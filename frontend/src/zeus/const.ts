@@ -10,7 +10,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		allAkces:{
+		akces:{
 			first:{
 				type:"Int",
 				array:false,
@@ -54,7 +54,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allAkceItems:{
+		akceItems:{
 			first:{
 				type:"Int",
 				array:false,
@@ -98,7 +98,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allAktualities:{
+		aktualities:{
 			first:{
 				type:"Int",
 				array:false,
@@ -142,7 +142,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allDokumenties:{
+		dokumenties:{
 			first:{
 				type:"Int",
 				array:false,
@@ -186,7 +186,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allGalerieDirs:{
+		galerieDirs:{
 			first:{
 				type:"Int",
 				array:false,
@@ -230,7 +230,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allGalerieFotos:{
+		galerieFotos:{
 			first:{
 				type:"Int",
 				array:false,
@@ -274,7 +274,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allMembers:{
+		members:{
 			first:{
 				type:"Int",
 				array:false,
@@ -318,7 +318,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allNabidkas:{
+		nabidkas:{
 			first:{
 				type:"Int",
 				array:false,
@@ -362,7 +362,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allNabidkaItems:{
+		nabidkaItems:{
 			first:{
 				type:"Int",
 				array:false,
@@ -406,7 +406,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allPages:{
+		pages:{
 			first:{
 				type:"Int",
 				array:false,
@@ -450,7 +450,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allPageRevisions:{
+		pageRevisions:{
 			first:{
 				type:"Int",
 				array:false,
@@ -494,7 +494,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allParameters:{
+		parameters:{
 			first:{
 				type:"Int",
 				array:false,
@@ -538,7 +538,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allParies:{
+		paries:{
 			first:{
 				type:"Int",
 				array:false,
@@ -582,7 +582,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allParyNavrhs:{
+		paryNavrhs:{
 			first:{
 				type:"Int",
 				array:false,
@@ -626,7 +626,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allPermissions:{
+		permissions:{
 			first:{
 				type:"Int",
 				array:false,
@@ -670,7 +670,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allPlatbyCategories:{
+		platbyCategories:{
 			first:{
 				type:"Int",
 				array:false,
@@ -714,7 +714,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allPlatbyCategoryGroups:{
+		platbyCategoryGroups:{
 			first:{
 				type:"Int",
 				array:false,
@@ -758,7 +758,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allPlatbyGroups:{
+		platbyGroups:{
 			first:{
 				type:"Int",
 				array:false,
@@ -802,7 +802,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allPlatbyGroupSkupinas:{
+		platbyGroupSkupinas:{
 			first:{
 				type:"Int",
 				array:false,
@@ -846,7 +846,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allPlatbyItems:{
+		platbyItems:{
 			first:{
 				type:"Int",
 				array:false,
@@ -890,7 +890,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allPlatbyRaws:{
+		platbyRaws:{
 			first:{
 				type:"Int",
 				array:false,
@@ -934,7 +934,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allRozpis:{
+		rozpis:{
 			first:{
 				type:"Int",
 				array:false,
@@ -978,7 +978,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allRozpisItems:{
+		rozpisItems:{
 			first:{
 				type:"Int",
 				array:false,
@@ -1022,7 +1022,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allSessions:{
+		sessions:{
 			first:{
 				type:"Int",
 				array:false,
@@ -1066,7 +1066,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allSkupinies:{
+		skupinies:{
 			first:{
 				type:"Int",
 				array:false,
@@ -1110,7 +1110,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allUpozornenis:{
+		upozornenis:{
 			first:{
 				type:"Int",
 				array:false,
@@ -1154,7 +1154,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allUpozorneniSkupinies:{
+		upozorneniSkupinies:{
 			first:{
 				type:"Int",
 				array:false,
@@ -1198,7 +1198,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allUsers:{
+		users:{
 			first:{
 				type:"Int",
 				array:false,
@@ -1242,7 +1242,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allUsersSkupinies:{
+		usersSkupinies:{
 			first:{
 				type:"Int",
 				array:false,
@@ -1286,7 +1286,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allVideos:{
+		videos:{
 			first:{
 				type:"Int",
 				array:false,
@@ -1330,7 +1330,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allVideoLists:{
+		videoLists:{
 			first:{
 				type:"Int",
 				array:false,
@@ -1374,7 +1374,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		allVideoSources:{
+		videoSources:{
 			first:{
 				type:"Int",
 				array:false,
@@ -1418,7 +1418,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		akceByAId:{
+		akce:{
 			aId:{
 				type:"BigInt",
 				array:false,
@@ -1426,7 +1426,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		akceItemByAiId:{
+		akceItem:{
 			aiId:{
 				type:"BigInt",
 				array:false,
@@ -1434,7 +1434,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		aktualityByAtId:{
+		aktuality:{
 			atId:{
 				type:"BigInt",
 				array:false,
@@ -1442,7 +1442,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		dokumentyByDId:{
+		dokumenty:{
 			dId:{
 				type:"BigInt",
 				array:false,
@@ -1450,7 +1450,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		galerieDirByGdId:{
+		galerieDir:{
 			gdId:{
 				type:"BigInt",
 				array:false,
@@ -1458,7 +1458,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		galerieFotoByGfId:{
+		galerieFoto:{
 			gfId:{
 				type:"BigInt",
 				array:false,
@@ -1466,7 +1466,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		nabidkaByNId:{
+		nabidka:{
 			nId:{
 				type:"BigInt",
 				array:false,
@@ -1474,7 +1474,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		nabidkaItemByNiId:{
+		nabidkaItem:{
 			niId:{
 				type:"BigInt",
 				array:false,
@@ -1482,7 +1482,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		pageById:{
+		page:{
 			id:{
 				type:"Int",
 				array:false,
@@ -1498,7 +1498,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		pageRevisionByRevNumberAndId:{
+		pageRevision:{
 			revNumber:{
 				type:"Int",
 				array:false,
@@ -1512,7 +1512,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		parameterByPaName:{
+		parameter:{
 			paName:{
 				type:"String",
 				array:false,
@@ -1520,7 +1520,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		paryByPId:{
+		pary:{
 			pId:{
 				type:"BigInt",
 				array:false,
@@ -1528,7 +1528,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		paryNavrhByPnId:{
+		paryNavrh:{
 			pnId:{
 				type:"BigInt",
 				array:false,
@@ -1536,7 +1536,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		permissionByPeId:{
+		permission:{
 			peId:{
 				type:"BigInt",
 				array:false,
@@ -1544,7 +1544,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		platbyCategoryByPcId:{
+		platbyCategory:{
 			pcId:{
 				type:"BigInt",
 				array:false,
@@ -1552,7 +1552,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		platbyCategoryGroupByPcgId:{
+		platbyCategoryGroup:{
 			pcgId:{
 				type:"BigInt",
 				array:false,
@@ -1560,7 +1560,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		platbyGroupByPgId:{
+		platbyGroup:{
 			pgId:{
 				type:"BigInt",
 				array:false,
@@ -1568,7 +1568,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		platbyGroupSkupinaByPgsId:{
+		platbyGroupSkupina:{
 			pgsId:{
 				type:"BigInt",
 				array:false,
@@ -1576,7 +1576,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		platbyItemByPiId:{
+		platbyItem:{
 			piId:{
 				type:"BigInt",
 				array:false,
@@ -1584,7 +1584,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		platbyRawByPrId:{
+		platbyRaw:{
 			prId:{
 				type:"BigInt",
 				array:false,
@@ -1592,7 +1592,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		rozpiByRId:{
+		rozpi:{
 			rId:{
 				type:"BigInt",
 				array:false,
@@ -1600,7 +1600,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		rozpisItemByRiId:{
+		rozpisItem:{
 			riId:{
 				type:"BigInt",
 				array:false,
@@ -1608,7 +1608,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		sessionBySsId:{
+		session:{
 			ssId:{
 				type:"String",
 				array:false,
@@ -1616,7 +1616,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		skupinyBySId:{
+		skupiny:{
 			sId:{
 				type:"BigInt",
 				array:false,
@@ -1624,7 +1624,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		upozorneniByUpId:{
+		upozorneni:{
 			upId:{
 				type:"BigInt",
 				array:false,
@@ -1632,7 +1632,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		upozorneniSkupinyByUpsId:{
+		upozorneniSkupiny:{
 			upsId:{
 				type:"BigInt",
 				array:false,
@@ -1640,7 +1640,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		userByUId:{
+		user:{
 			uId:{
 				type:"BigInt",
 				array:false,
@@ -1648,7 +1648,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		usersSkupinyByUsId:{
+		usersSkupiny:{
 			usId:{
 				type:"BigInt",
 				array:false,
@@ -1656,7 +1656,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		videoByVId:{
+		video:{
 			vId:{
 				type:"BigInt",
 				array:false,
@@ -1664,7 +1664,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		videoListByVlId:{
+		videoList:{
 			vlId:{
 				type:"BigInt",
 				array:false,
@@ -1672,7 +1672,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		videoSourceByVsId:{
+		videoSource:{
 			vsId:{
 				type:"BigInt",
 				array:false,
@@ -1744,7 +1744,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		akce:{
+		akceByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1752,7 +1752,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		akceItem:{
+		akceItemByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1760,7 +1760,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		aktuality:{
+		aktualityByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1768,7 +1768,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		dokumenty:{
+		dokumentyByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1776,7 +1776,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		galerieDir:{
+		galerieDirByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1784,7 +1784,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		galerieFoto:{
+		galerieFotoByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1792,7 +1792,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		nabidka:{
+		nabidkaByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1800,7 +1800,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		nabidkaItem:{
+		nabidkaItemByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1808,7 +1808,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		page:{
+		pageByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1816,7 +1816,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		pageRevision:{
+		pageRevisionByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1824,7 +1824,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		parameter:{
+		parameterByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1832,7 +1832,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		pary:{
+		paryByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1840,7 +1840,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		paryNavrh:{
+		paryNavrhByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1848,7 +1848,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		permission:{
+		permissionByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1856,7 +1856,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		platbyCategory:{
+		platbyCategoryByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1864,7 +1864,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		platbyCategoryGroup:{
+		platbyCategoryGroupByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1872,7 +1872,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		platbyGroup:{
+		platbyGroupByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1880,7 +1880,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		platbyGroupSkupina:{
+		platbyGroupSkupinaByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1888,7 +1888,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		platbyItem:{
+		platbyItemByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1896,7 +1896,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		platbyRaw:{
+		platbyRawByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1904,7 +1904,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		rozpi:{
+		rozpiByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1912,7 +1912,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		rozpisItem:{
+		rozpisItemByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1920,7 +1920,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		session:{
+		sessionByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1928,7 +1928,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		skupiny:{
+		skupinyByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1936,7 +1936,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		upozorneni:{
+		upozorneniByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1944,7 +1944,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		upozorneniSkupiny:{
+		upozorneniSkupinyByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1952,7 +1952,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		user:{
+		userByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1960,7 +1960,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		usersSkupiny:{
+		usersSkupinyByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1968,7 +1968,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		video:{
+		videoByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1976,7 +1976,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		videoList:{
+		videoListByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -1984,7 +1984,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		videoSource:{
+		videoSourceByNodeId:{
 			nodeId:{
 				type:"ID",
 				array:false,
@@ -5125,6 +5125,14 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
+		updateAkceByNodeId:{
+			input:{
+				type:"UpdateAkceByNodeIdInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
 		updateAkce:{
 			input:{
 				type:"UpdateAkceInput",
@@ -5133,9 +5141,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateAkceByAId:{
+		updateAkceItemByNodeId:{
 			input:{
-				type:"UpdateAkceByAIdInput",
+				type:"UpdateAkceItemByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5149,9 +5157,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateAkceItemByAiId:{
+		updateAktualityByNodeId:{
 			input:{
-				type:"UpdateAkceItemByAiIdInput",
+				type:"UpdateAktualityByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5165,9 +5173,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateAktualityByAtId:{
+		updateDokumentyByNodeId:{
 			input:{
-				type:"UpdateAktualityByAtIdInput",
+				type:"UpdateDokumentyByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5181,9 +5189,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateDokumentyByDId:{
+		updateGalerieDirByNodeId:{
 			input:{
-				type:"UpdateDokumentyByDIdInput",
+				type:"UpdateGalerieDirByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5197,9 +5205,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateGalerieDirByGdId:{
+		updateGalerieFotoByNodeId:{
 			input:{
-				type:"UpdateGalerieDirByGdIdInput",
+				type:"UpdateGalerieFotoByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5213,9 +5221,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateGalerieFotoByGfId:{
+		updateNabidkaByNodeId:{
 			input:{
-				type:"UpdateGalerieFotoByGfIdInput",
+				type:"UpdateNabidkaByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5229,9 +5237,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateNabidkaByNId:{
+		updateNabidkaItemByNodeId:{
 			input:{
-				type:"UpdateNabidkaByNIdInput",
+				type:"UpdateNabidkaItemByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5245,9 +5253,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateNabidkaItemByNiId:{
+		updatePageByNodeId:{
 			input:{
-				type:"UpdateNabidkaItemByNiIdInput",
+				type:"UpdatePageByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5261,17 +5269,17 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updatePageById:{
+		updatePageByUrl:{
 			input:{
-				type:"UpdatePageByIdInput",
+				type:"UpdatePageByUrlInput",
 				array:false,
 				arrayRequired:false,
 				required:true
 			}
 		},
-		updatePageByUrl:{
+		updateParameterByNodeId:{
 			input:{
-				type:"UpdatePageByUrlInput",
+				type:"UpdateParameterByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5285,9 +5293,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateParameterByPaName:{
+		updateParyByNodeId:{
 			input:{
-				type:"UpdateParameterByPaNameInput",
+				type:"UpdateParyByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5301,9 +5309,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateParyByPId:{
+		updateParyNavrhByNodeId:{
 			input:{
-				type:"UpdateParyByPIdInput",
+				type:"UpdateParyNavrhByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5317,9 +5325,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateParyNavrhByPnId:{
+		updatePermissionByNodeId:{
 			input:{
-				type:"UpdateParyNavrhByPnIdInput",
+				type:"UpdatePermissionByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5333,9 +5341,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updatePermissionByPeId:{
+		updatePlatbyCategoryByNodeId:{
 			input:{
-				type:"UpdatePermissionByPeIdInput",
+				type:"UpdatePlatbyCategoryByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5349,9 +5357,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updatePlatbyCategoryByPcId:{
+		updatePlatbyCategoryGroupByNodeId:{
 			input:{
-				type:"UpdatePlatbyCategoryByPcIdInput",
+				type:"UpdatePlatbyCategoryGroupByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5365,9 +5373,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updatePlatbyCategoryGroupByPcgId:{
+		updatePlatbyGroupByNodeId:{
 			input:{
-				type:"UpdatePlatbyCategoryGroupByPcgIdInput",
+				type:"UpdatePlatbyGroupByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5381,9 +5389,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updatePlatbyGroupByPgId:{
+		updatePlatbyGroupSkupinaByNodeId:{
 			input:{
-				type:"UpdatePlatbyGroupByPgIdInput",
+				type:"UpdatePlatbyGroupSkupinaByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5397,9 +5405,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updatePlatbyGroupSkupinaByPgsId:{
+		updatePlatbyItemByNodeId:{
 			input:{
-				type:"UpdatePlatbyGroupSkupinaByPgsIdInput",
+				type:"UpdatePlatbyItemByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5413,9 +5421,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updatePlatbyItemByPiId:{
+		updatePlatbyRawByNodeId:{
 			input:{
-				type:"UpdatePlatbyItemByPiIdInput",
+				type:"UpdatePlatbyRawByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5429,9 +5437,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updatePlatbyRawByPrId:{
+		updateRozpiByNodeId:{
 			input:{
-				type:"UpdatePlatbyRawByPrIdInput",
+				type:"UpdateRozpiByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5445,9 +5453,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateRozpiByRId:{
+		updateRozpisItemByNodeId:{
 			input:{
-				type:"UpdateRozpiByRIdInput",
+				type:"UpdateRozpisItemByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5461,9 +5469,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateRozpisItemByRiId:{
+		updateSessionByNodeId:{
 			input:{
-				type:"UpdateRozpisItemByRiIdInput",
+				type:"UpdateSessionByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5477,9 +5485,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateSessionBySsId:{
+		updateSkupinyByNodeId:{
 			input:{
-				type:"UpdateSessionBySsIdInput",
+				type:"UpdateSkupinyByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5493,9 +5501,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateSkupinyBySId:{
+		updateUpozorneniByNodeId:{
 			input:{
-				type:"UpdateSkupinyBySIdInput",
+				type:"UpdateUpozorneniByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5509,9 +5517,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateUpozorneniByUpId:{
+		updateUpozorneniSkupinyByNodeId:{
 			input:{
-				type:"UpdateUpozorneniByUpIdInput",
+				type:"UpdateUpozorneniSkupinyByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5525,9 +5533,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateUpozorneniSkupinyByUpsId:{
+		updateUserByNodeId:{
 			input:{
-				type:"UpdateUpozorneniSkupinyByUpsIdInput",
+				type:"UpdateUserByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5541,9 +5549,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateUserByUId:{
+		updateUsersSkupinyByNodeId:{
 			input:{
-				type:"UpdateUserByUIdInput",
+				type:"UpdateUsersSkupinyByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5557,9 +5565,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateUsersSkupinyByUsId:{
+		updateVideoByNodeId:{
 			input:{
-				type:"UpdateUsersSkupinyByUsIdInput",
+				type:"UpdateVideoByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5573,9 +5581,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateVideoByVId:{
+		updateVideoListByNodeId:{
 			input:{
-				type:"UpdateVideoByVIdInput",
+				type:"UpdateVideoListByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5589,9 +5597,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateVideoListByVlId:{
+		updateVideoSourceByNodeId:{
 			input:{
-				type:"UpdateVideoListByVlIdInput",
+				type:"UpdateVideoSourceByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5605,9 +5613,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateVideoSourceByVsId:{
+		deleteAkceByNodeId:{
 			input:{
-				type:"UpdateVideoSourceByVsIdInput",
+				type:"DeleteAkceByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5621,9 +5629,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteAkceByAId:{
+		deleteAkceItemByNodeId:{
 			input:{
-				type:"DeleteAkceByAIdInput",
+				type:"DeleteAkceItemByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5637,9 +5645,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteAkceItemByAiId:{
+		deleteAktualityByNodeId:{
 			input:{
-				type:"DeleteAkceItemByAiIdInput",
+				type:"DeleteAktualityByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5653,9 +5661,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteAktualityByAtId:{
+		deleteDokumentyByNodeId:{
 			input:{
-				type:"DeleteAktualityByAtIdInput",
+				type:"DeleteDokumentyByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5669,9 +5677,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteDokumentyByDId:{
+		deleteGalerieDirByNodeId:{
 			input:{
-				type:"DeleteDokumentyByDIdInput",
+				type:"DeleteGalerieDirByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5685,9 +5693,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteGalerieDirByGdId:{
+		deleteGalerieFotoByNodeId:{
 			input:{
-				type:"DeleteGalerieDirByGdIdInput",
+				type:"DeleteGalerieFotoByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5701,9 +5709,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteGalerieFotoByGfId:{
+		deleteNabidkaByNodeId:{
 			input:{
-				type:"DeleteGalerieFotoByGfIdInput",
+				type:"DeleteNabidkaByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5717,9 +5725,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteNabidkaByNId:{
+		deleteNabidkaItemByNodeId:{
 			input:{
-				type:"DeleteNabidkaByNIdInput",
+				type:"DeleteNabidkaItemByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5733,9 +5741,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteNabidkaItemByNiId:{
+		deleteParameterByNodeId:{
 			input:{
-				type:"DeleteNabidkaItemByNiIdInput",
+				type:"DeleteParameterByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5749,9 +5757,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteParameterByPaName:{
+		deleteParyByNodeId:{
 			input:{
-				type:"DeleteParameterByPaNameInput",
+				type:"DeleteParyByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5765,9 +5773,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteParyByPId:{
+		deleteParyNavrhByNodeId:{
 			input:{
-				type:"DeleteParyByPIdInput",
+				type:"DeleteParyNavrhByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5781,9 +5789,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteParyNavrhByPnId:{
+		deletePermissionByNodeId:{
 			input:{
-				type:"DeleteParyNavrhByPnIdInput",
+				type:"DeletePermissionByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5797,9 +5805,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deletePermissionByPeId:{
+		deletePlatbyCategoryByNodeId:{
 			input:{
-				type:"DeletePermissionByPeIdInput",
+				type:"DeletePlatbyCategoryByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5813,9 +5821,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deletePlatbyCategoryByPcId:{
+		deletePlatbyCategoryGroupByNodeId:{
 			input:{
-				type:"DeletePlatbyCategoryByPcIdInput",
+				type:"DeletePlatbyCategoryGroupByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5829,9 +5837,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deletePlatbyCategoryGroupByPcgId:{
+		deletePlatbyGroupByNodeId:{
 			input:{
-				type:"DeletePlatbyCategoryGroupByPcgIdInput",
+				type:"DeletePlatbyGroupByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5845,9 +5853,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deletePlatbyGroupByPgId:{
+		deletePlatbyGroupSkupinaByNodeId:{
 			input:{
-				type:"DeletePlatbyGroupByPgIdInput",
+				type:"DeletePlatbyGroupSkupinaByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5861,9 +5869,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deletePlatbyGroupSkupinaByPgsId:{
+		deletePlatbyItemByNodeId:{
 			input:{
-				type:"DeletePlatbyGroupSkupinaByPgsIdInput",
+				type:"DeletePlatbyItemByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5877,9 +5885,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deletePlatbyItemByPiId:{
+		deletePlatbyRawByNodeId:{
 			input:{
-				type:"DeletePlatbyItemByPiIdInput",
+				type:"DeletePlatbyRawByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5893,9 +5901,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deletePlatbyRawByPrId:{
+		deleteRozpiByNodeId:{
 			input:{
-				type:"DeletePlatbyRawByPrIdInput",
+				type:"DeleteRozpiByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5909,9 +5917,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteRozpiByRId:{
+		deleteRozpisItemByNodeId:{
 			input:{
-				type:"DeleteRozpiByRIdInput",
+				type:"DeleteRozpisItemByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5925,9 +5933,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteRozpisItemByRiId:{
+		deleteSessionByNodeId:{
 			input:{
-				type:"DeleteRozpisItemByRiIdInput",
+				type:"DeleteSessionByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5941,9 +5949,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteSessionBySsId:{
+		deleteSkupinyByNodeId:{
 			input:{
-				type:"DeleteSessionBySsIdInput",
+				type:"DeleteSkupinyByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5957,9 +5965,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteSkupinyBySId:{
+		deleteUpozorneniByNodeId:{
 			input:{
-				type:"DeleteSkupinyBySIdInput",
+				type:"DeleteUpozorneniByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5973,9 +5981,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteUpozorneniByUpId:{
+		deleteUpozorneniSkupinyByNodeId:{
 			input:{
-				type:"DeleteUpozorneniByUpIdInput",
+				type:"DeleteUpozorneniSkupinyByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5989,9 +5997,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteUpozorneniSkupinyByUpsId:{
+		deleteUserByNodeId:{
 			input:{
-				type:"DeleteUpozorneniSkupinyByUpsIdInput",
+				type:"DeleteUserByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -6005,9 +6013,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteUserByUId:{
+		deleteUsersSkupinyByNodeId:{
 			input:{
-				type:"DeleteUserByUIdInput",
+				type:"DeleteUsersSkupinyByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -6021,9 +6029,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteUsersSkupinyByUsId:{
+		deleteVideoByNodeId:{
 			input:{
-				type:"DeleteUsersSkupinyByUsIdInput",
+				type:"DeleteVideoByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -6037,9 +6045,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteVideoByVId:{
+		deleteVideoListByNodeId:{
 			input:{
-				type:"DeleteVideoByVIdInput",
+				type:"DeleteVideoListByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -6053,9 +6061,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteVideoListByVlId:{
+		deleteVideoSourceByNodeId:{
 			input:{
-				type:"DeleteVideoListByVlIdInput",
+				type:"DeleteVideoSourceByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -6064,14 +6072,6 @@ export const AllTypesProps: Record<string,any> = {
 		deleteVideoSource:{
 			input:{
 				type:"DeleteVideoSourceInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		deleteVideoSourceByVsId:{
-			input:{
-				type:"DeleteVideoSourceByVsIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -8270,7 +8270,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateAkceInput:{
+	UpdateAkceByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -8283,7 +8283,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		akcePatch:{
+		patch:{
 			type:"AkcePatch",
 			array:false,
 			arrayRequired:false,
@@ -8358,14 +8358,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdateAkceByAIdInput:{
+	UpdateAkceInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		akcePatch:{
+		patch:{
 			type:"AkcePatch",
 			array:false,
 			arrayRequired:false,
@@ -8388,7 +8388,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateAkceItemInput:{
+	UpdateAkceItemByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -8401,7 +8401,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		akceItemPatch:{
+		patch:{
 			type:"AkceItemPatch",
 			array:false,
 			arrayRequired:false,
@@ -8434,14 +8434,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdateAkceItemByAiIdInput:{
+	UpdateAkceItemInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		akceItemPatch:{
+		patch:{
 			type:"AkceItemPatch",
 			array:false,
 			arrayRequired:false,
@@ -8464,7 +8464,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateAktualityInput:{
+	UpdateAktualityByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -8477,7 +8477,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		aktualityPatch:{
+		patch:{
 			type:"AktualityPatch",
 			array:false,
 			arrayRequired:false,
@@ -8546,14 +8546,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdateAktualityByAtIdInput:{
+	UpdateAktualityInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		aktualityPatch:{
+		patch:{
 			type:"AktualityPatch",
 			array:false,
 			arrayRequired:false,
@@ -8576,7 +8576,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateDokumentyInput:{
+	UpdateDokumentyByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -8589,7 +8589,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		dokumentyPatch:{
+		patch:{
 			type:"DokumentyPatch",
 			array:false,
 			arrayRequired:false,
@@ -8640,14 +8640,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdateDokumentyByDIdInput:{
+	UpdateDokumentyInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		dokumentyPatch:{
+		patch:{
 			type:"DokumentyPatch",
 			array:false,
 			arrayRequired:false,
@@ -8670,7 +8670,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateGalerieDirInput:{
+	UpdateGalerieDirByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -8683,7 +8683,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		galerieDirPatch:{
+		patch:{
 			type:"GalerieDirPatch",
 			array:false,
 			arrayRequired:false,
@@ -8728,14 +8728,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdateGalerieDirByGdIdInput:{
+	UpdateGalerieDirInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		galerieDirPatch:{
+		patch:{
 			type:"GalerieDirPatch",
 			array:false,
 			arrayRequired:false,
@@ -8758,7 +8758,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateGalerieFotoInput:{
+	UpdateGalerieFotoByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -8771,7 +8771,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		galerieFotoPatch:{
+		patch:{
 			type:"GalerieFotoPatch",
 			array:false,
 			arrayRequired:false,
@@ -8816,14 +8816,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdateGalerieFotoByGfIdInput:{
+	UpdateGalerieFotoInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		galerieFotoPatch:{
+		patch:{
 			type:"GalerieFotoPatch",
 			array:false,
 			arrayRequired:false,
@@ -8846,7 +8846,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateNabidkaInput:{
+	UpdateNabidkaByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -8859,7 +8859,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		nabidkaPatch:{
+		patch:{
 			type:"NabidkaPatch",
 			array:false,
 			arrayRequired:false,
@@ -8922,14 +8922,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdateNabidkaByNIdInput:{
+	UpdateNabidkaInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nabidkaPatch:{
+		patch:{
 			type:"NabidkaPatch",
 			array:false,
 			arrayRequired:false,
@@ -8952,7 +8952,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateNabidkaItemInput:{
+	UpdateNabidkaItemByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -8965,7 +8965,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		nabidkaItemPatch:{
+		patch:{
 			type:"NabidkaItemPatch",
 			array:false,
 			arrayRequired:false,
@@ -9004,14 +9004,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdateNabidkaItemByNiIdInput:{
+	UpdateNabidkaItemInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nabidkaItemPatch:{
+		patch:{
 			type:"NabidkaItemPatch",
 			array:false,
 			arrayRequired:false,
@@ -9034,7 +9034,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdatePageInput:{
+	UpdatePageByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -9047,7 +9047,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		pagePatch:{
+		patch:{
 			type:"PagePatch",
 			array:false,
 			arrayRequired:false,
@@ -9086,14 +9086,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdatePageByIdInput:{
+	UpdatePageInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		pagePatch:{
+		patch:{
 			type:"PagePatch",
 			array:false,
 			arrayRequired:false,
@@ -9113,7 +9113,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		pagePatch:{
+		patch:{
 			type:"PagePatch",
 			array:false,
 			arrayRequired:false,
@@ -9136,7 +9136,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateParameterInput:{
+	UpdateParameterByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -9149,7 +9149,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		parameterPatch:{
+		patch:{
 			type:"ParameterPatch",
 			array:false,
 			arrayRequired:false,
@@ -9170,14 +9170,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdateParameterByPaNameInput:{
+	UpdateParameterInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		parameterPatch:{
+		patch:{
 			type:"ParameterPatch",
 			array:false,
 			arrayRequired:false,
@@ -9200,7 +9200,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateParyInput:{
+	UpdateParyByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -9213,7 +9213,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		paryPatch:{
+		patch:{
 			type:"ParyPatch",
 			array:false,
 			arrayRequired:false,
@@ -9300,14 +9300,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdateParyByPIdInput:{
+	UpdateParyInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		paryPatch:{
+		patch:{
 			type:"ParyPatch",
 			array:false,
 			arrayRequired:false,
@@ -9330,7 +9330,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateParyNavrhInput:{
+	UpdateParyNavrhByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -9343,7 +9343,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		paryNavrhPatch:{
+		patch:{
 			type:"ParyNavrhPatch",
 			array:false,
 			arrayRequired:false,
@@ -9376,14 +9376,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdateParyNavrhByPnIdInput:{
+	UpdateParyNavrhInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		paryNavrhPatch:{
+		patch:{
 			type:"ParyNavrhPatch",
 			array:false,
 			arrayRequired:false,
@@ -9406,7 +9406,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdatePermissionInput:{
+	UpdatePermissionByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -9419,7 +9419,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		permissionPatch:{
+		patch:{
 			type:"PermissionPatch",
 			array:false,
 			arrayRequired:false,
@@ -9548,14 +9548,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdatePermissionByPeIdInput:{
+	UpdatePermissionInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		permissionPatch:{
+		patch:{
 			type:"PermissionPatch",
 			array:false,
 			arrayRequired:false,
@@ -9578,7 +9578,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdatePlatbyCategoryInput:{
+	UpdatePlatbyCategoryByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -9591,7 +9591,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		platbyCategoryPatch:{
+		patch:{
 			type:"PlatbyCategoryPatch",
 			array:false,
 			arrayRequired:false,
@@ -9666,14 +9666,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdatePlatbyCategoryByPcIdInput:{
+	UpdatePlatbyCategoryInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		platbyCategoryPatch:{
+		patch:{
 			type:"PlatbyCategoryPatch",
 			array:false,
 			arrayRequired:false,
@@ -9696,7 +9696,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdatePlatbyCategoryGroupInput:{
+	UpdatePlatbyCategoryGroupByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -9709,7 +9709,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		platbyCategoryGroupPatch:{
+		patch:{
 			type:"PlatbyCategoryGroupPatch",
 			array:false,
 			arrayRequired:false,
@@ -9736,14 +9736,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdatePlatbyCategoryGroupByPcgIdInput:{
+	UpdatePlatbyCategoryGroupInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		platbyCategoryGroupPatch:{
+		patch:{
 			type:"PlatbyCategoryGroupPatch",
 			array:false,
 			arrayRequired:false,
@@ -9766,7 +9766,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdatePlatbyGroupInput:{
+	UpdatePlatbyGroupByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -9779,7 +9779,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		platbyGroupPatch:{
+		patch:{
 			type:"PlatbyGroupPatch",
 			array:false,
 			arrayRequired:false,
@@ -9818,14 +9818,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdatePlatbyGroupByPgIdInput:{
+	UpdatePlatbyGroupInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		platbyGroupPatch:{
+		patch:{
 			type:"PlatbyGroupPatch",
 			array:false,
 			arrayRequired:false,
@@ -9848,7 +9848,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdatePlatbyGroupSkupinaInput:{
+	UpdatePlatbyGroupSkupinaByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -9861,7 +9861,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		platbyGroupSkupinaPatch:{
+		patch:{
 			type:"PlatbyGroupSkupinaPatch",
 			array:false,
 			arrayRequired:false,
@@ -9888,14 +9888,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdatePlatbyGroupSkupinaByPgsIdInput:{
+	UpdatePlatbyGroupSkupinaInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		platbyGroupSkupinaPatch:{
+		patch:{
 			type:"PlatbyGroupSkupinaPatch",
 			array:false,
 			arrayRequired:false,
@@ -9918,7 +9918,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdatePlatbyItemInput:{
+	UpdatePlatbyItemByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -9931,7 +9931,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		platbyItemPatch:{
+		patch:{
 			type:"PlatbyItemPatch",
 			array:false,
 			arrayRequired:false,
@@ -9982,14 +9982,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdatePlatbyItemByPiIdInput:{
+	UpdatePlatbyItemInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		platbyItemPatch:{
+		patch:{
 			type:"PlatbyItemPatch",
 			array:false,
 			arrayRequired:false,
@@ -10012,7 +10012,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdatePlatbyRawInput:{
+	UpdatePlatbyRawByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -10025,7 +10025,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		platbyRawPatch:{
+		patch:{
 			type:"PlatbyRawPatch",
 			array:false,
 			arrayRequired:false,
@@ -10064,14 +10064,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdatePlatbyRawByPrIdInput:{
+	UpdatePlatbyRawInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		platbyRawPatch:{
+		patch:{
 			type:"PlatbyRawPatch",
 			array:false,
 			arrayRequired:false,
@@ -10094,7 +10094,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateRozpiInput:{
+	UpdateRozpiByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -10107,7 +10107,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		rozpiPatch:{
+		patch:{
 			type:"RozpiPatch",
 			array:false,
 			arrayRequired:false,
@@ -10158,14 +10158,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdateRozpiByRIdInput:{
+	UpdateRozpiInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		rozpiPatch:{
+		patch:{
 			type:"RozpiPatch",
 			array:false,
 			arrayRequired:false,
@@ -10188,7 +10188,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateRozpisItemInput:{
+	UpdateRozpisItemByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -10201,7 +10201,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		rozpisItemPatch:{
+		patch:{
 			type:"RozpisItemPatch",
 			array:false,
 			arrayRequired:false,
@@ -10246,14 +10246,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdateRozpisItemByRiIdInput:{
+	UpdateRozpisItemInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		rozpisItemPatch:{
+		patch:{
 			type:"RozpisItemPatch",
 			array:false,
 			arrayRequired:false,
@@ -10276,7 +10276,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateSessionInput:{
+	UpdateSessionByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -10289,7 +10289,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		sessionPatch:{
+		patch:{
 			type:"SessionPatch",
 			array:false,
 			arrayRequired:false,
@@ -10328,14 +10328,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdateSessionBySsIdInput:{
+	UpdateSessionInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		sessionPatch:{
+		patch:{
 			type:"SessionPatch",
 			array:false,
 			arrayRequired:false,
@@ -10358,7 +10358,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateSkupinyInput:{
+	UpdateSkupinyByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -10371,7 +10371,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		skupinyPatch:{
+		patch:{
 			type:"SkupinyPatch",
 			array:false,
 			arrayRequired:false,
@@ -10410,14 +10410,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdateSkupinyBySIdInput:{
+	UpdateSkupinyInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		skupinyPatch:{
+		patch:{
 			type:"SkupinyPatch",
 			array:false,
 			arrayRequired:false,
@@ -10440,7 +10440,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateUpozorneniInput:{
+	UpdateUpozorneniByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -10453,7 +10453,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		upozorneniPatch:{
+		patch:{
 			type:"UpozorneniPatch",
 			array:false,
 			arrayRequired:false,
@@ -10510,14 +10510,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdateUpozorneniByUpIdInput:{
+	UpdateUpozorneniInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		upozorneniPatch:{
+		patch:{
 			type:"UpozorneniPatch",
 			array:false,
 			arrayRequired:false,
@@ -10540,7 +10540,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateUpozorneniSkupinyInput:{
+	UpdateUpozorneniSkupinyByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -10553,7 +10553,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		upozorneniSkupinyPatch:{
+		patch:{
 			type:"UpozorneniSkupinyPatch",
 			array:false,
 			arrayRequired:false,
@@ -10592,14 +10592,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdateUpozorneniSkupinyByUpsIdInput:{
+	UpdateUpozorneniSkupinyInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		upozorneniSkupinyPatch:{
+		patch:{
 			type:"UpozorneniSkupinyPatch",
 			array:false,
 			arrayRequired:false,
@@ -10622,7 +10622,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateUserInput:{
+	UpdateUserByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -10635,7 +10635,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		userPatch:{
+		patch:{
 			type:"UserPatch",
 			array:false,
 			arrayRequired:false,
@@ -10836,14 +10836,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdateUserByUIdInput:{
+	UpdateUserInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		userPatch:{
+		patch:{
 			type:"UserPatch",
 			array:false,
 			arrayRequired:false,
@@ -10866,7 +10866,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateUsersSkupinyInput:{
+	UpdateUsersSkupinyByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -10879,7 +10879,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		usersSkupinyPatch:{
+		patch:{
 			type:"UsersSkupinyPatch",
 			array:false,
 			arrayRequired:false,
@@ -10924,14 +10924,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdateUsersSkupinyByUsIdInput:{
+	UpdateUsersSkupinyInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		usersSkupinyPatch:{
+		patch:{
 			type:"UsersSkupinyPatch",
 			array:false,
 			arrayRequired:false,
@@ -10954,7 +10954,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateVideoInput:{
+	UpdateVideoByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -10967,7 +10967,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		videoPatch:{
+		patch:{
 			type:"VideoPatch",
 			array:false,
 			arrayRequired:false,
@@ -11024,14 +11024,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdateVideoByVIdInput:{
+	UpdateVideoInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		videoPatch:{
+		patch:{
 			type:"VideoPatch",
 			array:false,
 			arrayRequired:false,
@@ -11054,7 +11054,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateVideoListInput:{
+	UpdateVideoListByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11067,7 +11067,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		videoListPatch:{
+		patch:{
 			type:"VideoListPatch",
 			array:false,
 			arrayRequired:false,
@@ -11118,14 +11118,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdateVideoListByVlIdInput:{
+	UpdateVideoListInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		videoListPatch:{
+		patch:{
 			type:"VideoListPatch",
 			array:false,
 			arrayRequired:false,
@@ -11148,7 +11148,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateVideoSourceInput:{
+	UpdateVideoSourceByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11161,7 +11161,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		videoSourcePatch:{
+		patch:{
 			type:"VideoSourcePatch",
 			array:false,
 			arrayRequired:false,
@@ -11206,14 +11206,14 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdateVideoSourceByVsIdInput:{
+	UpdateVideoSourceInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		videoSourcePatch:{
+		patch:{
 			type:"VideoSourcePatch",
 			array:false,
 			arrayRequired:false,
@@ -11236,7 +11236,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteAkceInput:{
+	DeleteAkceByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11250,7 +11250,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteAkceByAIdInput:{
+	DeleteAkceInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11274,7 +11274,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteAkceItemInput:{
+	DeleteAkceItemByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11288,7 +11288,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteAkceItemByAiIdInput:{
+	DeleteAkceItemInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11312,7 +11312,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteAktualityInput:{
+	DeleteAktualityByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11326,7 +11326,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteAktualityByAtIdInput:{
+	DeleteAktualityInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11350,7 +11350,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteDokumentyInput:{
+	DeleteDokumentyByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11364,7 +11364,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteDokumentyByDIdInput:{
+	DeleteDokumentyInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11388,7 +11388,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteGalerieDirInput:{
+	DeleteGalerieDirByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11402,7 +11402,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteGalerieDirByGdIdInput:{
+	DeleteGalerieDirInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11426,7 +11426,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteGalerieFotoInput:{
+	DeleteGalerieFotoByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11440,7 +11440,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteGalerieFotoByGfIdInput:{
+	DeleteGalerieFotoInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11464,7 +11464,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteNabidkaInput:{
+	DeleteNabidkaByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11478,7 +11478,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteNabidkaByNIdInput:{
+	DeleteNabidkaInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11502,7 +11502,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteNabidkaItemInput:{
+	DeleteNabidkaItemByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11516,7 +11516,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteNabidkaItemByNiIdInput:{
+	DeleteNabidkaItemInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11540,7 +11540,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteParameterInput:{
+	DeleteParameterByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11554,7 +11554,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteParameterByPaNameInput:{
+	DeleteParameterInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11578,7 +11578,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteParyInput:{
+	DeleteParyByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11592,7 +11592,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteParyByPIdInput:{
+	DeleteParyInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11616,7 +11616,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteParyNavrhInput:{
+	DeleteParyNavrhByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11630,7 +11630,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteParyNavrhByPnIdInput:{
+	DeleteParyNavrhInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11654,7 +11654,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeletePermissionInput:{
+	DeletePermissionByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11668,7 +11668,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeletePermissionByPeIdInput:{
+	DeletePermissionInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11692,7 +11692,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeletePlatbyCategoryInput:{
+	DeletePlatbyCategoryByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11706,7 +11706,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeletePlatbyCategoryByPcIdInput:{
+	DeletePlatbyCategoryInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11730,7 +11730,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeletePlatbyCategoryGroupInput:{
+	DeletePlatbyCategoryGroupByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11744,7 +11744,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeletePlatbyCategoryGroupByPcgIdInput:{
+	DeletePlatbyCategoryGroupInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11768,7 +11768,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeletePlatbyGroupInput:{
+	DeletePlatbyGroupByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11782,7 +11782,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeletePlatbyGroupByPgIdInput:{
+	DeletePlatbyGroupInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11806,7 +11806,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeletePlatbyGroupSkupinaInput:{
+	DeletePlatbyGroupSkupinaByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11820,7 +11820,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeletePlatbyGroupSkupinaByPgsIdInput:{
+	DeletePlatbyGroupSkupinaInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11844,7 +11844,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeletePlatbyItemInput:{
+	DeletePlatbyItemByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11858,7 +11858,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeletePlatbyItemByPiIdInput:{
+	DeletePlatbyItemInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11882,7 +11882,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeletePlatbyRawInput:{
+	DeletePlatbyRawByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11896,7 +11896,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeletePlatbyRawByPrIdInput:{
+	DeletePlatbyRawInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11920,7 +11920,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteRozpiInput:{
+	DeleteRozpiByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11934,7 +11934,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteRozpiByRIdInput:{
+	DeleteRozpiInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11958,7 +11958,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteRozpisItemInput:{
+	DeleteRozpisItemByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11972,7 +11972,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteRozpisItemByRiIdInput:{
+	DeleteRozpisItemInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -11996,7 +11996,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteSessionInput:{
+	DeleteSessionByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -12010,7 +12010,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteSessionBySsIdInput:{
+	DeleteSessionInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -12034,7 +12034,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteSkupinyInput:{
+	DeleteSkupinyByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -12048,7 +12048,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteSkupinyBySIdInput:{
+	DeleteSkupinyInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -12072,7 +12072,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteUpozorneniInput:{
+	DeleteUpozorneniByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -12086,7 +12086,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteUpozorneniByUpIdInput:{
+	DeleteUpozorneniInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -12110,7 +12110,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteUpozorneniSkupinyInput:{
+	DeleteUpozorneniSkupinyByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -12124,7 +12124,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteUpozorneniSkupinyByUpsIdInput:{
+	DeleteUpozorneniSkupinyInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -12148,7 +12148,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteUserInput:{
+	DeleteUserByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -12162,7 +12162,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteUserByUIdInput:{
+	DeleteUserInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -12186,7 +12186,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteUsersSkupinyInput:{
+	DeleteUsersSkupinyByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -12200,7 +12200,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteUsersSkupinyByUsIdInput:{
+	DeleteUsersSkupinyInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -12224,7 +12224,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteVideoInput:{
+	DeleteVideoByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -12238,7 +12238,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteVideoByVIdInput:{
+	DeleteVideoInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -12262,7 +12262,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteVideoListInput:{
+	DeleteVideoListByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -12276,7 +12276,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteVideoListByVlIdInput:{
+	DeleteVideoListInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -12300,7 +12300,7 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteVideoSourceInput:{
+	DeleteVideoSourceByNodeIdInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -12314,7 +12314,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteVideoSourceByVsIdInput:{
+	DeleteVideoSourceInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -12363,75 +12363,38 @@ export const ReturnTypes: Record<string,any> = {
 		query:"Query",
 		nodeId:"ID",
 		node:"Node",
-		allAkces:"AkcesConnection",
-		allAkceItems:"AkceItemsConnection",
-		allAktualities:"AktualitiesConnection",
-		allDokumenties:"DokumentiesConnection",
-		allGalerieDirs:"GalerieDirsConnection",
-		allGalerieFotos:"GalerieFotosConnection",
-		allMembers:"MembersConnection",
-		allNabidkas:"NabidkasConnection",
-		allNabidkaItems:"NabidkaItemsConnection",
-		allPages:"PagesConnection",
-		allPageRevisions:"PageRevisionsConnection",
-		allParameters:"ParametersConnection",
-		allParies:"PariesConnection",
-		allParyNavrhs:"ParyNavrhsConnection",
-		allPermissions:"PermissionsConnection",
-		allPlatbyCategories:"PlatbyCategoriesConnection",
-		allPlatbyCategoryGroups:"PlatbyCategoryGroupsConnection",
-		allPlatbyGroups:"PlatbyGroupsConnection",
-		allPlatbyGroupSkupinas:"PlatbyGroupSkupinasConnection",
-		allPlatbyItems:"PlatbyItemsConnection",
-		allPlatbyRaws:"PlatbyRawsConnection",
-		allRozpis:"RozpisConnection",
-		allRozpisItems:"RozpisItemsConnection",
-		allSessions:"SessionsConnection",
-		allSkupinies:"SkupiniesConnection",
-		allUpozornenis:"UpozornenisConnection",
-		allUpozorneniSkupinies:"UpozorneniSkupiniesConnection",
-		allUsers:"UsersConnection",
-		allUsersSkupinies:"UsersSkupiniesConnection",
-		allVideos:"VideosConnection",
-		allVideoLists:"VideoListsConnection",
-		allVideoSources:"VideoSourcesConnection",
-		akceByAId:"Akce",
-		akceItemByAiId:"AkceItem",
-		aktualityByAtId:"Aktuality",
-		dokumentyByDId:"Dokumenty",
-		galerieDirByGdId:"GalerieDir",
-		galerieFotoByGfId:"GalerieFoto",
-		nabidkaByNId:"Nabidka",
-		nabidkaItemByNiId:"NabidkaItem",
-		pageById:"Page",
-		pageByUrl:"Page",
-		pageRevisionByRevNumberAndId:"PageRevision",
-		parameterByPaName:"Parameter",
-		paryByPId:"Pary",
-		paryNavrhByPnId:"ParyNavrh",
-		permissionByPeId:"Permission",
-		platbyCategoryByPcId:"PlatbyCategory",
-		platbyCategoryGroupByPcgId:"PlatbyCategoryGroup",
-		platbyGroupByPgId:"PlatbyGroup",
-		platbyGroupSkupinaByPgsId:"PlatbyGroupSkupina",
-		platbyItemByPiId:"PlatbyItem",
-		platbyRawByPrId:"PlatbyRaw",
-		rozpiByRId:"Rozpi",
-		rozpisItemByRiId:"RozpisItem",
-		sessionBySsId:"Session",
-		skupinyBySId:"Skupiny",
-		upozorneniByUpId:"Upozorneni",
-		upozorneniSkupinyByUpsId:"UpozorneniSkupiny",
-		userByUId:"User",
-		usersSkupinyByUsId:"UsersSkupiny",
-		videoByVId:"Video",
-		videoListByVlId:"VideoList",
-		videoSourceByVsId:"VideoSource",
-		currentCoupleIds:"CurrentCoupleIdsConnection",
-		currentSessionId:"String",
-		currentUserId:"BigInt",
-		getCurrentUser:"User",
-		titleVideos:"VideosConnection",
+		akces:"AkcesConnection",
+		akceItems:"AkceItemsConnection",
+		aktualities:"AktualitiesConnection",
+		dokumenties:"DokumentiesConnection",
+		galerieDirs:"GalerieDirsConnection",
+		galerieFotos:"GalerieFotosConnection",
+		members:"MembersConnection",
+		nabidkas:"NabidkasConnection",
+		nabidkaItems:"NabidkaItemsConnection",
+		pages:"PagesConnection",
+		pageRevisions:"PageRevisionsConnection",
+		parameters:"ParametersConnection",
+		paries:"PariesConnection",
+		paryNavrhs:"ParyNavrhsConnection",
+		permissions:"PermissionsConnection",
+		platbyCategories:"PlatbyCategoriesConnection",
+		platbyCategoryGroups:"PlatbyCategoryGroupsConnection",
+		platbyGroups:"PlatbyGroupsConnection",
+		platbyGroupSkupinas:"PlatbyGroupSkupinasConnection",
+		platbyItems:"PlatbyItemsConnection",
+		platbyRaws:"PlatbyRawsConnection",
+		rozpis:"RozpisConnection",
+		rozpisItems:"RozpisItemsConnection",
+		sessions:"SessionsConnection",
+		skupinies:"SkupiniesConnection",
+		upozornenis:"UpozornenisConnection",
+		upozorneniSkupinies:"UpozorneniSkupiniesConnection",
+		users:"UsersConnection",
+		usersSkupinies:"UsersSkupiniesConnection",
+		videos:"VideosConnection",
+		videoLists:"VideoListsConnection",
+		videoSources:"VideoSourcesConnection",
 		akce:"Akce",
 		akceItem:"AkceItem",
 		aktuality:"Aktuality",
@@ -12441,6 +12404,7 @@ export const ReturnTypes: Record<string,any> = {
 		nabidka:"Nabidka",
 		nabidkaItem:"NabidkaItem",
 		page:"Page",
+		pageByUrl:"Page",
 		pageRevision:"PageRevision",
 		parameter:"Parameter",
 		pary:"Pary",
@@ -12462,7 +12426,43 @@ export const ReturnTypes: Record<string,any> = {
 		usersSkupiny:"UsersSkupiny",
 		video:"Video",
 		videoList:"VideoList",
-		videoSource:"VideoSource"
+		videoSource:"VideoSource",
+		currentCoupleIds:"CurrentCoupleIdsConnection",
+		currentSessionId:"String",
+		currentUserId:"BigInt",
+		getCurrentUser:"User",
+		titleVideos:"VideosConnection",
+		akceByNodeId:"Akce",
+		akceItemByNodeId:"AkceItem",
+		aktualityByNodeId:"Aktuality",
+		dokumentyByNodeId:"Dokumenty",
+		galerieDirByNodeId:"GalerieDir",
+		galerieFotoByNodeId:"GalerieFoto",
+		nabidkaByNodeId:"Nabidka",
+		nabidkaItemByNodeId:"NabidkaItem",
+		pageByNodeId:"Page",
+		pageRevisionByNodeId:"PageRevision",
+		parameterByNodeId:"Parameter",
+		paryByNodeId:"Pary",
+		paryNavrhByNodeId:"ParyNavrh",
+		permissionByNodeId:"Permission",
+		platbyCategoryByNodeId:"PlatbyCategory",
+		platbyCategoryGroupByNodeId:"PlatbyCategoryGroup",
+		platbyGroupByNodeId:"PlatbyGroup",
+		platbyGroupSkupinaByNodeId:"PlatbyGroupSkupina",
+		platbyItemByNodeId:"PlatbyItem",
+		platbyRawByNodeId:"PlatbyRaw",
+		rozpiByNodeId:"Rozpi",
+		rozpisItemByNodeId:"RozpisItem",
+		sessionByNodeId:"Session",
+		skupinyByNodeId:"Skupiny",
+		upozorneniByNodeId:"Upozorneni",
+		upozorneniSkupinyByNodeId:"UpozorneniSkupiny",
+		userByNodeId:"User",
+		usersSkupinyByNodeId:"UsersSkupiny",
+		videoByNodeId:"Video",
+		videoListByNodeId:"VideoList",
+		videoSourceByNodeId:"VideoSource"
 	},
 	Node:{
 		"...on Query": "Query",
@@ -13260,125 +13260,125 @@ export const ReturnTypes: Record<string,any> = {
 		createVideo:"CreateVideoPayload",
 		createVideoList:"CreateVideoListPayload",
 		createVideoSource:"CreateVideoSourcePayload",
+		updateAkceByNodeId:"UpdateAkcePayload",
 		updateAkce:"UpdateAkcePayload",
-		updateAkceByAId:"UpdateAkcePayload",
+		updateAkceItemByNodeId:"UpdateAkceItemPayload",
 		updateAkceItem:"UpdateAkceItemPayload",
-		updateAkceItemByAiId:"UpdateAkceItemPayload",
+		updateAktualityByNodeId:"UpdateAktualityPayload",
 		updateAktuality:"UpdateAktualityPayload",
-		updateAktualityByAtId:"UpdateAktualityPayload",
+		updateDokumentyByNodeId:"UpdateDokumentyPayload",
 		updateDokumenty:"UpdateDokumentyPayload",
-		updateDokumentyByDId:"UpdateDokumentyPayload",
+		updateGalerieDirByNodeId:"UpdateGalerieDirPayload",
 		updateGalerieDir:"UpdateGalerieDirPayload",
-		updateGalerieDirByGdId:"UpdateGalerieDirPayload",
+		updateGalerieFotoByNodeId:"UpdateGalerieFotoPayload",
 		updateGalerieFoto:"UpdateGalerieFotoPayload",
-		updateGalerieFotoByGfId:"UpdateGalerieFotoPayload",
+		updateNabidkaByNodeId:"UpdateNabidkaPayload",
 		updateNabidka:"UpdateNabidkaPayload",
-		updateNabidkaByNId:"UpdateNabidkaPayload",
+		updateNabidkaItemByNodeId:"UpdateNabidkaItemPayload",
 		updateNabidkaItem:"UpdateNabidkaItemPayload",
-		updateNabidkaItemByNiId:"UpdateNabidkaItemPayload",
+		updatePageByNodeId:"UpdatePagePayload",
 		updatePage:"UpdatePagePayload",
-		updatePageById:"UpdatePagePayload",
 		updatePageByUrl:"UpdatePagePayload",
+		updateParameterByNodeId:"UpdateParameterPayload",
 		updateParameter:"UpdateParameterPayload",
-		updateParameterByPaName:"UpdateParameterPayload",
+		updateParyByNodeId:"UpdateParyPayload",
 		updatePary:"UpdateParyPayload",
-		updateParyByPId:"UpdateParyPayload",
+		updateParyNavrhByNodeId:"UpdateParyNavrhPayload",
 		updateParyNavrh:"UpdateParyNavrhPayload",
-		updateParyNavrhByPnId:"UpdateParyNavrhPayload",
+		updatePermissionByNodeId:"UpdatePermissionPayload",
 		updatePermission:"UpdatePermissionPayload",
-		updatePermissionByPeId:"UpdatePermissionPayload",
+		updatePlatbyCategoryByNodeId:"UpdatePlatbyCategoryPayload",
 		updatePlatbyCategory:"UpdatePlatbyCategoryPayload",
-		updatePlatbyCategoryByPcId:"UpdatePlatbyCategoryPayload",
+		updatePlatbyCategoryGroupByNodeId:"UpdatePlatbyCategoryGroupPayload",
 		updatePlatbyCategoryGroup:"UpdatePlatbyCategoryGroupPayload",
-		updatePlatbyCategoryGroupByPcgId:"UpdatePlatbyCategoryGroupPayload",
+		updatePlatbyGroupByNodeId:"UpdatePlatbyGroupPayload",
 		updatePlatbyGroup:"UpdatePlatbyGroupPayload",
-		updatePlatbyGroupByPgId:"UpdatePlatbyGroupPayload",
+		updatePlatbyGroupSkupinaByNodeId:"UpdatePlatbyGroupSkupinaPayload",
 		updatePlatbyGroupSkupina:"UpdatePlatbyGroupSkupinaPayload",
-		updatePlatbyGroupSkupinaByPgsId:"UpdatePlatbyGroupSkupinaPayload",
+		updatePlatbyItemByNodeId:"UpdatePlatbyItemPayload",
 		updatePlatbyItem:"UpdatePlatbyItemPayload",
-		updatePlatbyItemByPiId:"UpdatePlatbyItemPayload",
+		updatePlatbyRawByNodeId:"UpdatePlatbyRawPayload",
 		updatePlatbyRaw:"UpdatePlatbyRawPayload",
-		updatePlatbyRawByPrId:"UpdatePlatbyRawPayload",
+		updateRozpiByNodeId:"UpdateRozpiPayload",
 		updateRozpi:"UpdateRozpiPayload",
-		updateRozpiByRId:"UpdateRozpiPayload",
+		updateRozpisItemByNodeId:"UpdateRozpisItemPayload",
 		updateRozpisItem:"UpdateRozpisItemPayload",
-		updateRozpisItemByRiId:"UpdateRozpisItemPayload",
+		updateSessionByNodeId:"UpdateSessionPayload",
 		updateSession:"UpdateSessionPayload",
-		updateSessionBySsId:"UpdateSessionPayload",
+		updateSkupinyByNodeId:"UpdateSkupinyPayload",
 		updateSkupiny:"UpdateSkupinyPayload",
-		updateSkupinyBySId:"UpdateSkupinyPayload",
+		updateUpozorneniByNodeId:"UpdateUpozorneniPayload",
 		updateUpozorneni:"UpdateUpozorneniPayload",
-		updateUpozorneniByUpId:"UpdateUpozorneniPayload",
+		updateUpozorneniSkupinyByNodeId:"UpdateUpozorneniSkupinyPayload",
 		updateUpozorneniSkupiny:"UpdateUpozorneniSkupinyPayload",
-		updateUpozorneniSkupinyByUpsId:"UpdateUpozorneniSkupinyPayload",
+		updateUserByNodeId:"UpdateUserPayload",
 		updateUser:"UpdateUserPayload",
-		updateUserByUId:"UpdateUserPayload",
+		updateUsersSkupinyByNodeId:"UpdateUsersSkupinyPayload",
 		updateUsersSkupiny:"UpdateUsersSkupinyPayload",
-		updateUsersSkupinyByUsId:"UpdateUsersSkupinyPayload",
+		updateVideoByNodeId:"UpdateVideoPayload",
 		updateVideo:"UpdateVideoPayload",
-		updateVideoByVId:"UpdateVideoPayload",
+		updateVideoListByNodeId:"UpdateVideoListPayload",
 		updateVideoList:"UpdateVideoListPayload",
-		updateVideoListByVlId:"UpdateVideoListPayload",
+		updateVideoSourceByNodeId:"UpdateVideoSourcePayload",
 		updateVideoSource:"UpdateVideoSourcePayload",
-		updateVideoSourceByVsId:"UpdateVideoSourcePayload",
+		deleteAkceByNodeId:"DeleteAkcePayload",
 		deleteAkce:"DeleteAkcePayload",
-		deleteAkceByAId:"DeleteAkcePayload",
+		deleteAkceItemByNodeId:"DeleteAkceItemPayload",
 		deleteAkceItem:"DeleteAkceItemPayload",
-		deleteAkceItemByAiId:"DeleteAkceItemPayload",
+		deleteAktualityByNodeId:"DeleteAktualityPayload",
 		deleteAktuality:"DeleteAktualityPayload",
-		deleteAktualityByAtId:"DeleteAktualityPayload",
+		deleteDokumentyByNodeId:"DeleteDokumentyPayload",
 		deleteDokumenty:"DeleteDokumentyPayload",
-		deleteDokumentyByDId:"DeleteDokumentyPayload",
+		deleteGalerieDirByNodeId:"DeleteGalerieDirPayload",
 		deleteGalerieDir:"DeleteGalerieDirPayload",
-		deleteGalerieDirByGdId:"DeleteGalerieDirPayload",
+		deleteGalerieFotoByNodeId:"DeleteGalerieFotoPayload",
 		deleteGalerieFoto:"DeleteGalerieFotoPayload",
-		deleteGalerieFotoByGfId:"DeleteGalerieFotoPayload",
+		deleteNabidkaByNodeId:"DeleteNabidkaPayload",
 		deleteNabidka:"DeleteNabidkaPayload",
-		deleteNabidkaByNId:"DeleteNabidkaPayload",
+		deleteNabidkaItemByNodeId:"DeleteNabidkaItemPayload",
 		deleteNabidkaItem:"DeleteNabidkaItemPayload",
-		deleteNabidkaItemByNiId:"DeleteNabidkaItemPayload",
+		deleteParameterByNodeId:"DeleteParameterPayload",
 		deleteParameter:"DeleteParameterPayload",
-		deleteParameterByPaName:"DeleteParameterPayload",
+		deleteParyByNodeId:"DeleteParyPayload",
 		deletePary:"DeleteParyPayload",
-		deleteParyByPId:"DeleteParyPayload",
+		deleteParyNavrhByNodeId:"DeleteParyNavrhPayload",
 		deleteParyNavrh:"DeleteParyNavrhPayload",
-		deleteParyNavrhByPnId:"DeleteParyNavrhPayload",
+		deletePermissionByNodeId:"DeletePermissionPayload",
 		deletePermission:"DeletePermissionPayload",
-		deletePermissionByPeId:"DeletePermissionPayload",
+		deletePlatbyCategoryByNodeId:"DeletePlatbyCategoryPayload",
 		deletePlatbyCategory:"DeletePlatbyCategoryPayload",
-		deletePlatbyCategoryByPcId:"DeletePlatbyCategoryPayload",
+		deletePlatbyCategoryGroupByNodeId:"DeletePlatbyCategoryGroupPayload",
 		deletePlatbyCategoryGroup:"DeletePlatbyCategoryGroupPayload",
-		deletePlatbyCategoryGroupByPcgId:"DeletePlatbyCategoryGroupPayload",
+		deletePlatbyGroupByNodeId:"DeletePlatbyGroupPayload",
 		deletePlatbyGroup:"DeletePlatbyGroupPayload",
-		deletePlatbyGroupByPgId:"DeletePlatbyGroupPayload",
+		deletePlatbyGroupSkupinaByNodeId:"DeletePlatbyGroupSkupinaPayload",
 		deletePlatbyGroupSkupina:"DeletePlatbyGroupSkupinaPayload",
-		deletePlatbyGroupSkupinaByPgsId:"DeletePlatbyGroupSkupinaPayload",
+		deletePlatbyItemByNodeId:"DeletePlatbyItemPayload",
 		deletePlatbyItem:"DeletePlatbyItemPayload",
-		deletePlatbyItemByPiId:"DeletePlatbyItemPayload",
+		deletePlatbyRawByNodeId:"DeletePlatbyRawPayload",
 		deletePlatbyRaw:"DeletePlatbyRawPayload",
-		deletePlatbyRawByPrId:"DeletePlatbyRawPayload",
+		deleteRozpiByNodeId:"DeleteRozpiPayload",
 		deleteRozpi:"DeleteRozpiPayload",
-		deleteRozpiByRId:"DeleteRozpiPayload",
+		deleteRozpisItemByNodeId:"DeleteRozpisItemPayload",
 		deleteRozpisItem:"DeleteRozpisItemPayload",
-		deleteRozpisItemByRiId:"DeleteRozpisItemPayload",
+		deleteSessionByNodeId:"DeleteSessionPayload",
 		deleteSession:"DeleteSessionPayload",
-		deleteSessionBySsId:"DeleteSessionPayload",
+		deleteSkupinyByNodeId:"DeleteSkupinyPayload",
 		deleteSkupiny:"DeleteSkupinyPayload",
-		deleteSkupinyBySId:"DeleteSkupinyPayload",
+		deleteUpozorneniByNodeId:"DeleteUpozorneniPayload",
 		deleteUpozorneni:"DeleteUpozorneniPayload",
-		deleteUpozorneniByUpId:"DeleteUpozorneniPayload",
+		deleteUpozorneniSkupinyByNodeId:"DeleteUpozorneniSkupinyPayload",
 		deleteUpozorneniSkupiny:"DeleteUpozorneniSkupinyPayload",
-		deleteUpozorneniSkupinyByUpsId:"DeleteUpozorneniSkupinyPayload",
+		deleteUserByNodeId:"DeleteUserPayload",
 		deleteUser:"DeleteUserPayload",
-		deleteUserByUId:"DeleteUserPayload",
+		deleteUsersSkupinyByNodeId:"DeleteUsersSkupinyPayload",
 		deleteUsersSkupiny:"DeleteUsersSkupinyPayload",
-		deleteUsersSkupinyByUsId:"DeleteUsersSkupinyPayload",
+		deleteVideoByNodeId:"DeleteVideoPayload",
 		deleteVideo:"DeleteVideoPayload",
-		deleteVideoByVId:"DeleteVideoPayload",
+		deleteVideoListByNodeId:"DeleteVideoListPayload",
 		deleteVideoList:"DeleteVideoListPayload",
-		deleteVideoListByVlId:"DeleteVideoListPayload",
+		deleteVideoSourceByNodeId:"DeleteVideoSourcePayload",
 		deleteVideoSource:"DeleteVideoSourcePayload",
-		deleteVideoSourceByVsId:"DeleteVideoSourcePayload",
 		login:"LoginPayload",
 		logout:"LogoutPayload"
 	},
@@ -13805,14 +13805,14 @@ export const ReturnTypes: Record<string,any> = {
 	DeleteAkcePayload:{
 		clientMutationId:"String",
 		akce:"Akce",
-		deletedAkceId:"ID",
+		deletedAkceNodeId:"ID",
 		query:"Query",
 		akceEdge:"AkcesEdge"
 	},
 	DeleteAkceItemPayload:{
 		clientMutationId:"String",
 		akceItem:"AkceItem",
-		deletedAkceItemId:"ID",
+		deletedAkceItemNodeId:"ID",
 		query:"Query",
 		akceByAiIdRodic:"Akce",
 		userByAiUser:"User",
@@ -13821,7 +13821,7 @@ export const ReturnTypes: Record<string,any> = {
 	DeleteAktualityPayload:{
 		clientMutationId:"String",
 		aktuality:"Aktuality",
-		deletedAktualityId:"ID",
+		deletedAktualityNodeId:"ID",
 		query:"Query",
 		userByAtKdo:"User",
 		galerieFotoByAtFotoMain:"GalerieFoto",
@@ -13830,7 +13830,7 @@ export const ReturnTypes: Record<string,any> = {
 	DeleteDokumentyPayload:{
 		clientMutationId:"String",
 		dokumenty:"Dokumenty",
-		deletedDokumentyId:"ID",
+		deletedDokumentyNodeId:"ID",
 		query:"Query",
 		userByDKdo:"User",
 		dokumentyEdge:"DokumentiesEdge"
@@ -13838,14 +13838,14 @@ export const ReturnTypes: Record<string,any> = {
 	DeleteGalerieDirPayload:{
 		clientMutationId:"String",
 		galerieDir:"GalerieDir",
-		deletedGalerieDirId:"ID",
+		deletedGalerieDirNodeId:"ID",
 		query:"Query",
 		galerieDirEdge:"GalerieDirsEdge"
 	},
 	DeleteGalerieFotoPayload:{
 		clientMutationId:"String",
 		galerieFoto:"GalerieFoto",
-		deletedGalerieFotoId:"ID",
+		deletedGalerieFotoNodeId:"ID",
 		query:"Query",
 		galerieDirByGfIdRodic:"GalerieDir",
 		userByGfKdo:"User",
@@ -13854,7 +13854,7 @@ export const ReturnTypes: Record<string,any> = {
 	DeleteNabidkaPayload:{
 		clientMutationId:"String",
 		nabidka:"Nabidka",
-		deletedNabidkaId:"ID",
+		deletedNabidkaNodeId:"ID",
 		query:"Query",
 		userByNTrener:"User",
 		nabidkaEdge:"NabidkasEdge"
@@ -13862,7 +13862,7 @@ export const ReturnTypes: Record<string,any> = {
 	DeleteNabidkaItemPayload:{
 		clientMutationId:"String",
 		nabidkaItem:"NabidkaItem",
-		deletedNabidkaItemId:"ID",
+		deletedNabidkaItemNodeId:"ID",
 		query:"Query",
 		nabidkaByNiIdRodic:"Nabidka",
 		paryByNiPartner:"Pary",
@@ -13871,14 +13871,14 @@ export const ReturnTypes: Record<string,any> = {
 	DeleteParameterPayload:{
 		clientMutationId:"String",
 		parameter:"Parameter",
-		deletedParameterId:"ID",
+		deletedParameterNodeId:"ID",
 		query:"Query",
 		parameterEdge:"ParametersEdge"
 	},
 	DeleteParyPayload:{
 		clientMutationId:"String",
 		pary:"Pary",
-		deletedParyId:"ID",
+		deletedParyNodeId:"ID",
 		query:"Query",
 		userByPIdPartner:"User",
 		paryEdge:"PariesEdge"
@@ -13886,7 +13886,7 @@ export const ReturnTypes: Record<string,any> = {
 	DeleteParyNavrhPayload:{
 		clientMutationId:"String",
 		paryNavrh:"ParyNavrh",
-		deletedParyNavrhId:"ID",
+		deletedParyNavrhNodeId:"ID",
 		query:"Query",
 		userByPnNavrhl:"User",
 		userByPnPartner:"User",
@@ -13896,21 +13896,21 @@ export const ReturnTypes: Record<string,any> = {
 	DeletePermissionPayload:{
 		clientMutationId:"String",
 		permission:"Permission",
-		deletedPermissionId:"ID",
+		deletedPermissionNodeId:"ID",
 		query:"Query",
 		permissionEdge:"PermissionsEdge"
 	},
 	DeletePlatbyCategoryPayload:{
 		clientMutationId:"String",
 		platbyCategory:"PlatbyCategory",
-		deletedPlatbyCategoryId:"ID",
+		deletedPlatbyCategoryNodeId:"ID",
 		query:"Query",
 		platbyCategoryEdge:"PlatbyCategoriesEdge"
 	},
 	DeletePlatbyCategoryGroupPayload:{
 		clientMutationId:"String",
 		platbyCategoryGroup:"PlatbyCategoryGroup",
-		deletedPlatbyCategoryGroupId:"ID",
+		deletedPlatbyCategoryGroupNodeId:"ID",
 		query:"Query",
 		platbyGroupByPcgIdGroup:"PlatbyGroup",
 		platbyCategoryByPcgIdCategory:"PlatbyCategory",
@@ -13919,14 +13919,14 @@ export const ReturnTypes: Record<string,any> = {
 	DeletePlatbyGroupPayload:{
 		clientMutationId:"String",
 		platbyGroup:"PlatbyGroup",
-		deletedPlatbyGroupId:"ID",
+		deletedPlatbyGroupNodeId:"ID",
 		query:"Query",
 		platbyGroupEdge:"PlatbyGroupsEdge"
 	},
 	DeletePlatbyGroupSkupinaPayload:{
 		clientMutationId:"String",
 		platbyGroupSkupina:"PlatbyGroupSkupina",
-		deletedPlatbyGroupSkupinaId:"ID",
+		deletedPlatbyGroupSkupinaNodeId:"ID",
 		query:"Query",
 		skupinyByPgsIdSkupina:"Skupiny",
 		platbyGroupByPgsIdGroup:"PlatbyGroup",
@@ -13935,7 +13935,7 @@ export const ReturnTypes: Record<string,any> = {
 	DeletePlatbyItemPayload:{
 		clientMutationId:"String",
 		platbyItem:"PlatbyItem",
-		deletedPlatbyItemId:"ID",
+		deletedPlatbyItemNodeId:"ID",
 		query:"Query",
 		userByPiIdUser:"User",
 		platbyCategoryByPiIdCategory:"PlatbyCategory",
@@ -13945,14 +13945,14 @@ export const ReturnTypes: Record<string,any> = {
 	DeletePlatbyRawPayload:{
 		clientMutationId:"String",
 		platbyRaw:"PlatbyRaw",
-		deletedPlatbyRawId:"ID",
+		deletedPlatbyRawNodeId:"ID",
 		query:"Query",
 		platbyRawEdge:"PlatbyRawsEdge"
 	},
 	DeleteRozpiPayload:{
 		clientMutationId:"String",
 		rozpi:"Rozpi",
-		deletedRozpiId:"ID",
+		deletedRozpiNodeId:"ID",
 		query:"Query",
 		userByRTrener:"User",
 		rozpiEdge:"RozpisEdge"
@@ -13960,7 +13960,7 @@ export const ReturnTypes: Record<string,any> = {
 	DeleteRozpisItemPayload:{
 		clientMutationId:"String",
 		rozpisItem:"RozpisItem",
-		deletedRozpisItemId:"ID",
+		deletedRozpisItemNodeId:"ID",
 		query:"Query",
 		rozpiByRiIdRodic:"Rozpi",
 		paryByRiPartner:"Pary",
@@ -13969,7 +13969,7 @@ export const ReturnTypes: Record<string,any> = {
 	DeleteSessionPayload:{
 		clientMutationId:"String",
 		session:"Session",
-		deletedSessionId:"ID",
+		deletedSessionNodeId:"ID",
 		query:"Query",
 		userBySsUser:"User",
 		sessionEdge:"SessionsEdge"
@@ -13977,14 +13977,14 @@ export const ReturnTypes: Record<string,any> = {
 	DeleteSkupinyPayload:{
 		clientMutationId:"String",
 		skupiny:"Skupiny",
-		deletedSkupinyId:"ID",
+		deletedSkupinyNodeId:"ID",
 		query:"Query",
 		skupinyEdge:"SkupiniesEdge"
 	},
 	DeleteUpozorneniPayload:{
 		clientMutationId:"String",
 		upozorneni:"Upozorneni",
-		deletedUpozorneniId:"ID",
+		deletedUpozorneniNodeId:"ID",
 		query:"Query",
 		userByUpKdo:"User",
 		upozorneniEdge:"UpozornenisEdge"
@@ -13992,7 +13992,7 @@ export const ReturnTypes: Record<string,any> = {
 	DeleteUpozorneniSkupinyPayload:{
 		clientMutationId:"String",
 		upozorneniSkupiny:"UpozorneniSkupiny",
-		deletedUpozorneniSkupinyId:"ID",
+		deletedUpozorneniSkupinyNodeId:"ID",
 		query:"Query",
 		upozorneniByUpsIdRodic:"Upozorneni",
 		skupinyByUpsIdSkupina:"Skupiny",
@@ -14001,7 +14001,7 @@ export const ReturnTypes: Record<string,any> = {
 	DeleteUserPayload:{
 		clientMutationId:"String",
 		user:"User",
-		deletedUserId:"ID",
+		deletedUserNodeId:"ID",
 		query:"Query",
 		permissionByUGroup:"Permission",
 		skupinyByUSkupina:"Skupiny",
@@ -14010,28 +14010,28 @@ export const ReturnTypes: Record<string,any> = {
 	DeleteUsersSkupinyPayload:{
 		clientMutationId:"String",
 		usersSkupiny:"UsersSkupiny",
-		deletedUsersSkupinyId:"ID",
+		deletedUsersSkupinyNodeId:"ID",
 		query:"Query",
 		usersSkupinyEdge:"UsersSkupiniesEdge"
 	},
 	DeleteVideoPayload:{
 		clientMutationId:"String",
 		video:"Video",
-		deletedVideoId:"ID",
+		deletedVideoNodeId:"ID",
 		query:"Query",
 		videoEdge:"VideosEdge"
 	},
 	DeleteVideoListPayload:{
 		clientMutationId:"String",
 		videoList:"VideoList",
-		deletedVideoListId:"ID",
+		deletedVideoListNodeId:"ID",
 		query:"Query",
 		videoListEdge:"VideoListsEdge"
 	},
 	DeleteVideoSourcePayload:{
 		clientMutationId:"String",
 		videoSource:"VideoSource",
-		deletedVideoSourceId:"ID",
+		deletedVideoSourceNodeId:"ID",
 		query:"Query",
 		videoSourceEdge:"VideoSourcesEdge"
 	},

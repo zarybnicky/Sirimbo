@@ -14,7 +14,7 @@ which can only query top level fields if they are in a particular form. */
 	nodeId?:boolean,
 node?: [{	/** The globally unique `ID`. */
 	nodeId:string},ValueTypes["Node"]],
-allAkces?: [{	/** Only read the first `n` values of the set. */
+akces?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -23,7 +23,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Akce`. */
 	orderBy?:ValueTypes["AkcesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["AkceCondition"] | null},ValueTypes["AkcesConnection"]],
-allAkceItems?: [{	/** Only read the first `n` values of the set. */
+akceItems?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -32,7 +32,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `AkceItem`. */
 	orderBy?:ValueTypes["AkceItemsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["AkceItemCondition"] | null},ValueTypes["AkceItemsConnection"]],
-allAktualities?: [{	/** Only read the first `n` values of the set. */
+aktualities?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -41,7 +41,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Aktuality`. */
 	orderBy?:ValueTypes["AktualitiesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["AktualityCondition"] | null},ValueTypes["AktualitiesConnection"]],
-allDokumenties?: [{	/** Only read the first `n` values of the set. */
+dokumenties?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -50,7 +50,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Dokumenty`. */
 	orderBy?:ValueTypes["DokumentiesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["DokumentyCondition"] | null},ValueTypes["DokumentiesConnection"]],
-allGalerieDirs?: [{	/** Only read the first `n` values of the set. */
+galerieDirs?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -59,7 +59,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `GalerieDir`. */
 	orderBy?:ValueTypes["GalerieDirsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["GalerieDirCondition"] | null},ValueTypes["GalerieDirsConnection"]],
-allGalerieFotos?: [{	/** Only read the first `n` values of the set. */
+galerieFotos?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -68,7 +68,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `GalerieFoto`. */
 	orderBy?:ValueTypes["GalerieFotosOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["GalerieFotoCondition"] | null},ValueTypes["GalerieFotosConnection"]],
-allMembers?: [{	/** Only read the first `n` values of the set. */
+members?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -77,7 +77,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Member`. */
 	orderBy?:ValueTypes["MembersOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["MemberCondition"] | null},ValueTypes["MembersConnection"]],
-allNabidkas?: [{	/** Only read the first `n` values of the set. */
+nabidkas?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -86,7 +86,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Nabidka`. */
 	orderBy?:ValueTypes["NabidkasOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["NabidkaCondition"] | null},ValueTypes["NabidkasConnection"]],
-allNabidkaItems?: [{	/** Only read the first `n` values of the set. */
+nabidkaItems?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -95,7 +95,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `NabidkaItem`. */
 	orderBy?:ValueTypes["NabidkaItemsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["NabidkaItemCondition"] | null},ValueTypes["NabidkaItemsConnection"]],
-allPages?: [{	/** Only read the first `n` values of the set. */
+pages?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -104,7 +104,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Page`. */
 	orderBy?:ValueTypes["PagesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["PageCondition"] | null},ValueTypes["PagesConnection"]],
-allPageRevisions?: [{	/** Only read the first `n` values of the set. */
+pageRevisions?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -113,7 +113,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `PageRevision`. */
 	orderBy?:ValueTypes["PageRevisionsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["PageRevisionCondition"] | null},ValueTypes["PageRevisionsConnection"]],
-allParameters?: [{	/** Only read the first `n` values of the set. */
+parameters?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -122,7 +122,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Parameter`. */
 	orderBy?:ValueTypes["ParametersOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["ParameterCondition"] | null},ValueTypes["ParametersConnection"]],
-allParies?: [{	/** Only read the first `n` values of the set. */
+paries?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -131,7 +131,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Pary`. */
 	orderBy?:ValueTypes["PariesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["ParyCondition"] | null},ValueTypes["PariesConnection"]],
-allParyNavrhs?: [{	/** Only read the first `n` values of the set. */
+paryNavrhs?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -140,7 +140,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `ParyNavrh`. */
 	orderBy?:ValueTypes["ParyNavrhsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["ParyNavrhCondition"] | null},ValueTypes["ParyNavrhsConnection"]],
-allPermissions?: [{	/** Only read the first `n` values of the set. */
+permissions?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -149,7 +149,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Permission`. */
 	orderBy?:ValueTypes["PermissionsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["PermissionCondition"] | null},ValueTypes["PermissionsConnection"]],
-allPlatbyCategories?: [{	/** Only read the first `n` values of the set. */
+platbyCategories?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -158,7 +158,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `PlatbyCategory`. */
 	orderBy?:ValueTypes["PlatbyCategoriesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["PlatbyCategoryCondition"] | null},ValueTypes["PlatbyCategoriesConnection"]],
-allPlatbyCategoryGroups?: [{	/** Only read the first `n` values of the set. */
+platbyCategoryGroups?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -167,7 +167,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `PlatbyCategoryGroup`. */
 	orderBy?:ValueTypes["PlatbyCategoryGroupsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["PlatbyCategoryGroupCondition"] | null},ValueTypes["PlatbyCategoryGroupsConnection"]],
-allPlatbyGroups?: [{	/** Only read the first `n` values of the set. */
+platbyGroups?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -176,7 +176,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `PlatbyGroup`. */
 	orderBy?:ValueTypes["PlatbyGroupsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["PlatbyGroupCondition"] | null},ValueTypes["PlatbyGroupsConnection"]],
-allPlatbyGroupSkupinas?: [{	/** Only read the first `n` values of the set. */
+platbyGroupSkupinas?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -185,7 +185,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `PlatbyGroupSkupina`. */
 	orderBy?:ValueTypes["PlatbyGroupSkupinasOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["PlatbyGroupSkupinaCondition"] | null},ValueTypes["PlatbyGroupSkupinasConnection"]],
-allPlatbyItems?: [{	/** Only read the first `n` values of the set. */
+platbyItems?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -194,7 +194,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `PlatbyItem`. */
 	orderBy?:ValueTypes["PlatbyItemsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["PlatbyItemCondition"] | null},ValueTypes["PlatbyItemsConnection"]],
-allPlatbyRaws?: [{	/** Only read the first `n` values of the set. */
+platbyRaws?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -203,7 +203,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `PlatbyRaw`. */
 	orderBy?:ValueTypes["PlatbyRawsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["PlatbyRawCondition"] | null},ValueTypes["PlatbyRawsConnection"]],
-allRozpis?: [{	/** Only read the first `n` values of the set. */
+rozpis?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -212,7 +212,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Rozpi`. */
 	orderBy?:ValueTypes["RozpisOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["RozpiCondition"] | null},ValueTypes["RozpisConnection"]],
-allRozpisItems?: [{	/** Only read the first `n` values of the set. */
+rozpisItems?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -221,7 +221,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `RozpisItem`. */
 	orderBy?:ValueTypes["RozpisItemsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["RozpisItemCondition"] | null},ValueTypes["RozpisItemsConnection"]],
-allSessions?: [{	/** Only read the first `n` values of the set. */
+sessions?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -230,7 +230,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Session`. */
 	orderBy?:ValueTypes["SessionsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["SessionCondition"] | null},ValueTypes["SessionsConnection"]],
-allSkupinies?: [{	/** Only read the first `n` values of the set. */
+skupinies?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -239,7 +239,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Skupiny`. */
 	orderBy?:ValueTypes["SkupiniesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["SkupinyCondition"] | null},ValueTypes["SkupiniesConnection"]],
-allUpozornenis?: [{	/** Only read the first `n` values of the set. */
+upozornenis?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -248,7 +248,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Upozorneni`. */
 	orderBy?:ValueTypes["UpozornenisOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["UpozorneniCondition"] | null},ValueTypes["UpozornenisConnection"]],
-allUpozorneniSkupinies?: [{	/** Only read the first `n` values of the set. */
+upozorneniSkupinies?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -257,7 +257,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `UpozorneniSkupiny`. */
 	orderBy?:ValueTypes["UpozorneniSkupiniesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["UpozorneniSkupinyCondition"] | null},ValueTypes["UpozorneniSkupiniesConnection"]],
-allUsers?: [{	/** Only read the first `n` values of the set. */
+users?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -266,7 +266,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `User`. */
 	orderBy?:ValueTypes["UsersOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["UserCondition"] | null},ValueTypes["UsersConnection"]],
-allUsersSkupinies?: [{	/** Only read the first `n` values of the set. */
+usersSkupinies?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -275,7 +275,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `UsersSkupiny`. */
 	orderBy?:ValueTypes["UsersSkupiniesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["UsersSkupinyCondition"] | null},ValueTypes["UsersSkupiniesConnection"]],
-allVideos?: [{	/** Only read the first `n` values of the set. */
+videos?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -284,7 +284,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Video`. */
 	orderBy?:ValueTypes["VideosOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["VideoCondition"] | null},ValueTypes["VideosConnection"]],
-allVideoLists?: [{	/** Only read the first `n` values of the set. */
+videoLists?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -293,7 +293,7 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `VideoList`. */
 	orderBy?:ValueTypes["VideoListsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["VideoListCondition"] | null},ValueTypes["VideoListsConnection"]],
-allVideoSources?: [{	/** Only read the first `n` values of the set. */
+videoSources?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
@@ -302,38 +302,38 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `VideoSource`. */
 	orderBy?:ValueTypes["VideoSourcesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["VideoSourceCondition"] | null},ValueTypes["VideoSourcesConnection"]],
-akceByAId?: [{	aId:ValueTypes["BigInt"]},ValueTypes["Akce"]],
-akceItemByAiId?: [{	aiId:ValueTypes["BigInt"]},ValueTypes["AkceItem"]],
-aktualityByAtId?: [{	atId:ValueTypes["BigInt"]},ValueTypes["Aktuality"]],
-dokumentyByDId?: [{	dId:ValueTypes["BigInt"]},ValueTypes["Dokumenty"]],
-galerieDirByGdId?: [{	gdId:ValueTypes["BigInt"]},ValueTypes["GalerieDir"]],
-galerieFotoByGfId?: [{	gfId:ValueTypes["BigInt"]},ValueTypes["GalerieFoto"]],
-nabidkaByNId?: [{	nId:ValueTypes["BigInt"]},ValueTypes["Nabidka"]],
-nabidkaItemByNiId?: [{	niId:ValueTypes["BigInt"]},ValueTypes["NabidkaItem"]],
-pageById?: [{	id:number},ValueTypes["Page"]],
+akce?: [{	aId:ValueTypes["BigInt"]},ValueTypes["Akce"]],
+akceItem?: [{	aiId:ValueTypes["BigInt"]},ValueTypes["AkceItem"]],
+aktuality?: [{	atId:ValueTypes["BigInt"]},ValueTypes["Aktuality"]],
+dokumenty?: [{	dId:ValueTypes["BigInt"]},ValueTypes["Dokumenty"]],
+galerieDir?: [{	gdId:ValueTypes["BigInt"]},ValueTypes["GalerieDir"]],
+galerieFoto?: [{	gfId:ValueTypes["BigInt"]},ValueTypes["GalerieFoto"]],
+nabidka?: [{	nId:ValueTypes["BigInt"]},ValueTypes["Nabidka"]],
+nabidkaItem?: [{	niId:ValueTypes["BigInt"]},ValueTypes["NabidkaItem"]],
+page?: [{	id:number},ValueTypes["Page"]],
 pageByUrl?: [{	url:string},ValueTypes["Page"]],
-pageRevisionByRevNumberAndId?: [{	revNumber:number,	id:number},ValueTypes["PageRevision"]],
-parameterByPaName?: [{	paName:string},ValueTypes["Parameter"]],
-paryByPId?: [{	pId:ValueTypes["BigInt"]},ValueTypes["Pary"]],
-paryNavrhByPnId?: [{	pnId:ValueTypes["BigInt"]},ValueTypes["ParyNavrh"]],
-permissionByPeId?: [{	peId:ValueTypes["BigInt"]},ValueTypes["Permission"]],
-platbyCategoryByPcId?: [{	pcId:ValueTypes["BigInt"]},ValueTypes["PlatbyCategory"]],
-platbyCategoryGroupByPcgId?: [{	pcgId:ValueTypes["BigInt"]},ValueTypes["PlatbyCategoryGroup"]],
-platbyGroupByPgId?: [{	pgId:ValueTypes["BigInt"]},ValueTypes["PlatbyGroup"]],
-platbyGroupSkupinaByPgsId?: [{	pgsId:ValueTypes["BigInt"]},ValueTypes["PlatbyGroupSkupina"]],
-platbyItemByPiId?: [{	piId:ValueTypes["BigInt"]},ValueTypes["PlatbyItem"]],
-platbyRawByPrId?: [{	prId:ValueTypes["BigInt"]},ValueTypes["PlatbyRaw"]],
-rozpiByRId?: [{	rId:ValueTypes["BigInt"]},ValueTypes["Rozpi"]],
-rozpisItemByRiId?: [{	riId:ValueTypes["BigInt"]},ValueTypes["RozpisItem"]],
-sessionBySsId?: [{	ssId:string},ValueTypes["Session"]],
-skupinyBySId?: [{	sId:ValueTypes["BigInt"]},ValueTypes["Skupiny"]],
-upozorneniByUpId?: [{	upId:ValueTypes["BigInt"]},ValueTypes["Upozorneni"]],
-upozorneniSkupinyByUpsId?: [{	upsId:ValueTypes["BigInt"]},ValueTypes["UpozorneniSkupiny"]],
-userByUId?: [{	uId:ValueTypes["BigInt"]},ValueTypes["User"]],
-usersSkupinyByUsId?: [{	usId:ValueTypes["BigInt"]},ValueTypes["UsersSkupiny"]],
-videoByVId?: [{	vId:ValueTypes["BigInt"]},ValueTypes["Video"]],
-videoListByVlId?: [{	vlId:ValueTypes["BigInt"]},ValueTypes["VideoList"]],
-videoSourceByVsId?: [{	vsId:ValueTypes["BigInt"]},ValueTypes["VideoSource"]],
+pageRevision?: [{	revNumber:number,	id:number},ValueTypes["PageRevision"]],
+parameter?: [{	paName:string},ValueTypes["Parameter"]],
+pary?: [{	pId:ValueTypes["BigInt"]},ValueTypes["Pary"]],
+paryNavrh?: [{	pnId:ValueTypes["BigInt"]},ValueTypes["ParyNavrh"]],
+permission?: [{	peId:ValueTypes["BigInt"]},ValueTypes["Permission"]],
+platbyCategory?: [{	pcId:ValueTypes["BigInt"]},ValueTypes["PlatbyCategory"]],
+platbyCategoryGroup?: [{	pcgId:ValueTypes["BigInt"]},ValueTypes["PlatbyCategoryGroup"]],
+platbyGroup?: [{	pgId:ValueTypes["BigInt"]},ValueTypes["PlatbyGroup"]],
+platbyGroupSkupina?: [{	pgsId:ValueTypes["BigInt"]},ValueTypes["PlatbyGroupSkupina"]],
+platbyItem?: [{	piId:ValueTypes["BigInt"]},ValueTypes["PlatbyItem"]],
+platbyRaw?: [{	prId:ValueTypes["BigInt"]},ValueTypes["PlatbyRaw"]],
+rozpi?: [{	rId:ValueTypes["BigInt"]},ValueTypes["Rozpi"]],
+rozpisItem?: [{	riId:ValueTypes["BigInt"]},ValueTypes["RozpisItem"]],
+session?: [{	ssId:string},ValueTypes["Session"]],
+skupiny?: [{	sId:ValueTypes["BigInt"]},ValueTypes["Skupiny"]],
+upozorneni?: [{	upId:ValueTypes["BigInt"]},ValueTypes["Upozorneni"]],
+upozorneniSkupiny?: [{	upsId:ValueTypes["BigInt"]},ValueTypes["UpozorneniSkupiny"]],
+user?: [{	uId:ValueTypes["BigInt"]},ValueTypes["User"]],
+usersSkupiny?: [{	usId:ValueTypes["BigInt"]},ValueTypes["UsersSkupiny"]],
+video?: [{	vId:ValueTypes["BigInt"]},ValueTypes["Video"]],
+videoList?: [{	vlId:ValueTypes["BigInt"]},ValueTypes["VideoList"]],
+videoSource?: [{	vsId:ValueTypes["BigInt"]},ValueTypes["VideoSource"]],
 currentCoupleIds?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -351,67 +351,67 @@ based pagination. May not be used with `last`. */
 	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
 	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
 	after?:ValueTypes["Cursor"] | null},ValueTypes["VideosConnection"]],
-akce?: [{	/** The globally unique `ID` to be used in selecting a single `Akce`. */
+akceByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Akce`. */
 	nodeId:string},ValueTypes["Akce"]],
-akceItem?: [{	/** The globally unique `ID` to be used in selecting a single `AkceItem`. */
+akceItemByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `AkceItem`. */
 	nodeId:string},ValueTypes["AkceItem"]],
-aktuality?: [{	/** The globally unique `ID` to be used in selecting a single `Aktuality`. */
+aktualityByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Aktuality`. */
 	nodeId:string},ValueTypes["Aktuality"]],
-dokumenty?: [{	/** The globally unique `ID` to be used in selecting a single `Dokumenty`. */
+dokumentyByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Dokumenty`. */
 	nodeId:string},ValueTypes["Dokumenty"]],
-galerieDir?: [{	/** The globally unique `ID` to be used in selecting a single `GalerieDir`. */
+galerieDirByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `GalerieDir`. */
 	nodeId:string},ValueTypes["GalerieDir"]],
-galerieFoto?: [{	/** The globally unique `ID` to be used in selecting a single `GalerieFoto`. */
+galerieFotoByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `GalerieFoto`. */
 	nodeId:string},ValueTypes["GalerieFoto"]],
-nabidka?: [{	/** The globally unique `ID` to be used in selecting a single `Nabidka`. */
+nabidkaByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Nabidka`. */
 	nodeId:string},ValueTypes["Nabidka"]],
-nabidkaItem?: [{	/** The globally unique `ID` to be used in selecting a single `NabidkaItem`. */
+nabidkaItemByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `NabidkaItem`. */
 	nodeId:string},ValueTypes["NabidkaItem"]],
-page?: [{	/** The globally unique `ID` to be used in selecting a single `Page`. */
+pageByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Page`. */
 	nodeId:string},ValueTypes["Page"]],
-pageRevision?: [{	/** The globally unique `ID` to be used in selecting a single `PageRevision`. */
+pageRevisionByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `PageRevision`. */
 	nodeId:string},ValueTypes["PageRevision"]],
-parameter?: [{	/** The globally unique `ID` to be used in selecting a single `Parameter`. */
+parameterByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Parameter`. */
 	nodeId:string},ValueTypes["Parameter"]],
-pary?: [{	/** The globally unique `ID` to be used in selecting a single `Pary`. */
+paryByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Pary`. */
 	nodeId:string},ValueTypes["Pary"]],
-paryNavrh?: [{	/** The globally unique `ID` to be used in selecting a single `ParyNavrh`. */
+paryNavrhByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `ParyNavrh`. */
 	nodeId:string},ValueTypes["ParyNavrh"]],
-permission?: [{	/** The globally unique `ID` to be used in selecting a single `Permission`. */
+permissionByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Permission`. */
 	nodeId:string},ValueTypes["Permission"]],
-platbyCategory?: [{	/** The globally unique `ID` to be used in selecting a single `PlatbyCategory`. */
+platbyCategoryByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `PlatbyCategory`. */
 	nodeId:string},ValueTypes["PlatbyCategory"]],
-platbyCategoryGroup?: [{	/** The globally unique `ID` to be used in selecting a single `PlatbyCategoryGroup`. */
+platbyCategoryGroupByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `PlatbyCategoryGroup`. */
 	nodeId:string},ValueTypes["PlatbyCategoryGroup"]],
-platbyGroup?: [{	/** The globally unique `ID` to be used in selecting a single `PlatbyGroup`. */
+platbyGroupByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `PlatbyGroup`. */
 	nodeId:string},ValueTypes["PlatbyGroup"]],
-platbyGroupSkupina?: [{	/** The globally unique `ID` to be used in selecting a single `PlatbyGroupSkupina`. */
+platbyGroupSkupinaByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `PlatbyGroupSkupina`. */
 	nodeId:string},ValueTypes["PlatbyGroupSkupina"]],
-platbyItem?: [{	/** The globally unique `ID` to be used in selecting a single `PlatbyItem`. */
+platbyItemByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `PlatbyItem`. */
 	nodeId:string},ValueTypes["PlatbyItem"]],
-platbyRaw?: [{	/** The globally unique `ID` to be used in selecting a single `PlatbyRaw`. */
+platbyRawByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `PlatbyRaw`. */
 	nodeId:string},ValueTypes["PlatbyRaw"]],
-rozpi?: [{	/** The globally unique `ID` to be used in selecting a single `Rozpi`. */
+rozpiByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Rozpi`. */
 	nodeId:string},ValueTypes["Rozpi"]],
-rozpisItem?: [{	/** The globally unique `ID` to be used in selecting a single `RozpisItem`. */
+rozpisItemByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `RozpisItem`. */
 	nodeId:string},ValueTypes["RozpisItem"]],
-session?: [{	/** The globally unique `ID` to be used in selecting a single `Session`. */
+sessionByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Session`. */
 	nodeId:string},ValueTypes["Session"]],
-skupiny?: [{	/** The globally unique `ID` to be used in selecting a single `Skupiny`. */
+skupinyByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Skupiny`. */
 	nodeId:string},ValueTypes["Skupiny"]],
-upozorneni?: [{	/** The globally unique `ID` to be used in selecting a single `Upozorneni`. */
+upozorneniByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Upozorneni`. */
 	nodeId:string},ValueTypes["Upozorneni"]],
-upozorneniSkupiny?: [{	/** The globally unique `ID` to be used in selecting a single `UpozorneniSkupiny`. */
+upozorneniSkupinyByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `UpozorneniSkupiny`. */
 	nodeId:string},ValueTypes["UpozorneniSkupiny"]],
-user?: [{	/** The globally unique `ID` to be used in selecting a single `User`. */
+userByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `User`. */
 	nodeId:string},ValueTypes["User"]],
-usersSkupiny?: [{	/** The globally unique `ID` to be used in selecting a single `UsersSkupiny`. */
+usersSkupinyByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `UsersSkupiny`. */
 	nodeId:string},ValueTypes["UsersSkupiny"]],
-video?: [{	/** The globally unique `ID` to be used in selecting a single `Video`. */
+videoByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Video`. */
 	nodeId:string},ValueTypes["Video"]],
-videoList?: [{	/** The globally unique `ID` to be used in selecting a single `VideoList`. */
+videoListByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `VideoList`. */
 	nodeId:string},ValueTypes["VideoList"]],
-videoSource?: [{	/** The globally unique `ID` to be used in selecting a single `VideoSource`. */
+videoSourceByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `VideoSource`. */
 	nodeId:string},ValueTypes["VideoSource"]],
 		__typename?: boolean
 }>;
@@ -2594,244 +2594,244 @@ createVideoList?: [{	/** The exclusive input argument for this mutation. An obje
 	input:ValueTypes["CreateVideoListInput"]},ValueTypes["CreateVideoListPayload"]],
 createVideoSource?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["CreateVideoSourceInput"]},ValueTypes["CreateVideoSourcePayload"]],
+updateAkceByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateAkceByNodeIdInput"]},ValueTypes["UpdateAkcePayload"]],
 updateAkce?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateAkceInput"]},ValueTypes["UpdateAkcePayload"]],
-updateAkceByAId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateAkceByAIdInput"]},ValueTypes["UpdateAkcePayload"]],
+updateAkceItemByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateAkceItemByNodeIdInput"]},ValueTypes["UpdateAkceItemPayload"]],
 updateAkceItem?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateAkceItemInput"]},ValueTypes["UpdateAkceItemPayload"]],
-updateAkceItemByAiId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateAkceItemByAiIdInput"]},ValueTypes["UpdateAkceItemPayload"]],
+updateAktualityByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateAktualityByNodeIdInput"]},ValueTypes["UpdateAktualityPayload"]],
 updateAktuality?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateAktualityInput"]},ValueTypes["UpdateAktualityPayload"]],
-updateAktualityByAtId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateAktualityByAtIdInput"]},ValueTypes["UpdateAktualityPayload"]],
+updateDokumentyByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateDokumentyByNodeIdInput"]},ValueTypes["UpdateDokumentyPayload"]],
 updateDokumenty?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateDokumentyInput"]},ValueTypes["UpdateDokumentyPayload"]],
-updateDokumentyByDId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateDokumentyByDIdInput"]},ValueTypes["UpdateDokumentyPayload"]],
+updateGalerieDirByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateGalerieDirByNodeIdInput"]},ValueTypes["UpdateGalerieDirPayload"]],
 updateGalerieDir?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateGalerieDirInput"]},ValueTypes["UpdateGalerieDirPayload"]],
-updateGalerieDirByGdId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateGalerieDirByGdIdInput"]},ValueTypes["UpdateGalerieDirPayload"]],
+updateGalerieFotoByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateGalerieFotoByNodeIdInput"]},ValueTypes["UpdateGalerieFotoPayload"]],
 updateGalerieFoto?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateGalerieFotoInput"]},ValueTypes["UpdateGalerieFotoPayload"]],
-updateGalerieFotoByGfId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateGalerieFotoByGfIdInput"]},ValueTypes["UpdateGalerieFotoPayload"]],
+updateNabidkaByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateNabidkaByNodeIdInput"]},ValueTypes["UpdateNabidkaPayload"]],
 updateNabidka?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateNabidkaInput"]},ValueTypes["UpdateNabidkaPayload"]],
-updateNabidkaByNId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateNabidkaByNIdInput"]},ValueTypes["UpdateNabidkaPayload"]],
+updateNabidkaItemByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateNabidkaItemByNodeIdInput"]},ValueTypes["UpdateNabidkaItemPayload"]],
 updateNabidkaItem?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateNabidkaItemInput"]},ValueTypes["UpdateNabidkaItemPayload"]],
-updateNabidkaItemByNiId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateNabidkaItemByNiIdInput"]},ValueTypes["UpdateNabidkaItemPayload"]],
+updatePageByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdatePageByNodeIdInput"]},ValueTypes["UpdatePagePayload"]],
 updatePage?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdatePageInput"]},ValueTypes["UpdatePagePayload"]],
-updatePageById?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdatePageByIdInput"]},ValueTypes["UpdatePagePayload"]],
 updatePageByUrl?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdatePageByUrlInput"]},ValueTypes["UpdatePagePayload"]],
+updateParameterByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateParameterByNodeIdInput"]},ValueTypes["UpdateParameterPayload"]],
 updateParameter?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateParameterInput"]},ValueTypes["UpdateParameterPayload"]],
-updateParameterByPaName?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateParameterByPaNameInput"]},ValueTypes["UpdateParameterPayload"]],
+updateParyByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateParyByNodeIdInput"]},ValueTypes["UpdateParyPayload"]],
 updatePary?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateParyInput"]},ValueTypes["UpdateParyPayload"]],
-updateParyByPId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateParyByPIdInput"]},ValueTypes["UpdateParyPayload"]],
+updateParyNavrhByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateParyNavrhByNodeIdInput"]},ValueTypes["UpdateParyNavrhPayload"]],
 updateParyNavrh?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateParyNavrhInput"]},ValueTypes["UpdateParyNavrhPayload"]],
-updateParyNavrhByPnId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateParyNavrhByPnIdInput"]},ValueTypes["UpdateParyNavrhPayload"]],
+updatePermissionByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdatePermissionByNodeIdInput"]},ValueTypes["UpdatePermissionPayload"]],
 updatePermission?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdatePermissionInput"]},ValueTypes["UpdatePermissionPayload"]],
-updatePermissionByPeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdatePermissionByPeIdInput"]},ValueTypes["UpdatePermissionPayload"]],
+updatePlatbyCategoryByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdatePlatbyCategoryByNodeIdInput"]},ValueTypes["UpdatePlatbyCategoryPayload"]],
 updatePlatbyCategory?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdatePlatbyCategoryInput"]},ValueTypes["UpdatePlatbyCategoryPayload"]],
-updatePlatbyCategoryByPcId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdatePlatbyCategoryByPcIdInput"]},ValueTypes["UpdatePlatbyCategoryPayload"]],
+updatePlatbyCategoryGroupByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdatePlatbyCategoryGroupByNodeIdInput"]},ValueTypes["UpdatePlatbyCategoryGroupPayload"]],
 updatePlatbyCategoryGroup?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdatePlatbyCategoryGroupInput"]},ValueTypes["UpdatePlatbyCategoryGroupPayload"]],
-updatePlatbyCategoryGroupByPcgId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdatePlatbyCategoryGroupByPcgIdInput"]},ValueTypes["UpdatePlatbyCategoryGroupPayload"]],
+updatePlatbyGroupByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdatePlatbyGroupByNodeIdInput"]},ValueTypes["UpdatePlatbyGroupPayload"]],
 updatePlatbyGroup?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdatePlatbyGroupInput"]},ValueTypes["UpdatePlatbyGroupPayload"]],
-updatePlatbyGroupByPgId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdatePlatbyGroupByPgIdInput"]},ValueTypes["UpdatePlatbyGroupPayload"]],
+updatePlatbyGroupSkupinaByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdatePlatbyGroupSkupinaByNodeIdInput"]},ValueTypes["UpdatePlatbyGroupSkupinaPayload"]],
 updatePlatbyGroupSkupina?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdatePlatbyGroupSkupinaInput"]},ValueTypes["UpdatePlatbyGroupSkupinaPayload"]],
-updatePlatbyGroupSkupinaByPgsId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdatePlatbyGroupSkupinaByPgsIdInput"]},ValueTypes["UpdatePlatbyGroupSkupinaPayload"]],
+updatePlatbyItemByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdatePlatbyItemByNodeIdInput"]},ValueTypes["UpdatePlatbyItemPayload"]],
 updatePlatbyItem?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdatePlatbyItemInput"]},ValueTypes["UpdatePlatbyItemPayload"]],
-updatePlatbyItemByPiId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdatePlatbyItemByPiIdInput"]},ValueTypes["UpdatePlatbyItemPayload"]],
+updatePlatbyRawByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdatePlatbyRawByNodeIdInput"]},ValueTypes["UpdatePlatbyRawPayload"]],
 updatePlatbyRaw?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdatePlatbyRawInput"]},ValueTypes["UpdatePlatbyRawPayload"]],
-updatePlatbyRawByPrId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdatePlatbyRawByPrIdInput"]},ValueTypes["UpdatePlatbyRawPayload"]],
+updateRozpiByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateRozpiByNodeIdInput"]},ValueTypes["UpdateRozpiPayload"]],
 updateRozpi?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateRozpiInput"]},ValueTypes["UpdateRozpiPayload"]],
-updateRozpiByRId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateRozpiByRIdInput"]},ValueTypes["UpdateRozpiPayload"]],
+updateRozpisItemByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateRozpisItemByNodeIdInput"]},ValueTypes["UpdateRozpisItemPayload"]],
 updateRozpisItem?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateRozpisItemInput"]},ValueTypes["UpdateRozpisItemPayload"]],
-updateRozpisItemByRiId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateRozpisItemByRiIdInput"]},ValueTypes["UpdateRozpisItemPayload"]],
+updateSessionByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateSessionByNodeIdInput"]},ValueTypes["UpdateSessionPayload"]],
 updateSession?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateSessionInput"]},ValueTypes["UpdateSessionPayload"]],
-updateSessionBySsId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateSessionBySsIdInput"]},ValueTypes["UpdateSessionPayload"]],
+updateSkupinyByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateSkupinyByNodeIdInput"]},ValueTypes["UpdateSkupinyPayload"]],
 updateSkupiny?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateSkupinyInput"]},ValueTypes["UpdateSkupinyPayload"]],
-updateSkupinyBySId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateSkupinyBySIdInput"]},ValueTypes["UpdateSkupinyPayload"]],
+updateUpozorneniByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateUpozorneniByNodeIdInput"]},ValueTypes["UpdateUpozorneniPayload"]],
 updateUpozorneni?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateUpozorneniInput"]},ValueTypes["UpdateUpozorneniPayload"]],
-updateUpozorneniByUpId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateUpozorneniByUpIdInput"]},ValueTypes["UpdateUpozorneniPayload"]],
+updateUpozorneniSkupinyByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateUpozorneniSkupinyByNodeIdInput"]},ValueTypes["UpdateUpozorneniSkupinyPayload"]],
 updateUpozorneniSkupiny?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateUpozorneniSkupinyInput"]},ValueTypes["UpdateUpozorneniSkupinyPayload"]],
-updateUpozorneniSkupinyByUpsId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateUpozorneniSkupinyByUpsIdInput"]},ValueTypes["UpdateUpozorneniSkupinyPayload"]],
+updateUserByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateUserByNodeIdInput"]},ValueTypes["UpdateUserPayload"]],
 updateUser?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateUserInput"]},ValueTypes["UpdateUserPayload"]],
-updateUserByUId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateUserByUIdInput"]},ValueTypes["UpdateUserPayload"]],
+updateUsersSkupinyByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateUsersSkupinyByNodeIdInput"]},ValueTypes["UpdateUsersSkupinyPayload"]],
 updateUsersSkupiny?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateUsersSkupinyInput"]},ValueTypes["UpdateUsersSkupinyPayload"]],
-updateUsersSkupinyByUsId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateUsersSkupinyByUsIdInput"]},ValueTypes["UpdateUsersSkupinyPayload"]],
+updateVideoByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateVideoByNodeIdInput"]},ValueTypes["UpdateVideoPayload"]],
 updateVideo?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateVideoInput"]},ValueTypes["UpdateVideoPayload"]],
-updateVideoByVId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateVideoByVIdInput"]},ValueTypes["UpdateVideoPayload"]],
+updateVideoListByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateVideoListByNodeIdInput"]},ValueTypes["UpdateVideoListPayload"]],
 updateVideoList?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateVideoListInput"]},ValueTypes["UpdateVideoListPayload"]],
-updateVideoListByVlId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateVideoListByVlIdInput"]},ValueTypes["UpdateVideoListPayload"]],
+updateVideoSourceByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateVideoSourceByNodeIdInput"]},ValueTypes["UpdateVideoSourcePayload"]],
 updateVideoSource?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateVideoSourceInput"]},ValueTypes["UpdateVideoSourcePayload"]],
-updateVideoSourceByVsId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateVideoSourceByVsIdInput"]},ValueTypes["UpdateVideoSourcePayload"]],
+deleteAkceByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteAkceByNodeIdInput"]},ValueTypes["DeleteAkcePayload"]],
 deleteAkce?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteAkceInput"]},ValueTypes["DeleteAkcePayload"]],
-deleteAkceByAId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteAkceByAIdInput"]},ValueTypes["DeleteAkcePayload"]],
+deleteAkceItemByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteAkceItemByNodeIdInput"]},ValueTypes["DeleteAkceItemPayload"]],
 deleteAkceItem?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteAkceItemInput"]},ValueTypes["DeleteAkceItemPayload"]],
-deleteAkceItemByAiId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteAkceItemByAiIdInput"]},ValueTypes["DeleteAkceItemPayload"]],
+deleteAktualityByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteAktualityByNodeIdInput"]},ValueTypes["DeleteAktualityPayload"]],
 deleteAktuality?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteAktualityInput"]},ValueTypes["DeleteAktualityPayload"]],
-deleteAktualityByAtId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteAktualityByAtIdInput"]},ValueTypes["DeleteAktualityPayload"]],
+deleteDokumentyByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteDokumentyByNodeIdInput"]},ValueTypes["DeleteDokumentyPayload"]],
 deleteDokumenty?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteDokumentyInput"]},ValueTypes["DeleteDokumentyPayload"]],
-deleteDokumentyByDId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteDokumentyByDIdInput"]},ValueTypes["DeleteDokumentyPayload"]],
+deleteGalerieDirByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteGalerieDirByNodeIdInput"]},ValueTypes["DeleteGalerieDirPayload"]],
 deleteGalerieDir?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteGalerieDirInput"]},ValueTypes["DeleteGalerieDirPayload"]],
-deleteGalerieDirByGdId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteGalerieDirByGdIdInput"]},ValueTypes["DeleteGalerieDirPayload"]],
+deleteGalerieFotoByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteGalerieFotoByNodeIdInput"]},ValueTypes["DeleteGalerieFotoPayload"]],
 deleteGalerieFoto?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteGalerieFotoInput"]},ValueTypes["DeleteGalerieFotoPayload"]],
-deleteGalerieFotoByGfId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteGalerieFotoByGfIdInput"]},ValueTypes["DeleteGalerieFotoPayload"]],
+deleteNabidkaByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteNabidkaByNodeIdInput"]},ValueTypes["DeleteNabidkaPayload"]],
 deleteNabidka?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteNabidkaInput"]},ValueTypes["DeleteNabidkaPayload"]],
-deleteNabidkaByNId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteNabidkaByNIdInput"]},ValueTypes["DeleteNabidkaPayload"]],
+deleteNabidkaItemByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteNabidkaItemByNodeIdInput"]},ValueTypes["DeleteNabidkaItemPayload"]],
 deleteNabidkaItem?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteNabidkaItemInput"]},ValueTypes["DeleteNabidkaItemPayload"]],
-deleteNabidkaItemByNiId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteNabidkaItemByNiIdInput"]},ValueTypes["DeleteNabidkaItemPayload"]],
+deleteParameterByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteParameterByNodeIdInput"]},ValueTypes["DeleteParameterPayload"]],
 deleteParameter?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteParameterInput"]},ValueTypes["DeleteParameterPayload"]],
-deleteParameterByPaName?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteParameterByPaNameInput"]},ValueTypes["DeleteParameterPayload"]],
+deleteParyByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteParyByNodeIdInput"]},ValueTypes["DeleteParyPayload"]],
 deletePary?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteParyInput"]},ValueTypes["DeleteParyPayload"]],
-deleteParyByPId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteParyByPIdInput"]},ValueTypes["DeleteParyPayload"]],
+deleteParyNavrhByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteParyNavrhByNodeIdInput"]},ValueTypes["DeleteParyNavrhPayload"]],
 deleteParyNavrh?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteParyNavrhInput"]},ValueTypes["DeleteParyNavrhPayload"]],
-deleteParyNavrhByPnId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteParyNavrhByPnIdInput"]},ValueTypes["DeleteParyNavrhPayload"]],
+deletePermissionByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeletePermissionByNodeIdInput"]},ValueTypes["DeletePermissionPayload"]],
 deletePermission?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeletePermissionInput"]},ValueTypes["DeletePermissionPayload"]],
-deletePermissionByPeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeletePermissionByPeIdInput"]},ValueTypes["DeletePermissionPayload"]],
+deletePlatbyCategoryByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeletePlatbyCategoryByNodeIdInput"]},ValueTypes["DeletePlatbyCategoryPayload"]],
 deletePlatbyCategory?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeletePlatbyCategoryInput"]},ValueTypes["DeletePlatbyCategoryPayload"]],
-deletePlatbyCategoryByPcId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeletePlatbyCategoryByPcIdInput"]},ValueTypes["DeletePlatbyCategoryPayload"]],
+deletePlatbyCategoryGroupByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeletePlatbyCategoryGroupByNodeIdInput"]},ValueTypes["DeletePlatbyCategoryGroupPayload"]],
 deletePlatbyCategoryGroup?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeletePlatbyCategoryGroupInput"]},ValueTypes["DeletePlatbyCategoryGroupPayload"]],
-deletePlatbyCategoryGroupByPcgId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeletePlatbyCategoryGroupByPcgIdInput"]},ValueTypes["DeletePlatbyCategoryGroupPayload"]],
+deletePlatbyGroupByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeletePlatbyGroupByNodeIdInput"]},ValueTypes["DeletePlatbyGroupPayload"]],
 deletePlatbyGroup?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeletePlatbyGroupInput"]},ValueTypes["DeletePlatbyGroupPayload"]],
-deletePlatbyGroupByPgId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeletePlatbyGroupByPgIdInput"]},ValueTypes["DeletePlatbyGroupPayload"]],
+deletePlatbyGroupSkupinaByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeletePlatbyGroupSkupinaByNodeIdInput"]},ValueTypes["DeletePlatbyGroupSkupinaPayload"]],
 deletePlatbyGroupSkupina?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeletePlatbyGroupSkupinaInput"]},ValueTypes["DeletePlatbyGroupSkupinaPayload"]],
-deletePlatbyGroupSkupinaByPgsId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeletePlatbyGroupSkupinaByPgsIdInput"]},ValueTypes["DeletePlatbyGroupSkupinaPayload"]],
+deletePlatbyItemByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeletePlatbyItemByNodeIdInput"]},ValueTypes["DeletePlatbyItemPayload"]],
 deletePlatbyItem?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeletePlatbyItemInput"]},ValueTypes["DeletePlatbyItemPayload"]],
-deletePlatbyItemByPiId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeletePlatbyItemByPiIdInput"]},ValueTypes["DeletePlatbyItemPayload"]],
+deletePlatbyRawByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeletePlatbyRawByNodeIdInput"]},ValueTypes["DeletePlatbyRawPayload"]],
 deletePlatbyRaw?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeletePlatbyRawInput"]},ValueTypes["DeletePlatbyRawPayload"]],
-deletePlatbyRawByPrId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeletePlatbyRawByPrIdInput"]},ValueTypes["DeletePlatbyRawPayload"]],
+deleteRozpiByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteRozpiByNodeIdInput"]},ValueTypes["DeleteRozpiPayload"]],
 deleteRozpi?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteRozpiInput"]},ValueTypes["DeleteRozpiPayload"]],
-deleteRozpiByRId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteRozpiByRIdInput"]},ValueTypes["DeleteRozpiPayload"]],
+deleteRozpisItemByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteRozpisItemByNodeIdInput"]},ValueTypes["DeleteRozpisItemPayload"]],
 deleteRozpisItem?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteRozpisItemInput"]},ValueTypes["DeleteRozpisItemPayload"]],
-deleteRozpisItemByRiId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteRozpisItemByRiIdInput"]},ValueTypes["DeleteRozpisItemPayload"]],
+deleteSessionByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteSessionByNodeIdInput"]},ValueTypes["DeleteSessionPayload"]],
 deleteSession?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteSessionInput"]},ValueTypes["DeleteSessionPayload"]],
-deleteSessionBySsId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteSessionBySsIdInput"]},ValueTypes["DeleteSessionPayload"]],
+deleteSkupinyByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteSkupinyByNodeIdInput"]},ValueTypes["DeleteSkupinyPayload"]],
 deleteSkupiny?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteSkupinyInput"]},ValueTypes["DeleteSkupinyPayload"]],
-deleteSkupinyBySId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteSkupinyBySIdInput"]},ValueTypes["DeleteSkupinyPayload"]],
+deleteUpozorneniByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteUpozorneniByNodeIdInput"]},ValueTypes["DeleteUpozorneniPayload"]],
 deleteUpozorneni?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteUpozorneniInput"]},ValueTypes["DeleteUpozorneniPayload"]],
-deleteUpozorneniByUpId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteUpozorneniByUpIdInput"]},ValueTypes["DeleteUpozorneniPayload"]],
+deleteUpozorneniSkupinyByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteUpozorneniSkupinyByNodeIdInput"]},ValueTypes["DeleteUpozorneniSkupinyPayload"]],
 deleteUpozorneniSkupiny?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteUpozorneniSkupinyInput"]},ValueTypes["DeleteUpozorneniSkupinyPayload"]],
-deleteUpozorneniSkupinyByUpsId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteUpozorneniSkupinyByUpsIdInput"]},ValueTypes["DeleteUpozorneniSkupinyPayload"]],
+deleteUserByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteUserByNodeIdInput"]},ValueTypes["DeleteUserPayload"]],
 deleteUser?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteUserInput"]},ValueTypes["DeleteUserPayload"]],
-deleteUserByUId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteUserByUIdInput"]},ValueTypes["DeleteUserPayload"]],
+deleteUsersSkupinyByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteUsersSkupinyByNodeIdInput"]},ValueTypes["DeleteUsersSkupinyPayload"]],
 deleteUsersSkupiny?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteUsersSkupinyInput"]},ValueTypes["DeleteUsersSkupinyPayload"]],
-deleteUsersSkupinyByUsId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteUsersSkupinyByUsIdInput"]},ValueTypes["DeleteUsersSkupinyPayload"]],
+deleteVideoByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteVideoByNodeIdInput"]},ValueTypes["DeleteVideoPayload"]],
 deleteVideo?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteVideoInput"]},ValueTypes["DeleteVideoPayload"]],
-deleteVideoByVId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteVideoByVIdInput"]},ValueTypes["DeleteVideoPayload"]],
+deleteVideoListByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteVideoListByNodeIdInput"]},ValueTypes["DeleteVideoListPayload"]],
 deleteVideoList?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteVideoListInput"]},ValueTypes["DeleteVideoListPayload"]],
-deleteVideoListByVlId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteVideoListByVlIdInput"]},ValueTypes["DeleteVideoListPayload"]],
+deleteVideoSourceByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteVideoSourceByNodeIdInput"]},ValueTypes["DeleteVideoSourcePayload"]],
 deleteVideoSource?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteVideoSourceInput"]},ValueTypes["DeleteVideoSourcePayload"]],
-deleteVideoSourceByVsId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteVideoSourceByVsIdInput"]},ValueTypes["DeleteVideoSourcePayload"]],
 login?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["LoginInput"]},ValueTypes["LoginPayload"]],
 logout?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
@@ -3862,15 +3862,15 @@ akceEdge?: [{	/** The method to use when ordering `Akce`. */
 	orderBy?:ValueTypes["AkcesOrderBy"][]},ValueTypes["AkcesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateAkce` mutation. */
-["UpdateAkceInput"]: {
+	/** All input for the `updateAkceByNodeId` mutation. */
+["UpdateAkceByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Akce` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `Akce` being updated. */
-	akcePatch:ValueTypes["AkcePatch"]
+	patch:ValueTypes["AkcePatch"]
 };
 	/** Represents an update to a `Akce`. Fields that are set will be updated. */
 ["AkcePatch"]: {
@@ -3886,13 +3886,13 @@ payload verbatim. May be used to track mutations by the client. */
 	aLock?:boolean | null,
 	aVisible?:boolean | null
 };
-	/** All input for the `updateAkceByAId` mutation. */
-["UpdateAkceByAIdInput"]: {
+	/** All input for the `updateAkce` mutation. */
+["UpdateAkceInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `Akce` being updated. */
-	akcePatch:ValueTypes["AkcePatch"],
+	patch:ValueTypes["AkcePatch"],
 	aId:ValueTypes["BigInt"]
 };
 	/** The output of our update `AkceItem` mutation. */
@@ -3912,15 +3912,15 @@ akceItemEdge?: [{	/** The method to use when ordering `AkceItem`. */
 	orderBy?:ValueTypes["AkceItemsOrderBy"][]},ValueTypes["AkceItemsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateAkceItem` mutation. */
-["UpdateAkceItemInput"]: {
+	/** All input for the `updateAkceItemByNodeId` mutation. */
+["UpdateAkceItemByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `AkceItem` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `AkceItem` being updated. */
-	akceItemPatch:ValueTypes["AkceItemPatch"]
+	patch:ValueTypes["AkceItemPatch"]
 };
 	/** Represents an update to a `AkceItem`. Fields that are set will be updated. */
 ["AkceItemPatch"]: {
@@ -3929,13 +3929,13 @@ payload verbatim. May be used to track mutations by the client. */
 	aiUser?:ValueTypes["BigInt"] | null,
 	aiRokNarozeni?:number | null
 };
-	/** All input for the `updateAkceItemByAiId` mutation. */
-["UpdateAkceItemByAiIdInput"]: {
+	/** All input for the `updateAkceItem` mutation. */
+["UpdateAkceItemInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `AkceItem` being updated. */
-	akceItemPatch:ValueTypes["AkceItemPatch"],
+	patch:ValueTypes["AkceItemPatch"],
 	aiId:ValueTypes["BigInt"]
 };
 	/** The output of our update `Aktuality` mutation. */
@@ -3955,15 +3955,15 @@ aktualityEdge?: [{	/** The method to use when ordering `Aktuality`. */
 	orderBy?:ValueTypes["AktualitiesOrderBy"][]},ValueTypes["AktualitiesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateAktuality` mutation. */
-["UpdateAktualityInput"]: {
+	/** All input for the `updateAktualityByNodeId` mutation. */
+["UpdateAktualityByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Aktuality` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `Aktuality` being updated. */
-	aktualityPatch:ValueTypes["AktualityPatch"]
+	patch:ValueTypes["AktualityPatch"]
 };
 	/** Represents an update to a `Aktuality`. Fields that are set will be updated. */
 ["AktualityPatch"]: {
@@ -3978,13 +3978,13 @@ payload verbatim. May be used to track mutations by the client. */
 	atTimestamp?:ValueTypes["Datetime"] | null,
 	atTimestampAdd?:ValueTypes["Datetime"] | null
 };
-	/** All input for the `updateAktualityByAtId` mutation. */
-["UpdateAktualityByAtIdInput"]: {
+	/** All input for the `updateAktuality` mutation. */
+["UpdateAktualityInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `Aktuality` being updated. */
-	aktualityPatch:ValueTypes["AktualityPatch"],
+	patch:ValueTypes["AktualityPatch"],
 	atId:ValueTypes["BigInt"]
 };
 	/** The output of our update `Dokumenty` mutation. */
@@ -4002,15 +4002,15 @@ dokumentyEdge?: [{	/** The method to use when ordering `Dokumenty`. */
 	orderBy?:ValueTypes["DokumentiesOrderBy"][]},ValueTypes["DokumentiesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateDokumenty` mutation. */
-["UpdateDokumentyInput"]: {
+	/** All input for the `updateDokumentyByNodeId` mutation. */
+["UpdateDokumentyByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Dokumenty` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `Dokumenty` being updated. */
-	dokumentyPatch:ValueTypes["DokumentyPatch"]
+	patch:ValueTypes["DokumentyPatch"]
 };
 	/** Represents an update to a `Dokumenty`. Fields that are set will be updated. */
 ["DokumentyPatch"]: {
@@ -4022,13 +4022,13 @@ payload verbatim. May be used to track mutations by the client. */
 	dKdo?:ValueTypes["BigInt"] | null,
 	dTimestamp?:ValueTypes["Datetime"] | null
 };
-	/** All input for the `updateDokumentyByDId` mutation. */
-["UpdateDokumentyByDIdInput"]: {
+	/** All input for the `updateDokumenty` mutation. */
+["UpdateDokumentyInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `Dokumenty` being updated. */
-	dokumentyPatch:ValueTypes["DokumentyPatch"],
+	patch:ValueTypes["DokumentyPatch"],
 	dId:ValueTypes["BigInt"]
 };
 	/** The output of our update `GalerieDir` mutation. */
@@ -4044,15 +4044,15 @@ galerieDirEdge?: [{	/** The method to use when ordering `GalerieDir`. */
 	orderBy?:ValueTypes["GalerieDirsOrderBy"][]},ValueTypes["GalerieDirsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateGalerieDir` mutation. */
-["UpdateGalerieDirInput"]: {
+	/** All input for the `updateGalerieDirByNodeId` mutation. */
+["UpdateGalerieDirByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `GalerieDir` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `GalerieDir` being updated. */
-	galerieDirPatch:ValueTypes["GalerieDirPatch"]
+	patch:ValueTypes["GalerieDirPatch"]
 };
 	/** Represents an update to a `GalerieDir`. Fields that are set will be updated. */
 ["GalerieDirPatch"]: {
@@ -4063,13 +4063,13 @@ payload verbatim. May be used to track mutations by the client. */
 	gdPath?:string | null,
 	gdHidden?:boolean | null
 };
-	/** All input for the `updateGalerieDirByGdId` mutation. */
-["UpdateGalerieDirByGdIdInput"]: {
+	/** All input for the `updateGalerieDir` mutation. */
+["UpdateGalerieDirInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `GalerieDir` being updated. */
-	galerieDirPatch:ValueTypes["GalerieDirPatch"],
+	patch:ValueTypes["GalerieDirPatch"],
 	gdId:ValueTypes["BigInt"]
 };
 	/** The output of our update `GalerieFoto` mutation. */
@@ -4089,15 +4089,15 @@ galerieFotoEdge?: [{	/** The method to use when ordering `GalerieFoto`. */
 	orderBy?:ValueTypes["GalerieFotosOrderBy"][]},ValueTypes["GalerieFotosEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateGalerieFoto` mutation. */
-["UpdateGalerieFotoInput"]: {
+	/** All input for the `updateGalerieFotoByNodeId` mutation. */
+["UpdateGalerieFotoByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `GalerieFoto` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `GalerieFoto` being updated. */
-	galerieFotoPatch:ValueTypes["GalerieFotoPatch"]
+	patch:ValueTypes["GalerieFotoPatch"]
 };
 	/** Represents an update to a `GalerieFoto`. Fields that are set will be updated. */
 ["GalerieFotoPatch"]: {
@@ -4108,13 +4108,13 @@ payload verbatim. May be used to track mutations by the client. */
 	gfKdo?:ValueTypes["BigInt"] | null,
 	gfTimestamp?:ValueTypes["Datetime"] | null
 };
-	/** All input for the `updateGalerieFotoByGfId` mutation. */
-["UpdateGalerieFotoByGfIdInput"]: {
+	/** All input for the `updateGalerieFoto` mutation. */
+["UpdateGalerieFotoInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `GalerieFoto` being updated. */
-	galerieFotoPatch:ValueTypes["GalerieFotoPatch"],
+	patch:ValueTypes["GalerieFotoPatch"],
 	gfId:ValueTypes["BigInt"]
 };
 	/** The output of our update `Nabidka` mutation. */
@@ -4132,15 +4132,15 @@ nabidkaEdge?: [{	/** The method to use when ordering `Nabidka`. */
 	orderBy?:ValueTypes["NabidkasOrderBy"][]},ValueTypes["NabidkasEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateNabidka` mutation. */
-["UpdateNabidkaInput"]: {
+	/** All input for the `updateNabidkaByNodeId` mutation. */
+["UpdateNabidkaByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Nabidka` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `Nabidka` being updated. */
-	nabidkaPatch:ValueTypes["NabidkaPatch"]
+	patch:ValueTypes["NabidkaPatch"]
 };
 	/** Represents an update to a `Nabidka`. Fields that are set will be updated. */
 ["NabidkaPatch"]: {
@@ -4154,13 +4154,13 @@ payload verbatim. May be used to track mutations by the client. */
 	nLock?:boolean | null,
 	nTimestamp?:ValueTypes["Datetime"] | null
 };
-	/** All input for the `updateNabidkaByNId` mutation. */
-["UpdateNabidkaByNIdInput"]: {
+	/** All input for the `updateNabidka` mutation. */
+["UpdateNabidkaInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `Nabidka` being updated. */
-	nabidkaPatch:ValueTypes["NabidkaPatch"],
+	patch:ValueTypes["NabidkaPatch"],
 	nId:ValueTypes["BigInt"]
 };
 	/** The output of our update `NabidkaItem` mutation. */
@@ -4180,15 +4180,15 @@ nabidkaItemEdge?: [{	/** The method to use when ordering `NabidkaItem`. */
 	orderBy?:ValueTypes["NabidkaItemsOrderBy"][]},ValueTypes["NabidkaItemsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateNabidkaItem` mutation. */
-["UpdateNabidkaItemInput"]: {
+	/** All input for the `updateNabidkaItemByNodeId` mutation. */
+["UpdateNabidkaItemByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `NabidkaItem` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `NabidkaItem` being updated. */
-	nabidkaItemPatch:ValueTypes["NabidkaItemPatch"]
+	patch:ValueTypes["NabidkaItemPatch"]
 };
 	/** Represents an update to a `NabidkaItem`. Fields that are set will be updated. */
 ["NabidkaItemPatch"]: {
@@ -4198,13 +4198,13 @@ payload verbatim. May be used to track mutations by the client. */
 	niPocetHod?:number | null,
 	niLock?:boolean | null
 };
-	/** All input for the `updateNabidkaItemByNiId` mutation. */
-["UpdateNabidkaItemByNiIdInput"]: {
+	/** All input for the `updateNabidkaItem` mutation. */
+["UpdateNabidkaItemInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `NabidkaItem` being updated. */
-	nabidkaItemPatch:ValueTypes["NabidkaItemPatch"],
+	patch:ValueTypes["NabidkaItemPatch"],
 	niId:ValueTypes["BigInt"]
 };
 	/** The output of our update `Page` mutation. */
@@ -4220,15 +4220,15 @@ pageEdge?: [{	/** The method to use when ordering `Page`. */
 	orderBy?:ValueTypes["PagesOrderBy"][]},ValueTypes["PagesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updatePage` mutation. */
-["UpdatePageInput"]: {
+	/** All input for the `updatePageByNodeId` mutation. */
+["UpdatePageByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Page` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `Page` being updated. */
-	pagePatch:ValueTypes["PagePatch"]
+	patch:ValueTypes["PagePatch"]
 };
 	/** Represents an update to a `Page`. Fields that are set will be updated. */
 ["PagePatch"]: {
@@ -4238,13 +4238,13 @@ payload verbatim. May be used to track mutations by the client. */
 	createdAt?:ValueTypes["Datetime"] | null,
 	updatedAt?:ValueTypes["Datetime"] | null
 };
-	/** All input for the `updatePageById` mutation. */
-["UpdatePageByIdInput"]: {
+	/** All input for the `updatePage` mutation. */
+["UpdatePageInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `Page` being updated. */
-	pagePatch:ValueTypes["PagePatch"],
+	patch:ValueTypes["PagePatch"],
 	id:number
 };
 	/** All input for the `updatePageByUrl` mutation. */
@@ -4253,7 +4253,7 @@ payload verbatim. May be used to track mutations by the client. */
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `Page` being updated. */
-	pagePatch:ValueTypes["PagePatch"],
+	patch:ValueTypes["PagePatch"],
 	url:string
 };
 	/** The output of our update `Parameter` mutation. */
@@ -4269,28 +4269,28 @@ parameterEdge?: [{	/** The method to use when ordering `Parameter`. */
 	orderBy?:ValueTypes["ParametersOrderBy"][]},ValueTypes["ParametersEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateParameter` mutation. */
-["UpdateParameterInput"]: {
+	/** All input for the `updateParameterByNodeId` mutation. */
+["UpdateParameterByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Parameter` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `Parameter` being updated. */
-	parameterPatch:ValueTypes["ParameterPatch"]
+	patch:ValueTypes["ParameterPatch"]
 };
 	/** Represents an update to a `Parameter`. Fields that are set will be updated. */
 ["ParameterPatch"]: {
 	paName?:string | null,
 	paValue?:string | null
 };
-	/** All input for the `updateParameterByPaName` mutation. */
-["UpdateParameterByPaNameInput"]: {
+	/** All input for the `updateParameter` mutation. */
+["UpdateParameterInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `Parameter` being updated. */
-	parameterPatch:ValueTypes["ParameterPatch"],
+	patch:ValueTypes["ParameterPatch"],
 	paName:string
 };
 	/** The output of our update `Pary` mutation. */
@@ -4308,15 +4308,15 @@ paryEdge?: [{	/** The method to use when ordering `Pary`. */
 	orderBy?:ValueTypes["PariesOrderBy"][]},ValueTypes["PariesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updatePary` mutation. */
-["UpdateParyInput"]: {
+	/** All input for the `updateParyByNodeId` mutation. */
+["UpdateParyByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Pary` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `Pary` being updated. */
-	paryPatch:ValueTypes["ParyPatch"]
+	patch:ValueTypes["ParyPatch"]
 };
 	/** Represents an update to a `Pary`. Fields that are set will be updated. */
 ["ParyPatch"]: {
@@ -4334,13 +4334,13 @@ payload verbatim. May be used to track mutations by the client. */
 	pTimestampAdd?:ValueTypes["Datetime"] | null,
 	pTimestampArchive?:ValueTypes["Datetime"] | null
 };
-	/** All input for the `updateParyByPId` mutation. */
-["UpdateParyByPIdInput"]: {
+	/** All input for the `updatePary` mutation. */
+["UpdateParyInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `Pary` being updated. */
-	paryPatch:ValueTypes["ParyPatch"],
+	patch:ValueTypes["ParyPatch"],
 	pId:ValueTypes["BigInt"]
 };
 	/** The output of our update `ParyNavrh` mutation. */
@@ -4362,15 +4362,15 @@ paryNavrhEdge?: [{	/** The method to use when ordering `ParyNavrh`. */
 	orderBy?:ValueTypes["ParyNavrhsOrderBy"][]},ValueTypes["ParyNavrhsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateParyNavrh` mutation. */
-["UpdateParyNavrhInput"]: {
+	/** All input for the `updateParyNavrhByNodeId` mutation. */
+["UpdateParyNavrhByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `ParyNavrh` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `ParyNavrh` being updated. */
-	paryNavrhPatch:ValueTypes["ParyNavrhPatch"]
+	patch:ValueTypes["ParyNavrhPatch"]
 };
 	/** Represents an update to a `ParyNavrh`. Fields that are set will be updated. */
 ["ParyNavrhPatch"]: {
@@ -4379,13 +4379,13 @@ payload verbatim. May be used to track mutations by the client. */
 	pnPartner?:ValueTypes["BigInt"] | null,
 	pnPartnerka?:ValueTypes["BigInt"] | null
 };
-	/** All input for the `updateParyNavrhByPnId` mutation. */
-["UpdateParyNavrhByPnIdInput"]: {
+	/** All input for the `updateParyNavrh` mutation. */
+["UpdateParyNavrhInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `ParyNavrh` being updated. */
-	paryNavrhPatch:ValueTypes["ParyNavrhPatch"],
+	patch:ValueTypes["ParyNavrhPatch"],
 	pnId:ValueTypes["BigInt"]
 };
 	/** The output of our update `Permission` mutation. */
@@ -4401,15 +4401,15 @@ permissionEdge?: [{	/** The method to use when ordering `Permission`. */
 	orderBy?:ValueTypes["PermissionsOrderBy"][]},ValueTypes["PermissionsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updatePermission` mutation. */
-["UpdatePermissionInput"]: {
+	/** All input for the `updatePermissionByNodeId` mutation. */
+["UpdatePermissionByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Permission` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `Permission` being updated. */
-	permissionPatch:ValueTypes["PermissionPatch"]
+	patch:ValueTypes["PermissionPatch"]
 };
 	/** Represents an update to a `Permission`. Fields that are set will be updated. */
 ["PermissionPatch"]: {
@@ -4434,13 +4434,13 @@ payload verbatim. May be used to track mutations by the client. */
 	peUsers?:number | null,
 	peMain?:number | null
 };
-	/** All input for the `updatePermissionByPeId` mutation. */
-["UpdatePermissionByPeIdInput"]: {
+	/** All input for the `updatePermission` mutation. */
+["UpdatePermissionInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `Permission` being updated. */
-	permissionPatch:ValueTypes["PermissionPatch"],
+	patch:ValueTypes["PermissionPatch"],
 	peId:ValueTypes["BigInt"]
 };
 	/** The output of our update `PlatbyCategory` mutation. */
@@ -4456,15 +4456,15 @@ platbyCategoryEdge?: [{	/** The method to use when ordering `PlatbyCategory`. */
 	orderBy?:ValueTypes["PlatbyCategoriesOrderBy"][]},ValueTypes["PlatbyCategoriesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updatePlatbyCategory` mutation. */
-["UpdatePlatbyCategoryInput"]: {
+	/** All input for the `updatePlatbyCategoryByNodeId` mutation. */
+["UpdatePlatbyCategoryByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `PlatbyCategory` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `PlatbyCategory` being updated. */
-	platbyCategoryPatch:ValueTypes["PlatbyCategoryPatch"]
+	patch:ValueTypes["PlatbyCategoryPatch"]
 };
 	/** Represents an update to a `PlatbyCategory`. Fields that are set will be updated. */
 ["PlatbyCategoryPatch"]: {
@@ -4480,13 +4480,13 @@ payload verbatim. May be used to track mutations by the client. */
 	pcArchive?:boolean | null,
 	pcVisible?:boolean | null
 };
-	/** All input for the `updatePlatbyCategoryByPcId` mutation. */
-["UpdatePlatbyCategoryByPcIdInput"]: {
+	/** All input for the `updatePlatbyCategory` mutation. */
+["UpdatePlatbyCategoryInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `PlatbyCategory` being updated. */
-	platbyCategoryPatch:ValueTypes["PlatbyCategoryPatch"],
+	patch:ValueTypes["PlatbyCategoryPatch"],
 	pcId:ValueTypes["BigInt"]
 };
 	/** The output of our update `PlatbyCategoryGroup` mutation. */
@@ -4506,15 +4506,15 @@ platbyCategoryGroupEdge?: [{	/** The method to use when ordering `PlatbyCategory
 	orderBy?:ValueTypes["PlatbyCategoryGroupsOrderBy"][]},ValueTypes["PlatbyCategoryGroupsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updatePlatbyCategoryGroup` mutation. */
-["UpdatePlatbyCategoryGroupInput"]: {
+	/** All input for the `updatePlatbyCategoryGroupByNodeId` mutation. */
+["UpdatePlatbyCategoryGroupByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `PlatbyCategoryGroup` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `PlatbyCategoryGroup` being updated. */
-	platbyCategoryGroupPatch:ValueTypes["PlatbyCategoryGroupPatch"]
+	patch:ValueTypes["PlatbyCategoryGroupPatch"]
 };
 	/** Represents an update to a `PlatbyCategoryGroup`. Fields that are set will be updated. */
 ["PlatbyCategoryGroupPatch"]: {
@@ -4522,13 +4522,13 @@ payload verbatim. May be used to track mutations by the client. */
 	pcgIdGroup?:ValueTypes["BigInt"] | null,
 	pcgIdCategory?:ValueTypes["BigInt"] | null
 };
-	/** All input for the `updatePlatbyCategoryGroupByPcgId` mutation. */
-["UpdatePlatbyCategoryGroupByPcgIdInput"]: {
+	/** All input for the `updatePlatbyCategoryGroup` mutation. */
+["UpdatePlatbyCategoryGroupInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `PlatbyCategoryGroup` being updated. */
-	platbyCategoryGroupPatch:ValueTypes["PlatbyCategoryGroupPatch"],
+	patch:ValueTypes["PlatbyCategoryGroupPatch"],
 	pcgId:ValueTypes["BigInt"]
 };
 	/** The output of our update `PlatbyGroup` mutation. */
@@ -4544,15 +4544,15 @@ platbyGroupEdge?: [{	/** The method to use when ordering `PlatbyGroup`. */
 	orderBy?:ValueTypes["PlatbyGroupsOrderBy"][]},ValueTypes["PlatbyGroupsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updatePlatbyGroup` mutation. */
-["UpdatePlatbyGroupInput"]: {
+	/** All input for the `updatePlatbyGroupByNodeId` mutation. */
+["UpdatePlatbyGroupByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `PlatbyGroup` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `PlatbyGroup` being updated. */
-	platbyGroupPatch:ValueTypes["PlatbyGroupPatch"]
+	patch:ValueTypes["PlatbyGroupPatch"]
 };
 	/** Represents an update to a `PlatbyGroup`. Fields that are set will be updated. */
 ["PlatbyGroupPatch"]: {
@@ -4562,13 +4562,13 @@ payload verbatim. May be used to track mutations by the client. */
 	pgDescription?:string | null,
 	pgBase?:ValueTypes["BigInt"] | null
 };
-	/** All input for the `updatePlatbyGroupByPgId` mutation. */
-["UpdatePlatbyGroupByPgIdInput"]: {
+	/** All input for the `updatePlatbyGroup` mutation. */
+["UpdatePlatbyGroupInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `PlatbyGroup` being updated. */
-	platbyGroupPatch:ValueTypes["PlatbyGroupPatch"],
+	patch:ValueTypes["PlatbyGroupPatch"],
 	pgId:ValueTypes["BigInt"]
 };
 	/** The output of our update `PlatbyGroupSkupina` mutation. */
@@ -4588,15 +4588,15 @@ platbyGroupSkupinaEdge?: [{	/** The method to use when ordering `PlatbyGroupSkup
 	orderBy?:ValueTypes["PlatbyGroupSkupinasOrderBy"][]},ValueTypes["PlatbyGroupSkupinasEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updatePlatbyGroupSkupina` mutation. */
-["UpdatePlatbyGroupSkupinaInput"]: {
+	/** All input for the `updatePlatbyGroupSkupinaByNodeId` mutation. */
+["UpdatePlatbyGroupSkupinaByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `PlatbyGroupSkupina` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `PlatbyGroupSkupina` being updated. */
-	platbyGroupSkupinaPatch:ValueTypes["PlatbyGroupSkupinaPatch"]
+	patch:ValueTypes["PlatbyGroupSkupinaPatch"]
 };
 	/** Represents an update to a `PlatbyGroupSkupina`. Fields that are set will be updated. */
 ["PlatbyGroupSkupinaPatch"]: {
@@ -4604,13 +4604,13 @@ payload verbatim. May be used to track mutations by the client. */
 	pgsIdSkupina?:ValueTypes["BigInt"] | null,
 	pgsIdGroup?:ValueTypes["BigInt"] | null
 };
-	/** All input for the `updatePlatbyGroupSkupinaByPgsId` mutation. */
-["UpdatePlatbyGroupSkupinaByPgsIdInput"]: {
+	/** All input for the `updatePlatbyGroupSkupina` mutation. */
+["UpdatePlatbyGroupSkupinaInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `PlatbyGroupSkupina` being updated. */
-	platbyGroupSkupinaPatch:ValueTypes["PlatbyGroupSkupinaPatch"],
+	patch:ValueTypes["PlatbyGroupSkupinaPatch"],
 	pgsId:ValueTypes["BigInt"]
 };
 	/** The output of our update `PlatbyItem` mutation. */
@@ -4632,15 +4632,15 @@ platbyItemEdge?: [{	/** The method to use when ordering `PlatbyItem`. */
 	orderBy?:ValueTypes["PlatbyItemsOrderBy"][]},ValueTypes["PlatbyItemsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updatePlatbyItem` mutation. */
-["UpdatePlatbyItemInput"]: {
+	/** All input for the `updatePlatbyItemByNodeId` mutation. */
+["UpdatePlatbyItemByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `PlatbyItem` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `PlatbyItem` being updated. */
-	platbyItemPatch:ValueTypes["PlatbyItemPatch"]
+	patch:ValueTypes["PlatbyItemPatch"]
 };
 	/** Represents an update to a `PlatbyItem`. Fields that are set will be updated. */
 ["PlatbyItemPatch"]: {
@@ -4652,13 +4652,13 @@ payload verbatim. May be used to track mutations by the client. */
 	piDate?:ValueTypes["Date"] | null,
 	piPrefix?:number | null
 };
-	/** All input for the `updatePlatbyItemByPiId` mutation. */
-["UpdatePlatbyItemByPiIdInput"]: {
+	/** All input for the `updatePlatbyItem` mutation. */
+["UpdatePlatbyItemInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `PlatbyItem` being updated. */
-	platbyItemPatch:ValueTypes["PlatbyItemPatch"],
+	patch:ValueTypes["PlatbyItemPatch"],
 	piId:ValueTypes["BigInt"]
 };
 	/** The output of our update `PlatbyRaw` mutation. */
@@ -4674,15 +4674,15 @@ platbyRawEdge?: [{	/** The method to use when ordering `PlatbyRaw`. */
 	orderBy?:ValueTypes["PlatbyRawsOrderBy"][]},ValueTypes["PlatbyRawsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updatePlatbyRaw` mutation. */
-["UpdatePlatbyRawInput"]: {
+	/** All input for the `updatePlatbyRawByNodeId` mutation. */
+["UpdatePlatbyRawByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `PlatbyRaw` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `PlatbyRaw` being updated. */
-	platbyRawPatch:ValueTypes["PlatbyRawPatch"]
+	patch:ValueTypes["PlatbyRawPatch"]
 };
 	/** Represents an update to a `PlatbyRaw`. Fields that are set will be updated. */
 ["PlatbyRawPatch"]: {
@@ -4692,13 +4692,13 @@ payload verbatim. May be used to track mutations by the client. */
 	prSorted?:boolean | null,
 	prDiscarded?:boolean | null
 };
-	/** All input for the `updatePlatbyRawByPrId` mutation. */
-["UpdatePlatbyRawByPrIdInput"]: {
+	/** All input for the `updatePlatbyRaw` mutation. */
+["UpdatePlatbyRawInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `PlatbyRaw` being updated. */
-	platbyRawPatch:ValueTypes["PlatbyRawPatch"],
+	patch:ValueTypes["PlatbyRawPatch"],
 	prId:ValueTypes["BigInt"]
 };
 	/** The output of our update `Rozpi` mutation. */
@@ -4716,15 +4716,15 @@ rozpiEdge?: [{	/** The method to use when ordering `Rozpi`. */
 	orderBy?:ValueTypes["RozpisOrderBy"][]},ValueTypes["RozpisEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateRozpi` mutation. */
-["UpdateRozpiInput"]: {
+	/** All input for the `updateRozpiByNodeId` mutation. */
+["UpdateRozpiByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Rozpi` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `Rozpi` being updated. */
-	rozpiPatch:ValueTypes["RozpiPatch"]
+	patch:ValueTypes["RozpiPatch"]
 };
 	/** Represents an update to a `Rozpi`. Fields that are set will be updated. */
 ["RozpiPatch"]: {
@@ -4736,13 +4736,13 @@ payload verbatim. May be used to track mutations by the client. */
 	rLock?:boolean | null,
 	rTimestamp?:ValueTypes["Datetime"] | null
 };
-	/** All input for the `updateRozpiByRId` mutation. */
-["UpdateRozpiByRIdInput"]: {
+	/** All input for the `updateRozpi` mutation. */
+["UpdateRozpiInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `Rozpi` being updated. */
-	rozpiPatch:ValueTypes["RozpiPatch"],
+	patch:ValueTypes["RozpiPatch"],
 	rId:ValueTypes["BigInt"]
 };
 	/** The output of our update `RozpisItem` mutation. */
@@ -4762,15 +4762,15 @@ rozpisItemEdge?: [{	/** The method to use when ordering `RozpisItem`. */
 	orderBy?:ValueTypes["RozpisItemsOrderBy"][]},ValueTypes["RozpisItemsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateRozpisItem` mutation. */
-["UpdateRozpisItemInput"]: {
+	/** All input for the `updateRozpisItemByNodeId` mutation. */
+["UpdateRozpisItemByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `RozpisItem` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `RozpisItem` being updated. */
-	rozpisItemPatch:ValueTypes["RozpisItemPatch"]
+	patch:ValueTypes["RozpisItemPatch"]
 };
 	/** Represents an update to a `RozpisItem`. Fields that are set will be updated. */
 ["RozpisItemPatch"]: {
@@ -4781,13 +4781,13 @@ payload verbatim. May be used to track mutations by the client. */
 	riDo?:ValueTypes["Time"] | null,
 	riLock?:boolean | null
 };
-	/** All input for the `updateRozpisItemByRiId` mutation. */
-["UpdateRozpisItemByRiIdInput"]: {
+	/** All input for the `updateRozpisItem` mutation. */
+["UpdateRozpisItemInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `RozpisItem` being updated. */
-	rozpisItemPatch:ValueTypes["RozpisItemPatch"],
+	patch:ValueTypes["RozpisItemPatch"],
 	riId:ValueTypes["BigInt"]
 };
 	/** The output of our update `Session` mutation. */
@@ -4805,15 +4805,15 @@ sessionEdge?: [{	/** The method to use when ordering `Session`. */
 	orderBy?:ValueTypes["SessionsOrderBy"][]},ValueTypes["SessionsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateSession` mutation. */
-["UpdateSessionInput"]: {
+	/** All input for the `updateSessionByNodeId` mutation. */
+["UpdateSessionByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Session` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `Session` being updated. */
-	sessionPatch:ValueTypes["SessionPatch"]
+	patch:ValueTypes["SessionPatch"]
 };
 	/** Represents an update to a `Session`. Fields that are set will be updated. */
 ["SessionPatch"]: {
@@ -4823,13 +4823,13 @@ payload verbatim. May be used to track mutations by the client. */
 	ssLifetime?:ValueTypes["BigInt"] | null,
 	ssUser?:ValueTypes["BigInt"] | null
 };
-	/** All input for the `updateSessionBySsId` mutation. */
-["UpdateSessionBySsIdInput"]: {
+	/** All input for the `updateSession` mutation. */
+["UpdateSessionInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `Session` being updated. */
-	sessionPatch:ValueTypes["SessionPatch"],
+	patch:ValueTypes["SessionPatch"],
 	ssId:string
 };
 	/** The output of our update `Skupiny` mutation. */
@@ -4845,15 +4845,15 @@ skupinyEdge?: [{	/** The method to use when ordering `Skupiny`. */
 	orderBy?:ValueTypes["SkupiniesOrderBy"][]},ValueTypes["SkupiniesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateSkupiny` mutation. */
-["UpdateSkupinyInput"]: {
+	/** All input for the `updateSkupinyByNodeId` mutation. */
+["UpdateSkupinyByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Skupiny` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `Skupiny` being updated. */
-	skupinyPatch:ValueTypes["SkupinyPatch"]
+	patch:ValueTypes["SkupinyPatch"]
 };
 	/** Represents an update to a `Skupiny`. Fields that are set will be updated. */
 ["SkupinyPatch"]: {
@@ -4863,13 +4863,13 @@ payload verbatim. May be used to track mutations by the client. */
 	sColorRgb?:string | null,
 	sColorText?:string | null
 };
-	/** All input for the `updateSkupinyBySId` mutation. */
-["UpdateSkupinyBySIdInput"]: {
+	/** All input for the `updateSkupiny` mutation. */
+["UpdateSkupinyInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `Skupiny` being updated. */
-	skupinyPatch:ValueTypes["SkupinyPatch"],
+	patch:ValueTypes["SkupinyPatch"],
 	sId:ValueTypes["BigInt"]
 };
 	/** The output of our update `Upozorneni` mutation. */
@@ -4887,15 +4887,15 @@ upozorneniEdge?: [{	/** The method to use when ordering `Upozorneni`. */
 	orderBy?:ValueTypes["UpozornenisOrderBy"][]},ValueTypes["UpozornenisEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateUpozorneni` mutation. */
-["UpdateUpozorneniInput"]: {
+	/** All input for the `updateUpozorneniByNodeId` mutation. */
+["UpdateUpozorneniByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Upozorneni` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `Upozorneni` being updated. */
-	upozorneniPatch:ValueTypes["UpozorneniPatch"]
+	patch:ValueTypes["UpozorneniPatch"]
 };
 	/** Represents an update to a `Upozorneni`. Fields that are set will be updated. */
 ["UpozorneniPatch"]: {
@@ -4908,13 +4908,13 @@ payload verbatim. May be used to track mutations by the client. */
 	upTimestamp?:ValueTypes["Datetime"] | null,
 	upTimestampAdd?:ValueTypes["Datetime"] | null
 };
-	/** All input for the `updateUpozorneniByUpId` mutation. */
-["UpdateUpozorneniByUpIdInput"]: {
+	/** All input for the `updateUpozorneni` mutation. */
+["UpdateUpozorneniInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `Upozorneni` being updated. */
-	upozorneniPatch:ValueTypes["UpozorneniPatch"],
+	patch:ValueTypes["UpozorneniPatch"],
 	upId:ValueTypes["BigInt"]
 };
 	/** The output of our update `UpozorneniSkupiny` mutation. */
@@ -4934,15 +4934,15 @@ upozorneniSkupinyEdge?: [{	/** The method to use when ordering `UpozorneniSkupin
 	orderBy?:ValueTypes["UpozorneniSkupiniesOrderBy"][]},ValueTypes["UpozorneniSkupiniesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateUpozorneniSkupiny` mutation. */
-["UpdateUpozorneniSkupinyInput"]: {
+	/** All input for the `updateUpozorneniSkupinyByNodeId` mutation. */
+["UpdateUpozorneniSkupinyByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `UpozorneniSkupiny` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `UpozorneniSkupiny` being updated. */
-	upozorneniSkupinyPatch:ValueTypes["UpozorneniSkupinyPatch"]
+	patch:ValueTypes["UpozorneniSkupinyPatch"]
 };
 	/** Represents an update to a `UpozorneniSkupiny`. Fields that are set will be updated. */
 ["UpozorneniSkupinyPatch"]: {
@@ -4952,13 +4952,13 @@ payload verbatim. May be used to track mutations by the client. */
 	upsColor?:string | null,
 	upsPopis?:string | null
 };
-	/** All input for the `updateUpozorneniSkupinyByUpsId` mutation. */
-["UpdateUpozorneniSkupinyByUpsIdInput"]: {
+	/** All input for the `updateUpozorneniSkupiny` mutation. */
+["UpdateUpozorneniSkupinyInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `UpozorneniSkupiny` being updated. */
-	upozorneniSkupinyPatch:ValueTypes["UpozorneniSkupinyPatch"],
+	patch:ValueTypes["UpozorneniSkupinyPatch"],
 	upsId:ValueTypes["BigInt"]
 };
 	/** The output of our update `User` mutation. */
@@ -4978,15 +4978,15 @@ userEdge?: [{	/** The method to use when ordering `User`. */
 	orderBy?:ValueTypes["UsersOrderBy"][]},ValueTypes["UsersEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateUser` mutation. */
-["UpdateUserInput"]: {
+	/** All input for the `updateUserByNodeId` mutation. */
+["UpdateUserByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `User` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `User` being updated. */
-	userPatch:ValueTypes["UserPatch"]
+	patch:ValueTypes["UserPatch"]
 };
 	/** Represents an update to a `User`. Fields that are set will be updated. */
 ["UserPatch"]: {
@@ -5023,13 +5023,13 @@ payload verbatim. May be used to track mutations by the client. */
 	uTeacher?:boolean | null,
 	uGdprSignedAt?:ValueTypes["Datetime"] | null
 };
-	/** All input for the `updateUserByUId` mutation. */
-["UpdateUserByUIdInput"]: {
+	/** All input for the `updateUser` mutation. */
+["UpdateUserInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `User` being updated. */
-	userPatch:ValueTypes["UserPatch"],
+	patch:ValueTypes["UserPatch"],
 	uId:ValueTypes["BigInt"]
 };
 	/** The output of our update `UsersSkupiny` mutation. */
@@ -5045,15 +5045,15 @@ usersSkupinyEdge?: [{	/** The method to use when ordering `UsersSkupiny`. */
 	orderBy?:ValueTypes["UsersSkupiniesOrderBy"][]},ValueTypes["UsersSkupiniesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateUsersSkupiny` mutation. */
-["UpdateUsersSkupinyInput"]: {
+	/** All input for the `updateUsersSkupinyByNodeId` mutation. */
+["UpdateUsersSkupinyByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `UsersSkupiny` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `UsersSkupiny` being updated. */
-	usersSkupinyPatch:ValueTypes["UsersSkupinyPatch"]
+	patch:ValueTypes["UsersSkupinyPatch"]
 };
 	/** Represents an update to a `UsersSkupiny`. Fields that are set will be updated. */
 ["UsersSkupinyPatch"]: {
@@ -5064,13 +5064,13 @@ payload verbatim. May be used to track mutations by the client. */
 	usPlatbaPulrok?:ValueTypes["BigInt"] | null,
 	usPopis?:string | null
 };
-	/** All input for the `updateUsersSkupinyByUsId` mutation. */
-["UpdateUsersSkupinyByUsIdInput"]: {
+	/** All input for the `updateUsersSkupiny` mutation. */
+["UpdateUsersSkupinyInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `UsersSkupiny` being updated. */
-	usersSkupinyPatch:ValueTypes["UsersSkupinyPatch"],
+	patch:ValueTypes["UsersSkupinyPatch"],
 	usId:ValueTypes["BigInt"]
 };
 	/** The output of our update `Video` mutation. */
@@ -5086,15 +5086,15 @@ videoEdge?: [{	/** The method to use when ordering `Video`. */
 	orderBy?:ValueTypes["VideosOrderBy"][]},ValueTypes["VideosEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateVideo` mutation. */
-["UpdateVideoInput"]: {
+	/** All input for the `updateVideoByNodeId` mutation. */
+["UpdateVideoByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Video` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `Video` being updated. */
-	videoPatch:ValueTypes["VideoPatch"]
+	patch:ValueTypes["VideoPatch"]
 };
 	/** Represents an update to a `Video`. Fields that are set will be updated. */
 ["VideoPatch"]: {
@@ -5107,13 +5107,13 @@ payload verbatim. May be used to track mutations by the client. */
 	vCreatedAt?:ValueTypes["Datetime"] | null,
 	vUpdatedAt?:ValueTypes["Datetime"] | null
 };
-	/** All input for the `updateVideoByVId` mutation. */
-["UpdateVideoByVIdInput"]: {
+	/** All input for the `updateVideo` mutation. */
+["UpdateVideoInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `Video` being updated. */
-	videoPatch:ValueTypes["VideoPatch"],
+	patch:ValueTypes["VideoPatch"],
 	vId:ValueTypes["BigInt"]
 };
 	/** The output of our update `VideoList` mutation. */
@@ -5129,15 +5129,15 @@ videoListEdge?: [{	/** The method to use when ordering `VideoList`. */
 	orderBy?:ValueTypes["VideoListsOrderBy"][]},ValueTypes["VideoListsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateVideoList` mutation. */
-["UpdateVideoListInput"]: {
+	/** All input for the `updateVideoListByNodeId` mutation. */
+["UpdateVideoListByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `VideoList` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `VideoList` being updated. */
-	videoListPatch:ValueTypes["VideoListPatch"]
+	patch:ValueTypes["VideoListPatch"]
 };
 	/** Represents an update to a `VideoList`. Fields that are set will be updated. */
 ["VideoListPatch"]: {
@@ -5149,13 +5149,13 @@ payload verbatim. May be used to track mutations by the client. */
 	vlCreatedAt?:ValueTypes["Datetime"] | null,
 	vlLastChecked?:ValueTypes["Datetime"] | null
 };
-	/** All input for the `updateVideoListByVlId` mutation. */
-["UpdateVideoListByVlIdInput"]: {
+	/** All input for the `updateVideoList` mutation. */
+["UpdateVideoListInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `VideoList` being updated. */
-	videoListPatch:ValueTypes["VideoListPatch"],
+	patch:ValueTypes["VideoListPatch"],
 	vlId:ValueTypes["BigInt"]
 };
 	/** The output of our update `VideoSource` mutation. */
@@ -5171,15 +5171,15 @@ videoSourceEdge?: [{	/** The method to use when ordering `VideoSource`. */
 	orderBy?:ValueTypes["VideoSourcesOrderBy"][]},ValueTypes["VideoSourcesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateVideoSource` mutation. */
-["UpdateVideoSourceInput"]: {
+	/** All input for the `updateVideoSourceByNodeId` mutation. */
+["UpdateVideoSourceByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `VideoSource` to be updated. */
 	nodeId:string,
 	/** An object where the defined keys will be set on the `VideoSource` being updated. */
-	videoSourcePatch:ValueTypes["VideoSourcePatch"]
+	patch:ValueTypes["VideoSourcePatch"]
 };
 	/** Represents an update to a `VideoSource`. Fields that are set will be updated. */
 ["VideoSourcePatch"]: {
@@ -5190,13 +5190,13 @@ payload verbatim. May be used to track mutations by the client. */
 	vsCreatedAt?:ValueTypes["Datetime"] | null,
 	vsLastChecked?:ValueTypes["Datetime"] | null
 };
-	/** All input for the `updateVideoSourceByVsId` mutation. */
-["UpdateVideoSourceByVsIdInput"]: {
+	/** All input for the `updateVideoSource` mutation. */
+["UpdateVideoSourceInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** An object where the defined keys will be set on the `VideoSource` being updated. */
-	videoSourcePatch:ValueTypes["VideoSourcePatch"],
+	patch:ValueTypes["VideoSourcePatch"],
 	vsId:ValueTypes["BigInt"]
 };
 	/** The output of our delete `Akce` mutation. */
@@ -5206,23 +5206,23 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `Akce` that was deleted by this mutation. */
 	akce?:ValueTypes["Akce"],
-	deletedAkceId?:boolean,
+	deletedAkceNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 akceEdge?: [{	/** The method to use when ordering `Akce`. */
 	orderBy?:ValueTypes["AkcesOrderBy"][]},ValueTypes["AkcesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteAkce` mutation. */
-["DeleteAkceInput"]: {
+	/** All input for the `deleteAkceByNodeId` mutation. */
+["DeleteAkceByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Akce` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deleteAkceByAId` mutation. */
-["DeleteAkceByAIdInput"]: {
+	/** All input for the `deleteAkce` mutation. */
+["DeleteAkceInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5235,7 +5235,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `AkceItem` that was deleted by this mutation. */
 	akceItem?:ValueTypes["AkceItem"],
-	deletedAkceItemId?:boolean,
+	deletedAkceItemNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 	/** Reads a single `Akce` that is related to this `AkceItem`. */
@@ -5246,16 +5246,16 @@ akceItemEdge?: [{	/** The method to use when ordering `AkceItem`. */
 	orderBy?:ValueTypes["AkceItemsOrderBy"][]},ValueTypes["AkceItemsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteAkceItem` mutation. */
-["DeleteAkceItemInput"]: {
+	/** All input for the `deleteAkceItemByNodeId` mutation. */
+["DeleteAkceItemByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `AkceItem` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deleteAkceItemByAiId` mutation. */
-["DeleteAkceItemByAiIdInput"]: {
+	/** All input for the `deleteAkceItem` mutation. */
+["DeleteAkceItemInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5268,7 +5268,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `Aktuality` that was deleted by this mutation. */
 	aktuality?:ValueTypes["Aktuality"],
-	deletedAktualityId?:boolean,
+	deletedAktualityNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 	/** Reads a single `User` that is related to this `Aktuality`. */
@@ -5279,16 +5279,16 @@ aktualityEdge?: [{	/** The method to use when ordering `Aktuality`. */
 	orderBy?:ValueTypes["AktualitiesOrderBy"][]},ValueTypes["AktualitiesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteAktuality` mutation. */
-["DeleteAktualityInput"]: {
+	/** All input for the `deleteAktualityByNodeId` mutation. */
+["DeleteAktualityByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Aktuality` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deleteAktualityByAtId` mutation. */
-["DeleteAktualityByAtIdInput"]: {
+	/** All input for the `deleteAktuality` mutation. */
+["DeleteAktualityInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5301,7 +5301,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `Dokumenty` that was deleted by this mutation. */
 	dokumenty?:ValueTypes["Dokumenty"],
-	deletedDokumentyId?:boolean,
+	deletedDokumentyNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 	/** Reads a single `User` that is related to this `Dokumenty`. */
@@ -5310,16 +5310,16 @@ dokumentyEdge?: [{	/** The method to use when ordering `Dokumenty`. */
 	orderBy?:ValueTypes["DokumentiesOrderBy"][]},ValueTypes["DokumentiesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteDokumenty` mutation. */
-["DeleteDokumentyInput"]: {
+	/** All input for the `deleteDokumentyByNodeId` mutation. */
+["DeleteDokumentyByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Dokumenty` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deleteDokumentyByDId` mutation. */
-["DeleteDokumentyByDIdInput"]: {
+	/** All input for the `deleteDokumenty` mutation. */
+["DeleteDokumentyInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5332,23 +5332,23 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `GalerieDir` that was deleted by this mutation. */
 	galerieDir?:ValueTypes["GalerieDir"],
-	deletedGalerieDirId?:boolean,
+	deletedGalerieDirNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 galerieDirEdge?: [{	/** The method to use when ordering `GalerieDir`. */
 	orderBy?:ValueTypes["GalerieDirsOrderBy"][]},ValueTypes["GalerieDirsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteGalerieDir` mutation. */
-["DeleteGalerieDirInput"]: {
+	/** All input for the `deleteGalerieDirByNodeId` mutation. */
+["DeleteGalerieDirByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `GalerieDir` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deleteGalerieDirByGdId` mutation. */
-["DeleteGalerieDirByGdIdInput"]: {
+	/** All input for the `deleteGalerieDir` mutation. */
+["DeleteGalerieDirInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5361,7 +5361,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `GalerieFoto` that was deleted by this mutation. */
 	galerieFoto?:ValueTypes["GalerieFoto"],
-	deletedGalerieFotoId?:boolean,
+	deletedGalerieFotoNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 	/** Reads a single `GalerieDir` that is related to this `GalerieFoto`. */
@@ -5372,16 +5372,16 @@ galerieFotoEdge?: [{	/** The method to use when ordering `GalerieFoto`. */
 	orderBy?:ValueTypes["GalerieFotosOrderBy"][]},ValueTypes["GalerieFotosEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteGalerieFoto` mutation. */
-["DeleteGalerieFotoInput"]: {
+	/** All input for the `deleteGalerieFotoByNodeId` mutation. */
+["DeleteGalerieFotoByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `GalerieFoto` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deleteGalerieFotoByGfId` mutation. */
-["DeleteGalerieFotoByGfIdInput"]: {
+	/** All input for the `deleteGalerieFoto` mutation. */
+["DeleteGalerieFotoInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5394,7 +5394,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `Nabidka` that was deleted by this mutation. */
 	nabidka?:ValueTypes["Nabidka"],
-	deletedNabidkaId?:boolean,
+	deletedNabidkaNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 	/** Reads a single `User` that is related to this `Nabidka`. */
@@ -5403,16 +5403,16 @@ nabidkaEdge?: [{	/** The method to use when ordering `Nabidka`. */
 	orderBy?:ValueTypes["NabidkasOrderBy"][]},ValueTypes["NabidkasEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteNabidka` mutation. */
-["DeleteNabidkaInput"]: {
+	/** All input for the `deleteNabidkaByNodeId` mutation. */
+["DeleteNabidkaByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Nabidka` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deleteNabidkaByNId` mutation. */
-["DeleteNabidkaByNIdInput"]: {
+	/** All input for the `deleteNabidka` mutation. */
+["DeleteNabidkaInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5425,7 +5425,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `NabidkaItem` that was deleted by this mutation. */
 	nabidkaItem?:ValueTypes["NabidkaItem"],
-	deletedNabidkaItemId?:boolean,
+	deletedNabidkaItemNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 	/** Reads a single `Nabidka` that is related to this `NabidkaItem`. */
@@ -5436,16 +5436,16 @@ nabidkaItemEdge?: [{	/** The method to use when ordering `NabidkaItem`. */
 	orderBy?:ValueTypes["NabidkaItemsOrderBy"][]},ValueTypes["NabidkaItemsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteNabidkaItem` mutation. */
-["DeleteNabidkaItemInput"]: {
+	/** All input for the `deleteNabidkaItemByNodeId` mutation. */
+["DeleteNabidkaItemByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `NabidkaItem` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deleteNabidkaItemByNiId` mutation. */
-["DeleteNabidkaItemByNiIdInput"]: {
+	/** All input for the `deleteNabidkaItem` mutation. */
+["DeleteNabidkaItemInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5458,23 +5458,23 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `Parameter` that was deleted by this mutation. */
 	parameter?:ValueTypes["Parameter"],
-	deletedParameterId?:boolean,
+	deletedParameterNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 parameterEdge?: [{	/** The method to use when ordering `Parameter`. */
 	orderBy?:ValueTypes["ParametersOrderBy"][]},ValueTypes["ParametersEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteParameter` mutation. */
-["DeleteParameterInput"]: {
+	/** All input for the `deleteParameterByNodeId` mutation. */
+["DeleteParameterByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Parameter` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deleteParameterByPaName` mutation. */
-["DeleteParameterByPaNameInput"]: {
+	/** All input for the `deleteParameter` mutation. */
+["DeleteParameterInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5487,7 +5487,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `Pary` that was deleted by this mutation. */
 	pary?:ValueTypes["Pary"],
-	deletedParyId?:boolean,
+	deletedParyNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 	/** Reads a single `User` that is related to this `Pary`. */
@@ -5496,16 +5496,16 @@ paryEdge?: [{	/** The method to use when ordering `Pary`. */
 	orderBy?:ValueTypes["PariesOrderBy"][]},ValueTypes["PariesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deletePary` mutation. */
-["DeleteParyInput"]: {
+	/** All input for the `deleteParyByNodeId` mutation. */
+["DeleteParyByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Pary` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deleteParyByPId` mutation. */
-["DeleteParyByPIdInput"]: {
+	/** All input for the `deletePary` mutation. */
+["DeleteParyInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5518,7 +5518,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `ParyNavrh` that was deleted by this mutation. */
 	paryNavrh?:ValueTypes["ParyNavrh"],
-	deletedParyNavrhId?:boolean,
+	deletedParyNavrhNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 	/** Reads a single `User` that is related to this `ParyNavrh`. */
@@ -5531,16 +5531,16 @@ paryNavrhEdge?: [{	/** The method to use when ordering `ParyNavrh`. */
 	orderBy?:ValueTypes["ParyNavrhsOrderBy"][]},ValueTypes["ParyNavrhsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteParyNavrh` mutation. */
-["DeleteParyNavrhInput"]: {
+	/** All input for the `deleteParyNavrhByNodeId` mutation. */
+["DeleteParyNavrhByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `ParyNavrh` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deleteParyNavrhByPnId` mutation. */
-["DeleteParyNavrhByPnIdInput"]: {
+	/** All input for the `deleteParyNavrh` mutation. */
+["DeleteParyNavrhInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5553,23 +5553,23 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `Permission` that was deleted by this mutation. */
 	permission?:ValueTypes["Permission"],
-	deletedPermissionId?:boolean,
+	deletedPermissionNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 permissionEdge?: [{	/** The method to use when ordering `Permission`. */
 	orderBy?:ValueTypes["PermissionsOrderBy"][]},ValueTypes["PermissionsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deletePermission` mutation. */
-["DeletePermissionInput"]: {
+	/** All input for the `deletePermissionByNodeId` mutation. */
+["DeletePermissionByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Permission` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deletePermissionByPeId` mutation. */
-["DeletePermissionByPeIdInput"]: {
+	/** All input for the `deletePermission` mutation. */
+["DeletePermissionInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5582,23 +5582,23 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `PlatbyCategory` that was deleted by this mutation. */
 	platbyCategory?:ValueTypes["PlatbyCategory"],
-	deletedPlatbyCategoryId?:boolean,
+	deletedPlatbyCategoryNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 platbyCategoryEdge?: [{	/** The method to use when ordering `PlatbyCategory`. */
 	orderBy?:ValueTypes["PlatbyCategoriesOrderBy"][]},ValueTypes["PlatbyCategoriesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deletePlatbyCategory` mutation. */
-["DeletePlatbyCategoryInput"]: {
+	/** All input for the `deletePlatbyCategoryByNodeId` mutation. */
+["DeletePlatbyCategoryByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `PlatbyCategory` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deletePlatbyCategoryByPcId` mutation. */
-["DeletePlatbyCategoryByPcIdInput"]: {
+	/** All input for the `deletePlatbyCategory` mutation. */
+["DeletePlatbyCategoryInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5611,7 +5611,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `PlatbyCategoryGroup` that was deleted by this mutation. */
 	platbyCategoryGroup?:ValueTypes["PlatbyCategoryGroup"],
-	deletedPlatbyCategoryGroupId?:boolean,
+	deletedPlatbyCategoryGroupNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 	/** Reads a single `PlatbyGroup` that is related to this `PlatbyCategoryGroup`. */
@@ -5622,16 +5622,16 @@ platbyCategoryGroupEdge?: [{	/** The method to use when ordering `PlatbyCategory
 	orderBy?:ValueTypes["PlatbyCategoryGroupsOrderBy"][]},ValueTypes["PlatbyCategoryGroupsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deletePlatbyCategoryGroup` mutation. */
-["DeletePlatbyCategoryGroupInput"]: {
+	/** All input for the `deletePlatbyCategoryGroupByNodeId` mutation. */
+["DeletePlatbyCategoryGroupByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `PlatbyCategoryGroup` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deletePlatbyCategoryGroupByPcgId` mutation. */
-["DeletePlatbyCategoryGroupByPcgIdInput"]: {
+	/** All input for the `deletePlatbyCategoryGroup` mutation. */
+["DeletePlatbyCategoryGroupInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5644,23 +5644,23 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `PlatbyGroup` that was deleted by this mutation. */
 	platbyGroup?:ValueTypes["PlatbyGroup"],
-	deletedPlatbyGroupId?:boolean,
+	deletedPlatbyGroupNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 platbyGroupEdge?: [{	/** The method to use when ordering `PlatbyGroup`. */
 	orderBy?:ValueTypes["PlatbyGroupsOrderBy"][]},ValueTypes["PlatbyGroupsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deletePlatbyGroup` mutation. */
-["DeletePlatbyGroupInput"]: {
+	/** All input for the `deletePlatbyGroupByNodeId` mutation. */
+["DeletePlatbyGroupByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `PlatbyGroup` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deletePlatbyGroupByPgId` mutation. */
-["DeletePlatbyGroupByPgIdInput"]: {
+	/** All input for the `deletePlatbyGroup` mutation. */
+["DeletePlatbyGroupInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5673,7 +5673,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `PlatbyGroupSkupina` that was deleted by this mutation. */
 	platbyGroupSkupina?:ValueTypes["PlatbyGroupSkupina"],
-	deletedPlatbyGroupSkupinaId?:boolean,
+	deletedPlatbyGroupSkupinaNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 	/** Reads a single `Skupiny` that is related to this `PlatbyGroupSkupina`. */
@@ -5684,16 +5684,16 @@ platbyGroupSkupinaEdge?: [{	/** The method to use when ordering `PlatbyGroupSkup
 	orderBy?:ValueTypes["PlatbyGroupSkupinasOrderBy"][]},ValueTypes["PlatbyGroupSkupinasEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deletePlatbyGroupSkupina` mutation. */
-["DeletePlatbyGroupSkupinaInput"]: {
+	/** All input for the `deletePlatbyGroupSkupinaByNodeId` mutation. */
+["DeletePlatbyGroupSkupinaByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `PlatbyGroupSkupina` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deletePlatbyGroupSkupinaByPgsId` mutation. */
-["DeletePlatbyGroupSkupinaByPgsIdInput"]: {
+	/** All input for the `deletePlatbyGroupSkupina` mutation. */
+["DeletePlatbyGroupSkupinaInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5706,7 +5706,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `PlatbyItem` that was deleted by this mutation. */
 	platbyItem?:ValueTypes["PlatbyItem"],
-	deletedPlatbyItemId?:boolean,
+	deletedPlatbyItemNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 	/** Reads a single `User` that is related to this `PlatbyItem`. */
@@ -5719,16 +5719,16 @@ platbyItemEdge?: [{	/** The method to use when ordering `PlatbyItem`. */
 	orderBy?:ValueTypes["PlatbyItemsOrderBy"][]},ValueTypes["PlatbyItemsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deletePlatbyItem` mutation. */
-["DeletePlatbyItemInput"]: {
+	/** All input for the `deletePlatbyItemByNodeId` mutation. */
+["DeletePlatbyItemByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `PlatbyItem` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deletePlatbyItemByPiId` mutation. */
-["DeletePlatbyItemByPiIdInput"]: {
+	/** All input for the `deletePlatbyItem` mutation. */
+["DeletePlatbyItemInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5741,23 +5741,23 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `PlatbyRaw` that was deleted by this mutation. */
 	platbyRaw?:ValueTypes["PlatbyRaw"],
-	deletedPlatbyRawId?:boolean,
+	deletedPlatbyRawNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 platbyRawEdge?: [{	/** The method to use when ordering `PlatbyRaw`. */
 	orderBy?:ValueTypes["PlatbyRawsOrderBy"][]},ValueTypes["PlatbyRawsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deletePlatbyRaw` mutation. */
-["DeletePlatbyRawInput"]: {
+	/** All input for the `deletePlatbyRawByNodeId` mutation. */
+["DeletePlatbyRawByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `PlatbyRaw` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deletePlatbyRawByPrId` mutation. */
-["DeletePlatbyRawByPrIdInput"]: {
+	/** All input for the `deletePlatbyRaw` mutation. */
+["DeletePlatbyRawInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5770,7 +5770,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `Rozpi` that was deleted by this mutation. */
 	rozpi?:ValueTypes["Rozpi"],
-	deletedRozpiId?:boolean,
+	deletedRozpiNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 	/** Reads a single `User` that is related to this `Rozpi`. */
@@ -5779,16 +5779,16 @@ rozpiEdge?: [{	/** The method to use when ordering `Rozpi`. */
 	orderBy?:ValueTypes["RozpisOrderBy"][]},ValueTypes["RozpisEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteRozpi` mutation. */
-["DeleteRozpiInput"]: {
+	/** All input for the `deleteRozpiByNodeId` mutation. */
+["DeleteRozpiByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Rozpi` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deleteRozpiByRId` mutation. */
-["DeleteRozpiByRIdInput"]: {
+	/** All input for the `deleteRozpi` mutation. */
+["DeleteRozpiInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5801,7 +5801,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `RozpisItem` that was deleted by this mutation. */
 	rozpisItem?:ValueTypes["RozpisItem"],
-	deletedRozpisItemId?:boolean,
+	deletedRozpisItemNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 	/** Reads a single `Rozpi` that is related to this `RozpisItem`. */
@@ -5812,16 +5812,16 @@ rozpisItemEdge?: [{	/** The method to use when ordering `RozpisItem`. */
 	orderBy?:ValueTypes["RozpisItemsOrderBy"][]},ValueTypes["RozpisItemsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteRozpisItem` mutation. */
-["DeleteRozpisItemInput"]: {
+	/** All input for the `deleteRozpisItemByNodeId` mutation. */
+["DeleteRozpisItemByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `RozpisItem` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deleteRozpisItemByRiId` mutation. */
-["DeleteRozpisItemByRiIdInput"]: {
+	/** All input for the `deleteRozpisItem` mutation. */
+["DeleteRozpisItemInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5834,7 +5834,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `Session` that was deleted by this mutation. */
 	session?:ValueTypes["Session"],
-	deletedSessionId?:boolean,
+	deletedSessionNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 	/** Reads a single `User` that is related to this `Session`. */
@@ -5843,16 +5843,16 @@ sessionEdge?: [{	/** The method to use when ordering `Session`. */
 	orderBy?:ValueTypes["SessionsOrderBy"][]},ValueTypes["SessionsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteSession` mutation. */
-["DeleteSessionInput"]: {
+	/** All input for the `deleteSessionByNodeId` mutation. */
+["DeleteSessionByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Session` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deleteSessionBySsId` mutation. */
-["DeleteSessionBySsIdInput"]: {
+	/** All input for the `deleteSession` mutation. */
+["DeleteSessionInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5865,23 +5865,23 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `Skupiny` that was deleted by this mutation. */
 	skupiny?:ValueTypes["Skupiny"],
-	deletedSkupinyId?:boolean,
+	deletedSkupinyNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 skupinyEdge?: [{	/** The method to use when ordering `Skupiny`. */
 	orderBy?:ValueTypes["SkupiniesOrderBy"][]},ValueTypes["SkupiniesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteSkupiny` mutation. */
-["DeleteSkupinyInput"]: {
+	/** All input for the `deleteSkupinyByNodeId` mutation. */
+["DeleteSkupinyByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Skupiny` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deleteSkupinyBySId` mutation. */
-["DeleteSkupinyBySIdInput"]: {
+	/** All input for the `deleteSkupiny` mutation. */
+["DeleteSkupinyInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5894,7 +5894,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `Upozorneni` that was deleted by this mutation. */
 	upozorneni?:ValueTypes["Upozorneni"],
-	deletedUpozorneniId?:boolean,
+	deletedUpozorneniNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 	/** Reads a single `User` that is related to this `Upozorneni`. */
@@ -5903,16 +5903,16 @@ upozorneniEdge?: [{	/** The method to use when ordering `Upozorneni`. */
 	orderBy?:ValueTypes["UpozornenisOrderBy"][]},ValueTypes["UpozornenisEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteUpozorneni` mutation. */
-["DeleteUpozorneniInput"]: {
+	/** All input for the `deleteUpozorneniByNodeId` mutation. */
+["DeleteUpozorneniByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Upozorneni` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deleteUpozorneniByUpId` mutation. */
-["DeleteUpozorneniByUpIdInput"]: {
+	/** All input for the `deleteUpozorneni` mutation. */
+["DeleteUpozorneniInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5925,7 +5925,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `UpozorneniSkupiny` that was deleted by this mutation. */
 	upozorneniSkupiny?:ValueTypes["UpozorneniSkupiny"],
-	deletedUpozorneniSkupinyId?:boolean,
+	deletedUpozorneniSkupinyNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 	/** Reads a single `Upozorneni` that is related to this `UpozorneniSkupiny`. */
@@ -5936,16 +5936,16 @@ upozorneniSkupinyEdge?: [{	/** The method to use when ordering `UpozorneniSkupin
 	orderBy?:ValueTypes["UpozorneniSkupiniesOrderBy"][]},ValueTypes["UpozorneniSkupiniesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteUpozorneniSkupiny` mutation. */
-["DeleteUpozorneniSkupinyInput"]: {
+	/** All input for the `deleteUpozorneniSkupinyByNodeId` mutation. */
+["DeleteUpozorneniSkupinyByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `UpozorneniSkupiny` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deleteUpozorneniSkupinyByUpsId` mutation. */
-["DeleteUpozorneniSkupinyByUpsIdInput"]: {
+	/** All input for the `deleteUpozorneniSkupiny` mutation. */
+["DeleteUpozorneniSkupinyInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5958,7 +5958,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `User` that was deleted by this mutation. */
 	user?:ValueTypes["User"],
-	deletedUserId?:boolean,
+	deletedUserNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 	/** Reads a single `Permission` that is related to this `User`. */
@@ -5969,16 +5969,16 @@ userEdge?: [{	/** The method to use when ordering `User`. */
 	orderBy?:ValueTypes["UsersOrderBy"][]},ValueTypes["UsersEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteUser` mutation. */
-["DeleteUserInput"]: {
+	/** All input for the `deleteUserByNodeId` mutation. */
+["DeleteUserByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `User` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deleteUserByUId` mutation. */
-["DeleteUserByUIdInput"]: {
+	/** All input for the `deleteUser` mutation. */
+["DeleteUserInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -5991,23 +5991,23 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `UsersSkupiny` that was deleted by this mutation. */
 	usersSkupiny?:ValueTypes["UsersSkupiny"],
-	deletedUsersSkupinyId?:boolean,
+	deletedUsersSkupinyNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 usersSkupinyEdge?: [{	/** The method to use when ordering `UsersSkupiny`. */
 	orderBy?:ValueTypes["UsersSkupiniesOrderBy"][]},ValueTypes["UsersSkupiniesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteUsersSkupiny` mutation. */
-["DeleteUsersSkupinyInput"]: {
+	/** All input for the `deleteUsersSkupinyByNodeId` mutation. */
+["DeleteUsersSkupinyByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `UsersSkupiny` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deleteUsersSkupinyByUsId` mutation. */
-["DeleteUsersSkupinyByUsIdInput"]: {
+	/** All input for the `deleteUsersSkupiny` mutation. */
+["DeleteUsersSkupinyInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -6020,23 +6020,23 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `Video` that was deleted by this mutation. */
 	video?:ValueTypes["Video"],
-	deletedVideoId?:boolean,
+	deletedVideoNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 videoEdge?: [{	/** The method to use when ordering `Video`. */
 	orderBy?:ValueTypes["VideosOrderBy"][]},ValueTypes["VideosEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteVideo` mutation. */
-["DeleteVideoInput"]: {
+	/** All input for the `deleteVideoByNodeId` mutation. */
+["DeleteVideoByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `Video` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deleteVideoByVId` mutation. */
-["DeleteVideoByVIdInput"]: {
+	/** All input for the `deleteVideo` mutation. */
+["DeleteVideoInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -6049,23 +6049,23 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `VideoList` that was deleted by this mutation. */
 	videoList?:ValueTypes["VideoList"],
-	deletedVideoListId?:boolean,
+	deletedVideoListNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 videoListEdge?: [{	/** The method to use when ordering `VideoList`. */
 	orderBy?:ValueTypes["VideoListsOrderBy"][]},ValueTypes["VideoListsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteVideoList` mutation. */
-["DeleteVideoListInput"]: {
+	/** All input for the `deleteVideoListByNodeId` mutation. */
+["DeleteVideoListByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `VideoList` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deleteVideoListByVlId` mutation. */
-["DeleteVideoListByVlIdInput"]: {
+	/** All input for the `deleteVideoList` mutation. */
+["DeleteVideoListInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -6078,23 +6078,23 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
 	/** The `VideoSource` that was deleted by this mutation. */
 	videoSource?:ValueTypes["VideoSource"],
-	deletedVideoSourceId?:boolean,
+	deletedVideoSourceNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
 videoSourceEdge?: [{	/** The method to use when ordering `VideoSource`. */
 	orderBy?:ValueTypes["VideoSourcesOrderBy"][]},ValueTypes["VideoSourcesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteVideoSource` mutation. */
-["DeleteVideoSourceInput"]: {
+	/** All input for the `deleteVideoSourceByNodeId` mutation. */
+["DeleteVideoSourceByNodeIdInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	/** The globally unique `ID` which will identify a single `VideoSource` to be deleted. */
 	nodeId:string
 };
-	/** All input for the `deleteVideoSourceByVsId` mutation. */
-["DeleteVideoSourceByVsIdInput"]: {
+	/** All input for the `deleteVideoSource` mutation. */
+["DeleteVideoSourceInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
@@ -6152,101 +6152,101 @@ which can only query top level fields if they are in a particular form. */
 	/** Fetches an object given its globally unique `ID`. */
 	node?:ModelTypes["Node"],
 	/** Reads and enables pagination through a set of `Akce`. */
-	allAkces?:ModelTypes["AkcesConnection"],
+	akces?:ModelTypes["AkcesConnection"],
 	/** Reads and enables pagination through a set of `AkceItem`. */
-	allAkceItems?:ModelTypes["AkceItemsConnection"],
+	akceItems?:ModelTypes["AkceItemsConnection"],
 	/** Reads and enables pagination through a set of `Aktuality`. */
-	allAktualities?:ModelTypes["AktualitiesConnection"],
+	aktualities?:ModelTypes["AktualitiesConnection"],
 	/** Reads and enables pagination through a set of `Dokumenty`. */
-	allDokumenties?:ModelTypes["DokumentiesConnection"],
+	dokumenties?:ModelTypes["DokumentiesConnection"],
 	/** Reads and enables pagination through a set of `GalerieDir`. */
-	allGalerieDirs?:ModelTypes["GalerieDirsConnection"],
+	galerieDirs?:ModelTypes["GalerieDirsConnection"],
 	/** Reads and enables pagination through a set of `GalerieFoto`. */
-	allGalerieFotos?:ModelTypes["GalerieFotosConnection"],
+	galerieFotos?:ModelTypes["GalerieFotosConnection"],
 	/** Reads and enables pagination through a set of `Member`. */
-	allMembers?:ModelTypes["MembersConnection"],
+	members?:ModelTypes["MembersConnection"],
 	/** Reads and enables pagination through a set of `Nabidka`. */
-	allNabidkas?:ModelTypes["NabidkasConnection"],
+	nabidkas?:ModelTypes["NabidkasConnection"],
 	/** Reads and enables pagination through a set of `NabidkaItem`. */
-	allNabidkaItems?:ModelTypes["NabidkaItemsConnection"],
+	nabidkaItems?:ModelTypes["NabidkaItemsConnection"],
 	/** Reads and enables pagination through a set of `Page`. */
-	allPages?:ModelTypes["PagesConnection"],
+	pages?:ModelTypes["PagesConnection"],
 	/** Reads and enables pagination through a set of `PageRevision`. */
-	allPageRevisions?:ModelTypes["PageRevisionsConnection"],
+	pageRevisions?:ModelTypes["PageRevisionsConnection"],
 	/** Reads and enables pagination through a set of `Parameter`. */
-	allParameters?:ModelTypes["ParametersConnection"],
+	parameters?:ModelTypes["ParametersConnection"],
 	/** Reads and enables pagination through a set of `Pary`. */
-	allParies?:ModelTypes["PariesConnection"],
+	paries?:ModelTypes["PariesConnection"],
 	/** Reads and enables pagination through a set of `ParyNavrh`. */
-	allParyNavrhs?:ModelTypes["ParyNavrhsConnection"],
+	paryNavrhs?:ModelTypes["ParyNavrhsConnection"],
 	/** Reads and enables pagination through a set of `Permission`. */
-	allPermissions?:ModelTypes["PermissionsConnection"],
+	permissions?:ModelTypes["PermissionsConnection"],
 	/** Reads and enables pagination through a set of `PlatbyCategory`. */
-	allPlatbyCategories?:ModelTypes["PlatbyCategoriesConnection"],
+	platbyCategories?:ModelTypes["PlatbyCategoriesConnection"],
 	/** Reads and enables pagination through a set of `PlatbyCategoryGroup`. */
-	allPlatbyCategoryGroups?:ModelTypes["PlatbyCategoryGroupsConnection"],
+	platbyCategoryGroups?:ModelTypes["PlatbyCategoryGroupsConnection"],
 	/** Reads and enables pagination through a set of `PlatbyGroup`. */
-	allPlatbyGroups?:ModelTypes["PlatbyGroupsConnection"],
+	platbyGroups?:ModelTypes["PlatbyGroupsConnection"],
 	/** Reads and enables pagination through a set of `PlatbyGroupSkupina`. */
-	allPlatbyGroupSkupinas?:ModelTypes["PlatbyGroupSkupinasConnection"],
+	platbyGroupSkupinas?:ModelTypes["PlatbyGroupSkupinasConnection"],
 	/** Reads and enables pagination through a set of `PlatbyItem`. */
-	allPlatbyItems?:ModelTypes["PlatbyItemsConnection"],
+	platbyItems?:ModelTypes["PlatbyItemsConnection"],
 	/** Reads and enables pagination through a set of `PlatbyRaw`. */
-	allPlatbyRaws?:ModelTypes["PlatbyRawsConnection"],
+	platbyRaws?:ModelTypes["PlatbyRawsConnection"],
 	/** Reads and enables pagination through a set of `Rozpi`. */
-	allRozpis?:ModelTypes["RozpisConnection"],
+	rozpis?:ModelTypes["RozpisConnection"],
 	/** Reads and enables pagination through a set of `RozpisItem`. */
-	allRozpisItems?:ModelTypes["RozpisItemsConnection"],
+	rozpisItems?:ModelTypes["RozpisItemsConnection"],
 	/** Reads and enables pagination through a set of `Session`. */
-	allSessions?:ModelTypes["SessionsConnection"],
+	sessions?:ModelTypes["SessionsConnection"],
 	/** Reads and enables pagination through a set of `Skupiny`. */
-	allSkupinies?:ModelTypes["SkupiniesConnection"],
+	skupinies?:ModelTypes["SkupiniesConnection"],
 	/** Reads and enables pagination through a set of `Upozorneni`. */
-	allUpozornenis?:ModelTypes["UpozornenisConnection"],
+	upozornenis?:ModelTypes["UpozornenisConnection"],
 	/** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
-	allUpozorneniSkupinies?:ModelTypes["UpozorneniSkupiniesConnection"],
+	upozorneniSkupinies?:ModelTypes["UpozorneniSkupiniesConnection"],
 	/** Reads and enables pagination through a set of `User`. */
-	allUsers?:ModelTypes["UsersConnection"],
+	users?:ModelTypes["UsersConnection"],
 	/** Reads and enables pagination through a set of `UsersSkupiny`. */
-	allUsersSkupinies?:ModelTypes["UsersSkupiniesConnection"],
+	usersSkupinies?:ModelTypes["UsersSkupiniesConnection"],
 	/** Reads and enables pagination through a set of `Video`. */
-	allVideos?:ModelTypes["VideosConnection"],
+	videos?:ModelTypes["VideosConnection"],
 	/** Reads and enables pagination through a set of `VideoList`. */
-	allVideoLists?:ModelTypes["VideoListsConnection"],
+	videoLists?:ModelTypes["VideoListsConnection"],
 	/** Reads and enables pagination through a set of `VideoSource`. */
-	allVideoSources?:ModelTypes["VideoSourcesConnection"],
-	akceByAId?:ModelTypes["Akce"],
-	akceItemByAiId?:ModelTypes["AkceItem"],
-	aktualityByAtId?:ModelTypes["Aktuality"],
-	dokumentyByDId?:ModelTypes["Dokumenty"],
-	galerieDirByGdId?:ModelTypes["GalerieDir"],
-	galerieFotoByGfId?:ModelTypes["GalerieFoto"],
-	nabidkaByNId?:ModelTypes["Nabidka"],
-	nabidkaItemByNiId?:ModelTypes["NabidkaItem"],
-	pageById?:ModelTypes["Page"],
+	videoSources?:ModelTypes["VideoSourcesConnection"],
+	akce?:ModelTypes["Akce"],
+	akceItem?:ModelTypes["AkceItem"],
+	aktuality?:ModelTypes["Aktuality"],
+	dokumenty?:ModelTypes["Dokumenty"],
+	galerieDir?:ModelTypes["GalerieDir"],
+	galerieFoto?:ModelTypes["GalerieFoto"],
+	nabidka?:ModelTypes["Nabidka"],
+	nabidkaItem?:ModelTypes["NabidkaItem"],
+	page?:ModelTypes["Page"],
 	pageByUrl?:ModelTypes["Page"],
-	pageRevisionByRevNumberAndId?:ModelTypes["PageRevision"],
-	parameterByPaName?:ModelTypes["Parameter"],
-	paryByPId?:ModelTypes["Pary"],
-	paryNavrhByPnId?:ModelTypes["ParyNavrh"],
-	permissionByPeId?:ModelTypes["Permission"],
-	platbyCategoryByPcId?:ModelTypes["PlatbyCategory"],
-	platbyCategoryGroupByPcgId?:ModelTypes["PlatbyCategoryGroup"],
-	platbyGroupByPgId?:ModelTypes["PlatbyGroup"],
-	platbyGroupSkupinaByPgsId?:ModelTypes["PlatbyGroupSkupina"],
-	platbyItemByPiId?:ModelTypes["PlatbyItem"],
-	platbyRawByPrId?:ModelTypes["PlatbyRaw"],
-	rozpiByRId?:ModelTypes["Rozpi"],
-	rozpisItemByRiId?:ModelTypes["RozpisItem"],
-	sessionBySsId?:ModelTypes["Session"],
-	skupinyBySId?:ModelTypes["Skupiny"],
-	upozorneniByUpId?:ModelTypes["Upozorneni"],
-	upozorneniSkupinyByUpsId?:ModelTypes["UpozorneniSkupiny"],
-	userByUId?:ModelTypes["User"],
-	usersSkupinyByUsId?:ModelTypes["UsersSkupiny"],
-	videoByVId?:ModelTypes["Video"],
-	videoListByVlId?:ModelTypes["VideoList"],
-	videoSourceByVsId?:ModelTypes["VideoSource"],
+	pageRevision?:ModelTypes["PageRevision"],
+	parameter?:ModelTypes["Parameter"],
+	pary?:ModelTypes["Pary"],
+	paryNavrh?:ModelTypes["ParyNavrh"],
+	permission?:ModelTypes["Permission"],
+	platbyCategory?:ModelTypes["PlatbyCategory"],
+	platbyCategoryGroup?:ModelTypes["PlatbyCategoryGroup"],
+	platbyGroup?:ModelTypes["PlatbyGroup"],
+	platbyGroupSkupina?:ModelTypes["PlatbyGroupSkupina"],
+	platbyItem?:ModelTypes["PlatbyItem"],
+	platbyRaw?:ModelTypes["PlatbyRaw"],
+	rozpi?:ModelTypes["Rozpi"],
+	rozpisItem?:ModelTypes["RozpisItem"],
+	session?:ModelTypes["Session"],
+	skupiny?:ModelTypes["Skupiny"],
+	upozorneni?:ModelTypes["Upozorneni"],
+	upozorneniSkupiny?:ModelTypes["UpozorneniSkupiny"],
+	user?:ModelTypes["User"],
+	usersSkupiny?:ModelTypes["UsersSkupiny"],
+	video?:ModelTypes["Video"],
+	videoList?:ModelTypes["VideoList"],
+	videoSource?:ModelTypes["VideoSource"],
 	currentCoupleIds?:ModelTypes["CurrentCoupleIdsConnection"],
 	currentSessionId?:string,
 	currentUserId?:ModelTypes["BigInt"],
@@ -6254,67 +6254,67 @@ which can only query top level fields if they are in a particular form. */
 	/** Reads and enables pagination through a set of `Video`. */
 	titleVideos?:ModelTypes["VideosConnection"],
 	/** Reads a single `Akce` using its globally unique `ID`. */
-	akce?:ModelTypes["Akce"],
+	akceByNodeId?:ModelTypes["Akce"],
 	/** Reads a single `AkceItem` using its globally unique `ID`. */
-	akceItem?:ModelTypes["AkceItem"],
+	akceItemByNodeId?:ModelTypes["AkceItem"],
 	/** Reads a single `Aktuality` using its globally unique `ID`. */
-	aktuality?:ModelTypes["Aktuality"],
+	aktualityByNodeId?:ModelTypes["Aktuality"],
 	/** Reads a single `Dokumenty` using its globally unique `ID`. */
-	dokumenty?:ModelTypes["Dokumenty"],
+	dokumentyByNodeId?:ModelTypes["Dokumenty"],
 	/** Reads a single `GalerieDir` using its globally unique `ID`. */
-	galerieDir?:ModelTypes["GalerieDir"],
+	galerieDirByNodeId?:ModelTypes["GalerieDir"],
 	/** Reads a single `GalerieFoto` using its globally unique `ID`. */
-	galerieFoto?:ModelTypes["GalerieFoto"],
+	galerieFotoByNodeId?:ModelTypes["GalerieFoto"],
 	/** Reads a single `Nabidka` using its globally unique `ID`. */
-	nabidka?:ModelTypes["Nabidka"],
+	nabidkaByNodeId?:ModelTypes["Nabidka"],
 	/** Reads a single `NabidkaItem` using its globally unique `ID`. */
-	nabidkaItem?:ModelTypes["NabidkaItem"],
+	nabidkaItemByNodeId?:ModelTypes["NabidkaItem"],
 	/** Reads a single `Page` using its globally unique `ID`. */
-	page?:ModelTypes["Page"],
+	pageByNodeId?:ModelTypes["Page"],
 	/** Reads a single `PageRevision` using its globally unique `ID`. */
-	pageRevision?:ModelTypes["PageRevision"],
+	pageRevisionByNodeId?:ModelTypes["PageRevision"],
 	/** Reads a single `Parameter` using its globally unique `ID`. */
-	parameter?:ModelTypes["Parameter"],
+	parameterByNodeId?:ModelTypes["Parameter"],
 	/** Reads a single `Pary` using its globally unique `ID`. */
-	pary?:ModelTypes["Pary"],
+	paryByNodeId?:ModelTypes["Pary"],
 	/** Reads a single `ParyNavrh` using its globally unique `ID`. */
-	paryNavrh?:ModelTypes["ParyNavrh"],
+	paryNavrhByNodeId?:ModelTypes["ParyNavrh"],
 	/** Reads a single `Permission` using its globally unique `ID`. */
-	permission?:ModelTypes["Permission"],
+	permissionByNodeId?:ModelTypes["Permission"],
 	/** Reads a single `PlatbyCategory` using its globally unique `ID`. */
-	platbyCategory?:ModelTypes["PlatbyCategory"],
+	platbyCategoryByNodeId?:ModelTypes["PlatbyCategory"],
 	/** Reads a single `PlatbyCategoryGroup` using its globally unique `ID`. */
-	platbyCategoryGroup?:ModelTypes["PlatbyCategoryGroup"],
+	platbyCategoryGroupByNodeId?:ModelTypes["PlatbyCategoryGroup"],
 	/** Reads a single `PlatbyGroup` using its globally unique `ID`. */
-	platbyGroup?:ModelTypes["PlatbyGroup"],
+	platbyGroupByNodeId?:ModelTypes["PlatbyGroup"],
 	/** Reads a single `PlatbyGroupSkupina` using its globally unique `ID`. */
-	platbyGroupSkupina?:ModelTypes["PlatbyGroupSkupina"],
+	platbyGroupSkupinaByNodeId?:ModelTypes["PlatbyGroupSkupina"],
 	/** Reads a single `PlatbyItem` using its globally unique `ID`. */
-	platbyItem?:ModelTypes["PlatbyItem"],
+	platbyItemByNodeId?:ModelTypes["PlatbyItem"],
 	/** Reads a single `PlatbyRaw` using its globally unique `ID`. */
-	platbyRaw?:ModelTypes["PlatbyRaw"],
+	platbyRawByNodeId?:ModelTypes["PlatbyRaw"],
 	/** Reads a single `Rozpi` using its globally unique `ID`. */
-	rozpi?:ModelTypes["Rozpi"],
+	rozpiByNodeId?:ModelTypes["Rozpi"],
 	/** Reads a single `RozpisItem` using its globally unique `ID`. */
-	rozpisItem?:ModelTypes["RozpisItem"],
+	rozpisItemByNodeId?:ModelTypes["RozpisItem"],
 	/** Reads a single `Session` using its globally unique `ID`. */
-	session?:ModelTypes["Session"],
+	sessionByNodeId?:ModelTypes["Session"],
 	/** Reads a single `Skupiny` using its globally unique `ID`. */
-	skupiny?:ModelTypes["Skupiny"],
+	skupinyByNodeId?:ModelTypes["Skupiny"],
 	/** Reads a single `Upozorneni` using its globally unique `ID`. */
-	upozorneni?:ModelTypes["Upozorneni"],
+	upozorneniByNodeId?:ModelTypes["Upozorneni"],
 	/** Reads a single `UpozorneniSkupiny` using its globally unique `ID`. */
-	upozorneniSkupiny?:ModelTypes["UpozorneniSkupiny"],
+	upozorneniSkupinyByNodeId?:ModelTypes["UpozorneniSkupiny"],
 	/** Reads a single `User` using its globally unique `ID`. */
-	user?:ModelTypes["User"],
+	userByNodeId?:ModelTypes["User"],
 	/** Reads a single `UsersSkupiny` using its globally unique `ID`. */
-	usersSkupiny?:ModelTypes["UsersSkupiny"],
+	usersSkupinyByNodeId?:ModelTypes["UsersSkupiny"],
 	/** Reads a single `Video` using its globally unique `ID`. */
-	video?:ModelTypes["Video"],
+	videoByNodeId?:ModelTypes["Video"],
 	/** Reads a single `VideoList` using its globally unique `ID`. */
-	videoList?:ModelTypes["VideoList"],
+	videoListByNodeId?:ModelTypes["VideoList"],
 	/** Reads a single `VideoSource` using its globally unique `ID`. */
-	videoSource?:ModelTypes["VideoSource"]
+	videoSourceByNodeId?:ModelTypes["VideoSource"]
 };
 	/** An object with a globally unique `ID`. */
 ["Node"]: ModelTypes["Query"] | ModelTypes["Akce"] | ModelTypes["AkceItem"] | ModelTypes["User"] | ModelTypes["Permission"] | ModelTypes["Skupiny"] | ModelTypes["PlatbyGroupSkupina"] | ModelTypes["PlatbyGroup"] | ModelTypes["PlatbyCategoryGroup"] | ModelTypes["PlatbyCategory"] | ModelTypes["PlatbyItem"] | ModelTypes["PlatbyRaw"] | ModelTypes["UpozorneniSkupiny"] | ModelTypes["Upozorneni"] | ModelTypes["Aktuality"] | ModelTypes["GalerieFoto"] | ModelTypes["GalerieDir"] | ModelTypes["Dokumenty"] | ModelTypes["Nabidka"] | ModelTypes["NabidkaItem"] | ModelTypes["Pary"] | ModelTypes["RozpisItem"] | ModelTypes["Rozpi"] | ModelTypes["ParyNavrh"] | ModelTypes["Session"] | ModelTypes["Page"] | ModelTypes["PageRevision"] | ModelTypes["Parameter"] | ModelTypes["UsersSkupiny"] | ModelTypes["Video"] | ModelTypes["VideoList"] | ModelTypes["VideoSource"];
@@ -7639,243 +7639,243 @@ for equality and combined with a logical ‘and.’ */
 	/** Creates a single `VideoSource`. */
 	createVideoSource?:ModelTypes["CreateVideoSourcePayload"],
 	/** Updates a single `Akce` using its globally unique id and a patch. */
-	updateAkce?:ModelTypes["UpdateAkcePayload"],
+	updateAkceByNodeId?:ModelTypes["UpdateAkcePayload"],
 	/** Updates a single `Akce` using a unique key and a patch. */
-	updateAkceByAId?:ModelTypes["UpdateAkcePayload"],
+	updateAkce?:ModelTypes["UpdateAkcePayload"],
 	/** Updates a single `AkceItem` using its globally unique id and a patch. */
-	updateAkceItem?:ModelTypes["UpdateAkceItemPayload"],
+	updateAkceItemByNodeId?:ModelTypes["UpdateAkceItemPayload"],
 	/** Updates a single `AkceItem` using a unique key and a patch. */
-	updateAkceItemByAiId?:ModelTypes["UpdateAkceItemPayload"],
+	updateAkceItem?:ModelTypes["UpdateAkceItemPayload"],
 	/** Updates a single `Aktuality` using its globally unique id and a patch. */
-	updateAktuality?:ModelTypes["UpdateAktualityPayload"],
+	updateAktualityByNodeId?:ModelTypes["UpdateAktualityPayload"],
 	/** Updates a single `Aktuality` using a unique key and a patch. */
-	updateAktualityByAtId?:ModelTypes["UpdateAktualityPayload"],
+	updateAktuality?:ModelTypes["UpdateAktualityPayload"],
 	/** Updates a single `Dokumenty` using its globally unique id and a patch. */
-	updateDokumenty?:ModelTypes["UpdateDokumentyPayload"],
+	updateDokumentyByNodeId?:ModelTypes["UpdateDokumentyPayload"],
 	/** Updates a single `Dokumenty` using a unique key and a patch. */
-	updateDokumentyByDId?:ModelTypes["UpdateDokumentyPayload"],
+	updateDokumenty?:ModelTypes["UpdateDokumentyPayload"],
 	/** Updates a single `GalerieDir` using its globally unique id and a patch. */
-	updateGalerieDir?:ModelTypes["UpdateGalerieDirPayload"],
+	updateGalerieDirByNodeId?:ModelTypes["UpdateGalerieDirPayload"],
 	/** Updates a single `GalerieDir` using a unique key and a patch. */
-	updateGalerieDirByGdId?:ModelTypes["UpdateGalerieDirPayload"],
+	updateGalerieDir?:ModelTypes["UpdateGalerieDirPayload"],
 	/** Updates a single `GalerieFoto` using its globally unique id and a patch. */
-	updateGalerieFoto?:ModelTypes["UpdateGalerieFotoPayload"],
+	updateGalerieFotoByNodeId?:ModelTypes["UpdateGalerieFotoPayload"],
 	/** Updates a single `GalerieFoto` using a unique key and a patch. */
-	updateGalerieFotoByGfId?:ModelTypes["UpdateGalerieFotoPayload"],
+	updateGalerieFoto?:ModelTypes["UpdateGalerieFotoPayload"],
 	/** Updates a single `Nabidka` using its globally unique id and a patch. */
-	updateNabidka?:ModelTypes["UpdateNabidkaPayload"],
+	updateNabidkaByNodeId?:ModelTypes["UpdateNabidkaPayload"],
 	/** Updates a single `Nabidka` using a unique key and a patch. */
-	updateNabidkaByNId?:ModelTypes["UpdateNabidkaPayload"],
+	updateNabidka?:ModelTypes["UpdateNabidkaPayload"],
 	/** Updates a single `NabidkaItem` using its globally unique id and a patch. */
-	updateNabidkaItem?:ModelTypes["UpdateNabidkaItemPayload"],
+	updateNabidkaItemByNodeId?:ModelTypes["UpdateNabidkaItemPayload"],
 	/** Updates a single `NabidkaItem` using a unique key and a patch. */
-	updateNabidkaItemByNiId?:ModelTypes["UpdateNabidkaItemPayload"],
+	updateNabidkaItem?:ModelTypes["UpdateNabidkaItemPayload"],
 	/** Updates a single `Page` using its globally unique id and a patch. */
-	updatePage?:ModelTypes["UpdatePagePayload"],
+	updatePageByNodeId?:ModelTypes["UpdatePagePayload"],
 	/** Updates a single `Page` using a unique key and a patch. */
-	updatePageById?:ModelTypes["UpdatePagePayload"],
+	updatePage?:ModelTypes["UpdatePagePayload"],
 	/** Updates a single `Page` using a unique key and a patch. */
 	updatePageByUrl?:ModelTypes["UpdatePagePayload"],
 	/** Updates a single `Parameter` using its globally unique id and a patch. */
-	updateParameter?:ModelTypes["UpdateParameterPayload"],
+	updateParameterByNodeId?:ModelTypes["UpdateParameterPayload"],
 	/** Updates a single `Parameter` using a unique key and a patch. */
-	updateParameterByPaName?:ModelTypes["UpdateParameterPayload"],
+	updateParameter?:ModelTypes["UpdateParameterPayload"],
 	/** Updates a single `Pary` using its globally unique id and a patch. */
-	updatePary?:ModelTypes["UpdateParyPayload"],
+	updateParyByNodeId?:ModelTypes["UpdateParyPayload"],
 	/** Updates a single `Pary` using a unique key and a patch. */
-	updateParyByPId?:ModelTypes["UpdateParyPayload"],
+	updatePary?:ModelTypes["UpdateParyPayload"],
 	/** Updates a single `ParyNavrh` using its globally unique id and a patch. */
-	updateParyNavrh?:ModelTypes["UpdateParyNavrhPayload"],
+	updateParyNavrhByNodeId?:ModelTypes["UpdateParyNavrhPayload"],
 	/** Updates a single `ParyNavrh` using a unique key and a patch. */
-	updateParyNavrhByPnId?:ModelTypes["UpdateParyNavrhPayload"],
+	updateParyNavrh?:ModelTypes["UpdateParyNavrhPayload"],
 	/** Updates a single `Permission` using its globally unique id and a patch. */
-	updatePermission?:ModelTypes["UpdatePermissionPayload"],
+	updatePermissionByNodeId?:ModelTypes["UpdatePermissionPayload"],
 	/** Updates a single `Permission` using a unique key and a patch. */
-	updatePermissionByPeId?:ModelTypes["UpdatePermissionPayload"],
+	updatePermission?:ModelTypes["UpdatePermissionPayload"],
 	/** Updates a single `PlatbyCategory` using its globally unique id and a patch. */
-	updatePlatbyCategory?:ModelTypes["UpdatePlatbyCategoryPayload"],
+	updatePlatbyCategoryByNodeId?:ModelTypes["UpdatePlatbyCategoryPayload"],
 	/** Updates a single `PlatbyCategory` using a unique key and a patch. */
-	updatePlatbyCategoryByPcId?:ModelTypes["UpdatePlatbyCategoryPayload"],
+	updatePlatbyCategory?:ModelTypes["UpdatePlatbyCategoryPayload"],
 	/** Updates a single `PlatbyCategoryGroup` using its globally unique id and a patch. */
-	updatePlatbyCategoryGroup?:ModelTypes["UpdatePlatbyCategoryGroupPayload"],
+	updatePlatbyCategoryGroupByNodeId?:ModelTypes["UpdatePlatbyCategoryGroupPayload"],
 	/** Updates a single `PlatbyCategoryGroup` using a unique key and a patch. */
-	updatePlatbyCategoryGroupByPcgId?:ModelTypes["UpdatePlatbyCategoryGroupPayload"],
+	updatePlatbyCategoryGroup?:ModelTypes["UpdatePlatbyCategoryGroupPayload"],
 	/** Updates a single `PlatbyGroup` using its globally unique id and a patch. */
-	updatePlatbyGroup?:ModelTypes["UpdatePlatbyGroupPayload"],
+	updatePlatbyGroupByNodeId?:ModelTypes["UpdatePlatbyGroupPayload"],
 	/** Updates a single `PlatbyGroup` using a unique key and a patch. */
-	updatePlatbyGroupByPgId?:ModelTypes["UpdatePlatbyGroupPayload"],
+	updatePlatbyGroup?:ModelTypes["UpdatePlatbyGroupPayload"],
 	/** Updates a single `PlatbyGroupSkupina` using its globally unique id and a patch. */
-	updatePlatbyGroupSkupina?:ModelTypes["UpdatePlatbyGroupSkupinaPayload"],
+	updatePlatbyGroupSkupinaByNodeId?:ModelTypes["UpdatePlatbyGroupSkupinaPayload"],
 	/** Updates a single `PlatbyGroupSkupina` using a unique key and a patch. */
-	updatePlatbyGroupSkupinaByPgsId?:ModelTypes["UpdatePlatbyGroupSkupinaPayload"],
+	updatePlatbyGroupSkupina?:ModelTypes["UpdatePlatbyGroupSkupinaPayload"],
 	/** Updates a single `PlatbyItem` using its globally unique id and a patch. */
-	updatePlatbyItem?:ModelTypes["UpdatePlatbyItemPayload"],
+	updatePlatbyItemByNodeId?:ModelTypes["UpdatePlatbyItemPayload"],
 	/** Updates a single `PlatbyItem` using a unique key and a patch. */
-	updatePlatbyItemByPiId?:ModelTypes["UpdatePlatbyItemPayload"],
+	updatePlatbyItem?:ModelTypes["UpdatePlatbyItemPayload"],
 	/** Updates a single `PlatbyRaw` using its globally unique id and a patch. */
-	updatePlatbyRaw?:ModelTypes["UpdatePlatbyRawPayload"],
+	updatePlatbyRawByNodeId?:ModelTypes["UpdatePlatbyRawPayload"],
 	/** Updates a single `PlatbyRaw` using a unique key and a patch. */
-	updatePlatbyRawByPrId?:ModelTypes["UpdatePlatbyRawPayload"],
+	updatePlatbyRaw?:ModelTypes["UpdatePlatbyRawPayload"],
 	/** Updates a single `Rozpi` using its globally unique id and a patch. */
-	updateRozpi?:ModelTypes["UpdateRozpiPayload"],
+	updateRozpiByNodeId?:ModelTypes["UpdateRozpiPayload"],
 	/** Updates a single `Rozpi` using a unique key and a patch. */
-	updateRozpiByRId?:ModelTypes["UpdateRozpiPayload"],
+	updateRozpi?:ModelTypes["UpdateRozpiPayload"],
 	/** Updates a single `RozpisItem` using its globally unique id and a patch. */
-	updateRozpisItem?:ModelTypes["UpdateRozpisItemPayload"],
+	updateRozpisItemByNodeId?:ModelTypes["UpdateRozpisItemPayload"],
 	/** Updates a single `RozpisItem` using a unique key and a patch. */
-	updateRozpisItemByRiId?:ModelTypes["UpdateRozpisItemPayload"],
+	updateRozpisItem?:ModelTypes["UpdateRozpisItemPayload"],
 	/** Updates a single `Session` using its globally unique id and a patch. */
-	updateSession?:ModelTypes["UpdateSessionPayload"],
+	updateSessionByNodeId?:ModelTypes["UpdateSessionPayload"],
 	/** Updates a single `Session` using a unique key and a patch. */
-	updateSessionBySsId?:ModelTypes["UpdateSessionPayload"],
+	updateSession?:ModelTypes["UpdateSessionPayload"],
 	/** Updates a single `Skupiny` using its globally unique id and a patch. */
-	updateSkupiny?:ModelTypes["UpdateSkupinyPayload"],
+	updateSkupinyByNodeId?:ModelTypes["UpdateSkupinyPayload"],
 	/** Updates a single `Skupiny` using a unique key and a patch. */
-	updateSkupinyBySId?:ModelTypes["UpdateSkupinyPayload"],
+	updateSkupiny?:ModelTypes["UpdateSkupinyPayload"],
 	/** Updates a single `Upozorneni` using its globally unique id and a patch. */
-	updateUpozorneni?:ModelTypes["UpdateUpozorneniPayload"],
+	updateUpozorneniByNodeId?:ModelTypes["UpdateUpozorneniPayload"],
 	/** Updates a single `Upozorneni` using a unique key and a patch. */
-	updateUpozorneniByUpId?:ModelTypes["UpdateUpozorneniPayload"],
+	updateUpozorneni?:ModelTypes["UpdateUpozorneniPayload"],
 	/** Updates a single `UpozorneniSkupiny` using its globally unique id and a patch. */
-	updateUpozorneniSkupiny?:ModelTypes["UpdateUpozorneniSkupinyPayload"],
+	updateUpozorneniSkupinyByNodeId?:ModelTypes["UpdateUpozorneniSkupinyPayload"],
 	/** Updates a single `UpozorneniSkupiny` using a unique key and a patch. */
-	updateUpozorneniSkupinyByUpsId?:ModelTypes["UpdateUpozorneniSkupinyPayload"],
+	updateUpozorneniSkupiny?:ModelTypes["UpdateUpozorneniSkupinyPayload"],
 	/** Updates a single `User` using its globally unique id and a patch. */
-	updateUser?:ModelTypes["UpdateUserPayload"],
+	updateUserByNodeId?:ModelTypes["UpdateUserPayload"],
 	/** Updates a single `User` using a unique key and a patch. */
-	updateUserByUId?:ModelTypes["UpdateUserPayload"],
+	updateUser?:ModelTypes["UpdateUserPayload"],
 	/** Updates a single `UsersSkupiny` using its globally unique id and a patch. */
-	updateUsersSkupiny?:ModelTypes["UpdateUsersSkupinyPayload"],
+	updateUsersSkupinyByNodeId?:ModelTypes["UpdateUsersSkupinyPayload"],
 	/** Updates a single `UsersSkupiny` using a unique key and a patch. */
-	updateUsersSkupinyByUsId?:ModelTypes["UpdateUsersSkupinyPayload"],
+	updateUsersSkupiny?:ModelTypes["UpdateUsersSkupinyPayload"],
 	/** Updates a single `Video` using its globally unique id and a patch. */
-	updateVideo?:ModelTypes["UpdateVideoPayload"],
+	updateVideoByNodeId?:ModelTypes["UpdateVideoPayload"],
 	/** Updates a single `Video` using a unique key and a patch. */
-	updateVideoByVId?:ModelTypes["UpdateVideoPayload"],
+	updateVideo?:ModelTypes["UpdateVideoPayload"],
 	/** Updates a single `VideoList` using its globally unique id and a patch. */
-	updateVideoList?:ModelTypes["UpdateVideoListPayload"],
+	updateVideoListByNodeId?:ModelTypes["UpdateVideoListPayload"],
 	/** Updates a single `VideoList` using a unique key and a patch. */
-	updateVideoListByVlId?:ModelTypes["UpdateVideoListPayload"],
+	updateVideoList?:ModelTypes["UpdateVideoListPayload"],
 	/** Updates a single `VideoSource` using its globally unique id and a patch. */
-	updateVideoSource?:ModelTypes["UpdateVideoSourcePayload"],
+	updateVideoSourceByNodeId?:ModelTypes["UpdateVideoSourcePayload"],
 	/** Updates a single `VideoSource` using a unique key and a patch. */
-	updateVideoSourceByVsId?:ModelTypes["UpdateVideoSourcePayload"],
+	updateVideoSource?:ModelTypes["UpdateVideoSourcePayload"],
 	/** Deletes a single `Akce` using its globally unique id. */
-	deleteAkce?:ModelTypes["DeleteAkcePayload"],
+	deleteAkceByNodeId?:ModelTypes["DeleteAkcePayload"],
 	/** Deletes a single `Akce` using a unique key. */
-	deleteAkceByAId?:ModelTypes["DeleteAkcePayload"],
+	deleteAkce?:ModelTypes["DeleteAkcePayload"],
 	/** Deletes a single `AkceItem` using its globally unique id. */
-	deleteAkceItem?:ModelTypes["DeleteAkceItemPayload"],
+	deleteAkceItemByNodeId?:ModelTypes["DeleteAkceItemPayload"],
 	/** Deletes a single `AkceItem` using a unique key. */
-	deleteAkceItemByAiId?:ModelTypes["DeleteAkceItemPayload"],
+	deleteAkceItem?:ModelTypes["DeleteAkceItemPayload"],
 	/** Deletes a single `Aktuality` using its globally unique id. */
-	deleteAktuality?:ModelTypes["DeleteAktualityPayload"],
+	deleteAktualityByNodeId?:ModelTypes["DeleteAktualityPayload"],
 	/** Deletes a single `Aktuality` using a unique key. */
-	deleteAktualityByAtId?:ModelTypes["DeleteAktualityPayload"],
+	deleteAktuality?:ModelTypes["DeleteAktualityPayload"],
 	/** Deletes a single `Dokumenty` using its globally unique id. */
-	deleteDokumenty?:ModelTypes["DeleteDokumentyPayload"],
+	deleteDokumentyByNodeId?:ModelTypes["DeleteDokumentyPayload"],
 	/** Deletes a single `Dokumenty` using a unique key. */
-	deleteDokumentyByDId?:ModelTypes["DeleteDokumentyPayload"],
+	deleteDokumenty?:ModelTypes["DeleteDokumentyPayload"],
 	/** Deletes a single `GalerieDir` using its globally unique id. */
-	deleteGalerieDir?:ModelTypes["DeleteGalerieDirPayload"],
+	deleteGalerieDirByNodeId?:ModelTypes["DeleteGalerieDirPayload"],
 	/** Deletes a single `GalerieDir` using a unique key. */
-	deleteGalerieDirByGdId?:ModelTypes["DeleteGalerieDirPayload"],
+	deleteGalerieDir?:ModelTypes["DeleteGalerieDirPayload"],
 	/** Deletes a single `GalerieFoto` using its globally unique id. */
-	deleteGalerieFoto?:ModelTypes["DeleteGalerieFotoPayload"],
+	deleteGalerieFotoByNodeId?:ModelTypes["DeleteGalerieFotoPayload"],
 	/** Deletes a single `GalerieFoto` using a unique key. */
-	deleteGalerieFotoByGfId?:ModelTypes["DeleteGalerieFotoPayload"],
+	deleteGalerieFoto?:ModelTypes["DeleteGalerieFotoPayload"],
 	/** Deletes a single `Nabidka` using its globally unique id. */
-	deleteNabidka?:ModelTypes["DeleteNabidkaPayload"],
+	deleteNabidkaByNodeId?:ModelTypes["DeleteNabidkaPayload"],
 	/** Deletes a single `Nabidka` using a unique key. */
-	deleteNabidkaByNId?:ModelTypes["DeleteNabidkaPayload"],
+	deleteNabidka?:ModelTypes["DeleteNabidkaPayload"],
 	/** Deletes a single `NabidkaItem` using its globally unique id. */
-	deleteNabidkaItem?:ModelTypes["DeleteNabidkaItemPayload"],
+	deleteNabidkaItemByNodeId?:ModelTypes["DeleteNabidkaItemPayload"],
 	/** Deletes a single `NabidkaItem` using a unique key. */
-	deleteNabidkaItemByNiId?:ModelTypes["DeleteNabidkaItemPayload"],
+	deleteNabidkaItem?:ModelTypes["DeleteNabidkaItemPayload"],
 	/** Deletes a single `Parameter` using its globally unique id. */
-	deleteParameter?:ModelTypes["DeleteParameterPayload"],
+	deleteParameterByNodeId?:ModelTypes["DeleteParameterPayload"],
 	/** Deletes a single `Parameter` using a unique key. */
-	deleteParameterByPaName?:ModelTypes["DeleteParameterPayload"],
+	deleteParameter?:ModelTypes["DeleteParameterPayload"],
 	/** Deletes a single `Pary` using its globally unique id. */
-	deletePary?:ModelTypes["DeleteParyPayload"],
+	deleteParyByNodeId?:ModelTypes["DeleteParyPayload"],
 	/** Deletes a single `Pary` using a unique key. */
-	deleteParyByPId?:ModelTypes["DeleteParyPayload"],
+	deletePary?:ModelTypes["DeleteParyPayload"],
 	/** Deletes a single `ParyNavrh` using its globally unique id. */
-	deleteParyNavrh?:ModelTypes["DeleteParyNavrhPayload"],
+	deleteParyNavrhByNodeId?:ModelTypes["DeleteParyNavrhPayload"],
 	/** Deletes a single `ParyNavrh` using a unique key. */
-	deleteParyNavrhByPnId?:ModelTypes["DeleteParyNavrhPayload"],
+	deleteParyNavrh?:ModelTypes["DeleteParyNavrhPayload"],
 	/** Deletes a single `Permission` using its globally unique id. */
-	deletePermission?:ModelTypes["DeletePermissionPayload"],
+	deletePermissionByNodeId?:ModelTypes["DeletePermissionPayload"],
 	/** Deletes a single `Permission` using a unique key. */
-	deletePermissionByPeId?:ModelTypes["DeletePermissionPayload"],
+	deletePermission?:ModelTypes["DeletePermissionPayload"],
 	/** Deletes a single `PlatbyCategory` using its globally unique id. */
-	deletePlatbyCategory?:ModelTypes["DeletePlatbyCategoryPayload"],
+	deletePlatbyCategoryByNodeId?:ModelTypes["DeletePlatbyCategoryPayload"],
 	/** Deletes a single `PlatbyCategory` using a unique key. */
-	deletePlatbyCategoryByPcId?:ModelTypes["DeletePlatbyCategoryPayload"],
+	deletePlatbyCategory?:ModelTypes["DeletePlatbyCategoryPayload"],
 	/** Deletes a single `PlatbyCategoryGroup` using its globally unique id. */
-	deletePlatbyCategoryGroup?:ModelTypes["DeletePlatbyCategoryGroupPayload"],
+	deletePlatbyCategoryGroupByNodeId?:ModelTypes["DeletePlatbyCategoryGroupPayload"],
 	/** Deletes a single `PlatbyCategoryGroup` using a unique key. */
-	deletePlatbyCategoryGroupByPcgId?:ModelTypes["DeletePlatbyCategoryGroupPayload"],
+	deletePlatbyCategoryGroup?:ModelTypes["DeletePlatbyCategoryGroupPayload"],
 	/** Deletes a single `PlatbyGroup` using its globally unique id. */
-	deletePlatbyGroup?:ModelTypes["DeletePlatbyGroupPayload"],
+	deletePlatbyGroupByNodeId?:ModelTypes["DeletePlatbyGroupPayload"],
 	/** Deletes a single `PlatbyGroup` using a unique key. */
-	deletePlatbyGroupByPgId?:ModelTypes["DeletePlatbyGroupPayload"],
+	deletePlatbyGroup?:ModelTypes["DeletePlatbyGroupPayload"],
 	/** Deletes a single `PlatbyGroupSkupina` using its globally unique id. */
-	deletePlatbyGroupSkupina?:ModelTypes["DeletePlatbyGroupSkupinaPayload"],
+	deletePlatbyGroupSkupinaByNodeId?:ModelTypes["DeletePlatbyGroupSkupinaPayload"],
 	/** Deletes a single `PlatbyGroupSkupina` using a unique key. */
-	deletePlatbyGroupSkupinaByPgsId?:ModelTypes["DeletePlatbyGroupSkupinaPayload"],
+	deletePlatbyGroupSkupina?:ModelTypes["DeletePlatbyGroupSkupinaPayload"],
 	/** Deletes a single `PlatbyItem` using its globally unique id. */
-	deletePlatbyItem?:ModelTypes["DeletePlatbyItemPayload"],
+	deletePlatbyItemByNodeId?:ModelTypes["DeletePlatbyItemPayload"],
 	/** Deletes a single `PlatbyItem` using a unique key. */
-	deletePlatbyItemByPiId?:ModelTypes["DeletePlatbyItemPayload"],
+	deletePlatbyItem?:ModelTypes["DeletePlatbyItemPayload"],
 	/** Deletes a single `PlatbyRaw` using its globally unique id. */
-	deletePlatbyRaw?:ModelTypes["DeletePlatbyRawPayload"],
+	deletePlatbyRawByNodeId?:ModelTypes["DeletePlatbyRawPayload"],
 	/** Deletes a single `PlatbyRaw` using a unique key. */
-	deletePlatbyRawByPrId?:ModelTypes["DeletePlatbyRawPayload"],
+	deletePlatbyRaw?:ModelTypes["DeletePlatbyRawPayload"],
 	/** Deletes a single `Rozpi` using its globally unique id. */
-	deleteRozpi?:ModelTypes["DeleteRozpiPayload"],
+	deleteRozpiByNodeId?:ModelTypes["DeleteRozpiPayload"],
 	/** Deletes a single `Rozpi` using a unique key. */
-	deleteRozpiByRId?:ModelTypes["DeleteRozpiPayload"],
+	deleteRozpi?:ModelTypes["DeleteRozpiPayload"],
 	/** Deletes a single `RozpisItem` using its globally unique id. */
-	deleteRozpisItem?:ModelTypes["DeleteRozpisItemPayload"],
+	deleteRozpisItemByNodeId?:ModelTypes["DeleteRozpisItemPayload"],
 	/** Deletes a single `RozpisItem` using a unique key. */
-	deleteRozpisItemByRiId?:ModelTypes["DeleteRozpisItemPayload"],
+	deleteRozpisItem?:ModelTypes["DeleteRozpisItemPayload"],
 	/** Deletes a single `Session` using its globally unique id. */
-	deleteSession?:ModelTypes["DeleteSessionPayload"],
+	deleteSessionByNodeId?:ModelTypes["DeleteSessionPayload"],
 	/** Deletes a single `Session` using a unique key. */
-	deleteSessionBySsId?:ModelTypes["DeleteSessionPayload"],
+	deleteSession?:ModelTypes["DeleteSessionPayload"],
 	/** Deletes a single `Skupiny` using its globally unique id. */
-	deleteSkupiny?:ModelTypes["DeleteSkupinyPayload"],
+	deleteSkupinyByNodeId?:ModelTypes["DeleteSkupinyPayload"],
 	/** Deletes a single `Skupiny` using a unique key. */
-	deleteSkupinyBySId?:ModelTypes["DeleteSkupinyPayload"],
+	deleteSkupiny?:ModelTypes["DeleteSkupinyPayload"],
 	/** Deletes a single `Upozorneni` using its globally unique id. */
-	deleteUpozorneni?:ModelTypes["DeleteUpozorneniPayload"],
+	deleteUpozorneniByNodeId?:ModelTypes["DeleteUpozorneniPayload"],
 	/** Deletes a single `Upozorneni` using a unique key. */
-	deleteUpozorneniByUpId?:ModelTypes["DeleteUpozorneniPayload"],
+	deleteUpozorneni?:ModelTypes["DeleteUpozorneniPayload"],
 	/** Deletes a single `UpozorneniSkupiny` using its globally unique id. */
-	deleteUpozorneniSkupiny?:ModelTypes["DeleteUpozorneniSkupinyPayload"],
+	deleteUpozorneniSkupinyByNodeId?:ModelTypes["DeleteUpozorneniSkupinyPayload"],
 	/** Deletes a single `UpozorneniSkupiny` using a unique key. */
-	deleteUpozorneniSkupinyByUpsId?:ModelTypes["DeleteUpozorneniSkupinyPayload"],
+	deleteUpozorneniSkupiny?:ModelTypes["DeleteUpozorneniSkupinyPayload"],
 	/** Deletes a single `User` using its globally unique id. */
-	deleteUser?:ModelTypes["DeleteUserPayload"],
+	deleteUserByNodeId?:ModelTypes["DeleteUserPayload"],
 	/** Deletes a single `User` using a unique key. */
-	deleteUserByUId?:ModelTypes["DeleteUserPayload"],
+	deleteUser?:ModelTypes["DeleteUserPayload"],
 	/** Deletes a single `UsersSkupiny` using its globally unique id. */
-	deleteUsersSkupiny?:ModelTypes["DeleteUsersSkupinyPayload"],
+	deleteUsersSkupinyByNodeId?:ModelTypes["DeleteUsersSkupinyPayload"],
 	/** Deletes a single `UsersSkupiny` using a unique key. */
-	deleteUsersSkupinyByUsId?:ModelTypes["DeleteUsersSkupinyPayload"],
+	deleteUsersSkupiny?:ModelTypes["DeleteUsersSkupinyPayload"],
 	/** Deletes a single `Video` using its globally unique id. */
-	deleteVideo?:ModelTypes["DeleteVideoPayload"],
+	deleteVideoByNodeId?:ModelTypes["DeleteVideoPayload"],
 	/** Deletes a single `Video` using a unique key. */
-	deleteVideoByVId?:ModelTypes["DeleteVideoPayload"],
+	deleteVideo?:ModelTypes["DeleteVideoPayload"],
 	/** Deletes a single `VideoList` using its globally unique id. */
-	deleteVideoList?:ModelTypes["DeleteVideoListPayload"],
+	deleteVideoListByNodeId?:ModelTypes["DeleteVideoListPayload"],
 	/** Deletes a single `VideoList` using a unique key. */
-	deleteVideoListByVlId?:ModelTypes["DeleteVideoListPayload"],
+	deleteVideoList?:ModelTypes["DeleteVideoListPayload"],
 	/** Deletes a single `VideoSource` using its globally unique id. */
-	deleteVideoSource?:ModelTypes["DeleteVideoSourcePayload"],
+	deleteVideoSourceByNodeId?:ModelTypes["DeleteVideoSourcePayload"],
 	/** Deletes a single `VideoSource` using a unique key. */
-	deleteVideoSourceByVsId?:ModelTypes["DeleteVideoSourcePayload"],
+	deleteVideoSource?:ModelTypes["DeleteVideoSourcePayload"],
 	login?:ModelTypes["LoginPayload"],
 	logout?:ModelTypes["LogoutPayload"]
 };
@@ -8431,12 +8431,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Akce`. May be used by Relay 1. */
 	akceEdge?:ModelTypes["AkcesEdge"]
 };
-	/** All input for the `updateAkce` mutation. */
-["UpdateAkceInput"]: GraphQLTypes["UpdateAkceInput"];
+	/** All input for the `updateAkceByNodeId` mutation. */
+["UpdateAkceByNodeIdInput"]: GraphQLTypes["UpdateAkceByNodeIdInput"];
 	/** Represents an update to a `Akce`. Fields that are set will be updated. */
 ["AkcePatch"]: GraphQLTypes["AkcePatch"];
-	/** All input for the `updateAkceByAId` mutation. */
-["UpdateAkceByAIdInput"]: GraphQLTypes["UpdateAkceByAIdInput"];
+	/** All input for the `updateAkce` mutation. */
+["UpdateAkceInput"]: GraphQLTypes["UpdateAkceInput"];
 	/** The output of our update `AkceItem` mutation. */
 ["UpdateAkceItemPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8453,12 +8453,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `AkceItem`. May be used by Relay 1. */
 	akceItemEdge?:ModelTypes["AkceItemsEdge"]
 };
-	/** All input for the `updateAkceItem` mutation. */
-["UpdateAkceItemInput"]: GraphQLTypes["UpdateAkceItemInput"];
+	/** All input for the `updateAkceItemByNodeId` mutation. */
+["UpdateAkceItemByNodeIdInput"]: GraphQLTypes["UpdateAkceItemByNodeIdInput"];
 	/** Represents an update to a `AkceItem`. Fields that are set will be updated. */
 ["AkceItemPatch"]: GraphQLTypes["AkceItemPatch"];
-	/** All input for the `updateAkceItemByAiId` mutation. */
-["UpdateAkceItemByAiIdInput"]: GraphQLTypes["UpdateAkceItemByAiIdInput"];
+	/** All input for the `updateAkceItem` mutation. */
+["UpdateAkceItemInput"]: GraphQLTypes["UpdateAkceItemInput"];
 	/** The output of our update `Aktuality` mutation. */
 ["UpdateAktualityPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8475,12 +8475,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Aktuality`. May be used by Relay 1. */
 	aktualityEdge?:ModelTypes["AktualitiesEdge"]
 };
-	/** All input for the `updateAktuality` mutation. */
-["UpdateAktualityInput"]: GraphQLTypes["UpdateAktualityInput"];
+	/** All input for the `updateAktualityByNodeId` mutation. */
+["UpdateAktualityByNodeIdInput"]: GraphQLTypes["UpdateAktualityByNodeIdInput"];
 	/** Represents an update to a `Aktuality`. Fields that are set will be updated. */
 ["AktualityPatch"]: GraphQLTypes["AktualityPatch"];
-	/** All input for the `updateAktualityByAtId` mutation. */
-["UpdateAktualityByAtIdInput"]: GraphQLTypes["UpdateAktualityByAtIdInput"];
+	/** All input for the `updateAktuality` mutation. */
+["UpdateAktualityInput"]: GraphQLTypes["UpdateAktualityInput"];
 	/** The output of our update `Dokumenty` mutation. */
 ["UpdateDokumentyPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8495,12 +8495,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Dokumenty`. May be used by Relay 1. */
 	dokumentyEdge?:ModelTypes["DokumentiesEdge"]
 };
-	/** All input for the `updateDokumenty` mutation. */
-["UpdateDokumentyInput"]: GraphQLTypes["UpdateDokumentyInput"];
+	/** All input for the `updateDokumentyByNodeId` mutation. */
+["UpdateDokumentyByNodeIdInput"]: GraphQLTypes["UpdateDokumentyByNodeIdInput"];
 	/** Represents an update to a `Dokumenty`. Fields that are set will be updated. */
 ["DokumentyPatch"]: GraphQLTypes["DokumentyPatch"];
-	/** All input for the `updateDokumentyByDId` mutation. */
-["UpdateDokumentyByDIdInput"]: GraphQLTypes["UpdateDokumentyByDIdInput"];
+	/** All input for the `updateDokumenty` mutation. */
+["UpdateDokumentyInput"]: GraphQLTypes["UpdateDokumentyInput"];
 	/** The output of our update `GalerieDir` mutation. */
 ["UpdateGalerieDirPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8513,12 +8513,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `GalerieDir`. May be used by Relay 1. */
 	galerieDirEdge?:ModelTypes["GalerieDirsEdge"]
 };
-	/** All input for the `updateGalerieDir` mutation. */
-["UpdateGalerieDirInput"]: GraphQLTypes["UpdateGalerieDirInput"];
+	/** All input for the `updateGalerieDirByNodeId` mutation. */
+["UpdateGalerieDirByNodeIdInput"]: GraphQLTypes["UpdateGalerieDirByNodeIdInput"];
 	/** Represents an update to a `GalerieDir`. Fields that are set will be updated. */
 ["GalerieDirPatch"]: GraphQLTypes["GalerieDirPatch"];
-	/** All input for the `updateGalerieDirByGdId` mutation. */
-["UpdateGalerieDirByGdIdInput"]: GraphQLTypes["UpdateGalerieDirByGdIdInput"];
+	/** All input for the `updateGalerieDir` mutation. */
+["UpdateGalerieDirInput"]: GraphQLTypes["UpdateGalerieDirInput"];
 	/** The output of our update `GalerieFoto` mutation. */
 ["UpdateGalerieFotoPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8535,12 +8535,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `GalerieFoto`. May be used by Relay 1. */
 	galerieFotoEdge?:ModelTypes["GalerieFotosEdge"]
 };
-	/** All input for the `updateGalerieFoto` mutation. */
-["UpdateGalerieFotoInput"]: GraphQLTypes["UpdateGalerieFotoInput"];
+	/** All input for the `updateGalerieFotoByNodeId` mutation. */
+["UpdateGalerieFotoByNodeIdInput"]: GraphQLTypes["UpdateGalerieFotoByNodeIdInput"];
 	/** Represents an update to a `GalerieFoto`. Fields that are set will be updated. */
 ["GalerieFotoPatch"]: GraphQLTypes["GalerieFotoPatch"];
-	/** All input for the `updateGalerieFotoByGfId` mutation. */
-["UpdateGalerieFotoByGfIdInput"]: GraphQLTypes["UpdateGalerieFotoByGfIdInput"];
+	/** All input for the `updateGalerieFoto` mutation. */
+["UpdateGalerieFotoInput"]: GraphQLTypes["UpdateGalerieFotoInput"];
 	/** The output of our update `Nabidka` mutation. */
 ["UpdateNabidkaPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8555,12 +8555,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Nabidka`. May be used by Relay 1. */
 	nabidkaEdge?:ModelTypes["NabidkasEdge"]
 };
-	/** All input for the `updateNabidka` mutation. */
-["UpdateNabidkaInput"]: GraphQLTypes["UpdateNabidkaInput"];
+	/** All input for the `updateNabidkaByNodeId` mutation. */
+["UpdateNabidkaByNodeIdInput"]: GraphQLTypes["UpdateNabidkaByNodeIdInput"];
 	/** Represents an update to a `Nabidka`. Fields that are set will be updated. */
 ["NabidkaPatch"]: GraphQLTypes["NabidkaPatch"];
-	/** All input for the `updateNabidkaByNId` mutation. */
-["UpdateNabidkaByNIdInput"]: GraphQLTypes["UpdateNabidkaByNIdInput"];
+	/** All input for the `updateNabidka` mutation. */
+["UpdateNabidkaInput"]: GraphQLTypes["UpdateNabidkaInput"];
 	/** The output of our update `NabidkaItem` mutation. */
 ["UpdateNabidkaItemPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8577,12 +8577,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `NabidkaItem`. May be used by Relay 1. */
 	nabidkaItemEdge?:ModelTypes["NabidkaItemsEdge"]
 };
-	/** All input for the `updateNabidkaItem` mutation. */
-["UpdateNabidkaItemInput"]: GraphQLTypes["UpdateNabidkaItemInput"];
+	/** All input for the `updateNabidkaItemByNodeId` mutation. */
+["UpdateNabidkaItemByNodeIdInput"]: GraphQLTypes["UpdateNabidkaItemByNodeIdInput"];
 	/** Represents an update to a `NabidkaItem`. Fields that are set will be updated. */
 ["NabidkaItemPatch"]: GraphQLTypes["NabidkaItemPatch"];
-	/** All input for the `updateNabidkaItemByNiId` mutation. */
-["UpdateNabidkaItemByNiIdInput"]: GraphQLTypes["UpdateNabidkaItemByNiIdInput"];
+	/** All input for the `updateNabidkaItem` mutation. */
+["UpdateNabidkaItemInput"]: GraphQLTypes["UpdateNabidkaItemInput"];
 	/** The output of our update `Page` mutation. */
 ["UpdatePagePayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8595,12 +8595,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Page`. May be used by Relay 1. */
 	pageEdge?:ModelTypes["PagesEdge"]
 };
-	/** All input for the `updatePage` mutation. */
-["UpdatePageInput"]: GraphQLTypes["UpdatePageInput"];
+	/** All input for the `updatePageByNodeId` mutation. */
+["UpdatePageByNodeIdInput"]: GraphQLTypes["UpdatePageByNodeIdInput"];
 	/** Represents an update to a `Page`. Fields that are set will be updated. */
 ["PagePatch"]: GraphQLTypes["PagePatch"];
-	/** All input for the `updatePageById` mutation. */
-["UpdatePageByIdInput"]: GraphQLTypes["UpdatePageByIdInput"];
+	/** All input for the `updatePage` mutation. */
+["UpdatePageInput"]: GraphQLTypes["UpdatePageInput"];
 	/** All input for the `updatePageByUrl` mutation. */
 ["UpdatePageByUrlInput"]: GraphQLTypes["UpdatePageByUrlInput"];
 	/** The output of our update `Parameter` mutation. */
@@ -8615,12 +8615,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Parameter`. May be used by Relay 1. */
 	parameterEdge?:ModelTypes["ParametersEdge"]
 };
-	/** All input for the `updateParameter` mutation. */
-["UpdateParameterInput"]: GraphQLTypes["UpdateParameterInput"];
+	/** All input for the `updateParameterByNodeId` mutation. */
+["UpdateParameterByNodeIdInput"]: GraphQLTypes["UpdateParameterByNodeIdInput"];
 	/** Represents an update to a `Parameter`. Fields that are set will be updated. */
 ["ParameterPatch"]: GraphQLTypes["ParameterPatch"];
-	/** All input for the `updateParameterByPaName` mutation. */
-["UpdateParameterByPaNameInput"]: GraphQLTypes["UpdateParameterByPaNameInput"];
+	/** All input for the `updateParameter` mutation. */
+["UpdateParameterInput"]: GraphQLTypes["UpdateParameterInput"];
 	/** The output of our update `Pary` mutation. */
 ["UpdateParyPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8635,12 +8635,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Pary`. May be used by Relay 1. */
 	paryEdge?:ModelTypes["PariesEdge"]
 };
-	/** All input for the `updatePary` mutation. */
-["UpdateParyInput"]: GraphQLTypes["UpdateParyInput"];
+	/** All input for the `updateParyByNodeId` mutation. */
+["UpdateParyByNodeIdInput"]: GraphQLTypes["UpdateParyByNodeIdInput"];
 	/** Represents an update to a `Pary`. Fields that are set will be updated. */
 ["ParyPatch"]: GraphQLTypes["ParyPatch"];
-	/** All input for the `updateParyByPId` mutation. */
-["UpdateParyByPIdInput"]: GraphQLTypes["UpdateParyByPIdInput"];
+	/** All input for the `updatePary` mutation. */
+["UpdateParyInput"]: GraphQLTypes["UpdateParyInput"];
 	/** The output of our update `ParyNavrh` mutation. */
 ["UpdateParyNavrhPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8659,12 +8659,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `ParyNavrh`. May be used by Relay 1. */
 	paryNavrhEdge?:ModelTypes["ParyNavrhsEdge"]
 };
-	/** All input for the `updateParyNavrh` mutation. */
-["UpdateParyNavrhInput"]: GraphQLTypes["UpdateParyNavrhInput"];
+	/** All input for the `updateParyNavrhByNodeId` mutation. */
+["UpdateParyNavrhByNodeIdInput"]: GraphQLTypes["UpdateParyNavrhByNodeIdInput"];
 	/** Represents an update to a `ParyNavrh`. Fields that are set will be updated. */
 ["ParyNavrhPatch"]: GraphQLTypes["ParyNavrhPatch"];
-	/** All input for the `updateParyNavrhByPnId` mutation. */
-["UpdateParyNavrhByPnIdInput"]: GraphQLTypes["UpdateParyNavrhByPnIdInput"];
+	/** All input for the `updateParyNavrh` mutation. */
+["UpdateParyNavrhInput"]: GraphQLTypes["UpdateParyNavrhInput"];
 	/** The output of our update `Permission` mutation. */
 ["UpdatePermissionPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8677,12 +8677,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Permission`. May be used by Relay 1. */
 	permissionEdge?:ModelTypes["PermissionsEdge"]
 };
-	/** All input for the `updatePermission` mutation. */
-["UpdatePermissionInput"]: GraphQLTypes["UpdatePermissionInput"];
+	/** All input for the `updatePermissionByNodeId` mutation. */
+["UpdatePermissionByNodeIdInput"]: GraphQLTypes["UpdatePermissionByNodeIdInput"];
 	/** Represents an update to a `Permission`. Fields that are set will be updated. */
 ["PermissionPatch"]: GraphQLTypes["PermissionPatch"];
-	/** All input for the `updatePermissionByPeId` mutation. */
-["UpdatePermissionByPeIdInput"]: GraphQLTypes["UpdatePermissionByPeIdInput"];
+	/** All input for the `updatePermission` mutation. */
+["UpdatePermissionInput"]: GraphQLTypes["UpdatePermissionInput"];
 	/** The output of our update `PlatbyCategory` mutation. */
 ["UpdatePlatbyCategoryPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8695,12 +8695,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyCategory`. May be used by Relay 1. */
 	platbyCategoryEdge?:ModelTypes["PlatbyCategoriesEdge"]
 };
-	/** All input for the `updatePlatbyCategory` mutation. */
-["UpdatePlatbyCategoryInput"]: GraphQLTypes["UpdatePlatbyCategoryInput"];
+	/** All input for the `updatePlatbyCategoryByNodeId` mutation. */
+["UpdatePlatbyCategoryByNodeIdInput"]: GraphQLTypes["UpdatePlatbyCategoryByNodeIdInput"];
 	/** Represents an update to a `PlatbyCategory`. Fields that are set will be updated. */
 ["PlatbyCategoryPatch"]: GraphQLTypes["PlatbyCategoryPatch"];
-	/** All input for the `updatePlatbyCategoryByPcId` mutation. */
-["UpdatePlatbyCategoryByPcIdInput"]: GraphQLTypes["UpdatePlatbyCategoryByPcIdInput"];
+	/** All input for the `updatePlatbyCategory` mutation. */
+["UpdatePlatbyCategoryInput"]: GraphQLTypes["UpdatePlatbyCategoryInput"];
 	/** The output of our update `PlatbyCategoryGroup` mutation. */
 ["UpdatePlatbyCategoryGroupPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8717,12 +8717,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyCategoryGroup`. May be used by Relay 1. */
 	platbyCategoryGroupEdge?:ModelTypes["PlatbyCategoryGroupsEdge"]
 };
-	/** All input for the `updatePlatbyCategoryGroup` mutation. */
-["UpdatePlatbyCategoryGroupInput"]: GraphQLTypes["UpdatePlatbyCategoryGroupInput"];
+	/** All input for the `updatePlatbyCategoryGroupByNodeId` mutation. */
+["UpdatePlatbyCategoryGroupByNodeIdInput"]: GraphQLTypes["UpdatePlatbyCategoryGroupByNodeIdInput"];
 	/** Represents an update to a `PlatbyCategoryGroup`. Fields that are set will be updated. */
 ["PlatbyCategoryGroupPatch"]: GraphQLTypes["PlatbyCategoryGroupPatch"];
-	/** All input for the `updatePlatbyCategoryGroupByPcgId` mutation. */
-["UpdatePlatbyCategoryGroupByPcgIdInput"]: GraphQLTypes["UpdatePlatbyCategoryGroupByPcgIdInput"];
+	/** All input for the `updatePlatbyCategoryGroup` mutation. */
+["UpdatePlatbyCategoryGroupInput"]: GraphQLTypes["UpdatePlatbyCategoryGroupInput"];
 	/** The output of our update `PlatbyGroup` mutation. */
 ["UpdatePlatbyGroupPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8735,12 +8735,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyGroup`. May be used by Relay 1. */
 	platbyGroupEdge?:ModelTypes["PlatbyGroupsEdge"]
 };
-	/** All input for the `updatePlatbyGroup` mutation. */
-["UpdatePlatbyGroupInput"]: GraphQLTypes["UpdatePlatbyGroupInput"];
+	/** All input for the `updatePlatbyGroupByNodeId` mutation. */
+["UpdatePlatbyGroupByNodeIdInput"]: GraphQLTypes["UpdatePlatbyGroupByNodeIdInput"];
 	/** Represents an update to a `PlatbyGroup`. Fields that are set will be updated. */
 ["PlatbyGroupPatch"]: GraphQLTypes["PlatbyGroupPatch"];
-	/** All input for the `updatePlatbyGroupByPgId` mutation. */
-["UpdatePlatbyGroupByPgIdInput"]: GraphQLTypes["UpdatePlatbyGroupByPgIdInput"];
+	/** All input for the `updatePlatbyGroup` mutation. */
+["UpdatePlatbyGroupInput"]: GraphQLTypes["UpdatePlatbyGroupInput"];
 	/** The output of our update `PlatbyGroupSkupina` mutation. */
 ["UpdatePlatbyGroupSkupinaPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8757,12 +8757,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyGroupSkupina`. May be used by Relay 1. */
 	platbyGroupSkupinaEdge?:ModelTypes["PlatbyGroupSkupinasEdge"]
 };
-	/** All input for the `updatePlatbyGroupSkupina` mutation. */
-["UpdatePlatbyGroupSkupinaInput"]: GraphQLTypes["UpdatePlatbyGroupSkupinaInput"];
+	/** All input for the `updatePlatbyGroupSkupinaByNodeId` mutation. */
+["UpdatePlatbyGroupSkupinaByNodeIdInput"]: GraphQLTypes["UpdatePlatbyGroupSkupinaByNodeIdInput"];
 	/** Represents an update to a `PlatbyGroupSkupina`. Fields that are set will be updated. */
 ["PlatbyGroupSkupinaPatch"]: GraphQLTypes["PlatbyGroupSkupinaPatch"];
-	/** All input for the `updatePlatbyGroupSkupinaByPgsId` mutation. */
-["UpdatePlatbyGroupSkupinaByPgsIdInput"]: GraphQLTypes["UpdatePlatbyGroupSkupinaByPgsIdInput"];
+	/** All input for the `updatePlatbyGroupSkupina` mutation. */
+["UpdatePlatbyGroupSkupinaInput"]: GraphQLTypes["UpdatePlatbyGroupSkupinaInput"];
 	/** The output of our update `PlatbyItem` mutation. */
 ["UpdatePlatbyItemPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8781,12 +8781,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyItem`. May be used by Relay 1. */
 	platbyItemEdge?:ModelTypes["PlatbyItemsEdge"]
 };
-	/** All input for the `updatePlatbyItem` mutation. */
-["UpdatePlatbyItemInput"]: GraphQLTypes["UpdatePlatbyItemInput"];
+	/** All input for the `updatePlatbyItemByNodeId` mutation. */
+["UpdatePlatbyItemByNodeIdInput"]: GraphQLTypes["UpdatePlatbyItemByNodeIdInput"];
 	/** Represents an update to a `PlatbyItem`. Fields that are set will be updated. */
 ["PlatbyItemPatch"]: GraphQLTypes["PlatbyItemPatch"];
-	/** All input for the `updatePlatbyItemByPiId` mutation. */
-["UpdatePlatbyItemByPiIdInput"]: GraphQLTypes["UpdatePlatbyItemByPiIdInput"];
+	/** All input for the `updatePlatbyItem` mutation. */
+["UpdatePlatbyItemInput"]: GraphQLTypes["UpdatePlatbyItemInput"];
 	/** The output of our update `PlatbyRaw` mutation. */
 ["UpdatePlatbyRawPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8799,12 +8799,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyRaw`. May be used by Relay 1. */
 	platbyRawEdge?:ModelTypes["PlatbyRawsEdge"]
 };
-	/** All input for the `updatePlatbyRaw` mutation. */
-["UpdatePlatbyRawInput"]: GraphQLTypes["UpdatePlatbyRawInput"];
+	/** All input for the `updatePlatbyRawByNodeId` mutation. */
+["UpdatePlatbyRawByNodeIdInput"]: GraphQLTypes["UpdatePlatbyRawByNodeIdInput"];
 	/** Represents an update to a `PlatbyRaw`. Fields that are set will be updated. */
 ["PlatbyRawPatch"]: GraphQLTypes["PlatbyRawPatch"];
-	/** All input for the `updatePlatbyRawByPrId` mutation. */
-["UpdatePlatbyRawByPrIdInput"]: GraphQLTypes["UpdatePlatbyRawByPrIdInput"];
+	/** All input for the `updatePlatbyRaw` mutation. */
+["UpdatePlatbyRawInput"]: GraphQLTypes["UpdatePlatbyRawInput"];
 	/** The output of our update `Rozpi` mutation. */
 ["UpdateRozpiPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8819,12 +8819,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Rozpi`. May be used by Relay 1. */
 	rozpiEdge?:ModelTypes["RozpisEdge"]
 };
-	/** All input for the `updateRozpi` mutation. */
-["UpdateRozpiInput"]: GraphQLTypes["UpdateRozpiInput"];
+	/** All input for the `updateRozpiByNodeId` mutation. */
+["UpdateRozpiByNodeIdInput"]: GraphQLTypes["UpdateRozpiByNodeIdInput"];
 	/** Represents an update to a `Rozpi`. Fields that are set will be updated. */
 ["RozpiPatch"]: GraphQLTypes["RozpiPatch"];
-	/** All input for the `updateRozpiByRId` mutation. */
-["UpdateRozpiByRIdInput"]: GraphQLTypes["UpdateRozpiByRIdInput"];
+	/** All input for the `updateRozpi` mutation. */
+["UpdateRozpiInput"]: GraphQLTypes["UpdateRozpiInput"];
 	/** The output of our update `RozpisItem` mutation. */
 ["UpdateRozpisItemPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8841,12 +8841,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `RozpisItem`. May be used by Relay 1. */
 	rozpisItemEdge?:ModelTypes["RozpisItemsEdge"]
 };
-	/** All input for the `updateRozpisItem` mutation. */
-["UpdateRozpisItemInput"]: GraphQLTypes["UpdateRozpisItemInput"];
+	/** All input for the `updateRozpisItemByNodeId` mutation. */
+["UpdateRozpisItemByNodeIdInput"]: GraphQLTypes["UpdateRozpisItemByNodeIdInput"];
 	/** Represents an update to a `RozpisItem`. Fields that are set will be updated. */
 ["RozpisItemPatch"]: GraphQLTypes["RozpisItemPatch"];
-	/** All input for the `updateRozpisItemByRiId` mutation. */
-["UpdateRozpisItemByRiIdInput"]: GraphQLTypes["UpdateRozpisItemByRiIdInput"];
+	/** All input for the `updateRozpisItem` mutation. */
+["UpdateRozpisItemInput"]: GraphQLTypes["UpdateRozpisItemInput"];
 	/** The output of our update `Session` mutation. */
 ["UpdateSessionPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8861,12 +8861,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Session`. May be used by Relay 1. */
 	sessionEdge?:ModelTypes["SessionsEdge"]
 };
-	/** All input for the `updateSession` mutation. */
-["UpdateSessionInput"]: GraphQLTypes["UpdateSessionInput"];
+	/** All input for the `updateSessionByNodeId` mutation. */
+["UpdateSessionByNodeIdInput"]: GraphQLTypes["UpdateSessionByNodeIdInput"];
 	/** Represents an update to a `Session`. Fields that are set will be updated. */
 ["SessionPatch"]: GraphQLTypes["SessionPatch"];
-	/** All input for the `updateSessionBySsId` mutation. */
-["UpdateSessionBySsIdInput"]: GraphQLTypes["UpdateSessionBySsIdInput"];
+	/** All input for the `updateSession` mutation. */
+["UpdateSessionInput"]: GraphQLTypes["UpdateSessionInput"];
 	/** The output of our update `Skupiny` mutation. */
 ["UpdateSkupinyPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8879,12 +8879,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Skupiny`. May be used by Relay 1. */
 	skupinyEdge?:ModelTypes["SkupiniesEdge"]
 };
-	/** All input for the `updateSkupiny` mutation. */
-["UpdateSkupinyInput"]: GraphQLTypes["UpdateSkupinyInput"];
+	/** All input for the `updateSkupinyByNodeId` mutation. */
+["UpdateSkupinyByNodeIdInput"]: GraphQLTypes["UpdateSkupinyByNodeIdInput"];
 	/** Represents an update to a `Skupiny`. Fields that are set will be updated. */
 ["SkupinyPatch"]: GraphQLTypes["SkupinyPatch"];
-	/** All input for the `updateSkupinyBySId` mutation. */
-["UpdateSkupinyBySIdInput"]: GraphQLTypes["UpdateSkupinyBySIdInput"];
+	/** All input for the `updateSkupiny` mutation. */
+["UpdateSkupinyInput"]: GraphQLTypes["UpdateSkupinyInput"];
 	/** The output of our update `Upozorneni` mutation. */
 ["UpdateUpozorneniPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8899,12 +8899,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Upozorneni`. May be used by Relay 1. */
 	upozorneniEdge?:ModelTypes["UpozornenisEdge"]
 };
-	/** All input for the `updateUpozorneni` mutation. */
-["UpdateUpozorneniInput"]: GraphQLTypes["UpdateUpozorneniInput"];
+	/** All input for the `updateUpozorneniByNodeId` mutation. */
+["UpdateUpozorneniByNodeIdInput"]: GraphQLTypes["UpdateUpozorneniByNodeIdInput"];
 	/** Represents an update to a `Upozorneni`. Fields that are set will be updated. */
 ["UpozorneniPatch"]: GraphQLTypes["UpozorneniPatch"];
-	/** All input for the `updateUpozorneniByUpId` mutation. */
-["UpdateUpozorneniByUpIdInput"]: GraphQLTypes["UpdateUpozorneniByUpIdInput"];
+	/** All input for the `updateUpozorneni` mutation. */
+["UpdateUpozorneniInput"]: GraphQLTypes["UpdateUpozorneniInput"];
 	/** The output of our update `UpozorneniSkupiny` mutation. */
 ["UpdateUpozorneniSkupinyPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8921,12 +8921,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `UpozorneniSkupiny`. May be used by Relay 1. */
 	upozorneniSkupinyEdge?:ModelTypes["UpozorneniSkupiniesEdge"]
 };
-	/** All input for the `updateUpozorneniSkupiny` mutation. */
-["UpdateUpozorneniSkupinyInput"]: GraphQLTypes["UpdateUpozorneniSkupinyInput"];
+	/** All input for the `updateUpozorneniSkupinyByNodeId` mutation. */
+["UpdateUpozorneniSkupinyByNodeIdInput"]: GraphQLTypes["UpdateUpozorneniSkupinyByNodeIdInput"];
 	/** Represents an update to a `UpozorneniSkupiny`. Fields that are set will be updated. */
 ["UpozorneniSkupinyPatch"]: GraphQLTypes["UpozorneniSkupinyPatch"];
-	/** All input for the `updateUpozorneniSkupinyByUpsId` mutation. */
-["UpdateUpozorneniSkupinyByUpsIdInput"]: GraphQLTypes["UpdateUpozorneniSkupinyByUpsIdInput"];
+	/** All input for the `updateUpozorneniSkupiny` mutation. */
+["UpdateUpozorneniSkupinyInput"]: GraphQLTypes["UpdateUpozorneniSkupinyInput"];
 	/** The output of our update `User` mutation. */
 ["UpdateUserPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8943,12 +8943,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `User`. May be used by Relay 1. */
 	userEdge?:ModelTypes["UsersEdge"]
 };
-	/** All input for the `updateUser` mutation. */
-["UpdateUserInput"]: GraphQLTypes["UpdateUserInput"];
+	/** All input for the `updateUserByNodeId` mutation. */
+["UpdateUserByNodeIdInput"]: GraphQLTypes["UpdateUserByNodeIdInput"];
 	/** Represents an update to a `User`. Fields that are set will be updated. */
 ["UserPatch"]: GraphQLTypes["UserPatch"];
-	/** All input for the `updateUserByUId` mutation. */
-["UpdateUserByUIdInput"]: GraphQLTypes["UpdateUserByUIdInput"];
+	/** All input for the `updateUser` mutation. */
+["UpdateUserInput"]: GraphQLTypes["UpdateUserInput"];
 	/** The output of our update `UsersSkupiny` mutation. */
 ["UpdateUsersSkupinyPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8961,12 +8961,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `UsersSkupiny`. May be used by Relay 1. */
 	usersSkupinyEdge?:ModelTypes["UsersSkupiniesEdge"]
 };
-	/** All input for the `updateUsersSkupiny` mutation. */
-["UpdateUsersSkupinyInput"]: GraphQLTypes["UpdateUsersSkupinyInput"];
+	/** All input for the `updateUsersSkupinyByNodeId` mutation. */
+["UpdateUsersSkupinyByNodeIdInput"]: GraphQLTypes["UpdateUsersSkupinyByNodeIdInput"];
 	/** Represents an update to a `UsersSkupiny`. Fields that are set will be updated. */
 ["UsersSkupinyPatch"]: GraphQLTypes["UsersSkupinyPatch"];
-	/** All input for the `updateUsersSkupinyByUsId` mutation. */
-["UpdateUsersSkupinyByUsIdInput"]: GraphQLTypes["UpdateUsersSkupinyByUsIdInput"];
+	/** All input for the `updateUsersSkupiny` mutation. */
+["UpdateUsersSkupinyInput"]: GraphQLTypes["UpdateUsersSkupinyInput"];
 	/** The output of our update `Video` mutation. */
 ["UpdateVideoPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8979,12 +8979,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Video`. May be used by Relay 1. */
 	videoEdge?:ModelTypes["VideosEdge"]
 };
-	/** All input for the `updateVideo` mutation. */
-["UpdateVideoInput"]: GraphQLTypes["UpdateVideoInput"];
+	/** All input for the `updateVideoByNodeId` mutation. */
+["UpdateVideoByNodeIdInput"]: GraphQLTypes["UpdateVideoByNodeIdInput"];
 	/** Represents an update to a `Video`. Fields that are set will be updated. */
 ["VideoPatch"]: GraphQLTypes["VideoPatch"];
-	/** All input for the `updateVideoByVId` mutation. */
-["UpdateVideoByVIdInput"]: GraphQLTypes["UpdateVideoByVIdInput"];
+	/** All input for the `updateVideo` mutation. */
+["UpdateVideoInput"]: GraphQLTypes["UpdateVideoInput"];
 	/** The output of our update `VideoList` mutation. */
 ["UpdateVideoListPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8997,12 +8997,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `VideoList`. May be used by Relay 1. */
 	videoListEdge?:ModelTypes["VideoListsEdge"]
 };
-	/** All input for the `updateVideoList` mutation. */
-["UpdateVideoListInput"]: GraphQLTypes["UpdateVideoListInput"];
+	/** All input for the `updateVideoListByNodeId` mutation. */
+["UpdateVideoListByNodeIdInput"]: GraphQLTypes["UpdateVideoListByNodeIdInput"];
 	/** Represents an update to a `VideoList`. Fields that are set will be updated. */
 ["VideoListPatch"]: GraphQLTypes["VideoListPatch"];
-	/** All input for the `updateVideoListByVlId` mutation. */
-["UpdateVideoListByVlIdInput"]: GraphQLTypes["UpdateVideoListByVlIdInput"];
+	/** All input for the `updateVideoList` mutation. */
+["UpdateVideoListInput"]: GraphQLTypes["UpdateVideoListInput"];
 	/** The output of our update `VideoSource` mutation. */
 ["UpdateVideoSourcePayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9015,12 +9015,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `VideoSource`. May be used by Relay 1. */
 	videoSourceEdge?:ModelTypes["VideoSourcesEdge"]
 };
-	/** All input for the `updateVideoSource` mutation. */
-["UpdateVideoSourceInput"]: GraphQLTypes["UpdateVideoSourceInput"];
+	/** All input for the `updateVideoSourceByNodeId` mutation. */
+["UpdateVideoSourceByNodeIdInput"]: GraphQLTypes["UpdateVideoSourceByNodeIdInput"];
 	/** Represents an update to a `VideoSource`. Fields that are set will be updated. */
 ["VideoSourcePatch"]: GraphQLTypes["VideoSourcePatch"];
-	/** All input for the `updateVideoSourceByVsId` mutation. */
-["UpdateVideoSourceByVsIdInput"]: GraphQLTypes["UpdateVideoSourceByVsIdInput"];
+	/** All input for the `updateVideoSource` mutation. */
+["UpdateVideoSourceInput"]: GraphQLTypes["UpdateVideoSourceInput"];
 	/** The output of our delete `Akce` mutation. */
 ["DeleteAkcePayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9028,16 +9028,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `Akce` that was deleted by this mutation. */
 	akce?:ModelTypes["Akce"],
-	deletedAkceId?:string,
+	deletedAkceNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** An edge for our `Akce`. May be used by Relay 1. */
 	akceEdge?:ModelTypes["AkcesEdge"]
 };
+	/** All input for the `deleteAkceByNodeId` mutation. */
+["DeleteAkceByNodeIdInput"]: GraphQLTypes["DeleteAkceByNodeIdInput"];
 	/** All input for the `deleteAkce` mutation. */
 ["DeleteAkceInput"]: GraphQLTypes["DeleteAkceInput"];
-	/** All input for the `deleteAkceByAId` mutation. */
-["DeleteAkceByAIdInput"]: GraphQLTypes["DeleteAkceByAIdInput"];
 	/** The output of our delete `AkceItem` mutation. */
 ["DeleteAkceItemPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9045,7 +9045,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `AkceItem` that was deleted by this mutation. */
 	akceItem?:ModelTypes["AkceItem"],
-	deletedAkceItemId?:string,
+	deletedAkceItemNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** Reads a single `Akce` that is related to this `AkceItem`. */
@@ -9055,10 +9055,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `AkceItem`. May be used by Relay 1. */
 	akceItemEdge?:ModelTypes["AkceItemsEdge"]
 };
+	/** All input for the `deleteAkceItemByNodeId` mutation. */
+["DeleteAkceItemByNodeIdInput"]: GraphQLTypes["DeleteAkceItemByNodeIdInput"];
 	/** All input for the `deleteAkceItem` mutation. */
 ["DeleteAkceItemInput"]: GraphQLTypes["DeleteAkceItemInput"];
-	/** All input for the `deleteAkceItemByAiId` mutation. */
-["DeleteAkceItemByAiIdInput"]: GraphQLTypes["DeleteAkceItemByAiIdInput"];
 	/** The output of our delete `Aktuality` mutation. */
 ["DeleteAktualityPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9066,7 +9066,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `Aktuality` that was deleted by this mutation. */
 	aktuality?:ModelTypes["Aktuality"],
-	deletedAktualityId?:string,
+	deletedAktualityNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** Reads a single `User` that is related to this `Aktuality`. */
@@ -9076,10 +9076,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Aktuality`. May be used by Relay 1. */
 	aktualityEdge?:ModelTypes["AktualitiesEdge"]
 };
+	/** All input for the `deleteAktualityByNodeId` mutation. */
+["DeleteAktualityByNodeIdInput"]: GraphQLTypes["DeleteAktualityByNodeIdInput"];
 	/** All input for the `deleteAktuality` mutation. */
 ["DeleteAktualityInput"]: GraphQLTypes["DeleteAktualityInput"];
-	/** All input for the `deleteAktualityByAtId` mutation. */
-["DeleteAktualityByAtIdInput"]: GraphQLTypes["DeleteAktualityByAtIdInput"];
 	/** The output of our delete `Dokumenty` mutation. */
 ["DeleteDokumentyPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9087,7 +9087,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `Dokumenty` that was deleted by this mutation. */
 	dokumenty?:ModelTypes["Dokumenty"],
-	deletedDokumentyId?:string,
+	deletedDokumentyNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** Reads a single `User` that is related to this `Dokumenty`. */
@@ -9095,10 +9095,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Dokumenty`. May be used by Relay 1. */
 	dokumentyEdge?:ModelTypes["DokumentiesEdge"]
 };
+	/** All input for the `deleteDokumentyByNodeId` mutation. */
+["DeleteDokumentyByNodeIdInput"]: GraphQLTypes["DeleteDokumentyByNodeIdInput"];
 	/** All input for the `deleteDokumenty` mutation. */
 ["DeleteDokumentyInput"]: GraphQLTypes["DeleteDokumentyInput"];
-	/** All input for the `deleteDokumentyByDId` mutation. */
-["DeleteDokumentyByDIdInput"]: GraphQLTypes["DeleteDokumentyByDIdInput"];
 	/** The output of our delete `GalerieDir` mutation. */
 ["DeleteGalerieDirPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9106,16 +9106,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `GalerieDir` that was deleted by this mutation. */
 	galerieDir?:ModelTypes["GalerieDir"],
-	deletedGalerieDirId?:string,
+	deletedGalerieDirNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** An edge for our `GalerieDir`. May be used by Relay 1. */
 	galerieDirEdge?:ModelTypes["GalerieDirsEdge"]
 };
+	/** All input for the `deleteGalerieDirByNodeId` mutation. */
+["DeleteGalerieDirByNodeIdInput"]: GraphQLTypes["DeleteGalerieDirByNodeIdInput"];
 	/** All input for the `deleteGalerieDir` mutation. */
 ["DeleteGalerieDirInput"]: GraphQLTypes["DeleteGalerieDirInput"];
-	/** All input for the `deleteGalerieDirByGdId` mutation. */
-["DeleteGalerieDirByGdIdInput"]: GraphQLTypes["DeleteGalerieDirByGdIdInput"];
 	/** The output of our delete `GalerieFoto` mutation. */
 ["DeleteGalerieFotoPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9123,7 +9123,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `GalerieFoto` that was deleted by this mutation. */
 	galerieFoto?:ModelTypes["GalerieFoto"],
-	deletedGalerieFotoId?:string,
+	deletedGalerieFotoNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** Reads a single `GalerieDir` that is related to this `GalerieFoto`. */
@@ -9133,10 +9133,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `GalerieFoto`. May be used by Relay 1. */
 	galerieFotoEdge?:ModelTypes["GalerieFotosEdge"]
 };
+	/** All input for the `deleteGalerieFotoByNodeId` mutation. */
+["DeleteGalerieFotoByNodeIdInput"]: GraphQLTypes["DeleteGalerieFotoByNodeIdInput"];
 	/** All input for the `deleteGalerieFoto` mutation. */
 ["DeleteGalerieFotoInput"]: GraphQLTypes["DeleteGalerieFotoInput"];
-	/** All input for the `deleteGalerieFotoByGfId` mutation. */
-["DeleteGalerieFotoByGfIdInput"]: GraphQLTypes["DeleteGalerieFotoByGfIdInput"];
 	/** The output of our delete `Nabidka` mutation. */
 ["DeleteNabidkaPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9144,7 +9144,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `Nabidka` that was deleted by this mutation. */
 	nabidka?:ModelTypes["Nabidka"],
-	deletedNabidkaId?:string,
+	deletedNabidkaNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** Reads a single `User` that is related to this `Nabidka`. */
@@ -9152,10 +9152,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Nabidka`. May be used by Relay 1. */
 	nabidkaEdge?:ModelTypes["NabidkasEdge"]
 };
+	/** All input for the `deleteNabidkaByNodeId` mutation. */
+["DeleteNabidkaByNodeIdInput"]: GraphQLTypes["DeleteNabidkaByNodeIdInput"];
 	/** All input for the `deleteNabidka` mutation. */
 ["DeleteNabidkaInput"]: GraphQLTypes["DeleteNabidkaInput"];
-	/** All input for the `deleteNabidkaByNId` mutation. */
-["DeleteNabidkaByNIdInput"]: GraphQLTypes["DeleteNabidkaByNIdInput"];
 	/** The output of our delete `NabidkaItem` mutation. */
 ["DeleteNabidkaItemPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9163,7 +9163,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `NabidkaItem` that was deleted by this mutation. */
 	nabidkaItem?:ModelTypes["NabidkaItem"],
-	deletedNabidkaItemId?:string,
+	deletedNabidkaItemNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** Reads a single `Nabidka` that is related to this `NabidkaItem`. */
@@ -9173,10 +9173,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `NabidkaItem`. May be used by Relay 1. */
 	nabidkaItemEdge?:ModelTypes["NabidkaItemsEdge"]
 };
+	/** All input for the `deleteNabidkaItemByNodeId` mutation. */
+["DeleteNabidkaItemByNodeIdInput"]: GraphQLTypes["DeleteNabidkaItemByNodeIdInput"];
 	/** All input for the `deleteNabidkaItem` mutation. */
 ["DeleteNabidkaItemInput"]: GraphQLTypes["DeleteNabidkaItemInput"];
-	/** All input for the `deleteNabidkaItemByNiId` mutation. */
-["DeleteNabidkaItemByNiIdInput"]: GraphQLTypes["DeleteNabidkaItemByNiIdInput"];
 	/** The output of our delete `Parameter` mutation. */
 ["DeleteParameterPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9184,16 +9184,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `Parameter` that was deleted by this mutation. */
 	parameter?:ModelTypes["Parameter"],
-	deletedParameterId?:string,
+	deletedParameterNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** An edge for our `Parameter`. May be used by Relay 1. */
 	parameterEdge?:ModelTypes["ParametersEdge"]
 };
+	/** All input for the `deleteParameterByNodeId` mutation. */
+["DeleteParameterByNodeIdInput"]: GraphQLTypes["DeleteParameterByNodeIdInput"];
 	/** All input for the `deleteParameter` mutation. */
 ["DeleteParameterInput"]: GraphQLTypes["DeleteParameterInput"];
-	/** All input for the `deleteParameterByPaName` mutation. */
-["DeleteParameterByPaNameInput"]: GraphQLTypes["DeleteParameterByPaNameInput"];
 	/** The output of our delete `Pary` mutation. */
 ["DeleteParyPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9201,7 +9201,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `Pary` that was deleted by this mutation. */
 	pary?:ModelTypes["Pary"],
-	deletedParyId?:string,
+	deletedParyNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** Reads a single `User` that is related to this `Pary`. */
@@ -9209,10 +9209,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Pary`. May be used by Relay 1. */
 	paryEdge?:ModelTypes["PariesEdge"]
 };
+	/** All input for the `deleteParyByNodeId` mutation. */
+["DeleteParyByNodeIdInput"]: GraphQLTypes["DeleteParyByNodeIdInput"];
 	/** All input for the `deletePary` mutation. */
 ["DeleteParyInput"]: GraphQLTypes["DeleteParyInput"];
-	/** All input for the `deleteParyByPId` mutation. */
-["DeleteParyByPIdInput"]: GraphQLTypes["DeleteParyByPIdInput"];
 	/** The output of our delete `ParyNavrh` mutation. */
 ["DeleteParyNavrhPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9220,7 +9220,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `ParyNavrh` that was deleted by this mutation. */
 	paryNavrh?:ModelTypes["ParyNavrh"],
-	deletedParyNavrhId?:string,
+	deletedParyNavrhNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** Reads a single `User` that is related to this `ParyNavrh`. */
@@ -9232,10 +9232,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `ParyNavrh`. May be used by Relay 1. */
 	paryNavrhEdge?:ModelTypes["ParyNavrhsEdge"]
 };
+	/** All input for the `deleteParyNavrhByNodeId` mutation. */
+["DeleteParyNavrhByNodeIdInput"]: GraphQLTypes["DeleteParyNavrhByNodeIdInput"];
 	/** All input for the `deleteParyNavrh` mutation. */
 ["DeleteParyNavrhInput"]: GraphQLTypes["DeleteParyNavrhInput"];
-	/** All input for the `deleteParyNavrhByPnId` mutation. */
-["DeleteParyNavrhByPnIdInput"]: GraphQLTypes["DeleteParyNavrhByPnIdInput"];
 	/** The output of our delete `Permission` mutation. */
 ["DeletePermissionPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9243,16 +9243,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `Permission` that was deleted by this mutation. */
 	permission?:ModelTypes["Permission"],
-	deletedPermissionId?:string,
+	deletedPermissionNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** An edge for our `Permission`. May be used by Relay 1. */
 	permissionEdge?:ModelTypes["PermissionsEdge"]
 };
+	/** All input for the `deletePermissionByNodeId` mutation. */
+["DeletePermissionByNodeIdInput"]: GraphQLTypes["DeletePermissionByNodeIdInput"];
 	/** All input for the `deletePermission` mutation. */
 ["DeletePermissionInput"]: GraphQLTypes["DeletePermissionInput"];
-	/** All input for the `deletePermissionByPeId` mutation. */
-["DeletePermissionByPeIdInput"]: GraphQLTypes["DeletePermissionByPeIdInput"];
 	/** The output of our delete `PlatbyCategory` mutation. */
 ["DeletePlatbyCategoryPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9260,16 +9260,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `PlatbyCategory` that was deleted by this mutation. */
 	platbyCategory?:ModelTypes["PlatbyCategory"],
-	deletedPlatbyCategoryId?:string,
+	deletedPlatbyCategoryNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** An edge for our `PlatbyCategory`. May be used by Relay 1. */
 	platbyCategoryEdge?:ModelTypes["PlatbyCategoriesEdge"]
 };
+	/** All input for the `deletePlatbyCategoryByNodeId` mutation. */
+["DeletePlatbyCategoryByNodeIdInput"]: GraphQLTypes["DeletePlatbyCategoryByNodeIdInput"];
 	/** All input for the `deletePlatbyCategory` mutation. */
 ["DeletePlatbyCategoryInput"]: GraphQLTypes["DeletePlatbyCategoryInput"];
-	/** All input for the `deletePlatbyCategoryByPcId` mutation. */
-["DeletePlatbyCategoryByPcIdInput"]: GraphQLTypes["DeletePlatbyCategoryByPcIdInput"];
 	/** The output of our delete `PlatbyCategoryGroup` mutation. */
 ["DeletePlatbyCategoryGroupPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9277,7 +9277,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `PlatbyCategoryGroup` that was deleted by this mutation. */
 	platbyCategoryGroup?:ModelTypes["PlatbyCategoryGroup"],
-	deletedPlatbyCategoryGroupId?:string,
+	deletedPlatbyCategoryGroupNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** Reads a single `PlatbyGroup` that is related to this `PlatbyCategoryGroup`. */
@@ -9287,10 +9287,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyCategoryGroup`. May be used by Relay 1. */
 	platbyCategoryGroupEdge?:ModelTypes["PlatbyCategoryGroupsEdge"]
 };
+	/** All input for the `deletePlatbyCategoryGroupByNodeId` mutation. */
+["DeletePlatbyCategoryGroupByNodeIdInput"]: GraphQLTypes["DeletePlatbyCategoryGroupByNodeIdInput"];
 	/** All input for the `deletePlatbyCategoryGroup` mutation. */
 ["DeletePlatbyCategoryGroupInput"]: GraphQLTypes["DeletePlatbyCategoryGroupInput"];
-	/** All input for the `deletePlatbyCategoryGroupByPcgId` mutation. */
-["DeletePlatbyCategoryGroupByPcgIdInput"]: GraphQLTypes["DeletePlatbyCategoryGroupByPcgIdInput"];
 	/** The output of our delete `PlatbyGroup` mutation. */
 ["DeletePlatbyGroupPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9298,16 +9298,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `PlatbyGroup` that was deleted by this mutation. */
 	platbyGroup?:ModelTypes["PlatbyGroup"],
-	deletedPlatbyGroupId?:string,
+	deletedPlatbyGroupNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** An edge for our `PlatbyGroup`. May be used by Relay 1. */
 	platbyGroupEdge?:ModelTypes["PlatbyGroupsEdge"]
 };
+	/** All input for the `deletePlatbyGroupByNodeId` mutation. */
+["DeletePlatbyGroupByNodeIdInput"]: GraphQLTypes["DeletePlatbyGroupByNodeIdInput"];
 	/** All input for the `deletePlatbyGroup` mutation. */
 ["DeletePlatbyGroupInput"]: GraphQLTypes["DeletePlatbyGroupInput"];
-	/** All input for the `deletePlatbyGroupByPgId` mutation. */
-["DeletePlatbyGroupByPgIdInput"]: GraphQLTypes["DeletePlatbyGroupByPgIdInput"];
 	/** The output of our delete `PlatbyGroupSkupina` mutation. */
 ["DeletePlatbyGroupSkupinaPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9315,7 +9315,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `PlatbyGroupSkupina` that was deleted by this mutation. */
 	platbyGroupSkupina?:ModelTypes["PlatbyGroupSkupina"],
-	deletedPlatbyGroupSkupinaId?:string,
+	deletedPlatbyGroupSkupinaNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** Reads a single `Skupiny` that is related to this `PlatbyGroupSkupina`. */
@@ -9325,10 +9325,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyGroupSkupina`. May be used by Relay 1. */
 	platbyGroupSkupinaEdge?:ModelTypes["PlatbyGroupSkupinasEdge"]
 };
+	/** All input for the `deletePlatbyGroupSkupinaByNodeId` mutation. */
+["DeletePlatbyGroupSkupinaByNodeIdInput"]: GraphQLTypes["DeletePlatbyGroupSkupinaByNodeIdInput"];
 	/** All input for the `deletePlatbyGroupSkupina` mutation. */
 ["DeletePlatbyGroupSkupinaInput"]: GraphQLTypes["DeletePlatbyGroupSkupinaInput"];
-	/** All input for the `deletePlatbyGroupSkupinaByPgsId` mutation. */
-["DeletePlatbyGroupSkupinaByPgsIdInput"]: GraphQLTypes["DeletePlatbyGroupSkupinaByPgsIdInput"];
 	/** The output of our delete `PlatbyItem` mutation. */
 ["DeletePlatbyItemPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9336,7 +9336,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `PlatbyItem` that was deleted by this mutation. */
 	platbyItem?:ModelTypes["PlatbyItem"],
-	deletedPlatbyItemId?:string,
+	deletedPlatbyItemNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** Reads a single `User` that is related to this `PlatbyItem`. */
@@ -9348,10 +9348,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyItem`. May be used by Relay 1. */
 	platbyItemEdge?:ModelTypes["PlatbyItemsEdge"]
 };
+	/** All input for the `deletePlatbyItemByNodeId` mutation. */
+["DeletePlatbyItemByNodeIdInput"]: GraphQLTypes["DeletePlatbyItemByNodeIdInput"];
 	/** All input for the `deletePlatbyItem` mutation. */
 ["DeletePlatbyItemInput"]: GraphQLTypes["DeletePlatbyItemInput"];
-	/** All input for the `deletePlatbyItemByPiId` mutation. */
-["DeletePlatbyItemByPiIdInput"]: GraphQLTypes["DeletePlatbyItemByPiIdInput"];
 	/** The output of our delete `PlatbyRaw` mutation. */
 ["DeletePlatbyRawPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9359,16 +9359,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `PlatbyRaw` that was deleted by this mutation. */
 	platbyRaw?:ModelTypes["PlatbyRaw"],
-	deletedPlatbyRawId?:string,
+	deletedPlatbyRawNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** An edge for our `PlatbyRaw`. May be used by Relay 1. */
 	platbyRawEdge?:ModelTypes["PlatbyRawsEdge"]
 };
+	/** All input for the `deletePlatbyRawByNodeId` mutation. */
+["DeletePlatbyRawByNodeIdInput"]: GraphQLTypes["DeletePlatbyRawByNodeIdInput"];
 	/** All input for the `deletePlatbyRaw` mutation. */
 ["DeletePlatbyRawInput"]: GraphQLTypes["DeletePlatbyRawInput"];
-	/** All input for the `deletePlatbyRawByPrId` mutation. */
-["DeletePlatbyRawByPrIdInput"]: GraphQLTypes["DeletePlatbyRawByPrIdInput"];
 	/** The output of our delete `Rozpi` mutation. */
 ["DeleteRozpiPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9376,7 +9376,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `Rozpi` that was deleted by this mutation. */
 	rozpi?:ModelTypes["Rozpi"],
-	deletedRozpiId?:string,
+	deletedRozpiNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** Reads a single `User` that is related to this `Rozpi`. */
@@ -9384,10 +9384,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Rozpi`. May be used by Relay 1. */
 	rozpiEdge?:ModelTypes["RozpisEdge"]
 };
+	/** All input for the `deleteRozpiByNodeId` mutation. */
+["DeleteRozpiByNodeIdInput"]: GraphQLTypes["DeleteRozpiByNodeIdInput"];
 	/** All input for the `deleteRozpi` mutation. */
 ["DeleteRozpiInput"]: GraphQLTypes["DeleteRozpiInput"];
-	/** All input for the `deleteRozpiByRId` mutation. */
-["DeleteRozpiByRIdInput"]: GraphQLTypes["DeleteRozpiByRIdInput"];
 	/** The output of our delete `RozpisItem` mutation. */
 ["DeleteRozpisItemPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9395,7 +9395,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `RozpisItem` that was deleted by this mutation. */
 	rozpisItem?:ModelTypes["RozpisItem"],
-	deletedRozpisItemId?:string,
+	deletedRozpisItemNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** Reads a single `Rozpi` that is related to this `RozpisItem`. */
@@ -9405,10 +9405,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `RozpisItem`. May be used by Relay 1. */
 	rozpisItemEdge?:ModelTypes["RozpisItemsEdge"]
 };
+	/** All input for the `deleteRozpisItemByNodeId` mutation. */
+["DeleteRozpisItemByNodeIdInput"]: GraphQLTypes["DeleteRozpisItemByNodeIdInput"];
 	/** All input for the `deleteRozpisItem` mutation. */
 ["DeleteRozpisItemInput"]: GraphQLTypes["DeleteRozpisItemInput"];
-	/** All input for the `deleteRozpisItemByRiId` mutation. */
-["DeleteRozpisItemByRiIdInput"]: GraphQLTypes["DeleteRozpisItemByRiIdInput"];
 	/** The output of our delete `Session` mutation. */
 ["DeleteSessionPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9416,7 +9416,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `Session` that was deleted by this mutation. */
 	session?:ModelTypes["Session"],
-	deletedSessionId?:string,
+	deletedSessionNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** Reads a single `User` that is related to this `Session`. */
@@ -9424,10 +9424,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Session`. May be used by Relay 1. */
 	sessionEdge?:ModelTypes["SessionsEdge"]
 };
+	/** All input for the `deleteSessionByNodeId` mutation. */
+["DeleteSessionByNodeIdInput"]: GraphQLTypes["DeleteSessionByNodeIdInput"];
 	/** All input for the `deleteSession` mutation. */
 ["DeleteSessionInput"]: GraphQLTypes["DeleteSessionInput"];
-	/** All input for the `deleteSessionBySsId` mutation. */
-["DeleteSessionBySsIdInput"]: GraphQLTypes["DeleteSessionBySsIdInput"];
 	/** The output of our delete `Skupiny` mutation. */
 ["DeleteSkupinyPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9435,16 +9435,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `Skupiny` that was deleted by this mutation. */
 	skupiny?:ModelTypes["Skupiny"],
-	deletedSkupinyId?:string,
+	deletedSkupinyNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** An edge for our `Skupiny`. May be used by Relay 1. */
 	skupinyEdge?:ModelTypes["SkupiniesEdge"]
 };
+	/** All input for the `deleteSkupinyByNodeId` mutation. */
+["DeleteSkupinyByNodeIdInput"]: GraphQLTypes["DeleteSkupinyByNodeIdInput"];
 	/** All input for the `deleteSkupiny` mutation. */
 ["DeleteSkupinyInput"]: GraphQLTypes["DeleteSkupinyInput"];
-	/** All input for the `deleteSkupinyBySId` mutation. */
-["DeleteSkupinyBySIdInput"]: GraphQLTypes["DeleteSkupinyBySIdInput"];
 	/** The output of our delete `Upozorneni` mutation. */
 ["DeleteUpozorneniPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9452,7 +9452,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `Upozorneni` that was deleted by this mutation. */
 	upozorneni?:ModelTypes["Upozorneni"],
-	deletedUpozorneniId?:string,
+	deletedUpozorneniNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** Reads a single `User` that is related to this `Upozorneni`. */
@@ -9460,10 +9460,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Upozorneni`. May be used by Relay 1. */
 	upozorneniEdge?:ModelTypes["UpozornenisEdge"]
 };
+	/** All input for the `deleteUpozorneniByNodeId` mutation. */
+["DeleteUpozorneniByNodeIdInput"]: GraphQLTypes["DeleteUpozorneniByNodeIdInput"];
 	/** All input for the `deleteUpozorneni` mutation. */
 ["DeleteUpozorneniInput"]: GraphQLTypes["DeleteUpozorneniInput"];
-	/** All input for the `deleteUpozorneniByUpId` mutation. */
-["DeleteUpozorneniByUpIdInput"]: GraphQLTypes["DeleteUpozorneniByUpIdInput"];
 	/** The output of our delete `UpozorneniSkupiny` mutation. */
 ["DeleteUpozorneniSkupinyPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9471,7 +9471,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `UpozorneniSkupiny` that was deleted by this mutation. */
 	upozorneniSkupiny?:ModelTypes["UpozorneniSkupiny"],
-	deletedUpozorneniSkupinyId?:string,
+	deletedUpozorneniSkupinyNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** Reads a single `Upozorneni` that is related to this `UpozorneniSkupiny`. */
@@ -9481,10 +9481,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `UpozorneniSkupiny`. May be used by Relay 1. */
 	upozorneniSkupinyEdge?:ModelTypes["UpozorneniSkupiniesEdge"]
 };
+	/** All input for the `deleteUpozorneniSkupinyByNodeId` mutation. */
+["DeleteUpozorneniSkupinyByNodeIdInput"]: GraphQLTypes["DeleteUpozorneniSkupinyByNodeIdInput"];
 	/** All input for the `deleteUpozorneniSkupiny` mutation. */
 ["DeleteUpozorneniSkupinyInput"]: GraphQLTypes["DeleteUpozorneniSkupinyInput"];
-	/** All input for the `deleteUpozorneniSkupinyByUpsId` mutation. */
-["DeleteUpozorneniSkupinyByUpsIdInput"]: GraphQLTypes["DeleteUpozorneniSkupinyByUpsIdInput"];
 	/** The output of our delete `User` mutation. */
 ["DeleteUserPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9492,7 +9492,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `User` that was deleted by this mutation. */
 	user?:ModelTypes["User"],
-	deletedUserId?:string,
+	deletedUserNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** Reads a single `Permission` that is related to this `User`. */
@@ -9502,10 +9502,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `User`. May be used by Relay 1. */
 	userEdge?:ModelTypes["UsersEdge"]
 };
+	/** All input for the `deleteUserByNodeId` mutation. */
+["DeleteUserByNodeIdInput"]: GraphQLTypes["DeleteUserByNodeIdInput"];
 	/** All input for the `deleteUser` mutation. */
 ["DeleteUserInput"]: GraphQLTypes["DeleteUserInput"];
-	/** All input for the `deleteUserByUId` mutation. */
-["DeleteUserByUIdInput"]: GraphQLTypes["DeleteUserByUIdInput"];
 	/** The output of our delete `UsersSkupiny` mutation. */
 ["DeleteUsersSkupinyPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9513,16 +9513,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `UsersSkupiny` that was deleted by this mutation. */
 	usersSkupiny?:ModelTypes["UsersSkupiny"],
-	deletedUsersSkupinyId?:string,
+	deletedUsersSkupinyNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** An edge for our `UsersSkupiny`. May be used by Relay 1. */
 	usersSkupinyEdge?:ModelTypes["UsersSkupiniesEdge"]
 };
+	/** All input for the `deleteUsersSkupinyByNodeId` mutation. */
+["DeleteUsersSkupinyByNodeIdInput"]: GraphQLTypes["DeleteUsersSkupinyByNodeIdInput"];
 	/** All input for the `deleteUsersSkupiny` mutation. */
 ["DeleteUsersSkupinyInput"]: GraphQLTypes["DeleteUsersSkupinyInput"];
-	/** All input for the `deleteUsersSkupinyByUsId` mutation. */
-["DeleteUsersSkupinyByUsIdInput"]: GraphQLTypes["DeleteUsersSkupinyByUsIdInput"];
 	/** The output of our delete `Video` mutation. */
 ["DeleteVideoPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9530,16 +9530,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `Video` that was deleted by this mutation. */
 	video?:ModelTypes["Video"],
-	deletedVideoId?:string,
+	deletedVideoNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** An edge for our `Video`. May be used by Relay 1. */
 	videoEdge?:ModelTypes["VideosEdge"]
 };
+	/** All input for the `deleteVideoByNodeId` mutation. */
+["DeleteVideoByNodeIdInput"]: GraphQLTypes["DeleteVideoByNodeIdInput"];
 	/** All input for the `deleteVideo` mutation. */
 ["DeleteVideoInput"]: GraphQLTypes["DeleteVideoInput"];
-	/** All input for the `deleteVideoByVId` mutation. */
-["DeleteVideoByVIdInput"]: GraphQLTypes["DeleteVideoByVIdInput"];
 	/** The output of our delete `VideoList` mutation. */
 ["DeleteVideoListPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9547,16 +9547,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `VideoList` that was deleted by this mutation. */
 	videoList?:ModelTypes["VideoList"],
-	deletedVideoListId?:string,
+	deletedVideoListNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** An edge for our `VideoList`. May be used by Relay 1. */
 	videoListEdge?:ModelTypes["VideoListsEdge"]
 };
+	/** All input for the `deleteVideoListByNodeId` mutation. */
+["DeleteVideoListByNodeIdInput"]: GraphQLTypes["DeleteVideoListByNodeIdInput"];
 	/** All input for the `deleteVideoList` mutation. */
 ["DeleteVideoListInput"]: GraphQLTypes["DeleteVideoListInput"];
-	/** All input for the `deleteVideoListByVlId` mutation. */
-["DeleteVideoListByVlIdInput"]: GraphQLTypes["DeleteVideoListByVlIdInput"];
 	/** The output of our delete `VideoSource` mutation. */
 ["DeleteVideoSourcePayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9564,16 +9564,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
 	/** The `VideoSource` that was deleted by this mutation. */
 	videoSource?:ModelTypes["VideoSource"],
-	deletedVideoSourceId?:string,
+	deletedVideoSourceNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
 	/** An edge for our `VideoSource`. May be used by Relay 1. */
 	videoSourceEdge?:ModelTypes["VideoSourcesEdge"]
 };
+	/** All input for the `deleteVideoSourceByNodeId` mutation. */
+["DeleteVideoSourceByNodeIdInput"]: GraphQLTypes["DeleteVideoSourceByNodeIdInput"];
 	/** All input for the `deleteVideoSource` mutation. */
 ["DeleteVideoSourceInput"]: GraphQLTypes["DeleteVideoSourceInput"];
-	/** All input for the `deleteVideoSourceByVsId` mutation. */
-["DeleteVideoSourceByVsIdInput"]: GraphQLTypes["DeleteVideoSourceByVsIdInput"];
 	/** The output of our `login` mutation. */
 ["LoginPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9614,101 +9614,101 @@ which can only query top level fields if they are in a particular form. */
 	/** Fetches an object given its globally unique `ID`. */
 	node?: GraphQLTypes["Node"],
 	/** Reads and enables pagination through a set of `Akce`. */
-	allAkces?: GraphQLTypes["AkcesConnection"],
+	akces?: GraphQLTypes["AkcesConnection"],
 	/** Reads and enables pagination through a set of `AkceItem`. */
-	allAkceItems?: GraphQLTypes["AkceItemsConnection"],
+	akceItems?: GraphQLTypes["AkceItemsConnection"],
 	/** Reads and enables pagination through a set of `Aktuality`. */
-	allAktualities?: GraphQLTypes["AktualitiesConnection"],
+	aktualities?: GraphQLTypes["AktualitiesConnection"],
 	/** Reads and enables pagination through a set of `Dokumenty`. */
-	allDokumenties?: GraphQLTypes["DokumentiesConnection"],
+	dokumenties?: GraphQLTypes["DokumentiesConnection"],
 	/** Reads and enables pagination through a set of `GalerieDir`. */
-	allGalerieDirs?: GraphQLTypes["GalerieDirsConnection"],
+	galerieDirs?: GraphQLTypes["GalerieDirsConnection"],
 	/** Reads and enables pagination through a set of `GalerieFoto`. */
-	allGalerieFotos?: GraphQLTypes["GalerieFotosConnection"],
+	galerieFotos?: GraphQLTypes["GalerieFotosConnection"],
 	/** Reads and enables pagination through a set of `Member`. */
-	allMembers?: GraphQLTypes["MembersConnection"],
+	members?: GraphQLTypes["MembersConnection"],
 	/** Reads and enables pagination through a set of `Nabidka`. */
-	allNabidkas?: GraphQLTypes["NabidkasConnection"],
+	nabidkas?: GraphQLTypes["NabidkasConnection"],
 	/** Reads and enables pagination through a set of `NabidkaItem`. */
-	allNabidkaItems?: GraphQLTypes["NabidkaItemsConnection"],
+	nabidkaItems?: GraphQLTypes["NabidkaItemsConnection"],
 	/** Reads and enables pagination through a set of `Page`. */
-	allPages?: GraphQLTypes["PagesConnection"],
+	pages?: GraphQLTypes["PagesConnection"],
 	/** Reads and enables pagination through a set of `PageRevision`. */
-	allPageRevisions?: GraphQLTypes["PageRevisionsConnection"],
+	pageRevisions?: GraphQLTypes["PageRevisionsConnection"],
 	/** Reads and enables pagination through a set of `Parameter`. */
-	allParameters?: GraphQLTypes["ParametersConnection"],
+	parameters?: GraphQLTypes["ParametersConnection"],
 	/** Reads and enables pagination through a set of `Pary`. */
-	allParies?: GraphQLTypes["PariesConnection"],
+	paries?: GraphQLTypes["PariesConnection"],
 	/** Reads and enables pagination through a set of `ParyNavrh`. */
-	allParyNavrhs?: GraphQLTypes["ParyNavrhsConnection"],
+	paryNavrhs?: GraphQLTypes["ParyNavrhsConnection"],
 	/** Reads and enables pagination through a set of `Permission`. */
-	allPermissions?: GraphQLTypes["PermissionsConnection"],
+	permissions?: GraphQLTypes["PermissionsConnection"],
 	/** Reads and enables pagination through a set of `PlatbyCategory`. */
-	allPlatbyCategories?: GraphQLTypes["PlatbyCategoriesConnection"],
+	platbyCategories?: GraphQLTypes["PlatbyCategoriesConnection"],
 	/** Reads and enables pagination through a set of `PlatbyCategoryGroup`. */
-	allPlatbyCategoryGroups?: GraphQLTypes["PlatbyCategoryGroupsConnection"],
+	platbyCategoryGroups?: GraphQLTypes["PlatbyCategoryGroupsConnection"],
 	/** Reads and enables pagination through a set of `PlatbyGroup`. */
-	allPlatbyGroups?: GraphQLTypes["PlatbyGroupsConnection"],
+	platbyGroups?: GraphQLTypes["PlatbyGroupsConnection"],
 	/** Reads and enables pagination through a set of `PlatbyGroupSkupina`. */
-	allPlatbyGroupSkupinas?: GraphQLTypes["PlatbyGroupSkupinasConnection"],
+	platbyGroupSkupinas?: GraphQLTypes["PlatbyGroupSkupinasConnection"],
 	/** Reads and enables pagination through a set of `PlatbyItem`. */
-	allPlatbyItems?: GraphQLTypes["PlatbyItemsConnection"],
+	platbyItems?: GraphQLTypes["PlatbyItemsConnection"],
 	/** Reads and enables pagination through a set of `PlatbyRaw`. */
-	allPlatbyRaws?: GraphQLTypes["PlatbyRawsConnection"],
+	platbyRaws?: GraphQLTypes["PlatbyRawsConnection"],
 	/** Reads and enables pagination through a set of `Rozpi`. */
-	allRozpis?: GraphQLTypes["RozpisConnection"],
+	rozpis?: GraphQLTypes["RozpisConnection"],
 	/** Reads and enables pagination through a set of `RozpisItem`. */
-	allRozpisItems?: GraphQLTypes["RozpisItemsConnection"],
+	rozpisItems?: GraphQLTypes["RozpisItemsConnection"],
 	/** Reads and enables pagination through a set of `Session`. */
-	allSessions?: GraphQLTypes["SessionsConnection"],
+	sessions?: GraphQLTypes["SessionsConnection"],
 	/** Reads and enables pagination through a set of `Skupiny`. */
-	allSkupinies?: GraphQLTypes["SkupiniesConnection"],
+	skupinies?: GraphQLTypes["SkupiniesConnection"],
 	/** Reads and enables pagination through a set of `Upozorneni`. */
-	allUpozornenis?: GraphQLTypes["UpozornenisConnection"],
+	upozornenis?: GraphQLTypes["UpozornenisConnection"],
 	/** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
-	allUpozorneniSkupinies?: GraphQLTypes["UpozorneniSkupiniesConnection"],
+	upozorneniSkupinies?: GraphQLTypes["UpozorneniSkupiniesConnection"],
 	/** Reads and enables pagination through a set of `User`. */
-	allUsers?: GraphQLTypes["UsersConnection"],
+	users?: GraphQLTypes["UsersConnection"],
 	/** Reads and enables pagination through a set of `UsersSkupiny`. */
-	allUsersSkupinies?: GraphQLTypes["UsersSkupiniesConnection"],
+	usersSkupinies?: GraphQLTypes["UsersSkupiniesConnection"],
 	/** Reads and enables pagination through a set of `Video`. */
-	allVideos?: GraphQLTypes["VideosConnection"],
+	videos?: GraphQLTypes["VideosConnection"],
 	/** Reads and enables pagination through a set of `VideoList`. */
-	allVideoLists?: GraphQLTypes["VideoListsConnection"],
+	videoLists?: GraphQLTypes["VideoListsConnection"],
 	/** Reads and enables pagination through a set of `VideoSource`. */
-	allVideoSources?: GraphQLTypes["VideoSourcesConnection"],
-	akceByAId?: GraphQLTypes["Akce"],
-	akceItemByAiId?: GraphQLTypes["AkceItem"],
-	aktualityByAtId?: GraphQLTypes["Aktuality"],
-	dokumentyByDId?: GraphQLTypes["Dokumenty"],
-	galerieDirByGdId?: GraphQLTypes["GalerieDir"],
-	galerieFotoByGfId?: GraphQLTypes["GalerieFoto"],
-	nabidkaByNId?: GraphQLTypes["Nabidka"],
-	nabidkaItemByNiId?: GraphQLTypes["NabidkaItem"],
-	pageById?: GraphQLTypes["Page"],
+	videoSources?: GraphQLTypes["VideoSourcesConnection"],
+	akce?: GraphQLTypes["Akce"],
+	akceItem?: GraphQLTypes["AkceItem"],
+	aktuality?: GraphQLTypes["Aktuality"],
+	dokumenty?: GraphQLTypes["Dokumenty"],
+	galerieDir?: GraphQLTypes["GalerieDir"],
+	galerieFoto?: GraphQLTypes["GalerieFoto"],
+	nabidka?: GraphQLTypes["Nabidka"],
+	nabidkaItem?: GraphQLTypes["NabidkaItem"],
+	page?: GraphQLTypes["Page"],
 	pageByUrl?: GraphQLTypes["Page"],
-	pageRevisionByRevNumberAndId?: GraphQLTypes["PageRevision"],
-	parameterByPaName?: GraphQLTypes["Parameter"],
-	paryByPId?: GraphQLTypes["Pary"],
-	paryNavrhByPnId?: GraphQLTypes["ParyNavrh"],
-	permissionByPeId?: GraphQLTypes["Permission"],
-	platbyCategoryByPcId?: GraphQLTypes["PlatbyCategory"],
-	platbyCategoryGroupByPcgId?: GraphQLTypes["PlatbyCategoryGroup"],
-	platbyGroupByPgId?: GraphQLTypes["PlatbyGroup"],
-	platbyGroupSkupinaByPgsId?: GraphQLTypes["PlatbyGroupSkupina"],
-	platbyItemByPiId?: GraphQLTypes["PlatbyItem"],
-	platbyRawByPrId?: GraphQLTypes["PlatbyRaw"],
-	rozpiByRId?: GraphQLTypes["Rozpi"],
-	rozpisItemByRiId?: GraphQLTypes["RozpisItem"],
-	sessionBySsId?: GraphQLTypes["Session"],
-	skupinyBySId?: GraphQLTypes["Skupiny"],
-	upozorneniByUpId?: GraphQLTypes["Upozorneni"],
-	upozorneniSkupinyByUpsId?: GraphQLTypes["UpozorneniSkupiny"],
-	userByUId?: GraphQLTypes["User"],
-	usersSkupinyByUsId?: GraphQLTypes["UsersSkupiny"],
-	videoByVId?: GraphQLTypes["Video"],
-	videoListByVlId?: GraphQLTypes["VideoList"],
-	videoSourceByVsId?: GraphQLTypes["VideoSource"],
+	pageRevision?: GraphQLTypes["PageRevision"],
+	parameter?: GraphQLTypes["Parameter"],
+	pary?: GraphQLTypes["Pary"],
+	paryNavrh?: GraphQLTypes["ParyNavrh"],
+	permission?: GraphQLTypes["Permission"],
+	platbyCategory?: GraphQLTypes["PlatbyCategory"],
+	platbyCategoryGroup?: GraphQLTypes["PlatbyCategoryGroup"],
+	platbyGroup?: GraphQLTypes["PlatbyGroup"],
+	platbyGroupSkupina?: GraphQLTypes["PlatbyGroupSkupina"],
+	platbyItem?: GraphQLTypes["PlatbyItem"],
+	platbyRaw?: GraphQLTypes["PlatbyRaw"],
+	rozpi?: GraphQLTypes["Rozpi"],
+	rozpisItem?: GraphQLTypes["RozpisItem"],
+	session?: GraphQLTypes["Session"],
+	skupiny?: GraphQLTypes["Skupiny"],
+	upozorneni?: GraphQLTypes["Upozorneni"],
+	upozorneniSkupiny?: GraphQLTypes["UpozorneniSkupiny"],
+	user?: GraphQLTypes["User"],
+	usersSkupiny?: GraphQLTypes["UsersSkupiny"],
+	video?: GraphQLTypes["Video"],
+	videoList?: GraphQLTypes["VideoList"],
+	videoSource?: GraphQLTypes["VideoSource"],
 	currentCoupleIds?: GraphQLTypes["CurrentCoupleIdsConnection"],
 	currentSessionId?: string,
 	currentUserId?: GraphQLTypes["BigInt"],
@@ -9716,67 +9716,67 @@ which can only query top level fields if they are in a particular form. */
 	/** Reads and enables pagination through a set of `Video`. */
 	titleVideos?: GraphQLTypes["VideosConnection"],
 	/** Reads a single `Akce` using its globally unique `ID`. */
-	akce?: GraphQLTypes["Akce"],
+	akceByNodeId?: GraphQLTypes["Akce"],
 	/** Reads a single `AkceItem` using its globally unique `ID`. */
-	akceItem?: GraphQLTypes["AkceItem"],
+	akceItemByNodeId?: GraphQLTypes["AkceItem"],
 	/** Reads a single `Aktuality` using its globally unique `ID`. */
-	aktuality?: GraphQLTypes["Aktuality"],
+	aktualityByNodeId?: GraphQLTypes["Aktuality"],
 	/** Reads a single `Dokumenty` using its globally unique `ID`. */
-	dokumenty?: GraphQLTypes["Dokumenty"],
+	dokumentyByNodeId?: GraphQLTypes["Dokumenty"],
 	/** Reads a single `GalerieDir` using its globally unique `ID`. */
-	galerieDir?: GraphQLTypes["GalerieDir"],
+	galerieDirByNodeId?: GraphQLTypes["GalerieDir"],
 	/** Reads a single `GalerieFoto` using its globally unique `ID`. */
-	galerieFoto?: GraphQLTypes["GalerieFoto"],
+	galerieFotoByNodeId?: GraphQLTypes["GalerieFoto"],
 	/** Reads a single `Nabidka` using its globally unique `ID`. */
-	nabidka?: GraphQLTypes["Nabidka"],
+	nabidkaByNodeId?: GraphQLTypes["Nabidka"],
 	/** Reads a single `NabidkaItem` using its globally unique `ID`. */
-	nabidkaItem?: GraphQLTypes["NabidkaItem"],
+	nabidkaItemByNodeId?: GraphQLTypes["NabidkaItem"],
 	/** Reads a single `Page` using its globally unique `ID`. */
-	page?: GraphQLTypes["Page"],
+	pageByNodeId?: GraphQLTypes["Page"],
 	/** Reads a single `PageRevision` using its globally unique `ID`. */
-	pageRevision?: GraphQLTypes["PageRevision"],
+	pageRevisionByNodeId?: GraphQLTypes["PageRevision"],
 	/** Reads a single `Parameter` using its globally unique `ID`. */
-	parameter?: GraphQLTypes["Parameter"],
+	parameterByNodeId?: GraphQLTypes["Parameter"],
 	/** Reads a single `Pary` using its globally unique `ID`. */
-	pary?: GraphQLTypes["Pary"],
+	paryByNodeId?: GraphQLTypes["Pary"],
 	/** Reads a single `ParyNavrh` using its globally unique `ID`. */
-	paryNavrh?: GraphQLTypes["ParyNavrh"],
+	paryNavrhByNodeId?: GraphQLTypes["ParyNavrh"],
 	/** Reads a single `Permission` using its globally unique `ID`. */
-	permission?: GraphQLTypes["Permission"],
+	permissionByNodeId?: GraphQLTypes["Permission"],
 	/** Reads a single `PlatbyCategory` using its globally unique `ID`. */
-	platbyCategory?: GraphQLTypes["PlatbyCategory"],
+	platbyCategoryByNodeId?: GraphQLTypes["PlatbyCategory"],
 	/** Reads a single `PlatbyCategoryGroup` using its globally unique `ID`. */
-	platbyCategoryGroup?: GraphQLTypes["PlatbyCategoryGroup"],
+	platbyCategoryGroupByNodeId?: GraphQLTypes["PlatbyCategoryGroup"],
 	/** Reads a single `PlatbyGroup` using its globally unique `ID`. */
-	platbyGroup?: GraphQLTypes["PlatbyGroup"],
+	platbyGroupByNodeId?: GraphQLTypes["PlatbyGroup"],
 	/** Reads a single `PlatbyGroupSkupina` using its globally unique `ID`. */
-	platbyGroupSkupina?: GraphQLTypes["PlatbyGroupSkupina"],
+	platbyGroupSkupinaByNodeId?: GraphQLTypes["PlatbyGroupSkupina"],
 	/** Reads a single `PlatbyItem` using its globally unique `ID`. */
-	platbyItem?: GraphQLTypes["PlatbyItem"],
+	platbyItemByNodeId?: GraphQLTypes["PlatbyItem"],
 	/** Reads a single `PlatbyRaw` using its globally unique `ID`. */
-	platbyRaw?: GraphQLTypes["PlatbyRaw"],
+	platbyRawByNodeId?: GraphQLTypes["PlatbyRaw"],
 	/** Reads a single `Rozpi` using its globally unique `ID`. */
-	rozpi?: GraphQLTypes["Rozpi"],
+	rozpiByNodeId?: GraphQLTypes["Rozpi"],
 	/** Reads a single `RozpisItem` using its globally unique `ID`. */
-	rozpisItem?: GraphQLTypes["RozpisItem"],
+	rozpisItemByNodeId?: GraphQLTypes["RozpisItem"],
 	/** Reads a single `Session` using its globally unique `ID`. */
-	session?: GraphQLTypes["Session"],
+	sessionByNodeId?: GraphQLTypes["Session"],
 	/** Reads a single `Skupiny` using its globally unique `ID`. */
-	skupiny?: GraphQLTypes["Skupiny"],
+	skupinyByNodeId?: GraphQLTypes["Skupiny"],
 	/** Reads a single `Upozorneni` using its globally unique `ID`. */
-	upozorneni?: GraphQLTypes["Upozorneni"],
+	upozorneniByNodeId?: GraphQLTypes["Upozorneni"],
 	/** Reads a single `UpozorneniSkupiny` using its globally unique `ID`. */
-	upozorneniSkupiny?: GraphQLTypes["UpozorneniSkupiny"],
+	upozorneniSkupinyByNodeId?: GraphQLTypes["UpozorneniSkupiny"],
 	/** Reads a single `User` using its globally unique `ID`. */
-	user?: GraphQLTypes["User"],
+	userByNodeId?: GraphQLTypes["User"],
 	/** Reads a single `UsersSkupiny` using its globally unique `ID`. */
-	usersSkupiny?: GraphQLTypes["UsersSkupiny"],
+	usersSkupinyByNodeId?: GraphQLTypes["UsersSkupiny"],
 	/** Reads a single `Video` using its globally unique `ID`. */
-	video?: GraphQLTypes["Video"],
+	videoByNodeId?: GraphQLTypes["Video"],
 	/** Reads a single `VideoList` using its globally unique `ID`. */
-	videoList?: GraphQLTypes["VideoList"],
+	videoListByNodeId?: GraphQLTypes["VideoList"],
 	/** Reads a single `VideoSource` using its globally unique `ID`. */
-	videoSource?: GraphQLTypes["VideoSource"]
+	videoSourceByNodeId?: GraphQLTypes["VideoSource"]
 };
 	/** An object with a globally unique `ID`. */
 ["Node"]: {
@@ -11749,243 +11749,243 @@ for equality and combined with a logical ‘and.’ */
 	/** Creates a single `VideoSource`. */
 	createVideoSource?: GraphQLTypes["CreateVideoSourcePayload"],
 	/** Updates a single `Akce` using its globally unique id and a patch. */
-	updateAkce?: GraphQLTypes["UpdateAkcePayload"],
+	updateAkceByNodeId?: GraphQLTypes["UpdateAkcePayload"],
 	/** Updates a single `Akce` using a unique key and a patch. */
-	updateAkceByAId?: GraphQLTypes["UpdateAkcePayload"],
+	updateAkce?: GraphQLTypes["UpdateAkcePayload"],
 	/** Updates a single `AkceItem` using its globally unique id and a patch. */
-	updateAkceItem?: GraphQLTypes["UpdateAkceItemPayload"],
+	updateAkceItemByNodeId?: GraphQLTypes["UpdateAkceItemPayload"],
 	/** Updates a single `AkceItem` using a unique key and a patch. */
-	updateAkceItemByAiId?: GraphQLTypes["UpdateAkceItemPayload"],
+	updateAkceItem?: GraphQLTypes["UpdateAkceItemPayload"],
 	/** Updates a single `Aktuality` using its globally unique id and a patch. */
-	updateAktuality?: GraphQLTypes["UpdateAktualityPayload"],
+	updateAktualityByNodeId?: GraphQLTypes["UpdateAktualityPayload"],
 	/** Updates a single `Aktuality` using a unique key and a patch. */
-	updateAktualityByAtId?: GraphQLTypes["UpdateAktualityPayload"],
+	updateAktuality?: GraphQLTypes["UpdateAktualityPayload"],
 	/** Updates a single `Dokumenty` using its globally unique id and a patch. */
-	updateDokumenty?: GraphQLTypes["UpdateDokumentyPayload"],
+	updateDokumentyByNodeId?: GraphQLTypes["UpdateDokumentyPayload"],
 	/** Updates a single `Dokumenty` using a unique key and a patch. */
-	updateDokumentyByDId?: GraphQLTypes["UpdateDokumentyPayload"],
+	updateDokumenty?: GraphQLTypes["UpdateDokumentyPayload"],
 	/** Updates a single `GalerieDir` using its globally unique id and a patch. */
-	updateGalerieDir?: GraphQLTypes["UpdateGalerieDirPayload"],
+	updateGalerieDirByNodeId?: GraphQLTypes["UpdateGalerieDirPayload"],
 	/** Updates a single `GalerieDir` using a unique key and a patch. */
-	updateGalerieDirByGdId?: GraphQLTypes["UpdateGalerieDirPayload"],
+	updateGalerieDir?: GraphQLTypes["UpdateGalerieDirPayload"],
 	/** Updates a single `GalerieFoto` using its globally unique id and a patch. */
-	updateGalerieFoto?: GraphQLTypes["UpdateGalerieFotoPayload"],
+	updateGalerieFotoByNodeId?: GraphQLTypes["UpdateGalerieFotoPayload"],
 	/** Updates a single `GalerieFoto` using a unique key and a patch. */
-	updateGalerieFotoByGfId?: GraphQLTypes["UpdateGalerieFotoPayload"],
+	updateGalerieFoto?: GraphQLTypes["UpdateGalerieFotoPayload"],
 	/** Updates a single `Nabidka` using its globally unique id and a patch. */
-	updateNabidka?: GraphQLTypes["UpdateNabidkaPayload"],
+	updateNabidkaByNodeId?: GraphQLTypes["UpdateNabidkaPayload"],
 	/** Updates a single `Nabidka` using a unique key and a patch. */
-	updateNabidkaByNId?: GraphQLTypes["UpdateNabidkaPayload"],
+	updateNabidka?: GraphQLTypes["UpdateNabidkaPayload"],
 	/** Updates a single `NabidkaItem` using its globally unique id and a patch. */
-	updateNabidkaItem?: GraphQLTypes["UpdateNabidkaItemPayload"],
+	updateNabidkaItemByNodeId?: GraphQLTypes["UpdateNabidkaItemPayload"],
 	/** Updates a single `NabidkaItem` using a unique key and a patch. */
-	updateNabidkaItemByNiId?: GraphQLTypes["UpdateNabidkaItemPayload"],
+	updateNabidkaItem?: GraphQLTypes["UpdateNabidkaItemPayload"],
 	/** Updates a single `Page` using its globally unique id and a patch. */
-	updatePage?: GraphQLTypes["UpdatePagePayload"],
+	updatePageByNodeId?: GraphQLTypes["UpdatePagePayload"],
 	/** Updates a single `Page` using a unique key and a patch. */
-	updatePageById?: GraphQLTypes["UpdatePagePayload"],
+	updatePage?: GraphQLTypes["UpdatePagePayload"],
 	/** Updates a single `Page` using a unique key and a patch. */
 	updatePageByUrl?: GraphQLTypes["UpdatePagePayload"],
 	/** Updates a single `Parameter` using its globally unique id and a patch. */
-	updateParameter?: GraphQLTypes["UpdateParameterPayload"],
+	updateParameterByNodeId?: GraphQLTypes["UpdateParameterPayload"],
 	/** Updates a single `Parameter` using a unique key and a patch. */
-	updateParameterByPaName?: GraphQLTypes["UpdateParameterPayload"],
+	updateParameter?: GraphQLTypes["UpdateParameterPayload"],
 	/** Updates a single `Pary` using its globally unique id and a patch. */
-	updatePary?: GraphQLTypes["UpdateParyPayload"],
+	updateParyByNodeId?: GraphQLTypes["UpdateParyPayload"],
 	/** Updates a single `Pary` using a unique key and a patch. */
-	updateParyByPId?: GraphQLTypes["UpdateParyPayload"],
+	updatePary?: GraphQLTypes["UpdateParyPayload"],
 	/** Updates a single `ParyNavrh` using its globally unique id and a patch. */
-	updateParyNavrh?: GraphQLTypes["UpdateParyNavrhPayload"],
+	updateParyNavrhByNodeId?: GraphQLTypes["UpdateParyNavrhPayload"],
 	/** Updates a single `ParyNavrh` using a unique key and a patch. */
-	updateParyNavrhByPnId?: GraphQLTypes["UpdateParyNavrhPayload"],
+	updateParyNavrh?: GraphQLTypes["UpdateParyNavrhPayload"],
 	/** Updates a single `Permission` using its globally unique id and a patch. */
-	updatePermission?: GraphQLTypes["UpdatePermissionPayload"],
+	updatePermissionByNodeId?: GraphQLTypes["UpdatePermissionPayload"],
 	/** Updates a single `Permission` using a unique key and a patch. */
-	updatePermissionByPeId?: GraphQLTypes["UpdatePermissionPayload"],
+	updatePermission?: GraphQLTypes["UpdatePermissionPayload"],
 	/** Updates a single `PlatbyCategory` using its globally unique id and a patch. */
-	updatePlatbyCategory?: GraphQLTypes["UpdatePlatbyCategoryPayload"],
+	updatePlatbyCategoryByNodeId?: GraphQLTypes["UpdatePlatbyCategoryPayload"],
 	/** Updates a single `PlatbyCategory` using a unique key and a patch. */
-	updatePlatbyCategoryByPcId?: GraphQLTypes["UpdatePlatbyCategoryPayload"],
+	updatePlatbyCategory?: GraphQLTypes["UpdatePlatbyCategoryPayload"],
 	/** Updates a single `PlatbyCategoryGroup` using its globally unique id and a patch. */
-	updatePlatbyCategoryGroup?: GraphQLTypes["UpdatePlatbyCategoryGroupPayload"],
+	updatePlatbyCategoryGroupByNodeId?: GraphQLTypes["UpdatePlatbyCategoryGroupPayload"],
 	/** Updates a single `PlatbyCategoryGroup` using a unique key and a patch. */
-	updatePlatbyCategoryGroupByPcgId?: GraphQLTypes["UpdatePlatbyCategoryGroupPayload"],
+	updatePlatbyCategoryGroup?: GraphQLTypes["UpdatePlatbyCategoryGroupPayload"],
 	/** Updates a single `PlatbyGroup` using its globally unique id and a patch. */
-	updatePlatbyGroup?: GraphQLTypes["UpdatePlatbyGroupPayload"],
+	updatePlatbyGroupByNodeId?: GraphQLTypes["UpdatePlatbyGroupPayload"],
 	/** Updates a single `PlatbyGroup` using a unique key and a patch. */
-	updatePlatbyGroupByPgId?: GraphQLTypes["UpdatePlatbyGroupPayload"],
+	updatePlatbyGroup?: GraphQLTypes["UpdatePlatbyGroupPayload"],
 	/** Updates a single `PlatbyGroupSkupina` using its globally unique id and a patch. */
-	updatePlatbyGroupSkupina?: GraphQLTypes["UpdatePlatbyGroupSkupinaPayload"],
+	updatePlatbyGroupSkupinaByNodeId?: GraphQLTypes["UpdatePlatbyGroupSkupinaPayload"],
 	/** Updates a single `PlatbyGroupSkupina` using a unique key and a patch. */
-	updatePlatbyGroupSkupinaByPgsId?: GraphQLTypes["UpdatePlatbyGroupSkupinaPayload"],
+	updatePlatbyGroupSkupina?: GraphQLTypes["UpdatePlatbyGroupSkupinaPayload"],
 	/** Updates a single `PlatbyItem` using its globally unique id and a patch. */
-	updatePlatbyItem?: GraphQLTypes["UpdatePlatbyItemPayload"],
+	updatePlatbyItemByNodeId?: GraphQLTypes["UpdatePlatbyItemPayload"],
 	/** Updates a single `PlatbyItem` using a unique key and a patch. */
-	updatePlatbyItemByPiId?: GraphQLTypes["UpdatePlatbyItemPayload"],
+	updatePlatbyItem?: GraphQLTypes["UpdatePlatbyItemPayload"],
 	/** Updates a single `PlatbyRaw` using its globally unique id and a patch. */
-	updatePlatbyRaw?: GraphQLTypes["UpdatePlatbyRawPayload"],
+	updatePlatbyRawByNodeId?: GraphQLTypes["UpdatePlatbyRawPayload"],
 	/** Updates a single `PlatbyRaw` using a unique key and a patch. */
-	updatePlatbyRawByPrId?: GraphQLTypes["UpdatePlatbyRawPayload"],
+	updatePlatbyRaw?: GraphQLTypes["UpdatePlatbyRawPayload"],
 	/** Updates a single `Rozpi` using its globally unique id and a patch. */
-	updateRozpi?: GraphQLTypes["UpdateRozpiPayload"],
+	updateRozpiByNodeId?: GraphQLTypes["UpdateRozpiPayload"],
 	/** Updates a single `Rozpi` using a unique key and a patch. */
-	updateRozpiByRId?: GraphQLTypes["UpdateRozpiPayload"],
+	updateRozpi?: GraphQLTypes["UpdateRozpiPayload"],
 	/** Updates a single `RozpisItem` using its globally unique id and a patch. */
-	updateRozpisItem?: GraphQLTypes["UpdateRozpisItemPayload"],
+	updateRozpisItemByNodeId?: GraphQLTypes["UpdateRozpisItemPayload"],
 	/** Updates a single `RozpisItem` using a unique key and a patch. */
-	updateRozpisItemByRiId?: GraphQLTypes["UpdateRozpisItemPayload"],
+	updateRozpisItem?: GraphQLTypes["UpdateRozpisItemPayload"],
 	/** Updates a single `Session` using its globally unique id and a patch. */
-	updateSession?: GraphQLTypes["UpdateSessionPayload"],
+	updateSessionByNodeId?: GraphQLTypes["UpdateSessionPayload"],
 	/** Updates a single `Session` using a unique key and a patch. */
-	updateSessionBySsId?: GraphQLTypes["UpdateSessionPayload"],
+	updateSession?: GraphQLTypes["UpdateSessionPayload"],
 	/** Updates a single `Skupiny` using its globally unique id and a patch. */
-	updateSkupiny?: GraphQLTypes["UpdateSkupinyPayload"],
+	updateSkupinyByNodeId?: GraphQLTypes["UpdateSkupinyPayload"],
 	/** Updates a single `Skupiny` using a unique key and a patch. */
-	updateSkupinyBySId?: GraphQLTypes["UpdateSkupinyPayload"],
+	updateSkupiny?: GraphQLTypes["UpdateSkupinyPayload"],
 	/** Updates a single `Upozorneni` using its globally unique id and a patch. */
-	updateUpozorneni?: GraphQLTypes["UpdateUpozorneniPayload"],
+	updateUpozorneniByNodeId?: GraphQLTypes["UpdateUpozorneniPayload"],
 	/** Updates a single `Upozorneni` using a unique key and a patch. */
-	updateUpozorneniByUpId?: GraphQLTypes["UpdateUpozorneniPayload"],
+	updateUpozorneni?: GraphQLTypes["UpdateUpozorneniPayload"],
 	/** Updates a single `UpozorneniSkupiny` using its globally unique id and a patch. */
-	updateUpozorneniSkupiny?: GraphQLTypes["UpdateUpozorneniSkupinyPayload"],
+	updateUpozorneniSkupinyByNodeId?: GraphQLTypes["UpdateUpozorneniSkupinyPayload"],
 	/** Updates a single `UpozorneniSkupiny` using a unique key and a patch. */
-	updateUpozorneniSkupinyByUpsId?: GraphQLTypes["UpdateUpozorneniSkupinyPayload"],
+	updateUpozorneniSkupiny?: GraphQLTypes["UpdateUpozorneniSkupinyPayload"],
 	/** Updates a single `User` using its globally unique id and a patch. */
-	updateUser?: GraphQLTypes["UpdateUserPayload"],
+	updateUserByNodeId?: GraphQLTypes["UpdateUserPayload"],
 	/** Updates a single `User` using a unique key and a patch. */
-	updateUserByUId?: GraphQLTypes["UpdateUserPayload"],
+	updateUser?: GraphQLTypes["UpdateUserPayload"],
 	/** Updates a single `UsersSkupiny` using its globally unique id and a patch. */
-	updateUsersSkupiny?: GraphQLTypes["UpdateUsersSkupinyPayload"],
+	updateUsersSkupinyByNodeId?: GraphQLTypes["UpdateUsersSkupinyPayload"],
 	/** Updates a single `UsersSkupiny` using a unique key and a patch. */
-	updateUsersSkupinyByUsId?: GraphQLTypes["UpdateUsersSkupinyPayload"],
+	updateUsersSkupiny?: GraphQLTypes["UpdateUsersSkupinyPayload"],
 	/** Updates a single `Video` using its globally unique id and a patch. */
-	updateVideo?: GraphQLTypes["UpdateVideoPayload"],
+	updateVideoByNodeId?: GraphQLTypes["UpdateVideoPayload"],
 	/** Updates a single `Video` using a unique key and a patch. */
-	updateVideoByVId?: GraphQLTypes["UpdateVideoPayload"],
+	updateVideo?: GraphQLTypes["UpdateVideoPayload"],
 	/** Updates a single `VideoList` using its globally unique id and a patch. */
-	updateVideoList?: GraphQLTypes["UpdateVideoListPayload"],
+	updateVideoListByNodeId?: GraphQLTypes["UpdateVideoListPayload"],
 	/** Updates a single `VideoList` using a unique key and a patch. */
-	updateVideoListByVlId?: GraphQLTypes["UpdateVideoListPayload"],
+	updateVideoList?: GraphQLTypes["UpdateVideoListPayload"],
 	/** Updates a single `VideoSource` using its globally unique id and a patch. */
-	updateVideoSource?: GraphQLTypes["UpdateVideoSourcePayload"],
+	updateVideoSourceByNodeId?: GraphQLTypes["UpdateVideoSourcePayload"],
 	/** Updates a single `VideoSource` using a unique key and a patch. */
-	updateVideoSourceByVsId?: GraphQLTypes["UpdateVideoSourcePayload"],
+	updateVideoSource?: GraphQLTypes["UpdateVideoSourcePayload"],
 	/** Deletes a single `Akce` using its globally unique id. */
-	deleteAkce?: GraphQLTypes["DeleteAkcePayload"],
+	deleteAkceByNodeId?: GraphQLTypes["DeleteAkcePayload"],
 	/** Deletes a single `Akce` using a unique key. */
-	deleteAkceByAId?: GraphQLTypes["DeleteAkcePayload"],
+	deleteAkce?: GraphQLTypes["DeleteAkcePayload"],
 	/** Deletes a single `AkceItem` using its globally unique id. */
-	deleteAkceItem?: GraphQLTypes["DeleteAkceItemPayload"],
+	deleteAkceItemByNodeId?: GraphQLTypes["DeleteAkceItemPayload"],
 	/** Deletes a single `AkceItem` using a unique key. */
-	deleteAkceItemByAiId?: GraphQLTypes["DeleteAkceItemPayload"],
+	deleteAkceItem?: GraphQLTypes["DeleteAkceItemPayload"],
 	/** Deletes a single `Aktuality` using its globally unique id. */
-	deleteAktuality?: GraphQLTypes["DeleteAktualityPayload"],
+	deleteAktualityByNodeId?: GraphQLTypes["DeleteAktualityPayload"],
 	/** Deletes a single `Aktuality` using a unique key. */
-	deleteAktualityByAtId?: GraphQLTypes["DeleteAktualityPayload"],
+	deleteAktuality?: GraphQLTypes["DeleteAktualityPayload"],
 	/** Deletes a single `Dokumenty` using its globally unique id. */
-	deleteDokumenty?: GraphQLTypes["DeleteDokumentyPayload"],
+	deleteDokumentyByNodeId?: GraphQLTypes["DeleteDokumentyPayload"],
 	/** Deletes a single `Dokumenty` using a unique key. */
-	deleteDokumentyByDId?: GraphQLTypes["DeleteDokumentyPayload"],
+	deleteDokumenty?: GraphQLTypes["DeleteDokumentyPayload"],
 	/** Deletes a single `GalerieDir` using its globally unique id. */
-	deleteGalerieDir?: GraphQLTypes["DeleteGalerieDirPayload"],
+	deleteGalerieDirByNodeId?: GraphQLTypes["DeleteGalerieDirPayload"],
 	/** Deletes a single `GalerieDir` using a unique key. */
-	deleteGalerieDirByGdId?: GraphQLTypes["DeleteGalerieDirPayload"],
+	deleteGalerieDir?: GraphQLTypes["DeleteGalerieDirPayload"],
 	/** Deletes a single `GalerieFoto` using its globally unique id. */
-	deleteGalerieFoto?: GraphQLTypes["DeleteGalerieFotoPayload"],
+	deleteGalerieFotoByNodeId?: GraphQLTypes["DeleteGalerieFotoPayload"],
 	/** Deletes a single `GalerieFoto` using a unique key. */
-	deleteGalerieFotoByGfId?: GraphQLTypes["DeleteGalerieFotoPayload"],
+	deleteGalerieFoto?: GraphQLTypes["DeleteGalerieFotoPayload"],
 	/** Deletes a single `Nabidka` using its globally unique id. */
-	deleteNabidka?: GraphQLTypes["DeleteNabidkaPayload"],
+	deleteNabidkaByNodeId?: GraphQLTypes["DeleteNabidkaPayload"],
 	/** Deletes a single `Nabidka` using a unique key. */
-	deleteNabidkaByNId?: GraphQLTypes["DeleteNabidkaPayload"],
+	deleteNabidka?: GraphQLTypes["DeleteNabidkaPayload"],
 	/** Deletes a single `NabidkaItem` using its globally unique id. */
-	deleteNabidkaItem?: GraphQLTypes["DeleteNabidkaItemPayload"],
+	deleteNabidkaItemByNodeId?: GraphQLTypes["DeleteNabidkaItemPayload"],
 	/** Deletes a single `NabidkaItem` using a unique key. */
-	deleteNabidkaItemByNiId?: GraphQLTypes["DeleteNabidkaItemPayload"],
+	deleteNabidkaItem?: GraphQLTypes["DeleteNabidkaItemPayload"],
 	/** Deletes a single `Parameter` using its globally unique id. */
-	deleteParameter?: GraphQLTypes["DeleteParameterPayload"],
+	deleteParameterByNodeId?: GraphQLTypes["DeleteParameterPayload"],
 	/** Deletes a single `Parameter` using a unique key. */
-	deleteParameterByPaName?: GraphQLTypes["DeleteParameterPayload"],
+	deleteParameter?: GraphQLTypes["DeleteParameterPayload"],
 	/** Deletes a single `Pary` using its globally unique id. */
-	deletePary?: GraphQLTypes["DeleteParyPayload"],
+	deleteParyByNodeId?: GraphQLTypes["DeleteParyPayload"],
 	/** Deletes a single `Pary` using a unique key. */
-	deleteParyByPId?: GraphQLTypes["DeleteParyPayload"],
+	deletePary?: GraphQLTypes["DeleteParyPayload"],
 	/** Deletes a single `ParyNavrh` using its globally unique id. */
-	deleteParyNavrh?: GraphQLTypes["DeleteParyNavrhPayload"],
+	deleteParyNavrhByNodeId?: GraphQLTypes["DeleteParyNavrhPayload"],
 	/** Deletes a single `ParyNavrh` using a unique key. */
-	deleteParyNavrhByPnId?: GraphQLTypes["DeleteParyNavrhPayload"],
+	deleteParyNavrh?: GraphQLTypes["DeleteParyNavrhPayload"],
 	/** Deletes a single `Permission` using its globally unique id. */
-	deletePermission?: GraphQLTypes["DeletePermissionPayload"],
+	deletePermissionByNodeId?: GraphQLTypes["DeletePermissionPayload"],
 	/** Deletes a single `Permission` using a unique key. */
-	deletePermissionByPeId?: GraphQLTypes["DeletePermissionPayload"],
+	deletePermission?: GraphQLTypes["DeletePermissionPayload"],
 	/** Deletes a single `PlatbyCategory` using its globally unique id. */
-	deletePlatbyCategory?: GraphQLTypes["DeletePlatbyCategoryPayload"],
+	deletePlatbyCategoryByNodeId?: GraphQLTypes["DeletePlatbyCategoryPayload"],
 	/** Deletes a single `PlatbyCategory` using a unique key. */
-	deletePlatbyCategoryByPcId?: GraphQLTypes["DeletePlatbyCategoryPayload"],
+	deletePlatbyCategory?: GraphQLTypes["DeletePlatbyCategoryPayload"],
 	/** Deletes a single `PlatbyCategoryGroup` using its globally unique id. */
-	deletePlatbyCategoryGroup?: GraphQLTypes["DeletePlatbyCategoryGroupPayload"],
+	deletePlatbyCategoryGroupByNodeId?: GraphQLTypes["DeletePlatbyCategoryGroupPayload"],
 	/** Deletes a single `PlatbyCategoryGroup` using a unique key. */
-	deletePlatbyCategoryGroupByPcgId?: GraphQLTypes["DeletePlatbyCategoryGroupPayload"],
+	deletePlatbyCategoryGroup?: GraphQLTypes["DeletePlatbyCategoryGroupPayload"],
 	/** Deletes a single `PlatbyGroup` using its globally unique id. */
-	deletePlatbyGroup?: GraphQLTypes["DeletePlatbyGroupPayload"],
+	deletePlatbyGroupByNodeId?: GraphQLTypes["DeletePlatbyGroupPayload"],
 	/** Deletes a single `PlatbyGroup` using a unique key. */
-	deletePlatbyGroupByPgId?: GraphQLTypes["DeletePlatbyGroupPayload"],
+	deletePlatbyGroup?: GraphQLTypes["DeletePlatbyGroupPayload"],
 	/** Deletes a single `PlatbyGroupSkupina` using its globally unique id. */
-	deletePlatbyGroupSkupina?: GraphQLTypes["DeletePlatbyGroupSkupinaPayload"],
+	deletePlatbyGroupSkupinaByNodeId?: GraphQLTypes["DeletePlatbyGroupSkupinaPayload"],
 	/** Deletes a single `PlatbyGroupSkupina` using a unique key. */
-	deletePlatbyGroupSkupinaByPgsId?: GraphQLTypes["DeletePlatbyGroupSkupinaPayload"],
+	deletePlatbyGroupSkupina?: GraphQLTypes["DeletePlatbyGroupSkupinaPayload"],
 	/** Deletes a single `PlatbyItem` using its globally unique id. */
-	deletePlatbyItem?: GraphQLTypes["DeletePlatbyItemPayload"],
+	deletePlatbyItemByNodeId?: GraphQLTypes["DeletePlatbyItemPayload"],
 	/** Deletes a single `PlatbyItem` using a unique key. */
-	deletePlatbyItemByPiId?: GraphQLTypes["DeletePlatbyItemPayload"],
+	deletePlatbyItem?: GraphQLTypes["DeletePlatbyItemPayload"],
 	/** Deletes a single `PlatbyRaw` using its globally unique id. */
-	deletePlatbyRaw?: GraphQLTypes["DeletePlatbyRawPayload"],
+	deletePlatbyRawByNodeId?: GraphQLTypes["DeletePlatbyRawPayload"],
 	/** Deletes a single `PlatbyRaw` using a unique key. */
-	deletePlatbyRawByPrId?: GraphQLTypes["DeletePlatbyRawPayload"],
+	deletePlatbyRaw?: GraphQLTypes["DeletePlatbyRawPayload"],
 	/** Deletes a single `Rozpi` using its globally unique id. */
-	deleteRozpi?: GraphQLTypes["DeleteRozpiPayload"],
+	deleteRozpiByNodeId?: GraphQLTypes["DeleteRozpiPayload"],
 	/** Deletes a single `Rozpi` using a unique key. */
-	deleteRozpiByRId?: GraphQLTypes["DeleteRozpiPayload"],
+	deleteRozpi?: GraphQLTypes["DeleteRozpiPayload"],
 	/** Deletes a single `RozpisItem` using its globally unique id. */
-	deleteRozpisItem?: GraphQLTypes["DeleteRozpisItemPayload"],
+	deleteRozpisItemByNodeId?: GraphQLTypes["DeleteRozpisItemPayload"],
 	/** Deletes a single `RozpisItem` using a unique key. */
-	deleteRozpisItemByRiId?: GraphQLTypes["DeleteRozpisItemPayload"],
+	deleteRozpisItem?: GraphQLTypes["DeleteRozpisItemPayload"],
 	/** Deletes a single `Session` using its globally unique id. */
-	deleteSession?: GraphQLTypes["DeleteSessionPayload"],
+	deleteSessionByNodeId?: GraphQLTypes["DeleteSessionPayload"],
 	/** Deletes a single `Session` using a unique key. */
-	deleteSessionBySsId?: GraphQLTypes["DeleteSessionPayload"],
+	deleteSession?: GraphQLTypes["DeleteSessionPayload"],
 	/** Deletes a single `Skupiny` using its globally unique id. */
-	deleteSkupiny?: GraphQLTypes["DeleteSkupinyPayload"],
+	deleteSkupinyByNodeId?: GraphQLTypes["DeleteSkupinyPayload"],
 	/** Deletes a single `Skupiny` using a unique key. */
-	deleteSkupinyBySId?: GraphQLTypes["DeleteSkupinyPayload"],
+	deleteSkupiny?: GraphQLTypes["DeleteSkupinyPayload"],
 	/** Deletes a single `Upozorneni` using its globally unique id. */
-	deleteUpozorneni?: GraphQLTypes["DeleteUpozorneniPayload"],
+	deleteUpozorneniByNodeId?: GraphQLTypes["DeleteUpozorneniPayload"],
 	/** Deletes a single `Upozorneni` using a unique key. */
-	deleteUpozorneniByUpId?: GraphQLTypes["DeleteUpozorneniPayload"],
+	deleteUpozorneni?: GraphQLTypes["DeleteUpozorneniPayload"],
 	/** Deletes a single `UpozorneniSkupiny` using its globally unique id. */
-	deleteUpozorneniSkupiny?: GraphQLTypes["DeleteUpozorneniSkupinyPayload"],
+	deleteUpozorneniSkupinyByNodeId?: GraphQLTypes["DeleteUpozorneniSkupinyPayload"],
 	/** Deletes a single `UpozorneniSkupiny` using a unique key. */
-	deleteUpozorneniSkupinyByUpsId?: GraphQLTypes["DeleteUpozorneniSkupinyPayload"],
+	deleteUpozorneniSkupiny?: GraphQLTypes["DeleteUpozorneniSkupinyPayload"],
 	/** Deletes a single `User` using its globally unique id. */
-	deleteUser?: GraphQLTypes["DeleteUserPayload"],
+	deleteUserByNodeId?: GraphQLTypes["DeleteUserPayload"],
 	/** Deletes a single `User` using a unique key. */
-	deleteUserByUId?: GraphQLTypes["DeleteUserPayload"],
+	deleteUser?: GraphQLTypes["DeleteUserPayload"],
 	/** Deletes a single `UsersSkupiny` using its globally unique id. */
-	deleteUsersSkupiny?: GraphQLTypes["DeleteUsersSkupinyPayload"],
+	deleteUsersSkupinyByNodeId?: GraphQLTypes["DeleteUsersSkupinyPayload"],
 	/** Deletes a single `UsersSkupiny` using a unique key. */
-	deleteUsersSkupinyByUsId?: GraphQLTypes["DeleteUsersSkupinyPayload"],
+	deleteUsersSkupiny?: GraphQLTypes["DeleteUsersSkupinyPayload"],
 	/** Deletes a single `Video` using its globally unique id. */
-	deleteVideo?: GraphQLTypes["DeleteVideoPayload"],
+	deleteVideoByNodeId?: GraphQLTypes["DeleteVideoPayload"],
 	/** Deletes a single `Video` using a unique key. */
-	deleteVideoByVId?: GraphQLTypes["DeleteVideoPayload"],
+	deleteVideo?: GraphQLTypes["DeleteVideoPayload"],
 	/** Deletes a single `VideoList` using its globally unique id. */
-	deleteVideoList?: GraphQLTypes["DeleteVideoListPayload"],
+	deleteVideoListByNodeId?: GraphQLTypes["DeleteVideoListPayload"],
 	/** Deletes a single `VideoList` using a unique key. */
-	deleteVideoListByVlId?: GraphQLTypes["DeleteVideoListPayload"],
+	deleteVideoList?: GraphQLTypes["DeleteVideoListPayload"],
 	/** Deletes a single `VideoSource` using its globally unique id. */
-	deleteVideoSource?: GraphQLTypes["DeleteVideoSourcePayload"],
+	deleteVideoSourceByNodeId?: GraphQLTypes["DeleteVideoSourcePayload"],
 	/** Deletes a single `VideoSource` using a unique key. */
-	deleteVideoSourceByVsId?: GraphQLTypes["DeleteVideoSourcePayload"],
+	deleteVideoSource?: GraphQLTypes["DeleteVideoSourcePayload"],
 	login?: GraphQLTypes["LoginPayload"],
 	logout?: GraphQLTypes["LogoutPayload"]
 };
@@ -13013,15 +13013,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Akce`. May be used by Relay 1. */
 	akceEdge?: GraphQLTypes["AkcesEdge"]
 };
-	/** All input for the `updateAkce` mutation. */
-["UpdateAkceInput"]: {
+	/** All input for the `updateAkceByNodeId` mutation. */
+["UpdateAkceByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Akce` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `Akce` being updated. */
-	akcePatch: GraphQLTypes["AkcePatch"]
+	patch: GraphQLTypes["AkcePatch"]
 };
 	/** Represents an update to a `Akce`. Fields that are set will be updated. */
 ["AkcePatch"]: {
@@ -13037,13 +13037,13 @@ payload verbatim. May be used to track mutations by the client. */
 	aLock?: boolean,
 	aVisible?: boolean
 };
-	/** All input for the `updateAkceByAId` mutation. */
-["UpdateAkceByAIdInput"]: {
+	/** All input for the `updateAkce` mutation. */
+["UpdateAkceInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `Akce` being updated. */
-	akcePatch: GraphQLTypes["AkcePatch"],
+	patch: GraphQLTypes["AkcePatch"],
 	aId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `AkceItem` mutation. */
@@ -13063,15 +13063,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `AkceItem`. May be used by Relay 1. */
 	akceItemEdge?: GraphQLTypes["AkceItemsEdge"]
 };
-	/** All input for the `updateAkceItem` mutation. */
-["UpdateAkceItemInput"]: {
+	/** All input for the `updateAkceItemByNodeId` mutation. */
+["UpdateAkceItemByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `AkceItem` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `AkceItem` being updated. */
-	akceItemPatch: GraphQLTypes["AkceItemPatch"]
+	patch: GraphQLTypes["AkceItemPatch"]
 };
 	/** Represents an update to a `AkceItem`. Fields that are set will be updated. */
 ["AkceItemPatch"]: {
@@ -13080,13 +13080,13 @@ payload verbatim. May be used to track mutations by the client. */
 	aiUser?: GraphQLTypes["BigInt"],
 	aiRokNarozeni?: number
 };
-	/** All input for the `updateAkceItemByAiId` mutation. */
-["UpdateAkceItemByAiIdInput"]: {
+	/** All input for the `updateAkceItem` mutation. */
+["UpdateAkceItemInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `AkceItem` being updated. */
-	akceItemPatch: GraphQLTypes["AkceItemPatch"],
+	patch: GraphQLTypes["AkceItemPatch"],
 	aiId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `Aktuality` mutation. */
@@ -13106,15 +13106,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Aktuality`. May be used by Relay 1. */
 	aktualityEdge?: GraphQLTypes["AktualitiesEdge"]
 };
-	/** All input for the `updateAktuality` mutation. */
-["UpdateAktualityInput"]: {
+	/** All input for the `updateAktualityByNodeId` mutation. */
+["UpdateAktualityByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Aktuality` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `Aktuality` being updated. */
-	aktualityPatch: GraphQLTypes["AktualityPatch"]
+	patch: GraphQLTypes["AktualityPatch"]
 };
 	/** Represents an update to a `Aktuality`. Fields that are set will be updated. */
 ["AktualityPatch"]: {
@@ -13129,13 +13129,13 @@ payload verbatim. May be used to track mutations by the client. */
 	atTimestamp?: GraphQLTypes["Datetime"],
 	atTimestampAdd?: GraphQLTypes["Datetime"]
 };
-	/** All input for the `updateAktualityByAtId` mutation. */
-["UpdateAktualityByAtIdInput"]: {
+	/** All input for the `updateAktuality` mutation. */
+["UpdateAktualityInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `Aktuality` being updated. */
-	aktualityPatch: GraphQLTypes["AktualityPatch"],
+	patch: GraphQLTypes["AktualityPatch"],
 	atId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `Dokumenty` mutation. */
@@ -13153,15 +13153,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Dokumenty`. May be used by Relay 1. */
 	dokumentyEdge?: GraphQLTypes["DokumentiesEdge"]
 };
-	/** All input for the `updateDokumenty` mutation. */
-["UpdateDokumentyInput"]: {
+	/** All input for the `updateDokumentyByNodeId` mutation. */
+["UpdateDokumentyByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Dokumenty` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `Dokumenty` being updated. */
-	dokumentyPatch: GraphQLTypes["DokumentyPatch"]
+	patch: GraphQLTypes["DokumentyPatch"]
 };
 	/** Represents an update to a `Dokumenty`. Fields that are set will be updated. */
 ["DokumentyPatch"]: {
@@ -13173,13 +13173,13 @@ payload verbatim. May be used to track mutations by the client. */
 	dKdo?: GraphQLTypes["BigInt"],
 	dTimestamp?: GraphQLTypes["Datetime"]
 };
-	/** All input for the `updateDokumentyByDId` mutation. */
-["UpdateDokumentyByDIdInput"]: {
+	/** All input for the `updateDokumenty` mutation. */
+["UpdateDokumentyInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `Dokumenty` being updated. */
-	dokumentyPatch: GraphQLTypes["DokumentyPatch"],
+	patch: GraphQLTypes["DokumentyPatch"],
 	dId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `GalerieDir` mutation. */
@@ -13195,15 +13195,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `GalerieDir`. May be used by Relay 1. */
 	galerieDirEdge?: GraphQLTypes["GalerieDirsEdge"]
 };
-	/** All input for the `updateGalerieDir` mutation. */
-["UpdateGalerieDirInput"]: {
+	/** All input for the `updateGalerieDirByNodeId` mutation. */
+["UpdateGalerieDirByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `GalerieDir` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `GalerieDir` being updated. */
-	galerieDirPatch: GraphQLTypes["GalerieDirPatch"]
+	patch: GraphQLTypes["GalerieDirPatch"]
 };
 	/** Represents an update to a `GalerieDir`. Fields that are set will be updated. */
 ["GalerieDirPatch"]: {
@@ -13214,13 +13214,13 @@ payload verbatim. May be used to track mutations by the client. */
 	gdPath?: string,
 	gdHidden?: boolean
 };
-	/** All input for the `updateGalerieDirByGdId` mutation. */
-["UpdateGalerieDirByGdIdInput"]: {
+	/** All input for the `updateGalerieDir` mutation. */
+["UpdateGalerieDirInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `GalerieDir` being updated. */
-	galerieDirPatch: GraphQLTypes["GalerieDirPatch"],
+	patch: GraphQLTypes["GalerieDirPatch"],
 	gdId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `GalerieFoto` mutation. */
@@ -13240,15 +13240,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `GalerieFoto`. May be used by Relay 1. */
 	galerieFotoEdge?: GraphQLTypes["GalerieFotosEdge"]
 };
-	/** All input for the `updateGalerieFoto` mutation. */
-["UpdateGalerieFotoInput"]: {
+	/** All input for the `updateGalerieFotoByNodeId` mutation. */
+["UpdateGalerieFotoByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `GalerieFoto` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `GalerieFoto` being updated. */
-	galerieFotoPatch: GraphQLTypes["GalerieFotoPatch"]
+	patch: GraphQLTypes["GalerieFotoPatch"]
 };
 	/** Represents an update to a `GalerieFoto`. Fields that are set will be updated. */
 ["GalerieFotoPatch"]: {
@@ -13259,13 +13259,13 @@ payload verbatim. May be used to track mutations by the client. */
 	gfKdo?: GraphQLTypes["BigInt"],
 	gfTimestamp?: GraphQLTypes["Datetime"]
 };
-	/** All input for the `updateGalerieFotoByGfId` mutation. */
-["UpdateGalerieFotoByGfIdInput"]: {
+	/** All input for the `updateGalerieFoto` mutation. */
+["UpdateGalerieFotoInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `GalerieFoto` being updated. */
-	galerieFotoPatch: GraphQLTypes["GalerieFotoPatch"],
+	patch: GraphQLTypes["GalerieFotoPatch"],
 	gfId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `Nabidka` mutation. */
@@ -13283,15 +13283,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Nabidka`. May be used by Relay 1. */
 	nabidkaEdge?: GraphQLTypes["NabidkasEdge"]
 };
-	/** All input for the `updateNabidka` mutation. */
-["UpdateNabidkaInput"]: {
+	/** All input for the `updateNabidkaByNodeId` mutation. */
+["UpdateNabidkaByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Nabidka` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `Nabidka` being updated. */
-	nabidkaPatch: GraphQLTypes["NabidkaPatch"]
+	patch: GraphQLTypes["NabidkaPatch"]
 };
 	/** Represents an update to a `Nabidka`. Fields that are set will be updated. */
 ["NabidkaPatch"]: {
@@ -13305,13 +13305,13 @@ payload verbatim. May be used to track mutations by the client. */
 	nLock?: boolean,
 	nTimestamp?: GraphQLTypes["Datetime"]
 };
-	/** All input for the `updateNabidkaByNId` mutation. */
-["UpdateNabidkaByNIdInput"]: {
+	/** All input for the `updateNabidka` mutation. */
+["UpdateNabidkaInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `Nabidka` being updated. */
-	nabidkaPatch: GraphQLTypes["NabidkaPatch"],
+	patch: GraphQLTypes["NabidkaPatch"],
 	nId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `NabidkaItem` mutation. */
@@ -13331,15 +13331,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `NabidkaItem`. May be used by Relay 1. */
 	nabidkaItemEdge?: GraphQLTypes["NabidkaItemsEdge"]
 };
-	/** All input for the `updateNabidkaItem` mutation. */
-["UpdateNabidkaItemInput"]: {
+	/** All input for the `updateNabidkaItemByNodeId` mutation. */
+["UpdateNabidkaItemByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `NabidkaItem` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `NabidkaItem` being updated. */
-	nabidkaItemPatch: GraphQLTypes["NabidkaItemPatch"]
+	patch: GraphQLTypes["NabidkaItemPatch"]
 };
 	/** Represents an update to a `NabidkaItem`. Fields that are set will be updated. */
 ["NabidkaItemPatch"]: {
@@ -13349,13 +13349,13 @@ payload verbatim. May be used to track mutations by the client. */
 	niPocetHod?: number,
 	niLock?: boolean
 };
-	/** All input for the `updateNabidkaItemByNiId` mutation. */
-["UpdateNabidkaItemByNiIdInput"]: {
+	/** All input for the `updateNabidkaItem` mutation. */
+["UpdateNabidkaItemInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `NabidkaItem` being updated. */
-	nabidkaItemPatch: GraphQLTypes["NabidkaItemPatch"],
+	patch: GraphQLTypes["NabidkaItemPatch"],
 	niId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `Page` mutation. */
@@ -13371,15 +13371,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Page`. May be used by Relay 1. */
 	pageEdge?: GraphQLTypes["PagesEdge"]
 };
-	/** All input for the `updatePage` mutation. */
-["UpdatePageInput"]: {
+	/** All input for the `updatePageByNodeId` mutation. */
+["UpdatePageByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Page` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `Page` being updated. */
-	pagePatch: GraphQLTypes["PagePatch"]
+	patch: GraphQLTypes["PagePatch"]
 };
 	/** Represents an update to a `Page`. Fields that are set will be updated. */
 ["PagePatch"]: {
@@ -13389,13 +13389,13 @@ payload verbatim. May be used to track mutations by the client. */
 	createdAt?: GraphQLTypes["Datetime"],
 	updatedAt?: GraphQLTypes["Datetime"]
 };
-	/** All input for the `updatePageById` mutation. */
-["UpdatePageByIdInput"]: {
+	/** All input for the `updatePage` mutation. */
+["UpdatePageInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `Page` being updated. */
-	pagePatch: GraphQLTypes["PagePatch"],
+	patch: GraphQLTypes["PagePatch"],
 	id: number
 };
 	/** All input for the `updatePageByUrl` mutation. */
@@ -13404,7 +13404,7 @@ payload verbatim. May be used to track mutations by the client. */
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `Page` being updated. */
-	pagePatch: GraphQLTypes["PagePatch"],
+	patch: GraphQLTypes["PagePatch"],
 	url: string
 };
 	/** The output of our update `Parameter` mutation. */
@@ -13420,28 +13420,28 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Parameter`. May be used by Relay 1. */
 	parameterEdge?: GraphQLTypes["ParametersEdge"]
 };
-	/** All input for the `updateParameter` mutation. */
-["UpdateParameterInput"]: {
+	/** All input for the `updateParameterByNodeId` mutation. */
+["UpdateParameterByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Parameter` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `Parameter` being updated. */
-	parameterPatch: GraphQLTypes["ParameterPatch"]
+	patch: GraphQLTypes["ParameterPatch"]
 };
 	/** Represents an update to a `Parameter`. Fields that are set will be updated. */
 ["ParameterPatch"]: {
 		paName?: string,
 	paValue?: string
 };
-	/** All input for the `updateParameterByPaName` mutation. */
-["UpdateParameterByPaNameInput"]: {
+	/** All input for the `updateParameter` mutation. */
+["UpdateParameterInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `Parameter` being updated. */
-	parameterPatch: GraphQLTypes["ParameterPatch"],
+	patch: GraphQLTypes["ParameterPatch"],
 	paName: string
 };
 	/** The output of our update `Pary` mutation. */
@@ -13459,15 +13459,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Pary`. May be used by Relay 1. */
 	paryEdge?: GraphQLTypes["PariesEdge"]
 };
-	/** All input for the `updatePary` mutation. */
-["UpdateParyInput"]: {
+	/** All input for the `updateParyByNodeId` mutation. */
+["UpdateParyByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Pary` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `Pary` being updated. */
-	paryPatch: GraphQLTypes["ParyPatch"]
+	patch: GraphQLTypes["ParyPatch"]
 };
 	/** Represents an update to a `Pary`. Fields that are set will be updated. */
 ["ParyPatch"]: {
@@ -13485,13 +13485,13 @@ payload verbatim. May be used to track mutations by the client. */
 	pTimestampAdd?: GraphQLTypes["Datetime"],
 	pTimestampArchive?: GraphQLTypes["Datetime"]
 };
-	/** All input for the `updateParyByPId` mutation. */
-["UpdateParyByPIdInput"]: {
+	/** All input for the `updatePary` mutation. */
+["UpdateParyInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `Pary` being updated. */
-	paryPatch: GraphQLTypes["ParyPatch"],
+	patch: GraphQLTypes["ParyPatch"],
 	pId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `ParyNavrh` mutation. */
@@ -13513,15 +13513,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `ParyNavrh`. May be used by Relay 1. */
 	paryNavrhEdge?: GraphQLTypes["ParyNavrhsEdge"]
 };
-	/** All input for the `updateParyNavrh` mutation. */
-["UpdateParyNavrhInput"]: {
+	/** All input for the `updateParyNavrhByNodeId` mutation. */
+["UpdateParyNavrhByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `ParyNavrh` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `ParyNavrh` being updated. */
-	paryNavrhPatch: GraphQLTypes["ParyNavrhPatch"]
+	patch: GraphQLTypes["ParyNavrhPatch"]
 };
 	/** Represents an update to a `ParyNavrh`. Fields that are set will be updated. */
 ["ParyNavrhPatch"]: {
@@ -13530,13 +13530,13 @@ payload verbatim. May be used to track mutations by the client. */
 	pnPartner?: GraphQLTypes["BigInt"],
 	pnPartnerka?: GraphQLTypes["BigInt"]
 };
-	/** All input for the `updateParyNavrhByPnId` mutation. */
-["UpdateParyNavrhByPnIdInput"]: {
+	/** All input for the `updateParyNavrh` mutation. */
+["UpdateParyNavrhInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `ParyNavrh` being updated. */
-	paryNavrhPatch: GraphQLTypes["ParyNavrhPatch"],
+	patch: GraphQLTypes["ParyNavrhPatch"],
 	pnId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `Permission` mutation. */
@@ -13552,15 +13552,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Permission`. May be used by Relay 1. */
 	permissionEdge?: GraphQLTypes["PermissionsEdge"]
 };
-	/** All input for the `updatePermission` mutation. */
-["UpdatePermissionInput"]: {
+	/** All input for the `updatePermissionByNodeId` mutation. */
+["UpdatePermissionByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Permission` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `Permission` being updated. */
-	permissionPatch: GraphQLTypes["PermissionPatch"]
+	patch: GraphQLTypes["PermissionPatch"]
 };
 	/** Represents an update to a `Permission`. Fields that are set will be updated. */
 ["PermissionPatch"]: {
@@ -13585,13 +13585,13 @@ payload verbatim. May be used to track mutations by the client. */
 	peUsers?: number,
 	peMain?: number
 };
-	/** All input for the `updatePermissionByPeId` mutation. */
-["UpdatePermissionByPeIdInput"]: {
+	/** All input for the `updatePermission` mutation. */
+["UpdatePermissionInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `Permission` being updated. */
-	permissionPatch: GraphQLTypes["PermissionPatch"],
+	patch: GraphQLTypes["PermissionPatch"],
 	peId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `PlatbyCategory` mutation. */
@@ -13607,15 +13607,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyCategory`. May be used by Relay 1. */
 	platbyCategoryEdge?: GraphQLTypes["PlatbyCategoriesEdge"]
 };
-	/** All input for the `updatePlatbyCategory` mutation. */
-["UpdatePlatbyCategoryInput"]: {
+	/** All input for the `updatePlatbyCategoryByNodeId` mutation. */
+["UpdatePlatbyCategoryByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `PlatbyCategory` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `PlatbyCategory` being updated. */
-	platbyCategoryPatch: GraphQLTypes["PlatbyCategoryPatch"]
+	patch: GraphQLTypes["PlatbyCategoryPatch"]
 };
 	/** Represents an update to a `PlatbyCategory`. Fields that are set will be updated. */
 ["PlatbyCategoryPatch"]: {
@@ -13631,13 +13631,13 @@ payload verbatim. May be used to track mutations by the client. */
 	pcArchive?: boolean,
 	pcVisible?: boolean
 };
-	/** All input for the `updatePlatbyCategoryByPcId` mutation. */
-["UpdatePlatbyCategoryByPcIdInput"]: {
+	/** All input for the `updatePlatbyCategory` mutation. */
+["UpdatePlatbyCategoryInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `PlatbyCategory` being updated. */
-	platbyCategoryPatch: GraphQLTypes["PlatbyCategoryPatch"],
+	patch: GraphQLTypes["PlatbyCategoryPatch"],
 	pcId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `PlatbyCategoryGroup` mutation. */
@@ -13657,15 +13657,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyCategoryGroup`. May be used by Relay 1. */
 	platbyCategoryGroupEdge?: GraphQLTypes["PlatbyCategoryGroupsEdge"]
 };
-	/** All input for the `updatePlatbyCategoryGroup` mutation. */
-["UpdatePlatbyCategoryGroupInput"]: {
+	/** All input for the `updatePlatbyCategoryGroupByNodeId` mutation. */
+["UpdatePlatbyCategoryGroupByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `PlatbyCategoryGroup` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `PlatbyCategoryGroup` being updated. */
-	platbyCategoryGroupPatch: GraphQLTypes["PlatbyCategoryGroupPatch"]
+	patch: GraphQLTypes["PlatbyCategoryGroupPatch"]
 };
 	/** Represents an update to a `PlatbyCategoryGroup`. Fields that are set will be updated. */
 ["PlatbyCategoryGroupPatch"]: {
@@ -13673,13 +13673,13 @@ payload verbatim. May be used to track mutations by the client. */
 	pcgIdGroup?: GraphQLTypes["BigInt"],
 	pcgIdCategory?: GraphQLTypes["BigInt"]
 };
-	/** All input for the `updatePlatbyCategoryGroupByPcgId` mutation. */
-["UpdatePlatbyCategoryGroupByPcgIdInput"]: {
+	/** All input for the `updatePlatbyCategoryGroup` mutation. */
+["UpdatePlatbyCategoryGroupInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `PlatbyCategoryGroup` being updated. */
-	platbyCategoryGroupPatch: GraphQLTypes["PlatbyCategoryGroupPatch"],
+	patch: GraphQLTypes["PlatbyCategoryGroupPatch"],
 	pcgId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `PlatbyGroup` mutation. */
@@ -13695,15 +13695,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyGroup`. May be used by Relay 1. */
 	platbyGroupEdge?: GraphQLTypes["PlatbyGroupsEdge"]
 };
-	/** All input for the `updatePlatbyGroup` mutation. */
-["UpdatePlatbyGroupInput"]: {
+	/** All input for the `updatePlatbyGroupByNodeId` mutation. */
+["UpdatePlatbyGroupByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `PlatbyGroup` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `PlatbyGroup` being updated. */
-	platbyGroupPatch: GraphQLTypes["PlatbyGroupPatch"]
+	patch: GraphQLTypes["PlatbyGroupPatch"]
 };
 	/** Represents an update to a `PlatbyGroup`. Fields that are set will be updated. */
 ["PlatbyGroupPatch"]: {
@@ -13713,13 +13713,13 @@ payload verbatim. May be used to track mutations by the client. */
 	pgDescription?: string,
 	pgBase?: GraphQLTypes["BigInt"]
 };
-	/** All input for the `updatePlatbyGroupByPgId` mutation. */
-["UpdatePlatbyGroupByPgIdInput"]: {
+	/** All input for the `updatePlatbyGroup` mutation. */
+["UpdatePlatbyGroupInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `PlatbyGroup` being updated. */
-	platbyGroupPatch: GraphQLTypes["PlatbyGroupPatch"],
+	patch: GraphQLTypes["PlatbyGroupPatch"],
 	pgId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `PlatbyGroupSkupina` mutation. */
@@ -13739,15 +13739,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyGroupSkupina`. May be used by Relay 1. */
 	platbyGroupSkupinaEdge?: GraphQLTypes["PlatbyGroupSkupinasEdge"]
 };
-	/** All input for the `updatePlatbyGroupSkupina` mutation. */
-["UpdatePlatbyGroupSkupinaInput"]: {
+	/** All input for the `updatePlatbyGroupSkupinaByNodeId` mutation. */
+["UpdatePlatbyGroupSkupinaByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `PlatbyGroupSkupina` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `PlatbyGroupSkupina` being updated. */
-	platbyGroupSkupinaPatch: GraphQLTypes["PlatbyGroupSkupinaPatch"]
+	patch: GraphQLTypes["PlatbyGroupSkupinaPatch"]
 };
 	/** Represents an update to a `PlatbyGroupSkupina`. Fields that are set will be updated. */
 ["PlatbyGroupSkupinaPatch"]: {
@@ -13755,13 +13755,13 @@ payload verbatim. May be used to track mutations by the client. */
 	pgsIdSkupina?: GraphQLTypes["BigInt"],
 	pgsIdGroup?: GraphQLTypes["BigInt"]
 };
-	/** All input for the `updatePlatbyGroupSkupinaByPgsId` mutation. */
-["UpdatePlatbyGroupSkupinaByPgsIdInput"]: {
+	/** All input for the `updatePlatbyGroupSkupina` mutation. */
+["UpdatePlatbyGroupSkupinaInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `PlatbyGroupSkupina` being updated. */
-	platbyGroupSkupinaPatch: GraphQLTypes["PlatbyGroupSkupinaPatch"],
+	patch: GraphQLTypes["PlatbyGroupSkupinaPatch"],
 	pgsId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `PlatbyItem` mutation. */
@@ -13783,15 +13783,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyItem`. May be used by Relay 1. */
 	platbyItemEdge?: GraphQLTypes["PlatbyItemsEdge"]
 };
-	/** All input for the `updatePlatbyItem` mutation. */
-["UpdatePlatbyItemInput"]: {
+	/** All input for the `updatePlatbyItemByNodeId` mutation. */
+["UpdatePlatbyItemByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `PlatbyItem` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `PlatbyItem` being updated. */
-	platbyItemPatch: GraphQLTypes["PlatbyItemPatch"]
+	patch: GraphQLTypes["PlatbyItemPatch"]
 };
 	/** Represents an update to a `PlatbyItem`. Fields that are set will be updated. */
 ["PlatbyItemPatch"]: {
@@ -13803,13 +13803,13 @@ payload verbatim. May be used to track mutations by the client. */
 	piDate?: GraphQLTypes["Date"],
 	piPrefix?: number
 };
-	/** All input for the `updatePlatbyItemByPiId` mutation. */
-["UpdatePlatbyItemByPiIdInput"]: {
+	/** All input for the `updatePlatbyItem` mutation. */
+["UpdatePlatbyItemInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `PlatbyItem` being updated. */
-	platbyItemPatch: GraphQLTypes["PlatbyItemPatch"],
+	patch: GraphQLTypes["PlatbyItemPatch"],
 	piId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `PlatbyRaw` mutation. */
@@ -13825,15 +13825,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyRaw`. May be used by Relay 1. */
 	platbyRawEdge?: GraphQLTypes["PlatbyRawsEdge"]
 };
-	/** All input for the `updatePlatbyRaw` mutation. */
-["UpdatePlatbyRawInput"]: {
+	/** All input for the `updatePlatbyRawByNodeId` mutation. */
+["UpdatePlatbyRawByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `PlatbyRaw` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `PlatbyRaw` being updated. */
-	platbyRawPatch: GraphQLTypes["PlatbyRawPatch"]
+	patch: GraphQLTypes["PlatbyRawPatch"]
 };
 	/** Represents an update to a `PlatbyRaw`. Fields that are set will be updated. */
 ["PlatbyRawPatch"]: {
@@ -13843,13 +13843,13 @@ payload verbatim. May be used to track mutations by the client. */
 	prSorted?: boolean,
 	prDiscarded?: boolean
 };
-	/** All input for the `updatePlatbyRawByPrId` mutation. */
-["UpdatePlatbyRawByPrIdInput"]: {
+	/** All input for the `updatePlatbyRaw` mutation. */
+["UpdatePlatbyRawInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `PlatbyRaw` being updated. */
-	platbyRawPatch: GraphQLTypes["PlatbyRawPatch"],
+	patch: GraphQLTypes["PlatbyRawPatch"],
 	prId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `Rozpi` mutation. */
@@ -13867,15 +13867,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Rozpi`. May be used by Relay 1. */
 	rozpiEdge?: GraphQLTypes["RozpisEdge"]
 };
-	/** All input for the `updateRozpi` mutation. */
-["UpdateRozpiInput"]: {
+	/** All input for the `updateRozpiByNodeId` mutation. */
+["UpdateRozpiByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Rozpi` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `Rozpi` being updated. */
-	rozpiPatch: GraphQLTypes["RozpiPatch"]
+	patch: GraphQLTypes["RozpiPatch"]
 };
 	/** Represents an update to a `Rozpi`. Fields that are set will be updated. */
 ["RozpiPatch"]: {
@@ -13887,13 +13887,13 @@ payload verbatim. May be used to track mutations by the client. */
 	rLock?: boolean,
 	rTimestamp?: GraphQLTypes["Datetime"]
 };
-	/** All input for the `updateRozpiByRId` mutation. */
-["UpdateRozpiByRIdInput"]: {
+	/** All input for the `updateRozpi` mutation. */
+["UpdateRozpiInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `Rozpi` being updated. */
-	rozpiPatch: GraphQLTypes["RozpiPatch"],
+	patch: GraphQLTypes["RozpiPatch"],
 	rId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `RozpisItem` mutation. */
@@ -13913,15 +13913,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `RozpisItem`. May be used by Relay 1. */
 	rozpisItemEdge?: GraphQLTypes["RozpisItemsEdge"]
 };
-	/** All input for the `updateRozpisItem` mutation. */
-["UpdateRozpisItemInput"]: {
+	/** All input for the `updateRozpisItemByNodeId` mutation. */
+["UpdateRozpisItemByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `RozpisItem` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `RozpisItem` being updated. */
-	rozpisItemPatch: GraphQLTypes["RozpisItemPatch"]
+	patch: GraphQLTypes["RozpisItemPatch"]
 };
 	/** Represents an update to a `RozpisItem`. Fields that are set will be updated. */
 ["RozpisItemPatch"]: {
@@ -13932,13 +13932,13 @@ payload verbatim. May be used to track mutations by the client. */
 	riDo?: GraphQLTypes["Time"],
 	riLock?: boolean
 };
-	/** All input for the `updateRozpisItemByRiId` mutation. */
-["UpdateRozpisItemByRiIdInput"]: {
+	/** All input for the `updateRozpisItem` mutation. */
+["UpdateRozpisItemInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `RozpisItem` being updated. */
-	rozpisItemPatch: GraphQLTypes["RozpisItemPatch"],
+	patch: GraphQLTypes["RozpisItemPatch"],
 	riId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `Session` mutation. */
@@ -13956,15 +13956,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Session`. May be used by Relay 1. */
 	sessionEdge?: GraphQLTypes["SessionsEdge"]
 };
-	/** All input for the `updateSession` mutation. */
-["UpdateSessionInput"]: {
+	/** All input for the `updateSessionByNodeId` mutation. */
+["UpdateSessionByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Session` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `Session` being updated. */
-	sessionPatch: GraphQLTypes["SessionPatch"]
+	patch: GraphQLTypes["SessionPatch"]
 };
 	/** Represents an update to a `Session`. Fields that are set will be updated. */
 ["SessionPatch"]: {
@@ -13974,13 +13974,13 @@ payload verbatim. May be used to track mutations by the client. */
 	ssLifetime?: GraphQLTypes["BigInt"],
 	ssUser?: GraphQLTypes["BigInt"]
 };
-	/** All input for the `updateSessionBySsId` mutation. */
-["UpdateSessionBySsIdInput"]: {
+	/** All input for the `updateSession` mutation. */
+["UpdateSessionInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `Session` being updated. */
-	sessionPatch: GraphQLTypes["SessionPatch"],
+	patch: GraphQLTypes["SessionPatch"],
 	ssId: string
 };
 	/** The output of our update `Skupiny` mutation. */
@@ -13996,15 +13996,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Skupiny`. May be used by Relay 1. */
 	skupinyEdge?: GraphQLTypes["SkupiniesEdge"]
 };
-	/** All input for the `updateSkupiny` mutation. */
-["UpdateSkupinyInput"]: {
+	/** All input for the `updateSkupinyByNodeId` mutation. */
+["UpdateSkupinyByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Skupiny` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `Skupiny` being updated. */
-	skupinyPatch: GraphQLTypes["SkupinyPatch"]
+	patch: GraphQLTypes["SkupinyPatch"]
 };
 	/** Represents an update to a `Skupiny`. Fields that are set will be updated. */
 ["SkupinyPatch"]: {
@@ -14014,13 +14014,13 @@ payload verbatim. May be used to track mutations by the client. */
 	sColorRgb?: string,
 	sColorText?: string
 };
-	/** All input for the `updateSkupinyBySId` mutation. */
-["UpdateSkupinyBySIdInput"]: {
+	/** All input for the `updateSkupiny` mutation. */
+["UpdateSkupinyInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `Skupiny` being updated. */
-	skupinyPatch: GraphQLTypes["SkupinyPatch"],
+	patch: GraphQLTypes["SkupinyPatch"],
 	sId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `Upozorneni` mutation. */
@@ -14038,15 +14038,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Upozorneni`. May be used by Relay 1. */
 	upozorneniEdge?: GraphQLTypes["UpozornenisEdge"]
 };
-	/** All input for the `updateUpozorneni` mutation. */
-["UpdateUpozorneniInput"]: {
+	/** All input for the `updateUpozorneniByNodeId` mutation. */
+["UpdateUpozorneniByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Upozorneni` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `Upozorneni` being updated. */
-	upozorneniPatch: GraphQLTypes["UpozorneniPatch"]
+	patch: GraphQLTypes["UpozorneniPatch"]
 };
 	/** Represents an update to a `Upozorneni`. Fields that are set will be updated. */
 ["UpozorneniPatch"]: {
@@ -14059,13 +14059,13 @@ payload verbatim. May be used to track mutations by the client. */
 	upTimestamp?: GraphQLTypes["Datetime"],
 	upTimestampAdd?: GraphQLTypes["Datetime"]
 };
-	/** All input for the `updateUpozorneniByUpId` mutation. */
-["UpdateUpozorneniByUpIdInput"]: {
+	/** All input for the `updateUpozorneni` mutation. */
+["UpdateUpozorneniInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `Upozorneni` being updated. */
-	upozorneniPatch: GraphQLTypes["UpozorneniPatch"],
+	patch: GraphQLTypes["UpozorneniPatch"],
 	upId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `UpozorneniSkupiny` mutation. */
@@ -14085,15 +14085,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `UpozorneniSkupiny`. May be used by Relay 1. */
 	upozorneniSkupinyEdge?: GraphQLTypes["UpozorneniSkupiniesEdge"]
 };
-	/** All input for the `updateUpozorneniSkupiny` mutation. */
-["UpdateUpozorneniSkupinyInput"]: {
+	/** All input for the `updateUpozorneniSkupinyByNodeId` mutation. */
+["UpdateUpozorneniSkupinyByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `UpozorneniSkupiny` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `UpozorneniSkupiny` being updated. */
-	upozorneniSkupinyPatch: GraphQLTypes["UpozorneniSkupinyPatch"]
+	patch: GraphQLTypes["UpozorneniSkupinyPatch"]
 };
 	/** Represents an update to a `UpozorneniSkupiny`. Fields that are set will be updated. */
 ["UpozorneniSkupinyPatch"]: {
@@ -14103,13 +14103,13 @@ payload verbatim. May be used to track mutations by the client. */
 	upsColor?: string,
 	upsPopis?: string
 };
-	/** All input for the `updateUpozorneniSkupinyByUpsId` mutation. */
-["UpdateUpozorneniSkupinyByUpsIdInput"]: {
+	/** All input for the `updateUpozorneniSkupiny` mutation. */
+["UpdateUpozorneniSkupinyInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `UpozorneniSkupiny` being updated. */
-	upozorneniSkupinyPatch: GraphQLTypes["UpozorneniSkupinyPatch"],
+	patch: GraphQLTypes["UpozorneniSkupinyPatch"],
 	upsId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `User` mutation. */
@@ -14129,15 +14129,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `User`. May be used by Relay 1. */
 	userEdge?: GraphQLTypes["UsersEdge"]
 };
-	/** All input for the `updateUser` mutation. */
-["UpdateUserInput"]: {
+	/** All input for the `updateUserByNodeId` mutation. */
+["UpdateUserByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `User` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `User` being updated. */
-	userPatch: GraphQLTypes["UserPatch"]
+	patch: GraphQLTypes["UserPatch"]
 };
 	/** Represents an update to a `User`. Fields that are set will be updated. */
 ["UserPatch"]: {
@@ -14174,13 +14174,13 @@ payload verbatim. May be used to track mutations by the client. */
 	uTeacher?: boolean,
 	uGdprSignedAt?: GraphQLTypes["Datetime"]
 };
-	/** All input for the `updateUserByUId` mutation. */
-["UpdateUserByUIdInput"]: {
+	/** All input for the `updateUser` mutation. */
+["UpdateUserInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `User` being updated. */
-	userPatch: GraphQLTypes["UserPatch"],
+	patch: GraphQLTypes["UserPatch"],
 	uId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `UsersSkupiny` mutation. */
@@ -14196,15 +14196,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `UsersSkupiny`. May be used by Relay 1. */
 	usersSkupinyEdge?: GraphQLTypes["UsersSkupiniesEdge"]
 };
-	/** All input for the `updateUsersSkupiny` mutation. */
-["UpdateUsersSkupinyInput"]: {
+	/** All input for the `updateUsersSkupinyByNodeId` mutation. */
+["UpdateUsersSkupinyByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `UsersSkupiny` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `UsersSkupiny` being updated. */
-	usersSkupinyPatch: GraphQLTypes["UsersSkupinyPatch"]
+	patch: GraphQLTypes["UsersSkupinyPatch"]
 };
 	/** Represents an update to a `UsersSkupiny`. Fields that are set will be updated. */
 ["UsersSkupinyPatch"]: {
@@ -14215,13 +14215,13 @@ payload verbatim. May be used to track mutations by the client. */
 	usPlatbaPulrok?: GraphQLTypes["BigInt"],
 	usPopis?: string
 };
-	/** All input for the `updateUsersSkupinyByUsId` mutation. */
-["UpdateUsersSkupinyByUsIdInput"]: {
+	/** All input for the `updateUsersSkupiny` mutation. */
+["UpdateUsersSkupinyInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `UsersSkupiny` being updated. */
-	usersSkupinyPatch: GraphQLTypes["UsersSkupinyPatch"],
+	patch: GraphQLTypes["UsersSkupinyPatch"],
 	usId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `Video` mutation. */
@@ -14237,15 +14237,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Video`. May be used by Relay 1. */
 	videoEdge?: GraphQLTypes["VideosEdge"]
 };
-	/** All input for the `updateVideo` mutation. */
-["UpdateVideoInput"]: {
+	/** All input for the `updateVideoByNodeId` mutation. */
+["UpdateVideoByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Video` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `Video` being updated. */
-	videoPatch: GraphQLTypes["VideoPatch"]
+	patch: GraphQLTypes["VideoPatch"]
 };
 	/** Represents an update to a `Video`. Fields that are set will be updated. */
 ["VideoPatch"]: {
@@ -14258,13 +14258,13 @@ payload verbatim. May be used to track mutations by the client. */
 	vCreatedAt?: GraphQLTypes["Datetime"],
 	vUpdatedAt?: GraphQLTypes["Datetime"]
 };
-	/** All input for the `updateVideoByVId` mutation. */
-["UpdateVideoByVIdInput"]: {
+	/** All input for the `updateVideo` mutation. */
+["UpdateVideoInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `Video` being updated. */
-	videoPatch: GraphQLTypes["VideoPatch"],
+	patch: GraphQLTypes["VideoPatch"],
 	vId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `VideoList` mutation. */
@@ -14280,15 +14280,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `VideoList`. May be used by Relay 1. */
 	videoListEdge?: GraphQLTypes["VideoListsEdge"]
 };
-	/** All input for the `updateVideoList` mutation. */
-["UpdateVideoListInput"]: {
+	/** All input for the `updateVideoListByNodeId` mutation. */
+["UpdateVideoListByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `VideoList` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `VideoList` being updated. */
-	videoListPatch: GraphQLTypes["VideoListPatch"]
+	patch: GraphQLTypes["VideoListPatch"]
 };
 	/** Represents an update to a `VideoList`. Fields that are set will be updated. */
 ["VideoListPatch"]: {
@@ -14300,13 +14300,13 @@ payload verbatim. May be used to track mutations by the client. */
 	vlCreatedAt?: GraphQLTypes["Datetime"],
 	vlLastChecked?: GraphQLTypes["Datetime"]
 };
-	/** All input for the `updateVideoListByVlId` mutation. */
-["UpdateVideoListByVlIdInput"]: {
+	/** All input for the `updateVideoList` mutation. */
+["UpdateVideoListInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `VideoList` being updated. */
-	videoListPatch: GraphQLTypes["VideoListPatch"],
+	patch: GraphQLTypes["VideoListPatch"],
 	vlId: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `VideoSource` mutation. */
@@ -14322,15 +14322,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `VideoSource`. May be used by Relay 1. */
 	videoSourceEdge?: GraphQLTypes["VideoSourcesEdge"]
 };
-	/** All input for the `updateVideoSource` mutation. */
-["UpdateVideoSourceInput"]: {
+	/** All input for the `updateVideoSourceByNodeId` mutation. */
+["UpdateVideoSourceByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `VideoSource` to be updated. */
 	nodeId: string,
 	/** An object where the defined keys will be set on the `VideoSource` being updated. */
-	videoSourcePatch: GraphQLTypes["VideoSourcePatch"]
+	patch: GraphQLTypes["VideoSourcePatch"]
 };
 	/** Represents an update to a `VideoSource`. Fields that are set will be updated. */
 ["VideoSourcePatch"]: {
@@ -14341,13 +14341,13 @@ payload verbatim. May be used to track mutations by the client. */
 	vsCreatedAt?: GraphQLTypes["Datetime"],
 	vsLastChecked?: GraphQLTypes["Datetime"]
 };
-	/** All input for the `updateVideoSourceByVsId` mutation. */
-["UpdateVideoSourceByVsIdInput"]: {
+	/** All input for the `updateVideoSource` mutation. */
+["UpdateVideoSourceInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** An object where the defined keys will be set on the `VideoSource` being updated. */
-	videoSourcePatch: GraphQLTypes["VideoSourcePatch"],
+	patch: GraphQLTypes["VideoSourcePatch"],
 	vsId: GraphQLTypes["BigInt"]
 };
 	/** The output of our delete `Akce` mutation. */
@@ -14358,22 +14358,22 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `Akce` that was deleted by this mutation. */
 	akce?: GraphQLTypes["Akce"],
-	deletedAkceId?: string,
+	deletedAkceNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** An edge for our `Akce`. May be used by Relay 1. */
 	akceEdge?: GraphQLTypes["AkcesEdge"]
 };
-	/** All input for the `deleteAkce` mutation. */
-["DeleteAkceInput"]: {
+	/** All input for the `deleteAkceByNodeId` mutation. */
+["DeleteAkceByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Akce` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deleteAkceByAId` mutation. */
-["DeleteAkceByAIdInput"]: {
+	/** All input for the `deleteAkce` mutation. */
+["DeleteAkceInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -14387,7 +14387,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `AkceItem` that was deleted by this mutation. */
 	akceItem?: GraphQLTypes["AkceItem"],
-	deletedAkceItemId?: string,
+	deletedAkceItemNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** Reads a single `Akce` that is related to this `AkceItem`. */
@@ -14397,16 +14397,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `AkceItem`. May be used by Relay 1. */
 	akceItemEdge?: GraphQLTypes["AkceItemsEdge"]
 };
-	/** All input for the `deleteAkceItem` mutation. */
-["DeleteAkceItemInput"]: {
+	/** All input for the `deleteAkceItemByNodeId` mutation. */
+["DeleteAkceItemByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `AkceItem` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deleteAkceItemByAiId` mutation. */
-["DeleteAkceItemByAiIdInput"]: {
+	/** All input for the `deleteAkceItem` mutation. */
+["DeleteAkceItemInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -14420,7 +14420,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `Aktuality` that was deleted by this mutation. */
 	aktuality?: GraphQLTypes["Aktuality"],
-	deletedAktualityId?: string,
+	deletedAktualityNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** Reads a single `User` that is related to this `Aktuality`. */
@@ -14430,16 +14430,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Aktuality`. May be used by Relay 1. */
 	aktualityEdge?: GraphQLTypes["AktualitiesEdge"]
 };
-	/** All input for the `deleteAktuality` mutation. */
-["DeleteAktualityInput"]: {
+	/** All input for the `deleteAktualityByNodeId` mutation. */
+["DeleteAktualityByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Aktuality` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deleteAktualityByAtId` mutation. */
-["DeleteAktualityByAtIdInput"]: {
+	/** All input for the `deleteAktuality` mutation. */
+["DeleteAktualityInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -14453,7 +14453,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `Dokumenty` that was deleted by this mutation. */
 	dokumenty?: GraphQLTypes["Dokumenty"],
-	deletedDokumentyId?: string,
+	deletedDokumentyNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** Reads a single `User` that is related to this `Dokumenty`. */
@@ -14461,16 +14461,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Dokumenty`. May be used by Relay 1. */
 	dokumentyEdge?: GraphQLTypes["DokumentiesEdge"]
 };
-	/** All input for the `deleteDokumenty` mutation. */
-["DeleteDokumentyInput"]: {
+	/** All input for the `deleteDokumentyByNodeId` mutation. */
+["DeleteDokumentyByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Dokumenty` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deleteDokumentyByDId` mutation. */
-["DeleteDokumentyByDIdInput"]: {
+	/** All input for the `deleteDokumenty` mutation. */
+["DeleteDokumentyInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -14484,22 +14484,22 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `GalerieDir` that was deleted by this mutation. */
 	galerieDir?: GraphQLTypes["GalerieDir"],
-	deletedGalerieDirId?: string,
+	deletedGalerieDirNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** An edge for our `GalerieDir`. May be used by Relay 1. */
 	galerieDirEdge?: GraphQLTypes["GalerieDirsEdge"]
 };
-	/** All input for the `deleteGalerieDir` mutation. */
-["DeleteGalerieDirInput"]: {
+	/** All input for the `deleteGalerieDirByNodeId` mutation. */
+["DeleteGalerieDirByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `GalerieDir` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deleteGalerieDirByGdId` mutation. */
-["DeleteGalerieDirByGdIdInput"]: {
+	/** All input for the `deleteGalerieDir` mutation. */
+["DeleteGalerieDirInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -14513,7 +14513,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `GalerieFoto` that was deleted by this mutation. */
 	galerieFoto?: GraphQLTypes["GalerieFoto"],
-	deletedGalerieFotoId?: string,
+	deletedGalerieFotoNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** Reads a single `GalerieDir` that is related to this `GalerieFoto`. */
@@ -14523,16 +14523,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `GalerieFoto`. May be used by Relay 1. */
 	galerieFotoEdge?: GraphQLTypes["GalerieFotosEdge"]
 };
-	/** All input for the `deleteGalerieFoto` mutation. */
-["DeleteGalerieFotoInput"]: {
+	/** All input for the `deleteGalerieFotoByNodeId` mutation. */
+["DeleteGalerieFotoByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `GalerieFoto` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deleteGalerieFotoByGfId` mutation. */
-["DeleteGalerieFotoByGfIdInput"]: {
+	/** All input for the `deleteGalerieFoto` mutation. */
+["DeleteGalerieFotoInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -14546,7 +14546,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `Nabidka` that was deleted by this mutation. */
 	nabidka?: GraphQLTypes["Nabidka"],
-	deletedNabidkaId?: string,
+	deletedNabidkaNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** Reads a single `User` that is related to this `Nabidka`. */
@@ -14554,16 +14554,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Nabidka`. May be used by Relay 1. */
 	nabidkaEdge?: GraphQLTypes["NabidkasEdge"]
 };
-	/** All input for the `deleteNabidka` mutation. */
-["DeleteNabidkaInput"]: {
+	/** All input for the `deleteNabidkaByNodeId` mutation. */
+["DeleteNabidkaByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Nabidka` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deleteNabidkaByNId` mutation. */
-["DeleteNabidkaByNIdInput"]: {
+	/** All input for the `deleteNabidka` mutation. */
+["DeleteNabidkaInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -14577,7 +14577,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `NabidkaItem` that was deleted by this mutation. */
 	nabidkaItem?: GraphQLTypes["NabidkaItem"],
-	deletedNabidkaItemId?: string,
+	deletedNabidkaItemNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** Reads a single `Nabidka` that is related to this `NabidkaItem`. */
@@ -14587,16 +14587,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `NabidkaItem`. May be used by Relay 1. */
 	nabidkaItemEdge?: GraphQLTypes["NabidkaItemsEdge"]
 };
-	/** All input for the `deleteNabidkaItem` mutation. */
-["DeleteNabidkaItemInput"]: {
+	/** All input for the `deleteNabidkaItemByNodeId` mutation. */
+["DeleteNabidkaItemByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `NabidkaItem` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deleteNabidkaItemByNiId` mutation. */
-["DeleteNabidkaItemByNiIdInput"]: {
+	/** All input for the `deleteNabidkaItem` mutation. */
+["DeleteNabidkaItemInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -14610,22 +14610,22 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `Parameter` that was deleted by this mutation. */
 	parameter?: GraphQLTypes["Parameter"],
-	deletedParameterId?: string,
+	deletedParameterNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** An edge for our `Parameter`. May be used by Relay 1. */
 	parameterEdge?: GraphQLTypes["ParametersEdge"]
 };
-	/** All input for the `deleteParameter` mutation. */
-["DeleteParameterInput"]: {
+	/** All input for the `deleteParameterByNodeId` mutation. */
+["DeleteParameterByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Parameter` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deleteParameterByPaName` mutation. */
-["DeleteParameterByPaNameInput"]: {
+	/** All input for the `deleteParameter` mutation. */
+["DeleteParameterInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -14639,7 +14639,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `Pary` that was deleted by this mutation. */
 	pary?: GraphQLTypes["Pary"],
-	deletedParyId?: string,
+	deletedParyNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** Reads a single `User` that is related to this `Pary`. */
@@ -14647,16 +14647,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Pary`. May be used by Relay 1. */
 	paryEdge?: GraphQLTypes["PariesEdge"]
 };
-	/** All input for the `deletePary` mutation. */
-["DeleteParyInput"]: {
+	/** All input for the `deleteParyByNodeId` mutation. */
+["DeleteParyByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Pary` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deleteParyByPId` mutation. */
-["DeleteParyByPIdInput"]: {
+	/** All input for the `deletePary` mutation. */
+["DeleteParyInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -14670,7 +14670,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `ParyNavrh` that was deleted by this mutation. */
 	paryNavrh?: GraphQLTypes["ParyNavrh"],
-	deletedParyNavrhId?: string,
+	deletedParyNavrhNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** Reads a single `User` that is related to this `ParyNavrh`. */
@@ -14682,16 +14682,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `ParyNavrh`. May be used by Relay 1. */
 	paryNavrhEdge?: GraphQLTypes["ParyNavrhsEdge"]
 };
-	/** All input for the `deleteParyNavrh` mutation. */
-["DeleteParyNavrhInput"]: {
+	/** All input for the `deleteParyNavrhByNodeId` mutation. */
+["DeleteParyNavrhByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `ParyNavrh` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deleteParyNavrhByPnId` mutation. */
-["DeleteParyNavrhByPnIdInput"]: {
+	/** All input for the `deleteParyNavrh` mutation. */
+["DeleteParyNavrhInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -14705,22 +14705,22 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `Permission` that was deleted by this mutation. */
 	permission?: GraphQLTypes["Permission"],
-	deletedPermissionId?: string,
+	deletedPermissionNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** An edge for our `Permission`. May be used by Relay 1. */
 	permissionEdge?: GraphQLTypes["PermissionsEdge"]
 };
-	/** All input for the `deletePermission` mutation. */
-["DeletePermissionInput"]: {
+	/** All input for the `deletePermissionByNodeId` mutation. */
+["DeletePermissionByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Permission` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deletePermissionByPeId` mutation. */
-["DeletePermissionByPeIdInput"]: {
+	/** All input for the `deletePermission` mutation. */
+["DeletePermissionInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -14734,22 +14734,22 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `PlatbyCategory` that was deleted by this mutation. */
 	platbyCategory?: GraphQLTypes["PlatbyCategory"],
-	deletedPlatbyCategoryId?: string,
+	deletedPlatbyCategoryNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** An edge for our `PlatbyCategory`. May be used by Relay 1. */
 	platbyCategoryEdge?: GraphQLTypes["PlatbyCategoriesEdge"]
 };
-	/** All input for the `deletePlatbyCategory` mutation. */
-["DeletePlatbyCategoryInput"]: {
+	/** All input for the `deletePlatbyCategoryByNodeId` mutation. */
+["DeletePlatbyCategoryByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `PlatbyCategory` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deletePlatbyCategoryByPcId` mutation. */
-["DeletePlatbyCategoryByPcIdInput"]: {
+	/** All input for the `deletePlatbyCategory` mutation. */
+["DeletePlatbyCategoryInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -14763,7 +14763,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `PlatbyCategoryGroup` that was deleted by this mutation. */
 	platbyCategoryGroup?: GraphQLTypes["PlatbyCategoryGroup"],
-	deletedPlatbyCategoryGroupId?: string,
+	deletedPlatbyCategoryGroupNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** Reads a single `PlatbyGroup` that is related to this `PlatbyCategoryGroup`. */
@@ -14773,16 +14773,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyCategoryGroup`. May be used by Relay 1. */
 	platbyCategoryGroupEdge?: GraphQLTypes["PlatbyCategoryGroupsEdge"]
 };
-	/** All input for the `deletePlatbyCategoryGroup` mutation. */
-["DeletePlatbyCategoryGroupInput"]: {
+	/** All input for the `deletePlatbyCategoryGroupByNodeId` mutation. */
+["DeletePlatbyCategoryGroupByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `PlatbyCategoryGroup` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deletePlatbyCategoryGroupByPcgId` mutation. */
-["DeletePlatbyCategoryGroupByPcgIdInput"]: {
+	/** All input for the `deletePlatbyCategoryGroup` mutation. */
+["DeletePlatbyCategoryGroupInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -14796,22 +14796,22 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `PlatbyGroup` that was deleted by this mutation. */
 	platbyGroup?: GraphQLTypes["PlatbyGroup"],
-	deletedPlatbyGroupId?: string,
+	deletedPlatbyGroupNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** An edge for our `PlatbyGroup`. May be used by Relay 1. */
 	platbyGroupEdge?: GraphQLTypes["PlatbyGroupsEdge"]
 };
-	/** All input for the `deletePlatbyGroup` mutation. */
-["DeletePlatbyGroupInput"]: {
+	/** All input for the `deletePlatbyGroupByNodeId` mutation. */
+["DeletePlatbyGroupByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `PlatbyGroup` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deletePlatbyGroupByPgId` mutation. */
-["DeletePlatbyGroupByPgIdInput"]: {
+	/** All input for the `deletePlatbyGroup` mutation. */
+["DeletePlatbyGroupInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -14825,7 +14825,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `PlatbyGroupSkupina` that was deleted by this mutation. */
 	platbyGroupSkupina?: GraphQLTypes["PlatbyGroupSkupina"],
-	deletedPlatbyGroupSkupinaId?: string,
+	deletedPlatbyGroupSkupinaNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** Reads a single `Skupiny` that is related to this `PlatbyGroupSkupina`. */
@@ -14835,16 +14835,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyGroupSkupina`. May be used by Relay 1. */
 	platbyGroupSkupinaEdge?: GraphQLTypes["PlatbyGroupSkupinasEdge"]
 };
-	/** All input for the `deletePlatbyGroupSkupina` mutation. */
-["DeletePlatbyGroupSkupinaInput"]: {
+	/** All input for the `deletePlatbyGroupSkupinaByNodeId` mutation. */
+["DeletePlatbyGroupSkupinaByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `PlatbyGroupSkupina` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deletePlatbyGroupSkupinaByPgsId` mutation. */
-["DeletePlatbyGroupSkupinaByPgsIdInput"]: {
+	/** All input for the `deletePlatbyGroupSkupina` mutation. */
+["DeletePlatbyGroupSkupinaInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -14858,7 +14858,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `PlatbyItem` that was deleted by this mutation. */
 	platbyItem?: GraphQLTypes["PlatbyItem"],
-	deletedPlatbyItemId?: string,
+	deletedPlatbyItemNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** Reads a single `User` that is related to this `PlatbyItem`. */
@@ -14870,16 +14870,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyItem`. May be used by Relay 1. */
 	platbyItemEdge?: GraphQLTypes["PlatbyItemsEdge"]
 };
-	/** All input for the `deletePlatbyItem` mutation. */
-["DeletePlatbyItemInput"]: {
+	/** All input for the `deletePlatbyItemByNodeId` mutation. */
+["DeletePlatbyItemByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `PlatbyItem` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deletePlatbyItemByPiId` mutation. */
-["DeletePlatbyItemByPiIdInput"]: {
+	/** All input for the `deletePlatbyItem` mutation. */
+["DeletePlatbyItemInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -14893,22 +14893,22 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `PlatbyRaw` that was deleted by this mutation. */
 	platbyRaw?: GraphQLTypes["PlatbyRaw"],
-	deletedPlatbyRawId?: string,
+	deletedPlatbyRawNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** An edge for our `PlatbyRaw`. May be used by Relay 1. */
 	platbyRawEdge?: GraphQLTypes["PlatbyRawsEdge"]
 };
-	/** All input for the `deletePlatbyRaw` mutation. */
-["DeletePlatbyRawInput"]: {
+	/** All input for the `deletePlatbyRawByNodeId` mutation. */
+["DeletePlatbyRawByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `PlatbyRaw` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deletePlatbyRawByPrId` mutation. */
-["DeletePlatbyRawByPrIdInput"]: {
+	/** All input for the `deletePlatbyRaw` mutation. */
+["DeletePlatbyRawInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -14922,7 +14922,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `Rozpi` that was deleted by this mutation. */
 	rozpi?: GraphQLTypes["Rozpi"],
-	deletedRozpiId?: string,
+	deletedRozpiNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** Reads a single `User` that is related to this `Rozpi`. */
@@ -14930,16 +14930,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Rozpi`. May be used by Relay 1. */
 	rozpiEdge?: GraphQLTypes["RozpisEdge"]
 };
-	/** All input for the `deleteRozpi` mutation. */
-["DeleteRozpiInput"]: {
+	/** All input for the `deleteRozpiByNodeId` mutation. */
+["DeleteRozpiByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Rozpi` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deleteRozpiByRId` mutation. */
-["DeleteRozpiByRIdInput"]: {
+	/** All input for the `deleteRozpi` mutation. */
+["DeleteRozpiInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -14953,7 +14953,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `RozpisItem` that was deleted by this mutation. */
 	rozpisItem?: GraphQLTypes["RozpisItem"],
-	deletedRozpisItemId?: string,
+	deletedRozpisItemNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** Reads a single `Rozpi` that is related to this `RozpisItem`. */
@@ -14963,16 +14963,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `RozpisItem`. May be used by Relay 1. */
 	rozpisItemEdge?: GraphQLTypes["RozpisItemsEdge"]
 };
-	/** All input for the `deleteRozpisItem` mutation. */
-["DeleteRozpisItemInput"]: {
+	/** All input for the `deleteRozpisItemByNodeId` mutation. */
+["DeleteRozpisItemByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `RozpisItem` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deleteRozpisItemByRiId` mutation. */
-["DeleteRozpisItemByRiIdInput"]: {
+	/** All input for the `deleteRozpisItem` mutation. */
+["DeleteRozpisItemInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -14986,7 +14986,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `Session` that was deleted by this mutation. */
 	session?: GraphQLTypes["Session"],
-	deletedSessionId?: string,
+	deletedSessionNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** Reads a single `User` that is related to this `Session`. */
@@ -14994,16 +14994,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Session`. May be used by Relay 1. */
 	sessionEdge?: GraphQLTypes["SessionsEdge"]
 };
-	/** All input for the `deleteSession` mutation. */
-["DeleteSessionInput"]: {
+	/** All input for the `deleteSessionByNodeId` mutation. */
+["DeleteSessionByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Session` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deleteSessionBySsId` mutation. */
-["DeleteSessionBySsIdInput"]: {
+	/** All input for the `deleteSession` mutation. */
+["DeleteSessionInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -15017,22 +15017,22 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `Skupiny` that was deleted by this mutation. */
 	skupiny?: GraphQLTypes["Skupiny"],
-	deletedSkupinyId?: string,
+	deletedSkupinyNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** An edge for our `Skupiny`. May be used by Relay 1. */
 	skupinyEdge?: GraphQLTypes["SkupiniesEdge"]
 };
-	/** All input for the `deleteSkupiny` mutation. */
-["DeleteSkupinyInput"]: {
+	/** All input for the `deleteSkupinyByNodeId` mutation. */
+["DeleteSkupinyByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Skupiny` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deleteSkupinyBySId` mutation. */
-["DeleteSkupinyBySIdInput"]: {
+	/** All input for the `deleteSkupiny` mutation. */
+["DeleteSkupinyInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -15046,7 +15046,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `Upozorneni` that was deleted by this mutation. */
 	upozorneni?: GraphQLTypes["Upozorneni"],
-	deletedUpozorneniId?: string,
+	deletedUpozorneniNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** Reads a single `User` that is related to this `Upozorneni`. */
@@ -15054,16 +15054,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Upozorneni`. May be used by Relay 1. */
 	upozorneniEdge?: GraphQLTypes["UpozornenisEdge"]
 };
-	/** All input for the `deleteUpozorneni` mutation. */
-["DeleteUpozorneniInput"]: {
+	/** All input for the `deleteUpozorneniByNodeId` mutation. */
+["DeleteUpozorneniByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Upozorneni` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deleteUpozorneniByUpId` mutation. */
-["DeleteUpozorneniByUpIdInput"]: {
+	/** All input for the `deleteUpozorneni` mutation. */
+["DeleteUpozorneniInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -15077,7 +15077,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `UpozorneniSkupiny` that was deleted by this mutation. */
 	upozorneniSkupiny?: GraphQLTypes["UpozorneniSkupiny"],
-	deletedUpozorneniSkupinyId?: string,
+	deletedUpozorneniSkupinyNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** Reads a single `Upozorneni` that is related to this `UpozorneniSkupiny`. */
@@ -15087,16 +15087,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `UpozorneniSkupiny`. May be used by Relay 1. */
 	upozorneniSkupinyEdge?: GraphQLTypes["UpozorneniSkupiniesEdge"]
 };
-	/** All input for the `deleteUpozorneniSkupiny` mutation. */
-["DeleteUpozorneniSkupinyInput"]: {
+	/** All input for the `deleteUpozorneniSkupinyByNodeId` mutation. */
+["DeleteUpozorneniSkupinyByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `UpozorneniSkupiny` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deleteUpozorneniSkupinyByUpsId` mutation. */
-["DeleteUpozorneniSkupinyByUpsIdInput"]: {
+	/** All input for the `deleteUpozorneniSkupiny` mutation. */
+["DeleteUpozorneniSkupinyInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -15110,7 +15110,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `User` that was deleted by this mutation. */
 	user?: GraphQLTypes["User"],
-	deletedUserId?: string,
+	deletedUserNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** Reads a single `Permission` that is related to this `User`. */
@@ -15120,16 +15120,16 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `User`. May be used by Relay 1. */
 	userEdge?: GraphQLTypes["UsersEdge"]
 };
-	/** All input for the `deleteUser` mutation. */
-["DeleteUserInput"]: {
+	/** All input for the `deleteUserByNodeId` mutation. */
+["DeleteUserByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `User` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deleteUserByUId` mutation. */
-["DeleteUserByUIdInput"]: {
+	/** All input for the `deleteUser` mutation. */
+["DeleteUserInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -15143,22 +15143,22 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `UsersSkupiny` that was deleted by this mutation. */
 	usersSkupiny?: GraphQLTypes["UsersSkupiny"],
-	deletedUsersSkupinyId?: string,
+	deletedUsersSkupinyNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** An edge for our `UsersSkupiny`. May be used by Relay 1. */
 	usersSkupinyEdge?: GraphQLTypes["UsersSkupiniesEdge"]
 };
-	/** All input for the `deleteUsersSkupiny` mutation. */
-["DeleteUsersSkupinyInput"]: {
+	/** All input for the `deleteUsersSkupinyByNodeId` mutation. */
+["DeleteUsersSkupinyByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `UsersSkupiny` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deleteUsersSkupinyByUsId` mutation. */
-["DeleteUsersSkupinyByUsIdInput"]: {
+	/** All input for the `deleteUsersSkupiny` mutation. */
+["DeleteUsersSkupinyInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -15172,22 +15172,22 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `Video` that was deleted by this mutation. */
 	video?: GraphQLTypes["Video"],
-	deletedVideoId?: string,
+	deletedVideoNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** An edge for our `Video`. May be used by Relay 1. */
 	videoEdge?: GraphQLTypes["VideosEdge"]
 };
-	/** All input for the `deleteVideo` mutation. */
-["DeleteVideoInput"]: {
+	/** All input for the `deleteVideoByNodeId` mutation. */
+["DeleteVideoByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `Video` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deleteVideoByVId` mutation. */
-["DeleteVideoByVIdInput"]: {
+	/** All input for the `deleteVideo` mutation. */
+["DeleteVideoInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -15201,22 +15201,22 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `VideoList` that was deleted by this mutation. */
 	videoList?: GraphQLTypes["VideoList"],
-	deletedVideoListId?: string,
+	deletedVideoListNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** An edge for our `VideoList`. May be used by Relay 1. */
 	videoListEdge?: GraphQLTypes["VideoListsEdge"]
 };
-	/** All input for the `deleteVideoList` mutation. */
-["DeleteVideoListInput"]: {
+	/** All input for the `deleteVideoListByNodeId` mutation. */
+["DeleteVideoListByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `VideoList` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deleteVideoListByVlId` mutation. */
-["DeleteVideoListByVlIdInput"]: {
+	/** All input for the `deleteVideoList` mutation. */
+["DeleteVideoListInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
@@ -15230,22 +15230,22 @@ unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
 	/** The `VideoSource` that was deleted by this mutation. */
 	videoSource?: GraphQLTypes["VideoSource"],
-	deletedVideoSourceId?: string,
+	deletedVideoSourceNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
 	/** An edge for our `VideoSource`. May be used by Relay 1. */
 	videoSourceEdge?: GraphQLTypes["VideoSourcesEdge"]
 };
-	/** All input for the `deleteVideoSource` mutation. */
-["DeleteVideoSourceInput"]: {
+	/** All input for the `deleteVideoSourceByNodeId` mutation. */
+["DeleteVideoSourceByNodeIdInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	/** The globally unique `ID` which will identify a single `VideoSource` to be deleted. */
 	nodeId: string
 };
-	/** All input for the `deleteVideoSourceByVsId` mutation. */
-["DeleteVideoSourceByVsIdInput"]: {
+	/** All input for the `deleteVideoSource` mutation. */
+["DeleteVideoSourceInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,

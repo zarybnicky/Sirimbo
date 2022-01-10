@@ -53,19 +53,21 @@ const loadUserFromSession = async (req: express.Request): Promise<{ [k: string]:
 }
 
 export const graphileOptions: PostGraphileOptions<express.Request, express.Response> = {
+  // subscriptions: true,
+  retryOnInitFail: true,
+  dynamicJson: true,
+  setofFunctionsContainNulls: false,
+  ignoreRBAC: false,
+  extendedErrors: ['hint', 'detail', 'errcode'],
+  showErrorStack: "json",
   pgSettings: loadUserFromSession,
   watchPg: true,
   graphiql: true,
   enhanceGraphiql: true,
-  // subscriptions: true,
-  dynamicJson: true,
-  setofFunctionsContainNulls: false,
-  ignoreRBAC: false,
-  showErrorStack: 'json',
-  extendedErrors: ['hint', 'detail', 'errcode'],
   allowExplain: true,
   legacyRelations: 'omit',
   sortExport: true,
+  enableQueryBatching: true,
   pluginHook: makePluginHook([operationHooks]),
 
   async additionalGraphQLContextFromRequest(_, res) {
@@ -80,6 +82,7 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
   },
 
   appendPlugins: [
+    require("@graphile-contrib/pg-simplify-inflector"),
     function OperationHookPlugin(builder) {
       builder.hook("init", (_, build) => {
         (build.addOperationHook as AddOperationHookFn)(useAuthCredentials(build));

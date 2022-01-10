@@ -49,3 +49,8 @@ const server = app.listen(port, () => {
     console.log(`PostGraphiQL available at ${href} 🚀`);
   }
 });
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.log('Unhandled Rejection at:', reason.stack || reason)
+  sys
+})

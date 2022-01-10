@@ -2391,11 +2391,11 @@
                 }
             }
         },
-        "UpdateAkceInput": {
+        "UpdateAkceByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "akcePatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -2404,7 +2404,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "akcePatch": {
+                "patch": {
                     "$ref": "#/inputs/AkcePatch"
                 }
             }
@@ -2448,17 +2448,17 @@
                 }
             }
         },
-        "UpdateAkceByAIdInput": {
+        "UpdateAkceInput": {
             "type": "object",
             "required": [
-                "akcePatch",
+                "patch",
                 "aId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "akcePatch": {
+                "patch": {
                     "$ref": "#/inputs/AkcePatch"
                 },
                 "aId": {
@@ -2466,11 +2466,11 @@
                 }
             }
         },
-        "UpdateAkceItemInput": {
+        "UpdateAkceItemByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "akceItemPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -2479,7 +2479,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "akceItemPatch": {
+                "patch": {
                     "$ref": "#/inputs/AkceItemPatch"
                 }
             }
@@ -2502,17 +2502,17 @@
                 }
             }
         },
-        "UpdateAkceItemByAiIdInput": {
+        "UpdateAkceItemInput": {
             "type": "object",
             "required": [
-                "akceItemPatch",
+                "patch",
                 "aiId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "akceItemPatch": {
+                "patch": {
                     "$ref": "#/inputs/AkceItemPatch"
                 },
                 "aiId": {
@@ -2520,11 +2520,11 @@
                 }
             }
         },
-        "UpdateAktualityInput": {
+        "UpdateAktualityByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "aktualityPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -2533,7 +2533,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "aktualityPatch": {
+                "patch": {
                     "$ref": "#/inputs/AktualityPatch"
                 }
             }
@@ -2574,17 +2574,17 @@
                 }
             }
         },
-        "UpdateAktualityByAtIdInput": {
+        "UpdateAktualityInput": {
             "type": "object",
             "required": [
-                "aktualityPatch",
+                "patch",
                 "atId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "aktualityPatch": {
+                "patch": {
                     "$ref": "#/inputs/AktualityPatch"
                 },
                 "atId": {
@@ -2592,11 +2592,11 @@
                 }
             }
         },
-        "UpdateDokumentyInput": {
+        "UpdateDokumentyByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "dokumentyPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -2605,7 +2605,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "dokumentyPatch": {
+                "patch": {
                     "$ref": "#/inputs/DokumentyPatch"
                 }
             }
@@ -2637,17 +2637,17 @@
                 }
             }
         },
-        "UpdateDokumentyByDIdInput": {
+        "UpdateDokumentyInput": {
             "type": "object",
             "required": [
-                "dokumentyPatch",
+                "patch",
                 "dId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "dokumentyPatch": {
+                "patch": {
                     "$ref": "#/inputs/DokumentyPatch"
                 },
                 "dId": {
@@ -2655,11 +2655,11 @@
                 }
             }
         },
-        "UpdateGalerieDirInput": {
+        "UpdateGalerieDirByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "galerieDirPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -2668,7 +2668,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "galerieDirPatch": {
+                "patch": {
                     "$ref": "#/inputs/GalerieDirPatch"
                 }
             }
@@ -2697,17 +2697,17 @@
                 }
             }
         },
-        "UpdateGalerieDirByGdIdInput": {
+        "UpdateGalerieDirInput": {
             "type": "object",
             "required": [
-                "galerieDirPatch",
+                "patch",
                 "gdId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "galerieDirPatch": {
+                "patch": {
                     "$ref": "#/inputs/GalerieDirPatch"
                 },
                 "gdId": {
@@ -2715,11 +2715,11 @@
                 }
             }
         },
-        "UpdateGalerieFotoInput": {
+        "UpdateGalerieFotoByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "galerieFotoPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -2728,7 +2728,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "galerieFotoPatch": {
+                "patch": {
                     "$ref": "#/inputs/GalerieFotoPatch"
                 }
             }
@@ -2757,17 +2757,17 @@
                 }
             }
         },
-        "UpdateGalerieFotoByGfIdInput": {
+        "UpdateGalerieFotoInput": {
             "type": "object",
             "required": [
-                "galerieFotoPatch",
+                "patch",
                 "gfId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "galerieFotoPatch": {
+                "patch": {
                     "$ref": "#/inputs/GalerieFotoPatch"
                 },
                 "gfId": {
@@ -2775,11 +2775,11 @@
                 }
             }
         },
-        "UpdateNabidkaInput": {
+        "UpdateNabidkaByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "nabidkaPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -2788,7 +2788,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "nabidkaPatch": {
+                "patch": {
                     "$ref": "#/inputs/NabidkaPatch"
                 }
             }
@@ -2826,17 +2826,17 @@
                 }
             }
         },
-        "UpdateNabidkaByNIdInput": {
+        "UpdateNabidkaInput": {
             "type": "object",
             "required": [
-                "nabidkaPatch",
+                "patch",
                 "nId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "nabidkaPatch": {
+                "patch": {
                     "$ref": "#/inputs/NabidkaPatch"
                 },
                 "nId": {
@@ -2844,11 +2844,11 @@
                 }
             }
         },
-        "UpdateNabidkaItemInput": {
+        "UpdateNabidkaItemByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "nabidkaItemPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -2857,7 +2857,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "nabidkaItemPatch": {
+                "patch": {
                     "$ref": "#/inputs/NabidkaItemPatch"
                 }
             }
@@ -2883,17 +2883,17 @@
                 }
             }
         },
-        "UpdateNabidkaItemByNiIdInput": {
+        "UpdateNabidkaItemInput": {
             "type": "object",
             "required": [
-                "nabidkaItemPatch",
+                "patch",
                 "niId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "nabidkaItemPatch": {
+                "patch": {
                     "$ref": "#/inputs/NabidkaItemPatch"
                 },
                 "niId": {
@@ -2901,11 +2901,11 @@
                 }
             }
         },
-        "UpdatePageInput": {
+        "UpdatePageByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "pagePatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -2914,7 +2914,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "pagePatch": {
+                "patch": {
                     "$ref": "#/inputs/PagePatch"
                 }
             }
@@ -2940,17 +2940,17 @@
                 }
             }
         },
-        "UpdatePageByIdInput": {
+        "UpdatePageInput": {
             "type": "object",
             "required": [
-                "pagePatch",
+                "patch",
                 "id"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "pagePatch": {
+                "patch": {
                     "$ref": "#/inputs/PagePatch"
                 },
                 "id": {
@@ -2961,14 +2961,14 @@
         "UpdatePageByUrlInput": {
             "type": "object",
             "required": [
-                "pagePatch",
+                "patch",
                 "url"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "pagePatch": {
+                "patch": {
                     "$ref": "#/inputs/PagePatch"
                 },
                 "url": {
@@ -2976,11 +2976,11 @@
                 }
             }
         },
-        "UpdateParameterInput": {
+        "UpdateParameterByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "parameterPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -2989,7 +2989,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "parameterPatch": {
+                "patch": {
                     "$ref": "#/inputs/ParameterPatch"
                 }
             }
@@ -3006,17 +3006,17 @@
                 }
             }
         },
-        "UpdateParameterByPaNameInput": {
+        "UpdateParameterInput": {
             "type": "object",
             "required": [
-                "parameterPatch",
+                "patch",
                 "paName"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "parameterPatch": {
+                "patch": {
                     "$ref": "#/inputs/ParameterPatch"
                 },
                 "paName": {
@@ -3024,11 +3024,11 @@
                 }
             }
         },
-        "UpdateParyInput": {
+        "UpdateParyByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "paryPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -3037,7 +3037,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "paryPatch": {
+                "patch": {
                     "$ref": "#/inputs/ParyPatch"
                 }
             }
@@ -3105,17 +3105,17 @@
                 }
             }
         },
-        "UpdateParyByPIdInput": {
+        "UpdateParyInput": {
             "type": "object",
             "required": [
-                "paryPatch",
+                "patch",
                 "pId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "paryPatch": {
+                "patch": {
                     "$ref": "#/inputs/ParyPatch"
                 },
                 "pId": {
@@ -3123,11 +3123,11 @@
                 }
             }
         },
-        "UpdateParyNavrhInput": {
+        "UpdateParyNavrhByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "paryNavrhPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -3136,7 +3136,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "paryNavrhPatch": {
+                "patch": {
                     "$ref": "#/inputs/ParyNavrhPatch"
                 }
             }
@@ -3159,17 +3159,17 @@
                 }
             }
         },
-        "UpdateParyNavrhByPnIdInput": {
+        "UpdateParyNavrhInput": {
             "type": "object",
             "required": [
-                "paryNavrhPatch",
+                "patch",
                 "pnId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "paryNavrhPatch": {
+                "patch": {
                     "$ref": "#/inputs/ParyNavrhPatch"
                 },
                 "pnId": {
@@ -3177,11 +3177,11 @@
                 }
             }
         },
-        "UpdatePermissionInput": {
+        "UpdatePermissionByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "permissionPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -3190,7 +3190,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "permissionPatch": {
+                "patch": {
                     "$ref": "#/inputs/PermissionPatch"
                 }
             }
@@ -3261,17 +3261,17 @@
                 }
             }
         },
-        "UpdatePermissionByPeIdInput": {
+        "UpdatePermissionInput": {
             "type": "object",
             "required": [
-                "permissionPatch",
+                "patch",
                 "peId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "permissionPatch": {
+                "patch": {
                     "$ref": "#/inputs/PermissionPatch"
                 },
                 "peId": {
@@ -3279,11 +3279,11 @@
                 }
             }
         },
-        "UpdatePlatbyCategoryInput": {
+        "UpdatePlatbyCategoryByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "platbyCategoryPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -3292,7 +3292,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "platbyCategoryPatch": {
+                "patch": {
                     "$ref": "#/inputs/PlatbyCategoryPatch"
                 }
             }
@@ -3336,17 +3336,17 @@
                 }
             }
         },
-        "UpdatePlatbyCategoryByPcIdInput": {
+        "UpdatePlatbyCategoryInput": {
             "type": "object",
             "required": [
-                "platbyCategoryPatch",
+                "patch",
                 "pcId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "platbyCategoryPatch": {
+                "patch": {
                     "$ref": "#/inputs/PlatbyCategoryPatch"
                 },
                 "pcId": {
@@ -3354,11 +3354,11 @@
                 }
             }
         },
-        "UpdatePlatbyCategoryGroupInput": {
+        "UpdatePlatbyCategoryGroupByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "platbyCategoryGroupPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -3367,7 +3367,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "platbyCategoryGroupPatch": {
+                "patch": {
                     "$ref": "#/inputs/PlatbyCategoryGroupPatch"
                 }
             }
@@ -3387,17 +3387,17 @@
                 }
             }
         },
-        "UpdatePlatbyCategoryGroupByPcgIdInput": {
+        "UpdatePlatbyCategoryGroupInput": {
             "type": "object",
             "required": [
-                "platbyCategoryGroupPatch",
+                "patch",
                 "pcgId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "platbyCategoryGroupPatch": {
+                "patch": {
                     "$ref": "#/inputs/PlatbyCategoryGroupPatch"
                 },
                 "pcgId": {
@@ -3405,11 +3405,11 @@
                 }
             }
         },
-        "UpdatePlatbyGroupInput": {
+        "UpdatePlatbyGroupByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "platbyGroupPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -3418,7 +3418,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "platbyGroupPatch": {
+                "patch": {
                     "$ref": "#/inputs/PlatbyGroupPatch"
                 }
             }
@@ -3444,17 +3444,17 @@
                 }
             }
         },
-        "UpdatePlatbyGroupByPgIdInput": {
+        "UpdatePlatbyGroupInput": {
             "type": "object",
             "required": [
-                "platbyGroupPatch",
+                "patch",
                 "pgId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "platbyGroupPatch": {
+                "patch": {
                     "$ref": "#/inputs/PlatbyGroupPatch"
                 },
                 "pgId": {
@@ -3462,11 +3462,11 @@
                 }
             }
         },
-        "UpdatePlatbyGroupSkupinaInput": {
+        "UpdatePlatbyGroupSkupinaByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "platbyGroupSkupinaPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -3475,7 +3475,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "platbyGroupSkupinaPatch": {
+                "patch": {
                     "$ref": "#/inputs/PlatbyGroupSkupinaPatch"
                 }
             }
@@ -3495,17 +3495,17 @@
                 }
             }
         },
-        "UpdatePlatbyGroupSkupinaByPgsIdInput": {
+        "UpdatePlatbyGroupSkupinaInput": {
             "type": "object",
             "required": [
-                "platbyGroupSkupinaPatch",
+                "patch",
                 "pgsId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "platbyGroupSkupinaPatch": {
+                "patch": {
                     "$ref": "#/inputs/PlatbyGroupSkupinaPatch"
                 },
                 "pgsId": {
@@ -3513,11 +3513,11 @@
                 }
             }
         },
-        "UpdatePlatbyItemInput": {
+        "UpdatePlatbyItemByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "platbyItemPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -3526,7 +3526,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "platbyItemPatch": {
+                "patch": {
                     "$ref": "#/inputs/PlatbyItemPatch"
                 }
             }
@@ -3558,17 +3558,17 @@
                 }
             }
         },
-        "UpdatePlatbyItemByPiIdInput": {
+        "UpdatePlatbyItemInput": {
             "type": "object",
             "required": [
-                "platbyItemPatch",
+                "patch",
                 "piId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "platbyItemPatch": {
+                "patch": {
                     "$ref": "#/inputs/PlatbyItemPatch"
                 },
                 "piId": {
@@ -3576,11 +3576,11 @@
                 }
             }
         },
-        "UpdatePlatbyRawInput": {
+        "UpdatePlatbyRawByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "platbyRawPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -3589,7 +3589,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "platbyRawPatch": {
+                "patch": {
                     "$ref": "#/inputs/PlatbyRawPatch"
                 }
             }
@@ -3615,17 +3615,17 @@
                 }
             }
         },
-        "UpdatePlatbyRawByPrIdInput": {
+        "UpdatePlatbyRawInput": {
             "type": "object",
             "required": [
-                "platbyRawPatch",
+                "patch",
                 "prId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "platbyRawPatch": {
+                "patch": {
                     "$ref": "#/inputs/PlatbyRawPatch"
                 },
                 "prId": {
@@ -3633,11 +3633,11 @@
                 }
             }
         },
-        "UpdateRozpiInput": {
+        "UpdateRozpiByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "rozpiPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -3646,7 +3646,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "rozpiPatch": {
+                "patch": {
                     "$ref": "#/inputs/RozpiPatch"
                 }
             }
@@ -3678,17 +3678,17 @@
                 }
             }
         },
-        "UpdateRozpiByRIdInput": {
+        "UpdateRozpiInput": {
             "type": "object",
             "required": [
-                "rozpiPatch",
+                "patch",
                 "rId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "rozpiPatch": {
+                "patch": {
                     "$ref": "#/inputs/RozpiPatch"
                 },
                 "rId": {
@@ -3696,11 +3696,11 @@
                 }
             }
         },
-        "UpdateRozpisItemInput": {
+        "UpdateRozpisItemByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "rozpisItemPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -3709,7 +3709,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "rozpisItemPatch": {
+                "patch": {
                     "$ref": "#/inputs/RozpisItemPatch"
                 }
             }
@@ -3738,17 +3738,17 @@
                 }
             }
         },
-        "UpdateRozpisItemByRiIdInput": {
+        "UpdateRozpisItemInput": {
             "type": "object",
             "required": [
-                "rozpisItemPatch",
+                "patch",
                 "riId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "rozpisItemPatch": {
+                "patch": {
                     "$ref": "#/inputs/RozpisItemPatch"
                 },
                 "riId": {
@@ -3756,11 +3756,11 @@
                 }
             }
         },
-        "UpdateSessionInput": {
+        "UpdateSessionByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "sessionPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -3769,7 +3769,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "sessionPatch": {
+                "patch": {
                     "$ref": "#/inputs/SessionPatch"
                 }
             }
@@ -3795,17 +3795,17 @@
                 }
             }
         },
-        "UpdateSessionBySsIdInput": {
+        "UpdateSessionInput": {
             "type": "object",
             "required": [
-                "sessionPatch",
+                "patch",
                 "ssId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "sessionPatch": {
+                "patch": {
                     "$ref": "#/inputs/SessionPatch"
                 },
                 "ssId": {
@@ -3813,11 +3813,11 @@
                 }
             }
         },
-        "UpdateSkupinyInput": {
+        "UpdateSkupinyByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "skupinyPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -3826,7 +3826,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "skupinyPatch": {
+                "patch": {
                     "$ref": "#/inputs/SkupinyPatch"
                 }
             }
@@ -3852,17 +3852,17 @@
                 }
             }
         },
-        "UpdateSkupinyBySIdInput": {
+        "UpdateSkupinyInput": {
             "type": "object",
             "required": [
-                "skupinyPatch",
+                "patch",
                 "sId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "skupinyPatch": {
+                "patch": {
                     "$ref": "#/inputs/SkupinyPatch"
                 },
                 "sId": {
@@ -3870,11 +3870,11 @@
                 }
             }
         },
-        "UpdateUpozorneniInput": {
+        "UpdateUpozorneniByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "upozorneniPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -3883,7 +3883,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "upozorneniPatch": {
+                "patch": {
                     "$ref": "#/inputs/UpozorneniPatch"
                 }
             }
@@ -3918,17 +3918,17 @@
                 }
             }
         },
-        "UpdateUpozorneniByUpIdInput": {
+        "UpdateUpozorneniInput": {
             "type": "object",
             "required": [
-                "upozorneniPatch",
+                "patch",
                 "upId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "upozorneniPatch": {
+                "patch": {
                     "$ref": "#/inputs/UpozorneniPatch"
                 },
                 "upId": {
@@ -3936,11 +3936,11 @@
                 }
             }
         },
-        "UpdateUpozorneniSkupinyInput": {
+        "UpdateUpozorneniSkupinyByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "upozorneniSkupinyPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -3949,7 +3949,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "upozorneniSkupinyPatch": {
+                "patch": {
                     "$ref": "#/inputs/UpozorneniSkupinyPatch"
                 }
             }
@@ -3975,17 +3975,17 @@
                 }
             }
         },
-        "UpdateUpozorneniSkupinyByUpsIdInput": {
+        "UpdateUpozorneniSkupinyInput": {
             "type": "object",
             "required": [
-                "upozorneniSkupinyPatch",
+                "patch",
                 "upsId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "upozorneniSkupinyPatch": {
+                "patch": {
                     "$ref": "#/inputs/UpozorneniSkupinyPatch"
                 },
                 "upsId": {
@@ -3993,11 +3993,11 @@
                 }
             }
         },
-        "UpdateUserInput": {
+        "UpdateUserByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "userPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -4006,7 +4006,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "userPatch": {
+                "patch": {
                     "$ref": "#/inputs/UserPatch"
                 }
             }
@@ -4113,17 +4113,17 @@
                 }
             }
         },
-        "UpdateUserByUIdInput": {
+        "UpdateUserInput": {
             "type": "object",
             "required": [
-                "userPatch",
+                "patch",
                 "uId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "userPatch": {
+                "patch": {
                     "$ref": "#/inputs/UserPatch"
                 },
                 "uId": {
@@ -4131,11 +4131,11 @@
                 }
             }
         },
-        "UpdateUsersSkupinyInput": {
+        "UpdateUsersSkupinyByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "usersSkupinyPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -4144,7 +4144,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "usersSkupinyPatch": {
+                "patch": {
                     "$ref": "#/inputs/UsersSkupinyPatch"
                 }
             }
@@ -4173,17 +4173,17 @@
                 }
             }
         },
-        "UpdateUsersSkupinyByUsIdInput": {
+        "UpdateUsersSkupinyInput": {
             "type": "object",
             "required": [
-                "usersSkupinyPatch",
+                "patch",
                 "usId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "usersSkupinyPatch": {
+                "patch": {
                     "$ref": "#/inputs/UsersSkupinyPatch"
                 },
                 "usId": {
@@ -4191,11 +4191,11 @@
                 }
             }
         },
-        "UpdateVideoInput": {
+        "UpdateVideoByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "videoPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -4204,7 +4204,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "videoPatch": {
+                "patch": {
                     "$ref": "#/inputs/VideoPatch"
                 }
             }
@@ -4239,17 +4239,17 @@
                 }
             }
         },
-        "UpdateVideoByVIdInput": {
+        "UpdateVideoInput": {
             "type": "object",
             "required": [
-                "videoPatch",
+                "patch",
                 "vId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "videoPatch": {
+                "patch": {
                     "$ref": "#/inputs/VideoPatch"
                 },
                 "vId": {
@@ -4257,11 +4257,11 @@
                 }
             }
         },
-        "UpdateVideoListInput": {
+        "UpdateVideoListByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "videoListPatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -4270,7 +4270,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "videoListPatch": {
+                "patch": {
                     "$ref": "#/inputs/VideoListPatch"
                 }
             }
@@ -4302,17 +4302,17 @@
                 }
             }
         },
-        "UpdateVideoListByVlIdInput": {
+        "UpdateVideoListInput": {
             "type": "object",
             "required": [
-                "videoListPatch",
+                "patch",
                 "vlId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "videoListPatch": {
+                "patch": {
                     "$ref": "#/inputs/VideoListPatch"
                 },
                 "vlId": {
@@ -4320,11 +4320,11 @@
                 }
             }
         },
-        "UpdateVideoSourceInput": {
+        "UpdateVideoSourceByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId",
-                "videoSourcePatch"
+                "patch"
             ],
             "properties": {
                 "clientMutationId": {
@@ -4333,7 +4333,7 @@
                 "nodeId": {
                     "type": "string"
                 },
-                "videoSourcePatch": {
+                "patch": {
                     "$ref": "#/inputs/VideoSourcePatch"
                 }
             }
@@ -4362,17 +4362,17 @@
                 }
             }
         },
-        "UpdateVideoSourceByVsIdInput": {
+        "UpdateVideoSourceInput": {
             "type": "object",
             "required": [
-                "videoSourcePatch",
+                "patch",
                 "vsId"
             ],
             "properties": {
                 "clientMutationId": {
                     "type": "string"
                 },
-                "videoSourcePatch": {
+                "patch": {
                     "$ref": "#/inputs/VideoSourcePatch"
                 },
                 "vsId": {
@@ -4380,7 +4380,7 @@
                 }
             }
         },
-        "DeleteAkceInput": {
+        "DeleteAkceByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -4394,7 +4394,7 @@
                 }
             }
         },
-        "DeleteAkceByAIdInput": {
+        "DeleteAkceInput": {
             "type": "object",
             "required": [
                 "aId"
@@ -4408,7 +4408,7 @@
                 }
             }
         },
-        "DeleteAkceItemInput": {
+        "DeleteAkceItemByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -4422,7 +4422,7 @@
                 }
             }
         },
-        "DeleteAkceItemByAiIdInput": {
+        "DeleteAkceItemInput": {
             "type": "object",
             "required": [
                 "aiId"
@@ -4436,7 +4436,7 @@
                 }
             }
         },
-        "DeleteAktualityInput": {
+        "DeleteAktualityByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -4450,7 +4450,7 @@
                 }
             }
         },
-        "DeleteAktualityByAtIdInput": {
+        "DeleteAktualityInput": {
             "type": "object",
             "required": [
                 "atId"
@@ -4464,7 +4464,7 @@
                 }
             }
         },
-        "DeleteDokumentyInput": {
+        "DeleteDokumentyByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -4478,7 +4478,7 @@
                 }
             }
         },
-        "DeleteDokumentyByDIdInput": {
+        "DeleteDokumentyInput": {
             "type": "object",
             "required": [
                 "dId"
@@ -4492,7 +4492,7 @@
                 }
             }
         },
-        "DeleteGalerieDirInput": {
+        "DeleteGalerieDirByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -4506,7 +4506,7 @@
                 }
             }
         },
-        "DeleteGalerieDirByGdIdInput": {
+        "DeleteGalerieDirInput": {
             "type": "object",
             "required": [
                 "gdId"
@@ -4520,7 +4520,7 @@
                 }
             }
         },
-        "DeleteGalerieFotoInput": {
+        "DeleteGalerieFotoByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -4534,7 +4534,7 @@
                 }
             }
         },
-        "DeleteGalerieFotoByGfIdInput": {
+        "DeleteGalerieFotoInput": {
             "type": "object",
             "required": [
                 "gfId"
@@ -4548,7 +4548,7 @@
                 }
             }
         },
-        "DeleteNabidkaInput": {
+        "DeleteNabidkaByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -4562,7 +4562,7 @@
                 }
             }
         },
-        "DeleteNabidkaByNIdInput": {
+        "DeleteNabidkaInput": {
             "type": "object",
             "required": [
                 "nId"
@@ -4576,7 +4576,7 @@
                 }
             }
         },
-        "DeleteNabidkaItemInput": {
+        "DeleteNabidkaItemByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -4590,7 +4590,7 @@
                 }
             }
         },
-        "DeleteNabidkaItemByNiIdInput": {
+        "DeleteNabidkaItemInput": {
             "type": "object",
             "required": [
                 "niId"
@@ -4604,7 +4604,7 @@
                 }
             }
         },
-        "DeleteParameterInput": {
+        "DeleteParameterByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -4618,7 +4618,7 @@
                 }
             }
         },
-        "DeleteParameterByPaNameInput": {
+        "DeleteParameterInput": {
             "type": "object",
             "required": [
                 "paName"
@@ -4632,7 +4632,7 @@
                 }
             }
         },
-        "DeleteParyInput": {
+        "DeleteParyByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -4646,7 +4646,7 @@
                 }
             }
         },
-        "DeleteParyByPIdInput": {
+        "DeleteParyInput": {
             "type": "object",
             "required": [
                 "pId"
@@ -4660,7 +4660,7 @@
                 }
             }
         },
-        "DeleteParyNavrhInput": {
+        "DeleteParyNavrhByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -4674,7 +4674,7 @@
                 }
             }
         },
-        "DeleteParyNavrhByPnIdInput": {
+        "DeleteParyNavrhInput": {
             "type": "object",
             "required": [
                 "pnId"
@@ -4688,7 +4688,7 @@
                 }
             }
         },
-        "DeletePermissionInput": {
+        "DeletePermissionByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -4702,7 +4702,7 @@
                 }
             }
         },
-        "DeletePermissionByPeIdInput": {
+        "DeletePermissionInput": {
             "type": "object",
             "required": [
                 "peId"
@@ -4716,7 +4716,7 @@
                 }
             }
         },
-        "DeletePlatbyCategoryInput": {
+        "DeletePlatbyCategoryByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -4730,7 +4730,7 @@
                 }
             }
         },
-        "DeletePlatbyCategoryByPcIdInput": {
+        "DeletePlatbyCategoryInput": {
             "type": "object",
             "required": [
                 "pcId"
@@ -4744,7 +4744,7 @@
                 }
             }
         },
-        "DeletePlatbyCategoryGroupInput": {
+        "DeletePlatbyCategoryGroupByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -4758,7 +4758,7 @@
                 }
             }
         },
-        "DeletePlatbyCategoryGroupByPcgIdInput": {
+        "DeletePlatbyCategoryGroupInput": {
             "type": "object",
             "required": [
                 "pcgId"
@@ -4772,7 +4772,7 @@
                 }
             }
         },
-        "DeletePlatbyGroupInput": {
+        "DeletePlatbyGroupByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -4786,7 +4786,7 @@
                 }
             }
         },
-        "DeletePlatbyGroupByPgIdInput": {
+        "DeletePlatbyGroupInput": {
             "type": "object",
             "required": [
                 "pgId"
@@ -4800,7 +4800,7 @@
                 }
             }
         },
-        "DeletePlatbyGroupSkupinaInput": {
+        "DeletePlatbyGroupSkupinaByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -4814,7 +4814,7 @@
                 }
             }
         },
-        "DeletePlatbyGroupSkupinaByPgsIdInput": {
+        "DeletePlatbyGroupSkupinaInput": {
             "type": "object",
             "required": [
                 "pgsId"
@@ -4828,7 +4828,7 @@
                 }
             }
         },
-        "DeletePlatbyItemInput": {
+        "DeletePlatbyItemByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -4842,7 +4842,7 @@
                 }
             }
         },
-        "DeletePlatbyItemByPiIdInput": {
+        "DeletePlatbyItemInput": {
             "type": "object",
             "required": [
                 "piId"
@@ -4856,7 +4856,7 @@
                 }
             }
         },
-        "DeletePlatbyRawInput": {
+        "DeletePlatbyRawByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -4870,7 +4870,7 @@
                 }
             }
         },
-        "DeletePlatbyRawByPrIdInput": {
+        "DeletePlatbyRawInput": {
             "type": "object",
             "required": [
                 "prId"
@@ -4884,7 +4884,7 @@
                 }
             }
         },
-        "DeleteRozpiInput": {
+        "DeleteRozpiByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -4898,7 +4898,7 @@
                 }
             }
         },
-        "DeleteRozpiByRIdInput": {
+        "DeleteRozpiInput": {
             "type": "object",
             "required": [
                 "rId"
@@ -4912,7 +4912,7 @@
                 }
             }
         },
-        "DeleteRozpisItemInput": {
+        "DeleteRozpisItemByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -4926,7 +4926,7 @@
                 }
             }
         },
-        "DeleteRozpisItemByRiIdInput": {
+        "DeleteRozpisItemInput": {
             "type": "object",
             "required": [
                 "riId"
@@ -4940,7 +4940,7 @@
                 }
             }
         },
-        "DeleteSessionInput": {
+        "DeleteSessionByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -4954,7 +4954,7 @@
                 }
             }
         },
-        "DeleteSessionBySsIdInput": {
+        "DeleteSessionInput": {
             "type": "object",
             "required": [
                 "ssId"
@@ -4968,7 +4968,7 @@
                 }
             }
         },
-        "DeleteSkupinyInput": {
+        "DeleteSkupinyByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -4982,7 +4982,7 @@
                 }
             }
         },
-        "DeleteSkupinyBySIdInput": {
+        "DeleteSkupinyInput": {
             "type": "object",
             "required": [
                 "sId"
@@ -4996,7 +4996,7 @@
                 }
             }
         },
-        "DeleteUpozorneniInput": {
+        "DeleteUpozorneniByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -5010,7 +5010,7 @@
                 }
             }
         },
-        "DeleteUpozorneniByUpIdInput": {
+        "DeleteUpozorneniInput": {
             "type": "object",
             "required": [
                 "upId"
@@ -5024,7 +5024,7 @@
                 }
             }
         },
-        "DeleteUpozorneniSkupinyInput": {
+        "DeleteUpozorneniSkupinyByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -5038,7 +5038,7 @@
                 }
             }
         },
-        "DeleteUpozorneniSkupinyByUpsIdInput": {
+        "DeleteUpozorneniSkupinyInput": {
             "type": "object",
             "required": [
                 "upsId"
@@ -5052,7 +5052,7 @@
                 }
             }
         },
-        "DeleteUserInput": {
+        "DeleteUserByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -5066,7 +5066,7 @@
                 }
             }
         },
-        "DeleteUserByUIdInput": {
+        "DeleteUserInput": {
             "type": "object",
             "required": [
                 "uId"
@@ -5080,7 +5080,7 @@
                 }
             }
         },
-        "DeleteUsersSkupinyInput": {
+        "DeleteUsersSkupinyByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -5094,7 +5094,7 @@
                 }
             }
         },
-        "DeleteUsersSkupinyByUsIdInput": {
+        "DeleteUsersSkupinyInput": {
             "type": "object",
             "required": [
                 "usId"
@@ -5108,7 +5108,7 @@
                 }
             }
         },
-        "DeleteVideoInput": {
+        "DeleteVideoByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -5122,7 +5122,7 @@
                 }
             }
         },
-        "DeleteVideoByVIdInput": {
+        "DeleteVideoInput": {
             "type": "object",
             "required": [
                 "vId"
@@ -5136,7 +5136,7 @@
                 }
             }
         },
-        "DeleteVideoListInput": {
+        "DeleteVideoListByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -5150,7 +5150,7 @@
                 }
             }
         },
-        "DeleteVideoListByVlIdInput": {
+        "DeleteVideoListInput": {
             "type": "object",
             "required": [
                 "vlId"
@@ -5164,7 +5164,7 @@
                 }
             }
         },
-        "DeleteVideoSourceInput": {
+        "DeleteVideoSourceByNodeIdInput": {
             "type": "object",
             "required": [
                 "nodeId"
@@ -5178,7 +5178,7 @@
                 }
             }
         },
-        "DeleteVideoSourceByVsIdInput": {
+        "DeleteVideoSourceInput": {
             "type": "object",
             "required": [
                 "vsId"
@@ -5243,7 +5243,7 @@
                     }
                 }
             },
-            "allAkces": {
+            "akces": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -5302,7 +5302,7 @@
                     }
                 }
             },
-            "allAkceItems": {
+            "akceItems": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -5347,7 +5347,7 @@
                     }
                 }
             },
-            "allAktualities": {
+            "aktualities": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -5404,7 +5404,7 @@
                     }
                 }
             },
-            "allDokumenties": {
+            "dokumenties": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -5455,7 +5455,7 @@
                     }
                 }
             },
-            "allGalerieDirs": {
+            "galerieDirs": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -5504,7 +5504,7 @@
                     }
                 }
             },
-            "allGalerieFotos": {
+            "galerieFotos": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -5553,7 +5553,7 @@
                     }
                 }
             },
-            "allMembers": {
+            "members": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -5590,7 +5590,7 @@
                     }
                 }
             },
-            "allNabidkas": {
+            "nabidkas": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -5645,7 +5645,7 @@
                     }
                 }
             },
-            "allNabidkaItems": {
+            "nabidkaItems": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -5692,7 +5692,7 @@
                     }
                 }
             },
-            "allPages": {
+            "pages": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -5739,7 +5739,7 @@
                     }
                 }
             },
-            "allPageRevisions": {
+            "pageRevisions": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -5792,7 +5792,7 @@
                     }
                 }
             },
-            "allParameters": {
+            "parameters": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -5833,7 +5833,7 @@
                     }
                 }
             },
-            "allParies": {
+            "paries": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -5896,7 +5896,7 @@
                     }
                 }
             },
-            "allParyNavrhs": {
+            "paryNavrhs": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -5941,7 +5941,7 @@
                     }
                 }
             },
-            "allPermissions": {
+            "permissions": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -6018,7 +6018,7 @@
                     }
                 }
             },
-            "allPlatbyCategories": {
+            "platbyCategories": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -6077,7 +6077,7 @@
                     }
                 }
             },
-            "allPlatbyCategoryGroups": {
+            "platbyCategoryGroups": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -6120,7 +6120,7 @@
                     }
                 }
             },
-            "allPlatbyGroups": {
+            "platbyGroups": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -6167,7 +6167,7 @@
                     }
                 }
             },
-            "allPlatbyGroupSkupinas": {
+            "platbyGroupSkupinas": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -6210,7 +6210,7 @@
                     }
                 }
             },
-            "allPlatbyItems": {
+            "platbyItems": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -6261,7 +6261,7 @@
                     }
                 }
             },
-            "allPlatbyRaws": {
+            "platbyRaws": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -6308,7 +6308,7 @@
                     }
                 }
             },
-            "allRozpis": {
+            "rozpis": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -6359,7 +6359,7 @@
                     }
                 }
             },
-            "allRozpisItems": {
+            "rozpisItems": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -6408,7 +6408,7 @@
                     }
                 }
             },
-            "allSessions": {
+            "sessions": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -6455,7 +6455,7 @@
                     }
                 }
             },
-            "allSkupinies": {
+            "skupinies": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -6502,7 +6502,7 @@
                     }
                 }
             },
-            "allUpozornenis": {
+            "upozornenis": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -6555,7 +6555,7 @@
                     }
                 }
             },
-            "allUpozorneniSkupinies": {
+            "upozorneniSkupinies": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -6602,7 +6602,7 @@
                     }
                 }
             },
-            "allUsers": {
+            "users": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -6703,7 +6703,7 @@
                     }
                 }
             },
-            "allUsersSkupinies": {
+            "usersSkupinies": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -6752,7 +6752,7 @@
                     }
                 }
             },
-            "allVideos": {
+            "videos": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -6805,7 +6805,7 @@
                     }
                 }
             },
-            "allVideoLists": {
+            "videoLists": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -6856,7 +6856,7 @@
                     }
                 }
             },
-            "allVideoSources": {
+            "videoSources": {
                 "type": "object",
                 "required": [
                     "orderBy"
@@ -6905,7 +6905,7 @@
                     }
                 }
             },
-            "akceByAId": {
+            "akce": {
                 "type": "object",
                 "required": [
                     "aId"
@@ -6916,7 +6916,7 @@
                     }
                 }
             },
-            "akceItemByAiId": {
+            "akceItem": {
                 "type": "object",
                 "required": [
                     "aiId"
@@ -6927,7 +6927,7 @@
                     }
                 }
             },
-            "aktualityByAtId": {
+            "aktuality": {
                 "type": "object",
                 "required": [
                     "atId"
@@ -6938,7 +6938,7 @@
                     }
                 }
             },
-            "dokumentyByDId": {
+            "dokumenty": {
                 "type": "object",
                 "required": [
                     "dId"
@@ -6949,7 +6949,7 @@
                     }
                 }
             },
-            "galerieDirByGdId": {
+            "galerieDir": {
                 "type": "object",
                 "required": [
                     "gdId"
@@ -6960,7 +6960,7 @@
                     }
                 }
             },
-            "galerieFotoByGfId": {
+            "galerieFoto": {
                 "type": "object",
                 "required": [
                     "gfId"
@@ -6971,7 +6971,7 @@
                     }
                 }
             },
-            "nabidkaByNId": {
+            "nabidka": {
                 "type": "object",
                 "required": [
                     "nId"
@@ -6982,7 +6982,7 @@
                     }
                 }
             },
-            "nabidkaItemByNiId": {
+            "nabidkaItem": {
                 "type": "object",
                 "required": [
                     "niId"
@@ -6993,7 +6993,7 @@
                     }
                 }
             },
-            "pageById": {
+            "page": {
                 "type": "object",
                 "required": [
                     "id"
@@ -7015,7 +7015,7 @@
                     }
                 }
             },
-            "pageRevisionByRevNumberAndId": {
+            "pageRevision": {
                 "type": "object",
                 "required": [
                     "revNumber",
@@ -7030,7 +7030,7 @@
                     }
                 }
             },
-            "parameterByPaName": {
+            "parameter": {
                 "type": "object",
                 "required": [
                     "paName"
@@ -7041,7 +7041,7 @@
                     }
                 }
             },
-            "paryByPId": {
+            "pary": {
                 "type": "object",
                 "required": [
                     "pId"
@@ -7052,7 +7052,7 @@
                     }
                 }
             },
-            "paryNavrhByPnId": {
+            "paryNavrh": {
                 "type": "object",
                 "required": [
                     "pnId"
@@ -7063,7 +7063,7 @@
                     }
                 }
             },
-            "permissionByPeId": {
+            "permission": {
                 "type": "object",
                 "required": [
                     "peId"
@@ -7074,7 +7074,7 @@
                     }
                 }
             },
-            "platbyCategoryByPcId": {
+            "platbyCategory": {
                 "type": "object",
                 "required": [
                     "pcId"
@@ -7085,7 +7085,7 @@
                     }
                 }
             },
-            "platbyCategoryGroupByPcgId": {
+            "platbyCategoryGroup": {
                 "type": "object",
                 "required": [
                     "pcgId"
@@ -7096,7 +7096,7 @@
                     }
                 }
             },
-            "platbyGroupByPgId": {
+            "platbyGroup": {
                 "type": "object",
                 "required": [
                     "pgId"
@@ -7107,7 +7107,7 @@
                     }
                 }
             },
-            "platbyGroupSkupinaByPgsId": {
+            "platbyGroupSkupina": {
                 "type": "object",
                 "required": [
                     "pgsId"
@@ -7118,7 +7118,7 @@
                     }
                 }
             },
-            "platbyItemByPiId": {
+            "platbyItem": {
                 "type": "object",
                 "required": [
                     "piId"
@@ -7129,7 +7129,7 @@
                     }
                 }
             },
-            "platbyRawByPrId": {
+            "platbyRaw": {
                 "type": "object",
                 "required": [
                     "prId"
@@ -7140,7 +7140,7 @@
                     }
                 }
             },
-            "rozpiByRId": {
+            "rozpi": {
                 "type": "object",
                 "required": [
                     "rId"
@@ -7151,7 +7151,7 @@
                     }
                 }
             },
-            "rozpisItemByRiId": {
+            "rozpisItem": {
                 "type": "object",
                 "required": [
                     "riId"
@@ -7162,7 +7162,7 @@
                     }
                 }
             },
-            "sessionBySsId": {
+            "session": {
                 "type": "object",
                 "required": [
                     "ssId"
@@ -7173,7 +7173,7 @@
                     }
                 }
             },
-            "skupinyBySId": {
+            "skupiny": {
                 "type": "object",
                 "required": [
                     "sId"
@@ -7184,7 +7184,7 @@
                     }
                 }
             },
-            "upozorneniByUpId": {
+            "upozorneni": {
                 "type": "object",
                 "required": [
                     "upId"
@@ -7195,7 +7195,7 @@
                     }
                 }
             },
-            "upozorneniSkupinyByUpsId": {
+            "upozorneniSkupiny": {
                 "type": "object",
                 "required": [
                     "upsId"
@@ -7206,7 +7206,7 @@
                     }
                 }
             },
-            "userByUId": {
+            "user": {
                 "type": "object",
                 "required": [
                     "uId"
@@ -7217,7 +7217,7 @@
                     }
                 }
             },
-            "usersSkupinyByUsId": {
+            "usersSkupiny": {
                 "type": "object",
                 "required": [
                     "usId"
@@ -7228,7 +7228,7 @@
                     }
                 }
             },
-            "videoByVId": {
+            "video": {
                 "type": "object",
                 "required": [
                     "vId"
@@ -7239,7 +7239,7 @@
                     }
                 }
             },
-            "videoListByVlId": {
+            "videoList": {
                 "type": "object",
                 "required": [
                     "vlId"
@@ -7250,7 +7250,7 @@
                     }
                 }
             },
-            "videoSourceByVsId": {
+            "videoSource": {
                 "type": "object",
                 "required": [
                     "vsId"
@@ -7318,7 +7318,7 @@
                     }
                 }
             },
-            "akce": {
+            "akceByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7329,7 +7329,7 @@
                     }
                 }
             },
-            "akceItem": {
+            "akceItemByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7340,7 +7340,7 @@
                     }
                 }
             },
-            "aktuality": {
+            "aktualityByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7351,7 +7351,7 @@
                     }
                 }
             },
-            "dokumenty": {
+            "dokumentyByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7362,7 +7362,7 @@
                     }
                 }
             },
-            "galerieDir": {
+            "galerieDirByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7373,7 +7373,7 @@
                     }
                 }
             },
-            "galerieFoto": {
+            "galerieFotoByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7384,7 +7384,7 @@
                     }
                 }
             },
-            "nabidka": {
+            "nabidkaByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7395,7 +7395,7 @@
                     }
                 }
             },
-            "nabidkaItem": {
+            "nabidkaItemByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7406,7 +7406,7 @@
                     }
                 }
             },
-            "page": {
+            "pageByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7417,7 +7417,7 @@
                     }
                 }
             },
-            "pageRevision": {
+            "pageRevisionByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7428,7 +7428,7 @@
                     }
                 }
             },
-            "parameter": {
+            "parameterByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7439,7 +7439,7 @@
                     }
                 }
             },
-            "pary": {
+            "paryByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7450,7 +7450,7 @@
                     }
                 }
             },
-            "paryNavrh": {
+            "paryNavrhByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7461,7 +7461,7 @@
                     }
                 }
             },
-            "permission": {
+            "permissionByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7472,7 +7472,7 @@
                     }
                 }
             },
-            "platbyCategory": {
+            "platbyCategoryByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7483,7 +7483,7 @@
                     }
                 }
             },
-            "platbyCategoryGroup": {
+            "platbyCategoryGroupByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7494,7 +7494,7 @@
                     }
                 }
             },
-            "platbyGroup": {
+            "platbyGroupByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7505,7 +7505,7 @@
                     }
                 }
             },
-            "platbyGroupSkupina": {
+            "platbyGroupSkupinaByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7516,7 +7516,7 @@
                     }
                 }
             },
-            "platbyItem": {
+            "platbyItemByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7527,7 +7527,7 @@
                     }
                 }
             },
-            "platbyRaw": {
+            "platbyRawByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7538,7 +7538,7 @@
                     }
                 }
             },
-            "rozpi": {
+            "rozpiByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7549,7 +7549,7 @@
                     }
                 }
             },
-            "rozpisItem": {
+            "rozpisItemByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7560,7 +7560,7 @@
                     }
                 }
             },
-            "session": {
+            "sessionByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7571,7 +7571,7 @@
                     }
                 }
             },
-            "skupiny": {
+            "skupinyByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7582,7 +7582,7 @@
                     }
                 }
             },
-            "upozorneni": {
+            "upozorneniByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7593,7 +7593,7 @@
                     }
                 }
             },
-            "upozorneniSkupiny": {
+            "upozorneniSkupinyByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7604,7 +7604,7 @@
                     }
                 }
             },
-            "user": {
+            "userByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7615,7 +7615,7 @@
                     }
                 }
             },
-            "usersSkupiny": {
+            "usersSkupinyByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7626,7 +7626,7 @@
                     }
                 }
             },
-            "video": {
+            "videoByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7637,7 +7637,7 @@
                     }
                 }
             },
-            "videoList": {
+            "videoListByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -7648,7 +7648,7 @@
                     }
                 }
             },
-            "videoSource": {
+            "videoSourceByNodeId": {
                 "type": "object",
                 "required": [
                     "nodeId"
@@ -10382,6 +10382,17 @@
                     }
                 }
             },
+            "updateAkceByNodeId": {
+                "type": "object",
+                "required": [
+                    "input"
+                ],
+                "properties": {
+                    "input": {
+                        "$ref": "#/inputs/UpdateAkceByNodeIdInput"
+                    }
+                }
+            },
             "updateAkce": {
                 "type": "object",
                 "required": [
@@ -10393,14 +10404,14 @@
                     }
                 }
             },
-            "updateAkceByAId": {
+            "updateAkceItemByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdateAkceByAIdInput"
+                        "$ref": "#/inputs/UpdateAkceItemByNodeIdInput"
                     }
                 }
             },
@@ -10415,14 +10426,14 @@
                     }
                 }
             },
-            "updateAkceItemByAiId": {
+            "updateAktualityByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdateAkceItemByAiIdInput"
+                        "$ref": "#/inputs/UpdateAktualityByNodeIdInput"
                     }
                 }
             },
@@ -10437,14 +10448,14 @@
                     }
                 }
             },
-            "updateAktualityByAtId": {
+            "updateDokumentyByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdateAktualityByAtIdInput"
+                        "$ref": "#/inputs/UpdateDokumentyByNodeIdInput"
                     }
                 }
             },
@@ -10459,14 +10470,14 @@
                     }
                 }
             },
-            "updateDokumentyByDId": {
+            "updateGalerieDirByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdateDokumentyByDIdInput"
+                        "$ref": "#/inputs/UpdateGalerieDirByNodeIdInput"
                     }
                 }
             },
@@ -10481,14 +10492,14 @@
                     }
                 }
             },
-            "updateGalerieDirByGdId": {
+            "updateGalerieFotoByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdateGalerieDirByGdIdInput"
+                        "$ref": "#/inputs/UpdateGalerieFotoByNodeIdInput"
                     }
                 }
             },
@@ -10503,14 +10514,14 @@
                     }
                 }
             },
-            "updateGalerieFotoByGfId": {
+            "updateNabidkaByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdateGalerieFotoByGfIdInput"
+                        "$ref": "#/inputs/UpdateNabidkaByNodeIdInput"
                     }
                 }
             },
@@ -10525,14 +10536,14 @@
                     }
                 }
             },
-            "updateNabidkaByNId": {
+            "updateNabidkaItemByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdateNabidkaByNIdInput"
+                        "$ref": "#/inputs/UpdateNabidkaItemByNodeIdInput"
                     }
                 }
             },
@@ -10547,14 +10558,14 @@
                     }
                 }
             },
-            "updateNabidkaItemByNiId": {
+            "updatePageByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdateNabidkaItemByNiIdInput"
+                        "$ref": "#/inputs/UpdatePageByNodeIdInput"
                     }
                 }
             },
@@ -10569,17 +10580,6 @@
                     }
                 }
             },
-            "updatePageById": {
-                "type": "object",
-                "required": [
-                    "input"
-                ],
-                "properties": {
-                    "input": {
-                        "$ref": "#/inputs/UpdatePageByIdInput"
-                    }
-                }
-            },
             "updatePageByUrl": {
                 "type": "object",
                 "required": [
@@ -10588,6 +10588,17 @@
                 "properties": {
                     "input": {
                         "$ref": "#/inputs/UpdatePageByUrlInput"
+                    }
+                }
+            },
+            "updateParameterByNodeId": {
+                "type": "object",
+                "required": [
+                    "input"
+                ],
+                "properties": {
+                    "input": {
+                        "$ref": "#/inputs/UpdateParameterByNodeIdInput"
                     }
                 }
             },
@@ -10602,14 +10613,14 @@
                     }
                 }
             },
-            "updateParameterByPaName": {
+            "updateParyByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdateParameterByPaNameInput"
+                        "$ref": "#/inputs/UpdateParyByNodeIdInput"
                     }
                 }
             },
@@ -10624,14 +10635,14 @@
                     }
                 }
             },
-            "updateParyByPId": {
+            "updateParyNavrhByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdateParyByPIdInput"
+                        "$ref": "#/inputs/UpdateParyNavrhByNodeIdInput"
                     }
                 }
             },
@@ -10646,14 +10657,14 @@
                     }
                 }
             },
-            "updateParyNavrhByPnId": {
+            "updatePermissionByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdateParyNavrhByPnIdInput"
+                        "$ref": "#/inputs/UpdatePermissionByNodeIdInput"
                     }
                 }
             },
@@ -10668,14 +10679,14 @@
                     }
                 }
             },
-            "updatePermissionByPeId": {
+            "updatePlatbyCategoryByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdatePermissionByPeIdInput"
+                        "$ref": "#/inputs/UpdatePlatbyCategoryByNodeIdInput"
                     }
                 }
             },
@@ -10690,14 +10701,14 @@
                     }
                 }
             },
-            "updatePlatbyCategoryByPcId": {
+            "updatePlatbyCategoryGroupByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdatePlatbyCategoryByPcIdInput"
+                        "$ref": "#/inputs/UpdatePlatbyCategoryGroupByNodeIdInput"
                     }
                 }
             },
@@ -10712,14 +10723,14 @@
                     }
                 }
             },
-            "updatePlatbyCategoryGroupByPcgId": {
+            "updatePlatbyGroupByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdatePlatbyCategoryGroupByPcgIdInput"
+                        "$ref": "#/inputs/UpdatePlatbyGroupByNodeIdInput"
                     }
                 }
             },
@@ -10734,14 +10745,14 @@
                     }
                 }
             },
-            "updatePlatbyGroupByPgId": {
+            "updatePlatbyGroupSkupinaByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdatePlatbyGroupByPgIdInput"
+                        "$ref": "#/inputs/UpdatePlatbyGroupSkupinaByNodeIdInput"
                     }
                 }
             },
@@ -10756,14 +10767,14 @@
                     }
                 }
             },
-            "updatePlatbyGroupSkupinaByPgsId": {
+            "updatePlatbyItemByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdatePlatbyGroupSkupinaByPgsIdInput"
+                        "$ref": "#/inputs/UpdatePlatbyItemByNodeIdInput"
                     }
                 }
             },
@@ -10778,14 +10789,14 @@
                     }
                 }
             },
-            "updatePlatbyItemByPiId": {
+            "updatePlatbyRawByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdatePlatbyItemByPiIdInput"
+                        "$ref": "#/inputs/UpdatePlatbyRawByNodeIdInput"
                     }
                 }
             },
@@ -10800,14 +10811,14 @@
                     }
                 }
             },
-            "updatePlatbyRawByPrId": {
+            "updateRozpiByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdatePlatbyRawByPrIdInput"
+                        "$ref": "#/inputs/UpdateRozpiByNodeIdInput"
                     }
                 }
             },
@@ -10822,14 +10833,14 @@
                     }
                 }
             },
-            "updateRozpiByRId": {
+            "updateRozpisItemByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdateRozpiByRIdInput"
+                        "$ref": "#/inputs/UpdateRozpisItemByNodeIdInput"
                     }
                 }
             },
@@ -10844,14 +10855,14 @@
                     }
                 }
             },
-            "updateRozpisItemByRiId": {
+            "updateSessionByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdateRozpisItemByRiIdInput"
+                        "$ref": "#/inputs/UpdateSessionByNodeIdInput"
                     }
                 }
             },
@@ -10866,14 +10877,14 @@
                     }
                 }
             },
-            "updateSessionBySsId": {
+            "updateSkupinyByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdateSessionBySsIdInput"
+                        "$ref": "#/inputs/UpdateSkupinyByNodeIdInput"
                     }
                 }
             },
@@ -10888,14 +10899,14 @@
                     }
                 }
             },
-            "updateSkupinyBySId": {
+            "updateUpozorneniByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdateSkupinyBySIdInput"
+                        "$ref": "#/inputs/UpdateUpozorneniByNodeIdInput"
                     }
                 }
             },
@@ -10910,14 +10921,14 @@
                     }
                 }
             },
-            "updateUpozorneniByUpId": {
+            "updateUpozorneniSkupinyByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdateUpozorneniByUpIdInput"
+                        "$ref": "#/inputs/UpdateUpozorneniSkupinyByNodeIdInput"
                     }
                 }
             },
@@ -10932,14 +10943,14 @@
                     }
                 }
             },
-            "updateUpozorneniSkupinyByUpsId": {
+            "updateUserByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdateUpozorneniSkupinyByUpsIdInput"
+                        "$ref": "#/inputs/UpdateUserByNodeIdInput"
                     }
                 }
             },
@@ -10954,14 +10965,14 @@
                     }
                 }
             },
-            "updateUserByUId": {
+            "updateUsersSkupinyByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdateUserByUIdInput"
+                        "$ref": "#/inputs/UpdateUsersSkupinyByNodeIdInput"
                     }
                 }
             },
@@ -10976,14 +10987,14 @@
                     }
                 }
             },
-            "updateUsersSkupinyByUsId": {
+            "updateVideoByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdateUsersSkupinyByUsIdInput"
+                        "$ref": "#/inputs/UpdateVideoByNodeIdInput"
                     }
                 }
             },
@@ -10998,14 +11009,14 @@
                     }
                 }
             },
-            "updateVideoByVId": {
+            "updateVideoListByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdateVideoByVIdInput"
+                        "$ref": "#/inputs/UpdateVideoListByNodeIdInput"
                     }
                 }
             },
@@ -11020,14 +11031,14 @@
                     }
                 }
             },
-            "updateVideoListByVlId": {
+            "updateVideoSourceByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdateVideoListByVlIdInput"
+                        "$ref": "#/inputs/UpdateVideoSourceByNodeIdInput"
                     }
                 }
             },
@@ -11042,14 +11053,14 @@
                     }
                 }
             },
-            "updateVideoSourceByVsId": {
+            "deleteAkceByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/UpdateVideoSourceByVsIdInput"
+                        "$ref": "#/inputs/DeleteAkceByNodeIdInput"
                     }
                 }
             },
@@ -11064,14 +11075,14 @@
                     }
                 }
             },
-            "deleteAkceByAId": {
+            "deleteAkceItemByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeleteAkceByAIdInput"
+                        "$ref": "#/inputs/DeleteAkceItemByNodeIdInput"
                     }
                 }
             },
@@ -11086,14 +11097,14 @@
                     }
                 }
             },
-            "deleteAkceItemByAiId": {
+            "deleteAktualityByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeleteAkceItemByAiIdInput"
+                        "$ref": "#/inputs/DeleteAktualityByNodeIdInput"
                     }
                 }
             },
@@ -11108,14 +11119,14 @@
                     }
                 }
             },
-            "deleteAktualityByAtId": {
+            "deleteDokumentyByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeleteAktualityByAtIdInput"
+                        "$ref": "#/inputs/DeleteDokumentyByNodeIdInput"
                     }
                 }
             },
@@ -11130,14 +11141,14 @@
                     }
                 }
             },
-            "deleteDokumentyByDId": {
+            "deleteGalerieDirByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeleteDokumentyByDIdInput"
+                        "$ref": "#/inputs/DeleteGalerieDirByNodeIdInput"
                     }
                 }
             },
@@ -11152,14 +11163,14 @@
                     }
                 }
             },
-            "deleteGalerieDirByGdId": {
+            "deleteGalerieFotoByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeleteGalerieDirByGdIdInput"
+                        "$ref": "#/inputs/DeleteGalerieFotoByNodeIdInput"
                     }
                 }
             },
@@ -11174,14 +11185,14 @@
                     }
                 }
             },
-            "deleteGalerieFotoByGfId": {
+            "deleteNabidkaByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeleteGalerieFotoByGfIdInput"
+                        "$ref": "#/inputs/DeleteNabidkaByNodeIdInput"
                     }
                 }
             },
@@ -11196,14 +11207,14 @@
                     }
                 }
             },
-            "deleteNabidkaByNId": {
+            "deleteNabidkaItemByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeleteNabidkaByNIdInput"
+                        "$ref": "#/inputs/DeleteNabidkaItemByNodeIdInput"
                     }
                 }
             },
@@ -11218,14 +11229,14 @@
                     }
                 }
             },
-            "deleteNabidkaItemByNiId": {
+            "deleteParameterByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeleteNabidkaItemByNiIdInput"
+                        "$ref": "#/inputs/DeleteParameterByNodeIdInput"
                     }
                 }
             },
@@ -11240,14 +11251,14 @@
                     }
                 }
             },
-            "deleteParameterByPaName": {
+            "deleteParyByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeleteParameterByPaNameInput"
+                        "$ref": "#/inputs/DeleteParyByNodeIdInput"
                     }
                 }
             },
@@ -11262,14 +11273,14 @@
                     }
                 }
             },
-            "deleteParyByPId": {
+            "deleteParyNavrhByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeleteParyByPIdInput"
+                        "$ref": "#/inputs/DeleteParyNavrhByNodeIdInput"
                     }
                 }
             },
@@ -11284,14 +11295,14 @@
                     }
                 }
             },
-            "deleteParyNavrhByPnId": {
+            "deletePermissionByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeleteParyNavrhByPnIdInput"
+                        "$ref": "#/inputs/DeletePermissionByNodeIdInput"
                     }
                 }
             },
@@ -11306,14 +11317,14 @@
                     }
                 }
             },
-            "deletePermissionByPeId": {
+            "deletePlatbyCategoryByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeletePermissionByPeIdInput"
+                        "$ref": "#/inputs/DeletePlatbyCategoryByNodeIdInput"
                     }
                 }
             },
@@ -11328,14 +11339,14 @@
                     }
                 }
             },
-            "deletePlatbyCategoryByPcId": {
+            "deletePlatbyCategoryGroupByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeletePlatbyCategoryByPcIdInput"
+                        "$ref": "#/inputs/DeletePlatbyCategoryGroupByNodeIdInput"
                     }
                 }
             },
@@ -11350,14 +11361,14 @@
                     }
                 }
             },
-            "deletePlatbyCategoryGroupByPcgId": {
+            "deletePlatbyGroupByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeletePlatbyCategoryGroupByPcgIdInput"
+                        "$ref": "#/inputs/DeletePlatbyGroupByNodeIdInput"
                     }
                 }
             },
@@ -11372,14 +11383,14 @@
                     }
                 }
             },
-            "deletePlatbyGroupByPgId": {
+            "deletePlatbyGroupSkupinaByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeletePlatbyGroupByPgIdInput"
+                        "$ref": "#/inputs/DeletePlatbyGroupSkupinaByNodeIdInput"
                     }
                 }
             },
@@ -11394,14 +11405,14 @@
                     }
                 }
             },
-            "deletePlatbyGroupSkupinaByPgsId": {
+            "deletePlatbyItemByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeletePlatbyGroupSkupinaByPgsIdInput"
+                        "$ref": "#/inputs/DeletePlatbyItemByNodeIdInput"
                     }
                 }
             },
@@ -11416,14 +11427,14 @@
                     }
                 }
             },
-            "deletePlatbyItemByPiId": {
+            "deletePlatbyRawByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeletePlatbyItemByPiIdInput"
+                        "$ref": "#/inputs/DeletePlatbyRawByNodeIdInput"
                     }
                 }
             },
@@ -11438,14 +11449,14 @@
                     }
                 }
             },
-            "deletePlatbyRawByPrId": {
+            "deleteRozpiByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeletePlatbyRawByPrIdInput"
+                        "$ref": "#/inputs/DeleteRozpiByNodeIdInput"
                     }
                 }
             },
@@ -11460,14 +11471,14 @@
                     }
                 }
             },
-            "deleteRozpiByRId": {
+            "deleteRozpisItemByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeleteRozpiByRIdInput"
+                        "$ref": "#/inputs/DeleteRozpisItemByNodeIdInput"
                     }
                 }
             },
@@ -11482,14 +11493,14 @@
                     }
                 }
             },
-            "deleteRozpisItemByRiId": {
+            "deleteSessionByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeleteRozpisItemByRiIdInput"
+                        "$ref": "#/inputs/DeleteSessionByNodeIdInput"
                     }
                 }
             },
@@ -11504,14 +11515,14 @@
                     }
                 }
             },
-            "deleteSessionBySsId": {
+            "deleteSkupinyByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeleteSessionBySsIdInput"
+                        "$ref": "#/inputs/DeleteSkupinyByNodeIdInput"
                     }
                 }
             },
@@ -11526,14 +11537,14 @@
                     }
                 }
             },
-            "deleteSkupinyBySId": {
+            "deleteUpozorneniByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeleteSkupinyBySIdInput"
+                        "$ref": "#/inputs/DeleteUpozorneniByNodeIdInput"
                     }
                 }
             },
@@ -11548,14 +11559,14 @@
                     }
                 }
             },
-            "deleteUpozorneniByUpId": {
+            "deleteUpozorneniSkupinyByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeleteUpozorneniByUpIdInput"
+                        "$ref": "#/inputs/DeleteUpozorneniSkupinyByNodeIdInput"
                     }
                 }
             },
@@ -11570,14 +11581,14 @@
                     }
                 }
             },
-            "deleteUpozorneniSkupinyByUpsId": {
+            "deleteUserByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeleteUpozorneniSkupinyByUpsIdInput"
+                        "$ref": "#/inputs/DeleteUserByNodeIdInput"
                     }
                 }
             },
@@ -11592,14 +11603,14 @@
                     }
                 }
             },
-            "deleteUserByUId": {
+            "deleteUsersSkupinyByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeleteUserByUIdInput"
+                        "$ref": "#/inputs/DeleteUsersSkupinyByNodeIdInput"
                     }
                 }
             },
@@ -11614,14 +11625,14 @@
                     }
                 }
             },
-            "deleteUsersSkupinyByUsId": {
+            "deleteVideoByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeleteUsersSkupinyByUsIdInput"
+                        "$ref": "#/inputs/DeleteVideoByNodeIdInput"
                     }
                 }
             },
@@ -11636,14 +11647,14 @@
                     }
                 }
             },
-            "deleteVideoByVId": {
+            "deleteVideoListByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeleteVideoByVIdInput"
+                        "$ref": "#/inputs/DeleteVideoListByNodeIdInput"
                     }
                 }
             },
@@ -11658,14 +11669,14 @@
                     }
                 }
             },
-            "deleteVideoListByVlId": {
+            "deleteVideoSourceByNodeId": {
                 "type": "object",
                 "required": [
                     "input"
                 ],
                 "properties": {
                     "input": {
-                        "$ref": "#/inputs/DeleteVideoListByVlIdInput"
+                        "$ref": "#/inputs/DeleteVideoSourceByNodeIdInput"
                     }
                 }
             },
@@ -11677,17 +11688,6 @@
                 "properties": {
                     "input": {
                         "$ref": "#/inputs/DeleteVideoSourceInput"
-                    }
-                }
-            },
-            "deleteVideoSourceByVsId": {
-                "type": "object",
-                "required": [
-                    "input"
-                ],
-                "properties": {
-                    "input": {
-                        "$ref": "#/inputs/DeleteVideoSourceByVsIdInput"
                     }
                 }
             },
@@ -15109,7 +15109,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedAkceId": {
+            "deletedAkceNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -15172,7 +15172,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedAkceItemId": {
+            "deletedAkceItemNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -15231,7 +15231,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedAktualityId": {
+            "deletedAktualityNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -15302,7 +15302,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedDokumentyId": {
+            "deletedDokumentyNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -15362,7 +15362,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedGalerieDirId": {
+            "deletedGalerieDirNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -15415,7 +15415,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedGalerieFotoId": {
+            "deletedGalerieFotoNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -15478,7 +15478,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedNabidkaId": {
+            "deletedNabidkaNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -15542,7 +15542,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedNabidkaItemId": {
+            "deletedNabidkaItemNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -15603,7 +15603,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedParameterId": {
+            "deletedParameterNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -15648,7 +15648,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedParyId": {
+            "deletedParyNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -15720,7 +15720,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedParyNavrhId": {
+            "deletedParyNavrhNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -15784,7 +15784,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedPermissionId": {
+            "deletedPermissionNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -15865,7 +15865,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedPlatbyCategoryId": {
+            "deletedPlatbyCategoryNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -15928,7 +15928,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedPlatbyCategoryGroupId": {
+            "deletedPlatbyCategoryGroupNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -15985,7 +15985,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedPlatbyGroupId": {
+            "deletedPlatbyGroupNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -16036,7 +16036,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedPlatbyGroupSkupinaId": {
+            "deletedPlatbyGroupSkupinaNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -16093,7 +16093,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedPlatbyItemId": {
+            "deletedPlatbyItemNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -16163,7 +16163,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedPlatbyRawId": {
+            "deletedPlatbyRawNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -16214,7 +16214,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedRozpiId": {
+            "deletedRozpiNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -16274,7 +16274,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedRozpisItemId": {
+            "deletedRozpisItemNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -16337,7 +16337,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedSessionId": {
+            "deletedSessionNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -16393,7 +16393,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedSkupinyId": {
+            "deletedSkupinyNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -16444,7 +16444,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedUpozorneniId": {
+            "deletedUpozorneniNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -16506,7 +16506,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedUpozorneniSkupinyId": {
+            "deletedUpozorneniSkupinyNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -16567,7 +16567,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedUserId": {
+            "deletedUserNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -16682,7 +16682,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedUsersSkupinyId": {
+            "deletedUsersSkupinyNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -16735,7 +16735,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedVideoId": {
+            "deletedVideoNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -16792,7 +16792,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedVideoListId": {
+            "deletedVideoListNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -16847,7 +16847,7 @@
                 "required": [],
                 "properties": {}
             },
-            "deletedVideoSourceId": {
+            "deletedVideoSourceNodeId": {
                 "type": "object",
                 "required": [],
                 "properties": {}
