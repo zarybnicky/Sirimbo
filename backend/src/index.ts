@@ -50,7 +50,4 @@ const server = app.listen(port, () => {
   }
 });
 
-process.on('unhandledRejection', (reason, promise) => {
-  console.log('Unhandled Rejection at:', reason.stack || reason)
-  sys
-})
+process.on('unhandledRejection', (reason) => { throw reason; });

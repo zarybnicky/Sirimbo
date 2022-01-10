@@ -8,7 +8,7 @@ import { useTypedQuery, useTypedMutation } from '../zeus/apollo';
 import { DateRange } from './DateRange';
 
 export const EventListQuery = Selector('Query')({
-  allAkces: [
+  akces: [
     { first: $`limit`, offset: $`offset`, orderBy: [AkcesOrderBy.A_OD_DESC] },
     {
       nodes: {
@@ -41,8 +41,8 @@ export const EventListQuery = Selector('Query')({
 });
 
 export const ToggleEventVisible = Selector('Mutation')({
-  updateAkceByAId: [
-    { input: { aId: $`id`, akcePatch: { aVisible: $`visible` } } },
+  updateAkceByNodeId: [
+    { input: { nodeId: $`id`, patch: { aVisible: $`visible` } } },
     {
       akce: {
         aId: true,
@@ -60,7 +60,7 @@ export function EventList() {
   const [toggleVisible] = useTypedMutation(ToggleEventVisible, {
     onCompleted: () => refetch(),
   });
-  const total = data?.allAkces?.totalCount || 0;
+  const total = data?.akces?.totalCount || 0;
 
   const list = !total ? null : <table>
     <thead>
@@ -72,7 +72,7 @@ export function EventList() {
       </tr>
     </thead>
     <tbody>
-      {(data?.allAkces?.nodes || []).map((a) => <tr key={a.aId}>
+      {(data?.akces?.nodes || []).map((a) => <tr key={a.aId}>
         <td>
           <PopupState variant="popover">
             {(popupState) => <React.Fragment>

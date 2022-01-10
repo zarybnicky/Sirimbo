@@ -15,15 +15,15 @@ export type MenuStructItem = {
 
 export function useDbMenu(): MenuStructItem[] {
   const { data } = useTypedQuery({
-    parameterByPaName: [
+    parameter: [
       { paName: "menu" },
       { paValue: true },
     ],
   });
-  if (!data?.parameterByPaName?.paValue) {
+  if (!data?.parameter?.paValue) {
     return [];
   }
-  return JSON.parse(data.parameterByPaName.paValue) as MenuStructItem[];
+  return JSON.parse(data.parameter.paValue) as MenuStructItem[];
 };
 
 export function getHrefs(x: MenuStructItem): string[] {

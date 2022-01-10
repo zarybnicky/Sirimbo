@@ -7,7 +7,7 @@ import { $, GalerieDirsOrderBy, Selector } from '../zeus';
 import { useTypedQuery, useTypedMutation } from '../zeus/apollo';
 
 const GalleryDirList = Selector('Query')({
-  allGalerieDirs: [
+  galerieDirs: [
     { first: $`limit`, offset: $`offset`, orderBy: [GalerieDirsOrderBy.GD_NAME_ASC] },
     {
       nodes: {
@@ -24,8 +24,8 @@ const GalleryDirList = Selector('Query')({
 });
 
 const ToggleVisible = Selector('Mutation')({
-  updateGalerieDirByGdId: [
-    { input: { gdId: $`id`, galerieDirPatch: { gdHidden: $`visible` } } },
+  updateGalerieDirByNodeId: [
+    { input: { nodeId: $`id`, patch: { gdHidden: $`visible` } } },
     {
       galerieDir: {
         gdId: true,
@@ -67,7 +67,7 @@ export function GalleryDirectoryList() {
   const { data, refetch } = useTypedQuery(GalleryDirList, {
     variables: { limit, offset: (page - 1) * limit },
   });
-  const roots = listToTree((data?.allGalerieDirs?.nodes || []).map(x => ({
+  const roots = listToTree((data?.galerieDirs?.nodes || []).map(x => ({
     ...x,
     id: x.gdId,
     parentId: x.gdIdRodic,
@@ -77,7 +77,7 @@ export function GalleryDirectoryList() {
   const [toggleVisible] = useTypedMutation(ToggleVisible, {
     onCompleted: () => refetch(),
   });
-  const total = data?.allGalerieDirs?.totalCount || 0;
+  const total = data?.galerieDirs?.totalCount || 0;
 
   const list = !total ? null : <table>
     <thead><tr><th>Složka</th><th>Skrytá</th></tr></thead>

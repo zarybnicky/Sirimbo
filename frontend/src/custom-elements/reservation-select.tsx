@@ -54,7 +54,7 @@ const ReservationView = (x: GraphQLTypes["Nabidka"]) => {
 }
 
 export const NabidkaList = Selector("Query")({
-  allNabidkas: [
+  nabidkas: [
     { first: $`limit`, offset: $`offset`, orderBy: [NabidkasOrderBy.N_OD_DESC] },
     {
       nodes: {
@@ -97,13 +97,13 @@ export function ReservationSelect() {
   const [reservation, setReservation] = React.useState<GraphQLTypes["Nabidka"] | undefined>();
   const onChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const id = parseInt(event.target.value, 10);
-    setReservation(reservations?.allNabidkas?.nodes?.find(x => x.nId === id) as GraphQLTypes["Nabidka"]);
+    setReservation(reservations?.nabidkas?.nodes?.find(x => x.nId === id) as GraphQLTypes["Nabidka"]);
   };
 
   return <div>
     <select className='team-selection' value={reservation?.nId || 'none'} onChange={onChange}>
       <option value='none'> --vyberte nabídku-- </option>
-      {(reservations?.allNabidkas?.nodes || []).map(x => <option value={x.nId} key={x.nId}>
+      {(reservations?.nabidkas?.nodes || []).map(x => <option value={x.nId} key={x.nId}>
         {`${formatDateRange(x.nOd, x.nDo)} - ${x.userByNTrener?.uJmeno} ${x.userByNTrener?.uPrijmeni}`}
       </option>)}
     </select>

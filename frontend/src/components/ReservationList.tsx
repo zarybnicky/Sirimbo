@@ -9,7 +9,7 @@ import { useAuth } from '../data/use-auth';
 import { DateRange } from './DateRange';
 
 export const NabidkaAdminQuery = Selector('Query')({
-  allNabidkas: [
+  nabidkas: [
     { first: $`limit`, offset: $`offset`, orderBy: [NabidkasOrderBy.N_OD_DESC] },
     {
       nodes: {
@@ -48,8 +48,8 @@ export const NabidkaAdminQuery = Selector('Query')({
 });
 
 const ToggleVisibleNabidka = Selector("Mutation")({
-  updateNabidkaByNId: [
-    { input: { nabidkaPatch: { nVisible: $`visible` }, nId: $`id` } },
+  updateNabidkaByNodeId: [
+    { input: { patch: { nVisible: $`visible` }, nodeId: $`id` } },
     {
       nabidka: {
         nId: true,
@@ -68,7 +68,7 @@ export function ReservationAdminList() {
   const [toggleVisible] = useTypedMutation(ToggleVisibleNabidka, {
     onCompleted: () => refetch(),
   });
-  const total = data?.allNabidkas?.totalCount || 0;
+  const total = data?.nabidkas?.totalCount || 0;
 
   const list = (!user || !total) ? null : <table>
     <thead>
@@ -79,7 +79,7 @@ export function ReservationAdminList() {
       </tr>
     </thead>
     <tbody>
-      {data!.allNabidkas?.nodes.filter(
+      {data!.nabidkas?.nodes.filter(
         a => 16 <= (user.permissionByUGroup?.peNabidka || 0) || a.nTrener == user.uId
       ).map((a) => <tr key={a.nId}>
         <td>

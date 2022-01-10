@@ -3,7 +3,7 @@ import { $, Selector, AktualitiesOrderBy } from '../zeus';
 import { useTypedQuery } from '../zeus/apollo';
 
 export const ArticlesQuery = Selector('Query')({
-  allAktualities: [
+  aktualities: [
     { first: $`limit`, offset: $`offset`, orderBy: [AktualitiesOrderBy.AT_TIMESTAMP_ADD_DESC] },
     {
       nodes: {
@@ -37,14 +37,14 @@ export const useArticles = (limit: number, offset: number): {
   });
 
   return {
-    articles: (data?.allAktualities?.nodes || []).map(x => ({
+    articles: (data?.aktualities?.nodes || []).map(x => ({
       href: `/articles/${x.atId}`,
       img: `/galerie/${x.galerieFotoByAtFotoMain?.gfPath}`,
       imgThumb: `/galerie/thumbnails/${x.galerieFotoByAtFotoMain?.gfPath}`,
       header: x.atJmeno,
       preview: x.atPreview,
     })),
-    count: data?.allAktualities?.totalCount || 0,
+    count: data?.aktualities?.totalCount || 0,
   };
 };
 

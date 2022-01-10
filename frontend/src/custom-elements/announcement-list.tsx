@@ -8,7 +8,7 @@ import { useTypedQuery } from '../zeus/apollo';
 import { $, UpozornenisOrderBy, Selector } from '../zeus';
 
 const AnnouncementQuery = Selector('Query')({
-  allUpozornenis: [
+  upozornenis: [
     { first: $`limit`, offset: $`offset`, orderBy: [UpozornenisOrderBy.UP_TIMESTAMP_ADD_DESC] },
     {
       totalCount: true,
@@ -41,19 +41,19 @@ const AnnouncementQuery = Selector('Query')({
 });
 
 export function AnnouncementList() {
-  const [limit, setLimit] = useState(10);
+  const [limit] = useState(10);
   const [offset, setOffset] = useState(0);
   const [total, setTotal] = useState(0);
   const { data } = useTypedQuery(AnnouncementQuery, {
     variables: { limit, offset },
     onCompleted: (data) => {
-      const total = data.allUpozornenis?.totalCount;
+      const total = data.upozornenis?.totalCount;
       total && setTotal(total);
     },
   });
   const setPage = (x: { selected: number; }) => setOffset(x.selected * limit);
   return <React.Fragment>
-    {!data?.allUpozornenis ? null : data.allUpozornenis.nodes.map((a) => <React.Fragment>
+    {!data?.upozornenis ? null : data.upozornenis.nodes.map((a) => <React.Fragment>
       <div className="row">
         <div className="col h3">{a.upNadpis}</div>
         <div className="col-12 col-md-4 text-right h6">

@@ -11,7 +11,7 @@ import { $, NabidkasOrderBy, Selector } from '../zeus';
 import { useTypedQuery, useTypedMutation } from '../zeus/apollo';
 
 export const NabidkaAdminQuery = Selector('Query')({
-  allNabidkas: [
+  nabidkas: [
     { first: $`limit`, offset: $`offset`, orderBy: [NabidkasOrderBy.N_OD_DESC] },
     {
       nodes: {
@@ -50,8 +50,8 @@ export const NabidkaAdminQuery = Selector('Query')({
 });
 
 const ToggleVisibleNabidka = Selector("Mutation")({
-  updateNabidkaByNId: [
-    { input: { nabidkaPatch: { nVisible: $`visible` }, nId: $`id` } },
+  updateNabidkaByNodeId: [
+    { input: { patch: { nVisible: $`visible` }, nodeId: $`id` } },
     {
       nabidka: {
         nId: true,
@@ -68,7 +68,7 @@ export function ReservationAdminList() {
   const { data, refetch } = useTypedQuery(NabidkaAdminQuery, {
     variables: { limit, offset },
     onCompleted: (data) => {
-      const total = data.allNabidkas?.totalCount;
+      const total = data.nabidkas?.totalCount;
       total && setTotal(total);
     },
   });
@@ -77,7 +77,7 @@ export function ReservationAdminList() {
     onCompleted: () => refetch(),
   });
 
-  const list = (!user || !data?.allNabidkas?.nodes.length) ? null : <table>
+  const list = (!user || !data?.nabidkas?.nodes.length) ? null : <table>
     <thead>
       <tr>
         <th>Trenér</th>
@@ -86,7 +86,7 @@ export function ReservationAdminList() {
       </tr>
     </thead>
     <tbody>
-      {data!.allNabidkas?.nodes.filter(
+      {data!.nabidkas?.nodes.filter(
         a => 16 <= (user.getCurrentUser?.permissionByUGroup?.peNabidka || 0)
           || a.nTrener == user.getCurrentUser?.uId
       ).map((a) => <tr key={a.nId}>

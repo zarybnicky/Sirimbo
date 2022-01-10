@@ -10,7 +10,7 @@ import { $, AktualitiesOrderBy, Selector } from '../zeus';
 import { useTypedQuery } from '../zeus/apollo';
 
 export const ArticlesAdminQuery = Selector('Query')({
-  allAktualities: [
+  aktualities: [
     { first: $`limit`, offset: $`offset`, orderBy: [AktualitiesOrderBy.AT_TIMESTAMP_ADD_DESC] },
     {
       nodes: {
@@ -37,18 +37,18 @@ export function ArticleAdminList() {
   const { data } = useTypedQuery(ArticlesAdminQuery, {
     variables: { limit, offset },
     onCompleted: (data) => {
-      const total = data.allAktualities?.totalCount;
+      const total = data.aktualities?.totalCount;
       total && setTotal(total);
     },
   });
   const setPage = (x: { selected: number; }) => setOffset(x.selected * limit);
 
-  const list = (!user || !data?.allAktualities?.nodes.length) ? null : <table>
+  const list = (!user || !data?.aktualities?.nodes.length) ? null : <table>
     <thead>
       <tr><th>Jméno</th><th>Přidáno</th></tr>
     </thead>
     <tbody>
-      {data!.allAktualities?.nodes.filter(
+      {data!.aktualities?.nodes.filter(
         a => 16 <= (user.getCurrentUser?.permissionByUGroup?.peAktuality || 0)
           || a.atKdo == user.getCurrentUser?.uId
       ).map((a) => <tr key={a.atId}>

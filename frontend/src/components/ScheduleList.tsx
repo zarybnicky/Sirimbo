@@ -9,7 +9,7 @@ import { useTypedQuery, useTypedMutation } from '../zeus/apollo';
 import { useAuth } from '../data/use-auth';
 
 export const ScheduleListQuery = Selector('Query')({
-  allRozpis: [
+  rozpis: [
     { first: $`limit`, offset: $`offset`, orderBy: [RozpisOrderBy.R_DATUM_DESC] },
     {
       nodes: {
@@ -40,8 +40,8 @@ export const ScheduleListQuery = Selector('Query')({
 });
 
 export const ToggleScheduleVisible = Selector('Mutation')({
-  updateRozpiByRId: [
-    { input: { rozpiPatch: { rVisible: $`visible` }, rId: $`id` } },
+  updateRozpiByNodeId: [
+    { input: { patch: { rVisible: $`visible` }, nodeId: $`id` } },
     {
       rozpi: {
         rId: true,
@@ -60,7 +60,7 @@ export function RozpisAdminList() {
   const [toggleVisible] = useTypedMutation(ToggleScheduleVisible, {
     onCompleted: () => refetch(),
   });
-  const total = data?.allRozpis?.totalCount || 0;
+  const total = data?.rozpis?.totalCount || 0;
 
   const list = (!user || !total) ? null : <table>
     <thead>
@@ -72,7 +72,7 @@ export function RozpisAdminList() {
       </tr>
     </thead>
     <tbody>
-      {(data?.allRozpis?.nodes || []).filter(
+      {(data?.rozpis?.nodes || []).filter(
         a => 16 <= (user.permissionByUGroup?.peRozpis || 0) || a.rTrener == user.uId
       ).map((a) => <tr key={a.rId}>
         <td>

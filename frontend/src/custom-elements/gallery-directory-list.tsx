@@ -9,7 +9,7 @@ import { useTypedQuery, useTypedMutation } from '../zeus/apollo';
 import { Dropdown } from './dropdown';
 
 const GalleryDirList = Selector('Query')({
-  allGalerieDirs: [
+  galerieDirs: [
     { first: $`limit`, offset: $`offset`, orderBy: [GalerieDirsOrderBy.GD_NAME_ASC] },
     {
       nodes: {
@@ -26,8 +26,8 @@ const GalleryDirList = Selector('Query')({
 });
 
 const ToggleVisible = Selector('Mutation')({
-  updateGalerieDirByGdId: [
-    { input: { gdId: $`id`, galerieDirPatch: { gdHidden: $`visible` } } },
+  updateGalerieDirByNodeId: [
+    { input: { nodeId: $`id`, patch: { gdHidden: $`visible` } } },
     {
       galerieDir: {
         gdId: true,
@@ -70,11 +70,11 @@ export function GalleryDirectoryList() {
   const { data, refetch } = useTypedQuery(GalleryDirList, {
     variables: { limit, offset },
     onCompleted: (data) => {
-      const total = data.allGalerieDirs?.totalCount;
+      const total = data.galerieDirs?.totalCount;
       total && setTotal(total);
     },
   });
-  const roots = listToTree((data?.allGalerieDirs?.nodes || []).map(x => ({
+  const roots = listToTree((data?.galerieDirs?.nodes || []).map(x => ({
     ...x,
     id: x.gdId,
     parentId: x.gdIdRodic,

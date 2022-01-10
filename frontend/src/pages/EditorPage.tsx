@@ -44,7 +44,7 @@ type State = {
 
 export const EditorPage = ({ }) => {
   const { data, refetch } = useTypedQuery({
-    allPages: [{ orderBy: [PagesOrderBy.URL_ASC] }, {
+    pages: [{ orderBy: [PagesOrderBy.URL_ASC] }, {
       nodes: {
         __typename: true,
         nodeId: true,
@@ -57,7 +57,7 @@ export const EditorPage = ({ }) => {
     }],
   });
   const [fetchRevs] = useTypedLazyQuery({
-    allPageRevisions: [
+    pageRevisions: [
       { condition: { id: $`id` } },
       {
         nodes: {
@@ -92,8 +92,8 @@ export const EditorPage = ({ }) => {
     ],
   });
   const [doSavePage] = useTypedMutation({
-    updatePageById: [
-      { input: { id: $`id`, pagePatch: { url: $`url`, content: $`content` } } },
+    updatePageByNodeId: [
+      { input: { nodeId: $`id`, patch: { url: $`url`, content: $`content` } } },
       { __typename: true },
     ],
   }, {
@@ -141,7 +141,7 @@ export const EditorPage = ({ }) => {
       const selectHistory = async () => {
         setState({ state: 'history', page: state.page, revs: [] });
         const { data } = await fetchRevs({ variables: { id: state.page.id } });
-        setState(state => ({ ...state, revs: data?.allPageRevisions?.nodes || [] }));
+        setState(state => ({ ...state, revs: data?.pageRevisions?.nodes || [] }));
       };
       const savePage = async () => {
         setLoading(true);
@@ -182,7 +182,7 @@ export const EditorPage = ({ }) => {
       {toolbar}
       <Typography variant="h4">Všechny stránky</Typography>
       <List>
-        {data?.allPages?.nodes.map((p) => (
+        {data?.pages?.nodes.map((p) => (
           <ListItem button key={p.id} onClick={() => selectPage(p)}>
             <ListItemText primary={p.url} />
           </ListItem>

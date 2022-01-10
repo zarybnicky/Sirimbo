@@ -9,7 +9,7 @@ import { useTypedQuery } from '../zeus/apollo';
 import { useAuth } from '../data/use-auth';
 
 export const ArticlesAdminQuery = Selector('Query')({
-  allAktualities: [
+  aktualities: [
     { first: $`limit`, offset: $`offset`, orderBy: [AktualitiesOrderBy.AT_TIMESTAMP_ADD_DESC] },
     {
       nodes: {
@@ -35,14 +35,14 @@ export function ArticleAdminList() {
   const { data } = useTypedQuery(ArticlesAdminQuery, {
     variables: { limit, offset: (page - 1) * limit },
   });
-  const total = data?.allAktualities?.totalCount || 0;
+  const total = data?.aktualities?.totalCount || 0;
 
   const list = (!user || !total) ? null : <table>
     <thead>
       <tr><th>Jméno</th><th>Přidáno</th></tr>
     </thead>
     <tbody>
-      {data!.allAktualities?.nodes.filter(
+      {data!.aktualities?.nodes.filter(
         a => 16 <= (user.permissionByUGroup?.peAktuality || 0) || a.atKdo == user.uId
       ).map((a) => <tr key={a.atId}>
         <td>

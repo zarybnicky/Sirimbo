@@ -7,7 +7,7 @@ import { useParams } from 'react-router';
 import { CallToAction } from '../components/CallToAction';
 
 export const ArticleQuery = Selector('Query')({
-  aktualityByAtId: [
+  aktuality: [
     { atId: $`id` },
     {
       atJmeno: true,
@@ -26,7 +26,7 @@ export const ArticleQuery = Selector('Query')({
 export const ArticlePage = ({ }) => {
   const { id } = useParams<{ id: string; }>();
   const { data } = useTypedQuery(ArticleQuery, { variables: { id } });
-  const x = data?.aktualityByAtId;
+  const x = data?.aktuality;
   if (!x) {
     return null;
   }

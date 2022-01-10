@@ -10,7 +10,7 @@ import { $, AkcesOrderBy, Selector } from '../zeus';
 import { useTypedQuery, useTypedMutation } from '../zeus/apollo';
 
 export const AkceList = Selector('Query')({
-  allAkces: [
+  akces: [
     { first: $`limit`, offset: $`offset`, orderBy: [AkcesOrderBy.A_OD_DESC] },
     {
       nodes: {
@@ -43,8 +43,8 @@ export const AkceList = Selector('Query')({
 });
 
 export const ToggleVisible = Selector('Mutation')({
-  updateAkceByAId: [
-    { input: { aId: $`id`, akcePatch: { aVisible: $`visible` } } },
+  updateAkceByNodeId: [
+    { input: { nodeId: $`id`, patch: { aVisible: $`visible` } } },
     {
       akce: {
         aId: true,
@@ -60,7 +60,7 @@ export function EventList() {
   const { data, refetch } = useTypedQuery(AkceList, {
     variables: { limit, offset },
     onCompleted: (data) => {
-      const total = data.allAkces?.totalCount;
+      const total = data.akces?.totalCount;
       total && setTotal(total);
     },
   });
@@ -69,7 +69,7 @@ export function EventList() {
     onCompleted: () => refetch(),
   });
 
-  const list = !data?.allAkces?.nodes.length ? null : <table>
+  const list = !data?.akces?.nodes.length ? null : <table>
     <thead>
       <tr>
         <th>Jméno</th>
@@ -79,7 +79,7 @@ export function EventList() {
       </tr>
     </thead>
     <tbody>
-      {data!.allAkces.nodes.map((a) => <tr key={a.aId}>
+      {data!.akces.nodes.map((a) => <tr key={a.aId}>
         <td>
           <Dropdown links={{
             [`/admin/akce/edit/${a.aId}`]: "Upravit",

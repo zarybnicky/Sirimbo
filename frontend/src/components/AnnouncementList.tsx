@@ -9,7 +9,7 @@ import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
 const AnnouncementQuery = Selector('Query')({
-  allUpozornenis: [
+  upozornenis: [
     { first: $`limit`, offset: $`offset`, orderBy: [UpozornenisOrderBy.UP_TIMESTAMP_ADD_DESC] },
     {
       totalCount: true,
@@ -47,8 +47,8 @@ export function AnnouncementList() {
   const { data } = useTypedQuery(AnnouncementQuery, {
     variables: { limit, offset: (page - 1) * limit },
   });
-  const nodes = data?.allUpozornenis?.nodes;
-  const total = data?.allUpozornenis?.totalCount;
+  const nodes = data?.upozornenis?.nodes;
+  const total = data?.upozornenis?.totalCount;
   if (nodes === undefined || total === undefined) {
     // react-skeleton
     return null;
