@@ -17,7 +17,8 @@
           </div>
         </div>
         <div class="box" title="{{ row.s_name }}" style="background-color:{{ row.s_color_rgb }}"></div>
-        {{ row.s_name }}
+        {{ row.s_name }}{% if row.s_location %}, {{ row.s_location }}{% endif %}
+        {% if not row.s_visible %}(skrytá){% endif %}
       </div>
     {% endfor %}
   </div>

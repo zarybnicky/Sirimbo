@@ -54,7 +54,7 @@ class DBSkupiny extends Database
 
     public static function get()
     {
-        $res = self::query("SELECT * FROM skupiny");
+        $res = self::query("SELECT * FROM skupiny order by s_id asc");
         return self::getArray($res);
     }
 
