@@ -825,6 +825,9 @@
                 },
                 "sLocation": {
                     "type": "string"
+                },
+                "sVisible": {
+                    "type": "boolean"
                 }
             }
         },
@@ -1999,6 +2002,9 @@
                 },
                 "sLocation": {
                     "type": "string"
+                },
+                "sVisible": {
+                    "type": "boolean"
                 }
             }
         },
@@ -3858,6 +3864,9 @@
                 },
                 "sLocation": {
                     "type": "string"
+                },
+                "sVisible": {
+                    "type": "boolean"
                 }
             }
         },
@@ -6503,6 +6512,8 @@
                                 "S_COLOR_TEXT_DESC",
                                 "S_LOCATION_ASC",
                                 "S_LOCATION_DESC",
+                                "S_VISIBLE_ASC",
+                                "S_VISIBLE_DESC",
                                 "PRIMARY_KEY_ASC",
                                 "PRIMARY_KEY_DESC"
                             ]
@@ -8852,6 +8863,11 @@
                 "properties": {}
             },
             "sLocation": {
+                "type": "object",
+                "required": [],
+                "properties": {}
+            },
+            "sVisible": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -12995,6 +13011,8 @@
                                 "S_COLOR_TEXT_DESC",
                                 "S_LOCATION_ASC",
                                 "S_LOCATION_DESC",
+                                "S_VISIBLE_ASC",
+                                "S_VISIBLE_DESC",
                                 "PRIMARY_KEY_ASC",
                                 "PRIMARY_KEY_DESC"
                             ]
@@ -14689,6 +14707,8 @@
                                 "S_COLOR_TEXT_DESC",
                                 "S_LOCATION_ASC",
                                 "S_LOCATION_DESC",
+                                "S_VISIBLE_ASC",
+                                "S_VISIBLE_DESC",
                                 "PRIMARY_KEY_ASC",
                                 "PRIMARY_KEY_DESC"
                             ]
@@ -16447,6 +16467,8 @@
                                 "S_COLOR_TEXT_DESC",
                                 "S_LOCATION_ASC",
                                 "S_LOCATION_DESC",
+                                "S_VISIBLE_ASC",
+                                "S_VISIBLE_DESC",
                                 "PRIMARY_KEY_ASC",
                                 "PRIMARY_KEY_DESC"
                             ]

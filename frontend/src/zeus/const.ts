@@ -4714,6 +4714,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		sVisible:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	UsersSkupiniesOrderBy: "enum",
@@ -7656,6 +7662,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		sVisible:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	CreateUpozorneniPayload:{
@@ -10426,6 +10438,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		sVisible:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	UpdateSkupinyInput:{
@@ -12651,6 +12669,7 @@ export const ReturnTypes: Record<string,any> = {
 		sColorRgb:"String",
 		sColorText:"String",
 		sLocation:"String",
+		sVisible:"Boolean",
 		platbyGroupSkupinasByPgsIdSkupina:"PlatbyGroupSkupinasConnection",
 		upozorneniSkupiniesByUpsIdSkupina:"UpozorneniSkupiniesConnection",
 		usersByUSkupina:"UsersConnection"

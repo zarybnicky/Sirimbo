@@ -41,13 +41,20 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 
-do $$
-begin
-  if not exists (
-    select 1 from information_schema.columns
-      where table_schema = 'public' and table_name = 'skupiny' and column_name = 's_location'
+do $$ begin
+  if not exists (select 1
+     from information_schema.columns
+     where table_schema = 'public' and table_name = 'skupiny' and column_name = 's_location'
   ) then
     alter table public.skupiny add column s_location text not null default '';
   end if;
-end
-$$;
+end $$;
+
+do $$ begin
+  if not exists (select 1
+     from information_schema.columns
+     where table_schema = 'public' and table_name = 'skupiny' and column_name = 's_visible'
+  ) then
+    alter table public.skupiny add column s_visible boolean not null default true;
+  end if;
+end $$;
