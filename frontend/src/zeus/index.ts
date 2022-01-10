@@ -827,6 +827,7 @@ based pagination. May not be used with `last`. */
 	sDescription?:boolean,
 	sColorRgb?:boolean,
 	sColorText?:boolean,
+	sLocation?:boolean,
 platbyGroupSkupinasByPgsIdSkupina?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -2308,7 +2309,9 @@ for equality and combined with a logical ‘and.’ */
 	/** Checks for equality with the object’s `sColorRgb` field. */
 	sColorRgb?:string | null,
 	/** Checks for equality with the object’s `sColorText` field. */
-	sColorText?:string | null
+	sColorText?:string | null,
+	/** Checks for equality with the object’s `sLocation` field. */
+	sLocation?:string | null
 };
 	/** A connection to a list of `UsersSkupiny` values. */
 ["UsersSkupiniesConnection"]: AliasType<{
@@ -3597,7 +3600,8 @@ payload verbatim. May be used to track mutations by the client. */
 	sName:string,
 	sDescription:string,
 	sColorRgb:string,
-	sColorText:string
+	sColorText:string,
+	sLocation?:string | null
 };
 	/** The output of our create `Upozorneni` mutation. */
 ["CreateUpozorneniPayload"]: AliasType<{
@@ -4861,7 +4865,8 @@ payload verbatim. May be used to track mutations by the client. */
 	sName?:string | null,
 	sDescription?:string | null,
 	sColorRgb?:string | null,
-	sColorText?:string | null
+	sColorText?:string | null,
+	sLocation?:string | null
 };
 	/** All input for the `updateSkupiny` mutation. */
 ["UpdateSkupinyInput"]: {
@@ -6513,6 +6518,7 @@ strings and not numbers. */
 	sDescription:string,
 	sColorRgb:string,
 	sColorText:string,
+	sLocation:string,
 	/** Reads and enables pagination through a set of `PlatbyGroupSkupina`. */
 	platbyGroupSkupinasByPgsIdSkupina:ModelTypes["PlatbyGroupSkupinasConnection"],
 	/** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
@@ -10086,6 +10092,7 @@ strings and not numbers. */
 	sDescription: string,
 	sColorRgb: string,
 	sColorText: string,
+	sLocation: string,
 	/** Reads and enables pagination through a set of `PlatbyGroupSkupina`. */
 	platbyGroupSkupinasByPgsIdSkupina: GraphQLTypes["PlatbyGroupSkupinasConnection"],
 	/** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
@@ -11461,7 +11468,9 @@ for equality and combined with a logical ‘and.’ */
 	/** Checks for equality with the object’s `sColorRgb` field. */
 	sColorRgb?: string,
 	/** Checks for equality with the object’s `sColorText` field. */
-	sColorText?: string
+	sColorText?: string,
+	/** Checks for equality with the object’s `sLocation` field. */
+	sLocation?: string
 };
 	/** A connection to a list of `UsersSkupiny` values. */
 ["UsersSkupiniesConnection"]: {
@@ -12748,7 +12757,8 @@ payload verbatim. May be used to track mutations by the client. */
 	sName: string,
 	sDescription: string,
 	sColorRgb: string,
-	sColorText: string
+	sColorText: string,
+	sLocation?: string
 };
 	/** The output of our create `Upozorneni` mutation. */
 ["CreateUpozorneniPayload"]: {
@@ -14012,7 +14022,8 @@ payload verbatim. May be used to track mutations by the client. */
 	sName?: string,
 	sDescription?: string,
 	sColorRgb?: string,
-	sColorText?: string
+	sColorText?: string,
+	sLocation?: string
 };
 	/** All input for the `updateSkupiny` mutation. */
 ["UpdateSkupinyInput"]: {
@@ -15898,6 +15909,8 @@ export const enum SkupiniesOrderBy {
 	S_COLOR_RGB_DESC = "S_COLOR_RGB_DESC",
 	S_COLOR_TEXT_ASC = "S_COLOR_TEXT_ASC",
 	S_COLOR_TEXT_DESC = "S_COLOR_TEXT_DESC",
+	S_LOCATION_ASC = "S_LOCATION_ASC",
+	S_LOCATION_DESC = "S_LOCATION_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
 	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
 }

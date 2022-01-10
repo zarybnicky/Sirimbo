@@ -64,22 +64,24 @@ class DBSkupiny extends Database
         return self::getSingleRow($res);
     }
 
-    public static function insert($name, $color, $desc)
+    public static function insert($name, $location, $color, $desc)
     {
         self::query(
-            "INSERT INTO skupiny (s_name,s_color_text,s_color_rgb,s_description)
-            VALUES ('?','','?','?')",
+            "INSERT INTO skupiny (s_name,s_location,s_color_text,s_color_rgb,s_description)
+            VALUES ('?','?','','?','?')",
             $name,
+            $location,
             $color,
             $desc,
         );
     }
 
-    public static function update($id, $name, $color, $desc)
+    public static function update($id, $name, $location, $color, $desc)
     {
         self::query(
-            "UPDATE skupiny SET s_name='?',s_color_rgb='?',s_description='?' WHERE s_id='?'",
+            "UPDATE skupiny SET s_name='?',s_location='?',s_color_rgb='?',s_description='?' WHERE s_id='?'",
             $name,
+            $location,
             $color,
             $desc,
             $id,

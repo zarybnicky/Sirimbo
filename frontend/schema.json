@@ -822,6 +822,9 @@
                 },
                 "sColorText": {
                     "type": "string"
+                },
+                "sLocation": {
+                    "type": "string"
                 }
             }
         },
@@ -1992,6 +1995,9 @@
                     "type": "string"
                 },
                 "sColorText": {
+                    "type": "string"
+                },
+                "sLocation": {
                     "type": "string"
                 }
             }
@@ -3848,6 +3854,9 @@
                     "type": "string"
                 },
                 "sColorText": {
+                    "type": "string"
+                },
+                "sLocation": {
                     "type": "string"
                 }
             }
@@ -6492,6 +6501,8 @@
                                 "S_COLOR_RGB_DESC",
                                 "S_COLOR_TEXT_ASC",
                                 "S_COLOR_TEXT_DESC",
+                                "S_LOCATION_ASC",
+                                "S_LOCATION_DESC",
                                 "PRIMARY_KEY_ASC",
                                 "PRIMARY_KEY_DESC"
                             ]
@@ -8836,6 +8847,11 @@
                 "properties": {}
             },
             "sColorText": {
+                "type": "object",
+                "required": [],
+                "properties": {}
+            },
+            "sLocation": {
                 "type": "object",
                 "required": [],
                 "properties": {}
@@ -12977,6 +12993,8 @@
                                 "S_COLOR_RGB_DESC",
                                 "S_COLOR_TEXT_ASC",
                                 "S_COLOR_TEXT_DESC",
+                                "S_LOCATION_ASC",
+                                "S_LOCATION_DESC",
                                 "PRIMARY_KEY_ASC",
                                 "PRIMARY_KEY_DESC"
                             ]
@@ -14669,6 +14687,8 @@
                                 "S_COLOR_RGB_DESC",
                                 "S_COLOR_TEXT_ASC",
                                 "S_COLOR_TEXT_DESC",
+                                "S_LOCATION_ASC",
+                                "S_LOCATION_DESC",
                                 "PRIMARY_KEY_ASC",
                                 "PRIMARY_KEY_DESC"
                             ]
@@ -16425,6 +16445,8 @@
                                 "S_COLOR_RGB_DESC",
                                 "S_COLOR_TEXT_ASC",
                                 "S_COLOR_TEXT_DESC",
+                                "S_LOCATION_ASC",
+                                "S_LOCATION_DESC",
                                 "PRIMARY_KEY_ASC",
                                 "PRIMARY_KEY_DESC"
                             ]

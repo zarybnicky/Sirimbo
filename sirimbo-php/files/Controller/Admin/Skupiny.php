@@ -23,7 +23,7 @@ class Skupiny
             \Message::warning($form->getMessages());
             return static::displayForm(0, 'add');
         }
-        \DBSkupiny::insert($_POST['name'], $_POST['color'], $_POST['desc']);
+        \DBSkupiny::insert($_POST['name'], $_POST['location'], $_POST['color'], $_POST['desc']);
         $insertId = \DBSkupiny::getInsertId();
         foreach ($_POST['group'] ?? [] as $item) {
             \DBSkupiny::addChild($insertId, $item);
@@ -53,7 +53,7 @@ class Skupiny
             \Message::warning($form->getMessages());
             return static::displayForm($id, 'edit', $data);
         }
-        \DBSkupiny::update($id, $_POST['name'], $_POST['color'], $_POST['desc']);
+        \DBSkupiny::update($id, $_POST['name'], $_POST['location'], $_POST['color'], $_POST['desc']);
 
         $groupsOld = array_column(\DBSkupiny::getSingleWithGroups($id), 'pg_id');
         $groupsNew = $_POST['group'] ?? [];
@@ -117,6 +117,7 @@ class Skupiny
         \Render::twig('Admin/SkupinyForm.twig', [
             'id' => $id,
             'name' => $_POST['name'] ?? $data['s_name'] ?? '',
+            'location' => $_POST['location'] ?? $data['s_location'] ?? '',
             'color' => $_POST['color'] ?? $data['s_color_rgb'] ?? '',
             'popis' => $_POST['popis'] ?? $data['s_description'] ?? '',
             'action' => $action,
