@@ -17,6 +17,7 @@ import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { DynamicPage } from './pages/DynamicPage';
+import { CohortsPage } from './pages/CohortsPage';
 /* import { ListGuesser, EditGuesser, ShowGuesser } from 'ra-ui-materialui'; */
 
 const ProtectedRoute = ({ check, children, ...rest }: {
@@ -64,9 +65,9 @@ export const routes = <Switch>
   <Route exact path="/o-nas"><AboutPage /></Route>
   <Route exact path="/o-nas/kde-trenujeme"><LocationsPage /></Route>
   <Route exact path="/o-nas/treneri"><TrainersPage /></Route>
+  <Route exact path="/o-nas/treninkove-skupiny"><CohortsPage /></Route>
 
-  {/* <Route exact path="/o-nas/treninkove-skupiny"><CohortsPage /></Route>
-      <Route exact path="/o-nas/clenstvi"><MembershipPage /></Route>
+  {/* <Route exact path="/o-nas/clenstvi"><MembershipPage /></Route>
       <Route exact path="/o-nas/galerie-mistru"><HallOfFamePage /></Route>
 
       <Redirect exact from="/nabizime" to="/nabizime/treninkove-programy" />

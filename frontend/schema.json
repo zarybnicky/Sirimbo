@@ -180,6 +180,27 @@
                 }
             }
         },
+        "SessionCondition": {
+            "type": "object",
+            "required": [],
+            "properties": {
+                "ssId": {
+                    "type": "string"
+                },
+                "ssData": {
+                    "type": "string"
+                },
+                "ssUpdatedAt": {
+                    "type": "string"
+                },
+                "ssLifetime": {
+                    "type": "string"
+                },
+                "ssUser": {
+                    "type": "string"
+                }
+            }
+        },
         "AkceItemCondition": {
             "type": "object",
             "required": [],
@@ -467,27 +488,6 @@
                     "type": "boolean"
                 },
                 "rTimestamp": {
-                    "type": "string"
-                }
-            }
-        },
-        "SessionCondition": {
-            "type": "object",
-            "required": [],
-            "properties": {
-                "ssId": {
-                    "type": "string"
-                },
-                "ssData": {
-                    "type": "string"
-                },
-                "ssUpdatedAt": {
-                    "type": "string"
-                },
-                "ssLifetime": {
-                    "type": "string"
-                },
-                "ssUser": {
                     "type": "string"
                 }
             }
@@ -7965,6 +7965,53 @@
                 "required": [],
                 "properties": {}
             },
+            "sessionsBySsUser": {
+                "type": "object",
+                "required": [
+                    "orderBy"
+                ],
+                "properties": {
+                    "first": {
+                        "type": "integer"
+                    },
+                    "last": {
+                        "type": "integer"
+                    },
+                    "offset": {
+                        "type": "integer"
+                    },
+                    "before": {
+                        "type": "string"
+                    },
+                    "after": {
+                        "type": "string"
+                    },
+                    "orderBy": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "NATURAL",
+                                "SS_ID_ASC",
+                                "SS_ID_DESC",
+                                "SS_DATA_ASC",
+                                "SS_DATA_DESC",
+                                "SS_UPDATED_AT_ASC",
+                                "SS_UPDATED_AT_DESC",
+                                "SS_LIFETIME_ASC",
+                                "SS_LIFETIME_DESC",
+                                "SS_USER_ASC",
+                                "SS_USER_DESC",
+                                "PRIMARY_KEY_ASC",
+                                "PRIMARY_KEY_DESC"
+                            ]
+                        }
+                    },
+                    "condition": {
+                        "$ref": "#/inputs/SessionCondition"
+                    }
+                }
+            },
             "akceItemsByAiUser": {
                 "type": "object",
                 "required": [
@@ -8164,6 +8211,57 @@
                     },
                     "condition": {
                         "$ref": "#/inputs/GalerieFotoCondition"
+                    }
+                }
+            },
+            "platbyItemsByPiIdUser": {
+                "type": "object",
+                "required": [
+                    "orderBy"
+                ],
+                "properties": {
+                    "first": {
+                        "type": "integer"
+                    },
+                    "last": {
+                        "type": "integer"
+                    },
+                    "offset": {
+                        "type": "integer"
+                    },
+                    "before": {
+                        "type": "string"
+                    },
+                    "after": {
+                        "type": "string"
+                    },
+                    "orderBy": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "NATURAL",
+                                "PI_ID_ASC",
+                                "PI_ID_DESC",
+                                "PI_ID_USER_ASC",
+                                "PI_ID_USER_DESC",
+                                "PI_ID_CATEGORY_ASC",
+                                "PI_ID_CATEGORY_DESC",
+                                "PI_ID_RAW_ASC",
+                                "PI_ID_RAW_DESC",
+                                "PI_AMOUNT_ASC",
+                                "PI_AMOUNT_DESC",
+                                "PI_DATE_ASC",
+                                "PI_DATE_DESC",
+                                "PI_PREFIX_ASC",
+                                "PI_PREFIX_DESC",
+                                "PRIMARY_KEY_ASC",
+                                "PRIMARY_KEY_DESC"
+                            ]
+                        }
+                    },
+                    "condition": {
+                        "$ref": "#/inputs/PlatbyItemCondition"
                     }
                 }
             },
@@ -8420,57 +8518,6 @@
                     }
                 }
             },
-            "platbyItemsByPiIdUser": {
-                "type": "object",
-                "required": [
-                    "orderBy"
-                ],
-                "properties": {
-                    "first": {
-                        "type": "integer"
-                    },
-                    "last": {
-                        "type": "integer"
-                    },
-                    "offset": {
-                        "type": "integer"
-                    },
-                    "before": {
-                        "type": "string"
-                    },
-                    "after": {
-                        "type": "string"
-                    },
-                    "orderBy": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "enum": [
-                                "NATURAL",
-                                "PI_ID_ASC",
-                                "PI_ID_DESC",
-                                "PI_ID_USER_ASC",
-                                "PI_ID_USER_DESC",
-                                "PI_ID_CATEGORY_ASC",
-                                "PI_ID_CATEGORY_DESC",
-                                "PI_ID_RAW_ASC",
-                                "PI_ID_RAW_DESC",
-                                "PI_AMOUNT_ASC",
-                                "PI_AMOUNT_DESC",
-                                "PI_DATE_ASC",
-                                "PI_DATE_DESC",
-                                "PI_PREFIX_ASC",
-                                "PI_PREFIX_DESC",
-                                "PRIMARY_KEY_ASC",
-                                "PRIMARY_KEY_DESC"
-                            ]
-                        }
-                    },
-                    "condition": {
-                        "$ref": "#/inputs/PlatbyItemCondition"
-                    }
-                }
-            },
             "rozpisByRTrener": {
                 "type": "object",
                 "required": [
@@ -8519,53 +8566,6 @@
                     },
                     "condition": {
                         "$ref": "#/inputs/RozpiCondition"
-                    }
-                }
-            },
-            "sessionsBySsUser": {
-                "type": "object",
-                "required": [
-                    "orderBy"
-                ],
-                "properties": {
-                    "first": {
-                        "type": "integer"
-                    },
-                    "last": {
-                        "type": "integer"
-                    },
-                    "offset": {
-                        "type": "integer"
-                    },
-                    "before": {
-                        "type": "string"
-                    },
-                    "after": {
-                        "type": "string"
-                    },
-                    "orderBy": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "enum": [
-                                "NATURAL",
-                                "SS_ID_ASC",
-                                "SS_ID_DESC",
-                                "SS_DATA_ASC",
-                                "SS_DATA_DESC",
-                                "SS_UPDATED_AT_ASC",
-                                "SS_UPDATED_AT_DESC",
-                                "SS_LIFETIME_ASC",
-                                "SS_LIFETIME_DESC",
-                                "SS_USER_ASC",
-                                "SS_USER_DESC",
-                                "PRIMARY_KEY_ASC",
-                                "PRIMARY_KEY_DESC"
-                            ]
-                        }
-                    },
-                    "condition": {
-                        "$ref": "#/inputs/SessionCondition"
                     }
                 }
             },
@@ -8872,96 +8872,6 @@
                 "required": [],
                 "properties": {}
             },
-            "platbyGroupSkupinasByPgsIdSkupina": {
-                "type": "object",
-                "required": [
-                    "orderBy"
-                ],
-                "properties": {
-                    "first": {
-                        "type": "integer"
-                    },
-                    "last": {
-                        "type": "integer"
-                    },
-                    "offset": {
-                        "type": "integer"
-                    },
-                    "before": {
-                        "type": "string"
-                    },
-                    "after": {
-                        "type": "string"
-                    },
-                    "orderBy": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "enum": [
-                                "NATURAL",
-                                "PGS_ID_ASC",
-                                "PGS_ID_DESC",
-                                "PGS_ID_SKUPINA_ASC",
-                                "PGS_ID_SKUPINA_DESC",
-                                "PGS_ID_GROUP_ASC",
-                                "PGS_ID_GROUP_DESC",
-                                "PRIMARY_KEY_ASC",
-                                "PRIMARY_KEY_DESC"
-                            ]
-                        }
-                    },
-                    "condition": {
-                        "$ref": "#/inputs/PlatbyGroupSkupinaCondition"
-                    }
-                }
-            },
-            "upozorneniSkupiniesByUpsIdSkupina": {
-                "type": "object",
-                "required": [
-                    "orderBy"
-                ],
-                "properties": {
-                    "first": {
-                        "type": "integer"
-                    },
-                    "last": {
-                        "type": "integer"
-                    },
-                    "offset": {
-                        "type": "integer"
-                    },
-                    "before": {
-                        "type": "string"
-                    },
-                    "after": {
-                        "type": "string"
-                    },
-                    "orderBy": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "enum": [
-                                "NATURAL",
-                                "UPS_ID_ASC",
-                                "UPS_ID_DESC",
-                                "UPS_ID_RODIC_ASC",
-                                "UPS_ID_RODIC_DESC",
-                                "UPS_ID_SKUPINA_ASC",
-                                "UPS_ID_SKUPINA_DESC",
-                                "UPS_COLOR_ASC",
-                                "UPS_COLOR_DESC",
-                                "UPS_POPIS_ASC",
-                                "UPS_POPIS_DESC",
-                                "PRIMARY_KEY_ASC",
-                                "PRIMARY_KEY_DESC"
-                            ]
-                        }
-                    },
-                    "condition": {
-                        "$ref": "#/inputs/UpozorneniSkupinyCondition"
-                    }
-                }
-            },
             "usersByUSkupina": {
                 "type": "object",
                 "required": [
@@ -9060,6 +8970,96 @@
                     },
                     "condition": {
                         "$ref": "#/inputs/UserCondition"
+                    }
+                }
+            },
+            "platbyGroupSkupinasByPgsIdSkupina": {
+                "type": "object",
+                "required": [
+                    "orderBy"
+                ],
+                "properties": {
+                    "first": {
+                        "type": "integer"
+                    },
+                    "last": {
+                        "type": "integer"
+                    },
+                    "offset": {
+                        "type": "integer"
+                    },
+                    "before": {
+                        "type": "string"
+                    },
+                    "after": {
+                        "type": "string"
+                    },
+                    "orderBy": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "NATURAL",
+                                "PGS_ID_ASC",
+                                "PGS_ID_DESC",
+                                "PGS_ID_SKUPINA_ASC",
+                                "PGS_ID_SKUPINA_DESC",
+                                "PGS_ID_GROUP_ASC",
+                                "PGS_ID_GROUP_DESC",
+                                "PRIMARY_KEY_ASC",
+                                "PRIMARY_KEY_DESC"
+                            ]
+                        }
+                    },
+                    "condition": {
+                        "$ref": "#/inputs/PlatbyGroupSkupinaCondition"
+                    }
+                }
+            },
+            "upozorneniSkupiniesByUpsIdSkupina": {
+                "type": "object",
+                "required": [
+                    "orderBy"
+                ],
+                "properties": {
+                    "first": {
+                        "type": "integer"
+                    },
+                    "last": {
+                        "type": "integer"
+                    },
+                    "offset": {
+                        "type": "integer"
+                    },
+                    "before": {
+                        "type": "string"
+                    },
+                    "after": {
+                        "type": "string"
+                    },
+                    "orderBy": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "NATURAL",
+                                "UPS_ID_ASC",
+                                "UPS_ID_DESC",
+                                "UPS_ID_RODIC_ASC",
+                                "UPS_ID_RODIC_DESC",
+                                "UPS_ID_SKUPINA_ASC",
+                                "UPS_ID_SKUPINA_DESC",
+                                "UPS_COLOR_ASC",
+                                "UPS_COLOR_DESC",
+                                "UPS_POPIS_ASC",
+                                "UPS_POPIS_DESC",
+                                "PRIMARY_KEY_ASC",
+                                "PRIMARY_KEY_DESC"
+                            ]
+                        }
+                    },
+                    "condition": {
+                        "$ref": "#/inputs/UpozorneniSkupinyCondition"
                     }
                 }
             }

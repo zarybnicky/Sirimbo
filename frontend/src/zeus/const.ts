@@ -2043,6 +2043,50 @@ export const AllTypesProps: Record<string,any> = {
 	Date: "String",
 	Datetime: "String",
 	User:{
+		sessionsBySsUser:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"SessionsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"SessionCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
 		akceItemsByAiUser:{
 			first:{
 				type:"Int",
@@ -2214,6 +2258,50 @@ export const AllTypesProps: Record<string,any> = {
 			},
 			condition:{
 				type:"GalerieFotoCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		platbyItemsByPiIdUser:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"PlatbyItemsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"PlatbyItemCondition",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -2439,50 +2527,6 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		platbyItemsByPiIdUser:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"PlatbyItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"PlatbyItemCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
 		rozpisByRTrener:{
 			first:{
 				type:"Int",
@@ -2522,50 +2566,6 @@ export const AllTypesProps: Record<string,any> = {
 			},
 			condition:{
 				type:"RozpiCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		sessionsBySsUser:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"SessionsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"SessionCondition",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -2859,6 +2859,50 @@ export const AllTypesProps: Record<string,any> = {
 		}
 	},
 	Skupiny:{
+		usersByUSkupina:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"UsersOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"UserCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
 		platbyGroupSkupinasByPgsIdSkupina:{
 			first:{
 				type:"Int",
@@ -2942,50 +2986,6 @@ export const AllTypesProps: Record<string,any> = {
 			},
 			condition:{
 				type:"UpozorneniSkupinyCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		usersByUSkupina:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"UsersOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"UserCondition",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -3380,6 +3380,39 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		upsPopis:{
 			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	SessionsOrderBy: "enum",
+	SessionCondition:{
+		ssId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		ssData:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		ssUpdatedAt:{
+			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		ssLifetime:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		ssUser:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -4113,39 +4146,6 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		rTimestamp:{
 			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	SessionsOrderBy: "enum",
-	SessionCondition:{
-		ssId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssData:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssUpdatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssLifetime:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssUser:{
-			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -12515,6 +12515,7 @@ export const ReturnTypes: Record<string,any> = {
 		"...on PlatbyRaw": "PlatbyRaw",
 		"...on UpozorneniSkupiny": "UpozorneniSkupiny",
 		"...on Upozorneni": "Upozorneni",
+		"...on Session": "Session",
 		"...on Aktuality": "Aktuality",
 		"...on GalerieFoto": "GalerieFoto",
 		"...on GalerieDir": "GalerieDir",
@@ -12525,7 +12526,6 @@ export const ReturnTypes: Record<string,any> = {
 		"...on RozpisItem": "RozpisItem",
 		"...on Rozpi": "Rozpi",
 		"...on ParyNavrh": "ParyNavrh",
-		"...on Session": "Session",
 		"...on Page": "Page",
 		"...on PageRevision": "PageRevision",
 		"...on Parameter": "Parameter",
@@ -12607,18 +12607,18 @@ export const ReturnTypes: Record<string,any> = {
 		uGdprSignedAt:"Datetime",
 		permissionByUGroup:"Permission",
 		skupinyByUSkupina:"Skupiny",
+		sessionsBySsUser:"SessionsConnection",
 		akceItemsByAiUser:"AkceItemsConnection",
 		aktualitiesByAtKdo:"AktualitiesConnection",
 		dokumentiesByDKdo:"DokumentiesConnection",
 		galerieFotosByGfKdo:"GalerieFotosConnection",
+		platbyItemsByPiIdUser:"PlatbyItemsConnection",
 		nabidkasByNTrener:"NabidkasConnection",
 		pariesByPIdPartner:"PariesConnection",
 		paryNavrhsByPnNavrhl:"ParyNavrhsConnection",
 		paryNavrhsByPnPartner:"ParyNavrhsConnection",
 		paryNavrhsByPnPartnerka:"ParyNavrhsConnection",
-		platbyItemsByPiIdUser:"PlatbyItemsConnection",
 		rozpisByRTrener:"RozpisConnection",
-		sessionsBySsUser:"SessionsConnection",
 		upozornenisByUpKdo:"UpozornenisConnection"
 	},
 	Permission:{
@@ -12670,9 +12670,9 @@ export const ReturnTypes: Record<string,any> = {
 		sColorText:"String",
 		sLocation:"String",
 		sVisible:"Boolean",
+		usersByUSkupina:"UsersConnection",
 		platbyGroupSkupinasByPgsIdSkupina:"PlatbyGroupSkupinasConnection",
-		upozorneniSkupiniesByUpsIdSkupina:"UpozorneniSkupiniesConnection",
-		usersByUSkupina:"UsersConnection"
+		upozorneniSkupiniesByUpsIdSkupina:"UpozorneniSkupiniesConnection"
 	},
 	PlatbyGroupSkupinasConnection:{
 		nodes:"PlatbyGroupSkupina",
@@ -12800,6 +12800,25 @@ export const ReturnTypes: Record<string,any> = {
 	UpozorneniSkupiniesEdge:{
 		cursor:"Cursor",
 		node:"UpozorneniSkupiny"
+	},
+	SessionsConnection:{
+		nodes:"Session",
+		edges:"SessionsEdge",
+		pageInfo:"PageInfo",
+		totalCount:"Int"
+	},
+	Session:{
+		nodeId:"ID",
+		ssId:"String",
+		ssData:"String",
+		ssUpdatedAt:"Datetime",
+		ssLifetime:"BigInt",
+		ssUser:"BigInt",
+		userBySsUser:"User"
+	},
+	SessionsEdge:{
+		cursor:"Cursor",
+		node:"Session"
 	},
 	AktualitiesConnection:{
 		nodes:"Aktuality",
@@ -13014,25 +13033,6 @@ export const ReturnTypes: Record<string,any> = {
 	RozpisEdge:{
 		cursor:"Cursor",
 		node:"Rozpi"
-	},
-	SessionsConnection:{
-		nodes:"Session",
-		edges:"SessionsEdge",
-		pageInfo:"PageInfo",
-		totalCount:"Int"
-	},
-	Session:{
-		nodeId:"ID",
-		ssId:"String",
-		ssData:"String",
-		ssUpdatedAt:"Datetime",
-		ssLifetime:"BigInt",
-		ssUser:"BigInt",
-		userBySsUser:"User"
-	},
-	SessionsEdge:{
-		cursor:"Cursor",
-		node:"Session"
 	},
 	UpozornenisConnection:{
 		nodes:"Upozorneni",
