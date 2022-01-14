@@ -244,8 +244,8 @@ in {
           set -e
           mc --config-dir . config host add minio \
             http://localhost:${toString cfg.minioPort} "${cfg.minioAccessKey}" "${cfg.minioSecretKey}"
-          mc --config-dir . mb minio/public
-          mc --config-dir . mb minio/private
+          mc --config-dir . ls minio/public || mc --config-dir . mb minio/public
+          mc --config-dir . ls minio/private || mc --config-dir . mb minio/private
           mc --config-dir . policy set download minio/public
         '';
       };
