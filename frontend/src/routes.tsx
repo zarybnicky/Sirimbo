@@ -92,7 +92,9 @@ export const routes = <Switch>
   <Route exact path="/register"><RegisterPage /></Route>
   <Route exact path="/forgotten-password"><ForgottenPasswordPage /></Route>
 
-  <Route exact path="/events"><EventsPage /></Route>
+  <Redirect exact from="/events" to="/events/public" />
+  <Route exact path="/events/public"><EventsPage /></Route>
+  <Route exact path="/events/private"><EventsPage /></Route>
   <Route exact path="/events/:id"><EventPage /></Route>
 
   <Redirect from="/member/home" to="/dashboard" />

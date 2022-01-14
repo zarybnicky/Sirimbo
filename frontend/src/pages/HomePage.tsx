@@ -17,7 +17,11 @@ export const HomePage = ({ }) => {
   return <React.Fragment>
     <Hero />
     <Container maxWidth="lg">
-      {services.map((x, i) => <ServiceCard key={i} item={x} />)}
+      {services.map((x, i) => (
+        <ServiceCard key={i} image={x.image} header={x.header}>
+          <Typography variant="body1">{x.text}</Typography>
+        </ServiceCard>
+      ))}
     </Container>
 
     <CallToAction />

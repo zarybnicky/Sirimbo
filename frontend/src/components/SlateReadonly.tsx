@@ -2,6 +2,9 @@ import * as React from 'react';
 import { Typography, useTheme } from '@material-ui/core';
 import { createEditor, Descendant } from 'slate';
 import { Slate, Editable, ReactEditor, withReact } from 'slate-react';
+import slate from '@react-page/plugins-slate';
+
+export const defaultSlate = slate();
 
 export const SlateReadonly = ({ value }: { value: Descendant[] }) => {
   const editor = React.useMemo(() => withReact(createEditor() as ReactEditor), []);

@@ -42,7 +42,11 @@ export const ServiceList: ComponentStory<React.ElementType> = () => {
   const items = useServices();
   return <StoryTemplate>
     <Container maxWidth="lg">
-      {items.map((x, i) => <ServiceCard key={i} item={x} />)}
+      {items.map((x, i) => (
+        <ServiceCard key={i} image={x.image} header={x.header}>
+          <Typography variant="body1">{x.text}</Typography>
+        </ServiceCard>
+      ))}
     </Container>
   </StoryTemplate>;
 };

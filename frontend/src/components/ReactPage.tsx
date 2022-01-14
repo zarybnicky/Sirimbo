@@ -1,24 +1,25 @@
 import * as React from 'react';
-import { makeStyles, Container } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import type { CellPlugin, EditorProps } from '@react-page/editor';
 import Editor from '@react-page/editor';
-import slate from '@react-page/plugins-slate';
 import image from '@react-page/plugins-image';
 import { CallToActionPlugin } from './CallToAction';
 import { ContainerPlugin } from './Container';
 import { HeadingPlugin } from './Heading';
+import { defaultSlate } from './SlateReadonly';
 
 import { CSSProperties } from '@material-ui/styles';
 
+export { defaultSlate };
 export const cellPlugins: CellPlugin<any, any>[] = [
-  slate(),
+  defaultSlate,
   image,
   ContainerPlugin,
   CallToActionPlugin,
   HeadingPlugin,
 ];
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   background: {
     /* backgroundColor: theme.palette.grey[200],
      * padding: '2rem', */

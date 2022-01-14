@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { makeStyles, Grid, Paper, Typography } from '@material-ui/core';
+import { CellPlugin } from '@react-page/editor';
+import { defaultSlate } from './ReactPage';
 
 const useStyles = makeStyles((theme) => ({
   item: {
@@ -42,24 +44,48 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-interface Service {
-  img: string;
+interface ServiceCardProps {
+  image: string;
   header: string;
-  text: string;
 }
 
-export const ServiceCard = ({ item: x }: { item: Service }) => {
+export const ServiceCard = (props: ServiceCardProps & { children: React.ReactNode | React.ReactChildren; }) => {
   const classes = useStyles();
   return <Paper elevation={3} className={classes.item}>
     <Grid container>
       <Grid item xs={12} sm={4} className="image">
-        <img src={x.img} alt={x.header} />
+        <img src={props.image} alt={props.header} />
       </Grid>
       <Grid item xs={12} sm="auto" className="gutter" />
       <Grid item xs={12} sm="auto" className="body">
-        <Typography variant="h5" component="h2" className="header">{x.header}</Typography>
-        <Typography variant="body1">{x.text}</Typography>
+        <Typography variant="h5" component="h2" className="header">{props.header}</Typography>
+        {props.children}
       </Grid>
     </Grid>
   </Paper>;
+};
+
+export const ServiceCardPlugin: CellPlugin<ServiceCardProps> = {
+  Renderer: ({ children, data }) => <ServiceCard {...data}>
+    {children}
+  </ServiceCard>,
+
+  id: 'app-service-card-plugin',
+  title: 'ServiceCard',
+  version: 1,
+  createInitialData: () => ({
+    header: 'Tréninkový program',
+    image: '/images/services-pripravka.png',
+  }),
+  createInitialChildren: () => [[{ plugin: defaultSlate }]],
+  controls: {
+    type: 'autoform',
+    schema: {
+      required: [],
+      properties: {
+        header: { type: 'string' },
+        image: { type: 'string' },
+      },
+    },
+  },
 };

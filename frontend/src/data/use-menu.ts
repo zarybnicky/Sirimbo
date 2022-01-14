@@ -69,14 +69,14 @@ export const publicMenu: MenuStructItem[] = [
   },
   { "type": "link", "text": "Aktuality", "href": "/articles" },
   { "type": "link", "text": "Galerie", "href": "/gallery" },
-  { "type": "link", "text": "Akce", "href": "/events" },
+  { "type": "link", "text": "Akce", "href": "/events/public" },
   { "type": "link", "text": "Kontakt", "href": "/contact" }
 ];
 
 export const memberMenu: MenuStructItem[] = [
   { "type": "link", "text": "Nástěnka", "href": "/dashboard" },
   { "type": "link", "text": "Tréninky", "href": "/schedule" },
-  { "type": "link", "text": "Akce", "href": "/events" },
+  { "type": "link", "text": "Akce", "href": "/events/private" },
   { "type": "link", "text": "Dokumenty", "href": "/documents" },
   { "type": "link", "text": "Členové", "href": "/groups" },
   { "type": "link", "text": "Profil", "href": "/profile" },
