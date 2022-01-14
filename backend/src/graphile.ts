@@ -2,6 +2,7 @@ import express from 'express';
 import { makePluginHook, Build, PostGraphileOptions } from 'postgraphile';
 import operationHooks, { AddOperationHookFn, OperationHookGenerator } from '@graphile/operation-hooks';
 import { getSession, getUser } from './db';
+import { UploadPlugin } from './minio';
 
 const useAuthCredentials: (build: Build) => OperationHookGenerator = _ => ctx => {
   if (ctx.scope.isRootMutation && ctx.scope.pgFieldIntrospection?.name === "login") {
@@ -15,6 +16,7 @@ const useAuthCredentials: (build: Build) => OperationHookGenerator = _ => ctx =>
       }],
     };
   }
+
   if (ctx.scope.isRootMutation && ctx.scope.pgFieldIntrospection?.name === "logout") {
     return {
       after: [{
@@ -26,6 +28,7 @@ const useAuthCredentials: (build: Build) => OperationHookGenerator = _ => ctx =>
       }],
     };
   }
+
   return {};
 };
 
@@ -77,15 +80,17 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
       },
       unsetAuthCookie: () => {
         res.clearCookie('PHPSESSID');
-      }
+      },
     };
   },
 
   appendPlugins: [
     require("@graphile-contrib/pg-simplify-inflector"),
+    UploadPlugin,
     function OperationHookPlugin(builder) {
       builder.hook("init", (_, build) => {
-        (build.addOperationHook as AddOperationHookFn)(useAuthCredentials(build));
+        const addOperationHook: AddOperationHookFn = build.addOperationHook;
+        addOperationHook(useAuthCredentials(build));
         return _;
       });
     },

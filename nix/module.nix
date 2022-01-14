@@ -11,6 +11,7 @@ in {
       description = "${pkgName} Nginx vhost domain";
       example = "tkolymp.cz";
     };
+    ssl = lib.mkEnableOption "${pkgName} enable ssl";
 
     phpPort = lib.mkOption {
       type = lib.types.int;
@@ -27,6 +28,10 @@ in {
       type = lib.types.int;
       description = "${pkgName} internal Minio port";
       default = 9000;
+    };
+    minioDomain = lib.mkOption {
+      type = lib.types.str;
+      description = "${pkgName} Minio access key";
     };
     minioAccessKey = lib.mkOption {
       type = lib.types.str;
@@ -146,6 +151,17 @@ in {
         recommendedGzipSettings = true;
         recommendedOptimisation = true;
         recommendedProxySettings = true;
+
+        virtualHosts.${cfg.minioDomain} = {
+          locations."/files/images/" = {
+            # TODO: resizer
+            proxyPass = "http://127.0.0.1:${toString cfg.minioPort}/";
+          };
+          locations."/" = {
+            proxyPass = "http://127.0.0.1:${toString cfg.minioPort}/";
+          };
+        };
+
         virtualHosts.${cfg.domain} = {
           root = phpRoot;
           serverAliases = ["www.${cfg.domain}"];
@@ -166,14 +182,6 @@ in {
           };
           locations."/upload" = {
             proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
-          };
-
-          locations."/files/images/" = {
-            # TODO: resizer
-            proxyPass = "http://127.0.0.1:${toString cfg.minioPort}/";
-          };
-          locations."/files/" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.minioPort}/";
           };
 
           locations."/" = {
@@ -256,12 +264,17 @@ in {
         environment.PGDATABASE = "olymp";
         environment.PGHOST = "/run/postgresql";
         environment.PORT = toString cfg.jsPort;
+        environment.DOMAIN = cfg.domain;
+        environment.SSL = if cfg.ssl then "1" else "";
+
         environment.SMTP_AUTH = if cfg.smtpAuth then "1" else "";
         environment.SMTP_TLS = if cfg.smtpTLS then "1" else "";
         environment.SMTP_HOST = cfg.smtpHost;
         environment.SMTP_PORT = toString cfg.smtpPort;
         environment.SMTP_USER = cfg.smtpUser;
         environment.SMTP_PASS = cfg.smtpPass;
+
+        environment.MINIO_DOMAIN = cfg.minioDomain;
         environment.MINIO_ACCESS_KEY = cfg.minioAccessKey;
         environment.MINIO_SECRET_KEY = cfg.minioSecretKey;
         serviceConfig = {

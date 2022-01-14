@@ -97,6 +97,11 @@
       PGDATABASE = "olymp";
       SMTP_HOST = "olymp-test";
       SMTP_PORT = "1025";
+      MINIO_DOMAIN = "olymp-test";
+      MINIO_PORT = "9000";
+      MINIO_ACCESS_KEY = "00000000";
+      MINIO_SECRET_KEY = "000000000000";
+      DOMAIN = "olymp-test";
     };
 
     nixosConfigurations.container = nixpkgs.lib.nixosSystem {
@@ -108,7 +113,7 @@
           boot.isContainer = true;
           system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
           networking.useDHCP = false;
-          networking.firewall.allowedTCPPorts = [ 80 3000 3306 5432 8025 1025 ];
+          networking.firewall.allowedTCPPorts = [ 80 3000 3306 5432 8025 1025 9000 ];
           environment.systemPackages = [ pkgs.file ];
 
           services.postgresql = {
@@ -136,6 +141,7 @@
             dbConnString = "dbname=olymp";
             stateDir = "/var/lib/olymp";
             domain = "olymp-test";
+            ssl = false;
             phpPort = 3010;
             jsPort = 3020;
 
@@ -143,6 +149,9 @@
             smtpTLS = false;
             smtpHost = "127.0.0.1";
             smtpPort = 1025;
+
+            minioDomain = "cdn.olymp-test"; # doesn't work in local container
+            minioPort = 9000;
             minioAccessKey = "00000000";
             minioSecretKey = "000000000000";
           };
