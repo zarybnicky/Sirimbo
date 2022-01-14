@@ -23,6 +23,20 @@ in {
       example = 3002;
     };
 
+    minioPort = lib.mkOption {
+      type = lib.types.int;
+      description = "${pkgName} internal Minio port";
+      default = 9000;
+    };
+    minioAccessKey = lib.mkOption {
+      type = lib.types.str;
+      description = "${pkgName} Minio access key";
+    };
+    minioSecretKey = lib.mkOption {
+      type = lib.types.str;
+      description = "${pkgName} Minio secret key";
+    };
+
     dbConnString = lib.mkOption {
       type = lib.types.str;
       description = "${pkgName} DB connection string";
@@ -149,7 +163,17 @@ in {
           };
           locations."/logout" = {
             proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
-            proxyWebsockets = true;
+          };
+          locations."/upload" = {
+            proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
+          };
+
+          locations."/files/images/" = {
+            # TODO: resizer
+            proxyPass = "http://127.0.0.1:${toString cfg.minioPort}/";
+          };
+          locations."/files/" = {
+            proxyPass = "http://127.0.0.1:${toString cfg.minioPort}/";
           };
 
           locations."/" = {
@@ -190,6 +214,42 @@ in {
         ]);
       };
 
+      services.minio = {
+        enable = true;
+        browser = false;
+        configDir = "${cfg.stateDir}/minio-config";
+        dataDir = ["${cfg.stateDir}/minio-data"];
+        accessKey = cfg.minioAccessKey;
+        secretKey = cfg.minioSecretKey;
+      };
+      systemd.services.minio = {
+        serviceConfig = {
+          ExecStartPost= ''
+            ${pkgs.coreutils}/bin/timeout 30 ${pkgs.bash}/bin/bash -c \
+              'while ! ${pkgs.curl}/bin/curl --silent --fail http://localhost:${toString cfg.minioPort}/minio/health/cluster; do sleep 1; done'
+          '';
+        };
+      };
+      systemd.services.minio-config = {
+        path = [pkgs.minio pkgs.minio-client];
+        requiredBy = ["multi-user.target"];
+        after = ["minio.service"];
+        serviceConfig = {
+          Type = "simple";
+          User = "minio";
+          Group = "minio";
+          WorkingDirectory = config.services.minio.configDir;
+        };
+        script = ''
+          set -e
+          mc --config-dir . config host add minio \
+            http://localhost:${toString cfg.minioPort} "${cfg.minioAccessKey}" "${cfg.minioSecretKey}"
+          mc --config-dir . mb minio/public
+          mc --config-dir . mb minio/private
+          mc --config-dir . policy set download minio/public
+        '';
+      };
+
       systemd.services.sirimbo-backend = {
         after = [ "network.target" ];
         wantedBy = [ "multi-user.target" ];
@@ -202,6 +262,8 @@ in {
         environment.SMTP_PORT = toString cfg.smtpPort;
         environment.SMTP_USER = cfg.smtpUser;
         environment.SMTP_PASS = cfg.smtpPass;
+        environment.MINIO_ACCESS_KEY = cfg.minioAccessKey;
+        environment.MINIO_SECRET_KEY = cfg.minioSecretKey;
         serviceConfig = {
           User = cfg.user;
           Group = cfg.group;

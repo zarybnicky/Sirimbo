@@ -143,6 +143,8 @@
             smtpTLS = false;
             smtpHost = "127.0.0.1";
             smtpPort = 1025;
+            minioAccessKey = "00000000";
+            minioSecretKey = "000000000000";
           };
         })
       ];
