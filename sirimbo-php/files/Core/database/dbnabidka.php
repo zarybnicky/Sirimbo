@@ -91,28 +91,28 @@ class DBNabidka extends Database
     public static function getReservationLessons($id)
     {
         $res = self::query(
-            "SELECT SUM(ni_pocet_hod) FROM nabidka_item WHERE ni_id_rodic='?'",
+            "SELECT SUM(ni_pocet_hod) as sum FROM nabidka_item WHERE ni_id_rodic='?'",
             $id
         );
         if (!$res) {
             return false;
         } else {
             $row = self::getSingleRow($res);
-            return $row["SUM(ni_pocet_hod)"];
+            return $row["sum"];
         }
     }
 
     public static function getNabidkaMaxItems($id)
     {
         $res = self::query(
-            "SELECT MAX(ni_pocet_hod) FROM nabidka_item WHERE ni_id_rodic='?'",
+            "SELECT MAX(ni_pocet_hod) as max FROM nabidka_item WHERE ni_id_rodic='?'",
             $id
         );
         if (!$res) {
             return false;
         } else {
             $row = self::getSingleRow($res);
-            return $row["MAX(ni_pocet_hod)"];
+            return $row["max"];
         }
     }
 
