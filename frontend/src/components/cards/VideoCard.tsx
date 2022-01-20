@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Grid, Paper, Typography, CardActionArea, makeStyles } from '@material-ui/core';
 import { Video } from '../../data/use-videos';
 
-import PlayIcon from '../style/play_white.png';
+import PlayIcon from '../../style/play_white.png';
 
 const useStyles = makeStyles((theme) => ({
   img: {

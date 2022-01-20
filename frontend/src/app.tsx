@@ -1,51 +1,26 @@
 import * as React from 'react';
 import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache } from '@apollo/client';
-import { createBrowserHistory } from 'history';
-import { ConnectedRouter } from 'connected-react-router';
-import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/styles';
-
-import { DataProvider, DataProviderContext, Resource } from 'ra-core';
 
 import { Layout } from './components/Layout';
 import { ProvideAuth } from './data/use-auth';
 import { routes } from './routes';
-import { createAppStore } from './store';
 import { theme } from './theme';
 
-const history = createBrowserHistory({ basename: '/app' });
 const client = new ApolloClient({
   link: new HttpLink({ uri: '/graphql' }),
   cache: new InMemoryCache(),
 });
 
 export const App = () => {
-  /* const [dataProvider, setDataProvider] = React.useState<DataProvider | null>(null);
-   * React.useEffect(() => {
-   *   (async () => {
-   *     setDataProvider(await buildHasuraProvider('/graphql', {}, {
-   *       primaryKey: {
-   *         'upozorneni': 'up_id',
-   *       },
-   *     }));
-   *   })();
-   * }, []);
-   * if (!dataProvider) {
-   *   return null;
-   * } */
-
-  return <Provider store={createAppStore({} as DataProvider, history)}>
-    <DataProviderContext.Provider value={null as any}>
-      <ThemeProvider theme={theme}>
-        <ApolloProvider client={client}>
-          <ConnectedRouter history={history}>
-            <ProvideAuth>
-              <Resource name="upozorneni" intent="registration" />
-              <Layout>{routes}</Layout>
-            </ProvideAuth>
-          </ConnectedRouter>
-        </ApolloProvider>
-      </ThemeProvider>
-    </DataProviderContext.Provider>
-  </Provider>;
+  return <ThemeProvider theme={theme}>
+    <ApolloProvider client={client}>
+      <BrowserRouter basename="/app">
+        <ProvideAuth>
+          <Layout>{routes}</Layout>
+        </ProvideAuth>
+      </BrowserRouter>
+    </ApolloProvider>
+  </ThemeProvider>;
 }

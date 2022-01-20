@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { CssBaseline } from '@material-ui/core';
-import { Notification } from 'ra-ui-materialui';
 import { Header } from './Header';
 import { Footer } from './Footer';
 
@@ -19,5 +18,4 @@ export const Layout = ({ children }: { children: React.ReactChild | React.ReactC
     {children}
   </React.Suspense>
   <Footer />
-  <Notification />
 </React.Fragment>;

@@ -18,7 +18,6 @@ import { RegisterPage } from './pages/RegisterPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { DynamicPage } from './pages/DynamicPage';
 import { CohortsPage } from './pages/CohortsPage';
-/* import { ListGuesser, EditGuesser, ShowGuesser } from 'ra-ui-materialui'; */
 
 const ProtectedRoute = ({ check, children, ...rest }: {
   check: (user: AppUser | null) => boolean;
@@ -111,16 +110,6 @@ export const routes = <Switch>
 
   <ProtectedRoute exact path="/editor" check={isAdmin}><EditorPage /></ProtectedRoute>
   <ExternalRedirect path="/admin" to="/admin/rozpis" />
-
-  {/* <Route exact path="/admin/upozorneni" render={(routeProps) =>
-      <ListGuesser hasCreate resource="upozorneni"
-      basePath={routeProps.match.url} {...routeProps} />} />
-      <Route exact path="/admin/upozorneni/:id" render={(routeProps) =>
-      <EditGuesser hasShow resource="upozorneni"
-      basePath={routeProps.match.url} id={routeProps.match.params.id} {...routeProps} />} />
-      <Route exact path="/admin/upozorneni/:id/show" render={(routeProps) =>
-      <ShowGuesser hasEdit resource="upozorneni"
-      basePath={routeProps.match.url} id={routeProps.match.params.id} {...routeProps} />} /> */}
 
   <Route><DynamicPage /></Route>
 </Switch>;
