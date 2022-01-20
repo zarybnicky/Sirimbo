@@ -22,6 +22,6 @@ if (document.getElementById('app-new')) {
   ReactDOM.render(<App />, document.getElementById('app-new'));
 }
 
-if (module['hot']) {
-  module['hot'].accept();
+if ((module as any).hot) {
+  (module as any).hot.accept();
 }

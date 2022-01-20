@@ -1,13 +1,19 @@
 import * as React from 'react';
 import { createValue, Value } from '@react-page/editor';
-import { ReactPage, cellPlugins } from '../components/ReactPage';
-import { CircularProgress, Grid, TextField, List, ListItem, ListItemText, Typography, Button, ListItemIcon } from '@material-ui/core';
+import {
+  CircularProgress, Grid, TextField, List, ListItem, ListItemText, Typography, Button, ListItemIcon,
+} from '@material-ui/core';
+import { useSnackbar } from 'notistack';
+
 import { useTypedLazyQuery, useTypedMutation, useTypedQuery } from '../zeus/apollo';
 import { $, PagesOrderBy, GraphQLTypes } from '../zeus';
-import AddIcon from '@material-ui/icons/Add';
 import { HeadingPlugin } from '../components/Heading';
 import { ContainerPlugin } from '../components/Container';
 import { CallToActionPlugin } from '../components/CallToAction';
+import { ReactPage, cellPlugins } from '../components/ReactPage';
+
+import AddIcon from '@material-ui/icons/Add';
+
 
 type Page = GraphQLTypes['Page'];
 type PageRevision = GraphQLTypes['PageRevision'];
@@ -43,6 +49,9 @@ type State = {
 };
 
 export const EditorPage = ({ }) => {
+  const { enqueueSnackbar } = useSnackbar();
+  const confirm = useConfirm();
+
   const { data, refetch } = useTypedQuery({
     pages: [{ orderBy: [PagesOrderBy.URL_ASC] }, {
       nodes: {
@@ -114,6 +123,9 @@ export const EditorPage = ({ }) => {
     case 'create':
       const createPage = async () => {
         setLoading(true);
+        await confirm({
+          description: `Opravdu chcete vytvořit stránku s URL ${state.url}?`,
+        }).catch(() => { });
         const { data } = await doCreatePage({ variables: { url: state.url, content: state.content } });
         await refetch();
         setLoading(false);
@@ -147,6 +159,7 @@ export const EditorPage = ({ }) => {
         setLoading(true);
         const { id, url } = state.page;
         await doSavePage({ variables: { id, url, content: state.content } });
+        enqueueSnackbar('Stránka upravena', { variant: 'success' });
         await refetch();
         setLoading(false);
       };
