@@ -4,6 +4,7 @@ import {
   CircularProgress, Grid, TextField, List, ListItem, ListItemText, Typography, Button, ListItemIcon,
 } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
+import { useConfirm } from 'material-ui-confirm';
 
 import { useTypedLazyQuery, useTypedMutation, useTypedQuery } from '../zeus/apollo';
 import { $, PagesOrderBy, GraphQLTypes } from '../zeus';
@@ -122,10 +123,10 @@ export const EditorPage = ({ }) => {
   switch (state.state) {
     case 'create':
       const createPage = async () => {
-        setLoading(true);
         await confirm({
           description: `Opravdu chcete vytvořit stránku s URL ${state.url}?`,
-        }).catch(() => { });
+        });
+        setLoading(true);
         const { data } = await doCreatePage({ variables: { url: state.url, content: state.content } });
         await refetch();
         setLoading(false);
