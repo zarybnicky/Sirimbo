@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makeStyles, Container, Typography, Paper, Grid } from '@material-ui/core';
+import { makeStyles, Typography, Paper, Grid } from '@material-ui/core';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 
 const useStyles = makeStyles((theme) => ({

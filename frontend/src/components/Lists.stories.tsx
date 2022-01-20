@@ -2,10 +2,10 @@ import React from 'react';
 import { ComponentStory, Meta } from '@storybook/react';
 import { Container, Grid, Typography } from '@material-ui/core';
 import { StoryTemplate } from '../test-utils'
-import { ArticleCard } from './ArticleCard';
-import { GalleryCard } from './GalleryCard';
-import { ServiceCard } from './ServiceCard';
-import { VideoCard } from './VideoCard';
+import { ArticleCard } from './cards/ArticleCard';
+import { GalleryCard } from './cards/GalleryCard';
+import { ServiceCard } from './cards/ServiceCard';
+import { VideoCard } from './cards/VideoCard';
 import { useMockVideos } from '../data/use-videos';
 import { useMockArticles } from '../data/use-articles';
 import { useGallery, useServices } from '../data';

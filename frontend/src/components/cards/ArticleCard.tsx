@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   Button, Typography, Card, CardMedia, CardContent, CardActionArea, CardActions, makeStyles
 } from '@material-ui/core';
-import { Article } from '../data/use-articles';
+import { Article } from '../../data/use-articles';
 
 const useStyles = makeStyles((theme) => ({
   header: {

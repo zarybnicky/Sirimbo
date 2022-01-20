@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { makeStyles, Grid, Paper, Typography } from '@material-ui/core';
 import { CellPlugin } from '@react-page/editor';
-import { defaultSlate } from './ReactPage';
+import { defaultSlate } from '../ReactPage';
 
 const useStyles = makeStyles((theme) => ({
   item: {

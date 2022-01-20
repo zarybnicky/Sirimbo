@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { makeStyles, Container, Typography, Grid } from '@material-ui/core';
-import { TrainerCard } from '../components/TrainerCard';
+import { TrainerCard } from '../components/cards/TrainerCard';
 import { Descendant } from 'slate';
 import { useExternalTrainers, useInternalTrainers } from '../data';
 import { CallToAction } from '../components/CallToAction';

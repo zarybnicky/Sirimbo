@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Container, Grid, Typography } from '@material-ui/core';
 import { Hero } from '../components/Hero';
-import { ServiceCard } from '../components/ServiceCard';
+import { ServiceCard } from '../components/cards/ServiceCard';
 import { CallToAction } from '../components/CallToAction';
-import { ArticleCard } from '../components/ArticleCard';
-import { VideoCard } from '../components/VideoCard';
+import { ArticleCard } from '../components/cards/ArticleCard';
+import { VideoCard } from '../components/cards/VideoCard';
 import { useTitleVideos } from '../data/use-videos';
 import { useArticles } from '../data/use-articles';
 import { useServices } from '../data';

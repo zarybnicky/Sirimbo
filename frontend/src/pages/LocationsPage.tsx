@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Container } from '@material-ui/core';
-import { LocationCard } from '../components/LocationCard';
+import { LocationCard } from '../components/cards/LocationCard';
 import { useLocations } from '../data';
 import { CallToAction } from '../components/CallToAction';
 import { Heading } from '../components/Heading';

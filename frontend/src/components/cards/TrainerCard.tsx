@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { makeStyles, Typography, Paper } from '@material-ui/core';
-import { SlateReadonly } from '../components/SlateReadonly';
+import { SlateReadonly } from '../SlateReadonly';
 import { Descendant } from 'slate';
 
 const useStyles = makeStyles((theme) => ({

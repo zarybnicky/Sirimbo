@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Container, Grid, Typography } from '@material-ui/core';
-import { GalleryCard } from '../components/GalleryCard';
+import { GalleryCard } from '../components/cards/GalleryCard';
 import { useGallery } from '../data';
 
 export const GalleryPage = ({ }) => {

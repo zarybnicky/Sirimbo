@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Container, Grid, Typography } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
-import { ArticleCard } from '../components/ArticleCard';
+import { ArticleCard } from '../components/cards/ArticleCard';
 import { useArticles } from '../data/use-articles';
 import { CallToAction } from '../components/CallToAction';
 
