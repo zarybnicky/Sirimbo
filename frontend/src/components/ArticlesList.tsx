@@ -42,9 +42,7 @@ export function ArticleAdminList() {
       <tr><th>Jméno</th><th>Přidáno</th></tr>
     </thead>
     <tbody>
-      {data!.aktualities?.nodes.filter(
-        a => 16 <= (user.permissionByUGroup?.peAktuality || 0) || a.atKdo == user.uId
-      ).map((a) => <tr key={a.atId}>
+      {data!.aktualities?.nodes.map((a) => <tr key={a.atId}>
         <td>
           <PopupState variant="popover">
             {(popupState) => <React.Fragment>

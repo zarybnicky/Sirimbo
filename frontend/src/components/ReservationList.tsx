@@ -79,9 +79,7 @@ export function ReservationAdminList() {
       </tr>
     </thead>
     <tbody>
-      {data!.nabidkas?.nodes.filter(
-        a => 16 <= (user.permissionByUGroup?.peNabidka || 0) || a.nTrener == user.uId
-      ).map((a) => <tr key={a.nId}>
+      {data!.nabidkas?.nodes.map((a) => <tr key={a.nId}>
         <td>
           <PopupState variant="popover">
             {(popupState) => <React.Fragment>

@@ -72,9 +72,7 @@ export function RozpisAdminList() {
       </tr>
     </thead>
     <tbody>
-      {(data?.rozpis?.nodes || []).filter(
-        a => 16 <= (user.permissionByUGroup?.peRozpis || 0) || a.rTrener == user.uId
-      ).map((a) => <tr key={a.rId}>
+      {(data?.rozpis?.nodes || []).map((a) => <tr key={a.rId}>
         <td>
           <PopupState variant="popover">
             {(popupState) => <React.Fragment>
