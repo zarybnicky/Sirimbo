@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Container, Grid, Typography } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
+import { Helmet } from 'react-helmet-async';
 import { ArticleCard } from '../components/cards/ArticleCard';
 import { useArticles } from '../data/use-articles';
 import { CallToAction } from '../components/CallToAction';
@@ -11,6 +12,9 @@ export const ArticlesPage = ({ }) => {
   const { articles, count } = useArticles(limit, (page - 1) * limit);
 
   return <React.Fragment>
+    <Helmet>
+      <title>Články | TK Olymp</title>
+    </Helmet>
     <Container maxWidth="lg" style={{ margin: '4rem auto 3rem' }}>
       <Typography gutterBottom variant="h4" component="h2">Aktuálně</Typography>
       <Grid container spacing={3} style={{ alignItems: "stretch", marginBottom: '2rem' }}>

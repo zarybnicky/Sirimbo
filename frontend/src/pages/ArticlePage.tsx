@@ -5,6 +5,7 @@ import { $, Selector } from '../zeus';
 import { useTypedQuery } from '../zeus/apollo';
 import { useParams } from 'react-router';
 import { CallToAction } from '../components/CallToAction';
+import { Helmet } from 'react-helmet-async';
 
 export const ArticleQuery = Selector('Query')({
   aktuality: [
@@ -32,6 +33,15 @@ export const ArticlePage = ({ }) => {
   }
 
   return <React.Fragment>
+    <Helmet>
+      <title>{x.atJmeno} | TK Olymp</title>
+      <meta property="og:title" content="{x.atJmeno}" />
+      <meta property="og:type" content="article" />
+      <meta property="og:url" content="https://tkolymp.cz/aktualne/{x.atId}" />
+      <meta property="og:image" content="https://tkolymp.cz/galerie/thumbnails/{x.atFotoMain}" />
+      <meta property="og:site_name" content="TK Olymp" />
+      <meta property="og:description" content="{x.atPreview}" />
+    </Helmet>
     <Container maxWidth="lg" style={{ margin: '5rem auto' }}>
       <Typography variant="h3" component="h2">{x.atJmeno}</Typography>
       <Typography color="textSecondary">

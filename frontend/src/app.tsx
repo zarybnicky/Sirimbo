@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/styles';
 import { SnackbarProvider } from 'notistack';
 import { ConfirmProvider } from 'material-ui-confirm';
+import { HelmetProvider } from 'react-helmet-async';
 
 import { Layout } from './components/Layout';
 import { ProvideAuth } from './data/use-auth';
@@ -21,13 +22,15 @@ export const App = () => {
       <ConfirmProvider defaultOptions={{
         confirmationButtonProps: { autoFocus: true }
       }}>
-        <ApolloProvider client={client}>
-          <BrowserRouter basename="/app">
-            <ProvideAuth>
-              <Layout>{routes}</Layout>
-            </ProvideAuth>
-          </BrowserRouter>
-        </ApolloProvider>
+        <HelmetProvider>
+          <ApolloProvider client={client}>
+            <BrowserRouter basename="/app">
+              <ProvideAuth>
+                <Layout>{routes}</Layout>
+              </ProvideAuth>
+            </BrowserRouter>
+          </ApolloProvider>
+        </HelmetProvider>
       </ConfirmProvider>
     </SnackbarProvider>
   </ThemeProvider>;
