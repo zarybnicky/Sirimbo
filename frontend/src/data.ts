@@ -275,33 +275,6 @@ export const useExternalTrainers = () => [
   },
 ];
 
-export const useGallery = () => [
-  {
-    img: getPlaceholder(1600, 900),
-    href: "/o-nas",
-    name: "Galerie Olomouc",
-    date: "20. 10. 2019",
-  },
-  {
-    img: getPlaceholder(1600, 900),
-    href: "/o-nas",
-    name: "Galerie Olomouc",
-    date: "20. 10. 2019",
-  },
-  {
-    img: getPlaceholder(1600, 900),
-    href: "/o-nas",
-    name: "Galerie Olomouc",
-    date: "20. 10. 2019",
-  },
-  {
-    img: getPlaceholder(1600, 900),
-    href: "/o-nas",
-    name: "Galerie Olomouc",
-    date: "20. 10. 2019",
-  },
-];
-
 export const useHeroData = () => [
   {
     img: getPlaceholder(1600, 900),

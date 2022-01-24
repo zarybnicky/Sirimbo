@@ -12,7 +12,6 @@ import { ArticlePage } from './pages/ArticlePage';
 import { ArticlesPage } from './pages/ArticlesPage';
 import { TrainersPage } from './pages/TrainersPage';
 import { GalleryPage } from './pages/GalleryPage';
-import { GalleryPhotoPage } from './pages/GalleryPhotoPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { DashboardPage } from './pages/DashboardPage';
@@ -82,8 +81,8 @@ export const routes = <Switch>
   <Redirect from="/galerie/:path*" to="/gallery/:path*" />
   <Redirect from="/gallery/:directory/foto/:id" to="/gallery/:directory/photo/:id" />
   <Route exact path="/gallery"><GalleryPage /></Route>
-  <Route exact path="/gallery/:directory"><GalleryPage /></Route>
-  <Route exact path="/gallery/:directory/photo/:id"><GalleryPhotoPage /></Route>
+  <Route exact path="/gallery/:dir"><GalleryPage /></Route>
+  <Route exact path="/gallery/:dir/photo/:photo"><GalleryPage /></Route>
 
   <Redirect from="/registrace" to="/register" />
   <Redirect from="/nopassword" to="/forgotten-password" />

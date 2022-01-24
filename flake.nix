@@ -150,7 +150,7 @@
             smtpHost = "127.0.0.1";
             smtpPort = 1025;
 
-            minioDomain = "cdn.olymp-test"; # doesn't work in local container
+            minioDomain = "cdn-olymp-test"; # doesn't work in local container
             minioPort = 9000;
             minioAccessKey = "00000000";
             minioSecretKey = "000000000000";

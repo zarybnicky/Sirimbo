@@ -5236,6 +5236,20 @@
                     "type": "string"
                 }
             }
+        },
+        "UploadInput": {
+            "type": "object",
+            "required": [
+                "filename"
+            ],
+            "properties": {
+                "directory": {
+                    "type": "string"
+                },
+                "filename": {
+                    "type": "string"
+                }
+            }
         }
     },
     "types": {
@@ -11742,6 +11756,17 @@
                 "properties": {
                     "input": {
                         "$ref": "#/inputs/LogoutInput"
+                    }
+                }
+            },
+            "uploadFile": {
+                "type": "object",
+                "required": [
+                    "input"
+                ],
+                "properties": {
+                    "input": {
+                        "$ref": "#/inputs/UploadInput"
                     }
                 }
             }

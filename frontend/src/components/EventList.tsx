@@ -41,8 +41,8 @@ export const EventListQuery = Selector('Query')({
 });
 
 export const ToggleEventVisible = Selector('Mutation')({
-  updateAkceByNodeId: [
-    { input: { nodeId: $`id`, patch: { aVisible: $`visible` } } },
+  updateAkce: [
+    { input: { aId: $`id`, patch: { aVisible: $`visible` } } },
     {
       akce: {
         aId: true,

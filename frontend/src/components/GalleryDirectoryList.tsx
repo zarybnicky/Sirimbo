@@ -24,8 +24,8 @@ const GalleryDirList = Selector('Query')({
 });
 
 const ToggleVisible = Selector('Mutation')({
-  updateGalerieDirByNodeId: [
-    { input: { nodeId: $`id`, patch: { gdHidden: $`visible` } } },
+  updateGalerieDir: [
+    { input: { gdId: $`id`, patch: { gdHidden: $`visible` } } },
     {
       galerieDir: {
         gdId: true,

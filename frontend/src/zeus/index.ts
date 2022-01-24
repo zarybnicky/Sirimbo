@@ -2842,6 +2842,8 @@ login?: [{	/** The exclusive input argument for this mutation. An object type, m
 	input:ValueTypes["LoginInput"]},ValueTypes["LoginPayload"]],
 logout?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["LogoutInput"]},ValueTypes["LogoutPayload"]],
+uploadFile?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UploadInput"]},ValueTypes["Upload"]],
 		__typename?: boolean
 }>;
 	/** The output of our create `Akce` mutation. */
@@ -6148,6 +6150,14 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null
+};
+	["Upload"]: AliasType<{
+	uploadUrl?:boolean,
+		__typename?: boolean
+}>;
+	["UploadInput"]: {
+	directory?:string | null,
+	filename:string
 }
   }
 
@@ -7889,7 +7899,8 @@ for equality and combined with a logical ‘and.’ */
 	/** Deletes a single `VideoSource` using a unique key. */
 	deleteVideoSource?:ModelTypes["DeleteVideoSourcePayload"],
 	login?:ModelTypes["LoginPayload"],
-	logout?:ModelTypes["LogoutPayload"]
+	logout?:ModelTypes["LogoutPayload"],
+	uploadFile:ModelTypes["Upload"]
 };
 	/** The output of our create `Akce` mutation. */
 ["CreateAkcePayload"]: {
@@ -9611,7 +9622,11 @@ unchanged and unused. May be used by a client to track mutations. */
 	query?:ModelTypes["Query"]
 };
 	/** All input for the `logout` mutation. */
-["LogoutInput"]: GraphQLTypes["LogoutInput"]
+["LogoutInput"]: GraphQLTypes["LogoutInput"];
+	["Upload"]: {
+		uploadUrl:string
+};
+	["UploadInput"]: GraphQLTypes["UploadInput"]
     }
 
 export type GraphQLTypes = {
@@ -12005,7 +12020,8 @@ for equality and combined with a logical ‘and.’ */
 	/** Deletes a single `VideoSource` using a unique key. */
 	deleteVideoSource?: GraphQLTypes["DeleteVideoSourcePayload"],
 	login?: GraphQLTypes["LoginPayload"],
-	logout?: GraphQLTypes["LogoutPayload"]
+	logout?: GraphQLTypes["LogoutPayload"],
+	uploadFile: GraphQLTypes["Upload"]
 };
 	/** The output of our create `Akce` mutation. */
 ["CreateAkcePayload"]: {
@@ -15311,6 +15327,14 @@ unchanged and unused. May be used by a client to track mutations. */
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string
+};
+	["Upload"]: {
+	__typename: "Upload",
+	uploadUrl: string
+};
+	["UploadInput"]: {
+		directory?: string,
+	filename: string
 }
     }
 /** Methods to use when ordering `User`. */

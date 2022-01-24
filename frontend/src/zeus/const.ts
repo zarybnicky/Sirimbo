@@ -6104,6 +6104,14 @@ export const AllTypesProps: Record<string,any> = {
 				arrayRequired:false,
 				required:true
 			}
+		},
+		uploadFile:{
+			input:{
+				type:"UploadInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
 		}
 	},
 	CreateAkcePayload:{
@@ -12391,6 +12399,20 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		}
+	},
+	UploadInput:{
+		directory:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		filename:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
 	}
 }
 
@@ -13418,7 +13440,8 @@ export const ReturnTypes: Record<string,any> = {
 		deleteVideoSourceByNodeId:"DeleteVideoSourcePayload",
 		deleteVideoSource:"DeleteVideoSourcePayload",
 		login:"LoginPayload",
-		logout:"LogoutPayload"
+		logout:"LogoutPayload",
+		uploadFile:"Upload"
 	},
 	CreateAkcePayload:{
 		clientMutationId:"String",
@@ -14085,5 +14108,8 @@ export const ReturnTypes: Record<string,any> = {
 	LogoutPayload:{
 		clientMutationId:"String",
 		query:"Query"
+	},
+	Upload:{
+		uploadUrl:"String"
 	}
 }

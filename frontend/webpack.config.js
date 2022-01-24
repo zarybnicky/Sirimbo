@@ -31,7 +31,10 @@ module.exports = {
     proxy: {
       '/graphql': 'http://localhost:3000',
       '/graphiql': 'http://localhost:3000',
-      '/galerie': 'http://olymp-test',
+      '/galerie': {
+        target: 'http://olymp-test:80',
+        changeOrigin: true,
+      }
     },
   },
   plugins: [
@@ -49,7 +52,7 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        exclude: path.resolve(__dirname, 'node_modules'),
+        include: path.resolve(__dirname, 'src'),
         use: 'ts-loader',
       },
       {

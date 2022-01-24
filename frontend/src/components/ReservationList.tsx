@@ -48,8 +48,8 @@ export const NabidkaAdminQuery = Selector('Query')({
 });
 
 const ToggleVisibleNabidka = Selector("Mutation")({
-  updateNabidkaByNodeId: [
-    { input: { patch: { nVisible: $`visible` }, nodeId: $`id` } },
+  updateNabidka: [
+    { input: { patch: { nVisible: $`visible` }, nId: $`id` } },
     {
       nabidka: {
         nId: true,

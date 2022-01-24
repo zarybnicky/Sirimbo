@@ -166,7 +166,6 @@ in {
           root = phpRoot;
           serverAliases = ["www.${cfg.domain}"];
           locations."/gallery".root = cfg.stateDir;
-          locations."/galerie".root = cfg.stateDir;
           locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
 
           locations."/graphql" = {

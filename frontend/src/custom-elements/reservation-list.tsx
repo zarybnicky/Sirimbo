@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
-import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache, useQuery } from '@apollo/client';
+import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache } from '@apollo/client';
 import { Pagination } from './pagination';
 import { DateRange } from './date';
 import { UserQuery } from '../data/use-auth';
@@ -50,8 +50,8 @@ export const NabidkaAdminQuery = Selector('Query')({
 });
 
 const ToggleVisibleNabidka = Selector("Mutation")({
-  updateNabidkaByNodeId: [
-    { input: { patch: { nVisible: $`visible` }, nodeId: $`id` } },
+  updateNabidka: [
+    { input: { patch: { nVisible: $`visible` }, nId: $`id` } },
     {
       nabidka: {
         nId: true,
@@ -61,10 +61,10 @@ const ToggleVisibleNabidka = Selector("Mutation")({
 });
 
 export function ReservationAdminList() {
-  const [limit, setLimit] = useState(30);
+  const [limit] = useState(30);
   const [offset, setOffset] = useState(0);
   const [total, setTotal] = useState(0);
-  const { data: user } = useQuery(UserQuery);
+  const { data: user } = useTypedQuery(UserQuery);
   const { data, refetch } = useTypedQuery(NabidkaAdminQuery, {
     variables: { limit, offset },
     onCompleted: (data) => {

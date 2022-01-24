@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
       height: '100%',
       maxHeight: '600px',
       objectFit: 'cover',
+      objectPosition: '50% 30%',
       transition: 'transform .3s',
     },
     '&:hover img': {

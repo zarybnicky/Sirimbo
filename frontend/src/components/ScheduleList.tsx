@@ -40,8 +40,8 @@ export const ScheduleListQuery = Selector('Query')({
 });
 
 export const ToggleScheduleVisible = Selector('Mutation')({
-  updateRozpiByNodeId: [
-    { input: { patch: { rVisible: $`visible` }, nodeId: $`id` } },
+  updateRozpi: [
+    { input: { patch: { rVisible: $`visible` }, rId: $`id` } },
     {
       rozpi: {
         rId: true,

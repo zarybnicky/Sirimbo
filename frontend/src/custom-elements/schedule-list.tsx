@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache, useQuery } from '@apollo/client';
+import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache } from '@apollo/client';
 import Form from 'react-bootstrap/Form';
 import { Pagination } from './pagination';
 import { DateEl } from './date';
@@ -41,8 +41,8 @@ export const ScheduleListQuery = Selector('Query')({
 });
 
 export const ToggleScheduleVisible = Selector('Mutation')({
-  updateRozpiByNodeId: [
-    { input: { patch: { rVisible: $`visible` }, nodeId: $`id` } },
+  updateRozpi: [
+    { input: { patch: { rVisible: $`visible` }, rId: $`id` } },
     {
       rozpi: {
         rId: true,
@@ -52,10 +52,10 @@ export const ToggleScheduleVisible = Selector('Mutation')({
 });
 
 export function RozpisAdminList() {
-  const [limit, setLimit] = React.useState(30);
+  const [limit] = React.useState(30);
   const [offset, setOffset] = React.useState(0);
   const [total, setTotal] = React.useState(0);
-  const { data: user } = useQuery(UserQuery);
+  const { data: user } = useTypedQuery(UserQuery);
   const { data, refetch } = useTypedQuery(ScheduleListQuery, {
     variables: { limit, offset },
     onCompleted: (data) => {

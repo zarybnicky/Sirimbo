@@ -43,8 +43,8 @@ export const AkceList = Selector('Query')({
 });
 
 export const ToggleVisible = Selector('Mutation')({
-  updateAkceByNodeId: [
-    { input: { nodeId: $`id`, patch: { aVisible: $`visible` } } },
+  updateAkce: [
+    { input: { aId: $`id`, patch: { aVisible: $`visible` } } },
     {
       akce: {
         aId: true,

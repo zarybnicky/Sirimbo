@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache, useQuery } from '@apollo/client';
+import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache } from '@apollo/client';
 import { useState } from 'react';
 import { Pagination } from './pagination';
 import { DateEl } from './date';
@@ -30,10 +30,10 @@ export const ArticlesAdminQuery = Selector('Query')({
 });
 
 export function ArticleAdminList() {
-  const [limit, setLimit] = useState(30);
+  const [limit] = useState(30);
   const [offset, setOffset] = useState(0);
   const [total, setTotal] = useState(0);
-  const { data: user } = useQuery(UserQuery);
+  const { data: user } = useTypedQuery(UserQuery);
   const { data } = useTypedQuery(ArticlesAdminQuery, {
     variables: { limit, offset },
     onCompleted: (data) => {

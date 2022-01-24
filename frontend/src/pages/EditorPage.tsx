@@ -102,8 +102,8 @@ export const EditorPage = ({ }) => {
     ],
   });
   const [doSavePage] = useTypedMutation({
-    updatePageByNodeId: [
-      { input: { nodeId: $`id`, patch: { url: $`url`, content: $`content` } } },
+    updatePage: [
+      { input: { id: $`id`, patch: { url: $`url`, content: $`content` } } },
       { __typename: true },
     ],
   }, {
