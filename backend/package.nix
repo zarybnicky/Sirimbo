@@ -6,7 +6,7 @@
 yarn2nix-moretea.mkYarnPackage {
   src = nix-gitignore.gitignoreSourcePure [../.gitignore] ./.;
   packageJSON = ./package.json;
-  yarnLock = ./yarn.lock;
+  yarnLock = ../yarn.lock;
   installPhase = ''
     # Inline watch-fixtures.sql
     sed -i \

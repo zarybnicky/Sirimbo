@@ -1,0 +1,17 @@
+{
+  "name": "sirimbo",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "devDependencies": {
+    "concurrently": "^7.0.0"
+  },
+  "scripts": {
+    "frontend": "yarn workspace sirimbo-frontend start",
+    "backend": "yarn workspace sirimbo-backend start",
+    "migrate": "graphile-migrate watch",
+    "start": "concurrently --kill-others-on-fail 'yarn frontend' 'yarn backend' 'yarn migrate'"
+  }
+}

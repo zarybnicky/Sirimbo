@@ -9,7 +9,7 @@
 yarn2nix-moretea.mkYarnPackage {
   src = nix-gitignore.gitignoreSourcePure [../.gitignore] ./.;
   packageJSON = ./package.json;
-  yarnLock = ./yarn.lock;
+  yarnLock = ../yarn.lock;
   name = "sirimbo-frontend";
   # doCheck = true;
   # checkPhase = "yarn test --coverage --ci";
@@ -17,8 +17,8 @@ yarn2nix-moretea.mkYarnPackage {
   distPhase = "true";
   installPhase = ''
     mkdir -p $out/public
-    cp -Lr deps/Sirimbo/dist/* $out/public/
-    cp -Lr deps/Sirimbo/static/* $out/public/
+    cp -Lr deps/sirimbo-frontend/dist/* $out/public/
+    cp -Lr deps/sirimbo-frontend/static/* $out/public/
   '';
   extraBuildInputs = [libsass];
   yarnPreBuild = "export npm_config_nodedir=${nodejs}";
