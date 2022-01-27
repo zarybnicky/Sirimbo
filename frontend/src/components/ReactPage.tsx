@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core';
 import { CSSProperties } from '@material-ui/styles';
-import type { CellPlugin, EditorProps } from '@react-page/editor';
-import Editor from '@react-page/editor';
+import type { CellPlugin, EditorProps, BottomToolbarProps } from '@react-page/editor';
+import Editor, { BottomToolbar } from '@react-page/editor';
 import image from '@react-page/plugins-image';
 import { CallToActionPlugin } from './CallToAction';
 import { ContainerPlugin } from './Container';
@@ -29,13 +29,28 @@ const useStyles = makeStyles(() => ({
       padding: '20px',
     },
   },
+  drawer: {
+    "&, & > *": {
+      // Passed to MuiPaper
+      zIndex: `1200 !important`,
+    },
+  },
 }));
+
+const CustomToolbar = React.memo<BottomToolbarProps>((props) => {
+  const classes = useStyles();
+  return <BottomToolbar {...props} className={classes.drawer} />;
+});
 
 export const ReactPage = ({ style, ...editorProps }: {
   style?: CSSProperties;
-} & Omit<EditorProps, 'cellPlugins'>) => {
+} & Omit<EditorProps, 'cellPlugins' | 'components'>) => {
   const classes = useStyles({ innerStyle: style || {} });
   return <div className={classes.container} style={style}>
-    <Editor cellPlugins={cellPlugins} {...editorProps} />
+    <Editor
+      cellPlugins={cellPlugins}
+      components={{ BottomToolbar: CustomToolbar }}
+      {...editorProps}
+    />
   </div>;
 }
