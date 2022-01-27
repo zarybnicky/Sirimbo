@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core';
+import { CSSProperties } from '@material-ui/styles';
 import type { CellPlugin, EditorProps } from '@react-page/editor';
 import Editor from '@react-page/editor';
 import image from '@react-page/plugins-image';
@@ -7,8 +8,8 @@ import { CallToActionPlugin } from './CallToAction';
 import { ContainerPlugin } from './Container';
 import { HeadingPlugin } from './Heading';
 import { defaultSlate } from './SlateReadonly';
-
-import { CSSProperties } from '@material-ui/styles';
+import { ServiceCardPlugin } from './cards/ServiceCard';
+import { LocationCardPlugin } from './cards/LocationCard';
 
 export { defaultSlate };
 export const cellPlugins: CellPlugin<any, any>[] = [
@@ -17,15 +18,12 @@ export const cellPlugins: CellPlugin<any, any>[] = [
   ContainerPlugin,
   CallToActionPlugin,
   HeadingPlugin,
+  ServiceCardPlugin,
+  LocationCardPlugin,
 ];
 
 const useStyles = makeStyles(() => ({
-  background: {
-    /* backgroundColor: theme.palette.grey[200],
-     * padding: '2rem', */
-  },
   container: {
-    /* backgroundColor: 'white', */
     minHeight: '200px',
     '& .react-page-cell-inner-leaf.slate': {
       padding: '20px',

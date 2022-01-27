@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-interface ServiceCardProps {
+type ServiceCardProps = {
   image: string;
   header: string;
 }
@@ -78,6 +78,9 @@ export const ServiceCardPlugin: CellPlugin<ServiceCardProps> = {
     image: '/images/services-pripravka.png',
   }),
   createInitialChildren: () => [[{ plugin: defaultSlate }]],
+  childConstraints: {
+    maxChildren: 1,
+  },
   controls: {
     type: 'autoform',
     schema: {

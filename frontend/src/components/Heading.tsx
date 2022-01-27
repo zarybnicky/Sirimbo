@@ -3,7 +3,7 @@ import { makeStyles, Container, Theme, Typography } from '@material-ui/core';
 import { CellPlugin } from '@react-page/editor';
 import { RGBColor } from 'react-color';
 
-interface HeadingProps {
+type HeadingProps = {
   color: string | RGBColor;
   image: string;
   text: string;

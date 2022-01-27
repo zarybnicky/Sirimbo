@@ -2,7 +2,7 @@ import { getPlaceholder } from './test-utils';
 
 export const useLocations = () => [
   {
-    img: getPlaceholder(360, 240),
+    image: getPlaceholder(360, 240),
     name: 'Taneční centrum při FZŠ Holečkova',
     address: 'Holečkova 10, 779 00, Olomouc (vchod brankou u zastávy Povel - škola)',
     href: 'https://www.zsholeckova.cz/',
@@ -14,7 +14,7 @@ export const useLocations = () => [
     },
   },
   {
-    img: getPlaceholder(360, 240),
+    image: getPlaceholder(360, 240),
     name: 'Tělocvična Slovanského gymnázia',
     address: 'Jiřího z Poděbrad 13, 779 00 Olomouc (vchod brankou z ulice U reálky)',
     href: 'https://www.sgo.cz/',
@@ -26,7 +26,7 @@ export const useLocations = () => [
     },
   },
   {
-    img: getPlaceholder(360, 240),
+    image: getPlaceholder(360, 240),
     name: 'T.J. Sokol Přerov',
     address: 'Brabansko 2, 750 02 Přerov',
     href: 'https://www.sokolprerov.cz/',
@@ -38,7 +38,7 @@ export const useLocations = () => [
     },
   },
   {
-    img: getPlaceholder(360, 240),
+    image: getPlaceholder(360, 240),
     name: 'Taneční sál Gala',
     address: 'Západní 1, 796 04 Prostějov-Krasice (vchod vedle podnikové prodejny Gala)',
     href: null,

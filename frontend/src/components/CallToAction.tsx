@@ -66,8 +66,7 @@ export const CallToAction = ({ }) => {
   </div>;
 };
 
-export const CallToActionPlugin: CellPlugin<{
-}> = {
+export const CallToActionPlugin: CellPlugin<{}> = {
   Renderer: () => <CallToAction />,
 
   id: 'app-cta-plugin',
