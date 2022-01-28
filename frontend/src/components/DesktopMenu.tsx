@@ -4,7 +4,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { alpha, Button, Menu, MenuItem, makeStyles } from '@material-ui/core';
 import { PopupState as PopupStateType } from 'material-ui-popup-state/core';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import NestedMenuItem from "material-ui-nested-menu-item";
+import { NestedMenuItem } from "./NestedMenuItem";
 import { useMenu, MenuStructItem, getHrefs } from '../data/use-menu';
 
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
@@ -63,7 +63,8 @@ const Submenu = React.forwardRef<any, {
     return <PopupState variant="popover" popupId={`menu-${x.text.replace(' ', '')}`}>
       {(popupState) => <React.Fragment>
         <Button ref={ref}
-          {...bindTrigger(popupState)} className={cls}
+          {...bindTrigger(popupState)}
+          className={cls}
           color="inherit"
           endIcon={<KeyboardArrowDownIcon />}
         >{x.text}</Button>
@@ -79,9 +80,15 @@ const Submenu = React.forwardRef<any, {
       </React.Fragment>}
     </PopupState>;
   } else {
-    return <NestedMenuItem ref={ref} label={x.text} parentMenuOpen={!!popupState.isOpen}>
-      {x.children.map(y => <Submenu key={y.text} popupState={popupState} item={y} />)}
-    </NestedMenuItem>;
+    return (
+      <NestedMenuItem
+        ref={ref} label={x.text}
+        parentMenuOpen={!!popupState.isOpen}
+        ContainerProps={{ className: classes.submenu }}
+      >
+        {x.children.map(y => <Submenu key={y.text} popupState={popupState} item={y} />)}
+      </NestedMenuItem>
+    );
   }
 });
 

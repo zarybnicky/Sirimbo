@@ -32,7 +32,6 @@
     "jquery": "^3.6.0",
     "leaflet": "^1.7.1",
     "material-ui-confirm": "^2",
-    "material-ui-nested-menu-item": "^1.0.2",
     "material-ui-popup-state": "^1.9.3",
     "mui-rff": "^3",
     "notistack": "^1.0.10",
