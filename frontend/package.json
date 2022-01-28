@@ -5,7 +5,7 @@
   "scripts": {
     "lint": "eslint \"**/*.{js,ts}\"",
     "build": "webpack --progress",
-    "start": "webpack serve --open --progress",
+    "start": "webpack serve --open",
     "schema": "zeus http://localhost:3000/graphql -H Content-Type:application/json -j schema.json ./src --apollo"
   },
   "dependencies": {

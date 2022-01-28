@@ -22,6 +22,18 @@ module.exports = {
     extensions: ['.js', '.ts', '.tsx', '.json'],
   },
   devtool: "source-map",
+  stats: {
+    chunks: false,
+    hash: false,
+    version: false,
+    children: false,
+    source: false,
+    warnings: true,
+    modules: false,
+    errors: true,
+    reasons: true,
+    errorDetails: true,
+  },
   devServer: {
     hot: 'only',
     historyApiFallback: true,
