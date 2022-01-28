@@ -4317,6 +4317,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		sName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	JSON: "String",
@@ -13091,7 +13097,8 @@ export const ReturnTypes: Record<string,any> = {
 		totalCount:"Int"
 	},
 	Member:{
-		uEmail:"String"
+		uEmail:"String",
+		sName:"String"
 	},
 	MembersEdge:{
 		cursor:"Cursor",

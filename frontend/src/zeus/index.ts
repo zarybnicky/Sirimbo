@@ -1935,6 +1935,7 @@ for equality and combined with a logical ‘and.’ */
 }>;
 	["Member"]: AliasType<{
 	uEmail?:boolean,
+	sName?:boolean,
 		__typename?: boolean
 }>;
 	/** A `Member` edge in the connection. */
@@ -1950,7 +1951,9 @@ for equality and combined with a logical ‘and.’ */
 	/** A condition to be used against `Member` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 ["MemberCondition"]: {
 	/** Checks for equality with the object’s `uEmail` field. */
-	uEmail?:string | null
+	uEmail?:string | null,
+	/** Checks for equality with the object’s `sName` field. */
+	sName?:string | null
 };
 	/** A connection to a list of `Page` values. */
 ["PagesConnection"]: AliasType<{
@@ -7224,7 +7227,8 @@ for equality and combined with a logical ‘and.’ */
 	totalCount:number
 };
 	["Member"]: {
-		uEmail?:string
+		uEmail?:string,
+	sName?:string
 };
 	/** A `Member` edge in the connection. */
 ["MembersEdge"]: {
@@ -11115,7 +11119,8 @@ for equality and combined with a logical ‘and.’ */
 };
 	["Member"]: {
 	__typename: "Member",
-	uEmail?: string
+	uEmail?: string,
+	sName?: string
 };
 	/** A `Member` edge in the connection. */
 ["MembersEdge"]: {
@@ -11130,7 +11135,9 @@ for equality and combined with a logical ‘and.’ */
 	/** A condition to be used against `Member` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 ["MemberCondition"]: {
 		/** Checks for equality with the object’s `uEmail` field. */
-	uEmail?: string
+	uEmail?: string,
+	/** Checks for equality with the object’s `sName` field. */
+	sName?: string
 };
 	/** A connection to a list of `Page` values. */
 ["PagesConnection"]: {
@@ -15775,7 +15782,9 @@ export const enum GalerieDirsOrderBy {
 export const enum MembersOrderBy {
 	NATURAL = "NATURAL",
 	U_EMAIL_ASC = "U_EMAIL_ASC",
-	U_EMAIL_DESC = "U_EMAIL_DESC"
+	U_EMAIL_DESC = "U_EMAIL_DESC",
+	S_NAME_ASC = "S_NAME_ASC",
+	S_NAME_DESC = "S_NAME_DESC"
 }
 /** Methods to use when ordering `Page`. */
 export const enum PagesOrderBy {

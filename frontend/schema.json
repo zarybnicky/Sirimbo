@@ -591,6 +591,9 @@
             "properties": {
                 "uEmail": {
                     "type": "string"
+                },
+                "sName": {
+                    "type": "string"
                 }
             }
         },
@@ -5613,7 +5616,9 @@
                             "enum": [
                                 "NATURAL",
                                 "U_EMAIL_ASC",
-                                "U_EMAIL_DESC"
+                                "U_EMAIL_DESC",
+                                "S_NAME_ASC",
+                                "S_NAME_DESC"
                             ]
                         }
                     },

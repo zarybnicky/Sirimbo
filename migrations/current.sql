@@ -58,3 +58,18 @@ do $$ begin
     alter table public.skupiny add column s_visible boolean not null default true;
   end if;
 end $$;
+
+CREATE OR REPLACE VIEW public.members AS
+  SELECT DISTINCT ON (u_id, s_name, u_email) u_email, s_name FROM platby_item
+    INNER JOIN platby_category ON pc_id=pi_id_category
+    INNER JOIN platby_category_group ON pcg_id_category=pc_id
+    INNER JOIN platby_group ON pg_id=pcg_id_group
+    INNER JOIN platby_group_skupina ON pgs_id_group=pg_id
+    INNER JOIN skupiny ON pgs_id_skupina=s_id
+    INNER JOIN users ON pi_id_user=u_id AND u_skupina=s_id
+  WHERE pg_type='1'
+    AND CURRENT_DATE >= pc_valid_from
+    AND CURRENT_DATE <= pc_valid_to
+    AND u_confirmed='1'
+    AND u_ban='0'
+    AND u_system='0' ORDER BY s_name, u_email;
