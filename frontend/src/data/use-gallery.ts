@@ -1,5 +1,5 @@
 import { getPlaceholder } from '../test-utils';
-import { $, GalerieFotosOrderBy, Selector } from '../zeus';
+import { $, GalerieFotosOrderBy, Selector, GraphQLTypes } from '../zeus';
 import { useTypedQuery } from '../zeus/apollo';
 import format from 'date-fns/format';
 
@@ -50,6 +50,11 @@ export const GalleryDirQuery = Selector('Query')({
   ],
 });
 
+export interface GalleryDir {
+  name?: string;
+  parentId?: string;
+}
+
 export interface GalleryItem {
   id: number;
   name: string;
@@ -60,6 +65,7 @@ export interface GalleryItem {
 }
 
 export const useGallery = (dir: number): {
+  dir?: GalleryDir;
   dirs: GalleryItem[];
   images: GalleryItem[];
 } => {
@@ -91,7 +97,18 @@ export const useGallery = (dir: number): {
       imgThumb: decodeURIComponent(`/galerie/thumbnails/${x.gfPath}`),
     };
   });
-  return { dirs, images };
+  return {
+    dir: {
+      name: data?.galerieDir?.gdName,
+      parentId: (
+        data?.galerieDir?.gdIdRodic && data?.galerieDir?.gdIdRodic != dir
+          ? data?.galerieDir?.gdIdRodic
+          : undefined
+      ),
+    },
+    dirs,
+    images,
+  };
 };
 
 export const useMockGallery = () => [

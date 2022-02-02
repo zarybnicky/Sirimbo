@@ -180,45 +180,6 @@
                 }
             }
         },
-        "SessionCondition": {
-            "type": "object",
-            "required": [],
-            "properties": {
-                "ssId": {
-                    "type": "string"
-                },
-                "ssData": {
-                    "type": "string"
-                },
-                "ssUpdatedAt": {
-                    "type": "string"
-                },
-                "ssLifetime": {
-                    "type": "string"
-                },
-                "ssUser": {
-                    "type": "string"
-                }
-            }
-        },
-        "AkceItemCondition": {
-            "type": "object",
-            "required": [],
-            "properties": {
-                "aiId": {
-                    "type": "string"
-                },
-                "aiIdRodic": {
-                    "type": "string"
-                },
-                "aiUser": {
-                    "type": "string"
-                },
-                "aiRokNarozeni": {
-                    "type": "integer"
-                }
-            }
-        },
         "GalerieFotoCondition": {
             "type": "object",
             "required": [],
@@ -275,33 +236,6 @@
                     "type": "string"
                 },
                 "atTimestampAdd": {
-                    "type": "string"
-                }
-            }
-        },
-        "DokumentyCondition": {
-            "type": "object",
-            "required": [],
-            "properties": {
-                "dId": {
-                    "type": "string"
-                },
-                "dPath": {
-                    "type": "string"
-                },
-                "dName": {
-                    "type": "string"
-                },
-                "dFilename": {
-                    "type": "string"
-                },
-                "dKategorie": {
-                    "type": "integer"
-                },
-                "dKdo": {
-                    "type": "string"
-                },
-                "dTimestamp": {
                     "type": "string"
                 }
             }
@@ -384,6 +318,99 @@
                 }
             }
         },
+        "RozpiCondition": {
+            "type": "object",
+            "required": [],
+            "properties": {
+                "rId": {
+                    "type": "string"
+                },
+                "rTrener": {
+                    "type": "string"
+                },
+                "rKde": {
+                    "type": "string"
+                },
+                "rDatum": {
+                    "type": "string"
+                },
+                "rVisible": {
+                    "type": "boolean"
+                },
+                "rLock": {
+                    "type": "boolean"
+                },
+                "rTimestamp": {
+                    "type": "string"
+                }
+            }
+        },
+        "SessionCondition": {
+            "type": "object",
+            "required": [],
+            "properties": {
+                "ssId": {
+                    "type": "string"
+                },
+                "ssData": {
+                    "type": "string"
+                },
+                "ssUpdatedAt": {
+                    "type": "string"
+                },
+                "ssLifetime": {
+                    "type": "string"
+                },
+                "ssUser": {
+                    "type": "string"
+                }
+            }
+        },
+        "AkceItemCondition": {
+            "type": "object",
+            "required": [],
+            "properties": {
+                "aiId": {
+                    "type": "string"
+                },
+                "aiIdRodic": {
+                    "type": "string"
+                },
+                "aiUser": {
+                    "type": "string"
+                },
+                "aiRokNarozeni": {
+                    "type": "integer"
+                }
+            }
+        },
+        "DokumentyCondition": {
+            "type": "object",
+            "required": [],
+            "properties": {
+                "dId": {
+                    "type": "string"
+                },
+                "dPath": {
+                    "type": "string"
+                },
+                "dName": {
+                    "type": "string"
+                },
+                "dFilename": {
+                    "type": "string"
+                },
+                "dKategorie": {
+                    "type": "integer"
+                },
+                "dKdo": {
+                    "type": "string"
+                },
+                "dTimestamp": {
+                    "type": "string"
+                }
+            }
+        },
         "ParyCondition": {
             "type": "object",
             "required": [],
@@ -461,33 +488,6 @@
                     "type": "string"
                 },
                 "pnPartnerka": {
-                    "type": "string"
-                }
-            }
-        },
-        "RozpiCondition": {
-            "type": "object",
-            "required": [],
-            "properties": {
-                "rId": {
-                    "type": "string"
-                },
-                "rTrener": {
-                    "type": "string"
-                },
-                "rKde": {
-                    "type": "string"
-                },
-                "rDatum": {
-                    "type": "string"
-                },
-                "rVisible": {
-                    "type": "boolean"
-                },
-                "rLock": {
-                    "type": "boolean"
-                },
-                "rTimestamp": {
                     "type": "string"
                 }
             }
@@ -594,6 +594,9 @@
                 },
                 "sName": {
                     "type": "string"
+                },
+                "paymentValid": {
+                    "type": "boolean"
                 }
             }
         },
@@ -5618,7 +5621,9 @@
                                 "U_EMAIL_ASC",
                                 "U_EMAIL_DESC",
                                 "S_NAME_ASC",
-                                "S_NAME_DESC"
+                                "S_NAME_DESC",
+                                "PAYMENT_VALID_ASC",
+                                "PAYMENT_VALID_DESC"
                             ]
                         }
                     },
@@ -7984,6 +7989,169 @@
                 "required": [],
                 "properties": {}
             },
+            "aktualitiesByAtKdo": {
+                "type": "object",
+                "required": [
+                    "orderBy"
+                ],
+                "properties": {
+                    "first": {
+                        "type": "integer"
+                    },
+                    "last": {
+                        "type": "integer"
+                    },
+                    "offset": {
+                        "type": "integer"
+                    },
+                    "before": {
+                        "type": "string"
+                    },
+                    "after": {
+                        "type": "string"
+                    },
+                    "orderBy": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "NATURAL",
+                                "AT_ID_ASC",
+                                "AT_ID_DESC",
+                                "AT_KDO_ASC",
+                                "AT_KDO_DESC",
+                                "AT_KAT_ASC",
+                                "AT_KAT_DESC",
+                                "AT_JMENO_ASC",
+                                "AT_JMENO_DESC",
+                                "AT_TEXT_ASC",
+                                "AT_TEXT_DESC",
+                                "AT_PREVIEW_ASC",
+                                "AT_PREVIEW_DESC",
+                                "AT_FOTO_ASC",
+                                "AT_FOTO_DESC",
+                                "AT_FOTO_MAIN_ASC",
+                                "AT_FOTO_MAIN_DESC",
+                                "AT_TIMESTAMP_ASC",
+                                "AT_TIMESTAMP_DESC",
+                                "AT_TIMESTAMP_ADD_ASC",
+                                "AT_TIMESTAMP_ADD_DESC",
+                                "PRIMARY_KEY_ASC",
+                                "PRIMARY_KEY_DESC"
+                            ]
+                        }
+                    },
+                    "condition": {
+                        "$ref": "#/inputs/AktualityCondition"
+                    }
+                }
+            },
+            "nabidkasByNTrener": {
+                "type": "object",
+                "required": [
+                    "orderBy"
+                ],
+                "properties": {
+                    "first": {
+                        "type": "integer"
+                    },
+                    "last": {
+                        "type": "integer"
+                    },
+                    "offset": {
+                        "type": "integer"
+                    },
+                    "before": {
+                        "type": "string"
+                    },
+                    "after": {
+                        "type": "string"
+                    },
+                    "orderBy": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "NATURAL",
+                                "N_ID_ASC",
+                                "N_ID_DESC",
+                                "N_TRENER_ASC",
+                                "N_TRENER_DESC",
+                                "N_POCET_HOD_ASC",
+                                "N_POCET_HOD_DESC",
+                                "N_MAX_POCET_HOD_ASC",
+                                "N_MAX_POCET_HOD_DESC",
+                                "N_OD_ASC",
+                                "N_OD_DESC",
+                                "N_DO_ASC",
+                                "N_DO_DESC",
+                                "N_VISIBLE_ASC",
+                                "N_VISIBLE_DESC",
+                                "N_LOCK_ASC",
+                                "N_LOCK_DESC",
+                                "N_TIMESTAMP_ASC",
+                                "N_TIMESTAMP_DESC",
+                                "PRIMARY_KEY_ASC",
+                                "PRIMARY_KEY_DESC"
+                            ]
+                        }
+                    },
+                    "condition": {
+                        "$ref": "#/inputs/NabidkaCondition"
+                    }
+                }
+            },
+            "rozpisByRTrener": {
+                "type": "object",
+                "required": [
+                    "orderBy"
+                ],
+                "properties": {
+                    "first": {
+                        "type": "integer"
+                    },
+                    "last": {
+                        "type": "integer"
+                    },
+                    "offset": {
+                        "type": "integer"
+                    },
+                    "before": {
+                        "type": "string"
+                    },
+                    "after": {
+                        "type": "string"
+                    },
+                    "orderBy": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "NATURAL",
+                                "R_ID_ASC",
+                                "R_ID_DESC",
+                                "R_TRENER_ASC",
+                                "R_TRENER_DESC",
+                                "R_KDE_ASC",
+                                "R_KDE_DESC",
+                                "R_DATUM_ASC",
+                                "R_DATUM_DESC",
+                                "R_VISIBLE_ASC",
+                                "R_VISIBLE_DESC",
+                                "R_LOCK_ASC",
+                                "R_LOCK_DESC",
+                                "R_TIMESTAMP_ASC",
+                                "R_TIMESTAMP_DESC",
+                                "PRIMARY_KEY_ASC",
+                                "PRIMARY_KEY_DESC"
+                            ]
+                        }
+                    },
+                    "condition": {
+                        "$ref": "#/inputs/RozpiCondition"
+                    }
+                }
+            },
             "sessionsBySsUser": {
                 "type": "object",
                 "required": [
@@ -8073,63 +8241,6 @@
                     },
                     "condition": {
                         "$ref": "#/inputs/AkceItemCondition"
-                    }
-                }
-            },
-            "aktualitiesByAtKdo": {
-                "type": "object",
-                "required": [
-                    "orderBy"
-                ],
-                "properties": {
-                    "first": {
-                        "type": "integer"
-                    },
-                    "last": {
-                        "type": "integer"
-                    },
-                    "offset": {
-                        "type": "integer"
-                    },
-                    "before": {
-                        "type": "string"
-                    },
-                    "after": {
-                        "type": "string"
-                    },
-                    "orderBy": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "enum": [
-                                "NATURAL",
-                                "AT_ID_ASC",
-                                "AT_ID_DESC",
-                                "AT_KDO_ASC",
-                                "AT_KDO_DESC",
-                                "AT_KAT_ASC",
-                                "AT_KAT_DESC",
-                                "AT_JMENO_ASC",
-                                "AT_JMENO_DESC",
-                                "AT_TEXT_ASC",
-                                "AT_TEXT_DESC",
-                                "AT_PREVIEW_ASC",
-                                "AT_PREVIEW_DESC",
-                                "AT_FOTO_ASC",
-                                "AT_FOTO_DESC",
-                                "AT_FOTO_MAIN_ASC",
-                                "AT_FOTO_MAIN_DESC",
-                                "AT_TIMESTAMP_ASC",
-                                "AT_TIMESTAMP_DESC",
-                                "AT_TIMESTAMP_ADD_ASC",
-                                "AT_TIMESTAMP_ADD_DESC",
-                                "PRIMARY_KEY_ASC",
-                                "PRIMARY_KEY_DESC"
-                            ]
-                        }
-                    },
-                    "condition": {
-                        "$ref": "#/inputs/AktualityCondition"
                     }
                 }
             },
@@ -8281,61 +8392,6 @@
                     },
                     "condition": {
                         "$ref": "#/inputs/PlatbyItemCondition"
-                    }
-                }
-            },
-            "nabidkasByNTrener": {
-                "type": "object",
-                "required": [
-                    "orderBy"
-                ],
-                "properties": {
-                    "first": {
-                        "type": "integer"
-                    },
-                    "last": {
-                        "type": "integer"
-                    },
-                    "offset": {
-                        "type": "integer"
-                    },
-                    "before": {
-                        "type": "string"
-                    },
-                    "after": {
-                        "type": "string"
-                    },
-                    "orderBy": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "enum": [
-                                "NATURAL",
-                                "N_ID_ASC",
-                                "N_ID_DESC",
-                                "N_TRENER_ASC",
-                                "N_TRENER_DESC",
-                                "N_POCET_HOD_ASC",
-                                "N_POCET_HOD_DESC",
-                                "N_MAX_POCET_HOD_ASC",
-                                "N_MAX_POCET_HOD_DESC",
-                                "N_OD_ASC",
-                                "N_OD_DESC",
-                                "N_DO_ASC",
-                                "N_DO_DESC",
-                                "N_VISIBLE_ASC",
-                                "N_VISIBLE_DESC",
-                                "N_LOCK_ASC",
-                                "N_LOCK_DESC",
-                                "N_TIMESTAMP_ASC",
-                                "N_TIMESTAMP_DESC",
-                                "PRIMARY_KEY_ASC",
-                                "PRIMARY_KEY_DESC"
-                            ]
-                        }
-                    },
-                    "condition": {
-                        "$ref": "#/inputs/NabidkaCondition"
                     }
                 }
             },
@@ -8534,57 +8590,6 @@
                     },
                     "condition": {
                         "$ref": "#/inputs/ParyNavrhCondition"
-                    }
-                }
-            },
-            "rozpisByRTrener": {
-                "type": "object",
-                "required": [
-                    "orderBy"
-                ],
-                "properties": {
-                    "first": {
-                        "type": "integer"
-                    },
-                    "last": {
-                        "type": "integer"
-                    },
-                    "offset": {
-                        "type": "integer"
-                    },
-                    "before": {
-                        "type": "string"
-                    },
-                    "after": {
-                        "type": "string"
-                    },
-                    "orderBy": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "enum": [
-                                "NATURAL",
-                                "R_ID_ASC",
-                                "R_ID_DESC",
-                                "R_TRENER_ASC",
-                                "R_TRENER_DESC",
-                                "R_KDE_ASC",
-                                "R_KDE_DESC",
-                                "R_DATUM_ASC",
-                                "R_DATUM_DESC",
-                                "R_VISIBLE_ASC",
-                                "R_VISIBLE_DESC",
-                                "R_LOCK_ASC",
-                                "R_LOCK_DESC",
-                                "R_TIMESTAMP_ASC",
-                                "R_TIMESTAMP_DESC",
-                                "PRIMARY_KEY_ASC",
-                                "PRIMARY_KEY_DESC"
-                            ]
-                        }
-                    },
-                    "condition": {
-                        "$ref": "#/inputs/RozpiCondition"
                     }
                 }
             },

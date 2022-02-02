@@ -2043,6 +2043,138 @@ export const AllTypesProps: Record<string,any> = {
 	Date: "String",
 	Datetime: "String",
 	User:{
+		aktualitiesByAtKdo:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"AktualitiesOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"AktualityCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		nabidkasByNTrener:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"NabidkasOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"NabidkaCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		rozpisByRTrener:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"RozpisOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"RozpiCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
 		sessionsBySsUser:{
 			first:{
 				type:"Int",
@@ -2126,50 +2258,6 @@ export const AllTypesProps: Record<string,any> = {
 			},
 			condition:{
 				type:"AkceItemCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		aktualitiesByAtKdo:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"AktualitiesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"AktualityCondition",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -2302,50 +2390,6 @@ export const AllTypesProps: Record<string,any> = {
 			},
 			condition:{
 				type:"PlatbyItemCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		nabidkasByNTrener:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"NabidkasOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"NabidkaCondition",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -2522,50 +2566,6 @@ export const AllTypesProps: Record<string,any> = {
 			},
 			condition:{
 				type:"ParyNavrhCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		rozpisByRTrener:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"RozpisOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"RozpiCondition",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -3385,66 +3385,6 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	SessionsOrderBy: "enum",
-	SessionCondition:{
-		ssId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssData:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssUpdatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssLifetime:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssUser:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	AkceItemsOrderBy: "enum",
-	AkceItemCondition:{
-		aiId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aiIdRodic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aiUser:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aiRokNarozeni:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
 	GalerieFoto:{
 		aktualitiesByAtFotoMain:{
 			first:{
@@ -3633,51 +3573,6 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		atTimestampAdd:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	DokumentiesOrderBy: "enum",
-	DokumentyCondition:{
-		dId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dPath:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dFilename:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dKategorie:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dKdo:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dTimestamp:{
 			type:"Datetime",
 			array:false,
 			arrayRequired:false,
@@ -3998,6 +3893,156 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
+	RozpisOrderBy: "enum",
+	RozpiCondition:{
+		rId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		rTrener:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		rKde:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		rDatum:{
+			type:"Date",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		rVisible:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		rLock:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		rTimestamp:{
+			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	SessionsOrderBy: "enum",
+	SessionCondition:{
+		ssId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		ssData:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		ssUpdatedAt:{
+			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		ssLifetime:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		ssUser:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	AkceItemsOrderBy: "enum",
+	AkceItemCondition:{
+		aiId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		aiIdRodic:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		aiUser:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		aiRokNarozeni:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	DokumentiesOrderBy: "enum",
+	DokumentyCondition:{
+		dId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		dPath:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		dName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		dFilename:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		dKategorie:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		dKdo:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		dTimestamp:{
+			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
 	PariesOrderBy: "enum",
 	ParyCondition:{
 		pId:{
@@ -4101,51 +4146,6 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		pnPartnerka:{
 			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	RozpisOrderBy: "enum",
-	RozpiCondition:{
-		rId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rTrener:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rKde:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rDatum:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rVisible:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rTimestamp:{
-			type:"Datetime",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -4320,6 +4320,12 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		sName:{
 			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		paymentValid:{
+			type:"Boolean",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -12543,16 +12549,16 @@ export const ReturnTypes: Record<string,any> = {
 		"...on PlatbyRaw": "PlatbyRaw",
 		"...on UpozorneniSkupiny": "UpozorneniSkupiny",
 		"...on Upozorneni": "Upozorneni",
-		"...on Session": "Session",
 		"...on Aktuality": "Aktuality",
 		"...on GalerieFoto": "GalerieFoto",
 		"...on GalerieDir": "GalerieDir",
-		"...on Dokumenty": "Dokumenty",
 		"...on Nabidka": "Nabidka",
 		"...on NabidkaItem": "NabidkaItem",
 		"...on Pary": "Pary",
 		"...on RozpisItem": "RozpisItem",
 		"...on Rozpi": "Rozpi",
+		"...on Session": "Session",
+		"...on Dokumenty": "Dokumenty",
 		"...on ParyNavrh": "ParyNavrh",
 		"...on Page": "Page",
 		"...on PageRevision": "PageRevision",
@@ -12635,18 +12641,18 @@ export const ReturnTypes: Record<string,any> = {
 		uGdprSignedAt:"Datetime",
 		permissionByUGroup:"Permission",
 		skupinyByUSkupina:"Skupiny",
+		aktualitiesByAtKdo:"AktualitiesConnection",
+		nabidkasByNTrener:"NabidkasConnection",
+		rozpisByRTrener:"RozpisConnection",
 		sessionsBySsUser:"SessionsConnection",
 		akceItemsByAiUser:"AkceItemsConnection",
-		aktualitiesByAtKdo:"AktualitiesConnection",
 		dokumentiesByDKdo:"DokumentiesConnection",
 		galerieFotosByGfKdo:"GalerieFotosConnection",
 		platbyItemsByPiIdUser:"PlatbyItemsConnection",
-		nabidkasByNTrener:"NabidkasConnection",
 		pariesByPIdPartner:"PariesConnection",
 		paryNavrhsByPnNavrhl:"ParyNavrhsConnection",
 		paryNavrhsByPnPartner:"ParyNavrhsConnection",
 		paryNavrhsByPnPartnerka:"ParyNavrhsConnection",
-		rozpisByRTrener:"RozpisConnection",
 		upozornenisByUpKdo:"UpozornenisConnection"
 	},
 	Permission:{
@@ -12829,25 +12835,6 @@ export const ReturnTypes: Record<string,any> = {
 		cursor:"Cursor",
 		node:"UpozorneniSkupiny"
 	},
-	SessionsConnection:{
-		nodes:"Session",
-		edges:"SessionsEdge",
-		pageInfo:"PageInfo",
-		totalCount:"Int"
-	},
-	Session:{
-		nodeId:"ID",
-		ssId:"String",
-		ssData:"String",
-		ssUpdatedAt:"Datetime",
-		ssLifetime:"BigInt",
-		ssUser:"BigInt",
-		userBySsUser:"User"
-	},
-	SessionsEdge:{
-		cursor:"Cursor",
-		node:"Session"
-	},
 	AktualitiesConnection:{
 		nodes:"Aktuality",
 		edges:"AktualitiesEdge",
@@ -12904,27 +12891,6 @@ export const ReturnTypes: Record<string,any> = {
 	AktualitiesEdge:{
 		cursor:"Cursor",
 		node:"Aktuality"
-	},
-	DokumentiesConnection:{
-		nodes:"Dokumenty",
-		edges:"DokumentiesEdge",
-		pageInfo:"PageInfo",
-		totalCount:"Int"
-	},
-	Dokumenty:{
-		nodeId:"ID",
-		dId:"BigInt",
-		dPath:"String",
-		dName:"String",
-		dFilename:"String",
-		dKategorie:"Int",
-		dKdo:"BigInt",
-		dTimestamp:"Datetime",
-		userByDKdo:"User"
-	},
-	DokumentiesEdge:{
-		cursor:"Cursor",
-		node:"Dokumenty"
 	},
 	NabidkasConnection:{
 		nodes:"Nabidka",
@@ -13022,6 +12988,56 @@ export const ReturnTypes: Record<string,any> = {
 		cursor:"Cursor",
 		node:"Nabidka"
 	},
+	RozpisConnection:{
+		nodes:"Rozpi",
+		edges:"RozpisEdge",
+		pageInfo:"PageInfo",
+		totalCount:"Int"
+	},
+	RozpisEdge:{
+		cursor:"Cursor",
+		node:"Rozpi"
+	},
+	SessionsConnection:{
+		nodes:"Session",
+		edges:"SessionsEdge",
+		pageInfo:"PageInfo",
+		totalCount:"Int"
+	},
+	Session:{
+		nodeId:"ID",
+		ssId:"String",
+		ssData:"String",
+		ssUpdatedAt:"Datetime",
+		ssLifetime:"BigInt",
+		ssUser:"BigInt",
+		userBySsUser:"User"
+	},
+	SessionsEdge:{
+		cursor:"Cursor",
+		node:"Session"
+	},
+	DokumentiesConnection:{
+		nodes:"Dokumenty",
+		edges:"DokumentiesEdge",
+		pageInfo:"PageInfo",
+		totalCount:"Int"
+	},
+	Dokumenty:{
+		nodeId:"ID",
+		dId:"BigInt",
+		dPath:"String",
+		dName:"String",
+		dFilename:"String",
+		dKategorie:"Int",
+		dKdo:"BigInt",
+		dTimestamp:"Datetime",
+		userByDKdo:"User"
+	},
+	DokumentiesEdge:{
+		cursor:"Cursor",
+		node:"Dokumenty"
+	},
 	PariesConnection:{
 		nodes:"Pary",
 		edges:"PariesEdge",
@@ -13051,16 +13067,6 @@ export const ReturnTypes: Record<string,any> = {
 	ParyNavrhsEdge:{
 		cursor:"Cursor",
 		node:"ParyNavrh"
-	},
-	RozpisConnection:{
-		nodes:"Rozpi",
-		edges:"RozpisEdge",
-		pageInfo:"PageInfo",
-		totalCount:"Int"
-	},
-	RozpisEdge:{
-		cursor:"Cursor",
-		node:"Rozpi"
 	},
 	UpozornenisConnection:{
 		nodes:"Upozorneni",
@@ -13098,7 +13104,8 @@ export const ReturnTypes: Record<string,any> = {
 	},
 	Member:{
 		uEmail:"String",
-		sName:"String"
+		sName:"String",
+		paymentValid:"Boolean"
 	},
 	MembersEdge:{
 		cursor:"Cursor",

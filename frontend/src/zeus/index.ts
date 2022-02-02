@@ -433,16 +433,16 @@ videoSourceByNodeId?: [{	/** The globally unique `ID` to be used in selecting a 
 		['...on PlatbyRaw']?: Omit<ValueTypes["PlatbyRaw"],keyof ValueTypes["Node"]>;
 		['...on UpozorneniSkupiny']?: Omit<ValueTypes["UpozorneniSkupiny"],keyof ValueTypes["Node"]>;
 		['...on Upozorneni']?: Omit<ValueTypes["Upozorneni"],keyof ValueTypes["Node"]>;
-		['...on Session']?: Omit<ValueTypes["Session"],keyof ValueTypes["Node"]>;
 		['...on Aktuality']?: Omit<ValueTypes["Aktuality"],keyof ValueTypes["Node"]>;
 		['...on GalerieFoto']?: Omit<ValueTypes["GalerieFoto"],keyof ValueTypes["Node"]>;
 		['...on GalerieDir']?: Omit<ValueTypes["GalerieDir"],keyof ValueTypes["Node"]>;
-		['...on Dokumenty']?: Omit<ValueTypes["Dokumenty"],keyof ValueTypes["Node"]>;
 		['...on Nabidka']?: Omit<ValueTypes["Nabidka"],keyof ValueTypes["Node"]>;
 		['...on NabidkaItem']?: Omit<ValueTypes["NabidkaItem"],keyof ValueTypes["Node"]>;
 		['...on Pary']?: Omit<ValueTypes["Pary"],keyof ValueTypes["Node"]>;
 		['...on RozpisItem']?: Omit<ValueTypes["RozpisItem"],keyof ValueTypes["Node"]>;
 		['...on Rozpi']?: Omit<ValueTypes["Rozpi"],keyof ValueTypes["Node"]>;
+		['...on Session']?: Omit<ValueTypes["Session"],keyof ValueTypes["Node"]>;
+		['...on Dokumenty']?: Omit<ValueTypes["Dokumenty"],keyof ValueTypes["Node"]>;
 		['...on ParyNavrh']?: Omit<ValueTypes["ParyNavrh"],keyof ValueTypes["Node"]>;
 		['...on Page']?: Omit<ValueTypes["Page"],keyof ValueTypes["Node"]>;
 		['...on PageRevision']?: Omit<ValueTypes["PageRevision"],keyof ValueTypes["Node"]>;
@@ -563,6 +563,33 @@ strings and not numbers. */
 	permissionByUGroup?:ValueTypes["Permission"],
 	/** Reads a single `Skupiny` that is related to this `User`. */
 	skupinyByUSkupina?:ValueTypes["Skupiny"],
+aktualitiesByAtKdo?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Aktuality`. */
+	orderBy?:ValueTypes["AktualitiesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["AktualityCondition"] | null},ValueTypes["AktualitiesConnection"]],
+nabidkasByNTrener?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Nabidka`. */
+	orderBy?:ValueTypes["NabidkasOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["NabidkaCondition"] | null},ValueTypes["NabidkasConnection"]],
+rozpisByRTrener?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Rozpi`. */
+	orderBy?:ValueTypes["RozpisOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["RozpiCondition"] | null},ValueTypes["RozpisConnection"]],
 sessionsBySsUser?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -581,15 +608,6 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `AkceItem`. */
 	orderBy?:ValueTypes["AkceItemsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["AkceItemCondition"] | null},ValueTypes["AkceItemsConnection"]],
-aktualitiesByAtKdo?: [{	/** Only read the first `n` values of the set. */
-	first?:number | null,	/** Only read the last `n` values of the set. */
-	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
-based pagination. May not be used with `last`. */
-	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
-	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
-	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Aktuality`. */
-	orderBy?:ValueTypes["AktualitiesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
-	condition?:ValueTypes["AktualityCondition"] | null},ValueTypes["AktualitiesConnection"]],
 dokumentiesByDKdo?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -617,15 +635,6 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `PlatbyItem`. */
 	orderBy?:ValueTypes["PlatbyItemsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["PlatbyItemCondition"] | null},ValueTypes["PlatbyItemsConnection"]],
-nabidkasByNTrener?: [{	/** Only read the first `n` values of the set. */
-	first?:number | null,	/** Only read the last `n` values of the set. */
-	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
-based pagination. May not be used with `last`. */
-	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
-	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
-	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Nabidka`. */
-	orderBy?:ValueTypes["NabidkasOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
-	condition?:ValueTypes["NabidkaCondition"] | null},ValueTypes["NabidkasConnection"]],
 pariesByPIdPartner?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -662,15 +671,6 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `ParyNavrh`. */
 	orderBy?:ValueTypes["ParyNavrhsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["ParyNavrhCondition"] | null},ValueTypes["ParyNavrhsConnection"]],
-rozpisByRTrener?: [{	/** Only read the first `n` values of the set. */
-	first?:number | null,	/** Only read the last `n` values of the set. */
-	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
-based pagination. May not be used with `last`. */
-	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
-	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
-	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Rozpi`. */
-	orderBy?:ValueTypes["RozpisOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
-	condition?:ValueTypes["RozpiCondition"] | null},ValueTypes["RozpisConnection"]],
 upozornenisByUpKdo?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -1161,67 +1161,6 @@ tested for equality and combined with a logical ‘and.’ */
 	node?:ValueTypes["UpozorneniSkupiny"],
 		__typename?: boolean
 }>;
-	/** A connection to a list of `Session` values. */
-["SessionsConnection"]: AliasType<{
-	/** A list of `Session` objects. */
-	nodes?:ValueTypes["Session"],
-	/** A list of edges which contains the `Session` and cursor to aid in pagination. */
-	edges?:ValueTypes["SessionsEdge"],
-	/** Information to aid in pagination. */
-	pageInfo?:ValueTypes["PageInfo"],
-	/** The count of *all* `Session` you could get from the connection. */
-	totalCount?:boolean,
-		__typename?: boolean
-}>;
-	["Session"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
-	ssId?:boolean,
-	ssData?:boolean,
-	ssUpdatedAt?:boolean,
-	ssLifetime?:boolean,
-	ssUser?:boolean,
-	/** Reads a single `User` that is related to this `Session`. */
-	userBySsUser?:ValueTypes["User"],
-		__typename?: boolean
-}>;
-	/** A `Session` edge in the connection. */
-["SessionsEdge"]: AliasType<{
-	/** A cursor for use in pagination. */
-	cursor?:boolean,
-	/** The `Session` at the end of the edge. */
-	node?:ValueTypes["Session"],
-		__typename?: boolean
-}>;
-	/** Methods to use when ordering `Session`. */
-["SessionsOrderBy"]:SessionsOrderBy;
-	/** A condition to be used against `Session` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["SessionCondition"]: {
-	/** Checks for equality with the object’s `ssId` field. */
-	ssId?:string | null,
-	/** Checks for equality with the object’s `ssData` field. */
-	ssData?:string | null,
-	/** Checks for equality with the object’s `ssUpdatedAt` field. */
-	ssUpdatedAt?:ValueTypes["Datetime"] | null,
-	/** Checks for equality with the object’s `ssLifetime` field. */
-	ssLifetime?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `ssUser` field. */
-	ssUser?:ValueTypes["BigInt"] | null
-};
-	/** Methods to use when ordering `AkceItem`. */
-["AkceItemsOrderBy"]:AkceItemsOrderBy;
-	/** A condition to be used against `AkceItem` object types. All fields are tested
-for equality and combined with a logical ‘and.’ */
-["AkceItemCondition"]: {
-	/** Checks for equality with the object’s `aiId` field. */
-	aiId?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `aiIdRodic` field. */
-	aiIdRodic?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `aiUser` field. */
-	aiUser?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `aiRokNarozeni` field. */
-	aiRokNarozeni?:number | null
-};
 	/** A connection to a list of `Aktuality` values. */
 ["AktualitiesConnection"]: AliasType<{
 	/** A list of `Aktuality` objects. */
@@ -1369,60 +1308,6 @@ for equality and combined with a logical ‘and.’ */
 	node?:ValueTypes["Aktuality"],
 		__typename?: boolean
 }>;
-	/** A connection to a list of `Dokumenty` values. */
-["DokumentiesConnection"]: AliasType<{
-	/** A list of `Dokumenty` objects. */
-	nodes?:ValueTypes["Dokumenty"],
-	/** A list of edges which contains the `Dokumenty` and cursor to aid in pagination. */
-	edges?:ValueTypes["DokumentiesEdge"],
-	/** Information to aid in pagination. */
-	pageInfo?:ValueTypes["PageInfo"],
-	/** The count of *all* `Dokumenty` you could get from the connection. */
-	totalCount?:boolean,
-		__typename?: boolean
-}>;
-	["Dokumenty"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
-	dId?:boolean,
-	dPath?:boolean,
-	dName?:boolean,
-	dFilename?:boolean,
-	dKategorie?:boolean,
-	dKdo?:boolean,
-	dTimestamp?:boolean,
-	/** Reads a single `User` that is related to this `Dokumenty`. */
-	userByDKdo?:ValueTypes["User"],
-		__typename?: boolean
-}>;
-	/** A `Dokumenty` edge in the connection. */
-["DokumentiesEdge"]: AliasType<{
-	/** A cursor for use in pagination. */
-	cursor?:boolean,
-	/** The `Dokumenty` at the end of the edge. */
-	node?:ValueTypes["Dokumenty"],
-		__typename?: boolean
-}>;
-	/** Methods to use when ordering `Dokumenty`. */
-["DokumentiesOrderBy"]:DokumentiesOrderBy;
-	/** A condition to be used against `Dokumenty` object types. All fields are tested
-for equality and combined with a logical ‘and.’ */
-["DokumentyCondition"]: {
-	/** Checks for equality with the object’s `dId` field. */
-	dId?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `dPath` field. */
-	dPath?:string | null,
-	/** Checks for equality with the object’s `dName` field. */
-	dName?:string | null,
-	/** Checks for equality with the object’s `dFilename` field. */
-	dFilename?:string | null,
-	/** Checks for equality with the object’s `dKategorie` field. */
-	dKategorie?:number | null,
-	/** Checks for equality with the object’s `dKdo` field. */
-	dKdo?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `dTimestamp` field. */
-	dTimestamp?:ValueTypes["Datetime"] | null
-};
 	/** A connection to a list of `Nabidka` values. */
 ["NabidkasConnection"]: AliasType<{
 	/** A list of `Nabidka` objects. */
@@ -1659,6 +1544,160 @@ for equality and combined with a logical ‘and.’ */
 	/** Checks for equality with the object’s `nTimestamp` field. */
 	nTimestamp?:ValueTypes["Datetime"] | null
 };
+	/** A connection to a list of `Rozpi` values. */
+["RozpisConnection"]: AliasType<{
+	/** A list of `Rozpi` objects. */
+	nodes?:ValueTypes["Rozpi"],
+	/** A list of edges which contains the `Rozpi` and cursor to aid in pagination. */
+	edges?:ValueTypes["RozpisEdge"],
+	/** Information to aid in pagination. */
+	pageInfo?:ValueTypes["PageInfo"],
+	/** The count of *all* `Rozpi` you could get from the connection. */
+	totalCount?:boolean,
+		__typename?: boolean
+}>;
+	/** A `Rozpi` edge in the connection. */
+["RozpisEdge"]: AliasType<{
+	/** A cursor for use in pagination. */
+	cursor?:boolean,
+	/** The `Rozpi` at the end of the edge. */
+	node?:ValueTypes["Rozpi"],
+		__typename?: boolean
+}>;
+	/** Methods to use when ordering `Rozpi`. */
+["RozpisOrderBy"]:RozpisOrderBy;
+	/** A condition to be used against `Rozpi` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["RozpiCondition"]: {
+	/** Checks for equality with the object’s `rId` field. */
+	rId?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `rTrener` field. */
+	rTrener?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `rKde` field. */
+	rKde?:string | null,
+	/** Checks for equality with the object’s `rDatum` field. */
+	rDatum?:ValueTypes["Date"] | null,
+	/** Checks for equality with the object’s `rVisible` field. */
+	rVisible?:boolean | null,
+	/** Checks for equality with the object’s `rLock` field. */
+	rLock?:boolean | null,
+	/** Checks for equality with the object’s `rTimestamp` field. */
+	rTimestamp?:ValueTypes["Datetime"] | null
+};
+	/** A connection to a list of `Session` values. */
+["SessionsConnection"]: AliasType<{
+	/** A list of `Session` objects. */
+	nodes?:ValueTypes["Session"],
+	/** A list of edges which contains the `Session` and cursor to aid in pagination. */
+	edges?:ValueTypes["SessionsEdge"],
+	/** Information to aid in pagination. */
+	pageInfo?:ValueTypes["PageInfo"],
+	/** The count of *all* `Session` you could get from the connection. */
+	totalCount?:boolean,
+		__typename?: boolean
+}>;
+	["Session"]: AliasType<{
+	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+	nodeId?:boolean,
+	ssId?:boolean,
+	ssData?:boolean,
+	ssUpdatedAt?:boolean,
+	ssLifetime?:boolean,
+	ssUser?:boolean,
+	/** Reads a single `User` that is related to this `Session`. */
+	userBySsUser?:ValueTypes["User"],
+		__typename?: boolean
+}>;
+	/** A `Session` edge in the connection. */
+["SessionsEdge"]: AliasType<{
+	/** A cursor for use in pagination. */
+	cursor?:boolean,
+	/** The `Session` at the end of the edge. */
+	node?:ValueTypes["Session"],
+		__typename?: boolean
+}>;
+	/** Methods to use when ordering `Session`. */
+["SessionsOrderBy"]:SessionsOrderBy;
+	/** A condition to be used against `Session` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["SessionCondition"]: {
+	/** Checks for equality with the object’s `ssId` field. */
+	ssId?:string | null,
+	/** Checks for equality with the object’s `ssData` field. */
+	ssData?:string | null,
+	/** Checks for equality with the object’s `ssUpdatedAt` field. */
+	ssUpdatedAt?:ValueTypes["Datetime"] | null,
+	/** Checks for equality with the object’s `ssLifetime` field. */
+	ssLifetime?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `ssUser` field. */
+	ssUser?:ValueTypes["BigInt"] | null
+};
+	/** Methods to use when ordering `AkceItem`. */
+["AkceItemsOrderBy"]:AkceItemsOrderBy;
+	/** A condition to be used against `AkceItem` object types. All fields are tested
+for equality and combined with a logical ‘and.’ */
+["AkceItemCondition"]: {
+	/** Checks for equality with the object’s `aiId` field. */
+	aiId?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `aiIdRodic` field. */
+	aiIdRodic?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `aiUser` field. */
+	aiUser?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `aiRokNarozeni` field. */
+	aiRokNarozeni?:number | null
+};
+	/** A connection to a list of `Dokumenty` values. */
+["DokumentiesConnection"]: AliasType<{
+	/** A list of `Dokumenty` objects. */
+	nodes?:ValueTypes["Dokumenty"],
+	/** A list of edges which contains the `Dokumenty` and cursor to aid in pagination. */
+	edges?:ValueTypes["DokumentiesEdge"],
+	/** Information to aid in pagination. */
+	pageInfo?:ValueTypes["PageInfo"],
+	/** The count of *all* `Dokumenty` you could get from the connection. */
+	totalCount?:boolean,
+		__typename?: boolean
+}>;
+	["Dokumenty"]: AliasType<{
+	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+	nodeId?:boolean,
+	dId?:boolean,
+	dPath?:boolean,
+	dName?:boolean,
+	dFilename?:boolean,
+	dKategorie?:boolean,
+	dKdo?:boolean,
+	dTimestamp?:boolean,
+	/** Reads a single `User` that is related to this `Dokumenty`. */
+	userByDKdo?:ValueTypes["User"],
+		__typename?: boolean
+}>;
+	/** A `Dokumenty` edge in the connection. */
+["DokumentiesEdge"]: AliasType<{
+	/** A cursor for use in pagination. */
+	cursor?:boolean,
+	/** The `Dokumenty` at the end of the edge. */
+	node?:ValueTypes["Dokumenty"],
+		__typename?: boolean
+}>;
+	/** Methods to use when ordering `Dokumenty`. */
+["DokumentiesOrderBy"]:DokumentiesOrderBy;
+	/** A condition to be used against `Dokumenty` object types. All fields are tested
+for equality and combined with a logical ‘and.’ */
+["DokumentyCondition"]: {
+	/** Checks for equality with the object’s `dId` field. */
+	dId?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `dPath` field. */
+	dPath?:string | null,
+	/** Checks for equality with the object’s `dName` field. */
+	dName?:string | null,
+	/** Checks for equality with the object’s `dFilename` field. */
+	dFilename?:string | null,
+	/** Checks for equality with the object’s `dKategorie` field. */
+	dKategorie?:number | null,
+	/** Checks for equality with the object’s `dKdo` field. */
+	dKdo?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `dTimestamp` field. */
+	dTimestamp?:ValueTypes["Datetime"] | null
+};
 	/** A connection to a list of `Pary` values. */
 ["PariesConnection"]: AliasType<{
 	/** A list of `Pary` objects. */
@@ -1758,45 +1797,6 @@ for equality and combined with a logical ‘and.’ */
 	pnPartner?:ValueTypes["BigInt"] | null,
 	/** Checks for equality with the object’s `pnPartnerka` field. */
 	pnPartnerka?:ValueTypes["BigInt"] | null
-};
-	/** A connection to a list of `Rozpi` values. */
-["RozpisConnection"]: AliasType<{
-	/** A list of `Rozpi` objects. */
-	nodes?:ValueTypes["Rozpi"],
-	/** A list of edges which contains the `Rozpi` and cursor to aid in pagination. */
-	edges?:ValueTypes["RozpisEdge"],
-	/** Information to aid in pagination. */
-	pageInfo?:ValueTypes["PageInfo"],
-	/** The count of *all* `Rozpi` you could get from the connection. */
-	totalCount?:boolean,
-		__typename?: boolean
-}>;
-	/** A `Rozpi` edge in the connection. */
-["RozpisEdge"]: AliasType<{
-	/** A cursor for use in pagination. */
-	cursor?:boolean,
-	/** The `Rozpi` at the end of the edge. */
-	node?:ValueTypes["Rozpi"],
-		__typename?: boolean
-}>;
-	/** Methods to use when ordering `Rozpi`. */
-["RozpisOrderBy"]:RozpisOrderBy;
-	/** A condition to be used against `Rozpi` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["RozpiCondition"]: {
-	/** Checks for equality with the object’s `rId` field. */
-	rId?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `rTrener` field. */
-	rTrener?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `rKde` field. */
-	rKde?:string | null,
-	/** Checks for equality with the object’s `rDatum` field. */
-	rDatum?:ValueTypes["Date"] | null,
-	/** Checks for equality with the object’s `rVisible` field. */
-	rVisible?:boolean | null,
-	/** Checks for equality with the object’s `rLock` field. */
-	rLock?:boolean | null,
-	/** Checks for equality with the object’s `rTimestamp` field. */
-	rTimestamp?:ValueTypes["Datetime"] | null
 };
 	/** A connection to a list of `Upozorneni` values. */
 ["UpozornenisConnection"]: AliasType<{
@@ -1936,6 +1936,7 @@ for equality and combined with a logical ‘and.’ */
 	["Member"]: AliasType<{
 	uEmail?:boolean,
 	sName?:boolean,
+	paymentValid?:boolean,
 		__typename?: boolean
 }>;
 	/** A `Member` edge in the connection. */
@@ -1953,7 +1954,9 @@ for equality and combined with a logical ‘and.’ */
 	/** Checks for equality with the object’s `uEmail` field. */
 	uEmail?:string | null,
 	/** Checks for equality with the object’s `sName` field. */
-	sName?:string | null
+	sName?:string | null,
+	/** Checks for equality with the object’s `paymentValid` field. */
+	paymentValid?:boolean | null
 };
 	/** A connection to a list of `Page` values. */
 ["PagesConnection"]: AliasType<{
@@ -6340,7 +6343,7 @@ which can only query top level fields if they are in a particular form. */
 	videoSourceByNodeId?:ModelTypes["VideoSource"]
 };
 	/** An object with a globally unique `ID`. */
-["Node"]: ModelTypes["Query"] | ModelTypes["Akce"] | ModelTypes["AkceItem"] | ModelTypes["User"] | ModelTypes["Permission"] | ModelTypes["Skupiny"] | ModelTypes["PlatbyGroupSkupina"] | ModelTypes["PlatbyGroup"] | ModelTypes["PlatbyCategoryGroup"] | ModelTypes["PlatbyCategory"] | ModelTypes["PlatbyItem"] | ModelTypes["PlatbyRaw"] | ModelTypes["UpozorneniSkupiny"] | ModelTypes["Upozorneni"] | ModelTypes["Session"] | ModelTypes["Aktuality"] | ModelTypes["GalerieFoto"] | ModelTypes["GalerieDir"] | ModelTypes["Dokumenty"] | ModelTypes["Nabidka"] | ModelTypes["NabidkaItem"] | ModelTypes["Pary"] | ModelTypes["RozpisItem"] | ModelTypes["Rozpi"] | ModelTypes["ParyNavrh"] | ModelTypes["Page"] | ModelTypes["PageRevision"] | ModelTypes["Parameter"] | ModelTypes["UsersSkupiny"] | ModelTypes["Video"] | ModelTypes["VideoList"] | ModelTypes["VideoSource"];
+["Node"]: ModelTypes["Query"] | ModelTypes["Akce"] | ModelTypes["AkceItem"] | ModelTypes["User"] | ModelTypes["Permission"] | ModelTypes["Skupiny"] | ModelTypes["PlatbyGroupSkupina"] | ModelTypes["PlatbyGroup"] | ModelTypes["PlatbyCategoryGroup"] | ModelTypes["PlatbyCategory"] | ModelTypes["PlatbyItem"] | ModelTypes["PlatbyRaw"] | ModelTypes["UpozorneniSkupiny"] | ModelTypes["Upozorneni"] | ModelTypes["Aktuality"] | ModelTypes["GalerieFoto"] | ModelTypes["GalerieDir"] | ModelTypes["Nabidka"] | ModelTypes["NabidkaItem"] | ModelTypes["Pary"] | ModelTypes["RozpisItem"] | ModelTypes["Rozpi"] | ModelTypes["Session"] | ModelTypes["Dokumenty"] | ModelTypes["ParyNavrh"] | ModelTypes["Page"] | ModelTypes["PageRevision"] | ModelTypes["Parameter"] | ModelTypes["UsersSkupiny"] | ModelTypes["Video"] | ModelTypes["VideoList"] | ModelTypes["VideoSource"];
 	/** A connection to a list of `Akce` values. */
 ["AkcesConnection"]: {
 		/** A list of `Akce` objects. */
@@ -6440,20 +6443,22 @@ strings and not numbers. */
 	permissionByUGroup?:ModelTypes["Permission"],
 	/** Reads a single `Skupiny` that is related to this `User`. */
 	skupinyByUSkupina?:ModelTypes["Skupiny"],
+	/** Reads and enables pagination through a set of `Aktuality`. */
+	aktualitiesByAtKdo:ModelTypes["AktualitiesConnection"],
+	/** Reads and enables pagination through a set of `Nabidka`. */
+	nabidkasByNTrener:ModelTypes["NabidkasConnection"],
+	/** Reads and enables pagination through a set of `Rozpi`. */
+	rozpisByRTrener:ModelTypes["RozpisConnection"],
 	/** Reads and enables pagination through a set of `Session`. */
 	sessionsBySsUser:ModelTypes["SessionsConnection"],
 	/** Reads and enables pagination through a set of `AkceItem`. */
 	akceItemsByAiUser:ModelTypes["AkceItemsConnection"],
-	/** Reads and enables pagination through a set of `Aktuality`. */
-	aktualitiesByAtKdo:ModelTypes["AktualitiesConnection"],
 	/** Reads and enables pagination through a set of `Dokumenty`. */
 	dokumentiesByDKdo:ModelTypes["DokumentiesConnection"],
 	/** Reads and enables pagination through a set of `GalerieFoto`. */
 	galerieFotosByGfKdo:ModelTypes["GalerieFotosConnection"],
 	/** Reads and enables pagination through a set of `PlatbyItem`. */
 	platbyItemsByPiIdUser:ModelTypes["PlatbyItemsConnection"],
-	/** Reads and enables pagination through a set of `Nabidka`. */
-	nabidkasByNTrener:ModelTypes["NabidkasConnection"],
 	/** Reads and enables pagination through a set of `Pary`. */
 	pariesByPIdPartner:ModelTypes["PariesConnection"],
 	/** Reads and enables pagination through a set of `ParyNavrh`. */
@@ -6462,8 +6467,6 @@ strings and not numbers. */
 	paryNavrhsByPnPartner:ModelTypes["ParyNavrhsConnection"],
 	/** Reads and enables pagination through a set of `ParyNavrh`. */
 	paryNavrhsByPnPartnerka:ModelTypes["ParyNavrhsConnection"],
-	/** Reads and enables pagination through a set of `Rozpi`. */
-	rozpisByRTrener:ModelTypes["RozpisConnection"],
 	/** Reads and enables pagination through a set of `Upozorneni`. */
 	upozornenisByUpKdo:ModelTypes["UpozornenisConnection"]
 };
@@ -6750,44 +6753,6 @@ tested for equality and combined with a logical ‘and.’ */
 	/** The `UpozorneniSkupiny` at the end of the edge. */
 	node:ModelTypes["UpozorneniSkupiny"]
 };
-	/** A connection to a list of `Session` values. */
-["SessionsConnection"]: {
-		/** A list of `Session` objects. */
-	nodes:ModelTypes["Session"][],
-	/** A list of edges which contains the `Session` and cursor to aid in pagination. */
-	edges:ModelTypes["SessionsEdge"][],
-	/** Information to aid in pagination. */
-	pageInfo:ModelTypes["PageInfo"],
-	/** The count of *all* `Session` you could get from the connection. */
-	totalCount:number
-};
-	["Session"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	ssId:string,
-	ssData:string,
-	ssUpdatedAt:ModelTypes["Datetime"],
-	ssLifetime:ModelTypes["BigInt"],
-	ssUser?:ModelTypes["BigInt"],
-	/** Reads a single `User` that is related to this `Session`. */
-	userBySsUser?:ModelTypes["User"]
-};
-	/** A `Session` edge in the connection. */
-["SessionsEdge"]: {
-		/** A cursor for use in pagination. */
-	cursor?:ModelTypes["Cursor"],
-	/** The `Session` at the end of the edge. */
-	node:ModelTypes["Session"]
-};
-	/** Methods to use when ordering `Session`. */
-["SessionsOrderBy"]: GraphQLTypes["SessionsOrderBy"];
-	/** A condition to be used against `Session` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["SessionCondition"]: GraphQLTypes["SessionCondition"];
-	/** Methods to use when ordering `AkceItem`. */
-["AkceItemsOrderBy"]: GraphQLTypes["AkceItemsOrderBy"];
-	/** A condition to be used against `AkceItem` object types. All fields are tested
-for equality and combined with a logical ‘and.’ */
-["AkceItemCondition"]: GraphQLTypes["AkceItemCondition"];
 	/** A connection to a list of `Aktuality` values. */
 ["AktualitiesConnection"]: {
 		/** A list of `Aktuality` objects. */
@@ -6880,42 +6845,6 @@ for equality and combined with a logical ‘and.’ */
 	/** The `Aktuality` at the end of the edge. */
 	node:ModelTypes["Aktuality"]
 };
-	/** A connection to a list of `Dokumenty` values. */
-["DokumentiesConnection"]: {
-		/** A list of `Dokumenty` objects. */
-	nodes:ModelTypes["Dokumenty"][],
-	/** A list of edges which contains the `Dokumenty` and cursor to aid in pagination. */
-	edges:ModelTypes["DokumentiesEdge"][],
-	/** Information to aid in pagination. */
-	pageInfo:ModelTypes["PageInfo"],
-	/** The count of *all* `Dokumenty` you could get from the connection. */
-	totalCount:number
-};
-	["Dokumenty"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	dId:ModelTypes["BigInt"],
-	dPath:string,
-	dName:string,
-	dFilename:string,
-	dKategorie:number,
-	dKdo:ModelTypes["BigInt"],
-	dTimestamp?:ModelTypes["Datetime"],
-	/** Reads a single `User` that is related to this `Dokumenty`. */
-	userByDKdo?:ModelTypes["User"]
-};
-	/** A `Dokumenty` edge in the connection. */
-["DokumentiesEdge"]: {
-		/** A cursor for use in pagination. */
-	cursor?:ModelTypes["Cursor"],
-	/** The `Dokumenty` at the end of the edge. */
-	node:ModelTypes["Dokumenty"]
-};
-	/** Methods to use when ordering `Dokumenty`. */
-["DokumentiesOrderBy"]: GraphQLTypes["DokumentiesOrderBy"];
-	/** A condition to be used against `Dokumenty` object types. All fields are tested
-for equality and combined with a logical ‘and.’ */
-["DokumentyCondition"]: GraphQLTypes["DokumentyCondition"];
 	/** A connection to a list of `Nabidka` values. */
 ["NabidkasConnection"]: {
 		/** A list of `Nabidka` objects. */
@@ -7070,6 +6999,102 @@ for equality and combined with a logical ‘and.’ */
 ["NabidkasOrderBy"]: GraphQLTypes["NabidkasOrderBy"];
 	/** A condition to be used against `Nabidka` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 ["NabidkaCondition"]: GraphQLTypes["NabidkaCondition"];
+	/** A connection to a list of `Rozpi` values. */
+["RozpisConnection"]: {
+		/** A list of `Rozpi` objects. */
+	nodes:ModelTypes["Rozpi"][],
+	/** A list of edges which contains the `Rozpi` and cursor to aid in pagination. */
+	edges:ModelTypes["RozpisEdge"][],
+	/** Information to aid in pagination. */
+	pageInfo:ModelTypes["PageInfo"],
+	/** The count of *all* `Rozpi` you could get from the connection. */
+	totalCount:number
+};
+	/** A `Rozpi` edge in the connection. */
+["RozpisEdge"]: {
+		/** A cursor for use in pagination. */
+	cursor?:ModelTypes["Cursor"],
+	/** The `Rozpi` at the end of the edge. */
+	node:ModelTypes["Rozpi"]
+};
+	/** Methods to use when ordering `Rozpi`. */
+["RozpisOrderBy"]: GraphQLTypes["RozpisOrderBy"];
+	/** A condition to be used against `Rozpi` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["RozpiCondition"]: GraphQLTypes["RozpiCondition"];
+	/** A connection to a list of `Session` values. */
+["SessionsConnection"]: {
+		/** A list of `Session` objects. */
+	nodes:ModelTypes["Session"][],
+	/** A list of edges which contains the `Session` and cursor to aid in pagination. */
+	edges:ModelTypes["SessionsEdge"][],
+	/** Information to aid in pagination. */
+	pageInfo:ModelTypes["PageInfo"],
+	/** The count of *all* `Session` you could get from the connection. */
+	totalCount:number
+};
+	["Session"]: {
+		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+	nodeId:string,
+	ssId:string,
+	ssData:string,
+	ssUpdatedAt:ModelTypes["Datetime"],
+	ssLifetime:ModelTypes["BigInt"],
+	ssUser?:ModelTypes["BigInt"],
+	/** Reads a single `User` that is related to this `Session`. */
+	userBySsUser?:ModelTypes["User"]
+};
+	/** A `Session` edge in the connection. */
+["SessionsEdge"]: {
+		/** A cursor for use in pagination. */
+	cursor?:ModelTypes["Cursor"],
+	/** The `Session` at the end of the edge. */
+	node:ModelTypes["Session"]
+};
+	/** Methods to use when ordering `Session`. */
+["SessionsOrderBy"]: GraphQLTypes["SessionsOrderBy"];
+	/** A condition to be used against `Session` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["SessionCondition"]: GraphQLTypes["SessionCondition"];
+	/** Methods to use when ordering `AkceItem`. */
+["AkceItemsOrderBy"]: GraphQLTypes["AkceItemsOrderBy"];
+	/** A condition to be used against `AkceItem` object types. All fields are tested
+for equality and combined with a logical ‘and.’ */
+["AkceItemCondition"]: GraphQLTypes["AkceItemCondition"];
+	/** A connection to a list of `Dokumenty` values. */
+["DokumentiesConnection"]: {
+		/** A list of `Dokumenty` objects. */
+	nodes:ModelTypes["Dokumenty"][],
+	/** A list of edges which contains the `Dokumenty` and cursor to aid in pagination. */
+	edges:ModelTypes["DokumentiesEdge"][],
+	/** Information to aid in pagination. */
+	pageInfo:ModelTypes["PageInfo"],
+	/** The count of *all* `Dokumenty` you could get from the connection. */
+	totalCount:number
+};
+	["Dokumenty"]: {
+		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+	nodeId:string,
+	dId:ModelTypes["BigInt"],
+	dPath:string,
+	dName:string,
+	dFilename:string,
+	dKategorie:number,
+	dKdo:ModelTypes["BigInt"],
+	dTimestamp?:ModelTypes["Datetime"],
+	/** Reads a single `User` that is related to this `Dokumenty`. */
+	userByDKdo?:ModelTypes["User"]
+};
+	/** A `Dokumenty` edge in the connection. */
+["DokumentiesEdge"]: {
+		/** A cursor for use in pagination. */
+	cursor?:ModelTypes["Cursor"],
+	/** The `Dokumenty` at the end of the edge. */
+	node:ModelTypes["Dokumenty"]
+};
+	/** Methods to use when ordering `Dokumenty`. */
+["DokumentiesOrderBy"]: GraphQLTypes["DokumentiesOrderBy"];
+	/** A condition to be used against `Dokumenty` object types. All fields are tested
+for equality and combined with a logical ‘and.’ */
+["DokumentyCondition"]: GraphQLTypes["DokumentyCondition"];
 	/** A connection to a list of `Pary` values. */
 ["PariesConnection"]: {
 		/** A list of `Pary` objects. */
@@ -7129,28 +7154,6 @@ for equality and combined with a logical ‘and.’ */
 	/** A condition to be used against `ParyNavrh` object types. All fields are tested
 for equality and combined with a logical ‘and.’ */
 ["ParyNavrhCondition"]: GraphQLTypes["ParyNavrhCondition"];
-	/** A connection to a list of `Rozpi` values. */
-["RozpisConnection"]: {
-		/** A list of `Rozpi` objects. */
-	nodes:ModelTypes["Rozpi"][],
-	/** A list of edges which contains the `Rozpi` and cursor to aid in pagination. */
-	edges:ModelTypes["RozpisEdge"][],
-	/** Information to aid in pagination. */
-	pageInfo:ModelTypes["PageInfo"],
-	/** The count of *all* `Rozpi` you could get from the connection. */
-	totalCount:number
-};
-	/** A `Rozpi` edge in the connection. */
-["RozpisEdge"]: {
-		/** A cursor for use in pagination. */
-	cursor?:ModelTypes["Cursor"],
-	/** The `Rozpi` at the end of the edge. */
-	node:ModelTypes["Rozpi"]
-};
-	/** Methods to use when ordering `Rozpi`. */
-["RozpisOrderBy"]: GraphQLTypes["RozpisOrderBy"];
-	/** A condition to be used against `Rozpi` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["RozpiCondition"]: GraphQLTypes["RozpiCondition"];
 	/** A connection to a list of `Upozorneni` values. */
 ["UpozornenisConnection"]: {
 		/** A list of `Upozorneni` objects. */
@@ -7228,7 +7231,8 @@ for equality and combined with a logical ‘and.’ */
 };
 	["Member"]: {
 		uEmail?:string,
-	sName?:string
+	sName?:string,
+	paymentValid?:boolean
 };
 	/** A `Member` edge in the connection. */
 ["MembersEdge"]: {
@@ -9811,7 +9815,7 @@ which can only query top level fields if they are in a particular form. */
 };
 	/** An object with a globally unique `ID`. */
 ["Node"]: {
-	__typename:"Query" | "Akce" | "AkceItem" | "User" | "Permission" | "Skupiny" | "PlatbyGroupSkupina" | "PlatbyGroup" | "PlatbyCategoryGroup" | "PlatbyCategory" | "PlatbyItem" | "PlatbyRaw" | "UpozorneniSkupiny" | "Upozorneni" | "Session" | "Aktuality" | "GalerieFoto" | "GalerieDir" | "Dokumenty" | "Nabidka" | "NabidkaItem" | "Pary" | "RozpisItem" | "Rozpi" | "ParyNavrh" | "Page" | "PageRevision" | "Parameter" | "UsersSkupiny" | "Video" | "VideoList" | "VideoSource",
+	__typename:"Query" | "Akce" | "AkceItem" | "User" | "Permission" | "Skupiny" | "PlatbyGroupSkupina" | "PlatbyGroup" | "PlatbyCategoryGroup" | "PlatbyCategory" | "PlatbyItem" | "PlatbyRaw" | "UpozorneniSkupiny" | "Upozorneni" | "Aktuality" | "GalerieFoto" | "GalerieDir" | "Nabidka" | "NabidkaItem" | "Pary" | "RozpisItem" | "Rozpi" | "Session" | "Dokumenty" | "ParyNavrh" | "Page" | "PageRevision" | "Parameter" | "UsersSkupiny" | "Video" | "VideoList" | "VideoSource",
 	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
 	nodeId: string
 	['...on Query']: '__union' & GraphQLTypes["Query"];
@@ -9828,16 +9832,16 @@ which can only query top level fields if they are in a particular form. */
 	['...on PlatbyRaw']: '__union' & GraphQLTypes["PlatbyRaw"];
 	['...on UpozorneniSkupiny']: '__union' & GraphQLTypes["UpozorneniSkupiny"];
 	['...on Upozorneni']: '__union' & GraphQLTypes["Upozorneni"];
-	['...on Session']: '__union' & GraphQLTypes["Session"];
 	['...on Aktuality']: '__union' & GraphQLTypes["Aktuality"];
 	['...on GalerieFoto']: '__union' & GraphQLTypes["GalerieFoto"];
 	['...on GalerieDir']: '__union' & GraphQLTypes["GalerieDir"];
-	['...on Dokumenty']: '__union' & GraphQLTypes["Dokumenty"];
 	['...on Nabidka']: '__union' & GraphQLTypes["Nabidka"];
 	['...on NabidkaItem']: '__union' & GraphQLTypes["NabidkaItem"];
 	['...on Pary']: '__union' & GraphQLTypes["Pary"];
 	['...on RozpisItem']: '__union' & GraphQLTypes["RozpisItem"];
 	['...on Rozpi']: '__union' & GraphQLTypes["Rozpi"];
+	['...on Session']: '__union' & GraphQLTypes["Session"];
+	['...on Dokumenty']: '__union' & GraphQLTypes["Dokumenty"];
 	['...on ParyNavrh']: '__union' & GraphQLTypes["ParyNavrh"];
 	['...on Page']: '__union' & GraphQLTypes["Page"];
 	['...on PageRevision']: '__union' & GraphQLTypes["PageRevision"];
@@ -9951,20 +9955,22 @@ strings and not numbers. */
 	permissionByUGroup?: GraphQLTypes["Permission"],
 	/** Reads a single `Skupiny` that is related to this `User`. */
 	skupinyByUSkupina?: GraphQLTypes["Skupiny"],
+	/** Reads and enables pagination through a set of `Aktuality`. */
+	aktualitiesByAtKdo: GraphQLTypes["AktualitiesConnection"],
+	/** Reads and enables pagination through a set of `Nabidka`. */
+	nabidkasByNTrener: GraphQLTypes["NabidkasConnection"],
+	/** Reads and enables pagination through a set of `Rozpi`. */
+	rozpisByRTrener: GraphQLTypes["RozpisConnection"],
 	/** Reads and enables pagination through a set of `Session`. */
 	sessionsBySsUser: GraphQLTypes["SessionsConnection"],
 	/** Reads and enables pagination through a set of `AkceItem`. */
 	akceItemsByAiUser: GraphQLTypes["AkceItemsConnection"],
-	/** Reads and enables pagination through a set of `Aktuality`. */
-	aktualitiesByAtKdo: GraphQLTypes["AktualitiesConnection"],
 	/** Reads and enables pagination through a set of `Dokumenty`. */
 	dokumentiesByDKdo: GraphQLTypes["DokumentiesConnection"],
 	/** Reads and enables pagination through a set of `GalerieFoto`. */
 	galerieFotosByGfKdo: GraphQLTypes["GalerieFotosConnection"],
 	/** Reads and enables pagination through a set of `PlatbyItem`. */
 	platbyItemsByPiIdUser: GraphQLTypes["PlatbyItemsConnection"],
-	/** Reads and enables pagination through a set of `Nabidka`. */
-	nabidkasByNTrener: GraphQLTypes["NabidkasConnection"],
 	/** Reads and enables pagination through a set of `Pary`. */
 	pariesByPIdPartner: GraphQLTypes["PariesConnection"],
 	/** Reads and enables pagination through a set of `ParyNavrh`. */
@@ -9973,8 +9979,6 @@ strings and not numbers. */
 	paryNavrhsByPnPartner: GraphQLTypes["ParyNavrhsConnection"],
 	/** Reads and enables pagination through a set of `ParyNavrh`. */
 	paryNavrhsByPnPartnerka: GraphQLTypes["ParyNavrhsConnection"],
-	/** Reads and enables pagination through a set of `Rozpi`. */
-	rozpisByRTrener: GraphQLTypes["RozpisConnection"],
 	/** Reads and enables pagination through a set of `Upozorneni`. */
 	upozornenisByUpKdo: GraphQLTypes["UpozornenisConnection"]
 };
@@ -10387,67 +10391,6 @@ tested for equality and combined with a logical ‘and.’ */
 	/** The `UpozorneniSkupiny` at the end of the edge. */
 	node: GraphQLTypes["UpozorneniSkupiny"]
 };
-	/** A connection to a list of `Session` values. */
-["SessionsConnection"]: {
-	__typename: "SessionsConnection",
-	/** A list of `Session` objects. */
-	nodes: Array<GraphQLTypes["Session"]>,
-	/** A list of edges which contains the `Session` and cursor to aid in pagination. */
-	edges: Array<GraphQLTypes["SessionsEdge"]>,
-	/** Information to aid in pagination. */
-	pageInfo: GraphQLTypes["PageInfo"],
-	/** The count of *all* `Session` you could get from the connection. */
-	totalCount: number
-};
-	["Session"]: {
-	__typename: "Session",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
-	ssId: string,
-	ssData: string,
-	ssUpdatedAt: GraphQLTypes["Datetime"],
-	ssLifetime: GraphQLTypes["BigInt"],
-	ssUser?: GraphQLTypes["BigInt"],
-	/** Reads a single `User` that is related to this `Session`. */
-	userBySsUser?: GraphQLTypes["User"]
-};
-	/** A `Session` edge in the connection. */
-["SessionsEdge"]: {
-	__typename: "SessionsEdge",
-	/** A cursor for use in pagination. */
-	cursor?: GraphQLTypes["Cursor"],
-	/** The `Session` at the end of the edge. */
-	node: GraphQLTypes["Session"]
-};
-	/** Methods to use when ordering `Session`. */
-["SessionsOrderBy"]: SessionsOrderBy;
-	/** A condition to be used against `Session` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["SessionCondition"]: {
-		/** Checks for equality with the object’s `ssId` field. */
-	ssId?: string,
-	/** Checks for equality with the object’s `ssData` field. */
-	ssData?: string,
-	/** Checks for equality with the object’s `ssUpdatedAt` field. */
-	ssUpdatedAt?: GraphQLTypes["Datetime"],
-	/** Checks for equality with the object’s `ssLifetime` field. */
-	ssLifetime?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `ssUser` field. */
-	ssUser?: GraphQLTypes["BigInt"]
-};
-	/** Methods to use when ordering `AkceItem`. */
-["AkceItemsOrderBy"]: AkceItemsOrderBy;
-	/** A condition to be used against `AkceItem` object types. All fields are tested
-for equality and combined with a logical ‘and.’ */
-["AkceItemCondition"]: {
-		/** Checks for equality with the object’s `aiId` field. */
-	aiId?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `aiIdRodic` field. */
-	aiIdRodic?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `aiUser` field. */
-	aiUser?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `aiRokNarozeni` field. */
-	aiRokNarozeni?: number
-};
 	/** A connection to a list of `Aktuality` values. */
 ["AktualitiesConnection"]: {
 	__typename: "AktualitiesConnection",
@@ -10580,60 +10523,6 @@ for equality and combined with a logical ‘and.’ */
 	cursor?: GraphQLTypes["Cursor"],
 	/** The `Aktuality` at the end of the edge. */
 	node: GraphQLTypes["Aktuality"]
-};
-	/** A connection to a list of `Dokumenty` values. */
-["DokumentiesConnection"]: {
-	__typename: "DokumentiesConnection",
-	/** A list of `Dokumenty` objects. */
-	nodes: Array<GraphQLTypes["Dokumenty"]>,
-	/** A list of edges which contains the `Dokumenty` and cursor to aid in pagination. */
-	edges: Array<GraphQLTypes["DokumentiesEdge"]>,
-	/** Information to aid in pagination. */
-	pageInfo: GraphQLTypes["PageInfo"],
-	/** The count of *all* `Dokumenty` you could get from the connection. */
-	totalCount: number
-};
-	["Dokumenty"]: {
-	__typename: "Dokumenty",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
-	dId: GraphQLTypes["BigInt"],
-	dPath: string,
-	dName: string,
-	dFilename: string,
-	dKategorie: number,
-	dKdo: GraphQLTypes["BigInt"],
-	dTimestamp?: GraphQLTypes["Datetime"],
-	/** Reads a single `User` that is related to this `Dokumenty`. */
-	userByDKdo?: GraphQLTypes["User"]
-};
-	/** A `Dokumenty` edge in the connection. */
-["DokumentiesEdge"]: {
-	__typename: "DokumentiesEdge",
-	/** A cursor for use in pagination. */
-	cursor?: GraphQLTypes["Cursor"],
-	/** The `Dokumenty` at the end of the edge. */
-	node: GraphQLTypes["Dokumenty"]
-};
-	/** Methods to use when ordering `Dokumenty`. */
-["DokumentiesOrderBy"]: DokumentiesOrderBy;
-	/** A condition to be used against `Dokumenty` object types. All fields are tested
-for equality and combined with a logical ‘and.’ */
-["DokumentyCondition"]: {
-		/** Checks for equality with the object’s `dId` field. */
-	dId?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `dPath` field. */
-	dPath?: string,
-	/** Checks for equality with the object’s `dName` field. */
-	dName?: string,
-	/** Checks for equality with the object’s `dFilename` field. */
-	dFilename?: string,
-	/** Checks for equality with the object’s `dKategorie` field. */
-	dKategorie?: number,
-	/** Checks for equality with the object’s `dKdo` field. */
-	dKdo?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `dTimestamp` field. */
-	dTimestamp?: GraphQLTypes["Datetime"]
 };
 	/** A connection to a list of `Nabidka` values. */
 ["NabidkasConnection"]: {
@@ -10843,6 +10732,160 @@ for equality and combined with a logical ‘and.’ */
 	/** Checks for equality with the object’s `nTimestamp` field. */
 	nTimestamp?: GraphQLTypes["Datetime"]
 };
+	/** A connection to a list of `Rozpi` values. */
+["RozpisConnection"]: {
+	__typename: "RozpisConnection",
+	/** A list of `Rozpi` objects. */
+	nodes: Array<GraphQLTypes["Rozpi"]>,
+	/** A list of edges which contains the `Rozpi` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["RozpisEdge"]>,
+	/** Information to aid in pagination. */
+	pageInfo: GraphQLTypes["PageInfo"],
+	/** The count of *all* `Rozpi` you could get from the connection. */
+	totalCount: number
+};
+	/** A `Rozpi` edge in the connection. */
+["RozpisEdge"]: {
+	__typename: "RozpisEdge",
+	/** A cursor for use in pagination. */
+	cursor?: GraphQLTypes["Cursor"],
+	/** The `Rozpi` at the end of the edge. */
+	node: GraphQLTypes["Rozpi"]
+};
+	/** Methods to use when ordering `Rozpi`. */
+["RozpisOrderBy"]: RozpisOrderBy;
+	/** A condition to be used against `Rozpi` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["RozpiCondition"]: {
+		/** Checks for equality with the object’s `rId` field. */
+	rId?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `rTrener` field. */
+	rTrener?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `rKde` field. */
+	rKde?: string,
+	/** Checks for equality with the object’s `rDatum` field. */
+	rDatum?: GraphQLTypes["Date"],
+	/** Checks for equality with the object’s `rVisible` field. */
+	rVisible?: boolean,
+	/** Checks for equality with the object’s `rLock` field. */
+	rLock?: boolean,
+	/** Checks for equality with the object’s `rTimestamp` field. */
+	rTimestamp?: GraphQLTypes["Datetime"]
+};
+	/** A connection to a list of `Session` values. */
+["SessionsConnection"]: {
+	__typename: "SessionsConnection",
+	/** A list of `Session` objects. */
+	nodes: Array<GraphQLTypes["Session"]>,
+	/** A list of edges which contains the `Session` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["SessionsEdge"]>,
+	/** Information to aid in pagination. */
+	pageInfo: GraphQLTypes["PageInfo"],
+	/** The count of *all* `Session` you could get from the connection. */
+	totalCount: number
+};
+	["Session"]: {
+	__typename: "Session",
+	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+	nodeId: string,
+	ssId: string,
+	ssData: string,
+	ssUpdatedAt: GraphQLTypes["Datetime"],
+	ssLifetime: GraphQLTypes["BigInt"],
+	ssUser?: GraphQLTypes["BigInt"],
+	/** Reads a single `User` that is related to this `Session`. */
+	userBySsUser?: GraphQLTypes["User"]
+};
+	/** A `Session` edge in the connection. */
+["SessionsEdge"]: {
+	__typename: "SessionsEdge",
+	/** A cursor for use in pagination. */
+	cursor?: GraphQLTypes["Cursor"],
+	/** The `Session` at the end of the edge. */
+	node: GraphQLTypes["Session"]
+};
+	/** Methods to use when ordering `Session`. */
+["SessionsOrderBy"]: SessionsOrderBy;
+	/** A condition to be used against `Session` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["SessionCondition"]: {
+		/** Checks for equality with the object’s `ssId` field. */
+	ssId?: string,
+	/** Checks for equality with the object’s `ssData` field. */
+	ssData?: string,
+	/** Checks for equality with the object’s `ssUpdatedAt` field. */
+	ssUpdatedAt?: GraphQLTypes["Datetime"],
+	/** Checks for equality with the object’s `ssLifetime` field. */
+	ssLifetime?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `ssUser` field. */
+	ssUser?: GraphQLTypes["BigInt"]
+};
+	/** Methods to use when ordering `AkceItem`. */
+["AkceItemsOrderBy"]: AkceItemsOrderBy;
+	/** A condition to be used against `AkceItem` object types. All fields are tested
+for equality and combined with a logical ‘and.’ */
+["AkceItemCondition"]: {
+		/** Checks for equality with the object’s `aiId` field. */
+	aiId?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `aiIdRodic` field. */
+	aiIdRodic?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `aiUser` field. */
+	aiUser?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `aiRokNarozeni` field. */
+	aiRokNarozeni?: number
+};
+	/** A connection to a list of `Dokumenty` values. */
+["DokumentiesConnection"]: {
+	__typename: "DokumentiesConnection",
+	/** A list of `Dokumenty` objects. */
+	nodes: Array<GraphQLTypes["Dokumenty"]>,
+	/** A list of edges which contains the `Dokumenty` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["DokumentiesEdge"]>,
+	/** Information to aid in pagination. */
+	pageInfo: GraphQLTypes["PageInfo"],
+	/** The count of *all* `Dokumenty` you could get from the connection. */
+	totalCount: number
+};
+	["Dokumenty"]: {
+	__typename: "Dokumenty",
+	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+	nodeId: string,
+	dId: GraphQLTypes["BigInt"],
+	dPath: string,
+	dName: string,
+	dFilename: string,
+	dKategorie: number,
+	dKdo: GraphQLTypes["BigInt"],
+	dTimestamp?: GraphQLTypes["Datetime"],
+	/** Reads a single `User` that is related to this `Dokumenty`. */
+	userByDKdo?: GraphQLTypes["User"]
+};
+	/** A `Dokumenty` edge in the connection. */
+["DokumentiesEdge"]: {
+	__typename: "DokumentiesEdge",
+	/** A cursor for use in pagination. */
+	cursor?: GraphQLTypes["Cursor"],
+	/** The `Dokumenty` at the end of the edge. */
+	node: GraphQLTypes["Dokumenty"]
+};
+	/** Methods to use when ordering `Dokumenty`. */
+["DokumentiesOrderBy"]: DokumentiesOrderBy;
+	/** A condition to be used against `Dokumenty` object types. All fields are tested
+for equality and combined with a logical ‘and.’ */
+["DokumentyCondition"]: {
+		/** Checks for equality with the object’s `dId` field. */
+	dId?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `dPath` field. */
+	dPath?: string,
+	/** Checks for equality with the object’s `dName` field. */
+	dName?: string,
+	/** Checks for equality with the object’s `dFilename` field. */
+	dFilename?: string,
+	/** Checks for equality with the object’s `dKategorie` field. */
+	dKategorie?: number,
+	/** Checks for equality with the object’s `dKdo` field. */
+	dKdo?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `dTimestamp` field. */
+	dTimestamp?: GraphQLTypes["Datetime"]
+};
 	/** A connection to a list of `Pary` values. */
 ["PariesConnection"]: {
 	__typename: "PariesConnection",
@@ -10942,45 +10985,6 @@ for equality and combined with a logical ‘and.’ */
 	pnPartner?: GraphQLTypes["BigInt"],
 	/** Checks for equality with the object’s `pnPartnerka` field. */
 	pnPartnerka?: GraphQLTypes["BigInt"]
-};
-	/** A connection to a list of `Rozpi` values. */
-["RozpisConnection"]: {
-	__typename: "RozpisConnection",
-	/** A list of `Rozpi` objects. */
-	nodes: Array<GraphQLTypes["Rozpi"]>,
-	/** A list of edges which contains the `Rozpi` and cursor to aid in pagination. */
-	edges: Array<GraphQLTypes["RozpisEdge"]>,
-	/** Information to aid in pagination. */
-	pageInfo: GraphQLTypes["PageInfo"],
-	/** The count of *all* `Rozpi` you could get from the connection. */
-	totalCount: number
-};
-	/** A `Rozpi` edge in the connection. */
-["RozpisEdge"]: {
-	__typename: "RozpisEdge",
-	/** A cursor for use in pagination. */
-	cursor?: GraphQLTypes["Cursor"],
-	/** The `Rozpi` at the end of the edge. */
-	node: GraphQLTypes["Rozpi"]
-};
-	/** Methods to use when ordering `Rozpi`. */
-["RozpisOrderBy"]: RozpisOrderBy;
-	/** A condition to be used against `Rozpi` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["RozpiCondition"]: {
-		/** Checks for equality with the object’s `rId` field. */
-	rId?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `rTrener` field. */
-	rTrener?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `rKde` field. */
-	rKde?: string,
-	/** Checks for equality with the object’s `rDatum` field. */
-	rDatum?: GraphQLTypes["Date"],
-	/** Checks for equality with the object’s `rVisible` field. */
-	rVisible?: boolean,
-	/** Checks for equality with the object’s `rLock` field. */
-	rLock?: boolean,
-	/** Checks for equality with the object’s `rTimestamp` field. */
-	rTimestamp?: GraphQLTypes["Datetime"]
 };
 	/** A connection to a list of `Upozorneni` values. */
 ["UpozornenisConnection"]: {
@@ -11120,7 +11124,8 @@ for equality and combined with a logical ‘and.’ */
 	["Member"]: {
 	__typename: "Member",
 	uEmail?: string,
-	sName?: string
+	sName?: string,
+	paymentValid?: boolean
 };
 	/** A `Member` edge in the connection. */
 ["MembersEdge"]: {
@@ -11137,7 +11142,9 @@ for equality and combined with a logical ‘and.’ */
 		/** Checks for equality with the object’s `uEmail` field. */
 	uEmail?: string,
 	/** Checks for equality with the object’s `sName` field. */
-	sName?: string
+	sName?: string,
+	/** Checks for equality with the object’s `paymentValid` field. */
+	paymentValid?: boolean
 };
 	/** A connection to a list of `Page` values. */
 ["PagesConnection"]: {
@@ -15474,36 +15481,6 @@ export const enum UpozorneniSkupiniesOrderBy {
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
 	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
 }
-/** Methods to use when ordering `Session`. */
-export const enum SessionsOrderBy {
-	NATURAL = "NATURAL",
-	SS_ID_ASC = "SS_ID_ASC",
-	SS_ID_DESC = "SS_ID_DESC",
-	SS_DATA_ASC = "SS_DATA_ASC",
-	SS_DATA_DESC = "SS_DATA_DESC",
-	SS_UPDATED_AT_ASC = "SS_UPDATED_AT_ASC",
-	SS_UPDATED_AT_DESC = "SS_UPDATED_AT_DESC",
-	SS_LIFETIME_ASC = "SS_LIFETIME_ASC",
-	SS_LIFETIME_DESC = "SS_LIFETIME_DESC",
-	SS_USER_ASC = "SS_USER_ASC",
-	SS_USER_DESC = "SS_USER_DESC",
-	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
-}
-/** Methods to use when ordering `AkceItem`. */
-export const enum AkceItemsOrderBy {
-	NATURAL = "NATURAL",
-	AI_ID_ASC = "AI_ID_ASC",
-	AI_ID_DESC = "AI_ID_DESC",
-	AI_ID_RODIC_ASC = "AI_ID_RODIC_ASC",
-	AI_ID_RODIC_DESC = "AI_ID_RODIC_DESC",
-	AI_USER_ASC = "AI_USER_ASC",
-	AI_USER_DESC = "AI_USER_DESC",
-	AI_ROK_NAROZENI_ASC = "AI_ROK_NAROZENI_ASC",
-	AI_ROK_NAROZENI_DESC = "AI_ROK_NAROZENI_DESC",
-	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
-}
 /** Methods to use when ordering `GalerieFoto`. */
 export const enum GalerieFotosOrderBy {
 	NATURAL = "NATURAL",
@@ -15545,26 +15522,6 @@ export const enum AktualitiesOrderBy {
 	AT_TIMESTAMP_DESC = "AT_TIMESTAMP_DESC",
 	AT_TIMESTAMP_ADD_ASC = "AT_TIMESTAMP_ADD_ASC",
 	AT_TIMESTAMP_ADD_DESC = "AT_TIMESTAMP_ADD_DESC",
-	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
-}
-/** Methods to use when ordering `Dokumenty`. */
-export const enum DokumentiesOrderBy {
-	NATURAL = "NATURAL",
-	D_ID_ASC = "D_ID_ASC",
-	D_ID_DESC = "D_ID_DESC",
-	D_PATH_ASC = "D_PATH_ASC",
-	D_PATH_DESC = "D_PATH_DESC",
-	D_NAME_ASC = "D_NAME_ASC",
-	D_NAME_DESC = "D_NAME_DESC",
-	D_FILENAME_ASC = "D_FILENAME_ASC",
-	D_FILENAME_DESC = "D_FILENAME_DESC",
-	D_KATEGORIE_ASC = "D_KATEGORIE_ASC",
-	D_KATEGORIE_DESC = "D_KATEGORIE_DESC",
-	D_KDO_ASC = "D_KDO_ASC",
-	D_KDO_DESC = "D_KDO_DESC",
-	D_TIMESTAMP_ASC = "D_TIMESTAMP_ASC",
-	D_TIMESTAMP_DESC = "D_TIMESTAMP_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
 	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
 }
@@ -15644,6 +15601,76 @@ export const enum NabidkasOrderBy {
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
 	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
 }
+/** Methods to use when ordering `Rozpi`. */
+export const enum RozpisOrderBy {
+	NATURAL = "NATURAL",
+	R_ID_ASC = "R_ID_ASC",
+	R_ID_DESC = "R_ID_DESC",
+	R_TRENER_ASC = "R_TRENER_ASC",
+	R_TRENER_DESC = "R_TRENER_DESC",
+	R_KDE_ASC = "R_KDE_ASC",
+	R_KDE_DESC = "R_KDE_DESC",
+	R_DATUM_ASC = "R_DATUM_ASC",
+	R_DATUM_DESC = "R_DATUM_DESC",
+	R_VISIBLE_ASC = "R_VISIBLE_ASC",
+	R_VISIBLE_DESC = "R_VISIBLE_DESC",
+	R_LOCK_ASC = "R_LOCK_ASC",
+	R_LOCK_DESC = "R_LOCK_DESC",
+	R_TIMESTAMP_ASC = "R_TIMESTAMP_ASC",
+	R_TIMESTAMP_DESC = "R_TIMESTAMP_DESC",
+	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+}
+/** Methods to use when ordering `Session`. */
+export const enum SessionsOrderBy {
+	NATURAL = "NATURAL",
+	SS_ID_ASC = "SS_ID_ASC",
+	SS_ID_DESC = "SS_ID_DESC",
+	SS_DATA_ASC = "SS_DATA_ASC",
+	SS_DATA_DESC = "SS_DATA_DESC",
+	SS_UPDATED_AT_ASC = "SS_UPDATED_AT_ASC",
+	SS_UPDATED_AT_DESC = "SS_UPDATED_AT_DESC",
+	SS_LIFETIME_ASC = "SS_LIFETIME_ASC",
+	SS_LIFETIME_DESC = "SS_LIFETIME_DESC",
+	SS_USER_ASC = "SS_USER_ASC",
+	SS_USER_DESC = "SS_USER_DESC",
+	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+}
+/** Methods to use when ordering `AkceItem`. */
+export const enum AkceItemsOrderBy {
+	NATURAL = "NATURAL",
+	AI_ID_ASC = "AI_ID_ASC",
+	AI_ID_DESC = "AI_ID_DESC",
+	AI_ID_RODIC_ASC = "AI_ID_RODIC_ASC",
+	AI_ID_RODIC_DESC = "AI_ID_RODIC_DESC",
+	AI_USER_ASC = "AI_USER_ASC",
+	AI_USER_DESC = "AI_USER_DESC",
+	AI_ROK_NAROZENI_ASC = "AI_ROK_NAROZENI_ASC",
+	AI_ROK_NAROZENI_DESC = "AI_ROK_NAROZENI_DESC",
+	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+}
+/** Methods to use when ordering `Dokumenty`. */
+export const enum DokumentiesOrderBy {
+	NATURAL = "NATURAL",
+	D_ID_ASC = "D_ID_ASC",
+	D_ID_DESC = "D_ID_DESC",
+	D_PATH_ASC = "D_PATH_ASC",
+	D_PATH_DESC = "D_PATH_DESC",
+	D_NAME_ASC = "D_NAME_ASC",
+	D_NAME_DESC = "D_NAME_DESC",
+	D_FILENAME_ASC = "D_FILENAME_ASC",
+	D_FILENAME_DESC = "D_FILENAME_DESC",
+	D_KATEGORIE_ASC = "D_KATEGORIE_ASC",
+	D_KATEGORIE_DESC = "D_KATEGORIE_DESC",
+	D_KDO_ASC = "D_KDO_ASC",
+	D_KDO_DESC = "D_KDO_DESC",
+	D_TIMESTAMP_ASC = "D_TIMESTAMP_ASC",
+	D_TIMESTAMP_DESC = "D_TIMESTAMP_DESC",
+	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+}
 /** Methods to use when ordering `Pary`. */
 export const enum PariesOrderBy {
 	NATURAL = "NATURAL",
@@ -15687,26 +15714,6 @@ export const enum ParyNavrhsOrderBy {
 	PN_PARTNER_DESC = "PN_PARTNER_DESC",
 	PN_PARTNERKA_ASC = "PN_PARTNERKA_ASC",
 	PN_PARTNERKA_DESC = "PN_PARTNERKA_DESC",
-	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
-}
-/** Methods to use when ordering `Rozpi`. */
-export const enum RozpisOrderBy {
-	NATURAL = "NATURAL",
-	R_ID_ASC = "R_ID_ASC",
-	R_ID_DESC = "R_ID_DESC",
-	R_TRENER_ASC = "R_TRENER_ASC",
-	R_TRENER_DESC = "R_TRENER_DESC",
-	R_KDE_ASC = "R_KDE_ASC",
-	R_KDE_DESC = "R_KDE_DESC",
-	R_DATUM_ASC = "R_DATUM_ASC",
-	R_DATUM_DESC = "R_DATUM_DESC",
-	R_VISIBLE_ASC = "R_VISIBLE_ASC",
-	R_VISIBLE_DESC = "R_VISIBLE_DESC",
-	R_LOCK_ASC = "R_LOCK_ASC",
-	R_LOCK_DESC = "R_LOCK_DESC",
-	R_TIMESTAMP_ASC = "R_TIMESTAMP_ASC",
-	R_TIMESTAMP_DESC = "R_TIMESTAMP_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
 	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
 }
@@ -15784,7 +15791,9 @@ export const enum MembersOrderBy {
 	U_EMAIL_ASC = "U_EMAIL_ASC",
 	U_EMAIL_DESC = "U_EMAIL_DESC",
 	S_NAME_ASC = "S_NAME_ASC",
-	S_NAME_DESC = "S_NAME_DESC"
+	S_NAME_DESC = "S_NAME_DESC",
+	PAYMENT_VALID_ASC = "PAYMENT_VALID_ASC",
+	PAYMENT_VALID_DESC = "PAYMENT_VALID_DESC"
 }
 /** Methods to use when ordering `Page`. */
 export const enum PagesOrderBy {
