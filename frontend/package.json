@@ -24,6 +24,8 @@
     "bootstrap": "^4.6.1",
     "clsx": "^1.1.1",
     "date-fns": "^2.24.0",
+    "exceljs": "^4.3.0",
+    "file-saver": "^2.0.5",
     "final-form": "^4.20.2",
     "final-form-arrays": "^3.0.2",
     "graphql": "^15.6.1",
@@ -57,6 +59,7 @@
   "devDependencies": {
     "@babel/core": "^7.16.0",
     "@svgr/webpack": "^5.5.0",
+    "@types/file-saver": "^2.0.5",
     "@types/iban": "^0.0.32",
     "@types/qrcode.react": "^1.0.2",
     "@types/react": "^17",

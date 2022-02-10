@@ -6,6 +6,7 @@
 <div class="container">
   <form action="" method="POST">
     {% include 'Member/AkceHeader.twig' with {'item': data} %}
+    <event-participant-export id="{{ data.a_id }}"></event-participant-export>
     <table>
       <tr>
         <th>Uživatel</th>
