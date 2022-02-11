@@ -47,7 +47,7 @@ export function EventParticipantExport({ id }: { id: string; }) {
 
     worksheet.getRow(1).font = { bold: true };
     worksheet.columns.forEach(column => {
-      column.width = (column?.header?.length || 0) + 5;
+      column.width = (column?.header?.length || 0) + 10;
       column.alignment = { horizontal: 'center' };
     });
 
@@ -63,7 +63,10 @@ export function EventParticipantExport({ id }: { id: string; }) {
     saveAs(new Blob([buf]), `${data.akce?.aJmeno || "export-akce"}.xlsx`);
   };
 
-  return <button className="btn btn-primary" onClick={saveData}>Export přihlášených</button>;
+  return <button className="btn btn-primary" onClick={(e) => {
+    e.preventDefault();
+    saveData();
+  }}>Export přihlášených</button>;
 }
 
 const client = new ApolloClient({
