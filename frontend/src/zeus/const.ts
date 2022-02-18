@@ -1712,6 +1712,94 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
+		reservationsForRange:{
+			startDate:{
+				type:"Date",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			endDate:{
+				type:"Date",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		schedulesForRange:{
+			startDate:{
+				type:"Date",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			endDate:{
+				type:"Date",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
 		titleVideos:{
 			first:{
 				type:"Int",
@@ -12501,6 +12589,8 @@ export const ReturnTypes: Record<string,any> = {
 		currentSessionId:"String",
 		currentUserId:"BigInt",
 		getCurrentUser:"User",
+		reservationsForRange:"NabidkasConnection",
+		schedulesForRange:"RozpisConnection",
 		titleVideos:"VideosConnection",
 		akceByNodeId:"Akce",
 		akceItemByNodeId:"AkceItem",

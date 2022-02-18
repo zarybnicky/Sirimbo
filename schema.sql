@@ -112,7 +112,7 @@ DECLARE
     _op CHAR(1);
     _record RECORD;
     _rev_number INTEGER;
-    _rev_table VARCHAR := TG_TABLE_NAME || '_revision';
+    _rev_table VARCHAR := TG_TABLE_SCHEMA || '.' || TG_TABLE_NAME || '_revision';
     _where VARCHAR := '';
     _pk VARCHAR;
 BEGIN
@@ -258,6 +258,27 @@ $$;
 
 
 --
+-- Name: pary; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pary (
+    p_id bigint NOT NULL,
+    p_id_partner bigint NOT NULL,
+    p_id_partnerka bigint DEFAULT '0'::bigint,
+    p_stt_trida public.pary_p_stt_trida DEFAULT 'Z'::public.pary_p_stt_trida NOT NULL,
+    p_stt_body integer DEFAULT 0 NOT NULL,
+    p_stt_finale boolean DEFAULT false NOT NULL,
+    p_lat_trida public.pary_p_lat_trida DEFAULT 'Z'::public.pary_p_lat_trida NOT NULL,
+    p_lat_body integer DEFAULT 0 NOT NULL,
+    p_lat_finale boolean DEFAULT false NOT NULL,
+    p_hodnoceni integer DEFAULT 0 NOT NULL,
+    p_archiv boolean DEFAULT false NOT NULL,
+    p_timestamp_add timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    p_timestamp_archive timestamp with time zone
+);
+
+
+--
 -- Name: session; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -274,7 +295,7 @@ CREATE TABLE public.session (
 -- Name: login(character varying, character varying); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.login(login character varying, passwd character varying, OUT sess public.session, OUT usr public.users) RETURNS record
+CREATE FUNCTION public.login(login character varying, passwd character varying, OUT couple public.pary, OUT sess public.session, OUT usr public.users) RETURNS record
     LANGUAGE plpgsql STRICT SECURITY DEFINER
     AS $$
 declare
@@ -306,6 +327,8 @@ begin
     (ss_id, ss_user, ss_data, ss_lifetime)
     values (gen_random_uuid(), usr.u_id, ('{"id":' || usr.u_id || '}')::bytea, 86400)
     returning * into sess;
+
+  select * from pary where p_archiv=false and (p_id_partner=usr.u_id or p_id_partnerka=usr.u_id) into couple;
 end;
 $$;
 
@@ -432,6 +455,97 @@ BEGIN
    NEW.u_timestamp = now();
    RETURN NEW;
 END;
+$$;
+
+
+--
+-- Name: nabidka; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.nabidka (
+    n_id bigint NOT NULL,
+    n_trener bigint NOT NULL,
+    n_pocet_hod smallint DEFAULT '1'::smallint NOT NULL,
+    n_max_pocet_hod bigint DEFAULT '0'::bigint NOT NULL,
+    n_od date NOT NULL,
+    n_do date NOT NULL,
+    n_visible boolean DEFAULT true NOT NULL,
+    n_lock boolean DEFAULT true NOT NULL,
+    n_timestamp timestamp with time zone
+);
+
+
+--
+-- Name: reservations_for_range(date, date); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.reservations_for_range(start_date date, end_date date) RETURNS SETOF public.nabidka
+    LANGUAGE sql STABLE
+    AS $$
+  select * from nabidka
+  where n_visible=true
+  and n_od <= start_date and n_do >= end_date
+  order by n_od asc;
+$$;
+
+
+--
+-- Name: rozpis; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rozpis (
+    r_id bigint NOT NULL,
+    r_trener bigint NOT NULL,
+    r_kde text NOT NULL,
+    r_datum date NOT NULL,
+    r_visible boolean DEFAULT true NOT NULL,
+    r_lock boolean DEFAULT true NOT NULL,
+    r_timestamp timestamp with time zone
+);
+
+
+--
+-- Name: schedules_for_range(date, date); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.schedules_for_range(start_date date, end_date date) RETURNS SETOF public.rozpis
+    LANGUAGE sql STABLE
+    AS $$
+  select * from rozpis
+  where r_visible=true
+  and r_datum >= start_date and r_datum <= end_date
+  order by r_datum asc;
+$$;
+
+
+--
+-- Name: video; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.video (
+    v_id bigint NOT NULL,
+    v_uri text NOT NULL,
+    v_title text NOT NULL,
+    v_author text NOT NULL,
+    v_description text NOT NULL,
+    v_playlist text,
+    v_created_at timestamp with time zone NOT NULL,
+    v_updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+--
+-- Name: title_videos(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.title_videos() RETURNS SETOF public.video
+    LANGUAGE sql STABLE
+    AS $$
+  select * from video where v_id in (
+    select pa_value::bigint from parameters where pa_name in (
+      'title_video1', 'title_video2', 'title_video3', 'title_video4'
+    )
+  );
 $$;
 
 
@@ -685,17 +799,6 @@ CREATE TABLE public.platby_group (
 
 
 --
--- Name: platby_group_skupina; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.platby_group_skupina (
-    pgs_id bigint NOT NULL,
-    pgs_id_skupina bigint NOT NULL,
-    pgs_id_group bigint NOT NULL
-);
-
-
---
 -- Name: platby_item; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -719,7 +822,9 @@ CREATE TABLE public.skupiny (
     s_name text NOT NULL,
     s_description text NOT NULL,
     s_color_rgb text NOT NULL,
-    s_color_text text NOT NULL
+    s_color_text text NOT NULL,
+    s_location text DEFAULT ''::text NOT NULL,
+    s_visible boolean DEFAULT true NOT NULL
 );
 
 
@@ -728,32 +833,48 @@ CREATE TABLE public.skupiny (
 --
 
 CREATE VIEW public.members AS
- SELECT DISTINCT ON (users.u_id) users.u_email
-   FROM ((((((public.platby_item
-     JOIN public.platby_category ON ((platby_category.pc_id = platby_item.pi_id_category)))
-     JOIN public.platby_category_group ON ((platby_category_group.pcg_id_category = platby_category.pc_id)))
-     JOIN public.platby_group ON ((platby_group.pg_id = platby_category_group.pcg_id_group)))
-     JOIN public.platby_group_skupina ON ((platby_group_skupina.pgs_id_group = platby_group.pg_id)))
-     JOIN public.skupiny ON ((platby_group_skupina.pgs_id_skupina = skupiny.s_id)))
-     JOIN public.users ON (((platby_item.pi_id_user = users.u_id) AND (users.u_skupina = skupiny.s_id))))
-  WHERE ((platby_group.pg_type = '1'::numeric) AND (CURRENT_DATE >= platby_category.pc_valid_from) AND (CURRENT_DATE <= platby_category.pc_valid_to) AND (users.u_confirmed = true) AND (users.u_ban = false) AND (users.u_system = false));
-
-
---
--- Name: nabidka; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.nabidka (
-    n_id bigint NOT NULL,
-    n_trener bigint NOT NULL,
-    n_pocet_hod smallint DEFAULT '1'::smallint NOT NULL,
-    n_max_pocet_hod bigint DEFAULT '0'::bigint NOT NULL,
-    n_od date NOT NULL,
-    n_do date NOT NULL,
-    n_visible boolean DEFAULT true NOT NULL,
-    n_lock boolean DEFAULT true NOT NULL,
-    n_timestamp timestamp with time zone
-);
+ WITH current_payments AS (
+         SELECT platby_item.pi_id,
+            platby_item.pi_id_user,
+            platby_item.pi_id_category,
+            platby_item.pi_id_raw,
+            platby_item.pi_amount,
+            platby_item.pi_date,
+            platby_item.pi_prefix,
+            platby_category.pc_id,
+            platby_category.pc_name,
+            platby_category.pc_symbol,
+            platby_category.pc_amount,
+            platby_category.pc_date_due,
+            platby_category.pc_valid_from,
+            platby_category.pc_valid_to,
+            platby_category.pc_use_base,
+            platby_category.pc_use_prefix,
+            platby_category.pc_archive,
+            platby_category.pc_visible,
+            platby_category_group.pcg_id,
+            platby_category_group.pcg_id_group,
+            platby_category_group.pcg_id_category,
+            platby_group.pg_id,
+            platby_group.pg_type,
+            platby_group.pg_name,
+            platby_group.pg_description,
+            platby_group.pg_base
+           FROM (((public.platby_item
+             JOIN public.platby_category ON ((platby_item.pi_id_category = platby_category.pc_id)))
+             JOIN public.platby_category_group ON ((platby_category_group.pcg_id_category = platby_category.pc_id)))
+             JOIN public.platby_group ON ((platby_group.pg_id = platby_category_group.pcg_id_group)))
+          WHERE ((platby_group.pg_type = '1'::numeric) AND (CURRENT_DATE >= platby_category.pc_valid_from) AND (CURRENT_DATE <= platby_category.pc_valid_to))
+        )
+ SELECT users.u_email,
+    skupiny.s_name,
+    ( SELECT (EXISTS ( SELECT current_payments.pi_id
+                   FROM current_payments
+                  WHERE (current_payments.pi_id_user = users.u_id))) AS "exists") AS payment_valid
+   FROM (public.users
+     JOIN public.skupiny ON ((skupiny.s_id = users.u_skupina)))
+  WHERE ((users.u_confirmed = true) AND (users.u_ban = false) AND (users.u_system = false))
+  ORDER BY skupiny.s_name, users.u_email;
 
 
 --
@@ -878,27 +999,6 @@ COMMENT ON TABLE public.page_revision IS '@omit create,update,delete';
 CREATE TABLE public.parameters (
     pa_name character varying(40) NOT NULL,
     pa_value text NOT NULL
-);
-
-
---
--- Name: pary; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.pary (
-    p_id bigint NOT NULL,
-    p_id_partner bigint NOT NULL,
-    p_id_partnerka bigint DEFAULT '0'::bigint,
-    p_stt_trida public.pary_p_stt_trida DEFAULT 'Z'::public.pary_p_stt_trida NOT NULL,
-    p_stt_body integer DEFAULT 0 NOT NULL,
-    p_stt_finale boolean DEFAULT false NOT NULL,
-    p_lat_trida public.pary_p_lat_trida DEFAULT 'Z'::public.pary_p_lat_trida NOT NULL,
-    p_lat_body integer DEFAULT 0 NOT NULL,
-    p_lat_finale boolean DEFAULT false NOT NULL,
-    p_hodnoceni integer DEFAULT 0 NOT NULL,
-    p_archiv boolean DEFAULT false NOT NULL,
-    p_timestamp_add timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    p_timestamp_archive timestamp with time zone
 );
 
 
@@ -1057,6 +1157,17 @@ ALTER SEQUENCE public.platby_group_pg_id_seq OWNED BY public.platby_group.pg_id;
 
 
 --
+-- Name: platby_group_skupina; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.platby_group_skupina (
+    pgs_id bigint NOT NULL,
+    pgs_id_skupina bigint NOT NULL,
+    pgs_id_group bigint NOT NULL
+);
+
+
+--
 -- Name: platby_group_skupina_pgs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1124,21 +1235,6 @@ CREATE SEQUENCE public.platby_raw_pr_id_seq
 --
 
 ALTER SEQUENCE public.platby_raw_pr_id_seq OWNED BY public.platby_raw.pr_id;
-
-
---
--- Name: rozpis; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.rozpis (
-    r_id bigint NOT NULL,
-    r_trener bigint NOT NULL,
-    r_kde text NOT NULL,
-    r_datum date NOT NULL,
-    r_visible boolean DEFAULT true NOT NULL,
-    r_lock boolean DEFAULT true NOT NULL,
-    r_timestamp timestamp with time zone
-);
 
 
 --
@@ -1329,22 +1425,6 @@ CREATE SEQUENCE public.users_u_id_seq
 --
 
 ALTER SEQUENCE public.users_u_id_seq OWNED BY public.users.u_id;
-
-
---
--- Name: video; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.video (
-    v_id bigint NOT NULL,
-    v_uri text NOT NULL,
-    v_title text NOT NULL,
-    v_author text NOT NULL,
-    v_description text NOT NULL,
-    v_playlist text,
-    v_created_at timestamp with time zone NOT NULL,
-    v_updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
-);
 
 
 --
@@ -1630,51 +1710,11 @@ ALTER TABLE ONLY public.video_source ALTER COLUMN vs_id SET DEFAULT nextval('pub
 
 
 --
--- Name: akce idx_23735_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.akce
-    ADD CONSTRAINT idx_23735_primary PRIMARY KEY (a_id);
-
-
---
--- Name: akce_item idx_23747_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.akce_item
-    ADD CONSTRAINT idx_23747_primary PRIMARY KEY (ai_id);
-
-
---
 -- Name: aktuality idx_23753_primary; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.aktuality
     ADD CONSTRAINT idx_23753_primary PRIMARY KEY (at_id);
-
-
---
--- Name: dokumenty idx_23771_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.dokumenty
-    ADD CONSTRAINT idx_23771_primary PRIMARY KEY (d_id);
-
-
---
--- Name: galerie_dir idx_23780_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.galerie_dir
-    ADD CONSTRAINT idx_23780_primary PRIMARY KEY (gd_id);
-
-
---
--- Name: galerie_foto idx_23791_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.galerie_foto
-    ADD CONSTRAINT idx_23791_primary PRIMARY KEY (gf_id);
 
 
 --
@@ -1686,94 +1726,6 @@ ALTER TABLE ONLY public.nabidka
 
 
 --
--- Name: nabidka_item idx_23810_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.nabidka_item
-    ADD CONSTRAINT idx_23810_primary PRIMARY KEY (ni_id);
-
-
---
--- Name: parameters idx_23816_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.parameters
-    ADD CONSTRAINT idx_23816_primary PRIMARY KEY (pa_name);
-
-
---
--- Name: pary idx_23824_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pary
-    ADD CONSTRAINT idx_23824_primary PRIMARY KEY (p_id);
-
-
---
--- Name: pary_navrh idx_23840_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pary_navrh
-    ADD CONSTRAINT idx_23840_primary PRIMARY KEY (pn_id);
-
-
---
--- Name: permissions idx_23846_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.permissions
-    ADD CONSTRAINT idx_23846_primary PRIMARY KEY (pe_id);
-
-
---
--- Name: platby_category idx_23855_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.platby_category
-    ADD CONSTRAINT idx_23855_primary PRIMARY KEY (pc_id);
-
-
---
--- Name: platby_category_group idx_23868_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.platby_category_group
-    ADD CONSTRAINT idx_23868_primary PRIMARY KEY (pcg_id);
-
-
---
--- Name: platby_group idx_23874_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.platby_group
-    ADD CONSTRAINT idx_23874_primary PRIMARY KEY (pg_id);
-
-
---
--- Name: platby_group_skupina idx_23885_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.platby_group_skupina
-    ADD CONSTRAINT idx_23885_primary PRIMARY KEY (pgs_id);
-
-
---
--- Name: platby_item idx_23891_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.platby_item
-    ADD CONSTRAINT idx_23891_primary PRIMARY KEY (pi_id);
-
-
---
--- Name: platby_raw idx_23898_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.platby_raw
-    ADD CONSTRAINT idx_23898_primary PRIMARY KEY (pr_id);
-
-
---
 -- Name: rozpis idx_23909_primary; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1782,83 +1734,211 @@ ALTER TABLE ONLY public.rozpis
 
 
 --
--- Name: rozpis_item idx_23920_primary; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: akce idx_24557_primary; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.akce
+    ADD CONSTRAINT idx_24557_primary PRIMARY KEY (a_id);
+
+
+--
+-- Name: akce_item idx_24569_primary; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.akce_item
+    ADD CONSTRAINT idx_24569_primary PRIMARY KEY (ai_id);
+
+
+--
+-- Name: dokumenty idx_24593_primary; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dokumenty
+    ADD CONSTRAINT idx_24593_primary PRIMARY KEY (d_id);
+
+
+--
+-- Name: galerie_dir idx_24602_primary; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.galerie_dir
+    ADD CONSTRAINT idx_24602_primary PRIMARY KEY (gd_id);
+
+
+--
+-- Name: galerie_foto idx_24613_primary; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.galerie_foto
+    ADD CONSTRAINT idx_24613_primary PRIMARY KEY (gf_id);
+
+
+--
+-- Name: nabidka_item idx_24632_primary; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.nabidka_item
+    ADD CONSTRAINT idx_24632_primary PRIMARY KEY (ni_id);
+
+
+--
+-- Name: parameters idx_24638_primary; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.parameters
+    ADD CONSTRAINT idx_24638_primary PRIMARY KEY (pa_name);
+
+
+--
+-- Name: pary idx_24646_primary; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pary
+    ADD CONSTRAINT idx_24646_primary PRIMARY KEY (p_id);
+
+
+--
+-- Name: pary_navrh idx_24662_primary; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pary_navrh
+    ADD CONSTRAINT idx_24662_primary PRIMARY KEY (pn_id);
+
+
+--
+-- Name: permissions idx_24668_primary; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.permissions
+    ADD CONSTRAINT idx_24668_primary PRIMARY KEY (pe_id);
+
+
+--
+-- Name: platby_category idx_24677_primary; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.platby_category
+    ADD CONSTRAINT idx_24677_primary PRIMARY KEY (pc_id);
+
+
+--
+-- Name: platby_category_group idx_24690_primary; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.platby_category_group
+    ADD CONSTRAINT idx_24690_primary PRIMARY KEY (pcg_id);
+
+
+--
+-- Name: platby_group idx_24696_primary; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.platby_group
+    ADD CONSTRAINT idx_24696_primary PRIMARY KEY (pg_id);
+
+
+--
+-- Name: platby_group_skupina idx_24707_primary; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.platby_group_skupina
+    ADD CONSTRAINT idx_24707_primary PRIMARY KEY (pgs_id);
+
+
+--
+-- Name: platby_item idx_24713_primary; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.platby_item
+    ADD CONSTRAINT idx_24713_primary PRIMARY KEY (pi_id);
+
+
+--
+-- Name: platby_raw idx_24720_primary; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.platby_raw
+    ADD CONSTRAINT idx_24720_primary PRIMARY KEY (pr_id);
+
+
+--
+-- Name: rozpis_item idx_24742_primary; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.rozpis_item
-    ADD CONSTRAINT idx_23920_primary PRIMARY KEY (ri_id);
+    ADD CONSTRAINT idx_24742_primary PRIMARY KEY (ri_id);
 
 
 --
--- Name: session idx_23925_primary; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: session idx_24747_primary; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.session
-    ADD CONSTRAINT idx_23925_primary PRIMARY KEY (ss_id);
+    ADD CONSTRAINT idx_24747_primary PRIMARY KEY (ss_id);
 
 
 --
--- Name: skupiny idx_23934_primary; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: skupiny idx_24756_primary; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.skupiny
-    ADD CONSTRAINT idx_23934_primary PRIMARY KEY (s_id);
+    ADD CONSTRAINT idx_24756_primary PRIMARY KEY (s_id);
 
 
 --
--- Name: upozorneni idx_23943_primary; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: upozorneni idx_24765_primary; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.upozorneni
-    ADD CONSTRAINT idx_23943_primary PRIMARY KEY (up_id);
+    ADD CONSTRAINT idx_24765_primary PRIMARY KEY (up_id);
 
 
 --
--- Name: upozorneni_skupiny idx_23955_primary; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: upozorneni_skupiny idx_24777_primary; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.upozorneni_skupiny
-    ADD CONSTRAINT idx_23955_primary PRIMARY KEY (ups_id);
+    ADD CONSTRAINT idx_24777_primary PRIMARY KEY (ups_id);
 
 
 --
--- Name: users idx_23964_primary; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: users idx_24786_primary; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.users
-    ADD CONSTRAINT idx_23964_primary PRIMARY KEY (u_id);
+    ADD CONSTRAINT idx_24786_primary PRIMARY KEY (u_id);
 
 
 --
--- Name: users_skupiny idx_23986_primary; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: users_skupiny idx_24808_primary; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.users_skupiny
-    ADD CONSTRAINT idx_23986_primary PRIMARY KEY (us_id);
+    ADD CONSTRAINT idx_24808_primary PRIMARY KEY (us_id);
 
 
 --
--- Name: video idx_23999_primary; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: video idx_24821_primary; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.video
-    ADD CONSTRAINT idx_23999_primary PRIMARY KEY (v_id);
+    ADD CONSTRAINT idx_24821_primary PRIMARY KEY (v_id);
 
 
 --
--- Name: video_list idx_24009_primary; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: video_list idx_24831_primary; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.video_list
-    ADD CONSTRAINT idx_24009_primary PRIMARY KEY (vl_id);
+    ADD CONSTRAINT idx_24831_primary PRIMARY KEY (vl_id);
 
 
 --
--- Name: video_source idx_24019_primary; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: video_source idx_24841_primary; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.video_source
-    ADD CONSTRAINT idx_24019_primary PRIMARY KEY (vs_id);
+    ADD CONSTRAINT idx_24841_primary PRIMARY KEY (vs_id);
 
 
 --
@@ -1886,20 +1966,6 @@ ALTER TABLE ONLY public.page
 
 
 --
--- Name: idx_23747_akce_item_ai_id_rodic_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23747_akce_item_ai_id_rodic_fkey ON public.akce_item USING btree (ai_id_rodic);
-
-
---
--- Name: idx_23747_akce_item_ai_user_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23747_akce_item_ai_user_fkey ON public.akce_item USING btree (ai_user);
-
-
---
 -- Name: idx_23753_aktuality_at_foto_main_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1921,171 +1987,10 @@ CREATE INDEX idx_23753_at_timestamp_add ON public.aktuality USING btree (at_time
 
 
 --
--- Name: idx_23771_d_path; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_23771_d_path ON public.dokumenty USING btree (d_path);
-
-
---
--- Name: idx_23771_dokumenty_d_kdo_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23771_dokumenty_d_kdo_fkey ON public.dokumenty USING btree (d_kdo);
-
-
---
--- Name: idx_23780_gd_id_rodic; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23780_gd_id_rodic ON public.galerie_dir USING btree (gd_id_rodic);
-
-
---
--- Name: idx_23791_galerie_foto_gf_kdo_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23791_galerie_foto_gf_kdo_fkey ON public.galerie_foto USING btree (gf_kdo);
-
-
---
--- Name: idx_23791_gf_id_rodic; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23791_gf_id_rodic ON public.galerie_foto USING btree (gf_id_rodic);
-
-
---
 -- Name: idx_23800_n_trener; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX idx_23800_n_trener ON public.nabidka USING btree (n_trener);
-
-
---
--- Name: idx_23810_nabidka_item_ni_partner_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23810_nabidka_item_ni_partner_fkey ON public.nabidka_item USING btree (ni_partner);
-
-
---
--- Name: idx_23810_ni_id_rodic; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_23810_ni_id_rodic ON public.nabidka_item USING btree (ni_id_rodic, ni_partner);
-
-
---
--- Name: idx_23824_p_hodnoceni; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23824_p_hodnoceni ON public.pary USING btree (p_hodnoceni);
-
-
---
--- Name: idx_23824_pary_p_id_partner_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23824_pary_p_id_partner_fkey ON public.pary USING btree (p_id_partner);
-
-
---
--- Name: idx_23824_pary_p_id_partnerka_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23824_pary_p_id_partnerka_fkey ON public.pary USING btree (p_id_partnerka);
-
-
---
--- Name: idx_23840_pary_navrh_pn_navrhl_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23840_pary_navrh_pn_navrhl_fkey ON public.pary_navrh USING btree (pn_navrhl);
-
-
---
--- Name: idx_23840_pary_navrh_pn_partner_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23840_pary_navrh_pn_partner_fkey ON public.pary_navrh USING btree (pn_partner);
-
-
---
--- Name: idx_23840_pary_navrh_pn_partnerka_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23840_pary_navrh_pn_partnerka_fkey ON public.pary_navrh USING btree (pn_partnerka);
-
-
---
--- Name: idx_23855_pc_symbol; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_23855_pc_symbol ON public.platby_category USING btree (pc_symbol);
-
-
---
--- Name: idx_23868_pcg_id_group; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_23868_pcg_id_group ON public.platby_category_group USING btree (pcg_id_group, pcg_id_category);
-
-
---
--- Name: idx_23868_platby_category_group_pcg_id_category_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23868_platby_category_group_pcg_id_category_fkey ON public.platby_category_group USING btree (pcg_id_category);
-
-
---
--- Name: idx_23885_pgs_id_skupina; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_23885_pgs_id_skupina ON public.platby_group_skupina USING btree (pgs_id_skupina, pgs_id_group);
-
-
---
--- Name: idx_23885_platby_group_skupina_pgs_id_group_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23885_platby_group_skupina_pgs_id_group_fkey ON public.platby_group_skupina USING btree (pgs_id_group);
-
-
---
--- Name: idx_23886_pgs_id_skupina; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_23886_pgs_id_skupina ON public.platby_group_skupina USING btree (pgs_id_skupina, pgs_id_group);
-
-
---
--- Name: idx_23891_pi_id_raw; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_23891_pi_id_raw ON public.platby_item USING btree (pi_id_raw);
-
-
---
--- Name: idx_23891_platby_item_pi_id_category_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23891_platby_item_pi_id_category_fkey ON public.platby_item USING btree (pi_id_category);
-
-
---
--- Name: idx_23891_platby_item_pi_id_user_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23891_platby_item_pi_id_user_fkey ON public.platby_item USING btree (pi_id_user);
-
-
---
--- Name: idx_23898_pr_hash; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_23898_pr_hash ON public.platby_raw USING btree (pr_hash);
 
 
 --
@@ -2096,73 +2001,283 @@ CREATE INDEX idx_23909_r_trener ON public.rozpis USING btree (r_trener);
 
 
 --
--- Name: idx_23920_rozpis_item_ri_id_rodic_fkey; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_24569_akce_item_ai_id_rodic_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_23920_rozpis_item_ri_id_rodic_fkey ON public.rozpis_item USING btree (ri_id_rodic);
-
-
---
--- Name: idx_23920_rozpis_item_ri_partner_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23920_rozpis_item_ri_partner_fkey ON public.rozpis_item USING btree (ri_partner);
+CREATE INDEX idx_24569_akce_item_ai_id_rodic_fkey ON public.akce_item USING btree (ai_id_rodic);
 
 
 --
--- Name: idx_23943_up_kdo; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_24569_akce_item_ai_user_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_23943_up_kdo ON public.upozorneni USING btree (up_kdo);
-
-
---
--- Name: idx_23943_up_timestamp_add; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23943_up_timestamp_add ON public.upozorneni USING btree (up_timestamp_add);
+CREATE INDEX idx_24569_akce_item_ai_user_fkey ON public.akce_item USING btree (ai_user);
 
 
 --
--- Name: idx_23955_upozorneni_skupiny_ups_id_rodic_fkey; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_24575_aktuality_at_foto_main_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_23955_upozorneni_skupiny_ups_id_rodic_fkey ON public.upozorneni_skupiny USING btree (ups_id_rodic);
-
-
---
--- Name: idx_23955_upozorneni_skupiny_ups_id_skupina_fkey; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23955_upozorneni_skupiny_ups_id_skupina_fkey ON public.upozorneni_skupiny USING btree (ups_id_skupina);
+CREATE INDEX idx_24575_aktuality_at_foto_main_fkey ON public.aktuality USING btree (at_foto_main);
 
 
 --
--- Name: idx_23964_u_login; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_24575_aktuality_at_kdo_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX idx_23964_u_login ON public.users USING btree (u_login);
-
-
---
--- Name: idx_23964_u_narozeni; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_23964_u_narozeni ON public.users USING btree (u_narozeni);
+CREATE INDEX idx_24575_aktuality_at_kdo_fkey ON public.aktuality USING btree (at_kdo);
 
 
 --
--- Name: idx_23964_users_u_group_fkey; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_24575_at_timestamp_add; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_23964_users_u_group_fkey ON public.users USING btree (u_group);
+CREATE INDEX idx_24575_at_timestamp_add ON public.aktuality USING btree (at_timestamp_add);
 
 
 --
--- Name: idx_23964_users_u_skupina_fkey; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_24593_d_path; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_23964_users_u_skupina_fkey ON public.users USING btree (u_skupina);
+CREATE UNIQUE INDEX idx_24593_d_path ON public.dokumenty USING btree (d_path);
+
+
+--
+-- Name: idx_24593_dokumenty_d_kdo_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24593_dokumenty_d_kdo_fkey ON public.dokumenty USING btree (d_kdo);
+
+
+--
+-- Name: idx_24602_gd_id_rodic; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24602_gd_id_rodic ON public.galerie_dir USING btree (gd_id_rodic);
+
+
+--
+-- Name: idx_24613_galerie_foto_gf_kdo_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24613_galerie_foto_gf_kdo_fkey ON public.galerie_foto USING btree (gf_kdo);
+
+
+--
+-- Name: idx_24613_gf_id_rodic; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24613_gf_id_rodic ON public.galerie_foto USING btree (gf_id_rodic);
+
+
+--
+-- Name: idx_24622_n_trener; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24622_n_trener ON public.nabidka USING btree (n_trener);
+
+
+--
+-- Name: idx_24632_nabidka_item_ni_partner_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24632_nabidka_item_ni_partner_fkey ON public.nabidka_item USING btree (ni_partner);
+
+
+--
+-- Name: idx_24632_ni_id_rodic; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_24632_ni_id_rodic ON public.nabidka_item USING btree (ni_id_rodic, ni_partner);
+
+
+--
+-- Name: idx_24646_p_hodnoceni; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24646_p_hodnoceni ON public.pary USING btree (p_hodnoceni);
+
+
+--
+-- Name: idx_24646_pary_p_id_partner_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24646_pary_p_id_partner_fkey ON public.pary USING btree (p_id_partner);
+
+
+--
+-- Name: idx_24646_pary_p_id_partnerka_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24646_pary_p_id_partnerka_fkey ON public.pary USING btree (p_id_partnerka);
+
+
+--
+-- Name: idx_24662_pary_navrh_pn_navrhl_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24662_pary_navrh_pn_navrhl_fkey ON public.pary_navrh USING btree (pn_navrhl);
+
+
+--
+-- Name: idx_24662_pary_navrh_pn_partner_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24662_pary_navrh_pn_partner_fkey ON public.pary_navrh USING btree (pn_partner);
+
+
+--
+-- Name: idx_24662_pary_navrh_pn_partnerka_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24662_pary_navrh_pn_partnerka_fkey ON public.pary_navrh USING btree (pn_partnerka);
+
+
+--
+-- Name: idx_24677_pc_symbol; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_24677_pc_symbol ON public.platby_category USING btree (pc_symbol);
+
+
+--
+-- Name: idx_24690_pcg_id_group; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_24690_pcg_id_group ON public.platby_category_group USING btree (pcg_id_group, pcg_id_category);
+
+
+--
+-- Name: idx_24690_platby_category_group_pcg_id_category_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24690_platby_category_group_pcg_id_category_fkey ON public.platby_category_group USING btree (pcg_id_category);
+
+
+--
+-- Name: idx_24707_pgs_id_skupina; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_24707_pgs_id_skupina ON public.platby_group_skupina USING btree (pgs_id_skupina, pgs_id_group);
+
+
+--
+-- Name: idx_24707_platby_group_skupina_pgs_id_group_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24707_platby_group_skupina_pgs_id_group_fkey ON public.platby_group_skupina USING btree (pgs_id_group);
+
+
+--
+-- Name: idx_24708_pgs_id_skupina; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_24708_pgs_id_skupina ON public.platby_group_skupina USING btree (pgs_id_skupina, pgs_id_group);
+
+
+--
+-- Name: idx_24713_pi_id_raw; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_24713_pi_id_raw ON public.platby_item USING btree (pi_id_raw);
+
+
+--
+-- Name: idx_24713_platby_item_pi_id_category_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24713_platby_item_pi_id_category_fkey ON public.platby_item USING btree (pi_id_category);
+
+
+--
+-- Name: idx_24713_platby_item_pi_id_user_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24713_platby_item_pi_id_user_fkey ON public.platby_item USING btree (pi_id_user);
+
+
+--
+-- Name: idx_24720_pr_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_24720_pr_hash ON public.platby_raw USING btree (pr_hash);
+
+
+--
+-- Name: idx_24731_r_trener; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24731_r_trener ON public.rozpis USING btree (r_trener);
+
+
+--
+-- Name: idx_24742_rozpis_item_ri_id_rodic_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24742_rozpis_item_ri_id_rodic_fkey ON public.rozpis_item USING btree (ri_id_rodic);
+
+
+--
+-- Name: idx_24742_rozpis_item_ri_partner_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24742_rozpis_item_ri_partner_fkey ON public.rozpis_item USING btree (ri_partner);
+
+
+--
+-- Name: idx_24765_up_kdo; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24765_up_kdo ON public.upozorneni USING btree (up_kdo);
+
+
+--
+-- Name: idx_24765_up_timestamp_add; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24765_up_timestamp_add ON public.upozorneni USING btree (up_timestamp_add);
+
+
+--
+-- Name: idx_24777_upozorneni_skupiny_ups_id_rodic_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24777_upozorneni_skupiny_ups_id_rodic_fkey ON public.upozorneni_skupiny USING btree (ups_id_rodic);
+
+
+--
+-- Name: idx_24777_upozorneni_skupiny_ups_id_skupina_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24777_upozorneni_skupiny_ups_id_skupina_fkey ON public.upozorneni_skupiny USING btree (ups_id_skupina);
+
+
+--
+-- Name: idx_24786_u_login; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_24786_u_login ON public.users USING btree (u_login);
+
+
+--
+-- Name: idx_24786_u_narozeni; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24786_u_narozeni ON public.users USING btree (u_narozeni);
+
+
+--
+-- Name: idx_24786_users_u_group_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24786_users_u_group_fkey ON public.users USING btree (u_group);
+
+
+--
+-- Name: idx_24786_users_u_skupina_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_24786_users_u_skupina_fkey ON public.users USING btree (u_skupina);
 
 
 --
@@ -3118,8 +3233,9 @@ REVOKE ALL ON SCHEMA public FROM postgres;
 REVOKE ALL ON SCHEMA public FROM PUBLIC;
 GRANT ALL ON SCHEMA public TO olymp;
 GRANT ALL ON SCHEMA public TO postgres;
-GRANT USAGE ON SCHEMA public TO olympuser;
 GRANT ALL ON SCHEMA public TO anonymous;
+GRANT USAGE ON SCHEMA public TO member;
+GRANT USAGE ON SCHEMA public TO administrator;
 
 
 --
@@ -3130,75 +3246,40 @@ GRANT ALL ON TABLE public.users TO member;
 
 
 --
--- Name: FUNCTION on_update_current_timestamp_akce(); Type: ACL; Schema: public; Owner: -
+-- Name: TABLE pary; Type: ACL; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION public.on_update_current_timestamp_akce() FROM PUBLIC;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_akce() TO olympuser;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_akce() TO anonymous;
+GRANT ALL ON TABLE public.pary TO anonymous;
 
 
 --
--- Name: FUNCTION on_update_current_timestamp_aktuality(); Type: ACL; Schema: public; Owner: -
+-- Name: TABLE nabidka; Type: ACL; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION public.on_update_current_timestamp_aktuality() FROM PUBLIC;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_aktuality() TO olympuser;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_aktuality() TO anonymous;
+GRANT ALL ON TABLE public.nabidka TO member;
 
 
 --
--- Name: FUNCTION on_update_current_timestamp_dokumenty(); Type: ACL; Schema: public; Owner: -
+-- Name: TABLE rozpis; Type: ACL; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION public.on_update_current_timestamp_dokumenty() FROM PUBLIC;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_dokumenty() TO olympuser;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_dokumenty() TO anonymous;
+GRANT ALL ON TABLE public.rozpis TO member;
 
 
 --
--- Name: FUNCTION on_update_current_timestamp_galerie_foto(); Type: ACL; Schema: public; Owner: -
+-- Name: TABLE video; Type: ACL; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION public.on_update_current_timestamp_galerie_foto() FROM PUBLIC;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_galerie_foto() TO olympuser;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_galerie_foto() TO anonymous;
+GRANT ALL ON TABLE public.video TO anonymous;
 
 
 --
--- Name: FUNCTION on_update_current_timestamp_nabidka(); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION title_videos(); Type: ACL; Schema: public; Owner: -
 --
 
-REVOKE ALL ON FUNCTION public.on_update_current_timestamp_nabidka() FROM PUBLIC;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_nabidka() TO olympuser;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_nabidka() TO anonymous;
-
-
---
--- Name: FUNCTION on_update_current_timestamp_rozpis(); Type: ACL; Schema: public; Owner: -
---
-
-REVOKE ALL ON FUNCTION public.on_update_current_timestamp_rozpis() FROM PUBLIC;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_rozpis() TO olympuser;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_rozpis() TO anonymous;
-
-
---
--- Name: FUNCTION on_update_current_timestamp_upozorneni(); Type: ACL; Schema: public; Owner: -
---
-
-REVOKE ALL ON FUNCTION public.on_update_current_timestamp_upozorneni() FROM PUBLIC;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_upozorneni() TO olympuser;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_upozorneni() TO anonymous;
-
-
---
--- Name: FUNCTION on_update_current_timestamp_users(); Type: ACL; Schema: public; Owner: -
---
-
-REVOKE ALL ON FUNCTION public.on_update_current_timestamp_users() FROM PUBLIC;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_users() TO olympuser;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_users() TO anonymous;
+GRANT ALL ON FUNCTION public.title_videos() TO anonymous;
+GRANT ALL ON FUNCTION public.title_videos() TO member;
+GRANT ALL ON FUNCTION public.title_videos() TO administrator;
 
 
 --
@@ -3209,26 +3290,10 @@ GRANT ALL ON TABLE public.akce TO anonymous;
 
 
 --
--- Name: SEQUENCE akce_a_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.akce_a_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.akce_a_id_seq TO anonymous;
-
-
---
 -- Name: TABLE akce_item; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON TABLE public.akce_item TO anonymous;
-
-
---
--- Name: SEQUENCE akce_item_ai_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.akce_item_ai_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.akce_item_ai_id_seq TO anonymous;
 
 
 --
@@ -3239,26 +3304,10 @@ GRANT ALL ON TABLE public.aktuality TO anonymous;
 
 
 --
--- Name: SEQUENCE aktuality_at_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.aktuality_at_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.aktuality_at_id_seq TO anonymous;
-
-
---
 -- Name: TABLE dokumenty; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON TABLE public.dokumenty TO anonymous;
-
-
---
--- Name: SEQUENCE dokumenty_d_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.dokumenty_d_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.dokumenty_d_id_seq TO anonymous;
 
 
 --
@@ -3269,26 +3318,10 @@ GRANT ALL ON TABLE public.galerie_dir TO anonymous;
 
 
 --
--- Name: SEQUENCE galerie_dir_gd_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.galerie_dir_gd_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.galerie_dir_gd_id_seq TO anonymous;
-
-
---
 -- Name: TABLE galerie_foto; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON TABLE public.galerie_foto TO anonymous;
-
-
---
--- Name: SEQUENCE galerie_foto_gf_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.galerie_foto_gf_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.galerie_foto_gf_id_seq TO anonymous;
 
 
 --
@@ -3313,13 +3346,6 @@ GRANT ALL ON TABLE public.platby_group TO member;
 
 
 --
--- Name: TABLE platby_group_skupina; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.platby_group_skupina TO member;
-
-
---
 -- Name: TABLE platby_item; Type: ACL; Schema: public; Owner: -
 --
 
@@ -3334,33 +3360,10 @@ GRANT ALL ON TABLE public.skupiny TO anonymous;
 
 
 --
--- Name: TABLE nabidka; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.nabidka TO member;
-
-
---
 -- Name: TABLE nabidka_item; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON TABLE public.nabidka_item TO member;
-
-
---
--- Name: SEQUENCE nabidka_item_ni_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.nabidka_item_ni_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.nabidka_item_ni_id_seq TO anonymous;
-
-
---
--- Name: SEQUENCE nabidka_n_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.nabidka_n_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.nabidka_n_id_seq TO anonymous;
 
 
 --
@@ -3392,33 +3395,10 @@ GRANT ALL ON TABLE public.parameters TO anonymous;
 
 
 --
--- Name: TABLE pary; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.pary TO anonymous;
-
-
---
 -- Name: TABLE pary_navrh; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON TABLE public.pary_navrh TO member;
-
-
---
--- Name: SEQUENCE pary_navrh_pn_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.pary_navrh_pn_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.pary_navrh_pn_id_seq TO anonymous;
-
-
---
--- Name: SEQUENCE pary_p_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.pary_p_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.pary_p_id_seq TO anonymous;
 
 
 --
@@ -3429,51 +3409,10 @@ GRANT ALL ON TABLE public.permissions TO anonymous;
 
 
 --
--- Name: SEQUENCE permissions_pe_id_seq; Type: ACL; Schema: public; Owner: -
+-- Name: TABLE platby_group_skupina; Type: ACL; Schema: public; Owner: -
 --
 
-GRANT SELECT,USAGE ON SEQUENCE public.permissions_pe_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.permissions_pe_id_seq TO anonymous;
-
-
---
--- Name: SEQUENCE platby_category_group_pcg_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.platby_category_group_pcg_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.platby_category_group_pcg_id_seq TO anonymous;
-
-
---
--- Name: SEQUENCE platby_category_pc_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.platby_category_pc_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.platby_category_pc_id_seq TO anonymous;
-
-
---
--- Name: SEQUENCE platby_group_pg_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.platby_group_pg_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.platby_group_pg_id_seq TO anonymous;
-
-
---
--- Name: SEQUENCE platby_group_skupina_pgs_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.platby_group_skupina_pgs_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.platby_group_skupina_pgs_id_seq TO anonymous;
-
-
---
--- Name: SEQUENCE platby_item_pi_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.platby_item_pi_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.platby_item_pi_id_seq TO anonymous;
+GRANT ALL ON TABLE public.platby_group_skupina TO member;
 
 
 --
@@ -3484,49 +3423,10 @@ GRANT ALL ON TABLE public.platby_raw TO member;
 
 
 --
--- Name: SEQUENCE platby_raw_pr_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.platby_raw_pr_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.platby_raw_pr_id_seq TO anonymous;
-
-
---
--- Name: TABLE rozpis; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.rozpis TO member;
-
-
---
 -- Name: TABLE rozpis_item; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON TABLE public.rozpis_item TO member;
-
-
---
--- Name: SEQUENCE rozpis_item_ri_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.rozpis_item_ri_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.rozpis_item_ri_id_seq TO anonymous;
-
-
---
--- Name: SEQUENCE rozpis_r_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.rozpis_r_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.rozpis_r_id_seq TO anonymous;
-
-
---
--- Name: SEQUENCE skupiny_s_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.skupiny_s_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.skupiny_s_id_seq TO anonymous;
 
 
 --
@@ -3544,49 +3444,10 @@ GRANT ALL ON TABLE public.upozorneni_skupiny TO member;
 
 
 --
--- Name: SEQUENCE upozorneni_skupiny_ups_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.upozorneni_skupiny_ups_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.upozorneni_skupiny_ups_id_seq TO anonymous;
-
-
---
--- Name: SEQUENCE upozorneni_up_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.upozorneni_up_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.upozorneni_up_id_seq TO anonymous;
-
-
---
 -- Name: TABLE users_skupiny; Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON TABLE public.users_skupiny TO member;
-
-
---
--- Name: SEQUENCE users_skupiny_us_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.users_skupiny_us_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.users_skupiny_us_id_seq TO anonymous;
-
-
---
--- Name: SEQUENCE users_u_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.users_u_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.users_u_id_seq TO anonymous;
-
-
---
--- Name: TABLE video; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.video TO anonymous;
 
 
 --
@@ -3597,14 +3458,6 @@ GRANT ALL ON TABLE public.video_list TO anonymous;
 
 
 --
--- Name: SEQUENCE video_list_vl_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.video_list_vl_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.video_list_vl_id_seq TO anonymous;
-
-
---
 -- Name: TABLE video_source; Type: ACL; Schema: public; Owner: -
 --
 
@@ -3612,35 +3465,21 @@ GRANT ALL ON TABLE public.video_source TO anonymous;
 
 
 --
--- Name: SEQUENCE video_source_vs_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.video_source_vs_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.video_source_vs_id_seq TO anonymous;
-
-
---
--- Name: SEQUENCE video_v_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.video_v_id_seq TO olympuser;
-GRANT SELECT,USAGE ON SEQUENCE public.video_v_id_seq TO anonymous;
-
-
---
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO olympuser;
 ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO anonymous;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO member;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO administrator;
 
 
 --
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON FUNCTIONS  TO olympuser;
 ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON FUNCTIONS  TO anonymous;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON FUNCTIONS  TO member;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON FUNCTIONS  TO administrator;
 
 
 --
@@ -3648,6 +3487,23 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON FUNCTIO
 --
 
 ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
+
+
+--
+-- Name: postgraphile_watch_ddl; Type: EVENT TRIGGER; Schema: -; Owner: -
+--
+
+CREATE EVENT TRIGGER postgraphile_watch_ddl ON ddl_command_end
+         WHEN TAG IN ('ALTER AGGREGATE', 'ALTER DOMAIN', 'ALTER EXTENSION', 'ALTER FOREIGN TABLE', 'ALTER FUNCTION', 'ALTER POLICY', 'ALTER SCHEMA', 'ALTER TABLE', 'ALTER TYPE', 'ALTER VIEW', 'COMMENT', 'CREATE AGGREGATE', 'CREATE DOMAIN', 'CREATE EXTENSION', 'CREATE FOREIGN TABLE', 'CREATE FUNCTION', 'CREATE INDEX', 'CREATE POLICY', 'CREATE RULE', 'CREATE SCHEMA', 'CREATE TABLE', 'CREATE TABLE AS', 'CREATE VIEW', 'DROP AGGREGATE', 'DROP DOMAIN', 'DROP EXTENSION', 'DROP FOREIGN TABLE', 'DROP FUNCTION', 'DROP INDEX', 'DROP OWNED', 'DROP POLICY', 'DROP RULE', 'DROP SCHEMA', 'DROP TABLE', 'DROP TYPE', 'DROP VIEW', 'GRANT', 'REVOKE', 'SELECT INTO')
+   EXECUTE FUNCTION postgraphile_watch.notify_watchers_ddl();
+
+
+--
+-- Name: postgraphile_watch_drop; Type: EVENT TRIGGER; Schema: -; Owner: -
+--
+
+CREATE EVENT TRIGGER postgraphile_watch_drop ON sql_drop
+   EXECUTE FUNCTION postgraphile_watch.notify_watchers_drop();
 
 
 --

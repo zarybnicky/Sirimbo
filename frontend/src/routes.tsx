@@ -17,6 +17,7 @@ import { RegisterPage } from './pages/RegisterPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { DynamicPage } from './pages/DynamicPage';
 import { CohortsPage } from './pages/CohortsPage';
+import { SchedulePage } from './pages/SchedulePage';
 
 const ProtectedRoute = ({ check, children, ...rest }: {
   check: (user: AppUser | null) => boolean;
@@ -47,7 +48,6 @@ const ExternalRedirect = ({ to, ...routeProps }: { to: string; } & Omit<RoutePro
 const ForgottenPasswordPage = () => <React.Fragment>Forgotten Password</React.Fragment>;
 const EventsPage = () => <React.Fragment>Events</React.Fragment>;
 const EventPage = () => <React.Fragment>Event</React.Fragment>;
-const SchedulePage = () => <React.Fragment>Schedule</React.Fragment>;
 const DocumentsPage = () => <React.Fragment>Documents</React.Fragment>;
 const GroupOverviewPage = () => <React.Fragment>GroupOverview</React.Fragment>;
 const ProfilePage = () => <React.Fragment>Profile</React.Fragment>;

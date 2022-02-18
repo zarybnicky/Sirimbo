@@ -5,6 +5,7 @@ import { useTypedMutation, useTypedQuery } from '../zeus/apollo';
 export interface AuthContextType {
   isLoading: boolean,
   user: AppUser | null;
+  couple: AppCouple | null;
   signIn: (email: string, password: string) => Promise<AppUser>;
   signUp: (email: string, password: string) => Promise<AppUser>;
   signOut: () => Promise<void>;
@@ -32,11 +33,12 @@ export const useAuth = () => {
 
 function useApiAuth(): AuthContextType {
   const [user, setUser] = React.useState<AppUser | null>(null);
+  const [couple, setCouple] = React.useState<AppCouple | null>(null);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [signIn] = useTypedMutation({
     login: [
       { input: { login: $`login`, passwd: $`passwd` } },
-      { result: { usr: UserPartial } },
+      { result: { usr: UserPartial, couple: CouplePartial } },
     ]
   }, {
     onError: () => setIsLoading(false),
@@ -59,22 +61,26 @@ function useApiAuth(): AuthContextType {
   return {
     isLoading,
     user,
+    couple,
     async signIn(login: string, passwd: string) {
       setIsLoading(true);
       const { data } = await signIn({ variables: { login, passwd } });
       setIsLoading(false);
       setUser(data?.login?.result?.usr!!);
+      setCouple(data?.login?.result?.couple!!);
       return data?.login?.result?.usr!!;
     },
     async signUp(email: string, password: string) {
       // const response = await createUserWithEmailAndPassword(email, password);
       // const response = { user: { name: "Jakub Zárybnický" } };
       setUser(UserMock as any);
+      setCouple(CoupleMock as any);
       return UserMock as any;
     },
     async signOut() {
       await signOut();
       setUser(null);
+      setCouple(null);
     },
     async sendPasswordResetEmail(email: string) {
       // await sendPasswordResetEmail(email);
@@ -87,20 +93,25 @@ function useApiAuth(): AuthContextType {
 
 export function useMockAuth(): AuthContextType {
   const [user, setUser] = React.useState<AppUser | null>(null);
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [couple, setCouple] = React.useState<AppCouple | null>(null);
+  const [isLoading] = React.useState<boolean>(false);
   return {
     isLoading,
     user,
+    couple,
     async signIn() {
       setUser(UserMock as any);
+      setCouple(CoupleMock as any);
       return UserMock as any;
     },
     async signUp() {
       setUser(UserMock as any);
+      setCouple(CoupleMock as any);
       return UserMock as any;
     },
     async signOut() {
       setUser(null);
+      setCouple(null);
     },
     async sendPasswordResetEmail(email: string) {
     },
@@ -110,6 +121,21 @@ export function useMockAuth(): AuthContextType {
 }
 
 export type AppUser = InputType<GraphQLTypes["User"], typeof UserPartial>;
+export type AppCouple = InputType<GraphQLTypes["Pary"], typeof CouplePartial>;
+
+export const CoupleMock: AppCouple = {
+  pId: 1,
+  pIdPartner: 1,
+  pIdPartnerka: 0,
+  pArchiv: false,
+};
+
+export const CouplePartial = Selector("Pary")({
+  pId: true,
+  pIdPartner: true,
+  pIdPartnerka: true,
+  pArchiv: true,
+});
 
 export const UserMock: AppUser = {
   permissionByUGroup: {

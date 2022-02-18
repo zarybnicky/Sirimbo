@@ -7343,6 +7343,60 @@
                 "required": [],
                 "properties": {}
             },
+            "reservationsForRange": {
+                "type": "object",
+                "required": [],
+                "properties": {
+                    "startDate": {
+                        "type": "string"
+                    },
+                    "endDate": {
+                        "type": "string"
+                    },
+                    "first": {
+                        "type": "integer"
+                    },
+                    "last": {
+                        "type": "integer"
+                    },
+                    "offset": {
+                        "type": "integer"
+                    },
+                    "before": {
+                        "type": "string"
+                    },
+                    "after": {
+                        "type": "string"
+                    }
+                }
+            },
+            "schedulesForRange": {
+                "type": "object",
+                "required": [],
+                "properties": {
+                    "startDate": {
+                        "type": "string"
+                    },
+                    "endDate": {
+                        "type": "string"
+                    },
+                    "first": {
+                        "type": "integer"
+                    },
+                    "last": {
+                        "type": "integer"
+                    },
+                    "offset": {
+                        "type": "integer"
+                    },
+                    "before": {
+                        "type": "string"
+                    },
+                    "after": {
+                        "type": "string"
+                    }
+                }
+            },
             "titleVideos": {
                 "type": "object",
                 "required": [],
