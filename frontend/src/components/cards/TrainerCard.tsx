@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { makeStyles, Typography, Paper } from '@material-ui/core';
-import { SlateReadonly } from '../SlateReadonly';
-import { Descendant } from 'slate';
+import { CellPlugin } from '@react-page/editor';
+import { defaultSlate } from '../ReactPage';
 
 const useStyles = makeStyles((theme) => ({
   item: {
@@ -38,19 +38,46 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-interface Card {
-  img: string;
+interface TrainerCardProps {
+  image: string;
   name: string;
-  content: Descendant[];
 }
 
-export const TrainerCard = ({ item: x }: { item: Card; }) => {
+export const TrainerCard = (props: TrainerCardProps & { children: React.ReactNode | React.ReactChildren; }) => {
   const classes = useStyles();
   return <Paper elevation={3} className={classes.item}>
     <div className="header">
-      <Typography variant="h6" component="h3">{x.name}</Typography>
+      <Typography variant="h6" component="h3">{props.name}</Typography>
     </div>
-    <SlateReadonly value={x.content} />
-    <img className="image" src={x.img} alt={x.name} />
+    {props.children}
+    <img className="image" src={props.image} alt={props.name} />
   </Paper>;
+};
+
+export const TrainerCardPlugin: CellPlugin<TrainerCardProps> = {
+  Renderer: ({ children, data }) => <TrainerCard {...data}>
+    {children}
+  </TrainerCard>,
+
+  id: 'app-trainer-card-plugin',
+  title: 'TrainerCard',
+  version: 1,
+  createInitialData: () => ({
+    name: 'Franta Nový',
+    image: '/images/services-pripravka.png',
+  }),
+  createInitialChildren: () => [[{ plugin: defaultSlate }]],
+  childConstraints: {
+    maxChildren: 1,
+  },
+  controls: {
+    type: 'autoform',
+    schema: {
+      required: [],
+      properties: {
+        name: { type: 'string' },
+        image: { type: 'string' },
+      },
+    },
+  },
 };

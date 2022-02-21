@@ -15,6 +15,7 @@ export const ContainerPlugin: CellPlugin<{
   title: 'Container',
   description: undefined,
   version: 1,
+  cellSpacing: 20,
   createInitialData: () => ({
     maxWidth: 'lg',
   }),

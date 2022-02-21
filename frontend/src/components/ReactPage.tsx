@@ -10,22 +10,24 @@ import { HeadingPlugin } from './Heading';
 import { defaultSlate } from './SlateReadonly';
 import { ServiceCardPlugin } from './cards/ServiceCard';
 import { LocationCardPlugin } from './cards/LocationCard';
+import { TrainerCardPlugin } from './cards/TrainerCard';
 
 export { defaultSlate };
 export const cellPlugins: CellPlugin<any, any>[] = [
   defaultSlate,
   image,
+  ServiceCardPlugin,
+  LocationCardPlugin,
+  TrainerCardPlugin,
   ContainerPlugin,
   CallToActionPlugin,
   HeadingPlugin,
-  ServiceCardPlugin,
-  LocationCardPlugin,
 ];
 
 const useStyles = makeStyles(() => ({
   container: {
     minHeight: '200px',
-    '& .react-page-cell-inner-leaf.slate': {
+    '& .react-page-cell-inner.slate': {
       padding: '20px',
     },
   },

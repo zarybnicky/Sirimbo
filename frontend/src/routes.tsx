@@ -10,7 +10,6 @@ import { HomePage } from './pages/HomePage';
 import { LocationsPage } from './pages/LocationsPage';
 import { ArticlePage } from './pages/ArticlePage';
 import { ArticlesPage } from './pages/ArticlesPage';
-import { TrainersPage } from './pages/TrainersPage';
 import { GalleryPage } from './pages/GalleryPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
@@ -62,7 +61,6 @@ export const routes = <Switch>
   <Redirect from="/oklubu/:path*" to="/o-nas/:path*" />
   <Route exact path="/o-nas"><AboutPage /></Route>
   <Route exact path="/o-nas/kde-trenujeme"><LocationsPage /></Route>
-  <Route exact path="/o-nas/treneri"><TrainersPage /></Route>
   <Route exact path="/o-nas/treninkove-skupiny"><CohortsPage /></Route>
 
   {/* <Route exact path="/o-nas/clenstvi"><MembershipPage /></Route>

@@ -139,10 +139,10 @@ export const RegisterPage = () => {
                     { id: 'other', label: 'Jiný' },
                   ]}
                 />
-                {form.values.poznamky === 'parent' && (
+                {(form.values as any).poznamky === 'parent' && (
                   <TextField label="Jméno tanečníka" name="dancer-name" />
                 )}
-                {form.values.poznamky === 'other' && (
+                {(form.values as any).poznamky === 'other' && (
                   <TextField label="Popište svůj vztah ke klubu" name="other" placeholder="vztah ke klubu" />
                 )}
               </Grid>

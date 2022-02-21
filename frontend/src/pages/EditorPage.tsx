@@ -211,7 +211,6 @@ export const EditorPage = ({ }) => {
       <ReactPage
         readOnly={state.state === 'history' || state.state === 'empty'}
         value={state.content} onChange={setContent}
-        style={{ padding: '4rem 2rem 2rem' }}
       />
     </Grid>
   </Grid>;
