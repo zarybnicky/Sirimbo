@@ -1,5 +1,5 @@
 import { getPlaceholder } from '../test-utils';
-import { $, GalerieFotosOrderBy, Selector, GraphQLTypes } from '../zeus';
+import { $, GalerieFotosOrderBy, Selector } from '../zeus';
 import { useTypedQuery } from '../zeus/apollo';
 import format from 'date-fns/format';
 

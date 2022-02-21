@@ -1992,6 +1992,7 @@ for equality and combined with a logical ‘and.’ */
 	content?:boolean,
 	createdAt?:boolean,
 	updatedAt?:boolean,
+	title?:boolean,
 		__typename?: boolean
 }>;
 	/** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
@@ -2017,7 +2018,9 @@ for equality and combined with a logical ‘and.’ */
 	/** Checks for equality with the object’s `createdAt` field. */
 	createdAt?:ValueTypes["Datetime"] | null,
 	/** Checks for equality with the object’s `updatedAt` field. */
-	updatedAt?:ValueTypes["Datetime"] | null
+	updatedAt?:ValueTypes["Datetime"] | null,
+	/** Checks for equality with the object’s `title` field. */
+	title?:string | null
 };
 	/** A connection to a list of `PageRevision` values. */
 ["PageRevisionsConnection"]: AliasType<{
@@ -2042,6 +2045,7 @@ for equality and combined with a logical ‘and.’ */
 	content?:boolean,
 	createdAt?:boolean,
 	updatedAt?:boolean,
+	title?:boolean,
 		__typename?: boolean
 }>;
 	/** A `PageRevision` edge in the connection. */
@@ -2072,7 +2076,9 @@ tested for equality and combined with a logical ‘and.’ */
 	/** Checks for equality with the object’s `createdAt` field. */
 	createdAt?:ValueTypes["Datetime"] | null,
 	/** Checks for equality with the object’s `updatedAt` field. */
-	updatedAt?:ValueTypes["Datetime"] | null
+	updatedAt?:ValueTypes["Datetime"] | null,
+	/** Checks for equality with the object’s `title` field. */
+	title?:string | null
 };
 	/** A connection to a list of `Parameter` values. */
 ["ParametersConnection"]: AliasType<{
@@ -3163,7 +3169,8 @@ payload verbatim. May be used to track mutations by the client. */
 	url:string,
 	content:ValueTypes["JSON"],
 	createdAt?:ValueTypes["Datetime"] | null,
-	updatedAt?:ValueTypes["Datetime"] | null
+	updatedAt?:ValueTypes["Datetime"] | null,
+	title?:string | null
 };
 	/** The output of our create `Parameter` mutation. */
 ["CreateParameterPayload"]: AliasType<{
@@ -4266,7 +4273,8 @@ payload verbatim. May be used to track mutations by the client. */
 	url?:string | null,
 	content?:ValueTypes["JSON"] | null,
 	createdAt?:ValueTypes["Datetime"] | null,
-	updatedAt?:ValueTypes["Datetime"] | null
+	updatedAt?:ValueTypes["Datetime"] | null,
+	title?:string | null
 };
 	/** All input for the `updatePage` mutation. */
 ["UpdatePageInput"]: {
@@ -7282,7 +7290,8 @@ for equality and combined with a logical ‘and.’ */
 	url:string,
 	content:ModelTypes["JSON"],
 	createdAt:ModelTypes["Datetime"],
-	updatedAt:ModelTypes["Datetime"]
+	updatedAt:ModelTypes["Datetime"],
+	title:string
 };
 	/** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
 ["JSON"]:any;
@@ -7318,7 +7327,8 @@ for equality and combined with a logical ‘and.’ */
 	url:string,
 	content:ModelTypes["JSON"],
 	createdAt:ModelTypes["Datetime"],
-	updatedAt:ModelTypes["Datetime"]
+	updatedAt:ModelTypes["Datetime"],
+	title:string
 };
 	/** A `PageRevision` edge in the connection. */
 ["PageRevisionsEdge"]: {
@@ -11190,7 +11200,8 @@ for equality and combined with a logical ‘and.’ */
 	url: string,
 	content: GraphQLTypes["JSON"],
 	createdAt: GraphQLTypes["Datetime"],
-	updatedAt: GraphQLTypes["Datetime"]
+	updatedAt: GraphQLTypes["Datetime"],
+	title: string
 };
 	/** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
 ["JSON"]:any;
@@ -11215,7 +11226,9 @@ for equality and combined with a logical ‘and.’ */
 	/** Checks for equality with the object’s `createdAt` field. */
 	createdAt?: GraphQLTypes["Datetime"],
 	/** Checks for equality with the object’s `updatedAt` field. */
-	updatedAt?: GraphQLTypes["Datetime"]
+	updatedAt?: GraphQLTypes["Datetime"],
+	/** Checks for equality with the object’s `title` field. */
+	title?: string
 };
 	/** A connection to a list of `PageRevision` values. */
 ["PageRevisionsConnection"]: {
@@ -11240,7 +11253,8 @@ for equality and combined with a logical ‘and.’ */
 	url: string,
 	content: GraphQLTypes["JSON"],
 	createdAt: GraphQLTypes["Datetime"],
-	updatedAt: GraphQLTypes["Datetime"]
+	updatedAt: GraphQLTypes["Datetime"],
+	title: string
 };
 	/** A `PageRevision` edge in the connection. */
 ["PageRevisionsEdge"]: {
@@ -11270,7 +11284,9 @@ tested for equality and combined with a logical ‘and.’ */
 	/** Checks for equality with the object’s `createdAt` field. */
 	createdAt?: GraphQLTypes["Datetime"],
 	/** Checks for equality with the object’s `updatedAt` field. */
-	updatedAt?: GraphQLTypes["Datetime"]
+	updatedAt?: GraphQLTypes["Datetime"],
+	/** Checks for equality with the object’s `title` field. */
+	title?: string
 };
 	/** A connection to a list of `Parameter` values. */
 ["ParametersConnection"]: {
@@ -12358,7 +12374,8 @@ payload verbatim. May be used to track mutations by the client. */
 	url: string,
 	content: GraphQLTypes["JSON"],
 	createdAt?: GraphQLTypes["Datetime"],
-	updatedAt?: GraphQLTypes["Datetime"]
+	updatedAt?: GraphQLTypes["Datetime"],
+	title?: string
 };
 	/** The output of our create `Parameter` mutation. */
 ["CreateParameterPayload"]: {
@@ -13461,7 +13478,8 @@ payload verbatim. May be used to track mutations by the client. */
 	url?: string,
 	content?: GraphQLTypes["JSON"],
 	createdAt?: GraphQLTypes["Datetime"],
-	updatedAt?: GraphQLTypes["Datetime"]
+	updatedAt?: GraphQLTypes["Datetime"],
+	title?: string
 };
 	/** All input for the `updatePage` mutation. */
 ["UpdatePageInput"]: {
@@ -15833,6 +15851,8 @@ export const enum PagesOrderBy {
 	CREATED_AT_DESC = "CREATED_AT_DESC",
 	UPDATED_AT_ASC = "UPDATED_AT_ASC",
 	UPDATED_AT_DESC = "UPDATED_AT_DESC",
+	TITLE_ASC = "TITLE_ASC",
+	TITLE_DESC = "TITLE_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
 	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
 }
@@ -15855,6 +15875,8 @@ export const enum PageRevisionsOrderBy {
 	CREATED_AT_DESC = "CREATED_AT_DESC",
 	UPDATED_AT_ASC = "UPDATED_AT_ASC",
 	UPDATED_AT_DESC = "UPDATED_AT_DESC",
+	TITLE_ASC = "TITLE_ASC",
+	TITLE_DESC = "TITLE_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
 	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
 }

@@ -4451,6 +4451,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		title:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	PageRevisionsOrderBy: "enum",
@@ -4499,6 +4505,12 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		updatedAt:{
 			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		title:{
+			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -6821,6 +6833,12 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		updatedAt:{
 			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		title:{
+			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -9213,6 +9231,12 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		updatedAt:{
 			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		title:{
+			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -13213,7 +13237,8 @@ export const ReturnTypes: Record<string,any> = {
 		url:"String",
 		content:"JSON",
 		createdAt:"Datetime",
-		updatedAt:"Datetime"
+		updatedAt:"Datetime",
+		title:"String"
 	},
 	PagesEdge:{
 		cursor:"Cursor",
@@ -13234,7 +13259,8 @@ export const ReturnTypes: Record<string,any> = {
 		url:"String",
 		content:"JSON",
 		createdAt:"Datetime",
-		updatedAt:"Datetime"
+		updatedAt:"Datetime",
+		title:"String"
 	},
 	PageRevisionsEdge:{
 		cursor:"Cursor",

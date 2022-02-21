@@ -35,3 +35,21 @@ do $$ begin
       execute procedure app_private.insert_revision();
   end if;
 end $$;
+
+do $$ begin
+  if not exists (select 1
+     from information_schema.columns
+     where table_schema = 'public' and table_name = 'page' and column_name = 'title'
+  ) then
+    alter table public.page add column title text not null default '';
+  end if;
+end $$;
+
+do $$ begin
+  if not exists (select 1
+     from information_schema.columns
+     where table_schema = 'public' and table_name = 'page_revision' and column_name = 'title'
+  ) then
+    alter table public.page_revision add column title text not null default '';
+  end if;
+end $$;

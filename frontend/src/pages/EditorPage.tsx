@@ -7,7 +7,7 @@ import { useSnackbar } from 'notistack';
 import { useConfirm } from 'material-ui-confirm';
 
 import { useTypedLazyQuery, useTypedMutation, useTypedQuery } from '../zeus/apollo';
-import { $, PagesOrderBy, GraphQLTypes } from '../zeus';
+import { $, Selector, PagesOrderBy, GraphQLTypes } from '../zeus';
 import { HeadingPlugin } from '../components/Heading';
 import { ContainerPlugin } from '../components/Container';
 import { CallToActionPlugin } from '../components/CallToAction';
@@ -35,6 +35,7 @@ type State = {
   content?: Value;
 } | {
   state: 'create';
+  title: string;
   url: string;
   content?: Value;
 } | {
@@ -49,22 +50,26 @@ type State = {
   content?: Value;
 };
 
+const PageFragment = Selector('Page')({
+  __typename: true,
+  nodeId: true,
+  id: true,
+  url: true,
+  title: true,
+  content: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 export const EditorPage = ({ }) => {
   const { enqueueSnackbar } = useSnackbar();
   const confirm = useConfirm();
 
   const { data, refetch } = useTypedQuery({
-    pages: [{ orderBy: [PagesOrderBy.URL_ASC] }, {
-      nodes: {
-        __typename: true,
-        nodeId: true,
-        id: true,
-        url: true,
-        content: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    }],
+    pages: [
+      { orderBy: [PagesOrderBy.URL_ASC] },
+      { nodes: PageFragment },
+    ],
   });
   const [fetchRevs] = useTypedLazyQuery({
     pageRevisions: [
@@ -78,6 +83,7 @@ export const EditorPage = ({ }) => {
           revTimestamp: true,
           id: true,
           url: true,
+          title: true,
           content: true,
           createdAt: true,
           updatedAt: true,
@@ -87,23 +93,13 @@ export const EditorPage = ({ }) => {
   });
   const [doCreatePage] = useTypedMutation({
     createPage: [
-      { input: { page: { url: $`url`, content: $`content` } } },
-      {
-        page: {
-          __typename: true,
-          nodeId: true,
-          id: true,
-          url: true,
-          content: true,
-          createdAt: true,
-          updatedAt: true,
-        }
-      },
+      { input: { page: { url: $`url`, title: $`title`, content: $`content` } } },
+      { page: PageFragment },
     ],
   });
   const [doSavePage] = useTypedMutation({
     updatePage: [
-      { input: { id: $`id`, patch: { url: $`url`, content: $`content` } } },
+      { input: { id: $`id`, patch: { url: $`url`, title: $`title`, content: $`content` } } },
       { __typename: true },
     ],
   }, {
@@ -112,12 +108,9 @@ export const EditorPage = ({ }) => {
 
   const [loading, setLoading] = React.useState<boolean>(false);
   const [state, setState] = React.useState<State>({ state: 'empty' });
-  const startPage = () => setState({ state: 'create', url: '', content: INITIAL_VALUE });
+  const startPage = () => setState({ state: 'create', url: '', title: '', content: INITIAL_VALUE });
   const selectPage = (page: Page) => setState({ state: 'edit', page, content: page.content })
-  const setContent = (content: Value) => {
-    console.log(content);
-    setState(s => ({ ...s, content }));
-  };
+  const setContent = (content: Value) => setState(s => ({ ...s, content }));
 
   let toolbar: JSX.Element | null = null;
   switch (state.state) {
@@ -127,15 +120,28 @@ export const EditorPage = ({ }) => {
           description: `Opravdu chcete vytvořit stránku s URL ${state.url}?`,
         });
         setLoading(true);
-        const { data } = await doCreatePage({ variables: { url: state.url, content: state.content } });
+        const { data } = await doCreatePage({
+          variables: {
+            url: state.url,
+            title: state.title,
+            content: state.content,
+          },
+        });
         await refetch();
         setLoading(false);
         setState({
-          state: 'edit', page: data?.createPage?.page, content: state.content
+          state: 'edit',
+          page: data?.createPage?.page,
+          content: state.content,
         } as State);
       };
       toolbar = <Grid container direction="column" spacing={2} style={{ marginBottom: '1rem' }}>
         <Grid item><Typography variant="h4">Nová stránka</Typography></Grid>
+        <Grid item>
+          <TextField value={state.title} placeholder="Název stránky" onChange={(e) => setState({
+            ...state, title: e.target.value,
+          })} />
+        </Grid>
         <Grid item>
           <TextField value={state.url} placeholder="URL stránky" onChange={(e) => setState({
             ...state, url: e.target.value,
@@ -166,6 +172,12 @@ export const EditorPage = ({ }) => {
       };
       toolbar = <Grid container direction="column" spacing={2} style={{ marginBottom: '1rem' }}>
         <Grid item><Typography variant="h4">Upravit stránku</Typography></Grid>
+        <Grid item>
+          <TextField value={state.page.title} placeholder="Název stránky" onChange={(e) => setState({
+            ...state,
+            page: { ...state.page, title: e.target.value },
+          })} />
+        </Grid>
         <Grid item>
           <TextField value={state.page.url} placeholder="URL stránky" onChange={(e) => setState({
             ...state,
