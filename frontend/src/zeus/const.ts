@@ -14206,6 +14206,7 @@ export const ReturnTypes: Record<string,any> = {
 		query:"Query"
 	},
 	LoginRecord:{
+		couple:"Pary",
 		sess:"Session",
 		usr:"User"
 	},

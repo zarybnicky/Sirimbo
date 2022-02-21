@@ -1,84 +1,7 @@
---! Previous: sha1:d0cd177bc6b88a640138c62ee96edf775c68dabb
---! Hash: sha1:e6fc78f85e7469db7fc7921a8f1a8a49db3207da
-
+drop view if exists nabidka_admin;
+drop view if exists rozpis_admin;
+drop view if exists aktuality_admin;
 drop table if exists aktuality_foto;
-
-drop function if exists login(login varchar, passwd varchar) cascade;
-create or replace function public.login(login varchar, passwd varchar, OUT sess session, out usr users) as $$
-declare
-  v_salt varchar;
-begin
-  if login like '%@%' then
-    select users.* into usr from users where u_email = login limit 1;
-  else
-    select users.* into usr from users where u_login = login limit 1;
-  end if;
-
-  if usr is null then
-    raise exception 'ACCOUNT_NOT_FOUND' using errcode = '28000';
-  end if;
-
-  select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
-  if usr.u_pass != encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex') then
-    raise exception 'INVALID_PASSWORD' using errcode = '28P01';
-  end if;
-
-  if usr.u_ban then
-    raise exception 'ACCOUNT_DISABLED' using errcode = '42501';
-  end if;
-  if not usr.u_confirmed then
-    raise exception 'ACCOUNT_NOT_CONFIRMED' using errcode = '42501';
-  end if;
-
-  insert into session
-    (ss_id, ss_user, ss_data, ss_lifetime)
-    values (gen_random_uuid(), usr.u_id, ('{"id":' || usr.u_id || '}')::bytea, 86400)
-    returning * into sess;
-end;
-$$ language plpgsql strict volatile security definer;
-select plpgsql_check_function('public.login');
-
-create or replace function public.logout() returns void as $$
-begin
-  delete from session where ss_id=current_session_id();
-end;
-$$ language plpgsql strict volatile security definer;
-select plpgsql_check_function('public.logout');
-
-
-drop function current_user_id() cascade;
-create or replace function current_user_id() returns bigint as $$
-  SELECT current_setting('jwt.claims.user_id', true)::bigint;
-$$ language sql stable;
-
-create or replace function current_session_id() returns text as $$
-  select current_setting('jwt.claims.session_id', true);
-$$ language sql stable;
-
-create or replace function current_couple_ids() returns setof bigint AS $$
-  select distinct p_id_partner
-  from public.pary
-  where p_id_partner = current_user_id() and p_archiv = false
-  UNION
-  select distinct p_id_partnerka
-  from public.pary
-  where p_id_partnerka = current_user_id() and p_archiv = false;
-$$ language sql stable;
-
-create or replace function app_private.drop_policies(tbl text) returns void as $$
-declare
-   rec record;
-begin
-   for rec in (
-     select policyname from pg_policies
-     where schemaname = split_part(tbl, '.', 1) and tablename = split_part(tbl, '.', 2)
-   ) loop
-     execute 'drop policy "' || rec.policyname || '" on ' || tbl;
-   end loop;
-end;
-$$ language plpgsql volatile;
-select plpgsql_check_function('app_private.drop_policies');
-
 
 -- ************** akce *************
 select app_private.drop_policies('public.akce');
@@ -257,6 +180,24 @@ create policy manage_own on session for all
   with check (ss_user = current_user_id());
 
 -- ************** skupiny **************
+do $$ begin
+  if not exists (select 1
+     from information_schema.columns
+     where table_schema = 'public' and table_name = 'skupiny' and column_name = 's_location'
+  ) then
+    alter table public.skupiny add column s_location text not null default '';
+  end if;
+end $$;
+
+do $$ begin
+  if not exists (select 1
+     from information_schema.columns
+     where table_schema = 'public' and table_name = 'skupiny' and column_name = 's_visible'
+  ) then
+    alter table public.skupiny add column s_visible boolean not null default true;
+  end if;
+end $$;
+
 select app_private.drop_policies('public.skupiny');
 alter table skupiny enable row level security;
 create policy admin_all on skupiny to administrator using (true) with check (true);

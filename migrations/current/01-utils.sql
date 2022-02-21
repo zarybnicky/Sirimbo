@@ -1,17 +1,22 @@
---! Previous: sha1:a606623ac50e1c7ea1d595dabe55c80735b56453
---! Hash: sha1:d0cd177bc6b88a640138c62ee96edf775c68dabb
-
-drop view if exists aktuality_admin;
-drop view if exists rozpis_admin;
-drop view if exists nabidka_admin;
-
-drop schema if exists app_private cascade;
-create schema app_private;
+create schema if not exists app_private;
 grant all on schema app_private to postgres;
 grant all on schema app_private to :DATABASE_OWNER;
 
+create or replace function app_private.drop_policies(tbl text) returns void as $$
+declare
+   rec record;
+begin
+   for rec in (
+     select policyname from pg_policies
+     where schemaname = split_part(tbl, '.', 1) and tablename = split_part(tbl, '.', 2)
+   ) loop
+     execute 'drop policy "' || rec.policyname || '" on ' || tbl;
+   end loop;
+end;
+$$ language plpgsql volatile;
+select plpgsql_check_function('app_private.drop_policies');
 
-create function app_private.tg__timestamps() returns trigger as $$
+create or replace function app_private.tg__timestamps() returns trigger as $$
 begin
   NEW.created_at = (case when TG_OP = 'INSERT' then NOW() else OLD.created_at end);
   NEW.updated_at = (case when TG_OP = 'UPDATE' and OLD.updated_at >= NOW() then OLD.updated_at + interval '1 millisecond' else NOW() end);
@@ -22,6 +27,7 @@ comment on function app_private.tg__timestamps() is
   E'This trigger should be called on all tables with created_at, updated_at - it ensures that they cannot be manipulated and that updated_at will always be larger than the previous updated_at.';
 
 
+
 -- https://dev.to/livioribeiro/use-your-database-part-3---creating-a-revision-system-20j7
 CREATE TEMPORARY TABLE IF NOT EXISTS base_revision (
     rev_number INTEGER NOT NULL,
@@ -29,14 +35,12 @@ CREATE TEMPORARY TABLE IF NOT EXISTS base_revision (
     rev_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-drop function if exists insert_revision;
-
 CREATE OR REPLACE FUNCTION app_private.insert_revision() RETURNS TRIGGER AS $$
 DECLARE
     _op CHAR(1);
     _record RECORD;
     _rev_number INTEGER;
-    _rev_table VARCHAR := TG_TABLE_NAME || '_revision';
+    _rev_table VARCHAR := TG_TABLE_SCHEMA || '.' || TG_TABLE_NAME || '_revision';
     _where VARCHAR := '';
     _pk VARCHAR;
 BEGIN
@@ -63,34 +67,4 @@ BEGIN
     RETURN _record;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
-
-
-
-drop table if exists page cascade;
-drop table if exists page_revision cascade;
-
-create table page (
-       id serial primary key,
-       url varchar not null unique,
-       content json not null,
-       created_at timestamptz not null default now(),
-       updated_at timestamptz not null default now()
-);
-comment on table page is E'@omit delete';
-
-create table page_revision (
-    like base_revision including constraints,
-    like page,
-    primary key (rev_number, id)
-);
-comment on table page_revision is E'@omit create,update,delete';
-
-create trigger _100_timestamps
-  before insert or update on page
-  for each row
-  execute procedure app_private.tg__timestamps();
-
-create trigger _100_page_revision
-  after insert or update or delete on page
-  for each row
-  execute procedure app_private.insert_revision();
+select plpgsql_check_function('app_private.insert_revision', 'page');

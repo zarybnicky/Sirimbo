@@ -6144,6 +6144,7 @@ unchanged and unused. May be used by a client to track mutations. */
 }>;
 	/** The return type of our `login` mutation. */
 ["LoginRecord"]: AliasType<{
+	couple?:ValueTypes["Pary"],
 	sess?:ValueTypes["Session"],
 	usr?:ValueTypes["User"],
 		__typename?: boolean
@@ -9634,7 +9635,8 @@ unchanged and unused. May be used by a client to track mutations. */
 };
 	/** The return type of our `login` mutation. */
 ["LoginRecord"]: {
-		sess?:ModelTypes["Session"],
+		couple?:ModelTypes["Pary"],
+	sess?:ModelTypes["Session"],
 	usr?:ModelTypes["User"]
 };
 	/** All input for the `login` mutation. */
@@ -15338,6 +15340,7 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** The return type of our `login` mutation. */
 ["LoginRecord"]: {
 	__typename: "LoginRecord",
+	couple?: GraphQLTypes["Pary"],
 	sess?: GraphQLTypes["Session"],
 	usr?: GraphQLTypes["User"]
 };
