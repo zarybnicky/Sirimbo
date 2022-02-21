@@ -72,18 +72,25 @@ export const routes = <Switch>
       <Route exact path="/nabizime/vystoupeni"><ShowOfferPage /></Route> */}
 
   <Redirect from="/aktualne/:path*" to="/articles/:path*" />
-  <Route exact path="/articles"><ArticlesPage /></Route>
-  <Route exact path="/articles/:id"><ArticlePage /></Route>
-
   <Redirect from="/fotogalerie/:path*" to="/gallery/:path*" />
   <Redirect from="/galerie/:path*" to="/gallery/:path*" />
   <Redirect from="/gallery/:directory/foto/:id" to="/gallery/:directory/photo/:id" />
+  <Redirect from="/registrace" to="/register" />
+  <Redirect from="/nopassword" to="/forgotten-password" />
+  <Redirect from="/member/home" to="/dashboard" />
+  <Redirect from="/member/rozpis" to="/schedule" />
+  <Redirect from="/member/treninky" to="/schedule" />
+  <Redirect from="/member/nabidka" to="/schedule" />
+  <Redirect from="/member/clenove" to="/groups" />
+  <Redirect from="/member/profil" to="/profile" />
+
+  <Route exact path="/articles"><ArticlesPage /></Route>
+  <Route exact path="/articles/:id"><ArticlePage /></Route>
+
   <Route exact path="/gallery"><GalleryPage /></Route>
   <Route exact path="/gallery/:dir"><GalleryPage /></Route>
   <Route exact path="/gallery/:dir/photo/:photo"><GalleryPage /></Route>
 
-  <Redirect from="/registrace" to="/register" />
-  <Redirect from="/nopassword" to="/forgotten-password" />
   <Route exact path="/login"><LoginPage /></Route>
   <Route exact path="/register"><RegisterPage /></Route>
   <Route exact path="/forgotten-password"><ForgottenPasswordPage /></Route>
@@ -93,12 +100,6 @@ export const routes = <Switch>
   <Route exact path="/events/private"><EventsPage /></Route>
   <Route exact path="/events/:id"><EventPage /></Route>
 
-  <Redirect from="/member/home" to="/dashboard" />
-  <Redirect from="/member/rozpis" to="/schedule" />
-  <Redirect from="/member/treninky" to="/schedule" />
-  <Redirect from="/member/nabidka" to="/schedule" />
-  <Redirect from="/member/clenove" to="/groups" />
-  <Redirect from="/member/profil" to="/profile" />
   <ProtectedRoute exact path="/dashboard" check={isLoggedIn}><DashboardPage /></ProtectedRoute>
   <ProtectedRoute exact path="/schedule" check={isLoggedIn}><SchedulePage /></ProtectedRoute>
   <ProtectedRoute exact path="/documents" check={isLoggedIn}><DocumentsPage /></ProtectedRoute>
