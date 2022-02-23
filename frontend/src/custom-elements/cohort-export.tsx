@@ -21,7 +21,7 @@ const ExportQuery = Selector('Query')({
   ],
 });
 
-export function CohortExport({ id, name }: { id: string; name: string; }) {
+export function CohortExport({ id, name }: { id: number; name: string; }) {
   const [fetchData] = useTypedLazyQuery(ExportQuery, { variables: { id } });
 
   const saveData = async () => {
@@ -73,7 +73,7 @@ export class CohortExportElement extends HTMLElement {
   connectedCallback() {
     ReactDOM.render(
       <ApolloProvider client={client}>
-        <CohortExport id={this.getAttribute('id') || ''} name={this.getAttribute('name') || ''} />
+        <CohortExport id={parseInt(this.getAttribute('id') || '1', 10)} name={this.getAttribute('name') || ''} />
       </ApolloProvider>,
       this
     );
