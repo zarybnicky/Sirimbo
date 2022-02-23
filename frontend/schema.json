@@ -7483,6 +7483,30 @@
                     }
                 }
             },
+            "cohortMembers": {
+                "type": "object",
+                "required": [],
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "first": {
+                        "type": "integer"
+                    },
+                    "last": {
+                        "type": "integer"
+                    },
+                    "offset": {
+                        "type": "integer"
+                    },
+                    "before": {
+                        "type": "string"
+                    },
+                    "after": {
+                        "type": "string"
+                    }
+                }
+            },
             "currentCoupleIds": {
                 "type": "object",
                 "required": [],

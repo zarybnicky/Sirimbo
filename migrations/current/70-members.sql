@@ -1,6 +1,6 @@
 drop view if exists public.members;
 
-CREATE OR REPLACE VIEW public.members AS
+create or replace view public.members as
   WITH current_payments as (
     SELECT * from platby_item
     INNER JOIN platby_category ON pi_id_category=pc_id
@@ -16,3 +16,9 @@ CREATE OR REPLACE VIEW public.members AS
     AND u_ban='0'
     AND u_system='0'
   ORDER BY s_name, u_email;
+
+create or replace function cohort_members(id int) returns setof members AS $$
+  select * from members where s_id=id;
+$$ language sql stable security definer;
+
+GRANT ALL ON FUNCTION public.cohort_members TO member;

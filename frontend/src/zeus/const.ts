@@ -1680,6 +1680,44 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
+		cohortMembers:{
+			id:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
 		currentCoupleIds:{
 			first:{
 				type:"Int",
@@ -12801,6 +12839,7 @@ export const ReturnTypes: Record<string,any> = {
 		video:"Video",
 		videoList:"VideoList",
 		videoSource:"VideoSource",
+		cohortMembers:"MembersConnection",
 		currentCoupleIds:"CurrentCoupleIdsConnection",
 		currentSessionId:"String",
 		currentUserId:"BigInt",

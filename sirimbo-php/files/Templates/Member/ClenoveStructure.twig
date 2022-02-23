@@ -14,7 +14,7 @@
                 <th class="r">
                   <div class="box" title="{{ skupina.name }}" style="background-color:{{ skupina.color }}"></div>
                 </th>
-                <th style="display:flex;justify-content:space-between">
+                <th style="display:flex;justify-content:space-between;align-items:center;">
                   <span><big>{{ skupina.name }}</big> ({{ skupina.count }})</span>
                   {% if showExport %}
                     <cohort-export id={{ skupina.id }} name={{ skupina.name }}></cohort-export>

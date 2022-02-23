@@ -334,6 +334,13 @@ usersSkupiny?: [{	usId:ValueTypes["BigInt"]},ValueTypes["UsersSkupiny"]],
 video?: [{	vId:ValueTypes["BigInt"]},ValueTypes["Video"]],
 videoList?: [{	vlId:ValueTypes["BigInt"]},ValueTypes["VideoList"]],
 videoSource?: [{	vsId:ValueTypes["BigInt"]},ValueTypes["VideoSource"]],
+cohortMembers?: [{	id?:number | null,	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null},ValueTypes["MembersConnection"]],
 currentCoupleIds?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -6392,6 +6399,8 @@ which can only query top level fields if they are in a particular form. */
 	video?:ModelTypes["Video"],
 	videoList?:ModelTypes["VideoList"],
 	videoSource?:ModelTypes["VideoSource"],
+	/** Reads and enables pagination through a set of `Member`. */
+	cohortMembers?:ModelTypes["MembersConnection"],
 	currentCoupleIds?:ModelTypes["CurrentCoupleIdsConnection"],
 	currentSessionId?:string,
 	currentUserId?:ModelTypes["BigInt"],
@@ -9902,6 +9911,8 @@ which can only query top level fields if they are in a particular form. */
 	video?: GraphQLTypes["Video"],
 	videoList?: GraphQLTypes["VideoList"],
 	videoSource?: GraphQLTypes["VideoSource"],
+	/** Reads and enables pagination through a set of `Member`. */
+	cohortMembers?: GraphQLTypes["MembersConnection"],
 	currentCoupleIds?: GraphQLTypes["CurrentCoupleIdsConnection"],
 	currentSessionId?: string,
 	currentUserId?: GraphQLTypes["BigInt"],

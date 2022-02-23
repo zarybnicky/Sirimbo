@@ -7,8 +7,8 @@ import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
 
 const ExportQuery = Selector('Query')({
-  members: [
-    { condition: { sId: $`id` } },
+  cohortMembers: [
+    { id: $`id` },
     {
       nodes: {
         uJmeno: true,
@@ -46,7 +46,7 @@ export function CohortExport({ id, name }: { id: string; name: string; }) {
       column.alignment = { horizontal: 'center' };
     });
 
-    data.members?.nodes.forEach(x => worksheet.addRow({
+    data.cohortMembers?.nodes.forEach(x => worksheet.addRow({
       firstName: x.uJmeno,
       lastName: x.uPrijmeni,
       birthNumber: x.uRodneCislo,
