@@ -7,24 +7,21 @@ import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
 
 const ExportQuery = Selector('Query')({
-  skupiny: [
-    { sId: $`id` },
+  members: [
+    { condition: { sId: $`id` } },
     {
-      sName: true,
-      usersByUSkupina: [{}, {
-        nodes: {
-          uJmeno: true,
-          uPrijmeni: true,
-          uRodneCislo: true,
-          uTelefon: true,
-          uEmail: true,
-        },
-      }],
+      nodes: {
+        uJmeno: true,
+        uPrijmeni: true,
+        uRodneCislo: true,
+        uTelefon: true,
+        uEmail: true,
+      },
     },
   ],
 });
 
-export function CohortExport({ id }: { id: string; }) {
+export function CohortExport({ id, name }: { id: string; name: string; }) {
   const [fetchData] = useTypedLazyQuery(ExportQuery, { variables: { id } });
 
   const saveData = async () => {
@@ -33,7 +30,7 @@ export function CohortExport({ id }: { id: string; }) {
       return;
     }
     const workbook = new Excel.Workbook();
-    const worksheet = workbook.addWorksheet(data.skupiny?.sName || "Sheet 1");
+    const worksheet = workbook.addWorksheet(name || "Sheet 1");
 
     worksheet.columns = [
       { header: 'Jméno', key: 'firstName' },
@@ -49,7 +46,7 @@ export function CohortExport({ id }: { id: string; }) {
       column.alignment = { horizontal: 'center' };
     });
 
-    data.skupiny?.usersByUSkupina.nodes.forEach(x => worksheet.addRow({
+    data.members?.nodes.forEach(x => worksheet.addRow({
       firstName: x.uJmeno,
       lastName: x.uPrijmeni,
       birthNumber: x.uRodneCislo,
@@ -58,13 +55,13 @@ export function CohortExport({ id }: { id: string; }) {
     }));
 
     const buf = await workbook.xlsx.writeBuffer();
-    saveAs(new Blob([buf]), `${data.skupiny?.sName || "export-akce"}.xlsx`);
+    saveAs(new Blob([buf]), `${name || "export-skupiny"}.xlsx`);
   };
 
   return <button className="btn btn-primary" onClick={(e) => {
     e.preventDefault();
     saveData();
-  }}>Export přihlášených</button>;
+  }}>Export</button>;
 }
 
 const client = new ApolloClient({
@@ -75,7 +72,9 @@ const client = new ApolloClient({
 export class CohortExportElement extends HTMLElement {
   connectedCallback() {
     ReactDOM.render(
-      <ApolloProvider client={client}><CohortExport id={this.getAttribute('id') || ''} /></ApolloProvider>,
+      <ApolloProvider client={client}>
+        <CohortExport id={this.getAttribute('id') || ''} name={this.getAttribute('name') || ''} />
+      </ApolloProvider>,
       this
     );
   }

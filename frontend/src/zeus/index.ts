@@ -1948,7 +1948,39 @@ for equality and combined with a logical ‘and.’ */
 		__typename?: boolean
 }>;
 	["Member"]: AliasType<{
+	uId?:boolean,
+	uLogin?:boolean,
+	uPass?:boolean,
+	uJmeno?:boolean,
+	uPrijmeni?:boolean,
+	uPohlavi?:boolean,
 	uEmail?:boolean,
+	uTelefon?:boolean,
+	uNarozeni?:boolean,
+	uRodneCislo?:boolean,
+	uPoznamky?:boolean,
+	uTimestamp?:boolean,
+	uLevel?:boolean,
+	uGroup?:boolean,
+	uSkupina?:boolean,
+	uDancer?:boolean,
+	uBan?:boolean,
+	uLock?:boolean,
+	uConfirmed?:boolean,
+	uSystem?:boolean,
+	uStreet?:boolean,
+	uConscriptionNumber?:boolean,
+	uOrientationNumber?:boolean,
+	uDistrict?:boolean,
+	uCity?:boolean,
+	uPostalCode?:boolean,
+	uNationality?:boolean,
+	uMemberSince?:boolean,
+	uMemberUntil?:boolean,
+	uCreatedAt?:boolean,
+	uTeacher?:boolean,
+	uGdprSignedAt?:boolean,
+	sId?:boolean,
 	sName?:boolean,
 	paymentValid?:boolean,
 		__typename?: boolean
@@ -1965,8 +1997,72 @@ for equality and combined with a logical ‘and.’ */
 ["MembersOrderBy"]:MembersOrderBy;
 	/** A condition to be used against `Member` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 ["MemberCondition"]: {
+	/** Checks for equality with the object’s `uId` field. */
+	uId?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `uLogin` field. */
+	uLogin?:string | null,
+	/** Checks for equality with the object’s `uPass` field. */
+	uPass?:string | null,
+	/** Checks for equality with the object’s `uJmeno` field. */
+	uJmeno?:string | null,
+	/** Checks for equality with the object’s `uPrijmeni` field. */
+	uPrijmeni?:string | null,
+	/** Checks for equality with the object’s `uPohlavi` field. */
+	uPohlavi?:string | null,
 	/** Checks for equality with the object’s `uEmail` field. */
 	uEmail?:string | null,
+	/** Checks for equality with the object’s `uTelefon` field. */
+	uTelefon?:string | null,
+	/** Checks for equality with the object’s `uNarozeni` field. */
+	uNarozeni?:ValueTypes["Date"] | null,
+	/** Checks for equality with the object’s `uRodneCislo` field. */
+	uRodneCislo?:string | null,
+	/** Checks for equality with the object’s `uPoznamky` field. */
+	uPoznamky?:string | null,
+	/** Checks for equality with the object’s `uTimestamp` field. */
+	uTimestamp?:ValueTypes["Datetime"] | null,
+	/** Checks for equality with the object’s `uLevel` field. */
+	uLevel?:number | null,
+	/** Checks for equality with the object’s `uGroup` field. */
+	uGroup?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `uSkupina` field. */
+	uSkupina?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `uDancer` field. */
+	uDancer?:boolean | null,
+	/** Checks for equality with the object’s `uBan` field. */
+	uBan?:boolean | null,
+	/** Checks for equality with the object’s `uLock` field. */
+	uLock?:boolean | null,
+	/** Checks for equality with the object’s `uConfirmed` field. */
+	uConfirmed?:boolean | null,
+	/** Checks for equality with the object’s `uSystem` field. */
+	uSystem?:boolean | null,
+	/** Checks for equality with the object’s `uStreet` field. */
+	uStreet?:string | null,
+	/** Checks for equality with the object’s `uConscriptionNumber` field. */
+	uConscriptionNumber?:string | null,
+	/** Checks for equality with the object’s `uOrientationNumber` field. */
+	uOrientationNumber?:string | null,
+	/** Checks for equality with the object’s `uDistrict` field. */
+	uDistrict?:string | null,
+	/** Checks for equality with the object’s `uCity` field. */
+	uCity?:string | null,
+	/** Checks for equality with the object’s `uPostalCode` field. */
+	uPostalCode?:string | null,
+	/** Checks for equality with the object’s `uNationality` field. */
+	uNationality?:string | null,
+	/** Checks for equality with the object’s `uMemberSince` field. */
+	uMemberSince?:ValueTypes["Datetime"] | null,
+	/** Checks for equality with the object’s `uMemberUntil` field. */
+	uMemberUntil?:ValueTypes["Datetime"] | null,
+	/** Checks for equality with the object’s `uCreatedAt` field. */
+	uCreatedAt?:ValueTypes["Datetime"] | null,
+	/** Checks for equality with the object’s `uTeacher` field. */
+	uTeacher?:boolean | null,
+	/** Checks for equality with the object’s `uGdprSignedAt` field. */
+	uGdprSignedAt?:ValueTypes["Datetime"] | null,
+	/** Checks for equality with the object’s `sId` field. */
+	sId?:ValueTypes["BigInt"] | null,
 	/** Checks for equality with the object’s `sName` field. */
 	sName?:string | null,
 	/** Checks for equality with the object’s `paymentValid` field. */
@@ -7257,7 +7353,39 @@ for equality and combined with a logical ‘and.’ */
 	totalCount:number
 };
 	["Member"]: {
-		uEmail?:string,
+		uId?:ModelTypes["BigInt"],
+	uLogin?:string,
+	uPass?:string,
+	uJmeno?:string,
+	uPrijmeni?:string,
+	uPohlavi?:string,
+	uEmail?:string,
+	uTelefon?:string,
+	uNarozeni?:ModelTypes["Date"],
+	uRodneCislo?:string,
+	uPoznamky?:string,
+	uTimestamp?:ModelTypes["Datetime"],
+	uLevel?:number,
+	uGroup?:ModelTypes["BigInt"],
+	uSkupina?:ModelTypes["BigInt"],
+	uDancer?:boolean,
+	uBan?:boolean,
+	uLock?:boolean,
+	uConfirmed?:boolean,
+	uSystem?:boolean,
+	uStreet?:string,
+	uConscriptionNumber?:string,
+	uOrientationNumber?:string,
+	uDistrict?:string,
+	uCity?:string,
+	uPostalCode?:string,
+	uNationality?:string,
+	uMemberSince?:ModelTypes["Datetime"],
+	uMemberUntil?:ModelTypes["Datetime"],
+	uCreatedAt?:ModelTypes["Datetime"],
+	uTeacher?:boolean,
+	uGdprSignedAt?:ModelTypes["Datetime"],
+	sId?:ModelTypes["BigInt"],
 	sName?:string,
 	paymentValid?:boolean
 };
@@ -11157,7 +11285,39 @@ for equality and combined with a logical ‘and.’ */
 };
 	["Member"]: {
 	__typename: "Member",
+	uId?: GraphQLTypes["BigInt"],
+	uLogin?: string,
+	uPass?: string,
+	uJmeno?: string,
+	uPrijmeni?: string,
+	uPohlavi?: string,
 	uEmail?: string,
+	uTelefon?: string,
+	uNarozeni?: GraphQLTypes["Date"],
+	uRodneCislo?: string,
+	uPoznamky?: string,
+	uTimestamp?: GraphQLTypes["Datetime"],
+	uLevel?: number,
+	uGroup?: GraphQLTypes["BigInt"],
+	uSkupina?: GraphQLTypes["BigInt"],
+	uDancer?: boolean,
+	uBan?: boolean,
+	uLock?: boolean,
+	uConfirmed?: boolean,
+	uSystem?: boolean,
+	uStreet?: string,
+	uConscriptionNumber?: string,
+	uOrientationNumber?: string,
+	uDistrict?: string,
+	uCity?: string,
+	uPostalCode?: string,
+	uNationality?: string,
+	uMemberSince?: GraphQLTypes["Datetime"],
+	uMemberUntil?: GraphQLTypes["Datetime"],
+	uCreatedAt?: GraphQLTypes["Datetime"],
+	uTeacher?: boolean,
+	uGdprSignedAt?: GraphQLTypes["Datetime"],
+	sId?: GraphQLTypes["BigInt"],
 	sName?: string,
 	paymentValid?: boolean
 };
@@ -11173,8 +11333,72 @@ for equality and combined with a logical ‘and.’ */
 ["MembersOrderBy"]: MembersOrderBy;
 	/** A condition to be used against `Member` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 ["MemberCondition"]: {
-		/** Checks for equality with the object’s `uEmail` field. */
+		/** Checks for equality with the object’s `uId` field. */
+	uId?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `uLogin` field. */
+	uLogin?: string,
+	/** Checks for equality with the object’s `uPass` field. */
+	uPass?: string,
+	/** Checks for equality with the object’s `uJmeno` field. */
+	uJmeno?: string,
+	/** Checks for equality with the object’s `uPrijmeni` field. */
+	uPrijmeni?: string,
+	/** Checks for equality with the object’s `uPohlavi` field. */
+	uPohlavi?: string,
+	/** Checks for equality with the object’s `uEmail` field. */
 	uEmail?: string,
+	/** Checks for equality with the object’s `uTelefon` field. */
+	uTelefon?: string,
+	/** Checks for equality with the object’s `uNarozeni` field. */
+	uNarozeni?: GraphQLTypes["Date"],
+	/** Checks for equality with the object’s `uRodneCislo` field. */
+	uRodneCislo?: string,
+	/** Checks for equality with the object’s `uPoznamky` field. */
+	uPoznamky?: string,
+	/** Checks for equality with the object’s `uTimestamp` field. */
+	uTimestamp?: GraphQLTypes["Datetime"],
+	/** Checks for equality with the object’s `uLevel` field. */
+	uLevel?: number,
+	/** Checks for equality with the object’s `uGroup` field. */
+	uGroup?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `uSkupina` field. */
+	uSkupina?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `uDancer` field. */
+	uDancer?: boolean,
+	/** Checks for equality with the object’s `uBan` field. */
+	uBan?: boolean,
+	/** Checks for equality with the object’s `uLock` field. */
+	uLock?: boolean,
+	/** Checks for equality with the object’s `uConfirmed` field. */
+	uConfirmed?: boolean,
+	/** Checks for equality with the object’s `uSystem` field. */
+	uSystem?: boolean,
+	/** Checks for equality with the object’s `uStreet` field. */
+	uStreet?: string,
+	/** Checks for equality with the object’s `uConscriptionNumber` field. */
+	uConscriptionNumber?: string,
+	/** Checks for equality with the object’s `uOrientationNumber` field. */
+	uOrientationNumber?: string,
+	/** Checks for equality with the object’s `uDistrict` field. */
+	uDistrict?: string,
+	/** Checks for equality with the object’s `uCity` field. */
+	uCity?: string,
+	/** Checks for equality with the object’s `uPostalCode` field. */
+	uPostalCode?: string,
+	/** Checks for equality with the object’s `uNationality` field. */
+	uNationality?: string,
+	/** Checks for equality with the object’s `uMemberSince` field. */
+	uMemberSince?: GraphQLTypes["Datetime"],
+	/** Checks for equality with the object’s `uMemberUntil` field. */
+	uMemberUntil?: GraphQLTypes["Datetime"],
+	/** Checks for equality with the object’s `uCreatedAt` field. */
+	uCreatedAt?: GraphQLTypes["Datetime"],
+	/** Checks for equality with the object’s `uTeacher` field. */
+	uTeacher?: boolean,
+	/** Checks for equality with the object’s `uGdprSignedAt` field. */
+	uGdprSignedAt?: GraphQLTypes["Datetime"],
+	/** Checks for equality with the object’s `sId` field. */
+	sId?: GraphQLTypes["BigInt"],
 	/** Checks for equality with the object’s `sName` field. */
 	sName?: string,
 	/** Checks for equality with the object’s `paymentValid` field. */
@@ -15831,8 +16055,72 @@ export const enum GalerieDirsOrderBy {
 /** Methods to use when ordering `Member`. */
 export const enum MembersOrderBy {
 	NATURAL = "NATURAL",
+	U_ID_ASC = "U_ID_ASC",
+	U_ID_DESC = "U_ID_DESC",
+	U_LOGIN_ASC = "U_LOGIN_ASC",
+	U_LOGIN_DESC = "U_LOGIN_DESC",
+	U_PASS_ASC = "U_PASS_ASC",
+	U_PASS_DESC = "U_PASS_DESC",
+	U_JMENO_ASC = "U_JMENO_ASC",
+	U_JMENO_DESC = "U_JMENO_DESC",
+	U_PRIJMENI_ASC = "U_PRIJMENI_ASC",
+	U_PRIJMENI_DESC = "U_PRIJMENI_DESC",
+	U_POHLAVI_ASC = "U_POHLAVI_ASC",
+	U_POHLAVI_DESC = "U_POHLAVI_DESC",
 	U_EMAIL_ASC = "U_EMAIL_ASC",
 	U_EMAIL_DESC = "U_EMAIL_DESC",
+	U_TELEFON_ASC = "U_TELEFON_ASC",
+	U_TELEFON_DESC = "U_TELEFON_DESC",
+	U_NAROZENI_ASC = "U_NAROZENI_ASC",
+	U_NAROZENI_DESC = "U_NAROZENI_DESC",
+	U_RODNE_CISLO_ASC = "U_RODNE_CISLO_ASC",
+	U_RODNE_CISLO_DESC = "U_RODNE_CISLO_DESC",
+	U_POZNAMKY_ASC = "U_POZNAMKY_ASC",
+	U_POZNAMKY_DESC = "U_POZNAMKY_DESC",
+	U_TIMESTAMP_ASC = "U_TIMESTAMP_ASC",
+	U_TIMESTAMP_DESC = "U_TIMESTAMP_DESC",
+	U_LEVEL_ASC = "U_LEVEL_ASC",
+	U_LEVEL_DESC = "U_LEVEL_DESC",
+	U_GROUP_ASC = "U_GROUP_ASC",
+	U_GROUP_DESC = "U_GROUP_DESC",
+	U_SKUPINA_ASC = "U_SKUPINA_ASC",
+	U_SKUPINA_DESC = "U_SKUPINA_DESC",
+	U_DANCER_ASC = "U_DANCER_ASC",
+	U_DANCER_DESC = "U_DANCER_DESC",
+	U_BAN_ASC = "U_BAN_ASC",
+	U_BAN_DESC = "U_BAN_DESC",
+	U_LOCK_ASC = "U_LOCK_ASC",
+	U_LOCK_DESC = "U_LOCK_DESC",
+	U_CONFIRMED_ASC = "U_CONFIRMED_ASC",
+	U_CONFIRMED_DESC = "U_CONFIRMED_DESC",
+	U_SYSTEM_ASC = "U_SYSTEM_ASC",
+	U_SYSTEM_DESC = "U_SYSTEM_DESC",
+	U_STREET_ASC = "U_STREET_ASC",
+	U_STREET_DESC = "U_STREET_DESC",
+	U_CONSCRIPTION_NUMBER_ASC = "U_CONSCRIPTION_NUMBER_ASC",
+	U_CONSCRIPTION_NUMBER_DESC = "U_CONSCRIPTION_NUMBER_DESC",
+	U_ORIENTATION_NUMBER_ASC = "U_ORIENTATION_NUMBER_ASC",
+	U_ORIENTATION_NUMBER_DESC = "U_ORIENTATION_NUMBER_DESC",
+	U_DISTRICT_ASC = "U_DISTRICT_ASC",
+	U_DISTRICT_DESC = "U_DISTRICT_DESC",
+	U_CITY_ASC = "U_CITY_ASC",
+	U_CITY_DESC = "U_CITY_DESC",
+	U_POSTAL_CODE_ASC = "U_POSTAL_CODE_ASC",
+	U_POSTAL_CODE_DESC = "U_POSTAL_CODE_DESC",
+	U_NATIONALITY_ASC = "U_NATIONALITY_ASC",
+	U_NATIONALITY_DESC = "U_NATIONALITY_DESC",
+	U_MEMBER_SINCE_ASC = "U_MEMBER_SINCE_ASC",
+	U_MEMBER_SINCE_DESC = "U_MEMBER_SINCE_DESC",
+	U_MEMBER_UNTIL_ASC = "U_MEMBER_UNTIL_ASC",
+	U_MEMBER_UNTIL_DESC = "U_MEMBER_UNTIL_DESC",
+	U_CREATED_AT_ASC = "U_CREATED_AT_ASC",
+	U_CREATED_AT_DESC = "U_CREATED_AT_DESC",
+	U_TEACHER_ASC = "U_TEACHER_ASC",
+	U_TEACHER_DESC = "U_TEACHER_DESC",
+	U_GDPR_SIGNED_AT_ASC = "U_GDPR_SIGNED_AT_ASC",
+	U_GDPR_SIGNED_AT_DESC = "U_GDPR_SIGNED_AT_DESC",
+	S_ID_ASC = "S_ID_ASC",
+	S_ID_DESC = "S_ID_DESC",
 	S_NAME_ASC = "S_NAME_ASC",
 	S_NAME_DESC = "S_NAME_DESC",
 	PAYMENT_VALID_ASC = "PAYMENT_VALID_ASC",

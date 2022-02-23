@@ -1,3 +1,5 @@
+drop view if exists public.members;
+
 CREATE OR REPLACE VIEW public.members AS
   WITH current_payments as (
     SELECT * from platby_item
@@ -8,7 +10,7 @@ CREATE OR REPLACE VIEW public.members AS
     AND CURRENT_DATE >= pc_valid_from
     AND CURRENT_DATE <= pc_valid_to
   )
-  SELECT u_email, s_name, (SELECT EXISTS (SELECT pi_id FROM current_payments WHERE pi_id_user=u_id)) as payment_valid
+  SELECT users.*, s_id, s_name, (SELECT EXISTS (SELECT pi_id FROM current_payments WHERE pi_id_user=u_id)) as payment_valid
     FROM users INNER JOIN skupiny ON s_id=u_skupina
   WHERE u_confirmed='1'
     AND u_ban='0'

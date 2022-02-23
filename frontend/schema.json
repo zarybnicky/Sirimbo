@@ -589,7 +589,103 @@
             "type": "object",
             "required": [],
             "properties": {
+                "uId": {
+                    "type": "string"
+                },
+                "uLogin": {
+                    "type": "string"
+                },
+                "uPass": {
+                    "type": "string"
+                },
+                "uJmeno": {
+                    "type": "string"
+                },
+                "uPrijmeni": {
+                    "type": "string"
+                },
+                "uPohlavi": {
+                    "type": "string"
+                },
                 "uEmail": {
+                    "type": "string"
+                },
+                "uTelefon": {
+                    "type": "string"
+                },
+                "uNarozeni": {
+                    "type": "string"
+                },
+                "uRodneCislo": {
+                    "type": "string"
+                },
+                "uPoznamky": {
+                    "type": "string"
+                },
+                "uTimestamp": {
+                    "type": "string"
+                },
+                "uLevel": {
+                    "type": "integer"
+                },
+                "uGroup": {
+                    "type": "string"
+                },
+                "uSkupina": {
+                    "type": "string"
+                },
+                "uDancer": {
+                    "type": "boolean"
+                },
+                "uBan": {
+                    "type": "boolean"
+                },
+                "uLock": {
+                    "type": "boolean"
+                },
+                "uConfirmed": {
+                    "type": "boolean"
+                },
+                "uSystem": {
+                    "type": "boolean"
+                },
+                "uStreet": {
+                    "type": "string"
+                },
+                "uConscriptionNumber": {
+                    "type": "string"
+                },
+                "uOrientationNumber": {
+                    "type": "string"
+                },
+                "uDistrict": {
+                    "type": "string"
+                },
+                "uCity": {
+                    "type": "string"
+                },
+                "uPostalCode": {
+                    "type": "string"
+                },
+                "uNationality": {
+                    "type": "string"
+                },
+                "uMemberSince": {
+                    "type": "string"
+                },
+                "uMemberUntil": {
+                    "type": "string"
+                },
+                "uCreatedAt": {
+                    "type": "string"
+                },
+                "uTeacher": {
+                    "type": "boolean"
+                },
+                "uGdprSignedAt": {
+                    "type": "string"
+                },
+                "sId": {
                     "type": "string"
                 },
                 "sName": {
@@ -5630,8 +5726,72 @@
                             "type": "string",
                             "enum": [
                                 "NATURAL",
+                                "U_ID_ASC",
+                                "U_ID_DESC",
+                                "U_LOGIN_ASC",
+                                "U_LOGIN_DESC",
+                                "U_PASS_ASC",
+                                "U_PASS_DESC",
+                                "U_JMENO_ASC",
+                                "U_JMENO_DESC",
+                                "U_PRIJMENI_ASC",
+                                "U_PRIJMENI_DESC",
+                                "U_POHLAVI_ASC",
+                                "U_POHLAVI_DESC",
                                 "U_EMAIL_ASC",
                                 "U_EMAIL_DESC",
+                                "U_TELEFON_ASC",
+                                "U_TELEFON_DESC",
+                                "U_NAROZENI_ASC",
+                                "U_NAROZENI_DESC",
+                                "U_RODNE_CISLO_ASC",
+                                "U_RODNE_CISLO_DESC",
+                                "U_POZNAMKY_ASC",
+                                "U_POZNAMKY_DESC",
+                                "U_TIMESTAMP_ASC",
+                                "U_TIMESTAMP_DESC",
+                                "U_LEVEL_ASC",
+                                "U_LEVEL_DESC",
+                                "U_GROUP_ASC",
+                                "U_GROUP_DESC",
+                                "U_SKUPINA_ASC",
+                                "U_SKUPINA_DESC",
+                                "U_DANCER_ASC",
+                                "U_DANCER_DESC",
+                                "U_BAN_ASC",
+                                "U_BAN_DESC",
+                                "U_LOCK_ASC",
+                                "U_LOCK_DESC",
+                                "U_CONFIRMED_ASC",
+                                "U_CONFIRMED_DESC",
+                                "U_SYSTEM_ASC",
+                                "U_SYSTEM_DESC",
+                                "U_STREET_ASC",
+                                "U_STREET_DESC",
+                                "U_CONSCRIPTION_NUMBER_ASC",
+                                "U_CONSCRIPTION_NUMBER_DESC",
+                                "U_ORIENTATION_NUMBER_ASC",
+                                "U_ORIENTATION_NUMBER_DESC",
+                                "U_DISTRICT_ASC",
+                                "U_DISTRICT_DESC",
+                                "U_CITY_ASC",
+                                "U_CITY_DESC",
+                                "U_POSTAL_CODE_ASC",
+                                "U_POSTAL_CODE_DESC",
+                                "U_NATIONALITY_ASC",
+                                "U_NATIONALITY_DESC",
+                                "U_MEMBER_SINCE_ASC",
+                                "U_MEMBER_SINCE_DESC",
+                                "U_MEMBER_UNTIL_ASC",
+                                "U_MEMBER_UNTIL_DESC",
+                                "U_CREATED_AT_ASC",
+                                "U_CREATED_AT_DESC",
+                                "U_TEACHER_ASC",
+                                "U_TEACHER_DESC",
+                                "U_GDPR_SIGNED_AT_ASC",
+                                "U_GDPR_SIGNED_AT_DESC",
+                                "S_ID_ASC",
+                                "S_ID_DESC",
                                 "S_NAME_ASC",
                                 "S_NAME_DESC",
                                 "PAYMENT_VALID_ASC",
