@@ -55,6 +55,7 @@ class Clenove
                 $skupiny[$currentKey] = [
                     'color' => $item['s_color_rgb'],
                     'name' => $item['s_name'],
+                    'id' => $item['s_id'],
                     'users' => [],
                     'count' => 0,
                 ];
@@ -83,6 +84,9 @@ class Clenove
                 $rightCount += $skupina['count'];
             }
         }
-        \Render::twig('Member/ClenoveStructure.twig', ['columns' => $columns]);
+        \Render::twig('Member/ClenoveStructure.twig', [
+            'columns' => $columns,
+            'showExport' => \Permissions::check('rozpis', P_OWNED),
+        ]);
     }
 }

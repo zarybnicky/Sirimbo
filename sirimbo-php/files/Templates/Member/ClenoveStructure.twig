@@ -14,7 +14,12 @@
                 <th class="r">
                   <div class="box" title="{{ skupina.name }}" style="background-color:{{ skupina.color }}"></div>
                 </th>
-                <th><big>{{ skupina.name }}</big> ({{ skupina.count }})</th>
+                <th>
+                  <big>{{ skupina.name }}</big> ({{ skupina.count }})
+                  {% if showExport %}
+                    <cohort-export id={{ skupina.id }}></cohort-export>
+                  {% endif %}
+                </th>
                 <th>Zaplaceno?</th>
               </tr>
               {% for row in skupina.users %}

@@ -17,6 +17,7 @@ import { DashboardPage } from './pages/DashboardPage';
 import { DynamicPage } from './pages/DynamicPage';
 import { CohortsPage } from './pages/CohortsPage';
 import { SchedulePage } from './pages/SchedulePage';
+import { ProfilePage } from './pages/ProfilePage';
 
 const ProtectedRoute = ({ check, children, ...rest }: {
   check: (user: AppUser | null) => boolean;
@@ -49,7 +50,6 @@ const EventsPage = () => <React.Fragment>Events</React.Fragment>;
 const EventPage = () => <React.Fragment>Event</React.Fragment>;
 const DocumentsPage = () => <React.Fragment>Documents</React.Fragment>;
 const GroupOverviewPage = () => <React.Fragment>GroupOverview</React.Fragment>;
-const ProfilePage = () => <React.Fragment>Profile</React.Fragment>;
 
 const isLoggedIn = (user: AppUser | null) => !!user;
 const isAdmin = (user: AppUser | null) => !!user && (user?.permissionByUGroup?.peUsers || 1) > 1;
