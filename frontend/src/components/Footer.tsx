@@ -63,7 +63,7 @@ const ContactText = () => {
     <Typography>
       Jiráskova 25, 779 00 Olomouc<br />
       IČO: 68347286<br />
-      tkolymp@tkolymp.cz
+      miroslav.hyza@tkolymp.cz
     </Typography>
 
     <br />

@@ -112,7 +112,6 @@ class Registrace
         );
 
         \Mailer::newUserNotice(DEFAULT_ADMIN_MAIL, $login);
-        \Mailer::newUserNotice('hyzam@tkolymp.cz', $login);
         \Message::success(
             '<h4 class="alert-heading">Registrace úspěšně proběhla.</h4>' .
             '<p>Během několika dnů vám na email příjde potvrzení vašeho účtu, ' .
