@@ -73,11 +73,9 @@
 
     devShell.x86_64-linux = hsPkgs.shellFor {
       withHoogle = true;
-      packages = p: [ p.sirimbo-api ];
+      packages = p: [];
+      # packages = p: [ p.sirimbo-api ];
       buildInputs = [
-        hsPkgs.cabal-install
-        hsPkgs.haskell-language-server
-        hsPkgs.stan
         pkgs.entr
         pkgs.graphile-migrate
         pkgs.yarn

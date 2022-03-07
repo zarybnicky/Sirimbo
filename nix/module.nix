@@ -301,26 +301,5 @@ in {
         };
       };
     })
-
-    (lib.mkIf cfg.yt-worker.enable {
-      systemd.services.olymp-yt-worker = {
-        description = "Olymp YouTube worker service";
-        environment.CONFIG = cfgFile;
-        serviceConfig = {
-          Type = "simple";
-          ExecStart = "${pkgs.sirimbo-api}/bin/olymp check-youtube";
-        };
-      };
-      systemd.timers.olymp-yt-worker = {
-        description = "Olymp YouTube worker service timer";
-        wantedBy = ["multi-user.service"];
-        timerConfig = {
-          Unit = "olymp-yt-worker.service";
-          OnBootSec = "10min";
-          OnUnitActiveSec = "70min";
-        };
-      };
-    })
-
   ];
 }

@@ -19,7 +19,10 @@ L.Icon.Default.mergeOptions({
 
 
 if (document.getElementById('app-new')) {
-  ReactDOM.render(<App />, document.getElementById('app-new'));
+  ReactDOM.render(
+    <React.StrictMode><App /></React.StrictMode>,
+    document.getElementById('app-new'),
+  );
 }
 
 if ((module as any).hot) {
