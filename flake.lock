@@ -1,22 +1,5 @@
 {
   "nodes": {
-    "gogol": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1615881825,
-        "narHash": "sha256-l/wML5GilN815SzJQr1CDgfywG2Cyn8wn3EFShOILH4=",
-        "owner": "brendanhay",
-        "repo": "gogol",
-        "rev": "797a2672b4652a1764d61a313939a2050ff0ed7f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "brendanhay",
-        "ref": "develop",
-        "repo": "gogol",
-        "type": "github"
-      }
-    },
     "migrate": {
       "flake": false,
       "locked": {
@@ -49,7 +32,6 @@
     },
     "root": {
       "inputs": {
-        "gogol": "gogol",
         "migrate": "migrate",
         "nixpkgs": "nixpkgs"
       }

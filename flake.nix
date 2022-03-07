@@ -1,16 +1,13 @@
 {
-  inputs.gogol = { flake = false; url = github:brendanhay/gogol/develop; };
   inputs.migrate = { flake = false; url = github:graphile/migrate/main; };
 
-  outputs = { self, nixpkgs, gogol, migrate }: let
+  outputs = { self, nixpkgs, migrate }: let
     inherit (nixpkgs.lib) flip mapAttrs mapAttrsToList;
 
     pkgs = import nixpkgs {
       system = "x86_64-linux";
       overlays = [ self.overlay ];
     };
-    compiler = "ghc8107";
-    hsPkgs = pkgs.haskell.packages.${compiler};
   in {
     nixosModule = ./nix/module.nix;
 
@@ -22,27 +19,6 @@
       sirimbo-backend = final.callPackage ./backend/package.nix {};
       sirimbo-frontend = final.callPackage ./frontend/package.nix {};
       sirimbo-migrations = final.callPackage ./migrations/package.nix {};
-
-      haskell = prev.haskell // (let
-        inherit (prev.haskell.lib) doJailbreak dontCheck justStaticExecutables
-          generateOptparseApplicativeCompletion unmarkBroken;
-      in {
-        packageOverrides = prev.lib.composeExtensions (prev.haskell.packageOverrides or (_: _: {})) (hself: hsuper: {
-          higgledy = doJailbreak (unmarkBroken hsuper.higgledy);
-          gogol-core = hself.callCabal2nix "gogol-core" "${gogol}/core" {};
-          gogol = hself.callCabal2nix "gogol" "${gogol}/gogol" {};
-          gogol-youtube = hself.callCabal2nix "gogol-youtube" "${gogol}/gogol-youtube" {};
-          sirimbo-api = generateOptparseApplicativeCompletion "olymp" (
-            justStaticExecutables (
-              hself.callCabal2nix "sirimbo-api" (
-                pkgs.nix-gitignore.gitignoreSourcePure [./.gitignore] ./sirimbo-api
-              ) {}
-            )
-          );
-        });
-      });
-
-      inherit (final.haskell.packages.${compiler}) sirimbo-api;
 
       sirimbo-php = (final.callPackage ./sirimbo-php/composer-project.nix {
         php = final.php74;
@@ -71,17 +47,13 @@
         squawk ncc sirimbo-php sirimbo-frontend sirimbo-backend graphile-migrate sirimbo-migrations;
     };
 
-    devShell.x86_64-linux = hsPkgs.shellFor {
-      withHoogle = true;
-      packages = p: [];
-      # packages = p: [ p.sirimbo-api ];
-      buildInputs = [
+    devShell.x86_64-linux = pkgs.mkShell {
+      nativeBuildInputs = [
         pkgs.entr
         pkgs.graphile-migrate
         pkgs.yarn
         pkgs.phpstan
         pkgs.nodePackages.typescript
-        pkgs.sass
         pkgs.yarn2nix
         pkgs.postgresql
         pkgs.ncc
