@@ -6447,6 +6447,14 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
+		prospectFormDancer:{
+			input:{
+				type:"ProspectFormDancerInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
 		uploadFile:{
 			input:{
 				type:"UploadInput",
@@ -12754,6 +12762,65 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
+	ProspectFormDancerInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		cohort:{
+			type:"CrmCohort",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		prospectData:{
+			type:"ProspectDatumInput",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		origin:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		note:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	CrmCohort: "enum",
+	ProspectDatumInput:{
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		surname:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		email:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		phone:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
 	UploadInput:{
 		directory:{
 			type:"String",
@@ -13834,6 +13901,7 @@ export const ReturnTypes: Record<string,any> = {
 		deleteVideoSource:"DeleteVideoSourcePayload",
 		login:"LoginPayload",
 		logout:"LogoutPayload",
+		prospectFormDancer:"ProspectFormDancerPayload",
 		uploadFile:"Upload"
 	},
 	CreateAkcePayload:{
@@ -14500,6 +14568,10 @@ export const ReturnTypes: Record<string,any> = {
 		usr:"User"
 	},
 	LogoutPayload:{
+		clientMutationId:"String",
+		query:"Query"
+	},
+	ProspectFormDancerPayload:{
 		clientMutationId:"String",
 		query:"Query"
 	},

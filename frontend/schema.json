@@ -5351,6 +5351,55 @@
                 }
             }
         },
+        "ProspectFormDancerInput": {
+            "type": "object",
+            "required": [
+                "cohort",
+                "prospectData",
+                "origin",
+                "note"
+            ],
+            "properties": {
+                "clientMutationId": {
+                    "type": "string"
+                },
+                "cohort": {
+                    "type": "string",
+                    "enum": [
+                        "DANCER",
+                        "HOBBYIST",
+                        "SHOWDANCE"
+                    ]
+                },
+                "prospectData": {
+                    "$ref": "#/inputs/ProspectDatumInput"
+                },
+                "origin": {
+                    "type": "string"
+                },
+                "note": {
+                    "type": "string"
+                }
+            }
+        },
+        "ProspectDatumInput": {
+            "type": "object",
+            "required": [],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "surname": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                }
+            }
+        },
         "UploadInput": {
             "type": "object",
             "required": [
@@ -12020,6 +12069,17 @@
                 "properties": {
                     "input": {
                         "$ref": "#/inputs/LogoutInput"
+                    }
+                }
+            },
+            "prospectFormDancer": {
+                "type": "object",
+                "required": [
+                    "input"
+                ],
+                "properties": {
+                    "input": {
+                        "$ref": "#/inputs/ProspectFormDancerInput"
                     }
                 }
             },

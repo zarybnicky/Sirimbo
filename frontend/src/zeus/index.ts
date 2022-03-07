@@ -2971,6 +2971,8 @@ login?: [{	/** The exclusive input argument for this mutation. An object type, m
 	input:ValueTypes["LoginInput"]},ValueTypes["LoginPayload"]],
 logout?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["LogoutInput"]},ValueTypes["LogoutPayload"]],
+prospectFormDancer?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["ProspectFormDancerInput"]},ValueTypes["ProspectFormDancerPayload"]],
 uploadFile?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UploadInput"]},ValueTypes["Upload"]],
 		__typename?: boolean
@@ -6283,6 +6285,33 @@ unchanged and unused. May be used by a client to track mutations. */
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null
 };
+	/** The output of our `prospectFormDancer` mutation. */
+["ProspectFormDancerPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+		__typename?: boolean
+}>;
+	/** All input for the `prospectFormDancer` mutation. */
+["ProspectFormDancerInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	cohort:ValueTypes["CrmCohort"],
+	prospectData:ValueTypes["ProspectDatumInput"],
+	origin:string,
+	note:string
+};
+	["CrmCohort"]:CrmCohort;
+	/** An input for mutations affecting `ProspectDatum` */
+["ProspectDatumInput"]: {
+	name?:string | null,
+	surname?:string | null,
+	email?:string | null,
+	phone?:string | null
+};
 	["Upload"]: AliasType<{
 	uploadUrl?:boolean,
 		__typename?: boolean
@@ -8074,6 +8103,7 @@ for equality and combined with a logical ‘and.’ */
 	deleteVideoSource?:ModelTypes["DeleteVideoSourcePayload"],
 	login?:ModelTypes["LoginPayload"],
 	logout?:ModelTypes["LogoutPayload"],
+	prospectFormDancer?:ModelTypes["ProspectFormDancerPayload"],
 	uploadFile:ModelTypes["Upload"]
 };
 	/** The output of our create `Akce` mutation. */
@@ -9798,6 +9828,19 @@ unchanged and unused. May be used by a client to track mutations. */
 };
 	/** All input for the `logout` mutation. */
 ["LogoutInput"]: GraphQLTypes["LogoutInput"];
+	/** The output of our `prospectFormDancer` mutation. */
+["ProspectFormDancerPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"]
+};
+	/** All input for the `prospectFormDancer` mutation. */
+["ProspectFormDancerInput"]: GraphQLTypes["ProspectFormDancerInput"];
+	["CrmCohort"]: GraphQLTypes["CrmCohort"];
+	/** An input for mutations affecting `ProspectDatum` */
+["ProspectDatumInput"]: GraphQLTypes["ProspectDatumInput"];
 	["Upload"]: {
 		uploadUrl:string
 };
@@ -12310,6 +12353,7 @@ for equality and combined with a logical ‘and.’ */
 	deleteVideoSource?: GraphQLTypes["DeleteVideoSourcePayload"],
 	login?: GraphQLTypes["LoginPayload"],
 	logout?: GraphQLTypes["LogoutPayload"],
+	prospectFormDancer?: GraphQLTypes["ProspectFormDancerPayload"],
 	uploadFile: GraphQLTypes["Upload"]
 };
 	/** The output of our create `Akce` mutation. */
@@ -15620,6 +15664,33 @@ unchanged and unused. May be used by a client to track mutations. */
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string
 };
+	/** The output of our `prospectFormDancer` mutation. */
+["ProspectFormDancerPayload"]: {
+	__typename: "ProspectFormDancerPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"]
+};
+	/** All input for the `prospectFormDancer` mutation. */
+["ProspectFormDancerInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	cohort: GraphQLTypes["CrmCohort"],
+	prospectData: GraphQLTypes["ProspectDatumInput"],
+	origin: string,
+	note: string
+};
+	["CrmCohort"]: CrmCohort;
+	/** An input for mutations affecting `ProspectDatum` */
+["ProspectDatumInput"]: {
+		name?: string,
+	surname?: string,
+	email?: string,
+	phone?: string
+};
 	["Upload"]: {
 	__typename: "Upload",
 	uploadUrl: string
@@ -16392,6 +16463,11 @@ export const enum VideoSourcesOrderBy {
 	VS_LAST_CHECKED_DESC = "VS_LAST_CHECKED_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
 	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+}
+export const enum CrmCohort {
+	DANCER = "DANCER",
+	HOBBYIST = "HOBBYIST",
+	SHOWDANCE = "SHOWDANCE"
 }
 export class GraphQLError extends Error {
     constructor(public response: GraphQLResponse) {

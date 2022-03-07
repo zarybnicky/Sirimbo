@@ -1,4 +1,4 @@
-drop view if exists public.members;
+drop view if exists public.members cascade;
 
 create or replace view public.members as
   WITH current_payments as (
