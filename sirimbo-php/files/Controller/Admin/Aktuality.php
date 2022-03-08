@@ -132,12 +132,12 @@ class Aktuality
         }
         if (!\DBGalerie::getSingleDir($_GET['dir'] ?? 0)) {
             \Message::warning('Taková složka neexistuje');
-            \Redirect::to('/admin/aktuality/foto/' . $id . '?dir=0');
+            \Redirect::to('/admin/aktuality/foto/' . $id . '?dir=1');
         }
         \Render::twig('Admin/AktualityFormFoto.twig', [
             'checked' => $article['at_foto_main'],
-            'photos' => \DBGalerie::getFotky($_GET['dir'] ?? 0),
-            'dir' => $_GET['dir'] ?? 0,
+            'photos' => \DBGalerie::getFotky($_GET['dir'] ?? 1),
+            'dir' => $_GET['dir'] ?? 1,
             'dirs' => [[
                 'id' => 'none',
                 'text' => '------ vyberte složku ------'
@@ -164,7 +164,7 @@ class Aktuality
             $article['at_jmeno'],
             $article['at_text'],
             $article['at_preview'],
-            $_GET['dir'] ?? 0,
+            $_GET['dir'] ?? 1,
             $_POST['foto'],
             $article['at_timestamp_add']
         );
