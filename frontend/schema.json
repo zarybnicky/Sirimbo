@@ -5397,6 +5397,9 @@
                 },
                 "phone": {
                     "type": "string"
+                },
+                "yearofbirth": {
+                    "type": "string"
                 }
             }
         },

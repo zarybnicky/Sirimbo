@@ -1,0 +1,9 @@
+{% extends "Layout.twig" %}
+
+{% block title %}Nábor{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <react-page page='{{ page.content|json_encode() }}'></react-page>
+  </div>
+{% endblock %}

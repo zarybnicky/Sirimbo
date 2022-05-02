@@ -28,6 +28,7 @@ import { GalleryDirectoryListElement } from './custom-elements/gallery-directory
 import { ReservationAdminListElement } from './custom-elements/reservation-list';
 import { ReservationSelectElement } from './custom-elements/reservation-select';
 import { RozpisAdminListElement } from './custom-elements/schedule-list';
+import { ReactPageElement } from './custom-elements/react-page';
 
 customElements.define('announcement-list', AnnouncementListElement);
 customElements.define('article-admin-list', ArticleAdminListElement);
@@ -40,6 +41,7 @@ customElements.define('reservation-select', ReservationSelectElement);
 customElements.define('rozpis-admin-list', RozpisAdminListElement);
 customElements.define('event-participant-export', EventParticipantExportElement);
 customElements.define('cohort-export', CohortExportElement);
+customElements.define('react-page', ReactPageElement);
 
 import { QRPayment } from './components/QRPayment';
 class QRCodeElement extends HTMLElement {

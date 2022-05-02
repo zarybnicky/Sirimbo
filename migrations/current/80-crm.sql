@@ -1,7 +1,7 @@
 
 do $$ begin
   if not exists (select 1 from information_schema.tables
-    where table_schema = 'public' and table_name = 'crm_cohort'
+    where table_schema = 'app_private' and table_name = 'crm_prospect'
   ) then
 
     create type app_private.crm_cohort as enum (
@@ -14,7 +14,8 @@ do $$ begin
       name text,
       surname text,
       email text,
-      phone text
+      phone text,
+      yearofbirth text
     );
 
     create table app_private.crm_prospect (
@@ -48,12 +49,12 @@ create or replace function public.prospect_form_dancer(
 declare
   prospect app_private.crm_prospect;
 begin
-  select * from app_private.crm_prospect where data.email=prospect_data.email or data.phone=prospect_data.phone into prospect;
+  select * from app_private.crm_prospect where (data).email=prospect_data.email or (data).phone=prospect_data.phone into prospect;
   if prospect is null then
     insert into app_private.crm_prospect (cohort, data) values (cohort, prospect_data) returning * into prospect;
   end if;
 
-  insert into crm_activity (prospect, source, note) values (prospect.id, origin, note);
+  insert into app_private.crm_activity (prospect, origin, note) values (prospect.id, origin, note);
 end;
 $$ language plpgsql strict volatile security definer;
 select plpgsql_check_function('public.prospect_form_dancer');

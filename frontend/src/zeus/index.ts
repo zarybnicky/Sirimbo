@@ -6310,7 +6310,8 @@ payload verbatim. May be used to track mutations by the client. */
 	name?:string | null,
 	surname?:string | null,
 	email?:string | null,
-	phone?:string | null
+	phone?:string | null,
+	yearofbirth?:string | null
 };
 	["Upload"]: AliasType<{
 	uploadUrl?:boolean,
@@ -15689,7 +15690,8 @@ payload verbatim. May be used to track mutations by the client. */
 		name?: string,
 	surname?: string,
 	email?: string,
-	phone?: string
+	phone?: string,
+	yearofbirth?: string
 };
 	["Upload"]: {
 	__typename: "Upload",

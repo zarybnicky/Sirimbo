@@ -6,6 +6,7 @@ import Editor, { BottomToolbar } from '@react-page/editor';
 import image from '@react-page/plugins-image';
 import { CallToActionPlugin } from './CallToAction';
 import { ContainerPlugin } from './Container';
+import { ProspectFormPlugin } from './ProspectForm';
 import { HeadingPlugin } from './Heading';
 import { defaultSlate } from './SlateReadonly';
 import { ServiceCardPlugin } from './cards/ServiceCard';
@@ -16,6 +17,7 @@ export { defaultSlate };
 export const cellPlugins: CellPlugin<any, any>[] = [
   defaultSlate,
   image,
+  ProspectFormPlugin,
   ServiceCardPlugin,
   LocationCardPlugin,
   TrainerCardPlugin,

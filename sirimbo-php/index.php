@@ -120,6 +120,8 @@ function makeRouter()
     $router->get('/error', '@Error::get');
     $router->get('/video', '@Video::get');
 
+    $router->get('/prijdtancit', '@Nabor::get');
+
     $router->get('/kontakt', '@StaticContent::kontakt');
     $router->get('/oklubu/klubovi-treneri', '@StaticContent::klubovi');
     $router->get('/oklubu/externi-treneri', '@StaticContent::externi');
