@@ -4,6 +4,7 @@ import { CSSProperties } from '@material-ui/styles';
 import type { CellPlugin, EditorProps, BottomToolbarProps } from '@react-page/editor';
 import Editor, { BottomToolbar } from '@react-page/editor';
 import image from '@react-page/plugins-image';
+import video from '@react-page/plugins-video';
 import { CallToActionPlugin } from './CallToAction';
 import { ContainerPlugin } from './Container';
 import { ProspectFormPlugin } from './ProspectForm';
@@ -17,6 +18,7 @@ export { defaultSlate };
 export const cellPlugins: CellPlugin<any, any>[] = [
   defaultSlate,
   image,
+  video as CellPlugin<any, any>,
   ProspectFormPlugin,
   ServiceCardPlugin,
   LocationCardPlugin,
