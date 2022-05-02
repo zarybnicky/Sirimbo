@@ -30,31 +30,39 @@ export const ProspectForm = ({ }) => {
   };
 
   return (
-    <Container maxWidth="lg">
-      <Form onSubmit={onSubmit} render={form => <>
-        {form.submitError && <Alert severity="error">{form.submitError}</Alert>}
-        <Card component="form" elevation={3} onSubmit={form.handleSubmit}>
-          <CardContent>
-            <Typography variant="h4" component="div">Přijď tančit!</Typography>
-            <Grid container spacing={3}>
-              <Grid item md><TextField label="Jméno" name="name" autoComplete="given-name" required /></Grid>
-              <Grid item md><TextField label="Příjmení" name="surname" autoComplete="family-name" required /></Grid>
-              <Grid item md><TextField label="Rok narození" name="yearofbirth" autoComplete="bday-year" required /></Grid>
+    <Form onSubmit={onSubmit} render={form => <>
+      {form.submitError && <Alert severity="error">{form.submitError}</Alert>}
+      <Card component="form" elevation={3} onSubmit={form.handleSubmit}>
+        <CardContent>
+          <Typography variant="h4" component="div">Přijď tančit!</Typography>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={4}>
+              <TextField label="Jméno" name="name" autoComplete="given-name" required />
             </Grid>
-            <Grid container spacing={3} style={{ marginTop: '1rem' }}>
-              <Grid item md><TextField label="Telefon" name="phone" type="tel" autoComplete="tel" required /></Grid>
-              <Grid item md><TextField label="E-mail" name="email" type="email" autoComplete="email" required /></Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField label="Příjmení" name="surname" autoComplete="family-name" required />
             </Grid>
-          </CardContent>
-          <CardActions style={{ flexDirection: 'column' }}>
-            <Button
-              fullWidth variant="contained" type="submit" color="primary"
-              disabled={form.pristine || form.submitting || form.hasValidationErrors}
-            >Chci tančit!</Button>
-          </CardActions>
-        </Card>
-      </>} />
-    </Container >
+            <Grid item xs={12} sm={4}>
+              <TextField label="Rok narození" name="yearofbirth" autoComplete="bday-year" required />
+            </Grid>
+          </Grid>
+          <Grid container spacing={3} style={{ marginTop: '1rem' }}>
+            <Grid item xs={12} sm={6}>
+              <TextField label="Telefon" name="phone" type="tel" autoComplete="tel" required />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField label="E-mail" name="email" type="email" autoComplete="email" required />
+            </Grid>
+          </Grid>
+        </CardContent>
+        <CardActions style={{ flexDirection: 'column' }}>
+          <Button
+            fullWidth variant="contained" type="submit" color="primary"
+            disabled={form.pristine || form.submitting || form.hasValidationErrors}
+          >Chci tančit!</Button>
+        </CardActions>
+      </Card>
+    </>} />
   );
 };
 
