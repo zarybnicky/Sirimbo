@@ -13,6 +13,7 @@ import { defaultSlate } from './SlateReadonly';
 import { ServiceCardPlugin } from './cards/ServiceCard';
 import { LocationCardPlugin } from './cards/LocationCard';
 import { TrainerCardPlugin } from './cards/TrainerCard';
+import { ProspectFormEmailPlugin } from './ProspectFormEmail';
 
 export { defaultSlate };
 export const cellPlugins: CellPlugin<any, any>[] = [
@@ -20,6 +21,7 @@ export const cellPlugins: CellPlugin<any, any>[] = [
   image,
   video as CellPlugin<any, any>,
   ProspectFormPlugin,
+  ProspectFormEmailPlugin,
   ServiceCardPlugin,
   LocationCardPlugin,
   TrainerCardPlugin,

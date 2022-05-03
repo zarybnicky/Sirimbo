@@ -5368,7 +5368,9 @@
                     "enum": [
                         "DANCER",
                         "HOBBYIST",
-                        "SHOWDANCE"
+                        "SHOWDANCE",
+                        "FREE_LESSON",
+                        "CONTACT_ME_LATER"
                     ]
                 },
                 "prospectData": {

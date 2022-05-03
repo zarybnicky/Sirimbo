@@ -8,10 +8,10 @@ import { useTypedMutation } from '../zeus/apollo';
 import { $, CrmCohort, Selector } from '../zeus';
 import { useSnackbar } from 'notistack';
 
-export const SubmitProspectForm = Selector('Mutation')({
+export const SubmitProspectFormEmail = Selector('Mutation')({
   prospectFormDancer: [{
     input: {
-      cohort: CrmCohort.FREE_LESSON,
+      cohort: CrmCohort.CONTACT_ME_LATER,
       prospectData: $`prospectData`,
       origin: $`origin`,
       note: '',
@@ -21,9 +21,9 @@ export const SubmitProspectForm = Selector('Mutation')({
   }],
 });
 
-export const ProspectForm = ({ }) => {
+export const ProspectFormEmail = ({ }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const [submit] = useTypedMutation(SubmitProspectForm);
+  const [submit] = useTypedMutation(SubmitProspectFormEmail);
   const onSubmit = async (prospectData: object) => {
     await submit({ variables: { prospectData, origin: window.location.toString() } });
     enqueueSnackbar('Brzy se vám ozveme!', { variant: 'success' });
@@ -34,43 +34,35 @@ export const ProspectForm = ({ }) => {
       {form.submitError && <Alert severity="error">{form.submitError}</Alert>}
       <Card component="form" elevation={3} onSubmit={form.handleSubmit}>
         <CardContent>
-          <Typography variant="h4" component="div">Chci úvodní hodinu ZDARMA!</Typography>
+          <Typography variant="h4" component="div">Nemůžete přjít? Zanechte nám kontakt:</Typography>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={6}>
               <TextField label="Jméno" name="name" autoComplete="given-name" required />
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={6}>
               <TextField label="Příjmení" name="surname" autoComplete="family-name" required />
             </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField label="Rok narození" name="yearofbirth" autoComplete="bday-year" required />
-            </Grid>
           </Grid>
-          <Grid container spacing={3} style={{ marginTop: '1rem' }}>
-            <Grid item xs={12} sm={6}>
-              <TextField label="Telefon" name="phone" type="tel" autoComplete="tel" required />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField label="E-mail" name="email" type="email" autoComplete="email" required />
-            </Grid>
+          <Grid item xs={12}>
+            <TextField label="E-mail" name="email" type="email" autoComplete="email" required />
           </Grid>
         </CardContent>
         <CardActions style={{ flexDirection: 'column' }}>
           <Button
             fullWidth variant="contained" type="submit" color="primary"
             disabled={form.pristine || form.submitting || form.hasValidationErrors}
-          >Chci tančit!</Button>
+          >Ozvěte se mi</Button>
         </CardActions>
       </Card>
     </>} />
   );
 };
 
-export const ProspectFormPlugin: CellPlugin<{}> = {
-  Renderer: () => <ProspectForm />,
+export const ProspectFormEmailPlugin: CellPlugin<{}> = {
+  Renderer: () => <ProspectFormEmail />,
 
-  id: 'app-prospect-form',
-  title: 'Prospect Form',
+  id: 'app-prospect-form-email',
+  title: 'Prospect Form Email',
   description: undefined,
   version: 1,
 };

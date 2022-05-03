@@ -16469,7 +16469,9 @@ export const enum VideoSourcesOrderBy {
 export const enum CrmCohort {
 	DANCER = "DANCER",
 	HOBBYIST = "HOBBYIST",
-	SHOWDANCE = "SHOWDANCE"
+	SHOWDANCE = "SHOWDANCE",
+	FREE_LESSON = "FREE_LESSON",
+	CONTACT_ME_LATER = "CONTACT_ME_LATER"
 }
 export class GraphQLError extends Error {
     constructor(public response: GraphQLResponse) {

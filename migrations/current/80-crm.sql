@@ -7,7 +7,9 @@ do $$ begin
     create type app_private.crm_cohort as enum (
       'dancer',
       'hobbyist',
-      'showdance'
+      'showdance',
+      'free-lesson',
+      'contact-me-later'
     );
 
     create type public.prospect_data as (
