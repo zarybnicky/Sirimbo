@@ -26,6 +26,9 @@ export const ProspectFormEmail = ({ }) => {
   const [submit] = useTypedMutation(SubmitProspectFormEmail);
   const onSubmit = async (prospectData: object) => {
     await submit({ variables: { prospectData, origin: window.location.toString() } });
+    if (typeof fbq !== 'undefined') {
+      fbq('track', 'Lead');
+    }
     enqueueSnackbar('Brzy se vám ozveme!', { variant: 'success' });
   };
 

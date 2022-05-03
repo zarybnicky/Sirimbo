@@ -60,6 +60,7 @@
   "devDependencies": {
     "@babel/core": "^7.16.0",
     "@svgr/webpack": "^5.5.0",
+    "@types/facebook-pixel": "^0.0.24",
     "@types/file-saver": "^2.0.5",
     "@types/iban": "^0.0.32",
     "@types/qrcode.react": "^1.0.2",
