@@ -1,7 +1,7 @@
 import * as React from 'react';
 import type { CellPlugin } from '@react-page/editor';
 import { Card, CardContent, CardActions, Grid, Button, Typography } from '@material-ui/core';
-import { TextField } from 'mui-rff';
+import { Checkboxes, TextField } from 'mui-rff';
 import { Alert } from '@material-ui/lab';
 import { Form } from 'react-final-form'
 import { useTypedMutation } from '../zeus/apollo';
@@ -24,7 +24,7 @@ export const SubmitProspectForm = Selector('Mutation')({
 export const ProspectForm = ({ }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [submit] = useTypedMutation(SubmitProspectForm);
-  const onSubmit = async (prospectData: object) => {
+  const onSubmit = async ({ op, ...prospectData }: any) => {
     await submit({ variables: { prospectData, origin: window.location.toString() } });
     if (typeof fbq !== 'undefined') {
       fbq('track', 'SubmitApplication');
@@ -49,12 +49,20 @@ export const ProspectForm = ({ }) => {
               <TextField label="Rok narození" name="yearofbirth" autoComplete="bday-year" required />
             </Grid>
           </Grid>
-          <Grid container spacing={3} style={{ marginTop: '1rem' }}>
+          <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
               <TextField label="Telefon" name="phone" type="tel" autoComplete="tel" required />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField label="E-mail" name="email" type="email" autoComplete="email" required />
+            </Grid>
+          </Grid>
+          <Grid container style={{ marginTop: '1rem' }}>
+            <Grid item xs={12}>
+              <Checkboxes name="op" required={true} data={{
+                label: <>Souhlasím s <a target="_blank" href="/obchodni-podminky">obchodními podmínkami</a></>,
+                value: "agreed"
+              }} />
             </Grid>
           </Grid>
         </CardContent>
