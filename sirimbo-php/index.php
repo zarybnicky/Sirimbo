@@ -121,7 +121,7 @@ function makeRouter()
     $router->get('/video', '@Video::get');
 
     $router->get('/prijdtancit', '@Page::get');
-    $router->get('/obchodni-podminky', '@Page::get');
+    $router->get('/ochrana-osobnich-udaju', '@Page::get');
 
     $router->get('/kontakt', '@StaticContent::kontakt');
     $router->get('/oklubu/klubovi-treneri', '@StaticContent::klubovi');

@@ -60,7 +60,7 @@ export const ProspectForm = ({ }) => {
           <Grid container style={{ marginTop: '1rem' }}>
             <Grid item xs={12}>
               <Checkboxes name="op" required={true} data={{
-                label: <>Souhlasím s <a target="_blank" href="/obchodni-podminky">obchodními podmínkami</a></>,
+                label: <>Souhlasím se <a target="_blank" href="/ochrana-osobnich-udaju">zpracováním osobních údajů</a></>,
                 value: "agreed"
               }} />
             </Grid>
