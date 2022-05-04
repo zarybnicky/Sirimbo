@@ -37,7 +37,7 @@ export const ProspectFormEmail = ({ }) => {
       {form.submitError && <Alert severity="error">{form.submitError}</Alert>}
       <Card component="form" elevation={3} onSubmit={form.handleSubmit}>
         <CardContent>
-          <Typography variant="h4" component="div">Nemůžete přjít? Zanechte nám kontakt:</Typography>
+          <Typography variant="h4" component="div">Nemůžete přijít? Zanechte nám kontakt:</Typography>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
               <TextField label="Jméno" name="name" autoComplete="given-name" required />
