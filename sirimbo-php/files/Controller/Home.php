@@ -13,6 +13,12 @@ class Home
             'description' => $val['at_preview'],
             'title_photo_uri' => $val['at_foto_main'] ? '/galerie/' . $val['gf_path'] : ''
         ]);
+        array_unshift($highlights, [
+            'uri' => '/prijdtancit',
+            'name' => "Přijď tančit!",
+            "description" => "Nečekejte, až vaše děti vyrostou. Vrcholoví sportovci začínají již v dětském věku.",
+            "title_photo_uri" => "https://tkolymp.cz/galerie/clanky/TKOLYMP-nabor-FB-post-1200x630.png",
+        ]);
         $moreArticles = array_for(array_slice($articles, 3, 2), fn($val) => [
             'uri'  => '/aktualne/' . $val['at_id'],
             'name' => $val['at_jmeno'],
