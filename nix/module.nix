@@ -112,7 +112,7 @@ in {
         }
       }
       define('NABOR', '0');
-      define('DEFAULT_FROM_MAIL', 'TK Olymp.cz <root@tkolymp.cz>');
+      define('DEFAULT_FROM_MAIL', 'root@tkolymp.cz');
       define('DEFAULT_ADMIN_MAIL', 'miroslav.hyza@tkolymp.cz');
 
       define('SMTP_AUTH', ${if cfg.smtpAuth then "true" else "false"});

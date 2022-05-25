@@ -16,7 +16,7 @@ class Mailer
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'utf-8';
 
-        $mail->setFrom(DEFAULT_FROM_MAIL);
+        $mail->setFrom(DEFAULT_FROM_MAIL, 'TK Olymp');
         foreach (is_array($to) ? $to : [$to] as $addr) {
             $mail->addAddress($addr, '');
         }
@@ -27,7 +27,7 @@ class Mailer
 
     public static function newPassword($to, $newpass)
     {
-        $subject = "TKOlymp.cz - nové heslo";
+        $subject = "[Olymp] Nové heslo";
         $message = <<<EOS
 Vy nebo někdo jiný jste požádali jste o vygenerování nového hesla.
 Heslo si můžete změnit hned po přihlášení v nabídce Profil.
@@ -47,7 +47,7 @@ EOS;
             $total_users = count(\DBUser::getNewUsers());
         }
 
-        $subject = "TKOlymp.cz - nový uživatel ($username)";
+        $subject = "[Olymp] Nová registrace ($username)";
         $message = "Na TKOlymp.cz se registroval uživatel $username a čeká na potvrzení registrace.\n";
         if ($total_users > 0) {
             $message .= "Celkem nepotvrzených uživatelů: $total_users";
@@ -57,7 +57,7 @@ EOS;
 
     public static function registrationConfirmNotice($to, $username)
     {
-        $subject = "TKOlymp.cz - potvrzení registrace";
+        $subject = "[Olymp] Potvrzení registrace";
         $message = <<<EOS
 Vaše registrace (uživatel '$username') na webu TKOlymp.cz byla potvrzena.
 Nyní se už můžete přihlásit s údaji, které jste zadali při registraci.
