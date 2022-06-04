@@ -101,7 +101,6 @@ export const NestedMenuItem = React.forwardRef<HTMLLIElement | null, NestedMenuI
     tabIndex = tabIndexProp !== undefined ? tabIndexProp : -1
   }
 
-  console.log(ContainerProps);
   return (
     <div
       ref={containerRef}

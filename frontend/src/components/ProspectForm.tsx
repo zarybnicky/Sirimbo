@@ -21,7 +21,11 @@ export const SubmitProspectForm = Selector('Mutation')({
   }],
 });
 
-export const ProspectForm = ({ }) => {
+type ProspectFormProps = {
+  title?: string;
+};
+
+export const ProspectForm = ({ title }: ProspectFormProps) => {
   const { enqueueSnackbar } = useSnackbar();
   const [submit] = useTypedMutation(SubmitProspectForm);
   const onSubmit = async ({ op, ...prospectData }: any) => {
@@ -37,7 +41,7 @@ export const ProspectForm = ({ }) => {
       {form.submitError && <Alert severity="error">{form.submitError}</Alert>}
       <Card component="form" elevation={3} onSubmit={form.handleSubmit}>
         <CardContent>
-          <Typography variant="h4" component="div">Chci úvodní hodinu ZDARMA!</Typography>
+          <Typography variant="h4" component="div">{title}</Typography>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={4}>
               <TextField label="Jméno" name="name" autoComplete="given-name" required />
@@ -77,11 +81,25 @@ export const ProspectForm = ({ }) => {
   );
 };
 
-export const ProspectFormPlugin: CellPlugin<{}> = {
-  Renderer: () => <ProspectForm />,
+export const ProspectFormPlugin: CellPlugin<ProspectFormProps> = {
+  Renderer: ({ data }) => <ProspectForm {...data} />,
 
   id: 'app-prospect-form',
   title: 'Prospect Form',
   description: undefined,
-  version: 1,
+  version: 2,
+
+  createInitialData: () => ({
+    title: 'Chci úvodní hodinu ZDARMA!',
+  }),
+  controls: {
+    type: 'autoform',
+    schema: {
+      properties: {
+        title: {
+          type: 'string',
+        },
+      },
+    },
+  },
 };
