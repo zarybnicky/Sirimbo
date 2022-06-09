@@ -7537,6 +7537,27 @@
                     }
                 }
             },
+            "activeProspects": {
+                "type": "object",
+                "required": [],
+                "properties": {
+                    "first": {
+                        "type": "integer"
+                    },
+                    "last": {
+                        "type": "integer"
+                    },
+                    "offset": {
+                        "type": "integer"
+                    },
+                    "before": {
+                        "type": "string"
+                    },
+                    "after": {
+                        "type": "string"
+                    }
+                }
+            },
             "cohortMembers": {
                 "type": "object",
                 "required": [],

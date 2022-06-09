@@ -60,3 +60,17 @@ begin
 end;
 $$ language plpgsql strict volatile security definer;
 select plpgsql_check_function('public.prospect_form_dancer');
+
+
+create or replace function active_prospects() returns table (
+  id bigint, data prospect_data, cohort app_private.crm_cohort,
+  origin text, note text, last_activity timestamptz
+) AS $$
+  SELECT DISTINCT ON (crm_prospect.id)
+    crm_prospect.id, crm_prospect.data, crm_prospect.cohort,
+    crm_activity.origin, crm_activity.note, crm_activity.updated_at as last_activity
+  FROM app_private.crm_prospect LEFT JOIN app_private.crm_activity ON crm_activity.prospect = crm_prospect.id
+  ORDER BY crm_prospect.id, crm_activity.created_at DESC
+$$ language sql stable security definer;
+
+GRANT ALL ON FUNCTION public.active_prospects TO administrator;

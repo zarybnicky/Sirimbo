@@ -334,6 +334,13 @@ usersSkupiny?: [{	usId:ValueTypes["BigInt"]},ValueTypes["UsersSkupiny"]],
 video?: [{	vId:ValueTypes["BigInt"]},ValueTypes["Video"]],
 videoList?: [{	vlId:ValueTypes["BigInt"]},ValueTypes["VideoList"]],
 videoSource?: [{	vsId:ValueTypes["BigInt"]},ValueTypes["VideoSource"]],
+activeProspects?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null},ValueTypes["ActiveProspectsConnection"]],
 cohortMembers?: [{	id?:number | null,	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -2649,6 +2656,43 @@ for equality and combined with a logical ‘and.’ */
 	/** Checks for equality with the object’s `vsLastChecked` field. */
 	vsLastChecked?:ValueTypes["Datetime"] | null
 };
+	/** A connection to a list of `ActiveProspectsRecord` values. */
+["ActiveProspectsConnection"]: AliasType<{
+	/** A list of `ActiveProspectsRecord` objects. */
+	nodes?:ValueTypes["ActiveProspectsRecord"],
+	/** A list of edges which contains the `ActiveProspectsRecord` and cursor to aid in pagination. */
+	edges?:ValueTypes["ActiveProspectEdge"],
+	/** The count of *all* `ActiveProspectsRecord` you could get from the connection. */
+	totalCount?:boolean,
+		__typename?: boolean
+}>;
+	/** The return type of our `activeProspects` query. */
+["ActiveProspectsRecord"]: AliasType<{
+	id?:boolean,
+	data?:ValueTypes["ProspectDatum"],
+	cohort?:boolean,
+	origin?:boolean,
+	note?:boolean,
+	lastActivity?:boolean,
+		__typename?: boolean
+}>;
+	["ProspectDatum"]: AliasType<{
+	name?:boolean,
+	surname?:boolean,
+	email?:boolean,
+	phone?:boolean,
+	yearofbirth?:boolean,
+		__typename?: boolean
+}>;
+	["CrmCohort"]:CrmCohort;
+	/** A `ActiveProspectsRecord` edge in the connection. */
+["ActiveProspectEdge"]: AliasType<{
+	/** A cursor for use in pagination. */
+	cursor?:boolean,
+	/** The `ActiveProspectsRecord` at the end of the edge. */
+	node?:ValueTypes["ActiveProspectsRecord"],
+		__typename?: boolean
+}>;
 	/** A connection to a list of `BigInt` values. */
 ["CurrentCoupleIdsConnection"]: AliasType<{
 	/** A list of `BigInt` objects. */
@@ -6304,7 +6348,6 @@ payload verbatim. May be used to track mutations by the client. */
 	origin:string,
 	note:string
 };
-	["CrmCohort"]:CrmCohort;
 	/** An input for mutations affecting `ProspectDatum` */
 ["ProspectDatumInput"]: {
 	name?:string | null,
@@ -6429,6 +6472,7 @@ which can only query top level fields if they are in a particular form. */
 	video?:ModelTypes["Video"],
 	videoList?:ModelTypes["VideoList"],
 	videoSource?:ModelTypes["VideoSource"],
+	activeProspects?:ModelTypes["ActiveProspectsConnection"],
 	/** Reads and enables pagination through a set of `Member`. */
 	cohortMembers?:ModelTypes["MembersConnection"],
 	currentCoupleIds?:ModelTypes["CurrentCoupleIdsConnection"],
@@ -7786,6 +7830,39 @@ for equality and combined with a logical ‘and.’ */
 	/** A condition to be used against `VideoSource` object types. All fields are tested
 for equality and combined with a logical ‘and.’ */
 ["VideoSourceCondition"]: GraphQLTypes["VideoSourceCondition"];
+	/** A connection to a list of `ActiveProspectsRecord` values. */
+["ActiveProspectsConnection"]: {
+		/** A list of `ActiveProspectsRecord` objects. */
+	nodes:ModelTypes["ActiveProspectsRecord"][],
+	/** A list of edges which contains the `ActiveProspectsRecord` and cursor to aid in pagination. */
+	edges:ModelTypes["ActiveProspectEdge"][],
+	/** The count of *all* `ActiveProspectsRecord` you could get from the connection. */
+	totalCount:number
+};
+	/** The return type of our `activeProspects` query. */
+["ActiveProspectsRecord"]: {
+		id?:ModelTypes["BigInt"],
+	data?:ModelTypes["ProspectDatum"],
+	cohort?:ModelTypes["CrmCohort"],
+	origin?:string,
+	note?:string,
+	lastActivity?:ModelTypes["Datetime"]
+};
+	["ProspectDatum"]: {
+		name?:string,
+	surname?:string,
+	email?:string,
+	phone?:string,
+	yearofbirth?:string
+};
+	["CrmCohort"]: GraphQLTypes["CrmCohort"];
+	/** A `ActiveProspectsRecord` edge in the connection. */
+["ActiveProspectEdge"]: {
+		/** A cursor for use in pagination. */
+	cursor?:ModelTypes["Cursor"],
+	/** The `ActiveProspectsRecord` at the end of the edge. */
+	node:ModelTypes["ActiveProspectsRecord"]
+};
 	/** A connection to a list of `BigInt` values. */
 ["CurrentCoupleIdsConnection"]: {
 		/** A list of `BigInt` objects. */
@@ -9839,7 +9916,6 @@ unchanged and unused. May be used by a client to track mutations. */
 };
 	/** All input for the `prospectFormDancer` mutation. */
 ["ProspectFormDancerInput"]: GraphQLTypes["ProspectFormDancerInput"];
-	["CrmCohort"]: GraphQLTypes["CrmCohort"];
 	/** An input for mutations affecting `ProspectDatum` */
 ["ProspectDatumInput"]: GraphQLTypes["ProspectDatumInput"];
 	["Upload"]: {
@@ -9955,6 +10031,7 @@ which can only query top level fields if they are in a particular form. */
 	video?: GraphQLTypes["Video"],
 	videoList?: GraphQLTypes["VideoList"],
 	videoSource?: GraphQLTypes["VideoSource"],
+	activeProspects?: GraphQLTypes["ActiveProspectsConnection"],
 	/** Reads and enables pagination through a set of `Member`. */
 	cohortMembers?: GraphQLTypes["MembersConnection"],
 	currentCoupleIds?: GraphQLTypes["CurrentCoupleIdsConnection"],
@@ -12032,6 +12109,43 @@ for equality and combined with a logical ‘and.’ */
 	vsCreatedAt?: GraphQLTypes["Datetime"],
 	/** Checks for equality with the object’s `vsLastChecked` field. */
 	vsLastChecked?: GraphQLTypes["Datetime"]
+};
+	/** A connection to a list of `ActiveProspectsRecord` values. */
+["ActiveProspectsConnection"]: {
+	__typename: "ActiveProspectsConnection",
+	/** A list of `ActiveProspectsRecord` objects. */
+	nodes: Array<GraphQLTypes["ActiveProspectsRecord"]>,
+	/** A list of edges which contains the `ActiveProspectsRecord` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["ActiveProspectEdge"]>,
+	/** The count of *all* `ActiveProspectsRecord` you could get from the connection. */
+	totalCount: number
+};
+	/** The return type of our `activeProspects` query. */
+["ActiveProspectsRecord"]: {
+	__typename: "ActiveProspectsRecord",
+	id?: GraphQLTypes["BigInt"],
+	data?: GraphQLTypes["ProspectDatum"],
+	cohort?: GraphQLTypes["CrmCohort"],
+	origin?: string,
+	note?: string,
+	lastActivity?: GraphQLTypes["Datetime"]
+};
+	["ProspectDatum"]: {
+	__typename: "ProspectDatum",
+	name?: string,
+	surname?: string,
+	email?: string,
+	phone?: string,
+	yearofbirth?: string
+};
+	["CrmCohort"]: CrmCohort;
+	/** A `ActiveProspectsRecord` edge in the connection. */
+["ActiveProspectEdge"]: {
+	__typename: "ActiveProspectEdge",
+	/** A cursor for use in pagination. */
+	cursor?: GraphQLTypes["Cursor"],
+	/** The `ActiveProspectsRecord` at the end of the edge. */
+	node: GraphQLTypes["ActiveProspectsRecord"]
 };
 	/** A connection to a list of `BigInt` values. */
 ["CurrentCoupleIdsConnection"]: {
@@ -15684,7 +15798,6 @@ payload verbatim. May be used to track mutations by the client. */
 	origin: string,
 	note: string
 };
-	["CrmCohort"]: CrmCohort;
 	/** An input for mutations affecting `ProspectDatum` */
 ["ProspectDatumInput"]: {
 		name?: string,

@@ -5,6 +5,7 @@ import { Alert } from '@material-ui/lab';
 import { AppUser, useAuth } from './data/use-auth';
 
 import { EditorPage } from './pages/EditorPage';
+import { CrmPage } from './pages/CrmPage';
 import { AboutPage } from './pages/AboutPage';
 import { HomePage } from './pages/HomePage';
 import { LocationsPage } from './pages/LocationsPage';
@@ -107,6 +108,7 @@ export const routes = <Switch>
   <ProtectedRoute exact path="/profile" check={isLoggedIn}><ProfilePage /></ProtectedRoute>
 
   <ProtectedRoute exact path="/editor" check={isAdmin}><EditorPage /></ProtectedRoute>
+  <ProtectedRoute exact path="/crm" check={isAdmin}><CrmPage /></ProtectedRoute>
   <ExternalRedirect path="/admin" to="/admin/rozpis" />
 
   <Route><DynamicPage /></Route>

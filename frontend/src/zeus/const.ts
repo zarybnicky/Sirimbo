@@ -1680,6 +1680,38 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
+		activeProspects:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
 		cohortMembers:{
 			id:{
 				type:"Int",
@@ -5238,6 +5270,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
+	CrmCohort: "enum",
 	Mutation:{
 		createAkce:{
 			input:{
@@ -12794,7 +12827,6 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	CrmCohort: "enum",
 	ProspectDatumInput:{
 		name:{
 			type:"String",
@@ -12912,6 +12944,7 @@ export const ReturnTypes: Record<string,any> = {
 		video:"Video",
 		videoList:"VideoList",
 		videoSource:"VideoSource",
+		activeProspects:"ActiveProspectsConnection",
 		cohortMembers:"MembersConnection",
 		currentCoupleIds:"CurrentCoupleIdsConnection",
 		currentSessionId:"String",
@@ -13745,6 +13778,30 @@ export const ReturnTypes: Record<string,any> = {
 	VideoSourcesEdge:{
 		cursor:"Cursor",
 		node:"VideoSource"
+	},
+	ActiveProspectsConnection:{
+		nodes:"ActiveProspectsRecord",
+		edges:"ActiveProspectEdge",
+		totalCount:"Int"
+	},
+	ActiveProspectsRecord:{
+		id:"BigInt",
+		data:"ProspectDatum",
+		cohort:"CrmCohort",
+		origin:"String",
+		note:"String",
+		lastActivity:"Datetime"
+	},
+	ProspectDatum:{
+		name:"String",
+		surname:"String",
+		email:"String",
+		phone:"String",
+		yearofbirth:"String"
+	},
+	ActiveProspectEdge:{
+		cursor:"Cursor",
+		node:"ActiveProspectsRecord"
 	},
 	CurrentCoupleIdsConnection:{
 		nodes:"BigInt",
