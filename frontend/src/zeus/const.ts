@@ -13788,9 +13788,7 @@ export const ReturnTypes: Record<string,any> = {
 		id:"BigInt",
 		data:"ProspectDatum",
 		cohort:"CrmCohort",
-		origin:"String",
-		note:"String",
-		lastActivity:"Datetime"
+		updatedAt:"Datetime"
 	},
 	ProspectDatum:{
 		name:"String",

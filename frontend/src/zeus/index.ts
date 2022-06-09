@@ -2671,9 +2671,7 @@ for equality and combined with a logical ‘and.’ */
 	id?:boolean,
 	data?:ValueTypes["ProspectDatum"],
 	cohort?:boolean,
-	origin?:boolean,
-	note?:boolean,
-	lastActivity?:boolean,
+	updatedAt?:boolean,
 		__typename?: boolean
 }>;
 	["ProspectDatum"]: AliasType<{
@@ -7844,9 +7842,7 @@ for equality and combined with a logical ‘and.’ */
 		id?:ModelTypes["BigInt"],
 	data?:ModelTypes["ProspectDatum"],
 	cohort?:ModelTypes["CrmCohort"],
-	origin?:string,
-	note?:string,
-	lastActivity?:ModelTypes["Datetime"]
+	updatedAt?:ModelTypes["Datetime"]
 };
 	["ProspectDatum"]: {
 		name?:string,
@@ -12126,9 +12122,7 @@ for equality and combined with a logical ‘and.’ */
 	id?: GraphQLTypes["BigInt"],
 	data?: GraphQLTypes["ProspectDatum"],
 	cohort?: GraphQLTypes["CrmCohort"],
-	origin?: string,
-	note?: string,
-	lastActivity?: GraphQLTypes["Datetime"]
+	updatedAt?: GraphQLTypes["Datetime"]
 };
 	["ProspectDatum"]: {
 	__typename: "ProspectDatum",

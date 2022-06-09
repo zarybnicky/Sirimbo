@@ -27,9 +27,7 @@ const ProspectQuery = Selector('Query')({
           yearofbirth: true,
         },
         cohort: true,
-        origin: true,
-        note: true,
-        lastActivity: true,
+        updatedAt: true,
       },
     },
   ],
@@ -62,7 +60,7 @@ export const CrmPage = ({ }) => {
               <TableCell>{row.data?.phone}</TableCell>
               <TableCell>{row.data?.yearofbirth}</TableCell>
               <TableCell>{row.cohort}</TableCell>
-              <TableCell>{format(new Date(row.lastActivity), 'd. M. y')}</TableCell>
+              <TableCell>{format(new Date(row.updatedAt), 'd. M. y')}</TableCell>
             </TableRow>
           ))}
         </TableBody>

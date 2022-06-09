@@ -63,9 +63,9 @@ select plpgsql_check_function('public.prospect_form_dancer');
 
 drop function active_prospects();
 create or replace function active_prospects() returns table (
-  id bigint, data prospect_data, cohort app_private.crm_cohort, last_activity timestamptz
+  id bigint, data prospect_data, cohort app_private.crm_cohort, updated_at timestamptz
 ) AS $$
-  SELECT crm_prospect.id, crm_prospect.data, crm_prospect.cohort, crm_prospect.updated_at as last_activity
+  SELECT crm_prospect.id, crm_prospect.data, crm_prospect.cohort, crm_prospect.updated_at
   FROM app_private.crm_prospect
   ORDER BY crm_prospect.updated_at DESC
 $$ language sql stable security definer;
