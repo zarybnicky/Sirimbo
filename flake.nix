@@ -1,4 +1,5 @@
 {
+  inputs.nixpkgs.url = github:NixOS/nixpkgs/release-22.05;
   inputs.migrate = { flake = false; url = github:graphile/migrate/main; };
 
   outputs = { self, nixpkgs, migrate }: let
@@ -59,19 +60,6 @@
         pkgs.ncc
         pkgs.squawk
       ];
-      DATABASE_URL = "postgres://olymp@olymp-test/olymp";
-      SHADOW_DATABASE_URL = "postgres://olymp@olymp-test/olymp_shadow";
-      ROOT_DATABASE_URL = "postgres://postgres@olymp-test/postgres";
-      PGHOST = "olymp-test";
-      PGUSER = "postgres";
-      PGDATABASE = "olymp";
-      SMTP_HOST = "olymp-test";
-      SMTP_PORT = "1025";
-      MINIO_DOMAIN = "olymp-test";
-      MINIO_PORT = "9000";
-      MINIO_ACCESS_KEY = "00000000";
-      MINIO_SECRET_KEY = "000000000000";
-      DOMAIN = "olymp-test";
     };
 
     nixosConfigurations.container = nixpkgs.lib.nixosSystem {

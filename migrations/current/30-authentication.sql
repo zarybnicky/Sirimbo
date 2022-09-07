@@ -64,3 +64,6 @@ $$ language sql stable;
 create or replace function get_current_user() returns users as $$
   SELECT * FROM users WHERE u_id = nullif(current_setting('jwt.claims.user_id', true), '')::integer;
 $$ language sql stable;
+
+grant execute on function current_couple_ids to anonymous;
+grant execute on function get_current_user to anonymous;

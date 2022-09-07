@@ -183,6 +183,10 @@ in {
             proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
           };
 
+          locations."/old/" = {
+            index = "index.php";
+            extraConfig = "try_files /public/$uri /index.php?$args;";
+          };
           locations."/" = {
             index = "index.php";
             extraConfig = "try_files /public/$uri /index.php?$args;";

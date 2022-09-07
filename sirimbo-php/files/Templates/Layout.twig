@@ -1,3 +1,12 @@
+{% if noLayout %}
+  {{ json_encode({
+    'meta': block('meta'),
+    'title': block('title'),
+    'subheader': block('subheader'),
+    'messages': getMessages(),
+    'content': block('content'),
+  }) | raw }}
+{% else %}
 <!DOCTYPE HTML>
 <html prefix="og:http://ogp.me/ns" lang="cs">
   <head>
@@ -200,3 +209,4 @@
     </script>
   </body>
 </html>
+{% endif %}

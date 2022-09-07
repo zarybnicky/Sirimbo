@@ -27,6 +27,7 @@ class Render
             'currentUser' => \Session::getUser(),
             'navbar' => static::getNavbar(),
             'frontendHash' => FRONTEND_HASH,
+            'noLayout' => $_GET['no-layout'] ?? false,
         ];
     }
 

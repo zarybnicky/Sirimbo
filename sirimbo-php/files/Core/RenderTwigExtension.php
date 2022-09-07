@@ -20,6 +20,7 @@ class RenderTwigExtension extends \Twig\Extension\AbstractExtension
             new TwigFunction('selectLiteral', '\\Utils::selectLiteral', ['is_safe' => ['html']]),
             new TwigFunction('partnerRequest', '\\Utils::partnerRequest', ['is_safe' => ['html']]),
             new TwigFunction('getMessages', '\\Message::get'),
+            new TwigFunction('json_encode', 'json_encode'),
         ];
     }
 }

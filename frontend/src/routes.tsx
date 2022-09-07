@@ -15,7 +15,7 @@ import { GalleryPage } from './pages/GalleryPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { DashboardPage } from './pages/DashboardPage';
-import { DynamicPage } from './pages/DynamicPage';
+import { DynamicPage, OldDynamicPage } from './pages/DynamicPage';
 import { CohortsPage } from './pages/CohortsPage';
 import { SchedulePage } from './pages/SchedulePage';
 import { ProfilePage } from './pages/ProfilePage';
@@ -110,6 +110,8 @@ export const routes = <Switch>
   <ProtectedRoute exact path="/editor" check={isAdmin}><EditorPage /></ProtectedRoute>
   <ProtectedRoute exact path="/crm" check={isAdmin}><CrmPage /></ProtectedRoute>
   <ExternalRedirect path="/admin" to="/admin/rozpis" />
+
+  <Route path="/old/:path*"><OldDynamicPage /></Route>
 
   <Route><DynamicPage /></Route>
 </Switch>;

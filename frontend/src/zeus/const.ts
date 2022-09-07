@@ -2333,6 +2333,94 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
+		platbyItemsByPiIdUser:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"PlatbyItemsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"PlatbyItemCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		pariesByPIdPartner:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"PariesOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"ParyCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
 		sessionsBySsUser:{
 			first:{
 				type:"Int",
@@ -2504,94 +2592,6 @@ export const AllTypesProps: Record<string,any> = {
 			},
 			condition:{
 				type:"GalerieFotoCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		platbyItemsByPiIdUser:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"PlatbyItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"PlatbyItemCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		pariesByPIdPartner:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"PariesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"ParyCondition",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -4096,6 +4096,87 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
+	PariesOrderBy: "enum",
+	ParyCondition:{
+		pId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		pIdPartner:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		pIdPartnerka:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		pSttTrida:{
+			type:"ParyPSttTrida",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		pSttBody:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		pSttFinale:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		pLatTrida:{
+			type:"ParyPLatTrida",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		pLatBody:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		pLatFinale:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		pHodnoceni:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		pArchiv:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		pTimestampAdd:{
+			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		pTimestampArchive:{
+			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
 	SessionsOrderBy: "enum",
 	SessionCondition:{
 		ssId:{
@@ -4195,87 +4276,6 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		dTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	PariesOrderBy: "enum",
-	ParyCondition:{
-		pId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pIdPartner:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pIdPartnerka:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pSttTrida:{
-			type:"ParyPSttTrida",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pSttBody:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pSttFinale:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pLatTrida:{
-			type:"ParyPLatTrida",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pLatBody:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pLatFinale:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pHodnoceni:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pArchiv:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pTimestampAdd:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pTimestampArchive:{
 			type:"Datetime",
 			array:false,
 			arrayRequired:false,
@@ -13095,12 +13095,12 @@ export const ReturnTypes: Record<string,any> = {
 		aktualitiesByAtKdo:"AktualitiesConnection",
 		nabidkasByNTrener:"NabidkasConnection",
 		rozpisByRTrener:"RozpisConnection",
+		platbyItemsByPiIdUser:"PlatbyItemsConnection",
+		pariesByPIdPartner:"PariesConnection",
 		sessionsBySsUser:"SessionsConnection",
 		akceItemsByAiUser:"AkceItemsConnection",
 		dokumentiesByDKdo:"DokumentiesConnection",
 		galerieFotosByGfKdo:"GalerieFotosConnection",
-		platbyItemsByPiIdUser:"PlatbyItemsConnection",
-		pariesByPIdPartner:"PariesConnection",
 		paryNavrhsByPnNavrhl:"ParyNavrhsConnection",
 		paryNavrhsByPnPartner:"ParyNavrhsConnection",
 		paryNavrhsByPnPartnerka:"ParyNavrhsConnection",
@@ -13449,6 +13449,16 @@ export const ReturnTypes: Record<string,any> = {
 		cursor:"Cursor",
 		node:"Rozpi"
 	},
+	PariesConnection:{
+		nodes:"Pary",
+		edges:"PariesEdge",
+		pageInfo:"PageInfo",
+		totalCount:"Int"
+	},
+	PariesEdge:{
+		cursor:"Cursor",
+		node:"Pary"
+	},
 	SessionsConnection:{
 		nodes:"Session",
 		edges:"SessionsEdge",
@@ -13488,16 +13498,6 @@ export const ReturnTypes: Record<string,any> = {
 	DokumentiesEdge:{
 		cursor:"Cursor",
 		node:"Dokumenty"
-	},
-	PariesConnection:{
-		nodes:"Pary",
-		edges:"PariesEdge",
-		pageInfo:"PageInfo",
-		totalCount:"Int"
-	},
-	PariesEdge:{
-		cursor:"Cursor",
-		node:"Pary"
 	},
 	ParyNavrhsConnection:{
 		nodes:"ParyNavrh",

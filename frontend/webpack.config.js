@@ -43,6 +43,10 @@ module.exports = {
     proxy: {
       '/graphql': 'http://localhost:3000',
       '/graphiql': 'http://localhost:3000',
+      '/old': {
+        target: 'http://olymp-test:80',
+        changeOrigin: true,
+      },
       '/galerie': {
         target: 'http://olymp-test:80',
         changeOrigin: true,

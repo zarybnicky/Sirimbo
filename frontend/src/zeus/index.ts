@@ -618,6 +618,24 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Rozpi`. */
 	orderBy?:ValueTypes["RozpisOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["RozpiCondition"] | null},ValueTypes["RozpisConnection"]],
+platbyItemsByPiIdUser?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `PlatbyItem`. */
+	orderBy?:ValueTypes["PlatbyItemsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["PlatbyItemCondition"] | null},ValueTypes["PlatbyItemsConnection"]],
+pariesByPIdPartner?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Pary`. */
+	orderBy?:ValueTypes["PariesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["ParyCondition"] | null},ValueTypes["PariesConnection"]],
 sessionsBySsUser?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -654,24 +672,6 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `GalerieFoto`. */
 	orderBy?:ValueTypes["GalerieFotosOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["GalerieFotoCondition"] | null},ValueTypes["GalerieFotosConnection"]],
-platbyItemsByPiIdUser?: [{	/** Only read the first `n` values of the set. */
-	first?:number | null,	/** Only read the last `n` values of the set. */
-	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
-based pagination. May not be used with `last`. */
-	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
-	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
-	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `PlatbyItem`. */
-	orderBy?:ValueTypes["PlatbyItemsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
-	condition?:ValueTypes["PlatbyItemCondition"] | null},ValueTypes["PlatbyItemsConnection"]],
-pariesByPIdPartner?: [{	/** Only read the first `n` values of the set. */
-	first?:number | null,	/** Only read the last `n` values of the set. */
-	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
-based pagination. May not be used with `last`. */
-	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
-	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
-	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Pary`. */
-	orderBy?:ValueTypes["PariesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
-	condition?:ValueTypes["ParyCondition"] | null},ValueTypes["PariesConnection"]],
 paryNavrhsByPnNavrhl?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -1611,6 +1611,57 @@ for equality and combined with a logical ‘and.’ */
 	/** Checks for equality with the object’s `rTimestamp` field. */
 	rTimestamp?:ValueTypes["Datetime"] | null
 };
+	/** A connection to a list of `Pary` values. */
+["PariesConnection"]: AliasType<{
+	/** A list of `Pary` objects. */
+	nodes?:ValueTypes["Pary"],
+	/** A list of edges which contains the `Pary` and cursor to aid in pagination. */
+	edges?:ValueTypes["PariesEdge"],
+	/** Information to aid in pagination. */
+	pageInfo?:ValueTypes["PageInfo"],
+	/** The count of *all* `Pary` you could get from the connection. */
+	totalCount?:boolean,
+		__typename?: boolean
+}>;
+	/** A `Pary` edge in the connection. */
+["PariesEdge"]: AliasType<{
+	/** A cursor for use in pagination. */
+	cursor?:boolean,
+	/** The `Pary` at the end of the edge. */
+	node?:ValueTypes["Pary"],
+		__typename?: boolean
+}>;
+	/** Methods to use when ordering `Pary`. */
+["PariesOrderBy"]:PariesOrderBy;
+	/** A condition to be used against `Pary` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["ParyCondition"]: {
+	/** Checks for equality with the object’s `pId` field. */
+	pId?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `pIdPartner` field. */
+	pIdPartner?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `pIdPartnerka` field. */
+	pIdPartnerka?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `pSttTrida` field. */
+	pSttTrida?:ValueTypes["ParyPSttTrida"] | null,
+	/** Checks for equality with the object’s `pSttBody` field. */
+	pSttBody?:number | null,
+	/** Checks for equality with the object’s `pSttFinale` field. */
+	pSttFinale?:boolean | null,
+	/** Checks for equality with the object’s `pLatTrida` field. */
+	pLatTrida?:ValueTypes["ParyPLatTrida"] | null,
+	/** Checks for equality with the object’s `pLatBody` field. */
+	pLatBody?:number | null,
+	/** Checks for equality with the object’s `pLatFinale` field. */
+	pLatFinale?:boolean | null,
+	/** Checks for equality with the object’s `pHodnoceni` field. */
+	pHodnoceni?:number | null,
+	/** Checks for equality with the object’s `pArchiv` field. */
+	pArchiv?:boolean | null,
+	/** Checks for equality with the object’s `pTimestampAdd` field. */
+	pTimestampAdd?:ValueTypes["Datetime"] | null,
+	/** Checks for equality with the object’s `pTimestampArchive` field. */
+	pTimestampArchive?:ValueTypes["Datetime"] | null
+};
 	/** A connection to a list of `Session` values. */
 ["SessionsConnection"]: AliasType<{
 	/** A list of `Session` objects. */
@@ -1725,57 +1776,6 @@ for equality and combined with a logical ‘and.’ */
 	dKdo?:ValueTypes["BigInt"] | null,
 	/** Checks for equality with the object’s `dTimestamp` field. */
 	dTimestamp?:ValueTypes["Datetime"] | null
-};
-	/** A connection to a list of `Pary` values. */
-["PariesConnection"]: AliasType<{
-	/** A list of `Pary` objects. */
-	nodes?:ValueTypes["Pary"],
-	/** A list of edges which contains the `Pary` and cursor to aid in pagination. */
-	edges?:ValueTypes["PariesEdge"],
-	/** Information to aid in pagination. */
-	pageInfo?:ValueTypes["PageInfo"],
-	/** The count of *all* `Pary` you could get from the connection. */
-	totalCount?:boolean,
-		__typename?: boolean
-}>;
-	/** A `Pary` edge in the connection. */
-["PariesEdge"]: AliasType<{
-	/** A cursor for use in pagination. */
-	cursor?:boolean,
-	/** The `Pary` at the end of the edge. */
-	node?:ValueTypes["Pary"],
-		__typename?: boolean
-}>;
-	/** Methods to use when ordering `Pary`. */
-["PariesOrderBy"]:PariesOrderBy;
-	/** A condition to be used against `Pary` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["ParyCondition"]: {
-	/** Checks for equality with the object’s `pId` field. */
-	pId?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `pIdPartner` field. */
-	pIdPartner?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `pIdPartnerka` field. */
-	pIdPartnerka?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `pSttTrida` field. */
-	pSttTrida?:ValueTypes["ParyPSttTrida"] | null,
-	/** Checks for equality with the object’s `pSttBody` field. */
-	pSttBody?:number | null,
-	/** Checks for equality with the object’s `pSttFinale` field. */
-	pSttFinale?:boolean | null,
-	/** Checks for equality with the object’s `pLatTrida` field. */
-	pLatTrida?:ValueTypes["ParyPLatTrida"] | null,
-	/** Checks for equality with the object’s `pLatBody` field. */
-	pLatBody?:number | null,
-	/** Checks for equality with the object’s `pLatFinale` field. */
-	pLatFinale?:boolean | null,
-	/** Checks for equality with the object’s `pHodnoceni` field. */
-	pHodnoceni?:number | null,
-	/** Checks for equality with the object’s `pArchiv` field. */
-	pArchiv?:boolean | null,
-	/** Checks for equality with the object’s `pTimestampAdd` field. */
-	pTimestampAdd?:ValueTypes["Datetime"] | null,
-	/** Checks for equality with the object’s `pTimestampArchive` field. */
-	pTimestampArchive?:ValueTypes["Datetime"] | null
 };
 	/** A connection to a list of `ParyNavrh` values. */
 ["ParyNavrhsConnection"]: AliasType<{
@@ -6653,6 +6653,10 @@ strings and not numbers. */
 	nabidkasByNTrener:ModelTypes["NabidkasConnection"],
 	/** Reads and enables pagination through a set of `Rozpi`. */
 	rozpisByRTrener:ModelTypes["RozpisConnection"],
+	/** Reads and enables pagination through a set of `PlatbyItem`. */
+	platbyItemsByPiIdUser:ModelTypes["PlatbyItemsConnection"],
+	/** Reads and enables pagination through a set of `Pary`. */
+	pariesByPIdPartner:ModelTypes["PariesConnection"],
 	/** Reads and enables pagination through a set of `Session`. */
 	sessionsBySsUser:ModelTypes["SessionsConnection"],
 	/** Reads and enables pagination through a set of `AkceItem`. */
@@ -6661,10 +6665,6 @@ strings and not numbers. */
 	dokumentiesByDKdo:ModelTypes["DokumentiesConnection"],
 	/** Reads and enables pagination through a set of `GalerieFoto`. */
 	galerieFotosByGfKdo:ModelTypes["GalerieFotosConnection"],
-	/** Reads and enables pagination through a set of `PlatbyItem`. */
-	platbyItemsByPiIdUser:ModelTypes["PlatbyItemsConnection"],
-	/** Reads and enables pagination through a set of `Pary`. */
-	pariesByPIdPartner:ModelTypes["PariesConnection"],
 	/** Reads and enables pagination through a set of `ParyNavrh`. */
 	paryNavrhsByPnNavrhl:ModelTypes["ParyNavrhsConnection"],
 	/** Reads and enables pagination through a set of `ParyNavrh`. */
@@ -7225,6 +7225,28 @@ for equality and combined with a logical ‘and.’ */
 ["RozpisOrderBy"]: GraphQLTypes["RozpisOrderBy"];
 	/** A condition to be used against `Rozpi` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 ["RozpiCondition"]: GraphQLTypes["RozpiCondition"];
+	/** A connection to a list of `Pary` values. */
+["PariesConnection"]: {
+		/** A list of `Pary` objects. */
+	nodes:ModelTypes["Pary"][],
+	/** A list of edges which contains the `Pary` and cursor to aid in pagination. */
+	edges:ModelTypes["PariesEdge"][],
+	/** Information to aid in pagination. */
+	pageInfo:ModelTypes["PageInfo"],
+	/** The count of *all* `Pary` you could get from the connection. */
+	totalCount:number
+};
+	/** A `Pary` edge in the connection. */
+["PariesEdge"]: {
+		/** A cursor for use in pagination. */
+	cursor?:ModelTypes["Cursor"],
+	/** The `Pary` at the end of the edge. */
+	node:ModelTypes["Pary"]
+};
+	/** Methods to use when ordering `Pary`. */
+["PariesOrderBy"]: GraphQLTypes["PariesOrderBy"];
+	/** A condition to be used against `Pary` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["ParyCondition"]: GraphQLTypes["ParyCondition"];
 	/** A connection to a list of `Session` values. */
 ["SessionsConnection"]: {
 		/** A list of `Session` objects. */
@@ -7299,28 +7321,6 @@ for equality and combined with a logical ‘and.’ */
 	/** A condition to be used against `Dokumenty` object types. All fields are tested
 for equality and combined with a logical ‘and.’ */
 ["DokumentyCondition"]: GraphQLTypes["DokumentyCondition"];
-	/** A connection to a list of `Pary` values. */
-["PariesConnection"]: {
-		/** A list of `Pary` objects. */
-	nodes:ModelTypes["Pary"][],
-	/** A list of edges which contains the `Pary` and cursor to aid in pagination. */
-	edges:ModelTypes["PariesEdge"][],
-	/** Information to aid in pagination. */
-	pageInfo:ModelTypes["PageInfo"],
-	/** The count of *all* `Pary` you could get from the connection. */
-	totalCount:number
-};
-	/** A `Pary` edge in the connection. */
-["PariesEdge"]: {
-		/** A cursor for use in pagination. */
-	cursor?:ModelTypes["Cursor"],
-	/** The `Pary` at the end of the edge. */
-	node:ModelTypes["Pary"]
-};
-	/** Methods to use when ordering `Pary`. */
-["PariesOrderBy"]: GraphQLTypes["PariesOrderBy"];
-	/** A condition to be used against `Pary` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["ParyCondition"]: GraphQLTypes["ParyCondition"];
 	/** A connection to a list of `ParyNavrh` values. */
 ["ParyNavrhsConnection"]: {
 		/** A list of `ParyNavrh` objects. */
@@ -10251,6 +10251,10 @@ strings and not numbers. */
 	nabidkasByNTrener: GraphQLTypes["NabidkasConnection"],
 	/** Reads and enables pagination through a set of `Rozpi`. */
 	rozpisByRTrener: GraphQLTypes["RozpisConnection"],
+	/** Reads and enables pagination through a set of `PlatbyItem`. */
+	platbyItemsByPiIdUser: GraphQLTypes["PlatbyItemsConnection"],
+	/** Reads and enables pagination through a set of `Pary`. */
+	pariesByPIdPartner: GraphQLTypes["PariesConnection"],
 	/** Reads and enables pagination through a set of `Session`. */
 	sessionsBySsUser: GraphQLTypes["SessionsConnection"],
 	/** Reads and enables pagination through a set of `AkceItem`. */
@@ -10259,10 +10263,6 @@ strings and not numbers. */
 	dokumentiesByDKdo: GraphQLTypes["DokumentiesConnection"],
 	/** Reads and enables pagination through a set of `GalerieFoto`. */
 	galerieFotosByGfKdo: GraphQLTypes["GalerieFotosConnection"],
-	/** Reads and enables pagination through a set of `PlatbyItem`. */
-	platbyItemsByPiIdUser: GraphQLTypes["PlatbyItemsConnection"],
-	/** Reads and enables pagination through a set of `Pary`. */
-	pariesByPIdPartner: GraphQLTypes["PariesConnection"],
 	/** Reads and enables pagination through a set of `ParyNavrh`. */
 	paryNavrhsByPnNavrhl: GraphQLTypes["ParyNavrhsConnection"],
 	/** Reads and enables pagination through a set of `ParyNavrh`. */
@@ -11061,6 +11061,57 @@ for equality and combined with a logical ‘and.’ */
 	/** Checks for equality with the object’s `rTimestamp` field. */
 	rTimestamp?: GraphQLTypes["Datetime"]
 };
+	/** A connection to a list of `Pary` values. */
+["PariesConnection"]: {
+	__typename: "PariesConnection",
+	/** A list of `Pary` objects. */
+	nodes: Array<GraphQLTypes["Pary"]>,
+	/** A list of edges which contains the `Pary` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["PariesEdge"]>,
+	/** Information to aid in pagination. */
+	pageInfo: GraphQLTypes["PageInfo"],
+	/** The count of *all* `Pary` you could get from the connection. */
+	totalCount: number
+};
+	/** A `Pary` edge in the connection. */
+["PariesEdge"]: {
+	__typename: "PariesEdge",
+	/** A cursor for use in pagination. */
+	cursor?: GraphQLTypes["Cursor"],
+	/** The `Pary` at the end of the edge. */
+	node: GraphQLTypes["Pary"]
+};
+	/** Methods to use when ordering `Pary`. */
+["PariesOrderBy"]: PariesOrderBy;
+	/** A condition to be used against `Pary` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["ParyCondition"]: {
+		/** Checks for equality with the object’s `pId` field. */
+	pId?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `pIdPartner` field. */
+	pIdPartner?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `pIdPartnerka` field. */
+	pIdPartnerka?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `pSttTrida` field. */
+	pSttTrida?: GraphQLTypes["ParyPSttTrida"],
+	/** Checks for equality with the object’s `pSttBody` field. */
+	pSttBody?: number,
+	/** Checks for equality with the object’s `pSttFinale` field. */
+	pSttFinale?: boolean,
+	/** Checks for equality with the object’s `pLatTrida` field. */
+	pLatTrida?: GraphQLTypes["ParyPLatTrida"],
+	/** Checks for equality with the object’s `pLatBody` field. */
+	pLatBody?: number,
+	/** Checks for equality with the object’s `pLatFinale` field. */
+	pLatFinale?: boolean,
+	/** Checks for equality with the object’s `pHodnoceni` field. */
+	pHodnoceni?: number,
+	/** Checks for equality with the object’s `pArchiv` field. */
+	pArchiv?: boolean,
+	/** Checks for equality with the object’s `pTimestampAdd` field. */
+	pTimestampAdd?: GraphQLTypes["Datetime"],
+	/** Checks for equality with the object’s `pTimestampArchive` field. */
+	pTimestampArchive?: GraphQLTypes["Datetime"]
+};
 	/** A connection to a list of `Session` values. */
 ["SessionsConnection"]: {
 	__typename: "SessionsConnection",
@@ -11175,57 +11226,6 @@ for equality and combined with a logical ‘and.’ */
 	dKdo?: GraphQLTypes["BigInt"],
 	/** Checks for equality with the object’s `dTimestamp` field. */
 	dTimestamp?: GraphQLTypes["Datetime"]
-};
-	/** A connection to a list of `Pary` values. */
-["PariesConnection"]: {
-	__typename: "PariesConnection",
-	/** A list of `Pary` objects. */
-	nodes: Array<GraphQLTypes["Pary"]>,
-	/** A list of edges which contains the `Pary` and cursor to aid in pagination. */
-	edges: Array<GraphQLTypes["PariesEdge"]>,
-	/** Information to aid in pagination. */
-	pageInfo: GraphQLTypes["PageInfo"],
-	/** The count of *all* `Pary` you could get from the connection. */
-	totalCount: number
-};
-	/** A `Pary` edge in the connection. */
-["PariesEdge"]: {
-	__typename: "PariesEdge",
-	/** A cursor for use in pagination. */
-	cursor?: GraphQLTypes["Cursor"],
-	/** The `Pary` at the end of the edge. */
-	node: GraphQLTypes["Pary"]
-};
-	/** Methods to use when ordering `Pary`. */
-["PariesOrderBy"]: PariesOrderBy;
-	/** A condition to be used against `Pary` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["ParyCondition"]: {
-		/** Checks for equality with the object’s `pId` field. */
-	pId?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `pIdPartner` field. */
-	pIdPartner?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `pIdPartnerka` field. */
-	pIdPartnerka?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `pSttTrida` field. */
-	pSttTrida?: GraphQLTypes["ParyPSttTrida"],
-	/** Checks for equality with the object’s `pSttBody` field. */
-	pSttBody?: number,
-	/** Checks for equality with the object’s `pSttFinale` field. */
-	pSttFinale?: boolean,
-	/** Checks for equality with the object’s `pLatTrida` field. */
-	pLatTrida?: GraphQLTypes["ParyPLatTrida"],
-	/** Checks for equality with the object’s `pLatBody` field. */
-	pLatBody?: number,
-	/** Checks for equality with the object’s `pLatFinale` field. */
-	pLatFinale?: boolean,
-	/** Checks for equality with the object’s `pHodnoceni` field. */
-	pHodnoceni?: number,
-	/** Checks for equality with the object’s `pArchiv` field. */
-	pArchiv?: boolean,
-	/** Checks for equality with the object’s `pTimestampAdd` field. */
-	pTimestampAdd?: GraphQLTypes["Datetime"],
-	/** Checks for equality with the object’s `pTimestampArchive` field. */
-	pTimestampArchive?: GraphQLTypes["Datetime"]
 };
 	/** A connection to a list of `ParyNavrh` values. */
 ["ParyNavrhsConnection"]: {
@@ -16079,6 +16079,38 @@ export const enum RozpisOrderBy {
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
 	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
 }
+/** Methods to use when ordering `Pary`. */
+export const enum PariesOrderBy {
+	NATURAL = "NATURAL",
+	P_ID_ASC = "P_ID_ASC",
+	P_ID_DESC = "P_ID_DESC",
+	P_ID_PARTNER_ASC = "P_ID_PARTNER_ASC",
+	P_ID_PARTNER_DESC = "P_ID_PARTNER_DESC",
+	P_ID_PARTNERKA_ASC = "P_ID_PARTNERKA_ASC",
+	P_ID_PARTNERKA_DESC = "P_ID_PARTNERKA_DESC",
+	P_STT_TRIDA_ASC = "P_STT_TRIDA_ASC",
+	P_STT_TRIDA_DESC = "P_STT_TRIDA_DESC",
+	P_STT_BODY_ASC = "P_STT_BODY_ASC",
+	P_STT_BODY_DESC = "P_STT_BODY_DESC",
+	P_STT_FINALE_ASC = "P_STT_FINALE_ASC",
+	P_STT_FINALE_DESC = "P_STT_FINALE_DESC",
+	P_LAT_TRIDA_ASC = "P_LAT_TRIDA_ASC",
+	P_LAT_TRIDA_DESC = "P_LAT_TRIDA_DESC",
+	P_LAT_BODY_ASC = "P_LAT_BODY_ASC",
+	P_LAT_BODY_DESC = "P_LAT_BODY_DESC",
+	P_LAT_FINALE_ASC = "P_LAT_FINALE_ASC",
+	P_LAT_FINALE_DESC = "P_LAT_FINALE_DESC",
+	P_HODNOCENI_ASC = "P_HODNOCENI_ASC",
+	P_HODNOCENI_DESC = "P_HODNOCENI_DESC",
+	P_ARCHIV_ASC = "P_ARCHIV_ASC",
+	P_ARCHIV_DESC = "P_ARCHIV_DESC",
+	P_TIMESTAMP_ADD_ASC = "P_TIMESTAMP_ADD_ASC",
+	P_TIMESTAMP_ADD_DESC = "P_TIMESTAMP_ADD_DESC",
+	P_TIMESTAMP_ARCHIVE_ASC = "P_TIMESTAMP_ARCHIVE_ASC",
+	P_TIMESTAMP_ARCHIVE_DESC = "P_TIMESTAMP_ARCHIVE_DESC",
+	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+}
 /** Methods to use when ordering `Session`. */
 export const enum SessionsOrderBy {
 	NATURAL = "NATURAL",
@@ -16126,38 +16158,6 @@ export const enum DokumentiesOrderBy {
 	D_KDO_DESC = "D_KDO_DESC",
 	D_TIMESTAMP_ASC = "D_TIMESTAMP_ASC",
 	D_TIMESTAMP_DESC = "D_TIMESTAMP_DESC",
-	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
-}
-/** Methods to use when ordering `Pary`. */
-export const enum PariesOrderBy {
-	NATURAL = "NATURAL",
-	P_ID_ASC = "P_ID_ASC",
-	P_ID_DESC = "P_ID_DESC",
-	P_ID_PARTNER_ASC = "P_ID_PARTNER_ASC",
-	P_ID_PARTNER_DESC = "P_ID_PARTNER_DESC",
-	P_ID_PARTNERKA_ASC = "P_ID_PARTNERKA_ASC",
-	P_ID_PARTNERKA_DESC = "P_ID_PARTNERKA_DESC",
-	P_STT_TRIDA_ASC = "P_STT_TRIDA_ASC",
-	P_STT_TRIDA_DESC = "P_STT_TRIDA_DESC",
-	P_STT_BODY_ASC = "P_STT_BODY_ASC",
-	P_STT_BODY_DESC = "P_STT_BODY_DESC",
-	P_STT_FINALE_ASC = "P_STT_FINALE_ASC",
-	P_STT_FINALE_DESC = "P_STT_FINALE_DESC",
-	P_LAT_TRIDA_ASC = "P_LAT_TRIDA_ASC",
-	P_LAT_TRIDA_DESC = "P_LAT_TRIDA_DESC",
-	P_LAT_BODY_ASC = "P_LAT_BODY_ASC",
-	P_LAT_BODY_DESC = "P_LAT_BODY_DESC",
-	P_LAT_FINALE_ASC = "P_LAT_FINALE_ASC",
-	P_LAT_FINALE_DESC = "P_LAT_FINALE_DESC",
-	P_HODNOCENI_ASC = "P_HODNOCENI_ASC",
-	P_HODNOCENI_DESC = "P_HODNOCENI_DESC",
-	P_ARCHIV_ASC = "P_ARCHIV_ASC",
-	P_ARCHIV_DESC = "P_ARCHIV_DESC",
-	P_TIMESTAMP_ADD_ASC = "P_TIMESTAMP_ADD_ASC",
-	P_TIMESTAMP_ADD_DESC = "P_TIMESTAMP_ADD_DESC",
-	P_TIMESTAMP_ARCHIVE_ASC = "P_TIMESTAMP_ARCHIVE_ASC",
-	P_TIMESTAMP_ARCHIVE_DESC = "P_TIMESTAMP_ARCHIVE_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
 	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
 }

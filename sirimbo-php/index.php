@@ -340,5 +340,7 @@ function makeRouter()
     $router->get('/admin/platby/structure/category/remove/([0-9]+)', '@Admin.PlatbyCategory::remove');
     $router->post('/admin/platby/structure/category/remove/([0-9]+)', '@Admin.PlatbyCategory::removePost');
 
+    $router->mount('/old', $router);
+
     return $router;
 }

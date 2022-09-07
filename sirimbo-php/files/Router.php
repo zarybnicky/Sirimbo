@@ -3,7 +3,7 @@ namespace Olymp;
 
 class Router
 {
-    private array $routes;
+    public array $routes;
     private string $baseNamespace;
     private string $currentPrefix;
 
@@ -32,11 +32,17 @@ class Router
         $this->routes[strtoupper($method)][$this->currentPrefix . $regex] = $handler;
     }
 
-    public function mount($prefix, callable $routes)
+    public function mount($prefix, Router $router)
     {
         $previousPrefix = $this->currentPrefix;
         $this->currentPrefix = $previousPrefix . $prefix;
-        $routes($this);
+
+        foreach ($router->routes as $method => $routes) {
+            foreach ($routes as $regex => $handler) {
+                $this->addRoute($method, $regex, $handler);
+            }
+        }
+
         $this->currentPrefix = $previousPrefix;
         return $this;
     }

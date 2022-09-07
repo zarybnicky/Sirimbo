@@ -24,5 +24,11 @@
     },
     "extra": {
         "generate-default-nix": false
+    },
+    "config": {
+        "allow-plugins": {
+            "ocramius/package-versions": true,
+            "stephank/composer-plugin-nixify": true
+        }
     }
 }
