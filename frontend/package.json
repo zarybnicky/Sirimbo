@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "schema": "zeus http://localhost:3000/graphql -H Content-Type:application/json -j schema.json ./lib --apollo"
+    "schema": "yarn schema:gen && yarn schema:fix",
+    "schema:fix": "sed -i -f graphql.sed lib/zeus/index.ts",
+    "schema:gen": "zeus http://localhost:3000/graphql -H Content-Type:application/json -j schema.json ./lib --apollo"
   },
   "dependencies": {
     "@apollo/client": "^3.4.16",
@@ -44,7 +46,7 @@
     "exceljs": "^4.3.0",
     "file-saver": "^2.0.5",
     "graphql": "^16.6.0",
-    "graphql-zeus": "^4.0.3",
+    "graphql-zeus": "^5.1.9",
     "iban": "^0.0.14",
     "jquery": "^3.6.1",
     "leaflet": "^1.8.0",

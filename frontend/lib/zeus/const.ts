@@ -3,12875 +3,2601 @@
 export const AllTypesProps: Record<string,any> = {
 	Query:{
 		node:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		akces:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"AkcesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"AkceCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"AkcesOrderBy",
+			condition:"AkceCondition"
 		},
 		akceItems:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"AkceItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"AkceItemCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"AkceItemsOrderBy",
+			condition:"AkceItemCondition"
 		},
 		aktualities:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"AktualitiesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"AktualityCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"AktualitiesOrderBy",
+			condition:"AktualityCondition"
 		},
 		dokumenties:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"DokumentiesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"DokumentyCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"DokumentiesOrderBy",
+			condition:"DokumentyCondition"
 		},
 		galerieDirs:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"GalerieDirsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"GalerieDirCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"GalerieDirsOrderBy",
+			condition:"GalerieDirCondition"
 		},
 		galerieFotos:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"GalerieFotosOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"GalerieFotoCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"GalerieFotosOrderBy",
+			condition:"GalerieFotoCondition"
 		},
 		members:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"MembersOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"MemberCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"MembersOrderBy",
+			condition:"MemberCondition"
 		},
 		nabidkas:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"NabidkasOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"NabidkaCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"NabidkasOrderBy",
+			condition:"NabidkaCondition"
 		},
 		nabidkaItems:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"NabidkaItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"NabidkaItemCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"NabidkaItemsOrderBy",
+			condition:"NabidkaItemCondition"
 		},
 		pages:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"PagesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"PageCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"PagesOrderBy",
+			condition:"PageCondition"
 		},
 		pageRevisions:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"PageRevisionsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"PageRevisionCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"PageRevisionsOrderBy",
+			condition:"PageRevisionCondition"
 		},
 		parameters:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"ParametersOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"ParameterCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"ParametersOrderBy",
+			condition:"ParameterCondition"
 		},
 		paries:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"PariesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"ParyCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"PariesOrderBy",
+			condition:"ParyCondition"
 		},
 		paryNavrhs:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"ParyNavrhsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"ParyNavrhCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"ParyNavrhsOrderBy",
+			condition:"ParyNavrhCondition"
 		},
 		permissions:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"PermissionsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"PermissionCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"PermissionsOrderBy",
+			condition:"PermissionCondition"
 		},
 		platbyCategories:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"PlatbyCategoriesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"PlatbyCategoryCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"PlatbyCategoriesOrderBy",
+			condition:"PlatbyCategoryCondition"
 		},
 		platbyCategoryGroups:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"PlatbyCategoryGroupsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"PlatbyCategoryGroupCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"PlatbyCategoryGroupsOrderBy",
+			condition:"PlatbyCategoryGroupCondition"
 		},
 		platbyGroups:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"PlatbyGroupsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"PlatbyGroupCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"PlatbyGroupsOrderBy",
+			condition:"PlatbyGroupCondition"
 		},
 		platbyGroupSkupinas:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"PlatbyGroupSkupinasOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"PlatbyGroupSkupinaCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"PlatbyGroupSkupinasOrderBy",
+			condition:"PlatbyGroupSkupinaCondition"
 		},
 		platbyItems:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"PlatbyItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"PlatbyItemCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"PlatbyItemsOrderBy",
+			condition:"PlatbyItemCondition"
 		},
 		platbyRaws:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"PlatbyRawsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"PlatbyRawCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"PlatbyRawsOrderBy",
+			condition:"PlatbyRawCondition"
 		},
 		rozpis:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"RozpisOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"RozpiCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"RozpisOrderBy",
+			condition:"RozpiCondition"
 		},
 		rozpisItems:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"RozpisItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"RozpisItemCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"RozpisItemsOrderBy",
+			condition:"RozpisItemCondition"
 		},
 		sessions:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"SessionsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"SessionCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"SessionsOrderBy",
+			condition:"SessionCondition"
 		},
 		skupinies:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"SkupiniesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"SkupinyCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"SkupiniesOrderBy",
+			condition:"SkupinyCondition"
 		},
 		upozornenis:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"UpozornenisOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"UpozorneniCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"UpozornenisOrderBy",
+			condition:"UpozorneniCondition"
 		},
 		upozorneniSkupinies:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"UpozorneniSkupiniesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"UpozorneniSkupinyCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"UpozorneniSkupiniesOrderBy",
+			condition:"UpozorneniSkupinyCondition"
 		},
 		users:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"UsersOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"UserCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"UsersOrderBy",
+			condition:"UserCondition"
 		},
 		usersSkupinies:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"UsersSkupiniesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"UsersSkupinyCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"UsersSkupiniesOrderBy",
+			condition:"UsersSkupinyCondition"
 		},
 		videos:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"VideosOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"VideoCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"VideosOrderBy",
+			condition:"VideoCondition"
 		},
 		videoLists:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"VideoListsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"VideoListCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"VideoListsOrderBy",
+			condition:"VideoListCondition"
 		},
 		videoSources:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"VideoSourcesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"VideoSourceCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"VideoSourcesOrderBy",
+			condition:"VideoSourceCondition"
 		},
 		akce:{
-			aId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			aId:"BigInt"
 		},
 		akceItem:{
-			aiId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			aiId:"BigInt"
 		},
 		aktuality:{
-			atId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			atId:"BigInt"
 		},
 		dokumenty:{
-			dId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			dId:"BigInt"
 		},
 		galerieDir:{
-			gdId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			gdId:"BigInt"
 		},
 		galerieFoto:{
-			gfId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			gfId:"BigInt"
 		},
 		nabidka:{
-			nId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			nId:"BigInt"
 		},
 		nabidkaItem:{
-			niId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			niId:"BigInt"
 		},
 		page:{
-			id:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		pageByUrl:{
-			url:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		pageRevision:{
-			revNumber:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:true
-			},
-			id:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		parameter:{
-			paName:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		pary:{
-			pId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			pId:"BigInt"
 		},
 		paryNavrh:{
-			pnId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			pnId:"BigInt"
 		},
 		permission:{
-			peId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			peId:"BigInt"
 		},
 		platbyCategory:{
-			pcId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			pcId:"BigInt"
 		},
 		platbyCategoryGroup:{
-			pcgId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			pcgId:"BigInt"
 		},
 		platbyGroup:{
-			pgId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			pgId:"BigInt"
 		},
 		platbyGroupSkupina:{
-			pgsId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			pgsId:"BigInt"
 		},
 		platbyItem:{
-			piId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			piId:"BigInt"
 		},
 		platbyRaw:{
-			prId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			prId:"BigInt"
 		},
 		rozpi:{
-			rId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			rId:"BigInt"
 		},
 		rozpisItem:{
-			riId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			riId:"BigInt"
 		},
 		session:{
-			ssId:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		skupiny:{
-			sId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			sId:"BigInt"
 		},
 		upozorneni:{
-			upId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			upId:"BigInt"
 		},
 		upozorneniSkupiny:{
-			upsId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			upsId:"BigInt"
 		},
 		user:{
-			uId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			uId:"BigInt"
 		},
 		usersSkupiny:{
-			usId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			usId:"BigInt"
 		},
 		video:{
-			vId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			vId:"BigInt"
 		},
 		videoList:{
-			vlId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			vlId:"BigInt"
 		},
 		videoSource:{
-			vsId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			vsId:"BigInt"
 		},
 		activeProspects:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor"
 		},
 		cohortMembers:{
-			id:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor"
 		},
 		currentCoupleIds:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor"
 		},
 		reservationsForRange:{
-			startDate:{
-				type:"Date",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			endDate:{
-				type:"Date",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			startDate:"Date",
+			endDate:"Date",
+			before:"Cursor",
+			after:"Cursor"
 		},
 		schedulesForRange:{
-			startDate:{
-				type:"Date",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			endDate:{
-				type:"Date",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			startDate:"Date",
+			endDate:"Date",
+			before:"Cursor",
+			after:"Cursor"
 		},
 		titleVideos:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor"
 		},
 		akceByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		akceItemByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		aktualityByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		dokumentyByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		galerieDirByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		galerieFotoByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		nabidkaByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		nabidkaItemByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		pageByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		pageRevisionByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		parameterByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		paryByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		paryNavrhByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		permissionByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		platbyCategoryByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		platbyCategoryGroupByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		platbyGroupByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		platbyGroupSkupinaByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		platbyItemByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		platbyRawByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		rozpiByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		rozpisItemByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		sessionByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		skupinyByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		upozorneniByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		upozorneniSkupinyByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		userByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		usersSkupinyByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		videoByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		videoListByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		videoSourceByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		}
 	},
 	Akce:{
 		akceItemsByAiIdRodic:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"AkceItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"AkceItemCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"AkceItemsOrderBy",
+			condition:"AkceItemCondition"
 		}
 	},
-	BigInt: "String",
-	Date: "String",
-	Datetime: "String",
+	BigInt: `scalar.BigInt` as const,
+	Date: `scalar.Date` as const,
+	Datetime: `scalar.Datetime` as const,
 	User:{
 		aktualitiesByAtKdo:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"AktualitiesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"AktualityCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"AktualitiesOrderBy",
+			condition:"AktualityCondition"
 		},
 		nabidkasByNTrener:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"NabidkasOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"NabidkaCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"NabidkasOrderBy",
+			condition:"NabidkaCondition"
 		},
 		rozpisByRTrener:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"RozpisOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"RozpiCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"RozpisOrderBy",
+			condition:"RozpiCondition"
 		},
 		platbyItemsByPiIdUser:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"PlatbyItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"PlatbyItemCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"PlatbyItemsOrderBy",
+			condition:"PlatbyItemCondition"
 		},
 		pariesByPIdPartner:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"PariesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"ParyCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"PariesOrderBy",
+			condition:"ParyCondition"
 		},
 		sessionsBySsUser:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"SessionsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"SessionCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"SessionsOrderBy",
+			condition:"SessionCondition"
 		},
 		akceItemsByAiUser:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"AkceItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"AkceItemCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"AkceItemsOrderBy",
+			condition:"AkceItemCondition"
 		},
 		dokumentiesByDKdo:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"DokumentiesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"DokumentyCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"DokumentiesOrderBy",
+			condition:"DokumentyCondition"
 		},
 		galerieFotosByGfKdo:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"GalerieFotosOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"GalerieFotoCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"GalerieFotosOrderBy",
+			condition:"GalerieFotoCondition"
 		},
 		paryNavrhsByPnNavrhl:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"ParyNavrhsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"ParyNavrhCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"ParyNavrhsOrderBy",
+			condition:"ParyNavrhCondition"
 		},
 		paryNavrhsByPnPartner:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"ParyNavrhsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"ParyNavrhCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"ParyNavrhsOrderBy",
+			condition:"ParyNavrhCondition"
 		},
 		paryNavrhsByPnPartnerka:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"ParyNavrhsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"ParyNavrhCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"ParyNavrhsOrderBy",
+			condition:"ParyNavrhCondition"
 		},
 		upozornenisByUpKdo:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"UpozornenisOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"UpozorneniCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"UpozornenisOrderBy",
+			condition:"UpozorneniCondition"
 		}
 	},
 	Permission:{
 		usersByUGroup:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"UsersOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"UserCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"UsersOrderBy",
+			condition:"UserCondition"
 		}
 	},
-	Cursor: "String",
-	UsersOrderBy: "enum",
+	Cursor: `scalar.Cursor` as const,
+	UsersOrderBy: "enum" as const,
 	UserCondition:{
-		uId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uLogin:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uPass:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uJmeno:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uPrijmeni:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uPohlavi:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uEmail:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uTelefon:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uNarozeni:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uRodneCislo:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uPoznamky:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uLevel:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uGroup:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uSkupina:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uDancer:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uBan:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uConfirmed:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uSystem:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uStreet:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uConscriptionNumber:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uOrientationNumber:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uDistrict:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uCity:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uPostalCode:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uNationality:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uMemberSince:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uMemberUntil:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uTeacher:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uGdprSignedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		uId:"BigInt",
+		uNarozeni:"Date",
+		uTimestamp:"Datetime",
+		uGroup:"BigInt",
+		uSkupina:"BigInt",
+		uMemberSince:"Datetime",
+		uMemberUntil:"Datetime",
+		uCreatedAt:"Datetime",
+		uGdprSignedAt:"Datetime"
 	},
 	Skupiny:{
 		usersByUSkupina:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"UsersOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"UserCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"UsersOrderBy",
+			condition:"UserCondition"
 		},
 		platbyGroupSkupinasByPgsIdSkupina:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"PlatbyGroupSkupinasOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"PlatbyGroupSkupinaCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"PlatbyGroupSkupinasOrderBy",
+			condition:"PlatbyGroupSkupinaCondition"
 		},
 		upozorneniSkupiniesByUpsIdSkupina:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"UpozorneniSkupiniesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"UpozorneniSkupinyCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"UpozorneniSkupiniesOrderBy",
+			condition:"UpozorneniSkupinyCondition"
 		}
 	},
 	PlatbyGroup:{
 		platbyCategoryGroupsByPcgIdGroup:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"PlatbyCategoryGroupsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"PlatbyCategoryGroupCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"PlatbyCategoryGroupsOrderBy",
+			condition:"PlatbyCategoryGroupCondition"
 		},
 		platbyGroupSkupinasByPgsIdGroup:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"PlatbyGroupSkupinasOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"PlatbyGroupSkupinaCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"PlatbyGroupSkupinasOrderBy",
+			condition:"PlatbyGroupSkupinaCondition"
 		}
 	},
-	BigFloat: "String",
+	BigFloat: `scalar.BigFloat` as const,
 	PlatbyCategory:{
 		platbyCategoryGroupsByPcgIdCategory:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"PlatbyCategoryGroupsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"PlatbyCategoryGroupCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"PlatbyCategoryGroupsOrderBy",
+			condition:"PlatbyCategoryGroupCondition"
 		},
 		platbyItemsByPiIdCategory:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"PlatbyItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"PlatbyItemCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"PlatbyItemsOrderBy",
+			condition:"PlatbyItemCondition"
 		}
 	},
-	PlatbyCategoryGroupsOrderBy: "enum",
+	PlatbyCategoryGroupsOrderBy: "enum" as const,
 	PlatbyCategoryGroupCondition:{
-		pcgId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcgIdGroup:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcgIdCategory:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		pcgId:"BigInt",
+		pcgIdGroup:"BigInt",
+		pcgIdCategory:"BigInt"
 	},
 	PlatbyRaw:{
 		platbyItemsByPiIdRaw:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"PlatbyItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"PlatbyItemCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"PlatbyItemsOrderBy",
+			condition:"PlatbyItemCondition"
 		}
 	},
-	PlatbyItemsOrderBy: "enum",
+	PlatbyItemsOrderBy: "enum" as const,
 	PlatbyItemCondition:{
-		piId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		piIdUser:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		piIdCategory:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		piIdRaw:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		piAmount:{
-			type:"BigFloat",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		piDate:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		piPrefix:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		piId:"BigInt",
+		piIdUser:"BigInt",
+		piIdCategory:"BigInt",
+		piIdRaw:"BigInt",
+		piAmount:"BigFloat",
+		piDate:"Date"
 	},
-	PlatbyGroupSkupinasOrderBy: "enum",
+	PlatbyGroupSkupinasOrderBy: "enum" as const,
 	PlatbyGroupSkupinaCondition:{
-		pgsId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pgsIdSkupina:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pgsIdGroup:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		pgsId:"BigInt",
+		pgsIdSkupina:"BigInt",
+		pgsIdGroup:"BigInt"
 	},
 	Upozorneni:{
 		upozorneniSkupiniesByUpsIdRodic:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"UpozorneniSkupiniesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"UpozorneniSkupinyCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"UpozorneniSkupiniesOrderBy",
+			condition:"UpozorneniSkupinyCondition"
 		}
 	},
-	UpozorneniSkupiniesOrderBy: "enum",
+	UpozorneniSkupiniesOrderBy: "enum" as const,
 	UpozorneniSkupinyCondition:{
-		upsId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upsIdRodic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upsIdSkupina:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upsColor:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upsPopis:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		upsId:"BigInt",
+		upsIdRodic:"BigInt",
+		upsIdSkupina:"BigInt"
 	},
 	GalerieFoto:{
 		aktualitiesByAtFotoMain:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"AktualitiesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"AktualityCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"AktualitiesOrderBy",
+			condition:"AktualityCondition"
 		}
 	},
 	GalerieDir:{
 		galerieFotosByGfIdRodic:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"GalerieFotosOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"GalerieFotoCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"GalerieFotosOrderBy",
+			condition:"GalerieFotoCondition"
 		}
 	},
-	GalerieFotosOrderBy: "enum",
+	GalerieFotosOrderBy: "enum" as const,
 	GalerieFotoCondition:{
-		gfId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gfIdRodic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gfName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gfPath:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gfKdo:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gfTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		gfId:"BigInt",
+		gfIdRodic:"BigInt",
+		gfKdo:"BigInt",
+		gfTimestamp:"Datetime"
 	},
-	AktualitiesOrderBy: "enum",
+	AktualitiesOrderBy: "enum" as const,
 	AktualityCondition:{
-		atId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atKdo:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atKat:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atJmeno:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atText:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atPreview:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atFoto:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atFotoMain:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atTimestampAdd:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		atId:"BigInt",
+		atKdo:"BigInt",
+		atFoto:"BigInt",
+		atFotoMain:"BigInt",
+		atTimestamp:"Datetime",
+		atTimestampAdd:"Datetime"
 	},
 	Nabidka:{
 		nabidkaItemsByNiIdRodic:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"NabidkaItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"NabidkaItemCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"NabidkaItemsOrderBy",
+			condition:"NabidkaItemCondition"
 		}
 	},
 	Pary:{
 		nabidkaItemsByNiPartner:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"NabidkaItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"NabidkaItemCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"NabidkaItemsOrderBy",
+			condition:"NabidkaItemCondition"
 		},
 		rozpisItemsByRiPartner:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"RozpisItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"RozpisItemCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"RozpisItemsOrderBy",
+			condition:"RozpisItemCondition"
 		}
 	},
-	ParyPSttTrida: "enum",
-	ParyPLatTrida: "enum",
-	NabidkaItemsOrderBy: "enum",
+	ParyPSttTrida: "enum" as const,
+	ParyPLatTrida: "enum" as const,
+	NabidkaItemsOrderBy: "enum" as const,
 	NabidkaItemCondition:{
-		niId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		niIdRodic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		niPartner:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		niPocetHod:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		niLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		niId:"BigInt",
+		niIdRodic:"BigInt",
+		niPartner:"BigInt"
 	},
-	Time: "String",
+	Time: `scalar.Time` as const,
 	Rozpi:{
 		rozpisItemsByRiIdRodic:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"RozpisItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"RozpisItemCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+			before:"Cursor",
+			after:"Cursor",
+			orderBy:"RozpisItemsOrderBy",
+			condition:"RozpisItemCondition"
 		}
 	},
-	RozpisItemsOrderBy: "enum",
+	RozpisItemsOrderBy: "enum" as const,
 	RozpisItemCondition:{
-		riId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		riIdRodic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		riPartner:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		riOd:{
-			type:"Time",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		riDo:{
-			type:"Time",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		riLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		riId:"BigInt",
+		riIdRodic:"BigInt",
+		riPartner:"BigInt",
+		riOd:"Time",
+		riDo:"Time"
 	},
-	NabidkasOrderBy: "enum",
+	NabidkasOrderBy: "enum" as const,
 	NabidkaCondition:{
-		nId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nTrener:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nPocetHod:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nMaxPocetHod:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nOd:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nDo:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nVisible:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		nId:"BigInt",
+		nTrener:"BigInt",
+		nMaxPocetHod:"BigInt",
+		nOd:"Date",
+		nDo:"Date",
+		nTimestamp:"Datetime"
 	},
-	RozpisOrderBy: "enum",
+	RozpisOrderBy: "enum" as const,
 	RozpiCondition:{
-		rId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rTrener:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rKde:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rDatum:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rVisible:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		rId:"BigInt",
+		rTrener:"BigInt",
+		rDatum:"Date",
+		rTimestamp:"Datetime"
 	},
-	PariesOrderBy: "enum",
+	PariesOrderBy: "enum" as const,
 	ParyCondition:{
-		pId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pIdPartner:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pIdPartnerka:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pSttTrida:{
-			type:"ParyPSttTrida",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pSttBody:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pSttFinale:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pLatTrida:{
-			type:"ParyPLatTrida",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pLatBody:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pLatFinale:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pHodnoceni:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pArchiv:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pTimestampAdd:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pTimestampArchive:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		pId:"BigInt",
+		pIdPartner:"BigInt",
+		pIdPartnerka:"BigInt",
+		pSttTrida:"ParyPSttTrida",
+		pLatTrida:"ParyPLatTrida",
+		pTimestampAdd:"Datetime",
+		pTimestampArchive:"Datetime"
 	},
-	SessionsOrderBy: "enum",
+	SessionsOrderBy: "enum" as const,
 	SessionCondition:{
-		ssId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssData:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssUpdatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssLifetime:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssUser:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		ssUpdatedAt:"Datetime",
+		ssLifetime:"BigInt",
+		ssUser:"BigInt"
 	},
-	AkceItemsOrderBy: "enum",
+	AkceItemsOrderBy: "enum" as const,
 	AkceItemCondition:{
-		aiId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aiIdRodic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aiUser:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aiRokNarozeni:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		aiId:"BigInt",
+		aiIdRodic:"BigInt",
+		aiUser:"BigInt"
 	},
-	DokumentiesOrderBy: "enum",
+	DokumentiesOrderBy: "enum" as const,
 	DokumentyCondition:{
-		dId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dPath:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dFilename:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dKategorie:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dKdo:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		dId:"BigInt",
+		dKdo:"BigInt",
+		dTimestamp:"Datetime"
 	},
-	ParyNavrhsOrderBy: "enum",
+	ParyNavrhsOrderBy: "enum" as const,
 	ParyNavrhCondition:{
-		pnId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pnNavrhl:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pnPartner:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pnPartnerka:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		pnId:"BigInt",
+		pnNavrhl:"BigInt",
+		pnPartner:"BigInt",
+		pnPartnerka:"BigInt"
 	},
-	UpozornenisOrderBy: "enum",
+	UpozornenisOrderBy: "enum" as const,
 	UpozorneniCondition:{
-		upId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upKdo:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upNadpis:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upText:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upBarvy:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upTimestampAdd:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		upId:"BigInt",
+		upKdo:"BigInt",
+		upBarvy:"BigInt",
+		upTimestamp:"Datetime",
+		upTimestampAdd:"Datetime"
 	},
-	AkcesOrderBy: "enum",
+	AkcesOrderBy: "enum" as const,
 	AkceCondition:{
-		aId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aJmeno:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aKde:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aInfo:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aOd:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aDo:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aKapacita:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aDokumenty:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aVisible:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		aId:"BigInt",
+		aOd:"Date",
+		aDo:"Date",
+		aKapacita:"BigInt",
+		aTimestamp:"Datetime"
 	},
-	GalerieDirsOrderBy: "enum",
+	GalerieDirsOrderBy: "enum" as const,
 	GalerieDirCondition:{
-		gdId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gdIdRodic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gdName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gdLevel:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gdPath:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gdHidden:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		gdId:"BigInt",
+		gdIdRodic:"BigInt"
 	},
-	MembersOrderBy: "enum",
+	MembersOrderBy: "enum" as const,
 	MemberCondition:{
-		uId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uLogin:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uPass:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uJmeno:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uPrijmeni:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uPohlavi:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uEmail:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uTelefon:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uNarozeni:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uRodneCislo:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uPoznamky:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uLevel:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uGroup:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uSkupina:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uDancer:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uBan:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uConfirmed:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uSystem:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uStreet:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uConscriptionNumber:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uOrientationNumber:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uDistrict:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uCity:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uPostalCode:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uNationality:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uMemberSince:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uMemberUntil:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uTeacher:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uGdprSignedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		paymentValid:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		uId:"BigInt",
+		uNarozeni:"Date",
+		uTimestamp:"Datetime",
+		uGroup:"BigInt",
+		uSkupina:"BigInt",
+		uMemberSince:"Datetime",
+		uMemberUntil:"Datetime",
+		uCreatedAt:"Datetime",
+		uGdprSignedAt:"Datetime",
+		sId:"BigInt"
 	},
-	JSON: "String",
-	PagesOrderBy: "enum",
+	JSON: `scalar.JSON` as const,
+	PagesOrderBy: "enum" as const,
 	PageCondition:{
-		id:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		url:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		content:{
-			type:"JSON",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		createdAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		updatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		title:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		content:"JSON",
+		createdAt:"Datetime",
+		updatedAt:"Datetime"
 	},
-	PageRevisionsOrderBy: "enum",
+	PageRevisionsOrderBy: "enum" as const,
 	PageRevisionCondition:{
-		revNumber:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		revOperation:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		revTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		id:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		url:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		content:{
-			type:"JSON",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		createdAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		updatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		title:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		revTimestamp:"Datetime",
+		content:"JSON",
+		createdAt:"Datetime",
+		updatedAt:"Datetime"
 	},
-	ParametersOrderBy: "enum",
+	ParametersOrderBy: "enum" as const,
 	ParameterCondition:{
-		paName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		paValue:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+
 	},
-	PermissionsOrderBy: "enum",
+	PermissionsOrderBy: "enum" as const,
 	PermissionCondition:{
-		peId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peAkce:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peAktuality:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peAnkety:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peDokumenty:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peGalerie:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peInzerce:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peKonzole:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peNabidka:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peNastenka:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peNovinky:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pePary:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pePlatby:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pePermissions:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peRozpis:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peSkupiny:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peUsers:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peMain:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		peId:"BigInt"
 	},
-	PlatbyCategoriesOrderBy: "enum",
+	PlatbyCategoriesOrderBy: "enum" as const,
 	PlatbyCategoryCondition:{
-		pcId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcSymbol:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcAmount:{
-			type:"BigFloat",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcDateDue:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcValidFrom:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcValidTo:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcUseBase:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcUsePrefix:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcArchive:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcVisible:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		pcId:"BigInt",
+		pcSymbol:"BigInt",
+		pcAmount:"BigFloat",
+		pcDateDue:"Date",
+		pcValidFrom:"Date",
+		pcValidTo:"Date"
 	},
-	PlatbyGroupsOrderBy: "enum",
+	PlatbyGroupsOrderBy: "enum" as const,
 	PlatbyGroupCondition:{
-		pgId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pgType:{
-			type:"BigFloat",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pgName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pgDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pgBase:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		pgId:"BigInt",
+		pgType:"BigFloat",
+		pgBase:"BigInt"
 	},
-	PlatbyRawsOrderBy: "enum",
+	PlatbyRawsOrderBy: "enum" as const,
 	PlatbyRawCondition:{
-		prId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		prRaw:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		prHash:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		prSorted:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		prDiscarded:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		prId:"BigInt"
 	},
-	SkupiniesOrderBy: "enum",
+	SkupiniesOrderBy: "enum" as const,
 	SkupinyCondition:{
-		sId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sColorRgb:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sColorText:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sLocation:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sVisible:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		sId:"BigInt"
 	},
-	UsersSkupiniesOrderBy: "enum",
+	UsersSkupiniesOrderBy: "enum" as const,
 	UsersSkupinyCondition:{
-		usId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usColor:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usPlatbaMesic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usPlatbaCtvrtrok:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usPlatbaPulrok:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usPopis:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		usId:"BigInt",
+		usPlatbaMesic:"BigInt",
+		usPlatbaCtvrtrok:"BigInt",
+		usPlatbaPulrok:"BigInt"
 	},
-	VideosOrderBy: "enum",
+	VideosOrderBy: "enum" as const,
 	VideoCondition:{
-		vId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vUri:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vTitle:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vAuthor:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vPlaylist:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vUpdatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		vId:"BigInt",
+		vCreatedAt:"Datetime",
+		vUpdatedAt:"Datetime"
 	},
-	VideoListsOrderBy: "enum",
+	VideoListsOrderBy: "enum" as const,
 	VideoListCondition:{
-		vlId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlUrl:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlTitle:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlCount:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlLastChecked:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		vlId:"BigInt",
+		vlCount:"BigInt",
+		vlCreatedAt:"Datetime",
+		vlLastChecked:"Datetime"
 	},
-	VideoSourcesOrderBy: "enum",
+	VideoSourcesOrderBy: "enum" as const,
 	VideoSourceCondition:{
-		vsId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsUrl:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsTitle:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsLastChecked:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		vsId:"BigInt",
+		vsCreatedAt:"Datetime",
+		vsLastChecked:"Datetime"
 	},
-	CrmCohort: "enum",
+	CrmCohort: "enum" as const,
 	Mutation:{
 		createAkce:{
-			input:{
-				type:"CreateAkceInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateAkceInput"
 		},
 		createAkceItem:{
-			input:{
-				type:"CreateAkceItemInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateAkceItemInput"
 		},
 		createAktuality:{
-			input:{
-				type:"CreateAktualityInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateAktualityInput"
 		},
 		createDokumenty:{
-			input:{
-				type:"CreateDokumentyInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateDokumentyInput"
 		},
 		createGalerieDir:{
-			input:{
-				type:"CreateGalerieDirInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateGalerieDirInput"
 		},
 		createGalerieFoto:{
-			input:{
-				type:"CreateGalerieFotoInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateGalerieFotoInput"
 		},
 		createNabidka:{
-			input:{
-				type:"CreateNabidkaInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateNabidkaInput"
 		},
 		createNabidkaItem:{
-			input:{
-				type:"CreateNabidkaItemInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateNabidkaItemInput"
 		},
 		createPage:{
-			input:{
-				type:"CreatePageInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreatePageInput"
 		},
 		createParameter:{
-			input:{
-				type:"CreateParameterInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateParameterInput"
 		},
 		createPary:{
-			input:{
-				type:"CreateParyInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateParyInput"
 		},
 		createParyNavrh:{
-			input:{
-				type:"CreateParyNavrhInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateParyNavrhInput"
 		},
 		createPermission:{
-			input:{
-				type:"CreatePermissionInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreatePermissionInput"
 		},
 		createPlatbyCategory:{
-			input:{
-				type:"CreatePlatbyCategoryInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreatePlatbyCategoryInput"
 		},
 		createPlatbyCategoryGroup:{
-			input:{
-				type:"CreatePlatbyCategoryGroupInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreatePlatbyCategoryGroupInput"
 		},
 		createPlatbyGroup:{
-			input:{
-				type:"CreatePlatbyGroupInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreatePlatbyGroupInput"
 		},
 		createPlatbyGroupSkupina:{
-			input:{
-				type:"CreatePlatbyGroupSkupinaInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreatePlatbyGroupSkupinaInput"
 		},
 		createPlatbyItem:{
-			input:{
-				type:"CreatePlatbyItemInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreatePlatbyItemInput"
 		},
 		createPlatbyRaw:{
-			input:{
-				type:"CreatePlatbyRawInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreatePlatbyRawInput"
 		},
 		createRozpi:{
-			input:{
-				type:"CreateRozpiInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateRozpiInput"
 		},
 		createRozpisItem:{
-			input:{
-				type:"CreateRozpisItemInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateRozpisItemInput"
 		},
 		createSession:{
-			input:{
-				type:"CreateSessionInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateSessionInput"
 		},
 		createSkupiny:{
-			input:{
-				type:"CreateSkupinyInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateSkupinyInput"
 		},
 		createUpozorneni:{
-			input:{
-				type:"CreateUpozorneniInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateUpozorneniInput"
 		},
 		createUpozorneniSkupiny:{
-			input:{
-				type:"CreateUpozorneniSkupinyInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateUpozorneniSkupinyInput"
 		},
 		createUser:{
-			input:{
-				type:"CreateUserInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateUserInput"
 		},
 		createUsersSkupiny:{
-			input:{
-				type:"CreateUsersSkupinyInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateUsersSkupinyInput"
 		},
 		createVideo:{
-			input:{
-				type:"CreateVideoInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateVideoInput"
 		},
 		createVideoList:{
-			input:{
-				type:"CreateVideoListInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateVideoListInput"
 		},
 		createVideoSource:{
-			input:{
-				type:"CreateVideoSourceInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateVideoSourceInput"
 		},
 		updateAkceByNodeId:{
-			input:{
-				type:"UpdateAkceByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateAkceByNodeIdInput"
 		},
 		updateAkce:{
-			input:{
-				type:"UpdateAkceInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateAkceInput"
 		},
 		updateAkceItemByNodeId:{
-			input:{
-				type:"UpdateAkceItemByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateAkceItemByNodeIdInput"
 		},
 		updateAkceItem:{
-			input:{
-				type:"UpdateAkceItemInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateAkceItemInput"
 		},
 		updateAktualityByNodeId:{
-			input:{
-				type:"UpdateAktualityByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateAktualityByNodeIdInput"
 		},
 		updateAktuality:{
-			input:{
-				type:"UpdateAktualityInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateAktualityInput"
 		},
 		updateDokumentyByNodeId:{
-			input:{
-				type:"UpdateDokumentyByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateDokumentyByNodeIdInput"
 		},
 		updateDokumenty:{
-			input:{
-				type:"UpdateDokumentyInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateDokumentyInput"
 		},
 		updateGalerieDirByNodeId:{
-			input:{
-				type:"UpdateGalerieDirByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateGalerieDirByNodeIdInput"
 		},
 		updateGalerieDir:{
-			input:{
-				type:"UpdateGalerieDirInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateGalerieDirInput"
 		},
 		updateGalerieFotoByNodeId:{
-			input:{
-				type:"UpdateGalerieFotoByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateGalerieFotoByNodeIdInput"
 		},
 		updateGalerieFoto:{
-			input:{
-				type:"UpdateGalerieFotoInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateGalerieFotoInput"
 		},
 		updateNabidkaByNodeId:{
-			input:{
-				type:"UpdateNabidkaByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateNabidkaByNodeIdInput"
 		},
 		updateNabidka:{
-			input:{
-				type:"UpdateNabidkaInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateNabidkaInput"
 		},
 		updateNabidkaItemByNodeId:{
-			input:{
-				type:"UpdateNabidkaItemByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateNabidkaItemByNodeIdInput"
 		},
 		updateNabidkaItem:{
-			input:{
-				type:"UpdateNabidkaItemInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateNabidkaItemInput"
 		},
 		updatePageByNodeId:{
-			input:{
-				type:"UpdatePageByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdatePageByNodeIdInput"
 		},
 		updatePage:{
-			input:{
-				type:"UpdatePageInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdatePageInput"
 		},
 		updatePageByUrl:{
-			input:{
-				type:"UpdatePageByUrlInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdatePageByUrlInput"
 		},
 		updateParameterByNodeId:{
-			input:{
-				type:"UpdateParameterByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateParameterByNodeIdInput"
 		},
 		updateParameter:{
-			input:{
-				type:"UpdateParameterInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateParameterInput"
 		},
 		updateParyByNodeId:{
-			input:{
-				type:"UpdateParyByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateParyByNodeIdInput"
 		},
 		updatePary:{
-			input:{
-				type:"UpdateParyInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateParyInput"
 		},
 		updateParyNavrhByNodeId:{
-			input:{
-				type:"UpdateParyNavrhByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateParyNavrhByNodeIdInput"
 		},
 		updateParyNavrh:{
-			input:{
-				type:"UpdateParyNavrhInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateParyNavrhInput"
 		},
 		updatePermissionByNodeId:{
-			input:{
-				type:"UpdatePermissionByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdatePermissionByNodeIdInput"
 		},
 		updatePermission:{
-			input:{
-				type:"UpdatePermissionInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdatePermissionInput"
 		},
 		updatePlatbyCategoryByNodeId:{
-			input:{
-				type:"UpdatePlatbyCategoryByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdatePlatbyCategoryByNodeIdInput"
 		},
 		updatePlatbyCategory:{
-			input:{
-				type:"UpdatePlatbyCategoryInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdatePlatbyCategoryInput"
 		},
 		updatePlatbyCategoryGroupByNodeId:{
-			input:{
-				type:"UpdatePlatbyCategoryGroupByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdatePlatbyCategoryGroupByNodeIdInput"
 		},
 		updatePlatbyCategoryGroup:{
-			input:{
-				type:"UpdatePlatbyCategoryGroupInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdatePlatbyCategoryGroupInput"
 		},
 		updatePlatbyGroupByNodeId:{
-			input:{
-				type:"UpdatePlatbyGroupByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdatePlatbyGroupByNodeIdInput"
 		},
 		updatePlatbyGroup:{
-			input:{
-				type:"UpdatePlatbyGroupInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdatePlatbyGroupInput"
 		},
 		updatePlatbyGroupSkupinaByNodeId:{
-			input:{
-				type:"UpdatePlatbyGroupSkupinaByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdatePlatbyGroupSkupinaByNodeIdInput"
 		},
 		updatePlatbyGroupSkupina:{
-			input:{
-				type:"UpdatePlatbyGroupSkupinaInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdatePlatbyGroupSkupinaInput"
 		},
 		updatePlatbyItemByNodeId:{
-			input:{
-				type:"UpdatePlatbyItemByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdatePlatbyItemByNodeIdInput"
 		},
 		updatePlatbyItem:{
-			input:{
-				type:"UpdatePlatbyItemInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdatePlatbyItemInput"
 		},
 		updatePlatbyRawByNodeId:{
-			input:{
-				type:"UpdatePlatbyRawByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdatePlatbyRawByNodeIdInput"
 		},
 		updatePlatbyRaw:{
-			input:{
-				type:"UpdatePlatbyRawInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdatePlatbyRawInput"
 		},
 		updateRozpiByNodeId:{
-			input:{
-				type:"UpdateRozpiByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateRozpiByNodeIdInput"
 		},
 		updateRozpi:{
-			input:{
-				type:"UpdateRozpiInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateRozpiInput"
 		},
 		updateRozpisItemByNodeId:{
-			input:{
-				type:"UpdateRozpisItemByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateRozpisItemByNodeIdInput"
 		},
 		updateRozpisItem:{
-			input:{
-				type:"UpdateRozpisItemInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateRozpisItemInput"
 		},
 		updateSessionByNodeId:{
-			input:{
-				type:"UpdateSessionByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateSessionByNodeIdInput"
 		},
 		updateSession:{
-			input:{
-				type:"UpdateSessionInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateSessionInput"
 		},
 		updateSkupinyByNodeId:{
-			input:{
-				type:"UpdateSkupinyByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateSkupinyByNodeIdInput"
 		},
 		updateSkupiny:{
-			input:{
-				type:"UpdateSkupinyInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateSkupinyInput"
 		},
 		updateUpozorneniByNodeId:{
-			input:{
-				type:"UpdateUpozorneniByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateUpozorneniByNodeIdInput"
 		},
 		updateUpozorneni:{
-			input:{
-				type:"UpdateUpozorneniInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateUpozorneniInput"
 		},
 		updateUpozorneniSkupinyByNodeId:{
-			input:{
-				type:"UpdateUpozorneniSkupinyByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateUpozorneniSkupinyByNodeIdInput"
 		},
 		updateUpozorneniSkupiny:{
-			input:{
-				type:"UpdateUpozorneniSkupinyInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateUpozorneniSkupinyInput"
 		},
 		updateUserByNodeId:{
-			input:{
-				type:"UpdateUserByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateUserByNodeIdInput"
 		},
 		updateUser:{
-			input:{
-				type:"UpdateUserInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateUserInput"
 		},
 		updateUsersSkupinyByNodeId:{
-			input:{
-				type:"UpdateUsersSkupinyByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateUsersSkupinyByNodeIdInput"
 		},
 		updateUsersSkupiny:{
-			input:{
-				type:"UpdateUsersSkupinyInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateUsersSkupinyInput"
 		},
 		updateVideoByNodeId:{
-			input:{
-				type:"UpdateVideoByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateVideoByNodeIdInput"
 		},
 		updateVideo:{
-			input:{
-				type:"UpdateVideoInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateVideoInput"
 		},
 		updateVideoListByNodeId:{
-			input:{
-				type:"UpdateVideoListByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateVideoListByNodeIdInput"
 		},
 		updateVideoList:{
-			input:{
-				type:"UpdateVideoListInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateVideoListInput"
 		},
 		updateVideoSourceByNodeId:{
-			input:{
-				type:"UpdateVideoSourceByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateVideoSourceByNodeIdInput"
 		},
 		updateVideoSource:{
-			input:{
-				type:"UpdateVideoSourceInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UpdateVideoSourceInput"
 		},
 		deleteAkceByNodeId:{
-			input:{
-				type:"DeleteAkceByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteAkceByNodeIdInput"
 		},
 		deleteAkce:{
-			input:{
-				type:"DeleteAkceInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteAkceInput"
 		},
 		deleteAkceItemByNodeId:{
-			input:{
-				type:"DeleteAkceItemByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteAkceItemByNodeIdInput"
 		},
 		deleteAkceItem:{
-			input:{
-				type:"DeleteAkceItemInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteAkceItemInput"
 		},
 		deleteAktualityByNodeId:{
-			input:{
-				type:"DeleteAktualityByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteAktualityByNodeIdInput"
 		},
 		deleteAktuality:{
-			input:{
-				type:"DeleteAktualityInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteAktualityInput"
 		},
 		deleteDokumentyByNodeId:{
-			input:{
-				type:"DeleteDokumentyByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteDokumentyByNodeIdInput"
 		},
 		deleteDokumenty:{
-			input:{
-				type:"DeleteDokumentyInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteDokumentyInput"
 		},
 		deleteGalerieDirByNodeId:{
-			input:{
-				type:"DeleteGalerieDirByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteGalerieDirByNodeIdInput"
 		},
 		deleteGalerieDir:{
-			input:{
-				type:"DeleteGalerieDirInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteGalerieDirInput"
 		},
 		deleteGalerieFotoByNodeId:{
-			input:{
-				type:"DeleteGalerieFotoByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteGalerieFotoByNodeIdInput"
 		},
 		deleteGalerieFoto:{
-			input:{
-				type:"DeleteGalerieFotoInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteGalerieFotoInput"
 		},
 		deleteNabidkaByNodeId:{
-			input:{
-				type:"DeleteNabidkaByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteNabidkaByNodeIdInput"
 		},
 		deleteNabidka:{
-			input:{
-				type:"DeleteNabidkaInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteNabidkaInput"
 		},
 		deleteNabidkaItemByNodeId:{
-			input:{
-				type:"DeleteNabidkaItemByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteNabidkaItemByNodeIdInput"
 		},
 		deleteNabidkaItem:{
-			input:{
-				type:"DeleteNabidkaItemInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteNabidkaItemInput"
 		},
 		deleteParameterByNodeId:{
-			input:{
-				type:"DeleteParameterByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteParameterByNodeIdInput"
 		},
 		deleteParameter:{
-			input:{
-				type:"DeleteParameterInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteParameterInput"
 		},
 		deleteParyByNodeId:{
-			input:{
-				type:"DeleteParyByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteParyByNodeIdInput"
 		},
 		deletePary:{
-			input:{
-				type:"DeleteParyInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteParyInput"
 		},
 		deleteParyNavrhByNodeId:{
-			input:{
-				type:"DeleteParyNavrhByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteParyNavrhByNodeIdInput"
 		},
 		deleteParyNavrh:{
-			input:{
-				type:"DeleteParyNavrhInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteParyNavrhInput"
 		},
 		deletePermissionByNodeId:{
-			input:{
-				type:"DeletePermissionByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeletePermissionByNodeIdInput"
 		},
 		deletePermission:{
-			input:{
-				type:"DeletePermissionInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeletePermissionInput"
 		},
 		deletePlatbyCategoryByNodeId:{
-			input:{
-				type:"DeletePlatbyCategoryByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeletePlatbyCategoryByNodeIdInput"
 		},
 		deletePlatbyCategory:{
-			input:{
-				type:"DeletePlatbyCategoryInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeletePlatbyCategoryInput"
 		},
 		deletePlatbyCategoryGroupByNodeId:{
-			input:{
-				type:"DeletePlatbyCategoryGroupByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeletePlatbyCategoryGroupByNodeIdInput"
 		},
 		deletePlatbyCategoryGroup:{
-			input:{
-				type:"DeletePlatbyCategoryGroupInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeletePlatbyCategoryGroupInput"
 		},
 		deletePlatbyGroupByNodeId:{
-			input:{
-				type:"DeletePlatbyGroupByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeletePlatbyGroupByNodeIdInput"
 		},
 		deletePlatbyGroup:{
-			input:{
-				type:"DeletePlatbyGroupInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeletePlatbyGroupInput"
 		},
 		deletePlatbyGroupSkupinaByNodeId:{
-			input:{
-				type:"DeletePlatbyGroupSkupinaByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeletePlatbyGroupSkupinaByNodeIdInput"
 		},
 		deletePlatbyGroupSkupina:{
-			input:{
-				type:"DeletePlatbyGroupSkupinaInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeletePlatbyGroupSkupinaInput"
 		},
 		deletePlatbyItemByNodeId:{
-			input:{
-				type:"DeletePlatbyItemByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeletePlatbyItemByNodeIdInput"
 		},
 		deletePlatbyItem:{
-			input:{
-				type:"DeletePlatbyItemInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeletePlatbyItemInput"
 		},
 		deletePlatbyRawByNodeId:{
-			input:{
-				type:"DeletePlatbyRawByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeletePlatbyRawByNodeIdInput"
 		},
 		deletePlatbyRaw:{
-			input:{
-				type:"DeletePlatbyRawInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeletePlatbyRawInput"
 		},
 		deleteRozpiByNodeId:{
-			input:{
-				type:"DeleteRozpiByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteRozpiByNodeIdInput"
 		},
 		deleteRozpi:{
-			input:{
-				type:"DeleteRozpiInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteRozpiInput"
 		},
 		deleteRozpisItemByNodeId:{
-			input:{
-				type:"DeleteRozpisItemByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteRozpisItemByNodeIdInput"
 		},
 		deleteRozpisItem:{
-			input:{
-				type:"DeleteRozpisItemInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteRozpisItemInput"
 		},
 		deleteSessionByNodeId:{
-			input:{
-				type:"DeleteSessionByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteSessionByNodeIdInput"
 		},
 		deleteSession:{
-			input:{
-				type:"DeleteSessionInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteSessionInput"
 		},
 		deleteSkupinyByNodeId:{
-			input:{
-				type:"DeleteSkupinyByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteSkupinyByNodeIdInput"
 		},
 		deleteSkupiny:{
-			input:{
-				type:"DeleteSkupinyInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteSkupinyInput"
 		},
 		deleteUpozorneniByNodeId:{
-			input:{
-				type:"DeleteUpozorneniByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteUpozorneniByNodeIdInput"
 		},
 		deleteUpozorneni:{
-			input:{
-				type:"DeleteUpozorneniInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteUpozorneniInput"
 		},
 		deleteUpozorneniSkupinyByNodeId:{
-			input:{
-				type:"DeleteUpozorneniSkupinyByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteUpozorneniSkupinyByNodeIdInput"
 		},
 		deleteUpozorneniSkupiny:{
-			input:{
-				type:"DeleteUpozorneniSkupinyInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteUpozorneniSkupinyInput"
 		},
 		deleteUserByNodeId:{
-			input:{
-				type:"DeleteUserByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteUserByNodeIdInput"
 		},
 		deleteUser:{
-			input:{
-				type:"DeleteUserInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteUserInput"
 		},
 		deleteUsersSkupinyByNodeId:{
-			input:{
-				type:"DeleteUsersSkupinyByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteUsersSkupinyByNodeIdInput"
 		},
 		deleteUsersSkupiny:{
-			input:{
-				type:"DeleteUsersSkupinyInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteUsersSkupinyInput"
 		},
 		deleteVideoByNodeId:{
-			input:{
-				type:"DeleteVideoByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteVideoByNodeIdInput"
 		},
 		deleteVideo:{
-			input:{
-				type:"DeleteVideoInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteVideoInput"
 		},
 		deleteVideoListByNodeId:{
-			input:{
-				type:"DeleteVideoListByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteVideoListByNodeIdInput"
 		},
 		deleteVideoList:{
-			input:{
-				type:"DeleteVideoListInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteVideoListInput"
 		},
 		deleteVideoSourceByNodeId:{
-			input:{
-				type:"DeleteVideoSourceByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteVideoSourceByNodeIdInput"
 		},
 		deleteVideoSource:{
-			input:{
-				type:"DeleteVideoSourceInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"DeleteVideoSourceInput"
 		},
 		login:{
-			input:{
-				type:"LoginInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"LoginInput"
 		},
 		logout:{
-			input:{
-				type:"LogoutInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"LogoutInput"
 		},
 		prospectFormDancer:{
-			input:{
-				type:"ProspectFormDancerInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"ProspectFormDancerInput"
 		},
 		uploadFile:{
-			input:{
-				type:"UploadInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"UploadInput"
 		}
 	},
 	CreateAkcePayload:{
 		akceEdge:{
-			orderBy:{
-				type:"AkcesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"AkcesOrderBy"
 		}
 	},
 	CreateAkceInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		akce:{
-			type:"AkceInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		akce:"AkceInput"
 	},
 	AkceInput:{
-		aId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aJmeno:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		aKde:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		aInfo:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		aOd:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		aDo:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		aKapacita:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aDokumenty:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		aTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aVisible:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		aId:"BigInt",
+		aOd:"Date",
+		aDo:"Date",
+		aKapacita:"BigInt",
+		aTimestamp:"Datetime"
 	},
 	CreateAkceItemPayload:{
 		akceItemEdge:{
-			orderBy:{
-				type:"AkceItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"AkceItemsOrderBy"
 		}
 	},
 	CreateAkceItemInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		akceItem:{
-			type:"AkceItemInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		akceItem:"AkceItemInput"
 	},
 	AkceItemInput:{
-		aiId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aiIdRodic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		aiUser:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		aiRokNarozeni:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		aiId:"BigInt",
+		aiIdRodic:"BigInt",
+		aiUser:"BigInt"
 	},
 	CreateAktualityPayload:{
 		aktualityEdge:{
-			orderBy:{
-				type:"AktualitiesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"AktualitiesOrderBy"
 		}
 	},
 	CreateAktualityInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aktuality:{
-			type:"AktualityInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		aktuality:"AktualityInput"
 	},
 	AktualityInput:{
-		atId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atKdo:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		atKat:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		atJmeno:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		atText:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		atPreview:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		atFoto:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atFotoMain:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atTimestampAdd:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		atId:"BigInt",
+		atKdo:"BigInt",
+		atFoto:"BigInt",
+		atFotoMain:"BigInt",
+		atTimestamp:"Datetime",
+		atTimestampAdd:"Datetime"
 	},
 	CreateDokumentyPayload:{
 		dokumentyEdge:{
-			orderBy:{
-				type:"DokumentiesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"DokumentiesOrderBy"
 		}
 	},
 	CreateDokumentyInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dokumenty:{
-			type:"DokumentyInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		dokumenty:"DokumentyInput"
 	},
 	DokumentyInput:{
-		dId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dPath:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		dName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		dFilename:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		dKategorie:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		dKdo:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		dTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		dId:"BigInt",
+		dKdo:"BigInt",
+		dTimestamp:"Datetime"
 	},
 	CreateGalerieDirPayload:{
 		galerieDirEdge:{
-			orderBy:{
-				type:"GalerieDirsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"GalerieDirsOrderBy"
 		}
 	},
 	CreateGalerieDirInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		galerieDir:{
-			type:"GalerieDirInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		galerieDir:"GalerieDirInput"
 	},
 	GalerieDirInput:{
-		gdId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gdIdRodic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		gdName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		gdLevel:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gdPath:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		gdHidden:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		gdId:"BigInt",
+		gdIdRodic:"BigInt"
 	},
 	CreateGalerieFotoPayload:{
 		galerieFotoEdge:{
-			orderBy:{
-				type:"GalerieFotosOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"GalerieFotosOrderBy"
 		}
 	},
 	CreateGalerieFotoInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		galerieFoto:{
-			type:"GalerieFotoInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		galerieFoto:"GalerieFotoInput"
 	},
 	GalerieFotoInput:{
-		gfId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gfIdRodic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		gfName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		gfPath:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		gfKdo:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		gfTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		gfId:"BigInt",
+		gfIdRodic:"BigInt",
+		gfKdo:"BigInt",
+		gfTimestamp:"Datetime"
 	},
 	CreateNabidkaPayload:{
 		nabidkaEdge:{
-			orderBy:{
-				type:"NabidkasOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"NabidkasOrderBy"
 		}
 	},
 	CreateNabidkaInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nabidka:{
-			type:"NabidkaInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		nabidka:"NabidkaInput"
 	},
 	NabidkaInput:{
-		nId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nTrener:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		nPocetHod:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nMaxPocetHod:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nOd:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		nDo:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		nVisible:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		nId:"BigInt",
+		nTrener:"BigInt",
+		nMaxPocetHod:"BigInt",
+		nOd:"Date",
+		nDo:"Date",
+		nTimestamp:"Datetime"
 	},
 	CreateNabidkaItemPayload:{
 		nabidkaItemEdge:{
-			orderBy:{
-				type:"NabidkaItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"NabidkaItemsOrderBy"
 		}
 	},
 	CreateNabidkaItemInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nabidkaItem:{
-			type:"NabidkaItemInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		nabidkaItem:"NabidkaItemInput"
 	},
 	NabidkaItemInput:{
-		niId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		niIdRodic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		niPartner:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		niPocetHod:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		niLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		niId:"BigInt",
+		niIdRodic:"BigInt",
+		niPartner:"BigInt"
 	},
 	CreatePagePayload:{
 		pageEdge:{
-			orderBy:{
-				type:"PagesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PagesOrderBy"
 		}
 	},
 	CreatePageInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		page:{
-			type:"PageInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		page:"PageInput"
 	},
 	PageInput:{
-		id:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		url:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		content:{
-			type:"JSON",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		createdAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		updatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		title:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		content:"JSON",
+		createdAt:"Datetime",
+		updatedAt:"Datetime"
 	},
 	CreateParameterPayload:{
 		parameterEdge:{
-			orderBy:{
-				type:"ParametersOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"ParametersOrderBy"
 		}
 	},
 	CreateParameterInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		parameter:{
-			type:"ParameterInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		parameter:"ParameterInput"
 	},
 	ParameterInput:{
-		paName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		paValue:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	CreateParyPayload:{
 		paryEdge:{
-			orderBy:{
-				type:"PariesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PariesOrderBy"
 		}
 	},
 	CreateParyInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pary:{
-			type:"ParyInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		pary:"ParyInput"
 	},
 	ParyInput:{
-		pId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pIdPartner:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pIdPartnerka:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pSttTrida:{
-			type:"ParyPSttTrida",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pSttBody:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pSttFinale:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pLatTrida:{
-			type:"ParyPLatTrida",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pLatBody:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pLatFinale:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pHodnoceni:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pArchiv:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pTimestampAdd:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pTimestampArchive:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		pId:"BigInt",
+		pIdPartner:"BigInt",
+		pIdPartnerka:"BigInt",
+		pSttTrida:"ParyPSttTrida",
+		pLatTrida:"ParyPLatTrida",
+		pTimestampAdd:"Datetime",
+		pTimestampArchive:"Datetime"
 	},
 	CreateParyNavrhPayload:{
 		paryNavrhEdge:{
-			orderBy:{
-				type:"ParyNavrhsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"ParyNavrhsOrderBy"
 		}
 	},
 	CreateParyNavrhInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		paryNavrh:{
-			type:"ParyNavrhInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		paryNavrh:"ParyNavrhInput"
 	},
 	ParyNavrhInput:{
-		pnId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pnNavrhl:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pnPartner:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pnPartnerka:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		pnId:"BigInt",
+		pnNavrhl:"BigInt",
+		pnPartner:"BigInt",
+		pnPartnerka:"BigInt"
 	},
 	CreatePermissionPayload:{
 		permissionEdge:{
-			orderBy:{
-				type:"PermissionsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PermissionsOrderBy"
 		}
 	},
 	CreatePermissionInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		permission:{
-			type:"PermissionInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		permission:"PermissionInput"
 	},
 	PermissionInput:{
-		peId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		peDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		peAkce:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		peAktuality:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		peAnkety:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		peDokumenty:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		peGalerie:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		peInzerce:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		peKonzole:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		peNabidka:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		peNastenka:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		peNovinky:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pePary:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pePlatby:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pePermissions:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		peRozpis:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		peSkupiny:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		peUsers:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		peMain:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		peId:"BigInt"
 	},
 	CreatePlatbyCategoryPayload:{
 		platbyCategoryEdge:{
-			orderBy:{
-				type:"PlatbyCategoriesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PlatbyCategoriesOrderBy"
 		}
 	},
 	CreatePlatbyCategoryInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		platbyCategory:{
-			type:"PlatbyCategoryInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		platbyCategory:"PlatbyCategoryInput"
 	},
 	PlatbyCategoryInput:{
-		pcId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pcSymbol:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pcAmount:{
-			type:"BigFloat",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pcDateDue:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pcValidFrom:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pcValidTo:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pcUseBase:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcUsePrefix:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcArchive:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcVisible:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		pcId:"BigInt",
+		pcSymbol:"BigInt",
+		pcAmount:"BigFloat",
+		pcDateDue:"Date",
+		pcValidFrom:"Date",
+		pcValidTo:"Date"
 	},
 	CreatePlatbyCategoryGroupPayload:{
 		platbyCategoryGroupEdge:{
-			orderBy:{
-				type:"PlatbyCategoryGroupsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PlatbyCategoryGroupsOrderBy"
 		}
 	},
 	CreatePlatbyCategoryGroupInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		platbyCategoryGroup:{
-			type:"PlatbyCategoryGroupInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		platbyCategoryGroup:"PlatbyCategoryGroupInput"
 	},
 	PlatbyCategoryGroupInput:{
-		pcgId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcgIdGroup:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pcgIdCategory:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		pcgId:"BigInt",
+		pcgIdGroup:"BigInt",
+		pcgIdCategory:"BigInt"
 	},
 	CreatePlatbyGroupPayload:{
 		platbyGroupEdge:{
-			orderBy:{
-				type:"PlatbyGroupsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PlatbyGroupsOrderBy"
 		}
 	},
 	CreatePlatbyGroupInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		platbyGroup:{
-			type:"PlatbyGroupInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		platbyGroup:"PlatbyGroupInput"
 	},
 	PlatbyGroupInput:{
-		pgId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pgType:{
-			type:"BigFloat",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pgName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pgDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pgBase:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		pgId:"BigInt",
+		pgType:"BigFloat",
+		pgBase:"BigInt"
 	},
 	CreatePlatbyGroupSkupinaPayload:{
 		platbyGroupSkupinaEdge:{
-			orderBy:{
-				type:"PlatbyGroupSkupinasOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PlatbyGroupSkupinasOrderBy"
 		}
 	},
 	CreatePlatbyGroupSkupinaInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		platbyGroupSkupina:{
-			type:"PlatbyGroupSkupinaInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		platbyGroupSkupina:"PlatbyGroupSkupinaInput"
 	},
 	PlatbyGroupSkupinaInput:{
-		pgsId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pgsIdSkupina:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pgsIdGroup:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		pgsId:"BigInt",
+		pgsIdSkupina:"BigInt",
+		pgsIdGroup:"BigInt"
 	},
 	CreatePlatbyItemPayload:{
 		platbyItemEdge:{
-			orderBy:{
-				type:"PlatbyItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PlatbyItemsOrderBy"
 		}
 	},
 	CreatePlatbyItemInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		platbyItem:{
-			type:"PlatbyItemInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		platbyItem:"PlatbyItemInput"
 	},
 	PlatbyItemInput:{
-		piId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		piIdUser:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		piIdCategory:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		piIdRaw:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		piAmount:{
-			type:"BigFloat",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		piDate:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		piPrefix:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		piId:"BigInt",
+		piIdUser:"BigInt",
+		piIdCategory:"BigInt",
+		piIdRaw:"BigInt",
+		piAmount:"BigFloat",
+		piDate:"Date"
 	},
 	CreatePlatbyRawPayload:{
 		platbyRawEdge:{
-			orderBy:{
-				type:"PlatbyRawsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PlatbyRawsOrderBy"
 		}
 	},
 	CreatePlatbyRawInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		platbyRaw:{
-			type:"PlatbyRawInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		platbyRaw:"PlatbyRawInput"
 	},
 	PlatbyRawInput:{
-		prId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		prRaw:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		prHash:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		prSorted:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		prDiscarded:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		prId:"BigInt"
 	},
 	CreateRozpiPayload:{
 		rozpiEdge:{
-			orderBy:{
-				type:"RozpisOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"RozpisOrderBy"
 		}
 	},
 	CreateRozpiInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rozpi:{
-			type:"RozpiInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		rozpi:"RozpiInput"
 	},
 	RozpiInput:{
-		rId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rTrener:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		rKde:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		rDatum:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		rVisible:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		rId:"BigInt",
+		rTrener:"BigInt",
+		rDatum:"Date",
+		rTimestamp:"Datetime"
 	},
 	CreateRozpisItemPayload:{
 		rozpisItemEdge:{
-			orderBy:{
-				type:"RozpisItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"RozpisItemsOrderBy"
 		}
 	},
 	CreateRozpisItemInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rozpisItem:{
-			type:"RozpisItemInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		rozpisItem:"RozpisItemInput"
 	},
 	RozpisItemInput:{
-		riId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		riIdRodic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		riPartner:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		riOd:{
-			type:"Time",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		riDo:{
-			type:"Time",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		riLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		riId:"BigInt",
+		riIdRodic:"BigInt",
+		riPartner:"BigInt",
+		riOd:"Time",
+		riDo:"Time"
 	},
 	CreateSessionPayload:{
 		sessionEdge:{
-			orderBy:{
-				type:"SessionsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"SessionsOrderBy"
 		}
 	},
 	CreateSessionInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		session:{
-			type:"SessionInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		session:"SessionInput"
 	},
 	SessionInput:{
-		ssId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		ssData:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		ssUpdatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssLifetime:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		ssUser:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		ssUpdatedAt:"Datetime",
+		ssLifetime:"BigInt",
+		ssUser:"BigInt"
 	},
 	CreateSkupinyPayload:{
 		skupinyEdge:{
-			orderBy:{
-				type:"SkupiniesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"SkupiniesOrderBy"
 		}
 	},
 	CreateSkupinyInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		skupiny:{
-			type:"SkupinyInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		skupiny:"SkupinyInput"
 	},
 	SkupinyInput:{
-		sId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		sDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		sColorRgb:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		sColorText:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		sLocation:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sVisible:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		sId:"BigInt"
 	},
 	CreateUpozorneniPayload:{
 		upozorneniEdge:{
-			orderBy:{
-				type:"UpozornenisOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"UpozornenisOrderBy"
 		}
 	},
 	CreateUpozorneniInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upozorneni:{
-			type:"UpozorneniInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		upozorneni:"UpozorneniInput"
 	},
 	UpozorneniInput:{
-		upId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upKdo:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		upNadpis:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		upText:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		upBarvy:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upTimestampAdd:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		upId:"BigInt",
+		upKdo:"BigInt",
+		upBarvy:"BigInt",
+		upTimestamp:"Datetime",
+		upTimestampAdd:"Datetime"
 	},
 	CreateUpozorneniSkupinyPayload:{
 		upozorneniSkupinyEdge:{
-			orderBy:{
-				type:"UpozorneniSkupiniesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"UpozorneniSkupiniesOrderBy"
 		}
 	},
 	CreateUpozorneniSkupinyInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upozorneniSkupiny:{
-			type:"UpozorneniSkupinyInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		upozorneniSkupiny:"UpozorneniSkupinyInput"
 	},
 	UpozorneniSkupinyInput:{
-		upsId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upsIdRodic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		upsIdSkupina:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		upsColor:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		upsPopis:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		upsId:"BigInt",
+		upsIdRodic:"BigInt",
+		upsIdSkupina:"BigInt"
 	},
 	CreateUserPayload:{
 		userEdge:{
-			orderBy:{
-				type:"UsersOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"UsersOrderBy"
 		}
 	},
 	CreateUserInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		user:{
-			type:"UserInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		user:"UserInput"
 	},
 	UserInput:{
-		uId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uLogin:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		uPass:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		uJmeno:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		uPrijmeni:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		uPohlavi:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		uEmail:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		uTelefon:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		uNarozeni:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		uRodneCislo:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uPoznamky:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uLevel:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uGroup:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		uSkupina:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uDancer:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uBan:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uConfirmed:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uSystem:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uStreet:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		uConscriptionNumber:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uOrientationNumber:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uDistrict:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uCity:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		uPostalCode:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		uNationality:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		uMemberSince:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uMemberUntil:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uTeacher:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uGdprSignedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		uId:"BigInt",
+		uNarozeni:"Date",
+		uTimestamp:"Datetime",
+		uGroup:"BigInt",
+		uSkupina:"BigInt",
+		uMemberSince:"Datetime",
+		uMemberUntil:"Datetime",
+		uCreatedAt:"Datetime",
+		uGdprSignedAt:"Datetime"
 	},
 	CreateUsersSkupinyPayload:{
 		usersSkupinyEdge:{
-			orderBy:{
-				type:"UsersSkupiniesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"UsersSkupiniesOrderBy"
 		}
 	},
 	CreateUsersSkupinyInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usersSkupiny:{
-			type:"UsersSkupinyInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		usersSkupiny:"UsersSkupinyInput"
 	},
 	UsersSkupinyInput:{
-		usId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usColor:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usPlatbaMesic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usPlatbaCtvrtrok:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usPlatbaPulrok:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usPopis:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		usId:"BigInt",
+		usPlatbaMesic:"BigInt",
+		usPlatbaCtvrtrok:"BigInt",
+		usPlatbaPulrok:"BigInt"
 	},
 	CreateVideoPayload:{
 		videoEdge:{
-			orderBy:{
-				type:"VideosOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"VideosOrderBy"
 		}
 	},
 	CreateVideoInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		video:{
-			type:"VideoInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		video:"VideoInput"
 	},
 	VideoInput:{
-		vId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vUri:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vTitle:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vAuthor:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vPlaylist:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vUpdatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		vId:"BigInt",
+		vCreatedAt:"Datetime",
+		vUpdatedAt:"Datetime"
 	},
 	CreateVideoListPayload:{
 		videoListEdge:{
-			orderBy:{
-				type:"VideoListsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"VideoListsOrderBy"
 		}
 	},
 	CreateVideoListInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		videoList:{
-			type:"VideoListInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		videoList:"VideoListInput"
 	},
 	VideoListInput:{
-		vlId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlUrl:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vlTitle:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vlDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vlCount:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vlCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vlLastChecked:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		vlId:"BigInt",
+		vlCount:"BigInt",
+		vlCreatedAt:"Datetime",
+		vlLastChecked:"Datetime"
 	},
 	CreateVideoSourcePayload:{
 		videoSourceEdge:{
-			orderBy:{
-				type:"VideoSourcesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"VideoSourcesOrderBy"
 		}
 	},
 	CreateVideoSourceInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		videoSource:{
-			type:"VideoSourceInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		videoSource:"VideoSourceInput"
 	},
 	VideoSourceInput:{
-		vsId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsUrl:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vsTitle:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsLastChecked:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		vsId:"BigInt",
+		vsCreatedAt:"Datetime",
+		vsLastChecked:"Datetime"
 	},
 	UpdateAkcePayload:{
 		akceEdge:{
-			orderBy:{
-				type:"AkcesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"AkcesOrderBy"
 		}
 	},
 	UpdateAkceByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"AkcePatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"AkcePatch"
 	},
 	AkcePatch:{
-		aId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aJmeno:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aKde:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aInfo:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aOd:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aDo:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aKapacita:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aDokumenty:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aVisible:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		aId:"BigInt",
+		aOd:"Date",
+		aDo:"Date",
+		aKapacita:"BigInt",
+		aTimestamp:"Datetime"
 	},
 	UpdateAkceInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"AkcePatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		aId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"AkcePatch",
+		aId:"BigInt"
 	},
 	UpdateAkceItemPayload:{
 		akceItemEdge:{
-			orderBy:{
-				type:"AkceItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"AkceItemsOrderBy"
 		}
 	},
 	UpdateAkceItemByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"AkceItemPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"AkceItemPatch"
 	},
 	AkceItemPatch:{
-		aiId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aiIdRodic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aiUser:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aiRokNarozeni:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		aiId:"BigInt",
+		aiIdRodic:"BigInt",
+		aiUser:"BigInt"
 	},
 	UpdateAkceItemInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"AkceItemPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		aiId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"AkceItemPatch",
+		aiId:"BigInt"
 	},
 	UpdateAktualityPayload:{
 		aktualityEdge:{
-			orderBy:{
-				type:"AktualitiesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"AktualitiesOrderBy"
 		}
 	},
 	UpdateAktualityByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"AktualityPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"AktualityPatch"
 	},
 	AktualityPatch:{
-		atId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atKdo:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atKat:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atJmeno:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atText:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atPreview:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atFoto:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atFotoMain:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atTimestampAdd:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		atId:"BigInt",
+		atKdo:"BigInt",
+		atFoto:"BigInt",
+		atFotoMain:"BigInt",
+		atTimestamp:"Datetime",
+		atTimestampAdd:"Datetime"
 	},
 	UpdateAktualityInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"AktualityPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		atId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"AktualityPatch",
+		atId:"BigInt"
 	},
 	UpdateDokumentyPayload:{
 		dokumentyEdge:{
-			orderBy:{
-				type:"DokumentiesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"DokumentiesOrderBy"
 		}
 	},
 	UpdateDokumentyByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"DokumentyPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"DokumentyPatch"
 	},
 	DokumentyPatch:{
-		dId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dPath:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dFilename:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dKategorie:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dKdo:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		dId:"BigInt",
+		dKdo:"BigInt",
+		dTimestamp:"Datetime"
 	},
 	UpdateDokumentyInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"DokumentyPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		dId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"DokumentyPatch",
+		dId:"BigInt"
 	},
 	UpdateGalerieDirPayload:{
 		galerieDirEdge:{
-			orderBy:{
-				type:"GalerieDirsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"GalerieDirsOrderBy"
 		}
 	},
 	UpdateGalerieDirByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"GalerieDirPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"GalerieDirPatch"
 	},
 	GalerieDirPatch:{
-		gdId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gdIdRodic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gdName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gdLevel:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gdPath:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gdHidden:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		gdId:"BigInt",
+		gdIdRodic:"BigInt"
 	},
 	UpdateGalerieDirInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"GalerieDirPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		gdId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"GalerieDirPatch",
+		gdId:"BigInt"
 	},
 	UpdateGalerieFotoPayload:{
 		galerieFotoEdge:{
-			orderBy:{
-				type:"GalerieFotosOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"GalerieFotosOrderBy"
 		}
 	},
 	UpdateGalerieFotoByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"GalerieFotoPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"GalerieFotoPatch"
 	},
 	GalerieFotoPatch:{
-		gfId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gfIdRodic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gfName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gfPath:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gfKdo:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gfTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		gfId:"BigInt",
+		gfIdRodic:"BigInt",
+		gfKdo:"BigInt",
+		gfTimestamp:"Datetime"
 	},
 	UpdateGalerieFotoInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"GalerieFotoPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		gfId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"GalerieFotoPatch",
+		gfId:"BigInt"
 	},
 	UpdateNabidkaPayload:{
 		nabidkaEdge:{
-			orderBy:{
-				type:"NabidkasOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"NabidkasOrderBy"
 		}
 	},
 	UpdateNabidkaByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"NabidkaPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"NabidkaPatch"
 	},
 	NabidkaPatch:{
-		nId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nTrener:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nPocetHod:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nMaxPocetHod:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nOd:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nDo:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nVisible:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		nId:"BigInt",
+		nTrener:"BigInt",
+		nMaxPocetHod:"BigInt",
+		nOd:"Date",
+		nDo:"Date",
+		nTimestamp:"Datetime"
 	},
 	UpdateNabidkaInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"NabidkaPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		nId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"NabidkaPatch",
+		nId:"BigInt"
 	},
 	UpdateNabidkaItemPayload:{
 		nabidkaItemEdge:{
-			orderBy:{
-				type:"NabidkaItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"NabidkaItemsOrderBy"
 		}
 	},
 	UpdateNabidkaItemByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"NabidkaItemPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"NabidkaItemPatch"
 	},
 	NabidkaItemPatch:{
-		niId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		niIdRodic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		niPartner:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		niPocetHod:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		niLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		niId:"BigInt",
+		niIdRodic:"BigInt",
+		niPartner:"BigInt"
 	},
 	UpdateNabidkaItemInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"NabidkaItemPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		niId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"NabidkaItemPatch",
+		niId:"BigInt"
 	},
 	UpdatePagePayload:{
 		pageEdge:{
-			orderBy:{
-				type:"PagesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PagesOrderBy"
 		}
 	},
 	UpdatePageByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"PagePatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"PagePatch"
 	},
 	PagePatch:{
-		id:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		url:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		content:{
-			type:"JSON",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		createdAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		updatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		title:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		content:"JSON",
+		createdAt:"Datetime",
+		updatedAt:"Datetime"
 	},
 	UpdatePageInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"PagePatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		id:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"PagePatch"
 	},
 	UpdatePageByUrlInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"PagePatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		url:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"PagePatch"
 	},
 	UpdateParameterPayload:{
 		parameterEdge:{
-			orderBy:{
-				type:"ParametersOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"ParametersOrderBy"
 		}
 	},
 	UpdateParameterByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"ParameterPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"ParameterPatch"
 	},
 	ParameterPatch:{
-		paName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		paValue:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+
 	},
 	UpdateParameterInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"ParameterPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		paName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"ParameterPatch"
 	},
 	UpdateParyPayload:{
 		paryEdge:{
-			orderBy:{
-				type:"PariesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PariesOrderBy"
 		}
 	},
 	UpdateParyByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"ParyPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"ParyPatch"
 	},
 	ParyPatch:{
-		pId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pIdPartner:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pIdPartnerka:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pSttTrida:{
-			type:"ParyPSttTrida",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pSttBody:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pSttFinale:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pLatTrida:{
-			type:"ParyPLatTrida",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pLatBody:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pLatFinale:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pHodnoceni:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pArchiv:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pTimestampAdd:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pTimestampArchive:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		pId:"BigInt",
+		pIdPartner:"BigInt",
+		pIdPartnerka:"BigInt",
+		pSttTrida:"ParyPSttTrida",
+		pLatTrida:"ParyPLatTrida",
+		pTimestampAdd:"Datetime",
+		pTimestampArchive:"Datetime"
 	},
 	UpdateParyInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"ParyPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"ParyPatch",
+		pId:"BigInt"
 	},
 	UpdateParyNavrhPayload:{
 		paryNavrhEdge:{
-			orderBy:{
-				type:"ParyNavrhsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"ParyNavrhsOrderBy"
 		}
 	},
 	UpdateParyNavrhByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"ParyNavrhPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"ParyNavrhPatch"
 	},
 	ParyNavrhPatch:{
-		pnId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pnNavrhl:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pnPartner:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pnPartnerka:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		pnId:"BigInt",
+		pnNavrhl:"BigInt",
+		pnPartner:"BigInt",
+		pnPartnerka:"BigInt"
 	},
 	UpdateParyNavrhInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"ParyNavrhPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pnId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"ParyNavrhPatch",
+		pnId:"BigInt"
 	},
 	UpdatePermissionPayload:{
 		permissionEdge:{
-			orderBy:{
-				type:"PermissionsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PermissionsOrderBy"
 		}
 	},
 	UpdatePermissionByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"PermissionPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"PermissionPatch"
 	},
 	PermissionPatch:{
-		peId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peAkce:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peAktuality:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peAnkety:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peDokumenty:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peGalerie:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peInzerce:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peKonzole:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peNabidka:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peNastenka:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peNovinky:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pePary:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pePlatby:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pePermissions:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peRozpis:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peSkupiny:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peUsers:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peMain:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		peId:"BigInt"
 	},
 	UpdatePermissionInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"PermissionPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		peId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"PermissionPatch",
+		peId:"BigInt"
 	},
 	UpdatePlatbyCategoryPayload:{
 		platbyCategoryEdge:{
-			orderBy:{
-				type:"PlatbyCategoriesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PlatbyCategoriesOrderBy"
 		}
 	},
 	UpdatePlatbyCategoryByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"PlatbyCategoryPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"PlatbyCategoryPatch"
 	},
 	PlatbyCategoryPatch:{
-		pcId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcSymbol:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcAmount:{
-			type:"BigFloat",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcDateDue:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcValidFrom:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcValidTo:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcUseBase:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcUsePrefix:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcArchive:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcVisible:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		pcId:"BigInt",
+		pcSymbol:"BigInt",
+		pcAmount:"BigFloat",
+		pcDateDue:"Date",
+		pcValidFrom:"Date",
+		pcValidTo:"Date"
 	},
 	UpdatePlatbyCategoryInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"PlatbyCategoryPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pcId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"PlatbyCategoryPatch",
+		pcId:"BigInt"
 	},
 	UpdatePlatbyCategoryGroupPayload:{
 		platbyCategoryGroupEdge:{
-			orderBy:{
-				type:"PlatbyCategoryGroupsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PlatbyCategoryGroupsOrderBy"
 		}
 	},
 	UpdatePlatbyCategoryGroupByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"PlatbyCategoryGroupPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"PlatbyCategoryGroupPatch"
 	},
 	PlatbyCategoryGroupPatch:{
-		pcgId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcgIdGroup:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcgIdCategory:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		pcgId:"BigInt",
+		pcgIdGroup:"BigInt",
+		pcgIdCategory:"BigInt"
 	},
 	UpdatePlatbyCategoryGroupInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"PlatbyCategoryGroupPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pcgId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"PlatbyCategoryGroupPatch",
+		pcgId:"BigInt"
 	},
 	UpdatePlatbyGroupPayload:{
 		platbyGroupEdge:{
-			orderBy:{
-				type:"PlatbyGroupsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PlatbyGroupsOrderBy"
 		}
 	},
 	UpdatePlatbyGroupByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"PlatbyGroupPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"PlatbyGroupPatch"
 	},
 	PlatbyGroupPatch:{
-		pgId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pgType:{
-			type:"BigFloat",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pgName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pgDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pgBase:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		pgId:"BigInt",
+		pgType:"BigFloat",
+		pgBase:"BigInt"
 	},
 	UpdatePlatbyGroupInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"PlatbyGroupPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pgId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"PlatbyGroupPatch",
+		pgId:"BigInt"
 	},
 	UpdatePlatbyGroupSkupinaPayload:{
 		platbyGroupSkupinaEdge:{
-			orderBy:{
-				type:"PlatbyGroupSkupinasOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PlatbyGroupSkupinasOrderBy"
 		}
 	},
 	UpdatePlatbyGroupSkupinaByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"PlatbyGroupSkupinaPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"PlatbyGroupSkupinaPatch"
 	},
 	PlatbyGroupSkupinaPatch:{
-		pgsId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pgsIdSkupina:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pgsIdGroup:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		pgsId:"BigInt",
+		pgsIdSkupina:"BigInt",
+		pgsIdGroup:"BigInt"
 	},
 	UpdatePlatbyGroupSkupinaInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"PlatbyGroupSkupinaPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pgsId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"PlatbyGroupSkupinaPatch",
+		pgsId:"BigInt"
 	},
 	UpdatePlatbyItemPayload:{
 		platbyItemEdge:{
-			orderBy:{
-				type:"PlatbyItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PlatbyItemsOrderBy"
 		}
 	},
 	UpdatePlatbyItemByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"PlatbyItemPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"PlatbyItemPatch"
 	},
 	PlatbyItemPatch:{
-		piId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		piIdUser:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		piIdCategory:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		piIdRaw:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		piAmount:{
-			type:"BigFloat",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		piDate:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		piPrefix:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		piId:"BigInt",
+		piIdUser:"BigInt",
+		piIdCategory:"BigInt",
+		piIdRaw:"BigInt",
+		piAmount:"BigFloat",
+		piDate:"Date"
 	},
 	UpdatePlatbyItemInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"PlatbyItemPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		piId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"PlatbyItemPatch",
+		piId:"BigInt"
 	},
 	UpdatePlatbyRawPayload:{
 		platbyRawEdge:{
-			orderBy:{
-				type:"PlatbyRawsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PlatbyRawsOrderBy"
 		}
 	},
 	UpdatePlatbyRawByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"PlatbyRawPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"PlatbyRawPatch"
 	},
 	PlatbyRawPatch:{
-		prId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		prRaw:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		prHash:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		prSorted:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		prDiscarded:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		prId:"BigInt"
 	},
 	UpdatePlatbyRawInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"PlatbyRawPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		prId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"PlatbyRawPatch",
+		prId:"BigInt"
 	},
 	UpdateRozpiPayload:{
 		rozpiEdge:{
-			orderBy:{
-				type:"RozpisOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"RozpisOrderBy"
 		}
 	},
 	UpdateRozpiByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"RozpiPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"RozpiPatch"
 	},
 	RozpiPatch:{
-		rId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rTrener:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rKde:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rDatum:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rVisible:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		rId:"BigInt",
+		rTrener:"BigInt",
+		rDatum:"Date",
+		rTimestamp:"Datetime"
 	},
 	UpdateRozpiInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"RozpiPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		rId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"RozpiPatch",
+		rId:"BigInt"
 	},
 	UpdateRozpisItemPayload:{
 		rozpisItemEdge:{
-			orderBy:{
-				type:"RozpisItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"RozpisItemsOrderBy"
 		}
 	},
 	UpdateRozpisItemByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"RozpisItemPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"RozpisItemPatch"
 	},
 	RozpisItemPatch:{
-		riId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		riIdRodic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		riPartner:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		riOd:{
-			type:"Time",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		riDo:{
-			type:"Time",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		riLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		riId:"BigInt",
+		riIdRodic:"BigInt",
+		riPartner:"BigInt",
+		riOd:"Time",
+		riDo:"Time"
 	},
 	UpdateRozpisItemInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"RozpisItemPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		riId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"RozpisItemPatch",
+		riId:"BigInt"
 	},
 	UpdateSessionPayload:{
 		sessionEdge:{
-			orderBy:{
-				type:"SessionsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"SessionsOrderBy"
 		}
 	},
 	UpdateSessionByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"SessionPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"SessionPatch"
 	},
 	SessionPatch:{
-		ssId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssData:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssUpdatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssLifetime:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssUser:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		ssUpdatedAt:"Datetime",
+		ssLifetime:"BigInt",
+		ssUser:"BigInt"
 	},
 	UpdateSessionInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"SessionPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		ssId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"SessionPatch"
 	},
 	UpdateSkupinyPayload:{
 		skupinyEdge:{
-			orderBy:{
-				type:"SkupiniesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"SkupiniesOrderBy"
 		}
 	},
 	UpdateSkupinyByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"SkupinyPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"SkupinyPatch"
 	},
 	SkupinyPatch:{
-		sId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sColorRgb:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sColorText:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sLocation:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sVisible:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		sId:"BigInt"
 	},
 	UpdateSkupinyInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"SkupinyPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		sId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"SkupinyPatch",
+		sId:"BigInt"
 	},
 	UpdateUpozorneniPayload:{
 		upozorneniEdge:{
-			orderBy:{
-				type:"UpozornenisOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"UpozornenisOrderBy"
 		}
 	},
 	UpdateUpozorneniByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"UpozorneniPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"UpozorneniPatch"
 	},
 	UpozorneniPatch:{
-		upId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upKdo:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upNadpis:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upText:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upBarvy:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upTimestampAdd:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		upId:"BigInt",
+		upKdo:"BigInt",
+		upBarvy:"BigInt",
+		upTimestamp:"Datetime",
+		upTimestampAdd:"Datetime"
 	},
 	UpdateUpozorneniInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"UpozorneniPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		upId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"UpozorneniPatch",
+		upId:"BigInt"
 	},
 	UpdateUpozorneniSkupinyPayload:{
 		upozorneniSkupinyEdge:{
-			orderBy:{
-				type:"UpozorneniSkupiniesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"UpozorneniSkupiniesOrderBy"
 		}
 	},
 	UpdateUpozorneniSkupinyByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"UpozorneniSkupinyPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"UpozorneniSkupinyPatch"
 	},
 	UpozorneniSkupinyPatch:{
-		upsId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upsIdRodic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upsIdSkupina:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upsColor:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upsPopis:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		upsId:"BigInt",
+		upsIdRodic:"BigInt",
+		upsIdSkupina:"BigInt"
 	},
 	UpdateUpozorneniSkupinyInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"UpozorneniSkupinyPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		upsId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"UpozorneniSkupinyPatch",
+		upsId:"BigInt"
 	},
 	UpdateUserPayload:{
 		userEdge:{
-			orderBy:{
-				type:"UsersOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"UsersOrderBy"
 		}
 	},
 	UpdateUserByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"UserPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"UserPatch"
 	},
 	UserPatch:{
-		uId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uLogin:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uPass:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uJmeno:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uPrijmeni:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uPohlavi:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uEmail:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uTelefon:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uNarozeni:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uRodneCislo:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uPoznamky:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uLevel:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uGroup:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uSkupina:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uDancer:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uBan:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uConfirmed:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uSystem:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uStreet:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uConscriptionNumber:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uOrientationNumber:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uDistrict:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uCity:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uPostalCode:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uNationality:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uMemberSince:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uMemberUntil:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uTeacher:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uGdprSignedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		uId:"BigInt",
+		uNarozeni:"Date",
+		uTimestamp:"Datetime",
+		uGroup:"BigInt",
+		uSkupina:"BigInt",
+		uMemberSince:"Datetime",
+		uMemberUntil:"Datetime",
+		uCreatedAt:"Datetime",
+		uGdprSignedAt:"Datetime"
 	},
 	UpdateUserInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"UserPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		uId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"UserPatch",
+		uId:"BigInt"
 	},
 	UpdateUsersSkupinyPayload:{
 		usersSkupinyEdge:{
-			orderBy:{
-				type:"UsersSkupiniesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"UsersSkupiniesOrderBy"
 		}
 	},
 	UpdateUsersSkupinyByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"UsersSkupinyPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"UsersSkupinyPatch"
 	},
 	UsersSkupinyPatch:{
-		usId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usColor:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usPlatbaMesic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usPlatbaCtvrtrok:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usPlatbaPulrok:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usPopis:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		usId:"BigInt",
+		usPlatbaMesic:"BigInt",
+		usPlatbaCtvrtrok:"BigInt",
+		usPlatbaPulrok:"BigInt"
 	},
 	UpdateUsersSkupinyInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"UsersSkupinyPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		usId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"UsersSkupinyPatch",
+		usId:"BigInt"
 	},
 	UpdateVideoPayload:{
 		videoEdge:{
-			orderBy:{
-				type:"VideosOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"VideosOrderBy"
 		}
 	},
 	UpdateVideoByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"VideoPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"VideoPatch"
 	},
 	VideoPatch:{
-		vId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vUri:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vTitle:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vAuthor:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vPlaylist:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vUpdatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		vId:"BigInt",
+		vCreatedAt:"Datetime",
+		vUpdatedAt:"Datetime"
 	},
 	UpdateVideoInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"VideoPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"VideoPatch",
+		vId:"BigInt"
 	},
 	UpdateVideoListPayload:{
 		videoListEdge:{
-			orderBy:{
-				type:"VideoListsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"VideoListsOrderBy"
 		}
 	},
 	UpdateVideoListByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"VideoListPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"VideoListPatch"
 	},
 	VideoListPatch:{
-		vlId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlUrl:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlTitle:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlCount:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlLastChecked:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		vlId:"BigInt",
+		vlCount:"BigInt",
+		vlCreatedAt:"Datetime",
+		vlLastChecked:"Datetime"
 	},
 	UpdateVideoListInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"VideoListPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vlId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"VideoListPatch",
+		vlId:"BigInt"
 	},
 	UpdateVideoSourcePayload:{
 		videoSourceEdge:{
-			orderBy:{
-				type:"VideoSourcesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"VideoSourcesOrderBy"
 		}
 	},
 	UpdateVideoSourceByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"VideoSourcePatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"VideoSourcePatch"
 	},
 	VideoSourcePatch:{
-		vsId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsUrl:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsTitle:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsLastChecked:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+		vsId:"BigInt",
+		vsCreatedAt:"Datetime",
+		vsLastChecked:"Datetime"
 	},
 	UpdateVideoSourceInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"VideoSourcePatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vsId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		patch:"VideoSourcePatch",
+		vsId:"BigInt"
 	},
 	DeleteAkcePayload:{
 		akceEdge:{
-			orderBy:{
-				type:"AkcesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"AkcesOrderBy"
 		}
 	},
 	DeleteAkceByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteAkceInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		aId:"BigInt"
 	},
 	DeleteAkceItemPayload:{
 		akceItemEdge:{
-			orderBy:{
-				type:"AkceItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"AkceItemsOrderBy"
 		}
 	},
 	DeleteAkceItemByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteAkceItemInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aiId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		aiId:"BigInt"
 	},
 	DeleteAktualityPayload:{
 		aktualityEdge:{
-			orderBy:{
-				type:"AktualitiesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"AktualitiesOrderBy"
 		}
 	},
 	DeleteAktualityByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteAktualityInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		atId:"BigInt"
 	},
 	DeleteDokumentyPayload:{
 		dokumentyEdge:{
-			orderBy:{
-				type:"DokumentiesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"DokumentiesOrderBy"
 		}
 	},
 	DeleteDokumentyByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteDokumentyInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		dId:"BigInt"
 	},
 	DeleteGalerieDirPayload:{
 		galerieDirEdge:{
-			orderBy:{
-				type:"GalerieDirsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"GalerieDirsOrderBy"
 		}
 	},
 	DeleteGalerieDirByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteGalerieDirInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gdId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		gdId:"BigInt"
 	},
 	DeleteGalerieFotoPayload:{
 		galerieFotoEdge:{
-			orderBy:{
-				type:"GalerieFotosOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"GalerieFotosOrderBy"
 		}
 	},
 	DeleteGalerieFotoByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteGalerieFotoInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gfId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		gfId:"BigInt"
 	},
 	DeleteNabidkaPayload:{
 		nabidkaEdge:{
-			orderBy:{
-				type:"NabidkasOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"NabidkasOrderBy"
 		}
 	},
 	DeleteNabidkaByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteNabidkaInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		nId:"BigInt"
 	},
 	DeleteNabidkaItemPayload:{
 		nabidkaItemEdge:{
-			orderBy:{
-				type:"NabidkaItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"NabidkaItemsOrderBy"
 		}
 	},
 	DeleteNabidkaItemByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteNabidkaItemInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		niId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		niId:"BigInt"
 	},
 	DeleteParameterPayload:{
 		parameterEdge:{
-			orderBy:{
-				type:"ParametersOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"ParametersOrderBy"
 		}
 	},
 	DeleteParameterByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteParameterInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		paName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteParyPayload:{
 		paryEdge:{
-			orderBy:{
-				type:"PariesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PariesOrderBy"
 		}
 	},
 	DeleteParyByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteParyInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		pId:"BigInt"
 	},
 	DeleteParyNavrhPayload:{
 		paryNavrhEdge:{
-			orderBy:{
-				type:"ParyNavrhsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"ParyNavrhsOrderBy"
 		}
 	},
 	DeleteParyNavrhByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteParyNavrhInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pnId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		pnId:"BigInt"
 	},
 	DeletePermissionPayload:{
 		permissionEdge:{
-			orderBy:{
-				type:"PermissionsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PermissionsOrderBy"
 		}
 	},
 	DeletePermissionByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeletePermissionInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		peId:"BigInt"
 	},
 	DeletePlatbyCategoryPayload:{
 		platbyCategoryEdge:{
-			orderBy:{
-				type:"PlatbyCategoriesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PlatbyCategoriesOrderBy"
 		}
 	},
 	DeletePlatbyCategoryByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeletePlatbyCategoryInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		pcId:"BigInt"
 	},
 	DeletePlatbyCategoryGroupPayload:{
 		platbyCategoryGroupEdge:{
-			orderBy:{
-				type:"PlatbyCategoryGroupsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PlatbyCategoryGroupsOrderBy"
 		}
 	},
 	DeletePlatbyCategoryGroupByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeletePlatbyCategoryGroupInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcgId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		pcgId:"BigInt"
 	},
 	DeletePlatbyGroupPayload:{
 		platbyGroupEdge:{
-			orderBy:{
-				type:"PlatbyGroupsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PlatbyGroupsOrderBy"
 		}
 	},
 	DeletePlatbyGroupByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeletePlatbyGroupInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pgId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		pgId:"BigInt"
 	},
 	DeletePlatbyGroupSkupinaPayload:{
 		platbyGroupSkupinaEdge:{
-			orderBy:{
-				type:"PlatbyGroupSkupinasOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PlatbyGroupSkupinasOrderBy"
 		}
 	},
 	DeletePlatbyGroupSkupinaByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeletePlatbyGroupSkupinaInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pgsId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		pgsId:"BigInt"
 	},
 	DeletePlatbyItemPayload:{
 		platbyItemEdge:{
-			orderBy:{
-				type:"PlatbyItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PlatbyItemsOrderBy"
 		}
 	},
 	DeletePlatbyItemByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeletePlatbyItemInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		piId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		piId:"BigInt"
 	},
 	DeletePlatbyRawPayload:{
 		platbyRawEdge:{
-			orderBy:{
-				type:"PlatbyRawsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"PlatbyRawsOrderBy"
 		}
 	},
 	DeletePlatbyRawByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeletePlatbyRawInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		prId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		prId:"BigInt"
 	},
 	DeleteRozpiPayload:{
 		rozpiEdge:{
-			orderBy:{
-				type:"RozpisOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"RozpisOrderBy"
 		}
 	},
 	DeleteRozpiByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteRozpiInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		rId:"BigInt"
 	},
 	DeleteRozpisItemPayload:{
 		rozpisItemEdge:{
-			orderBy:{
-				type:"RozpisItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"RozpisItemsOrderBy"
 		}
 	},
 	DeleteRozpisItemByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteRozpisItemInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		riId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		riId:"BigInt"
 	},
 	DeleteSessionPayload:{
 		sessionEdge:{
-			orderBy:{
-				type:"SessionsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"SessionsOrderBy"
 		}
 	},
 	DeleteSessionByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteSessionInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteSkupinyPayload:{
 		skupinyEdge:{
-			orderBy:{
-				type:"SkupiniesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"SkupiniesOrderBy"
 		}
 	},
 	DeleteSkupinyByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteSkupinyInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		sId:"BigInt"
 	},
 	DeleteUpozorneniPayload:{
 		upozorneniEdge:{
-			orderBy:{
-				type:"UpozornenisOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"UpozornenisOrderBy"
 		}
 	},
 	DeleteUpozorneniByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteUpozorneniInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		upId:"BigInt"
 	},
 	DeleteUpozorneniSkupinyPayload:{
 		upozorneniSkupinyEdge:{
-			orderBy:{
-				type:"UpozorneniSkupiniesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"UpozorneniSkupiniesOrderBy"
 		}
 	},
 	DeleteUpozorneniSkupinyByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteUpozorneniSkupinyInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upsId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		upsId:"BigInt"
 	},
 	DeleteUserPayload:{
 		userEdge:{
-			orderBy:{
-				type:"UsersOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"UsersOrderBy"
 		}
 	},
 	DeleteUserByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteUserInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		uId:"BigInt"
 	},
 	DeleteUsersSkupinyPayload:{
 		usersSkupinyEdge:{
-			orderBy:{
-				type:"UsersSkupiniesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"UsersSkupiniesOrderBy"
 		}
 	},
 	DeleteUsersSkupinyByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteUsersSkupinyInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		usId:"BigInt"
 	},
 	DeleteVideoPayload:{
 		videoEdge:{
-			orderBy:{
-				type:"VideosOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"VideosOrderBy"
 		}
 	},
 	DeleteVideoByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteVideoInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		vId:"BigInt"
 	},
 	DeleteVideoListPayload:{
 		videoListEdge:{
-			orderBy:{
-				type:"VideoListsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"VideoListsOrderBy"
 		}
 	},
 	DeleteVideoListByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteVideoListInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		vlId:"BigInt"
 	},
 	DeleteVideoSourcePayload:{
 		videoSourceEdge:{
-			orderBy:{
-				type:"VideoSourcesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
+			orderBy:"VideoSourcesOrderBy"
 		}
 	},
 	DeleteVideoSourceByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	DeleteVideoSourceInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		vsId:"BigInt"
 	},
 	LoginInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		login:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		passwd:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	LogoutInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+
 	},
 	ProspectFormDancerInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		cohort:{
-			type:"CrmCohort",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		prospectData:{
-			type:"ProspectDatumInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		origin:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		note:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+		cohort:"CrmCohort",
+		prospectData:"ProspectDatumInput"
 	},
 	ProspectDatumInput:{
-		name:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		surname:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		email:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		phone:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		yearofbirth:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+
 	},
 	UploadInput:{
-		directory:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		filename:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
+
 	}
 }
 
@@ -13041,6 +2767,9 @@ export const ReturnTypes: Record<string,any> = {
 		aVisible:"Boolean",
 		akceItemsByAiIdRodic:"AkceItemsConnection"
 	},
+	BigInt: `scalar.BigInt` as const,
+	Date: `scalar.Date` as const,
+	Datetime: `scalar.Datetime` as const,
 	AkceItemsConnection:{
 		nodes:"AkceItem",
 		edges:"AkceItemsEdge",
@@ -13140,6 +2869,7 @@ export const ReturnTypes: Record<string,any> = {
 		cursor:"Cursor",
 		node:"User"
 	},
+	Cursor: `scalar.Cursor` as const,
 	PageInfo:{
 		hasNextPage:"Boolean",
 		hasPreviousPage:"Boolean",
@@ -13183,6 +2913,7 @@ export const ReturnTypes: Record<string,any> = {
 		platbyCategoryGroupsByPcgIdGroup:"PlatbyCategoryGroupsConnection",
 		platbyGroupSkupinasByPgsIdGroup:"PlatbyGroupSkupinasConnection"
 	},
+	BigFloat: `scalar.BigFloat` as const,
 	PlatbyCategoryGroupsConnection:{
 		nodes:"PlatbyCategoryGroup",
 		edges:"PlatbyCategoryGroupsEdge",
@@ -13415,6 +3146,7 @@ export const ReturnTypes: Record<string,any> = {
 		rozpiByRiIdRodic:"Rozpi",
 		paryByRiPartner:"Pary"
 	},
+	Time: `scalar.Time` as const,
 	Rozpi:{
 		nodeId:"ID",
 		rId:"BigInt",
@@ -13609,6 +3341,7 @@ export const ReturnTypes: Record<string,any> = {
 		updatedAt:"Datetime",
 		title:"String"
 	},
+	JSON: `scalar.JSON` as const,
 	PagesEdge:{
 		cursor:"Cursor",
 		node:"Page"
@@ -14639,4 +4372,9 @@ export const ReturnTypes: Record<string,any> = {
 	Upload:{
 		uploadUrl:"String"
 	}
+}
+
+export const Ops = {
+query: "Query" as const,
+	mutation: "Mutation" as const
 }

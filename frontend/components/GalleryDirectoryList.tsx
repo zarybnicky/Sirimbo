@@ -65,7 +65,7 @@ export function GalleryDirectoryList() {
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
   const { data, refetch } = useTypedQuery(GalleryDirList, {
-    variables: { limit, offset: (page - 1) * limit },
+    apolloOptions: { variables: { limit, offset: (page - 1) * limit } },
   });
   const roots = listToTree((data?.galerieDirs?.nodes || []).map(x => ({
     ...x,

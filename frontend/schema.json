@@ -5445,9 +5445,7 @@
             },
             "akces": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -5504,9 +5502,7 @@
             },
             "akceItems": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -5549,9 +5545,7 @@
             },
             "aktualities": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -5606,9 +5600,7 @@
             },
             "dokumenties": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -5657,9 +5649,7 @@
             },
             "galerieDirs": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -5706,9 +5696,7 @@
             },
             "galerieFotos": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -5755,9 +5743,7 @@
             },
             "members": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -5860,9 +5846,7 @@
             },
             "nabidkas": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -5915,9 +5899,7 @@
             },
             "nabidkaItems": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -5962,9 +5944,7 @@
             },
             "pages": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -6011,9 +5991,7 @@
             },
             "pageRevisions": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -6066,9 +6044,7 @@
             },
             "parameters": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -6107,9 +6083,7 @@
             },
             "paries": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -6170,9 +6144,7 @@
             },
             "paryNavrhs": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -6215,9 +6187,7 @@
             },
             "permissions": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -6292,9 +6262,7 @@
             },
             "platbyCategories": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -6351,9 +6319,7 @@
             },
             "platbyCategoryGroups": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -6394,9 +6360,7 @@
             },
             "platbyGroups": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -6441,9 +6405,7 @@
             },
             "platbyGroupSkupinas": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -6484,9 +6446,7 @@
             },
             "platbyItems": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -6535,9 +6495,7 @@
             },
             "platbyRaws": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -6582,9 +6540,7 @@
             },
             "rozpis": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -6633,9 +6589,7 @@
             },
             "rozpisItems": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -6682,9 +6636,7 @@
             },
             "sessions": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -6729,9 +6681,7 @@
             },
             "skupinies": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -6780,9 +6730,7 @@
             },
             "upozornenis": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -6833,9 +6781,7 @@
             },
             "upozorneniSkupinies": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -6880,9 +6826,7 @@
             },
             "users": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -6981,9 +6925,7 @@
             },
             "usersSkupinies": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -7030,9 +6972,7 @@
             },
             "videos": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -7083,9 +7023,7 @@
             },
             "videoLists": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -7134,9 +7072,7 @@
             },
             "videoSources": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -8098,9 +8034,7 @@
             },
             "akceItemsByAiIdRodic": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -8320,9 +8254,7 @@
             },
             "aktualitiesByAtKdo": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -8377,9 +8309,7 @@
             },
             "nabidkasByNTrener": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -8432,9 +8362,7 @@
             },
             "rozpisByRTrener": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -8483,9 +8411,7 @@
             },
             "platbyItemsByPiIdUser": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -8534,9 +8460,7 @@
             },
             "pariesByPIdPartner": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -8597,9 +8521,7 @@
             },
             "sessionsBySsUser": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -8644,9 +8566,7 @@
             },
             "akceItemsByAiUser": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -8689,9 +8609,7 @@
             },
             "dokumentiesByDKdo": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -8740,9 +8658,7 @@
             },
             "galerieFotosByGfKdo": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -8789,9 +8705,7 @@
             },
             "paryNavrhsByPnNavrhl": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -8834,9 +8748,7 @@
             },
             "paryNavrhsByPnPartner": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -8879,9 +8791,7 @@
             },
             "paryNavrhsByPnPartnerka": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -8924,9 +8834,7 @@
             },
             "upozornenisByUpKdo": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -9084,9 +8992,7 @@
             },
             "usersByUGroup": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -9227,9 +9133,7 @@
             },
             "usersByUSkupina": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -9328,9 +9232,7 @@
             },
             "platbyGroupSkupinasByPgsIdSkupina": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -9371,9 +9273,7 @@
             },
             "upozorneniSkupiniesByUpsIdSkupina": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -9450,9 +9350,7 @@
             },
             "platbyCategoryGroupsByPcgIdGroup": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -9493,9 +9391,7 @@
             },
             "platbyGroupSkupinasByPgsIdGroup": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -9598,9 +9494,7 @@
             },
             "platbyCategoryGroupsByPcgIdCategory": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -9641,9 +9535,7 @@
             },
             "platbyItemsByPiIdCategory": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -9724,9 +9616,7 @@
             },
             "platbyItemsByPiIdRaw": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -9827,9 +9717,7 @@
             },
             "upozorneniSkupiniesByUpsIdRodic": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -9921,9 +9809,7 @@
             },
             "aktualitiesByAtFotoMain": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -10015,9 +9901,7 @@
             },
             "galerieFotosByGfIdRodic": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -10121,9 +10005,7 @@
             },
             "nabidkaItemsByNiIdRodic": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -10245,9 +10127,7 @@
             },
             "nabidkaItemsByNiPartner": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -10292,9 +10172,7 @@
             },
             "rozpisItemsByRiPartner": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -10388,9 +10266,7 @@
             },
             "rozpisItemsByRiIdRodic": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "first": {
                         "type": "integer"
@@ -12139,9 +12015,7 @@
             },
             "akceEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -12207,9 +12081,7 @@
             },
             "akceItemEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -12261,9 +12133,7 @@
             },
             "aktualityEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -12322,9 +12192,7 @@
             },
             "dokumentyEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -12372,9 +12240,7 @@
             },
             "galerieDirEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -12430,9 +12296,7 @@
             },
             "galerieFotoEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -12483,9 +12347,7 @@
             },
             "nabidkaEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -12547,9 +12409,7 @@
             },
             "nabidkaItemEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -12593,9 +12453,7 @@
             },
             "pageEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -12641,9 +12499,7 @@
             },
             "parameterEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -12686,9 +12542,7 @@
             },
             "paryEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -12763,9 +12617,7 @@
             },
             "paryNavrhEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -12807,9 +12659,7 @@
             },
             "permissionEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -12883,9 +12733,7 @@
             },
             "platbyCategoryEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -12951,9 +12799,7 @@
             },
             "platbyCategoryGroupEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -12993,9 +12839,7 @@
             },
             "platbyGroupEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -13049,9 +12893,7 @@
             },
             "platbyGroupSkupinaEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -13106,9 +12948,7 @@
             },
             "platbyItemEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -13156,9 +12996,7 @@
             },
             "platbyRawEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -13207,9 +13045,7 @@
             },
             "rozpiEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -13267,9 +13103,7 @@
             },
             "rozpisItemEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -13320,9 +13154,7 @@
             },
             "sessionEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -13366,9 +13198,7 @@
             },
             "skupinyEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -13421,9 +13251,7 @@
             },
             "upozorneniEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -13483,9 +13311,7 @@
             },
             "upozorneniSkupinyEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -13539,9 +13365,7 @@
             },
             "userEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -13639,9 +13463,7 @@
             },
             "usersSkupinyEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -13687,9 +13509,7 @@
             },
             "videoEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -13739,9 +13559,7 @@
             },
             "videoListEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -13789,9 +13607,7 @@
             },
             "videoSourceEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -13837,9 +13653,7 @@
             },
             "akceEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -13905,9 +13719,7 @@
             },
             "akceItemEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -13959,9 +13771,7 @@
             },
             "aktualityEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -14020,9 +13830,7 @@
             },
             "dokumentyEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -14070,9 +13878,7 @@
             },
             "galerieDirEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -14128,9 +13934,7 @@
             },
             "galerieFotoEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -14181,9 +13985,7 @@
             },
             "nabidkaEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -14245,9 +14047,7 @@
             },
             "nabidkaItemEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -14291,9 +14091,7 @@
             },
             "pageEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -14339,9 +14137,7 @@
             },
             "parameterEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -14384,9 +14180,7 @@
             },
             "paryEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -14461,9 +14255,7 @@
             },
             "paryNavrhEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -14505,9 +14297,7 @@
             },
             "permissionEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -14581,9 +14371,7 @@
             },
             "platbyCategoryEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -14649,9 +14437,7 @@
             },
             "platbyCategoryGroupEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -14691,9 +14477,7 @@
             },
             "platbyGroupEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -14747,9 +14531,7 @@
             },
             "platbyGroupSkupinaEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -14804,9 +14586,7 @@
             },
             "platbyItemEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -14854,9 +14634,7 @@
             },
             "platbyRawEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -14905,9 +14683,7 @@
             },
             "rozpiEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -14965,9 +14741,7 @@
             },
             "rozpisItemEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -15018,9 +14792,7 @@
             },
             "sessionEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -15064,9 +14836,7 @@
             },
             "skupinyEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -15119,9 +14889,7 @@
             },
             "upozorneniEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -15181,9 +14949,7 @@
             },
             "upozorneniSkupinyEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -15237,9 +15003,7 @@
             },
             "userEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -15337,9 +15101,7 @@
             },
             "usersSkupinyEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -15385,9 +15147,7 @@
             },
             "videoEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -15437,9 +15197,7 @@
             },
             "videoListEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -15487,9 +15245,7 @@
             },
             "videoSourceEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -15540,9 +15296,7 @@
             },
             "akceEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -15613,9 +15367,7 @@
             },
             "akceItemEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -15672,9 +15424,7 @@
             },
             "aktualityEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -15738,9 +15488,7 @@
             },
             "dokumentyEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -15793,9 +15541,7 @@
             },
             "galerieDirEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -15856,9 +15602,7 @@
             },
             "galerieFotoEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -15914,9 +15658,7 @@
             },
             "nabidkaEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -15983,9 +15725,7 @@
             },
             "nabidkaItemEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -16034,9 +15774,7 @@
             },
             "parameterEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -16084,9 +15822,7 @@
             },
             "paryEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -16166,9 +15902,7 @@
             },
             "paryNavrhEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -16215,9 +15949,7 @@
             },
             "permissionEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -16296,9 +16028,7 @@
             },
             "platbyCategoryEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -16369,9 +16099,7 @@
             },
             "platbyCategoryGroupEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -16416,9 +16144,7 @@
             },
             "platbyGroupEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -16477,9 +16203,7 @@
             },
             "platbyGroupSkupinaEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -16539,9 +16263,7 @@
             },
             "platbyItemEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -16594,9 +16316,7 @@
             },
             "platbyRawEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -16650,9 +16370,7 @@
             },
             "rozpiEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -16715,9 +16433,7 @@
             },
             "rozpisItemEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -16773,9 +16489,7 @@
             },
             "sessionEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -16824,9 +16538,7 @@
             },
             "skupinyEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -16884,9 +16596,7 @@
             },
             "upozorneniEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -16951,9 +16661,7 @@
             },
             "upozorneniSkupinyEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -17012,9 +16720,7 @@
             },
             "userEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -17117,9 +16823,7 @@
             },
             "usersSkupinyEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -17170,9 +16874,7 @@
             },
             "videoEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -17227,9 +16929,7 @@
             },
             "videoListEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
@@ -17282,9 +16982,7 @@
             },
             "videoSourceEdge": {
                 "type": "object",
-                "required": [
-                    "orderBy"
-                ],
+                "required": [],
                 "properties": {
                     "orderBy": {
                         "type": "array",
