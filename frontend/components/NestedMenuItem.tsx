@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import Menu, { MenuProps } from '@material-ui/core/Menu'
-import MenuItem, { MenuItemProps } from '@material-ui/core/MenuItem'
-import ArrowRight from '@material-ui/icons/ArrowRight'
+import { makeStyles } from '@mui/material/styles'
+import Menu, { MenuProps } from '@mui/material/Menu'
+import MenuItem, { MenuItemProps } from '@mui/material/MenuItem'
+import ArrowRight from '@mui/icons-material/ArrowRight'
 import clsx from 'clsx'
 
 export interface NestedMenuItemProps extends Omit<MenuItemProps, 'button'> {

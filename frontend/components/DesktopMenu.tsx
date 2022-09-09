@@ -1,13 +1,15 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { NavLink, useLocation } from 'react-router-dom';
-import { alpha, Button, Menu, MenuItem, makeStyles } from '@material-ui/core';
+import { alpha, Button, Menu, MenuItem } from '@mui/material';
+import { makeStyles } from '@mui/material/styles';
 import { PopupState as PopupStateType } from 'material-ui-popup-state/core';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { NestedMenuItem } from "./NestedMenuItem";
-import { useMenu, MenuStructItem, getHrefs } from '../data/use-menu';
+import { useMenu, MenuStructItem, getHrefs } from 'lib/data/use-menu';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -45,17 +47,17 @@ const useStyles = makeStyles((theme) => ({
 const Submenu = React.forwardRef<any, {
   popupState?: PopupStateType;
   item: MenuStructItem;
-}>(({ popupState, item: x }, ref) => {
+}>(function Submenu({ popupState, item: x }, ref) {
   const classes = useStyles();
-  const { pathname } = useLocation();
+  const { pathname } = useRouter();
   const inPath = getHrefs(x).find(y => pathname.startsWith(y));
   const cls = clsx(classes.menuButton, inPath ? classes.activeMenuButton : null);
 
   if (x.type === 'link') {
     if (popupState) {
-      return <MenuItem ref={ref} button component={NavLink} to={x.href} onClick={() => popupState.close()}>{x.text}</MenuItem>
+      return <MenuItem ref={ref} button LinkComponent={Link} to={x.href} onClick={() => popupState.close()}>{x.text}</MenuItem>
     } else {
-      return <Button ref={ref} className={cls} component={NavLink} to={x.href}>{x.text}</Button>;
+      return <Button ref={ref} className={cls} LinkComponent={Link} to={x.href}>{x.text}</Button>;
     }
   }
 
@@ -70,7 +72,6 @@ const Submenu = React.forwardRef<any, {
         >{x.text}</Button>
         <Menu
           {...bindMenu(popupState)}
-          getContentAnchorEl={null}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
           className={classes.submenu}

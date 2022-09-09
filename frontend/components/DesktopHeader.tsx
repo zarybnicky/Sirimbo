@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { AppBar, Box, Container, Toolbar, makeStyles } from '@material-ui/core';
+import Link from 'next/link';
+import { AppBar, Box, Container, Toolbar, makeStyles } from '@mui/material';
 import { SocialButtons } from './SocialButtons';
 import { AuthButton } from './AuthButton';
 import { DesktopMenu } from './DesktopMenu';
@@ -59,8 +59,10 @@ export const DesktopHeader = ({ }) => {
       <Container maxWidth="lg" className={classes.navbar}>
         <div className={classes.logoBox}>
           <Box boxShadow={10} className={classes.logo}>
-            <Link to="/" className={classes.logoInner}>
-              <OlympLogoVertical className={classes.svg} />
+            <Link href="/" passHref>
+              <a className={classes.logoInner}>
+                <OlympLogoVertical className={classes.svg} />
+              </a>
             </Link>
           </Box>
         </div>

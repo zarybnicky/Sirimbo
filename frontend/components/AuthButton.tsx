@@ -1,27 +1,27 @@
 import * as React from 'react';
-import { useHistory } from 'react-router';
-import { NavLink } from 'react-router-dom';
-import { Button, Menu, MenuItem, makeStyles } from '@material-ui/core';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { Button, Menu, MenuItem } from '@mui/material';
 import { PopupState as PopupStateType } from 'material-ui-popup-state/core';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import { useAuth } from '../data/use-auth';
+import { useAuth } from 'lib/data/use-auth';
 
-import AccountCircle from '@material-ui/icons/AccountCircle';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 
 export const AuthButton = ({ }) => {
   const auth = useAuth();
-  const history = useHistory();
+  const router = useRouter();
 
   const signOut = (popupState: PopupStateType) => {
     popupState.close();
     auth.signOut();
-    history.push('/');
+    router.push('/');
   };
 
   if (!auth.user) {
     return <div>
       <Button
-        component={NavLink} to="/login" color="inherit"
+        LinkComponent={Link} href="/login" color="inherit"
         startIcon={<AccountCircle />}
         style={{ textDecoration: 'underline' }}
       >

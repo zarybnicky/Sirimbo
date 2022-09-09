@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { $, GraphQLTypes, Selector, NabidkasOrderBy } from '../zeus';
-import { useTypedQuery } from '../zeus/apollo';
+import { $, GraphQLTypes, Selector, NabidkasOrderBy } from 'lib/zeus';
+import { useTypedQuery } from 'lib/zeus/apollo';
 import { formatDateRange } from './DateRange';
 
 const ReservationView = (x: GraphQLTypes["Nabidka"]) => {
@@ -36,7 +36,7 @@ const ReservationView = (x: GraphQLTypes["Nabidka"]) => {
       <tr><th>Tanečník</th><th>Počet hodin</th></tr>
     </thead>
     <tbody>
-      {(x.nabidkaItemsByNiIdRodic?.nodes || []).map(item => <tr>
+      {x.nabidkaItemsByNiIdRodic?.nodes?.map((item, i) => <tr key={i}>
         <td>{item.paryByNiPartner?.userByPIdPartner?.uJmeno} {item.paryByNiPartner?.userByPIdPartner?.uPrijmeni}</td>
         <td>{item.niPocetHod}</td>
       </tr>)}
@@ -101,7 +101,7 @@ export function ReservationSelect() {
   return <div>
     <select className='team-selection' value={reservation?.nId || 'none'} onChange={onChange}>
       <option value='none'> --vyberte nabídku-- </option>
-      {(reservations?.nabidkas?.nodes || []).map(x => <option value={x.nId} key={x.nId}>
+      {reservations?.nabidkas?.nodes?.map(x => <option value={x.nId} key={x.nId}>
         {`${formatDateRange(x.nOd, x.nDo)} - ${x.userByNTrener?.uJmeno} ${x.userByNTrener?.uPrijmeni}`}
       </option>)}
     </select>

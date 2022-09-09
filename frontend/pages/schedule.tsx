@@ -1,11 +1,11 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { Card, CardContent, Container, Grid, Typography } from '@material-ui/core';
-import { useTypedQuery } from '../zeus/apollo';
-import { useAuth } from '../data/use-auth';
-import { Schedule, ScheduleItem, ScheduleRangeQuery } from '../data/use-schedule';
-import { Reservation, ReservationItem, ReservationRangeQuery } from '../data/use-reservation';
-import { PermissionLevel, usePermissions } from '../data/use-permissions';
+import { Card, CardContent, Container, Grid, Typography } from '@mui/material';
+import { useTypedQuery } from 'lib/zeus/apollo';
+import { useAuth } from 'lib/data/use-auth';
+import { Schedule, ScheduleItem, ScheduleRangeQuery } from 'lib/data/use-schedule';
+import { Reservation, ReservationItem, ReservationRangeQuery } from 'lib/data/use-reservation';
+import { PermissionLevel, usePermissions } from 'lib/data/use-permissions';
 import { formatDateRange } from '../custom-elements/date';
 
 export const SchedulePage = ({ }) => {

@@ -1,3 +1,5 @@
 import * as React from 'react';
 
-export default () => <>TODO</>;
+export default function ForgottenPasswordPage() {
+  return <>TODO</>;
+}

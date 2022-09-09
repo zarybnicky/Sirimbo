@@ -1,14 +1,13 @@
 import * as React from 'react';
-import { Card, Grid, CardContent, Container, Button, CardActions, Typography } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+import { Card, Grid, CardContent, Container, Button, CardActions, Typography } from '@mui/material';
+import { Alert } from '@mui/lab';
 import { Form } from 'react-final-form'
 import { Autocomplete, TextField, KeyboardDatePicker, Radios, showErrorOnBlur } from 'mui-rff';
 import { Heading } from '../components/Heading';
-import { useCountries } from '../data/use-countries';
-import { useCohorts } from '../data/use-cohorts';
+import { useCountries } from 'lib/data/use-countries';
+import { useCohorts } from 'lib/data/use-cohorts';
 
-import 'date-fns';
-import DateFnsUtils from '@date-io/date-fns';
+import DateFnsUtils from 'date-fns';
 
 export const RegisterPage = () => {
   const countries = useCountries();

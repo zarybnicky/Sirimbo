@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { makeStyles } from '@material-ui/core';
-import { CSSProperties } from '@material-ui/styles';
+import { makeStyles } from '@mui/material';
+import { CSSProperties } from '@mui/styles';
 import type { CellPlugin, EditorProps, BottomToolbarProps } from '@react-page/editor';
 import Editor, { BottomToolbar } from '@react-page/editor';
 import image from '@react-page/plugins-image';
@@ -45,7 +45,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const CustomToolbar = React.memo<BottomToolbarProps>((props) => {
+const CustomToolbar = React.memo<BottomToolbarProps>(function CustomToolbar(props) {
   const classes = useStyles();
   return <BottomToolbar {...props} className={classes.drawer} />;
 });

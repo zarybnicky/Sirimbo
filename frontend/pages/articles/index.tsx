@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Container, Grid, Typography } from '@material-ui/core';
-import { Pagination } from '@material-ui/lab';
+import { Container, Grid, Typography } from '@mui/material';
+import { Pagination } from '@mui/lab';
 import { Helmet } from 'react-helmet-async';
 import { ArticleCard } from 'components/cards/ArticleCard';
 import { useArticles } from 'data/use-articles';

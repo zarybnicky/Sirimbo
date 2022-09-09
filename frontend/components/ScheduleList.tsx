@@ -1,12 +1,12 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { Checkbox, Menu, MenuItem, Button } from '@material-ui/core';
+import { Checkbox, Menu, MenuItem, Button } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import { Link } from 'react-router-dom';
-import { Pagination } from '@material-ui/lab';
-import { $, RozpisOrderBy, Selector } from '../zeus';
-import { useTypedQuery, useTypedMutation } from '../zeus/apollo';
-import { useAuth } from '../data/use-auth';
+import Link from 'next/link';
+import { Pagination } from '@mui/lab';
+import { $, RozpisOrderBy, Selector } from 'lib/zeus';
+import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
+import { useAuth } from 'lib/data/use-auth';
 
 export const ScheduleListQuery = Selector('Query')({
   rozpis: [
@@ -72,7 +72,7 @@ export function RozpisAdminList() {
       </tr>
     </thead>
     <tbody>
-      {(data?.rozpis?.nodes || []).map((a) => <tr key={a.rId}>
+      {data?.rozpis?.nodes?.map((a) => <tr key={a.rId}>
         <td>
           <PopupState variant="popover">
             {(popupState) => <React.Fragment>
@@ -108,7 +108,9 @@ export function RozpisAdminList() {
   </table >;
 
   return <React.Fragment>
-    <a href="/admin/rozpis/add" className="btn btn-primary">Nový rozpis</a>
+    <Link href="/admin/rozpis/add" passHref>
+      <a className="btn btn-primary">Nový rozpis</a>
+    </Link>
     {list}
     <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
   </React.Fragment>;

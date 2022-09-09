@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Checkbox, Menu, MenuItem, Button } from '@material-ui/core';
+import { Checkbox, Menu, MenuItem, Button } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import { Link } from 'react-router-dom';
-import { Pagination } from '@material-ui/lab';
-import { $, AkcesOrderBy, Selector } from '../zeus';
-import { useTypedQuery, useTypedMutation } from '../zeus/apollo';
+import Link from 'next/link';
+import { Pagination } from '@mui/lab';
+import { $, AkcesOrderBy, Selector } from 'lib/zeus';
+import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
 import { DateRange } from './DateRange';
 
 export const EventListQuery = Selector('Query')({
@@ -78,16 +78,16 @@ export function EventList() {
             {(popupState) => <React.Fragment>
               <Button {...bindTrigger(popupState)}>{a.aJmeno}</Button>
               <Menu {...bindMenu(popupState)} getContentAnchorEl={null}>
-                <MenuItem button onClick={popupState.close} component={Link} to={`/admin/akce/edit/${a.aId}`}>
+                <MenuItem button onClick={popupState.close} LinkComponent={Link} to={`/admin/akce/edit/${a.aId}`}>
                   Upravit
                 </MenuItem>
-                <MenuItem button onClick={popupState.close} component={Link} to={`/admin/akce/detail/${a.aId}`}>
+                <MenuItem button onClick={popupState.close} LinkComponent={Link} to={`/admin/akce/detail/${a.aId}`}>
                   Upravit účastníky
                 </MenuItem>
-                <MenuItem button onClick={popupState.close} component={Link} to={`/admin/akce/dokumenty/${a.aId}`}>
+                <MenuItem button onClick={popupState.close} LinkComponent={Link} to={`/admin/akce/dokumenty/${a.aId}`}>
                   Upravit dokumenty
                 </MenuItem>
-                <MenuItem button onClick={popupState.close} component={Link} to={`/admin/akce/remove/${a.aId}`}>
+                <MenuItem button onClick={popupState.close} LinkComponent={Link} to={`/admin/akce/remove/${a.aId}`}>
                   Odstranit
                 </MenuItem>
               </Menu>
@@ -106,7 +106,7 @@ export function EventList() {
   </table>;
 
   return <React.Fragment>
-    <a href="/admin/akce/add" className="btn btn-primary">Přidat</a>
+    <Link href="/admin/akce/add" passHref><a className="btn btn-primary">Přidat</a></Link>
     {list}
     <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
   </React.Fragment>;

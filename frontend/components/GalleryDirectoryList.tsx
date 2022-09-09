@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { Checkbox, Button, Menu, MenuItem } from '@material-ui/core';
-import { Pagination } from '@material-ui/lab';
+import Link from 'next/link';
+import { Checkbox, Button, Menu, MenuItem } from '@mui/material';
+import { Pagination } from '@mui/lab';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import { $, GalerieDirsOrderBy, Selector } from '../zeus';
-import { useTypedQuery, useTypedMutation } from '../zeus/apollo';
+import { $, GalerieDirsOrderBy, Selector } from 'lib/zeus';
+import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
 
 const GalleryDirList = Selector('Query')({
   galerieDirs: [
@@ -111,8 +111,12 @@ export function GalleryDirectoryList() {
   </table>;
 
   return <React.Fragment>
-    <a className="btn btn-outline-primary" href="/admin/galerie/file/upload">Přidat fotky</a>
-    <a className="btn btn-outline-primary" href="/admin/galerie/directory/add">Přidat složku</a>
+    <Link href="/admin/galerie/file/upload" passHref>
+      <a className="btn btn-outline-primary">Přidat fotky</a>
+    </Link>
+    <Link href="/admin/galerie/directory/add" passHref>
+      <a className="btn btn-outline-primary">Přidat složku</a>
+    </Link>
     {list}
     <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
   </React.Fragment>;

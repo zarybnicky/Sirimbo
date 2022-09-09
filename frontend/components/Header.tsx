@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Theme, useTheme, useMediaQuery } from '@material-ui/core';
+import { Theme, useTheme, useMediaQuery } from '@mui/material';
 import { DesktopHeader } from './DesktopHeader';
 import { MobileHeader } from './MobileHeader';
 

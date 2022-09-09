@@ -1,4 +1,4 @@
-import { $, InputType, GraphQLTypes, NabidkaItemsOrderBy, Selector } from '../zeus';
+import { $, InputType, GraphQLTypes, NabidkaItemsOrderBy, Selector } from 'lib/zeus';
 
 export const ReservationItemPartial = Selector('NabidkaItem')({
   niId: true,

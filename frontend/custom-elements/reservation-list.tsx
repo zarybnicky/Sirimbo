@@ -5,10 +5,10 @@ import Form from 'react-bootstrap/Form';
 import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache } from '@apollo/client';
 import { Pagination } from './pagination';
 import { DateRange } from './date';
-import { UserQuery } from '../data/use-auth';
+import { UserQuery } from 'lib/data/use-auth';
 import { Dropdown } from './dropdown';
-import { $, NabidkasOrderBy, Selector } from '../zeus';
-import { useTypedQuery, useTypedMutation } from '../zeus/apollo';
+import { $, NabidkasOrderBy, Selector } from 'lib/zeus';
+import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
 
 export const NabidkaAdminQuery = Selector('Query')({
   nabidkas: [

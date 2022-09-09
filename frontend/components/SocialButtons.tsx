@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { IconButton, makeStyles, useTheme } from '@material-ui/core';
-import InstagramIcon from '@material-ui/icons/Instagram';
-import FacebookIcon from '@material-ui/icons/Facebook';
-import YouTubeIcon from '@material-ui/icons/YouTube';
+import { IconButton, makeStyles, useTheme } from '@mui/material';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import YouTubeIcon from '@mui/icons-material/YouTube';
 
 const useStyles = makeStyles((theme) => ({
   icon: {

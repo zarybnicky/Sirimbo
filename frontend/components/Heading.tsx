@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makeStyles, Container, Theme, Typography } from '@material-ui/core';
+import { makeStyles, Container, Theme, Typography } from '@mui/material';
 import { CellPlugin } from '@react-page/editor';
 import { RGBColor } from 'react-color';
 

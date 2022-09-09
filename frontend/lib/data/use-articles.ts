@@ -1,6 +1,6 @@
 import { getPlaceholder } from '../test-utils';
-import { $, Selector, AktualitiesOrderBy } from '../zeus';
-import { useTypedQuery } from '../zeus/apollo';
+import { $, Selector, AktualitiesOrderBy } from 'lib/zeus';
+import { useTypedQuery } from 'lib/zeus/apollo';
 
 export const ArticlesQuery = Selector('Query')({
   aktualities: [

@@ -6,8 +6,8 @@ import Form from 'react-bootstrap/Form';
 import { Pagination } from './pagination';
 import { DateRange } from './date';
 import { Dropdown } from './dropdown';
-import { $, AkcesOrderBy, Selector } from '../zeus';
-import { useTypedQuery, useTypedMutation } from '../zeus/apollo';
+import { $, AkcesOrderBy, Selector } from 'lib/zeus';
+import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
 
 export const AkceList = Selector('Query')({
   akces: [

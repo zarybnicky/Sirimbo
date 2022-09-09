@@ -1,6 +1,6 @@
 import { getPlaceholder } from '../test-utils';
-import { $, GalerieFotosOrderBy, Selector } from '../zeus';
-import { useTypedQuery } from '../zeus/apollo';
+import { $, GalerieFotosOrderBy, Selector } from 'lib/zeus';
+import { useTypedQuery } from 'lib/zeus/apollo';
 import format from 'date-fns/format';
 
 const GalleryPhotoPartial = Selector('GalerieFoto')({

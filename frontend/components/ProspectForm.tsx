@@ -1,11 +1,11 @@
 import * as React from 'react';
 import type { CellPlugin } from '@react-page/editor';
-import { Card, CardContent, CardActions, Grid, Button, Typography } from '@material-ui/core';
+import { Card, CardContent, CardActions, Grid, Button, Typography } from '@mui/material';
 import { Checkboxes, TextField } from 'mui-rff';
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/lab';
 import { Form } from 'react-final-form'
-import { useTypedMutation } from '../zeus/apollo';
-import { $, CrmCohort, Selector } from '../zeus';
+import { useTypedMutation } from 'lib/zeus/apollo';
+import { $, CrmCohort, Selector } from 'lib/zeus';
 import { useSnackbar } from 'notistack';
 
 export const SubmitProspectForm = Selector('Mutation')({

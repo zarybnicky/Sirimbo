@@ -1,12 +1,12 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { Box, IconButton, Card, CardContent, Typography } from '@material-ui/core';
-import { Pagination } from '@material-ui/lab';
-import { useTypedQuery } from '../zeus/apollo';
-import { $, UpozornenisOrderBy, Selector } from '../zeus';
+import { Box, IconButton, Card, CardContent, Typography } from '@mui/material';
+import { Pagination } from '@mui/lab';
+import { useTypedQuery } from 'lib/zeus/apollo';
+import { $, UpozornenisOrderBy, Selector } from 'lib/zeus';
 
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 const AnnouncementQuery = Selector('Query')({
   upozornenis: [
@@ -60,9 +60,9 @@ export function AnnouncementList() {
     <Box display='flex' alignItems='center' justifyContent="right">
       {hasPrev ? <IconButton onClick={() => setPage(page - 1)}><NavigateBeforeIcon /></IconButton> : null}
       <Typography color="textSecondary" component="span">
-        {format(new Date(nodes[0].upTimestampAdd), 'd. M. y')}
+        {format(new Date(nodes[0]!.upTimestampAdd), 'd. M. y')}
         {' - '}
-        {format(new Date(nodes[nodes.length - 1].upTimestampAdd), 'd. M. y')}
+        {format(new Date(nodes[nodes.length - 1]!.upTimestampAdd), 'd. M. y')}
       </Typography>
       {hasNext ? <IconButton onClick={() => setPage(page + 1)}><NavigateNextIcon /></IconButton> : null}
     </Box>

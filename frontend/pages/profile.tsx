@@ -1,8 +1,8 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { Container, Grid, Typography } from '@material-ui/core';
-import { useTypedQuery } from '../zeus/apollo';
-import { useAuth } from '../data/use-auth';
+import { Container, Grid, Typography } from '@mui/material';
+import { useTypedQuery } from 'lib/zeus/apollo';
+import { useAuth } from 'lib/data/use-auth';
 
 export const ProfilePage = ({ }) => {
   // require auth

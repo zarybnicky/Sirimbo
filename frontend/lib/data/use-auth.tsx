@@ -1,6 +1,6 @@
 import * as React from "react";
-import { $, Selector, InputType, GraphQLTypes } from '../zeus';
-import { useTypedMutation, useTypedQuery } from '../zeus/apollo';
+import { $, Selector, InputType, GraphQLTypes } from 'lib/zeus';
+import { useTypedMutation, useTypedQuery } from 'lib/zeus/apollo';
 
 export interface AuthContextType {
   isLoading: boolean,
@@ -15,11 +15,13 @@ export interface AuthContextType {
 
 const authContext = React.createContext<AuthContextType | undefined>(undefined);
 
-export const ProvideAuth = ({ mock = false, children }: {
-  mock?: boolean;
-  children: React.ReactChild | React.ReactChild[];
-}) => {
-  const auth = mock ? useMockAuth() : useApiAuth();
+export const ProvideAuth: React.FC = ({ children }) => {
+  const auth = useApiAuth();
+  return <authContext.Provider value={auth}>{children}</authContext.Provider>;
+}
+
+export const ProvideMockAuth: React.FC = ({ children }) => {
+  const auth = useMockAuth();
   return <authContext.Provider value={auth}>{children}</authContext.Provider>;
 }
 

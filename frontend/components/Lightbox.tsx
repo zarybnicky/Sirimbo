@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { useHistory } from "react-router-dom";
 import { useSwipeable } from 'react-swipeable';
-import { makeStyles, Card, Dialog, Fade, IconButton, Typography } from '@material-ui/core';
-import ChevronLeft from '@material-ui/icons/ChevronLeft';
-import ChevronRight from '@material-ui/icons/ChevronRight';
-import { GalleryItem } from '../data/use-gallery';
+import { makeStyles, Card, Dialog, Fade, IconButton, Typography } from '@mui/material';
+import ChevronLeft from '@mui/icons-material/ChevronLeft';
+import ChevronRight from '@mui/icons-material/ChevronRight';
+import { GalleryItem } from 'lib/data/use-gallery';
+import { useRouter } from 'next/router';
 
 const useStyles = makeStyles((theme) => ({
   image: {
@@ -38,15 +38,16 @@ export interface LightboxProps {
 export const Lightbox = ({ dirHref, images, initial }: LightboxProps) => {
   const didMountRef = React.useRef(false);
   const styles = useStyles();
-  const history = useHistory();
+  const router = useRouter();
   const initialIx = images.findIndex(x => x.id == initial);
   const [selected, setSelected] = React.useState(Math.max(initialIx, 0));
 
   React.useEffect(() => {
-    if (didMountRef.current) {
-      return history.replace(images[selected].href);
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      return;
     }
-    didMountRef.current = true;
+    router.replace(images[selected]!.href);
   }, [selected]);
 
   const prevImage = React.useCallback(() => (
@@ -63,7 +64,7 @@ export const Lightbox = ({ dirHref, images, initial }: LightboxProps) => {
     } else if (e.key === "ArrowLeft" || e.key === "Left") {
       prevImage();
     } else if (e.key === "Escape" || e.key === "Esc") {
-      history.replace(dirHref);
+      router.replace(dirHref);
     }
   }, []);
 

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache } from '@apollo/client';
-import { useTypedLazyQuery } from '../zeus/apollo';
-import { $, Selector } from '../zeus';
+import { useTypedLazyQuery } from 'lib/zeus/apollo';
+import { $, Selector } from 'lib/zeus';
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
 

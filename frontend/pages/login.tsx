@@ -1,22 +1,21 @@
 import * as React from 'react';
-import { Card, CardContent, CardActions, Container, Grid, Typography, Button } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+import { Card, CardContent, CardActions, Container, Grid, Typography, Button } from '@mui/material';
+import { Alert } from '@mui/lab';
 import { FORM_ERROR } from 'final-form'
 import { Form } from 'react-final-form'
-import { useHistory, useLocation } from 'react-router';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { TextField } from 'mui-rff';
-import { useAuth } from '../data/use-auth';
+import { useAuth } from 'lib/data/use-auth';
+import { useRouter } from 'next/router';
 
 export const LoginPage = ({ }) => {
   const { signIn } = useAuth();
-  const history = useHistory()
-  const { state, search } = useLocation<{ from?: string }>();
+  const router = useRouter()
 
   const onSubmit = async (values: { login: string; passwd: string; }) => {
     try {
       await signIn(values.login, values.passwd);
-      history.push(state?.from || new URLSearchParams(search).get('return') || '/dashboard');
+      router.push(router.query?.from as string || '/dashboard');
       return undefined;
     } catch (e) {
       return {
@@ -49,8 +48,8 @@ export const LoginPage = ({ }) => {
         </CardActions>
       </Card>
       <Grid container justifyContent="space-between" style={{ marginTop: '1rem' }}>
-        <Button component={Link} size="small" to="/register">Registrovat se</Button>
-        <Button component={Link} size="small" to="/forgotten-password">Zapomněli jste heslo?</Button>
+        <Link href="/register" passHref><Button size="small">Registrovat se</Button></Link>
+        <Link href="/forgotten-password"><Button size="small">Zapomněli jste heslo?</Button></Link>
       </Grid>
     </React.Fragment>} />
   </Container>

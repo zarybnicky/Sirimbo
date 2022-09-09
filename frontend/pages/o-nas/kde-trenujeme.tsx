@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Container } from '@material-ui/core';
-import { LocationCard } from '../components/cards/LocationCard';
-import { useLocations } from '../data';
-import { CallToAction } from '../components/CallToAction';
-import { Heading } from '../components/Heading';
+import { Container } from '@mui/material';
+import { LocationCard } from 'components/cards/LocationCard';
+import { useLocations } from 'lib/data';
+import { CallToAction } from 'components/CallToAction';
+import { Heading } from 'components/Heading';
 
 export const LocationsPage = ({ }) => {
   const items = useLocations();

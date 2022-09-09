@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { makeStyles, Typography } from '@material-ui/core';
+import Link from 'next/link';
+import { makeStyles, Typography } from '@mui/material';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -47,11 +47,13 @@ interface GalleryItem {
 export const GalleryCard = ({ item: x }: { item: GalleryItem }) => {
   const classes = useStyles();
 
-  return <Link className={classes.container} to={x.href}>
-    <div className="overlay">
-      <Typography variant="body1">{x.name}</Typography>
-      <Typography variant="body1">{x.date}</Typography>
-    </div>
-    <img src={x.img} alt={`${x.name} - ${x.date}`} />
-  </Link>;
+  return <Link href={x.href} passHref>
+    <a className={classes.container}>
+      <div className="overlay">
+        <Typography variant="body1">{x.name}</Typography>
+        <Typography variant="body1">{x.date}</Typography>
+      </div>
+      <img src={x.img} alt={`${x.name} - ${x.date}`} />
+    </a>
+  </Link >;
 }

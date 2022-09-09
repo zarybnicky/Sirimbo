@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makeStyles, Grid, Paper, Typography } from '@material-ui/core';
+import { makeStyles, Grid, Paper, Typography } from '@mui/material';
 import { CellPlugin } from '@react-page/editor';
 import { defaultSlate } from '../ReactPage';
 

@@ -40,8 +40,7 @@
       ]
     },
     "incremental": true,
-    "allowJs": true,
-    "types": ["cypress", "cypress-wait-until"]
+    "allowJs": true
   },
   "include": [
     "next-env.d.ts",

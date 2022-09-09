@@ -1,5 +1,5 @@
 import { getPlaceholder } from '../test-utils';
-import { useTypedQuery } from '../zeus/apollo';
+import { useTypedQuery } from 'lib/zeus/apollo';
 
 export interface Video {
   img: string;

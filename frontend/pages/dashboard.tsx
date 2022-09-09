@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card, CardContent, Container, Grid, Typography } from '@material-ui/core';
+import { Card, CardContent, Container, Grid, Typography } from '@mui/material';
 import { AnnouncementList } from '../components/AnnouncementList';
 
 export const DashboardPage = ({ }) => {

@@ -1,5 +1,5 @@
-import { useLocation } from 'react-router';
-import { useTypedQuery } from '../zeus/apollo';
+import { useTypedQuery } from 'lib/zeus/apollo';
+import { useRouter } from 'next/router';
 import { useAuth } from './use-auth';
 
 export type MenuStructItem = {
@@ -34,7 +34,7 @@ export function getHrefs(x: MenuStructItem): string[] {
 
 export function useMenu(): MenuStructItem[] {
   const { user } = useAuth();
-  const { pathname } = useLocation();
+  const { pathname } = useRouter();
   if (!user) {
     return publicMenu;
   }

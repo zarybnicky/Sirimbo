@@ -4,10 +4,10 @@ import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache } from '@apollo/c
 import Form from 'react-bootstrap/Form';
 import { Pagination } from './pagination';
 import { DateEl } from './date';
-import { UserQuery } from '../data/use-auth';
+import { UserQuery } from 'lib/data/use-auth';
 import { Dropdown } from './dropdown';
-import { $, RozpisOrderBy, Selector } from '../zeus';
-import { useTypedQuery, useTypedMutation } from '../zeus/apollo';
+import { $, RozpisOrderBy, Selector } from 'lib/zeus';
+import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
 
 export const ScheduleListQuery = Selector('Query')({
   rozpis: [

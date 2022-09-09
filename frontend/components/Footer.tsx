@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Container, Grid, Paper, Typography, makeStyles } from '@material-ui/core';
+import { Container, Grid, Paper, Typography, makeStyles } from '@mui/material';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import clsx from 'clsx';
 import { LatLngTuple } from 'leaflet';

@@ -1,32 +1,33 @@
 import * as React from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
-import { Container, Grid, Button, Typography } from '@material-ui/core';
-import { GalleryCard } from '../components/cards/GalleryCard';
-import { Lightbox } from '../components/Lightbox';
-import { useGallery } from '../data/use-gallery';
+import Link from 'next/link';
+import Head from 'next/head';
+import { Container, Grid, Button, Typography } from '@mui/material';
+import { GalleryCard } from 'components/cards/GalleryCard';
+import { Lightbox } from 'components/Lightbox';
+import { useGallery } from 'lib/data/use-gallery';
 
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import { useRouter } from 'next/router';
 
 export const GalleryPage = ({ }) => {
-  const params = useParams<{ dir?: string; photo?: string; }>();
-  const dirId = params.dir ? parseInt(params.dir, 10) : 1;
-  const initial = params.photo ? parseInt(params.photo, 10) : undefined;
+  const router = useRouter();
+  const { dir: dirParam, photo: photoParam } = router.query;
+  const dirId = dirParam ? parseInt(dirParam as string, 10) : 1;
+  const photoId = photoParam ? parseInt(photoParam as string, 10) : undefined;
   const { dir, dirs, images } = useGallery(dirId);
 
   return <React.Fragment>
-    <Helmet>
+    <Head>
       <title>Galerie | TK Olymp</title>
-    </Helmet>
+    </Head>
     <Container maxWidth="lg" style={{ paddingBottom: '2rem', paddingTop: '5rem' }}>
-      {dir?.parentId
-        ? <Button
-          color='primary' startIcon={<ArrowUpwardIcon />}
-          component={Link} to={`/galerie/${dir.parentId}`}
-        >
-          Přejit o složku výš
-        </Button>
-        : null}
+      {dir?.parentId && (
+        <Link href={`/galerie/${dir.parentId}`} passHref>
+          <Button color='primary' startIcon={<ArrowUpwardIcon />}>
+            Přejit o složku výš
+          </Button>
+        </Link>
+      )}
       <Typography gutterBottom variant="h4" component="h2">
         {!dir?.name || dir.name == 'Hlavní' ? 'Galerie' : dir.name}
       </Typography>
@@ -43,6 +44,6 @@ export const GalleryPage = ({ }) => {
         ))}
       </Grid>
     </Container>
-    {initial ? <Lightbox dirHref={`/gallery/${dirId}`} {...{ images, initial }} /> : null}
+    {photoId ? <Lightbox dirHref={`/gallery/${dirId}`} {...{ images, initial: photoId }} /> : null}
   </React.Fragment>;
 };

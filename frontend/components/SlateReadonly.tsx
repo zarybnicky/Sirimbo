@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Typography, useTheme } from '@material-ui/core';
+import { Typography, useTheme } from '@mui/material';
 import { createEditor, Descendant } from 'slate';
 import { Slate, Editable, ReactEditor, withReact } from 'slate-react';
 import slate from '@react-page/plugins-slate';
@@ -27,7 +27,9 @@ const Element = ({ attributes, children, element }: any) => {
     case 'block-quote':
       return <blockquote {...attributes}>{children}</blockquote>;
     case 'bulleted-list':
-      return <ul style={{ paddingBottom: '1.7rem' }} {...attributes}>{children.map((x: any) => <li>{x}</li>)}</ul>;
+      return <ul style={{ paddingBottom: '1.7rem' }} {...attributes}>
+        {children.map((x: any, i: number) => <li key={i}>{x}</li>)}
+      </ul>;
     case 'heading-one':
       return <Typography variant="h4" component="h1" style={{ marginBottom: '2rem' }} {...attributes}>{children}</Typography>;
     case 'heading-two':

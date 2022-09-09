@@ -4,8 +4,8 @@ import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache } from '@apollo/client';
 import { Pagination } from './pagination';
-import { $, GalerieDirsOrderBy, Selector } from '../zeus';
-import { useTypedQuery, useTypedMutation } from '../zeus/apollo';
+import { $, GalerieDirsOrderBy, Selector } from 'lib/zeus';
+import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
 import { Dropdown } from './dropdown';
 
 const GalleryDirList = Selector('Query')({

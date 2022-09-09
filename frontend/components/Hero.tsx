@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { makeStyles, Typography } from '@material-ui/core';
-import Carousel from 'react-material-ui-carousel'
-/* import { useHeroData } from '../data'; */
-import { useArticles } from '../data/use-articles';
+import Link from 'next/link';
+import { makeStyles, Typography } from '@mui/material';
+import Carousel from 'react-mui-carousel'
+import { useArticles } from 'lib/data/use-articles';
 
 const useStyles = makeStyles((theme) => ({
   indicator: {
@@ -52,7 +51,6 @@ const useStyles = makeStyles((theme) => ({
 
 export const Hero = ({ }) => {
   const classes = useStyles();
-  /* const items = useHeroData(); */
   let { articles } = useArticles(3, 0);
   articles = articles.length > 0 ? articles : [{
     href: '#',
@@ -70,8 +68,10 @@ export const Hero = ({ }) => {
   >
     {articles.map((x, i) => (
       <div key={i} className={classes.container}>
-        <Link className="overlay" to={x.href}>
-          <Typography variant="h5">{x.header}</Typography>
+        <Link href={x.href} passHref>
+          <a className="overlay">
+            <Typography variant="h5">{x.header}</Typography>
+          </a>
         </Link>
         <img src={x.img} alt={x.header} />
       </div>

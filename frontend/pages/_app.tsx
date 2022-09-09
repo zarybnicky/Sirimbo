@@ -6,7 +6,7 @@ import "nprogress/nprogress.css";
 import { GoogleAnalytics, event } from "nextjs-google-analytics";
 import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache } from '@apollo/client';
 
-import "styles/globals.scss";
+import "public/style/index.scss";
 
 // Ideally include in ReactPage.tsx, to minimize bundle size
 import '@react-page/editor/lib/index.css';

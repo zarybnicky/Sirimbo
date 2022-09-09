@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Container, Card, CardContent, Typography } from '@material-ui/core';
-import { CallToAction } from '../components/CallToAction';
-import { Heading } from '../components/Heading';
-import { useCohorts } from '../data/use-cohorts';
+import { Container, Card, CardContent, Typography } from '@mui/material';
+import { CallToAction } from 'components/CallToAction';
+import { Heading } from 'components/Heading';
+import { useCohorts } from 'lib/data/use-cohorts';
 
 export const CohortsPage = ({ }) => {
   const cohorts = useCohorts();

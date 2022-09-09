@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CellPlugin } from '@react-page/editor';
-import { makeStyles, Typography, Paper, Grid } from '@material-ui/core';
+import { makeStyles, Typography, Paper, Grid } from '@mui/material';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { defaultSlate } from '../ReactPage';
 

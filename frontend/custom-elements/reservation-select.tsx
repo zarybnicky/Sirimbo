@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache } from '@apollo/client';
-import { $, GraphQLTypes, Selector, NabidkasOrderBy } from '../zeus';
-import { useTypedQuery } from '../zeus/apollo';
+import { $, GraphQLTypes, Selector, NabidkasOrderBy } from 'lib/zeus';
+import { useTypedQuery } from 'lib/zeus/apollo';
 import { formatDateRange } from './date';
 
 const ReservationView = (x: GraphQLTypes["Nabidka"]) => {

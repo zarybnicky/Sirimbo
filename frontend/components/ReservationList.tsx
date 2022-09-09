@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Checkbox, Menu, MenuItem, Button } from '@material-ui/core';
+import { Checkbox, Menu, MenuItem, Button } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import { Link } from 'react-router-dom';
-import { Pagination } from '@material-ui/lab';
-import { $, NabidkasOrderBy, Selector } from '../zeus';
-import { useTypedQuery, useTypedMutation } from '../zeus/apollo';
-import { useAuth } from '../data/use-auth';
+import Link from 'next/link';
+import { Pagination } from '@mui/lab';
+import { $, NabidkasOrderBy, Selector } from 'lib/zeus';
+import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
+import { useAuth } from 'lib/data/use-auth';
 import { DateRange } from './DateRange';
 
 export const NabidkaAdminQuery = Selector('Query')({
@@ -114,7 +114,7 @@ export function ReservationAdminList() {
   </table >;
 
   return <React.Fragment>
-    <a href="/admin/nabidka/add" className="btn btn-primary">Nová nabídka</a>
+    <Link href="/admin/nabidka/add"><a className="btn btn-primary">Nová nabídka</a></Link>
     {list}
     <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
   </React.Fragment>;

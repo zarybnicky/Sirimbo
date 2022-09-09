@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { gql, useQuery } from '@apollo/client';
-import { useLocation } from 'react-router-dom';
 import { ReactPage } from '../components/ReactPage';
-import { Container, Typography } from '@material-ui/core';
+import { Container, Typography } from '@mui/material';
+import { useRouter } from 'next/router';
 
 const GET_PAGE = gql(`
 query GetPage($url: String!) {
@@ -12,18 +12,17 @@ query GetPage($url: String!) {
 }`);
 
 export const DynamicPage = () => {
-  const location = useLocation();
-  const { data } = useQuery(GET_PAGE, { variables: { url: location.pathname } });
+  const router = useRouter();
+  const { data } = useQuery(GET_PAGE, { variables: { url: router.pathname } });
   return <ReactPage readOnly value={data?.pageByUrl?.content} />;
 }
 
 export const OldDynamicPage = () => {
-  const location = useLocation();
+  const router = useRouter();
   const [json, setJson] = React.useState<any>({});;
   React.useEffect(() => {
     (async () => {
-      console.log('fetching', `${location.pathname}?no-layout=1`);
-      const res = await fetch(`${location.pathname}?no-layout=1`);
+      const res = await fetch(`${router.pathname}?no-layout=1`);
       const json = await res.json();
       setJson(json);
     })();

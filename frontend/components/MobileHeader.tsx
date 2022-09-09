@@ -2,16 +2,17 @@ import * as React from 'react';
 import {
   AppBar, Collapse, Divider, IconButton, SwipeableDrawer, Toolbar, List,
   ListItem, ListItemText, makeStyles
-} from '@material-ui/core';
-import { NavLink, useHistory, useLocation } from 'react-router-dom';
-import { MenuStructItem, useMenu, getHrefs } from '../data/use-menu';
+} from '@mui/material';
+import { MenuStructItem, useMenu, getHrefs } from 'lib/data/use-menu';
+import { useAuth } from 'lib/data/use-auth';
 
 import OlympLogo from '../../static/images/olymp-logo-oneline.svg';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MenuIcon from '@material-ui/icons/Menu';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
-import { useAuth } from '../data/use-auth';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import MenuIcon from '@mui/icons-material/Menu';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const useStyles = makeStyles((theme) => ({
   svg: {
@@ -37,12 +38,12 @@ const Submenu = ({ level = 0, item: x, onClick }: {
   item: MenuStructItem;
   onClick: React.MouseEventHandler;
 }) => {
-  const { pathname } = useLocation();
+  const { pathname } = useRouter();
   const inPath = !!getHrefs(x).find(y => pathname.startsWith(y));
   const [open, setOpen] = React.useState(inPath);
 
   if (x.type === 'link') {
-    return <ListItem button component={NavLink} to={x.href} onClick={onClick}>
+    return <ListItem button LinkComponent={Link} to={x.href} onClick={onClick}>
       <ListItemText primary={x.text} style={{ marginLeft: `${level}rem` }} />
     </ListItem>
   }
@@ -65,7 +66,7 @@ export const MobileHeader = ({ }) => {
   const classes = useStyles();
   const auth = useAuth();
   const menu = useMenu();
-  const history = useHistory();
+  const router = useRouter();
   const [open, setOpen] = React.useState(false);
 
   return <div>
@@ -74,8 +75,9 @@ export const MobileHeader = ({ }) => {
         <div className={classes.header}>
           <OlympLogo viewBox="0 0 381.82217 111.78744" width="170" height="50" className={classes.svg} />
         </div>
-        <IconButton color="inherit" component={NavLink} to="/profile"
-        ><AccountCircle /></IconButton>
+        <IconButton color="inherit" LinkComponent={Link} href="/profile">
+          <AccountCircle />
+        </IconButton>
         <IconButton color="inherit" onClick={() => setOpen(!open)}><MenuIcon /></IconButton>
       </Toolbar>
     </AppBar>
@@ -95,7 +97,7 @@ export const MobileHeader = ({ }) => {
           <Submenu item={{ type: 'link', text: 'Odhlásit se', href: '/' }} onClick={() => {
             setOpen(false);
             auth.signOut();
-            history.push('/');
+            router.push('/');
           }} />
         </>) : (
           <Submenu item={{ type: 'link', text: 'Přihlásit se', href: '/login' }} onClick={() => setOpen(false)} />

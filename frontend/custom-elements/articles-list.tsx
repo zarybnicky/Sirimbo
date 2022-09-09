@@ -4,10 +4,10 @@ import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache } from '@apollo/c
 import { useState } from 'react';
 import { Pagination } from './pagination';
 import { DateEl } from './date';
-import { UserQuery } from '../data/use-auth';
+import { UserQuery } from 'lib/data/use-auth';
 import { Dropdown } from './dropdown';
-import { $, AktualitiesOrderBy, Selector } from '../zeus';
-import { useTypedQuery } from '../zeus/apollo';
+import { $, AktualitiesOrderBy, Selector } from 'lib/zeus';
+import { useTypedQuery } from 'lib/zeus/apollo';
 
 export const ArticlesAdminQuery = Selector('Query')({
   aktualities: [

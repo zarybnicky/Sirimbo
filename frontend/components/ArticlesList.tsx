@@ -1,12 +1,12 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { Link } from 'react-router-dom';
-import { Button, Menu, MenuItem } from '@material-ui/core';
-import { Pagination } from '@material-ui/lab';
+import Link from 'next/link';
+import { Button, Menu, MenuItem } from '@mui/material';
+import { Pagination } from '@mui/lab';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import { $, AktualitiesOrderBy, Selector } from '../zeus';
-import { useTypedQuery } from '../zeus/apollo';
-import { useAuth } from '../data/use-auth';
+import { $, AktualitiesOrderBy, Selector } from 'lib/zeus';
+import { useTypedQuery } from 'lib/zeus/apollo';
+import { useAuth } from 'lib/data/use-auth';
 
 export const ArticlesAdminQuery = Selector('Query')({
   aktualities: [
@@ -47,14 +47,14 @@ export function ArticleAdminList() {
           <PopupState variant="popover">
             {(popupState) => <React.Fragment>
               <Button {...bindTrigger(popupState)}>{a.atJmeno}</Button>
-              <Menu {...bindMenu(popupState)} getContentAnchorEl={null}>
-                <MenuItem button onClick={popupState.close} component={Link} to={`/admin/aktuality/edit/${a.atId}`}>
+              <Menu {...bindMenu(popupState)}>
+                <MenuItem onClick={popupState.close} component={Link} to={`/admin/aktuality/edit/${a.atId}`}>
                   Upravit
                 </MenuItem>
-                <MenuItem button onClick={popupState.close} component={Link} to={`/admin/aktuality/foto/${a.atId}`}>
+                <MenuItem onClick={popupState.close} component={Link} to={`/admin/aktuality/foto/${a.atId}`}>
                   Upravit fotky
                 </MenuItem>
-                <MenuItem button onClick={popupState.close} component={Link} to={`/admin/aktuality/remove/${a.atId}`}>
+                <MenuItem onClick={popupState.close} component={Link} to={`/admin/aktuality/remove/${a.atId}`}>
                   Odstranit
                 </MenuItem>
               </Menu>
@@ -67,7 +67,7 @@ export function ArticleAdminList() {
   </table >;
 
   return <React.Fragment>
-    <a href="/admin/aktuality/add" className="btn btn-primary">Nový článek</a>
+    <Link href="/admin/aktuality/add" passHref><a className="btn btn-primary">Nový článek</a></Link>
     {list}
     <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
   </React.Fragment>;

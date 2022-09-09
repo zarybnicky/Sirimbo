@@ -1,4 +1,4 @@
-import { $, InputType, GraphQLTypes, RozpisItemsOrderBy, Selector } from '../zeus';
+import { $, InputType, GraphQLTypes, RozpisItemsOrderBy, Selector } from 'lib/zeus';
 
 export const ScheduleItemPartial = Selector('RozpisItem')({
   riOd: true,

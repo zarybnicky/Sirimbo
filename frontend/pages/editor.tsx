@@ -2,18 +2,18 @@ import * as React from 'react';
 import { createValue, Value } from '@react-page/editor';
 import {
   CircularProgress, Grid, TextField, List, ListItem, ListItemText, Typography, Button, ListItemIcon,
-} from '@material-ui/core';
+} from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { useConfirm } from 'material-ui-confirm';
+import { useConfirm } from 'mui-confirm';
 
-import { useTypedLazyQuery, useTypedMutation, useTypedQuery } from '../zeus/apollo';
-import { $, Selector, PagesOrderBy, GraphQLTypes } from '../zeus';
+import { useTypedLazyQuery, useTypedMutation, useTypedQuery } from 'lib/zeus/apollo';
+import { $, Selector, PagesOrderBy, GraphQLTypes } from 'lib/zeus';
 import { HeadingPlugin } from '../components/Heading';
 import { ContainerPlugin } from '../components/Container';
 import { CallToActionPlugin } from '../components/CallToAction';
 import { ReactPage, cellPlugins } from '../components/ReactPage';
 
-import AddIcon from '@material-ui/icons/Add';
+import AddIcon from '@mui/icons/Add';
 
 
 type Page = GraphQLTypes['Page'];

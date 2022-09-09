@@ -4,8 +4,8 @@ import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache } from '@apollo/c
 import { useState } from 'react';
 import { DateEl } from './date';
 import { Pagination } from './pagination';
-import { useTypedQuery } from '../zeus/apollo';
-import { $, UpozornenisOrderBy, Selector } from '../zeus';
+import { useTypedQuery } from 'lib/zeus/apollo';
+import { $, UpozornenisOrderBy, Selector } from 'lib/zeus';
 
 const AnnouncementQuery = Selector('Query')({
   upozornenis: [

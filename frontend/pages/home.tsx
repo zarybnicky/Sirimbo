@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Container, Grid, Typography } from '@material-ui/core';
+import { Container, Grid, Typography } from '@mui/material';
 import { Hero } from 'components/Hero';
 import { ServiceCard } from 'components/cards/ServiceCard';
 import { CallToAction } from 'components/CallToAction';

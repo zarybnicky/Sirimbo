@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { Button, Container, Typography, makeStyles } from '@material-ui/core';
+import Link from 'next/link';
+import { Button, Container, Typography, makeStyles } from '@mui/material';
 import type { CellPlugin } from '@react-page/editor';
 
 import CtaImage from '../../static/images/call-to-action.png';
@@ -57,7 +57,7 @@ export const CallToAction = ({ }) => {
         <Typography variant="h4" component="div" className={classes.firstLine}>PŘIDEJ SE K NÁM</Typography>
         <Typography variant="h5" component="div" className={classes.secondLine}>A OBJEV LÁSKU K TANCI</Typography>
         <Button
-          component={Link} to="/treninkove-programy"
+          LinkComponent={Link} href="/treninkove-programy"
           color="secondary" variant="contained" size="large"
           className={classes.button}
         >Chci tančit</Button>

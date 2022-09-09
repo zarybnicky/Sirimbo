@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Container } from '@material-ui/core';
+import { Container } from '@mui/material';
 import type { CellPlugin } from '@react-page/editor';
 
 export const ContainerPlugin: CellPlugin<{
