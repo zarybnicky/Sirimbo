@@ -8,6 +8,7 @@ import { DateRange } from './date';
 import { Dropdown } from './dropdown';
 import { $, AkcesOrderBy, Selector } from 'lib/zeus';
 import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
+import { scalars } from 'lib/apollo';
 
 export const AkceList = Selector('Query')({
   akces: [
@@ -48,7 +49,14 @@ export const AkceList = Selector('Query')({
 
 export const ToggleVisible = Selector('Mutation')({
   updateAkce: [
-    { input: { aId: $`id`, patch: { aVisible: $`visible` } } },
+    {
+      input: {
+        aId: $('id', 'BigInt!'),
+        patch: {
+          aVisible: $('visible', 'Boolean!')
+        },
+      },
+    },
     {
       akce: {
         aId: true,
@@ -58,19 +66,24 @@ export const ToggleVisible = Selector('Mutation')({
 });
 
 export function EventList() {
-  const [limit, setLimit] = useState(30);
+  const [limit] = useState(30);
   const [offset, setOffset] = useState(0);
   const [total, setTotal] = useState(0);
   const { data, refetch } = useTypedQuery(AkceList, {
-    variables: { limit, offset },
-    onCompleted: (data) => {
-      const total = data.akces?.totalCount;
-      total && setTotal(total);
+    scalars,
+    apolloOptions: {
+      variables: { limit, offset },
+      onCompleted: (data) => {
+        const total = data.akces?.totalCount;
+        total && setTotal(total);
+      },
     },
   });
   const setPage = (x: { selected: number; }) => setOffset(x.selected * limit);
   const [toggleVisible] = useTypedMutation(ToggleVisible, {
-    onCompleted: () => refetch(),
+    apolloOptions: {
+      onCompleted: () => refetch(),
+    },
   });
 
   const list = !data?.akces?.nodes.length ? null : <table>

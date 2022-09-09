@@ -6,6 +6,7 @@ import { Pagination } from '@mui/lab';
 import { $, AkcesOrderBy, Selector } from 'lib/zeus';
 import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
 import { DateRange } from './DateRange';
+import { scalars } from 'lib/apollo';
 
 export const EventListQuery = Selector('Query')({
   akces: [
@@ -46,7 +47,14 @@ export const EventListQuery = Selector('Query')({
 
 export const ToggleEventVisible = Selector('Mutation')({
   updateAkce: [
-    { input: { aId: $`id`, patch: { aVisible: $`visible` } } },
+    {
+      input: {
+        aId: $('id', 'BigInt!'),
+        patch: {
+          aVisible: $('visible', 'Boolean!')
+        },
+      },
+    },
     {
       akce: {
         aId: true,
@@ -59,10 +67,15 @@ export function EventList() {
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
   const { data, refetch } = useTypedQuery(EventListQuery, {
-    variables: { limit, offset: (page - 1) * limit },
+    scalars,
+    apolloOptions: {
+      variables: { limit, offset: (page - 1) * limit },
+    },
   });
   const [toggleVisible] = useTypedMutation(ToggleEventVisible, {
-    onCompleted: () => refetch(),
+    apolloOptions: {
+      onCompleted: () => refetch(),
+    },
   });
   const total = data?.akces?.totalCount || 0;
 
@@ -81,17 +94,17 @@ export function EventList() {
           <PopupState variant="popover">
             {(popupState) => <React.Fragment>
               <Button {...bindTrigger(popupState)}>{a.aJmeno}</Button>
-              <Menu {...bindMenu(popupState)} getContentAnchorEl={null}>
-                <MenuItem button onClick={popupState.close} LinkComponent={Link} to={`/admin/akce/edit/${a.aId}`}>
+              <Menu {...bindMenu(popupState)}>
+                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/akce/edit/${a.aId}`}>
                   Upravit
                 </MenuItem>
-                <MenuItem button onClick={popupState.close} LinkComponent={Link} to={`/admin/akce/detail/${a.aId}`}>
+                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/akce/detail/${a.aId}`}>
                   Upravit účastníky
                 </MenuItem>
-                <MenuItem button onClick={popupState.close} LinkComponent={Link} to={`/admin/akce/dokumenty/${a.aId}`}>
+                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/akce/dokumenty/${a.aId}`}>
                   Upravit dokumenty
                 </MenuItem>
-                <MenuItem button onClick={popupState.close} LinkComponent={Link} to={`/admin/akce/remove/${a.aId}`}>
+                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/akce/remove/${a.aId}`}>
                   Odstranit
                 </MenuItem>
               </Menu>

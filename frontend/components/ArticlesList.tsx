@@ -56,13 +56,13 @@ export function ArticleAdminList() {
             {(popupState) => <React.Fragment>
               <Button {...bindTrigger(popupState)}>{a.atJmeno}</Button>
               <Menu {...bindMenu(popupState)}>
-                <MenuItem onClick={popupState.close} component={Link} to={`/admin/aktuality/edit/${a.atId}`}>
+                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/aktuality/edit/${a.atId}`}>
                   Upravit
                 </MenuItem>
-                <MenuItem onClick={popupState.close} component={Link} to={`/admin/aktuality/foto/${a.atId}`}>
+                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/aktuality/foto/${a.atId}`}>
                   Upravit fotky
                 </MenuItem>
-                <MenuItem onClick={popupState.close} component={Link} to={`/admin/aktuality/remove/${a.atId}`}>
+                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/aktuality/remove/${a.atId}`}>
                   Odstranit
                 </MenuItem>
               </Menu>

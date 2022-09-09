@@ -43,7 +43,6 @@ export const AuthButton = ({ }) => {
       </Button>
       <Menu
         {...bindMenu(popupState)}
-        getContentAnchorEl={null}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
