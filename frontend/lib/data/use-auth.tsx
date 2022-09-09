@@ -43,17 +43,21 @@ function useApiAuth(): AuthContextType {
       { result: { usr: UserPartial, couple: CouplePartial } },
     ]
   }, {
-    onError: () => setIsLoading(false),
+    apolloOptions: {
+      onError: () => setIsLoading(false),
+    },
   });
   const [signOut] = useTypedMutation({
     logout: [{ input: {} }, { __typename: true }],
   });
   useTypedQuery({ getCurrentUser: UserPartial }, {
-    onCompleted: (data) => {
-      setUser(data.getCurrentUser as AppUser);
-      setIsLoading(false);
+    apolloOptions: {
+      onCompleted: (data) => {
+        setUser(data.getCurrentUser as AppUser);
+        setIsLoading(false);
+      },
+      onError: () => setIsLoading(false),
     },
-    onError: () => setIsLoading(false),
   });
   /* useEffect(() => {
    *   const unsubscribe = firebase.auth().onAuthStateChanged(setUser);

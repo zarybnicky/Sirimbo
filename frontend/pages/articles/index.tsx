@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Container, Grid, Typography } from '@mui/material';
 import { Pagination } from '@mui/lab';
-import { Helmet } from 'react-helmet-async';
 import { ArticleCard } from 'components/cards/ArticleCard';
-import { useArticles } from 'data/use-articles';
+import { useArticles } from 'lib/data/use-articles';
 import { CallToAction } from 'components/CallToAction';
+import Head from 'next/head';
 
 export const ArticlesPage = ({ }) => {
   const [limit] = React.useState(12);
@@ -12,9 +12,9 @@ export const ArticlesPage = ({ }) => {
   const { articles, count } = useArticles(limit, (page - 1) * limit);
 
   return <React.Fragment>
-    <Helmet>
+    <Head>
       <title>Články | TK Olymp</title>
-    </Helmet>
+    </Head>
     <Container maxWidth="lg" style={{ margin: '4rem auto 3rem' }}>
       <Typography gutterBottom variant="h4" component="h2">Aktuálně</Typography>
       <Grid container spacing={3} style={{ alignItems: "stretch", marginBottom: '2rem' }}>

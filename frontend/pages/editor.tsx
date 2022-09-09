@@ -4,20 +4,21 @@ import {
   CircularProgress, Grid, TextField, List, ListItem, ListItemText, Typography, Button, ListItemIcon,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { useConfirm } from 'mui-confirm';
+import { useConfirm } from 'material-ui-confirm';
 
 import { useTypedLazyQuery, useTypedMutation, useTypedQuery } from 'lib/zeus/apollo';
-import { $, Selector, PagesOrderBy, GraphQLTypes } from 'lib/zeus';
-import { HeadingPlugin } from '../components/Heading';
-import { ContainerPlugin } from '../components/Container';
-import { CallToActionPlugin } from '../components/CallToAction';
-import { ReactPage, cellPlugins } from '../components/ReactPage';
+import { $, Selector, PagesOrderBy, ModelTypes } from 'lib/zeus';
+import { HeadingPlugin } from 'components/Heading';
+import { ContainerPlugin } from 'components/Container';
+import { CallToActionPlugin } from 'components/CallToAction';
+import { ReactPage, cellPlugins } from 'components/ReactPage';
 
-import AddIcon from '@mui/icons/Add';
+import AddIcon from '@mui/icons-material/Add';
+import { scalars } from 'lib/apollo';
 
 
-type Page = GraphQLTypes['Page'];
-type PageRevision = GraphQLTypes['PageRevision'];
+type Page = ModelTypes['Page'];
+type PageRevision = ModelTypes['PageRevision'];
 
 const INITIAL_VALUE: Value = createValue({
   rows: [
@@ -70,10 +71,15 @@ export const EditorPage = ({ }) => {
       { orderBy: [PagesOrderBy.URL_ASC] },
       { nodes: PageFragment },
     ],
-  });
+  }, { scalars });
+
   const [fetchRevs] = useTypedLazyQuery({
     pageRevisions: [
-      { condition: { id: $`id` } },
+      {
+        condition: {
+          id: $('id', 'BigInt!'),
+        },
+      },
       {
         nodes: {
           __typename: true,
@@ -90,20 +96,42 @@ export const EditorPage = ({ }) => {
         },
       },
     ],
-  });
+  }, { scalars });
+
   const [doCreatePage] = useTypedMutation({
     createPage: [
-      { input: { page: { url: $`url`, title: $`title`, content: $`content` } } },
+      {
+        input: {
+          page: {
+            url: $('url', 'String!'),
+            title: $('title', 'String!'),
+            content: $('content', 'JSON!'),
+          }
+        }
+      },
       { page: PageFragment },
     ],
-  });
+  }, { scalars });
+
   const [doSavePage] = useTypedMutation({
     updatePage: [
-      { input: { id: $`id`, patch: { url: $`url`, title: $`title`, content: $`content` } } },
+      {
+        input: {
+          id: $('id', 'BigInt!'),
+          patch: {
+            url: $('url', 'String!'),
+            title: $('title', 'String!'),
+            content: $('content', 'JSON!'),
+          }
+        }
+      },
       { __typename: true },
     ],
   }, {
-    onCompleted: () => refetch(),
+    scalars,
+    apolloOptions: {
+      onCompleted: () => refetch(),
+    },
   });
 
   const [loading, setLoading] = React.useState<boolean>(false);

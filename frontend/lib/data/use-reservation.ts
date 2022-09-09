@@ -40,7 +40,7 @@ export type Reservation = InputType<GraphQLTypes["Nabidka"], typeof ReservationP
 
 export const ReservationRangeQuery = Selector('Query')({
   reservationsForRange: [
-    { endDate: $`endDate`, startDate: $`startDate` },
+    { endDate: $('endDate', 'Date!'), startDate: $('startDate', 'Date!') },
     { nodes: ReservationPartial },
   ],
 });

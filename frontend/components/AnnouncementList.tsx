@@ -7,10 +7,15 @@ import { $, UpozornenisOrderBy, Selector } from 'lib/zeus';
 
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { scalars } from 'lib/apollo';
 
 const AnnouncementQuery = Selector('Query')({
   upozornenis: [
-    { first: $`limit`, offset: $`offset`, orderBy: [UpozornenisOrderBy.UP_TIMESTAMP_ADD_DESC] },
+    {
+      first: $('limit', 'Int!'),
+      offset: $('offset', 'Int!'),
+      orderBy: [UpozornenisOrderBy.UP_TIMESTAMP_ADD_DESC],
+    },
     {
       totalCount: true,
       nodes: {
@@ -45,8 +50,12 @@ export function AnnouncementList() {
   const [limit] = React.useState(5);
   const [page, setPage] = React.useState(1);
   const { data } = useTypedQuery(AnnouncementQuery, {
-    variables: { limit, offset: (page - 1) * limit },
+    scalars,
+    apolloOptions: {
+      variables: { limit, offset: (page - 1) * limit },
+    },
   });
+
   const nodes = data?.upozornenis?.nodes;
   const total = data?.upozornenis?.totalCount;
   if (nodes === undefined || total === undefined) {

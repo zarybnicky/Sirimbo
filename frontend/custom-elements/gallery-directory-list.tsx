@@ -10,7 +10,11 @@ import { Dropdown } from './dropdown';
 
 const GalleryDirList = Selector('Query')({
   galerieDirs: [
-    { first: $`limit`, offset: $`offset`, orderBy: [GalerieDirsOrderBy.GD_NAME_ASC] },
+    {
+      first: $('limit', 'Int!'),
+      offset: $('offset', 'Int!'),
+      orderBy: [GalerieDirsOrderBy.GD_NAME_ASC]
+    },
     {
       nodes: {
         gdHidden: true,
@@ -27,7 +31,12 @@ const GalleryDirList = Selector('Query')({
 
 const ToggleVisible = Selector('Mutation')({
   updateGalerieDir: [
-    { input: { gdId: $`id`, patch: { gdHidden: $`visible` } } },
+    {
+      input: {
+        gdId: $('id', 'BigInt!'),
+        patch: { gdHidden: $('visible', 'Boolean!') },
+      },
+    },
     {
       galerieDir: {
         gdId: true,

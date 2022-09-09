@@ -6,10 +6,15 @@ import { DateEl } from './date';
 import { Pagination } from './pagination';
 import { useTypedQuery } from 'lib/zeus/apollo';
 import { $, UpozornenisOrderBy, Selector } from 'lib/zeus';
+import { scalars } from 'lib/apollo';
 
 const AnnouncementQuery = Selector('Query')({
   upozornenis: [
-    { first: $`limit`, offset: $`offset`, orderBy: [UpozornenisOrderBy.UP_TIMESTAMP_ADD_DESC] },
+    {
+      first: $('limit', 'Int!'),
+      offset: $('offset', 'Int!'),
+      orderBy: [UpozornenisOrderBy.UP_TIMESTAMP_ADD_DESC],
+    },
     {
       totalCount: true,
       nodes: {
@@ -45,10 +50,13 @@ export function AnnouncementList() {
   const [offset, setOffset] = useState(0);
   const [total, setTotal] = useState(0);
   const { data } = useTypedQuery(AnnouncementQuery, {
-    variables: { limit, offset },
-    onCompleted: (data) => {
-      const total = data.upozornenis?.totalCount;
-      total && setTotal(total);
+    scalars,
+    apolloOptions: {
+      variables: { limit, offset },
+      onCompleted: (data) => {
+        const total = data.upozornenis?.totalCount;
+        total && setTotal(total);
+      },
     },
   });
   const setPage = (x: { selected: number; }) => setOffset(x.selected * limit);

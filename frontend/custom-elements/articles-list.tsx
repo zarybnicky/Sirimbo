@@ -8,10 +8,15 @@ import { UserQuery } from 'lib/data/use-auth';
 import { Dropdown } from './dropdown';
 import { $, AktualitiesOrderBy, Selector } from 'lib/zeus';
 import { useTypedQuery } from 'lib/zeus/apollo';
+import { scalars } from 'lib/apollo';
 
 export const ArticlesAdminQuery = Selector('Query')({
   aktualities: [
-    { first: $`limit`, offset: $`offset`, orderBy: [AktualitiesOrderBy.AT_TIMESTAMP_ADD_DESC] },
+    {
+      first: $('limit', 'Int!'),
+      offset: $('offset', 'Int!'),
+      orderBy: [AktualitiesOrderBy.AT_TIMESTAMP_ADD_DESC]
+    },
     {
       nodes: {
         atFoto: true,
@@ -35,10 +40,13 @@ export function ArticleAdminList() {
   const [total, setTotal] = useState(0);
   const { data: user } = useTypedQuery(UserQuery);
   const { data } = useTypedQuery(ArticlesAdminQuery, {
-    variables: { limit, offset },
-    onCompleted: (data) => {
-      const total = data.aktualities?.totalCount;
-      total && setTotal(total);
+    scalars,
+    apolloOptions: {
+      variables: { limit, offset },
+      onCompleted: (data) => {
+        const total = data.aktualities?.totalCount;
+        total && setTotal(total);
+      },
     },
   });
   const setPage = (x: { selected: number; }) => setOffset(x.selected * limit);
@@ -60,7 +68,7 @@ export function ArticleAdminList() {
           }} />
           {a.atJmeno}
         </td>
-        <td><DateEl date={a.atTimestampAdd} /></td>
+        <td>{a.atTimestampAdd && <DateEl date={a.atTimestampAdd} />}</td>
       </tr>)}
     </tbody>
   </table >;

@@ -11,7 +11,11 @@ import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
 
 export const ScheduleListQuery = Selector('Query')({
   rozpis: [
-    { first: $`limit`, offset: $`offset`, orderBy: [RozpisOrderBy.R_DATUM_DESC] },
+    {
+      first: $('limit', 'Int!'),
+      offset: $('offset', 'Int!'),
+      orderBy: [RozpisOrderBy.R_DATUM_DESC],
+    },
     {
       nodes: {
         rDatum: true,

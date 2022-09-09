@@ -7,9 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "schema": "yarn schema:gen && yarn schema:fix",
-    "schema:fix": "sed -i -f graphql.sed lib/zeus/index.ts",
-    "schema:gen": "zeus http://localhost:3000/graphql -H Content-Type:application/json -j schema.json ./lib --apollo"
+    "schema": "zeus http://localhost:3000/graphql -H Content-Type:application/json -j schema.json ./lib --apollo"
   },
   "dependencies": {
     "@apollo/client": "^3.4.16",
@@ -50,6 +48,7 @@
     "iban": "^0.0.14",
     "jquery": "^3.6.1",
     "leaflet": "^1.8.0",
+    "material-ui-confirm": "^3.0.5",
     "material-ui-popup-state": "^4.0.2",
     "next": "^12.2.5",
     "nextjs-google-analytics": "^2.1.0",

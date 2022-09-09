@@ -2,6 +2,7 @@ import { getPlaceholder } from '../test-utils';
 import { $, GalerieFotosOrderBy, Selector } from 'lib/zeus';
 import { useTypedQuery } from 'lib/zeus/apollo';
 import format from 'date-fns/format';
+import { scalars } from 'lib/apollo';
 
 const GalleryPhotoPartial = Selector('GalerieFoto')({
   __typename: true,
@@ -27,7 +28,7 @@ const GalleryDirPartial = Selector('GalerieDir')({
 
 export const GalleryDirQuery = Selector('Query')({
   galerieDir: [
-    { gdId: $`dirId` },
+    { gdId: $('dirId', 'BigInt!') },
     {
       ...GalleryDirPartial,
       galerieFotosByGfIdRodic: [
@@ -37,7 +38,7 @@ export const GalleryDirQuery = Selector('Query')({
     },
   ],
   galerieDirs: [
-    { condition: { gdIdRodic: $`dirId2`, gdHidden: false } },
+    { condition: { gdIdRodic: $('dirId2', 'BigInt!'), gdHidden: false } },
     {
       nodes: {
         ...GalleryDirPartial,
@@ -52,7 +53,7 @@ export const GalleryDirQuery = Selector('Query')({
 
 export interface GalleryDir {
   name?: string;
-  parentId?: string;
+  parentId?: number;
 }
 
 export interface GalleryItem {
@@ -70,9 +71,12 @@ export const useGallery = (dir: number): {
   images: GalleryItem[];
 } => {
   const { data } = useTypedQuery(GalleryDirQuery, {
-    variables: {
-      dirId: dir,
-      dirId2: dir,
+    scalars,
+    apolloOptions: {
+      variables: {
+        dirId: dir,
+        dirId2: dir,
+      },
     },
   });
   const dirs = (data?.galerieDirs?.nodes || []).map((x) => {
@@ -92,7 +96,7 @@ export const useGallery = (dir: number): {
       id: x.gfId,
       name: x.gfName,
       href: `/gallery/${x.gfIdRodic}/photo/${x.gfId}`,
-      date: format(new Date(x.gfTimestamp), 'd. M. y'),
+      date: x.gfTimestamp ? format(x.gfTimestamp, 'd. M. y') : '',
       img: decodeURIComponent(`/galerie/${x.gfPath}`),
       imgThumb: decodeURIComponent(`/galerie/thumbnails/${x.gfPath}`),
     };

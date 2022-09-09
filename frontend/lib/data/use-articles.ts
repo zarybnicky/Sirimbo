@@ -4,7 +4,11 @@ import { useTypedQuery } from 'lib/zeus/apollo';
 
 export const ArticlesQuery = Selector('Query')({
   aktualities: [
-    { first: $`limit`, offset: $`offset`, orderBy: [AktualitiesOrderBy.AT_TIMESTAMP_ADD_DESC] },
+    {
+      first: $('limit', 'Int!'),
+      offset: $('offset', 'Int!'),
+      orderBy: [AktualitiesOrderBy.AT_TIMESTAMP_ADD_DESC],
+    },
     {
       nodes: {
         atId: true,
@@ -33,7 +37,9 @@ export const useArticles = (limit: number, offset: number): {
   count: number;
 } => {
   const { data } = useTypedQuery(ArticlesQuery, {
-    variables: { limit, offset },
+    apolloOptions: {
+      variables: { limit, offset },
+    },
   });
 
   return {

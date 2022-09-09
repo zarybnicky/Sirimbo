@@ -8,7 +8,11 @@ import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
 
 const GalleryDirList = Selector('Query')({
   galerieDirs: [
-    { first: $`limit`, offset: $`offset`, orderBy: [GalerieDirsOrderBy.GD_NAME_ASC] },
+    {
+      first: $('limit', 'Int!'),
+      offset: $('offset', 'Int!'),
+      orderBy: [GalerieDirsOrderBy.GD_NAME_ASC]
+    },
     {
       nodes: {
         gdHidden: true,

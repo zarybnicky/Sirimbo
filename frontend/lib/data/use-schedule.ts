@@ -39,7 +39,7 @@ export type Schedule = InputType<GraphQLTypes["Rozpi"], typeof SchedulePartial>;
 
 export const ScheduleRangeQuery = Selector('Query')({
   schedulesForRange: [
-    { endDate: $`endDate`, startDate: $`startDate` },
+    { endDate: $(`endDate`, 'Date!'), startDate: $(`startDate`, 'Date!') },
     { nodes: SchedulePartial },
   ],
 });

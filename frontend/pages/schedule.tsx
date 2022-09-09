@@ -7,16 +7,23 @@ import { Schedule, ScheduleItem, ScheduleRangeQuery } from 'lib/data/use-schedul
 import { Reservation, ReservationItem, ReservationRangeQuery } from 'lib/data/use-reservation';
 import { PermissionLevel, usePermissions } from 'lib/data/use-permissions';
 import { formatDateRange } from '../custom-elements/date';
+import { scalars } from 'lib/apollo';
 
 export const SchedulePage = ({ }) => {
   // require or redirect
   const { user, couple } = useAuth();
   const perms = usePermissions();
   const { data: schedules } = useTypedQuery(ScheduleRangeQuery, {
-    variables: { startDate: '2022-02-01', endDate: '2022-04-01' },
+    scalars,
+    apolloOptions: {
+      variables: { startDate: '2022-02-01', endDate: '2022-04-01' },
+    },
   });
   const { data: reservations } = useTypedQuery(ReservationRangeQuery, {
-    variables: { startDate: '2022-02-01', endDate: '2022-04-01' },
+    scalars,
+    apolloOptions: {
+      variables: { startDate: '2022-02-01', endDate: '2022-04-01' },
+    },
   });
 
   const canEditSchedule = (trainerId: number) => (
@@ -56,7 +63,7 @@ export const SchedulePage = ({ }) => {
         <CardContent>
           <div className="h5 mb-0">
             {item.userByRTrener?.uJmeno} {item.userByRTrener?.uPrijmeni}
-            {canEditSchedule(item.userByRTrener?.uId) && (
+            {item.userByRTrener && canEditSchedule(item.userByRTrener?.uId) && (
               <div className="btn-group">
                 <button type="button" className="btn btn-xs pt-0" data-toggle="dropdown">
                   <img alt="Upravit" width="16" src="/style/icon-gear.png" />
@@ -73,7 +80,7 @@ export const SchedulePage = ({ }) => {
           <hr />
           {(item.rozpisItemsByRiIdRodic.nodes || []).map((lesson, i) => (
             <Grid container key={i} spacing={2}>
-              <Grid item>{lesson.riOd.slice(0, 5)}-{lesson.riDo.slice(0, 5)}</Grid>
+              <Grid item>{lesson.riOd.toTimeString()}-{lesson.riDo.toTimeString()}</Grid>
               <Grid item style={{ flexGrow: 1 }}>
                 {canSignUp(lesson, item) ? (
                   <button name="action" value="signup" className="py-0 btn btn-outline-primary btn-sm">+</button>

@@ -6,10 +6,11 @@ import { useTypedQuery } from 'lib/zeus/apollo';
 import { CallToAction } from 'components/CallToAction';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { scalars } from 'lib/apollo';
 
 export const ArticleQuery = Selector('Query')({
   aktuality: [
-    { atId: $`id` },
+    { atId: $('id', 'BigInt!') },
     {
       atJmeno: true,
       atText: true,
@@ -27,7 +28,7 @@ export const ArticleQuery = Selector('Query')({
 export const ArticlePage = ({ }) => {
   const router = useRouter();
   const id = router.query.id as string;
-  const { data } = useTypedQuery(ArticleQuery, { variables: { id } });
+  const { data } = useTypedQuery(ArticleQuery, { scalars, apolloOptions: { variables: { id } } });
   const x = data?.aktuality;
   if (!x) {
     return null;
@@ -47,7 +48,7 @@ export const ArticlePage = ({ }) => {
       <Typography variant="h3" component="h2">{x.atJmeno}</Typography>
       <Typography color="textSecondary">
         {x.userByAtKdo?.uJmeno} {x.userByAtKdo?.uPrijmeni}{', '}
-        {format(new Date(x.atTimestampAdd), 'd. M. y')}
+        {x.atTimestampAdd && format(x.atTimestampAdd, 'd. M. y')}
       </Typography>
       <div dangerouslySetInnerHTML={{ __html: x.atText }}></div>
     </Container>

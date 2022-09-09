@@ -5,9 +5,9 @@ import { ServiceCard } from 'components/cards/ServiceCard';
 import { CallToAction } from 'components/CallToAction';
 import { ArticleCard } from 'components/cards/ArticleCard';
 import { VideoCard } from 'components/cards/VideoCard';
-import { useTitleVideos } from 'data/use-videos';
-import { useArticles } from 'data/use-articles';
-import { useServices } from 'data';
+import { useTitleVideos } from 'lib/data/use-videos';
+import { useArticles } from 'lib/data/use-articles';
+import { useServices } from 'lib/data';
 
 export const HomePage = ({ }) => {
   const { articles } = useArticles(2, 3);

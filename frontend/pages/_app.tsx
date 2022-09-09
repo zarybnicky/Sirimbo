@@ -4,7 +4,7 @@ import Router from "next/router";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 import { GoogleAnalytics, event } from "nextjs-google-analytics";
-import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client';
 
 import "public/style/index.scss";
 
@@ -16,6 +16,7 @@ import '@react-page/plugins-image/lib/index.css';
 import 'leaflet/dist/leaflet.css';
 
 import L from 'leaflet';
+import { client } from "lib/apollo";
 delete (L.Icon.Default.prototype as unknown as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png').default,
@@ -26,11 +27,6 @@ L.Icon.Default.mergeOptions({
 Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
-
-const client = new ApolloClient({
-  link: new HttpLink({ uri: '/graphql' }),
-  cache: new InMemoryCache(),
-});
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (

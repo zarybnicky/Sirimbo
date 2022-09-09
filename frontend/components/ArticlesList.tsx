@@ -7,10 +7,15 @@ import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { $, AktualitiesOrderBy, Selector } from 'lib/zeus';
 import { useTypedQuery } from 'lib/zeus/apollo';
 import { useAuth } from 'lib/data/use-auth';
+import { scalars } from 'lib/apollo';
 
 export const ArticlesAdminQuery = Selector('Query')({
   aktualities: [
-    { first: $`limit`, offset: $`offset`, orderBy: [AktualitiesOrderBy.AT_TIMESTAMP_ADD_DESC] },
+    {
+      first: $('limit', 'Int!'),
+      offset: $('offset', 'Int!'),
+      orderBy: [AktualitiesOrderBy.AT_TIMESTAMP_ADD_DESC]
+    },
     {
       nodes: {
         atFoto: true,
@@ -33,7 +38,10 @@ export function ArticleAdminList() {
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
   const { data } = useTypedQuery(ArticlesAdminQuery, {
-    variables: { limit, offset: (page - 1) * limit },
+    scalars,
+    apolloOptions: {
+      variables: { limit, offset: (page - 1) * limit },
+    },
   });
   const total = data?.aktualities?.totalCount || 0;
 
@@ -42,7 +50,7 @@ export function ArticleAdminList() {
       <tr><th>Jméno</th><th>Přidáno</th></tr>
     </thead>
     <tbody>
-      {data!.aktualities?.nodes.map((a) => <tr key={a.atId}>
+      {data?.aktualities?.nodes?.map((a) => <tr key={a.atId}>
         <td>
           <PopupState variant="popover">
             {(popupState) => <React.Fragment>
@@ -61,7 +69,7 @@ export function ArticleAdminList() {
             </React.Fragment>}
           </PopupState>
         </td>
-        <td>{format(new Date(a.atTimestampAdd), 'd. M. y')}</td>
+        <td>{a.atTimestampAdd && format(a.atTimestampAdd, 'd. M. y')}</td>
       </tr>)}
     </tbody>
   </table >;

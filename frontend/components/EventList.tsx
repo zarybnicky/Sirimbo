@@ -9,7 +9,11 @@ import { DateRange } from './DateRange';
 
 export const EventListQuery = Selector('Query')({
   akces: [
-    { first: $`limit`, offset: $`offset`, orderBy: [AkcesOrderBy.A_OD_DESC] },
+    {
+      first: $('limit', 'Int!'),
+      offset: $('offset', 'Int!'),
+      orderBy: [AkcesOrderBy.A_OD_DESC],
+    },
     {
       nodes: {
         aDo: true,

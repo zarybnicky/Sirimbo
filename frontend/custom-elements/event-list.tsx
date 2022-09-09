@@ -11,7 +11,11 @@ import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
 
 export const AkceList = Selector('Query')({
   akces: [
-    { first: $`limit`, offset: $`offset`, orderBy: [AkcesOrderBy.A_OD_DESC] },
+    {
+      first: $('limit', 'Int!'),
+      offset: $('offset', 'Int!'),
+      orderBy: [AkcesOrderBy.A_OD_DESC],
+    },
     {
       nodes: {
         aDo: true,

@@ -11,6 +11,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { scalars } from 'lib/apollo';
 
 const ProspectQuery = Selector('Query')({
   activeProspects: [
@@ -34,7 +35,7 @@ const ProspectQuery = Selector('Query')({
 });
 
 export const CrmPage = ({ }) => {
-  const { data } = useTypedQuery(ProspectQuery);
+  const { data } = useTypedQuery(ProspectQuery, { scalars });
   const nodes = data?.activeProspects?.nodes || [];
 
   return <Container maxWidth="lg" style={{ padding: '2rem 0' }}>
@@ -60,7 +61,7 @@ export const CrmPage = ({ }) => {
               <TableCell>{row.data?.phone}</TableCell>
               <TableCell>{row.data?.yearofbirth}</TableCell>
               <TableCell>{row.cohort}</TableCell>
-              <TableCell>{format(new Date(row.updatedAt), 'd. M. y')}</TableCell>
+              <TableCell>{row.updatedAt && format(row.updatedAt, 'd. M. y')}</TableCell>
             </TableRow>
           ))}
         </TableBody>

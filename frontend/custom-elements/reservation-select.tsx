@@ -1,11 +1,12 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache } from '@apollo/client';
-import { $, GraphQLTypes, Selector, NabidkasOrderBy } from 'lib/zeus';
+import { $, Selector, NabidkasOrderBy, ModelTypes } from 'lib/zeus';
 import { useTypedQuery } from 'lib/zeus/apollo';
 import { formatDateRange } from './date';
+import { scalars } from 'lib/apollo';
 
-const ReservationView = (x: GraphQLTypes["Nabidka"]) => {
+const ReservationView = (x: ModelTypes["Nabidka"]) => {
   const header = <div className="trenink-header">
     <div className="title">
       {x.userByNTrener?.uJmeno} {x.userByNTrener?.uPrijmeni}
@@ -55,7 +56,11 @@ const ReservationView = (x: GraphQLTypes["Nabidka"]) => {
 
 export const NabidkaList = Selector("Query")({
   nabidkas: [
-    { first: $`limit`, offset: $`offset`, orderBy: [NabidkasOrderBy.N_OD_DESC] },
+    {
+      first: $('limit', 'Int!'),
+      offset: $('offset', 'Int!'),
+      orderBy: [NabidkasOrderBy.N_OD_DESC],
+    },
     {
       nodes: {
         nDo: true,
@@ -93,19 +98,21 @@ export const NabidkaList = Selector("Query")({
 });
 
 export function ReservationSelect() {
-  const { data: reservations } = useTypedQuery(NabidkaList);
-  const [reservation, setReservation] = React.useState<GraphQLTypes["Nabidka"] | undefined>();
+  const { data: reservations } = useTypedQuery(NabidkaList, { scalars });
+  const [reservation, setReservation] = React.useState<ModelTypes["Nabidka"] | undefined>();
   const onChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const id = parseInt(event.target.value, 10);
-    setReservation(reservations?.nabidkas?.nodes?.find(x => x.nId === id) as GraphQLTypes["Nabidka"]);
+    setReservation(reservations?.nabidkas?.nodes?.find(x => x.nId === id) as ModelTypes["Nabidka"]);
   };
 
   return <div>
     <select className='team-selection' value={reservation?.nId || 'none'} onChange={onChange}>
       <option value='none'> --vyberte nabídku-- </option>
-      {(reservations?.nabidkas?.nodes || []).map(x => <option value={x.nId} key={x.nId}>
-        {`${formatDateRange(x.nOd, x.nDo)} - ${x.userByNTrener?.uJmeno} ${x.userByNTrener?.uPrijmeni}`}
-      </option>)}
+      {reservations?.nabidkas?.nodes?.map(x => (
+        <option value={x.nId} key={x.nId}>
+          {formatDateRange(x.nOd, x.nDo)} - {x.userByNTrener?.uJmeno} {x.userByNTrener?.uPrijmeni}
+        </option>
+      ))}
     </select>
     {reservation ? ReservationView(reservation) : null}
   </div>;

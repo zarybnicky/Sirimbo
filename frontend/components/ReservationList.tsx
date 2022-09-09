@@ -10,7 +10,11 @@ import { DateRange } from './DateRange';
 
 export const NabidkaAdminQuery = Selector('Query')({
   nabidkas: [
-    { first: $`limit`, offset: $`offset`, orderBy: [NabidkasOrderBy.N_OD_DESC] },
+    {
+      first: $('limit', 'Int!'),
+      offset: $('offset', 'Int!'),
+      orderBy: [NabidkasOrderBy.N_OD_DESC],
+    },
     {
       nodes: {
         nDo: true,

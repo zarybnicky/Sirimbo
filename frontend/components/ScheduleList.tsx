@@ -7,10 +7,15 @@ import { Pagination } from '@mui/lab';
 import { $, RozpisOrderBy, Selector } from 'lib/zeus';
 import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
 import { useAuth } from 'lib/data/use-auth';
+import { scalars } from 'lib/apollo';
 
 export const ScheduleListQuery = Selector('Query')({
   rozpis: [
-    { first: $`limit`, offset: $`offset`, orderBy: [RozpisOrderBy.R_DATUM_DESC] },
+    {
+      first: $('limit', 'Int!'),
+      offset: $('offset', 'Int!'),
+      orderBy: [RozpisOrderBy.R_DATUM_DESC]
+    },
     {
       nodes: {
         rDatum: true,
@@ -55,10 +60,16 @@ export function RozpisAdminList() {
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
   const { data, refetch } = useTypedQuery(ScheduleListQuery, {
-    variables: { limit, offset: (page - 1) * limit },
+    scalars,
+    apolloOptions: {
+      variables: { limit, offset: (page - 1) * limit },
+    },
   });
   const [toggleVisible] = useTypedMutation(ToggleScheduleVisible, {
-    onCompleted: () => refetch(),
+    scalars,
+    apolloOptions: {
+      onCompleted: () => refetch(),
+    },
   });
   const total = data?.rozpis?.totalCount || 0;
 
