@@ -78,36 +78,6 @@ export const useServices = () => [
   },
 ];
 
-export const useExternalTrainers = () => [
-  {
-    image: '',
-    name: '',
-    content: [{
-      type: 'bulleted-list',
-      children: [
-      ]
-    }],
-  },
-  {
-    image: '',
-    name: '',
-    content: [{
-      type: 'bulleted-list',
-      children: [
-      ]
-    }],
-  },
-  {
-    image: '',
-    name: '',
-    content: [{
-      type: 'bulleted-list',
-      children: [
-      ]
-    }],
-  },
-];
-
 export const useHeroData = () => [
   {
     img: getPlaceholder(1600, 900),

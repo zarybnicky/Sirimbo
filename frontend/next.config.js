@@ -1,10 +1,37 @@
-const withPreact = require('next-plugin-preact');
-const withReactSvg = require('next-react-svg');
 const path = require('path');
 
-module.exports = withReactSvg(
-  withPreact({
-    include: path.resolve(__dirname, 'public/'),
-    experimental: { outputStandalone: true },
-  }),
-);
+module.exports = {
+  reactStrictMode: true,
+  poweredByHeader: false,
+  swcMinify: true,
+
+  output: 'standalone',
+  experimental: {
+    outputFileTracingRoot: path.join(__dirname, '../'),
+  },
+
+  async rewrites() {
+    return [
+      { source: '/graphql', destination: 'http://localhost:3000' },
+      { source: '/graphiql', destination: 'http://localhost:3000' },
+      { source: '/old', destination: 'http://olymp-test' },
+      { source: '/galerie', destination: 'http://olymp-test' },
+    ];
+  },
+
+  webpack: function (config, { isServer, webpack, buildId }) {
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        'process.env.BUILD_ID': JSON.stringify(buildId)
+      })
+    );
+
+    config.module.rules.push({
+      test: /\.(svg)$/,
+      include: path.resolve(__dirname, 'public'),
+      loader: 'svg-react-loader',
+    });
+
+    return config;
+  },
+};

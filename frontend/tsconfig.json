@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es5",
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
+    "skipLibCheck": true,
     "strict": true,
+    "noUncheckedIndexedAccess": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -14,19 +16,44 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "preserveConstEnums": true,
     "jsx": "preserve",
-    "baseUrl": ".",
+    "baseUrl": "./",
+    "paths": {
+      "@/components/*": [
+        "src/components/*"
+      ],
+      "@/nodes/*": [
+        "src/nodes/*"
+      ],
+      "@/paragraphs/*": [
+        "src/paragraphs/*"
+      ],
+      "@/views/*": [
+        "src/views/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
+      ],
+      "@/config": [
+        "src/config"
+      ]
+    },
+    "incremental": true,
     "allowJs": true,
-    "skipLibCheck": true,
-    "incremental": true
+    "types": ["cypress", "cypress-wait-until"]
   },
   "include": [
     "next-env.d.ts",
-    "next-react-svg",
     "**/*.ts",
     "**/*.tsx"
   ],
   "exclude": [
     "node_modules"
-  ]
+  ],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  }
 }
