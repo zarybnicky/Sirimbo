@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { makeStyles } from '@mui/material';
-import { CSSProperties } from '@mui/styles';
+import { Box } from '@mui/material';
 import type { CellPlugin, EditorProps, BottomToolbarProps } from '@react-page/editor';
 import Editor, { BottomToolbar } from '@react-page/editor';
 import image from '@react-page/plugins-image';
@@ -14,6 +13,10 @@ import { ServiceCardPlugin } from './cards/ServiceCard';
 import { LocationCardPlugin } from './cards/LocationCard';
 import { TrainerCardPlugin } from './cards/TrainerCard';
 import { ProspectFormEmailPlugin } from './ProspectFormEmail';
+
+import '@react-page/editor/lib/index.css';
+import '@react-page/plugins-slate/lib/index.css';
+import '@react-page/plugins-image/lib/index.css';
 
 export { defaultSlate };
 export const cellPlugins: CellPlugin<any, any>[] = [
@@ -30,35 +33,23 @@ export const cellPlugins: CellPlugin<any, any>[] = [
   HeadingPlugin,
 ];
 
-const useStyles = makeStyles(() => ({
-  container: {
+const CustomToolbar = React.memo<BottomToolbarProps>(function CustomToolbar(props) {
+  return <BottomToolbar {...props} style={{ zIndex: `1200 !important` }} />;
+});
+
+export const ReactPage = ({ style, ...editorProps }: {
+  style?: React.CSSProperties;
+} & Omit<EditorProps, 'cellPlugins' | 'components'>) => {
+  return <Box style={style} sx={{
     minHeight: '200px',
     '& .react-page-cell-inner.slate': {
       padding: '20px',
     },
-  },
-  drawer: {
-    "&, & > *": {
-      // Passed to MuiPaper
-      zIndex: `1200 !important`,
-    },
-  },
-}));
-
-const CustomToolbar = React.memo<BottomToolbarProps>(function CustomToolbar(props) {
-  const classes = useStyles();
-  return <BottomToolbar {...props} className={classes.drawer} />;
-});
-
-export const ReactPage = ({ style, ...editorProps }: {
-  style?: CSSProperties;
-} & Omit<EditorProps, 'cellPlugins' | 'components'>) => {
-  const classes = useStyles({ innerStyle: style || {} });
-  return <div className={classes.container} style={style}>
+  }}>
     <Editor
       cellPlugins={cellPlugins}
       components={{ BottomToolbar: CustomToolbar }}
       {...editorProps}
     />
-  </div>;
+  </Box>;
 }

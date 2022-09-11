@@ -1,11 +1,10 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import IBAN from 'iban';
 import QRCode from 'qrcode.react';
 
 export function mkSpayd({ acc, am, msg, ss, vs, ks }: QRPaymentProps) {
-  const [num, bank] = acc.split('/');
-  let [pref, acct] = num.split('-');
+  const [num, bank] = acc.split('/') as [string, string];
+  let [pref, acct] = num.split('-') as [string] | [string, string];
   if (!acct) {
     acct = pref;
     pref = '';

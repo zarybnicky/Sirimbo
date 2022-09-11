@@ -1,6 +1,4 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache } from '@apollo/client';
 import { useTypedLazyQuery } from 'lib/zeus/apollo';
 import { $, Selector } from 'lib/zeus';
 import Excel from 'exceljs';
@@ -8,7 +6,7 @@ import { saveAs } from 'file-saver';
 
 const ExportQuery = Selector('Query')({
   cohortMembers: [
-    { id: $`id` },
+    { id: $('id', 'BigInt!') },
     {
       nodes: {
         uJmeno: true,
@@ -22,7 +20,7 @@ const ExportQuery = Selector('Query')({
 });
 
 export function CohortExport({ id, name }: { id: number; name: string; }) {
-  const [fetchData] = useTypedLazyQuery(ExportQuery, { variables: { id } });
+  const [fetchData] = useTypedLazyQuery(ExportQuery, { apolloOptions: { variables: { id } } });
 
   const saveData = async () => {
     const { data } = await fetchData();
@@ -62,20 +60,4 @@ export function CohortExport({ id, name }: { id: number; name: string; }) {
     e.preventDefault();
     saveData();
   }}>Export</button>;
-}
-
-const client = new ApolloClient({
-  link: new HttpLink({ uri: '/graphql' }),
-  cache: new InMemoryCache(),
-});
-
-export class CohortExportElement extends HTMLElement {
-  connectedCallback() {
-    ReactDOM.render(
-      <ApolloProvider client={client}>
-        <CohortExport id={parseInt(this.getAttribute('id') || '1', 10)} name={this.getAttribute('name') || ''} />
-      </ApolloProvider>,
-      this
-    );
-  }
 }

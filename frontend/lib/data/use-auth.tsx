@@ -39,7 +39,7 @@ function useApiAuth(): AuthContextType {
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [signIn] = useTypedMutation({
     login: [
-      { input: { login: $`login`, passwd: $`passwd` } },
+      { input: { login: $('login', 'String!'), passwd: $('passwd', 'String!') } },
       { result: { usr: UserPartial, couple: CouplePartial } },
     ]
   }, {

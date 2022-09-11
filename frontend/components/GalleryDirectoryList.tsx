@@ -5,6 +5,7 @@ import { Pagination } from '@mui/lab';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { $, GalerieDirsOrderBy, Selector } from 'lib/zeus';
 import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
+import { scalars } from 'lib/apollo';
 
 const GalleryDirList = Selector('Query')({
   galerieDirs: [
@@ -29,7 +30,14 @@ const GalleryDirList = Selector('Query')({
 
 const ToggleVisible = Selector('Mutation')({
   updateGalerieDir: [
-    { input: { gdId: $`id`, patch: { gdHidden: $`visible` } } },
+    {
+      input: {
+        gdId: $('id', 'BigInt!'),
+        patch: {
+          gdHidden: $('visible', 'Boolean!'),
+        },
+      },
+    },
     {
       galerieDir: {
         gdId: true,
@@ -43,13 +51,13 @@ function listToTree<T>(list: Treeified<T>[]) {
   const map: { [k: number]: number } = {};
   const roots = []
   for (let i = 0; i < list.length; i += 1) {
-    map[list[i].id] = i;
+    map[list[i]!.id] = i;
   }
   for (let i = 0; i < list.length; i += 1) {
-    if (list[i].parentId === list[i].id) {
+    if (list[i]!.parentId === list[i]!.id) {
       roots.push(list[i]);
     } else {
-      list[map[list[i].parentId]].children.push(list[i]);
+      list[map[list[i]!.parentId]!]!.children.push(list[i]!);
     }
   }
   return roots;
@@ -69,7 +77,10 @@ export function GalleryDirectoryList() {
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
   const { data, refetch } = useTypedQuery(GalleryDirList, {
-    apolloOptions: { variables: { limit, offset: (page - 1) * limit } },
+    scalars,
+    apolloOptions: {
+      variables: { limit, offset: (page - 1) * limit }
+    },
   });
   const roots = listToTree((data?.galerieDirs?.nodes || []).map(x => ({
     ...x,
@@ -77,9 +88,12 @@ export function GalleryDirectoryList() {
     parentId: x.gdIdRodic,
     children: [],
   })));
-  const dataSorted = roots.length > 0 ? flatten(roots[0]) : [];
+  const dataSorted = roots.length > 0 ? flatten(roots[0]!) : [];
   const [toggleVisible] = useTypedMutation(ToggleVisible, {
-    onCompleted: () => refetch(),
+    scalars,
+    apolloOptions: {
+      onCompleted: () => refetch(),
+    },
   });
   const total = data?.galerieDirs?.totalCount || 0;
 
@@ -91,14 +105,14 @@ export function GalleryDirectoryList() {
           <PopupState variant="popover">
             {(popupState) => <React.Fragment>
               <Button {...bindTrigger(popupState)}>{'→'.repeat(a.gdLevel - 1)} {a.gdName}</Button>
-              <Menu {...bindMenu(popupState)} getContentAnchorEl={null}>
-                <MenuItem button onClick={popupState.close} component={Link} to={`/admin/galerie/directory/edit/${a.gdId}`}>
+              <Menu {...bindMenu(popupState)}>
+                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/galerie/directory/edit/${a.gdId}`}>
                   Upravit
                 </MenuItem>
-                <MenuItem button onClick={popupState.close} component={Link} to={`/admin/galerie/directory/${a.gdId}`}>
+                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/galerie/directory/${a.gdId}`}>
                   Upravit fotky
                 </MenuItem>
-                <MenuItem button onClick={popupState.close} component={Link} to={`/admin/galerie/directory/remove/${a.gdId}`}>
+                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/galerie/directory/remove/${a.gdId}`}>
                   Odstranit
                 </MenuItem>
               </Menu>

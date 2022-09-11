@@ -1,6 +1,4 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache } from '@apollo/client';
 import { useTypedLazyQuery } from 'lib/zeus/apollo';
 import { $, Selector } from 'lib/zeus';
 import Excel from 'exceljs';
@@ -8,7 +6,7 @@ import { saveAs } from 'file-saver';
 
 const ExportQuery = Selector('Query')({
   akce: [
-    { aId: $`id` },
+    { aId: $('id', 'BigInt!') },
     {
       aJmeno: true,
       akceItemsByAiIdRodic: [{}, {
@@ -27,7 +25,7 @@ const ExportQuery = Selector('Query')({
 });
 
 export function EventParticipantExport({ id }: { id: string; }) {
-  const [fetchData] = useTypedLazyQuery(ExportQuery, { variables: { id } });
+  const [fetchData] = useTypedLazyQuery(ExportQuery, { apolloOptions: { variables: { id } } });
 
   const saveData = async () => {
     const { data } = await fetchData();
@@ -67,18 +65,4 @@ export function EventParticipantExport({ id }: { id: string; }) {
     e.preventDefault();
     saveData();
   }}>Export přihlášených</button>;
-}
-
-const client = new ApolloClient({
-  link: new HttpLink({ uri: '/graphql' }),
-  cache: new InMemoryCache(),
-});
-
-export class EventParticipantExportElement extends HTMLElement {
-  connectedCallback() {
-    ReactDOM.render(
-      <ApolloProvider client={client}><EventParticipantExport id={this.getAttribute('id') || ''} /></ApolloProvider>,
-      this
-    );
-  }
 }

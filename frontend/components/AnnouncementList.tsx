@@ -69,9 +69,9 @@ export function AnnouncementList() {
     <Box display='flex' alignItems='center' justifyContent="right">
       {hasPrev ? <IconButton onClick={() => setPage(page - 1)}><NavigateBeforeIcon /></IconButton> : null}
       <Typography color="textSecondary" component="span">
-        {format(new Date(nodes[0]!.upTimestampAdd), 'd. M. y')}
+        {format(nodes[0]!.upTimestampAdd, 'd. M. y')}
         {' - '}
-        {format(new Date(nodes[nodes.length - 1]!.upTimestampAdd), 'd. M. y')}
+        {format(nodes[nodes.length - 1]!.upTimestampAdd, 'd. M. y')}
       </Typography>
       {hasNext ? <IconButton onClick={() => setPage(page + 1)}><NavigateNextIcon /></IconButton> : null}
     </Box>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makeStyles, Container, Theme, Typography } from '@mui/material';
+import { Container, Typography, Box } from '@mui/material';
 import { CellPlugin } from '@react-page/editor';
 import { RGBColor } from 'react-color';
 
@@ -9,47 +9,38 @@ type HeadingProps = {
   text: string;
 }
 
-const useStyles = makeStyles<Theme, HeadingProps>(() => ({
-  background: {
-    background: ({ color, image }) => {
-      const rgba = typeof color === 'string' ? color : `rgba(${color.r},${color.g},${color.b},${color.a})`;
-      const gradient = `linear-gradient(${rgba},${rgba})`;
-      return `${gradient}, url(${image}) no-repeat 50% 30%/cover`;
-    },
-  },
-  heading: {
-    position: 'relative',
-    padding: '5rem 0',
-  },
-  bgText: {
-    position: 'absolute',
-    top: '50%',
-    left: 0,
-    transform: 'translateY(-50%)',
-    zIndex: 2,
-    color: 'rgba(255, 255, 255, .4)',
-    userSelect: 'none',
-    textTransform: 'uppercase',
-    fontWeight: 'bold',
-  },
-  fgText: {
-    zIndex: 3,
-    color: 'white',
-    textTransform: 'uppercase',
-    fontWeight: 'bold',
-  },
-}));
+export const Heading = ({ color, image, text }: HeadingProps) => {
+  const rgba = typeof color === 'string' ? color : `rgba(${color.r},${color.g},${color.b},${color.a})`;
+  const gradient = `linear-gradient(${rgba},${rgba})`;
+  const background = `${gradient}, url(${image}) no-repeat 50% 30%/cover`;
 
-export const Heading = (props: HeadingProps) => {
-  const classes = useStyles(props);
-  return <div className={classes.background}>
+  return <Box sx={{ background }}>
     <Container maxWidth="lg">
-      <div className={classes.heading}>
-        <Typography variant="h4" component="h2" className={classes.fgText}>{props.text}</Typography>
-        <Typography variant="h3" component="div" className={classes.bgText}>{props.text}</Typography>
-      </div>
+      <Box sx={{
+        position: 'relative',
+        padding: '5rem 0',
+      }}>
+        <Typography variant="h4" component="h2" sx={{
+          zIndex: 3,
+          color: 'white',
+          textTransform: 'uppercase',
+          fontWeight: 'bold',
+        }}>{text}</Typography>
+
+        <Typography variant="h3" component="div" sx={{
+          position: 'absolute',
+          top: '50%',
+          left: 0,
+          transform: 'translateY(-50%)',
+          zIndex: 2,
+          color: 'rgba(255, 255, 255, .4)',
+          userSelect: 'none',
+          textTransform: 'uppercase',
+          fontWeight: 'bold',
+        }}>{text}</Typography>
+      </Box>
     </Container>
-  </div>;
+  </Box>;
 };
 
 export const HeadingPlugin: CellPlugin<HeadingProps> = {

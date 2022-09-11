@@ -7,6 +7,7 @@ import { $, NabidkasOrderBy, Selector } from 'lib/zeus';
 import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
 import { useAuth } from 'lib/data/use-auth';
 import { DateRange } from './DateRange';
+import { scalars } from 'lib/apollo';
 
 export const NabidkaAdminQuery = Selector('Query')({
   nabidkas: [
@@ -53,7 +54,14 @@ export const NabidkaAdminQuery = Selector('Query')({
 
 const ToggleVisibleNabidka = Selector("Mutation")({
   updateNabidka: [
-    { input: { patch: { nVisible: $`visible` }, nId: $`id` } },
+    {
+      input: {
+        nId: $('id', 'BigInt!'),
+        patch: {
+          nVisible: $('visible', 'Boolean!'),
+        },
+      }
+    },
     {
       nabidka: {
         nId: true,
@@ -67,10 +75,16 @@ export function ReservationAdminList() {
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(0);
   const { data, refetch } = useTypedQuery(NabidkaAdminQuery, {
-    variables: { limit, offset: (page - 1) * limit },
+    scalars,
+    apolloOptions: {
+      variables: { limit, offset: (page - 1) * limit },
+    },
   });
   const [toggleVisible] = useTypedMutation(ToggleVisibleNabidka, {
-    onCompleted: () => refetch(),
+    scalars,
+    apolloOptions: {
+      onCompleted: () => refetch(),
+    },
   });
   const total = data?.nabidkas?.totalCount || 0;
 
@@ -83,24 +97,24 @@ export function ReservationAdminList() {
       </tr>
     </thead>
     <tbody>
-      {data!.nabidkas?.nodes.map((a) => <tr key={a.nId}>
+      {data?.nabidkas?.nodes?.map((a) => <tr key={a.nId}>
         <td>
           <PopupState variant="popover">
             {(popupState) => <React.Fragment>
               <Button {...bindTrigger(popupState)}>
                 {a.userByNTrener?.uJmeno} {a.userByNTrener?.uPrijmeni}
               </Button>
-              <Menu {...bindMenu(popupState)} getContentAnchorEl={null}>
-                <MenuItem button onClick={popupState.close} component={Link} to={`/admin/nabidka/edit/${a.nId}`}>
+              <Menu {...bindMenu(popupState)}>
+                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/nabidka/edit/${a.nId}`}>
                   Upravit
                 </MenuItem>
-                <MenuItem button onClick={popupState.close} component={Link} to={`/admin/nabidka/detail/${a.nId}`}>
+                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/nabidka/detail/${a.nId}`}>
                   Upravit lekce
                 </MenuItem>
-                <MenuItem button onClick={popupState.close} component={Link} to={`/admin/nabidka/duplicate/${a.nId}`}>
+                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/nabidka/duplicate/${a.nId}`}>
                   Duplikovat
                 </MenuItem>
-                <MenuItem button onClick={popupState.close} component={Link} to={`/admin/nabidka/remove/${a.nId}`}>
+                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/nabidka/remove/${a.nId}`}>
                   Odstranit
                 </MenuItem>
               </Menu>
@@ -115,7 +129,7 @@ export function ReservationAdminList() {
         </td>
       </tr>)}
     </tbody>
-  </table >;
+  </table>;
 
   return <React.Fragment>
     <Link href="/admin/nabidka/add"><a className="btn btn-primary">Nová nabídka</a></Link>

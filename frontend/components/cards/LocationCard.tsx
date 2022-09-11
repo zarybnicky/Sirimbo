@@ -1,38 +1,8 @@
 import * as React from 'react';
 import { CellPlugin } from '@react-page/editor';
-import { makeStyles, Typography, Paper, Grid } from '@mui/material';
+import { Typography, Paper, Grid, useTheme } from '@mui/material';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { defaultSlate } from '../ReactPage';
-
-const useStyles = makeStyles((theme) => ({
-  item: {
-    margin: '2rem 0',
-    '& .image': {
-      position: 'relative',
-    },
-    '& .image img': {
-      width: '100%',
-      height: '100%',
-      objectFit: 'cover',
-    },
-    '& .body': {
-      padding: '2rem 2rem 1rem',
-      flexGrow: 1,
-      flexBasis: '1rem',
-    },
-    '& .header': {
-      fontWeight: 'bold',
-    },
-    '& .map': {
-      height: '150px',
-      marginTop: '1rem'
-    },
-    '& .MuiTypography-body1': {
-      color: theme.palette.secondary.main,
-      display: 'block',
-    },
-  }
-}));
 
 const Map = (props: {
   lat: number;
@@ -62,8 +32,35 @@ type Location = {
 }
 
 export const LocationCard = ({ item: x }: { item: Location; }) => {
-  const classes = useStyles();
-  return <Paper elevation={3} className={classes.item}>
+  const theme = useTheme();
+
+  return <Paper elevation={3} sx={{
+    margin: '2rem 0',
+    '& .image': {
+      position: 'relative',
+    },
+    '& .image img': {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+    },
+    '& .body': {
+      padding: '2rem 2rem 1rem',
+      flexGrow: 1,
+      flexBasis: '1rem',
+    },
+    '& .header': {
+      fontWeight: 'bold',
+    },
+    '& .map': {
+      height: '150px',
+      marginTop: '1rem'
+    },
+    '& .MuiTypography-body1': {
+      color: theme.palette.secondary.main,
+      display: 'block',
+    },
+  }}>
     <Grid container>
       <Grid item xs={12} sm={4} className="image">
         <img src={x.image} alt={x.name} />

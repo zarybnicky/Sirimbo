@@ -1,19 +1,20 @@
 import * as React from 'react';
 import type { CellPlugin } from '@react-page/editor';
 import { Card, CardContent, CardActions, Grid, Button, Typography } from '@mui/material';
-import { Checkboxes, TextField } from 'mui-rff';
 import { Alert } from '@mui/lab';
-import { Form } from 'react-final-form'
 import { useTypedMutation } from 'lib/zeus/apollo';
 import { $, CrmCohort, Selector } from 'lib/zeus';
 import { useSnackbar } from 'notistack';
+import { scalars } from 'lib/apollo';
+import { useForm } from 'react-hook-form';
+import { TextFieldElement, CheckboxElement } from 'react-hook-form-mui';
 
 export const SubmitProspectForm = Selector('Mutation')({
   prospectFormDancer: [{
     input: {
       cohort: CrmCohort.FREE_LESSON,
-      prospectData: $`prospectData`,
-      origin: $`origin`,
+      prospectData: $('prospectData', 'JSON!'),
+      origin: $('origin', 'String!'),
       note: '',
     }
   }, {
@@ -27,57 +28,67 @@ type ProspectFormProps = {
 
 export const ProspectForm = ({ title }: ProspectFormProps) => {
   const { enqueueSnackbar } = useSnackbar();
-  const [submit] = useTypedMutation(SubmitProspectForm);
+  const [submit] = useTypedMutation(SubmitProspectForm, { scalars });
+  const [submitError, setSubmitError] = React.useState<string | null>(null);
+  const methods = useForm();
+  const { handleSubmit, formState: { isDirty, isValid, isSubmitting } } = methods;
+
   const onSubmit = async ({ op, ...prospectData }: any) => {
-    await submit({ variables: { prospectData, origin: window.location.toString() } });
-    if (typeof fbq !== 'undefined') {
-      fbq('track', 'SubmitApplication');
+    setSubmitError(null);
+    try {
+      await submit({ variables: { prospectData, origin: window.location.toString() } });
+      if (typeof fbq !== 'undefined') {
+        fbq('track', 'SubmitApplication');
+      }
+      enqueueSnackbar('Brzy se vám ozveme!', { variant: 'success' });
+    } catch (e) {
+      if (e instanceof Error) {
+        setSubmitError(e.message);
+      } else {
+        setSubmitError('Něco se nepovedlo, zkuste to prosím znovu');
+      }
     }
-    enqueueSnackbar('Brzy se vám ozveme!', { variant: 'success' });
   };
 
   return (
-    <Form onSubmit={onSubmit} render={form => <>
-      {form.submitError && <Alert severity="error">{form.submitError}</Alert>}
-      <Card component="form" elevation={3} onSubmit={form.handleSubmit}>
-        <CardContent>
-          <Typography variant="h4" component="div">{title}</Typography>
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={4}>
-              <TextField label="Jméno" name="name" autoComplete="given-name" required />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField label="Příjmení" name="surname" autoComplete="family-name" required />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField label="Rok narození" name="yearofbirth" autoComplete="bday-year" required />
-            </Grid>
+    <Card component="form" elevation={3} onSubmit={handleSubmit(onSubmit)}>
+      <CardContent>
+        <Typography variant="h4" component="div">{title}</Typography>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={4}>
+            <TextFieldElement name="name" label="Jméno" autoComplete="given-name" required />
           </Grid>
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
-              <TextField label="Telefon" name="phone" type="tel" autoComplete="tel" required />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField label="E-mail" name="email" type="email" autoComplete="email" required />
-            </Grid>
+          <Grid item xs={12} sm={4}>
+            <TextFieldElement name="surname" label="Příjmení" autoComplete="family-name" required />
           </Grid>
-          <Grid container style={{ marginTop: '1rem' }}>
-            <Grid item xs={12}>
-              <Checkboxes name="op" required={true} data={{
-                label: <>Souhlasím se <a target="_blank" href="/ochrana-osobnich-udaju">zpracováním osobních údajů</a></>,
-                value: "agreed"
-              }} />
-            </Grid>
+          <Grid item xs={12} sm={4}>
+            <TextFieldElement name="yearofbirth" label="Rok narození" autoComplete="bday-year" required />
           </Grid>
-        </CardContent>
-        <CardActions style={{ flexDirection: 'column' }}>
-          <Button
-            fullWidth variant="contained" type="submit" color="primary"
-            disabled={form.pristine || form.submitting || form.hasValidationErrors}
-          >Chci tančit!</Button>
-        </CardActions>
-      </Card>
-    </>} />
+        </Grid>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6}>
+            <TextFieldElement name="phone" type="tel" autoComplete="tel" required />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextFieldElement name="email" type="email" autoComplete="email" required />
+          </Grid>
+        </Grid>
+        <Grid container style={{ marginTop: '1rem' }}>
+          <Grid item xs={12}>
+            <CheckboxElement name="op" value="agreed" required label={
+              <>Souhlasím se <a target="_blank" href="/ochrana-osobnich-udaju">zpracováním osobních údajů</a></>
+            } />
+          </Grid>
+        </Grid>
+      </CardContent>
+      <CardActions style={{ flexDirection: 'column' }}>
+        {submitError && <Alert severity="error">{submitError}</Alert>}
+        <Button
+          fullWidth variant="contained" type="submit" color="primary"
+          disabled={isValid && !isSubmitting && isDirty}
+        >Chci tančit!</Button>
+      </CardActions>
+    </Card>
   );
 };
 

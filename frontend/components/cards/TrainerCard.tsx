@@ -1,10 +1,16 @@
 import * as React from 'react';
-import { makeStyles, Typography, Paper } from '@mui/material';
+import { Typography, Paper, useTheme } from '@mui/material';
 import { CellPlugin } from '@react-page/editor';
 import { defaultSlate } from '../ReactPage';
 
-const useStyles = makeStyles((theme) => ({
-  item: {
+type TrainerCardProps = {
+  image: string;
+  name: string;
+}
+
+export const TrainerCard = (props: TrainerCardProps & { children: React.ReactNode | React.ReactChildren; }) => {
+  const theme = useTheme();
+  return <Paper elevation={3} sx={{
     position: 'relative',
     height: '100%',
     '& .image': {
@@ -35,17 +41,7 @@ const useStyles = makeStyles((theme) => ({
     '& [data-slate-editor="true"] li:nth-of-type(2)': {
       paddingRight: '115px',
     },
-  }
-}));
-
-interface TrainerCardProps {
-  image: string;
-  name: string;
-}
-
-export const TrainerCard = (props: TrainerCardProps & { children: React.ReactNode | React.ReactChildren; }) => {
-  const classes = useStyles();
-  return <Paper elevation={3} className={classes.item}>
+  }}>
     <div className="header">
       <Typography variant="h6" component="h3">{props.name}</Typography>
     </div>

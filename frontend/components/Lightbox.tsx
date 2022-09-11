@@ -1,33 +1,10 @@
 import * as React from 'react';
 import { useSwipeable } from 'react-swipeable';
-import { makeStyles, Card, Dialog, Fade, IconButton, Typography } from '@mui/material';
+import { Card, Dialog, Fade, IconButton, Typography, useTheme } from '@mui/material';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import { GalleryItem } from 'lib/data/use-gallery';
 import { useRouter } from 'next/router';
-
-const useStyles = makeStyles((theme) => ({
-  image: {
-    display: 'block',
-    maxWidth: '100%',
-    maxHeight: `calc(100vh - 130px)`,
-    objectFit: 'contain',
-  },
-  button: {
-    position: 'absolute',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    background: 'rgba(255, 255, 255, 0.5)',
-    boxShadow: theme.shadows[7],
-    '&:hover': {
-      background: 'rgba(255, 255, 255, 0.8)',
-    },
-  },
-  titleCard: {
-    padding: theme.spacing(1),
-    textAlign: 'center',
-  },
-}));
 
 export interface LightboxProps {
   dirHref: string;
@@ -37,8 +14,8 @@ export interface LightboxProps {
 
 export const Lightbox = ({ dirHref, images, initial }: LightboxProps) => {
   const didMountRef = React.useRef(false);
-  const styles = useStyles();
   const router = useRouter();
+  const theme = useTheme();
   const initialIx = images.findIndex(x => x.id == initial);
   const [selected, setSelected] = React.useState(Math.max(initialIx, 0));
 
@@ -80,24 +57,50 @@ export const Lightbox = ({ dirHref, images, initial }: LightboxProps) => {
       maxWidth="xl" open
       disableEscapeKeyDown
       onKeyDown={handleKeyDown}
-      onClose={() => history.replace(dirHref)}
+      onClose={() => router.replace(dirHref)}
     >
       {images.map((image, ix) => (
         ix !== selected ? null : (
           <Fade key={image.img} in={true}>
             <div {...handlers}>
-              <img className={styles.image} src={image.img} alt={image.name} />
-              <Card className={styles.titleCard} variant="outlined">
+              <img src={image.img} alt={image.name} style={{
+                display: 'block',
+                maxWidth: '100%',
+                maxHeight: `calc(100vh - 130px)`,
+                objectFit: 'contain',
+              }} />
+              <Card variant="outlined" sx={{
+                padding: theme.spacing(1),
+                textAlign: 'center',
+              }}>
                 <Typography variant="caption">{image.name}</Typography>
               </Card>
             </div>
           </Fade>
         )
       ))}
-      <IconButton className={styles.button} onClick={nextImage} style={{ left: 0 }}>
+      <IconButton onClick={nextImage} style={{ left: 0 }} sx={{
+        position: 'absolute',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        background: 'rgba(255, 255, 255, 0.5)',
+        boxShadow: theme.shadows[7],
+        '&:hover': {
+          background: 'rgba(255, 255, 255, 0.8)',
+        },
+      }}>
         <ChevronLeft />
       </IconButton>
-      <IconButton className={styles.button} onClick={prevImage} style={{ right: 0 }}>
+      <IconButton onClick={prevImage} style={{ right: 0 }} sx={{
+        position: 'absolute',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        background: 'rgba(255, 255, 255, 0.5)',
+        boxShadow: theme.shadows[7],
+        '&:hover': {
+          background: 'rgba(255, 255, 255, 0.8)',
+        },
+      }}>
         <ChevronRight />
       </IconButton>
     </Dialog>

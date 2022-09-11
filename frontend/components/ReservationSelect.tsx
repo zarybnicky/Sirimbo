@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { $, Selector, NabidkasOrderBy, ModelTypes } from 'lib/zeus';
 import { useTypedQuery } from 'lib/zeus/apollo';
-import { formatDateRange } from './DateRange';
+import { formatDateRange } from 'lib/format-date-range';
 import { scalars } from 'lib/apollo';
 
 const ReservationView = (x: ModelTypes["Nabidka"]) => {

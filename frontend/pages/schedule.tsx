@@ -6,7 +6,7 @@ import { useAuth } from 'lib/data/use-auth';
 import { Schedule, ScheduleItem, ScheduleRangeQuery } from 'lib/data/use-schedule';
 import { Reservation, ReservationItem, ReservationRangeQuery } from 'lib/data/use-reservation';
 import { PermissionLevel, usePermissions } from 'lib/data/use-permissions';
-import { formatDateRange } from '../custom-elements/date';
+import { formatDateRange } from 'lib/format-date-range';
 import { scalars } from 'lib/apollo';
 
 export const SchedulePage = ({ }) => {

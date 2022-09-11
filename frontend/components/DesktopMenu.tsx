@@ -55,9 +55,9 @@ const Submenu = React.forwardRef<any, {
 
   if (x.type === 'link') {
     if (popupState) {
-      return <MenuItem ref={ref} button LinkComponent={Link} to={x.href} onClick={() => popupState.close()}>{x.text}</MenuItem>
+      return <MenuItem ref={ref} LinkComponent={Link} href={x.href} onClick={() => popupState.close()}>{x.text}</MenuItem>
     } else {
-      return <Button ref={ref} className={cls} LinkComponent={Link} to={x.href}>{x.text}</Button>;
+      return <Button ref={ref} className={cls} LinkComponent={Link} href={x.href}>{x.text}</Button>;
     }
   }
 

@@ -1,10 +1,17 @@
 import * as React from 'react';
-import { makeStyles, Grid, Paper, Typography } from '@mui/material';
+import { Grid, Paper, Typography, useTheme } from '@mui/material';
 import { CellPlugin } from '@react-page/editor';
 import { defaultSlate } from '../ReactPage';
 
-const useStyles = makeStyles((theme) => ({
-  item: {
+type ServiceCardProps = {
+  image: string;
+  header: string;
+}
+
+export const ServiceCard = (props: ServiceCardProps & { children: React.ReactNode | React.ReactChildren; }) => {
+  const theme = useTheme();
+
+  return <Paper elevation={3} sx={{
     margin: '2rem 0',
     '& .image': {
       position: 'relative',
@@ -41,17 +48,7 @@ const useStyles = makeStyles((theme) => ({
     '&:nth-of-type(even) .header': {
       color: theme.palette.primary.main,
     },
-  }
-}));
-
-type ServiceCardProps = {
-  image: string;
-  header: string;
-}
-
-export const ServiceCard = (props: ServiceCardProps & { children: React.ReactNode | React.ReactChildren; }) => {
-  const classes = useStyles();
-  return <Paper elevation={3} className={classes.item}>
+  }}>
     <Grid container>
       <Grid item xs={12} sm={4} className="image">
         <img src={props.image} alt={props.header} />

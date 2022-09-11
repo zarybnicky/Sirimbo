@@ -46,7 +46,14 @@ export const ScheduleListQuery = Selector('Query')({
 
 export const ToggleScheduleVisible = Selector('Mutation')({
   updateRozpi: [
-    { input: { patch: { rVisible: $`visible` }, rId: $`id` } },
+    {
+      input: {
+        rId: $('id', 'BigInt!'),
+        patch: {
+          rVisible: $('visible', 'Boolean!'),
+        },
+      },
+    },
     {
       rozpi: {
         rId: true,
@@ -90,24 +97,24 @@ export function RozpisAdminList() {
               <Button {...bindTrigger(popupState)}>
                 {a.userByRTrener?.uJmeno} {a.userByRTrener?.uPrijmeni}
               </Button>
-              <Menu {...bindMenu(popupState)} getContentAnchorEl={null}>
-                <MenuItem button onClick={popupState.close} component={Link} to={`/admin/rozpis/edit/${a.rId}`}>
+              <Menu {...bindMenu(popupState)}>
+                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/rozpis/edit/${a.rId}`}>
                   Upravit
                 </MenuItem>
-                <MenuItem button onClick={popupState.close} component={Link} to={`/admin/rozpis/detail/${a.rId}`}>
+                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/rozpis/detail/${a.rId}`}>
                   Upravit lekce
                 </MenuItem>
-                <MenuItem button onClick={popupState.close} component={Link} to={`/admin/rozpis/duplicate/${a.rId}`}>
+                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/rozpis/duplicate/${a.rId}`}>
                   Duplikovat
                 </MenuItem>
-                <MenuItem button onClick={popupState.close} component={Link} to={`/admin/rozpis/remove/${a.rId}`}>
+                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/rozpis/remove/${a.rId}`}>
                   Odstranit
                 </MenuItem>
               </Menu>
             </React.Fragment>}
           </PopupState>
         </td>
-        <td>{format(new Date(a.rDatum), 'd. M. y')}</td>
+        <td>{format(a.rDatum, 'd. M. y')}</td>
         <td>{a.rKde}</td>
         <td>
           <Checkbox checked={a.rVisible || false} onChange={() => toggleVisible({

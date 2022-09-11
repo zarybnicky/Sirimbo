@@ -1,3 +1,4 @@
+//@ts-nocheck
 /* eslint-disable */
 
 import { AllTypesProps, ReturnTypes, Ops } from './const';
@@ -1348,12 +1349,12 @@ based pagination. May not be used with `last`. */
 	/** A signed eight-byte integer. The upper big integer values are greater than the
 max value for a JavaScript number. Therefore all big integers will be output as
 strings and not numbers. */
-["BigInt"]:string;
+["BigInt"]:unknown;
 	/** The day, does not include a time. */
-["Date"]:string;
+["Date"]:unknown;
 	/** A point in time as described by the [ISO
 8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone. */
-["Datetime"]:string;
+["Datetime"]:unknown;
 	/** A connection to a list of `AkceItem` values. */
 ["AkceItemsConnection"]: AliasType<{
 	/** A list of `AkceItem` objects. */
@@ -2310,7 +2311,7 @@ for equality and combined with a logical ‘and.’ */
 		__typename?: boolean | `@${string}`
 }>;
 	/** The exact time of day, does not include the date. May or may not have a timezone offset. */
-["Time"]:string;
+["Time"]:unknown;
 	["Rozpi"]: AliasType<{
 	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
 	nodeId?:boolean | `@${string}`,
@@ -2933,7 +2934,7 @@ for equality and combined with a logical ‘and.’ */
 		__typename?: boolean | `@${string}`
 }>;
 	/** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
-["JSON"]:string;
+["JSON"]:unknown;
 	/** A `Page` edge in the connection. */
 ["PagesEdge"]: AliasType<{
 	/** A cursor for use in pagination. */
@@ -7708,12 +7709,12 @@ based pagination. May not be used with `last`. */
 	/** A signed eight-byte integer. The upper big integer values are greater than the
 max value for a JavaScript number. Therefore all big integers will be output as
 strings and not numbers. */
-["BigInt"]:string;
+["BigInt"]:unknown;
 	/** The day, does not include a time. */
-["Date"]:string;
+["Date"]:unknown;
 	/** A point in time as described by the [ISO
 8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone. */
-["Datetime"]:string;
+["Datetime"]:unknown;
 	/** A connection to a list of `AkceItem` values. */
 ["AkceItemsConnection"]: AliasType<{
 	/** A list of `AkceItem` objects. */
@@ -8670,7 +8671,7 @@ for equality and combined with a logical ‘and.’ */
 		__typename?: boolean | `@${string}`
 }>;
 	/** The exact time of day, does not include the date. May or may not have a timezone offset. */
-["Time"]:string;
+["Time"]:unknown;
 	["Rozpi"]: AliasType<{
 	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
 	nodeId?:boolean | `@${string}`,
@@ -9293,7 +9294,7 @@ for equality and combined with a logical ‘and.’ */
 		__typename?: boolean | `@${string}`
 }>;
 	/** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
-["JSON"]:string;
+["JSON"]:unknown;
 	/** A `Page` edge in the connection. */
 ["PagesEdge"]: AliasType<{
 	/** A cursor for use in pagination. */
