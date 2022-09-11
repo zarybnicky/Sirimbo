@@ -1,7 +1,6 @@
 import * as React from 'react';
-import clsx from 'clsx';
 import { alpha, Button, Menu, MenuItem } from '@mui/material';
-import { makeStyles } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { PopupState as PopupStateType } from 'material-ui-popup-state/core';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { NestedMenuItem } from "./NestedMenuItem";
@@ -11,53 +10,34 @@ import Link from 'next/link';
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
-const useStyles = makeStyles((theme) => ({
-  menuButton: {
-    ...theme.mixins.toolbar,
-    color: theme.palette.grey[500],
-    fontWeight: 'bold',
-    borderRadius: 0,
-    transitionProperty: 'background-color, box-shadow',
-    "&:hover": {
-      color: theme.palette.common.white,
-      borderBottom: '3px solid white',
-    },
-  },
-  activeMenuButton: {
-    '&:not(:hover)': {
-      color: theme.palette.common.white,
-      borderBottom: '3px solid white',
-    },
-  },
-  submenu: {
-    '& .MuiMenu-paper': {
-      backgroundColor: alpha(theme.palette.common.white, .9),
-      borderRadius: 0,
-    },
-    '& .MuiListItem-button': {
-      fontVariant: 'small-caps',
-      display: 'flex',
-    },
-    '& .MuiListItem-button:hover': {
-      color: theme.palette.primary.main,
-    },
-  },
-}));
-
 const Submenu = React.forwardRef<any, {
   popupState?: PopupStateType;
   item: MenuStructItem;
 }>(function Submenu({ popupState, item: x }, ref) {
-  const classes = useStyles();
+  const theme = useTheme();
   const { pathname } = useRouter();
   const inPath = getHrefs(x).find(y => pathname.startsWith(y));
-  const cls = clsx(classes.menuButton, inPath ? classes.activeMenuButton : null);
 
   if (x.type === 'link') {
     if (popupState) {
       return <MenuItem ref={ref} LinkComponent={Link} href={x.href} onClick={() => popupState.close()}>{x.text}</MenuItem>
     } else {
-      return <Button ref={ref} className={cls} LinkComponent={Link} href={x.href}>{x.text}</Button>;
+      return <Button ref={ref} sx={[{
+        ...theme.mixins.toolbar,
+        color: theme.palette.grey[500],
+        fontWeight: 'bold',
+        borderRadius: 0,
+        transitionProperty: 'background-color, box-shadow',
+        "&:hover": {
+          color: theme.palette.common.white,
+          borderBottom: '3px solid white',
+        },
+      }, inPath ? {
+        '&:not(:hover)': {
+          color: theme.palette.common.white,
+          borderBottom: '3px solid white',
+        },
+      } : {}]} LinkComponent={Link} href={x.href}>{x.text}</Button>;
     }
   }
 
@@ -66,15 +46,42 @@ const Submenu = React.forwardRef<any, {
       {(popupState) => <React.Fragment>
         <Button ref={ref}
           {...bindTrigger(popupState)}
-          className={cls}
           color="inherit"
           endIcon={<KeyboardArrowDownIcon />}
+          sx={[{
+            ...theme.mixins.toolbar,
+            color: theme.palette.grey[500],
+            fontWeight: 'bold',
+            borderRadius: 0,
+            transitionProperty: 'background-color, box-shadow',
+            "&:hover": {
+              color: theme.palette.common.white,
+              borderBottom: '3px solid white',
+            },
+          }, inPath ? {
+            '&:not(:hover)': {
+              color: theme.palette.common.white,
+              borderBottom: '3px solid white',
+            },
+          } : {}]}
         >{x.text}</Button>
         <Menu
           {...bindMenu(popupState)}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-          className={classes.submenu}
+          sx={{
+            '& .MuiMenu-paper': {
+              backgroundColor: alpha(theme.palette.common.white, .9),
+              borderRadius: 0,
+            },
+            '& .MuiListItem-button': {
+              fontVariant: 'small-caps',
+              display: 'flex',
+            },
+            '& .MuiListItem-button:hover': {
+              color: theme.palette.primary.main,
+            },
+          }}
         >
           {x.children.map(y => <Submenu key={y.text} popupState={popupState} item={y} />)}
         </Menu>
@@ -82,11 +89,7 @@ const Submenu = React.forwardRef<any, {
     </PopupState>;
   } else {
     return (
-      <NestedMenuItem
-        ref={ref} label={x.text}
-        parentMenuOpen={!!popupState.isOpen}
-        ContainerProps={{ className: classes.submenu }}
-      >
+      <NestedMenuItem ref={ref} label={x.text} parentMenuOpen={!!popupState.isOpen}>
         {x.children.map(y => <Submenu key={y.text} popupState={popupState} item={y} />)}
       </NestedMenuItem>
     );

@@ -30,8 +30,7 @@ export const ProspectFormEmail = ({ title }: ProspectFormEmailProps) => {
   const { enqueueSnackbar } = useSnackbar();
   const [submit] = useTypedMutation(SubmitProspectFormEmail, { scalars });
   const [submitError, setSubmitError] = React.useState<string | null>(null);
-  const methods = useForm();
-  const { handleSubmit, formState: { isDirty, isValid, isSubmitting } } = methods;
+  const { control, handleSubmit, formState: { isDirty, isValid, isSubmitting } } = useForm();
 
   const onSubmit = async ({ op, ...prospectData }: any) => {
     setSubmitError(null);
@@ -56,20 +55,20 @@ export const ProspectFormEmail = ({ title }: ProspectFormEmailProps) => {
         <Typography variant="h4" component="div">{title}</Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
-            <TextFieldElement name="name" label="Jméno" autoComplete="given-name" required />
+            <TextFieldElement control={control} name="name" label="Jméno" autoComplete="given-name" required />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextFieldElement name="surname" label="Příjmení" autoComplete="family-name" required />
+            <TextFieldElement control={control} name="surname" label="Příjmení" autoComplete="family-name" required />
           </Grid>
         </Grid>
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <TextFieldElement name="email" type="email" autoComplete="email" required />
+            <TextFieldElement control={control} name="email" type="email" autoComplete="email" required />
           </Grid>
         </Grid>
         <Grid container style={{ marginTop: '1rem' }}>
           <Grid item xs={12}>
-            <CheckboxElement name="op" value="agreed" required label={
+            <CheckboxElement control={control} name="op" value="agreed" required label={
               <>Souhlasím se <a target="_blank" href="/ochrana-osobnich-udaju">zpracováním osobních údajů</a></>
             } />
           </Grid>

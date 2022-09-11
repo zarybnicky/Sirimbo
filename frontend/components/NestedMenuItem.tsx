@@ -1,9 +1,8 @@
 import * as React from 'react'
-import { makeStyles } from '@mui/material/styles'
+import { alpha, useTheme } from '@mui/material/styles'
 import Menu, { MenuProps } from '@mui/material/Menu'
 import MenuItem, { MenuItemProps } from '@mui/material/MenuItem'
 import ArrowRight from '@mui/icons-material/ArrowRight'
-import clsx from 'clsx'
 
 export interface NestedMenuItemProps extends Omit<MenuItemProps, 'button'> {
   parentMenuOpen: boolean
@@ -15,12 +14,6 @@ export interface NestedMenuItemProps extends Omit<MenuItemProps, 'button'> {
   MenuProps?: Omit<MenuProps, 'children'>
   button?: true | undefined
 }
-
-const useMenuItemStyles = makeStyles((theme) => ({
-  root: (props: any) => ({
-    backgroundColor: props.open ? theme.palette.action.hover : 'rgba(0,0,0,0)'
-  })
-}))
 
 export const NestedMenuItem = React.forwardRef<HTMLLIElement | null, NestedMenuItemProps>(function NestedMenuItem(props, ref) {
   const {
@@ -36,7 +29,9 @@ export const NestedMenuItem = React.forwardRef<HTMLLIElement | null, NestedMenuI
     ...MenuItemProps
   } = props
 
-  const { ref: containerRefProp, ...ContainerProps } = ContainerPropsProp
+  const { ref: containerRefProp, ...ContainerProps } = ContainerPropsProp;
+
+  const theme = useTheme();
 
   const menuItemRef = React.useRef<HTMLLIElement>(null)
   const containerRef = React.useRef<HTMLDivElement>(null)
@@ -93,7 +88,6 @@ export const NestedMenuItem = React.forwardRef<HTMLLIElement | null, NestedMenuI
   }
 
   const open = isSubMenuOpen && parentMenuOpen
-  const menuItemClasses = useMenuItemStyles({ open })
 
   // Root element must have a `tabIndex` attribute for keyboard navigation
   let tabIndex
@@ -112,8 +106,11 @@ export const NestedMenuItem = React.forwardRef<HTMLLIElement | null, NestedMenuI
     >
       <MenuItem
         {...MenuItemProps}
-        className={clsx(menuItemClasses.root, className)}
+        className={className}
         ref={menuItemRef}
+        sx={{
+          backgroundColor: open ? theme.palette.action.hover : 'rgba(0,0,0,0)'
+        }}
       >
         {label} {rightIcon}
       </MenuItem>
@@ -127,6 +124,19 @@ export const NestedMenuItem = React.forwardRef<HTMLLIElement | null, NestedMenuI
         disableAutoFocus
         disableEnforceFocus
         onClose={() => setIsSubMenuOpen(false)}
+        sx={{
+          '& .MuiMenu-paper': {
+            backgroundColor: alpha(theme.palette.common.white, .9),
+            borderRadius: 0,
+          },
+          '& .MuiListItem-button': {
+            fontVariant: 'small-caps',
+            display: 'flex',
+          },
+          '& .MuiListItem-button:hover': {
+            color: theme.palette.primary.main,
+          },
+        }}
         {...ContainerProps}
       >
         <div ref={menuContainerRef} style={{ pointerEvents: 'auto' }}>{children}</div>

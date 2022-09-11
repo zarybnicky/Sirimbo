@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   AppBar, Collapse, Divider, IconButton, SwipeableDrawer, Toolbar, List,
-  ListItem, ListItemText, makeStyles
+  ListItem, ListItemText, Box
 } from '@mui/material';
 import { MenuStructItem, useMenu, getHrefs } from 'lib/data/use-menu';
 import { useAuth } from 'lib/data/use-auth';
@@ -14,25 +14,6 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
-const useStyles = makeStyles((theme) => ({
-  svg: {
-    filter: 'drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.2))',
-    '& *': {
-      color: 'white',
-      fill: 'white !important',
-    },
-  },
-  header: {
-    flexGrow: 1,
-    display: 'flex',
-    alignItems: 'center',
-  },
-  list: {
-    maxWidth: '450px',
-    width: '85vw',
-  }
-}));
-
 const Submenu = ({ level = 0, item: x, onClick }: {
   level?: number;
   item: MenuStructItem;
@@ -43,7 +24,7 @@ const Submenu = ({ level = 0, item: x, onClick }: {
   const [open, setOpen] = React.useState(inPath);
 
   if (x.type === 'link') {
-    return <ListItem button LinkComponent={Link} to={x.href} onClick={onClick}>
+    return <ListItem button component={Link} href={x.href} onClick={onClick}>
       <ListItemText primary={x.text} style={{ marginLeft: `${level}rem` }} />
     </ListItem>
   }
@@ -63,7 +44,6 @@ const Submenu = ({ level = 0, item: x, onClick }: {
 };
 
 export const MobileHeader = ({ }) => {
-  const classes = useStyles();
   const auth = useAuth();
   const menu = useMenu();
   const router = useRouter();
@@ -72,9 +52,17 @@ export const MobileHeader = ({ }) => {
   return <div>
     <AppBar position="static" color="primary">
       <Toolbar>
-        <div className={classes.header}>
-          <OlympLogo viewBox="0 0 381.82217 111.78744" width="170" height="50" className={classes.svg} />
-        </div>
+        <Box sx={{
+          flexGrow: 1,
+          display: 'flex',
+          alignItems: 'center',
+        }}>
+          <OlympLogo viewBox="0 0 381.82217 111.78744" width="170" height="50" style={{
+            filter: 'drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.2))',
+            color: 'white',
+            fill: 'white !important',
+          }} />
+        </Box>
         <IconButton color="inherit" LinkComponent={Link} href="/profile">
           <AccountCircle />
         </IconButton>
@@ -88,7 +76,10 @@ export const MobileHeader = ({ }) => {
       onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
     >
-      <List className={classes.list}>
+      <List sx={{
+        maxWidth: '450px',
+        width: '85vw',
+      }}>
         <Submenu item={{ type: 'link', text: 'Domů', href: '/home' }} onClick={() => setOpen(false)} />
         {menu.map(x => <Submenu key={x.text} item={x} onClick={() => setOpen(false)} />)}
         <Divider />
