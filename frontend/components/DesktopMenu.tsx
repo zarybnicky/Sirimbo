@@ -6,8 +6,7 @@ import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { NestedMenuItem } from "./NestedMenuItem";
 import { useMenu, MenuStructItem, getHrefs } from 'lib/data/use-menu';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
-
+import { NextLinkComposed } from './Link';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const Submenu = React.forwardRef<any, {
@@ -20,7 +19,7 @@ const Submenu = React.forwardRef<any, {
 
   if (x.type === 'link') {
     if (popupState) {
-      return <MenuItem ref={ref} LinkComponent={Link} href={x.href} onClick={() => popupState.close()}>{x.text}</MenuItem>
+      return <MenuItem ref={ref} component={NextLinkComposed} href={x.href} onClick={() => popupState.close()}><a>{x.text}</a></MenuItem>
     } else {
       return <Button ref={ref} sx={[{
         ...theme.mixins.toolbar,
@@ -37,7 +36,7 @@ const Submenu = React.forwardRef<any, {
           color: theme.palette.common.white,
           borderBottom: '3px solid white',
         },
-      } : {}]} LinkComponent={Link} href={x.href}>{x.text}</Button>;
+      } : {}]} component={NextLinkComposed} href={x.href}>{x.text}</Button>;
     }
   }
 

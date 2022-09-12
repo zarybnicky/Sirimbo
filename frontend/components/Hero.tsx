@@ -1,8 +1,8 @@
 import * as React from 'react';
-import Link from 'next/link';
 import { Box, Typography, useTheme } from '@mui/material';
 import Carousel from 'react-material-ui-carousel'
 import { useArticles } from 'lib/data/use-articles';
+import { NextLinkComposed } from './Link';
 
 export const Hero = ({ }) => {
   const theme = useTheme();
@@ -66,11 +66,9 @@ export const Hero = ({ }) => {
           textDecoration: 'underline',
         }
       }}>
-        <Link href={x.href} passHref>
-          <a className="overlay">
-            <Typography variant="h5">{x.header}</Typography>
-          </a>
-        </Link>
+        <NextLinkComposed className="overlay" href={x.href}>
+          <Typography variant="h5">{x.header}</Typography>
+        </NextLinkComposed>
         <img src={x.img} alt={x.header} />
       </Box>
     ))}

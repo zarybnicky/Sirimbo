@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { Button, Menu, MenuItem } from '@mui/material';
 import { PopupState as PopupStateType } from 'material-ui-popup-state/core';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { useAuth } from 'lib/data/use-auth';
-
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import { NextLinkComposed } from './Link';
 
 export const AuthButton = ({ }) => {
   const auth = useAuth();
@@ -21,7 +20,7 @@ export const AuthButton = ({ }) => {
   if (!auth.user) {
     return <div>
       <Button
-        LinkComponent={Link} href="/login" color="inherit"
+        component={NextLinkComposed} href="/login" color="inherit"
         startIcon={<AccountCircle />}
         style={{ textDecoration: 'underline' }}
       >

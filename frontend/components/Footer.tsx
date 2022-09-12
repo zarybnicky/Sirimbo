@@ -5,7 +5,7 @@ import { SocialButtons } from './SocialButtons';
 import CstsLogo from 'public/images/csts-logo.svg';
 import OlomoucLogo from 'public/style/logo-olomouc.jpg';
 import KrajLogo from 'public/style/logo-kraj.png';
-import Map from './Map-client';
+import { Map } from './Map';
 
 const ContactText = () => {
   const theme = useTheme();

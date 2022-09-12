@@ -65,7 +65,7 @@ export const RegisterPage = () => {
               <TextFieldElement control={control} label="Příjmení" name="prijmeni" autoComplete="family-name" required />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <DatePickerElement control={control} label="Datum narození" name="narozeni" required dateFunsUtils={DateFnsUtils} />
+              <DatePickerElement control={control} label="Datum narození" name="narozeni" required />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextFieldElement control={control} label="Rodné číslo" name="rodnecislo" required validation={{

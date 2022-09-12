@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CellPlugin } from '@react-page/editor';
 import { Typography, Paper, Grid, useTheme } from '@mui/material';
-import { defaultSlate } from '../ReactPage';
+import { defaultSlate } from '../SlateReadonly';
 import { Map } from 'components/Map';
 
 const CardMap = (props: {

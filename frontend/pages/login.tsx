@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Card, CardContent, CardActions, Container, Grid, Typography, Button } from '@mui/material';
 import { Alert } from '@mui/lab';
-import Link from 'next/link';
+import { NextLinkComposed } from 'components/Link';
 import { useAuth } from 'lib/data/use-auth';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
@@ -54,8 +54,8 @@ export const LoginPage = ({ }) => {
       </CardActions>
     </Card>
     <Grid container justifyContent="space-between" style={{ marginTop: '1rem' }}>
-      <Link href="/register" passHref><Button size="small">Registrovat se</Button></Link>
-      <Link href="/forgotten-password"><Button size="small">Zapomněli jste heslo?</Button></Link>
+      <Button component={NextLinkComposed} href="/register" size="small">Registrovat se</Button>
+      <Button component={NextLinkComposed} href="/forgotten-password" size="small">Zapomněli jste heslo?</Button>
     </Grid>
   </Container>
 };

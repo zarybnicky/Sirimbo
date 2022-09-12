@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Link from 'next/link';
+import { NextLinkComposed } from 'components/Link';
 import { Button, Container, Typography, Box, useTheme } from '@mui/material';
 import type { CellPlugin } from '@react-page/editor';
 
@@ -11,7 +11,7 @@ export const CallToAction = ({ }) => {
     backgroundColor: theme.palette.primary.main,
   }}>
     <Container maxWidth="lg" disableGutters sx={{
-      backgroundImage: `url(${CtaImage})`,
+      backgroundImage: `url(${CtaImage.src})`,
       backgroundPosition: '85% 50%',
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'auto 100%',
@@ -44,7 +44,7 @@ export const CallToAction = ({ }) => {
         }}>A OBJEV LÁSKU K TANCI</Typography>
 
         <Button
-          LinkComponent={Link} href="/treninkove-programy"
+          component={NextLinkComposed} href="/treninkove-programy"
           color="secondary" variant="contained" size="large"
           sx={{
             textTransform: 'none',

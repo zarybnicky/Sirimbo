@@ -5,14 +5,13 @@ import {
 } from '@mui/material';
 import { MenuStructItem, useMenu, getHrefs } from 'lib/data/use-menu';
 import { useAuth } from 'lib/data/use-auth';
-
-import OlympLogo from '../../static/images/olymp-logo-oneline.svg';
+import { useRouter } from 'next/router';
+import { NextLinkComposed } from './Link';
+import OlympLogo from 'public/images/olymp-logo-oneline.svg';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuIcon from '@mui/icons-material/Menu';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
 
 const Submenu = ({ level = 0, item: x, onClick }: {
   level?: number;
@@ -24,7 +23,7 @@ const Submenu = ({ level = 0, item: x, onClick }: {
   const [open, setOpen] = React.useState(inPath);
 
   if (x.type === 'link') {
-    return <ListItem button component={Link} href={x.href} onClick={onClick}>
+    return <ListItem button component={NextLinkComposed} href={x.href} onClick={onClick}>
       <ListItemText primary={x.text} style={{ marginLeft: `${level}rem` }} />
     </ListItem>
   }
@@ -63,7 +62,7 @@ export const MobileHeader = ({ }) => {
             fill: 'white !important',
           }} />
         </Box>
-        <IconButton color="inherit" LinkComponent={Link} href="/profile">
+        <IconButton color="inherit" LinkComponent={NextLinkComposed} href="/profile">
           <AccountCircle />
         </IconButton>
         <IconButton color="inherit" onClick={() => setOpen(!open)}><MenuIcon /></IconButton>

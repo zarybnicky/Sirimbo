@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Link from 'next/link';
+import Link from 'components/Link';
 import { AppBar, Box, Container, Toolbar, useTheme } from '@mui/material';
 import { SocialButtons } from './SocialButtons';
 import { AuthButton } from './AuthButton';
@@ -34,28 +34,26 @@ export const DesktopHeader = ({ }) => {
             backgroundColor: theme.palette.primary.main,
             color: theme.palette.primary.contrastText,
           }}>
-            <Link href="/" passHref>
-              <Box component="a" sx={{
-                display: 'block',
-                padding: 0,
-                margin: 0,
-                height: '100%',
-                width: '100%',
-                position: 'relative',
-              }}>
-                <Box component={OlympLogoVertical} sx={{
-                  filter: 'drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.2))',
-                  position: 'absolute',
-                  left: 0,
-                  bottom: 0,
-                  width: '104px',
-                  height: '104px',
-                  '& *': {
-                    color: 'white',
-                    fill: 'white !important',
-                  },
-                }} />
-              </Box>
+            <Link href="/" sx={{
+              display: 'block',
+              padding: 0,
+              margin: 0,
+              height: '100%',
+              width: '100%',
+              position: 'relative',
+            }}>
+              <Box component={OlympLogoVertical} sx={{
+                filter: 'drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.2))',
+                position: 'absolute',
+                left: 0,
+                bottom: 0,
+                width: '104px',
+                height: '104px',
+                '& *': {
+                  color: 'white',
+                  fill: 'white !important',
+                },
+              }} />
             </Link>
           </Box>
         </Box>

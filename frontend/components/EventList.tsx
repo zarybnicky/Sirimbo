@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Checkbox, Menu, MenuItem, Button } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import Link from 'next/link';
 import { Pagination } from '@mui/lab';
 import { $, AkcesOrderBy, Selector } from 'lib/zeus';
 import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
 import { DateRange } from './DateRange';
 import { scalars } from 'lib/apollo';
+import { NextLinkComposed } from './Link';
 
 export const EventListQuery = Selector('Query')({
   akces: [
@@ -95,16 +95,16 @@ export function EventList() {
             {(popupState) => <React.Fragment>
               <Button {...bindTrigger(popupState)}>{a.aJmeno}</Button>
               <Menu {...bindMenu(popupState)}>
-                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/akce/edit/${a.aId}`}>
+                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/akce/edit/${a.aId}`}>
                   Upravit
                 </MenuItem>
-                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/akce/detail/${a.aId}`}>
+                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/akce/detail/${a.aId}`}>
                   Upravit účastníky
                 </MenuItem>
-                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/akce/dokumenty/${a.aId}`}>
+                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/akce/dokumenty/${a.aId}`}>
                   Upravit dokumenty
                 </MenuItem>
-                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/akce/remove/${a.aId}`}>
+                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/akce/remove/${a.aId}`}>
                   Odstranit
                 </MenuItem>
               </Menu>
@@ -123,7 +123,7 @@ export function EventList() {
   </table>;
 
   return <React.Fragment>
-    <Link href="/admin/akce/add" passHref><a className="btn btn-primary">Přidat</a></Link>
+    <NextLinkComposed href="/admin/akce/add" className="btn btn-primary">Přidat</NextLinkComposed>
     {list}
     <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
   </React.Fragment>;

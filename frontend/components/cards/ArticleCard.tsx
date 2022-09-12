@@ -1,7 +1,7 @@
 import * as React from 'react';
-import Link from 'next/link';
 import { Button, Typography, Card, CardMedia, CardContent, CardActionArea, CardActions, useTheme } from '@mui/material';
 import { Article } from 'lib/data/use-articles';
+import { NextLinkComposed } from 'components/Link';
 
 export const ArticleCard = ({ item: x }: { item: Article }) => {
   const theme = useTheme();
@@ -10,7 +10,7 @@ export const ArticleCard = ({ item: x }: { item: Article }) => {
     display: 'flex',
     flexDirection: 'column',
   }}>
-    <CardActionArea LinkComponent={Link} href={x.href} style={{ flexGrow: 1 }}>
+    <CardActionArea component={NextLinkComposed} href={x.href} style={{ flexGrow: 1 }}>
       <CardMedia component="img" height={240} image={x.img} title={x.header} />
       <CardContent>
         <Typography gutterBottom variant="subtitle1" component="h3" sx={{
@@ -37,7 +37,7 @@ export const ArticleCard = ({ item: x }: { item: Article }) => {
       justifyContent: 'center',
       paddingBottom: '2px',
     }}>
-      <Button size="large" variant="contained" color="primary" LinkComponent={Link} href={x.href}>
+      <Button size="large" variant="contained" color="primary" component={NextLinkComposed} href={x.href}>
         Více zde ᐳ
       </Button>
     </CardActions>

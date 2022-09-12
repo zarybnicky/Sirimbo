@@ -1,6 +1,5 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import Link from 'next/link';
 import { Button, Menu, MenuItem } from '@mui/material';
 import { Pagination } from '@mui/lab';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
@@ -8,6 +7,7 @@ import { $, AktualitiesOrderBy, Selector } from 'lib/zeus';
 import { useTypedQuery } from 'lib/zeus/apollo';
 import { useAuth } from 'lib/data/use-auth';
 import { scalars } from 'lib/apollo';
+import { NextLinkComposed } from './Link';
 
 export const ArticlesAdminQuery = Selector('Query')({
   aktualities: [
@@ -56,13 +56,13 @@ export function ArticleAdminList() {
             {(popupState) => <React.Fragment>
               <Button {...bindTrigger(popupState)}>{a.atJmeno}</Button>
               <Menu {...bindMenu(popupState)}>
-                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/aktuality/edit/${a.atId}`}>
+                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/aktuality/edit/${a.atId}`}>
                   Upravit
                 </MenuItem>
-                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/aktuality/foto/${a.atId}`}>
+                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/aktuality/foto/${a.atId}`}>
                   Upravit fotky
                 </MenuItem>
-                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/aktuality/remove/${a.atId}`}>
+                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/aktuality/remove/${a.atId}`}>
                   Odstranit
                 </MenuItem>
               </Menu>
@@ -75,7 +75,7 @@ export function ArticleAdminList() {
   </table >;
 
   return <React.Fragment>
-    <Link href="/admin/aktuality/add" passHref><a className="btn btn-primary">Nový článek</a></Link>
+    <NextLinkComposed href="/admin/aktuality/add" className="btn btn-primary">Nový článek</NextLinkComposed>
     {list}
     <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
   </React.Fragment>;

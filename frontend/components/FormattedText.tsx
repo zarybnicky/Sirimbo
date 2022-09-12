@@ -1,6 +1,6 @@
 import Image from "next/image"
 import parse, { HTMLReactParserOptions, domToReact, DOMNode, Element } from "html-react-parser"
-import { Link, isRelative } from "./Link"
+import { NextLinkComposed, isRelative } from "./Link"
 
 const isElement = (domNode: DOMNode): domNode is Element => {
   const isTag = domNode.type === "tag";
@@ -31,9 +31,9 @@ const options: HTMLReactParserOptions = {
       if (domNode.name === "a") {
         const { href, class: className, ...rest } = domNode.attribs
         return (
-          <Link href={href || '#'} passHref>
-            <a className={className} {...rest}>{domToReact(domNode.children as DOMNode[])}</a>
-          </Link>
+          <NextLinkComposed href={href || '#'} className={className} {...rest}>
+            {domToReact(domNode.children as DOMNode[])}
+          </NextLinkComposed>
         );
       }
 

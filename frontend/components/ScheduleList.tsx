@@ -2,12 +2,12 @@ import * as React from 'react';
 import format from 'date-fns/format';
 import { Checkbox, Menu, MenuItem, Button } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import Link from 'next/link';
 import { Pagination } from '@mui/lab';
 import { $, RozpisOrderBy, Selector } from 'lib/zeus';
 import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
 import { useAuth } from 'lib/data/use-auth';
 import { scalars } from 'lib/apollo';
+import { NextLinkComposed } from './Link';
 
 export const ScheduleListQuery = Selector('Query')({
   rozpis: [
@@ -98,16 +98,16 @@ export function RozpisAdminList() {
                 {a.userByRTrener?.uJmeno} {a.userByRTrener?.uPrijmeni}
               </Button>
               <Menu {...bindMenu(popupState)}>
-                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/rozpis/edit/${a.rId}`}>
+                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/rozpis/edit/${a.rId}`}>
                   Upravit
                 </MenuItem>
-                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/rozpis/detail/${a.rId}`}>
+                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/rozpis/detail/${a.rId}`}>
                   Upravit lekce
                 </MenuItem>
-                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/rozpis/duplicate/${a.rId}`}>
+                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/rozpis/duplicate/${a.rId}`}>
                   Duplikovat
                 </MenuItem>
-                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/rozpis/remove/${a.rId}`}>
+                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/rozpis/remove/${a.rId}`}>
                   Odstranit
                 </MenuItem>
               </Menu>
@@ -126,9 +126,7 @@ export function RozpisAdminList() {
   </table >;
 
   return <React.Fragment>
-    <Link href="/admin/rozpis/add" passHref>
-      <a className="btn btn-primary">Nový rozpis</a>
-    </Link>
+    <NextLinkComposed href="/admin/rozpis/add" className="btn btn-primary">Nový rozpis</NextLinkComposed>
     {list}
     <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
   </React.Fragment>;

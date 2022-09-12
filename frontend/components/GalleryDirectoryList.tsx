@@ -1,11 +1,11 @@
 import * as React from 'react';
-import Link from 'next/link';
 import { Checkbox, Button, Menu, MenuItem } from '@mui/material';
 import { Pagination } from '@mui/lab';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { $, GalerieDirsOrderBy, Selector } from 'lib/zeus';
 import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
 import { scalars } from 'lib/apollo';
+import { NextLinkComposed } from './Link';
 
 const GalleryDirList = Selector('Query')({
   galerieDirs: [
@@ -106,13 +106,13 @@ export function GalleryDirectoryList() {
             {(popupState) => <React.Fragment>
               <Button {...bindTrigger(popupState)}>{'→'.repeat(a.gdLevel - 1)} {a.gdName}</Button>
               <Menu {...bindMenu(popupState)}>
-                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/galerie/directory/edit/${a.gdId}`}>
+                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/galerie/directory/edit/${a.gdId}`}>
                   Upravit
                 </MenuItem>
-                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/galerie/directory/${a.gdId}`}>
+                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/galerie/directory/${a.gdId}`}>
                   Upravit fotky
                 </MenuItem>
-                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/galerie/directory/remove/${a.gdId}`}>
+                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/galerie/directory/remove/${a.gdId}`}>
                   Odstranit
                 </MenuItem>
               </Menu>
@@ -129,12 +129,8 @@ export function GalleryDirectoryList() {
   </table>;
 
   return <React.Fragment>
-    <Link href="/admin/galerie/file/upload" passHref>
-      <a className="btn btn-outline-primary">Přidat fotky</a>
-    </Link>
-    <Link href="/admin/galerie/directory/add" passHref>
-      <a className="btn btn-outline-primary">Přidat složku</a>
-    </Link>
+    <NextLinkComposed href="/admin/galerie/file/upload" className="btn btn-outline-primary">Přidat fotky</NextLinkComposed>
+    <NextLinkComposed href="/admin/galerie/directory/add" className="btn btn-outline-primary">Přidat složku</NextLinkComposed>
     {list}
     <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
   </React.Fragment>;

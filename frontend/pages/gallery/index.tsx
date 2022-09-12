@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Link from 'next/link';
+import { NextLinkComposed } from 'components/Link';
 import Head from 'next/head';
 import { Container, Grid, Button, Typography } from '@mui/material';
 import { GalleryCard } from 'components/cards/GalleryCard';
@@ -22,11 +22,9 @@ export const GalleryPage = ({ }) => {
     </Head>
     <Container maxWidth="lg" style={{ paddingBottom: '2rem', paddingTop: '5rem' }}>
       {dir?.parentId && (
-        <Link href={`/galerie/${dir.parentId}`} passHref>
-          <Button color='primary' startIcon={<ArrowUpwardIcon />}>
-            Přejit o složku výš
-          </Button>
-        </Link>
+        <Button component={NextLinkComposed} href={`/galerie/${dir.parentId}`} color='primary' startIcon={<ArrowUpwardIcon />}>
+          Přejit o složku výš
+        </Button>
       )}
       <Typography gutterBottom variant="h4" component="h2">
         {!dir?.name || dir.name == 'Hlavní' ? 'Galerie' : dir.name}

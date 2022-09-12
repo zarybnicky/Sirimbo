@@ -1,14 +1,14 @@
 import * as React from 'react';
-import Link from 'next/link';
 import { Grid, Paper, Typography, CardActionArea, useTheme } from '@mui/material';
 import { Video } from 'lib/data/use-videos';
 
 import PlayIcon from 'public/style/play_white.png';
+import { NextLinkComposed } from 'components/Link';
 
 export const VideoCard = ({ item: x }: { item: Video }) => {
   const theme = useTheme();
   return <Paper elevation={3}>
-    <CardActionArea component={Link} href={x.href}>
+    <CardActionArea component={NextLinkComposed} href={x.href}>
       <Grid container>
         <Grid item sm={12} md={3} sx={{
           position: 'relative',

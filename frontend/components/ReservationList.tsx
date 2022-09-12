@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Checkbox, Menu, MenuItem, Button } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import Link from 'next/link';
 import { Pagination } from '@mui/lab';
 import { $, NabidkasOrderBy, Selector } from 'lib/zeus';
 import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
 import { useAuth } from 'lib/data/use-auth';
 import { DateRange } from './DateRange';
 import { scalars } from 'lib/apollo';
+import { NextLinkComposed } from './Link';
 
 export const NabidkaAdminQuery = Selector('Query')({
   nabidkas: [
@@ -105,16 +105,16 @@ export function ReservationAdminList() {
                 {a.userByNTrener?.uJmeno} {a.userByNTrener?.uPrijmeni}
               </Button>
               <Menu {...bindMenu(popupState)}>
-                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/nabidka/edit/${a.nId}`}>
+                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/nabidka/edit/${a.nId}`}>
                   Upravit
                 </MenuItem>
-                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/nabidka/detail/${a.nId}`}>
+                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/nabidka/detail/${a.nId}`}>
                   Upravit lekce
                 </MenuItem>
-                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/nabidka/duplicate/${a.nId}`}>
+                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/nabidka/duplicate/${a.nId}`}>
                   Duplikovat
                 </MenuItem>
-                <MenuItem onClick={popupState.close} LinkComponent={Link} href={`/admin/nabidka/remove/${a.nId}`}>
+                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/nabidka/remove/${a.nId}`}>
                   Odstranit
                 </MenuItem>
               </Menu>
@@ -132,7 +132,7 @@ export function ReservationAdminList() {
   </table>;
 
   return <React.Fragment>
-    <Link href="/admin/nabidka/add"><a className="btn btn-primary">Nová nabídka</a></Link>
+    <NextLinkComposed href="/admin/nabidka/add" className="btn btn-primary">Nová nabídka</NextLinkComposed>
     {list}
     <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
   </React.Fragment>;
