@@ -10,10 +10,16 @@ module.exports = {
     outputFileTracingRoot: path.join(__dirname, '../'),
   },
 
+  async redirects() {
+    return [
+      { source: '/home', destination: '/', permanent: true },
+    ];
+  },
+
   async rewrites() {
     return [
-      { source: '/graphql', destination: 'http://localhost:3000' },
-      { source: '/graphiql', destination: 'http://localhost:3000' },
+      { source: '/graphql', destination: 'http://localhost:4000' },
+      { source: '/graphiql', destination: 'http://localhost:4000' },
       { source: '/old', destination: 'http://olymp-test' },
       { source: '/galerie', destination: 'http://olymp-test' },
     ];

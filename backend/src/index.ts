@@ -38,7 +38,7 @@ app.get('/logout', async function(req, res) {
   await runner.promise;
 })();
 
-const port = parseInt(process.env.PORT || '3000', 10);
+const port = parseInt(process.env.PORT || '4000', 10);
 const server = app.listen(port, () => {
   const address = server.address();
   if (address === null) {

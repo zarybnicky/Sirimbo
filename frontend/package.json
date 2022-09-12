@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "schema": "yarn schema:gen && yarn schema:fix",
-    "schema:gen": "zeus http://localhost:3000/graphql -H Content-Type:application/json -j schema.json ./lib --apollo",
+    "schema:gen": "zeus http://localhost:4000/graphql -H Content-Type:application/json -j schema.json ./lib --apollo",
     "schema:fix": "sed -i '1i//@ts-nocheck' lib/zeus/index.ts"
   },
   "dependencies": {

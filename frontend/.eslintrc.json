@@ -1,3 +1,9 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "import/no-unused-modules": ["warn", {
+      "unusedExports": true,
+      "ignoreExports": ["pages/**"]
+    }]
+  }
 }
