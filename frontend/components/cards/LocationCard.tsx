@@ -1,20 +1,24 @@
 import * as React from 'react';
 import { CellPlugin } from '@react-page/editor';
 import { Typography, Paper, Grid, useTheme } from '@mui/material';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { defaultSlate } from '../ReactPage';
+import { Map } from 'components/Map';
 
-const Map = (props: {
+const CardMap = (props: {
   lat: number;
   lng: number;
   zoom: number;
   name: string;
 }) => {
   return <Paper elevation={3}>
-    <MapContainer className="map" center={props} zoom={props.zoom} scrollWheelZoom={false}>
-      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-      <Marker position={props}><Popup>{props.name}</Popup></Marker>
-    </MapContainer>
+    <Map className="map" center={props} zoom={props.zoom} scrollWheelZoom={false}>
+      {({ TileLayer, Marker, Popup }) => <>
+        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        <Marker position={props}>
+          <Popup>{props.name}</Popup>
+        </Marker>
+      </>}
+    </Map>
   </Paper>;
 };
 
@@ -72,7 +76,7 @@ export const LocationCard = ({ item: x }: { item: Location; }) => {
         <Typography variant="body1" component="a" href={x.mapHref} target="_blank">
           Otevřít mapu
         </Typography>
-        <Map name={x.name} {...x.map} />
+        <CardMap name={x.name} {...x.map} />
       </Grid>
     </Grid>
   </Paper>;

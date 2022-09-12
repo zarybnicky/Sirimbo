@@ -5,24 +5,15 @@ import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 import { GoogleAnalytics, event } from "nextjs-google-analytics";
 import { ApolloProvider } from '@apollo/client';
+import { client } from "lib/apollo";
 
 import "public/style/index.scss";
+import 'public/style/material-icons.css';
 
 // Ideally include in ReactPage.tsx, to minimize bundle size
 import '@react-page/editor/lib/index.css';
 import '@react-page/plugins-slate/lib/index.css';
 import '@react-page/plugins-image/lib/index.css';
-
-import 'leaflet/dist/leaflet.css';
-
-import L from 'leaflet';
-import { client } from "lib/apollo";
-delete (L.Icon.Default.prototype as unknown as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png').default,
-  iconUrl: require('leaflet/dist/images/marker-icon.png').default,
-  shadowUrl: require('leaflet/dist/images/marker-shadow.png').default,
-});
 
 Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());

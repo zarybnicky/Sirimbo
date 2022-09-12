@@ -1,13 +1,11 @@
 import * as React from 'react';
-import { Container, Grid, Paper, Typography, Box } from '@mui/material';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { LatLngTuple } from 'leaflet';
-
-import CstsLogo from '../../static/images/csts-logo.svg';
-import OlomoucLogo from '../../static/style/logo-olomouc.jpg';
-import KrajLogo from '../../static/style/logo-kraj.png';
+import { Container, Grid, Paper, Typography, Box, useTheme } from '@mui/material';
 import { SocialButtons } from './SocialButtons';
-import { useTheme } from '@mui/material';
+
+import CstsLogo from 'public/images/csts-logo.svg';
+import OlomoucLogo from 'public/style/logo-olomouc.jpg';
+import KrajLogo from 'public/style/logo-kraj.png';
+import Map from './Map-client';
 
 const ContactText = () => {
   const theme = useTheme();
@@ -71,22 +69,24 @@ const ContactText = () => {
   </React.Fragment>;
 }
 
-const Map = () => {
-  const position = [49.58727525, 17.25661055] as LatLngTuple;
-  const holeckova = [49.57963, 17.2495939] as LatLngTuple;
-  const slovan = [49.59490, 17.26340] as LatLngTuple;
+const FooterMap = () => {
+  const position = [49.58727525, 17.25661055] as [number, number];
+  const holeckova = [49.57963, 17.2495939] as [number, number];
+  const slovan = [49.59490, 17.26340] as [number, number];
 
-  return <MapContainer center={position} zoom={12} scrollWheelZoom={false} sx={{
+  return <Map center={position} zoom={12} scrollWheelZoom={false} style={{
     height: '200px'
   }}>
-    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-    <Marker position={holeckova}>
-      <Popup>Taneční centrum při FZŠ Holečkova</Popup>
-    </Marker>
-    <Marker position={slovan}>
-      <Popup>Tělocvična Slovanského gymnázia</Popup>
-    </Marker>
-  </MapContainer>;
+    {({ TileLayer, Marker, Popup }) => <>
+      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      <Marker position={holeckova}>
+        <Popup>Taneční centrum při FZŠ Holečkova</Popup>
+      </Marker>
+      <Marker position={slovan}>
+        <Popup>Tělocvična Slovanského gymnázia</Popup>
+      </Marker>
+    </>}
+  </Map>;
 };
 
 export const Footer = ({ }) => {
@@ -100,7 +100,7 @@ export const Footer = ({ }) => {
       <Grid container spacing={3}>
         <Grid item xs><ContactText /></Grid>
         <Grid item xs>
-          <Map />
+          <FooterMap />
           <SocialButtons variant="large" sx={{
             margin: '1rem 0',
             textAlign: 'right',

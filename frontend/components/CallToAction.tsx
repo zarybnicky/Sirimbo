@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Button, Container, Typography, Box, useTheme } from '@mui/material';
 import type { CellPlugin } from '@react-page/editor';
 
-import CtaImage from '../../static/images/call-to-action.png';
+import CtaImage from 'public/images/call-to-action.png';
 
 export const CallToAction = ({ }) => {
   const theme = useTheme();

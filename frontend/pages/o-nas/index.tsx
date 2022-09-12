@@ -3,7 +3,7 @@ import { Container, Grid } from '@mui/material';
 import { CallToAction } from 'components/CallToAction';
 import { SlateReadonly } from 'components/SlateReadonly';
 
-import MirekDomca from '../../static/images/mirek-domca.png';
+import MirekDomca from 'public/images/mirek-domca.png';
 
 export const AboutPage = ({ }) => {
   return <React.Fragment>

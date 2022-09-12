@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Grid, Paper, Typography, useTheme } from '@mui/material';
 import { CellPlugin } from '@react-page/editor';
-import { defaultSlate } from '../ReactPage';
+import { defaultSlate } from '../SlateReadonly';
 
 type ServiceCardProps = {
   image: string;

@@ -5,7 +5,7 @@ import { SocialButtons } from './SocialButtons';
 import { AuthButton } from './AuthButton';
 import { DesktopMenu } from './DesktopMenu';
 
-import OlympLogoVertical from '../../static/images/olymp-logo-vertical.svg';
+import OlympLogoVertical from 'public/images/olymp-logo-vertical.svg';
 
 export const DesktopHeader = ({ }) => {
   const theme = useTheme();

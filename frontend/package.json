@@ -23,6 +23,7 @@
     "@mui/material": "^5.10.4",
     "@mui/styles": "^5.10.3",
     "@mui/system": "^5.10.4",
+    "@mui/x-date-pickers": "^5.0.1",
     "@react-page/editor": "^5",
     "@react-page/plugins-background": "^5",
     "@react-page/plugins-divider": "^5",
