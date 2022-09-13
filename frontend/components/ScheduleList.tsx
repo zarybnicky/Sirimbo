@@ -1,8 +1,7 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { Checkbox, Menu, MenuItem, Button } from '@mui/material';
+import { Pagination, Checkbox, Menu, MenuItem, Button } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import { Pagination } from '@mui/lab';
 import { $, RozpisOrderBy, Selector } from 'lib/zeus';
 import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
 import { useAuth } from 'lib/data/use-auth';

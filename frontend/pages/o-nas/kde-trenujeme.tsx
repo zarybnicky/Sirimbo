@@ -5,7 +5,7 @@ import { useLocations } from 'lib/data';
 import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
 
-export const LocationsPage = ({ }) => {
+export default function LocationsPage() {
   const items = useLocations();
   return <React.Fragment>
     <Heading color={{ r: 20, g: 200, b: 20, a: .5 }} text="Kde trénujeme" image="" />

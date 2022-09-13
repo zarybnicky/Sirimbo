@@ -16,7 +16,7 @@ export const Hero = ({ }) => {
   }];
 
   return <Carousel
-    interval={400}
+    interval={4000}
     IndicatorIcon={<svg width="50" height="9" viewBox="5 0 50 9"><rect width="40" height="9" /></svg>}
     indicatorIconButtonProps={{
       style: {

@@ -5,11 +5,10 @@ import { Container, Grid, Button, Typography } from '@mui/material';
 import { GalleryCard } from 'components/cards/GalleryCard';
 import { Lightbox } from 'components/Lightbox';
 import { useGallery } from 'lib/data/use-gallery';
-
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { useRouter } from 'next/router';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
-export const GalleryPage = ({ }) => {
+export default function GalleryPage() {
   const router = useRouter();
   const { dir: dirParam, photo: photoParam } = router.query;
   const dirId = dirParam ? parseInt(dirParam as string, 10) : 1;

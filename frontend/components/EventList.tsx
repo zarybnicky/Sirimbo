@@ -1,12 +1,10 @@
 import * as React from 'react';
-import { Checkbox, Menu, MenuItem, Button } from '@mui/material';
+import { Checkbox, Menu, MenuItem, Button, Pagination } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import { Pagination } from '@mui/lab';
 import { $, AkcesOrderBy, Selector } from 'lib/zeus';
-import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
 import { DateRange } from './DateRange';
-import { scalars } from 'lib/apollo';
 import { NextLinkComposed } from './Link';
+import { useTypedMutation, useTypedQuery } from 'lib/query';
 
 export const EventListQuery = Selector('Query')({
   akces: [
@@ -66,16 +64,11 @@ export const ToggleEventVisible = Selector('Mutation')({
 export function EventList() {
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
-  const { data, refetch } = useTypedQuery(EventListQuery, {
-    scalars,
-    apolloOptions: {
-      variables: { limit, offset: (page - 1) * limit },
-    },
+  const { data, refetch } = useTypedQuery('events', EventListQuery, {}, {
+    variables: { limit, offset: (page - 1) * limit },
   });
-  const [toggleVisible] = useTypedMutation(ToggleEventVisible, {
-    apolloOptions: {
-      onCompleted: () => refetch(),
-    },
+  const { mutate: toggleVisible } = useTypedMutation('toggle-event', ToggleEventVisible, {
+    onSuccess: () => refetch(),
   });
   const total = data?.akces?.totalCount || 0;
 

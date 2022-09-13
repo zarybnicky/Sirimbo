@@ -18,10 +18,10 @@ module.exports = {
 
   async rewrites() {
     return [
-      { source: '/graphql', destination: 'http://localhost:4000' },
-      { source: '/graphiql', destination: 'http://localhost:4000' },
-      { source: '/old', destination: 'http://olymp-test' },
-      { source: '/galerie', destination: 'http://olymp-test' },
+      { source: '/graphql', destination: 'http://localhost:4000/graphql' },
+      { source: '/graphiql', destination: 'http://localhost:4000/graphiql' },
+      { source: '/old/:path*', destination: 'http://olymp-test/:path*' },
+      { source: '/galerie/:path*', destination: 'http://olymp-test/galerie/:path*' },
     ];
   },
 

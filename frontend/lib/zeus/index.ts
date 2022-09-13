@@ -2,7 +2,7 @@
 /* eslint-disable */
 
 import { AllTypesProps, ReturnTypes, Ops } from './const';
-export const HOST = "http://localhost:3000/graphql"
+export const HOST = "http://localhost:4000/graphql"
 
 
 export const HEADERS = {}

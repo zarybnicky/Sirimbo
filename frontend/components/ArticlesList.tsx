@@ -1,7 +1,6 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { Button, Menu, MenuItem } from '@mui/material';
-import { Pagination } from '@mui/lab';
+import { Button, Menu, MenuItem, Pagination } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { $, AktualitiesOrderBy, Selector } from 'lib/zeus';
 import { useTypedQuery } from 'lib/zeus/apollo';

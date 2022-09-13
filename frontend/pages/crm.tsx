@@ -1,9 +1,7 @@
 import * as React from 'react';
 import format from 'date-fns/format';
 import { Container, Typography } from '@mui/material';
-import { useTypedQuery } from 'lib/zeus/apollo';
 import { Selector } from 'lib/zeus';
-
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -11,7 +9,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { scalars } from 'lib/apollo';
+import { useTypedQuery } from 'lib/query';
 
 const ProspectQuery = Selector('Query')({
   activeProspects: [
@@ -34,8 +32,8 @@ const ProspectQuery = Selector('Query')({
   ],
 });
 
-export const CrmPage = ({ }) => {
-  const { data } = useTypedQuery(ProspectQuery, { scalars });
+export default function CrmPage() {
+  const { data } = useTypedQuery('prospects', ProspectQuery);
   const nodes = data?.activeProspects?.nodes || [];
 
   return <Container maxWidth="lg" style={{ padding: '2rem 0' }}>

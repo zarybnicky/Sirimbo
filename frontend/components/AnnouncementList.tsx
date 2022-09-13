@@ -1,7 +1,6 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { Box, IconButton, Card, CardContent, Typography } from '@mui/material';
-import { Pagination } from '@mui/lab';
+import { Pagination, Box, IconButton, Card, CardContent, Typography } from '@mui/material';
 import { useTypedQuery } from 'lib/zeus/apollo';
 import { $, UpozornenisOrderBy, Selector } from 'lib/zeus';
 
@@ -64,7 +63,7 @@ export function AnnouncementList() {
   }
   const hasNext = total >= page * limit;
   const hasPrev = 0 < (page - 1) * limit;
-
+  console.log(nodes);
   return <React.Fragment>
     <Box display='flex' alignItems='center' justifyContent="right">
       {hasPrev ? <IconButton onClick={() => setPage(page - 1)}><NavigateBeforeIcon /></IconButton> : null}
@@ -77,7 +76,7 @@ export function AnnouncementList() {
     </Box>
     {nodes.map((a) => <Card key={a.upId} style={{ marginBottom: '1rem' }}>
       <CardContent>
-        <Typography color="textSecondary">{format(new Date(a.upTimestampAdd), 'd. M. y')}</Typography>
+        <Typography color="textSecondary">{format(a.upTimestampAdd, 'd. M. y')}</Typography>
         <Typography variant="h5" component="h2">{a.upNadpis}</Typography>
         <Typography color="textSecondary">{a.userByUpKdo?.uJmeno} {a.userByUpKdo?.uPrijmeni}</Typography>
         <div dangerouslySetInnerHTML={{ __html: a.upText }}></div>

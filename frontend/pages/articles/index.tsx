@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Container, Grid, Typography } from '@mui/material';
-import { Pagination } from '@mui/lab';
+import { Container, Grid, Typography, Pagination } from '@mui/material';
 import { ArticleCard } from 'components/cards/ArticleCard';
 import { useArticles } from 'lib/data/use-articles';
 import { CallToAction } from 'components/CallToAction';

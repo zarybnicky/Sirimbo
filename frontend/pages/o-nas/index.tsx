@@ -5,7 +5,7 @@ import { SlateReadonly } from 'components/SlateReadonly';
 
 import MirekDomca from 'public/images/mirek-domca.png';
 
-export const AboutPage = ({ }) => {
+export default function AboutPage() {
   return <React.Fragment>
     <Container maxWidth="md" style={{ paddingBottom: '2rem', paddingTop: '2rem' }}>
       <Grid container direction="row-reverse" justifyContent="center">

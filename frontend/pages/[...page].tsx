@@ -27,7 +27,23 @@ export const OldDynamicPage = () => {
       setJson(json);
     })();
   }, []);
+
   return <Container maxWidth="lg" style={{ marginTop: 80 }}>
+    {json.title && json.title !== 'TK Olymp' && (
+      <div className="header-section">
+        <div className="container full">
+          <h1>{json.title}</h1>
+          {json.subheader}
+        </div>
+      </div>
+    )}
+
+    {json.messages.map((msg: any, i: number) => (
+      <div className="container" key={i}>
+        <div className="alert alert-{{ msg.type }}" dangerouslySetInnerHTML={{ __html: msg.text }} />
+      </div>
+    ))}
+
     <Typography variant="h3" component="h2">{json.title}</Typography>
 
     <div dangerouslySetInnerHTML={{ __html: json.content }} />

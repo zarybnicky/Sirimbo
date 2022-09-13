@@ -4,7 +4,7 @@ import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
 import { useCohorts } from 'lib/data/use-cohorts';
 
-export const CohortsPage = ({ }) => {
+export default function CohortsPage() {
   const cohorts = useCohorts();
 
   return <React.Fragment>

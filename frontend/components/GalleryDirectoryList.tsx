@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Checkbox, Button, Menu, MenuItem } from '@mui/material';
-import { Pagination } from '@mui/lab';
+import { Pagination, Checkbox, Button, Menu, MenuItem } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { $, GalerieDirsOrderBy, Selector } from 'lib/zeus';
 import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
