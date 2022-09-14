@@ -113,20 +113,17 @@ function makeRouter()
 {
     $router = new \Olymp\Router('Olymp.Controller');
 
-    $router->get('/', '@Home::get');
-    $router->get('/app', '@StaticContent::app');
-    $router->get('/app/(.*)', '@StaticContent::app');
-    $router->get('/home', '@Home::get');
-    $router->get('/error', '@Error::get');
+    $router->get('/login', '@Member::login');
+    $router->post('/login', '@Member::loginPost');
+    $router->get('/nopassword', '@Nopassword::get');
+    $router->post('/nopassword', '@Nopassword::post');
+    $router->get('/registrace', '@Registrace::get');
+    $router->post('/registrace', '@Registrace::post');
+
     $router->get('/video', '@Video::get');
 
     $router->get('/prijdtancit', '@Page::get');
     $router->get('/ochrana-osobnich-udaju', '@Page::get');
-
-    $router->get('/kontakt', '@StaticContent::kontakt');
-    $router->get('/oklubu/klubovi-treneri', '@StaticContent::klubovi');
-    $router->get('/oklubu/externi-treneri', '@StaticContent::externi');
-    $router->get('/oklubu/saly', '@StaticContent::saly');
 
     $router->get('/aktualne', '@Aktualne::list');
     $router->get('/aktualne/([0-9]+)', '@Aktualne::single');
@@ -134,13 +131,6 @@ function makeRouter()
     $router->get('/fotogalerie/([0-9]+)', '@Fotogalerie::directory');
     $router->get('/fotogalerie/foto/([0-9]+)', '@Fotogalerie::single');
     $router->get('/fotogalerie/([0-9]+)/foto/([0-9]+)', '@Fotogalerie::singleWithDir');
-
-    $router->get('/login', '@Member::login');
-    $router->post('/login', '@Member::loginPost');
-    $router->get('/nopassword', '@Nopassword::get');
-    $router->post('/nopassword', '@Nopassword::post');
-    $router->get('/registrace', '@Registrace::get');
-    $router->post('/registrace', '@Registrace::post');
 
     $router->get('/member', '@Member::get');
     $router->redirect('/member/home', '/member');
@@ -169,9 +159,6 @@ function makeRouter()
     $router->get('/member/profil/par/partner', '@Member.ProfilPar::partner');
     $router->post('/member/profil/par/partner', '@Member.ProfilPar::partnerPost');
     $router->post('/member/profil/par/zadost', '@Member.ProfilPar::zadost');
-
-    $router->get('/admin/konzole', '@Admin.Repl::get');
-    $router->post('/admin/konzole', '@Admin.Repl::post');
 
     $router->get('/admin/akce', '@Admin.Akce::list');
     $router->get('/admin/akce/add', '@Admin.Akce::add');

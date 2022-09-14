@@ -13,6 +13,12 @@ module.exports = {
   async redirects() {
     return [
       { source: '/home', destination: '/', permanent: true },
+      { source: '/nopassword', destination: '/forgotten-password', permanent: true },
+      { source: '/registrace', destination: '/register', permanent: true },
+      { source: '/kontakt', destination: '/contact', permanent: true },
+      { source: '/oklubu/saly', destination: '/o-nas/kde-trenujeme', permanent: true },
+      { source: '/oklubu/klubovi-treneri', destination: '/o-nas/treneri', permanent: true },
+      { source: '/oklubu/externi-treneri', destination: '/o-nas/treneri', permanent: true },
     ];
   },
 
