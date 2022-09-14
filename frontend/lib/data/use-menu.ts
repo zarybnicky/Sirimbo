@@ -14,7 +14,7 @@ export type MenuStructItem = {
 };
 
 export function useDbMenu(): MenuStructItem[] {
-  const { data } = useTypedQuery('menu', {
+  const { data } = useTypedQuery(['menu'], {
     parameter: [
       { paName: "menu" },
       { paValue: true },

@@ -33,7 +33,7 @@ const ProspectQuery = Selector('Query')({
 });
 
 export default function CrmPage() {
-  const { data } = useTypedQuery('prospects', ProspectQuery);
+  const { data } = useTypedQuery(['prospects'], ProspectQuery);
   const nodes = data?.activeProspects?.nodes || [];
 
   return <Container maxWidth="lg" style={{ padding: '2rem 0' }}>

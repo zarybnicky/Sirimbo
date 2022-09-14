@@ -72,10 +72,10 @@ export function ReservationAdminList() {
   const { user } = useAuth();
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(0);
-  const { data, refetch } = useTypedQuery('nabidka-admin', NabidkaAdminQuery, {}, {
+  const { data, refetch } = useTypedQuery(['nabidkaAdmin'], NabidkaAdminQuery, {}, {
     variables: { limit, offset: (page - 1) * limit },
   });
-  const { mutate: toggleVisible } = useTypedMutation('toggle-nabidka', ToggleVisibleNabidka, {
+  const { mutate: toggleVisible } = useTypedMutation(['toggleNabidka'], ToggleVisibleNabidka, {
     onSuccess: () => refetch(),
   });
   const total = data?.nabidkas?.totalCount || 0;

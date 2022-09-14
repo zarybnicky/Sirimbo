@@ -72,8 +72,8 @@ export const LocationCard = ({ item: x }: { item: Location; }) => {
       <Grid item xs={12} sm="auto" className="body">
         <Typography variant="h5" component="h3" className="header">{x.name}</Typography>
         <Typography variant="body1">{x.address}</Typography>
-        {x.href && <Typography variant="body1" component="a" href={x.href} target="_blank">{x.href}</Typography>}
-        <Typography variant="body1" component="a" href={x.mapHref} target="_blank">
+        {x.href && <Typography variant="body1" component="a" href={x.href} rel="noreferrer" target="_blank">{x.href}</Typography>}
+        <Typography variant="body1" component="a" href={x.mapHref} rel="noreferrer" target="_blank">
           Otevřít mapu
         </Typography>
         <CardMap name={x.name} {...x.map} />

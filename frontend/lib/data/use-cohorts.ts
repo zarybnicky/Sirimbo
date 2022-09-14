@@ -1,7 +1,7 @@
 import { useTypedQuery } from "lib/query";
 
 export const useCohorts = () => {
-  const { data } = useTypedQuery('cohorts', {
+  const { data } = useTypedQuery(['cohorts'], {
     skupinies: [
       { condition: { sVisible: true } },
       {

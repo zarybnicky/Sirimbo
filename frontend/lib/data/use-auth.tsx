@@ -38,7 +38,7 @@ function useApiAuth(): AuthContextType {
   const [couple, setCouple] = React.useState<AppCouple | null>(null);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
-  const { mutateAsync: signIn } = useTypedMutation('login', {
+  const { mutateAsync: signIn } = useTypedMutation(['login'], {
     login: [
       { input: { login: $('login', 'String!'), passwd: $('passwd', 'String!') } },
       { result: { usr: UserPartial, couple: CouplePartial } },
@@ -51,7 +51,7 @@ function useApiAuth(): AuthContextType {
     onSettled: () => setIsLoading(false),
   });
 
-  const { mutateAsync: signOut } = useTypedMutation('logout', {
+  const { mutateAsync: signOut } = useTypedMutation(['logout'], {
     logout: [{ input: {} }, { __typename: true }],
   }, {
     onSuccess: () => {
@@ -60,7 +60,7 @@ function useApiAuth(): AuthContextType {
     },
   });
 
-  useTypedQuery('current-user', { getCurrentUser: UserPartial }, {
+  useTypedQuery(['currentUser'], { getCurrentUser: UserPartial }, {
     onSuccess: (data) => setUser(data.getCurrentUser as AppUser),
     onSettled: () => setIsLoading(false),
   });

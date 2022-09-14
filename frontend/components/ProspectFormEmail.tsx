@@ -27,7 +27,7 @@ type ProspectFormEmailProps = {
 
 export const ProspectFormEmail = ({ title }: ProspectFormEmailProps) => {
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync: submit } = useTypedMutation('prospect-form', SubmitProspectFormEmail);
+  const { mutateAsync: submit } = useTypedMutation(['prospectForm'], SubmitProspectFormEmail);
   const [submitError, setSubmitError] = React.useState<string | null>(null);
   const { control, handleSubmit, formState: { isDirty, isValid, isSubmitting } } = useForm();
 
@@ -68,7 +68,7 @@ export const ProspectFormEmail = ({ title }: ProspectFormEmailProps) => {
         <Grid container style={{ marginTop: '1rem' }}>
           <Grid item xs={12}>
             <CheckboxElement control={control} name="op" value="agreed" required label={
-              <>Souhlasím se <a target="_blank" href="/ochrana-osobnich-udaju">zpracováním osobních údajů</a></>
+              <>Souhlasím se <a rel="noreferrer" target="_blank" href="/ochrana-osobnich-udaju">zpracováním osobních údajů</a></>
             } />
           </Grid>
         </Grid>

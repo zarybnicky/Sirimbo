@@ -35,7 +35,7 @@ export function ArticleAdminList() {
   const { user } = useAuth();
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
-  const { data } = useTypedQuery('articles-admin', ArticlesAdminQuery, {}, {
+  const { data } = useTypedQuery(['articleAdmin'], ArticlesAdminQuery, {}, {
     variables: { limit, offset: (page - 1) * limit },
   });
   const total = data?.aktualities?.totalCount || 0;

@@ -2,6 +2,7 @@ import { useAuth } from 'lib/data/use-auth';
 import { useRouter } from 'next/router';
 import { Col, Container, Dropdown, Row } from 'react-bootstrap';
 import { LoginForm } from "components/LoginForm";
+import { NextLinkComposed } from './Link';
 
 export const OldLayout: React.FC = ({ children }) => {
   const { user } = useAuth();
@@ -14,7 +15,9 @@ export const OldLayout: React.FC = ({ children }) => {
       <div className="container">
         <div className="container">
           <h1 className="navbar-brand my-0 ml-lg-2 mx-3">
-            <a href="/"><img alt="" src="/style/new-logo-oneline.png" /></a>
+            <NextLinkComposed href="/">
+              <img alt="" src="/style/new-logo-oneline.png" />
+            </NextLinkComposed>
           </h1>
           <button className="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target=".navbars">
             <span className="navbar-toggler-icon"></span>
@@ -27,9 +30,9 @@ export const OldLayout: React.FC = ({ children }) => {
 
                 {user ? (
                   <li className="userbox nav-item nav-link">
-                    <a href="/member/profil">
+                    <NextLinkComposed href="/member/profil">
                       <i className="fa-solid fa-user" /> {user.uJmeno} {user.uPrijmeni}
-                    </a>
+                    </NextLinkComposed>
                   </li>
                 ) : <>
                   <li className="nav-item">
@@ -71,7 +74,7 @@ export const OldLayout: React.FC = ({ children }) => {
         <Row className="text-center">
           <Col className="d-flex" style={{ flexDirection: 'column', justifyContent: 'space-around' }}>
             <div>
-              <a className="no-a" href="https://www.facebook.com/tkolymp" target="_blank">
+              <a className="no-a" href="https://www.facebook.com/tkolymp" rel="noreferrer" target="_blank">
                 <img alt="Facebook, stránka Taneční klub Olymp" src="/style/fb-logo.png" />
               </a>
             </div>
@@ -85,11 +88,11 @@ export const OldLayout: React.FC = ({ children }) => {
           <Col>
             <span>Podporuje nás:</span>
             <div>
-              <a className="no-a" href="http://www.kr-olomoucky.cz/" target="_blank">
+              <a className="no-a" href="http://www.kr-olomoucky.cz/" rel="noreferrer" target="_blank">
                 <img alt="Olomoucký kraj" src="/style/logo-kraj.png" />
               </a>
               <br />
-              <a className="no-a" href="http://www.olomouc.eu/" target="_blank">
+              <a className="no-a" href="http://www.olomouc.eu/" rel="noreferrer" target="_blank">
                 <img alt="Město Olomouc" src="/style/logo-olomouc.jpg" height={85} />
               </a>
             </div>

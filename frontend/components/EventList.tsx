@@ -64,10 +64,10 @@ export const ToggleEventVisible = Selector('Mutation')({
 export function EventList() {
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
-  const { data, refetch } = useTypedQuery('events', EventListQuery, {}, {
+  const { data, refetch } = useTypedQuery(['eventAdmin'], EventListQuery, {}, {
     variables: { limit, offset: (page - 1) * limit },
   });
-  const { mutate: toggleVisible } = useTypedMutation('toggle-event', ToggleEventVisible, {
+  const { mutate: toggleVisible } = useTypedMutation(['toggleEvent'], ToggleEventVisible, {
     onSuccess: () => refetch(),
   });
   const total = data?.akces?.totalCount || 0;
