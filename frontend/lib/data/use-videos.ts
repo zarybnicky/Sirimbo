@@ -1,5 +1,5 @@
+import { useTypedQuery } from 'lib/query';
 import { getPlaceholder } from '../test-utils';
-import { useTypedQuery } from 'lib/zeus/apollo';
 
 export interface Video {
   img: string;
@@ -8,7 +8,7 @@ export interface Video {
 }
 
 export const useTitleVideos = (): Video[] => {
-  const { data } = useTypedQuery({
+  const { data } = useTypedQuery(['titleVideos'], {
     titleVideos: [{}, {
       nodes: {
         vTitle: true,

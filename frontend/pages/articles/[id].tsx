@@ -2,11 +2,10 @@ import * as React from 'react';
 import format from 'date-fns/format';
 import { Container, Typography } from '@mui/material';
 import { $, Selector } from 'lib/zeus';
-import { useTypedQuery } from 'lib/zeus/apollo';
 import { CallToAction } from 'components/CallToAction';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { scalars } from 'lib/apollo';
+import { useTypedQuery } from 'lib/query';
 
 export const ArticleQuery = Selector('Query')({
   aktuality: [
@@ -28,7 +27,7 @@ export const ArticleQuery = Selector('Query')({
 export const ArticlePage = ({ }) => {
   const router = useRouter();
   const id = router.query.id as string;
-  const { data } = useTypedQuery(ArticleQuery, { scalars, apolloOptions: { variables: { id } } });
+  const { data } = useTypedQuery(['article', id], ArticleQuery, {}, { variables: { id } });
   const x = data?.aktuality;
   if (!x) {
     return null;

@@ -3,10 +3,9 @@ import format from 'date-fns/format';
 import { Pagination, Checkbox, Menu, MenuItem, Button } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { $, RozpisOrderBy, Selector } from 'lib/zeus';
-import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
 import { useAuth } from 'lib/data/use-auth';
-import { scalars } from 'lib/apollo';
 import { NextLinkComposed } from './Link';
+import { useTypedMutation, useTypedQuery } from 'lib/query';
 
 export const ScheduleListQuery = Selector('Query')({
   rozpis: [
@@ -65,17 +64,11 @@ export function RozpisAdminList() {
   const { user } = useAuth();
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
-  const { data, refetch } = useTypedQuery(ScheduleListQuery, {
-    scalars,
-    apolloOptions: {
-      variables: { limit, offset: (page - 1) * limit },
-    },
+  const { data, refetch } = useTypedQuery(['scheduleList'], ScheduleListQuery, {}, {
+    variables: { limit, offset: (page - 1) * limit },
   });
-  const [toggleVisible] = useTypedMutation(ToggleScheduleVisible, {
-    scalars,
-    apolloOptions: {
-      onCompleted: () => refetch(),
-    },
+  const { mutateAsync: toggleVisible } = useTypedMutation(['toggleSchedule'], ToggleScheduleVisible, {
+    onSuccess: () => refetch(),
   });
   const total = data?.rozpis?.totalCount || 0;
 

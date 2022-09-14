@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { useTypedLazyQuery } from 'lib/zeus/apollo';
 import { $, Selector } from 'lib/zeus';
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
+import { useTypedQuery } from 'lib/query';
 
 const ExportQuery = Selector('Query')({
   akce: [
@@ -25,10 +25,9 @@ const ExportQuery = Selector('Query')({
 });
 
 export function EventParticipantExport({ id }: { id: string; }) {
-  const [fetchData] = useTypedLazyQuery(ExportQuery, { apolloOptions: { variables: { id } } });
+  const { data } = useTypedQuery(['exportParticipation'], ExportQuery, {}, { variables: { id } });
 
   const saveData = async () => {
-    const { data } = await fetchData();
     if (!data) {
       return;
     }

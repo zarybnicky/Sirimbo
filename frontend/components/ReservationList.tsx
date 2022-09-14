@@ -2,11 +2,10 @@ import * as React from 'react';
 import { Checkbox, Menu, MenuItem, Button, Pagination } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { $, NabidkasOrderBy, Selector } from 'lib/zeus';
-import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
 import { useAuth } from 'lib/data/use-auth';
 import { DateRange } from './DateRange';
-import { scalars } from 'lib/apollo';
 import { NextLinkComposed } from './Link';
+import { useTypedMutation, useTypedQuery } from 'lib/query';
 
 export const NabidkaAdminQuery = Selector('Query')({
   nabidkas: [
@@ -73,17 +72,11 @@ export function ReservationAdminList() {
   const { user } = useAuth();
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(0);
-  const { data, refetch } = useTypedQuery(NabidkaAdminQuery, {
-    scalars,
-    apolloOptions: {
-      variables: { limit, offset: (page - 1) * limit },
-    },
+  const { data, refetch } = useTypedQuery('nabidka-admin', NabidkaAdminQuery, {}, {
+    variables: { limit, offset: (page - 1) * limit },
   });
-  const [toggleVisible] = useTypedMutation(ToggleVisibleNabidka, {
-    scalars,
-    apolloOptions: {
-      onCompleted: () => refetch(),
-    },
+  const { mutate: toggleVisible } = useTypedMutation('toggle-nabidka', ToggleVisibleNabidka, {
+    onSuccess: () => refetch(),
   });
   const total = data?.nabidkas?.totalCount || 0;
 
@@ -122,7 +115,7 @@ export function ReservationAdminList() {
         </td>
         <td><DateRange from={a.nOd} to={a.nDo} /></td>
         <td>
-          <Checkbox checked={a.nVisible || false} onChange={() => toggleVisible({
+          <Checkbox checked={a.nVisible} onChange={() => toggleVisible({
             variables: { id: a.nId, visible: !a.nVisible },
           })} />
         </td>

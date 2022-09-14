@@ -1,4 +1,4 @@
-import { useTypedQuery } from 'lib/zeus/apollo';
+import { useTypedQuery } from 'lib/query';
 import { useRouter } from 'next/router';
 import { useAuth } from './use-auth';
 
@@ -14,7 +14,7 @@ export type MenuStructItem = {
 };
 
 export function useDbMenu(): MenuStructItem[] {
-  const { data } = useTypedQuery({
+  const { data } = useTypedQuery('menu', {
     parameter: [
       { paName: "menu" },
       { paValue: true },

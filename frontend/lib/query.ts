@@ -1,6 +1,8 @@
-import { ValueTypes, GraphQLTypes, InputType, Chain, OperationOptions, chainOptions, ScalarDefinition, ZeusScalars } from 'lib/zeus';
-import { useQuery, useMutation, QueryKey } from 'react-query';
-import type { UseQueryOptions, UseMutationOptions } from 'react-query';
+import { $, ValueTypes, GraphQLTypes, InputType, Chain, OperationOptions, chainOptions, ScalarDefinition, ZeusScalars } from 'lib/zeus';
+import { useQuery, useMutation, QueryKey } from '@tanstack/react-query';
+import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
+
+export { $ };
 
 const scalars = ZeusScalars({
   BigInt: {
@@ -59,7 +61,7 @@ export function useTypedMutation<
 >(
   mutationKey: QueryKey,
   mutation: TData | ValueTypes[O],
-  options?: Omit<UseMutationOptions<TResult, any, Variables>, 'mutationKey' | 'mutationFn'>,
+  options?: Omit<UseMutationOptions<TResult, any, Variables | void>, 'mutationKey' | 'mutationFn'>,
   graphqlOptions?: Variables & {
     operationOptions?: OperationOptions;
     scalars?: ScalarDefinition;
@@ -67,7 +69,7 @@ export function useTypedMutation<
     hostOptions: chainOptions[1];
   },
 ) {
-  return useMutation<TResult, any, Variables>(mutationKey, (vars) => Chain(
+  return useMutation<TResult, any, Variables | void>(mutationKey, (vars) => Chain(
     graphqlOptions?.host || '/graphql',
     graphqlOptions?.hostOptions || {}
   )("mutation", { scalars })(mutation, {

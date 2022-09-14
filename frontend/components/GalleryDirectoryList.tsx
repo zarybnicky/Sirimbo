@@ -2,9 +2,8 @@ import * as React from 'react';
 import { Pagination, Checkbox, Button, Menu, MenuItem } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { $, GalerieDirsOrderBy, Selector } from 'lib/zeus';
-import { useTypedQuery, useTypedMutation } from 'lib/zeus/apollo';
-import { scalars } from 'lib/apollo';
 import { NextLinkComposed } from './Link';
+import { useTypedMutation, useTypedQuery } from 'lib/query';
 
 const GalleryDirList = Selector('Query')({
   galerieDirs: [
@@ -75,12 +74,13 @@ function flatten<T>(root: Treeified<T>): T[] {
 export function GalleryDirectoryList() {
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
-  const { data, refetch } = useTypedQuery(GalleryDirList, {
-    scalars,
-    apolloOptions: {
-      variables: { limit, offset: (page - 1) * limit }
-    },
+  const { data, refetch } = useTypedQuery(['galleryDirs', page], GalleryDirList, {}, {
+    variables: { limit, offset: (page - 1) * limit }
   });
+  const { mutateAsync: toggleVisible } = useTypedMutation(['toggleEventVisible'], ToggleVisible, {
+    onSuccess: () => refetch(),
+  });
+
   const roots = listToTree((data?.galerieDirs?.nodes || []).map(x => ({
     ...x,
     id: x.gdId,
@@ -88,12 +88,6 @@ export function GalleryDirectoryList() {
     children: [],
   })));
   const dataSorted = roots.length > 0 ? flatten(roots[0]!) : [];
-  const [toggleVisible] = useTypedMutation(ToggleVisible, {
-    scalars,
-    apolloOptions: {
-      onCompleted: () => refetch(),
-    },
-  });
   const total = data?.galerieDirs?.totalCount || 0;
 
   const list = !total ? null : <table>

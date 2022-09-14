@@ -1,29 +1,25 @@
 import * as React from 'react';
 import format from 'date-fns/format';
 import { Card, CardContent, Container, Grid, Typography } from '@mui/material';
-import { useTypedQuery } from 'lib/zeus/apollo';
 import { useAuth } from 'lib/data/use-auth';
 import { Schedule, ScheduleItem, ScheduleRangeQuery } from 'lib/data/use-schedule';
 import { Reservation, ReservationItem, ReservationRangeQuery } from 'lib/data/use-reservation';
 import { PermissionLevel, usePermissions } from 'lib/data/use-permissions';
 import { formatDateRange } from 'lib/format-date-range';
-import { scalars } from 'lib/apollo';
+import { useTypedQuery } from 'lib/query';
 
 export const SchedulePage = ({ }) => {
   // require or redirect
   const { user, couple } = useAuth();
   const perms = usePermissions();
-  const { data: schedules } = useTypedQuery(ScheduleRangeQuery, {
-    scalars,
-    apolloOptions: {
-      variables: { startDate: '2022-02-01', endDate: '2022-04-01' },
-    },
+  const [startDate] = React.useState('2022-02-01');
+  const [endDate] = React.useState('2022-03-01');
+
+  const { data: schedules } = useTypedQuery(['scheduleRange'], ScheduleRangeQuery, {}, {
+    variables: { startDate, endDate },
   });
-  const { data: reservations } = useTypedQuery(ReservationRangeQuery, {
-    scalars,
-    apolloOptions: {
-      variables: { startDate: '2022-02-01', endDate: '2022-04-01' },
-    },
+  const { data: reservations } = useTypedQuery(['reservationRange'], ReservationRangeQuery, {}, {
+    variables: { startDate, endDate },
   });
 
   const canEditSchedule = (trainerId: number) => (
@@ -75,7 +71,9 @@ export const SchedulePage = ({ }) => {
               </div>
             )}
           </div>
-          <div className="date">{format(new Date(item.rDatum), 'd. M. y')}</div>
+          <div className="date">
+            {format(item.rDatum, 'd. M. y')}
+          </div>
           <div>{item.rKde}</div>
           <hr />
           {(item.rozpisItemsByRiIdRodic.nodes || []).map((lesson, i) => (

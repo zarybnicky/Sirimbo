@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { $, Selector, NabidkasOrderBy, ModelTypes } from 'lib/zeus';
-import { useTypedQuery } from 'lib/zeus/apollo';
 import { formatDateRange } from 'lib/format-date-range';
-import { scalars } from 'lib/apollo';
+import { useTypedQuery } from 'lib/query';
 
 const ReservationView = (x: ModelTypes["Nabidka"]) => {
   const header = <div className="trenink-header">
@@ -96,7 +95,7 @@ export const NabidkaList = Selector("Query")({
 });
 
 export function ReservationSelect() {
-  const { data: reservations } = useTypedQuery(NabidkaList, { scalars });
+  const { data: reservations } = useTypedQuery(['reservationSelect'], NabidkaList)
   const [reservation, setReservation] = React.useState<ModelTypes["Nabidka"] | undefined>();
   const onChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const id = parseInt(event.target.value, 10);

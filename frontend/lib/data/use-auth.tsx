@@ -1,13 +1,13 @@
 import * as React from "react";
 import { $, Selector, InputType, GraphQLTypes } from 'lib/zeus';
-import { useTypedMutation, useTypedQuery } from 'lib/zeus/apollo';
+import { useTypedMutation, useTypedQuery } from "lib/query";
 
 export interface AuthContextType {
   isLoading: boolean,
   user: AppUser | null;
   couple: AppCouple | null;
-  signIn: (email: string, password: string) => Promise<AppUser>;
-  signUp: (email: string, password: string) => Promise<AppUser>;
+  signIn: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   sendPasswordResetEmail: (email: string) => Promise<void>;
   confirmPasswordReset: (code: string, password: string) => Promise<void>;
@@ -37,32 +37,33 @@ function useApiAuth(): AuthContextType {
   const [user, setUser] = React.useState<AppUser | null>(null);
   const [couple, setCouple] = React.useState<AppCouple | null>(null);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
-  const [signIn] = useTypedMutation({
+
+  const { mutateAsync: signIn } = useTypedMutation('login', {
     login: [
       { input: { login: $('login', 'String!'), passwd: $('passwd', 'String!') } },
       { result: { usr: UserPartial, couple: CouplePartial } },
     ]
   }, {
-    apolloOptions: {
-      onError: () => setIsLoading(false),
+    onSuccess: (data) => {
+      setUser(data?.login?.result?.usr!!);
+      setCouple(data?.login?.result?.couple!!);
     },
+    onSettled: () => setIsLoading(false),
   });
-  const [signOut] = useTypedMutation({
+
+  const { mutateAsync: signOut } = useTypedMutation('logout', {
     logout: [{ input: {} }, { __typename: true }],
-  });
-  useTypedQuery({ getCurrentUser: UserPartial }, {
-    apolloOptions: {
-      onCompleted: (data) => {
-        setUser(data.getCurrentUser as AppUser);
-        setIsLoading(false);
-      },
-      onError: () => setIsLoading(false),
+  }, {
+    onSuccess: () => {
+      setUser(null);
+      setCouple(null);
     },
   });
-  /* useEffect(() => {
-   *   const unsubscribe = firebase.auth().onAuthStateChanged(setUser);
-   *   return () => unsubscribe();
-   * }, []); */
+
+  useTypedQuery('current-user', { getCurrentUser: UserPartial }, {
+    onSuccess: (data) => setUser(data.getCurrentUser as AppUser),
+    onSettled: () => setIsLoading(false),
+  });
 
   return {
     isLoading,
@@ -70,23 +71,16 @@ function useApiAuth(): AuthContextType {
     couple,
     async signIn(login: string, passwd: string) {
       setIsLoading(true);
-      const { data } = await signIn({ variables: { login, passwd } });
-      setIsLoading(false);
-      setUser(data?.login?.result?.usr!!);
-      setCouple(data?.login?.result?.couple!!);
-      return data?.login?.result?.usr!!;
+      await signIn({ variables: { login, passwd } });
     },
     async signUp(email: string, password: string) {
       // const response = await createUserWithEmailAndPassword(email, password);
       // const response = { user: { name: "Jakub Zárybnický" } };
       setUser(UserMock as any);
       setCouple(CoupleMock as any);
-      return UserMock as any;
     },
-    async signOut() {
-      await signOut();
-      setUser(null);
-      setCouple(null);
+    signOut: async () => {
+      await signOut()
     },
     async sendPasswordResetEmail(email: string) {
       // await sendPasswordResetEmail(email);

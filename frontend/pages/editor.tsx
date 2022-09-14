@@ -5,17 +5,13 @@ import {
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useConfirm } from 'material-ui-confirm';
-
-import { useTypedLazyQuery, useTypedMutation, useTypedQuery } from 'lib/zeus/apollo';
 import { $, Selector, PagesOrderBy, ModelTypes } from 'lib/zeus';
 import { HeadingPlugin } from 'components/Heading';
 import { ContainerPlugin } from 'components/Container';
 import { CallToActionPlugin } from 'components/CallToAction';
 import { ReactPage, cellPlugins } from 'components/ReactPage';
-
 import AddIcon from '@mui/icons-material/Add';
-import { scalars } from 'lib/apollo';
-
+import { useTypedMutation, useTypedQuery } from 'lib/query';
 
 type Page = ModelTypes['Page'];
 type PageRevision = ModelTypes['PageRevision'];
@@ -46,7 +42,6 @@ type State = {
 } | {
   state: 'history';
   page: Page;
-  revs: PageRevision[];
   current?: PageRevision;
   content?: Value;
 };
@@ -65,21 +60,23 @@ const PageFragment = Selector('Page')({
 export const EditorPage = ({ }) => {
   const { enqueueSnackbar } = useSnackbar();
   const confirm = useConfirm();
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [state, setState] = React.useState<State>({ state: 'empty' });
+  const startPage = () => setState({ state: 'create', url: '', title: '', content: INITIAL_VALUE });
+  const selectPage = (page: Page) => setState({ state: 'edit', page, content: page.content })
+  const setContent = (content: Value) => setState(s => ({ ...s, content }));
 
-  const { data, refetch } = useTypedQuery({
+  const { data, refetch } = useTypedQuery(['pages'], {
     pages: [
       { orderBy: [PagesOrderBy.URL_ASC] },
       { nodes: PageFragment },
     ],
-  }, { scalars });
+  });
 
-  const [fetchRevs] = useTypedLazyQuery({
+  const selectedPage = (state.state === 'edit' || state.state === 'history') ? state.page : undefined
+  const { data: revisions } = useTypedQuery(['pageRevisions', selectedPage?.id], {
     pageRevisions: [
-      {
-        condition: {
-          id: $('id', 'BigInt!'),
-        },
-      },
+      { condition: { id: $('id', 'BigInt!') }, },
       {
         nodes: {
           __typename: true,
@@ -96,9 +93,9 @@ export const EditorPage = ({ }) => {
         },
       },
     ],
-  }, { scalars });
+  }, { enabled: !!selectedPage?.id }, { variables: { id: selectedPage?.id } });
 
-  const [doCreatePage] = useTypedMutation({
+  const { mutateAsync: doCreatePage } = useTypedMutation(['createPage'], {
     createPage: [
       {
         input: {
@@ -111,9 +108,9 @@ export const EditorPage = ({ }) => {
       },
       { page: PageFragment },
     ],
-  }, { scalars });
+  });
 
-  const [doSavePage] = useTypedMutation({
+  const { mutateAsync: doSavePage } = useTypedMutation(['updatePage'], {
     updatePage: [
       {
         input: {
@@ -128,17 +125,9 @@ export const EditorPage = ({ }) => {
       { __typename: true },
     ],
   }, {
-    scalars,
-    apolloOptions: {
-      onCompleted: () => refetch(),
-    },
+    onSuccess: () => refetch(),
   });
 
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const [state, setState] = React.useState<State>({ state: 'empty' });
-  const startPage = () => setState({ state: 'create', url: '', title: '', content: INITIAL_VALUE });
-  const selectPage = (page: Page) => setState({ state: 'edit', page, content: page.content })
-  const setContent = (content: Value) => setState(s => ({ ...s, content }));
 
   let toolbar: JSX.Element | null = null;
   switch (state.state) {
@@ -148,7 +137,7 @@ export const EditorPage = ({ }) => {
           description: `Opravdu chcete vytvořit stránku s URL ${state.url}?`,
         });
         setLoading(true);
-        const { data } = await doCreatePage({
+        const data = await doCreatePage({
           variables: {
             url: state.url,
             title: state.title,
@@ -185,11 +174,7 @@ export const EditorPage = ({ }) => {
       break;
 
     case 'edit':
-      const selectHistory = async () => {
-        setState({ state: 'history', page: state.page, revs: [] });
-        const { data } = await fetchRevs({ variables: { id: state.page.id } });
-        setState(state => ({ ...state, revs: data?.pageRevisions?.nodes || [] }));
-      };
+      const selectHistory = () => setState({ state: 'history', page: state.page });
       const savePage = async () => {
         setLoading(true);
         const { id, url } = state.page;

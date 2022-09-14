@@ -1,19 +1,19 @@
 import * as React from 'react';
-import { gql, useQuery } from '@apollo/client';
 import { ReactPage } from '../components/ReactPage';
 import { Container, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
-
-const GET_PAGE = gql(`
-query GetPage($url: String!) {
-  pageByUrl(url: $url) {
-    content
-  }
-}`);
+import { useTypedQuery, $ } from 'lib/query';
 
 export const DynamicPage = () => {
   const router = useRouter();
-  const { data } = useQuery(GET_PAGE, { variables: { url: router.pathname } });
+  const { data } = useTypedQuery(['page', router.pathname], {
+    pageByUrl: [
+      { url: $('url', 'String!') },
+      { content: true }
+    ],
+  }, {}, {
+    variables: { url: router.pathname },
+  });
   return <ReactPage readOnly value={data?.pageByUrl?.content} />;
 }
 

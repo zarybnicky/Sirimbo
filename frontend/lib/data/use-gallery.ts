@@ -1,8 +1,7 @@
 import { getPlaceholder } from '../test-utils';
 import { $, GalerieFotosOrderBy, Selector } from 'lib/zeus';
-import { useTypedQuery } from 'lib/zeus/apollo';
 import format from 'date-fns/format';
-import { scalars } from 'lib/apollo';
+import { useTypedQuery } from 'lib/query';
 
 const GalleryPhotoPartial = Selector('GalerieFoto')({
   __typename: true,
@@ -70,15 +69,13 @@ export const useGallery = (dir: number): {
   dirs: GalleryItem[];
   images: GalleryItem[];
 } => {
-  const { data } = useTypedQuery(GalleryDirQuery, {
-    scalars,
-    apolloOptions: {
-      variables: {
-        dirId: dir,
-        dirId2: dir,
-      },
+  const { data } = useTypedQuery(['galerieDir', dir], GalleryDirQuery, {}, {
+    variables: {
+      dirId: dir,
+      dirId2: dir,
     },
   });
+
   const dirs = (data?.galerieDirs?.nodes || []).map((x) => {
     const date = x.galerieFotosByGfIdRodic.nodes?.[0]?.gfTimestamp;
     const photo = x.galerieFotosByGfIdRodic.nodes?.[0]?.gfPath;
@@ -91,6 +88,7 @@ export const useGallery = (dir: number): {
       imgThumb: decodeURIComponent(`/galerie/thumbnails/${photo}`),
     };
   }).filter(x => x.id != dir);
+
   const images = (data?.galerieDir?.galerieFotosByGfIdRodic.nodes || []).map(x => {
     return {
       id: x.gfId,
@@ -101,6 +99,7 @@ export const useGallery = (dir: number): {
       imgThumb: decodeURIComponent(`/galerie/thumbnails/${x.gfPath}`),
     };
   });
+
   return {
     dir: {
       name: data?.galerieDir?.gdName,

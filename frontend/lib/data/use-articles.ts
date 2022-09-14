@@ -1,6 +1,6 @@
 import { getPlaceholder } from '../test-utils';
 import { $, Selector, AktualitiesOrderBy } from 'lib/zeus';
-import { useTypedQuery } from 'lib/zeus/apollo';
+import { useTypedQuery } from 'lib/query';
 
 export const ArticlesQuery = Selector('Query')({
   aktualities: [
@@ -36,10 +36,8 @@ export const useArticles = (limit: number, offset: number): {
   articles: Article[];
   count: number;
 } => {
-  const { data } = useTypedQuery(ArticlesQuery, {
-    apolloOptions: {
-      variables: { limit, offset },
-    },
+  const { data } = useTypedQuery(['articles', offset, limit], ArticlesQuery, {}, {
+    variables: { limit, offset },
   });
 
   return {

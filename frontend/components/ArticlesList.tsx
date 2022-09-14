@@ -3,10 +3,9 @@ import format from 'date-fns/format';
 import { Button, Menu, MenuItem, Pagination } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { $, AktualitiesOrderBy, Selector } from 'lib/zeus';
-import { useTypedQuery } from 'lib/zeus/apollo';
 import { useAuth } from 'lib/data/use-auth';
-import { scalars } from 'lib/apollo';
 import { NextLinkComposed } from './Link';
+import { useTypedQuery } from 'lib/query';
 
 export const ArticlesAdminQuery = Selector('Query')({
   aktualities: [
@@ -36,11 +35,8 @@ export function ArticleAdminList() {
   const { user } = useAuth();
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
-  const { data } = useTypedQuery(ArticlesAdminQuery, {
-    scalars,
-    apolloOptions: {
-      variables: { limit, offset: (page - 1) * limit },
-    },
+  const { data } = useTypedQuery('articles-admin', ArticlesAdminQuery, {}, {
+    variables: { limit, offset: (page - 1) * limit },
   });
   const total = data?.aktualities?.totalCount || 0;
 
