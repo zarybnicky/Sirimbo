@@ -122,9 +122,6 @@ function makeRouter()
 
     $router->get('/video', '@Video::get');
 
-    $router->get('/prijdtancit', '@Page::get');
-    $router->get('/ochrana-osobnich-udaju', '@Page::get');
-
     $router->get('/aktualne', '@Aktualne::list');
     $router->get('/aktualne/([0-9]+)', '@Aktualne::single');
     $router->get('/fotogalerie', '@Fotogalerie::root');
@@ -133,7 +130,6 @@ function makeRouter()
     $router->get('/fotogalerie/([0-9]+)/foto/([0-9]+)', '@Fotogalerie::singleWithDir');
 
     $router->get('/member', '@Member::get');
-    $router->redirect('/member/home', '/member');
     $router->get('/member/akce', '@Member.Akce::list');
     $router->post('/member/akce', '@Member.Akce::listPost');
     $router->get('/member/akce/([0-9]+)', '@Member.Akce::single');

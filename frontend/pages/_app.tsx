@@ -88,7 +88,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
                 </Head>
                 <GoogleAnalytics gaMeasurementId="UA-44456908-1" trackPageViews={{ ignoreHashChange: true }} />
-                <Layout>
+                <Layout layout={layout || 'old'} setLayout={setLayout}>
                   <Component {...pageProps} />
                 </Layout>
               </ProvideAuth>

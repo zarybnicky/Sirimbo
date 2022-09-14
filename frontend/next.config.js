@@ -19,6 +19,8 @@ module.exports = {
       { source: '/oklubu/saly', destination: '/o-nas/kde-trenujeme', permanent: true },
       { source: '/oklubu/klubovi-treneri', destination: '/o-nas/treneri', permanent: true },
       { source: '/oklubu/externi-treneri', destination: '/o-nas/treneri', permanent: true },
+      { source: '/member', destination: '/dashboard', permanent: true },
+      { source: '/member/home', destination: '/dashboard', permanent: true },
     ];
   },
 

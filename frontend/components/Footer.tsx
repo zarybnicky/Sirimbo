@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Container, Grid, Paper, Typography, Box, useTheme } from '@mui/material';
+import { Container, Grid, Paper, Typography, Box, useTheme, FormControlLabel, Switch } from '@mui/material';
 import { SocialButtons } from './SocialButtons';
 
 import CstsLogo from 'public/images/csts-logo.svg';
@@ -89,7 +89,10 @@ const FooterMap = () => {
   </Map>;
 };
 
-export const Footer = ({ }) => {
+export const Footer: React.FC<{
+  layout: string;
+  setLayout: (x: string) => void
+}> = ({ layout, setLayout }) => {
   const theme = useTheme();
   return <Box sx={{
     padding: '3rem 0 5rem',
@@ -138,6 +141,16 @@ export const Footer = ({ }) => {
       <Typography variant="body1" component="div">
         © 2022 Taneční klub Olymp Olomouc, z. s.
       </Typography>
+
+      <FormControlLabel
+        control={
+          <Switch
+            checked={layout === 'new'}
+            onChange={(_, isNew) => setLayout(isNew ? 'new' : 'old')}
+          />
+        }
+        label="Nový design"
+      />
     </Container>
   </Box>;
 };

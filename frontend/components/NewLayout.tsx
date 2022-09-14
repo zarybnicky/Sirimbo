@@ -4,13 +4,16 @@ import { DesktopHeader } from './DesktopHeader';
 import { MobileHeader } from './MobileHeader';
 import { Footer } from './Footer';
 
-export const NewLayout: React.FC = ({ children }) => {
+export const NewLayout: React.FC<{
+  layout: string;
+  setLayout: (x: string) => void
+}> = ({ children, layout, setLayout }) => {
   const theme = useTheme();
   const isTabletOrDesktop = useMediaQuery<Theme>(theme.breakpoints.up('md'));
-
+  const Header = isTabletOrDesktop ? DesktopHeader : MobileHeader;
   return <>
-    {isTabletOrDesktop ? <DesktopHeader /> : <MobileHeader />}
+    <Header />
     {children}
-    <Footer />
+    <Footer layout={layout} setLayout={setLayout} />
   </>;
 };

@@ -2,10 +2,15 @@ import React from "react";
 import { getCookie, setCookies } from "cookies-next";
 
 export const useCookie = (key: string, defaultValue: string | undefined = undefined) => {
-  const [cookie, setCookie] = React.useState<string | undefined>((getCookie(key) as string) ?? defaultValue);
+  const [cookie, setCookie] = React.useState<string | undefined>(defaultValue);
 
-  const updateCookie = (value: string, numberOfDays: number) => {
+  React.useEffect(() => {
+    setCookie(getCookie(key) as string);
+  }, []);
+
+  const updateCookie = (value: string) => {
     const expires = new Date();
+    const numberOfDays = 30;
     expires.setTime(expires.getTime() + numberOfDays * 60 * 60 * 24 * 1000);
 
     setCookie(value);

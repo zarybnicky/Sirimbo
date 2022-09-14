@@ -3,8 +3,12 @@ import { useRouter } from 'next/router';
 import { Col, Container, Dropdown, Row } from 'react-bootstrap';
 import { LoginForm } from "components/LoginForm";
 import { NextLinkComposed } from './Link';
+import { FormControlLabel, Switch } from '@mui/material';
 
-export const OldLayout: React.FC = ({ children }) => {
+export const OldLayout: React.FC<{
+  layout: string;
+  setLayout: (x: string) => void
+}> = ({ children, layout, setLayout }) => {
   const { user } = useAuth();
   const router = useRouter();
   const navbar = [[], []] as const;
@@ -82,7 +86,18 @@ export const OldLayout: React.FC = ({ children }) => {
               design a realizace:
               <a href="mailto:jakub@zarybnicky.com">Jakub Zárybnický</a>
               <br />
-              © 2018 TK Olymp
+              © 2022 Taneční klub Olymp Olomouc, z. s.
+            </div>
+            <div>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={layout === 'new'}
+                    onChange={(_, isNew) => setLayout(isNew ? 'new' : 'old')}
+                  />
+                }
+                label="Nový design"
+              />
             </div>
           </Col>
           <Col>
