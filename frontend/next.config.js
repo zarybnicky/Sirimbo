@@ -1,6 +1,23 @@
 const path = require('path');
 
-module.exports = {
+let withBundleAnalyzer = x => x;
+if (process.env.ANALYZE === 'true') {
+  withBundleAnalyzer = require('@next/bundle-analyzer')({ enabled: true });
+}
+
+let withSentryConfig = x => x;
+if (process.env.NODE_ENV === 'production') {
+  withSentryConfig = cfg => require('@sentry/nextjs').withSentryConfig({
+    ...cfg,
+    sentry: {
+      hideSourceMaps: true,
+    },
+  }, {
+    silent: true, // Suppresses all logs
+  });
+}
+
+module.exports = withBundleAnalyzer(withSentryConfig({
   reactStrictMode: true,
   poweredByHeader: false,
   swcMinify: true,
@@ -48,4 +65,4 @@ module.exports = {
 
     return config;
   },
-};
+}));

@@ -173,6 +173,11 @@ in {
           locations."/gallery".root = cfg.stateDir;
           locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
 
+          locations."/old" = {
+            index = "index.php";
+            extraConfig = "try_files /index.php?$args;";
+          };
+
           locations."/graphql" = {
             proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
             proxyWebsockets = true;
@@ -188,10 +193,6 @@ in {
             proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
           };
 
-          locations."/old/" = {
-            index = "index.php";
-            extraConfig = "try_files /public/$uri /index.php?$args;";
-          };
           locations."/" = {
             proxyPass = "http://127.0.0.1:${toString cfg.frontendPort}";
             proxyWebsockets = true;

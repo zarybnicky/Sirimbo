@@ -30,7 +30,7 @@ Router.events.on("routeChangeError", () => NProgress.done());
 
 export default function App({ Component, pageProps }: AppProps) {
   const [layout, setLayout] = useCookie('layout', 'old');
-  const Layout = layout === 'old' ? OldLayout : NewLayout;
+  const Layout = layout === 'new' ? NewLayout : OldLayout;
   const router = useRouter()
 
   const queryClientRef = React.useRef<QueryClient>()
