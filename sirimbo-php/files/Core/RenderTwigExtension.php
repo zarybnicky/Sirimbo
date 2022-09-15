@@ -13,7 +13,6 @@ class RenderTwigExtension extends \Twig\Extension\AbstractExtension
             new TwigFunction('select', '\\Utils::select', ['is_safe' => ['html']]),
             new TwigFunction('checkbox', '\\Utils::checkbox', ['is_safe' => ['html']]),
             new TwigFunction('dateRange', '\\Utils::dateRange', ['is_safe' => ['html']]),
-            new TwigFunction('navbarItem', '\\Utils::navbarItem', ['is_safe' => ['html']]),
             new TwigFunction('userSelect', '\\Utils::userSelect', ['is_safe' => ['html']]),
             new TwigFunction('inlineRadio', '\\Utils::inlineRadio', ['is_safe' => ['html']]),
             new TwigFunction('selectAssoc', '\\Utils::selectAssoc', ['is_safe' => ['html']]),

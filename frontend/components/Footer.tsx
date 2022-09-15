@@ -6,6 +6,7 @@ import CstsLogo from 'public/images/csts-logo.svg';
 import OlomoucLogo from 'public/style/logo-olomouc.jpg';
 import KrajLogo from 'public/style/logo-kraj.png';
 import { Map } from './Map';
+import { useConfig } from 'lib/use-config';
 
 const ContactText = () => {
   const theme = useTheme();
@@ -69,14 +70,12 @@ const ContactText = () => {
   </React.Fragment>;
 }
 
-const FooterMap = () => {
+export const FooterMap = ({ height = '200px' }) => {
   const position = [49.58727525, 17.25661055] as [number, number];
   const holeckova = [49.57963, 17.2495939] as [number, number];
   const slovan = [49.59490, 17.26340] as [number, number];
 
-  return <Map center={position} zoom={12} scrollWheelZoom={false} style={{
-    height: '200px'
-  }}>
+  return <Map center={position} zoom={12} scrollWheelZoom={false} style={{ height }}>
     {({ TileLayer, Marker, Popup }) => <>
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <Marker position={holeckova}>
@@ -89,10 +88,8 @@ const FooterMap = () => {
   </Map>;
 };
 
-export const Footer: React.FC<{
-  layout: string;
-  setLayout: (x: string) => void
-}> = ({ layout, setLayout }) => {
+export const Footer: React.FC = () => {
+  const { layout, setLayout } = useConfig();
   const theme = useTheme();
   return <Box sx={{
     padding: '3rem 0 5rem',
