@@ -14,7 +14,7 @@ export const SocialButtons = ({ variant = 'medium', ...props }: SocialButtonsPro
       padding: 0,
       margin: '5px',
     }}>
-      <FacebookIcon color="primary" fontSize={variant} />
+      <FacebookIcon htmlColor={theme.palette.primary.main} fontSize={variant} />
     </IconButton>
     <IconButton href="https://www.instagram.com/tanecni_klub_olymp/?hl=cs" sx={{
       padding: 0,

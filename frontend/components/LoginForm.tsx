@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Card, CardContent, CardActions, Grid, Typography, Button } from '@mui/material';
-import { Alert } from '@mui/lab';
+import { Alert, Card, CardContent, CardActions, Grid, Typography, Button } from '@mui/material';
 import { NextLinkComposed } from 'components/Link';
 import { useAuth } from 'lib/data/use-auth';
 import { useRouter } from 'next/router';

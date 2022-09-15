@@ -1,7 +1,6 @@
 import * as React from 'react';
 import type { CellPlugin } from '@react-page/editor';
-import { Card, CardContent, CardActions, Grid, Button, Typography } from '@mui/material';
-import { Alert } from '@mui/lab';
+import { Alert, Card, CardContent, CardActions, Grid, Button, Typography } from '@mui/material';
 import { $, CrmCohort, Selector } from 'lib/zeus';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
