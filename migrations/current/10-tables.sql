@@ -225,7 +225,7 @@ create policy admin_all on users to administrator using (true) with check (true)
 create policy all_view on users for select using (true);
 create policy manage_own on users for all
   using (u_id = current_user_id()) with check (u_id = current_user_id());
-grant all on users to member;
+grant all on users to anonymous;
 
 -- ************** users_skupiny **************
 select app_private.drop_policies('public.users_skupiny');

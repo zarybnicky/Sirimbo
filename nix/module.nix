@@ -23,6 +23,11 @@ in {
       description = "${pkgName} internal JS port";
       example = 3002;
     };
+    frontendPort = lib.mkOption {
+      type = lib.types.int;
+      description = "${pkgName} internal JS port";
+      example = 3003;
+    };
 
     minioPort = lib.mkOption {
       type = lib.types.int;
@@ -126,7 +131,7 @@ in {
 
     phpRoot = pkgs.symlinkJoin {
       name = "sirimbo-php-dist";
-      paths = [pkgs.sirimbo-php pkgs.sirimbo-frontend configPhp];
+      paths = [pkgs.sirimbo-php configPhp];
     };
   in lib.mkMerge [
     (lib.mkIf cfg.enable {
@@ -188,9 +193,10 @@ in {
             extraConfig = "try_files /public/$uri /index.php?$args;";
           };
           locations."/" = {
-            index = "index.php";
-            extraConfig = "try_files /public/$uri /index.php?$args;";
+            proxyPass = "http://127.0.0.1:${toString cfg.frontendPort}";
+            proxyWebsockets = true;
           };
+
           locations."~ \.php$".extraConfig = ''
             try_files $uri /index.php?$args;
             client_max_body_size 20M;
@@ -259,6 +265,21 @@ in {
           mc --config-dir . ls minio/private || mc --config-dir . mb minio/private
           mc --config-dir . policy set download minio/public
         '';
+      };
+
+      systemd.services.sirimbo-frontend = {
+        after = [ "network.target" ];
+        wantedBy = [ "multi-user.target" ];
+
+        environment.PORT = toString cfg.frontendPort;
+
+        serviceConfig = {
+          User = cfg.user;
+          Group = cfg.group;
+          ExecStart = "${pkgs.nodejs}/bin/node ${pkgs.sirimbo-frontend}/server.js";
+          Restart = "always";
+          RestartSec = "10s";
+        };
       };
 
       systemd.services.sirimbo-backend = {

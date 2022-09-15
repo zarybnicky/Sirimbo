@@ -13,12 +13,20 @@ yarn2nix-moretea.mkYarnPackage {
   name = "sirimbo-frontend";
   # doCheck = true;
   # checkPhase = "yarn test --coverage --ci";
-  buildPhase = "yarn --offline run build";
+  buildPhase = ''
+    shopt -s dotglob
+    unlink deps/sirimbo-frontend/sirimbo-frontend
+    unlink deps/sirimbo-frontend/node_modules
+    mv deps/sirimbo-frontend/* .
+    yarn --offline run build
+  '';
   distPhase = "true";
   installPhase = ''
-    mkdir -p $out/public
-    cp -Lr deps/sirimbo-frontend/dist/* $out/public/
-    cp -Lr deps/sirimbo-frontend/static/* $out/public/
+    shopt -s dotglob
+    mkdir -p $out
+    cp -r public package.json $out/
+    cp -r .next/standalone/frontend/* $out/
+    cp -r .next/static $out/.next/
   '';
   extraBuildInputs = [libsass];
   yarnPreBuild = "export npm_config_nodedir=${nodejs}";

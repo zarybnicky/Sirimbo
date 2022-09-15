@@ -1,8 +1,6 @@
-import { $, ValueTypes, GraphQLTypes, InputType, Chain, OperationOptions, chainOptions, ScalarDefinition, ZeusScalars } from 'lib/zeus';
+import { ValueTypes, GraphQLTypes, InputType, Chain, OperationOptions, chainOptions, ScalarDefinition, ZeusScalars } from 'lib/zeus';
 import { useQuery, useMutation, QueryKey } from '@tanstack/react-query';
 import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
-
-export { $ };
 
 const scalars = ZeusScalars({
   BigInt: {
@@ -27,6 +25,26 @@ const scalars = ZeusScalars({
   },
 });
 
+export const origin = typeof window === 'undefined' ? `http://localhost:${process.env.PORT || 3000}` : '';
+const source = origin + '/graphql';
+
+export function fetchTypedQuery<
+  O extends "Query",
+  TData extends ValueTypes[O],
+  TResult = InputType<GraphQLTypes[O], TData, typeof scalars>
+>(
+  query: TData | ValueTypes[O],
+  graphqlOptions?: {
+    variables: Record<string, unknown>;
+    operationOptions?: OperationOptions;
+    scalars?: ScalarDefinition;
+  },
+) {
+  return Chain(source)("query", { scalars })(query, {
+    variables: graphqlOptions?.variables || {},
+  }) as Promise<TResult>;
+}
+
 export function useTypedQuery<
   O extends "Query",
   TData extends ValueTypes[O],
@@ -39,17 +57,16 @@ export function useTypedQuery<
     variables: Record<string, unknown>;
     operationOptions?: OperationOptions;
     scalars?: ScalarDefinition;
-    host?: string;
-    hostOptions?: chainOptions[1];
   },
 ) {
-  return useQuery<TResult, any>(queryKey, () => Chain(
-    graphqlOptions?.host || '/graphql',
-    graphqlOptions?.hostOptions || {}
-  )("query", { scalars })(query, {
-    variables: graphqlOptions?.variables || {},
-    operationName: typeof queryKey === 'string' ? queryKey : queryKey.join('_'),
-  }) as Promise<TResult>, options);
+  return useQuery<TResult, any>(
+    queryKey,
+    () => Chain(source)("query", { scalars })(query, {
+      variables: graphqlOptions?.variables || {},
+      operationName: typeof queryKey === 'string' ? queryKey : (queryKey[0] as object).toString(),
+    }) as Promise<TResult>,
+    options,
+  );
 }
 
 type Variables = { variables?: Record<string, unknown> };
@@ -69,11 +86,12 @@ export function useTypedMutation<
     hostOptions: chainOptions[1];
   },
 ) {
-  return useMutation<TResult, any, Variables | void>(mutationKey, (vars) => Chain(
-    graphqlOptions?.host || '/graphql',
-    graphqlOptions?.hostOptions || {}
-  )("mutation", { scalars })(mutation, {
-    variables: { ...(graphqlOptions?.variables || {}), ...(vars || {}) },
-    operationName: typeof mutationKey === 'string' ? mutationKey : mutationKey.join('_'),
-  }) as Promise<TResult>, options);
+  return useMutation<TResult, any, Variables | void>(
+    mutationKey,
+    (opts) => Chain(source)("mutation", { scalars })(mutation, {
+      variables: { ...(graphqlOptions?.variables || {}), ...(opts?.variables || {}) },
+      operationName: typeof mutationKey === 'string' ? mutationKey : (mutationKey[0] as object).toString(),
+    }) as Promise<TResult>,
+    options,
+  );
 }

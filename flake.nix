@@ -101,7 +101,8 @@
             domain = "olymp-test";
             ssl = false;
             phpPort = 3010;
-            jsPort = 3020;
+            jsPort = 4000;
+            frontendPort = 3030;
 
             smtpAuth = false;
             smtpTLS = false;
