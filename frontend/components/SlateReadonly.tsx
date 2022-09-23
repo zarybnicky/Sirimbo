@@ -11,7 +11,7 @@ export const SlateReadonly = ({ value }: { value: Descendant[] }) => {
   const renderLeaf = React.useCallback(props => <Leaf {...props} />, []);
   const renderElement = React.useCallback(props => <Element {...props} />, []);
 
-  return <React.Fragment>
+  return (
     <Slate editor={editor} value={value} onChange={() => { }}>
       <Editable
         readOnly
@@ -19,7 +19,7 @@ export const SlateReadonly = ({ value }: { value: Descendant[] }) => {
         renderElement={renderElement}
       />
     </Slate>
-  </React.Fragment>;
+  );
 };
 
 const Element = ({ attributes, children, element }: any) => {

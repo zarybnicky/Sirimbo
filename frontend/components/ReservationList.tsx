@@ -92,7 +92,7 @@ export function ReservationAdminList() {
       {data?.nabidkas?.nodes?.map((a) => <tr key={a.nId}>
         <td>
           <PopupState variant="popover">
-            {(popupState) => <React.Fragment>
+            {(popupState) => <>
               <Button {...bindTrigger(popupState)}>
                 {a.userByNTrener?.uJmeno} {a.userByNTrener?.uPrijmeni}
               </Button>
@@ -110,7 +110,7 @@ export function ReservationAdminList() {
                   Odstranit
                 </MenuItem>
               </Menu>
-            </React.Fragment>}
+            </>}
           </PopupState>
         </td>
         <td><DateRange from={a.nOd} to={a.nDo} /></td>
@@ -123,9 +123,9 @@ export function ReservationAdminList() {
     </tbody>
   </table>;
 
-  return <React.Fragment>
+  return <>
     <NextLinkComposed href="/admin/nabidka/add" className="btn btn-primary">Nová nabídka</NextLinkComposed>
     {list}
     <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
-  </React.Fragment>;
+  </>;
 }

@@ -113,38 +113,7 @@ function makeRouter()
 {
     $router = new \Olymp\Router('Olymp.Controller');
 
-    $router->get('/login', '@Member::login');
-    $router->post('/login', '@Member::loginPost');
-    $router->get('/nopassword', '@Nopassword::get');
-    $router->post('/nopassword', '@Nopassword::post');
-    $router->get('/registrace', '@Registrace::get');
-    $router->post('/registrace', '@Registrace::post');
-
-    $router->get('/video', '@Video::get');
-
-    $router->get('/aktualne', '@Aktualne::list');
-    $router->get('/aktualne/([0-9]+)', '@Aktualne::single');
-    $router->get('/fotogalerie', '@Fotogalerie::root');
-    $router->get('/fotogalerie/([0-9]+)', '@Fotogalerie::directory');
-    $router->get('/fotogalerie/foto/([0-9]+)', '@Fotogalerie::single');
-    $router->get('/fotogalerie/([0-9]+)/foto/([0-9]+)', '@Fotogalerie::singleWithDir');
-
-    $router->get('/member', '@Member::get');
-    $router->get('/member/akce', '@Member.Akce::list');
-    $router->post('/member/akce', '@Member.Akce::listPost');
-    $router->get('/member/akce/([0-9]+)', '@Member.Akce::single');
-    $router->redirect('/member/rozpis', '/member/treninky');
-    $router->redirect('/member/nabidka', '/member/treninky');
-    $router->get('/member/treninky', '@Member.Schedule::get');
-    $router->post('/member/treninky', '@Member.Schedule::post');
-    $router->get('/member/dokumenty', '@Member::dokumenty');
-    $router->get('/member/download', '@Member::download');
-    $router->get('/member/clenove', '@Member.Clenove::structure');
-    $router->redirect('/member/clenove/structure', '/member/clenove');
-    $router->get('/member/clenove/seznam', '@Member.Clenove::list');
-    $router->get('/member/clenove/skupiny', '@Member.Clenove::groups');
-    $router->get('/member/clenove/([0-9]+)', '@Member.Clenove::single');
-
+    // As a dynamic page
     $router->get('/member/profil', '@Member.Profil::get');
     $router->get('/member/profil/edit', '@Member.Profil::edit');
     $router->post('/member/profil/edit', '@Member.Profil::editPost');
@@ -155,6 +124,22 @@ function makeRouter()
     $router->get('/member/profil/par/partner', '@Member.ProfilPar::partner');
     $router->post('/member/profil/par/partner', '@Member.ProfilPar::partnerPost');
     $router->post('/member/profil/par/zadost', '@Member.ProfilPar::zadost');
+
+    $router->get('/member/akce', '@Member.Akce::list');
+    $router->post('/member/akce', '@Member.Akce::listPost');
+    $router->get('/member/akce/([0-9]+)', '@Member.Akce::single');
+    $router->get('/member/treninky', '@Member.Schedule::get');
+    $router->post('/member/treninky', '@Member.Schedule::post');
+    $router->get('/member/dokumenty', '@Member::dokumenty');
+    $router->get('/member/clenove', '@Member.Clenove::structure');
+    $router->get('/member/clenove/seznam', '@Member.Clenove::list');
+    $router->get('/member/clenove/skupiny', '@Member.Clenove::groups');
+    $router->get('/member/clenove/([0-9]+)', '@Member.Clenove::single');
+
+    $router->get('/nopassword', '@Nopassword::get');
+    $router->post('/nopassword', '@Nopassword::post');
+    $router->get('/registrace', '@Registrace::get');
+    $router->post('/registrace', '@Registrace::post');
 
     $router->get('/admin/akce', '@Admin.Akce::list');
     $router->get('/admin/akce/add', '@Admin.Akce::add');
@@ -216,7 +201,6 @@ function makeRouter()
     $router->get('/admin/users/sign-as/([0-9]+)', '@Admin.Users::signAs');
     $router->get('/admin/users/remove/([0-9]+)', '@Admin.Users::remove');
     $router->post('/admin/users/remove/([0-9]+)', '@Admin.Users::removePost');
-    $router->get('/admin/users/getMsmtCsv', '@Admin.Users::getMsmtCsv');
     $router->get('/admin/users/unconfirmed', '@Admin.Users::unconfirmed');
     $router->post('/admin/users/unconfirmed', '@Admin.Users::unconfirmedPost');
     $router->get('/admin/users/duplicate', '@Admin.Users::duplicate');
@@ -289,7 +273,6 @@ function makeRouter()
     $router->get('/admin/platby', '@Admin.Platby::overview');
     $router->get('/admin/platby/structure', '@Admin.Platby::structure');
     $router->get('/admin/platby/raw', '@Admin.PlatbyRaw::get');
-    $router->post('/admin/platby/raw', '@Admin.PlatbyRaw::post');
     $router->get('/admin/platby/raw/select_columns', '@Admin.PlatbyRaw::selectColumns');
     $router->post('/admin/platby/raw/select_columns', '@Admin.PlatbyRaw::selectColumnsPost');
     $router->get('/admin/platby/discarded', '@Admin.PlatbyDiscarded::view');
@@ -322,6 +305,23 @@ function makeRouter()
     $router->post('/admin/platby/structure/category/edit/([0-9]+)', '@Admin.PlatbyCategory::editPost');
     $router->get('/admin/platby/structure/category/remove/([0-9]+)', '@Admin.PlatbyCategory::remove');
     $router->post('/admin/platby/structure/category/remove/([0-9]+)', '@Admin.PlatbyCategory::removePost');
+
+
+    // To convert
+    $router->get('/member', '@Member::get');
+    $router->get('/member/download', '@Member::download');
+    $router->get('/admin/users/getMsmtCsv', '@Admin.Users::getMsmtCsv');
+    $router->post('/admin/platby/raw', '@Admin.PlatbyRaw::post');
+
+
+    // Cannot convert - phpDynamicPage is only for member pages
+    $router->get('/video', '@Video::get');
+    $router->get('/aktualne', '@Aktualne::list');
+    $router->get('/aktualne/([0-9]+)', '@Aktualne::single');
+    $router->get('/fotogalerie', '@Fotogalerie::root');
+    $router->get('/fotogalerie/([0-9]+)', '@Fotogalerie::directory');
+    $router->get('/fotogalerie/foto/([0-9]+)', '@Fotogalerie::single');
+    $router->get('/fotogalerie/([0-9]+)/foto/([0-9]+)', '@Fotogalerie::singleWithDir');
 
     $router->mount('/old', $router);
 

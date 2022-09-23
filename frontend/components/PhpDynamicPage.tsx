@@ -2,7 +2,12 @@ import * as React from 'react';
 import { Container, Typography } from '@mui/material';
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import { origin } from 'lib/query';
-import { NextRequest } from 'next/server';
+import parse, { domToReact, DOMNode, Element, HTMLReactParserOptions } from "html-react-parser"
+import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
+import { NextLinkComposed, isRelative } from "./Link"
+import Image from "next/image"
+import { useAuth } from 'lib/data/use-auth';
 
 export type PhpPage = {
   meta: string;
@@ -12,33 +17,125 @@ export type PhpPage = {
   content: string;
 };
 
-export const PhpPageView: React.FC<{ page: PhpPage; }> = ({ page }) => {
-  return <Container maxWidth="lg" style={{ marginTop: 80 }}>
-    {page.title && page.title !== 'TK Olymp' && (
-      <div className="header-section">
-        <div className="container full">
-          <h1>{page.title}</h1>
-          {page.subheader}
-        </div>
-      </div>
-    )}
+const isElement = (domNode: DOMNode): domNode is Element => {
+  const isTag = domNode.type === "tag";
+  const hasAttributes = (domNode as Element).attribs !== undefined;
 
-    {page.messages.map((msg, i) => (
-      <div className="container" key={i}>
-        <div className={`alert alert-${msg.type}`} dangerouslySetInnerHTML={{ __html: msg.text }} />
-      </div>
-    ))}
+  return isTag && hasAttributes;
+};
 
-    <Typography variant="h3" component="h2">{page.title}</Typography>
+const options = (onSubmit: (e: React.FormEvent<HTMLFormElement>) => void): HTMLReactParserOptions => ({
+  replace: (domNode) => {
+    if (isElement(domNode)) {
+      if (domNode.name === "form") {
+        const { class: className, ...rest } = domNode.attribs;
+        return (
+          <form onSubmit={onSubmit} className={className} {...rest}>
+            {domToReact(domNode.children as DOMNode[], options(onSubmit))}
+          </form>
+        );
+      }
 
-    <div dangerouslySetInnerHTML={{ __html: page.content }} />
-  </Container>;
+      if (domNode.name === "img") {
+        const { class: className, src, alt, width = "100px", height = "100px" } = domNode.attribs
+        if (src && isRelative(src)) {
+          return (
+            <Image
+              src={src}
+              width={`${width}px`}
+              height={`${height}px`}
+              alt={alt}
+              className={className}
+              layout="intrinsic"
+              objectFit="cover"
+            />
+          )
+        }
+      }
+
+      if (domNode.name === "a") {
+        const { href, class: className, ...rest } = domNode.attribs
+        return (
+          <NextLinkComposed href={href || '#'} className={className} {...rest}>
+            {domToReact(domNode.children as DOMNode[])}
+          </NextLinkComposed>
+        );
+      }
+
+      if (domNode.name === "input") {
+        if (domNode.attribs.value === "") {
+          delete domNode.attribs.value
+        }
+
+        return domNode
+      }
+
+      if (domNode.name === 'option') {
+        return <option {...domNode.attribs}>
+          {domToReact(domNode.children as DOMNode[])}
+        </option>;
+      }
+    }
+  },
+});
+
+export const PhpPageView: React.FC<{ page: PhpPage; }> = ({ page: initialPage }) => {
+  const { user, isLoading } = useAuth();
+  const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
+  if (!user && !isLoading) {
+    enqueueSnackbar('Nejprve se musíte přihlásit', { variant: 'error' })
+    router.push('/login');
+  }
+  const [page, setPage] = React.useState(initialPage);
+
+  React.useEffect(() => {
+    setPage(initialPage);
+  }, [initialPage]);
+
+  const submitForm = React.useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    if (form.method === 'post') {
+      const body = new FormData(form);
+      const action = (form.action || router.asPath)
+        .replace(origin, '')
+        .replace(window.location.origin, '');
+
+      const result = await fetchPhpPage(action, { body });
+      if (result.type === 'error') {
+        enqueueSnackbar(result.errorText, { variant: 'error' });
+      } else if (result.type === 'redirect') {
+        router.push(result.redirectUrl.replace(origin, ''));
+      } else {
+        setPage(result.content);
+      }
+    }
+  }, []);
+
+  return (
+    <Container maxWidth="lg" sx={{ margin: '80px auto' }}>
+      {page.messages.map((msg, i) => (
+        <div key={i} className={`alert alert-${msg.type}`} dangerouslySetInnerHTML={{ __html: msg.text }} />
+      ))}
+
+      <Typography variant="h3" component="h2">{page.title}</Typography>
+      {page.subheader}
+
+      <div className='prose' style={{
+        overflowWrap: "break-word",
+        wordWrap: "break-word",
+        wordBreak: "break-word",
+      }}>
+        {parse(page.content, options(submitForm))}
+      </div >
+    </Container>
+  );
 }
 
 export const getServerSidePhpPage: GetServerSideProps = async ({ req, resolvedUrl }) => {
   try {
     const page = await fetchPhpPage(resolvedUrl, { req });
-    console.log(page);
     if (page.type === 'redirect') {
       return {
         redirect: {
@@ -86,6 +183,7 @@ export const fetchPhpPage = async (url: string, options: {
   });
 
   if (res.redirected) {
+    console.log('redirect', res.url);
     return {
       type: 'redirect',
       redirect: 303,
@@ -94,6 +192,7 @@ export const fetchPhpPage = async (url: string, options: {
   }
 
   if (!res.ok) {
+    console.log('error', res.statusText);
     return {
       type: 'error',
       error: res.status,
@@ -106,3 +205,6 @@ export const fetchPhpPage = async (url: string, options: {
     content: await res.json() as PhpPage,
   }
 };
+
+export default PhpPageView;
+export { getServerSidePhpPage as getServerSideProps };

@@ -15,7 +15,7 @@ export default function GalleryPage() {
   const photoId = photoParam ? parseInt(photoParam as string, 10) : undefined;
   const { dir, dirs, images } = useGallery(dirId);
 
-  return <React.Fragment>
+  return <>
     <Head>
       <title>Galerie | TK Olymp</title>
     </Head>
@@ -42,5 +42,5 @@ export default function GalleryPage() {
       </Grid>
     </Container>
     {photoId ? <Lightbox dirHref={`/gallery/${dirId}`} {...{ images, initial: photoId }} /> : null}
-  </React.Fragment>;
+  </>;
 };

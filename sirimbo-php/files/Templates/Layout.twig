@@ -1,3 +1,10 @@
+{% if false %}
+  {% block meta %}{% endblock %}
+  {% block title %}{% endblock %}
+  {% block subheader %}{% endblock %}
+  {% block content %}{% endblock %}
+{% endif %}
+
 {{ json_encode({
   'meta': block('meta'),
   'title': block('title'),

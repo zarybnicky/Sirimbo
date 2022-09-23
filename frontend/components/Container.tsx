@@ -7,7 +7,7 @@ export const ContainerPlugin: CellPlugin<{
 }> = {
   Renderer: ({ children, data }) => (
     <Container maxWidth={data.maxWidth} style={{ padding: '2rem .5rem' }}>
-      <React.Fragment>{children}</React.Fragment>
+      {children}
     </Container>
   ),
 

@@ -33,7 +33,7 @@ export const ArticlePage = ({ }) => {
     return null;
   }
 
-  return <React.Fragment>
+  return <>
     <Head>
       <title>{x.atJmeno} | TK Olymp</title>
       <meta property="og:title" content="{x.atJmeno}" />
@@ -52,7 +52,7 @@ export const ArticlePage = ({ }) => {
       <div dangerouslySetInnerHTML={{ __html: x.atText }}></div>
     </Container>
     <CallToAction />
-  </React.Fragment>;
+  </>;
 };
 
 export default ArticlePage;

@@ -96,7 +96,7 @@ export function GalleryDirectoryList() {
       {dataSorted.map((a) => <tr key={a.gdId}>
         <td>
           <PopupState variant="popover">
-            {(popupState) => <React.Fragment>
+            {(popupState) => <>
               <Button {...bindTrigger(popupState)}>{'→'.repeat(a.gdLevel - 1)} {a.gdName}</Button>
               <Menu {...bindMenu(popupState)}>
                 <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/galerie/directory/edit/${a.gdId}`}>
@@ -109,7 +109,7 @@ export function GalleryDirectoryList() {
                   Odstranit
                 </MenuItem>
               </Menu>
-            </React.Fragment>}
+            </>}
           </PopupState>
         </td>
         <td>
@@ -121,10 +121,10 @@ export function GalleryDirectoryList() {
     </tbody>
   </table>;
 
-  return <React.Fragment>
+  return <>
     <NextLinkComposed href="/admin/galerie/file/upload" className="btn btn-outline-primary">Přidat fotky</NextLinkComposed>
     <NextLinkComposed href="/admin/galerie/directory/add" className="btn btn-outline-primary">Přidat složku</NextLinkComposed>
     {list}
     <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
-  </React.Fragment>;
+  </>;
 }

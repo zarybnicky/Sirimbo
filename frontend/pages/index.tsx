@@ -11,14 +11,61 @@ import { useServices } from 'lib/data';
 import { NextLinkComposed } from 'components/Link';
 import { Carousel as BsCarousel } from 'react-bootstrap';
 import { FooterMap } from 'components/Footer';
+import { useConfig } from 'lib/use-config';
 
 export const HomePage = ({ }) => {
   const { articles } = useArticles(2, 3);
   const videos = useTitleVideos();
   const services = useServices();
-  let { articles: highlights } = useArticles(3, 0);
 
-  return <React.Fragment>
+  const { layout } = useConfig();
+  if (!layout || layout === 'old') {
+    return <OldHomePage />
+  }
+
+  return <>
+    <Hero />
+    <Container maxWidth="lg">
+      {services.map((x, i) => (
+        <ServiceCard key={i} image={x.image} header={x.header}>
+          <Typography variant="body1">{x.text}</Typography>
+        </ServiceCard>
+      ))}
+    </Container>
+
+    <CallToAction />
+
+    <Container maxWidth="lg" style={{ margin: '3rem auto' }}>
+      <Grid container spacing={3}>
+
+        <Grid item sm={12} md={6}>
+          <Typography gutterBottom variant="h4" component="h2">Aktuálně</Typography>
+          <Grid container spacing={3} style={{ alignItems: "stretch" }}>
+            {articles.map((x, i) => <Grid item container sm={12} md={6} key={i}><ArticleCard item={x} /></Grid>)}
+          </Grid>
+        </Grid>
+
+        <Grid item sm={12} md={6}>
+          <Typography gutterBottom variant="h4" component="h2">Videa</Typography>
+          <Grid container spacing={3}>
+            {videos.map((x, i) => <Grid item sm={12} key={i}><VideoCard item={x} /></Grid>)}
+          </Grid>
+        </Grid>
+
+      </Grid>
+    </Container>
+  </>;
+}
+
+export default HomePage;
+
+
+const OldHomePage = () => {
+  const { articles } = useArticles(2, 3);
+  const videos = useTitleVideos();
+  const { articles: highlights } = useArticles(3, 0);
+
+  return <>
     <BsCarousel>
       {highlights.map((item, i) => (
         <BsCarousel.Item key={i}>
@@ -161,7 +208,9 @@ export const HomePage = ({ }) => {
     <div className="container news">
       <div className="row" style={{ marginTop: '3.5rem', marginBottom: '3.5rem' }}>
         <div className="col-md-6">
-          <h3><a href="/aktualne">Aktuálně</a></h3>
+          <h3>
+            <NextLinkComposed href="/aktualne">Aktuálně</NextLinkComposed>
+          </h3>
           <div className="row">
             {articles.map((item, i) => (
               <div className="col-12 col-md-6 pb-2" key={i}>
@@ -171,11 +220,11 @@ export const HomePage = ({ }) => {
                   </a>
                   <div className="card-body">
                     <h4 className="card-title">
-                      <a href={item.href}>{item.header}</a>
+                      <NextLinkComposed href={item.href}>{item.header}</NextLinkComposed>
                     </h4>
                     <p className="card-text">{item.preview}</p>
                     <div style={{ textAlign: 'right', fontSize: '85%' }}>
-                      <a href={item.href}>více zde &raquo;</a>
+                      <NextLinkComposed href={item.href}>více zde &raquo;</NextLinkComposed>
                     </div>
                   </div>
                 </div>
@@ -185,14 +234,16 @@ export const HomePage = ({ }) => {
         </div>
 
         <div className="col-md-6">
-          <h3><a href="/video">Videa ze soutěží</a></h3>
+          <h3>
+            <NextLinkComposed href="/video">Videa ze soutěží</NextLinkComposed>
+          </h3>
           <ul className="list-group">
             {videos.map((x, i) => (
               <li className="list-group-item" key={i}>
-                <a className="video row" href={x.href}>
+                <NextLinkComposed className="video row" href={x.href}>
                   <div className="col-4"><img style={{ maxWidth: '100%' }} alt="" src={x.img} /></div>
                   <div className="col-8"><h5>{x.name}</h5></div>
-                </a>
+                </NextLinkComposed>
               </li>
             ))}
           </ul>
@@ -228,41 +279,5 @@ export const HomePage = ({ }) => {
         </div>
       </div>
     </div>
-
-
-
-
-    <Hero />
-    <Container maxWidth="lg">
-      {services.map((x, i) => (
-        <ServiceCard key={i} image={x.image} header={x.header}>
-          <Typography variant="body1">{x.text}</Typography>
-        </ServiceCard>
-      ))}
-    </Container>
-
-    <CallToAction />
-
-    <Container maxWidth="lg" style={{ margin: '3rem auto' }}>
-      <Grid container spacing={3}>
-
-        <Grid item sm={12} md={6}>
-          <Typography gutterBottom variant="h4" component="h2">Aktuálně</Typography>
-          <Grid container spacing={3} style={{ alignItems: "stretch" }}>
-            {articles.map((x, i) => <Grid item container sm={12} md={6} key={i}><ArticleCard item={x} /></Grid>)}
-          </Grid>
-        </Grid>
-
-        <Grid item sm={12} md={6}>
-          <Typography gutterBottom variant="h4" component="h2">Videa</Typography>
-          <Grid container spacing={3}>
-            {videos.map((x, i) => <Grid item sm={12} key={i}><VideoCard item={x} /></Grid>)}
-          </Grid>
-        </Grid>
-
-      </Grid>
-    </Container>
-  </React.Fragment >;
-}
-
-export default HomePage;
+  </>;
+};

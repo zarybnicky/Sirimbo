@@ -6,7 +6,7 @@ import { SlateReadonly } from 'components/SlateReadonly';
 import MirekDomca from 'public/images/mirek-domca.png';
 
 export default function AboutPage() {
-  return <React.Fragment>
+  return <>
     <Container maxWidth="md" style={{ paddingBottom: '2rem', paddingTop: '2rem' }}>
       <Grid container direction="row-reverse" justifyContent="center">
         <Grid item sm={12} md={6}>
@@ -18,7 +18,7 @@ export default function AboutPage() {
       </Grid>
     </Container>
     <CallToAction />
-  </React.Fragment>;
+  </>;
 };
 
 const text = [

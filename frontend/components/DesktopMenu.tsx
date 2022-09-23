@@ -19,9 +19,9 @@ const Submenu = React.forwardRef<any, {
 
   if (x.type === 'link') {
     if (popupState) {
-      return <MenuItem ref={ref} component={NextLinkComposed} href={x.href} onClick={() => popupState.close()}><a>{x.text}</a></MenuItem>
+      return <MenuItem component={NextLinkComposed} href={x.href} onClick={popupState.close}>{x.text}</MenuItem>
     } else {
-      return <Button ref={ref} sx={[{
+      return <Button component={NextLinkComposed} href={x.href} sx={[{
         ...theme.mixins.toolbar,
         color: theme.palette.grey[500],
         fontWeight: 'bold',
@@ -36,14 +36,14 @@ const Submenu = React.forwardRef<any, {
           color: theme.palette.common.white,
           borderBottom: '3px solid white',
         },
-      } : {}]} component={NextLinkComposed} href={x.href}>{x.text}</Button>;
+      } : {}]}>{x.text}</Button>;
     }
   }
 
   if (!popupState) {
     return <PopupState variant="popover" popupId={`menu-${x.text.replace(' ', '')}`}>
-      {(popupState) => <React.Fragment>
-        <Button ref={ref}
+      {(popupState) => <>
+        <Button
           {...bindTrigger(popupState)}
           color="inherit"
           endIcon={<KeyboardArrowDownIcon />}
@@ -70,7 +70,8 @@ const Submenu = React.forwardRef<any, {
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
           sx={{
             '& .MuiMenu-paper': {
-              backgroundColor: alpha(theme.palette.common.white, .9),
+              backgroundColor: theme.palette.common.white,
+              opacity: 1,
               borderRadius: 0,
             },
             '& .MuiListItem-button': {
@@ -84,11 +85,11 @@ const Submenu = React.forwardRef<any, {
         >
           {x.children.map(y => <Submenu key={y.text} popupState={popupState} item={y} />)}
         </Menu>
-      </React.Fragment>}
+      </>}
     </PopupState>;
   } else {
     return (
-      <NestedMenuItem ref={ref} label={x.text} parentMenuOpen={!!popupState.isOpen}>
+      <NestedMenuItem label={x.text} parentMenuOpen={!!popupState.isOpen}>
         {x.children.map(y => <Submenu key={y.text} popupState={popupState} item={y} />)}
       </NestedMenuItem>
     );
@@ -97,7 +98,5 @@ const Submenu = React.forwardRef<any, {
 
 export const DesktopMenu = () => {
   const menu = useMenu();
-  return <React.Fragment>
-    {menu.map(x => <Submenu key={x.text} item={x} />)}
-  </React.Fragment>;
+  return <>{menu.map(x => <Submenu key={x.text} item={x} />)}</>;
 }

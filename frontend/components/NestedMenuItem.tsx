@@ -126,7 +126,7 @@ export const NestedMenuItem = React.forwardRef<HTMLLIElement | null, NestedMenuI
         onClose={() => setIsSubMenuOpen(false)}
         sx={{
           '& .MuiMenu-paper': {
-            backgroundColor: alpha(theme.palette.common.white, .9),
+            backgroundColor: theme.palette.common.white,
             borderRadius: 0,
           },
           '& .MuiListItem-button': {

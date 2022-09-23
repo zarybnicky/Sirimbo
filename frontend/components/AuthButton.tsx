@@ -29,7 +29,7 @@ export const AuthButton = ({ }) => {
     </div>;
   }
   return <PopupState variant="popover" popupId="demoMenu">
-    {(popupState) => <React.Fragment>
+    {(popupState) => <>
       <Button
         {...bindTrigger(popupState)}
         color="inherit"
@@ -45,8 +45,9 @@ export const AuthButton = ({ }) => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
+        <MenuItem component={NextLinkComposed} href="/member/profil">Můj profil</MenuItem>
         <MenuItem onClick={() => signOut(popupState)}>Odhlásit se</MenuItem>
       </Menu>
-    </React.Fragment>}
+    </>}
   </PopupState>;
 };

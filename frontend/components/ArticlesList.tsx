@@ -48,7 +48,7 @@ export function ArticleAdminList() {
       {data?.aktualities?.nodes?.map((a) => <tr key={a.atId}>
         <td>
           <PopupState variant="popover">
-            {(popupState) => <React.Fragment>
+            {(popupState) => <>
               <Button {...bindTrigger(popupState)}>{a.atJmeno}</Button>
               <Menu {...bindMenu(popupState)}>
                 <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/aktuality/edit/${a.atId}`}>
@@ -61,7 +61,7 @@ export function ArticleAdminList() {
                   Odstranit
                 </MenuItem>
               </Menu>
-            </React.Fragment>}
+            </>}
           </PopupState>
         </td>
         <td>{a.atTimestampAdd && format(a.atTimestampAdd, 'd. M. y')}</td>
@@ -69,9 +69,9 @@ export function ArticleAdminList() {
     </tbody>
   </table >;
 
-  return <React.Fragment>
+  return <>
     <NextLinkComposed href="/admin/aktuality/add" className="btn btn-primary">Nový článek</NextLinkComposed>
     {list}
     <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
-  </React.Fragment>;
+  </>;
 }

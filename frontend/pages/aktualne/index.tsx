@@ -10,7 +10,7 @@ export const ArticlesPage = ({ }) => {
   const [page, setPage] = React.useState(1);
   const { articles, count } = useArticles(limit, (page - 1) * limit);
 
-  return <React.Fragment>
+  return <>
     <Head>
       <title>Články | TK Olymp</title>
     </Head>
@@ -24,7 +24,7 @@ export const ArticlesPage = ({ }) => {
       <Pagination count={Math.ceil(count / limit)} page={page} onChange={(_, p) => setPage(p)} />
     </Container>
     <CallToAction />
-  </React.Fragment>;
+  </>;
 };
 
 export default ArticlesPage;

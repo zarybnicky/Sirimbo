@@ -85,7 +85,7 @@ export function RozpisAdminList() {
       {data?.rozpis?.nodes?.map((a) => <tr key={a.rId}>
         <td>
           <PopupState variant="popover">
-            {(popupState) => <React.Fragment>
+            {(popupState) => <>
               <Button {...bindTrigger(popupState)}>
                 {a.userByRTrener?.uJmeno} {a.userByRTrener?.uPrijmeni}
               </Button>
@@ -103,7 +103,7 @@ export function RozpisAdminList() {
                   Odstranit
                 </MenuItem>
               </Menu>
-            </React.Fragment>}
+            </>}
           </PopupState>
         </td>
         <td>{format(a.rDatum, 'd. M. y')}</td>
@@ -117,9 +117,9 @@ export function RozpisAdminList() {
     </tbody>
   </table >;
 
-  return <React.Fragment>
+  return <>
     <NextLinkComposed href="/admin/rozpis/add" className="btn btn-primary">Nový rozpis</NextLinkComposed>
     {list}
     <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
-  </React.Fragment>;
+  </>;
 }

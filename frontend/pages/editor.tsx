@@ -212,7 +212,7 @@ export const EditorPage = ({ }) => {
       break;
 
     case 'history':
-      toolbar = <React.Fragment></React.Fragment>;
+      toolbar = <></>;
       break;
   }
 

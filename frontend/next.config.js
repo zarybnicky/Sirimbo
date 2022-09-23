@@ -30,23 +30,37 @@ module.exports = withBundleAnalyzer(withSentryConfig({
   async redirects() {
     return [
       { source: '/home', destination: '/', permanent: true },
-      { source: '/nopassword', destination: '/forgotten-password', permanent: true },
-      { source: '/registrace', destination: '/register', permanent: true },
+      { source: '/forgotten-password', destination: '/nopassword', permanent: true },
+      { source: '/register', destination: '/registrace', permanent: true },
       { source: '/kontakt', destination: '/contact', permanent: true },
       { source: '/oklubu/saly', destination: '/o-nas/kde-trenujeme', permanent: true },
       { source: '/oklubu/klubovi-treneri', destination: '/o-nas/treneri', permanent: true },
       { source: '/oklubu/externi-treneri', destination: '/o-nas/treneri', permanent: true },
       { source: '/member', destination: '/dashboard', permanent: true },
       { source: '/member/home', destination: '/dashboard', permanent: true },
+      { source: '/member/rozpis', destination: '/member/treninky', permanent: true },
+      { source: '/member/nabidka', destination: '/member/treninky', permanent: true },
     ];
   },
 
   async rewrites() {
     return [
-      { source: '/graphql', destination: 'http://localhost:4000/graphql' },
-      { source: '/graphiql', destination: 'http://localhost:4000/graphiql' },
-      { source: '/old/:path*', destination: 'http://olymp-test/:path*' },
-      { source: '/galerie/:path*', destination: 'http://olymp-test/galerie/:path*' },
+      {
+        source: '/graphql',
+        destination: `${process.env.GRAPHQL_BACKEND || 'http://localhost:4000'}/graphql`,
+      },
+      {
+        source: '/graphqli',
+        destination: `${process.env.GRAPHQL_BACKEND || 'http://localhost:4000'}/graphqli`,
+      },
+      {
+        source: '/old/:path*',
+        destination: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://olymp-test'}/old/:path*`,
+      },
+      {
+        source: '/galerie/:path*',
+        destination: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://olymp-test'}/galerie/:path*`,
+      },
     ];
   },
 

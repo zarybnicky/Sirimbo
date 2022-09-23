@@ -175,7 +175,7 @@ in {
 
           locations."/old" = {
             index = "index.php";
-            extraConfig = "try_files /index.php?$args;";
+            extraConfig = "try_files /undefined /index.php?$args;";
           };
 
           locations."/graphql" = {
@@ -273,6 +273,9 @@ in {
         wantedBy = [ "multi-user.target" ];
 
         environment.PORT = toString cfg.frontendPort;
+        environment.GRAPHQL_BACKEND = "http://localhost:${toString cfg.jsPort}";
+        environment.NEXT_PUBLIC_SENTRY_ENVIRONMENT = cfg.domain;
+        environment.NEXT_PUBLIC_BASE_URL = "http${if cfg.ssl then "s" else ""}://${cfg.domain}";
 
         serviceConfig = {
           User = cfg.user;

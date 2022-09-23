@@ -255,13 +255,12 @@ class DBUser extends Database implements Pagable
                    WHERE CURRENT_DATE >= pc_valid_from AND CURRENT_DATE <= pc_valid_to
                  ) pi ON u_id=pi_id_user
                  LEFT JOIN platby_category_group ON pcg_id_category=pc_id
-                 LEFT JOIN platby_group ON pg_id=pgs_id_group AND ((pg_id=pcg_id_group AND pi_id IS NOT NULL) OR (pi_id IS NULL))
+                 LEFT JOIN platby_group ON pg_id=pgs_id_group
                WHERE
-                 u_confirmed='1' AND u_ban='0' AND u_system='0' AND ((pg_type='1' AND pi_id IS NOT NULL) OR (pi_id IS NULL AND (pg_type='1' OR pg_type IS NULL)))
+                 u_confirmed='1' AND u_ban='0' AND u_system='0' AND pg_type<>'0'
                ORDER BY u_id
             ) tt ORDER BY tt.s_id, tt.u_prijmeni"
         );
-
         return self::getArray($res);
     }
 

@@ -28,7 +28,7 @@ const Submenu = ({ level = 0, item: x, onClick }: {
     </ListItem>
   }
 
-  return <React.Fragment>
+  return <>
     <ListItem key={x.text} button onClick={() => setOpen(!open)}>
       <ListItemText primary={x.text} style={{ marginLeft: `${level}rem` }} />
       {open ? <ExpandLess /> : <ExpandMore />}
@@ -39,7 +39,7 @@ const Submenu = ({ level = 0, item: x, onClick }: {
       </List>
     </Collapse>
     <Divider />
-  </React.Fragment>;
+  </>;
 };
 
 export const MobileHeader = ({ }) => {

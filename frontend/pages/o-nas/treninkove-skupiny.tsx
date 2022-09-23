@@ -7,7 +7,7 @@ import { useCohorts } from 'lib/data/use-cohorts';
 export default function CohortsPage() {
   const cohorts = useCohorts();
 
-  return <React.Fragment>
+  return <>
     <Heading color={{ r: 20, g: 20, b: 200, a: .5 }} text="Tréninkové skupiny" image="" />
     <Container maxWidth="md" style={{ paddingBottom: '2rem', paddingTop: '2rem' }}>
       {cohorts.map((x, i) => (
@@ -26,5 +26,5 @@ export default function CohortsPage() {
       ))}
     </Container>
     <CallToAction />
-  </React.Fragment>;
+  </>;
 };

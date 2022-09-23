@@ -7,11 +7,11 @@ import { Heading } from 'components/Heading';
 
 export default function LocationsPage() {
   const items = useLocations();
-  return <React.Fragment>
+  return <>
     <Heading color={{ r: 20, g: 200, b: 20, a: .5 }} text="Kde trénujeme" image="" />
     <Container maxWidth="md" style={{ paddingBottom: '2rem', paddingTop: '2rem' }}>
       {items.map((x, i) => <LocationCard item={x} key={i} />)}
     </Container>
     <CallToAction />
-  </React.Fragment>;
+  </>;
 };

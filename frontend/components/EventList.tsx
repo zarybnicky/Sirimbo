@@ -85,7 +85,7 @@ export function EventList() {
       {(data?.akces?.nodes || []).map((a) => <tr key={a.aId}>
         <td>
           <PopupState variant="popover">
-            {(popupState) => <React.Fragment>
+            {(popupState) => <>
               <Button {...bindTrigger(popupState)}>{a.aJmeno}</Button>
               <Menu {...bindMenu(popupState)}>
                 <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/akce/edit/${a.aId}`}>
@@ -101,7 +101,7 @@ export function EventList() {
                   Odstranit
                 </MenuItem>
               </Menu>
-            </React.Fragment>}
+            </>}
           </PopupState>
         </td>
         <td><DateRange from={a.aOd} to={a.aDo} /></td>
@@ -115,9 +115,9 @@ export function EventList() {
     </tbody>
   </table>;
 
-  return <React.Fragment>
+  return <>
     <NextLinkComposed href="/admin/akce/add" className="btn btn-primary">Přidat</NextLinkComposed>
     {list}
     <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
-  </React.Fragment>;
+  </>;
 }

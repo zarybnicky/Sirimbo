@@ -11,7 +11,7 @@ import { useConfig } from 'lib/use-config';
 const ContactText = () => {
   const theme = useTheme();
 
-  return <React.Fragment>
+  return <>
     <Typography variant="h2" sx={{
       fontSize: '2rem',
       fontWeight: 900,
@@ -67,7 +67,7 @@ const ContactText = () => {
       Jiřího z Poděbrad 13, 779 00 Olomouc<br />
       (vchod bránou z ulice U reálky)
     </Typography>
-  </React.Fragment>;
+  </>;
 }
 
 export const FooterMap = ({ height = '200px' }) => {
