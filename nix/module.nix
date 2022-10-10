@@ -4,7 +4,6 @@
 in {
   options.services.olymp = {
     enable = lib.mkEnableOption "${pkgName}";
-    enableNewFrontend = lib.mkEnableOption "${pkgName} New Frontend";
 
     domain = lib.mkOption {
       type = lib.types.str;
@@ -162,17 +161,9 @@ in {
             proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
           };
 
-          locations."/app" = if !cfg.enableNewFrontend then {
+          locations."/" = {
             proxyPass = "http://127.0.0.1:${toString cfg.frontendPort}";
             proxyWebsockets = true;
-          } else {};
-
-          locations."/" = if cfg.enableNewFrontend then {
-            proxyPass = "http://127.0.0.1:${toString cfg.frontendPort}";
-            proxyWebsockets = true;
-          } else {
-            index = "index.php";
-            extraConfig = "try_files /public/$uri /index.php?$args;";
           };
 
           locations."~ \.php$".extraConfig = ''
