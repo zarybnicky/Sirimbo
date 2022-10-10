@@ -4,7 +4,7 @@
 in {
   options.services.olymp = {
     enable = lib.mkEnableOption "${pkgName}";
-    yt-worker.enable = lib.mkEnableOption "${pkgName}";
+    enableNewFrontend = lib.mkEnableOption "${pkgName} New Frontend";
 
     domain = lib.mkOption {
       type = lib.types.str;
@@ -27,24 +27,6 @@ in {
       type = lib.types.int;
       description = "${pkgName} internal JS port";
       example = 3003;
-    };
-
-    minioPort = lib.mkOption {
-      type = lib.types.int;
-      description = "${pkgName} internal Minio port";
-      default = 9000;
-    };
-    minioDomain = lib.mkOption {
-      type = lib.types.str;
-      description = "${pkgName} Minio access key";
-    };
-    minioAccessKey = lib.mkOption {
-      type = lib.types.str;
-      description = "${pkgName} Minio access key";
-    };
-    minioSecretKey = lib.mkOption {
-      type = lib.types.str;
-      description = "${pkgName} Minio secret key";
     };
 
     dbConnString = lib.mkOption {
@@ -90,11 +72,6 @@ in {
   };
 
   config = let
-    cfgFile = pkgs.writeText "config.yaml" ''
-      dbConnString: "${cfg.dbConnString}"
-      proxyPort: ${toString cfg.phpPort}
-    '';
-
     configPhp = pkgs.runCommand "sirimbo-php-config" {} ''
       mkdir -p $out
       cat > $out/config.php <<EOS
@@ -111,12 +88,7 @@ in {
       define('GALERIE_THUMBS', '${cfg.stateDir}/gallery/thumbnails');
       define('UPLOADS', '${cfg.stateDir}/uploads');
       define('CACHE', '${cfg.stateDir}/cache');
-      foreach ([GALERIE, GALERIE_THUMBS, UPLOADS, CACHE] as \$path) {
-        if (!is_readable(\$path)) {
-          mkdir(\$path, 0777, true);
-        }
-      }
-      define('NABOR', '0');
+
       define('DEFAULT_FROM_MAIL', 'root@tkolymp.cz');
       define('DEFAULT_ADMIN_MAIL', 'miroslav.hyza@tkolymp.cz');
 
@@ -131,7 +103,7 @@ in {
 
     phpRoot = pkgs.symlinkJoin {
       name = "sirimbo-php-dist";
-      paths = [pkgs.sirimbo-php configPhp];
+      paths = [pkgs.sirimbo-php pkgs.sirimbo-frontend configPhp];
     };
   in lib.mkMerge [
     (lib.mkIf cfg.enable {
@@ -147,7 +119,13 @@ in {
       users.groups.${cfg.user} = {
         name = cfg.group;
       };
-      systemd.tmpfiles.rules = [ "d ${cfg.stateDir} 0755 ${cfg.user} ${cfg.user} -" ];
+      systemd.tmpfiles.rules = [
+        "d ${cfg.stateDir} 0755 ${cfg.user} ${cfg.user} -"
+        "d ${cfg.stateDir}/gallery 0755 ${cfg.user} ${cfg.user} -"
+        "d ${cfg.stateDir}/gallery/thumbnails 0755 ${cfg.user} ${cfg.user} -"
+        "d ${cfg.stateDir}/uploads 0755 ${cfg.user} ${cfg.user} -"
+        "d ${cfg.stateDir}/cache 0755 ${cfg.user} ${cfg.user} -"
+      ];
 
       services.nginx = {
         enable = true;
@@ -157,19 +135,10 @@ in {
         recommendedOptimisation = true;
         recommendedProxySettings = true;
 
-        virtualHosts.${cfg.minioDomain} = {
-          locations."/files/images/" = {
-            # TODO: resizer
-            proxyPass = "http://127.0.0.1:${toString cfg.minioPort}/";
-          };
-          locations."/" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.minioPort}/";
-          };
-        };
-
         virtualHosts.${cfg.domain} = {
           root = phpRoot;
           serverAliases = ["www.${cfg.domain}"];
+
           locations."/gallery".root = cfg.stateDir;
           locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
 
@@ -193,9 +162,17 @@ in {
             proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
           };
 
-          locations."/" = {
+          locations."/app" = if !cfg.enableNewFrontend then {
             proxyPass = "http://127.0.0.1:${toString cfg.frontendPort}";
             proxyWebsockets = true;
+          } else {};
+
+          locations."/" = if cfg.enableNewFrontend then {
+            proxyPass = "http://127.0.0.1:${toString cfg.frontendPort}";
+            proxyWebsockets = true;
+          } else {
+            index = "index.php";
+            extraConfig = "try_files /public/$uri /index.php?$args;";
           };
 
           locations."~ \.php$".extraConfig = ''
@@ -232,42 +209,6 @@ in {
         ]);
       };
 
-      services.minio = {
-        enable = true;
-        browser = false;
-        configDir = "${cfg.stateDir}/minio-config";
-        dataDir = ["${cfg.stateDir}/minio-data"];
-        accessKey = cfg.minioAccessKey;
-        secretKey = cfg.minioSecretKey;
-      };
-      systemd.services.minio = {
-        serviceConfig = {
-          ExecStartPost= ''
-            ${pkgs.coreutils}/bin/timeout 30 ${pkgs.bash}/bin/bash -c \
-              'while ! ${pkgs.curl}/bin/curl --silent --fail http://localhost:${toString cfg.minioPort}/minio/health/cluster; do sleep 1; done'
-          '';
-        };
-      };
-      systemd.services.minio-config = {
-        path = [pkgs.minio pkgs.minio-client];
-        requiredBy = ["multi-user.target"];
-        after = ["minio.service"];
-        serviceConfig = {
-          Type = "simple";
-          User = "minio";
-          Group = "minio";
-          WorkingDirectory = config.services.minio.configDir;
-        };
-        script = ''
-          set -e
-          mc --config-dir . config host add minio \
-            http://localhost:${toString cfg.minioPort} "${cfg.minioAccessKey}" "${cfg.minioSecretKey}"
-          mc --config-dir . ls minio/public || mc --config-dir . mb minio/public
-          mc --config-dir . ls minio/private || mc --config-dir . mb minio/private
-          mc --config-dir . policy set download minio/public
-        '';
-      };
-
       systemd.services.sirimbo-frontend = {
         after = [ "network.target" ];
         wantedBy = [ "multi-user.target" ];
@@ -302,9 +243,6 @@ in {
         environment.SMTP_USER = cfg.smtpUser;
         environment.SMTP_PASS = cfg.smtpPass;
 
-        environment.MINIO_DOMAIN = cfg.minioDomain;
-        environment.MINIO_ACCESS_KEY = cfg.minioAccessKey;
-        environment.MINIO_SECRET_KEY = cfg.minioSecretKey;
         serviceConfig = {
           User = cfg.user;
           Group = cfg.group;
