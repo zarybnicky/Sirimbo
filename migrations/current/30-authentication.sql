@@ -42,7 +42,6 @@ end;
 $$ language plpgsql strict volatile security definer;
 select plpgsql_check_function('public.logout');
 
-
 create or replace function current_user_id() returns bigint as $$
   SELECT current_setting('jwt.claims.user_id', true)::bigint;
 $$ language sql stable;
@@ -67,3 +66,37 @@ $$ language sql stable;
 
 grant execute on function current_couple_ids to anonymous;
 grant execute on function get_current_user to anonymous;
+
+
+create or replace function app_private.tg_users__notify_admin() returns trigger as $$
+begin
+  perform graphile_worker.add_job('notify_admin_registration', json_build_object('id', NEW.u_id));
+  return NEW;
+end;
+$$ language plpgsql volatile;
+select plpgsql_check_function('app_private.tg_users__notify_admin', 'users');
+
+drop trigger if exists _500_notify_admin ON users;
+create trigger _500_notify_admin
+  after insert on public.users
+  for each row
+  execute procedure app_private.tg_users__notify_admin();
+
+create or replace function app_private.tg_users__encrypt_password() returns trigger as $$
+declare
+  v_salt varchar;
+begin
+  if length(NEW.u_pas) <> 40 then
+      select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
+      NEW.u_pass := encode(digest(v_salt || NEW.u_pass || v_salt, 'sha1'), 'hex');
+  end if;
+  return NEW;
+end;
+$$ language plpgsql volatile;
+select plpgsql_check_function('app_private.tg_users__encrypt_password', 'users');
+
+drop trigger if exists _200_encrypt_password ON users;
+create trigger _200_encrypt_password
+  before insert or update on public.users
+  for each row
+  execute procedure app_private.tg_users__encrypt_password();

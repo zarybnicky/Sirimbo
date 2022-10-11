@@ -5,8 +5,8 @@ import { useAuth } from 'lib/data/use-auth';
 import { Schedule, ScheduleItem, ScheduleRangeQuery } from 'lib/data/use-schedule';
 import { Reservation, ReservationItem, ReservationRangeQuery } from 'lib/data/use-reservation';
 import { PermissionLevel, usePermissions } from 'lib/data/use-permissions';
-import { formatDateRange } from 'lib/format-date-range';
 import { useTypedQuery } from 'lib/query';
+import { DateRange } from 'components/DateRange';
 
 export const SchedulePage = ({ }) => {
   // require or redirect
@@ -72,13 +72,13 @@ export const SchedulePage = ({ }) => {
             )}
           </div>
           <div className="date">
-            {format(item.rDatum, 'd. M. y')}
+            {format(new Date(item.rDatum), 'd. M. y')}
           </div>
           <div>{item.rKde}</div>
           <hr />
           {(item.rozpisItemsByRiIdRodic.nodes || []).map((lesson, i) => (
             <Grid container key={i} spacing={2}>
-              <Grid item>{lesson.riOd.toTimeString()}-{lesson.riDo.toTimeString()}</Grid>
+              <Grid item>{new Date(lesson.riOd).toTimeString()}-{new Date(lesson.riDo).toTimeString()}</Grid>
               <Grid item style={{ flexGrow: 1 }}>
                 {canSignUp(lesson, item) ? (
                   <button name="action" value="signup" className="py-0 btn btn-outline-primary btn-sm">+</button>
@@ -116,7 +116,7 @@ export const SchedulePage = ({ }) => {
               </div>
             )}
           </div>
-          <div className="date">{formatDateRange(item.nOd, item.nDo)}</div>
+          <div className="date"><DateRange from={item.nOd} to={item.nDo} /></div>
 
           {item.nMaxPocetHod > 0 && <>
             <span className="little">Maximálně hodin/pár:</span>

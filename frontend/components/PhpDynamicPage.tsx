@@ -5,9 +5,10 @@ import { origin } from 'lib/query';
 import parse, { domToReact, DOMNode, Element, HTMLReactParserOptions } from "html-react-parser"
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { NextLinkComposed, isRelative } from "./Link"
-import Image from "next/image"
+import { NextLinkComposed } from "./Link"
 import { useAuth } from 'lib/data/use-auth';
+import { useConfig } from 'lib/use-config';
+import { DateRange } from './DateRange';
 
 export type PhpPage = {
   meta: string;
@@ -36,23 +37,6 @@ const options = (onSubmit: (e: React.FormEvent<HTMLFormElement>) => void): HTMLR
         );
       }
 
-      if (domNode.name === "img") {
-        const { class: className, src, alt, width = "100px", height = "100px" } = domNode.attribs
-        if (src && isRelative(src)) {
-          return (
-            <Image
-              src={src}
-              width={`${width}px`}
-              height={`${height}px`}
-              alt={alt}
-              className={className}
-              layout="intrinsic"
-              objectFit="cover"
-            />
-          )
-        }
-      }
-
       if (domNode.name === "a") {
         const { href, class: className, ...rest } = domNode.attribs
         return (
@@ -70,10 +54,35 @@ const options = (onSubmit: (e: React.FormEvent<HTMLFormElement>) => void): HTMLR
         return domNode
       }
 
+      if (domNode.name === 'select') {
+        const { class: className, ...rest } = domNode.attribs;
+        let selected: string | undefined = undefined;
+        (domNode.children as DOMNode[]).forEach(x => {
+          if (isElement(x) && x.attribs.selected) {
+            selected = x.attribs.selected;
+            delete x.attribs.selected;
+          }
+        });
+        return <select defaultValue={selected} className={className} {...rest}>
+          {domToReact(domNode.children as DOMNode[], options(onSubmit))}
+        </select>;
+      }
+
       if (domNode.name === 'option') {
         return <option {...domNode.attribs}>
-          {domToReact(domNode.children as DOMNode[])}
+          {domToReact(domNode.children as DOMNode[], options(onSubmit))}
         </option>;
+      }
+
+      if (domNode.name === 'date-range') {
+        return <DateRange {...domNode.attribs as any} />
+      }
+
+      if (domNode.name === 'button') {
+        const { class: className, ...rest } = domNode.attribs
+        return <button className={className} {...rest}>
+          {domToReact(domNode.children as DOMNode[], options(onSubmit))}
+        </button>;
       }
     }
   },
@@ -88,6 +97,7 @@ export const PhpPageView: React.FC<{ page: PhpPage; }> = ({ page: initialPage })
     router.push('/login');
   }
   const [page, setPage] = React.useState(initialPage);
+  const { layout } = useConfig();
 
   React.useEffect(() => {
     setPage(initialPage);
@@ -95,10 +105,14 @@ export const PhpPageView: React.FC<{ page: PhpPage; }> = ({ page: initialPage })
 
   const submitForm = React.useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const submitter = (e.nativeEvent as any).submitter;
     const form = e.currentTarget;
     if (form.method === 'post') {
       const body = new FormData(form);
-      const action = (form.action || router.asPath)
+      if (submitter) {
+        body.append(submitter.name, submitter.value);
+      }
+      const action = (form.getAttribute('action') || location.toString())
         .replace(origin, '')
         .replace(window.location.origin, '');
 
@@ -106,15 +120,25 @@ export const PhpPageView: React.FC<{ page: PhpPage; }> = ({ page: initialPage })
       if (result.type === 'error') {
         enqueueSnackbar(result.errorText, { variant: 'error' });
       } else if (result.type === 'redirect') {
-        router.push(result.redirectUrl.replace(origin, ''));
+        const redirectUrl = result.redirectUrl
+          .replace(origin, '')
+          .replace(window.location.origin, '');
+        if (router.asPath === redirectUrl) {
+          router.push(router.asPath);
+        } else {
+          router.push(redirectUrl);
+        }
       } else {
         setPage(result.content);
       }
+    } else if (form.method === 'get') {
+      const url = new URL(form.getAttribute('action') || location.toString());
+      router.push(`${url.pathname}?${new URLSearchParams(new FormData(form) as any).toString()}`);
     }
   }, []);
 
   return (
-    <Container maxWidth="lg" sx={{ margin: '80px auto' }}>
+    <Container maxWidth="lg" sx={{ margin: layout === 'new' ? '80px auto' : '20px auto' }}>
       {page.messages.map((msg, i) => (
         <div key={i} className={`alert alert-${msg.type}`} dangerouslySetInnerHTML={{ __html: msg.text }} />
       ))}

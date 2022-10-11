@@ -7,7 +7,6 @@ export interface AuthContextType {
   user: AppUser | null;
   couple: AppCouple | null;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   sendPasswordResetEmail: (email: string) => Promise<void>;
   confirmPasswordReset: (code: string, password: string) => Promise<void>;
@@ -17,11 +16,6 @@ const authContext = React.createContext<AuthContextType | undefined>(undefined);
 
 export const ProvideAuth: React.FC = ({ children }) => {
   const auth = useApiAuth();
-  return <authContext.Provider value={auth}>{children}</authContext.Provider>;
-}
-
-export const ProvideMockAuth: React.FC = ({ children }) => {
-  const auth = useMockAuth();
   return <authContext.Provider value={auth}>{children}</authContext.Provider>;
 }
 
@@ -73,13 +67,7 @@ function useApiAuth(): AuthContextType {
       setIsLoading(true);
       await signIn({ variables: { login, passwd } });
     },
-    async signUp(email: string, password: string) {
-      // const response = await createUserWithEmailAndPassword(email, password);
-      // const response = { user: { name: "Jakub Zárybnický" } };
-      setUser(UserMock as any);
-      setCouple(CoupleMock as any);
-    },
-    signOut: async () => {
+    async signOut() {
       await signOut()
     },
     async sendPasswordResetEmail(email: string) {
@@ -91,44 +79,8 @@ function useApiAuth(): AuthContextType {
   };
 }
 
-export function useMockAuth(): AuthContextType {
-  const [user, setUser] = React.useState<AppUser | null>(null);
-  const [couple, setCouple] = React.useState<AppCouple | null>(null);
-  const [isLoading] = React.useState<boolean>(false);
-  return {
-    isLoading,
-    user,
-    couple,
-    async signIn() {
-      setUser(UserMock as any);
-      setCouple(CoupleMock as any);
-      return UserMock as any;
-    },
-    async signUp() {
-      setUser(UserMock as any);
-      setCouple(CoupleMock as any);
-      return UserMock as any;
-    },
-    async signOut() {
-      setUser(null);
-      setCouple(null);
-    },
-    async sendPasswordResetEmail(email: string) {
-    },
-    async confirmPasswordReset() {
-    },
-  };
-}
-
 export type AppUser = InputType<GraphQLTypes["User"], typeof UserPartial>;
 export type AppCouple = InputType<GraphQLTypes["Pary"], typeof CouplePartial>;
-
-export const CoupleMock: AppCouple = {
-  pId: 1,
-  pIdPartner: 1,
-  pIdPartnerka: 0,
-  pArchiv: false,
-};
 
 export const CouplePartial = Selector("Pary")({
   pId: true,
@@ -136,62 +88,6 @@ export const CouplePartial = Selector("Pary")({
   pIdPartnerka: true,
   pArchiv: true,
 });
-
-export const UserMock: AppUser = {
-  permissionByUGroup: {
-    peAkce: 1,
-    peAnkety: 1,
-    peAktuality: 1,
-    peDescription: "Guest",
-    peDokumenty: 1,
-    peGalerie: 1,
-    peId: 5,
-    peKonzole: 1,
-    peInzerce: 1,
-    peNabidka: 1,
-    peMain: 1,
-    peName: "Guest",
-    peNastenka: 1,
-    peNovinky: 1,
-    pePary: 1,
-    pePermissions: 1,
-    pePlatby: 1,
-    peRozpis: 1,
-    peSkupiny: 1,
-    peUsers: 1,
-  },
-  uTimestamp: true,
-  uSystem: false,
-  uTelefon: "734408237",
-  uTeacher: true,
-  uStreet: "Street",
-  uRodneCislo: "9999990000",
-  uSkupina: 5,
-  uPrijmeni: "Surname",
-  uPoznamky: "...",
-  uPostalCode: "77777",
-  uPohlavi: "m",
-  uOrientationNumber: "4",
-  uNationality: "CZ",
-  uNarozeni: "2010-02-01",
-  uMemberUntil: null,
-  uLogin: "guest",
-  uMemberSince: "2010-02-01T12:12:12Z",
-  uLock: true,
-  uLevel: 5,
-  uJmeno: "Guest",
-  uGroup: "5",
-  uId: "5",
-  uGdprSignedAt: "2010-02-01T12:12:12Z",
-  uEmail: "a@a.com",
-  uDancer: true,
-  uDistrict: "District",
-  uCreatedAt: "2010-02-01T12:12:12Z",
-  uConfirmed: true,
-  uConscriptionNumber: "4",
-  uBan: false,
-  uCity: "City",
-};
 
 export const UserPartial = Selector("User")({
   permissionByUGroup: {

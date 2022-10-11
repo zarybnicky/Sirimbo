@@ -1,5 +1,4 @@
 import { useTypedQuery } from 'lib/query';
-import { getPlaceholder } from '../test-utils';
 
 export interface Video {
   img: string;
@@ -26,26 +25,3 @@ export const useTitleVideos = (): Video[] => {
     };
   });
 };
-
-export const useMockVideos = (): Video[] => [
-  {
-    href: "/o-nas",
-    img: getPlaceholder(360, 240),
-    name: "Přípravný kurz tanečního sportu",
-  },
-  {
-    href: "/o-nas",
-    img: getPlaceholder(360, 240),
-    name: "Přípravný kurz tanečního sportu",
-  },
-  {
-    href: "/o-nas",
-    img: getPlaceholder(360, 240),
-    name: "Přípravný kurz tanečního sportu",
-  },
-  {
-    href: "/o-nas",
-    img: getPlaceholder(360, 240),
-    name: "Přípravný kurz tanečního sportu",
-  },
-];

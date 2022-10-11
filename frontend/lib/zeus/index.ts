@@ -3843,8 +3843,6 @@ logout?: [{	/** The exclusive input argument for this mutation. An object type, 
 	input: ValueTypes["LogoutInput"] | Variable<any, string>},ValueTypes["LogoutPayload"]],
 prospectFormDancer?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input: ValueTypes["ProspectFormDancerInput"] | Variable<any, string>},ValueTypes["ProspectFormDancerPayload"]],
-uploadFile?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input: ValueTypes["UploadInput"] | Variable<any, string>},ValueTypes["Upload"]],
 		__typename?: boolean | `@${string}`
 }>;
 	/** The output of our create `Akce` mutation. */
@@ -4718,7 +4716,7 @@ payload verbatim. May be used to track mutations by the client. */
 	uPoznamky?: string | undefined | null | Variable<any, string>,
 	uTimestamp?: ValueTypes["Datetime"] | undefined | null | Variable<any, string>,
 	uLevel?: number | undefined | null | Variable<any, string>,
-	uGroup: ValueTypes["BigInt"] | Variable<any, string>,
+	uGroup?: ValueTypes["BigInt"] | undefined | null | Variable<any, string>,
 	uSkupina?: ValueTypes["BigInt"] | undefined | null | Variable<any, string>,
 	uDancer?: boolean | undefined | null | Variable<any, string>,
 	uBan?: boolean | undefined | null | Variable<any, string>,
@@ -7181,14 +7179,6 @@ payload verbatim. May be used to track mutations by the client. */
 	email?: string | undefined | null | Variable<any, string>,
 	phone?: string | undefined | null | Variable<any, string>,
 	yearofbirth?: string | undefined | null | Variable<any, string>
-};
-	["Upload"]: AliasType<{
-	uploadUrl?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	["UploadInput"]: {
-	directory?: string | undefined | null | Variable<any, string>,
-	filename: string | Variable<any, string>
 }
   }
 
@@ -10203,8 +10193,6 @@ logout?: [{	/** The exclusive input argument for this mutation. An object type, 
 	input: ResolverInputTypes["LogoutInput"]},ResolverInputTypes["LogoutPayload"]],
 prospectFormDancer?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input: ResolverInputTypes["ProspectFormDancerInput"]},ResolverInputTypes["ProspectFormDancerPayload"]],
-uploadFile?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input: ResolverInputTypes["UploadInput"]},ResolverInputTypes["Upload"]],
 		__typename?: boolean | `@${string}`
 }>;
 	/** The output of our create `Akce` mutation. */
@@ -11078,7 +11066,7 @@ payload verbatim. May be used to track mutations by the client. */
 	uPoznamky?: string | undefined | null,
 	uTimestamp?: ResolverInputTypes["Datetime"] | undefined | null,
 	uLevel?: number | undefined | null,
-	uGroup: ResolverInputTypes["BigInt"],
+	uGroup?: ResolverInputTypes["BigInt"] | undefined | null,
 	uSkupina?: ResolverInputTypes["BigInt"] | undefined | null,
 	uDancer?: boolean | undefined | null,
 	uBan?: boolean | undefined | null,
@@ -13541,14 +13529,6 @@ payload verbatim. May be used to track mutations by the client. */
 	email?: string | undefined | null,
 	phone?: string | undefined | null,
 	yearofbirth?: string | undefined | null
-};
-	["Upload"]: AliasType<{
-	uploadUrl?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	["UploadInput"]: {
-	directory?: string | undefined | null,
-	filename: string
 }
   }
 
@@ -15921,8 +15901,7 @@ for equality and combined with a logical ‘and.’ */
 	deleteVideoSource?: ModelTypes["DeleteVideoSourcePayload"] | undefined,
 	login?: ModelTypes["LoginPayload"] | undefined,
 	logout?: ModelTypes["LogoutPayload"] | undefined,
-	prospectFormDancer?: ModelTypes["ProspectFormDancerPayload"] | undefined,
-	uploadFile: ModelTypes["Upload"]
+	prospectFormDancer?: ModelTypes["ProspectFormDancerPayload"] | undefined
 };
 	/** The output of our create `Akce` mutation. */
 ["CreateAkcePayload"]: {
@@ -16769,7 +16748,7 @@ payload verbatim. May be used to track mutations by the client. */
 	uPoznamky?: string | undefined,
 	uTimestamp?: ModelTypes["Datetime"] | undefined,
 	uLevel?: number | undefined,
-	uGroup: ModelTypes["BigInt"],
+	uGroup?: ModelTypes["BigInt"] | undefined,
 	uSkupina?: ModelTypes["BigInt"] | undefined,
 	uDancer?: boolean | undefined,
 	uBan?: boolean | undefined,
@@ -19165,13 +19144,6 @@ payload verbatim. May be used to track mutations by the client. */
 	email?: string | undefined,
 	phone?: string | undefined,
 	yearofbirth?: string | undefined
-};
-	["Upload"]: {
-		uploadUrl: string
-};
-	["UploadInput"]: {
-	directory?: string | undefined,
-	filename: string
 }
     }
 
@@ -21717,8 +21689,7 @@ for equality and combined with a logical ‘and.’ */
 	deleteVideoSource?: GraphQLTypes["DeleteVideoSourcePayload"] | undefined,
 	login?: GraphQLTypes["LoginPayload"] | undefined,
 	logout?: GraphQLTypes["LogoutPayload"] | undefined,
-	prospectFormDancer?: GraphQLTypes["ProspectFormDancerPayload"] | undefined,
-	uploadFile: GraphQLTypes["Upload"]
+	prospectFormDancer?: GraphQLTypes["ProspectFormDancerPayload"] | undefined
 };
 	/** The output of our create `Akce` mutation. */
 ["CreateAkcePayload"]: {
@@ -22591,7 +22562,7 @@ payload verbatim. May be used to track mutations by the client. */
 	uPoznamky?: string | undefined,
 	uTimestamp?: GraphQLTypes["Datetime"] | undefined,
 	uLevel?: number | undefined,
-	uGroup: GraphQLTypes["BigInt"],
+	uGroup?: GraphQLTypes["BigInt"] | undefined,
 	uSkupina?: GraphQLTypes["BigInt"] | undefined,
 	uDancer?: boolean | undefined,
 	uBan?: boolean | undefined,
@@ -25054,14 +25025,6 @@ payload verbatim. May be used to track mutations by the client. */
 	email?: string | undefined,
 	phone?: string | undefined,
 	yearofbirth?: string | undefined
-};
-	["Upload"]: {
-	__typename: "Upload",
-	uploadUrl: string
-};
-	["UploadInput"]: {
-		directory?: string | undefined,
-	filename: string
 }
     }
 /** Methods to use when ordering `User`. */
@@ -26124,5 +26087,4 @@ type ZEUS_VARIABLES = {
 	["LogoutInput"]: ValueTypes["LogoutInput"];
 	["ProspectFormDancerInput"]: ValueTypes["ProspectFormDancerInput"];
 	["ProspectDatumInput"]: ValueTypes["ProspectDatumInput"];
-	["UploadInput"]: ValueTypes["UploadInput"];
 }

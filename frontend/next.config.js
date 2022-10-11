@@ -1,4 +1,5 @@
 const path = require('path');
+const { execSync } = require('child_process');
 
 let withBundleAnalyzer = x => x;
 if (process.env.ANALYZE === 'true') {
@@ -44,23 +45,16 @@ module.exports = withBundleAnalyzer(withSentryConfig({
   },
 
   async rewrites() {
+    const graphqlUrl = process.env.GRAPHQL_BACKEND || 'http://localhost:4000';
+    let phpUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    if (!phpUrl) {
+      phpUrl = `http://${execSync('nixos-container show-ip olymp-test', {encoding: 'utf8'})}`;
+    }
     return [
-      {
-        source: '/graphql',
-        destination: `${process.env.GRAPHQL_BACKEND || 'http://localhost:4000'}/graphql`,
-      },
-      {
-        source: '/graphqli',
-        destination: `${process.env.GRAPHQL_BACKEND || 'http://localhost:4000'}/graphqli`,
-      },
-      {
-        source: '/old/:path*',
-        destination: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://olymp-test'}/old/:path*`,
-      },
-      {
-        source: '/galerie/:path*',
-        destination: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://olymp-test'}/galerie/:path*`,
-      },
+      { source: '/graphql', destination: `${graphqlUrl}/graphql` },
+      { source: '/graphqli', destination: `${graphqlUrl}/graphqli` },
+      { source: '/old/:path*', destination: `${phpUrl}/old/:path*` },
+      { source: '/galerie/:path*', destination: `${phpUrl}/galerie/:path*` },
     ];
   },
 

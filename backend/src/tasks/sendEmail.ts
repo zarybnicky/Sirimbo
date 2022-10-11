@@ -17,7 +17,7 @@ const fromEmail = "TK Olymp.cz <root@tkolymp.cz>";
 // } as SendEmailPayload);
 
 
-export interface SendEmailPayload {
+export type SendEmailPayload = {
   options: {
     from?: string;
     to: string | string[];

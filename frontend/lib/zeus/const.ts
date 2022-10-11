@@ -1311,9 +1311,6 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		prospectFormDancer:{
 			input:"ProspectFormDancerInput"
-		},
-		uploadFile:{
-			input:"UploadInput"
 		}
 	},
 	CreateAkcePayload:{
@@ -2595,9 +2592,6 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	ProspectDatumInput:{
 
-	},
-	UploadInput:{
-
 	}
 }
 
@@ -3695,8 +3689,7 @@ export const ReturnTypes: Record<string,any> = {
 		deleteVideoSource:"DeleteVideoSourcePayload",
 		login:"LoginPayload",
 		logout:"LogoutPayload",
-		prospectFormDancer:"ProspectFormDancerPayload",
-		uploadFile:"Upload"
+		prospectFormDancer:"ProspectFormDancerPayload"
 	},
 	CreateAkcePayload:{
 		clientMutationId:"String",
@@ -4368,9 +4361,6 @@ export const ReturnTypes: Record<string,any> = {
 	ProspectFormDancerPayload:{
 		clientMutationId:"String",
 		query:"Query"
-	},
-	Upload:{
-		uploadUrl:"String"
 	}
 }
 

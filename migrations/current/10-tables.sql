@@ -225,7 +225,16 @@ create policy admin_all on users to administrator using (true) with check (true)
 create policy all_view on users for select using (true);
 create policy manage_own on users for all
   using (u_id = current_user_id()) with check (u_id = current_user_id());
-grant all on users to anonymous;
+grant all on users to member;
+
+alter table users alter column u_confirmed set default false;
+alter table users alter column u_group set default 0;
+alter table users alter column u_teacher set default false;
+alter table users alter column u_gdpr_signed_at set default CURRENT_TIMESTAMP;
+grant insert (u_login, u_pass, u_jmeno, u_prijmeni, u_pohlavi, u_email,
+u_telefon, u_narozeni, u_rodne_cislo, u_poznamky, u_dancer, u_street,
+u_conscription_number, u_orientation_number, u_district, u_city,
+u_postal_code, u_nationality) on users to anonymous;
 
 -- ************** users_skupiny **************
 select app_private.drop_policies('public.users_skupiny');

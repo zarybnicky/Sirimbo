@@ -1,9 +1,16 @@
 import * as React from 'react';
 import { Card, CardContent, Container, Grid, Typography } from '@mui/material';
 import { AnnouncementList } from '../components/AnnouncementList';
+import { useAuth } from 'lib/data/use-auth';
+import { useRouter } from 'next/router';
 
 export const DashboardPage = ({ }) => {
-  // require user or redirect
+  const router = useRouter();
+  const { user, isLoading } = useAuth();
+  console.log(user, isLoading);
+  if (!isLoading && !user) {
+    router.push('/');
+  }
   // Copy AnnouncementList
   // Copy ScheduleList
 

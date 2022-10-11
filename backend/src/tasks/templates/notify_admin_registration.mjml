@@ -1,0 +1,42 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-class name="background" background-color="#f5faff" font-size="13px" />
+      <mj-class name="bold-text" align="center" font-size="20px" font-family="Helvetica" font-weight="bold" />
+      <mj-class name="text" align="center" font-size="16px" font-family="Helvetica" />
+      <mj-class name="small-text" align="center" font-size="13px" font-family="Helvetica" />
+      <mj-class name="blue-section" background-color="#d81c3a" />
+      <mj-class name="white-section" background-color="#fff" />
+    </mj-attributes>
+  </mj-head>
+
+  <mj-body mj-class="background">
+    <mj-section padding-bottom="20px"></mj-section>
+
+    <mj-section mj-class="blue-section">
+      <mj-column width="100%">
+        <mj-text mj-class="bold-text" color="#FFF" padding-left="25px" padding-right="25px" padding-top="28px">
+          Do systému tkolymp.cz se registroval nový uživatel "[[fullName]]" ([[email]]).
+        </mj-text>
+        <mj-text mj-class="bold-text" color="#FFF" padding-left="25px" padding-right="25px" padding-bottom="28px" padding-top="8px">
+          Na odkazu níže můžete uživatele smazat, nebo ho potvrdit a povolit mu přístup do systému.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-section mj-class="white-section">
+      <mj-column width="100%">
+        <mj-button mj-class="text" background-color="#d81c3a" color="#FFF" font-weight="bold" border="none" padding="15px 30px" border-radius="10px" href="https://tkolymp.cz/admin/users/unconfirmed" font-family="Helvetica" padding-left="25px" padding-right="25px" padding-bottom="10px">Zkontrolovat nového uživatele</mj-button>
+      </mj-column>
+    </mj-section>
+
+    <mj-section mj-class="blue-section">
+      <mj-column width="100%">
+        <mj-text mj-class="text" color="#FFF" padding-left="25px" padding-right="25px" padding-bottom="20px" padding-top="20px">
+          S pozdravem<br/>
+          tkolymp.cz
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

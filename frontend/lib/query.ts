@@ -1,6 +1,7 @@
-import { ValueTypes, GraphQLTypes, InputType, Chain, OperationOptions, chainOptions, ScalarDefinition, ZeusScalars } from 'lib/zeus';
+import { $, ValueTypes, GraphQLTypes, InputType, Chain, OperationOptions, chainOptions, ScalarDefinition, ZeusScalars } from 'lib/zeus';
 import { useQuery, useMutation, QueryKey } from '@tanstack/react-query';
 import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
+export { $ }
 
 const scalars = ZeusScalars({
   BigInt: {
@@ -8,20 +9,20 @@ const scalars = ZeusScalars({
     decode: (e: unknown) => parseInt(e as string, 10),
   },
   JSON: {
-    encode: (e: unknown) => JSON.stringify(e),
-    decode: (e: unknown) => JSON.parse(e as string),
+    encode: (e: unknown) => e as any,
+    decode: (e: unknown) => e as any,
   },
   Date: {
-    decode: (e: unknown) => new Date(e as string),
-    encode: (e: unknown) => (e as Date).toDateString(),
+    decode: (e: unknown) => e as string,
+    encode: (e: unknown) => e as string,
   },
   Datetime: {
-    decode: (e: unknown) => new Date(e as string),
-    encode: (e: unknown) => (e as Date).toISOString(),
+    decode: (e: unknown) => e as string,
+    encode: (e: unknown) => e as string,
   },
   Time: {
-    decode: (e: unknown) => new Date(e as string),
-    encode: (e: unknown) => (e as Date).toTimeString(),
+    decode: (e: unknown) => e as string,
+    encode: (e: unknown) => e as string,
   },
 });
 

@@ -64,10 +64,6 @@ table.nocolor td, table.nocolor th { border: none; background: none; }
     padding:40px;
     color: #555;
 }
-#footer span {
-    display:block;
-    margin:10px 0 5px;
-}
 
 .dropdown-no-arrow::after {
     display: none !important;
@@ -265,9 +261,6 @@ $navbar-padding-y: 0;
     background-size: 100% 100%, cover;
     height: 100%;
     width: 100%;
-}
-.carousel-item img {
-    visibility: hidden;
 }
 
 .logo-image {

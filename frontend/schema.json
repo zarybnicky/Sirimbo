@@ -2232,7 +2232,6 @@
                 "uEmail",
                 "uTelefon",
                 "uNarozeni",
-                "uGroup",
                 "uStreet",
                 "uCity",
                 "uPostalCode",
@@ -5401,20 +5400,6 @@
                     "type": "string"
                 },
                 "yearofbirth": {
-                    "type": "string"
-                }
-            }
-        },
-        "UploadInput": {
-            "type": "object",
-            "required": [
-                "filename"
-            ],
-            "properties": {
-                "directory": {
-                    "type": "string"
-                },
-                "filename": {
                     "type": "string"
                 }
             }
@@ -11982,17 +11967,6 @@
                 "properties": {
                     "input": {
                         "$ref": "#/inputs/ProspectFormDancerInput"
-                    }
-                }
-            },
-            "uploadFile": {
-                "type": "object",
-                "required": [
-                    "input"
-                ],
-                "properties": {
-                    "input": {
-                        "$ref": "#/inputs/UploadInput"
                     }
                 }
             }

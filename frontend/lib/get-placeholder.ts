@@ -1,18 +1,3 @@
-import React from 'react';
-import { CssBaseline } from '@mui/material';
-import { ThemeProvider } from '@mui/styles';
-import { ProvideMockAuth } from 'lib/data/use-auth';
-import { theme } from './theme';
-
-export const StoryTemplate = ({ children }: { children: JSX.Element | JSX.Element[] }) => (
-  <ThemeProvider theme={theme}>
-    <CssBaseline />
-    <ProvideMockAuth>
-      {children}
-    </ProvideMockAuth>
-  </ThemeProvider>
-);
-
 export function getPlaceholder(
   width = 300,
   height = 150,

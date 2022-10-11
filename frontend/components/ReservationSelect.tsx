@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { $, Selector, NabidkasOrderBy, ModelTypes } from 'lib/zeus';
-import { formatDateRange } from 'lib/format-date-range';
 import { useTypedQuery } from 'lib/query';
+import { DateRange } from './DateRange';
+import { usePermissions } from 'lib/data/use-permissions';
 
 const ReservationView = (x: ModelTypes["Nabidka"]) => {
+  const permissions = usePermissions();
   const header = <div className="trenink-header">
     <div className="title">
       {x.userByNTrener?.uJmeno} {x.userByNTrener?.uPrijmeni}
@@ -17,7 +19,7 @@ const ReservationView = (x: ModelTypes["Nabidka"]) => {
                           </div>
                           </div>} */}
     </div>
-    <div className="date">{formatDateRange(x.nOd, x.nDo, '1')}</div>
+    <div className="date"><DateRange from={x.nOd} to={x.nDo} noYear /></div>
     {x?.nMaxPocetHod > 0 && <div>
       <span className="little"> Maximálně hodin/pár: </span>
       <span className="nadpis">{x?.nMaxPocetHod}</span>
@@ -106,7 +108,8 @@ export function ReservationSelect() {
     <select className='team-selection' value={reservation?.nId || 'none'} onChange={onChange}>
       <option value='none'> --vyberte nabídku-- </option>
       {reservations?.nabidkas?.nodes?.map(x => <option value={x.nId} key={x.nId}>
-        {`${formatDateRange(x.nOd, x.nDo)} - ${x.userByNTrener?.uJmeno} ${x.userByNTrener?.uPrijmeni}`}
+        <DateRange from={x.nOd} to={x.nDo} />
+        {` - ${x.userByNTrener?.uJmeno} ${x.userByNTrener?.uPrijmeni}`}
       </option>)}
     </select>
     {reservation ? ReservationView(reservation) : null}

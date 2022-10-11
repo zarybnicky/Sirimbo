@@ -5,6 +5,7 @@ import { $, UpozornenisOrderBy, Selector } from 'lib/zeus';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useTypedQuery } from 'lib/query';
+import parseISO from 'date-fns/parseISO';
 
 const AnnouncementQuery = Selector('Query')({
   upozornenis: [
@@ -44,7 +45,7 @@ const AnnouncementQuery = Selector('Query')({
 });
 
 export function AnnouncementList() {
-  const [limit] = React.useState(5);
+  const [limit] = React.useState(3);
   const [page, setPage] = React.useState(1);
   const { data } = useTypedQuery(['announcements', page], AnnouncementQuery, {}, {
     variables: { limit, offset: (page - 1) * limit },
@@ -58,20 +59,19 @@ export function AnnouncementList() {
   }
   const hasNext = total >= page * limit;
   const hasPrev = 0 < (page - 1) * limit;
-  console.log(nodes);
   return <>
     <Box display='flex' alignItems='center' justifyContent="right">
       {hasPrev ? <IconButton onClick={() => setPage(page - 1)}><NavigateBeforeIcon /></IconButton> : null}
       <Typography color="textSecondary" component="span">
-        {format(nodes[0]!.upTimestampAdd, 'd. M. y')}
+        {nodes.length > 0 ? format(new Date(nodes[0]!.upTimestampAdd), 'd. M. y') : ''}
         {' - '}
-        {format(nodes[nodes.length - 1]!.upTimestampAdd, 'd. M. y')}
+        {nodes.length > 0 ? format(new Date(nodes[nodes.length - 1]!.upTimestampAdd), 'd. M. y') : ''}
       </Typography>
       {hasNext ? <IconButton onClick={() => setPage(page + 1)}><NavigateNextIcon /></IconButton> : null}
     </Box>
     {nodes.map((a) => <Card key={a.upId} style={{ marginBottom: '1rem' }}>
       <CardContent>
-        <Typography color="textSecondary">{format(a.upTimestampAdd, 'd. M. y')}</Typography>
+        <Typography color="textSecondary">{format(new Date(a.upTimestampAdd), 'd. M. y')}</Typography>
         <Typography variant="h5" component="h2">{a.upNadpis}</Typography>
         <Typography color="textSecondary">{a.userByUpKdo?.uJmeno} {a.userByUpKdo?.uPrijmeni}</Typography>
         <div dangerouslySetInnerHTML={{ __html: a.upText }}></div>

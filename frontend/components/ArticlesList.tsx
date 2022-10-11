@@ -64,7 +64,7 @@ export function ArticleAdminList() {
             </>}
           </PopupState>
         </td>
-        <td>{a.atTimestampAdd && format(a.atTimestampAdd, 'd. M. y')}</td>
+        <td>{a.atTimestampAdd && format(new Date(a.atTimestampAdd), 'd. M. y')}</td>
       </tr>)}
     </tbody>
   </table >;

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Container } from '@mui/material';
 import { LocationCard } from 'components/cards/LocationCard';
-import { useLocations } from 'lib/data';
 import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
+import { getPlaceholder } from 'lib/get-placeholder';
 
 export default function LocationsPage() {
   const items = useLocations();
@@ -15,3 +15,54 @@ export default function LocationsPage() {
     <CallToAction />
   </>;
 };
+
+const useLocations = () => [
+  {
+    image: getPlaceholder(360, 240),
+    name: 'Taneční centrum při FZŠ Holečkova',
+    address: 'Holečkova 10, 779 00, Olomouc (vchod brankou u zastávy Povel - škola)',
+    href: 'https://www.zsholeckova.cz/',
+    mapHref: 'https://goo.gl/maps/swv3trZB2uvjcQfR6',
+    map: {
+      lat: 49.57963,
+      lng: 17.2495939,
+      zoom: 12,
+    },
+  },
+  {
+    image: getPlaceholder(360, 240),
+    name: 'Tělocvična Slovanského gymnázia',
+    address: 'Jiřího z Poděbrad 13, 779 00 Olomouc (vchod brankou z ulice U reálky)',
+    href: 'https://www.sgo.cz/',
+    mapHref: 'https://goo.gl/maps/PgsEra8TnYV4V7KGA',
+    map: {
+      lat: 49.59490,
+      lng: 17.26340,
+      zoom: 12,
+    },
+  },
+  {
+    image: getPlaceholder(360, 240),
+    name: 'T.J. Sokol Přerov',
+    address: 'Brabansko 2, 750 02 Přerov',
+    href: 'https://www.sokolprerov.cz/',
+    mapHref: 'https://goo.gl/maps/gP5cDBxJwgUS3hyz6',
+    map: {
+      lat: 49.4574331,
+      lng: 17.4480036,
+      zoom: 12,
+    },
+  },
+  {
+    image: getPlaceholder(360, 240),
+    name: 'Taneční sál Gala',
+    address: 'Západní 1, 796 04 Prostějov-Krasice (vchod vedle podnikové prodejny Gala)',
+    href: null,
+    mapHref: 'https://goo.gl/maps/Jtv6mdoSgBEdsiTN7',
+    map: {
+      lat: 49.4681836,
+      lng: 17.0837344,
+      zoom: 12,
+    },
+  },
+];

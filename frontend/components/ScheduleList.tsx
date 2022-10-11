@@ -106,7 +106,7 @@ export function RozpisAdminList() {
             </>}
           </PopupState>
         </td>
-        <td>{format(a.rDatum, 'd. M. y')}</td>
+        <td>{format(new Date(a.rDatum), 'd. M. y')}</td>
         <td>{a.rKde}</td>
         <td>
           <Checkbox checked={a.rVisible || false} onChange={() => toggleVisible({

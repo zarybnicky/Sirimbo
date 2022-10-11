@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { Alert, Card, Grid, CardContent, Container, Button, CardActions, Typography } from '@mui/material';
-import { AutocompleteElement, TextFieldElement, DatePickerElement, RadioButtonGroup } from 'react-hook-form-mui';
+import { useForm, AutocompleteElement, TextFieldElement, DatePickerElement, RadioButtonGroup } from 'react-hook-form-mui';
 import { Heading } from '../components/Heading';
 import { useCountries } from 'lib/data/use-countries';
 import { useCohorts } from 'lib/data/use-cohorts';
-
-import DateFnsUtils from 'date-fns';
-import { useForm } from 'react-hook-form';
+import { $, useTypedMutation } from 'lib/query';
+import format from 'date-fns/format';
 
 export const RegisterPage = () => {
   const countries = useCountries();
@@ -14,16 +13,59 @@ export const RegisterPage = () => {
   const [submitError, setSubmitError] = React.useState<string | null>(null);
   const { control, handleSubmit, watch, formState: { isDirty, isValid, isSubmitting } } = useForm();
 
+  const { mutate: register } = useTypedMutation(['register'], {
+    createUser: [{
+      input: {
+        user: {
+          uLogin: $('username', 'String!'), // to lowercasae
+          uPass: $('password', 'String!'), // hash!!
+          uJmeno: $('jmeno', 'String!'),
+          uPrijmeni: $('prijmeni', 'String!'),
+          uNarozeni: $('narozeni', 'String!'), // date
+          uRodneCislo: $('rodneCislo', 'String!'),
+          uPohlavi: $('pohlavi', 'String!'),
+          uNationality: $('nationality', 'String!'), // text
+          uEmail: $('email', 'String!'),
+          uTelefon: $('telefon', 'String!'),
+          uStreet: $('street', 'String!'),
+          uConscriptionNumber: $('popisne', 'String!'),
+          uOrientationNumber: $('orientacni', 'String!'),
+          uCity: $('city', 'String!'),
+          uDistrict: $('district', 'String!'),
+          uPostalCode: $('postal', 'String!'),
+          uSkupina: $('skupina', 'String!'),
+          uPoznamky: $('poznamky', 'String!'),
+          uDancer: $('dancer', 'Boolean!'),
+        },
+      },
+    }, {
+      user: {
+        uId: true,
+      },
+    }],
+  });
+
   //         $poznamkyMap = [
   //             'parent' => 'Rodič tanečníka: ' . ($_POST['dancer-name'] ?? null),
-  //             'dancer' => 'Tanečník/tanečnice',
+  //             'dancer' => '',
   //             'other' => 'Jiný vztah: ' . ($_POST['other'] ?? null)
   //         ];
 
-  const onSubmit = async (values: object) => {
+  const onSubmit = async (values: any) => {
     setSubmitError(null);
     try {
-      // register
+      register({
+        ...values,
+        username: values.username.toLowerCase(),
+        password: values.password,
+        narozeni: format(values.narozeni, 'y-M-d'),
+        poznamky: values.poznamky === 'dancer' ? 'Tanečník/tanečnice' :
+          values.poznamky === 'parent' ? `Rodič tanečníka: ${values.dancerName}` :
+            `Jiný vztah: ${values.other}`,
+        dancer: values.poznamky === 'dancer',
+        dancerName: undefined,
+        other: undefined,
+      });
     } catch (e) {
       if (e instanceof Error) {
         setSubmitError(e.message);
@@ -45,12 +87,16 @@ export const RegisterPage = () => {
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              {/* Pouze písmena bez diakritiky, číslice a podtržítka, 3 - 20 znaků */}
-              <TextFieldElement control={control} label="Přihlašovací jméno" name="username" autoComplete="username" required />
+              <TextFieldElement
+                control={control} label="Přihlašovací jméno" name="username" autoComplete="username" required
+                helperText="Pouze písmena bez diakritiky, číslice a podtržítka, 3 - 20 znaků"
+              />
             </Grid>
             <Grid item xs={12} sm={6}>
-              {/* Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků */}
-              <TextFieldElement control={control} label="Heslo" name="pass" type="password" autoComplete="new-password" required />
+              <TextFieldElement
+                control={control} label="Heslo" name="pass" type="password" autoComplete="new-password" required
+                helperText="Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků"
+              />
             </Grid>
 
             <Grid item xs={12} style={{ marginTop: '1rem' }}>

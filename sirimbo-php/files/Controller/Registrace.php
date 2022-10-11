@@ -3,34 +3,6 @@ namespace Olymp\Controller;
 
 class Registrace
 {
-    public static function get()
-    {
-        \Render::twig('Main/Registrace.twig', [
-            'skupiny' => \DBSkupiny::get(),
-            'countries' => \Countries::$countries,
-            'username' => '',
-            'pass' => '',
-            'jmeno' => '',
-            'prijmeni' => '',
-            'pohlavi' => '',
-            'email' => '',
-            'telefon' => '',
-            'narozeni' => '',
-            'rodnecislo' => '',
-            'poznamky' => '',
-            'street' => '',
-            'popisne' => '',
-            'orientacni' => '',
-            'district' => '',
-            'city' => '',
-            'postal' => '',
-            'nationality' => '203',
-            'dancerName' => '',
-            'skupina' => '0',
-            'other' => ''
-        ]);
-    }
-
     public static function post()
     {
         $narozeni = (string) new \Date($_POST['narozeni'] ?? null);

@@ -3,12 +3,6 @@ namespace Olymp\Controller\Admin;
 
 class Akce
 {
-    public static function list()
-    {
-        \Permissions::checkError('akce', P_OWNED);
-        \Render::twig('Admin/Akce.twig', ['data' => \DBAkce::getWithItemCount()]);
-    }
-
     public static function add()
     {
         \Permissions::checkError('akce', P_OWNED);

@@ -1,12 +1,15 @@
 import * as React from 'react';
-import { formatDateRange } from 'lib/format-date-range';
+import format from 'date-fns/format';
 
 interface DateRangeProps {
-  noYear?: string;
-  from: Date;
-  to?: Date;
+  noYear?: boolean;
+  from: string;
+  to?: string;
 }
 
 export function DateRange({ noYear, from, to }: DateRangeProps) {
-  return <span>{formatDateRange(from, to, noYear)}</span>;
+  const f = noYear ? 'd. M.' : 'd. M. y';
+  return <>{(to && from != to)
+    ? format(new Date(from), f) + ' - ' + format(new Date(to), f)
+    : format(new Date(from), f)}</>;
 }

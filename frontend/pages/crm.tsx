@@ -59,7 +59,7 @@ export default function CrmPage() {
               <TableCell>{row.data?.phone}</TableCell>
               <TableCell>{row.data?.yearofbirth}</TableCell>
               <TableCell>{row.cohort}</TableCell>
-              <TableCell>{row.updatedAt && format(row.updatedAt, 'd. M. y')}</TableCell>
+              <TableCell>{row.updatedAt && format(new Date(row.updatedAt), 'd. M. y')}</TableCell>
             </TableRow>
           ))}
         </TableBody>

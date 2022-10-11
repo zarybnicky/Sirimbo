@@ -1,4 +1,3 @@
-import { getPlaceholder } from '../test-utils';
 import { $, GalerieFotosOrderBy, Selector } from 'lib/zeus';
 import format from 'date-fns/format';
 import { useTypedQuery } from 'lib/query';
@@ -94,7 +93,7 @@ export const useGallery = (dir: number): {
       id: x.gfId,
       name: x.gfName,
       href: `/gallery/${x.gfIdRodic}/photo/${x.gfId}`,
-      date: x.gfTimestamp ? format(x.gfTimestamp, 'd. M. y') : '',
+      date: x.gfTimestamp ? format(new Date(x.gfTimestamp), 'd. M. y') : '',
       img: decodeURIComponent(`/galerie/${x.gfPath}`),
       imgThumb: decodeURIComponent(`/galerie/thumbnails/${x.gfPath}`),
     };
@@ -113,34 +112,3 @@ export const useGallery = (dir: number): {
     images,
   };
 };
-
-export const useMockGallery = () => [
-  {
-    img: getPlaceholder(1600, 900),
-    imgThumb: getPlaceholder(300, 200),
-    href: "/o-nas",
-    name: "Galerie Olomouc",
-    date: "20. 10. 2019",
-  },
-  {
-    img: getPlaceholder(1600, 900),
-    imgThumb: getPlaceholder(300, 200),
-    href: "/o-nas",
-    name: "Galerie Olomouc",
-    date: "20. 10. 2019",
-  },
-  {
-    img: getPlaceholder(1600, 900),
-    imgThumb: getPlaceholder(300, 200),
-    href: "/o-nas",
-    name: "Galerie Olomouc",
-    date: "20. 10. 2019",
-  },
-  {
-    img: getPlaceholder(1600, 900),
-    imgThumb: getPlaceholder(300, 200),
-    href: "/o-nas",
-    name: "Galerie Olomouc",
-    date: "20. 10. 2019",
-  },
-];

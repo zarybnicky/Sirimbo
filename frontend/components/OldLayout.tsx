@@ -1,6 +1,6 @@
 import { useAuth } from 'lib/data/use-auth';
 import { useRouter } from 'next/router';
-import { Col, Container, Dropdown, Row } from 'react-bootstrap';
+import { Col, Container, Dropdown, Navbar, Row } from 'react-bootstrap';
 import { LoginForm } from "components/LoginForm";
 import { NextLinkComposed } from './Link';
 import { FormControlLabel, Switch } from '@mui/material';
@@ -27,7 +27,7 @@ const topMenu: NavbarItem[] = [
 
 // if logged in
 const bottomMenu: NavbarItem[] = [
-  ['Nástěnka', '/member'],
+  ['Nástěnka', '/dashboard'],
   ['Tréninky', '/member/treninky'],
   ['Akce', '/member/akce'],
   ['Dokumenty', '/member/dokumenty'],
@@ -101,6 +101,8 @@ export const OldLayout: React.FC = ({ children }) => {
               <img alt="" src="/style/new-logo-oneline.png" />
             </NextLinkComposed>
           </h1>
+
+
           <button className="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target=".navbars">
             <span className="navbar-toggler-icon"></span>
           </button>
@@ -121,14 +123,9 @@ export const OldLayout: React.FC = ({ children }) => {
                   </li>
                 ) : <>
                   <li className="nav-item">
-                    <Dropdown alignRight>
-                      <Dropdown.Toggle variant="danger" style={{ border: 'transparent', backgroundColor: 'transparent' }}>
-                        <i className="fa-solid fa-user" /> Přihlásit
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu style={{ minWidth: '250px', padding: 0 }}>
-                        <LoginForm />
-                      </Dropdown.Menu>
-                    </Dropdown>
+                    <NextLinkComposed className="nav-link active" href="/login">
+                      <i className="fa-solid fa-user" /> Přihlásit
+                    </NextLinkComposed>
                   </li>
                 </>}
               </ul>
@@ -139,7 +136,7 @@ export const OldLayout: React.FC = ({ children }) => {
         {user && (
           <div className="w-100" id="navbar-second">
             <Container>
-              <div className="navbars collapse navbar-collapse ml-lg-0 ml-3">
+              <Navbar.Collapse className="navbars ml-lg-0 ml-3">
                 <div className="flex-column" style={{ flexGrow: 1 }}>
                   <ul className="navbar-nav">
                     {bottomMenu.map((item, i) => (
@@ -147,7 +144,7 @@ export const OldLayout: React.FC = ({ children }) => {
                     ))}
                   </ul>
                 </div>
-              </div>
+              </Navbar.Collapse>
             </Container>
           </div>
         )}
