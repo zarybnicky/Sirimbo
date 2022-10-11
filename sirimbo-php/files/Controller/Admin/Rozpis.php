@@ -3,25 +3,6 @@ namespace Olymp\Controller\Admin;
 
 class Rozpis
 {
-    public static function list()
-    {
-        \Permissions::checkError('rozpis', P_OWNED);
-        \Render::twig('Admin/Rozpis.twig', [
-            'data' => array_map(
-                fn($item) => [
-                    'id' => $item['r_id'],
-                    'fullName' => "{$item['u_jmeno']} {$item['u_prijmeni']}",
-                    'date' => $item['r_datum'],
-                    'kde' => $item['r_kde'],
-                    'visible' => $item['r_visible'],
-                ],
-                \Permissions::check('rozpis', P_ADMIN)
-                ? \DBRozpis::getSchedules(true)
-                : \DBRozpis::getSchedulesByTrainer(\Session::getUser()->getId(), true)
-            )
-        ]);
-    }
-
     public static function add()
     {
         \Permissions::checkError('rozpis', P_OWNED);

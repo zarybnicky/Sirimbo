@@ -41,20 +41,6 @@ EOS;
         Mailer::_mail($to, $subject, $message);
     }
 
-    public static function newUserNotice($to, $username, $total_users = -1)
-    {
-        if ($total_users == -1) {
-            $total_users = count(\DBUser::getNewUsers());
-        }
-
-        $subject = "[Olymp] Nová registrace ($username)";
-        $message = "Na TKOlymp.cz se registroval uživatel $username a čeká na potvrzení registrace.\n";
-        if ($total_users > 0) {
-            $message .= "Celkem nepotvrzených uživatelů: $total_users";
-        }
-        Mailer::_mail($to, $subject, $message);
-    }
-
     public static function registrationConfirmNotice($to, $username)
     {
         $subject = "[Olymp] Potvrzení registrace";

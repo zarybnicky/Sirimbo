@@ -225,13 +225,15 @@ create policy admin_all on users to administrator using (true) with check (true)
 create policy all_view on users for select using (true);
 create policy manage_own on users for all
   using (u_id = current_user_id()) with check (u_id = current_user_id());
-grant all on users to member;
+create policy register_anonymous on users for insert with check (u_confirmed=false);
 
 alter table users alter column u_confirmed set default false;
 alter table users alter column u_group set default 0;
 alter table users alter column u_teacher set default false;
 alter table users alter column u_gdpr_signed_at set default CURRENT_TIMESTAMP;
-grant insert (u_login, u_pass, u_jmeno, u_prijmeni, u_pohlavi, u_email,
+
+grant all on users to member;
+grant insert (u_id, u_login, u_pass, u_jmeno, u_prijmeni, u_pohlavi, u_email,
 u_telefon, u_narozeni, u_rodne_cislo, u_poznamky, u_dancer, u_street,
 u_conscription_number, u_orientation_number, u_district, u_city,
 u_postal_code, u_nationality) on users to anonymous;
@@ -263,6 +265,10 @@ alter table video_source enable row level security;
 create policy admin_all on video_source to administrator using (true) with check (true);
 create policy all_view on video_source for select using (true);
 grant all on video_source to anonymous;
+
+grant usage, select on all sequences in schema public to anonymous;
+grant execute on all functions in schema public to anonymous;
+
 
 -- alter table app_public.posts enable row level security;
 -- grant select on app_public.user_feed_posts to :DATABASE_VISITOR;

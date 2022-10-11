@@ -113,9 +113,6 @@ function makeRouter()
 {
     $router = new \Olymp\Router('Olymp.Controller');
 
-    $router->get('/registrace', '@Registrace::get');
-    $router->post('/registrace', '@Registrace::post');
-
     // To convert
     // $router->get('/member/download', '@Member::download');
     // $router->get('/admin/users/getMsmtCsv', '@Admin.Users::getMsmtCsv');
@@ -167,8 +164,6 @@ function makeRouter()
 
     $router->get('/admin/akce/dokumenty/([0-9]+)', '@Admin.Akce::dokumenty');
     $router->post('/admin/akce/dokumenty/([0-9]+)', '@Admin.Akce::dokumentyPost');
-
-    $router->get('/admin/aktuality', '@Admin.Aktuality::list');
 
     $router->get('/admin/aktuality/add', '@Admin.Aktuality::add');
     $router->post('/admin/aktuality/add', '@Admin.Aktuality::addPost');
@@ -245,8 +240,6 @@ function makeRouter()
 
     $router->get('/admin/users/statistiky', '@Admin.Users::statistiky');
 
-    $router->get('/admin/galerie', '@Admin.Galerie::list');
-
     $router->get('/admin/galerie/file/upload', '@Admin.GalerieFile::upload');
     $router->post('/admin/galerie/file/upload', '@Admin.GalerieFile::uploadPost');
 
@@ -267,8 +260,6 @@ function makeRouter()
     $router->get('/admin/galerie/directory/remove/([0-9]+)', '@Admin.GalerieDirectory::remove');
     $router->post('/admin/galerie/directory/remove/([0-9]+)', '@Admin.GalerieDirectory::removePost');
 
-    $router->get('/admin/rozpis', '@Admin.Rozpis::list');
-
     $router->get('/admin/rozpis/add', '@Admin.Rozpis::add');
     $router->post('/admin/rozpis/add', '@Admin.Rozpis::addPost');
 
@@ -281,8 +272,6 @@ function makeRouter()
 
     $router->get('/admin/rozpis/detail/([0-9]+)', '@Admin.RozpisDetail::detail');
     $router->post('/admin/rozpis/detail/([0-9]+)', '@Admin.RozpisDetail::detailPost');
-
-    $router->get('/admin/nabidka', '@Admin.Nabidka::list');
 
     $router->get('/admin/nabidka/add', '@Admin.Nabidka::add');
     $router->post('/admin/nabidka/add', '@Admin.Nabidka::addPost');

@@ -3,17 +3,6 @@ namespace Olymp\Controller\Admin;
 
 class Aktuality
 {
-    public static function list()
-    {
-        \Permissions::checkError('aktuality', P_OWNED);
-        \Render::twig('Admin/Aktuality.twig', [
-            'data' => \DBAktuality::getAktuality(
-                1,
-                \Permissions::check('aktuality', P_ADMIN) ? null : \Session::getUser()->getId()
-            ),
-        ]);
-    }
-
     public static function add()
     {
         \Permissions::checkError('aktuality', P_OWNED);

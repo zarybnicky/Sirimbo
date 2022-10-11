@@ -9,6 +9,10 @@ import { NextLinkComposed } from "./Link"
 import { useAuth } from 'lib/data/use-auth';
 import { useConfig } from 'lib/use-config';
 import { DateRange } from './DateRange';
+import { ReservationSelect } from './ReservationSelect';
+import { EventParticipantExport } from './EventParticipantExport';
+import { CohortExport } from './CohortExport';
+import { QRPayment } from './QRPayment';
 
 export type PhpPage = {
   meta: string;
@@ -76,6 +80,22 @@ const options = (onSubmit: (e: React.FormEvent<HTMLFormElement>) => void): HTMLR
 
       if (domNode.name === 'date-range') {
         return <DateRange {...domNode.attribs as any} />
+      }
+
+      if (domNode.name === 'reservation-select') {
+        return <ReservationSelect />;
+      }
+
+      if (domNode.name === 'event-participant-export') {
+        return <EventParticipantExport {...domNode.attribs as any} />;
+      }
+
+      if (domNode.name === 'cohort-export') {
+        return <CohortExport {...domNode.attribs as any} />;
+      }
+
+      if (domNode.name === 'qr-payment') {
+        return <QRPayment {...domNode.attribs as any} />;
       }
 
       if (domNode.name === 'button') {

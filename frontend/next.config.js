@@ -32,7 +32,7 @@ module.exports = withBundleAnalyzer(withSentryConfig({
     return [
       { source: '/home', destination: '/', permanent: true },
       { source: '/forgotten-password', destination: '/nopassword', permanent: true },
-      { source: '/register', destination: '/registrace', permanent: true },
+      { source: '/registrate', destination: '/register', permanent: true },
       { source: '/kontakt', destination: '/contact', permanent: true },
       { source: '/oklubu/saly', destination: '/o-nas/kde-trenujeme', permanent: true },
       { source: '/oklubu/klubovi-treneri', destination: '/o-nas/treneri', permanent: true },

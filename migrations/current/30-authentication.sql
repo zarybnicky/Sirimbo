@@ -73,7 +73,7 @@ begin
   perform graphile_worker.add_job('notify_admin_registration', json_build_object('id', NEW.u_id));
   return NEW;
 end;
-$$ language plpgsql volatile;
+$$ language plpgsql volatile security definer;
 select plpgsql_check_function('app_private.tg_users__notify_admin', 'users');
 
 drop trigger if exists _500_notify_admin ON users;
@@ -86,7 +86,7 @@ create or replace function app_private.tg_users__encrypt_password() returns trig
 declare
   v_salt varchar;
 begin
-  if length(NEW.u_pas) <> 40 then
+  if length(NEW.u_pass) <> 40 then
       select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
       NEW.u_pass := encode(digest(v_salt || NEW.u_pass || v_salt, 'sha1'), 'hex');
   end if;

@@ -3,7 +3,6 @@ namespace Olymp\Controller;
 
 class Member
 {
-
     public static function download()
     {
         \Permissions::checkError('dokumenty', P_VIEW);

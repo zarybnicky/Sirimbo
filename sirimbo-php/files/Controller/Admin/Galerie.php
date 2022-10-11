@@ -3,12 +3,6 @@ namespace Olymp\Controller\Admin;
 
 class Galerie
 {
-    public static function list()
-    {
-        \Permissions::checkError('galerie', P_OWNED);
-        \Render::twig('Admin/Galerie.twig', ['data' => \DBGalerie::getDirs()]);
-    }
-
     public static function getCanonicalName(string $file): string
     {
         return trim(str_replace(GALERIE, '', $file), '/');

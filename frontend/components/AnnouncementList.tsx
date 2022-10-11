@@ -5,7 +5,6 @@ import { $, UpozornenisOrderBy, Selector } from 'lib/zeus';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useTypedQuery } from 'lib/query';
-import parseISO from 'date-fns/parseISO';
 
 const AnnouncementQuery = Selector('Query')({
   upozornenis: [
@@ -71,9 +70,15 @@ export function AnnouncementList() {
     </Box>
     {nodes.map((a) => <Card key={a.upId} style={{ marginBottom: '1rem' }}>
       <CardContent>
-        <Typography color="textSecondary">{format(new Date(a.upTimestampAdd), 'd. M. y')}</Typography>
-        <Typography variant="h5" component="h2">{a.upNadpis}</Typography>
-        <Typography color="textSecondary">{a.userByUpKdo?.uJmeno} {a.userByUpKdo?.uPrijmeni}</Typography>
+        <Typography color="textSecondary">
+          {format(new Date(a.upTimestampAdd), 'd. M. y')}
+        </Typography>
+        <Typography variant="h5" component="h2">
+          {a.upNadpis}
+        </Typography>
+        <Typography color="textSecondary">
+          {a.userByUpKdo?.uJmeno} {a.userByUpKdo?.uPrijmeni}
+        </Typography>
         <div dangerouslySetInnerHTML={{ __html: a.upText }}></div>
         {a.upozorneniSkupiniesByUpsIdRodic?.nodes?.length <= 0 ? null : <div>
           {a.upozorneniSkupiniesByUpsIdRodic.nodes.map((g) =>
@@ -81,7 +86,7 @@ export function AnnouncementList() {
               key={g.skupinyByUpsIdSkupina?.sColorRgb}
               title={g.skupinyByUpsIdSkupina?.sName}
               style={{ backgroundColor: g.skupinyByUpsIdSkupina?.sColorRgb }}
-            ></div>
+            />
           )}
         </div>}
       </CardContent>
