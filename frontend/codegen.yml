@@ -27,5 +27,4 @@ generates:
       exposeQueryKeys: true
       exposeMutationKeys: true
       exposeFetcher: true
-      fetcher:
-        endpoint: 'endpointUrl'
+      fetcher: './lib/query#fetcher'

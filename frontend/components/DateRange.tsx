@@ -9,7 +9,8 @@ interface DateRangeProps {
 
 export function DateRange({ noYear, from, to }: DateRangeProps) {
   const f = noYear ? 'd. M.' : 'd. M. y';
-  return <>{(to && from != to)
-    ? format(new Date(from), f) + ' - ' + format(new Date(to), f)
-    : format(new Date(from), f)}</>;
+  if (to && from != to) {
+    return <>{format(new Date(from), f) + ' - ' + format(new Date(to), f)}</>;
+  }
+  return <>{format(new Date(from), f)}</>;
 }

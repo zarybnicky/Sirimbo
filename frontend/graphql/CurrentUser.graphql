@@ -93,3 +93,9 @@ mutation Register($input: CreateUserInput!) {
     }
   }
 }
+
+mutation ResetPassword($input: ResetPasswordInput!) {
+  resetPassword(input: $input) {
+    __typename
+  }
+}

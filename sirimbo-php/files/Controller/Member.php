@@ -7,14 +7,16 @@ class Member
     {
         \Permissions::checkError('dokumenty', P_VIEW);
         if (!$_GET['id']) {
-            \Redirect::to('/member/dokumenty');
+            http_response_code(400);
+            return;
         }
 
         $data = \DBDokumenty::getSingleDokument($_GET['id']);
         $path = $data['d_path'];
         if (!is_file($path) || !($file = fopen($path, 'rb'))) {
-            \Message::warning('Soubor nebyl nalezen.');
-            \Redirect::to('/member/dokumenty');
+            echo "Soubor nebyl nalezen.";
+            http_response_code(404);
+            return;
         }
 
         header('Pragma: no-cache');
@@ -22,27 +24,5 @@ class Member
         header('Content-Disposition: inline; filename="' . $data['d_filename'] . '"');
         fpassthru($file);
         fclose($file);
-    }
-
-    public static function dokumenty()
-    {
-        \Permissions::checkError('dokumenty', P_VIEW);
-        $kat = $_GET['kat'] ?? '';
-        \Render::twig('Member/Dokumenty.twig', [
-            'kat' => $kat,
-            'categories' => ['' => '--- vše ---'] + Admin\Dokumenty::$types,
-            'data' => array_map(
-                fn($item) => [
-                    'id' => $item['d_id'],
-                    'name' => $item['d_name'],
-                    'fileName' => $item['d_filename'],
-                    'kategorie' => Admin\Dokumenty::$types[$item['d_kategorie']],
-                    'uploadedBy' => "{$item['u_jmeno']}\u{00A0}{$item['u_prijmeni']}",
-                ],
-                ctype_digit($kat)
-                ? \DBDokumenty::getDokumentyByKategorie($kat)
-                : \DBDokumenty::getDokumenty()
-            )
-        ]);
     }
 }

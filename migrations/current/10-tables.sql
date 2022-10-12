@@ -2,6 +2,7 @@ drop view if exists nabidka_admin;
 drop view if exists rozpis_admin;
 drop view if exists aktuality_admin;
 drop table if exists aktuality_foto;
+drop table if exists users_skupiny;
 
 -- ************** akce *************
 select app_private.drop_policies('public.akce');
@@ -32,7 +33,7 @@ select app_private.drop_policies('public.dokumenty');
 alter table dokumenty enable row level security;
 create policy admin_all on dokumenty to administrator using (true) with check (true);
 create policy all_view on dokumenty for select using (true);
-grant all on dokumenty to anonymous;
+grant all on dokumenty to member;
 
 -- ************** galerie_dir **************
 select app_private.drop_policies('public.galerie_dir');
@@ -239,13 +240,6 @@ grant insert (u_id, u_login, u_pass, u_jmeno, u_prijmeni, u_pohlavi, u_email,
 u_telefon, u_narozeni, u_rodne_cislo, u_poznamky, u_dancer, u_street,
 u_conscription_number, u_orientation_number, u_district, u_city,
 u_postal_code, u_nationality) on users to anonymous;
-
--- ************** users_skupiny **************
-select app_private.drop_policies('public.users_skupiny');
-alter table users_skupiny enable row level security;
-create policy admin_all on users_skupiny to administrator using (true) with check (true);
-create policy all_view on users_skupiny for select using (true);
-grant all on users_skupiny to member;
 
 -- ************** video **************
 select app_private.drop_policies('public.video');

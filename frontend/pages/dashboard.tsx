@@ -7,9 +7,10 @@ import { useRouter } from 'next/router';
 export const DashboardPage = ({ }) => {
   const router = useRouter();
   const { user, isLoading } = useAuth();
-  console.log(user, isLoading);
+
   if (!isLoading && !user) {
     router.push('/');
+    return;
   }
   // Copy AnnouncementList
   // Copy ScheduleList

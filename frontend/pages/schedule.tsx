@@ -1,92 +1,56 @@
 import * as React from 'react';
 import format from 'date-fns/format';
 import { Card, CardContent, Container, Grid, Typography } from '@mui/material';
-import { useAuth } from 'lib/data/use-auth';
-import { PermissionLevel, usePermissions } from 'lib/data/use-permissions';
+import { usePermissions } from 'lib/data/use-permissions';
 import { DateRange } from 'components/DateRange';
-import { ReservationFragment, ScheduleItemFragment, ScheduleFragment, useReservationRangeQuery, useScheduleRangeQuery, ReservationItemFragment } from 'index';
+import { useReservationRangeQuery, useScheduleRangeQuery } from 'index';
+import parse from 'date-fns/parse';
+import { Dropdown } from 'components/Dropdown';
 
 export const SchedulePage = ({ }) => {
   // require or redirect
-  const { user, couple } = useAuth();
   const perms = usePermissions();
   const [startDate] = React.useState('2022-02-01');
   const [endDate] = React.useState('2022-03-01');
 
-  const { data: schedules } = useScheduleRangeQuery({
-    startDate,
-    endDate,
-  });
-  const { data: reservations } = useReservationRangeQuery({
-    startDate,
-    endDate,
-  });
+  const { data: schedules } = useScheduleRangeQuery({ startDate, endDate });
+  const { data: reservations } = useReservationRangeQuery({ startDate, endDate });
 
-  const canEditSchedule = (trainerId: string) => (
-    (perms.peRozpis >= PermissionLevel.P_OWNED && user?.uId == trainerId) ||
-    perms.peRozpis >= PermissionLevel.P_ADMIN
-  );
-  const canSignUp = (lesson: ScheduleItemFragment, item: ScheduleFragment) => (
-    perms.peRozpis >= PermissionLevel.P_MEMBER &&
-    (!lesson.riPartner || lesson.riPartner === '0') && !item.rLock && !lesson.riLock
-  );
-  const canSignOut = (lesson: ScheduleItemFragment, item: ScheduleFragment) => (
-    (!lesson.riPartner || lesson.riPartner === '0') && !item.rLock && !lesson.riLock && (
-      (perms.peRozpis >= PermissionLevel.P_MEMBER && couple?.pId == lesson.riPartner) ||
-      (perms.peRozpis >= PermissionLevel.P_OWNED && user?.uId == item.rTrener) ||
-      perms.peRozpis >= PermissionLevel.P_ADMIN
-    )
-  );
-  const canEditReservation = (trainerId: string) => (
-    (perms.peNabidka >= PermissionLevel.P_OWNED && user?.uId == trainerId) ||
-    perms.peNabidka >= PermissionLevel.P_ADMIN
-  );
-  const canReserve = (item: ReservationFragment) => (
-    perms.peNabidka >= PermissionLevel.P_MEMBER && !item.nLock &&
-    item.nPocetHod > item.nabidkaItemsByNiIdRodic.nodes.reduce((n, x) => n + x.niPocetHod, 0)
-  );
-  const canCancel = (lesson: ReservationItemFragment, item: ReservationFragment) => (
-    (!lesson.niPartner || lesson.niPartner === '0') && !item.nLock && !lesson.niLock && (
-      (perms.peNabidka >= PermissionLevel.P_MEMBER && couple?.pId == lesson.niPartner) ||
-      (perms.peNabidka >= PermissionLevel.P_OWNED && user?.uId == item.nTrener) ||
-      perms.peNabidka >= PermissionLevel.P_ADMIN
-    )
-  );
+  const now = new Date();
 
   const scheduleList = (schedules?.schedulesForRange?.nodes || []).map((item, i) => (
-    <Grid item key={i}>
+    <Grid item key={i} md={6} lg={4} xl={3}>
       <Card>
         <CardContent>
           <div className="h5 mb-0">
             {item.userByRTrener?.uJmeno} {item.userByRTrener?.uPrijmeni}
-            {item.userByRTrener && canEditSchedule(item.userByRTrener?.uId) && (
-              <div className="btn-group">
-                <button type="button" className="btn btn-xs pt-0" data-toggle="dropdown">
-                  <img alt="Upravit" width="16" src="/style/icon-gear.png" />
-                </button>
-                <div className="dropdown-menu dropdown-menu-right">
-                  <a className="dropdown-item" href={`/admin/rozpis/edit/${item.rId}`}>Upravit</a>
-                  <a className="dropdown-item" href={`/admin/rozpis/detail/${item.rId}`}>Upravit lekce</a>
-                </div>
-              </div>
-            )}
+            {item.userByRTrener && perms.canEditSchedule(item) && <Dropdown
+              button={<img alt="Upravit" width="16" src="/style/icon-gear.png" />}
+              options={[
+                { title: "Upravit", href: "`/admin/rozpis/edit/${item.rId}`" },
+                { title: "Upravit rezervace", href: "`/admin/rozpis/detail/${item.rId}`" },
+              ]}
+            />}
           </div>
-          <div className="date">
-            {format(new Date(item.rDatum), 'd. M. y')}
-          </div>
+          <div className="date">{format(new Date(item.rDatum), 'd. M. y')}</div>
           <div>{item.rKde}</div>
           <hr />
-          {(item.rozpisItemsByRiIdRodic.nodes || []).map((lesson, i) => (
+
+          {item.rozpisItemsByRiIdRodic.nodes?.map((lesson, i) => (
             <Grid container key={i} spacing={2}>
-              <Grid item>{new Date(lesson.riOd).toTimeString()}-{new Date(lesson.riDo).toTimeString()}</Grid>
+              <Grid item>
+                {format(parse(lesson.riOd, "HH:mm:ss", now), 'HH:mm')}
+                {'-'}
+                {format(parse(lesson.riDo, "HH:mm:ss", now), 'HH:mm')}
+              </Grid>
               <Grid item style={{ flexGrow: 1 }}>
-                {canSignUp(lesson, item) ? (
+                {perms.canSignUp(item, lesson) ? (
                   <button name="action" value="signup" className="py-0 btn btn-outline-primary btn-sm">+</button>
                 ) : (
                   <>{lesson.paryByRiPartner?.userByPIdPartner?.uJmeno} {lesson.paryByRiPartner?.userByPIdPartner?.uPrijmeni}</>
                 )}
               </Grid>
-              {canSignOut(lesson, item) && (
+              {perms.canSignOut(item, lesson) && (
                 <Grid item>
                   <button name="action" value="signout" className="py-0 btn btn-outline-primary btn-sm">&times;</button>
                 </Grid>
@@ -99,22 +63,18 @@ export const SchedulePage = ({ }) => {
   ));
 
   const reservationList = (reservations?.reservationsForRange?.nodes || []).map((item, i) => (
-    <Grid item key={i}>
+    <Grid item key={i} md={6} lg={4} xl={3}>
       <Card>
         <CardContent>
           <div className="h5 mb-0">
             {item.userByNTrener?.uJmeno} {item.userByNTrener?.uPrijmeni}
-            {canEditReservation(item.nTrener) && (
-              <div className="btn-group">
-                <button type="button" className="btn btn-xs pt-0" data-toggle="dropdown">
-                  <img alt="Upravit" width="16" src="/style/icon-gear.png" />
-                </button>
-                <div className="dropdown-menu dropdown-menu-right">
-                  <a className="dropdown-item" href={`/admin/nabidka/edit/${item.nId}`}>Upravit</a>
-                  <a className="dropdown-item" href={`/admin/nabidka/detail/${item.nId}`}>Upravit rezervace</a>
-                </div>
-              </div>
-            )}
+            {perms.canEditReservation(item) && <Dropdown
+              button={<img alt="Upravit" width="16" src="/style/icon-gear.png" />}
+              options={[
+                { title: "Upravit", href: "`/admin/nabidka/edit/${item.nId}`" },
+                { title: "Upravit rezervace", href: "`/admin/nabidka/detail/${item.nId}`" },
+              ]}
+            />}
           </div>
           <div className="date"><DateRange from={item.nOd} to={item.nDo} /></div>
 
@@ -136,15 +96,14 @@ export const SchedulePage = ({ }) => {
                 {lesson.paryByNiPartner?.userByPIdPartner?.uJmeno}
                 {lesson.paryByNiPartner?.userByPIdPartner?.uPrijmeni}
               </div>
-              {canCancel(lesson, item) && (
+              {perms.canCancelReservation(item, lesson) && (
                 <div className="col-2">
-                  <button name="p_id" value="{lesson.p_id}"
-                    className="pl-2 py-0 btn btn-outline-primary btn-sm">&times;</button>
+                  <button name="p_id" value="{lesson.p_id}" className="pl-2 py-0 btn btn-outline-primary btn-sm">&times;</button>
                 </div>
               )}
             </div>
           ))}
-          {canReserve(item) && (
+          {perms.canMakeReservation(item) && (
             <div className="form-inline text-center" style={{ padding: '10px 0 5px' }}>
               <input className="w-auto form-control" type="text" placeholder="Počet hodin" name="hodiny" />
               <button className="btn btn-primary">Rezervovat</button>
@@ -155,7 +114,7 @@ export const SchedulePage = ({ }) => {
     </Grid>
   ));
 
-  return <Container maxWidth="lg" style={{ paddingTop: '2rem' }}>
+  return <Container maxWidth="xl" style={{ paddingTop: '2rem' }}>
     <Typography align="right" variant="h4" component="h2">Tento týden</Typography>
     <Grid container spacing={2}>
       {scheduleList}

@@ -113,20 +113,10 @@ function makeRouter()
 {
     $router = new \Olymp\Router('Olymp.Controller');
 
-    // To convert
-    // $router->get('/member/download', '@Member::download');
-    // $router->get('/admin/users/getMsmtCsv', '@Admin.Users::getMsmtCsv');
-    // $router->post('/admin/platby/raw', '@Admin.PlatbyRaw::post');
-
     $router->get('/member/akce', '@Member.Akce::list');
     $router->post('/member/akce', '@Member.Akce::listPost');
 
     $router->get('/member/akce/([0-9]+)', '@Member.Akce::single');
-
-    $router->get('/member/treninky', '@Member.Schedule::get');
-    $router->post('/member/treninky', '@Member.Schedule::post');
-
-    $router->get('/member/dokumenty', '@Member::dokumenty');
 
     $router->get('/member/download', '@Member::download');
 

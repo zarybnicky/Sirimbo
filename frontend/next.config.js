@@ -31,16 +31,18 @@ module.exports = withBundleAnalyzer(withSentryConfig({
   async redirects() {
     return [
       { source: '/home', destination: '/', permanent: true },
-      { source: '/forgotten-password', destination: '/nopassword', permanent: true },
-      { source: '/registrate', destination: '/register', permanent: true },
+      { source: '/nopassword', destination: '/forgotten-password', permanent: true },
+      { source: '/registrace', destination: '/register', permanent: true },
       { source: '/kontakt', destination: '/contact', permanent: true },
       { source: '/oklubu/saly', destination: '/o-nas/kde-trenujeme', permanent: true },
       { source: '/oklubu/klubovi-treneri', destination: '/o-nas/treneri', permanent: true },
       { source: '/oklubu/externi-treneri', destination: '/o-nas/treneri', permanent: true },
       { source: '/member', destination: '/dashboard', permanent: true },
       { source: '/member/home', destination: '/dashboard', permanent: true },
-      { source: '/member/rozpis', destination: '/member/treninky', permanent: true },
-      { source: '/member/nabidka', destination: '/member/treninky', permanent: true },
+      { source: '/member/rozpis', destination: '/schedule', permanent: true },
+      { source: '/member/nabidka', destination: '/schedule', permanent: true },
+      { source: '/member/treninky', destination: '/schedule', permanent: true },
+      { source: '/member/dokumenty', destination: '/documents', permanent: true },
     ];
   },
 

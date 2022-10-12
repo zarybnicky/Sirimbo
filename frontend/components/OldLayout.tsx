@@ -27,9 +27,9 @@ const topMenu: NavbarItem[] = [
 // if logged in
 const bottomMenu: NavbarItem[] = [
   ['Nástěnka', '/dashboard'],
-  ['Tréninky', '/member/treninky'],
+  ['Tréninky', '/schedule'],
   ['Akce', '/member/akce'],
-  ['Dokumenty', '/member/dokumenty'],
+  ['Dokumenty', '/documents'],
   ['Členové', '/member/clenove'],
   ['Profil', '/member/profil'],
   'w-100',
@@ -100,7 +100,6 @@ export const OldLayout: React.FC = ({ children }) => {
               <img alt="" src="/style/new-logo-oneline.png" />
             </NextLinkComposed>
           </h1>
-
 
           <button className="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target=".navbars">
             <span className="navbar-toggler-icon"></span>

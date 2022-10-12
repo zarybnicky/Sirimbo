@@ -47,11 +47,12 @@ export const RegisterPage = () => {
   };
 
   return (
-    <Container maxWidth="md" style={{ margin: '1rem auto 1rem' }}>
-      <Typography variant="h3" style={{ marginBottom: '1rem' }}>Registrace</Typography>
+    <Container maxWidth="md" style={{ margin: '4rem auto 6rem' }}>
       <Card component="form" onSubmit={handleSubmit(onSubmit)}>
         <CardContent>
           <Grid container spacing={1}>
+            <Typography gutterBottom variant="h4" component="h2">Registrace</Typography>
+
             <Grid item xs={12}>
               <Typography variant="caption">Přihlašovací údaje</Typography>
             </Grid>
@@ -92,17 +93,17 @@ export const RegisterPage = () => {
             </Grid>
 
             <Grid item xs={12}>
-              <RadioButtonGroup control={control} name="pohlavi" required options={[
-                { label: 'Muž', id: 'm' },
-                { label: 'Žena', id: 'f' }
-              ]} />
-            </Grid>
-
-            <Grid item xs={12}>
               <AutocompleteElement control={control}
                 label="Národnost" name="nationality" required
                 options={countries.map(x => ({ id: x.code, label: x.label }))}
               />
+            </Grid>
+
+            <Grid item xs={12}>
+              <RadioButtonGroup row control={control} name="pohlavi" required options={[
+                { label: 'Muž', id: 'm' },
+                { label: 'Žena', id: 'f' }
+              ]} />
             </Grid>
 
             <Grid item xs={12} style={{ marginTop: '1rem' }}>

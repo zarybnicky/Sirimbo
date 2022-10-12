@@ -2,21 +2,22 @@ import * as React from 'react';
 import { DateRange } from './DateRange';
 import { usePermissions } from 'lib/data/use-permissions';
 import { ReservationFragment, useReservationListQuery } from 'index';
+import { Dropdown } from 'components/Dropdown';
 
 const ReservationView = (x: ReservationFragment) => {
-  const permissions = usePermissions();
+  const perms = usePermissions();
   const header = <div className="trenink-header">
     <div className="title">
       {x.userByNTrener?.uJmeno} {x.userByNTrener?.uPrijmeni}
-      {/* {this.state.data.canEdit && <div className="btn-group">
-                          <button type="button" className="btn btn-xs pt-0" data-toggle="dropdown" >
-                          <img alt="Upravit" width="16" src="/style/icon-gear.png" />
-                          </button>
-                          <div className="dropdown-menu dropdown-menu-right" >
-                          <a className="dropdown-item" href="/admin/nabidka/edit/{{ this.state.id }}" > Upravit </a>,
-                          <a className="dropdown-item" href="/admin/nabidka/detail/{{ this.state.id }}" > Upravit rezervace </a>
-                          </div>
-                          </div>} */}
+      {perms.canEditReservation(x) && (
+        <Dropdown
+          button={<img alt="Upravit" width="16" src="/style/icon-gear.png" />}
+          options={[
+            { title: "Upravit", href: `/admin/nabidka/edit/${x.nId}` },
+            { title: "Upravit rezervace", href: `/admin/nabidka/detail/${x.nId}` },
+          ]}
+        />
+      )}
     </div>
     <div className="date"><DateRange from={x.nOd} to={x.nDo} noYear /></div>
     {x?.nMaxPocetHod > 0 && <div>

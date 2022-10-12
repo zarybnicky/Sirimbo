@@ -25,22 +25,6 @@ class Mailer
         $mail->send();
     }
 
-    public static function newPassword($to, $newpass)
-    {
-        $subject = "[Olymp] Nové heslo";
-        $message = <<<EOS
-Vy nebo někdo jiný jste požádali jste o vygenerování nového hesla.
-Heslo si můžete změnit hned po přihlášení v nabídce Profil.
-
-Dočasné heslo:
-$newpass
-
-S pozdravem
-TKOlymp.cz
-EOS;
-        Mailer::_mail($to, $subject, $message);
-    }
-
     public static function registrationConfirmNotice($to, $username)
     {
         $subject = "[Olymp] Potvrzení registrace";

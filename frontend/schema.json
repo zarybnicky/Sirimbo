@@ -6702,119 +6702,6 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "CreateUsersSkupinyInput",
-          "description": "All input for the create `UsersSkupiny` mutation.",
-          "fields": null,
-          "inputFields": [
-            {
-              "name": "clientMutationId",
-              "description": "An arbitrary string value with no semantic meaning. Will be included in the\npayload verbatim. May be used to track mutations by the client.",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "usersSkupiny",
-              "description": "The `UsersSkupiny` to be created by this mutation.",
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "UsersSkupinyInput",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "CreateUsersSkupinyPayload",
-          "description": "The output of our create `UsersSkupiny` mutation.",
-          "fields": [
-            {
-              "name": "clientMutationId",
-              "description": "The exact same `clientMutationId` that was provided in the mutation input,\nunchanged and unused. May be used by a client to track mutations.",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "query",
-              "description": "Our root query field type. Allows us to run any query from our mutation payload.",
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "Query",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "usersSkupiny",
-              "description": "The `UsersSkupiny` that was created by this mutation.",
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "UsersSkupiny",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "usersSkupinyEdge",
-              "description": "An edge for our `UsersSkupiny`. May be used by Relay 1.",
-              "args": [
-                {
-                  "name": "orderBy",
-                  "description": "The method to use when ordering `UsersSkupiny`.",
-                  "type": {
-                    "kind": "LIST",
-                    "name": null,
-                    "ofType": {
-                      "kind": "NON_NULL",
-                      "name": null,
-                      "ofType": {
-                        "kind": "ENUM",
-                        "name": "UsersSkupiniesOrderBy",
-                        "ofType": null
-                      }
-                    }
-                  },
-                  "defaultValue": "[PRIMARY_KEY_ASC]"
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "UsersSkupiniesEdge",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "INPUT_OBJECT",
           "name": "CreateVideoInput",
           "description": "All input for the create `Video` mutation.",
           "fields": null,
@@ -11691,166 +11578,6 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "DeleteUsersSkupinyByNodeIdInput",
-          "description": "All input for the `deleteUsersSkupinyByNodeId` mutation.",
-          "fields": null,
-          "inputFields": [
-            {
-              "name": "clientMutationId",
-              "description": "An arbitrary string value with no semantic meaning. Will be included in the\npayload verbatim. May be used to track mutations by the client.",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "nodeId",
-              "description": "The globally unique `ID` which will identify a single `UsersSkupiny` to be deleted.",
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "ID",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "INPUT_OBJECT",
-          "name": "DeleteUsersSkupinyInput",
-          "description": "All input for the `deleteUsersSkupiny` mutation.",
-          "fields": null,
-          "inputFields": [
-            {
-              "name": "clientMutationId",
-              "description": "An arbitrary string value with no semantic meaning. Will be included in the\npayload verbatim. May be used to track mutations by the client.",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "usId",
-              "description": null,
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "BigInt",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "DeleteUsersSkupinyPayload",
-          "description": "The output of our delete `UsersSkupiny` mutation.",
-          "fields": [
-            {
-              "name": "clientMutationId",
-              "description": "The exact same `clientMutationId` that was provided in the mutation input,\nunchanged and unused. May be used by a client to track mutations.",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "deletedUsersSkupinyNodeId",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "query",
-              "description": "Our root query field type. Allows us to run any query from our mutation payload.",
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "Query",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "usersSkupiny",
-              "description": "The `UsersSkupiny` that was deleted by this mutation.",
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "UsersSkupiny",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "usersSkupinyEdge",
-              "description": "An edge for our `UsersSkupiny`. May be used by Relay 1.",
-              "args": [
-                {
-                  "name": "orderBy",
-                  "description": "The method to use when ordering `UsersSkupiny`.",
-                  "type": {
-                    "kind": "LIST",
-                    "name": null,
-                    "ofType": {
-                      "kind": "NON_NULL",
-                      "name": null,
-                      "ofType": {
-                        "kind": "ENUM",
-                        "name": "UsersSkupiniesOrderBy",
-                        "ofType": null
-                      }
-                    }
-                  },
-                  "defaultValue": "[PRIMARY_KEY_ASC]"
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "UsersSkupiniesEdge",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "INPUT_OBJECT",
           "name": "DeleteVideoByNodeIdInput",
           "description": "All input for the `deleteVideoByNodeId` mutation.",
           "fields": null,
@@ -16668,33 +16395,6 @@
               "deprecationReason": null
             },
             {
-              "name": "createUsersSkupiny",
-              "description": "Creates a single `UsersSkupiny`.",
-              "args": [
-                {
-                  "name": "input",
-                  "description": "The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.",
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "CreateUsersSkupinyInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "CreateUsersSkupinyPayload",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "createVideo",
               "description": "Creates a single `Video`.",
               "args": [
@@ -18126,60 +17826,6 @@
               "deprecationReason": null
             },
             {
-              "name": "deleteUsersSkupiny",
-              "description": "Deletes a single `UsersSkupiny` using a unique key.",
-              "args": [
-                {
-                  "name": "input",
-                  "description": "The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.",
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "DeleteUsersSkupinyInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "DeleteUsersSkupinyPayload",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "deleteUsersSkupinyByNodeId",
-              "description": "Deletes a single `UsersSkupiny` using its globally unique id.",
-              "args": [
-                {
-                  "name": "input",
-                  "description": "The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.",
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "DeleteUsersSkupinyByNodeIdInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "DeleteUsersSkupinyPayload",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "deleteVideo",
               "description": "Deletes a single `Video` using a unique key.",
               "args": [
@@ -18417,6 +18063,33 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "ProspectFormDancerPayload",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "resetPassword",
+              "description": null,
+              "args": [
+                {
+                  "name": "input",
+                  "description": "The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "ResetPasswordInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "ResetPasswordPayload",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -19848,60 +19521,6 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "UpdateUserPayload",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "updateUsersSkupiny",
-              "description": "Updates a single `UsersSkupiny` using a unique key and a patch.",
-              "args": [
-                {
-                  "name": "input",
-                  "description": "The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.",
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "UpdateUsersSkupinyInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "UpdateUsersSkupinyPayload",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "updateUsersSkupinyByNodeId",
-              "description": "Updates a single `UsersSkupiny` using its globally unique id and a patch.",
-              "args": [
-                {
-                  "name": "input",
-                  "description": "The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.",
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "UpdateUsersSkupinyByNodeIdInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "UpdateUsersSkupinyPayload",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -21648,11 +21267,6 @@
             {
               "kind": "OBJECT",
               "name": "User",
-              "ofType": null
-            },
-            {
-              "kind": "OBJECT",
-              "name": "UsersSkupiny",
               "ofType": null
             },
             {
@@ -35315,151 +34929,6 @@
               "deprecationReason": null
             },
             {
-              "name": "usersSkupinies",
-              "description": "Reads and enables pagination through a set of `UsersSkupiny`.",
-              "args": [
-                {
-                  "name": "after",
-                  "description": "Read all values in the set after (below) this cursor.",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Cursor",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "before",
-                  "description": "Read all values in the set before (above) this cursor.",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Cursor",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "condition",
-                  "description": "A condition to be used in determining which values should be returned by the collection.",
-                  "type": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "UsersSkupinyCondition",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "first",
-                  "description": "Only read the first `n` values of the set.",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "last",
-                  "description": "Only read the last `n` values of the set.",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "offset",
-                  "description": "Skip the first `n` values from our `after` cursor, an alternative to cursor\nbased pagination. May not be used with `last`.",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "orderBy",
-                  "description": "The method to use when ordering `UsersSkupiny`.",
-                  "type": {
-                    "kind": "LIST",
-                    "name": null,
-                    "ofType": {
-                      "kind": "NON_NULL",
-                      "name": null,
-                      "ofType": {
-                        "kind": "ENUM",
-                        "name": "UsersSkupiniesOrderBy",
-                        "ofType": null
-                      }
-                    }
-                  },
-                  "defaultValue": "[PRIMARY_KEY_ASC]"
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "UsersSkupiniesConnection",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "usersSkupiny",
-              "description": null,
-              "args": [
-                {
-                  "name": "usId",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "BigInt",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "UsersSkupiny",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "usersSkupinyByNodeId",
-              "description": "Reads a single `UsersSkupiny` using its globally unique `ID`.",
-              "args": [
-                {
-                  "name": "nodeId",
-                  "description": "The globally unique `ID` to be used in selecting a single `UsersSkupiny`.",
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "ID",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "UsersSkupiny",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "video",
               "description": null,
               "args": [
@@ -35903,6 +35372,90 @@
               "ofType": null
             }
           ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "ResetPasswordInput",
+          "description": "All input for the `resetPassword` mutation.",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "clientMutationId",
+              "description": "An arbitrary string value with no semantic meaning. Will be included in the\npayload verbatim. May be used to track mutations by the client.",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "email",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "login",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ResetPasswordPayload",
+          "description": "The output of our `resetPassword` mutation.",
+          "fields": [
+            {
+              "name": "clientMutationId",
+              "description": "The exact same `clientMutationId` that was provided in the mutation input,\nunchanged and unused. May be used by a client to track mutations.",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "query",
+              "description": "Our root query field type. Allows us to run any query from our mutation payload.",
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Query",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
           "enumValues": null,
           "possibleTypes": null
         },
@@ -43731,182 +43284,6 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "UpdateUsersSkupinyByNodeIdInput",
-          "description": "All input for the `updateUsersSkupinyByNodeId` mutation.",
-          "fields": null,
-          "inputFields": [
-            {
-              "name": "clientMutationId",
-              "description": "An arbitrary string value with no semantic meaning. Will be included in the\npayload verbatim. May be used to track mutations by the client.",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "nodeId",
-              "description": "The globally unique `ID` which will identify a single `UsersSkupiny` to be updated.",
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "ID",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "patch",
-              "description": "An object where the defined keys will be set on the `UsersSkupiny` being updated.",
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "UsersSkupinyPatch",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "INPUT_OBJECT",
-          "name": "UpdateUsersSkupinyInput",
-          "description": "All input for the `updateUsersSkupiny` mutation.",
-          "fields": null,
-          "inputFields": [
-            {
-              "name": "clientMutationId",
-              "description": "An arbitrary string value with no semantic meaning. Will be included in the\npayload verbatim. May be used to track mutations by the client.",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "patch",
-              "description": "An object where the defined keys will be set on the `UsersSkupiny` being updated.",
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "UsersSkupinyPatch",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "usId",
-              "description": null,
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "BigInt",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "UpdateUsersSkupinyPayload",
-          "description": "The output of our update `UsersSkupiny` mutation.",
-          "fields": [
-            {
-              "name": "clientMutationId",
-              "description": "The exact same `clientMutationId` that was provided in the mutation input,\nunchanged and unused. May be used by a client to track mutations.",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "query",
-              "description": "Our root query field type. Allows us to run any query from our mutation payload.",
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "Query",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "usersSkupiny",
-              "description": "The `UsersSkupiny` that was updated by this mutation.",
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "UsersSkupiny",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "usersSkupinyEdge",
-              "description": "An edge for our `UsersSkupiny`. May be used by Relay 1.",
-              "args": [
-                {
-                  "name": "orderBy",
-                  "description": "The method to use when ordering `UsersSkupiny`.",
-                  "type": {
-                    "kind": "LIST",
-                    "name": null,
-                    "ofType": {
-                      "kind": "NON_NULL",
-                      "name": null,
-                      "ofType": {
-                        "kind": "ENUM",
-                        "name": "UsersSkupiniesOrderBy",
-                        "ofType": null
-                      }
-                    }
-                  },
-                  "defaultValue": "[PRIMARY_KEY_ASC]"
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "UsersSkupiniesEdge",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "INPUT_OBJECT",
           "name": "UpdateVideoByNodeIdInput",
           "description": "All input for the `updateVideoByNodeId` mutation.",
           "fields": null,
@@ -49162,583 +48539,6 @@
               "deprecationReason": null
             }
           ],
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "UsersSkupiniesConnection",
-          "description": "A connection to a list of `UsersSkupiny` values.",
-          "fields": [
-            {
-              "name": "edges",
-              "description": "A list of edges which contains the `UsersSkupiny` and cursor to aid in pagination.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "OBJECT",
-                      "name": "UsersSkupiniesEdge",
-                      "ofType": null
-                    }
-                  }
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "nodes",
-              "description": "A list of `UsersSkupiny` objects.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "OBJECT",
-                      "name": "UsersSkupiny",
-                      "ofType": null
-                    }
-                  }
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "pageInfo",
-              "description": "Information to aid in pagination.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "PageInfo",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "totalCount",
-              "description": "The count of *all* `UsersSkupiny` you could get from the connection.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "UsersSkupiniesEdge",
-          "description": "A `UsersSkupiny` edge in the connection.",
-          "fields": [
-            {
-              "name": "cursor",
-              "description": "A cursor for use in pagination.",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "Cursor",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "node",
-              "description": "The `UsersSkupiny` at the end of the edge.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "UsersSkupiny",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "ENUM",
-          "name": "UsersSkupiniesOrderBy",
-          "description": "Methods to use when ordering `UsersSkupiny`.",
-          "fields": null,
-          "inputFields": null,
-          "interfaces": null,
-          "enumValues": [
-            {
-              "name": "NATURAL",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "PRIMARY_KEY_ASC",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "PRIMARY_KEY_DESC",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "US_COLOR_ASC",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "US_COLOR_DESC",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "US_ID_ASC",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "US_ID_DESC",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "US_PLATBA_CTVRTROK_ASC",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "US_PLATBA_CTVRTROK_DESC",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "US_PLATBA_MESIC_ASC",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "US_PLATBA_MESIC_DESC",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "US_PLATBA_PULROK_ASC",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "US_PLATBA_PULROK_DESC",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "US_POPIS_ASC",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "US_POPIS_DESC",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "UsersSkupiny",
-          "description": null,
-          "fields": [
-            {
-              "name": "nodeId",
-              "description": "A globally unique identifier. Can be used in various places throughout the system to identify this single value.",
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "ID",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "usColor",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "usId",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "BigInt",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "usPlatbaCtvrtrok",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "BigInt",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "usPlatbaMesic",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "BigInt",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "usPlatbaPulrok",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "BigInt",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "usPopis",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [
-            {
-              "kind": "INTERFACE",
-              "name": "Node",
-              "ofType": null
-            }
-          ],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "INPUT_OBJECT",
-          "name": "UsersSkupinyCondition",
-          "description": "A condition to be used against `UsersSkupiny` object types. All fields are\ntested for equality and combined with a logical ‘and.’",
-          "fields": null,
-          "inputFields": [
-            {
-              "name": "usColor",
-              "description": "Checks for equality with the object’s `usColor` field.",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "usId",
-              "description": "Checks for equality with the object’s `usId` field.",
-              "type": {
-                "kind": "SCALAR",
-                "name": "BigInt",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "usPlatbaCtvrtrok",
-              "description": "Checks for equality with the object’s `usPlatbaCtvrtrok` field.",
-              "type": {
-                "kind": "SCALAR",
-                "name": "BigInt",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "usPlatbaMesic",
-              "description": "Checks for equality with the object’s `usPlatbaMesic` field.",
-              "type": {
-                "kind": "SCALAR",
-                "name": "BigInt",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "usPlatbaPulrok",
-              "description": "Checks for equality with the object’s `usPlatbaPulrok` field.",
-              "type": {
-                "kind": "SCALAR",
-                "name": "BigInt",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "usPopis",
-              "description": "Checks for equality with the object’s `usPopis` field.",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "INPUT_OBJECT",
-          "name": "UsersSkupinyInput",
-          "description": "An input for mutations affecting `UsersSkupiny`",
-          "fields": null,
-          "inputFields": [
-            {
-              "name": "usColor",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "usId",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "BigInt",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "usPlatbaCtvrtrok",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "BigInt",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "usPlatbaMesic",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "BigInt",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "usPlatbaPulrok",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "BigInt",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "usPopis",
-              "description": null,
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "INPUT_OBJECT",
-          "name": "UsersSkupinyPatch",
-          "description": "Represents an update to a `UsersSkupiny`. Fields that are set will be updated.",
-          "fields": null,
-          "inputFields": [
-            {
-              "name": "usColor",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "usId",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "BigInt",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "usPlatbaCtvrtrok",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "BigInt",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "usPlatbaMesic",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "BigInt",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "usPlatbaPulrok",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "BigInt",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "usPopis",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
           "possibleTypes": null
         },
         {

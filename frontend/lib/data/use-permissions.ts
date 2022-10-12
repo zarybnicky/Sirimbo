@@ -1,3 +1,4 @@
+import { ReservationFragment, ReservationItemFragment, ScheduleFragment, ScheduleItemFragment, UserPartialFragment } from 'index';
 import { useAuth } from './use-auth';
 
 export enum PermissionLevel {
@@ -44,13 +45,50 @@ export const defaultPermissions: PermissionMap = {
   peMain: 2,
 };
 
-export const usePermissions = (): PermissionMap => {
-  const { user } = useAuth();
+export const usePermissions = () => {
+  const { user, couple } = useAuth();
+  const perms = user?.permissionByUGroup || defaultPermissions;
 
-  return user?.permissionByUGroup || defaultPermissions;
+  return {
+    canEditSchedule(schedule: ScheduleFragment) {
+      return (
+        (perms.peRozpis >= PermissionLevel.P_OWNED && user?.uId == schedule.rTrener) ||
+        perms.peRozpis >= PermissionLevel.P_ADMIN
+      );
+    },
+    canEditReservation(reservation: ReservationFragment) {
+      return (
+        (perms.peNabidka >= PermissionLevel.P_OWNED && user?.uId == reservation.nTrener) ||
+        perms.peNabidka >= PermissionLevel.P_ADMIN
+      );
+    },
+    canSignUp(item: ScheduleFragment, lesson: ScheduleItemFragment) {
+      return (
+        perms.peRozpis >= PermissionLevel.P_MEMBER &&
+        (!lesson.riPartner || lesson.riPartner === '0') && !item.rLock && !lesson.riLock
+      );
+    },
+    canSignOut(item: ScheduleFragment, lesson: ScheduleItemFragment) {
+      return (
+        (lesson.riPartner && lesson.riPartner !== '0') && !item.rLock && !lesson.riLock && (
+          (perms.peRozpis >= PermissionLevel.P_MEMBER && couple?.pId == lesson.riPartner) ||
+          (perms.peRozpis >= PermissionLevel.P_OWNED && user?.uId == item.rTrener) ||
+          perms.peRozpis >= PermissionLevel.P_ADMIN
+        )
+      );
+    },
+    canMakeReservation(item: ReservationFragment) {
+      return (
+        perms.peNabidka >= PermissionLevel.P_MEMBER && !item.nLock &&
+        item.nPocetHod > item.nabidkaItemsByNiIdRodic.nodes.reduce((n, x) => n + x.niPocetHod, 0)
+      );
+    },
+    canCancelReservation(item: ReservationFragment, lesson: ReservationItemFragment) {
+      return !item.nLock && !lesson.niLock && (
+        (perms.peNabidka >= PermissionLevel.P_MEMBER && couple?.pId == lesson.niPartner) ||
+        (perms.peNabidka >= PermissionLevel.P_OWNED && user?.uId == item.nTrener) ||
+        perms.peNabidka >= PermissionLevel.P_ADMIN
+      );
+    },
+  };
 };
-
-export const useCheckPermission = (key: keyof typeof PermissionKey, level: PermissionLevel): boolean => {
-  const perms = usePermissions();
-  return perms[key] >= level;
-}

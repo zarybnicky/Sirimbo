@@ -100,3 +100,18 @@ create trigger _200_encrypt_password
   before insert or update on public.users
   for each row
   execute procedure app_private.tg_users__encrypt_password();
+
+drop function if exists reset_password(login varchar, email varchar) cascade;
+create or replace function public.reset_password(login varchar, email varchar) returns void as $$
+declare
+  v_salt varchar;
+  usr users;
+begin
+  select * into usr from users where u_login=login and u_email=email;
+  if usr is null then
+    raise exception 'ACCOUNT_NOT_FOUND' using errcode = '28000';
+  end if;
+  perform graphile_worker.add_job('forgotten_password_generate', json_build_object('id', usr.u_id));
+end;
+$$ language plpgsql strict volatile security definer;
+select plpgsql_check_function('public.reset_password');

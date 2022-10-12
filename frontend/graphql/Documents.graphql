@@ -1,0 +1,15 @@
+query Documents($category: Int) {
+  dokumenties(condition: {dKategorie: $category}, orderBy: D_TIMESTAMP_DESC) {
+    nodes {
+      dId
+      dName
+      dFilename
+      dKategorie
+      dTimestamp
+      userByDKdo {
+        uJmeno
+        uPrijmeni
+      }
+    }
+  }
+}
