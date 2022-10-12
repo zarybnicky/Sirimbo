@@ -1,81 +1,19 @@
 import * as React from 'react';
 import { Checkbox, Menu, MenuItem, Button, Pagination } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import { $, NabidkasOrderBy, Selector } from 'lib/zeus';
 import { useAuth } from 'lib/data/use-auth';
 import { DateRange } from 'components/DateRange';
 import { NextLinkComposed } from 'components/Link';
-import { useTypedMutation, useTypedQuery } from 'lib/query';
-
-export const NabidkaAdminQuery = Selector('Query')({
-  nabidkas: [
-    {
-      first: $('limit', 'Int!'),
-      offset: $('offset', 'Int!'),
-      orderBy: [NabidkasOrderBy.N_OD_DESC],
-    },
-    {
-      nodes: {
-        nDo: true,
-        nId: true,
-        nLock: true,
-        nMaxPocetHod: true,
-        nOd: true,
-        nPocetHod: true,
-        nTimestamp: true,
-        nTrener: true,
-        nVisible: true,
-        nabidkaItemsByNiIdRodic: [{}, {
-          nodes: {
-            niPocetHod: true,
-            niPartner: true,
-            niLock: true,
-            paryByNiPartner: {
-              userByPIdPartner: {
-                uJmeno: true,
-                uPrijmeni: true,
-                uId: true,
-              },
-            },
-          },
-        }],
-        userByNTrener: {
-          uJmeno: true,
-          uPrijmeni: true,
-          uId: true,
-        },
-      },
-      totalCount: true,
-    },
-  ],
-});
-
-const ToggleVisibleNabidka = Selector("Mutation")({
-  updateNabidka: [
-    {
-      input: {
-        nId: $('id', 'BigInt!'),
-        patch: {
-          nVisible: $('visible', 'Boolean!'),
-        },
-      }
-    },
-    {
-      nabidka: {
-        nId: true,
-      },
-    },
-  ],
-});
+import { useReservationListQuery, useToggleReservationVisibleMutation } from 'index';
 
 export default function ReservationAdminList() {
   const { user } = useAuth();
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(0);
-  const { data, refetch } = useTypedQuery(['nabidkaAdmin'], NabidkaAdminQuery, {}, {
-    variables: { limit, offset: (page - 1) * limit },
+  const { data, refetch } = useReservationListQuery({
+    limit, offset: (page - 1) * limit,
   });
-  const { mutate: toggleVisible } = useTypedMutation(['toggleNabidka'], ToggleVisibleNabidka, {
+  const { mutate: toggleVisible } = useToggleReservationVisibleMutation({
     onSuccess: () => refetch(),
   });
   const total = data?.nabidkas?.totalCount || 0;
@@ -115,9 +53,7 @@ export default function ReservationAdminList() {
         </td>
         <td><DateRange from={a.nOd} to={a.nDo} /></td>
         <td>
-          <Checkbox checked={a.nVisible} onChange={() => toggleVisible({
-            variables: { id: a.nId, visible: !a.nVisible },
-          })} />
+          <Checkbox checked={a.nVisible} onChange={() => toggleVisible({ id: a.nId, visible: !a.nVisible })} />
         </td>
       </tr>)}
     </tbody>

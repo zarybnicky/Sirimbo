@@ -1,11 +1,11 @@
 import * as React from "react";
-import { $, Selector, InputType, GraphQLTypes } from 'lib/zeus';
-import { useTypedMutation, useTypedQuery } from "lib/query";
+import { CouplePartialFragment, useCurrentUserQuery, useLoginMutation, useLogoutMutation } from "index";
+import type { UserPartialFragment } from "index";
 
 export interface AuthContextType {
   isLoading: boolean,
-  user: AppUser | null;
-  couple: AppCouple | null;
+  user: UserPartialFragment | null;
+  couple: CouplePartialFragment | null;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   sendPasswordResetEmail: (email: string) => Promise<void>;
@@ -28,35 +28,26 @@ export const useAuth = () => {
 }
 
 function useApiAuth(): AuthContextType {
-  const [user, setUser] = React.useState<AppUser | null>(null);
-  const [couple, setCouple] = React.useState<AppCouple | null>(null);
+  const [user, setUser] = React.useState<UserPartialFragment | null>(null);
+  const [couple, setCouple] = React.useState<CouplePartialFragment | null>(null);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
-  const { mutateAsync: signIn } = useTypedMutation(['login'], {
-    login: [
-      { input: { login: $('login', 'String!'), passwd: $('passwd', 'String!') } },
-      { result: { usr: UserPartial, couple: CouplePartial } },
-    ]
-  }, {
+  useCurrentUserQuery({}, {
+    onSuccess: (data) => setUser(data.getCurrentUser),
+    onSettled: () => setIsLoading(false),
+  });
+  const { mutateAsync: signIn } = useLoginMutation({
     onSuccess: (data) => {
-      setUser(data?.login?.result?.usr!!);
-      setCouple(data?.login?.result?.couple!!);
+      setUser(data.login?.result?.usr!);
+      setCouple(data.login?.result?.couple!);
     },
     onSettled: () => setIsLoading(false),
   });
-
-  const { mutateAsync: signOut } = useTypedMutation(['logout'], {
-    logout: [{ input: {} }, { __typename: true }],
-  }, {
+  const { mutateAsync: signOut } = useLogoutMutation({
     onSuccess: () => {
       setUser(null);
       setCouple(null);
     },
-  });
-
-  useTypedQuery(['currentUser'], { getCurrentUser: UserPartial }, {
-    onSuccess: (data) => setUser(data.getCurrentUser as AppUser),
-    onSettled: () => setIsLoading(false),
   });
 
   return {
@@ -65,10 +56,10 @@ function useApiAuth(): AuthContextType {
     couple,
     async signIn(login: string, passwd: string) {
       setIsLoading(true);
-      await signIn({ variables: { login, passwd } });
+      await signIn({ login, passwd });
     },
     async signOut() {
-      await signOut()
+      await signOut({});
     },
     async sendPasswordResetEmail(email: string) {
       // await sendPasswordResetEmail(email);
@@ -78,73 +69,3 @@ function useApiAuth(): AuthContextType {
     }
   };
 }
-
-export type AppUser = InputType<GraphQLTypes["User"], typeof UserPartial>;
-export type AppCouple = InputType<GraphQLTypes["Pary"], typeof CouplePartial>;
-
-export const CouplePartial = Selector("Pary")({
-  pId: true,
-  pIdPartner: true,
-  pIdPartnerka: true,
-  pArchiv: true,
-});
-
-export const UserPartial = Selector("User")({
-  permissionByUGroup: {
-    peAkce: true,
-    peAnkety: true,
-    peAktuality: true,
-    peDescription: true,
-    peDokumenty: true,
-    peGalerie: true,
-    peId: true,
-    peKonzole: true,
-    peInzerce: true,
-    peNabidka: true,
-    peMain: true,
-    peName: true,
-    peNastenka: true,
-    peNovinky: true,
-    pePary: true,
-    pePermissions: true,
-    pePlatby: true,
-    peRozpis: true,
-    peSkupiny: true,
-    peUsers: true,
-  },
-  uTimestamp: true,
-  uSystem: true,
-  uTelefon: true,
-  uTeacher: true,
-  uStreet: true,
-  uRodneCislo: true,
-  uSkupina: true,
-  uPrijmeni: true,
-  uPoznamky: true,
-  uPostalCode: true,
-  uPohlavi: true,
-  uOrientationNumber: true,
-  uNationality: true,
-  uNarozeni: true,
-  uMemberUntil: true,
-  uLogin: true,
-  uMemberSince: true,
-  uLock: true,
-  uLevel: true,
-  uJmeno: true,
-  uGroup: true,
-  uId: true,
-  uGdprSignedAt: true,
-  uEmail: true,
-  uDancer: true,
-  uDistrict: true,
-  uCreatedAt: true,
-  uConfirmed: true,
-  uConscriptionNumber: true,
-  uBan: true,
-  uCity: true,
-});
-
-export const UserQuery = Selector("Query")({
-  getCurrentUser: UserPartial,
-});

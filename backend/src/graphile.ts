@@ -2,6 +2,7 @@ import express from 'express';
 import { makePluginHook, Build, PostGraphileOptions } from 'postgraphile';
 import operationHooks, { AddOperationHookFn, OperationHookGenerator } from '@graphile/operation-hooks';
 import { getSession, getUser } from './db';
+import path from 'path';
 
 const useAuthCredentials: (build: Build) => OperationHookGenerator = _ => ctx => {
   if (ctx.scope.isRootMutation && ctx.scope.pgFieldIntrospection?.name === "login") {
@@ -71,6 +72,7 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
   sortExport: true,
   enableQueryBatching: true,
   pluginHook: makePluginHook([operationHooks]),
+  exportJsonSchemaPath: process.env.DEBUG ? path.resolve('../frontend/schema.json') : undefined,
 
   async additionalGraphQLContextFromRequest(_, res) {
     return {

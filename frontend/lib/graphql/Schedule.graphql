@@ -1,0 +1,78 @@
+fragment ScheduleItem on RozpisItem {
+  riOd
+  riDo
+  riId
+  riLock
+  riPartner
+  paryByRiPartner {
+    userByPIdPartner {
+      uJmeno
+      uId
+      uPrijmeni
+    }
+    pId
+  }
+}
+
+fragment Schedule on Rozpi {
+  rDatum
+  rId
+  rKde
+  rLock
+  rTrener
+  rVisible
+  userByRTrener {
+    uJmeno
+    uId
+    uPrijmeni
+  }
+  rozpisItemsByRiIdRodic(orderBy: [RI_OD_ASC]) {
+    nodes {
+      ...ScheduleItem
+    }
+  }
+}
+
+query ScheduleRange($startDate: Date!, $endDate: Date!) {
+  schedulesForRange(startDate: $startDate, endDate: $endDate) {
+    nodes {
+      ...Schedule
+    }
+  }
+}
+
+query ScheduleList($limit: Int!, $offset: Int!) {
+  rozpis(first: $limit, offset: $offset, orderBy: [R_DATUM_DESC]) {
+    nodes {
+      rDatum
+      rId
+      rKde
+      rLock
+      rTimestamp
+      rTrener
+      rVisible
+      userByRTrener {
+        uId
+        uJmeno
+        uPrijmeni
+      }
+      rozpisItemsByRiIdRodic {
+        nodes {
+          riDo
+          riOd
+          riId
+          riPartner
+        }
+      }
+    }
+    totalCount
+  }
+}
+
+mutation ToggleScheduleVisible($id: BigInt!, $visible: Boolean!) {
+  updateRozpi(input: {rId: $id, patch: {rVisible: $visible}}) {
+    rozpi {
+      rId
+    }
+  }
+}

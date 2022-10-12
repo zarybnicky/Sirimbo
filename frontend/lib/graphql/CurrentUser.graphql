@@ -1,0 +1,95 @@
+fragment UserPartial on User {
+    uId
+    uLogin
+    uJmeno
+    uPrijmeni
+    uEmail
+    uTelefon
+    uConfirmed
+    uTeacher
+    uDancer
+    uSystem
+    uLock
+    uBan
+    uLevel
+    uGroup
+    uSkupina
+    uTimestamp
+    uStreet
+    uRodneCislo
+    uPoznamky
+    uPostalCode
+    uPohlavi
+    uOrientationNumber
+    uNationality
+    uNarozeni
+    uMemberUntil
+    uMemberSince
+    uGdprSignedAt
+    uDistrict
+    uCreatedAt
+    uConscriptionNumber
+    uCity
+    permissionByUGroup {
+      peAkce
+      peAnkety
+      peAktuality
+      peDescription
+      peDokumenty
+      peGalerie
+      peId
+      peKonzole
+      peInzerce
+      peNabidka
+      peMain
+      peName
+      peNastenka
+      peNovinky
+      pePary
+      pePermissions
+      pePlatby
+      peRozpis
+      peSkupiny
+      peUsers
+    }
+}
+
+fragment CouplePartial on Pary {
+  pId
+  pIdPartner
+  pIdPartnerka
+  pArchiv
+}
+
+query CurrentUser {
+  getCurrentUser {
+    ...UserPartial
+  }
+}
+
+mutation Login($login: String!, $passwd: String!) {
+  login(input: { login: $login, passwd: $passwd }) {
+    result {
+      usr {
+        ...UserPartial
+      }
+      couple {
+        ...CouplePartial
+      }
+    }
+  }
+}
+
+mutation Logout {
+  logout(input: {}) {
+    __typename
+  }
+}
+
+mutation Register($input: CreateUserInput!) {
+  createUser(input: $input) {
+    user {
+      uId
+    }
+  }
+}

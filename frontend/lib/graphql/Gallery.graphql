@@ -1,0 +1,64 @@
+fragment GalleryPhoto on GalerieFoto {
+  __typename
+  nodeId
+  gfId
+  gfIdRodic
+  gfKdo
+  gfName
+  gfPath
+  gfTimestamp
+}
+
+fragment GalleryDir on GalerieDir {
+  __typename
+  nodeId
+  gdId
+  gdIdRodic
+  gdName
+  gdPath
+  gdLevel
+  gdHidden
+}
+
+query GalleryDir($dirId: BigInt!) {
+  galerieDir(gdId: $dirId) {
+    ...GalleryDir,
+    galerieFotosByGfIdRodic(orderBy: [GF_NAME_ASC]) {
+      nodes {
+        ...GalleryPhoto
+      }
+    }
+  }
+  galerieDirs(condition: { gdIdRodic: $dirId, gdHidden: false }) {
+    nodes {
+      ...GalleryDir,
+      galerieFotosByGfIdRodic(orderBy: [GF_NAME_ASC], first: 1) {
+        nodes {
+          ...GalleryPhoto
+        }
+      }
+    }
+  }
+}
+
+query GalleryDirList($limit: Int! $offset: Int!) {
+  galerieDirs(first: $limit, offset: $offset, orderBy: [GD_NAME_ASC]) {
+    nodes {
+      gdHidden
+      gdId
+      gdIdRodic
+      gdLevel
+      gdName
+      gdPath
+    }
+    totalCount
+  }
+}
+
+mutation ToggleGalleryDirVisible($id: BigInt!, $visible: Boolean!) {
+  updateGalerieDir(input: {gdId: $id, patch: {gdHidden: $visible}}) {
+    galerieDir {
+      gdId
+    }
+  }
+}

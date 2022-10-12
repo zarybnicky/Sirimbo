@@ -1,0 +1,8 @@
+query TitleVideos {
+  titleVideos {
+    nodes {
+      vTitle
+      vUri
+    }
+  }
+}

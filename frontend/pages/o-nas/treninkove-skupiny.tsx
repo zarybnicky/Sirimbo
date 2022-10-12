@@ -2,15 +2,15 @@ import * as React from 'react';
 import { Container, Card, CardContent, Typography } from '@mui/material';
 import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
-import { useCohorts } from 'lib/data/use-cohorts';
+import { useCohortsQuery } from 'index';
 
 export default function CohortsPage() {
-  const cohorts = useCohorts();
+  const { data: cohorts } = useCohortsQuery();
 
   return <>
     <Heading color={{ r: 20, g: 20, b: 200, a: .5 }} text="Tréninkové skupiny" image="" />
     <Container maxWidth="md" style={{ paddingBottom: '2rem', paddingTop: '2rem' }}>
-      {cohorts.map((x, i) => (
+      {cohorts?.skupinies?.nodes?.map((x, i) => (
         <Card key={i} elevation={3} style={{ marginBottom: '2rem', display: 'flex' }}>
           <div style={{ minWidth: '2rem', backgroundColor: x.sColorRgb, borderRight: '1px solid #ddd' }} />
           <CardContent>

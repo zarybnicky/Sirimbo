@@ -1,0 +1,59 @@
+fragment EventItem on AkceItem {
+  aiId
+  userByAiUser {
+    uJmeno
+    uPrijmeni
+    uRodneCislo
+    uTelefon
+    uEmail
+  }
+}
+
+query EventParticipants($id: BigInt!) {
+  akce(aId: $id) {
+    aJmeno
+    akceItemsByAiIdRodic {
+      nodes {
+        ...EventItem
+      }
+    }
+  }
+}
+
+query EventList($limit: Int!, $offset: Int!) {
+  akces(first: $limit, offset: $offset, orderBy: [A_OD_DESC]) {
+    nodes {
+      aDo
+      aId
+      aInfo
+      aDokumenty
+      aJmeno
+      aKapacita
+      aKde
+      aLock
+      aOd
+      aTimestamp
+      aVisible
+      akceItemsByAiIdRodic {
+        nodes {
+          aiId
+          userByAiUser {
+            uJmeno
+            uPrijmeni
+              uId
+          }
+        }
+        totalCount
+      }
+    }
+    totalCount
+  }
+}
+
+mutation ToggleEventVisible($id: BigInt!, $visible: Boolean!) {
+  updateAkce(input: {aId: $id, patch: {aVisible: $visible}}) {
+    akce {
+      aId
+    }
+  }
+}

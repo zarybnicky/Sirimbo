@@ -2,72 +2,16 @@ import * as React from 'react';
 import format from 'date-fns/format';
 import { Pagination, Checkbox, Menu, MenuItem, Button } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import { $, RozpisOrderBy, Selector } from 'lib/zeus';
 import { useAuth } from 'lib/data/use-auth';
 import { NextLinkComposed } from 'components/Link';
-import { useTypedMutation, useTypedQuery } from 'lib/query';
-
-export const ScheduleListQuery = Selector('Query')({
-  rozpis: [
-    {
-      first: $('limit', 'Int!'),
-      offset: $('offset', 'Int!'),
-      orderBy: [RozpisOrderBy.R_DATUM_DESC]
-    },
-    {
-      nodes: {
-        rDatum: true,
-        rId: true,
-        rKde: true,
-        rLock: true,
-        rTimestamp: true,
-        rTrener: true,
-        rVisible: true,
-        userByRTrener: {
-          uId: true,
-          uJmeno: true,
-          uPrijmeni: true,
-        },
-        rozpisItemsByRiIdRodic: [{}, {
-          nodes: {
-            riDo: true,
-            riOd: true,
-            riId: true,
-            riPartner: true,
-          },
-        }],
-      },
-      totalCount: true,
-    }
-  ],
-});
-
-export const ToggleScheduleVisible = Selector('Mutation')({
-  updateRozpi: [
-    {
-      input: {
-        rId: $('id', 'BigInt!'),
-        patch: {
-          rVisible: $('visible', 'Boolean!'),
-        },
-      },
-    },
-    {
-      rozpi: {
-        rId: true,
-      }
-    }
-  ],
-});
+import { useScheduleListQuery, useToggleScheduleVisibleMutation } from 'index';
 
 export default function RozpisAdminList() {
   const { user } = useAuth();
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
-  const { data, refetch } = useTypedQuery(['scheduleList'], ScheduleListQuery, {}, {
-    variables: { limit, offset: (page - 1) * limit },
-  });
-  const { mutateAsync: toggleVisible } = useTypedMutation(['toggleSchedule'], ToggleScheduleVisible, {
+  const { data, refetch } = useScheduleListQuery({ limit, offset: (page - 1) * limit });
+  const { mutateAsync: toggleVisible } = useToggleScheduleVisibleMutation({
     onSuccess: () => refetch(),
   });
   const total = data?.rozpis?.totalCount || 0;
@@ -110,7 +54,7 @@ export default function RozpisAdminList() {
         <td>{a.rKde}</td>
         <td>
           <Checkbox checked={a.rVisible || false} onChange={() => toggleVisible({
-            variables: { id: a.rId, visible: !a.rVisible },
+            id: a.rId, visible: !a.rVisible,
           })} />
         </td>
       </tr>)}

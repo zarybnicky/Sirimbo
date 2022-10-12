@@ -1,24 +1,10 @@
 import * as React from 'react';
 import type { CellPlugin } from '@react-page/editor';
 import { Alert, Card, CardContent, CardActions, Grid, Button, Typography } from '@mui/material';
-import { $, CrmCohort, Selector } from 'lib/zeus';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement, CheckboxElement } from 'react-hook-form-mui';
-import { useTypedMutation } from 'lib/query';
-
-export const SubmitProspectFormEmail = Selector('Mutation')({
-  prospectFormDancer: [{
-    input: {
-      cohort: CrmCohort.CONTACT_ME_LATER,
-      prospectData: $('prospectData', 'JSON!'),
-      origin: $('origin', 'String!'),
-      note: '',
-    }
-  }, {
-    clientMutationId: true,
-  }],
-});
+import { CrmCohort, useSubmitProspectFormMutation } from 'index';
 
 type ProspectFormEmailProps = {
   title?: string;
@@ -26,7 +12,7 @@ type ProspectFormEmailProps = {
 
 export const ProspectFormEmail = ({ title }: ProspectFormEmailProps) => {
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync: submit } = useTypedMutation(['prospectForm'], SubmitProspectFormEmail);
+  const { mutateAsync: submit } = useSubmitProspectFormMutation();
   const [submitError, setSubmitError] = React.useState<string | null>(null);
   const { control, handleSubmit, formState: { isDirty, isValid, isSubmitting } } = useForm();
 
@@ -36,7 +22,7 @@ export const ProspectFormEmail = ({ title }: ProspectFormEmailProps) => {
       if (typeof fbq !== 'undefined') {
         fbq('track', 'Lead');
       }
-      await submit({ variables: { prospectData, origin: window.location.toString() } });
+      await submit({ cohort: CrmCohort.ContactMeLater, prospectData, origin: window.location.toString() });
       enqueueSnackbar('Brzy se vám ozveme!', { variant: 'success' });
     } catch (e) {
       if (e instanceof Error) {

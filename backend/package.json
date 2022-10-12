@@ -34,7 +34,7 @@
     "graphile-build-pg": "^4.12.3",
     "graphile-migrate": "^1.4.0",
     "graphile-worker": "^0.12.2",
-    "graphql": "^15.0.0",
+    "graphql": "15.4.0",
     "helmet": "^4.6.0",
     "html-to-text": "^8.1.0",
     "lodash": "^4.17.21",

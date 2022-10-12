@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { $, Selector, NabidkasOrderBy, ModelTypes } from 'lib/zeus';
-import { useTypedQuery } from 'lib/query';
 import { DateRange } from './DateRange';
 import { usePermissions } from 'lib/data/use-permissions';
+import { ReservationFragment, useReservationListQuery } from 'index';
 
-const ReservationView = (x: ModelTypes["Nabidka"]) => {
+const ReservationView = (x: ReservationFragment) => {
   const permissions = usePermissions();
   const header = <div className="trenink-header">
     <div className="title">
@@ -53,55 +52,11 @@ const ReservationView = (x: ModelTypes["Nabidka"]) => {
   </div>;
 }
 
-export const NabidkaList = Selector("Query")({
-  nabidkas: [
-    {
-      first: $('limit', 'Int!'),
-      offset: $('offset', 'Int!'),
-      orderBy: [NabidkasOrderBy.N_OD_DESC],
-    },
-    {
-      nodes: {
-        nDo: true,
-        nId: true,
-        nLock: true,
-        nMaxPocetHod: true,
-        nOd: true,
-        nPocetHod: true,
-        nTimestamp: true,
-        nTrener: true,
-        nVisible: true,
-        nabidkaItemsByNiIdRodic: [{}, {
-          nodes: {
-            niPocetHod: true,
-            niPartner: true,
-            niLock: true,
-            paryByNiPartner: {
-              userByPIdPartner: {
-                uJmeno: true,
-                uPrijmeni: true,
-                uId: true,
-              },
-            },
-          },
-        }],
-        userByNTrener: {
-          uJmeno: true,
-          uPrijmeni: true,
-          uId: true,
-        },
-      },
-      totalCount: true,
-    },
-  ],
-});
-
 export function ReservationSelect() {
-  const { data: reservations } = useTypedQuery(['reservationSelect'], NabidkaList)
-  const [reservation, setReservation] = React.useState<ModelTypes["Nabidka"] | undefined>();
+  const { data: reservations } = useReservationListQuery({ limit: 30, offset: 0 });
+  const [reservation, setReservation] = React.useState<ReservationFragment | undefined>();
   const onChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const id = parseInt(event.target.value, 10);
-    setReservation(reservations?.nabidkas?.nodes?.find(x => x.nId === id) as ModelTypes["Nabidka"]);
+    setReservation(reservations?.nabidkas?.nodes?.find(x => x.nId === event.target.value));
   };
 
   return <div>

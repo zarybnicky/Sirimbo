@@ -1,0 +1,34 @@
+query Article($id: BigInt!) {
+  aktuality(atId: $id) {
+    atJmeno
+    atText
+    atFotoMain
+    atTimestampAdd
+    userByAtKdo {
+      uId
+      uJmeno
+      uPrijmeni
+    }
+  }
+}
+
+
+query Articles($limit: Int!, $offset: Int!) {
+  aktualities(first: $limit, offset: $offset, orderBy: [AT_TIMESTAMP_ADD_DESC]) {
+    nodes {
+      atId
+      atPreview
+      atJmeno
+      atFoto
+      atFotoMain
+      atKdo
+      atText
+      atTimestamp
+      atTimestampAdd
+      galerieFotoByAtFotoMain {
+        gfPath
+      }
+    }
+    totalCount
+  }
+}

@@ -1,7 +1,6 @@
 import { useAuth } from 'lib/data/use-auth';
 import { useRouter } from 'next/router';
 import { Col, Container, Dropdown, Navbar, Row } from 'react-bootstrap';
-import { LoginForm } from "components/LoginForm";
 import { NextLinkComposed } from './Link';
 import { FormControlLabel, Switch } from '@mui/material';
 import { useConfig } from 'lib/use-config';

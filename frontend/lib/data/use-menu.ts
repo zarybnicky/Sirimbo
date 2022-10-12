@@ -1,4 +1,4 @@
-import { useTypedQuery } from 'lib/query';
+import { useMenuQuery } from 'index';
 import { useRouter } from 'next/router';
 import { useAuth } from './use-auth';
 
@@ -14,12 +14,7 @@ export type MenuStructItem = {
 };
 
 export function useDbMenu(): MenuStructItem[] {
-  const { data } = useTypedQuery(['menu'], {
-    parameter: [
-      { paName: "menu" },
-      { paValue: true },
-    ],
-  });
+  const { data } = useMenuQuery();
   if (!data?.parameter?.paValue) {
     return [];
   }

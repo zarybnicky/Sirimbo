@@ -1,33 +1,15 @@
 import * as React from 'react';
 import format from 'date-fns/format';
 import { Container, Typography } from '@mui/material';
-import { $, Selector } from 'lib/zeus';
 import { CallToAction } from 'components/CallToAction';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useTypedQuery } from 'lib/query';
-
-export const ArticleQuery = Selector('Query')({
-  aktuality: [
-    { atId: $('id', 'BigInt!') },
-    {
-      atJmeno: true,
-      atText: true,
-      atFotoMain: true,
-      atTimestampAdd: true,
-      userByAtKdo: {
-        uId: true,
-        uJmeno: true,
-        uPrijmeni: true,
-      }
-    },
-  ],
-});
+import { useArticleQuery } from 'index';
 
 export const ArticlePage = ({ }) => {
   const router = useRouter();
   const id = router.query.id as string;
-  const { data } = useTypedQuery(['article', id], ArticleQuery, {}, { variables: { id } });
+  const { data } = useArticleQuery({ id });
   const x = data?.aktuality;
   if (!x) {
     return null;

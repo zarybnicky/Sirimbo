@@ -1,0 +1,30 @@
+query ActiveProspects {
+  activeProspects {
+    totalCount
+    nodes {
+      id
+      data {
+        name
+        surname
+        email
+        phone
+        yearofbirth
+      }
+      cohort
+      updatedAt
+    }
+  }
+}
+
+mutation SubmitProspectForm($cohort: CrmCohort!, $origin: String!, $prospectData: ProspectDatumInput!) {
+  prospectFormDancer(
+    input: {
+      cohort: $cohort,
+      origin: $origin,
+      prospectData: $prospectData,
+      note: "",
+    }
+  ) {
+    clientMutationId
+  }
+}

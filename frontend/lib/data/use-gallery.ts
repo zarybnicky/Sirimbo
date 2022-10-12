@@ -1,61 +1,13 @@
-import { $, GalerieFotosOrderBy, Selector } from 'lib/zeus';
 import format from 'date-fns/format';
-import { useTypedQuery } from 'lib/query';
-
-const GalleryPhotoPartial = Selector('GalerieFoto')({
-  __typename: true,
-  nodeId: true,
-  gfId: true,
-  gfIdRodic: true,
-  gfKdo: true,
-  gfName: true,
-  gfPath: true,
-  gfTimestamp: true,
-});
-
-const GalleryDirPartial = Selector('GalerieDir')({
-  __typename: true,
-  nodeId: true,
-  gdId: true,
-  gdIdRodic: true,
-  gdName: true,
-  gdPath: true,
-  gdLevel: true,
-  gdHidden: true,
-});
-
-export const GalleryDirQuery = Selector('Query')({
-  galerieDir: [
-    { gdId: $('dirId', 'BigInt!') },
-    {
-      ...GalleryDirPartial,
-      galerieFotosByGfIdRodic: [
-        { orderBy: [GalerieFotosOrderBy.GF_NAME_ASC] },
-        { nodes: GalleryPhotoPartial },
-      ],
-    },
-  ],
-  galerieDirs: [
-    { condition: { gdIdRodic: $('dirId2', 'BigInt!'), gdHidden: false } },
-    {
-      nodes: {
-        ...GalleryDirPartial,
-        galerieFotosByGfIdRodic: [
-          { orderBy: [GalerieFotosOrderBy.GF_NAME_ASC], first: 1 },
-          { nodes: GalleryPhotoPartial },
-        ],
-      },
-    },
-  ],
-});
+import { useGalleryDirQuery } from 'index';
 
 export interface GalleryDir {
   name?: string;
-  parentId?: number;
+  parentId?: string;
 }
 
 export interface GalleryItem {
-  id: number;
+  id: string;
   name: string;
   href: string;
   date: string;
@@ -63,16 +15,13 @@ export interface GalleryItem {
   imgThumb: string;
 }
 
-export const useGallery = (dir: number): {
+export const useGallery = (dir: string): {
   dir?: GalleryDir;
   dirs: GalleryItem[];
   images: GalleryItem[];
 } => {
-  const { data } = useTypedQuery(['galerieDir', dir], GalleryDirQuery, {}, {
-    variables: {
-      dirId: dir,
-      dirId2: dir,
-    },
+  const { data } = useGalleryDirQuery({
+    dirId: dir,
   });
 
   const dirs = (data?.galerieDirs?.nodes || []).map((x) => {

@@ -1,73 +1,17 @@
 import * as React from 'react';
 import { Checkbox, Menu, MenuItem, Button, Pagination } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import { $, AkcesOrderBy, Selector } from 'lib/zeus';
 import { DateRange } from 'components/DateRange';
 import { NextLinkComposed } from 'components/Link';
-import { useTypedMutation, useTypedQuery } from 'lib/query';
-
-export const EventListQuery = Selector('Query')({
-  akces: [
-    {
-      first: $('limit', 'Int!'),
-      offset: $('offset', 'Int!'),
-      orderBy: [AkcesOrderBy.A_OD_DESC],
-    },
-    {
-      nodes: {
-        aDo: true,
-        aId: true,
-        aInfo: true,
-        aDokumenty: true,
-        aJmeno: true,
-        aKapacita: true,
-        aKde: true,
-        aLock: true,
-        aOd: true,
-        aTimestamp: true,
-        aVisible: true,
-        akceItemsByAiIdRodic: [{}, {
-          nodes: {
-            aiId: true,
-            userByAiUser: {
-              uJmeno: true,
-              uPrijmeni: true,
-              uId: true,
-            },
-          },
-          totalCount: true,
-        }],
-      },
-      totalCount: true,
-    },
-  ],
-});
-
-export const ToggleEventVisible = Selector('Mutation')({
-  updateAkce: [
-    {
-      input: {
-        aId: $('id', 'BigInt!'),
-        patch: {
-          aVisible: $('visible', 'Boolean!')
-        },
-      },
-    },
-    {
-      akce: {
-        aId: true,
-      },
-    },
-  ],
-});
+import { useEventListQuery, useToggleEventVisibleMutation } from 'index';
 
 export default function AdminEventList() {
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
-  const { data, refetch } = useTypedQuery(['eventAdmin'], EventListQuery, {}, {
-    variables: { limit, offset: (page - 1) * limit },
+  const { data, refetch } = useEventListQuery({
+    limit, offset: (page - 1) * limit,
   });
-  const { mutate: toggleVisible } = useTypedMutation(['toggleEvent'], ToggleEventVisible, {
+  const { mutate: toggleVisible } = useToggleEventVisibleMutation({
     onSuccess: () => refetch(),
   });
   const total = data?.akces?.totalCount || 0;
@@ -82,7 +26,7 @@ export default function AdminEventList() {
       </tr>
     </thead>
     <tbody>
-      {(data?.akces?.nodes || []).map((a) => <tr key={a.aId}>
+      {data?.akces?.nodes?.map((a) => <tr key={a.aId}>
         <td>
           <PopupState variant="popover">
             {(popupState) => <>
@@ -107,9 +51,7 @@ export default function AdminEventList() {
         <td><DateRange from={a.aOd} to={a.aDo} /></td>
         <td>{a.akceItemsByAiIdRodic.totalCount || 0}/{a.aKapacita}</td>
         <td>
-          <Checkbox checked={a.aVisible} onChange={() => toggleVisible({
-            variables: { id: a.aId, visible: !a.aVisible },
-          })} />
+          <Checkbox checked={a.aVisible} onChange={() => toggleVisible({ id: a.aId, visible: !a.aVisible })} />
         </td>
       </tr>)}
     </tbody>

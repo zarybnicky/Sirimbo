@@ -1,0 +1,24 @@
+query Cohorts {
+  skupinies(condition: {sVisible: true}) {
+    nodes {
+      sId
+      sName
+      sLocation
+      sDescription
+      sVisible
+      sColorRgb
+    }
+  }
+}
+
+query CohortMembers($id: Int!) {
+  cohortMembers(id: $id) {
+    nodes {
+      uJmeno
+      uPrijmeni
+      uRodneCislo
+      uTelefon
+      uEmail
+    }
+  }
+}

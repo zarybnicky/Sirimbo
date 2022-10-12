@@ -1,4 +1,4 @@
-import { useTypedQuery } from 'lib/query';
+import { useTitleVideosQuery } from "index";
 
 export interface Video {
   img: string;
@@ -7,15 +7,7 @@ export interface Video {
 }
 
 export const useTitleVideos = (): Video[] => {
-  const { data } = useTypedQuery(['titleVideos'], {
-    titleVideos: [{}, {
-      nodes: {
-        vTitle: true,
-        vUri: true,
-      },
-    }],
-  });
-
+  const { data } = useTitleVideosQuery();
   return (data?.titleVideos?.nodes || []).map(x => {
     const [id, query] = x.vUri.split('?');
     return {

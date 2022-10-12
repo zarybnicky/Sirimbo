@@ -1,52 +1,12 @@
 import * as React from 'react';
 import { Pagination, Checkbox, Button, Menu, MenuItem } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import { $, GalerieDirsOrderBy, Selector } from 'lib/zeus';
 import { NextLinkComposed } from 'components/Link';
-import { useTypedMutation, useTypedQuery } from 'lib/query';
+import { useGalleryDirListQuery, useToggleGalleryDirVisibleMutation } from 'index';
 
-const GalleryDirList = Selector('Query')({
-  galerieDirs: [
-    {
-      first: $('limit', 'Int!'),
-      offset: $('offset', 'Int!'),
-      orderBy: [GalerieDirsOrderBy.GD_NAME_ASC]
-    },
-    {
-      nodes: {
-        gdHidden: true,
-        gdId: true,
-        gdIdRodic: true,
-        gdLevel: true,
-        gdName: true,
-        gdPath: true,
-      },
-      totalCount: true,
-    }
-  ],
-});
-
-const ToggleVisible = Selector('Mutation')({
-  updateGalerieDir: [
-    {
-      input: {
-        gdId: $('id', 'BigInt!'),
-        patch: {
-          gdHidden: $('visible', 'Boolean!'),
-        },
-      },
-    },
-    {
-      galerieDir: {
-        gdId: true,
-      },
-    },
-  ],
-});
-
-type Treeified<T> = T & { id: number; parentId: number; children: Treeified<T>[]; };
+type Treeified<T> = T & { id: string; parentId: string; children: Treeified<T>[]; };
 function listToTree<T>(list: Treeified<T>[]) {
-  const map: { [k: number]: number } = {};
+  const map: { [k: string]: number } = {};
   const roots = []
   for (let i = 0; i < list.length; i += 1) {
     map[list[i]!.id] = i;
@@ -74,10 +34,10 @@ function flatten<T>(root: Treeified<T>): T[] {
 export default function GalleryDirectoryList() {
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
-  const { data, refetch } = useTypedQuery(['galleryDirs', page], GalleryDirList, {}, {
-    variables: { limit, offset: (page - 1) * limit }
+  const { data, refetch } = useGalleryDirListQuery({
+    limit, offset: (page - 1) * limit,
   });
-  const { mutateAsync: toggleVisible } = useTypedMutation(['toggleEventVisible'], ToggleVisible, {
+  const { mutateAsync: toggleVisible } = useToggleGalleryDirVisibleMutation({
     onSuccess: () => refetch(),
   });
 
@@ -114,7 +74,7 @@ export default function GalleryDirectoryList() {
         </td>
         <td>
           <Checkbox checked={a.gdHidden} onChange={() => toggleVisible({
-            variables: { id: a.gdId, visible: !a.gdHidden },
+            id: a.gdId, visible: !a.gdHidden,
           })} />
         </td>
       </tr>)}

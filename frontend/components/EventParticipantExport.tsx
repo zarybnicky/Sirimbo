@@ -1,31 +1,10 @@
 import * as React from 'react';
-import { $, Selector } from 'lib/zeus';
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
-import { useTypedQuery } from 'lib/query';
-
-const ExportQuery = Selector('Query')({
-  akce: [
-    { aId: $('id', 'BigInt!') },
-    {
-      aJmeno: true,
-      akceItemsByAiIdRodic: [{}, {
-        nodes: {
-          userByAiUser: {
-            uJmeno: true,
-            uPrijmeni: true,
-            uRodneCislo: true,
-            uTelefon: true,
-            uEmail: true,
-          },
-        },
-      }],
-    },
-  ],
-});
+import { useEventParticipantsQuery } from 'index';
 
 export function EventParticipantExport({ id }: { id: string; }) {
-  const { data } = useTypedQuery(['exportParticipation'], ExportQuery, {}, { variables: { id } });
+  const { data } = useEventParticipantsQuery({ id });
 
   const saveData = async () => {
     if (!data) {

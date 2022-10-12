@@ -1,0 +1,5 @@
+query Menu {
+  parameter(paName: "menu") {
+    paValue
+  }
+}

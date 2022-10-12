@@ -5,16 +5,12 @@ import {
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useConfirm } from 'material-ui-confirm';
-import { $, Selector, PagesOrderBy, ModelTypes } from 'lib/zeus';
 import { HeadingPlugin } from 'components/Heading';
 import { ContainerPlugin } from 'components/Container';
 import { CallToActionPlugin } from 'components/CallToAction';
 import { ReactPage, cellPlugins } from 'components/ReactPage';
 import AddIcon from '@mui/icons-material/Add';
-import { useTypedMutation, useTypedQuery } from 'lib/query';
-
-type Page = ModelTypes['Page'];
-type PageRevision = ModelTypes['PageRevision'];
+import { Page, PageRevision, useCreatePageMutation, usePageListQuery, usePageRevisionsQuery, useUpdatePageMutation } from 'index';
 
 const INITIAL_VALUE: Value = createValue({
   rows: [
@@ -46,85 +42,29 @@ type State = {
   content?: Value;
 };
 
-const PageFragment = Selector('Page')({
-  __typename: true,
-  nodeId: true,
-  id: true,
-  url: true,
-  title: true,
-  content: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
 export const EditorPage = ({ }) => {
   const { enqueueSnackbar } = useSnackbar();
   const confirm = useConfirm();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [state, setState] = React.useState<State>({ state: 'empty' });
   const startPage = () => setState({ state: 'create', url: '', title: '', content: INITIAL_VALUE });
-  const selectPage = (page: Page) => setState({ state: 'edit', page, content: page.content })
+  const selectPage = (page: Page) => setState({
+    state: 'edit',
+    page,
+    content: page.content as any,
+  })
   const setContent = (content: Value) => setState(s => ({ ...s, content }));
 
-  const { data, refetch } = useTypedQuery(['pages'], {
-    pages: [
-      { orderBy: [PagesOrderBy.URL_ASC] },
-      { nodes: PageFragment },
-    ],
-  });
-
   const selectedPage = (state.state === 'edit' || state.state === 'history') ? state.page : undefined
-  const { data: revisions } = useTypedQuery(['pageRevisions', selectedPage?.id], {
-    pageRevisions: [
-      { condition: { id: $('id', 'BigInt!') }, },
-      {
-        nodes: {
-          __typename: true,
-          nodeId: true,
-          revNumber: true,
-          revOperation: true,
-          revTimestamp: true,
-          id: true,
-          url: true,
-          title: true,
-          content: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-      },
-    ],
-  }, { enabled: !!selectedPage?.id }, { variables: { id: selectedPage?.id } });
-
-  const { mutateAsync: doCreatePage } = useTypedMutation(['createPage'], {
-    createPage: [
-      {
-        input: {
-          page: {
-            url: $('url', 'String!'),
-            title: $('title', 'String!'),
-            content: $('content', 'JSON!'),
-          }
-        }
-      },
-      { page: PageFragment },
-    ],
+  const { data: revisions } = usePageRevisionsQuery({
+    id: selectedPage?.id!
+  }, {
+    enabled: !!selectedPage?.id,
   });
 
-  const { mutateAsync: doSavePage } = useTypedMutation(['updatePage'], {
-    updatePage: [
-      {
-        input: {
-          id: $('id', 'BigInt!'),
-          patch: {
-            url: $('url', 'String!'),
-            title: $('title', 'String!'),
-            content: $('content', 'JSON!'),
-          }
-        }
-      },
-      { __typename: true },
-    ],
-  }, {
+  const { data, refetch } = usePageListQuery();
+  const { mutateAsync: doCreatePage } = useCreatePageMutation();
+  const { mutateAsync: doSavePage } = useUpdatePageMutation({
     onSuccess: () => refetch(),
   });
 
@@ -138,10 +78,10 @@ export const EditorPage = ({ }) => {
         });
         setLoading(true);
         const data = await doCreatePage({
-          variables: {
+          input: {
             url: state.url,
             title: state.title,
-            content: state.content,
+            content: state.content || {},
           },
         });
         await refetch();
@@ -178,7 +118,7 @@ export const EditorPage = ({ }) => {
       const savePage = async () => {
         setLoading(true);
         const { id, url } = state.page;
-        await doSavePage({ variables: { id, url, content: state.content } });
+        await doSavePage({ id, patch: { url, content: state.content } });
         enqueueSnackbar('Stránka upravena', { variant: 'success' });
         await refetch();
         setLoading(false);

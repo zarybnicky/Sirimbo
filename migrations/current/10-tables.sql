@@ -55,6 +55,8 @@ create policy admin_all on nabidka to administrator using (true) with check (tru
 create policy all_view on nabidka for select using (true);
 grant all on nabidka to member;
 
+alter table nabidka alter column n_max_pocet_hod type smallint;
+
 -- ************** nabidka_item *************
 select app_private.drop_policies('public.nabidka_item');
 alter table nabidka_item enable row level security;

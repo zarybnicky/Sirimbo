@@ -2,41 +2,16 @@ import * as React from 'react';
 import format from 'date-fns/format';
 import { Button, Menu, MenuItem, Pagination } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import { $, AktualitiesOrderBy, Selector } from 'lib/zeus';
 import { useAuth } from 'lib/data/use-auth';
 import { NextLinkComposed } from 'components/Link';
-import { useTypedQuery } from 'lib/query';
-
-export const ArticlesAdminQuery = Selector('Query')({
-  aktualities: [
-    {
-      first: $('limit', 'Int!'),
-      offset: $('offset', 'Int!'),
-      orderBy: [AktualitiesOrderBy.AT_TIMESTAMP_ADD_DESC]
-    },
-    {
-      nodes: {
-        atFoto: true,
-        atFotoMain: true,
-        atId: true,
-        atJmeno: true,
-        atKdo: true,
-        atPreview: true,
-        atText: true,
-        atTimestampAdd: true,
-        atTimestamp: true,
-      },
-      totalCount: true,
-    },
-  ],
-});
+import { useArticlesQuery } from 'index';
 
 export function ArticleAdminList() {
   const { user } = useAuth();
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
-  const { data } = useTypedQuery(['articleAdmin'], ArticlesAdminQuery, {}, {
-    variables: { limit, offset: (page - 1) * limit },
+  const { data } = useArticlesQuery({
+    limit, offset: (page - 1) * limit,
   });
   const total = data?.aktualities?.totalCount || 0;
 

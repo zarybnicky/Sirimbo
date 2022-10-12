@@ -1,26 +1,10 @@
 import * as React from 'react';
-import { $, Selector } from 'lib/zeus';
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
-import { useTypedQuery } from 'lib/query';
-
-const ExportQuery = Selector('Query')({
-  cohortMembers: [
-    { id: $('id', 'BigInt!') },
-    {
-      nodes: {
-        uJmeno: true,
-        uPrijmeni: true,
-        uRodneCislo: true,
-        uTelefon: true,
-        uEmail: true,
-      },
-    },
-  ],
-});
+import { useCohortMembersQuery } from 'index';
 
 export function CohortExport({ id, name }: { id: number; name: string; }) {
-  const { data } = useTypedQuery(['cohortExport', id], ExportQuery, {}, { variables: { id } });
+  const { data } = useCohortMembersQuery({ id });
 
   const saveData = async () => {
     if (!data) {

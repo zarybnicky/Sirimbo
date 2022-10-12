@@ -2,11 +2,9 @@ import * as React from 'react';
 import format from 'date-fns/format';
 import { Card, CardContent, Container, Grid, Typography } from '@mui/material';
 import { useAuth } from 'lib/data/use-auth';
-import { Schedule, ScheduleItem, ScheduleRangeQuery } from 'lib/data/use-schedule';
-import { Reservation, ReservationItem, ReservationRangeQuery } from 'lib/data/use-reservation';
 import { PermissionLevel, usePermissions } from 'lib/data/use-permissions';
-import { useTypedQuery } from 'lib/query';
 import { DateRange } from 'components/DateRange';
+import { ReservationFragment, ScheduleItemFragment, ScheduleFragment, useReservationRangeQuery, useScheduleRangeQuery, ReservationItemFragment } from 'index';
 
 export const SchedulePage = ({ }) => {
   // require or redirect
@@ -15,38 +13,40 @@ export const SchedulePage = ({ }) => {
   const [startDate] = React.useState('2022-02-01');
   const [endDate] = React.useState('2022-03-01');
 
-  const { data: schedules } = useTypedQuery(['scheduleRange'], ScheduleRangeQuery, {}, {
-    variables: { startDate, endDate },
+  const { data: schedules } = useScheduleRangeQuery({
+    startDate,
+    endDate,
   });
-  const { data: reservations } = useTypedQuery(['reservationRange'], ReservationRangeQuery, {}, {
-    variables: { startDate, endDate },
+  const { data: reservations } = useReservationRangeQuery({
+    startDate,
+    endDate,
   });
 
-  const canEditSchedule = (trainerId: number) => (
+  const canEditSchedule = (trainerId: string) => (
     (perms.peRozpis >= PermissionLevel.P_OWNED && user?.uId == trainerId) ||
     perms.peRozpis >= PermissionLevel.P_ADMIN
   );
-  const canSignUp = (lesson: ScheduleItem, item: Schedule) => (
+  const canSignUp = (lesson: ScheduleItemFragment, item: ScheduleFragment) => (
     perms.peRozpis >= PermissionLevel.P_MEMBER &&
-    lesson.riPartner == 0 && !item.rLock && !lesson.riLock
+    (!lesson.riPartner || lesson.riPartner === '0') && !item.rLock && !lesson.riLock
   );
-  const canSignOut = (lesson: ScheduleItem, item: Schedule) => (
-    lesson.riPartner != 0 && !item.rLock && !lesson.riLock && (
+  const canSignOut = (lesson: ScheduleItemFragment, item: ScheduleFragment) => (
+    (!lesson.riPartner || lesson.riPartner === '0') && !item.rLock && !lesson.riLock && (
       (perms.peRozpis >= PermissionLevel.P_MEMBER && couple?.pId == lesson.riPartner) ||
       (perms.peRozpis >= PermissionLevel.P_OWNED && user?.uId == item.rTrener) ||
       perms.peRozpis >= PermissionLevel.P_ADMIN
     )
   );
-  const canEditReservation = (trainerId: number) => (
+  const canEditReservation = (trainerId: string) => (
     (perms.peNabidka >= PermissionLevel.P_OWNED && user?.uId == trainerId) ||
     perms.peNabidka >= PermissionLevel.P_ADMIN
   );
-  const canReserve = (item: Reservation) => (
+  const canReserve = (item: ReservationFragment) => (
     perms.peNabidka >= PermissionLevel.P_MEMBER && !item.nLock &&
     item.nPocetHod > item.nabidkaItemsByNiIdRodic.nodes.reduce((n, x) => n + x.niPocetHod, 0)
   );
-  const canCancel = (lesson: ReservationItem, item: Reservation) => (
-    lesson.niPartner != 0 && !item.nLock && !lesson.niLock && (
+  const canCancel = (lesson: ReservationItemFragment, item: ReservationFragment) => (
+    (!lesson.niPartner || lesson.niPartner === '0') && !item.nLock && !lesson.niLock && (
       (perms.peNabidka >= PermissionLevel.P_MEMBER && couple?.pId == lesson.niPartner) ||
       (perms.peNabidka >= PermissionLevel.P_OWNED && user?.uId == item.nTrener) ||
       perms.peNabidka >= PermissionLevel.P_ADMIN

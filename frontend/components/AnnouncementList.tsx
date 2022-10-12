@@ -1,54 +1,14 @@
 import * as React from 'react';
 import format from 'date-fns/format';
 import { Pagination, Box, IconButton, Card, CardContent, Typography } from '@mui/material';
-import { $, UpozornenisOrderBy, Selector } from 'lib/zeus';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { useTypedQuery } from 'lib/query';
-
-const AnnouncementQuery = Selector('Query')({
-  upozornenis: [
-    {
-      first: $('limit', 'Int!'),
-      offset: $('offset', 'Int!'),
-      orderBy: [UpozornenisOrderBy.UP_TIMESTAMP_ADD_DESC],
-    },
-    {
-      totalCount: true,
-      nodes: {
-        upId: true,
-        upKdo: true,
-        upLock: true,
-        upNadpis: true,
-        upText: true,
-        upTimestamp: true,
-        upTimestampAdd: true,
-        userByUpKdo: {
-          uId: true,
-          uJmeno: true,
-          uPrijmeni: true,
-        },
-        upozorneniSkupiniesByUpsIdRodic: [{}, {
-          nodes: {
-            skupinyByUpsIdSkupina: {
-              sName: true,
-              sDescription: true,
-              sColorText: true,
-              sColorRgb: true,
-            }
-          }
-        }],
-      },
-    },
-  ],
-});
+import { useAnnouncementListQuery } from 'index';
 
 export function AnnouncementList() {
   const [limit] = React.useState(3);
   const [page, setPage] = React.useState(1);
-  const { data } = useTypedQuery(['announcements', page], AnnouncementQuery, {}, {
-    variables: { limit, offset: (page - 1) * limit },
-  });
+  const { data } = useAnnouncementListQuery({ limit, offset: (page - 1) * limit });
 
   const nodes = data?.upozornenis?.nodes;
   const total = data?.upozornenis?.totalCount;
@@ -56,6 +16,7 @@ export function AnnouncementList() {
     // react-skeleton
     return null;
   }
+
   const hasNext = total >= page * limit;
   const hasPrev = 0 < (page - 1) * limit;
   return <>

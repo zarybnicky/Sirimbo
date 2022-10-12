@@ -10,10 +10,8 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
 export default function GalleryPage() {
   const router = useRouter();
-  const { dir: dirParam, photo: photoParam } = router.query;
-  const dirId = dirParam ? parseInt(dirParam as string, 10) : 1;
-  const photoId = photoParam ? parseInt(photoParam as string, 10) : undefined;
-  const { dir, dirs, images } = useGallery(dirId);
+  const { dir: dirId = 1, photo: photoId } = router.query;
+  const { dir, dirs, images } = useGallery(dirId as string);
 
   return <>
     <Head>
@@ -41,6 +39,13 @@ export default function GalleryPage() {
         ))}
       </Grid>
     </Container>
-    {photoId ? <Lightbox dirHref={`/gallery/${dirId}`} {...{ images, initial: photoId }} /> : null}
+
+    {photoId && (
+      <Lightbox
+        dirHref={`/gallery/${dirId}`}
+        images={images}
+        initial={photoId as string}
+      />
+    )}
   </>;
 };

@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 export interface LightboxProps {
   dirHref: string;
   images: GalleryItem[];
-  initial: number;
+  initial: string;
 }
 
 export const Lightbox = ({ dirHref, images, initial }: LightboxProps) => {

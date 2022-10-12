@@ -1,0 +1,61 @@
+fragment ReservationItem on NabidkaItem {
+  niId
+  niPartner
+  niPocetHod
+  niLock
+  paryByNiPartner {
+    pId
+    userByPIdPartner {
+      uJmeno
+      uPrijmeni
+      uId
+    }
+  }
+}
+
+fragment Reservation on Nabidka {
+  nId
+  nOd
+  nDo
+  nPocetHod
+  nMaxPocetHod
+  nLock
+  nTimestamp
+  nVisible
+  nTrener
+  nabidkaItemsByNiIdRodic(orderBy: [NI_POCET_HOD_DESC]) {
+    nodes {
+      ...ReservationItem
+    }
+  }
+  userByNTrener {
+    uJmeno
+    uPrijmeni
+    uId
+  }
+}
+
+query ReservationList($limit: Int! $offset: Int!) {
+  nabidkas(first: $limit, offset: $offset, orderBy: [N_OD_DESC]) {
+    nodes {
+      ...Reservation
+    }
+    totalCount
+  }
+}
+
+query ReservationRange($startDate: Date!, $endDate: Date!) {
+  reservationsForRange(startDate: $startDate, endDate: $endDate) {
+    nodes {
+      ...Reservation
+    }
+  }
+}
+
+mutation ToggleReservationVisible($id: BigInt!, $visible: Boolean!) {
+  updateNabidka(input: {nId: $id, patch: {nVisible: $visible}}) {
+    nabidka {
+      nId
+    }
+  }
+}

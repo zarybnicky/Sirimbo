@@ -5,13 +5,17 @@
     "frontend",
     "backend"
   ],
+  "resolutions": {
+    "graphql": "15.4.0"
+  },
   "devDependencies": {
     "concurrently": "^7.0.0"
   },
   "scripts": {
     "frontend": "yarn workspace sirimbo-frontend dev",
+    "schema": "yarn workspace sirimbo-frontend schema:watch",
     "backend": "yarn workspace sirimbo-backend start",
     "migrate": "graphile-migrate watch",
-    "start": "concurrently --kill-others-on-fail 'yarn frontend' 'yarn backend' 'yarn migrate'"
+    "start": "DEBUG=true concurrently --kill-others-on-fail 'yarn migrate' 'yarn frontend' 'yarn backend' 'yarn schema'"
   }
 }

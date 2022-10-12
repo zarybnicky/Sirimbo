@@ -2,55 +2,24 @@ import * as React from 'react';
 import { Alert, Card, Grid, CardContent, Container, Button, CardActions, Typography } from '@mui/material';
 import { useForm, AutocompleteElement, TextFieldElement, DatePickerElement, RadioButtonGroup } from 'react-hook-form-mui';
 import { useCountries } from 'lib/data/use-countries';
-import { useCohorts } from 'lib/data/use-cohorts';
-import { $, useTypedMutation } from 'lib/query';
 import format from 'date-fns/format';
 import { useSnackbar } from 'notistack';
+import { useCohortsQuery, useRegisterMutation } from 'index';
 
 export const RegisterPage = () => {
   const countries = useCountries();
-  const cohorts = useCohorts();
+  const { data: cohorts } = useCohortsQuery();
   const [submitError, setSubmitError] = React.useState<string | null>(null);
   const { control, handleSubmit, watch, formState: { isDirty, isSubmitting } } = useForm();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync: register } = useTypedMutation(['register'], {
-    createUser: [{
-      input: {
-        user: {
-          uLogin: $('username', 'String!'), // to lowercasae
-          uPass: $('password', 'String!'), // hash!!
-          uJmeno: $('jmeno', 'String!'),
-          uPrijmeni: $('prijmeni', 'String!'),
-          uNarozeni: $('narozeni', 'Date!'), // date
-          uRodneCislo: $('rodneCislo', 'String!'),
-          uPohlavi: $('pohlavi', 'String!'),
-          uNationality: $('nationality', 'String!'), // text
-          uEmail: $('email', 'String!'),
-          uTelefon: $('telefon', 'String!'),
-          uStreet: $('street', 'String!'),
-          uConscriptionNumber: $('popisne', 'String'),
-          uOrientationNumber: $('orientacni', 'String!'),
-          uCity: $('city', 'String!'),
-          uDistrict: $('district', 'String'),
-          uPostalCode: $('postal', 'String!'),
-          uSkupina: $('skupina', 'BigInt!'),
-          uPoznamky: $('poznamky', 'String!'),
-          uDancer: $('dancer', 'Boolean!'),
-        },
-      },
-    }, {
-      user: {
-        uId: true,
-      },
-    }],
-  });
+  const { mutateAsync: register } = useRegisterMutation();
 
   const onSubmit = async (values: any) => {
     setSubmitError(null);
     try {
       await register({
-        variables: {
+        input: {
           ...values,
           username: values.username.toLowerCase(),
           poznamky: values.poznamky === 'dancer' ? 'Tanečník/tanečnice' :
@@ -177,7 +146,7 @@ export const RegisterPage = () => {
             <Grid item xs={12} sm={6}>
               <AutocompleteElement control={control}
                 label="Tréninková skupina" name="skupina"
-                options={cohorts.map(x => ({ id: x.sId, label: x.sName }))}
+                options={cohorts?.skupinies?.nodes?.map(x => ({ id: x.sId, label: x.sName })) || []}
               />
             </Grid>
 

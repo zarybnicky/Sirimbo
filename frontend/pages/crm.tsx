@@ -1,7 +1,6 @@
 import * as React from 'react';
 import format from 'date-fns/format';
 import { Container, Typography } from '@mui/material';
-import { Selector } from 'lib/zeus';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -9,31 +8,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { useTypedQuery } from 'lib/query';
-
-const ProspectQuery = Selector('Query')({
-  activeProspects: [
-    {},
-    {
-      totalCount: true,
-      nodes: {
-        id: true,
-        data: {
-          name: true,
-          surname: true,
-          email: true,
-          phone: true,
-          yearofbirth: true,
-        },
-        cohort: true,
-        updatedAt: true,
-      },
-    },
-  ],
-});
+import { useActiveProspectsQuery } from 'index';
 
 export default function CrmPage() {
-  const { data } = useTypedQuery(['prospects'], ProspectQuery);
+  const { data } = useActiveProspectsQuery();
   const nodes = data?.activeProspects?.nodes || [];
 
   return <Container maxWidth="lg" style={{ padding: '2rem 0' }}>
