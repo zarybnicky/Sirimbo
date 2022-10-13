@@ -3,18 +3,6 @@ namespace Olymp\Controller\Member;
 
 class Clenove
 {
-    public static function single($id)
-    {
-        \Permissions::checkError('users', P_VIEW);
-        if (!($data = \DBUser::getUser($id))) {
-            \Redirect::to('/member/clenove');
-        }
-        \Render::twig('Member/ClenoveSingle.twig', [
-            'user' => $data,
-            'returnURI' => $_SERVER['HTTP_REFERER'],
-        ]);
-    }
-
     public static function groups()
     {
         \Permissions::checkError('users', P_VIEW);

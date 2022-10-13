@@ -10164,6 +10164,15 @@ export type ToggleScheduleVisibleMutationVariables = Exact<{
 
 export type ToggleScheduleVisibleMutation = { __typename?: 'Mutation', updateRozpi: { __typename?: 'UpdateRozpiPayload', rozpi: { __typename?: 'Rozpi', rId: string } | null } | null };
 
+export type UserDetailFragment = { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string };
+
+export type UserQueryVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string } | null };
+
 export type TitleVideosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -10357,6 +10366,15 @@ export const ScheduleFragmentDoc = `
   }
 }
     ${ScheduleItemFragmentDoc}`;
+export const UserDetailFragmentDoc = `
+    fragment UserDetail on User {
+  uId
+  uJmeno
+  uPrijmeni
+  uEmail
+  uTelefon
+}
+    `;
 export const AnnouncementListDocument = `
     query AnnouncementList($limit: Int!, $offset: Int!) {
   upozornenis(first: $limit, offset: $offset, orderBy: [UP_TIMESTAMP_ADD_DESC]) {
@@ -11285,6 +11303,32 @@ export const useToggleScheduleVisibleMutation = <
 useToggleScheduleVisibleMutation.getKey = () => ['ToggleScheduleVisible'];
 
 useToggleScheduleVisibleMutation.fetcher = (variables: ToggleScheduleVisibleMutationVariables, options?: RequestInit['headers']) => fetcher<ToggleScheduleVisibleMutation, ToggleScheduleVisibleMutationVariables>(ToggleScheduleVisibleDocument, variables, options);
+export const UserDocument = `
+    query User($id: BigInt!) {
+  user(uId: $id) {
+    ...UserDetail
+  }
+}
+    ${UserDetailFragmentDoc}`;
+export const useUserQuery = <
+      TData = UserQuery,
+      TError = unknown
+    >(
+      variables: UserQueryVariables,
+      options?: UseQueryOptions<UserQuery, TError, TData>
+    ) =>
+    useQuery<UserQuery, TError, TData>(
+      ['User', variables],
+      fetcher<UserQuery, UserQueryVariables>(UserDocument, variables),
+      options
+    );
+useUserQuery.document = UserDocument;
+
+
+useUserQuery.getKey = (variables: UserQueryVariables) => ['User', variables];
+;
+
+useUserQuery.fetcher = (variables: UserQueryVariables, options?: RequestInit['headers']) => fetcher<UserQuery, UserQueryVariables>(UserDocument, variables, options);
 export const TitleVideosDocument = `
     query TitleVideos {
   titleVideos {

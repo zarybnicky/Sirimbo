@@ -1,0 +1,19 @@
+fragment UserDetail on User {
+  uId
+  uJmeno
+  uPrijmeni
+  uEmail
+  uTelefon
+}
+
+query User($id: BigInt!) {
+  user(uId: $id) {
+    ...UserDetail
+  }
+}
+
+query UserList($cohortId: BigInt) {
+  users() {
+    $1
+  }
+}

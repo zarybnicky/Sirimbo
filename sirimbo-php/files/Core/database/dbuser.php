@@ -300,26 +300,6 @@ class DBUser extends Database implements Pagable
         return self::getArray($res);
     }
 
-    public static function getBannedUsers()
-    {
-        $res = self::query(
-            "SELECT u1.*,skupiny.* FROM users u1
-                LEFT JOIN skupiny ON u1.u_skupina=skupiny.s_id
-            WHERE u_ban='1' ORDER BY u_prijmeni"
-        );
-        return self::getArray($res);
-    }
-
-    public static function getUnconfirmedUsers()
-    {
-        $res = self::query(
-            "SELECT u1.*,skupiny.* FROM users u1
-                LEFT JOIN skupiny ON u1.u_skupina=skupiny.s_id
-            WHERE u_confirmed='0' ORDER BY u_prijmeni"
-        );
-        return self::getArray($res);
-    }
-
     public static function getActiveUsers($group = null)
     {
         $res = self::query(

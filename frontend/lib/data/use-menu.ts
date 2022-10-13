@@ -73,7 +73,7 @@ export const memberMenu: MenuStructItem[] = [
   { "type": "link", "text": "Tréninky", "href": "/schedule" },
   { "type": "link", "text": "Akce", "href": "/events/private" },
   { "type": "link", "text": "Dokumenty", "href": "/documents" },
-  { "type": "link", "text": "Členové", "href": "/groups" },
+  { "type": "link", "text": "Členové", "href": "/cohorts" },
 ];
 
 export const adminMenu: MenuStructItem[] = [
