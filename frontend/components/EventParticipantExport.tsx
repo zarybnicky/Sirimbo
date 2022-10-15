@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
-import { useEventParticipantsQuery } from 'index';
+import { useEventParticipantsQuery } from 'lib/graphql';
 
 export function EventParticipantExport({ id }: { id: string; }) {
   const { data } = useEventParticipantsQuery({ id });

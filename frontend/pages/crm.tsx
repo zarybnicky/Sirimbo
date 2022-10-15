@@ -8,9 +8,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { useActiveProspectsQuery } from 'index';
+import { useActiveProspectsQuery } from 'lib/graphql';
+import { withUserLoggedIn } from 'lib/route-guards';
 
-export default function CrmPage() {
+function CrmPage() {
   const { data } = useActiveProspectsQuery();
   const nodes = data?.activeProspects?.nodes || [];
 
@@ -45,3 +46,5 @@ export default function CrmPage() {
     </TableContainer>
   </Container>;
 }
+
+export default withUserLoggedIn(CrmPage);

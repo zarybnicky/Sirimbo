@@ -12,8 +12,22 @@ query User($id: BigInt!) {
   }
 }
 
-query UserList($cohortId: BigInt) {
-  users() {
-    $1
+query UserList($confirmed: Boolean) {
+  users(condition: {uConfirmed: $confirmed}) {
+    nodes {
+      ...UserPartial
+    }
+  }
+}
+
+mutation ConfirmUser($id: BigInt!, $role: BigInt!, $cohort: BigInt!) {
+  confirmUser(input: {id: $id, grp: $role, cohort: $cohort}) {
+    __typename
+  }
+}
+
+mutation DeleteUser($id: BigInt!) {
+  deleteUser(input: {uId: $id}) {
+    __typename
   }
 }

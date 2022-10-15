@@ -1,5 +1,5 @@
 import format from 'date-fns/format';
-import { useGalleryDirQuery } from 'index';
+import { useGalleryDirQuery } from 'lib/graphql';
 
 export interface GalleryDir {
   name?: string;

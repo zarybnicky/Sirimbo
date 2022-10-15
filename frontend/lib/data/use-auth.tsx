@@ -1,6 +1,6 @@
 import * as React from "react";
-import { CouplePartialFragment, useCurrentUserQuery, useLoginMutation, useLogoutMutation } from "index";
-import type { UserPartialFragment } from "index";
+import { CouplePartialFragment, useCurrentUserQuery, useLoginMutation, useLogoutMutation } from 'lib/graphql';
+import type { UserPartialFragment } from 'lib/graphql';
 
 export interface AuthContextType {
   isLoading: boolean,

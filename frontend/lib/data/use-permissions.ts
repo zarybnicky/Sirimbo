@@ -1,4 +1,4 @@
-import { ReservationFragment, ReservationItemFragment, ScheduleFragment, ScheduleItemFragment, UserPartialFragment } from 'index';
+import { ReservationFragment, ReservationItemFragment, ScheduleFragment, ScheduleItemFragment, UserPartialFragment } from 'lib/graphql';
 import { useAuth } from './use-auth';
 
 export enum PermissionLevel {

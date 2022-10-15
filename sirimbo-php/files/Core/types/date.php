@@ -76,11 +76,6 @@ class Date
         return ((int) $this->day) . '. ' . ((int) $this->month) . '. ' . $this->year;
     }
 
-    public function getDay()
-    {
-        return $this->day;
-    }
-
     public function getMonth()
     {
         return $this->month;

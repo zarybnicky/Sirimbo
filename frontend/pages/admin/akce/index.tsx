@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { Checkbox, Menu, MenuItem, Button, Pagination } from '@mui/material';
-import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import { Checkbox, Pagination } from '@mui/material';
 import { DateRange } from 'components/DateRange';
 import { NextLinkComposed } from 'components/Link';
-import { useEventListQuery, useToggleEventVisibleMutation } from 'index';
+import { useEventListQuery, useToggleEventVisibleMutation } from 'lib/graphql';
+import { withUserLoggedIn } from 'lib/route-guards';
+import { Dropdown } from 'components/Dropdown';
 
-export default function AdminEventList() {
+function AdminEventList() {
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
   const { data, refetch } = useEventListQuery({
@@ -28,25 +29,15 @@ export default function AdminEventList() {
     <tbody>
       {data?.akces?.nodes?.map((a) => <tr key={a.aId}>
         <td>
-          <PopupState variant="popover">
-            {(popupState) => <>
-              <Button {...bindTrigger(popupState)}>{a.aJmeno}</Button>
-              <Menu {...bindMenu(popupState)}>
-                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/akce/edit/${a.aId}`}>
-                  Upravit
-                </MenuItem>
-                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/akce/detail/${a.aId}`}>
-                  Upravit účastníky
-                </MenuItem>
-                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/akce/dokumenty/${a.aId}`}>
-                  Upravit dokumenty
-                </MenuItem>
-                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/akce/remove/${a.aId}`}>
-                  Odstranit
-                </MenuItem>
-              </Menu>
-            </>}
-          </PopupState>
+          <Dropdown
+            button={<>{a.aJmeno}</>}
+            options={[
+              { title: 'Upravit', href: `/admin/rozpis/edit/${a.aId}` },
+              { title: 'Upravit účastníky', href: `/admin/rozpis/detail/${a.aId}` },
+              { title: 'Upravit dokumenty', href: `/admin/rozpis/detail/${a.aId}` },
+              { title: 'Odstranit', href: `/admin/rozpis/remove/${a.aId}` },
+            ]}
+          />
         </td>
         <td><DateRange from={a.aOd} to={a.aDo} /></td>
         <td>{a.akceItemsByAiIdRodic.totalCount || 0}/{a.aKapacita}</td>
@@ -63,3 +54,5 @@ export default function AdminEventList() {
     <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
   </>;
 }
+
+export default withUserLoggedIn(AdminEventList);

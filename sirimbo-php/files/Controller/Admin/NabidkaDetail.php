@@ -33,12 +33,10 @@ class NabidkaDetail
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
 
         $items = \DBNabidka::getReservationItems($id);
-        $obsazeno = \DBNabidka::getReservationLessons($id);
 
         if (($_POST["remove"] ?? 0) > 0) {
             \DBNabidka::removeNabidkaItem($id, $_POST[$_POST["remove"] . "-partner"]);
             $items = \DBNabidka::getReservationItems($id);
-            $obsazeno = \DBNabidka::getReservationLessons($id);
         }
 
         $maxLessons = $data['n_max_pocet_hodin'];
@@ -56,13 +54,13 @@ class NabidkaDetail
                 \DBNabidka::editNabidkaItem($item["ni_id"], $partnerNew, $countNew);
             }
         }
+
         $obsazeno = \DBNabidka::getReservationLessons($id);
 
         if (is_numeric($_POST["add_hodiny"] ?? null) &&
             is_numeric($_POST["add_partner"] ?? null) &&
             $_POST['add_partner']
         ) {
-            $partner = $_POST['add_partner'];
             $count = $_POST["add_hodiny"];
             if (0 < $maxLessons && $maxLessons < $count) {
                 $count = $maxLessons;

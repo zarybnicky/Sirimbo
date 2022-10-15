@@ -94,10 +94,4 @@ class DBPlatbyItem extends Database
         );
         return self::getSingleRow($res);
     }
-
-    public static function getSingleByRawId($id)
-    {
-        $res = self::query("SELECT * FROM platby_item WHERE pi_id_raw='?'", $id);
-        return self::getSingleRow($res);
-    }
 }

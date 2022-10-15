@@ -6,13 +6,14 @@ import { useAuth } from 'lib/data/use-auth';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'react-hook-form-mui';
+import { withUserLoggedOut } from 'lib/route-guards';
 
 type FormProps = {
   login: string;
   passwd: string;
 };
 
-export default function LoginPage() {
+function LoginPage() {
   const { signIn } = useAuth();
   const router = useRouter()
   const [submitError, setSubmitError] = React.useState<string | null>(null);
@@ -68,3 +69,5 @@ export default function LoginPage() {
     </Container>
   );
 };
+
+export default withUserLoggedOut(LoginPage);

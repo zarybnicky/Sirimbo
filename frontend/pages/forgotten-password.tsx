@@ -1,12 +1,13 @@
 import { Container, Typography, Grid, Card, CardContent, CardActions, Button, Alert } from "@mui/material";
-import { useResetPasswordMutation } from "index";
+import { useResetPasswordMutation } from 'lib/graphql';
+import { withUserLoggedOut } from "lib/route-guards";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { TextFieldElement } from "react-hook-form-mui";
 
-export default function ForgottenPassword() {
+function ForgottenPassword() {
   const { control, handleSubmit, formState: { isDirty, isSubmitting } } = useForm();
   const { enqueueSnackbar } = useSnackbar();
   const [submitError, setSubmitError] = React.useState<string | null>(null);
@@ -62,3 +63,5 @@ export default function ForgottenPassword() {
     </Card>
   </Container>;
 }
+
+export default withUserLoggedOut(ForgottenPassword);

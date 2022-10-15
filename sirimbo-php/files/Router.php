@@ -57,16 +57,6 @@ class Router
         $this->addRoute('POST', $regex, $handler);
     }
 
-    public function put(string $regex, string $handler)
-    {
-        $this->addRoute('PUT', $regex, $handler);
-    }
-
-    public function delete(string $regex, string $handler)
-    {
-        $this->addRoute('DELETE', $regex, $handler);
-    }
-
     public function redirect(string $regex, string $target)
     {
         $this->addRoute('GET', $regex, fn() => header("Location: $target"));

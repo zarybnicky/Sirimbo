@@ -1,10 +1,10 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { Pagination, Checkbox, Menu, MenuItem, Button } from '@mui/material';
-import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import { Pagination, Checkbox, Container } from '@mui/material';
 import { useAuth } from 'lib/data/use-auth';
 import { NextLinkComposed } from 'components/Link';
-import { useScheduleListQuery, useToggleScheduleVisibleMutation } from 'index';
+import { useScheduleListQuery, useToggleScheduleVisibleMutation } from 'lib/graphql';
+import { Dropdown } from 'components/Dropdown';
 
 export default function RozpisAdminList() {
   const { user } = useAuth();
@@ -28,27 +28,15 @@ export default function RozpisAdminList() {
     <tbody>
       {data?.rozpis?.nodes?.map((a) => <tr key={a.rId}>
         <td>
-          <PopupState variant="popover">
-            {(popupState) => <>
-              <Button {...bindTrigger(popupState)}>
-                {a.userByRTrener?.uJmeno} {a.userByRTrener?.uPrijmeni}
-              </Button>
-              <Menu {...bindMenu(popupState)}>
-                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/rozpis/edit/${a.rId}`}>
-                  Upravit
-                </MenuItem>
-                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/rozpis/detail/${a.rId}`}>
-                  Upravit lekce
-                </MenuItem>
-                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/rozpis/duplicate/${a.rId}`}>
-                  Duplikovat
-                </MenuItem>
-                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/rozpis/remove/${a.rId}`}>
-                  Odstranit
-                </MenuItem>
-              </Menu>
-            </>}
-          </PopupState>
+          <Dropdown
+            button={<>{a.userByRTrener?.uJmeno} {a.userByRTrener?.uPrijmeni}</>}
+            options={[
+              { title: 'Upravit', href: `/admin/rozpis/edit/${a.rId}` },
+              { title: 'Upravit lekce', href: `/admin/rozpis/detail/${a.rId}` },
+              { title: 'Duplikovat', href: `/admin/rozpis/duplicate/${a.rId}` },
+              { title: 'Odstranit', href: `/admin/rozpis/remove/${a.rId}` },
+            ]}
+          />
         </td>
         <td>{format(new Date(a.rDatum), 'd. M. y')}</td>
         <td>{a.rKde}</td>
@@ -61,9 +49,9 @@ export default function RozpisAdminList() {
     </tbody>
   </table >;
 
-  return <>
+  return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
     <NextLinkComposed href="/admin/rozpis/add" className="btn btn-primary">Nový rozpis</NextLinkComposed>
     {list}
     <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
-  </>;
+  </Container>;
 }

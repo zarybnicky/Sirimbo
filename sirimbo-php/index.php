@@ -222,9 +222,6 @@ function makeRouter()
 
     $router->get('/admin/users/getMsmtCsv', '@Admin.Users::getMsmtCsv');
 
-    $router->get('/admin/users/unconfirmed', '@Admin.Users::unconfirmed');
-    $router->post('/admin/users/unconfirmed', '@Admin.Users::unconfirmedPost');
-
     $router->get('/admin/users/duplicate', '@Admin.Users::duplicate');
 
     $router->get('/admin/users/statistiky', '@Admin.Users::statistiky');

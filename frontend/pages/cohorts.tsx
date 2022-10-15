@@ -1,10 +1,8 @@
-import { useAuth } from 'lib/data/use-auth';
+import { withUserLoggedIn } from 'lib/route-guards';
 import * as React from 'react';
 
-export const GroupsPage = ({ }) => {
-  // require auth
-  const { user } = useAuth();
+const CohortsPage = ({ }) => {
   return null;
 }
 
-export default GroupsPage;
+export default withUserLoggedIn(CohortsPage);

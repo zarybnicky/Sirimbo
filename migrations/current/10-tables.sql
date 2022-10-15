@@ -96,6 +96,10 @@ create policy admin_all on pary to administrator using (true) with check (true);
 create policy all_view on pary for select using (true);
 grant all on pary to anonymous;
 
+alter table public.pary
+drop constraint pary_p_id_partner_fkey,
+add constraint pary_p_id_partner_fkey foreign key (p_id_partner) references public.users(u_id) on update cascade on delete cascade;
+
 -- ************** pary_navrh **************
 select app_private.drop_policies('public.pary_navrh');
 create policy manage_own on pary_navrh for all
@@ -263,7 +267,6 @@ create policy all_view on video_source for select using (true);
 grant all on video_source to anonymous;
 
 grant usage, select on all sequences in schema public to anonymous;
-grant execute on all functions in schema public to anonymous;
 
 
 -- alter table app_public.posts enable row level security;

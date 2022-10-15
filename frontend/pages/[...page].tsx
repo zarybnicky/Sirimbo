@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ReactPage } from '../components/ReactPage';
 import { GetServerSideProps } from 'next';
-import { usePageQuery } from 'index';
+import { usePageQuery } from 'lib/graphql';
 import { QueryClient } from '@tanstack/react-query';
 
 const DynamicPage: React.FC<{ content: any; }> = ({ content }) => {

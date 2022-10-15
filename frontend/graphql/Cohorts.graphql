@@ -1,5 +1,5 @@
-query Cohorts {
-  skupinies(condition: {sVisible: true}) {
+query CohortList($visible: Boolean = true) {
+  skupinies(condition: {sVisible: $visible}) {
     nodes {
       sId
       sName

@@ -1,4 +1,4 @@
-import { useTitleVideosQuery } from "index";
+import { useTitleVideosQuery } from 'lib/graphql';
 
 export interface Video {
   img: string;

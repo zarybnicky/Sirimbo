@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Pagination, Checkbox, Button, Menu, MenuItem } from '@mui/material';
-import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import { Pagination, Checkbox } from '@mui/material';
 import { NextLinkComposed } from 'components/Link';
-import { useGalleryDirListQuery, useToggleGalleryDirVisibleMutation } from 'index';
+import { useGalleryDirListQuery, useToggleGalleryDirVisibleMutation } from 'lib/graphql';
+import { withUserLoggedIn } from 'lib/route-guards';
+import { Dropdown } from 'components/Dropdown';
 
 type Treeified<T> = T & { id: string; parentId: string; children: Treeified<T>[]; };
 function listToTree<T>(list: Treeified<T>[]) {
@@ -31,7 +32,7 @@ function flatten<T>(root: Treeified<T>): T[] {
   return output;
 }
 
-export default function GalleryDirectoryList() {
+function GalleryDirectoryList() {
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
   const { data, refetch } = useGalleryDirListQuery({
@@ -55,22 +56,14 @@ export default function GalleryDirectoryList() {
     <tbody>
       {dataSorted.map((a) => <tr key={a.gdId}>
         <td>
-          <PopupState variant="popover">
-            {(popupState) => <>
-              <Button {...bindTrigger(popupState)}>{'→'.repeat(a.gdLevel - 1)} {a.gdName}</Button>
-              <Menu {...bindMenu(popupState)}>
-                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/galerie/directory/edit/${a.gdId}`}>
-                  Upravit
-                </MenuItem>
-                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/galerie/directory/${a.gdId}`}>
-                  Upravit fotky
-                </MenuItem>
-                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/galerie/directory/remove/${a.gdId}`}>
-                  Odstranit
-                </MenuItem>
-              </Menu>
-            </>}
-          </PopupState>
+          <Dropdown
+            button={<>{'→'.repeat(a.gdLevel - 1)} {a.gdName}</>}
+            options={[
+              { title: 'Upravit', href: `/admin/galerie/directory/edit/${a.gdId}` },
+              { title: 'Upravit fotky', href: `/admin/galerie/directory/${a.gdId}` },
+              { title: 'Odstranit', href: `/admin/galerie/directory/remove/${a.gdId}` },
+            ]}
+          />
         </td>
         <td>
           <Checkbox checked={a.gdHidden} onChange={() => toggleVisible({
@@ -88,3 +81,5 @@ export default function GalleryDirectoryList() {
     <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
   </>;
 }
+
+export default withUserLoggedIn(GalleryDirectoryList);

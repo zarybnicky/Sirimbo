@@ -365,29 +365,6 @@ class Users
         echo chr(239) . chr(187) . chr(191) . $out;
     }
 
-    public static function unconfirmed()
-    {
-        \Permissions::checkError('users', P_ADMIN);
-        \Render::twig('Admin/UsersUnconfirmed.twig', [
-            'groups' => \DBPermissions::getGroups(),
-            'skupiny' => \DBSkupiny::get(),
-            'data' => \DBUser::getNewUsers(),
-        ]);
-    }
-
-    public static function unconfirmedPost()
-    {
-        \Permissions::checkError('users', P_ADMIN);
-        $id = $_POST['confirm'];
-        if (!$data = \DBUser::getUser($id)) {
-            \Message::warning('Uživatel s takovým ID neexistuje');
-            \Redirect::to($_POST['returnURI'] ?? '/admin/users');
-        }
-        \DBUser::confirmUser($id, $_POST[$id . '-group'], $_POST[$id . '-skupina']);
-        \Mailer::registrationConfirmNotice($data->getEmail(), $data->getLogin());
-        \Redirect::to('/admin/users/unconfirmed');
-    }
-
     public static function duplicate()
     {
         \Permissions::checkError('users', P_ADMIN);

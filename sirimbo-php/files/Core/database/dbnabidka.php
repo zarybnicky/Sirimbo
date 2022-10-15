@@ -1,28 +1,6 @@
 <?php
 class DBNabidka extends Database
 {
-    public static function getNabidka($desc = false)
-    {
-        $res = self::query(
-            "SELECT u_id,u_jmeno,u_prijmeni,nabidka.* " .
-            "FROM nabidka LEFT JOIN users ON n_trener=u_id ORDER BY n_od" .
-            ($desc ? ' DESC' : '')
-        );
-        return self::getArray($res);
-    }
-
-    public static function getNabidkyByTrener($trener, $desc = false)
-    {
-        $res = self::query(
-            "SELECT u_id,u_jmeno,u_prijmeni,nabidka.*
-            FROM nabidka LEFT JOIN users ON n_trener=u_id
-            WHERE n_trener='?'
-            ORDER BY n_od" . ($desc ? ' DESC' : ''),
-            $trener
-        );
-        return self::getArray($res);
-    }
-
     public static function getSingleNabidka($id)
     {
         $res = self::query(

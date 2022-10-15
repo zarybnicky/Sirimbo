@@ -3,9 +3,10 @@ import format from 'date-fns/format';
 import { Card, CardContent, Container, Grid, Typography } from '@mui/material';
 import { usePermissions } from 'lib/data/use-permissions';
 import { DateRange } from 'components/DateRange';
-import { useReservationRangeQuery, useScheduleRangeQuery } from 'index';
+import { useReservationRangeQuery, useScheduleRangeQuery } from 'lib/graphql';
 import parse from 'date-fns/parse';
 import { Dropdown } from 'components/Dropdown';
+import { withUserLoggedIn } from 'lib/route-guards';
 
 export const SchedulePage = ({ }) => {
   // require or redirect
@@ -120,7 +121,7 @@ export const SchedulePage = ({ }) => {
       {scheduleList}
       {reservationList}
     </Grid>
-  </Container >;
+  </Container>;
 }
 
-export default SchedulePage;
+export default withUserLoggedIn(SchedulePage);

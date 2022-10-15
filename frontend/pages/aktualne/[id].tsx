@@ -4,7 +4,7 @@ import { Container, Typography } from '@mui/material';
 import { CallToAction } from 'components/CallToAction';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useArticleQuery } from 'index';
+import { useArticleQuery } from 'lib/graphql';
 
 export const ArticlePage = ({ }) => {
   const router = useRouter();

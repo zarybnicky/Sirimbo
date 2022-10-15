@@ -12,6 +12,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Hydrate, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
+import { ConfirmProvider } from 'material-ui-confirm';
 import { ConfigProvider } from "lib/use-config";
 import { Layout } from "components/Layout";
 import { ProvideMeta } from "lib/use-meta";
@@ -32,6 +33,7 @@ export default function App({ Component, pageProps }: AppProps) {
     queryClientRef.current = new QueryClient({
       defaultOptions: {
         queries: {
+          refetchOnWindowFocus: false,
           cacheTime: 1000 * 60 * 60 * 24, // 24 hours
         },
       },
@@ -52,22 +54,28 @@ export default function App({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClientRef.current}>
       <Hydrate state={pageProps.dehydratedState}>
         <ThemeProvider theme={theme}>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <SnackbarProvider maxSnack={3}>
-              <ProvideAuth>
-                <ProvideMeta>
-                  <ConfigProvider>
-                    <Layout>
-                      <Component {...pageProps} />
-                    </Layout>
-                  </ConfigProvider>
-                </ProvideMeta>
-              </ProvideAuth>
-            </SnackbarProvider>
-          </LocalizationProvider>
+          <ConfirmProvider defaultOptions={{
+            title: 'Jste si jistí?',
+            cancellationText: 'Zrušit',
+            confirmationButtonProps: { autoFocus: true }
+          }}>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <SnackbarProvider maxSnack={3}>
+                <ProvideAuth>
+                  <ProvideMeta>
+                    <ConfigProvider>
+                      <Layout>
+                        <Component {...pageProps} />
+                      </Layout>
+                    </ConfigProvider>
+                  </ProvideMeta>
+                </ProvideAuth>
+              </SnackbarProvider>
+            </LocalizationProvider>
+          </ConfirmProvider>
         </ThemeProvider>
       </Hydrate>
-    </QueryClientProvider >
+    </QueryClientProvider>
   );
 }
 

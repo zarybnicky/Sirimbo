@@ -36,15 +36,6 @@ class DBAkce extends Database implements Pagable
         return $res ? self::getSingleRow($res) : false;
     }
 
-    public static function getWithItemCount()
-    {
-        $res = self::query(
-            'SELECT *, (SELECT COUNT(*) FROM akce_item WHERE a_id=ai_id_rodic) as a_obsazeno
-             FROM akce ORDER BY a_od DESC'
-        );
-        return self::getArray($res);
-    }
-
     public static function getAkceItems($id)
     {
         $res = self::query(

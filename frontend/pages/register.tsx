@@ -4,7 +4,8 @@ import { useForm, AutocompleteElement, TextFieldElement, DatePickerElement, Radi
 import { useCountries } from 'lib/data/use-countries';
 import format from 'date-fns/format';
 import { useSnackbar } from 'notistack';
-import { useCohortsQuery, useRegisterMutation } from 'index';
+import { useCohortsQuery, useRegisterMutation } from 'lib/graphql';
+import { withUserLoggedOut } from 'lib/route-guards';
 
 export const RegisterPage = () => {
   const countries = useCountries();
@@ -208,4 +209,4 @@ export const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default withUserLoggedOut(RegisterPage);

@@ -34,6 +34,7 @@ begin
 end;
 $$ language plpgsql strict volatile security definer;
 select plpgsql_check_function('public.login');
+grant execute on function login to anonymous;
 
 create or replace function public.logout() returns void as $$
 begin
@@ -41,14 +42,17 @@ begin
 end;
 $$ language plpgsql strict volatile security definer;
 select plpgsql_check_function('public.logout');
+grant execute on function logout to anonymous;
 
 create or replace function current_user_id() returns bigint as $$
   SELECT current_setting('jwt.claims.user_id', true)::bigint;
 $$ language sql stable;
+grant execute on function current_user_id to anonymous;
 
 create or replace function current_session_id() returns text as $$
   select current_setting('jwt.claims.session_id', true);
 $$ language sql stable;
+grant execute on function current_session_id to anonymous;
 
 create or replace function current_couple_ids() returns setof bigint AS $$
   select distinct p_id_partner
@@ -59,12 +63,11 @@ create or replace function current_couple_ids() returns setof bigint AS $$
   from public.pary
   where p_id_partnerka = current_user_id() and p_archiv = false;
 $$ language sql stable;
+grant execute on function current_couple_ids to anonymous;
 
 create or replace function get_current_user() returns users as $$
   SELECT * FROM users WHERE u_id = nullif(current_setting('jwt.claims.user_id', true), '')::integer;
 $$ language sql stable;
-
-grant execute on function current_couple_ids to anonymous;
 grant execute on function get_current_user to anonymous;
 
 
@@ -115,3 +118,21 @@ begin
 end;
 $$ language plpgsql strict volatile security definer;
 select plpgsql_check_function('public.reset_password');
+grant execute on function public.reset_password to anonymous;
+
+
+drop function if exists public.confirm_user(id bigint) cascade;
+create or replace function public.confirm_user(id bigint, grp bigint, cohort bigint) returns void as $$
+declare
+  usr users;
+begin
+  select * into usr from users where u_id=id;
+  if usr is null then
+    raise exception 'ACCOUNT_NOT_FOUND' using errcode = '28000';
+  end if;
+  update users set u_confirmed=true, u_group=grp, u_skupina=cohort, u_system=false where u_id=id;
+  perform graphile_worker.add_job('notify_confirmed_user', json_build_object('id', id));
+end;
+$$ language plpgsql strict volatile security definer;
+select plpgsql_check_function('public.confirm_user');
+grant execute on function public.confirm_user to administrator;

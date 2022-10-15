@@ -1,10 +1,10 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { Button, Menu, MenuItem, Pagination } from '@mui/material';
-import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import { Pagination } from '@mui/material';
 import { useAuth } from 'lib/data/use-auth';
 import { NextLinkComposed } from 'components/Link';
-import { useArticlesQuery } from 'index';
+import { useArticlesQuery } from 'lib/graphql';
+import { Dropdown } from 'components/Dropdown';
 
 export function ArticleAdminList() {
   const { user } = useAuth();
@@ -22,22 +22,14 @@ export function ArticleAdminList() {
     <tbody>
       {data?.aktualities?.nodes?.map((a) => <tr key={a.atId}>
         <td>
-          <PopupState variant="popover">
-            {(popupState) => <>
-              <Button {...bindTrigger(popupState)}>{a.atJmeno}</Button>
-              <Menu {...bindMenu(popupState)}>
-                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/aktuality/edit/${a.atId}`}>
-                  Upravit
-                </MenuItem>
-                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/aktuality/foto/${a.atId}`}>
-                  Upravit fotky
-                </MenuItem>
-                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/aktuality/remove/${a.atId}`}>
-                  Odstranit
-                </MenuItem>
-              </Menu>
-            </>}
-          </PopupState>
+          <Dropdown
+            button={<>a.atJmeno</>}
+            options={[
+              { title: 'Upravit', href: `/admin/aktuality/edit/${a.atId}` },
+              { title: 'Upravit fotky', href: `/admin/aktuality/foto/${a.atId}` },
+              { title: 'Odstranit', href: `/admin/aktuality/remove/${a.atId}` },
+            ]}
+          />
         </td>
         <td>{a.atTimestampAdd && format(new Date(a.atTimestampAdd), 'd. M. y')}</td>
       </tr>)}

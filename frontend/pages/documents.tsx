@@ -1,9 +1,10 @@
 import { useForm } from "react-hook-form";
-import { useDocumentsQuery } from 'index';
+import { useDocumentsQuery } from 'lib/graphql';
 import { AutocompleteElement } from "react-hook-form-mui";
 import { Container } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 import format from "date-fns/format";
+import { withUserLoggedIn } from "lib/route-guards";
 
 const categories = [
   { id: 1, label: "Schůze,\u{00A0}rady" },
@@ -12,7 +13,7 @@ const categories = [
   { id: 0, label: 'Ostatní' },
 ];
 
-export default function DocumentsPage() {
+function DocumentsPage() {
   const { control, watch } = useForm<{ category?: { id: number; label: string; }; }>();
   const { data } = useDocumentsQuery({ category: watch('category.id') });
 
@@ -45,3 +46,5 @@ export default function DocumentsPage() {
     />
   </Container>;
 }
+
+export default withUserLoggedIn(DocumentsPage);

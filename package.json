@@ -13,9 +13,10 @@
   },
   "scripts": {
     "frontend": "yarn workspace sirimbo-frontend dev",
-    "schema": "yarn workspace sirimbo-frontend schema:watch",
+    "schema": "graphql-codegen --config graphql.config.yml",
+    "schema:watch": "graphql-codegen --config graphql.config.yml --watch",
     "backend": "yarn workspace sirimbo-backend start",
     "migrate": "graphile-migrate watch",
-    "start": "DEBUG=true concurrently --kill-others-on-fail 'yarn migrate' 'yarn frontend' 'yarn backend' 'yarn schema'"
+    "start": "DEBUG=true concurrently --kill-others-on-fail 'yarn migrate' 'yarn frontend' 'yarn backend' 'yarn schema:watch'"
   }
 }

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Container, Card, CardContent, Typography } from '@mui/material';
 import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
-import { useCohortsQuery } from 'index';
+import { useCohortsQuery } from 'lib/graphql';
 
 export default function CohortsPage() {
   const { data: cohorts } = useCohortsQuery();

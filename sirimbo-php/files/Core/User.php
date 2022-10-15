@@ -91,7 +91,7 @@ class User
             'u_narozeni' => $this->getBirthDate(),
             'u_rodne_cislo' => $this->getBirthNumber(),
             'u_poznamky' => $this->getNotes(),
-            'u_timestamp' => $this->getCreatedAt(),
+            'u_timestamp' => $this->getUpdatedAt(),
             'u_group' => $this->getPermissionGroup(),
             'u_skupina' => $this->getTrainingGroup(),
             'u_dancer' => $this->getDancer(),
@@ -201,11 +201,6 @@ class User
     public function setSurname(string $surname): void
     {
         $this->surname = $surname;
-    }
-
-    public function getFullName(): string
-    {
-        return $this->getSurname() . ', ' . $this->getName();
     }
 
     /**

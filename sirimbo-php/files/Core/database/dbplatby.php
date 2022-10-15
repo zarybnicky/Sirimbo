@@ -1,29 +1,6 @@
 <?php
 class DBPlatby extends Database
 {
-    public static function checkConflicts($sid)
-    {
-        $res = self::query(
-            "SELECT skupiny.*,platby_group.*,platby_category.*
-            FROM platby_category_group pcg
-                INNER JOIN platby_group_skupina ON pcg.pcg_id_group=pgs_id_group
-                LEFT JOIN skupiny ON pgs_id_skupina=s_id
-                LEFT JOIN platby_group ON pcg.pcg_id_group=pg_id
-                LEFT JOIN platby_category ON pcg.pcg_id_category=pc_id
-                INNER JOIN (
-                    SELECT DISTINCT ON (pc_symbol) pcg_id FROM platby_category_group
-                        INNER JOIN platby_group_skupina ON pcg_id_group=pgs_id_group
-                        LEFT JOIN platby_category ON pc_id=pcg_id_category
-                    WHERE pgs_id_skupina='?' AND pc_symbol IS NOT NULL
-                    ORDER BY pc_symbol
-                    HAVING COUNT(*) > 1
-                ) dupl
-            WHERE pcg.pcg_id=dupl.pcg_id",
-            $sid,
-        );
-        return self::getArray($res);
-    }
-
     public static function hasPaidMemberFees($uid)
     {
         $res = self::query(

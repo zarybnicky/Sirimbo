@@ -4,7 +4,7 @@ import { Alert, Card, CardContent, CardActions, Grid, Button, Typography } from 
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement, CheckboxElement } from 'react-hook-form-mui';
-import { CrmCohort, useSubmitProspectFormMutation } from 'index';
+import { CrmCohort, useSubmitProspectFormMutation } from 'lib/graphql';
 
 type ProspectFormProps = {
   title?: string;

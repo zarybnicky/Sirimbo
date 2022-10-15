@@ -118,10 +118,10 @@ class PlatbyRaw
             $item->processWithSymbolLookup($userLookup, $categoryLookup);
 
             if (!$item->isValid) {
-                \DBPlatbyRaw::insert($serialized, $hash, '0', '0', false);
+                \DBPlatbyRaw::insert($serialized, $hash, '0', '0');
                 continue;
             }
-            $id = \DBPlatbyRaw::insert($serialized, $hash, '1', '0', true);
+            $id = \DBPlatbyRaw::insert($serialized, $hash, '1', '0');
             \DBPlatbyItem::insert(
                 $item->variable,
                 $item->categoryId,

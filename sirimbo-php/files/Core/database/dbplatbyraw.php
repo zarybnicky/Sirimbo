@@ -1,7 +1,7 @@
 <?php
 class DBPlatbyRaw extends Database
 {
-    public static function insert($raw, $hash, $sorted, $discarded, $updateValues)
+    public static function insert($raw, $hash, $sorted, $discarded)
     {
         self::query(
             "INSERT INTO platby_raw (pr_raw,pr_hash,pr_sorted,pr_discarded)

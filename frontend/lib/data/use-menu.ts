@@ -1,4 +1,4 @@
-import { useMenuQuery } from 'index';
+import { useMenuQuery } from 'lib/graphql';
 import { useRouter } from 'next/router';
 import { useAuth } from './use-auth';
 

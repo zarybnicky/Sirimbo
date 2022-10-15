@@ -111,19 +111,6 @@ class DBUser extends Database implements Pagable
         return self::getSingleRow($res);
     }
 
-    public static function getUserByNameEmail($login, $email): ?User
-    {
-        $res = self::query(
-            "SELECT * FROM users WHERE LOWER(u_login)='?' AND LOWER(u_email)='?'",
-            strtolower($login),
-            strtolower($email)
-        );
-        if (!$res || !($row = self::getSingleRow($res))) {
-            return null;
-        }
-        return User::fromArray($row);
-    }
-
     public static function getUser(int $id): ?User
     {
         $res = self::query(
@@ -137,16 +124,6 @@ class DBUser extends Database implements Pagable
             return null;
         }
         return User::fromArray($row);
-    }
-
-    public static function confirmUser($id, $group, $skupina = '1')
-    {
-        self::query(
-            "UPDATE users SET u_confirmed='1',u_group='?',u_skupina='?',u_system='0' WHERE u_id='?'",
-            $group,
-            $skupina,
-            $id
-        );
     }
 
     public static function markGdprSigned($id)
@@ -273,16 +250,6 @@ class DBUser extends Database implements Pagable
             WHERE pe_$module >= '?'
             ORDER BY u_prijmeni",
             $permission,
-        );
-        return self::getArray($res);
-    }
-
-    public static function getNewUsers()
-    {
-        $res = self::query(
-            "SELECT * FROM users
-                LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
-            WHERE u_confirmed='0' ORDER BY u_prijmeni"
         );
         return self::getArray($res);
     }

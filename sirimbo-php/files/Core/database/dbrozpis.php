@@ -1,28 +1,6 @@
 <?php
 class DBRozpis extends Database
 {
-    public static function getSchedules($descending = false)
-    {
-        $res = self::query(
-            "SELECT u_jmeno,u_prijmeni,r_id,r_trener,r_kde,r_datum,r_visible,r_lock" .
-            " FROM rozpis LEFT JOIN users ON r_trener=u_id ORDER BY r_datum" .
-            ($descending ? ' DESC' : '')
-        );
-        return self::getArray($res);
-    }
-
-    public static function getSchedulesByTrainer($trener, $descending = false)
-    {
-        $res = self::query(
-            "SELECT u_jmeno,u_prijmeni,r_id,r_trener,r_kde,r_datum,r_visible,r_lock
-            FROM rozpis LEFT JOIN users ON r_trener=u_id
-            WHERE r_trener='?'
-            ORDER BY r_datum" . ($descending ? ' DESC' : ''),
-            $trener,
-        );
-        return self::getArray($res);
-    }
-
     public static function getSchedule($id)
     {
         $res = self::query(

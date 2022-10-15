@@ -30,24 +30,19 @@ class Message
     {
         self::setMessage('info', $msg);
     }
+
     public static function warning($msg): void
     {
         self::setMessage('warning', $msg);
     }
+
     public static function danger($msg): void
     {
         self::setMessage('danger', $msg);
     }
+
     public static function success($msg): void
     {
         self::setMessage('success', $msg);
-    }
-    public static function primary($msg): void
-    {
-        self::setMessage('primary', $msg);
-    }
-    public static function secondary($msg): void
-    {
-        self::setMessage('secondary', $msg);
     }
 }

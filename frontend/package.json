@@ -6,9 +6,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "schema": "graphql-codegen --config codegen.yml",
-    "schema:watch": "graphql-codegen --config codegen.yml --watch"
+    "lint": "next lint"
   },
   "dependencies": {
     "@babel/core": "^7.19.0",

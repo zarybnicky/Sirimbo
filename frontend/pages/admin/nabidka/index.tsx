@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Checkbox, Menu, MenuItem, Button, Pagination } from '@mui/material';
-import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import { Checkbox, Pagination } from '@mui/material';
 import { useAuth } from 'lib/data/use-auth';
 import { DateRange } from 'components/DateRange';
 import { NextLinkComposed } from 'components/Link';
-import { useReservationListQuery, useToggleReservationVisibleMutation } from 'index';
+import { useReservationListQuery, useToggleReservationVisibleMutation } from 'lib/graphql';
+import { Dropdown } from 'components/Dropdown';
 
 export default function ReservationAdminList() {
   const { user } = useAuth();
@@ -29,27 +29,15 @@ export default function ReservationAdminList() {
     <tbody>
       {data?.nabidkas?.nodes?.map((a) => <tr key={a.nId}>
         <td>
-          <PopupState variant="popover">
-            {(popupState) => <>
-              <Button {...bindTrigger(popupState)}>
-                {a.userByNTrener?.uJmeno} {a.userByNTrener?.uPrijmeni}
-              </Button>
-              <Menu {...bindMenu(popupState)}>
-                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/nabidka/edit/${a.nId}`}>
-                  Upravit
-                </MenuItem>
-                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/nabidka/detail/${a.nId}`}>
-                  Upravit lekce
-                </MenuItem>
-                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/nabidka/duplicate/${a.nId}`}>
-                  Duplikovat
-                </MenuItem>
-                <MenuItem onClick={popupState.close} component={NextLinkComposed} href={`/admin/nabidka/remove/${a.nId}`}>
-                  Odstranit
-                </MenuItem>
-              </Menu>
-            </>}
-          </PopupState>
+          <Dropdown
+            button={<>{a.userByNTrener?.uJmeno} {a.userByNTrener?.uPrijmeni}</>}
+            options={[
+              { title: 'Upravit', href: `/admin/nabidka/edit/${a.nId}` },
+              { title: 'Upravit lekce', href: `/admin/nabidka/detail/${a.nId}` },
+              { title: 'Duplikovat', href: `/admin/nabidka/duplicate/${a.nId}` },
+              { title: 'Odstranit', href: `/admin/nabidka/remove/${a.nId}` },
+            ]}
+          />
         </td>
         <td><DateRange from={a.nOd} to={a.nDo} /></td>
         <td>

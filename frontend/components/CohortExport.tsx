@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
-import { useCohortMembersQuery } from 'index';
+import { useCohortMembersQuery } from 'lib/graphql';
 
 export function CohortExport({ id, name }: { id: number; name: string; }) {
   const { data } = useCohortMembersQuery({ id });

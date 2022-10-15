@@ -14,19 +14,6 @@ class Widget extends Tree
         parent::__construct(get_called_class(), $attributes, $children);
     }
 
-    public function get($name = null)
-    {
-        if ($name === null) {
-            return $this->value;
-        }
-        return isset($this->value[$name]) ? $this->value[$name] : null;
-    }
-
-    public function set($key, $value)
-    {
-        $this->value[$key] = $value;
-    }
-
     public function render()
     {
         return '';

@@ -3,14 +3,15 @@ import { Card, CardContent, Container, Grid, Typography } from '@mui/material';
 import { AnnouncementList } from '../components/AnnouncementList';
 import { useAuth } from 'lib/data/use-auth';
 import { useRouter } from 'next/router';
+import { withUserLoggedIn } from 'lib/route-guards';
 
-export const DashboardPage = ({ }) => {
+const DashboardPage = ({ }) => {
   const router = useRouter();
   const { user, isLoading } = useAuth();
 
   if (!isLoading && !user) {
     router.push('/');
-    return;
+    return null;
   }
   // Copy AnnouncementList
   // Copy ScheduleList
@@ -33,4 +34,4 @@ export const DashboardPage = ({ }) => {
   </Container >;
 }
 
-export default DashboardPage;
+export default withUserLoggedIn(DashboardPage);

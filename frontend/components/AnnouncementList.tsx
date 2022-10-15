@@ -3,7 +3,7 @@ import format from 'date-fns/format';
 import { Pagination, Box, IconButton, Card, CardContent, Typography } from '@mui/material';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { useAnnouncementListQuery } from 'index';
+import { useAnnouncementListQuery } from 'lib/graphql';
 
 export function AnnouncementList() {
   const [limit] = React.useState(3);

@@ -1,0 +1,44 @@
+query RoleList {
+  permissions {
+    nodes {
+      peAkce
+      peAnkety
+      peAktuality
+      peDescription
+      peDokumenty
+      peGalerie
+      peId
+      peKonzole
+      peInzerce
+      peNabidka
+      peMain
+      peName
+      peNastenka
+      peNovinky
+      pePary
+      pePermissions
+      pePlatby
+      peRozpis
+      peSkupiny
+      peUsers
+    }
+  }
+}
+
+mutation CreateRole($input: PermissionInput!) {
+  createPermission(input: {permission: $input}) {
+    permission {
+      peId
+    }
+  }
+}
+mutation UpdateRole($id: BigInt!, $patch: PermissionPatch!) {
+  updatePermission(input: {peId: $id, patch: $patch}) {
+    __typename
+  }
+}
+mutation DeleteRole($id: BigInt!) {
+  deletePermission(input: {peId: $id}) {
+    __typename
+  }
+}

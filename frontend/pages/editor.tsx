@@ -10,7 +10,8 @@ import { ContainerPlugin } from 'components/Container';
 import { CallToActionPlugin } from 'components/CallToAction';
 import { ReactPage, cellPlugins } from 'components/ReactPage';
 import AddIcon from '@mui/icons-material/Add';
-import { Page, PageRevision, useCreatePageMutation, usePageListQuery, usePageRevisionsQuery, useUpdatePageMutation } from 'index';
+import { Page, PageRevision, useCreatePageMutation, usePageListQuery, usePageRevisionsQuery, useUpdatePageMutation } from 'lib/graphql';
+import { withUserLoggedIn } from 'lib/route-guards';
 
 const INITIAL_VALUE: Value = createValue({
   rows: [
@@ -42,7 +43,7 @@ type State = {
   content?: Value;
 };
 
-export const EditorPage = ({ }) => {
+const EditorPage = ({ }) => {
   const { enqueueSnackbar } = useSnackbar();
   const confirm = useConfirm();
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -181,4 +182,4 @@ export const EditorPage = ({ }) => {
   </Grid>;
 };
 
-export default EditorPage;
+export default withUserLoggedIn(EditorPage);

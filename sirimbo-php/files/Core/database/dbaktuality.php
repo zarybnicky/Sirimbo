@@ -1,20 +1,6 @@
 <?php
 class DBAktuality extends Database
 {
-    public static function getAktuality($kat = 0, $kdo = 0)
-    {
-        $res = self::query(
-            "SELECT *
-            FROM aktuality
-            LEFT JOIN galerie_foto ON gf_id=at_foto_main
-            WHERE 1=1"
-            . ($kat ? " AND at_kat='$kat'" : '')
-            . ($kdo ? " AND at_kdo='$kdo'" : '')
-            . " ORDER BY at_timestamp_add DESC"
-        );
-        return self::getArray($res);
-    }
-
     public static function getSingleAktualita($id)
     {
         $res = self::query(

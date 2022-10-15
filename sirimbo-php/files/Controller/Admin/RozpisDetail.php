@@ -18,29 +18,10 @@ class RozpisDetail
             'canEdit' => \Permissions::check('nabidka', P_OWNED, $data['r_trener'])
         ];
 
-        $nabidky = \DBNabidka::getNabidka();
-        usort(
-            $nabidky,
-            function ($a, $b) {
-                $a1 = $a['n_od'] . $a['u_prijmeni'] . $a['u_jmeno'];
-                $b1 = $b['n_od'] . $b['u_prijmeni'] . $b['u_jmeno'];
-                return $a1 < $b1 ? 1 : ($a1 > $b1 ? -1 : 0);
-            }
-        );
-
         \Render::twig('Admin/RozpisDetail.twig', [
             'data' => $data,
             'users' => $users,
             'items' => $items,
-            'nabidky' => array_for($nabidky, fn($item) => [
-                'key' => $item['n_id'],
-                'value' => (
-                    date('j. n. Y', strtotime($item['n_od'])) .
-                    (($item['n_od'] != $item['n_do']) ?
-                     (' - ' . date('j. n. Y', strtotime($item['n_do']))) : '') .
-                    " - {$item['u_jmeno']} {$item['u_prijmeni']}"
-                ),
-            ]),
         ]);
     }
 
