@@ -16,6 +16,7 @@ import { ConfirmProvider } from 'material-ui-confirm';
 import { ConfigProvider } from "lib/use-config";
 import { Layout } from "components/Layout";
 import { ProvideMeta } from "lib/use-meta";
+import { usePostHog } from 'next-use-posthog';
 import "nprogress/nprogress.css";
 import "public/style/index.scss";
 import 'public/style/material-icons.css';
@@ -28,6 +29,13 @@ Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
 
 export default function App({ Component, pageProps }: AppProps) {
+  usePostHog('phc_H2WM9q2xXVFl1wEak9TcQVAsOpWNGuauzAvyOmBquYQ', {
+    api_host: 'https://eu.posthog.com',
+    loaded: (posthog) => {
+      if (process.env.NODE_ENV === 'development') posthog.opt_out_capturing()
+    },
+  });
+
   const queryClientRef = React.useRef<QueryClient>()
   if (!queryClientRef.current) {
     queryClientRef.current = new QueryClient({

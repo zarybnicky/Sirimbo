@@ -2,10 +2,10 @@ import * as React from 'react';
 import { Container, Card, CardContent, Typography } from '@mui/material';
 import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
-import { useCohortsQuery } from 'lib/graphql';
+import { useCohortListQuery } from 'lib/graphql';
 
 export default function CohortsPage() {
-  const { data: cohorts } = useCohortsQuery();
+  const { data: cohorts } = useCohortListQuery();
 
   return <>
     <Heading color={{ r: 20, g: 20, b: 200, a: .5 }} text="Tréninkové skupiny" image="" />

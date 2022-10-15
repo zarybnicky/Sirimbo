@@ -7,6 +7,7 @@ class Member
     {
         \Permissions::checkError('dokumenty', P_VIEW);
         if (!$_GET['id']) {
+            echo "Soubor nebyl nalezen.";
             http_response_code(400);
             return;
         }
@@ -14,7 +15,7 @@ class Member
         $data = \DBDokumenty::getSingleDokument($_GET['id']);
         $path = $data['d_path'];
         if (!is_file($path) || !($file = fopen($path, 'rb'))) {
-            echo "Soubor nebyl nalezen.";
+            echo "Neplatný soubor.";
             http_response_code(404);
             return;
         }

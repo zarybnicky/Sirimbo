@@ -11,7 +11,7 @@ import { CallToActionPlugin } from 'components/CallToAction';
 import { ReactPage, cellPlugins } from 'components/ReactPage';
 import AddIcon from '@mui/icons-material/Add';
 import { Page, PageRevision, useCreatePageMutation, usePageListQuery, usePageRevisionsQuery, useUpdatePageMutation } from 'lib/graphql';
-import { withUserLoggedIn } from 'lib/route-guards';
+import { useRequireUserLoggedIn } from 'lib/route-guards';
 
 const INITIAL_VALUE: Value = createValue({
   rows: [
@@ -43,7 +43,8 @@ type State = {
   content?: Value;
 };
 
-const EditorPage = ({ }) => {
+export default function EditorPage() {
+  useRequireUserLoggedIn();
   const { enqueueSnackbar } = useSnackbar();
   const confirm = useConfirm();
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -181,5 +182,3 @@ const EditorPage = ({ }) => {
     </Grid>
   </Grid>;
 };
-
-export default withUserLoggedIn(EditorPage);

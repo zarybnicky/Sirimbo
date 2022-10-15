@@ -1,10 +1,10 @@
 import * as React from 'react';
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
-import { useCohortMembersQuery } from 'lib/graphql';
+import { useMemberListQuery } from 'lib/graphql';
 
-export function CohortExport({ id, name }: { id: number; name: string; }) {
-  const { data } = useCohortMembersQuery({ id });
+export function CohortExport({ id, name }: { id: string; name: string; }) {
+  const { data } = useMemberListQuery({ cohortId: id });
 
   const saveData = async () => {
     if (!data) {
@@ -27,7 +27,7 @@ export function CohortExport({ id, name }: { id: number; name: string; }) {
       column.alignment = { horizontal: 'center' };
     });
 
-    data.cohortMembers?.nodes.forEach(x => worksheet.addRow({
+    data.members?.nodes.forEach(x => worksheet.addRow({
       firstName: x.uJmeno,
       lastName: x.uPrijmeni,
       birthNumber: x.uRodneCislo,

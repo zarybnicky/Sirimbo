@@ -11,8 +11,8 @@ query CohortList($visible: Boolean = true) {
   }
 }
 
-query CohortMembers($id: Int!) {
-  cohortMembers(id: $id) {
+query CohortMembers($id: BigInt!) {
+  members(condition: {sId: $id}) {
     nodes {
       uJmeno
       uPrijmeni

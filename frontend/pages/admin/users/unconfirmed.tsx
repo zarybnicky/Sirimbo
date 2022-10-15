@@ -1,13 +1,13 @@
 import { Alert, Button, Card, CardActions, CardContent, Container, Grid, Typography } from "@mui/material";
 import format from "date-fns/format";
 import parseISO from "date-fns/parseISO";
-import { useDeleteUserMutation, useCohortListQuery, useConfirmUserMutation, useRoleListQuery, UserPartialFragment, useUserListQuery, useUserQuery } from 'lib/graphql';
+import { useDeleteUserMutation, useCohortListQuery, useConfirmUserMutation, useRoleListQuery, UserPartialFragment, useUserListQuery } from 'lib/graphql';
 import { SelectElement, useForm } from "react-hook-form-mui";
 import CheckIcon from '@mui/icons-material/Check';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useConfirm } from 'material-ui-confirm';
 import React from "react";
-import { withUserLoggedIn } from "lib/route-guards";
+import { useRequireUserLoggedIn } from "lib/route-guards";
 
 const UnconfirmedUser: React.FC<{
   item: UserPartialFragment;
@@ -82,7 +82,8 @@ const UnconfirmedUser: React.FC<{
   );
 };
 
-export const UnconfirmedUsers = () => {
+export default function UnconfirmedUsers() {
+  useRequireUserLoggedIn();
   const { data: users, refetch } = useUserListQuery({ confirmed: false });
 
   return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
@@ -95,5 +96,3 @@ export const UnconfirmedUsers = () => {
     {users?.users?.nodes?.map((item, i) => <UnconfirmedUser onProcessed={refetch} item={item} key={i} />)}
   </Container >;
 };
-
-export default withUserLoggedIn(UnconfirmedUsers);

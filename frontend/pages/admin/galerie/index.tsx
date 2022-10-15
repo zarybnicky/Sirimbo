@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Pagination, Checkbox } from '@mui/material';
 import { NextLinkComposed } from 'components/Link';
 import { useGalleryDirListQuery, useToggleGalleryDirVisibleMutation } from 'lib/graphql';
-import { withUserLoggedIn } from 'lib/route-guards';
+import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { Dropdown } from 'components/Dropdown';
 
 type Treeified<T> = T & { id: string; parentId: string; children: Treeified<T>[]; };
@@ -32,7 +32,8 @@ function flatten<T>(root: Treeified<T>): T[] {
   return output;
 }
 
-function GalleryDirectoryList() {
+export default function GalleryDirectoryList() {
+  useRequireUserLoggedIn();
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
   const { data, refetch } = useGalleryDirListQuery({
@@ -81,5 +82,3 @@ function GalleryDirectoryList() {
     <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
   </>;
 }
-
-export default withUserLoggedIn(GalleryDirectoryList);

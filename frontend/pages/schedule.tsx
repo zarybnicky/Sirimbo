@@ -6,10 +6,10 @@ import { DateRange } from 'components/DateRange';
 import { useReservationRangeQuery, useScheduleRangeQuery } from 'lib/graphql';
 import parse from 'date-fns/parse';
 import { Dropdown } from 'components/Dropdown';
-import { withUserLoggedIn } from 'lib/route-guards';
+import { useRequireUserLoggedIn } from 'lib/route-guards';
 
-export const SchedulePage = ({ }) => {
-  // require or redirect
+export default function SchedulePage() {
+  useRequireUserLoggedIn();
   const perms = usePermissions();
   const [startDate] = React.useState('2022-02-01');
   const [endDate] = React.useState('2022-03-01');
@@ -123,5 +123,3 @@ export const SchedulePage = ({ }) => {
     </Grid>
   </Container>;
 }
-
-export default withUserLoggedIn(SchedulePage);

@@ -4,12 +4,13 @@ import { useForm, AutocompleteElement, TextFieldElement, DatePickerElement, Radi
 import { useCountries } from 'lib/data/use-countries';
 import format from 'date-fns/format';
 import { useSnackbar } from 'notistack';
-import { useCohortsQuery, useRegisterMutation } from 'lib/graphql';
-import { withUserLoggedOut } from 'lib/route-guards';
+import { useCohortListQuery, useRegisterMutation } from 'lib/graphql';
+import { useRequireUserLoggedOut } from 'lib/route-guards';
 
-export const RegisterPage = () => {
+export default function RegisterPage() {
+  useRequireUserLoggedOut()
   const countries = useCountries();
-  const { data: cohorts } = useCohortsQuery();
+  const { data: cohorts } = useCohortListQuery();
   const [submitError, setSubmitError] = React.useState<string | null>(null);
   const { control, handleSubmit, watch, formState: { isDirty, isSubmitting } } = useForm();
   const { enqueueSnackbar } = useSnackbar();
@@ -208,5 +209,3 @@ export const RegisterPage = () => {
     </Container>
   );
 };
-
-export default withUserLoggedOut(RegisterPage);

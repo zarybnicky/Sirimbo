@@ -3,10 +3,11 @@ import { Checkbox, Pagination } from '@mui/material';
 import { DateRange } from 'components/DateRange';
 import { NextLinkComposed } from 'components/Link';
 import { useEventListQuery, useToggleEventVisibleMutation } from 'lib/graphql';
-import { withUserLoggedIn } from 'lib/route-guards';
+import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { Dropdown } from 'components/Dropdown';
 
-function AdminEventList() {
+export default function AdminEventList() {
+  useRequireUserLoggedIn();
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
   const { data, refetch } = useEventListQuery({
@@ -54,5 +55,3 @@ function AdminEventList() {
     <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
   </>;
 }
-
-export default withUserLoggedIn(AdminEventList);

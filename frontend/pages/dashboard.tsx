@@ -1,18 +1,11 @@
 import * as React from 'react';
 import { Card, CardContent, Container, Grid, Typography } from '@mui/material';
 import { AnnouncementList } from '../components/AnnouncementList';
-import { useAuth } from 'lib/data/use-auth';
-import { useRouter } from 'next/router';
-import { withUserLoggedIn } from 'lib/route-guards';
+import { useRequireUserLoggedIn } from 'lib/route-guards';
 
-const DashboardPage = ({ }) => {
-  const router = useRouter();
-  const { user, isLoading } = useAuth();
+export default function DashboardPage() {
+  useRequireUserLoggedIn();
 
-  if (!isLoading && !user) {
-    router.push('/');
-    return null;
-  }
   // Copy AnnouncementList
   // Copy ScheduleList
 
@@ -33,5 +26,3 @@ const DashboardPage = ({ }) => {
     </Grid>
   </Container >;
 }
-
-export default withUserLoggedIn(DashboardPage);

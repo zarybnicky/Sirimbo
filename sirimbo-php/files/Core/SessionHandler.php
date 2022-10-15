@@ -24,6 +24,7 @@ class DbSessionHandler extends Database implements SessionHandlerInterface
         $sessionData = unserialize($data);
         $userId = $sessionData['id'] ?? null;
         $data = json_encode($sessionData, JSON_FORCE_OBJECT);
+
         $stmt = self::prepare(
             "INSERT INTO session
              (ss_id, ss_user, ss_data, ss_lifetime) VALUES

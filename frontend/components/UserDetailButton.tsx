@@ -9,8 +9,8 @@ export const UserDetailButton: React.FC<{ user: UserDetailFragment }> = ({ user 
   const [open, setOpen] = React.useState(false);
 
   return <>
-    <Button variant="outlined" onClick={() => setOpen(true)} startIcon={<PersonIcon />}>
-      {user.uJmeno} {user.uPrijmeni}
+    <Button variant="text" sx={{ textTransform: 'none' }} onClick={() => setOpen(true)} startIcon={<PersonIcon />}>
+      {user.uPrijmeni}, {user.uJmeno}
     </Button>
 
     <Dialog onClose={() => setOpen(false)} open={open}>

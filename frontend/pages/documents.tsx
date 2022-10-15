@@ -4,7 +4,7 @@ import { AutocompleteElement } from "react-hook-form-mui";
 import { Container } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 import format from "date-fns/format";
-import { withUserLoggedIn } from "lib/route-guards";
+import { useRequireUserLoggedIn } from "lib/route-guards";
 
 const categories = [
   { id: 1, label: "Schůze,\u{00A0}rady" },
@@ -13,11 +13,12 @@ const categories = [
   { id: 0, label: 'Ostatní' },
 ];
 
-function DocumentsPage() {
+export default function DocumentsPage() {
+  useRequireUserLoggedIn();
   const { control, watch } = useForm<{ category?: { id: number; label: string; }; }>();
   const { data } = useDocumentsQuery({ category: watch('category.id') });
 
-  return <Container maxWidth="lg" style={{ paddingTop: '4rem' }}>
+  return <Container maxWidth="lg" style={{ paddingTop: '2rem' }}>
     <div style={{ margin: '0 1rem 1rem auto', maxWidth: '12rem' }}>
       <AutocompleteElement control={control} name="category" label="Kategorie" required options={categories} />
     </div>
@@ -46,5 +47,3 @@ function DocumentsPage() {
     />
   </Container>;
 }
-
-export default withUserLoggedIn(DocumentsPage);

@@ -113,16 +113,31 @@ function makeRouter()
 {
     $router = new \Olymp\Router('Olymp.Controller');
 
+    $router->get('/admin/users/sign-as/([0-9]+)', '@Admin.Users::signAs');
+    $router->get('/admin/users/getMsmtCsv', '@Admin.Users::getMsmtCsv');
+    $router->get('/admin/users/duplicate', '@Admin.Users::duplicate');
+    $router->get('/admin/users/statistiky', '@Admin.Users::statistiky');
+
+    $router->get('/admin/nastenka', '@Admin.Nastenka::list');
+    $router->get('/admin/permissions', '@Admin.Permissions::list');
+    $router->get('/admin/skupiny', '@Admin.Skupiny::list');
+    $router->get('/admin/video/source', '@Admin.VideoSource::list');
+    $router->get('/admin/dokumenty', '@Admin.Dokumenty::list');
+    $router->post('/admin/dokumenty', '@Admin.Dokumenty::listPost');
+    $router->get('/admin/pary', '@Admin.Pary::list');
+    $router->post('/admin/pary', '@Admin.Pary::listPost');
+
+    $router->get('/admin/platby', '@Admin.Platby::overview');
+    $router->get('/admin/platby/structure', '@Admin.Platby::structure');
+    $router->get('/admin/platby/items', '@Admin.PlatbyItems::list');
+    $router->get('/admin/platby/manual', '@Admin.PlatbyManual::query');
+
     $router->get('/member/akce', '@Member.Akce::list');
     $router->post('/member/akce', '@Member.Akce::listPost');
 
     $router->get('/member/akce/([0-9]+)', '@Member.Akce::single');
 
     $router->get('/member/download', '@Member::download');
-
-    $router->get('/member/clenove', '@Member.Clenove::structure');
-    $router->get('/member/clenove/seznam', '@Member.Clenove::list');
-    $router->get('/member/clenove/skupiny', '@Member.Clenove::groups');
 
     $router->get('/member/profil', '@Member.Profil::get');
 
@@ -184,8 +199,6 @@ function makeRouter()
     $router->get('/admin/video/remove/([0-9]+)', '@Admin.Video::remove');
     $router->post('/admin/video/remove/([0-9]+)', '@Admin.Video::removePost');
 
-    $router->get('/admin/video/source', '@Admin.VideoSource::list');
-
     $router->get('/admin/video/source/add', '@Admin.VideoSource::add');
     $router->post('/admin/video/source/add', '@Admin.VideoSource::addPost');
 
@@ -194,8 +207,6 @@ function makeRouter()
 
     $router->get('/admin/video/source/remove/([0-9]+)', '@Admin.VideoSource::remove');
     $router->post('/admin/video/source/remove/([0-9]+)', '@Admin.VideoSource::removePost');
-
-    $router->get('/admin/nastenka', '@Admin.Nastenka::list');
 
     $router->get('/admin/nastenka/add', '@Admin.Nastenka::add');
     $router->post('/admin/nastenka/add', '@Admin.Nastenka::addPost');
@@ -215,16 +226,8 @@ function makeRouter()
     $router->get('/admin/users/edit/([0-9]+)', '@Admin.Users::edit');
     $router->post('/admin/users/edit/([0-9]+)', '@Admin.Users::editPost');
 
-    $router->get('/admin/users/sign-as/([0-9]+)', '@Admin.Users::signAs');
-
     $router->get('/admin/users/remove/([0-9]+)', '@Admin.Users::remove');
     $router->post('/admin/users/remove/([0-9]+)', '@Admin.Users::removePost');
-
-    $router->get('/admin/users/getMsmtCsv', '@Admin.Users::getMsmtCsv');
-
-    $router->get('/admin/users/duplicate', '@Admin.Users::duplicate');
-
-    $router->get('/admin/users/statistiky', '@Admin.Users::statistiky');
 
     $router->get('/admin/galerie/file/upload', '@Admin.GalerieFile::upload');
     $router->post('/admin/galerie/file/upload', '@Admin.GalerieFile::uploadPost');
@@ -272,24 +275,13 @@ function makeRouter()
     $router->get('/admin/nabidka/detail/([0-9]+)', '@Admin.NabidkaDetail::detail');
     $router->post('/admin/nabidka/detail/([0-9]+)', '@Admin.NabidkaDetail::detailPost');
 
-    $router->get('/admin/dokumenty', '@Admin.Dokumenty::list');
-    $router->post('/admin/dokumenty', '@Admin.Dokumenty::listPost');
-
     $router->get('/admin/dokumenty/edit/([0-9]+)', '@Admin.Dokumenty::edit');
     $router->post('/admin/dokumenty/edit/([0-9]+)', '@Admin.Dokumenty::editPost');
 
     $router->get('/admin/dokumenty/remove/([0-9]+)', '@Admin.Dokumenty::remove');
     $router->post('/admin/dokumenty/remove/([0-9]+)', '@Admin.Dokumenty::removePost');
 
-    $router->get('/admin/pary', '@Admin.Pary::list');
-    $router->post('/admin/pary', '@Admin.Pary::listPost');
-
-    $router->get('/admin/pary/edit/([0-9]+)', '@Admin.Pary::edit');
-    $router->post('/admin/pary/edit/([0-9]+)', '@Admin.Pary::editPost');
-
     $router->get('/admin/pary/remove/([0-9]+)', '@Admin.Pary::remove');
-
-    $router->get('/admin/permissions', '@Admin.Permissions::list');
 
     $router->get('/admin/permissions/add', '@Admin.Permissions::add');
     $router->post('/admin/permissions/add', '@Admin.Permissions::addPost');
@@ -300,8 +292,6 @@ function makeRouter()
     $router->get('/admin/permissions/remove/([0-9]+)', '@Admin.Permissions::remove');
     $router->post('/admin/permissions/remove/([0-9]+)', '@Admin.Permissions::removePost');
 
-    $router->get('/admin/skupiny', '@Admin.Skupiny::list');
-
     $router->get('/admin/skupiny/add', '@Admin.Skupiny::add');
     $router->post('/admin/skupiny/add', '@Admin.Skupiny::addPost');
 
@@ -310,10 +300,6 @@ function makeRouter()
 
     $router->get('/admin/skupiny/remove/([0-9]+)', '@Admin.Skupiny::remove');
     $router->post('/admin/skupiny/remove/([0-9]+)', '@Admin.Skupiny::removePost');
-
-    $router->get('/admin/platby', '@Admin.Platby::overview');
-
-    $router->get('/admin/platby/structure', '@Admin.Platby::structure');
 
     $router->get('/admin/platby/raw', '@Admin.PlatbyRaw::get');
     $router->post('/admin/platby/raw', '@Admin.PlatbyRaw::post');
@@ -324,12 +310,8 @@ function makeRouter()
     $router->get('/admin/platby/discarded', '@Admin.PlatbyDiscarded::view');
     $router->get('/admin/platby/discarded/remove/([0-9]+)', '@Admin.PlatbyDiscarded::remove');
 
-    $router->get('/admin/platby/manual', '@Admin.PlatbyManual::query');
-
     $router->get('/admin/platby/manual/([0-9]+)', '@Admin.PlatbyManual::get');
     $router->post('/admin/platby/manual/([0-9]+)', '@Admin.PlatbyManual::post');
-
-    $router->get('/admin/platby/items', '@Admin.PlatbyItems::list');
 
     $router->get('/admin/platby/items/add', '@Admin.PlatbyItems::add');
     $router->post('/admin/platby/items/add', '@Admin.PlatbyItems::addPost');

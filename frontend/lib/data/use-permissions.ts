@@ -1,4 +1,4 @@
-import { ReservationFragment, ReservationItemFragment, ScheduleFragment, ScheduleItemFragment, UserPartialFragment } from 'lib/graphql';
+import { ReservationFragment, ReservationItemFragment, ScheduleFragment, ScheduleItemFragment } from 'lib/graphql';
 import { useAuth } from './use-auth';
 
 export enum PermissionLevel {
@@ -50,6 +50,10 @@ export const usePermissions = () => {
   const perms = user?.permissionByUGroup || defaultPermissions;
 
   return {
+    hasPermission(key: PermissionKey, level: PermissionLevel) {
+      const perm = PermissionKey[key] as keyof PermissionMap;
+      return perms[perm] >= level;
+    },
     canEditSchedule(schedule: ScheduleFragment) {
       return (
         (perms.peRozpis >= PermissionLevel.P_OWNED && user?.uId == schedule.rTrener) ||

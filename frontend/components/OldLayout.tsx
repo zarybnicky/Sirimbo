@@ -7,7 +7,7 @@ import { useConfig } from 'lib/use-config';
 import { usePermissions, PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 
 type NavbarItem
-  = string
+  = [string]
   | [string, string]
   | [string, string, NavbarItem[]]
   | [string, string, NavbarItem[], [PermissionKey, PermissionLevel]];
@@ -32,7 +32,7 @@ const bottomMenu: NavbarItem[] = [
   ['Dokumenty', '/documents'],
   ['Členové', '/member/clenove'],
   ['Profil', '/member/profil'],
-  'w-100',
+  ['w-100'],
   ['Administrace', '/admin', [
     ['Uživatelé', '/admin/users', [], [PermissionKey.peUsers, PermissionLevel.P_OWNED]],
     ['Skupiny', '/admin/skupiny', [], [PermissionKey.peSkupiny, PermissionLevel.P_OWNED]],
@@ -53,10 +53,10 @@ const bottomMenu: NavbarItem[] = [
 const NavbarItem: React.FC<{ pathname: string; item: NavbarItem; }> = ({ item, pathname }) => {
   const permissions = usePermissions();
 
-  if (typeof item === 'string') {
-    return <div className={item} />;
+  if (item.length === 1) {
+    return <div className={item[0]} />;
   }
-  if (item[3] && permissions[item[3][0]]! < item[3][1]) {
+  if (item[3] && !permissions.hasPermission(item[3][0], item[3][1])) {
     return null;
   }
   const active = (item[1] === pathname || pathname.includes(item[1])) ? ' active' : '';
@@ -76,7 +76,7 @@ const NavbarItem: React.FC<{ pathname: string; item: NavbarItem; }> = ({ item, p
       </Dropdown.Toggle>
       <Dropdown.Menu style={{ minWidth: '250px' }}>
         {item[2].map((sub: NavbarItem, i) => {
-          if (sub[3] && permissions[sub[3][0] as PermissionKey]! < sub[3][1]) {
+          if (sub[3] && !permissions.hasPermission(sub[3][0], sub[3][1])) {
             return null;
           }
           return <a key={i} className="dropdown-item" href={sub[1]}>{sub[0]}</a>;

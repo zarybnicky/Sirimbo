@@ -4,6 +4,7 @@ fragment UserDetail on User {
   uPrijmeni
   uEmail
   uTelefon
+  uRodneCislo
 }
 
 query User($id: BigInt!) {
@@ -16,6 +17,26 @@ query UserList($confirmed: Boolean) {
   users(condition: {uConfirmed: $confirmed}) {
     nodes {
       ...UserPartial
+    }
+  }
+}
+
+query MemberList($cohortId: BigInt) {
+  members(condition: {sId: $cohortId}) {
+    totalCount
+    nodes {
+      uId
+      uJmeno
+      uPrijmeni
+      uEmail
+      uTelefon
+      uRodneCislo
+      sId
+      sName
+      sColorRgb
+      sDescription
+      sVisible
+      paymentValid
     }
   }
 }

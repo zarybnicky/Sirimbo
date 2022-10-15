@@ -9,9 +9,10 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useActiveProspectsQuery } from 'lib/graphql';
-import { withUserLoggedIn } from 'lib/route-guards';
+import { useRequireUserLoggedIn } from 'lib/route-guards';
 
-function CrmPage() {
+export default function CrmPage() {
+  useRequireUserLoggedIn()
   const { data } = useActiveProspectsQuery();
   const nodes = data?.activeProspects?.nodes || [];
 
@@ -46,5 +47,3 @@ function CrmPage() {
     </TableContainer>
   </Container>;
 }
-
-export default withUserLoggedIn(CrmPage);
