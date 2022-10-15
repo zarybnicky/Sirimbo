@@ -9,16 +9,15 @@ export function AnnouncementList() {
   const [limit] = React.useState(3);
   const [page, setPage] = React.useState(1);
   const { data } = useAnnouncementListQuery({ limit, offset: (page - 1) * limit });
-
-  const nodes = data?.upozornenis?.nodes;
-  const total = data?.upozornenis?.totalCount;
-  if (nodes === undefined || total === undefined) {
+  if (!data?.upozornenis) {
     // react-skeleton
     return null;
   }
-
+  const nodes = data.upozornenis.nodes;
+  const total = data.upozornenis.totalCount;
   const hasNext = total >= page * limit;
   const hasPrev = 0 < (page - 1) * limit;
+
   return <>
     <Box display='flex' alignItems='center' justifyContent="right">
       {hasPrev ? <IconButton onClick={() => setPage(page - 1)}><NavigateBeforeIcon /></IconButton> : null}

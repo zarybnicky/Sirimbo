@@ -14,12 +14,26 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** A floating point number that requires more precision than IEEE 754 binary 64 */
   BigFloat: any;
+  /**
+   * A signed eight-byte integer. The upper big integer values are greater than the
+   * max value for a JavaScript number. Therefore all big integers will be output as
+   * strings and not numbers.
+   */
   BigInt: string;
+  /** A location in a connection that can be used for resuming pagination. */
   Cursor: any;
+  /** The day, does not include a time. */
   Date: string;
+  /**
+   * A point in time as described by the [ISO
+   * 8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone.
+   */
   Datetime: string;
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: { [key: string]: any };
+  /** The exact time of day, does not include the date. May or may not have a timezone offset. */
   Time: string;
 };
 
@@ -835,6 +849,8 @@ export type CreateParyPayload = {
   query: Maybe<Query>;
   /** Reads a single `User` that is related to this `Pary`. */
   userByPIdPartner: Maybe<User>;
+  /** Reads a single `User` that is related to this `Pary`. */
+  userByPIdPartnerka: Maybe<User>;
 };
 
 
@@ -1968,6 +1984,8 @@ export type DeleteParyPayload = {
   query: Maybe<Query>;
   /** Reads a single `User` that is related to this `Pary`. */
   userByPIdPartner: Maybe<User>;
+  /** Reads a single `User` that is related to this `Pary`. */
+  userByPIdPartnerka: Maybe<User>;
 };
 
 
@@ -5102,6 +5120,8 @@ export type Pary = Node & {
   rozpisItemsByRiPartner: RozpisItemsConnection;
   /** Reads a single `User` that is related to this `Pary`. */
   userByPIdPartner: Maybe<User>;
+  /** Reads a single `User` that is related to this `Pary`. */
+  userByPIdPartnerka: Maybe<User>;
 };
 
 
@@ -6197,6 +6217,8 @@ export type Query = Node & {
   getCurrentUser: Maybe<User>;
   /** Reads and enables pagination through a set of `Member`. */
   members: Maybe<MembersConnection>;
+  /** Reads and enables pagination through a set of `RozpisItem`. */
+  myLessons: Maybe<RozpisItemsConnection>;
   nabidka: Maybe<Nabidka>;
   /** Reads a single `Nabidka` using its globally unique `ID`. */
   nabidkaByNodeId: Maybe<Nabidka>;
@@ -6509,6 +6531,16 @@ export type QueryMembersArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<MembersOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryMyLessonsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -8179,6 +8211,8 @@ export type UpdateParyPayload = {
   query: Maybe<Query>;
   /** Reads a single `User` that is related to this `Pary`. */
   userByPIdPartner: Maybe<User>;
+  /** Reads a single `User` that is related to this `Pary`. */
+  userByPIdPartnerka: Maybe<User>;
 };
 
 
@@ -9244,6 +9278,8 @@ export type User = Node & {
   nodeId: Scalars['ID'];
   /** Reads and enables pagination through a set of `Pary`. */
   pariesByPIdPartner: PariesConnection;
+  /** Reads and enables pagination through a set of `Pary`. */
+  pariesByPIdPartnerka: PariesConnection;
   /** Reads and enables pagination through a set of `ParyNavrh`. */
   paryNavrhsByPnNavrhl: ParyNavrhsConnection;
   /** Reads and enables pagination through a set of `ParyNavrh`. */
@@ -9353,6 +9389,17 @@ export type UserNabidkasByNTrenerArgs = {
 
 
 export type UserPariesByPIdPartnerArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<ParyCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PariesOrderBy>>;
+};
+
+
+export type UserPariesByPIdPartnerkaArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
   condition?: InputMaybe<ParyCondition>;
@@ -10227,6 +10274,11 @@ export type ScheduleListQueryVariables = Exact<{
 
 
 export type ScheduleListQuery = { __typename?: 'Query', rozpis: { __typename?: 'RozpisConnection', totalCount: number, nodes: Array<{ __typename?: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTimestamp: string | null, rTrener: string, rVisible: boolean, userByRTrener: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename?: 'RozpisItem', riDo: string, riOd: string, riId: string, riPartner: string | null }> } }> } | null };
+
+export type MyLessonsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyLessonsQuery = { __typename?: 'Query', myLessons: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename?: 'RozpisItem', riId: string, riOd: string, riDo: string, rozpiByRiIdRodic: { __typename?: 'Rozpi', rId: string, rDatum: string, rKde: string, userByRTrener: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', userByPIdPartner: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> } | null };
 
 export type ToggleScheduleVisibleMutationVariables = Exact<{
   id: Scalars['BigInt'];
@@ -11491,6 +11543,58 @@ useScheduleListQuery.getKey = (variables: ScheduleListQueryVariables) => ['Sched
 ;
 
 useScheduleListQuery.fetcher = (variables: ScheduleListQueryVariables, options?: RequestInit['headers']) => fetcher<ScheduleListQuery, ScheduleListQueryVariables>(ScheduleListDocument, variables, options);
+export const MyLessonsDocument = `
+    query MyLessons {
+  myLessons {
+    nodes {
+      riId
+      riOd
+      riDo
+      rozpiByRiIdRodic {
+        rId
+        rDatum
+        rKde
+        userByRTrener {
+          uId
+          uJmeno
+          uPrijmeni
+        }
+      }
+      paryByRiPartner {
+        userByPIdPartner {
+          uId
+          uJmeno
+          uPrijmeni
+        }
+        userByPIdPartnerka {
+          uId
+          uJmeno
+          uPrijmeni
+        }
+      }
+    }
+  }
+}
+    `;
+export const useMyLessonsQuery = <
+      TData = MyLessonsQuery,
+      TError = unknown
+    >(
+      variables?: MyLessonsQueryVariables,
+      options?: UseQueryOptions<MyLessonsQuery, TError, TData>
+    ) =>
+    useQuery<MyLessonsQuery, TError, TData>(
+      variables === undefined ? ['MyLessons'] : ['MyLessons', variables],
+      fetcher<MyLessonsQuery, MyLessonsQueryVariables>(MyLessonsDocument, variables),
+      options
+    );
+useMyLessonsQuery.document = MyLessonsDocument;
+
+
+useMyLessonsQuery.getKey = (variables?: MyLessonsQueryVariables) => variables === undefined ? ['MyLessons'] : ['MyLessons', variables];
+;
+
+useMyLessonsQuery.fetcher = (variables?: MyLessonsQueryVariables, options?: RequestInit['headers']) => fetcher<MyLessonsQuery, MyLessonsQueryVariables>(MyLessonsDocument, variables, options);
 export const ToggleScheduleVisibleDocument = `
     mutation ToggleScheduleVisible($id: BigInt!, $visible: Boolean!) {
   updateRozpi(input: {rId: $id, patch: {rVisible: $visible}}) {

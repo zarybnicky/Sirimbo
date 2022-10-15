@@ -69,6 +69,38 @@ query ScheduleList($limit: Int!, $offset: Int!) {
   }
 }
 
+query MyLessons {
+  myLessons {
+    nodes {
+      riId
+      riOd
+      riDo
+      rozpiByRiIdRodic {
+        rId
+        rDatum
+        rKde
+        userByRTrener {
+          uId
+          uJmeno
+          uPrijmeni
+        }
+      }
+      paryByRiPartner {
+        userByPIdPartner {
+          uId
+          uJmeno
+          uPrijmeni
+        }
+        userByPIdPartnerka {
+          uId
+          uJmeno
+          uPrijmeni
+        }
+      }
+    }
+  }
+}
+
 mutation ToggleScheduleVisible($id: BigInt!, $visible: Boolean!) {
   updateRozpi(input: {rId: $id, patch: {rVisible: $visible}}) {
     rozpi {

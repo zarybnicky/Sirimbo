@@ -100,6 +100,8 @@ alter table public.pary
 drop constraint pary_p_id_partner_fkey,
 add constraint pary_p_id_partner_fkey foreign key (p_id_partner) references public.users(u_id) on update cascade on delete cascade;
 
+comment on table public.pary is E'@foreignKey (p_id_partnerka) references users (u_id)';
+
 -- ************** pary_navrh **************
 select app_private.drop_policies('public.pary_navrh');
 create policy manage_own on pary_navrh for all

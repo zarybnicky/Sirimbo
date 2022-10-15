@@ -72,7 +72,7 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
   sortExport: true,
   enableQueryBatching: true,
   pluginHook: makePluginHook([operationHooks]),
-  exportJsonSchemaPath: process.env.DEBUG ? path.resolve('../frontend/schema.json') : undefined,
+  exportGqlSchemaPath: process.env.DEBUG ? path.resolve('../schema.graphql') : undefined,
 
   async additionalGraphQLContextFromRequest(_, res) {
     return {

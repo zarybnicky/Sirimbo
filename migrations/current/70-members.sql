@@ -18,3 +18,17 @@ create or replace view public.members as
   ORDER BY s_name, u_email;
 
 GRANT ALL ON public.members TO member;
+
+create or replace function my_lessons() returns setof rozpis_item as $$
+  select rozpis_item.*
+  from public.rozpis_item
+  inner join public.rozpis on (rozpis.r_id = rozpis_item.ri_id_rodic)
+  left join public.pary on (rozpis_item.ri_partner = pary.p_id)
+  where (
+        rozpis.r_trener = current_user_id()
+     or pary.p_id_partner = current_user_id()
+     or pary.p_id_partnerka = current_user_id()
+  ) and rozpis.r_visible = true
+--  and rozpis.r_datum > NOW()
+  order by rozpis.r_datum, rozpis_item.ri_od
+$$ language sql stable;
