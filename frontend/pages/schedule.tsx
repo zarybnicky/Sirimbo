@@ -13,11 +13,70 @@ export default function SchedulePage() {
   const perms = usePermissions();
   const [startDate] = React.useState('2022-02-01');
   const [endDate] = React.useState('2022-03-01');
+  const now = new Date();
 
   const { data: schedules } = useScheduleRangeQuery({ startDate, endDate });
   const { data: reservations } = useReservationRangeQuery({ startDate, endDate });
 
-  const now = new Date();
+  // can reserve === has paid
+  // $paid = \DBPlatby::hasPaidMemberFees(self::getUser()->getId);
+  // $par = \DBPary::getLatestPartner($user->getId(), $user->getGender());
+  // if ($par) {
+  //     $paid = $paid && \DBPlatby::hasPaidMemberFees($par['u_id']);
+  // }
+  // return $paid;
+
+  const bookLesson = React.useCallback((id: string) => {
+    /* if (!\Session::getZaplacenoPar()) {
+     *   \Message::warning('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
+     * } elseif ($lesson['ri_partner']) {
+     *   \Message::warning('Lekce už je obsazená');
+     * } else {
+         if ri_partner is NULL, then
+     *   self::query("UPDATE rozpis_item SET ri_partner='?' WHERE ri_id='?'", $uid, $rid);
+     * } */
+  }, []);
+
+  const cancelLesson = React.useCallback((id: string) => {
+    /* if ($lesson['ri_partner'] === null) {
+     * } elseif ($par['p_id'] != $lesson['ri_partner']
+     *           && !\Permissions::check('rozpis', P_OWNED, $data['r_trener'])
+     * ) {
+     *   \Message::warning('Nedostatečná oprávnění!');
+     * } else {
+     *   self::query("UPDATE rozpis_item SET ri_partner=NULL WHERE ri_id='?'", $rid)
+     * } */
+  }, []);
+
+  const reserveLessons = React.useCallback((id: string) => {
+    // check lock
+    // check lesson count
+    /* if (!\Session::getZaplacenoPar()) {
+     *   \Message::danger('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
+     * } elseif ($data['n_max_pocet_hod'] > 0 &&
+     *           (\DBNabidka::getNabidkaLessons($nId, $par['p_id']) + $_POST['hodiny']) > $data['n_max_pocet_hod']
+     *             ) {
+     *   \Message::danger('Maximální počet hodin na pár je ' . $data['n_max_pocet_hod'] . '!');
+     * } elseif (($data['n_pocet_hod'] - \DBNabidka::getReservationLessons($nId)) < $_POST['hodiny']) {
+     *   \Message::danger('Tolik volných hodin tu není');
+     * } else {
+     *   \DBNabidka::addNabidkaItemLessons($par['p_id'], $nId, $_POST['hodiny']);
+     * } */
+  }, []);
+
+  const cancelLessonsReservation = React.useCallback((id: string) => {
+    // check lock
+    // check lesson count
+    /* if (!\DBNabidka::getNabidkaLessons($nId, $_POST['p_id'])) {
+     *   \Message::danger('Neplatný požadavek!');
+     * } elseif ($_POST['p_id'] != $par['p_id'] &&
+     *           !\Permissions::check('nabidka', P_OWNED, $data['n_trener'])
+     * ) {
+     *   \Message::danger('Nedostatečná oprávnění!');
+     * } else {
+     *   \DBNabidka::removeNabidkaItem($nId, $_POST['p_id']);
+     * } */
+  }, []);
 
   const scheduleList = (schedules?.schedulesForRange?.nodes || []).map((item, i) => (
     <Grid item key={i} md={6} lg={4} xl={3}>

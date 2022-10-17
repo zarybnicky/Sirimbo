@@ -90,13 +90,13 @@ class PlatbyDiscarded
             $result[] = $row;
         }
         foreach ($result as &$row) {
-            foreach ($columnsTemp as $key => $value) {
+            foreach (array_keys($columnsTemp) as $key) {
                 if (!isset($row[$key])) {
                     $row[$key] = '';
                 }
             }
         }
-        foreach (array_filter($columnsTemp) as $key => $value) {
+        foreach (array_keys(array_filter($columnsTemp)) as $key) {
             $columns[] = $key;
         }
     }

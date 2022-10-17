@@ -69,34 +69,43 @@ query ScheduleList($limit: Int!, $offset: Int!) {
   }
 }
 
-query MyLessons {
-  myLessons {
+fragment Lesson on RozpisItem {
+  riId
+  riOd
+  riDo
+  rozpiByRiIdRodic {
+    rId
+    rDatum
+    rKde
+    userByRTrener {
+      uId
+      uJmeno
+      uPrijmeni
+    }
+  }
+  paryByRiPartner {
+    userByPIdPartner {
+      uId
+      uJmeno
+      uPrijmeni
+    }
+    userByPIdPartnerka {
+      uId
+      uJmeno
+      uPrijmeni
+    }
+  }
+}
+
+query MyLessons($startDate: Date, $endDate: Date) {
+  currentCoupleIds {
+    nodes
+  }
+  currentSessionId
+  currentUserId
+  myLessons(startDate: $startDate, endDate: $endDate) {
     nodes {
-      riId
-      riOd
-      riDo
-      rozpiByRiIdRodic {
-        rId
-        rDatum
-        rKde
-        userByRTrener {
-          uId
-          uJmeno
-          uPrijmeni
-        }
-      }
-      paryByRiPartner {
-        userByPIdPartner {
-          uId
-          uJmeno
-          uPrijmeni
-        }
-        userByPIdPartnerka {
-          uId
-          uJmeno
-          uPrijmeni
-        }
-      }
+      ...Lesson
     }
   }
 }

@@ -2,38 +2,6 @@
 <?php
 class DBPary extends Database
 {
-    public static function getActivePary()
-    {
-        $res = self::query(
-            "SELECT p_id,
-                m.u_id AS man,m.u_id AS man_id,m.u_jmeno AS man_name,m.u_prijmeni AS man_surname,
-                f.u_id AS woman,f.u_id AS woman_id,f.u_jmeno AS woman_name,f.u_prijmeni AS woman_surname
-            FROM pary AS p
-                LEFT JOIN users AS m ON p.p_id_partner=m.u_id
-                LEFT JOIN users AS f ON p.p_id_partnerka=f.u_id
-            WHERE p.p_archiv='0'
-                AND p.p_id_partner!='0' AND p.p_id_partnerka!='0'
-                AND m.u_id IS NOT NULL AND f.u_id IS NOT NULL
-            ORDER BY man_surname ASC"
-        );
-        return self::getArray($res);
-    }
-
-    public static function getSinglePar($id)
-    {
-        $res = self::query(
-            "SELECT p_id,
-                m.u_id AS man_id,m.u_jmeno AS man_name,m.u_prijmeni AS man_surname,
-                f.u_id AS woman_id,f.u_jmeno AS woman_name,f.u_prijmeni AS woman_surname
-            FROM pary AS p
-                LEFT JOIN users AS m ON p.p_id_partner=m.u_id
-                LEFT JOIN users AS f ON p.p_id_partnerka=f.u_id
-            WHERE p.p_id='?'",
-            $id
-        );
-        return $res ? self::getSingleRow($res) : false;
-    }
-
     public static function getLatestPartner($partner, $pohlavi)
     {
         if ($pohlavi == 'm') {
@@ -120,7 +88,17 @@ class DBPary extends Database
 
     public static function removeCouple($id)
     {
-        $data = self::getSinglePar($id);
+        $res = self::query(
+            "SELECT p_id,
+                m.u_id AS man_id,m.u_jmeno AS man_name,m.u_prijmeni AS man_surname,
+                f.u_id AS woman_id,f.u_jmeno AS woman_name,f.u_prijmeni AS woman_surname
+            FROM pary AS p
+                LEFT JOIN users AS m ON p.p_id_partner=m.u_id
+                LEFT JOIN users AS f ON p.p_id_partnerka=f.u_id
+            WHERE p.p_id='?'",
+            $id
+        );
+        $data = $res ? self::getSingleRow($res) : false;
         self::noPartner($data['man_id']);
     }
 

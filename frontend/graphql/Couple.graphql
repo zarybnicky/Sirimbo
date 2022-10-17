@@ -1,0 +1,27 @@
+query CoupleList {
+  activeCouples {
+    nodes {
+      pId
+      userByPIdPartner {
+        uJmeno
+        uPrijmeni
+      }
+      userByPIdPartnerka {
+        uJmeno
+        uPrijmeni
+      }
+    }
+  }
+}
+
+mutation CreateCouple($man: BigInt!, $woman: BigInt!) {
+  createPary(input: {pary: {pIdPartner: $man, pIdPartnerka: $woman}}) {
+    __typename
+  }
+}
+
+# mutation RemoveCouple($id: BigInt!) {
+#   deletePary(input: {pId: $id}) {
+#     __typename
+#   }
+# }

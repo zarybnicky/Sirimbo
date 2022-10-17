@@ -79,17 +79,4 @@ class ProfilPar
         \Message::warning('Žádná taková žádost tu není');
         \Redirect::to('/member/profil');
     }
-
-    private static function checkData()
-    {
-        $classes = ['Z', 'H', 'D', 'C', 'B', 'A', 'M'];
-        $f = new \Form();
-        $f->checkInArray($_POST['stt-trida'], $classes, 'Neplatná standardní třída');
-        $f->checkInArray($_POST['lat-trida'], $classes, 'Neplatná latinská třída');
-        $f->checkNumberBetween($_POST['stt-body'], 0, 1000, 'Špatný počet standardních bodů');
-        $f->checkNumberBetween($_POST['lat-body'], 0, 1000, 'Špatný počet latinských bodů');
-        $f->checkNumberBetween($_POST['stt-finale'], 0, 10, 'Špatný počet standardních finálí');
-        $f->checkNumberBetween($_POST['lat-finale'], 0, 10, 'Špatný počet latinských finálí');
-        return $f;
-    }
 }

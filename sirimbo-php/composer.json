@@ -12,7 +12,11 @@
             "files/Core/helpers/",
             "files/Core/types/"
         ],
-        "files": ["files/functions.php"]
+      "files": [
+        "config.php",
+        "files/Core/settings.php",
+        "files/functions.php"
+      ]
     },
     "require": {
         "stephank/composer-plugin-nixify": "^1.0",

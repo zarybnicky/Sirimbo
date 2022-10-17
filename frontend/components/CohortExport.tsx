@@ -2,14 +2,12 @@ import * as React from 'react';
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
 import { useMemberListQuery } from 'lib/graphql';
+import { PermissionKey, PermissionLevel, usePermissions } from 'lib/data/use-permissions';
 
-export function CohortExport({ id, name }: { id: string; name: string; }) {
-  const { data } = useMemberListQuery({ cohortId: id });
-
-  const saveData = async () => {
-    if (!data) {
-      return;
-    }
+export function CohortExport({ id, name }: { id?: string; name?: string; }) {
+  const perms = usePermissions();
+  const saveData = React.useCallback(async () => {
+    const data = await useMemberListQuery.fetcher({ cohortId: id })();
     const workbook = new Excel.Workbook();
     const worksheet = workbook.addWorksheet(name || "Sheet 1");
 
@@ -36,11 +34,15 @@ export function CohortExport({ id, name }: { id: string; name: string; }) {
     }));
 
     const buf = await workbook.xlsx.writeBuffer();
-    saveAs(new Blob([buf]), `${name || "export-skupiny"}.xlsx`);
-  };
+    saveAs(new Blob([buf]), `${name || "Všechny skupiny"}.xlsx`);
+  }, [id, name]);
+
+  if (!perms.hasPermission(PermissionKey.peRozpis, PermissionLevel.P_OWNED)) {
+    return null;
+  }
 
   return <button className="btn btn-primary" onClick={(e) => {
     e.preventDefault();
     saveData();
-  }}>Export</button>;
+  }}>Export {!name && 'všech'}</button>;
 }

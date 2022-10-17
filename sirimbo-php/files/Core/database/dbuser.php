@@ -254,19 +254,6 @@ class DBUser extends Database implements Pagable
         return self::getArray($res);
     }
 
-    public static function getDuplicateUsers()
-    {
-        $res = self::query(
-            "SELECT u1.*,skupiny.* FROM users u1
-                LEFT JOIN skupiny ON u1.u_skupina=skupiny.s_id
-            WHERE EXISTS (SELECT * FROM users u2 WHERE
-                ((u1.u_jmeno=u2.u_jmeno AND u1.u_prijmeni=u2.u_prijmeni) OR
-                u1.u_email=u2.u_email OR u1.u_telefon=u2.u_telefon) AND u1.u_id!=u2.u_id)
-            ORDER BY u_email, u_telefon, u_prijmeni"
-        );
-        return self::getArray($res);
-    }
-
     public static function getActiveUsers($group = null)
     {
         $res = self::query(
@@ -275,16 +262,6 @@ class DBUser extends Database implements Pagable
             WHERE u_system='0' AND u_confirmed='1' AND u_ban='0' " .
             ($group !== null ? "AND u_group='$group' " : '') .
                 "ORDER BY u_prijmeni "
-        );
-        return self::getArray($res);
-    }
-    public static function getGroupCounts()
-    {
-        $res = self::query(
-            "SELECT u_group, count(*) as count, pe_name
-            FROM permissions LEFT JOIN users ON u_group=pe_id
-            GROUP BY u_group, pe_name
-            ORDER BY u_group, count DESC"
         );
         return self::getArray($res);
     }

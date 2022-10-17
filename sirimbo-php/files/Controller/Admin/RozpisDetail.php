@@ -33,14 +33,14 @@ class RozpisDetail
             \Redirect::to('/admin/rozpis');
         }
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
-        $items = static::processPost($id, $data, \DBRozpis::getLessons($id));
+        $items = static::processPost($id, \DBRozpis::getLessons($id));
         if ($items) {
             \DBRozpis::editMultipleLessons($items);
         }
         \Redirect::to($_SERVER['REQUEST_URI']);
     }
 
-    protected static function processPost($id, $data, $items)
+    protected static function processPost($id, $items)
     {
         if (($_POST['remove'] ?? null) > 0) {
             \DBRozpis::deleteLesson($_POST['remove']);

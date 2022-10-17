@@ -50,16 +50,16 @@ $$ language sql stable;
 grant execute on function current_user_id to anonymous;
 
 create or replace function current_session_id() returns text as $$
-  select current_setting('jwt.claims.session_id', true);
+  select nullif(current_setting('jwt.claims.user_id', true), '')::integer;
 $$ language sql stable;
 grant execute on function current_session_id to anonymous;
 
 create or replace function current_couple_ids() returns setof bigint AS $$
-  select distinct p_id_partner
+  select distinct p_id
   from public.pary
   where p_id_partner = current_user_id() and p_archiv = false
   UNION
-  select distinct p_id_partnerka
+  select distinct p_id
   from public.pary
   where p_id_partnerka = current_user_id() and p_archiv = false;
 $$ language sql stable;

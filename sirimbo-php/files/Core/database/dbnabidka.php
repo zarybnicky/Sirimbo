@@ -94,21 +94,6 @@ class DBNabidka extends Database
         }
     }
 
-    public static function getNabidkaLessons($parent_id, $u_id)
-    {
-        $res = self::query(
-            "SELECT ni_pocet_hod FROM nabidka_item WHERE ni_id_rodic='?' AND ni_partner='?'",
-            $parent_id,
-            $u_id
-        );
-        if (!$res) {
-            return false;
-        } else {
-            $row = self::getSingleRow($res);
-            return $row["ni_pocet_hod"];
-        }
-    }
-
     public static function addNabidkaItemLessons($user_id, $parent_id, $pocet_hod)
     {
         self::query(

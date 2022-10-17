@@ -96,14 +96,6 @@ class Form
         }
     }
 
-    public function checkNumberBetween($i, $min, $max, $message)
-    {
-        if (!is_numeric($i) || $i < $min || $i > $max) {
-            $this->valid = false;
-            $this->messages[] = $message;
-        }
-    }
-
     public function checkBool($i, $message)
     {
         if (!(bool) $i) {

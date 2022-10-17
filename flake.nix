@@ -14,6 +14,7 @@
 
     overlay = final: prev: {
       phpstan = final.callPackage ./nix/phpstan.nix {};
+      psalm = final.callPackage ./nix/psalm.nix {};
       ncc = final.callPackage ./nix/ncc.nix {};
       squawk = final.callPackage ./nix/squawk.nix {};
       graphile-migrate = final.callPackage ./nix/graphile-migrate.nix { src = migrate; };
@@ -54,6 +55,7 @@
         pkgs.graphile-migrate
         pkgs.yarn
         pkgs.phpstan
+        pkgs.psalm
         pkgs.nodePackages.typescript
         pkgs.yarn2nix
         pkgs.postgresql

@@ -40,22 +40,11 @@ class Session
         return self::$user = $user;
     }
 
-    public static function getUser()
+    public static function getUser(): ?User
     {
         if (!($_SESSION['id'] ?? null)) {
             return null;
         }
         return self::$user;
-    }
-
-    public static function getZaplacenoPar()
-    {
-        return true;
-        // $paid = \DBPlatby::hasPaidMemberFees(self::getUser()->getId);
-        // $par = \DBPary::getLatestPartner($user->getId(), $user->getGender());
-        // if ($par) {
-        //     $paid = $paid && \DBPlatby::hasPaidMemberFees($par['u_id']);
-        // }
-        // return $paid;
     }
 }

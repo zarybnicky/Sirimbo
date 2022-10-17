@@ -3,12 +3,6 @@ namespace Olymp\Controller\Admin;
 
 class Skupiny
 {
-    public static function list()
-    {
-        \Permissions::checkError('skupiny', P_OWNED);
-        \Render::twig('Admin/Skupiny.twig', ['data' => \DBSkupiny::get()]);
-    }
-
     public static function add()
     {
         \Permissions::checkError('skupiny', P_OWNED);
@@ -104,7 +98,7 @@ class Skupiny
     public static function removePost($id)
     {
         \Permissions::checkError('skupiny', P_OWNED);
-        if (!$data = \DBSkupiny::getSingle($id)) {
+        if (!\DBSkupiny::getSingle($id)) {
             \Message::warning('Skupina s takovým ID neexistuje');
             \Redirect::to('/admin/skupiny');
         }

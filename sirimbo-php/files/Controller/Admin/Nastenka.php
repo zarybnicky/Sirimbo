@@ -3,21 +3,6 @@ namespace Olymp\Controller\Admin;
 
 class Nastenka
 {
-    public static function list()
-    {
-        \Permissions::checkError('nastenka', P_OWNED);
-        $pager = new \Paging(new \DBNastenka());
-        $pager->setCurrentPage($_GET['p'] ?? null);
-        $pager->setItemsPerPage($_GET['c'] ?? null);
-        \Render::twig('Admin/Nastenka.twig', [
-            'navigation' => $pager->getNavigation(),
-            'data' => array_for($pager->getItems(), fn($item) => $item + [
-                'canEdit' => \Permissions::check('nastenka', P_OWNED, $item['up_kdo']),
-                'groups' => \DBNastenka::getNastenkaSkupiny($item['up_id']),
-            ]),
-        ]);
-    }
-
     public static function add()
     {
         \Permissions::checkError('nastenka', P_OWNED);

@@ -3,14 +3,6 @@ namespace Olymp\Controller\Admin;
 
 class Permissions
 {
-    public static function list()
-    {
-        \Permissions::checkError('permissions', P_ADMIN);
-        \Render::twig('Admin/Permissions.twig', [
-            'data' => \DBPermissions::getGroups()
-        ]);
-    }
-
     public static function add()
     {
         \Permissions::checkError('permissions', P_ADMIN);

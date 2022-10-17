@@ -6180,6 +6180,8 @@ export type ProspectFormDancerPayload = {
 /** The root query type which gives access points into the data universe. */
 export type Query = Node & {
   __typename?: 'Query';
+  /** Reads and enables pagination through a set of `Pary`. */
+  activeCouples: Maybe<PariesConnection>;
   activeProspects: Maybe<ActiveProspectsConnection>;
   akce: Maybe<Akce>;
   /** Reads a single `Akce` using its globally unique `ID`. */
@@ -6355,6 +6357,16 @@ export type Query = Node & {
   videoSourceByNodeId: Maybe<VideoSource>;
   /** Reads and enables pagination through a set of `VideoSource`. */
   videoSources: Maybe<VideoSourcesConnection>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryActiveCouplesArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -6538,9 +6550,11 @@ export type QueryMembersArgs = {
 export type QueryMyLessonsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
+  endDate?: InputMaybe<Scalars['Date']>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
+  startDate?: InputMaybe<Scalars['Date']>;
 };
 
 
@@ -10050,6 +10064,19 @@ export type CohortMembersQueryVariables = Exact<{
 
 export type CohortMembersQuery = { __typename?: 'Query', members: { __typename?: 'MembersConnection', nodes: Array<{ __typename?: 'Member', uJmeno: string | null, uPrijmeni: string | null, uRodneCislo: string | null, uTelefon: string | null, uEmail: string | null }> } | null };
 
+export type CoupleListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CoupleListQuery = { __typename?: 'Query', activeCouples: { __typename?: 'PariesConnection', nodes: Array<{ __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string } | null }> } | null };
+
+export type CreateCoupleMutationVariables = Exact<{
+  man: Scalars['BigInt'];
+  woman: Scalars['BigInt'];
+}>;
+
+
+export type CreateCoupleMutation = { __typename?: 'Mutation', createPary: { __typename: 'CreateParyPayload' } | null };
+
 export type ActiveProspectsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -10200,6 +10227,11 @@ export type MenuQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MenuQuery = { __typename?: 'Query', parameter: { __typename?: 'Parameter', paValue: string } | null };
 
+export type PermissionListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PermissionListQuery = { __typename?: 'Query', permissions: { __typename?: 'PermissionsConnection', nodes: Array<{ __typename?: 'Permission', peId: string, peName: string, peDescription: string }> } | null };
+
 export type ReservationItemFragment = { __typename?: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null };
 
 export type ReservationFragment = { __typename?: 'Nabidka', nId: string, nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename?: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null };
@@ -10275,10 +10307,15 @@ export type ScheduleListQueryVariables = Exact<{
 
 export type ScheduleListQuery = { __typename?: 'Query', rozpis: { __typename?: 'RozpisConnection', totalCount: number, nodes: Array<{ __typename?: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTimestamp: string | null, rTrener: string, rVisible: boolean, userByRTrener: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename?: 'RozpisItem', riDo: string, riOd: string, riId: string, riPartner: string | null }> } }> } | null };
 
-export type MyLessonsQueryVariables = Exact<{ [key: string]: never; }>;
+export type LessonFragment = { __typename?: 'RozpisItem', riId: string, riOd: string, riDo: string, rozpiByRiIdRodic: { __typename?: 'Rozpi', rId: string, rDatum: string, rKde: string, userByRTrener: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', userByPIdPartner: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null };
+
+export type MyLessonsQueryVariables = Exact<{
+  startDate?: InputMaybe<Scalars['Date']>;
+  endDate?: InputMaybe<Scalars['Date']>;
+}>;
 
 
-export type MyLessonsQuery = { __typename?: 'Query', myLessons: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename?: 'RozpisItem', riId: string, riOd: string, riDo: string, rozpiByRiIdRodic: { __typename?: 'Rozpi', rId: string, rDatum: string, rKde: string, userByRTrener: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', userByPIdPartner: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> } | null };
+export type MyLessonsQuery = { __typename?: 'Query', currentSessionId: string | null, currentUserId: string | null, currentCoupleIds: { __typename?: 'CurrentCoupleIdsConnection', nodes: Array<string | null> } | null, myLessons: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename?: 'RozpisItem', riId: string, riOd: string, riDo: string, rozpiByRiIdRodic: { __typename?: 'Rozpi', rId: string, rDatum: string, rKde: string, userByRTrener: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', userByPIdPartner: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> } | null };
 
 export type ToggleScheduleVisibleMutationVariables = Exact<{
   id: Scalars['BigInt'];
@@ -10520,6 +10557,35 @@ export const ScheduleFragmentDoc = `
   }
 }
     ${ScheduleItemFragmentDoc}`;
+export const LessonFragmentDoc = `
+    fragment Lesson on RozpisItem {
+  riId
+  riOd
+  riDo
+  rozpiByRiIdRodic {
+    rId
+    rDatum
+    rKde
+    userByRTrener {
+      uId
+      uJmeno
+      uPrijmeni
+    }
+  }
+  paryByRiPartner {
+    userByPIdPartner {
+      uId
+      uJmeno
+      uPrijmeni
+    }
+    userByPIdPartnerka {
+      uId
+      uJmeno
+      uPrijmeni
+    }
+  }
+}
+    `;
 export const UserDetailFragmentDoc = `
     fragment UserDetail on User {
   uId
@@ -10719,6 +10785,61 @@ useCohortMembersQuery.getKey = (variables: CohortMembersQueryVariables) => ['Coh
 ;
 
 useCohortMembersQuery.fetcher = (variables: CohortMembersQueryVariables, options?: RequestInit['headers']) => fetcher<CohortMembersQuery, CohortMembersQueryVariables>(CohortMembersDocument, variables, options);
+export const CoupleListDocument = `
+    query CoupleList {
+  activeCouples {
+    nodes {
+      pId
+      userByPIdPartner {
+        uJmeno
+        uPrijmeni
+      }
+      userByPIdPartnerka {
+        uJmeno
+        uPrijmeni
+      }
+    }
+  }
+}
+    `;
+export const useCoupleListQuery = <
+      TData = CoupleListQuery,
+      TError = unknown
+    >(
+      variables?: CoupleListQueryVariables,
+      options?: UseQueryOptions<CoupleListQuery, TError, TData>
+    ) =>
+    useQuery<CoupleListQuery, TError, TData>(
+      variables === undefined ? ['CoupleList'] : ['CoupleList', variables],
+      fetcher<CoupleListQuery, CoupleListQueryVariables>(CoupleListDocument, variables),
+      options
+    );
+useCoupleListQuery.document = CoupleListDocument;
+
+
+useCoupleListQuery.getKey = (variables?: CoupleListQueryVariables) => variables === undefined ? ['CoupleList'] : ['CoupleList', variables];
+;
+
+useCoupleListQuery.fetcher = (variables?: CoupleListQueryVariables, options?: RequestInit['headers']) => fetcher<CoupleListQuery, CoupleListQueryVariables>(CoupleListDocument, variables, options);
+export const CreateCoupleDocument = `
+    mutation CreateCouple($man: BigInt!, $woman: BigInt!) {
+  createPary(input: {pary: {pIdPartner: $man, pIdPartnerka: $woman}}) {
+    __typename
+  }
+}
+    `;
+export const useCreateCoupleMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreateCoupleMutation, TError, CreateCoupleMutationVariables, TContext>) =>
+    useMutation<CreateCoupleMutation, TError, CreateCoupleMutationVariables, TContext>(
+      ['CreateCouple'],
+      (variables?: CreateCoupleMutationVariables) => fetcher<CreateCoupleMutation, CreateCoupleMutationVariables>(CreateCoupleDocument, variables)(),
+      options
+    );
+useCreateCoupleMutation.getKey = () => ['CreateCouple'];
+
+useCreateCoupleMutation.fetcher = (variables: CreateCoupleMutationVariables, options?: RequestInit['headers']) => fetcher<CreateCoupleMutation, CreateCoupleMutationVariables>(CreateCoupleDocument, variables, options);
 export const ActiveProspectsDocument = `
     query ActiveProspects {
   activeProspects {
@@ -11283,6 +11404,36 @@ useMenuQuery.getKey = (variables?: MenuQueryVariables) => variables === undefine
 ;
 
 useMenuQuery.fetcher = (variables?: MenuQueryVariables, options?: RequestInit['headers']) => fetcher<MenuQuery, MenuQueryVariables>(MenuDocument, variables, options);
+export const PermissionListDocument = `
+    query PermissionList {
+  permissions {
+    nodes {
+      peId
+      peName
+      peDescription
+    }
+  }
+}
+    `;
+export const usePermissionListQuery = <
+      TData = PermissionListQuery,
+      TError = unknown
+    >(
+      variables?: PermissionListQueryVariables,
+      options?: UseQueryOptions<PermissionListQuery, TError, TData>
+    ) =>
+    useQuery<PermissionListQuery, TError, TData>(
+      variables === undefined ? ['PermissionList'] : ['PermissionList', variables],
+      fetcher<PermissionListQuery, PermissionListQueryVariables>(PermissionListDocument, variables),
+      options
+    );
+usePermissionListQuery.document = PermissionListDocument;
+
+
+usePermissionListQuery.getKey = (variables?: PermissionListQueryVariables) => variables === undefined ? ['PermissionList'] : ['PermissionList', variables];
+;
+
+usePermissionListQuery.fetcher = (variables?: PermissionListQueryVariables, options?: RequestInit['headers']) => fetcher<PermissionListQuery, PermissionListQueryVariables>(PermissionListDocument, variables, options);
 export const ReservationListDocument = `
     query ReservationList($limit: Int!, $offset: Int!) {
   nabidkas(first: $limit, offset: $offset, orderBy: [N_OD_DESC]) {
@@ -11544,38 +11695,19 @@ useScheduleListQuery.getKey = (variables: ScheduleListQueryVariables) => ['Sched
 
 useScheduleListQuery.fetcher = (variables: ScheduleListQueryVariables, options?: RequestInit['headers']) => fetcher<ScheduleListQuery, ScheduleListQueryVariables>(ScheduleListDocument, variables, options);
 export const MyLessonsDocument = `
-    query MyLessons {
-  myLessons {
+    query MyLessons($startDate: Date, $endDate: Date) {
+  currentCoupleIds {
+    nodes
+  }
+  currentSessionId
+  currentUserId
+  myLessons(startDate: $startDate, endDate: $endDate) {
     nodes {
-      riId
-      riOd
-      riDo
-      rozpiByRiIdRodic {
-        rId
-        rDatum
-        rKde
-        userByRTrener {
-          uId
-          uJmeno
-          uPrijmeni
-        }
-      }
-      paryByRiPartner {
-        userByPIdPartner {
-          uId
-          uJmeno
-          uPrijmeni
-        }
-        userByPIdPartnerka {
-          uId
-          uJmeno
-          uPrijmeni
-        }
-      }
+      ...Lesson
     }
   }
 }
-    `;
+    ${LessonFragmentDoc}`;
 export const useMyLessonsQuery = <
       TData = MyLessonsQuery,
       TError = unknown

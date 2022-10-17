@@ -16,5 +16,3 @@ define('SMTP_HOST', '');
 define('SMTP_PORT', 1);
 define('SMTP_USER', '');
 define('SMTP_PASS', '');
-
-require 'files/Core/settings.php';

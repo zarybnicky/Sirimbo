@@ -14,19 +14,6 @@ class Router
         $this->currentPrefix = '';
     }
 
-    public function route($method, $regex, $handler)
-    {
-        if ($method == '*') {
-            $method = ['GET', 'PUT', 'DELETE', 'POST'];
-        }
-
-        foreach ((array)$method as $m) {
-            $this->addRoute($m, $regex, $handler);
-        }
-
-        return $this;
-    }
-
     private function addRoute($method, $regex, $handler)
     {
         $this->routes[strtoupper($method)][$this->currentPrefix . $regex] = $handler;
@@ -47,19 +34,16 @@ class Router
         return $this;
     }
 
-    public function get(string $regex, string $handler)
+    /* @param $handler callable-array */
+    public function get(string $regex, callable $handler)
     {
         $this->addRoute('GET', $regex, $handler);
     }
 
-    public function post(string $regex, string $handler)
+    /* @param $handler callable-array */
+    public function post(string $regex, callable $handler)
     {
         $this->addRoute('POST', $regex, $handler);
-    }
-
-    public function redirect(string $regex, string $target)
-    {
-        $this->addRoute('GET', $regex, fn() => header("Location: $target"));
     }
 
     public function dispatch(string $method, string $path)

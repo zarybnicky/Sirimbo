@@ -127,7 +127,6 @@ class Platby
             $_POST['date'],
             $_POST['amount'],
             $_POST['prefix'],
-            $id,
             $_POST['specific']
         );
         $item->processWithSymbolLookup(

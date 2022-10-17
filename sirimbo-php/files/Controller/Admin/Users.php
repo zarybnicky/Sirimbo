@@ -365,24 +365,6 @@ class Users
         echo chr(239) . chr(187) . chr(191) . $out;
     }
 
-    public static function duplicate()
-    {
-        \Permissions::checkError('users', P_ADMIN);
-        \Render::twig('Admin/UsersDuplicate.twig', [
-            'data' => \DBUser::getDuplicateUsers(),
-        ]);
-    }
-
-    public static function statistiky()
-    {
-        \Permissions::checkError('users', P_ADMIN);
-        \Render::twig('Admin/UsersStatistics.twig', [
-            'total' => count(\DBUser::getUsers()),
-            'active' => count(\DBUser::getActiveUsers()),
-            'groups' => \DBUser::getGroupCounts(),
-        ]);
-    }
-
     private static function displayForm($action)
     {
         \Render::twig('Admin/UsersForm.twig', [

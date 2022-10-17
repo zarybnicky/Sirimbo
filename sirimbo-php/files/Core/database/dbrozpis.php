@@ -11,24 +11,6 @@ class DBRozpis extends Database
         return $res ? self::getSingleRow($res) : false;
     }
 
-    public static function reserveLesson($rid, $uid)
-    {
-        if (!self::isLessonFree($rid)) {
-            return false;
-        }
-        self::query("UPDATE rozpis_item SET ri_partner='?' WHERE ri_id='?'", $uid, $rid);
-        return true;
-    }
-
-    public static function cancelLesson($rid)
-    {
-        if (self::isLessonFree($rid)) {
-            return false;
-        }
-        self::query("UPDATE rozpis_item SET ri_partner=NULL WHERE ri_id='?'", $rid);
-        return true;
-    }
-
     public static function getLessons($rid)
     {
         $res = self::query(
@@ -53,16 +35,6 @@ class DBRozpis extends Database
             $ri_id,
         );
         return self::getSingleRow($res);
-    }
-
-    public static function isLessonFree($rid)
-    {
-        $res = self::query("SELECT ri_partner FROM rozpis_item WHERE ri_id='?'", $rid);
-        if (!$res) {
-            return false;
-        }
-        $row = self::getSingleRow($res);
-        return $row["ri_partner"] === null;
     }
 
     public static function getScheduleTrainer($id)
