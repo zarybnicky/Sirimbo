@@ -7,7 +7,6 @@ import { useScheduleListQuery, useToggleScheduleVisibleMutation } from 'lib/grap
 import { Dropdown } from 'components/Dropdown';
 
 export default function RozpisAdminList() {
-  const { user } = useAuth();
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
   const { data, refetch } = useScheduleListQuery({ limit, offset: (page - 1) * limit });
@@ -16,42 +15,40 @@ export default function RozpisAdminList() {
   });
   const total = data?.rozpis?.totalCount || 0;
 
-  const list = (!user || !total) ? null : <table>
-    <thead>
-      <tr>
-        <th>Trenér</th>
-        <th>Datum</th>
-        <th>Místo</th>
-        <th>Viditelný</th>
-      </tr>
-    </thead>
-    <tbody>
-      {data?.rozpis?.nodes?.map((a) => <tr key={a.rId}>
-        <td>
-          <Dropdown
-            button={<>{a.userByRTrener?.uJmeno} {a.userByRTrener?.uPrijmeni}</>}
-            options={[
-              { title: 'Upravit', href: `/admin/rozpis/edit/${a.rId}` },
-              { title: 'Upravit lekce', href: `/admin/rozpis/detail/${a.rId}` },
-              { title: 'Duplikovat', href: `/admin/rozpis/duplicate/${a.rId}` },
-              { title: 'Odstranit', href: `/admin/rozpis/remove/${a.rId}` },
-            ]}
-          />
-        </td>
-        <td>{format(new Date(a.rDatum), 'd. M. y')}</td>
-        <td>{a.rKde}</td>
-        <td>
-          <Checkbox checked={a.rVisible || false} onChange={() => toggleVisible({
-            id: a.rId, visible: !a.rVisible,
-          })} />
-        </td>
-      </tr>)}
-    </tbody>
-  </table >;
-
   return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
     <NextLinkComposed href="/admin/rozpis/add" className="btn btn-primary">Nový rozpis</NextLinkComposed>
-    {list}
+    <table>
+      <thead>
+        <tr>
+          <th>Trenér</th>
+          <th>Datum</th>
+          <th>Místo</th>
+          <th>Viditelný</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data?.rozpis?.nodes?.map((a) => <tr key={a.rId}>
+          <td>
+            <Dropdown
+              button={<>{a.userByRTrener?.uJmeno} {a.userByRTrener?.uPrijmeni}</>}
+              options={[
+                { title: 'Upravit', href: `/admin/rozpis/edit/${a.rId}` },
+                { title: 'Upravit lekce', href: `/admin/rozpis/detail/${a.rId}` },
+                { title: 'Duplikovat', href: `/admin/rozpis/duplicate/${a.rId}` },
+                { title: 'Odstranit', href: `/admin/rozpis/remove/${a.rId}` },
+              ]}
+            />
+          </td>
+          <td>{format(new Date(a.rDatum), 'd. M. y')}</td>
+          <td>{a.rKde}</td>
+          <td>
+            <Checkbox checked={a.rVisible || false} onChange={() => toggleVisible({
+              id: a.rId, visible: !a.rVisible,
+            })} />
+          </td>
+        </tr>)}
+      </tbody>
+    </table>
     <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
   </Container>;
 }

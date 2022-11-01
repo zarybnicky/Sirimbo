@@ -13,7 +13,6 @@
             "files/Core/types/"
         ],
       "files": [
-        "config.php",
         "files/Core/settings.php",
         "files/functions.php"
       ]

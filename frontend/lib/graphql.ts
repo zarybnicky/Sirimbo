@@ -10369,6 +10369,21 @@ export type TitleVideosQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type TitleVideosQuery = { __typename?: 'Query', titleVideos: { __typename?: 'VideosConnection', nodes: Array<{ __typename?: 'Video', vTitle: string, vUri: string }> } | null };
 
+export type VideoSourceListQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type VideoSourceListQuery = { __typename?: 'Query', videoSources: { __typename?: 'VideoSourcesConnection', nodes: Array<{ __typename?: 'VideoSource', vsId: string, vsTitle: string | null, vsUrl: string, vsDescription: string | null, vsLastChecked: string | null, vsCreatedAt: string }> } | null };
+
+export type DeleteVideoSourceMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type DeleteVideoSourceMutation = { __typename?: 'Mutation', deleteVideoSource: { __typename?: 'DeleteVideoSourcePayload', clientMutationId: string | null } | null };
+
 export const UserPartialFragmentDoc = `
     fragment UserPartial on User {
   uId
@@ -11909,3 +11924,55 @@ useTitleVideosQuery.getKey = (variables?: TitleVideosQueryVariables) => variable
 ;
 
 useTitleVideosQuery.fetcher = (variables?: TitleVideosQueryVariables, options?: RequestInit['headers']) => fetcher<TitleVideosQuery, TitleVideosQueryVariables>(TitleVideosDocument, variables, options);
+export const VideoSourceListDocument = `
+    query VideoSourceList($limit: Int, $offset: Int) {
+  videoSources(first: $limit, offset: $offset) {
+    nodes {
+      vsId
+      vsTitle
+      vsUrl
+      vsDescription
+      vsLastChecked
+      vsCreatedAt
+    }
+  }
+}
+    `;
+export const useVideoSourceListQuery = <
+      TData = VideoSourceListQuery,
+      TError = unknown
+    >(
+      variables?: VideoSourceListQueryVariables,
+      options?: UseQueryOptions<VideoSourceListQuery, TError, TData>
+    ) =>
+    useQuery<VideoSourceListQuery, TError, TData>(
+      variables === undefined ? ['VideoSourceList'] : ['VideoSourceList', variables],
+      fetcher<VideoSourceListQuery, VideoSourceListQueryVariables>(VideoSourceListDocument, variables),
+      options
+    );
+useVideoSourceListQuery.document = VideoSourceListDocument;
+
+
+useVideoSourceListQuery.getKey = (variables?: VideoSourceListQueryVariables) => variables === undefined ? ['VideoSourceList'] : ['VideoSourceList', variables];
+;
+
+useVideoSourceListQuery.fetcher = (variables?: VideoSourceListQueryVariables, options?: RequestInit['headers']) => fetcher<VideoSourceListQuery, VideoSourceListQueryVariables>(VideoSourceListDocument, variables, options);
+export const DeleteVideoSourceDocument = `
+    mutation DeleteVideoSource($id: BigInt!) {
+  deleteVideoSource(input: {vsId: $id}) {
+    clientMutationId
+  }
+}
+    `;
+export const useDeleteVideoSourceMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<DeleteVideoSourceMutation, TError, DeleteVideoSourceMutationVariables, TContext>) =>
+    useMutation<DeleteVideoSourceMutation, TError, DeleteVideoSourceMutationVariables, TContext>(
+      ['DeleteVideoSource'],
+      (variables?: DeleteVideoSourceMutationVariables) => fetcher<DeleteVideoSourceMutation, DeleteVideoSourceMutationVariables>(DeleteVideoSourceDocument, variables)(),
+      options
+    );
+useDeleteVideoSourceMutation.getKey = () => ['DeleteVideoSource'];
+
+useDeleteVideoSourceMutation.fetcher = (variables: DeleteVideoSourceMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteVideoSourceMutation, DeleteVideoSourceMutationVariables>(DeleteVideoSourceDocument, variables, options);

@@ -70,7 +70,6 @@ export default function EditorPage() {
     onSuccess: () => refetch(),
   });
 
-
   let toolbar: JSX.Element | null = null;
   switch (state.state) {
     case 'create':

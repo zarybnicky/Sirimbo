@@ -18,39 +18,5 @@
       <a class="nav-link" style="color:#303C3C!important" href="/admin/video/title">Titulní stránka</a>
     </li>
   </ul>
-  <a class="btn btn-primary" href="/admin/video/source/add">Nový zdroj</a>
-  <form action="" method="post">
-    {% if not data %}
-      <div class="alert alert-info">Žádné zdroje</div>
-    {% else %}
-      <table style="width:100%">
-        <tr>
-          <th>Jméno</th>
-          <th>ID kanálu</th>
-          <th>Přidáno</th>
-          <th>Poslední kontrola</th>
-        </tr>
-        {% for row in data %}
-          <tr>
-            <td>
-              <div class="btn-group">
-                <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">
-                  <img alt="Upravit" width="14" src="/style/icon-gear.png" />
-                </button>
-                <div class="dropdown-menu">
-                  <a class="dropdown-item" href="/admin/video/source/edit/{{ row.vs_id }}">Upravit</a>
-                  <a class="dropdown-item" href="/admin/video/source/remove/{{ row.vs_id }}">Odstranit</a>
-                </div>
-              </div>
-              {{ row.vs_title }}
-            </td>
-            <td>{{ row.vs_url }}</td>
-            <td style="width:100px">{{ row.vs_created_at | date('j. n. Y H:i') }}</td>
-            <td style="width:100px">{{ row.vs_last_checked ? (row.vs_last_checked | date('j. n. Y H:i')) : '' }}</td>
-          </tr>
-        {% endfor %}
-      </table>
-    {% endif %}
-  </form>
 </div>
 {% endblock %}

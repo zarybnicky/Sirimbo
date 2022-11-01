@@ -70,41 +70,7 @@ in {
     };
   };
 
-  config = let
-    configPhp = pkgs.runCommand "sirimbo-php-config" {} ''
-      mkdir -p $out
-      cat > $out/config.php <<EOS
-      <?php
-      openlog('${cfg.domain}', LOG_ODELAY, LOG_USER);
-      date_default_timezone_set('Europe/Paris');
-      mb_internal_encoding('UTF-8');
-
-      define('FRONTEND_HASH', '${builtins.substring 11 32 "${pkgs.sirimbo-frontend}"}');
-      define('SENTRY_ENV', '${cfg.domain}');
-      define('DB_CONN_STRING', 'pgsql:${cfg.dbConnString}');
-
-      define('GALERIE', '${cfg.stateDir}/gallery');
-      define('GALERIE_THUMBS', '${cfg.stateDir}/gallery/thumbnails');
-      define('UPLOADS', '${cfg.stateDir}/uploads');
-      define('CACHE', '${cfg.stateDir}/cache');
-
-      define('DEFAULT_FROM_MAIL', 'root@tkolymp.cz');
-      define('DEFAULT_ADMIN_MAIL', 'miroslav.hyza@tkolymp.cz');
-
-      define('SMTP_AUTH', ${if cfg.smtpAuth then "true" else "false"});
-      define('SMTP_TLS', ${if cfg.smtpTLS then "true" else "false"});
-      define('SMTP_HOST', '${cfg.smtpHost}');
-      define('SMTP_PORT', ${toString cfg.smtpPort});
-      define('SMTP_USER', '${cfg.smtpUser}');
-      define('SMTP_PASS', '${cfg.smtpPass}');
-      EOS
-    '';
-
-    phpRoot = pkgs.symlinkJoin {
-      name = "sirimbo-php-dist";
-      paths = [pkgs.sirimbo-php pkgs.sirimbo-frontend configPhp];
-    };
-  in lib.mkMerge [
+  config = lib.mkMerge [
     (lib.mkIf cfg.enable {
       users.users.${cfg.user} = {
         name = cfg.user;
@@ -135,7 +101,7 @@ in {
         recommendedProxySettings = true;
 
         virtualHosts.${cfg.domain} = {
-          root = phpRoot;
+          root = pkgs.sirimbo-php;
           serverAliases = ["www.${cfg.domain}"];
 
           locations."/gallery".root = cfg.stateDir;
@@ -194,20 +160,34 @@ in {
           "php_admin_value[upload_max_filesize]" = "40M";
           "php_admin_value[post_max_size]" = "40M";
         };
-        phpPackage = pkgs.php.withExtensions ({ all, ... }: with all; [
-          curl imagick opcache pdo openssl posix
+        phpPackage = pkgs.php.withExtensions ({ all, enabled }: with all; [
+          curl imagick opcache pdo openssl posix json
           mbstring session ctype exif gd zlib pdo_pgsql
-        ]);
+        ] ++ enabled);
+
+        phpEnv = {
+          DOMAIN = "'${cfg.domain}'";
+          DATABASE_URL = "'pgsql:${cfg.dbConnString}'";
+          STATE_DIR = "'${cfg.stateDir}'";
+          SMTP_AUTH = if cfg.smtpAuth then "1" else "0";
+          SMTP_TLS = if cfg.smtpTLS then "1" else "0";
+          SMTP_HOST = "'${cfg.smtpHost}'";
+          SMTP_PORT = "'${toString cfg.smtpPort}'";
+          SMTP_USER = "'${cfg.smtpUser}'";
+          SMTP_PASS = "'${cfg.smtpPass}'";
+        };
       };
 
       systemd.services.sirimbo-frontend = {
         after = [ "network.target" ];
         wantedBy = [ "multi-user.target" ];
 
-        environment.PORT = toString cfg.frontendPort;
-        environment.GRAPHQL_BACKEND = "http://localhost:${toString cfg.jsPort}";
-        environment.NEXT_PUBLIC_SENTRY_ENVIRONMENT = cfg.domain;
-        environment.NEXT_PUBLIC_BASE_URL = "http${if cfg.ssl then "s" else ""}://${cfg.domain}";
+        environment = {
+          PORT = toString cfg.frontendPort;
+          GRAPHQL_BACKEND = "http://localhost:${toString cfg.jsPort}";
+          NEXT_PUBLIC_SENTRY_ENVIRONMENT = cfg.domain;
+          NEXT_PUBLIC_BASE_URL = "http${if cfg.ssl then "s" else ""}://${cfg.domain}";
+        };
 
         serviceConfig = {
           User = cfg.user;
@@ -221,18 +201,21 @@ in {
       systemd.services.sirimbo-backend = {
         after = [ "network.target" ];
         wantedBy = [ "multi-user.target" ];
-        environment.PGDATABASE = "olymp";
-        environment.PGHOST = "/run/postgresql";
-        environment.PORT = toString cfg.jsPort;
-        environment.DOMAIN = cfg.domain;
-        environment.SSL = if cfg.ssl then "1" else "";
 
-        environment.SMTP_AUTH = if cfg.smtpAuth then "1" else "";
-        environment.SMTP_TLS = if cfg.smtpTLS then "1" else "";
-        environment.SMTP_HOST = cfg.smtpHost;
-        environment.SMTP_PORT = toString cfg.smtpPort;
-        environment.SMTP_USER = cfg.smtpUser;
-        environment.SMTP_PASS = cfg.smtpPass;
+        environment = {
+          PGDATABASE = "olymp";
+          PGHOST = "/run/postgresql";
+          PORT = toString cfg.jsPort;
+          DOMAIN = cfg.domain;
+          SSL = if cfg.ssl then "1" else "";
+          STATE_DIR = cfg.stateDir;
+          SMTP_AUTH = if cfg.smtpAuth then "1" else "";
+          SMTP_TLS = if cfg.smtpTLS then "1" else "";
+          SMTP_HOST = cfg.smtpHost;
+          SMTP_PORT = toString cfg.smtpPort;
+          SMTP_USER = cfg.smtpUser;
+          SMTP_PASS = cfg.smtpPass;
+        };
 
         serviceConfig = {
           User = cfg.user;

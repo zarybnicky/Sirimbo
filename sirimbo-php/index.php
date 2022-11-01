@@ -18,6 +18,7 @@ if (!isset($_COOKIE['off_mode'])) {
 }
 //end OFF switch*/
 
+require 'config.php';
 require 'vendor/autoload.php';
 
 Sentry\init([
@@ -73,11 +74,16 @@ try {
     $router->get('/admin/users/sign-as/([0-9]+)', [\Olymp\Controller\Admin\Users::class, 'signAs']);
     $router->get('/admin/users/getMsmtCsv', [\Olymp\Controller\Admin\Users::class, 'getMsmtCsv']);
 
+    // $router->get('/admin/pary', [\Olymp\Controller\Admin\Pary::class, 'list']);
+    // $router->post('/admin/pary', [\Olymp\Controller\Admin\Pary::class, 'listPost']);
+
     $router->get('/admin/video/source', [\Olymp\Controller\Admin\VideoSource::class, 'list']);
-    $router->get('/admin/dokumenty', [\Olymp\Controller\Admin\Dokumenty::class, 'list']);
-    $router->post('/admin/dokumenty', [\Olymp\Controller\Admin\Dokumenty::class, 'listPost']);
-    $router->get('/admin/pary', [\Olymp\Controller\Admin\Pary::class, 'list']);
-    $router->post('/admin/pary', [\Olymp\Controller\Admin\Pary::class, 'listPost']);
+    $router->get('/admin/video/source/add', [\Olymp\Controller\Admin\VideoSource::class, 'add']);
+    $router->post('/admin/video/source/add', [\Olymp\Controller\Admin\VideoSource::class, 'addPost']);
+    $router->get('/admin/video/source/edit/([0-9]+)', [\Olymp\Controller\Admin\VideoSource::class, 'edit']);
+    $router->post('/admin/video/source/edit/([0-9]+)', [\Olymp\Controller\Admin\VideoSource::class, 'editPost']);
+    $router->get('/admin/video/source/remove/([0-9]+)', [\Olymp\Controller\Admin\VideoSource::class, 'remove']);
+    $router->post('/admin/video/source/remove/([0-9]+)', [\Olymp\Controller\Admin\VideoSource::class, 'removePost']);
 
     $router->get('/admin/platby', [\Olymp\Controller\Admin\Platby::class, 'overview']);
     $router->get('/admin/platby/structure', [\Olymp\Controller\Admin\Platby::class, 'structure']);
@@ -133,6 +139,9 @@ try {
     $router->get('/admin/aktuality/foto/([0-9]+)', [\Olymp\Controller\Admin\Aktuality::class, 'foto']);
     $router->post('/admin/aktuality/foto/([0-9]+)', [\Olymp\Controller\Admin\Aktuality::class, 'fotoPost']);
 
+    $router->get('/admin/dokumenty', [\Olymp\Controller\Admin\Dokumenty::class, 'list']);
+    $router->post('/admin/dokumenty', [\Olymp\Controller\Admin\Dokumenty::class, 'listPost']);
+
     $router->get('/admin/video', [\Olymp\Controller\Admin\Video::class, 'orphan']);
     $router->get('/admin/video/orphan', [\Olymp\Controller\Admin\Video::class, 'orphan']);
 
@@ -150,15 +159,6 @@ try {
 
     $router->get('/admin/video/remove/([0-9]+)', [\Olymp\Controller\Admin\Video::class, 'remove']);
     $router->post('/admin/video/remove/([0-9]+)', [\Olymp\Controller\Admin\Video::class, 'removePost']);
-
-    $router->get('/admin/video/source/add', [\Olymp\Controller\Admin\VideoSource::class, 'add']);
-    $router->post('/admin/video/source/add', [\Olymp\Controller\Admin\VideoSource::class, 'addPost']);
-
-    $router->get('/admin/video/source/edit/([0-9]+)', [\Olymp\Controller\Admin\VideoSource::class, 'edit']);
-    $router->post('/admin/video/source/edit/([0-9]+)', [\Olymp\Controller\Admin\VideoSource::class, 'editPost']);
-
-    $router->get('/admin/video/source/remove/([0-9]+)', [\Olymp\Controller\Admin\VideoSource::class, 'remove']);
-    $router->post('/admin/video/source/remove/([0-9]+)', [\Olymp\Controller\Admin\VideoSource::class, 'removePost']);
 
     $router->get('/admin/nastenka/add', [\Olymp\Controller\Admin\Nastenka::class, 'add']);
     $router->post('/admin/nastenka/add', [\Olymp\Controller\Admin\Nastenka::class, 'addPost']);
@@ -298,10 +298,6 @@ try {
     $router->post('/admin/platby/structure/category/remove/([0-9]+)', [\Olymp\Controller\Admin\PlatbyCategory::class, 'removePost']);
 
     $router->get('/video', [\Olymp\Controller\Video::class, 'get']);
-    $router->get('/fotogalerie', [\Olymp\Controller\Fotogalerie::class, 'root']);
-    $router->get('/fotogalerie/([0-9]+)', [\Olymp\Controller\Fotogalerie::class, 'directory']);
-    $router->get('/fotogalerie/foto/([0-9]+)', [\Olymp\Controller\Fotogalerie::class, 'single']);
-    $router->get('/fotogalerie/([0-9]+)/foto/([0-9]+)', [\Olymp\Controller\Fotogalerie::class, 'singleWithDir']);
 
     $router->mount('/old', $router);
 

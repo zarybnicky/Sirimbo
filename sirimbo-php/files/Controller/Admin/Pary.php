@@ -3,15 +3,15 @@ namespace Olymp\Controller\Admin;
 
 class Pary
 {
-    public static function list()
-    {
-        \Permissions::checkError('pary', P_OWNED);
-        \Render::twig('Admin/Pary.twig', [
-            'data' => \DBPary::getActivePary(),
-            'usersMen' => \DBUser::getUsersByPohlavi('m'),
-            'usersWomen' => \DBUser::getUsersByPohlavi('f')
-        ]);
-    }
+    // public static function list()
+    // {
+    //     \Permissions::checkError('pary', P_OWNED);
+    //     \Render::twig('Admin/Pary.twig', [
+    //         'data' => \DBPary::getActivePary(),
+    //         'usersMen' => \DBUser::getUsersByPohlavi('m'),
+    //         'usersWomen' => \DBUser::getUsersByPohlavi('f')
+    //     ]);
+    // }
 
     public static function listPost()
     {

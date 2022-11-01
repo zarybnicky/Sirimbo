@@ -6,3 +6,22 @@ query TitleVideos {
     }
   }
 }
+
+query VideoSourceList($limit: Int, $offset: Int) {
+  videoSources(first: $limit, offset: $offset) {
+    nodes {
+      vsId
+      vsTitle
+      vsUrl
+      vsDescription
+      vsLastChecked
+      vsCreatedAt
+    }
+  }
+}
+
+mutation DeleteVideoSource($id: BigInt!) {
+  deleteVideoSource(input: {vsId: $id}) {
+    clientMutationId
+  }
+}

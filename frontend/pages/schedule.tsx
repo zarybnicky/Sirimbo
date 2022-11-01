@@ -78,7 +78,7 @@ export default function SchedulePage() {
      * } */
   }, []);
 
-  const scheduleList = (schedules?.schedulesForRange?.nodes || []).map((item, i) => (
+  const scheduleList = schedules?.schedulesForRange?.nodes?.map((item, i) => (
     <Grid item key={i} md={6} lg={4} xl={3}>
       <Card>
         <CardContent>
@@ -122,7 +122,7 @@ export default function SchedulePage() {
     </Grid>
   ));
 
-  const reservationList = (reservations?.reservationsForRange?.nodes || []).map((item, i) => (
+  const reservationList = reservations?.reservationsForRange?.nodes?.map((item, i) => (
     <Grid item key={i} md={6} lg={4} xl={3}>
       <Card>
         <CardContent>
