@@ -1,4 +1,5 @@
 <?php
+$_ENV = getenv();
 if ($_ENV['DOMAIN'] ?? '') {
     openlog($_ENV['DOMAIN'], LOG_ODELAY, LOG_USER);
 }
@@ -8,11 +9,11 @@ mb_internal_encoding('UTF-8');
 define('SENTRY_ENV', $_ENV['DOMAIN'] ?? 'development');
 define('DB_CONN_STRING', str_replace($_ENV['DATABASE_URL'], 'postgres:', 'pgsql:'));
 
-$stateDir = $_ENV['STATE_DIR'] ?? getcwd();
-define('GALERIE', $stateDir . '/gallery');
-define('GALERIE_THUMBS', $stateDir . '/gallery/thumbnails');
-define('UPLOADS', $stateDir . '/uploads');
-define('CACHE', $stateDir . '/cache');
+define('STATE_DIR', $_ENV['STATE_DIR'] ?? getcwd());
+define('GALERIE', STATE_DIR . '/gallery');
+define('GALERIE_THUMBS', STATE_DIR . '/gallery/thumbnails');
+define('UPLOADS', STATE_DIR . '/uploads');
+define('CACHE', STATE_DIR . '/cache');
 foreach ([GALERIE, GALERIE_THUMBS, UPLOADS, CACHE] as $path) {
     if (!is_readable($path)) {
         mkdir($path, 0777, true);

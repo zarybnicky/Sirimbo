@@ -165,16 +165,16 @@ in {
           mbstring session ctype exif gd zlib pdo_pgsql
         ] ++ enabled);
 
-        phpEnv = {
-          DOMAIN = "'${cfg.domain}'";
-          DATABASE_URL = "'pgsql:${cfg.dbConnString}'";
-          STATE_DIR = "'${cfg.stateDir}'";
+        phpEnv = lib.filterAttrs (n: v: v != "\"\"" && v != "") {
+          DOMAIN = "${cfg.domain}";
+          DATABASE_URL = "\"pgsql:${cfg.dbConnString}\"";
+          STATE_DIR = "${cfg.stateDir}";
           SMTP_AUTH = if cfg.smtpAuth then "1" else "0";
           SMTP_TLS = if cfg.smtpTLS then "1" else "0";
-          SMTP_HOST = "'${cfg.smtpHost}'";
-          SMTP_PORT = "'${toString cfg.smtpPort}'";
-          SMTP_USER = "'${cfg.smtpUser}'";
-          SMTP_PASS = "'${cfg.smtpPass}'";
+          SMTP_HOST = "${cfg.smtpHost}";
+          SMTP_PORT = "${toString cfg.smtpPort}";
+          SMTP_USER = "${cfg.smtpUser}";
+          SMTP_PASS = "${cfg.smtpPass}";
         };
       };
 

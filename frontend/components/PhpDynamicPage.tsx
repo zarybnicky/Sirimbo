@@ -164,7 +164,7 @@ export const PhpPageView: React.FC<{ page: PhpPage; }> = ({ page: initialPage })
       ))}
 
       <Typography variant="h3" component="h2">{page.title}</Typography>
-      {page.subheader}
+      {page.subheader && <div dangerouslySetInnerHTML={{ __html: page.subheader }} />}
 
       <div className='prose' style={{
         overflowWrap: "break-word",
