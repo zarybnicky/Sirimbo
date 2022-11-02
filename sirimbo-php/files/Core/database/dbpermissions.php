@@ -67,10 +67,4 @@ class DBPermissions extends Database
         self::query($q);
         return true;
     }
-
-    public static function removeGroup($id)
-    {
-        self::query("DELETE FROM permissions WHERE pe_id='?'", $id);
-        return true;
-    }
 }

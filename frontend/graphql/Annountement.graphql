@@ -17,6 +17,7 @@ query AnnouncementList($limit: Int!, $offset: Int!) {
       upozorneniSkupiniesByUpsIdRodic {
         nodes {
           skupinyByUpsIdSkupina {
+            sId
             sName
             sDescription
             sColorText
@@ -25,5 +26,11 @@ query AnnouncementList($limit: Int!, $offset: Int!) {
         }
       }
     }
+  }
+}
+
+mutation DeleteAnnouncement($id: BigInt!) {
+  deleteUpozorneni(input: {upId: $id}) {
+    __typename
   }
 }

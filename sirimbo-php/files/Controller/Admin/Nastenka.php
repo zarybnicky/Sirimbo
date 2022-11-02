@@ -102,34 +102,6 @@ class Nastenka
         \Redirect::to($_POST['returnURI']);
     }
 
-    public static function remove($id)
-    {
-        \Permissions::checkError('nastenka', P_OWNED);
-        if (!$data = \DBNastenka::getSingleNastenka($id)) {
-            \Message::warning('Příspěvek s takovým ID neexistuje');
-            \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
-        }
-        \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
-        \Render::twig('RemovePrompt.twig', [
-            'header' => 'Správa nástěnky',
-            'prompt' => 'Opravdu chcete odstranit příspěvek:',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/nastenka',
-            'data' => [['id' => $data['up_id'], 'text' => $data['up_nadpis']]]
-        ]);
-    }
-
-    public static function removePost($id)
-    {
-        \Permissions::checkError('nastenka', P_OWNED);
-        if (!$data = \DBNastenka::getSingleNastenka($id)) {
-            \Message::warning('Příspěvek s takovým ID neexistuje');
-            \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
-        }
-        \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
-        \DBNastenka::removeNastenka($id);
-        \Redirect::to('/admin/nastenka');
-    }
-
     public static function renderForm($action)
     {
         $skupiny = \DBSkupiny::get();

@@ -10033,7 +10033,14 @@ export type AnnouncementListQueryVariables = Exact<{
 }>;
 
 
-export type AnnouncementListQuery = { __typename?: 'Query', upozornenis: { __typename?: 'UpozornenisConnection', totalCount: number, nodes: Array<{ __typename?: 'Upozorneni', upId: string, upKdo: string, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, userByUpKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sName: string, sDescription: string, sColorText: string, sColorRgb: string } | null }> } }> } | null };
+export type AnnouncementListQuery = { __typename?: 'Query', upozornenis: { __typename?: 'UpozornenisConnection', totalCount: number, nodes: Array<{ __typename?: 'Upozorneni', upId: string, upKdo: string, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, userByUpKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sId: string, sName: string, sDescription: string, sColorText: string, sColorRgb: string } | null }> } }> } | null };
+
+export type DeleteAnnouncementMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type DeleteAnnouncementMutation = { __typename?: 'Mutation', deleteUpozorneni: { __typename: 'DeleteUpozorneniPayload' } | null };
 
 export type ArticleQueryVariables = Exact<{
   id: Scalars['BigInt'];
@@ -10055,7 +10062,7 @@ export type CohortListQueryVariables = Exact<{
 }>;
 
 
-export type CohortListQuery = { __typename?: 'Query', skupinies: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename?: 'Skupiny', sId: string, sName: string, sLocation: string, sDescription: string, sVisible: boolean, sColorRgb: string }> } | null };
+export type CohortListQuery = { __typename?: 'Query', skupinies: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename?: 'Skupiny', sId: string, sName: string, sLocation: string, sDescription: string, sVisible: boolean, sColorRgb: string, platbyGroupSkupinasByPgsIdSkupina: { __typename?: 'PlatbyGroupSkupinasConnection', nodes: Array<{ __typename?: 'PlatbyGroupSkupina', pgsIdGroup: string }> } }> } | null };
 
 export type CohortMembersQueryVariables = Exact<{
   id: Scalars['BigInt'];
@@ -10631,6 +10638,7 @@ export const AnnouncementListDocument = `
       upozorneniSkupiniesByUpsIdRodic {
         nodes {
           skupinyByUpsIdSkupina {
+            sId
             sName
             sDescription
             sColorText
@@ -10661,6 +10669,25 @@ useAnnouncementListQuery.getKey = (variables: AnnouncementListQueryVariables) =>
 ;
 
 useAnnouncementListQuery.fetcher = (variables: AnnouncementListQueryVariables, options?: RequestInit['headers']) => fetcher<AnnouncementListQuery, AnnouncementListQueryVariables>(AnnouncementListDocument, variables, options);
+export const DeleteAnnouncementDocument = `
+    mutation DeleteAnnouncement($id: BigInt!) {
+  deleteUpozorneni(input: {upId: $id}) {
+    __typename
+  }
+}
+    `;
+export const useDeleteAnnouncementMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<DeleteAnnouncementMutation, TError, DeleteAnnouncementMutationVariables, TContext>) =>
+    useMutation<DeleteAnnouncementMutation, TError, DeleteAnnouncementMutationVariables, TContext>(
+      ['DeleteAnnouncement'],
+      (variables?: DeleteAnnouncementMutationVariables) => fetcher<DeleteAnnouncementMutation, DeleteAnnouncementMutationVariables>(DeleteAnnouncementDocument, variables)(),
+      options
+    );
+useDeleteAnnouncementMutation.getKey = () => ['DeleteAnnouncement'];
+
+useDeleteAnnouncementMutation.fetcher = (variables: DeleteAnnouncementMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteAnnouncementMutation, DeleteAnnouncementMutationVariables>(DeleteAnnouncementDocument, variables, options);
 export const ArticleDocument = `
     query Article($id: BigInt!) {
   aktuality(atId: $id) {
@@ -10745,6 +10772,11 @@ export const CohortListDocument = `
       sDescription
       sVisible
       sColorRgb
+      platbyGroupSkupinasByPgsIdSkupina {
+        nodes {
+          pgsIdGroup
+        }
+      }
     }
   }
 }

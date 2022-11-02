@@ -12,11 +12,6 @@ class Permissions
     public static function addPost()
     {
         \Permissions::checkError('permissions', P_ADMIN);
-        $form = static::checkData();
-        if (!$form->isValid()) {
-            \Message::warning($form->getMessages());
-            return static::renderForm('add');
-        }
         $permissions = [];
         foreach (array_keys(\Permissions::$permissions) as $name) {
             $permissions[$name] = $_POST[$name];
@@ -42,39 +37,12 @@ class Permissions
             \Message::warning('Skupina s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/permissions');
         }
-        $form = static::checkData();
-        if (!$form->isValid()) {
-            \Message::warning($form->getMessages());
-            return static::renderForm('edit', $data);
-        }
         $permissions = [];
         foreach (array_keys(\Permissions::$permissions) as $name) {
             $permissions[$name] = $_POST[$name];
         }
         \DBPermissions::editGroup($id, $_POST['name'], $_POST['description'], $permissions);
         \Redirect::to($_POST['returnURI'] ?? '/admin/permissions');
-    }
-
-    public static function remove($id)
-    {
-        \Permissions::checkError('permissions', P_ADMIN);
-        $item = \DBPermissions::getSingleGroup($id);
-        \Render::twig('RemovePrompt.twig', [
-            'header' => 'Správa oprávnění',
-            'prompt' =>
-                '<div class="alert alert-info">Uživatelům z této skupiny bude nutné přiřadit jinou skupinu!</div>'
-                . 'Opravdu chcete odstranit uživatelskou úroveň:',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/permissions',
-            'data' => [['id' => $item['pe_id'], 'text' => $item['pe_name']]]
-        ]);
-    }
-
-    public static function removePost($id)
-    {
-        \Permissions::checkError('permissions', P_ADMIN);
-        \DBPermissions::removeGroup($id);
-        \Message::info('Úroveň odebrána. Nezapomeňte přiřadit uživatelům z této skupiny jinou skupinu!');
-        \Redirect::to('/admin/permissions');
     }
 
     protected static function renderForm($action, $data = [])
@@ -97,14 +65,5 @@ class Permissions
                 P_ADMIN => 'Admin'
             ],
         ]);
-    }
-
-    private static function checkData(): \Form
-    {
-        $f = new \Form();
-        foreach (\Permissions::$permissions as $name => $item) {
-            $f->checkArrayKey($_POST[$name], $item, "Neplatná hodnota práva $name");
-        }
-        return $f;
     }
 }

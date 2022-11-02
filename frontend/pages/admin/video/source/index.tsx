@@ -16,19 +16,13 @@ export default function VideoSourceList() {
   const confirm = useConfirm();
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-  const [limit] = React.useState(30);
-  const [page, setPage] = React.useState(1);
-  const { data, refetch } = useVideoSourceListQuery({
-    limit, offset: (page - 1) * limit,
-  });
+  const { data, refetch } = useVideoSourceListQuery();
   const { mutateAsync: doDeleteItem } = useDeleteVideoSourceMutation({
     onSuccess: () => refetch(),
   });
 
   const deleteItem = React.useCallback(async (id: string) => {
-    await confirm({
-      description: 'Opravdu chcete smazat zdroj videí?',
-    });
+    await confirm({ description: 'Opravdu chcete smazat zdroj videí?' });
     try {
       await doDeleteItem({ id });
     } catch (e) {
@@ -38,13 +32,12 @@ export default function VideoSourceList() {
         enqueueSnackbar('Nepodařilo se smazat položku', { variant: 'error' });
       }
     }
-  }, [])
+  }, []);
 
   return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
     <NextLinkComposed href="/admin/video/source/add" className="btn btn-outline-primary">Přidat zdroj</NextLinkComposed>
 
     <DataGrid
-      pageSize={20}
       autoHeight={true}
       getRowId={row => row.vsId}
       rows={data?.videoSources?.nodes || []}

@@ -227,6 +227,13 @@ create policy admin_all on upozorneni_skupiny to administrator using (true) with
 create policy all_view on upozorneni_skupiny for select using (true);
 grant all on upozorneni_skupiny to member;
 
+alter table public.upozorneni_skupiny
+drop constraint upozorneni_skupiny_ups_id_rodic_fkey,
+ADD CONSTRAINT upozorneni_skupiny_ups_id_rodic_fkey FOREIGN KEY (ups_id_rodic) REFERENCES public.upozorneni(up_id) ON UPDATE CASCADE ON DELETE CASCADE,
+drop constraint upozorneni_skupiny_ups_id_skupina_fkey,
+ADD CONSTRAINT upozorneni_skupiny_ups_id_skupina_fkey FOREIGN KEY (ups_id_skupina) REFERENCES public.skupiny(s_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
 -- ************** users **************
 select app_private.drop_policies('public.users');
 alter table users enable row level security;
