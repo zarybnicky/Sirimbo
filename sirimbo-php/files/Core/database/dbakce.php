@@ -87,13 +87,6 @@ class DBAkce extends Database implements Pagable
         return true;
     }
 
-    public static function removeAkce($id)
-    {
-        self::query("DELETE FROM akce WHERE a_id='?'", $id);
-        self::query("DELETE FROM akce_item WHERE ai_id_rodic='?'", $id);
-        return true;
-    }
-
     public static function signUp($uid, $pid, $rok_narozeni)
     {
         self::query(

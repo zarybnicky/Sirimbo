@@ -72,14 +72,6 @@ class Form
         }
     }
 
-    public function checkArrayKey($i, $array, $message)
-    {
-        if (!array_key_exists($i, $array)) {
-            $this->valid = false;
-            $this->messages[] = $message;
-        }
-    }
-
     public function checkNotEmpty($i, $message)
     {
         if (!$i && $i !== 0) {

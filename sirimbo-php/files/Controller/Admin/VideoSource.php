@@ -3,14 +3,6 @@ namespace Olymp\Controller\Admin;
 
 class VideoSource
 {
-    public static function list()
-    {
-        \Permissions::checkError('aktuality', P_OWNED);
-        \Render::twig('Admin/VideoSource.twig', [
-            'data' => \DBVideoSource::getAll(),
-        ]);
-    }
-
     public static function add()
     {
         \Permissions::checkError('aktuality', P_OWNED);
@@ -52,26 +44,6 @@ class VideoSource
             return static::displayForm('edit', $data);
         }
         \DBVideoSource::edit($id, $_POST['uri'], $_POST['title'], $_POST['desc']);
-        \Redirect::to('/admin/video/source');
-    }
-
-    public static function remove($id)
-    {
-        \Permissions::checkError('aktuality', P_OWNED);
-        $item = \DBVideoSource::getSingle($id);
-        \Render::twig('RemovePrompt.twig', [
-            'header' => 'Správa videí',
-            'prompt' => 'Opravdu chcete odstranit zdroj:',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/video/source',
-            'data' => [['id' => $item['vs_id'], 'text' => $item['vs_title']]]
-        ]);
-    }
-
-    public static function removePost($id)
-    {
-        \Permissions::checkError('aktuality', P_OWNED);
-        \DBVideoSource::remove($id);
-        \Message::info('Video odebráno');
         \Redirect::to('/admin/video/source');
     }
 

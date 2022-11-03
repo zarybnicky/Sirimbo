@@ -1,42 +1,66 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { Pagination } from '@mui/material';
 import { NextLinkComposed } from 'components/Link';
-import { useArticlesQuery } from 'lib/graphql';
-import { Dropdown } from 'components/Dropdown';
+import { useArticlesQuery, useDeleteArticleMutation } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import EditIcon from '@mui/icons-material/Edit';
+import { useRouter } from 'next/router';
+import { DeleteButton } from 'components/DeleteButton';
+import { Container } from '@mui/material';
 
 export default function ArticleAdminList() {
   useRequireUserLoggedIn();
+  const router = useRouter();
   const [limit] = React.useState(30);
-  const [page, setPage] = React.useState(1);
-  const { data } = useArticlesQuery({
-    limit, offset: (page - 1) * limit,
+  const [page, setPage] = React.useState(0);
+  const { data, refetch } = useArticlesQuery({ limit, offset: page * limit });
+  const { mutateAsync: doDelete } = useDeleteArticleMutation({
+    onSuccess: () => refetch(),
   });
-  const total = data?.aktualities?.totalCount || 0;
 
-  return <>
+  const rowCount = data?.aktualities?.totalCount || 0;
+  const [rowCountState, setRowCountState] = React.useState(rowCount);
+  React.useEffect(() => {
+    setRowCountState((prev) => rowCount !== undefined ? rowCount : prev);
+  }, [rowCount]);
+
+  return <Container maxWidth="md" style={{ margin: '4rem auto 6rem' }}>
     <NextLinkComposed href="/admin/aktuality/add" className="btn btn-primary">Nový článek</NextLinkComposed>
-    <table>
-      <thead>
-        <tr><th>Jméno</th><th>Přidáno</th></tr>
-      </thead>
-      <tbody>
-        {data?.aktualities?.nodes?.map((a) => <tr key={a.atId}>
-          <td>
-            <Dropdown
-              button={<>{a.atJmeno}</>}
-              options={[
-                { title: 'Upravit', href: `/admin/aktuality/edit/${a.atId}` },
-                { title: 'Upravit fotky', href: `/admin/aktuality/foto/${a.atId}` },
-                { title: 'Odstranit', href: `/admin/aktuality/remove/${a.atId}` },
-              ]}
-            />
-          </td>
-          <td>{a.atTimestampAdd && format(new Date(a.atTimestampAdd), 'd. M. y')}</td>
-        </tr>)}
-      </tbody>
-    </table>
-    <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
-  </>;
+
+    <DataGrid
+      page={page}
+      onPageChange={setPage}
+      pageSize={limit}
+      rowsPerPageOptions={[limit]}
+      rowCount={rowCountState}
+      pagination
+      paginationMode="server"
+      autoHeight={true}
+      getRowId={row => row.atId}
+      rows={data?.aktualities?.nodes || []}
+      columns={[
+        {
+          field: 'actions',
+          type: 'actions',
+          getActions: ({ row }) => [
+            <GridActionsCellItem key="edit"
+              icon={<EditIcon />}
+              onClick={() => router.push(`/admin/aktuality/edit/${row.atId}`)}
+              label="Upravit"
+            />,
+            <DeleteButton
+              key="delete" title="smazat článek"
+              params={{ id: row.atId }} onDelete={doDelete}
+            />,
+          ],
+        },
+        { field: 'atJmeno', headerName: 'Jméno', flex: 1 },
+        {
+          field: 'author', headerName: 'Autor', flex: 1,
+          renderCell: ({ row }) => row.atTimestampAdd ? format(new Date(row.atTimestampAdd), 'd. M. y') : '',
+        },
+      ]}
+    />
+  </Container>;
 }

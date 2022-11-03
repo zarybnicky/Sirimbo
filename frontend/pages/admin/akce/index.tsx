@@ -1,53 +1,89 @@
 import * as React from 'react';
-import { Checkbox, Pagination } from '@mui/material';
+import { Checkbox } from '@mui/material';
 import { DateRange } from 'components/DateRange';
 import { NextLinkComposed } from 'components/Link';
-import { useEventListQuery, useToggleEventVisibleMutation } from 'lib/graphql';
+import { useEventListQuery, useToggleEventVisibleMutation, useDeleteEventMutation } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
-import { Dropdown } from 'components/Dropdown';
+import { useRouter } from 'next/router';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import EditIcon from '@mui/icons-material/Edit';
+import { DeleteButton } from 'components/DeleteButton';
 
 export default function AdminEventList() {
   useRequireUserLoggedIn();
+  const router = useRouter();
   const [limit] = React.useState(30);
-  const [page, setPage] = React.useState(1);
-  const { data, refetch } = useEventListQuery({ limit, offset: (page - 1) * limit });
+  const [page, setPage] = React.useState(0);
+  const { data, refetch } = useEventListQuery({ limit, offset: page * limit });
   const { mutate: toggleVisible } = useToggleEventVisibleMutation({
     onSuccess: () => refetch(),
   });
-  const total = data?.akces?.totalCount || 0;
+  const { mutateAsync: doDelete } = useDeleteEventMutation({
+    onSuccess: () => refetch(),
+  });
+
+  const rowCount = data?.akces?.totalCount || 0;
+  const [rowCountState, setRowCountState] = React.useState(rowCount);
+  React.useEffect(() => {
+    setRowCountState((prev) => rowCount !== undefined ? rowCount : prev);
+  }, [rowCount]);
 
   return <>
     <NextLinkComposed href="/admin/akce/add" className="btn btn-primary">Přidat</NextLinkComposed>
-    <table>
-      <thead>
-        <tr>
-          <th>Jméno</th>
-          <th>Datum</th>
-          <th>Kapacita</th>
-          <th>Viditelný</th>
-        </tr>
-      </thead>
-      <tbody>
-        {data?.akces?.nodes?.map((a) => <tr key={a.aId}>
-          <td>
-            <Dropdown
-              button={<>{a.aJmeno}</>}
-              options={[
-                { title: 'Upravit', href: `/admin/rozpis/edit/${a.aId}` },
-                { title: 'Upravit účastníky', href: `/admin/rozpis/detail/${a.aId}` },
-                { title: 'Upravit dokumenty', href: `/admin/rozpis/detail/${a.aId}` },
-                { title: 'Odstranit', href: `/admin/rozpis/remove/${a.aId}` },
-              ]}
-            />
-          </td>
-          <td><DateRange from={a.aOd} to={a.aDo} /></td>
-          <td>{a.akceItemsByAiIdRodic.totalCount || 0}/{a.aKapacita}</td>
-          <td>
-            <Checkbox checked={a.aVisible} onChange={() => toggleVisible({ id: a.aId, visible: !a.aVisible })} />
-          </td>
-        </tr>)}
-      </tbody>
-    </table>
-    <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
+
+    <DataGrid
+      page={page}
+      onPageChange={setPage}
+      pageSize={limit}
+      rowsPerPageOptions={[limit]}
+      rowCount={rowCountState}
+      pagination
+      paginationMode="server"
+      autoHeight={true}
+      getRowId={row => row.aId}
+      rows={data?.akces?.nodes || []}
+      columns={[
+        {
+          field: 'actions',
+          type: 'actions',
+          getActions: ({ id }) => [
+            <GridActionsCellItem key="edit"
+              icon={<EditIcon />}
+              onClick={() => router.push(`/admin/akce/edit/${id}`)}
+              label="Upravit"
+            />,
+            <GridActionsCellItem key="edit-detail"
+              icon={<EditIcon />}
+              onClick={() => router.push(`/admin/akce/detail/${id}`)}
+              label="Upravit účastníky"
+            />,
+            <GridActionsCellItem key="edit-detail"
+              icon={<EditIcon />}
+              onClick={() => router.push(`/admin/akce/dokumenty/${id}`)}
+              label="Upravit dokumenty"
+            />,
+            <DeleteButton
+              key="delete" title="smazat akci"
+              params={{ id: id.toString() }} onDelete={doDelete}
+            />,
+          ], flex: 1
+        },
+        { field: 'aJmeno', headerName: 'Jméno', flex: 1 },
+        {
+          field: 'aOd', headerName: 'Datum', flex: 1,
+          renderCell: ({ row }) => <DateRange from={row.aOd} to={row.aDo} />
+        },
+        {
+          field: 'aKapacita', headerName: 'Kapacita', flex: 1,
+          renderCell: ({ row }) => <>{row.akceItemsByAiIdRodic.totalCount || 0}/{row.aKapacita}</>
+        },
+        {
+          field: 'aVisible', headerName: 'Viditelná', flex: 1,
+          renderCell: ({ row }) => (
+            <Checkbox checked={row.aVisible} onChange={() => toggleVisible({ id: row.aId, visible: !row.aVisible })} />
+          ),
+        },
+      ]}
+    />
   </>;
 }

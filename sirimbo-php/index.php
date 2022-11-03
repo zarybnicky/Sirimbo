@@ -74,9 +74,6 @@ try {
     $router->get('/admin/users/sign-as/([0-9]+)', [\Olymp\Controller\Admin\Users::class, 'signAs']);
     $router->get('/admin/users/getMsmtCsv', [\Olymp\Controller\Admin\Users::class, 'getMsmtCsv']);
 
-    // $router->get('/admin/pary', [\Olymp\Controller\Admin\Pary::class, 'list']);
-    // $router->post('/admin/pary', [\Olymp\Controller\Admin\Pary::class, 'listPost']);
-
     $router->get('/admin/video/source', [\Olymp\Controller\Admin\VideoSource::class, 'list']);
     $router->get('/admin/video/source/add', [\Olymp\Controller\Admin\VideoSource::class, 'add']);
     $router->post('/admin/video/source/add', [\Olymp\Controller\Admin\VideoSource::class, 'addPost']);
@@ -126,18 +123,6 @@ try {
 
     $router->get('/admin/akce/dokumenty/([0-9]+)', [\Olymp\Controller\Admin\Akce::class, 'dokumenty']);
     $router->post('/admin/akce/dokumenty/([0-9]+)', [\Olymp\Controller\Admin\Akce::class, 'dokumentyPost']);
-
-    $router->get('/admin/aktuality/add', [\Olymp\Controller\Admin\Aktuality::class, 'add']);
-    $router->post('/admin/aktuality/add', [\Olymp\Controller\Admin\Aktuality::class, 'addPost']);
-
-    $router->get('/admin/aktuality/edit/([0-9]+)', [\Olymp\Controller\Admin\Aktuality::class, 'edit']);
-    $router->post('/admin/aktuality/edit/([0-9]+)', [\Olymp\Controller\Admin\Aktuality::class, 'editPost']);
-
-    $router->get('/admin/aktuality/remove/([0-9]+)', [\Olymp\Controller\Admin\Aktuality::class, 'remove']);
-    $router->post('/admin/aktuality/remove/([0-9]+)', [\Olymp\Controller\Admin\Aktuality::class, 'removePost']);
-
-    $router->get('/admin/aktuality/foto/([0-9]+)', [\Olymp\Controller\Admin\Aktuality::class, 'foto']);
-    $router->post('/admin/aktuality/foto/([0-9]+)', [\Olymp\Controller\Admin\Aktuality::class, 'fotoPost']);
 
     $router->get('/admin/dokumenty', [\Olymp\Controller\Admin\Dokumenty::class, 'list']);
     $router->post('/admin/dokumenty', [\Olymp\Controller\Admin\Dokumenty::class, 'listPost']);
@@ -232,8 +217,6 @@ try {
 
     $router->get('/admin/dokumenty/remove/([0-9]+)', [\Olymp\Controller\Admin\Dokumenty::class, 'remove']);
     $router->post('/admin/dokumenty/remove/([0-9]+)', [\Olymp\Controller\Admin\Dokumenty::class, 'removePost']);
-
-    $router->get('/admin/pary/remove/([0-9]+)', [\Olymp\Controller\Admin\Pary::class, 'remove']);
 
     $router->get('/admin/permissions/add', [\Olymp\Controller\Admin\Permissions::class, 'add']);
     $router->post('/admin/permissions/add', [\Olymp\Controller\Admin\Permissions::class, 'addPost']);

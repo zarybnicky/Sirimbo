@@ -341,7 +341,7 @@ export type Aktuality = Node & {
   atId: Scalars['BigInt'];
   atJmeno: Scalars['String'];
   atKat: Scalars['String'];
-  atKdo: Scalars['BigInt'];
+  atKdo: Maybe<Scalars['BigInt']>;
   atPreview: Scalars['String'];
   atText: Scalars['String'];
   atTimestamp: Maybe<Scalars['Datetime']>;
@@ -388,7 +388,7 @@ export type AktualityInput = {
   atId?: InputMaybe<Scalars['BigInt']>;
   atJmeno: Scalars['String'];
   atKat: Scalars['String'];
-  atKdo: Scalars['BigInt'];
+  atKdo?: InputMaybe<Scalars['BigInt']>;
   atPreview: Scalars['String'];
   atText: Scalars['String'];
   atTimestamp?: InputMaybe<Scalars['Datetime']>;
@@ -538,6 +538,30 @@ export type CreateAktualityPayload = {
 /** The output of our create `Aktuality` mutation. */
 export type CreateAktualityPayloadAktualityEdgeArgs = {
   orderBy?: InputMaybe<Array<AktualitiesOrderBy>>;
+};
+
+/** All input for the `createCouple` mutation. */
+export type CreateCoupleInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  man: Scalars['BigInt'];
+  woman: Scalars['BigInt'];
+};
+
+/** The output of our `createCouple` mutation. */
+export type CreateCouplePayload = {
+  __typename?: 'CreateCouplePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  paries: Maybe<Array<Pary>>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
 };
 
 /** All input for the create `Dokumenty` mutation. */
@@ -2875,6 +2899,28 @@ export type DokumentyPatch = {
   dTimestamp?: InputMaybe<Scalars['Datetime']>;
 };
 
+/** All input for the `fixUnpairedCouples` mutation. */
+export type FixUnpairedCouplesInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+};
+
+/** The output of our `fixUnpairedCouples` mutation. */
+export type FixUnpairedCouplesPayload = {
+  __typename?: 'FixUnpairedCouplesPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  paries: Maybe<Array<Pary>>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
 export type GalerieDir = Node & {
   __typename?: 'GalerieDir';
   /** Reads and enables pagination through a set of `GalerieFoto`. */
@@ -3387,6 +3433,7 @@ export type Mutation = {
   createAkceItem: Maybe<CreateAkceItemPayload>;
   /** Creates a single `Aktuality`. */
   createAktuality: Maybe<CreateAktualityPayload>;
+  createCouple: Maybe<CreateCouplePayload>;
   /** Creates a single `Dokumenty`. */
   createDokumenty: Maybe<CreateDokumentyPayload>;
   /** Creates a single `GalerieDir`. */
@@ -3551,6 +3598,7 @@ export type Mutation = {
   deleteVideoSource: Maybe<DeleteVideoSourcePayload>;
   /** Deletes a single `VideoSource` using its globally unique id. */
   deleteVideoSourceByNodeId: Maybe<DeleteVideoSourcePayload>;
+  fixUnpairedCouples: Maybe<FixUnpairedCouplesPayload>;
   login: Maybe<LoginPayload>;
   logout: Maybe<LogoutPayload>;
   prospectFormDancer: Maybe<ProspectFormDancerPayload>;
@@ -3697,6 +3745,12 @@ export type MutationCreateAkceItemArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateAktualityArgs = {
   input: CreateAktualityInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateCoupleArgs = {
+  input: CreateCoupleInput;
 };
 
 
@@ -4189,6 +4243,12 @@ export type MutationDeleteVideoSourceArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteVideoSourceByNodeIdArgs = {
   input: DeleteVideoSourceByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationFixUnpairedCouplesArgs = {
+  input: FixUnpairedCouplesInput;
 };
 
 
@@ -10042,12 +10102,14 @@ export type DeleteAnnouncementMutationVariables = Exact<{
 
 export type DeleteAnnouncementMutation = { __typename?: 'Mutation', deleteUpozorneni: { __typename: 'DeleteUpozorneniPayload' } | null };
 
+export type ArticleFragment = { __typename?: 'Aktuality', atId: string, atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, atKdo: string | null, userByAtKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null };
+
 export type ArticleQueryVariables = Exact<{
   id: Scalars['BigInt'];
 }>;
 
 
-export type ArticleQuery = { __typename?: 'Query', aktuality: { __typename?: 'Aktuality', atJmeno: string, atText: string, atFotoMain: string | null, atTimestampAdd: string | null, userByAtKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null };
+export type ArticleQuery = { __typename?: 'Query', aktuality: { __typename?: 'Aktuality', atId: string, atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, atKdo: string | null, userByAtKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null } | null };
 
 export type ArticlesQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -10055,7 +10117,29 @@ export type ArticlesQueryVariables = Exact<{
 }>;
 
 
-export type ArticlesQuery = { __typename?: 'Query', aktualities: { __typename?: 'AktualitiesConnection', totalCount: number, nodes: Array<{ __typename?: 'Aktuality', atId: string, atPreview: string, atJmeno: string, atFoto: string | null, atFotoMain: string | null, atKdo: string, atText: string, atTimestamp: string | null, atTimestampAdd: string | null, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null }> } | null };
+export type ArticlesQuery = { __typename?: 'Query', aktualities: { __typename?: 'AktualitiesConnection', totalCount: number, nodes: Array<{ __typename?: 'Aktuality', atId: string, atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, atKdo: string | null, userByAtKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null }> } | null };
+
+export type CreateArticleMutationVariables = Exact<{
+  input: AktualityInput;
+}>;
+
+
+export type CreateArticleMutation = { __typename?: 'Mutation', createAktuality: { __typename: 'CreateAktualityPayload' } | null };
+
+export type UpdateArticleMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+  patch: AktualityPatch;
+}>;
+
+
+export type UpdateArticleMutation = { __typename?: 'Mutation', updateAktuality: { __typename: 'UpdateAktualityPayload' } | null };
+
+export type DeleteArticleMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type DeleteArticleMutation = { __typename?: 'Mutation', deleteAktuality: { __typename: 'DeleteAktualityPayload' } | null };
 
 export type CohortListQueryVariables = Exact<{
   visible?: InputMaybe<Scalars['Boolean']>;
@@ -10074,7 +10158,7 @@ export type CohortMembersQuery = { __typename?: 'Query', members: { __typename?:
 export type CoupleListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CoupleListQuery = { __typename?: 'Query', activeCouples: { __typename?: 'PariesConnection', nodes: Array<{ __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string } | null }> } | null };
+export type CoupleListQuery = { __typename?: 'Query', activeCouples: { __typename?: 'PariesConnection', totalCount: number, nodes: Array<{ __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string } | null }> } | null };
 
 export type CreateCoupleMutationVariables = Exact<{
   man: Scalars['BigInt'];
@@ -10082,7 +10166,19 @@ export type CreateCoupleMutationVariables = Exact<{
 }>;
 
 
-export type CreateCoupleMutation = { __typename?: 'Mutation', createPary: { __typename: 'CreateParyPayload' } | null };
+export type CreateCoupleMutation = { __typename?: 'Mutation', createCouple: { __typename?: 'CreateCouplePayload', paries: Array<{ __typename?: 'Pary', pId: string }> | null } | null };
+
+export type DeleteCoupleMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type DeleteCoupleMutation = { __typename?: 'Mutation', deletePary: { __typename: 'DeleteParyPayload' } | null };
+
+export type FixUnpairedCouplesMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FixUnpairedCouplesMutation = { __typename?: 'Mutation', fixUnpairedCouples: { __typename?: 'FixUnpairedCouplesPayload', paries: Array<{ __typename?: 'Pary', pId: string }> | null } | null };
 
 export type ActiveProspectsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -10165,6 +10261,13 @@ export type ToggleEventVisibleMutationVariables = Exact<{
 
 
 export type ToggleEventVisibleMutation = { __typename?: 'Mutation', updateAkce: { __typename?: 'UpdateAkcePayload', akce: { __typename?: 'Akce', aId: string } | null } | null };
+
+export type DeleteEventMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type DeleteEventMutation = { __typename?: 'Mutation', deleteAkce: { __typename: 'DeleteAkcePayload' } | null };
 
 export type GalleryPhotoFragment = { __typename: 'GalerieFoto', nodeId: string, gfId: string, gfIdRodic: string, gfKdo: string, gfName: string, gfPath: string, gfTimestamp: string | null };
 
@@ -10332,6 +10435,13 @@ export type ToggleScheduleVisibleMutationVariables = Exact<{
 
 export type ToggleScheduleVisibleMutation = { __typename?: 'Mutation', updateRozpi: { __typename?: 'UpdateRozpiPayload', rozpi: { __typename?: 'Rozpi', rId: string } | null } | null };
 
+export type DeleteScheduleMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type DeleteScheduleMutation = { __typename?: 'Mutation', deleteRozpi: { __typename: 'DeleteRozpiPayload' } | null };
+
 export type UserDetailFragment = { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uRodneCislo: string | null };
 
 export type UserQueryVariables = Exact<{
@@ -10391,6 +10501,27 @@ export type DeleteVideoSourceMutationVariables = Exact<{
 
 export type DeleteVideoSourceMutation = { __typename?: 'Mutation', deleteVideoSource: { __typename?: 'DeleteVideoSourcePayload', clientMutationId: string | null } | null };
 
+export const ArticleFragmentDoc = `
+    fragment Article on Aktuality {
+  atId
+  atPreview
+  atJmeno
+  atText
+  atFoto
+  atFotoMain
+  atTimestamp
+  atTimestampAdd
+  atKdo
+  userByAtKdo {
+    uId
+    uJmeno
+    uPrijmeni
+  }
+  galerieFotoByAtFotoMain {
+    gfPath
+  }
+}
+    `;
 export const UserPartialFragmentDoc = `
     fragment UserPartial on User {
   uId
@@ -10691,18 +10822,10 @@ useDeleteAnnouncementMutation.fetcher = (variables: DeleteAnnouncementMutationVa
 export const ArticleDocument = `
     query Article($id: BigInt!) {
   aktuality(atId: $id) {
-    atJmeno
-    atText
-    atFotoMain
-    atTimestampAdd
-    userByAtKdo {
-      uId
-      uJmeno
-      uPrijmeni
-    }
+    ...Article
   }
 }
-    `;
+    ${ArticleFragmentDoc}`;
 export const useArticleQuery = <
       TData = ArticleQuery,
       TError = unknown
@@ -10725,24 +10848,13 @@ useArticleQuery.fetcher = (variables: ArticleQueryVariables, options?: RequestIn
 export const ArticlesDocument = `
     query Articles($limit: Int!, $offset: Int!) {
   aktualities(first: $limit, offset: $offset, orderBy: [AT_TIMESTAMP_ADD_DESC]) {
-    nodes {
-      atId
-      atPreview
-      atJmeno
-      atFoto
-      atFotoMain
-      atKdo
-      atText
-      atTimestamp
-      atTimestampAdd
-      galerieFotoByAtFotoMain {
-        gfPath
-      }
-    }
     totalCount
+    nodes {
+      ...Article
+    }
   }
 }
-    `;
+    ${ArticleFragmentDoc}`;
 export const useArticlesQuery = <
       TData = ArticlesQuery,
       TError = unknown
@@ -10762,6 +10874,63 @@ useArticlesQuery.getKey = (variables: ArticlesQueryVariables) => ['Articles', va
 ;
 
 useArticlesQuery.fetcher = (variables: ArticlesQueryVariables, options?: RequestInit['headers']) => fetcher<ArticlesQuery, ArticlesQueryVariables>(ArticlesDocument, variables, options);
+export const CreateArticleDocument = `
+    mutation CreateArticle($input: AktualityInput!) {
+  createAktuality(input: {aktuality: $input}) {
+    __typename
+  }
+}
+    `;
+export const useCreateArticleMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreateArticleMutation, TError, CreateArticleMutationVariables, TContext>) =>
+    useMutation<CreateArticleMutation, TError, CreateArticleMutationVariables, TContext>(
+      ['CreateArticle'],
+      (variables?: CreateArticleMutationVariables) => fetcher<CreateArticleMutation, CreateArticleMutationVariables>(CreateArticleDocument, variables)(),
+      options
+    );
+useCreateArticleMutation.getKey = () => ['CreateArticle'];
+
+useCreateArticleMutation.fetcher = (variables: CreateArticleMutationVariables, options?: RequestInit['headers']) => fetcher<CreateArticleMutation, CreateArticleMutationVariables>(CreateArticleDocument, variables, options);
+export const UpdateArticleDocument = `
+    mutation UpdateArticle($id: BigInt!, $patch: AktualityPatch!) {
+  updateAktuality(input: {atId: $id, patch: $patch}) {
+    __typename
+  }
+}
+    `;
+export const useUpdateArticleMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<UpdateArticleMutation, TError, UpdateArticleMutationVariables, TContext>) =>
+    useMutation<UpdateArticleMutation, TError, UpdateArticleMutationVariables, TContext>(
+      ['UpdateArticle'],
+      (variables?: UpdateArticleMutationVariables) => fetcher<UpdateArticleMutation, UpdateArticleMutationVariables>(UpdateArticleDocument, variables)(),
+      options
+    );
+useUpdateArticleMutation.getKey = () => ['UpdateArticle'];
+
+useUpdateArticleMutation.fetcher = (variables: UpdateArticleMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateArticleMutation, UpdateArticleMutationVariables>(UpdateArticleDocument, variables, options);
+export const DeleteArticleDocument = `
+    mutation DeleteArticle($id: BigInt!) {
+  deleteAktuality(input: {atId: $id}) {
+    __typename
+  }
+}
+    `;
+export const useDeleteArticleMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<DeleteArticleMutation, TError, DeleteArticleMutationVariables, TContext>) =>
+    useMutation<DeleteArticleMutation, TError, DeleteArticleMutationVariables, TContext>(
+      ['DeleteArticle'],
+      (variables?: DeleteArticleMutationVariables) => fetcher<DeleteArticleMutation, DeleteArticleMutationVariables>(DeleteArticleDocument, variables)(),
+      options
+    );
+useDeleteArticleMutation.getKey = () => ['DeleteArticle'];
+
+useDeleteArticleMutation.fetcher = (variables: DeleteArticleMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteArticleMutation, DeleteArticleMutationVariables>(DeleteArticleDocument, variables, options);
 export const CohortListDocument = `
     query CohortList($visible: Boolean = true) {
   skupinies(condition: {sVisible: $visible}) {
@@ -10835,6 +11004,7 @@ useCohortMembersQuery.fetcher = (variables: CohortMembersQueryVariables, options
 export const CoupleListDocument = `
     query CoupleList {
   activeCouples {
+    totalCount
     nodes {
       pId
       userByPIdPartner {
@@ -10870,8 +11040,10 @@ useCoupleListQuery.getKey = (variables?: CoupleListQueryVariables) => variables 
 useCoupleListQuery.fetcher = (variables?: CoupleListQueryVariables, options?: RequestInit['headers']) => fetcher<CoupleListQuery, CoupleListQueryVariables>(CoupleListDocument, variables, options);
 export const CreateCoupleDocument = `
     mutation CreateCouple($man: BigInt!, $woman: BigInt!) {
-  createPary(input: {pary: {pIdPartner: $man, pIdPartnerka: $woman}}) {
-    __typename
+  createCouple(input: {man: $man, woman: $woman}) {
+    paries {
+      pId
+    }
   }
 }
     `;
@@ -10887,6 +11059,46 @@ export const useCreateCoupleMutation = <
 useCreateCoupleMutation.getKey = () => ['CreateCouple'];
 
 useCreateCoupleMutation.fetcher = (variables: CreateCoupleMutationVariables, options?: RequestInit['headers']) => fetcher<CreateCoupleMutation, CreateCoupleMutationVariables>(CreateCoupleDocument, variables, options);
+export const DeleteCoupleDocument = `
+    mutation DeleteCouple($id: BigInt!) {
+  deletePary(input: {pId: $id}) {
+    __typename
+  }
+}
+    `;
+export const useDeleteCoupleMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<DeleteCoupleMutation, TError, DeleteCoupleMutationVariables, TContext>) =>
+    useMutation<DeleteCoupleMutation, TError, DeleteCoupleMutationVariables, TContext>(
+      ['DeleteCouple'],
+      (variables?: DeleteCoupleMutationVariables) => fetcher<DeleteCoupleMutation, DeleteCoupleMutationVariables>(DeleteCoupleDocument, variables)(),
+      options
+    );
+useDeleteCoupleMutation.getKey = () => ['DeleteCouple'];
+
+useDeleteCoupleMutation.fetcher = (variables: DeleteCoupleMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteCoupleMutation, DeleteCoupleMutationVariables>(DeleteCoupleDocument, variables, options);
+export const FixUnpairedCouplesDocument = `
+    mutation FixUnpairedCouples {
+  fixUnpairedCouples(input: {}) {
+    paries {
+      pId
+    }
+  }
+}
+    `;
+export const useFixUnpairedCouplesMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<FixUnpairedCouplesMutation, TError, FixUnpairedCouplesMutationVariables, TContext>) =>
+    useMutation<FixUnpairedCouplesMutation, TError, FixUnpairedCouplesMutationVariables, TContext>(
+      ['FixUnpairedCouples'],
+      (variables?: FixUnpairedCouplesMutationVariables) => fetcher<FixUnpairedCouplesMutation, FixUnpairedCouplesMutationVariables>(FixUnpairedCouplesDocument, variables)(),
+      options
+    );
+useFixUnpairedCouplesMutation.getKey = () => ['FixUnpairedCouples'];
+
+useFixUnpairedCouplesMutation.fetcher = (variables?: FixUnpairedCouplesMutationVariables, options?: RequestInit['headers']) => fetcher<FixUnpairedCouplesMutation, FixUnpairedCouplesMutationVariables>(FixUnpairedCouplesDocument, variables, options);
 export const ActiveProspectsDocument = `
     query ActiveProspects {
   activeProspects {
@@ -11196,6 +11408,25 @@ export const useToggleEventVisibleMutation = <
 useToggleEventVisibleMutation.getKey = () => ['ToggleEventVisible'];
 
 useToggleEventVisibleMutation.fetcher = (variables: ToggleEventVisibleMutationVariables, options?: RequestInit['headers']) => fetcher<ToggleEventVisibleMutation, ToggleEventVisibleMutationVariables>(ToggleEventVisibleDocument, variables, options);
+export const DeleteEventDocument = `
+    mutation DeleteEvent($id: BigInt!) {
+  deleteAkce(input: {aId: $id}) {
+    __typename
+  }
+}
+    `;
+export const useDeleteEventMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<DeleteEventMutation, TError, DeleteEventMutationVariables, TContext>) =>
+    useMutation<DeleteEventMutation, TError, DeleteEventMutationVariables, TContext>(
+      ['DeleteEvent'],
+      (variables?: DeleteEventMutationVariables) => fetcher<DeleteEventMutation, DeleteEventMutationVariables>(DeleteEventDocument, variables)(),
+      options
+    );
+useDeleteEventMutation.getKey = () => ['DeleteEvent'];
+
+useDeleteEventMutation.fetcher = (variables: DeleteEventMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteEventMutation, DeleteEventMutationVariables>(DeleteEventDocument, variables, options);
 export const GalleryDirDocument = `
     query GalleryDir($dirId: BigInt!) {
   galerieDir(gdId: $dirId) {
@@ -11795,6 +12026,25 @@ export const useToggleScheduleVisibleMutation = <
 useToggleScheduleVisibleMutation.getKey = () => ['ToggleScheduleVisible'];
 
 useToggleScheduleVisibleMutation.fetcher = (variables: ToggleScheduleVisibleMutationVariables, options?: RequestInit['headers']) => fetcher<ToggleScheduleVisibleMutation, ToggleScheduleVisibleMutationVariables>(ToggleScheduleVisibleDocument, variables, options);
+export const DeleteScheduleDocument = `
+    mutation DeleteSchedule($id: BigInt!) {
+  deleteRozpi(input: {rId: $id}) {
+    __typename
+  }
+}
+    `;
+export const useDeleteScheduleMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<DeleteScheduleMutation, TError, DeleteScheduleMutationVariables, TContext>) =>
+    useMutation<DeleteScheduleMutation, TError, DeleteScheduleMutationVariables, TContext>(
+      ['DeleteSchedule'],
+      (variables?: DeleteScheduleMutationVariables) => fetcher<DeleteScheduleMutation, DeleteScheduleMutationVariables>(DeleteScheduleDocument, variables)(),
+      options
+    );
+useDeleteScheduleMutation.getKey = () => ['DeleteSchedule'];
+
+useDeleteScheduleMutation.fetcher = (variables: DeleteScheduleMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteScheduleMutation, DeleteScheduleMutationVariables>(DeleteScheduleDocument, variables, options);
 export const UserDocument = `
     query User($id: BigInt!) {
   user(uId: $id) {

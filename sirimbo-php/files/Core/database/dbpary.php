@@ -30,19 +30,6 @@ class DBPary extends Database
         return $res;
     }
 
-    public static function getUnpairedUsers()
-    {
-        $res = self::query(
-            "SELECT u_jmeno,u_prijmeni,u_id
-            FROM users
-            WHERE u_id NOT IN
-            (SELECT u_id FROM users
-               LEFT JOIN pary ON p_id_partnerka=u_id OR p_id_partner=u_id
-             WHERE p_archiv='0')"
-        );
-        return self::getArray($res);
-    }
-
     public static function getPartners($currentCouples = [])
     {
         $currentCouples = array_filter($currentCouples);

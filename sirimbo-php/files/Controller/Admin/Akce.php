@@ -86,29 +86,6 @@ class Akce
         \Redirect::to('/admin/akce');
     }
 
-    public static function remove($id)
-    {
-        \Permissions::checkError('akce', P_OWNED);
-        $item = \DBAkce::getSingleAkce($id);
-        \Render::twig('RemovePrompt.twig', [
-            'header' => 'Správa akcí',
-            'prompt' => 'Opravdu chcete odstranit akce:',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/akce',
-            'data' => [[
-                'id' => $item['a_id'],
-                'text' => $item['a_jmeno']
-            ]]
-        ]);
-    }
-
-    public static function removePost($id)
-    {
-        \Permissions::checkError('akce', P_OWNED);
-        \DBAkce::removeAkce($id);
-        \Message::success('Akce odebrány');
-        \Redirect::to('/admin/akce');
-    }
-
     public static function detail($id)
     {
         \Permissions::checkError('akce', P_OWNED);

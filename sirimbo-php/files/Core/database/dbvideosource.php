@@ -1,15 +1,6 @@
 <?php
 class DBVideoSource extends Database
 {
-    public static function getAll()
-    {
-        $res = self::query(
-            'SELECT vs_id, vs_url, vs_title, vs_description, vs_created_at, vs_last_checked
-            FROM video_source ORDER BY vs_created_at DESC'
-        );
-        return self::getArray($res);
-    }
-
     public static function getSingle($id)
     {
         $res = self::query(
@@ -41,10 +32,5 @@ class DBVideoSource extends Database
             $desc ? "'$desc'" : 'null',
             $id
         );
-    }
-
-    public static function remove($id)
-    {
-        self::query("DELETE FROM video_source WHERE vs_id='?'", $id);
     }
 }

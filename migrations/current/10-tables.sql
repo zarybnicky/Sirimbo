@@ -21,12 +21,43 @@ create policy manage_own on akce_item for all to member
   with check (ai_user = current_user_id());
 grant all on akce_item to anonymous;
 
+ALTER TABLE ONLY public.akce_item
+drop constraint akce_item_ai_id_rodic_fkey,
+ADD CONSTRAINT akce_item_ai_id_rodic_fkey FOREIGN KEY (ai_id_rodic) REFERENCES public.akce(a_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
 -- ************** aktuality **************
 select app_private.drop_policies('public.aktuality');
 alter table aktuality enable row level security;
 create policy admin_all on aktuality to administrator using (true) with check (true);
 create policy all_view on aktuality for select using (true);
 grant all on aktuality to anonymous;
+
+alter table aktuality alter column at_kdo drop not null;
+alter table aktuality alter column at_timestamp_add set default now();
+
+CREATE or replace FUNCTION public.on_update_author_aktuality() RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+   NEW.at_kdo = current_user_id();
+   NEW.at_timestamp = now();
+   RETURN NEW;
+END;
+$$;
+select plpgsql_check_function('public.on_update_author_aktuality', 'aktuality');
+
+drop trigger if exists on_update_author on public.aktuality;
+create trigger on_update_author
+  before update on public.aktuality
+  for each row
+  execute procedure public.on_update_author_aktuality();
+
+drop trigger if exists on_update_author on public.aktuality;
+create trigger on_update_author
+  before update on public.aktuality
+  for each row
+  execute procedure public.on_update_author_aktuality();
+
+
 
 -- ************** dokumenty **************
 select app_private.drop_policies('public.dokumenty');

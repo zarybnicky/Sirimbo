@@ -57,3 +57,9 @@ mutation ToggleEventVisible($id: BigInt!, $visible: Boolean!) {
     }
   }
 }
+
+mutation DeleteEvent($id: BigInt!) {
+  deleteAkce(input: {aId: $id}) {
+    __typename
+  }
+}

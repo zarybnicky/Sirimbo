@@ -1,34 +1,52 @@
+fragment Article on Aktuality {
+  atId
+  atPreview
+  atJmeno
+  atText
+  atFoto
+  atFotoMain
+  atTimestamp
+  atTimestampAdd
+  atKdo
+  userByAtKdo {
+    uId
+    uJmeno
+    uPrijmeni
+  }
+  galerieFotoByAtFotoMain {
+    gfPath
+  }
+}
+
 query Article($id: BigInt!) {
   aktuality(atId: $id) {
-    atJmeno
-    atText
-    atFotoMain
-    atTimestampAdd
-    userByAtKdo {
-      uId
-      uJmeno
-      uPrijmeni
+    ...Article
+  }
+}
+
+query Articles($limit: Int!, $offset: Int!) {
+  aktualities(first: $limit, offset: $offset, orderBy: [AT_TIMESTAMP_ADD_DESC]) {
+    totalCount
+    nodes {
+      ...Article
     }
   }
 }
 
+mutation CreateArticle($input: AktualityInput!) {
+  createAktuality(input: {aktuality: $input}) {
+    __typename
+  }
+}
 
-query Articles($limit: Int!, $offset: Int!) {
-  aktualities(first: $limit, offset: $offset, orderBy: [AT_TIMESTAMP_ADD_DESC]) {
-    nodes {
-      atId
-      atPreview
-      atJmeno
-      atFoto
-      atFotoMain
-      atKdo
-      atText
-      atTimestamp
-      atTimestampAdd
-      galerieFotoByAtFotoMain {
-        gfPath
-      }
-    }
-    totalCount
+mutation UpdateArticle($id: BigInt!, $patch: AktualityPatch!) {
+  updateAktuality(input: {atId: $id, patch: $patch}) {
+    __typename
+  }
+}
+
+mutation DeleteArticle($id: BigInt!) {
+  deleteAktuality(input: {atId: $id}) {
+    __typename
   }
 }

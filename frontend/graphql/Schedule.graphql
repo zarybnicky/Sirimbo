@@ -117,3 +117,9 @@ mutation ToggleScheduleVisible($id: BigInt!, $visible: Boolean!) {
     }
   }
 }
+
+mutation DeleteSchedule($id: BigInt!) {
+  deleteRozpi(input: {rId: $id}) {
+    __typename
+  }
+}
