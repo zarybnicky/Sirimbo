@@ -3,24 +3,18 @@ import { Container } from "@mui/material";
 import { NextLinkComposed } from "components/Link";
 import { useAnnouncementListQuery, useDeleteAnnouncementMutation } from "lib/graphql";
 import { useRequireUserLoggedIn } from "lib/route-guards";
-import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { useRouter } from 'next/router';
-import { useSnackbar } from 'notistack';
-import { useConfirm } from 'material-ui-confirm';
 import format from "date-fns/format";
+import { DeleteButton } from "components/DeleteButton";
 
 export default function AnnouncementAdminList() {
   useRequireUserLoggedIn();
   const router = useRouter();
-  const confirm = useConfirm();
-  const { enqueueSnackbar } = useSnackbar();
   const [limit] = React.useState(12);
   const [page, setPage] = React.useState(0);
-  const { data, refetch } = useAnnouncementListQuery({
-    limit, offset: page * limit,
-  });
+  const { data, refetch } = useAnnouncementListQuery({ limit, offset: page * limit });
 
   const rowCount = data?.upozornenis?.totalCount || 0;
   const [rowCountState, setRowCountState] = React.useState(rowCount);
@@ -28,21 +22,9 @@ export default function AnnouncementAdminList() {
     setRowCountState((prev) => rowCount !== undefined ? rowCount : prev);
   }, [rowCount]);
 
-  const { mutateAsync: doDeleteItem } = useDeleteAnnouncementMutation({
+  const { mutateAsync: doDelete } = useDeleteAnnouncementMutation({
     onSuccess: () => refetch(),
   });
-  const deleteItem = React.useCallback(async (id: string) => {
-    await confirm({ description: 'Opravdu chcete smazat příspěvek?' });
-    try {
-      await doDeleteItem({ id });
-    } catch (e) {
-      if (e instanceof Error) {
-        enqueueSnackbar(e.message, { variant: 'error' });
-      } else {
-        enqueueSnackbar('Nepodařilo se smazat položku', { variant: 'error' });
-      }
-    }
-  }, [])
 
   return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
     <NextLinkComposed href="/admin/nastenka/add" className="btn btn-primary">Přidat</NextLinkComposed>
@@ -62,16 +44,15 @@ export default function AnnouncementAdminList() {
         {
           field: 'actions',
           type: 'actions',
-          getActions: ({ id }: GridRowParams) => [
+          getActions: ({ id }) => [
             <GridActionsCellItem key="edit"
               icon={<EditIcon />}
               onClick={() => router.push(`/admin/nastenka/edit/${id}`)}
               label="Upravit"
             />,
-            <GridActionsCellItem key="delete"
-              icon={<DeleteIcon />}
-              onClick={() => deleteItem(id.toString())}
-              label="Odstranit"
+            <DeleteButton
+              key="delete" title="smazat příspěvek"
+              params={{ id: id.toString() }} onDelete={doDelete}
             />,
           ]
         },

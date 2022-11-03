@@ -57,11 +57,4 @@ class DBNastenka extends Database
         );
         return true;
     }
-
-    public static function removeNastenka($id)
-    {
-        self::query("DELETE FROM upozorneni WHERE up_id='?'", $id);
-        self::query("DELETE FROM upozorneni_skupiny WHERE ups_id_rodic='?'", $id);
-        return true;
-    }
 }

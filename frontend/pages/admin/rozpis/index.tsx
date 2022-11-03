@@ -1,19 +1,29 @@
 import * as React from 'react';
 import format from 'date-fns/format';
 import { Pagination, Checkbox, Container } from '@mui/material';
-import { useAuth } from 'lib/data/use-auth';
 import { NextLinkComposed } from 'components/Link';
 import { useScheduleListQuery, useToggleScheduleVisibleMutation } from 'lib/graphql';
 import { Dropdown } from 'components/Dropdown';
+import { useRouter } from 'next/router';
+import { useConfirm } from 'material-ui-confirm';
+import { useSnackbar } from 'notistack';
 
 export default function RozpisAdminList() {
+  const router = useRouter();
+  const confirm = useConfirm();
+  const { enqueueSnackbar } = useSnackbar();
   const [limit] = React.useState(30);
-  const [page, setPage] = React.useState(1);
-  const { data, refetch } = useScheduleListQuery({ limit, offset: (page - 1) * limit });
+  const [page, setPage] = React.useState(0);
+  const { data, refetch } = useScheduleListQuery({ limit, offset: page * limit });
   const { mutateAsync: toggleVisible } = useToggleScheduleVisibleMutation({
     onSuccess: () => refetch(),
   });
-  const total = data?.rozpis?.totalCount || 0;
+
+  const rowCount = data?.rozpis?.totalCount || 0;
+  const [rowCountState, setRowCountState] = React.useState(rowCount);
+  React.useEffect(() => {
+    setRowCountState((prev) => rowCount !== undefined ? rowCount : prev);
+  }, [rowCount]);
 
   return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
     <NextLinkComposed href="/admin/rozpis/add" className="btn btn-primary">Nový rozpis</NextLinkComposed>
