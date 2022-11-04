@@ -1,3 +1,4 @@
+
 query TitleVideos {
   titleVideos {
     nodes {
@@ -7,16 +8,39 @@ query TitleVideos {
   }
 }
 
+
+fragment VideoSource on VideoSource {
+  vsId
+  vsTitle
+  vsUrl
+  vsDescription
+  vsLastChecked
+  vsCreatedAt
+}
+
+query VideoSource($id: BigInt!) {
+  videoSource(vsId: $id) {
+    ...VideoSource
+  }
+}
+
 query VideoSourceList($limit: Int, $offset: Int) {
   videoSources(first: $limit, offset: $offset) {
     nodes {
-      vsId
-      vsTitle
-      vsUrl
-      vsDescription
-      vsLastChecked
-      vsCreatedAt
+      ...VideoSource
     }
+  }
+}
+
+mutation CreateVideoSource($input: VideoSourceInput!) {
+  createVideoSource(input: {videoSource: $input}) {
+    __typename
+  }
+}
+
+mutation UpdateVideoSource($id: BigInt!, $patch: VideoSourcePatch!) {
+  updateVideoSource(input: {vsId: $id, patch: $patch}) {
+    __typename
   }
 }
 

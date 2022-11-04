@@ -1,10 +1,12 @@
 import * as React from 'react';
 import type { CellPlugin } from '@react-page/editor';
-import { Alert, Card, CardContent, CardActions, Grid, Button, Typography } from '@mui/material';
+import { Card, CardContent, CardActions, Grid, Button, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement, CheckboxElement } from 'react-hook-form-mui';
 import { CrmCohort, useSubmitProspectFormMutation } from 'lib/graphql';
+import { useAsyncCallback } from 'react-async-hook';
+import { ErrorBox } from './ErrorBox';
 
 type ProspectFormProps = {
   title?: string;
@@ -13,28 +15,18 @@ type ProspectFormProps = {
 export const ProspectForm = ({ title }: ProspectFormProps) => {
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: submit } = useSubmitProspectFormMutation();
-  const [submitError, setSubmitError] = React.useState<string | null>(null);
   const { control, handleSubmit, formState: { isDirty, isValid, isSubmitting } } = useForm();
 
-  const onSubmit = async ({ op, ...prospectData }: any) => {
-    setSubmitError(null);
-    try {
-      if (typeof fbq !== 'undefined') {
-        fbq('track', 'SubmitApplication');
-      }
-      await submit({ cohort: CrmCohort.FreeLesson, prospectData, origin: window.location.toString() });
-      enqueueSnackbar('Brzy se vám ozveme!', { variant: 'success' });
-    } catch (e) {
-      if (e instanceof Error) {
-        setSubmitError(e.message);
-      } else {
-        setSubmitError('Něco se nepovedlo, zkuste to prosím znovu');
-      }
+  const onSubmit = useAsyncCallback(async ({ op, ...prospectData }: any) => {
+    if (typeof fbq !== 'undefined') {
+      fbq('track', 'SubmitApplication');
     }
-  };
+    await submit({ cohort: CrmCohort.FreeLesson, prospectData, origin: window.location.toString() });
+    enqueueSnackbar('Brzy se vám ozveme!', { variant: 'success' });
+  });
 
   return (
-    <Card component="form" elevation={3} onSubmit={handleSubmit(onSubmit)}>
+    <Card component="form" elevation={3} onSubmit={handleSubmit(onSubmit.execute)}>
       <CardContent>
         <Typography variant="h4" component="div">{title}</Typography>
         <Grid container spacing={3}>
@@ -63,9 +55,9 @@ export const ProspectForm = ({ title }: ProspectFormProps) => {
             } />
           </Grid>
         </Grid>
+        <ErrorBox grid error={onSubmit.error} />
       </CardContent>
       <CardActions style={{ flexDirection: 'column' }}>
-        {submitError && <Alert severity="error">{submitError}</Alert>}
         <Button
           fullWidth variant="contained" type="submit" color="primary"
           disabled={isValid && !isSubmitting && isDirty}

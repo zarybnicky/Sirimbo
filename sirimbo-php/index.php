@@ -74,13 +74,10 @@ try {
     $router->get('/admin/users/sign-as/([0-9]+)', [\Olymp\Controller\Admin\Users::class, 'signAs']);
     $router->get('/admin/users/getMsmtCsv', [\Olymp\Controller\Admin\Users::class, 'getMsmtCsv']);
 
-    $router->get('/admin/video/source', [\Olymp\Controller\Admin\VideoSource::class, 'list']);
     $router->get('/admin/video/source/add', [\Olymp\Controller\Admin\VideoSource::class, 'add']);
     $router->post('/admin/video/source/add', [\Olymp\Controller\Admin\VideoSource::class, 'addPost']);
     $router->get('/admin/video/source/edit/([0-9]+)', [\Olymp\Controller\Admin\VideoSource::class, 'edit']);
     $router->post('/admin/video/source/edit/([0-9]+)', [\Olymp\Controller\Admin\VideoSource::class, 'editPost']);
-    $router->get('/admin/video/source/remove/([0-9]+)', [\Olymp\Controller\Admin\VideoSource::class, 'remove']);
-    $router->post('/admin/video/source/remove/([0-9]+)', [\Olymp\Controller\Admin\VideoSource::class, 'removePost']);
 
     $router->get('/admin/platby', [\Olymp\Controller\Admin\Platby::class, 'overview']);
     $router->get('/admin/platby/structure', [\Olymp\Controller\Admin\Platby::class, 'structure']);
@@ -115,9 +112,6 @@ try {
     $router->get('/admin/akce/edit/([0-9]+)', [\Olymp\Controller\Admin\Akce::class, 'edit']);
     $router->post('/admin/akce/edit/([0-9]+)', [\Olymp\Controller\Admin\Akce::class, 'editPost']);
 
-    $router->get('/admin/akce/remove/([0-9]+)', [\Olymp\Controller\Admin\Akce::class, 'remove']);
-    $router->post('/admin/akce/remove/([0-9]+)', [\Olymp\Controller\Admin\Akce::class, 'removePost']);
-
     $router->get('/admin/akce/detail/([0-9]+)', [\Olymp\Controller\Admin\Akce::class, 'detail']);
     $router->post('/admin/akce/detail/([0-9]+)', [\Olymp\Controller\Admin\Akce::class, 'detailPost']);
 
@@ -150,9 +144,6 @@ try {
 
     $router->get('/admin/nastenka/edit/([0-9]+)', [\Olymp\Controller\Admin\Nastenka::class, 'edit']);
     $router->post('/admin/nastenka/edit/([0-9]+)', [\Olymp\Controller\Admin\Nastenka::class, 'editPost']);
-
-    $router->get('/admin/nastenka/remove/([0-9]+)', [\Olymp\Controller\Admin\Nastenka::class, 'remove']);
-    $router->post('/admin/nastenka/remove/([0-9]+)', [\Olymp\Controller\Admin\Nastenka::class, 'removePost']);
 
     $router->get('/admin/users', [\Olymp\Controller\Admin\Users::class, 'list']);
     $router->post('/admin/users', [\Olymp\Controller\Admin\Users::class, 'listPost']);
@@ -223,9 +214,6 @@ try {
 
     $router->get('/admin/permissions/edit/([0-9]+)', [\Olymp\Controller\Admin\Permissions::class, 'edit']);
     $router->post('/admin/permissions/edit/([0-9]+)', [\Olymp\Controller\Admin\Permissions::class, 'editPost']);
-
-    $router->get('/admin/permissions/remove/([0-9]+)', [\Olymp\Controller\Admin\Permissions::class, 'remove']);
-    $router->post('/admin/permissions/remove/([0-9]+)', [\Olymp\Controller\Admin\Permissions::class, 'removePost']);
 
     $router->get('/admin/skupiny/add', [\Olymp\Controller\Admin\Skupiny::class, 'add']);
     $router->post('/admin/skupiny/add', [\Olymp\Controller\Admin\Skupiny::class, 'addPost']);

@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { } from '@mui/material';
-import { Alert, Card, CardContent, CardActions, Container, Grid, Typography, Button } from '@mui/material';
+import { Card, CardContent, CardActions, Container, Grid, Typography, Button } from '@mui/material';
 import { NextLinkComposed } from 'components/Link';
 import { useAuth } from 'lib/data/use-auth';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'react-hook-form-mui';
 import { useRequireUserLoggedOut } from 'lib/route-guards';
+import { ErrorBox } from 'components/ErrorBox';
+import { useAsyncCallback } from 'react-async-hook';
 
 type FormProps = {
   login: string;
@@ -17,35 +18,21 @@ export default function LoginPage() {
   useRequireUserLoggedOut();
   const { signIn } = useAuth();
   const router = useRouter()
-  const [submitError, setSubmitError] = React.useState<string | null>(null);
   const { control, handleSubmit, formState: { isDirty, isValid, isSubmitting } } = useForm<FormProps>();
 
-  const onSubmit = async (values: FormProps) => {
-    setSubmitError(null);
-    try {
-      await signIn(values.login, values.passwd);
-      router.push(router.query?.from as string || '/dashboard');
-    } catch (e) {
-      setSubmitError(
-        e instanceof Error ? (
-          e.message === 'ACCOUNT_NOT_FOUND' ? 'Účet nenalezen' :
-            e.message === 'INVALID_PASSWORD' ? 'Nesprávné heslo' :
-              e.message === 'ACCOUNT_DISABLED' ? 'Učet byl zablokován' :
-                e.message === 'ACCOUNT_NOT_CONFIRMED' ? 'Účet ještě nebyl potvrzen' :
-                  'Neznámá chyba'
-        ) : 'Neznámá chyba',
-      );
-    }
-  };
+  const onSubmit = useAsyncCallback(async (values: FormProps) => {
+    await signIn(values.login, values.passwd);
+    router.push(router.query?.from as string || '/dashboard');
+  });
 
   return (
     <Container maxWidth="xs" style={{ margin: '4rem auto 6rem' }}>
-      <Card component="form" onSubmit={handleSubmit(onSubmit)}>
+      <Card component="form" onSubmit={handleSubmit(onSubmit.execute)}>
         <CardContent style={{ gap: '5px', display: 'flex', flexDirection: 'column', justifyItems: 'stretch' }}>
           <Typography gutterBottom variant="h5" component="h2">
             Přihlášení do systému
           </Typography>
-          {submitError && <Alert severity="error">{submitError}</Alert>}
+          <ErrorBox grid error={onSubmit.error} />
           <TextFieldElement
             control={control} name="login"
             label="E-mail nebo přihlašovací jméno" autoComplete="username"

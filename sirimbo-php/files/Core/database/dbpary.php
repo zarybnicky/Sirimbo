@@ -73,22 +73,6 @@ class DBPary extends Database
         self::query("INSERT INTO pary (p_id_partner, p_id_partnerka) VALUES ('?','?')", $partner, $partnerka);
     }
 
-    public static function removeCouple($id)
-    {
-        $res = self::query(
-            "SELECT p_id,
-                m.u_id AS man_id,m.u_jmeno AS man_name,m.u_prijmeni AS man_surname,
-                f.u_id AS woman_id,f.u_jmeno AS woman_name,f.u_prijmeni AS woman_surname
-            FROM pary AS p
-                LEFT JOIN users AS m ON p.p_id_partner=m.u_id
-                LEFT JOIN users AS f ON p.p_id_partnerka=f.u_id
-            WHERE p.p_id='?'",
-            $id
-        );
-        $data = $res ? self::getSingleRow($res) : false;
-        self::noPartner($data['man_id']);
-    }
-
     public static function noPartner($partner)
     {
         if ($partner == '0') {

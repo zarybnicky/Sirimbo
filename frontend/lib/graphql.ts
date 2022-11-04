@@ -10486,6 +10486,15 @@ export type TitleVideosQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type TitleVideosQuery = { __typename?: 'Query', titleVideos: { __typename?: 'VideosConnection', nodes: Array<{ __typename?: 'Video', vTitle: string, vUri: string }> } | null };
 
+export type VideoSourceFragment = { __typename?: 'VideoSource', vsId: string, vsTitle: string | null, vsUrl: string, vsDescription: string | null, vsLastChecked: string | null, vsCreatedAt: string };
+
+export type VideoSourceQueryVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type VideoSourceQuery = { __typename?: 'Query', videoSource: { __typename?: 'VideoSource', vsId: string, vsTitle: string | null, vsUrl: string, vsDescription: string | null, vsLastChecked: string | null, vsCreatedAt: string } | null };
+
 export type VideoSourceListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -10493,6 +10502,21 @@ export type VideoSourceListQueryVariables = Exact<{
 
 
 export type VideoSourceListQuery = { __typename?: 'Query', videoSources: { __typename?: 'VideoSourcesConnection', nodes: Array<{ __typename?: 'VideoSource', vsId: string, vsTitle: string | null, vsUrl: string, vsDescription: string | null, vsLastChecked: string | null, vsCreatedAt: string }> } | null };
+
+export type CreateVideoSourceMutationVariables = Exact<{
+  input: VideoSourceInput;
+}>;
+
+
+export type CreateVideoSourceMutation = { __typename?: 'Mutation', createVideoSource: { __typename: 'CreateVideoSourcePayload' } | null };
+
+export type UpdateVideoSourceMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+  patch: VideoSourcePatch;
+}>;
+
+
+export type UpdateVideoSourceMutation = { __typename?: 'Mutation', updateVideoSource: { __typename: 'UpdateVideoSourcePayload' } | null };
 
 export type DeleteVideoSourceMutationVariables = Exact<{
   id: Scalars['BigInt'];
@@ -10747,6 +10771,16 @@ export const UserDetailFragmentDoc = `
   uEmail
   uTelefon
   uRodneCislo
+}
+    `;
+export const VideoSourceFragmentDoc = `
+    fragment VideoSource on VideoSource {
+  vsId
+  vsTitle
+  vsUrl
+  vsDescription
+  vsLastChecked
+  vsCreatedAt
 }
     `;
 export const AnnouncementListDocument = `
@@ -12206,20 +12240,41 @@ useTitleVideosQuery.getKey = (variables?: TitleVideosQueryVariables) => variable
 ;
 
 useTitleVideosQuery.fetcher = (variables?: TitleVideosQueryVariables, options?: RequestInit['headers']) => fetcher<TitleVideosQuery, TitleVideosQueryVariables>(TitleVideosDocument, variables, options);
+export const VideoSourceDocument = `
+    query VideoSource($id: BigInt!) {
+  videoSource(vsId: $id) {
+    ...VideoSource
+  }
+}
+    ${VideoSourceFragmentDoc}`;
+export const useVideoSourceQuery = <
+      TData = VideoSourceQuery,
+      TError = unknown
+    >(
+      variables: VideoSourceQueryVariables,
+      options?: UseQueryOptions<VideoSourceQuery, TError, TData>
+    ) =>
+    useQuery<VideoSourceQuery, TError, TData>(
+      ['VideoSource', variables],
+      fetcher<VideoSourceQuery, VideoSourceQueryVariables>(VideoSourceDocument, variables),
+      options
+    );
+useVideoSourceQuery.document = VideoSourceDocument;
+
+
+useVideoSourceQuery.getKey = (variables: VideoSourceQueryVariables) => ['VideoSource', variables];
+;
+
+useVideoSourceQuery.fetcher = (variables: VideoSourceQueryVariables, options?: RequestInit['headers']) => fetcher<VideoSourceQuery, VideoSourceQueryVariables>(VideoSourceDocument, variables, options);
 export const VideoSourceListDocument = `
     query VideoSourceList($limit: Int, $offset: Int) {
   videoSources(first: $limit, offset: $offset) {
     nodes {
-      vsId
-      vsTitle
-      vsUrl
-      vsDescription
-      vsLastChecked
-      vsCreatedAt
+      ...VideoSource
     }
   }
 }
-    `;
+    ${VideoSourceFragmentDoc}`;
 export const useVideoSourceListQuery = <
       TData = VideoSourceListQuery,
       TError = unknown
@@ -12239,6 +12294,44 @@ useVideoSourceListQuery.getKey = (variables?: VideoSourceListQueryVariables) => 
 ;
 
 useVideoSourceListQuery.fetcher = (variables?: VideoSourceListQueryVariables, options?: RequestInit['headers']) => fetcher<VideoSourceListQuery, VideoSourceListQueryVariables>(VideoSourceListDocument, variables, options);
+export const CreateVideoSourceDocument = `
+    mutation CreateVideoSource($input: VideoSourceInput!) {
+  createVideoSource(input: {videoSource: $input}) {
+    __typename
+  }
+}
+    `;
+export const useCreateVideoSourceMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreateVideoSourceMutation, TError, CreateVideoSourceMutationVariables, TContext>) =>
+    useMutation<CreateVideoSourceMutation, TError, CreateVideoSourceMutationVariables, TContext>(
+      ['CreateVideoSource'],
+      (variables?: CreateVideoSourceMutationVariables) => fetcher<CreateVideoSourceMutation, CreateVideoSourceMutationVariables>(CreateVideoSourceDocument, variables)(),
+      options
+    );
+useCreateVideoSourceMutation.getKey = () => ['CreateVideoSource'];
+
+useCreateVideoSourceMutation.fetcher = (variables: CreateVideoSourceMutationVariables, options?: RequestInit['headers']) => fetcher<CreateVideoSourceMutation, CreateVideoSourceMutationVariables>(CreateVideoSourceDocument, variables, options);
+export const UpdateVideoSourceDocument = `
+    mutation UpdateVideoSource($id: BigInt!, $patch: VideoSourcePatch!) {
+  updateVideoSource(input: {vsId: $id, patch: $patch}) {
+    __typename
+  }
+}
+    `;
+export const useUpdateVideoSourceMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<UpdateVideoSourceMutation, TError, UpdateVideoSourceMutationVariables, TContext>) =>
+    useMutation<UpdateVideoSourceMutation, TError, UpdateVideoSourceMutationVariables, TContext>(
+      ['UpdateVideoSource'],
+      (variables?: UpdateVideoSourceMutationVariables) => fetcher<UpdateVideoSourceMutation, UpdateVideoSourceMutationVariables>(UpdateVideoSourceDocument, variables)(),
+      options
+    );
+useUpdateVideoSourceMutation.getKey = () => ['UpdateVideoSource'];
+
+useUpdateVideoSourceMutation.fetcher = (variables: UpdateVideoSourceMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateVideoSourceMutation, UpdateVideoSourceMutationVariables>(UpdateVideoSourceDocument, variables, options);
 export const DeleteVideoSourceDocument = `
     mutation DeleteVideoSource($id: BigInt!) {
   deleteVideoSource(input: {vsId: $id}) {

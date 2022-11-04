@@ -1,56 +1,46 @@
 import * as React from 'react';
-import { Alert, Card, Grid, CardContent, Container, Button, CardActions, Typography } from '@mui/material';
+import { Card, Grid, CardContent, Container, Button, CardActions, Typography } from '@mui/material';
 import { useForm, AutocompleteElement, TextFieldElement, DatePickerElement, RadioButtonGroup } from 'react-hook-form-mui';
 import { useCountries } from 'lib/data/use-countries';
 import format from 'date-fns/format';
 import { useSnackbar } from 'notistack';
 import { useCohortListQuery, useRegisterMutation } from 'lib/graphql';
 import { useRequireUserLoggedOut } from 'lib/route-guards';
+import { useAsyncCallback } from 'react-async-hook';
+import { ErrorBox } from 'components/ErrorBox';
 
 export default function RegisterPage() {
   useRequireUserLoggedOut()
   const countries = useCountries();
   const { data: cohorts } = useCohortListQuery();
-  const [submitError, setSubmitError] = React.useState<string | null>(null);
   const { control, handleSubmit, watch, formState: { isDirty, isSubmitting } } = useForm();
   const { enqueueSnackbar } = useSnackbar();
 
   const { mutateAsync: register } = useRegisterMutation();
 
-  const onSubmit = async (values: any) => {
-    setSubmitError(null);
-    try {
-      await register({
-        input: {
-          ...values,
-          username: values.username.toLowerCase(),
-          poznamky: values.poznamky === 'dancer' ? 'Tanečník/tanečnice' :
-            values.poznamky === 'parent' ? `Rodič tanečníka: ${values.dancerName}` :
-              `Jiný vztah: ${values.other}`,
-          dancer: values.poznamky === 'dancer',
-          nationality: values.nationality.id.toString(),
-          skupina: values.skupina.id,
-          narozeni: format(new Date(values.narozeni), 'yyyy-MM-dd'),
-          dancerName: undefined,
-          other: undefined,
-        },
-      });
+  const onSubmit = useAsyncCallback(async (values: any) => {
+    await register({
+      input: {
+        ...values,
+        username: values.username.toLowerCase(),
+        poznamky: values.poznamky === 'dancer' ? 'Tanečník/tanečnice' :
+          values.poznamky === 'parent' ? `Rodič tanečníka: ${values.dancerName}` :
+            `Jiný vztah: ${values.other}`,
+        dancer: values.poznamky === 'dancer',
+        nationality: values.nationality.id.toString(),
+        skupina: values.skupina.id,
+        narozeni: format(new Date(values.narozeni), 'yyyy-MM-dd'),
+        dancerName: undefined,
+        other: undefined,
+      },
+    });
 
-      enqueueSnackbar('Registrace úspěšně proběhla. Během několika dnů vám na email příjde potvrzení vašeho účtu, které vyřizuje administrátor ručně', { variant: 'success' });
-    } catch (e) {
-      if (typeof e === 'object' && Array.isArray((e as any)?.response?.errors)) {
-        setSubmitError((e as any).response.errors.map((x: any) => x.message).join(', '));
-      } else if (e instanceof Error) {
-        setSubmitError(e.message);
-      } else {
-        setSubmitError('Něco se nepovedlo, zkuste to prosím znovu');
-      }
-    }
-  };
+    enqueueSnackbar('Registrace úspěšně proběhla. Během několika dnů vám na email příjde potvrzení vašeho účtu, které vyřizuje administrátor ručně', { variant: 'success' });
+  });
 
   return (
     <Container maxWidth="md" style={{ margin: '4rem auto 6rem' }}>
-      <Card component="form" onSubmit={handleSubmit(onSubmit)}>
+      <Card component="form" onSubmit={handleSubmit(onSubmit.execute)}>
         <CardContent>
           <Grid container spacing={1}>
             <Typography gutterBottom variant="h4" component="h2">Registrace</Typography>
@@ -196,7 +186,7 @@ export default function RegisterPage() {
               </Typography>
             </Grid>
 
-            {submitError && <Alert severity="error">{submitError}</Alert>}
+            <ErrorBox grid error={onSubmit.error} />
           </Grid>
         </CardContent>
         <CardActions>

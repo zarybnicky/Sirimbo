@@ -3,8 +3,9 @@ import { ArticleFragment, AktualityInput, useCreateArticleMutation, useUpdateArt
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'react-hook-form-mui';
+import { useAsyncCallback } from 'react-async-hook'
 
-type FormProps = AktualityInput;
+type FormProps = Pick<AktualityInput, 'atJmeno' | 'atPreview' | 'atText'>;
 
 export const ArticleForm: React.FC<{
   data?: ArticleFragment;
@@ -13,33 +14,27 @@ export const ArticleForm: React.FC<{
   const { mutateAsync: doCreate } = useCreateArticleMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateArticleMutation({ onSuccess });
 
-  const [submitError, setSubmitError] = React.useState<string | null>(null);
-  const { control, handleSubmit } = useForm<FormProps>({ defaultValues: data });
-  const onSubmit = async (values: FormProps) => {
-    setSubmitError(null);
-    try {
-      await (data ? doUpdate({
-        id: data.atId,
-        patch: {
-          atJmeno: values.atJmeno,
-          atPreview: values.atPreview,
-          atText: values.atText,
-        },
-      }) : doCreate({
-        input: {
-          ...values,
-          atKat: '1',
-        },
-      }));
-    } catch (e) {
-      setSubmitError(e instanceof Error ? e.message : 'Něco se nepovedlo');
+  const { control, handleSubmit } = useForm<FormProps>({
+    defaultValues: {
+      atJmeno: data?.atJmeno,
+      atPreview: data?.atPreview,
+      atText: data?.atText,
+    },
+  });
+
+  const onSubmit = useAsyncCallback(async (values: FormProps) => {
+    if (data) {
+      await doUpdate({ id: data.atId, patch: values });
+    } else {
+      doCreate({ input: { ...values, atKat: '1' } });
     }
-  };
+    onSuccess();
+  });
 
   return (
-    <Grid container spacing={3} component="form" onSubmit={handleSubmit(onSubmit)}>
+    <Grid container spacing={3} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
       <Grid item xs={12}>
-        {submitError && <Alert severity="error">{submitError}</Alert>}
+        {onSubmit.error && <Alert severity="error">{onSubmit.error}</Alert>}
         <TextFieldElement fullWidth control={control} name="atJmeno" label="Název" required />
       </Grid>
       <Grid item xs={12}>
@@ -49,7 +44,7 @@ export const ArticleForm: React.FC<{
         <TextFieldElement fullWidth control={control} name="atText" label="Text" rows={20} multiline required />
       </Grid>
       <Grid item xs={12}>
-        <Button fullWidth variant="contained" type="submit" color="primary">Uložit</Button>
+        <Button fullWidth variant="contained" type="submit" color="primary" disabled={onSubmit.loading}>Uložit</Button>
       </Grid>
     </Grid>
   );

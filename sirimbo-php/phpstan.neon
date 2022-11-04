@@ -7,8 +7,6 @@ parameters:
       - to
   inferPrivatePropertyTypeFromConstructor: true
   checkMissingIterableValueType: false
-  bootstrapFiles:
-    - phpstan-constants.php
   fileExtensions:
     - php
     - inc

@@ -1,8 +1,10 @@
-import { Alert, Button, Grid } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { useCreateCoupleMutation, useUserListQuery } from 'lib/graphql';
 import React from 'react';
+import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
 import { AutocompleteElement } from 'react-hook-form-mui';
+import { ErrorBox } from './ErrorBox';
 
 type FormProps = {
   man: { id: string; label: string };
@@ -13,36 +15,32 @@ export const NewCoupleForm: React.FC<{
   onSuccess: () => void;
 }> = ({ onSuccess }) => {
   const { data: users } = useUserListQuery();
+  const men = React.useMemo(() => (users?.users?.nodes || [])
+    .filter(x => x.uPohlavi === 'm')
+    .map(x => ({ id: x.uId, label: `${x.uJmeno} ${x.uPrijmeni} (${x.uId})` })), [users]);
+  const women = React.useMemo(() => (users?.users?.nodes || [])
+    .filter(x => x.uPohlavi === 'f')
+    .map(x => ({ id: x.uId, label: `${x.uJmeno} ${x.uPrijmeni} (${x.uId})` })), [users])
   const { mutateAsync: doCreate } = useCreateCoupleMutation({ onSuccess });
 
-  const [submitError, setSubmitError] = React.useState<string | null>(null);
   const { control, handleSubmit } = useForm<FormProps>();
-  const onSubmit = async (values: FormProps) => {
-    setSubmitError(null);
-    try {
-      await doCreate({ man: values.man.id, woman: values.woman.id });
-    } catch (e) {
-      setSubmitError(e instanceof Error ? e.message : 'Něco se nepovedlo');
-    }
-  };
+  const onSubmit = useAsyncCallback(async (values: FormProps) => {
+    await doCreate({ man: values.man.id, woman: values.woman.id });
+  });
 
   return (
-    <Grid container spacing={3} component="form" onSubmit={handleSubmit(onSubmit)}>
+    <Grid container spacing={3} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
+      <ErrorBox grid error={onSubmit.error} />
       <Grid item xs={12}>
-        {submitError && <Alert severity="error">{submitError}</Alert>}
         <AutocompleteElement
           control={control} name="man" label="Partner" required
-          options={(users?.users?.nodes || []).filter(x => x.uPohlavi === 'm').map(x => ({
-            id: x.uId, label: `${x.uJmeno} ${x.uPrijmeni} (${x.uId})`
-          }))}
+          options={men}
         />
       </Grid>
       <Grid item xs={12}>
         <AutocompleteElement
           control={control} name="woman" label="Partnerka" required
-          options={(users?.users?.nodes || []).filter(x => x.uPohlavi === 'f').map(x => ({
-            id: x.uId, label: `${x.uJmeno} ${x.uPrijmeni} (${x.uId})`
-          }))}
+          options={women}
         />
       </Grid>
       <Grid item xs={12}>
