@@ -10268,6 +10268,8 @@ export type DocumentsQueryVariables = Exact<{
 
 export type DocumentsQuery = { __typename?: 'Query', dokumenties: { __typename?: 'DokumentiesConnection', nodes: Array<{ __typename?: 'Dokumenty', dId: string, dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null, userByDKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string } | null }> } | null };
 
+export type EventFragment = { __typename?: 'Akce', aId: string, aOd: string, aDo: string, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean };
+
 export type EventItemFragment = { __typename?: 'AkceItem', aiId: string, userByAiUser: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string } | null };
 
 export type EventParticipantsQueryVariables = Exact<{
@@ -10283,7 +10285,14 @@ export type EventListQueryVariables = Exact<{
 }>;
 
 
-export type EventListQuery = { __typename?: 'Query', akces: { __typename?: 'AkcesConnection', totalCount: number, nodes: Array<{ __typename?: 'Akce', aDo: string, aId: string, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aOd: string, aTimestamp: string | null, aVisible: boolean, akceItemsByAiIdRodic: { __typename?: 'AkceItemsConnection', totalCount: number, nodes: Array<{ __typename?: 'AkceItem', aiId: string, userByAiUser: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null }> } }> } | null };
+export type EventListQuery = { __typename?: 'Query', akces: { __typename?: 'AkcesConnection', totalCount: number, nodes: Array<{ __typename?: 'Akce', aId: string, aOd: string, aDo: string, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean, akceItemsByAiIdRodic: { __typename?: 'AkceItemsConnection', totalCount: number, nodes: Array<{ __typename?: 'AkceItem', aiId: string, userByAiUser: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null }> } }> } | null };
+
+export type EventQueryVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type EventQuery = { __typename?: 'Query', akce: { __typename?: 'Akce', aId: string, aOd: string, aDo: string, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean } | null };
 
 export type ToggleEventVisibleMutationVariables = Exact<{
   id: Scalars['BigInt'];
@@ -10292,6 +10301,21 @@ export type ToggleEventVisibleMutationVariables = Exact<{
 
 
 export type ToggleEventVisibleMutation = { __typename?: 'Mutation', updateAkce: { __typename?: 'UpdateAkcePayload', akce: { __typename?: 'Akce', aId: string } | null } | null };
+
+export type CreateEventMutationVariables = Exact<{
+  input: AkceInput;
+}>;
+
+
+export type CreateEventMutation = { __typename?: 'Mutation', createAkce: { __typename: 'CreateAkcePayload' } | null };
+
+export type UpdateEventMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+  patch: AkcePatch;
+}>;
+
+
+export type UpdateEventMutation = { __typename?: 'Mutation', updateAkce: { __typename: 'UpdateAkcePayload' } | null };
 
 export type DeleteEventMutationVariables = Exact<{
   id: Scalars['BigInt'];
@@ -10367,6 +10391,33 @@ export type MenuQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MenuQuery = { __typename?: 'Query', parameter: { __typename?: 'Parameter', paValue: string } | null };
+
+export type ParameterListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ParameterListQuery = { __typename?: 'Query', parameters: { __typename?: 'ParametersConnection', totalCount: number, nodes: Array<{ __typename?: 'Parameter', paName: string, paValue: string }> } | null };
+
+export type CreateParameterMutationVariables = Exact<{
+  input: ParameterInput;
+}>;
+
+
+export type CreateParameterMutation = { __typename?: 'Mutation', createParameter: { __typename: 'CreateParameterPayload' } | null };
+
+export type UpdateParameterMutationVariables = Exact<{
+  id: Scalars['String'];
+  value: Scalars['String'];
+}>;
+
+
+export type UpdateParameterMutation = { __typename?: 'Mutation', updateParameter: { __typename: 'UpdateParameterPayload' } | null };
+
+export type DeleteParameterMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteParameterMutation = { __typename?: 'Mutation', deleteParameter: { __typename: 'DeleteParameterPayload' } | null };
 
 export type PaymentGroupFragment = { __typename?: 'PlatbyGroup', pgId: string, pgName: string, pgType: any, pgDescription: string, pgBase: string };
 
@@ -10702,6 +10753,21 @@ export const CouplePartialFragmentDoc = `
   pIdPartner
   pIdPartnerka
   pArchiv
+}
+    `;
+export const EventFragmentDoc = `
+    fragment Event on Akce {
+  aId
+  aOd
+  aDo
+  aInfo
+  aDokumenty
+  aJmeno
+  aKapacita
+  aKde
+  aLock
+  aTimestamp
+  aVisible
 }
     `;
 export const EventItemFragmentDoc = `
@@ -11554,34 +11620,24 @@ useEventParticipantsQuery.fetcher = (variables: EventParticipantsQueryVariables,
 export const EventListDocument = `
     query EventList($limit: Int!, $offset: Int!) {
   akces(first: $limit, offset: $offset, orderBy: [A_OD_DESC]) {
+    totalCount
     nodes {
-      aDo
-      aId
-      aInfo
-      aDokumenty
-      aJmeno
-      aKapacita
-      aKde
-      aLock
-      aOd
-      aTimestamp
-      aVisible
+      ...Event
       akceItemsByAiIdRodic {
+        totalCount
         nodes {
           aiId
           userByAiUser {
+            uId
             uJmeno
             uPrijmeni
-            uId
           }
         }
-        totalCount
       }
     }
-    totalCount
   }
 }
-    `;
+    ${EventFragmentDoc}`;
 export const useEventListQuery = <
       TData = EventListQuery,
       TError = unknown
@@ -11601,6 +11657,32 @@ useEventListQuery.getKey = (variables: EventListQueryVariables) => ['EventList',
 ;
 
 useEventListQuery.fetcher = (variables: EventListQueryVariables, options?: RequestInit['headers']) => fetcher<EventListQuery, EventListQueryVariables>(EventListDocument, variables, options);
+export const EventDocument = `
+    query Event($id: BigInt!) {
+  akce(aId: $id) {
+    ...Event
+  }
+}
+    ${EventFragmentDoc}`;
+export const useEventQuery = <
+      TData = EventQuery,
+      TError = unknown
+    >(
+      variables: EventQueryVariables,
+      options?: UseQueryOptions<EventQuery, TError, TData>
+    ) =>
+    useQuery<EventQuery, TError, TData>(
+      ['Event', variables],
+      fetcher<EventQuery, EventQueryVariables>(EventDocument, variables),
+      options
+    );
+useEventQuery.document = EventDocument;
+
+
+useEventQuery.getKey = (variables: EventQueryVariables) => ['Event', variables];
+;
+
+useEventQuery.fetcher = (variables: EventQueryVariables, options?: RequestInit['headers']) => fetcher<EventQuery, EventQueryVariables>(EventDocument, variables, options);
 export const ToggleEventVisibleDocument = `
     mutation ToggleEventVisible($id: BigInt!, $visible: Boolean!) {
   updateAkce(input: {aId: $id, patch: {aVisible: $visible}}) {
@@ -11622,6 +11704,44 @@ export const useToggleEventVisibleMutation = <
 useToggleEventVisibleMutation.getKey = () => ['ToggleEventVisible'];
 
 useToggleEventVisibleMutation.fetcher = (variables: ToggleEventVisibleMutationVariables, options?: RequestInit['headers']) => fetcher<ToggleEventVisibleMutation, ToggleEventVisibleMutationVariables>(ToggleEventVisibleDocument, variables, options);
+export const CreateEventDocument = `
+    mutation CreateEvent($input: AkceInput!) {
+  createAkce(input: {akce: $input}) {
+    __typename
+  }
+}
+    `;
+export const useCreateEventMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreateEventMutation, TError, CreateEventMutationVariables, TContext>) =>
+    useMutation<CreateEventMutation, TError, CreateEventMutationVariables, TContext>(
+      ['CreateEvent'],
+      (variables?: CreateEventMutationVariables) => fetcher<CreateEventMutation, CreateEventMutationVariables>(CreateEventDocument, variables)(),
+      options
+    );
+useCreateEventMutation.getKey = () => ['CreateEvent'];
+
+useCreateEventMutation.fetcher = (variables: CreateEventMutationVariables, options?: RequestInit['headers']) => fetcher<CreateEventMutation, CreateEventMutationVariables>(CreateEventDocument, variables, options);
+export const UpdateEventDocument = `
+    mutation UpdateEvent($id: BigInt!, $patch: AkcePatch!) {
+  updateAkce(input: {aId: $id, patch: $patch}) {
+    __typename
+  }
+}
+    `;
+export const useUpdateEventMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<UpdateEventMutation, TError, UpdateEventMutationVariables, TContext>) =>
+    useMutation<UpdateEventMutation, TError, UpdateEventMutationVariables, TContext>(
+      ['UpdateEvent'],
+      (variables?: UpdateEventMutationVariables) => fetcher<UpdateEventMutation, UpdateEventMutationVariables>(UpdateEventDocument, variables)(),
+      options
+    );
+useUpdateEventMutation.getKey = () => ['UpdateEvent'];
+
+useUpdateEventMutation.fetcher = (variables: UpdateEventMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateEventMutation, UpdateEventMutationVariables>(UpdateEventDocument, variables, options);
 export const DeleteEventDocument = `
     mutation DeleteEvent($id: BigInt!) {
   deleteAkce(input: {aId: $id}) {
@@ -11896,6 +12016,93 @@ useMenuQuery.getKey = (variables?: MenuQueryVariables) => variables === undefine
 ;
 
 useMenuQuery.fetcher = (variables?: MenuQueryVariables, options?: RequestInit['headers']) => fetcher<MenuQuery, MenuQueryVariables>(MenuDocument, variables, options);
+export const ParameterListDocument = `
+    query ParameterList {
+  parameters {
+    totalCount
+    nodes {
+      paName
+      paValue
+    }
+  }
+}
+    `;
+export const useParameterListQuery = <
+      TData = ParameterListQuery,
+      TError = unknown
+    >(
+      variables?: ParameterListQueryVariables,
+      options?: UseQueryOptions<ParameterListQuery, TError, TData>
+    ) =>
+    useQuery<ParameterListQuery, TError, TData>(
+      variables === undefined ? ['ParameterList'] : ['ParameterList', variables],
+      fetcher<ParameterListQuery, ParameterListQueryVariables>(ParameterListDocument, variables),
+      options
+    );
+useParameterListQuery.document = ParameterListDocument;
+
+
+useParameterListQuery.getKey = (variables?: ParameterListQueryVariables) => variables === undefined ? ['ParameterList'] : ['ParameterList', variables];
+;
+
+useParameterListQuery.fetcher = (variables?: ParameterListQueryVariables, options?: RequestInit['headers']) => fetcher<ParameterListQuery, ParameterListQueryVariables>(ParameterListDocument, variables, options);
+export const CreateParameterDocument = `
+    mutation CreateParameter($input: ParameterInput!) {
+  createParameter(input: {parameter: $input}) {
+    __typename
+  }
+}
+    `;
+export const useCreateParameterMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreateParameterMutation, TError, CreateParameterMutationVariables, TContext>) =>
+    useMutation<CreateParameterMutation, TError, CreateParameterMutationVariables, TContext>(
+      ['CreateParameter'],
+      (variables?: CreateParameterMutationVariables) => fetcher<CreateParameterMutation, CreateParameterMutationVariables>(CreateParameterDocument, variables)(),
+      options
+    );
+useCreateParameterMutation.getKey = () => ['CreateParameter'];
+
+useCreateParameterMutation.fetcher = (variables: CreateParameterMutationVariables, options?: RequestInit['headers']) => fetcher<CreateParameterMutation, CreateParameterMutationVariables>(CreateParameterDocument, variables, options);
+export const UpdateParameterDocument = `
+    mutation UpdateParameter($id: String!, $value: String!) {
+  updateParameter(input: {paName: $id, patch: {paValue: $value}}) {
+    __typename
+  }
+}
+    `;
+export const useUpdateParameterMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<UpdateParameterMutation, TError, UpdateParameterMutationVariables, TContext>) =>
+    useMutation<UpdateParameterMutation, TError, UpdateParameterMutationVariables, TContext>(
+      ['UpdateParameter'],
+      (variables?: UpdateParameterMutationVariables) => fetcher<UpdateParameterMutation, UpdateParameterMutationVariables>(UpdateParameterDocument, variables)(),
+      options
+    );
+useUpdateParameterMutation.getKey = () => ['UpdateParameter'];
+
+useUpdateParameterMutation.fetcher = (variables: UpdateParameterMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateParameterMutation, UpdateParameterMutationVariables>(UpdateParameterDocument, variables, options);
+export const DeleteParameterDocument = `
+    mutation DeleteParameter($id: String!) {
+  deleteParameter(input: {paName: $id}) {
+    __typename
+  }
+}
+    `;
+export const useDeleteParameterMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<DeleteParameterMutation, TError, DeleteParameterMutationVariables, TContext>) =>
+    useMutation<DeleteParameterMutation, TError, DeleteParameterMutationVariables, TContext>(
+      ['DeleteParameter'],
+      (variables?: DeleteParameterMutationVariables) => fetcher<DeleteParameterMutation, DeleteParameterMutationVariables>(DeleteParameterDocument, variables)(),
+      options
+    );
+useDeleteParameterMutation.getKey = () => ['DeleteParameter'];
+
+useDeleteParameterMutation.fetcher = (variables: DeleteParameterMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteParameterMutation, DeleteParameterMutationVariables>(DeleteParameterDocument, variables, options);
 export const PaymentGroupListDocument = `
     query PaymentGroupList {
   platbyGroups {

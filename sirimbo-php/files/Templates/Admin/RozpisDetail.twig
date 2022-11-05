@@ -6,7 +6,25 @@
 <div class="container">
   <form action="" method="POST">
     <div class="r_wrapper">
-      {% include 'Member/RozpisHeader.twig' with {'item': data} %}
+      <div class="trenink-header">
+        <div class="h5 mb-0">
+          {{ data.u_jmeno }} {{ data.u_prijmeni }}
+          {% if data.canEdit %}
+            <div class="btn-group">
+              <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">
+                <img alt="Upravit" width="16" src="/style/icon-gear.png" />
+              </button>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-data" href="/admin/rozpis/edit/{{ data.r_id }}">Upravit</a>
+                <a class="dropdown-data" href="/admin/rozpis/detail/{{ data.r_id }}">Upravit lekce</a>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+        <div class="date">{{ data.r_datum|date('j. n. Y') }}</div>
+        <div>{{ data.r_kde }}</div>
+      </div>
+
       <table>
         <tr>
           <th>Tanečník</th>

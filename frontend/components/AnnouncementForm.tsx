@@ -1,5 +1,5 @@
 import { Button, Grid } from '@mui/material';
-import { ArticleFragment, AktualityInput, useCreateArticleMutation, useUpdateArticleMutation } from 'lib/graphql';
+import { AnnouncementFragment, AktualityInput, useCreateAnnouncementMutation, useUpdateAnnouncementMutation } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'react-hook-form-mui';
@@ -8,12 +8,12 @@ import { ErrorBox } from './ErrorBox';
 
 type FormProps = Pick<AktualityInput, 'atJmeno' | 'atPreview' | 'atText'>;
 
-export const ArticleForm: React.FC<{
-  data?: ArticleFragment;
+export const AnnouncementForm: React.FC<{
+  data?: AnnouncementFragment;
   onSuccess: () => void;
 }> = ({ data, onSuccess }) => {
-  const { mutateAsync: doCreate } = useCreateArticleMutation({ onSuccess });
-  const { mutateAsync: doUpdate } = useUpdateArticleMutation({ onSuccess });
+  const { mutateAsync: doCreate } = useCreateAnnouncementMutation({ onSuccess });
+  const { mutateAsync: doUpdate } = useUpdateAnnouncementMutation({ onSuccess });
 
   const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {

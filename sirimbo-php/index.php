@@ -100,12 +100,6 @@ try {
     $router->post('/member/profil/par/partner', [\Olymp\Controller\Member\ProfilPar::class, 'partnerPost']);
     $router->post('/member/profil/par/zadost', [\Olymp\Controller\Member\ProfilPar::class, 'zadost']);
 
-    $router->get('/admin/akce/add', [\Olymp\Controller\Admin\Akce::class, 'add']);
-    $router->post('/admin/akce/add', [\Olymp\Controller\Admin\Akce::class, 'addPost']);
-
-    $router->get('/admin/akce/edit/([0-9]+)', [\Olymp\Controller\Admin\Akce::class, 'edit']);
-    $router->post('/admin/akce/edit/([0-9]+)', [\Olymp\Controller\Admin\Akce::class, 'editPost']);
-
     $router->get('/admin/akce/detail/([0-9]+)', [\Olymp\Controller\Admin\Akce::class, 'detail']);
     $router->post('/admin/akce/detail/([0-9]+)', [\Olymp\Controller\Admin\Akce::class, 'detailPost']);
 

@@ -1,3 +1,17 @@
+fragment Event on Akce {
+  aId
+  aOd
+  aDo
+  aInfo
+  aDokumenty
+  aJmeno
+  aKapacita
+  aKde
+  aLock
+  aTimestamp
+  aVisible
+}
+
 fragment EventItem on AkceItem {
   aiId
   userByAiUser {
@@ -22,31 +36,27 @@ query EventParticipants($id: BigInt!) {
 
 query EventList($limit: Int!, $offset: Int!) {
   akces(first: $limit, offset: $offset, orderBy: [A_OD_DESC]) {
+    totalCount
     nodes {
-      aDo
-      aId
-      aInfo
-      aDokumenty
-      aJmeno
-      aKapacita
-      aKde
-      aLock
-      aOd
-      aTimestamp
-      aVisible
+      ...Event
       akceItemsByAiIdRodic {
+        totalCount
         nodes {
           aiId
           userByAiUser {
+            uId
             uJmeno
             uPrijmeni
-              uId
           }
         }
-        totalCount
       }
     }
-    totalCount
+  }
+}
+
+query Event($id: BigInt!) {
+  akce(aId: $id) {
+    ...Event
   }
 }
 
@@ -55,6 +65,18 @@ mutation ToggleEventVisible($id: BigInt!, $visible: Boolean!) {
     akce {
       aId
     }
+  }
+}
+
+mutation CreateEvent($input: AkceInput!) {
+  createAkce(input: {akce: $input}) {
+    __typename
+  }
+}
+
+mutation UpdateEvent($id: BigInt!, $patch: AkcePatch!) {
+  updateAkce(input: {aId: $id, patch: $patch}) {
+    __typename
   }
 }
 

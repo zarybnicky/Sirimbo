@@ -44,7 +44,7 @@ export const CohortForm: React.FC<{
         <TextFieldElement fullWidth control={control} name="sLocation" label="Město/místo" required />
       </Grid>
       <Grid item xs={12}>
-        <CheckboxElement control={control} name="sVisible" value="1" required label="Viditelná pro registraci" />
+        <CheckboxElement control={control} name="sVisible" value="1" label="Viditelná pro registraci" />
       </Grid>
       <Grid item xs={12}>
         <Controller

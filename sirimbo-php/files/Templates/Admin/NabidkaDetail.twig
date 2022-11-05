@@ -7,7 +7,39 @@
   <form action="" method="POST">
     <button type="submit" name="action" value="add" style="display:none;">Enter</button>
     <div class="n_wrapper">
-      {% include 'Member/NabidkaHeader.twig' with {'item': nabidka} %}
+      <div class="trenink-header">
+        <div class="h5 mb-0">
+          {{ nabidka.u_jmeno }} {{ nabidka.u_prijmeni }}
+          {% if nabidka.canEdit %}
+            <div class="btn-group">
+              <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">
+                <img alt="Upravit" width="16" src="/style/icon-gear.png" />
+              </button>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-nabidka" href="/admin/nabidka/edit/{{ nabidka.n_id }}">Upravit</a>
+                <a class="dropdown-nabidka" href="/admin/nabidka/detail/{{ nabidka.n_id }}">Upravit rezervace</a>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+        <div class="date">
+          <date-range from="{{ nabidka.n_od }}" to="{{ nabidka.n_do }}"></date-range>
+        </div>
+
+        {% if nabidka.n_max_pocet_hod > 0 %}
+          <div>
+            <span class="little">Maximálně hodin/pár:</span>
+            <span class="nadpis">{{ nabidka.n_max_pocet_hod }}</span>
+          </div>
+        {% endif %}
+        <div>
+          <span class="little">Volných hodin: </span>
+          <span class="nadpis">
+            {{ nabidka.n_pocet_hod - nabidka.hourReserved }} z {{ nabidka.n_pocet_hod }} nabízených
+          </span>
+        </div>
+      </div>
+
       <table>
         <tr>
           <th>Tanečník</th>

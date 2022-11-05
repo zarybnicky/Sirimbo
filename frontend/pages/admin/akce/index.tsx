@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Checkbox } from '@mui/material';
+import { Checkbox, Container } from '@mui/material';
 import { DateRange } from 'components/DateRange';
 import { NextLinkComposed } from 'components/Link';
 import { useEventListQuery, useToggleEventVisibleMutation, useDeleteEventMutation } from 'lib/graphql';
@@ -28,7 +28,7 @@ export default function AdminEventList() {
     setRowCountState((prev) => rowCount !== undefined ? rowCount : prev);
   }, [rowCount]);
 
-  return <>
+  return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
     <NextLinkComposed href="/admin/akce/add" className="btn btn-primary">Přidat</NextLinkComposed>
 
     <DataGrid
@@ -85,5 +85,5 @@ export default function AdminEventList() {
         },
       ]}
     />
-  </>;
+  </Container>;
 }

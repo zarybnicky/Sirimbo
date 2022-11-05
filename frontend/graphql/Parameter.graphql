@@ -3,3 +3,31 @@ query Menu {
     paValue
   }
 }
+
+query ParameterList {
+  parameters {
+    totalCount
+    nodes {
+      paName
+      paValue
+    }
+  }
+}
+
+mutation CreateParameter($input: ParameterInput!) {
+  createParameter(input: {parameter: $input}) {
+    __typename
+  }
+}
+
+mutation UpdateParameter($id: String!, $value: String!) {
+  updateParameter(input: {paName: $id, patch: {paValue: $value}}) {
+    __typename
+  }
+}
+
+mutation DeleteParameter($id: String!) {
+  deleteParameter(input: {paName: $id}) {
+    __typename
+  }
+}
