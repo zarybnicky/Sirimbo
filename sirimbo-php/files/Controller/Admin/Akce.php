@@ -6,6 +6,7 @@ class Akce
     public static function add()
     {
         \Permissions::checkError('akce', P_OWNED);
+        $data = null;
         \Render::twig('Admin/AkceForm.twig', [
             'dokumenty' => $data ? \DBDokumenty::getMultipleById(explode(',', $data['a_dokumenty'])) : [],
             'id' => $data ? $data['a_id'] : null,

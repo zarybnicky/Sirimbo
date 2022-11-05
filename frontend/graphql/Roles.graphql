@@ -21,18 +21,18 @@ fragment Role on Permission {
   peUsers
 }
 
-query Role($id: BigInt!) {
-  permission(peId: $id) {
-    ...Role
-  }
-}
-
 query RoleList {
   permissions {
     totalCount
     nodes {
       ...Role
     }
+  }
+}
+
+query Role($id: BigInt!) {
+  permission(peId: $id) {
+    ...Role
   }
 }
 

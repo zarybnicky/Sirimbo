@@ -4,6 +4,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'react-hook-form-mui';
 import { useAsyncCallback } from 'react-async-hook'
+import { ErrorBox } from './ErrorBox';
 
 type FormProps = Pick<AktualityInput, 'atJmeno' | 'atPreview' | 'atText'>;
 
@@ -32,8 +33,8 @@ export const ArticleForm: React.FC<{
 
   return (
     <Grid container spacing={3} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
+      <ErrorBox grid error={onSubmit.error} />
       <Grid item xs={12}>
-        {onSubmit.error && <Alert severity="error">{onSubmit.error}</Alert>}
         <TextFieldElement fullWidth control={control} name="atJmeno" label="Název" required />
       </Grid>
       <Grid item xs={12}>

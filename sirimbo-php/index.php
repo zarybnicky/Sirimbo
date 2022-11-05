@@ -74,11 +74,6 @@ try {
     $router->get('/admin/users/sign-as/([0-9]+)', [\Olymp\Controller\Admin\Users::class, 'signAs']);
     $router->get('/admin/users/getMsmtCsv', [\Olymp\Controller\Admin\Users::class, 'getMsmtCsv']);
 
-    $router->get('/admin/video/source/add', [\Olymp\Controller\Admin\VideoSource::class, 'add']);
-    $router->post('/admin/video/source/add', [\Olymp\Controller\Admin\VideoSource::class, 'addPost']);
-    $router->get('/admin/video/source/edit/([0-9]+)', [\Olymp\Controller\Admin\VideoSource::class, 'edit']);
-    $router->post('/admin/video/source/edit/([0-9]+)', [\Olymp\Controller\Admin\VideoSource::class, 'editPost']);
-
     $router->get('/admin/platby', [\Olymp\Controller\Admin\Platby::class, 'overview']);
     $router->get('/admin/platby/structure', [\Olymp\Controller\Admin\Platby::class, 'structure']);
     $router->get('/admin/platby/items', [\Olymp\Controller\Admin\PlatbyItems::class, 'list']);
@@ -208,21 +203,6 @@ try {
     $router->get('/admin/dokumenty/remove/([0-9]+)', [\Olymp\Controller\Admin\Dokumenty::class, 'remove']);
     $router->post('/admin/dokumenty/remove/([0-9]+)', [\Olymp\Controller\Admin\Dokumenty::class, 'removePost']);
 
-    $router->get('/admin/permissions/add', [\Olymp\Controller\Admin\Permissions::class, 'add']);
-    $router->post('/admin/permissions/add', [\Olymp\Controller\Admin\Permissions::class, 'addPost']);
-
-    $router->get('/admin/permissions/edit/([0-9]+)', [\Olymp\Controller\Admin\Permissions::class, 'edit']);
-    $router->post('/admin/permissions/edit/([0-9]+)', [\Olymp\Controller\Admin\Permissions::class, 'editPost']);
-
-    $router->get('/admin/skupiny/add', [\Olymp\Controller\Admin\Skupiny::class, 'add']);
-    $router->post('/admin/skupiny/add', [\Olymp\Controller\Admin\Skupiny::class, 'addPost']);
-
-    $router->get('/admin/skupiny/edit/([0-9]+)', [\Olymp\Controller\Admin\Skupiny::class, 'edit']);
-    $router->post('/admin/skupiny/edit/([0-9]+)', [\Olymp\Controller\Admin\Skupiny::class, 'editPost']);
-
-    $router->get('/admin/skupiny/remove/([0-9]+)', [\Olymp\Controller\Admin\Skupiny::class, 'remove']);
-    $router->post('/admin/skupiny/remove/([0-9]+)', [\Olymp\Controller\Admin\Skupiny::class, 'removePost']);
-
     $router->get('/admin/platby/raw', [\Olymp\Controller\Admin\PlatbyRaw::class, 'get']);
     $router->post('/admin/platby/raw', [\Olymp\Controller\Admin\PlatbyRaw::class, 'post']);
 
@@ -243,17 +223,6 @@ try {
 
     $router->get('/admin/platby/items/remove/([0-9]+)', [\Olymp\Controller\Admin\PlatbyItems::class, 'remove']);
     $router->post('/admin/platby/items/remove/([0-9]+)', [\Olymp\Controller\Admin\PlatbyItems::class, 'removePost']);
-
-    $router->get('/admin/platby/structure/group', [\Olymp\Controller\Admin\PlatbyGroup::class, 'list']);
-
-    $router->get('/admin/platby/structure/group/add', [\Olymp\Controller\Admin\PlatbyGroup::class, 'add']);
-    $router->post('/admin/platby/structure/group/add', [\Olymp\Controller\Admin\PlatbyGroup::class, 'addPost']);
-
-    $router->get('/admin/platby/structure/group/edit/([0-9]+)', [\Olymp\Controller\Admin\PlatbyGroup::class, 'edit']);
-    $router->post('/admin/platby/structure/group/edit/([0-9]+)', [\Olymp\Controller\Admin\PlatbyGroup::class, 'editPost']);
-
-    $router->get('/admin/platby/structure/group/remove/([0-9]+)', [\Olymp\Controller\Admin\PlatbyGroup::class, 'remove']);
-    $router->post('/admin/platby/structure/group/remove/([0-9]+)', [\Olymp\Controller\Admin\PlatbyGroup::class, 'removePost']);
 
     $router->get('/admin/platby/structure/category', [\Olymp\Controller\Admin\PlatbyCategory::class, 'list']);
     $router->post('/admin/platby/structure/category', [\Olymp\Controller\Admin\PlatbyCategory::class, 'listPost']);

@@ -42,36 +42,4 @@ class DBSkupiny extends Database
         $res = self::query("SELECT * FROM skupiny WHERE s_id='?'", $id);
         return self::getSingleRow($res);
     }
-
-    public static function insert($name, $location, $color, $desc, $visible)
-    {
-        self::query(
-            "INSERT INTO skupiny (s_name,s_location,s_color_text,s_color_rgb,s_description,s_visible)
-            VALUES ('?','?','','?','?','?')",
-            $name,
-            $location,
-            $color,
-            $desc,
-            $visible,
-        );
-    }
-
-    public static function update($id, $name, $location, $color, $desc, $visible)
-    {
-        self::query(
-            "UPDATE skupiny SET s_name='?',s_location='?',s_color_rgb='?',s_description='?',s_visible='?' WHERE s_id='?'",
-            $name,
-            $location,
-            $color,
-            $desc,
-            $visible,
-            $id,
-        );
-    }
-
-    public static function delete($id)
-    {
-        self::query("DELETE FROM skupiny WHERE s_id='?'", $id);
-        return true;
-    }
 }

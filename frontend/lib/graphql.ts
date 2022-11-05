@@ -10141,12 +10141,14 @@ export type DeleteArticleMutationVariables = Exact<{
 
 export type DeleteArticleMutation = { __typename?: 'Mutation', deleteAktuality: { __typename: 'DeleteAktualityPayload' } | null };
 
+export type CohortFragment = { __typename?: 'Skupiny', sId: string, sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string };
+
 export type CohortListQueryVariables = Exact<{
   visible?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
-export type CohortListQuery = { __typename?: 'Query', skupinies: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename?: 'Skupiny', sId: string, sName: string, sLocation: string, sDescription: string, sVisible: boolean, sColorRgb: string, platbyGroupSkupinasByPgsIdSkupina: { __typename?: 'PlatbyGroupSkupinasConnection', nodes: Array<{ __typename?: 'PlatbyGroupSkupina', pgsIdGroup: string }> } }> } | null };
+export type CohortListQuery = { __typename?: 'Query', skupinies: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename?: 'Skupiny', sId: string, sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string, platbyGroupSkupinasByPgsIdSkupina: { __typename?: 'PlatbyGroupSkupinasConnection', nodes: Array<{ __typename?: 'PlatbyGroupSkupina', pgsIdGroup: string }> } }> } | null };
 
 export type CohortMembersQueryVariables = Exact<{
   id: Scalars['BigInt'];
@@ -10154,6 +10156,28 @@ export type CohortMembersQueryVariables = Exact<{
 
 
 export type CohortMembersQuery = { __typename?: 'Query', members: { __typename?: 'MembersConnection', nodes: Array<{ __typename?: 'Member', uJmeno: string | null, uPrijmeni: string | null, uRodneCislo: string | null, uTelefon: string | null, uEmail: string | null }> } | null };
+
+export type CohortQueryVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type CohortQuery = { __typename?: 'Query', skupiny: { __typename?: 'Skupiny', sId: string, sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string } | null };
+
+export type CreateCohortMutationVariables = Exact<{
+  input: SkupinyInput;
+}>;
+
+
+export type CreateCohortMutation = { __typename?: 'Mutation', createSkupiny: { __typename: 'CreateSkupinyPayload' } | null };
+
+export type UpdateCohortMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+  patch: SkupinyPatch;
+}>;
+
+
+export type UpdateCohortMutation = { __typename?: 'Mutation', updateSkupiny: { __typename: 'UpdateSkupinyPayload' } | null };
 
 export type DeleteCohortMutationVariables = Exact<{
   id: Scalars['BigInt'];
@@ -10417,17 +10441,17 @@ export type DeleteReservationMutation = { __typename?: 'Mutation', deleteNabidka
 
 export type RoleFragment = { __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number };
 
+export type RoleListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RoleListQuery = { __typename?: 'Query', permissions: { __typename?: 'PermissionsConnection', totalCount: number, nodes: Array<{ __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number }> } | null };
+
 export type RoleQueryVariables = Exact<{
   id: Scalars['BigInt'];
 }>;
 
 
 export type RoleQuery = { __typename?: 'Query', permission: { __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null };
-
-export type RoleListQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type RoleListQuery = { __typename?: 'Query', permissions: { __typename?: 'PermissionsConnection', totalCount: number, nodes: Array<{ __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number }> } | null };
 
 export type CreateRoleMutationVariables = Exact<{
   input: PermissionInput;
@@ -10598,6 +10622,16 @@ export const ArticleFragmentDoc = `
   galerieFotoByAtFotoMain {
     gfPath
   }
+}
+    `;
+export const CohortFragmentDoc = `
+    fragment Cohort on Skupiny {
+  sId
+  sName
+  sDescription
+  sLocation
+  sVisible
+  sColorRgb
 }
     `;
 export const RoleFragmentDoc = `
@@ -11034,15 +11068,10 @@ useDeleteArticleMutation.getKey = () => ['DeleteArticle'];
 
 useDeleteArticleMutation.fetcher = (variables: DeleteArticleMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteArticleMutation, DeleteArticleMutationVariables>(DeleteArticleDocument, variables, options);
 export const CohortListDocument = `
-    query CohortList($visible: Boolean = true) {
+    query CohortList($visible: Boolean) {
   skupinies(condition: {sVisible: $visible}) {
     nodes {
-      sId
-      sName
-      sLocation
-      sDescription
-      sVisible
-      sColorRgb
+      ...Cohort
       platbyGroupSkupinasByPgsIdSkupina {
         nodes {
           pgsIdGroup
@@ -11051,7 +11080,7 @@ export const CohortListDocument = `
     }
   }
 }
-    `;
+    ${CohortFragmentDoc}`;
 export const useCohortListQuery = <
       TData = CohortListQuery,
       TError = unknown
@@ -11103,6 +11132,70 @@ useCohortMembersQuery.getKey = (variables: CohortMembersQueryVariables) => ['Coh
 ;
 
 useCohortMembersQuery.fetcher = (variables: CohortMembersQueryVariables, options?: RequestInit['headers']) => fetcher<CohortMembersQuery, CohortMembersQueryVariables>(CohortMembersDocument, variables, options);
+export const CohortDocument = `
+    query Cohort($id: BigInt!) {
+  skupiny(sId: $id) {
+    ...Cohort
+  }
+}
+    ${CohortFragmentDoc}`;
+export const useCohortQuery = <
+      TData = CohortQuery,
+      TError = unknown
+    >(
+      variables: CohortQueryVariables,
+      options?: UseQueryOptions<CohortQuery, TError, TData>
+    ) =>
+    useQuery<CohortQuery, TError, TData>(
+      ['Cohort', variables],
+      fetcher<CohortQuery, CohortQueryVariables>(CohortDocument, variables),
+      options
+    );
+useCohortQuery.document = CohortDocument;
+
+
+useCohortQuery.getKey = (variables: CohortQueryVariables) => ['Cohort', variables];
+;
+
+useCohortQuery.fetcher = (variables: CohortQueryVariables, options?: RequestInit['headers']) => fetcher<CohortQuery, CohortQueryVariables>(CohortDocument, variables, options);
+export const CreateCohortDocument = `
+    mutation CreateCohort($input: SkupinyInput!) {
+  createSkupiny(input: {skupiny: $input}) {
+    __typename
+  }
+}
+    `;
+export const useCreateCohortMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreateCohortMutation, TError, CreateCohortMutationVariables, TContext>) =>
+    useMutation<CreateCohortMutation, TError, CreateCohortMutationVariables, TContext>(
+      ['CreateCohort'],
+      (variables?: CreateCohortMutationVariables) => fetcher<CreateCohortMutation, CreateCohortMutationVariables>(CreateCohortDocument, variables)(),
+      options
+    );
+useCreateCohortMutation.getKey = () => ['CreateCohort'];
+
+useCreateCohortMutation.fetcher = (variables: CreateCohortMutationVariables, options?: RequestInit['headers']) => fetcher<CreateCohortMutation, CreateCohortMutationVariables>(CreateCohortDocument, variables, options);
+export const UpdateCohortDocument = `
+    mutation UpdateCohort($id: BigInt!, $patch: SkupinyPatch!) {
+  updateSkupiny(input: {sId: $id, patch: $patch}) {
+    __typename
+  }
+}
+    `;
+export const useUpdateCohortMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<UpdateCohortMutation, TError, UpdateCohortMutationVariables, TContext>) =>
+    useMutation<UpdateCohortMutation, TError, UpdateCohortMutationVariables, TContext>(
+      ['UpdateCohort'],
+      (variables?: UpdateCohortMutationVariables) => fetcher<UpdateCohortMutation, UpdateCohortMutationVariables>(UpdateCohortDocument, variables)(),
+      options
+    );
+useUpdateCohortMutation.getKey = () => ['UpdateCohort'];
+
+useUpdateCohortMutation.fetcher = (variables: UpdateCohortMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateCohortMutation, UpdateCohortMutationVariables>(UpdateCohortDocument, variables, options);
 export const DeleteCohortDocument = `
     mutation DeleteCohort($id: BigInt!) {
   deleteSkupiny(input: {sId: $id}) {
@@ -12012,32 +12105,6 @@ export const useDeleteReservationMutation = <
 useDeleteReservationMutation.getKey = () => ['DeleteReservation'];
 
 useDeleteReservationMutation.fetcher = (variables: DeleteReservationMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteReservationMutation, DeleteReservationMutationVariables>(DeleteReservationDocument, variables, options);
-export const RoleDocument = `
-    query Role($id: BigInt!) {
-  permission(peId: $id) {
-    ...Role
-  }
-}
-    ${RoleFragmentDoc}`;
-export const useRoleQuery = <
-      TData = RoleQuery,
-      TError = unknown
-    >(
-      variables: RoleQueryVariables,
-      options?: UseQueryOptions<RoleQuery, TError, TData>
-    ) =>
-    useQuery<RoleQuery, TError, TData>(
-      ['Role', variables],
-      fetcher<RoleQuery, RoleQueryVariables>(RoleDocument, variables),
-      options
-    );
-useRoleQuery.document = RoleDocument;
-
-
-useRoleQuery.getKey = (variables: RoleQueryVariables) => ['Role', variables];
-;
-
-useRoleQuery.fetcher = (variables: RoleQueryVariables, options?: RequestInit['headers']) => fetcher<RoleQuery, RoleQueryVariables>(RoleDocument, variables, options);
 export const RoleListDocument = `
     query RoleList {
   permissions {
@@ -12067,6 +12134,32 @@ useRoleListQuery.getKey = (variables?: RoleListQueryVariables) => variables === 
 ;
 
 useRoleListQuery.fetcher = (variables?: RoleListQueryVariables, options?: RequestInit['headers']) => fetcher<RoleListQuery, RoleListQueryVariables>(RoleListDocument, variables, options);
+export const RoleDocument = `
+    query Role($id: BigInt!) {
+  permission(peId: $id) {
+    ...Role
+  }
+}
+    ${RoleFragmentDoc}`;
+export const useRoleQuery = <
+      TData = RoleQuery,
+      TError = unknown
+    >(
+      variables: RoleQueryVariables,
+      options?: UseQueryOptions<RoleQuery, TError, TData>
+    ) =>
+    useQuery<RoleQuery, TError, TData>(
+      ['Role', variables],
+      fetcher<RoleQuery, RoleQueryVariables>(RoleDocument, variables),
+      options
+    );
+useRoleQuery.document = RoleDocument;
+
+
+useRoleQuery.getKey = (variables: RoleQueryVariables) => ['Role', variables];
+;
+
+useRoleQuery.fetcher = (variables: RoleQueryVariables, options?: RequestInit['headers']) => fetcher<RoleQuery, RoleQueryVariables>(RoleDocument, variables, options);
 export const CreateRoleDocument = `
     mutation CreateRole($input: PermissionInput!) {
   createPermission(input: {permission: $input}) {

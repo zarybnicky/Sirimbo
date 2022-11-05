@@ -5,6 +5,7 @@ import { useRequireUserLoggedIn } from "lib/route-guards";
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import { DeleteButton } from 'components/DeleteButton';
+import { Container } from '@mui/material';
 
 export default function CohortsPage() {
   useRequireUserLoggedIn();
@@ -14,7 +15,7 @@ export default function CohortsPage() {
     onSuccess: () => refetch(),
   });
 
-  return <>
+  return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
     <NextLinkComposed href="/admin/skupiny/add" className="btn btn-primary">Nová skupina</NextLinkComposed>
 
     <DataGrid
@@ -41,11 +42,15 @@ export default function CohortsPage() {
           field: 'sName', headerName: 'Jméno', flex: 1,
           renderCell: ({ row }) => <>
             <div className="box" title={row.sDescription} style={{ backgroundColor: row.sColorRgb }} />
-            {row.sName}{row.sLocation && `, ${row.sLocation}`}
-            {!row.sVisible && ` (skrytá)`}
+            {' '}{row.sName}
           </>,
+        },
+        { field: 'sLocation', headerName: 'Místo', flex: 1 },
+        {
+          field: 'sVisible', headerName: 'Viditelná', flex: 1,
+          valueFormatter: ({ value }) => value ? '' : 'skrytá',
         },
       ]}
     />
-  </>;
+  </Container>;
 }

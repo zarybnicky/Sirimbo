@@ -1,12 +1,16 @@
-query CohortList($visible: Boolean = true) {
+fragment Cohort on Skupiny {
+  sId
+  sName
+  sDescription
+  sLocation
+  sVisible
+  sColorRgb
+}
+
+query CohortList($visible: Boolean) {
   skupinies(condition: {sVisible: $visible}) {
     nodes {
-      sId
-      sName
-      sLocation
-      sDescription
-      sVisible
-      sColorRgb
+      ...Cohort
       platbyGroupSkupinasByPgsIdSkupina {
         nodes {
           pgsIdGroup
@@ -25,6 +29,24 @@ query CohortMembers($id: BigInt!) {
       uTelefon
       uEmail
     }
+  }
+}
+
+query Cohort($id: BigInt!) {
+  skupiny(sId: $id) {
+    ...Cohort
+  }
+}
+
+mutation CreateCohort($input: SkupinyInput!) {
+  createSkupiny(input: {skupiny: $input}) {
+    __typename
+  }
+}
+
+mutation UpdateCohort($id: BigInt!, $patch: SkupinyPatch!) {
+  updateSkupiny(input: {sId: $id, patch: $patch}) {
+    __typename
   }
 }
 

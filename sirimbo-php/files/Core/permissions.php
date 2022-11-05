@@ -16,12 +16,9 @@ class Permissions
 
         $permissionsRaw = \DBPermissions::getSingleGroup($user->getPermissionGroup());
         $permissions = [];
-        foreach (array_keys(self::$permissions) as $key) {
-            if ($user->getPermissionGroup() == 0) {
-                $permissions[$key] = P_NONE;
-            } else {
-                $permissions[$key] = $permissionsRaw['pe_' . $key];
-            }
+        foreach ($permissionsRaw as $key => $value) {
+            $key = str_replace('pe_', '', $key);
+            $permissions[$key] = $user->getPermissionGroup() == 0 ? P_NONE : $value;
         }
         return $permissions[$module] ?? P_NONE;
     }

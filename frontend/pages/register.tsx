@@ -12,7 +12,7 @@ import { ErrorBox } from 'components/ErrorBox';
 export default function RegisterPage() {
   useRequireUserLoggedOut()
   const countries = useCountries();
-  const { data: cohorts } = useCohortListQuery();
+  const { data: cohorts } = useCohortListQuery({ visible: true });
   const { control, handleSubmit, watch, formState: { isDirty, isSubmitting } } = useForm();
   const { enqueueSnackbar } = useSnackbar();
 

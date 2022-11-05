@@ -5,7 +5,7 @@ import { Heading } from 'components/Heading';
 import { useCohortListQuery } from 'lib/graphql';
 
 export default function CohortsPage() {
-  const { data: cohorts } = useCohortListQuery();
+  const { data: cohorts } = useCohortListQuery({ visible: true });
 
   return <>
     <Heading color={{ r: 20, g: 20, b: 200, a: .5 }} text="Tréninkové skupiny" image="" />

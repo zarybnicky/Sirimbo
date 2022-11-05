@@ -67,6 +67,7 @@
     "leaflet": "^1.8.0",
     "material-ui-confirm": "^3.0.5",
     "material-ui-popup-state": "^4.0.2",
+    "mui-color": "^2.0.0-beta.2",
     "next": "^12.2.5",
     "next-use-posthog": "^1.16.0",
     "nextjs-google-analytics": "^2.1.0",
