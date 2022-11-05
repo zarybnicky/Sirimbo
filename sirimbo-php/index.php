@@ -84,10 +84,9 @@ try {
     $router->get('/admin/platby/items', [\Olymp\Controller\Admin\PlatbyItems::class, 'list']);
     $router->get('/admin/platby/manual', [\Olymp\Controller\Admin\PlatbyManual::class, 'query']);
 
+    $router->get('/member/akce/([0-9]+)', [\Olymp\Controller\Member\Akce::class, 'single']);
     $router->get('/member/akce', [\Olymp\Controller\Member\Akce::class, 'list']);
     $router->post('/member/akce', [\Olymp\Controller\Member\Akce::class, 'listPost']);
-
-    $router->get('/member/akce/([0-9]+)', [\Olymp\Controller\Member\Akce::class, 'single']);
 
     $router->get('/member/download', [\Olymp\Controller\Member::class, 'download']);
 

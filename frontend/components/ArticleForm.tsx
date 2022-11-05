@@ -26,9 +26,8 @@ export const ArticleForm: React.FC<{
     if (data) {
       await doUpdate({ id: data.atId, patch: values });
     } else {
-      doCreate({ input: { ...values, atKat: '1' } });
+      await doCreate({ input: { ...values, atKat: '1' } });
     }
-    onSuccess();
   });
 
   return (

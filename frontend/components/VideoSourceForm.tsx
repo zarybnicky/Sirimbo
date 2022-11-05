@@ -29,7 +29,6 @@ export const VideoSourceForm: React.FC<{
     } else {
       await doUpdate({ id: data.vsId, patch: values });
     }
-    onSuccess();
   });
 
   return (

@@ -1,0 +1,40 @@
+fragment PaymentGroup on PlatbyGroup {
+  pgId
+  pgName
+  pgType
+  pgDescription
+  pgBase
+}
+
+query PaymentGroupList {
+  platbyGroups {
+    totalCount
+    nodes {
+      ...PaymentGroup
+    }
+  }
+}
+
+query PaymentGroup($id: BigInt!) {
+  platbyGroup(pgId: $id) {
+    ...PaymentGroup
+  }
+}
+
+mutation CreatePaymentGroup($input: PlatbyGroupInput!) {
+  createPlatbyGroup(input: {platbyGroup: $input}) {
+    __typename
+  }
+}
+
+mutation UpdatePaymentGroup($id: BigInt!, $patch: PlatbyGroupPatch!) {
+  updatePlatbyGroup (input: {pgId: $id, patch: $patch}) {
+    __typename
+  }
+}
+
+mutation DeletePaymentGroup($id: BigInt!) {
+  deletePlatbyGroup(input: {pgId: $id}) {
+    __typename
+  }
+}

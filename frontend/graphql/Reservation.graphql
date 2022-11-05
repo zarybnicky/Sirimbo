@@ -59,3 +59,9 @@ mutation ToggleReservationVisible($id: BigInt!, $visible: Boolean!) {
     }
   }
 }
+
+mutation DeleteReservation($id: BigInt!) {
+  deleteNabidka(input: {nId: $id}) {
+    __typename
+  }
+}

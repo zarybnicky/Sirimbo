@@ -6,23 +6,41 @@ class Akce
     public static function add()
     {
         \Permissions::checkError('akce', P_OWNED);
-        return static::displayForm('add');
+        \Render::twig('Admin/AkceForm.twig', [
+            'dokumenty' => $data ? \DBDokumenty::getMultipleById(explode(',', $data['a_dokumenty'])) : [],
+            'id' => $data ? $data['a_id'] : null,
+            'jmeno' => $_POST['jmeno'] ?? $data['a_jmeno'] ?? '',
+            'kde' => $_POST['kde'] ?? $data['a_kde'] ?? '',
+            'info' => $_POST['info'] ?? $data['a_info'] ?? '',
+            'od' => $_POST['od'] ?? $data['a_od'] ?? '',
+            'do' => $_POST['do'] ?? $data['a_do'] ?? '',
+            'kapacita' => $_POST['kapacita'] ?? $data['a_kapacita'] ?? '',
+            'lock' => $_POST['lock'] ?? $data['a_lock'] ?? '',
+            'visible' => $_POST['visible'] ?? $data['a_visible'] ?? ''
+        ]);
     }
 
     public static function addPost()
     {
         \Permissions::checkError('akce', P_OWNED);
-        $form = static::checkData();
-        if (!$form->isValid()) {
-            \Message::warning($form->getMessages());
-            return static::displayForm('add');
-        }
 
         $od = new \Date($_POST['od'] ?? null);
         $do = new \Date($_POST['do'] ?? null);
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }
+
+        $form = new \Form();
+        $form->checkDate((string) $od, 'Špatný formát data ("Od")');
+        if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
+            $form->checkDate((string) $do, 'Špatný formát data ("Do")');
+        }
+        $form->checkNumeric($_POST['kapacita'], 'Kapacita musí být zadána číselně');
+        if (!$form->isValid()) {
+            \Message::warning($form->getMessages());
+            return static::displayForm('add');
+        }
+
         \DBAkce::addAkce(
             $_POST['jmeno'],
             $_POST['kde'],
@@ -46,7 +64,19 @@ class Akce
             \Message::warning('Akce s takovým ID neexistuje');
             \Redirect::to('/admin/akce');
         }
-        return static::displayForm('edit', $data);
+        \Render::twig('Admin/AkceForm.twig', [
+            'dokumenty' => $data ? \DBDokumenty::getMultipleById(explode(',', $data['a_dokumenty'])) : [],
+            'action' => $action,
+            'id' => $data ? $data['a_id'] : null,
+            'jmeno' => $_POST['jmeno'] ?? $data['a_jmeno'] ?? '',
+            'kde' => $_POST['kde'] ?? $data['a_kde'] ?? '',
+            'info' => $_POST['info'] ?? $data['a_info'] ?? '',
+            'od' => $_POST['od'] ?? $data['a_od'] ?? '',
+            'do' => $_POST['do'] ?? $data['a_do'] ?? '',
+            'kapacita' => $_POST['kapacita'] ?? $data['a_kapacita'] ?? '',
+            'lock' => $_POST['lock'] ?? $data['a_lock'] ?? '',
+            'visible' => $_POST['visible'] ?? $data['a_visible'] ?? ''
+        ]);
     }
 
     public static function editPost($id)
@@ -55,12 +85,6 @@ class Akce
         if (!($data = \DBAkce::getSingleAkce($id))) {
             \Message::warning('Akce s takovým ID neexistuje');
             \Redirect::to('/admin/akce');
-        }
-
-        $form = static::checkData();
-        if (!$form->isValid()) {
-            \Message::warning($form->getMessages());
-            return static::displayForm('edit', $data);
         }
 
         $od = new \Date($_POST['od'] ?? null);
@@ -202,37 +226,5 @@ class Akce
             );
         }
         \Redirect::to('/admin/akce/dokumenty/' . $id);
-    }
-
-    private static function displayForm($action, $data = [])
-    {
-        \Render::twig('Admin/AkceForm.twig', [
-            'dokumenty' => $data ? \DBDokumenty::getMultipleById(explode(',', $data['a_dokumenty'])) : [],
-            'action' => $action,
-            'id' => $data ? $data['a_id'] : null,
-            'jmeno' => $_POST['jmeno'] ?? $data['a_jmeno'] ?? '',
-            'kde' => $_POST['kde'] ?? $data['a_kde'] ?? '',
-            'info' => $_POST['info'] ?? $data['a_info'] ?? '',
-            'od' => $_POST['od'] ?? $data['a_od'] ?? '',
-            'do' => $_POST['do'] ?? $data['a_do'] ?? '',
-            'kapacita' => $_POST['kapacita'] ?? $data['a_kapacita'] ?? '',
-            'lock' => $_POST['lock'] ?? $data['a_lock'] ?? '',
-            'visible' => $_POST['visible'] ?? $data['a_visible'] ?? ''
-        ]);
-    }
-
-    private static function checkData(): \Form
-    {
-        $od = new \Date($_POST['od'] ?? null);
-        $do = new \Date($_POST['do'] ?? null);
-
-        $form = new \Form();
-        $form->checkDate((string) $od, 'Špatný formát data ("Od")');
-        if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
-            $form->checkDate((string) $do, 'Špatný formát data ("Do")');
-        }
-        $form->checkNumeric($_POST['kapacita'], 'Kapacita musí být zadána číselně');
-
-        return $form;
     }
 }

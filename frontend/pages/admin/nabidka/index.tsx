@@ -1,51 +1,87 @@
 import * as React from 'react';
-import { Checkbox, Pagination } from '@mui/material';
+import { Checkbox, Container } from '@mui/material';
 import { DateRange } from 'components/DateRange';
 import { NextLinkComposed } from 'components/Link';
-import { useReservationListQuery, useToggleReservationVisibleMutation } from 'lib/graphql';
-import { Dropdown } from 'components/Dropdown';
+import { useDeleteReservationMutation, useReservationListQuery, useToggleReservationVisibleMutation } from 'lib/graphql';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import EditIcon from '@mui/icons-material/Edit';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { DeleteButton } from 'components/DeleteButton';
+import { useRouter } from 'next/router';
 
 export default function ReservationAdminList() {
+  const router = useRouter();
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(0);
-  const { data, refetch } = useReservationListQuery({
-    limit, offset: (page - 1) * limit,
-  });
-  const { mutate: toggleVisible } = useToggleReservationVisibleMutation({
+  const { data, refetch } = useReservationListQuery({ limit, offset: page * limit });
+  const { mutateAsync: toggleVisible } = useToggleReservationVisibleMutation({
     onSuccess: () => refetch(),
   });
-  const total = data?.nabidkas?.totalCount || 0;
+  const { mutateAsync: doDelete } = useDeleteReservationMutation({
+    onSuccess: () => refetch(),
+  });
 
-  return <>
+  const rowCount = data?.nabidkas?.totalCount || 0;
+  const [rowCountState, setRowCountState] = React.useState(rowCount);
+  React.useEffect(() => {
+    setRowCountState((prev) => rowCount !== undefined ? rowCount : prev);
+  }, [rowCount]);
+
+  return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
     <NextLinkComposed href="/admin/nabidka/add" className="btn btn-primary">Nová nabídka</NextLinkComposed>
-    <table>
-      <thead>
-        <tr>
-          <th>Trenér</th>
-          <th>Datum</th>
-          <th>Viditelný</th>
-        </tr>
-      </thead>
-      <tbody>
-        {data?.nabidkas?.nodes?.map((a) => <tr key={a.nId}>
-          <td>
-            <Dropdown
-              button={<>{a.userByNTrener?.uJmeno} {a.userByNTrener?.uPrijmeni}</>}
-              options={[
-                { title: 'Upravit', href: `/admin/nabidka/edit/${a.nId}` },
-                { title: 'Upravit lekce', href: `/admin/nabidka/detail/${a.nId}` },
-                { title: 'Duplikovat', href: `/admin/nabidka/duplicate/${a.nId}` },
-                { title: 'Odstranit', href: `/admin/nabidka/remove/${a.nId}` },
-              ]}
-            />
-          </td>
-          <td><DateRange from={a.nOd} to={a.nDo} /></td>
-          <td>
-            <Checkbox checked={a.nVisible} onChange={() => toggleVisible({ id: a.nId, visible: !a.nVisible })} />
-          </td>
-        </tr>)}
-      </tbody>
-    </table>
-    <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
-  </>;
+
+    <DataGrid
+      page={page}
+      onPageChange={setPage}
+      pageSize={limit}
+      rowsPerPageOptions={[limit]}
+      rowCount={rowCountState}
+      pagination
+      paginationMode="server"
+      autoHeight={true}
+      getRowId={row => row.nId}
+      rows={data?.nabidkas?.nodes || []}
+      columns={[
+        {
+          field: 'actions',
+          type: 'actions',
+          getActions: ({ id }) => [
+            <GridActionsCellItem key="edit"
+              icon={<EditIcon />}
+              onClick={() => router.push(`/admin/nabidka/edit/${id}`)}
+              label="Upravit"
+            />,
+            <GridActionsCellItem key="edit-lessons"
+              icon={<EditIcon />}
+              onClick={() => router.push(`/admin/nabidka/detail/${id}`)}
+              label="Upravit lekce"
+            />,
+            <GridActionsCellItem key="duplicate"
+              icon={<ContentCopyIcon />}
+              onClick={() => router.push(`/admin/nabidka/duplicate/${id}`)}
+              label="Duplikovat"
+            />,
+            <DeleteButton
+              key="delete" title="smazat nabídku"
+              params={{ id: id.toString() }} onDelete={doDelete}
+            />,
+          ], flex: 1,
+        },
+        {
+          field: 'userByNTrener', headerName: 'Trenér', flex: 1,
+          renderCell: ({ row }) => `${row.userByNTrener?.uJmeno} ${row.userByNTrener?.uPrijmeni}`,
+        },
+        {
+          field: 'nOd', headerName: 'Datum', flex: 1,
+          renderCell: ({ row }) => <DateRange from={row.nOd} to={row.nDo} />,
+        },
+        {
+          field: 'nVisible', headerName: 'Viditelný', flex: 1,
+          renderCell: ({ row }) => (
+            <Checkbox checked={row.nVisible} onChange={() => toggleVisible({ id: row.nId, visible: !row.nVisible })} />
+          ),
+        },
+      ]}
+    />
+  </Container>;
 }

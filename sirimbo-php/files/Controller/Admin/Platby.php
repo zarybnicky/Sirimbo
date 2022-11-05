@@ -119,7 +119,7 @@ class Platby
         return $out;
     }
 
-    public static function getFromPost($id = null)
+    public static function getFromPost()
     {
         $item = new \PlatbyItem(
             null,

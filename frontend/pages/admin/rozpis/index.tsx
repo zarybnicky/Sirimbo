@@ -58,7 +58,7 @@ export default function RozpisAdminList() {
             />,
             <GridActionsCellItem key="duplicate"
               icon={<ContentCopyIcon />}
-              onClick={() => router.push(`/admin/rozpis/detail/${id}`)}
+              onClick={() => router.push(`/admin/rozpis/duplicate/${id}`)}
               label="Duplikovat"
             />,
             <DeleteButton

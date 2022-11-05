@@ -1,27 +1,6 @@
 <?php
 class DBSkupiny extends Database
 {
-    public static function addChild($sid, $gid)
-    {
-        self::query(
-            "INSERT INTO platby_group_skupina
-            (pgs_id_skupina,pgs_id_group) VALUES ('?','?')
-            ON CONFLICT (pgs_id_skupina,pgs_id_group) DO NOTHING",
-            $sid,
-            $gid,
-        );
-    }
-
-    public static function removeChild($sid, $gid)
-    {
-        self::query(
-            "DELETE FROM platby_group_skupina
-            WHERE pgs_id_group='?' AND pgs_id_skupina='?'",
-            $gid,
-            $sid,
-        );
-    }
-
     public static function getSingleWithGroups($id)
     {
         $res = self::query(

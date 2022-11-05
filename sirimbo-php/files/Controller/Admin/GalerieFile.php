@@ -22,11 +22,19 @@ class GalerieFile
             \Message::warning('Takový soubor neexistuje!');
             \Redirect::to($_SERVER['HTTP_REFERER']);
         }
-        $form = static::checkData();
+
+        $form = new \Form();
+        $form->checkNotEmpty($_POST['name'], 'Zadejte prosím nějaký popis');
+        $form->checkBool(
+            $_POST['parent'] > 0 && is_numeric($_POST['parent'])
+            && \DBGalerie::getSingleDir($_POST['parent']),
+            'Zadaná nadsložka není platná',
+        );
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
             return static::displayForm($id);
         }
+
         $parent = \DBGalerie::getSingleDir($_POST['parent']);
         $newPath = Galerie::sanitizePathname(
             Galerie::getCanonicalName(
@@ -153,17 +161,5 @@ class GalerieFile
                 \DBGalerie::getDirs()
             ),
         ]);
-    }
-
-    private static function checkData(): \Form
-    {
-        $form = new \Form();
-        $form->checkNotEmpty($_POST['name'], 'Zadejte prosím nějaký popis');
-        $form->checkBool(
-            $_POST['parent'] > 0 && is_numeric($_POST['parent'])
-            && \DBGalerie::getSingleDir($_POST['parent']),
-            'Zadaná nadsložka není platná',
-        );
-        return $form;
     }
 }

@@ -55,6 +55,7 @@ export default function GalleryDirectoryList() {
   return <>
     <NextLinkComposed href="/admin/galerie/file/upload" className="btn btn-outline-primary">Přidat fotky</NextLinkComposed>
     <NextLinkComposed href="/admin/galerie/directory/add" className="btn btn-outline-primary">Přidat složku</NextLinkComposed>
+
     <table>
       <thead><tr><th>Složka</th><th>Skrytá</th></tr></thead>
       <tbody>

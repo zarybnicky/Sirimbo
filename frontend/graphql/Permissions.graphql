@@ -1,9 +1,0 @@
-query PermissionList {
-  permissions {
-    nodes {
-      peId
-      peName
-      peDescription
-    }
-  }
-}

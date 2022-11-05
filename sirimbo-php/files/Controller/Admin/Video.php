@@ -87,11 +87,14 @@ class Video
     public static function addPost()
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        $form = static::checkData();
+
+        $form = new \Form();
+        $form->checkNotEmpty($_POST['uri'], 'Zadejce prosím ID videa');
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
             return static::displayForm('add');
         }
+
         \DBVideo::add(
             $_POST['uri'],
             $_POST['title'],
@@ -119,11 +122,7 @@ class Video
             \Message::warning('Článek s takovým ID neexistuje');
             \Redirect::to('/admin/aktuality');
         }
-        $form = static::checkData();
-        if (!$form->isValid()) {
-            \Message::warning($form->getMessages());
-            return static::displayForm('edit', $data);
-        }
+
         \DBVideo::edit(
             $id,
             $_POST['uri'],
@@ -166,12 +165,5 @@ class Video
             'desc' => $_POST['desc'] ?? $data['v_description'] ?? '',
             'playlist' => $_POST['playlist'] ?? $data['v_playlist'] ?? '',
         ]);
-    }
-
-    protected static function checkData(): \Form
-    {
-        $form = new \Form();
-        $form->checkNotEmpty($_POST['uri'], 'Zadejce prosím ID videa');
-        return $form;
     }
 }

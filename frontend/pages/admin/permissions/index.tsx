@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { NextLinkComposed } from 'components/Link';
-import { useDeleteRoleMutation, usePermissionListQuery } from 'lib/graphql';
+import { useDeleteRoleMutation, useRoleListQuery } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
@@ -11,7 +11,7 @@ import { DeleteButton } from 'components/DeleteButton';
 export default function PermissionAdminList() {
   useRequireUserLoggedIn();
   const router = useRouter();
-  const { data, refetch } = usePermissionListQuery();
+  const { data, refetch } = useRoleListQuery();
   const { mutateAsync: doDelete } = useDeleteRoleMutation({
     onSuccess: () => refetch(),
   });

@@ -12,7 +12,12 @@ class Rozpis
     public static function addPost()
     {
         \Permissions::checkError('rozpis', P_OWNED);
-        $form = static::checkData();
+
+        $datum = new \Date($_POST['datum'] ?? null);
+
+        $form = new \Form();
+        $form->checkNumeric($_POST['trener'], 'Neplatný trenér');
+        $form->checkDate((string) $datum, 'Neplatný formát data');
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
             return static::displayForm('add');
@@ -47,11 +52,7 @@ class Rozpis
             \Redirect::to('/admin/rozpis');
         }
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
-        $form = static::checkData();
-        if (!$form->isValid()) {
-            \Message::warning($form->getMessages());
-            return static::displayForm('edit', $data);
-        }
+
         \DBRozpis::editSchedule(
             $id,
             $_POST['trener'],
@@ -111,15 +112,5 @@ class Rozpis
             'visible' => $_POST['visible'] ?? ($data ? $data['r_visible'] : ''),
             'lock' => $_POST['lock'] ?? ($data ? $data['r_lock'] : '')
         ]);
-    }
-
-    private static function checkData(): \Form
-    {
-        $datum = new \Date($_POST['datum'] ?? null);
-
-        $f = new \Form();
-        $f->checkNumeric($_POST['trener'], 'Neplatný trenér');
-        $f->checkDate((string) $datum, 'Neplatný formát data');
-        return $f;
     }
 }

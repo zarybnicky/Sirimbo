@@ -12,7 +12,20 @@ class Nabidka
     public static function addPost()
     {
         \Permissions::checkError('nabidka', P_OWNED);
-        $form = static::checkData();
+
+        $od = new \Date($_POST['od'] ?? null);
+        $do = new \Date($_POST['do'] ?? null);
+        if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
+            $do = $od;
+        }
+
+        $form = new \Form();
+        $form->checkNumeric($_POST['trener'], 'ID trenéra musí být číselné');
+        $form->checkNumeric($_POST['pocet_hod'], 'Počet hodin prosím zadejte čísly');
+        $form->checkDate((string) $od, 'Zadejte prosím platné datum ("Od")');
+        if ($do->isValid()) {
+            $form->checkDate((string) $do, 'Zadejte prosím platné datum ("Do")');
+        }
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
             return static::displayForm('add');
@@ -59,11 +72,7 @@ class Nabidka
             \Redirect::to($_POST['returnURI'] ?? '/admin/nabidka');
         }
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
-        $form = static::checkData();
-        if (!$form->isValid()) {
-            \Message::warning($form->getMessages());
-            return static::displayForm('edit', $data);
-        }
+
         $od = new \Date($_POST['od'] ?? null);
         $do = new \Date($_POST['do'] ?? null);
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
@@ -149,24 +158,5 @@ class Nabidka
             'visible' => $_POST['visible'] ?? $data['n_visible'] ?? false,
             'lock' => $_POST['lock'] ?? $data['n_lock'] ?? ''
         ]);
-    }
-
-    private static function checkData(): \Form
-    {
-        $od = new \Date($_POST['od'] ?? null);
-        $do = new \Date($_POST['do'] ?? null);
-        if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
-            $do = $od;
-        }
-
-        $f = new \Form();
-        $f->checkNumeric($_POST['trener'], 'ID trenéra musí být číselné');
-        $f->checkNumeric($_POST['pocet_hod'], 'Počet hodin prosím zadejte čísly');
-        $f->checkDate((string) $od, 'Zadejte prosím platné datum ("Od")');
-        if ($do->isValid()) {
-            $f->checkDate((string) $do, 'Zadejte prosím platné datum ("Do")');
-        }
-
-        return $f;
     }
 }

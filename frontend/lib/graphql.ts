@@ -10155,6 +10155,13 @@ export type CohortMembersQueryVariables = Exact<{
 
 export type CohortMembersQuery = { __typename?: 'Query', members: { __typename?: 'MembersConnection', nodes: Array<{ __typename?: 'Member', uJmeno: string | null, uPrijmeni: string | null, uRodneCislo: string | null, uTelefon: string | null, uEmail: string | null }> } | null };
 
+export type DeleteCohortMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type DeleteCohortMutation = { __typename?: 'Mutation', deleteSkupiny: { __typename: 'DeleteSkupinyPayload' } | null };
+
 export type CoupleListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -10337,10 +10344,41 @@ export type MenuQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MenuQuery = { __typename?: 'Query', parameter: { __typename?: 'Parameter', paValue: string } | null };
 
-export type PermissionListQueryVariables = Exact<{ [key: string]: never; }>;
+export type PaymentGroupFragment = { __typename?: 'PlatbyGroup', pgId: string, pgName: string, pgType: any, pgDescription: string, pgBase: string };
+
+export type PaymentGroupListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PermissionListQuery = { __typename?: 'Query', permissions: { __typename?: 'PermissionsConnection', nodes: Array<{ __typename?: 'Permission', peId: string, peName: string, peDescription: string }> } | null };
+export type PaymentGroupListQuery = { __typename?: 'Query', platbyGroups: { __typename?: 'PlatbyGroupsConnection', totalCount: number, nodes: Array<{ __typename?: 'PlatbyGroup', pgId: string, pgName: string, pgType: any, pgDescription: string, pgBase: string }> } | null };
+
+export type PaymentGroupQueryVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type PaymentGroupQuery = { __typename?: 'Query', platbyGroup: { __typename?: 'PlatbyGroup', pgId: string, pgName: string, pgType: any, pgDescription: string, pgBase: string } | null };
+
+export type CreatePaymentGroupMutationVariables = Exact<{
+  input: PlatbyGroupInput;
+}>;
+
+
+export type CreatePaymentGroupMutation = { __typename?: 'Mutation', createPlatbyGroup: { __typename: 'CreatePlatbyGroupPayload' } | null };
+
+export type UpdatePaymentGroupMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+  patch: PlatbyGroupPatch;
+}>;
+
+
+export type UpdatePaymentGroupMutation = { __typename?: 'Mutation', updatePlatbyGroup: { __typename: 'UpdatePlatbyGroupPayload' } | null };
+
+export type DeletePaymentGroupMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type DeletePaymentGroupMutation = { __typename?: 'Mutation', deletePlatbyGroup: { __typename: 'DeletePlatbyGroupPayload' } | null };
 
 export type ReservationItemFragment = { __typename?: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null };
 
@@ -10370,10 +10408,26 @@ export type ToggleReservationVisibleMutationVariables = Exact<{
 
 export type ToggleReservationVisibleMutation = { __typename?: 'Mutation', updateNabidka: { __typename?: 'UpdateNabidkaPayload', nabidka: { __typename?: 'Nabidka', nId: string } | null } | null };
 
+export type DeleteReservationMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type DeleteReservationMutation = { __typename?: 'Mutation', deleteNabidka: { __typename: 'DeleteNabidkaPayload' } | null };
+
+export type RoleFragment = { __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number };
+
+export type RoleQueryVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type RoleQuery = { __typename?: 'Query', permission: { __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null };
+
 export type RoleListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type RoleListQuery = { __typename?: 'Query', permissions: { __typename?: 'PermissionsConnection', nodes: Array<{ __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number }> } | null };
+export type RoleListQuery = { __typename?: 'Query', permissions: { __typename?: 'PermissionsConnection', totalCount: number, nodes: Array<{ __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number }> } | null };
 
 export type CreateRoleMutationVariables = Exact<{
   input: PermissionInput;
@@ -10546,6 +10600,30 @@ export const ArticleFragmentDoc = `
   }
 }
     `;
+export const RoleFragmentDoc = `
+    fragment Role on Permission {
+  peAkce
+  peAnkety
+  peAktuality
+  peDescription
+  peDokumenty
+  peGalerie
+  peId
+  peKonzole
+  peInzerce
+  peNabidka
+  peMain
+  peName
+  peNastenka
+  peNovinky
+  pePary
+  pePermissions
+  pePlatby
+  peRozpis
+  peSkupiny
+  peUsers
+}
+    `;
 export const UserPartialFragmentDoc = `
     fragment UserPartial on User {
   uId
@@ -10580,29 +10658,10 @@ export const UserPartialFragmentDoc = `
   uConscriptionNumber
   uCity
   permissionByUGroup {
-    peAkce
-    peAnkety
-    peAktuality
-    peDescription
-    peDokumenty
-    peGalerie
-    peId
-    peKonzole
-    peInzerce
-    peNabidka
-    peMain
-    peName
-    peNastenka
-    peNovinky
-    pePary
-    pePermissions
-    pePlatby
-    peRozpis
-    peSkupiny
-    peUsers
+    ...Role
   }
 }
-    `;
+    ${RoleFragmentDoc}`;
 export const CouplePartialFragmentDoc = `
     fragment CouplePartial on Pary {
   pId
@@ -10656,6 +10715,15 @@ export const PageFragmentDoc = `
   content
   createdAt
   updatedAt
+}
+    `;
+export const PaymentGroupFragmentDoc = `
+    fragment PaymentGroup on PlatbyGroup {
+  pgId
+  pgName
+  pgType
+  pgDescription
+  pgBase
 }
     `;
 export const ReservationItemFragmentDoc = `
@@ -11035,6 +11103,25 @@ useCohortMembersQuery.getKey = (variables: CohortMembersQueryVariables) => ['Coh
 ;
 
 useCohortMembersQuery.fetcher = (variables: CohortMembersQueryVariables, options?: RequestInit['headers']) => fetcher<CohortMembersQuery, CohortMembersQueryVariables>(CohortMembersDocument, variables, options);
+export const DeleteCohortDocument = `
+    mutation DeleteCohort($id: BigInt!) {
+  deleteSkupiny(input: {sId: $id}) {
+    __typename
+  }
+}
+    `;
+export const useDeleteCohortMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<DeleteCohortMutation, TError, DeleteCohortMutationVariables, TContext>) =>
+    useMutation<DeleteCohortMutation, TError, DeleteCohortMutationVariables, TContext>(
+      ['DeleteCohort'],
+      (variables?: DeleteCohortMutationVariables) => fetcher<DeleteCohortMutation, DeleteCohortMutationVariables>(DeleteCohortDocument, variables)(),
+      options
+    );
+useDeleteCohortMutation.getKey = () => ['DeleteCohort'];
+
+useDeleteCohortMutation.fetcher = (variables: DeleteCohortMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteCohortMutation, DeleteCohortMutationVariables>(DeleteCohortDocument, variables, options);
 export const CoupleListDocument = `
     query CoupleList {
   activeCouples {
@@ -11716,36 +11803,118 @@ useMenuQuery.getKey = (variables?: MenuQueryVariables) => variables === undefine
 ;
 
 useMenuQuery.fetcher = (variables?: MenuQueryVariables, options?: RequestInit['headers']) => fetcher<MenuQuery, MenuQueryVariables>(MenuDocument, variables, options);
-export const PermissionListDocument = `
-    query PermissionList {
-  permissions {
+export const PaymentGroupListDocument = `
+    query PaymentGroupList {
+  platbyGroups {
+    totalCount
     nodes {
-      peId
-      peName
-      peDescription
+      ...PaymentGroup
     }
   }
 }
-    `;
-export const usePermissionListQuery = <
-      TData = PermissionListQuery,
+    ${PaymentGroupFragmentDoc}`;
+export const usePaymentGroupListQuery = <
+      TData = PaymentGroupListQuery,
       TError = unknown
     >(
-      variables?: PermissionListQueryVariables,
-      options?: UseQueryOptions<PermissionListQuery, TError, TData>
+      variables?: PaymentGroupListQueryVariables,
+      options?: UseQueryOptions<PaymentGroupListQuery, TError, TData>
     ) =>
-    useQuery<PermissionListQuery, TError, TData>(
-      variables === undefined ? ['PermissionList'] : ['PermissionList', variables],
-      fetcher<PermissionListQuery, PermissionListQueryVariables>(PermissionListDocument, variables),
+    useQuery<PaymentGroupListQuery, TError, TData>(
+      variables === undefined ? ['PaymentGroupList'] : ['PaymentGroupList', variables],
+      fetcher<PaymentGroupListQuery, PaymentGroupListQueryVariables>(PaymentGroupListDocument, variables),
       options
     );
-usePermissionListQuery.document = PermissionListDocument;
+usePaymentGroupListQuery.document = PaymentGroupListDocument;
 
 
-usePermissionListQuery.getKey = (variables?: PermissionListQueryVariables) => variables === undefined ? ['PermissionList'] : ['PermissionList', variables];
+usePaymentGroupListQuery.getKey = (variables?: PaymentGroupListQueryVariables) => variables === undefined ? ['PaymentGroupList'] : ['PaymentGroupList', variables];
 ;
 
-usePermissionListQuery.fetcher = (variables?: PermissionListQueryVariables, options?: RequestInit['headers']) => fetcher<PermissionListQuery, PermissionListQueryVariables>(PermissionListDocument, variables, options);
+usePaymentGroupListQuery.fetcher = (variables?: PaymentGroupListQueryVariables, options?: RequestInit['headers']) => fetcher<PaymentGroupListQuery, PaymentGroupListQueryVariables>(PaymentGroupListDocument, variables, options);
+export const PaymentGroupDocument = `
+    query PaymentGroup($id: BigInt!) {
+  platbyGroup(pgId: $id) {
+    ...PaymentGroup
+  }
+}
+    ${PaymentGroupFragmentDoc}`;
+export const usePaymentGroupQuery = <
+      TData = PaymentGroupQuery,
+      TError = unknown
+    >(
+      variables: PaymentGroupQueryVariables,
+      options?: UseQueryOptions<PaymentGroupQuery, TError, TData>
+    ) =>
+    useQuery<PaymentGroupQuery, TError, TData>(
+      ['PaymentGroup', variables],
+      fetcher<PaymentGroupQuery, PaymentGroupQueryVariables>(PaymentGroupDocument, variables),
+      options
+    );
+usePaymentGroupQuery.document = PaymentGroupDocument;
+
+
+usePaymentGroupQuery.getKey = (variables: PaymentGroupQueryVariables) => ['PaymentGroup', variables];
+;
+
+usePaymentGroupQuery.fetcher = (variables: PaymentGroupQueryVariables, options?: RequestInit['headers']) => fetcher<PaymentGroupQuery, PaymentGroupQueryVariables>(PaymentGroupDocument, variables, options);
+export const CreatePaymentGroupDocument = `
+    mutation CreatePaymentGroup($input: PlatbyGroupInput!) {
+  createPlatbyGroup(input: {platbyGroup: $input}) {
+    __typename
+  }
+}
+    `;
+export const useCreatePaymentGroupMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreatePaymentGroupMutation, TError, CreatePaymentGroupMutationVariables, TContext>) =>
+    useMutation<CreatePaymentGroupMutation, TError, CreatePaymentGroupMutationVariables, TContext>(
+      ['CreatePaymentGroup'],
+      (variables?: CreatePaymentGroupMutationVariables) => fetcher<CreatePaymentGroupMutation, CreatePaymentGroupMutationVariables>(CreatePaymentGroupDocument, variables)(),
+      options
+    );
+useCreatePaymentGroupMutation.getKey = () => ['CreatePaymentGroup'];
+
+useCreatePaymentGroupMutation.fetcher = (variables: CreatePaymentGroupMutationVariables, options?: RequestInit['headers']) => fetcher<CreatePaymentGroupMutation, CreatePaymentGroupMutationVariables>(CreatePaymentGroupDocument, variables, options);
+export const UpdatePaymentGroupDocument = `
+    mutation UpdatePaymentGroup($id: BigInt!, $patch: PlatbyGroupPatch!) {
+  updatePlatbyGroup(input: {pgId: $id, patch: $patch}) {
+    __typename
+  }
+}
+    `;
+export const useUpdatePaymentGroupMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<UpdatePaymentGroupMutation, TError, UpdatePaymentGroupMutationVariables, TContext>) =>
+    useMutation<UpdatePaymentGroupMutation, TError, UpdatePaymentGroupMutationVariables, TContext>(
+      ['UpdatePaymentGroup'],
+      (variables?: UpdatePaymentGroupMutationVariables) => fetcher<UpdatePaymentGroupMutation, UpdatePaymentGroupMutationVariables>(UpdatePaymentGroupDocument, variables)(),
+      options
+    );
+useUpdatePaymentGroupMutation.getKey = () => ['UpdatePaymentGroup'];
+
+useUpdatePaymentGroupMutation.fetcher = (variables: UpdatePaymentGroupMutationVariables, options?: RequestInit['headers']) => fetcher<UpdatePaymentGroupMutation, UpdatePaymentGroupMutationVariables>(UpdatePaymentGroupDocument, variables, options);
+export const DeletePaymentGroupDocument = `
+    mutation DeletePaymentGroup($id: BigInt!) {
+  deletePlatbyGroup(input: {pgId: $id}) {
+    __typename
+  }
+}
+    `;
+export const useDeletePaymentGroupMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<DeletePaymentGroupMutation, TError, DeletePaymentGroupMutationVariables, TContext>) =>
+    useMutation<DeletePaymentGroupMutation, TError, DeletePaymentGroupMutationVariables, TContext>(
+      ['DeletePaymentGroup'],
+      (variables?: DeletePaymentGroupMutationVariables) => fetcher<DeletePaymentGroupMutation, DeletePaymentGroupMutationVariables>(DeletePaymentGroupDocument, variables)(),
+      options
+    );
+useDeletePaymentGroupMutation.getKey = () => ['DeletePaymentGroup'];
+
+useDeletePaymentGroupMutation.fetcher = (variables: DeletePaymentGroupMutationVariables, options?: RequestInit['headers']) => fetcher<DeletePaymentGroupMutation, DeletePaymentGroupMutationVariables>(DeletePaymentGroupDocument, variables, options);
 export const ReservationListDocument = `
     query ReservationList($limit: Int!, $offset: Int!) {
   nabidkas(first: $limit, offset: $offset, orderBy: [N_OD_DESC]) {
@@ -11824,34 +11993,61 @@ export const useToggleReservationVisibleMutation = <
 useToggleReservationVisibleMutation.getKey = () => ['ToggleReservationVisible'];
 
 useToggleReservationVisibleMutation.fetcher = (variables: ToggleReservationVisibleMutationVariables, options?: RequestInit['headers']) => fetcher<ToggleReservationVisibleMutation, ToggleReservationVisibleMutationVariables>(ToggleReservationVisibleDocument, variables, options);
-export const RoleListDocument = `
-    query RoleList {
-  permissions {
-    nodes {
-      peAkce
-      peAnkety
-      peAktuality
-      peDescription
-      peDokumenty
-      peGalerie
-      peId
-      peKonzole
-      peInzerce
-      peNabidka
-      peMain
-      peName
-      peNastenka
-      peNovinky
-      pePary
-      pePermissions
-      pePlatby
-      peRozpis
-      peSkupiny
-      peUsers
-    }
+export const DeleteReservationDocument = `
+    mutation DeleteReservation($id: BigInt!) {
+  deleteNabidka(input: {nId: $id}) {
+    __typename
   }
 }
     `;
+export const useDeleteReservationMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<DeleteReservationMutation, TError, DeleteReservationMutationVariables, TContext>) =>
+    useMutation<DeleteReservationMutation, TError, DeleteReservationMutationVariables, TContext>(
+      ['DeleteReservation'],
+      (variables?: DeleteReservationMutationVariables) => fetcher<DeleteReservationMutation, DeleteReservationMutationVariables>(DeleteReservationDocument, variables)(),
+      options
+    );
+useDeleteReservationMutation.getKey = () => ['DeleteReservation'];
+
+useDeleteReservationMutation.fetcher = (variables: DeleteReservationMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteReservationMutation, DeleteReservationMutationVariables>(DeleteReservationDocument, variables, options);
+export const RoleDocument = `
+    query Role($id: BigInt!) {
+  permission(peId: $id) {
+    ...Role
+  }
+}
+    ${RoleFragmentDoc}`;
+export const useRoleQuery = <
+      TData = RoleQuery,
+      TError = unknown
+    >(
+      variables: RoleQueryVariables,
+      options?: UseQueryOptions<RoleQuery, TError, TData>
+    ) =>
+    useQuery<RoleQuery, TError, TData>(
+      ['Role', variables],
+      fetcher<RoleQuery, RoleQueryVariables>(RoleDocument, variables),
+      options
+    );
+useRoleQuery.document = RoleDocument;
+
+
+useRoleQuery.getKey = (variables: RoleQueryVariables) => ['Role', variables];
+;
+
+useRoleQuery.fetcher = (variables: RoleQueryVariables, options?: RequestInit['headers']) => fetcher<RoleQuery, RoleQueryVariables>(RoleDocument, variables, options);
+export const RoleListDocument = `
+    query RoleList {
+  permissions {
+    totalCount
+    nodes {
+      ...Role
+    }
+  }
+}
+    ${RoleFragmentDoc}`;
 export const useRoleListQuery = <
       TData = RoleListQuery,
       TError = unknown

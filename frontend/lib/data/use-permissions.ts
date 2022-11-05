@@ -26,13 +26,11 @@ export enum PermissionKey {
   peMain,
 };
 
-type PermissionMap = { [key in keyof typeof PermissionKey]: PermissionLevel };
-
-export const defaultPermissions: PermissionMap = {
+export const defaultPermissions: { [key in keyof typeof PermissionKey]: PermissionLevel } = {
   peAkce: 1,
-  peAktuality: 1,
+  peAktuality: 2,
   peDokumenty: 1,
-  peGalerie: 1,
+  peGalerie: 2,
   peNabidka: 1,
   peNastenka: 1,
   peNovinky: 1,
@@ -40,9 +38,43 @@ export const defaultPermissions: PermissionMap = {
   pePlatby: 1,
   pePermissions: 1,
   peRozpis: 1,
-  peSkupiny: 1,
+  peSkupiny: 2,
   peUsers: 1,
   peMain: 2,
+};
+
+export const allowedPermissions: { [key in keyof typeof PermissionKey]: PermissionLevel[] } = {
+  peAkce: [1, 2, 4, 8, 16],
+  peAktuality: [2, 8, 16],
+  peDokumenty: [1, 4, 8, 16],
+  peGalerie: [2, 8, 16],
+  peNabidka: [1, 2, 4, 8, 16],
+  peNastenka: [1, 2, 8, 16],
+  peNovinky: [1, 2, 8, 16],
+  pePary: [1, 2, 16],
+  pePlatby: [1, 16],
+  pePermissions: [1, 16],
+  peRozpis: [1, 2, 4, 8, 16],
+  peSkupiny: [1, 2, 16],
+  peUsers: [1, 2, 8, 16],
+  peMain: [2],
+};
+
+export const permissionLabels: { [key in keyof typeof PermissionKey]: string } = {
+  peAkce: "Akce",
+  peAktuality: "Aktuality",
+  peDokumenty: "Dokumenty",
+  peGalerie: "Galerie",
+  peNabidka: "Nabídky",
+  peNastenka: "Nástěnka",
+  peNovinky: "Novinky",
+  pePary: "Páry",
+  pePlatby: "Platby",
+  pePermissions: "Uživatelské role",
+  peRozpis: "Rozpisy",
+  peSkupiny: "Skupiny",
+  peUsers: "Uživatelé",
+  peMain: "Veřejná sekce",
 };
 
 export const usePermissions = () => {
@@ -51,7 +83,7 @@ export const usePermissions = () => {
 
   return {
     hasPermission(key: PermissionKey, level: PermissionLevel) {
-      const perm = PermissionKey[key] as keyof PermissionMap;
+      const perm = PermissionKey[key] as keyof typeof PermissionKey;
       return perms[perm] >= level;
     },
     canEditSchedule(schedule: ScheduleFragment) {

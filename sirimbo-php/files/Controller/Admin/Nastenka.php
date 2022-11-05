@@ -12,7 +12,10 @@ class Nastenka
     public static function addPost()
     {
         \Permissions::checkError('nastenka', P_OWNED);
-        $form = static::checkData();
+
+        $form = new \Form();
+        $form->checkNotEmpty($_POST['nadpis'], 'Zadejte nadpis');
+        $form->checkNotEmpty($_POST['text'], 'Zadejte nějaký text');
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
             return static::renderForm('add');
@@ -67,11 +70,6 @@ class Nastenka
             \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
-        $form = static::checkData();
-        if (!$form->isValid()) {
-            \Message::warning($form->getMessages());
-            return static::renderForm('edit');
-        }
 
         $skupiny_old = [];
         foreach (\DBNastenka::getNastenkaSkupiny($id) as $skupina) {
@@ -118,13 +116,5 @@ class Nastenka
             'text' => $_POST['text'] ?? '',
             'lock' => $_POST['lock'] ?? ''
         ]);
-    }
-
-    private static function checkData(): \Form
-    {
-        $f = new \Form();
-        $f->checkNotEmpty($_POST['nadpis'], 'Zadejte nadpis');
-        $f->checkNotEmpty($_POST['text'], 'Zadejte nějaký text');
-        return $f;
     }
 }

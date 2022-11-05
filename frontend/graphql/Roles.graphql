@@ -1,26 +1,37 @@
+fragment Role on Permission {
+  peAkce
+  peAnkety
+  peAktuality
+  peDescription
+  peDokumenty
+  peGalerie
+  peId
+  peKonzole
+  peInzerce
+  peNabidka
+  peMain
+  peName
+  peNastenka
+  peNovinky
+  pePary
+  pePermissions
+  pePlatby
+  peRozpis
+  peSkupiny
+  peUsers
+}
+
+query Role($id: BigInt!) {
+  permission(peId: $id) {
+    ...Role
+  }
+}
+
 query RoleList {
   permissions {
+    totalCount
     nodes {
-      peAkce
-      peAnkety
-      peAktuality
-      peDescription
-      peDokumenty
-      peGalerie
-      peId
-      peKonzole
-      peInzerce
-      peNabidka
-      peMain
-      peName
-      peNastenka
-      peNovinky
-      pePary
-      pePermissions
-      pePlatby
-      peRozpis
-      peSkupiny
-      peUsers
+      ...Role
     }
   }
 }

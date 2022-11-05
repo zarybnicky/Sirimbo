@@ -32,11 +32,19 @@ class GalerieDirectory
     public static function addPost()
     {
         \Permissions::checkError('galerie', P_OWNED);
-        $form = static::checkData();
+        $form = new \Form();
+        $form->checkNotEmpty($_POST['name'], 'Název složky nesmí být prázdný');
+        $form->checkBool(
+            $_POST['parent'] > 0
+            && is_numeric($_POST['parent'])
+            && \DBGalerie::getSingleDir($_POST['parent']),
+            'Zadaná nadsložka není platná',
+        );
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
             return static::displayForm('add');
         }
+
         $parent = \DBGalerie::getSingleDir($_POST['parent']);
         $dirPath = $parent['gd_path'] . DIRECTORY_SEPARATOR . Galerie::sanitizePathname($_POST['name']);
         mkdir($dirPath, 0777, true);
@@ -70,11 +78,7 @@ class GalerieDirectory
             \Message::warning('Taková složka neexistuje');
             \Redirect::to('/admin/galerie');
         }
-        $form = static::checkData();
-        if (!$form->isValid()) {
-            \Message::warning($form->getMessages());
-            return static::displayForm('edit');
-        }
+
         $parent = \DBGalerie::getSingleDir($_POST['parent']);
         $newPath = $parent['gd_path'] . DIRECTORY_SEPARATOR . Galerie::sanitizePathname(
             Galerie::getCanonicalName($_POST['name'])
@@ -146,18 +150,5 @@ class GalerieDirectory
             'parent' => $_POST['parent'] ?? '',
             'hidden' => $_POST['hidden'] ?? ''
         ]);
-    }
-
-    protected static function checkData()
-    {
-        $form = new \Form();
-        $form->checkNotEmpty($_POST['name'], 'Název složky nesmí být prázdný');
-        $form->checkBool(
-            $_POST['parent'] > 0
-            && is_numeric($_POST['parent'])
-            && \DBGalerie::getSingleDir($_POST['parent']),
-            'Zadaná nadsložka není platná',
-        );
-        return $form;
     }
 }

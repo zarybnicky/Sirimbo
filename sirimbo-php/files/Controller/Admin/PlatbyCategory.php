@@ -32,10 +32,6 @@ class PlatbyCategory
             $data['pc_archive'] ? '1' : '0',
             $data['pc_visible'] ? '1' : '0'
         );
-        $insertId = \DBPlatbyCategory::getInsertId();
-        foreach (\DBPlatbyCategory::getSingleWithGroups($id) as $group) {
-            \DBPlatbyGroup::addChild($group['pg_id'], $insertId);
-        }
         \Redirect::to('/admin/platby/structure/category');
     }
 
@@ -82,10 +78,6 @@ class PlatbyCategory
             $_POST['archive'] ? '1' : '0',
             $_POST['visible'] ? '1' : '0'
         );
-        $insertId = \DBPlatbyCategory::getInsertId();
-        foreach ($_POST['group'] ?? [] as $item) {
-            \DBPlatbyGroup::addChild($item, $insertId);
-        }
         \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/category');
     }
 
@@ -155,18 +147,6 @@ class PlatbyCategory
             $archive,
             $visible
         );
-
-        $groupsOld = array_column(\DBPlatbyCategory::getSingleWithGroups($id), 'pg_id');
-        $groupsNew = $_POST['group'] ?? [];
-        foreach (array_diff($groupsOld, $groupsNew) as $removed) {
-            \DBPlatbyGroup::removeChild($removed, $id);
-        }
-        foreach (array_diff($groupsNew, $groupsOld) as $added) {
-            \DBPlatbyGroup::addChild($added, $id);
-        }
-        if ($_GET['group']) {
-            \Redirect::to('/admin/platby/structure/group/edit/' . $_GET['group']);
-        }
         \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/category');
     }
 
@@ -205,27 +185,7 @@ class PlatbyCategory
         }
 
         $f = static::getLinkedObjects($id);
-        if ($_POST['action'] == 'unlink') {
-            $groupCount = count($f['groups']);
-            foreach ($f['groups'] as $data) {
-                \DBPlatbyGroup::removeChild($data['pg_id'], $id);
-            }
-
-            $itemCount = count($f['items']);
-            foreach ($f['items'] as $data) {
-                $raw = \DBPlatbyRaw::getSingle($data['pi_id_raw']);
-                \DBPlatbyRaw::update(
-                    $raw['pr_id'],
-                    stream_get_contents($raw['pr_raw']),
-                    $raw['pr_hash'],
-                    '0',
-                    '0'
-                );
-                \DBPlatbyItem::remove($data['pi_id']);
-            }
-            \Message::info("Spojení s $groupCount kategoriemi a s $itemCount platbami bylo odstraněno");
-            \Redirect::to('/admin/platby/structure/category/remove/' . $id);
-        } elseif ($_POST['action'] == 'archive') {
+        if ($_POST['action'] == 'archive') {
             \DBPlatbyCategory::update(
                 $id,
                 $data['pc_name'],
