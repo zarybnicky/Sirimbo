@@ -10225,14 +10225,14 @@ export type SubmitProspectFormMutationVariables = Exact<{
 
 export type SubmitProspectFormMutation = { __typename?: 'Mutation', prospectFormDancer: { __typename?: 'ProspectFormDancerPayload', clientMutationId: string | null } | null };
 
-export type UserPartialFragment = { __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uLevel: number, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, permissionByUGroup: { __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null };
+export type UserFragment = { __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string };
 
 export type CouplePartialFragment = { __typename?: 'Pary', pId: string, pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean };
 
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uLevel: number, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, permissionByUGroup: { __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null } | null };
+export type CurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, permissionByUGroup: { __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null } | null };
 
 export type LoginMutationVariables = Exact<{
   login: Scalars['String'];
@@ -10240,7 +10240,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginPayload', result: { __typename?: 'LoginRecord', usr: { __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uLevel: number, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, permissionByUGroup: { __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null } | null, couple: { __typename?: 'Pary', pId: string, pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean } | null } | null } | null };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginPayload', result: { __typename?: 'LoginRecord', usr: { __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, permissionByUGroup: { __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null } | null, couple: { __typename?: 'Pary', pId: string, pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean } | null } | null } | null };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -10571,21 +10571,19 @@ export type DeleteScheduleMutationVariables = Exact<{
 
 export type DeleteScheduleMutation = { __typename?: 'Mutation', deleteRozpi: { __typename: 'DeleteRozpiPayload' } | null };
 
-export type UserDetailFragment = { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uRodneCislo: string | null };
-
 export type UserQueryVariables = Exact<{
   id: Scalars['BigInt'];
 }>;
 
 
-export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uRodneCislo: string | null } | null };
+export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string } | null };
 
 export type UserListQueryVariables = Exact<{
   confirmed?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
-export type UserListQuery = { __typename?: 'Query', users: { __typename?: 'UsersConnection', nodes: Array<{ __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uLevel: number, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, permissionByUGroup: { __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null }> } | null };
+export type UserListQuery = { __typename?: 'Query', users: { __typename?: 'UsersConnection', totalCount: number, nodes: Array<{ __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string }> } | null };
 
 export type MemberListQueryVariables = Exact<{
   cohortId?: InputMaybe<Scalars['BigInt']>;
@@ -10602,6 +10600,21 @@ export type ConfirmUserMutationVariables = Exact<{
 
 
 export type ConfirmUserMutation = { __typename?: 'Mutation', confirmUser: { __typename: 'ConfirmUserPayload' } | null };
+
+export type CreateUserMutationVariables = Exact<{
+  input: UserInput;
+}>;
+
+
+export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename: 'CreateUserPayload' } | null };
+
+export type UpdateUserMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+  patch: UserPatch;
+}>;
+
+
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename: 'UpdateUserPayload' } | null };
 
 export type DeleteUserMutationVariables = Exact<{
   id: Scalars['BigInt'];
@@ -10685,32 +10698,8 @@ export const CohortFragmentDoc = `
   sColorRgb
 }
     `;
-export const RoleFragmentDoc = `
-    fragment Role on Permission {
-  peAkce
-  peAnkety
-  peAktuality
-  peDescription
-  peDokumenty
-  peGalerie
-  peId
-  peKonzole
-  peInzerce
-  peNabidka
-  peMain
-  peName
-  peNastenka
-  peNovinky
-  pePary
-  pePermissions
-  pePlatby
-  peRozpis
-  peSkupiny
-  peUsers
-}
-    `;
-export const UserPartialFragmentDoc = `
-    fragment UserPartial on User {
+export const UserFragmentDoc = `
+    fragment User on User {
   uId
   uLogin
   uJmeno
@@ -10723,7 +10712,6 @@ export const UserPartialFragmentDoc = `
   uSystem
   uLock
   uBan
-  uLevel
   uGroup
   uSkupina
   uTimestamp
@@ -10742,11 +10730,8 @@ export const UserPartialFragmentDoc = `
   uCreatedAt
   uConscriptionNumber
   uCity
-  permissionByUGroup {
-    ...Role
-  }
 }
-    ${RoleFragmentDoc}`;
+    `;
 export const CouplePartialFragmentDoc = `
     fragment CouplePartial on Pary {
   pId
@@ -10865,6 +10850,30 @@ export const ReservationFragmentDoc = `
   }
 }
     ${ReservationItemFragmentDoc}`;
+export const RoleFragmentDoc = `
+    fragment Role on Permission {
+  peAkce
+  peAnkety
+  peAktuality
+  peDescription
+  peDokumenty
+  peGalerie
+  peId
+  peKonzole
+  peInzerce
+  peNabidka
+  peMain
+  peName
+  peNastenka
+  peNovinky
+  pePary
+  pePermissions
+  pePlatby
+  peRozpis
+  peSkupiny
+  peUsers
+}
+    `;
 export const ScheduleItemFragmentDoc = `
     fragment ScheduleItem on RozpisItem {
   riOd
@@ -10929,16 +10938,6 @@ export const LessonFragmentDoc = `
       uPrijmeni
     }
   }
-}
-    `;
-export const UserDetailFragmentDoc = `
-    fragment UserDetail on User {
-  uId
-  uJmeno
-  uPrijmeni
-  uEmail
-  uTelefon
-  uRodneCislo
 }
     `;
 export const VideoSourceFragmentDoc = `
@@ -11441,10 +11440,14 @@ useSubmitProspectFormMutation.fetcher = (variables: SubmitProspectFormMutationVa
 export const CurrentUserDocument = `
     query CurrentUser {
   getCurrentUser {
-    ...UserPartial
+    ...User
+    permissionByUGroup {
+      ...Role
+    }
   }
 }
-    ${UserPartialFragmentDoc}`;
+    ${UserFragmentDoc}
+${RoleFragmentDoc}`;
 export const useCurrentUserQuery = <
       TData = CurrentUserQuery,
       TError = unknown
@@ -11469,7 +11472,10 @@ export const LoginDocument = `
   login(input: {login: $login, passwd: $passwd}) {
     result {
       usr {
-        ...UserPartial
+        ...User
+        permissionByUGroup {
+          ...Role
+        }
       }
       couple {
         ...CouplePartial
@@ -11477,7 +11483,8 @@ export const LoginDocument = `
     }
   }
 }
-    ${UserPartialFragmentDoc}
+    ${UserFragmentDoc}
+${RoleFragmentDoc}
 ${CouplePartialFragmentDoc}`;
 export const useLoginMutation = <
       TError = unknown,
@@ -12578,10 +12585,10 @@ useDeleteScheduleMutation.fetcher = (variables: DeleteScheduleMutationVariables,
 export const UserDocument = `
     query User($id: BigInt!) {
   user(uId: $id) {
-    ...UserDetail
+    ...User
   }
 }
-    ${UserDetailFragmentDoc}`;
+    ${UserFragmentDoc}`;
 export const useUserQuery = <
       TData = UserQuery,
       TError = unknown
@@ -12604,12 +12611,13 @@ useUserQuery.fetcher = (variables: UserQueryVariables, options?: RequestInit['he
 export const UserListDocument = `
     query UserList($confirmed: Boolean) {
   users(condition: {uConfirmed: $confirmed}) {
+    totalCount
     nodes {
-      ...UserPartial
+      ...User
     }
   }
 }
-    ${UserPartialFragmentDoc}`;
+    ${UserFragmentDoc}`;
 export const useUserListQuery = <
       TData = UserListQuery,
       TError = unknown
@@ -12688,6 +12696,44 @@ export const useConfirmUserMutation = <
 useConfirmUserMutation.getKey = () => ['ConfirmUser'];
 
 useConfirmUserMutation.fetcher = (variables: ConfirmUserMutationVariables, options?: RequestInit['headers']) => fetcher<ConfirmUserMutation, ConfirmUserMutationVariables>(ConfirmUserDocument, variables, options);
+export const CreateUserDocument = `
+    mutation CreateUser($input: UserInput!) {
+  createUser(input: {user: $input}) {
+    __typename
+  }
+}
+    `;
+export const useCreateUserMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreateUserMutation, TError, CreateUserMutationVariables, TContext>) =>
+    useMutation<CreateUserMutation, TError, CreateUserMutationVariables, TContext>(
+      ['CreateUser'],
+      (variables?: CreateUserMutationVariables) => fetcher<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument, variables)(),
+      options
+    );
+useCreateUserMutation.getKey = () => ['CreateUser'];
+
+useCreateUserMutation.fetcher = (variables: CreateUserMutationVariables, options?: RequestInit['headers']) => fetcher<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument, variables, options);
+export const UpdateUserDocument = `
+    mutation UpdateUser($id: BigInt!, $patch: UserPatch!) {
+  updateUser(input: {uId: $id, patch: $patch}) {
+    __typename
+  }
+}
+    `;
+export const useUpdateUserMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<UpdateUserMutation, TError, UpdateUserMutationVariables, TContext>) =>
+    useMutation<UpdateUserMutation, TError, UpdateUserMutationVariables, TContext>(
+      ['UpdateUser'],
+      (variables?: UpdateUserMutationVariables) => fetcher<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, variables)(),
+      options
+    );
+useUpdateUserMutation.getKey = () => ['UpdateUser'];
+
+useUpdateUserMutation.fetcher = (variables: UpdateUserMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, variables, options);
 export const DeleteUserDocument = `
     mutation DeleteUser($id: BigInt!) {
   deleteUser(input: {uId: $id}) {

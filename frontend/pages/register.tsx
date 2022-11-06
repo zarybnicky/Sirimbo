@@ -8,9 +8,11 @@ import { useCohortListQuery, useRegisterMutation } from 'lib/graphql';
 import { useRequireUserLoggedOut } from 'lib/route-guards';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from 'components/ErrorBox';
+import { useRouter } from 'next/router';
 
 export default function RegisterPage() {
   useRequireUserLoggedOut()
+  const router = useRouter();
   const countries = useCountries();
   const { data: cohorts } = useCohortListQuery({ visible: true });
   const { control, handleSubmit, watch, formState: { isDirty, isSubmitting } } = useForm();
@@ -34,8 +36,8 @@ export default function RegisterPage() {
         other: undefined,
       },
     });
-
     enqueueSnackbar('Registrace úspěšně proběhla. Během několika dnů vám na email příjde potvrzení vašeho účtu, které vyřizuje administrátor ručně', { variant: 'success' });
+    router.push('/');
   });
 
   return (

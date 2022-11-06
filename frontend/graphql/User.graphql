@@ -1,22 +1,14 @@
-fragment UserDetail on User {
-  uId
-  uJmeno
-  uPrijmeni
-  uEmail
-  uTelefon
-  uRodneCislo
-}
-
 query User($id: BigInt!) {
   user(uId: $id) {
-    ...UserDetail
+    ...User
   }
 }
 
 query UserList($confirmed: Boolean) {
   users(condition: {uConfirmed: $confirmed}) {
+    totalCount
     nodes {
-      ...UserPartial
+      ...User
     }
   }
 }
@@ -43,6 +35,18 @@ query MemberList($cohortId: BigInt) {
 
 mutation ConfirmUser($id: BigInt!, $role: BigInt!, $cohort: BigInt!) {
   confirmUser(input: {id: $id, grp: $role, cohort: $cohort}) {
+    __typename
+  }
+}
+
+mutation CreateUser($input: UserInput!) {
+  createUser(input: {user: $input}) {
+    __typename
+  }
+}
+
+mutation UpdateUser($id: BigInt!, $patch: UserPatch!) {
+  updateUser(input: {uId: $id, patch: $patch}) {
     __typename
   }
 }

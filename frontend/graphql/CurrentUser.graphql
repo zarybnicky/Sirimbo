@@ -1,4 +1,4 @@
-fragment UserPartial on User {
+fragment User on User {
   uId
   uLogin
   uJmeno
@@ -11,7 +11,6 @@ fragment UserPartial on User {
   uSystem
   uLock
   uBan
-  uLevel
   uGroup
   uSkupina
   uTimestamp
@@ -30,9 +29,6 @@ fragment UserPartial on User {
   uCreatedAt
   uConscriptionNumber
   uCity
-  permissionByUGroup {
-    ...Role
-  }
 }
 
 fragment CouplePartial on Pary {
@@ -44,7 +40,10 @@ fragment CouplePartial on Pary {
 
 query CurrentUser {
   getCurrentUser {
-    ...UserPartial
+    ...User
+    permissionByUGroup {
+      ...Role
+    }
   }
 }
 
@@ -52,7 +51,10 @@ mutation Login($login: String!, $passwd: String!) {
   login(input: { login: $login, passwd: $passwd }) {
     result {
       usr {
-        ...UserPartial
+        ...User
+        permissionByUGroup {
+          ...Role
+        }
       }
       couple {
         ...CouplePartial
