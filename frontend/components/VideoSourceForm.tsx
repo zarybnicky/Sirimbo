@@ -32,7 +32,7 @@ export const VideoSourceForm: React.FC<{
   });
 
   return (
-    <Grid container spacing={3} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
+    <Grid container spacing={1.5} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox grid error={onSubmit.error} />
       <Grid item xs={12}>
         <TextFieldElement fullWidth control={control} name="vsUrl" required label={<>

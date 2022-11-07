@@ -133,18 +133,6 @@ try {
     $router->get('/admin/nastenka/edit/([0-9]+)', [\Olymp\Controller\Admin\Nastenka::class, 'edit']);
     $router->post('/admin/nastenka/edit/([0-9]+)', [\Olymp\Controller\Admin\Nastenka::class, 'editPost']);
 
-    $router->get('/admin/users', [\Olymp\Controller\Admin\Users::class, 'list']);
-    $router->post('/admin/users', [\Olymp\Controller\Admin\Users::class, 'listPost']);
-
-    $router->get('/admin/users/add', [\Olymp\Controller\Admin\Users::class, 'add']);
-    $router->post('/admin/users/add', [\Olymp\Controller\Admin\Users::class, 'addPost']);
-
-    $router->get('/admin/users/edit/([0-9]+)', [\Olymp\Controller\Admin\Users::class, 'edit']);
-    $router->post('/admin/users/edit/([0-9]+)', [\Olymp\Controller\Admin\Users::class, 'editPost']);
-
-    $router->get('/admin/users/remove/([0-9]+)', [\Olymp\Controller\Admin\Users::class, 'remove']);
-    $router->post('/admin/users/remove/([0-9]+)', [\Olymp\Controller\Admin\Users::class, 'removePost']);
-
     $router->get('/admin/galerie/file/upload', [\Olymp\Controller\Admin\GalerieFile::class, 'upload']);
     $router->post('/admin/galerie/file/upload', [\Olymp\Controller\Admin\GalerieFile::class, 'uploadPost']);
 
@@ -190,9 +178,6 @@ try {
 
     $router->get('/admin/nabidka/detail/([0-9]+)', [\Olymp\Controller\Admin\NabidkaDetail::class, 'detail']);
     $router->post('/admin/nabidka/detail/([0-9]+)', [\Olymp\Controller\Admin\NabidkaDetail::class, 'detailPost']);
-
-    $router->get('/admin/dokumenty/edit/([0-9]+)', [\Olymp\Controller\Admin\Dokumenty::class, 'edit']);
-    $router->post('/admin/dokumenty/edit/([0-9]+)', [\Olymp\Controller\Admin\Dokumenty::class, 'editPost']);
 
     $router->get('/admin/dokumenty/remove/([0-9]+)', [\Olymp\Controller\Admin\Dokumenty::class, 'remove']);
     $router->post('/admin/dokumenty/remove/([0-9]+)', [\Olymp\Controller\Admin\Dokumenty::class, 'removePost']);

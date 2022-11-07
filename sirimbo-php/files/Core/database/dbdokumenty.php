@@ -88,15 +88,6 @@ class DBDokumenty extends Database
         return self::getInsertId();
     }
 
-    public static function editDokument($id, $newname)
-    {
-        self::query(
-            "UPDATE dokumenty SET d_name='?' WHERE d_id='?'",
-            $newname, $id
-        );
-        return true;
-    }
-
     public static function removeDokument($id)
     {
         self::query("DELETE FROM dokumenty WHERE d_id='?'", $id);

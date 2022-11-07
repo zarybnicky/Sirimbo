@@ -42,7 +42,7 @@ export const RoleForm: React.FC<{
   const realPermissionLevels = keysOf(PermissionLevel).filter(key => !(!~~key && key.toString() !== "0"));
 
   return (
-    <Grid container spacing={3} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
+    <Grid container spacing={1.5} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
       <Grid item xs={12}>
         <TextFieldElement control={control} fullWidth name="peName" label="Jméno" required />
       </Grid>

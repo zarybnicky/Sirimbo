@@ -32,7 +32,7 @@ export default function ForgottenPassword() {
           Pokud jste zapomněli heslo, pošleme Vám nové na e-mail, který jste zadali při registraci.
         </Typography>
 
-        <Grid container spacing={3}>
+        <Grid container spacing={1.5}>
           <Grid item xs={12}>
             <TextFieldElement fullWidth control={control} name="login" label="Přihlašovací jméno" autoComplete="login" required />
           </Grid>

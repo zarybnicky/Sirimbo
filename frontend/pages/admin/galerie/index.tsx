@@ -1,9 +1,12 @@
 import * as React from 'react';
-import { Pagination, Checkbox } from '@mui/material';
+import { Checkbox, Container } from '@mui/material';
 import { NextLinkComposed } from 'components/Link';
-import { useGalleryDirListQuery, useToggleGalleryDirVisibleMutation } from 'lib/graphql';
+import { useDeleteGalleryDirMutation, useGalleryDirListQuery, useToggleGalleryDirVisibleMutation } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
-import { Dropdown } from 'components/Dropdown';
+import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
+import EditIcon from '@mui/icons-material/Edit';
+import { DeleteButton } from 'components/DeleteButton';
+import { useRouter } from 'next/router';
 
 type Treeified<T> = T & { id: string; parentId: string; children: Treeified<T>[]; };
 function listToTree<T>(list: Treeified<T>[]) {
@@ -34,12 +37,16 @@ function flatten<T>(root: Treeified<T>): T[] {
 
 export default function GalleryDirectoryList() {
   useRequireUserLoggedIn();
+  const router = useRouter();
   const [limit] = React.useState(30);
-  const [page, setPage] = React.useState(1);
+  const [page, setPage] = React.useState(0);
   const { data, refetch } = useGalleryDirListQuery({
-    limit, offset: (page - 1) * limit,
+    limit, offset: page * limit,
   });
   const { mutateAsync: toggleVisible } = useToggleGalleryDirVisibleMutation({
+    onSuccess: () => refetch(),
+  });
+  const { mutateAsync: doDelete } = useDeleteGalleryDirMutation({
     onSuccess: () => refetch(),
   });
 
@@ -50,34 +57,62 @@ export default function GalleryDirectoryList() {
     children: [],
   })));
   const dataSorted = roots.length > 0 ? flatten(roots[0]!) : [];
-  const total = data?.galerieDirs?.totalCount || 0;
 
-  return <>
+  const rowCount = data?.galerieDirs?.totalCount || 0;
+  const [rowCountState, setRowCountState] = React.useState(rowCount);
+  React.useEffect(() => {
+    setRowCountState((prev) => rowCount !== undefined ? rowCount : prev);
+  }, [rowCount]);
+
+  return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
     <NextLinkComposed href="/admin/galerie/file/upload" className="btn btn-outline-primary">Přidat fotky</NextLinkComposed>
     <NextLinkComposed href="/admin/galerie/directory/add" className="btn btn-outline-primary">Přidat složku</NextLinkComposed>
 
-    <table>
-      <thead><tr><th>Složka</th><th>Skrytá</th></tr></thead>
-      <tbody>
-        {dataSorted.map((a) => <tr key={a.gdId}>
-          <td>
-            <Dropdown
-              button={<>{'→'.repeat(a.gdLevel - 1)} {a.gdName}</>}
-              options={[
-                { title: 'Upravit', href: `/admin/galerie/directory/edit/${a.gdId}` },
-                { title: 'Upravit fotky', href: `/admin/galerie/directory/${a.gdId}` },
-                { title: 'Odstranit', href: `/admin/galerie/directory/remove/${a.gdId}` },
-              ]}
-            />
-          </td>
-          <td>
-            <Checkbox checked={a.gdHidden} onChange={() => toggleVisible({
-              id: a.gdId, visible: !a.gdHidden,
+    <DataGrid
+      page={page}
+      onPageChange={setPage}
+      pageSize={limit}
+      rowsPerPageOptions={[limit]}
+      rowCount={rowCountState}
+      pagination
+      paginationMode="server"
+      autoHeight={true}
+      getRowId={row => row.gdId}
+      rows={dataSorted}
+      columns={[
+        {
+          field: 'actions',
+          type: 'actions',
+          getActions: ({ id }: GridRowParams) => [
+            <GridActionsCellItem key="edit"
+              icon={<EditIcon />}
+              onClick={() => router.push(`/admin/galerie/directory/edit/${id}`)}
+              label="Upravit"
+            />,
+            <GridActionsCellItem key="edit"
+              icon={<EditIcon />}
+              onClick={() => router.push(`/admin/galerie/directory/${id}`)}
+              label="Upravit fotky"
+            />,
+            <DeleteButton
+              key="delete" title="smazat složku"
+              params={{ id: id.toString() }} onDelete={doDelete}
+            />,
+          ], flex: 1,
+        },
+        {
+          field: 'gdName', headerName: 'Jméno', flex: 1,
+          valueGetter: ({ row }) => `${'→'.repeat(row.gdLevel - 1)} ${row.gdName}`,
+        },
+        {
+          field: 'gdHidden', headerName: 'Skrytá', flex: 1,
+          renderCell: ({ row }) => <>
+            <Checkbox checked={row.gdHidden} onChange={() => toggleVisible({
+              id: row.gdId, visible: !row.gdHidden,
             })} />
-          </td>
-        </tr>)}
-      </tbody>
-    </table>
-    <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
-  </>;
+          </>,
+        },
+      ]}
+    />
+  </Container>;
 }

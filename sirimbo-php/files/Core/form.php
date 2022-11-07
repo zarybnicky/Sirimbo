@@ -45,12 +45,6 @@ class Form
         return $this->checkRegexp($i, '/^((\+|00)\d{3})?( ?\d{3}){3}$/', $message);
     }
 
-    public function checkLogin($i, $message)
-    {
-        $this->checkRegexp($i, '/^[A-Z0-9_]{3,20}$/i', $message);
-        $this->checkBool(!\DBUser::getUserID(strtolower($i)), 'Toto přihlašovací jméno je obsazené.');
-    }
-
     public function checkPassword($i, $message)
     {
         return $this->checkRegexp($i, '/^[A-Z0-9_]{6,}$/i', $message);

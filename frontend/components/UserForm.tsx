@@ -2,7 +2,7 @@ import { Button, Grid, Typography } from '@mui/material';
 import { UserFragment, UserInput, useCreateUserMutation, useUpdateUserMutation, useRoleListQuery, useCohortListQuery } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { AutocompleteElement, CheckboxElement, DatePickerElement, RadioButtonGroup, TextFieldElement } from 'react-hook-form-mui';
+import { SelectElement, CheckboxElement, DatePickerElement, RadioButtonGroup, TextFieldElement } from 'react-hook-form-mui';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { useCountries } from 'lib/data/use-countries';
@@ -67,7 +67,7 @@ export const UserForm: React.FC<{
   });
 
   return (
-    <Grid container spacing={3} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
+    <Grid container spacing={1.5} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox grid error={onSubmit.error} />
       {!data && <>
         <Grid item xs={12} md={6}>
@@ -143,7 +143,7 @@ export const UserForm: React.FC<{
       </Grid>
 
       <Grid item xs={12}>
-        <AutocompleteElement control={control}
+        <SelectElement control={control} fullWidth
           label="Národnost" name="uNationality" required
           options={countries.map(x => ({ id: x.code, label: x.label }))}
         />
@@ -154,7 +154,7 @@ export const UserForm: React.FC<{
       </Grid>
 
       <Grid item xs={12}>
-        <AutocompleteElement control={control}
+        <SelectElement control={control} fullWidth
           label="Tréninková skupina" name="uSkupina"
           options={cohorts?.skupinies?.nodes?.map(x => ({ id: x.sId, label: x.sName })) || []}
         />
@@ -176,7 +176,7 @@ export const UserForm: React.FC<{
       </Grid>
 
       <Grid item xs={12}>
-        <AutocompleteElement control={control}
+        <SelectElement control={control} fullWidth
           label="Uživatelská role" name="uGroup"
           options={roles?.permissions?.nodes?.map(x => ({ id: x.peId, label: x.peName })) || []}
         />

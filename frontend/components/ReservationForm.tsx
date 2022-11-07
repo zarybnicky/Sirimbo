@@ -1,5 +1,5 @@
 import { Button, Grid } from '@mui/material';
-import { CohortFragment, SkupinyInput, useCreateCohortMutation, useUpdateCohortMutation } from 'lib/graphql';
+import { ReservationFragment, NabidkaInput, useCreateReservationMutation, useUpdateReservationMutation } from 'lib/graphql';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { CheckboxElement, TextFieldElement } from 'react-hook-form-mui';
@@ -7,30 +7,34 @@ import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { ColorFormat, ColorPicker } from 'mui-color';
 
-type FormProps = Pick<SkupinyInput, 'sName' | 'sDescription' | 'sLocation' | 'sVisible' | 'sColorRgb'>;
+type FormProps = Pick<NabidkaInput, 'nTrener' | 'nPocetHod' | 'nMaxPocetHod' | 'nOd' | 'nDo' | 'nVisible' | 'nLock'>;
 
-export const CohortForm: React.FC<{
-  data?: CohortFragment;
+export const ReservationForm: React.FC<{
+  data?: ReservationFragment;
   onSuccess: () => void;
 }> = ({ data, onSuccess }) => {
-  const { mutateAsync: doCreate } = useCreateCohortMutation({ onSuccess });
-  const { mutateAsync: doUpdate } = useUpdateCohortMutation({ onSuccess });
+  const { mutateAsync: doCreate } = useCreateReservationMutation({ onSuccess });
+  const { mutateAsync: doUpdate } = useUpdateReservationMutation({ onSuccess });
+
+  // trainers - if admin, then all with pe_nabidka >= OWNED, else [me]
 
   const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
-      sName: data?.sName,
-      sDescription: data?.sDescription,
-      sLocation: data?.sLocation,
-      sVisible: data?.sVisible,
-      sColorRgb: data?.sColorRgb,
+      nTrener: data?.nTrener,
+      nPocetHod: data?.nPocetHod,
+      nMaxPocetHod: data?.nMaxPocetHod,
+      nOd: data?.nOd,
+      nDo: data?.nDo,
+      nVisible: data?.nVisible,
+      nLock: data?.nLock,
     },
   });
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     if (data) {
-      await doUpdate({ id: data.sId, patch: values });
+      await doUpdate({ id: data.nId, patch: values });
     } else {
-      await doCreate({ input: { ...values, sColorText: '' } });
+      await doCreate({ input: { ...values } });
     }
   });
 

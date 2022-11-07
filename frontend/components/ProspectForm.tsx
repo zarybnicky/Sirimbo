@@ -29,7 +29,7 @@ export const ProspectForm = ({ title }: ProspectFormProps) => {
     <Card component="form" elevation={3} onSubmit={handleSubmit(onSubmit.execute)}>
       <CardContent>
         <Typography variant="h4" component="div">{title}</Typography>
-        <Grid container spacing={3}>
+        <Grid container spacing={1.5}>
           <Grid item xs={12} sm={4}>
             <TextFieldElement control={control} name="name" label="Jméno" autoComplete="given-name" required />
           </Grid>
@@ -40,7 +40,7 @@ export const ProspectForm = ({ title }: ProspectFormProps) => {
             <TextFieldElement control={control} name="yearofbirth" label="Rok narození" autoComplete="bday-year" required />
           </Grid>
         </Grid>
-        <Grid container spacing={3}>
+        <Grid container spacing={1.5}>
           <Grid item xs={12} sm={6}>
             <TextFieldElement control={control} name="phone" type="tel" autoComplete="tel" required />
           </Grid>

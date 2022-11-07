@@ -1,5 +1,5 @@
 <?php
-class DBAkce extends Database implements Pagable
+class DBAkce extends Database
 {
     public static function getAkce($onlyVisible = false)
     {
@@ -8,22 +8,6 @@ class DBAkce extends Database implements Pagable
             . ($onlyVisible ? " WHERE a_visible='1'" : '') . ' ORDER BY a_do DESC, a_od DESC'
         );
         return self::getArray($res);
-    }
-
-    public function getPage($offset, $count, $options = '')
-    {
-        $res = self::query(
-            "SELECT * FROM akce $options LIMIT ? OFFSET ?",
-            $count,
-            $offset
-        );
-        return self::getArray($res);
-    }
-
-    public function getCount($options = null)
-    {
-        $res = self::query("SELECT COUNT(*) as count FROM akce");
-        return $res ? self::getSingleRow($res)['count'] : false;
     }
 
     public static function getSingleAkce($id, $onlyVisible = false)

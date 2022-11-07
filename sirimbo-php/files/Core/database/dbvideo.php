@@ -1,44 +1,6 @@
 <?php
-class DBVideo extends Database implements Pagable
+class DBVideo extends Database
 {
-    public function getPage($offset, $count, $options = null)
-    {
-        switch ($options) {
-            case 'orphan':
-                $filter = "v_playlist IS NULL OR v_playlist='' ORDER BY v_created_at DESC";
-                break;
-            case 'playlist':
-                $filter = "v_playlist IS NOT NULL AND v_playlist<>'' ORDER BY v_playlist DESC";
-                break;
-            default:
-                $filter = '1=1 ORDER BY v_created_at';
-                break;
-        }
-        $res = self::query(
-            "SELECT * FROM video WHERE $filter LIMIT $count OFFSET $offset"
-        );
-        return self::getArray($res);
-    }
-
-    public function getCount($options = null)
-    {
-        switch ($options) {
-            case 'orphan':
-                $filter = "v_playlist IS NULL OR v_playlist=''";
-                break;
-            case 'playlist':
-                $filter = "v_playlist IS NOT NULL AND v_playlist<>''";
-                break;
-            default:
-                $filter = '1=1';
-                break;
-        }
-        $res = self::query(
-            "SELECT COUNT(*) as count FROM video WHERE $filter"
-        );
-        return self::getSingleRow($res)['count'];
-    }
-
     public static function getAll()
     {
         $res = self::query('SELECT * FROM video ORDER BY v_created_at DESC');

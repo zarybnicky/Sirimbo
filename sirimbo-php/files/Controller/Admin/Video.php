@@ -6,13 +6,10 @@ class Video
     public static function orphan()
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        $pager = new \Paging(new \DBVideo(), 'orphan');
-        $pager->setItemsPerPage($_GET['c'] ?? null);
-        $pager->setCurrentPage($_GET['p'] ?? null);
         \Render::twig('Admin/Video.twig', [
             'action' => 'orphan',
-            'navigation' => $pager->getNavigation(),
-            'data' => array_for($pager->getItems(), fn($item) => [
+            'navigation' => '',
+            'data' => array_for(\DBVideo::getOrphan(), fn($item) => [
                 'type' => 'video',
                 'id' => $item['v_id'],
                 'title' => $item['v_title'],
@@ -118,7 +115,7 @@ class Video
     public static function editPost($id)
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        if (!$data = \DBVideo::getSingle($id)) {
+        if (!\DBVideo::getSingle($id)) {
             \Message::warning('Článek s takovým ID neexistuje');
             \Redirect::to('/admin/aktuality');
         }

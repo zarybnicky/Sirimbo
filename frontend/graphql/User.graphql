@@ -4,8 +4,8 @@ query User($id: BigInt!) {
   }
 }
 
-query UserList($confirmed: Boolean) {
-  users(condition: {uConfirmed: $confirmed}) {
+query UserList($confirmed: Boolean, $limit: Int, $offset: Int) {
+  users(condition: {uConfirmed: $confirmed}, offset: $offset, first: $limit) {
     totalCount
     nodes {
       ...User

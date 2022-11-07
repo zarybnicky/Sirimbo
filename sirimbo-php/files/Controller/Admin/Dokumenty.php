@@ -55,32 +55,6 @@ class Dokumenty
         \Redirect::to('/admin/dokumenty');
     }
 
-    public static function edit($id)
-    {
-        \Permissions::checkError('dokumenty', P_OWNED);
-        if (!$data = \DBDokumenty::getSingleDokument($id)) {
-            \Message::warning('Dokument s takovým ID neexistuje');
-            \Redirect::to('/admin/dokumenty');
-        }
-        \Permissions::checkError('dokumenty', P_OWNED, $data['d_kdo']);
-        \Render::twig('Admin/DokumentyForm.twig', [
-            'name' => $data['d_name']
-        ]);
-    }
-
-    public static function editPost($id)
-    {
-        \Permissions::checkError('dokumenty', P_OWNED);
-        if (!$data = \DBDokumenty::getSingleDokument($id)) {
-            \Message::warning('Dokument s takovým ID neexistuje');
-            \Redirect::to('/admin/dokumenty');
-        }
-        \Permissions::checkError('dokumenty', P_OWNED, $data['d_kdo']);
-        \DBDokumenty::editDokument($id, $_POST['newname']);
-        \Message::success('Dokument upraven');
-        \Redirect::to('/admin/dokumenty');
-    }
-
     public static function remove($id)
     {
         \Permissions::checkError('dokumenty', P_OWNED);

@@ -1,15 +1,44 @@
+fragment Document on Dokumenty {
+  dId
+  dName
+  dFilename
+  dKategorie
+  dTimestamp
+}
+
 query Documents($category: Int) {
   dokumenties(condition: {dKategorie: $category}, orderBy: D_TIMESTAMP_DESC) {
+    totalCount
     nodes {
-      dId
-      dName
-      dFilename
-      dKategorie
-      dTimestamp
+      ...Document
       userByDKdo {
         uJmeno
         uPrijmeni
       }
     }
+  }
+}
+
+query Document($id: BigInt!) {
+  dokumenty(dId: $id) {
+    ...Document
+  }
+}
+
+mutation CreateDocument($input: DokumentyInput!) {
+  createDokumenty(input: {dokumenty: $input}) {
+    __typename
+  }
+}
+
+mutation UpdateDocument($id: BigInt!, $patch: DokumentyPatch!) {
+  updateDokumenty(input: {dId: $id, patch: $patch}) {
+    __typename
+  }
+}
+
+mutation DeleteDocument($id: BigInt!) {
+  deleteDokumenty(input: {dId: $id}) {
+    __typename
   }
 }

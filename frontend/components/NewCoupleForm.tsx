@@ -21,6 +21,7 @@ export const NewCoupleForm: React.FC<{
   const women = React.useMemo(() => (users?.users?.nodes || [])
     .filter(x => x.uPohlavi === 'f')
     .map(x => ({ id: x.uId, label: `${x.uJmeno} ${x.uPrijmeni} (${x.uId})` })), [users])
+
   const { mutateAsync: doCreate } = useCreateCoupleMutation({ onSuccess });
 
   const { control, handleSubmit } = useForm<FormProps>();
@@ -29,7 +30,7 @@ export const NewCoupleForm: React.FC<{
   });
 
   return (
-    <Grid container spacing={3} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
+    <Grid container spacing={1.5} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox grid error={onSubmit.error} />
       <Grid item xs={12}>
         <AutocompleteElement

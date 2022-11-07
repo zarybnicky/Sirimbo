@@ -10261,12 +10261,43 @@ export type ResetPasswordMutationVariables = Exact<{
 
 export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword: { __typename: 'ResetPasswordPayload' } | null };
 
+export type DocumentFragment = { __typename?: 'Dokumenty', dId: string, dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null };
+
 export type DocumentsQueryVariables = Exact<{
   category?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type DocumentsQuery = { __typename?: 'Query', dokumenties: { __typename?: 'DokumentiesConnection', nodes: Array<{ __typename?: 'Dokumenty', dId: string, dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null, userByDKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string } | null }> } | null };
+export type DocumentsQuery = { __typename?: 'Query', dokumenties: { __typename?: 'DokumentiesConnection', totalCount: number, nodes: Array<{ __typename?: 'Dokumenty', dId: string, dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null, userByDKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string } | null }> } | null };
+
+export type DocumentQueryVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type DocumentQuery = { __typename?: 'Query', dokumenty: { __typename?: 'Dokumenty', dId: string, dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null } | null };
+
+export type CreateDocumentMutationVariables = Exact<{
+  input: DokumentyInput;
+}>;
+
+
+export type CreateDocumentMutation = { __typename?: 'Mutation', createDokumenty: { __typename: 'CreateDokumentyPayload' } | null };
+
+export type UpdateDocumentMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+  patch: DokumentyPatch;
+}>;
+
+
+export type UpdateDocumentMutation = { __typename?: 'Mutation', updateDokumenty: { __typename: 'UpdateDokumentyPayload' } | null };
+
+export type DeleteDocumentMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type DeleteDocumentMutation = { __typename?: 'Mutation', deleteDokumenty: { __typename: 'DeleteDokumentyPayload' } | null };
 
 export type EventFragment = { __typename?: 'Akce', aId: string, aOd: string, aDo: string, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean };
 
@@ -10341,7 +10372,7 @@ export type GalleryDirListQueryVariables = Exact<{
 }>;
 
 
-export type GalleryDirListQuery = { __typename?: 'Query', galerieDirs: { __typename?: 'GalerieDirsConnection', totalCount: number, nodes: Array<{ __typename?: 'GalerieDir', gdHidden: boolean, gdId: string, gdIdRodic: string, gdLevel: number, gdName: string, gdPath: string }> } | null };
+export type GalleryDirListQuery = { __typename?: 'Query', galerieDirs: { __typename?: 'GalerieDirsConnection', totalCount: number, nodes: Array<{ __typename: 'GalerieDir', nodeId: string, gdId: string, gdIdRodic: string, gdName: string, gdPath: string, gdLevel: number, gdHidden: boolean }> } | null };
 
 export type ToggleGalleryDirVisibleMutationVariables = Exact<{
   id: Scalars['BigInt'];
@@ -10350,6 +10381,28 @@ export type ToggleGalleryDirVisibleMutationVariables = Exact<{
 
 
 export type ToggleGalleryDirVisibleMutation = { __typename?: 'Mutation', updateGalerieDir: { __typename?: 'UpdateGalerieDirPayload', galerieDir: { __typename?: 'GalerieDir', gdId: string } | null } | null };
+
+export type CreateGalleryDirMutationVariables = Exact<{
+  input: GalerieDirInput;
+}>;
+
+
+export type CreateGalleryDirMutation = { __typename?: 'Mutation', createGalerieDir: { __typename: 'CreateGalerieDirPayload' } | null };
+
+export type UpdateGalleryDirMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+  patch: GalerieDirPatch;
+}>;
+
+
+export type UpdateGalleryDirMutation = { __typename?: 'Mutation', updateGalerieDir: { __typename: 'UpdateGalerieDirPayload' } | null };
+
+export type DeleteGalleryDirMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type DeleteGalleryDirMutation = { __typename?: 'Mutation', deleteGalerieDir: { __typename: 'DeleteGalerieDirPayload' } | null };
 
 export type PageFragment = { __typename?: 'Page', nodeId: string, id: number, url: string, title: string, content: { [key: string]: any }, createdAt: string, updatedAt: string };
 
@@ -10483,6 +10536,21 @@ export type ToggleReservationVisibleMutationVariables = Exact<{
 
 export type ToggleReservationVisibleMutation = { __typename?: 'Mutation', updateNabidka: { __typename?: 'UpdateNabidkaPayload', nabidka: { __typename?: 'Nabidka', nId: string } | null } | null };
 
+export type CreateReservationMutationVariables = Exact<{
+  input: NabidkaInput;
+}>;
+
+
+export type CreateReservationMutation = { __typename?: 'Mutation', createNabidka: { __typename: 'CreateNabidkaPayload' } | null };
+
+export type UpdateReservationMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+  patch: NabidkaPatch;
+}>;
+
+
+export type UpdateReservationMutation = { __typename?: 'Mutation', updateNabidka: { __typename: 'UpdateNabidkaPayload' } | null };
+
 export type DeleteReservationMutationVariables = Exact<{
   id: Scalars['BigInt'];
 }>;
@@ -10580,6 +10648,8 @@ export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', uId
 
 export type UserListQueryVariables = Exact<{
   confirmed?: InputMaybe<Scalars['Boolean']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 }>;
 
 
@@ -10738,6 +10808,15 @@ export const CouplePartialFragmentDoc = `
   pIdPartner
   pIdPartnerka
   pArchiv
+}
+    `;
+export const DocumentFragmentDoc = `
+    fragment Document on Dokumenty {
+  dId
+  dName
+  dFilename
+  dKategorie
+  dTimestamp
 }
     `;
 export const EventFragmentDoc = `
@@ -11560,12 +11639,9 @@ useResetPasswordMutation.fetcher = (variables: ResetPasswordMutationVariables, o
 export const DocumentsDocument = `
     query Documents($category: Int) {
   dokumenties(condition: {dKategorie: $category}, orderBy: D_TIMESTAMP_DESC) {
+    totalCount
     nodes {
-      dId
-      dName
-      dFilename
-      dKategorie
-      dTimestamp
+      ...Document
       userByDKdo {
         uJmeno
         uPrijmeni
@@ -11573,7 +11649,7 @@ export const DocumentsDocument = `
     }
   }
 }
-    `;
+    ${DocumentFragmentDoc}`;
 export const useDocumentsQuery = <
       TData = DocumentsQuery,
       TError = unknown
@@ -11593,6 +11669,89 @@ useDocumentsQuery.getKey = (variables?: DocumentsQueryVariables) => variables ==
 ;
 
 useDocumentsQuery.fetcher = (variables?: DocumentsQueryVariables, options?: RequestInit['headers']) => fetcher<DocumentsQuery, DocumentsQueryVariables>(DocumentsDocument, variables, options);
+export const DocumentDocument = `
+    query Document($id: BigInt!) {
+  dokumenty(dId: $id) {
+    ...Document
+  }
+}
+    ${DocumentFragmentDoc}`;
+export const useDocumentQuery = <
+      TData = DocumentQuery,
+      TError = unknown
+    >(
+      variables: DocumentQueryVariables,
+      options?: UseQueryOptions<DocumentQuery, TError, TData>
+    ) =>
+    useQuery<DocumentQuery, TError, TData>(
+      ['Document', variables],
+      fetcher<DocumentQuery, DocumentQueryVariables>(DocumentDocument, variables),
+      options
+    );
+useDocumentQuery.document = DocumentDocument;
+
+
+useDocumentQuery.getKey = (variables: DocumentQueryVariables) => ['Document', variables];
+;
+
+useDocumentQuery.fetcher = (variables: DocumentQueryVariables, options?: RequestInit['headers']) => fetcher<DocumentQuery, DocumentQueryVariables>(DocumentDocument, variables, options);
+export const CreateDocumentDocument = `
+    mutation CreateDocument($input: DokumentyInput!) {
+  createDokumenty(input: {dokumenty: $input}) {
+    __typename
+  }
+}
+    `;
+export const useCreateDocumentMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreateDocumentMutation, TError, CreateDocumentMutationVariables, TContext>) =>
+    useMutation<CreateDocumentMutation, TError, CreateDocumentMutationVariables, TContext>(
+      ['CreateDocument'],
+      (variables?: CreateDocumentMutationVariables) => fetcher<CreateDocumentMutation, CreateDocumentMutationVariables>(CreateDocumentDocument, variables)(),
+      options
+    );
+useCreateDocumentMutation.getKey = () => ['CreateDocument'];
+
+useCreateDocumentMutation.fetcher = (variables: CreateDocumentMutationVariables, options?: RequestInit['headers']) => fetcher<CreateDocumentMutation, CreateDocumentMutationVariables>(CreateDocumentDocument, variables, options);
+export const UpdateDocumentDocument = `
+    mutation UpdateDocument($id: BigInt!, $patch: DokumentyPatch!) {
+  updateDokumenty(input: {dId: $id, patch: $patch}) {
+    __typename
+  }
+}
+    `;
+export const useUpdateDocumentMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<UpdateDocumentMutation, TError, UpdateDocumentMutationVariables, TContext>) =>
+    useMutation<UpdateDocumentMutation, TError, UpdateDocumentMutationVariables, TContext>(
+      ['UpdateDocument'],
+      (variables?: UpdateDocumentMutationVariables) => fetcher<UpdateDocumentMutation, UpdateDocumentMutationVariables>(UpdateDocumentDocument, variables)(),
+      options
+    );
+useUpdateDocumentMutation.getKey = () => ['UpdateDocument'];
+
+useUpdateDocumentMutation.fetcher = (variables: UpdateDocumentMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateDocumentMutation, UpdateDocumentMutationVariables>(UpdateDocumentDocument, variables, options);
+export const DeleteDocumentDocument = `
+    mutation DeleteDocument($id: BigInt!) {
+  deleteDokumenty(input: {dId: $id}) {
+    __typename
+  }
+}
+    `;
+export const useDeleteDocumentMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<DeleteDocumentMutation, TError, DeleteDocumentMutationVariables, TContext>) =>
+    useMutation<DeleteDocumentMutation, TError, DeleteDocumentMutationVariables, TContext>(
+      ['DeleteDocument'],
+      (variables?: DeleteDocumentMutationVariables) => fetcher<DeleteDocumentMutation, DeleteDocumentMutationVariables>(DeleteDocumentDocument, variables)(),
+      options
+    );
+useDeleteDocumentMutation.getKey = () => ['DeleteDocument'];
+
+useDeleteDocumentMutation.fetcher = (variables: DeleteDocumentMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteDocumentMutation, DeleteDocumentMutationVariables>(DeleteDocumentDocument, variables, options);
 export const EventParticipantsDocument = `
     query EventParticipants($id: BigInt!) {
   akce(aId: $id) {
@@ -11813,18 +11972,13 @@ useGalleryDirQuery.fetcher = (variables: GalleryDirQueryVariables, options?: Req
 export const GalleryDirListDocument = `
     query GalleryDirList($limit: Int!, $offset: Int!) {
   galerieDirs(first: $limit, offset: $offset, orderBy: [GD_NAME_ASC]) {
-    nodes {
-      gdHidden
-      gdId
-      gdIdRodic
-      gdLevel
-      gdName
-      gdPath
-    }
     totalCount
+    nodes {
+      ...GalleryDir
+    }
   }
 }
-    `;
+    ${GalleryDirFragmentDoc}`;
 export const useGalleryDirListQuery = <
       TData = GalleryDirListQuery,
       TError = unknown
@@ -11865,6 +12019,63 @@ export const useToggleGalleryDirVisibleMutation = <
 useToggleGalleryDirVisibleMutation.getKey = () => ['ToggleGalleryDirVisible'];
 
 useToggleGalleryDirVisibleMutation.fetcher = (variables: ToggleGalleryDirVisibleMutationVariables, options?: RequestInit['headers']) => fetcher<ToggleGalleryDirVisibleMutation, ToggleGalleryDirVisibleMutationVariables>(ToggleGalleryDirVisibleDocument, variables, options);
+export const CreateGalleryDirDocument = `
+    mutation CreateGalleryDir($input: GalerieDirInput!) {
+  createGalerieDir(input: {galerieDir: $input}) {
+    __typename
+  }
+}
+    `;
+export const useCreateGalleryDirMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreateGalleryDirMutation, TError, CreateGalleryDirMutationVariables, TContext>) =>
+    useMutation<CreateGalleryDirMutation, TError, CreateGalleryDirMutationVariables, TContext>(
+      ['CreateGalleryDir'],
+      (variables?: CreateGalleryDirMutationVariables) => fetcher<CreateGalleryDirMutation, CreateGalleryDirMutationVariables>(CreateGalleryDirDocument, variables)(),
+      options
+    );
+useCreateGalleryDirMutation.getKey = () => ['CreateGalleryDir'];
+
+useCreateGalleryDirMutation.fetcher = (variables: CreateGalleryDirMutationVariables, options?: RequestInit['headers']) => fetcher<CreateGalleryDirMutation, CreateGalleryDirMutationVariables>(CreateGalleryDirDocument, variables, options);
+export const UpdateGalleryDirDocument = `
+    mutation UpdateGalleryDir($id: BigInt!, $patch: GalerieDirPatch!) {
+  updateGalerieDir(input: {gdId: $id, patch: $patch}) {
+    __typename
+  }
+}
+    `;
+export const useUpdateGalleryDirMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<UpdateGalleryDirMutation, TError, UpdateGalleryDirMutationVariables, TContext>) =>
+    useMutation<UpdateGalleryDirMutation, TError, UpdateGalleryDirMutationVariables, TContext>(
+      ['UpdateGalleryDir'],
+      (variables?: UpdateGalleryDirMutationVariables) => fetcher<UpdateGalleryDirMutation, UpdateGalleryDirMutationVariables>(UpdateGalleryDirDocument, variables)(),
+      options
+    );
+useUpdateGalleryDirMutation.getKey = () => ['UpdateGalleryDir'];
+
+useUpdateGalleryDirMutation.fetcher = (variables: UpdateGalleryDirMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateGalleryDirMutation, UpdateGalleryDirMutationVariables>(UpdateGalleryDirDocument, variables, options);
+export const DeleteGalleryDirDocument = `
+    mutation DeleteGalleryDir($id: BigInt!) {
+  deleteGalerieDir(input: {gdId: $id}) {
+    __typename
+  }
+}
+    `;
+export const useDeleteGalleryDirMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<DeleteGalleryDirMutation, TError, DeleteGalleryDirMutationVariables, TContext>) =>
+    useMutation<DeleteGalleryDirMutation, TError, DeleteGalleryDirMutationVariables, TContext>(
+      ['DeleteGalleryDir'],
+      (variables?: DeleteGalleryDirMutationVariables) => fetcher<DeleteGalleryDirMutation, DeleteGalleryDirMutationVariables>(DeleteGalleryDirDocument, variables)(),
+      options
+    );
+useDeleteGalleryDirMutation.getKey = () => ['DeleteGalleryDir'];
+
+useDeleteGalleryDirMutation.fetcher = (variables: DeleteGalleryDirMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteGalleryDirMutation, DeleteGalleryDirMutationVariables>(DeleteGalleryDirDocument, variables, options);
 export const PageDocument = `
     query Page($url: String!) {
   pageByUrl(url: $url) {
@@ -12300,6 +12511,44 @@ export const useToggleReservationVisibleMutation = <
 useToggleReservationVisibleMutation.getKey = () => ['ToggleReservationVisible'];
 
 useToggleReservationVisibleMutation.fetcher = (variables: ToggleReservationVisibleMutationVariables, options?: RequestInit['headers']) => fetcher<ToggleReservationVisibleMutation, ToggleReservationVisibleMutationVariables>(ToggleReservationVisibleDocument, variables, options);
+export const CreateReservationDocument = `
+    mutation CreateReservation($input: NabidkaInput!) {
+  createNabidka(input: {nabidka: $input}) {
+    __typename
+  }
+}
+    `;
+export const useCreateReservationMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreateReservationMutation, TError, CreateReservationMutationVariables, TContext>) =>
+    useMutation<CreateReservationMutation, TError, CreateReservationMutationVariables, TContext>(
+      ['CreateReservation'],
+      (variables?: CreateReservationMutationVariables) => fetcher<CreateReservationMutation, CreateReservationMutationVariables>(CreateReservationDocument, variables)(),
+      options
+    );
+useCreateReservationMutation.getKey = () => ['CreateReservation'];
+
+useCreateReservationMutation.fetcher = (variables: CreateReservationMutationVariables, options?: RequestInit['headers']) => fetcher<CreateReservationMutation, CreateReservationMutationVariables>(CreateReservationDocument, variables, options);
+export const UpdateReservationDocument = `
+    mutation UpdateReservation($id: BigInt!, $patch: NabidkaPatch!) {
+  updateNabidka(input: {nId: $id, patch: $patch}) {
+    __typename
+  }
+}
+    `;
+export const useUpdateReservationMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<UpdateReservationMutation, TError, UpdateReservationMutationVariables, TContext>) =>
+    useMutation<UpdateReservationMutation, TError, UpdateReservationMutationVariables, TContext>(
+      ['UpdateReservation'],
+      (variables?: UpdateReservationMutationVariables) => fetcher<UpdateReservationMutation, UpdateReservationMutationVariables>(UpdateReservationDocument, variables)(),
+      options
+    );
+useUpdateReservationMutation.getKey = () => ['UpdateReservation'];
+
+useUpdateReservationMutation.fetcher = (variables: UpdateReservationMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateReservationMutation, UpdateReservationMutationVariables>(UpdateReservationDocument, variables, options);
 export const DeleteReservationDocument = `
     mutation DeleteReservation($id: BigInt!) {
   deleteNabidka(input: {nId: $id}) {
@@ -12609,8 +12858,8 @@ useUserQuery.getKey = (variables: UserQueryVariables) => ['User', variables];
 
 useUserQuery.fetcher = (variables: UserQueryVariables, options?: RequestInit['headers']) => fetcher<UserQuery, UserQueryVariables>(UserDocument, variables, options);
 export const UserListDocument = `
-    query UserList($confirmed: Boolean) {
-  users(condition: {uConfirmed: $confirmed}) {
+    query UserList($confirmed: Boolean, $limit: Int, $offset: Int) {
+  users(condition: {uConfirmed: $confirmed}, offset: $offset, first: $limit) {
     totalCount
     nodes {
       ...User

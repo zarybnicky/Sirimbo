@@ -97,7 +97,7 @@ export const Footer: React.FC = () => {
     backgroundColor: theme.palette.secondary.main
   }}>
     <Container maxWidth="lg">
-      <Grid container spacing={3}>
+      <Grid container spacing={1.5}>
         <Grid item xs><ContactText /></Grid>
         <Grid item xs>
           <FooterMap />
@@ -118,7 +118,7 @@ export const Footer: React.FC = () => {
               marginBottom: '1rem',
             }}>Podporují nás</Typography>
 
-            <Grid container spacing={3} alignItems="center">
+            <Grid container spacing={1.5} alignItems="center">
               <Grid item xs={4}>
                 <CstsLogo height="100" width="100" />
               </Grid>
