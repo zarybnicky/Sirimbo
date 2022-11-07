@@ -1,4 +1,4 @@
-fragment Document on Dokumenty {
+fragment File on Dokumenty {
   dId
   dName
   dFilename
@@ -6,11 +6,11 @@ fragment Document on Dokumenty {
   dTimestamp
 }
 
-query Documents($category: Int) {
-  dokumenties(condition: {dKategorie: $category}, orderBy: D_TIMESTAMP_DESC) {
+query FileList($limit: Int, $offset: Int, $category: Int) {
+  dokumenties(offset: $offset, first: $limit, condition: {dKategorie: $category}, orderBy: D_TIMESTAMP_DESC) {
     totalCount
     nodes {
-      ...Document
+      ...File
       userByDKdo {
         uJmeno
         uPrijmeni
@@ -19,25 +19,25 @@ query Documents($category: Int) {
   }
 }
 
-query Document($id: BigInt!) {
+query File($id: BigInt!) {
   dokumenty(dId: $id) {
-    ...Document
+    ...File
   }
 }
 
-mutation CreateDocument($input: DokumentyInput!) {
+mutation CreateFile($input: DokumentyInput!) {
   createDokumenty(input: {dokumenty: $input}) {
     __typename
   }
 }
 
-mutation UpdateDocument($id: BigInt!, $patch: DokumentyPatch!) {
+mutation UpdateFile($id: BigInt!, $patch: DokumentyPatch!) {
   updateDokumenty(input: {dId: $id, patch: $patch}) {
     __typename
   }
 }
 
-mutation DeleteDocument($id: BigInt!) {
+mutation DeleteFile($id: BigInt!) {
   deleteDokumenty(input: {dId: $id}) {
     __typename
   }

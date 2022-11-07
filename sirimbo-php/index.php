@@ -103,12 +103,6 @@ try {
     $router->get('/admin/akce/detail/([0-9]+)', [\Olymp\Controller\Admin\Akce::class, 'detail']);
     $router->post('/admin/akce/detail/([0-9]+)', [\Olymp\Controller\Admin\Akce::class, 'detailPost']);
 
-    $router->get('/admin/akce/dokumenty/([0-9]+)', [\Olymp\Controller\Admin\Akce::class, 'dokumenty']);
-    $router->post('/admin/akce/dokumenty/([0-9]+)', [\Olymp\Controller\Admin\Akce::class, 'dokumentyPost']);
-
-    $router->get('/admin/dokumenty', [\Olymp\Controller\Admin\Dokumenty::class, 'list']);
-    $router->post('/admin/dokumenty', [\Olymp\Controller\Admin\Dokumenty::class, 'listPost']);
-
     $router->get('/admin/video', [\Olymp\Controller\Admin\Video::class, 'orphan']);
     $router->get('/admin/video/orphan', [\Olymp\Controller\Admin\Video::class, 'orphan']);
 
@@ -178,9 +172,6 @@ try {
 
     $router->get('/admin/nabidka/detail/([0-9]+)', [\Olymp\Controller\Admin\NabidkaDetail::class, 'detail']);
     $router->post('/admin/nabidka/detail/([0-9]+)', [\Olymp\Controller\Admin\NabidkaDetail::class, 'detailPost']);
-
-    $router->get('/admin/dokumenty/remove/([0-9]+)', [\Olymp\Controller\Admin\Dokumenty::class, 'remove']);
-    $router->post('/admin/dokumenty/remove/([0-9]+)', [\Olymp\Controller\Admin\Dokumenty::class, 'removePost']);
 
     $router->get('/admin/platby/raw', [\Olymp\Controller\Admin\PlatbyRaw::class, 'get']);
     $router->post('/admin/platby/raw', [\Olymp\Controller\Admin\PlatbyRaw::class, 'post']);

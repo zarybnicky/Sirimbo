@@ -1,17 +1,6 @@
 <?php
 class DBDokumenty extends Database
 {
-    public static function getDokumenty()
-    {
-        $res = self::query(
-            "SELECT *
-            FROM dokumenty
-            LEFT JOIN users ON d_kdo=u_id
-            ORDER BY d_id DESC"
-        );
-        return self::getArray($res);
-    }
-
     public static function getMultipleById($ids)
     {
         if (!array_filter($ids)) {
@@ -21,32 +10,6 @@ class DBDokumenty extends Database
             'SELECT * FROM dokumenty
             LEFT JOIN users ON d_kdo=u_id
             WHERE d_id IN (\'' . implode('\',\'', array_filter($ids)) . '\')'
-        );
-        return self::getArray($res);
-    }
-
-    public static function getDokumentyByKategorie($kat)
-    {
-        $res = self::query(
-            "SELECT *
-            FROM dokumenty
-            LEFT JOIN users ON d_kdo=u_id
-            WHERE d_kategorie='?'
-            ORDER BY d_id DESC",
-            $kat
-        );
-        return self::getArray($res);
-    }
-
-    public static function getDokumentyByAuthor($author)
-    {
-        $res = self::query(
-            "SELECT *
-            FROM dokumenty
-            LEFT JOIN users ON d_kdo=u_id
-            WHERE d_kdo='?'
-            ORDER BY d_id DESC",
-            $author
         );
         return self::getArray($res);
     }
@@ -65,32 +28,5 @@ class DBDokumenty extends Database
         } else {
             return self::getSingleRow($res);
         }
-    }
-
-    public static function getDokumentName($id)
-    {
-        $res = self::query("SELECT d_name FROM dokumenty WHERE d_id='?'", $id);
-        if (!$res) {
-            return false;
-        } else {
-            $row = self::getSingleRow($res);
-            return $row["d_name"];
-        }
-    }
-
-    public static function addDokument($path, $name, $filename, $kategorie, $kdo)
-    {
-        self::query(
-            "INSERT INTO dokumenty (d_path,d_name,d_filename,d_kategorie,d_kdo) VALUES " .
-            "('?','?','?','?','?')",
-            $path, $name, $filename, $kategorie, $kdo
-        );
-        return self::getInsertId();
-    }
-
-    public static function removeDokument($id)
-    {
-        self::query("DELETE FROM dokumenty WHERE d_id='?'", $id);
-        return true;
     }
 }

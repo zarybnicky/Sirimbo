@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
-import { useDocumentsQuery } from 'lib/graphql';
-import { AutocompleteElement } from "react-hook-form-mui";
+import { useFileListQuery } from 'lib/graphql';
+import { SelectElement } from "react-hook-form-mui";
 import { Container } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 import format from "date-fns/format";
@@ -13,14 +13,14 @@ const categories = [
   { id: 0, label: 'Ostatní' },
 ];
 
-export default function DocumentsPage() {
+export default function FileListPage() {
   useRequireUserLoggedIn();
-  const { control, watch } = useForm<{ category?: { id: number; label: string; }; }>();
-  const { data } = useDocumentsQuery({ category: watch('category.id') });
+  const { control, watch } = useForm<{ category: number; }>();
+  const { data } = useFileListQuery({ category: watch('category') });
 
   return <Container maxWidth="lg" style={{ paddingTop: '2rem' }}>
     <div style={{ margin: '0 1rem 1rem auto', maxWidth: '12rem' }}>
-      <AutocompleteElement control={control} name="category" label="Kategorie" required options={categories} />
+      <SelectElement control={control} name="category" label="Kategorie" required options={categories} />
     </div>
 
     <DataGrid

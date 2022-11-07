@@ -6,7 +6,7 @@ class Rozpis
     public static function add()
     {
         \Permissions::checkError('rozpis', P_OWNED);
-        return static::displayForm('add');
+        return static::displayForm();
     }
 
     public static function addPost()
@@ -20,7 +20,7 @@ class Rozpis
         $form->checkDate((string) $datum, 'Neplatný formát data');
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            return static::displayForm('add');
+            return static::displayForm();
         }
         \Permissions::checkError('rozpis', P_OWNED, $_POST['trener']);
         \DBRozpis::addSchedule(
@@ -41,7 +41,7 @@ class Rozpis
             \Redirect::to('/admin/rozpis');
         }
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
-        return static::displayForm('edit', $data);
+        return static::displayForm($data);
     }
 
     public static function editPost($id)
@@ -99,7 +99,7 @@ class Rozpis
         \Redirect::to('/admin/rozpis');
     }
 
-    protected static function displayForm($action, $data = null)
+    protected static function displayForm($data = null)
     {
         \Render::twig('Admin/RozpisForm.twig', [
             'action' => $data ? 'edit' : 'add',

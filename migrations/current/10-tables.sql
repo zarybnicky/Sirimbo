@@ -51,12 +51,6 @@ create trigger on_update_author
   for each row
   execute procedure public.on_update_author_aktuality();
 
-drop trigger if exists on_update_author on public.aktuality;
-create trigger on_update_author
-  before update on public.aktuality
-  for each row
-  execute procedure public.on_update_author_aktuality();
-
 
 
 -- ************** dokumenty **************
@@ -65,6 +59,20 @@ alter table dokumenty enable row level security;
 create policy admin_all on dokumenty to administrator using (true) with check (true);
 create policy all_view on dokumenty for select using (true);
 grant all on dokumenty to member;
+
+CREATE or replace FUNCTION public.on_delete_file_dokumenty() RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+    perform graphile_worker.add_job('delete_file', json_build_object('path', OLD.d_path));
+END;
+$$;
+select plpgsql_check_function('public.on_delete_file_dokumenty', 'dokumenty');
+
+drop trigger if exists on_delete_file_dokumenty on public.dokumenty;
+create trigger on_delete_file_dokumenty
+  after delete on public.dokumenty
+  for each row
+  execute procedure public.on_delete_file_dokumenty();
+
 
 -- ************** galerie_dir **************
 select app_private.drop_policies('public.galerie_dir');

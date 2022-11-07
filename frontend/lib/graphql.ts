@@ -10261,43 +10261,45 @@ export type ResetPasswordMutationVariables = Exact<{
 
 export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword: { __typename: 'ResetPasswordPayload' } | null };
 
-export type DocumentFragment = { __typename?: 'Dokumenty', dId: string, dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null };
+export type FileFragment = { __typename?: 'Dokumenty', dId: string, dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null };
 
-export type DocumentsQueryVariables = Exact<{
+export type FileListQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
   category?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type DocumentsQuery = { __typename?: 'Query', dokumenties: { __typename?: 'DokumentiesConnection', totalCount: number, nodes: Array<{ __typename?: 'Dokumenty', dId: string, dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null, userByDKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string } | null }> } | null };
+export type FileListQuery = { __typename?: 'Query', dokumenties: { __typename?: 'DokumentiesConnection', totalCount: number, nodes: Array<{ __typename?: 'Dokumenty', dId: string, dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null, userByDKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string } | null }> } | null };
 
-export type DocumentQueryVariables = Exact<{
+export type FileQueryVariables = Exact<{
   id: Scalars['BigInt'];
 }>;
 
 
-export type DocumentQuery = { __typename?: 'Query', dokumenty: { __typename?: 'Dokumenty', dId: string, dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null } | null };
+export type FileQuery = { __typename?: 'Query', dokumenty: { __typename?: 'Dokumenty', dId: string, dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null } | null };
 
-export type CreateDocumentMutationVariables = Exact<{
+export type CreateFileMutationVariables = Exact<{
   input: DokumentyInput;
 }>;
 
 
-export type CreateDocumentMutation = { __typename?: 'Mutation', createDokumenty: { __typename: 'CreateDokumentyPayload' } | null };
+export type CreateFileMutation = { __typename?: 'Mutation', createDokumenty: { __typename: 'CreateDokumentyPayload' } | null };
 
-export type UpdateDocumentMutationVariables = Exact<{
+export type UpdateFileMutationVariables = Exact<{
   id: Scalars['BigInt'];
   patch: DokumentyPatch;
 }>;
 
 
-export type UpdateDocumentMutation = { __typename?: 'Mutation', updateDokumenty: { __typename: 'UpdateDokumentyPayload' } | null };
+export type UpdateFileMutation = { __typename?: 'Mutation', updateDokumenty: { __typename: 'UpdateDokumentyPayload' } | null };
 
-export type DeleteDocumentMutationVariables = Exact<{
+export type DeleteFileMutationVariables = Exact<{
   id: Scalars['BigInt'];
 }>;
 
 
-export type DeleteDocumentMutation = { __typename?: 'Mutation', deleteDokumenty: { __typename: 'DeleteDokumentyPayload' } | null };
+export type DeleteFileMutation = { __typename?: 'Mutation', deleteDokumenty: { __typename: 'DeleteDokumentyPayload' } | null };
 
 export type EventFragment = { __typename?: 'Akce', aId: string, aOd: string, aDo: string, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean };
 
@@ -10810,8 +10812,8 @@ export const CouplePartialFragmentDoc = `
   pArchiv
 }
     `;
-export const DocumentFragmentDoc = `
-    fragment Document on Dokumenty {
+export const FileFragmentDoc = `
+    fragment File on Dokumenty {
   dId
   dName
   dFilename
@@ -11636,12 +11638,17 @@ export const useResetPasswordMutation = <
 useResetPasswordMutation.getKey = () => ['ResetPassword'];
 
 useResetPasswordMutation.fetcher = (variables: ResetPasswordMutationVariables, options?: RequestInit['headers']) => fetcher<ResetPasswordMutation, ResetPasswordMutationVariables>(ResetPasswordDocument, variables, options);
-export const DocumentsDocument = `
-    query Documents($category: Int) {
-  dokumenties(condition: {dKategorie: $category}, orderBy: D_TIMESTAMP_DESC) {
+export const FileListDocument = `
+    query FileList($limit: Int, $offset: Int, $category: Int) {
+  dokumenties(
+    offset: $offset
+    first: $limit
+    condition: {dKategorie: $category}
+    orderBy: D_TIMESTAMP_DESC
+  ) {
     totalCount
     nodes {
-      ...Document
+      ...File
       userByDKdo {
         uJmeno
         uPrijmeni
@@ -11649,109 +11656,109 @@ export const DocumentsDocument = `
     }
   }
 }
-    ${DocumentFragmentDoc}`;
-export const useDocumentsQuery = <
-      TData = DocumentsQuery,
+    ${FileFragmentDoc}`;
+export const useFileListQuery = <
+      TData = FileListQuery,
       TError = unknown
     >(
-      variables?: DocumentsQueryVariables,
-      options?: UseQueryOptions<DocumentsQuery, TError, TData>
+      variables?: FileListQueryVariables,
+      options?: UseQueryOptions<FileListQuery, TError, TData>
     ) =>
-    useQuery<DocumentsQuery, TError, TData>(
-      variables === undefined ? ['Documents'] : ['Documents', variables],
-      fetcher<DocumentsQuery, DocumentsQueryVariables>(DocumentsDocument, variables),
+    useQuery<FileListQuery, TError, TData>(
+      variables === undefined ? ['FileList'] : ['FileList', variables],
+      fetcher<FileListQuery, FileListQueryVariables>(FileListDocument, variables),
       options
     );
-useDocumentsQuery.document = DocumentsDocument;
+useFileListQuery.document = FileListDocument;
 
 
-useDocumentsQuery.getKey = (variables?: DocumentsQueryVariables) => variables === undefined ? ['Documents'] : ['Documents', variables];
+useFileListQuery.getKey = (variables?: FileListQueryVariables) => variables === undefined ? ['FileList'] : ['FileList', variables];
 ;
 
-useDocumentsQuery.fetcher = (variables?: DocumentsQueryVariables, options?: RequestInit['headers']) => fetcher<DocumentsQuery, DocumentsQueryVariables>(DocumentsDocument, variables, options);
-export const DocumentDocument = `
-    query Document($id: BigInt!) {
+useFileListQuery.fetcher = (variables?: FileListQueryVariables, options?: RequestInit['headers']) => fetcher<FileListQuery, FileListQueryVariables>(FileListDocument, variables, options);
+export const FileDocument = `
+    query File($id: BigInt!) {
   dokumenty(dId: $id) {
-    ...Document
+    ...File
   }
 }
-    ${DocumentFragmentDoc}`;
-export const useDocumentQuery = <
-      TData = DocumentQuery,
+    ${FileFragmentDoc}`;
+export const useFileQuery = <
+      TData = FileQuery,
       TError = unknown
     >(
-      variables: DocumentQueryVariables,
-      options?: UseQueryOptions<DocumentQuery, TError, TData>
+      variables: FileQueryVariables,
+      options?: UseQueryOptions<FileQuery, TError, TData>
     ) =>
-    useQuery<DocumentQuery, TError, TData>(
-      ['Document', variables],
-      fetcher<DocumentQuery, DocumentQueryVariables>(DocumentDocument, variables),
+    useQuery<FileQuery, TError, TData>(
+      ['File', variables],
+      fetcher<FileQuery, FileQueryVariables>(FileDocument, variables),
       options
     );
-useDocumentQuery.document = DocumentDocument;
+useFileQuery.document = FileDocument;
 
 
-useDocumentQuery.getKey = (variables: DocumentQueryVariables) => ['Document', variables];
+useFileQuery.getKey = (variables: FileQueryVariables) => ['File', variables];
 ;
 
-useDocumentQuery.fetcher = (variables: DocumentQueryVariables, options?: RequestInit['headers']) => fetcher<DocumentQuery, DocumentQueryVariables>(DocumentDocument, variables, options);
-export const CreateDocumentDocument = `
-    mutation CreateDocument($input: DokumentyInput!) {
+useFileQuery.fetcher = (variables: FileQueryVariables, options?: RequestInit['headers']) => fetcher<FileQuery, FileQueryVariables>(FileDocument, variables, options);
+export const CreateFileDocument = `
+    mutation CreateFile($input: DokumentyInput!) {
   createDokumenty(input: {dokumenty: $input}) {
     __typename
   }
 }
     `;
-export const useCreateDocumentMutation = <
+export const useCreateFileMutation = <
       TError = unknown,
       TContext = unknown
-    >(options?: UseMutationOptions<CreateDocumentMutation, TError, CreateDocumentMutationVariables, TContext>) =>
-    useMutation<CreateDocumentMutation, TError, CreateDocumentMutationVariables, TContext>(
-      ['CreateDocument'],
-      (variables?: CreateDocumentMutationVariables) => fetcher<CreateDocumentMutation, CreateDocumentMutationVariables>(CreateDocumentDocument, variables)(),
+    >(options?: UseMutationOptions<CreateFileMutation, TError, CreateFileMutationVariables, TContext>) =>
+    useMutation<CreateFileMutation, TError, CreateFileMutationVariables, TContext>(
+      ['CreateFile'],
+      (variables?: CreateFileMutationVariables) => fetcher<CreateFileMutation, CreateFileMutationVariables>(CreateFileDocument, variables)(),
       options
     );
-useCreateDocumentMutation.getKey = () => ['CreateDocument'];
+useCreateFileMutation.getKey = () => ['CreateFile'];
 
-useCreateDocumentMutation.fetcher = (variables: CreateDocumentMutationVariables, options?: RequestInit['headers']) => fetcher<CreateDocumentMutation, CreateDocumentMutationVariables>(CreateDocumentDocument, variables, options);
-export const UpdateDocumentDocument = `
-    mutation UpdateDocument($id: BigInt!, $patch: DokumentyPatch!) {
+useCreateFileMutation.fetcher = (variables: CreateFileMutationVariables, options?: RequestInit['headers']) => fetcher<CreateFileMutation, CreateFileMutationVariables>(CreateFileDocument, variables, options);
+export const UpdateFileDocument = `
+    mutation UpdateFile($id: BigInt!, $patch: DokumentyPatch!) {
   updateDokumenty(input: {dId: $id, patch: $patch}) {
     __typename
   }
 }
     `;
-export const useUpdateDocumentMutation = <
+export const useUpdateFileMutation = <
       TError = unknown,
       TContext = unknown
-    >(options?: UseMutationOptions<UpdateDocumentMutation, TError, UpdateDocumentMutationVariables, TContext>) =>
-    useMutation<UpdateDocumentMutation, TError, UpdateDocumentMutationVariables, TContext>(
-      ['UpdateDocument'],
-      (variables?: UpdateDocumentMutationVariables) => fetcher<UpdateDocumentMutation, UpdateDocumentMutationVariables>(UpdateDocumentDocument, variables)(),
+    >(options?: UseMutationOptions<UpdateFileMutation, TError, UpdateFileMutationVariables, TContext>) =>
+    useMutation<UpdateFileMutation, TError, UpdateFileMutationVariables, TContext>(
+      ['UpdateFile'],
+      (variables?: UpdateFileMutationVariables) => fetcher<UpdateFileMutation, UpdateFileMutationVariables>(UpdateFileDocument, variables)(),
       options
     );
-useUpdateDocumentMutation.getKey = () => ['UpdateDocument'];
+useUpdateFileMutation.getKey = () => ['UpdateFile'];
 
-useUpdateDocumentMutation.fetcher = (variables: UpdateDocumentMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateDocumentMutation, UpdateDocumentMutationVariables>(UpdateDocumentDocument, variables, options);
-export const DeleteDocumentDocument = `
-    mutation DeleteDocument($id: BigInt!) {
+useUpdateFileMutation.fetcher = (variables: UpdateFileMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateFileMutation, UpdateFileMutationVariables>(UpdateFileDocument, variables, options);
+export const DeleteFileDocument = `
+    mutation DeleteFile($id: BigInt!) {
   deleteDokumenty(input: {dId: $id}) {
     __typename
   }
 }
     `;
-export const useDeleteDocumentMutation = <
+export const useDeleteFileMutation = <
       TError = unknown,
       TContext = unknown
-    >(options?: UseMutationOptions<DeleteDocumentMutation, TError, DeleteDocumentMutationVariables, TContext>) =>
-    useMutation<DeleteDocumentMutation, TError, DeleteDocumentMutationVariables, TContext>(
-      ['DeleteDocument'],
-      (variables?: DeleteDocumentMutationVariables) => fetcher<DeleteDocumentMutation, DeleteDocumentMutationVariables>(DeleteDocumentDocument, variables)(),
+    >(options?: UseMutationOptions<DeleteFileMutation, TError, DeleteFileMutationVariables, TContext>) =>
+    useMutation<DeleteFileMutation, TError, DeleteFileMutationVariables, TContext>(
+      ['DeleteFile'],
+      (variables?: DeleteFileMutationVariables) => fetcher<DeleteFileMutation, DeleteFileMutationVariables>(DeleteFileDocument, variables)(),
       options
     );
-useDeleteDocumentMutation.getKey = () => ['DeleteDocument'];
+useDeleteFileMutation.getKey = () => ['DeleteFile'];
 
-useDeleteDocumentMutation.fetcher = (variables: DeleteDocumentMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteDocumentMutation, DeleteDocumentMutationVariables>(DeleteDocumentDocument, variables, options);
+useDeleteFileMutation.fetcher = (variables: DeleteFileMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteFileMutation, DeleteFileMutationVariables>(DeleteFileDocument, variables, options);
 export const EventParticipantsDocument = `
     query EventParticipants($id: BigInt!) {
   akce(aId: $id) {

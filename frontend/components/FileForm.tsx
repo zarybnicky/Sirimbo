@@ -1,5 +1,5 @@
 import { Button, Grid } from '@mui/material';
-import { DocumentFragment, DokumentyInput, useUpdateDocumentMutation } from 'lib/graphql';
+import { FileFragment, DokumentyInput, useUpdateFileMutation } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'react-hook-form-mui';
@@ -8,11 +8,11 @@ import { ErrorBox } from './ErrorBox';
 
 type FormProps = Pick<DokumentyInput, 'dName'>;
 
-export const DocumentForm: React.FC<{
-  data: DocumentFragment;
+export const FileForm: React.FC<{
+  data: FileFragment;
   onSuccess: () => void;
 }> = ({ data, onSuccess }) => {
-  const { mutateAsync: doUpdate } = useUpdateDocumentMutation({ onSuccess });
+  const { mutateAsync: doUpdate } = useUpdateFileMutation({ onSuccess });
 
   const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {

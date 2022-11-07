@@ -1,15 +1,15 @@
 import { Container } from "@mui/material";
-import { DocumentForm } from "components/DocumentForm";
-import { useDocumentQuery } from "lib/graphql";
+import { FileForm } from "components/FileForm";
+import { useFileQuery } from "lib/graphql";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
 
-export default function DocumentEditPage() {
+export default function FileEditPage() {
   useRequireUserLoggedIn();
   const router = useRouter();
   const { id } = router.query;
-  const { data } = useDocumentQuery({ id: id as string }, { enabled: !!id, cacheTime: 0 });
+  const { data } = useFileQuery({ id: id as string }, { enabled: !!id, cacheTime: 0 });
   return <Container maxWidth="md" style={{ margin: '4rem auto 6rem' }}>
-    {data?.dokumenty && <DocumentForm data={data.dokumenty} onSuccess={() => router.back()} />}
+    {data?.dokumenty && <FileForm data={data.dokumenty} onSuccess={() => router.back()} />}
   </Container>;
 };

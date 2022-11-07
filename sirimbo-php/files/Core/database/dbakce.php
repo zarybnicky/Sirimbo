@@ -33,25 +33,6 @@ class DBAkce extends Database
         return self::getArray($res);
     }
 
-    public static function editAkce($id, $jmeno, $kde, $info, $od, $do, $kapacita, $dokumenty, $lock, $visible)
-    {
-        self::query(
-            "UPDATE akce SET a_jmeno='?',a_kde='?',a_info='?',a_od='?',a_do='?'," .
-            "a_kapacita='?',a_dokumenty='?',a_lock='?',a_visible='?' WHERE a_id='?'",
-            $jmeno,
-            $kde,
-            $info,
-            $od,
-            $do,
-            $kapacita,
-            $dokumenty,
-            $lock,
-            $visible,
-            $id,
-        );
-        return true;
-    }
-
     public static function signUp($uid, $pid, $rok_narozeni)
     {
         self::query(
