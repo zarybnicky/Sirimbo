@@ -33,8 +33,8 @@ create policy admin_all on aktuality to administrator using (true) with check (t
 create policy all_view on aktuality for select using (true);
 grant all on aktuality to anonymous;
 
-alter table aktuality alter column at_kdo drop not null;
 alter table aktuality alter column at_timestamp_add set default now();
+alter table aktuality alter column at_kdo drop not null;
 
 CREATE or replace FUNCTION public.on_update_author_aktuality() RETURNS trigger LANGUAGE plpgsql AS $$
 BEGIN
@@ -259,6 +259,17 @@ create policy admin_all on upozorneni to administrator using (true) with check (
 create policy all_view on upozorneni for select using (true);
 grant all on upozorneni to member;
 
+alter table upozorneni alter column up_kdo drop not null;
+
+CREATE or replace FUNCTION public.on_update_author_upozorneni() RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+   NEW.up_kdo = current_user_id();
+   NEW.up_timestamp = now();
+   RETURN NEW;
+END;
+$$;
+select plpgsql_check_function('public.on_update_author_upozorneni', 'upozorneni');
+
 -- ************** upozorneni_skupiny **************
 select app_private.drop_policies('public.upozorneni_skupiny');
 alter table upozorneni_skupiny enable row level security;
@@ -299,6 +310,8 @@ alter table video enable row level security;
 create policy admin_all on video to administrator using (true) with check (true);
 create policy all_view on video for select using (true);
 grant all on video to anonymous;
+
+alter table video alter column v_created_at set default now();
 
 -- ************** video_list **************
 select app_private.drop_policies('public.video_list');

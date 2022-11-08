@@ -3,7 +3,7 @@ import { useCreateCoupleMutation, useUserListQuery } from 'lib/graphql';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
-import { AutocompleteElement } from 'react-hook-form-mui';
+import { SelectElement } from 'react-hook-form-mui';
 import { ErrorBox } from './ErrorBox';
 
 type FormProps = {
@@ -33,13 +33,13 @@ export const NewCoupleForm: React.FC<{
     <Grid container spacing={1.5} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox grid error={onSubmit.error} />
       <Grid item xs={12}>
-        <AutocompleteElement
+        <SelectElement
           control={control} name="man" label="Partner" required
           options={men}
         />
       </Grid>
       <Grid item xs={12}>
-        <AutocompleteElement
+        <SelectElement
           control={control} name="woman" label="Partnerka" required
           options={women}
         />

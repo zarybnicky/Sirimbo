@@ -19,34 +19,6 @@ class DBPlatbyGroup extends Database
         return self::getArray($res);
     }
 
-    public static function getSingleWithCategories($id)
-    {
-        $res = self::query(
-            "SELECT *
-            FROM platby_category_group
-                LEFT JOIN platby_group ON pcg_id_group=pg_id
-                LEFT JOIN platby_category ON pcg_id_category=pc_id
-            WHERE pg_id='?'
-            ORDER BY pg_type,pg_id,pc_symbol",
-            $id,
-        );
-        return self::getArray($res);
-    }
-
-    public static function getSingleWithSkupiny($id)
-    {
-        $res = self::query(
-            "SELECT *
-            FROM platby_group_skupina
-                LEFT JOIN platby_group ON pgs_id_group=pg_id
-                LEFT JOIN skupiny ON pgs_id_skupina=s_id
-            WHERE pg_id='?'
-            ORDER BY pg_type,pg_id",
-            $id,
-        );
-        return self::getArray($res);
-    }
-
     public static function getWithoutSkupina()
     {
         $res = self::query(

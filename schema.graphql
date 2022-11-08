@@ -10727,7 +10727,7 @@ type Upozorneni implements Node {
   nodeId: ID!
   upBarvy: BigInt!
   upId: BigInt!
-  upKdo: BigInt!
+  upKdo: BigInt
   upLock: Boolean!
   upNadpis: String!
 
@@ -10801,7 +10801,7 @@ input UpozorneniCondition {
 input UpozorneniInput {
   upBarvy: BigInt
   upId: BigInt
-  upKdo: BigInt!
+  upKdo: BigInt
   upLock: Boolean
   upNadpis: String!
   upText: String!
@@ -11746,7 +11746,7 @@ input VideoCondition {
 """An input for mutations affecting `Video`"""
 input VideoInput {
   vAuthor: String!
-  vCreatedAt: Datetime!
+  vCreatedAt: Datetime
   vDescription: String!
   vId: BigInt
   vPlaylist: String

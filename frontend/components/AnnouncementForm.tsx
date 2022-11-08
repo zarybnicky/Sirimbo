@@ -1,12 +1,12 @@
 import { Button, Grid } from '@mui/material';
-import { AnnouncementFragment, AktualityInput, useCreateAnnouncementMutation, useUpdateAnnouncementMutation } from 'lib/graphql';
+import { AnnouncementFragment, UpozorneniInput, useCreateAnnouncementMutation, useUpdateAnnouncementMutation } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { TextFieldElement } from 'react-hook-form-mui';
+import { CheckboxElement, TextFieldElement } from 'react-hook-form-mui';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 
-type FormProps = Pick<AktualityInput, 'atJmeno' | 'atPreview' | 'atText'>;
+type FormProps = Pick<UpozorneniInput, 'upNadpis' | 'upText' | 'upLock'>;
 
 export const AnnouncementForm: React.FC<{
   data?: AnnouncementFragment;
@@ -17,17 +17,17 @@ export const AnnouncementForm: React.FC<{
 
   const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
-      atJmeno: data?.atJmeno,
-      atPreview: data?.atPreview,
-      atText: data?.atText,
+      upNadpis: data?.upNadpis,
+      upText: data?.upText,
+      upLock: data?.upLock,
     },
   });
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     if (data) {
-      await doUpdate({ id: data.atId, patch: values });
+      await doUpdate({ id: data.upId, patch: values });
     } else {
-      await doCreate({ input: { ...values, atKat: '1' } });
+      await doCreate({ input: values });
     }
   });
 
@@ -35,13 +35,13 @@ export const AnnouncementForm: React.FC<{
     <Grid container spacing={1.5} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox grid error={onSubmit.error} />
       <Grid item xs={12}>
-        <TextFieldElement fullWidth control={control} name="atJmeno" label="Název" required />
+        <TextFieldElement fullWidth control={control} name="upNadpis" label="Nadpis" required />
       </Grid>
       <Grid item xs={12}>
-        <TextFieldElement fullWidth control={control} name="atPreview" label="Shrnutí" rows={3} multiline required />
+        <TextFieldElement fullWidth control={control} name="upText" label="Text" rows={20} multiline required />
       </Grid>
       <Grid item xs={12}>
-        <TextFieldElement fullWidth control={control} name="atText" label="Text" rows={20} multiline required />
+        <CheckboxElement control={control} name="upLock" value="1" label="Uzamčená" />
       </Grid>
       <Grid item xs={12}>
         <Button fullWidth variant="contained" type="submit" color="primary" disabled={onSubmit.loading}>Uložit</Button>

@@ -100,16 +100,6 @@ class Utils
         return "<select class=\"$cls\" name=\"$name\">" . implode($options) . "</select>";
     }
 
-    public static function selectLiteral(string $name, array $data, $set = null, $cls = "form-control"): string
-    {
-        $options = array_for($data, fn($x) => (
-            "<option value=\"$x\""
-            . ((string) $set === (string) $x ? " selected" : '')
-            . ">$x</option>"
-        ));
-        return "<select class=\"$cls\" name=\"$name\">" . implode($options) . "</select>";
-    }
-
     public static function partnerRequest(): string
     {
         $out = '';

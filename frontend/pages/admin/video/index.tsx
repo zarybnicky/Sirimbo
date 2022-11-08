@@ -1,1 +1,52 @@
-export { default, getServerSideProps } from 'components/PhpDynamicPage';
+import * as React from 'react';
+import { Container } from '@mui/material';
+import { NextLinkComposed } from 'components/Link';
+import { useDeleteVideoMutation, useVideoListQuery } from 'lib/graphql';
+import { useRequireUserLoggedIn } from 'lib/route-guards';
+import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
+import format from 'date-fns/format';
+import { useRouter } from 'next/router';
+import EditIcon from '@mui/icons-material/Edit';
+import { DeleteButton } from 'components/DeleteButton';
+
+export default function VideoList() {
+  useRequireUserLoggedIn();
+  const router = useRouter();
+  const { data, refetch } = useVideoListQuery();
+  const { mutateAsync: doDelete } = useDeleteVideoMutation({
+    onSuccess: () => refetch(),
+  });
+
+  return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
+    <NextLinkComposed href="/admin/video/add" className="btn btn-outline-primary">Přidat video</NextLinkComposed>
+
+    <DataGrid
+      autoHeight={true}
+      getRowId={row => row.vId}
+      rows={data?.videos?.nodes || []}
+      columns={[
+        {
+          field: 'actions',
+          type: 'actions',
+          getActions: ({ id }: GridRowParams) => [
+            <GridActionsCellItem key="edit"
+              icon={<EditIcon />}
+              onClick={() => router.push(`/admin/video/edit/${id}`)}
+              label="Upravit"
+            />,
+            <DeleteButton
+              key="delete" title="smazat video"
+              params={{ id: id.toString() }} onDelete={doDelete}
+            />,
+          ]
+        },
+        { field: 'vName', headerName: 'Jméno', flex: 1 },
+        { field: 'vId', headerName: 'ID videa', flex: 1 },
+        {
+          field: 'checked', headerName: 'Přidáno', flex: 1,
+          renderCell: ({ row }) => row.vCreatedAt ? format(new Date(row.vCreatedAt), 'd. M. y') : '',
+        },
+      ]}
+    />
+  </Container>;
+}

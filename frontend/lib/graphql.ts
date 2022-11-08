@@ -9132,7 +9132,7 @@ export type Upozorneni = Node & {
   nodeId: Scalars['ID'];
   upBarvy: Scalars['BigInt'];
   upId: Scalars['BigInt'];
-  upKdo: Scalars['BigInt'];
+  upKdo: Maybe<Scalars['BigInt']>;
   upLock: Scalars['Boolean'];
   upNadpis: Scalars['String'];
   /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
@@ -9182,7 +9182,7 @@ export type UpozorneniCondition = {
 export type UpozorneniInput = {
   upBarvy?: InputMaybe<Scalars['BigInt']>;
   upId?: InputMaybe<Scalars['BigInt']>;
-  upKdo: Scalars['BigInt'];
+  upKdo?: InputMaybe<Scalars['BigInt']>;
   upLock?: InputMaybe<Scalars['Boolean']>;
   upNadpis: Scalars['String'];
   upText: Scalars['String'];
@@ -9830,7 +9830,7 @@ export type VideoCondition = {
 /** An input for mutations affecting `Video` */
 export type VideoInput = {
   vAuthor: Scalars['String'];
-  vCreatedAt: Scalars['Datetime'];
+  vCreatedAt?: InputMaybe<Scalars['Datetime']>;
   vDescription: Scalars['String'];
   vId?: InputMaybe<Scalars['BigInt']>;
   vPlaylist?: InputMaybe<Scalars['String']>;
@@ -10087,13 +10087,37 @@ export enum VideoSourcesOrderBy {
   VsUrlDesc = 'VS_URL_DESC'
 }
 
+export type AnnouncementFragment = { __typename?: 'Upozorneni', upId: string, upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, userByUpKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sId: string, sName: string, sDescription: string, sColorText: string, sColorRgb: string } | null }> } };
+
 export type AnnouncementListQueryVariables = Exact<{
   limit: Scalars['Int'];
   offset: Scalars['Int'];
 }>;
 
 
-export type AnnouncementListQuery = { __typename?: 'Query', upozornenis: { __typename?: 'UpozornenisConnection', totalCount: number, nodes: Array<{ __typename?: 'Upozorneni', upId: string, upKdo: string, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, userByUpKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sId: string, sName: string, sDescription: string, sColorText: string, sColorRgb: string } | null }> } }> } | null };
+export type AnnouncementListQuery = { __typename?: 'Query', upozornenis: { __typename?: 'UpozornenisConnection', totalCount: number, nodes: Array<{ __typename?: 'Upozorneni', upId: string, upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, userByUpKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sId: string, sName: string, sDescription: string, sColorText: string, sColorRgb: string } | null }> } }> } | null };
+
+export type AnnouncementQueryVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type AnnouncementQuery = { __typename?: 'Query', upozorneni: { __typename?: 'Upozorneni', upId: string, upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, userByUpKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sId: string, sName: string, sDescription: string, sColorText: string, sColorRgb: string } | null }> } } | null };
+
+export type CreateAnnouncementMutationVariables = Exact<{
+  input: UpozorneniInput;
+}>;
+
+
+export type CreateAnnouncementMutation = { __typename?: 'Mutation', createUpozorneni: { __typename: 'CreateUpozorneniPayload' } | null };
+
+export type UpdateAnnouncementMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+  patch: UpozorneniPatch;
+}>;
+
+
+export type UpdateAnnouncementMutation = { __typename?: 'Mutation', updateUpozorneni: { __typename: 'UpdateUpozorneniPayload' } | null };
 
 export type DeleteAnnouncementMutationVariables = Exact<{
   id: Scalars['BigInt'];
@@ -10737,8 +10761,74 @@ export type DeleteVideoSourceMutationVariables = Exact<{
 }>;
 
 
-export type DeleteVideoSourceMutation = { __typename?: 'Mutation', deleteVideoSource: { __typename?: 'DeleteVideoSourcePayload', clientMutationId: string | null } | null };
+export type DeleteVideoSourceMutation = { __typename?: 'Mutation', deleteVideoSource: { __typename: 'DeleteVideoSourcePayload' } | null };
 
+export type VideoFragment = { __typename?: 'Video', vId: string, vAuthor: string, vPlaylist: string | null, vTitle: string, vDescription: string, vUri: string, vCreatedAt: string };
+
+export type VideoQueryVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type VideoQuery = { __typename?: 'Query', video: { __typename?: 'Video', vId: string, vAuthor: string, vPlaylist: string | null, vTitle: string, vDescription: string, vUri: string, vCreatedAt: string } | null };
+
+export type VideoListQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type VideoListQuery = { __typename?: 'Query', videos: { __typename?: 'VideosConnection', nodes: Array<{ __typename?: 'Video', vId: string, vAuthor: string, vPlaylist: string | null, vTitle: string, vDescription: string, vUri: string, vCreatedAt: string }> } | null };
+
+export type CreateVideoMutationVariables = Exact<{
+  input: VideoInput;
+}>;
+
+
+export type CreateVideoMutation = { __typename?: 'Mutation', createVideo: { __typename: 'CreateVideoPayload' } | null };
+
+export type UpdateVideoMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+  patch: VideoPatch;
+}>;
+
+
+export type UpdateVideoMutation = { __typename?: 'Mutation', updateVideo: { __typename: 'UpdateVideoPayload' } | null };
+
+export type DeleteVideoMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type DeleteVideoMutation = { __typename?: 'Mutation', deleteVideo: { __typename: 'DeleteVideoPayload' } | null };
+
+export const AnnouncementFragmentDoc = `
+    fragment Announcement on Upozorneni {
+  upId
+  upKdo
+  upLock
+  upNadpis
+  upText
+  upTimestamp
+  upTimestampAdd
+  userByUpKdo {
+    uId
+    uJmeno
+    uPrijmeni
+  }
+  upozorneniSkupiniesByUpsIdRodic {
+    nodes {
+      skupinyByUpsIdSkupina {
+        sId
+        sName
+        sDescription
+        sColorText
+        sColorRgb
+      }
+    }
+  }
+}
+    `;
 export const ArticleFragmentDoc = `
     fragment Article on Aktuality {
   atId
@@ -11031,38 +11121,27 @@ export const VideoSourceFragmentDoc = `
   vsCreatedAt
 }
     `;
+export const VideoFragmentDoc = `
+    fragment Video on Video {
+  vId
+  vAuthor
+  vPlaylist
+  vTitle
+  vDescription
+  vUri
+  vCreatedAt
+}
+    `;
 export const AnnouncementListDocument = `
     query AnnouncementList($limit: Int!, $offset: Int!) {
   upozornenis(first: $limit, offset: $offset, orderBy: [UP_TIMESTAMP_ADD_DESC]) {
     totalCount
     nodes {
-      upId
-      upKdo
-      upLock
-      upNadpis
-      upText
-      upTimestamp
-      upTimestampAdd
-      userByUpKdo {
-        uId
-        uJmeno
-        uPrijmeni
-      }
-      upozorneniSkupiniesByUpsIdRodic {
-        nodes {
-          skupinyByUpsIdSkupina {
-            sId
-            sName
-            sDescription
-            sColorText
-            sColorRgb
-          }
-        }
-      }
+      ...Announcement
     }
   }
 }
-    `;
+    ${AnnouncementFragmentDoc}`;
 export const useAnnouncementListQuery = <
       TData = AnnouncementListQuery,
       TError = unknown
@@ -11082,6 +11161,70 @@ useAnnouncementListQuery.getKey = (variables: AnnouncementListQueryVariables) =>
 ;
 
 useAnnouncementListQuery.fetcher = (variables: AnnouncementListQueryVariables, options?: RequestInit['headers']) => fetcher<AnnouncementListQuery, AnnouncementListQueryVariables>(AnnouncementListDocument, variables, options);
+export const AnnouncementDocument = `
+    query Announcement($id: BigInt!) {
+  upozorneni(upId: $id) {
+    ...Announcement
+  }
+}
+    ${AnnouncementFragmentDoc}`;
+export const useAnnouncementQuery = <
+      TData = AnnouncementQuery,
+      TError = unknown
+    >(
+      variables: AnnouncementQueryVariables,
+      options?: UseQueryOptions<AnnouncementQuery, TError, TData>
+    ) =>
+    useQuery<AnnouncementQuery, TError, TData>(
+      ['Announcement', variables],
+      fetcher<AnnouncementQuery, AnnouncementQueryVariables>(AnnouncementDocument, variables),
+      options
+    );
+useAnnouncementQuery.document = AnnouncementDocument;
+
+
+useAnnouncementQuery.getKey = (variables: AnnouncementQueryVariables) => ['Announcement', variables];
+;
+
+useAnnouncementQuery.fetcher = (variables: AnnouncementQueryVariables, options?: RequestInit['headers']) => fetcher<AnnouncementQuery, AnnouncementQueryVariables>(AnnouncementDocument, variables, options);
+export const CreateAnnouncementDocument = `
+    mutation CreateAnnouncement($input: UpozorneniInput!) {
+  createUpozorneni(input: {upozorneni: $input}) {
+    __typename
+  }
+}
+    `;
+export const useCreateAnnouncementMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreateAnnouncementMutation, TError, CreateAnnouncementMutationVariables, TContext>) =>
+    useMutation<CreateAnnouncementMutation, TError, CreateAnnouncementMutationVariables, TContext>(
+      ['CreateAnnouncement'],
+      (variables?: CreateAnnouncementMutationVariables) => fetcher<CreateAnnouncementMutation, CreateAnnouncementMutationVariables>(CreateAnnouncementDocument, variables)(),
+      options
+    );
+useCreateAnnouncementMutation.getKey = () => ['CreateAnnouncement'];
+
+useCreateAnnouncementMutation.fetcher = (variables: CreateAnnouncementMutationVariables, options?: RequestInit['headers']) => fetcher<CreateAnnouncementMutation, CreateAnnouncementMutationVariables>(CreateAnnouncementDocument, variables, options);
+export const UpdateAnnouncementDocument = `
+    mutation UpdateAnnouncement($id: BigInt!, $patch: UpozorneniPatch!) {
+  updateUpozorneni(input: {upId: $id, patch: $patch}) {
+    __typename
+  }
+}
+    `;
+export const useUpdateAnnouncementMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<UpdateAnnouncementMutation, TError, UpdateAnnouncementMutationVariables, TContext>) =>
+    useMutation<UpdateAnnouncementMutation, TError, UpdateAnnouncementMutationVariables, TContext>(
+      ['UpdateAnnouncement'],
+      (variables?: UpdateAnnouncementMutationVariables) => fetcher<UpdateAnnouncementMutation, UpdateAnnouncementMutationVariables>(UpdateAnnouncementDocument, variables)(),
+      options
+    );
+useUpdateAnnouncementMutation.getKey = () => ['UpdateAnnouncement'];
+
+useUpdateAnnouncementMutation.fetcher = (variables: UpdateAnnouncementMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateAnnouncementMutation, UpdateAnnouncementMutationVariables>(UpdateAnnouncementDocument, variables, options);
 export const DeleteAnnouncementDocument = `
     mutation DeleteAnnouncement($id: BigInt!) {
   deleteUpozorneni(input: {upId: $id}) {
@@ -13133,7 +13276,7 @@ useUpdateVideoSourceMutation.fetcher = (variables: UpdateVideoSourceMutationVari
 export const DeleteVideoSourceDocument = `
     mutation DeleteVideoSource($id: BigInt!) {
   deleteVideoSource(input: {vsId: $id}) {
-    clientMutationId
+    __typename
   }
 }
     `;
@@ -13149,3 +13292,114 @@ export const useDeleteVideoSourceMutation = <
 useDeleteVideoSourceMutation.getKey = () => ['DeleteVideoSource'];
 
 useDeleteVideoSourceMutation.fetcher = (variables: DeleteVideoSourceMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteVideoSourceMutation, DeleteVideoSourceMutationVariables>(DeleteVideoSourceDocument, variables, options);
+export const VideoDocument = `
+    query Video($id: BigInt!) {
+  video(vId: $id) {
+    ...Video
+  }
+}
+    ${VideoFragmentDoc}`;
+export const useVideoQuery = <
+      TData = VideoQuery,
+      TError = unknown
+    >(
+      variables: VideoQueryVariables,
+      options?: UseQueryOptions<VideoQuery, TError, TData>
+    ) =>
+    useQuery<VideoQuery, TError, TData>(
+      ['Video', variables],
+      fetcher<VideoQuery, VideoQueryVariables>(VideoDocument, variables),
+      options
+    );
+useVideoQuery.document = VideoDocument;
+
+
+useVideoQuery.getKey = (variables: VideoQueryVariables) => ['Video', variables];
+;
+
+useVideoQuery.fetcher = (variables: VideoQueryVariables, options?: RequestInit['headers']) => fetcher<VideoQuery, VideoQueryVariables>(VideoDocument, variables, options);
+export const VideoListDocument = `
+    query VideoList($limit: Int, $offset: Int) {
+  videos(first: $limit, offset: $offset) {
+    nodes {
+      ...Video
+    }
+  }
+}
+    ${VideoFragmentDoc}`;
+export const useVideoListQuery = <
+      TData = VideoListQuery,
+      TError = unknown
+    >(
+      variables?: VideoListQueryVariables,
+      options?: UseQueryOptions<VideoListQuery, TError, TData>
+    ) =>
+    useQuery<VideoListQuery, TError, TData>(
+      variables === undefined ? ['VideoList'] : ['VideoList', variables],
+      fetcher<VideoListQuery, VideoListQueryVariables>(VideoListDocument, variables),
+      options
+    );
+useVideoListQuery.document = VideoListDocument;
+
+
+useVideoListQuery.getKey = (variables?: VideoListQueryVariables) => variables === undefined ? ['VideoList'] : ['VideoList', variables];
+;
+
+useVideoListQuery.fetcher = (variables?: VideoListQueryVariables, options?: RequestInit['headers']) => fetcher<VideoListQuery, VideoListQueryVariables>(VideoListDocument, variables, options);
+export const CreateVideoDocument = `
+    mutation CreateVideo($input: VideoInput!) {
+  createVideo(input: {video: $input}) {
+    __typename
+  }
+}
+    `;
+export const useCreateVideoMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreateVideoMutation, TError, CreateVideoMutationVariables, TContext>) =>
+    useMutation<CreateVideoMutation, TError, CreateVideoMutationVariables, TContext>(
+      ['CreateVideo'],
+      (variables?: CreateVideoMutationVariables) => fetcher<CreateVideoMutation, CreateVideoMutationVariables>(CreateVideoDocument, variables)(),
+      options
+    );
+useCreateVideoMutation.getKey = () => ['CreateVideo'];
+
+useCreateVideoMutation.fetcher = (variables: CreateVideoMutationVariables, options?: RequestInit['headers']) => fetcher<CreateVideoMutation, CreateVideoMutationVariables>(CreateVideoDocument, variables, options);
+export const UpdateVideoDocument = `
+    mutation UpdateVideo($id: BigInt!, $patch: VideoPatch!) {
+  updateVideo(input: {vId: $id, patch: $patch}) {
+    __typename
+  }
+}
+    `;
+export const useUpdateVideoMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<UpdateVideoMutation, TError, UpdateVideoMutationVariables, TContext>) =>
+    useMutation<UpdateVideoMutation, TError, UpdateVideoMutationVariables, TContext>(
+      ['UpdateVideo'],
+      (variables?: UpdateVideoMutationVariables) => fetcher<UpdateVideoMutation, UpdateVideoMutationVariables>(UpdateVideoDocument, variables)(),
+      options
+    );
+useUpdateVideoMutation.getKey = () => ['UpdateVideo'];
+
+useUpdateVideoMutation.fetcher = (variables: UpdateVideoMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateVideoMutation, UpdateVideoMutationVariables>(UpdateVideoDocument, variables, options);
+export const DeleteVideoDocument = `
+    mutation DeleteVideo($id: BigInt!) {
+  deleteVideo(input: {vId: $id}) {
+    __typename
+  }
+}
+    `;
+export const useDeleteVideoMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<DeleteVideoMutation, TError, DeleteVideoMutationVariables, TContext>) =>
+    useMutation<DeleteVideoMutation, TError, DeleteVideoMutationVariables, TContext>(
+      ['DeleteVideo'],
+      (variables?: DeleteVideoMutationVariables) => fetcher<DeleteVideoMutation, DeleteVideoMutationVariables>(DeleteVideoDocument, variables)(),
+      options
+    );
+useDeleteVideoMutation.getKey = () => ['DeleteVideo'];
+
+useDeleteVideoMutation.fetcher = (variables: DeleteVideoMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteVideoMutation, DeleteVideoMutationVariables>(DeleteVideoDocument, variables, options);

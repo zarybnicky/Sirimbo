@@ -1,0 +1,58 @@
+fragment Announcement on Upozorneni {
+  upId
+  upKdo
+  upLock
+  upNadpis
+  upText
+  upTimestamp
+  upTimestampAdd
+  userByUpKdo {
+    uId
+    uJmeno
+    uPrijmeni
+  }
+  upozorneniSkupiniesByUpsIdRodic {
+    nodes {
+      skupinyByUpsIdSkupina {
+        sId
+        sName
+        sDescription
+        sColorText
+        sColorRgb
+      }
+    }
+  }
+}
+
+query AnnouncementList($limit: Int!, $offset: Int!) {
+  upozornenis(first: $limit, offset: $offset, orderBy: [UP_TIMESTAMP_ADD_DESC]) {
+    totalCount
+    nodes {
+      ...Announcement
+    }
+  }
+}
+
+query Announcement($id: BigInt!) {
+  upozorneni(upId: $id) {
+    ...Announcement
+  }
+}
+
+mutation CreateAnnouncement($input: UpozorneniInput!) {
+  createUpozorneni(input: {upozorneni: $input}) {
+    __typename
+  }
+}
+
+mutation UpdateAnnouncement($id: BigInt!, $patch: UpozorneniPatch!) {
+  updateUpozorneni(input: {upId: $id, patch: $patch}) {
+    __typename
+  }
+}
+
+mutation DeleteAnnouncement($id: BigInt!) {
+  deleteUpozorneni(input: {upId: $id}) {
+    __typename
+  }
+}

@@ -1,7 +1,6 @@
 <?php
 class DBUser extends Database
 {
-
     public static function checkUser($login, $pass)
     {
         $res = self::query("SELECT * FROM users WHERE

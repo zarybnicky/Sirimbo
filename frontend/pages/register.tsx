@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Card, Grid, CardContent, Container, Button, CardActions, Typography } from '@mui/material';
-import { useForm, AutocompleteElement, TextFieldElement, DatePickerElement, RadioButtonGroup } from 'react-hook-form-mui';
+import { useForm, SelectElement, TextFieldElement, DatePickerElement, RadioButtonGroup } from 'react-hook-form-mui';
 import { useCountries } from 'lib/data/use-countries';
 import format from 'date-fns/format';
 import { useSnackbar } from 'notistack';
@@ -29,8 +29,8 @@ export default function RegisterPage() {
           values.poznamky === 'parent' ? `Rodič tanečníka: ${values.dancerName}` :
             `Jiný vztah: ${values.other}`,
         dancer: values.poznamky === 'dancer',
-        nationality: values.nationality.id.toString(),
-        skupina: values.skupina.id,
+        nationality: values.nationality.toString(),
+        skupina: values.skupina,
         narozeni: format(new Date(values.narozeni), 'yyyy-MM-dd'),
         dancerName: undefined,
         other: undefined,
@@ -87,7 +87,7 @@ export default function RegisterPage() {
             </Grid>
 
             <Grid item xs={12}>
-              <AutocompleteElement control={control}
+              <SelectElement control={control}
                 label="Národnost" name="nationality" required
                 options={countries.map(x => ({ id: x.code, label: x.label }))}
               />
@@ -139,14 +139,14 @@ export default function RegisterPage() {
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <AutocompleteElement control={control}
+              <SelectElement control={control}
                 label="Tréninková skupina" name="skupina"
                 options={cohorts?.skupinies?.nodes?.map(x => ({ id: x.sId, label: x.sName })) || []}
               />
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <AutocompleteElement control={control}
+              <SelectElement control={control}
                 label="Vztah ke klubu" name="poznamky" required
                 options={[
                   { id: 'dancer', label: 'Tanečník/tanečnice' },
@@ -154,10 +154,10 @@ export default function RegisterPage() {
                   { id: 'other', label: 'Jiný' },
                 ]}
               />
-              {watch('poznamky')?.id === 'parent' && (
+              {watch('poznamky') === 'parent' && (
                 <TextFieldElement fullWidth control={control} label="Jméno tanečníka" name="dancer-name" />
               )}
-              {watch('poznamky')?.id === 'other' && (
+              {watch('poznamky') === 'other' && (
                 <TextFieldElement fullWidth control={control} label="Popište svůj vztah ke klubu" name="other" placeholder="vztah ke klubu" />
               )}
             </Grid>

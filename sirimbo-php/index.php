@@ -112,21 +112,6 @@ try {
     $router->get('/admin/video/playlist', [\Olymp\Controller\Admin\Video::class, 'playlistList']);
     $router->get('/admin/video/playlist/([0-9]+)', [\Olymp\Controller\Admin\Video::class, 'playlist']);
 
-    $router->get('/admin/video/add', [\Olymp\Controller\Admin\Video::class, 'add']);
-    $router->post('/admin/video/add', [\Olymp\Controller\Admin\Video::class, 'addPost']);
-
-    $router->get('/admin/video/edit/([0-9]+)', [\Olymp\Controller\Admin\Video::class, 'edit']);
-    $router->post('/admin/video/edit/([0-9]+)', [\Olymp\Controller\Admin\Video::class, 'editPost']);
-
-    $router->get('/admin/video/remove/([0-9]+)', [\Olymp\Controller\Admin\Video::class, 'remove']);
-    $router->post('/admin/video/remove/([0-9]+)', [\Olymp\Controller\Admin\Video::class, 'removePost']);
-
-    $router->get('/admin/nastenka/add', [\Olymp\Controller\Admin\Nastenka::class, 'add']);
-    $router->post('/admin/nastenka/add', [\Olymp\Controller\Admin\Nastenka::class, 'addPost']);
-
-    $router->get('/admin/nastenka/edit/([0-9]+)', [\Olymp\Controller\Admin\Nastenka::class, 'edit']);
-    $router->post('/admin/nastenka/edit/([0-9]+)', [\Olymp\Controller\Admin\Nastenka::class, 'editPost']);
-
     $router->get('/admin/galerie/file/upload', [\Olymp\Controller\Admin\GalerieFile::class, 'upload']);
     $router->post('/admin/galerie/file/upload', [\Olymp\Controller\Admin\GalerieFile::class, 'uploadPost']);
 

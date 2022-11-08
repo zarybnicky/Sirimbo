@@ -46,6 +46,49 @@ mutation UpdateVideoSource($id: BigInt!, $patch: VideoSourcePatch!) {
 
 mutation DeleteVideoSource($id: BigInt!) {
   deleteVideoSource(input: {vsId: $id}) {
-    clientMutationId
+    __typename
+  }
+}
+
+
+fragment Video on Video {
+  vId
+  vAuthor
+  vPlaylist
+  vTitle
+  vDescription
+  vUri
+  vCreatedAt
+}
+
+query Video($id: BigInt!) {
+  video(vId: $id) {
+    ...Video
+  }
+}
+
+query VideoList($limit: Int, $offset: Int) {
+  videos(first: $limit, offset: $offset) {
+    nodes {
+      ...Video
+    }
+  }
+}
+
+mutation CreateVideo($input: VideoInput!) {
+  createVideo(input: {video: $input}) {
+    __typename
+  }
+}
+
+mutation UpdateVideo($id: BigInt!, $patch: VideoPatch!) {
+  updateVideo(input: {vId: $id, patch: $patch}) {
+    __typename
+  }
+}
+
+mutation DeleteVideo($id: BigInt!) {
+  deleteVideo(input: {vId: $id}) {
+    __typename
   }
 }
