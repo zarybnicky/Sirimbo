@@ -1,4 +1,4 @@
-import { Alert, Button, Grid } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { PaymentGroupFragment, PlatbyGroupInput, useCreatePaymentGroupMutation, useUpdatePaymentGroupMutation } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';

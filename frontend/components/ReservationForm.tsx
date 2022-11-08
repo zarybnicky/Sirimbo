@@ -1,11 +1,10 @@
 import { Button, Grid } from '@mui/material';
-import { ReservationFragment, NabidkaInput, useCreateReservationMutation, useUpdateReservationMutation } from 'lib/graphql';
+import { ReservationFragment, NabidkaInput, useCreateReservationMutation, useUpdateReservationMutation, useTrainerListQuery } from 'lib/graphql';
 import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { CheckboxElement, TextFieldElement } from 'react-hook-form-mui';
+import { useForm } from 'react-hook-form';
+import { CheckboxElement, DatePickerElement, SelectElement, TextFieldElement } from 'react-hook-form-mui';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
-import { ColorFormat, ColorPicker } from 'mui-color';
 
 type FormProps = Pick<NabidkaInput, 'nTrener' | 'nPocetHod' | 'nMaxPocetHod' | 'nOd' | 'nDo' | 'nVisible' | 'nLock'>;
 
@@ -16,7 +15,7 @@ export const ReservationForm: React.FC<{
   const { mutateAsync: doCreate } = useCreateReservationMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateReservationMutation({ onSuccess });
 
-  // trainers - if admin, then all with pe_nabidka >= OWNED, else [me]
+  const { data: trainers } = useTrainerListQuery();
 
   const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
@@ -34,7 +33,7 @@ export const ReservationForm: React.FC<{
     if (data) {
       await doUpdate({ id: data.nId, patch: values });
     } else {
-      await doCreate({ input: { ...values } });
+      await doCreate({ input: values });
     }
   });
 
@@ -42,28 +41,28 @@ export const ReservationForm: React.FC<{
     <Grid container spacing={1.5} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox grid error={onSubmit.error} />
       <Grid item xs={12}>
-        <TextFieldElement fullWidth control={control} name="sName" label="Název" required />
-      </Grid>
-      <Grid item xs={12}>
-        <TextFieldElement fullWidth control={control} name="sLocation" label="Město/místo" required />
-      </Grid>
-      <Grid item xs={12}>
-        <CheckboxElement control={control} name="sVisible" value="1" label="Viditelná pro registraci" />
-      </Grid>
-      <Grid item xs={12}>
-        <Controller
-          name="sColorRgb"
-          control={control}
-          defaultValue="#FF0000"
-          render={({ field: { onChange, value } }) => (
-            <ColorPicker
-              inputFormats={["hex" as any as ColorFormat]}
-              value={value} onChange={(v) => onChange((v as any).css.backgroundColor)} />
-          )}
+        <SelectElement
+          fullWidth control={control} name="nTrener" label="Trenér" required
+          options={(trainers?.trainers?.nodes || []).map(x => ({ id: x.uId, label: `${x.uJmeno} ${x.uPrijmeni}` }))}
         />
       </Grid>
       <Grid item xs={12}>
-        <TextFieldElement fullWidth control={control} name="sDescription" label="Popis" rows={3} multiline required />
+        <TextFieldElement fullWidth control={control} name="nPocetHod" label="Počet hodin" required />
+      </Grid>
+      <Grid item xs={12}>
+        <TextFieldElement fullWidth control={control} name="nMaxPocetHod" label="Max.počet hodin" required />
+      </Grid>
+      <Grid item xs={12}>
+        <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Od" name="nOd" required />
+      </Grid>
+      <Grid item xs={12}>
+        <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Do" name="nDo" required />
+      </Grid>
+      <Grid item xs={12}>
+        <CheckboxElement control={control} name="nVisible" value="1" label="Viditelný" />
+      </Grid>
+      <Grid item xs={12}>
+        <CheckboxElement control={control} name="nLock" value="1" label="Uzamčený" />
       </Grid>
       <Grid item xs={12}>
         <Button fullWidth variant="contained" type="submit" color="primary" disabled={onSubmit.loading}>Uložit</Button>

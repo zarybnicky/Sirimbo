@@ -47,12 +47,4 @@ class Settings
         'image/x-png' => 'png',
         'image/png' => 'png',
     ];
-
-    public static $imageSuffix = [
-        'image/pjpeg' => 'JPEG',
-        'image/jpeg' => 'JPEG',
-        'image/gif' => 'GIF',
-        'image/x-png' => 'PNG',
-        'image/png' => 'PNG',
-    ];
 }

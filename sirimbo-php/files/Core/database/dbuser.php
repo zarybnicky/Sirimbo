@@ -130,16 +130,4 @@ class DBUser extends Database
         );
         return self::getArray($res);
     }
-
-    public static function getActiveUsers($group = null)
-    {
-        $res = self::query(
-            "SELECT users.*,skupiny.* FROM users
-                LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
-            WHERE u_system='0' AND u_confirmed='1' AND u_ban='0' " .
-            ($group !== null ? "AND u_group='$group' " : '') .
-                "ORDER BY u_prijmeni "
-        );
-        return self::getArray($res);
-    }
 }

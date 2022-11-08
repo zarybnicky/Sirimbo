@@ -33,6 +33,15 @@ query MemberList($cohortId: BigInt) {
   }
 }
 
+query TrainerList {
+  trainers {
+    totalCount
+    nodes {
+      ...User
+    }
+  }
+}
+
 mutation ConfirmUser($id: BigInt!, $role: BigInt!, $cohort: BigInt!) {
   confirmUser(input: {id: $id, grp: $role, cohort: $cohort}) {
     __typename

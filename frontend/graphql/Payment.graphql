@@ -38,3 +38,56 @@ mutation DeletePaymentGroup($id: BigInt!) {
     __typename
   }
 }
+
+
+fragment PaymentItem on PlatbyItem {
+  piId
+  piIdCategory
+  piIdRaw
+  piIdUser
+  piAmount
+  piPrefix
+  piDate
+  userByPiIdUser {
+    uId
+    uJmeno
+    uPrijmeni
+  }
+  platbyCategoryByPiIdCategory {
+    pcId
+    pcName
+  }
+}
+
+query PaymentItemList {
+  platbyItems {
+    totalCount
+    nodes {
+      ...PaymentItem
+    }
+  }
+}
+
+query PaymentItem($id: BigInt!) {
+  platbyItem(piId: $id) {
+    ...PaymentItem
+  }
+}
+
+mutation CreatePaymentItem($input: PlatbyItemInput!) {
+  createPlatbyItem(input: {platbyItem: $input}) {
+    __typename
+  }
+}
+
+mutation UpdatePaymentItem($id: BigInt!, $patch: PlatbyItemPatch!) {
+  updatePlatbyItem (input: {piId: $id, patch: $patch}) {
+    __typename
+  }
+}
+
+mutation DeletePaymentItem($id: BigInt!) {
+  deletePlatbyItem(input: {piId: $id}) {
+    __typename
+  }
+}

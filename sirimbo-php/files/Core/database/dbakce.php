@@ -51,35 +51,6 @@ class DBAkce extends Database
         return true;
     }
 
-    public static function addAkceItem($p_id, $u_id, $rok)
-    {
-        self::query(
-            "INSERT INTO akce_item (ai_id_rodic,ai_user,ai_rok_narozeni)" .
-            " VALUES ('?','?','?')",
-            $p_id,
-            $u_id,
-            $rok,
-        );
-        return true;
-    }
-
-    public static function editAkceItem($id, $u_id, $rok)
-    {
-        self::query(
-            "UPDATE akce_item SET ai_user='?',ai_rok_narozeni='?' WHERE ai_id='?'",
-            $u_id,
-            $rok,
-            $id,
-        );
-        return true;
-    }
-
-    public static function removeAkceItem($id)
-    {
-        self::query("DELETE FROM akce_item WHERE ai_id='?'", $id);
-        return true;
-    }
-
     public static function isUserSignedUp($a_id, $u_id)
     {
         $res = self::query(

@@ -59,53 +59,10 @@ class DBGalerie extends Database
         return true;
     }
 
-    public static function editFoto($id, $path, $dir = false, $name = false)
-    {
-        self::query(
-            "UPDATE galerie_foto SET gf_path='?'"
-            . ($dir != false ? ",gf_id_rodic='$dir'" : '')
-            . ($name != false ? ",gf_name='$name'" : '')
-            . " WHERE gf_id='?'",
-            $path,
-            $id,
-        );
-        return true;
-    }
-
-    public static function editFotoReplacePath($parent, $original, $new)
-    {
-        self::query(
-            "UPDATE galerie_foto SET gf_path=REPLACE(gf_path,'?','?')
-            WHERE gf_id_rodic='?'",
-            $original, $new, $parent
-        );
-    }
-
     public static function removeFoto($id)
     {
         self::query("DELETE FROM galerie_foto WHERE gf_id='?'", $id);
         return true;
-    }
-
-    public static function addDir($name, $parent, $level, $hidden, $path)
-    {
-        self::query(
-            "INSERT INTO galerie_dir
-            (gd_name,gd_id_rodic,gd_level,gd_hidden,gd_path) VALUES
-            ('?','?','?','?','?')",
-            $name, $parent, $level, $hidden, $path
-        );
-        return true;
-    }
-
-    public static function editDir($id, $name, $parent, $level, $hidden, $path)
-    {
-        self::query(
-            "UPDATE galerie_dir
-            SET gd_name='?',gd_id_rodic='?',gd_level='?',gd_hidden='?',gd_path='?'
-            WHERE gd_id='?'",
-            $name, $parent, $level, $hidden, $path, $id
-        );
     }
 
     public static function removeDir($id)

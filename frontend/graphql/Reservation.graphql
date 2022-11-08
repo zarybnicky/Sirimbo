@@ -44,6 +44,12 @@ query ReservationList($limit: Int! $offset: Int!) {
   }
 }
 
+query Reservation($id: BigInt!) {
+  nabidka(nId: $id) {
+    ...Reservation
+  }
+}
+
 query ReservationRange($startDate: Date!, $endDate: Date!) {
   reservationsForRange(startDate: $startDate, endDate: $endDate) {
     nodes {

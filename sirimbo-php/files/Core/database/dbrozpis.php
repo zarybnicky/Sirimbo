@@ -37,52 +37,6 @@ class DBRozpis extends Database
         return self::getSingleRow($res);
     }
 
-    public static function getScheduleTrainer($id)
-    {
-        $res = self::query(
-            "SELECT * FROM users
-            WHERE u_id=(SELECT r_trener FROM rozpis WHERE r_id='?')",
-            $id
-        );
-        return $res ? self::getSingleRow($res) : false;
-    }
-
-    public static function addSchedule($trener, $kde, $datum, $visible, $lock)
-    {
-        self::query(
-            "INSERT INTO rozpis (r_trener,r_kde,r_datum,r_visible,r_lock) VALUES " .
-            "('?','?','?','?','?')",
-            $trener,
-            $kde,
-            $datum,
-            $visible,
-            $lock,
-        );
-        return self::getInsertId();
-    }
-
-    public static function editSchedule($id, $trener, $kde, $datum, $visible, $lock)
-    {
-        self::query(
-            "UPDATE rozpis SET r_trener='?',r_kde='?',r_datum='?'," .
-            "r_visible='?',r_lock='?' WHERE r_id='?'",
-            $trener,
-            $kde,
-            $datum,
-            $visible,
-            $lock,
-            $id,
-        );
-        return true;
-    }
-
-    public static function deleteSchedule($id)
-    {
-        self::query("DELETE FROM rozpis WHERE r_id='?'", $id);
-        self::query("DELETE FROM rozpis_item WHERE ri_id_rodic='?'", $id);
-        return true;
-    }
-
     public static function addLesson($parent_id, $user_id, $od, $do, $lock)
     {
         $user_id = $user_id ? "'$user_id'" : "NULL";

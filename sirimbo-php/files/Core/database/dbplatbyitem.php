@@ -22,26 +22,6 @@ class DBPlatbyItem extends Database
         );
     }
 
-    public static function update($id, $uid, $cid, $amount, $date, $prefix)
-    {
-        self::query(
-            "UPDATE platby_item
-            SET pi_id_user='?', pi_id_category='?', pi_amount='?', pi_date='?', pi_prefix='?'
-            WHERE pi_id='?'",
-            $uid,
-            $cid,
-            $amount,
-            $date,
-            $prefix,
-            $id,
-        );
-    }
-
-    public static function remove($id)
-    {
-        self::query("DELETE FROM platby_item WHERE pi_id='?'", $id);
-    }
-
     public static function get($joined = false, $filter = [], $date = [])
     {
         $query
@@ -80,18 +60,5 @@ class DBPlatbyItem extends Database
 
         $res = self::query($query);
         return self::getArray($res);
-    }
-
-    public static function getSingle($id, $joined = false)
-    {
-        $res = self::query(
-            "SELECT * FROM platby_item"
-            . ($joined ?
-               ' LEFT JOIN users ON pi_id_user=u_id
-                 LEFT JOIN platby_category ON pi_id_category=pc_id' : '')
-            . " WHERE pi_id='?'",
-            $id
-        );
-        return self::getSingleRow($res);
     }
 }

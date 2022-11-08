@@ -49,6 +49,13 @@ create or replace function current_user_id() returns bigint as $$
 $$ language sql stable;
 grant execute on function current_user_id to anonymous;
 
+create or replace function current_permissions() returns setof permissions as $$
+  SELECT permissions.* from permissions
+  inner join users on u_group=pe_id
+  where u_id=current_setting('jwt.claims.user_id', true)::bigint;
+$$ language sql stable;
+grant execute on function current_user_id to anonymous;
+
 create or replace function current_session_id() returns text as $$
   select nullif(current_setting('jwt.claims.user_id', true), '')::integer;
 $$ language sql stable;

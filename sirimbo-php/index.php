@@ -76,7 +76,6 @@ try {
 
     $router->get('/admin/platby', [\Olymp\Controller\Admin\Platby::class, 'overview']);
     $router->get('/admin/platby/structure', [\Olymp\Controller\Admin\Platby::class, 'structure']);
-    $router->get('/admin/platby/items', [\Olymp\Controller\Admin\PlatbyItems::class, 'list']);
     $router->get('/admin/platby/manual', [\Olymp\Controller\Admin\PlatbyManual::class, 'query']);
 
     $router->get('/member/akce/([0-9]+)', [\Olymp\Controller\Member\Akce::class, 'single']);
@@ -99,9 +98,6 @@ try {
     $router->get('/member/profil/par/partner', [\Olymp\Controller\Member\ProfilPar::class, 'partner']);
     $router->post('/member/profil/par/partner', [\Olymp\Controller\Member\ProfilPar::class, 'partnerPost']);
     $router->post('/member/profil/par/zadost', [\Olymp\Controller\Member\ProfilPar::class, 'zadost']);
-
-    $router->get('/admin/akce/detail/([0-9]+)', [\Olymp\Controller\Admin\Akce::class, 'detail']);
-    $router->post('/admin/akce/detail/([0-9]+)', [\Olymp\Controller\Admin\Akce::class, 'detailPost']);
 
     $router->get('/admin/video', [\Olymp\Controller\Admin\Video::class, 'orphan']);
     $router->get('/admin/video/orphan', [\Olymp\Controller\Admin\Video::class, 'orphan']);
@@ -132,16 +128,6 @@ try {
     $router->get('/admin/galerie/directory/remove/([0-9]+)', [\Olymp\Controller\Admin\GalerieDirectory::class, 'remove']);
     $router->post('/admin/galerie/directory/remove/([0-9]+)', [\Olymp\Controller\Admin\GalerieDirectory::class, 'removePost']);
 
-    $router->get('/admin/rozpis/add', [\Olymp\Controller\Admin\Rozpis::class, 'add']);
-    $router->post('/admin/rozpis/add', [\Olymp\Controller\Admin\Rozpis::class, 'addPost']);
-
-    $router->get('/admin/rozpis/duplicate/([0-9]+)', [\Olymp\Controller\Admin\Rozpis::class, 'duplicate']);
-
-    $router->get('/admin/rozpis/edit/([0-9]+)', [\Olymp\Controller\Admin\Rozpis::class, 'edit']);
-    $router->post('/admin/rozpis/edit/([0-9]+)', [\Olymp\Controller\Admin\Rozpis::class, 'editPost']);
-
-    $router->get('/admin/rozpis/remove/([0-9]+)', [\Olymp\Controller\Admin\Rozpis::class, 'remove']);
-
     $router->get('/admin/rozpis/detail/([0-9]+)', [\Olymp\Controller\Admin\RozpisDetail::class, 'detail']);
     $router->post('/admin/rozpis/detail/([0-9]+)', [\Olymp\Controller\Admin\RozpisDetail::class, 'detailPost']);
 
@@ -169,15 +155,6 @@ try {
 
     $router->get('/admin/platby/manual/([0-9]+)', [\Olymp\Controller\Admin\PlatbyManual::class, 'get']);
     $router->post('/admin/platby/manual/([0-9]+)', [\Olymp\Controller\Admin\PlatbyManual::class, 'post']);
-
-    $router->get('/admin/platby/items/add', [\Olymp\Controller\Admin\PlatbyItems::class, 'add']);
-    $router->post('/admin/platby/items/add', [\Olymp\Controller\Admin\PlatbyItems::class, 'addPost']);
-
-    $router->get('/admin/platby/items/edit/([0-9]+)', [\Olymp\Controller\Admin\PlatbyItems::class, 'edit']);
-    $router->post('/admin/platby/items/edit/([0-9]+)', [\Olymp\Controller\Admin\PlatbyItems::class, 'editPost']);
-
-    $router->get('/admin/platby/items/remove/([0-9]+)', [\Olymp\Controller\Admin\PlatbyItems::class, 'remove']);
-    $router->post('/admin/platby/items/remove/([0-9]+)', [\Olymp\Controller\Admin\PlatbyItems::class, 'removePost']);
 
     $router->get('/admin/platby/structure/category', [\Olymp\Controller\Admin\PlatbyCategory::class, 'list']);
     $router->post('/admin/platby/structure/category', [\Olymp\Controller\Admin\PlatbyCategory::class, 'listPost']);

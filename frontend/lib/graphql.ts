@@ -6259,6 +6259,8 @@ export type Query = Node & {
   /** Reads a single `Aktuality` using its globally unique `ID`. */
   aktualityByNodeId: Maybe<Aktuality>;
   currentCoupleIds: Maybe<CurrentCoupleIdsConnection>;
+  /** Reads and enables pagination through a set of `Permission`. */
+  currentPermissions: Maybe<PermissionsConnection>;
   currentSessionId: Maybe<Scalars['String']>;
   currentUserId: Maybe<Scalars['BigInt']>;
   /** Reads and enables pagination through a set of `Dokumenty`. */
@@ -6387,6 +6389,8 @@ export type Query = Node & {
   skupinyByNodeId: Maybe<Skupiny>;
   /** Reads and enables pagination through a set of `Video`. */
   titleVideos: Maybe<VideosConnection>;
+  /** Reads and enables pagination through a set of `User`. */
+  trainers: Maybe<UsersConnection>;
   upozorneni: Maybe<Upozorneni>;
   /** Reads a single `Upozorneni` using its globally unique `ID`. */
   upozorneniByNodeId: Maybe<Upozorneni>;
@@ -6514,6 +6518,16 @@ export type QueryAktualityByNodeIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCurrentCoupleIdsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCurrentPermissionsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
   first?: InputMaybe<Scalars['Int']>;
@@ -7089,6 +7103,16 @@ export type QuerySkupinyByNodeIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTitleVideosArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTrainersArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
   first?: InputMaybe<Scalars['Int']>;
@@ -10534,6 +10558,42 @@ export type DeletePaymentGroupMutationVariables = Exact<{
 
 export type DeletePaymentGroupMutation = { __typename?: 'Mutation', deletePlatbyGroup: { __typename: 'DeletePlatbyGroupPayload' } | null };
 
+export type PaymentItemFragment = { __typename?: 'PlatbyItem', piId: string, piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, userByPiIdUser: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcId: string, pcName: string } | null };
+
+export type PaymentItemListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PaymentItemListQuery = { __typename?: 'Query', platbyItems: { __typename?: 'PlatbyItemsConnection', totalCount: number, nodes: Array<{ __typename?: 'PlatbyItem', piId: string, piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, userByPiIdUser: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcId: string, pcName: string } | null }> } | null };
+
+export type PaymentItemQueryVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type PaymentItemQuery = { __typename?: 'Query', platbyItem: { __typename?: 'PlatbyItem', piId: string, piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, userByPiIdUser: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcId: string, pcName: string } | null } | null };
+
+export type CreatePaymentItemMutationVariables = Exact<{
+  input: PlatbyItemInput;
+}>;
+
+
+export type CreatePaymentItemMutation = { __typename?: 'Mutation', createPlatbyItem: { __typename: 'CreatePlatbyItemPayload' } | null };
+
+export type UpdatePaymentItemMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+  patch: PlatbyItemPatch;
+}>;
+
+
+export type UpdatePaymentItemMutation = { __typename?: 'Mutation', updatePlatbyItem: { __typename: 'UpdatePlatbyItemPayload' } | null };
+
+export type DeletePaymentItemMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type DeletePaymentItemMutation = { __typename?: 'Mutation', deletePlatbyItem: { __typename: 'DeletePlatbyItemPayload' } | null };
+
 export type ReservationItemFragment = { __typename?: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null };
 
 export type ReservationFragment = { __typename?: 'Nabidka', nId: string, nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename?: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null };
@@ -10545,6 +10605,13 @@ export type ReservationListQueryVariables = Exact<{
 
 
 export type ReservationListQuery = { __typename?: 'Query', nabidkas: { __typename?: 'NabidkasConnection', totalCount: number, nodes: Array<{ __typename?: 'Nabidka', nId: string, nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename?: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null }> } | null };
+
+export type ReservationQueryVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type ReservationQuery = { __typename?: 'Query', nabidka: { __typename?: 'Nabidka', nId: string, nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename?: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null };
 
 export type ReservationRangeQueryVariables = Exact<{
   startDate: Scalars['Date'];
@@ -10650,6 +10717,13 @@ export type MyLessonsQueryVariables = Exact<{
 
 export type MyLessonsQuery = { __typename?: 'Query', currentSessionId: string | null, currentUserId: string | null, currentCoupleIds: { __typename?: 'CurrentCoupleIdsConnection', nodes: Array<string | null> } | null, myLessons: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename?: 'RozpisItem', riId: string, riOd: string, riDo: string, rozpiByRiIdRodic: { __typename?: 'Rozpi', rId: string, rDatum: string, rKde: string, userByRTrener: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', userByPIdPartner: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> } | null };
 
+export type ScheduleQueryVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type ScheduleQuery = { __typename?: 'Query', rozpi: { __typename?: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename?: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null } | null }> } } | null };
+
 export type ToggleScheduleVisibleMutationVariables = Exact<{
   id: Scalars['BigInt'];
   visible: Scalars['Boolean'];
@@ -10657,6 +10731,21 @@ export type ToggleScheduleVisibleMutationVariables = Exact<{
 
 
 export type ToggleScheduleVisibleMutation = { __typename?: 'Mutation', updateRozpi: { __typename?: 'UpdateRozpiPayload', rozpi: { __typename?: 'Rozpi', rId: string } | null } | null };
+
+export type CreateScheduleMutationVariables = Exact<{
+  input: RozpiInput;
+}>;
+
+
+export type CreateScheduleMutation = { __typename?: 'Mutation', createRozpi: { __typename: 'CreateRozpiPayload' } | null };
+
+export type UpdateScheduleMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+  patch: RozpiPatch;
+}>;
+
+
+export type UpdateScheduleMutation = { __typename?: 'Mutation', updateRozpi: { __typename: 'UpdateRozpiPayload' } | null };
 
 export type DeleteScheduleMutationVariables = Exact<{
   id: Scalars['BigInt'];
@@ -10687,6 +10776,11 @@ export type MemberListQueryVariables = Exact<{
 
 
 export type MemberListQuery = { __typename?: 'Query', members: { __typename?: 'MembersConnection', totalCount: number, nodes: Array<{ __typename?: 'Member', uId: string | null, uJmeno: string | null, uPrijmeni: string | null, uEmail: string | null, uTelefon: string | null, uRodneCislo: string | null, sId: string | null, sName: string | null, sColorRgb: string | null, sDescription: string | null, sVisible: boolean | null, paymentValid: boolean | null }> } | null };
+
+export type TrainerListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TrainerListQuery = { __typename?: 'Query', trainers: { __typename?: 'UsersConnection', totalCount: number, nodes: Array<{ __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string }> } | null };
 
 export type ConfirmUserMutationVariables = Exact<{
   id: Scalars['BigInt'];
@@ -10980,6 +11074,26 @@ export const PaymentGroupFragmentDoc = `
   pgType
   pgDescription
   pgBase
+}
+    `;
+export const PaymentItemFragmentDoc = `
+    fragment PaymentItem on PlatbyItem {
+  piId
+  piIdCategory
+  piIdRaw
+  piIdUser
+  piAmount
+  piPrefix
+  piDate
+  userByPiIdUser {
+    uId
+    uJmeno
+    uPrijmeni
+  }
+  platbyCategoryByPiIdCategory {
+    pcId
+    pcName
+  }
 }
     `;
 export const ReservationItemFragmentDoc = `
@@ -12583,6 +12697,118 @@ export const useDeletePaymentGroupMutation = <
 useDeletePaymentGroupMutation.getKey = () => ['DeletePaymentGroup'];
 
 useDeletePaymentGroupMutation.fetcher = (variables: DeletePaymentGroupMutationVariables, options?: RequestInit['headers']) => fetcher<DeletePaymentGroupMutation, DeletePaymentGroupMutationVariables>(DeletePaymentGroupDocument, variables, options);
+export const PaymentItemListDocument = `
+    query PaymentItemList {
+  platbyItems {
+    totalCount
+    nodes {
+      ...PaymentItem
+    }
+  }
+}
+    ${PaymentItemFragmentDoc}`;
+export const usePaymentItemListQuery = <
+      TData = PaymentItemListQuery,
+      TError = unknown
+    >(
+      variables?: PaymentItemListQueryVariables,
+      options?: UseQueryOptions<PaymentItemListQuery, TError, TData>
+    ) =>
+    useQuery<PaymentItemListQuery, TError, TData>(
+      variables === undefined ? ['PaymentItemList'] : ['PaymentItemList', variables],
+      fetcher<PaymentItemListQuery, PaymentItemListQueryVariables>(PaymentItemListDocument, variables),
+      options
+    );
+usePaymentItemListQuery.document = PaymentItemListDocument;
+
+
+usePaymentItemListQuery.getKey = (variables?: PaymentItemListQueryVariables) => variables === undefined ? ['PaymentItemList'] : ['PaymentItemList', variables];
+;
+
+usePaymentItemListQuery.fetcher = (variables?: PaymentItemListQueryVariables, options?: RequestInit['headers']) => fetcher<PaymentItemListQuery, PaymentItemListQueryVariables>(PaymentItemListDocument, variables, options);
+export const PaymentItemDocument = `
+    query PaymentItem($id: BigInt!) {
+  platbyItem(piId: $id) {
+    ...PaymentItem
+  }
+}
+    ${PaymentItemFragmentDoc}`;
+export const usePaymentItemQuery = <
+      TData = PaymentItemQuery,
+      TError = unknown
+    >(
+      variables: PaymentItemQueryVariables,
+      options?: UseQueryOptions<PaymentItemQuery, TError, TData>
+    ) =>
+    useQuery<PaymentItemQuery, TError, TData>(
+      ['PaymentItem', variables],
+      fetcher<PaymentItemQuery, PaymentItemQueryVariables>(PaymentItemDocument, variables),
+      options
+    );
+usePaymentItemQuery.document = PaymentItemDocument;
+
+
+usePaymentItemQuery.getKey = (variables: PaymentItemQueryVariables) => ['PaymentItem', variables];
+;
+
+usePaymentItemQuery.fetcher = (variables: PaymentItemQueryVariables, options?: RequestInit['headers']) => fetcher<PaymentItemQuery, PaymentItemQueryVariables>(PaymentItemDocument, variables, options);
+export const CreatePaymentItemDocument = `
+    mutation CreatePaymentItem($input: PlatbyItemInput!) {
+  createPlatbyItem(input: {platbyItem: $input}) {
+    __typename
+  }
+}
+    `;
+export const useCreatePaymentItemMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreatePaymentItemMutation, TError, CreatePaymentItemMutationVariables, TContext>) =>
+    useMutation<CreatePaymentItemMutation, TError, CreatePaymentItemMutationVariables, TContext>(
+      ['CreatePaymentItem'],
+      (variables?: CreatePaymentItemMutationVariables) => fetcher<CreatePaymentItemMutation, CreatePaymentItemMutationVariables>(CreatePaymentItemDocument, variables)(),
+      options
+    );
+useCreatePaymentItemMutation.getKey = () => ['CreatePaymentItem'];
+
+useCreatePaymentItemMutation.fetcher = (variables: CreatePaymentItemMutationVariables, options?: RequestInit['headers']) => fetcher<CreatePaymentItemMutation, CreatePaymentItemMutationVariables>(CreatePaymentItemDocument, variables, options);
+export const UpdatePaymentItemDocument = `
+    mutation UpdatePaymentItem($id: BigInt!, $patch: PlatbyItemPatch!) {
+  updatePlatbyItem(input: {piId: $id, patch: $patch}) {
+    __typename
+  }
+}
+    `;
+export const useUpdatePaymentItemMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<UpdatePaymentItemMutation, TError, UpdatePaymentItemMutationVariables, TContext>) =>
+    useMutation<UpdatePaymentItemMutation, TError, UpdatePaymentItemMutationVariables, TContext>(
+      ['UpdatePaymentItem'],
+      (variables?: UpdatePaymentItemMutationVariables) => fetcher<UpdatePaymentItemMutation, UpdatePaymentItemMutationVariables>(UpdatePaymentItemDocument, variables)(),
+      options
+    );
+useUpdatePaymentItemMutation.getKey = () => ['UpdatePaymentItem'];
+
+useUpdatePaymentItemMutation.fetcher = (variables: UpdatePaymentItemMutationVariables, options?: RequestInit['headers']) => fetcher<UpdatePaymentItemMutation, UpdatePaymentItemMutationVariables>(UpdatePaymentItemDocument, variables, options);
+export const DeletePaymentItemDocument = `
+    mutation DeletePaymentItem($id: BigInt!) {
+  deletePlatbyItem(input: {piId: $id}) {
+    __typename
+  }
+}
+    `;
+export const useDeletePaymentItemMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<DeletePaymentItemMutation, TError, DeletePaymentItemMutationVariables, TContext>) =>
+    useMutation<DeletePaymentItemMutation, TError, DeletePaymentItemMutationVariables, TContext>(
+      ['DeletePaymentItem'],
+      (variables?: DeletePaymentItemMutationVariables) => fetcher<DeletePaymentItemMutation, DeletePaymentItemMutationVariables>(DeletePaymentItemDocument, variables)(),
+      options
+    );
+useDeletePaymentItemMutation.getKey = () => ['DeletePaymentItem'];
+
+useDeletePaymentItemMutation.fetcher = (variables: DeletePaymentItemMutationVariables, options?: RequestInit['headers']) => fetcher<DeletePaymentItemMutation, DeletePaymentItemMutationVariables>(DeletePaymentItemDocument, variables, options);
 export const ReservationListDocument = `
     query ReservationList($limit: Int!, $offset: Int!) {
   nabidkas(first: $limit, offset: $offset, orderBy: [N_OD_DESC]) {
@@ -12612,6 +12838,32 @@ useReservationListQuery.getKey = (variables: ReservationListQueryVariables) => [
 ;
 
 useReservationListQuery.fetcher = (variables: ReservationListQueryVariables, options?: RequestInit['headers']) => fetcher<ReservationListQuery, ReservationListQueryVariables>(ReservationListDocument, variables, options);
+export const ReservationDocument = `
+    query Reservation($id: BigInt!) {
+  nabidka(nId: $id) {
+    ...Reservation
+  }
+}
+    ${ReservationFragmentDoc}`;
+export const useReservationQuery = <
+      TData = ReservationQuery,
+      TError = unknown
+    >(
+      variables: ReservationQueryVariables,
+      options?: UseQueryOptions<ReservationQuery, TError, TData>
+    ) =>
+    useQuery<ReservationQuery, TError, TData>(
+      ['Reservation', variables],
+      fetcher<ReservationQuery, ReservationQueryVariables>(ReservationDocument, variables),
+      options
+    );
+useReservationQuery.document = ReservationDocument;
+
+
+useReservationQuery.getKey = (variables: ReservationQueryVariables) => ['Reservation', variables];
+;
+
+useReservationQuery.fetcher = (variables: ReservationQueryVariables, options?: RequestInit['headers']) => fetcher<ReservationQuery, ReservationQueryVariables>(ReservationDocument, variables, options);
 export const ReservationRangeDocument = `
     query ReservationRange($startDate: Date!, $endDate: Date!) {
   reservationsForRange(startDate: $startDate, endDate: $endDate) {
@@ -12941,6 +13193,32 @@ useMyLessonsQuery.getKey = (variables?: MyLessonsQueryVariables) => variables ==
 ;
 
 useMyLessonsQuery.fetcher = (variables?: MyLessonsQueryVariables, options?: RequestInit['headers']) => fetcher<MyLessonsQuery, MyLessonsQueryVariables>(MyLessonsDocument, variables, options);
+export const ScheduleDocument = `
+    query Schedule($id: BigInt!) {
+  rozpi(rId: $id) {
+    ...Schedule
+  }
+}
+    ${ScheduleFragmentDoc}`;
+export const useScheduleQuery = <
+      TData = ScheduleQuery,
+      TError = unknown
+    >(
+      variables: ScheduleQueryVariables,
+      options?: UseQueryOptions<ScheduleQuery, TError, TData>
+    ) =>
+    useQuery<ScheduleQuery, TError, TData>(
+      ['Schedule', variables],
+      fetcher<ScheduleQuery, ScheduleQueryVariables>(ScheduleDocument, variables),
+      options
+    );
+useScheduleQuery.document = ScheduleDocument;
+
+
+useScheduleQuery.getKey = (variables: ScheduleQueryVariables) => ['Schedule', variables];
+;
+
+useScheduleQuery.fetcher = (variables: ScheduleQueryVariables, options?: RequestInit['headers']) => fetcher<ScheduleQuery, ScheduleQueryVariables>(ScheduleDocument, variables, options);
 export const ToggleScheduleVisibleDocument = `
     mutation ToggleScheduleVisible($id: BigInt!, $visible: Boolean!) {
   updateRozpi(input: {rId: $id, patch: {rVisible: $visible}}) {
@@ -12962,6 +13240,44 @@ export const useToggleScheduleVisibleMutation = <
 useToggleScheduleVisibleMutation.getKey = () => ['ToggleScheduleVisible'];
 
 useToggleScheduleVisibleMutation.fetcher = (variables: ToggleScheduleVisibleMutationVariables, options?: RequestInit['headers']) => fetcher<ToggleScheduleVisibleMutation, ToggleScheduleVisibleMutationVariables>(ToggleScheduleVisibleDocument, variables, options);
+export const CreateScheduleDocument = `
+    mutation CreateSchedule($input: RozpiInput!) {
+  createRozpi(input: {rozpi: $input}) {
+    __typename
+  }
+}
+    `;
+export const useCreateScheduleMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreateScheduleMutation, TError, CreateScheduleMutationVariables, TContext>) =>
+    useMutation<CreateScheduleMutation, TError, CreateScheduleMutationVariables, TContext>(
+      ['CreateSchedule'],
+      (variables?: CreateScheduleMutationVariables) => fetcher<CreateScheduleMutation, CreateScheduleMutationVariables>(CreateScheduleDocument, variables)(),
+      options
+    );
+useCreateScheduleMutation.getKey = () => ['CreateSchedule'];
+
+useCreateScheduleMutation.fetcher = (variables: CreateScheduleMutationVariables, options?: RequestInit['headers']) => fetcher<CreateScheduleMutation, CreateScheduleMutationVariables>(CreateScheduleDocument, variables, options);
+export const UpdateScheduleDocument = `
+    mutation UpdateSchedule($id: BigInt!, $patch: RozpiPatch!) {
+  updateRozpi(input: {rId: $id, patch: $patch}) {
+    __typename
+  }
+}
+    `;
+export const useUpdateScheduleMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<UpdateScheduleMutation, TError, UpdateScheduleMutationVariables, TContext>) =>
+    useMutation<UpdateScheduleMutation, TError, UpdateScheduleMutationVariables, TContext>(
+      ['UpdateSchedule'],
+      (variables?: UpdateScheduleMutationVariables) => fetcher<UpdateScheduleMutation, UpdateScheduleMutationVariables>(UpdateScheduleDocument, variables)(),
+      options
+    );
+useUpdateScheduleMutation.getKey = () => ['UpdateSchedule'];
+
+useUpdateScheduleMutation.fetcher = (variables: UpdateScheduleMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateScheduleMutation, UpdateScheduleMutationVariables>(UpdateScheduleDocument, variables, options);
 export const DeleteScheduleDocument = `
     mutation DeleteSchedule($id: BigInt!) {
   deleteRozpi(input: {rId: $id}) {
@@ -13076,6 +13392,35 @@ useMemberListQuery.getKey = (variables?: MemberListQueryVariables) => variables 
 ;
 
 useMemberListQuery.fetcher = (variables?: MemberListQueryVariables, options?: RequestInit['headers']) => fetcher<MemberListQuery, MemberListQueryVariables>(MemberListDocument, variables, options);
+export const TrainerListDocument = `
+    query TrainerList {
+  trainers {
+    totalCount
+    nodes {
+      ...User
+    }
+  }
+}
+    ${UserFragmentDoc}`;
+export const useTrainerListQuery = <
+      TData = TrainerListQuery,
+      TError = unknown
+    >(
+      variables?: TrainerListQueryVariables,
+      options?: UseQueryOptions<TrainerListQuery, TError, TData>
+    ) =>
+    useQuery<TrainerListQuery, TError, TData>(
+      variables === undefined ? ['TrainerList'] : ['TrainerList', variables],
+      fetcher<TrainerListQuery, TrainerListQueryVariables>(TrainerListDocument, variables),
+      options
+    );
+useTrainerListQuery.document = TrainerListDocument;
+
+
+useTrainerListQuery.getKey = (variables?: TrainerListQueryVariables) => variables === undefined ? ['TrainerList'] : ['TrainerList', variables];
+;
+
+useTrainerListQuery.fetcher = (variables?: TrainerListQueryVariables, options?: RequestInit['headers']) => fetcher<TrainerListQuery, TrainerListQueryVariables>(TrainerListDocument, variables, options);
 export const ConfirmUserDocument = `
     mutation ConfirmUser($id: BigInt!, $role: BigInt!, $cohort: BigInt!) {
   confirmUser(input: {id: $id, grp: $role, cohort: $cohort}) {

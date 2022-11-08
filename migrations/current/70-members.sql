@@ -1,5 +1,4 @@
 drop view if exists public.members cascade;
-
 create or replace view public.members as
   WITH current_payments as (
     SELECT * from platby_item
@@ -18,6 +17,20 @@ create or replace view public.members as
   ORDER BY s_name, u_email;
 
 GRANT ALL ON public.members TO member;
+
+create or replace function public.trainers() returns setof users as $$
+  SELECT users.*
+    FROM users INNER JOIN permissions on u_group=pe_id
+  WHERE u_confirmed='1'
+    AND u_system='0'
+    AND u_ban='0'
+    AND CASE
+      WHEN (select pe_rozpis > 8 from current_permissions()) THEN pe_rozpis >= 8
+      ELSE u_id = current_user_id()
+    END
+  ORDER BY u_prijmeni, u_jmeno;
+$$ language sql stable;
+GRANT EXECUTE ON function public.trainers TO member;
 
 create or replace function my_lessons(start_date date, end_date date) returns setof rozpis_item as $$
   select rozpis_item.*

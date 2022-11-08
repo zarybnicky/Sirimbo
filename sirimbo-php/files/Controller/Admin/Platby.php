@@ -118,39 +118,4 @@ class Platby
         }
         return $out;
     }
-
-    public static function getFromPost()
-    {
-        $item = new \PlatbyItem(
-            null,
-            $_POST['variable'],
-            $_POST['date'],
-            $_POST['amount'],
-            $_POST['prefix'],
-            $_POST['specific']
-        );
-        $item->processWithSymbolLookup(
-            static::getUserLookup(false),
-            static::getCategoryLookup(true, true, false)
-        );
-
-        $error = [];
-        if (!$item->variable) {
-            $error[] = 'Neplatné ID uživatele';
-        }
-        if (!$item->categoryId) {
-            $error[] = 'Neplatné ID kategorie';
-        }
-        if (!$item->date) {
-            $error[] = 'Neplatné datum';
-        }
-        if (!$item->prefix) {
-            $error[] = 'Neplatný prefix';
-        }
-        if ($item->amount < 0) {
-            $error[] = 'Neplatná částka';
-        }
-
-        return $item->isValid ? $item : $error;
-    }
 }

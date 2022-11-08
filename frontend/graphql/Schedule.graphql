@@ -110,11 +110,29 @@ query MyLessons($startDate: Date, $endDate: Date) {
   }
 }
 
+query Schedule($id: BigInt!) {
+  rozpi(rId: $id) {
+    ...Schedule
+  }
+}
+
 mutation ToggleScheduleVisible($id: BigInt!, $visible: Boolean!) {
   updateRozpi(input: {rId: $id, patch: {rVisible: $visible}}) {
     rozpi {
       rId
     }
+  }
+}
+
+mutation CreateSchedule($input: RozpiInput!) {
+  createRozpi(input: {rozpi: $input}) {
+    __typename
+  }
+}
+
+mutation UpdateSchedule($id: BigInt!, $patch: RozpiPatch!) {
+  updateRozpi(input: {rId: $id, patch: $patch}) {
+    __typename
   }
 }
 
