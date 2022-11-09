@@ -16,14 +16,9 @@
       ncc = final.callPackage ./nix/ncc.nix {};
       squawk = final.callPackage ./nix/squawk.nix {};
       graphile-migrate = final.callPackage ./nix/graphile-migrate.nix { src = migrate; };
-      sirimbo-backend = final.callPackage ./backend/package.nix {};
-      sirimbo-frontend = final.callPackage ./frontend/package.nix {};
-      sirimbo-migrations = final.callPackage ./migrations/package.nix {};
-    };
-
-    packages.x86_64-linux = {
-      inherit (pkgs)
-        squawk ncc sirimbo-frontend sirimbo-backend graphile-migrate sirimbo-migrations;
+      sirimbo-backend-beta = final.callPackage ./backend/package.nix {};
+      sirimbo-frontend-beta = final.callPackage ./frontend/package.nix {};
+      sirimbo-migrations-beta = final.callPackage ./migrations/package.nix {};
     };
 
     devShell.x86_64-linux = pkgs.mkShell {

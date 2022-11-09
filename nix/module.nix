@@ -143,7 +143,7 @@ in {
         serviceConfig = {
           User = cfg.user;
           Group = cfg.group;
-          ExecStart = "${pkgs.nodejs}/bin/node ${pkgs.sirimbo-frontend}/server.js";
+          ExecStart = "${pkgs.nodejs}/bin/node ${pkgs.sirimbo-frontend-beta}/server.js";
           Restart = "always";
           RestartSec = "10s";
         };
@@ -171,7 +171,7 @@ in {
         serviceConfig = {
           User = cfg.user;
           Group = cfg.group;
-          ExecStart = "${pkgs.nodejs}/bin/node ${pkgs.sirimbo-backend}/bin/sirimbo-backend";
+          ExecStart = "${pkgs.nodejs}/bin/node ${pkgs.sirimbo-backend-beta}/bin/sirimbo-backend";
           Restart = "always";
           RestartSec = "10s";
         };
@@ -188,7 +188,7 @@ in {
           Group = cfg.group;
           Type = "oneshot";
           RemainAfterExit = "true";
-          WorkingDirectory = pkgs.sirimbo-migrations;
+          WorkingDirectory = pkgs.sirimbo-migrations-beta;
           ExecStart = "${pkgs.graphile-migrate}/bin/graphile-migrate migrate";
         };
       };
