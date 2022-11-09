@@ -15,7 +15,7 @@ class DbSessionHandler extends Database implements SessionHandlerInterface
         if (!($result = self::getSingleRow($stmt))) {
             return '';
         }
-        return serialize(json_decode(stream_get_contents($result['ss_data']), true));
+        return serialize(["id" => $result['ss_user']]);
     }
 
     public function write($sessionId, $data)
@@ -23,17 +23,15 @@ class DbSessionHandler extends Database implements SessionHandlerInterface
         setcookie(session_name(), $sessionId, time() + 86400, '/');
         $sessionData = unserialize($data);
         $userId = $sessionData['id'] ?? null;
-        $data = json_encode($sessionData, JSON_FORCE_OBJECT);
         $stmt = self::prepare(
             "INSERT INTO session
-             (ss_id, ss_user, ss_data, ss_lifetime) VALUES
+             (ss_id, ss_user, ss_lifetime) VALUES
              (?, ?, ?, 86400)
              ON CONFLICT (ss_id) DO UPDATE SET
-             ss_user=EXCLUDED.ss_user, ss_data=EXCLUDED.ss_data, ss_updated_at=NOW()"
+             ss_user=EXCLUDED.ss_user, ss_updated_at=NOW()"
         );
         $stmt->bindParam(1, $sessionId);
         $stmt->bindParam(2, $userId);
-        $stmt->bindParam(3, $data, PDO::PARAM_LOB);
         $stmt->execute();
         return !!$stmt;
     }
