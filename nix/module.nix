@@ -104,6 +104,7 @@ in {
 
         virtualHosts.${cfg.domain} = {
           enableACME = cfg.ssl;
+          forceSSL = cfg.ssl;
 
           serverAliases = cfg.domainAliases;
 
