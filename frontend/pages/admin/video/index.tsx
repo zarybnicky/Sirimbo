@@ -34,10 +34,7 @@ export default function VideoList() {
               onClick={() => router.push(`/admin/video/edit/${id}`)}
               label="Upravit"
             />,
-            <DeleteButton
-              key="delete" title="smazat video"
-              params={{ id: id.toString() }} onDelete={doDelete}
-            />,
+            <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat video" />,
           ]
         },
         { field: 'vName', headerName: 'Jméno', flex: 1 },

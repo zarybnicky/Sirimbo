@@ -94,10 +94,7 @@ export default function GalleryDirectoryList() {
               onClick={() => router.push(`/admin/galerie/directory/${id}`)}
               label="Upravit fotky"
             />,
-            <DeleteButton
-              key="delete" title="smazat složku"
-              params={{ id: id.toString() }} onDelete={doDelete}
-            />,
+            <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat složku" />,
           ], flex: 1,
         },
         {

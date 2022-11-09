@@ -34,10 +34,7 @@ export default function PlatbyGroupListPage() {
               onClick={() => router.push(`/admin/platby/structure/group/edit/${id}`)}
               label="Upravit"
             />,
-            <DeleteButton
-              key="delete" title="smazat skupinu plateb"
-              params={{ id: id.toString() }} onDelete={doDelete}
-            />,
+            <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat skupinu plateb" />,
           ]
         },
         { field: 'pgName', headerName: 'Jméno', flex: 1 },

@@ -3,9 +3,9 @@ import { Button, DialogTitle, Dialog, ListItemIcon, List, ListItem, ListItemText
 import PersonIcon from '@mui/icons-material/Person';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
-import { UserDetailFragment } from 'lib/graphql';
+import { UserFragment } from 'lib/graphql';
 
-export const UserDetailButton: React.FC<{ user: UserDetailFragment }> = ({ user }) => {
+export const UserDetailButton: React.FC<{ user: UserFragment }> = ({ user }) => {
   const [open, setOpen] = React.useState(false);
 
   return <>

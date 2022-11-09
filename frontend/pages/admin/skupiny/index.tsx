@@ -32,10 +32,7 @@ export default function CohortsPage() {
               onClick={() => router.push(`/admin/skupiny/edit/${id}`)}
               label="Upravit"
             />,
-            <DeleteButton
-              key="delete" title="smazat skupinu"
-              params={{ id: id.toString() }} onDelete={doDelete}
-            />,
+            <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat skupinu" />,
           ]
         },
         {

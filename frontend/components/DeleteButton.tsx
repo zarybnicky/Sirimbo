@@ -4,14 +4,14 @@ import { useConfirm } from 'material-ui-confirm';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { GridActionsCellItem } from '@mui/x-data-grid';
 
-const genericMemo: <T>(component: T) => T = React.memo
+const genericMemo: <T>(component: T) => T = React.memo;
 
-export const DeleteButton = genericMemo(function DeleteButton<T>({
-  title, params, onDelete
+export const DeleteButton = React.memo(function DeleteButton({
+  title, id, onDelete
 }: {
   title: string;
-  params: T;
-  onDelete: (x: T) => Promise<unknown>;
+  id: string | number;
+  onDelete: (params: { id: string; }) => Promise<unknown>;
 }): React.ReactElement | null {
   const confirm = useConfirm();
   const { enqueueSnackbar } = useSnackbar();
@@ -19,7 +19,7 @@ export const DeleteButton = genericMemo(function DeleteButton<T>({
   const deleteItem = React.useCallback(async () => {
     await confirm({ description: `Opravdu chcete smazat ${title}?` });
     try {
-      await onDelete(params);
+      await onDelete({ id: id.toString() });
       enqueueSnackbar('Smazáno', { variant: 'success' });
     } catch (e) {
       if (e instanceof Error) {

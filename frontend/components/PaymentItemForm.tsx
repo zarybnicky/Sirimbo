@@ -1,5 +1,5 @@
 import { Button, Grid } from '@mui/material';
-import { PaymentItemFragment, PlatbyItemInput, useCreatePaymentItemMutation, useUpdatePaymentItemMutation, useUserListQuery } from 'lib/graphql';
+import { PaymentItemFragment, PlatbyItemInput, useCreatePaymentItemMutation, usePaymentCategoryListQuery, useUpdatePaymentItemMutation, useUserListQuery } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { DatePickerElement, SelectElement, TextFieldElement } from 'react-hook-form-mui';
@@ -16,7 +16,8 @@ export const PaymentItemForm: React.FC<{
   const { mutateAsync: doUpdate } = useUpdatePaymentItemMutation({ onSuccess });
 
   const { data: users } = useUserListQuery();
-  // load categories (VS)
+  const { data: categories } = usePaymentCategoryListQuery();
+
   // load also platby_raw linked to this one
   // php-unserialize-js the blob
   // on delete, mark raw as !sorted and discarded
@@ -70,8 +71,6 @@ export const PaymentItemForm: React.FC<{
       <Grid item xs={12}>
         <Button fullWidth variant="contained" type="submit" color="primary" disabled={onSubmit.loading}>Uložit</Button>
       </Grid>
-
-      // raw table
     </Grid>
   );
 };

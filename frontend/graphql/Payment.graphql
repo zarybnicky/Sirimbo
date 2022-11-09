@@ -91,3 +91,51 @@ mutation DeletePaymentItem($id: BigInt!) {
     __typename
   }
 }
+
+
+fragment PaymentCategory on PlatbyCategory {
+  pcId
+  pcName
+  pcSymbol
+  pcAmount
+  pcDateDue
+  pcValidFrom
+  pcValidTo
+  pcUsePrefix
+  pcUseBase
+  pcArchive
+  pcVisible
+}
+
+query PaymentCategoryList {
+  platbyCategories {
+    totalCount
+    nodes {
+      ...PaymentCategory
+    }
+  }
+}
+
+query PaymentCategory($id: BigInt!) {
+  platbyCategory(pcId: $id) {
+    ...PaymentCategory
+  }
+}
+
+mutation CreatePaymentCategory($input: PlatbyCategoryInput!) {
+  createPlatbyCategory(input: {platbyCategory: $input}) {
+    __typename
+  }
+}
+
+mutation UpdatePaymentCategory($id: BigInt!, $patch: PlatbyCategoryPatch!) {
+  updatePlatbyCategory(input: {pcId: $id, patch: $patch}) {
+    __typename
+  }
+}
+
+mutation DeletePaymentCategory($id: BigInt!) {
+  deletePlatbyCategory(input: {pcId: $id}) {
+    __typename
+  }
+}

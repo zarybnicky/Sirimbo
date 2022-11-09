@@ -13,49 +13,23 @@
     nixosModule = ./nix/module.nix;
 
     overlay = final: prev: {
-      phpstan = final.callPackage ./nix/phpstan.nix {};
-      psalm = final.callPackage ./nix/psalm.nix {};
       ncc = final.callPackage ./nix/ncc.nix {};
       squawk = final.callPackage ./nix/squawk.nix {};
       graphile-migrate = final.callPackage ./nix/graphile-migrate.nix { src = migrate; };
       sirimbo-backend = final.callPackage ./backend/package.nix {};
       sirimbo-frontend = final.callPackage ./frontend/package.nix {};
       sirimbo-migrations = final.callPackage ./migrations/package.nix {};
-
-      sirimbo-php = (final.callPackage ./sirimbo-php/composer-project.nix {
-        php = final.php74;
-      } (
-        pkgs.nix-gitignore.gitignoreSourcePure [./.gitignore] ./sirimbo-php
-      )).overrideAttrs (oldAttrs: {
-        name = "sirimbo-php";
-        buildInputs = oldAttrs.buildInputs ++ [ final.imagemagick ];
-        buildPhase = "composer validate";
-        installPhase = ''
-          runHook preInstall
-          mkdir -p $out
-          mv $PWD/* $out/
-          runHook postInstall
-        '';
-        doCheck = true;
-        checkPhase = ''
-          # {pkgs.php}/bin/php -f vendor/bin/twig-linter -- lint files/Templates
-          ${pkgs.phpstan}/bin/phpstan analyse --level 5 files/
-        '';
-      });
     };
 
     packages.x86_64-linux = {
       inherit (pkgs)
-        squawk ncc sirimbo-php sirimbo-frontend sirimbo-backend graphile-migrate sirimbo-migrations;
+        squawk ncc sirimbo-frontend sirimbo-backend graphile-migrate sirimbo-migrations;
     };
 
     devShell.x86_64-linux = pkgs.mkShell {
       nativeBuildInputs = [
-        pkgs.entr
         pkgs.graphile-migrate
         pkgs.yarn
-        pkgs.phpstan
-        pkgs.psalm
         pkgs.nodePackages.typescript
         pkgs.yarn2nix
         pkgs.postgresql
@@ -102,7 +76,6 @@
             stateDir = "/var/lib/olymp";
             domain = "olymp-test";
             ssl = false;
-            phpPort = 3010;
             jsPort = 4000;
             frontendPort = 3030;
 

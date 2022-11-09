@@ -1,11 +1,10 @@
 import * as React from "react";
-import { CouplePartialFragment, useCurrentUserQuery, useLoginMutation, useLogoutMutation } from 'lib/graphql';
-import type { UserPartialFragment } from 'lib/graphql';
+import { UserAuthFragment, CouplePartialFragment, useCurrentUserQuery, useLoginMutation, useLogoutMutation } from 'lib/graphql';
 import posthog from 'posthog-js';
 
 export interface AuthContextType {
   isLoading: boolean,
-  user: UserPartialFragment | null;
+  user: UserAuthFragment | null;
   couple: CouplePartialFragment | null;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -29,7 +28,7 @@ export const useAuth = () => {
 }
 
 function useApiAuth(): AuthContextType {
-  const [user, setUser] = React.useState<UserPartialFragment | null>(null);
+  const [user, setUser] = React.useState<UserAuthFragment | null>(null);
   const [couple, setCouple] = React.useState<CouplePartialFragment | null>(null);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 

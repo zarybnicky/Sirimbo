@@ -1,9 +1,16 @@
-import { useConfig } from "lib/use-config";
-import { NewLayout } from "components/NewLayout";
-import { OldLayout } from "components/OldLayout";
+import * as React from 'react';
+import { Theme, useTheme, useMediaQuery } from '@mui/material';
+import { DesktopHeader } from './DesktopHeader';
+import { MobileHeader } from './MobileHeader';
+import { Footer } from './Footer';
 
 export const Layout: React.FC = ({ children }) => {
-  const { layout } = useConfig();
-  const Layout = layout === 'new' ? NewLayout : OldLayout;
-  return <Layout>{children}</Layout>;
+  const theme = useTheme();
+  const isTabletOrDesktop = useMediaQuery<Theme>(theme.breakpoints.up('md'));
+  const Header = isTabletOrDesktop ? DesktopHeader : MobileHeader;
+  return <>
+    <Header />
+    {children}
+    <Footer />
+  </>;
 };

@@ -10114,8 +10114,8 @@ export enum VideoSourcesOrderBy {
 export type AnnouncementFragment = { __typename?: 'Upozorneni', upId: string, upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, userByUpKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sId: string, sName: string, sDescription: string, sColorText: string, sColorRgb: string } | null }> } };
 
 export type AnnouncementListQueryVariables = Exact<{
-  limit: Scalars['Int'];
-  offset: Scalars['Int'];
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 }>;
 
 
@@ -10160,8 +10160,8 @@ export type ArticleQueryVariables = Exact<{
 export type ArticleQuery = { __typename?: 'Query', aktuality: { __typename?: 'Aktuality', atId: string, atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, atKdo: string | null, userByAtKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null } | null };
 
 export type ArticlesQueryVariables = Exact<{
-  limit: Scalars['Int'];
-  offset: Scalars['Int'];
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 }>;
 
 
@@ -10275,6 +10275,8 @@ export type SubmitProspectFormMutation = { __typename?: 'Mutation', prospectForm
 
 export type UserFragment = { __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string };
 
+export type UserAuthFragment = { __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, permissionByUGroup: { __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null };
+
 export type CouplePartialFragment = { __typename?: 'Pary', pId: string, pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean };
 
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
@@ -10361,8 +10363,8 @@ export type EventParticipantsQueryVariables = Exact<{
 export type EventParticipantsQuery = { __typename?: 'Query', akce: { __typename?: 'Akce', aJmeno: string, akceItemsByAiIdRodic: { __typename?: 'AkceItemsConnection', nodes: Array<{ __typename?: 'AkceItem', aiId: string, userByAiUser: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string } | null }> } } | null };
 
 export type EventListQueryVariables = Exact<{
-  limit: Scalars['Int'];
-  offset: Scalars['Int'];
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 }>;
 
 
@@ -10410,15 +10412,15 @@ export type GalleryPhotoFragment = { __typename: 'GalerieFoto', nodeId: string, 
 export type GalleryDirFragment = { __typename: 'GalerieDir', nodeId: string, gdId: string, gdIdRodic: string, gdName: string, gdPath: string, gdLevel: number, gdHidden: boolean };
 
 export type GalleryDirQueryVariables = Exact<{
-  dirId: Scalars['BigInt'];
+  id: Scalars['BigInt'];
 }>;
 
 
 export type GalleryDirQuery = { __typename?: 'Query', galerieDir: { __typename: 'GalerieDir', nodeId: string, gdId: string, gdIdRodic: string, gdName: string, gdPath: string, gdLevel: number, gdHidden: boolean, galerieFotosByGfIdRodic: { __typename?: 'GalerieFotosConnection', nodes: Array<{ __typename: 'GalerieFoto', nodeId: string, gfId: string, gfIdRodic: string, gfKdo: string, gfName: string, gfPath: string, gfTimestamp: string | null }> } } | null, galerieDirs: { __typename?: 'GalerieDirsConnection', nodes: Array<{ __typename: 'GalerieDir', nodeId: string, gdId: string, gdIdRodic: string, gdName: string, gdPath: string, gdLevel: number, gdHidden: boolean, galerieFotosByGfIdRodic: { __typename?: 'GalerieFotosConnection', nodes: Array<{ __typename: 'GalerieFoto', nodeId: string, gfId: string, gfIdRodic: string, gfKdo: string, gfName: string, gfPath: string, gfTimestamp: string | null }> } }> } | null };
 
 export type GalleryDirListQueryVariables = Exact<{
-  limit: Scalars['Int'];
-  offset: Scalars['Int'];
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 }>;
 
 
@@ -10453,6 +10455,35 @@ export type DeleteGalleryDirMutationVariables = Exact<{
 
 
 export type DeleteGalleryDirMutation = { __typename?: 'Mutation', deleteGalerieDir: { __typename: 'DeleteGalerieDirPayload' } | null };
+
+export type GalleryPhotoQueryVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type GalleryPhotoQuery = { __typename?: 'Query', galerieFoto: { __typename: 'GalerieFoto', nodeId: string, gfId: string, gfIdRodic: string, gfKdo: string, gfName: string, gfPath: string, gfTimestamp: string | null } | null };
+
+export type CreateGalleryPhotoMutationVariables = Exact<{
+  input: GalerieFotoInput;
+}>;
+
+
+export type CreateGalleryPhotoMutation = { __typename?: 'Mutation', createGalerieFoto: { __typename: 'CreateGalerieFotoPayload' } | null };
+
+export type UpdateGalleryPhotoMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+  patch: GalerieFotoPatch;
+}>;
+
+
+export type UpdateGalleryPhotoMutation = { __typename?: 'Mutation', updateGalerieFoto: { __typename: 'UpdateGalerieFotoPayload' } | null };
+
+export type DeleteGalleryPhotoMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type DeleteGalleryPhotoMutation = { __typename?: 'Mutation', deleteGalerieFoto: { __typename: 'DeleteGalerieFotoPayload' } | null };
 
 export type PageFragment = { __typename?: 'Page', nodeId: string, id: number, url: string, title: string, content: { [key: string]: any }, createdAt: string, updatedAt: string };
 
@@ -10594,13 +10625,49 @@ export type DeletePaymentItemMutationVariables = Exact<{
 
 export type DeletePaymentItemMutation = { __typename?: 'Mutation', deletePlatbyItem: { __typename: 'DeletePlatbyItemPayload' } | null };
 
+export type PaymentCategoryFragment = { __typename?: 'PlatbyCategory', pcId: string, pcName: string, pcSymbol: string, pcAmount: any, pcDateDue: string, pcValidFrom: string, pcValidTo: string, pcUsePrefix: boolean, pcUseBase: boolean, pcArchive: boolean, pcVisible: boolean };
+
+export type PaymentCategoryListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PaymentCategoryListQuery = { __typename?: 'Query', platbyCategories: { __typename?: 'PlatbyCategoriesConnection', totalCount: number, nodes: Array<{ __typename?: 'PlatbyCategory', pcId: string, pcName: string, pcSymbol: string, pcAmount: any, pcDateDue: string, pcValidFrom: string, pcValidTo: string, pcUsePrefix: boolean, pcUseBase: boolean, pcArchive: boolean, pcVisible: boolean }> } | null };
+
+export type PaymentCategoryQueryVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type PaymentCategoryQuery = { __typename?: 'Query', platbyCategory: { __typename?: 'PlatbyCategory', pcId: string, pcName: string, pcSymbol: string, pcAmount: any, pcDateDue: string, pcValidFrom: string, pcValidTo: string, pcUsePrefix: boolean, pcUseBase: boolean, pcArchive: boolean, pcVisible: boolean } | null };
+
+export type CreatePaymentCategoryMutationVariables = Exact<{
+  input: PlatbyCategoryInput;
+}>;
+
+
+export type CreatePaymentCategoryMutation = { __typename?: 'Mutation', createPlatbyCategory: { __typename: 'CreatePlatbyCategoryPayload' } | null };
+
+export type UpdatePaymentCategoryMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+  patch: PlatbyCategoryPatch;
+}>;
+
+
+export type UpdatePaymentCategoryMutation = { __typename?: 'Mutation', updatePlatbyCategory: { __typename: 'UpdatePlatbyCategoryPayload' } | null };
+
+export type DeletePaymentCategoryMutationVariables = Exact<{
+  id: Scalars['BigInt'];
+}>;
+
+
+export type DeletePaymentCategoryMutation = { __typename?: 'Mutation', deletePlatbyCategory: { __typename: 'DeletePlatbyCategoryPayload' } | null };
+
 export type ReservationItemFragment = { __typename?: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null };
 
 export type ReservationFragment = { __typename?: 'Nabidka', nId: string, nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename?: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null };
 
 export type ReservationListQueryVariables = Exact<{
-  limit: Scalars['Int'];
-  offset: Scalars['Int'];
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 }>;
 
 
@@ -10700,8 +10767,8 @@ export type ScheduleRangeQueryVariables = Exact<{
 export type ScheduleRangeQuery = { __typename?: 'Query', schedulesForRange: { __typename?: 'RozpisConnection', nodes: Array<{ __typename?: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename?: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null } | null }> } }> } | null };
 
 export type ScheduleListQueryVariables = Exact<{
-  limit: Scalars['Int'];
-  offset: Scalars['Int'];
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 }>;
 
 
@@ -10988,6 +11055,39 @@ export const UserFragmentDoc = `
   uCity
 }
     `;
+export const RoleFragmentDoc = `
+    fragment Role on Permission {
+  peAkce
+  peAnkety
+  peAktuality
+  peDescription
+  peDokumenty
+  peGalerie
+  peId
+  peKonzole
+  peInzerce
+  peNabidka
+  peMain
+  peName
+  peNastenka
+  peNovinky
+  pePary
+  pePermissions
+  pePlatby
+  peRozpis
+  peSkupiny
+  peUsers
+}
+    `;
+export const UserAuthFragmentDoc = `
+    fragment UserAuth on User {
+  ...User
+  permissionByUGroup {
+    ...Role
+  }
+}
+    ${UserFragmentDoc}
+${RoleFragmentDoc}`;
 export const CouplePartialFragmentDoc = `
     fragment CouplePartial on Pary {
   pId
@@ -11096,6 +11196,21 @@ export const PaymentItemFragmentDoc = `
   }
 }
     `;
+export const PaymentCategoryFragmentDoc = `
+    fragment PaymentCategory on PlatbyCategory {
+  pcId
+  pcName
+  pcSymbol
+  pcAmount
+  pcDateDue
+  pcValidFrom
+  pcValidTo
+  pcUsePrefix
+  pcUseBase
+  pcArchive
+  pcVisible
+}
+    `;
 export const ReservationItemFragmentDoc = `
     fragment ReservationItem on NabidkaItem {
   niId
@@ -11135,30 +11250,6 @@ export const ReservationFragmentDoc = `
   }
 }
     ${ReservationItemFragmentDoc}`;
-export const RoleFragmentDoc = `
-    fragment Role on Permission {
-  peAkce
-  peAnkety
-  peAktuality
-  peDescription
-  peDokumenty
-  peGalerie
-  peId
-  peKonzole
-  peInzerce
-  peNabidka
-  peMain
-  peName
-  peNastenka
-  peNovinky
-  pePary
-  pePermissions
-  pePlatby
-  peRozpis
-  peSkupiny
-  peUsers
-}
-    `;
 export const ScheduleItemFragmentDoc = `
     fragment ScheduleItem on RozpisItem {
   riOd
@@ -11247,7 +11338,7 @@ export const VideoFragmentDoc = `
 }
     `;
 export const AnnouncementListDocument = `
-    query AnnouncementList($limit: Int!, $offset: Int!) {
+    query AnnouncementList($limit: Int, $offset: Int) {
   upozornenis(first: $limit, offset: $offset, orderBy: [UP_TIMESTAMP_ADD_DESC]) {
     totalCount
     nodes {
@@ -11260,21 +11351,21 @@ export const useAnnouncementListQuery = <
       TData = AnnouncementListQuery,
       TError = unknown
     >(
-      variables: AnnouncementListQueryVariables,
+      variables?: AnnouncementListQueryVariables,
       options?: UseQueryOptions<AnnouncementListQuery, TError, TData>
     ) =>
     useQuery<AnnouncementListQuery, TError, TData>(
-      ['AnnouncementList', variables],
+      variables === undefined ? ['AnnouncementList'] : ['AnnouncementList', variables],
       fetcher<AnnouncementListQuery, AnnouncementListQueryVariables>(AnnouncementListDocument, variables),
       options
     );
 useAnnouncementListQuery.document = AnnouncementListDocument;
 
 
-useAnnouncementListQuery.getKey = (variables: AnnouncementListQueryVariables) => ['AnnouncementList', variables];
+useAnnouncementListQuery.getKey = (variables?: AnnouncementListQueryVariables) => variables === undefined ? ['AnnouncementList'] : ['AnnouncementList', variables];
 ;
 
-useAnnouncementListQuery.fetcher = (variables: AnnouncementListQueryVariables, options?: RequestInit['headers']) => fetcher<AnnouncementListQuery, AnnouncementListQueryVariables>(AnnouncementListDocument, variables, options);
+useAnnouncementListQuery.fetcher = (variables?: AnnouncementListQueryVariables, options?: RequestInit['headers']) => fetcher<AnnouncementListQuery, AnnouncementListQueryVariables>(AnnouncementListDocument, variables, options);
 export const AnnouncementDocument = `
     query Announcement($id: BigInt!) {
   upozorneni(upId: $id) {
@@ -11385,7 +11476,7 @@ useArticleQuery.getKey = (variables: ArticleQueryVariables) => ['Article', varia
 
 useArticleQuery.fetcher = (variables: ArticleQueryVariables, options?: RequestInit['headers']) => fetcher<ArticleQuery, ArticleQueryVariables>(ArticleDocument, variables, options);
 export const ArticlesDocument = `
-    query Articles($limit: Int!, $offset: Int!) {
+    query Articles($limit: Int, $offset: Int) {
   aktualities(first: $limit, offset: $offset, orderBy: [AT_TIMESTAMP_ADD_DESC]) {
     totalCount
     nodes {
@@ -11398,21 +11489,21 @@ export const useArticlesQuery = <
       TData = ArticlesQuery,
       TError = unknown
     >(
-      variables: ArticlesQueryVariables,
+      variables?: ArticlesQueryVariables,
       options?: UseQueryOptions<ArticlesQuery, TError, TData>
     ) =>
     useQuery<ArticlesQuery, TError, TData>(
-      ['Articles', variables],
+      variables === undefined ? ['Articles'] : ['Articles', variables],
       fetcher<ArticlesQuery, ArticlesQueryVariables>(ArticlesDocument, variables),
       options
     );
 useArticlesQuery.document = ArticlesDocument;
 
 
-useArticlesQuery.getKey = (variables: ArticlesQueryVariables) => ['Articles', variables];
+useArticlesQuery.getKey = (variables?: ArticlesQueryVariables) => variables === undefined ? ['Articles'] : ['Articles', variables];
 ;
 
-useArticlesQuery.fetcher = (variables: ArticlesQueryVariables, options?: RequestInit['headers']) => fetcher<ArticlesQuery, ArticlesQueryVariables>(ArticlesDocument, variables, options);
+useArticlesQuery.fetcher = (variables?: ArticlesQueryVariables, options?: RequestInit['headers']) => fetcher<ArticlesQuery, ArticlesQueryVariables>(ArticlesDocument, variables, options);
 export const CreateArticleDocument = `
     mutation CreateArticle($input: AktualityInput!) {
   createAktuality(input: {aktuality: $input}) {
@@ -11778,14 +11869,10 @@ useSubmitProspectFormMutation.fetcher = (variables: SubmitProspectFormMutationVa
 export const CurrentUserDocument = `
     query CurrentUser {
   getCurrentUser {
-    ...User
-    permissionByUGroup {
-      ...Role
-    }
+    ...UserAuth
   }
 }
-    ${UserFragmentDoc}
-${RoleFragmentDoc}`;
+    ${UserAuthFragmentDoc}`;
 export const useCurrentUserQuery = <
       TData = CurrentUserQuery,
       TError = unknown
@@ -12048,7 +12135,7 @@ useEventParticipantsQuery.getKey = (variables: EventParticipantsQueryVariables) 
 
 useEventParticipantsQuery.fetcher = (variables: EventParticipantsQueryVariables, options?: RequestInit['headers']) => fetcher<EventParticipantsQuery, EventParticipantsQueryVariables>(EventParticipantsDocument, variables, options);
 export const EventListDocument = `
-    query EventList($limit: Int!, $offset: Int!) {
+    query EventList($limit: Int, $offset: Int) {
   akces(first: $limit, offset: $offset, orderBy: [A_OD_DESC]) {
     totalCount
     nodes {
@@ -12072,21 +12159,21 @@ export const useEventListQuery = <
       TData = EventListQuery,
       TError = unknown
     >(
-      variables: EventListQueryVariables,
+      variables?: EventListQueryVariables,
       options?: UseQueryOptions<EventListQuery, TError, TData>
     ) =>
     useQuery<EventListQuery, TError, TData>(
-      ['EventList', variables],
+      variables === undefined ? ['EventList'] : ['EventList', variables],
       fetcher<EventListQuery, EventListQueryVariables>(EventListDocument, variables),
       options
     );
 useEventListQuery.document = EventListDocument;
 
 
-useEventListQuery.getKey = (variables: EventListQueryVariables) => ['EventList', variables];
+useEventListQuery.getKey = (variables?: EventListQueryVariables) => variables === undefined ? ['EventList'] : ['EventList', variables];
 ;
 
-useEventListQuery.fetcher = (variables: EventListQueryVariables, options?: RequestInit['headers']) => fetcher<EventListQuery, EventListQueryVariables>(EventListDocument, variables, options);
+useEventListQuery.fetcher = (variables?: EventListQueryVariables, options?: RequestInit['headers']) => fetcher<EventListQuery, EventListQueryVariables>(EventListDocument, variables, options);
 export const EventDocument = `
     query Event($id: BigInt!) {
   akce(aId: $id) {
@@ -12192,8 +12279,8 @@ useDeleteEventMutation.getKey = () => ['DeleteEvent'];
 
 useDeleteEventMutation.fetcher = (variables: DeleteEventMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteEventMutation, DeleteEventMutationVariables>(DeleteEventDocument, variables, options);
 export const GalleryDirDocument = `
-    query GalleryDir($dirId: BigInt!) {
-  galerieDir(gdId: $dirId) {
+    query GalleryDir($id: BigInt!) {
+  galerieDir(gdId: $id) {
     ...GalleryDir
     galerieFotosByGfIdRodic(orderBy: [GF_NAME_ASC]) {
       nodes {
@@ -12201,7 +12288,7 @@ export const GalleryDirDocument = `
       }
     }
   }
-  galerieDirs(condition: {gdIdRodic: $dirId, gdHidden: false}) {
+  galerieDirs(condition: {gdIdRodic: $id, gdHidden: false}) {
     nodes {
       ...GalleryDir
       galerieFotosByGfIdRodic(orderBy: [GF_NAME_ASC], first: 1) {
@@ -12234,7 +12321,7 @@ useGalleryDirQuery.getKey = (variables: GalleryDirQueryVariables) => ['GalleryDi
 
 useGalleryDirQuery.fetcher = (variables: GalleryDirQueryVariables, options?: RequestInit['headers']) => fetcher<GalleryDirQuery, GalleryDirQueryVariables>(GalleryDirDocument, variables, options);
 export const GalleryDirListDocument = `
-    query GalleryDirList($limit: Int!, $offset: Int!) {
+    query GalleryDirList($limit: Int, $offset: Int) {
   galerieDirs(first: $limit, offset: $offset, orderBy: [GD_NAME_ASC]) {
     totalCount
     nodes {
@@ -12247,21 +12334,21 @@ export const useGalleryDirListQuery = <
       TData = GalleryDirListQuery,
       TError = unknown
     >(
-      variables: GalleryDirListQueryVariables,
+      variables?: GalleryDirListQueryVariables,
       options?: UseQueryOptions<GalleryDirListQuery, TError, TData>
     ) =>
     useQuery<GalleryDirListQuery, TError, TData>(
-      ['GalleryDirList', variables],
+      variables === undefined ? ['GalleryDirList'] : ['GalleryDirList', variables],
       fetcher<GalleryDirListQuery, GalleryDirListQueryVariables>(GalleryDirListDocument, variables),
       options
     );
 useGalleryDirListQuery.document = GalleryDirListDocument;
 
 
-useGalleryDirListQuery.getKey = (variables: GalleryDirListQueryVariables) => ['GalleryDirList', variables];
+useGalleryDirListQuery.getKey = (variables?: GalleryDirListQueryVariables) => variables === undefined ? ['GalleryDirList'] : ['GalleryDirList', variables];
 ;
 
-useGalleryDirListQuery.fetcher = (variables: GalleryDirListQueryVariables, options?: RequestInit['headers']) => fetcher<GalleryDirListQuery, GalleryDirListQueryVariables>(GalleryDirListDocument, variables, options);
+useGalleryDirListQuery.fetcher = (variables?: GalleryDirListQueryVariables, options?: RequestInit['headers']) => fetcher<GalleryDirListQuery, GalleryDirListQueryVariables>(GalleryDirListDocument, variables, options);
 export const ToggleGalleryDirVisibleDocument = `
     mutation ToggleGalleryDirVisible($id: BigInt!, $visible: Boolean!) {
   updateGalerieDir(input: {gdId: $id, patch: {gdHidden: $visible}}) {
@@ -12340,6 +12427,89 @@ export const useDeleteGalleryDirMutation = <
 useDeleteGalleryDirMutation.getKey = () => ['DeleteGalleryDir'];
 
 useDeleteGalleryDirMutation.fetcher = (variables: DeleteGalleryDirMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteGalleryDirMutation, DeleteGalleryDirMutationVariables>(DeleteGalleryDirDocument, variables, options);
+export const GalleryPhotoDocument = `
+    query GalleryPhoto($id: BigInt!) {
+  galerieFoto(gfId: $id) {
+    ...GalleryPhoto
+  }
+}
+    ${GalleryPhotoFragmentDoc}`;
+export const useGalleryPhotoQuery = <
+      TData = GalleryPhotoQuery,
+      TError = unknown
+    >(
+      variables: GalleryPhotoQueryVariables,
+      options?: UseQueryOptions<GalleryPhotoQuery, TError, TData>
+    ) =>
+    useQuery<GalleryPhotoQuery, TError, TData>(
+      ['GalleryPhoto', variables],
+      fetcher<GalleryPhotoQuery, GalleryPhotoQueryVariables>(GalleryPhotoDocument, variables),
+      options
+    );
+useGalleryPhotoQuery.document = GalleryPhotoDocument;
+
+
+useGalleryPhotoQuery.getKey = (variables: GalleryPhotoQueryVariables) => ['GalleryPhoto', variables];
+;
+
+useGalleryPhotoQuery.fetcher = (variables: GalleryPhotoQueryVariables, options?: RequestInit['headers']) => fetcher<GalleryPhotoQuery, GalleryPhotoQueryVariables>(GalleryPhotoDocument, variables, options);
+export const CreateGalleryPhotoDocument = `
+    mutation CreateGalleryPhoto($input: GalerieFotoInput!) {
+  createGalerieFoto(input: {galerieFoto: $input}) {
+    __typename
+  }
+}
+    `;
+export const useCreateGalleryPhotoMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreateGalleryPhotoMutation, TError, CreateGalleryPhotoMutationVariables, TContext>) =>
+    useMutation<CreateGalleryPhotoMutation, TError, CreateGalleryPhotoMutationVariables, TContext>(
+      ['CreateGalleryPhoto'],
+      (variables?: CreateGalleryPhotoMutationVariables) => fetcher<CreateGalleryPhotoMutation, CreateGalleryPhotoMutationVariables>(CreateGalleryPhotoDocument, variables)(),
+      options
+    );
+useCreateGalleryPhotoMutation.getKey = () => ['CreateGalleryPhoto'];
+
+useCreateGalleryPhotoMutation.fetcher = (variables: CreateGalleryPhotoMutationVariables, options?: RequestInit['headers']) => fetcher<CreateGalleryPhotoMutation, CreateGalleryPhotoMutationVariables>(CreateGalleryPhotoDocument, variables, options);
+export const UpdateGalleryPhotoDocument = `
+    mutation UpdateGalleryPhoto($id: BigInt!, $patch: GalerieFotoPatch!) {
+  updateGalerieFoto(input: {gfId: $id, patch: $patch}) {
+    __typename
+  }
+}
+    `;
+export const useUpdateGalleryPhotoMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<UpdateGalleryPhotoMutation, TError, UpdateGalleryPhotoMutationVariables, TContext>) =>
+    useMutation<UpdateGalleryPhotoMutation, TError, UpdateGalleryPhotoMutationVariables, TContext>(
+      ['UpdateGalleryPhoto'],
+      (variables?: UpdateGalleryPhotoMutationVariables) => fetcher<UpdateGalleryPhotoMutation, UpdateGalleryPhotoMutationVariables>(UpdateGalleryPhotoDocument, variables)(),
+      options
+    );
+useUpdateGalleryPhotoMutation.getKey = () => ['UpdateGalleryPhoto'];
+
+useUpdateGalleryPhotoMutation.fetcher = (variables: UpdateGalleryPhotoMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateGalleryPhotoMutation, UpdateGalleryPhotoMutationVariables>(UpdateGalleryPhotoDocument, variables, options);
+export const DeleteGalleryPhotoDocument = `
+    mutation DeleteGalleryPhoto($id: BigInt!) {
+  deleteGalerieFoto(input: {gfId: $id}) {
+    __typename
+  }
+}
+    `;
+export const useDeleteGalleryPhotoMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<DeleteGalleryPhotoMutation, TError, DeleteGalleryPhotoMutationVariables, TContext>) =>
+    useMutation<DeleteGalleryPhotoMutation, TError, DeleteGalleryPhotoMutationVariables, TContext>(
+      ['DeleteGalleryPhoto'],
+      (variables?: DeleteGalleryPhotoMutationVariables) => fetcher<DeleteGalleryPhotoMutation, DeleteGalleryPhotoMutationVariables>(DeleteGalleryPhotoDocument, variables)(),
+      options
+    );
+useDeleteGalleryPhotoMutation.getKey = () => ['DeleteGalleryPhoto'];
+
+useDeleteGalleryPhotoMutation.fetcher = (variables: DeleteGalleryPhotoMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteGalleryPhotoMutation, DeleteGalleryPhotoMutationVariables>(DeleteGalleryPhotoDocument, variables, options);
 export const PageDocument = `
     query Page($url: String!) {
   pageByUrl(url: $url) {
@@ -12809,8 +12979,120 @@ export const useDeletePaymentItemMutation = <
 useDeletePaymentItemMutation.getKey = () => ['DeletePaymentItem'];
 
 useDeletePaymentItemMutation.fetcher = (variables: DeletePaymentItemMutationVariables, options?: RequestInit['headers']) => fetcher<DeletePaymentItemMutation, DeletePaymentItemMutationVariables>(DeletePaymentItemDocument, variables, options);
+export const PaymentCategoryListDocument = `
+    query PaymentCategoryList {
+  platbyCategories {
+    totalCount
+    nodes {
+      ...PaymentCategory
+    }
+  }
+}
+    ${PaymentCategoryFragmentDoc}`;
+export const usePaymentCategoryListQuery = <
+      TData = PaymentCategoryListQuery,
+      TError = unknown
+    >(
+      variables?: PaymentCategoryListQueryVariables,
+      options?: UseQueryOptions<PaymentCategoryListQuery, TError, TData>
+    ) =>
+    useQuery<PaymentCategoryListQuery, TError, TData>(
+      variables === undefined ? ['PaymentCategoryList'] : ['PaymentCategoryList', variables],
+      fetcher<PaymentCategoryListQuery, PaymentCategoryListQueryVariables>(PaymentCategoryListDocument, variables),
+      options
+    );
+usePaymentCategoryListQuery.document = PaymentCategoryListDocument;
+
+
+usePaymentCategoryListQuery.getKey = (variables?: PaymentCategoryListQueryVariables) => variables === undefined ? ['PaymentCategoryList'] : ['PaymentCategoryList', variables];
+;
+
+usePaymentCategoryListQuery.fetcher = (variables?: PaymentCategoryListQueryVariables, options?: RequestInit['headers']) => fetcher<PaymentCategoryListQuery, PaymentCategoryListQueryVariables>(PaymentCategoryListDocument, variables, options);
+export const PaymentCategoryDocument = `
+    query PaymentCategory($id: BigInt!) {
+  platbyCategory(pcId: $id) {
+    ...PaymentCategory
+  }
+}
+    ${PaymentCategoryFragmentDoc}`;
+export const usePaymentCategoryQuery = <
+      TData = PaymentCategoryQuery,
+      TError = unknown
+    >(
+      variables: PaymentCategoryQueryVariables,
+      options?: UseQueryOptions<PaymentCategoryQuery, TError, TData>
+    ) =>
+    useQuery<PaymentCategoryQuery, TError, TData>(
+      ['PaymentCategory', variables],
+      fetcher<PaymentCategoryQuery, PaymentCategoryQueryVariables>(PaymentCategoryDocument, variables),
+      options
+    );
+usePaymentCategoryQuery.document = PaymentCategoryDocument;
+
+
+usePaymentCategoryQuery.getKey = (variables: PaymentCategoryQueryVariables) => ['PaymentCategory', variables];
+;
+
+usePaymentCategoryQuery.fetcher = (variables: PaymentCategoryQueryVariables, options?: RequestInit['headers']) => fetcher<PaymentCategoryQuery, PaymentCategoryQueryVariables>(PaymentCategoryDocument, variables, options);
+export const CreatePaymentCategoryDocument = `
+    mutation CreatePaymentCategory($input: PlatbyCategoryInput!) {
+  createPlatbyCategory(input: {platbyCategory: $input}) {
+    __typename
+  }
+}
+    `;
+export const useCreatePaymentCategoryMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreatePaymentCategoryMutation, TError, CreatePaymentCategoryMutationVariables, TContext>) =>
+    useMutation<CreatePaymentCategoryMutation, TError, CreatePaymentCategoryMutationVariables, TContext>(
+      ['CreatePaymentCategory'],
+      (variables?: CreatePaymentCategoryMutationVariables) => fetcher<CreatePaymentCategoryMutation, CreatePaymentCategoryMutationVariables>(CreatePaymentCategoryDocument, variables)(),
+      options
+    );
+useCreatePaymentCategoryMutation.getKey = () => ['CreatePaymentCategory'];
+
+useCreatePaymentCategoryMutation.fetcher = (variables: CreatePaymentCategoryMutationVariables, options?: RequestInit['headers']) => fetcher<CreatePaymentCategoryMutation, CreatePaymentCategoryMutationVariables>(CreatePaymentCategoryDocument, variables, options);
+export const UpdatePaymentCategoryDocument = `
+    mutation UpdatePaymentCategory($id: BigInt!, $patch: PlatbyCategoryPatch!) {
+  updatePlatbyCategory(input: {pcId: $id, patch: $patch}) {
+    __typename
+  }
+}
+    `;
+export const useUpdatePaymentCategoryMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<UpdatePaymentCategoryMutation, TError, UpdatePaymentCategoryMutationVariables, TContext>) =>
+    useMutation<UpdatePaymentCategoryMutation, TError, UpdatePaymentCategoryMutationVariables, TContext>(
+      ['UpdatePaymentCategory'],
+      (variables?: UpdatePaymentCategoryMutationVariables) => fetcher<UpdatePaymentCategoryMutation, UpdatePaymentCategoryMutationVariables>(UpdatePaymentCategoryDocument, variables)(),
+      options
+    );
+useUpdatePaymentCategoryMutation.getKey = () => ['UpdatePaymentCategory'];
+
+useUpdatePaymentCategoryMutation.fetcher = (variables: UpdatePaymentCategoryMutationVariables, options?: RequestInit['headers']) => fetcher<UpdatePaymentCategoryMutation, UpdatePaymentCategoryMutationVariables>(UpdatePaymentCategoryDocument, variables, options);
+export const DeletePaymentCategoryDocument = `
+    mutation DeletePaymentCategory($id: BigInt!) {
+  deletePlatbyCategory(input: {pcId: $id}) {
+    __typename
+  }
+}
+    `;
+export const useDeletePaymentCategoryMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<DeletePaymentCategoryMutation, TError, DeletePaymentCategoryMutationVariables, TContext>) =>
+    useMutation<DeletePaymentCategoryMutation, TError, DeletePaymentCategoryMutationVariables, TContext>(
+      ['DeletePaymentCategory'],
+      (variables?: DeletePaymentCategoryMutationVariables) => fetcher<DeletePaymentCategoryMutation, DeletePaymentCategoryMutationVariables>(DeletePaymentCategoryDocument, variables)(),
+      options
+    );
+useDeletePaymentCategoryMutation.getKey = () => ['DeletePaymentCategory'];
+
+useDeletePaymentCategoryMutation.fetcher = (variables: DeletePaymentCategoryMutationVariables, options?: RequestInit['headers']) => fetcher<DeletePaymentCategoryMutation, DeletePaymentCategoryMutationVariables>(DeletePaymentCategoryDocument, variables, options);
 export const ReservationListDocument = `
-    query ReservationList($limit: Int!, $offset: Int!) {
+    query ReservationList($limit: Int, $offset: Int) {
   nabidkas(first: $limit, offset: $offset, orderBy: [N_OD_DESC]) {
     nodes {
       ...Reservation
@@ -12823,21 +13105,21 @@ export const useReservationListQuery = <
       TData = ReservationListQuery,
       TError = unknown
     >(
-      variables: ReservationListQueryVariables,
+      variables?: ReservationListQueryVariables,
       options?: UseQueryOptions<ReservationListQuery, TError, TData>
     ) =>
     useQuery<ReservationListQuery, TError, TData>(
-      ['ReservationList', variables],
+      variables === undefined ? ['ReservationList'] : ['ReservationList', variables],
       fetcher<ReservationListQuery, ReservationListQueryVariables>(ReservationListDocument, variables),
       options
     );
 useReservationListQuery.document = ReservationListDocument;
 
 
-useReservationListQuery.getKey = (variables: ReservationListQueryVariables) => ['ReservationList', variables];
+useReservationListQuery.getKey = (variables?: ReservationListQueryVariables) => variables === undefined ? ['ReservationList'] : ['ReservationList', variables];
 ;
 
-useReservationListQuery.fetcher = (variables: ReservationListQueryVariables, options?: RequestInit['headers']) => fetcher<ReservationListQuery, ReservationListQueryVariables>(ReservationListDocument, variables, options);
+useReservationListQuery.fetcher = (variables?: ReservationListQueryVariables, options?: RequestInit['headers']) => fetcher<ReservationListQuery, ReservationListQueryVariables>(ReservationListDocument, variables, options);
 export const ReservationDocument = `
     query Reservation($id: BigInt!) {
   nabidka(nId: $id) {
@@ -13113,7 +13395,7 @@ useScheduleRangeQuery.getKey = (variables: ScheduleRangeQueryVariables) => ['Sch
 
 useScheduleRangeQuery.fetcher = (variables: ScheduleRangeQueryVariables, options?: RequestInit['headers']) => fetcher<ScheduleRangeQuery, ScheduleRangeQueryVariables>(ScheduleRangeDocument, variables, options);
 export const ScheduleListDocument = `
-    query ScheduleList($limit: Int!, $offset: Int!) {
+    query ScheduleList($limit: Int, $offset: Int) {
   rozpis(first: $limit, offset: $offset, orderBy: [R_DATUM_DESC]) {
     nodes {
       rDatum
@@ -13145,21 +13427,21 @@ export const useScheduleListQuery = <
       TData = ScheduleListQuery,
       TError = unknown
     >(
-      variables: ScheduleListQueryVariables,
+      variables?: ScheduleListQueryVariables,
       options?: UseQueryOptions<ScheduleListQuery, TError, TData>
     ) =>
     useQuery<ScheduleListQuery, TError, TData>(
-      ['ScheduleList', variables],
+      variables === undefined ? ['ScheduleList'] : ['ScheduleList', variables],
       fetcher<ScheduleListQuery, ScheduleListQueryVariables>(ScheduleListDocument, variables),
       options
     );
 useScheduleListQuery.document = ScheduleListDocument;
 
 
-useScheduleListQuery.getKey = (variables: ScheduleListQueryVariables) => ['ScheduleList', variables];
+useScheduleListQuery.getKey = (variables?: ScheduleListQueryVariables) => variables === undefined ? ['ScheduleList'] : ['ScheduleList', variables];
 ;
 
-useScheduleListQuery.fetcher = (variables: ScheduleListQueryVariables, options?: RequestInit['headers']) => fetcher<ScheduleListQuery, ScheduleListQueryVariables>(ScheduleListDocument, variables, options);
+useScheduleListQuery.fetcher = (variables?: ScheduleListQueryVariables, options?: RequestInit['headers']) => fetcher<ScheduleListQuery, ScheduleListQueryVariables>(ScheduleListDocument, variables, options);
 export const MyLessonsDocument = `
     query MyLessons($startDate: Date, $endDate: Date) {
   currentCoupleIds {

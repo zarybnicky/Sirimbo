@@ -31,6 +31,13 @@ fragment User on User {
   uCity
 }
 
+fragment UserAuth on User {
+  ...User
+  permissionByUGroup {
+    ...Role
+  }
+}
+
 fragment CouplePartial on Pary {
   pId
   pIdPartner
@@ -40,10 +47,7 @@ fragment CouplePartial on Pary {
 
 query CurrentUser {
   getCurrentUser {
-    ...User
-    permissionByUGroup {
-      ...Role
-    }
+    ...UserAuth
   }
 }
 

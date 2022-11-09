@@ -35,7 +35,7 @@ fragment Reservation on Nabidka {
   }
 }
 
-query ReservationList($limit: Int! $offset: Int!) {
+query ReservationList($limit: Int, $offset: Int) {
   nabidkas(first: $limit, offset: $offset, orderBy: [N_OD_DESC]) {
     nodes {
       ...Reservation

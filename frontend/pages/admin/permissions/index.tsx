@@ -32,10 +32,7 @@ export default function PermissionAdminList() {
               onClick={() => router.push(`/admin/permissions/edit/${id}`)}
               label="Upravit"
             />,
-            <DeleteButton
-              key="delete" title="smazat uživatelskou roli"
-              params={{ id: id.toString() }} onDelete={doDelete}
-            />,
+            <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat uživatelskou roli" />,
           ]
         },
         { field: 'peName', headerName: 'Jméno', flex: 1, },

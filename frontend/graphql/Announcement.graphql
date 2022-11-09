@@ -24,7 +24,7 @@ fragment Announcement on Upozorneni {
   }
 }
 
-query AnnouncementList($limit: Int!, $offset: Int!) {
+query AnnouncementList($limit: Int, $offset: Int) {
   upozornenis(first: $limit, offset: $offset, orderBy: [UP_TIMESTAMP_ADD_DESC]) {
     totalCount
     nodes {

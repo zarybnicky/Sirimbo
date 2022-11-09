@@ -7,7 +7,6 @@ import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { NextLinkComposed } from "./Link"
 import { useAuth } from 'lib/data/use-auth';
-import { useConfig } from 'lib/use-config';
 import { DateRange } from './DateRange';
 import { ReservationSelect } from './ReservationSelect';
 import { EventParticipantExport } from './EventParticipantExport';
@@ -117,7 +116,6 @@ export const PhpPageView: React.FC<{ page: PhpPage; }> = ({ page: initialPage })
     router.push('/login');
   }
   const [page, setPage] = React.useState(initialPage);
-  const { layout } = useConfig();
 
   React.useEffect(() => {
     setPage(initialPage);
@@ -158,7 +156,7 @@ export const PhpPageView: React.FC<{ page: PhpPage; }> = ({ page: initialPage })
   }, []);
 
   return (
-    <Container maxWidth="lg" sx={{ margin: layout === 'new' ? '80px auto' : '20px auto' }}>
+    <Container maxWidth="lg" sx={{ margin: '80px auto' }}>
       {page.messages.map((msg, i) => (
         <div key={i} className={`alert alert-${msg.type}`} dangerouslySetInnerHTML={{ __html: msg.text }} />
       ))}

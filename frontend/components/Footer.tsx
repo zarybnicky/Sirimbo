@@ -6,7 +6,6 @@ import CstsLogo from 'public/images/csts-logo.svg';
 import OlomoucLogo from 'public/style/logo-olomouc.jpg';
 import KrajLogo from 'public/style/logo-kraj.png';
 import { Map } from './Map';
-import { useConfig } from 'lib/use-config';
 
 const ContactText = () => {
   const theme = useTheme();
@@ -89,7 +88,6 @@ export const FooterMap = ({ height = '200px' }) => {
 };
 
 export const Footer: React.FC = () => {
-  const { layout, setLayout } = useConfig();
   const theme = useTheme();
   return <Box sx={{
     padding: '3rem 0 5rem',
@@ -138,16 +136,6 @@ export const Footer: React.FC = () => {
       <Typography variant="body1" component="div">
         © 2022 Taneční klub Olymp Olomouc, z. s.
       </Typography>
-
-      <FormControlLabel
-        control={
-          <Switch
-            checked={layout === 'new'}
-            onChange={(_, isNew) => setLayout(isNew ? 'new' : 'old')}
-          />
-        }
-        label="Nový design"
-      />
     </Container>
   </Box>;
 };

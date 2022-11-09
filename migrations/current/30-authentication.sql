@@ -26,8 +26,8 @@ begin
   end if;
 
   insert into session
-    (ss_id, ss_user, ss_data, ss_lifetime)
-    values (gen_random_uuid(), usr.u_id, ('{"id":' || usr.u_id || '}')::bytea, 86400)
+    (ss_id, ss_user, ss_lifetime)
+    values (gen_random_uuid(), usr.u_id, 86400)
     returning * into sess;
 
   select * from pary where p_archiv=false and (p_id_partner=usr.u_id or p_id_partnerka=usr.u_id) into couple;

@@ -1,7 +1,7 @@
 import { Alert, Button, Card, CardActions, CardContent, Container, Grid, Typography } from "@mui/material";
 import format from "date-fns/format";
 import parseISO from "date-fns/parseISO";
-import { useDeleteUserMutation, useCohortListQuery, useConfirmUserMutation, useRoleListQuery, UserPartialFragment, useUserListQuery } from 'lib/graphql';
+import { useDeleteUserMutation, useCohortListQuery, useConfirmUserMutation, useRoleListQuery, UserFragment, useUserListQuery } from 'lib/graphql';
 import { SelectElement, useForm } from "react-hook-form-mui";
 import CheckIcon from '@mui/icons-material/Check';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -10,7 +10,7 @@ import React from "react";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 
 const UnconfirmedUser: React.FC<{
-  item: UserPartialFragment;
+  item: UserFragment;
   onProcessed: () => void;
 }> = ({ item, onProcessed }) => {
   const confirm = useConfirm();

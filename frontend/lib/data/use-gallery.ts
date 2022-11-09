@@ -20,9 +20,7 @@ export const useGallery = (dir: string): {
   dirs: GalleryItem[];
   images: GalleryItem[];
 } => {
-  const { data } = useGalleryDirQuery({
-    dirId: dir,
-  });
+  const { data } = useGalleryDirQuery({ id: dir });
 
   const dirs = (data?.galerieDirs?.nodes || []).map((x) => {
     const date = x.galerieFotosByGfIdRodic.nodes?.[0]?.gfTimestamp;

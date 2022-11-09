@@ -21,7 +21,7 @@ export default function CoupleAdminList() {
   const fix = React.useCallback(async () => {
     const data = await doFix({});
     enqueueSnackbar(`Opraveno ${data.fixUnpairedCouples?.paries?.length || 0} záznamů`);
-  }, [doFix]);
+  }, [doFix, enqueueSnackbar]);
 
   const [open, setOpen] = React.useState(false);
 
@@ -38,10 +38,7 @@ export default function CoupleAdminList() {
           field: 'actions',
           type: 'actions',
           getActions: ({ id }) => [
-            <DeleteButton
-              key="delete" title="smazat pár"
-              params={{ id: id.toString() }} onDelete={doDelete}
-            />,
+            <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat pár" />,
           ]
         },
         {

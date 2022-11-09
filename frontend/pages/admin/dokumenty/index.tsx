@@ -79,10 +79,7 @@ export default function FileAdminList() {
               onClick={() => router.push(`/admin/dokumenty/edit/${id}`)}
               label="Upravit"
             />,
-            <DeleteButton
-              key="delete" title="smazat soubor"
-              params={{ id: id.toString() }} onDelete={doDelete}
-            />,
+            <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat soubor" />,
           ],
         },
         {

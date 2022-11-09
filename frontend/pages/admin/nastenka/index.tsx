@@ -50,10 +50,7 @@ export default function AnnouncementAdminList() {
               onClick={() => router.push(`/admin/nastenka/edit/${id}`)}
               label="Upravit"
             />,
-            <DeleteButton
-              key="delete" title="smazat příspěvek"
-              params={{ id: id.toString() }} onDelete={doDelete}
-            />,
+            <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat příspěvek" />,
           ]
         },
         {

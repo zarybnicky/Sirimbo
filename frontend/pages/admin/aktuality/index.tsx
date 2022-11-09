@@ -43,16 +43,13 @@ export default function ArticleAdminList() {
         {
           field: 'actions',
           type: 'actions',
-          getActions: ({ row }) => [
+          getActions: ({ id }) => [
             <GridActionsCellItem key="edit"
               icon={<EditIcon />}
-              onClick={() => router.push(`/admin/aktuality/edit/${row.atId}`)}
+              onClick={() => router.push(`/admin/aktuality/edit/${id}`)}
               label="Upravit"
             />,
-            <DeleteButton
-              key="delete" title="smazat článek"
-              params={{ id: row.atId }} onDelete={doDelete}
-            />,
+            <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat článek" />,
           ],
         },
         { field: 'atJmeno', headerName: 'Jméno', flex: 1 },

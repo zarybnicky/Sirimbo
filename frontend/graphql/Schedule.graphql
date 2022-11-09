@@ -41,7 +41,7 @@ query ScheduleRange($startDate: Date!, $endDate: Date!) {
   }
 }
 
-query ScheduleList($limit: Int!, $offset: Int!) {
+query ScheduleList($limit: Int, $offset: Int) {
   rozpis(first: $limit, offset: $offset, orderBy: [R_DATUM_DESC]) {
     nodes {
       rDatum

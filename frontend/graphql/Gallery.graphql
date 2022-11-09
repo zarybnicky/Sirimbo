@@ -20,8 +20,8 @@ fragment GalleryDir on GalerieDir {
   gdHidden
 }
 
-query GalleryDir($dirId: BigInt!) {
-  galerieDir(gdId: $dirId) {
+query GalleryDir($id: BigInt!) {
+  galerieDir(gdId: $id) {
     ...GalleryDir,
     galerieFotosByGfIdRodic(orderBy: [GF_NAME_ASC]) {
       nodes {
@@ -29,7 +29,7 @@ query GalleryDir($dirId: BigInt!) {
       }
     }
   }
-  galerieDirs(condition: { gdIdRodic: $dirId, gdHidden: false }) {
+  galerieDirs(condition: { gdIdRodic: $id, gdHidden: false }) {
     nodes {
       ...GalleryDir,
       galerieFotosByGfIdRodic(orderBy: [GF_NAME_ASC], first: 1) {
@@ -41,7 +41,7 @@ query GalleryDir($dirId: BigInt!) {
   }
 }
 
-query GalleryDirList($limit: Int! $offset: Int!) {
+query GalleryDirList($limit: Int $offset: Int) {
   galerieDirs(first: $limit, offset: $offset, orderBy: [GD_NAME_ASC]) {
     totalCount
     nodes {
@@ -72,6 +72,31 @@ mutation UpdateGalleryDir($id: BigInt!, $patch: GalerieDirPatch!) {
 
 mutation DeleteGalleryDir($id: BigInt!) {
   deleteGalerieDir(input: {gdId: $id}) {
+    __typename
+  }
+}
+
+
+query GalleryPhoto($id: BigInt!) {
+  galerieFoto(gfId: $id) {
+    ...GalleryPhoto
+  }
+}
+
+mutation CreateGalleryPhoto($input: GalerieFotoInput!) {
+  createGalerieFoto(input: {galerieFoto: $input}) {
+    __typename
+  }
+}
+
+mutation UpdateGalleryPhoto($id: BigInt!, $patch: GalerieFotoPatch!) {
+  updateGalerieFoto(input: {gfId: $id, patch: $patch}) {
+    __typename
+  }
+}
+
+mutation DeleteGalleryPhoto($id: BigInt!) {
+  deleteGalerieFoto(input: {gfId: $id}) {
     __typename
   }
 }
