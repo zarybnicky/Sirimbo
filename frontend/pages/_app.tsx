@@ -2,10 +2,9 @@ import * as React from "react";
 import { AppProps, NextWebVitalsMetric } from 'next/app';
 import Router from "next/router";
 import NProgress from "nprogress";
-import posthog from "posthog-js";
 import { event } from "nextjs-google-analytics";
 import { ProvideAuth } from 'lib/data/use-auth';
-import { ThemeProvider } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import { theme } from "lib/theme";
 import { SnackbarProvider } from "notistack";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -21,6 +20,7 @@ import 'public/style/material-icons.css';
 import '@react-page/editor/lib/index.css';
 import '@react-page/plugins-slate/lib/index.css';
 import '@react-page/plugins-image/lib/index.css';
+import { Tracking } from "components/Tracking";
 
 Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
@@ -28,17 +28,6 @@ Router.events.on("routeChangeError", () => NProgress.done());
 
 
 export default function App({ Component, pageProps }: AppProps) {
-  React.useEffect(() => {
-    if (process.env.NODE_ENV !== 'development') {
-      posthog.init('phc_H2WM9q2xXVFl1wEak9TcQVAsOpWNGuauzAvyOmBquYQ', {
-        api_host: 'https://eu.posthog.com',
-      });
-      const capture = () => posthog.capture('$pageview');
-      Router.events.on('routeChangeComplete', capture);
-      return () => Router.events.off('routeChangeComplete', capture);
-    }
-  }, []);
-
   const queryClientRef = React.useRef<QueryClient>()
   if (!queryClientRef.current) {
     queryClientRef.current = new QueryClient({
@@ -65,6 +54,8 @@ export default function App({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClientRef.current}>
       <Hydrate state={pageProps.dehydratedState}>
         <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Tracking />
           <ConfirmProvider defaultOptions={{
             title: 'Jste si jistí?',
             cancellationText: 'Zrušit',

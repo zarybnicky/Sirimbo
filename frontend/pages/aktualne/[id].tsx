@@ -28,7 +28,6 @@ export const ArticlePage = ({ }) => {
     <Container maxWidth="lg" style={{ margin: '5rem auto' }}>
       <Typography variant="h3" component="h2">{x.atJmeno}</Typography>
       <Typography color="textSecondary">
-        {x.userByAtKdo?.uJmeno} {x.userByAtKdo?.uPrijmeni}{', '}
         {x.atTimestampAdd && format(new Date(x.atTimestampAdd), 'd. M. y')}
       </Typography>
       <div dangerouslySetInnerHTML={{ __html: x.atText }}></div>

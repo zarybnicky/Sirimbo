@@ -6,7 +6,7 @@ export const useCookie = (key: string, defaultValue: string | undefined = undefi
 
   React.useEffect(() => {
     setCookie(getCookie(key) as string);
-  }, []);
+  }, [key]);
 
   const updateCookie = (value: string) => {
     const expires = new Date();

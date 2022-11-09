@@ -8694,7 +8694,6 @@ type Session implements Node {
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
-  ssData: String!
   ssId: String!
   ssLifetime: BigInt!
   ssUpdatedAt: Datetime!
@@ -8708,9 +8707,6 @@ type Session implements Node {
 A condition to be used against `Session` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
 input SessionCondition {
-  """Checks for equality with the object’s `ssData` field."""
-  ssData: String
-
   """Checks for equality with the object’s `ssId` field."""
   ssId: String
 
@@ -8726,7 +8722,6 @@ input SessionCondition {
 
 """An input for mutations affecting `Session`"""
 input SessionInput {
-  ssData: String!
   ssId: String!
   ssLifetime: BigInt!
   ssUpdatedAt: Datetime
@@ -8737,7 +8732,6 @@ input SessionInput {
 Represents an update to a `Session`. Fields that are set will be updated.
 """
 input SessionPatch {
-  ssData: String
   ssId: String
   ssLifetime: BigInt
   ssUpdatedAt: Datetime
@@ -8775,8 +8769,6 @@ enum SessionsOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  SS_DATA_ASC
-  SS_DATA_DESC
   SS_ID_ASC
   SS_ID_DESC
   SS_LIFETIME_ASC

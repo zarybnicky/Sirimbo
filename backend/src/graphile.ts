@@ -1,8 +1,8 @@
 import express from 'express';
 import { makePluginHook, Build, PostGraphileOptions } from 'postgraphile';
 import operationHooks, { AddOperationHookFn, OperationHookGenerator } from '@graphile/operation-hooks';
-import { getSession, getUser } from './db';
 import path from 'path';
+import { pool } from './db';
 
 const useAuthCredentials: (build: Build) => OperationHookGenerator = _ => ctx => {
   if (ctx.scope.isRootMutation && ctx.scope.pgFieldIntrospection?.name === "login") {
@@ -39,18 +39,18 @@ const loadUserFromSession = async (req: express.Request): Promise<{ [k: string]:
     'jwt.claims.user_id': null,
   };
 
-  const session = await getSession(req.cookies.PHPSESSID)
-  if (!session) return settings;
-  settings['jwt.claims.session_id'] = session.ss_id;
+  const { rows: [session] } = await pool.query(
+    `SELECT u_id, u_group, ss_id FROM session LEFT JOIN users on u_id=ss_user WHERE ss_id='${req.cookies.PHPSESSID}'`
+  );
+  if (session) {
+    settings['jwt.claims.session_id'] = session.ss_id;
+    settings['jwt.claims.user_id'] = session.u_id;;
 
-  const user = await getUser(session.ss_user);
-  if (!user) return settings;
-  settings['jwt.claims.user_id'] = user.u_id;;
-
-  settings['role'] =
-    user.u_group == "0" ? "anonymous" :
-      user.u_group == "1" ? "administrator" :
-        "member"
+    settings['role'] =
+      session.u_group == "0" ? "anonymous" :
+        session.u_group == "1" ? "administrator" :
+          "member";
+  }
 
   return settings;
 }

@@ -20,14 +20,6 @@ app.use(bodyParser.text({ type: 'application/graphql' }));
 
 app.use(postgraphile(pool, ['public'], graphileOptions));
 
-app.get('/logout', async function(req, res) {
-  const phpsessid = req.cookies.PHPSESSID;
-  if (phpsessid) {
-    await pool.query(`DELETE FROM session WHERE ss_id='${phpsessid}'`);
-  }
-  return res.clearCookie('PHPSESSID', { path: '/' }).redirect('/');
-});
-
 (async function runWorker() {
   const runner = await run({
     concurrency: 5,

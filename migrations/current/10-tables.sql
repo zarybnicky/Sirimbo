@@ -216,6 +216,7 @@ grant all on rozpis_item to member;
 
 -- ************** session **************
 ALTER TABLE session DROP COLUMN IF EXISTS ss_user CASCADE;
+ALTER TABLE session DROP COLUMN IF EXISTS ss_data CASCADE;
 ALTER TABLE session ADD COLUMN ss_user bigint null default null;
 ALTER TABLE ONLY public.session
   ADD CONSTRAINT session_ss_user_fkey FOREIGN KEY (ss_user) REFERENCES users(u_id) ON DELETE CASCADE;
@@ -269,6 +270,12 @@ BEGIN
 END;
 $$;
 select plpgsql_check_function('public.on_update_author_upozorneni', 'upozorneni');
+
+drop trigger if exists on_update_author_upozorneni on public.upozorneni;
+create trigger on_update_author_upozorneni
+  before insert or update on public.upozorneni
+  for each row
+  execute procedure public.on_update_author_aktuality();
 
 -- ************** upozorneni_skupiny **************
 select app_private.drop_policies('public.upozorneni_skupiny');

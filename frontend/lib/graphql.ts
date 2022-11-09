@@ -7498,7 +7498,6 @@ export type Session = Node & {
   __typename?: 'Session';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
-  ssData: Scalars['String'];
   ssId: Scalars['String'];
   ssLifetime: Scalars['BigInt'];
   ssUpdatedAt: Scalars['Datetime'];
@@ -7509,8 +7508,6 @@ export type Session = Node & {
 
 /** A condition to be used against `Session` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type SessionCondition = {
-  /** Checks for equality with the object’s `ssData` field. */
-  ssData?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `ssId` field. */
   ssId?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `ssLifetime` field. */
@@ -7523,7 +7520,6 @@ export type SessionCondition = {
 
 /** An input for mutations affecting `Session` */
 export type SessionInput = {
-  ssData: Scalars['String'];
   ssId: Scalars['String'];
   ssLifetime: Scalars['BigInt'];
   ssUpdatedAt?: InputMaybe<Scalars['Datetime']>;
@@ -7532,7 +7528,6 @@ export type SessionInput = {
 
 /** Represents an update to a `Session`. Fields that are set will be updated. */
 export type SessionPatch = {
-  ssData?: InputMaybe<Scalars['String']>;
   ssId?: InputMaybe<Scalars['String']>;
   ssLifetime?: InputMaybe<Scalars['BigInt']>;
   ssUpdatedAt?: InputMaybe<Scalars['Datetime']>;
@@ -7566,8 +7561,6 @@ export enum SessionsOrderBy {
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  SsDataAsc = 'SS_DATA_ASC',
-  SsDataDesc = 'SS_DATA_DESC',
   SsIdAsc = 'SS_ID_ASC',
   SsIdDesc = 'SS_ID_DESC',
   SsLifetimeAsc = 'SS_LIFETIME_ASC',
@@ -10150,14 +10143,14 @@ export type DeleteAnnouncementMutationVariables = Exact<{
 
 export type DeleteAnnouncementMutation = { __typename?: 'Mutation', deleteUpozorneni: { __typename: 'DeleteUpozorneniPayload' } | null };
 
-export type ArticleFragment = { __typename?: 'Aktuality', atId: string, atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, atKdo: string | null, userByAtKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null };
+export type ArticleFragment = { __typename?: 'Aktuality', atId: string, atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null };
 
 export type ArticleQueryVariables = Exact<{
   id: Scalars['BigInt'];
 }>;
 
 
-export type ArticleQuery = { __typename?: 'Query', aktuality: { __typename?: 'Aktuality', atId: string, atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, atKdo: string | null, userByAtKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null } | null };
+export type ArticleQuery = { __typename?: 'Query', aktuality: { __typename?: 'Aktuality', atId: string, atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null } | null };
 
 export type ArticlesQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -10165,7 +10158,7 @@ export type ArticlesQueryVariables = Exact<{
 }>;
 
 
-export type ArticlesQuery = { __typename?: 'Query', aktualities: { __typename?: 'AktualitiesConnection', totalCount: number, nodes: Array<{ __typename?: 'Aktuality', atId: string, atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, atKdo: string | null, userByAtKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null }> } | null };
+export type ArticlesQuery = { __typename?: 'Query', aktualities: { __typename?: 'AktualitiesConnection', totalCount: number, nodes: Array<{ __typename?: 'Aktuality', atId: string, atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null }> } | null };
 
 export type CreateArticleMutationVariables = Exact<{
   input: AktualityInput;
@@ -11000,12 +10993,6 @@ export const ArticleFragmentDoc = `
   atFotoMain
   atTimestamp
   atTimestampAdd
-  atKdo
-  userByAtKdo {
-    uId
-    uJmeno
-    uPrijmeni
-  }
   galerieFotoByAtFotoMain {
     gfPath
   }

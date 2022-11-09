@@ -10,7 +10,7 @@ export const useRequireUserLoggedIn = () => {
     if (!user && !isLoading) {
       router.replace("/login");
     }
-  }, [user, isLoading]);
+  }, [router, user, isLoading]);
 };
 
 export const useRequireUserLoggedOut = () => {
@@ -21,5 +21,5 @@ export const useRequireUserLoggedOut = () => {
     if (user && !isLoading) {
       router.replace("/dashboard");
     }
-  }, [user, isLoading]);
+  }, [router, user, isLoading]);
 };

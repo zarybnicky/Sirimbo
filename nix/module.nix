@@ -1,8 +1,8 @@
 { config, lib, pkgs, ... }: let
-  cfg = config.services.olymp;
+  cfg = config.services.olymp-beta;
   pkgName = "tkolymp.cz";
 in {
-  options.services.olymp = {
+  options.services.olymp-beta = {
     enable = lib.mkEnableOption "${pkgName}";
 
     domain = lib.mkOption {
@@ -105,12 +105,9 @@ in {
             proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
             proxyWebsockets = true;
           };
-xs          locations."/graphiql" = {
+          locations."/graphiql" = {
             proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
             proxyWebsockets = true;
-          };
-          locations."/logout" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
           };
           locations."/upload" = {
             proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
@@ -122,7 +119,7 @@ xs          locations."/graphiql" = {
         };
       };
 
-      systemd.services.sirimbo-frontend = {
+      systemd.services.sirimbo-frontend-beta = {
         after = [ "network.target" ];
         wantedBy = [ "multi-user.target" ];
 
@@ -142,7 +139,7 @@ xs          locations."/graphiql" = {
         };
       };
 
-      systemd.services.sirimbo-backend = {
+      systemd.services.sirimbo-backend-beta = {
         after = [ "network.target" ];
         wantedBy = [ "multi-user.target" ];
 
@@ -170,7 +167,7 @@ xs          locations."/graphiql" = {
         };
       };
 
-      systemd.services.sirimbo-migrate = {
+      systemd.services.sirimbo-migrate-beta = {
         description = "${pkgName} Migrations";
         wantedBy = [ "multi-user.target" ];
         after = [ "network-online.target" "postgresql.service" ];

@@ -70,7 +70,7 @@
           };
 
           services.mailhog.enable = true;
-          services.olymp = {
+          services.olymp-beta = {
             enable = true;
             dbConnString = "dbname=olymp";
             stateDir = "/var/lib/olymp";
