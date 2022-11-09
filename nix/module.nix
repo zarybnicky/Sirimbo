@@ -96,6 +96,8 @@ in {
         recommendedProxySettings = true;
 
         virtualHosts.${cfg.domain} = {
+          enableACME = config.ssl;
+
           serverAliases = ["www.${cfg.domain}"];
 
           locations."/gallery".root = cfg.stateDir;
