@@ -10,6 +10,13 @@ in {
       description = "${pkgName} Nginx vhost domain";
       example = "tkolymp.cz";
     };
+    domainAliases = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      description = "${pkgName} Nginx vhost domain aliases";
+      default = [];
+      example = "[www.tkolymp.cz]";
+    };
+
     ssl = lib.mkEnableOption "${pkgName} enable ssl";
 
     jsPort = lib.mkOption {
@@ -98,7 +105,7 @@ in {
         virtualHosts.${cfg.domain} = {
           enableACME = cfg.ssl;
 
-          serverAliases = ["www.${cfg.domain}"];
+          serverAliases = cfg.domainAliases;
 
           locations."/gallery".root = cfg.stateDir;
           locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
