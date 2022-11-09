@@ -26,7 +26,7 @@ class DbSessionHandler extends Database implements SessionHandlerInterface
         $stmt = self::prepare(
             "INSERT INTO session
              (ss_id, ss_user, ss_lifetime) VALUES
-             (?, ?, ?, 86400)
+             (?, ?, 86400)
              ON CONFLICT (ss_id) DO UPDATE SET
              ss_user=EXCLUDED.ss_user, ss_updated_at=NOW()"
         );
