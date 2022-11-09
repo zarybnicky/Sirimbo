@@ -96,7 +96,7 @@ in {
         recommendedProxySettings = true;
 
         virtualHosts.${cfg.domain} = {
-          enableACME = config.ssl;
+          enableACME = cfg.ssl;
 
           serverAliases = ["www.${cfg.domain}"];
 
