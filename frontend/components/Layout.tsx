@@ -3,6 +3,7 @@ import { Theme, useTheme, useMediaQuery } from '@mui/material';
 import { DesktopHeader } from './DesktopHeader';
 import { MobileHeader } from './MobileHeader';
 import { Footer } from './Footer';
+import { DesktopSidemenu } from './DesktopMenu';
 
 export const Layout: React.FC = ({ children }) => {
   const theme = useTheme();
@@ -10,7 +11,10 @@ export const Layout: React.FC = ({ children }) => {
   const Header = isTabletOrDesktop ? DesktopHeader : MobileHeader;
   return <>
     <Header />
-    {children}
+    <div className="relative flex h-full min-h-screen w-full">
+      {isTabletOrDesktop && <DesktopSidemenu />}
+      <div className="flex flex-1">{children}</div>
+    </div>
     <Footer />
   </>;
 };

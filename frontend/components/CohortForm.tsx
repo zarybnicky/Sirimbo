@@ -5,7 +5,8 @@ import { Controller, useForm } from 'react-hook-form';
 import { CheckboxElement, TextFieldElement } from 'react-hook-form-mui';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
-import { ColorFormat, ColorPicker } from 'mui-color';
+import { HexColorPicker } from 'react-colorful';
+import { TextField } from '@react-page/editor/lib/ui/uniform-mui';
 
 type FormProps = Pick<SkupinyInput, 'sName' | 'sDescription' | 'sLocation' | 'sVisible' | 'sColorRgb'>;
 
@@ -48,14 +49,11 @@ export const CohortForm: React.FC<{
       </Grid>
       <Grid item xs={12}>
         <Controller
-          name="sColorRgb"
-          control={control}
-          defaultValue="#FF0000"
-          render={({ field: { onChange, value } }) => (
-            <ColorPicker
-              inputFormats={["hex" as any as ColorFormat]}
-              value={value} onChange={(v) => onChange((v as any).css.backgroundColor)} />
-          )}
+          name="sColorRgb" control={control} defaultValue="#FF0000"
+          render={({ field: { onChange, value } }) => <>
+            <HexColorPicker color={value} onChange={onChange} />
+            <TextField name="sColorRgb" value={value} onChange={onChange} />
+          </>}
         />
       </Grid>
       <Grid item xs={12}>

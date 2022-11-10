@@ -1,13 +1,15 @@
 import * as React from 'react';
-import { alpha, Button, Menu, MenuItem } from '@mui/material';
+import { Button, Menu, MenuItem } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { PopupState as PopupStateType } from 'material-ui-popup-state/core';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { NestedMenuItem } from "./NestedMenuItem";
-import { useMenu, MenuStructItem, getHrefs } from 'lib/data/use-menu';
+import { MenuStructItem, getHrefs, useTopMenu, useSideMenu } from 'lib/data/use-menu';
 import { useRouter } from 'next/router';
 import { NextLinkComposed } from './Link';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import classNames from 'classnames';
+import { MobileSubmenu } from './MobileHeader';
 
 const Submenu = React.forwardRef<any, {
   popupState?: PopupStateType;
@@ -41,7 +43,7 @@ const Submenu = React.forwardRef<any, {
   }
 
   if (!popupState) {
-    return <PopupState variant="popover" popupId={`menu-${x.text.replace(' ', '')}`}>
+    return <PopupState variant="popover" popupId={`menu-${x.text.replace(' ', '')} `}>
       {(popupState) => <>
         <Button
           {...bindTrigger(popupState)}
@@ -97,6 +99,17 @@ const Submenu = React.forwardRef<any, {
 });
 
 export const DesktopMenu = () => {
-  const menu = useMenu();
+  const menu = useTopMenu();
   return <>{menu.map(x => <Submenu key={x.text} item={x} />)}</>;
+}
+
+export const DesktopSidemenu = () => {
+  const menu = useSideMenu();
+  return (
+    <nav className={classNames(
+      `3xl:w-80 z-30 flex h-full max-h-screen min-h-screen w-3/4 flex-none transform flex-col overflow-y-auto border-r border-slate-200 bg-muted pb-10 sm:w-1/2 sm:pb-0 md:w-1/3 lg:relative lg:z-auto lg:w-56 lg:translate-x-0 lg:bg-gray-50 2xl:w-72`
+    )}>
+      {menu.map(x => <MobileSubmenu key={x.text} item={x} />)}
+    </nav>
+  );
 }

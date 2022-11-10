@@ -26,7 +26,6 @@ module.exports = {
 
         text: "#575757",
 
-        gray: '#9a9a9a',
         muted: '#f1f1f1',
         success: '#90CA63',
         warning: '#e6be2a',

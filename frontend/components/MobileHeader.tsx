@@ -1,50 +1,62 @@
 import * as React from 'react';
 import {
-  AppBar, Collapse, Divider, IconButton, SwipeableDrawer, Toolbar, List,
+  AppBar, Divider, IconButton, SwipeableDrawer, Toolbar, List,
   ListItem, ListItemText, Box
 } from '@mui/material';
-import { MenuStructItem, useMenu, getHrefs } from 'lib/data/use-menu';
+import { MenuStructItem, useTopMenu, useSideMenu, getHrefs } from 'lib/data/use-menu';
 import { useAuth } from 'lib/data/use-auth';
 import { useRouter } from 'next/router';
 import { NextLinkComposed } from './Link';
 import OlympLogo from 'public/images/olymp-logo-oneline.svg';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuIcon from '@mui/icons-material/Menu';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
 
-const Submenu = ({ level = 0, item: x, onClick }: {
-  level?: number;
+export const MobileSubmenu = ({ item: x, onClick }: {
   item: MenuStructItem;
-  onClick: React.MouseEventHandler;
+  onClick?: React.MouseEventHandler;
 }) => {
   const { pathname } = useRouter();
   const inPath = !!getHrefs(x).find(y => pathname.startsWith(y));
-  const [open, setOpen] = React.useState(inPath);
 
   if (x.type === 'link') {
-    return <ListItem button component={NextLinkComposed} href={x.href} onClick={onClick}>
-      <ListItemText primary={x.text} style={{ marginLeft: `${level}rem` }} />
-    </ListItem>
+    return <ListItem
+      button component={NextLinkComposed} href={x.href} onClick={onClick}
+      disablePadding sx={{
+        width: 'calc(100% - 1rem)',
+        margin: '.2rem .5rem .2rem .5rem',
+        paddingLeft: '.5rem',
+        borderRadius: 3,
+        backgroundColor: inPath ? '#777' : undefined,
+      }}
+    >
+      <ListItemText primary={x.text} sx={{
+        fontWeight: 'light',
+        color: inPath ? 'white' : undefined,
+      }} />
+    </ListItem >
   }
 
   return <>
-    <ListItem key={x.text} button onClick={() => setOpen(!open)}>
-      <ListItemText primary={x.text} style={{ marginLeft: `${level}rem` }} />
-      {open ? <ExpandLess /> : <ExpandMore />}
+    <ListItem key={x.text} disablePadding sx={{
+      padding: '1rem 1rem 0.2rem',
+    }}>
+      <ListItemText primary={x.text} primaryTypographyProps={{
+        sx: {
+          fontWeight: 'bold',
+          fontSize: 13,
+        }
+      }} />
     </ListItem>
-    <Collapse in={open} timeout="auto" unmountOnExit>
-      <List disablePadding>
-        {x.children.map(y => <Submenu level={level + 1} key={y.text} item={y} onClick={onClick} />)}
-      </List>
-    </Collapse>
-    <Divider />
+    <List disablePadding>
+      {x.children.map(y => <MobileSubmenu key={y.text} item={y} onClick={onClick} />)}
+    </List>
   </>;
 };
 
 export const MobileHeader = ({ }) => {
   const auth = useAuth();
-  const menu = useMenu();
+  const topMenu = useTopMenu();
+  const sideMenu = useSideMenu();
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
 
@@ -79,18 +91,23 @@ export const MobileHeader = ({ }) => {
         maxWidth: '450px',
         width: '85vw',
       }}>
-        <Submenu item={{ type: 'link', text: 'Domů', href: '/home' }} onClick={() => setOpen(false)} />
-        {menu.map(x => <Submenu key={x.text} item={x} onClick={() => setOpen(false)} />)}
+        <MobileSubmenu item={{ type: 'link', text: 'Domů', href: '/home' }} onClick={() => setOpen(false)} />
+        {sideMenu.length > 0 ? (
+          <MobileSubmenu item={{ type: 'menu', text: 'Pro veřejnost', children: topMenu }} onClick={() => setOpen(false)} />
+        ) : (
+          topMenu.map(x => <MobileSubmenu key={x.text} item={x} onClick={() => setOpen(false)} />)
+        )}
         <Divider />
+        {sideMenu.map(x => <MobileSubmenu key={x.text} item={x} onClick={() => setOpen(false)} />)}
         {auth.user ? (<>
-          <Submenu item={{ type: 'link', text: 'Profil', href: '/profile' }} onClick={() => setOpen(false)} />
-          <Submenu item={{ type: 'link', text: 'Odhlásit se', href: '/' }} onClick={() => {
+          <MobileSubmenu item={{ type: 'link', text: 'Profil', href: '/profile' }} onClick={() => setOpen(false)} />
+          <MobileSubmenu item={{ type: 'link', text: 'Odhlásit se', href: '/' }} onClick={() => {
             setOpen(false);
             auth.signOut();
             router.push('/');
           }} />
         </>) : (
-          <Submenu item={{ type: 'link', text: 'Přihlásit se', href: '/login' }} onClick={() => setOpen(false)} />
+          <MobileSubmenu item={{ type: 'link', text: 'Přihlásit se', href: '/login' }} onClick={() => setOpen(false)} />
         )}
       </List>
     </SwipeableDrawer>

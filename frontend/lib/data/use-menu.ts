@@ -1,25 +1,18 @@
-import { useMenuQuery } from 'lib/graphql';
-import { useRouter } from 'next/router';
 import { useAuth } from './use-auth';
+import { PermissionKey, PermissionLevel, usePermissions } from './use-permissions';
 
+type MenuLink = {
+  type: 'link';
+  text: string;
+  href: string;
+  auth?: [PermissionKey, PermissionLevel];
+};
 export type MenuStructItem = {
   type: 'menu';
   hrefRoot?: string;
   text: string;
   children: MenuStructItem[];
-} | {
-  type: 'link';
-  text: string;
-  href: string;
-};
-
-export function useDbMenu(): MenuStructItem[] {
-  const { data } = useMenuQuery();
-  if (!data?.parameter?.paValue) {
-    return [];
-  }
-  return JSON.parse(data.parameter.paValue) as MenuStructItem[];
-};
+} | MenuLink;
 
 export function getHrefs(x: MenuStructItem): string[] {
   return x.type === 'link'
@@ -27,24 +20,33 @@ export function getHrefs(x: MenuStructItem): string[] {
     : (x.hrefRoot ? [x.hrefRoot] : []).concat(...x.children.map(getHrefs));
 }
 
-export function useMenu(): MenuStructItem[] {
-  const { user } = useAuth();
-  const { pathname } = useRouter();
-  if (!user) {
-    return publicMenu;
-  }
-  const isAdmin = user.permissionByUGroup?.peNastenka == 16;
-
-  if (getHrefs(publicSubmenu).find(y => pathname.startsWith(y))) {
-    return publicMenu.concat([memberSubmenu]).concat(isAdmin ? [adminSubmenu] : []);
-  }
-  if (getHrefs(adminSubmenu).find(y => pathname.startsWith(y))) {
-    return [publicSubmenu].concat([memberSubmenu]).concat(isAdmin ? adminMenu : []);
-  }
-  return [publicSubmenu].concat(memberMenu).concat(isAdmin ? [adminSubmenu] : []);
+export function useTopMenu(): MenuStructItem[] {
+  return publicMenu;
 }
 
-export const publicMenu: MenuStructItem[] = [
+export function useSideMenu(): MenuStructItem[] {
+  const { user } = useAuth();
+  const permissions = usePermissions();
+
+  const menu: MenuStructItem[] = [];
+  if (user) {
+    menu.push({
+      type: 'menu',
+      text: 'Pro členy',
+      children: memberMenu,
+    });
+  }
+  if (permissions.hasPermission(PermissionKey.peNastenka, PermissionLevel.P_OWNED)) {
+    menu.push({
+      type: 'menu',
+      text: 'Správa',
+      children: adminMenu.filter(item => !item.auth || permissions.hasPermission(...item.auth)),
+    });
+  }
+  return menu;
+}
+
+const publicMenu: MenuStructItem[] = [
   {
     "type": "menu", "text": "Klub", "children": [
       { "type": "link", "text": "O nás", "href": "/o-nas" },
@@ -68,35 +70,68 @@ export const publicMenu: MenuStructItem[] = [
   { "type": "link", "text": "Kontakt", "href": "/contact" }
 ];
 
-export const memberMenu: MenuStructItem[] = [
-  { "type": "link", "text": "Nástěnka", "href": "/dashboard" },
-  { "type": "link", "text": "Tréninky", "href": "/schedule" },
-  { "type": "link", "text": "Akce", "href": "/events/private" },
-  { "type": "link", "text": "Dokumenty", "href": "/documents" },
-  { "type": "link", "text": "Členové", "href": "/cohorts" },
+const memberMenu: MenuLink[] = [
+  { "type": "link", "text": 'Nástěnka', "href": '/dashboard' },
+  { "type": "link", "text": 'Tréninky', "href": '/schedule' },
+  { "type": "link", "text": 'Akce', "href": '/events' },
+  { "type": "link", "text": 'Dokumenty', "href": '/documents' },
+  { "type": "link", "text": 'Členové', "href": '/cohorts' },
+  { "type": "link", "text": 'Profil', "href": '/profile' },
 ];
 
-export const adminMenu: MenuStructItem[] = [
+const adminMenu: MenuLink[] = [
+  {
+    "type": "link", "text": 'Uživatelé', "href": '/admin/users',
+    auth: [PermissionKey.peUsers, PermissionLevel.P_OWNED]
+  },
+  {
+    "type": "link", "text": 'Skupiny', "href": '/admin/skupiny',
+    auth: [PermissionKey.peSkupiny, PermissionLevel.P_OWNED]
+  },
+  {
+    "type": "link", "text": 'Platby', "href": '/admin/platby',
+    auth: [PermissionKey.pePlatby, PermissionLevel.P_OWNED]
+  },
+  {
+    "type": "link", "text": 'Páry', "href": '/admin/pary',
+    auth: [PermissionKey.pePary, PermissionLevel.P_OWNED]
+  },
+  {
+    "type": "link", "text": 'Články', "href": '/admin/aktuality',
+    auth: [PermissionKey.peAktuality, PermissionLevel.P_OWNED]
+  },
+  {
+    "type": "link", "text": 'Nástěnka', "href": '/admin/nastenka',
+    auth: [PermissionKey.peNastenka, PermissionLevel.P_OWNED]
+  },
+  {
+    "type": "link", "text": 'Rozpis', "href": '/admin/rozpis',
+    auth: [PermissionKey.peRozpis, PermissionLevel.P_OWNED]
+  },
+  {
+    "type": "link", "text": 'Nabídka', "href": '/admin/nabidka',
+    auth: [PermissionKey.peNabidka, PermissionLevel.P_OWNED]
+  },
+  {
+    "type": "link", "text": 'Akce', "href": '/admin/akce',
+    auth: [PermissionKey.peAkce, PermissionLevel.P_OWNED]
+  },
+  {
+    "type": "link", "text": 'Galerie', "href": '/admin/galerie',
+    auth: [PermissionKey.peGalerie, PermissionLevel.P_OWNED]
+  },
+  {
+    "type": "link", "text": 'Video', "href": '/admin/video',
+    auth: [PermissionKey.peAktuality, PermissionLevel.P_OWNED]
+  },
+  {
+    "type": "link", "text": 'Dokumenty', "href": '/admin/dokumenty',
+    auth: [PermissionKey.peDokumenty, PermissionLevel.P_OWNED]
+  },
+  {
+    "type": "link", "text": 'Oprávnění', "href": '/admin/permissions',
+    auth: [PermissionKey.pePermissions, PermissionLevel.P_OWNED]
+  },
   { "type": "link", "text": "Správa obsahu", "href": "/editor" },
   { "type": "link", "text": "Zájemci", "href": "/crm" },
-  { "type": "link", "text": "Stará administrace", "href": "/admin/rozpis" },
 ];
-
-const publicSubmenu: MenuStructItem = {
-  type: 'menu',
-  hrefRoot: '/home',
-  text: 'Pro veřejnost',
-  children: publicMenu,
-};
-
-const memberSubmenu: MenuStructItem = {
-  type: 'menu',
-  text: 'Pro členy',
-  children: memberMenu,
-};
-
-const adminSubmenu: MenuStructItem = {
-  type: 'menu',
-  text: 'Správa',
-  children: adminMenu,
-};

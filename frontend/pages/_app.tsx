@@ -17,6 +17,7 @@ import { Layout } from "components/Layout";
 import { ProvideMeta } from "lib/use-meta";
 import "nprogress/nprogress.css";
 import 'public/style/material-icons.css';
+import 'public/style/index.scss';
 import '@react-page/editor/lib/index.css';
 import '@react-page/plugins-slate/lib/index.css';
 import '@react-page/plugins-image/lib/index.css';

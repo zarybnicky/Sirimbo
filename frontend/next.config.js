@@ -43,6 +43,7 @@ module.exports = withBundleAnalyzer(withSentryConfig({
       { source: '/member/nabidka', destination: '/schedule', permanent: true },
       { source: '/member/treninky', destination: '/schedule', permanent: true },
       { source: '/member/dokumenty', destination: '/documents', permanent: true },
+      { source: '/member/profil', destination: '/profile', permanent: true },
     ];
   },
 
