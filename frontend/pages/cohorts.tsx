@@ -55,9 +55,9 @@ export default function CohortsPage() {
   const [variant, setVariant] = React.useState<'all' | 'cohortsOnly'>('all');
 
   const content = (variant === 'cohortsOnly') ? (
-    <Masonry columns={3} spacing={2}>
+    <div className="gap-4 md:columns-2 xl:columns-3">
       {Object.values(cohorts).map(cohort => (
-        <Paper key={cohort.sId} sx={{ marginBottom: 1, padding: 2 }}>
+        <Paper key={cohort.sId} sx={{ pageBreakInside: 'avoid', marginBottom: 1, padding: 2 }}>
           <CohortHeader cohort={cohort} />
           <Typography variant="body1">
             <div dangerouslySetInnerHTML={{
@@ -66,18 +66,18 @@ export default function CohortsPage() {
           </Typography>
         </Paper>
       ))}
-    </Masonry>
+    </div>
   ) : (
-    <Masonry columns={3} spacing={2}>
+    <div className="gap-4 md:columns-2 xl:columns-3">
       {Object.values(cohorts).map(cohort => (
-        <Paper key={cohort.sId} sx={{ marginBottom: 1, padding: 2 }}>
+        <Paper key={cohort.sId} sx={{ pageBreakInside: 'avoid', marginBottom: 1, padding: 2 }}>
           <CohortHeader cohort={cohort} />
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
             {cohort.members.map((member) => <UserDetailButton key={member.uId} user={member} />)}
           </div>
         </Paper>
       ))}
-    </Masonry>
+    </div>
   );
 
   return <Container maxWidth="lg" sx={{ margin: '2rem auto 6rem' }}>
