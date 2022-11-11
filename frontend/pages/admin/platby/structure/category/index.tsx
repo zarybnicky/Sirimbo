@@ -7,6 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { DeleteButton } from 'components/DeleteButton';
 import { Container } from '@mui/material';
 import format from 'date-fns/format';
+import { Button } from 'components/Button';
 
 export default function PlatbyCategoryListPage() {
   useRequireUserLoggedIn();
@@ -17,9 +18,7 @@ export default function PlatbyCategoryListPage() {
   });
 
   return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
-    <NextLinkComposed href="/admin/platby/structure/category/add" className="btn btn-primary">
-      Nová platba
-    </NextLinkComposed>
+    <Button href="/admin/platby/structure/category/add">Nová platba</Button>
 
     <DataGrid
       autoHeight={true}

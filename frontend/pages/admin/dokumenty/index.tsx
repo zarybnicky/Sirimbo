@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Container } from '@mui/material';
-import { NextLinkComposed } from 'components/Link';
 import { useDeleteFileMutation, useFileListQuery } from 'lib/graphql';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import { DeleteButton } from 'components/DeleteButton';
 import { useRouter } from 'next/router';
 import format from 'date-fns/format';
+import { Button } from 'components/Button';
 
 const categories = [
   { id: 1, label: "Schůze,\u{00A0}rady" },
@@ -56,7 +56,7 @@ export default function FileAdminList() {
   // );
 
   return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
-    <NextLinkComposed href="/admin/dokumenty/add" className="btn btn-primary">Nový soubor</NextLinkComposed>
+    <Button href="/admin/dokumenty/add">Nový soubor</Button>
 
     <DataGrid
       page={page}

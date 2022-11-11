@@ -34,8 +34,8 @@ query EventParticipants($id: BigInt!) {
   }
 }
 
-query EventList($limit: Int, $offset: Int) {
-  akces(first: $limit, offset: $offset, orderBy: [A_OD_DESC]) {
+query EventList($limit: Int, $offset: Int, $visible: Boolean!) {
+  akces(first: $limit, offset: $offset, orderBy: [A_OD_DESC], condition: {aVisible: $visible}) {
     totalCount
     nodes {
       ...Event

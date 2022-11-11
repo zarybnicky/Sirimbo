@@ -42,7 +42,7 @@ export function AnnouncementList() {
         <div dangerouslySetInnerHTML={{ __html: a.upText }}></div>
         {a.upozorneniSkupiniesByUpsIdRodic?.nodes?.length <= 0 ? null : <div>
           {a.upozorneniSkupiniesByUpsIdRodic.nodes.map((g) =>
-            <div className="box"
+            <div className="w-3 h-3"
               key={g.skupinyByUpsIdSkupina?.sColorRgb}
               title={g.skupinyByUpsIdSkupina?.sName}
               style={{ backgroundColor: g.skupinyByUpsIdSkupina?.sColorRgb }}

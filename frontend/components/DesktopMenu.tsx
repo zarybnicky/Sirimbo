@@ -105,6 +105,9 @@ export const DesktopMenu = () => {
 
 export const DesktopSidemenu = () => {
   const menu = useSideMenu();
+  if (menu.length < 1) {
+    return null;
+  }
   return (
     <nav className={classNames(
       `3xl:w-80 z-30 flex h-full max-h-screen min-h-screen w-3/4 flex-none transform flex-col overflow-y-auto border-r border-slate-200 bg-muted pb-10 sm:w-1/2 sm:pb-0 md:w-1/3 lg:relative lg:z-auto lg:w-56 lg:translate-x-0 lg:bg-gray-50 2xl:w-72`

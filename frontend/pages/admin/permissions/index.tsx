@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { NextLinkComposed } from 'components/Link';
 import { useDeleteRoleMutation, useRoleListQuery } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
@@ -7,6 +6,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useRouter } from 'next/router';
 import { Container } from '@mui/material';
 import { DeleteButton } from 'components/DeleteButton';
+import { Button } from 'components/Button';
 
 export default function PermissionAdminList() {
   useRequireUserLoggedIn();
@@ -17,7 +17,7 @@ export default function PermissionAdminList() {
   });
 
   return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
-    <NextLinkComposed href="/admin/permissions/add" className="btn btn-primary">Nová role</NextLinkComposed>
+    <Button href="/admin/permissions/add">Nová role</Button>
     <DataGrid
       autoHeight={true}
       getRowId={row => row.peId}

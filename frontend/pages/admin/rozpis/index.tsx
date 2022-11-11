@@ -1,13 +1,13 @@
 import * as React from 'react';
 import format from 'date-fns/format';
 import { Checkbox, Container } from '@mui/material';
-import { NextLinkComposed } from 'components/Link';
 import { useScheduleListQuery, useDeleteScheduleMutation, useToggleScheduleVisibleMutation } from 'lib/graphql';
 import { useRouter } from 'next/router';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { DeleteButton } from 'components/DeleteButton';
+import { Button } from 'components/Button';
 
 export default function RozpisAdminList() {
   const router = useRouter();
@@ -28,7 +28,7 @@ export default function RozpisAdminList() {
   }, [rowCount]);
 
   return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
-    <NextLinkComposed href="/admin/rozpis/add" className="btn btn-primary">Nový rozpis</NextLinkComposed>
+    <Button href="/admin/rozpis/add">Nový rozpis</Button>
 
     <DataGrid
       page={page}

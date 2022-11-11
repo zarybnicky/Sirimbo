@@ -1,10 +1,9 @@
 import * as React from 'react';
-import Link from 'components/Link';
+import Link from 'next/link';
 import { AppBar, Box, Container, Toolbar, useTheme } from '@mui/material';
 import { SocialButtons } from './SocialButtons';
 import { AuthButton } from './AuthButton';
 import { DesktopMenu } from './DesktopMenu';
-
 import OlympLogoVertical from 'public/images/olymp-logo-vertical.svg';
 
 export const DesktopHeader = ({ }) => {
@@ -34,14 +33,7 @@ export const DesktopHeader = ({ }) => {
             backgroundColor: theme.palette.primary.main,
             color: theme.palette.primary.contrastText,
           }}>
-            <Link href="/" sx={{
-              display: 'block',
-              padding: 0,
-              margin: 0,
-              height: '100%',
-              width: '100%',
-              position: 'relative',
-            }}>
+            <Link href="/" className="block p-0 m-0 h-full w-full relative">
               <Box component={OlympLogoVertical} sx={{
                 filter: 'drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.2))',
                 position: 'absolute',

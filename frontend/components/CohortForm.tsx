@@ -1,4 +1,4 @@
-import { Button, Grid } from '@mui/material';
+import { TextField, Button, Grid } from '@mui/material';
 import { CohortFragment, SkupinyInput, useCreateCohortMutation, useUpdateCohortMutation } from 'lib/graphql';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -6,7 +6,6 @@ import { CheckboxElement, TextFieldElement } from 'react-hook-form-mui';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { HexColorPicker } from 'react-colorful';
-import { TextField } from '@react-page/editor/lib/ui/uniform-mui';
 
 type FormProps = Pick<SkupinyInput, 'sName' | 'sDescription' | 'sLocation' | 'sVisible' | 'sColorRgb'>;
 

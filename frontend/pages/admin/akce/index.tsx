@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Checkbox, Container } from '@mui/material';
 import { DateRange } from 'components/DateRange';
-import { NextLinkComposed } from 'components/Link';
 import { useEventListQuery, useToggleEventVisibleMutation, useDeleteEventMutation } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { useRouter } from 'next/router';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import { DeleteButton } from 'components/DeleteButton';
+import { Button } from 'components/Button';
 
 export default function AdminEventList() {
   useRequireUserLoggedIn();
@@ -29,7 +29,7 @@ export default function AdminEventList() {
   }, [rowCount]);
 
   return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
-    <NextLinkComposed href="/admin/akce/add" className="btn btn-primary">Přidat</NextLinkComposed>
+    <Button href="/admin/akce/add">Přidat</Button>
 
     <DataGrid
       page={page}

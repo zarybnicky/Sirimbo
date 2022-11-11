@@ -1,4 +1,4 @@
-import { Container, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { NextLinkComposed } from "./Link"
 import parse, { domToReact, DOMNode, Element, HTMLReactParserOptions } from "html-react-parser"
 
@@ -30,7 +30,7 @@ export const HtmlView: React.FC<{
   content: string;
 }> = (page) => {
   return (
-    <Container maxWidth="lg" sx={{ margin: '80px auto' }}>
+    <div>
       {page.title && <Typography variant="h3" component="h2">{page.title}</Typography>}
       {page.subheader && <div dangerouslySetInnerHTML={{ __html: page.subheader }} />}
 
@@ -41,7 +41,6 @@ export const HtmlView: React.FC<{
       }}>
         {parse(page.content, options)}
       </div >
-    </Container>
+    </div>
   );
-
 };

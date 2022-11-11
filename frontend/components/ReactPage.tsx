@@ -39,16 +39,11 @@ const CustomToolbar = React.memo<BottomToolbarProps>(function CustomToolbar(prop
 export const ReactPage = ({ style, ...editorProps }: {
   style?: React.CSSProperties;
 } & Omit<EditorProps, 'cellPlugins' | 'components'>) => {
-  return <Box style={style} sx={{
-    minHeight: '200px',
-    '& .react-page-cell-inner.slate': {
-      padding: '20px',
-    },
-  }}>
+  return <div className="min-h-12" style={style}>
     <Editor
       cellPlugins={cellPlugins}
       components={{ BottomToolbar: CustomToolbar }}
       {...editorProps}
     />
-  </Box>;
+  </div>;
 }

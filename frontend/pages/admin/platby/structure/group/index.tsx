@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router';
-import { NextLinkComposed } from "components/Link";
 import { usePaymentGroupListQuery, useDeletePaymentGroupMutation } from "lib/graphql";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import { DeleteButton } from 'components/DeleteButton';
 import { Container } from '@mui/material';
+import { Button } from 'components/Button';
 
 export default function PlatbyGroupListPage() {
   useRequireUserLoggedIn();
@@ -16,9 +16,9 @@ export default function PlatbyGroupListPage() {
   });
 
   return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
-    <NextLinkComposed href="/admin/platby/structure/group/add" className="btn btn-primary">
+    <Button href="/admin/platby/structure/group/add">
       Nová skupina plateb
-    </NextLinkComposed>
+    </Button>
 
     <DataGrid
       autoHeight={true}

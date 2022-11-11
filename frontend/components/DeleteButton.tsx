@@ -4,8 +4,6 @@ import { useConfirm } from 'material-ui-confirm';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { GridActionsCellItem } from '@mui/x-data-grid';
 
-const genericMemo: <T>(component: T) => T = React.memo;
-
 export const DeleteButton = React.memo(function DeleteButton({
   title, id, onDelete
 }: {

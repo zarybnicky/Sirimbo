@@ -275,7 +275,7 @@ drop trigger if exists on_update_author_upozorneni on public.upozorneni;
 create trigger on_update_author_upozorneni
   before insert or update on public.upozorneni
   for each row
-  execute procedure public.on_update_author_aktuality();
+  execute procedure public.on_update_author_upozorneni();
 
 -- ************** upozorneni_skupiny **************
 select app_private.drop_policies('public.upozorneni_skupiny');

@@ -3,10 +3,13 @@ import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
 import { useMemberListQuery } from 'lib/graphql';
 import { PermissionKey, PermissionLevel, usePermissions } from 'lib/data/use-permissions';
+import { Button } from './Button';
 
 export function CohortExport({ id, name }: { id?: string; name?: string; }) {
   const perms = usePermissions();
-  const saveData = React.useCallback(async () => {
+  const saveData = React.useCallback(async (e?: React.MouseEvent) => {
+    e?.preventDefault();
+
     const data = await useMemberListQuery.fetcher({ cohortId: id })();
     const workbook = new Excel.Workbook();
     const worksheet = workbook.addWorksheet(name || "Sheet 1");
@@ -41,8 +44,5 @@ export function CohortExport({ id, name }: { id?: string; name?: string; }) {
     return null;
   }
 
-  return <button className="btn btn-primary" onClick={(e) => {
-    e.preventDefault();
-    saveData();
-  }}>Export {!name && 'všech'}</button>;
+  return <Button onClick={saveData}>Export {!name && 'všech'}</Button>;
 }

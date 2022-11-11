@@ -9,12 +9,14 @@ export const Layout: React.FC = ({ children }) => {
   const theme = useTheme();
   const isTabletOrDesktop = useMediaQuery<Theme>(theme.breakpoints.up('md'));
   const Header = isTabletOrDesktop ? DesktopHeader : MobileHeader;
-  return <>
+  return <div className="h-screen w-full overflow-hidden">
     <Header />
-    <div className="relative flex h-full min-h-screen w-full">
+    <div className="relative h-full flex">
       {isTabletOrDesktop && <DesktopSidemenu />}
-      <div className="flex flex-1">{children}</div>
+      <div className="flex flex-1 flex-col overflow-y-auto">
+        {children}
+        <Footer />
+      </div>
     </div>
-    <Footer />
-  </>;
+  </div>;
 };

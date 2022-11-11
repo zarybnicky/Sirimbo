@@ -1,6 +1,5 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { NextLinkComposed } from 'components/Link';
 import { useArticlesQuery, useDeleteArticleMutation } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
@@ -8,6 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useRouter } from 'next/router';
 import { DeleteButton } from 'components/DeleteButton';
 import { Container } from '@mui/material';
+import { Button } from 'components/Button';
 
 export default function ArticleAdminList() {
   useRequireUserLoggedIn();
@@ -26,7 +26,7 @@ export default function ArticleAdminList() {
   }, [rowCount]);
 
   return <Container maxWidth="md" style={{ margin: '4rem auto 6rem' }}>
-    <NextLinkComposed href="/admin/aktuality/add" className="btn btn-primary">Nový článek</NextLinkComposed>
+    <Button href="/admin/aktuality/add">Nový článek</Button>
 
     <DataGrid
       page={page}

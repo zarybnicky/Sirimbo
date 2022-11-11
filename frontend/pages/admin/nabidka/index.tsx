@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Checkbox, Container } from '@mui/material';
 import { DateRange } from 'components/DateRange';
-import { NextLinkComposed } from 'components/Link';
 import { useDeleteReservationMutation, useReservationListQuery, useToggleReservationVisibleMutation } from 'lib/graphql';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { DeleteButton } from 'components/DeleteButton';
 import { useRouter } from 'next/router';
+import { Button } from 'components/Button';
 
 export default function ReservationAdminList() {
   const router = useRouter();
@@ -28,7 +28,7 @@ export default function ReservationAdminList() {
   }, [rowCount]);
 
   return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
-    <NextLinkComposed href="/admin/nabidka/add" className="btn btn-primary">Nová nabídka</NextLinkComposed>
+    <Button href="/admin/nabidka/add">Nová nabídka</Button>
 
     <DataGrid
       page={page}

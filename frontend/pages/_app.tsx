@@ -17,7 +17,7 @@ import { Layout } from "components/Layout";
 import { ProvideMeta } from "lib/use-meta";
 import "nprogress/nprogress.css";
 import 'public/style/material-icons.css';
-import 'public/style/index.scss';
+import 'public/style/index.css';
 import '@react-page/editor/lib/index.css';
 import '@react-page/plugins-slate/lib/index.css';
 import '@react-page/plugins-image/lib/index.css';
@@ -26,7 +26,6 @@ import { Tracking } from "components/Tracking";
 Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
-
 
 export default function App({ Component, pageProps }: AppProps) {
   const queryClientRef = React.useRef<QueryClient>()

@@ -65,8 +65,8 @@ export function ReservationSelect() {
     setReservation(reservations?.nabidkas?.nodes?.find(x => x.nId === event.target.value));
   };
 
-  return <div>
-    <select className='team-selection' value={reservation?.nId || 'none'} onChange={onChange}>
+  return <>
+    <select value={reservation?.nId || 'none'} onChange={onChange}>
       <option value='none'> --vyberte nabídku-- </option>
       {reservations?.nabidkas?.nodes?.map(x => <option value={x.nId} key={x.nId}>
         <DateRange from={x.nOd} to={x.nDo} />
@@ -74,5 +74,5 @@ export function ReservationSelect() {
       </option>)}
     </select>
     {reservation ? ReservationView(reservation) : null}
-  </div>;
+  </>;
 }

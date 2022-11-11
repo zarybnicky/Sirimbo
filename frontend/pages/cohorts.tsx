@@ -1,31 +1,13 @@
 import * as React from 'react';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
-import { Paper, Container, ToggleButton, ToggleButtonGroup, Typography, Grid } from '@mui/material';
+import { DialogTitle, Dialog, Paper, Container, Typography } from '@mui/material';
 import { useMemberListQuery } from 'lib/graphql';
-import Masonry from '@mui/lab/Masonry';
-import { UserDetailButton } from 'components/UserDetailButton';
 import { CohortExport } from 'components/CohortExport';
-
-function CohortHeader({ cohort }: {
-  cohort: {
-    sId: string; sDescription: string; sColorRgb: string; sName: string; members: any[];
-  }
-}) {
-  return (
-    <Grid container justifyContent="space-between">
-      <Grid item>
-        <Typography variant="body1">
-          <div className="box" title={cohort.sName} style={{ backgroundColor: cohort.sColorRgb }} />
-          {' '}{cohort.members.length} členů
-        </Typography>
-        <Typography variant="h5">{cohort.sName}</Typography>
-      </Grid>
-      <Grid item>
-        <CohortExport id={cohort.sId} name={cohort.sName} />
-      </Grid>
-    </Grid>
-  );
-}
+import { TabMenu } from 'components/TabMenu';
+import EmailIcon from '@mui/icons-material/Email';
+import PhoneIcon from '@mui/icons-material/Phone';
+import { UserFragment } from 'lib/graphql';
+import { HtmlView } from 'components/HtmlView';
 
 export default function CohortsPage() {
   useRequireUserLoggedIn();
@@ -52,45 +34,56 @@ export default function CohortsPage() {
     });
     return cohorts;
   }, [members]);
-  const [variant, setVariant] = React.useState<'all' | 'cohortsOnly'>('all');
-
-  const content = (variant === 'cohortsOnly') ? (
-    <div className="gap-4 md:columns-2 xl:columns-3">
-      {Object.values(cohorts).map(cohort => (
-        <Paper key={cohort.sId} sx={{ pageBreakInside: 'avoid', marginBottom: 1, padding: 2 }}>
-          <CohortHeader cohort={cohort} />
-          <Typography variant="body1">
-            <div dangerouslySetInnerHTML={{
-              __html: cohort.sDescription.replace('&nbsp;', ' ').replace('<br />', '')
-            }} />
-          </Typography>
-        </Paper>
-      ))}
-    </div>
-  ) : (
-    <div className="gap-4 md:columns-2 xl:columns-3">
-      {Object.values(cohorts).map(cohort => (
-        <Paper key={cohort.sId} sx={{ pageBreakInside: 'avoid', marginBottom: 1, padding: 2 }}>
-          <CohortHeader cohort={cohort} />
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-            {cohort.members.map((member) => <UserDetailButton key={member.uId} user={member} />)}
-          </div>
-        </Paper>
-      ))}
-    </div>
-  );
+  const [variant, setVariant] = React.useState('all');
 
   return <Container maxWidth="lg" sx={{ margin: '2rem auto 6rem' }}>
-    <div style={{ display: 'flex', alignItems: 'center', gap: 5, justifyContent: 'flex-end', paddingBottom: 3, marginRight: '16px' }}>
-      <div>
-        <CohortExport />
-      </div>
-
-      <ToggleButtonGroup value={variant} onChange={(_, v) => setVariant(v)} exclusive>
-        <ToggleButton value="cohortsOnly">Tréninkové skupiny</ToggleButton>
-        <ToggleButton value="all">Členové dle skupin</ToggleButton>
-      </ToggleButtonGroup>
+    <div className="flex items-center justify-between gap-2 pb-2">
+      <TabMenu selected={variant} onSelect={setVariant} options={[
+        { id: 'cohortsOnly', label: 'Tréninkové skupiny' },
+        { id: 'all', label: 'Členové dle skupin' },
+      ]} />
+      <CohortExport />
     </div>
-    {content}
+
+    <div className="gap-4 lg:columns-2">
+      {Object.values(cohorts).map(cohort => (
+        <Paper key={cohort.sId} sx={{ pageBreakInside: 'avoid', marginBottom: 1, padding: 2 }}>
+          <div className="flex items-start justify-between mb-3">
+            <div>
+              {cohort.members.length} členů
+              <Typography variant="h5">{cohort.sName}</Typography>
+            </div>
+            <CohortExport id={cohort.sId} name={cohort.sName} />
+          </div>
+
+          {(variant === 'cohortsOnly') ? (
+            <HtmlView content={cohort.sDescription.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', '')} />
+          ) : (
+            <div className="flex flex-col items-start">
+              {cohort.members.map((member) => <UserDetailButton key={member.uId} user={member} />)}
+            </div>
+          )}
+        </Paper>
+      ))}
+    </div>
   </Container>;
+}
+
+const UserDetailButton: React.FC<{ user: UserFragment }> = ({ user }) => {
+  const [open, setOpen] = React.useState(false);
+
+  return <>
+    <a
+      href="#" onClick={() => setOpen(true)}
+      className="underline text-red-900"
+    >{user.uPrijmeni}, {user.uJmeno}</a>
+
+    <Dialog onClose={() => setOpen(false)} open={open}>
+      <DialogTitle>{user.uJmeno} {user.uPrijmeni}</DialogTitle>
+      <ul className="flex flex-col gap-3 m-4 mt-0">
+        <li><EmailIcon /> {user.uEmail}</li>
+        <li><PhoneIcon /> {user.uTelefon}</li>
+      </ul>
+    </Dialog>
+  </>;
 }

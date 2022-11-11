@@ -10,22 +10,13 @@ export const SocialButtons = ({ variant = 'medium', ...props }: SocialButtonsPro
   const theme = useTheme();
 
   return <Box sx={{ textAlign: 'right' }} {...props}>
-    <IconButton href="https://www.facebook.com/tkolymp" sx={{
-      padding: 0,
-      margin: '5px',
-    }}>
+    <IconButton className="button button-icon p-0 m-1" href="https://www.facebook.com/tkolymp">
       <FacebookIcon htmlColor={theme.palette.primary.main} fontSize={variant} />
     </IconButton>
-    <IconButton href="https://www.instagram.com/tanecni_klub_olymp/?hl=cs" sx={{
-      padding: 0,
-      margin: '5px',
-    }}>
+    <IconButton className="p-0 m-1" href="https://www.instagram.com/tanecni_klub_olymp">
       <InstagramIcon htmlColor={theme.palette.primary.light} fontSize={variant} />
     </IconButton>
-    <IconButton href="https://www.youtube.com/user/TheMamcro" sx={{
-      padding: 0,
-      margin: '5px',
-    }}>
+    <IconButton className="p-0 m-1" href="https://www.youtube.com/user/TheMamcro">
       <YouTubeIcon htmlColor={theme.palette.grey[200]} fontSize={variant} />
     </IconButton>
   </Box>

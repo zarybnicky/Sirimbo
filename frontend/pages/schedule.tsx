@@ -7,6 +7,7 @@ import { useReservationRangeQuery, useScheduleRangeQuery } from 'lib/graphql';
 import parse from 'date-fns/parse';
 import { Dropdown } from 'components/Dropdown';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
+import { Button } from 'components/Button';
 
 export default function SchedulePage() {
   useRequireUserLoggedIn();
@@ -92,7 +93,7 @@ export default function SchedulePage() {
               ]}
             />}
           </div>
-          <div className="date">{format(new Date(item.rDatum), 'd. M. y')}</div>
+          <div className="text-slate">{format(new Date(item.rDatum), 'd. M. y')}</div>
           <div>{item.rKde}</div>
           <hr />
 
@@ -166,12 +167,12 @@ export default function SchedulePage() {
           {perms.canMakeReservation(item) && (
             <div className="form-inline text-center" style={{ padding: '10px 0 5px' }}>
               <input className="w-auto form-control" type="text" placeholder="Počet hodin" name="hodiny" />
-              <button className="btn btn-primary">Rezervovat</button>
+              <Button onClick={() => reserveLessons(item.nId)}>Rezervovat</Button>
             </div>
           )}
         </CardContent>
       </Card>
-    </Grid>
+    </Grid >
   ));
 
   return <Container maxWidth="xl" style={{ paddingTop: '2rem' }}>

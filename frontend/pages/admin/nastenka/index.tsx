@@ -1,6 +1,5 @@
 import React from "react";
 import { Container } from "@mui/material";
-import { NextLinkComposed } from "components/Link";
 import { useAnnouncementListQuery, useDeleteAnnouncementMutation } from "lib/graphql";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
@@ -8,6 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useRouter } from 'next/router';
 import format from "date-fns/format";
 import { DeleteButton } from "components/DeleteButton";
+import { Button } from "components/Button";
 
 export default function AnnouncementAdminList() {
   useRequireUserLoggedIn();
@@ -27,7 +27,7 @@ export default function AnnouncementAdminList() {
   });
 
   return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
-    <NextLinkComposed href="/admin/nastenka/add" className="btn btn-primary">Přidat</NextLinkComposed>
+    <Button href="/admin/nastenka/add">Přidat</Button>
 
     <DataGrid
       page={page}

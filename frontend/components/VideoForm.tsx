@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'react-hook-form-mui';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
+import { SubmitButton } from './SubmitButton';
 
 type FormProps = Pick<VideoInput, 'vUri' | 'vTitle' | 'vDescription' | 'vPlaylist' | 'vAuthor'>;
 
@@ -15,7 +16,7 @@ export const VideoForm: React.FC<{
   const { mutateAsync: doCreate } = useCreateVideoMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateVideoMutation({ onSuccess });
 
-  const { control, handleSubmit } = useForm<FormProps>({
+  const { control, handleSubmit, formState } = useForm<FormProps>({
     defaultValues: {
       vUri: data?.vUri,
       vTitle: data?.vTitle,
@@ -57,7 +58,7 @@ export const VideoForm: React.FC<{
         <TextFieldElement fullWidth control={control} name="vPlaylist" label="ID playlistu (nepovinné)" required />
       </Grid>
       <Grid item xs={12}>
-        <Button fullWidth variant="contained" type="submit" color="primary" disabled={onSubmit.loading}>Uložit</Button>
+        <SubmitButton disabled={!formState.isValid} loading={onSubmit.loading} />
       </Grid>
     </Grid>
   );

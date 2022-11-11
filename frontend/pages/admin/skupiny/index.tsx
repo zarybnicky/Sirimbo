@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router';
-import { NextLinkComposed } from "components/Link";
 import { useCohortListQuery, useDeleteCohortMutation } from "lib/graphql";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import { DeleteButton } from 'components/DeleteButton';
 import { Container } from '@mui/material';
+import { Button } from 'components/Button';
 
 export default function CohortsPage() {
   useRequireUserLoggedIn();
@@ -16,7 +16,7 @@ export default function CohortsPage() {
   });
 
   return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
-    <NextLinkComposed href="/admin/skupiny/add" className="btn btn-primary">Nová skupina</NextLinkComposed>
+    <Button href="/admin/skupiny/add">Nová skupina</Button>
 
     <DataGrid
       autoHeight={true}

@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router';
-import { NextLinkComposed } from "components/Link";
 import { usePaymentItemListQuery, useDeletePaymentItemMutation } from "lib/graphql";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
@@ -7,6 +6,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { DeleteButton } from 'components/DeleteButton';
 import { Container } from '@mui/material';
 import format from 'date-fns/format';
+import { Button } from 'components/Button';
 
 export default function PlatbyItemListPage() {
   useRequireUserLoggedIn();
@@ -17,9 +17,7 @@ export default function PlatbyItemListPage() {
   });
 
   return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
-    <NextLinkComposed href="/admin/platby/items/add" className="btn btn-primary">
-      Nová platba
-    </NextLinkComposed>
+    <Button href="/admin/platby/items/add">Nová platba</Button>
 
     <DataGrid
       autoHeight={true}

@@ -2,11 +2,13 @@ import * as React from 'react';
 import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
 import { useEventParticipantsQuery } from 'lib/graphql';
+import { Button } from './Button';
 
 export function EventParticipantExport({ id }: { id: string; }) {
   const { data } = useEventParticipantsQuery({ id });
 
-  const saveData = async () => {
+  const saveData = React.useCallback(async (e?: React.MouseEvent) => {
+    e?.preventDefault();
     if (!data) {
       return;
     }
@@ -14,8 +16,8 @@ export function EventParticipantExport({ id }: { id: string; }) {
     const worksheet = workbook.addWorksheet(data.akce?.aJmeno || "Sheet 1");
 
     worksheet.columns = [
-      { header: 'First Name', key: 'firstName' },
-      { header: 'Last Name', key: 'lastName' },
+      { header: 'Jméno', key: 'firstName' },
+      { header: 'Přijmení', key: 'lastName' },
       { header: 'Rodné číslo', key: 'birthNumber' },
       { header: 'Telefon', key: 'phone' },
       { header: 'E-mail', key: 'email' },
@@ -37,10 +39,7 @@ export function EventParticipantExport({ id }: { id: string; }) {
 
     const buf = await workbook.xlsx.writeBuffer();
     saveAs(new Blob([buf]), `${data.akce?.aJmeno || "export-akce"}.xlsx`);
-  };
+  }, [data]);
 
-  return <button className="btn btn-primary" onClick={(e) => {
-    e.preventDefault();
-    saveData();
-  }}>Export přihlášených</button>;
+  return <Button onClick={saveData}>Export přihlášených</Button>;
 }
