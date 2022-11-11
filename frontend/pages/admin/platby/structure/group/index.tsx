@@ -4,7 +4,6 @@ import { useRequireUserLoggedIn } from "lib/route-guards";
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import { DeleteButton } from 'components/DeleteButton';
-import { Container } from '@mui/material';
 import { Button } from 'components/Button';
 
 export default function PlatbyGroupListPage() {
@@ -15,7 +14,7 @@ export default function PlatbyGroupListPage() {
     onSuccess: () => refetch(),
   });
 
-  return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
+  return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
     <Button href="/admin/platby/structure/group/add">
       Nová skupina plateb
     </Button>
@@ -44,5 +43,5 @@ export default function PlatbyGroupListPage() {
         },
       ]}
     />
-  </Container>;
+  </div>;
 }

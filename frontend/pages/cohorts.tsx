@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
-import { DialogTitle, Dialog, Container, Typography } from '@mui/material';
+import { DialogTitle, Dialog, Typography } from '@mui/material';
 import { useMemberListQuery } from 'lib/graphql';
 import { CohortExport } from 'components/CohortExport';
 import { TabMenu } from 'components/TabMenu';
@@ -37,7 +37,7 @@ export default function CohortsPage() {
   }, [members]);
   const [variant, setVariant] = React.useState('all');
 
-  return <Container maxWidth="lg" sx={{ margin: '2rem auto 6rem' }}>
+  return <div className="container mx-auto max-w-5xl" style={{ margin: '2rem auto 6rem' }}>
     <div className="flex items-center justify-between gap-2 pb-2">
       <TabMenu selected={variant} onSelect={setVariant} options={[
         { id: 'cohortsOnly', label: 'Tréninkové skupiny' },
@@ -67,7 +67,7 @@ export default function CohortsPage() {
         </Card>
       ))}
     </div>
-  </Container>;
+  </div>;
 }
 
 const UserDetailButton: React.FC<{ user: UserFragment }> = ({ user }) => {

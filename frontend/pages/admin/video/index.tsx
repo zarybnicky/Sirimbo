@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Container } from '@mui/material';
 import { Button } from 'components/Button';
 import { useDeleteVideoMutation, useVideoListQuery } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
@@ -17,7 +16,7 @@ export default function VideoList() {
     onSuccess: () => refetch(),
   });
 
-  return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
+  return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
     <Button href="/admin/video/add">Přidat video</Button>
 
     <DataGrid
@@ -45,5 +44,5 @@ export default function VideoList() {
         },
       ]}
     />
-  </Container>;
+  </div>;
 }

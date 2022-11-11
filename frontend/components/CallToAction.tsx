@@ -1,44 +1,38 @@
 import * as React from 'react';
-import { NextLinkComposed } from 'components/Link';
-import { Button, Container, Typography } from '@mui/material';
 import type { CellPlugin } from '@react-page/editor';
-
 import CtaImage from 'public/images/call-to-action.png';
+import Link from 'next/link';
 
 export const CallToAction = ({ }) => {
   return <div className="bg-red-500">
-    <Container maxWidth="lg" disableGutters sx={{
+    <div className="container mx-auto max-w-5xl flex justify-left" style={{
       backgroundImage: `url(${CtaImage.src})`,
       backgroundPosition: '85% 50%',
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'auto 100%',
-      display: 'flex',
-      justifyContent: 'left',
     }}>
       <div className="px-4 py-8 md:p-16 md:pr-24" style={{
         background: 'linear-gradient(90deg, rgba(216,28,58,0.6) 70%, rgba(0,0,0,0) 100%)',
       }}>
-        <Typography variant="h4" component="div" className="text-white font-black text-3xl md:text-4xl">
+        <div className="text-white font-black text-3xl md:text-4xl">
           PŘIDEJ SE K NÁM
-        </Typography>
+        </div>
 
-        <Typography variant="h5" component="div" className="font-bold text-2xl md:text-3xl">
+        <div className="font-bold text-2xl md:text-3xl">
           A OBJEV LÁSKU K TANCI
-        </Typography>
+        </div>
 
-        <Button
-          component={NextLinkComposed} href="/treninkove-programy"
-          color="secondary" variant="contained" size="large"
-          sx={{
+        <Link href="/treninkove-programy" passHref>
+          <a className="button button-grey bg-stone-800" style={{
             textTransform: 'none',
             marginTop: '1.25rem',
             padding: '.75rem 3rem',
             borderRadius: 0,
             fontSize: '140%',
-          }}
-        >Chci tančit</Button>
+          }}>Chci tančit</a>
+        </Link>
       </div>
-    </Container>
+    </div>
   </div>;
 };
 

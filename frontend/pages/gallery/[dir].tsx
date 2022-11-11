@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { NextLinkComposed } from 'components/Link';
 import Head from 'next/head';
-import { Container, Grid, Button, Typography } from '@mui/material';
+import { Grid, Button, Typography } from '@mui/material';
 import { GalleryCard } from 'components/cards/GalleryCard';
 import { Lightbox } from 'components/Lightbox';
 import { useGallery } from 'lib/data/use-gallery';
@@ -17,7 +17,7 @@ export default function GalleryPage() {
     <Head>
       <title>Galerie | TK Olymp</title>
     </Head>
-    <Container maxWidth="lg" style={{ paddingBottom: '2rem', paddingTop: '5rem' }}>
+    <div className="container mx-auto max-w-5xl" style={{ paddingBottom: '2rem', paddingTop: '5rem' }}>
       {dir?.parentId && (
         <Button component={NextLinkComposed} href={`/galerie/${dir.parentId}`} color='primary' startIcon={<ArrowUpwardIcon />}>
           Přejit o složku výš
@@ -38,7 +38,7 @@ export default function GalleryPage() {
           </Grid>
         ))}
       </Grid>
-    </Container>
+    </div>
 
     {photoId && (
       <Lightbox

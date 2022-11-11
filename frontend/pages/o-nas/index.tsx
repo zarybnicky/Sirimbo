@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Container, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import { CallToAction } from 'components/CallToAction';
 import { SlateReadonly } from 'components/SlateReadonly';
 
@@ -7,7 +7,7 @@ import MirekDomca from 'public/images/mirek-domca.png';
 
 export default function AboutPage() {
   return <>
-    <Container maxWidth="md" style={{ paddingBottom: '2rem', paddingTop: '2rem' }}>
+    <div className="container mx-auto max-w-3xl mt-8 mb-8">
       <Grid container direction="row-reverse" justifyContent="center">
         <Grid item sm={12} md={6}>
           <SlateReadonly value={text} />
@@ -16,7 +16,7 @@ export default function AboutPage() {
           <img src={MirekDomca.src} alt="Miroslav Hýža a Dominika Feglová" />
         </Grid>
       </Grid>
-    </Container>
+    </div>
     <CallToAction />
   </>;
 };

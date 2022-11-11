@@ -41,7 +41,7 @@ export default function EventListPage() {
   useRequireUserLoggedIn();
   const { data } = useEventListQuery({ visible: true });
 
-  return <div className="container max-w-6xl mx-auto mt-4 mb-8">
+  return <div className="container mx-auto max-w-5xl mt-4 mb-8">
     {data?.akces?.nodes.map(event => <EventItem key={event.aId} event={event} />)}
   </div >;
 }

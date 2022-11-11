@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Container } from '@mui/material';
 import { LocationCard } from 'components/cards/LocationCard';
 import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
@@ -9,9 +8,9 @@ export default function LocationsPage() {
   const items = useLocations();
   return <>
     <Heading color={{ r: 20, g: 200, b: 20, a: .5 }} text="Kde trénujeme" image="" />
-    <Container maxWidth="md" style={{ paddingBottom: '2rem', paddingTop: '2rem' }}>
+    <div className="container mx-auto max-w-3xl mt-8 mb-8">
       {items.map((x, i) => <LocationCard item={x} key={i} />)}
-    </Container>
+    </div>
     <CallToAction />
   </>;
 };

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Checkbox, Container } from '@mui/material';
+import { Checkbox } from '@mui/material';
 import { DateRange } from 'components/DateRange';
 import { useDeleteReservationMutation, useReservationListQuery, useToggleReservationVisibleMutation } from 'lib/graphql';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
@@ -27,7 +27,7 @@ export default function ReservationAdminList() {
     setRowCountState((prev) => rowCount !== undefined ? rowCount : prev);
   }, [rowCount]);
 
-  return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
+  return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
     <Button href="/admin/nabidka/add">Nová nabídka</Button>
 
     <DataGrid
@@ -80,5 +80,5 @@ export default function ReservationAdminList() {
         },
       ]}
     />
-  </Container>;
+  </div>;
 }

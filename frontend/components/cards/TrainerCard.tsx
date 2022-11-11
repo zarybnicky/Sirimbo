@@ -10,22 +10,13 @@ type TrainerCardProps = {
 }
 
 export const TrainerCard = (props: TrainerCardProps & { children: React.ReactNode | React.ReactChildren; }) => {
-  return <Card className="relative h-full">
-    <div className="bg-gray-800 text-white font-bold p-4 border-l-8 border-red-500 header">
+  return <Card className="relative h-full p-0">
+    <div className="bg-stone-800 text-white font-bold mb-0 p-4 border-l-8 border-red-500 header">
       <Typography variant="h6" component="h3">{props.name}</Typography>
     </div>
-    '& [data-slate-editor="true"]': {
-      paddingTop: '.5rem',
-    paddingRight: '1rem',
-    },
-    '& [data-slate-editor="true"] li:nth-of-type(1)': {
-      paddingRight: '115px',
-    },
-    '& [data-slate-editor="true"] li:nth-of-type(2)': {
-      paddingRight: '115px',
-    },
-
-    {props.children}
+    <div className="prose avoid-trainer-pictures pt-0">
+      {props.children}
+    </div>
     <img className="w-[100px] h-[120px] object-cover absolute top-4 right-4" src={props.image} alt={props.name} />
   </Card>;
 };

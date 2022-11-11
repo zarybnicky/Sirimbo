@@ -4,7 +4,7 @@ import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid } from '@mui/x-data-grid';
 import { DeleteButton } from 'components/DeleteButton';
 import { NewCoupleForm } from 'components/NewCoupleForm';
-import { Button, Container, Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 export default function CoupleAdminList() {
@@ -25,7 +25,7 @@ export default function CoupleAdminList() {
 
   const [open, setOpen] = React.useState(false);
 
-  return <Container maxWidth="lg" style={{ margin: '4rem auto 6rem' }}>
+  return <div className="container mx-auto max-w-5xl" style={{ margin: '4rem auto 6rem' }}>
     <Button variant="text" onClick={() => setOpen(true)}>Nový pár</Button>
     <Button variant="text" onClick={fix}>Opravit nespárované páry</Button>
 
@@ -57,5 +57,5 @@ export default function CoupleAdminList() {
         <NewCoupleForm onSuccess={() => { refetch(); setOpen(false) }} />
       </DialogContent>
     </Dialog>
-  </Container>;
+  </div>;
 }

@@ -8,6 +8,6 @@ export default function LogoutPage() {
   React.useEffect(() => {
     signOut();
     router.push('/');
-  }, []);
+  }, [router, signOut]);
   return null;
 };

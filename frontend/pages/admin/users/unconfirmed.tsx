@@ -1,4 +1,4 @@
-import { Alert, Button, Card, CardActions, CardContent, Container, Grid, Typography } from "@mui/material";
+import { Alert, Button, Card, CardActions, CardContent, Grid, Typography } from "@mui/material";
 import format from "date-fns/format";
 import parseISO from "date-fns/parseISO";
 import { useDeleteUserMutation, useCohortListQuery, useConfirmUserMutation, useRoleListQuery, UserFragment, useUserListQuery } from 'lib/graphql';
@@ -29,7 +29,7 @@ const UnconfirmedUser: React.FC<{
   const onSubmit = React.useCallback(async (values) => {
     await confirmUser({ id: item.uId, cohort: values.cohort, role: values.role });
     onProcessed();
-  }, [item, onProcessed]);
+  }, [item, onProcessed, confirmUser]);
 
   const onDelete = React.useCallback(async () => {
     try {
@@ -86,7 +86,7 @@ export default function UnconfirmedUsers() {
   useRequireUserLoggedIn();
   const { data: users, refetch } = useUserListQuery({ confirmed: false });
 
-  return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
+  return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
     <Typography align="right" variant="h4" component="h2" gutterBottom>
       Nepotvrzení uživatelé
     </Typography>
@@ -94,5 +94,5 @@ export default function UnconfirmedUsers() {
       <Alert severity="info">Žádní nepotvrzení uživatelé nejsou v databázi.</Alert>
     )}
     {users?.users?.nodes?.map((item, i) => <UnconfirmedUser onProcessed={refetch} item={item} key={i} />)}
-  </Container >;
+  </div>;
 };

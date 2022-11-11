@@ -4,7 +4,6 @@ import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import { useRouter } from 'next/router';
-import { Container } from '@mui/material';
 import { DeleteButton } from 'components/DeleteButton';
 import { Button } from 'components/Button';
 
@@ -16,7 +15,7 @@ export default function PermissionAdminList() {
     onSuccess: () => refetch(),
   });
 
-  return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
+  return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
     <Button href="/admin/permissions/add">Nová role</Button>
     <DataGrid
       autoHeight={true}
@@ -39,5 +38,5 @@ export default function PermissionAdminList() {
         { field: 'peDescription', headerName: 'Popis', flex: 1, },
       ]}
     />
-  </Container>;
+  </div>;
 }

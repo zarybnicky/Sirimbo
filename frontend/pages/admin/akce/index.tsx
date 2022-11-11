@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Checkbox, Container } from '@mui/material';
+import { Checkbox } from '@mui/material';
 import { DateRange } from 'components/DateRange';
 import { useEventListQuery, useToggleEventVisibleMutation, useDeleteEventMutation } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
@@ -28,7 +28,7 @@ export default function AdminEventList() {
     setRowCountState((prev) => rowCount !== undefined ? rowCount : prev);
   }, [rowCount]);
 
-  return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
+  return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
     <Button href="/admin/akce/add">Přidat</Button>
 
     <DataGrid
@@ -82,5 +82,5 @@ export default function AdminEventList() {
         },
       ]}
     />
-  </Container>;
+  </div>;
 }

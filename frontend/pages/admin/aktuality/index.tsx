@@ -6,7 +6,6 @@ import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import { useRouter } from 'next/router';
 import { DeleteButton } from 'components/DeleteButton';
-import { Container } from '@mui/material';
 import { Button } from 'components/Button';
 
 export default function ArticleAdminList() {
@@ -25,7 +24,7 @@ export default function ArticleAdminList() {
     setRowCountState((prev) => rowCount !== undefined ? rowCount : prev);
   }, [rowCount]);
 
-  return <Container maxWidth="md" style={{ margin: '4rem auto 6rem' }}>
+  return <div className="container mx-auto max-w-5xl mt-12 mb-8">
     <Button href="/admin/aktuality/add">Nový článek</Button>
 
     <DataGrid
@@ -59,5 +58,5 @@ export default function ArticleAdminList() {
         },
       ]}
     />
-  </Container>;
+  </div>;
 }

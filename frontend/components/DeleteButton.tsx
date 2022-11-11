@@ -26,7 +26,7 @@ export const DeleteButton = React.memo(function DeleteButton({
         enqueueSnackbar('Nepodařilo se smazat položku', { variant: 'error' });
       }
     }
-  }, [])
+  }, [confirm, enqueueSnackbar, id, onDelete, title]);
 
   return <GridActionsCellItem key="delete" icon={<DeleteIcon />} onClick={deleteItem} label="Odstranit" />;
 });

@@ -27,7 +27,7 @@ export const SubmitButton = React.forwardRef(function SubmitButton({
   return <button
     type="submit" {...props} ref={ref}
     disabled={loading || disabled}
-    className={classNames("button button-rose", className)}
+    className={classNames("button button-red", className)}
   >
     {children}
     {loading ? <Spinner /> : <KeyboardArrowRightIcon />}

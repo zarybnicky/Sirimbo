@@ -1,6 +1,6 @@
 import Glider from "glider-js";
 
-export interface BreakPoint {
+interface BreakPoint {
   breakpoint: number;
   settings: {
     slidesToShow?: number | "auto";

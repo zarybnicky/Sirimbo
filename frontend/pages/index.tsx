@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Container, Grid, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { Hero } from 'components/Hero';
 import { ServiceCard } from 'components/cards/ServiceCard';
 import { CallToAction } from 'components/CallToAction';
@@ -15,17 +15,17 @@ export const HomePage = ({ }) => {
 
   return <>
     <Hero />
-    <Container maxWidth="lg">
+    <div className="container mx-auto max-w-5xl">
       {services.map((x, i) => (
         <ServiceCard key={i} image={x.image} header={x.header}>
           <Typography variant="body1">{x.text}</Typography>
         </ServiceCard>
       ))}
-    </Container>
+    </div>
 
     <CallToAction />
 
-    <Container maxWidth="lg" style={{ margin: '3rem auto' }}>
+    <div className="container mx-auto max-w-5xl" style={{ margin: '3rem auto' }}>
       <Grid container spacing={3}>
 
         <Grid item sm={12} md={6}>
@@ -43,7 +43,7 @@ export const HomePage = ({ }) => {
         </Grid>
 
       </Grid>
-    </Container>
+    </div>
   </>;
 }
 

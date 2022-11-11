@@ -1,11 +1,9 @@
 import { useRouter } from 'next/router';
-import { NextLinkComposed } from "components/Link";
 import { usePaymentCategoryListQuery, useDeletePaymentCategoryMutation } from "lib/graphql";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import { DeleteButton } from 'components/DeleteButton';
-import { Container } from '@mui/material';
 import format from 'date-fns/format';
 import { Button } from 'components/Button';
 
@@ -17,7 +15,7 @@ export default function PlatbyCategoryListPage() {
     onSuccess: () => refetch(),
   });
 
-  return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
+  return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
     <Button href="/admin/platby/structure/category/add">Nová platba</Button>
 
     <DataGrid
@@ -53,5 +51,5 @@ export default function PlatbyCategoryListPage() {
         },
       ]}
     />
-  </Container>;
+  </div>;
 }

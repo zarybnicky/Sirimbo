@@ -1,6 +1,6 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { Container, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { CallToAction } from 'components/CallToAction';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -25,13 +25,13 @@ export const ArticlePage = ({ }) => {
       <meta property="og:site_name" content="TK Olymp" />
       <meta property="og:description" content="{x.atPreview}" />
     </Head>
-    <Container maxWidth="lg" style={{ margin: '5rem auto' }}>
+    <div className="container mx-auto max-w-5xl" style={{ margin: '5rem auto' }}>
       <Typography variant="h3" component="h2">{x.atJmeno}</Typography>
       <Typography color="textSecondary">
         {x.atTimestampAdd && format(new Date(x.atTimestampAdd), 'd. M. y')}
       </Typography>
       <div dangerouslySetInnerHTML={{ __html: x.atText }}></div>
-    </Container>
+    </div>
     <CallToAction />
   </>;
 };

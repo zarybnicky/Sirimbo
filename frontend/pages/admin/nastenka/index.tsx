@@ -1,5 +1,4 @@
 import React from "react";
-import { Container } from "@mui/material";
 import { useAnnouncementListQuery, useDeleteAnnouncementMutation } from "lib/graphql";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
@@ -26,7 +25,7 @@ export default function AnnouncementAdminList() {
     onSuccess: () => refetch(),
   });
 
-  return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
+  return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
     <Button href="/admin/nastenka/add">Přidat</Button>
 
     <DataGrid
@@ -77,5 +76,5 @@ export default function AnnouncementAdminList() {
         },
       ]}
     />
-  </Container>;
+  </div>;
 }

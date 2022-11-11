@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Container } from '@mui/material';
 import { useDeleteFileMutation, useFileListQuery } from 'lib/graphql';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
@@ -55,7 +54,7 @@ export default function FileAdminList() {
   //     \Session::getUser()->getId()
   // );
 
-  return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
+  return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
     <Button href="/admin/dokumenty/add">Nový soubor</Button>
 
     <DataGrid
@@ -98,5 +97,5 @@ export default function FileAdminList() {
         }
       ]}
     />
-  </Container>;
+  </div>;
 }

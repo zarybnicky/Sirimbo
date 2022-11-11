@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Container, Card, CardContent, Typography } from '@mui/material';
+import { Card, CardContent, Typography } from '@mui/material';
 import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
 import { useCohortListQuery } from 'lib/graphql';
@@ -9,7 +9,7 @@ export default function CohortsPage() {
 
   return <>
     <Heading color={{ r: 20, g: 20, b: 200, a: .5 }} text="Tréninkové skupiny" image="" />
-    <Container maxWidth="md" style={{ paddingBottom: '2rem', paddingTop: '2rem' }}>
+    <div className="container mx-auto max-w-3xl mt-8 mb-8">
       {cohorts?.skupinies?.nodes?.map((x, i) => (
         <Card key={i} elevation={3} style={{ marginBottom: '2rem', display: 'flex' }}>
           <div style={{ minWidth: '2rem', backgroundColor: x.sColorRgb, borderRight: '1px solid #ddd' }} />
@@ -24,7 +24,7 @@ export default function CohortsPage() {
           </CardContent>
         </Card>
       ))}
-    </Container>
+    </div>
     <CallToAction />
   </>;
 };

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card, CardContent, CardActions, Container, Grid, Typography, Button } from '@mui/material';
+import { Card, CardContent, CardActions, Grid, Typography, Button } from '@mui/material';
 import { NextLinkComposed } from 'components/Link';
 import { useAuth } from 'lib/data/use-auth';
 import { useRouter } from 'next/router';
@@ -27,7 +27,7 @@ export default function LoginPage() {
   });
 
   return (
-    <Container maxWidth="xs" style={{ margin: '4rem auto 6rem' }}>
+    <div className="container mx-auto max-w-md mt-12 mb-16">
       <Card component="form" onSubmit={handleSubmit(onSubmit.execute)}>
         <CardContent style={{ gap: '5px', display: 'flex', flexDirection: 'column', justifyItems: 'stretch' }}>
           <Typography gutterBottom variant="h5" component="h2">
@@ -54,6 +54,6 @@ export default function LoginPage() {
           <Button component={NextLinkComposed} href="/forgotten-password" size="small">Zapomněli jste heslo?</Button>
         </Grid>
       </Card>
-    </Container>
+    </div>
   );
 };

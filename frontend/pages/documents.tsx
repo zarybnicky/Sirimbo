@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useFileListQuery } from 'lib/graphql';
 import { SelectElement } from "react-hook-form-mui";
-import { Container } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 import format from "date-fns/format";
 import { useRequireUserLoggedIn } from "lib/route-guards";
@@ -18,7 +17,7 @@ export default function FileListPage() {
   const { control, watch } = useForm<{ category: number; }>();
   const { data } = useFileListQuery({ category: watch('category') });
 
-  return <Container maxWidth="lg" className="pt-8">
+  return <div className="container mx-auto max-w-5xl pt-12 pb-4">
     <div style={{ margin: '0 1rem 1rem auto', maxWidth: '12rem' }}>
       <SelectElement control={control} name="category" label="Kategorie" required options={categories} />
     </div>
@@ -45,5 +44,5 @@ export default function FileListPage() {
         }
       ]}
     />
-  </Container>;
+  </div>;
 }

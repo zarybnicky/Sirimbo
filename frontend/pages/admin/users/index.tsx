@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { Container } from '@mui/material';
-import { NextLinkComposed } from 'components/Link';
 import { useCohortListQuery, useDeleteUserMutation, useRoleListQuery, useUserListQuery } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
@@ -29,7 +27,7 @@ export default function UserectoryList() {
     setRowCountState((prev) => rowCount !== undefined ? rowCount : prev);
   }, [rowCount]);
 
-  return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
+  return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
     <Button href="/admin/users/add">Přidat uživatele</Button>
     <Button href="/admin/users/duplicate">Duplicitní uživatelé</Button>
     <Button href="/admin/users/unconfirmed">Nepotvrzení uživatelé</Button>
@@ -95,5 +93,5 @@ export default function UserectoryList() {
 
       ]}
     />
-  </Container>;
+  </div>;
 }

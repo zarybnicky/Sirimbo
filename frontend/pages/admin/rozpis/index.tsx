@@ -1,6 +1,6 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { Checkbox, Container } from '@mui/material';
+import { Checkbox } from '@mui/material';
 import { useScheduleListQuery, useDeleteScheduleMutation, useToggleScheduleVisibleMutation } from 'lib/graphql';
 import { useRouter } from 'next/router';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
@@ -27,7 +27,7 @@ export default function RozpisAdminList() {
     setRowCountState((prev) => rowCount !== undefined ? rowCount : prev);
   }, [rowCount]);
 
-  return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
+  return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
     <Button href="/admin/rozpis/add">Nový rozpis</Button>
 
     <DataGrid
@@ -83,5 +83,5 @@ export default function RozpisAdminList() {
         },
       ]}
     />
-  </Container>;
+  </div>;
 }

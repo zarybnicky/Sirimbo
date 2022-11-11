@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Container, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { CellPlugin } from '@react-page/editor';
 import { RGBColor } from 'react-color';
 
@@ -15,7 +15,7 @@ export const Heading = ({ color, image, text }: HeadingProps) => {
   const background = `${gradient}, url(${image}) no-repeat 50% 30%/cover`;
 
   return <div style={{ background }}>
-    <Container maxWidth="lg">
+    <div className="container mx-auto max-w-5xl">
       <div className="relative py-20">
         <Typography variant="h4" component="h2" sx={{
           zIndex: 3,
@@ -36,7 +36,7 @@ export const Heading = ({ color, image, text }: HeadingProps) => {
           fontWeight: 'bold',
         }}>{text}</Typography>
       </div>
-    </Container>
+    </div>
   </div>;
 };
 

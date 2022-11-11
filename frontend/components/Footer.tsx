@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Container, Grid, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { SocialButtons } from './SocialButtons';
 import { Map } from './Map';
 import { Card } from './Card';
@@ -81,22 +81,19 @@ export const FooterMap = ({ height = '200px' }) => {
 
 export const Footer: React.FC = () => {
   return <div className="bg-stone-800 text-white pt-12 pb-20">
-    <Container maxWidth="lg">
+    <div className="container mx-auto max-w-5xl">
       <Grid container spacing={1.5}>
         <Grid item xs><ContactText /></Grid>
         <Grid item xs>
           <FooterMap />
           <SocialButtons variant="large" className="text-right my-4" />
 
-          <Card classNames="p-4 text-center">
-            <Typography variant="h2" className="text-red-500" sx={{
-              fontSize: '1.2rem',
-              fontWeight: 900,
-              textAlign: 'left',
-              marginBottom: '1rem',
-            }}>Podporují nás</Typography>
+          <Card className="p-4 text-center">
+            <Typography variant="h2" className="text-xl text-red-500 font-bold mb-4">
+              Podporují nás
+            </Typography>
 
-            <Grid container spacing={1.5} alignItems="center">
+            <Grid container spacing={1.5} className="items-center text-center">
               <Grid item xs={4}>
                 <img alt="ČSTS" style={{ width: '100%', height: 'auto' }} src={CstsLogo.src} />
               </Grid>
@@ -107,15 +104,15 @@ export const Footer: React.FC = () => {
                 <img alt="Olomoucký kraj" style={{ width: '100%', height: 'auto' }} src={KrajLogo.src} />
               </Grid>
             </Grid>
-          </Paper>
+          </Card>
         </Grid>
       </Grid>
-      <Typography variant="body1" component="div" style={{ marginTop: '1rem' }}>
+      <Typography variant="body1" component="div" className="mt-4">
         Realizace: Jakub Zárybnický
       </Typography>
       <Typography variant="body1" component="div">
         © 2022 Taneční klub Olymp Olomouc, z. s.
       </Typography>
-    </Container>
+    </div>
   </div>;
 };

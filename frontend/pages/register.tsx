@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card, Grid, CardContent, Container, Button, CardActions, Typography } from '@mui/material';
+import { Card, Grid, CardContent, CardActions, Typography } from '@mui/material';
 import { useForm, SelectElement, TextFieldElement, DatePickerElement, RadioButtonGroup } from 'react-hook-form-mui';
 import { useCountries } from 'lib/data/use-countries';
 import format from 'date-fns/format';
@@ -42,7 +42,7 @@ export default function RegisterPage() {
   });
 
   return (
-    <Container maxWidth="md" style={{ margin: '4rem auto 6rem' }}>
+    <div className="container mx-auto max-w-3xl mt-12 mb-8">
       <Card component="form" onSubmit={handleSubmit(onSubmit.execute)}>
         <CardContent>
           <Grid container spacing={1}>
@@ -198,6 +198,6 @@ export default function RegisterPage() {
           </SubmitButton>
         </CardActions>
       </Card>
-    </Container>
+    </div>
   );
 };

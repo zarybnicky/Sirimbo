@@ -1,6 +1,6 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { Container, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useActiveProspectsQuery } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid } from '@mui/x-data-grid';
@@ -9,7 +9,7 @@ export default function CrmPage() {
   useRequireUserLoggedIn()
   const { data } = useActiveProspectsQuery();
 
-  return <Container maxWidth="lg" style={{ padding: '2rem 0' }}>
+  return <div className="container mx-auto max-w-5xl" style={{ padding: '2rem 0' }}>
     <Typography align="right" variant="h4" component="h2">Zájemci</Typography>
 
     <DataGrid
@@ -40,5 +40,5 @@ export default function CrmPage() {
         },
       ]}
     />
-  </Container>;
+  </div>;
 }

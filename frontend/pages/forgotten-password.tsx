@@ -1,4 +1,4 @@
-import { Container, Typography, Grid, Card, CardContent, CardActions } from "@mui/material";
+import { Typography, Card, CardContent, CardActions } from "@mui/material";
 import { ErrorBox } from "components/ErrorBox";
 import { SubmitButton } from "components/SubmitButton";
 import { useResetPasswordMutation } from 'lib/graphql';
@@ -23,7 +23,7 @@ export default function ForgottenPassword() {
     router.push('/');
   });
 
-  return <Container maxWidth="xs" style={{ margin: '4rem auto 6rem' }}>
+  return <div className="container mx-auto max-w-md" style={{ margin: '4rem auto 6rem' }}>
     <Card component="form" onSubmit={handleSubmit(onSubmit.execute)}>
       <CardContent>
         <Typography gutterBottom variant="h5" component="h2">
@@ -33,15 +33,11 @@ export default function ForgottenPassword() {
           Pokud jste zapomněli heslo, pošleme Vám nové na e-mail, který jste zadali při registraci.
         </Typography>
 
-        <Grid container spacing={1.5}>
-          <Grid item xs={12}>
-            <TextFieldElement fullWidth control={control} name="login" label="Přihlašovací jméno" autoComplete="login" required />
-          </Grid>
-          <Grid item xs={12}>
-            <TextFieldElement fullWidth control={control} type="email" name="email" label="E-mail" autoComplete="email" required />
-          </Grid>
+        <div className="flex flex-col gap-4">
+          <TextFieldElement fullWidth control={control} name="login" label="Přihlašovací jméno" autoComplete="login" required />
+          <TextFieldElement fullWidth control={control} type="email" name="email" label="E-mail" autoComplete="email" required />
           <ErrorBox grid error={onSubmit.error} default="Nepodařilo se změnit heslo, prosím kontaktujte administrátora." />
-        </Grid>
+        </div>
       </CardContent>
       <CardActions>
         <SubmitButton className="w-full" loading={onSubmit.loading} disabled={!formState.isValid}>
@@ -49,5 +45,5 @@ export default function ForgottenPassword() {
         </SubmitButton>
       </CardActions>
     </Card>
-  </Container>;
+  </div>;
 }

@@ -11,7 +11,7 @@ export default function ErrorPage() {
       <title>Chyba</title>
     </Head>
 
-    <Container>
+    <div className="container mx-auto max-w-3xl mt-12 mb-8">
       <Alert severity="error">
         {errorCode === 'not_found' ? <>
           <b>Stránka nenalezena.</b>

@@ -1,4 +1,3 @@
-import { Container } from "@mui/material";
 import { GalleryDirForm } from "components/GalleryDirectoryForm";
 import { useGalleryDirQuery } from "lib/graphql";
 import { useRequireUserLoggedIn } from "lib/route-guards";
@@ -9,7 +8,7 @@ export default function GalleryDirEditPage() {
   const router = useRouter();
   const { id } = router.query;
   const { data } = useGalleryDirQuery({ id: id as string }, { enabled: !!id, cacheTime: 0 });
-  return <Container maxWidth="md" style={{ margin: '4rem auto 6rem' }}>
+  return <div className="container mx-auto max-w-3xl mt-12 mb-8">
     {data?.galerieDir && <GalleryDirForm data={data.galerieDir} onSuccess={() => router.back()} />}
-  </Container>;
+  </div>;
 };

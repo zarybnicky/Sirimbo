@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Checkbox, Container } from '@mui/material';
+import { Checkbox } from '@mui/material';
 import { Button } from 'components/Button';
 import { useDeleteGalleryDirMutation, useGalleryDirListQuery, useToggleGalleryDirVisibleMutation } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
@@ -64,7 +64,7 @@ export default function GalleryDirectoryList() {
     setRowCountState((prev) => rowCount !== undefined ? rowCount : prev);
   }, [rowCount]);
 
-  return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
+  return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
     <Button href="/admin/galerie/file/upload">Přidat fotky</Button>
     <Button href="/admin/galerie/directory/add">Přidat složku</Button>
 
@@ -111,5 +111,5 @@ export default function GalleryDirectoryList() {
         },
       ]}
     />
-  </Container>;
+  </div>;
 }

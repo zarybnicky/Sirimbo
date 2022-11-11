@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Container, Grid, Typography, Pagination } from '@mui/material';
+import { Grid, Typography, Pagination } from '@mui/material';
 import { ArticleCard } from 'components/cards/ArticleCard';
 import { useArticles } from 'lib/data/use-articles';
 import { CallToAction } from 'components/CallToAction';
@@ -14,7 +14,7 @@ export const ArticlesPage = ({ }) => {
     <Head>
       <title>Články | TK Olymp</title>
     </Head>
-    <Container maxWidth="lg" style={{ margin: '4rem auto 3rem' }}>
+    <div className="container mx-auto max-w-5xl" style={{ margin: '4rem auto 3rem' }}>
       <Typography gutterBottom variant="h4" component="h2">Aktuálně</Typography>
       <Grid container spacing={3} style={{ alignItems: "stretch", marginBottom: '2rem' }}>
         {articles.map((x, i) => <Grid item container sm={6} md={3} key={i}>
@@ -22,7 +22,7 @@ export const ArticlesPage = ({ }) => {
         </Grid>)}
       </Grid>
       <Pagination count={Math.ceil(count / limit)} page={page} onChange={(_, p) => setPage(p)} />
-    </Container>
+    </div>
     <CallToAction />
   </>;
 };

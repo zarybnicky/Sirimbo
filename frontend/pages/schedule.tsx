@@ -1,6 +1,6 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { Card, CardContent, Container, Grid, Typography } from '@mui/material';
+import { Card, CardContent, Grid, Typography } from '@mui/material';
 import { usePermissions } from 'lib/data/use-permissions';
 import { DateRange } from 'components/DateRange';
 import { useReservationRangeQuery, useScheduleRangeQuery } from 'lib/graphql';
@@ -175,11 +175,11 @@ export default function SchedulePage() {
     </Grid >
   ));
 
-  return <Container maxWidth="xl" className="pt-8">
+  return <div className="container mx-auto max-w-5xl mt-12 mb-8">
     <Typography align="right" variant="h4" component="h2">Tento týden</Typography>
     <Grid container spacing={2}>
       {scheduleList}
       {reservationList}
     </Grid>
-  </Container>;
+  </div>;
 }
