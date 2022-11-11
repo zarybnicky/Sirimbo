@@ -59,7 +59,7 @@ export default function AnnouncementAdminList() {
             <big>{row.upNadpis} </big>
             {row.upozorneniSkupiniesByUpsIdRodic?.nodes?.length <= 0 ? null : <div>
               {row.upozorneniSkupiniesByUpsIdRodic.nodes.map((g) =>
-                <div className="box"
+                <div className="w-3.5 h-3.5"
                   key={g.skupinyByUpsIdSkupina?.sId}
                   title={g.skupinyByUpsIdSkupina?.sName}
                   style={{ backgroundColor: g.skupinyByUpsIdSkupina?.sColorRgb }}

@@ -82,7 +82,7 @@ export default function UserectoryList() {
             const cohort = cohorts?.skupinies?.nodes.find(x => x.sId === value);
             if (!cohort) return null;
             return <>
-              <div className="box" title={cohort.sName} style={{ backgroundColor: cohort.sColorRgb }} />
+              <div className="w-3.5 h-3.5" title={cohort.sName} style={{ backgroundColor: cohort.sColorRgb }} />
               {' '}{cohort.sName}
             </>
           }

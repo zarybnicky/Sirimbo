@@ -38,7 +38,7 @@ export default function CohortsPage() {
         {
           field: 'sName', headerName: 'Jméno', flex: 1,
           renderCell: ({ row }) => <>
-            <div className="box" title={row.sDescription} style={{ backgroundColor: row.sColorRgb }} />
+            <div className="w-3.5 h-3.5" title={row.sDescription} style={{ backgroundColor: row.sColorRgb }} />
             {' '}{row.sName}
           </>,
         },
