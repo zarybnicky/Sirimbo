@@ -18,7 +18,7 @@ export default function FileListPage() {
   const { control, watch } = useForm<{ category: number; }>();
   const { data } = useFileListQuery({ category: watch('category') });
 
-  return <Container maxWidth="lg" style={{ paddingTop: '2rem' }}>
+  return <Container maxWidth="lg" className="pt-8">
     <div style={{ margin: '0 1rem 1rem auto', maxWidth: '12rem' }}>
       <SelectElement control={control} name="category" label="Kategorie" required options={categories} />
     </div>

@@ -4,16 +4,14 @@ import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { useEventListQuery } from "lib/graphql";
 import { HtmlView } from 'components/HtmlView';
 import classNames from 'classnames';
+import { Card } from 'components/Card';
 
 const EventItem = ({ event }: { event: EventWithItemsFragment }) => {
   const [expanded, setExpanded] = React.useState(false);
   const open = React.useCallback(() => setExpanded(true), []);
 
   return (
-    <div onClick={open} className={classNames(
-      "bg-white overflow-hidden border border-slate-100 shadow-lg sm:rounded-lg p-4 mb-2 break-inside-avoid",
-      !expanded && 'cursor-pointer',
-    )}>
+    <Card onClick={open} className={classNames("break-inside-avoid", !expanded && 'cursor-pointer')}>
       <div className="text-4xl text-gray-600">{event.aJmeno}</div>
 
       <div className="flex gap-4">
@@ -35,7 +33,7 @@ const EventItem = ({ event }: { event: EventWithItemsFragment }) => {
           </div>
         )}
       </div >
-    </div>
+    </Card>
   );
 };
 

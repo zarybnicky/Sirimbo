@@ -93,7 +93,7 @@ export default function EditorPage() {
           content: state.content,
         } as State);
       };
-      toolbar = <Grid container direction="column" spacing={2} style={{ marginBottom: '1rem' }}>
+      toolbar = <Grid container direction="column" spacing={2} className="mb-4">
         <Grid item><Typography variant="h4">Nová stránka</Typography></Grid>
         <Grid item>
           <TextField value={state.title} placeholder="Název stránky" onChange={(e) => setState({

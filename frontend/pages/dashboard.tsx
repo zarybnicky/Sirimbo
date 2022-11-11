@@ -7,7 +7,7 @@ import { MyLessonsList } from 'components/MyLessonsList';
 export default function DashboardPage() {
   useRequireUserLoggedIn();
 
-  return <Container maxWidth="lg" style={{ paddingTop: '2rem' }}>
+  return <Container maxWidth="lg" className="pt-8">
     <Grid container spacing={3}>
       <Grid item md={12} lg={6}>
         <Typography align="right" variant="h4" component="h2">Moje tréninky</Typography>

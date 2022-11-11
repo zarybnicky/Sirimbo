@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { Grid, Paper, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { CellPlugin } from '@react-page/editor';
 import { defaultSlate } from '../SlateReadonly';
+import { Card } from 'components/Card';
 
 type ServiceCardProps = {
   image: string;
@@ -9,31 +10,18 @@ type ServiceCardProps = {
 }
 
 export const ServiceCard = (props: ServiceCardProps & { children: React.ReactNode | React.ReactChildren; }) => {
-  return <Paper elevation={3} className="my-8" sx={{
-    '& .gutter': {
-      background: '#222222',
-    },
-    '&:nth-of-type(even) .gutter': {
-      background: '#d81c3a',
-    },
-    '& .header': {
-      color: '#222222',
-    },
-    '&:nth-of-type(even) .header': {
-      color: '#d81c3a',
-    },
-  }}>
+  return <Card className="group my-8">
     <Grid container>
       <Grid item xs={12} sm={4} className="relative">
         <img className="w-full h-full object-cover" src={props.image} alt={props.header} />
       </Grid>
-      <Grid item xs={12} sm="auto" className="gutter w-4 h-4" />
+      <Grid item xs={12} sm="auto" className="bg-slate-800 group-even:bg-primary w-4 h-4" />
       <Grid item xs={12} sm="auto" className="grow basis-4 px-4 py-6 md:px-8 md:py-12">
-        <Typography variant="h5" component="h2" className="header font-bold mb-2 md:mb-4">{props.header}</Typography>
+        <Typography variant="h5" component="h2" className="text-slate-800 group-odd:text-primary font-bold mb-2 md:mb-4">{props.header}</Typography>
         {props.children}
       </Grid>
     </Grid>
-  </Paper>;
+  </Card>;
 };
 
 export const ServiceCardPlugin: CellPlugin<ServiceCardProps> = {

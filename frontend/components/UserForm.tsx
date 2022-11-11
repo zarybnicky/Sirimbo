@@ -107,7 +107,7 @@ export const UserForm: React.FC<{
         options={[{ id: 'm', label: 'Muž' }, { id: 'f', label: 'Źena' }]}
       />
 
-      <Grid item xs={12} style={{ marginTop: '1rem' }}>
+      <Grid item xs={12} className="mt-4">
         <Typography variant="caption">Kontaktní údaje</Typography>
       </Grid>
 
@@ -118,7 +118,7 @@ export const UserForm: React.FC<{
         <TextFieldElement fullWidth control={control} type="tel" name="uTelefon" label="Telefon" required />
       </Grid>
 
-      <Grid item xs={12} style={{ marginTop: '1rem' }}>
+      <Grid item xs={12} className="mt-4">
         <Typography variant="caption">Bydliště</Typography>
       </Grid>
 
@@ -171,7 +171,7 @@ export const UserForm: React.FC<{
         <CheckboxElement control={control} name="uTeacher" value="1" label="Trenér" />
       </Grid>
 
-      <Grid item xs={12} style={{ marginTop: '1rem' }}>
+      <Grid item xs={12} className="mt-4">
         <Typography variant="overline">Přístupy</Typography>
       </Grid>
 

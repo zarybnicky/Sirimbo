@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { CellPlugin } from '@react-page/editor';
-import { Typography, Paper, Grid } from '@mui/material';
+import { Typography, Grid } from '@mui/material';
 import { defaultSlate } from '../SlateReadonly';
 import { Map } from 'components/Map';
+import { Card } from 'components/Card';
 import classNames from 'classnames';
 
 const CardMap = (props: {
@@ -12,7 +13,7 @@ const CardMap = (props: {
   name: string;
   className?: string;
 }) => {
-  return <Paper elevation={3}>
+  return <Card>
     <Map className={classNames("map", props.className)} center={props} zoom={props.zoom} scrollWheelZoom={false}>
       {({ TileLayer, Marker, Popup }) => <>
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
@@ -21,7 +22,7 @@ const CardMap = (props: {
         </Marker>
       </>}
     </Map>
-  </Paper >;
+  </Card>;
 };
 
 type Location = {
@@ -38,7 +39,7 @@ type Location = {
 }
 
 export const LocationCard = ({ item: x }: { item: Location; }) => {
-  return <Paper elevation={3} className="my-8">
+  return <Card className="my-8">
     <Grid container>
       <Grid item xs={12} sm={4} className="relative">
         <img className="w-full h-full object-cove" src={x.image} alt={x.name} />
@@ -53,7 +54,7 @@ export const LocationCard = ({ item: x }: { item: Location; }) => {
         <CardMap className="h-[150px] mt-4" name={x.name} {...x.map} />
       </Grid>
     </Grid>
-  </Paper>;
+  </Card>;
 };
 
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
-import { DialogTitle, Dialog, Paper, Container, Typography } from '@mui/material';
+import { DialogTitle, Dialog, Container, Typography } from '@mui/material';
 import { useMemberListQuery } from 'lib/graphql';
 import { CohortExport } from 'components/CohortExport';
 import { TabMenu } from 'components/TabMenu';
@@ -8,6 +8,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import { UserFragment } from 'lib/graphql';
 import { HtmlView } from 'components/HtmlView';
+import { Card } from 'components/Card';
 
 export default function CohortsPage() {
   useRequireUserLoggedIn();
@@ -47,7 +48,7 @@ export default function CohortsPage() {
 
     <div className="gap-4 lg:columns-2">
       {Object.values(cohorts).map(cohort => (
-        <Paper key={cohort.sId} className="break-inside-avoid mb-4 p-8">
+        <Card key={cohort.sId} className="break-inside-avoid mb-4 p-8">
           <div className="flex items-start justify-between mb-3">
             <div>
               {cohort.members.length} členů
@@ -63,7 +64,7 @@ export default function CohortsPage() {
               {cohort.members.map((member) => <UserDetailButton key={member.uId} user={member} />)}
             </div>
           )}
-        </Paper>
+        </Card>
       ))}
     </div>
   </Container>;

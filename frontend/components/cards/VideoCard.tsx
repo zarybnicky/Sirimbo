@@ -1,22 +1,15 @@
 import * as React from 'react';
-import { Grid, Paper, Typography, CardActionArea } from '@mui/material';
+import { Grid, Typography, CardActionArea } from '@mui/material';
 import { Video } from 'lib/data/use-videos';
-
-import PlayIcon from 'public/style/play_white.png';
 import { NextLinkComposed } from 'components/Link';
+import PlayIcon from 'public/style/play_white.png';
+import { Card } from 'components/Card';
 
 export const VideoCard = ({ item: x }: { item: Video }) => {
-  return <Paper elevation={3}>
+  return <Card>
     <CardActionArea component={NextLinkComposed} href={x.href}>
       <Grid container>
-        <Grid item sm={12} md={3} sx={{
-          position: 'relative',
-          '& img': {
-            display: 'block',
-            height: '100%',
-            width: '100%',
-            objectFit: 'cover',
-          },
+        <Grid item sm={12} md={3} className="relative" sx={{
           '&::after': {
             content: '""',
             display: 'block',
@@ -28,7 +21,7 @@ export const VideoCard = ({ item: x }: { item: Video }) => {
             background: `url(${PlayIcon}) no-repeat center/35%`,
           },
         }}>
-          <img src={x.img} alt={x.name} />
+          <img src={x.img} alt={x.name} className="block w-full h-full object-cover" />
         </Grid>
 
         <Grid item sm={12} md={9} className="flex grow justify-stretch items-center px-4 py-2 md:pl-8 underline">
@@ -36,5 +29,5 @@ export const VideoCard = ({ item: x }: { item: Video }) => {
         </Grid>
       </Grid>
     </CardActionArea>
-  </Paper>;
+  </Card>;
 };

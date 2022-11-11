@@ -65,7 +65,7 @@ export default function RegisterPage() {
               />
             </Grid>
 
-            <Grid item xs={12} style={{ marginTop: '1rem' }}>
+            <Grid item xs={12} className="mt-4">
               <Typography variant="caption">Osobní údaje</Typography>
             </Grid>
 
@@ -101,7 +101,7 @@ export default function RegisterPage() {
               ]} />
             </Grid>
 
-            <Grid item xs={12} style={{ marginTop: '1rem' }}>
+            <Grid item xs={12} className="mt-4">
               <Typography variant="caption">Kontaktní údaje</Typography>
             </Grid>
 
@@ -112,7 +112,7 @@ export default function RegisterPage() {
               <TextFieldElement fullWidth control={control} label="Telefon" name="telefon" required />
             </Grid>
 
-            <Grid item xs={12} style={{ marginTop: '1rem' }}>
+            <Grid item xs={12} className="mt-4">
               <Typography variant="caption">Adresa</Typography>
             </Grid>
 
@@ -135,7 +135,7 @@ export default function RegisterPage() {
               <TextFieldElement fullWidth control={control} label="PSČ" name="postal" autoComplete="postal-code" required />
             </Grid>
 
-            <Grid item xs={12} style={{ marginTop: '1rem' }}>
+            <Grid item xs={12} className="mt-4">
               <Typography variant="overline">Tréninkové údaje</Typography>
             </Grid>
 

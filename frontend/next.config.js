@@ -48,17 +48,21 @@ module.exports = withBundleAnalyzer(withSentryConfig({
   },
 
   async rewrites() {
-    const graphqlUrl = process.env.GRAPHQL_BACKEND || 'http://localhost:4000';
-    let phpUrl = process.env.NEXT_PUBLIC_BASE_URL;
-    if (!phpUrl) {
-      phpUrl = `http://${execSync('nixos-container show-ip olymp-test', {encoding: 'utf8'})}`;
+    if (process.env.NODE_ENV !== 'production') {
+      const graphqlUrl = process.env.GRAPHQL_BACKEND || 'http://localhost:4000';
+      let phpUrl = process.env.NEXT_PUBLIC_BASE_URL;
+      if (!phpUrl) {
+        phpUrl = `http://${execSync('nixos-container show-ip olymp-test', {encoding: 'utf8'})}`;
+      }
+      return [
+        { source: '/graphql', destination: `${graphqlUrl}/graphql` },
+        { source: '/graphqli', destination: `${graphqlUrl}/graphqli` },
+        { source: '/old/:path*', destination: `${phpUrl}/old/:path*` },
+        { source: '/galerie/:path*', destination: `${phpUrl}/galerie/:path*` },
+      ];
+    } else {
+      return [];
     }
-    return [
-      { source: '/graphql', destination: `${graphqlUrl}/graphql` },
-      { source: '/graphqli', destination: `${graphqlUrl}/graphqli` },
-      { source: '/old/:path*', destination: `${phpUrl}/old/:path*` },
-      { source: '/galerie/:path*', destination: `${phpUrl}/galerie/:path*` },
-    ];
   },
 
   webpack: function (config, { isServer, webpack, buildId }) {

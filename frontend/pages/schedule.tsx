@@ -104,7 +104,7 @@ export default function SchedulePage() {
                 {'-'}
                 {format(parse(lesson.riDo, "HH:mm:ss", now), 'HH:mm')}
               </Grid>
-              <Grid item style={{ flexGrow: 1 }}>
+              <Grid item className="grow">
                 {perms.canSignUp(item, lesson) ? (
                   <Button name="action" value="signup" className="py-0">+</Button>
                 ) : (
@@ -175,7 +175,7 @@ export default function SchedulePage() {
     </Grid >
   ));
 
-  return <Container maxWidth="xl" style={{ paddingTop: '2rem' }}>
+  return <Container maxWidth="xl" className="pt-8">
     <Typography align="right" variant="h4" component="h2">Tento týden</Typography>
     <Grid container spacing={2}>
       {scheduleList}

@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { Container, Grid, Paper, Typography } from '@mui/material';
+import { Container, Grid, Typography } from '@mui/material';
 import { SocialButtons } from './SocialButtons';
 import { Map } from './Map';
+import { Card } from './Card';
 
 import CstsLogo from 'public/images/csts-logo.svg';
 import OlomoucLogo from 'public/style/logo-olomouc.jpg';
@@ -87,10 +88,7 @@ export const Footer: React.FC = () => {
           <FooterMap />
           <SocialButtons variant="large" className="text-right my-4" />
 
-          <Paper sx={{
-            padding: '1rem',
-            textAlign: 'center',
-          }}>
+          <Card classNames="p-4 text-center">
             <Typography variant="h2" className="text-red-500" sx={{
               fontSize: '1.2rem',
               fontWeight: 900,

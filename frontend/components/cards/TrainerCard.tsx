@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { Typography, Paper } from '@mui/material';
+import { Typography } from '@mui/material';
 import { CellPlugin } from '@react-page/editor';
 import { defaultSlate } from '../SlateReadonly';
+import { Card } from 'components/Card';
 
 type TrainerCardProps = {
   image: string;
@@ -9,14 +10,13 @@ type TrainerCardProps = {
 }
 
 export const TrainerCard = (props: TrainerCardProps & { children: React.ReactNode | React.ReactChildren; }) => {
-  return <Paper elevation={3} className="relative h-full" sx={{
-    '& .image': {
-      width: '100px',
-      height: '120px',
-    },
+  return <Card className="relative h-full">
+    <div className="bg-gray-800 text-white font-bold p-4 border-l-8 border-red-500 header">
+      <Typography variant="h6" component="h3">{props.name}</Typography>
+    </div>
     '& [data-slate-editor="true"]': {
       paddingTop: '.5rem',
-      paddingRight: '1rem',
+    paddingRight: '1rem',
     },
     '& [data-slate-editor="true"] li:nth-of-type(1)': {
       paddingRight: '115px',
@@ -24,13 +24,10 @@ export const TrainerCard = (props: TrainerCardProps & { children: React.ReactNod
     '& [data-slate-editor="true"] li:nth-of-type(2)': {
       paddingRight: '115px',
     },
-  }}>
-    <div className="bg-gray-800 text-white font-bold p-4 border-l-8 border-red-500 header">
-      <Typography variant="h6" component="h3">{props.name}</Typography>
-    </div>
+
     {props.children}
-    <img className="image object-cover absolute top-4 right-4" src={props.image} alt={props.name} />
-  </Paper>;
+    <img className="w-[100px] h-[120px] object-cover absolute top-4 right-4" src={props.image} alt={props.name} />
+  </Card>;
 };
 
 export const TrainerCardPlugin: CellPlugin<TrainerCardProps> = {
