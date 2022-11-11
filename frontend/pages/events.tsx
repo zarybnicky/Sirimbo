@@ -30,7 +30,7 @@ const EventItem = ({ event }: { event: EventWithItemsFragment }) => {
           <div>
             <div className="text-slate font-bold mb-2">Účastníci</div>
             {event.akceItemsByAiIdRodic.nodes.map((item) => (
-              <div>{item.userByAiUser?.uJmeno} {item.userByAiUser?.uPrijmeni}</div>
+              <div key={item.aiId}>{item.userByAiUser?.uJmeno} {item.userByAiUser?.uPrijmeni}</div>
             ))}
           </div>
         )}
