@@ -10346,6 +10346,8 @@ export type DeleteFileMutation = { __typename?: 'Mutation', deleteDokumenty: { _
 
 export type EventFragment = { __typename?: 'Akce', aId: string, aOd: string, aDo: string, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean };
 
+export type EventWithItemsFragment = { __typename?: 'Akce', aId: string, aOd: string, aDo: string, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean, akceItemsByAiIdRodic: { __typename?: 'AkceItemsConnection', totalCount: number, nodes: Array<{ __typename?: 'AkceItem', aiId: string, userByAiUser: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null }> } };
+
 export type EventItemFragment = { __typename?: 'AkceItem', aiId: string, userByAiUser: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string } | null };
 
 export type EventParticipantsQueryVariables = Exact<{
@@ -11108,6 +11110,22 @@ export const EventFragmentDoc = `
   aVisible
 }
     `;
+export const EventWithItemsFragmentDoc = `
+    fragment EventWithItems on Akce {
+  ...Event
+  akceItemsByAiIdRodic {
+    totalCount
+    nodes {
+      aiId
+      userByAiUser {
+        uId
+        uJmeno
+        uPrijmeni
+      }
+    }
+  }
+}
+    ${EventFragmentDoc}`;
 export const EventItemFragmentDoc = `
     fragment EventItem on AkceItem {
   aiId
@@ -12132,22 +12150,11 @@ export const EventListDocument = `
   ) {
     totalCount
     nodes {
-      ...Event
-      akceItemsByAiIdRodic {
-        totalCount
-        nodes {
-          aiId
-          userByAiUser {
-            uId
-            uJmeno
-            uPrijmeni
-          }
-        }
-      }
+      ...EventWithItems
     }
   }
 }
-    ${EventFragmentDoc}`;
+    ${EventWithItemsFragmentDoc}`;
 export const useEventListQuery = <
       TData = EventListQuery,
       TError = unknown

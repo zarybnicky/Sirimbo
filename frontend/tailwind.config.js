@@ -42,6 +42,7 @@ module.exports = {
     require("@tailwindcss/forms"),
     require("@tailwindcss/typography"),
     require("@tailwindcss/aspect-ratio"),
+    require('@tailwindcss/line-clamp'),
     plugin(function ({ addComponents, theme }) {
       addComponents(accordion(theme));
       addComponents(alert(theme));

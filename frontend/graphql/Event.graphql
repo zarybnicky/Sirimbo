@@ -12,6 +12,21 @@ fragment Event on Akce {
   aVisible
 }
 
+fragment EventWithItems on Akce {
+  ...Event
+  akceItemsByAiIdRodic {
+    totalCount
+    nodes {
+      aiId
+      userByAiUser {
+        uId
+        uJmeno
+        uPrijmeni
+      }
+    }
+  }
+}
+
 fragment EventItem on AkceItem {
   aiId
   userByAiUser {
@@ -38,18 +53,7 @@ query EventList($limit: Int, $offset: Int, $visible: Boolean) {
   akces(first: $limit, offset: $offset, orderBy: [A_OD_DESC], condition: {aVisible: $visible}) {
     totalCount
     nodes {
-      ...Event
-      akceItemsByAiIdRodic {
-        totalCount
-        nodes {
-          aiId
-          userByAiUser {
-            uId
-            uJmeno
-            uPrijmeni
-          }
-        }
-      }
+      ...EventWithItems
     }
   }
 }
