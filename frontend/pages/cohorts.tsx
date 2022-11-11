@@ -47,7 +47,7 @@ export default function CohortsPage() {
 
     <div className="gap-4 lg:columns-2">
       {Object.values(cohorts).map(cohort => (
-        <Paper key={cohort.sId} sx={{ pageBreakInside: 'avoid', marginBottom: 1, padding: 2 }}>
+        <Paper key={cohort.sId} className="break-inside-avoid mb-4 p-8">
           <div className="flex items-start justify-between mb-3">
             <div>
               {cohort.members.length} členů

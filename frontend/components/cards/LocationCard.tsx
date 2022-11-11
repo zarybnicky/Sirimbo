@@ -3,15 +3,17 @@ import { CellPlugin } from '@react-page/editor';
 import { Typography, Paper, Grid } from '@mui/material';
 import { defaultSlate } from '../SlateReadonly';
 import { Map } from 'components/Map';
+import classNames from 'classnames';
 
 const CardMap = (props: {
   lat: number;
   lng: number;
   zoom: number;
   name: string;
+  className?: string;
 }) => {
   return <Paper elevation={3}>
-    <Map className="map" center={props} zoom={props.zoom} scrollWheelZoom={false}>
+    <Map className={classNames("map", props.className)} center={props} zoom={props.zoom} scrollWheelZoom={false}>
       {({ TileLayer, Marker, Popup }) => <>
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         <Marker position={props}>
@@ -19,7 +21,7 @@ const CardMap = (props: {
         </Marker>
       </>}
     </Map>
-  </Paper>;
+  </Paper >;
 };
 
 type Location = {
@@ -36,41 +38,19 @@ type Location = {
 }
 
 export const LocationCard = ({ item: x }: { item: Location; }) => {
-  return <Paper elevation={3} sx={{
-    margin: '2rem 0',
-    '& .image': {
-      position: 'relative',
-    },
-    '& .image img': {
-      width: '100%',
-      height: '100%',
-      objectFit: 'cover',
-    },
-    '& .body': {
-      padding: '2rem 2rem 1rem',
-      flexGrow: 1,
-      flexBasis: '1rem',
-    },
-    '& .header': {
-      fontWeight: 'bold',
-    },
-    '& .map': {
-      height: '150px',
-      marginTop: '1rem'
-    },
-  }}>
+  return <Paper elevation={3} className="my-8">
     <Grid container>
-      <Grid item xs={12} sm={4} className="image">
-        <img src={x.image} alt={x.name} />
+      <Grid item xs={12} sm={4} className="relative">
+        <img className="w-full h-full object-cove" src={x.image} alt={x.name} />
       </Grid>
-      <Grid item xs={12} sm="auto" className="body text-gray-800">
-        <Typography variant="h5" component="h3" className="header">{x.name}</Typography>
+      <Grid item xs={12} sm="auto" className="p-8 pb-4 grow basis-4 text-gray-800">
+        <Typography variant="h5" component="h3" className="font-bold">{x.name}</Typography>
         <Typography variant="body1">{x.address}</Typography>
         {x.href && <Typography variant="body1" component="a" href={x.href} rel="noreferrer" target="_blank">{x.href}</Typography>}
         <Typography variant="body1" component="a" href={x.mapHref} rel="noreferrer" target="_blank">
           Otevřít mapu
         </Typography>
-        <CardMap name={x.name} {...x.map} />
+        <CardMap className="h-[150px] mt-4" name={x.name} {...x.map} />
       </Grid>
     </Grid>
   </Paper>;

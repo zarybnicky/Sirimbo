@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { NextLinkComposed } from 'components/Link';
 
 interface GalleryItem {
@@ -17,32 +17,10 @@ export const GalleryCard = ({ item: x }: { item: GalleryItem }) => {
     height: '250px',
     overflow: 'hidden',
   }}>
-    <Box className="overlay text-gray-800" sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      bottom: '15px',
-      padding: '.25rem .75rem',
-      background: 'rgba(255, 255, 255, .9)',
-      textDecoration: 'none',
-      zIndex: 10,
-    }}>
+    <div className="z-10 flex flex-col absolute lef-0 right-0 bottom-4 py-1 px-3 bg-white/90 text-gray-800">
       <Typography variant="body1">{x.name}</Typography>
       <Typography variant="body1">{x.date}</Typography>
-    </Box>
-    <Box component="img" src={x.img} alt={`${x.name} - ${x.date}`} sx={{
-      overflow: 'hidden',
-      width: '100%',
-      height: '100%',
-      maxHeight: '600px',
-      objectFit: 'cover',
-      objectPosition: '50% 30%',
-      transition: 'transform .3s',
-      '&:hover': {
-        transform: 'scale(1.1)',
-      },
-    }} />
+    </div>
+    <img src={x.img} alt={`${x.name} - ${x.date}`} className="hidden w-full h-full max-h-[600px] object-cover object-[50%_30%] transform transition duration-300 hover:scale-120" />
   </NextLinkComposed>
 };

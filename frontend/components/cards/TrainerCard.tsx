@@ -9,19 +9,10 @@ type TrainerCardProps = {
 }
 
 export const TrainerCard = (props: TrainerCardProps & { children: React.ReactNode | React.ReactChildren; }) => {
-  return <Paper elevation={3} sx={{
-    position: 'relative',
-    height: '100%',
+  return <Paper elevation={3} className="relative h-full" sx={{
     '& .image': {
-      position: 'absolute',
-      top: '1rem',
-      right: '1rem',
       width: '100px',
       height: '120px',
-      objectFit: 'cover',
-    },
-    '& h3': {
-      fontWeight: 'bold',
     },
     '& [data-slate-editor="true"]': {
       paddingTop: '.5rem',
@@ -34,11 +25,11 @@ export const TrainerCard = (props: TrainerCardProps & { children: React.ReactNod
       paddingRight: '115px',
     },
   }}>
-    <div className="bg-gray-800 text-white p-4 border-l-8 border-red-500 header">
+    <div className="bg-gray-800 text-white font-bold p-4 border-l-8 border-red-500 header">
       <Typography variant="h6" component="h3">{props.name}</Typography>
     </div>
     {props.children}
-    <img className="image" src={props.image} alt={props.name} />
+    <img className="image object-cover absolute top-4 right-4" src={props.image} alt={props.name} />
   </Paper>;
 };
 

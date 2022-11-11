@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Container, Typography, Box } from '@mui/material';
+import { Container, Typography } from '@mui/material';
 import { CellPlugin } from '@react-page/editor';
 import { RGBColor } from 'react-color';
 
@@ -14,12 +14,9 @@ export const Heading = ({ color, image, text }: HeadingProps) => {
   const gradient = `linear-gradient(${rgba},${rgba})`;
   const background = `${gradient}, url(${image}) no-repeat 50% 30%/cover`;
 
-  return <Box sx={{ background }}>
+  return <div style={{ background }}>
     <Container maxWidth="lg">
-      <Box sx={{
-        position: 'relative',
-        padding: '5rem 0',
-      }}>
+      <div className="relative py-20">
         <Typography variant="h4" component="h2" sx={{
           zIndex: 3,
           color: 'white',
@@ -38,9 +35,9 @@ export const Heading = ({ color, image, text }: HeadingProps) => {
           textTransform: 'uppercase',
           fontWeight: 'bold',
         }}>{text}</Typography>
-      </Box>
+      </div>
     </Container>
-  </Box>;
+  </div>;
 };
 
 export const HeadingPlugin: CellPlugin<HeadingProps> = {

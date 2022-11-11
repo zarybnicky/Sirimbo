@@ -40,7 +40,7 @@ const UnconfirmedUser: React.FC<{
   }, [item, confirm, deleteUser, onProcessed]);
 
   return (
-    <Card sx={{ marginBottom: 2 }} component="form" onSubmit={handleSubmit(onSubmit)}>
+    <Card className="mb-8" component="form" onSubmit={handleSubmit(onSubmit)}>
       <CardContent>
         <Grid container spacing={2}>
           <Grid item md={6}>
@@ -63,7 +63,7 @@ const UnconfirmedUser: React.FC<{
           </Grid>
           <Grid item md={6}>
             <SelectElement
-              sx={{ marginTop: 1, marginBottom: 1 }}
+              className="my-4"
               fullWidth required control={control} name="cohort" label="Tréninková skupina"
               options={(cohorts?.skupinies?.nodes || []).map(item => ({ id: item.sId, label: item.sName }))}
             />
@@ -74,7 +74,7 @@ const UnconfirmedUser: React.FC<{
           </Grid>
         </Grid>
       </CardContent>
-      <CardActions sx={{ flexDirection: 'row-reverse', gap: 1 }}>
+      <CardActions className="gap-4 flex-row-reverse">
         <Button type="submit" startIcon={<CheckIcon />}>Potvrdit</Button>
         <Button onClick={onDelete} startIcon={<DeleteIcon />}>Odstranit</Button>
       </CardActions>

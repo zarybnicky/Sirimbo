@@ -85,10 +85,7 @@ export const Footer: React.FC = () => {
         <Grid item xs><ContactText /></Grid>
         <Grid item xs>
           <FooterMap />
-          <SocialButtons variant="large" sx={{
-            margin: '1rem 0',
-            textAlign: 'right',
-          }} />
+          <SocialButtons variant="large" className="text-right my-4" />
 
           <Paper sx={{
             padding: '1rem',

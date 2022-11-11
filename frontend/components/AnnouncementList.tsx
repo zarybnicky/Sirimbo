@@ -1,6 +1,6 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { Pagination, Box, IconButton, Card, CardContent, Typography } from '@mui/material';
+import { Pagination, IconButton, Card, CardContent, Typography } from '@mui/material';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useAnnouncementListQuery } from 'lib/graphql';
@@ -19,7 +19,7 @@ export function AnnouncementList() {
   const hasPrev = 0 < (page - 1) * limit;
 
   return <>
-    <Box display='flex' alignItems='center' justifyContent="right">
+    <div className="flex items-center justify-center">
       {hasPrev ? <IconButton onClick={() => setPage(page - 1)}><NavigateBeforeIcon /></IconButton> : null}
       <Typography color="textSecondary" component="span">
         {nodes.length > 0 ? format(new Date(nodes[0]!.upTimestampAdd), 'd. M. y') : ''}
@@ -27,7 +27,7 @@ export function AnnouncementList() {
         {nodes.length > 0 ? format(new Date(nodes[nodes.length - 1]!.upTimestampAdd), 'd. M. y') : ''}
       </Typography>
       {hasNext ? <IconButton onClick={() => setPage(page + 1)}><NavigateNextIcon /></IconButton> : null}
-    </Box>
+    </div>
     {nodes.map((a) => <Card key={a.upId} style={{ marginBottom: '1rem' }}>
       <CardContent>
         <Typography color="textSecondary">

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   AppBar, Divider, IconButton, SwipeableDrawer, Toolbar, List,
-  ListItem, ListItemText, Box
+  ListItem, ListItemText,
 } from '@mui/material';
 import { MenuStructItem, useTopMenu, useSideMenu, getHrefs } from 'lib/data/use-menu';
 import { useAuth } from 'lib/data/use-auth';
@@ -62,17 +62,13 @@ export const MobileHeader = ({ }) => {
   return <div className="block md:hidden">
     <AppBar position="static" color="primary">
       <Toolbar>
-        <Box sx={{
-          flexGrow: 1,
-          display: 'flex',
-          alignItems: 'center',
-        }}>
+        <div className="grow flex items-center">
           <OlympLogoOneline viewBox="0 0 381.82217 111.78744" width="170" height="50" style={{
             filter: 'drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.2))',
             color: 'white',
             fill: 'white !important',
           }} />
-        </Box>
+        </div>
         <IconButton color="inherit" LinkComponent={NextLinkComposed} href="/profile">
           <AccountCircle />
         </IconButton>

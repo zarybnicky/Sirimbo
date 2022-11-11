@@ -10,36 +10,34 @@ const ReservationView = (x: ReservationFragment) => {
   return <div className="col-12 col-md-6 col-lg-4 pb-2">
     <div className="widget">
       <div className="widget-title text-center">
-        <div className="trenink-header">
-          <div className="title">
-            {x.userByNTrener?.uJmeno} {x.userByNTrener?.uPrijmeni}
-            {perms.canEditReservation(x) && (
-              <Dropdown
-                button={<img alt="Upravit" width="16" src="/style/icon-gear.png" />}
-                options={[
-                  { title: "Upravit", href: `/admin/nabidka/edit/${x.nId}` },
-                  { title: "Upravit rezervace", href: `/admin/nabidka/detail/${x.nId}` },
-                ]}
-              />
-            )}
-          </div>
-          <div className="date"><DateRange from={x.nOd} to={x.nDo} noYear /></div>
-          {x?.nMaxPocetHod > 0 && <div>
-            <span className="little"> Maximálně hodin/pár: </span>
-            <span className="nadpis">{x?.nMaxPocetHod}</span>
-          </div>}
-          <div>
-            <span className="little">Volných hodin: </span>
-            <span className="nadpis">
-              {x?.nPocetHod - (x.nabidkaItemsByNiIdRodic?.nodes || []).reduce((x, y) => x + y.niPocetHod, 0)}
-              {" z "}
-              {x?.nPocetHod} nabízených
-            </span>
-          </div>
+        <div className="title">
+          {x.userByNTrener?.uJmeno} {x.userByNTrener?.uPrijmeni}
+          {perms.canEditReservation(x) && (
+            <Dropdown
+              button={<img alt="Upravit" width="16" src="/style/icon-gear.png" />}
+              options={[
+                { title: "Upravit", href: `/admin/nabidka/edit/${x.nId}` },
+                { title: "Upravit rezervace", href: `/admin/nabidka/detail/${x.nId}` },
+              ]}
+            />
+          )}
+        </div>
+        <div className="font-bold"><DateRange from={x.nOd} to={x.nDo} noYear /></div>
+        {x?.nMaxPocetHod > 0 && <div>
+          <span className="text-slate-500"> Maximálně hodin/pár: </span>
+          <span className="text-lg">{x?.nMaxPocetHod}</span>
+        </div>}
+        <div>
+          <span className="text-slate-500">Volných hodin: </span>
+          <span className="text-lg">
+            {x?.nPocetHod - (x.nabidkaItemsByNiIdRodic?.nodes || []).reduce((x, y) => x + y.niPocetHod, 0)}
+            {" z "}
+            {x?.nPocetHod} nabízených
+          </span>
         </div>
       </div>
       <div className="widget-content">
-        <table className="nocolor" style={{ width: '100%' }}>
+        <table style={{ width: '100%' }}>
           <thead>
             <tr><th>Tanečník</th><th>Počet hodin</th></tr>
           </thead>

@@ -137,15 +137,15 @@ export default function SchedulePage() {
               ]}
             />}
           </div>
-          <div className="date"><DateRange from={item.nOd} to={item.nDo} /></div>
+          <div className="font-bold"><DateRange from={item.nOd} to={item.nDo} /></div>
 
           {item.nMaxPocetHod > 0 && <>
-            <span className="little">Maximálně hodin/pár:</span>
-            <span className="nadpis">{item.nMaxPocetHod}</span>
+            <span className="text-slate-500">Maximálně hodin/pár:</span>
+            <span className="text-lg">{item.nMaxPocetHod}</span>
           </>}
           <div>
-            <span className="little">Volných hodin: </span>
-            <span className="nadpis">
+            <span className="text-slate-500">Volných hodin: </span>
+            <span className="text-lg">
               {item.nPocetHod - item.nabidkaItemsByNiIdRodic.nodes.reduce((n, x) => n + x.niPocetHod, 0)} z {item.nPocetHod} nabízených
             </span>
           </div>

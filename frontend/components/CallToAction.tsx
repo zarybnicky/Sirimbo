@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { NextLinkComposed } from 'components/Link';
-import { Button, Container, Typography, Box } from '@mui/material';
+import { Button, Container, Typography } from '@mui/material';
 import type { CellPlugin } from '@react-page/editor';
 
 import CtaImage from 'public/images/call-to-action.png';
@@ -15,7 +15,7 @@ export const CallToAction = ({ }) => {
       display: 'flex',
       justifyContent: 'left',
     }}>
-      <Box className="px-4 py-8 md:p-16 md:pr-24" sx={{
+      <div className="px-4 py-8 md:p-16 md:pr-24" style={{
         background: 'linear-gradient(90deg, rgba(216,28,58,0.6) 70%, rgba(0,0,0,0) 100%)',
       }}>
         <Typography variant="h4" component="div" className="text-white font-black text-3xl md:text-4xl">
@@ -37,7 +37,7 @@ export const CallToAction = ({ }) => {
             fontSize: '140%',
           }}
         >Chci tančit</Button>
-      </Box>
+      </div>
     </Container>
   </div>;
 };

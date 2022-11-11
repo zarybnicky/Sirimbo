@@ -1,13 +1,16 @@
 import * as React from 'react';
-import { Box, BoxProps, IconButton } from '@mui/material';
+import { IconButton } from '@mui/material';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 
-type SocialButtonsProps = { variant: 'small' | 'medium' | 'large'; } & BoxProps;
+type SocialButtonsProps = {
+  variant: 'small' | 'medium' | 'large';
+  className?: string;
+};
 
-export const SocialButtons = ({ variant = 'medium', ...props }: SocialButtonsProps) => {
-  return <Box sx={{ textAlign: 'right' }} {...props}>
+export const SocialButtons = ({ variant = 'medium', className = "text-right" }: SocialButtonsProps) => {
+  return <div className={className}>
     <IconButton className="p-0 m-1" href="https://www.facebook.com/tkolymp">
       <FacebookIcon className="text-red-500" fontSize={variant} />
     </IconButton>
@@ -17,5 +20,5 @@ export const SocialButtons = ({ variant = 'medium', ...props }: SocialButtonsPro
     <IconButton className="p-0 m-1" href="https://www.youtube.com/user/TheMamcro">
       <YouTubeIcon className="text-gray-200" fontSize={variant} />
     </IconButton>
-  </Box>
+  </div>
 }
