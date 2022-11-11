@@ -4,8 +4,6 @@ import Router from "next/router";
 import NProgress from "nprogress";
 import { event } from "nextjs-google-analytics";
 import { ProvideAuth } from 'lib/data/use-auth';
-import { CssBaseline, ThemeProvider } from "@mui/material";
-import { theme } from "lib/theme";
 import { SnackbarProvider } from "notistack";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -53,27 +51,24 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClientRef.current}>
       <Hydrate state={pageProps.dehydratedState}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Tracking />
-          <ConfirmProvider defaultOptions={{
-            title: 'Jste si jistí?',
-            cancellationText: 'Zrušit',
-            confirmationButtonProps: { autoFocus: true }
-          }}>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <SnackbarProvider maxSnack={3}>
-                <ProvideAuth>
-                  <ProvideMeta>
-                    <Layout>
-                      <Component {...pageProps} />
-                    </Layout>
-                  </ProvideMeta>
-                </ProvideAuth>
-              </SnackbarProvider>
-            </LocalizationProvider>
-          </ConfirmProvider>
-        </ThemeProvider>
+        <Tracking />
+        <ConfirmProvider defaultOptions={{
+          title: 'Jste si jistí?',
+          cancellationText: 'Zrušit',
+          confirmationButtonProps: { autoFocus: true }
+        }}>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <SnackbarProvider maxSnack={3}>
+              <ProvideAuth>
+                <ProvideMeta>
+                  <Layout>
+                    <Component {...pageProps} />
+                  </Layout>
+                </ProvideMeta>
+              </ProvideAuth>
+            </SnackbarProvider>
+          </LocalizationProvider>
+        </ConfirmProvider>
       </Hydrate>
     </QueryClientProvider>
   );

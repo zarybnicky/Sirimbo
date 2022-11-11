@@ -1,7 +1,8 @@
 import React from 'react';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import classNames from 'classnames';
 
-export const Spinner = React.memo(function Spinner() {
+const Spinner = React.memo(function Spinner() {
   return (
     <svg className="w-10 h-10 animate-spin text-indigo-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M12 4.75V6.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
@@ -17,16 +18,16 @@ export const Spinner = React.memo(function Spinner() {
 });
 
 export const SubmitButton = React.forwardRef(function SubmitButton({
-  loading, disabled, children = "Uložit",
+  loading, disabled, className, children = "Uložit",
   ...props
-}: Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'type' | 'disabled'> & {
+}: Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type' | 'disabled'> & {
   disabled?: boolean;
   loading?: boolean;
 }, ref: React.ForwardedRef<HTMLButtonElement>) {
   return <button
     type="submit" {...props} ref={ref}
     disabled={loading || disabled}
-    className="button button-red"
+    className={classNames("button button-rose", className)}
   >
     {children}
     {loading ? <Spinner /> : <KeyboardArrowRightIcon />}

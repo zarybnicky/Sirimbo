@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Typography, Paper, useTheme } from '@mui/material';
+import { Typography, Paper } from '@mui/material';
 import { CellPlugin } from '@react-page/editor';
 import { defaultSlate } from '../SlateReadonly';
 
@@ -9,7 +9,6 @@ type TrainerCardProps = {
 }
 
 export const TrainerCard = (props: TrainerCardProps & { children: React.ReactNode | React.ReactChildren; }) => {
-  const theme = useTheme();
   return <Paper elevation={3} sx={{
     position: 'relative',
     height: '100%',
@@ -20,13 +19,6 @@ export const TrainerCard = (props: TrainerCardProps & { children: React.ReactNod
       width: '100px',
       height: '120px',
       objectFit: 'cover',
-    },
-    '& .header': {
-      backgroundColor: theme.palette.secondary.main,
-      color: theme.palette.secondary.contrastText,
-      borderLeft: '8px solid',
-      borderLeftColor: theme.palette.primary.main,
-      padding: '1rem',
     },
     '& h3': {
       fontWeight: 'bold',
@@ -42,7 +34,7 @@ export const TrainerCard = (props: TrainerCardProps & { children: React.ReactNod
       paddingRight: '115px',
     },
   }}>
-    <div className="header">
+    <div className="bg-gray-800 text-white p-4 border-l-8 border-red-500 header">
       <Typography variant="h6" component="h3">{props.name}</Typography>
     </div>
     {props.children}

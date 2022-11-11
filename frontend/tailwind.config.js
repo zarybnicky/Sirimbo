@@ -80,6 +80,18 @@ module.exports = {
         fit: 'fit-content',
       },
       colors: {
+        red: {
+          50: '#fdf4f5',
+          100: '#fbe8eb',
+          200: '#f5c6ce',
+          300: '#efa4b0',
+          400: '#e46075',
+          500: '#d81c3a',
+          600: '#c21934',
+          700: '#a2152c',
+          800: '#821123',
+          900: '#6a0e1c'
+        },
         'blue-gray': colors.slate,
         primary: '#d81c3a',
         secondary: '#222222',

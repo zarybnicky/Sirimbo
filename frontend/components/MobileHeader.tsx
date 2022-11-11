@@ -29,8 +29,7 @@ export const MobileSubmenu = ({ item: x, onClick }: {
         backgroundColor: inPath ? '#777' : undefined,
       }}
     >
-      <ListItemText primary={x.text} sx={{
-        fontWeight: 'light',
+      <ListItemText className="font-light" primary={x.text} sx={{
         color: inPath ? 'white' : undefined,
       }} />
     </ListItem >
@@ -60,7 +59,7 @@ export const MobileHeader = ({ }) => {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
 
-  return <div>
+  return <div className="block md:hidden">
     <AppBar position="static" color="primary">
       <Toolbar>
         <Box sx={{

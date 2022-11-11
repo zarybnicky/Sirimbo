@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { alpha, useTheme } from '@mui/material/styles'
 import Menu, { MenuProps } from '@mui/material/Menu'
 import MenuItem, { MenuItemProps } from '@mui/material/MenuItem'
 import ArrowRight from '@mui/icons-material/ArrowRight'
@@ -30,8 +29,6 @@ export const NestedMenuItem = React.forwardRef<HTMLLIElement | null, NestedMenuI
   } = props
 
   const { ref: containerRefProp, ...ContainerProps } = ContainerPropsProp;
-
-  const theme = useTheme();
 
   const menuItemRef = React.useRef<HTMLLIElement>(null)
   const containerRef = React.useRef<HTMLDivElement>(null)
@@ -109,7 +106,7 @@ export const NestedMenuItem = React.forwardRef<HTMLLIElement | null, NestedMenuI
         className={className}
         ref={menuItemRef}
         sx={{
-          backgroundColor: open ? theme.palette.action.hover : 'rgba(0,0,0,0)'
+          backgroundColor: open ? '#bbb' : 'rgba(0,0,0,0)'
         }}
       >
         {label} {rightIcon}
@@ -126,7 +123,7 @@ export const NestedMenuItem = React.forwardRef<HTMLLIElement | null, NestedMenuI
         onClose={() => setIsSubMenuOpen(false)}
         sx={{
           '& .MuiMenu-paper': {
-            backgroundColor: theme.palette.common.white,
+            backgroundColor: 'white',
             borderRadius: 0,
           },
           '& .MuiListItem-button': {
@@ -134,7 +131,7 @@ export const NestedMenuItem = React.forwardRef<HTMLLIElement | null, NestedMenuI
             display: 'flex',
           },
           '& .MuiListItem-button:hover': {
-            color: theme.palette.primary.main,
+            color: '#d81c3a',
           },
         }}
         {...ContainerProps}

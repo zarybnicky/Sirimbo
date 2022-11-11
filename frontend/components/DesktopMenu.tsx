@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Button, Menu, MenuItem } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { PopupState as PopupStateType } from 'material-ui-popup-state/core';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { NestedMenuItem } from "./NestedMenuItem";
@@ -15,7 +14,6 @@ const Submenu = React.forwardRef<any, {
   popupState?: PopupStateType;
   item: MenuStructItem;
 }>(function Submenu({ popupState, item: x }, ref) {
-  const theme = useTheme();
   const { pathname } = useRouter();
   const inPath = getHrefs(x).find(y => pathname.startsWith(y));
 
@@ -23,22 +21,20 @@ const Submenu = React.forwardRef<any, {
     if (popupState) {
       return <MenuItem component={NextLinkComposed} href={x.href} onClick={popupState.close}>{x.text}</MenuItem>
     } else {
-      return <Button component={NextLinkComposed} href={x.href} sx={[{
-        ...theme.mixins.toolbar,
-        color: theme.palette.grey[500],
-        fontWeight: 'bold',
-        borderRadius: 0,
-        transitionProperty: 'background-color, box-shadow',
-        "&:hover": {
-          color: theme.palette.common.white,
-          borderBottom: '3px solid white',
-        },
-      }, inPath ? {
-        '&:not(:hover)': {
-          color: theme.palette.common.white,
-          borderBottom: '3px solid white',
-        },
-      } : {}]}>{x.text}</Button>;
+      return <Button
+        component={NextLinkComposed} href={x.href}
+        className="min-h-[48px] md:min-h-[64px] text-grey-500 font-bold rounded-none transition-colors"
+        sx={[{
+          "&:hover": {
+            color: 'white',
+            borderBottom: '3px solid white',
+          },
+        }, inPath ? {
+          '&:not(:hover)': {
+            color: 'white',
+            borderBottom: '3px solid white',
+          },
+        } : {}]}>{x.text}</Button>;
     }
   }
 
@@ -49,19 +45,15 @@ const Submenu = React.forwardRef<any, {
           {...bindTrigger(popupState)}
           color="inherit"
           endIcon={<KeyboardArrowDownIcon />}
+          className="min-h-[48px] md:min-h-[64px] text-grey-500 font-bold rounded-none transition-colors"
           sx={[{
-            ...theme.mixins.toolbar,
-            color: theme.palette.grey[500],
-            fontWeight: 'bold',
-            borderRadius: 0,
-            transitionProperty: 'background-color, box-shadow',
             "&:hover": {
-              color: theme.palette.common.white,
+              color: 'white',
               borderBottom: '3px solid white',
             },
           }, inPath ? {
             '&:not(:hover)': {
-              color: theme.palette.common.white,
+              color: 'white',
               borderBottom: '3px solid white',
             },
           } : {}]}
@@ -72,7 +64,7 @@ const Submenu = React.forwardRef<any, {
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
           sx={{
             '& .MuiMenu-paper': {
-              backgroundColor: theme.palette.common.white,
+              backgroundColor: 'white',
               opacity: 1,
               borderRadius: 0,
             },
@@ -81,7 +73,7 @@ const Submenu = React.forwardRef<any, {
               display: 'flex',
             },
             '& .MuiListItem-button:hover': {
-              color: theme.palette.primary.main,
+              color: '#d81c3a',
             },
           }}
         >
@@ -110,6 +102,7 @@ export const DesktopSidemenu = () => {
   }
   return (
     <nav className={classNames(
+      'hidden md:block',
       `3xl:w-80 z-30 flex h-full max-h-screen min-h-screen w-3/4 flex-none transform flex-col overflow-y-auto border-r border-slate-200 bg-muted pb-10 sm:w-1/2 sm:pb-0 md:w-1/3 lg:relative lg:z-auto lg:w-56 lg:translate-x-0 lg:bg-gray-50 2xl:w-72`
     )}>
       {menu.map(x => <MobileSubmenu key={x.text} item={x} />)}

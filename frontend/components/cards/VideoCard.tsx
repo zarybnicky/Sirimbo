@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { Grid, Paper, Typography, CardActionArea, useTheme } from '@mui/material';
+import { Grid, Paper, Typography, CardActionArea } from '@mui/material';
 import { Video } from 'lib/data/use-videos';
 
 import PlayIcon from 'public/style/play_white.png';
 import { NextLinkComposed } from 'components/Link';
 
 export const VideoCard = ({ item: x }: { item: Video }) => {
-  const theme = useTheme();
   return <Paper elevation={3}>
     <CardActionArea component={NextLinkComposed} href={x.href}>
       <Grid container>
@@ -32,17 +31,7 @@ export const VideoCard = ({ item: x }: { item: Video }) => {
           <img src={x.img} alt={x.name} />
         </Grid>
 
-        <Grid item sm={12} md={9} sx={{
-          flexGrow: 1,
-          display: 'flex',
-          justifyContent: 'stretch',
-          alignItems: 'center',
-          textDecoration: 'underline',
-          paddingLeft: '2rem',
-          [theme.breakpoints.down('sm')]: {
-            padding: '.5rem 1rem',
-          },
-        }}>
+        <Grid item sm={12} md={9} className="flex grow justify-stretch items-center px-4 py-2 md:pl-8 underline">
           <Typography variant="h6" component="h2" className="header">{x.name}</Typography>
         </Grid>
       </Grid>

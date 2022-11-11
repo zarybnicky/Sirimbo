@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Container, Grid, Paper, Typography, Box, useTheme } from '@mui/material';
+import { Container, Grid, Paper, Typography } from '@mui/material';
 import { SocialButtons } from './SocialButtons';
 import { Map } from './Map';
 
@@ -8,24 +8,19 @@ import OlomoucLogo from 'public/style/logo-olomouc.jpg';
 import KrajLogo from 'public/style/logo-kraj.png';
 
 const ContactText = () => {
-  const theme = useTheme();
-
   return <>
-    <Typography variant="h2" sx={{
+    <Typography variant="h2" className="font-black" sx={{
       fontSize: '2rem',
       fontWeight: 900,
     }}>Kontakt:</Typography>
 
-    <Typography variant="h3" sx={{
-      color: theme.palette.primary.main,
-      fontWeight: 700,
+    <Typography variant="h3" className="text-red-500 font-bold" sx={{
       fontSize: '1.2rem',
       marginTop: '1rem',
     }}>Taneční klub</Typography>
 
-    <Typography variant="h4" sx={{
+    <Typography variant="h4" className="font-black" sx={{
       fontSize: '1.2rem',
-      fontWeight: 900,
       marginTop: '1rem',
     }}>Taneční klub Olymp Olomouc</Typography>
 
@@ -38,16 +33,13 @@ const ContactText = () => {
     <br />
     <br />
 
-    <Typography variant="h3" sx={{
-      color: theme.palette.primary.main,
-      fontWeight: 700,
+    <Typography variant="h3" className="text-red-500 font-bold" sx={{
       fontSize: '1.2rem',
       marginTop: '1rem',
     }}>Taneční sály</Typography>
 
-    <Typography variant="h4" sx={{
+    <Typography variant="h4" className="font-black" sx={{
       fontSize: '1.2rem',
-      fontWeight: 900,
       marginTop: '.5rem',
     }}>Taneční centrum při FZŠ Holečkova</Typography>
 
@@ -57,9 +49,8 @@ const ContactText = () => {
     </Typography>
 
     <br />
-    <Typography variant="h4" sx={{
+    <Typography variant="h4" className="font-black" sx={{
       fontSize: '1.2rem',
-      fontWeight: 900,
       marginTop: '.5rem',
     }}>Tělocvična Slovanského gymnázia</Typography>
     <Typography>
@@ -88,12 +79,7 @@ export const FooterMap = ({ height = '200px' }) => {
 };
 
 export const Footer: React.FC = () => {
-  const theme = useTheme();
-  return <Box sx={{
-    padding: '3rem 0 5rem',
-    color: theme.palette.secondary.contrastText,
-    backgroundColor: theme.palette.secondary.main
-  }}>
+  return <div className="bg-stone-800 text-white pt-12 pb-20">
     <Container maxWidth="lg">
       <Grid container spacing={1.5}>
         <Grid item xs><ContactText /></Grid>
@@ -108,8 +94,7 @@ export const Footer: React.FC = () => {
             padding: '1rem',
             textAlign: 'center',
           }}>
-            <Typography variant="h2" sx={{
-              color: theme.palette.primary.main,
+            <Typography variant="h2" className="text-red-500" sx={{
               fontSize: '1.2rem',
               fontWeight: 900,
               textAlign: 'left',
@@ -137,5 +122,5 @@ export const Footer: React.FC = () => {
         © 2022 Taneční klub Olymp Olomouc, z. s.
       </Typography>
     </Container>
-  </Box>;
+  </div>;
 };

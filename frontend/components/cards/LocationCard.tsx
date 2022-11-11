@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CellPlugin } from '@react-page/editor';
-import { Typography, Paper, Grid, useTheme } from '@mui/material';
+import { Typography, Paper, Grid } from '@mui/material';
 import { defaultSlate } from '../SlateReadonly';
 import { Map } from 'components/Map';
 
@@ -36,8 +36,6 @@ type Location = {
 }
 
 export const LocationCard = ({ item: x }: { item: Location; }) => {
-  const theme = useTheme();
-
   return <Paper elevation={3} sx={{
     margin: '2rem 0',
     '& .image': {
@@ -60,16 +58,12 @@ export const LocationCard = ({ item: x }: { item: Location; }) => {
       height: '150px',
       marginTop: '1rem'
     },
-    '& .MuiTypography-body1': {
-      color: theme.palette.secondary.main,
-      display: 'block',
-    },
   }}>
     <Grid container>
       <Grid item xs={12} sm={4} className="image">
         <img src={x.image} alt={x.name} />
       </Grid>
-      <Grid item xs={12} sm="auto" className="body">
+      <Grid item xs={12} sm="auto" className="body text-gray-800">
         <Typography variant="h5" component="h3" className="header">{x.name}</Typography>
         <Typography variant="body1">{x.address}</Typography>
         {x.href && <Typography variant="body1" component="a" href={x.href} rel="noreferrer" target="_blank">{x.href}</Typography>}

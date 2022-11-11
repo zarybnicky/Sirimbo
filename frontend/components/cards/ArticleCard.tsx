@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { Button, Typography, Card, CardMedia, CardContent, CardActionArea, CardActions, useTheme } from '@mui/material';
+import { Button, Typography, Card, CardMedia, CardContent, CardActionArea, CardActions } from '@mui/material';
 import { Article } from 'lib/data/use-articles';
 import { NextLinkComposed } from 'components/Link';
 
 export const ArticleCard = ({ item: x }: { item: Article }) => {
-  const theme = useTheme();
   return <Card elevation={3} sx={{
     flexGrow: 1,
     display: 'flex',
@@ -13,10 +12,7 @@ export const ArticleCard = ({ item: x }: { item: Article }) => {
     <CardActionArea component={NextLinkComposed} href={x.href} style={{ flexGrow: 1 }}>
       <CardMedia component="img" height={240} image={x.img} title={x.header} />
       <CardContent>
-        <Typography gutterBottom variant="subtitle1" component="h3" sx={{
-          color: theme.palette.primary.main,
-          fontWeight: 'bold',
-          position: 'relative',
+        <Typography className="relative text-red-500 after:bg-red-500 font-bold" gutterBottom variant="subtitle1" component="h3" sx={{
           marginBottom: '15px',
           '&::after': {
             content: '""',
@@ -25,7 +21,6 @@ export const ArticleCard = ({ item: x }: { item: Article }) => {
             left: 0,
             right: '50%',
             height: '5px',
-            backgroundColor: theme.palette.primary.main,
           },
         }}>{x.header}</Typography>
 

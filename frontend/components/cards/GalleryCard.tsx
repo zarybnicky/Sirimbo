@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { NextLinkComposed } from 'components/Link';
 
 interface GalleryItem {
@@ -10,8 +10,6 @@ interface GalleryItem {
 }
 
 export const GalleryCard = ({ item: x }: { item: GalleryItem }) => {
-  const theme = useTheme();
-
   return <NextLinkComposed href={x.href} style={{
     display: 'block',
     position: 'relative',
@@ -19,7 +17,7 @@ export const GalleryCard = ({ item: x }: { item: GalleryItem }) => {
     height: '250px',
     overflow: 'hidden',
   }}>
-    <Box className="overlay" sx={{
+    <Box className="overlay text-gray-800" sx={{
       display: 'flex',
       flexDirection: 'column',
       position: 'absolute',
@@ -28,7 +26,6 @@ export const GalleryCard = ({ item: x }: { item: GalleryItem }) => {
       bottom: '15px',
       padding: '.25rem .75rem',
       background: 'rgba(255, 255, 255, .9)',
-      color: theme.palette.secondary.main,
       textDecoration: 'none',
       zIndex: 10,
     }}>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Grid, Paper, Typography, useTheme } from '@mui/material';
+import { Grid, Paper, Typography } from '@mui/material';
 import { CellPlugin } from '@react-page/editor';
 import { defaultSlate } from '../SlateReadonly';
 
@@ -9,53 +9,27 @@ type ServiceCardProps = {
 }
 
 export const ServiceCard = (props: ServiceCardProps & { children: React.ReactNode | React.ReactChildren; }) => {
-  const theme = useTheme();
-
-  return <Paper elevation={3} sx={{
-    margin: '2rem 0',
-    '& .image': {
-      position: 'relative',
-    },
-    '& .image img': {
-      width: '100%',
-      height: '100%',
-      objectFit: 'cover',
-    },
+  return <Paper elevation={3} className="my-8" sx={{
     '& .gutter': {
-      minHeight: '1rem',
-      minWidth: '1rem',
-      background: theme.palette.secondary.main,
+      background: '#222222',
     },
     '&:nth-of-type(even) .gutter': {
-      background: theme.palette.primary.main,
-    },
-    '& .body': {
-      flexGrow: 1,
-      flexBasis: '1rem',
-      padding: '3rem 2rem',
-      [theme.breakpoints.down('sm')]: {
-        padding: '1.5rem 1rem',
-      },
+      background: '#d81c3a',
     },
     '& .header': {
-      color: theme.palette.secondary.main,
-      fontWeight: 'bold',
-      marginBottom: '1rem',
-      [theme.breakpoints.down('sm')]: {
-        marginBottom: '.5rem',
-      },
+      color: '#222222',
     },
     '&:nth-of-type(even) .header': {
-      color: theme.palette.primary.main,
+      color: '#d81c3a',
     },
   }}>
     <Grid container>
-      <Grid item xs={12} sm={4} className="image">
-        <img src={props.image} alt={props.header} />
+      <Grid item xs={12} sm={4} className="relative">
+        <img className="w-full h-full object-cover" src={props.image} alt={props.header} />
       </Grid>
-      <Grid item xs={12} sm="auto" className="gutter" />
-      <Grid item xs={12} sm="auto" className="body">
-        <Typography variant="h5" component="h2" className="header">{props.header}</Typography>
+      <Grid item xs={12} sm="auto" className="gutter w-4 h-4" />
+      <Grid item xs={12} sm="auto" className="grow basis-4 px-4 py-6 md:px-8 md:py-12">
+        <Typography variant="h5" component="h2" className="header font-bold mb-2 md:mb-4">{props.header}</Typography>
         {props.children}
       </Grid>
     </Grid>

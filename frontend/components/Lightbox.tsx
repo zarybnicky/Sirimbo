@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useSwipeable } from 'react-swipeable';
-import { Card, Dialog, Fade, IconButton, Typography, useTheme } from '@mui/material';
+import { Card, Dialog, Fade, IconButton, Typography } from '@mui/material';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import { GalleryItem } from 'lib/data/use-gallery';
@@ -15,7 +15,6 @@ export interface LightboxProps {
 export const Lightbox = ({ dirHref, images, initial }: LightboxProps) => {
   const didMountRef = React.useRef(false);
   const router = useRouter();
-  const theme = useTheme();
   const initialIx = images.findIndex(x => x.id == initial);
   const [selected, setSelected] = React.useState(Math.max(initialIx, 0));
 
@@ -69,34 +68,29 @@ export const Lightbox = ({ dirHref, images, initial }: LightboxProps) => {
                 maxHeight: `calc(100vh - 130px)`,
                 objectFit: 'contain',
               }} />
-              <Card variant="outlined" sx={{
-                padding: theme.spacing(1),
-                textAlign: 'center',
-              }}>
+              <Card variant="outlined" className="p-4 text-center">
                 <Typography variant="caption">{image.name}</Typography>
               </Card>
             </div>
           </Fade>
         )
       ))}
-      <IconButton onClick={nextImage} style={{ left: 0 }} sx={{
+      <IconButton onClick={nextImage} style={{ left: 0 }} className="shadow-lg" sx={{
         position: 'absolute',
         top: '50%',
         transform: 'translateY(-50%)',
         background: 'rgba(255, 255, 255, 0.5)',
-        boxShadow: theme.shadows[7],
         '&:hover': {
           background: 'rgba(255, 255, 255, 0.8)',
         },
       }}>
         <ChevronLeft />
       </IconButton>
-      <IconButton onClick={prevImage} style={{ right: 0 }} sx={{
+      <IconButton onClick={prevImage} style={{ right: 0 }} className="shadow-lg" sx={{
         position: 'absolute',
         top: '50%',
         transform: 'translateY(-50%)',
         background: 'rgba(255, 255, 255, 0.5)',
-        boxShadow: theme.shadows[7],
         '&:hover': {
           background: 'rgba(255, 255, 255, 0.8)',
         },

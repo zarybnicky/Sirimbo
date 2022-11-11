@@ -9,13 +9,14 @@ import { useRequireUserLoggedOut } from 'lib/route-guards';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from 'components/ErrorBox';
 import { useRouter } from 'next/router';
+import { SubmitButton } from 'components/SubmitButton';
 
 export default function RegisterPage() {
   useRequireUserLoggedOut()
   const router = useRouter();
   const countries = useCountries();
   const { data: cohorts } = useCohortListQuery({ visible: true });
-  const { control, handleSubmit, watch, formState: { isDirty, isSubmitting } } = useForm();
+  const { control, handleSubmit, watch, formState } = useForm();
   const { enqueueSnackbar } = useSnackbar();
 
   const { mutateAsync: register } = useRegisterMutation();
@@ -192,10 +193,9 @@ export default function RegisterPage() {
           </Grid>
         </CardContent>
         <CardActions>
-          <Button
-            fullWidth variant="contained" type="submit" color="primary"
-            disabled={isSubmitting || !isDirty}
-          >Registrovat</Button>
+          <SubmitButton className="w-full" loading={onSubmit.loading} disabled={!formState.isValid}>
+            Registrovat
+          </SubmitButton>
         </CardActions>
       </Card>
     </Container>

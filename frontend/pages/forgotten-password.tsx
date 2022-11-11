@@ -1,5 +1,6 @@
-import { Container, Typography, Grid, Card, CardContent, CardActions, Button } from "@mui/material";
+import { Container, Typography, Grid, Card, CardContent, CardActions } from "@mui/material";
 import { ErrorBox } from "components/ErrorBox";
+import { SubmitButton } from "components/SubmitButton";
 import { useResetPasswordMutation } from 'lib/graphql';
 import { useRequireUserLoggedOut } from "lib/route-guards";
 import { useRouter } from "next/router";
@@ -11,7 +12,7 @@ import { TextFieldElement } from "react-hook-form-mui";
 
 export default function ForgottenPassword() {
   useRequireUserLoggedOut();
-  const { control, handleSubmit, formState: { isDirty, isSubmitting } } = useForm();
+  const { control, handleSubmit, formState } = useForm();
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: resetPassword } = useResetPasswordMutation();
   const router = useRouter();
@@ -43,10 +44,9 @@ export default function ForgottenPassword() {
         </Grid>
       </CardContent>
       <CardActions>
-        <Button
-          fullWidth variant="contained" type="submit" color="primary"
-          disabled={isSubmitting || !isDirty}
-        >Resetovat heslo</Button>
+        <SubmitButton className="w-full" loading={onSubmit.loading} disabled={!formState.isValid}>
+          Obnovit heslo
+        </SubmitButton>
       </CardActions>
     </Card>
   </Container>;

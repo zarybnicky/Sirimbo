@@ -8,6 +8,7 @@ import { TextFieldElement } from 'react-hook-form-mui';
 import { useRequireUserLoggedOut } from 'lib/route-guards';
 import { ErrorBox } from 'components/ErrorBox';
 import { useAsyncCallback } from 'react-async-hook';
+import { SubmitButton } from 'components/SubmitButton';
 
 type FormProps = {
   login: string;
@@ -18,7 +19,7 @@ export default function LoginPage() {
   useRequireUserLoggedOut();
   const { signIn } = useAuth();
   const router = useRouter()
-  const { control, handleSubmit, formState: { isDirty, isValid, isSubmitting } } = useForm<FormProps>();
+  const { control, handleSubmit, formState } = useForm<FormProps>();
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await signIn(values.login, values.passwd);
@@ -44,10 +45,9 @@ export default function LoginPage() {
           />
         </CardContent>
         <CardActions style={{ flexDirection: 'column', padding: '0 1rem 1rem' }}>
-          <Button
-            fullWidth variant="contained" type="submit" color="primary"
-            disabled={isValid && !isSubmitting && isDirty}
-          >Přihlásit</Button>
+          <SubmitButton className="w-full" loading={onSubmit.loading} disabled={!formState.isValid}>
+            Přihlásit
+          </SubmitButton>
         </CardActions>
         <Grid container justifyContent="space-between" style={{ padding: '0 1rem 1rem' }}>
           <Button component={NextLinkComposed} href="/register" size="small">Registrovat se</Button>

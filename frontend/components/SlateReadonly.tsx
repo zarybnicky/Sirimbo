@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Typography, useTheme } from '@mui/material';
+import { Typography } from '@mui/material';
 import { createEditor, Descendant } from 'slate';
 import { Slate, Editable, ReactEditor, withReact } from 'slate-react';
 import slate from '@react-page/plugins-slate';
@@ -43,9 +43,8 @@ const Element = ({ attributes, children, element }: any) => {
   }
 }
 const Leaf = ({ attributes, children, leaf }: any) => {
-  const theme = useTheme();
   if (leaf.primary) {
-    children = <span style={{ color: theme.palette.primary.main }}>{children}</span>;
+    children = <span className="text-red-500">{children}</span>;
   }
   if (leaf.bold) {
     children = <strong>{children}</strong>
@@ -59,5 +58,5 @@ const Leaf = ({ attributes, children, leaf }: any) => {
   if (leaf.underline) {
     children = <u>{children}</u>
   }
-  return <span style={{ fontFamily: theme.typography.body1.fontFamily }} {...attributes}>{children}</span>
+  return <span {...attributes}>{children}</span>
 }
