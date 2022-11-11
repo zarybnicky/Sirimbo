@@ -68,12 +68,6 @@ module.exports = withBundleAnalyzer(withSentryConfig({
       })
     );
 
-    config.module.rules.push({
-      test: /\.(svg)$/,
-      include: path.resolve(__dirname, 'public'),
-      loader: 'svg-react-loader',
-    });
-
     return config;
   },
 }));

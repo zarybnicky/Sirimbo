@@ -7,7 +7,7 @@ import { MenuStructItem, useTopMenu, useSideMenu, getHrefs } from 'lib/data/use-
 import { useAuth } from 'lib/data/use-auth';
 import { useRouter } from 'next/router';
 import { NextLinkComposed } from './Link';
-import OlympLogo from 'public/images/olymp-logo-oneline.svg';
+import { OlympLogoOneline } from 'components/Icons';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuIcon from '@mui/icons-material/Menu';
 
@@ -68,7 +68,7 @@ export const MobileHeader = ({ }) => {
           display: 'flex',
           alignItems: 'center',
         }}>
-          <OlympLogo viewBox="0 0 381.82217 111.78744" width="170" height="50" style={{
+          <OlympLogoOneline viewBox="0 0 381.82217 111.78744" width="170" height="50" style={{
             filter: 'drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.2))',
             color: 'white',
             fill: 'white !important',

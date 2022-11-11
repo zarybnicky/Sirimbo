@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Container, Grid, Paper, Typography, Box, useTheme, FormControlLabel, Switch } from '@mui/material';
+import { Container, Grid, Paper, Typography, Box, useTheme } from '@mui/material';
 import { SocialButtons } from './SocialButtons';
+import { Map } from './Map';
 
 import CstsLogo from 'public/images/csts-logo.svg';
 import OlomoucLogo from 'public/style/logo-olomouc.jpg';
 import KrajLogo from 'public/style/logo-kraj.png';
-import { Map } from './Map';
 
 const ContactText = () => {
   const theme = useTheme();
@@ -118,7 +118,7 @@ export const Footer: React.FC = () => {
 
             <Grid container spacing={1.5} alignItems="center">
               <Grid item xs={4}>
-                <CstsLogo height="100" width="100" />
+                <img alt="ČSTS" style={{ width: '100%', height: 'auto' }} src={CstsLogo.src} />
               </Grid>
               <Grid item xs={4}>
                 <img alt="Město Olomouc" style={{ width: '100%', height: 'auto' }} src={OlomoucLogo.src} />

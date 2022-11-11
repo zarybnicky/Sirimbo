@@ -4,7 +4,7 @@ import { AppBar, Box, Container, Toolbar, useTheme } from '@mui/material';
 import { SocialButtons } from './SocialButtons';
 import { AuthButton } from './AuthButton';
 import { DesktopMenu } from './DesktopMenu';
-import OlympLogoVertical from 'public/images/olymp-logo-vertical.svg';
+import { OlympLogoVertical } from 'components/Icons';
 
 export const DesktopHeader = ({ }) => {
   const theme = useTheme();

@@ -10358,7 +10358,7 @@ export type EventParticipantsQuery = { __typename?: 'Query', akce: { __typename?
 export type EventListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  visible: Scalars['Boolean'];
+  visible?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
@@ -12123,7 +12123,7 @@ useEventParticipantsQuery.getKey = (variables: EventParticipantsQueryVariables) 
 
 useEventParticipantsQuery.fetcher = (variables: EventParticipantsQueryVariables, options?: RequestInit['headers']) => fetcher<EventParticipantsQuery, EventParticipantsQueryVariables>(EventParticipantsDocument, variables, options);
 export const EventListDocument = `
-    query EventList($limit: Int, $offset: Int, $visible: Boolean!) {
+    query EventList($limit: Int, $offset: Int, $visible: Boolean) {
   akces(
     first: $limit
     offset: $offset
@@ -12152,21 +12152,21 @@ export const useEventListQuery = <
       TData = EventListQuery,
       TError = unknown
     >(
-      variables: EventListQueryVariables,
+      variables?: EventListQueryVariables,
       options?: UseQueryOptions<EventListQuery, TError, TData>
     ) =>
     useQuery<EventListQuery, TError, TData>(
-      ['EventList', variables],
+      variables === undefined ? ['EventList'] : ['EventList', variables],
       fetcher<EventListQuery, EventListQueryVariables>(EventListDocument, variables),
       options
     );
 useEventListQuery.document = EventListDocument;
 
 
-useEventListQuery.getKey = (variables: EventListQueryVariables) => ['EventList', variables];
+useEventListQuery.getKey = (variables?: EventListQueryVariables) => variables === undefined ? ['EventList'] : ['EventList', variables];
 ;
 
-useEventListQuery.fetcher = (variables: EventListQueryVariables, options?: RequestInit['headers']) => fetcher<EventListQuery, EventListQueryVariables>(EventListDocument, variables, options);
+useEventListQuery.fetcher = (variables?: EventListQueryVariables, options?: RequestInit['headers']) => fetcher<EventListQuery, EventListQueryVariables>(EventListDocument, variables, options);
 export const EventDocument = `
     query Event($id: BigInt!) {
   akce(aId: $id) {
