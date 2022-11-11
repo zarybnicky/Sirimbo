@@ -1,0 +1,32 @@
+@import 'glider-js/glider.min.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.react-page-cell-inner.slate {
+    padding: 20px;
+}
+
+.glider-dots {
+    margin-top: .5rem;
+}
+.glider-dot {
+    border-radius: 0;
+    width: 50px;
+    height: 9px;
+}
+.glider-dot.active {
+    background-color: theme('colors.primary');
+}
+.glider-prev, .glider-next {
+    position: absolute;
+}
+.glider-prev {
+    left: 1rem;
+    top: calc(50% - 2rem);
+}
+.glider-next {
+    right: 1rem;
+    top: calc(50% - 2rem);
+}

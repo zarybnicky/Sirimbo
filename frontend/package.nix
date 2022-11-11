@@ -19,6 +19,7 @@ yarn2nix-moretea.mkYarnPackage {
     unlink deps/sirimbo-frontend/node_modules
     mv deps/sirimbo-frontend/* .
 
+    find -type f -not -path "./node_modules/*"
     NEXT_PUBLIC_BASE_URL="http://undefined" yarn --offline run build
   '';
   distPhase = "true";

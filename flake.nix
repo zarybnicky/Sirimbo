@@ -33,6 +33,11 @@
       ];
     };
 
+    packages.x86_64-linux = {
+      inherit (pkgs) sirimbo-frontend-beta;
+      sirimbo-frontend = pkgs.sirimbo-frontend-beta;
+    };
+
     nixosConfigurations.container = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
