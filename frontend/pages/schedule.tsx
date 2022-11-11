@@ -106,14 +106,14 @@ export default function SchedulePage() {
               </Grid>
               <Grid item style={{ flexGrow: 1 }}>
                 {perms.canSignUp(item, lesson) ? (
-                  <button name="action" value="signup" className="py-0 btn btn-outline-primary btn-sm">+</button>
+                  <Button name="action" value="signup" className="py-0">+</Button>
                 ) : (
                   <>{lesson.paryByRiPartner?.userByPIdPartner?.uJmeno} {lesson.paryByRiPartner?.userByPIdPartner?.uPrijmeni}</>
                 )}
               </Grid>
               {perms.canSignOut(item, lesson) && (
                 <Grid item>
-                  <button name="action" value="signout" className="py-0 btn btn-outline-primary btn-sm">&times;</button>
+                  <Button name="action" value="signout" className="py-0">&times;</Button>
                 </Grid>
               )}
             </Grid>
@@ -159,7 +159,7 @@ export default function SchedulePage() {
               </div>
               {perms.canCancelReservation(item, lesson) && (
                 <div className="col-2">
-                  <button name="p_id" value="{lesson.p_id}" className="pl-2 py-0 btn btn-outline-primary btn-sm">&times;</button>
+                  <Button name="p_id" value="{lesson.p_id}" className="pl-2">&times;</Button>
                 </div>
               )}
             </div>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Container } from '@mui/material';
-import { NextLinkComposed } from 'components/Link';
+import { Button } from 'components/Button';
 import { useDeleteVideoMutation, useVideoListQuery } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
@@ -18,7 +18,7 @@ export default function VideoList() {
   });
 
   return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
-    <NextLinkComposed href="/admin/video/add" className="btn btn-outline-primary">Přidat video</NextLinkComposed>
+    <Button href="/admin/video/add">Přidat video</Button>
 
     <DataGrid
       autoHeight={true}

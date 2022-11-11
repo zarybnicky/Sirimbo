@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Checkbox, Container } from '@mui/material';
-import { NextLinkComposed } from 'components/Link';
+import { Button } from 'components/Button';
 import { useDeleteGalleryDirMutation, useGalleryDirListQuery, useToggleGalleryDirVisibleMutation } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
@@ -65,8 +65,8 @@ export default function GalleryDirectoryList() {
   }, [rowCount]);
 
   return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
-    <NextLinkComposed href="/admin/galerie/file/upload" className="btn btn-outline-primary">Přidat fotky</NextLinkComposed>
-    <NextLinkComposed href="/admin/galerie/directory/add" className="btn btn-outline-primary">Přidat složku</NextLinkComposed>
+    <Button href="/admin/galerie/file/upload">Přidat fotky</Button>
+    <Button href="/admin/galerie/directory/add">Přidat složku</Button>
 
     <DataGrid
       page={page}

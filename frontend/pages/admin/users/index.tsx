@@ -8,6 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { DeleteButton } from 'components/DeleteButton';
 import { useRouter } from 'next/router';
 import format from 'date-fns/format';
+import { Button } from 'components/Button';
 
 export default function UserectoryList() {
   useRequireUserLoggedIn();
@@ -29,11 +30,11 @@ export default function UserectoryList() {
   }, [rowCount]);
 
   return <Container maxWidth="lg" style={{ padding: '4rem 0 6rem' }}>
-    <NextLinkComposed href="/admin/users/add" className="btn btn-outline-primary">Přidat uživatele</NextLinkComposed>
-    <NextLinkComposed href="/admin/users/duplicate" className="btn btn-outline-primary">Duplicitní uživatelé</NextLinkComposed>
-    <NextLinkComposed href="/admin/users/unconfirmed" className="btn btn-outline-primary">Nepotvrzení uživatelé</NextLinkComposed>
-    <NextLinkComposed href="/admin/users/statistiky" className="btn btn-outline-primary">Statistiky</NextLinkComposed>
-    <NextLinkComposed href="/admin/users/getMsmtCsv" className="btn btn-outline-primary">MŠMT export</NextLinkComposed>
+    <Button href="/admin/users/add">Přidat uživatele</Button>
+    <Button href="/admin/users/duplicate">Duplicitní uživatelé</Button>
+    <Button href="/admin/users/unconfirmed">Nepotvrzení uživatelé</Button>
+    <Button href="/admin/users/statistiky">Statistiky</Button>
+    <Button href="/admin/users/getMsmtCsv">MŠMT export</Button>
 
     <DataGrid
       page={page}
