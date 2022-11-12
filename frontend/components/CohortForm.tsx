@@ -1,13 +1,13 @@
 import { Grid } from '@mui/material';
 import { CohortFragment, SkupinyInput, useCreateCohortMutation, useUpdateCohortMutation } from 'lib/graphql';
 import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { TextAreaElement, TextField, TextFieldElement } from 'components/TextField';
+import { useForm } from 'react-hook-form';
+import { TextAreaElement, TextFieldElement } from 'components/TextField';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
-import { HexColorPicker } from 'react-colorful';
 import { SubmitButton } from './SubmitButton';
+import { ColorPicker } from './ColorPicker';
 
 type FormProps = Pick<SkupinyInput, 'sName' | 'sDescription' | 'sLocation' | 'sVisible' | 'sColorRgb'>;
 
@@ -24,7 +24,7 @@ export const CohortForm: React.FC<{
       sDescription: data?.sDescription,
       sLocation: data?.sLocation,
       sVisible: data?.sVisible,
-      sColorRgb: data?.sColorRgb,
+      sColorRgb: data?.sColorRgb || '#FF0000',
     },
   });
 
@@ -49,13 +49,7 @@ export const CohortForm: React.FC<{
         <CheckboxElement control={control} name="sVisible" value="1" label="Viditelná pro registraci" />
       </Grid>
       <Grid item xs={12}>
-        <Controller
-          name="sColorRgb" control={control} defaultValue="#FF0000"
-          render={({ field: { onChange, value } }) => <>
-            <HexColorPicker color={value} onChange={onChange} />
-            <TextField name="sColorRgb" value={value} onChange={onChange} />
-          </>}
-        />
+        <ColorPicker name="sColorRgb" control={control} />
       </Grid>
       <Grid item xs={12}>
         <TextAreaElement control={control} name="sDescription" label="Popis" rows={3} required />

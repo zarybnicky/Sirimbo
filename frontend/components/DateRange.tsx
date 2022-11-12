@@ -14,3 +14,20 @@ export function DateRange({ noYear, from, to }: DateRangeProps) {
   }
   return <>{format(new Date(from), f)}</>;
 }
+
+
+export function DatePickerElement() {
+  const [state, setState] = React.useState([
+    {
+      startDate: new Date(),
+      endDate: null,
+      key: 'selection'
+    }
+  ]);
+
+  <DateRange
+    editableDateInputs={true}
+    onChange={item => setState([item.selection])}
+    moveRangeOnFirstSelection={false}
+    ranges={state}
+  />

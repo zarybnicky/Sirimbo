@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
-import { Control, Controller, FieldValues, ControllerProps, FieldError, Path } from 'react-hook-form';
+import { Control, FieldValues, ControllerProps, FieldError, Path, useController } from 'react-hook-form';
 
 type Extras = {
   label?: React.ReactNode;
@@ -89,18 +89,14 @@ export function TextFieldElement<TFieldValues extends FieldValues>({
       message: 'Zadejte platný e-mail',
     };
   }
+  const { field: { value, onChange }, fieldState: { error } } = useController({
+    name, control, rules: validation
+  });
 
   return (
-    <Controller
-      name={name}
-      rules={validation}
-      control={control}
-      render={({ field: { value, onChange }, fieldState: { error } }) => {
-        return <TextField
-          name={name} value={value} error={error} {...props}
-          onChange={() => onChange(!value)}
-        />
-      }}
+    <TextField
+      name={name} value={value} error={error} {...props}
+      onChange={() => onChange(!value)}
     />
   );
 };
@@ -111,18 +107,14 @@ export function TextAreaElement<TFieldValues extends FieldValues>({
   if (required && !validation?.required) {
     validation.required = 'Toto pole je povinné';
   }
+  const { field: { value, onChange }, fieldState: { error } } = useController({
+    name, control, rules: validation
+  });
 
   return (
-    <Controller
-      name={name}
-      rules={validation}
-      control={control}
-      render={({ field: { value, onChange }, fieldState: { error } }) => {
-        return <TextArea
-          name={name} value={value} error={error} {...props}
-          onChange={() => onChange(!value)}
-        />
-      }}
+    <TextArea
+      name={name} value={value} error={error} {...props}
+      onChange={() => onChange(!value)}
     />
   );
 };

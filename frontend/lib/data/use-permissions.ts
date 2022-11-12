@@ -1,4 +1,5 @@
 import { ReservationFragment, ReservationItemFragment, ScheduleFragment, ScheduleItemFragment } from 'lib/graphql';
+import { keysOf } from 'lib/keys-of';
 import { useAuth } from './use-auth';
 
 export enum PermissionLevel {
@@ -76,6 +77,17 @@ export const permissionLabels: { [key in keyof typeof PermissionKey]: string } =
   peUsers: "Uživatelé",
   peMain: "Veřejná sekce",
 };
+
+export const realPermissionKeys = keysOf(PermissionKey).filter(key => (!~~key && key.toString() !== "0"));
+export const realPermissionLevels = keysOf(PermissionLevel).filter(key => !(!~~key && key.toString() !== "0"));
+
+export const permissionMarks = [
+  { value: 0, realValue: PermissionLevel.P_NONE, label: 'žádná' },
+  { value: 1, realValue: PermissionLevel.P_VIEW, label: 'zobrazení' },
+  { value: 2, realValue: PermissionLevel.P_MEMBER, label: 'člen' },
+  { value: 3, realValue: PermissionLevel.P_OWNED, label: 'správa svých' },
+  { value: 4, realValue: PermissionLevel.P_ADMIN, label: 'správa všech' },
+];
 
 export const usePermissions = () => {
   const { user, couple } = useAuth();

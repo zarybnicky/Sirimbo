@@ -1,4 +1,4 @@
-import { Control, Controller, FieldValues, ControllerProps, FieldError, Path } from 'react-hook-form';
+import { Control, FieldValues, ControllerProps, FieldError, Path, useController } from 'react-hook-form';
 
 type Extras = {
   label?: React.ReactNode;
@@ -43,18 +43,14 @@ export function CheckboxElement<TFieldValues extends FieldValues>({
   if (required && !validation?.required) {
     validation.required = 'Toto pole je povinné';
   }
+  const { field: { value, onChange }, fieldState: { error } } = useController({
+    name, rules: validation, control
+  });
 
   return (
-    <Controller
-      name={name}
-      rules={validation}
-      control={control}
-      render={({ field: { value, onChange }, fieldState: { error } }) => {
-        return <Checkbox
-          name={name} value={value} checked={!!value} error={error} {...props}
-          onChange={() => onChange(!value)}
-        />
-      }}
+    <Checkbox
+      name={name} value={value} checked={!!value} error={error} {...props}
+      onChange={() => onChange(!value)}
     />
   );
 };
