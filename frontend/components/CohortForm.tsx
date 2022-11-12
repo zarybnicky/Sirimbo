@@ -1,11 +1,13 @@
-import { TextField, Button, Grid } from '@mui/material';
+import { TextField, Grid } from '@mui/material';
 import { CohortFragment, SkupinyInput, useCreateCohortMutation, useUpdateCohortMutation } from 'lib/graphql';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { CheckboxElement, TextFieldElement } from 'react-hook-form-mui';
+import { TextFieldElement } from 'react-hook-form-mui';
+import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { HexColorPicker } from 'react-colorful';
+import { SubmitButton } from './SubmitButton';
 
 type FormProps = Pick<SkupinyInput, 'sName' | 'sDescription' | 'sLocation' | 'sVisible' | 'sColorRgb'>;
 
@@ -16,7 +18,7 @@ export const CohortForm: React.FC<{
   const { mutateAsync: doCreate } = useCreateCohortMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateCohortMutation({ onSuccess });
 
-  const { control, handleSubmit } = useForm<FormProps>({
+  const { control, handleSubmit, formState } = useForm<FormProps>({
     defaultValues: {
       sName: data?.sName,
       sDescription: data?.sDescription,
@@ -59,7 +61,7 @@ export const CohortForm: React.FC<{
         <TextFieldElement fullWidth control={control} name="sDescription" label="Popis" rows={3} multiline required />
       </Grid>
       <Grid item xs={12}>
-        <Button fullWidth variant="contained" type="submit" color="primary" disabled={onSubmit.loading}>Uložit</Button>
+        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
       </Grid>
     </Grid >
   );

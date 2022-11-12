@@ -1,10 +1,12 @@
-import { Button, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import { ScheduleFragment, RozpiInput, useCreateScheduleMutation, useUpdateScheduleMutation, useTrainerListQuery } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { CheckboxElement, DatePickerElement, SelectElement, TextFieldElement } from 'react-hook-form-mui';
+import { DatePickerElement, SelectElement, TextFieldElement } from 'react-hook-form-mui';
+import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
+import { SubmitButton } from './SubmitButton';
 
 type FormProps = Pick<RozpiInput, 'rTrener' | 'rKde' | 'rDatum' | 'rVisible' | 'rLock'>;
 
@@ -17,7 +19,7 @@ export const ScheduleForm: React.FC<{
 
   const { data: trainers } = useTrainerListQuery();
 
-  const { control, handleSubmit } = useForm<FormProps>({
+  const { control, handleSubmit, formState } = useForm<FormProps>({
     defaultValues: {
       rKde: data?.rKde,
       rDatum: data?.rDatum,
@@ -57,7 +59,7 @@ export const ScheduleForm: React.FC<{
         <CheckboxElement control={control} name="rLock" value="1" label="Uzamčený" />
       </Grid>
       <Grid item xs={12}>
-        <Button fullWidth variant="contained" type="submit" color="primary" disabled={onSubmit.loading}>Uložit</Button>
+        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
       </Grid>
     </Grid>
   );

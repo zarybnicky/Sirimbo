@@ -1,10 +1,11 @@
-import { Button, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import { PaymentGroupFragment, PlatbyGroupInput, useCreatePaymentGroupMutation, useUpdatePaymentGroupMutation } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'react-hook-form-mui';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
+import { SubmitButton } from './SubmitButton';
 
 type FormProps = Pick<PlatbyGroupInput, 'pgName' | 'pgDescription' | 'pgBase'>;
 
@@ -15,7 +16,7 @@ export const PaymentGroupForm: React.FC<{
   const { mutateAsync: doCreate } = useCreatePaymentGroupMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdatePaymentGroupMutation({ onSuccess });
 
-  const { control, handleSubmit } = useForm<FormProps>({
+  const { control, handleSubmit, formState } = useForm<FormProps>({
     defaultValues: {
       pgName: data?.pgName,
       pgDescription: data?.pgDescription,
@@ -44,7 +45,7 @@ export const PaymentGroupForm: React.FC<{
         <TextFieldElement fullWidth control={control} type="number" name="pgBase" label="Násobitel částky" required />
       </Grid>
       <Grid item xs={12}>
-        <Button fullWidth variant="contained" type="submit" color="primary" disabled={onSubmit.loading}>Uložit</Button>
+        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
       </Grid>
     </Grid>
   );

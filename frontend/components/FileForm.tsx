@@ -1,10 +1,11 @@
-import { Button, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import { FileFragment, DokumentyInput, useUpdateFileMutation } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'react-hook-form-mui';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
+import { SubmitButton } from './SubmitButton';
 
 type FormProps = Pick<DokumentyInput, 'dName'>;
 
@@ -14,7 +15,7 @@ export const FileForm: React.FC<{
 }> = ({ data, onSuccess }) => {
   const { mutateAsync: doUpdate } = useUpdateFileMutation({ onSuccess });
 
-  const { control, handleSubmit } = useForm<FormProps>({
+  const { control, handleSubmit, formState } = useForm<FormProps>({
     defaultValues: {
       dName: data?.dName,
     },
@@ -32,7 +33,7 @@ export const FileForm: React.FC<{
       </Grid>
 
       <Grid item xs={12}>
-        <Button fullWidth variant="contained" type="submit" color="primary" disabled={onSubmit.loading}>Uložit</Button>
+        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
       </Grid>
     </Grid >
   );

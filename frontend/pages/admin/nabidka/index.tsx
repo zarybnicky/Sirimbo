@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Checkbox } from '@mui/material';
+import { Checkbox } from 'components/Checkbox';
 import { DateRange } from 'components/DateRange';
 import { useDeleteReservationMutation, useReservationListQuery, useToggleReservationVisibleMutation } from 'lib/graphql';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';

@@ -1,10 +1,11 @@
-import { Button, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import { useCreateCoupleMutation, useUserListQuery } from 'lib/graphql';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
 import { SelectElement } from 'react-hook-form-mui';
 import { ErrorBox } from './ErrorBox';
+import { SubmitButton } from './SubmitButton';
 
 type FormProps = {
   man: { id: string; label: string };
@@ -24,7 +25,7 @@ export const NewCoupleForm: React.FC<{
 
   const { mutateAsync: doCreate } = useCreateCoupleMutation({ onSuccess });
 
-  const { control, handleSubmit } = useForm<FormProps>();
+  const { control, handleSubmit, formState } = useForm<FormProps>();
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await doCreate({ man: values.man.id, woman: values.woman.id });
   });
@@ -45,9 +46,9 @@ export const NewCoupleForm: React.FC<{
         />
       </Grid>
       <Grid item xs={12}>
-        <Button fullWidth variant="contained" type="submit" color="primary">
+        <SubmitButton className="w-full" loading={onSubmit.loading} disabled={!formState.isDirty || !formState.isValid}>
           Spárovat
-        </Button>
+        </SubmitButton>
       </Grid>
     </Grid>
   );

@@ -2,10 +2,11 @@ import { RoleFragment, PermissionInput, useCreateRoleMutation, useUpdateRoleMuta
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useAsyncCallback } from 'react-async-hook'
-import { Slider, Typography, Grid, Button } from "@mui/material";
+import { Slider, Typography, Grid } from "@mui/material";
 import { allowedPermissions, defaultPermissions, PermissionKey, permissionLabels, PermissionLevel } from "lib/data/use-permissions";
 import { keysOf } from "lib/keys-of";
 import { Controller, TextFieldElement } from "react-hook-form-mui";
+import { SubmitButton } from './SubmitButton';
 
 const marks = [
   { value: 0, realValue: PermissionLevel.P_NONE, label: 'žádná' },
@@ -24,7 +25,7 @@ export const RoleForm: React.FC<{
   const { mutateAsync: doCreate } = useCreateRoleMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateRoleMutation({ onSuccess });
 
-  const { control, handleSubmit } = useForm<FormProps>({
+  const { control, handleSubmit, formState } = useForm<FormProps>({
     defaultValues: data,
   });
 
@@ -72,7 +73,7 @@ export const RoleForm: React.FC<{
         </Grid>
       </React.Fragment>)}
       <Grid item xs={12}>
-        <Button fullWidth variant="contained" type="submit" color="primary" disabled={onSubmit.loading}>Uložit</Button>
+        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
       </Grid>
     </Grid>
   );

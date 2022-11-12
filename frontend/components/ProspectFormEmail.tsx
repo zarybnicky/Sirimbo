@@ -1,12 +1,14 @@
 import * as React from 'react';
 import type { CellPlugin } from '@react-page/editor';
-import { Card, CardContent, CardActions, Grid, Button, Typography } from '@mui/material';
+import { Card, CardContent, CardActions, Grid, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
-import { TextFieldElement, CheckboxElement } from 'react-hook-form-mui';
+import { TextFieldElement, } from 'react-hook-form-mui';
+import { CheckboxElement } from 'components/Checkbox';
 import { CrmCohort, useSubmitProspectFormMutation } from 'lib/graphql';
 import { ErrorBox } from './ErrorBox';
 import { useAsyncCallback } from 'react-async-hook';
+import { SubmitButton } from './SubmitButton';
 
 type ProspectFormEmailProps = {
   title?: string;
@@ -15,7 +17,7 @@ type ProspectFormEmailProps = {
 export const ProspectFormEmail = ({ title }: ProspectFormEmailProps) => {
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: submit } = useSubmitProspectFormMutation();
-  const { control, handleSubmit, formState: { isDirty, isValid, isSubmitting } } = useForm();
+  const { control, handleSubmit, formState } = useForm();
 
   const onSubmit = useAsyncCallback(async ({ op, ...prospectData }: any) => {
     if (typeof fbq !== 'undefined') {
@@ -52,10 +54,9 @@ export const ProspectFormEmail = ({ title }: ProspectFormEmailProps) => {
         <ErrorBox grid error={onSubmit.error} />
       </CardContent>
       <CardActions style={{ flexDirection: 'column' }}>
-        <Button
-          fullWidth variant="contained" type="submit" color="primary"
-          disabled={isValid && !isSubmitting && isDirty}
-        >Ozvěte se mi</Button>
+        <SubmitButton className="w-full" loading={onSubmit.loading} disabled={!formState.isDirty || !formState.isValid}>
+          Ozvěte se mi
+        </SubmitButton>
       </CardActions>
     </Card>
   );

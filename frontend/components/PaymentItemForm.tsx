@@ -1,10 +1,11 @@
-import { Button, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import { PaymentItemFragment, PlatbyItemInput, useCreatePaymentItemMutation, usePaymentCategoryListQuery, useUpdatePaymentItemMutation, useUserListQuery } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { DatePickerElement, SelectElement, TextFieldElement } from 'react-hook-form-mui';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
+import { SubmitButton } from './SubmitButton';
 
 type FormProps = Pick<PlatbyItemInput, 'piAmount' | 'piDate' | 'piIdCategory' | 'piIdUser' | 'piPrefix'>;
 
@@ -22,7 +23,7 @@ export const PaymentItemForm: React.FC<{
   // php-unserialize-js the blob
   // on delete, mark raw as !sorted and discarded
 
-  const { control, handleSubmit } = useForm<FormProps>({
+  const { control, handleSubmit, formState } = useForm<FormProps>({
     defaultValues: {
       piAmount: data?.piAmount,
       piDate: data?.piDate,
@@ -69,7 +70,7 @@ export const PaymentItemForm: React.FC<{
         <TextFieldElement fullWidth control={control} name="piPrefix" label="Prefix (rok)" required />
       </Grid>
       <Grid item xs={12}>
-        <Button fullWidth variant="contained" type="submit" color="primary" disabled={onSubmit.loading}>Uložit</Button>
+        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
       </Grid>
     </Grid>
   );

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Checkbox } from '@mui/material';
+import { Checkbox } from 'components/Checkbox';
 import { DateRange } from 'components/DateRange';
 import { useEventListQuery, useToggleEventVisibleMutation, useDeleteEventMutation } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';

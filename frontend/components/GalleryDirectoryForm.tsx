@@ -1,11 +1,13 @@
-import { Button, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import { GalleryDirFragment, GalerieDirInput, useUpdateGalleryDirMutation, useGalleryDirListQuery, useCreateGalleryDirMutation } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { CheckboxElement, SelectElement, TextFieldElement } from 'react-hook-form-mui';
+import { SelectElement, TextFieldElement } from 'react-hook-form-mui';
+import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { slugify } from 'lib/slugify';
+import { SubmitButton } from './SubmitButton';
 
 type FormProps = Pick<GalerieDirInput, 'gdIdRodic' | 'gdName' | 'gdHidden'>;
 
@@ -18,7 +20,7 @@ export const GalleryDirForm: React.FC<{
 
   const { data: dirs } = useGalleryDirListQuery();
 
-  const { control, handleSubmit } = useForm<FormProps>({
+  const { control, handleSubmit, formState } = useForm<FormProps>({
     defaultValues: {
       gdName: data?.gdName,
       gdHidden: data?.gdHidden,
@@ -55,7 +57,7 @@ export const GalleryDirForm: React.FC<{
       </Grid>
 
       <Grid item xs={12}>
-        <Button fullWidth variant="contained" type="submit" color="primary" disabled={onSubmit.loading}>Uložit</Button>
+        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
       </Grid>
     </Grid >
   );

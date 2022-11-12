@@ -1,10 +1,11 @@
-import { Button, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import { VideoSourceFragment, VideoSourceInput, useCreateVideoSourceMutation, useUpdateVideoSourceMutation } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'react-hook-form-mui';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
+import { SubmitButton } from './SubmitButton';
 
 type FormProps = Pick<VideoSourceInput, 'vsUrl' | 'vsTitle' | 'vsDescription'>;
 
@@ -15,7 +16,7 @@ export const VideoSourceForm: React.FC<{
   const { mutateAsync: doCreate } = useCreateVideoSourceMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateVideoSourceMutation({ onSuccess });
 
-  const { control, handleSubmit } = useForm<FormProps>({
+  const { control, handleSubmit, formState } = useForm<FormProps>({
     defaultValues: {
       vsUrl: data?.vsUrl,
       vsTitle: data?.vsTitle,
@@ -47,7 +48,7 @@ export const VideoSourceForm: React.FC<{
         <TextFieldElement fullWidth control={control} name="vsDescription" label="Popis" required />
       </Grid>
       <Grid item xs={12}>
-        <Button fullWidth variant="contained" type="submit" color="primary" disabled={onSubmit.loading}>Uložit</Button>
+        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
       </Grid>
     </Grid>
   );

@@ -1,10 +1,12 @@
-import { Button, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import { PaymentCategoryFragment, PlatbyCategoryInput, useCreatePaymentCategoryMutation, useUpdatePaymentCategoryMutation } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { CheckboxElement, DatePickerElement, TextFieldElement } from 'react-hook-form-mui';
+import { DatePickerElement, TextFieldElement } from 'react-hook-form-mui';
+import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
+import { SubmitButton } from './SubmitButton';
 
 type FormProps = Pick<PlatbyCategoryInput, 'pcName' | 'pcSymbol' | 'pcAmount' | 'pcDateDue' | 'pcValidFrom' | 'pcValidTo' | 'pcUsePrefix' | 'pcArchive' | 'pcVisible'>;
 
@@ -15,7 +17,7 @@ export const PaymentCategoryForm: React.FC<{
   const { mutateAsync: doCreate } = useCreatePaymentCategoryMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdatePaymentCategoryMutation({ onSuccess });
 
-  const { control, handleSubmit } = useForm<FormProps>({
+  const { control, handleSubmit, formState } = useForm<FormProps>({
     defaultValues: {
       pcName: data?.pcName,
       pcSymbol: data?.pcSymbol,
@@ -71,7 +73,7 @@ export const PaymentCategoryForm: React.FC<{
       </Grid>
 
       <Grid item xs={12}>
-        <Button fullWidth variant="contained" type="submit" color="primary" disabled={onSubmit.loading}>Uložit</Button>
+        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
       </Grid>
     </Grid>
   );

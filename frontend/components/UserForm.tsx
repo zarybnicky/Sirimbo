@@ -1,11 +1,13 @@
-import { Button, Grid, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { UserFragment, UserInput, useCreateUserMutation, useUpdateUserMutation, useRoleListQuery, useCohortListQuery } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { SelectElement, CheckboxElement, DatePickerElement, RadioButtonGroup, TextFieldElement } from 'react-hook-form-mui';
+import { SelectElement, DatePickerElement, RadioButtonGroup, TextFieldElement } from 'react-hook-form-mui';
+import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { useCountries } from 'lib/data/use-countries';
+import { SubmitButton } from './SubmitButton';
 
 type FormProps = Pick<UserInput, 'uLogin' | 'uJmeno' | 'uPrijmeni' | 'uNarozeni'
   | 'uRodneCislo' | 'uPohlavi' | 'uEmail' | 'uTelefon' | 'uStreet' |
@@ -25,7 +27,7 @@ export const UserForm: React.FC<{
   const { data: cohorts } = useCohortListQuery();
   const { data: roles } = useRoleListQuery();
 
-  const { control, handleSubmit } = useForm<FormProps>({
+  const { control, handleSubmit, formState } = useForm<FormProps>({
     defaultValues: {
       uJmeno: data?.uJmeno,
       uPrijmeni: data?.uPrijmeni,
@@ -191,7 +193,7 @@ export const UserForm: React.FC<{
       </Grid>
 
       <Grid item xs={12}>
-        <Button fullWidth variant="contained" type="submit" color="primary" disabled={onSubmit.loading}>Uložit</Button>
+        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
       </Grid>
     </Grid >
   );

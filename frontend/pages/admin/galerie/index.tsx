@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Checkbox } from '@mui/material';
+import { Checkbox } from 'components/Checkbox';
 import { Button } from 'components/Button';
 import { useDeleteGalleryDirMutation, useGalleryDirListQuery, useToggleGalleryDirVisibleMutation } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';

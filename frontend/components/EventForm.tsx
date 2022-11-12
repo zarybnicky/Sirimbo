@@ -1,10 +1,12 @@
-import { Button, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import { EventFragment, AkceInput, useCreateEventMutation, useUpdateEventMutation } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { CheckboxElement, DatePickerElement, TextFieldElement } from 'react-hook-form-mui';
+import { DatePickerElement, TextFieldElement } from 'react-hook-form-mui';
+import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
+import { SubmitButton } from './SubmitButton';
 
 type FormProps = Pick<AkceInput, 'aJmeno' | 'aKde' | 'aInfo' | 'aOd' | 'aDo' |
   'aKapacita' | 'aVisible' | 'aLock'>;
@@ -16,7 +18,7 @@ export const EventForm: React.FC<{
   const { mutateAsync: doCreate } = useCreateEventMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateEventMutation({ onSuccess });
 
-  const { control, handleSubmit } = useForm<FormProps>({
+  const { control, handleSubmit, formState } = useForm<FormProps>({
     defaultValues: {
       aJmeno: data?.aJmeno,
       aKde: data?.aKde,
@@ -65,7 +67,7 @@ export const EventForm: React.FC<{
         <CheckboxElement control={control} name="aLock" value="1" label="Uzamčená" />
       </Grid>
       <Grid item xs={12}>
-        <Button fullWidth variant="contained" type="submit" color="primary" disabled={onSubmit.loading}>Uložit</Button>
+        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
       </Grid>
     </Grid>
   );

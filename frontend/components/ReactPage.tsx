@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Box } from '@mui/material';
 import type { CellPlugin, EditorProps, BottomToolbarProps } from '@react-page/editor';
 import Editor, { BottomToolbar } from '@react-page/editor';
 import image from '@react-page/plugins-image';

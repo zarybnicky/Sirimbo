@@ -1,4 +1,4 @@
-import { Alert, Container } from "@mui/material";
+import { Alert } from "@mui/material";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
@@ -64,6 +64,6 @@ export default function ErrorPage() {
 
         </>}
       </Alert>
-    </Container>
+    </div>
   </>;
 }

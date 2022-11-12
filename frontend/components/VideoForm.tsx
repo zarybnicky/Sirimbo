@@ -1,4 +1,4 @@
-import { Button, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import { VideoFragment, VideoInput, useCreateVideoMutation, useUpdateVideoMutation } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';

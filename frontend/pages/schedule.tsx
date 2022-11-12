@@ -88,8 +88,8 @@ export default function SchedulePage() {
             {item.userByRTrener && perms.canEditSchedule(item) && <Dropdown
               button={<img alt="Upravit" width="16" src="/style/icon-gear.png" />}
               options={[
-                { title: "Upravit", href: "`/admin/rozpis/edit/${item.rId}`" },
-                { title: "Upravit rezervace", href: "`/admin/rozpis/detail/${item.rId}`" },
+                { title: "Upravit", href: `/admin/rozpis/edit/${item.rId}` },
+                { title: "Upravit rezervace", href: `/admin/rozpis/detail/${item.rId}` },
               ]}
             />}
           </div>
@@ -132,8 +132,8 @@ export default function SchedulePage() {
             {perms.canEditReservation(item) && <Dropdown
               button={<img alt="Upravit" width="16" src="/style/icon-gear.png" />}
               options={[
-                { title: "Upravit", href: "`/admin/nabidka/edit/${item.nId}`" },
-                { title: "Upravit rezervace", href: "`/admin/nabidka/detail/${item.nId}`" },
+                { title: "Upravit", href: `/admin/nabidka/edit/${item.nId}` },
+                { title: "Upravit rezervace", href: `/admin/nabidka/detail/${item.nId}` },
               ]}
             />}
           </div>

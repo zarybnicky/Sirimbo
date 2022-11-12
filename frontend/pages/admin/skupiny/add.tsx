@@ -1,4 +1,3 @@
-import { Container } from "@mui/material";
 import { CohortForm } from "components/CohortForm";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";

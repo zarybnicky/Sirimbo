@@ -1,10 +1,12 @@
-import { Button, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import { AnnouncementFragment, UpozorneniInput, useCreateAnnouncementMutation, useUpdateAnnouncementMutation } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { CheckboxElement, TextFieldElement } from 'react-hook-form-mui';
+import { TextFieldElement } from 'react-hook-form-mui';
+import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
+import { SubmitButton } from './SubmitButton';
 
 type FormProps = Pick<UpozorneniInput, 'upNadpis' | 'upText' | 'upLock'>;
 
@@ -15,7 +17,7 @@ export const AnnouncementForm: React.FC<{
   const { mutateAsync: doCreate } = useCreateAnnouncementMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateAnnouncementMutation({ onSuccess });
 
-  const { control, handleSubmit } = useForm<FormProps>({
+  const { control, handleSubmit, formState } = useForm<FormProps>({
     defaultValues: {
       upNadpis: data?.upNadpis,
       upText: data?.upText,
@@ -44,7 +46,7 @@ export const AnnouncementForm: React.FC<{
         <CheckboxElement control={control} name="upLock" value="1" label="Uzamčená" />
       </Grid>
       <Grid item xs={12}>
-        <Button fullWidth variant="contained" type="submit" color="primary" disabled={onSubmit.loading}>Uložit</Button>
+        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
       </Grid>
     </Grid>
   );

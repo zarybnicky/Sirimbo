@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { Button, Typography, Card, CardMedia, CardContent, CardActionArea, CardActions } from '@mui/material';
+import { Typography, Card, CardMedia, CardContent, CardActionArea, CardActions } from '@mui/material';
 import { Article } from 'lib/data/use-articles';
 import { NextLinkComposed } from 'components/Link';
+import Link from 'next/link';
 
 export const ArticleCard = ({ item: x }: { item: Article }) => {
   return <Card elevation={3} sx={{
@@ -12,8 +13,7 @@ export const ArticleCard = ({ item: x }: { item: Article }) => {
     <CardActionArea component={NextLinkComposed} href={x.href} style={{ flexGrow: 1 }}>
       <CardMedia component="img" height={240} image={x.img} title={x.header} />
       <CardContent>
-        <Typography className="relative text-red-500 after:bg-red-500 font-bold" gutterBottom variant="subtitle1" component="h3" sx={{
-          marginBottom: '15px',
+        <Typography className="mb-4 relative text-red-500 after:bg-red-500 font-bold" gutterBottom variant="subtitle1" component="h3" sx={{
           '&::after': {
             content: '""',
             position: 'absolute',
@@ -28,13 +28,10 @@ export const ArticleCard = ({ item: x }: { item: Article }) => {
       </CardContent>
     </CardActionArea>
 
-    <CardActions sx={{
-      justifyContent: 'center',
-      paddingBottom: '2px',
-    }}>
-      <Button size="large" variant="contained" color="primary" component={NextLinkComposed} href={x.href}>
-        Více zde ᐳ
-      </Button>
+    <CardActions className="justify-center pb-1">
+      <Link href={x.href} passHref>
+        <a className="button button-red button-lg">Více zde ᐳ</a>
+      </Link>
     </CardActions>
   </Card>;
 };
