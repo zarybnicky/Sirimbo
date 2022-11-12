@@ -2,7 +2,8 @@ import { Grid } from '@mui/material';
 import { ScheduleFragment, RozpiInput, useCreateScheduleMutation, useUpdateScheduleMutation, useTrainerListQuery } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { DatePickerElement, SelectElement, TextFieldElement } from 'react-hook-form-mui';
+import { DatePickerElement, SelectElement } from 'react-hook-form-mui';
+import { TextFieldElement } from 'components/TextField';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
@@ -47,7 +48,7 @@ export const ScheduleForm: React.FC<{
         />
       </Grid>
       <Grid item xs={12}>
-        <TextFieldElement fullWidth control={control} name="rKde" label="Místo" required />
+        <TextFieldElement control={control} name="rKde" label="Místo" required />
       </Grid>
       <Grid item xs={12}>
         <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Datum" name="rDatum" required />

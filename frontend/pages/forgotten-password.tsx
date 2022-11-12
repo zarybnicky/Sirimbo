@@ -8,7 +8,7 @@ import { useSnackbar } from "notistack";
 import React from "react";
 import { useAsyncCallback } from "react-async-hook";
 import { useForm } from "react-hook-form";
-import { TextFieldElement } from "react-hook-form-mui";
+import { TextFieldElement } from "components/TextField";
 
 export default function ForgottenPassword() {
   useRequireUserLoggedOut();
@@ -34,8 +34,8 @@ export default function ForgottenPassword() {
         </Typography>
 
         <div className="flex flex-col gap-4">
-          <TextFieldElement fullWidth control={control} name="login" label="Přihlašovací jméno" autoComplete="login" required />
-          <TextFieldElement fullWidth control={control} type="email" name="email" label="E-mail" autoComplete="email" required />
+          <TextFieldElement control={control} name="login" label="Přihlašovací jméno" autoComplete="login" required />
+          <TextFieldElement control={control} type="email" name="email" label="E-mail" autoComplete="email" required />
           <ErrorBox grid error={onSubmit.error} default="Nepodařilo se změnit heslo, prosím kontaktujte administrátora." />
         </div>
       </CardContent>

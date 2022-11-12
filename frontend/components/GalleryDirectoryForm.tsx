@@ -2,7 +2,8 @@ import { Grid } from '@mui/material';
 import { GalleryDirFragment, GalerieDirInput, useUpdateGalleryDirMutation, useGalleryDirListQuery, useCreateGalleryDirMutation } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { SelectElement, TextFieldElement } from 'react-hook-form-mui';
+import { TextFieldElement } from 'components/TextField';
+import { SelectElement } from 'react-hook-form-mui';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
@@ -41,7 +42,7 @@ export const GalleryDirForm: React.FC<{
     <Grid container spacing={1} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox grid error={onSubmit.error} />
       <Grid item xs={12}>
-        <TextFieldElement fullWidth control={control} name="gdName" label="Název" required />
+        <TextFieldElement control={control} name="gdName" label="Název" required />
       </Grid>
       <Grid item xs={12}>
         <SelectElement

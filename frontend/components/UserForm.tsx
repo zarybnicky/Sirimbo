@@ -2,7 +2,8 @@ import { Grid, Typography } from '@mui/material';
 import { UserFragment, UserInput, useCreateUserMutation, useUpdateUserMutation, useRoleListQuery, useCohortListQuery } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { SelectElement, DatePickerElement, RadioButtonGroup, TextFieldElement } from 'react-hook-form-mui';
+import { SelectElement, DatePickerElement, RadioButtonGroup } from 'react-hook-form-mui';
+import { TextAreaElement, TextFieldElement } from 'components/TextField';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
@@ -73,19 +74,19 @@ export const UserForm: React.FC<{
       <ErrorBox grid error={onSubmit.error} />
       {!data && <>
         <Grid item xs={12} md={6}>
-          <TextFieldElement fullWidth control={control} name="uLogin"
+          <TextFieldElement control={control} name="uLogin"
             label="Uživatelské jméno" required />
         </Grid>
         <Grid item xs={12} md={6}>
-          <TextFieldElement fullWidth control={control} type="password" name="uPass" label="Heslo" required />
+          <TextFieldElement control={control} type="password" name="uPass" label="Heslo" required />
         </Grid>
       </>}
 
       <Grid item xs={12} md={6}>
-        <TextFieldElement fullWidth control={control} name="uJmeno" label="Jméno" required />
+        <TextFieldElement control={control} name="uJmeno" label="Jméno" required />
       </Grid>
       <Grid item xs={12} md={6}>
-        <TextFieldElement fullWidth control={control} name="uPrijmeni" label="Příjmení" required />
+        <TextFieldElement control={control} name="uPrijmeni" label="Příjmení" required />
       </Grid>
 
       <Grid item xs={12} md={6}>
@@ -93,7 +94,7 @@ export const UserForm: React.FC<{
           label="Datum narození" name="uNarozeni" required />
       </Grid>
       <Grid item xs={12} md={6}>
-        <TextFieldElement fullWidth control={control} name="uRodneCislo"
+        <TextFieldElement control={control} name="uRodneCislo"
           label="Rodné číslo" required placeholder="1111119999"
           validation={{
             pattern: {
@@ -114,10 +115,10 @@ export const UserForm: React.FC<{
       </Grid>
 
       <Grid item xs={12} md={6}>
-        <TextFieldElement fullWidth control={control} type="email" name="uEmail" label="E-mail" required />
+        <TextFieldElement control={control} type="email" name="uEmail" label="E-mail" required />
       </Grid>
       <Grid item xs={12} md={6}>
-        <TextFieldElement fullWidth control={control} type="tel" name="uTelefon" label="Telefon" required />
+        <TextFieldElement control={control} type="tel" name="uTelefon" label="Telefon" required />
       </Grid>
 
       <Grid item xs={12} className="mt-4">
@@ -125,23 +126,23 @@ export const UserForm: React.FC<{
       </Grid>
 
       <Grid item xs={12} md={6}>
-        <TextFieldElement fullWidth control={control} name="uStreet" label="Ulice" required />
+        <TextFieldElement control={control} name="uStreet" label="Ulice" required />
       </Grid>
       <Grid item xs={12} md={3}>
-        <TextFieldElement fullWidth control={control} name="uConscriptionNumber" label="Č.popisné" />
+        <TextFieldElement control={control} name="uConscriptionNumber" label="Č.popisné" />
       </Grid>
       <Grid item xs={12} md={3}>
-        <TextFieldElement fullWidth control={control} name="uOrientationNumber" label="Č.orientační" />
+        <TextFieldElement control={control} name="uOrientationNumber" label="Č.orientační" />
       </Grid>
 
       <Grid item xs={12} md={6}>
-        <TextFieldElement fullWidth control={control} name="uCity" label="Ulice" required />
+        <TextFieldElement control={control} name="uCity" label="Ulice" required />
       </Grid>
       <Grid item xs={12} md={6}>
-        <TextFieldElement fullWidth control={control} name="uDistrict" label="Č.popisné" />
+        <TextFieldElement control={control} name="uDistrict" label="Č.popisné" />
       </Grid>
       <Grid item xs={12} md={6}>
-        <TextFieldElement fullWidth control={control} name="uPostalCode" label="Č.orientační" />
+        <TextFieldElement control={control} name="uPostalCode" label="Č.orientační" />
       </Grid>
 
       <Grid item xs={12}>
@@ -163,7 +164,7 @@ export const UserForm: React.FC<{
       </Grid>
 
       <Grid item xs={12}>
-        <TextFieldElement fullWidth control={control} name="uPoznamky" label="Poznámka" rows={3} multiline required />
+        <TextAreaElement control={control} name="uPoznamky" label="Poznámka" rows={3} required />
       </Grid>
 
       <Grid item xs={12}>

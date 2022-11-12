@@ -4,7 +4,7 @@ import { NextLinkComposed } from 'components/Link';
 import { useAuth } from 'lib/data/use-auth';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
-import { TextFieldElement } from 'react-hook-form-mui';
+import { TextFieldElement } from 'components/TextField';
 import { useRequireUserLoggedOut } from 'lib/route-guards';
 import { ErrorBox } from 'components/ErrorBox';
 import { useAsyncCallback } from 'react-async-hook';

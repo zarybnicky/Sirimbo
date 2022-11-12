@@ -3,7 +3,7 @@ import type { CellPlugin } from '@react-page/editor';
 import { Card, CardContent, CardActions, Grid, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
-import { TextFieldElement, } from 'react-hook-form-mui';
+import { TextFieldElement } from 'components/TextField';
 import { CheckboxElement } from 'components/Checkbox';
 import { CrmCohort, useSubmitProspectFormMutation } from 'lib/graphql';
 import { ErrorBox } from './ErrorBox';

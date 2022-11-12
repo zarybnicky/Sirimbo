@@ -2,7 +2,8 @@ import { Grid } from '@mui/material';
 import { GalleryPhotoFragment, GalerieFotoInput, useUpdateGalleryPhotoMutation, useGalleryDirListQuery } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { SelectElement, TextFieldElement } from 'react-hook-form-mui';
+import { SelectElement } from 'react-hook-form-mui';
+import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
@@ -32,7 +33,7 @@ export const GalleryPhotoForm: React.FC<{
     <Grid container spacing={1} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox grid error={onSubmit.error} />
       <Grid item xs={12}>
-        <TextFieldElement fullWidth control={control} name="gfName" label="Název" required />
+        <TextFieldElement control={control} name="gfName" label="Název" required />
       </Grid>
       <Grid item xs={12}>
         <SelectElement

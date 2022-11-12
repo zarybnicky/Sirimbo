@@ -2,7 +2,8 @@ import { Grid } from '@mui/material';
 import { PaymentItemFragment, PlatbyItemInput, useCreatePaymentItemMutation, usePaymentCategoryListQuery, useUpdatePaymentItemMutation, useUserListQuery } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { DatePickerElement, SelectElement, TextFieldElement } from 'react-hook-form-mui';
+import { DatePickerElement, SelectElement } from 'react-hook-form-mui';
+import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
@@ -48,7 +49,7 @@ export const PaymentItemForm: React.FC<{
         <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Datum" name="piDate" required />
       </Grid>
       <Grid item xs={12}>
-        <TextFieldElement fullWidth control={control} name="piAmount" label="Částka (Kč)" required />
+        <TextFieldElement control={control} name="piAmount" label="Částka (Kč)" required />
       </Grid>
       <Grid item xs={12}>
         <SelectElement
@@ -67,7 +68,7 @@ export const PaymentItemForm: React.FC<{
         />
       </Grid>
       <Grid item xs={12}>
-        <TextFieldElement fullWidth control={control} name="piPrefix" label="Prefix (rok)" required />
+        <TextFieldElement control={control} name="piPrefix" label="Prefix (rok)" required />
       </Grid>
       <Grid item xs={12}>
         <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />

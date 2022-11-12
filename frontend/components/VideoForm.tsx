@@ -2,7 +2,7 @@ import { Grid } from '@mui/material';
 import { VideoFragment, VideoInput, useCreateVideoMutation, useUpdateVideoMutation } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { TextFieldElement } from 'react-hook-form-mui';
+import { TextFieldElement } from './TextField';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
@@ -43,19 +43,19 @@ export const VideoForm: React.FC<{
     <Grid container spacing={1.5} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox grid error={onSubmit.error} />
       <Grid item xs={12}>
-        <TextFieldElement fullWidth control={control} name="vUri" required label={<>
+        <TextFieldElement control={control} name="vUri" required label={<>
           ID videa (např. <code>https://www.youtube.com/watch?v=<b>lt6h7Fgxohs</b></code>)<br />
           Ostatní pole se později zjistí z YouTube, pokud zůstanou prázdná.
         </>} />
       </Grid>
       <Grid item xs={12}>
-        <TextFieldElement fullWidth control={control} name="vTitle" label="Jméno" required />
+        <TextFieldElement control={control} name="vTitle" label="Jméno" required />
       </Grid>
       <Grid item xs={12}>
-        <TextFieldElement fullWidth control={control} name="vAuthor" label="Autor/kanál" required />
+        <TextFieldElement control={control} name="vAuthor" label="Autor/kanál" required />
       </Grid>
       <Grid item xs={12}>
-        <TextFieldElement fullWidth control={control} name="vPlaylist" label="ID playlistu (nepovinné)" required />
+        <TextFieldElement control={control} name="vPlaylist" label="ID playlistu (nepovinné)" required />
       </Grid>
       <Grid item xs={12}>
         <SubmitButton disabled={!formState.isValid} loading={onSubmit.loading} />

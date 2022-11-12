@@ -1,8 +1,8 @@
-import { TextField, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import { CohortFragment, SkupinyInput, useCreateCohortMutation, useUpdateCohortMutation } from 'lib/graphql';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { TextFieldElement } from 'react-hook-form-mui';
+import { TextAreaElement, TextField, TextFieldElement } from 'components/TextField';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
@@ -40,10 +40,10 @@ export const CohortForm: React.FC<{
     <Grid container spacing={1.5} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox grid error={onSubmit.error} />
       <Grid item xs={12}>
-        <TextFieldElement fullWidth control={control} name="sName" label="Název" required />
+        <TextFieldElement control={control} name="sName" label="Název" required />
       </Grid>
       <Grid item xs={12}>
-        <TextFieldElement fullWidth control={control} name="sLocation" label="Město/místo" required />
+        <TextFieldElement control={control} name="sLocation" label="Město/místo" required />
       </Grid>
       <Grid item xs={12}>
         <CheckboxElement control={control} name="sVisible" value="1" label="Viditelná pro registraci" />
@@ -58,7 +58,7 @@ export const CohortForm: React.FC<{
         />
       </Grid>
       <Grid item xs={12}>
-        <TextFieldElement fullWidth control={control} name="sDescription" label="Popis" rows={3} multiline required />
+        <TextAreaElement control={control} name="sDescription" label="Popis" rows={3} required />
       </Grid>
       <Grid item xs={12}>
         <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Card, Grid, CardContent, CardActions, Typography } from '@mui/material';
-import { useForm, SelectElement, TextFieldElement, DatePickerElement, RadioButtonGroup } from 'react-hook-form-mui';
+import { useForm, SelectElement, DatePickerElement, RadioButtonGroup } from 'react-hook-form-mui';
+import { TextFieldElement } from 'components/TextField';
 import { useCountries } from 'lib/data/use-countries';
 import format from 'date-fns/format';
 import { useSnackbar } from 'notistack';
@@ -53,13 +54,13 @@ export default function RegisterPage() {
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <TextFieldElement fullWidth
+              <TextFieldElement
                 control={control} label="Přihlašovací jméno" name="username" autoComplete="username" required
                 helperText="Pouze písmena bez diakritiky, číslice a podtržítka, 3 - 20 znaků"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextFieldElement fullWidth
+              <TextFieldElement
                 control={control} label="Heslo" name="password" type="password" autoComplete="new-password" required
                 helperText="Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků"
               />
@@ -70,16 +71,16 @@ export default function RegisterPage() {
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <TextFieldElement fullWidth control={control} label="Jméno" name="jmeno" autoComplete="given-name" required />
+              <TextFieldElement control={control} label="Jméno" name="jmeno" autoComplete="given-name" required />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextFieldElement fullWidth control={control} label="Příjmení" name="prijmeni" autoComplete="family-name" required />
+              <TextFieldElement control={control} label="Příjmení" name="prijmeni" autoComplete="family-name" required />
             </Grid>
             <Grid item xs={12} sm={6}>
               <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Datum narození" name="narozeni" required />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextFieldElement fullWidth control={control} label="Rodné číslo" name="rodneCislo" required validation={{
+              <TextFieldElement control={control} label="Rodné číslo" name="rodneCislo" required validation={{
                 pattern: {
                   value: /[0-9]{9,10}/,
                   message: 'Neplatné rodné číslo',
@@ -106,10 +107,10 @@ export default function RegisterPage() {
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <TextFieldElement fullWidth control={control} label="E-mail" name="email" type="email" required />
+              <TextFieldElement control={control} label="E-mail" name="email" type="email" required />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextFieldElement fullWidth control={control} label="Telefon" name="telefon" required />
+              <TextFieldElement control={control} label="Telefon" name="telefon" required />
             </Grid>
 
             <Grid item xs={12} className="mt-4">
@@ -117,22 +118,22 @@ export default function RegisterPage() {
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <TextFieldElement fullWidth control={control} label="Ulice" name="street" autoComplete="address-line1" required />
+              <TextFieldElement control={control} label="Ulice" name="street" autoComplete="address-line1" required />
             </Grid>
             <Grid item xs={6} sm={3}>
-              <TextFieldElement fullWidth control={control} type="number" label="Č. popisné" name="popisne" />
+              <TextFieldElement control={control} type="number" label="Č. popisné" name="popisne" />
             </Grid>
             <Grid item xs={6} sm={3}>
               <TextFieldElement control={control} type="number" label="Č. orientační" name="orientacni" required />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextFieldElement fullWidth control={control} label="Město" name="city" autoComplete="address-level2" required />
+              <TextFieldElement control={control} label="Město" name="city" autoComplete="address-level2" required />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextFieldElement fullWidth control={control} label="Část města" name="district" autoComplete="address-level3" />
+              <TextFieldElement control={control} label="Část města" name="district" autoComplete="address-level3" />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextFieldElement fullWidth control={control} label="PSČ" name="postal" autoComplete="postal-code" required />
+              <TextFieldElement control={control} label="PSČ" name="postal" autoComplete="postal-code" required />
             </Grid>
 
             <Grid item xs={12} className="mt-4">
@@ -156,10 +157,10 @@ export default function RegisterPage() {
                 ]}
               />
               {watch('poznamky') === 'parent' && (
-                <TextFieldElement fullWidth control={control} label="Jméno tanečníka" name="dancer-name" />
+                <TextFieldElement control={control} label="Jméno tanečníka" name="dancer-name" />
               )}
               {watch('poznamky') === 'other' && (
-                <TextFieldElement fullWidth control={control} label="Popište svůj vztah ke klubu" name="other" placeholder="vztah ke klubu" />
+                <TextFieldElement control={control} label="Popište svůj vztah ke klubu" name="other" placeholder="vztah ke klubu" />
               )}
             </Grid>
 

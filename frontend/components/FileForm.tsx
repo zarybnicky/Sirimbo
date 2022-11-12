@@ -2,7 +2,7 @@ import { Grid } from '@mui/material';
 import { FileFragment, DokumentyInput, useUpdateFileMutation } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { TextFieldElement } from 'react-hook-form-mui';
+import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
@@ -29,7 +29,7 @@ export const FileForm: React.FC<{
     <Grid container spacing={1} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox grid error={onSubmit.error} />
       <Grid item xs={12}>
-        <TextFieldElement fullWidth control={control} name="dName" label="Název" required />
+        <TextFieldElement control={control} name="dName" label="Název" required />
       </Grid>
 
       <Grid item xs={12}>

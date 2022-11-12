@@ -5,7 +5,8 @@ import { useAsyncCallback } from 'react-async-hook'
 import { Slider, Typography, Grid } from "@mui/material";
 import { allowedPermissions, defaultPermissions, PermissionKey, permissionLabels, PermissionLevel } from "lib/data/use-permissions";
 import { keysOf } from "lib/keys-of";
-import { Controller, TextFieldElement } from "react-hook-form-mui";
+import { TextAreaElement, TextFieldElement } from 'components/TextField';
+import { Controller } from "react-hook-form-mui";
 import { SubmitButton } from './SubmitButton';
 
 const marks = [
@@ -45,10 +46,10 @@ export const RoleForm: React.FC<{
   return (
     <Grid container spacing={1.5} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
       <Grid item xs={12}>
-        <TextFieldElement control={control} fullWidth name="peName" label="Jméno" required />
+        <TextFieldElement control={control} name="peName" label="Jméno" required />
       </Grid>
       <Grid item xs={12}>
-        <TextFieldElement control={control} fullWidth name="peDescription" label="Popis" multiline rows={3} required />
+        <TextAreaElement control={control} name="peDescription" label="Popis" rows={3} required />
       </Grid>
       {realPermissionKeys.map(key => <React.Fragment key={key}>
         <Grid item xs={12} md={3}>

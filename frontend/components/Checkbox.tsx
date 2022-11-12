@@ -51,9 +51,7 @@ export function CheckboxElement<TFieldValues extends FieldValues>({
       control={control}
       render={({ field: { value, onChange }, fieldState: { error } }) => {
         return <Checkbox
-          name={name} type="checkbox" {...props}
-          value={value} checked={!!value}
-          error={error}
+          name={name} value={value} checked={!!value} error={error} {...props}
           onChange={() => onChange(!value)}
         />
       }}
