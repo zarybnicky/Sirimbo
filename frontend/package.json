@@ -86,6 +86,7 @@
     "react-hook-form-mui": "^5.7.1",
     "react-leaflet": "^3.2.2",
     "react-lightbox-pack": "^0.1.5",
+    "react-nice-dates": "^3.1.0",
     "react-paginate": "^7.1.3",
     "react-ssr-prepass": "^1.5.0",
     "react-swipeable": "^6.2.0",
@@ -93,6 +94,7 @@
     "slate": "^0.72.0",
     "slate-react": "^0.72.0",
     "tailwindcss": "^3.1.8",
+    "tailwindcss-opentype": "^1.1.0",
     "typescript": "4.8.2",
     "use-deep-compare-effect": "^1.8.1",
     "webpack": "^5.74.0"

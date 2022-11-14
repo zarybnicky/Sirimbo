@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Card, CardContent, CardActions, Grid, Typography, Button } from '@mui/material';
-import { NextLinkComposed } from 'components/Link';
+import { Card, CardContent, CardActions, Grid, Typography } from '@mui/material';
+import Link from 'next/link';
 import { useAuth } from 'lib/data/use-auth';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
@@ -18,7 +18,7 @@ type FormProps = {
 export default function LoginPage() {
   useRequireUserLoggedOut();
   const { signIn } = useAuth();
-  const router = useRouter()
+  const router = useRouter();
   const { control, handleSubmit, formState } = useForm<FormProps>();
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
@@ -50,8 +50,16 @@ export default function LoginPage() {
           </SubmitButton>
         </CardActions>
         <Grid container justifyContent="space-between" style={{ padding: '0 1rem 1rem' }}>
-          <Button component={NextLinkComposed} href="/register" size="small">Registrovat se</Button>
-          <Button component={NextLinkComposed} href="/forgotten-password" size="small">Zapomněli jste heslo?</Button>
+          <Link href="/register" passHref>
+            <a className="button button-red button-sm button-text flex gap-2 items-center">
+              Registrovat se
+            </a>
+          </Link>
+          <Link href="/forgotten-password" passHref>
+            <a className="button button-red button-sm button-text flex gap-2 items-center">
+              Zapomněli jste heslo?
+            </a>
+          </Link>
         </Grid>
       </Card>
     </div>

@@ -26,15 +26,13 @@ export const AuthButton = ({ }) => {
   }
   return <PopupState variant="popover" popupId="demoMenu">
     {(popupState) => <>
-      <Button
-        {...bindTrigger(popupState)}
-      >
+      <button className="flex normal-case button button-text gap-2 items-center" {...bindTrigger(popupState)}>
         <AccountCircle />
-        <div style={{ display: 'flex', alignItems: 'start', lineHeight: 1.3, flexDirection: 'column' }}>
-          <span style={{ textDecoration: 'underline' }}>Přihlášen</span>
-          <span style={{ textTransform: 'none' }}>{auth.user?.uJmeno} {auth.user?.uPrijmeni}</span>
+        <div className="flex flex-col items-start" style={{ lineHeight: 1.3 }}>
+          <span className="text-base small-caps underline">Přihlášen</span>
+          <span className="">{auth.user?.uJmeno} {auth.user?.uPrijmeni}</span>
         </div>
-      </Button>
+      </button>
       <Menu
         {...bindMenu(popupState)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}

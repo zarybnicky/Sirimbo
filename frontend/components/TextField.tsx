@@ -27,7 +27,7 @@ export function TextArea({ name, label, error, helperText, parseError, required,
       <div className="mt-1 relative rounded-md shadow-sm">
         <textarea
           id={name} name={name} {...props}
-          className="shadow-sm focus:ring-red-500 focus:border-red-500 block w-full sm:text-sm border-gray-300 rounded-md"
+          className="text-slate-900 shadow-sm focus:ring-red-500 focus:border-red-500 block w-full sm:text-sm border-red-400 rounded-md"
         />
         {error && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -48,20 +48,20 @@ export type TextFieldElementProps<T extends FieldValues> = Omit<React.HTMLProps<
   control?: Control<T>
 } & Extras;
 
-export function TextField({ name, label, error, helperText, parseError, required, ...props }: {
+export function TextField({ name, type = "text", label, error, helperText, parseError, required, ...props }: {
   error?: FieldError;
 } & Extras & Omit<React.HTMLProps<HTMLInputElement>, 'label'>) {
   const parsedHelperText = !error ? helperText : parseError ? parseError(error) : error.message;
 
   return (
     <div>
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+      <label htmlFor={name} className="block text-sm font-medium text-slate-700 mt-1 mb-1">
         {label}
       </label>
-      <div className="mt-1 relative rounded-md shadow-sm">
+      <div className="relative rounded-md shadow-sm">
         <input
-          id={name} name={name} {...props}
-          className="block w-full pr-10 border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
+          id={name} name={name} type={type} {...props}
+          className="block w-full pr-10 border-red-400 text-slate-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
         />
         {error && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -93,12 +93,10 @@ export function TextFieldElement<TFieldValues extends FieldValues>({
     name, control, rules: validation
   });
 
-  return (
-    <TextField
-      name={name} value={value} error={error} {...props}
-      onChange={() => onChange(!value)}
-    />
-  );
+  return <TextField
+    name={name} value={value} error={error} {...props}
+    onChange={(e) => onChange(e.currentTarget.value)}
+  />;
 };
 
 export function TextAreaElement<TFieldValues extends FieldValues>({
@@ -111,10 +109,8 @@ export function TextAreaElement<TFieldValues extends FieldValues>({
     name, control, rules: validation
   });
 
-  return (
-    <TextArea
-      name={name} value={value} error={error} {...props}
-      onChange={() => onChange(!value)}
-    />
-  );
+  return <TextArea
+    name={name} value={value} error={error} {...props}
+    onChange={(e) => onChange(e.currentTarget.value)}
+  />;
 };

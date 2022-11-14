@@ -1,9 +1,10 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { Pagination, IconButton, Card, CardContent, Typography } from '@mui/material';
+import { Pagination, Card, CardContent, Typography } from '@mui/material';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useAnnouncementListQuery } from 'lib/graphql';
+import { HtmlView } from './HtmlView';
 
 export function AnnouncementList() {
   const [limit] = React.useState(3);
@@ -20,15 +21,25 @@ export function AnnouncementList() {
 
   return <>
     <div className="flex items-center justify-center">
-      {hasPrev ? <IconButton onClick={() => setPage(page - 1)}><NavigateBeforeIcon /></IconButton> : null}
+      {hasPrev && (
+        <button className="button button-icon" onClick={() => setPage(page - 1)}>
+          <NavigateBeforeIcon />
+        </button>
+      )}
+
       <Typography color="textSecondary" component="span">
         {nodes.length > 0 ? format(new Date(nodes[0]!.upTimestampAdd), 'd. M. y') : ''}
         {' - '}
         {nodes.length > 0 ? format(new Date(nodes[nodes.length - 1]!.upTimestampAdd), 'd. M. y') : ''}
       </Typography>
-      {hasNext ? <IconButton onClick={() => setPage(page + 1)}><NavigateNextIcon /></IconButton> : null}
+
+      {hasNext && (
+        <button className="button button-icon" onClick={() => setPage(page + 1)}>
+          <NavigateNextIcon />
+        </button>
+      )}
     </div>
-    {nodes.map((a) => <Card key={a.upId} style={{ marginBottom: '1rem' }}>
+    {nodes.map((a) => <Card key={a.upId} className="mb-4">
       <CardContent>
         <Typography color="textSecondary">
           {format(new Date(a.upTimestampAdd), 'd. M. y')}
@@ -39,7 +50,9 @@ export function AnnouncementList() {
         <Typography color="textSecondary">
           {a.userByUpKdo?.uJmeno} {a.userByUpKdo?.uPrijmeni}
         </Typography>
-        <div dangerouslySetInnerHTML={{ __html: a.upText }}></div>
+
+        <HtmlView content={a.upText} />
+
         {a.upozorneniSkupiniesByUpsIdRodic?.nodes?.length <= 0 ? null : <div>
           {a.upozorneniSkupiniesByUpsIdRodic.nodes.map((g) =>
             <div className="w-3 h-3"

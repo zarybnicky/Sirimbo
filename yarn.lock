@@ -8820,9 +8820,9 @@ react-hook-form-mui@^5.7.1:
   integrity sha512-wWyYVXx6vB2ceYd4TKJKSf3HquoSbWtHVW1MO71OZ22nK3PfWFj130tu8TSm0zJnzPBAlPDglZDvBVryG43bDw==
 
 react-hook-form@^7.35.0:
-  version "7.35.0"
-  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.35.0.tgz#b133de48fc84b1e62f9277ba79dfbacd9bb13dd3"
-  integrity sha512-9CYdOed+Itbiu5VMVxW0PK9mBR3f0gDGJcZEyUSm0eJbDymQ913TRs2gHcQZZmfTC+rtxyDFRuelMxx/+xwMcw==
+  version "7.39.3"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.39.3.tgz#d5e66dae44187606992ba01f26460cca2565ea58"
+  integrity sha512-H/vwk1vBf+TiXuyW6+hWz+zCujiDO6NqHlN5sPE/a+NGKKGK95XTM65DZz3NmEgs2M20Wka+g4uv4VD367wDBA==
 
 react-is@^16.12.0, react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
@@ -8850,6 +8850,13 @@ react-lightbox-pack@^0.1.5:
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/react-lightbox-pack/-/react-lightbox-pack-0.1.5.tgz#1f7d8c33db9657076ea73be9a0bbec9c920bd333"
   integrity sha512-kAtTwjRbZ/gHB8DDpPrJ8dncrbCEl7gjUvI7S7XqxHSFnSwVLENtncqQhjk1IWBDwMWjraY0BMCVqKgkKLpk8A==
+
+react-nice-dates@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/react-nice-dates/-/react-nice-dates-3.1.0.tgz#1be7dc18397a54a81e6b37bae460a34c058e5a14"
+  integrity sha512-tOsA7tB2E9q+47nZwrk2ncK2rOUublNOWPVnY/N2HFDLO8slexGaAfOTKpej2KzPxCN3gcvOKeE2/9vua2LAjQ==
+  dependencies:
+    classnames "^2.2.6"
 
 react-paginate@^7.1.3:
   version "7.1.5"
@@ -9982,6 +9989,11 @@ symbol-observable@^1.0.4:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.2.0.tgz#c22688aed4eab3cdc2dfeacbb561660560a00804"
   integrity sha512-e900nM8RRtGhlV36KGEU9k65K3mPb1WV70OdjfxlG2EAuM1noi/E/BaW/uMhL7bPEssK8QV57vN3esixjUvcXQ==
+
+tailwindcss-opentype@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/tailwindcss-opentype/-/tailwindcss-opentype-1.1.0.tgz#68aebc6f8a24151167b0a4f372370afe375a3b38"
+  integrity sha512-d/+/oBITS2JX/Nn+20WSfnxQbYNcSHMNrKeBwmgetxf/9Nmi5k1pOae6OJC4WD+5M8jX9Xb8TnLZ2lkp6qv09A==
 
 tailwindcss@^3.1.8:
   version "3.1.8"

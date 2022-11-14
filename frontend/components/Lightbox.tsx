@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { useSwipeable } from 'react-swipeable';
-import { Card, Dialog, Fade, IconButton, Typography } from '@mui/material';
+import { Card, Dialog, Fade, Typography } from '@mui/material';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import { GalleryItem } from 'lib/data/use-gallery';
 import { useRouter } from 'next/router';
+import classNames from 'classnames';
 
 export interface LightboxProps {
   dirHref: string;
@@ -75,28 +76,18 @@ export const Lightbox = ({ dirHref, images, initial }: LightboxProps) => {
           </Fade>
         )
       ))}
-      <IconButton onClick={nextImage} style={{ left: 0 }} className="shadow-lg" sx={{
-        position: 'absolute',
-        top: '50%',
-        transform: 'translateY(-50%)',
-        background: 'rgba(255, 255, 255, 0.5)',
-        '&:hover': {
-          background: 'rgba(255, 255, 255, 0.8)',
-        },
-      }}>
+      <button onClick={nextImage} style={{ left: 0 }} className={classNames(
+        "button button-icon",
+        "absolute top-1/2 bg-white/50 shadow-lg hover:bg-white/80 -translate-y-1/2 transform"
+      )}>
         <ChevronLeft />
-      </IconButton>
-      <IconButton onClick={prevImage} style={{ right: 0 }} className="shadow-lg" sx={{
-        position: 'absolute',
-        top: '50%',
-        transform: 'translateY(-50%)',
-        background: 'rgba(255, 255, 255, 0.5)',
-        '&:hover': {
-          background: 'rgba(255, 255, 255, 0.8)',
-        },
-      }}>
+      </button>
+      <button onClick={prevImage} style={{ right: 0 }} className={classNames(
+        "button button-icon",
+        "absolute top-1/2 bg-white/50 shadow-lg hover:bg-white/80 -translate-y-1/2 transform"
+      )}>
         <ChevronRight />
-      </IconButton>
+      </button>
     </Dialog>
   );
 };

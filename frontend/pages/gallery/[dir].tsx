@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { NextLinkComposed } from 'components/Link';
 import Head from 'next/head';
-import { Grid, Button, Typography } from '@mui/material';
+import Link from 'next/link';
+import { Grid } from '@mui/material';
 import { GalleryCard } from 'components/cards/GalleryCard';
 import { Lightbox } from 'components/Lightbox';
 import { useGallery } from 'lib/data/use-gallery';
@@ -17,15 +17,15 @@ export default function GalleryPage() {
     <Head>
       <title>Galerie | TK Olymp</title>
     </Head>
-    <div className="container mx-auto max-w-5xl" style={{ paddingBottom: '2rem', paddingTop: '5rem' }}>
+    <div className="container mx-auto max-w-5xl pt-12 pb-4">
       {dir?.parentId && (
-        <Button component={NextLinkComposed} href={`/galerie/${dir.parentId}`} color='primary' startIcon={<ArrowUpwardIcon />}>
-          Přejit o složku výš
-        </Button>
+        <Link href={dir.parentId === "1" ? '/gallery' : `/gallery/${dir.parentId}`} passHref>
+          <a className="button button-red button-text flex gap-2 items-center">
+            <ArrowUpwardIcon className="w-4.5 h-4.5" /> Přejit o složku výš
+          </a>
+        </Link>
       )}
-      <Typography gutterBottom variant="h4" component="h2">
-        {!dir?.name || dir.name == 'Hlavní' ? 'Galerie' : dir.name}
-      </Typography>
+      <h2 className="font-lg mb-2">{!dir?.name || dir.name == 'Hlavní' ? 'Galerie' : dir.name}</h2>
       <Grid container spacing={3}>
         {dirs.map((x, i) => (
           <Grid item sm={6} md={3} key={i}>

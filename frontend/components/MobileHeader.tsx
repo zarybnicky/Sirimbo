@@ -86,14 +86,6 @@ export const MobileHeader = ({ }) => {
         maxWidth: '450px',
         width: '85vw',
       }}>
-        <MobileSubmenu item={{ type: 'link', text: 'Domů', href: '/home' }} onClick={() => setOpen(false)} />
-        {sideMenu.length > 0 ? (
-          <MobileSubmenu item={{ type: 'menu', text: 'Pro veřejnost', children: topMenu }} onClick={() => setOpen(false)} />
-        ) : (
-          topMenu.map(x => <MobileSubmenu key={x.text} item={x} onClick={() => setOpen(false)} />)
-        )}
-        <Divider />
-        {sideMenu.map(x => <MobileSubmenu key={x.text} item={x} onClick={() => setOpen(false)} />)}
         {auth.user ? (<>
           <MobileSubmenu item={{ type: 'link', text: 'Profil', href: '/profile' }} onClick={() => setOpen(false)} />
           <MobileSubmenu item={{ type: 'link', text: 'Odhlásit se', href: '/' }} onClick={() => {
@@ -104,6 +96,10 @@ export const MobileHeader = ({ }) => {
         </>) : (
           <MobileSubmenu item={{ type: 'link', text: 'Přihlásit se', href: '/login' }} onClick={() => setOpen(false)} />
         )}
+        {sideMenu.map(x => <MobileSubmenu key={x.text} item={x} onClick={() => setOpen(false)} />)}
+        {auth.user && <Divider />}
+        <MobileSubmenu item={{ type: 'link', text: 'Domů', href: '/home' }} onClick={() => setOpen(false)} />
+        {topMenu.map(x => <MobileSubmenu key={x.text} item={x} onClick={() => setOpen(false)} />)}
       </List>
     </SwipeableDrawer>
   </div>;

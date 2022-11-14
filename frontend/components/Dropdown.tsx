@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Menu, MenuItem } from '@mui/material';
+import { Menu, MenuItem } from '@mui/material';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { NextLinkComposed } from './Link';
 
@@ -13,9 +13,7 @@ export const Dropdown: React.FC<{
 }> = ({ button, options }) => {
   return <PopupState variant="popover" popupId="demoMenu">
     {(popupState) => <>
-      <Button {...bindTrigger(popupState)} color="inherit">
-        {button}
-      </Button>
+      <button {...bindTrigger(popupState)} color="inherit">{button}</button>
       <Menu
         {...bindMenu(popupState)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}

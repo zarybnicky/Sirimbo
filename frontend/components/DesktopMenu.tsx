@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Button, Menu, MenuItem } from '@mui/material';
+import Link from 'next/link';
+import { Menu, MenuItem } from '@mui/material';
 import { PopupState as PopupStateType } from 'material-ui-popup-state/core';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { NestedMenuItem } from "./NestedMenuItem";
@@ -21,43 +22,33 @@ const Submenu = React.forwardRef<any, {
     if (popupState) {
       return <MenuItem component={NextLinkComposed} href={x.href} onClick={popupState.close}>{x.text}</MenuItem>
     } else {
-      return <Button
-        component={NextLinkComposed} href={x.href}
-        className="min-h-[48px] md:min-h-[64px] text-grey-500 font-bold rounded-none transition-colors"
-        sx={[{
-          "&:hover": {
-            color: 'white',
-            borderBottom: '3px solid white',
-          },
-        }, inPath ? {
-          '&:not(:hover)': {
-            color: 'white',
-            borderBottom: '3px solid white',
-          },
-        } : {}]}>{x.text}</Button>;
+      return <Link href={x.href} passHref>
+        <a className={classNames(
+          "flex gap-2 items-center",
+          "min-h-[48px] md:min-h-[64px] text-grey-500 font-bold rounded-none transition-colors",
+          "small-caps",
+          "hover:text-white hover:border-b-3 hover:border-white",
+          inPath && 'text-white border-b-3 border-white'
+        )}>
+          {x.text}
+        </a>
+      </Link>;
     }
   }
 
   if (!popupState) {
     return <PopupState variant="popover" popupId={`menu-${x.text.replace(' ', '')} `}>
       {(popupState) => <>
-        <Button
-          {...bindTrigger(popupState)}
-          color="inherit"
-          endIcon={<KeyboardArrowDownIcon />}
-          className="min-h-[48px] md:min-h-[64px] text-grey-500 font-bold rounded-none transition-colors"
-          sx={[{
-            "&:hover": {
-              color: 'white',
-              borderBottom: '3px solid white',
-            },
-          }, inPath ? {
-            '&:not(:hover)': {
-              color: 'white',
-              borderBottom: '3px solid white',
-            },
-          } : {}]}
-        >{x.text}</Button>
+        <button {...bindTrigger(popupState)} className={classNames(
+          "flex gap-2 items-center",
+          "min-h-[48px] md:min-h-[64px] text-grey-500 font-bold rounded-none transition-colors",
+          "small-caps",
+          "hover:text-white hover:border-b-3 hover:border-white",
+          inPath && 'text-white border-b-3 border-white'
+        )}>
+          {x.text}
+          <KeyboardArrowDownIcon className="w-4.5 h-4.5" />
+        </button>
         <Menu
           {...bindMenu(popupState)}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
@@ -103,7 +94,7 @@ export const DesktopSidemenu = () => {
   return (
     <nav className={classNames(
       'hidden md:block',
-      `3xl:w-80 z-30 flex h-full max-h-screen min-h-screen w-3/4 flex-none transform flex-col overflow-y-auto border-r border-slate-200 bg-muted pb-10 sm:w-1/2 sm:pb-0 md:w-1/3 lg:relative lg:z-auto lg:w-56 lg:translate-x-0 lg:bg-gray-50 2xl:w-72`
+      `w-3/4 sm:w-1/2 md:w-1/3 lg:w-56 2xl:w-72 3xl:w-80 z-30 flex flex-col h-full max-h-screen min-h-screen flex-none transform overflow-y-auto border-r border-slate-200 bg-muted pb-10 sm:pb-0 lg:relative lg:z-auto lg:translate-x-0 lg:bg-gray-50`
     )}>
       {menu.map(x => <MobileSubmenu key={x.text} item={x} />)}
     </nav>

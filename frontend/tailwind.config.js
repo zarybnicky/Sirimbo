@@ -43,6 +43,7 @@ module.exports = {
     require("@tailwindcss/typography"),
     require("@tailwindcss/aspect-ratio"),
     require('@tailwindcss/line-clamp'),
+    require('tailwindcss-opentype'),
     plugin(function ({ addComponents, theme }) {
       addComponents(accordion(theme));
       addComponents(alert(theme));

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IconButton, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useMyLessonsQuery, LessonFragment } from 'lib/graphql';
 import { useAuth } from 'lib/data/use-auth';
 import format from 'date-fns/format';
@@ -59,11 +59,15 @@ export const MyLessonsList: React.FC = () => {
 
   return <>
     <div className="flex items-center justify-center">
-      <IconButton onClick={setPrevWeek}><NavigateBeforeIcon /></IconButton>
+      <button className="button button-icon" onClick={setPrevWeek}>
+        <NavigateBeforeIcon />
+      </button>
       <Typography color="textSecondary" component="span" align="right">
         {format(startDate, 'd. M. y')} - {format(lastDayOfWeek(startDate), 'd. M. y')}
       </Typography>
-      <IconButton onClick={setNextWeek}><NavigateNextIcon /></IconButton>
+      <button className="button button-icon" onClick={setNextWeek}>
+        <NavigateNextIcon />
+      </button>
     </div>
     {Object.entries(lessonsPerDay).map(([key, lessons]) => <React.Fragment key={key}>
       <Typography variant="h6" align="center">

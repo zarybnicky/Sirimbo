@@ -1,4 +1,4 @@
-import { Alert, Button, Card, CardActions, CardContent, Grid, Typography } from "@mui/material";
+import { Alert, Card, CardActions, CardContent, Grid, Typography } from "@mui/material";
 import format from "date-fns/format";
 import parseISO from "date-fns/parseISO";
 import { useDeleteUserMutation, useCohortListQuery, useConfirmUserMutation, useRoleListQuery, UserFragment, useUserListQuery } from 'lib/graphql';
@@ -75,8 +75,12 @@ const UnconfirmedUser: React.FC<{
         </Grid>
       </CardContent>
       <CardActions className="gap-4 flex-row-reverse">
-        <Button type="submit" startIcon={<CheckIcon />}>Potvrdit</Button>
-        <Button onClick={onDelete} startIcon={<DeleteIcon />}>Odstranit</Button>
+        <button type="submit" className="button button-red button-text flex gap-2 items-center">
+          <CheckIcon /> Potvrdit
+        </button>
+        <button type="button" onClick={onDelete} className="button button-red button-text flex gap-2 items-center">
+          <DeleteIcon /> Odstranit
+        </button>
       </CardActions>
     </Card>
   );
