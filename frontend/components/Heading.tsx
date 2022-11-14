@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { CellPlugin } from '@react-page/editor';
-import { RGBColor } from 'react-color';
 
 type HeadingProps = {
-  color: string | RGBColor;
+  color: string | { r: number; g: number; b: number; a: number; };
   image: string;
   text: string;
 }
@@ -37,7 +36,7 @@ export const HeadingPlugin: CellPlugin<HeadingProps> = {
   version: 1,
   createInitialData: () => ({
     text: '...nadpis',
-    color: 'rgba(216, 28, 58, 0.6)',
+    color: { r: 216, g: 28, b: 58, a: 0.6 },
     image: '/images/mohelnice2021-title.jpg',
   }),
   controls: {

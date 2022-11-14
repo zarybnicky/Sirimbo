@@ -1,7 +1,7 @@
 import * as React from 'react';
+import Link from 'next/link';
 import { Card } from 'components/Card';
 import { Article } from 'lib/data/use-articles';
-import Link from 'next/link';
 
 export const ArticleCard = ({ item: x }: { item: Article }) => {
   return <Link href={x.href} passHref>
@@ -16,9 +16,7 @@ export const ArticleCard = ({ item: x }: { item: Article }) => {
         <p className="text-slate-700 grow">{x.preview}</p>
 
         <div className="flex justify-center mt-3">
-          <Link href={x.href} passHref>
-            <a className="button button-red button-lg">Více zde ᐳ</a>
-          </Link>
+          <a className="button button-red button-lg">Více zde ᐳ</a>
         </div>
       </Card>
     </a>

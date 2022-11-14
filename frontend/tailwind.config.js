@@ -19,7 +19,6 @@ const { input } = require("@material-tailwind/html/theme/components/input");
 const { menu } = require("@material-tailwind/html/theme/components/menu");
 const { navbar } = require("@material-tailwind/html/theme/components/navbar");
 const { notifications } = require("@material-tailwind/html/theme/components/notifications");
-const { pagination } = require("@material-tailwind/html/theme/components/pagination");
 const { popover } = require("@material-tailwind/html/theme/components/popover");
 const { progress } = require("@material-tailwind/html/theme/components/progress");
 const { radio } = require("@material-tailwind/html/theme/components/radio");
@@ -63,7 +62,6 @@ module.exports = {
       addComponents(menu(theme));
       addComponents(navbar(theme));
       addComponents(notifications(theme));
-      addComponents(pagination(theme));
       addComponents(popover(theme));
       addComponents(progress(theme));
       addComponents(range(theme));

@@ -1,7 +1,6 @@
 import React from "react";
 import Head from "next/head"
 import { useRouter } from "next/router"
-import { GoogleAnalytics } from "nextjs-google-analytics";
 import useDeepCompareEffect from 'use-deep-compare-effect';
 
 interface MetaProps {
@@ -49,16 +48,6 @@ export const ProvideMeta: React.FC = React.memo(function ProvideMeta({ children 
     title: '',
   });
 
-  React.useEffect(() => {
-    import('react-facebook-pixel')
-      .then((x) => x.default)
-      .then((ReactPixel) => {
-        ReactPixel.init('704526480597551');
-        ReactPixel.pageView();
-        router.events.on('routeChangeComplete', () => ReactPixel.pageView());
-      })
-  }, [router.events]);
-
   const base = process.env.NEXT_PUBLIC_BASE_URL;
   let canonical = meta.canonical || `${router.asPath !== "/" ? router.asPath : ""}`;
   if (!canonical.startsWith('/')) {
@@ -67,7 +56,6 @@ export const ProvideMeta: React.FC = React.memo(function ProvideMeta({ children 
 
   return (
     <MetaContext.Provider value={[meta, setMeta]}>
-      <GoogleAnalytics gaMeasurementId="UA-44456908-1" trackPageViews={{ ignoreHashChange: true }} />
       <Head>
         <link rel="canonical" href={`${base}${canonical}`} />
         <title>{meta?.title ? `${meta?.title} • ` : ''}TK Olymp</title>

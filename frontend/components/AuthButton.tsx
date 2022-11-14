@@ -30,7 +30,7 @@ export const AuthButton = ({ }) => {
         <AccountCircle />
         <div className="flex flex-col items-start" style={{ lineHeight: 1.3 }}>
           <span className="text-sm uppercase underline">Přihlášen</span>
-          <span className="">{auth.user?.uJmeno} {auth.user?.uPrijmeni}</span>
+          <span className="text-sm">{auth.user?.uJmeno} {auth.user?.uPrijmeni}</span>
         </div>
       </button>
       <Menu

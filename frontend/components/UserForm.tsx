@@ -1,4 +1,3 @@
-import { Typography } from '@mui/material';
 import { UserFragment, UserInput, useCreateUserMutation, useUpdateUserMutation, useRoleListQuery, useCohortListQuery } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';

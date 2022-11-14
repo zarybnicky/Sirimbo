@@ -1,10 +1,11 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { Pagination, Card, CardContent } from '@mui/material';
+import { Pagination } from '@mui/material';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useAnnouncementListQuery } from 'lib/graphql';
 import { HtmlView } from './HtmlView';
+import { Card } from 'components/Card';
 
 export function AnnouncementList() {
   const [limit] = React.useState(3);
@@ -39,27 +40,26 @@ export function AnnouncementList() {
         </button>
       )}
     </div>
+
     {nodes.map((a) => <Card key={a.upId} className="mb-4">
-      <CardContent>
-        <h2 className="text-2xl mb-2">
-          {a.upNadpis}
-        </h2>
-        <p className="text-slate-500 mb-4">
-          {format(new Date(a.upTimestampAdd), 'd. M. y')} , {a.userByUpKdo?.uJmeno} {a.userByUpKdo?.uPrijmeni}
-        </p>
+      <h2 className="text-2xl mb-2">
+        {a.upNadpis}
+      </h2>
+      <p className="text-slate-500 mb-4">
+        {format(new Date(a.upTimestampAdd), 'd. M. y')} , {a.userByUpKdo?.uJmeno} {a.userByUpKdo?.uPrijmeni}
+      </p>
 
-        <HtmlView content={a.upText} />
+      <HtmlView content={a.upText} />
 
-        {a.upozorneniSkupiniesByUpsIdRodic?.nodes?.length <= 0 ? null : <div>
-          {a.upozorneniSkupiniesByUpsIdRodic.nodes.map((g) =>
-            <div className="w-3 h-3"
-              key={g.skupinyByUpsIdSkupina?.sColorRgb}
-              title={g.skupinyByUpsIdSkupina?.sName}
-              style={{ backgroundColor: g.skupinyByUpsIdSkupina?.sColorRgb }}
-            />
-          )}
-        </div>}
-      </CardContent>
+      {a.upozorneniSkupiniesByUpsIdRodic?.nodes?.length <= 0 ? null : <div>
+        {a.upozorneniSkupiniesByUpsIdRodic.nodes.map((g) =>
+          <div className="w-3 h-3"
+            key={g.skupinyByUpsIdSkupina?.sColorRgb}
+            title={g.skupinyByUpsIdSkupina?.sName}
+            style={{ backgroundColor: g.skupinyByUpsIdSkupina?.sColorRgb }}
+          />
+        )}
+      </div>}
     </Card>)}
     <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
   </>;

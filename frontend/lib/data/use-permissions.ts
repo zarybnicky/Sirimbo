@@ -27,7 +27,7 @@ export enum PermissionKey {
   peMain,
 };
 
-export const defaultPermissions: { [key in keyof typeof PermissionKey]: PermissionLevel } = {
+const defaultPermissions: { [key in keyof typeof PermissionKey]: PermissionLevel } = {
   peAkce: 1,
   peAktuality: 2,
   peDokumenty: 1,

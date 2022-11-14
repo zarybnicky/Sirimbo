@@ -51,7 +51,6 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClientRef.current}>
       <Hydrate state={pageProps.dehydratedState}>
-        <Tracking />
         <ConfirmProvider defaultOptions={{
           title: 'Jste si jistí?',
           cancellationText: 'Zrušit',
@@ -61,6 +60,7 @@ export default function App({ Component, pageProps }: AppProps) {
             <SnackbarProvider maxSnack={3}>
               <ProvideAuth>
                 <ProvideMeta>
+                  {/* <Tracking /> */}
                   <Layout>
                     <Component {...pageProps} />
                   </Layout>
