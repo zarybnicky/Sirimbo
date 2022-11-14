@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Grid, Typography } from '@mui/material';
 import { Hero } from 'components/Hero';
 import { ServiceCard } from 'components/cards/ServiceCard';
 import { CallToAction } from 'components/CallToAction';
@@ -18,7 +17,7 @@ export const HomePage = ({ }) => {
     <div className="container mx-auto max-w-5xl">
       {services.map((x, i) => (
         <ServiceCard key={i} image={x.image} header={x.header}>
-          <Typography variant="body1">{x.text}</Typography>
+          <div>{x.text}</div>
         </ServiceCard>
       ))}
     </div>
@@ -26,23 +25,19 @@ export const HomePage = ({ }) => {
     <CallToAction />
 
     <div className="container mx-auto max-w-5xl" style={{ margin: '3rem auto' }}>
-      <Grid container spacing={3}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <div>
+          <h4>Aktuálně</h4>
+          <div className="grid gap-2 grid-cols-1 md:grid-cols-2">
+            {articles.map((x, i) => <ArticleCard key={i} item={x} />)}
+          </div>
+        </div>
 
-        <Grid item sm={12} md={6}>
-          <Typography gutterBottom variant="h4" component="h2">Aktuálně</Typography>
-          <Grid container spacing={3} style={{ alignItems: "stretch" }}>
-            {articles.map((x, i) => <Grid item container sm={12} md={6} key={i}><ArticleCard item={x} /></Grid>)}
-          </Grid>
-        </Grid>
-
-        <Grid item sm={12} md={6}>
-          <Typography gutterBottom variant="h4" component="h2">Videa</Typography>
-          <Grid container spacing={3}>
-            {videos.map((x, i) => <Grid item sm={12} key={i}><VideoCard item={x} /></Grid>)}
-          </Grid>
-        </Grid>
-
-      </Grid>
+        <div className="grid gap-2">
+          <h4>Videa</h4>
+          {videos.map((x, i) => <VideoCard key={i} item={x} />)}
+        </div>
+      </div>
     </div>
   </>;
 }

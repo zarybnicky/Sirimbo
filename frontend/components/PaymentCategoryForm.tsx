@@ -1,4 +1,3 @@
-import { Grid } from '@mui/material';
 import { PaymentCategoryFragment, PlatbyCategoryInput, useCreatePaymentCategoryMutation, useUpdatePaymentCategoryMutation } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -41,41 +40,18 @@ export const PaymentCategoryForm: React.FC<{
   });
 
   return (
-    <Grid container spacing={1.5} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
-      <ErrorBox grid error={onSubmit.error} />
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="pcName" label="Název" required />
-      </Grid>
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="pcSymbol" label="Specifický symbol" required />
-      </Grid>
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="pcAmount" label="Očekávaná částka" type="number" required />
-      </Grid>
-
-      <Grid item xs={12}>
-        <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Splatnost" name="pcDateDue" required />
-      </Grid>
-      <Grid item xs={12}>
-        <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Platné od" name="pcValidFrom" required />
-      </Grid>
-      <Grid item xs={12}>
-        <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Platné do" name="pcValidTo" required />
-      </Grid>
-
-      <Grid item xs={12}>
-        <CheckboxElement control={control} name="pcUsePrefix" value="1" label="Použít prefix" />
-      </Grid>
-      <Grid item xs={12}>
-        <CheckboxElement control={control} name="pcArchive" value="1" label="Archiv" />
-      </Grid>
-      <Grid item xs={12}>
-        <CheckboxElement control={control} name="pcVisible" value="1" label="Viditelný" />
-      </Grid>
-
-      <Grid item xs={12}>
-        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
-      </Grid>
-    </Grid>
+    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <ErrorBox error={onSubmit.error} />
+      <TextFieldElement control={control} name="pcName" label="Název" required />
+      <TextFieldElement control={control} name="pcSymbol" label="Specifický symbol" required />
+      <TextFieldElement control={control} name="pcAmount" label="Očekávaná částka" type="number" required />
+      <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Splatnost" name="pcDateDue" required />
+      <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Platné od" name="pcValidFrom" required />
+      <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Platné do" name="pcValidTo" required />
+      <CheckboxElement control={control} name="pcUsePrefix" value="1" label="Použít prefix" />
+      <CheckboxElement control={control} name="pcArchive" value="1" label="Archiv" />
+      <CheckboxElement control={control} name="pcVisible" value="1" label="Viditelný" />
+      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+    </form>
   );
 };

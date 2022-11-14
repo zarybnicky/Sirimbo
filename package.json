@@ -13,6 +13,7 @@
   },
   "scripts": {
     "frontend": "yarn workspace sirimbo-frontend dev",
+    "frontend:build": "yarn workspace sirimbo-frontend build",
     "schema": "graphql-codegen --config graphql.config.yml",
     "schema:watch": "graphql-codegen --config graphql.config.yml --watch",
     "backend": "yarn workspace sirimbo-backend start",

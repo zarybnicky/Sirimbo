@@ -1,8 +1,7 @@
-import { Grid } from '@mui/material';
 import { AnnouncementFragment, UpozorneniInput, useCreateAnnouncementMutation, useUpdateAnnouncementMutation } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { TextFieldElement } from 'components/TextField';
+import { TextAreaElement, TextFieldElement } from 'components/TextField';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
@@ -34,20 +33,12 @@ export const AnnouncementForm: React.FC<{
   });
 
   return (
-    <Grid container spacing={1.5} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
-      <ErrorBox grid error={onSubmit.error} />
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="upNadpis" label="Nadpis" required />
-      </Grid>
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="upText" label="Text" rows={20} multiline required />
-      </Grid>
-      <Grid item xs={12}>
-        <CheckboxElement control={control} name="upLock" value="1" label="Uzamčená" />
-      </Grid>
-      <Grid item xs={12}>
-        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
-      </Grid>
-    </Grid>
+    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <ErrorBox error={onSubmit.error} />
+      <TextFieldElement control={control} name="upNadpis" label="Nadpis" required />
+      <TextAreaElement control={control} name="upText" label="Text" rows={20} required />
+      <CheckboxElement control={control} name="upLock" value="1" label="Uzamčená" />
+      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+    </form>
   );
 };

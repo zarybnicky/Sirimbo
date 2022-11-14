@@ -167,13 +167,13 @@ export default function RegisterPage() {
             </Grid>
 
             <Grid item xs={12} style={{ marginTop: '2rem' }}>
-              <Typography variant="body1" gutterBottom>
+              <p>
                 Zákon č. 101/2000 Sb., o ochraně osobních údajů, ve znění pozdějších předpisů, ukládá
                 <b> Tanečnímu klubu Olymp Olomouc, z. s., IČ: 68347286, se sídlem: Jiráskova 381/25, Olomouc</b>
                 (dále jen „klub“) práva a povinnosti, mezi něž mimo jiné patří i povinnost informovat své členy
                 o právech, které se týkají ochrany osobních údajů člena, respektive budoucího člena o přístupu
                 k osobním údajům, zpracování a předávání osobních údajů třetí osobě.
-              </Typography>
+              </p>
               <Typography variant="body1" gutterBottom>
                 Stvrzuji, že tuto povinnost klub splnil a souhlasím, aby klub shromažďoval a
                 zpracovával mé (mého syna/dcery) osobní údaje v souladu s právy a povinnostmi, které mu
@@ -192,7 +192,7 @@ export default function RegisterPage() {
               </Typography>
             </Grid>
 
-            <ErrorBox grid error={onSubmit.error} />
+            <ErrorBox error={onSubmit.error} />
           </Grid>
         </CardContent>
         <CardActions>

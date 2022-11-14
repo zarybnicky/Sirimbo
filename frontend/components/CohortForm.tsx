@@ -1,4 +1,3 @@
-import { Grid } from '@mui/material';
 import { CohortFragment, SkupinyInput, useCreateCohortMutation, useUpdateCohortMutation } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -37,26 +36,14 @@ export const CohortForm: React.FC<{
   });
 
   return (
-    <Grid container spacing={1.5} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
-      <ErrorBox grid error={onSubmit.error} />
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="sName" label="Název" required />
-      </Grid>
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="sLocation" label="Město/místo" required />
-      </Grid>
-      <Grid item xs={12}>
-        <CheckboxElement control={control} name="sVisible" value="1" label="Viditelná pro registraci" />
-      </Grid>
-      <Grid item xs={12}>
-        <ColorPicker name="sColorRgb" control={control} />
-      </Grid>
-      <Grid item xs={12}>
-        <TextAreaElement control={control} name="sDescription" label="Popis" rows={3} required />
-      </Grid>
-      <Grid item xs={12}>
-        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
-      </Grid>
-    </Grid >
+    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <ErrorBox error={onSubmit.error} />
+      <TextFieldElement control={control} name="sName" label="Název" required />
+      <TextFieldElement control={control} name="sLocation" label="Město/místo" required />
+      <CheckboxElement control={control} name="sVisible" value="1" label="Viditelná pro registraci" />
+      <ColorPicker name="sColorRgb" control={control} />
+      <TextAreaElement control={control} name="sDescription" label="Popis" rows={3} required />
+      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+    </form>
   );
 };

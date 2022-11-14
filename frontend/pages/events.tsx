@@ -21,7 +21,7 @@ const EventItem = ({ event }: { event: EventWithItemsFragment }) => {
             content={event.aInfo.replaceAll('\n', '<br/>')}
           />
           {!expanded && (
-            <div className="text-primary font-bold mt-3">Zobrazit více...</div>
+            <div className="text-red-500 font-bold mt-3">Zobrazit více...</div>
           )}
         </div>
         {expanded && (

@@ -1,6 +1,5 @@
-import { Grid } from '@mui/material';
-import { FileFragment, DokumentyInput, useUpdateFileMutation } from 'lib/graphql';
 import React from 'react';
+import { FileFragment, DokumentyInput, useUpdateFileMutation } from 'lib/graphql';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook'
@@ -26,15 +25,10 @@ export const FileForm: React.FC<{
   });
 
   return (
-    <Grid container spacing={1} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
-      <ErrorBox grid error={onSubmit.error} />
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="dName" label="Název" required />
-      </Grid>
-
-      <Grid item xs={12}>
-        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
-      </Grid>
-    </Grid >
+    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <ErrorBox error={onSubmit.error} />
+      <TextFieldElement control={control} name="dName" label="Název" required />
+      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+    </form>
   );
 };

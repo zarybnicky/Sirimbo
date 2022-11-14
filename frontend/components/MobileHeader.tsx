@@ -10,6 +10,7 @@ import { NextLinkComposed } from './Link';
 import { OlympLogoOneline } from 'components/Icons';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuIcon from '@mui/icons-material/Menu';
+import Link from 'next/link';
 
 export const MobileSubmenu = ({ item: x, onClick }: {
   item: MenuStructItem;
@@ -69,10 +70,14 @@ export const MobileHeader = ({ }) => {
             fill: 'white !important',
           }} />
         </div>
-        <IconButton color="inherit" LinkComponent={NextLinkComposed} href="/profile">
-          <AccountCircle />
-        </IconButton>
-        <IconButton color="inherit" onClick={() => setOpen(!open)}><MenuIcon /></IconButton>
+        <Link href="/profile" passHref>
+          <a className="button button-icon p-0 m-1" >
+            <AccountCircle />
+          </a>
+        </Link>
+        <button className="button button-icon p-0 m-1" onClick={() => setOpen(!open)}>
+          <MenuIcon />
+        </button>
       </Toolbar>
     </AppBar>
     <SwipeableDrawer

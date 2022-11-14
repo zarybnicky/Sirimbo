@@ -24,7 +24,7 @@
     height: 9px;
 }
 .glider-dot.active {
-    background-color: theme('colors.primary');
+    background-color: theme('colors.primary.500');
 }
 .glider-prev, .glider-next {
     position: absolute;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { Pagination, Card, CardContent, Typography } from '@mui/material';
+import { Pagination, Card, CardContent } from '@mui/material';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useAnnouncementListQuery } from 'lib/graphql';
@@ -22,34 +22,31 @@ export function AnnouncementList() {
   return <>
     <div className="flex items-center justify-center">
       {hasPrev && (
-        <button className="button button-icon" onClick={() => setPage(page - 1)}>
+        <button className="button button-icon text-slate-500" onClick={() => setPage(page - 1)}>
           <NavigateBeforeIcon />
         </button>
       )}
 
-      <Typography color="textSecondary" component="span">
+      <span className="text-slate-500">
         {nodes.length > 0 ? format(new Date(nodes[0]!.upTimestampAdd), 'd. M. y') : ''}
         {' - '}
         {nodes.length > 0 ? format(new Date(nodes[nodes.length - 1]!.upTimestampAdd), 'd. M. y') : ''}
-      </Typography>
+      </span>
 
       {hasNext && (
-        <button className="button button-icon" onClick={() => setPage(page + 1)}>
+        <button className="button button-icon text-slate-500" onClick={() => setPage(page + 1)}>
           <NavigateNextIcon />
         </button>
       )}
     </div>
     {nodes.map((a) => <Card key={a.upId} className="mb-4">
       <CardContent>
-        <Typography color="textSecondary">
-          {format(new Date(a.upTimestampAdd), 'd. M. y')}
-        </Typography>
-        <Typography variant="h5" component="h2">
+        <h2 className="text-2xl mb-2">
           {a.upNadpis}
-        </Typography>
-        <Typography color="textSecondary">
-          {a.userByUpKdo?.uJmeno} {a.userByUpKdo?.uPrijmeni}
-        </Typography>
+        </h2>
+        <p className="text-slate-500 mb-4">
+          {format(new Date(a.upTimestampAdd), 'd. M. y')} , {a.userByUpKdo?.uJmeno} {a.userByUpKdo?.uPrijmeni}
+        </p>
 
         <HtmlView content={a.upText} />
 

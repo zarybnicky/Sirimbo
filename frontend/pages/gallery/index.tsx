@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { Grid } from '@mui/material';
 import { GalleryCard } from 'components/cards/GalleryCard';
 import { Lightbox } from 'components/Lightbox';
 import { useGallery } from 'lib/data/use-gallery';
@@ -26,18 +25,10 @@ export default function GalleryPage() {
         </Link>
       )}
       <h2 className="font-lg mb-2">{!dir?.name || dir.name == 'Hlavní' ? 'Galerie' : dir.name}</h2>
-      <Grid container spacing={3}>
-        {dirs.map((x, i) => (
-          <Grid item sm={6} md={3} key={i}>
-            <GalleryCard item={x} />
-          </Grid>
-        ))}
-        {images.map((x, i) => (
-          <Grid item sm={6} md={3} key={i}>
-            <GalleryCard item={x} />
-          </Grid>
-        ))}
-      </Grid>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+        {dirs.map((x, i) => <GalleryCard key={i} item={x} />)}
+        {images.map((x, i) => <GalleryCard key={i} item={x} />)}
+      </div>
     </div>
 
     {photoId && (

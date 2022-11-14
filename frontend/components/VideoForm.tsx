@@ -1,6 +1,5 @@
-import { Grid } from '@mui/material';
-import { VideoFragment, VideoInput, useCreateVideoMutation, useUpdateVideoMutation } from 'lib/graphql';
 import React from 'react';
+import { VideoFragment, VideoInput, useCreateVideoMutation, useUpdateVideoMutation } from 'lib/graphql';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from './TextField';
 import { useAsyncCallback } from 'react-async-hook'
@@ -40,26 +39,16 @@ export const VideoForm: React.FC<{
   });
 
   return (
-    <Grid container spacing={1.5} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
-      <ErrorBox grid error={onSubmit.error} />
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="vUri" required label={<>
-          ID videa (např. <code>https://www.youtube.com/watch?v=<b>lt6h7Fgxohs</b></code>)<br />
-          Ostatní pole se později zjistí z YouTube, pokud zůstanou prázdná.
-        </>} />
-      </Grid>
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="vTitle" label="Jméno" required />
-      </Grid>
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="vAuthor" label="Autor/kanál" required />
-      </Grid>
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="vPlaylist" label="ID playlistu (nepovinné)" required />
-      </Grid>
-      <Grid item xs={12}>
-        <SubmitButton disabled={!formState.isValid} loading={onSubmit.loading} />
-      </Grid>
-    </Grid>
+    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <ErrorBox error={onSubmit.error} />
+      <TextFieldElement control={control} name="vUri" required label={<>
+        ID videa (např. <code>https://www.youtube.com/watch?v=<b>lt6h7Fgxohs</b></code>)<br />
+        Ostatní pole se později zjistí z YouTube, pokud zůstanou prázdná.
+      </>} />
+      <TextFieldElement control={control} name="vTitle" label="Jméno" required />
+      <TextFieldElement control={control} name="vAuthor" label="Autor/kanál" required />
+      <TextFieldElement control={control} name="vPlaylist" label="ID playlistu (nepovinné)" required />
+      <SubmitButton disabled={!formState.isValid} loading={onSubmit.loading} />
+    </form>
   );
 };

@@ -1,4 +1,4 @@
-import { Alert, AlertTitle, Grid } from "@mui/material";
+import { Alert, AlertTitle } from "@mui/material";
 
 const errorTranslation: { [key: string]: string } = {
   ACCOUNT_NOT_FOUND: 'Zadaná kombinace jména a e-mailu neexistuje',
@@ -7,9 +7,8 @@ const errorTranslation: { [key: string]: string } = {
   ACCOUNT_NOT_CONFIRMED: 'Účet ještě nebyl potvrzen',
 }
 
-export const ErrorBox = ({ error: e, grid, default: def }: {
+export const ErrorBox = ({ error: e, default: def }: {
   error: any;
-  grid?: boolean;
   default?: string;
 }): JSX.Element | null => {
   let error: string | null = null;
@@ -28,11 +27,5 @@ export const ErrorBox = ({ error: e, grid, default: def }: {
   const human = errorTranslation[error] || 'Něco se nepovedlo, zkuste to prosím znovu';
   const res = human || (def ? <><AlertTitle>{def}</AlertTitle>{error}</> : error);
 
-  return grid ? (
-    <Grid item xs={12}>
-      <Alert severity="error">{res}</Alert>
-    </Grid>
-  ) : (
-    <Alert severity="error">{res}</Alert>
-  );
+  return <Alert className="col-full" severity="error">{res}</Alert>;
 };

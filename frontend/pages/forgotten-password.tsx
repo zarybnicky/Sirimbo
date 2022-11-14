@@ -1,4 +1,4 @@
-import { Typography, Card, CardContent, CardActions } from "@mui/material";
+import { Card, CardContent, CardActions } from "@mui/material";
 import { ErrorBox } from "components/ErrorBox";
 import { SubmitButton } from "components/SubmitButton";
 import { useResetPasswordMutation } from 'lib/graphql';
@@ -26,17 +26,15 @@ export default function ForgottenPassword() {
   return <div className="container mx-auto max-w-md" style={{ margin: '4rem auto 6rem' }}>
     <Card component="form" onSubmit={handleSubmit(onSubmit.execute)}>
       <CardContent>
-        <Typography gutterBottom variant="h5" component="h2">
-          Zapomenuté heslo
-        </Typography>
-        <Typography variant="body1" style={{ marginBottom: '1rem' }}>
+        <h5>Zapomenuté heslo</h5>
+        <div className="mb-4">
           Pokud jste zapomněli heslo, pošleme Vám nové na e-mail, který jste zadali při registraci.
-        </Typography>
+        </div>
 
         <div className="flex flex-col gap-4">
           <TextFieldElement control={control} name="login" label="Přihlašovací jméno" autoComplete="login" required />
           <TextFieldElement control={control} type="email" name="email" label="E-mail" autoComplete="email" required />
-          <ErrorBox grid error={onSubmit.error} default="Nepodařilo se změnit heslo, prosím kontaktujte administrátora." />
+          <ErrorBox error={onSubmit.error} default="Nepodařilo se změnit heslo, prosím kontaktujte administrátora." />
         </div>
       </CardContent>
       <CardActions>

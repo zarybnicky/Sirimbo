@@ -71,132 +71,85 @@ export const UserForm: React.FC<{
   });
 
   return (
-    <Grid container spacing={1.5} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
-      <ErrorBox grid error={onSubmit.error} />
+    <form className="grid grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <ErrorBox error={onSubmit.error} />
       {!data && <>
-        <Grid item xs={12} md={6}>
-          <TextFieldElement control={control} name="uLogin"
-            label="Uživatelské jméno" required />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <TextFieldElement control={control} type="password" name="uPass" label="Heslo" required />
-        </Grid>
+        <TextFieldElement control={control} name="uLogin" label="Uživatelské jméno" required />
+        <TextFieldElement control={control} type="password" name="uPass" label="Heslo" required />
       </>}
 
-      <Grid item xs={12} md={6}>
-        <TextFieldElement control={control} name="uJmeno" label="Jméno" required />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <TextFieldElement control={control} name="uPrijmeni" label="Příjmení" required />
-      </Grid>
+      <TextFieldElement control={control} name="uJmeno" label="Jméno" required />
+      <TextFieldElement control={control} name="uPrijmeni" label="Příjmení" required />
 
-      <Grid item xs={12} md={6}>
-        <DatePickerElement inputProps={{ fullWidth: true }} control={control}
-          label="Datum narození" name="uNarozeni" required />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <TextFieldElement control={control} name="uRodneCislo"
-          label="Rodné číslo" required placeholder="1111119999"
-          validation={{
-            pattern: {
-              value: /[0-9]{9,10}/,
-              message: 'Neplatné rodné číslo',
-            },
-          }}
-        />
-      </Grid>
-
-      <RadioButtonGroup
-        control={control} row name="uPohlavi" required
-        options={[{ id: 'm', label: 'Muž' }, { id: 'f', label: 'Źena' }]}
+      <DatePickerElement inputProps={{ fullWidth: true }} control={control}
+        label="Datum narození" name="uNarozeni" required />
+      <TextFieldElement control={control} name="uRodneCislo"
+        label="Rodné číslo" required placeholder="1111119999"
+        validation={{
+          pattern: {
+            value: /[0-9]{9,10}/,
+            message: 'Neplatné rodné číslo',
+          },
+        }}
       />
 
-      <Grid item xs={12} className="mt-4">
-        <Typography variant="caption">Kontaktní údaje</Typography>
-      </Grid>
+      <div>
+        <RadioButtonGroup
+          control={control} row name="uPohlavi" required
+          options={[{ id: 'm', label: 'Muž' }, { id: 'f', label: 'Žena' }]}
+        />
+      </div>
 
-      <Grid item xs={12} md={6}>
-        <TextFieldElement control={control} type="email" name="uEmail" label="E-mail" required />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <TextFieldElement control={control} type="tel" name="uTelefon" label="Telefon" required />
-      </Grid>
+      <Typography className="col-full mt-4" variant="caption">Kontaktní údaje</Typography>
 
-      <Grid item xs={12} className="mt-4">
-        <Typography variant="caption">Bydliště</Typography>
-      </Grid>
+      <TextFieldElement control={control} type="email" name="uEmail" label="E-mail" required />
+      <TextFieldElement control={control} type="tel" name="uTelefon" label="Telefon" required />
 
-      <Grid item xs={12} md={6}>
-        <TextFieldElement control={control} name="uStreet" label="Ulice" required />
-      </Grid>
-      <Grid item xs={12} md={3}>
-        <TextFieldElement control={control} name="uConscriptionNumber" label="Č.popisné" />
-      </Grid>
-      <Grid item xs={12} md={3}>
-        <TextFieldElement control={control} name="uOrientationNumber" label="Č.orientační" />
-      </Grid>
+      <Typography className="col-full mt-4" variant="caption">Bydliště</Typography>
 
-      <Grid item xs={12} md={6}>
-        <TextFieldElement control={control} name="uCity" label="Ulice" required />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <TextFieldElement control={control} name="uDistrict" label="Č.popisné" />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <TextFieldElement control={control} name="uPostalCode" label="Č.orientační" />
-      </Grid>
+      <TextFieldElement control={control} name="uStreet" label="Ulice" required />
+      <TextFieldElement control={control} name="uConscriptionNumber" label="Č.popisné" />
+      <TextFieldElement control={control} name="uOrientationNumber" label="Č.orientační" />
 
-      <Grid item xs={12}>
+      <TextFieldElement control={control} name="uCity" label="Ulice" required />
+      <TextFieldElement control={control} name="uDistrict" label="Č.popisné" />
+      <TextFieldElement control={control} name="uPostalCode" label="Č.orientační" />
+
+      <div className="col-full">
         <SelectElement control={control}
           label="Národnost" name="uNationality" required
           options={countries.map(x => ({ id: x.code.toString(), label: x.label }))}
         />
-      </Grid>
+      </div>
 
-      <Grid item xs={12} style={{ marginTop: '1rem' }}>
-        <Typography variant="overline">Tréninkové údaje</Typography>
-      </Grid>
+      <Typography className="col-full mt-4" variant="caption">Tréninkové údaje</Typography>
 
-      <Grid item xs={12}>
+      <div className="col-full grid gap-2">
         <SelectElement control={control}
           label="Tréninková skupina" name="uSkupina"
           options={cohorts?.skupinies?.nodes?.map(x => ({ id: x.sId, label: x.sName })) || []}
         />
-      </Grid>
 
-      <Grid item xs={12}>
         <TextAreaElement control={control} name="uPoznamky" label="Poznámka" rows={3} required />
-      </Grid>
 
-      <Grid item xs={12}>
         <CheckboxElement control={control} name="uDancer" value="1" label="Aktivní tanečník" />
-      </Grid>
-      <Grid item xs={12}>
         <CheckboxElement control={control} name="uTeacher" value="1" label="Trenér" />
-      </Grid>
+      </div>
 
-      <Grid item xs={12} className="mt-4">
-        <Typography variant="overline">Přístupy</Typography>
-      </Grid>
+      <Typography className="col-full mt-4" variant="overline">Přístupy</Typography>
 
-      <Grid item xs={12}>
-        <SelectElement control={control}
+      <div className="col-full grid gap-2">
+        <SelectElement
+          control={control}
           label="Uživatelská role" name="uGroup"
           options={roles?.permissions?.nodes?.map(x => ({ id: x.peId, label: x.peName })) || []}
         />
-      </Grid>
 
-      <Grid item xs={12}>
-        <CheckboxElement control={control} name="uBan" value="1"
-          label="Neaktivní uživatel (ban)" />
-      </Grid>
-      <Grid item xs={12}>
+        <CheckboxElement control={control} name="uBan" value="1" label="Neaktivní uživatel (ban)" />
         <CheckboxElement control={control} name="uSystem" value="1" label="Systémový uživatel" />
-      </Grid>
+      </div>
 
-      <Grid item xs={12}>
-        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
-      </Grid>
-    </Grid >
+      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+    </form >
   );
 };

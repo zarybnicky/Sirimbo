@@ -94,9 +94,20 @@ module.exports = {
           800: '#821123',
           900: '#6a0e1c'
         },
+        primary: {
+          50: '#fdf4f5',
+          100: '#fbe8eb',
+          200: '#f5c6ce',
+          300: '#efa4b0',
+          400: '#e46075',
+          500: '#d81c3a',
+          600: '#c21934',
+          700: '#a2152c',
+          800: '#821123',
+          900: '#6a0e1c'
+        },
         'blue-gray': colors.slate,
-        primary: '#d81c3a',
-        secondary: '#222222',
+        secondary: colors.stone,
 
         text: "#575757",
 
@@ -104,6 +115,9 @@ module.exports = {
         warning: '#e6be2a',
         error: '#e24320',
         message: '#90CA63',
+      },
+      gridColumn: {
+        'full': '1 / -1',
       },
       backgroundImage: {
         'red-black-red': 'linear-gradient(90deg, rgba(216,28,58,.8) 0%, rgba(0,0,0,0.8) 50%, rgba(216,28,58,.8) 100%)'

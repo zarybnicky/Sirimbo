@@ -1,6 +1,5 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { Typography } from '@mui/material';
 import { useActiveProspectsQuery } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid } from '@mui/x-data-grid';
@@ -10,7 +9,7 @@ export default function CrmPage() {
   const { data } = useActiveProspectsQuery();
 
   return <div className="container mx-auto max-w-5xl" style={{ padding: '2rem 0' }}>
-    <Typography align="right" variant="h4" component="h2">Zájemci</Typography>
+    <h4 className="text-right">Zájemci</h4>
 
     <DataGrid
       autoHeight={true}

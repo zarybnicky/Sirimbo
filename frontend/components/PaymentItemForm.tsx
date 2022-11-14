@@ -1,6 +1,5 @@
-import { Grid } from '@mui/material';
-import { PaymentItemFragment, PlatbyItemInput, useCreatePaymentItemMutation, usePaymentCategoryListQuery, useUpdatePaymentItemMutation, useUserListQuery } from 'lib/graphql';
 import React from 'react';
+import { PaymentItemFragment, PlatbyItemInput, useCreatePaymentItemMutation, usePaymentCategoryListQuery, useUpdatePaymentItemMutation, useUserListQuery } from 'lib/graphql';
 import { useForm } from 'react-hook-form';
 import { DatePickerElement } from 'react-hook-form-mui';
 import { SelectElement } from 'components/SelectElement';
@@ -44,36 +43,24 @@ export const PaymentItemForm: React.FC<{
   });
 
   return (
-    <Grid container spacing={1.5} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
-      <ErrorBox grid error={onSubmit.error} />
-      <Grid item xs={12}>
-        <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Datum" name="piDate" required />
-      </Grid>
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="piAmount" label="Částka (Kč)" required />
-      </Grid>
-      <Grid item xs={12}>
-        <SelectElement
-          control={control} name="piIdUser" label="Uživatel" required
-          options={(users?.users?.nodes || []).map(x => ({
-            id: x.uId, label: `${x.uId.padStart(6, '0')} - ${x.uJmeno} ${x.uPrijmeni}`
-          }))}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <SelectElement
-          control={control} name="piIdUser" label="Uživatel" required
-          options={(categories?.platbyCategories?.nodes || []).map(x => ({
-            id: x.pcId, label: `${x.pcId} - ${x.pcName}`
-          }))}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="piPrefix" label="Prefix (rok)" required />
-      </Grid>
-      <Grid item xs={12}>
-        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
-      </Grid>
-    </Grid>
+    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <ErrorBox error={onSubmit.error} />
+      <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Datum" name="piDate" required />
+      <TextFieldElement control={control} name="piAmount" label="Částka (Kč)" required />
+      <SelectElement
+        control={control} name="piIdUser" label="Uživatel" required
+        options={(users?.users?.nodes || []).map(x => ({
+          id: x.uId, label: `${x.uId.padStart(6, '0')} - ${x.uJmeno} ${x.uPrijmeni}`
+        }))}
+      />
+      <SelectElement
+        control={control} name="piIdUser" label="Uživatel" required
+        options={(categories?.platbyCategories?.nodes || []).map(x => ({
+          id: x.pcId, label: `${x.pcId} - ${x.pcName}`
+        }))}
+      />
+      <TextFieldElement control={control} name="piPrefix" label="Prefix (rok)" required />
+      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+    </form>
   );
 };

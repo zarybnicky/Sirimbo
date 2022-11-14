@@ -1,4 +1,3 @@
-import { Grid } from '@mui/material';
 import { GalleryPhotoFragment, GalerieFotoInput, useUpdateGalleryPhotoMutation, useGalleryDirListQuery } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -30,24 +29,17 @@ export const GalleryPhotoForm: React.FC<{
   });
 
   return (
-    <Grid container spacing={1} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
-      <ErrorBox grid error={onSubmit.error} />
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="gfName" label="Název" required />
-      </Grid>
-      <Grid item xs={12}>
-        <SelectElement
-          control={control} name="gfIdRodic" label="Rodičovská složka" required
-          options={(dirs?.galerieDirs?.nodes || []).map(x => ({
-            id: x.gdId,
-            label: '\xa0'.repeat(x.gdLevel - 1) + x.gdName,
-          }))}
-        />
-      </Grid>
-
-      <Grid item xs={12}>
-        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
-      </Grid>
-    </Grid >
+    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <ErrorBox error={onSubmit.error} />
+      <TextFieldElement control={control} name="gfName" label="Název" required />
+      <SelectElement
+        control={control} name="gfIdRodic" label="Rodičovská složka" required
+        options={(dirs?.galerieDirs?.nodes || []).map(x => ({
+          id: x.gdId,
+          label: '\xa0'.repeat(x.gdLevel - 1) + x.gdName,
+        }))}
+      />
+      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+    </form>
   );
 };

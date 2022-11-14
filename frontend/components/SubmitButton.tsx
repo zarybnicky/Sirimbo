@@ -24,7 +24,7 @@ export const SubmitButton = React.forwardRef(function SubmitButton({
   disabled?: boolean;
   loading?: boolean;
 }, ref: React.ForwardedRef<HTMLButtonElement>) {
-  const color = disabled ? 'button button-secondary' : 'button button-red';
+  const color = disabled ? 'button col-full button-secondary' : 'button col-full button-red';
   return <button
     type="submit" {...props} ref={ref}
     disabled={loading || disabled}

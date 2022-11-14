@@ -57,7 +57,7 @@ export const ProspectForm = ({ title }: ProspectFormProps) => {
             } />
           </Grid>
         </Grid>
-        <ErrorBox grid error={onSubmit.error} />
+        <ErrorBox error={onSubmit.error} />
       </CardContent>
       <CardActions style={{ flexDirection: 'column' }}>
         <SubmitButton className="w-full" loading={onSubmit.loading} disabled={!formState.isDirty || !formState.isValid}>

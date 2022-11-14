@@ -15,9 +15,9 @@ export const ServiceCard = (props: ServiceCardProps & { children: React.ReactNod
       <Grid item xs={12} sm={4} className="relative">
         <img className="w-full h-full object-cover" src={props.image} alt={props.header} />
       </Grid>
-      <Grid item xs={12} sm="auto" className="bg-slate-800 group-even:bg-primary w-4 h-4" />
+      <Grid item xs={12} sm="auto" className="bg-slate-800 group-even:bg-red-500 w-4 h-4" />
       <Grid item xs={12} sm="auto" className="grow basis-4 px-4 py-6 md:px-8 md:py-12">
-        <Typography variant="h5" component="h2" className="text-slate-800 group-odd:text-primary font-bold mb-2 md:mb-4">{props.header}</Typography>
+        <Typography variant="h5" component="h2" className="text-slate-800 group-odd:text-red-500 font-bold mb-2 md:mb-4">{props.header}</Typography>
         {props.children}
       </Grid>
     </Grid>

@@ -1,4 +1,3 @@
-import { Grid } from '@mui/material';
 import { ReservationFragment, NabidkaInput, useCreateReservationMutation, useUpdateReservationMutation, useTrainerListQuery } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -42,35 +41,19 @@ export const ReservationForm: React.FC<{
   });
 
   return (
-    <Grid container spacing={1.5} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
-      <ErrorBox grid error={onSubmit.error} />
-      <Grid item xs={12}>
-        <SelectElement
-          control={control} name="nTrener" label="Trenér" required
-          options={(trainers?.trainers?.nodes || []).map(x => ({ id: x.uId, label: `${x.uJmeno} ${x.uPrijmeni}` }))}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="nPocetHod" label="Počet hodin" required />
-      </Grid>
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="nMaxPocetHod" label="Max.počet hodin" required />
-      </Grid>
-      <Grid item xs={12}>
-        <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Od" name="nOd" required />
-      </Grid>
-      <Grid item xs={12}>
-        <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Do" name="nDo" required />
-      </Grid>
-      <Grid item xs={12}>
-        <CheckboxElement control={control} name="nVisible" value="1" label="Viditelný" />
-      </Grid>
-      <Grid item xs={12}>
-        <CheckboxElement control={control} name="nLock" value="1" label="Uzamčený" />
-      </Grid>
-      <Grid item xs={12}>
-        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
-      </Grid>
-    </Grid >
+    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <ErrorBox error={onSubmit.error} />
+      <SelectElement
+        control={control} name="nTrener" label="Trenér" required
+        options={(trainers?.trainers?.nodes || []).map(x => ({ id: x.uId, label: `${x.uJmeno} ${x.uPrijmeni}` }))}
+      />
+      <TextFieldElement control={control} name="nPocetHod" label="Počet hodin" required />
+      <TextFieldElement control={control} name="nMaxPocetHod" label="Max.počet hodin" required />
+      <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Od" name="nOd" required />
+      <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Do" name="nDo" required />
+      <CheckboxElement control={control} name="nVisible" value="1" label="Viditelný" />
+      <CheckboxElement control={control} name="nLock" value="1" label="Uzamčený" />
+      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+    </form>
   );
 };

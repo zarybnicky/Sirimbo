@@ -45,22 +45,22 @@ const UnconfirmedUser: React.FC<{
       <CardContent>
         <Grid container spacing={2}>
           <Grid item md={6}>
-            <Typography variant="h5">{item.uJmeno} {item.uPrijmeni}</Typography>
-            <Typography>
+            <h5>{item.uJmeno} {item.uPrijmeni}</h5>
+            <div>
               <b>Login:</b> {item.uLogin}
-            </Typography>
-            <Typography>
+            </div>
+            <div>
               <b>Datum narození:</b> {format(parseISO(item.uNarozeni), 'd. M. y')}
-            </Typography>
-            <Typography>
+            </div>
+            <div>
               <b>E-mail:</b> {item.uEmail}
-            </Typography>
-            <Typography>
+            </div>
+            <div>
               <b>Telefon:</b> {item.uTelefon}
-            </Typography>
-            <Typography>
+            </div>
+            <div>
               <b>Poznámka:</b> {item.uPoznamky}
-            </Typography>
+            </div>
           </Grid>
           <Grid item md={6} className="flex gap-2">
             <SelectElement
@@ -91,9 +91,7 @@ export default function UnconfirmedUsers() {
   const { data: users, refetch } = useUserListQuery({ confirmed: false });
 
   return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
-    <Typography align="right" variant="h4" component="h2" gutterBottom>
-      Nepotvrzení uživatelé
-    </Typography>
+    <h4 className="text-right">Nepotvrzení uživatelé</h4>
     {users && users?.users?.nodes.length === 0 && (
       <Alert severity="info">Žádní nepotvrzení uživatelé nejsou v databázi.</Alert>
     )}

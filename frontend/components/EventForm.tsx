@@ -1,4 +1,3 @@
-import { Grid } from '@mui/material';
 import { EventFragment, AkceInput, useCreateEventMutation, useUpdateEventMutation } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -41,35 +40,17 @@ export const EventForm: React.FC<{
   });
 
   return (
-    <Grid container spacing={1.5} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
-      <ErrorBox grid error={onSubmit.error} />
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="aJmeno" label="Název" required />
-      </Grid>
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="aKde" label="Místo akce" required />
-      </Grid>
-      <Grid item xs={12}>
-        <TextAreaElement control={control} name="aInfo" label="Další info" rows={3} required />
-      </Grid>
-      <Grid item xs={12}>
-        <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Od" name="aOd" required />
-      </Grid>
-      <Grid item xs={12}>
-        <DatePickerElement inputProps={{ fullWidth: true }} helperText="(pokud je prázdné, počítá se jako 'Od')" control={control} label="Do" name="aDo" required />
-      </Grid>
-      <Grid item xs={12}>
-        <TextFieldElement control={control} type="number" name="aKapacita" label="Kapacita" required />
-      </Grid>
-      <Grid item xs={12}>
-        <CheckboxElement control={control} name="aVisible" value="1" label="Zviditelnit" />
-      </Grid>
-      <Grid item xs={12}>
-        <CheckboxElement control={control} name="aLock" value="1" label="Uzamčená" />
-      </Grid>
-      <Grid item xs={12}>
-        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
-      </Grid>
-    </Grid>
+    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <ErrorBox error={onSubmit.error} />
+      <TextFieldElement control={control} name="aJmeno" label="Název" required />
+      <TextFieldElement control={control} name="aKde" label="Místo akce" required />
+      <TextAreaElement control={control} name="aInfo" label="Další info" rows={3} required />
+      <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Od" name="aOd" required />
+      <DatePickerElement inputProps={{ fullWidth: true }} helperText="(pokud je prázdné, počítá se jako 'Od')" control={control} label="Do" name="aDo" required />
+      <TextFieldElement control={control} type="number" name="aKapacita" label="Kapacita" required />
+      <CheckboxElement control={control} name="aVisible" value="1" label="Zviditelnit" />
+      <CheckboxElement control={control} name="aLock" value="1" label="Uzamčená" />
+      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+    </form>
   );
 };

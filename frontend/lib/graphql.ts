@@ -11365,8 +11365,6 @@ export const useAnnouncementListQuery = <
       fetcher<AnnouncementListQuery, AnnouncementListQueryVariables>(AnnouncementListDocument, variables),
       options
     );
-useAnnouncementListQuery.document = AnnouncementListDocument;
-
 
 useAnnouncementListQuery.getKey = (variables?: AnnouncementListQueryVariables) => variables === undefined ? ['AnnouncementList'] : ['AnnouncementList', variables];
 ;
@@ -11391,8 +11389,6 @@ export const useAnnouncementQuery = <
       fetcher<AnnouncementQuery, AnnouncementQueryVariables>(AnnouncementDocument, variables),
       options
     );
-useAnnouncementQuery.document = AnnouncementDocument;
-
 
 useAnnouncementQuery.getKey = (variables: AnnouncementQueryVariables) => ['Announcement', variables];
 ;
@@ -11474,8 +11470,6 @@ export const useArticleQuery = <
       fetcher<ArticleQuery, ArticleQueryVariables>(ArticleDocument, variables),
       options
     );
-useArticleQuery.document = ArticleDocument;
-
 
 useArticleQuery.getKey = (variables: ArticleQueryVariables) => ['Article', variables];
 ;
@@ -11503,8 +11497,6 @@ export const useArticlesQuery = <
       fetcher<ArticlesQuery, ArticlesQueryVariables>(ArticlesDocument, variables),
       options
     );
-useArticlesQuery.document = ArticlesDocument;
-
 
 useArticlesQuery.getKey = (variables?: ArticlesQueryVariables) => variables === undefined ? ['Articles'] : ['Articles', variables];
 ;
@@ -11593,8 +11585,6 @@ export const useCohortListQuery = <
       fetcher<CohortListQuery, CohortListQueryVariables>(CohortListDocument, variables),
       options
     );
-useCohortListQuery.document = CohortListDocument;
-
 
 useCohortListQuery.getKey = (variables?: CohortListQueryVariables) => variables === undefined ? ['CohortList'] : ['CohortList', variables];
 ;
@@ -11625,8 +11615,6 @@ export const useCohortMembersQuery = <
       fetcher<CohortMembersQuery, CohortMembersQueryVariables>(CohortMembersDocument, variables),
       options
     );
-useCohortMembersQuery.document = CohortMembersDocument;
-
 
 useCohortMembersQuery.getKey = (variables: CohortMembersQueryVariables) => ['CohortMembers', variables];
 ;
@@ -11651,8 +11639,6 @@ export const useCohortQuery = <
       fetcher<CohortQuery, CohortQueryVariables>(CohortDocument, variables),
       options
     );
-useCohortQuery.document = CohortDocument;
-
 
 useCohortQuery.getKey = (variables: CohortQueryVariables) => ['Cohort', variables];
 ;
@@ -11745,8 +11731,6 @@ export const useCoupleListQuery = <
       fetcher<CoupleListQuery, CoupleListQueryVariables>(CoupleListDocument, variables),
       options
     );
-useCoupleListQuery.document = CoupleListDocument;
-
 
 useCoupleListQuery.getKey = (variables?: CoupleListQueryVariables) => variables === undefined ? ['CoupleList'] : ['CoupleList', variables];
 ;
@@ -11844,8 +11828,6 @@ export const useActiveProspectsQuery = <
       fetcher<ActiveProspectsQuery, ActiveProspectsQueryVariables>(ActiveProspectsDocument, variables),
       options
     );
-useActiveProspectsQuery.document = ActiveProspectsDocument;
-
 
 useActiveProspectsQuery.getKey = (variables?: ActiveProspectsQueryVariables) => variables === undefined ? ['ActiveProspects'] : ['ActiveProspects', variables];
 ;
@@ -11891,8 +11873,6 @@ export const useCurrentUserQuery = <
       fetcher<CurrentUserQuery, CurrentUserQueryVariables>(CurrentUserDocument, variables),
       options
     );
-useCurrentUserQuery.document = CurrentUserDocument;
-
 
 useCurrentUserQuery.getKey = (variables?: CurrentUserQueryVariables) => variables === undefined ? ['CurrentUser'] : ['CurrentUser', variables];
 ;
@@ -12019,8 +11999,6 @@ export const useFileListQuery = <
       fetcher<FileListQuery, FileListQueryVariables>(FileListDocument, variables),
       options
     );
-useFileListQuery.document = FileListDocument;
-
 
 useFileListQuery.getKey = (variables?: FileListQueryVariables) => variables === undefined ? ['FileList'] : ['FileList', variables];
 ;
@@ -12045,8 +12023,6 @@ export const useFileQuery = <
       fetcher<FileQuery, FileQueryVariables>(FileDocument, variables),
       options
     );
-useFileQuery.document = FileDocument;
-
 
 useFileQuery.getKey = (variables: FileQueryVariables) => ['File', variables];
 ;
@@ -12133,8 +12109,6 @@ export const useEventParticipantsQuery = <
       fetcher<EventParticipantsQuery, EventParticipantsQueryVariables>(EventParticipantsDocument, variables),
       options
     );
-useEventParticipantsQuery.document = EventParticipantsDocument;
-
 
 useEventParticipantsQuery.getKey = (variables: EventParticipantsQueryVariables) => ['EventParticipants', variables];
 ;
@@ -12167,8 +12141,6 @@ export const useEventListQuery = <
       fetcher<EventListQuery, EventListQueryVariables>(EventListDocument, variables),
       options
     );
-useEventListQuery.document = EventListDocument;
-
 
 useEventListQuery.getKey = (variables?: EventListQueryVariables) => variables === undefined ? ['EventList'] : ['EventList', variables];
 ;
@@ -12193,8 +12165,6 @@ export const useEventQuery = <
       fetcher<EventQuery, EventQueryVariables>(EventDocument, variables),
       options
     );
-useEventQuery.document = EventDocument;
-
 
 useEventQuery.getKey = (variables: EventQueryVariables) => ['Event', variables];
 ;
@@ -12313,8 +12283,6 @@ export const useGalleryDirQuery = <
       fetcher<GalleryDirQuery, GalleryDirQueryVariables>(GalleryDirDocument, variables),
       options
     );
-useGalleryDirQuery.document = GalleryDirDocument;
-
 
 useGalleryDirQuery.getKey = (variables: GalleryDirQueryVariables) => ['GalleryDir', variables];
 ;
@@ -12342,8 +12310,6 @@ export const useGalleryDirListQuery = <
       fetcher<GalleryDirListQuery, GalleryDirListQueryVariables>(GalleryDirListDocument, variables),
       options
     );
-useGalleryDirListQuery.document = GalleryDirListDocument;
-
 
 useGalleryDirListQuery.getKey = (variables?: GalleryDirListQueryVariables) => variables === undefined ? ['GalleryDirList'] : ['GalleryDirList', variables];
 ;
@@ -12446,8 +12412,6 @@ export const useGalleryPhotoQuery = <
       fetcher<GalleryPhotoQuery, GalleryPhotoQueryVariables>(GalleryPhotoDocument, variables),
       options
     );
-useGalleryPhotoQuery.document = GalleryPhotoDocument;
-
 
 useGalleryPhotoQuery.getKey = (variables: GalleryPhotoQueryVariables) => ['GalleryPhoto', variables];
 ;
@@ -12529,8 +12493,6 @@ export const usePageQuery = <
       fetcher<PageQuery, PageQueryVariables>(PageDocument, variables),
       options
     );
-usePageQuery.document = PageDocument;
-
 
 usePageQuery.getKey = (variables: PageQueryVariables) => ['Page', variables];
 ;
@@ -12557,8 +12519,6 @@ export const usePageListQuery = <
       fetcher<PageListQuery, PageListQueryVariables>(PageListDocument, variables),
       options
     );
-usePageListQuery.document = PageListDocument;
-
 
 usePageListQuery.getKey = (variables?: PageListQueryVariables) => variables === undefined ? ['PageList'] : ['PageList', variables];
 ;
@@ -12593,8 +12553,6 @@ export const usePageRevisionsQuery = <
       fetcher<PageRevisionsQuery, PageRevisionsQueryVariables>(PageRevisionsDocument, variables),
       options
     );
-usePageRevisionsQuery.document = PageRevisionsDocument;
-
 
 usePageRevisionsQuery.getKey = (variables: PageRevisionsQueryVariables) => ['PageRevisions', variables];
 ;
@@ -12661,8 +12619,6 @@ export const useMenuQuery = <
       fetcher<MenuQuery, MenuQueryVariables>(MenuDocument, variables),
       options
     );
-useMenuQuery.document = MenuDocument;
-
 
 useMenuQuery.getKey = (variables?: MenuQueryVariables) => variables === undefined ? ['Menu'] : ['Menu', variables];
 ;
@@ -12691,8 +12647,6 @@ export const useParameterListQuery = <
       fetcher<ParameterListQuery, ParameterListQueryVariables>(ParameterListDocument, variables),
       options
     );
-useParameterListQuery.document = ParameterListDocument;
-
 
 useParameterListQuery.getKey = (variables?: ParameterListQueryVariables) => variables === undefined ? ['ParameterList'] : ['ParameterList', variables];
 ;
@@ -12777,8 +12731,6 @@ export const usePaymentGroupListQuery = <
       fetcher<PaymentGroupListQuery, PaymentGroupListQueryVariables>(PaymentGroupListDocument, variables),
       options
     );
-usePaymentGroupListQuery.document = PaymentGroupListDocument;
-
 
 usePaymentGroupListQuery.getKey = (variables?: PaymentGroupListQueryVariables) => variables === undefined ? ['PaymentGroupList'] : ['PaymentGroupList', variables];
 ;
@@ -12803,8 +12755,6 @@ export const usePaymentGroupQuery = <
       fetcher<PaymentGroupQuery, PaymentGroupQueryVariables>(PaymentGroupDocument, variables),
       options
     );
-usePaymentGroupQuery.document = PaymentGroupDocument;
-
 
 usePaymentGroupQuery.getKey = (variables: PaymentGroupQueryVariables) => ['PaymentGroup', variables];
 ;
@@ -12889,8 +12839,6 @@ export const usePaymentItemListQuery = <
       fetcher<PaymentItemListQuery, PaymentItemListQueryVariables>(PaymentItemListDocument, variables),
       options
     );
-usePaymentItemListQuery.document = PaymentItemListDocument;
-
 
 usePaymentItemListQuery.getKey = (variables?: PaymentItemListQueryVariables) => variables === undefined ? ['PaymentItemList'] : ['PaymentItemList', variables];
 ;
@@ -12915,8 +12863,6 @@ export const usePaymentItemQuery = <
       fetcher<PaymentItemQuery, PaymentItemQueryVariables>(PaymentItemDocument, variables),
       options
     );
-usePaymentItemQuery.document = PaymentItemDocument;
-
 
 usePaymentItemQuery.getKey = (variables: PaymentItemQueryVariables) => ['PaymentItem', variables];
 ;
@@ -13001,8 +12947,6 @@ export const usePaymentCategoryListQuery = <
       fetcher<PaymentCategoryListQuery, PaymentCategoryListQueryVariables>(PaymentCategoryListDocument, variables),
       options
     );
-usePaymentCategoryListQuery.document = PaymentCategoryListDocument;
-
 
 usePaymentCategoryListQuery.getKey = (variables?: PaymentCategoryListQueryVariables) => variables === undefined ? ['PaymentCategoryList'] : ['PaymentCategoryList', variables];
 ;
@@ -13027,8 +12971,6 @@ export const usePaymentCategoryQuery = <
       fetcher<PaymentCategoryQuery, PaymentCategoryQueryVariables>(PaymentCategoryDocument, variables),
       options
     );
-usePaymentCategoryQuery.document = PaymentCategoryDocument;
-
 
 usePaymentCategoryQuery.getKey = (variables: PaymentCategoryQueryVariables) => ['PaymentCategory', variables];
 ;
@@ -13113,8 +13055,6 @@ export const useReservationListQuery = <
       fetcher<ReservationListQuery, ReservationListQueryVariables>(ReservationListDocument, variables),
       options
     );
-useReservationListQuery.document = ReservationListDocument;
-
 
 useReservationListQuery.getKey = (variables?: ReservationListQueryVariables) => variables === undefined ? ['ReservationList'] : ['ReservationList', variables];
 ;
@@ -13139,8 +13079,6 @@ export const useReservationQuery = <
       fetcher<ReservationQuery, ReservationQueryVariables>(ReservationDocument, variables),
       options
     );
-useReservationQuery.document = ReservationDocument;
-
 
 useReservationQuery.getKey = (variables: ReservationQueryVariables) => ['Reservation', variables];
 ;
@@ -13167,8 +13105,6 @@ export const useReservationRangeQuery = <
       fetcher<ReservationRangeQuery, ReservationRangeQueryVariables>(ReservationRangeDocument, variables),
       options
     );
-useReservationRangeQuery.document = ReservationRangeDocument;
-
 
 useReservationRangeQuery.getKey = (variables: ReservationRangeQueryVariables) => ['ReservationRange', variables];
 ;
@@ -13274,8 +13210,6 @@ export const useRoleListQuery = <
       fetcher<RoleListQuery, RoleListQueryVariables>(RoleListDocument, variables),
       options
     );
-useRoleListQuery.document = RoleListDocument;
-
 
 useRoleListQuery.getKey = (variables?: RoleListQueryVariables) => variables === undefined ? ['RoleList'] : ['RoleList', variables];
 ;
@@ -13300,8 +13234,6 @@ export const useRoleQuery = <
       fetcher<RoleQuery, RoleQueryVariables>(RoleDocument, variables),
       options
     );
-useRoleQuery.document = RoleDocument;
-
 
 useRoleQuery.getKey = (variables: RoleQueryVariables) => ['Role', variables];
 ;
@@ -13387,8 +13319,6 @@ export const useScheduleRangeQuery = <
       fetcher<ScheduleRangeQuery, ScheduleRangeQueryVariables>(ScheduleRangeDocument, variables),
       options
     );
-useScheduleRangeQuery.document = ScheduleRangeDocument;
-
 
 useScheduleRangeQuery.getKey = (variables: ScheduleRangeQueryVariables) => ['ScheduleRange', variables];
 ;
@@ -13435,8 +13365,6 @@ export const useScheduleListQuery = <
       fetcher<ScheduleListQuery, ScheduleListQueryVariables>(ScheduleListDocument, variables),
       options
     );
-useScheduleListQuery.document = ScheduleListDocument;
-
 
 useScheduleListQuery.getKey = (variables?: ScheduleListQueryVariables) => variables === undefined ? ['ScheduleList'] : ['ScheduleList', variables];
 ;
@@ -13468,8 +13396,6 @@ export const useMyLessonsQuery = <
       fetcher<MyLessonsQuery, MyLessonsQueryVariables>(MyLessonsDocument, variables),
       options
     );
-useMyLessonsQuery.document = MyLessonsDocument;
-
 
 useMyLessonsQuery.getKey = (variables?: MyLessonsQueryVariables) => variables === undefined ? ['MyLessons'] : ['MyLessons', variables];
 ;
@@ -13494,8 +13420,6 @@ export const useScheduleQuery = <
       fetcher<ScheduleQuery, ScheduleQueryVariables>(ScheduleDocument, variables),
       options
     );
-useScheduleQuery.document = ScheduleDocument;
-
 
 useScheduleQuery.getKey = (variables: ScheduleQueryVariables) => ['Schedule', variables];
 ;
@@ -13598,8 +13522,6 @@ export const useUserQuery = <
       fetcher<UserQuery, UserQueryVariables>(UserDocument, variables),
       options
     );
-useUserQuery.document = UserDocument;
-
 
 useUserQuery.getKey = (variables: UserQueryVariables) => ['User', variables];
 ;
@@ -13627,8 +13549,6 @@ export const useUserListQuery = <
       fetcher<UserListQuery, UserListQueryVariables>(UserListDocument, variables),
       options
     );
-useUserListQuery.document = UserListDocument;
-
 
 useUserListQuery.getKey = (variables?: UserListQueryVariables) => variables === undefined ? ['UserList'] : ['UserList', variables];
 ;
@@ -13667,8 +13587,6 @@ export const useMemberListQuery = <
       fetcher<MemberListQuery, MemberListQueryVariables>(MemberListDocument, variables),
       options
     );
-useMemberListQuery.document = MemberListDocument;
-
 
 useMemberListQuery.getKey = (variables?: MemberListQueryVariables) => variables === undefined ? ['MemberList'] : ['MemberList', variables];
 ;
@@ -13696,8 +13614,6 @@ export const useTrainerListQuery = <
       fetcher<TrainerListQuery, TrainerListQueryVariables>(TrainerListDocument, variables),
       options
     );
-useTrainerListQuery.document = TrainerListDocument;
-
 
 useTrainerListQuery.getKey = (variables?: TrainerListQueryVariables) => variables === undefined ? ['TrainerList'] : ['TrainerList', variables];
 ;
@@ -13801,8 +13717,6 @@ export const useTitleVideosQuery = <
       fetcher<TitleVideosQuery, TitleVideosQueryVariables>(TitleVideosDocument, variables),
       options
     );
-useTitleVideosQuery.document = TitleVideosDocument;
-
 
 useTitleVideosQuery.getKey = (variables?: TitleVideosQueryVariables) => variables === undefined ? ['TitleVideos'] : ['TitleVideos', variables];
 ;
@@ -13827,8 +13741,6 @@ export const useVideoSourceQuery = <
       fetcher<VideoSourceQuery, VideoSourceQueryVariables>(VideoSourceDocument, variables),
       options
     );
-useVideoSourceQuery.document = VideoSourceDocument;
-
 
 useVideoSourceQuery.getKey = (variables: VideoSourceQueryVariables) => ['VideoSource', variables];
 ;
@@ -13855,8 +13767,6 @@ export const useVideoSourceListQuery = <
       fetcher<VideoSourceListQuery, VideoSourceListQueryVariables>(VideoSourceListDocument, variables),
       options
     );
-useVideoSourceListQuery.document = VideoSourceListDocument;
-
 
 useVideoSourceListQuery.getKey = (variables?: VideoSourceListQueryVariables) => variables === undefined ? ['VideoSourceList'] : ['VideoSourceList', variables];
 ;
@@ -13938,8 +13848,6 @@ export const useVideoQuery = <
       fetcher<VideoQuery, VideoQueryVariables>(VideoDocument, variables),
       options
     );
-useVideoQuery.document = VideoDocument;
-
 
 useVideoQuery.getKey = (variables: VideoQueryVariables) => ['Video', variables];
 ;
@@ -13966,8 +13874,6 @@ export const useVideoListQuery = <
       fetcher<VideoListQuery, VideoListQueryVariables>(VideoListDocument, variables),
       options
     );
-useVideoListQuery.document = VideoListDocument;
-
 
 useVideoListQuery.getKey = (variables?: VideoListQueryVariables) => variables === undefined ? ['VideoList'] : ['VideoList', variables];
 ;

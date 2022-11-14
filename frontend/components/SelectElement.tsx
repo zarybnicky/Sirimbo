@@ -6,6 +6,7 @@ import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import CheckIcon from '@mui/icons-material/Check';
 
 type Extras = {
+  className?: string;
   label?: React.ReactNode;
   helperText?: React.ReactNode;
   parseError?: (error: FieldError) => React.ReactNode;
@@ -21,7 +22,7 @@ export type SelectElementProps<T extends FieldValues> = {
 } & Extras;
 
 export function SelectElement<TFieldValues extends FieldValues>({
-  name, control, validation = {}, required, options, helperText, parseError, label,
+  name, control, validation = {}, required, options, className, helperText, parseError, label,
 }: SelectElementProps<TFieldValues>) {
   if (required && !validation?.required) {
     validation.required = 'Toto pole je povinné';
@@ -41,13 +42,13 @@ export function SelectElement<TFieldValues extends FieldValues>({
 
   return (
     <Combobox value={valueObject} onChange={(x) => onChange(x.id)}>
-      <div className="relative mt-1">
-        {label}
-        <div className="relative w-full cursor-default overflow-hidden border-red-500 border focus-within:border-3 rounded-lg bg-white text-left shadow-md focus:outline-none sm:text-sm">
+      <div className={`relative mt-1 ${className}`}>
+        <div className="text-slate-700 text-sm mb-1">{label}</div>
+        <div className="relative w-full cursor-default overflow-hidden border-red-500 border focus-within:border-3 rounded-lg bg-white text-left shadow-sm focus:outline-none sm:text-sm">
           <Combobox.Input
             className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
             onChange={(event) => setQuery(event.target.value)}
-            displayValue={(x: Item) => x.label}
+            displayValue={(x?: Item) => x?.label || ''}
           />
           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
             <UnfoldMoreIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />

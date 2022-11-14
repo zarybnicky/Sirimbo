@@ -2,7 +2,6 @@ import { RoleFragment, PermissionInput, useCreateRoleMutation, useUpdateRoleMuta
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useAsyncCallback } from 'react-async-hook'
-import { Typography, Grid } from "@mui/material";
 import { permissionLabels, realPermissionKeys } from "lib/data/use-permissions";
 import { TextAreaElement, TextFieldElement } from 'components/TextField';
 import { SubmitButton } from './SubmitButton';
@@ -32,19 +31,13 @@ export const RoleForm: React.FC<{
   });
 
   return (
-    <Grid container spacing={1.5} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="peName" label="Jméno" required />
-      </Grid>
-      <Grid item xs={12}>
-        <TextAreaElement control={control} name="peDescription" label="Popis" rows={3} required />
-      </Grid>
+    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <TextFieldElement control={control} name="peName" label="Jméno" required />
+      <TextAreaElement control={control} name="peDescription" label="Popis" rows={3} required />
       {realPermissionKeys.map(key => (
         <PermissionSlider control={control} key={key} name={key} label={permissionLabels[key]} />
       ))}
-      <Grid item xs={12}>
-        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
-      </Grid>
-    </Grid>
+      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+    </form>
   );
 }

@@ -1,4 +1,3 @@
-import { Grid } from '@mui/material';
 import { useCreateCoupleMutation, useUserListQuery } from 'lib/graphql';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -31,25 +30,19 @@ export const NewCoupleForm: React.FC<{
   });
 
   return (
-    <Grid container spacing={1.5} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
-      <ErrorBox grid error={onSubmit.error} />
-      <Grid item xs={12}>
-        <SelectElement
-          control={control} name="man" label="Partner" required
-          options={men}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <SelectElement
-          control={control} name="woman" label="Partnerka" required
-          options={women}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <SubmitButton className="w-full" loading={onSubmit.loading} disabled={!formState.isDirty || !formState.isValid}>
-          Spárovat
-        </SubmitButton>
-      </Grid>
-    </Grid>
+    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <ErrorBox error={onSubmit.error} />
+      <SelectElement
+        control={control} name="man" label="Partner" required
+        options={men}
+      />
+      <SelectElement
+        control={control} name="woman" label="Partnerka" required
+        options={women}
+      />
+      <SubmitButton className="w-full" loading={onSubmit.loading} disabled={!formState.isDirty || !formState.isValid}>
+        Spárovat
+      </SubmitButton>
+    </form>
   );
 };

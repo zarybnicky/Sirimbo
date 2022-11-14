@@ -1,4 +1,4 @@
-import { Slider, Grid, Typography } from "@mui/material";
+import { Slider } from "@mui/material";
 import { allowedPermissions, PermissionKey, permissionMarks, realPermissionLevels } from "lib/data/use-permissions";
 import { Control, FieldValues, ControllerProps, Path, useController } from 'react-hook-form';
 
@@ -16,11 +16,9 @@ export function PermissionSlider<TFieldValues extends FieldValues>({
     name, control, rules: validation
   });
 
-  return <>
-    <Grid item xs={12} md={3}>
-      <Typography gutterBottom>{label}</Typography>
-    </Grid>
-    <Grid item xs={12} md={9}>
+  return <div className="grid grid-cols-4 gap-2">
+    <div className="col-span-4 md:col-auto">{label}</div>
+    <div className="col-span-4 md:col-span-3">
       <Slider
         {...props}
         value={[1, 2, 4, 8, 16].indexOf(value as number)}
@@ -29,6 +27,6 @@ export function PermissionSlider<TFieldValues extends FieldValues>({
         marks={permissionMarks.filter(x => allowedPermissions[name]?.includes(x.realValue))}
         valueLabelDisplay="off"
       />
-    </Grid>
-  </>;
+    </div>
+  </div >;
 };

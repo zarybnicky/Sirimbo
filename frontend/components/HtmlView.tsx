@@ -1,4 +1,4 @@
-import { NextLinkComposed } from "./Link"
+import Link from "next/link"
 import parse, { domToReact, DOMNode, Element, HTMLReactParserOptions } from "html-react-parser"
 
 const isElement = (domNode: DOMNode): domNode is Element => {
@@ -17,9 +17,11 @@ const options: HTMLReactParserOptions = {
     if (domNode.name === "a") {
       const { href, class: className, ...rest } = domNode.attribs
       return (
-        <NextLinkComposed href={href || '#'} className={className} {...rest}>
-          {domToReact(domNode.children as DOMNode[])}
-        </NextLinkComposed>
+        <Link href={href || '#'} passHref>
+          <a className={className} {...rest}>
+            {domToReact(domNode.children as DOMNode[])}
+          </a>
+        </Link>
       );
     }
   },

@@ -3,6 +3,7 @@ import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import { Control, FieldValues, ControllerProps, FieldError, Path, useController } from 'react-hook-form';
 
 type Extras = {
+  className?: string;
   label?: React.ReactNode;
   helperText?: React.ReactNode;
   parseError?: (error: FieldError) => React.ReactNode;
@@ -14,13 +15,13 @@ export type TextAreaElementProps<T extends FieldValues> = Omit<React.HTMLProps<H
   control?: Control<T>;
 } & Extras;
 
-export function TextArea({ name, label, error, helperText, parseError, required, ...props }: {
+export function TextArea({ name, label, className, error, helperText, parseError, required, ...props }: {
   error?: FieldError;
 } & Extras & Omit<React.HTMLProps<HTMLTextAreaElement>, 'label'>) {
   const parsedHelperText = !error ? helperText : parseError ? parseError(error) : error.message;
 
   return (
-    <div>
+    <div className={className}>
       <label htmlFor={name} className="block text-sm font-medium text-gray-700">
         {label}
       </label>

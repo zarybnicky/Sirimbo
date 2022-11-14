@@ -1,10 +1,10 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { Typography } from '@mui/material';
 import { CallToAction } from 'components/CallToAction';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useArticleQuery } from 'lib/graphql';
+import { HtmlView } from 'components/HtmlView';
 
 export const ArticlePage = ({ }) => {
   const router = useRouter();
@@ -26,11 +26,11 @@ export const ArticlePage = ({ }) => {
       <meta property="og:description" content="{x.atPreview}" />
     </Head>
     <div className="container mx-auto max-w-5xl" style={{ margin: '5rem auto' }}>
-      <Typography variant="h3" component="h2">{x.atJmeno}</Typography>
-      <Typography color="textSecondary">
+      <h3>{x.atJmeno}</h3>
+      <div className="text-slate-700">
         {x.atTimestampAdd && format(new Date(x.atTimestampAdd), 'd. M. y')}
-      </Typography>
-      <div dangerouslySetInnerHTML={{ __html: x.atText }}></div>
+      </div>
+      <HtmlView content={x.atText} />
     </div>
     <CallToAction />
   </>;

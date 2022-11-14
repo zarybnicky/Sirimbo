@@ -1,4 +1,3 @@
-import { Grid } from '@mui/material';
 import { VideoSourceFragment, VideoSourceInput, useCreateVideoSourceMutation, useUpdateVideoSourceMutation } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -33,23 +32,15 @@ export const VideoSourceForm: React.FC<{
   });
 
   return (
-    <Grid container spacing={1.5} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
-      <ErrorBox grid error={onSubmit.error} />
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="vsUrl" required label={<>
-          ID kanálu (např. <code>https://www.youtube.com/channel/<b>UCopG139AfgpmaswNXmEwX2Q</b></code>)<br />
-          Ostatní pole se později zjistí z YouTube, pokud zůstanou prázdná.
-        </>} />
-      </Grid>
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="vsTitle" label="Jméno" required />
-      </Grid>
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="vsDescription" label="Popis" required />
-      </Grid>
-      <Grid item xs={12}>
-        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
-      </Grid>
-    </Grid>
+    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <ErrorBox error={onSubmit.error} />
+      <TextFieldElement control={control} name="vsUrl" required
+        label={<> ID kanálu (např. <code>https://www.youtube.com/channel/<b>UCopG139AfgpmaswNXmEwX2Q</b></code>)</>}
+        helperText="Ostatní pole se později zjistí z YouTube, pokud zůstanou prázdná."
+      />
+      <TextFieldElement control={control} name="vsTitle" label="Jméno" required />
+      <TextFieldElement control={control} name="vsDescription" label="Popis" required />
+      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+    </form>
   );
 };

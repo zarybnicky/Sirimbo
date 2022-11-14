@@ -12,12 +12,12 @@ export type CheckboxElementProps<T extends FieldValues> = Omit<React.HTMLProps<H
   control?: Control<T>;
 } & Extras;
 
-export function Checkbox({ name, label, error, helperText, parseError, required, ...props }: {
+export function Checkbox({ name, className, label, error, helperText, parseError, required, ...props }: {
   error?: FieldError;
 } & Extras & Omit<React.HTMLProps<HTMLInputElement>, 'label'>) {
   const parsedHelperText = !error ? helperText : parseError ? parseError(error) : error.message;
   return (
-    <div className="relative flex items-start">
+    <div className={`relative flex items-start ${className}`}>
       <div className="flex items-center h-5">
         <input
           id={name} name={name} type="checkbox" {...props}
@@ -33,7 +33,7 @@ export function Checkbox({ name, label, error, helperText, parseError, required,
           <p className={error ? 'text-red-800' : 'text-gray-500'}>{parsedHelperText}</p>
         )}
       </div>
-    </div>
+    </div >
   );
 }
 

@@ -1,4 +1,3 @@
-import { Grid } from '@mui/material';
 import { ScheduleFragment, RozpiInput, useCreateScheduleMutation, useUpdateScheduleMutation, useTrainerListQuery } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -40,29 +39,17 @@ export const ScheduleForm: React.FC<{
   });
 
   return (
-    <Grid container spacing={1.5} component="form" onSubmit={handleSubmit(onSubmit.execute)}>
-      <ErrorBox grid error={onSubmit.error} />
-      <Grid item xs={12}>
-        <SelectElement
-          control={control} name="rTrener" label="Trenér" required
-          options={(trainers?.trainers?.nodes || []).map(x => ({ id: x.uId, label: `${x.uJmeno} ${x.uPrijmeni}` }))}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <TextFieldElement control={control} name="rKde" label="Místo" required />
-      </Grid>
-      <Grid item xs={12}>
-        <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Datum" name="rDatum" required />
-      </Grid>
-      <Grid item xs={12}>
-        <CheckboxElement control={control} name="rVisible" value="1" label="Viditelný" />
-      </Grid>
-      <Grid item xs={12}>
-        <CheckboxElement control={control} name="rLock" value="1" label="Uzamčený" />
-      </Grid>
-      <Grid item xs={12}>
-        <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
-      </Grid>
-    </Grid>
+    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <ErrorBox error={onSubmit.error} />
+      <SelectElement
+        control={control} name="rTrener" label="Trenér" required
+        options={(trainers?.trainers?.nodes || []).map(x => ({ id: x.uId, label: `${x.uJmeno} ${x.uPrijmeni}` }))}
+      />
+      <TextFieldElement control={control} name="rKde" label="Místo" required />
+      <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Datum" name="rDatum" required />
+      <CheckboxElement control={control} name="rVisible" value="1" label="Viditelný" />
+      <CheckboxElement control={control} name="rLock" value="1" label="Uzamčený" />
+      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+    </form>
   );
 };

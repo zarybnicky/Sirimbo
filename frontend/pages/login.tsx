@@ -33,7 +33,7 @@ export default function LoginPage() {
           <Typography gutterBottom variant="h5" component="h2">
             Přihlášení do systému
           </Typography>
-          <ErrorBox grid error={onSubmit.error} />
+          <ErrorBox error={onSubmit.error} />
           <TextFieldElement
             control={control} name="login"
             label="E-mail nebo přihlašovací jméno" autoComplete="username"

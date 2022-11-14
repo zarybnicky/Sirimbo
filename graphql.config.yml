@@ -24,7 +24,6 @@ generates:
       - "typescript-operations"
       - "typescript-react-query"
     config:
-      exposeDocument: true
       exposeQueryKeys: true
       exposeMutationKeys: true
       exposeFetcher: true

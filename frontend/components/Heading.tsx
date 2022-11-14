@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Typography } from '@mui/material';
 import { CellPlugin } from '@react-page/editor';
 import { RGBColor } from 'react-color';
 
@@ -16,25 +15,14 @@ export const Heading = ({ color, image, text }: HeadingProps) => {
 
   return <div style={{ background }}>
     <div className="container mx-auto max-w-5xl">
-      <div className="relative py-20">
-        <Typography variant="h4" component="h2" sx={{
-          zIndex: 3,
-          color: 'white',
-          textTransform: 'uppercase',
-          fontWeight: 'bold',
-        }}>{text}</Typography>
+      <div className="relative py-20 mx-10 xl:mx-0">
+        <h2 className="text-3xl drop-shadow-md mb-0 z-3 text-white uppercase font-bold">
+          {text}
+        </h2>
 
-        <Typography variant="h3" component="div" sx={{
-          position: 'absolute',
-          top: '50%',
-          left: 0,
-          transform: 'translateY(-50%)',
-          zIndex: 2,
-          color: 'rgba(255, 255, 255, .4)',
-          userSelect: 'none',
-          textTransform: 'uppercase',
-          fontWeight: 'bold',
-        }}>{text}</Typography>
+        <div className="text-5xl absolute top-1/2 transform -translate-y-1/2 left-0 z-2 text-white/40 uppercase font-bold select-none">
+          {text}
+        </div>
       </div>
     </div>
   </div>;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
-import { DialogTitle, Dialog, Typography } from '@mui/material';
+import { DialogTitle, Dialog } from '@mui/material';
 import { useMemberListQuery } from 'lib/graphql';
 import { CohortExport } from 'components/CohortExport';
 import { TabMenu } from 'components/TabMenu';
@@ -52,7 +52,7 @@ export default function CohortsPage() {
           <div className="flex items-start justify-between mb-3">
             <div>
               {cohort.members.length} členů
-              <Typography variant="h5">{cohort.sName}</Typography>
+              <h5>{cohort.sName}</h5>
             </div>
             <CohortExport id={cohort.sId} name={cohort.sName} />
           </div>
