@@ -44,6 +44,7 @@ module.exports = {
     require("@tailwindcss/aspect-ratio"),
     require('@tailwindcss/line-clamp'),
     require('tailwindcss-opentype'),
+    require("tailwindcss-radix")(),
     plugin(function ({ addComponents, theme }) {
       addComponents(accordion(theme));
       addComponents(alert(theme));

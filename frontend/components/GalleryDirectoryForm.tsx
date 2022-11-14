@@ -3,7 +3,7 @@ import { GalleryDirFragment, GalerieDirInput, useUpdateGalleryDirMutation, useGa
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
-import { SelectElement } from 'react-hook-form-mui';
+import { SelectElement } from 'components/SelectElement';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
@@ -46,7 +46,7 @@ export const GalleryDirForm: React.FC<{
       </Grid>
       <Grid item xs={12}>
         <SelectElement
-          fullWidth control={control} name="gdIdRodic" label="Rodičovská složka" required
+          control={control} name="gdIdRodic" label="Rodičovská složka" required
           options={(dirs?.galerieDirs?.nodes || []).map(x => ({
             id: x.gdId,
             label: '\xa0'.repeat(x.gdLevel - 1) + x.gdName,

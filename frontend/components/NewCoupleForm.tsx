@@ -3,7 +3,7 @@ import { useCreateCoupleMutation, useUserListQuery } from 'lib/graphql';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
-import { SelectElement } from 'react-hook-form-mui';
+import { SelectElement } from 'components/SelectElement';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 

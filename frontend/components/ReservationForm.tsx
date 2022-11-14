@@ -2,7 +2,8 @@ import { Grid } from '@mui/material';
 import { ReservationFragment, NabidkaInput, useCreateReservationMutation, useUpdateReservationMutation, useTrainerListQuery } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { DatePickerElement, SelectElement } from 'react-hook-form-mui';
+import { DatePickerElement } from 'react-hook-form-mui';
+import { SelectElement } from 'components/SelectElement';
 import { TextFieldElement } from 'components/TextField';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
@@ -45,7 +46,7 @@ export const ReservationForm: React.FC<{
       <ErrorBox grid error={onSubmit.error} />
       <Grid item xs={12}>
         <SelectElement
-          fullWidth control={control} name="nTrener" label="Trenér" required
+          control={control} name="nTrener" label="Trenér" required
           options={(trainers?.trainers?.nodes || []).map(x => ({ id: x.uId, label: `${x.uJmeno} ${x.uPrijmeni}` }))}
         />
       </Grid>

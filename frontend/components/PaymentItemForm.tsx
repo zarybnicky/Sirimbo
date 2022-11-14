@@ -2,7 +2,8 @@ import { Grid } from '@mui/material';
 import { PaymentItemFragment, PlatbyItemInput, useCreatePaymentItemMutation, usePaymentCategoryListQuery, useUpdatePaymentItemMutation, useUserListQuery } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { DatePickerElement, SelectElement } from 'react-hook-form-mui';
+import { DatePickerElement } from 'react-hook-form-mui';
+import { SelectElement } from 'components/SelectElement';
 import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
@@ -53,7 +54,7 @@ export const PaymentItemForm: React.FC<{
       </Grid>
       <Grid item xs={12}>
         <SelectElement
-          fullWidth control={control} name="piIdUser" label="Uživatel" required
+          control={control} name="piIdUser" label="Uživatel" required
           options={(users?.users?.nodes || []).map(x => ({
             id: x.uId, label: `${x.uId.padStart(6, '0')} - ${x.uJmeno} ${x.uPrijmeni}`
           }))}
@@ -61,7 +62,7 @@ export const PaymentItemForm: React.FC<{
       </Grid>
       <Grid item xs={12}>
         <SelectElement
-          fullWidth control={control} name="piIdUser" label="Uživatel" required
+          control={control} name="piIdUser" label="Uživatel" required
           options={(categories?.platbyCategories?.nodes || []).map(x => ({
             id: x.pcId, label: `${x.pcId} - ${x.pcName}`
           }))}

@@ -2,7 +2,8 @@ import { Grid, Typography } from '@mui/material';
 import { UserFragment, UserInput, useCreateUserMutation, useUpdateUserMutation, useRoleListQuery, useCohortListQuery } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { SelectElement, DatePickerElement, RadioButtonGroup } from 'react-hook-form-mui';
+import { SelectElement } from 'components/SelectElement';
+import { DatePickerElement, RadioButtonGroup } from 'react-hook-form-mui';
 import { TextAreaElement, TextFieldElement } from 'components/TextField';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
@@ -146,9 +147,9 @@ export const UserForm: React.FC<{
       </Grid>
 
       <Grid item xs={12}>
-        <SelectElement control={control} fullWidth
+        <SelectElement control={control}
           label="Národnost" name="uNationality" required
-          options={countries.map(x => ({ id: x.code, label: x.label }))}
+          options={countries.map(x => ({ id: x.code.toString(), label: x.label }))}
         />
       </Grid>
 
@@ -157,7 +158,7 @@ export const UserForm: React.FC<{
       </Grid>
 
       <Grid item xs={12}>
-        <SelectElement control={control} fullWidth
+        <SelectElement control={control}
           label="Tréninková skupina" name="uSkupina"
           options={cohorts?.skupinies?.nodes?.map(x => ({ id: x.sId, label: x.sName })) || []}
         />
@@ -179,7 +180,7 @@ export const UserForm: React.FC<{
       </Grid>
 
       <Grid item xs={12}>
-        <SelectElement control={control} fullWidth
+        <SelectElement control={control}
           label="Uživatelská role" name="uGroup"
           options={roles?.permissions?.nodes?.map(x => ({ id: x.peId, label: x.peName })) || []}
         />

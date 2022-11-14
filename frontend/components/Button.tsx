@@ -8,8 +8,8 @@ export const Button = React.memo(function Button({
 }: ButtonProps) {
   const color = props.disabled ? 'button button-secondary' : 'button button-red';
   if (href) {
-    return <Link href={href} passHref className={color}>
-      <a>{children}</a>
+    return <Link href={href} passHref>
+      <a className={color}>{children}</a>
     </Link>
   }
   return <button type={type} {...props} className={color}>{children}</button>

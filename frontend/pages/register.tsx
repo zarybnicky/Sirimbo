@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Card, Grid, CardContent, CardActions, Typography } from '@mui/material';
-import { useForm, SelectElement, DatePickerElement, RadioButtonGroup } from 'react-hook-form-mui';
+import { useForm } from 'react-hook-form';
+import { DatePickerElement, RadioButtonGroup } from 'react-hook-form-mui';
+import { SelectElement } from 'components/SelectElement';
 import { TextFieldElement } from 'components/TextField';
 import { useCountries } from 'lib/data/use-countries';
 import format from 'date-fns/format';
@@ -91,7 +93,7 @@ export default function RegisterPage() {
             <Grid item xs={12}>
               <SelectElement control={control}
                 label="Národnost" name="nationality" required
-                options={countries.map(x => ({ id: x.code, label: x.label }))}
+                options={countries.map(x => ({ id: x.code.toString(), label: x.label }))}
               />
             </Grid>
 

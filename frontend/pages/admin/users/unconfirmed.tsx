@@ -2,7 +2,8 @@ import { Alert, Card, CardActions, CardContent, Grid, Typography } from "@mui/ma
 import format from "date-fns/format";
 import parseISO from "date-fns/parseISO";
 import { useDeleteUserMutation, useCohortListQuery, useConfirmUserMutation, useRoleListQuery, UserFragment, useUserListQuery } from 'lib/graphql';
-import { SelectElement, useForm } from "react-hook-form-mui";
+import { SelectElement } from 'components/SelectElement';
+import { useForm } from "react-hook-form";
 import CheckIcon from '@mui/icons-material/Check';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useConfirm } from 'material-ui-confirm';
@@ -61,14 +62,13 @@ const UnconfirmedUser: React.FC<{
               <b>Poznámka:</b> {item.uPoznamky}
             </Typography>
           </Grid>
-          <Grid item md={6}>
+          <Grid item md={6} className="flex gap-2">
             <SelectElement
-              className="my-4"
-              fullWidth required control={control} name="cohort" label="Tréninková skupina"
+              required control={control} name="cohort" label="Tréninková skupina"
               options={(cohorts?.skupinies?.nodes || []).map(item => ({ id: item.sId, label: item.sName }))}
             />
             <SelectElement
-              fullWidth required control={control} name="role" label="Role oprávnění"
+              required control={control} name="role" label="Role oprávnění"
               options={(roles?.permissions?.nodes || []).map(item => ({ id: item.peId, label: item.peName }))}
             />
           </Grid>

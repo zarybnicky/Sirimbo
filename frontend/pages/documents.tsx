@@ -1,21 +1,21 @@
 import { useForm } from "react-hook-form";
 import { useFileListQuery } from 'lib/graphql';
-import { SelectElement } from "react-hook-form-mui";
+import { SelectElement } from 'components/SelectElement';
 import { DataGrid } from '@mui/x-data-grid';
 import format from "date-fns/format";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 
 const categories = [
-  { id: 1, label: "Schůze,\u{00A0}rady" },
-  { id: 2, label: 'Soutěže' },
-  { id: 3, label: 'Soustředění' },
-  { id: 0, label: 'Ostatní' },
+  { id: "1", label: "Schůze,\u{00A0}rady" },
+  { id: "2", label: 'Soutěže' },
+  { id: "3", label: 'Soustředění' },
+  { id: "0", label: 'Ostatní' },
 ];
 
 export default function FileListPage() {
   useRequireUserLoggedIn();
-  const { control, watch } = useForm<{ category: number; }>();
-  const { data } = useFileListQuery({ category: watch('category') });
+  const { control, watch } = useForm<{ category: string; }>();
+  const { data } = useFileListQuery({ category: parseInt(watch('category'), 10) });
 
   return <div className="container mx-auto max-w-5xl pt-12 pb-4">
     <div style={{ margin: '0 1rem 1rem auto', maxWidth: '12rem' }}>
@@ -36,7 +36,7 @@ export default function FileListPage() {
         },
         {
           field: 'category', headerName: 'Kategorie', width: 150,
-          renderCell: ({ row }) => categories.find(x => x.id === row.dKategorie)?.label,
+          renderCell: ({ row }) => categories.find(x => x.id === row.dKategorie.toString())?.label,
         },
         {
           field: 'date', headerName: 'Přidáno', flex: 1,
