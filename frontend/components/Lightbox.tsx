@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useSwipeable } from 'react-swipeable';
-import { Card, Dialog, Fade, Typography } from '@mui/material';
+import { Card, Dialog, Fade } from '@mui/material';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import { GalleryItem } from 'lib/data/use-gallery';
@@ -70,7 +70,7 @@ export const Lightbox = ({ dirHref, images, initial }: LightboxProps) => {
                 objectFit: 'contain',
               }} />
               <Card variant="outlined" className="p-4 text-center">
-                <Typography variant="caption">{image.name}</Typography>
+                <div className="tracking-wide uppercase text-slate-700 text-xs">{image.name}</div>
               </Card>
             </div>
           </Fade>

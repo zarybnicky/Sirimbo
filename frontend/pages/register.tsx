@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Card, Grid, CardContent, CardActions, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { DatePickerElement, RadioButtonGroup } from 'react-hook-form-mui';
 import { SelectElement } from 'components/SelectElement';
@@ -11,6 +10,7 @@ import { useCohortListQuery, useRegisterMutation } from 'lib/graphql';
 import { useRequireUserLoggedOut } from 'lib/route-guards';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from 'components/ErrorBox';
+import { Card } from 'components/Card';
 import { useRouter } from 'next/router';
 import { SubmitButton } from 'components/SubmitButton';
 
@@ -46,160 +46,118 @@ export default function RegisterPage() {
 
   return (
     <div className="container mx-auto max-w-3xl mt-12 mb-8">
-      <Card component="form" onSubmit={handleSubmit(onSubmit.execute)}>
-        <CardContent>
-          <Grid container spacing={1}>
-            <Typography gutterBottom variant="h4" component="h2">Registrace</Typography>
+      <Card>
+        <form className="grid md:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+          <h4 className="col-full">Registrace</h4>
 
-            <Grid item xs={12}>
-              <Typography variant="caption">Přihlašovací údaje</Typography>
-            </Grid>
+          <div className="tracking-wide uppercase text-slate-700 text-xs col-full mt-4">Přihlašovací údaje</div>
 
-            <Grid item xs={12} sm={6}>
-              <TextFieldElement
-                control={control} label="Přihlašovací jméno" name="username" autoComplete="username" required
-                helperText="Pouze písmena bez diakritiky, číslice a podtržítka, 3 - 20 znaků"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextFieldElement
-                control={control} label="Heslo" name="password" type="password" autoComplete="new-password" required
-                helperText="Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků"
-              />
-            </Grid>
+          <TextFieldElement
+            control={control} label="Přihlašovací jméno" name="username" autoComplete="username" required
+            helperText="Pouze písmena bez diakritiky, číslice a podtržítka, 3 - 20 znaků"
+          />
+          <TextFieldElement
+            control={control} label="Heslo" name="password" type="password" autoComplete="new-password" required
+            helperText="Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků"
+          />
 
-            <Grid item xs={12} className="mt-4">
-              <Typography variant="caption">Osobní údaje</Typography>
-            </Grid>
+          <div className="tracking-wide uppercase text-slate-700 text-xs col-full mt-4">Osobní údaje</div>
 
-            <Grid item xs={12} sm={6}>
-              <TextFieldElement control={control} label="Jméno" name="jmeno" autoComplete="given-name" required />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextFieldElement control={control} label="Příjmení" name="prijmeni" autoComplete="family-name" required />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Datum narození" name="narozeni" required />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextFieldElement control={control} label="Rodné číslo" name="rodneCislo" required validation={{
-                pattern: {
-                  value: /[0-9]{9,10}/,
-                  message: 'Neplatné rodné číslo',
-                },
-              }} />
-            </Grid>
+          <TextFieldElement control={control} label="Jméno" name="jmeno" autoComplete="given-name" required />
+          <TextFieldElement control={control} label="Příjmení" name="prijmeni" autoComplete="family-name" required />
+          <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Datum narození" name="narozeni" required />
+          <TextFieldElement control={control} label="Rodné číslo" name="rodneCislo" required validation={{
+            pattern: {
+              value: /[0-9]{9,10}/,
+              message: 'Neplatné rodné číslo',
+            },
+          }} />
 
-            <Grid item xs={12}>
-              <SelectElement control={control}
-                label="Národnost" name="nationality" required
-                options={countries.map(x => ({ id: x.code.toString(), label: x.label }))}
-              />
-            </Grid>
+          <div className="col-full grid gap-2">
+            <SelectElement control={control}
+              label="Národnost" name="nationality" required
+              options={countries.map(x => ({ id: x.code.toString(), label: x.label }))}
+            />
 
-            <Grid item xs={12}>
-              <RadioButtonGroup row control={control} name="pohlavi" required options={[
-                { label: 'Muž', id: 'm' },
-                { label: 'Žena', id: 'f' }
-              ]} />
-            </Grid>
+            <RadioButtonGroup row control={control} name="pohlavi" required options={[
+              { label: 'Muž', id: 'm' },
+              { label: 'Žena', id: 'f' }
+            ]} />
+          </div>
 
-            <Grid item xs={12} className="mt-4">
-              <Typography variant="caption">Kontaktní údaje</Typography>
-            </Grid>
+          <div className="tracking-wide uppercase text-slate-700 text-xs col-full mt-4">Kontaktní údaje</div>
 
-            <Grid item xs={12} sm={6}>
-              <TextFieldElement control={control} label="E-mail" name="email" type="email" required />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextFieldElement control={control} label="Telefon" name="telefon" required />
-            </Grid>
+          <TextFieldElement control={control} label="E-mail" name="email" type="email" required />
+          <TextFieldElement control={control} label="Telefon" name="telefon" required />
 
-            <Grid item xs={12} className="mt-4">
-              <Typography variant="caption">Adresa</Typography>
-            </Grid>
+          <div className="tracking-wide uppercase text-slate-700 text-xs col-full mt-4">Adresa</div>
 
-            <Grid item xs={12} sm={6}>
-              <TextFieldElement control={control} label="Ulice" name="street" autoComplete="address-line1" required />
-            </Grid>
-            <Grid item xs={6} sm={3}>
-              <TextFieldElement control={control} type="number" label="Č. popisné" name="popisne" />
-            </Grid>
-            <Grid item xs={6} sm={3}>
-              <TextFieldElement control={control} type="number" label="Č. orientační" name="orientacni" required />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextFieldElement control={control} label="Město" name="city" autoComplete="address-level2" required />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextFieldElement control={control} label="Část města" name="district" autoComplete="address-level3" />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextFieldElement control={control} label="PSČ" name="postal" autoComplete="postal-code" required />
-            </Grid>
+          <TextFieldElement control={control} label="Ulice" name="street" autoComplete="address-line1" required />
+          <div className="grid grid-cols-2 gap-2">
+            <TextFieldElement control={control} type="number" label="Č. popisné" name="popisne" />
+            <TextFieldElement control={control} type="number" label="Č. orientační" name="orientacni" required />
+          </div>
+          <TextFieldElement control={control} label="Město" name="city" autoComplete="address-level2" required />
+          <TextFieldElement control={control} label="Část města" name="district" autoComplete="address-level3" />
+          <TextFieldElement control={control} label="PSČ" name="postal" autoComplete="postal-code" required />
 
-            <Grid item xs={12} className="mt-4">
-              <Typography variant="overline">Tréninkové údaje</Typography>
-            </Grid>
+          <div className="tracking-wide uppercase text-slate-700 text-xs col-full mt-4">Tréninkové údaje</div>
 
-            <Grid item xs={12} sm={6}>
-              <SelectElement control={control}
-                label="Tréninková skupina" name="skupina"
-                options={cohorts?.skupinies?.nodes?.map(x => ({ id: x.sId, label: x.sName })) || []}
-              />
-            </Grid>
+          <div className="col-full md:col-span-2">
+            <SelectElement control={control}
+              label="Tréninková skupina" name="skupina"
+              options={cohorts?.skupinies?.nodes?.map(x => ({ id: x.sId, label: x.sName })) || []}
+            />
+          </div>
 
-            <Grid item xs={12} sm={6}>
-              <SelectElement control={control}
-                label="Vztah ke klubu" name="poznamky" required
-                options={[
-                  { id: 'dancer', label: 'Tanečník/tanečnice' },
-                  { id: 'parent', label: 'Rodič tanečníka' },
-                  { id: 'other', label: 'Jiný' },
-                ]}
-              />
-              {watch('poznamky') === 'parent' && (
-                <TextFieldElement control={control} label="Jméno tanečníka" name="dancer-name" />
-              )}
-              {watch('poznamky') === 'other' && (
-                <TextFieldElement control={control} label="Popište svůj vztah ke klubu" name="other" placeholder="vztah ke klubu" />
-              )}
-            </Grid>
+          <div className="col-full md:col-span-2">
+            <SelectElement control={control}
+              label="Vztah ke klubu" name="poznamky" required
+              options={[
+                { id: 'dancer', label: 'Tanečník/tanečnice' },
+                { id: 'parent', label: 'Rodič tanečníka' },
+                { id: 'other', label: 'Jiný' },
+              ]}
+            />
+            {watch('poznamky') === 'parent' && (
+              <TextFieldElement control={control} label="Jméno tanečníka" name="dancer-name" />
+            )}
+            {watch('poznamky') === 'other' && (
+              <TextFieldElement control={control} label="Popište svůj vztah ke klubu" name="other" placeholder="vztah ke klubu" />
+            )}
+          </div>
 
-            <Grid item xs={12} style={{ marginTop: '2rem' }}>
-              <p>
-                Zákon č. 101/2000 Sb., o ochraně osobních údajů, ve znění pozdějších předpisů, ukládá
-                <b> Tanečnímu klubu Olymp Olomouc, z. s., IČ: 68347286, se sídlem: Jiráskova 381/25, Olomouc</b>
-                (dále jen „klub“) práva a povinnosti, mezi něž mimo jiné patří i povinnost informovat své členy
-                o právech, které se týkají ochrany osobních údajů člena, respektive budoucího člena o přístupu
-                k osobním údajům, zpracování a předávání osobních údajů třetí osobě.
-              </p>
-              <Typography variant="body1" gutterBottom>
-                Stvrzuji, že tuto povinnost klub splnil a souhlasím, aby klub shromažďoval a
-                zpracovával mé (mého syna/dcery) osobní údaje v souladu s právy a povinnostmi, které mu
-                ukládají obecně závazné právní předpisy.
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                Dávám tímto výslovný souhlas s použitím citlivého údaje – fotografie – na webu klubu.
-                Souhlasím s používáním všech fotografií a videí ze soutěží, tréninků, soustředění… vytvořených
-                pro účely propagace klubu. Souhlasím s jejich zveřejněním na webových stránkách klubu a
-                sociálních sítích Facebook a Instagram.
-              </Typography>
-              <Typography variant="body1">
-                Dojde-li ke změně v mých osobních údajích, zavazuji se je klubu oznámit neprodleně. Můj
-                souhlas se zpracováním osobních údajů se bude vztahovat i na tyto nově oznámené osobní
-                údaje.
-              </Typography>
-            </Grid>
+          <div className="col-full mt-8">
+            <p>
+              Zákon č. 101/2000 Sb., o ochraně osobních údajů, ve znění pozdějších předpisů, ukládá
+              <b> Tanečnímu klubu Olymp Olomouc, z. s., IČ: 68347286, se sídlem: Jiráskova 381/25, Olomouc</b>
+              (dále jen „klub“) práva a povinnosti, mezi něž mimo jiné patří i povinnost informovat své členy
+              o právech, které se týkají ochrany osobních údajů člena, respektive budoucího člena o přístupu
+              k osobním údajům, zpracování a předávání osobních údajů třetí osobě.
+            </p>
+            <p>
+              Stvrzuji, že tuto povinnost klub splnil a souhlasím, aby klub shromažďoval a
+              zpracovával mé (mého syna/dcery) osobní údaje v souladu s právy a povinnostmi, které mu
+              ukládají obecně závazné právní předpisy.
+            </p>
+            <p>
+              Dávám tímto výslovný souhlas s použitím citlivého údaje – fotografie – na webu klubu.
+              Souhlasím s používáním všech fotografií a videí ze soutěží, tréninků, soustředění… vytvořených
+              pro účely propagace klubu. Souhlasím s jejich zveřejněním na webových stránkách klubu a
+              sociálních sítích Facebook a Instagram.
+            </p>
+            <p>
+              Dojde-li ke změně v mých osobních údajích, zavazuji se je klubu oznámit neprodleně. Můj
+              souhlas se zpracováním osobních údajů se bude vztahovat i na tyto nově oznámené osobní
+              údaje.
+            </p>
+          </div>
 
-            <ErrorBox error={onSubmit.error} />
-          </Grid>
-        </CardContent>
-        <CardActions>
+          <ErrorBox error={onSubmit.error} />
           <SubmitButton className="w-full" loading={onSubmit.loading} disabled={!formState.isValid}>
             Registrovat
           </SubmitButton>
-        </CardActions>
+        </form>
       </Card>
     </div>
   );

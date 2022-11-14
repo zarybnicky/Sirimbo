@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Grid, Typography, Pagination } from '@mui/material';
+import { Pagination } from '@mui/material';
 import { ArticleCard } from 'components/cards/ArticleCard';
 import { useArticles } from 'lib/data/use-articles';
 import { CallToAction } from 'components/CallToAction';
@@ -15,12 +15,10 @@ export const ArticlesPage = ({ }) => {
       <title>Články | TK Olymp</title>
     </Head>
     <div className="container mx-auto max-w-5xl" style={{ margin: '4rem auto 3rem' }}>
-      <Typography gutterBottom variant="h4" component="h2">Aktuálně</Typography>
-      <Grid container spacing={3} style={{ alignItems: "stretch", marginBottom: '2rem' }}>
-        {articles.map((x, i) => <Grid item container sm={6} md={3} key={i}>
-          <ArticleCard item={x} />
-        </Grid>)}
-      </Grid>
+      <h3>Aktuálně</h3>
+      <div className="grid place-items-stretch gap-4 grid-cols-2 lg:grid-cols-3 mb-6">
+        {articles.map((x, i) => <ArticleCard key={i} item={x} />)}
+      </div>
       <Pagination count={Math.ceil(count / limit)} page={page} onChange={(_, p) => setPage(p)} />
     </div>
     <CallToAction />

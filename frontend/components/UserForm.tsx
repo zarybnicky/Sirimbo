@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { UserFragment, UserInput, useCreateUserMutation, useUpdateUserMutation, useRoleListQuery, useCohortListQuery } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -100,20 +100,23 @@ export const UserForm: React.FC<{
         />
       </div>
 
-      <Typography className="col-full mt-4" variant="caption">Kontaktní údaje</Typography>
+      <div className="tracking-wide uppercase text-slate-700 text-xs col-full mt-4">Kontaktní údaje</div>
 
       <TextFieldElement control={control} type="email" name="uEmail" label="E-mail" required />
       <TextFieldElement control={control} type="tel" name="uTelefon" label="Telefon" required />
 
-      <Typography className="col-full mt-4" variant="caption">Bydliště</Typography>
+      <div className="tracking-wide uppercase text-slate-700 text-xs col-full mt-4">Bydliště</div>
 
       <TextFieldElement control={control} name="uStreet" label="Ulice" required />
-      <TextFieldElement control={control} name="uConscriptionNumber" label="Č.popisné" />
-      <TextFieldElement control={control} name="uOrientationNumber" label="Č.orientační" />
 
-      <TextFieldElement control={control} name="uCity" label="Ulice" required />
-      <TextFieldElement control={control} name="uDistrict" label="Č.popisné" />
-      <TextFieldElement control={control} name="uPostalCode" label="Č.orientační" />
+      <div className="grid grid-cols-2 gap-2">
+        <TextFieldElement control={control} name="uConscriptionNumber" label="Č.popisné" />
+        <TextFieldElement control={control} name="uOrientationNumber" label="Č.orientační" />
+      </div>
+
+      <TextFieldElement control={control} name="uCity" label="Město" required />
+      <TextFieldElement control={control} name="uDistrict" label="Městská čtvrť" />
+      <TextFieldElement control={control} name="uPostalCode" label="PSČ" />
 
       <div className="col-full">
         <SelectElement control={control}
@@ -122,7 +125,7 @@ export const UserForm: React.FC<{
         />
       </div>
 
-      <Typography className="col-full mt-4" variant="caption">Tréninkové údaje</Typography>
+      <div className="tracking-wide uppercase text-slate-700 text-xs col-full mt-4">Tréninkové údaje</div>
 
       <div className="col-full grid gap-2">
         <SelectElement control={control}
@@ -136,7 +139,7 @@ export const UserForm: React.FC<{
         <CheckboxElement control={control} name="uTeacher" value="1" label="Trenér" />
       </div>
 
-      <Typography className="col-full mt-4" variant="overline">Přístupy</Typography>
+      <div className="tracking-wide uppercase text-slate-700 text-xs col-full mt-4">Přístupy</div>
 
       <div className="col-full grid gap-2">
         <SelectElement

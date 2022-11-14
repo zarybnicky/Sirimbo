@@ -30,7 +30,7 @@ export const ProspectForm = ({ title }: ProspectFormProps) => {
   return (
     <Card component="form" elevation={3} onSubmit={handleSubmit(onSubmit.execute)}>
       <CardContent>
-        <Typography variant="h4" component="div">{title}</Typography>
+        <h4>{title}</h4>
         <Grid container spacing={1.5}>
           <Grid item xs={12} sm={4}>
             <TextFieldElement control={control} name="name" label="Jméno" autoComplete="given-name" required />

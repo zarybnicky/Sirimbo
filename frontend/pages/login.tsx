@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card, CardContent, CardActions, Grid, Typography } from '@mui/material';
+import { Card, CardContent, CardActions } from '@mui/material';
 import Link from 'next/link';
 import { useAuth } from 'lib/data/use-auth';
 import { useRouter } from 'next/router';
@@ -30,9 +30,8 @@ export default function LoginPage() {
     <div className="container mx-auto max-w-md mt-12 mb-16">
       <Card component="form" onSubmit={handleSubmit(onSubmit.execute)}>
         <CardContent style={{ gap: '5px', display: 'flex', flexDirection: 'column', justifyItems: 'stretch' }}>
-          <Typography gutterBottom variant="h5" component="h2">
-            Přihlášení do systému
-          </Typography>
+          <h5>Přihlášení do systému</h5>
+
           <ErrorBox error={onSubmit.error} />
           <TextFieldElement
             control={control} name="login"
@@ -49,7 +48,7 @@ export default function LoginPage() {
             Přihlásit
           </SubmitButton>
         </CardActions>
-        <Grid container justifyContent="space-between" style={{ padding: '0 1rem 1rem' }}>
+        <div className="flex gap-2 pb-4 px-4">
           <Link href="/register" passHref>
             <a className="button button-red button-sm button-text flex gap-2 items-center">
               Registrovat se
@@ -60,7 +59,7 @@ export default function LoginPage() {
               Zapomněli jste heslo?
             </a>
           </Link>
-        </Grid>
+        </div>
       </Card>
     </div>
   );

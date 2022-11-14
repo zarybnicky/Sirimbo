@@ -31,6 +31,8 @@ module.exports = withBundleAnalyzer(withSentryConfig({
   async redirects() {
     return [
       { source: '/home', destination: '/', permanent: true },
+      { source: '/aktualne', destination: '/articles', permanent: true },
+      { source: '/aktualne/:path*', destination: '/articles/:path*', permanent: true },
       { source: '/nopassword', destination: '/forgotten-password', permanent: true },
       { source: '/registrace', destination: '/register', permanent: true },
       { source: '/kontakt', destination: '/contact', permanent: true },

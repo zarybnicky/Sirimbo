@@ -1,6 +1,6 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { Card, CardContent, Grid, Typography } from '@mui/material';
+import { Card } from 'components/Card';
 import { usePermissions } from 'lib/data/use-permissions';
 import { DateRange } from 'components/DateRange';
 import { useReservationRangeQuery, useScheduleRangeQuery } from 'lib/graphql';
@@ -80,106 +80,92 @@ export default function SchedulePage() {
   }, []);
 
   const scheduleList = schedules?.schedulesForRange?.nodes?.map((item, i) => (
-    <Grid item key={i} md={6} lg={4} xl={3}>
-      <Card>
-        <CardContent>
-          <div className="h5 mb-0">
-            {item.userByRTrener?.uJmeno} {item.userByRTrener?.uPrijmeni}
-            {item.userByRTrener && perms.canEditSchedule(item) && <Dropdown
-              button={<img alt="Upravit" width="16" src="/style/icon-gear.png" />}
-              options={[
-                { title: "Upravit", href: `/admin/rozpis/edit/${item.rId}` },
-                { title: "Upravit rezervace", href: `/admin/rozpis/detail/${item.rId}` },
-              ]}
-            />}
-          </div>
-          <div className="text-slate">{format(new Date(item.rDatum), 'd. M. y')}</div>
-          <div>{item.rKde}</div>
-          <hr />
+    <Card key={i}>
+      <div className="h5 mb-0">
+        {item.userByRTrener?.uJmeno} {item.userByRTrener?.uPrijmeni}
+        {item.userByRTrener && perms.canEditSchedule(item) && <Dropdown
+          button={<img alt="Upravit" width="16" src="/style/icon-gear.png" />}
+          options={[
+            { title: "Upravit", href: `/admin/rozpis/edit/${item.rId}` },
+            { title: "Upravit rezervace", href: `/admin/rozpis/detail/${item.rId}` },
+          ]}
+        />}
+      </div>
+      <div className="text-slate">{format(new Date(item.rDatum), 'd. M. y')}</div>
+      <div>{item.rKde}</div>
+      <hr />
 
-          {item.rozpisItemsByRiIdRodic.nodes?.map((lesson, i) => (
-            <Grid container key={i} spacing={2}>
-              <Grid item>
-                {format(parse(lesson.riOd, "HH:mm:ss", now), 'HH:mm')}
-                {'-'}
-                {format(parse(lesson.riDo, "HH:mm:ss", now), 'HH:mm')}
-              </Grid>
-              <Grid item className="grow">
-                {perms.canSignUp(item, lesson) ? (
-                  <Button name="action" value="signup" className="py-0">+</Button>
-                ) : (
-                  <>{lesson.paryByRiPartner?.userByPIdPartner?.uJmeno} {lesson.paryByRiPartner?.userByPIdPartner?.uPrijmeni}</>
-                )}
-              </Grid>
+      <div className="grid grid-cols-[1fr_2fr]">
+        {item.rozpisItemsByRiIdRodic.nodes?.map((lesson, i) => <React.Fragment key={i}>
+          <div>
+            {format(parse(lesson.riOd, "HH:mm:ss", now), 'HH:mm')}{'-'}
+            {format(parse(lesson.riDo, "HH:mm:ss", now), 'HH:mm')}
+          </div>
+          <div>
+            {perms.canSignUp(item, lesson) ? (
+              <button name="action" value="signup" className="button button-icon button-red button-sm py-0">+</button>
+            ) : <>
+              {lesson.paryByRiPartner?.userByPIdPartner?.uJmeno}{' '}
+              {lesson.paryByRiPartner?.userByPIdPartner?.uPrijmeni}
               {perms.canSignOut(item, lesson) && (
-                <Grid item>
-                  <Button name="action" value="signout" className="py-0">&times;</Button>
-                </Grid>
+                <button name="action" value="signout" className="button button-icon button-sm button-red py-0">&times;</button>
               )}
-            </Grid>
-          ))}
-        </CardContent>
-      </Card>
-    </Grid>
+            </>}
+          </div>
+        </React.Fragment>)}
+      </div>
+    </Card>
   ));
 
   const reservationList = reservations?.reservationsForRange?.nodes?.map((item, i) => (
-    <Grid item key={i} md={6} lg={4} xl={3}>
-      <Card>
-        <CardContent>
-          <div className="h5 mb-0">
-            {item.userByNTrener?.uJmeno} {item.userByNTrener?.uPrijmeni}
-            {perms.canEditReservation(item) && <Dropdown
-              button={<img alt="Upravit" width="16" src="/style/icon-gear.png" />}
-              options={[
-                { title: "Upravit", href: `/admin/nabidka/edit/${item.nId}` },
-                { title: "Upravit rezervace", href: `/admin/nabidka/detail/${item.nId}` },
-              ]}
-            />}
-          </div>
-          <div className="font-bold"><DateRange from={item.nOd} to={item.nDo} /></div>
+    <Card key={i}>
+      <div className="h5 mb-0">
+        {item.userByNTrener?.uJmeno} {item.userByNTrener?.uPrijmeni}
+        {perms.canEditReservation(item) && <Dropdown
+          button={<img alt="Upravit" width="16" src="/style/icon-gear.png" />}
+          options={[
+            { title: "Upravit", href: `/admin/nabidka/edit/${item.nId}` },
+            { title: "Upravit rezervace", href: `/admin/nabidka/detail/${item.nId}` },
+          ]}
+        />}
+      </div>
+      <div className="font-bold"><DateRange from={item.nOd} to={item.nDo} /></div>
 
-          {item.nMaxPocetHod > 0 && <>
-            <span className="text-slate-500">Maximálně hodin/pár:</span>
-            <span className="text-lg">{item.nMaxPocetHod}</span>
-          </>}
-          <div>
-            <span className="text-slate-500">Volných hodin: </span>
-            <span className="text-lg">
-              {item.nPocetHod - item.nabidkaItemsByNiIdRodic.nodes.reduce((n, x) => n + x.niPocetHod, 0)} z {item.nPocetHod} nabízených
-            </span>
-          </div>
-          <hr />
-          {item.nabidkaItemsByNiIdRodic.nodes.map((lesson, i) => (
-            <div className="row mx-auto mb-1 no-gutters" key={i}>
-              <div className="col-auto flex-grow-1 pr-1">
-                {lesson.niPocetHod}x
-                {lesson.paryByNiPartner?.userByPIdPartner?.uJmeno}
-                {lesson.paryByNiPartner?.userByPIdPartner?.uPrijmeni}
-              </div>
-              {perms.canCancelReservation(item, lesson) && (
-                <div className="col-2">
-                  <Button name="p_id" value="{lesson.p_id}" className="pl-2">&times;</Button>
-                </div>
-              )}
-            </div>
-          ))}
-          {perms.canMakeReservation(item) && (
-            <div className="form-inline text-center" style={{ padding: '10px 0 5px' }}>
-              <input className="w-auto form-control" type="text" placeholder="Počet hodin" name="hodiny" />
-              <Button onClick={() => reserveLessons(item.nId)}>Rezervovat</Button>
-            </div>
+      {item.nMaxPocetHod > 0 && <>
+        <span className="text-slate-500">Maximálně hodin/pár:</span>
+        <span className="text-lg">{item.nMaxPocetHod}</span>
+      </>}
+      <div>
+        <span className="text-slate-500">Volných hodin: </span>
+        <span className="text-lg">
+          {item.nPocetHod - item.nabidkaItemsByNiIdRodic.nodes.reduce((n, x) => n + x.niPocetHod, 0)} z {item.nPocetHod} nabízených
+        </span>
+      </div>
+      <hr />
+      {item.nabidkaItemsByNiIdRodic.nodes.map((lesson, i) => (
+        <div className="mx-auto mb-1 no-gutters" key={i}>
+          {lesson.niPocetHod}x{' '}
+          {lesson.paryByNiPartner?.userByPIdPartner?.uJmeno}{' '}
+          {lesson.paryByNiPartner?.userByPIdPartner?.uPrijmeni}
+          {perms.canCancelReservation(item, lesson) && (
+            <Button name="p_id" value="{lesson.p_id}" className="pl-2">&times;</Button>
           )}
-        </CardContent>
-      </Card>
-    </Grid >
+        </div>
+      ))}
+      {perms.canMakeReservation(item) && (
+        <div className="form-inline text-center" style={{ padding: '10px 0 5px' }}>
+          <input className="w-auto form-control" type="text" placeholder="Počet hodin" name="hodiny" />
+          <Button onClick={() => reserveLessons(item.nId)}>Rezervovat</Button>
+        </div>
+      )}
+    </Card>
   ));
 
   return <div className="container mx-auto max-w-5xl mt-12 mb-8">
-    <Typography align="right" variant="h4" component="h2">Tento týden</Typography>
-    <Grid container spacing={2}>
+    <h4 className="text-right">Tento týden</h4>
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
       {scheduleList}
       {reservationList}
-    </Grid>
+    </div>
   </div>;
 }

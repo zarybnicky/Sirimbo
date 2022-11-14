@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Typography } from '@mui/material';
 import { createEditor, Descendant } from 'slate';
 import { Slate, Editable, ReactEditor, withReact } from 'slate-react';
 import slate from '@react-page/plugins-slate';
@@ -31,15 +30,15 @@ const Element = ({ attributes, children, element }: any) => {
         {children.map((x: any, i: number) => <li key={i}>{x}</li>)}
       </ul>;
     case 'heading-one':
-      return <Typography variant="h4" component="h1" style={{ marginBottom: '2rem' }} {...attributes}>{children}</Typography>;
+      return <h1 className="heading-4 mb-8" {...attributes}>{children}</h1>;
     case 'heading-two':
-      return <Typography variant="h5" component="h2" style={{ marginBottom: '2rem' }} {...attributes}>{children}</Typography>;
+      return <h2 className="heading-5 mb-8" {...attributes}>{children}</h2>;
     case 'list-item':
       return <li {...attributes}>{children}</li>
     case 'numbered-list':
       return <ol {...attributes}>{children}</ol>
     default:
-      return <Typography variant="body1" style={{ marginBottom: '1rem' }} {...attributes}>{children}</Typography>
+      return <p {...attributes}>{children}</p>
   }
 }
 const Leaf = ({ attributes, children, leaf }: any) => {

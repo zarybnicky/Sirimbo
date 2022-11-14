@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Typography } from '@mui/material';
 import { SocialButtons } from './SocialButtons';
 import { Map } from './Map';
 import { Card } from './Card';
@@ -71,9 +70,7 @@ export const Footer: React.FC = () => {
           <SocialButtons variant="large" className="text-right my-4" />
 
           <Card className="p-4">
-            <Typography variant="h2" className="text-xl text-red-500 font-bold mb-4">
-              Podporují nás
-            </Typography>
+            <h2 className="text-xl text-red-500 font-bold mb-4">Podporují nás</h2>
 
             <div className="grid grid-cols-2 gap-2 text-center">
               <div className="row-span-2">

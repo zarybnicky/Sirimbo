@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { CellPlugin } from '@react-page/editor';
-import { Typography, Grid } from '@mui/material';
 import { defaultSlate } from '../SlateReadonly';
 import { Map } from 'components/Map';
 import { Card } from 'components/Card';
@@ -39,21 +38,19 @@ type Location = {
 }
 
 export const LocationCard = ({ item: x }: { item: Location; }) => {
-  return <Card className="my-8">
-    <Grid container>
-      <Grid item xs={12} sm={4} className="relative">
-        <img className="w-full h-full object-cove" src={x.image} alt={x.name} />
-      </Grid>
-      <Grid item xs={12} sm="auto" className="p-8 pb-4 grow basis-4 text-gray-800">
-        <Typography variant="h5" component="h3" className="font-bold">{x.name}</Typography>
-        <Typography variant="body1">{x.address}</Typography>
-        {x.href && <Typography variant="body1" component="a" href={x.href} rel="noreferrer" target="_blank">{x.href}</Typography>}
-        <Typography variant="body1" component="a" href={x.mapHref} rel="noreferrer" target="_blank">
-          Otevřít mapu
-        </Typography>
-        <CardMap className="h-[150px] mt-4" name={x.name} {...x.map} />
-      </Grid>
-    </Grid>
+  return <Card className="my-8 grid md:grid-cols-[1fr_2fr]">
+    <div className="relative -order-1 md:order-1">
+      <img className="w-full h-full object-cover" src={x.image} alt={x.name} />
+    </div>
+    <div className="p-8 pb-4 grow basis-4 text-gray-800">
+      <h5 className="font-bold">{x.name}</h5>
+      <p>{x.address}</p>
+      {x.href && <a href={x.href} rel="noreferrer" target="_blank">{x.href}</a>}
+      <a href={x.mapHref} rel="noreferrer" target="_blank">
+        Otevřít mapu
+      </a>
+      <CardMap className="h-[150px] mt-4" name={x.name} {...x.map} />
+    </div>
   </Card>;
 };
 

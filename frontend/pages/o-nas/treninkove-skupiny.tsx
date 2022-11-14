@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Card, CardContent, Typography } from '@mui/material';
+import { Card, CardContent } from '@mui/material';
 import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
 import { useCohortListQuery } from 'lib/graphql';
+import { HtmlView } from 'components/HtmlView';
 
 export default function CohortsPage() {
   const { data: cohorts } = useCohortListQuery({ visible: true });
@@ -14,13 +15,9 @@ export default function CohortsPage() {
         <Card key={i} elevation={3} style={{ marginBottom: '2rem', display: 'flex' }}>
           <div style={{ minWidth: '2rem', backgroundColor: x.sColorRgb, borderRight: '1px solid #ddd' }} />
           <CardContent>
-            <Typography variant="h5" component="h2" className="header">{x.sName}</Typography>
-            <Typography variant="h6" component="h3" className="header">{x.sLocation}</Typography>
-            <Typography variant="body1">
-              <div dangerouslySetInnerHTML={{
-                __html: x.sDescription.replace('&nbsp;', ' ').replace('<br />', '')
-              }} />
-            </Typography>
+            <h5>{x.sName}</h5>
+            <h6>{x.sLocation}</h6>
+            <HtmlView content={x.sDescription.replace('&nbsp;', ' ').replace('<br />', '')} />
           </CardContent>
         </Card>
       ))}

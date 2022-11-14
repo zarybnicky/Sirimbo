@@ -1,37 +1,26 @@
 import * as React from 'react';
-import { Typography, Card, CardMedia, CardContent, CardActionArea, CardActions } from '@mui/material';
+import { Card } from 'components/Card';
 import { Article } from 'lib/data/use-articles';
-import { NextLinkComposed } from 'components/Link';
 import Link from 'next/link';
 
 export const ArticleCard = ({ item: x }: { item: Article }) => {
-  return <Card elevation={3} sx={{
-    flexGrow: 1,
-    display: 'flex',
-    flexDirection: 'column',
-  }}>
-    <CardActionArea component={NextLinkComposed} href={x.href} style={{ flexGrow: 1 }}>
-      <CardMedia component="img" height={240} image={x.img} title={x.header} />
-      <CardContent>
-        <Typography className="mb-4 relative text-red-500 after:bg-red-500 font-bold" gutterBottom variant="subtitle1" component="h3" sx={{
-          '&::after': {
-            content: '""',
-            position: 'absolute',
-            bottom: '-7px',
-            left: 0,
-            right: '50%',
-            height: '5px',
-          },
-        }}>{x.header}</Typography>
+  return <Link href={x.href} passHref>
+    <a>
+      <Card className="h-full flex flex-col">
+        <div className="-m-3 mb-2">
+          <img className="object-cover w-full" style={{ height: 240 }} src={x.img} title={x.header} />
+        </div>
+        <div className="tracking-wide mt-2 text-lg text-red-500 after:bg-red-500 font-bold">{x.header}</div>
+        <div className="mr-24 mt-1 mb-4 h-1 bg-red-500" />
 
-        <Typography variant="body2" color="textSecondary" component="p">{x.preview}</Typography>
-      </CardContent>
-    </CardActionArea>
+        <p className="text-slate-700 grow">{x.preview}</p>
 
-    <CardActions className="justify-center pb-1">
-      <Link href={x.href} passHref>
-        <a className="button button-red button-lg">Více zde ᐳ</a>
-      </Link>
-    </CardActions>
-  </Card>;
+        <div className="flex justify-center mt-3">
+          <Link href={x.href} passHref>
+            <a className="button button-red button-lg">Více zde ᐳ</a>
+          </Link>
+        </div>
+      </Card>
+    </a>
+  </Link>;
 };

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Typography } from '@mui/material';
 import { CellPlugin } from '@react-page/editor';
 import { defaultSlate } from '../SlateReadonly';
 import { Card } from 'components/Card';
@@ -12,7 +11,7 @@ type TrainerCardProps = {
 export const TrainerCard = (props: TrainerCardProps & { children: React.ReactNode | React.ReactChildren; }) => {
   return <Card className="relative h-full p-0">
     <div className="bg-stone-800 text-white font-bold mb-0 p-4 border-l-8 border-red-500 header">
-      <Typography variant="h6" component="h3">{props.name}</Typography>
+      <h6>{props.name}</h6>
     </div>
     <div className="prose avoid-trainer-pictures pt-0">
       {props.children}

@@ -12,17 +12,19 @@ export const DesktopHeader = ({ }) => {
       <div className="container mx-auto max-w-5xl flex items-center justify-between">
         <div className="relative overflow-visible min-w-[104px] min-h-[48px] md:min-h-[64px]">
           <div className="w-[104px] h-[130px] text-white bg-red-500 z-50 shadow-red-900/40 shadow-lg absolute top-0 left-0 right-0">
-            <Link href="/" className="block p-0 m-0 h-full w-full relative">
-              <OlympLogoVertical style={{
-                filter: 'drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.2))',
-                position: 'absolute',
-                left: 0,
-                bottom: 0,
-                width: '104px',
-                height: '104px',
-                color: 'white',
-                fill: 'white !important',
-              }} />
+            <Link passHref href="/" className="block p-0 m-0 h-full w-full relative">
+              <a>
+                <OlympLogoVertical style={{
+                  filter: 'drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.2))',
+                  position: 'absolute',
+                  left: 0,
+                  bottom: 0,
+                  width: '104px',
+                  height: '104px',
+                  color: 'white',
+                  fill: 'white !important',
+                }} />
+              </a>
             </Link>
           </div>
         </div>

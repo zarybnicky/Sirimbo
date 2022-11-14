@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Grid, Typography, CardActionArea } from '@mui/material';
+import { Grid, CardActionArea } from '@mui/material';
 import { Video } from 'lib/data/use-videos';
 import { NextLinkComposed } from 'components/Link';
 import PlayIcon from 'public/style/play_white.png';
@@ -25,7 +25,7 @@ export const VideoCard = ({ item: x }: { item: Video }) => {
         </Grid>
 
         <Grid item sm={12} md={9} className="flex grow justify-stretch items-center px-4 py-2 md:pl-8 underline">
-          <Typography variant="h6" component="h2" className="header">{x.name}</Typography>
+          <h6>{x.name}</h6>
         </Grid>
       </Grid>
     </CardActionArea>

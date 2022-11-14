@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Typography } from '@mui/material';
 import { useMyLessonsQuery, LessonFragment } from 'lib/graphql';
 import { useAuth } from 'lib/data/use-auth';
 import format from 'date-fns/format';
@@ -62,17 +61,16 @@ export const MyLessonsList: React.FC = () => {
       <button className="button button-icon" onClick={setPrevWeek}>
         <NavigateBeforeIcon />
       </button>
-      <Typography color="textSecondary" component="span" align="right">
+      <span className="text-slate-700 text-right">
         {format(startDate, 'd. M. y')} - {format(lastDayOfWeek(startDate), 'd. M. y')}
-      </Typography>
+      </span>
       <button className="button button-icon" onClick={setNextWeek}>
         <NavigateNextIcon />
       </button>
     </div>
     {Object.entries(lessonsPerDay).map(([key, lessons]) => <React.Fragment key={key}>
-      <Typography variant="h6" align="center">
-        {key}
-      </Typography>
+      <h6 className="text-center">{key}</h6>
+
       <Timeline sx={{ flex: 1 }}>
         {lessons.map((lesson) => (
           <TimelineItem key={lesson.riId} sx={{ minHeight: '45px' }}>
@@ -93,10 +91,8 @@ export const MyLessonsList: React.FC = () => {
                   {lesson.paryByRiPartner?.userByPIdPartnerka?.uPrijmeni}
                 </> : ''}
               </> : <>
-                <Typography>
-                  {lesson.rozpiByRiIdRodic?.userByRTrener?.uJmeno}{' '}
-                  {lesson.rozpiByRiIdRodic?.userByRTrener?.uPrijmeni}
-                </Typography>
+                {lesson.rozpiByRiIdRodic?.userByRTrener?.uJmeno}{' '}
+                {lesson.rozpiByRiIdRodic?.userByRTrener?.uPrijmeni}
               </>}
             </TimelineContent>
           </TimelineItem>

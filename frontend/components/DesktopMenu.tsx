@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { Menu, MenuItem } from '@mui/material';
 import { PopupState as PopupStateType } from 'material-ui-popup-state/core';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import { NestedMenuItem } from "./NestedMenuItem";
 import { MenuStructItem, getHrefs, useTopMenu, useSideMenu } from 'lib/data/use-menu';
 import { useRouter } from 'next/router';
 import { NextLinkComposed } from './Link';
@@ -36,49 +35,41 @@ const Submenu = React.forwardRef<any, {
     }
   }
 
-  if (!popupState) {
-    return <PopupState variant="popover" popupId={`menu-${x.text.replace(' ', '')} `}>
-      {(popupState) => <>
-        <button {...bindTrigger(popupState)} className={classNames(
-          "flex gap-2 items-center",
-          "min-h-[48px] md:min-h-[64px] text-grey-500 font-bold rounded-none transition-colors",
-          "small-caps",
-          "hover:text-white hover:border-b-3 hover:border-white",
-          inPath && 'text-white border-b-3 border-white'
-        )}>
-          {x.text}
-          <KeyboardArrowDownIcon className="w-4.5 h-4.5" />
-        </button>
-        <Menu
-          {...bindMenu(popupState)}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-          sx={{
-            '& .MuiMenu-paper': {
-              backgroundColor: 'white',
-              opacity: 1,
-              borderRadius: 0,
-            },
-            '& .MuiListItem-button': {
-              fontVariant: 'small-caps',
-              display: 'flex',
-            },
-            '& .MuiListItem-button:hover': {
-              color: '#d81c3a',
-            },
-          }}
-        >
-          {x.children.map(y => <Submenu key={y.text} popupState={popupState} item={y} />)}
-        </Menu>
-      </>}
-    </PopupState>;
-  } else {
-    return (
-      <NestedMenuItem label={x.text} parentMenuOpen={!!popupState.isOpen}>
+  return <PopupState variant="popover" popupId={`menu-${x.text.replace(' ', '')} `}>
+    {(popupState) => <>
+      <button {...bindTrigger(popupState)} className={classNames(
+        "flex gap-2 items-center",
+        "min-h-[48px] md:min-h-[64px] text-grey-500 font-bold rounded-none transition-colors",
+        "small-caps",
+        "hover:text-white hover:border-b-3 hover:border-white",
+        inPath && 'text-white border-b-3 border-white'
+      )}>
+        {x.text}
+        <KeyboardArrowDownIcon className="w-4.5 h-4.5" />
+      </button>
+      <Menu
+        {...bindMenu(popupState)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        sx={{
+          '& .MuiMenu-paper': {
+            backgroundColor: 'white',
+            opacity: 1,
+            borderRadius: 0,
+          },
+          '& .MuiListItem-button': {
+            fontVariant: 'small-caps',
+            display: 'flex',
+          },
+          '& .MuiListItem-button:hover': {
+            color: '#d81c3a',
+          },
+        }}
+      >
         {x.children.map(y => <Submenu key={y.text} popupState={popupState} item={y} />)}
-      </NestedMenuItem>
-    );
-  }
+      </Menu>
+    </>}
+  </PopupState>;
 });
 
 export const DesktopMenu = () => {

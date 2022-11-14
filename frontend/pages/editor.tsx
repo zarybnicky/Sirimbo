@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { createValue, Value } from '@react-page/editor';
-import {
-  CircularProgress, Grid, TextField, List, ListItem, ListItemText, Typography, Button, ListItemIcon,
-} from '@mui/material';
+import { CircularProgress, TextField, List, ListItem, ListItemText, Button, ListItemIcon } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useConfirm } from 'material-ui-confirm';
 import { HeadingPlugin } from 'components/Heading';
@@ -93,25 +91,19 @@ export default function EditorPage() {
           content: state.content,
         } as State);
       };
-      toolbar = <Grid container direction="column" spacing={2} className="mb-4">
-        <Grid item><Typography variant="h4">Nová stránka</Typography></Grid>
-        <Grid item>
-          <TextField value={state.title} placeholder="Název stránky" onChange={(e) => setState({
-            ...state, title: e.target.value,
-          })} />
-        </Grid>
-        <Grid item>
-          <TextField value={state.url} placeholder="URL stránky" onChange={(e) => setState({
-            ...state, url: e.target.value,
-          })} />
-        </Grid>
-        <Grid item>
-          <Button disabled={loading} variant="contained" onClick={createPage}>
-            Vytvořit a publikovat
-            {loading ? <CircularProgress size={20} /> : null}
-          </Button>
-        </Grid>
-      </Grid>;
+      toolbar = <div className="grid gap-4 mb-4">
+        <h4>Nová stránka</h4>
+        <TextField value={state.title} placeholder="Název stránky" onChange={(e) => setState({
+          ...state, title: e.target.value,
+        })} />
+        <TextField value={state.url} placeholder="URL stránky" onChange={(e) => setState({
+          ...state, url: e.target.value,
+        })} />
+        <Button disabled={loading} variant="contained" onClick={createPage}>
+          Vytvořit a publikovat
+          {loading ? <CircularProgress size={20} /> : null}
+        </Button>
+      </div>;
       break;
 
     case 'edit':
@@ -124,32 +116,24 @@ export default function EditorPage() {
         await refetch();
         setLoading(false);
       };
-      toolbar = <Grid container direction="column" spacing={2} style={{ marginBottom: '1rem' }}>
-        <Grid item><Typography variant="h4">Upravit stránku</Typography></Grid>
-        <Grid item>
-          <TextField value={state.page.title} placeholder="Název stránky" onChange={(e) => setState({
-            ...state,
-            page: { ...state.page, title: e.target.value },
-          })} />
-        </Grid>
-        <Grid item>
-          <TextField value={state.page.url} placeholder="URL stránky" onChange={(e) => setState({
-            ...state,
-            page: { ...state.page, url: e.target.value },
-          })} />
-        </Grid>
-        <Grid item>
-          <Button disabled={loading} variant="contained" onClick={savePage}>
-            Uložit a publikovat
-            {loading ? <CircularProgress size={20} /> : null}
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button disabled={loading} variant="contained" onClick={selectHistory}>
-            Zobrazit historii
-          </Button>
-        </Grid>
-      </Grid>;
+      toolbar = <div className="grid gap-4 mb-4">
+        <h4>Upravit stránku</h4>
+        <TextField value={state.page.title} placeholder="Název stránky" onChange={(e) => setState({
+          ...state,
+          page: { ...state.page, title: e.target.value },
+        })} />
+        <TextField value={state.page.url} placeholder="URL stránky" onChange={(e) => setState({
+          ...state,
+          page: { ...state.page, url: e.target.value },
+        })} />
+        <Button disabled={loading} variant="contained" onClick={savePage}>
+          Uložit a publikovat
+          {loading ? <CircularProgress size={20} /> : null}
+        </Button>
+        <Button disabled={loading} variant="contained" onClick={selectHistory}>
+          Zobrazit historii
+        </Button>
+      </div>;
       break;
 
     case 'history':
@@ -157,10 +141,10 @@ export default function EditorPage() {
       break;
   }
 
-  return <Grid container wrap='nowrap'>
-    <Grid item style={{ padding: '2rem' }}>
+  return <div className="flex flex-nowrap">
+    <div className="p-8">
       {toolbar}
-      <Typography variant="h4">Všechny stránky</Typography>
+      <h4>Všechny stránky</h4>
       <List>
         {data?.pages?.nodes.map((p) => (
           <ListItem button key={p.id} onClick={() => selectPage(p)}>
@@ -172,12 +156,12 @@ export default function EditorPage() {
           <ListItemText primary="Nová stránka" />
         </ListItem>
       </List>
-    </Grid>
-    <Grid item style={{ borderLeft: '1px solid black', flexGrow: 1 }}>
+    </div>
+    <div className="border-l border-black grow">
       <ReactPage
         readOnly={state.state === 'history' || state.state === 'empty'}
         value={state.content} onChange={setContent}
       />
-    </Grid>
-  </Grid>;
+    </div>
+  </div>;
 };
