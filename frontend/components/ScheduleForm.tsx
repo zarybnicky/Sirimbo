@@ -1,7 +1,6 @@
 import { ScheduleFragment, RozpiInput, useCreateScheduleMutation, useUpdateScheduleMutation, useTrainerListQuery } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { DatePickerElement } from 'react-hook-form-mui';
 import { SelectElement } from 'components/SelectElement';
 import { TextFieldElement } from 'components/TextField';
 import { CheckboxElement } from 'components/Checkbox';
@@ -46,7 +45,7 @@ export const ScheduleForm: React.FC<{
         options={(trainers?.trainers?.nodes || []).map(x => ({ id: x.uId, label: `${x.uJmeno} ${x.uPrijmeni}` }))}
       />
       <TextFieldElement control={control} name="rKde" label="Místo" required />
-      <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Datum" name="rDatum" required />
+      <TextFieldElement control={control} type="date" label="Datum" name="rDatum" required />
       <CheckboxElement control={control} name="rVisible" value="1" label="Viditelný" />
       <CheckboxElement control={control} name="rLock" value="1" label="Uzamčený" />
       <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />

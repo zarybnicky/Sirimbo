@@ -2,7 +2,6 @@ import { EventFragment, AkceInput, useCreateEventMutation, useUpdateEventMutatio
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextAreaElement, TextFieldElement } from 'components/TextField';
-import { DatePickerElement } from 'react-hook-form-mui';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
@@ -45,8 +44,8 @@ export const EventForm: React.FC<{
       <TextFieldElement control={control} name="aJmeno" label="Název" required />
       <TextFieldElement control={control} name="aKde" label="Místo akce" required />
       <TextAreaElement control={control} name="aInfo" label="Další info" rows={3} required />
-      <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Od" name="aOd" required />
-      <DatePickerElement inputProps={{ fullWidth: true }} helperText="(pokud je prázdné, počítá se jako 'Od')" control={control} label="Do" name="aDo" required />
+      <TextFieldElement control={control} type="date" label="Od" name="aOd" required />
+      <TextFieldElement type="date" helperText="(pokud je prázdné, počítá se jako 'Od')" control={control} label="Do" name="aDo" required />
       <TextFieldElement control={control} type="number" name="aKapacita" label="Kapacita" required />
       <CheckboxElement control={control} name="aVisible" value="1" label="Zviditelnit" />
       <CheckboxElement control={control} name="aLock" value="1" label="Uzamčená" />

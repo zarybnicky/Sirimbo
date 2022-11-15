@@ -1,7 +1,6 @@
 import React from 'react';
 import { PaymentItemFragment, PlatbyItemInput, useCreatePaymentItemMutation, usePaymentCategoryListQuery, useUpdatePaymentItemMutation, useUserListQuery } from 'lib/graphql';
 import { useForm } from 'react-hook-form';
-import { DatePickerElement } from 'react-hook-form-mui';
 import { SelectElement } from 'components/SelectElement';
 import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook'
@@ -45,7 +44,7 @@ export const PaymentItemForm: React.FC<{
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
-      <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Datum" name="piDate" required />
+      <TextFieldElement control={control} type="date" label="Datum" name="piDate" required />
       <TextFieldElement control={control} name="piAmount" label="Částka (Kč)" required />
       <SelectElement
         control={control} name="piIdUser" label="Uživatel" required

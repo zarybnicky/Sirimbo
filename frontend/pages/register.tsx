@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
-import { DatePickerElement, RadioButtonGroup } from 'react-hook-form-mui';
+import { RadioButtonGroup } from 'react-hook-form-mui';
 import { SelectElement } from 'components/SelectElement';
 import { TextFieldElement } from 'components/TextField';
 import { useCountries } from 'lib/data/use-countries';
@@ -65,7 +65,7 @@ export default function RegisterPage() {
 
           <TextFieldElement control={control} label="Jméno" name="jmeno" autoComplete="given-name" required />
           <TextFieldElement control={control} label="Příjmení" name="prijmeni" autoComplete="family-name" required />
-          <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Datum narození" name="narozeni" required />
+          <TextFieldElement control={control} type="date" label="Datum narození" name="narozeni" required />
           <TextFieldElement control={control} label="Rodné číslo" name="rodneCislo" required validation={{
             pattern: {
               value: /[0-9]{9,10}/,

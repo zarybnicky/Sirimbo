@@ -2,7 +2,7 @@ import { UserFragment, UserInput, useCreateUserMutation, useUpdateUserMutation, 
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { SelectElement } from 'components/SelectElement';
-import { DatePickerElement, RadioButtonGroup } from 'react-hook-form-mui';
+import { RadioButtonGroup } from 'react-hook-form-mui';
 import { TextAreaElement, TextFieldElement } from 'components/TextField';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
@@ -80,10 +80,8 @@ export const UserForm: React.FC<{
       <TextFieldElement control={control} name="uJmeno" label="Jméno" required />
       <TextFieldElement control={control} name="uPrijmeni" label="Příjmení" required />
 
-      <DatePickerElement inputProps={{ fullWidth: true }} control={control}
-        label="Datum narození" name="uNarozeni" required />
-      <TextFieldElement control={control} name="uRodneCislo"
-        label="Rodné číslo" required placeholder="1111119999"
+      <TextFieldElement type="date" control={control} label="Datum narození" name="uNarozeni" required />
+      <TextFieldElement control={control} name="uRodneCislo" label="Rodné číslo" required placeholder="1111119999"
         validation={{
           pattern: {
             value: /[0-9]{9,10}/,

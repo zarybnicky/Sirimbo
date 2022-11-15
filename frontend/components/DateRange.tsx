@@ -2,7 +2,8 @@ import * as React from 'react';
 import format from 'date-fns/format';
 import { cs } from 'date-fns/locale'
 import { Control, FieldValues, ControllerProps, Path, useController } from 'react-hook-form';
-import { DatePickerCalendar, DateRangePicker } from "@axel-dev/react-nice-dates";
+import { DatePickerCalendar, DateRangePicker, DatePicker } from "@axel-dev/react-nice-dates";
+import '@axel-dev/react-nice-dates/build/style.css';
 
 interface DateRangeProps {
   noYear?: boolean;
@@ -24,11 +25,17 @@ type DateRangeInputProps<T extends FieldValues> = {
   validation?: ControllerProps['rules'];
   name: Path<T>;
   control?: Control<T>;
+  label?: React.ReactNode;
+  required?: boolean;
 }
 
 export function DateRangeInput<TFieldValues extends FieldValues>({
-  name, control, validation
+  name, control, validation = {}, label, required,
 }: DateRangeInputProps<TFieldValues>) {
+  if (required && !validation?.required) {
+    validation.required = 'Toto pole je povinné';
+  }
+
   const { field: { value, onChange } } = useController({ control, name, rules: validation });
 
   return (
@@ -41,6 +48,7 @@ export function DateRangeInput<TFieldValues extends FieldValues>({
     >
       {({ startDateInputProps, endDateInputProps }) => (
         <div className="date-range flex flex-col gap-4">
+          {label}
           <input
             className="input"
             {...startDateInputProps}
@@ -54,12 +62,24 @@ export function DateRangeInput<TFieldValues extends FieldValues>({
   );
 };
 
+export function DatePickerElement<TFieldValues extends FieldValues>({
+  name, control, validation = {}, label, required,
+}: DateRangeInputProps<TFieldValues>) {
+  if (required && !validation?.required) {
+    validation.required = 'Toto pole je povinné';
+  }
+  const { field: { value, onChange } } = useController({ control, name, rules: validation });
+  return <DatePicker date={value} onDateChange={onChange} locale={cs}>
+    {({ inputProps }) => <>
+      {label}
+      <input className="input" {...inputProps} placeholder="Date" />
+    </>}
+  </DatePicker>;
+}
 
-export function DateInput<TFieldValues extends FieldValues>({
+export function DateCalendarElement<TFieldValues extends FieldValues>({
   name, control, validation
 }: DateRangeInputProps<TFieldValues>) {
   const { field: { value, onChange } } = useController({ control, name, rules: validation });
-  return (
-    <DatePickerCalendar date={value} onDateChange={onChange} locale={cs} />
-  );
+  return <DatePickerCalendar date={value} onDateChange={onChange} locale={cs} />;
 }

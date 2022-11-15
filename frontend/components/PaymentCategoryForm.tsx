@@ -1,7 +1,6 @@
 import { PaymentCategoryFragment, PlatbyCategoryInput, useCreatePaymentCategoryMutation, useUpdatePaymentCategoryMutation } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { DatePickerElement } from 'react-hook-form-mui';
 import { TextFieldElement } from 'components/TextField';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
@@ -45,9 +44,9 @@ export const PaymentCategoryForm: React.FC<{
       <TextFieldElement control={control} name="pcName" label="Název" required />
       <TextFieldElement control={control} name="pcSymbol" label="Specifický symbol" required />
       <TextFieldElement control={control} name="pcAmount" label="Očekávaná částka" type="number" required />
-      <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Splatnost" name="pcDateDue" required />
-      <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Platné od" name="pcValidFrom" required />
-      <DatePickerElement inputProps={{ fullWidth: true }} control={control} label="Platné do" name="pcValidTo" required />
+      <TextFieldElement control={control} type="date" label="Splatnost" name="pcDateDue" required />
+      <TextFieldElement control={control} type="date" label="Platné od" name="pcValidFrom" required />
+      <TextFieldElement control={control} type="date" label="Platné do" name="pcValidTo" required />
       <CheckboxElement control={control} name="pcUsePrefix" value="1" label="Použít prefix" />
       <CheckboxElement control={control} name="pcArchive" value="1" label="Archiv" />
       <CheckboxElement control={control} name="pcVisible" value="1" label="Viditelný" />
