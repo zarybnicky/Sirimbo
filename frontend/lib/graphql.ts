@@ -10778,7 +10778,7 @@ export type MyLessonsQueryVariables = Exact<{
 }>;
 
 
-export type MyLessonsQuery = { __typename?: 'Query', currentSessionId: string | null, currentUserId: string | null, currentCoupleIds: { __typename?: 'CurrentCoupleIdsConnection', nodes: Array<string | null> } | null, myLessons: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> } | null };
+export type MyLessonsQuery = { __typename?: 'Query', currentSessionId: string | null, currentUserId: string | null, currentCoupleIds: { __typename?: 'CurrentCoupleIdsConnection', nodes: Array<string | null> } | null, myLessons: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riId: string, riOd: string, riDo: string, rozpiByRiIdRodic: { __typename?: 'Rozpi', rId: string, rDatum: string, rKde: string, userByRTrener: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', userByPIdPartner: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> } | null };
 
 export type ScheduleQueryVariables = Exact<{
   id: Scalars['BigInt'];
@@ -13398,11 +13398,11 @@ export const MyLessonsDocument = `
   currentUserId
   myLessons(startDate: $startDate, endDate: $endDate) {
     nodes {
-      ...ScheduleItem
+      ...Lesson
     }
   }
 }
-    ${ScheduleItemFragmentDoc}`;
+    ${LessonFragmentDoc}`;
 export const useMyLessonsQuery = <
       TData = MyLessonsQuery,
       TError = unknown

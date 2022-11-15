@@ -1,9 +1,8 @@
 import * as React from 'react';
 import format from 'date-fns/format';
-import { Card } from 'components/Card';
 import { usePermissions } from 'lib/data/use-permissions';
 import { DateRange } from 'components/DateRange';
-import { ReservationFragment, ScheduleFragment, useReservationRangeQuery, useScheduleRangeQuery } from 'lib/graphql';
+import { ReservationFragment, ScheduleFragment, ScheduleItemFragment, useReservationRangeQuery, useScheduleRangeQuery } from 'lib/graphql';
 import { Dropdown } from 'components/Dropdown';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { Button } from 'components/Button';
@@ -32,6 +31,8 @@ export default function SchedulePage() {
     });
     return obj;
   }, [schedules, reservations])
+
+  const openLesson = (item: ScheduleFragment, lesson: ScheduleItemFragment) => { };
 
   // can reserve === has paid
   // $paid = \DBPlatby::hasPaidMemberFees(self::getUser()->getId);
@@ -117,8 +118,8 @@ export default function SchedulePage() {
 
             <div className="grid gap-1.5">
               {item.rozpisItemsByRiIdRodic.nodes?.map((lesson, i) => (
-                <div key={i} onClick={() => openLesson(item, lesson)} className="cursor-pointer px-2 py-0.5 rounded-md bg-stone-50">
-                  <div className="text-slate-700 leading-4 text-sm tabular-nums">
+                <div key={i} onClick={() => openLesson(item, lesson)} className="cursor-pointer px-2 pt-1 rounded-md bg-slate-50">
+                  <div className="text-stone-700 leading-4 text-sm tabular-nums">
                     {lesson.riOd.substring(0, 5)} - {lesson.riDo.substring(0, 5)}
                   </div>
                   {perms.canSignUp(item, lesson) ? (

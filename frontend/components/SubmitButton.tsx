@@ -24,11 +24,11 @@ export const SubmitButton = React.forwardRef(function SubmitButton({
   disabled?: boolean;
   loading?: boolean;
 }, ref: React.ForwardedRef<HTMLButtonElement>) {
-  const color = disabled ? 'button col-full button-secondary' : 'button col-full button-red';
+  const color = disabled ? 'button-secondary' : 'button-red';
   return <button
     type="submit" {...props} ref={ref}
     disabled={loading || disabled}
-    className={classNames(color, className)}
+    className={classNames("button col-full flex", color, className)}
   >
     {children}
     {loading ? <Spinner /> : <KeyboardArrowRightIcon />}

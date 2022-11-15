@@ -1,4 +1,4 @@
-import { Alert, Card, CardActions, CardContent, Grid, Typography } from "@mui/material";
+import { Card } from 'components/Card';
 import format from "date-fns/format";
 import parseISO from "date-fns/parseISO";
 import { useDeleteUserMutation, useCohortListQuery, useConfirmUserMutation, useRoleListQuery, UserFragment, useUserListQuery } from 'lib/graphql';
@@ -41,47 +41,47 @@ const UnconfirmedUser: React.FC<{
   }, [item, confirm, deleteUser, onProcessed]);
 
   return (
-    <Card className="mb-8" component="form" onSubmit={handleSubmit(onSubmit)}>
-      <CardContent>
-        <Grid container spacing={2}>
-          <Grid item md={6}>
-            <h5>{item.uJmeno} {item.uPrijmeni}</h5>
-            <div>
-              <b>Login:</b> {item.uLogin}
-            </div>
-            <div>
-              <b>Datum narození:</b> {format(parseISO(item.uNarozeni), 'd. M. y')}
-            </div>
-            <div>
-              <b>E-mail:</b> {item.uEmail}
-            </div>
-            <div>
-              <b>Telefon:</b> {item.uTelefon}
-            </div>
-            <div>
-              <b>Poznámka:</b> {item.uPoznamky}
-            </div>
-          </Grid>
-          <Grid item md={6} className="flex gap-2">
-            <SelectElement
-              required control={control} name="cohort" label="Tréninková skupina"
-              options={(cohorts?.skupinies?.nodes || []).map(item => ({ id: item.sId, label: item.sName }))}
-            />
-            <SelectElement
-              required control={control} name="role" label="Role oprávnění"
-              options={(roles?.permissions?.nodes || []).map(item => ({ id: item.peId, label: item.peName }))}
-            />
-          </Grid>
-        </Grid>
-      </CardContent>
-      <CardActions className="gap-4 flex-row-reverse">
-        <button type="submit" className="button button-red button-text flex gap-2 items-center">
-          <CheckIcon /> Potvrdit
-        </button>
-        <button type="button" onClick={onDelete} className="button button-red button-text flex gap-2 items-center">
-          <DeleteIcon /> Odstranit
-        </button>
-      </CardActions>
+    <Card className="mb-8">
+      <form className="grid md:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit)}>
+        <div>
+          <h5>{item.uJmeno} {item.uPrijmeni}</h5>
+          <div>
+            <b>Login:</b> {item.uLogin}
+          </div>
+          <div>
+            <b>Datum narození:</b> {format(parseISO(item.uNarozeni), 'd. M. y')}
+          </div>
+          <div>
+            <b>E-mail:</b> {item.uEmail}
+          </div>
+          <div>
+            <b>Telefon:</b> {item.uTelefon}
+          </div>
+          <div>
+            <b>Poznámka:</b> {item.uPoznamky}
+          </div>
+        </div>
+
+        <div className="flex gap-2">
+          <SelectElement
+            required control={control} name="cohort" label="Tréninková skupina"
+            options={(cohorts?.skupinies?.nodes || []).map(item => ({ id: item.sId, label: item.sName }))}
+          />
+          <SelectElement
+            required control={control} name="role" label="Role oprávnění"
+            options={(roles?.permissions?.nodes || []).map(item => ({ id: item.peId, label: item.peName }))}
+          />
+        </div>
+
+        <div className="col-full flex gap-4 flex-row-reverse">
+          <button type="submit" className="button button-red button-text flex gap-2 items-center">
+            <CheckIcon /> Potvrdit
+          </button>
+          <button type="button" onClick={onDelete} className="button button-red button-text flex gap-2 items-center">
+            <DeleteIcon /> Odstranit
+          </button>
+        </div>
+      </form>
     </Card>
   );
 };
@@ -92,9 +92,6 @@ export default function UnconfirmedUsers() {
 
   return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
     <h4 className="text-right">Nepotvrzení uživatelé</h4>
-    {users && users?.users?.nodes.length === 0 && (
-      <Alert severity="info">Žádní nepotvrzení uživatelé nejsou v databázi.</Alert>
-    )}
     {users?.users?.nodes?.map((item, i) => <UnconfirmedUser onProcessed={refetch} item={item} key={i} />)}
   </div>;
 };

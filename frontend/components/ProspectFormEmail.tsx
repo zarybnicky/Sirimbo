@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { CellPlugin } from '@react-page/editor';
-import { Card, CardContent, CardActions, Grid, Typography } from '@mui/material';
+import { Card } from 'components/Card';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
@@ -28,36 +28,21 @@ export const ProspectFormEmail = ({ title }: ProspectFormEmailProps) => {
   });
 
   return (
-    <Card component="form" elevation={3} onSubmit={handleSubmit(onSubmit.execute)}>
-      <CardContent>
-        <h4>{title}</h4>
-        <Grid container spacing={1.5}>
-          <Grid item xs={12} sm={6}>
-            <TextFieldElement control={control} name="name" label="Jméno" autoComplete="given-name" required />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextFieldElement control={control} name="surname" label="Příjmení" autoComplete="family-name" required />
-          </Grid>
-        </Grid>
-        <Grid container spacing={1.5}>
-          <Grid item xs={12}>
-            <TextFieldElement control={control} name="email" type="email" autoComplete="email" required />
-          </Grid>
-        </Grid>
-        <Grid container style={{ marginTop: '1rem' }}>
-          <Grid item xs={12}>
-            <CheckboxElement control={control} name="op" value="agreed" required label={
-              <>Souhlasím se <a rel="noreferrer" target="_blank" href="/ochrana-osobnich-udaju">zpracováním osobních údajů</a></>
-            } />
-          </Grid>
-        </Grid>
+    <Card>
+      <form className="grid grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+        <h4 className="col-full">{title}</h4>
+
+        <TextFieldElement control={control} name="name" label="Jméno" autoComplete="given-name" required />
+        <TextFieldElement control={control} name="surname" label="Příjmení" autoComplete="family-name" required />
+        <TextFieldElement className="col-full" control={control} name="email" type="email" autoComplete="email" required />
+        <CheckboxElement className="col-full mt-4 mb-2" control={control} name="op" value="agreed" required label={
+          <>Souhlasím se <a className="text-red-500" rel="noreferrer" target="_blank" href="/ochrana-osobnich-udaju">zpracováním osobních údajů</a></>
+        } />
         <ErrorBox error={onSubmit.error} />
-      </CardContent>
-      <CardActions style={{ flexDirection: 'column' }}>
-        <SubmitButton className="w-full" loading={onSubmit.loading} disabled={!formState.isDirty || !formState.isValid}>
+        <SubmitButton className="col-full w-full" loading={onSubmit.loading} disabled={!formState.isDirty || !formState.isValid}>
           Ozvěte se mi
         </SubmitButton>
-      </CardActions>
+      </form>
     </Card>
   );
 };

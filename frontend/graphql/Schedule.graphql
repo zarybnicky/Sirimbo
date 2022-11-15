@@ -108,7 +108,7 @@ query MyLessons($startDate: Date, $endDate: Date) {
   currentUserId
   myLessons(startDate: $startDate, endDate: $endDate) {
     nodes {
-      ...ScheduleItem
+      ...Lesson
     }
   }
 }

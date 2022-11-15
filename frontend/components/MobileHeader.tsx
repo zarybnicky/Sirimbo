@@ -1,16 +1,13 @@
 import * as React from 'react';
-import {
-  AppBar, Divider, IconButton, SwipeableDrawer, Toolbar, List,
-  ListItem, ListItemText,
-} from '@mui/material';
+import { AppBar, SwipeableDrawer, Toolbar } from '@mui/material';
 import { MenuStructItem, useTopMenu, useSideMenu, getHrefs } from 'lib/data/use-menu';
 import { useAuth } from 'lib/data/use-auth';
 import { useRouter } from 'next/router';
-import { NextLinkComposed } from './Link';
 import { OlympLogoOneline } from 'components/Icons';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuIcon from '@mui/icons-material/Menu';
 import Link from 'next/link';
+import classNames from 'classnames';
 
 export const MobileSubmenu = ({ item: x, onClick }: {
   item: MenuStructItem;
@@ -20,36 +17,24 @@ export const MobileSubmenu = ({ item: x, onClick }: {
   const inPath = !!getHrefs(x).find(y => pathname.startsWith(y));
 
   if (x.type === 'link') {
-    return <ListItem
-      button component={NextLinkComposed} href={x.href} onClick={onClick}
-      disablePadding sx={{
-        width: 'calc(100% - 1rem)',
-        margin: '.2rem .5rem .2rem .5rem',
-        paddingLeft: '.5rem',
-        borderRadius: 3,
-        backgroundColor: inPath ? '#777' : undefined,
-      }}
-    >
-      <ListItemText className="font-light" primary={x.text} sx={{
-        color: inPath ? 'white' : undefined,
-      }} />
-    </ListItem >
+    return <Link href={x.href} passHref>
+      <a onClick={onClick} className={classNames(
+        "rounded-2xl tracking-wide text-xm px-3 py-1.5",
+        "flex items-center grow mx-2 hover:bg-stone-500 hover:text-white",
+        inPath ? 'bg-stone-700' : '',
+      )}>
+        <div className={`font-light grow ${inPath ? 'text-white' : ''}`}>{x.text}</div>
+      </a>
+    </Link>
   }
 
   return <>
-    <ListItem key={x.text} disablePadding sx={{
-      padding: '1rem 1rem 0.2rem',
-    }}>
-      <ListItemText primary={x.text} primaryTypographyProps={{
-        sx: {
-          fontWeight: 'bold',
-          fontSize: 13,
-        }
-      }} />
-    </ListItem>
-    <List disablePadding>
+    <div key={x.text} className="ml-3 mt-4 mb-2">
+      <div className="font-bold text-xs uppercase grow my-1">{x.text}</div>
+    </div>
+    <div className="list-none grid gap-0.5">
       {x.children.map(y => <MobileSubmenu key={y.text} item={y} onClick={onClick} />)}
-    </List>
+    </div>
   </>;
 };
 
@@ -87,25 +72,21 @@ export const MobileHeader = ({ }) => {
       onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
     >
-      <List sx={{
-        maxWidth: '450px',
-        width: '85vw',
-      }}>
-        {auth.user ? (<>
+      <div className="list-none w-[85vw] max-w-[450px]">
+        {auth.user ? <>
           <MobileSubmenu item={{ type: 'link', text: 'Profil', href: '/profile' }} onClick={() => setOpen(false)} />
           <MobileSubmenu item={{ type: 'link', text: 'Odhlásit se', href: '/' }} onClick={() => {
             setOpen(false);
             auth.signOut();
             router.push('/');
           }} />
-        </>) : (
+        </> : (
           <MobileSubmenu item={{ type: 'link', text: 'Přihlásit se', href: '/login' }} onClick={() => setOpen(false)} />
         )}
         {sideMenu.map(x => <MobileSubmenu key={x.text} item={x} onClick={() => setOpen(false)} />)}
-        {auth.user && <Divider />}
         <MobileSubmenu item={{ type: 'link', text: 'Domů', href: '/home' }} onClick={() => setOpen(false)} />
         {topMenu.map(x => <MobileSubmenu key={x.text} item={x} onClick={() => setOpen(false)} />)}
-      </List>
+      </div>
     </SwipeableDrawer>
   </div>;
 }

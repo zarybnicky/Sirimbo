@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { CellPlugin } from '@react-page/editor';
-import { Card, CardContent, CardActions, Grid, Typography } from '@mui/material';
+import { Card } from 'components/Card';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
@@ -28,42 +28,28 @@ export const ProspectForm = ({ title }: ProspectFormProps) => {
   });
 
   return (
-    <Card component="form" elevation={3} onSubmit={handleSubmit(onSubmit.execute)}>
-      <CardContent>
-        <h4>{title}</h4>
-        <Grid container spacing={1.5}>
-          <Grid item xs={12} sm={4}>
-            <TextFieldElement control={control} name="name" label="Jméno" autoComplete="given-name" required />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextFieldElement control={control} name="surname" label="Příjmení" autoComplete="family-name" required />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextFieldElement control={control} name="yearofbirth" label="Rok narození" autoComplete="bday-year" required />
-          </Grid>
-        </Grid>
-        <Grid container spacing={1.5}>
-          <Grid item xs={12} sm={6}>
-            <TextFieldElement control={control} name="phone" type="tel" autoComplete="tel" required />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextFieldElement control={control} name="email" type="email" autoComplete="email" required />
-          </Grid>
-        </Grid>
-        <Grid container style={{ marginTop: '1rem' }}>
-          <Grid item xs={12}>
-            <CheckboxElement control={control} name="op" value="agreed" required label={
-              <>Souhlasím se <a target="_blank" rel="noreferrer" href="/ochrana-osobnich-udaju">zpracováním osobních údajů</a></>
-            } />
-          </Grid>
-        </Grid>
+    <Card>
+      <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+        <h4 className="col-full">{title}</h4>
+        <div className="grid md:grid-cols-3 gap-2">
+          <TextFieldElement control={control} name="name" label="Jméno" autoComplete="given-name" required />
+          <TextFieldElement control={control} name="surname" label="Příjmení" autoComplete="family-name" required />
+          <TextFieldElement control={control} name="yearofbirth" label="Rok narození" autoComplete="bday-year" required />
+        </div>
+
+        <div className="grid sm:grid-cols-2 gap-2">
+          <TextFieldElement control={control} name="phone" label="Telefon" type="tel" autoComplete="tel" required />
+          <TextFieldElement control={control} name="email" label="E-mail" type="email" autoComplete="email" required />
+        </div>
+
+        <CheckboxElement className="my-2" control={control} name="op" value="agreed" required label={
+          <>Souhlasím se <a className="text-red-500" target="_blank" rel="noreferrer" href="/ochrana-osobnich-udaju">zpracováním osobních údajů</a></>
+        } />
         <ErrorBox error={onSubmit.error} />
-      </CardContent>
-      <CardActions style={{ flexDirection: 'column' }}>
         <SubmitButton className="w-full" loading={onSubmit.loading} disabled={!formState.isDirty || !formState.isValid}>
           Chci tančit!
         </SubmitButton>
-      </CardActions>
+      </form>
     </Card>
   );
 };

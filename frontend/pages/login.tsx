@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card, CardContent, CardActions } from '@mui/material';
+import { Card } from 'components/Card';
 import Link from 'next/link';
 import { useAuth } from 'lib/data/use-auth';
 import { useRouter } from 'next/router';
@@ -28,9 +28,9 @@ export default function LoginPage() {
 
   return (
     <div className="container mx-auto max-w-md mt-12 mb-16">
-      <Card component="form" onSubmit={handleSubmit(onSubmit.execute)}>
-        <CardContent style={{ gap: '5px', display: 'flex', flexDirection: 'column', justifyItems: 'stretch' }}>
-          <h5>Přihlášení do systému</h5>
+      <Card>
+        <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+          <h4>Přihlášení do systému</h4>
 
           <ErrorBox error={onSubmit.error} />
           <TextFieldElement
@@ -42,24 +42,23 @@ export default function LoginPage() {
             control={control} name="passwd" type="password"
             label="Heslo" autoComplete="current-password" required
           />
-        </CardContent>
-        <CardActions style={{ flexDirection: 'column', padding: '0 1rem 1rem' }}>
-          <SubmitButton className="w-full" loading={onSubmit.loading} disabled={!formState.isValid}>
+          <SubmitButton className="w-full my-2" loading={onSubmit.loading} disabled={!formState.isValid}>
             Přihlásit
           </SubmitButton>
-        </CardActions>
-        <div className="flex gap-2 pb-4 px-4">
-          <Link href="/register" passHref>
-            <a className="button button-red button-sm button-text flex gap-2 items-center">
-              Registrovat se
-            </a>
-          </Link>
-          <Link href="/forgotten-password" passHref>
-            <a className="button button-red button-sm button-text flex gap-2 items-center">
-              Zapomněli jste heslo?
-            </a>
-          </Link>
-        </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            <Link href="/register" passHref>
+              <a className="button button-red button-text">
+                Registrovat se
+              </a>
+            </Link>
+            <Link href="/forgotten-password" passHref>
+              <a className="button button-red button-text text-right">
+                Zapomněli jste heslo?
+              </a>
+            </Link>
+          </div>
+        </form>
       </Card>
     </div>
   );

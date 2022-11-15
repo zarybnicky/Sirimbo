@@ -74,10 +74,9 @@ const UserDetailButton: React.FC<{ user: UserFragment }> = ({ user }) => {
   const [open, setOpen] = React.useState(false);
 
   return <>
-    <a
-      href="#" onClick={() => setOpen(true)}
-      className="underline text-red-900"
-    >{user.uPrijmeni}, {user.uJmeno}</a>
+    <button onClick={() => setOpen(true)} className="underline text-slate-700">
+      {user.uPrijmeni}, {user.uJmeno}
+    </button>
 
     <Dialog onClose={() => setOpen(false)} open={open}>
       <DialogTitle>{user.uJmeno} {user.uPrijmeni}</DialogTitle>
