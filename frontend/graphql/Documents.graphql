@@ -1,4 +1,5 @@
 fragment File on Dokumenty {
+  __typename
   dId
   dName
   dFilename

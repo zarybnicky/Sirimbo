@@ -1,4 +1,5 @@
 fragment Article on Aktuality {
+  __typename
   atId
   atPreview
   atJmeno

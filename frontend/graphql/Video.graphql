@@ -10,6 +10,7 @@ query TitleVideos {
 
 
 fragment VideoSource on VideoSource {
+  __typename
   vsId
   vsTitle
   vsUrl
@@ -52,6 +53,7 @@ mutation DeleteVideoSource($id: BigInt!) {
 
 
 fragment Video on Video {
+  __typename
   vId
   vAuthor
   vPlaylist

@@ -1,20 +1,51 @@
 fragment ScheduleItem on RozpisItem {
+  __typename
   riOd
   riDo
   riId
   riLock
   riPartner
   paryByRiPartner {
+    pId
     userByPIdPartner {
       uJmeno
       uId
       uPrijmeni
     }
-    pId
+    userByPIdPartnerka {
+      uId
+      uJmeno
+      uPrijmeni
+    }
+  }
+}
+
+fragment Lesson on RozpisItem {
+  __typename
+  riId
+  riOd
+  riDo
+  rozpiByRiIdRodic {
+    rId
+    rDatum
+    rKde
+    userByRTrener {
+      uId
+      uJmeno
+      uPrijmeni
+    }
+  }
+  paryByRiPartner {
+    userByPIdPartner {
+      uId
+      uJmeno
+      uPrijmeni
+    }
   }
 }
 
 fragment Schedule on Rozpi {
+  __typename
   rDatum
   rId
   rKde
@@ -69,34 +100,6 @@ query ScheduleList($limit: Int, $offset: Int) {
   }
 }
 
-fragment Lesson on RozpisItem {
-  riId
-  riOd
-  riDo
-  rozpiByRiIdRodic {
-    rId
-    rDatum
-    rKde
-    userByRTrener {
-      uId
-      uJmeno
-      uPrijmeni
-    }
-  }
-  paryByRiPartner {
-    userByPIdPartner {
-      uId
-      uJmeno
-      uPrijmeni
-    }
-    userByPIdPartnerka {
-      uId
-      uJmeno
-      uPrijmeni
-    }
-  }
-}
-
 query MyLessons($startDate: Date, $endDate: Date) {
   currentCoupleIds {
     nodes
@@ -105,7 +108,7 @@ query MyLessons($startDate: Date, $endDate: Date) {
   currentUserId
   myLessons(startDate: $startDate, endDate: $endDate) {
     nodes {
-      ...Lesson
+      ...ScheduleItem
     }
   }
 }

@@ -1,4 +1,5 @@
 fragment ReservationItem on NabidkaItem {
+  __typename
   niId
   niPartner
   niPocetHod
@@ -14,6 +15,7 @@ fragment ReservationItem on NabidkaItem {
 }
 
 fragment Reservation on Nabidka {
+  __typename
   nId
   nOd
   nDo

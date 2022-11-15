@@ -40,6 +40,13 @@
   dependencies:
     node-fetch "^2.6.1"
 
+"@axel-dev/react-nice-dates@^3.1.0":
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@axel-dev/react-nice-dates/-/react-nice-dates-3.1.3.tgz#2a4bb7c8760e763cc771b2da69834bdf2adc3463"
+  integrity sha512-2iLZ6m6e2h8FyANxuXaJzXyZzRsX2k/kBeE4Gh/T1utE/2HcObEnb0aAit1bbbO3LTwrPAnGbfGiAFr2Ssn5Fg==
+  dependencies:
+    classnames "^2.2.6"
+
 "@babel/code-frame@^7.0.0":
   version "7.16.7"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.16.7.tgz#44416b6bd7624b998f5b1af5d470856c40138789"
@@ -9132,13 +9139,6 @@ react-lightbox-pack@^0.1.5:
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/react-lightbox-pack/-/react-lightbox-pack-0.1.5.tgz#1f7d8c33db9657076ea73be9a0bbec9c920bd333"
   integrity sha512-kAtTwjRbZ/gHB8DDpPrJ8dncrbCEl7gjUvI7S7XqxHSFnSwVLENtncqQhjk1IWBDwMWjraY0BMCVqKgkKLpk8A==
-
-react-nice-dates@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/react-nice-dates/-/react-nice-dates-3.1.0.tgz#1be7dc18397a54a81e6b37bae460a34c058e5a14"
-  integrity sha512-tOsA7tB2E9q+47nZwrk2ncK2rOUublNOWPVnY/N2HFDLO8slexGaAfOTKpej2KzPxCN3gcvOKeE2/9vua2LAjQ==
-  dependencies:
-    classnames "^2.2.6"
 
 react-paginate@^7.1.3:
   version "7.1.5"

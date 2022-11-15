@@ -1,4 +1,5 @@
 fragment Cohort on Skupiny {
+  __typename
   sId
   sName
   sDescription

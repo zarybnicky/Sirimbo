@@ -100,13 +100,13 @@ export const usePermissions = () => {
     },
     canEditSchedule(schedule: ScheduleFragment) {
       return (
-        (perms.peRozpis >= PermissionLevel.P_OWNED && user?.uId == schedule.rTrener) ||
+        (perms.peRozpis >= PermissionLevel.P_OWNED && user?.uId === schedule.rTrener) ||
         perms.peRozpis >= PermissionLevel.P_ADMIN
       );
     },
     canEditReservation(reservation: ReservationFragment) {
       return (
-        (perms.peNabidka >= PermissionLevel.P_OWNED && user?.uId == reservation.nTrener) ||
+        (perms.peNabidka >= PermissionLevel.P_OWNED && user?.uId === reservation.nTrener) ||
         perms.peNabidka >= PermissionLevel.P_ADMIN
       );
     },

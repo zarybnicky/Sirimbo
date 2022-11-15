@@ -10104,7 +10104,7 @@ export enum VideoSourcesOrderBy {
   VsUrlDesc = 'VS_URL_DESC'
 }
 
-export type AnnouncementFragment = { __typename?: 'Upozorneni', upId: string, upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, userByUpKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sId: string, sName: string, sDescription: string, sColorText: string, sColorRgb: string } | null }> } };
+export type AnnouncementFragment = { __typename: 'Upozorneni', upId: string, upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, userByUpKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sId: string, sName: string, sDescription: string, sColorText: string, sColorRgb: string } | null }> } };
 
 export type AnnouncementListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -10112,14 +10112,14 @@ export type AnnouncementListQueryVariables = Exact<{
 }>;
 
 
-export type AnnouncementListQuery = { __typename?: 'Query', upozornenis: { __typename?: 'UpozornenisConnection', totalCount: number, nodes: Array<{ __typename?: 'Upozorneni', upId: string, upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, userByUpKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sId: string, sName: string, sDescription: string, sColorText: string, sColorRgb: string } | null }> } }> } | null };
+export type AnnouncementListQuery = { __typename?: 'Query', upozornenis: { __typename?: 'UpozornenisConnection', totalCount: number, nodes: Array<{ __typename: 'Upozorneni', upId: string, upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, userByUpKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sId: string, sName: string, sDescription: string, sColorText: string, sColorRgb: string } | null }> } }> } | null };
 
 export type AnnouncementQueryVariables = Exact<{
   id: Scalars['BigInt'];
 }>;
 
 
-export type AnnouncementQuery = { __typename?: 'Query', upozorneni: { __typename?: 'Upozorneni', upId: string, upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, userByUpKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sId: string, sName: string, sDescription: string, sColorText: string, sColorRgb: string } | null }> } } | null };
+export type AnnouncementQuery = { __typename?: 'Query', upozorneni: { __typename: 'Upozorneni', upId: string, upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, userByUpKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sId: string, sName: string, sDescription: string, sColorText: string, sColorRgb: string } | null }> } } | null };
 
 export type CreateAnnouncementMutationVariables = Exact<{
   input: UpozorneniInput;
@@ -10143,14 +10143,14 @@ export type DeleteAnnouncementMutationVariables = Exact<{
 
 export type DeleteAnnouncementMutation = { __typename?: 'Mutation', deleteUpozorneni: { __typename: 'DeleteUpozorneniPayload' } | null };
 
-export type ArticleFragment = { __typename?: 'Aktuality', atId: string, atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null };
+export type ArticleFragment = { __typename: 'Aktuality', atId: string, atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null };
 
 export type ArticleQueryVariables = Exact<{
   id: Scalars['BigInt'];
 }>;
 
 
-export type ArticleQuery = { __typename?: 'Query', aktuality: { __typename?: 'Aktuality', atId: string, atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null } | null };
+export type ArticleQuery = { __typename?: 'Query', aktuality: { __typename: 'Aktuality', atId: string, atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null } | null };
 
 export type ArticlesQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -10158,7 +10158,7 @@ export type ArticlesQueryVariables = Exact<{
 }>;
 
 
-export type ArticlesQuery = { __typename?: 'Query', aktualities: { __typename?: 'AktualitiesConnection', totalCount: number, nodes: Array<{ __typename?: 'Aktuality', atId: string, atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null }> } | null };
+export type ArticlesQuery = { __typename?: 'Query', aktualities: { __typename?: 'AktualitiesConnection', totalCount: number, nodes: Array<{ __typename: 'Aktuality', atId: string, atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null }> } | null };
 
 export type CreateArticleMutationVariables = Exact<{
   input: AktualityInput;
@@ -10182,14 +10182,14 @@ export type DeleteArticleMutationVariables = Exact<{
 
 export type DeleteArticleMutation = { __typename?: 'Mutation', deleteAktuality: { __typename: 'DeleteAktualityPayload' } | null };
 
-export type CohortFragment = { __typename?: 'Skupiny', sId: string, sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string };
+export type CohortFragment = { __typename: 'Skupiny', sId: string, sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string };
 
 export type CohortListQueryVariables = Exact<{
   visible?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
-export type CohortListQuery = { __typename?: 'Query', skupinies: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename?: 'Skupiny', sId: string, sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string, platbyGroupSkupinasByPgsIdSkupina: { __typename?: 'PlatbyGroupSkupinasConnection', nodes: Array<{ __typename?: 'PlatbyGroupSkupina', pgsIdGroup: string }> } }> } | null };
+export type CohortListQuery = { __typename?: 'Query', skupinies: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename: 'Skupiny', sId: string, sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string, platbyGroupSkupinasByPgsIdSkupina: { __typename?: 'PlatbyGroupSkupinasConnection', nodes: Array<{ __typename?: 'PlatbyGroupSkupina', pgsIdGroup: string }> } }> } | null };
 
 export type CohortMembersQueryVariables = Exact<{
   id: Scalars['BigInt'];
@@ -10203,7 +10203,7 @@ export type CohortQueryVariables = Exact<{
 }>;
 
 
-export type CohortQuery = { __typename?: 'Query', skupiny: { __typename?: 'Skupiny', sId: string, sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string } | null };
+export type CohortQuery = { __typename?: 'Query', skupiny: { __typename: 'Skupiny', sId: string, sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string } | null };
 
 export type CreateCohortMutationVariables = Exact<{
   input: SkupinyInput;
@@ -10268,14 +10268,14 @@ export type SubmitProspectFormMutation = { __typename?: 'Mutation', prospectForm
 
 export type UserFragment = { __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string };
 
-export type UserAuthFragment = { __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, permissionByUGroup: { __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null };
+export type UserAuthFragment = { __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, permissionByUGroup: { __typename: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null };
 
 export type CouplePartialFragment = { __typename?: 'Pary', pId: string, pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean };
 
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, permissionByUGroup: { __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null } | null };
+export type CurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, permissionByUGroup: { __typename: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null } | null };
 
 export type LoginMutationVariables = Exact<{
   login: Scalars['String'];
@@ -10283,7 +10283,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginPayload', result: { __typename?: 'LoginRecord', usr: { __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, permissionByUGroup: { __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null } | null, couple: { __typename?: 'Pary', pId: string, pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean } | null } | null } | null };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginPayload', result: { __typename?: 'LoginRecord', usr: { __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, permissionByUGroup: { __typename: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null } | null, couple: { __typename?: 'Pary', pId: string, pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean } | null } | null } | null };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -10304,7 +10304,7 @@ export type ResetPasswordMutationVariables = Exact<{
 
 export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword: { __typename: 'ResetPasswordPayload' } | null };
 
-export type FileFragment = { __typename?: 'Dokumenty', dId: string, dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null };
+export type FileFragment = { __typename: 'Dokumenty', dId: string, dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null };
 
 export type FileListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -10313,14 +10313,14 @@ export type FileListQueryVariables = Exact<{
 }>;
 
 
-export type FileListQuery = { __typename?: 'Query', dokumenties: { __typename?: 'DokumentiesConnection', totalCount: number, nodes: Array<{ __typename?: 'Dokumenty', dId: string, dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null, userByDKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string } | null }> } | null };
+export type FileListQuery = { __typename?: 'Query', dokumenties: { __typename?: 'DokumentiesConnection', totalCount: number, nodes: Array<{ __typename: 'Dokumenty', dId: string, dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null, userByDKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string } | null }> } | null };
 
 export type FileQueryVariables = Exact<{
   id: Scalars['BigInt'];
 }>;
 
 
-export type FileQuery = { __typename?: 'Query', dokumenty: { __typename?: 'Dokumenty', dId: string, dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null } | null };
+export type FileQuery = { __typename?: 'Query', dokumenty: { __typename: 'Dokumenty', dId: string, dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null } | null };
 
 export type CreateFileMutationVariables = Exact<{
   input: DokumentyInput;
@@ -10344,18 +10344,18 @@ export type DeleteFileMutationVariables = Exact<{
 
 export type DeleteFileMutation = { __typename?: 'Mutation', deleteDokumenty: { __typename: 'DeleteDokumentyPayload' } | null };
 
-export type EventFragment = { __typename?: 'Akce', aId: string, aOd: string, aDo: string, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean };
+export type EventFragment = { __typename: 'Akce', aId: string, aOd: string, aDo: string, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean };
 
-export type EventWithItemsFragment = { __typename?: 'Akce', aId: string, aOd: string, aDo: string, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean, akceItemsByAiIdRodic: { __typename?: 'AkceItemsConnection', totalCount: number, nodes: Array<{ __typename?: 'AkceItem', aiId: string, userByAiUser: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null }> } };
+export type EventWithItemsFragment = { __typename: 'Akce', aId: string, aOd: string, aDo: string, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean, akceItemsByAiIdRodic: { __typename?: 'AkceItemsConnection', totalCount: number, nodes: Array<{ __typename: 'AkceItem', aiId: string, userByAiUser: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null }> } };
 
-export type EventItemFragment = { __typename?: 'AkceItem', aiId: string, userByAiUser: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string } | null };
+export type EventItemFragment = { __typename: 'AkceItem', aiId: string, userByAiUser: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string } | null };
 
 export type EventParticipantsQueryVariables = Exact<{
   id: Scalars['BigInt'];
 }>;
 
 
-export type EventParticipantsQuery = { __typename?: 'Query', akce: { __typename?: 'Akce', aJmeno: string, akceItemsByAiIdRodic: { __typename?: 'AkceItemsConnection', nodes: Array<{ __typename?: 'AkceItem', aiId: string, userByAiUser: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string } | null }> } } | null };
+export type EventParticipantsQuery = { __typename?: 'Query', akce: { __typename?: 'Akce', aJmeno: string, akceItemsByAiIdRodic: { __typename?: 'AkceItemsConnection', nodes: Array<{ __typename: 'AkceItem', aiId: string, userByAiUser: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string } | null }> } } | null };
 
 export type EventListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -10364,14 +10364,14 @@ export type EventListQueryVariables = Exact<{
 }>;
 
 
-export type EventListQuery = { __typename?: 'Query', akces: { __typename?: 'AkcesConnection', totalCount: number, nodes: Array<{ __typename?: 'Akce', aId: string, aOd: string, aDo: string, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean, akceItemsByAiIdRodic: { __typename?: 'AkceItemsConnection', totalCount: number, nodes: Array<{ __typename?: 'AkceItem', aiId: string, userByAiUser: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null }> } }> } | null };
+export type EventListQuery = { __typename?: 'Query', akces: { __typename?: 'AkcesConnection', totalCount: number, nodes: Array<{ __typename: 'Akce', aId: string, aOd: string, aDo: string, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean, akceItemsByAiIdRodic: { __typename?: 'AkceItemsConnection', totalCount: number, nodes: Array<{ __typename: 'AkceItem', aiId: string, userByAiUser: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null }> } }> } | null };
 
 export type EventQueryVariables = Exact<{
   id: Scalars['BigInt'];
 }>;
 
 
-export type EventQuery = { __typename?: 'Query', akce: { __typename?: 'Akce', aId: string, aOd: string, aDo: string, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean } | null };
+export type EventQuery = { __typename?: 'Query', akce: { __typename: 'Akce', aId: string, aOd: string, aDo: string, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean } | null };
 
 export type ToggleEventVisibleMutationVariables = Exact<{
   id: Scalars['BigInt'];
@@ -10481,7 +10481,7 @@ export type DeleteGalleryPhotoMutationVariables = Exact<{
 
 export type DeleteGalleryPhotoMutation = { __typename?: 'Mutation', deleteGalerieFoto: { __typename: 'DeleteGalerieFotoPayload' } | null };
 
-export type PageFragment = { __typename?: 'Page', nodeId: string, id: number, url: string, title: string, content: { [key: string]: any }, createdAt: string, updatedAt: string };
+export type PageFragment = { __typename: 'Page', nodeId: string, id: number, url: string, title: string, content: { [key: string]: any }, createdAt: string, updatedAt: string };
 
 export type PageQueryVariables = Exact<{
   url: Scalars['String'];
@@ -10493,7 +10493,7 @@ export type PageQuery = { __typename?: 'Query', pageByUrl: { __typename?: 'Page'
 export type PageListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PageListQuery = { __typename?: 'Query', pages: { __typename?: 'PagesConnection', nodes: Array<{ __typename?: 'Page', nodeId: string, id: number, url: string, title: string, content: { [key: string]: any }, createdAt: string, updatedAt: string }> } | null };
+export type PageListQuery = { __typename?: 'Query', pages: { __typename?: 'PagesConnection', nodes: Array<{ __typename: 'Page', nodeId: string, id: number, url: string, title: string, content: { [key: string]: any }, createdAt: string, updatedAt: string }> } | null };
 
 export type PageRevisionsQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -10507,7 +10507,7 @@ export type CreatePageMutationVariables = Exact<{
 }>;
 
 
-export type CreatePageMutation = { __typename?: 'Mutation', createPage: { __typename?: 'CreatePagePayload', page: { __typename?: 'Page', nodeId: string, id: number, url: string, title: string, content: { [key: string]: any }, createdAt: string, updatedAt: string } | null } | null };
+export type CreatePageMutation = { __typename?: 'Mutation', createPage: { __typename?: 'CreatePagePayload', page: { __typename: 'Page', nodeId: string, id: number, url: string, title: string, content: { [key: string]: any }, createdAt: string, updatedAt: string } | null } | null };
 
 export type UpdatePageMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -10515,7 +10515,7 @@ export type UpdatePageMutationVariables = Exact<{
 }>;
 
 
-export type UpdatePageMutation = { __typename?: 'Mutation', updatePage: { __typename?: 'UpdatePagePayload', page: { __typename?: 'Page', nodeId: string, id: number, url: string, title: string, content: { [key: string]: any }, createdAt: string, updatedAt: string } | null } | null };
+export type UpdatePageMutation = { __typename?: 'Mutation', updatePage: { __typename?: 'UpdatePagePayload', page: { __typename: 'Page', nodeId: string, id: number, url: string, title: string, content: { [key: string]: any }, createdAt: string, updatedAt: string } | null } | null };
 
 export type MenuQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -10549,19 +10549,19 @@ export type DeleteParameterMutationVariables = Exact<{
 
 export type DeleteParameterMutation = { __typename?: 'Mutation', deleteParameter: { __typename: 'DeleteParameterPayload' } | null };
 
-export type PaymentGroupFragment = { __typename?: 'PlatbyGroup', pgId: string, pgName: string, pgType: any, pgDescription: string, pgBase: string };
+export type PaymentGroupFragment = { __typename: 'PlatbyGroup', pgId: string, pgName: string, pgType: any, pgDescription: string, pgBase: string };
 
 export type PaymentGroupListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PaymentGroupListQuery = { __typename?: 'Query', platbyGroups: { __typename?: 'PlatbyGroupsConnection', totalCount: number, nodes: Array<{ __typename?: 'PlatbyGroup', pgId: string, pgName: string, pgType: any, pgDescription: string, pgBase: string }> } | null };
+export type PaymentGroupListQuery = { __typename?: 'Query', platbyGroups: { __typename?: 'PlatbyGroupsConnection', totalCount: number, nodes: Array<{ __typename: 'PlatbyGroup', pgId: string, pgName: string, pgType: any, pgDescription: string, pgBase: string }> } | null };
 
 export type PaymentGroupQueryVariables = Exact<{
   id: Scalars['BigInt'];
 }>;
 
 
-export type PaymentGroupQuery = { __typename?: 'Query', platbyGroup: { __typename?: 'PlatbyGroup', pgId: string, pgName: string, pgType: any, pgDescription: string, pgBase: string } | null };
+export type PaymentGroupQuery = { __typename?: 'Query', platbyGroup: { __typename: 'PlatbyGroup', pgId: string, pgName: string, pgType: any, pgDescription: string, pgBase: string } | null };
 
 export type CreatePaymentGroupMutationVariables = Exact<{
   input: PlatbyGroupInput;
@@ -10585,19 +10585,19 @@ export type DeletePaymentGroupMutationVariables = Exact<{
 
 export type DeletePaymentGroupMutation = { __typename?: 'Mutation', deletePlatbyGroup: { __typename: 'DeletePlatbyGroupPayload' } | null };
 
-export type PaymentItemFragment = { __typename?: 'PlatbyItem', piId: string, piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, userByPiIdUser: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcId: string, pcName: string } | null };
+export type PaymentItemFragment = { __typename: 'PlatbyItem', piId: string, piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, userByPiIdUser: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcId: string, pcName: string } | null };
 
 export type PaymentItemListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PaymentItemListQuery = { __typename?: 'Query', platbyItems: { __typename?: 'PlatbyItemsConnection', totalCount: number, nodes: Array<{ __typename?: 'PlatbyItem', piId: string, piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, userByPiIdUser: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcId: string, pcName: string } | null }> } | null };
+export type PaymentItemListQuery = { __typename?: 'Query', platbyItems: { __typename?: 'PlatbyItemsConnection', totalCount: number, nodes: Array<{ __typename: 'PlatbyItem', piId: string, piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, userByPiIdUser: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcId: string, pcName: string } | null }> } | null };
 
 export type PaymentItemQueryVariables = Exact<{
   id: Scalars['BigInt'];
 }>;
 
 
-export type PaymentItemQuery = { __typename?: 'Query', platbyItem: { __typename?: 'PlatbyItem', piId: string, piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, userByPiIdUser: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcId: string, pcName: string } | null } | null };
+export type PaymentItemQuery = { __typename?: 'Query', platbyItem: { __typename: 'PlatbyItem', piId: string, piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, userByPiIdUser: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcId: string, pcName: string } | null } | null };
 
 export type CreatePaymentItemMutationVariables = Exact<{
   input: PlatbyItemInput;
@@ -10621,19 +10621,19 @@ export type DeletePaymentItemMutationVariables = Exact<{
 
 export type DeletePaymentItemMutation = { __typename?: 'Mutation', deletePlatbyItem: { __typename: 'DeletePlatbyItemPayload' } | null };
 
-export type PaymentCategoryFragment = { __typename?: 'PlatbyCategory', pcId: string, pcName: string, pcSymbol: string, pcAmount: any, pcDateDue: string, pcValidFrom: string, pcValidTo: string, pcUsePrefix: boolean, pcUseBase: boolean, pcArchive: boolean, pcVisible: boolean };
+export type PaymentCategoryFragment = { __typename: 'PlatbyCategory', pcId: string, pcName: string, pcSymbol: string, pcAmount: any, pcDateDue: string, pcValidFrom: string, pcValidTo: string, pcUsePrefix: boolean, pcUseBase: boolean, pcArchive: boolean, pcVisible: boolean };
 
 export type PaymentCategoryListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PaymentCategoryListQuery = { __typename?: 'Query', platbyCategories: { __typename?: 'PlatbyCategoriesConnection', totalCount: number, nodes: Array<{ __typename?: 'PlatbyCategory', pcId: string, pcName: string, pcSymbol: string, pcAmount: any, pcDateDue: string, pcValidFrom: string, pcValidTo: string, pcUsePrefix: boolean, pcUseBase: boolean, pcArchive: boolean, pcVisible: boolean }> } | null };
+export type PaymentCategoryListQuery = { __typename?: 'Query', platbyCategories: { __typename?: 'PlatbyCategoriesConnection', totalCount: number, nodes: Array<{ __typename: 'PlatbyCategory', pcId: string, pcName: string, pcSymbol: string, pcAmount: any, pcDateDue: string, pcValidFrom: string, pcValidTo: string, pcUsePrefix: boolean, pcUseBase: boolean, pcArchive: boolean, pcVisible: boolean }> } | null };
 
 export type PaymentCategoryQueryVariables = Exact<{
   id: Scalars['BigInt'];
 }>;
 
 
-export type PaymentCategoryQuery = { __typename?: 'Query', platbyCategory: { __typename?: 'PlatbyCategory', pcId: string, pcName: string, pcSymbol: string, pcAmount: any, pcDateDue: string, pcValidFrom: string, pcValidTo: string, pcUsePrefix: boolean, pcUseBase: boolean, pcArchive: boolean, pcVisible: boolean } | null };
+export type PaymentCategoryQuery = { __typename?: 'Query', platbyCategory: { __typename: 'PlatbyCategory', pcId: string, pcName: string, pcSymbol: string, pcAmount: any, pcDateDue: string, pcValidFrom: string, pcValidTo: string, pcUsePrefix: boolean, pcUseBase: boolean, pcArchive: boolean, pcVisible: boolean } | null };
 
 export type CreatePaymentCategoryMutationVariables = Exact<{
   input: PlatbyCategoryInput;
@@ -10657,9 +10657,9 @@ export type DeletePaymentCategoryMutationVariables = Exact<{
 
 export type DeletePaymentCategoryMutation = { __typename?: 'Mutation', deletePlatbyCategory: { __typename: 'DeletePlatbyCategoryPayload' } | null };
 
-export type ReservationItemFragment = { __typename?: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null };
+export type ReservationItemFragment = { __typename: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null };
 
-export type ReservationFragment = { __typename?: 'Nabidka', nId: string, nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename?: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null };
+export type ReservationFragment = { __typename: 'Nabidka', nId: string, nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null };
 
 export type ReservationListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -10667,14 +10667,14 @@ export type ReservationListQueryVariables = Exact<{
 }>;
 
 
-export type ReservationListQuery = { __typename?: 'Query', nabidkas: { __typename?: 'NabidkasConnection', totalCount: number, nodes: Array<{ __typename?: 'Nabidka', nId: string, nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename?: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null }> } | null };
+export type ReservationListQuery = { __typename?: 'Query', nabidkas: { __typename?: 'NabidkasConnection', totalCount: number, nodes: Array<{ __typename: 'Nabidka', nId: string, nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null }> } | null };
 
 export type ReservationQueryVariables = Exact<{
   id: Scalars['BigInt'];
 }>;
 
 
-export type ReservationQuery = { __typename?: 'Query', nabidka: { __typename?: 'Nabidka', nId: string, nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename?: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null };
+export type ReservationQuery = { __typename?: 'Query', nabidka: { __typename: 'Nabidka', nId: string, nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null };
 
 export type ReservationRangeQueryVariables = Exact<{
   startDate: Scalars['Date'];
@@ -10682,7 +10682,7 @@ export type ReservationRangeQueryVariables = Exact<{
 }>;
 
 
-export type ReservationRangeQuery = { __typename?: 'Query', reservationsForRange: { __typename?: 'NabidkasConnection', nodes: Array<{ __typename?: 'Nabidka', nId: string, nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename?: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null }> } | null };
+export type ReservationRangeQuery = { __typename?: 'Query', reservationsForRange: { __typename?: 'NabidkasConnection', nodes: Array<{ __typename: 'Nabidka', nId: string, nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null }> } | null };
 
 export type ToggleReservationVisibleMutationVariables = Exact<{
   id: Scalars['BigInt'];
@@ -10714,19 +10714,19 @@ export type DeleteReservationMutationVariables = Exact<{
 
 export type DeleteReservationMutation = { __typename?: 'Mutation', deleteNabidka: { __typename: 'DeleteNabidkaPayload' } | null };
 
-export type RoleFragment = { __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number };
+export type RoleFragment = { __typename: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number };
 
 export type RoleListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type RoleListQuery = { __typename?: 'Query', permissions: { __typename?: 'PermissionsConnection', totalCount: number, nodes: Array<{ __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number }> } | null };
+export type RoleListQuery = { __typename?: 'Query', permissions: { __typename?: 'PermissionsConnection', totalCount: number, nodes: Array<{ __typename: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number }> } | null };
 
 export type RoleQueryVariables = Exact<{
   id: Scalars['BigInt'];
 }>;
 
 
-export type RoleQuery = { __typename?: 'Query', permission: { __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null };
+export type RoleQuery = { __typename?: 'Query', permission: { __typename: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null };
 
 export type CreateRoleMutationVariables = Exact<{
   input: PermissionInput;
@@ -10750,9 +10750,11 @@ export type DeleteRoleMutationVariables = Exact<{
 
 export type DeleteRoleMutation = { __typename?: 'Mutation', deletePermission: { __typename: 'DeletePermissionPayload' } | null };
 
-export type ScheduleItemFragment = { __typename?: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null } | null };
+export type ScheduleItemFragment = { __typename: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null };
 
-export type ScheduleFragment = { __typename?: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename?: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null } | null }> } };
+export type LessonFragment = { __typename: 'RozpisItem', riId: string, riOd: string, riDo: string, rozpiByRiIdRodic: { __typename?: 'Rozpi', rId: string, rDatum: string, rKde: string, userByRTrener: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', userByPIdPartner: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null };
+
+export type ScheduleFragment = { __typename: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> } };
 
 export type ScheduleRangeQueryVariables = Exact<{
   startDate: Scalars['Date'];
@@ -10760,7 +10762,7 @@ export type ScheduleRangeQueryVariables = Exact<{
 }>;
 
 
-export type ScheduleRangeQuery = { __typename?: 'Query', schedulesForRange: { __typename?: 'RozpisConnection', nodes: Array<{ __typename?: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename?: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null } | null }> } }> } | null };
+export type ScheduleRangeQuery = { __typename?: 'Query', schedulesForRange: { __typename?: 'RozpisConnection', nodes: Array<{ __typename: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> } }> } | null };
 
 export type ScheduleListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -10770,22 +10772,20 @@ export type ScheduleListQueryVariables = Exact<{
 
 export type ScheduleListQuery = { __typename?: 'Query', rozpis: { __typename?: 'RozpisConnection', totalCount: number, nodes: Array<{ __typename?: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTimestamp: string | null, rTrener: string, rVisible: boolean, userByRTrener: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename?: 'RozpisItem', riDo: string, riOd: string, riId: string, riPartner: string | null }> } }> } | null };
 
-export type LessonFragment = { __typename?: 'RozpisItem', riId: string, riOd: string, riDo: string, rozpiByRiIdRodic: { __typename?: 'Rozpi', rId: string, rDatum: string, rKde: string, userByRTrener: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', userByPIdPartner: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null };
-
 export type MyLessonsQueryVariables = Exact<{
   startDate?: InputMaybe<Scalars['Date']>;
   endDate?: InputMaybe<Scalars['Date']>;
 }>;
 
 
-export type MyLessonsQuery = { __typename?: 'Query', currentSessionId: string | null, currentUserId: string | null, currentCoupleIds: { __typename?: 'CurrentCoupleIdsConnection', nodes: Array<string | null> } | null, myLessons: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename?: 'RozpisItem', riId: string, riOd: string, riDo: string, rozpiByRiIdRodic: { __typename?: 'Rozpi', rId: string, rDatum: string, rKde: string, userByRTrener: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', userByPIdPartner: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> } | null };
+export type MyLessonsQuery = { __typename?: 'Query', currentSessionId: string | null, currentUserId: string | null, currentCoupleIds: { __typename?: 'CurrentCoupleIdsConnection', nodes: Array<string | null> } | null, myLessons: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> } | null };
 
 export type ScheduleQueryVariables = Exact<{
   id: Scalars['BigInt'];
 }>;
 
 
-export type ScheduleQuery = { __typename?: 'Query', rozpi: { __typename?: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename?: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null } | null }> } } | null };
+export type ScheduleQuery = { __typename?: 'Query', rozpi: { __typename: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> } } | null };
 
 export type ToggleScheduleVisibleMutationVariables = Exact<{
   id: Scalars['BigInt'];
@@ -10881,14 +10881,14 @@ export type TitleVideosQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type TitleVideosQuery = { __typename?: 'Query', titleVideos: { __typename?: 'VideosConnection', nodes: Array<{ __typename?: 'Video', vTitle: string, vUri: string }> } | null };
 
-export type VideoSourceFragment = { __typename?: 'VideoSource', vsId: string, vsTitle: string | null, vsUrl: string, vsDescription: string | null, vsLastChecked: string | null, vsCreatedAt: string };
+export type VideoSourceFragment = { __typename: 'VideoSource', vsId: string, vsTitle: string | null, vsUrl: string, vsDescription: string | null, vsLastChecked: string | null, vsCreatedAt: string };
 
 export type VideoSourceQueryVariables = Exact<{
   id: Scalars['BigInt'];
 }>;
 
 
-export type VideoSourceQuery = { __typename?: 'Query', videoSource: { __typename?: 'VideoSource', vsId: string, vsTitle: string | null, vsUrl: string, vsDescription: string | null, vsLastChecked: string | null, vsCreatedAt: string } | null };
+export type VideoSourceQuery = { __typename?: 'Query', videoSource: { __typename: 'VideoSource', vsId: string, vsTitle: string | null, vsUrl: string, vsDescription: string | null, vsLastChecked: string | null, vsCreatedAt: string } | null };
 
 export type VideoSourceListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -10896,7 +10896,7 @@ export type VideoSourceListQueryVariables = Exact<{
 }>;
 
 
-export type VideoSourceListQuery = { __typename?: 'Query', videoSources: { __typename?: 'VideoSourcesConnection', nodes: Array<{ __typename?: 'VideoSource', vsId: string, vsTitle: string | null, vsUrl: string, vsDescription: string | null, vsLastChecked: string | null, vsCreatedAt: string }> } | null };
+export type VideoSourceListQuery = { __typename?: 'Query', videoSources: { __typename?: 'VideoSourcesConnection', nodes: Array<{ __typename: 'VideoSource', vsId: string, vsTitle: string | null, vsUrl: string, vsDescription: string | null, vsLastChecked: string | null, vsCreatedAt: string }> } | null };
 
 export type CreateVideoSourceMutationVariables = Exact<{
   input: VideoSourceInput;
@@ -10920,14 +10920,14 @@ export type DeleteVideoSourceMutationVariables = Exact<{
 
 export type DeleteVideoSourceMutation = { __typename?: 'Mutation', deleteVideoSource: { __typename: 'DeleteVideoSourcePayload' } | null };
 
-export type VideoFragment = { __typename?: 'Video', vId: string, vAuthor: string, vPlaylist: string | null, vTitle: string, vDescription: string, vUri: string, vCreatedAt: string };
+export type VideoFragment = { __typename: 'Video', vId: string, vAuthor: string, vPlaylist: string | null, vTitle: string, vDescription: string, vUri: string, vCreatedAt: string };
 
 export type VideoQueryVariables = Exact<{
   id: Scalars['BigInt'];
 }>;
 
 
-export type VideoQuery = { __typename?: 'Query', video: { __typename?: 'Video', vId: string, vAuthor: string, vPlaylist: string | null, vTitle: string, vDescription: string, vUri: string, vCreatedAt: string } | null };
+export type VideoQuery = { __typename?: 'Query', video: { __typename: 'Video', vId: string, vAuthor: string, vPlaylist: string | null, vTitle: string, vDescription: string, vUri: string, vCreatedAt: string } | null };
 
 export type VideoListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -10935,7 +10935,7 @@ export type VideoListQueryVariables = Exact<{
 }>;
 
 
-export type VideoListQuery = { __typename?: 'Query', videos: { __typename?: 'VideosConnection', nodes: Array<{ __typename?: 'Video', vId: string, vAuthor: string, vPlaylist: string | null, vTitle: string, vDescription: string, vUri: string, vCreatedAt: string }> } | null };
+export type VideoListQuery = { __typename?: 'Query', videos: { __typename?: 'VideosConnection', nodes: Array<{ __typename: 'Video', vId: string, vAuthor: string, vPlaylist: string | null, vTitle: string, vDescription: string, vUri: string, vCreatedAt: string }> } | null };
 
 export type CreateVideoMutationVariables = Exact<{
   input: VideoInput;
@@ -10961,6 +10961,7 @@ export type DeleteVideoMutation = { __typename?: 'Mutation', deleteVideo: { __ty
 
 export const AnnouncementFragmentDoc = `
     fragment Announcement on Upozorneni {
+  __typename
   upId
   upKdo
   upLock
@@ -10988,6 +10989,7 @@ export const AnnouncementFragmentDoc = `
     `;
 export const ArticleFragmentDoc = `
     fragment Article on Aktuality {
+  __typename
   atId
   atPreview
   atJmeno
@@ -11003,6 +11005,7 @@ export const ArticleFragmentDoc = `
     `;
 export const CohortFragmentDoc = `
     fragment Cohort on Skupiny {
+  __typename
   sId
   sName
   sDescription
@@ -11047,6 +11050,7 @@ export const UserFragmentDoc = `
     `;
 export const RoleFragmentDoc = `
     fragment Role on Permission {
+  __typename
   peAkce
   peAnkety
   peAktuality
@@ -11088,6 +11092,7 @@ export const CouplePartialFragmentDoc = `
     `;
 export const FileFragmentDoc = `
     fragment File on Dokumenty {
+  __typename
   dId
   dName
   dFilename
@@ -11097,6 +11102,7 @@ export const FileFragmentDoc = `
     `;
 export const EventFragmentDoc = `
     fragment Event on Akce {
+  __typename
   aId
   aOd
   aDo
@@ -11116,6 +11122,7 @@ export const EventWithItemsFragmentDoc = `
   akceItemsByAiIdRodic {
     totalCount
     nodes {
+      __typename
       aiId
       userByAiUser {
         uId
@@ -11128,6 +11135,7 @@ export const EventWithItemsFragmentDoc = `
     ${EventFragmentDoc}`;
 export const EventItemFragmentDoc = `
     fragment EventItem on AkceItem {
+  __typename
   aiId
   userByAiUser {
     uJmeno
@@ -11164,6 +11172,7 @@ export const GalleryDirFragmentDoc = `
     `;
 export const PageFragmentDoc = `
     fragment Page on Page {
+  __typename
   nodeId
   id
   url
@@ -11175,6 +11184,7 @@ export const PageFragmentDoc = `
     `;
 export const PaymentGroupFragmentDoc = `
     fragment PaymentGroup on PlatbyGroup {
+  __typename
   pgId
   pgName
   pgType
@@ -11184,6 +11194,7 @@ export const PaymentGroupFragmentDoc = `
     `;
 export const PaymentItemFragmentDoc = `
     fragment PaymentItem on PlatbyItem {
+  __typename
   piId
   piIdCategory
   piIdRaw
@@ -11204,6 +11215,7 @@ export const PaymentItemFragmentDoc = `
     `;
 export const PaymentCategoryFragmentDoc = `
     fragment PaymentCategory on PlatbyCategory {
+  __typename
   pcId
   pcName
   pcSymbol
@@ -11219,6 +11231,7 @@ export const PaymentCategoryFragmentDoc = `
     `;
 export const ReservationItemFragmentDoc = `
     fragment ReservationItem on NabidkaItem {
+  __typename
   niId
   niPartner
   niPocetHod
@@ -11235,6 +11248,7 @@ export const ReservationItemFragmentDoc = `
     `;
 export const ReservationFragmentDoc = `
     fragment Reservation on Nabidka {
+  __typename
   nId
   nOd
   nDo
@@ -11256,45 +11270,9 @@ export const ReservationFragmentDoc = `
   }
 }
     ${ReservationItemFragmentDoc}`;
-export const ScheduleItemFragmentDoc = `
-    fragment ScheduleItem on RozpisItem {
-  riOd
-  riDo
-  riId
-  riLock
-  riPartner
-  paryByRiPartner {
-    userByPIdPartner {
-      uJmeno
-      uId
-      uPrijmeni
-    }
-    pId
-  }
-}
-    `;
-export const ScheduleFragmentDoc = `
-    fragment Schedule on Rozpi {
-  rDatum
-  rId
-  rKde
-  rLock
-  rTrener
-  rVisible
-  userByRTrener {
-    uJmeno
-    uId
-    uPrijmeni
-  }
-  rozpisItemsByRiIdRodic(orderBy: [RI_OD_ASC]) {
-    nodes {
-      ...ScheduleItem
-    }
-  }
-}
-    ${ScheduleItemFragmentDoc}`;
 export const LessonFragmentDoc = `
     fragment Lesson on RozpisItem {
+  __typename
   riId
   riOd
   riDo
@@ -11314,6 +11292,24 @@ export const LessonFragmentDoc = `
       uJmeno
       uPrijmeni
     }
+  }
+}
+    `;
+export const ScheduleItemFragmentDoc = `
+    fragment ScheduleItem on RozpisItem {
+  __typename
+  riOd
+  riDo
+  riId
+  riLock
+  riPartner
+  paryByRiPartner {
+    pId
+    userByPIdPartner {
+      uJmeno
+      uId
+      uPrijmeni
+    }
     userByPIdPartnerka {
       uId
       uJmeno
@@ -11322,8 +11318,30 @@ export const LessonFragmentDoc = `
   }
 }
     `;
+export const ScheduleFragmentDoc = `
+    fragment Schedule on Rozpi {
+  __typename
+  rDatum
+  rId
+  rKde
+  rLock
+  rTrener
+  rVisible
+  userByRTrener {
+    uJmeno
+    uId
+    uPrijmeni
+  }
+  rozpisItemsByRiIdRodic(orderBy: [RI_OD_ASC]) {
+    nodes {
+      ...ScheduleItem
+    }
+  }
+}
+    ${ScheduleItemFragmentDoc}`;
 export const VideoSourceFragmentDoc = `
     fragment VideoSource on VideoSource {
+  __typename
   vsId
   vsTitle
   vsUrl
@@ -11334,6 +11352,7 @@ export const VideoSourceFragmentDoc = `
     `;
 export const VideoFragmentDoc = `
     fragment Video on Video {
+  __typename
   vId
   vAuthor
   vPlaylist
@@ -13379,11 +13398,11 @@ export const MyLessonsDocument = `
   currentUserId
   myLessons(startDate: $startDate, endDate: $endDate) {
     nodes {
-      ...Lesson
+      ...ScheduleItem
     }
   }
 }
-    ${LessonFragmentDoc}`;
+    ${ScheduleItemFragmentDoc}`;
 export const useMyLessonsQuery = <
       TData = MyLessonsQuery,
       TError = unknown

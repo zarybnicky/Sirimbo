@@ -1,4 +1,5 @@
 fragment PaymentGroup on PlatbyGroup {
+  __typename
   pgId
   pgName
   pgType
@@ -41,6 +42,7 @@ mutation DeletePaymentGroup($id: BigInt!) {
 
 
 fragment PaymentItem on PlatbyItem {
+  __typename
   piId
   piIdCategory
   piIdRaw
@@ -94,6 +96,7 @@ mutation DeletePaymentItem($id: BigInt!) {
 
 
 fragment PaymentCategory on PlatbyCategory {
+  __typename
   pcId
   pcName
   pcSymbol

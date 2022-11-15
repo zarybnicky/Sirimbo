@@ -7,16 +7,16 @@ if (process.env.ANALYZE === 'true') {
 }
 
 let withSentryConfig = x => x;
-if (process.env.NODE_ENV === 'production') {
-  withSentryConfig = cfg => require('@sentry/nextjs').withSentryConfig({
-    ...cfg,
-    sentry: {
-      hideSourceMaps: true,
-    },
-  }, {
-    silent: true, // Suppresses all logs
-  });
-}
+// if (process.env.NODE_ENV === 'production') {
+//   withSentryConfig = cfg => require('@sentry/nextjs').withSentryConfig({
+//     ...cfg,
+//     sentry: {
+//       hideSourceMaps: true,
+//     },
+//   }, {
+//     silent: true, // Suppresses all logs
+//   });
+// }
 
 module.exports = withBundleAnalyzer(withSentryConfig({
   reactStrictMode: true,

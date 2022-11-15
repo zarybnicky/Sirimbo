@@ -1,4 +1,5 @@
 fragment Page on Page {
+  __typename
   nodeId
   id
   url

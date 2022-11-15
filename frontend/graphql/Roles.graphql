@@ -1,4 +1,5 @@
 fragment Role on Permission {
+  __typename
   peAkce
   peAnkety
   peAktuality

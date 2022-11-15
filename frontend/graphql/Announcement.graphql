@@ -1,4 +1,5 @@
 fragment Announcement on Upozorneni {
+  __typename
   upId
   upKdo
   upLock
