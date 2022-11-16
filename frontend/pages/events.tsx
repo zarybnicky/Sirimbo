@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { EventWithItemsFragment } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
-import { useEventListQuery } from "lib/graphql";
 import { HtmlView } from 'components/HtmlView';
 import classNames from 'classnames';
 import { Card } from 'components/Card';
+import { EventWithItemsFragment, useEventListQuery } from 'lib/graphql/Event';
 
 const EventItem = ({ event }: { event: EventWithItemsFragment }) => {
   const [expanded, setExpanded] = React.useState(false);

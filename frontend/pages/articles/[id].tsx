@@ -3,8 +3,8 @@ import { format } from 'date-fns';
 import { CallToAction } from 'components/CallToAction';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useArticleQuery } from 'lib/graphql';
 import { HtmlView } from 'components/HtmlView';
+import { useArticleQuery } from 'lib/graphql/Articles';
 
 export const ArticlePage = ({ }) => {
   const router = useRouter();

@@ -1,5 +1,5 @@
 import { ScheduleForm } from "components/ScheduleForm";
-import { useScheduleQuery } from "lib/graphql";
+import { useScheduleQuery } from "lib/graphql/Schedule";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
 

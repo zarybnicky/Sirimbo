@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button } from 'components/Button';
-import { useDeleteVideoSourceMutation, useVideoSourceListQuery } from 'lib/graphql';
+import { useDeleteVideoSourceMutation, useVideoSourceListQuery } from 'lib/graphql/Video';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
 import { format } from 'date-fns';

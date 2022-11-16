@@ -1,4 +1,4 @@
-import { ScheduleFragment, RozpiInput, useCreateScheduleMutation, useUpdateScheduleMutation, useTrainerListQuery } from 'lib/graphql';
+import { ScheduleFragment, useCreateScheduleMutation, useUpdateScheduleMutation } from 'lib/graphql/Schedule';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { SelectElement } from 'components/SelectElement';
@@ -7,6 +7,8 @@ import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
+import { RozpiInput } from 'lib/graphql';
+import { useTrainerListQuery } from 'lib/graphql/User';
 
 type FormProps = Pick<RozpiInput, 'rTrener' | 'rKde' | 'rDatum' | 'rVisible' | 'rLock'>;
 

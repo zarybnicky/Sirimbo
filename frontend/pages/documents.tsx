@@ -1,9 +1,9 @@
 import { useForm } from "react-hook-form";
-import { useFileListQuery } from 'lib/graphql';
 import { SelectElement } from 'components/SelectElement';
 import { DataGrid } from '@mui/x-data-grid';
 import format from "date-fns/format";
 import { useRequireUserLoggedIn } from "lib/route-guards";
+import { useFileListQuery } from "lib/graphql/Documents";
 
 const categories = [
   { id: "1", label: "Schůze,\u{00A0}rady" },

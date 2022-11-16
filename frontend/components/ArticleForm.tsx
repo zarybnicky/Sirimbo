@@ -1,10 +1,11 @@
 import React from 'react';
-import { ArticleFragment, AktualityInput, useCreateArticleMutation, useUpdateArticleMutation } from 'lib/graphql';
 import { useForm } from 'react-hook-form';
 import { TextAreaElement, TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
+import { AktualityInput } from 'lib/graphql';
+import { ArticleFragment, useCreateArticleMutation, useUpdateArticleMutation } from 'lib/graphql/Articles';
 
 type FormProps = Pick<AktualityInput, 'atJmeno' | 'atPreview' | 'atText'>;
 

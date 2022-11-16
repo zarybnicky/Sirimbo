@@ -1,4 +1,5 @@
-import { CohortFragment, SkupinyInput, useCreateCohortMutation, useUpdateCohortMutation } from 'lib/graphql';
+import { SkupinyInput } from 'lib/graphql';
+import { CohortFragment, useCreateCohortMutation, useUpdateCohortMutation } from 'lib/graphql/Cohorts';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextAreaElement, TextFieldElement } from 'components/TextField';

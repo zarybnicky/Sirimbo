@@ -1,5 +1,5 @@
 import { CohortForm } from "components/CohortForm";
-import { useCohortQuery } from "lib/graphql";
+import { useCohortQuery } from "lib/graphql/Cohorts";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
 

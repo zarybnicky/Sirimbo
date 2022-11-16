@@ -1,5 +1,5 @@
 import { VideoSourceForm } from "components/VideoSourceForm";
-import { useVideoSourceQuery } from "lib/graphql";
+import { useVideoSourceQuery } from "lib/graphql/Video";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
 

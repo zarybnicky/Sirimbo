@@ -1,4 +1,4 @@
-import { GalleryPhotoFragment, GalerieFotoInput, useUpdateGalleryPhotoMutation, useGalleryDirListQuery } from 'lib/graphql';
+import { GalleryPhotoFragment, useUpdateGalleryPhotoMutation, useGalleryDirListQuery } from 'lib/graphql/Gallery';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { SelectElement } from 'components/SelectElement';
@@ -6,6 +6,7 @@ import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
+import { GalerieFotoInput } from 'lib/graphql';
 
 type FormProps = Pick<GalerieFotoInput, 'gfIdRodic' | 'gfName'>;
 

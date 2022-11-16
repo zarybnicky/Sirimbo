@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { saveAs } from 'file-saver';
-import { useMemberListQuery } from 'lib/graphql';
 import { PermissionKey, PermissionLevel, usePermissions } from 'lib/data/use-permissions';
 import { Button } from './Button';
+import { useMemberListQuery } from 'lib/graphql/User';
 
 export function CohortExport({ id, name }: { id?: string; name?: string; }) {
   const perms = usePermissions();

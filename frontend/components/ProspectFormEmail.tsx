@@ -4,11 +4,12 @@ import { Card } from 'components/Card';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
 import { CheckboxElement } from 'components/Checkbox';
-import { CrmCohort, useSubmitProspectFormMutation } from 'lib/graphql';
+import { useSubmitProspectFormMutation } from 'lib/graphql/Crm';
 import { ErrorBox } from './ErrorBox';
 import { useAsyncCallback } from 'react-async-hook';
 import { SubmitButton } from './SubmitButton';
 import { toast } from 'react-toastify';
+import { CrmCohort } from 'lib/graphql';
 
 type ProspectFormEmailProps = {
   title?: string;

@@ -4,7 +4,6 @@ import { SelectElement } from 'components/SelectElement';
 import { TextFieldElement } from 'components/TextField';
 import { useCountries } from 'lib/data/use-countries';
 import { format } from 'date-fns';
-import { useCohortListQuery, useRegisterMutation } from 'lib/graphql';
 import { useRequireUserLoggedOut } from 'lib/route-guards';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from 'components/ErrorBox';
@@ -13,6 +12,8 @@ import { useRouter } from 'next/router';
 import { SubmitButton } from 'components/SubmitButton';
 import { RadioButtonGroupElement } from 'components/RadioButtomGroupElement';
 import { toast } from 'react-toastify';
+import { useCohortListQuery } from 'lib/graphql/Cohorts';
+import { useRegisterMutation } from 'lib/graphql/CurrentUser';
 
 export default function RegisterPage() {
   useRequireUserLoggedOut()

@@ -1,5 +1,5 @@
 import { RoleForm } from "components/RoleForm";
-import { useRoleQuery } from "lib/graphql";
+import { useRoleQuery } from "lib/graphql/Roles";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
 

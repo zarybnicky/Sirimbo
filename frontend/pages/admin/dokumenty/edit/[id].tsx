@@ -1,5 +1,5 @@
 import { FileForm } from "components/FileForm";
-import { useFileQuery } from "lib/graphql";
+import { useFileQuery } from "lib/graphql/Documents";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
 

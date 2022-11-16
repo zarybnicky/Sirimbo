@@ -6,13 +6,14 @@ import { ContainerPlugin } from 'components/Container';
 import { CallToActionPlugin } from 'components/CallToAction';
 import { ReactPage, cellPlugins } from 'components/ReactPage';
 import { Plus as AddIcon } from 'react-feather';
-import { Page, PageRevision, useCreatePageMutation, usePageListQuery, usePageRevisionsQuery, useUpdatePageMutation } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { toast } from 'react-toastify';
 import classNames from 'classnames';
 import { TextField } from 'components/TextField';
 import { Spinner } from 'components/Spinner';
 import { Button } from 'components/Button';
+import { Page, PageRevision } from 'lib/graphql';
+import { useCreatePageMutation, usePageListQuery, usePageRevisionsQuery, useUpdatePageMutation } from 'lib/graphql/Page';
 
 const INITIAL_VALUE: Value = createValue({
   rows: [

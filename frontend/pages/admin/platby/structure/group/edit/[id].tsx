@@ -1,5 +1,5 @@
 import { PaymentGroupForm } from "components/PaymentGroupForm";
-import { usePaymentGroupQuery } from "lib/graphql";
+import { usePaymentGroupQuery } from "lib/graphql/Payment";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
 

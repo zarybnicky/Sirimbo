@@ -1,4 +1,3 @@
-import { ReservationFragment, ReservationItemFragment, ScheduleFragment, ScheduleItemFragment } from 'lib/graphql';
 import { keysOf } from 'lib/keys-of';
 import { useAuth } from './use-auth';
 
@@ -98,25 +97,25 @@ export const usePermissions = () => {
       const perm = PermissionKey[key] as keyof typeof PermissionKey;
       return perms[perm] >= level;
     },
-    canEditSchedule(schedule: ScheduleFragment) {
+    canEditSchedule(schedule: { rTrener: string }) {
       return (
         (perms.peRozpis >= PermissionLevel.P_OWNED && user?.uId === schedule.rTrener) ||
         perms.peRozpis >= PermissionLevel.P_ADMIN
       );
     },
-    canEditReservation(reservation: ReservationFragment) {
+    canEditReservation(reservation: { nTrener: string; }) {
       return (
         (perms.peNabidka >= PermissionLevel.P_OWNED && user?.uId === reservation.nTrener) ||
         perms.peNabidka >= PermissionLevel.P_ADMIN
       );
     },
-    canSignUp(item: ScheduleFragment, lesson: ScheduleItemFragment) {
+    canSignUp(item: { rLock: boolean; rTrener: string; }, lesson: { riLock: boolean; riPartner: string | null; }) {
       return (
         perms.peRozpis >= PermissionLevel.P_MEMBER &&
         (!lesson.riPartner || lesson.riPartner === '0') && !item.rLock && !lesson.riLock
       );
     },
-    canSignOut(item: ScheduleFragment, lesson: ScheduleItemFragment) {
+    canSignOut(item: { rLock: boolean; rTrener: string; }, lesson: { riLock: boolean; riPartner: string | null; }) {
       return (
         (lesson.riPartner && lesson.riPartner !== '0') && !item.rLock && !lesson.riLock && (
           (perms.peRozpis >= PermissionLevel.P_MEMBER && couple?.pId == lesson.riPartner) ||
@@ -125,13 +124,19 @@ export const usePermissions = () => {
         )
       );
     },
-    canMakeReservation(item: ReservationFragment) {
+    canMakeReservation(item: {
+      nabidkaItemsByNiIdRodic: { nodes: { niPocetHod: number; }[] };
+      nTrener: string; nLock: boolean; nPocetHod: number;
+    }) {
       return (
         perms.peNabidka >= PermissionLevel.P_MEMBER && !item.nLock &&
         item.nPocetHod > item.nabidkaItemsByNiIdRodic.nodes.reduce((n, x) => n + x.niPocetHod, 0)
       );
     },
-    canCancelReservation(item: ReservationFragment, lesson: ReservationItemFragment) {
+    canCancelReservation(
+      item: { nLock: boolean; nTrener: string; },
+      lesson: { niLock: boolean; niPartner: string; }
+    ) {
       return !item.nLock && !lesson.niLock && (
         (perms.peNabidka >= PermissionLevel.P_MEMBER && couple?.pId == lesson.niPartner) ||
         (perms.peNabidka >= PermissionLevel.P_OWNED && user?.uId == item.nTrener) ||

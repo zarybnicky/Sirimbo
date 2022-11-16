@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useMyLessonsQuery, ScheduleItemFragment } from 'lib/graphql';
+import { useMyLessonsQuery, ScheduleItemFragment } from 'lib/graphql/Schedule';
 import { useAuth } from 'lib/data/use-auth';
 import { format } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'react-feather';

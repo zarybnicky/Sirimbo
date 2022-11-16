@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Checkbox } from 'components/Checkbox';
 import { DateRange } from 'components/DateRange';
-import { useDeleteReservationMutation, useReservationListQuery, useToggleReservationVisibleMutation } from 'lib/graphql';
+import { useDeleteReservationMutation, useReservationListQuery, useToggleReservationVisibleMutation } from 'lib/graphql/Reservation';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import { Edit as EditIcon, Copy as ContentCopyIcon } from 'react-feather';
 import { DeleteButton } from 'components/DeleteButton';

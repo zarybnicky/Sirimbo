@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { saveAs } from 'file-saver';
-import { useEventParticipantsQuery } from 'lib/graphql';
+import { useEventParticipantsQuery } from 'lib/graphql/Event';
 import { Button } from './Button';
 
 export function EventParticipantExport({ id }: { id: string; }) {

@@ -1,20 +1,16 @@
 import * as React from 'react';
 import { ReactPage } from '../components/ReactPage';
 import { GetServerSideProps } from 'next';
-import { usePageQuery } from 'lib/graphql';
-import { QueryClient } from '@tanstack/react-query';
+import { usePageQuery } from 'lib/graphql/Page';
 
-const DynamicPage: React.FC<{ content: any; }> = ({ content }) => {
+export default function DynamicPage({ content }: { content: any }) {
   return <ReactPage readOnly value={content} />;
 }
-
-export default DynamicPage;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { resolvedUrl: url } = context;
 
-  const queryClient = new QueryClient();
-  const data = await queryClient.fetchQuery(usePageQuery.getKey({ url }), usePageQuery.fetcher({ url }));
+  const data = await usePageQuery.fetcher({ url })();
   if (!data.pageByUrl) {
     return { notFound: true };
   }

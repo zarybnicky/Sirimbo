@@ -1,5 +1,5 @@
 import { PaymentItemForm } from "components/PaymentItemForm";
-import { usePaymentItemQuery } from "lib/graphql";
+import { usePaymentItemQuery } from "lib/graphql/Payment";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
 

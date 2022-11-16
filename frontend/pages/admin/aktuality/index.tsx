@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { format } from 'date-fns';
-import { useArticlesQuery, useDeleteArticleMutation } from 'lib/graphql';
+import { useArticlesQuery, useDeleteArticleMutation } from 'lib/graphql/Articles';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import { Edit as EditIcon } from 'react-feather';

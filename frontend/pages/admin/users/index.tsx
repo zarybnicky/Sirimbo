@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useCohortListQuery, useDeleteUserMutation, useRoleListQuery, useUserListQuery } from 'lib/graphql';
+import { useDeleteUserMutation, useUserListQuery } from 'lib/graphql/User';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
 import { Edit as EditIcon } from 'react-feather';
@@ -7,6 +7,8 @@ import { DeleteButton } from 'components/DeleteButton';
 import { useRouter } from 'next/router';
 import { format } from 'date-fns';
 import { Button } from 'components/Button';
+import { useRoleListQuery } from 'lib/graphql/Roles';
+import { useCohortListQuery } from 'lib/graphql/Cohorts';
 
 export default function UserectoryList() {
   useRequireUserLoggedIn();

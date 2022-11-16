@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Card } from 'components/Card';
 import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
-import { useCohortListQuery } from 'lib/graphql';
 import { HtmlView } from 'components/HtmlView';
+import { useCohortListQuery } from 'lib/graphql/Cohorts';
 
 export default function CohortsPage() {
   const { data: cohorts } = useCohortListQuery({ visible: true });

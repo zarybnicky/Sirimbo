@@ -1,4 +1,5 @@
-import { useCreateCoupleMutation, useUserListQuery } from 'lib/graphql';
+import { useUserListQuery } from 'lib/graphql/User';
+import { useCreateCoupleMutation } from 'lib/graphql/Couple';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';

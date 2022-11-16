@@ -1,4 +1,3 @@
-import { AnnouncementFragment, UpozorneniInput, useCreateAnnouncementMutation, useUpdateAnnouncementMutation } from 'lib/graphql';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextAreaElement, TextFieldElement } from 'components/TextField';
@@ -6,6 +5,8 @@ import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
+import { UpozorneniInput } from 'lib/graphql';
+import { AnnouncementFragment, useCreateAnnouncementMutation, useUpdateAnnouncementMutation } from 'lib/graphql/Announcement';
 
 type FormProps = Pick<UpozorneniInput, 'upNadpis' | 'upText' | 'upLock'>;
 

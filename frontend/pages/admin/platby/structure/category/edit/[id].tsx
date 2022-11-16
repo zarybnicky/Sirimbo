@@ -1,5 +1,5 @@
 import { PaymentCategoryForm } from "components/PaymentCategoryForm";
-import { usePaymentCategoryQuery } from "lib/graphql";
+import { usePaymentCategoryQuery } from "lib/graphql/Payment";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
 

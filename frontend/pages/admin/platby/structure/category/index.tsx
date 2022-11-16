@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { usePaymentCategoryListQuery, useDeletePaymentCategoryMutation } from "lib/graphql";
+import { usePaymentCategoryListQuery, useDeletePaymentCategoryMutation } from "lib/graphql/Payment";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
 import { Edit as EditIcon } from 'react-feather';

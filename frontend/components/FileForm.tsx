@@ -1,5 +1,6 @@
 import React from 'react';
-import { FileFragment, DokumentyInput, useUpdateFileMutation } from 'lib/graphql';
+import { FileFragment, useUpdateFileMutation } from 'lib/graphql/Documents';
+import { DokumentyInput } from 'lib/graphql';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook'

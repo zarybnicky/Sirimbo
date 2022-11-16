@@ -1,4 +1,5 @@
-import { EventFragment, AkceInput, useCreateEventMutation, useUpdateEventMutation } from 'lib/graphql';
+import { AkceInput } from 'lib/graphql';
+import { EventFragment, useCreateEventMutation, useUpdateEventMutation } from 'lib/graphql/Event';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextAreaElement, TextFieldElement } from 'components/TextField';

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { format } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'react-feather';
-import { useAnnouncementListQuery } from 'lib/graphql';
+import { useAnnouncementListQuery } from 'lib/graphql/Announcement';
 import { HtmlView } from './HtmlView';
 import { Card } from 'components/Card';
 import { Pagination } from './Pagination';

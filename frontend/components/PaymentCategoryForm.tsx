@@ -1,4 +1,4 @@
-import { PaymentCategoryFragment, PlatbyCategoryInput, useCreatePaymentCategoryMutation, useUpdatePaymentCategoryMutation } from 'lib/graphql';
+import { PaymentCategoryFragment, useCreatePaymentCategoryMutation, useUpdatePaymentCategoryMutation } from 'lib/graphql/Payment';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
@@ -6,6 +6,7 @@ import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
+import { PlatbyCategoryInput } from 'lib/graphql';
 
 type FormProps = Pick<PlatbyCategoryInput, 'pcName' | 'pcSymbol' | 'pcAmount' | 'pcDateDue' | 'pcValidFrom' | 'pcValidTo' | 'pcUsePrefix' | 'pcArchive' | 'pcVisible'>;
 

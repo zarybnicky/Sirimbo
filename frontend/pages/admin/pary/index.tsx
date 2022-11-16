@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useCoupleListQuery, useDeleteCoupleMutation, useFixUnpairedCouplesMutation } from 'lib/graphql';
+import { useCoupleListQuery, useDeleteCoupleMutation, useFixUnpairedCouplesMutation } from 'lib/graphql/Couple';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DeleteButton } from 'components/DeleteButton';
 import { NewCoupleForm } from 'components/NewCoupleForm';

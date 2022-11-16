@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useCohortListQuery, useDeleteCohortMutation } from "lib/graphql";
+import { useCohortListQuery, useDeleteCohortMutation } from "lib/graphql/Cohorts";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
 import { Edit as EditIcon } from 'react-feather';

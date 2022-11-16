@@ -1,5 +1,5 @@
 import { UserForm } from "components/UserForm";
-import { useUserQuery } from "lib/graphql";
+import { useUserQuery } from "lib/graphql/User";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
 

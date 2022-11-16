@@ -1,4 +1,4 @@
-import { ReservationFragment, NabidkaInput, useCreateReservationMutation, useUpdateReservationMutation, useTrainerListQuery } from 'lib/graphql';
+import { ReservationFragment, useCreateReservationMutation, useUpdateReservationMutation } from 'lib/graphql/Reservation';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { SelectElement } from 'components/SelectElement';
@@ -7,6 +7,8 @@ import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
+import { NabidkaInput } from 'lib/graphql';
+import { useTrainerListQuery } from 'lib/graphql/User';
 
 type FormProps = Pick<NabidkaInput, 'nTrener' | 'nPocetHod' | 'nMaxPocetHod' | 'nOd' | 'nDo' | 'nVisible' | 'nLock'>;
 

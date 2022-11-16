@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useGalleryDirQuery, useDeleteGalleryPhotoMutation } from 'lib/graphql';
+import { useGalleryDirQuery, useDeleteGalleryPhotoMutation } from 'lib/graphql/Gallery';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { useRouter } from 'next/router';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';

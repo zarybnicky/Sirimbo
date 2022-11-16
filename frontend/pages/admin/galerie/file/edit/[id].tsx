@@ -1,5 +1,5 @@
 import { GalleryPhotoForm } from "components/GalleryPhotoForm";
-import { useGalleryPhotoQuery } from "lib/graphql";
+import { useGalleryPhotoQuery } from "lib/graphql/Gallery";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
 

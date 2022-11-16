@@ -1,5 +1,5 @@
 import { GalleryDirForm } from "components/GalleryDirectoryForm";
-import { useGalleryDirQuery } from "lib/graphql";
+import { useGalleryDirQuery } from "lib/graphql/Gallery";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
 

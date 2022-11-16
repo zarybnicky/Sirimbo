@@ -1,12 +1,15 @@
 import { Card } from 'components/Card';
 import { format } from "date-fns";
-import { useDeleteUserMutation, useCohortListQuery, useConfirmUserMutation, useRoleListQuery, UserFragment, useUserListQuery } from 'lib/graphql';
+import { useDeleteUserMutation, useConfirmUserMutation, useUserListQuery } from 'lib/graphql/User';
 import { SelectElement } from 'components/SelectElement';
 import { useForm } from "react-hook-form";
 import { Trash2 as DeleteIcon, Check as CheckIcon } from 'react-feather';
 import { useConfirm } from 'components/Confirm';
 import React from "react";
 import { useRequireUserLoggedIn } from "lib/route-guards";
+import { UserFragment } from 'lib/graphql/CurrentUser';
+import { useCohortListQuery } from 'lib/graphql/Cohorts';
+import { useRoleListQuery } from 'lib/graphql/Roles';
 
 const UnconfirmedUser: React.FC<{
   item: UserFragment;

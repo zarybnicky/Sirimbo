@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DateRange } from './DateRange';
 import { usePermissions } from 'lib/data/use-permissions';
-import { ReservationFragment, useReservationListQuery } from 'lib/graphql';
+import { ReservationFragment, useReservationListQuery } from 'lib/graphql/Reservation';
 import { Dropdown } from 'components/Dropdown';
 
 const ReservationView = (x: ReservationFragment) => {

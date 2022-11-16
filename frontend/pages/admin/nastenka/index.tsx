@@ -1,5 +1,5 @@
 import React from "react";
-import { useAnnouncementListQuery, useDeleteAnnouncementMutation } from "lib/graphql";
+import { useAnnouncementListQuery, useDeleteAnnouncementMutation } from "lib/graphql/Announcement";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import { Edit as EditIcon } from 'react-feather';

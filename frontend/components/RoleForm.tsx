@@ -1,4 +1,4 @@
-import { RoleFragment, PermissionInput, useCreateRoleMutation, useUpdateRoleMutation } from 'lib/graphql';
+import { RoleFragment, useCreateRoleMutation, useUpdateRoleMutation } from 'lib/graphql/Roles';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useAsyncCallback } from 'react-async-hook'
@@ -6,6 +6,7 @@ import { permissionLabels, realPermissionKeys } from "lib/data/use-permissions";
 import { TextAreaElement, TextFieldElement } from 'components/TextField';
 import { SubmitButton } from './SubmitButton';
 import { PermissionSlider } from './PermissionSlider';
+import { PermissionInput } from 'lib/graphql';
 
 type FormProps = PermissionInput;
 

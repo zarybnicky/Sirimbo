@@ -1,5 +1,5 @@
 import { ArticleForm } from "components/ArticleForm";
-import { useArticleQuery } from "lib/graphql";
+import { useArticleQuery } from "lib/graphql/Articles";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
 

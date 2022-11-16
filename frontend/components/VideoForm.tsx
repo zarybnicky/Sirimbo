@@ -1,5 +1,6 @@
 import React from 'react';
-import { VideoFragment, VideoInput, useCreateVideoMutation, useUpdateVideoMutation } from 'lib/graphql';
+import { VideoInput } from 'lib/graphql';
+import { VideoFragment, useCreateVideoMutation, useUpdateVideoMutation } from 'lib/graphql/Video';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from './TextField';
 import { useAsyncCallback } from 'react-async-hook'

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Checkbox } from 'components/Checkbox';
 import { DateRange } from 'components/DateRange';
-import { useEventListQuery, useToggleEventVisibleMutation, useDeleteEventMutation } from 'lib/graphql';
+import { useEventListQuery, useToggleEventVisibleMutation, useDeleteEventMutation } from 'lib/graphql/Event';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { useRouter } from 'next/router';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';

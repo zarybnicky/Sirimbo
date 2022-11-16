@@ -1,4 +1,4 @@
-import { UserFragment, UserInput, useCreateUserMutation, useUpdateUserMutation, useRoleListQuery, useCohortListQuery } from 'lib/graphql';
+import { useCreateUserMutation, useUpdateUserMutation } from 'lib/graphql/User';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { SelectElement } from 'components/SelectElement';
@@ -9,6 +9,10 @@ import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { useCountries } from 'lib/data/use-countries';
 import { SubmitButton } from './SubmitButton';
+import { UserInput } from 'lib/graphql';
+import { UserFragment } from 'lib/graphql/CurrentUser';
+import { useCohortListQuery } from 'lib/graphql/Cohorts';
+import { useRoleListQuery } from 'lib/graphql/Roles';
 
 type FormProps = Pick<UserInput, 'uLogin' | 'uJmeno' | 'uPrijmeni' | 'uNarozeni'
   | 'uRodneCislo' | 'uPohlavi' | 'uEmail' | 'uTelefon' | 'uStreet' |

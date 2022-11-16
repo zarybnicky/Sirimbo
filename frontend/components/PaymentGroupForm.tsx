@@ -1,10 +1,11 @@
-import { PaymentGroupFragment, PlatbyGroupInput, useCreatePaymentGroupMutation, useUpdatePaymentGroupMutation } from 'lib/graphql';
+import { PaymentGroupFragment, useCreatePaymentGroupMutation, useUpdatePaymentGroupMutation } from 'lib/graphql/Payment';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextAreaElement, TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
+import { PlatbyGroupInput } from 'lib/graphql';
 
 type FormProps = Pick<PlatbyGroupInput, 'pgName' | 'pgDescription' | 'pgBase'>;
 

@@ -1,4 +1,4 @@
-import { useArticlesQuery } from 'lib/graphql';
+import { useArticlesQuery } from 'lib/graphql/Articles';
 
 export interface Article {
   href: string;

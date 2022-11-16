@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
-import { useMemberListQuery } from 'lib/graphql';
 import { CohortExport } from 'components/CohortExport';
 import { TabMenu } from 'components/TabMenu';
 import { AtSign as EmailIcon, Phone as PhoneIcon } from 'react-feather';
-import { UserFragment } from 'lib/graphql';
+import { useMemberListQuery } from 'lib/graphql/User';
 import { HtmlView } from 'components/HtmlView';
 import { Card } from 'components/Card';
 import { SimpleDialog } from 'components/Dialog';
+import { UserFragment } from 'lib/graphql/CurrentUser';
 
 export default function CohortsPage() {
   useRequireUserLoggedIn();

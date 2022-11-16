@@ -1,10 +1,11 @@
-import { VideoSourceFragment, VideoSourceInput, useCreateVideoSourceMutation, useUpdateVideoSourceMutation } from 'lib/graphql';
+import { VideoSourceFragment, useCreateVideoSourceMutation, useUpdateVideoSourceMutation } from 'lib/graphql/Video';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
+import { VideoSourceInput } from 'lib/graphql';
 
 type FormProps = Pick<VideoSourceInput, 'vsUrl' | 'vsTitle' | 'vsDescription'>;
 

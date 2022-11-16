@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useDeleteFileMutation, useFileListQuery } from 'lib/graphql';
+import { useDeleteFileMutation, useFileListQuery } from 'lib/graphql/Documents';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import { Edit as EditIcon } from 'react-feather';
 import { DeleteButton } from 'components/DeleteButton';

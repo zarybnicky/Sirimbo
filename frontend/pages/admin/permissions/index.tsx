@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useDeleteRoleMutation, useRoleListQuery } from 'lib/graphql';
+import { useDeleteRoleMutation, useRoleListQuery } from 'lib/graphql/Roles';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
 import { Edit as EditIcon } from 'react-feather';

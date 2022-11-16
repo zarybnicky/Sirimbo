@@ -1,5 +1,5 @@
 import { ReservationForm } from "components/ReservationForm";
-import { useReservationQuery } from "lib/graphql";
+import { useReservationQuery } from "lib/graphql/Reservation";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
 

@@ -10,7 +10,6 @@ import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persist
 import { Layout } from "components/Layout";
 import { ProvideMeta } from "lib/use-meta";
 import "nprogress/nprogress.css";
-import 'public/style/material-icons.css';
 import 'public/style/index.css';
 import '@react-page/editor/lib/index.css';
 import '@react-page/plugins-slate/lib/index.css';

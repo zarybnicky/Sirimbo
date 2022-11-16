@@ -1,5 +1,5 @@
 import { EventForm } from "components/EventForm";
-import { useEventQuery } from "lib/graphql";
+import { useEventQuery } from "lib/graphql/Event";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
 

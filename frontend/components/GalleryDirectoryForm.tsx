@@ -1,5 +1,5 @@
 import React from 'react';
-import { GalleryDirFragment, GalerieDirInput, useUpdateGalleryDirMutation, useGalleryDirListQuery, useCreateGalleryDirMutation } from 'lib/graphql';
+import { GalleryDirFragment, useUpdateGalleryDirMutation, useGalleryDirListQuery, useCreateGalleryDirMutation } from 'lib/graphql/Gallery';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
 import { SelectElement } from 'components/SelectElement';
@@ -8,6 +8,7 @@ import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { slugify } from 'lib/slugify';
 import { SubmitButton } from './SubmitButton';
+import { GalerieDirInput } from 'lib/graphql';
 
 type FormProps = Pick<GalerieDirInput, 'gdIdRodic' | 'gdName' | 'gdHidden'>;
 

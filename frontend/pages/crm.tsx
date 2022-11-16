@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { format } from 'date-fns';
-import { useActiveProspectsQuery } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid } from '@mui/x-data-grid';
+import { useActiveProspectsQuery } from 'lib/graphql/Crm';
 
 export default function CrmPage() {
   useRequireUserLoggedIn()

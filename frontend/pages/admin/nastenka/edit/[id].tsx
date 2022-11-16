@@ -1,5 +1,5 @@
 import { AnnouncementForm } from "components/AnnouncementForm";
-import { useAnnouncementQuery } from "lib/graphql";
+import { useAnnouncementQuery } from "lib/graphql/Announcement";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
 

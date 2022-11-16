@@ -1,11 +1,13 @@
 import React from 'react';
-import { PaymentItemFragment, PlatbyItemInput, useCreatePaymentItemMutation, usePaymentCategoryListQuery, useUpdatePaymentItemMutation, useUserListQuery } from 'lib/graphql';
+import { PaymentItemFragment, useCreatePaymentItemMutation, usePaymentCategoryListQuery, useUpdatePaymentItemMutation } from 'lib/graphql/Payment';
 import { useForm } from 'react-hook-form';
 import { SelectElement } from 'components/SelectElement';
 import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
+import { PlatbyItemInput } from 'lib/graphql';
+import { useUserListQuery } from 'lib/graphql/User';
 
 type FormProps = Pick<PlatbyItemInput, 'piAmount' | 'piDate' | 'piIdCategory' | 'piIdUser' | 'piPrefix'>;
 
