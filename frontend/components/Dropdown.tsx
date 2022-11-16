@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import Link from 'next/link';
 
-export const Dropdown = ({ button, options }: {
+export const Dropdown = ({ button, align, options }: {
   button: React.ReactNode;
   options: {
     icon?: React.ReactNode;
@@ -11,6 +11,7 @@ export const Dropdown = ({ button, options }: {
     href?: string;
     onClick?: () => void;
   }[];
+  align: "start" | "end" | "center";
 }) => {
   return (
     <DropdownMenuPrimitive.Root>
@@ -20,7 +21,7 @@ export const Dropdown = ({ button, options }: {
 
       <DropdownMenuPrimitive.Portal>
         <DropdownMenuPrimitive.Content
-          align="center"
+          align={align}
           sideOffset={5}
           className={classNames(
             " radix-side-top:animate-slide-up radix-side-bottom:animate-slide-down",
@@ -34,28 +35,26 @@ export const Dropdown = ({ button, options }: {
                 <Link href={href} passHref>
                   <a
                     className={classNames(
-                      "flex cursor-default select-none items-center rounded-md px-2 py-2 text-xs outline-none",
-                      "text-gray-400 focus:bg-gray-50 dark:text-gray-500 dark:focus:bg-gray-900"
+                      "flex cursor-pointer select-none rounded-md uppercase px-2 py-2 text-xs outline-none",
+                      "text-gray-400 focus:bg-gray-50 dark:text-gray-500 dark:focus:bg-gray-900",
+                      "w-full",
                     )}
                   >
                     {icon}
-                    <span className="flex-grow text-gray-700 dark:text-gray-300">
-                      {title}
-                    </span>
+                    <span className="text-gray-800 dark:text-gray-300">{title}</span>
                   </a>
                 </Link>
               ) : (
                 <button
                   onClick={onClick}
                   className={classNames(
-                    "flex cursor-default select-none items-center rounded-md px-2 py-2 text-xs outline-none",
-                    "text-gray-400 focus:bg-gray-50 dark:text-gray-500 dark:focus:bg-gray-900"
+                    "flex cursor-pointer select-none rounded-md uppercase px-2 py-2 text-xs outline-none",
+                    "text-gray-400 focus:bg-gray-50 dark:text-gray-500 dark:focus:bg-gray-900",
+                    "w-full",
                   )}
                 >
                   {icon}
-                  <span className="flex-grow text-gray-700 dark:text-gray-300">
-                    {title}
-                  </span>
+                  <span className="text-gray-800 dark:text-gray-300">{title}</span>
                 </button>
               )}
             </DropdownMenuPrimitive.Item>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import format from 'date-fns/format';
+import { format } from 'date-fns';
 import { cs } from 'date-fns/locale'
 import { Control, FieldValues, ControllerProps, Path, useController } from 'react-hook-form';
 import { DatePickerCalendar, DateRangePicker, DatePicker } from "@axel-dev/react-nice-dates";

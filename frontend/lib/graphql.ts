@@ -10750,11 +10750,9 @@ export type DeleteRoleMutationVariables = Exact<{
 
 export type DeleteRoleMutation = { __typename?: 'Mutation', deletePermission: { __typename: 'DeletePermissionPayload' } | null };
 
-export type ScheduleItemFragment = { __typename: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null };
+export type ScheduleItemFragment = { __typename: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, rozpiByRiIdRodic: { __typename?: 'Rozpi', rId: string, rDatum: string, rKde: string, userByRTrener: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null };
 
-export type LessonFragment = { __typename: 'RozpisItem', riId: string, riOd: string, riDo: string, rozpiByRiIdRodic: { __typename?: 'Rozpi', rId: string, rDatum: string, rKde: string, userByRTrener: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', userByPIdPartner: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null };
-
-export type ScheduleFragment = { __typename: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> } };
+export type ScheduleFragment = { __typename: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, rozpiByRiIdRodic: { __typename?: 'Rozpi', rId: string, rDatum: string, rKde: string, userByRTrener: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> } };
 
 export type ScheduleRangeQueryVariables = Exact<{
   startDate: Scalars['Date'];
@@ -10762,7 +10760,7 @@ export type ScheduleRangeQueryVariables = Exact<{
 }>;
 
 
-export type ScheduleRangeQuery = { __typename?: 'Query', schedulesForRange: { __typename?: 'RozpisConnection', nodes: Array<{ __typename: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> } }> } | null };
+export type ScheduleRangeQuery = { __typename?: 'Query', schedulesForRange: { __typename?: 'RozpisConnection', nodes: Array<{ __typename: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, rozpiByRiIdRodic: { __typename?: 'Rozpi', rId: string, rDatum: string, rKde: string, userByRTrener: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> } }> } | null };
 
 export type ScheduleListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -10778,14 +10776,14 @@ export type MyLessonsQueryVariables = Exact<{
 }>;
 
 
-export type MyLessonsQuery = { __typename?: 'Query', currentSessionId: string | null, currentUserId: string | null, currentCoupleIds: { __typename?: 'CurrentCoupleIdsConnection', nodes: Array<string | null> } | null, myLessons: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riId: string, riOd: string, riDo: string, rozpiByRiIdRodic: { __typename?: 'Rozpi', rId: string, rDatum: string, rKde: string, userByRTrener: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', userByPIdPartner: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> } | null };
+export type MyLessonsQuery = { __typename?: 'Query', currentSessionId: string | null, currentUserId: string | null, currentCoupleIds: { __typename?: 'CurrentCoupleIdsConnection', nodes: Array<string | null> } | null, myLessons: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, rozpiByRiIdRodic: { __typename?: 'Rozpi', rId: string, rDatum: string, rKde: string, userByRTrener: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> } | null };
 
 export type ScheduleQueryVariables = Exact<{
   id: Scalars['BigInt'];
 }>;
 
 
-export type ScheduleQuery = { __typename?: 'Query', rozpi: { __typename: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> } } | null };
+export type ScheduleQuery = { __typename?: 'Query', rozpi: { __typename: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, rozpiByRiIdRodic: { __typename?: 'Rozpi', rId: string, rDatum: string, rKde: string, userByRTrener: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> } } | null };
 
 export type ToggleScheduleVisibleMutationVariables = Exact<{
   id: Scalars['BigInt'];
@@ -11270,12 +11268,14 @@ export const ReservationFragmentDoc = `
   }
 }
     ${ReservationItemFragmentDoc}`;
-export const LessonFragmentDoc = `
-    fragment Lesson on RozpisItem {
+export const ScheduleItemFragmentDoc = `
+    fragment ScheduleItem on RozpisItem {
   __typename
-  riId
   riOd
   riDo
+  riId
+  riLock
+  riPartner
   rozpiByRiIdRodic {
     rId
     rDatum
@@ -11286,23 +11286,6 @@ export const LessonFragmentDoc = `
       uPrijmeni
     }
   }
-  paryByRiPartner {
-    userByPIdPartner {
-      uId
-      uJmeno
-      uPrijmeni
-    }
-  }
-}
-    `;
-export const ScheduleItemFragmentDoc = `
-    fragment ScheduleItem on RozpisItem {
-  __typename
-  riOd
-  riDo
-  riId
-  riLock
-  riPartner
   paryByRiPartner {
     pId
     userByPIdPartner {
@@ -13398,11 +13381,11 @@ export const MyLessonsDocument = `
   currentUserId
   myLessons(startDate: $startDate, endDate: $endDate) {
     nodes {
-      ...Lesson
+      ...ScheduleItem
     }
   }
 }
-    ${LessonFragmentDoc}`;
+    ${ScheduleItemFragmentDoc}`;
 export const useMyLessonsQuery = <
       TData = MyLessonsQuery,
       TError = unknown

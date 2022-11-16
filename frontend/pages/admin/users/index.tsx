@@ -5,7 +5,7 @@ import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import { DeleteButton } from 'components/DeleteButton';
 import { useRouter } from 'next/router';
-import format from 'date-fns/format';
+import { format } from 'date-fns';
 import { Button } from 'components/Button';
 
 export default function UserectoryList() {

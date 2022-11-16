@@ -5,26 +5,6 @@ fragment ScheduleItem on RozpisItem {
   riId
   riLock
   riPartner
-  paryByRiPartner {
-    pId
-    userByPIdPartner {
-      uJmeno
-      uId
-      uPrijmeni
-    }
-    userByPIdPartnerka {
-      uId
-      uJmeno
-      uPrijmeni
-    }
-  }
-}
-
-fragment Lesson on RozpisItem {
-  __typename
-  riId
-  riOd
-  riDo
   rozpiByRiIdRodic {
     rId
     rDatum
@@ -36,7 +16,13 @@ fragment Lesson on RozpisItem {
     }
   }
   paryByRiPartner {
+    pId
     userByPIdPartner {
+      uJmeno
+      uId
+      uPrijmeni
+    }
+    userByPIdPartnerka {
       uId
       uJmeno
       uPrijmeni
@@ -108,7 +94,7 @@ query MyLessons($startDate: Date, $endDate: Date) {
   currentUserId
   myLessons(startDate: $startDate, endDate: $endDate) {
     nodes {
-      ...Lesson
+      ...ScheduleItem
     }
   }
 }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import format from 'date-fns/format';
+import { format } from 'date-fns';
 import { CallToAction } from 'components/CallToAction';
 import Head from 'next/head';
 import { useRouter } from 'next/router';

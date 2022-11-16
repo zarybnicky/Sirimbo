@@ -4,7 +4,7 @@ import { useRequireUserLoggedIn } from "lib/route-guards";
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import { useRouter } from 'next/router';
-import format from "date-fns/format";
+import { format } from "date-fns";
 import { DeleteButton } from "components/DeleteButton";
 import { Button } from "components/Button";
 

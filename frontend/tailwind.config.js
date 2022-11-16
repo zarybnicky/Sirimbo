@@ -3,7 +3,6 @@ const colors = require("tailwindcss/colors");
 const plugin = require("tailwindcss/plugin");
 const typography = require("@material-tailwind/html/theme/base/typography");
 const { accordion } = require("@material-tailwind/html/theme/components/accordion");
-const { alert } = require("@material-tailwind/html/theme/components/alert");
 const { avatar } = require("@material-tailwind/html/theme/components/avatar");
 const { background } = require("@material-tailwind/html/theme/components/background");
 const { breadcrumbs } = require("@material-tailwind/html/theme/components/breadcrumbs");
@@ -46,7 +45,6 @@ module.exports = {
     require("tailwindcss-radix")(),
     plugin(function ({ addComponents, theme }) {
       addComponents(accordion(theme));
-      addComponents(alert(theme));
       addComponents(avatar(theme));
       addComponents(background(theme));
       addComponents(breadcrumbs(theme));

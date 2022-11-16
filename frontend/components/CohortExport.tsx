@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
 import { useMemberListQuery } from 'lib/graphql';
 import { PermissionKey, PermissionLevel, usePermissions } from 'lib/data/use-permissions';
@@ -10,8 +9,9 @@ export function CohortExport({ id, name }: { id?: string; name?: string; }) {
   const saveData = React.useCallback(async (e?: React.MouseEvent) => {
     e?.preventDefault();
 
+    const { Workbook } = await import('exceljs');
     const data = await useMemberListQuery.fetcher({ cohortId: id })();
-    const workbook = new Excel.Workbook();
+    const workbook = new Workbook();
     const worksheet = workbook.addWorksheet(name || "Sheet 1");
 
     worksheet.columns = [

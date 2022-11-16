@@ -14,6 +14,7 @@ const ReservationView = (x: ReservationFragment) => {
           {x.userByNTrener?.uJmeno} {x.userByNTrener?.uPrijmeni}
           {perms.canEditReservation(x) && (
             <Dropdown
+              align="center"
               button={<img alt="Upravit" width="16" src="/style/icon-gear.png" />}
               options={[
                 { title: "Upravit", href: `/admin/nabidka/edit/${x.nId}` },

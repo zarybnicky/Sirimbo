@@ -3,7 +3,7 @@ import { Button } from 'components/Button';
 import { useDeleteVideoSourceMutation, useVideoSourceListQuery } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
-import format from 'date-fns/format';
+import { format } from 'date-fns';
 import { useRouter } from 'next/router';
 import EditIcon from '@mui/icons-material/Edit';
 import { DeleteButton } from 'components/DeleteButton';

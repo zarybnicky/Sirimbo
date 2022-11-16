@@ -3,14 +3,14 @@ import { PermissionKey, PermissionLevel, usePermissions } from './use-permission
 
 type MenuLink = {
   type: 'link';
-  text: string;
+  title: string;
   href: string;
   auth?: [PermissionKey, PermissionLevel];
 };
 export type MenuStructItem = {
   type: 'menu';
   hrefRoot?: string;
-  text: string;
+  title: string;
   children: MenuStructItem[];
 } | MenuLink;
 
@@ -32,14 +32,14 @@ export function useSideMenu(): MenuStructItem[] {
   if (user) {
     menu.push({
       type: 'menu',
-      text: 'Pro členy',
+      title: 'Pro členy',
       children: memberMenu,
     });
   }
   if (permissions.hasPermission(PermissionKey.peNastenka, PermissionLevel.P_OWNED)) {
     menu.push({
       type: 'menu',
-      text: 'Správa',
+      title: 'Správa',
       children: adminMenu.filter(item => !item.auth || permissions.hasPermission(...item.auth)),
     });
   }
@@ -48,90 +48,90 @@ export function useSideMenu(): MenuStructItem[] {
 
 const publicMenu: MenuStructItem[] = [
   {
-    "type": "menu", "text": "Klub", "children": [
-      { "type": "link", "text": "O nás", "href": "/o-nas" },
-      { "type": "link", "text": "Kde trénujeme", "href": "/o-nas/kde-trenujeme" },
-      { "type": "link", "text": "Trenéři", "href": "/o-nas/treneri" },
-      { "type": "link", "text": "Tréninkové skupiny", "href": "/o-nas/treninkove-skupiny" },
-      { "type": "link", "text": "Benefity členství", "href": "/o-nas/clenstvi" },
-      { "type": "link", "text": "Galerie mistrů", "href": "/o-nas/galerie-mistru" }
+    type: "menu", title: "Klub", children: [
+      { type: "link", title: "O nás", "href": "/o-nas" },
+      { type: "link", title: "Kde trénujeme", "href": "/o-nas/kde-trenujeme" },
+      { type: "link", title: "Trenéři", "href": "/o-nas/treneri" },
+      { type: "link", title: "Tréninkové skupiny", "href": "/o-nas/treninkove-skupiny" },
+      { type: "link", title: "Benefity členství", "href": "/o-nas/clenstvi" },
+      { type: "link", title: "Galerie mistrů", "href": "/o-nas/galerie-mistru" }
     ]
   },
   {
-    "type": "menu", "text": "Nabízíme", "children": [
-      { "type": "link", "text": "Tréninkové programy", "href": "/nabizime/treninkove-programy" },
-      { "type": "link", "text": "Školní taneční kroužky", "href": "/nabizime/skolni-krouzky" },
-      { "type": "link", "text": "Vystoupení na akcích", "href": "/nabizime/vystoupení" }
+    type: "menu", title: "Nabízíme", children: [
+      { type: "link", title: "Tréninkové programy", "href": "/nabizime/treninkove-programy" },
+      { type: "link", title: "Školní taneční kroužky", "href": "/nabizime/skolni-krouzky" },
+      { type: "link", title: "Vystoupení na akcích", "href": "/nabizime/vystoupení" }
     ]
   },
-  { "type": "link", "text": "Aktuality", "href": "/articles" },
-  { "type": "link", "text": "Galerie", "href": "/gallery" },
-  { "type": "link", "text": "Akce", "href": "/events/public" },
-  { "type": "link", "text": "Kontakt", "href": "/contact" }
+  { type: "link", title: "Aktuality", "href": "/articles" },
+  { type: "link", title: "Galerie", "href": "/gallery" },
+  { type: "link", title: "Akce", "href": "/events/public" },
+  { type: "link", title: "Kontakt", "href": "/contact" }
 ];
 
 const memberMenu: MenuLink[] = [
-  { "type": "link", "text": 'Nástěnka', "href": '/dashboard' },
-  { "type": "link", "text": 'Tréninky', "href": '/schedule' },
-  { "type": "link", "text": 'Akce', "href": '/events' },
-  { "type": "link", "text": 'Dokumenty', "href": '/documents' },
-  { "type": "link", "text": 'Členové', "href": '/cohorts' },
-  { "type": "link", "text": 'Profil', "href": '/profile' },
+  { type: "link", title: 'Nástěnka', "href": '/dashboard' },
+  { type: "link", title: 'Tréninky', "href": '/schedule' },
+  { type: "link", title: 'Akce', "href": '/events' },
+  { type: "link", title: 'Dokumenty', "href": '/documents' },
+  { type: "link", title: 'Členové', "href": '/cohorts' },
+  { type: "link", title: 'Profil', "href": '/profile' },
 ];
 
 const adminMenu: MenuLink[] = [
   {
-    "type": "link", "text": 'Uživatelé', "href": '/admin/users',
+    type: "link", title: 'Uživatelé', href: '/admin/users',
     auth: [PermissionKey.peUsers, PermissionLevel.P_OWNED]
   },
   {
-    "type": "link", "text": 'Skupiny', "href": '/admin/skupiny',
+    type: "link", title: 'Skupiny', href: '/admin/skupiny',
     auth: [PermissionKey.peSkupiny, PermissionLevel.P_OWNED]
   },
   {
-    "type": "link", "text": 'Platby', "href": '/admin/platby',
+    type: "link", title: 'Platby', href: '/admin/platby',
     auth: [PermissionKey.pePlatby, PermissionLevel.P_OWNED]
   },
   {
-    "type": "link", "text": 'Páry', "href": '/admin/pary',
+    type: "link", title: 'Páry', href: '/admin/pary',
     auth: [PermissionKey.pePary, PermissionLevel.P_OWNED]
   },
   {
-    "type": "link", "text": 'Články', "href": '/admin/aktuality',
+    type: "link", title: 'Články', href: '/admin/aktuality',
     auth: [PermissionKey.peAktuality, PermissionLevel.P_OWNED]
   },
   {
-    "type": "link", "text": 'Nástěnka', "href": '/admin/nastenka',
+    type: "link", title: 'Nástěnka', href: '/admin/nastenka',
     auth: [PermissionKey.peNastenka, PermissionLevel.P_OWNED]
   },
   {
-    "type": "link", "text": 'Rozpis', "href": '/admin/rozpis',
+    type: "link", title: 'Rozpis', href: '/admin/rozpis',
     auth: [PermissionKey.peRozpis, PermissionLevel.P_OWNED]
   },
   {
-    "type": "link", "text": 'Nabídka', "href": '/admin/nabidka',
+    type: "link", title: 'Nabídka', href: '/admin/nabidka',
     auth: [PermissionKey.peNabidka, PermissionLevel.P_OWNED]
   },
   {
-    "type": "link", "text": 'Akce', "href": '/admin/akce',
+    type: "link", title: 'Akce', href: '/admin/akce',
     auth: [PermissionKey.peAkce, PermissionLevel.P_OWNED]
   },
   {
-    "type": "link", "text": 'Galerie', "href": '/admin/galerie',
+    type: "link", title: 'Galerie', href: '/admin/galerie',
     auth: [PermissionKey.peGalerie, PermissionLevel.P_OWNED]
   },
   {
-    "type": "link", "text": 'Video', "href": '/admin/video',
+    type: "link", title: 'Video', href: '/admin/video',
     auth: [PermissionKey.peAktuality, PermissionLevel.P_OWNED]
   },
   {
-    "type": "link", "text": 'Dokumenty', "href": '/admin/dokumenty',
+    type: "link", title: 'Dokumenty', href: '/admin/dokumenty',
     auth: [PermissionKey.peDokumenty, PermissionLevel.P_OWNED]
   },
   {
-    "type": "link", "text": 'Oprávnění', "href": '/admin/permissions',
+    type: "link", title: 'Oprávnění', href: '/admin/permissions',
     auth: [PermissionKey.pePermissions, PermissionLevel.P_OWNED]
   },
-  { "type": "link", "text": "Správa obsahu", "href": "/editor" },
-  { "type": "link", "text": "Zájemci", "href": "/crm" },
+  { type: "link", title: "Správa obsahu", href: "/editor" },
+  { type: "link", title: "Zájemci", href: "/crm" },
 ];

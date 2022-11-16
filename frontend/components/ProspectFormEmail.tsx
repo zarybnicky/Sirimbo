@@ -1,7 +1,6 @@
 import * as React from 'react';
 import type { CellPlugin } from '@react-page/editor';
 import { Card } from 'components/Card';
-import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
 import { CheckboxElement } from 'components/Checkbox';
@@ -9,13 +8,13 @@ import { CrmCohort, useSubmitProspectFormMutation } from 'lib/graphql';
 import { ErrorBox } from './ErrorBox';
 import { useAsyncCallback } from 'react-async-hook';
 import { SubmitButton } from './SubmitButton';
+import { toast } from 'react-toastify';
 
 type ProspectFormEmailProps = {
   title?: string;
 };
 
 export const ProspectFormEmail = ({ title }: ProspectFormEmailProps) => {
-  const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: submit } = useSubmitProspectFormMutation();
   const { control, handleSubmit, formState } = useForm();
 
@@ -24,7 +23,7 @@ export const ProspectFormEmail = ({ title }: ProspectFormEmailProps) => {
       fbq('track', 'Lead');
     }
     await submit({ cohort: CrmCohort.ContactMeLater, prospectData, origin: window.location.toString() });
-    enqueueSnackbar('Brzy se vám ozveme!', { variant: 'success' });
+    toast.success('Brzy se vám ozveme!');
   });
 
   return (

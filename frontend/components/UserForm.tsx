@@ -2,7 +2,7 @@ import { UserFragment, UserInput, useCreateUserMutation, useUpdateUserMutation, 
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { SelectElement } from 'components/SelectElement';
-import { RadioButtonGroup } from 'react-hook-form-mui';
+import { RadioButtonGroupElement } from 'components/RadioButtomGroupElement';
 import { TextAreaElement, TextFieldElement } from 'components/TextField';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
@@ -91,8 +91,8 @@ export const UserForm: React.FC<{
       />
 
       <div>
-        <RadioButtonGroup
-          control={control} row name="uPohlavi" required
+        <RadioButtonGroupElement
+          control={control} name="uPohlavi" required
           options={[{ id: 'm', label: 'Muž' }, { id: 'f', label: 'Žena' }]}
         />
       </div>

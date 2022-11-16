@@ -23,17 +23,17 @@ export const MobileSubmenu = ({ item: x, onClick }: {
         "flex items-center grow mx-2 hover:bg-stone-500 hover:text-white",
         inPath ? 'bg-stone-700' : '',
       )}>
-        <div className={`font-light grow ${inPath ? 'text-white' : ''}`}>{x.text}</div>
+        <div className={`font-light grow ${inPath ? 'text-white' : ''}`}>{x.title}</div>
       </a>
     </Link>
   }
 
   return <>
-    <div key={x.text} className="ml-3 mt-4 mb-2">
-      <div className="font-bold text-xs uppercase grow my-1">{x.text}</div>
+    <div key={x.title} className="ml-3 mt-4 mb-2">
+      <div className="font-bold text-xs uppercase grow my-1">{x.title}</div>
     </div>
     <div className="list-none grid gap-0.5">
-      {x.children.map(y => <MobileSubmenu key={y.text} item={y} onClick={onClick} />)}
+      {x.children.map(y => <MobileSubmenu key={y.title} item={y} onClick={onClick} />)}
     </div>
   </>;
 };
@@ -74,18 +74,18 @@ export const MobileHeader = ({ }) => {
     >
       <div className="list-none w-[85vw] max-w-[450px]">
         {auth.user ? <>
-          <MobileSubmenu item={{ type: 'link', text: 'Profil', href: '/profile' }} onClick={() => setOpen(false)} />
-          <MobileSubmenu item={{ type: 'link', text: 'Odhlásit se', href: '/' }} onClick={() => {
+          <MobileSubmenu item={{ type: 'link', title: 'Profil', href: '/profile' }} onClick={() => setOpen(false)} />
+          <MobileSubmenu item={{ type: 'link', title: 'Odhlásit se', href: '/' }} onClick={() => {
             setOpen(false);
             auth.signOut();
             router.push('/');
           }} />
         </> : (
-          <MobileSubmenu item={{ type: 'link', text: 'Přihlásit se', href: '/login' }} onClick={() => setOpen(false)} />
+          <MobileSubmenu item={{ type: 'link', title: 'Přihlásit se', href: '/login' }} onClick={() => setOpen(false)} />
         )}
-        {sideMenu.map(x => <MobileSubmenu key={x.text} item={x} onClick={() => setOpen(false)} />)}
-        <MobileSubmenu item={{ type: 'link', text: 'Domů', href: '/home' }} onClick={() => setOpen(false)} />
-        {topMenu.map(x => <MobileSubmenu key={x.text} item={x} onClick={() => setOpen(false)} />)}
+        {sideMenu.map(x => <MobileSubmenu key={x.title} item={x} onClick={() => setOpen(false)} />)}
+        <MobileSubmenu item={{ type: 'link', title: 'Domů', href: '/home' }} onClick={() => setOpen(false)} />
+        {topMenu.map(x => <MobileSubmenu key={x.title} item={x} onClick={() => setOpen(false)} />)}
       </div>
     </SwipeableDrawer>
   </div>;

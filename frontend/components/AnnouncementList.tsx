@@ -1,5 +1,5 @@
 import * as React from 'react';
-import format from 'date-fns/format';
+import { format } from 'date-fns';
 import { Pagination } from '@mui/material';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';

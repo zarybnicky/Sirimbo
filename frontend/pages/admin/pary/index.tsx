@@ -5,11 +5,10 @@ import { DataGrid } from '@mui/x-data-grid';
 import { DeleteButton } from 'components/DeleteButton';
 import { NewCoupleForm } from 'components/NewCoupleForm';
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
-import { useSnackbar } from 'notistack';
+import { toast } from 'react-toastify';
 
 export default function CoupleAdminList() {
   useRequireUserLoggedIn();
-  const { enqueueSnackbar } = useSnackbar();
   const { data, refetch } = useCoupleListQuery();
   const { mutateAsync: doDelete } = useDeleteCoupleMutation({
     onSuccess: () => refetch(),
@@ -20,8 +19,8 @@ export default function CoupleAdminList() {
 
   const fix = React.useCallback(async () => {
     const data = await doFix({});
-    enqueueSnackbar(`Opraveno ${data.fixUnpairedCouples?.paries?.length || 0} záznamů`);
-  }, [doFix, enqueueSnackbar]);
+    toast.info(`Opraveno ${data.fixUnpairedCouples?.paries?.length || 0} záznamů`);
+  }, [doFix]);
 
   const [open, setOpen] = React.useState(false);
 

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
 import { useEventParticipantsQuery } from 'lib/graphql';
 import { Button } from './Button';
@@ -12,7 +11,8 @@ export function EventParticipantExport({ id }: { id: string; }) {
     if (!data) {
       return;
     }
-    const workbook = new Excel.Workbook();
+    const { Workbook } = await import('exceljs');
+    const workbook = new Workbook();
     const worksheet = workbook.addWorksheet(data.akce?.aJmeno || "Sheet 1");
 
     worksheet.columns = [

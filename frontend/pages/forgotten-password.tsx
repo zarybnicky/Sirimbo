@@ -4,22 +4,21 @@ import { SubmitButton } from "components/SubmitButton";
 import { useResetPasswordMutation } from 'lib/graphql';
 import { useRequireUserLoggedOut } from "lib/route-guards";
 import { useRouter } from "next/router";
-import { useSnackbar } from "notistack";
 import React from "react";
 import { useAsyncCallback } from "react-async-hook";
 import { useForm } from "react-hook-form";
 import { TextFieldElement } from "components/TextField";
+import { toast } from 'react-toastify';
 
 export default function ForgottenPassword() {
   useRequireUserLoggedOut();
   const { control, handleSubmit, formState } = useForm();
-  const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: resetPassword } = useResetPasswordMutation();
   const router = useRouter();
 
   const onSubmit = useAsyncCallback(async (data: any) => {
     await resetPassword({ input: data });
-    enqueueSnackbar('Heslo bylo úspěšně změněno, za chvíli byste jej měli obdržet v e-mailu', { variant: 'success' });
+    toast.success('Heslo bylo úspěšně změněno, za chvíli byste jej měli obdržet v e-mailu');
     router.push('/');
   });
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import format from 'date-fns/format';
+import { format } from 'date-fns';
 import { useArticlesQuery, useDeleteArticleMutation } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';

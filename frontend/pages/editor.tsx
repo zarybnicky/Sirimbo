@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { createValue, Value } from '@react-page/editor';
 import { CircularProgress, TextField, List, ListItem, ListItemText, Button, ListItemIcon } from '@mui/material';
-import { useSnackbar } from 'notistack';
 import { useConfirm } from 'material-ui-confirm';
 import { HeadingPlugin } from 'components/Heading';
 import { ContainerPlugin } from 'components/Container';
@@ -10,6 +9,7 @@ import { ReactPage, cellPlugins } from 'components/ReactPage';
 import AddIcon from '@mui/icons-material/Add';
 import { Page, PageRevision, useCreatePageMutation, usePageListQuery, usePageRevisionsQuery, useUpdatePageMutation } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
+import { toast } from 'react-toastify';
 
 const INITIAL_VALUE: Value = createValue({
   rows: [
@@ -43,7 +43,6 @@ type State = {
 
 export default function EditorPage() {
   useRequireUserLoggedIn();
-  const { enqueueSnackbar } = useSnackbar();
   const confirm = useConfirm();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [state, setState] = React.useState<State>({ state: 'empty' });
@@ -112,7 +111,7 @@ export default function EditorPage() {
         setLoading(true);
         const { id, url } = state.page;
         await doSavePage({ id, patch: { url, content: state.content } });
-        enqueueSnackbar('Stránka upravena', { variant: 'success' });
+        toast.success('Stránka upravena');
         await refetch();
         setLoading(false);
       };

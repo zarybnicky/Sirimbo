@@ -4,9 +4,6 @@ import Router from "next/router";
 import NProgress from "nprogress";
 import { event } from "nextjs-google-analytics";
 import { ProvideAuth } from 'lib/data/use-auth';
-import { SnackbarProvider } from "notistack";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Hydrate, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
@@ -19,7 +16,9 @@ import 'public/style/index.css';
 import '@react-page/editor/lib/index.css';
 import '@react-page/plugins-slate/lib/index.css';
 import '@react-page/plugins-image/lib/index.css';
+import "react-toastify/dist/ReactToastify.css";
 import { Tracking } from "components/Tracking";
+import { ToastContainer } from 'react-toastify';
 
 Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
@@ -56,18 +55,15 @@ export default function App({ Component, pageProps }: AppProps) {
           cancellationText: 'Zrušit',
           confirmationButtonProps: { autoFocus: true }
         }}>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <SnackbarProvider maxSnack={3}>
-              <ProvideAuth>
-                <ProvideMeta>
-                  {/* <Tracking /> */}
-                  <Layout>
-                    <Component {...pageProps} />
-                  </Layout>
-                </ProvideMeta>
-              </ProvideAuth>
-            </SnackbarProvider>
-          </LocalizationProvider>
+          <ProvideAuth>
+            <ProvideMeta>
+              <Tracking />
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+              <ToastContainer limit={3} />
+            </ProvideMeta>
+          </ProvideAuth>
         </ConfirmProvider>
       </Hydrate>
     </QueryClientProvider>

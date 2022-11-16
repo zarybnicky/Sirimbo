@@ -1,11 +1,9 @@
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
-import { RadioButtonGroup } from 'react-hook-form-mui';
 import { SelectElement } from 'components/SelectElement';
 import { TextFieldElement } from 'components/TextField';
 import { useCountries } from 'lib/data/use-countries';
-import format from 'date-fns/format';
-import { useSnackbar } from 'notistack';
+import { format } from 'date-fns';
 import { useCohortListQuery, useRegisterMutation } from 'lib/graphql';
 import { useRequireUserLoggedOut } from 'lib/route-guards';
 import { useAsyncCallback } from 'react-async-hook';
@@ -13,6 +11,8 @@ import { ErrorBox } from 'components/ErrorBox';
 import { Card } from 'components/Card';
 import { useRouter } from 'next/router';
 import { SubmitButton } from 'components/SubmitButton';
+import { RadioButtonGroupElement } from 'components/RadioButtomGroupElement';
+import { toast } from 'react-toastify';
 
 export default function RegisterPage() {
   useRequireUserLoggedOut()
@@ -20,7 +20,6 @@ export default function RegisterPage() {
   const countries = useCountries();
   const { data: cohorts } = useCohortListQuery({ visible: true });
   const { control, handleSubmit, watch, formState } = useForm();
-  const { enqueueSnackbar } = useSnackbar();
 
   const { mutateAsync: register } = useRegisterMutation();
 
@@ -40,7 +39,7 @@ export default function RegisterPage() {
         other: undefined,
       },
     });
-    enqueueSnackbar('Registrace úspěšně proběhla. Během několika dnů vám na email příjde potvrzení vašeho účtu, které vyřizuje administrátor ručně', { variant: 'success' });
+    toast.success('Registrace úspěšně proběhla. Během několika dnů vám na email příjde potvrzení vašeho účtu, které vyřizuje administrátor ručně');
     router.push('/');
   });
 
@@ -79,7 +78,7 @@ export default function RegisterPage() {
               options={countries.map(x => ({ id: x.code.toString(), label: x.label }))}
             />
 
-            <RadioButtonGroup row control={control} name="pohlavi" required options={[
+            <RadioButtonGroupElement control={control} name="pohlavi" required options={[
               { label: 'Muž', id: 'm' },
               { label: 'Žena', id: 'f' }
             ]} />
@@ -110,8 +109,8 @@ export default function RegisterPage() {
             />
           </div>
 
-          <div className="col-full md:col-span-2">
-            <SelectElement control={control}
+          <div className="col-full grid gap-2 md:col-span-2">
+            <RadioButtonGroupElement control={control}
               label="Vztah ke klubu" name="poznamky" required
               options={[
                 { id: 'dancer', label: 'Tanečník/tanečnice' },

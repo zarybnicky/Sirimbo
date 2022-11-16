@@ -1,5 +1,5 @@
 import * as React from 'react';
-import format from 'date-fns/format';
+import { format } from 'date-fns';
 import { usePermissions } from 'lib/data/use-permissions';
 import { DateRange } from 'components/DateRange';
 import { ReservationFragment, ScheduleFragment, ScheduleItemFragment, useReservationRangeQuery, useScheduleRangeQuery } from 'lib/graphql';
@@ -103,7 +103,7 @@ export default function SchedulePage() {
       <div className="flex gap-4">
         {items.map((item, i) => item.__typename === 'Rozpi' ? (
           <div key={i} className="min-w-[200px]">
-            {perms.canEditSchedule(item) && <Dropdown
+            {perms.canEditSchedule(item) && <Dropdown align="center"
               button={<img className="w-4 absolute top-2 right-2" alt="Upravit" src="/style/icon-gear.png" />}
               options={[
                 { title: "Upravit", href: `/admin/rozpis/edit/${item.rId}` },
@@ -120,7 +120,7 @@ export default function SchedulePage() {
               {item.rozpisItemsByRiIdRodic.nodes?.map((lesson, i) => (
                 <div key={i} onClick={() => openLesson(item, lesson)} className="cursor-pointer px-2 pt-1 rounded-md bg-slate-50">
                   <div className="text-stone-700 leading-4 text-sm tabular-nums">
-                    {lesson.riOd.substring(0, 5)} - {lesson.riDo.substring(0, 5)}
+                    {lesson.riOd.substring(0, 5)}&#8209;{lesson.riDo.substring(0, 5)}
                   </div>
                   {perms.canSignUp(item, lesson) ? (
                     <div>
@@ -146,7 +146,7 @@ export default function SchedulePage() {
           </div>
         ) : item.__typename === 'Nabidka' ? (
           <div key={i}>
-            {perms.canEditReservation(item) && <Dropdown
+            {perms.canEditReservation(item) && <Dropdown align="center"
               button={<img className="w-4 absolute top-2 right-2" alt="Upravit" src="/style/icon-gear.png" />}
               options={[
                 { title: "Upravit", href: `/admin/nabidka/edit/${item.nId}` },

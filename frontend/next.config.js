@@ -68,12 +68,10 @@ module.exports = withBundleAnalyzer(withSentryConfig({
   },
 
   webpack: function (config, { isServer, webpack, buildId }) {
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        'process.env.BUILD_ID': JSON.stringify(buildId)
-      })
-    );
-
+    const defines = {
+      'process.env.BUILD_ID': JSON.stringify(buildId),
+    };
+    config.plugins.push(new webpack.DefinePlugin(defines));
     return config;
   },
 }));

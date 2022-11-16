@@ -1,6 +1,5 @@
 import { Card } from 'components/Card';
-import format from "date-fns/format";
-import parseISO from "date-fns/parseISO";
+import { format } from "date-fns";
 import { useDeleteUserMutation, useCohortListQuery, useConfirmUserMutation, useRoleListQuery, UserFragment, useUserListQuery } from 'lib/graphql';
 import { SelectElement } from 'components/SelectElement';
 import { useForm } from "react-hook-form";
@@ -49,7 +48,7 @@ const UnconfirmedUser: React.FC<{
             <b>Login:</b> {item.uLogin}
           </div>
           <div>
-            <b>Datum narození:</b> {format(parseISO(item.uNarozeni), 'd. M. y')}
+            <b>Datum narození:</b> {format(new Date(item.uNarozeni), 'd. M. y')}
           </div>
           <div>
             <b>E-mail:</b> {item.uEmail}

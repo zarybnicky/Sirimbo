@@ -1,17 +1,10 @@
 import * as React from 'react';
-import { useMyLessonsQuery, LessonFragment } from 'lib/graphql';
+import { useMyLessonsQuery, ScheduleItemFragment } from 'lib/graphql';
 import { useAuth } from 'lib/data/use-auth';
-import format from 'date-fns/format';
-import Timeline from '@mui/lab/Timeline';
-import TimelineItem from '@mui/lab/TimelineItem';
-import TimelineSeparator from '@mui/lab/TimelineSeparator';
-import TimelineConnector from '@mui/lab/TimelineConnector';
-import TimelineContent from '@mui/lab/TimelineContent';
-import TimelineDot from '@mui/lab/TimelineDot';
-import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
+import { format } from 'date-fns';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import lastDayOfWeek from 'date-fns/lastDayOfWeek/index';
+import { lastDayOfWeek } from 'date-fns';
 import { cs } from 'date-fns/locale'
 
 export const MyLessonsList: React.FC = () => {
@@ -44,7 +37,7 @@ export const MyLessonsList: React.FC = () => {
   });
 
   const lessonsPerDay = React.useMemo(() => {
-    const lessonsPerDay: { [day: string]: LessonFragment[] } = {};
+    const lessonsPerDay: { [day: string]: ScheduleItemFragment[] } = {};
     data?.myLessons?.nodes?.forEach(lesson => {
       const date = lesson.rozpiByRiIdRodic?.rDatum;
       const place = lesson.rozpiByRiIdRodic?.rKde;
@@ -71,17 +64,13 @@ export const MyLessonsList: React.FC = () => {
     {Object.entries(lessonsPerDay).map(([key, lessons]) => <React.Fragment key={key}>
       <h6 className="text-center">{key}</h6>
 
-      <Timeline sx={{ flex: 1 }}>
-        {lessons.map((lesson) => (
-          <TimelineItem key={lesson.riId} sx={{ minHeight: '45px' }}>
-            <TimelineOppositeContent color="text.secondary">
+      <div className="grid gap-2">
+        {lessons.map((lesson, i) => (
+          <div key={i} className="px-2 pt-1 rounded-md bg-slate-50">
+            <div className="text-stone-700 leading-4 text-sm tabular-nums">
               {lesson.riOd.substring(0, 5)}&#8209;{lesson.riDo.substring(0, 5)}
-            </TimelineOppositeContent>
-            <TimelineSeparator>
-              <TimelineDot />
-              <TimelineConnector />
-            </TimelineSeparator>
-            <TimelineContent>
+            </div>
+            <div className="leading-6">
               {lesson.rozpiByRiIdRodic?.userByRTrener?.uId === user?.uId ? <>
                 {lesson.paryByRiPartner?.userByPIdPartner?.uJmeno}{' '}
                 {lesson.paryByRiPartner?.userByPIdPartner?.uPrijmeni}
@@ -94,10 +83,10 @@ export const MyLessonsList: React.FC = () => {
                 {lesson.rozpiByRiIdRodic?.userByRTrener?.uJmeno}{' '}
                 {lesson.rozpiByRiIdRodic?.userByRTrener?.uPrijmeni}
               </>}
-            </TimelineContent>
-          </TimelineItem>
+            </div>
+          </div>
         ))}
-      </Timeline>
+      </div>
     </React.Fragment>)}
   </>;
 };

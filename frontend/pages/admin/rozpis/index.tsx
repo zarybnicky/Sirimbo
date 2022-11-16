@@ -1,5 +1,5 @@
 import * as React from 'react';
-import format from 'date-fns/format';
+import { format } from 'date-fns';
 import { Checkbox } from 'components/Checkbox';
 import { useScheduleListQuery, useDeleteScheduleMutation, useToggleScheduleVisibleMutation } from 'lib/graphql';
 import { useRouter } from 'next/router';
