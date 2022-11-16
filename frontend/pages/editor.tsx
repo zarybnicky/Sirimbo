@@ -1,15 +1,18 @@
 import * as React from 'react';
 import { createValue, Value } from '@react-page/editor';
-import { CircularProgress, TextField, List, ListItem, ListItemText, Button, ListItemIcon } from '@mui/material';
-import { useConfirm } from 'material-ui-confirm';
+import { useConfirm } from 'components/Confirm';
 import { HeadingPlugin } from 'components/Heading';
 import { ContainerPlugin } from 'components/Container';
 import { CallToActionPlugin } from 'components/CallToAction';
 import { ReactPage, cellPlugins } from 'components/ReactPage';
-import AddIcon from '@mui/icons-material/Add';
+import { Plus as AddIcon } from 'react-feather';
 import { Page, PageRevision, useCreatePageMutation, usePageListQuery, usePageRevisionsQuery, useUpdatePageMutation } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { toast } from 'react-toastify';
+import classNames from 'classnames';
+import { TextField } from 'components/TextField';
+import { Spinner } from 'components/Spinner';
+import { Button } from 'components/Button';
 
 const INITIAL_VALUE: Value = createValue({
   rows: [
@@ -93,14 +96,14 @@ export default function EditorPage() {
       toolbar = <div className="grid gap-4 mb-4">
         <h4>Nová stránka</h4>
         <TextField value={state.title} placeholder="Název stránky" onChange={(e) => setState({
-          ...state, title: e.target.value,
+          ...state, title: e.currentTarget.value,
         })} />
         <TextField value={state.url} placeholder="URL stránky" onChange={(e) => setState({
-          ...state, url: e.target.value,
+          ...state, url: e.currentTarget.value,
         })} />
-        <Button disabled={loading} variant="contained" onClick={createPage}>
+        <Button disabled={loading} onClick={createPage}>
           Vytvořit a publikovat
-          {loading ? <CircularProgress size={20} /> : null}
+          {loading ? <Spinner /> : null}
         </Button>
       </div>;
       break;
@@ -119,17 +122,17 @@ export default function EditorPage() {
         <h4>Upravit stránku</h4>
         <TextField value={state.page.title} placeholder="Název stránky" onChange={(e) => setState({
           ...state,
-          page: { ...state.page, title: e.target.value },
+          page: { ...state.page, title: e.currentTarget.value },
         })} />
         <TextField value={state.page.url} placeholder="URL stránky" onChange={(e) => setState({
           ...state,
-          page: { ...state.page, url: e.target.value },
+          page: { ...state.page, url: e.currentTarget.value },
         })} />
-        <Button disabled={loading} variant="contained" onClick={savePage}>
+        <Button disabled={loading} onClick={savePage}>
           Uložit a publikovat
-          {loading ? <CircularProgress size={20} /> : null}
+          {loading ? <Spinner /> : null}
         </Button>
-        <Button disabled={loading} variant="contained" onClick={selectHistory}>
+        <Button disabled={loading} onClick={selectHistory}>
           Zobrazit historii
         </Button>
       </div>;
@@ -141,20 +144,24 @@ export default function EditorPage() {
   }
 
   return <div className="flex flex-nowrap">
-    <div className="p-8">
-      {toolbar}
-      <h4>Všechny stránky</h4>
-      <List>
-        {data?.pages?.nodes.map((p) => (
-          <ListItem button key={p.id} onClick={() => selectPage(p)}>
-            <ListItemText primary={p.url} />
-          </ListItem>
-        ))}
-        <ListItem button onClick={startPage}>
-          <ListItemIcon><AddIcon /></ListItemIcon>
-          <ListItemText primary="Nová stránka" />
-        </ListItem>
-      </List>
+    {toolbar}
+    <h4>Všechny stránky</h4>
+    <div className="list-none grid gap-0.5">
+      {data?.pages?.nodes.map((p) => (
+        <div key={p.id} onClick={() => selectPage(p)} className={classNames(
+          "p-3 hover:bg-stone-500 hover:text-white cursor-pointer",
+          selectedPage?.id === p.id && 'text-white bg-stone-700',
+        )}>
+          {p.url}
+        </div>
+      ))}
+      <div onClick={startPage} className={classNames(
+        "p-3 hover:bg-stone-500 hover:text-white cursor-pointer",
+        selectedPage === undefined && 'text-white bg-stone-700',
+      )}>
+        <AddIcon className="h-4.5 w-4.5 mr-3" />
+        Nová stránka
+      </div>
     </div>
     <div className="border-l border-black grow">
       <ReactPage

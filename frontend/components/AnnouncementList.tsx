@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { format } from 'date-fns';
-import { Pagination } from '@mui/material';
-import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { ChevronLeft, ChevronRight } from 'react-feather';
 import { useAnnouncementListQuery } from 'lib/graphql';
 import { HtmlView } from './HtmlView';
 import { Card } from 'components/Card';
+import { Pagination } from './Pagination';
 
 export function AnnouncementList() {
   const [limit] = React.useState(3);
@@ -24,7 +23,7 @@ export function AnnouncementList() {
     <div className="flex items-center justify-center">
       {hasPrev && (
         <button className="button button-icon text-slate-500" onClick={() => setPage(page - 1)}>
-          <NavigateBeforeIcon />
+          <ChevronLeft />
         </button>
       )}
 
@@ -36,7 +35,7 @@ export function AnnouncementList() {
 
       {hasNext && (
         <button className="button button-icon text-slate-500" onClick={() => setPage(page + 1)}>
-          <NavigateNextIcon />
+          <ChevronRight />
         </button>
       )}
     </div>
@@ -61,6 +60,7 @@ export function AnnouncementList() {
         )}
       </div>}
     </Card>)}
-    <Pagination count={Math.ceil(total / limit)} page={page} onChange={(_, p) => setPage(p)} />
+
+    <Pagination {...{ total, limit, page, setPage }} />
   </>;
 }

@@ -17,7 +17,7 @@ export const EventForm: React.FC<{
   const { mutateAsync: doCreate } = useCreateEventMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateEventMutation({ onSuccess });
 
-  const { control, handleSubmit, formState } = useForm<FormProps>({
+  const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
       aJmeno: data?.aJmeno,
       aKde: data?.aKde,
@@ -49,7 +49,7 @@ export const EventForm: React.FC<{
       <TextFieldElement control={control} type="number" name="aKapacita" label="Kapacita" required />
       <CheckboxElement control={control} name="aVisible" value="1" label="Zviditelnit" />
       <CheckboxElement control={control} name="aLock" value="1" label="Uzamčená" />
-      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };

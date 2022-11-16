@@ -16,7 +16,7 @@ export const PaymentCategoryForm: React.FC<{
   const { mutateAsync: doCreate } = useCreatePaymentCategoryMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdatePaymentCategoryMutation({ onSuccess });
 
-  const { control, handleSubmit, formState } = useForm<FormProps>({
+  const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
       pcName: data?.pcName,
       pcSymbol: data?.pcSymbol,
@@ -50,7 +50,7 @@ export const PaymentCategoryForm: React.FC<{
       <CheckboxElement control={control} name="pcUsePrefix" value="1" label="Použít prefix" />
       <CheckboxElement control={control} name="pcArchive" value="1" label="Archiv" />
       <CheckboxElement control={control} name="pcVisible" value="1" label="Viditelný" />
-      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };

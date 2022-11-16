@@ -19,7 +19,7 @@ export const ReservationForm: React.FC<{
 
   const { data: trainers } = useTrainerListQuery();
 
-  const { control, handleSubmit, formState } = useForm<FormProps>({
+  const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
       nTrener: data?.nTrener,
       nPocetHod: data?.nPocetHod,
@@ -52,7 +52,7 @@ export const ReservationForm: React.FC<{
       <TextFieldElement control={control} type="date" label="Do" name="nDo" required />
       <CheckboxElement control={control} name="nVisible" value="1" label="Viditelný" />
       <CheckboxElement control={control} name="nLock" value="1" label="Uzamčený" />
-      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };

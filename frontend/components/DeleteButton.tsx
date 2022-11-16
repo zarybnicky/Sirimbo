@@ -1,6 +1,6 @@
 import React from "react";
-import { useConfirm } from 'material-ui-confirm';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { useConfirm } from 'components/Confirm';
+import { Trash2 as DeleteIcon } from 'react-feather';
 import { GridActionsCellItem } from '@mui/x-data-grid';
 import { toast } from 'react-toastify';
 

@@ -28,7 +28,7 @@ export const UserForm: React.FC<{
   const { data: cohorts } = useCohortListQuery();
   const { data: roles } = useRoleListQuery();
 
-  const { control, handleSubmit, formState } = useForm<FormProps>({
+  const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
       uJmeno: data?.uJmeno,
       uPrijmeni: data?.uPrijmeni,
@@ -149,7 +149,7 @@ export const UserForm: React.FC<{
         <CheckboxElement control={control} name="uSystem" value="1" label="Systémový uživatel" />
       </div>
 
-      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+      <SubmitButton loading={onSubmit.loading} />
     </form >
   );
 };

@@ -24,7 +24,7 @@ export const Dropdown = ({ button, align, options }: {
           align={align}
           sideOffset={5}
           className={classNames(
-            " radix-side-top:animate-slide-up radix-side-bottom:animate-slide-down",
+            "z-50 radix-side-top:animate-slide-up radix-side-bottom:animate-slide-down",
             "w-48 rounded-lg px-1.5 py-1 shadow-md md:w-56",
             "bg-white dark:bg-gray-800"
           )}

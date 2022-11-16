@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useDeleteRoleMutation, useRoleListQuery } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
-import EditIcon from '@mui/icons-material/Edit';
+import { Edit as EditIcon } from 'react-feather';
 import { useRouter } from 'next/router';
 import { DeleteButton } from 'components/DeleteButton';
 import { Button } from 'components/Button';

@@ -17,7 +17,7 @@ export const CohortForm: React.FC<{
   const { mutateAsync: doCreate } = useCreateCohortMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateCohortMutation({ onSuccess });
 
-  const { control, handleSubmit, formState } = useForm<FormProps>({
+  const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
       sName: data?.sName,
       sDescription: data?.sDescription,
@@ -43,7 +43,7 @@ export const CohortForm: React.FC<{
       <CheckboxElement control={control} name="sVisible" value="1" label="Viditelná pro registraci" />
       <ColorPicker name="sColorRgb" control={control} />
       <TextAreaElement control={control} name="sDescription" label="Popis" rows={3} required />
-      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };

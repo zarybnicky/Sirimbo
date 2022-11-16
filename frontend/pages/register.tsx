@@ -19,7 +19,7 @@ export default function RegisterPage() {
   const router = useRouter();
   const countries = useCountries();
   const { data: cohorts } = useCohortListQuery({ visible: true });
-  const { control, handleSubmit, watch, formState } = useForm();
+  const { control, handleSubmit, watch } = useForm();
 
   const { mutateAsync: register } = useRegisterMutation();
 
@@ -153,7 +153,7 @@ export default function RegisterPage() {
           </div>
 
           <ErrorBox error={onSubmit.error} />
-          <SubmitButton className="w-full" loading={onSubmit.loading} disabled={!formState.isValid}>
+          <SubmitButton className="w-full" loading={onSubmit.loading}>
             Registrovat
           </SubmitButton>
         </form>

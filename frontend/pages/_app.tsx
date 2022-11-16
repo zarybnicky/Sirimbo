@@ -7,7 +7,6 @@ import { ProvideAuth } from 'lib/data/use-auth';
 import { Hydrate, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
-import { ConfirmProvider } from 'material-ui-confirm';
 import { Layout } from "components/Layout";
 import { ProvideMeta } from "lib/use-meta";
 import "nprogress/nprogress.css";
@@ -19,6 +18,7 @@ import '@react-page/plugins-image/lib/index.css';
 import "react-toastify/dist/ReactToastify.css";
 import { Tracking } from "components/Tracking";
 import { ToastContainer } from 'react-toastify';
+import { ConfirmProvider } from 'components/Confirm';
 
 Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
@@ -50,21 +50,17 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClientRef.current}>
       <Hydrate state={pageProps.dehydratedState}>
-        <ConfirmProvider defaultOptions={{
-          title: 'Jste si jistí?',
-          cancellationText: 'Zrušit',
-          confirmationButtonProps: { autoFocus: true }
-        }}>
-          <ProvideAuth>
-            <ProvideMeta>
+        <ProvideAuth>
+          <ProvideMeta>
+            <ConfirmProvider>
               <Tracking />
               <Layout>
                 <Component {...pageProps} />
               </Layout>
               <ToastContainer limit={3} />
-            </ProvideMeta>
-          </ProvideAuth>
-        </ConfirmProvider>
+            </ConfirmProvider>
+          </ProvideMeta>
+        </ProvideAuth>
       </Hydrate>
     </QueryClientProvider>
   );

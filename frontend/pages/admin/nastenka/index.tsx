@@ -2,7 +2,7 @@ import React from "react";
 import { useAnnouncementListQuery, useDeleteAnnouncementMutation } from "lib/graphql";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
-import EditIcon from '@mui/icons-material/Edit';
+import { Edit as EditIcon } from 'react-feather';
 import { useRouter } from 'next/router';
 import { format } from "date-fns";
 import { DeleteButton } from "components/DeleteButton";

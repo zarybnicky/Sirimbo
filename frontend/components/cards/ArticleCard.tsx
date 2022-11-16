@@ -16,7 +16,7 @@ export const ArticleCard = ({ item: x }: { item: Article }) => {
         <p className="text-slate-700 grow">{x.preview}</p>
 
         <div className="flex justify-center mt-3">
-          <a className="button button-red button-lg">Více zde ᐳ</a>
+          <div className="button button-red button-lg">Více zde ᐳ</div>
         </div>
       </Card>
     </a>

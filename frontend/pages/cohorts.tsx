@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
-import { DialogTitle, Dialog } from '@mui/material';
 import { useMemberListQuery } from 'lib/graphql';
 import { CohortExport } from 'components/CohortExport';
 import { TabMenu } from 'components/TabMenu';
-import EmailIcon from '@mui/icons-material/Email';
-import PhoneIcon from '@mui/icons-material/Phone';
+import { AtSign as EmailIcon, Phone as PhoneIcon } from 'react-feather';
 import { UserFragment } from 'lib/graphql';
 import { HtmlView } from 'components/HtmlView';
 import { Card } from 'components/Card';
+import { SimpleDialog } from 'components/Dialog';
 
 export default function CohortsPage() {
   useRequireUserLoggedIn();
@@ -71,19 +70,13 @@ export default function CohortsPage() {
 }
 
 const UserDetailButton: React.FC<{ user: UserFragment }> = ({ user }) => {
-  const [open, setOpen] = React.useState(false);
-
-  return <>
-    <button onClick={() => setOpen(true)} className="underline text-slate-700">
-      {user.uPrijmeni}, {user.uJmeno}
-    </button>
-
-    <Dialog onClose={() => setOpen(false)} open={open}>
-      <DialogTitle>{user.uJmeno} {user.uPrijmeni}</DialogTitle>
-      <ul className="flex flex-col gap-3 m-4 mt-0">
-        <li><EmailIcon /> {user.uEmail}</li>
-        <li><PhoneIcon /> {user.uTelefon}</li>
-      </ul>
-    </Dialog>
-  </>;
+  return <SimpleDialog
+    title={`${user.uJmeno} ${user.uPrijmeni}`}
+    button={<button className="underline text-slate-700">{user.uPrijmeni}, {user.uJmeno}</button>}
+  >
+    <ul className="flex flex-col gap-3 m-4 mt-0">
+      <li><EmailIcon /> {user.uEmail}</li>
+      <li><PhoneIcon /> {user.uTelefon}</li>
+    </ul>
+  </SimpleDialog>
 }

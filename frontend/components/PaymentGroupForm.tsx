@@ -15,7 +15,7 @@ export const PaymentGroupForm: React.FC<{
   const { mutateAsync: doCreate } = useCreatePaymentGroupMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdatePaymentGroupMutation({ onSuccess });
 
-  const { control, handleSubmit, formState } = useForm<FormProps>({
+  const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
       pgName: data?.pgName,
       pgDescription: data?.pgDescription,
@@ -37,7 +37,7 @@ export const PaymentGroupForm: React.FC<{
       <TextFieldElement control={control} name="pgName" label="Název" required />
       <TextAreaElement control={control} name="pgDescription" label="Shrnutí" rows={3} required />
       <TextFieldElement control={control} type="number" name="pgBase" label="Násobitel částky" required />
-      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };

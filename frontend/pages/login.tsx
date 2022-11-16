@@ -19,7 +19,7 @@ export default function LoginPage() {
   useRequireUserLoggedOut();
   const { signIn } = useAuth();
   const router = useRouter();
-  const { control, handleSubmit, formState } = useForm<FormProps>();
+  const { control, handleSubmit } = useForm<FormProps>();
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await signIn(values.login, values.passwd);
@@ -42,7 +42,7 @@ export default function LoginPage() {
             control={control} name="passwd" type="password"
             label="Heslo" autoComplete="current-password" required
           />
-          <SubmitButton className="w-full my-2" loading={onSubmit.loading} disabled={!formState.isValid}>
+          <SubmitButton className="w-full my-2" loading={onSubmit.loading}>
             Přihlásit
           </SubmitButton>
 

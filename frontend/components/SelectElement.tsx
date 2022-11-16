@@ -2,8 +2,7 @@ import React from 'react';
 import { Combobox, Transition } from '@headlessui/react'
 import { useController, FieldError, FieldValues, Path, Control, ControllerProps } from 'react-hook-form';
 import classNames from 'classnames';
-import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
-import CheckIcon from '@mui/icons-material/Check';
+import { ChevronsDown as UnfoldMoreIcon, Check as CheckIcon } from 'react-feather'
 
 type Extras = {
   className?: string;

@@ -19,7 +19,7 @@ export const ScheduleForm: React.FC<{
 
   const { data: trainers } = useTrainerListQuery();
 
-  const { control, handleSubmit, formState } = useForm<FormProps>({
+  const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
       rKde: data?.rKde,
       rDatum: data?.rDatum,
@@ -48,7 +48,7 @@ export const ScheduleForm: React.FC<{
       <TextFieldElement control={control} type="date" label="Datum" name="rDatum" required />
       <CheckboxElement control={control} name="rVisible" value="1" label="Viditelný" />
       <CheckboxElement control={control} name="rLock" value="1" label="Uzamčený" />
-      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };

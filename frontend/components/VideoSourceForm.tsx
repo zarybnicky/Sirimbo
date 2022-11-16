@@ -15,7 +15,7 @@ export const VideoSourceForm: React.FC<{
   const { mutateAsync: doCreate } = useCreateVideoSourceMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateVideoSourceMutation({ onSuccess });
 
-  const { control, handleSubmit, formState } = useForm<FormProps>({
+  const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
       vsUrl: data?.vsUrl,
       vsTitle: data?.vsTitle,
@@ -40,7 +40,7 @@ export const VideoSourceForm: React.FC<{
       />
       <TextFieldElement control={control} name="vsTitle" label="Jméno" required />
       <TextFieldElement control={control} name="vsDescription" label="Popis" required />
-      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };

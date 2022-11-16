@@ -15,7 +15,7 @@ export const VideoForm: React.FC<{
   const { mutateAsync: doCreate } = useCreateVideoMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateVideoMutation({ onSuccess });
 
-  const { control, handleSubmit, formState } = useForm<FormProps>({
+  const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
       vUri: data?.vUri,
       vTitle: data?.vTitle,
@@ -48,7 +48,7 @@ export const VideoForm: React.FC<{
       <TextFieldElement control={control} name="vTitle" label="Jméno" required />
       <TextFieldElement control={control} name="vAuthor" label="Autor/kanál" required />
       <TextFieldElement control={control} name="vPlaylist" label="ID playlistu (nepovinné)" required />
-      <SubmitButton disabled={!formState.isValid} loading={onSubmit.loading} />
+      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };

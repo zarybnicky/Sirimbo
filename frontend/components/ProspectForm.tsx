@@ -16,7 +16,7 @@ type ProspectFormProps = {
 
 export const ProspectForm = ({ title }: ProspectFormProps) => {
   const { mutateAsync: submit } = useSubmitProspectFormMutation();
-  const { control, handleSubmit, formState } = useForm();
+  const { control, handleSubmit } = useForm();
 
   const onSubmit = useAsyncCallback(async ({ op, ...prospectData }: any) => {
     if (typeof fbq !== 'undefined') {
@@ -45,7 +45,7 @@ export const ProspectForm = ({ title }: ProspectFormProps) => {
           <>Souhlasím se <a className="text-red-500" target="_blank" rel="noreferrer" href="/ochrana-osobnich-udaju">zpracováním osobních údajů</a></>
         } />
         <ErrorBox error={onSubmit.error} />
-        <SubmitButton className="w-full" loading={onSubmit.loading} disabled={!formState.isDirty || !formState.isValid}>
+        <SubmitButton className="w-full" loading={onSubmit.loading}>
           Chci tančit!
         </SubmitButton>
       </form>

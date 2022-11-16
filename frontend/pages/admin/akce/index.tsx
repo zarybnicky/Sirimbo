@@ -5,7 +5,7 @@ import { useEventListQuery, useToggleEventVisibleMutation, useDeleteEventMutatio
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { useRouter } from 'next/router';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
-import EditIcon from '@mui/icons-material/Edit';
+import { Edit as EditIcon } from 'react-feather';
 import { DeleteButton } from 'components/DeleteButton';
 import { Button } from 'components/Button';
 

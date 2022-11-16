@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from 'lib/data/use-auth';
-import AccountCircle from '@mui/icons-material/AccountCircle';
+import { User as Account } from 'react-feather';
 import Link from 'next/link';
 import { Dropdown } from './Dropdown';
 
@@ -16,13 +16,13 @@ export const AuthButton = ({ }) => {
   if (!auth.user) {
     return <Link href="/login" passHref>
       <a className="button button-text">
-        <AccountCircle /> <span className="underline">Přihlásit</span>
+        <Account /> <span className="underline">Přihlásit</span>
       </a>
     </Link>;
   }
   const button = (
     <div className="flex normal-case button button-text gap-2 items-center">
-      <AccountCircle />
+      <Account />
       <div className="flex flex-col items-start" style={{ lineHeight: 1.3 }}>
         <span className="text-sm uppercase underline">Přihlášen</span>
         <span className="text-sm">{auth.user?.uJmeno} {auth.user?.uPrijmeni}</span>

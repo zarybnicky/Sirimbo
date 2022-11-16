@@ -3,9 +3,8 @@ import { format } from "date-fns";
 import { useDeleteUserMutation, useCohortListQuery, useConfirmUserMutation, useRoleListQuery, UserFragment, useUserListQuery } from 'lib/graphql';
 import { SelectElement } from 'components/SelectElement';
 import { useForm } from "react-hook-form";
-import CheckIcon from '@mui/icons-material/Check';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { useConfirm } from 'material-ui-confirm';
+import { Trash2 as DeleteIcon, Check as CheckIcon } from 'react-feather';
+import { useConfirm } from 'components/Confirm';
 import React from "react";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 

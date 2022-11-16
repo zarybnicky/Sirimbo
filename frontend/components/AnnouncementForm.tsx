@@ -16,7 +16,7 @@ export const AnnouncementForm: React.FC<{
   const { mutateAsync: doCreate } = useCreateAnnouncementMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateAnnouncementMutation({ onSuccess });
 
-  const { control, handleSubmit, formState } = useForm<FormProps>({
+  const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
       upNadpis: data?.upNadpis,
       upText: data?.upText,
@@ -38,7 +38,7 @@ export const AnnouncementForm: React.FC<{
       <TextFieldElement control={control} name="upNadpis" label="Nadpis" required />
       <TextAreaElement control={control} name="upText" label="Text" rows={20} required />
       <CheckboxElement control={control} name="upLock" value="1" label="Uzamčená" />
-      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };

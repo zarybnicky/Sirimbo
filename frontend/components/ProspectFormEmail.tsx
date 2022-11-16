@@ -16,7 +16,7 @@ type ProspectFormEmailProps = {
 
 export const ProspectFormEmail = ({ title }: ProspectFormEmailProps) => {
   const { mutateAsync: submit } = useSubmitProspectFormMutation();
-  const { control, handleSubmit, formState } = useForm();
+  const { control, handleSubmit } = useForm();
 
   const onSubmit = useAsyncCallback(async ({ op, ...prospectData }: any) => {
     if (typeof fbq !== 'undefined') {
@@ -38,7 +38,7 @@ export const ProspectFormEmail = ({ title }: ProspectFormEmailProps) => {
           <>Souhlasím se <a className="text-red-500" rel="noreferrer" target="_blank" href="/ochrana-osobnich-udaju">zpracováním osobních údajů</a></>
         } />
         <ErrorBox error={onSubmit.error} />
-        <SubmitButton className="col-full w-full" loading={onSubmit.loading} disabled={!formState.isDirty || !formState.isValid}>
+        <SubmitButton className="col-full w-full" loading={onSubmit.loading}>
           Ozvěte se mi
         </SubmitButton>
       </form>

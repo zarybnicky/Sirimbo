@@ -1,7 +1,5 @@
 import * as React from 'react';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import YouTubeIcon from '@mui/icons-material/YouTube';
+import { Instagram, Facebook, Youtube } from 'react-feather';
 import Link from 'next/link';
 
 type SocialButtonsProps = {
@@ -9,21 +7,21 @@ type SocialButtonsProps = {
   className?: string;
 };
 
-export const SocialButtons = ({ variant = 'medium', className = "text-right" }: SocialButtonsProps) => {
+export const SocialButtons = ({ className = "text-right" }: SocialButtonsProps) => {
   return <div className={className}>
     <Link href="https://www.facebook.com/tkolymp" passHref>
       <a className="button button-icon p-0 m-1" >
-        <FacebookIcon className="text-red-500" fontSize={variant} />
+        <Facebook className="text-red-500" />
       </a>
     </Link>
     <Link href="https://www.instagram.com/tanecni_klub_olymp" passHref>
       <a className="button button-icon p-0 m-1" >
-        <InstagramIcon className="text-red-400" fontSize={variant} />
+        <Instagram className="text-red-400" />
       </a>
     </Link>
     <Link href="https://www.youtube.com/user/TheMamcro" passHref>
       <a className="button button-icon p-0 m-1" >
-        <YouTubeIcon className="text-gray-200" fontSize={variant} />
+        <Youtube className="text-gray-200" />
       </a>
     </Link>
   </div>

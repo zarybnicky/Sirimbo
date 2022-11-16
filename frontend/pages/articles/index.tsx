@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { Pagination } from '@mui/material';
 import { ArticleCard } from 'components/cards/ArticleCard';
 import { useArticles } from 'lib/data/use-articles';
 import { CallToAction } from 'components/CallToAction';
 import Head from 'next/head';
+import { Pagination } from 'components/Pagination';
 
 export const ArticlesPage = ({ }) => {
   const [limit] = React.useState(12);
   const [page, setPage] = React.useState(1);
-  const { articles, count } = useArticles(limit, (page - 1) * limit);
+  const { articles, count: total } = useArticles(limit, (page - 1) * limit);
 
   return <>
     <Head>
@@ -19,7 +19,8 @@ export const ArticlesPage = ({ }) => {
       <div className="grid place-items-stretch gap-4 grid-cols-2 lg:grid-cols-3 mb-6">
         {articles.map((x, i) => <ArticleCard key={i} item={x} />)}
       </div>
-      <Pagination count={Math.ceil(count / limit)} page={page} onChange={(_, p) => setPage(p)} />
+
+      <Pagination {...{ total, limit, page, setPage }} />
     </div>
     <CallToAction />
   </>;

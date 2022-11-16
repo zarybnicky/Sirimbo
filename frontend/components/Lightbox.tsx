@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { useSwipeable } from 'react-swipeable';
-import { Card, Dialog, Fade } from '@mui/material';
-import ChevronLeft from '@mui/icons-material/ChevronLeft';
-import ChevronRight from '@mui/icons-material/ChevronRight';
+import { Card } from 'components/Card';
+import { ChevronLeft, ChevronRight } from 'react-feather';
 import { GalleryItem } from 'lib/data/use-gallery';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
+import { Transition } from '@headlessui/react';
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 
 export interface LightboxProps {
   dirHref: string;
@@ -53,41 +54,54 @@ export const Lightbox = ({ dirHref, images, initial }: LightboxProps) => {
   if (!images.length) return null;
 
   return (
-    <Dialog
-      maxWidth="xl" open
-      disableEscapeKeyDown
-      onKeyDown={handleKeyDown}
-      onClose={() => router.replace(dirHref)}
+    <DialogPrimitive.Root
+      open={true}
+      onOpenChange={(open) => !open ? router.replace(dirHref) : null}
     >
-      {images.map((image, ix) => (
-        ix !== selected ? null : (
-          <Fade key={image.img} in={true}>
-            <div {...handlers}>
-              <img src={image.img} alt={image.name} style={{
-                display: 'block',
-                maxWidth: '100%',
-                maxHeight: `calc(100vh - 130px)`,
-                objectFit: 'contain',
-              }} />
-              <Card variant="outlined" className="p-4 text-center">
-                <div className="tracking-wide uppercase text-slate-700 text-xs">{image.name}</div>
-              </Card>
-            </div>
-          </Fade>
-        )
-      ))}
-      <button onClick={nextImage} style={{ left: 0 }} className={classNames(
-        "button button-icon",
-        "absolute top-1/2 bg-white/50 shadow-lg hover:bg-white/80 -translate-y-1/2 transform"
-      )}>
-        <ChevronLeft />
-      </button>
-      <button onClick={prevImage} style={{ right: 0 }} className={classNames(
-        "button button-icon",
-        "absolute top-1/2 bg-white/50 shadow-lg hover:bg-white/80 -translate-y-1/2 transform"
-      )}>
-        <ChevronRight />
-      </button>
-    </Dialog>
+      <DialogPrimitive.Overlay
+        forceMount
+        className="fixed inset-0 z-20 bg-black/50"
+      />
+      <DialogPrimitive.Content forceMount onKeyDown={handleKeyDown}>
+        {images.map((image, ix) => (
+          ix !== selected ? null : (
+            <Transition
+              key={image.img}
+              as={React.Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <div {...handlers}>
+                <img src={image.img} alt={image.name} style={{
+                  display: 'block',
+                  maxWidth: '100%',
+                  maxHeight: `calc(100vh - 130px)`,
+                  objectFit: 'contain',
+                }} />
+                <Card>
+                  <div className="text-center tracking-wide uppercase text-slate-700 text-xs">{image.name}</div>
+                </Card>
+              </div>
+            </Transition>
+          )
+        ))}
+        <button onClick={nextImage} style={{ left: 0 }} className={classNames(
+          "button button-icon",
+          "absolute top-1/2 bg-white/50 shadow-lg hover:bg-white/80 -translate-y-1/2 transform"
+        )}>
+          <ChevronLeft />
+        </button>
+        <button onClick={prevImage} style={{ right: 0 }} className={classNames(
+          "button button-icon",
+          "absolute top-1/2 bg-white/50 shadow-lg hover:bg-white/80 -translate-y-1/2 transform"
+        )}>
+          <ChevronRight />
+        </button>
+      </DialogPrimitive.Content>
+    </DialogPrimitive.Root>
   );
 };

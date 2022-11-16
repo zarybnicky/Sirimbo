@@ -1,4 +1,3 @@
-import { Alert } from "@mui/material";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
@@ -12,7 +11,7 @@ export default function ErrorPage() {
     </Head>
 
     <div className="container mx-auto max-w-3xl mt-12 mb-8">
-      <Alert severity="error">
+      <div className="rounded-xl p-4 bg-red-500 border-red-700">
         {errorCode === 'not_found' ? <>
           <b>Stránka nenalezena.</b>
           <br />
@@ -61,9 +60,8 @@ export default function ErrorPage() {
           co mohlo chybu způsobit.
         </> : <>
           Chybová stránka s daným ID nebyla nalezena.
-
         </>}
-      </Alert>
+      </div>
     </div>
   </>;
 }

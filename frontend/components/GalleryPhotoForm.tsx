@@ -17,7 +17,7 @@ export const GalleryPhotoForm: React.FC<{
 
   const { data: dirs } = useGalleryDirListQuery();
 
-  const { control, handleSubmit, formState } = useForm<FormProps>({
+  const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
       gfName: data?.gfName,
       gfIdRodic: data?.gfIdRodic,
@@ -39,7 +39,7 @@ export const GalleryPhotoForm: React.FC<{
           label: '\xa0'.repeat(x.gdLevel - 1) + x.gdName,
         }))}
       />
-      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { useCoupleListQuery, useDeleteCoupleMutation, useFixUnpairedCouplesMutation } from 'lib/graphql';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
-import { DataGrid } from '@mui/x-data-grid';
 import { DeleteButton } from 'components/DeleteButton';
 import { NewCoupleForm } from 'components/NewCoupleForm';
-import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { toast } from 'react-toastify';
+import { Card } from 'components/Card';
+import { SimpleDialog } from 'components/Dialog';
 
 export default function CoupleAdminList() {
   useRequireUserLoggedIn();
@@ -22,39 +22,21 @@ export default function CoupleAdminList() {
     toast.info(`Opraveno ${data.fixUnpairedCouples?.paries?.length || 0} záznamů`);
   }, [doFix]);
 
-  const [open, setOpen] = React.useState(false);
-
   return <div className="container mx-auto max-w-5xl" style={{ margin: '4rem auto 6rem' }}>
-    <button className="button button-text button-red" onClick={() => setOpen(true)}>Nový pár</button>
-    <button className="button button-text button-red" onClick={fix}>Opravit nespárované páry</button>
+    <button className="button button-red" onClick={fix}>Opravit nespárované páry</button>
+    <SimpleDialog
+      title="Nový pár"
+      button={<button className="button button-red">Nový pár</button>}
+    >
+      {({ close }) => <NewCoupleForm onSuccess={() => { refetch(); close(); }} />}
+    </SimpleDialog>
 
-    <DataGrid
-      autoHeight={true}
-      getRowId={row => row.pId}
-      rows={data?.activeCouples?.nodes || []}
-      columns={[
-        {
-          field: 'actions',
-          type: 'actions',
-          getActions: ({ id }) => [
-            <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat pár" />,
-          ]
-        },
-        {
-          field: 'atJmeno', headerName: 'Jméno', flex: 1,
-          valueGetter: ({ row }) => (
-            `${row.userByPIdPartner?.uPrijmeni}, ${row.userByPIdPartner?.uJmeno}` +
-            (row.userByPIdPartnerka ? ` - ${row.userByPIdPartnerka.uPrijmeni}, ${row.userByPIdPartnerka.uJmeno}` : '')
-          ),
-        },
-      ]}
-    />
-
-    <Dialog onClose={() => setOpen(false)} open={open}>
-      <DialogTitle>Nový pár</DialogTitle>
-      <DialogContent>
-        <NewCoupleForm onSuccess={() => { refetch(); setOpen(false) }} />
-      </DialogContent>
-    </Dialog>
+    {data?.activeCouples?.nodes.map((row) => (
+      <Card key={row.pId}>
+        <DeleteButton key="del" onDelete={doDelete} id={row.pId} title="smazat pár" />
+        {row.userByPIdPartner?.uPrijmeni}, {row.userByPIdPartner?.uJmeno}
+        {(row.userByPIdPartnerka ? ` - ${row.userByPIdPartnerka.uPrijmeni}, ${row.userByPIdPartnerka.uJmeno}` : '')}
+      </Card>
+    ))}
   </div>;
 }

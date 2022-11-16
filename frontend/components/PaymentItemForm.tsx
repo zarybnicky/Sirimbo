@@ -23,7 +23,7 @@ export const PaymentItemForm: React.FC<{
   // php-unserialize-js the blob
   // on delete, mark raw as !sorted and discarded
 
-  const { control, handleSubmit, formState } = useForm<FormProps>({
+  const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
       piAmount: data?.piAmount,
       piDate: data?.piDate,
@@ -59,7 +59,7 @@ export const PaymentItemForm: React.FC<{
         }))}
       />
       <TextFieldElement control={control} name="piPrefix" label="Prefix (rok)" required />
-      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };

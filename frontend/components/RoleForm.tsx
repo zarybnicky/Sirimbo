@@ -16,7 +16,7 @@ export const RoleForm: React.FC<{
   const { mutateAsync: doCreate } = useCreateRoleMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateRoleMutation({ onSuccess });
 
-  const { control, handleSubmit, formState } = useForm<FormProps>({
+  const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: data,
   });
 
@@ -37,7 +37,7 @@ export const RoleForm: React.FC<{
       {realPermissionKeys.map(key => (
         <PermissionSlider control={control} key={key} name={key} label={permissionLabels[key]} />
       ))}
-      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 }

@@ -1,5 +1,3 @@
-import { Alert, AlertTitle } from "@mui/material";
-
 const errorTranslation: { [key: string]: string } = {
   ACCOUNT_NOT_FOUND: 'Zadaná kombinace jména a e-mailu neexistuje',
   INVALID_PASSWORD: 'Nesprávné heslo',
@@ -24,8 +22,10 @@ export const ErrorBox = ({ error: e, default: def }: {
     return null;
   }
 
-  const human = errorTranslation[error] || 'Něco se nepovedlo, zkuste to prosím znovu';
-  const res = human || (def ? <><AlertTitle>{def}</AlertTitle>{error}</> : error);
-
-  return <Alert className="col-full" severity="error">{res}</Alert>;
+  return <div className="rounded-xl p-4 bg-red-500 border-red-700 col-full">
+    {errorTranslation[error] ? errorTranslation[error] : <>
+      <div className="font-bold">{def || 'Něco se nepovedlo, zkuste to prosím znovu'}</div>
+      <div className="text-sm">{error}</div>
+    </>}
+  </div>;
 };

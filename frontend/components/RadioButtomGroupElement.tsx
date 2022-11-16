@@ -10,7 +10,7 @@ type Extras = {
   parseError?: (error: FieldError) => React.ReactNode;
 };
 
-type Item = { id: string; label: string };
+type Item = { id: string; label: string; disabled?: boolean; };
 export type RadioButtonGroupElementProps<T extends FieldValues> = {
   validation?: ControllerProps['rules'];
   name: Path<T>;
@@ -34,10 +34,11 @@ export function RadioButtonGroupElement<TFieldValues extends FieldValues>({
   return <div className={`relative my-2 ${className}`}>
     <div className="text-slate-700 text-sm mb-1">{label}</div>
     <ToggleGroupPrimitive.Root value={value} onValueChange={onChange} type="single">
-      {options.map(({ label, id }) => (
+      {options.map(({ label, id, disabled }) => (
         <ToggleGroupPrimitive.Item
           key={`group-item-${id}-${label}`}
           value={id}
+          disabled={disabled}
           className={classNames(
             "group radix-state-on:text-white radix-state-on:bg-red-500 bg-white",
             "border-y px-2.5 py-2 first:rounded-l-xl first:border-x last:rounded-r-xl last:border-x",
@@ -48,9 +49,6 @@ export function RadioButtonGroupElement<TFieldValues extends FieldValues>({
           {label}
         </ToggleGroupPrimitive.Item>
       ))}
-      {parsedHelperText && (
-        <p className={classNames("mt-2 text-sm", error ? 'text-red-600' : 'text-gray-500')}>{parsedHelperText}</p>
-      )}
     </ToggleGroupPrimitive.Root>
     {parsedHelperText && (
       <p className={classNames("mt-2 text-sm", error ? 'text-red-600' : 'text-gray-500')}>{parsedHelperText}</p>

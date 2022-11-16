@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import { AlertCircle as ReportProblemIcon } from 'react-feather';
 import { Control, FieldValues, ControllerProps, FieldError, Path, useController } from 'react-hook-form';
 
 type Extras = {

@@ -1,5 +1,6 @@
-import { Slider } from "@mui/material";
-import { allowedPermissions, PermissionKey, permissionMarks, realPermissionLevels } from "lib/data/use-permissions";
+import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-group";
+import classNames from "classnames";
+import { allowedPermissions, PermissionKey, permissionMarks } from "lib/data/use-permissions";
 import { Control, FieldValues, ControllerProps, Path, useController } from 'react-hook-form';
 
 export type PermissionSliderProps<T extends FieldValues> = {
@@ -10,23 +11,31 @@ export type PermissionSliderProps<T extends FieldValues> = {
 };
 
 export function PermissionSlider<TFieldValues extends FieldValues>({
-  name, control, label, validation = {}, ...props
+  name, control, label, validation = {},
 }: PermissionSliderProps<TFieldValues>) {
   const { field: { value, onChange } } = useController({
     name, control, rules: validation
   });
+  return <div className="grid relative my-1">
+    <div className="text-slate-700 text-sm mb-1">{label}</div>
 
-  return <div className="grid grid-cols-4 gap-2">
-    <div className="col-span-4 md:col-auto">{label}</div>
-    <div className="col-span-4 md:col-span-3">
-      <Slider
-        {...props}
-        value={[1, 2, 4, 8, 16].indexOf(value as number)}
-        onChange={(_, value) => onChange(parseInt(realPermissionLevels[value as number]!))}
-        min={0} max={4} step={null}
-        marks={permissionMarks.filter(x => allowedPermissions[name]?.includes(x.realValue))}
-        valueLabelDisplay="off"
-      />
-    </div>
-  </div >;
+    <ToggleGroupPrimitive.Root value={value} onValueChange={onChange} type="single">
+      {permissionMarks.map(({ realValue, label }) => (
+        <ToggleGroupPrimitive.Item
+          key={realValue}
+          value={realValue as any}
+          disabled={!allowedPermissions[name].includes(realValue)}
+          className={classNames(
+            "group radix-state-on:text-white radix-state-on:bg-red-500  bg-white",
+            "disabled:text-stone-500 disabled:bg-stone-200",
+            "border-y px-2.5 py-2 first:rounded-l-xl first:border-x border-r last:rounded-r-xl",
+            "border-gray-400 radix-state-on:border-red-800",
+            "focus:relative focus:outline-none focus-visible:z-20 focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75"
+          )}
+        >
+          {label}
+        </ToggleGroupPrimitive.Item>
+      ))}
+    </ToggleGroupPrimitive.Root>
+  </div>;
 };

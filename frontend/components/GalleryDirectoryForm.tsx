@@ -20,7 +20,7 @@ export const GalleryDirForm: React.FC<{
 
   const { data: dirs } = useGalleryDirListQuery();
 
-  const { control, handleSubmit, formState } = useForm<FormProps>({
+  const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
       gdName: data?.gdName,
       gdHidden: data?.gdHidden,
@@ -49,7 +49,7 @@ export const GalleryDirForm: React.FC<{
         }))}
       />
       <CheckboxElement control={control} name="gdName" value="1" label="Skrytá" required />
-      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };

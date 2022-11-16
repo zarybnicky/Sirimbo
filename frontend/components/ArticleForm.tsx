@@ -15,7 +15,7 @@ export const ArticleForm: React.FC<{
   const { mutateAsync: doCreate } = useCreateArticleMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateArticleMutation({ onSuccess });
 
-  const { control, handleSubmit, formState } = useForm<FormProps>({
+  const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
       atJmeno: data?.atJmeno,
       atPreview: data?.atPreview,
@@ -37,7 +37,7 @@ export const ArticleForm: React.FC<{
       <TextFieldElement control={control} name="atJmeno" label="Název" required />
       <TextAreaElement control={control} name="atPreview" label="Shrnutí" rows={3} required />
       <TextAreaElement control={control} name="atText" label="Text" rows={20} required />
-      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };

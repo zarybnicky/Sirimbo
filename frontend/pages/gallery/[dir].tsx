@@ -5,7 +5,7 @@ import { GalleryCard } from 'components/cards/GalleryCard';
 import { Lightbox } from 'components/Lightbox';
 import { useGallery } from 'lib/data/use-gallery';
 import { useRouter } from 'next/router';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import { CornerLeftUp as UpIcon } from 'react-feather';
 
 export default function GalleryPage() {
   const router = useRouter();
@@ -20,7 +20,7 @@ export default function GalleryPage() {
       {dir?.parentId && (
         <Link href={dir.parentId === "1" ? '/gallery' : `/gallery/${dir.parentId}`} passHref>
           <a className="button button-red button-text flex gap-2 items-center">
-            <ArrowUpwardIcon className="w-4.5 h-4.5" /> Přejit o složku výš
+            <UpIcon className="w-4.5 h-4.5" /> Přejit o složku výš
           </a>
         </Link>
       )}

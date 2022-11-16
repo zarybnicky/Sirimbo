@@ -7,8 +7,8 @@ import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 
 type FormProps = {
-  man: { id: string; label: string };
-  woman: { id: string; label: string };
+  man: string;
+  woman: string;
 };
 
 export const NewCoupleForm: React.FC<{
@@ -24,9 +24,9 @@ export const NewCoupleForm: React.FC<{
 
   const { mutateAsync: doCreate } = useCreateCoupleMutation({ onSuccess });
 
-  const { control, handleSubmit, formState } = useForm<FormProps>();
+  const { control, handleSubmit } = useForm<FormProps>();
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    await doCreate({ man: values.man.id, woman: values.woman.id });
+    await doCreate({ man: values.man, woman: values.woman });
   });
 
   return (
@@ -40,7 +40,7 @@ export const NewCoupleForm: React.FC<{
         control={control} name="woman" label="Partnerka" required
         options={women}
       />
-      <SubmitButton className="w-full" loading={onSubmit.loading} disabled={!formState.isDirty || !formState.isValid}>
+      <SubmitButton className="w-full" loading={onSubmit.loading}>
         Spárovat
       </SubmitButton>
     </form>

@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 
 export default function ForgottenPassword() {
   useRequireUserLoggedOut();
-  const { control, handleSubmit, formState } = useForm();
+  const { control, handleSubmit } = useForm();
   const { mutateAsync: resetPassword } = useResetPasswordMutation();
   const router = useRouter();
 
@@ -35,7 +35,7 @@ export default function ForgottenPassword() {
           <TextFieldElement control={control} type="email" name="email" label="E-mail" autoComplete="email" required />
           <ErrorBox error={onSubmit.error} default="Nepodařilo se změnit heslo, prosím kontaktujte administrátora." />
         </div>
-        <SubmitButton className="w-full" loading={onSubmit.loading} disabled={!formState.isValid}>
+        <SubmitButton className="w-full" loading={onSubmit.loading}>
           Obnovit heslo
         </SubmitButton>
       </form>

@@ -2,8 +2,7 @@ import * as React from 'react';
 import { useMyLessonsQuery, ScheduleItemFragment } from 'lib/graphql';
 import { useAuth } from 'lib/data/use-auth';
 import { format } from 'date-fns';
-import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { ChevronLeft, ChevronRight } from 'react-feather';
 import { lastDayOfWeek } from 'date-fns';
 import { cs } from 'date-fns/locale'
 
@@ -52,13 +51,13 @@ export const MyLessonsList: React.FC = () => {
   return <>
     <div className="flex items-center justify-center">
       <button className="button button-icon" onClick={setPrevWeek}>
-        <NavigateBeforeIcon />
+        <ChevronLeft />
       </button>
       <span className="text-slate-700 text-right">
         {format(startDate, 'd. M. y')} - {format(lastDayOfWeek(startDate), 'd. M. y')}
       </span>
       <button className="button button-icon" onClick={setNextWeek}>
-        <NavigateNextIcon />
+        <ChevronRight />
       </button>
     </div>
     {Object.entries(lessonsPerDay).map(([key, lessons]) => <React.Fragment key={key}>

@@ -14,7 +14,7 @@ export const FileForm: React.FC<{
 }> = ({ data, onSuccess }) => {
   const { mutateAsync: doUpdate } = useUpdateFileMutation({ onSuccess });
 
-  const { control, handleSubmit, formState } = useForm<FormProps>({
+  const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
       dName: data?.dName,
     },
@@ -28,7 +28,7 @@ export const FileForm: React.FC<{
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="dName" label="Název" required />
-      <SubmitButton loading={onSubmit.loading} disabled={!formState.isValid} />
+      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };
