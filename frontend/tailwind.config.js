@@ -20,6 +20,7 @@ module.exports = {
     require('tailwindcss-opentype'),
     require("tailwindcss-radix")(),
     require('tailwind-scrollbar'),
+    require('@headlessui/tailwindcss'),
     plugin(function ({ addComponents, theme }) {
       addComponents(button(theme));
     }),

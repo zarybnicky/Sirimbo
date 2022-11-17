@@ -5,6 +5,8 @@ import { format } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'react-feather';
 import { lastDayOfWeek } from 'date-fns';
 import { cs } from 'date-fns/locale'
+import { LessonButton } from './LessonButton';
+import { Card } from './Card';
 
 export const MyLessonsList: React.FC = () => {
   const { user } = useAuth();
@@ -53,7 +55,7 @@ export const MyLessonsList: React.FC = () => {
       <button className="button button-icon" onClick={setPrevWeek}>
         <ChevronLeft />
       </button>
-      <span className="text-slate-700 text-right">
+      <span className="text-slate-700">
         {format(startDate, 'd. M. y')} - {format(lastDayOfWeek(startDate), 'd. M. y')}
       </span>
       <button className="button button-icon" onClick={setNextWeek}>
@@ -63,29 +65,14 @@ export const MyLessonsList: React.FC = () => {
     {Object.entries(lessonsPerDay).map(([key, lessons]) => <React.Fragment key={key}>
       <h6 className="text-lg font-bold mb-2 text-center">{key}</h6>
 
-      <div className="grid gap-2">
+      <Card className="grid mx-auto w-72 rounded-xl border-stone-200 border">
         {lessons.map((lesson, i) => (
-          <div key={i} className="px-2 pt-1 rounded-md bg-slate-50">
-            <div className="text-stone-700 leading-4 text-sm tabular-nums">
-              {lesson.riOd.substring(0, 5)}&#8209;{lesson.riDo.substring(0, 5)}
-            </div>
-            <div className="leading-6">
-              {lesson.rozpiByRiIdRodic?.userByRTrener?.uId === user?.uId ? <>
-                {lesson.paryByRiPartner?.userByPIdPartner?.uJmeno}{' '}
-                {lesson.paryByRiPartner?.userByPIdPartner?.uPrijmeni}
-                {lesson.paryByRiPartner?.userByPIdPartnerka ? <>
-                  {' - '}
-                  {lesson.paryByRiPartner?.userByPIdPartnerka?.uJmeno}{' '}
-                  {lesson.paryByRiPartner?.userByPIdPartnerka?.uPrijmeni}
-                </> : ''}
-              </> : <>
-                {lesson.rozpiByRiIdRodic?.userByRTrener?.uJmeno}{' '}
-                {lesson.rozpiByRiIdRodic?.userByRTrener?.uPrijmeni}
-              </>}
-            </div>
-          </div>
+          <LessonButton
+            showTrainer={lesson.rozpiByRiIdRodic?.rTrener !== user?.uId}
+            key={i} schedule={lesson.rozpiByRiIdRodic!} lesson={lesson}
+          />
         ))}
-      </div>
+      </Card>
     </React.Fragment>)}
   </>;
 };

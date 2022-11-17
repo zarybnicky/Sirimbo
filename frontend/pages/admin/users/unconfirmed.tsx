@@ -92,7 +92,7 @@ export default function UnconfirmedUsers() {
   const { data: users, refetch } = useUserListQuery({ confirmed: false });
 
   return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
-    <h4 className="text-xl font-bold text-right">Nepotvrzení uživatelé</h4>
+    <h4 className="text-xl font-bold">Nepotvrzení uživatelé</h4>
     {users?.users?.nodes?.map((item, i) => <UnconfirmedUser onProcessed={refetch} item={item} key={i} />)}
   </div>;
 };

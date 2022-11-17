@@ -1,20 +1,25 @@
-fragment ScheduleItem on RozpisItem {
+fragment ScheduleBasic on Rozpi {
+  __typename
+  rDatum
+  rId
+  rKde
+  rLock
+  rTrener
+  rVisible
+  userByRTrener {
+    uJmeno
+    uId
+    uPrijmeni
+  }
+}
+
+fragment ScheduleItemBasic on RozpisItem {
   __typename
   riOd
   riDo
   riId
   riLock
   riPartner
-  rozpiByRiIdRodic {
-    rId
-    rDatum
-    rKde
-    userByRTrener {
-      uId
-      uJmeno
-      uPrijmeni
-    }
-  }
   paryByRiPartner {
     pId
     userByPIdPartner {
@@ -30,22 +35,18 @@ fragment ScheduleItem on RozpisItem {
   }
 }
 
-fragment Schedule on Rozpi {
-  __typename
-  rDatum
-  rId
-  rKde
-  rLock
-  rTrener
-  rVisible
-  userByRTrener {
-    uJmeno
-    uId
-    uPrijmeni
+fragment ScheduleItem on RozpisItem {
+  ...ScheduleItemBasic
+  rozpiByRiIdRodic {
+    ...ScheduleBasic
   }
+}
+
+fragment Schedule on Rozpi {
+  ...ScheduleBasic
   rozpisItemsByRiIdRodic(orderBy: [RI_OD_ASC]) {
     nodes {
-      ...ScheduleItem
+      ...ScheduleItemBasic
     }
   }
 }
@@ -60,29 +61,10 @@ query ScheduleRange($startDate: Date!, $endDate: Date!) {
 
 query ScheduleList($limit: Int, $offset: Int) {
   rozpis(first: $limit, offset: $offset, orderBy: [R_DATUM_DESC]) {
-    nodes {
-      rDatum
-      rId
-      rKde
-      rLock
-      rTimestamp
-      rTrener
-      rVisible
-      userByRTrener {
-        uId
-        uJmeno
-        uPrijmeni
-      }
-      rozpisItemsByRiIdRodic {
-        nodes {
-          riDo
-          riOd
-          riId
-          riPartner
-        }
-      }
-    }
     totalCount
+    nodes {
+      ...Schedule
+    }
   }
 }
 

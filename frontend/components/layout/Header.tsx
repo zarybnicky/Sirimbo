@@ -79,9 +79,11 @@ const AuthButton = () => {
       </div>
     </div>
   );
-  return <Dropdown align="end" button={button}
-    options={[{ title: 'Odhlásit se', onClick: signOut }]}
-  />;
+  return <Dropdown align="end" button={button} options={[
+    { title: 'Moje lekce', href: '/dashboard' },
+    { title: 'Profil', href: '/profile' },
+    { title: 'Odhlásit se', onClick: signOut }
+  ]} />;
 };
 
 const DesktopLogo = () => (

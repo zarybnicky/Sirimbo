@@ -4,6 +4,7 @@ import { HtmlView } from 'components/HtmlView';
 import classNames from 'classnames';
 import { Card } from 'components/Card';
 import { EventWithItemsFragment, useEventListQuery } from 'lib/graphql/Event';
+import { Layout } from 'components/layout/Layout';
 
 const EventItem = ({ event }: { event: EventWithItemsFragment }) => {
   const [expanded, setExpanded] = React.useState(false);
@@ -44,3 +45,7 @@ export default function EventListPage() {
     {data?.akces?.nodes.map(event => <EventItem key={event.aId} event={event} />)}
   </div >;
 }
+
+EventListPage.getLayout = (page: React.ReactElement) => (
+  <Layout>{page}</Layout>
+);

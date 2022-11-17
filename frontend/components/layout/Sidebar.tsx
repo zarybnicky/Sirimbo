@@ -38,15 +38,15 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: {
     <nav className={classNames(
       isOpen ? 'absolute inset-y-0 left-0 translate-x-0 shadow-lg' : 'absolute -translate-x-full',
       "w-3/4 sm:w-1/2 md:w-1/3 lg:w-56 xl:w-64 2xl:w-72 3xl:w-80",
-      "scrollbar-thin scrollbar-track-transparent scrollbar-thumb-stone-800/30 hover:scrollbar-thumb-stone-800/50",
+      "scrollbar-thin scrollbar-track-transparent scrollbar-thumb-stone-800/20 hover:scrollbar-thumb-stone-800/50",
       "z-30 h-full max-h-screen min-h-screen flex-none transform overflow-y-auto border-r border-gray-150 bg-white pb-10 transition duration-200 ease-in-out dark:border-gray-800 dark:bg-gray-900 sm:pb-0 md:w-1/3 lg:relative lg:z-auto lg:translate-x-0 lg:bg-gray-50 lg:dark:bg-gray-900",
     )}>
       <div className="grid gap-1 pt-3 mr-1">
         {!showTopMenu && (
-          <div className="hidden lg:flex ml-4">
+          <div className="hidden lg:flex bg-red-500 -mt-3 p-3">
             <OlympLogoOneline viewBox="0 0 381.82217 111.78744" width="170" height="50" style={{
-              color: 'black',
-              fill: 'black !important',
+              color: 'white',
+              fill: 'white !important',
             }} />
           </div>
         )}

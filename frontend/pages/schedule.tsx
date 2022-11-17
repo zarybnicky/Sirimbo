@@ -3,11 +3,15 @@ import { format } from 'date-fns';
 import { usePermissions } from 'lib/data/use-permissions';
 import { DateRange } from 'components/DateRange';
 import { ReservationFragment, useReservationRangeQuery } from 'lib/graphql/Reservation';
-import { ScheduleFragment, ScheduleItemFragment, useScheduleRangeQuery } from 'lib/graphql/Schedule';
+import { ScheduleFragment, useScheduleRangeQuery } from 'lib/graphql/Schedule';
 import { Dropdown } from 'components/Dropdown';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { Button } from 'components/Button';
 import { cs } from 'date-fns/locale'
+import { LessonButton } from 'components/LessonButton';
+import { Card } from 'components/Card';
+import { MoreVertical } from 'react-feather';
+import { Layout } from 'components/layout/Layout';
 
 export default function SchedulePage() {
   useRequireUserLoggedIn();
@@ -33,8 +37,6 @@ export default function SchedulePage() {
     return obj;
   }, [schedules, reservations])
 
-  const openLesson = (item: ScheduleFragment, lesson: ScheduleItemFragment) => { };
-
   // can reserve === has paid
   // $paid = \DBPlatby::hasPaidMemberFees(self::getUser()->getId);
   // $par = \DBPary::getLatestPartner($user->getId(), $user->getGender());
@@ -42,28 +44,6 @@ export default function SchedulePage() {
   //     $paid = $paid && \DBPlatby::hasPaidMemberFees($par['u_id']);
   // }
   // return $paid;
-
-  const bookLesson = React.useCallback((id: string) => {
-    /* if (!\Session::getZaplacenoPar()) {
-     *   \Message::warning('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
-     * } elseif ($lesson['ri_partner']) {
-     *   \Message::warning('Lekce už je obsazená');
-     * } else {
-         if ri_partner is NULL, then
-     *   self::query("UPDATE rozpis_item SET ri_partner='?' WHERE ri_id='?'", $uid, $rid);
-     * } */
-  }, []);
-
-  const cancelLesson = React.useCallback((id: string) => {
-    /* if ($lesson['ri_partner'] === null) {
-     * } elseif ($par['p_id'] != $lesson['ri_partner']
-     *           && !\Permissions::check('rozpis', P_OWNED, $data['r_trener'])
-     * ) {
-     *   \Message::warning('Nedostatečná oprávnění!');
-     * } else {
-     *   self::query("UPDATE rozpis_item SET ri_partner=NULL WHERE ri_id='?'", $rid)
-     * } */
-  }, []);
 
   const reserveLessons = React.useCallback((id: string) => {
     // check lock
@@ -96,54 +76,38 @@ export default function SchedulePage() {
   }, []);
 
   return <div className="container mx-auto max-w-5xl mt-12 mb-8">
-    <h4 className="text-lg font-bold mb-2 text-right">Tento týden</h4>
+    <h4 className="text-lg font-bold mb-2">Tento týden</h4>
     {Object.entries(planList).map(([date, items]) => <>
       <div className="text-xl font-bold text-slate-700 mt-6 mb-2">
         {format(new Date(date), 'EEEE d. M.', { locale: cs })}
       </div>
-      <div className="flex gap-4">
+      <div className="flex flex-wrap gap-4">
         {items.map((item, i) => item.__typename === 'Rozpi' ? (
-          <div key={i} className="min-w-[200px]">
-            {perms.canEditSchedule(item) && <Dropdown align="center"
-              button={<img className="w-4 absolute top-2 right-2" alt="Upravit" src="/style/icon-gear.png" />}
-              options={[
-                { title: "Upravit", href: `/admin/rozpis/edit/${item.rId}` },
-                { title: "Upravit rezervace", href: `/admin/rozpis/detail/${item.rId}` },
-              ]}
-            />}
-
-            <div>{item.rKde}</div>
-            <div className="text-xl mb-2">
-              {item.userByRTrener?.uJmeno} {item.userByRTrener?.uPrijmeni}
-            </div>
-
-            <div className="grid gap-1.5">
-              {item.rozpisItemsByRiIdRodic.nodes?.map((lesson, i) => (
-                <div key={i} onClick={() => openLesson(item, lesson)} className="cursor-pointer px-2 pt-1 rounded-md bg-slate-50">
-                  <div className="text-stone-700 leading-4 text-sm tabular-nums">
-                    {lesson.riOd.substring(0, 5)}&#8209;{lesson.riDo.substring(0, 5)}
-                  </div>
-                  {perms.canSignUp(item, lesson) ? (
-                    <div>
-                      VOLNÁ
-                      <button name="action" value="signup" className="button button-icon button-red button-sm py-0">+</button>
-                    </div>
-                  ) : lesson.paryByRiPartner ? (
-                    <div className="leading-6">
-                      {['.',
-                        ',', undefined].includes(lesson.paryByRiPartner?.userByPIdPartner?.uPrijmeni)
-                        ? lesson.paryByRiPartner?.userByPIdPartner?.uJmeno : lesson.paryByRiPartner?.userByPIdPartner?.uPrijmeni}
-                      {lesson.paryByRiPartner?.userByPIdPartnerka
-                        ? ` - ${lesson.paryByRiPartner?.userByPIdPartnerka?.uPrijmeni}`
-                        : ''}
-                      {perms.canSignOut(item, lesson) && (
-                        <button name="action" value="signout" className="button button-icon button-sm button-red py-0">&times;</button>
-                      )}
-                    </div>
-                  ) : "-"}
+          <div key={i} className="group relative min-w-[200px]">
+            <div className="ml-3 mb-0.5">
+              {perms.canEditSchedule(item) && (
+                <div className="absolute right-2 top-0">
+                  <Dropdown align="end"
+                    button={<MoreVertical className="text-slate-500 w-6 invisible ui-open:visible group-hover:visible" />}
+                    options={[
+                      { title: "Upravit", href: `/admin/rozpis/edit/${item.rId}` },
+                      { title: "Upravit rezervace", href: `/admin/rozpis/detail/${item.rId}` },
+                    ]}
+                  />
                 </div>
-              ))}
+              )}
+
+              <div className="text-sm text-stone-500">{item.rKde}</div>
+              <div className="text-xl">
+                {item.userByRTrener?.uJmeno} {item.userByRTrener?.uPrijmeni}
+              </div>
             </div>
+
+            <Card className="grid mx-auto w-72 rounded-xl border-stone-200 border">
+              {item.rozpisItemsByRiIdRodic.nodes?.map((lesson, i) => (
+                <LessonButton key={i} schedule={item} lesson={lesson} />
+              ))}
+            </Card>
           </div>
         ) : item.__typename === 'Nabidka' ? (
           <div key={i}>
@@ -190,3 +154,7 @@ export default function SchedulePage() {
     </>)}
   </div>;
 }
+
+SchedulePage.getLayout = (page: React.ReactElement) => (
+  <Layout>{page}</Layout>
+);

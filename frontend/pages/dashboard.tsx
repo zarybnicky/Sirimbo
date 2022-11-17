@@ -10,11 +10,11 @@ export default function DashboardPage() {
   return <div className="container mx-auto max-w-5xl pt-12 pb-8">
     <div className="grid lg:grid-cols-2">
       <div>
-        <h4 className="text-lg font-bold text-right">Moje tréninky</h4>
+        <h4 className="text-lg font-bold text-center">Moje tréninky</h4>
         <MyLessonsList />
       </div>
       <div>
-        <h4 className="text-lg font-bold text-right">Nástěnka</h4>
+        <h4 className="text-lg font-bold text-center">Nástěnka</h4>
         <AnnouncementList />
       </div>
     </div>
