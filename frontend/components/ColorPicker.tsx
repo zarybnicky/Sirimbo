@@ -12,8 +12,8 @@ export function ColorPicker<TFieldValues extends FieldValues>({
 }: ColorPickerProps<TFieldValues>) {
   const { field: { value, onChange } } = useController({ name, control });
 
-  return <>
-    <HexColorPicker color={value} onChange={onChange} />
+  return <div className="w-[300px] grid gap-1 my-2">
+    <HexColorPicker style={{ width: 300 }} color={value} onChange={onChange} />
     <TextField name="sColorRgb" value={value} onChange={onChange} />
-  </>;
+  </div>;
 };

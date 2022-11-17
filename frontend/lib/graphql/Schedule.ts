@@ -4,13 +4,13 @@ import * as Types from './index';
 
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
-export type ScheduleBasicFragment = { __typename: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null };
+export type ScheduleBasicFragment = { __typename: 'Rozpi', rDatum: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, id: string, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null };
 
-export type ScheduleItemBasicFragment = { __typename: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null };
+export type ScheduleItemBasicFragment = { __typename: 'RozpisItem', riOd: string, riDo: string, riLock: boolean, riPartner: string | null, id: string, paryByRiPartner: { __typename?: 'Pary', id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null };
 
-export type ScheduleItemFragment = { __typename: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, rozpiByRiIdRodic: { __typename: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null };
+export type ScheduleItemFragment = { __typename: 'RozpisItem', riOd: string, riDo: string, riLock: boolean, riPartner: string | null, id: string, rozpiByRiIdRodic: { __typename: 'Rozpi', rDatum: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, id: string, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null };
 
-export type ScheduleFragment = { __typename: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> }, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null };
+export type ScheduleFragment = { __typename: 'Rozpi', rDatum: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, id: string, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riLock: boolean, riPartner: string | null, id: string, paryByRiPartner: { __typename?: 'Pary', id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null }> }, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null };
 
 export type ScheduleRangeQueryVariables = Types.Exact<{
   startDate: Types.Scalars['Date'];
@@ -18,7 +18,7 @@ export type ScheduleRangeQueryVariables = Types.Exact<{
 }>;
 
 
-export type ScheduleRangeQuery = { __typename?: 'Query', schedulesForRange: { __typename?: 'RozpisConnection', nodes: Array<{ __typename: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> }, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null }> } | null };
+export type ScheduleRangeQuery = { __typename?: 'Query', schedulesForRange: { __typename?: 'RozpisConnection', nodes: Array<{ __typename: 'Rozpi', rDatum: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, id: string, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riLock: boolean, riPartner: string | null, id: string, paryByRiPartner: { __typename?: 'Pary', id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null }> }, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null }> } | null };
 
 export type ScheduleListQueryVariables = Types.Exact<{
   limit?: Types.InputMaybe<Types.Scalars['Int']>;
@@ -26,7 +26,7 @@ export type ScheduleListQueryVariables = Types.Exact<{
 }>;
 
 
-export type ScheduleListQuery = { __typename?: 'Query', rozpis: { __typename?: 'RozpisConnection', totalCount: number, nodes: Array<{ __typename: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> }, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null }> } | null };
+export type ScheduleListQuery = { __typename?: 'Query', rozpis: { __typename?: 'RozpisConnection', totalCount: number, nodes: Array<{ __typename: 'Rozpi', rDatum: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, id: string, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riLock: boolean, riPartner: string | null, id: string, paryByRiPartner: { __typename?: 'Pary', id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null }> }, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null }> } | null };
 
 export type MyLessonsQueryVariables = Types.Exact<{
   startDate?: Types.InputMaybe<Types.Scalars['Date']>;
@@ -34,14 +34,14 @@ export type MyLessonsQueryVariables = Types.Exact<{
 }>;
 
 
-export type MyLessonsQuery = { __typename?: 'Query', currentSessionId: string | null, currentUserId: string | null, currentCoupleIds: { __typename?: 'CurrentCoupleIdsConnection', nodes: Array<string | null> } | null, myLessons: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, rozpiByRiIdRodic: { __typename: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> } | null };
+export type MyLessonsQuery = { __typename?: 'Query', currentSessionId: string | null, currentUserId: string | null, currentCoupleIds: { __typename?: 'CurrentCoupleIdsConnection', nodes: Array<string | null> } | null, myLessons: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riLock: boolean, riPartner: string | null, id: string, rozpiByRiIdRodic: { __typename: 'Rozpi', rDatum: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, id: string, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null }> } | null };
 
 export type ScheduleQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
 }>;
 
 
-export type ScheduleQuery = { __typename?: 'Query', rozpi: { __typename: 'Rozpi', rDatum: string, rId: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riId: string, riLock: boolean, riPartner: string | null, paryByRiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null } | null }> }, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null } | null };
+export type ScheduleQuery = { __typename?: 'Query', rozpi: { __typename: 'Rozpi', rDatum: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, id: string, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riLock: boolean, riPartner: string | null, id: string, paryByRiPartner: { __typename?: 'Pary', id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null }> }, userByRTrener: { __typename?: 'User', uJmeno: string, uId: string, uPrijmeni: string } | null } | null };
 
 export type ToggleScheduleVisibleMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -49,14 +49,14 @@ export type ToggleScheduleVisibleMutationVariables = Types.Exact<{
 }>;
 
 
-export type ToggleScheduleVisibleMutation = { __typename?: 'Mutation', updateRozpi: { __typename?: 'UpdateRozpiPayload', rozpi: { __typename?: 'Rozpi', rId: string } | null } | null };
+export type ToggleScheduleVisibleMutation = { __typename?: 'Mutation', updateRozpi: { __typename?: 'UpdateRozpiPayload', rozpi: { __typename?: 'Rozpi', id: string } | null } | null };
 
 export type CreateScheduleMutationVariables = Types.Exact<{
   input: Types.RozpiInput;
 }>;
 
 
-export type CreateScheduleMutation = { __typename?: 'Mutation', createRozpi: { __typename: 'CreateRozpiPayload' } | null };
+export type CreateScheduleMutation = { __typename?: 'Mutation', createRozpi: { __typename?: 'CreateRozpiPayload', rozpi: { __typename?: 'Rozpi', id: string } | null } | null };
 
 export type UpdateScheduleMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -78,18 +78,18 @@ export const ScheduleItemBasicFragmentDoc = `
   __typename
   riOd
   riDo
-  riId
+  id: riId
   riLock
   riPartner
   paryByRiPartner {
-    pId
+    id: pId
     userByPIdPartner {
       uJmeno
-      uId
+      id: uId
       uPrijmeni
     }
     userByPIdPartnerka {
-      uId
+      id: uId
       uJmeno
       uPrijmeni
     }
@@ -100,7 +100,7 @@ export const ScheduleBasicFragmentDoc = `
     fragment ScheduleBasic on Rozpi {
   __typename
   rDatum
-  rId
+  id: rId
   rKde
   rLock
   rTrener
@@ -244,7 +244,7 @@ export const ToggleScheduleVisibleDocument = `
     mutation ToggleScheduleVisible($id: BigInt!, $visible: Boolean!) {
   updateRozpi(input: {rId: $id, patch: {rVisible: $visible}}) {
     rozpi {
-      rId
+      id: rId
     }
   }
 }
@@ -264,7 +264,9 @@ useToggleScheduleVisibleMutation.fetcher = (variables: ToggleScheduleVisibleMuta
 export const CreateScheduleDocument = `
     mutation CreateSchedule($input: RozpiInput!) {
   createRozpi(input: {rozpi: $input}) {
-    __typename
+    rozpi {
+      id: rId
+    }
   }
 }
     `;

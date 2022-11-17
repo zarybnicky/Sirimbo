@@ -13,7 +13,6 @@ export default function CrmPage() {
 
     <DataGrid
       autoHeight={true}
-      getRowId={row => row.id!}
       rows={data?.activeProspects?.nodes || []}
       columns={[
         {

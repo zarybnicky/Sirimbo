@@ -52,7 +52,7 @@ export default function GalleryDirectoryList() {
 
   const roots = listToTree((data?.galerieDirs?.nodes || []).map(x => ({
     ...x,
-    id: x.gdId,
+    id: x.id,
     parentId: x.gdIdRodic,
     children: [],
   })));
@@ -77,7 +77,6 @@ export default function GalleryDirectoryList() {
       pagination
       paginationMode="server"
       autoHeight={true}
-      getRowId={row => row.gdId}
       rows={dataSorted}
       columns={[
         {
@@ -105,7 +104,7 @@ export default function GalleryDirectoryList() {
           field: 'gdHidden', headerName: 'Skrytá', flex: 1,
           renderCell: ({ row }) => <>
             <Checkbox checked={row.gdHidden} onChange={() => toggleVisible({
-              id: row.gdId, visible: !row.gdHidden,
+              id: row.id, visible: !row.gdHidden,
             })} />
           </>,
         },

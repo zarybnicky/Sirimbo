@@ -21,7 +21,6 @@ export default function PlatbyGroupListPage() {
 
     <DataGrid
       autoHeight={true}
-      getRowId={row => row.pgId}
       rows={data?.platbyGroups?.nodes || []}
       columns={[
         {

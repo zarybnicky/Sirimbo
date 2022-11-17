@@ -7,7 +7,7 @@ import { fetcher } from 'lib/query';
 export type CoupleListQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type CoupleListQuery = { __typename?: 'Query', activeCouples: { __typename?: 'PariesConnection', totalCount: number, nodes: Array<{ __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string } | null }> } | null };
+export type CoupleListQuery = { __typename?: 'Query', activeCouples: { __typename?: 'PariesConnection', totalCount: number, nodes: Array<{ __typename?: 'Pary', id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string } | null }> } | null };
 
 export type CreateCoupleMutationVariables = Types.Exact<{
   man: Types.Scalars['BigInt'];
@@ -15,7 +15,7 @@ export type CreateCoupleMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateCoupleMutation = { __typename?: 'Mutation', createCouple: { __typename?: 'CreateCouplePayload', paries: Array<{ __typename?: 'Pary', pId: string }> | null } | null };
+export type CreateCoupleMutation = { __typename?: 'Mutation', createCouple: { __typename?: 'CreateCouplePayload', paries: Array<{ __typename?: 'Pary', id: string }> | null } | null };
 
 export type DeleteCoupleMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -27,7 +27,7 @@ export type DeleteCoupleMutation = { __typename?: 'Mutation', deletePary: { __ty
 export type FixUnpairedCouplesMutationVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type FixUnpairedCouplesMutation = { __typename?: 'Mutation', fixUnpairedCouples: { __typename?: 'FixUnpairedCouplesPayload', paries: Array<{ __typename?: 'Pary', pId: string }> | null } | null };
+export type FixUnpairedCouplesMutation = { __typename?: 'Mutation', fixUnpairedCouples: { __typename?: 'FixUnpairedCouplesPayload', paries: Array<{ __typename?: 'Pary', id: string }> | null } | null };
 
 
 export const CoupleListDocument = `
@@ -35,7 +35,7 @@ export const CoupleListDocument = `
   activeCouples {
     totalCount
     nodes {
-      pId
+      id: pId
       userByPIdPartner {
         uJmeno
         uPrijmeni
@@ -69,7 +69,7 @@ export const CreateCoupleDocument = `
     mutation CreateCouple($man: BigInt!, $woman: BigInt!) {
   createCouple(input: {man: $man, woman: $woman}) {
     paries {
-      pId
+      id: pId
     }
   }
 }
@@ -109,7 +109,7 @@ export const FixUnpairedCouplesDocument = `
     mutation FixUnpairedCouples {
   fixUnpairedCouples(input: {}) {
     paries {
-      pId
+      id: pId
     }
   }
 }

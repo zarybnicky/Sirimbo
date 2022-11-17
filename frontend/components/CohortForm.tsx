@@ -30,7 +30,7 @@ export const CohortForm: React.FC<{
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     if (data) {
-      await doUpdate({ id: data.sId, patch: values });
+      await doUpdate({ id: data.id, patch: values });
     } else {
       await doCreate({ input: { ...values, sColorText: '' } });
     }
@@ -41,9 +41,9 @@ export const CohortForm: React.FC<{
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="sName" label="Název" required />
       <TextFieldElement control={control} name="sLocation" label="Město/místo" required />
-      <CheckboxElement control={control} name="sVisible" value="1" label="Viditelná pro registraci" />
       <ColorPicker name="sColorRgb" control={control} />
-      <TextAreaElement control={control} name="sDescription" label="Popis" rows={3} required />
+      <TextAreaElement control={control} name="sDescription" label="Popis" rows={10} required />
+      <CheckboxElement control={control} name="sVisible" value="1" label="Viditelná pro registraci" />
       <SubmitButton loading={onSubmit.loading} />
     </form>
   );

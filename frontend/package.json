@@ -44,6 +44,7 @@
     "@tailwindcss/typography": "^0.5.7",
     "@tanstack/query-sync-storage-persister": "^4.3.4",
     "@tanstack/react-query": "^4.3.4",
+    "@tanstack/react-query-devtools": "^4.16.1",
     "@tanstack/react-query-persist-client": "^4.3.4",
     "@types/facebook-pixel": "^0.0.24",
     "@types/file-saver": "^2.0.5",

@@ -1,6 +1,6 @@
 fragment Event on Akce {
   __typename
-  aId
+  id: aId
   aOd
   aDo
   aInfo
@@ -19,7 +19,7 @@ fragment EventWithItems on Akce {
     totalCount
     nodes {
       __typename
-      aiId
+      id: aiId
       userByAiUser {
         uId
         uJmeno
@@ -31,7 +31,7 @@ fragment EventWithItems on Akce {
 
 fragment EventItem on AkceItem {
   __typename
-  aiId
+  id: aiId
   userByAiUser {
     uJmeno
     uPrijmeni
@@ -43,6 +43,8 @@ fragment EventItem on AkceItem {
 
 query EventParticipants($id: BigInt!) {
   akce(aId: $id) {
+    id: aId
+    aId
     aJmeno
     akceItemsByAiIdRodic {
       nodes {
@@ -77,7 +79,9 @@ mutation ToggleEventVisible($id: BigInt!, $visible: Boolean!) {
 
 mutation CreateEvent($input: AkceInput!) {
   createAkce(input: {akce: $input}) {
-    __typename
+    akce {
+      id: aId
+    }
   }
 }
 

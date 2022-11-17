@@ -18,10 +18,10 @@ export const NewCoupleForm: React.FC<{
   const { data: users } = useUserListQuery();
   const men = React.useMemo(() => (users?.users?.nodes || [])
     .filter(x => x.uPohlavi === 'm')
-    .map(x => ({ id: x.uId, label: `${x.uJmeno} ${x.uPrijmeni} (${x.uId})` })), [users]);
+    .map(x => ({ id: x.id, label: `${x.uJmeno} ${x.uPrijmeni} (${x.id})` })), [users]);
   const women = React.useMemo(() => (users?.users?.nodes || [])
     .filter(x => x.uPohlavi === 'f')
-    .map(x => ({ id: x.uId, label: `${x.uJmeno} ${x.uPrijmeni} (${x.uId})` })), [users])
+    .map(x => ({ id: x.id, label: `${x.uJmeno} ${x.uPrijmeni} (${x.id})` })), [users])
 
   const { mutateAsync: doCreate } = useCreateCoupleMutation({ onSuccess });
 

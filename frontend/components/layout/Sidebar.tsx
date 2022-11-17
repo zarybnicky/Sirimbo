@@ -38,18 +38,23 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: {
     <nav className={classNames(
       isOpen ? 'absolute inset-y-0 left-0 translate-x-0 shadow-lg' : 'absolute -translate-x-full',
       "w-3/4 sm:w-1/2 md:w-1/3 lg:w-56 xl:w-64 2xl:w-72 3xl:w-80",
-      "scrollbar-thin scrollbar-track-transparent scrollbar-thumb-stone-800/20 hover:scrollbar-thumb-stone-800/50",
-      "z-30 h-full max-h-screen min-h-screen flex-none transform overflow-y-auto border-r border-gray-150 bg-white pb-10 transition duration-200 ease-in-out dark:border-gray-800 dark:bg-gray-900 sm:pb-0 md:w-1/3 lg:relative lg:z-auto lg:translate-x-0 lg:bg-gray-50 lg:dark:bg-gray-900",
+      "z-30 h-full max-h-screen min-h-screen flex-none transform pb-10 transition duration-200 ease-in-out dark:border-gray-800 sm:pb-0 md:w-1/3 lg:relative lg:z-auto lg:translate-x-0",
+      "bg-white dark:bg-gray-900 lg:bg-red-500 lg:text-white",
     )}>
-      <div className="grid gap-1 pt-3 mr-1">
-        {!showTopMenu && (
-          <div className="hidden lg:flex bg-red-500 -mt-3 p-3">
-            <OlympLogoOneline viewBox="0 0 381.82217 111.78744" width="170" height="50" style={{
+      {!showTopMenu && (
+        <div className="hidden lg:flex bg-red-500 h-20 p-3">
+          <OlympLogoOneline viewBox="0 0 381.82217 111.78744"
+            className="h-full w-full text-white" style={{
               color: 'white',
               fill: 'white !important',
             }} />
-          </div>
-        )}
+        </div>
+      )}
+      <div className={classNames(
+        "grid gap-1 pt-3 mr-1 oveflow-y-auto max-h-full",
+        "border-r border-gray-150",
+        "scrollbar-thin scrollbar-track-transparent scrollbar-thumb-red-700/80 hover:scrollbar-thumb-red-700/90",
+      )}>
         {sideMenu.map(x => <SidebarSection key={x.title} item={x} />)}
         <SidebarLink item={{ type: 'link', title: 'Domů', href: '/home' }} />
         {topMenu.map(x => <SidebarSection key={x.title} item={x} />)}
@@ -88,9 +93,9 @@ export const SidebarLink = ({ item, onClick }: {
     <Link href={item.href} passHref>
       <a onClick={onClick} className={classNames(
         "rounded-2xl px-3 py-1.5",
-        "flex items-center grow mx-2 hover:bg-stone-500 hover:text-white",
-        "font-light tracking-wide text-sm",
-        inPath ? 'bg-stone-700 text-white' : '',
+        "flex items-center grow mx-2 hover:bg-red-700 hover:text-white",
+        "tracking-wider text-sm",
+        inPath ? 'font-bold bg-stone-700 text-white lg:bg-red-900' : 'font-light',
       )}>
         {item.title}
       </a>

@@ -10,7 +10,7 @@ export type UserQueryVariables = Types.Exact<{
 }>;
 
 
-export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string } | null };
+export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, id: string } | null };
 
 export type UserListQueryVariables = Types.Exact<{
   confirmed?: Types.InputMaybe<Types.Scalars['Boolean']>;
@@ -19,19 +19,19 @@ export type UserListQueryVariables = Types.Exact<{
 }>;
 
 
-export type UserListQuery = { __typename?: 'Query', users: { __typename?: 'UsersConnection', totalCount: number, nodes: Array<{ __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string }> } | null };
+export type UserListQuery = { __typename?: 'Query', users: { __typename?: 'UsersConnection', totalCount: number, nodes: Array<{ __typename?: 'User', uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, id: string }> } | null };
 
 export type MemberListQueryVariables = Types.Exact<{
   cohortId?: Types.InputMaybe<Types.Scalars['BigInt']>;
 }>;
 
 
-export type MemberListQuery = { __typename?: 'Query', members: { __typename?: 'MembersConnection', totalCount: number, nodes: Array<{ __typename?: 'Member', uId: string | null, uJmeno: string | null, uPrijmeni: string | null, uEmail: string | null, uTelefon: string | null, uRodneCislo: string | null, sId: string | null, sName: string | null, sColorRgb: string | null, sDescription: string | null, sVisible: boolean | null, paymentValid: boolean | null }> } | null };
+export type MemberListQuery = { __typename?: 'Query', members: { __typename?: 'MembersConnection', totalCount: number, nodes: Array<{ __typename?: 'Member', uJmeno: string | null, uPrijmeni: string | null, uEmail: string | null, uTelefon: string | null, uRodneCislo: string | null, sId: string | null, sName: string | null, sColorRgb: string | null, sDescription: string | null, sVisible: boolean | null, paymentValid: boolean | null, id: string | null }> } | null };
 
 export type TrainerListQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type TrainerListQuery = { __typename?: 'Query', trainers: { __typename?: 'UsersConnection', totalCount: number, nodes: Array<{ __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string }> } | null };
+export type TrainerListQuery = { __typename?: 'Query', trainers: { __typename?: 'UsersConnection', totalCount: number, nodes: Array<{ __typename?: 'User', uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, id: string }> } | null };
 
 export type ConfirmUserMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -47,7 +47,7 @@ export type CreateUserMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename: 'CreateUserPayload' } | null };
+export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'CreateUserPayload', user: { __typename?: 'User', id: string } | null } | null };
 
 export type UpdateUserMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -121,7 +121,7 @@ export const MemberListDocument = `
   members(condition: {sId: $cohortId}) {
     totalCount
     nodes {
-      uId
+      id: uId
       uJmeno
       uPrijmeni
       uEmail
@@ -203,7 +203,9 @@ useConfirmUserMutation.fetcher = (variables: ConfirmUserMutationVariables, optio
 export const CreateUserDocument = `
     mutation CreateUser($input: UserInput!) {
   createUser(input: {user: $input}) {
-    __typename
+    user {
+      id: uId
+    }
   }
 }
     `;

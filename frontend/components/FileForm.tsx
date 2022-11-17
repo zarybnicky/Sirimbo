@@ -22,7 +22,7 @@ export const FileForm: React.FC<{
   });
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    await doUpdate({ id: data.dId, patch: values });
+    await doUpdate({ id: data.id, patch: values });
   });
 
   return (

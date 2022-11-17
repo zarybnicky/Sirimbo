@@ -4,16 +4,16 @@ import * as Types from './index';
 
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
-export type GalleryPhotoFragment = { __typename: 'GalerieFoto', nodeId: string, gfId: string, gfIdRodic: string, gfKdo: string, gfName: string, gfPath: string, gfTimestamp: string | null };
+export type GalleryPhotoFragment = { __typename: 'GalerieFoto', gfIdRodic: string, gfKdo: string, gfName: string, gfPath: string, gfTimestamp: string | null, id: string };
 
-export type GalleryDirFragment = { __typename: 'GalerieDir', nodeId: string, gdId: string, gdIdRodic: string, gdName: string, gdPath: string, gdLevel: number, gdHidden: boolean };
+export type GalleryDirFragment = { __typename: 'GalerieDir', gdIdRodic: string, gdName: string, gdPath: string, gdLevel: number, gdHidden: boolean, id: string };
 
 export type GalleryDirQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
 }>;
 
 
-export type GalleryDirQuery = { __typename?: 'Query', galerieDir: { __typename: 'GalerieDir', nodeId: string, gdId: string, gdIdRodic: string, gdName: string, gdPath: string, gdLevel: number, gdHidden: boolean, galerieFotosByGfIdRodic: { __typename?: 'GalerieFotosConnection', nodes: Array<{ __typename: 'GalerieFoto', nodeId: string, gfId: string, gfIdRodic: string, gfKdo: string, gfName: string, gfPath: string, gfTimestamp: string | null }> } } | null, galerieDirs: { __typename?: 'GalerieDirsConnection', nodes: Array<{ __typename: 'GalerieDir', nodeId: string, gdId: string, gdIdRodic: string, gdName: string, gdPath: string, gdLevel: number, gdHidden: boolean, galerieFotosByGfIdRodic: { __typename?: 'GalerieFotosConnection', nodes: Array<{ __typename: 'GalerieFoto', nodeId: string, gfId: string, gfIdRodic: string, gfKdo: string, gfName: string, gfPath: string, gfTimestamp: string | null }> } }> } | null };
+export type GalleryDirQuery = { __typename?: 'Query', galerieDir: { __typename: 'GalerieDir', gdIdRodic: string, gdName: string, gdPath: string, gdLevel: number, gdHidden: boolean, id: string, galerieFotosByGfIdRodic: { __typename?: 'GalerieFotosConnection', nodes: Array<{ __typename: 'GalerieFoto', gfIdRodic: string, gfKdo: string, gfName: string, gfPath: string, gfTimestamp: string | null, id: string }> } } | null, galerieDirs: { __typename?: 'GalerieDirsConnection', nodes: Array<{ __typename: 'GalerieDir', gdIdRodic: string, gdName: string, gdPath: string, gdLevel: number, gdHidden: boolean, id: string, galerieFotosByGfIdRodic: { __typename?: 'GalerieFotosConnection', nodes: Array<{ __typename: 'GalerieFoto', gfIdRodic: string, gfKdo: string, gfName: string, gfPath: string, gfTimestamp: string | null, id: string }> } }> } | null };
 
 export type GalleryDirListQueryVariables = Types.Exact<{
   limit?: Types.InputMaybe<Types.Scalars['Int']>;
@@ -21,7 +21,7 @@ export type GalleryDirListQueryVariables = Types.Exact<{
 }>;
 
 
-export type GalleryDirListQuery = { __typename?: 'Query', galerieDirs: { __typename?: 'GalerieDirsConnection', totalCount: number, nodes: Array<{ __typename: 'GalerieDir', nodeId: string, gdId: string, gdIdRodic: string, gdName: string, gdPath: string, gdLevel: number, gdHidden: boolean }> } | null };
+export type GalleryDirListQuery = { __typename?: 'Query', galerieDirs: { __typename?: 'GalerieDirsConnection', totalCount: number, nodes: Array<{ __typename: 'GalerieDir', gdIdRodic: string, gdName: string, gdPath: string, gdLevel: number, gdHidden: boolean, id: string }> } | null };
 
 export type ToggleGalleryDirVisibleMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -29,14 +29,14 @@ export type ToggleGalleryDirVisibleMutationVariables = Types.Exact<{
 }>;
 
 
-export type ToggleGalleryDirVisibleMutation = { __typename?: 'Mutation', updateGalerieDir: { __typename?: 'UpdateGalerieDirPayload', galerieDir: { __typename?: 'GalerieDir', gdId: string } | null } | null };
+export type ToggleGalleryDirVisibleMutation = { __typename?: 'Mutation', updateGalerieDir: { __typename?: 'UpdateGalerieDirPayload', galerieDir: { __typename?: 'GalerieDir', id: string } | null } | null };
 
 export type CreateGalleryDirMutationVariables = Types.Exact<{
   input: Types.GalerieDirInput;
 }>;
 
 
-export type CreateGalleryDirMutation = { __typename?: 'Mutation', createGalerieDir: { __typename: 'CreateGalerieDirPayload' } | null };
+export type CreateGalleryDirMutation = { __typename?: 'Mutation', createGalerieDir: { __typename?: 'CreateGalerieDirPayload', galerieDir: { __typename?: 'GalerieDir', id: string } | null } | null };
 
 export type UpdateGalleryDirMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -58,14 +58,14 @@ export type GalleryPhotoQueryVariables = Types.Exact<{
 }>;
 
 
-export type GalleryPhotoQuery = { __typename?: 'Query', galerieFoto: { __typename: 'GalerieFoto', nodeId: string, gfId: string, gfIdRodic: string, gfKdo: string, gfName: string, gfPath: string, gfTimestamp: string | null } | null };
+export type GalleryPhotoQuery = { __typename?: 'Query', galerieFoto: { __typename: 'GalerieFoto', gfIdRodic: string, gfKdo: string, gfName: string, gfPath: string, gfTimestamp: string | null, id: string } | null };
 
 export type CreateGalleryPhotoMutationVariables = Types.Exact<{
   input: Types.GalerieFotoInput;
 }>;
 
 
-export type CreateGalleryPhotoMutation = { __typename?: 'Mutation', createGalerieFoto: { __typename: 'CreateGalerieFotoPayload' } | null };
+export type CreateGalleryPhotoMutation = { __typename?: 'Mutation', createGalerieFoto: { __typename?: 'CreateGalerieFotoPayload', galerieFoto: { __typename?: 'GalerieFoto', id: string } | null } | null };
 
 export type UpdateGalleryPhotoMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -85,8 +85,7 @@ export type DeleteGalleryPhotoMutation = { __typename?: 'Mutation', deleteGaleri
 export const GalleryPhotoFragmentDoc = `
     fragment GalleryPhoto on GalerieFoto {
   __typename
-  nodeId
-  gfId
+  id: gfId
   gfIdRodic
   gfKdo
   gfName
@@ -97,8 +96,7 @@ export const GalleryPhotoFragmentDoc = `
 export const GalleryDirFragmentDoc = `
     fragment GalleryDir on GalerieDir {
   __typename
-  nodeId
-  gdId
+  id: gdId
   gdIdRodic
   gdName
   gdPath
@@ -177,7 +175,7 @@ export const ToggleGalleryDirVisibleDocument = `
     mutation ToggleGalleryDirVisible($id: BigInt!, $visible: Boolean!) {
   updateGalerieDir(input: {gdId: $id, patch: {gdHidden: $visible}}) {
     galerieDir {
-      gdId
+      id: gdId
     }
   }
 }
@@ -197,7 +195,9 @@ useToggleGalleryDirVisibleMutation.fetcher = (variables: ToggleGalleryDirVisible
 export const CreateGalleryDirDocument = `
     mutation CreateGalleryDir($input: GalerieDirInput!) {
   createGalerieDir(input: {galerieDir: $input}) {
-    __typename
+    galerieDir {
+      id: gdId
+    }
   }
 }
     `;
@@ -278,7 +278,9 @@ useGalleryPhotoQuery.fetcher = (variables: GalleryPhotoQueryVariables, options?:
 export const CreateGalleryPhotoDocument = `
     mutation CreateGalleryPhoto($input: GalerieFotoInput!) {
   createGalerieFoto(input: {galerieFoto: $input}) {
-    __typename
+    galerieFoto {
+      id: gfId
+    }
   }
 }
     `;

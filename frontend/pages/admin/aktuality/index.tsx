@@ -36,7 +36,6 @@ export default function ArticleAdminList() {
       pagination
       paginationMode="server"
       autoHeight={true}
-      getRowId={row => row.atId}
       rows={data?.aktualities?.nodes || []}
       columns={[
         {

@@ -68,7 +68,7 @@ export const MyLessonsList: React.FC = () => {
       <Card className="grid mx-auto w-72 rounded-xl border-stone-200 border">
         {lessons.map((lesson, i) => (
           <LessonButton
-            showTrainer={lesson.rozpiByRiIdRodic?.rTrener !== user?.uId}
+            showTrainer={lesson.rozpiByRiIdRodic?.rTrener !== user?.id}
             key={i} schedule={lesson.rozpiByRiIdRodic!} lesson={lesson}
           />
         ))}

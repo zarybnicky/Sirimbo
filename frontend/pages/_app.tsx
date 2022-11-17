@@ -19,12 +19,18 @@ import { Tracking } from "components/Tracking";
 import { ToastContainer } from 'react-toastify';
 import { ConfirmProvider } from 'components/Confirm';
 import { NextPage } from "next";
+import dynamic from "next/dynamic";
 
 Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
 
-const withProviders = (children: React.ReactNode, pageProps: AppProps['pageProps']) => {
+const ReactQueryDevtools = dynamic(
+  () => import('@tanstack/react-query-devtools').then(x => x.ReactQueryDevtools),
+  { ssr: false },
+);
+
+const WithProviders = (children: React.ReactNode, pageProps: AppProps['pageProps']) => {
   const queryClientRef = React.useRef<QueryClient>()
   if (!queryClientRef.current) {
     queryClientRef.current = new QueryClient({
@@ -46,8 +52,10 @@ const withProviders = (children: React.ReactNode, pageProps: AppProps['pageProps
       })
     };
   }
+
   return (
     <QueryClientProvider client={queryClientRef.current}>
+      {process.env.NODE_ENV === "development" && <ReactQueryDevtools initialIsOpen={false} />}
       <Hydrate state={pageProps.dehydratedState}>
         <ProvideAuth>
           <ProvideMeta>
@@ -72,11 +80,11 @@ type AppPropsWithLayout = AppProps & {
 }
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const defaultLayout = (page: React.ReactElement) => (
-    <Layout showTopMenu>{page}</Layout>
+    <Layout withBleeds showTopMenu>{page}</Layout>
   );
   const getLayout = Component.getLayout ?? defaultLayout;
 
-  return withProviders(getLayout(<Component {...pageProps} />), pageProps);
+  return WithProviders(getLayout(<Component {...pageProps} />), pageProps);
 }
 
 export function reportWebVitals({ id, name, label, value }: NextWebVitalsMetric) {

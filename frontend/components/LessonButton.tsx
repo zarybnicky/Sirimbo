@@ -65,7 +65,7 @@ export const LessonButton = ({ schedule, lesson, showTrainer }: {
           )}>
             <div className="text-stone-600">{lesson.riOd.substring(0, 5)}</div>
             <div className="grow">{perms.canSignUp(schedule, lesson) ? "VOLNÁ" : lesson.paryByRiPartner ? name : '-'}</div>
-            <div className="text-stone-600">{duration}'</div>
+            <div className="text-stone-600">{duration}&apos;</div>
           </div>
         </PopoverPrimitive.Trigger>
         <PopoverPrimitive.Content

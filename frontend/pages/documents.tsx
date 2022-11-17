@@ -25,13 +25,12 @@ export default function FileListPage() {
     <DataGrid
       pageSize={20}
       autoHeight={true}
-      getRowId={row => row.dId}
       rows={data?.dokumenties?.nodes || []}
       columns={[
         {
           field: 'dName', headerName: 'Soubor', flex: 1,
           renderCell: ({ row }) => (
-            <a target="_blank" rel="noreferrer" href={`/old/member/download?id=${row.dId}`}>{row.dName}</a>
+            <a target="_blank" rel="noreferrer" href={`/old/member/download?id=${row.id}`}>{row.dName}</a>
           ),
         },
         {

@@ -38,7 +38,6 @@ export default function RozpisAdminList() {
       pagination
       paginationMode="server"
       autoHeight={true}
-      getRowId={row => row.rId}
       rows={data?.rozpis?.nodes || []}
       columns={[
         {
@@ -76,7 +75,7 @@ export default function RozpisAdminList() {
           field: 'visible', headerName: 'Viditelný', flex: 1,
           renderCell: ({ row }) => (
             <Checkbox checked={row.rVisible || false} onChange={() => toggleVisible({
-              id: row.rId, visible: !row.rVisible,
+              id: row.id, visible: !row.rVisible,
             })} />
           ),
         },

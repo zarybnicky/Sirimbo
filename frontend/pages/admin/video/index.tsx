@@ -21,7 +21,6 @@ export default function VideoList() {
 
     <DataGrid
       autoHeight={true}
-      getRowId={row => row.vId}
       rows={data?.videos?.nodes || []}
       columns={[
         {

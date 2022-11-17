@@ -37,7 +37,7 @@ export const PaymentItemForm: React.FC<{
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     if (data) {
-      await doUpdate({ id: data.piId, patch: values });
+      await doUpdate({ id: data.id, patch: values });
     } else {
       await doCreate({ input: { ...values } });
     }
@@ -51,13 +51,13 @@ export const PaymentItemForm: React.FC<{
       <SelectElement
         control={control} name="piIdUser" label="Uživatel" required
         options={(users?.users?.nodes || []).map(x => ({
-          id: x.uId, label: `${x.uId.padStart(6, '0')} - ${x.uJmeno} ${x.uPrijmeni}`
+          id: x.id, label: `${x.id.padStart(6, '0')} - ${x.uJmeno} ${x.uPrijmeni}`
         }))}
       />
       <SelectElement
         control={control} name="piIdUser" label="Uživatel" required
         options={(categories?.platbyCategories?.nodes || []).map(x => ({
-          id: x.pcId, label: `${x.pcId} - ${x.pcName}`
+          id: x.id, label: `${x.id} - ${x.pcName}`
         }))}
       />
       <TextFieldElement control={control} name="piPrefix" label="Prefix (rok)" required />

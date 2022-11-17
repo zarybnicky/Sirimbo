@@ -9,14 +9,14 @@ export type TitleVideosQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 export type TitleVideosQuery = { __typename?: 'Query', titleVideos: { __typename?: 'VideosConnection', nodes: Array<{ __typename?: 'Video', vTitle: string, vUri: string }> } | null };
 
-export type VideoSourceFragment = { __typename: 'VideoSource', vsId: string, vsTitle: string | null, vsUrl: string, vsDescription: string | null, vsLastChecked: string | null, vsCreatedAt: string };
+export type VideoSourceFragment = { __typename: 'VideoSource', vsTitle: string | null, vsUrl: string, vsDescription: string | null, vsLastChecked: string | null, vsCreatedAt: string, id: string };
 
 export type VideoSourceQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
 }>;
 
 
-export type VideoSourceQuery = { __typename?: 'Query', videoSource: { __typename: 'VideoSource', vsId: string, vsTitle: string | null, vsUrl: string, vsDescription: string | null, vsLastChecked: string | null, vsCreatedAt: string } | null };
+export type VideoSourceQuery = { __typename?: 'Query', videoSource: { __typename: 'VideoSource', vsTitle: string | null, vsUrl: string, vsDescription: string | null, vsLastChecked: string | null, vsCreatedAt: string, id: string } | null };
 
 export type VideoSourceListQueryVariables = Types.Exact<{
   limit?: Types.InputMaybe<Types.Scalars['Int']>;
@@ -24,14 +24,14 @@ export type VideoSourceListQueryVariables = Types.Exact<{
 }>;
 
 
-export type VideoSourceListQuery = { __typename?: 'Query', videoSources: { __typename?: 'VideoSourcesConnection', nodes: Array<{ __typename: 'VideoSource', vsId: string, vsTitle: string | null, vsUrl: string, vsDescription: string | null, vsLastChecked: string | null, vsCreatedAt: string }> } | null };
+export type VideoSourceListQuery = { __typename?: 'Query', videoSources: { __typename?: 'VideoSourcesConnection', nodes: Array<{ __typename: 'VideoSource', vsTitle: string | null, vsUrl: string, vsDescription: string | null, vsLastChecked: string | null, vsCreatedAt: string, id: string }> } | null };
 
 export type CreateVideoSourceMutationVariables = Types.Exact<{
   input: Types.VideoSourceInput;
 }>;
 
 
-export type CreateVideoSourceMutation = { __typename?: 'Mutation', createVideoSource: { __typename: 'CreateVideoSourcePayload' } | null };
+export type CreateVideoSourceMutation = { __typename?: 'Mutation', createVideoSource: { __typename?: 'CreateVideoSourcePayload', videoSource: { __typename?: 'VideoSource', id: string } | null } | null };
 
 export type UpdateVideoSourceMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -48,14 +48,14 @@ export type DeleteVideoSourceMutationVariables = Types.Exact<{
 
 export type DeleteVideoSourceMutation = { __typename?: 'Mutation', deleteVideoSource: { __typename: 'DeleteVideoSourcePayload' } | null };
 
-export type VideoFragment = { __typename: 'Video', vId: string, vAuthor: string, vPlaylist: string | null, vTitle: string, vDescription: string, vUri: string, vCreatedAt: string };
+export type VideoFragment = { __typename: 'Video', vAuthor: string, vPlaylist: string | null, vTitle: string, vDescription: string, vUri: string, vCreatedAt: string, id: string };
 
 export type VideoQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
 }>;
 
 
-export type VideoQuery = { __typename?: 'Query', video: { __typename: 'Video', vId: string, vAuthor: string, vPlaylist: string | null, vTitle: string, vDescription: string, vUri: string, vCreatedAt: string } | null };
+export type VideoQuery = { __typename?: 'Query', video: { __typename: 'Video', vAuthor: string, vPlaylist: string | null, vTitle: string, vDescription: string, vUri: string, vCreatedAt: string, id: string } | null };
 
 export type VideoListQueryVariables = Types.Exact<{
   limit?: Types.InputMaybe<Types.Scalars['Int']>;
@@ -63,14 +63,14 @@ export type VideoListQueryVariables = Types.Exact<{
 }>;
 
 
-export type VideoListQuery = { __typename?: 'Query', videos: { __typename?: 'VideosConnection', nodes: Array<{ __typename: 'Video', vId: string, vAuthor: string, vPlaylist: string | null, vTitle: string, vDescription: string, vUri: string, vCreatedAt: string }> } | null };
+export type VideoListQuery = { __typename?: 'Query', videos: { __typename?: 'VideosConnection', nodes: Array<{ __typename: 'Video', vAuthor: string, vPlaylist: string | null, vTitle: string, vDescription: string, vUri: string, vCreatedAt: string, id: string }> } | null };
 
 export type CreateVideoMutationVariables = Types.Exact<{
   input: Types.VideoInput;
 }>;
 
 
-export type CreateVideoMutation = { __typename?: 'Mutation', createVideo: { __typename: 'CreateVideoPayload' } | null };
+export type CreateVideoMutation = { __typename?: 'Mutation', createVideo: { __typename?: 'CreateVideoPayload', video: { __typename?: 'Video', id: string } | null } | null };
 
 export type UpdateVideoMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -90,7 +90,7 @@ export type DeleteVideoMutation = { __typename?: 'Mutation', deleteVideo: { __ty
 export const VideoSourceFragmentDoc = `
     fragment VideoSource on VideoSource {
   __typename
-  vsId
+  id: vsId
   vsTitle
   vsUrl
   vsDescription
@@ -101,7 +101,7 @@ export const VideoSourceFragmentDoc = `
 export const VideoFragmentDoc = `
     fragment Video on Video {
   __typename
-  vId
+  id: vId
   vAuthor
   vPlaylist
   vTitle
@@ -190,7 +190,9 @@ useVideoSourceListQuery.fetcher = (variables?: VideoSourceListQueryVariables, op
 export const CreateVideoSourceDocument = `
     mutation CreateVideoSource($input: VideoSourceInput!) {
   createVideoSource(input: {videoSource: $input}) {
-    __typename
+    videoSource {
+      id: vsId
+    }
   }
 }
     `;
@@ -297,7 +299,9 @@ useVideoListQuery.fetcher = (variables?: VideoListQueryVariables, options?: Requ
 export const CreateVideoDocument = `
     mutation CreateVideo($input: VideoInput!) {
   createVideo(input: {video: $input}) {
-    __typename
+    video {
+      id: vId
+    }
   }
 }
     `;

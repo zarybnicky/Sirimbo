@@ -24,18 +24,20 @@ export const HomePage = ({ }) => {
 
     <CallToAction />
 
-    <div className="container mx-auto max-w-5xl" style={{ margin: '3rem auto' }}>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-        <div>
+    <div className="col-popout my-12">
+      <div className="flex flex-wrap md:flex-nowrap gap-2">
+        <div className="basis-1/2">
           <h4 className="text-lg font-bold mb-2">Aktuálně</h4>
           <div className="grid gap-2 grid-cols-1 md:grid-cols-2">
             {articles.map((x, i) => <ArticleCard key={i} item={x} />)}
           </div>
         </div>
 
-        <div className="grid gap-2">
+        <div className="basis-1/2">
           <h4 className="text-lg font-bold mb-2">Videa</h4>
-          {videos.map((x, i) => <VideoCard key={i} item={x} />)}
+          <div className="grid gap-1">
+            {videos.map((x, i) => <VideoCard key={i} item={x} />)}
+          </div>
         </div>
       </div>
     </div>

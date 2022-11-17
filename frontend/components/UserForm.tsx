@@ -61,7 +61,7 @@ export const UserForm: React.FC<{
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     if (data) {
-      await doUpdate({ id: data.uId, patch: values });
+      await doUpdate({ id: data.id, patch: values });
     } else {
       await doCreate({
         input: {
@@ -131,7 +131,7 @@ export const UserForm: React.FC<{
       <div className="col-full grid gap-2">
         <SelectElement control={control}
           label="Tréninková skupina" name="uSkupina"
-          options={cohorts?.skupinies?.nodes?.map(x => ({ id: x.sId, label: x.sName })) || []}
+          options={cohorts?.skupinies?.nodes?.map(x => ({ id: x.id, label: x.sName })) || []}
         />
 
         <TextAreaElement control={control} name="uPoznamky" label="Poznámka" rows={3} required />
@@ -146,7 +146,7 @@ export const UserForm: React.FC<{
         <SelectElement
           control={control}
           label="Uživatelská role" name="uGroup"
-          options={roles?.permissions?.nodes?.map(x => ({ id: x.peId, label: x.peName })) || []}
+          options={roles?.permissions?.nodes?.map(x => ({ id: x.id, label: x.peName })) || []}
         />
 
         <CheckboxElement control={control} name="uBan" value="1" label="Neaktivní uživatel (ban)" />

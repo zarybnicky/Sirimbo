@@ -19,7 +19,6 @@ export default function PermissionAdminList() {
     <Button href="/admin/permissions/add">Nová role</Button>
     <DataGrid
       autoHeight={true}
-      getRowId={row => row.peId}
       rows={data?.permissions?.nodes || []}
       columns={[
         {

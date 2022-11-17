@@ -1,22 +1,22 @@
 fragment ReservationItem on NabidkaItem {
   __typename
-  niId
+  id: niId
   niPartner
   niPocetHod
   niLock
   paryByNiPartner {
-    pId
+    id: pId
     userByPIdPartner {
       uJmeno
       uPrijmeni
-      uId
+      id: uId
     }
   }
 }
 
 fragment Reservation on Nabidka {
   __typename
-  nId
+  id: nId
   nOd
   nDo
   nPocetHod
@@ -33,7 +33,7 @@ fragment Reservation on Nabidka {
   userByNTrener {
     uJmeno
     uPrijmeni
-    uId
+    id: uId
   }
 }
 
@@ -63,14 +63,16 @@ query ReservationRange($startDate: Date!, $endDate: Date!) {
 mutation ToggleReservationVisible($id: BigInt!, $visible: Boolean!) {
   updateNabidka(input: {nId: $id, patch: {nVisible: $visible}}) {
     nabidka {
-      nId
+      id: nId
     }
   }
 }
 
 mutation CreateReservation($input: NabidkaInput!) {
   createNabidka(input: {nabidka: $input}) {
-    __typename
+    nabidka {
+      id: nId
+    }
   }
 }
 

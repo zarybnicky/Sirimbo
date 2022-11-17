@@ -1,7 +1,7 @@
 fragment ScheduleBasic on Rozpi {
   __typename
   rDatum
-  rId
+  id: rId
   rKde
   rLock
   rTrener
@@ -17,18 +17,18 @@ fragment ScheduleItemBasic on RozpisItem {
   __typename
   riOd
   riDo
-  riId
+  id: riId
   riLock
   riPartner
   paryByRiPartner {
-    pId
+    id: pId
     userByPIdPartner {
       uJmeno
-      uId
+      id: uId
       uPrijmeni
     }
     userByPIdPartnerka {
-      uId
+      id: uId
       uJmeno
       uPrijmeni
     }
@@ -90,14 +90,16 @@ query Schedule($id: BigInt!) {
 mutation ToggleScheduleVisible($id: BigInt!, $visible: Boolean!) {
   updateRozpi(input: {rId: $id, patch: {rVisible: $visible}}) {
     rozpi {
-      rId
+      id: rId
     }
   }
 }
 
 mutation CreateSchedule($input: RozpiInput!) {
   createRozpi(input: {rozpi: $input}) {
-    __typename
+    rozpi {
+      id: rId
+    }
   }
 }
 

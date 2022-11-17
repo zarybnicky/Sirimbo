@@ -1,12 +1,12 @@
 fragment Role on Permission {
   __typename
+  id: peId
   peAkce
   peAnkety
   peAktuality
   peDescription
   peDokumenty
   peGalerie
-  peId
   peKonzole
   peInzerce
   peNabidka
@@ -40,7 +40,7 @@ query Role($id: BigInt!) {
 mutation CreateRole($input: PermissionInput!) {
   createPermission(input: {permission: $input}) {
     permission {
-      peId
+      id: peId
     }
   }
 }

@@ -17,8 +17,8 @@ const ReservationView = (x: ReservationFragment) => {
               align="center"
               button={<img alt="Upravit" width="16" src="/style/icon-gear.png" />}
               options={[
-                { title: "Upravit", href: `/admin/nabidka/edit/${x.nId}` },
-                { title: "Upravit rezervace", href: `/admin/nabidka/detail/${x.nId}` },
+                { title: "Upravit", href: `/admin/nabidka/edit/${x.id}` },
+                { title: "Upravit rezervace", href: `/admin/nabidka/detail/${x.id}` },
               ]}
             />
           )}
@@ -61,13 +61,13 @@ export function ReservationSelect() {
   const { data: reservations } = useReservationListQuery({ limit: 30, offset: 0 });
   const [reservation, setReservation] = React.useState<ReservationFragment | undefined>();
   const onChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setReservation(reservations?.nabidkas?.nodes?.find(x => x.nId === event.target.value));
+    setReservation(reservations?.nabidkas?.nodes?.find(x => x.id === event.target.value));
   };
 
   return <>
-    <select value={reservation?.nId || 'none'} onChange={onChange}>
+    <select value={reservation?.id || 'none'} onChange={onChange}>
       <option value='none'> --vyberte nabídku-- </option>
-      {reservations?.nabidkas?.nodes?.map(x => <option value={x.nId} key={x.nId}>
+      {reservations?.nabidkas?.nodes?.map(x => <option value={x.id} key={x.id}>
         <DateRange from={x.nOd} to={x.nDo} />
         {` - ${x.userByNTrener?.uJmeno} ${x.userByNTrener?.uPrijmeni}`}
       </option>)}

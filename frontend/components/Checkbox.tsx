@@ -17,7 +17,7 @@ export function Checkbox({ name, className, label, error, helperText, parseError
 } & Extras & Omit<React.HTMLProps<HTMLInputElement>, 'label'>) {
   const parsedHelperText = !error ? helperText : parseError ? parseError(error) : error.message;
   return (
-    <div className={`relative flex items-start ${className}`}>
+    <div className={`relative flex items-start my-2 ${className}`}>
       <div className="flex items-center h-5">
         <input
           id={name} name={name} type="checkbox" {...props}

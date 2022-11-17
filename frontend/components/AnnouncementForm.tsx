@@ -27,7 +27,7 @@ export const AnnouncementForm: React.FC<{
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     if (data) {
-      await doUpdate({ id: data.upId, patch: values });
+      await doUpdate({ id: data.id, patch: values });
     } else {
       await doCreate({ input: values });
     }

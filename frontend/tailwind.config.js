@@ -68,6 +68,10 @@ module.exports = {
       },
       gridColumn: {
         'full': '1 / -1',
+        'content': 'content',
+        'feature': 'feature',
+        'popout': 'popout',
+        'full-width': 'full',
       },
       backgroundImage: {
         'red-black-red': 'linear-gradient(90deg, rgba(216,28,58,.8) 0%, rgba(0,0,0,0.8) 50%, rgba(216,28,58,.8) 100%)'

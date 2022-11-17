@@ -4,14 +4,14 @@ import * as Types from './index';
 
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
-export type ArticleFragment = { __typename: 'Aktuality', atId: string, atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null };
+export type ArticleFragment = { __typename: 'Aktuality', atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, id: string, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null };
 
 export type ArticleQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
 }>;
 
 
-export type ArticleQuery = { __typename?: 'Query', aktuality: { __typename: 'Aktuality', atId: string, atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null } | null };
+export type ArticleQuery = { __typename?: 'Query', aktuality: { __typename: 'Aktuality', atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, id: string, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null } | null };
 
 export type ArticlesQueryVariables = Types.Exact<{
   limit?: Types.InputMaybe<Types.Scalars['Int']>;
@@ -19,14 +19,14 @@ export type ArticlesQueryVariables = Types.Exact<{
 }>;
 
 
-export type ArticlesQuery = { __typename?: 'Query', aktualities: { __typename?: 'AktualitiesConnection', totalCount: number, nodes: Array<{ __typename: 'Aktuality', atId: string, atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null }> } | null };
+export type ArticlesQuery = { __typename?: 'Query', aktualities: { __typename?: 'AktualitiesConnection', totalCount: number, nodes: Array<{ __typename: 'Aktuality', atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, id: string, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null }> } | null };
 
 export type CreateArticleMutationVariables = Types.Exact<{
   input: Types.AktualityInput;
 }>;
 
 
-export type CreateArticleMutation = { __typename?: 'Mutation', createAktuality: { __typename: 'CreateAktualityPayload' } | null };
+export type CreateArticleMutation = { __typename?: 'Mutation', createAktuality: { __typename?: 'CreateAktualityPayload', aktuality: { __typename?: 'Aktuality', id: string } | null } | null };
 
 export type UpdateArticleMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -46,7 +46,7 @@ export type DeleteArticleMutation = { __typename?: 'Mutation', deleteAktuality: 
 export const ArticleFragmentDoc = `
     fragment Article on Aktuality {
   __typename
-  atId
+  id: atId
   atPreview
   atJmeno
   atText
@@ -113,7 +113,9 @@ useArticlesQuery.fetcher = (variables?: ArticlesQueryVariables, options?: Reques
 export const CreateArticleDocument = `
     mutation CreateArticle($input: AktualityInput!) {
   createAktuality(input: {aktuality: $input}) {
-    __typename
+    aktuality {
+      id: atId
+    }
   }
 }
     `;

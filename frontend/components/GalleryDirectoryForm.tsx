@@ -31,9 +31,9 @@ export const GalleryDirForm: React.FC<{
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     if (data) {
-      await doUpdate({ id: data.gdId, patch: values });
+      await doUpdate({ id: data.id, patch: values });
     } else {
-      const parent = dirs?.galerieDirs?.nodes.find(x => x.gdId === values.gdIdRodic);
+      const parent = dirs?.galerieDirs?.nodes.find(x => x.id === values.gdIdRodic);
       await doCreate({ input: { ...values, gdPath: parent?.gdPath + '/' + slugify(values.gdName) } });
     }
   });
@@ -45,7 +45,7 @@ export const GalleryDirForm: React.FC<{
       <SelectElement
         control={control} name="gdIdRodic" label="Rodičovská složka" required
         options={(dirs?.galerieDirs?.nodes || []).map(x => ({
-          id: x.gdId,
+          id: x.id,
           label: '\xa0'.repeat(x.gdLevel - 1) + x.gdName,
         }))}
       />

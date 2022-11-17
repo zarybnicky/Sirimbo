@@ -15,7 +15,7 @@ export const useArticles = (limit: number, offset: number): {
   const { data } = useArticlesQuery({ limit, offset });
   return {
     articles: (data?.aktualities?.nodes || []).map(x => ({
-      href: `/aktualne/${x.atId}`,
+      href: `/articles/${x.id}`,
       img: `/galerie/${x.galerieFotoByAtFotoMain?.gfPath}`,
       imgThumb: `/galerie/thumbnails/${x.galerieFotoByAtFotoMain?.gfPath}`,
       header: x.atJmeno,

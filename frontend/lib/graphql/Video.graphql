@@ -11,7 +11,7 @@ query TitleVideos {
 
 fragment VideoSource on VideoSource {
   __typename
-  vsId
+  id: vsId
   vsTitle
   vsUrl
   vsDescription
@@ -35,7 +35,9 @@ query VideoSourceList($limit: Int, $offset: Int) {
 
 mutation CreateVideoSource($input: VideoSourceInput!) {
   createVideoSource(input: {videoSource: $input}) {
-    __typename
+    videoSource {
+      id: vsId
+    }
   }
 }
 
@@ -54,7 +56,7 @@ mutation DeleteVideoSource($id: BigInt!) {
 
 fragment Video on Video {
   __typename
-  vId
+  id: vId
   vAuthor
   vPlaylist
   vTitle
@@ -79,7 +81,9 @@ query VideoList($limit: Int, $offset: Int) {
 
 mutation CreateVideo($input: VideoInput!) {
   createVideo(input: {video: $input}) {
-    __typename
+    video {
+      id: vId
+    }
   }
 }
 

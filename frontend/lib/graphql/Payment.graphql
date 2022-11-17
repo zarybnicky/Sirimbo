@@ -1,6 +1,6 @@
 fragment PaymentGroup on PlatbyGroup {
   __typename
-  pgId
+  id: pgId
   pgName
   pgType
   pgDescription
@@ -24,7 +24,9 @@ query PaymentGroup($id: BigInt!) {
 
 mutation CreatePaymentGroup($input: PlatbyGroupInput!) {
   createPlatbyGroup(input: {platbyGroup: $input}) {
-    __typename
+    platbyGroup {
+      id: pgId
+    }
   }
 }
 
@@ -43,7 +45,7 @@ mutation DeletePaymentGroup($id: BigInt!) {
 
 fragment PaymentItem on PlatbyItem {
   __typename
-  piId
+  id: piId
   piIdCategory
   piIdRaw
   piIdUser
@@ -78,7 +80,9 @@ query PaymentItem($id: BigInt!) {
 
 mutation CreatePaymentItem($input: PlatbyItemInput!) {
   createPlatbyItem(input: {platbyItem: $input}) {
-    __typename
+    platbyItem {
+      id: piId
+    }
   }
 }
 
@@ -97,7 +101,7 @@ mutation DeletePaymentItem($id: BigInt!) {
 
 fragment PaymentCategory on PlatbyCategory {
   __typename
-  pcId
+  id: pcId
   pcName
   pcSymbol
   pcAmount
@@ -127,7 +131,9 @@ query PaymentCategory($id: BigInt!) {
 
 mutation CreatePaymentCategory($input: PlatbyCategoryInput!) {
   createPlatbyCategory(input: {platbyCategory: $input}) {
-    __typename
+    platbyCategory {
+      id: pcId
+    }
   }
 }
 

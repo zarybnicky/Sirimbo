@@ -4,26 +4,26 @@ import * as Types from './index';
 
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
-export type PaymentGroupFragment = { __typename: 'PlatbyGroup', pgId: string, pgName: string, pgType: any, pgDescription: string, pgBase: string };
+export type PaymentGroupFragment = { __typename: 'PlatbyGroup', pgName: string, pgType: any, pgDescription: string, pgBase: string, id: string };
 
 export type PaymentGroupListQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type PaymentGroupListQuery = { __typename?: 'Query', platbyGroups: { __typename?: 'PlatbyGroupsConnection', totalCount: number, nodes: Array<{ __typename: 'PlatbyGroup', pgId: string, pgName: string, pgType: any, pgDescription: string, pgBase: string }> } | null };
+export type PaymentGroupListQuery = { __typename?: 'Query', platbyGroups: { __typename?: 'PlatbyGroupsConnection', totalCount: number, nodes: Array<{ __typename: 'PlatbyGroup', pgName: string, pgType: any, pgDescription: string, pgBase: string, id: string }> } | null };
 
 export type PaymentGroupQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
 }>;
 
 
-export type PaymentGroupQuery = { __typename?: 'Query', platbyGroup: { __typename: 'PlatbyGroup', pgId: string, pgName: string, pgType: any, pgDescription: string, pgBase: string } | null };
+export type PaymentGroupQuery = { __typename?: 'Query', platbyGroup: { __typename: 'PlatbyGroup', pgName: string, pgType: any, pgDescription: string, pgBase: string, id: string } | null };
 
 export type CreatePaymentGroupMutationVariables = Types.Exact<{
   input: Types.PlatbyGroupInput;
 }>;
 
 
-export type CreatePaymentGroupMutation = { __typename?: 'Mutation', createPlatbyGroup: { __typename: 'CreatePlatbyGroupPayload' } | null };
+export type CreatePaymentGroupMutation = { __typename?: 'Mutation', createPlatbyGroup: { __typename?: 'CreatePlatbyGroupPayload', platbyGroup: { __typename?: 'PlatbyGroup', id: string } | null } | null };
 
 export type UpdatePaymentGroupMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -40,26 +40,26 @@ export type DeletePaymentGroupMutationVariables = Types.Exact<{
 
 export type DeletePaymentGroupMutation = { __typename?: 'Mutation', deletePlatbyGroup: { __typename: 'DeletePlatbyGroupPayload' } | null };
 
-export type PaymentItemFragment = { __typename: 'PlatbyItem', piId: string, piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, userByPiIdUser: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcId: string, pcName: string } | null };
+export type PaymentItemFragment = { __typename: 'PlatbyItem', piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, id: string, userByPiIdUser: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcId: string, pcName: string } | null };
 
 export type PaymentItemListQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type PaymentItemListQuery = { __typename?: 'Query', platbyItems: { __typename?: 'PlatbyItemsConnection', totalCount: number, nodes: Array<{ __typename: 'PlatbyItem', piId: string, piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, userByPiIdUser: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcId: string, pcName: string } | null }> } | null };
+export type PaymentItemListQuery = { __typename?: 'Query', platbyItems: { __typename?: 'PlatbyItemsConnection', totalCount: number, nodes: Array<{ __typename: 'PlatbyItem', piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, id: string, userByPiIdUser: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcId: string, pcName: string } | null }> } | null };
 
 export type PaymentItemQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
 }>;
 
 
-export type PaymentItemQuery = { __typename?: 'Query', platbyItem: { __typename: 'PlatbyItem', piId: string, piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, userByPiIdUser: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcId: string, pcName: string } | null } | null };
+export type PaymentItemQuery = { __typename?: 'Query', platbyItem: { __typename: 'PlatbyItem', piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, id: string, userByPiIdUser: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcId: string, pcName: string } | null } | null };
 
 export type CreatePaymentItemMutationVariables = Types.Exact<{
   input: Types.PlatbyItemInput;
 }>;
 
 
-export type CreatePaymentItemMutation = { __typename?: 'Mutation', createPlatbyItem: { __typename: 'CreatePlatbyItemPayload' } | null };
+export type CreatePaymentItemMutation = { __typename?: 'Mutation', createPlatbyItem: { __typename?: 'CreatePlatbyItemPayload', platbyItem: { __typename?: 'PlatbyItem', id: string } | null } | null };
 
 export type UpdatePaymentItemMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -76,26 +76,26 @@ export type DeletePaymentItemMutationVariables = Types.Exact<{
 
 export type DeletePaymentItemMutation = { __typename?: 'Mutation', deletePlatbyItem: { __typename: 'DeletePlatbyItemPayload' } | null };
 
-export type PaymentCategoryFragment = { __typename: 'PlatbyCategory', pcId: string, pcName: string, pcSymbol: string, pcAmount: any, pcDateDue: string, pcValidFrom: string, pcValidTo: string, pcUsePrefix: boolean, pcUseBase: boolean, pcArchive: boolean, pcVisible: boolean };
+export type PaymentCategoryFragment = { __typename: 'PlatbyCategory', pcName: string, pcSymbol: string, pcAmount: any, pcDateDue: string, pcValidFrom: string, pcValidTo: string, pcUsePrefix: boolean, pcUseBase: boolean, pcArchive: boolean, pcVisible: boolean, id: string };
 
 export type PaymentCategoryListQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type PaymentCategoryListQuery = { __typename?: 'Query', platbyCategories: { __typename?: 'PlatbyCategoriesConnection', totalCount: number, nodes: Array<{ __typename: 'PlatbyCategory', pcId: string, pcName: string, pcSymbol: string, pcAmount: any, pcDateDue: string, pcValidFrom: string, pcValidTo: string, pcUsePrefix: boolean, pcUseBase: boolean, pcArchive: boolean, pcVisible: boolean }> } | null };
+export type PaymentCategoryListQuery = { __typename?: 'Query', platbyCategories: { __typename?: 'PlatbyCategoriesConnection', totalCount: number, nodes: Array<{ __typename: 'PlatbyCategory', pcName: string, pcSymbol: string, pcAmount: any, pcDateDue: string, pcValidFrom: string, pcValidTo: string, pcUsePrefix: boolean, pcUseBase: boolean, pcArchive: boolean, pcVisible: boolean, id: string }> } | null };
 
 export type PaymentCategoryQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
 }>;
 
 
-export type PaymentCategoryQuery = { __typename?: 'Query', platbyCategory: { __typename: 'PlatbyCategory', pcId: string, pcName: string, pcSymbol: string, pcAmount: any, pcDateDue: string, pcValidFrom: string, pcValidTo: string, pcUsePrefix: boolean, pcUseBase: boolean, pcArchive: boolean, pcVisible: boolean } | null };
+export type PaymentCategoryQuery = { __typename?: 'Query', platbyCategory: { __typename: 'PlatbyCategory', pcName: string, pcSymbol: string, pcAmount: any, pcDateDue: string, pcValidFrom: string, pcValidTo: string, pcUsePrefix: boolean, pcUseBase: boolean, pcArchive: boolean, pcVisible: boolean, id: string } | null };
 
 export type CreatePaymentCategoryMutationVariables = Types.Exact<{
   input: Types.PlatbyCategoryInput;
 }>;
 
 
-export type CreatePaymentCategoryMutation = { __typename?: 'Mutation', createPlatbyCategory: { __typename: 'CreatePlatbyCategoryPayload' } | null };
+export type CreatePaymentCategoryMutation = { __typename?: 'Mutation', createPlatbyCategory: { __typename?: 'CreatePlatbyCategoryPayload', platbyCategory: { __typename?: 'PlatbyCategory', id: string } | null } | null };
 
 export type UpdatePaymentCategoryMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -115,7 +115,7 @@ export type DeletePaymentCategoryMutation = { __typename?: 'Mutation', deletePla
 export const PaymentGroupFragmentDoc = `
     fragment PaymentGroup on PlatbyGroup {
   __typename
-  pgId
+  id: pgId
   pgName
   pgType
   pgDescription
@@ -125,7 +125,7 @@ export const PaymentGroupFragmentDoc = `
 export const PaymentItemFragmentDoc = `
     fragment PaymentItem on PlatbyItem {
   __typename
-  piId
+  id: piId
   piIdCategory
   piIdRaw
   piIdUser
@@ -146,7 +146,7 @@ export const PaymentItemFragmentDoc = `
 export const PaymentCategoryFragmentDoc = `
     fragment PaymentCategory on PlatbyCategory {
   __typename
-  pcId
+  id: pcId
   pcName
   pcSymbol
   pcAmount
@@ -213,7 +213,9 @@ usePaymentGroupQuery.fetcher = (variables: PaymentGroupQueryVariables, options?:
 export const CreatePaymentGroupDocument = `
     mutation CreatePaymentGroup($input: PlatbyGroupInput!) {
   createPlatbyGroup(input: {platbyGroup: $input}) {
-    __typename
+    platbyGroup {
+      id: pgId
+    }
   }
 }
     `;
@@ -321,7 +323,9 @@ usePaymentItemQuery.fetcher = (variables: PaymentItemQueryVariables, options?: R
 export const CreatePaymentItemDocument = `
     mutation CreatePaymentItem($input: PlatbyItemInput!) {
   createPlatbyItem(input: {platbyItem: $input}) {
-    __typename
+    platbyItem {
+      id: piId
+    }
   }
 }
     `;
@@ -429,7 +433,9 @@ usePaymentCategoryQuery.fetcher = (variables: PaymentCategoryQueryVariables, opt
 export const CreatePaymentCategoryDocument = `
     mutation CreatePaymentCategory($input: PlatbyCategoryInput!) {
   createPlatbyCategory(input: {platbyCategory: $input}) {
-    __typename
+    platbyCategory {
+      id: pcId
+    }
   }
 }
     `;

@@ -1,6 +1,6 @@
 fragment Article on Aktuality {
   __typename
-  atId
+  id: atId
   atPreview
   atJmeno
   atText
@@ -30,7 +30,9 @@ query Articles($limit: Int, $offset: Int) {
 
 mutation CreateArticle($input: AktualityInput!) {
   createAktuality(input: {aktuality: $input}) {
-    __typename
+    aktuality {
+      id: atId
+    }
   }
 }
 

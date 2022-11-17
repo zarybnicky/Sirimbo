@@ -33,7 +33,7 @@ export const PaymentCategoryForm: React.FC<{
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     if (data) {
-      await doUpdate({ id: data.pcId, patch: values });
+      await doUpdate({ id: data.id, patch: values });
     } else {
       await doCreate({ input: { ...values, pcUseBase: false } });
     }

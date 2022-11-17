@@ -106,7 +106,7 @@ export default function RegisterPage() {
           <div className="col-full md:col-span-2">
             <SelectElement control={control}
               label="Tréninková skupina" name="skupina"
-              options={cohorts?.skupinies?.nodes?.map(x => ({ id: x.sId, label: x.sName })) || []}
+              options={cohorts?.skupinies?.nodes?.map(x => ({ id: x.id, label: x.sName })) || []}
             />
           </div>
 

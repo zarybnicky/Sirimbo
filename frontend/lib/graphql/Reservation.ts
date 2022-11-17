@@ -4,9 +4,9 @@ import * as Types from './index';
 
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
-export type ReservationItemFragment = { __typename: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null };
+export type ReservationItemFragment = { __typename: 'NabidkaItem', niPartner: string, niPocetHod: number, niLock: boolean, id: string, paryByNiPartner: { __typename?: 'Pary', id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null };
 
-export type ReservationFragment = { __typename: 'Nabidka', nId: string, nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null };
+export type ReservationFragment = { __typename: 'Nabidka', nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, id: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename: 'NabidkaItem', niPartner: string, niPocetHod: number, niLock: boolean, id: string, paryByNiPartner: { __typename?: 'Pary', id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null };
 
 export type ReservationListQueryVariables = Types.Exact<{
   limit?: Types.InputMaybe<Types.Scalars['Int']>;
@@ -14,14 +14,14 @@ export type ReservationListQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReservationListQuery = { __typename?: 'Query', nabidkas: { __typename?: 'NabidkasConnection', totalCount: number, nodes: Array<{ __typename: 'Nabidka', nId: string, nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null }> } | null };
+export type ReservationListQuery = { __typename?: 'Query', nabidkas: { __typename?: 'NabidkasConnection', totalCount: number, nodes: Array<{ __typename: 'Nabidka', nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, id: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename: 'NabidkaItem', niPartner: string, niPocetHod: number, niLock: boolean, id: string, paryByNiPartner: { __typename?: 'Pary', id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null }> } | null };
 
 export type ReservationQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
 }>;
 
 
-export type ReservationQuery = { __typename?: 'Query', nabidka: { __typename: 'Nabidka', nId: string, nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null };
+export type ReservationQuery = { __typename?: 'Query', nabidka: { __typename: 'Nabidka', nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, id: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename: 'NabidkaItem', niPartner: string, niPocetHod: number, niLock: boolean, id: string, paryByNiPartner: { __typename?: 'Pary', id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null };
 
 export type ReservationRangeQueryVariables = Types.Exact<{
   startDate: Types.Scalars['Date'];
@@ -29,7 +29,7 @@ export type ReservationRangeQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReservationRangeQuery = { __typename?: 'Query', reservationsForRange: { __typename?: 'NabidkasConnection', nodes: Array<{ __typename: 'Nabidka', nId: string, nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename: 'NabidkaItem', niId: string, niPartner: string, niPocetHod: number, niLock: boolean, paryByNiPartner: { __typename?: 'Pary', pId: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: string } | null }> } | null };
+export type ReservationRangeQuery = { __typename?: 'Query', reservationsForRange: { __typename?: 'NabidkasConnection', nodes: Array<{ __typename: 'Nabidka', nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, id: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename: 'NabidkaItem', niPartner: string, niPocetHod: number, niLock: boolean, id: string, paryByNiPartner: { __typename?: 'Pary', id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null }> } | null };
 
 export type ToggleReservationVisibleMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -37,14 +37,14 @@ export type ToggleReservationVisibleMutationVariables = Types.Exact<{
 }>;
 
 
-export type ToggleReservationVisibleMutation = { __typename?: 'Mutation', updateNabidka: { __typename?: 'UpdateNabidkaPayload', nabidka: { __typename?: 'Nabidka', nId: string } | null } | null };
+export type ToggleReservationVisibleMutation = { __typename?: 'Mutation', updateNabidka: { __typename?: 'UpdateNabidkaPayload', nabidka: { __typename?: 'Nabidka', id: string } | null } | null };
 
 export type CreateReservationMutationVariables = Types.Exact<{
   input: Types.NabidkaInput;
 }>;
 
 
-export type CreateReservationMutation = { __typename?: 'Mutation', createNabidka: { __typename: 'CreateNabidkaPayload' } | null };
+export type CreateReservationMutation = { __typename?: 'Mutation', createNabidka: { __typename?: 'CreateNabidkaPayload', nabidka: { __typename?: 'Nabidka', id: string } | null } | null };
 
 export type UpdateReservationMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -64,16 +64,16 @@ export type DeleteReservationMutation = { __typename?: 'Mutation', deleteNabidka
 export const ReservationItemFragmentDoc = `
     fragment ReservationItem on NabidkaItem {
   __typename
-  niId
+  id: niId
   niPartner
   niPocetHod
   niLock
   paryByNiPartner {
-    pId
+    id: pId
     userByPIdPartner {
       uJmeno
       uPrijmeni
-      uId
+      id: uId
     }
   }
 }
@@ -81,7 +81,7 @@ export const ReservationItemFragmentDoc = `
 export const ReservationFragmentDoc = `
     fragment Reservation on Nabidka {
   __typename
-  nId
+  id: nId
   nOd
   nDo
   nPocetHod
@@ -98,7 +98,7 @@ export const ReservationFragmentDoc = `
   userByNTrener {
     uJmeno
     uPrijmeni
-    uId
+    id: uId
   }
 }
     ${ReservationItemFragmentDoc}`;
@@ -183,7 +183,7 @@ export const ToggleReservationVisibleDocument = `
     mutation ToggleReservationVisible($id: BigInt!, $visible: Boolean!) {
   updateNabidka(input: {nId: $id, patch: {nVisible: $visible}}) {
     nabidka {
-      nId
+      id: nId
     }
   }
 }
@@ -203,7 +203,9 @@ useToggleReservationVisibleMutation.fetcher = (variables: ToggleReservationVisib
 export const CreateReservationDocument = `
     mutation CreateReservation($input: NabidkaInput!) {
   createNabidka(input: {nabidka: $input}) {
-    __typename
+    nabidka {
+      id: nId
+    }
   }
 }
     `;

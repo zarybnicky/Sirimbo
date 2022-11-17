@@ -29,14 +29,14 @@ const UnconfirmedUser: React.FC<{
   const { mutateAsync: deleteUser } = useDeleteUserMutation();
 
   const onSubmit = React.useCallback(async (values) => {
-    await confirmUser({ id: item.uId, cohort: values.cohort, role: values.role });
+    await confirmUser({ id: item.id, cohort: values.cohort, role: values.role });
     onProcessed();
   }, [item, onProcessed, confirmUser]);
 
   const onDelete = React.useCallback(async () => {
     try {
       await confirm({ description: `Vymazat uživatele ${item.uLogin}?` })
-      await deleteUser({ id: item.uId });
+      await deleteUser({ id: item.id });
       onProcessed();
     } catch { }
   }, [item, confirm, deleteUser, onProcessed]);
@@ -66,11 +66,11 @@ const UnconfirmedUser: React.FC<{
         <div className="flex gap-2">
           <SelectElement
             required control={control} name="cohort" label="Tréninková skupina"
-            options={(cohorts?.skupinies?.nodes || []).map(item => ({ id: item.sId, label: item.sName }))}
+            options={(cohorts?.skupinies?.nodes || []).map(item => ({ id: item.id, label: item.sName }))}
           />
           <SelectElement
             required control={control} name="role" label="Role oprávnění"
-            options={(roles?.permissions?.nodes || []).map(item => ({ id: item.peId, label: item.peName }))}
+            options={(roles?.permissions?.nodes || []).map(item => ({ id: item.id, label: item.peName }))}
           />
         </div>
 

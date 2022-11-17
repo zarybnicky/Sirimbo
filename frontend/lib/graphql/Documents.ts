@@ -4,7 +4,7 @@ import * as Types from './index';
 
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
-export type FileFragment = { __typename: 'Dokumenty', dId: string, dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null };
+export type FileFragment = { __typename: 'Dokumenty', dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null, id: string };
 
 export type FileListQueryVariables = Types.Exact<{
   limit?: Types.InputMaybe<Types.Scalars['Int']>;
@@ -13,21 +13,21 @@ export type FileListQueryVariables = Types.Exact<{
 }>;
 
 
-export type FileListQuery = { __typename?: 'Query', dokumenties: { __typename?: 'DokumentiesConnection', totalCount: number, nodes: Array<{ __typename: 'Dokumenty', dId: string, dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null, userByDKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string } | null }> } | null };
+export type FileListQuery = { __typename?: 'Query', dokumenties: { __typename?: 'DokumentiesConnection', totalCount: number, nodes: Array<{ __typename: 'Dokumenty', dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null, id: string, userByDKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string } | null }> } | null };
 
 export type FileQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
 }>;
 
 
-export type FileQuery = { __typename?: 'Query', dokumenty: { __typename: 'Dokumenty', dId: string, dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null } | null };
+export type FileQuery = { __typename?: 'Query', dokumenty: { __typename: 'Dokumenty', dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null, id: string } | null };
 
 export type CreateFileMutationVariables = Types.Exact<{
   input: Types.DokumentyInput;
 }>;
 
 
-export type CreateFileMutation = { __typename?: 'Mutation', createDokumenty: { __typename: 'CreateDokumentyPayload' } | null };
+export type CreateFileMutation = { __typename?: 'Mutation', createDokumenty: { __typename?: 'CreateDokumentyPayload', dokumenty: { __typename?: 'Dokumenty', id: string } | null } | null };
 
 export type UpdateFileMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -47,7 +47,7 @@ export type DeleteFileMutation = { __typename?: 'Mutation', deleteDokumenty: { _
 export const FileFragmentDoc = `
     fragment File on Dokumenty {
   __typename
-  dId
+  id: dId
   dName
   dFilename
   dKategorie
@@ -117,7 +117,9 @@ useFileQuery.fetcher = (variables: FileQueryVariables, options?: RequestInit['he
 export const CreateFileDocument = `
     mutation CreateFile($input: DokumentyInput!) {
   createDokumenty(input: {dokumenty: $input}) {
-    __typename
+    dokumenty {
+      id: dId
+    }
   }
 }
     `;

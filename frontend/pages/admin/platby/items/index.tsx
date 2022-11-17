@@ -20,7 +20,6 @@ export default function PlatbyItemListPage() {
 
     <DataGrid
       autoHeight={true}
-      getRowId={row => row.piId}
       rows={data?.platbyItems?.nodes || []}
       columns={[
         {

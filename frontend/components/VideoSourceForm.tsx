@@ -28,7 +28,7 @@ export const VideoSourceForm: React.FC<{
     if (!data) {
       await doCreate({ input: values });
     } else {
-      await doUpdate({ id: data.vsId, patch: values });
+      await doUpdate({ id: data.id, patch: values });
     }
   });
 

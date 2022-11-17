@@ -35,7 +35,7 @@ export const VideoForm: React.FC<{
     if (!data) {
       await doCreate({ input: values });
     } else {
-      await doUpdate({ id: data.vId, patch: values });
+      await doUpdate({ id: data.id, patch: values });
     }
   });
 

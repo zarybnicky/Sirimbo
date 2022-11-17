@@ -4,26 +4,26 @@ import * as Types from './index';
 
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
-export type RoleFragment = { __typename: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number };
+export type RoleFragment = { __typename: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number, id: string };
 
 export type RoleListQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type RoleListQuery = { __typename?: 'Query', permissions: { __typename?: 'PermissionsConnection', totalCount: number, nodes: Array<{ __typename: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number }> } | null };
+export type RoleListQuery = { __typename?: 'Query', permissions: { __typename?: 'PermissionsConnection', totalCount: number, nodes: Array<{ __typename: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number, id: string }> } | null };
 
 export type RoleQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
 }>;
 
 
-export type RoleQuery = { __typename?: 'Query', permission: { __typename: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null };
+export type RoleQuery = { __typename?: 'Query', permission: { __typename: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number, id: string } | null };
 
 export type CreateRoleMutationVariables = Types.Exact<{
   input: Types.PermissionInput;
 }>;
 
 
-export type CreateRoleMutation = { __typename?: 'Mutation', createPermission: { __typename?: 'CreatePermissionPayload', permission: { __typename?: 'Permission', peId: string } | null } | null };
+export type CreateRoleMutation = { __typename?: 'Mutation', createPermission: { __typename?: 'CreatePermissionPayload', permission: { __typename?: 'Permission', id: string } | null } | null };
 
 export type UpdateRoleMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -43,13 +43,13 @@ export type DeleteRoleMutation = { __typename?: 'Mutation', deletePermission: { 
 export const RoleFragmentDoc = `
     fragment Role on Permission {
   __typename
+  id: peId
   peAkce
   peAnkety
   peAktuality
   peDescription
   peDokumenty
   peGalerie
-  peId
   peKonzole
   peInzerce
   peNabidka
@@ -120,7 +120,7 @@ export const CreateRoleDocument = `
     mutation CreateRole($input: PermissionInput!) {
   createPermission(input: {permission: $input}) {
     permission {
-      peId
+      id: peId
     }
   }
 }

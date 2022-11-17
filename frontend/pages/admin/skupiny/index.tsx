@@ -1,52 +1,29 @@
-import { useRouter } from 'next/router';
-import { useCohortListQuery, useDeleteCohortMutation } from "lib/graphql/Cohorts";
-import { useRequireUserLoggedIn } from "lib/route-guards";
-import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
-import { Edit as EditIcon } from 'react-feather';
-import { DeleteButton } from 'components/DeleteButton';
-import { Button } from 'components/Button';
+import { ListDetailView } from 'components/layout/LayoutWithList';
+import { Layout } from 'components/layout/Layout';
+import { GetServerSideProps } from 'next';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
+import { CohortsList } from 'components/CohortList';
 
 export default function CohortsPage() {
-  useRequireUserLoggedIn();
-  const router = useRouter();
-  const { data, refetch } = useCohortListQuery();
-  const { mutateAsync: doDelete } = useDeleteCohortMutation({
-    onSuccess: () => refetch(),
-  });
-
-  return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
-    <Button href="/admin/skupiny/add">Nová skupina</Button>
-
-    <DataGrid
-      autoHeight={true}
-      getRowId={row => row.sId}
-      rows={data?.skupinies?.nodes || []}
-      columns={[
-        {
-          field: 'actions',
-          type: 'actions',
-          getActions: ({ id }: GridRowParams) => [
-            <GridActionsCellItem key="edit"
-              icon={<EditIcon />}
-              onClick={() => router.push(`/admin/skupiny/edit/${id}`)}
-              label="Upravit"
-            />,
-            <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat skupinu" />,
-          ]
-        },
-        {
-          field: 'sName', headerName: 'Jméno', flex: 1,
-          renderCell: ({ row }) => <>
-            <div className="w-3.5 h-3.5" title={row.sDescription} style={{ backgroundColor: row.sColorRgb }} />
-            {' '}{row.sName}
-          </>,
-        },
-        { field: 'sLocation', headerName: 'Místo', flex: 1 },
-        {
-          field: 'sVisible', headerName: 'Viditelná', flex: 1,
-          valueFormatter: ({ value }) => value ? '' : 'skrytá',
-        },
-      ]}
-    />
-  </div>;
+  return null;
 }
+
+CohortsPage.getLayout = (page: React.ReactElement) => (
+  <Layout>
+    <ListDetailView list={<CohortsList />}>{page}</ListDetailView>
+  </Layout>
+);
+
+const queryClient = new QueryClient();
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  // get cookie
+  // is logged in
+  // load permissions
+  // has the correct permission?
+
+  // load cohorts
+  return {
+    props: { dehydratedState: dehydrate(queryClient) },
+  };
+};

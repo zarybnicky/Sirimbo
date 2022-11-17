@@ -1,5 +1,5 @@
 fragment User on User {
-  uId
+  id: uId
   uLogin
   uJmeno
   uPrijmeni
@@ -39,7 +39,7 @@ fragment UserAuth on User {
 }
 
 fragment CouplePartial on Pary {
-  pId
+  id: pId
   pIdPartner
   pIdPartnerka
   pArchiv
@@ -76,7 +76,7 @@ mutation Logout {
 mutation Register($input: CreateUserInput!) {
   createUser(input: $input) {
     user {
-      uId
+      id: uId
     }
   }
 }

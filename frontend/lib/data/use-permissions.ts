@@ -99,13 +99,13 @@ export const usePermissions = () => {
     },
     canEditSchedule(schedule: { rTrener: string }) {
       return (
-        (perms.peRozpis >= PermissionLevel.P_OWNED && user?.uId === schedule.rTrener) ||
+        (perms.peRozpis >= PermissionLevel.P_OWNED && user?.id === schedule.rTrener) ||
         perms.peRozpis >= PermissionLevel.P_ADMIN
       );
     },
     canEditReservation(reservation: { nTrener: string; }) {
       return (
-        (perms.peNabidka >= PermissionLevel.P_OWNED && user?.uId === reservation.nTrener) ||
+        (perms.peNabidka >= PermissionLevel.P_OWNED && user?.id === reservation.nTrener) ||
         perms.peNabidka >= PermissionLevel.P_ADMIN
       );
     },
@@ -118,8 +118,8 @@ export const usePermissions = () => {
     canSignOut(item: { rLock: boolean; rTrener: string; }, lesson: { riLock: boolean; riPartner: string | null; }) {
       return (
         (lesson.riPartner && lesson.riPartner !== '0') && !item.rLock && !lesson.riLock && (
-          (perms.peRozpis >= PermissionLevel.P_MEMBER && couple?.pId == lesson.riPartner) ||
-          (perms.peRozpis >= PermissionLevel.P_OWNED && user?.uId == item.rTrener) ||
+          (perms.peRozpis >= PermissionLevel.P_MEMBER && couple?.id == lesson.riPartner) ||
+          (perms.peRozpis >= PermissionLevel.P_OWNED && user?.id == item.rTrener) ||
           perms.peRozpis >= PermissionLevel.P_ADMIN
         )
       );
@@ -138,8 +138,8 @@ export const usePermissions = () => {
       lesson: { niLock: boolean; niPartner: string; }
     ) {
       return !item.nLock && !lesson.niLock && (
-        (perms.peNabidka >= PermissionLevel.P_MEMBER && couple?.pId == lesson.niPartner) ||
-        (perms.peNabidka >= PermissionLevel.P_OWNED && user?.uId == item.nTrener) ||
+        (perms.peNabidka >= PermissionLevel.P_MEMBER && couple?.id == lesson.niPartner) ||
+        (perms.peNabidka >= PermissionLevel.P_OWNED && user?.id == item.nTrener) ||
         perms.peNabidka >= PermissionLevel.P_ADMIN
       );
     },

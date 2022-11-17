@@ -5,16 +5,16 @@ import * as Types from './index';
 import { RoleFragmentDoc } from './Roles';
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
-export type UserFragment = { __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string };
+export type UserFragment = { __typename?: 'User', uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, id: string };
 
-export type UserAuthFragment = { __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, permissionByUGroup: { __typename: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null };
+export type UserAuthFragment = { __typename?: 'User', uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, id: string, permissionByUGroup: { __typename: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number, id: string } | null };
 
-export type CouplePartialFragment = { __typename?: 'Pary', pId: string, pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean };
+export type CouplePartialFragment = { __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean, id: string };
 
 export type CurrentUserQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type CurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, permissionByUGroup: { __typename: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null } | null };
+export type CurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'User', uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, id: string, permissionByUGroup: { __typename: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number, id: string } | null } | null };
 
 export type LoginMutationVariables = Types.Exact<{
   login: Types.Scalars['String'];
@@ -22,7 +22,7 @@ export type LoginMutationVariables = Types.Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginPayload', result: { __typename?: 'LoginRecord', usr: { __typename?: 'User', uId: string, uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, permissionByUGroup: { __typename: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: string, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null } | null, couple: { __typename?: 'Pary', pId: string, pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean } | null } | null } | null };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginPayload', result: { __typename?: 'LoginRecord', usr: { __typename?: 'User', uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, id: string, permissionByUGroup: { __typename: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number, id: string } | null } | null, couple: { __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean, id: string } | null } | null } | null };
 
 export type LogoutMutationVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -34,7 +34,7 @@ export type RegisterMutationVariables = Types.Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', createUser: { __typename?: 'CreateUserPayload', user: { __typename?: 'User', uId: string } | null } | null };
+export type RegisterMutation = { __typename?: 'Mutation', createUser: { __typename?: 'CreateUserPayload', user: { __typename?: 'User', id: string } | null } | null };
 
 export type ResetPasswordMutationVariables = Types.Exact<{
   input: Types.ResetPasswordInput;
@@ -45,7 +45,7 @@ export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword: { 
 
 export const UserFragmentDoc = `
     fragment User on User {
-  uId
+  id: uId
   uLogin
   uJmeno
   uPrijmeni
@@ -88,7 +88,7 @@ export const UserAuthFragmentDoc = `
 ${RoleFragmentDoc}`;
 export const CouplePartialFragmentDoc = `
     fragment CouplePartial on Pary {
-  pId
+  id: pId
   pIdPartner
   pIdPartnerka
   pArchiv
@@ -172,7 +172,7 @@ export const RegisterDocument = `
     mutation Register($input: CreateUserInput!) {
   createUser(input: $input) {
     user {
-      uId
+      id: uId
     }
   }
 }

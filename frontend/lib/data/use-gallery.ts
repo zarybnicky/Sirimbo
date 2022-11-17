@@ -26,9 +26,9 @@ export const useGallery = (dir: string): {
     const date = x.galerieFotosByGfIdRodic.nodes?.[0]?.gfTimestamp;
     const photo = x.galerieFotosByGfIdRodic.nodes?.[0]?.gfPath;
     return {
-      id: x.gdId,
+      id: x.id,
       name: x.gdName,
-      href: `/gallery/${x.gdId}`,
+      href: `/gallery/${x.id}`,
       date: date ? format(new Date(date), 'd. M. y') : '',
       img: decodeURIComponent(`/galerie/${photo}`),
       imgThumb: decodeURIComponent(`/galerie/thumbnails/${photo}`),
@@ -37,9 +37,9 @@ export const useGallery = (dir: string): {
 
   const images = (data?.galerieDir?.galerieFotosByGfIdRodic.nodes || []).map(x => {
     return {
-      id: x.gfId,
+      id: x.id,
       name: x.gfName,
-      href: `/gallery/${x.gfIdRodic}/photo/${x.gfId}`,
+      href: `/gallery/${x.gfIdRodic}/photo/${x.id}`,
       date: x.gfTimestamp ? format(new Date(x.gfTimestamp), 'd. M. y') : '',
       img: decodeURIComponent(`/galerie/${x.gfPath}`),
       imgThumb: decodeURIComponent(`/galerie/thumbnails/${x.gfPath}`),

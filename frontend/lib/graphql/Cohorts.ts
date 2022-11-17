@@ -4,35 +4,35 @@ import * as Types from './index';
 
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
-export type CohortFragment = { __typename: 'Skupiny', sId: string, sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string };
+export type CohortFragment = { __typename: 'Skupiny', sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string, id: string };
 
 export type CohortListQueryVariables = Types.Exact<{
   visible?: Types.InputMaybe<Types.Scalars['Boolean']>;
 }>;
 
 
-export type CohortListQuery = { __typename?: 'Query', skupinies: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename: 'Skupiny', sId: string, sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string, platbyGroupSkupinasByPgsIdSkupina: { __typename?: 'PlatbyGroupSkupinasConnection', nodes: Array<{ __typename?: 'PlatbyGroupSkupina', pgsIdGroup: string }> } }> } | null };
+export type CohortListQuery = { __typename?: 'Query', skupinies: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename: 'Skupiny', sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string, id: string, platbyGroupSkupinasByPgsIdSkupina: { __typename?: 'PlatbyGroupSkupinasConnection', nodes: Array<{ __typename?: 'PlatbyGroupSkupina', pgsIdGroup: string }> } }> } | null };
 
 export type CohortMembersQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
 }>;
 
 
-export type CohortMembersQuery = { __typename?: 'Query', members: { __typename?: 'MembersConnection', nodes: Array<{ __typename?: 'Member', uJmeno: string | null, uPrijmeni: string | null, uRodneCislo: string | null, uTelefon: string | null, uEmail: string | null }> } | null };
+export type CohortMembersQuery = { __typename?: 'Query', members: { __typename?: 'MembersConnection', nodes: Array<{ __typename?: 'Member', uJmeno: string | null, uPrijmeni: string | null, uRodneCislo: string | null, uTelefon: string | null, uEmail: string | null, id: string | null }> } | null };
 
 export type CohortQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
 }>;
 
 
-export type CohortQuery = { __typename?: 'Query', skupiny: { __typename: 'Skupiny', sId: string, sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string } | null };
+export type CohortQuery = { __typename?: 'Query', skupiny: { __typename: 'Skupiny', sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string, id: string } | null };
 
 export type CreateCohortMutationVariables = Types.Exact<{
   input: Types.SkupinyInput;
 }>;
 
 
-export type CreateCohortMutation = { __typename?: 'Mutation', createSkupiny: { __typename: 'CreateSkupinyPayload' } | null };
+export type CreateCohortMutation = { __typename?: 'Mutation', createSkupiny: { __typename?: 'CreateSkupinyPayload', skupiny: { __typename?: 'Skupiny', id: string } | null } | null };
 
 export type UpdateCohortMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -52,7 +52,7 @@ export type DeleteCohortMutation = { __typename?: 'Mutation', deleteSkupiny: { _
 export const CohortFragmentDoc = `
     fragment Cohort on Skupiny {
   __typename
-  sId
+  id: sId
   sName
   sDescription
   sLocation
@@ -95,6 +95,7 @@ export const CohortMembersDocument = `
     query CohortMembers($id: BigInt!) {
   members(condition: {sId: $id}) {
     nodes {
+      id: uId
       uJmeno
       uPrijmeni
       uRodneCislo
@@ -148,7 +149,9 @@ useCohortQuery.fetcher = (variables: CohortQueryVariables, options?: RequestInit
 export const CreateCohortDocument = `
     mutation CreateCohort($input: SkupinyInput!) {
   createSkupiny(input: {skupiny: $input}) {
-    __typename
+    skupiny {
+      id: sId
+    }
   }
 }
     `;

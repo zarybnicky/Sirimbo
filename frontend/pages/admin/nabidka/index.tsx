@@ -38,7 +38,6 @@ export default function ReservationAdminList() {
       pagination
       paginationMode="server"
       autoHeight={true}
-      getRowId={row => row.nId}
       rows={data?.nabidkas?.nodes || []}
       columns={[
         {
@@ -74,7 +73,7 @@ export default function ReservationAdminList() {
         {
           field: 'nVisible', headerName: 'Viditelný', flex: 1,
           renderCell: ({ row }) => (
-            <Checkbox checked={row.nVisible} onChange={() => toggleVisible({ id: row.nId, visible: !row.nVisible })} />
+            <Checkbox checked={row.nVisible} onChange={() => toggleVisible({ id: row.id, visible: !row.nVisible })} />
           ),
         },
       ]}

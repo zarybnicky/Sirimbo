@@ -45,7 +45,6 @@ export default function UserectoryList() {
       pagination
       paginationMode="server"
       autoHeight={true}
-      getRowId={row => row.uId}
       rows={data?.users?.nodes || []}
       columns={[
         {
@@ -75,12 +74,12 @@ export default function UserectoryList() {
         },
         {
           field: 'uGroup', headerName: 'Role', flex: 1,
-          renderCell: ({ value }) => roles?.permissions?.nodes.find(x => x.peId === value)?.peName,
+          renderCell: ({ value }) => roles?.permissions?.nodes.find(x => x.id === value)?.peName,
         },
         {
           field: 'uSkupina', headerName: 'Skupina', flex: 1,
           renderCell: ({ value }) => {
-            const cohort = cohorts?.skupinies?.nodes.find(x => x.sId === value);
+            const cohort = cohorts?.skupinies?.nodes.find(x => x.id === value);
             if (!cohort) return null;
             return <>
               <div className="w-3.5 h-3.5" title={cohort.sName} style={{ backgroundColor: cohort.sColorRgb }} />
@@ -89,7 +88,7 @@ export default function UserectoryList() {
           }
         },
         {
-          field: 'uId', headerName: 'Var. symbol', flex: 1,
+          field: 'id', headerName: 'Var. symbol', flex: 1,
           valueFormatter: ({ value }) => (value as string).padStart(6, '0'),
         },
 

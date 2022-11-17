@@ -22,5 +22,5 @@ export default function DashboardPage() {
 }
 
 DashboardPage.getLayout = (page: React.ReactElement) => (
-  <Layout>{page}</Layout>
+  <Layout withBleeds>{page}</Layout>
 );

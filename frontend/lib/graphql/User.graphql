@@ -17,7 +17,7 @@ query MemberList($cohortId: BigInt) {
   members(condition: {sId: $cohortId}) {
     totalCount
     nodes {
-      uId
+      id: uId
       uJmeno
       uPrijmeni
       uEmail
@@ -50,7 +50,9 @@ mutation ConfirmUser($id: BigInt!, $role: BigInt!, $cohort: BigInt!) {
 
 mutation CreateUser($input: UserInput!) {
   createUser(input: {user: $input}) {
-    __typename
+    user {
+      id: uId
+    }
   }
 }
 

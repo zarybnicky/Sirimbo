@@ -40,7 +40,6 @@ export default function AdminEventList() {
       pagination
       paginationMode="server"
       autoHeight={true}
-      getRowId={row => row.aId}
       rows={data?.akces?.nodes || []}
       columns={[
         {
@@ -77,7 +76,7 @@ export default function AdminEventList() {
         {
           field: 'aVisible', headerName: 'Viditelná', flex: 1,
           renderCell: ({ row }) => (
-            <Checkbox checked={row.aVisible} onChange={() => toggleVisible({ id: row.aId, visible: !row.aVisible })} />
+            <Checkbox checked={row.aVisible} onChange={() => toggleVisible({ id: row.id, visible: !row.aVisible })} />
           ),
         },
       ]}

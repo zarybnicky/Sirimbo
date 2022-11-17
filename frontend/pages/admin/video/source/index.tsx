@@ -21,7 +21,6 @@ export default function VideoSourceList() {
 
     <DataGrid
       autoHeight={true}
-      getRowId={row => row.vsId}
       rows={data?.videoSources?.nodes || []}
       columns={[
         {

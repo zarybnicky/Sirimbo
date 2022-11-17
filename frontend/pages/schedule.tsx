@@ -51,27 +51,27 @@ export default function SchedulePage() {
     /* if (!\Session::getZaplacenoPar()) {
      *   \Message::danger('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
      * } elseif ($data['n_max_pocet_hod'] > 0 &&
-     *           (\DBNabidka::getNabidkaLessons($nId, $par['p_id']) + $_POST['hodiny']) > $data['n_max_pocet_hod']
+     *           (\DBNabidka::getNabidkaLessons($id, $par['p_id']) + $_POST['hodiny']) > $data['n_max_pocet_hod']
      *             ) {
      *   \Message::danger('Maximální počet hodin na pár je ' . $data['n_max_pocet_hod'] . '!');
-     * } elseif (($data['n_pocet_hod'] - \DBNabidka::getReservationLessons($nId)) < $_POST['hodiny']) {
+     * } elseif (($data['n_pocet_hod'] - \DBNabidka::getReservationLessons($id)) < $_POST['hodiny']) {
      *   \Message::danger('Tolik volných hodin tu není');
      * } else {
-     *   \DBNabidka::addNabidkaItemLessons($par['p_id'], $nId, $_POST['hodiny']);
+     *   \DBNabidka::addNabidkaItemLessons($par['p_id'], $id, $_POST['hodiny']);
      * } */
   }, []);
 
   const cancelLessonsReservation = React.useCallback((id: string) => {
     // check lock
     // check lesson count
-    /* if (!\DBNabidka::getNabidkaLessons($nId, $_POST['p_id'])) {
+    /* if (!\DBNabidka::getNabidkaLessons($id, $_POST['p_id'])) {
      *   \Message::danger('Neplatný požadavek!');
      * } elseif ($_POST['p_id'] != $par['p_id'] &&
      *           !\Permissions::check('nabidka', P_OWNED, $data['n_trener'])
      * ) {
      *   \Message::danger('Nedostatečná oprávnění!');
      * } else {
-     *   \DBNabidka::removeNabidkaItem($nId, $_POST['p_id']);
+     *   \DBNabidka::removeNabidkaItem($id, $_POST['p_id']);
      * } */
   }, []);
 
@@ -90,8 +90,8 @@ export default function SchedulePage() {
                   <Dropdown align="end"
                     button={<MoreVertical className="text-slate-500 w-6 invisible ui-open:visible group-hover:visible" />}
                     options={[
-                      { title: "Upravit", href: `/admin/rozpis/edit/${item.rId}` },
-                      { title: "Upravit rezervace", href: `/admin/rozpis/detail/${item.rId}` },
+                      { title: "Upravit", href: `/admin/rozpis/edit/${item.id}` },
+                      { title: "Upravit rezervace", href: `/admin/rozpis/detail/${item.id}` },
                     ]}
                   />
                 </div>
@@ -114,8 +114,8 @@ export default function SchedulePage() {
             {perms.canEditReservation(item) && <Dropdown align="center"
               button={<img className="w-4 absolute top-2 right-2" alt="Upravit" src="/style/icon-gear.png" />}
               options={[
-                { title: "Upravit", href: `/admin/nabidka/edit/${item.nId}` },
-                { title: "Upravit rezervace", href: `/admin/nabidka/detail/${item.nId}` },
+                { title: "Upravit", href: `/admin/nabidka/edit/${item.id}` },
+                { title: "Upravit rezervace", href: `/admin/nabidka/detail/${item.id}` },
               ]}
             />}
             <div className="h5 mb-0">{item.userByNTrener?.uJmeno} {item.userByNTrener?.uPrijmeni}</div>
@@ -145,7 +145,7 @@ export default function SchedulePage() {
             {perms.canMakeReservation(item) && (
               <div className="form-inline text-center" style={{ padding: '10px 0 5px' }}>
                 <input className="w-auto form-control" type="text" placeholder="Počet hodin" name="hodiny" />
-                <Button onClick={() => reserveLessons(item.nId)}>Rezervovat</Button>
+                <Button onClick={() => reserveLessons(item.id)}>Rezervovat</Button>
               </div>
             )}
           </div>
@@ -156,5 +156,5 @@ export default function SchedulePage() {
 }
 
 SchedulePage.getLayout = (page: React.ReactElement) => (
-  <Layout>{page}</Layout>
+  <Layout withBleeds>{page}</Layout>
 );

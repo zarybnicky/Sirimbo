@@ -9,7 +9,7 @@ type ServiceCardProps = {
 }
 
 export const ServiceCard = (props: ServiceCardProps & { children: React.ReactNode | React.ReactChildren; }) => {
-  return <Card className="group p-0 my-8 grid sm:grid-cols-[1fr_4px_2fr]">
+  return <Card className="group p-0 my-8 grid md:grid-cols-[1fr_4px_2fr]">
     <div className="w-full h-full">
       <img className="w-full h-full object-cover" src={props.image} alt={props.header} />
     </div>

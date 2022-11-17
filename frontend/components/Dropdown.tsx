@@ -6,13 +6,15 @@ import { Menu, Transition } from '@headlessui/react'
 const MenuLink = React.forwardRef<
   HTMLAnchorElement,
   React.HTMLProps<HTMLAnchorElement>
->(({ href, children, ...rest }, ref) => (
-  <Link href={href as string} passHref>
-    <a ref={ref} {...rest}>
-      {children}
-    </a>
-  </Link>
-));
+>(function MenuLink({ href, children, ...rest }, ref) {
+  return (
+    <Link href={href as string} passHref>
+      <a ref={ref} {...rest}>
+        {children}
+      </a>
+    </Link>
+  );
+});
 
 export const Dropdown = ({ button, buttonClassName, options }: {
   button: React.ReactNode;

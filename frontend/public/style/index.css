@@ -1,5 +1,9 @@
 @import 'glider-js/glider.min.css';
 
+.content > * {
+    grid-column: content;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -15,6 +19,9 @@
     padding-right: 115px;
 }
 
+.glider-contain {
+    grid-column: full;
+}
 .glider-dots {
     margin-top: .5rem;
 }
@@ -37,3 +44,22 @@
     right: 1rem;
     top: calc(50% - 2rem);
 }
+
+/* https://ryanmulligan.dev/blog/layout-breakouts/ */
+.content {
+    --gap: clamp(.5rem, 6vw, 3rem);
+    --full: minmax(var(--gap), 1fr);
+    --content: min(100ch, 100% - var(--gap) * 2);
+    --popout: minmax(0, 4rem);
+    --feature: minmax(0, 8rem);
+
+    display: grid;
+	grid-template-columns:
+	    [full-start] var(--full)
+	    [feature-start] var(--feature)
+	    [popout-start] var(--popout)
+	    [content-start] var(--content) [content-end]
+	    var(--popout) [popout-end]
+	    var(--feature) [feature-end]
+	    var(--full) [full-end];
+    }

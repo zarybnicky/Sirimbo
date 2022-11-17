@@ -2,7 +2,7 @@ query CoupleList {
   activeCouples {
     totalCount
     nodes {
-      pId
+      id: pId
       userByPIdPartner {
         uJmeno
         uPrijmeni
@@ -18,7 +18,7 @@ query CoupleList {
 mutation CreateCouple($man: BigInt!, $woman: BigInt!) {
   createCouple(input: {man: $man, woman: $woman}) {
     paries {
-      pId
+      id: pId
     }
   }
 }
@@ -32,7 +32,7 @@ mutation DeleteCouple($id: BigInt!) {
 mutation FixUnpairedCouples {
   fixUnpairedCouples(input: {}) {
     paries {
-      pId
+      id: pId
     }
   }
 }

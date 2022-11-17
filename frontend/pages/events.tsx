@@ -28,7 +28,7 @@ const EventItem = ({ event }: { event: EventWithItemsFragment }) => {
           <div>
             <div className="text-slate font-bold mb-2">Účastníci</div>
             {event.akceItemsByAiIdRodic.nodes.map((item) => (
-              <div key={item.aiId}>{item.userByAiUser?.uJmeno} {item.userByAiUser?.uPrijmeni}</div>
+              <div key={item.id}>{item.userByAiUser?.uJmeno} {item.userByAiUser?.uPrijmeni}</div>
             ))}
           </div>
         )}
@@ -42,10 +42,10 @@ export default function EventListPage() {
   const { data } = useEventListQuery({ visible: true });
 
   return <div className="container mx-auto max-w-5xl mt-4 mb-8">
-    {data?.akces?.nodes.map(event => <EventItem key={event.aId} event={event} />)}
+    {data?.akces?.nodes.map(event => <EventItem key={event.id} event={event} />)}
   </div >;
 }
 
 EventListPage.getLayout = (page: React.ReactElement) => (
-  <Layout>{page}</Layout>
+  <Layout withBleeds>{page}</Layout>
 );

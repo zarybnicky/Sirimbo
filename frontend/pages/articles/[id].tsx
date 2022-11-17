@@ -20,7 +20,7 @@ export const ArticlePage = ({ }) => {
       <title>{x.atJmeno} | TK Olymp</title>
       <meta property="og:title" content="{x.atJmeno}" />
       <meta property="og:type" content="article" />
-      <meta property="og:url" content="https://tkolymp.cz/aktualne/{x.atId}" />
+      <meta property="og:url" content="https://tkolymp.cz/articles/{x.atId}" />
       <meta property="og:image" content="https://tkolymp.cz/galerie/thumbnails/{x.atFotoMain}" />
       <meta property="og:site_name" content="TK Olymp" />
       <meta property="og:description" content="{x.atPreview}" />

@@ -1,6 +1,6 @@
 fragment Announcement on Upozorneni {
   __typename
-  upId
+  id: upId
   upKdo
   upLock
   upNadpis
@@ -8,14 +8,14 @@ fragment Announcement on Upozorneni {
   upTimestamp
   upTimestampAdd
   userByUpKdo {
-    uId
+    id: uId
     uJmeno
     uPrijmeni
   }
   upozorneniSkupiniesByUpsIdRodic {
     nodes {
       skupinyByUpsIdSkupina {
-        sId
+        id: sId
         sName
         sDescription
         sColorText
@@ -42,7 +42,9 @@ query Announcement($id: BigInt!) {
 
 mutation CreateAnnouncement($input: UpozorneniInput!) {
   createUpozorneni(input: {upozorneni: $input}) {
-    __typename
+    upozorneni {
+      id: upId
+    }
   }
 }
 

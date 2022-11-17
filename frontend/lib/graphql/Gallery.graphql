@@ -1,7 +1,6 @@
 fragment GalleryPhoto on GalerieFoto {
   __typename
-  nodeId
-  gfId
+  id: gfId
   gfIdRodic
   gfKdo
   gfName
@@ -11,8 +10,7 @@ fragment GalleryPhoto on GalerieFoto {
 
 fragment GalleryDir on GalerieDir {
   __typename
-  nodeId
-  gdId
+  id: gdId
   gdIdRodic
   gdName
   gdPath
@@ -41,7 +39,7 @@ query GalleryDir($id: BigInt!) {
   }
 }
 
-query GalleryDirList($limit: Int $offset: Int) {
+query GalleryDirList($limit: Int, $offset: Int) {
   galerieDirs(first: $limit, offset: $offset, orderBy: [GD_NAME_ASC]) {
     totalCount
     nodes {
@@ -53,14 +51,16 @@ query GalleryDirList($limit: Int $offset: Int) {
 mutation ToggleGalleryDirVisible($id: BigInt!, $visible: Boolean!) {
   updateGalerieDir(input: {gdId: $id, patch: {gdHidden: $visible}}) {
     galerieDir {
-      gdId
+      id: gdId
     }
   }
 }
 
 mutation CreateGalleryDir($input: GalerieDirInput!) {
   createGalerieDir(input: {galerieDir: $input}) {
-    __typename
+    galerieDir {
+      id: gdId
+    }
   }
 }
 
@@ -85,7 +85,9 @@ query GalleryPhoto($id: BigInt!) {
 
 mutation CreateGalleryPhoto($input: GalerieFotoInput!) {
   createGalerieFoto(input: {galerieFoto: $input}) {
-    __typename
+    galerieFoto {
+      id: gfId
+    }
   }
 }
 

@@ -37,7 +37,6 @@ export default function AnnouncementAdminList() {
       pagination
       paginationMode="server"
       autoHeight={true}
-      getRowId={row => row.upId}
       rows={data?.upozornenis?.nodes || []}
       columns={[
         {
@@ -59,7 +58,7 @@ export default function AnnouncementAdminList() {
             {row.upozorneniSkupiniesByUpsIdRodic?.nodes?.length <= 0 ? null : <div>
               {row.upozorneniSkupiniesByUpsIdRodic.nodes.map((g) =>
                 <div className="w-3.5 h-3.5"
-                  key={g.skupinyByUpsIdSkupina?.sId}
+                  key={g.skupinyByUpsIdSkupina?.id}
                   title={g.skupinyByUpsIdSkupina?.sName}
                   style={{ backgroundColor: g.skupinyByUpsIdSkupina?.sColorRgb }}
                 />

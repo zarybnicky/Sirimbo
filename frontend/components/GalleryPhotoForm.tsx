@@ -26,7 +26,7 @@ export const GalleryPhotoForm: React.FC<{
   });
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    await doUpdate({ id: data.gfId, patch: values });
+    await doUpdate({ id: data.id, patch: values });
   });
 
   return (
@@ -36,7 +36,7 @@ export const GalleryPhotoForm: React.FC<{
       <SelectElement
         control={control} name="gfIdRodic" label="Rodičovská složka" required
         options={(dirs?.galerieDirs?.nodes || []).map(x => ({
-          id: x.gdId,
+          id: x.id,
           label: '\xa0'.repeat(x.gdLevel - 1) + x.gdName,
         }))}
       />

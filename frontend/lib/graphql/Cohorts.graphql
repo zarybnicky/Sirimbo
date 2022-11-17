@@ -1,6 +1,6 @@
 fragment Cohort on Skupiny {
   __typename
-  sId
+  id: sId
   sName
   sDescription
   sLocation
@@ -24,6 +24,7 @@ query CohortList($visible: Boolean) {
 query CohortMembers($id: BigInt!) {
   members(condition: {sId: $id}) {
     nodes {
+      id: uId
       uJmeno
       uPrijmeni
       uRodneCislo
@@ -41,7 +42,9 @@ query Cohort($id: BigInt!) {
 
 mutation CreateCohort($input: SkupinyInput!) {
   createSkupiny(input: {skupiny: $input}) {
-    __typename
+    skupiny {
+      id: sId
+    }
   }
 }
 

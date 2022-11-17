@@ -1,6 +1,6 @@
 fragment File on Dokumenty {
   __typename
-  dId
+  id: dId
   dName
   dFilename
   dKategorie
@@ -28,7 +28,9 @@ query File($id: BigInt!) {
 
 mutation CreateFile($input: DokumentyInput!) {
   createDokumenty(input: {dokumenty: $input}) {
-    __typename
+   dokumenty {
+      id: dId
+    }
   }
 }
 

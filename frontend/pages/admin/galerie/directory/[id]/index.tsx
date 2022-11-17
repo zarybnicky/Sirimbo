@@ -17,7 +17,6 @@ export default function AdminGalleryPhotoList() {
   return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
     <DataGrid
       autoHeight={true}
-      getRowId={row => row.gfId}
       rows={data?.galerieDir?.galerieFotosByGfIdRodic.nodes || []}
       columns={[
         {

@@ -4,7 +4,7 @@ import * as Types from './index';
 
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
-export type AnnouncementFragment = { __typename: 'Upozorneni', upId: string, upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, userByUpKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sId: string, sName: string, sDescription: string, sColorText: string, sColorRgb: string } | null }> } };
+export type AnnouncementFragment = { __typename: 'Upozorneni', upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, id: string, userByUpKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sName: string, sDescription: string, sColorText: string, sColorRgb: string, id: string } | null }> } };
 
 export type AnnouncementListQueryVariables = Types.Exact<{
   limit?: Types.InputMaybe<Types.Scalars['Int']>;
@@ -12,21 +12,21 @@ export type AnnouncementListQueryVariables = Types.Exact<{
 }>;
 
 
-export type AnnouncementListQuery = { __typename?: 'Query', upozornenis: { __typename?: 'UpozornenisConnection', totalCount: number, nodes: Array<{ __typename: 'Upozorneni', upId: string, upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, userByUpKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sId: string, sName: string, sDescription: string, sColorText: string, sColorRgb: string } | null }> } }> } | null };
+export type AnnouncementListQuery = { __typename?: 'Query', upozornenis: { __typename?: 'UpozornenisConnection', totalCount: number, nodes: Array<{ __typename: 'Upozorneni', upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, id: string, userByUpKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sName: string, sDescription: string, sColorText: string, sColorRgb: string, id: string } | null }> } }> } | null };
 
 export type AnnouncementQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
 }>;
 
 
-export type AnnouncementQuery = { __typename?: 'Query', upozorneni: { __typename: 'Upozorneni', upId: string, upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, userByUpKdo: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sId: string, sName: string, sDescription: string, sColorText: string, sColorRgb: string } | null }> } } | null };
+export type AnnouncementQuery = { __typename?: 'Query', upozorneni: { __typename: 'Upozorneni', upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, id: string, userByUpKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sName: string, sDescription: string, sColorText: string, sColorRgb: string, id: string } | null }> } } | null };
 
 export type CreateAnnouncementMutationVariables = Types.Exact<{
   input: Types.UpozorneniInput;
 }>;
 
 
-export type CreateAnnouncementMutation = { __typename?: 'Mutation', createUpozorneni: { __typename: 'CreateUpozorneniPayload' } | null };
+export type CreateAnnouncementMutation = { __typename?: 'Mutation', createUpozorneni: { __typename?: 'CreateUpozorneniPayload', upozorneni: { __typename?: 'Upozorneni', id: string } | null } | null };
 
 export type UpdateAnnouncementMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -46,7 +46,7 @@ export type DeleteAnnouncementMutation = { __typename?: 'Mutation', deleteUpozor
 export const AnnouncementFragmentDoc = `
     fragment Announcement on Upozorneni {
   __typename
-  upId
+  id: upId
   upKdo
   upLock
   upNadpis
@@ -54,14 +54,14 @@ export const AnnouncementFragmentDoc = `
   upTimestamp
   upTimestampAdd
   userByUpKdo {
-    uId
+    id: uId
     uJmeno
     uPrijmeni
   }
   upozorneniSkupiniesByUpsIdRodic {
     nodes {
       skupinyByUpsIdSkupina {
-        sId
+        id: sId
         sName
         sDescription
         sColorText
@@ -125,7 +125,9 @@ useAnnouncementQuery.fetcher = (variables: AnnouncementQueryVariables, options?:
 export const CreateAnnouncementDocument = `
     mutation CreateAnnouncement($input: UpozorneniInput!) {
   createUpozorneni(input: {upozorneni: $input}) {
-    __typename
+    upozorneni {
+      id: upId
+    }
   }
 }
     `;

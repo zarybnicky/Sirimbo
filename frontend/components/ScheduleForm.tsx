@@ -33,7 +33,7 @@ export const ScheduleForm: React.FC<{
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     if (data) {
-      await doUpdate({ id: data.rId, patch: values });
+      await doUpdate({ id: data.id, patch: values });
     } else {
       await doCreate({ input: values });
     }
@@ -44,7 +44,7 @@ export const ScheduleForm: React.FC<{
       <ErrorBox error={onSubmit.error} />
       <SelectElement
         control={control} name="rTrener" label="Trenér" required
-        options={(trainers?.trainers?.nodes || []).map(x => ({ id: x.uId, label: `${x.uJmeno} ${x.uPrijmeni}` }))}
+        options={(trainers?.trainers?.nodes || []).map(x => ({ id: x.id, label: `${x.uJmeno} ${x.uPrijmeni}` }))}
       />
       <TextFieldElement control={control} name="rKde" label="Místo" required />
       <TextFieldElement control={control} type="date" label="Datum" name="rDatum" required />

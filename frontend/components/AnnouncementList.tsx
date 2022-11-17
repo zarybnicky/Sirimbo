@@ -40,7 +40,7 @@ export function AnnouncementList() {
       )}
     </div>
 
-    {nodes.map((a) => <Card key={a.upId} className="mb-4">
+    {nodes.map((a) => <Card key={a.id} className="mb-4">
       <h2 className="text-2xl mb-2">
         {a.upNadpis}
       </h2>

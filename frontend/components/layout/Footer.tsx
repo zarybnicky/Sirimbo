@@ -26,66 +26,64 @@ export const FooterMap = ({ height = '200px' }) => {
 };
 
 export const Footer: React.FC = () => {
-  return <div className="bg-stone-800 text-white pt-12 pb-20">
-    <div className="container mx-auto max-w-5xl">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+  return <div className="col-full-width content bg-stone-800 text-white pt-12 pb-20">
+    <div className="col-feature grid grid-cols-1 md:grid-cols-2 gap-2">
+      <div>
+        <h2 className="text-2xl font-bold">Kontakt:</h2>
+
+        <h3 className="text-lg tracking-wide mt-4 text-red-500 font-bold">Taneční klub</h3>
+
+        <h4 className="text-lg tracking-wide mt-4 font-black">Taneční klub Olymp Olomouc</h4>
+
         <div>
-          <h2 className="text-2xl font-bold">Kontakt:</h2>
-
-          <h3 className="text-lg tracking-wide mt-4 text-red-500 font-bold">Taneční klub</h3>
-
-          <h4 className="text-lg tracking-wide mt-4 font-black">Taneční klub Olymp Olomouc</h4>
-
-          <div>
-            Jiráskova 25, 779 00 Olomouc<br />
-            IČO: 68347286<br />
-            miroslav.hyza@tkolymp.cz
-          </div>
-
-          <br />
-          <br />
-
-          <h3 className="text-lg tracking-wide mt-2 text-red-500 font-bold">Taneční sály</h3>
-
-          <h4 className="text-lg tracking-wide mt-2 font-black">Taneční centrum při FZŠ Holečkova</h4>
-
-          <div>
-            Holečkova 10, 779 00 Olomouc<br />
-            (vchod brankou u zastávky Povel, škola)
-          </div>
-
-          <br />
-          <h4 className="text-lg tracking-wide mt-2 font-black">Tělocvična Slovanského gymnázia</h4>
-          <div>
-            Jiřího z Poděbrad 13, 779 00 Olomouc<br />
-            (vchod bránou z ulice U reálky)
-          </div>
-
-          <div className="mt-12">Realizace: Jakub Zárybnický</div>
-          <div>© 2022 Taneční klub Olymp Olomouc, z. s.</div>
-          <div>Verze: {process.env.BUILD_ID?.substring(0, 7)}</div>
+          Jiráskova 25, 779 00 Olomouc<br />
+          IČO: 68347286<br />
+          miroslav.hyza@tkolymp.cz
         </div>
 
+        <br />
+        <br />
+
+        <h3 className="text-lg tracking-wide mt-2 text-red-500 font-bold">Taneční sály</h3>
+
+        <h4 className="text-lg tracking-wide mt-2 font-black">Taneční centrum při FZŠ Holečkova</h4>
+
         <div>
-          <FooterMap />
-          <SocialButtons variant="large" className="text-right my-4" />
+          Holečkova 10, 779 00 Olomouc<br />
+          (vchod brankou u zastávky Povel, škola)
+        </div>
 
-          <Card className="p-4">
-            <h2 className="text-xl text-red-500 font-bold mb-4">Podporují nás</h2>
+        <br />
+        <h4 className="text-lg tracking-wide mt-2 font-black">Tělocvična Slovanského gymnázia</h4>
+        <div>
+          Jiřího z Poděbrad 13, 779 00 Olomouc<br />
+          (vchod bránou z ulice U reálky)
+        </div>
 
-            <div className="grid grid-cols-2 gap-2 text-center">
-              <div className="row-span-2">
-                <img alt="ČSTS" style={{ width: '100%', height: 'auto' }} src={CstsLogo.src} />
-              </div>
-              <div>
-                <img alt="Olomoucký kraj" style={{ width: '100%', height: 'auto' }} src={KrajLogo.src} />
-              </div>
-              <div>
-                <img alt="Město Olomouc" style={{ width: '100%', height: 'auto' }} src={OlomoucLogo.src} />
-              </div>
+        <div className="mt-12">Realizace: Jakub Zárybnický</div>
+        <div>© 2022 Taneční klub Olymp Olomouc, z. s.</div>
+        <div>Verze: {process.env.BUILD_ID?.substring(0, 7)}</div>
+      </div>
+
+      <div>
+        <FooterMap />
+        <SocialButtons variant="large" className="text-right my-4" />
+
+        <Card className="p-4">
+          <h2 className="text-xl text-red-500 font-bold mb-4">Podporují nás</h2>
+
+          <div className="grid grid-cols-2 gap-2 text-center">
+            <div className="row-span-2">
+              <img alt="ČSTS" style={{ width: '100%', height: 'auto' }} src={CstsLogo.src} />
             </div>
-          </Card>
-        </div>
+            <div>
+              <img alt="Olomoucký kraj" style={{ width: '100%', height: 'auto' }} src={KrajLogo.src} />
+            </div>
+            <div>
+              <img alt="Město Olomouc" style={{ width: '100%', height: 'auto' }} src={OlomoucLogo.src} />
+            </div>
+          </div>
+        </Card>
       </div>
     </div>
   </div>;
