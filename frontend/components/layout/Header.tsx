@@ -13,7 +13,7 @@ import { useAuth } from 'lib/data/use-auth';
 export const Header = ({ isOpen, setIsOpen, showTopMenu }: {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  showTopMenu: boolean;
+  showTopMenu?: boolean;
 }) => {
   const topMenu = useTopMenu();
   const auth = useAuth();
@@ -73,13 +73,13 @@ const AuthButton = () => {
   const button = (
     <div className="flex normal-case button button-text gap-2 items-center">
       <Account />
-      <div className="flex flex-col items-start" style={{ lineHeight: 1.3 }}>
-        <span className="text-sm uppercase underline">Přihlášen</span>
+      <div className="flex flex-col justify-center items-start" style={{ lineHeight: 1.3 }}>
+        <span className="text-xs uppercase underline">Přihlášen</span>
         <span className="text-sm">{auth.user?.uJmeno} {auth.user?.uPrijmeni}</span>
       </div>
     </div>
   );
-  return <Dropdown align="end" button={button} options={[
+  return <Dropdown buttonClassName="min-h-[48px] md:min-h-[64px]" align="end" button={button} options={[
     { title: 'Moje lekce', href: '/dashboard' },
     { title: 'Profil', href: '/profile' },
     { title: 'Odhlásit se', onClick: signOut }

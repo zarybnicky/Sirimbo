@@ -13,7 +13,7 @@ export const ArticleCard = ({ item: x }: { item: Article }) => {
         <div className="tracking-wide mt-2 text-lg text-red-500 after:bg-red-500 font-bold">{x.header}</div>
         <div className="mr-24 mt-1 mb-4 h-1 bg-red-500" />
 
-        <p className="text-slate-700 grow">{x.preview}</p>
+        <p className="text-stone-700 grow">{x.preview}</p>
 
         <div className="flex justify-center mt-3">
           <div className="button button-red button-lg">Více zde ᐳ</div>

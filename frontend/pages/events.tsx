@@ -26,7 +26,7 @@ const EventItem = ({ event }: { event: EventWithItemsFragment }) => {
         </div>
         {expanded && (
           <div>
-            <div className="text-slate font-bold mb-2">Účastníci</div>
+            <div className="text-stone-700 font-bold mb-2">Účastníci</div>
             {event.akceItemsByAiIdRodic.nodes.map((item) => (
               <div key={item.id}>{item.userByAiUser?.uJmeno} {item.userByAiUser?.uPrijmeni}</div>
             ))}

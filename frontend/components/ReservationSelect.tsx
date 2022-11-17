@@ -25,11 +25,11 @@ const ReservationView = (x: ReservationFragment) => {
         </div>
         <div className="font-bold"><DateRange from={x.nOd} to={x.nDo} noYear /></div>
         {x?.nMaxPocetHod > 0 && <div>
-          <span className="text-slate-500"> Maximálně hodin/pár: </span>
+          <span className="text-stone-500"> Maximálně hodin/pár: </span>
           <span className="text-lg">{x?.nMaxPocetHod}</span>
         </div>}
         <div>
-          <span className="text-slate-500">Volných hodin: </span>
+          <span className="text-stone-500">Volných hodin: </span>
           <span className="text-lg">
             {x?.nPocetHod - (x.nabidkaItemsByNiIdRodic?.nodes || []).reduce((x, y) => x + y.niPocetHod, 0)}
             {" z "}

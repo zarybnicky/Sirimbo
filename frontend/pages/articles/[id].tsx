@@ -27,7 +27,7 @@ export const ArticlePage = ({ }) => {
     </Head>
     <div className="container mx-auto max-w-5xl" style={{ margin: '5rem auto' }}>
       <h3 className="text-xl font-bold mb-2">{x.atJmeno}</h3>
-      <div className="text-slate-700">
+      <div className="text-stone-700">
         {x.atTimestampAdd && format(new Date(x.atTimestampAdd), 'd. M. y')}
       </div>
       <HtmlView content={x.atText} />

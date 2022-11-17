@@ -101,12 +101,12 @@ export const UserForm: React.FC<{
         />
       </div>
 
-      <div className="tracking-wide uppercase text-slate-700 text-xs col-full mt-4">Kontaktní údaje</div>
+      <div className="tracking-wide uppercase text-stone-700 text-xs col-full mt-4">Kontaktní údaje</div>
 
       <TextFieldElement control={control} type="email" name="uEmail" label="E-mail" required />
       <TextFieldElement control={control} type="tel" name="uTelefon" label="Telefon" required />
 
-      <div className="tracking-wide uppercase text-slate-700 text-xs col-full mt-4">Bydliště</div>
+      <div className="tracking-wide uppercase text-stone-700 text-xs col-full mt-4">Bydliště</div>
 
       <TextFieldElement control={control} name="uStreet" label="Ulice" required />
 
@@ -126,7 +126,7 @@ export const UserForm: React.FC<{
         />
       </div>
 
-      <div className="tracking-wide uppercase text-slate-700 text-xs col-full mt-4">Tréninkové údaje</div>
+      <div className="tracking-wide uppercase text-stone-700 text-xs col-full mt-4">Tréninkové údaje</div>
 
       <div className="col-full grid gap-2">
         <SelectElement control={control}
@@ -140,7 +140,7 @@ export const UserForm: React.FC<{
         <CheckboxElement control={control} name="uTeacher" value="1" label="Trenér" />
       </div>
 
-      <div className="tracking-wide uppercase text-slate-700 text-xs col-full mt-4">Přístupy</div>
+      <div className="tracking-wide uppercase text-stone-700 text-xs col-full mt-4">Přístupy</div>
 
       <div className="col-full grid gap-2">
         <SelectElement

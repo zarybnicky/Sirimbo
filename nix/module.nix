@@ -134,6 +134,8 @@ in {
         wantedBy = [ "multi-user.target" ];
 
         environment = {
+          PGDATABASE = "olymp";
+          PGHOST = "/run/postgresql";
           PORT = toString cfg.frontendPort;
           GRAPHQL_BACKEND = "http://localhost:${toString cfg.jsPort}";
           NEXT_PUBLIC_SENTRY_ENVIRONMENT = cfg.domain;

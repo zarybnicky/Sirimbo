@@ -72,7 +72,7 @@ export default function CohortsPage() {
 const UserDetailButton: React.FC<{ user: UserFragment }> = ({ user }) => {
   return <SimpleDialog
     title={`${user.uJmeno} ${user.uPrijmeni}`}
-    button={<button className="underline text-slate-700">{user.uPrijmeni}, {user.uJmeno}</button>}
+    button={<button className="underline text-stone-700">{user.uPrijmeni}, {user.uJmeno}</button>}
   >
     <ul className="flex flex-col gap-3 m-4 mt-0">
       <li><EmailIcon /> {user.uEmail}</li>

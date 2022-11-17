@@ -5,7 +5,7 @@ export function List({ children }: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="lg:bg-stone-100 lg:dark:bg-gray-900 max-h-screen min-h-screen flex-none w-full lg:w-80 xl:w-96">
+    <div className="flex flex-col px-2 lg:bg-stone-100 lg:dark:bg-gray-900 max-h-screen min-h-screen flex-none w-full lg:w-80 xl:w-96">
       {children}
     </div>
   );

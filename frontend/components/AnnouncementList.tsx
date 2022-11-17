@@ -22,19 +22,19 @@ export function AnnouncementList() {
   return <>
     <div className="flex items-center justify-center">
       {hasPrev && (
-        <button className="button button-icon text-slate-500" onClick={() => setPage(page - 1)}>
+        <button className="button button-icon text-stone-500" onClick={() => setPage(page - 1)}>
           <ChevronLeft />
         </button>
       )}
 
-      <span className="text-slate-500">
+      <span className="text-stone-500">
         {nodes.length > 0 ? format(new Date(nodes[0]!.upTimestampAdd), 'd. M. y') : ''}
         {' - '}
         {nodes.length > 0 ? format(new Date(nodes[nodes.length - 1]!.upTimestampAdd), 'd. M. y') : ''}
       </span>
 
       {hasNext && (
-        <button className="button button-icon text-slate-500" onClick={() => setPage(page + 1)}>
+        <button className="button button-icon text-stone-500" onClick={() => setPage(page + 1)}>
           <ChevronRight />
         </button>
       )}
@@ -44,7 +44,7 @@ export function AnnouncementList() {
       <h2 className="text-2xl mb-2">
         {a.upNadpis}
       </h2>
-      <p className="text-slate-500 mb-4">
+      <p className="text-stone-500 mb-4">
         {format(new Date(a.upTimestampAdd), 'd. M. y')} , {a.userByUpKdo?.uJmeno} {a.userByUpKdo?.uPrijmeni}
       </p>
 

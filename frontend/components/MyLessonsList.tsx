@@ -55,7 +55,7 @@ export const MyLessonsList: React.FC = () => {
       <button className="button button-icon" onClick={setPrevWeek}>
         <ChevronLeft />
       </button>
-      <span className="text-slate-700">
+      <span className="text-stone-700">
         {format(startDate, 'd. M. y')} - {format(lastDayOfWeek(startDate), 'd. M. y')}
       </span>
       <button className="button button-icon" onClick={setNextWeek}>

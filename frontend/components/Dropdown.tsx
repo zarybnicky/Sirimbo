@@ -16,8 +16,9 @@ const MenuLink = React.forwardRef<
   );
 });
 
-export const Dropdown = ({ button, buttonClassName, options }: {
+export const Dropdown = ({ button, className, buttonClassName, options }: {
   button: React.ReactNode;
+  className?: string;
   buttonClassName?: string;
   options: {
     icon?: React.ReactNode;
@@ -28,7 +29,7 @@ export const Dropdown = ({ button, buttonClassName, options }: {
   align: "start" | "end" | "center";
 }) => {
   return (
-    <Menu as="div" className="relative">
+    <Menu as="div" className={`relative ${className}`}>
       <Menu.Button className={buttonClassName}>{button}</Menu.Button>
       <Transition
         as={React.Fragment}

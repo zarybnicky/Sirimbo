@@ -13,7 +13,7 @@ export default function CohortsPage() {
     <div className="container mx-auto max-w-3xl mt-8 mb-8">
       {cohorts?.skupinies?.nodes?.map((x, i) => (
         <Card key={i} className="mb-8 flex">
-          <div className="-m-3 mr-2 min-w-[2rem] border-r border-slate-200" style={{ backgroundColor: x.sColorRgb }} />
+          <div className="-m-3 mr-2 min-w-[2rem] border-r border-stone-200" style={{ backgroundColor: x.sColorRgb }} />
           <div className="">
             <h5 className="text-xl font-bold mb-2">{x.sName}</h5>
             <h6 className="font-bold mb-2">{x.sLocation}</h6>

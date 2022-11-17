@@ -50,7 +50,7 @@ export default function RegisterPage() {
         <form className="grid md:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
           <h4 className="text-lg font-bold mb-2 col-full">Registrace</h4>
 
-          <div className="tracking-wide uppercase text-slate-700 text-xs col-full mt-4">Přihlašovací údaje</div>
+          <div className="tracking-wide uppercase text-stone-700 text-xs col-full mt-4">Přihlašovací údaje</div>
 
           <TextFieldElement
             control={control} label="Přihlašovací jméno" name="username" autoComplete="username" required
@@ -61,7 +61,7 @@ export default function RegisterPage() {
             helperText="Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků"
           />
 
-          <div className="tracking-wide uppercase text-slate-700 text-xs col-full mt-4">Osobní údaje</div>
+          <div className="tracking-wide uppercase text-stone-700 text-xs col-full mt-4">Osobní údaje</div>
 
           <TextFieldElement control={control} label="Jméno" name="jmeno" autoComplete="given-name" required />
           <TextFieldElement control={control} label="Příjmení" name="prijmeni" autoComplete="family-name" required />
@@ -85,12 +85,12 @@ export default function RegisterPage() {
             ]} />
           </div>
 
-          <div className="tracking-wide uppercase text-slate-700 text-xs col-full mt-4">Kontaktní údaje</div>
+          <div className="tracking-wide uppercase text-stone-700 text-xs col-full mt-4">Kontaktní údaje</div>
 
           <TextFieldElement control={control} label="E-mail" name="email" type="email" required />
           <TextFieldElement control={control} label="Telefon" name="telefon" required />
 
-          <div className="tracking-wide uppercase text-slate-700 text-xs col-full mt-4">Adresa</div>
+          <div className="tracking-wide uppercase text-stone-700 text-xs col-full mt-4">Adresa</div>
 
           <TextFieldElement control={control} label="Ulice" name="street" autoComplete="address-line1" required />
           <div className="grid grid-cols-2 gap-2">
@@ -101,7 +101,7 @@ export default function RegisterPage() {
           <TextFieldElement control={control} label="Část města" name="district" autoComplete="address-level3" />
           <TextFieldElement control={control} label="PSČ" name="postal" autoComplete="postal-code" required />
 
-          <div className="tracking-wide uppercase text-slate-700 text-xs col-full mt-4">Tréninkové údaje</div>
+          <div className="tracking-wide uppercase text-stone-700 text-xs col-full mt-4">Tréninkové údaje</div>
 
           <div className="col-full md:col-span-2">
             <SelectElement control={control}

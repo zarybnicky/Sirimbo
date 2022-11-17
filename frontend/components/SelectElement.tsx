@@ -42,7 +42,7 @@ export function SelectElement<TFieldValues extends FieldValues>({
   return (
     <Combobox value={valueObject} onChange={(x) => onChange(x.id)}>
       <div className={`relative mt-1 ${className}`}>
-        <div className="text-slate-700 text-sm mb-1">{label}</div>
+        <div className="text-stone-700 text-sm mb-1">{label}</div>
         <div className="relative w-full cursor-default overflow-hidden border-red-500 border focus-within:border-3 rounded-lg bg-white text-left shadow-sm focus:outline-none sm:text-sm">
           <Combobox.Input
             className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"

@@ -32,7 +32,7 @@ export function RadioButtonGroupElement<TFieldValues extends FieldValues>({
   const parsedHelperText = !error ? helperText : parseError ? parseError(error) : error.message;
 
   return <div className={`relative my-2 ${className}`}>
-    <div className="text-slate-700 text-sm mb-1">{label}</div>
+    <div className="text-stone-700 text-sm mb-1">{label}</div>
     <ToggleGroupPrimitive.Root value={value} onValueChange={onChange} type="single">
       {options.map(({ label, id, disabled }) => (
         <ToggleGroupPrimitive.Item

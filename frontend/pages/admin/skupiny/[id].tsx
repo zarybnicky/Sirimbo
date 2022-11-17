@@ -3,8 +3,8 @@ import { DeleteButton } from "components/DeleteButton";
 import { useCohortListQuery, useCohortQuery, useDeleteCohortMutation } from "lib/graphql/Cohorts";
 import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
-import { ListDetailView } from 'components/layout/LayoutWithList';
 import { Layout } from 'components/layout/Layout';
+import { Item } from 'components/layout/Item';
 import { CohortsList } from 'components/CohortList';
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -18,14 +18,14 @@ export default function CohortEditPage() {
   const { mutateAsync: doDelete } = useDeleteCohortMutation({
     onSuccess: () => router.push('/admin/skupiny'),
   });
-  return <div className="grow p-4 mt-12 mb-8">
-    <DeleteButton key="del" onDelete={doDelete} id={id as string} title="smazat skupinu" />
+  return <>
+    <Item.Titlebar title={data?.skupiny?.sName}>
+      <DeleteButton onDelete={() => doDelete({ id: id as string })} title="smazat skupinu" />
+    </Item.Titlebar>
     {data && <CohortForm data={data.skupiny || undefined} onSuccess={refetch} />}
-  </div >;
+  </>;
 };
 
 CohortEditPage.getLayout = (page: React.ReactElement) => (
-  <Layout>
-    <ListDetailView list={<CohortsList />} hasDetail>{page}</ListDetailView>
-  </Layout>
+  <Layout list={<CohortsList />} isDetail>{page}</Layout>
 );

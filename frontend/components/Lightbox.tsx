@@ -83,7 +83,7 @@ export const Lightbox = ({ dirHref, images, initial }: LightboxProps) => {
                   objectFit: 'contain',
                 }} />
                 <Card>
-                  <div className="text-center tracking-wide uppercase text-slate-700 text-xs">{image.name}</div>
+                  <div className="text-center tracking-wide uppercase text-stone-700 text-xs">{image.name}</div>
                 </Card>
               </div>
             </Transition>

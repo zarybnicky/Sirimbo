@@ -9,7 +9,7 @@ import React from 'react';
 export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  showTopMenu: boolean;
+  showTopMenu?: boolean;
 }) => {
   const router = useRouter();
   const sideMenu = useSideMenu();
@@ -56,7 +56,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: {
         "scrollbar-thin scrollbar-track-transparent scrollbar-thumb-red-700/80 hover:scrollbar-thumb-red-700/90",
       )}>
         {sideMenu.map(x => <SidebarSection key={x.title} item={x} />)}
-        <SidebarLink item={{ type: 'link', title: 'Domů', href: '/home' }} />
+        <SidebarLink item={{ type: 'link', title: 'Domů', href: '/' }} />
         {topMenu.map(x => <SidebarSection key={x.title} item={x} />)}
 
         {auth.user ? <>
@@ -69,7 +69,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: {
           <SidebarLink item={{ type: 'link', title: 'Přihlásit se', href: '/login' }} />
         )}
 
-        <div className="mt-4 text-xs text-slate-700 p-4 grid gap-2">
+        <div className="mt-4 text-xs text-stone-700 p-4 grid gap-2">
           <div>© 2022 Taneční klub Olymp Olomouc, z. s.</div>
           <div>Verze: {process.env.BUILD_ID?.substring(0, 7)}</div>
         </div>

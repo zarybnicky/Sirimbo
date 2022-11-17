@@ -12,6 +12,7 @@ import { LessonButton } from 'components/LessonButton';
 import { Card } from 'components/Card';
 import { MoreVertical } from 'react-feather';
 import { Layout } from 'components/layout/Layout';
+import { capitalize } from 'lib/capitalize';
 
 export default function SchedulePage() {
   useRequireUserLoggedIn();
@@ -75,11 +76,10 @@ export default function SchedulePage() {
      * } */
   }, []);
 
-  return <div className="container mx-auto max-w-5xl mt-12 mb-8">
-    <h4 className="text-lg font-bold mb-2">Tento týden</h4>
+  return <div className="col-popout mt-12 mb-8">
     {Object.entries(planList).map(([date, items]) => <>
-      <div className="text-xl font-bold text-slate-700 mt-6 mb-2">
-        {format(new Date(date), 'EEEE d. M.', { locale: cs })}
+      <div className="text-xl font-bold text-stone-700 mt-6 ml-3 mb-4">
+        {capitalize(format(new Date(date), 'EEEE d. M.', { locale: cs }))}
       </div>
       <div className="flex flex-wrap gap-4">
         {items.map((item, i) => item.__typename === 'Rozpi' ? (
@@ -88,7 +88,7 @@ export default function SchedulePage() {
               {perms.canEditSchedule(item) && (
                 <div className="absolute right-2 top-0">
                   <Dropdown align="end"
-                    button={<MoreVertical className="text-slate-500 w-6 invisible ui-open:visible group-hover:visible" />}
+                    button={<MoreVertical className="text-stone-500 w-6 invisible ui-open:visible group-hover:visible" />}
                     options={[
                       { title: "Upravit", href: `/admin/rozpis/edit/${item.id}` },
                       { title: "Upravit rezervace", href: `/admin/rozpis/detail/${item.id}` },
@@ -122,11 +122,11 @@ export default function SchedulePage() {
             <div className="font-bold"><DateRange from={item.nOd} to={item.nDo} /></div>
 
             {item.nMaxPocetHod > 0 && <>
-              <span className="text-slate-500">Maximálně hodin/pár:</span>
+              <span className="text-stone-500">Maximálně hodin/pár:</span>
               <span className="text-lg">{item.nMaxPocetHod}</span>
             </>}
             <div>
-              <span className="text-slate-500">Volných hodin: </span>
+              <span className="text-stone-500">Volných hodin: </span>
               <span className="text-lg">
                 {item.nPocetHod - item.nabidkaItemsByNiIdRodic.nodes.reduce((n, x) => n + x.niPocetHod, 0)} z {item.nPocetHod} nabízených
               </span>
