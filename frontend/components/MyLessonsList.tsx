@@ -61,7 +61,7 @@ export const MyLessonsList: React.FC = () => {
       </button>
     </div>
     {Object.entries(lessonsPerDay).map(([key, lessons]) => <React.Fragment key={key}>
-      <h6 className="text-center">{key}</h6>
+      <h6 className="text-lg font-bold mb-2 text-center">{key}</h6>
 
       <div className="grid gap-2">
         {lessons.map((lesson, i) => (

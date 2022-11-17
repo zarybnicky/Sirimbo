@@ -95,7 +95,7 @@ export default function EditorPage() {
         } as State);
       };
       toolbar = <div className="grid gap-4 mb-4">
-        <h4>Nová stránka</h4>
+        <h4 className="text-lg font-bold mb-2">Nová stránka</h4>
         <TextField value={state.title} placeholder="Název stránky" onChange={(e) => setState({
           ...state, title: e.currentTarget.value,
         })} />
@@ -120,7 +120,7 @@ export default function EditorPage() {
         setLoading(false);
       };
       toolbar = <div className="grid gap-4 mb-4">
-        <h4>Upravit stránku</h4>
+        <h4 className="text-lg font-bold mb-2">Upravit stránku</h4>
         <TextField value={state.page.title} placeholder="Název stránky" onChange={(e) => setState({
           ...state,
           page: { ...state.page, title: e.currentTarget.value },
@@ -146,7 +146,7 @@ export default function EditorPage() {
 
   return <div className="flex flex-nowrap">
     {toolbar}
-    <h4>Všechny stránky</h4>
+    <h4 className="text-lg font-bold mb-2">Všechny stránky</h4>
     <div className="list-none grid gap-0.5">
       {data?.pages?.nodes.map((p) => (
         <div key={p.id} onClick={() => selectPage(p)} className={classNames(

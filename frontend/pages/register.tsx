@@ -48,7 +48,7 @@ export default function RegisterPage() {
     <div className="container mx-auto max-w-3xl mt-12 mb-8">
       <Card>
         <form className="grid md:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
-          <h4 className="col-full">Registrace</h4>
+          <h4 className="text-lg font-bold mb-2 col-full">Registrace</h4>
 
           <div className="tracking-wide uppercase text-slate-700 text-xs col-full mt-4">Přihlašovací údaje</div>
 

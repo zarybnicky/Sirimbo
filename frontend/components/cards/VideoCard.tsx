@@ -12,7 +12,7 @@ export const VideoCard = ({ item: x }: { item: Video }) => {
         </div>
 
         <div className="flex grow justify-stretch items-center px-4 py-2 md:pl-8 underline">
-          <h6>{x.name}</h6>
+          <div className="font-bold">{x.name}</div>
         </div>
       </Card>
     </a>

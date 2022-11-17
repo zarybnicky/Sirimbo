@@ -15,7 +15,7 @@ export const ArticlesPage = ({ }) => {
       <title>Články | TK Olymp</title>
     </Head>
     <div className="container mx-auto max-w-5xl" style={{ margin: '4rem auto 3rem' }}>
-      <h3>Aktuálně</h3>
+      <h3 className="text-xl font-bold mb-2">Aktuálně</h3>
       <div className="grid place-items-stretch gap-4 grid-cols-2 lg:grid-cols-3 mb-6">
         {articles.map((x, i) => <ArticleCard key={i} item={x} />)}
       </div>

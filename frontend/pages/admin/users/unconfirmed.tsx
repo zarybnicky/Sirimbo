@@ -45,7 +45,7 @@ const UnconfirmedUser: React.FC<{
     <Card className="mb-8">
       <form className="grid md:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <h5>{item.uJmeno} {item.uPrijmeni}</h5>
+          <h5 className="text-lg font-bold mb-2">{item.uJmeno} {item.uPrijmeni}</h5>
           <div>
             <b>Login:</b> {item.uLogin}
           </div>
@@ -92,7 +92,7 @@ export default function UnconfirmedUsers() {
   const { data: users, refetch } = useUserListQuery({ confirmed: false });
 
   return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
-    <h4 className="text-right">Nepotvrzení uživatelé</h4>
+    <h4 className="text-xl font-bold text-right">Nepotvrzení uživatelé</h4>
     {users?.users?.nodes?.map((item, i) => <UnconfirmedUser onProcessed={refetch} item={item} key={i} />)}
   </div>;
 };

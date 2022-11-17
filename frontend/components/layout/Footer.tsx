@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SocialButtons } from './SocialButtons';
-import { Map } from './Map';
-import { Card } from './Card';
+import { Map } from 'components/Map';
+import { Card } from 'components/Card';
 
 import CstsLogo from 'public/images/csts-logo.svg';
 import OlomoucLogo from 'public/style/logo-olomouc.jpg';

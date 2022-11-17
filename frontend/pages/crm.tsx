@@ -9,7 +9,7 @@ export default function CrmPage() {
   const { data } = useActiveProspectsQuery();
 
   return <div className="container mx-auto max-w-5xl" style={{ padding: '2rem 0' }}>
-    <h4 className="text-right">Zájemci</h4>
+    <h4 className="text-lg font-bold mb-2 text-right">Zájemci</h4>
 
     <DataGrid
       autoHeight={true}

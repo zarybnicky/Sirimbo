@@ -96,7 +96,7 @@ export default function SchedulePage() {
   }, []);
 
   return <div className="container mx-auto max-w-5xl mt-12 mb-8">
-    <h4 className="text-right">Tento týden</h4>
+    <h4 className="text-lg font-bold mb-2 text-right">Tento týden</h4>
     {Object.entries(planList).map(([date, items]) => <>
       <div className="text-xl font-bold text-slate-700 mt-6 mb-2">
         {format(new Date(date), 'EEEE d. M.', { locale: cs })}

@@ -25,7 +25,7 @@ export default function ForgottenPassword() {
   return <div className="container mx-auto max-w-md mt-16 mb-20">
     <Card>
       <form onSubmit={handleSubmit(onSubmit.execute)}>
-        <h5>Zapomenuté heslo</h5>
+        <h5 className="text-lg mb-2">Zapomenuté heslo</h5>
         <div className="mb-4">
           Pokud jste zapomněli heslo, pošleme Vám nové na e-mail, který jste zadali při registraci.
         </div>

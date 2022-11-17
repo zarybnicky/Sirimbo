@@ -7,7 +7,7 @@ import { ProvideAuth } from 'lib/data/use-auth';
 import { Hydrate, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
-import { Layout } from "components/Layout";
+import { Layout } from "components/layout/Layout";
 import { ProvideMeta } from "lib/use-meta";
 import "nprogress/nprogress.css";
 import 'public/style/index.css';
@@ -18,12 +18,13 @@ import "react-toastify/dist/ReactToastify.css";
 import { Tracking } from "components/Tracking";
 import { ToastContainer } from 'react-toastify';
 import { ConfirmProvider } from 'components/Confirm';
+import { NextPage } from "next";
 
 Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
 
-export default function App({ Component, pageProps }: AppProps) {
+const withProviders = (children: React.ReactNode, pageProps: AppProps['pageProps']) => {
   const queryClientRef = React.useRef<QueryClient>()
   if (!queryClientRef.current) {
     queryClientRef.current = new QueryClient({
@@ -45,7 +46,6 @@ export default function App({ Component, pageProps }: AppProps) {
       })
     };
   }
-
   return (
     <QueryClientProvider client={queryClientRef.current}>
       <Hydrate state={pageProps.dehydratedState}>
@@ -53,9 +53,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <ProvideMeta>
             <ConfirmProvider>
               <Tracking />
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
+              {children}
               <ToastContainer limit={3} />
             </ConfirmProvider>
           </ProvideMeta>
@@ -63,6 +61,22 @@ export default function App({ Component, pageProps }: AppProps) {
       </Hydrate>
     </QueryClientProvider>
   );
+};
+
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: React.ReactElement) => React.ReactNode
+}
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout
+}
+export default function App({ Component, pageProps }: AppPropsWithLayout) {
+  const defaultLayout = (page: React.ReactElement) => (
+    <Layout showTopMenu>{page}</Layout>
+  );
+  const getLayout = Component.getLayout ?? defaultLayout;
+
+  return withProviders(getLayout(<Component {...pageProps} />), pageProps);
 }
 
 export function reportWebVitals({ id, name, label, value }: NextWebVitalsMetric) {

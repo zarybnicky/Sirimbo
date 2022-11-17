@@ -15,8 +15,8 @@ export default function CohortsPage() {
         <Card key={i} className="mb-8 flex">
           <div className="-m-3 mr-2 min-w-[2rem] border-r border-slate-200" style={{ backgroundColor: x.sColorRgb }} />
           <div className="">
-            <h5>{x.sName}</h5>
-            <h6>{x.sLocation}</h6>
+            <h5 className="text-xl font-bold mb-2">{x.sName}</h5>
+            <h6 className="font-bold mb-2">{x.sLocation}</h6>
             <HtmlView content={x.sDescription.replace('&nbsp;', ' ').replace('<br />', '')} />
           </div>
         </Card>

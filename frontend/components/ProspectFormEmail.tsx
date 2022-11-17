@@ -30,7 +30,7 @@ export const ProspectFormEmail = ({ title }: ProspectFormEmailProps) => {
   return (
     <Card>
       <form className="grid grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
-        <h4 className="col-full">{title}</h4>
+        <h4 className="text-lg font-bold mb-2 col-full">{title}</h4>
 
         <TextFieldElement control={control} name="name" label="Jméno" autoComplete="given-name" required />
         <TextFieldElement control={control} name="surname" label="Příjmení" autoComplete="family-name" required />

@@ -1,10 +1,22 @@
 import React from 'react';
 import classNames from 'classnames';
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import Link from 'next/link';
+import { Menu, Transition } from '@headlessui/react'
 
-export const Dropdown = ({ button, align, options }: {
+const MenuLink = React.forwardRef<
+  HTMLAnchorElement,
+  React.HTMLProps<HTMLAnchorElement>
+>(({ href, children, ...rest }, ref) => (
+  <Link href={href as string} passHref>
+    <a ref={ref} {...rest}>
+      {children}
+    </a>
+  </Link>
+));
+
+export const Dropdown = ({ button, buttonClassName, options }: {
   button: React.ReactNode;
+  buttonClassName?: string;
   options: {
     icon?: React.ReactNode;
     title: string;
@@ -14,71 +26,36 @@ export const Dropdown = ({ button, align, options }: {
   align: "start" | "end" | "center";
 }) => {
   return (
-    <DropdownMenuPrimitive.Root>
-      <DropdownMenuPrimitive.Trigger asChild>
-        {button}
-      </DropdownMenuPrimitive.Trigger>
-
-      <DropdownMenuPrimitive.Portal>
-        <DropdownMenuPrimitive.Content
-          align={align}
-          sideOffset={5}
-          className={classNames(
-            "z-50 radix-side-top:animate-slide-up radix-side-bottom:animate-slide-down",
-            "w-48 rounded-lg px-1.5 py-1 shadow-md md:w-56",
-            "bg-white dark:bg-gray-800"
-          )}
-        >
+    <Menu as="div" className="relative">
+      <Menu.Button className={buttonClassName}>{button}</Menu.Button>
+      <Transition
+        as={React.Fragment}
+        enter="transition ease-out duration-200"
+        enterFrom="transform opacity-0 scale-95"
+        enterTo="transform opacity-100 scale-100"
+        leave="transition ease-in duration-75"
+        leaveFrom="transform opacity-100 scale-100"
+        leaveTo="transform opacity-0 scale-95"
+      >
+        <Menu.Items className="z-50 origin-top-right absolute right-0 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
           {options.map(({ title, icon, href, onClick }, i) => (
-            <DropdownMenuPrimitive.Item asChild key={`${title}-${i}`}>
-              {href ? (
-                <Link href={href} passHref>
-                  <a
-                    className={classNames(
-                      "flex cursor-pointer select-none rounded-md uppercase px-2 py-2 text-xs outline-none",
-                      "text-gray-400 focus:bg-gray-50 dark:text-gray-500 dark:focus:bg-gray-900",
-                      "w-full",
-                    )}
-                  >
-                    {icon}
-                    <span className="text-gray-800 dark:text-gray-300">{title}</span>
-                  </a>
-                </Link>
+            <Menu.Item key={i}>
+              {({ active }) => href ? (
+                <MenuLink href={href} className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-800')}>
+                  {icon} {title}
+                </MenuLink>
               ) : (
                 <button
                   onClick={onClick}
-                  className={classNames(
-                    "flex cursor-pointer select-none rounded-md uppercase px-2 py-2 text-xs outline-none",
-                    "text-gray-400 focus:bg-gray-50 dark:text-gray-500 dark:focus:bg-gray-900",
-                    "w-full",
-                  )}
+                  className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-800')}
                 >
-                  {icon}
-                  <span className="text-gray-800 dark:text-gray-300">{title}</span>
+                  {icon} {title}
                 </button>
               )}
-            </DropdownMenuPrimitive.Item>
+            </Menu.Item>
           ))}
-        </DropdownMenuPrimitive.Content>
-      </DropdownMenuPrimitive.Portal>
-    </DropdownMenuPrimitive.Root>
-  );
+        </Menu.Items>
+      </Transition>
+    </Menu >
+  )
 };
-
-const Button = ({ children, ...props }: Omit<React.ComponentProps<"button">, "className">) => (
-  <button
-    {...props}
-    className={classNames(
-      "inline-flex select-none items-center justify-center rounded-md px-4 py-2 text-sm font-medium",
-      "bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-900",
-      "hover:bg-gray-50",
-      "focus:outline-none focus-visible:ring focus-visible:ring-red-500 focus-visible:ring-opacity-75",
-      "group",
-      "radix-state-open:bg-gray-50 dark:radix-state-open:bg-gray-900",
-      "radix-state-on:bg-gray-50 dark:radix-state-on:bg-gray-900",
-      "radix-state-instant-open:bg-gray-50 radix-state-delayed-open:bg-gray-50"
-    )}
-  >
-    {children}
-  </button>
-);

@@ -11,7 +11,7 @@ type TrainerCardProps = {
 export const TrainerCard = (props: TrainerCardProps & { children: React.ReactNode | React.ReactChildren; }) => {
   return <Card className="relative h-full p-0">
     <div className="bg-stone-800 text-white font-bold mb-0 p-4 border-l-8 border-red-500 header">
-      <h6>{props.name}</h6>
+      <div className="font-bold mb-2">{props.name}</div>
     </div>
     <div className="prose avoid-trainer-pictures pt-0">
       {props.children}

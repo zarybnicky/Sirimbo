@@ -43,7 +43,7 @@ export const LocationCard = ({ item: x }: { item: Location; }) => {
       <img className="w-full h-full object-cover" src={x.image} alt={x.name} />
     </div>
     <div className="p-8 pb-4 grow basis-4 text-gray-800">
-      <h5 className="font-bold">{x.name}</h5>
+      <h5 className="text-lg font-bold mb-2">{x.name}</h5>
       <p>{x.address}</p>
       {x.href && <a href={x.href} rel="noreferrer" target="_blank">{x.href}</a>}
       <a href={x.mapHref} rel="noreferrer" target="_blank">

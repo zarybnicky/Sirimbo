@@ -51,7 +51,7 @@ export default function CohortsPage() {
           <div className="flex items-start justify-between mb-3">
             <div>
               {cohort.members.length} členů
-              <h5>{cohort.sName}</h5>
+              <div className="text-lg">{cohort.sName}</div>
             </div>
             <CohortExport id={cohort.sId} name={cohort.sName} />
           </div>

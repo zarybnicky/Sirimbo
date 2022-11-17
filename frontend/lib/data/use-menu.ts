@@ -1,17 +1,18 @@
 import { useAuth } from './use-auth';
 import { PermissionKey, PermissionLevel, usePermissions } from './use-permissions';
 
-type MenuLink = {
+export type MenuLink = {
   type: 'link';
   title: string;
   href: string;
   auth?: [PermissionKey, PermissionLevel];
 };
+
 export type MenuStructItem = {
   type: 'menu';
   hrefRoot?: string;
   title: string;
-  children: MenuStructItem[];
+  children: MenuLink[];
 } | MenuLink;
 
 export function getHrefs(x: MenuStructItem): string[] {

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { AnnouncementList } from '../components/AnnouncementList';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { MyLessonsList } from 'components/MyLessonsList';
+import { Layout } from 'components/layout/Layout';
 
 export default function DashboardPage() {
   useRequireUserLoggedIn();
@@ -9,13 +10,17 @@ export default function DashboardPage() {
   return <div className="container mx-auto max-w-5xl pt-12 pb-8">
     <div className="grid lg:grid-cols-2">
       <div>
-        <h4 className="text-right">Moje tréninky</h4>
+        <h4 className="text-lg font-bold text-right">Moje tréninky</h4>
         <MyLessonsList />
       </div>
       <div>
-        <h4 className="text-right">Nástěnka</h4>
+        <h4 className="text-lg font-bold text-right">Nástěnka</h4>
         <AnnouncementList />
       </div>
     </div>
   </div>;
 }
+
+DashboardPage.getLayout = (page: React.ReactElement) => (
+  <Layout>{page}</Layout>
+);

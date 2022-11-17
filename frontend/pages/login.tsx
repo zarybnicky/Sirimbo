@@ -30,7 +30,7 @@ export default function LoginPage() {
     <div className="container mx-auto max-w-md mt-12 mb-16">
       <Card>
         <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
-          <h4>Přihlášení do systému</h4>
+          <h4 className="text-lg font-bold mb-2">Přihlášení do systému</h4>
 
           <ErrorBox error={onSubmit.error} />
           <TextFieldElement
