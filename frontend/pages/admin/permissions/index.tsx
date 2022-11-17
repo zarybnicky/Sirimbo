@@ -27,7 +27,7 @@ export default function PermissionAdminList() {
           getActions: ({ id }: GridRowParams) => [
             <GridActionsCellItem key="edit"
               icon={<EditIcon />}
-              onClick={() => router.push(`/admin/permissions/edit/${id}`)}
+              onClick={() => router.push(`/admin/permissions/${id}`)}
               label="Upravit"
             />,
             <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat uživatelskou roli" />,

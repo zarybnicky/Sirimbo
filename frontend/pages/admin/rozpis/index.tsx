@@ -46,7 +46,7 @@ export default function RozpisAdminList() {
           getActions: ({ id }) => [
             <GridActionsCellItem key="edit"
               icon={<EditIcon />}
-              onClick={() => router.push(`/admin/rozpis/edit/${id}`)}
+              onClick={() => router.push(`/admin/rozpis/${id}`)}
               label="Upravit"
             />,
             <GridActionsCellItem key="edit-lessons"

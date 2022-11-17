@@ -26,7 +26,7 @@ export enum PermissionKey {
   peMain,
 };
 
-const defaultPermissions: { [key in keyof typeof PermissionKey]: PermissionLevel } = {
+export const defaultPermissions: { [key in keyof typeof PermissionKey]: PermissionLevel } = {
   peAkce: 1,
   peAktuality: 2,
   peDokumenty: 1,
@@ -88,60 +88,74 @@ export const permissionMarks = [
   { value: 4, realValue: PermissionLevel.P_ADMIN, label: 'správa všech' },
 ];
 
-export const usePermissions = () => {
+export function usePermissions() {
   const { user, couple } = useAuth();
   const perms = user?.permissionByUGroup || defaultPermissions;
 
-  return {
-    hasPermission(key: PermissionKey, level: PermissionLevel) {
-      const perm = PermissionKey[key] as keyof typeof PermissionKey;
-      return perms[perm] >= level;
-    },
-    canEditSchedule(schedule: { rTrener: string }) {
-      return (
-        (perms.peRozpis >= PermissionLevel.P_OWNED && user?.id === schedule.rTrener) ||
-        perms.peRozpis >= PermissionLevel.P_ADMIN
-      );
-    },
-    canEditReservation(reservation: { nTrener: string; }) {
-      return (
-        (perms.peNabidka >= PermissionLevel.P_OWNED && user?.id === reservation.nTrener) ||
-        perms.peNabidka >= PermissionLevel.P_ADMIN
-      );
-    },
-    canSignUp(item: { rLock: boolean; rTrener: string; }, lesson: { riLock: boolean; riPartner: string | null; }) {
-      return (
-        perms.peRozpis >= PermissionLevel.P_MEMBER &&
-        (!lesson.riPartner || lesson.riPartner === '0') && !item.rLock && !lesson.riLock
-      );
-    },
-    canSignOut(item: { rLock: boolean; rTrener: string; }, lesson: { riLock: boolean; riPartner: string | null; }) {
-      return (
-        (lesson.riPartner && lesson.riPartner !== '0') && !item.rLock && !lesson.riLock && (
-          (perms.peRozpis >= PermissionLevel.P_MEMBER && couple?.id == lesson.riPartner) ||
-          (perms.peRozpis >= PermissionLevel.P_OWNED && user?.id == item.rTrener) ||
-          perms.peRozpis >= PermissionLevel.P_ADMIN
-        )
-      );
-    },
-    canMakeReservation(item: {
-      nabidkaItemsByNiIdRodic: { nodes: { niPocetHod: number; }[] };
-      nTrener: string; nLock: boolean; nPocetHod: number;
-    }) {
-      return (
-        perms.peNabidka >= PermissionLevel.P_MEMBER && !item.nLock &&
-        item.nPocetHod > item.nabidkaItemsByNiIdRodic.nodes.reduce((n, x) => n + x.niPocetHod, 0)
-      );
-    },
-    canCancelReservation(
-      item: { nLock: boolean; nTrener: string; },
-      lesson: { niLock: boolean; niPartner: string; }
-    ) {
-      return !item.nLock && !lesson.niLock && (
-        (perms.peNabidka >= PermissionLevel.P_MEMBER && couple?.id == lesson.niPartner) ||
-        (perms.peNabidka >= PermissionLevel.P_OWNED && user?.id == item.nTrener) ||
-        perms.peNabidka >= PermissionLevel.P_ADMIN
-      );
-    },
-  };
+  return new PermissionChecker(user?.id || "0", couple?.id || "0", perms);
 };
+
+export class PermissionChecker {
+  constructor(
+    public userId: string,
+    public coupleId: string,
+    public perms: { [key in keyof typeof PermissionKey]: number }
+  ) { }
+
+  public hasPermission(key: PermissionKey, level: PermissionLevel) {
+    const perm = PermissionKey[key] as keyof typeof PermissionKey;
+    return this.perms[perm] >= level;
+  }
+
+  public canEditSchedule(schedule: { rTrener: string }) {
+    return (
+      (this.perms.peRozpis >= PermissionLevel.P_OWNED && this.userId === schedule.rTrener) ||
+      this.perms.peRozpis >= PermissionLevel.P_ADMIN
+    );
+  }
+
+  public canEditReservation(reservation: { nTrener: string; }) {
+    return (
+      (this.perms.peNabidka >= PermissionLevel.P_OWNED && this.userId === reservation.nTrener) ||
+      this.perms.peNabidka >= PermissionLevel.P_ADMIN
+    );
+  }
+
+  public canSignUp(item: { rLock: boolean; rTrener: string; }, lesson: { riLock: boolean; riPartner: string | null; }) {
+    return (
+      this.perms.peRozpis >= PermissionLevel.P_MEMBER &&
+      (!lesson.riPartner || lesson.riPartner === '0') && !item.rLock && !lesson.riLock
+    );
+  }
+
+  public canSignOut(item: { rLock: boolean; rTrener: string; }, lesson: { riLock: boolean; riPartner: string | null; }) {
+    return (
+      (lesson.riPartner && lesson.riPartner !== '0') && !item.rLock && !lesson.riLock && (
+        (this.perms.peRozpis >= PermissionLevel.P_MEMBER && this.coupleId == lesson.riPartner) ||
+        (this.perms.peRozpis >= PermissionLevel.P_OWNED && this.userId == item.rTrener) ||
+        this.perms.peRozpis >= PermissionLevel.P_ADMIN
+      )
+    );
+  }
+
+  public canMakeReservation(item: {
+    nabidkaItemsByNiIdRodic: { nodes: { niPocetHod: number; }[] };
+    nTrener: string; nLock: boolean; nPocetHod: number;
+  }) {
+    return (
+      this.perms.peNabidka >= PermissionLevel.P_MEMBER && !item.nLock &&
+      item.nPocetHod > item.nabidkaItemsByNiIdRodic.nodes.reduce((n, x) => n + x.niPocetHod, 0)
+    );
+  }
+
+  public canCancelReservation(
+    item: { nLock: boolean; nTrener: string; },
+    lesson: { niLock: boolean; niPartner: string; }
+  ) {
+    return !item.nLock && !lesson.niLock && (
+      (this.perms.peNabidka >= PermissionLevel.P_MEMBER && this.coupleId == lesson.niPartner) ||
+      (this.perms.peNabidka >= PermissionLevel.P_OWNED && this.userId == item.nTrener) ||
+      this.perms.peNabidka >= PermissionLevel.P_ADMIN
+    );
+  }
+}

@@ -74,7 +74,7 @@ export default function FileAdminList() {
           getActions: ({ id }) => [
             <GridActionsCellItem key="edit"
               icon={<EditIcon />}
-              onClick={() => router.push(`/admin/dokumenty/edit/${id}`)}
+              onClick={() => router.push(`/admin/dokumenty/${id}`)}
               label="Upravit"
             />,
             <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat soubor" />,

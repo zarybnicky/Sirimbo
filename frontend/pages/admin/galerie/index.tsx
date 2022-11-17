@@ -85,16 +85,11 @@ export default function GalleryDirectoryList() {
           getActions: ({ id }: GridRowParams) => [
             <GridActionsCellItem key="edit"
               icon={<EditIcon />}
-              onClick={() => router.push(`/admin/galerie/directory/edit/${id}`)}
-              label="Upravit"
-            />,
-            <GridActionsCellItem key="edit"
-              icon={<EditIcon />}
               onClick={() => router.push(`/admin/galerie/directory/${id}`)}
               label="Upravit fotky"
             />,
             <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat složku" />,
-          ], flex: 1,
+          ],
         },
         {
           field: 'gdName', headerName: 'Jméno', flex: 1,

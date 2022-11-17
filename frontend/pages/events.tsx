@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { HtmlView } from 'components/HtmlView';
 import classNames from 'classnames';
 import { Card } from 'components/Card';
 import { EventWithItemsFragment, useEventListQuery } from 'lib/graphql/Event';
 import { Layout } from 'components/layout/Layout';
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 const EventItem = ({ event }: { event: EventWithItemsFragment }) => {
   const [expanded, setExpanded] = React.useState(false);
@@ -38,7 +38,6 @@ const EventItem = ({ event }: { event: EventWithItemsFragment }) => {
 };
 
 export default function EventListPage() {
-  useRequireUserLoggedIn();
   const { data } = useEventListQuery({ visible: true });
 
   return <div className="container mx-auto max-w-5xl mt-4 mb-8">
@@ -49,3 +48,5 @@ export default function EventListPage() {
 EventListPage.getLayout = (page: React.ReactElement) => (
   <Layout withBleeds>{page}</Layout>
 );
+
+export const getServerSideProps = withServerPermissions(PermissionKey.peAkce, PermissionLevel.P_MEMBER);

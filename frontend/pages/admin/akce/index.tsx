@@ -48,7 +48,7 @@ export default function AdminEventList() {
           getActions: ({ id }) => [
             <GridActionsCellItem key="edit"
               icon={<EditIcon />}
-              onClick={() => router.push(`/admin/akce/edit/${id}`)}
+              onClick={() => router.push(`/admin/akce/${id}`)}
               label="Upravit"
             />,
             <GridActionsCellItem key="edit-detail"

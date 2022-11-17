@@ -29,7 +29,7 @@ export default function PlatbyGroupListPage() {
           getActions: ({ id }: GridRowParams) => [
             <GridActionsCellItem key="edit"
               icon={<EditIcon />}
-              onClick={() => router.push(`/admin/platby/structure/group/edit/${id}`)}
+              onClick={() => router.push(`/admin/platby/structure/group/${id}`)}
               label="Upravit"
             />,
             <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat skupinu plateb" />,

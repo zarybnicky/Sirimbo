@@ -29,7 +29,7 @@ export default function VideoList() {
           getActions: ({ id }: GridRowParams) => [
             <GridActionsCellItem key="edit"
               icon={<EditIcon />}
-              onClick={() => router.push(`/admin/video/edit/${id}`)}
+              onClick={() => router.push(`/admin/video/${id}`)}
               label="Upravit"
             />,
             <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat video" />,

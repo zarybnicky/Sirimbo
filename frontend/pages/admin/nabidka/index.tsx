@@ -46,7 +46,7 @@ export default function ReservationAdminList() {
           getActions: ({ id }) => [
             <GridActionsCellItem key="edit"
               icon={<EditIcon />}
-              onClick={() => router.push(`/admin/nabidka/edit/${id}`)}
+              onClick={() => router.push(`/admin/nabidka/${id}`)}
               label="Upravit"
             />,
             <GridActionsCellItem key="edit-lessons"

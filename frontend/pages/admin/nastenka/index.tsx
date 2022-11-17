@@ -45,7 +45,7 @@ export default function AnnouncementAdminList() {
           getActions: ({ id }) => [
             <GridActionsCellItem key="edit"
               icon={<EditIcon />}
-              onClick={() => router.push(`/admin/nastenka/edit/${id}`)}
+              onClick={() => router.push(`/admin/nastenka/${id}`)}
               label="Upravit"
             />,
             <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat příspěvek" />,

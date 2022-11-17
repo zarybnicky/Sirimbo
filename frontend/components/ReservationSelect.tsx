@@ -17,7 +17,7 @@ const ReservationView = (x: ReservationFragment) => {
               align="center"
               button={<img alt="Upravit" width="16" src="/style/icon-gear.png" />}
               options={[
-                { title: "Upravit", href: `/admin/nabidka/edit/${x.id}` },
+                { title: "Upravit", href: `/admin/nabidka/${x.id}` },
                 { title: "Upravit rezervace", href: `/admin/nabidka/detail/${x.id}` },
               ]}
             />

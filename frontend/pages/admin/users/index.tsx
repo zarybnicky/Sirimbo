@@ -53,7 +53,7 @@ export default function UserectoryList() {
           getActions: ({ id }: GridRowParams) => [
             <GridActionsCellItem key="edit"
               icon={<EditIcon />}
-              onClick={() => router.push(`/admin/users/edit/${id}`)}
+              onClick={() => router.push(`/admin/users/${id}`)}
               label="Upravit"
             />,
             <GridActionsCellItem key="sign-as"

@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import { Edit as EditIcon } from 'react-feather';
 import { DeleteButton } from 'components/DeleteButton';
+import { GalleryDirForm } from "components/GalleryDirectoryForm";
 
 export default function AdminGalleryPhotoList() {
   useRequireUserLoggedIn();
@@ -15,6 +16,8 @@ export default function AdminGalleryPhotoList() {
   });
 
   return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
+    {data?.galerieDir && <GalleryDirForm data={data.galerieDir} onSuccess={() => router.back()} />}
+
     <DataGrid
       autoHeight={true}
       rows={data?.galerieDir?.galerieFotosByGfIdRodic.nodes || []}
@@ -25,7 +28,7 @@ export default function AdminGalleryPhotoList() {
           getActions: ({ id }) => [
             <GridActionsCellItem key="edit"
               icon={<EditIcon />}
-              onClick={() => router.push(`/admin/galerie/file/edit/${id}`)}
+              onClick={() => router.push(`/admin/galerie/file/${id}`)}
               label="Upravit"
             />,
             <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat fotku" />,

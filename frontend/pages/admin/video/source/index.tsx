@@ -29,7 +29,7 @@ export default function VideoSourceList() {
           getActions: ({ id }: GridRowParams) => [
             <GridActionsCellItem key="edit"
               icon={<EditIcon />}
-              onClick={() => router.push(`/admin/video/source/edit/${id}`)}
+              onClick={() => router.push(`/admin/video/source/${id}`)}
               label="Upravit"
             />,
             <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat zdroj videí" />,

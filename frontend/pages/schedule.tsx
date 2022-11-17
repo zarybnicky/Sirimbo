@@ -90,7 +90,7 @@ export default function SchedulePage() {
                   <Dropdown align="end"
                     button={<MoreVertical className="text-stone-500 w-6 invisible ui-open:visible group-hover:visible" />}
                     options={[
-                      { title: "Upravit", href: `/admin/rozpis/edit/${item.id}` },
+                      { title: "Upravit", href: `/admin/rozpis/${item.id}` },
                       { title: "Upravit rezervace", href: `/admin/rozpis/detail/${item.id}` },
                     ]}
                   />
@@ -114,7 +114,7 @@ export default function SchedulePage() {
             {perms.canEditReservation(item) && <Dropdown align="center"
               button={<img className="w-4 absolute top-2 right-2" alt="Upravit" src="/style/icon-gear.png" />}
               options={[
-                { title: "Upravit", href: `/admin/nabidka/edit/${item.id}` },
+                { title: "Upravit", href: `/admin/nabidka/${item.id}` },
                 { title: "Upravit rezervace", href: `/admin/nabidka/detail/${item.id}` },
               ]}
             />}

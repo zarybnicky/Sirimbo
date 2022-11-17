@@ -11,7 +11,7 @@ export function List({ children }: {
   );
 }
 
-List.TitleBar = function ListTitleBar({ title, children }: {
+function ListTitleBar({ title, children }: {
   title: React.ReactNode;
   children?: React.ReactNode;
 }) {
@@ -23,7 +23,7 @@ List.TitleBar = function ListTitleBar({ title, children }: {
   );
 }
 
-List.TitleButton = function ListTitleButton({ active, icon: Icon, children, href }: {
+function ListTitleButton({ active, icon: Icon, children, href }: {
   children: React.ReactNode;
   active?: boolean;
   icon?: React.ElementType<{ className?: string }>;
@@ -41,7 +41,7 @@ List.TitleButton = function ListTitleButton({ active, icon: Icon, children, href
   );
 }
 
-List.Item = function ListItem({ active, children, href, title, subtitle }: {
+function ListItem({ active, children, href, title, subtitle }: {
   children: React.ReactNode;
   active?: boolean;
   href: string;
@@ -62,7 +62,7 @@ List.Item = function ListItem({ active, children, href, title, subtitle }: {
   );
 }
 
-List.Scroll = function ListScroll({ children }: {
+function ListScroll({ children }: {
   children: React.ReactNode;
 }) {
   return (
@@ -74,3 +74,8 @@ List.Scroll = function ListScroll({ children }: {
     </div>
   );
 }
+
+List.TitleBar = ListTitleBar;
+List.TitleButton = ListTitleButton;
+List.Item = ListItem;
+List.Scroll = ListScroll;
