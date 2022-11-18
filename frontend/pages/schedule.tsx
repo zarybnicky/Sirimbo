@@ -74,7 +74,7 @@ export default function SchedulePage() {
           <div key={i} className="group relative min-w-[200px]">
             <div className="ml-3 mb-0.5">
               {perms.canEditSchedule(item) && (
-                <div className="absolute right-2 top-0">
+                <div className="absolute right-2 top-2">
                   <Dropdown align="end"
                     button={<MoreVertical className="text-stone-500 w-6 invisible ui-open:visible group-hover:visible" />}
                     options={[

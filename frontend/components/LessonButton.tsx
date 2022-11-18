@@ -6,12 +6,14 @@ import classNames from 'classnames';
 import { X as Cross } from 'react-feather';
 import { SubmitButton } from './SubmitButton';
 import { useQueryClient } from '@tanstack/react-query';
+import { useAuth } from 'lib/data/use-auth';
 
 export const LessonButton = ({ schedule, lesson, showTrainer }: {
   lesson: ScheduleItemBasicFragment;
   schedule: ScheduleBasicFragment;
   showTrainer?: boolean;
 }) => {
+  const { couple: coupleData } = useAuth();
   const perms = usePermissions();
   const [isOpen, setIsOpen] = React.useState(false);
   const queryClient = useQueryClient();
@@ -60,6 +62,7 @@ export const LessonButton = ({ schedule, lesson, showTrainer }: {
       "leading-4 text-sm tabular-nums",
       "radix-state-open:bg-stone-200",
       (canBook || canCancel) && 'cursor-pointer hover:bg-stone-200',
+      (canBook || coupleData?.id === lesson.riPartner) && 'border border-red-500',
     )}>
       <div className="text-stone-600">{lesson.riOd.substring(0, 5)}</div>
       <div className="grow">{canBook ? "VOLNÁ" : lesson.paryByRiPartner ? name : '-'}</div>
