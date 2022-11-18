@@ -43,7 +43,7 @@ BEGIN
    RETURN NEW;
 END;
 $$;
-select plpgsql_check_function('public.on_update_author_aktuality', 'aktuality');
+select * from plpgsql_check_function('public.on_update_author_aktuality', 'aktuality');
 
 drop trigger if exists on_update_author on public.aktuality;
 create trigger on_update_author
@@ -63,9 +63,10 @@ grant all on dokumenty to member;
 CREATE or replace FUNCTION public.on_delete_file_dokumenty() RETURNS trigger LANGUAGE plpgsql AS $$
 BEGIN
     perform graphile_worker.add_job('delete_file', json_build_object('path', OLD.d_path));
+    return old;
 END;
 $$;
-select plpgsql_check_function('public.on_delete_file_dokumenty', 'dokumenty');
+select * from plpgsql_check_function('public.on_delete_file_dokumenty', 'dokumenty');
 
 drop trigger if exists on_delete_file_dokumenty on public.dokumenty;
 create trigger on_delete_file_dokumenty
@@ -106,20 +107,6 @@ create policy manage_own on nabidka_item for all to member
   using (ni_partner in (select current_couple_ids()))
   with check (ni_partner in (select current_couple_ids()));
 grant all on nabidka_item to member;
-
--- ************** page **************
-select app_private.drop_policies('public.page');
-alter table page enable row level security;
-create policy admin_all on page to administrator using (true) with check (true);
-create policy all_view on page for select using (true);
-grant usage, select on sequence page_id_seq to administrator;
-grant all on page to anonymous;
-
--- ************** page_revision **************
-select app_private.drop_policies('public.page_revision');
-alter table page_revision enable row level security;
-create policy all_view on page_revision for select using (true);
-grant all on page_revision to anonymous;
 
 -- ************** parameters **************
 select app_private.drop_policies('public.parameters');
@@ -269,7 +256,7 @@ BEGIN
    RETURN NEW;
 END;
 $$;
-select plpgsql_check_function('public.on_update_author_upozorneni', 'upozorneni');
+select * from plpgsql_check_function('public.on_update_author_upozorneni', 'upozorneni');
 
 drop trigger if exists on_update_author_upozorneni on public.upozorneni;
 create trigger on_update_author_upozorneni

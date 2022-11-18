@@ -4,12 +4,13 @@ import { useActiveProspectsQuery } from 'lib/graphql/Crm';
 import { Layout } from 'components/layout/Layout';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 import { formatFullDate } from 'lib/format-date';
+import { Item } from 'components/layout/Item';
 
 export default function CrmPage() {
   const { data } = useActiveProspectsQuery();
 
-  return <div className="container mx-auto max-w-5xl" style={{ padding: '2rem 0' }}>
-    <h4 className="text-lg font-bold mb-2">Zájemci</h4>
+  return <Item>
+    <Item.Titlebar title="Zájemci" />
 
     <DataGrid
       autoHeight={true}
@@ -38,10 +39,8 @@ export default function CrmPage() {
         },
       ]}
     />
-  </div>;
+  </Item>;
 }
-
-CrmPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peNastenka, PermissionLevel.P_ADMIN,

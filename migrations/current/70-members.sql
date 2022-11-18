@@ -90,7 +90,7 @@ begin
   where p_archiv=false and (p_id_partnerka=woman or (p_id_partnerka is null and p_id_partner=woman));
 
   if couple_man.p_id_partnerka = woman then
-     return query select * from couple_man;
+     return next couple_man;
   end if;
 
   if couple_man.p_id_partnerka is not null and couple_man.p_id_partnerka<>0 then
@@ -106,7 +106,7 @@ begin
   return query insert into pary (p_id_partner, p_id_partnerka) VALUES (man, woman) returning *;
 end;
 $$ language plpgsql strict volatile security definer;
-select plpgsql_check_function('public.create_couple');
+select * from plpgsql_check_function('public.create_couple');
 grant execute on function public.create_couple to administrator;
 
 create or replace function public.fix_unpaired_couples() returns setof pary as $$
@@ -139,21 +139,20 @@ begin
     raise exception 'ITEM_LOCKED' using errcode = '42501';
   end if;
 
-  update rozpis_item set ri_partner = couple_id where ri_id = lesson_id;
+  return query update rozpis_item set ri_partner = couple_id where ri_id = lesson_id
+    returning *;
 end;
 $$ language plpgsql strict volatile security definer;
-select plpgsql_check_function('public.book_lesson');
+select * from plpgsql_check_function('public.book_lesson');
 grant execute on function public.book_lesson to member;
 
 create or replace function public.cancel_lesson(lesson_id bigint) returns setof rozpis_item as $$
 declare
   schedule rozpis;
   lesson rozpis_item;
-  couple_id bigint;
 begin
   select * into lesson from rozpis_item where ri_id=lesson_id;
   select * into schedule from rozpis where r_id=lesson.ri_id_rodic;
-  select * into couple_id from current_couple_ids() limit 1;
 
   if schedule is null or lesson is null then
     raise exception 'ITEM_NOT_FOUND' using errcode = '28000';
@@ -163,8 +162,9 @@ begin
     raise exception 'ITEM_LOCKED' using errcode = '42501';
   end if;
 
-  update rozpis_item set ri_partner = null where ri_id = lesson_id;
+  return query update rozpis_item set ri_partner = null where ri_id = lesson_id
+    returning *;
 end;
 $$ language plpgsql strict volatile security definer;
-select plpgsql_check_function('public.cancel_lesson');
+select * from plpgsql_check_function('public.cancel_lesson');
 grant execute on function public.cancel_lesson to member;

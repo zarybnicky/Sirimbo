@@ -50,7 +50,7 @@ export const MyLessonsList: React.FC = () => {
   }, [data]);
 
   return <>
-    <div className="flex items-center justify-center">
+    <div className="flex items-center">
       <button className="button button-icon" onClick={setPrevWeek}>
         <ChevronLeft />
       </button>
@@ -62,9 +62,9 @@ export const MyLessonsList: React.FC = () => {
       </button>
     </div>
     {Object.entries(lessonsPerDay).map(([key, lessons]) => <React.Fragment key={key}>
-      <h6 className="text-lg font-bold mb-1 mt-4 text-center">{key}</h6>
+      <h6 className="text-lg font-bold mb-1 mt-4">{key}</h6>
 
-      <Card className="grid mx-auto w-72 rounded-xl border-stone-200 border">
+      <Card className="grid w-72 rounded-xl border-stone-200 border">
         {lessons.map((lesson, i) => (
           <LessonButton
             showTrainer={lesson.rozpiByRiIdRodic?.rTrener !== user?.id}

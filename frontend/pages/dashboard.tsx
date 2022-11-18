@@ -1,25 +1,23 @@
 import * as React from 'react';
 import { AnnouncementList } from '../components/AnnouncementList';
 import { MyLessonsList } from 'components/MyLessonsList';
-import { Layout } from 'components/layout/Layout';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
+import { Item } from 'components/layout/Item';
 
 export default function DashboardPage() {
-  return <div className="container mx-auto max-w-5xl pt-12 pb-8">
+  return <Item>
     <div className="grid lg:grid-cols-2">
       <div>
-        <h4 className="text-lg font-bold text-center">Moje tréninky</h4>
+        <h4 className="text-lg font-bold">Moje tréninky</h4>
         <MyLessonsList />
       </div>
       <div>
-        <h4 className="text-lg font-bold text-center">Nástěnka</h4>
+        <h4 className="text-lg font-bold">Nástěnka</h4>
         <AnnouncementList />
       </div>
     </div>
-  </div>;
+  </Item>;
 }
-
-DashboardPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peNastenka, PermissionLevel.P_VIEW,

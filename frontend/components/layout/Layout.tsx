@@ -13,10 +13,11 @@ export const Layout: React.FC<{
 
   return <div className="h-screen flex flex-col w-full relative overflow-hidden">
     <Header {...{ isOpen, setIsOpen, showTopMenu }} />
-    <div className="relative flex overflow-hidden">
+    <div className="relative grow flex overflow-hidden">
       <Sidebar {...{ isOpen, setIsOpen, showTopMenu }} />
       {list ? <>
         <div className={classNames(
+          "grow",
           isDetail ? 'hidden lg:flex flex-col' : 'max-h-screen min-h-screen w-full',
         )}>
           {list}

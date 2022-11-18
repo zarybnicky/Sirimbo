@@ -1,4 +1,3 @@
-
 do $$ begin
   if not exists (select 1 from information_schema.tables
     where table_schema = 'app_private' and table_name = 'crm_prospect'
@@ -59,9 +58,9 @@ begin
   insert into app_private.crm_activity (prospect, origin, note) values (prospect.id, origin, note);
 end;
 $$ language plpgsql strict volatile security definer;
-select plpgsql_check_function('public.prospect_form_dancer');
+select * from plpgsql_check_function('public.prospect_form_dancer');
 
-drop function active_prospects();
+drop function if exists active_prospects();
 create or replace function active_prospects() returns table (
   id bigint, data prospect_data, cohort app_private.crm_cohort, updated_at timestamptz
 ) AS $$

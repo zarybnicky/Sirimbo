@@ -27,7 +27,7 @@
         pkgs.yarn
         pkgs.nodePackages.typescript
         pkgs.yarn2nix
-        pkgs.postgresql
+        pkgs.postgresql_13
         pkgs.ncc
         pkgs.squawk
       ];

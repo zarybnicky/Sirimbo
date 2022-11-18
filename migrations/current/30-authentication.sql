@@ -33,7 +33,7 @@ begin
   select * from pary where p_archiv=false and (p_id_partner=usr.u_id or p_id_partnerka=usr.u_id) into couple;
 end;
 $$ language plpgsql strict volatile security definer;
-select plpgsql_check_function('public.login');
+select * from plpgsql_check_function('public.login');
 grant execute on function login to anonymous;
 
 create or replace function public.logout() returns void as $$
@@ -41,36 +41,8 @@ begin
   delete from session where ss_id=current_session_id();
 end;
 $$ language plpgsql strict volatile security definer;
-select plpgsql_check_function('public.logout');
+select * from plpgsql_check_function('public.logout');
 grant execute on function logout to anonymous;
-
-create or replace function current_user_id() returns bigint as $$
-  SELECT current_setting('jwt.claims.user_id', true)::bigint;
-$$ language sql stable;
-grant execute on function current_user_id to anonymous;
-
-create or replace function current_permissions() returns setof permissions as $$
-  SELECT permissions.* from permissions
-  inner join users on u_group=pe_id
-  where u_id=current_setting('jwt.claims.user_id', true)::bigint;
-$$ language sql stable;
-grant execute on function current_user_id to anonymous;
-
-create or replace function current_session_id() returns text as $$
-  select nullif(current_setting('jwt.claims.user_id', true), '')::integer;
-$$ language sql stable;
-grant execute on function current_session_id to anonymous;
-
-create or replace function current_couple_ids() returns setof bigint AS $$
-  select distinct p_id
-  from public.pary
-  where p_id_partner = current_user_id() and p_archiv = false
-  UNION
-  select distinct p_id
-  from public.pary
-  where p_id_partnerka = current_user_id() and p_archiv = false;
-$$ language sql stable;
-grant execute on function current_couple_ids to anonymous;
 
 create or replace function get_current_user() returns users as $$
   SELECT * FROM users WHERE u_id = nullif(current_setting('jwt.claims.user_id', true), '')::integer;
@@ -89,7 +61,7 @@ begin
   return NEW;
 end;
 $$ language plpgsql volatile security definer;
-select plpgsql_check_function('app_private.tg_users__notify_admin', 'users');
+select * from plpgsql_check_function('app_private.tg_users__notify_admin', 'users');
 
 drop trigger if exists _500_notify_admin ON users;
 create trigger _500_notify_admin
@@ -108,7 +80,7 @@ begin
   return NEW;
 end;
 $$ language plpgsql volatile;
-select plpgsql_check_function('app_private.tg_users__encrypt_password', 'users');
+select * from plpgsql_check_function('app_private.tg_users__encrypt_password', 'users');
 
 drop trigger if exists _200_encrypt_password ON users;
 create trigger _200_encrypt_password
@@ -129,7 +101,7 @@ begin
   perform graphile_worker.add_job('forgotten_password_generate', json_build_object('id', usr.u_id));
 end;
 $$ language plpgsql strict volatile security definer;
-select plpgsql_check_function('public.reset_password');
+select * from plpgsql_check_function('public.reset_password');
 grant execute on function public.reset_password to anonymous;
 
 
@@ -146,5 +118,5 @@ begin
   perform graphile_worker.add_job('notify_confirmed_user', json_build_object('id', id));
 end;
 $$ language plpgsql strict volatile security definer;
-select plpgsql_check_function('public.confirm_user');
+select * from plpgsql_check_function('public.confirm_user');
 grant execute on function public.confirm_user to administrator;

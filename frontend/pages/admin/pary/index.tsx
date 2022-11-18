@@ -6,7 +6,6 @@ import { NewCoupleForm } from 'components/NewCoupleForm';
 import { toast } from 'react-toastify';
 import { Card } from 'components/Card';
 import { SimpleDialog } from 'components/Dialog';
-import { Layout } from 'components/layout/Layout';
 import { Item } from 'components/layout/Item';
 
 export default function CoupleAdminList() {
@@ -42,5 +41,3 @@ export default function CoupleAdminList() {
     ))}
   </Item>;
 }
-
-CoupleAdminList.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;

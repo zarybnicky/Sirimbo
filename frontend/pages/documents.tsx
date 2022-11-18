@@ -2,9 +2,9 @@ import { useForm } from "react-hook-form";
 import { SelectElement } from 'components/SelectElement';
 import { DataGrid } from '@mui/x-data-grid';
 import { useFileListQuery } from "lib/graphql/Documents";
-import { Layout } from 'components/layout/Layout';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 import { formatFullDate } from "lib/format-date";
+import { Item } from "components/layout/Item";
 
 const categories = [
   { id: "1", label: "Schůze,\u{00A0}rady" },
@@ -15,12 +15,16 @@ const categories = [
 
 export default function FileListPage() {
   const { control, watch } = useForm<{ category: string; }>();
-  const { data } = useFileListQuery({ category: parseInt(watch('category'), 10) });
+  const category = watch('category');
 
-  return <div className="container mx-auto max-w-5xl pt-12 pb-4">
-    <div style={{ margin: '0 1rem 1rem auto', maxWidth: '12rem' }}>
+  const { data } = useFileListQuery({
+    category: category ? parseInt(category, 10) : undefined,
+  });
+
+  return <Item>
+    <Item.Titlebar title="Dokumenty">
       <SelectElement control={control} name="category" label="Kategorie" required options={categories} />
-    </div>
+    </Item.Titlebar>
 
     <DataGrid
       pageSize={20}
@@ -43,10 +47,8 @@ export default function FileListPage() {
         }
       ]}
     />
-  </div>;
+  </Item >;
 }
-
-FileListPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peNastenka, PermissionLevel.P_VIEW,

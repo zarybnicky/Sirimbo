@@ -8,23 +8,23 @@ export function Item({ children }: { children: React.ReactNode }) {
 }
 
 function ItemTitleBar({ backHref, title, children }: {
-  title?: string;
-  backHref: string;
+  title: string;
+  backHref?: string;
   children?: React.ReactNode;
 }) {
   return <>
-    <div className="block lg:hidden mb-4">
-      <Link href={backHref} passHref>
-        <a className="flex gap-2 text-red-500 items-center text-sm">
-          <UpIcon className="inline-block w-4 h-4" /> Zpět na seznam
-        </a>
-      </Link>
-    </div>
-    <div className="flex mb-4 grow-0 h-min justify-between">
-      <div className="text-xl font-bold">{title}</div>
-      <div>
-        {children}
+    {backHref && (
+      <div className="block lg:hidden mb-4">
+        <Link href={backHref} passHref>
+          <a className="flex gap-2 text-red-500 items-center text-sm">
+            <UpIcon className="inline-block w-4 h-4" /> Zpět na seznam
+          </a>
+        </Link>
       </div>
+    )}
+    <div className="flex gap-2 flex-wrap mb-4 grow-0 h-min justify-between">
+      <div className="text-2xl font-bold order-2 w-full md:w-auto md:order-none">{title}</div>
+      <div>{children}</div>
     </div>
   </>;
 }

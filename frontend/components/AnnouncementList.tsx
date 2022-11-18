@@ -20,7 +20,7 @@ export function AnnouncementList() {
   const hasPrev = 0 < (page - 1) * limit;
 
   return <>
-    <div className="flex items-center justify-center">
+    <div className="flex items-center">
       {hasPrev && (
         <button className="button button-icon text-stone-500" onClick={() => setPage(page - 1)}>
           <ChevronLeft />

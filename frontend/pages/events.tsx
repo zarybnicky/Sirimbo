@@ -5,6 +5,7 @@ import { Card } from 'components/Card';
 import { EventWithItemsFragment, useEventListQuery } from 'lib/graphql/Event';
 import { Layout } from 'components/layout/Layout';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
+import { Item } from 'components/layout/Item';
 
 const EventItem = ({ event }: { event: EventWithItemsFragment }) => {
   const [expanded, setExpanded] = React.useState(false);
@@ -40,11 +41,10 @@ const EventItem = ({ event }: { event: EventWithItemsFragment }) => {
 export default function EventListPage() {
   const { data } = useEventListQuery({ visible: true });
 
-  return <div className="container mx-auto max-w-5xl mt-4 mb-8">
+  return <Item>
+    <Item.Titlebar title="Nadcházející události" />
     {data?.akces?.nodes.map(event => <EventItem key={event.id} event={event} />)}
-  </div >;
+  </Item>;
 }
-
-EventListPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 
 export const getServerSideProps = withServerPermissions(PermissionKey.peAkce, PermissionLevel.P_MEMBER);

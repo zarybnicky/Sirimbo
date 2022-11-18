@@ -25,21 +25,27 @@ function ListTitleBar({ title, children }: {
   );
 }
 
-function ListTitleButton({ active, icon: Icon, children, href }: {
+function ListTitleButton({ active, icon: Icon, children, href, onClick }: {
   children: React.ReactNode;
   active?: boolean;
   icon?: React.ElementType<{ className?: string }>;
-  href: string;
+  href?: string;
+  onClick?: () => void;
 }) {
-  return (
+  const cx = classNames(
+    "button font-bold",
+    active ? 'tracking-wide bg-red-500 text-white' : 'bg-white hover:bg-stone-50',
+  );
+  return href ? (
     <Link href={href} passHref>
-      <a className={classNames(
-        "button font-bold",
-        active ? 'tracking-wide bg-red-500 text-white' : 'bg-white hover:bg-stone-50',
-      )}>
+      <a className={cx}>
         {Icon && <Icon className="w-4" />} {children}
       </a>
     </Link>
+  ) : (
+    <button className={cx} onClick={onClick}>
+      {Icon && <Icon className="w-4" />} {children}
+    </button>
   );
 }
 

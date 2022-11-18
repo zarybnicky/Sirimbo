@@ -1,3 +1,4 @@
+import { Item } from "components/layout/Item";
 import { Layout } from "components/layout/Layout";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -11,7 +12,7 @@ export default function ErrorPage() {
       <title>Chyba</title>
     </Head>
 
-    <div className="container mx-auto max-w-3xl mt-12 mb-8">
+    <Item>
       <div className="rounded-xl p-4 border-2 border-red-500">
         {errorCode === 'not_found' ? <>
           <b>Stránka nenalezena.</b>
@@ -63,7 +64,7 @@ export default function ErrorPage() {
           Chybová stránka s daným ID nebyla nalezena.
         </>}
       </div>
-    </div>
+    </Item>
   </>;
 }
 

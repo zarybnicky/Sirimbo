@@ -7,7 +7,6 @@ import { Button } from 'components/Button';
 import { LessonButton } from 'components/LessonButton';
 import { Card } from 'components/Card';
 import { MoreVertical } from 'react-feather';
-import { Layout } from 'components/layout/Layout';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 import { formatLongDateRange, formatWeekDay } from 'lib/format-date';
 
@@ -142,8 +141,6 @@ export default function SchedulePage() {
     </>)}
   </div>;
 }
-
-SchedulePage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peRozpis, PermissionLevel.P_MEMBER,

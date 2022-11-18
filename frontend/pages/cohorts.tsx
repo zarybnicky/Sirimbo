@@ -7,8 +7,8 @@ import { HtmlView } from 'components/HtmlView';
 import { Card } from 'components/Card';
 import { SimpleDialog } from 'components/Dialog';
 import { UserFragment } from 'lib/graphql/CurrentUser';
-import { Layout } from 'components/layout/Layout';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
+import { Item } from 'components/layout/Item';
 
 export default function CohortsPage() {
   const { data: members } = useMemberListQuery();
@@ -36,7 +36,7 @@ export default function CohortsPage() {
   }, [members]);
   const [variant, setVariant] = React.useState('all');
 
-  return <div className="container mx-auto max-w-5xl" style={{ margin: '2rem auto 6rem' }}>
+  return <Item>
     <div className="flex items-center justify-between gap-2 pb-2">
       <TabMenu selected={variant} onSelect={setVariant} options={[
         { id: 'cohortsOnly', label: 'Tréninkové skupiny' },
@@ -66,7 +66,7 @@ export default function CohortsPage() {
         </Card>
       ))}
     </div>
-  </div>;
+  </Item>;
 }
 
 const UserDetailButton: React.FC<{ user: UserFragment }> = ({ user }) => {
@@ -80,8 +80,6 @@ const UserDetailButton: React.FC<{ user: UserFragment }> = ({ user }) => {
     </ul>
   </SimpleDialog>
 }
-
-CohortsPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peNastenka, PermissionLevel.P_VIEW,

@@ -14,6 +14,7 @@ import { useCohortListQuery } from 'lib/graphql/Cohorts';
 import { useRegisterMutation } from 'lib/graphql/CurrentUser';
 import { withServerLoggedOut } from 'lib/data/use-server-permissions';
 import { Layout } from 'components/layout/Layout';
+import { Item } from 'components/layout/Item';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -44,7 +45,7 @@ export default function RegisterPage() {
   });
 
   return (
-    <div className="container mx-auto max-w-3xl mt-12 mb-8">
+    <Item>
       <Card>
         <form className="grid md:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
           <h4 className="text-lg font-bold mb-2 col-full">Registrace</h4>
@@ -158,7 +159,7 @@ export default function RegisterPage() {
           </SubmitButton>
         </form>
       </Card>
-    </div>
+    </Item>
   );
 };
 

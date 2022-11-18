@@ -74,8 +74,8 @@ const publicMenu: MenuStructItem[] = [
 const memberMenu: MenuLink[] = [
   { type: "link", title: 'Nástěnka', "href": '/dashboard' },
   { type: "link", title: 'Tréninky', "href": '/schedule' },
-  { type: "link", title: 'Akce', "href": '/events' },
-  { type: "link", title: 'Dokumenty', "href": '/documents' },
+  { type: "link", title: 'Soustředění', "href": '/events' },
+  // { type: "link", title: 'Dokumenty', "href": '/documents' },
   { type: "link", title: 'Členové', "href": '/cohorts' },
   { type: "link", title: 'Profil', "href": '/profile' },
 ];
