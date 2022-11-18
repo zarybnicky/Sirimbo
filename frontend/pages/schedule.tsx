@@ -5,7 +5,6 @@ import { DateRange } from 'components/DateRange';
 import { ReservationFragment, useReservationRangeQuery } from 'lib/graphql/Reservation';
 import { ScheduleFragment, useScheduleRangeQuery } from 'lib/graphql/Schedule';
 import { Dropdown } from 'components/Dropdown';
-import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { Button } from 'components/Button';
 import { cs } from 'date-fns/locale'
 import { LessonButton } from 'components/LessonButton';
@@ -13,9 +12,9 @@ import { Card } from 'components/Card';
 import { MoreVertical } from 'react-feather';
 import { Layout } from 'components/layout/Layout';
 import { capitalize } from 'lib/capitalize';
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 export default function SchedulePage() {
-  useRequireUserLoggedIn();
   const perms = usePermissions();
   const [startDate] = React.useState('2022-02-01');
   const [endDate] = React.useState('2022-03-01');
@@ -37,14 +36,6 @@ export default function SchedulePage() {
     });
     return obj;
   }, [schedules, reservations])
-
-  // can reserve === has paid
-  // $paid = \DBPlatby::hasPaidMemberFees(self::getUser()->getId);
-  // $par = \DBPary::getLatestPartner($user->getId(), $user->getGender());
-  // if ($par) {
-  //     $paid = $paid && \DBPlatby::hasPaidMemberFees($par['u_id']);
-  // }
-  // return $paid;
 
   const reserveLessons = React.useCallback((id: string) => {
     // check lock
@@ -155,6 +146,8 @@ export default function SchedulePage() {
   </div>;
 }
 
-SchedulePage.getLayout = (page: React.ReactElement) => (
-  <Layout withBleeds>{page}</Layout>
+SchedulePage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.peRozpis, PermissionLevel.P_MEMBER,
 );

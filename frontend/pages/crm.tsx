@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { format } from 'date-fns';
-import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid } from '@mui/x-data-grid';
 import { useActiveProspectsQuery } from 'lib/graphql/Crm';
+import { Layout } from 'components/layout/Layout';
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 export default function CrmPage() {
-  useRequireUserLoggedIn()
   const { data } = useActiveProspectsQuery();
 
   return <div className="container mx-auto max-w-5xl" style={{ padding: '2rem 0' }}>
@@ -40,3 +40,9 @@ export default function CrmPage() {
     />
   </div>;
 }
+
+CrmPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.peNastenka, PermissionLevel.P_ADMIN,
+);

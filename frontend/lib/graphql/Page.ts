@@ -4,7 +4,7 @@ import * as Types from './index';
 
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
-export type PageFragment = { __typename: 'Page', nodeId: string, id: number, url: string, title: string, content: { [key: string]: any }, createdAt: string, updatedAt: string };
+export type PageFragment = { __typename: 'Page', id: number, url: string, title: string, content: { [key: string]: any }, createdAt: string, updatedAt: string };
 
 export type PageQueryVariables = Types.Exact<{
   url: Types.Scalars['String'];
@@ -13,10 +13,17 @@ export type PageQueryVariables = Types.Exact<{
 
 export type PageQuery = { __typename?: 'Query', pageByUrl: { __typename?: 'Page', content: { [key: string]: any } } | null };
 
+export type PageByIdQueryVariables = Types.Exact<{
+  id: Types.Scalars['Int'];
+}>;
+
+
+export type PageByIdQuery = { __typename?: 'Query', page: { __typename: 'Page', id: number, url: string, title: string, content: { [key: string]: any }, createdAt: string, updatedAt: string } | null };
+
 export type PageListQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type PageListQuery = { __typename?: 'Query', pages: { __typename?: 'PagesConnection', nodes: Array<{ __typename: 'Page', nodeId: string, id: number, url: string, title: string, content: { [key: string]: any }, createdAt: string, updatedAt: string }> } | null };
+export type PageListQuery = { __typename?: 'Query', pages: { __typename?: 'PagesConnection', nodes: Array<{ __typename: 'Page', id: number, url: string, title: string, content: { [key: string]: any }, createdAt: string, updatedAt: string }> } | null };
 
 export type PageRevisionsQueryVariables = Types.Exact<{
   id: Types.Scalars['Int'];
@@ -30,7 +37,7 @@ export type CreatePageMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreatePageMutation = { __typename?: 'Mutation', createPage: { __typename?: 'CreatePagePayload', page: { __typename: 'Page', nodeId: string, id: number, url: string, title: string, content: { [key: string]: any }, createdAt: string, updatedAt: string } | null } | null };
+export type CreatePageMutation = { __typename?: 'Mutation', createPage: { __typename?: 'CreatePagePayload', page: { __typename: 'Page', id: number, url: string, title: string, content: { [key: string]: any }, createdAt: string, updatedAt: string } | null } | null };
 
 export type UpdatePageMutationVariables = Types.Exact<{
   id: Types.Scalars['Int'];
@@ -38,12 +45,11 @@ export type UpdatePageMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdatePageMutation = { __typename?: 'Mutation', updatePage: { __typename?: 'UpdatePagePayload', page: { __typename: 'Page', nodeId: string, id: number, url: string, title: string, content: { [key: string]: any }, createdAt: string, updatedAt: string } | null } | null };
+export type UpdatePageMutation = { __typename?: 'Mutation', updatePage: { __typename?: 'UpdatePagePayload', page: { __typename: 'Page', id: number, url: string, title: string, content: { [key: string]: any }, createdAt: string, updatedAt: string } | null } | null };
 
 export const PageFragmentDoc = `
     fragment Page on Page {
   __typename
-  nodeId
   id
   url
   title
@@ -76,6 +82,30 @@ usePageQuery.getKey = (variables: PageQueryVariables) => ['Page', variables];
 ;
 
 usePageQuery.fetcher = (variables: PageQueryVariables, options?: RequestInit['headers']) => fetcher<PageQuery, PageQueryVariables>(PageDocument, variables, options);
+export const PageByIdDocument = `
+    query PageById($id: Int!) {
+  page(id: $id) {
+    ...Page
+  }
+}
+    ${PageFragmentDoc}`;
+export const usePageByIdQuery = <
+      TData = PageByIdQuery,
+      TError = unknown
+    >(
+      variables: PageByIdQueryVariables,
+      options?: UseQueryOptions<PageByIdQuery, TError, TData>
+    ) =>
+    useQuery<PageByIdQuery, TError, TData>(
+      ['PageById', variables],
+      fetcher<PageByIdQuery, PageByIdQueryVariables>(PageByIdDocument, variables),
+      options
+    );
+
+usePageByIdQuery.getKey = (variables: PageByIdQueryVariables) => ['PageById', variables];
+;
+
+usePageByIdQuery.fetcher = (variables: PageByIdQueryVariables, options?: RequestInit['headers']) => fetcher<PageByIdQuery, PageByIdQueryVariables>(PageByIdDocument, variables, options);
 export const PageListDocument = `
     query PageList {
   pages(orderBy: URL_ASC) {

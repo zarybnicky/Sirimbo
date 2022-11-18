@@ -91,7 +91,6 @@ export const permissionMarks = [
 export function usePermissions() {
   const { user, couple } = useAuth();
   const perms = user?.permissionByUGroup || defaultPermissions;
-
   return new PermissionChecker(user?.id || "0", couple?.id || "0", perms);
 };
 
@@ -128,7 +127,9 @@ export class PermissionChecker {
     );
   }
 
-  public canSignOut(item: { rLock: boolean; rTrener: string; }, lesson: { riLock: boolean; riPartner: string | null; }) {
+  public canSignOut(item: { rLock: boolean; rTrener: string; }, lesson: {
+    riLock: boolean; riPartner: string | null;
+  }) {
     return (
       (lesson.riPartner && lesson.riPartner !== '0') && !item.rLock && !lesson.riLock && (
         (this.perms.peRozpis >= PermissionLevel.P_MEMBER && this.coupleId == lesson.riPartner) ||

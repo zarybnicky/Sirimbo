@@ -1,5 +1,6 @@
 import * as React from "react";
 import { UserAuthFragment, CouplePartialFragment, useCurrentUserQuery, useLoginMutation, useLogoutMutation } from 'lib/graphql/CurrentUser';
+import { useQueryClient } from "@tanstack/react-query";
 
 export interface AuthContextType {
   isLoading: boolean,
@@ -27,25 +28,26 @@ export const useAuth = () => {
 }
 
 function useApiAuth(): AuthContextType {
-  const [user, setUser] = React.useState<UserAuthFragment | null>(null);
-  const [couple, setCouple] = React.useState<CouplePartialFragment | null>(null);
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
-  useCurrentUserQuery({}, {
-    onSuccess: (data) => setUser(data.getCurrentUser),
+  const { data: currentUser } = useCurrentUserQuery({}, {
     onSettled: () => setIsLoading(false),
   });
+
+  const user = currentUser?.getCurrentUser || null;
+  const couple = currentUser?.getCurrentCouple || null;
   const { mutateAsync: signIn } = useLoginMutation({
     onSuccess: (data) => {
-      setUser(data.login?.result?.usr!);
-      setCouple(data.login?.result?.couple!);
+      queryClient.setQueryData(['CurrentUser', {}], {
+        getCurrentUser: data.login?.result?.usr,
+        getCurrentCouple: data.login?.result?.couple,
+      })
     },
-    onSettled: () => setIsLoading(false),
   });
   const { mutateAsync: signOut } = useLogoutMutation({
     onSuccess: () => {
-      setUser(null);
-      setCouple(null);
+      queryClient.resetQueries(['CurrentUser', {}]);
     },
   });
 

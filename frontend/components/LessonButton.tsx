@@ -1,9 +1,11 @@
 import { usePermissions } from 'lib/data/use-permissions';
-import { ScheduleBasicFragment, ScheduleItemBasicFragment } from 'lib/graphql/Schedule';
+import { useBookLessonMutation, useCancelLessonMutation, ScheduleBasicFragment, ScheduleItemBasicFragment, useMyLessonsQuery, useScheduleRangeQuery } from 'lib/graphql/Schedule';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import React from 'react';
 import classNames from 'classnames';
 import { X as Cross } from 'react-feather';
+import { SubmitButton } from './SubmitButton';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const LessonButton = ({ schedule, lesson, showTrainer }: {
   lesson: ScheduleItemBasicFragment;
@@ -11,28 +13,26 @@ export const LessonButton = ({ schedule, lesson, showTrainer }: {
   showTrainer?: boolean;
 }) => {
   const perms = usePermissions();
+  const [isOpen, setIsOpen] = React.useState(false);
+  const queryClient = useQueryClient();
 
-  const bookLesson = React.useCallback((id: string) => {
-    /* if (!\Session::getZaplacenoPar()) {
-     *   \Message::warning('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
-     * } elseif ($lesson['ri_partner']) {
-     *   \Message::warning('Lekce už je obsazená');
-     * } else {
-         if ri_partner is NULL, then
-     *   self::query("UPDATE rozpis_item SET ri_partner='?' WHERE ri_id='?'", $uid, $rid);
-     * } */
-  }, []);
+  const { mutateAsync: bookLesson, isLoading: isBooking } = useBookLessonMutation({
+    onSuccess() {
+      setIsOpen(false);
+      queryClient.invalidateQueries(useMyLessonsQuery.getKey());
+      queryClient.invalidateQueries(['ScheduleRange']);
+    }
+  });
+  const { mutateAsync: cancelLesson, isLoading: isCanceling } = useCancelLessonMutation({
+    onSuccess() {
+      setIsOpen(false);
+      queryClient.invalidateQueries(useMyLessonsQuery.getKey());
+      queryClient.invalidateQueries(['ScheduleRange']);
+    }
+  });
 
-  const cancelLesson = React.useCallback((id: string) => {
-    /* if ($lesson['ri_partner'] === null) {
-     * } elseif ($par['p_id'] != $lesson['ri_partner']
-     *           && !\Permissions::check('rozpis', P_OWNED, $data['r_trener'])
-     * ) {
-     *   \Message::warning('Nedostatečná oprávnění!');
-     * } else {
-     *   self::query("UPDATE rozpis_item SET ri_partner=NULL WHERE ri_id='?'", $rid)
-     * } */
-  }, []);
+  const canBook = perms.canSignUp(schedule, lesson);
+  const canCancel = perms.canSignOut(schedule, lesson);
 
   const trainer = schedule.userByRTrener;
   const couple = lesson.paryByRiPartner;
@@ -54,19 +54,27 @@ export const LessonButton = ({ schedule, lesson, showTrainer }: {
   const [toH = '0', toM = '0'] = lesson.riDo.split(':');
   const duration = parseInt(toH) * 60 + parseInt(toM) - parseInt(fromH) * 60 - parseInt(fromM);
 
-  return <>
+  const trigger = (
+    <div className={classNames(
+      "flex gap-3 p-2.5 rounded-lg",
+      "leading-4 text-sm tabular-nums",
+      "radix-state-open:bg-stone-200",
+      (canBook || canCancel) && 'cursor-pointer hover:bg-stone-200',
+    )}>
+      <div className="text-stone-600">{lesson.riOd.substring(0, 5)}</div>
+      <div className="grow">{canBook ? "VOLNÁ" : lesson.paryByRiPartner ? name : '-'}</div>
+      <div className="text-stone-600">{duration}&apos;</div>
+    </div>
+  );
+  if (!canBook && !canCancel) {
+    return trigger;
+  }
+
+  return (
     <div className="relative">
-      <PopoverPrimitive.Root>
+      <PopoverPrimitive.Root open={isOpen} onOpenChange={setIsOpen}>
         <PopoverPrimitive.Trigger asChild>
-          <div className={classNames(
-            "flex gap-3 cursor-pointer p-2.5 rounded-lg",
-            "leading-4 text-sm tabular-nums",
-            "hover:bg-stone-200 radix-state-open:bg-stone-200",
-          )}>
-            <div className="text-stone-600">{lesson.riOd.substring(0, 5)}</div>
-            <div className="grow">{perms.canSignUp(schedule, lesson) ? "VOLNÁ" : lesson.paryByRiPartner ? name : '-'}</div>
-            <div className="text-stone-600">{duration}&apos;</div>
-          </div>
+          {trigger}
         </PopoverPrimitive.Trigger>
         <PopoverPrimitive.Content
           align="start"
@@ -78,15 +86,16 @@ export const LessonButton = ({ schedule, lesson, showTrainer }: {
           )}
         >
           <PopoverPrimitive.Arrow className="fill-current text-white dark:text-gray-800" />
-          <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-            Lekce
-          </h3>
 
-          {perms.canSignUp(schedule, lesson) ? (
-            <button name="action" value="signup" className="button button-icon button-red button-sm py-0">+</button>
+          {canBook ? (
+            <SubmitButton loading={isBooking} onClick={() => bookLesson({ id: lesson.id })}>
+              Přihlásit
+            </SubmitButton>
           ) : null}
-          {perms.canSignOut(schedule, lesson) && (
-            <button name="action" value="signout" className="button button-icon button-sm button-red py-0">&times;</button>
+          {canCancel && (
+            <SubmitButton loading={isCanceling} onClick={() => cancelLesson({ id: lesson.id })}>
+              Zrušit
+            </SubmitButton>
           )}
 
           <PopoverPrimitive.Close
@@ -100,5 +109,5 @@ export const LessonButton = ({ schedule, lesson, showTrainer }: {
         </PopoverPrimitive.Content>
       </PopoverPrimitive.Root>
     </div>
-  </>;
+  );
 };

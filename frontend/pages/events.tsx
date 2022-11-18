@@ -45,8 +45,6 @@ export default function EventListPage() {
   </div >;
 }
 
-EventListPage.getLayout = (page: React.ReactElement) => (
-  <Layout withBleeds>{page}</Layout>
-);
+EventListPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 
 export const getServerSideProps = withServerPermissions(PermissionKey.peAkce, PermissionLevel.P_MEMBER);

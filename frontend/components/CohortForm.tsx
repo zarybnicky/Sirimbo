@@ -1,5 +1,5 @@
 import { SkupinyInput } from 'lib/graphql';
-import { CohortFragment, useCreateCohortMutation, useUpdateCohortMutation } from 'lib/graphql/Cohorts';
+import { CohortFragment, useCohortListQuery, useCreateCohortMutation, useUpdateCohortMutation } from 'lib/graphql/Cohorts';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextAreaElement, TextFieldElement } from 'components/TextField';
@@ -8,13 +8,16 @@ import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { ColorPicker } from './ColorPicker';
+import { useQueryClient } from '@tanstack/react-query';
 
 type FormProps = Pick<SkupinyInput, 'sName' | 'sDescription' | 'sLocation' | 'sVisible' | 'sColorRgb'>;
 
-export const CohortForm: React.FC<{
-  data?: CohortFragment;
-  onSuccess: () => void;
-}> = ({ data, onSuccess }) => {
+export const CohortForm: React.FC<{ data?: CohortFragment; }> = ({ data }) => {
+  const queryClient = useQueryClient();
+  const onSuccess = React.useCallback(() => {
+    queryClient.invalidateQueries(useCohortListQuery.getKey());
+  }, []);
+
   const { mutateAsync: doCreate } = useCreateCohortMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateCohortMutation({ onSuccess });
 

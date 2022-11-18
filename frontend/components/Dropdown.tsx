@@ -50,7 +50,7 @@ export const Dropdown = ({ button, className, buttonClassName, options }: {
               ) : (
                 <button
                   onClick={onClick}
-                  className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-800')}
+                  className={classNames(active ? 'bg-gray-100' : '', 'text-left w-full block px-4 py-2 text-sm text-gray-800')}
                 >
                   {icon} {title}
                 </button>

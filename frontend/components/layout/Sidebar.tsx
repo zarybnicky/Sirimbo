@@ -62,14 +62,14 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: {
         {auth.user ? <>
           <SidebarLink item={{ type: 'link', title: 'Profil', href: '/profile' }} />
           <SidebarLink item={{ type: 'link', title: 'Odhlásit se', href: '/' }} onClick={() => {
-            auth.signOut();
             router.push('/');
+            auth.signOut();
           }} />
         </> : (
           <SidebarLink item={{ type: 'link', title: 'Přihlásit se', href: '/login' }} />
         )}
 
-        <div className="mt-4 text-xs text-stone-700 p-4 grid gap-2">
+        <div className="mt-4 text-xs text-stone-700 lg:text-white p-4 grid gap-2">
           <div>© 2022 Taneční klub Olymp Olomouc, z. s.</div>
           <div>Verze: {process.env.BUILD_ID?.substring(0, 7)}</div>
         </div>

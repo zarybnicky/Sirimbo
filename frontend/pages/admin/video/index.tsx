@@ -32,7 +32,7 @@ export default function VideoList() {
               onClick={() => router.push(`/admin/video/${id}`)}
               label="Upravit"
             />,
-            <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat video" />,
+            <DeleteButton key="del" onDelete={() => doDelete({ id: id as string })} title="smazat video" />,
           ]
         },
         { field: 'vName', headerName: 'Jméno', flex: 1 },

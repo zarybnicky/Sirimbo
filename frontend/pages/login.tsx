@@ -5,10 +5,10 @@ import { useAuth } from 'lib/data/use-auth';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
-import { useRequireUserLoggedOut } from 'lib/route-guards';
 import { ErrorBox } from 'components/ErrorBox';
 import { useAsyncCallback } from 'react-async-hook';
 import { SubmitButton } from 'components/SubmitButton';
+import { withServerLoggedOut } from 'lib/data/use-server-permissions';
 
 type FormProps = {
   login: string;
@@ -16,7 +16,6 @@ type FormProps = {
 };
 
 export default function LoginPage() {
-  useRequireUserLoggedOut();
   const { signIn } = useAuth();
   const router = useRouter();
   const { control, handleSubmit } = useForm<FormProps>();
@@ -63,3 +62,5 @@ export default function LoginPage() {
     </div>
   );
 };
+
+export const getServerSideProps = withServerLoggedOut;

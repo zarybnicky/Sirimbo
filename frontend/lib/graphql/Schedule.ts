@@ -73,6 +73,20 @@ export type DeleteScheduleMutationVariables = Types.Exact<{
 
 export type DeleteScheduleMutation = { __typename?: 'Mutation', deleteRozpi: { __typename: 'DeleteRozpiPayload' } | null };
 
+export type BookLessonMutationVariables = Types.Exact<{
+  id: Types.Scalars['BigInt'];
+}>;
+
+
+export type BookLessonMutation = { __typename?: 'Mutation', bookLesson: { __typename: 'BookLessonPayload' } | null };
+
+export type CancelLessonMutationVariables = Types.Exact<{
+  id: Types.Scalars['BigInt'];
+}>;
+
+
+export type CancelLessonMutation = { __typename?: 'Mutation', cancelLesson: { __typename: 'CancelLessonPayload' } | null };
+
 export const ScheduleItemBasicFragmentDoc = `
     fragment ScheduleItemBasic on RozpisItem {
   __typename
@@ -320,3 +334,41 @@ export const useDeleteScheduleMutation = <
 useDeleteScheduleMutation.getKey = () => ['DeleteSchedule'];
 
 useDeleteScheduleMutation.fetcher = (variables: DeleteScheduleMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteScheduleMutation, DeleteScheduleMutationVariables>(DeleteScheduleDocument, variables, options);
+export const BookLessonDocument = `
+    mutation BookLesson($id: BigInt!) {
+  bookLesson(input: {lessonId: $id}) {
+    __typename
+  }
+}
+    `;
+export const useBookLessonMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<BookLessonMutation, TError, BookLessonMutationVariables, TContext>) =>
+    useMutation<BookLessonMutation, TError, BookLessonMutationVariables, TContext>(
+      ['BookLesson'],
+      (variables?: BookLessonMutationVariables) => fetcher<BookLessonMutation, BookLessonMutationVariables>(BookLessonDocument, variables)(),
+      options
+    );
+useBookLessonMutation.getKey = () => ['BookLesson'];
+
+useBookLessonMutation.fetcher = (variables: BookLessonMutationVariables, options?: RequestInit['headers']) => fetcher<BookLessonMutation, BookLessonMutationVariables>(BookLessonDocument, variables, options);
+export const CancelLessonDocument = `
+    mutation CancelLesson($id: BigInt!) {
+  cancelLesson(input: {lessonId: $id}) {
+    __typename
+  }
+}
+    `;
+export const useCancelLessonMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CancelLessonMutation, TError, CancelLessonMutationVariables, TContext>) =>
+    useMutation<CancelLessonMutation, TError, CancelLessonMutationVariables, TContext>(
+      ['CancelLesson'],
+      (variables?: CancelLessonMutationVariables) => fetcher<CancelLessonMutation, CancelLessonMutationVariables>(CancelLessonDocument, variables)(),
+      options
+    );
+useCancelLessonMutation.getKey = () => ['CancelLesson'];
+
+useCancelLessonMutation.fetcher = (variables: CancelLessonMutationVariables, options?: RequestInit['headers']) => fetcher<CancelLessonMutation, CancelLessonMutationVariables>(CancelLessonDocument, variables, options);

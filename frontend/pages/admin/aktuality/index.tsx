@@ -47,7 +47,7 @@ export default function ArticleAdminList() {
               onClick={() => router.push(`/admin/aktuality/${id}`)}
               label="Upravit"
             />,
-            <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat článek" />,
+            <DeleteButton key="del" onDelete={() => doDelete({ id: id as string })} title="smazat článek" />,
           ],
         },
         { field: 'atJmeno', headerName: 'Jméno', flex: 1 },

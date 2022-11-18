@@ -407,6 +407,52 @@ export type AktualityPatch = {
   atTimestampAdd?: InputMaybe<Scalars['Datetime']>;
 };
 
+/** All input for the `bookLesson` mutation. */
+export type BookLessonInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  lessonId: Scalars['BigInt'];
+};
+
+/** The output of our `bookLesson` mutation. */
+export type BookLessonPayload = {
+  __typename?: 'BookLessonPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  rozpisItems: Maybe<Array<RozpisItem>>;
+};
+
+/** All input for the `cancelLesson` mutation. */
+export type CancelLessonInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  lessonId: Scalars['BigInt'];
+};
+
+/** The output of our `cancelLesson` mutation. */
+export type CancelLessonPayload = {
+  __typename?: 'CancelLessonPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  rozpisItems: Maybe<Array<RozpisItem>>;
+};
+
 /** All input for the `confirmUser` mutation. */
 export type ConfirmUserInput = {
   /**
@@ -3424,6 +3470,8 @@ export enum MembersOrderBy {
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
+  bookLesson: Maybe<BookLessonPayload>;
+  cancelLesson: Maybe<CancelLessonPayload>;
   confirmUser: Maybe<ConfirmUserPayload>;
   /** Creates a single `Akce`. */
   createAkce: Maybe<CreateAkcePayload>;
@@ -3719,6 +3767,18 @@ export type Mutation = {
   updateVideoSource: Maybe<UpdateVideoSourcePayload>;
   /** Updates a single `VideoSource` using its globally unique id and a patch. */
   updateVideoSourceByNodeId: Maybe<UpdateVideoSourcePayload>;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationBookLessonArgs = {
+  input: BookLessonInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCancelLessonArgs = {
+  input: CancelLessonInput;
 };
 
 
@@ -6276,6 +6336,7 @@ export type Query = Node & {
   galerieFotoByNodeId: Maybe<GalerieFoto>;
   /** Reads and enables pagination through a set of `GalerieFoto`. */
   galerieFotos: Maybe<GalerieFotosConnection>;
+  getCurrentCouple: Maybe<Pary>;
   getCurrentUser: Maybe<User>;
   /** Reads and enables pagination through a set of `Member`. */
   members: Maybe<MembersConnection>;

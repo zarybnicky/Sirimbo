@@ -78,12 +78,11 @@ export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout
 }
-export default function App({ Component, pageProps }: AppPropsWithLayout) {
-  const defaultLayout = (page: React.ReactElement) => (
-    <Layout withBleeds showTopMenu>{page}</Layout>
-  );
-  const getLayout = Component.getLayout ?? defaultLayout;
 
+const defaultLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;
+
+export default function App({ Component, pageProps }: AppPropsWithLayout) {
+  const getLayout = Component.getLayout ?? defaultLayout;
   return WithProviders(getLayout(<Component {...pageProps} />), pageProps);
 }
 

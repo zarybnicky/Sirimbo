@@ -12,7 +12,7 @@ export const Heading = ({ color, image, text }: HeadingProps) => {
   const gradient = `linear-gradient(${rgba},${rgba})`;
   const background = `${gradient}, url(${image}) no-repeat 50% 30%/cover`;
 
-  return <div style={{ background }}>
+  return <div className="col-full-width" style={{ background }}>
     <div className="container mx-auto max-w-5xl">
       <div className="relative py-20 mx-10 xl:mx-0">
         <h2 className="text-3xl drop-shadow-md mb-0 z-3 text-white uppercase font-bold">

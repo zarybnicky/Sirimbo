@@ -2,8 +2,9 @@ import { useForm } from "react-hook-form";
 import { SelectElement } from 'components/SelectElement';
 import { DataGrid } from '@mui/x-data-grid';
 import format from "date-fns/format";
-import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useFileListQuery } from "lib/graphql/Documents";
+import { Layout } from 'components/layout/Layout';
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 const categories = [
   { id: "1", label: "Schůze,\u{00A0}rady" },
@@ -13,7 +14,6 @@ const categories = [
 ];
 
 export default function FileListPage() {
-  useRequireUserLoggedIn();
   const { control, watch } = useForm<{ category: string; }>();
   const { data } = useFileListQuery({ category: parseInt(watch('category'), 10) });
 
@@ -45,3 +45,9 @@ export default function FileListPage() {
     />
   </div>;
 }
+
+FileListPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.peNastenka, PermissionLevel.P_VIEW,
+);

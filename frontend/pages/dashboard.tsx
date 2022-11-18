@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { AnnouncementList } from '../components/AnnouncementList';
-import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { MyLessonsList } from 'components/MyLessonsList';
 import { Layout } from 'components/layout/Layout';
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 export default function DashboardPage() {
-  useRequireUserLoggedIn();
-
   return <div className="container mx-auto max-w-5xl pt-12 pb-8">
     <div className="grid lg:grid-cols-2">
       <div>
@@ -21,6 +19,8 @@ export default function DashboardPage() {
   </div>;
 }
 
-DashboardPage.getLayout = (page: React.ReactElement) => (
-  <Layout withBleeds>{page}</Layout>
+DashboardPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.peNastenka, PermissionLevel.P_VIEW,
 );

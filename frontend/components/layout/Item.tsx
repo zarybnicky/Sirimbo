@@ -6,7 +6,7 @@ export function Item() { }
 function ItemTitleBar({ backHref, title, children }: {
   title?: string;
   backHref: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }) {
   return <>
     <div>

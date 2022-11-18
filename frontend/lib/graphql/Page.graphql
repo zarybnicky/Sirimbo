@@ -1,6 +1,5 @@
 fragment Page on Page {
   __typename
-  nodeId
   id
   url
   title
@@ -12,6 +11,12 @@ fragment Page on Page {
 query Page($url: String!) {
   pageByUrl(url: $url) {
     content
+  }
+}
+
+query PageById($id: Int!) {
+  page(id: $id) {
+    ...Page
   }
 }
 

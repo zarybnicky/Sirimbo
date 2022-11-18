@@ -7,6 +7,7 @@ import { lastDayOfWeek } from 'date-fns';
 import { cs } from 'date-fns/locale'
 import { LessonButton } from './LessonButton';
 import { Card } from './Card';
+import { capitalize } from 'lib/capitalize';
 
 export const MyLessonsList: React.FC = () => {
   const { user } = useAuth();
@@ -42,7 +43,7 @@ export const MyLessonsList: React.FC = () => {
     data?.myLessons?.nodes?.forEach(lesson => {
       const date = lesson.rozpiByRiIdRodic?.rDatum;
       const place = lesson.rozpiByRiIdRodic?.rKde;
-      let key = date ? format(new Date(date), 'EEEE d.', { locale: cs }) : '';
+      let key = date ? capitalize(format(new Date(date), 'EEEE d. M.', { locale: cs })) : '';
       key += key ? ` ${place}` : place;
       lessonsPerDay[key] = lessonsPerDay[key] || [];
       lessonsPerDay[key]!.push(lesson);
@@ -63,7 +64,7 @@ export const MyLessonsList: React.FC = () => {
       </button>
     </div>
     {Object.entries(lessonsPerDay).map(([key, lessons]) => <React.Fragment key={key}>
-      <h6 className="text-lg font-bold mb-2 text-center">{key}</h6>
+      <h6 className="text-lg font-bold mb-1 mt-4 text-center">{key}</h6>
 
       <Card className="grid mx-auto w-72 rounded-xl border-stone-200 border">
         {lessons.map((lesson, i) => (

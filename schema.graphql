@@ -452,6 +452,56 @@ strings and not numbers.
 """
 scalar BigInt
 
+"""All input for the `bookLesson` mutation."""
+input BookLessonInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  lessonId: BigInt!
+}
+
+"""The output of our `bookLesson` mutation."""
+type BookLessonPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+  rozpisItems: [RozpisItem!]
+}
+
+"""All input for the `cancelLesson` mutation."""
+input CancelLessonInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  lessonId: BigInt!
+}
+
+"""The output of our `cancelLesson` mutation."""
+type CancelLessonPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+  rozpisItems: [RozpisItem!]
+}
+
 """All input for the `confirmUser` mutation."""
 input ConfirmUserInput {
   """
@@ -3867,6 +3917,18 @@ enum MembersOrderBy {
 The root mutation type which contains root level fields which mutate data.
 """
 type Mutation {
+  bookLesson(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: BookLessonInput!
+  ): BookLessonPayload
+  cancelLesson(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CancelLessonInput!
+  ): CancelLessonPayload
   confirmUser(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -7362,6 +7424,7 @@ type Query implements Node {
     """The method to use when ordering `GalerieFoto`."""
     orderBy: [GalerieFotosOrderBy!] = [PRIMARY_KEY_ASC]
   ): GalerieFotosConnection
+  getCurrentCouple: Pary
   getCurrentUser: User
 
   """Reads and enables pagination through a set of `Member`."""

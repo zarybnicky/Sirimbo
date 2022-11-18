@@ -133,6 +133,12 @@ const adminMenu: MenuLink[] = [
     type: "link", title: 'Oprávnění', href: '/admin/permissions',
     auth: [PermissionKey.pePermissions, PermissionLevel.P_OWNED]
   },
-  { type: "link", title: "Správa obsahu", href: "/editor" },
-  { type: "link", title: "Zájemci", href: "/crm" },
+  {
+    type: "link", title: "Správa obsahu", href: "/admin/page",
+    auth: [PermissionKey.peNastenka, PermissionLevel.P_ADMIN],
+  },
+  {
+    type: "link", title: "Zájemci", href: "/crm",
+    auth: [PermissionKey.peNastenka, PermissionLevel.P_ADMIN],
+  },
 ];

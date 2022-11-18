@@ -1,10 +1,10 @@
 import { pool } from 'lib/PgPool';
-import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { defaultPermissions, PermissionChecker, PermissionKey, PermissionLevel } from './use-permissions';
 
 export { PermissionKey, PermissionLevel };
 
-export async function useServerPermissions(context: GetServerSidePropsContext) {
+export async function loadServerPermissions(context: GetServerSidePropsContext) {
   const { rows: [session] } = await pool.query(`
 SELECT u_id, u_group, p_id, ss_id, permissions.* FROM session
 LEFT JOIN users ON u_id=ss_user
@@ -33,17 +33,33 @@ WHERE ss_id='${context.req.cookies.PHPSESSID}'
   });
 }
 
+export const withServerLoggedOut: GetServerSideProps = async (context) => {
+  const perms = await loadServerPermissions(context);
+  if (perms.userId) {
+    return {
+      redirect: {
+        statusCode: 301,
+        destination: '/dashboard',
+      }
+    };
+  }
+  return { props: {} };
+};
+
 export const withServerPermissions = (
   key: PermissionKey, level: PermissionLevel,
   callback?: (context: GetServerSidePropsContext) => Promise<object>
 ): GetServerSideProps => async (context) => {
-  const perms = await useServerPermissions(context);
+  const perms = await loadServerPermissions(context);
+
   if (!perms.hasPermission(key, level)) {
-    if (!perms.userId) {
-      return perms.redirectToLogin();
-    } else {
-      return perms.redirectToAuthError();
-    }
+    const params = new URLSearchParams({ from: context.resolvedUrl });
+    return {
+      redirect: {
+        statusCode: 301,
+        destination: !perms.userId ? `/login?${params}` : `/error?id=authorization`,
+      }
+    };
   }
   return { props: callback ? await callback(context) : {} };
 };
@@ -56,26 +72,5 @@ class ServerPermissionChecker extends PermissionChecker {
     perms: { [key in keyof typeof PermissionKey]: number }
   ) {
     super(userId, coupleId, perms);
-  }
-
-  public redirectToLogin(): GetServerSidePropsResult<object> {
-    const params = new URLSearchParams({
-      from: this.context.resolvedUrl
-    });
-    return {
-      redirect: {
-        statusCode: 301,
-        destination: `/login?${params}`
-      }
-    };
-  }
-
-  public redirectToAuthError(): GetServerSidePropsResult<object> {
-    return {
-      redirect: {
-        statusCode: 301,
-        destination: `/error?id=authorization`
-      }
-    };
   }
 }

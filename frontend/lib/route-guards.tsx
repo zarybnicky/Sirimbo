@@ -12,14 +12,3 @@ export const useRequireUserLoggedIn = () => {
     }
   }, [router, user, isLoading]);
 };
-
-export const useRequireUserLoggedOut = () => {
-  const router = useRouter();
-  const { user, isLoading } = useAuth();
-
-  React.useEffect(() => {
-    if (user && !isLoading) {
-      router.replace("/dashboard");
-    }
-  }, [router, user, isLoading]);
-};

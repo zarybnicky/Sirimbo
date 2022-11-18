@@ -61,7 +61,7 @@ export default function UserectoryList() {
               onClick={() => router.push(`/admin/users/sign-as/${id}`)}
               label="Přihlásit se jako..."
             />,
-            <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat uživatele" />,
+            <DeleteButton key="del" onDelete={() => doDelete({ id: id as string })} title="smazat uživatele" />,
           ], flex: 1,
         },
         {

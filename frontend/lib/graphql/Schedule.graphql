@@ -114,3 +114,15 @@ mutation DeleteSchedule($id: BigInt!) {
     __typename
   }
 }
+
+mutation BookLesson($id: BigInt!) {
+  bookLesson(input: {lessonId: $id}) {
+    __typename
+  }
+}
+
+mutation CancelLesson($id: BigInt!) {
+  cancelLesson(input: {lessonId: $id}) {
+    __typename
+  }
+}

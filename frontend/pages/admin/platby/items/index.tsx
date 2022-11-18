@@ -31,7 +31,7 @@ export default function PlatbyItemListPage() {
               onClick={() => router.push(`/admin/platby/items/${id}`)}
               label="Upravit"
             />,
-            <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat platbu" />,
+            <DeleteButton key="del" onDelete={() => doDelete({ id: id as string })} title="smazat platbu" />,
           ]
         },
         {

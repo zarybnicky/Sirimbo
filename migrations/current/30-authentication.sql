@@ -77,6 +77,11 @@ create or replace function get_current_user() returns users as $$
 $$ language sql stable security definer;
 grant execute on function get_current_user to anonymous;
 
+create or replace function get_current_couple() returns pary as $$
+  SELECT * FROM pary WHERE p_id in (select * from current_couple_ids()) limit 1;
+$$ language sql stable security definer;
+grant execute on function get_current_couple to anonymous;
+
 
 create or replace function app_private.tg_users__notify_admin() returns trigger as $$
 begin

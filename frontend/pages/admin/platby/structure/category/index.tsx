@@ -31,7 +31,7 @@ export default function PlatbyCategoryListPage() {
               onClick={() => router.push(`/admin/platby/structure/category/${id}`)}
               label="Upravit"
             />,
-            <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat platbu" />,
+            <DeleteButton key="del" onDelete={() => doDelete({ id: id as string })} title="smazat platbu" />,
           ]
         },
         { field: 'pcName', headerName: 'Název', flex: 1 },

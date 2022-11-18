@@ -59,7 +59,7 @@ export default function ReservationAdminList() {
               onClick={() => router.push(`/admin/nabidka/duplicate/${id}`)}
               label="Duplikovat"
             />,
-            <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat nabídku" />,
+            <DeleteButton key="del" onDelete={() => doDelete({ id: id as string })} title="smazat nabídku" />,
           ], flex: 1,
         },
         {

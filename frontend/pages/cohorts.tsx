@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { CohortExport } from 'components/CohortExport';
 import { TabMenu } from 'components/TabMenu';
 import { AtSign as EmailIcon, Phone as PhoneIcon } from 'react-feather';
@@ -8,9 +7,10 @@ import { HtmlView } from 'components/HtmlView';
 import { Card } from 'components/Card';
 import { SimpleDialog } from 'components/Dialog';
 import { UserFragment } from 'lib/graphql/CurrentUser';
+import { Layout } from 'components/layout/Layout';
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 export default function CohortsPage() {
-  useRequireUserLoggedIn();
   const { data: members } = useMemberListQuery();
   const cohorts = React.useMemo(() => {
     const cohorts: {
@@ -80,3 +80,9 @@ const UserDetailButton: React.FC<{ user: UserFragment }> = ({ user }) => {
     </ul>
   </SimpleDialog>
 }
+
+CohortsPage.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.peNastenka, PermissionLevel.P_VIEW,
+);

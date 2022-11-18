@@ -1,7 +1,6 @@
 import { Card } from "components/Card";
 import { ErrorBox } from "components/ErrorBox";
 import { SubmitButton } from "components/SubmitButton";
-import { useRequireUserLoggedOut } from "lib/route-guards";
 import { useRouter } from "next/router";
 import React from "react";
 import { useAsyncCallback } from "react-async-hook";
@@ -9,9 +8,9 @@ import { useForm } from "react-hook-form";
 import { TextFieldElement } from "components/TextField";
 import { toast } from 'react-toastify';
 import { useResetPasswordMutation } from "lib/graphql/CurrentUser";
+import { withServerLoggedOut } from "lib/data/use-server-permissions";
 
 export default function ForgottenPassword() {
-  useRequireUserLoggedOut();
   const { control, handleSubmit } = useForm();
   const { mutateAsync: resetPassword } = useResetPasswordMutation();
   const router = useRouter();
@@ -42,3 +41,5 @@ export default function ForgottenPassword() {
     </Card>
   </div>;
 }
+
+export const getServerSideProps = withServerLoggedOut;

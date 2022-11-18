@@ -31,7 +31,7 @@ export default function AdminGalleryPhotoList() {
               onClick={() => router.push(`/admin/galerie/file/${id}`)}
               label="Upravit"
             />,
-            <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat fotku" />,
+            <DeleteButton key="del" onDelete={() => doDelete({ id: id as string })} title="smazat fotku" />,
           ]
         },
         { field: 'gfName', headerName: 'Jméno', flex: 1 },

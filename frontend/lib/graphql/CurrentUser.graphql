@@ -49,16 +49,16 @@ query CurrentUser {
   getCurrentUser {
     ...UserAuth
   }
+  getCurrentCouple {
+    ...CouplePartial
+  }
 }
 
 mutation Login($login: String!, $passwd: String!) {
   login(input: { login: $login, passwd: $passwd }) {
     result {
       usr {
-        ...User
-        permissionByUGroup {
-          ...Role
-        }
+        ...UserAuth
       }
       couple {
         ...CouplePartial

@@ -61,7 +61,7 @@ export default function AdminEventList() {
               onClick={() => router.push(`/admin/akce/dokumenty/${id}`)}
               label="Upravit dokumenty"
             />,
-            <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat akci" />,
+            <DeleteButton key="del" onDelete={() => doDelete({ id: id as string })} title="smazat akci" />,
           ], flex: 1
         },
         { field: 'aJmeno', headerName: 'Jméno', flex: 1 },

@@ -32,7 +32,7 @@ export default function VideoSourceList() {
               onClick={() => router.push(`/admin/video/source/${id}`)}
               label="Upravit"
             />,
-            <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat zdroj videí" />,
+            <DeleteButton key="del" onDelete={() => doDelete({ id: id as string })} title="smazat zdroj videí" />,
           ]
         },
         { field: 'vsTitle', headerName: 'Zdroj', flex: 1 },

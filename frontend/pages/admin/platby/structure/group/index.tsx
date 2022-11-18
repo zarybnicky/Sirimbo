@@ -32,7 +32,7 @@ export default function PlatbyGroupListPage() {
               onClick={() => router.push(`/admin/platby/structure/group/${id}`)}
               label="Upravit"
             />,
-            <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat skupinu plateb" />,
+            <DeleteButton key="del" onDelete={() => doDelete({ id: id as string })} title="smazat skupinu plateb" />,
           ]
         },
         { field: 'pgName', headerName: 'Jméno', flex: 1 },

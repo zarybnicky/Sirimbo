@@ -33,7 +33,7 @@ export default function CoupleAdminList() {
 
     {data?.activeCouples?.nodes.map((row) => (
       <Card key={row.id}>
-        <DeleteButton key="del" onDelete={doDelete} id={row.id} title="smazat pár" />
+        <DeleteButton key="del" onDelete={() => doDelete({ id: row.id })} title="smazat pár" />
         {row.userByPIdPartner?.uPrijmeni}, {row.userByPIdPartner?.uJmeno}
         {(row.userByPIdPartnerka ? ` - ${row.userByPIdPartnerka.uPrijmeni}, ${row.userByPIdPartnerka.uJmeno}` : '')}
       </Card>

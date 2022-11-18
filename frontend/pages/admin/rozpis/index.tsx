@@ -59,7 +59,7 @@ export default function RozpisAdminList() {
               onClick={() => router.push(`/admin/rozpis/duplicate/${id}`)}
               label="Duplikovat"
             />,
-            <DeleteButton key="del" onDelete={doDelete} id={id} title="smazat rozpis" />,
+            <DeleteButton key="del" onDelete={() => doDelete({ id: id as string })} title="smazat rozpis" />,
           ]
         },
         {

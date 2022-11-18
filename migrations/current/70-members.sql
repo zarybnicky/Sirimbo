@@ -119,3 +119,52 @@ create or replace function public.fix_unpaired_couples() returns setof pary as $
   ) returning *;
 $$ language sql strict volatile security definer;
 grant execute on function public.fix_unpaired_couples to administrator;
+
+
+create or replace function public.book_lesson(lesson_id bigint) returns setof rozpis_item as $$
+declare
+  schedule rozpis;
+  lesson rozpis_item;
+  couple_id bigint;
+begin
+  select * into lesson from rozpis_item where ri_id=lesson_id;
+  select * into schedule from rozpis where r_id=lesson.ri_id_rodic;
+  select * into couple_id from current_couple_ids() limit 1;
+
+  if schedule is null or lesson is null then
+    raise exception 'ITEM_NOT_FOUND' using errcode = '28000';
+  end if;
+
+  if schedule.r_lock or lesson.ri_lock then
+    raise exception 'ITEM_LOCKED' using errcode = '42501';
+  end if;
+
+  update rozpis_item set ri_partner = couple_id where ri_id = lesson_id;
+end;
+$$ language plpgsql strict volatile security definer;
+select plpgsql_check_function('public.book_lesson');
+grant execute on function public.book_lesson to member;
+
+create or replace function public.cancel_lesson(lesson_id bigint) returns setof rozpis_item as $$
+declare
+  schedule rozpis;
+  lesson rozpis_item;
+  couple_id bigint;
+begin
+  select * into lesson from rozpis_item where ri_id=lesson_id;
+  select * into schedule from rozpis where r_id=lesson.ri_id_rodic;
+  select * into couple_id from current_couple_ids() limit 1;
+
+  if schedule is null or lesson is null then
+    raise exception 'ITEM_NOT_FOUND' using errcode = '28000';
+  end if;
+
+  if schedule.r_lock or lesson.ri_lock then
+    raise exception 'ITEM_LOCKED' using errcode = '42501';
+  end if;
+
+  update rozpis_item set ri_partner = null where ri_id = lesson_id;
+end;
+$$ language plpgsql strict volatile security definer;
+select plpgsql_check_function('public.cancel_lesson');
+grant execute on function public.cancel_lesson to member;

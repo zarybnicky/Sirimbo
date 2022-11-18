@@ -4,7 +4,6 @@ import { SelectElement } from 'components/SelectElement';
 import { TextFieldElement } from 'components/TextField';
 import { useCountries } from 'lib/data/use-countries';
 import { format } from 'date-fns';
-import { useRequireUserLoggedOut } from 'lib/route-guards';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from 'components/ErrorBox';
 import { Card } from 'components/Card';
@@ -14,9 +13,9 @@ import { RadioButtonGroupElement } from 'components/RadioButtomGroupElement';
 import { toast } from 'react-toastify';
 import { useCohortListQuery } from 'lib/graphql/Cohorts';
 import { useRegisterMutation } from 'lib/graphql/CurrentUser';
+import { withServerLoggedOut } from 'lib/data/use-server-permissions';
 
 export default function RegisterPage() {
-  useRequireUserLoggedOut()
   const router = useRouter();
   const countries = useCountries();
   const { data: cohorts } = useCohortListQuery({ visible: true });
@@ -162,3 +161,5 @@ export default function RegisterPage() {
     </div>
   );
 };
+
+export const getServerSideProps = withServerLoggedOut;

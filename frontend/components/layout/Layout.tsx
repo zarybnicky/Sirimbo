@@ -6,10 +6,9 @@ import { Sidebar } from './Sidebar';
 
 export const Layout: React.FC<{
   showTopMenu?: boolean;
-  withBleeds?: boolean;
   list?: React.ReactNode;
   isDetail?: boolean;
-}> = ({ children, withBleeds, showTopMenu, list, isDetail }) => {
+}> = ({ children, showTopMenu, list, isDetail }) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return <div className="h-screen flex flex-col w-full relative overflow-hidden">
@@ -30,9 +29,8 @@ export const Layout: React.FC<{
         </div>
       </> : (
         <div className={classNames(
-          "relative h-full grow overflow-y-auto",
+          "relative h-full grow overflow-y-auto content",
           "scrollbar-thin scrollbar-track-transparent scrollbar-thumb-stone-800/20 hover:scrollbar-thumb-stone-800/50",
-          withBleeds ? 'content' : '',
         )}>
           {children}
           {showTopMenu && <Footer />}
