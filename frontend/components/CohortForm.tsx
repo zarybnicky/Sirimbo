@@ -16,7 +16,7 @@ export const CohortForm: React.FC<{ data?: CohortFragment; }> = ({ data }) => {
   const queryClient = useQueryClient();
   const onSuccess = React.useCallback(() => {
     queryClient.invalidateQueries(useCohortListQuery.getKey());
-  }, []);
+  }, [queryClient]);
 
   const { mutateAsync: doCreate } = useCreateCohortMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateCohortMutation({ onSuccess });

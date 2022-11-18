@@ -1,4 +1,8 @@
 @import 'glider-js/glider.min.css';
+@import "nprogress/nprogress.css";
+@import '@react-page/plugins-slate/lib/index.css';
+@import '@react-page/plugins-image/lib/index.css';
+@import "react-toastify/dist/ReactToastify.css";
 
 .content > * {
     grid-column: content;
@@ -8,8 +12,17 @@
 @tailwind components;
 @tailwind utilities;
 
-.react-page-cell-inner.slate {
-    @apply prose;
+.button {
+    @apply relative flex items-center gap-1 px-3 py-1.5 text-xs font-bold tracking-tight shadow-md rounded-2xl;
+}
+.button svg {
+    @apply h-4 w-4;
+}
+.button-red {
+    @apply text-white bg-red-500 text-sm uppercase tracking-normal font-medium;
+}
+.button-icon {
+    @apply px-1.5 shadow-none;
 }
 
 .avoid-trainer-pictures .slate li:nth-of-type(1) {

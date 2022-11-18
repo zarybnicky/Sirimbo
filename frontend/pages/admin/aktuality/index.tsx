@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { format } from 'date-fns';
 import { useArticlesQuery, useDeleteArticleMutation } from 'lib/graphql/Articles';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
@@ -7,6 +6,7 @@ import { Edit as EditIcon } from 'react-feather';
 import { useRouter } from 'next/router';
 import { DeleteButton } from 'components/DeleteButton';
 import { Button } from 'components/Button';
+import { formatFullDate } from 'lib/format-date';
 
 export default function ArticleAdminList() {
   useRequireUserLoggedIn();
@@ -53,7 +53,7 @@ export default function ArticleAdminList() {
         { field: 'atJmeno', headerName: 'Jméno', flex: 1 },
         {
           field: 'author', headerName: 'Autor', flex: 1,
-          renderCell: ({ row }) => row.atTimestampAdd ? format(new Date(row.atTimestampAdd), 'd. M. y') : '',
+          renderCell: ({ row }) => row.atTimestampAdd ? formatFullDate(new Date(row.atTimestampAdd)) : '',
         },
       ]}
     />

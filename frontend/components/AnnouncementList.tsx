@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { format } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'react-feather';
 import { useAnnouncementListQuery } from 'lib/graphql/Announcement';
 import { HtmlView } from './HtmlView';
 import { Card } from 'components/Card';
 import { Pagination } from './Pagination';
+import { formatFullDate } from 'lib/format-date';
 
 export function AnnouncementList() {
   const [limit] = React.useState(3);
@@ -28,9 +28,9 @@ export function AnnouncementList() {
       )}
 
       <span className="text-stone-500">
-        {nodes.length > 0 ? format(new Date(nodes[0]!.upTimestampAdd), 'd. M. y') : ''}
+        {nodes.length > 0 ? formatFullDate(new Date(nodes[0]!.upTimestampAdd)) : ''}
         {' - '}
-        {nodes.length > 0 ? format(new Date(nodes[nodes.length - 1]!.upTimestampAdd), 'd. M. y') : ''}
+        {nodes.length > 0 ? formatFullDate(new Date(nodes[nodes.length - 1]!.upTimestampAdd)) : ''}
       </span>
 
       {hasNext && (
@@ -45,7 +45,7 @@ export function AnnouncementList() {
         {a.upNadpis}
       </h2>
       <p className="text-stone-500 mb-4">
-        {format(new Date(a.upTimestampAdd), 'd. M. y')} , {a.userByUpKdo?.uJmeno} {a.userByUpKdo?.uPrijmeni}
+        {formatFullDate(new Date(a.upTimestampAdd))} , {a.userByUpKdo?.uJmeno} {a.userByUpKdo?.uPrijmeni}
       </p>
 
       <HtmlView content={a.upText} />

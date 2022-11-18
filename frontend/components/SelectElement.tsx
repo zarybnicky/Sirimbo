@@ -12,7 +12,7 @@ type Extras = {
 };
 
 type Item = { id: string; label: string };
-export type SelectElementProps<T extends FieldValues> = {
+type SelectElementProps<T extends FieldValues> = {
   validation?: ControllerProps['rules'];
   name: Path<T>;
   control?: Control<T>;

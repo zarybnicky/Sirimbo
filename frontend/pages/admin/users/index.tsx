@@ -5,10 +5,10 @@ import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
 import { Edit as EditIcon } from 'react-feather';
 import { DeleteButton } from 'components/DeleteButton';
 import { useRouter } from 'next/router';
-import { format } from 'date-fns';
 import { Button } from 'components/Button';
 import { useRoleListQuery } from 'lib/graphql/Roles';
 import { useCohortListQuery } from 'lib/graphql/Cohorts';
+import { formatFullDate } from 'lib/format-date';
 
 export default function UserectoryList() {
   useRequireUserLoggedIn();
@@ -69,8 +69,8 @@ export default function UserectoryList() {
           valueGetter: ({ row }) => `${row.uJmeno} ${row.uPrijmeni}`,
         },
         {
-          field: 'uNarozeni', headerName: 'Jméno', flex: 1,
-          valueFormatter: ({ value }) => format(new Date(value), 'd. M. y'),
+          field: 'uNarozeni', headerName: 'Datum narození', flex: 1,
+          valueFormatter: ({ value }) => formatFullDate(new Date(value)),
         },
         {
           field: 'uGroup', headerName: 'Role', flex: 1,

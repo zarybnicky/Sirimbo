@@ -2,7 +2,6 @@ import React from "react";
 import { useConfirm } from 'components/Confirm';
 import { Trash2 as DeleteIcon } from 'react-feather';
 import { toast } from 'react-toastify';
-import classNames from "classnames";
 
 export const DeleteButton = React.memo(function DeleteButton({
   title, onDelete
@@ -26,10 +25,7 @@ export const DeleteButton = React.memo(function DeleteButton({
     }
   }, [confirm, onDelete, title]);
 
-  return <button onClick={deleteItem} className={classNames(
-    "flex gap-1 items-center relative shadow-md text-xs font-bold pl-2 pr-3 py-1 rounded-2xl",
-    'bg-white hover:bg-stone-50',
-  )}>
-    <DeleteIcon className="w-4" /> Odstranit
+  return <button onClick={deleteItem} className="button bg-white hover:bg-stone-50">
+    <DeleteIcon /> Odstranit
   </button>;
 });

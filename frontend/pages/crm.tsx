@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { format } from 'date-fns';
 import { DataGrid } from '@mui/x-data-grid';
 import { useActiveProspectsQuery } from 'lib/graphql/Crm';
 import { Layout } from 'components/layout/Layout';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
+import { formatFullDate } from 'lib/format-date';
 
 export default function CrmPage() {
   const { data } = useActiveProspectsQuery();
@@ -34,7 +34,7 @@ export default function CrmPage() {
         { field: 'cohort', headerName: 'Zdroj', flex: 1 },
         {
           field: 'updatedAd', headerName: 'Poslední aktivita', flex: 1,
-          renderCell: ({ row }) => row.updatedAt ? format(new Date(row.updatedAt), 'd. M. y') : '',
+          renderCell: ({ row }) => row.updatedAt ? formatFullDate(new Date(row.updatedAt)) : '',
         },
       ]}
     />

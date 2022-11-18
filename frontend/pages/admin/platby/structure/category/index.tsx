@@ -4,8 +4,8 @@ import { useRequireUserLoggedIn } from "lib/route-guards";
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
 import { Edit as EditIcon } from 'react-feather';
 import { DeleteButton } from 'components/DeleteButton';
-import { format } from 'date-fns';
 import { Button } from 'components/Button';
+import { formatLongDateRange } from 'lib/format-date';
 
 export default function PlatbyCategoryListPage() {
   useRequireUserLoggedIn();
@@ -38,7 +38,7 @@ export default function PlatbyCategoryListPage() {
         { field: 'pcSymbol', headerName: 'Specifický symbol', flex: 1 },
         {
           field: 'pcValidFrom', headerName: 'Platnost', flex: 1,
-          renderCell: ({ row }) => `${format(new Date(row.pcValidFrom), 'd. M. y')} - ${format(new Date(row.pcValidTo), 'd. M. y')}`,
+          renderCell: ({ row }) => formatLongDateRange(new Date(row.pcValidFrom), new Date(row.pcValidTo)),
         },
         {
           field: 'pcAmount', headerName: 'Částka', flex: 1,

@@ -2,32 +2,19 @@ import * as React from "react";
 import { UserAuthFragment, CouplePartialFragment, useCurrentUserQuery, useLoginMutation, useLogoutMutation } from 'lib/graphql/CurrentUser';
 import { useQueryClient } from "@tanstack/react-query";
 
-export interface AuthContextType {
+interface AuthContextType {
   isLoading: boolean,
   user: UserAuthFragment | null;
   couple: CouplePartialFragment | null;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  sendPasswordResetEmail: (email: string) => Promise<void>;
-  confirmPasswordReset: (code: string, password: string) => Promise<void>;
+  // sendPasswordResetEmail: (email: string) => Promise<void>;
+  // confirmPasswordReset: (code: string, password: string) => Promise<void>;
 }
 
 const authContext = React.createContext<AuthContextType | undefined>(undefined);
 
 export const ProvideAuth: React.FC = ({ children }) => {
-  const auth = useApiAuth();
-  return <authContext.Provider value={auth}>{children}</authContext.Provider>;
-}
-
-export const useAuth = () => {
-  const auth = React.useContext(authContext);
-  if (auth === undefined) {
-    throw new Error('You can only use `useAuth` from inside an AuthProvider');
-  }
-  return auth;
-}
-
-function useApiAuth(): AuthContextType {
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
@@ -37,7 +24,7 @@ function useApiAuth(): AuthContextType {
 
   const user = currentUser?.getCurrentUser || null;
   const couple = currentUser?.getCurrentCouple || null;
-  const { mutateAsync: signIn } = useLoginMutation({
+  const { mutateAsync: doSignIn } = useLoginMutation({
     onSuccess: (data) => {
       queryClient.setQueryData(['CurrentUser', {}], {
         getCurrentUser: data.login?.result?.usr,
@@ -45,28 +32,28 @@ function useApiAuth(): AuthContextType {
       })
     },
   });
-  const { mutateAsync: signOut } = useLogoutMutation({
+  const { mutateAsync: doSignOut } = useLogoutMutation({
     onSuccess: () => {
       queryClient.resetQueries(['CurrentUser', {}]);
     },
   });
 
-  return {
-    isLoading,
-    user,
-    couple,
-    async signIn(login: string, passwd: string) {
-      setIsLoading(true);
-      await signIn({ login, passwd });
-    },
-    async signOut() {
-      await signOut({});
-    },
-    async sendPasswordResetEmail(email: string) {
-      // await sendPasswordResetEmail(email);
-    },
-    async confirmPasswordReset(code: string, password: string) {
-      // await confirmPasswordReset(code, password)
-    }
-  };
+  const signIn = React.useCallback(async (login: string, passwd: string) => {
+    setIsLoading(true);
+    await doSignIn({ login, passwd });
+  }, [doSignIn]);
+  const signOut = React.useCallback(async () => {
+    await doSignOut({});
+  }, [doSignOut]);
+
+  const context = { isLoading, user, couple, signIn, signOut };
+  return <authContext.Provider value={context}>{children}</authContext.Provider>;
+}
+
+export const useAuth = () => {
+  const auth = React.useContext(authContext);
+  if (auth === undefined) {
+    throw new Error('You can only use `useAuth` from inside an AuthProvider');
+  }
+  return auth;
 }

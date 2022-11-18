@@ -1,18 +1,15 @@
 import * as React from 'react';
-import { format } from 'date-fns';
 import { usePermissions } from 'lib/data/use-permissions';
-import { DateRange } from 'components/DateRange';
 import { ReservationFragment, useReservationRangeQuery } from 'lib/graphql/Reservation';
 import { ScheduleFragment, useScheduleRangeQuery } from 'lib/graphql/Schedule';
 import { Dropdown } from 'components/Dropdown';
 import { Button } from 'components/Button';
-import { cs } from 'date-fns/locale'
 import { LessonButton } from 'components/LessonButton';
 import { Card } from 'components/Card';
 import { MoreVertical } from 'react-feather';
 import { Layout } from 'components/layout/Layout';
-import { capitalize } from 'lib/capitalize';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
+import { formatLongDateRange, formatWeekDay } from 'lib/format-date';
 
 export default function SchedulePage() {
   const perms = usePermissions();
@@ -70,7 +67,7 @@ export default function SchedulePage() {
   return <div className="col-popout mt-12 mb-8">
     {Object.entries(planList).map(([date, items]) => <>
       <div className="text-xl font-bold text-stone-700 mt-6 ml-3 mb-4">
-        {capitalize(format(new Date(date), 'EEEE d. M.', { locale: cs }))}
+        {formatWeekDay(new Date(date))}
       </div>
       <div className="flex flex-wrap gap-4">
         {items.map((item, i) => item.__typename === 'Rozpi' ? (
@@ -110,7 +107,7 @@ export default function SchedulePage() {
               ]}
             />}
             <div className="h5 mb-0">{item.userByNTrener?.uJmeno} {item.userByNTrener?.uPrijmeni}</div>
-            <div className="font-bold"><DateRange from={item.nOd} to={item.nDo} /></div>
+            <div className="font-bold">{formatLongDateRange(new Date(item.nOd), new Date(item.nDo))}</div>
 
             {item.nMaxPocetHod > 0 && <>
               <span className="text-stone-500">Maximálně hodin/pár:</span>

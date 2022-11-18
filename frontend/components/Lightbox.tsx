@@ -26,7 +26,7 @@ export const Lightbox = ({ dirHref, images, initial }: LightboxProps) => {
       return;
     }
     router.replace(images[selected]!.href);
-  }, [selected]);
+  }, [router, images, selected]);
 
   const prevImage = React.useCallback(() => (
     setSelected(sel => (sel + images.length - 1) % images.length)
@@ -44,7 +44,7 @@ export const Lightbox = ({ dirHref, images, initial }: LightboxProps) => {
     } else if (e.key === "Escape" || e.key === "Esc") {
       router.replace(dirHref);
     }
-  }, []);
+  }, [router]);
 
   const handlers = useSwipeable({
     onSwipedLeft: () => nextImage(),

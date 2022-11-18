@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { format } from 'date-fns';
 import { Checkbox } from 'components/Checkbox';
 import { useScheduleListQuery, useDeleteScheduleMutation, useToggleScheduleVisibleMutation } from 'lib/graphql/Schedule';
 import { useRouter } from 'next/router';
@@ -7,6 +6,7 @@ import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import { Edit as EditIcon, Copy as ContentCopyIcon } from 'react-feather';
 import { DeleteButton } from 'components/DeleteButton';
 import { Button } from 'components/Button';
+import { formatFullDate } from 'lib/format-date';
 
 export default function RozpisAdminList() {
   const router = useRouter();
@@ -68,7 +68,7 @@ export default function RozpisAdminList() {
         },
         {
           field: 'date', headerName: 'Datum', flex: 1,
-          renderCell: ({ row }) => row.rDatum ? format(new Date(row.rDatum), 'd. M. y') : '',
+          renderCell: ({ row }) => row.rDatum ? formatFullDate(new Date(row.rDatum)) : '',
         },
         { field: 'rKde', headerName: 'Místo', flex: 1 },
         {

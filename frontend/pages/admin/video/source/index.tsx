@@ -3,10 +3,10 @@ import { Button } from 'components/Button';
 import { useDeleteVideoSourceMutation, useVideoSourceListQuery } from 'lib/graphql/Video';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
-import { format } from 'date-fns';
 import { useRouter } from 'next/router';
 import { Edit as EditIcon } from 'react-feather';
 import { DeleteButton } from 'components/DeleteButton';
+import { formatFullDate } from 'lib/format-date';
 
 export default function VideoSourceList() {
   useRequireUserLoggedIn();
@@ -38,11 +38,11 @@ export default function VideoSourceList() {
         { field: 'vsTitle', headerName: 'Zdroj', flex: 1 },
         {
           field: 'date', headerName: 'Poslední kontrola', flex: 1,
-          renderCell: ({ row }) => row.vsCreatedAt ? format(new Date(row.vsCreatedAt), 'd. M. y') : '',
+          renderCell: ({ row }) => row.vsCreatedAt ? formatFullDate(new Date(row.vsCreatedAt)) : '',
         },
         {
           field: 'checked', headerName: 'Poslední kontrola', flex: 1,
-          renderCell: ({ row }) => row.vsLastChecked ? format(new Date(row.vsLastChecked), 'd. M. y') : '',
+          renderCell: ({ row }) => row.vsLastChecked ? formatFullDate(new Date(row.vsLastChecked)) : '',
         },
       ]}
     />

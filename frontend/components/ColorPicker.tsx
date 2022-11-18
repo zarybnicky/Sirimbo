@@ -2,7 +2,7 @@ import { Control, FieldValues, Path, useController } from 'react-hook-form';
 import { HexColorPicker } from 'react-colorful';
 import { TextField } from 'components/TextField';
 
-export type ColorPickerProps<T extends FieldValues> = {
+type ColorPickerProps<T extends FieldValues> = {
   name: Path<T>;
   control?: Control<T>;
 };

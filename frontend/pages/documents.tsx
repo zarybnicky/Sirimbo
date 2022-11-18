@@ -1,10 +1,10 @@
 import { useForm } from "react-hook-form";
 import { SelectElement } from 'components/SelectElement';
 import { DataGrid } from '@mui/x-data-grid';
-import format from "date-fns/format";
 import { useFileListQuery } from "lib/graphql/Documents";
 import { Layout } from 'components/layout/Layout';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
+import { formatFullDate } from "lib/format-date";
 
 const categories = [
   { id: "1", label: "Schůze,\u{00A0}rady" },
@@ -39,7 +39,7 @@ export default function FileListPage() {
         },
         {
           field: 'date', headerName: 'Přidáno', flex: 1,
-          renderCell: ({ row }) => row.dTimestamp ? format(new Date(row.dTimestamp), 'd. M. y') : '',
+          renderCell: ({ row }) => row.dTimestamp ? formatFullDate(new Date(row.dTimestamp)) : '',
         }
       ]}
     />

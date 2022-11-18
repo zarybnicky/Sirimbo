@@ -1,5 +1,4 @@
 import { Card } from 'components/Card';
-import { format } from "date-fns";
 import { useDeleteUserMutation, useConfirmUserMutation, useUserListQuery } from 'lib/graphql/User';
 import { SelectElement } from 'components/SelectElement';
 import { useForm } from "react-hook-form";
@@ -10,6 +9,7 @@ import { useRequireUserLoggedIn } from "lib/route-guards";
 import { UserFragment } from 'lib/graphql/CurrentUser';
 import { useCohortListQuery } from 'lib/graphql/Cohorts';
 import { useRoleListQuery } from 'lib/graphql/Roles';
+import { formatFullDate } from 'lib/format-date';
 
 const UnconfirmedUser: React.FC<{
   item: UserFragment;
@@ -50,7 +50,7 @@ const UnconfirmedUser: React.FC<{
             <b>Login:</b> {item.uLogin}
           </div>
           <div>
-            <b>Datum narození:</b> {format(new Date(item.uNarozeni), 'd. M. y')}
+            <b>Datum narození:</b> {formatFullDate(new Date(item.uNarozeni))}
           </div>
           <div>
             <b>E-mail:</b> {item.uEmail}

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { format } from 'date-fns';
 import { CallToAction } from 'components/CallToAction';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { HtmlView } from 'components/HtmlView';
 import { useArticleQuery } from 'lib/graphql/Articles';
+import { formatFullDate } from 'lib/format-date';
 
 export const ArticlePage = ({ }) => {
   const router = useRouter();
@@ -28,7 +28,7 @@ export const ArticlePage = ({ }) => {
     <div className="container mx-auto max-w-5xl" style={{ margin: '5rem auto' }}>
       <h3 className="text-xl font-bold mb-2">{x.atJmeno}</h3>
       <div className="text-stone-700">
-        {x.atTimestampAdd && format(new Date(x.atTimestampAdd), 'd. M. y')}
+        {x.atTimestampAdd && formatFullDate(new Date(x.atTimestampAdd))}
       </div>
       <HtmlView content={x.atText} />
     </div>

@@ -3,7 +3,6 @@ import { Button } from 'components/Button';
 import { useDeleteVideoMutation, useVideoListQuery } from 'lib/graphql/Video';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
-import { format } from 'date-fns';
 import { useRouter } from 'next/router';
 import { Edit as EditIcon } from 'react-feather';
 import { DeleteButton } from 'components/DeleteButton';
@@ -37,10 +36,6 @@ export default function VideoList() {
         },
         { field: 'vName', headerName: 'Jméno', flex: 1 },
         { field: 'vId', headerName: 'ID videa', flex: 1 },
-        {
-          field: 'checked', headerName: 'Přidáno', flex: 1,
-          renderCell: ({ row }) => row.vCreatedAt ? format(new Date(row.vCreatedAt), 'd. M. y') : '',
-        },
       ]}
     />
   </div>;

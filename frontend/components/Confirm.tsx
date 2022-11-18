@@ -32,17 +32,16 @@ export const useConfirm = () => {
   return confirm;
 }
 
-export const ConfirmProvider = ({ children, defaultOptions = {} }: {
+export const ConfirmProvider = React.memo(function ConfirmProvider({ children }: {
   children: React.ReactNode;
-  defaultOptions?: Partial<ConfirmOptions>;
-}) => {
+}) {
   const [options, setOptions] = React.useState(DEFAULT_OPTIONS);
   const [resolveReject, setResolveReject] = React.useState<[] | [(value?: unknown) => void, () => void]>([]);
   const [resolve, reject] = resolveReject;
 
   const confirm = React.useCallback((options: Partial<ConfirmOptions> = {}) => {
     return new Promise((resolve, reject) => {
-      setOptions({ ...DEFAULT_OPTIONS, ...defaultOptions, ...options });
+      setOptions({ ...DEFAULT_OPTIONS, ...options });
       setResolveReject([resolve, reject]);
     });
   }, []);
@@ -136,4 +135,4 @@ export const ConfirmProvider = ({ children, defaultOptions = {} }: {
       </DialogPrimitive.Root>
     </React.Fragment >
   );
-};
+});

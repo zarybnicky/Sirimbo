@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { formatFullDate } from 'lib/format-date';
 import { useGalleryDirQuery } from 'lib/graphql/Gallery';
 
 export interface GalleryDir {
@@ -29,7 +29,7 @@ export const useGallery = (dir: string): {
       id: x.id,
       name: x.gdName,
       href: `/gallery/${x.id}`,
-      date: date ? format(new Date(date), 'd. M. y') : '',
+      date: date ? formatFullDate(new Date(date)) : '',
       img: decodeURIComponent(`/galerie/${photo}`),
       imgThumb: decodeURIComponent(`/galerie/thumbnails/${photo}`),
     };
@@ -40,7 +40,7 @@ export const useGallery = (dir: string): {
       id: x.id,
       name: x.gfName,
       href: `/gallery/${x.gfIdRodic}/photo/${x.id}`,
-      date: x.gfTimestamp ? format(new Date(x.gfTimestamp), 'd. M. y') : '',
+      date: x.gfTimestamp ? formatFullDate(new Date(x.gfTimestamp)) : '',
       img: decodeURIComponent(`/galerie/${x.gfPath}`),
       imgThumb: decodeURIComponent(`/galerie/thumbnails/${x.gfPath}`),
     };

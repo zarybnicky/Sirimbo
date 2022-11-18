@@ -11,13 +11,15 @@ export const SlateReadonly = ({ value }: { value: Descendant[] }) => {
   const renderElement = React.useCallback(props => <Element {...props} />, []);
 
   return (
-    <Slate editor={editor} value={value} onChange={() => { }}>
-      <Editable
-        readOnly
-        renderLeaf={renderLeaf}
-        renderElement={renderElement}
-      />
-    </Slate>
+    <div className="prose">
+      <Slate editor={editor} value={value} onChange={() => { }}>
+        <Editable
+          readOnly
+          renderLeaf={renderLeaf}
+          renderElement={renderElement}
+        />
+      </Slate>
+    </div>
   );
 };
 

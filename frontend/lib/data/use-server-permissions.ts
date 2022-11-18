@@ -4,7 +4,7 @@ import { defaultPermissions, PermissionChecker, PermissionKey, PermissionLevel }
 
 export { PermissionKey, PermissionLevel };
 
-export async function loadServerPermissions(context: GetServerSidePropsContext) {
+async function loadServerPermissions(context: GetServerSidePropsContext) {
   const { rows: [session] } = await pool.query(`
 SELECT u_id, u_group, p_id, ss_id, permissions.* FROM session
 LEFT JOIN users ON u_id=ss_user

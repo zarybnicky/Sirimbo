@@ -19,9 +19,6 @@ export const Tracking = React.memo(function Tracking() {
       posthog.init('phc_H2WM9q2xXVFl1wEak9TcQVAsOpWNGuauzAvyOmBquYQ', {
         api_host: 'https://eu.posthog.com',
       });
-      if (user) {
-        posthog.identify(user.uLogin, user);
-      }
       posthogRef.current = posthog;
     })();
   }, []);
@@ -30,7 +27,7 @@ export const Tracking = React.memo(function Tracking() {
     if (user) {
       posthogRef.current?.identify(user.uLogin, user);
     }
-  }, [user]);
+  }, [user, posthogRef.current]);
 
   React.useEffect(() => {
     if (process.env.NODE_ENV === 'development') return;

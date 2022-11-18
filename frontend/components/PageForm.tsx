@@ -19,7 +19,7 @@ export const PageForm: React.FC<{ data?: PageFragment; }> = ({ data }) => {
   const queryClient = useQueryClient();
   const onSuccess = React.useCallback(() => {
     queryClient.invalidateQueries(usePageListQuery.getKey());
-  }, []);
+  }, [queryClient]);
 
   const { mutateAsync: doCreate } = useCreatePageMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdatePageMutation({ onSuccess });

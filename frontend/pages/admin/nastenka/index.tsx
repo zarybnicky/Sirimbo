@@ -4,9 +4,9 @@ import { useRequireUserLoggedIn } from "lib/route-guards";
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import { Edit as EditIcon } from 'react-feather';
 import { useRouter } from 'next/router';
-import { format } from "date-fns";
 import { DeleteButton } from "components/DeleteButton";
 import { Button } from "components/Button";
+import { formatFullDate } from "lib/format-date";
 
 export default function AnnouncementAdminList() {
   useRequireUserLoggedIn();
@@ -70,7 +70,7 @@ export default function AnnouncementAdminList() {
           field: 'author', headerName: 'Autor', flex: 1,
           renderCell: ({ row }) => <>
             {row.userByUpKdo?.uJmeno} {row.userByUpKdo?.uPrijmeni}{', '}
-            {row.upTimestampAdd ? format(new Date(row.upTimestampAdd), 'd. M. y') : ''}
+            {row.upTimestampAdd ? formatFullDate(new Date(row.upTimestampAdd)) : ''}
           </>,
         },
       ]}

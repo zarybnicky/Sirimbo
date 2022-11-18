@@ -20,7 +20,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: {
     const track = () => setIsOpen(false);
     router.events.on('routeChangeStart', track)
     return () => router.events.off('routeChangeStart', track);
-  }, [router.events]);
+  }, [router.events, setIsOpen]);
 
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -32,7 +32,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: {
     updateDetailView();
     window.addEventListener('resize', updateDetailView);
     return () => window.removeEventListener('resize', updateDetailView);
-  }, []);
+  }, [setIsOpen, isOpen]);
 
   return <>
     <nav className={classNames(
@@ -83,7 +83,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: {
   </>
 };
 
-export const SidebarLink = ({ item, onClick }: {
+const SidebarLink = ({ item, onClick }: {
   item: MenuLink;
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 }) => {
@@ -95,7 +95,7 @@ export const SidebarLink = ({ item, onClick }: {
         "rounded-2xl px-3 py-1.5",
         "flex items-center grow mx-2 hover:bg-red-700 hover:text-white",
         "tracking-wider text-sm",
-        inPath ? 'font-bold bg-stone-700 text-white lg:bg-red-900' : 'font-light',
+        inPath ? 'font-bold bg-stone-700 text-white lg:bg-red-900' : '',
       )}>
         {item.title}
       </a>
@@ -103,7 +103,7 @@ export const SidebarLink = ({ item, onClick }: {
   );
 };
 
-export const SidebarSection = ({ item }: { item: MenuStructItem; }) => {
+const SidebarSection = ({ item }: { item: MenuStructItem; }) => {
   return item.type === 'link' ? <SidebarLink item={item} /> : <>
     <div key={item.title} className="ml-5 mt-2">
       <div className="font-bold text-xs uppercase grow my-1">{item.title}</div>

@@ -6,7 +6,7 @@ type Extras = {
   parseError?: (error: FieldError) => React.ReactNode;
 };
 
-export type CheckboxElementProps<T extends FieldValues> = Omit<React.HTMLProps<HTMLInputElement>, 'label' | 'name'> & {
+type CheckboxElementProps<T extends FieldValues> = Omit<React.HTMLProps<HTMLInputElement>, 'label' | 'name'> & {
   validation?: ControllerProps['rules'];
   name: Path<T>;
   control?: Control<T>;

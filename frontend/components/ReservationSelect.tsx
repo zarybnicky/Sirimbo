@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { DateRange } from './DateRange';
 import { usePermissions } from 'lib/data/use-permissions';
 import { ReservationFragment, useReservationListQuery } from 'lib/graphql/Reservation';
 import { Dropdown } from 'components/Dropdown';
+import { formatShortDateRange } from 'lib/format-date';
 
 const ReservationView = (x: ReservationFragment) => {
   const perms = usePermissions();
@@ -23,7 +23,7 @@ const ReservationView = (x: ReservationFragment) => {
             />
           )}
         </div>
-        <div className="font-bold"><DateRange from={x.nOd} to={x.nDo} noYear /></div>
+        <div className="font-bold">{formatShortDateRange(new Date(x.nOd), new Date(x.nDo))}</div>
         {x?.nMaxPocetHod > 0 && <div>
           <span className="text-stone-500"> Maximálně hodin/pár: </span>
           <span className="text-lg">{x?.nMaxPocetHod}</span>
@@ -68,7 +68,7 @@ export function ReservationSelect() {
     <select value={reservation?.id || 'none'} onChange={onChange}>
       <option value='none'> --vyberte nabídku-- </option>
       {reservations?.nabidkas?.nodes?.map(x => <option value={x.id} key={x.id}>
-        <DateRange from={x.nOd} to={x.nDo} />
+        {formatShortDateRange(new Date(x.nOd), new Date(x.nDo))}
         {` - ${x.userByNTrener?.uJmeno} ${x.userByNTrener?.uPrijmeni}`}
       </option>)}
     </select>

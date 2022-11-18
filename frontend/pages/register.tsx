@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form';
 import { SelectElement } from 'components/SelectElement';
 import { TextFieldElement } from 'components/TextField';
 import { useCountries } from 'lib/data/use-countries';
-import { format } from 'date-fns';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from 'components/ErrorBox';
 import { Card } from 'components/Card';
@@ -34,7 +33,7 @@ export default function RegisterPage() {
         dancer: values.poznamky === 'dancer',
         nationality: values.nationality.toString(),
         skupina: values.skupina,
-        narozeni: format(new Date(values.narozeni), 'yyyy-MM-dd'),
+        narozeni: new Date(values.narozeni).toISOString().substring(0, 10),
         dancerName: undefined,
         other: undefined,
       },

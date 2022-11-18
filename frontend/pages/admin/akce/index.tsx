@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Checkbox } from 'components/Checkbox';
-import { DateRange } from 'components/DateRange';
 import { useEventListQuery, useToggleEventVisibleMutation, useDeleteEventMutation } from 'lib/graphql/Event';
 import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { useRouter } from 'next/router';
@@ -8,6 +7,7 @@ import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import { Edit as EditIcon } from 'react-feather';
 import { DeleteButton } from 'components/DeleteButton';
 import { Button } from 'components/Button';
+import { formatLongDateRange } from 'lib/format-date';
 
 export default function AdminEventList() {
   useRequireUserLoggedIn();
@@ -67,7 +67,7 @@ export default function AdminEventList() {
         { field: 'aJmeno', headerName: 'Jméno', flex: 1 },
         {
           field: 'aOd', headerName: 'Datum', flex: 1,
-          renderCell: ({ row }) => <DateRange from={row.aOd} to={row.aDo} />
+          renderCell: ({ row }) => formatLongDateRange(new Date(row.aOd), new Date(row.aDo)),
         },
         {
           field: 'aKapacita', headerName: 'Kapacita', flex: 1,

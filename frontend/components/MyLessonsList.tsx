@@ -1,13 +1,11 @@
 import * as React from 'react';
 import { useMyLessonsQuery, ScheduleItemFragment } from 'lib/graphql/Schedule';
 import { useAuth } from 'lib/data/use-auth';
-import { format } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'react-feather';
 import { lastDayOfWeek } from 'date-fns';
-import { cs } from 'date-fns/locale'
 import { LessonButton } from './LessonButton';
 import { Card } from './Card';
-import { capitalize } from 'lib/capitalize';
+import { formatFullDate, formatWeekDay } from 'lib/format-date';
 
 export const MyLessonsList: React.FC = () => {
   const { user } = useAuth();
@@ -43,7 +41,7 @@ export const MyLessonsList: React.FC = () => {
     data?.myLessons?.nodes?.forEach(lesson => {
       const date = lesson.rozpiByRiIdRodic?.rDatum;
       const place = lesson.rozpiByRiIdRodic?.rKde;
-      let key = date ? capitalize(format(new Date(date), 'EEEE d. M.', { locale: cs })) : '';
+      let key = date ? formatWeekDay(new Date(date)) : '';
       key += key ? ` ${place}` : place;
       lessonsPerDay[key] = lessonsPerDay[key] || [];
       lessonsPerDay[key]!.push(lesson);
@@ -57,7 +55,7 @@ export const MyLessonsList: React.FC = () => {
         <ChevronLeft />
       </button>
       <span className="text-stone-700">
-        {format(startDate, 'd. M. y')} - {format(lastDayOfWeek(startDate), 'd. M. y')}
+        {formatFullDate(startDate)} - {formatFullDate(lastDayOfWeek(startDate))}
       </span>
       <button className="button button-icon" onClick={setNextWeek}>
         <ChevronRight />

@@ -1,23 +1,8 @@
 import * as React from 'react';
-import { format } from 'date-fns';
-import { cs } from 'date-fns/locale'
 import { Control, FieldValues, ControllerProps, Path, useController } from 'react-hook-form';
 import { DatePickerCalendar, DateRangePicker, DatePicker } from "@axel-dev/react-nice-dates";
 import '@axel-dev/react-nice-dates/build/style.css';
-
-interface DateRangeProps {
-  noYear?: boolean;
-  from: string;
-  to?: string;
-}
-
-export function DateRange({ noYear, from, to }: DateRangeProps) {
-  const f = noYear ? 'd. M.' : 'd. M. y';
-  if (to && from != to) {
-    return <>{format(new Date(from), f) + ' - ' + format(new Date(to), f)}</>;
-  }
-  return <>{format(new Date(from), f)}</>;
-}
+import cs from 'date-fns/locale/cs';
 
 type DateRange = [Date | undefined, Date | undefined];
 

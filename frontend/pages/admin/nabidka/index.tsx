@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Checkbox } from 'components/Checkbox';
-import { DateRange } from 'components/DateRange';
 import { useDeleteReservationMutation, useReservationListQuery, useToggleReservationVisibleMutation } from 'lib/graphql/Reservation';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import { Edit as EditIcon, Copy as ContentCopyIcon } from 'react-feather';
 import { DeleteButton } from 'components/DeleteButton';
 import { useRouter } from 'next/router';
 import { Button } from 'components/Button';
+import { formatLongDateRange } from 'lib/format-date';
 
 export default function ReservationAdminList() {
   const router = useRouter();
@@ -68,7 +68,7 @@ export default function ReservationAdminList() {
         },
         {
           field: 'nOd', headerName: 'Datum', flex: 1,
-          renderCell: ({ row }) => <DateRange from={row.nOd} to={row.nDo} />,
+          renderCell: ({ row }) => formatLongDateRange(new Date(row.nOd), new Date(row.nDo)),
         },
         {
           field: 'nVisible', headerName: 'Viditelný', flex: 1,

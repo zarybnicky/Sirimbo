@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { allowedPermissions, PermissionKey, permissionMarks } from "lib/data/use-permissions";
 import { Control, FieldValues, ControllerProps, Path, useController } from 'react-hook-form';
 
-export type PermissionSliderProps<T extends FieldValues> = {
+type PermissionSliderProps<T extends FieldValues> = {
   validation?: ControllerProps['rules'];
   name: Path<T> & keyof typeof PermissionKey;
   control?: Control<T>;

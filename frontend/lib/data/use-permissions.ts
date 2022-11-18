@@ -78,7 +78,6 @@ export const permissionLabels: { [key in keyof typeof PermissionKey]: string } =
 };
 
 export const realPermissionKeys = keysOf(PermissionKey).filter(key => (!~~key && key.toString() !== "0"));
-export const realPermissionLevels = keysOf(PermissionLevel).filter(key => !(!~~key && key.toString() !== "0"));
 
 export const permissionMarks = [
   { value: 0, realValue: PermissionLevel.P_NONE, label: 'žádná' },

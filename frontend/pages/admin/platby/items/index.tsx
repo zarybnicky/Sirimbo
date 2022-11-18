@@ -4,8 +4,8 @@ import { useRequireUserLoggedIn } from "lib/route-guards";
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
 import { Edit as EditIcon } from 'react-feather';
 import { DeleteButton } from 'components/DeleteButton';
-import { format } from 'date-fns';
 import { Button } from 'components/Button';
+import { formatFullDate } from 'lib/format-date';
 
 export default function PlatbyItemListPage() {
   useRequireUserLoggedIn();
@@ -40,7 +40,7 @@ export default function PlatbyItemListPage() {
         },
         {
           field: 'piDate', headerName: 'Datum', flex: 1,
-          valueFormatter: ({ value }) => format(new Date(value), 'd. M. y'),
+          valueFormatter: ({ value }) => formatFullDate(new Date(value)),
         },
         {
           field: 'piIdUser', headerName: 'Uživatel', flex: 1,

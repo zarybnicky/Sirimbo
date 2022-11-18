@@ -32,7 +32,7 @@ function ListTitleButton({ active, icon: Icon, children, href }: {
   return (
     <Link href={href} passHref>
       <a className={classNames(
-        "flex gap-1 items-center relative shadow-md text-xs font-bold pl-2 pr-3 py-1 rounded-2xl",
+        "button font-bold",
         active ? 'tracking-wide bg-red-500 text-white' : 'bg-white hover:bg-stone-50',
       )}>
         {Icon && <Icon className="w-4" />} {children}

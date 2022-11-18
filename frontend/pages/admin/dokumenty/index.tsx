@@ -4,8 +4,8 @@ import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import { Edit as EditIcon } from 'react-feather';
 import { DeleteButton } from 'components/DeleteButton';
 import { useRouter } from 'next/router';
-import { format } from 'date-fns';
 import { Button } from 'components/Button';
+import { formatFullDate } from 'lib/format-date';
 
 const categories = [
   { id: 1, label: "Schůze,\u{00A0}rady" },
@@ -92,7 +92,7 @@ export default function FileAdminList() {
         },
         {
           field: 'date', headerName: 'Přidáno', flex: 1,
-          renderCell: ({ row }) => row.dTimestamp ? format(new Date(row.dTimestamp), 'd. M. y') : '',
+          renderCell: ({ row }) => row.dTimestamp ? formatFullDate(new Date(row.dTimestamp)) : '',
         }
       ]}
     />
