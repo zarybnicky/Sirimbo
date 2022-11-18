@@ -9,6 +9,7 @@ import { ErrorBox } from 'components/ErrorBox';
 import { useAsyncCallback } from 'react-async-hook';
 import { SubmitButton } from 'components/SubmitButton';
 import { withServerLoggedOut } from 'lib/data/use-server-permissions';
+import { Layout } from 'components/layout/Layout';
 
 type FormProps = {
   login: string;
@@ -64,3 +65,5 @@ export default function LoginPage() {
 };
 
 export const getServerSideProps = withServerLoggedOut;
+
+LoginPage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;

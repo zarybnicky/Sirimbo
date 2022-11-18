@@ -3,6 +3,7 @@ import { CallToAction } from 'components/CallToAction';
 import { SlateReadonly } from 'components/SlateReadonly';
 
 import MirekDomca from 'public/images/mirek-domca.png';
+import { Layout } from 'components/layout/Layout';
 
 export default function AboutPage() {
   return <>
@@ -51,3 +52,5 @@ const text = [
     ],
   },
 ]
+
+AboutPage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;

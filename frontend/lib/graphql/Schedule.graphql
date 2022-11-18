@@ -7,8 +7,8 @@ fragment ScheduleBasic on Rozpi {
   rTrener
   rVisible
   userByRTrener {
+    id: uId
     uJmeno
-    uId
     uPrijmeni
   }
 }

@@ -5,10 +5,10 @@ import { withServerPermissions, PermissionKey, PermissionLevel } from "lib/data/
 import { Item } from "components/layout/Item";
 
 export default function CohortAddPage() {
-  return <>
+  return <Item>
     <Item.Titlebar backHref="/admin/skupiny" title="Nová skupina" />
     <CohortForm />
-  </>;
+  </Item>;
 };
 
 CohortAddPage.getLayout = (page: React.ReactElement) => (

@@ -14,12 +14,12 @@ export default function CohortEditPage() {
   const { mutateAsync: doDelete } = useDeleteCohortMutation({
     onSuccess: () => router.push('/admin/skupiny'),
   });
-  return <>
+  return <Item>
     <Item.Titlebar backHref="/admin/skupiny" title={data?.skupiny?.sName}>
       <DeleteButton onDelete={() => doDelete({ id: id as string })} title="smazat skupinu" />
     </Item.Titlebar>
     {data && <CohortForm data={data.skupiny || undefined} />}
-  </>;
+  </Item>;
 };
 
 CohortEditPage.getLayout = (page: React.ReactElement) => (

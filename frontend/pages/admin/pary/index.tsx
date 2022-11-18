@@ -6,6 +6,8 @@ import { NewCoupleForm } from 'components/NewCoupleForm';
 import { toast } from 'react-toastify';
 import { Card } from 'components/Card';
 import { SimpleDialog } from 'components/Dialog';
+import { Layout } from 'components/layout/Layout';
+import { Item } from 'components/layout/Item';
 
 export default function CoupleAdminList() {
   useRequireUserLoggedIn();
@@ -22,7 +24,7 @@ export default function CoupleAdminList() {
     toast.info(`Opraveno ${data.fixUnpairedCouples?.paries?.length || 0} záznamů`);
   }, [doFix]);
 
-  return <div className="container mx-auto max-w-5xl" style={{ margin: '4rem auto 6rem' }}>
+  return <Item>
     <button className="button button-red" onClick={fix}>Opravit nespárované páry</button>
     <SimpleDialog
       title="Nový pár"
@@ -38,5 +40,7 @@ export default function CoupleAdminList() {
         {(row.userByPIdPartnerka ? ` - ${row.userByPIdPartnerka.uPrijmeni}, ${row.userByPIdPartnerka.uJmeno}` : '')}
       </Card>
     ))}
-  </div>;
+  </Item>;
 }
+
+CoupleAdminList.getLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;

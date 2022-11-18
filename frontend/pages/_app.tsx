@@ -74,7 +74,7 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout
 }
 
-const defaultLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;
+const defaultLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? defaultLayout;

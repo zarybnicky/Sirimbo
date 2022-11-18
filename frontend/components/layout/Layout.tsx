@@ -23,7 +23,7 @@ export const Layout: React.FC<{
         </div>
         <div className={classNames(
           "scrollbar-thin scrollbar-track-transparent scrollbar-thumb-stone-800/20 hover:scrollbar-thumb-stone-800/50",
-          isDetail ? "grow px-4 py-12 content min-h-0 overflow-y-auto" : 'hidden lg:flex',
+          isDetail ? "grow content min-h-0 overflow-y-auto" : 'hidden lg:flex',
         )}>
           {children}
         </div>

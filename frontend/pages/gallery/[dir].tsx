@@ -6,6 +6,7 @@ import { Lightbox } from 'components/Lightbox';
 import { useGallery } from 'lib/data/use-gallery';
 import { useRouter } from 'next/router';
 import { CornerLeftUp as UpIcon } from 'react-feather';
+import { Layout } from 'components/layout/Layout';
 
 export default function GalleryPage() {
   const router = useRouter();
@@ -40,3 +41,5 @@ export default function GalleryPage() {
     )}
   </>;
 };
+
+GalleryPage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;

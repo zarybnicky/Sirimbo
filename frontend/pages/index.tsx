@@ -6,6 +6,7 @@ import { ArticleCard } from 'components/cards/ArticleCard';
 import { VideoCard } from 'components/cards/VideoCard';
 import { useTitleVideos } from 'lib/data/use-videos';
 import { useArticles } from 'lib/data/use-articles';
+import { Layout } from 'components/layout/Layout';
 
 export default function HomePage() {
   const { articles } = useArticles(2, 3);
@@ -64,3 +65,5 @@ const useServices = () => [
     text: "Tréninkový program pro vrcholové sportovce, reprezentanty ČR se špičkovými českými trenéry, speciální kondiční přípravou a moderními metodami sportovního tréninku. Jsme jediným klubem v Olomouckém kraji se statutem Sprtovního centra mládeže dle MŠMT."
   },
 ];
+
+HomePage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;

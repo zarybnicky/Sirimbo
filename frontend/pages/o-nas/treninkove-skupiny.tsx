@@ -4,6 +4,7 @@ import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
 import { HtmlView } from 'components/HtmlView';
 import { useCohortListQuery } from 'lib/graphql/Cohorts';
+import { Layout } from 'components/layout/Layout';
 
 export default function CohortsPage() {
   const { data: cohorts } = useCohortListQuery({ visible: true });
@@ -25,3 +26,5 @@ export default function CohortsPage() {
     <CallToAction />
   </>;
 };
+
+CohortsPage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;

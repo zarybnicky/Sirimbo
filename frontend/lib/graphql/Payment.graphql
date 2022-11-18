@@ -53,12 +53,12 @@ fragment PaymentItem on PlatbyItem {
   piPrefix
   piDate
   userByPiIdUser {
-    uId
+    id: uId
     uJmeno
     uPrijmeni
   }
   platbyCategoryByPiIdCategory {
-    pcId
+    id: pcId
     pcName
   }
 }

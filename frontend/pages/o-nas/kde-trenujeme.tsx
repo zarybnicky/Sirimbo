@@ -3,6 +3,7 @@ import { LocationCard } from 'components/cards/LocationCard';
 import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
 import { getPlaceholder } from 'lib/get-placeholder';
+import { Layout } from 'components/layout/Layout';
 
 export default function LocationsPage() {
   const items = useLocations();
@@ -65,3 +66,5 @@ const useLocations = () => [
     },
   },
 ];
+
+LocationsPage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;

@@ -5,8 +5,9 @@ import { useRouter } from 'next/router';
 import { HtmlView } from 'components/HtmlView';
 import { useArticleQuery } from 'lib/graphql/Articles';
 import { formatFullDate } from 'lib/format-date';
+import { Layout } from 'components/layout/Layout';
 
-export const ArticlePage = ({ }) => {
+export default function ArticlePage() {
   const router = useRouter();
   const id = router.query.id as string;
   const { data } = useArticleQuery({ id });
@@ -25,15 +26,14 @@ export const ArticlePage = ({ }) => {
       <meta property="og:site_name" content="TK Olymp" />
       <meta property="og:description" content="{x.atPreview}" />
     </Head>
-    <div className="container mx-auto max-w-5xl" style={{ margin: '5rem auto' }}>
-      <h3 className="text-xl font-bold mb-2">{x.atJmeno}</h3>
-      <div className="text-stone-700">
-        {x.atTimestampAdd && formatFullDate(new Date(x.atTimestampAdd))}
-      </div>
-      <HtmlView content={x.atText} />
+    <h3 className="text-xl font-bold mt-20 mb-2">{x.atJmeno}</h3>
+    <div className="text-stone-700">
+      {x.atTimestampAdd && formatFullDate(new Date(x.atTimestampAdd))}
     </div>
+    <HtmlView content={x.atText} />
     <CallToAction />
   </>;
 };
 
-export default ArticlePage;
+
+ArticlePage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;

@@ -1,3 +1,4 @@
+import { Layout } from "components/layout/Layout";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
@@ -65,3 +66,5 @@ export default function ErrorPage() {
     </div>
   </>;
 }
+
+ErrorPage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;

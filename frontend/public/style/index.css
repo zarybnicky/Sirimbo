@@ -13,7 +13,7 @@
 @tailwind utilities;
 
 .button {
-    @apply relative flex items-center gap-1 px-3 py-1.5 text-xs font-bold tracking-tight shadow-md rounded-2xl;
+    @apply relative inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold tracking-tight shadow-md rounded-2xl;
 }
 .button svg {
     @apply h-4 w-4;
@@ -26,6 +26,9 @@
 }
 .button svg {
     @apply h-6 w-6;
+}
+.button-lg {
+    @apply text-xl px-6 py-3 uppercase rounded-xl;
 }
 
 .react-page-cell-inner.slate {

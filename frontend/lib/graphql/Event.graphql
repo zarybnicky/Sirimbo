@@ -21,7 +21,7 @@ fragment EventWithItems on Akce {
       __typename
       id: aiId
       userByAiUser {
-        uId
+        id: uId
         uJmeno
         uPrijmeni
       }

@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 import { useCohortListQuery } from 'lib/graphql/Cohorts';
 import { useRegisterMutation } from 'lib/graphql/CurrentUser';
 import { withServerLoggedOut } from 'lib/data/use-server-permissions';
+import { Layout } from 'components/layout/Layout';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -162,3 +163,5 @@ export default function RegisterPage() {
 };
 
 export const getServerSideProps = withServerLoggedOut;
+
+RegisterPage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;

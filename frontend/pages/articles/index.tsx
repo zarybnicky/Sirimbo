@@ -4,8 +4,9 @@ import { useArticles } from 'lib/data/use-articles';
 import { CallToAction } from 'components/CallToAction';
 import Head from 'next/head';
 import { Pagination } from 'components/Pagination';
+import { Layout } from 'components/layout/Layout';
 
-export const ArticlesPage = ({ }) => {
+export default function ArticleListPage() {
   const [limit] = React.useState(12);
   const [page, setPage] = React.useState(1);
   const { articles, count: total } = useArticles(limit, (page - 1) * limit);
@@ -26,4 +27,4 @@ export const ArticlesPage = ({ }) => {
   </>;
 };
 
-export default ArticlesPage;
+ArticleListPage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;

@@ -9,6 +9,7 @@ import { TextFieldElement } from "components/TextField";
 import { toast } from 'react-toastify';
 import { useResetPasswordMutation } from "lib/graphql/CurrentUser";
 import { withServerLoggedOut } from "lib/data/use-server-permissions";
+import { Layout } from "components/layout/Layout";
 
 export default function ForgottenPassword() {
   const { control, handleSubmit } = useForm();
@@ -43,3 +44,5 @@ export default function ForgottenPassword() {
 }
 
 export const getServerSideProps = withServerLoggedOut;
+
+ForgottenPassword.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;
