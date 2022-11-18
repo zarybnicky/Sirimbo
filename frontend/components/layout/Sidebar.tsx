@@ -15,7 +15,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: {
   const sideMenu = useSideMenu();
   const topMenu = useTopMenu();
   const auth = useAuth();
-
+  console.log(isOpen);
   React.useEffect(() => {
     const track = () => setIsOpen(false);
     router.events.on('routeChangeStart', track)
@@ -25,20 +25,21 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: {
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
     const updateDetailView = () => {
-      if (window.matchMedia("(min-width: 768px)").matches && isOpen) {
+      if (window.matchMedia("(min-width: 768px)").matches) {
         setIsOpen(false);
       }
     };
     updateDetailView();
     window.addEventListener('resize', updateDetailView);
     return () => window.removeEventListener('resize', updateDetailView);
-  }, [setIsOpen, isOpen]);
+  }, [setIsOpen]);
 
   return <>
     <nav className={classNames(
       isOpen ? 'absolute inset-y-0 left-0 translate-x-0 shadow-lg' : 'absolute -translate-x-full',
+      showTopMenu && 'lg:hidden',
       "w-3/4 sm:w-1/2 md:w-1/3 lg:w-56 xl:w-64 2xl:w-72 3xl:w-80",
-      "z-30 h-full max-h-screen min-h-screen flex-none transform pb-10 transition duration-200 ease-in-out dark:border-gray-800 sm:pb-0 md:w-1/3 lg:relative lg:z-auto lg:translate-x-0",
+      "z-30 h-full max-h-screen min-h-screen flex-none transform pb-10 transition duration-200 ease-in-out sm:pb-0 md:w-1/3 lg:relative lg:z-auto lg:translate-x-0",
       "bg-white dark:bg-gray-900 lg:bg-red-500 lg:text-white",
     )}>
       {!showTopMenu && (
@@ -52,7 +53,6 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: {
       )}
       <div className={classNames(
         "grid gap-1 pt-3 mr-1 oveflow-y-auto max-h-full",
-        "border-r border-gray-150",
         "scrollbar-thin scrollbar-track-transparent scrollbar-thumb-red-700/80 hover:scrollbar-thumb-red-700/90",
       )}>
         {sideMenu.map(x => <SidebarSection key={x.title} item={x} />)}

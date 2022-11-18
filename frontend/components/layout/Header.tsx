@@ -75,7 +75,7 @@ const AuthButton = () => {
       <Account />
       <div className="flex flex-col justify-center items-start" style={{ lineHeight: 1.3 }}>
         <span className="text-xs uppercase underline">Přihlášen</span>
-        <span className="text-sm">{auth.user?.uJmeno} {auth.user?.uPrijmeni}</span>
+        <span className="text-sm font-normal">{auth.user?.uJmeno} {auth.user?.uPrijmeni}</span>
       </div>
     </div>
   );

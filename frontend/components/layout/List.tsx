@@ -5,7 +5,9 @@ export function List({ children }: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col px-2 lg:bg-stone-100 lg:dark:bg-gray-900 max-h-screen min-h-screen flex-none w-full lg:w-80 xl:w-96">
+    <div className={classNames(
+      "flex flex-col px-2 max-h-screen min-h-screen flex-none w-full lg:w-80 xl:w-96",
+      "border-r dark:border-gray-800 lg:border-stone-150 lg:bg-stone-50 lg:dark:bg-gray-900")}>
       {children}
     </div>
   );
@@ -68,7 +70,7 @@ function ListScroll({ children }: {
   return (
     <div className={classNames(
       "scrollbar-thin scrollbar-track-transparent scrollbar-thumb-stone-800/20 hover:scrollbar-thumb-stone-800/50",
-      "relative h-full overflow-y-auto border-r border-gray-150 dark:border-gray-800 dark:bg-gray-900",
+      "relative h-full overflow-y-auto",
     )}>
       {children}
     </div>

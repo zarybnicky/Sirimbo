@@ -15,13 +15,24 @@ export const Hero = ({ }) => {
   }];
 
   const intervalRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const gliderRef = React.useRef<Glider | null>(null);
+
   const callbackRef = React.useCallback((glider: GliderJs) => {
     if (glider && !intervalRef.current) {
+      gliderRef.current = glider;
       intervalRef.current = setInterval(() => {
         glider.scrollItem((glider.page + 1) % articles.length, false);
       }, 6000);
     }
   }, [articles]);
+
+  React.useEffect(() => {
+    if (!gliderRef.current) return;
+    const resize = () => gliderRef.current?.resize();
+    window.addEventListener('resize', resize);
+    return () => window.removeEventListener('resize', resize);
+  }, [gliderRef.current]);
+
   React.useEffect(() => () => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -42,7 +53,7 @@ export const Hero = ({ }) => {
     {articles.map((x, i) => (
       <div key={i} className="group relative w-full oveflow-hidden">
         <Link href={x.href} passHref>
-          <a className="absolute left-0 right-0 bottom-0 z-10 bg-red-black-red flex items-center justify-center p-1 text-white group-hover:underline text-3xl py-4">{x.header}</a>
+          <a className="absolute left-0 right-0 bottom-0 z-10 bg-red-black-red p-4 text-white group-hover:underline text-2xl lg:text-3xl text-center py-4">{x.header}</a>
         </Link>
         <img className="block w-full object-cover object-[50%_30%] transform transition duration-300 group-hover:scale-110 h-[60vh] max-h-128" src={x.img} alt={x.header} />
       </div>

@@ -46,10 +46,11 @@ export const PageForm: React.FC<{ data?: PageFragment; }> = ({ data }) => {
       <TextFieldElement control={control} name="url" label="URL" required />
       <TextFieldElement control={control} name="title" label="Název" required />
       <Controller
+        control={control}
         name="content"
         defaultValue={INITIAL_VALUE}
         render={({ field: { value, onChange } }) => (
-          <ReactPage value={value} onChange={onChange} />
+          <ReactPage value={value as any} onChange={onChange} />
         )}
       />
       <SubmitButton loading={onSubmit.loading} />

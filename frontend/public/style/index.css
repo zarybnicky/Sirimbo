@@ -24,7 +24,13 @@
 .button-icon {
     @apply px-1.5 shadow-none;
 }
+.button svg {
+    @apply h-6 w-6;
+}
 
+.react-page-cell-inner.slate {
+    @apply prose;
+}
 .avoid-trainer-pictures .slate li:nth-of-type(1) {
     padding-right: 115px;
 }

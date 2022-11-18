@@ -21,7 +21,7 @@ export const PageList = () => {
         <List.Item
           key={item.id}
           active={active === item.id} href={`/admin/page/${item.id}`}
-          title={item.title}
+          title={item.title || '(Bez názvu)'}
           subtitle={item.url}
         >
         </List.Item>

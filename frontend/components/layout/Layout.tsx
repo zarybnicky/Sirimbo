@@ -14,7 +14,7 @@ export const Layout: React.FC<{
   return <div className="h-screen flex flex-col w-full relative overflow-hidden">
     <Header {...{ isOpen, setIsOpen, showTopMenu }} />
     <div className="relative flex overflow-hidden">
-      {!showTopMenu && <Sidebar {...{ isOpen, setIsOpen, showTopMenu }} />}
+      <Sidebar {...{ isOpen, setIsOpen, showTopMenu }} />
       {list ? <>
         <div className={classNames(
           isDetail ? 'hidden lg:flex flex-col' : 'max-h-screen min-h-screen w-full',

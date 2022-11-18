@@ -44,21 +44,27 @@ export function AnnouncementList() {
       <h2 className="text-2xl mb-2">
         {a.upNadpis}
       </h2>
-      <p className="text-stone-500 mb-4">
-        {formatFullDate(new Date(a.upTimestampAdd))} , {a.userByUpKdo?.uJmeno} {a.userByUpKdo?.uPrijmeni}
-      </p>
+      <div className="text-stone-500 flex justify-between flex-wrap mb-4">
+        <div>
+          {[
+            formatFullDate(new Date(a.upTimestampAdd)),
+            a.userByUpKdo && `${a.userByUpKdo?.uJmeno} ${a.userByUpKdo?.uPrijmeni}`,
+          ].filter(Boolean).join(', ')}
+        </div>
+        {a.upozorneniSkupiniesByUpsIdRodic?.nodes?.length <= 0 ? null : (
+          <div className="flex gap-1">
+            {a.upozorneniSkupiniesByUpsIdRodic.nodes.map((g) =>
+              <div className="w-3 h-3"
+                key={g.skupinyByUpsIdSkupina?.sColorRgb}
+                title={g.skupinyByUpsIdSkupina?.sName}
+                style={{ backgroundColor: g.skupinyByUpsIdSkupina?.sColorRgb }}
+              />
+            )}
+          </div>
+        )}
+      </div>
 
       <HtmlView content={a.upText} />
-
-      {a.upozorneniSkupiniesByUpsIdRodic?.nodes?.length <= 0 ? null : <div>
-        {a.upozorneniSkupiniesByUpsIdRodic.nodes.map((g) =>
-          <div className="w-3 h-3"
-            key={g.skupinyByUpsIdSkupina?.sColorRgb}
-            title={g.skupinyByUpsIdSkupina?.sName}
-            style={{ backgroundColor: g.skupinyByUpsIdSkupina?.sColorRgb }}
-          />
-        )}
-      </div>}
     </Card>)}
 
     <Pagination {...{ total, limit, page, setPage }} />
