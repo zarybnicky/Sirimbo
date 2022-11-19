@@ -83,7 +83,6 @@ export const memberMenu: MenuStructItem[] = [
 ];
 
 export const adminMenu: MenuStructItem[] = [
-  { "type": "link", "text": "Správa obsahu", "href": "/editor" },
   { "type": "link", "text": "Zájemci", "href": "/crm" },
   { "type": "link", "text": "Stará administrace", "href": "/admin/rozpis" },
 ];
