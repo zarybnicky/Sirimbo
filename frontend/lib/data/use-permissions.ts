@@ -1,3 +1,5 @@
+import { ScheduleBasicFragment, ScheduleItemBasicFragment } from 'lib/graphql/Schedule';
+import { ReservationBasicFragment, ReservationItemBasicFragment } from 'lib/graphql/Reservation';
 import { keysOf } from 'lib/keys-of';
 import { useAuth } from './use-auth';
 
@@ -88,15 +90,14 @@ export const permissionMarks = [
 ];
 
 export function usePermissions() {
-  const { user, couple } = useAuth();
+  const { user } = useAuth();
   const perms = user?.permissionByUGroup || defaultPermissions;
-  return new PermissionChecker(user?.id || "0", couple?.id || "0", perms);
+  return new PermissionChecker(user?.id || "0", perms);
 };
 
 export class PermissionChecker {
   constructor(
     public userId: string,
-    public coupleId: string,
     public perms: { [key in keyof typeof PermissionKey]: number }
   ) { }
 
@@ -126,12 +127,13 @@ export class PermissionChecker {
     );
   }
 
-  public canSignOut(item: { rLock: boolean; rTrener: string; }, lesson: {
-    riLock: boolean; riPartner: string | null;
-  }) {
+  public canSignOut(item: ScheduleBasicFragment, lesson: ScheduleItemBasicFragment) {
+    const man = lesson.paryByRiPartner?.userByPIdPartner;
+    const woman = lesson.paryByRiPartner?.userByPIdPartner;
+    const isMyLesson = this.userId === man?.id || this.userId === woman?.id;
     return (
       (lesson.riPartner && lesson.riPartner !== '0') && !item.rLock && !lesson.riLock && (
-        (this.perms.peRozpis >= PermissionLevel.P_MEMBER && this.coupleId == lesson.riPartner) ||
+        (this.perms.peRozpis >= PermissionLevel.P_MEMBER && isMyLesson) ||
         (this.perms.peRozpis >= PermissionLevel.P_OWNED && this.userId == item.rTrener) ||
         this.perms.peRozpis >= PermissionLevel.P_ADMIN
       )
@@ -148,12 +150,12 @@ export class PermissionChecker {
     );
   }
 
-  public canCancelReservation(
-    item: { nLock: boolean; nTrener: string; },
-    lesson: { niLock: boolean; niPartner: string; }
-  ) {
+  public canCancelReservation(item: ReservationBasicFragment, lesson: ReservationItemBasicFragment) {
+    const man = lesson.paryByRiPartner?.userByPIdPartner;
+    const woman = lesson.paryByRiPartner?.userByPIdPartner;
+    const isMyLesson = this.userId === man?.id || this.userId === woman?.id;
     return !item.nLock && !lesson.niLock && (
-      (this.perms.peNabidka >= PermissionLevel.P_MEMBER && this.coupleId == lesson.niPartner) ||
+      (this.perms.peNabidka >= PermissionLevel.P_MEMBER && isMyLesson) ||
       (this.perms.peNabidka >= PermissionLevel.P_OWNED && this.userId == item.nTrener) ||
       this.perms.peNabidka >= PermissionLevel.P_ADMIN
     );

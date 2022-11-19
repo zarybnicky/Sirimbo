@@ -28,6 +28,10 @@ module.exports = withBundleAnalyzer(withSentryConfig({
     outputFileTracingRoot: path.join(__dirname, '../'),
   },
 
+  images: {
+    domains: ['tkolymp.cz', 'www.tkolymp.cz'],
+  },
+
   async redirects() {
     return [
       { source: '/home', destination: '/', permanent: true },

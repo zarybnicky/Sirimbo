@@ -1,5 +1,5 @@
 import { usePermissions } from 'lib/data/use-permissions';
-import { useBookLessonMutation, useCancelLessonMutation, ScheduleBasicFragment, ScheduleItemBasicFragment, useMyLessonsQuery, useScheduleRangeQuery } from 'lib/graphql/Schedule';
+import { useBookLessonMutation, useCancelLessonMutation, ScheduleBasicFragment, ScheduleItemBasicFragment, useMyLessonsQuery } from 'lib/graphql/Schedule';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import React from 'react';
 import classNames from 'classnames';
@@ -13,7 +13,7 @@ export const LessonButton = ({ schedule, lesson, showTrainer }: {
   schedule: ScheduleBasicFragment;
   showTrainer?: boolean;
 }) => {
-  const { couple: coupleData } = useAuth();
+  const { user, couple: coupleData } = useAuth();
   const perms = usePermissions();
   const [isOpen, setIsOpen] = React.useState(false);
   const queryClient = useQueryClient();
@@ -40,6 +40,8 @@ export const LessonButton = ({ schedule, lesson, showTrainer }: {
   const couple = lesson.paryByRiPartner;
   const man = couple?.userByPIdPartner;
   const woman = couple?.userByPIdPartnerka;
+  const isMyLesson = user?.id === man?.id || user?.id === woman?.id;
+
   let name = '';
 
   if (showTrainer) {
@@ -58,15 +60,16 @@ export const LessonButton = ({ schedule, lesson, showTrainer }: {
 
   const trigger = (
     <div className={classNames(
-      "flex gap-3 p-2.5 rounded-lg",
+      "group flex gap-3 p-2.5 rounded-lg",
       "leading-4 text-sm tabular-nums",
-      "radix-state-open:bg-stone-200",
-      (canBook || canCancel) && 'cursor-pointer hover:bg-stone-200',
-      (canBook || coupleData?.id === lesson.riPartner) && 'border border-red-500',
+      "radix-state-open:bg-red-500 radix-state-open:text-white hover:radix-state-open:bg-red-500",
+      (canBook || canCancel) && 'cursor-pointer hover:bg-stone-50',
+      canBook && 'border border-red-200',
+      isMyLesson && 'border border-red-500',
     )}>
-      <div className="text-stone-600">{lesson.riOd.substring(0, 5)}</div>
+      <div className="text-stone-600 group-radix-state-open:text-white">{lesson.riOd.substring(0, 5)}</div>
       <div className="grow">{canBook ? "VOLNÁ" : lesson.paryByRiPartner ? name : '-'}</div>
-      <div className="text-stone-600">{duration}&apos;</div>
+      <div className="text-stone-600 group-radix-state-open:text-white">{duration}&apos;</div>
     </div>
   );
   if (!canBook && !canCancel) {

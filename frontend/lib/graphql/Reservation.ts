@@ -4,9 +4,11 @@ import * as Types from './index';
 
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
-export type ReservationItemFragment = { __typename: 'NabidkaItem', niPartner: string, niPocetHod: number, niLock: boolean, id: string, paryByNiPartner: { __typename?: 'Pary', id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null };
+export type ReservationItemBasicFragment = { __typename: 'NabidkaItem', niPartner: string, niPocetHod: number, niLock: boolean, id: string, paryByNiPartner: { __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null };
 
-export type ReservationFragment = { __typename: 'Nabidka', nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, id: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename: 'NabidkaItem', niPartner: string, niPocetHod: number, niLock: boolean, id: string, paryByNiPartner: { __typename?: 'Pary', id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null };
+export type ReservationBasicFragment = { __typename?: 'Nabidka', nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, id: string, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null };
+
+export type ReservationFragment = { __typename?: 'Nabidka', nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, id: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename: 'NabidkaItem', niPartner: string, niPocetHod: number, niLock: boolean, id: string, paryByNiPartner: { __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null };
 
 export type ReservationListQueryVariables = Types.Exact<{
   limit?: Types.InputMaybe<Types.Scalars['Int']>;
@@ -14,14 +16,14 @@ export type ReservationListQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReservationListQuery = { __typename?: 'Query', nabidkas: { __typename?: 'NabidkasConnection', totalCount: number, nodes: Array<{ __typename: 'Nabidka', nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, id: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename: 'NabidkaItem', niPartner: string, niPocetHod: number, niLock: boolean, id: string, paryByNiPartner: { __typename?: 'Pary', id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null }> } | null };
+export type ReservationListQuery = { __typename?: 'Query', nabidkas: { __typename?: 'NabidkasConnection', totalCount: number, nodes: Array<{ __typename?: 'Nabidka', nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, id: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename: 'NabidkaItem', niPartner: string, niPocetHod: number, niLock: boolean, id: string, paryByNiPartner: { __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null }> } | null };
 
 export type ReservationQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
 }>;
 
 
-export type ReservationQuery = { __typename?: 'Query', nabidka: { __typename: 'Nabidka', nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, id: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename: 'NabidkaItem', niPartner: string, niPocetHod: number, niLock: boolean, id: string, paryByNiPartner: { __typename?: 'Pary', id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null };
+export type ReservationQuery = { __typename?: 'Query', nabidka: { __typename?: 'Nabidka', nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, id: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename: 'NabidkaItem', niPartner: string, niPocetHod: number, niLock: boolean, id: string, paryByNiPartner: { __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null };
 
 export type ReservationRangeQueryVariables = Types.Exact<{
   startDate: Types.Scalars['Date'];
@@ -29,7 +31,7 @@ export type ReservationRangeQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReservationRangeQuery = { __typename?: 'Query', reservationsForRange: { __typename?: 'NabidkasConnection', nodes: Array<{ __typename: 'Nabidka', nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, id: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename: 'NabidkaItem', niPartner: string, niPocetHod: number, niLock: boolean, id: string, paryByNiPartner: { __typename?: 'Pary', id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null }> } | null };
+export type ReservationRangeQuery = { __typename?: 'Query', reservationsForRange: { __typename?: 'NabidkasConnection', nodes: Array<{ __typename?: 'Nabidka', nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, id: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename: 'NabidkaItem', niPartner: string, niPocetHod: number, niLock: boolean, id: string, paryByNiPartner: { __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null }> }, userByNTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null }> } | null };
 
 export type ToggleReservationVisibleMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -61,26 +63,8 @@ export type DeleteReservationMutationVariables = Types.Exact<{
 
 export type DeleteReservationMutation = { __typename?: 'Mutation', deleteNabidka: { __typename: 'DeleteNabidkaPayload' } | null };
 
-export const ReservationItemFragmentDoc = `
-    fragment ReservationItem on NabidkaItem {
-  __typename
-  id: niId
-  niPartner
-  niPocetHod
-  niLock
-  paryByNiPartner {
-    id: pId
-    userByPIdPartner {
-      uJmeno
-      uPrijmeni
-      id: uId
-    }
-  }
-}
-    `;
-export const ReservationFragmentDoc = `
-    fragment Reservation on Nabidka {
-  __typename
+export const ReservationBasicFragmentDoc = `
+    fragment ReservationBasic on Nabidka {
   id: nId
   nOd
   nDo
@@ -90,18 +74,48 @@ export const ReservationFragmentDoc = `
   nTimestamp
   nVisible
   nTrener
-  nabidkaItemsByNiIdRodic(orderBy: [NI_POCET_HOD_DESC]) {
-    nodes {
-      ...ReservationItem
-    }
-  }
   userByNTrener {
     uJmeno
     uPrijmeni
     id: uId
   }
 }
-    ${ReservationItemFragmentDoc}`;
+    `;
+export const ReservationItemBasicFragmentDoc = `
+    fragment ReservationItemBasic on NabidkaItem {
+  __typename
+  id: niId
+  niPartner
+  niPocetHod
+  niLock
+  paryByNiPartner {
+    id: pId
+    pIdPartner
+    pIdPartnerka
+    userByPIdPartner {
+      uJmeno
+      uPrijmeni
+      id: uId
+    }
+    userByPIdPartnerka {
+      uJmeno
+      uPrijmeni
+      id: uId
+    }
+  }
+}
+    `;
+export const ReservationFragmentDoc = `
+    fragment Reservation on Nabidka {
+  ...ReservationBasic
+  nabidkaItemsByNiIdRodic(orderBy: [NI_POCET_HOD_DESC]) {
+    nodes {
+      ...ReservationItemBasic
+    }
+  }
+}
+    ${ReservationBasicFragmentDoc}
+${ReservationItemBasicFragmentDoc}`;
 export const ReservationListDocument = `
     query ReservationList($limit: Int, $offset: Int) {
   nabidkas(first: $limit, offset: $offset, orderBy: [N_OD_DESC]) {

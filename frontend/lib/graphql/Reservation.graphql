@@ -1,4 +1,4 @@
-fragment ReservationItem on NabidkaItem {
+fragment ReservationItemBasic on NabidkaItem {
   __typename
   id: niId
   niPartner
@@ -6,7 +6,14 @@ fragment ReservationItem on NabidkaItem {
   niLock
   paryByNiPartner {
     id: pId
+    pIdPartner
+    pIdPartnerka
     userByPIdPartner {
+      uJmeno
+      uPrijmeni
+      id: uId
+    }
+    userByPIdPartnerka {
       uJmeno
       uPrijmeni
       id: uId
@@ -14,8 +21,7 @@ fragment ReservationItem on NabidkaItem {
   }
 }
 
-fragment Reservation on Nabidka {
-  __typename
+fragment ReservationBasic on Nabidka {
   id: nId
   nOd
   nDo
@@ -25,15 +31,19 @@ fragment Reservation on Nabidka {
   nTimestamp
   nVisible
   nTrener
-  nabidkaItemsByNiIdRodic(orderBy: [NI_POCET_HOD_DESC]) {
-    nodes {
-      ...ReservationItem
-    }
-  }
   userByNTrener {
     uJmeno
     uPrijmeni
     id: uId
+  }
+}
+
+fragment Reservation on Nabidka {
+  ...ReservationBasic
+  nabidkaItemsByNiIdRodic(orderBy: [NI_POCET_HOD_DESC]) {
+    nodes {
+      ...ReservationItemBasic
+    }
   }
 }
 

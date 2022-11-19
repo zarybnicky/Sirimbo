@@ -6,11 +6,11 @@ const weekDayFormatter = new Intl.DateTimeFormat('cs-CZ', {
   month: 'long',
 });
 
-const fullDateFormatter = new Intl.DateTimeFormat('cs-CZ', {
+export const fullDateFormatter = new Intl.DateTimeFormat('cs-CZ', {
   dateStyle: 'long',
 });
 
-const shortDateFormatter = new Intl.DateTimeFormat('cs-CZ', {
+export const shortDateFormatter = new Intl.DateTimeFormat('cs-CZ', {
   day: 'numeric',
   month: 'long',
 });

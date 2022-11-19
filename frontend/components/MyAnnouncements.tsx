@@ -4,12 +4,12 @@ import { useAnnouncementListQuery } from 'lib/graphql/Announcement';
 import { HtmlView } from './HtmlView';
 import { Card } from 'components/Card';
 import { Pagination } from './Pagination';
-import { formatFullDate } from 'lib/format-date';
+import { formatFullDate, fullDateFormatter } from 'lib/format-date';
 
 export function MyAnnouncements() {
   const [limit] = React.useState(3);
   const [page, setPage] = React.useState(1);
-  const { data } = useAnnouncementListQuery({ limit, offset: (page - 1) * limit });
+  const { data, isLoading } = useAnnouncementListQuery({ limit, offset: (page - 1) * limit });
   if (!data?.upozornenis) {
     // react-skeleton
     return null;
@@ -19,8 +19,9 @@ export function MyAnnouncements() {
   const hasNext = total >= page * limit;
   const hasPrev = 0 < (page - 1) * limit;
 
-  return <>
-    <div className="flex items-center">
+  return <div>
+    <h4 className="ml-6 text-2xl tracking-wide">Nástěnka</h4>
+    <div className="flex items-center mb-4">
       {hasPrev && (
         <button className="button button-icon text-stone-500" onClick={() => setPage(page - 1)}>
           <ChevronLeft />
@@ -28,9 +29,7 @@ export function MyAnnouncements() {
       )}
 
       <span className="text-stone-500">
-        {nodes.length > 0 ? formatFullDate(new Date(nodes[0]!.upTimestampAdd)) : ''}
-        {' - '}
-        {nodes.length > 0 ? formatFullDate(new Date(nodes[nodes.length - 1]!.upTimestampAdd)) : ''}
+        {nodes.length > 0 ? fullDateFormatter.formatRange(new Date(nodes[0]!.upTimestampAdd), new Date(nodes[nodes.length - 1]!.upTimestampAdd)) : ''}
       </span>
 
       {hasNext && (
@@ -41,7 +40,7 @@ export function MyAnnouncements() {
     </div>
 
     {nodes.map((a) => <Card key={a.id} className="mb-4">
-      <h2 className="text-2xl mb-2">
+      <h2 className="text-2xl">
         {a.upNadpis}
       </h2>
       <div className="text-stone-500 flex justify-between flex-wrap mb-4">
@@ -68,5 +67,5 @@ export function MyAnnouncements() {
     </Card>)}
 
     <Pagination {...{ total, limit, page, setPage }} />
-  </>;
+  </div>;
 }

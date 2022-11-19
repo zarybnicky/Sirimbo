@@ -22,6 +22,8 @@ fragment ScheduleItemBasic on RozpisItem {
   riPartner
   paryByRiPartner {
     id: pId
+    pIdPartner
+    pIdPartnerka
     userByPIdPartner {
       uJmeno
       id: uId

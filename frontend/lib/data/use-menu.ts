@@ -26,25 +26,12 @@ export function useTopMenu(): MenuStructItem[] {
 }
 
 export function useSideMenu(): MenuStructItem[] {
-  const { user } = useAuth();
   const permissions = usePermissions();
-
-  const menu: MenuStructItem[] = [];
-  if (user) {
-    menu.push({
-      type: 'menu',
-      title: 'Pro členy',
-      children: memberMenu,
-    });
-  }
-  if (permissions.hasPermission(PermissionKey.peNastenka, PermissionLevel.P_OWNED)) {
-    menu.push({
-      type: 'menu',
-      title: 'Správa',
-      children: adminMenu.filter(item => !item.auth || permissions.hasPermission(...item.auth)),
-    });
-  }
-  return menu;
+  return (permissions.hasPermission(PermissionKey.peNastenka, PermissionLevel.P_OWNED)) ? [{
+    type: 'menu',
+    title: 'Správa',
+    children: adminMenu.filter(item => !item.auth || permissions.hasPermission(...item.auth)),
+  }] : [];
 }
 
 const publicMenu: MenuStructItem[] = [
@@ -69,15 +56,6 @@ const publicMenu: MenuStructItem[] = [
   { type: "link", title: "Galerie", "href": "/gallery" },
   { type: "link", title: "Akce", "href": "/events/public" },
   { type: "link", title: "Kontakt", "href": "/contact" }
-];
-
-const memberMenu: MenuLink[] = [
-  { type: "link", title: 'Nástěnka', "href": '/dashboard' },
-  { type: "link", title: 'Tréninky', "href": '/schedule' },
-  { type: "link", title: 'Soustředění', "href": '/events' },
-  // { type: "link", title: 'Dokumenty', "href": '/documents' },
-  { type: "link", title: 'Členové', "href": '/cohorts' },
-  { type: "link", title: 'Profil', "href": '/profile' },
 ];
 
 const adminMenu: MenuLink[] = [

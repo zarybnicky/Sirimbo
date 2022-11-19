@@ -58,12 +58,19 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: {
         "grid gap-1 pt-3 mr-1 oveflow-y-auto max-h-full",
         "scrollbar-thin scrollbar-track-transparent scrollbar-thumb-red-700/80 hover:scrollbar-thumb-red-700/90",
       )}>
-        {sideMenu.map(x => <SidebarSection key={x.title} item={x} />)}
-        <SidebarLink item={{ type: 'link', title: 'Domů', href: '/' }} />
-        {topMenu.map(x => <SidebarSection key={x.title} item={x} />)}
-
         {auth.user ? <>
-          <SidebarLink item={{ type: 'link', title: 'Profil', href: '/profile' }} />
+          <SidebarSection item={{
+            type: 'menu',
+            title: 'Pro členy',
+            children: [
+              { type: "link", title: 'Nástěnka', "href": '/dashboard' },
+              { type: "link", title: 'Tréninky', "href": '/schedule' },
+              { type: "link", title: 'Soustředění', "href": '/events' },
+              // { type: "link", title: 'Dokumenty', "href": '/documents' },
+              { type: "link", title: 'Členové', "href": '/cohorts' },
+              { type: "link", title: 'Profil', "href": '/profile' },
+            ],
+          }} />
           <SidebarLink item={{ type: 'link', title: 'Odhlásit se', href: '/' }} onClick={() => {
             router.push('/');
             auth.signOut();
@@ -71,6 +78,9 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: {
         </> : (
           <SidebarLink item={{ type: 'link', title: 'Přihlásit se', href: '/login' }} />
         )}
+        {sideMenu.map(x => <SidebarSection key={x.title} item={x} />)}
+        {auth.user && <div className="h-8" />}
+        {topMenu.map(x => <SidebarSection key={x.title} item={x} />)}
 
         <div className="mt-4 text-xs text-stone-700 lg:text-white p-4 grid gap-2">
           <div>© 2022 Taneční klub Olymp Olomouc, z. s.</div>
@@ -108,10 +118,10 @@ const SidebarLink = ({ item, onClick }: {
 
 const SidebarSection = ({ item }: { item: MenuStructItem; }) => {
   return item.type === 'link' ? <SidebarLink item={item} /> : <>
-    <div key={item.title} className="ml-5 mt-2">
+    <div key={item.title} className="ml-5 mt-4">
       <div className="font-bold text-xs uppercase grow my-1">{item.title}</div>
     </div>
-    <div className="list-none grid gap-0.5 mb-2">
+    <div className="list-none grid gap-0.5">
       {item.children.map(y => <SidebarLink key={y.title} item={y} />)}
     </div>
   </>;

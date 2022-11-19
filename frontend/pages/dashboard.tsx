@@ -5,16 +5,10 @@ import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/
 import { Item } from 'components/layout/Item';
 
 export default function DashboardPage() {
-  return <Item className="col-popout">
+  return <Item className="col-feature">
     <div className="grid lg:grid-cols-2">
-      <div>
-        <h4 className="text-lg font-bold">Moje tréninky</h4>
-        <MyLessonsList />
-      </div>
-      <div>
-        <h4 className="text-lg font-bold">Nástěnka</h4>
-        <MyAnnouncements />
-      </div>
+      <MyLessonsList />
+      <MyAnnouncements />
     </div>
   </Item>;
 }

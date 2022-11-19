@@ -5,7 +5,8 @@ import { ChevronLeft, ChevronRight } from 'react-feather';
 import { lastDayOfWeek } from 'date-fns';
 import { LessonButton } from './LessonButton';
 import { Card } from './Card';
-import { formatFullDate, formatWeekDay } from 'lib/format-date';
+import { formatWeekDay, fullDateFormatter } from 'lib/format-date';
+import getWeek from 'date-fns/getWeek';
 
 export const MyLessonsList: React.FC = () => {
   const { user } = useAuth();
@@ -31,9 +32,9 @@ export const MyLessonsList: React.FC = () => {
     });
   }, [])
 
-  const { data } = useMyLessonsQuery({
-    startDate: '2020-01-01', // format(startDate, 'yyyy-MM-dd'),
-    endDate: '2023-01-01'  // format(lastDayOfWeek(startDate), 'yyyy-MM-dd'),
+  const { data, isLoading } = useMyLessonsQuery({
+    startDate: startDate.toISOString().substring(0, 10),
+    endDate: lastDayOfWeek(startDate).toISOString().substring(0, 10),
   });
 
   const lessonsPerDay = React.useMemo(() => {
@@ -49,18 +50,29 @@ export const MyLessonsList: React.FC = () => {
     return lessonsPerDay;
   }, [data]);
 
-  return <>
-    <div className="flex items-center">
+  return <div className="flex flex-col items-center">
+    <h4 className="text-2xl tracking-wide">Moje lekce</h4>
+    <div className=" text-stone-700">
+      {fullDateFormatter.formatRange(startDate, lastDayOfWeek(startDate))}
+    </div>
+    <div className="flex items-center text-stone-700">
       <button className="button button-icon" onClick={setPrevWeek}>
         <ChevronLeft />
       </button>
-      <span className="text-stone-700">
-        {formatFullDate(startDate)} - {formatFullDate(lastDayOfWeek(startDate))}
-      </span>
+      <div className="text-lg">
+        {getWeek(startDate, { weekStartsOn: 2 })}. týden
+      </div>
       <button className="button button-icon" onClick={setNextWeek}>
         <ChevronRight />
       </button>
     </div>
+
+    {!isLoading && !data?.myLessons?.nodes?.length && (
+      <div className="text-stone-600 p-4 text-center">
+        Žádné lekce tento týden
+      </div>
+    )}
+
     {Object.entries(lessonsPerDay).map(([key, lessons]) => <React.Fragment key={key}>
       <h6 className="text-lg font-bold mb-1 mt-4">{key}</h6>
 
@@ -73,5 +85,5 @@ export const MyLessonsList: React.FC = () => {
         ))}
       </Card>
     </React.Fragment>)}
-  </>;
+  </div>;
 };

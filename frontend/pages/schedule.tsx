@@ -9,14 +9,25 @@ import { Card } from 'components/Card';
 import { MoreVertical } from 'react-feather';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 import { formatLongDateRange, formatWeekDay } from 'lib/format-date';
+import lastDayOfWeek from 'date-fns/lastDayOfWeek';
 
 export default function SchedulePage() {
   const perms = usePermissions();
-  const [startDate] = React.useState('2022-02-01');
-  const [endDate] = React.useState('2022-03-01');
+  const [startDate, setStartDate] = React.useState(() => {
+    const today = new Date();
+    const first = today.getDate() - today.getDay() + 1;
+    const monday = new Date(today.setDate(first));
+    return monday;
+  });
 
-  const { data: schedules } = useScheduleRangeQuery({ startDate, endDate });
-  const { data: reservations } = useReservationRangeQuery({ startDate, endDate });
+  const { data: schedules } = useScheduleRangeQuery({
+    startDate: startDate.toISOString().substring(0, 10),
+    endDate: lastDayOfWeek(startDate).toISOString().substring(0, 10),
+  });
+  const { data: reservations } = useReservationRangeQuery({
+    startDate: startDate.toISOString().substring(0, 10),
+    endDate: lastDayOfWeek(startDate).toISOString().substring(0, 10),
+  });
 
   const planList = React.useMemo(() => {
     const obj: { [date: string]: (ReservationFragment | ScheduleFragment)[] } = {};
@@ -63,9 +74,9 @@ export default function SchedulePage() {
      * } */
   }, []);
 
-  return <div className="col-popout mt-12 mb-8">
-    {Object.entries(planList).map(([date, items]) => <>
-      <div className="text-xl font-bold text-stone-700 mt-6 ml-3 mb-4">
+  return <div className="col-feature mt-12 mb-8">
+    {Object.entries(planList).map(([date, items], i) => <>
+      <div key={i} className="text-xl font-bold text-stone-700 mt-6 ml-3 mb-4">
         {formatWeekDay(new Date(date))}
       </div>
       <div className="flex flex-wrap gap-4">

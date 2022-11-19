@@ -19,10 +19,10 @@
     @apply h-4 w-4;
 }
 .button-red {
-    @apply px-2 py-3 text-white bg-red-500 text-sm uppercase tracking-normal font-medium;
+    @apply px-3 py-2 text-white bg-red-500 text-sm uppercase tracking-normal font-medium;
 }
 .button-secondary {
-    @apply px-2 py-3 text-stone-700 bg-stone-300 text-sm uppercase tracking-normal font-medium;
+    @apply px-3 py-2 text-stone-700 bg-stone-300 text-sm uppercase tracking-normal font-medium;
 }
 .button-icon {
     @apply px-1.5 shadow-none;
