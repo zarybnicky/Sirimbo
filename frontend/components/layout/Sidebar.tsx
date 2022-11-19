@@ -15,7 +15,6 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: {
   const sideMenu = useSideMenu();
   const topMenu = useTopMenu();
   const auth = useAuth();
-  console.log(isOpen);
   React.useEffect(() => {
     const track = () => setIsOpen(false);
     router.events.on('routeChangeStart', track)

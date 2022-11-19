@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AnnouncementList } from '../components/AnnouncementList';
+import { MyAnnouncements } from 'components/MyAnnouncements';
 import { MyLessonsList } from 'components/MyLessonsList';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 import { Item } from 'components/layout/Item';
@@ -13,7 +13,7 @@ export default function DashboardPage() {
       </div>
       <div>
         <h4 className="text-lg font-bold">Nástěnka</h4>
-        <AnnouncementList />
+        <MyAnnouncements />
       </div>
     </div>
   </Item>;

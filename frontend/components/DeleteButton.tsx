@@ -25,7 +25,7 @@ export const DeleteButton = React.memo(function DeleteButton({
     }
   }, [confirm, onDelete, title]);
 
-  return <button onClick={deleteItem} className="button bg-white hover:bg-stone-50">
-    <DeleteIcon /> Odstranit
+  return <button onClick={deleteItem} className="shadow-md hover:bg-stone-50 flex items-center gap-1 px-3 rounded-2xl py-1 text-xs tracking-tight font-bold">
+    <DeleteIcon className="w-4" /> Odstranit
   </button>;
 });

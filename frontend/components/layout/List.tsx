@@ -33,7 +33,7 @@ function ListTitleButton({ active, icon: Icon, children, href, onClick }: {
   onClick?: () => void;
 }) {
   const cx = classNames(
-    "button px-3 py-1.5 text-xs tracking-tight font-bold",
+    "shadow-md flex items-center gap-1 px-3 rounded-2xl py-1 text-xs tracking-tight font-bold",
     active ? 'tracking-wide bg-red-500 text-white' : 'bg-white hover:bg-stone-50',
   );
   return href ? (
@@ -50,11 +50,11 @@ function ListTitleButton({ active, icon: Icon, children, href, onClick }: {
 }
 
 function ListItem({ active, children, href, title, subtitle }: {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   active?: boolean;
   href: string;
   title: string;
-  subtitle?: string;
+  subtitle?: React.ReactNode;
 }) {
   return (
     <Link key={href} href={href} passHref>

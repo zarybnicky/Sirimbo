@@ -6,14 +6,19 @@ import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { UpozorneniInput } from 'lib/graphql';
-import { AnnouncementFragment, useCreateAnnouncementMutation, useUpdateAnnouncementMutation } from 'lib/graphql/Announcement';
+import { AnnouncementFragment, useAnnouncementListQuery, useCreateAnnouncementMutation, useUpdateAnnouncementMutation } from 'lib/graphql/Announcement';
+import { useQueryClient } from '@tanstack/react-query';
 
 type FormProps = Pick<UpozorneniInput, 'upNadpis' | 'upText' | 'upLock'>;
 
 export const AnnouncementForm: React.FC<{
   data?: AnnouncementFragment;
-  onSuccess: () => void;
-}> = ({ data, onSuccess }) => {
+}> = ({ data }) => {
+  const queryClient = useQueryClient();
+  const onSuccess = React.useCallback(() => {
+    queryClient.invalidateQueries(useAnnouncementListQuery.getKey());
+  }, [queryClient]);
+
   const { mutateAsync: doCreate } = useCreateAnnouncementMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateAnnouncementMutation({ onSuccess });
 
