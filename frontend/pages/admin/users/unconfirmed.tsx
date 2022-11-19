@@ -45,7 +45,7 @@ const UnconfirmedUser: React.FC<{
     <Card className="mb-8">
       <form className="grid md:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <h5 className="text-lg font-bold mb-2">{item.uJmeno} {item.uPrijmeni}</h5>
+          <h5 className="text-xl font-bold mb-2">{item.uJmeno} {item.uPrijmeni}</h5>
           <div>
             <b>Login:</b> {item.uLogin}
           </div>

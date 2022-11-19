@@ -90,7 +90,7 @@ export default function SchedulePage() {
               </div>
             </div>
 
-            <Card className="grid mx-auto w-72 rounded-xl border-stone-200 border">
+            <Card className="grid mx-auto w-72 rounded-lg border-stone-200 border">
               {item.rozpisItemsByRiIdRodic.nodes?.map((lesson, i) => (
                 <LessonButton key={i} schedule={item} lesson={lesson} />
               ))}

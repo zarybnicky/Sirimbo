@@ -48,7 +48,7 @@ export default function RegisterPage() {
     <Item>
       <Card>
         <form className="grid md:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
-          <h4 className="text-lg font-bold mb-2 col-full">Registrace</h4>
+          <h4 className="text-xl font-bold mb-2 col-full">Registrace</h4>
 
           <div className="tracking-wide uppercase text-stone-700 text-xs col-full mt-4">Přihlašovací údaje</div>
 
@@ -127,7 +127,7 @@ export default function RegisterPage() {
             )}
           </div>
 
-          <div className="col-full mt-8">
+          <div className="col-full prose mt-4">
             <p>
               Zákon č. 101/2000 Sb., o ochraně osobních údajů, ve znění pozdějších předpisů, ukládá
               <b> Tanečnímu klubu Olymp Olomouc, z. s., IČ: 68347286, se sídlem: Jiráskova 381/25, Olomouc</b>

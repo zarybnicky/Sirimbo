@@ -13,22 +13,25 @@
 @tailwind utilities;
 
 .button {
-    @apply relative inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold tracking-tight shadow-md rounded-2xl;
+    @apply relative inline-flex justify-center items-center shadow-md rounded-lg;
 }
 .button svg {
     @apply h-4 w-4;
 }
 .button-red {
-    @apply text-white bg-red-500 text-sm uppercase tracking-normal font-medium;
+    @apply px-2 py-3 text-white bg-red-500 text-sm uppercase tracking-normal font-medium;
+}
+.button-secondary {
+    @apply px-2 py-3 text-stone-700 bg-stone-300 text-sm uppercase tracking-normal font-medium;
 }
 .button-icon {
     @apply px-1.5 shadow-none;
 }
-.button svg {
-    @apply h-6 w-6;
-}
 .button-lg {
-    @apply text-xl px-6 py-3 uppercase rounded-xl;
+    @apply px-6 py-3 uppercase rounded-xl;
+}
+.button-lg svg {
+    @apply h-5 w-5;
 }
 
 .react-page-cell-inner.slate {
@@ -71,7 +74,7 @@
 .content {
     --gap: clamp(.5rem, 6vw, 3rem);
     --full: minmax(var(--gap), 1fr);
-    --content: min(100ch, 100% - var(--gap) * 2);
+    --content: min(65ch, 100% - var(--gap) * 2);
     --popout: minmax(0, 4rem);
     --feature: minmax(0, 8rem);
 

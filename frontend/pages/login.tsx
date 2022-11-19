@@ -30,7 +30,7 @@ export default function LoginPage() {
     <div className="container mx-auto max-w-md mt-12 mb-16">
       <Card>
         <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
-          <h4 className="text-lg font-bold mb-2">Přihlášení do systému</h4>
+          <h4 className="text-2xl">Přihlášení do systému</h4>
 
           <ErrorBox error={onSubmit.error} />
           <TextFieldElement
@@ -46,14 +46,14 @@ export default function LoginPage() {
             Přihlásit
           </SubmitButton>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="flex justify-between flex-wrap gap-2">
             <Link href="/register" passHref>
-              <a className="button button-red button-text">
+              <a className="uppercase rounded-md px-3 text-sm py-2 text-red-500 hover:bg-red-100 text-left">
                 Registrovat se
               </a>
             </Link>
             <Link href="/forgotten-password" passHref>
-              <a className="button button-red button-text text-right">
+              <a className="uppercase rounded-md px-3 text-sm py-2 text-red-500 hover:bg-red-100 text-right">
                 Zapomněli jste heslo?
               </a>
             </Link>

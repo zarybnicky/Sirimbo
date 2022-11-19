@@ -7,21 +7,21 @@ type SocialButtonsProps = {
   className?: string;
 };
 
-export const SocialButtons = ({ className = "text-right" }: SocialButtonsProps) => {
-  return <div className={className}>
+export const SocialButtons = ({ variant }: SocialButtonsProps) => {
+  return <div className="flex gap-3 items-center">
     <Link href="https://www.facebook.com/tkolymp" passHref>
-      <a className="button button-icon p-0 m-1" >
-        <Facebook className="text-red-500" />
+      <a className="p-1">
+        <Facebook className={`text-red-500 ${variant === "large" && 'w-10 h-10'}`} />
       </a>
     </Link>
     <Link href="https://www.instagram.com/tanecni_klub_olymp" passHref>
-      <a className="button button-icon p-0 m-1" >
-        <Instagram className="text-red-400" />
+      <a className="p-1" >
+        <Instagram className={`text-red-400 ${variant === "large" && 'w-10 h-10'}`} />
       </a>
     </Link>
     <Link href="https://www.youtube.com/user/TheMamcro" passHref>
-      <a className="button button-icon p-0 m-1" >
-        <Youtube className="text-gray-200" />
+      <a className="p-1">
+        <Youtube className={`text-gray-200 ${variant === "large" && 'w-10 h-10'}`} />
       </a>
     </Link>
   </div>

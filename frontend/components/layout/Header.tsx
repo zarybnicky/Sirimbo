@@ -25,16 +25,17 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: {
           <div className="relative hidden lg:flex items-stretch justify-between min-h-[48px] md:min-h-[64px]">
             <DesktopLogo />
             {topMenu.map(x => <DesktopMenuItem key={x.title} item={x} />)}
-            <SocialButtons className="flex items-center" variant="medium" />
             {auth.user ? (
               <AuthButton />
             ) : (
               <Link href="/login" passHref>
-                <a className="flex items-center gap-2 uppercase text-xs tracking-wide">
-                  <Account /> Přihlásit
+                <a className="flex items-center gap-2 uppercase font-bold text-sm">
+                  <Account className="h-4 w-4" />
+                  Pro členy
                 </a>
               </Link>
             )}
+            <SocialButtons variant="medium" />
           </div>
         )}
 
@@ -72,9 +73,9 @@ const AuthButton = () => {
 
   const button = (
     <div className="flex normal-case button button-text gap-2 items-center">
-      <Account />
+      <Account className="h-4 w-4" />
       <div className="flex flex-col justify-center items-start" style={{ lineHeight: 1.3 }}>
-        <span className="text-xs uppercase underline">Přihlášen</span>
+        <span className="text-xs uppercase tracking-wider">Přihlášen</span>
         <span className="text-sm font-normal">{auth.user?.uJmeno} {auth.user?.uPrijmeni}</span>
       </div>
     </div>
@@ -113,9 +114,9 @@ const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {
 
   const cx = classNames(
     "flex gap-1 rounded-none transition-colors",
-    "uppercase text-xs justify-center items-center",
-    "hover:text-white hover:underline",
-    inPath ? 'text-white font-bold tracking-wide' : 'text-gray-300',
+    "uppercase text-sm font-bold justify-center items-center",
+    "hover:text-white hover:border-b-[3px] border-white",
+    inPath ? 'text-white border-b-[3px] tracking-wide' : 'text-stone-300',
   );
   if (x.type === 'link') {
     return <Link href={x.href} passHref>
@@ -125,7 +126,7 @@ const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {
   return <Dropdown
     align="center"
     buttonClassName={"h-full " + cx}
-    button={<>{x.title} <ChevronDown className="w-4.5 h-4.5" /></>}
+    button={<>{x.title} <ChevronDown className="w-4 h-4" /></>}
     options={x.children}
   />
 };

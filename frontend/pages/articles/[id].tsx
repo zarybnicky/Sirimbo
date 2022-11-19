@@ -26,10 +26,10 @@ export default function ArticlePage() {
       <meta property="og:site_name" content="TK Olymp" />
       <meta property="og:description" content="{x.atPreview}" />
     </Head>
-    <h3 className="text-xl font-bold mt-20 mb-2">{x.atJmeno}</h3>
-    <div className="text-stone-700">
+    <div className="text-stone-600 mt-20">
       {x.atTimestampAdd && formatFullDate(new Date(x.atTimestampAdd))}
     </div>
+    <h3 className="text-3xl font-bold mb-4">{x.atJmeno}</h3>
     <HtmlView content={x.atText} />
     <CallToAction />
   </>;

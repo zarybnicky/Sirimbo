@@ -5,6 +5,7 @@ import { CallToAction } from 'components/CallToAction';
 import Head from 'next/head';
 import { Pagination } from 'components/Pagination';
 import { Layout } from 'components/layout/Layout';
+import { Heading } from 'components/Heading';
 
 export default function ArticleListPage() {
   const [limit] = React.useState(12);
@@ -15,14 +16,13 @@ export default function ArticleListPage() {
     <Head>
       <title>Články | TK Olymp</title>
     </Head>
-    <div className="container mx-auto max-w-5xl" style={{ margin: '4rem auto 3rem' }}>
-      <h3 className="text-xl font-bold mb-2">Aktuálně</h3>
-      <div className="grid place-items-stretch gap-4 grid-cols-2 lg:grid-cols-3 mb-6">
-        {articles.map((x, i) => <ArticleCard key={i} item={x} />)}
-      </div>
+    <Heading color={{ r: 190, g: 10, b: 10, a: .5 }} text="Aktuálně" image="" />
 
-      <Pagination {...{ total, limit, page, setPage }} />
+    <div className="col-feature grid place-items-stretch gap-4 grid-cols-2 lg:grid-cols-3 mb-6">
+      {articles.map((x, i) => <ArticleCard key={i} item={x} />)}
     </div>
+
+    <Pagination {...{ total, limit, page, setPage }} />
     <CallToAction />
   </>;
 };

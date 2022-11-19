@@ -1,5 +1,7 @@
+import Image from "next/image"
 import Link from "next/link"
 import parse, { domToReact, DOMNode, Element, HTMLReactParserOptions } from "html-react-parser"
+import { isRelative } from "./Link"
 
 const isElement = (domNode: DOMNode): domNode is Element => {
   const isTag = domNode.type === "tag";
@@ -14,6 +16,22 @@ const options: HTMLReactParserOptions = {
       return;
     }
 
+    if (domNode.name === "img") {
+      const { src, alt, width = "100px", height = "100px" } = domNode.attribs
+      if (src && isRelative(src)) {
+        return (
+          <Image
+            src={src}
+            width={`${width}px`}
+            height={`${height}px`}
+            alt={alt}
+            layout="intrinsic"
+            objectFit="cover"
+          />
+        )
+      }
+    }
+
     if (domNode.name === "a") {
       const { href, class: className, ...rest } = domNode.attribs
       return (
@@ -23,6 +41,13 @@ const options: HTMLReactParserOptions = {
           </a>
         </Link>
       );
+    }
+
+    if (domNode.name === "input") {
+      if (domNode.attribs.value === "") {
+        delete domNode.attribs.value
+      }
+      return domNode
     }
   },
 };

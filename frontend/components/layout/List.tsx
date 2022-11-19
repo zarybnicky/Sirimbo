@@ -33,7 +33,7 @@ function ListTitleButton({ active, icon: Icon, children, href, onClick }: {
   onClick?: () => void;
 }) {
   const cx = classNames(
-    "button font-bold",
+    "button px-3 py-1.5 text-xs tracking-tight font-bold",
     active ? 'tracking-wide bg-red-500 text-white' : 'bg-white hover:bg-stone-50',
   );
   return href ? (
@@ -59,7 +59,7 @@ function ListItem({ active, children, href, title, subtitle }: {
   return (
     <Link key={href} href={href} passHref>
       <a className={classNames(
-        "relative p-1 pl-6 m-2 rounded-xl grid",
+        "relative p-1 pl-6 m-2 rounded-lg grid",
         active ? 'font-semibold bg-red-500 text-white shadow-md' : 'hover:bg-stone-200',
       )}>
         <div>{title}</div>

@@ -3,7 +3,7 @@ import React from "react";
 
 export const Card = (props: React.HTMLAttributes<HTMLDivElement>) => {
   return <div {...props} className={classNames(
-    "bg-white relative overflow-hidden border border-stone-200 shadow-md sm:rounded-xl p-3 mb-2",
+    "bg-white relative overflow-hidden border border-stone-200 shadow-sm sm:rounded-lg p-3 mb-2",
     props.className
   )} />;
 };

@@ -64,7 +64,7 @@ export const MyLessonsList: React.FC = () => {
     {Object.entries(lessonsPerDay).map(([key, lessons]) => <React.Fragment key={key}>
       <h6 className="text-lg font-bold mb-1 mt-4">{key}</h6>
 
-      <Card className="grid w-72 rounded-xl border-stone-200 border">
+      <Card className="grid w-72 rounded-lg border-stone-200 border">
         {lessons.map((lesson, i) => (
           <LessonButton
             showTrainer={lesson.rozpiByRiIdRodic?.rTrener !== user?.id}

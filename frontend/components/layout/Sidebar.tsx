@@ -43,12 +43,16 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: {
       "bg-white dark:bg-gray-900 lg:bg-red-500 lg:text-white",
     )}>
       {!showTopMenu && (
-        <div className="hidden lg:flex bg-red-500 h-20 p-3">
-          <OlympLogoOneline viewBox="0 0 381.82217 111.78744"
-            className="h-full w-full text-white" style={{
-              color: 'white',
-              fill: 'white !important',
-            }} />
+        <div className="hidden lg:flex">
+          <Link href="/" passHref>
+            <a className="h-20 p-3 bg-red-500 mx-auto">
+              <OlympLogoOneline viewBox="0 0 381.82217 111.78744"
+                className="h-full w-full text-white" style={{
+                  color: 'white',
+                  fill: 'white !important',
+                }} />
+            </a>
+          </Link>
         </div>
       )}
       <div className={classNames(
@@ -88,14 +92,14 @@ const SidebarLink = ({ item, onClick }: {
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 }) => {
   const { pathname } = useRouter();
-  const inPath = pathname.startsWith(item.href);
+  const inPath = pathname.startsWith(item.href) && item.href !== '/';
   return (
     <Link href={item.href} passHref>
       <a onClick={onClick} className={classNames(
         "rounded-2xl px-3 py-1.5",
         "flex items-center grow mx-2 hover:bg-red-700 hover:text-white",
         "tracking-wider text-sm",
-        inPath ? 'font-bold bg-stone-700 text-white lg:bg-red-900' : '',
+        inPath ? 'underline font-bold bg-stone-700 text-white lg:bg-red-900' : '',
       )}>
         {item.title}
       </a>

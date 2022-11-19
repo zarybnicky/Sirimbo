@@ -1,8 +1,11 @@
 import Link from 'next/link';
 import { CornerLeftUp as UpIcon } from 'react-feather';
 
-export function Item({ children }: { children: React.ReactNode }) {
-  return <div className="py-12 ">
+export function Item({ className, children }: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return <div className={"py-12 " + className}>
     {children}
   </div>;
 }

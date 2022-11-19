@@ -16,7 +16,7 @@ const MenuLink = React.forwardRef<
   );
 });
 
-export const Dropdown = ({ button, className, buttonClassName, options }: {
+export const Dropdown = ({ align, button, className, buttonClassName, options }: {
   button: React.ReactNode;
   className?: string;
   buttonClassName?: string;
@@ -40,7 +40,12 @@ export const Dropdown = ({ button, className, buttonClassName, options }: {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="z-50 origin-top-right absolute right-0 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className={classNames(
+          "z-50 absolute w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none",
+          align === 'center' ? 'origin-top-right right-1/2 transform translate-x-1/2' :
+            align === 'start' ? 'origin-top-left left-0' :
+              'origin-top-right right-0'
+        )}>
           {options.map(({ title, icon, href, onClick }, i) => (
             <Menu.Item key={i}>
               {({ active }) => href ? (

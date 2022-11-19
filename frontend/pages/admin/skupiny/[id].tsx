@@ -15,7 +15,7 @@ export default function CohortEditPage() {
     onSuccess: () => router.push('/admin/skupiny'),
   });
   return <Item>
-    <Item.Titlebar backHref="/admin/skupiny" title={data?.skupiny?.sName}>
+    <Item.Titlebar backHref="/admin/skupiny" title={data?.skupiny?.sName || '(Bez názvu)'}>
       <DeleteButton onDelete={() => doDelete({ id: id as string })} title="smazat skupinu" />
     </Item.Titlebar>
     {data && <CohortForm data={data.skupiny || undefined} />}

@@ -10,10 +10,10 @@ export default function PageEditPage() {
   const router = useRouter();
   const { id } = router.query;
   const { data } = usePageByIdQuery({ id: parseInt(id as string) }, { enabled: !!id, cacheTime: 0 });
-  return <>
-    <Item.Titlebar backHref="/admin/skupiny" title={data?.page?.title} />
+  return <Item>
+    <Item.Titlebar backHref="/admin/skupiny" title={data?.page?.title || '(Bez názvu)'} />
     {data && <PageForm data={data.page || undefined} />}
-  </>;
+  </Item>;
 };
 
 PageEditPage.getLayout = (page: React.ReactElement) => (

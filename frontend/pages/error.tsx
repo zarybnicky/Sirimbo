@@ -13,7 +13,7 @@ export default function ErrorPage() {
     </Head>
 
     <Item>
-      <div className="rounded-xl p-4 border-2 border-red-500">
+      <div className="rounded-lg p-4 border-2 border-red-500">
         {errorCode === 'not_found' ? <>
           <b>Stránka nenalezena.</b>
           <br />

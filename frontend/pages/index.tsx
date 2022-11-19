@@ -15,7 +15,7 @@ export default function HomePage() {
 
   return <>
     <Hero />
-    <div className="container mx-auto max-w-5xl">
+    <div className="col-feature mb-4">
       {services.map((x, i) => (
         <ServiceCard key={i} image={x.image} header={x.header}>{x.text}</ServiceCard>
       ))}
@@ -23,17 +23,17 @@ export default function HomePage() {
 
     <CallToAction />
 
-    <div className="col-popout my-12">
-      <div className="flex flex-wrap md:flex-nowrap gap-2">
-        <div className="basis-1/2 grow">
-          <h4 className="text-lg font-bold mb-2">Aktuálně</h4>
+    <div className="col-feature my-12">
+      <div className="flex flex-wrap md:flex-nowrap gap-8">
+        <div className="basis-3/5 grow">
+          <h4 className="text-2xl font-bold mb-2">Aktuálně</h4>
           <div className="grid gap-2 grid-cols-1 md:grid-cols-2">
             {articles.map((x, i) => <ArticleCard key={i} item={x} />)}
           </div>
         </div>
 
-        <div className="basis-1/2 grow">
-          <h4 className="text-lg font-bold mb-2">Videa</h4>
+        <div className="basis-2/5 grow">
+          <h4 className="text-2xl font-bold mb-2">Videa</h4>
           <div className="grid gap-1">
             {videos.map((x, i) => <VideoCard key={i} item={x} />)}
           </div>

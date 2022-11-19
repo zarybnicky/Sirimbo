@@ -5,7 +5,7 @@ import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/
 import { Item } from 'components/layout/Item';
 
 export default function DashboardPage() {
-  return <Item>
+  return <Item className="col-popout">
     <div className="grid lg:grid-cols-2">
       <div>
         <h4 className="text-lg font-bold">Moje tréninky</h4>

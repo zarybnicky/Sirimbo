@@ -2,6 +2,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Card } from 'components/Card';
 import { Article } from 'lib/data/use-articles';
+import { ChevronRight } from 'react-feather';
 
 export const ArticleCard = ({ item: x }: { item: Article }) => {
   return <Link href={x.href} passHref>
@@ -16,7 +17,10 @@ export const ArticleCard = ({ item: x }: { item: Article }) => {
         <p className="text-stone-700 grow">{x.preview}</p>
 
         <div className="flex justify-center mt-3">
-          <div className="button button-red button-lg">Více zde ᐳ</div>
+          <div className=" font-bold tracking-wider button text-white button-lg button button-red button-lg">
+            Více zde
+            <ChevronRight className="h-3 w-3 mt-0.5 ml-2 -mr-2" />
+          </div>
         </div>
       </Card>
     </a>

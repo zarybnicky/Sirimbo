@@ -22,7 +22,7 @@ export const ErrorBox = ({ error: e, default: def }: {
     return null;
   }
 
-  return <div className="rounded-xl px-4 py-2 bg-red-500 text-white border-red-700 col-full">
+  return <div className="rounded-lg px-4 py-2 bg-red-500 text-white col-full">
     {errorTranslation[error] ? errorTranslation[error] : <>
       <div className="font-bold">{def || 'Něco se nepovedlo, zkuste to prosím znovu'}</div>
       <div className="text-sm">{error}</div>

@@ -30,7 +30,7 @@ export const ProspectForm = ({ title }: ProspectFormProps) => {
   return (
     <Card>
       <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
-        <h4 className="text-lg font-bold mb-2 col-full">{title}</h4>
+        <h4 className="text-xl font-bold mb-2 col-full">{title}</h4>
         <div className="grid md:grid-cols-3 gap-2">
           <TextFieldElement control={control} name="name" label="Jméno" autoComplete="given-name" required />
           <TextFieldElement control={control} name="surname" label="Příjmení" autoComplete="family-name" required />
