@@ -5,11 +5,11 @@ import { useForm } from "react-hook-form";
 import { Trash2 as DeleteIcon, Check as CheckIcon } from 'react-feather';
 import { useConfirm } from 'components/Confirm';
 import React from "react";
-import { useRequireUserLoggedIn } from "lib/route-guards";
 import { UserFragment } from 'lib/graphql/CurrentUser';
 import { useCohortListQuery } from 'lib/graphql/Cohorts';
 import { useRoleListQuery } from 'lib/graphql/Roles';
 import { formatFullDate } from 'lib/format-date';
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 const UnconfirmedUser: React.FC<{
   item: UserFragment;
@@ -88,7 +88,6 @@ const UnconfirmedUser: React.FC<{
 };
 
 export default function UnconfirmedUsers() {
-  useRequireUserLoggedIn();
   const { data: users, refetch } = useUserListQuery({ confirmed: false });
 
   return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
@@ -96,3 +95,7 @@ export default function UnconfirmedUsers() {
     {users?.users?.nodes?.map((item, i) => <UnconfirmedUser onProcessed={refetch} item={item} key={i} />)}
   </div>;
 };
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.peUsers, PermissionLevel.P_OWNED,
+);

@@ -1,10 +1,9 @@
 import { ScheduleForm } from "components/ScheduleForm";
 import { useScheduleQuery } from "lib/graphql/Schedule";
-import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 export default function ScheduleEditPage() {
-  useRequireUserLoggedIn();
   const router = useRouter();
   const { id } = router.query;
   const { data } = useScheduleQuery({ id: id as string }, { enabled: !!id, cacheTime: 0 });
@@ -12,3 +11,7 @@ export default function ScheduleEditPage() {
     {data && <ScheduleForm data={data.rozpi || undefined} onSuccess={() => router.back()} />}
   </div>;
 };
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.peRozpis, PermissionLevel.P_OWNED,
+);

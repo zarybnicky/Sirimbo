@@ -7,6 +7,7 @@ import { Edit as EditIcon, Copy as ContentCopyIcon } from 'react-feather';
 import { DeleteButton } from 'components/DeleteButton';
 import { Button } from 'components/Button';
 import { formatFullDate } from 'lib/format-date';
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 export default function RozpisAdminList() {
   const router = useRouter();
@@ -83,3 +84,7 @@ export default function RozpisAdminList() {
     />
   </div>;
 }
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.peRozpis, PermissionLevel.P_VIEW,
+);

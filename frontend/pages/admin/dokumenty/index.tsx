@@ -6,6 +6,7 @@ import { DeleteButton } from 'components/DeleteButton';
 import { useRouter } from 'next/router';
 import { Button } from 'components/Button';
 import { formatFullDate } from 'lib/format-date';
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 const categories = [
   { id: 1, label: "Schůze,\u{00A0}rady" },
@@ -98,3 +99,7 @@ export default function FileAdminList() {
     />
   </div>;
 }
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.peDokumenty, PermissionLevel.P_OWNED,
+);

@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { useArticlesQuery, useDeleteArticleMutation } from 'lib/graphql/Articles';
-import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import { Edit as EditIcon } from 'react-feather';
 import { useRouter } from 'next/router';
 import { DeleteButton } from 'components/DeleteButton';
 import { Button } from 'components/Button';
 import { formatFullDate } from 'lib/format-date';
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 export default function ArticleAdminList() {
-  useRequireUserLoggedIn();
   const router = useRouter();
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(0);
@@ -59,3 +58,7 @@ export default function ArticleAdminList() {
     />
   </div>;
 }
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.peAktuality, PermissionLevel.P_OWNED,
+);

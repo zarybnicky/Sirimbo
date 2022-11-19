@@ -1,13 +1,12 @@
 import { useRouter } from 'next/router';
 import { usePaymentGroupListQuery, useDeletePaymentGroupMutation } from "lib/graphql/Payment";
-import { useRequireUserLoggedIn } from "lib/route-guards";
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
 import { Edit as EditIcon } from 'react-feather';
 import { DeleteButton } from 'components/DeleteButton';
 import { Button } from 'components/Button';
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 export default function PlatbyGroupListPage() {
-  useRequireUserLoggedIn();
   const router = useRouter();
   const { data, refetch } = usePaymentGroupListQuery();
   const { mutateAsync: doDelete } = useDeletePaymentGroupMutation({
@@ -44,3 +43,7 @@ export default function PlatbyGroupListPage() {
     />
   </div>;
 }
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.pePlatby, PermissionLevel.P_OWNED,
+);

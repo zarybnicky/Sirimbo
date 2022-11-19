@@ -1,10 +1,9 @@
 import { EventForm } from "components/EventForm";
 import { useEventQuery } from "lib/graphql/Event";
-import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 export default function EventEditPage() {
-  useRequireUserLoggedIn();
   const router = useRouter();
   const { id } = router.query;
   const { data } = useEventQuery({ id: id as string }, { enabled: !!id, cacheTime: 0 });
@@ -12,3 +11,7 @@ export default function EventEditPage() {
     {data && <EventForm data={data?.akce || undefined} onSuccess={() => router.back()} />}
   </div>;
 };
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.peAkce, PermissionLevel.P_OWNED,
+);

@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { Checkbox } from 'components/Checkbox';
 import { useEventListQuery, useToggleEventVisibleMutation, useDeleteEventMutation } from 'lib/graphql/Event';
-import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { useRouter } from 'next/router';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import { Edit as EditIcon } from 'react-feather';
 import { DeleteButton } from 'components/DeleteButton';
 import { Button } from 'components/Button';
 import { formatLongDateRange } from 'lib/format-date';
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 export default function AdminEventList() {
-  useRequireUserLoggedIn();
   const router = useRouter();
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(0);
@@ -83,3 +82,7 @@ export default function AdminEventList() {
     />
   </div>;
 }
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.peAkce, PermissionLevel.P_OWNED,
+);

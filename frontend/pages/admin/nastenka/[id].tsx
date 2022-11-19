@@ -1,6 +1,5 @@
 import { AnnouncementForm } from "components/AnnouncementForm";
 import { useAnnouncementQuery, useDeleteAnnouncementMutation } from "lib/graphql/Announcement";
-import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 import { Item } from "components/layout/Item";
@@ -9,7 +8,6 @@ import { Layout } from "components/layout/Layout";
 import { AnnouncementList } from "components/AnnouncementList";
 
 export default function AnnouncementEditPage() {
-  useRequireUserLoggedIn();
   const router = useRouter();
   const { id } = router.query;
   const { data } = useAnnouncementQuery({ id: id as string }, { enabled: !!id, cacheTime: 0 });

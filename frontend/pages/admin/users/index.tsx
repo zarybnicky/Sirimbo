@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useDeleteUserMutation, useUserListQuery } from 'lib/graphql/User';
-import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
 import { Edit as EditIcon } from 'react-feather';
 import { DeleteButton } from 'components/DeleteButton';
@@ -9,9 +8,9 @@ import { Button } from 'components/Button';
 import { useRoleListQuery } from 'lib/graphql/Roles';
 import { useCohortListQuery } from 'lib/graphql/Cohorts';
 import { formatFullDate } from 'lib/format-date';
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
-export default function UserectoryList() {
-  useRequireUserLoggedIn();
+export default function Userist() {
   const router = useRouter();
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(0);
@@ -96,3 +95,7 @@ export default function UserectoryList() {
     />
   </div>;
 }
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.peUsers, PermissionLevel.P_OWNED,
+);

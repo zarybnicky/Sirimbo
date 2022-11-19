@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { Button } from 'components/Button';
 import { useDeleteVideoSourceMutation, useVideoSourceListQuery } from 'lib/graphql/Video';
-import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
 import { useRouter } from 'next/router';
 import { Edit as EditIcon } from 'react-feather';
 import { DeleteButton } from 'components/DeleteButton';
 import { formatFullDate } from 'lib/format-date';
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 export default function VideoSourceList() {
-  useRequireUserLoggedIn();
   const router = useRouter();
   const { data, refetch } = useVideoSourceListQuery();
   const { mutateAsync: doDelete } = useDeleteVideoSourceMutation({
@@ -48,3 +47,7 @@ export default function VideoSourceList() {
     />
   </div>;
 }
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.peGalerie, PermissionLevel.P_OWNED,
+);

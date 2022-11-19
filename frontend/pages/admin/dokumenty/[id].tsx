@@ -1,10 +1,9 @@
 import { FileForm } from "components/FileForm";
 import { useFileQuery } from "lib/graphql/Documents";
-import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 export default function FileEditPage() {
-  useRequireUserLoggedIn();
   const router = useRouter();
   const { id } = router.query;
   const { data } = useFileQuery({ id: id as string }, { enabled: !!id, cacheTime: 0 });
@@ -12,3 +11,7 @@ export default function FileEditPage() {
     {data?.dokumenty && <FileForm data={data.dokumenty} onSuccess={() => router.back()} />}
   </div>;
 };
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.peDokumenty, PermissionLevel.P_OWNED,
+);

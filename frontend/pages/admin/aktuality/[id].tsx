@@ -1,10 +1,9 @@
 import { ArticleForm } from "components/ArticleForm";
 import { useArticleQuery } from "lib/graphql/Articles";
-import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 export default function ArticleEditPage() {
-  useRequireUserLoggedIn();
   const router = useRouter();
   const { id } = router.query;
   const { data } = useArticleQuery({ id: id as string }, { enabled: !!id, cacheTime: 0 });
@@ -12,3 +11,7 @@ export default function ArticleEditPage() {
     {data && <ArticleForm data={data?.aktuality || undefined} onSuccess={() => router.back()} />}
   </div>;
 };
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.peAktuality, PermissionLevel.P_OWNED,
+);

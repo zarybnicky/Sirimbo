@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { useGalleryDirQuery, useDeleteGalleryPhotoMutation } from 'lib/graphql/Gallery';
-import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { useRouter } from 'next/router';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import { Edit as EditIcon } from 'react-feather';
 import { DeleteButton } from 'components/DeleteButton';
 import { GalleryDirForm } from "components/GalleryDirectoryForm";
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 export default function AdminGalleryPhotoList() {
-  useRequireUserLoggedIn();
   const router = useRouter();
   const { data, refetch } = useGalleryDirQuery({ id: router.query.id as string });
   const { mutateAsync: doDelete } = useDeleteGalleryPhotoMutation({
@@ -39,3 +38,7 @@ export default function AdminGalleryPhotoList() {
     />
   </div>;
 }
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.peGalerie, PermissionLevel.P_OWNED,
+);

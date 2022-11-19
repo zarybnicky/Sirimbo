@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { useDeleteRoleMutation, useRoleListQuery } from 'lib/graphql/Roles';
-import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
 import { Edit as EditIcon } from 'react-feather';
 import { useRouter } from 'next/router';
 import { DeleteButton } from 'components/DeleteButton';
 import { Button } from 'components/Button';
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 export default function PermissionAdminList() {
-  useRequireUserLoggedIn();
   const router = useRouter();
   const { data, refetch } = useRoleListQuery();
   const { mutateAsync: doDelete } = useDeleteRoleMutation({
@@ -39,3 +38,7 @@ export default function PermissionAdminList() {
     />
   </div>;
 }
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.pePermissions, PermissionLevel.P_ADMIN,
+);

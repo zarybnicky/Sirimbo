@@ -7,6 +7,7 @@ import { DeleteButton } from 'components/DeleteButton';
 import { useRouter } from 'next/router';
 import { Button } from 'components/Button';
 import { formatLongDateRange } from 'lib/format-date';
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 export default function ReservationAdminList() {
   const router = useRouter();
@@ -80,3 +81,7 @@ export default function ReservationAdminList() {
     />
   </div>;
 }
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.peNabidka, PermissionLevel.P_VIEW,
+);

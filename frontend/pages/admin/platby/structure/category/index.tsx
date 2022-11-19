@@ -1,14 +1,13 @@
 import { useRouter } from 'next/router';
 import { usePaymentCategoryListQuery, useDeletePaymentCategoryMutation } from "lib/graphql/Payment";
-import { useRequireUserLoggedIn } from "lib/route-guards";
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
 import { Edit as EditIcon } from 'react-feather';
 import { DeleteButton } from 'components/DeleteButton';
 import { Button } from 'components/Button';
 import { formatLongDateRange } from 'lib/format-date';
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 export default function PlatbyCategoryListPage() {
-  useRequireUserLoggedIn();
   const router = useRouter();
   const { data, refetch } = usePaymentCategoryListQuery();
   const { mutateAsync: doDelete } = useDeletePaymentCategoryMutation({
@@ -52,3 +51,7 @@ export default function PlatbyCategoryListPage() {
     />
   </div>;
 }
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.pePlatby, PermissionLevel.P_OWNED,
+);

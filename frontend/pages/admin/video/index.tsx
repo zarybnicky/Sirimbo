@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { Button } from 'components/Button';
 import { useDeleteVideoMutation, useVideoListQuery } from 'lib/graphql/Video';
-import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
 import { useRouter } from 'next/router';
 import { Edit as EditIcon } from 'react-feather';
 import { DeleteButton } from 'components/DeleteButton';
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 export default function VideoList() {
-  useRequireUserLoggedIn();
   const router = useRouter();
   const { data, refetch } = useVideoListQuery();
   const { mutateAsync: doDelete } = useDeleteVideoMutation({
@@ -40,3 +39,7 @@ export default function VideoList() {
     />
   </div>;
 }
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.peGalerie, PermissionLevel.P_OWNED,
+);

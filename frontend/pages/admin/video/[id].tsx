@@ -1,10 +1,9 @@
 import { VideoForm } from "components/VideoForm";
 import { useVideoQuery } from "lib/graphql/Video";
-import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 export default function VideoEditPage() {
-  useRequireUserLoggedIn();
   const router = useRouter();
   const { id } = router.query;
   const { data } = useVideoQuery({ id: id as string }, { enabled: !!id, cacheTime: 0 });
@@ -12,3 +11,7 @@ export default function VideoEditPage() {
     {data && <VideoForm data={data?.video || undefined} onSuccess={() => router.back()} />}
   </div>;
 };
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.peGalerie, PermissionLevel.P_OWNED,
+);

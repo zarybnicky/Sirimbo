@@ -1,10 +1,9 @@
 import { ReservationForm } from "components/ReservationForm";
 import { useReservationQuery } from "lib/graphql/Reservation";
-import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 export default function ReservationEditPage() {
-  useRequireUserLoggedIn();
   const router = useRouter();
   const { id } = router.query;
   const { data } = useReservationQuery({ id: id as string }, { enabled: !!id, cacheTime: 0 });
@@ -12,3 +11,7 @@ export default function ReservationEditPage() {
     {data && <ReservationForm data={data.nabidka || undefined} onSuccess={() => router.back()} />}
   </div>;
 };
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.peNabidka, PermissionLevel.P_OWNED,
+);

@@ -1,10 +1,9 @@
 import { GalleryPhotoForm } from "components/GalleryPhotoForm";
 import { useGalleryPhotoQuery } from "lib/graphql/Gallery";
-import { useRequireUserLoggedIn } from "lib/route-guards";
 import { useRouter } from "next/router";
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 export default function GalleryPhotoEditPage() {
-  useRequireUserLoggedIn();
   const router = useRouter();
   const { id } = router.query;
   const { data } = useGalleryPhotoQuery({ id: id as string }, { enabled: !!id, cacheTime: 0 });
@@ -12,3 +11,7 @@ export default function GalleryPhotoEditPage() {
     {data?.galerieFoto && <GalleryPhotoForm data={data.galerieFoto} onSuccess={() => router.back()} />}
   </div>;
 };
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.peGalerie, PermissionLevel.P_OWNED,
+);

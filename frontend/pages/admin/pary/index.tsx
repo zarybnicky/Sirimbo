@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { useCoupleListQuery, useDeleteCoupleMutation, useFixUnpairedCouplesMutation } from 'lib/graphql/Couple';
-import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DeleteButton } from 'components/DeleteButton';
 import { NewCoupleForm } from 'components/NewCoupleForm';
 import { toast } from 'react-toastify';
 import { Card } from 'components/Card';
 import { SimpleDialog } from 'components/Dialog';
 import { Item } from 'components/layout/Item';
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 export default function CoupleAdminList() {
-  useRequireUserLoggedIn();
   const { data, refetch } = useCoupleListQuery();
   const { mutateAsync: doDelete } = useDeleteCoupleMutation({
     onSuccess: () => refetch(),
@@ -41,3 +40,7 @@ export default function CoupleAdminList() {
     ))}
   </Item>;
 }
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.pePary, PermissionLevel.P_OWNED,
+);

@@ -2,11 +2,11 @@ import * as React from 'react';
 import { Checkbox } from 'components/Checkbox';
 import { Button } from 'components/Button';
 import { useDeleteGalleryDirMutation, useGalleryDirListQuery, useToggleGalleryDirVisibleMutation } from 'lib/graphql/Gallery';
-import { useRequireUserLoggedIn } from 'lib/route-guards';
 import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
 import { Edit as EditIcon } from 'react-feather';
 import { DeleteButton } from 'components/DeleteButton';
 import { useRouter } from 'next/router';
+import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 
 type Treeified<T> = T & { id: string; parentId: string; children: Treeified<T>[]; };
 function listToTree<T>(list: Treeified<T>[]) {
@@ -36,7 +36,6 @@ function flatten<T>(root: Treeified<T>): T[] {
 }
 
 export default function GalleryDirectoryList() {
-  useRequireUserLoggedIn();
   const router = useRouter();
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(0);
@@ -107,3 +106,7 @@ export default function GalleryDirectoryList() {
     />
   </div>;
 }
+
+export const getServerSideProps = withServerPermissions(
+  PermissionKey.peGalerie, PermissionLevel.P_OWNED,
+);
