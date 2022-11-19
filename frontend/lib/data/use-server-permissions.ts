@@ -15,7 +15,7 @@ LEFT JOIN public.pary ON (
 )
 WHERE ss_id='${context.req.cookies.PHPSESSID}'
   `);
-  return new ServerPermissionChecker(context, session?.u_id, session?.p_id, !session ? defaultPermissions : {
+  return new ServerPermissionChecker(context, session?.u_id, !session ? defaultPermissions : {
     peAkce: session.pe_akce,
     peAktuality: session.pe_aktuality,
     peDokumenty: session.pe_dokumenty,
@@ -68,9 +68,8 @@ class ServerPermissionChecker extends PermissionChecker {
   constructor(
     public context: GetServerSidePropsContext,
     userId: string,
-    coupleId: string,
     perms: { [key in keyof typeof PermissionKey]: number }
   ) {
-    super(userId, coupleId, perms);
+    super(userId, perms);
   }
 }
