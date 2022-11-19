@@ -151,8 +151,8 @@ export class PermissionChecker {
   }
 
   public canCancelReservation(item: ReservationBasicFragment, lesson: ReservationItemBasicFragment) {
-    const man = lesson.paryByRiPartner?.userByPIdPartner;
-    const woman = lesson.paryByRiPartner?.userByPIdPartner;
+    const man = lesson.paryByNiPartner?.userByPIdPartner;
+    const woman = lesson.paryByNiPartner?.userByPIdPartner;
     const isMyLesson = this.userId === man?.id || this.userId === woman?.id;
     return !item.nLock && !lesson.niLock && (
       (this.perms.peNabidka >= PermissionLevel.P_MEMBER && isMyLesson) ||
