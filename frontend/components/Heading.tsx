@@ -13,7 +13,7 @@ export const Heading = ({ color, image, text }: HeadingProps) => {
   const background = `${gradient}, url(${image}) no-repeat 50% 30%/cover`;
 
   return <div className="col-full-width content mb-8" style={{ background }}>
-    <div className="col-feature">
+    <div className="col-popout">
       <div className="relative py-20 mx-10 xl:mx-0">
         <h2 className="text-3xl drop-shadow-md mb-0 ml-1.5 z-3 text-white uppercase font-bold">
           {text}

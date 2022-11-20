@@ -9,7 +9,6 @@ import { ErrorBox } from 'components/ErrorBox';
 import { useAsyncCallback } from 'react-async-hook';
 import { SubmitButton } from 'components/SubmitButton';
 import { withServerLoggedOut } from 'lib/data/use-server-permissions';
-import { Layout } from 'components/layout/Layout';
 
 type FormProps = {
   login: string;
@@ -27,9 +26,9 @@ export default function LoginPage() {
   });
 
   return (
-    <div className="container mx-auto max-w-md mt-12 mb-16">
+    <div className="flex items-center justify-center min-h-[50vh]">
       <Card>
-        <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+        <form className="grid gap-2 p-4" onSubmit={handleSubmit(onSubmit.execute)}>
           <h4 className="text-2xl">Přihlášení do systému</h4>
 
           <ErrorBox error={onSubmit.error} />
@@ -65,5 +64,3 @@ export default function LoginPage() {
 };
 
 export const getServerSideProps = withServerLoggedOut;
-
-LoginPage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;

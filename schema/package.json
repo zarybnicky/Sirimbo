@@ -1,0 +1,17 @@
+{
+  "name": "sirimbo-schema",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "cd .. && graphql-codegen --config graphql.config.yml",
+    "dev": "cd .. && graphql-codegen --config graphql.config.yml --watch"
+  },
+  "dependencies": {
+    "@graphql-codegen/add": "^3.2.1",
+    "@graphql-codegen/cli": "^2.13.6",
+    "@graphql-codegen/near-operation-file-preset": "^2.4.4",
+    "@graphql-codegen/typescript": "^2.7.4",
+    "@graphql-codegen/typescript-operations": "^2.5.4",
+    "@graphql-codegen/typescript-react-query": "^4.0.2"
+  }
+}

@@ -1,5 +1,5 @@
-schema: ./schema.graphql
-documents: ./frontend/**/*.graphql
+schema: schema.graphql
+documents: frontend/**/*.graphql
 overwrite: true
 config:
   avoidOptionals:
