@@ -4,11 +4,41 @@ query User($id: BigInt!) {
   }
 }
 
-query UserList($confirmed: Boolean, $limit: Int, $offset: Int) {
-  users(condition: {uConfirmed: $confirmed}, offset: $offset, first: $limit) {
+query UserList($confirmed: Boolean, $system: Boolean = false, $ban: Boolean = false, $limit: Int, $offset: Int) {
+  users(condition: {uBan: $ban, uSystem: $system, uConfirmed: $confirmed}, offset: $offset, first: $limit) {
     totalCount
     nodes {
       ...User
+    }
+  }
+}
+
+query MsmtExport {
+  members(condition: {sVisible: true}) {
+    nodes {
+      id: uId
+      uJmeno
+      uPrijmeni
+      uEmail
+      uTelefon
+      uRodneCislo
+      uNationality
+      uNarozeni
+      uCity
+      uDistrict
+      uConscriptionNumber
+      uOrientationNumber
+      uPostalCode
+      uStreet
+      sId
+      sName
+      sColorRgb
+      sDescription
+      sVisible
+      paymentValid
+      oldestPayment
+      newestPayment
+      uGroup
     }
   }
 }

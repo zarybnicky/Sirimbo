@@ -55,6 +55,8 @@ const loadUserFromSession = async (req: express.Request): Promise<{ [k: string]:
   return settings;
 }
 
+const isDevelopment = !!process.env.DEBUG;
+
 export const graphileOptions: PostGraphileOptions<express.Request, express.Response> = {
   // subscriptions: true,
   retryOnInitFail: true,
@@ -65,14 +67,15 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
   showErrorStack: "json",
   pgSettings: loadUserFromSession,
   watchPg: true,
-  graphiql: true,
-  enhanceGraphiql: true,
-  allowExplain: true,
   legacyRelations: 'omit',
   sortExport: true,
   enableQueryBatching: true,
   pluginHook: makePluginHook([operationHooks]),
-  exportGqlSchemaPath: process.env.DEBUG ? path.resolve('../schema.graphql') : undefined,
+
+  graphiql: isDevelopment,
+  enhanceGraphiql: isDevelopment,
+  allowExplain: isDevelopment,
+  exportGqlSchemaPath: isDevelopment ? path.resolve('../schema.graphql') : undefined,
 
   async additionalGraphQLContextFromRequest(_, res) {
     return {

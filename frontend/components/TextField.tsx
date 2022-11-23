@@ -49,13 +49,13 @@ export type TextFieldElementProps<T extends FieldValues> = Omit<React.HTMLProps<
   control?: Control<T>
 } & Extras;
 
-export function TextField({ name, type = "text", label, error, helperText, parseError, required, ...props }: {
+export function TextField({ name, type = "text", className, label, error, helperText, parseError, required, ...props }: {
   error?: FieldError;
 } & Extras & Omit<React.HTMLProps<HTMLInputElement>, 'label'>) {
   const parsedHelperText = !error ? helperText : parseError ? parseError(error) : error.message;
 
   return (
-    <div>
+    <div className={className || ''}>
       <label htmlFor={name} className="block text-sm font-medium text-stone-700 mt-1 mb-1">
         {label}
       </label>

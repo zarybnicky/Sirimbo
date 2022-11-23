@@ -10,6 +10,9 @@ import { useCohortListQuery } from 'lib/graphql/Cohorts';
 import { useRoleListQuery } from 'lib/graphql/Roles';
 import { formatFullDate } from 'lib/format-date';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
+import { UserList } from 'components/UserList';
+import { Layout } from 'components/layout/Layout';
+import { Item } from 'components/layout/Item';
 
 const UnconfirmedUser: React.FC<{
   item: UserFragment;
@@ -90,11 +93,15 @@ const UnconfirmedUser: React.FC<{
 export default function UnconfirmedUsers() {
   const { data: users, refetch } = useUserListQuery({ confirmed: false });
 
-  return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
-    <h4 className="text-xl font-bold">Nepotvrzení uživatelé</h4>
+  return <Item>
+    <Item.Titlebar backHref="/admin/users" title="Nepotvrzení uživatelé" />
     {users?.users?.nodes?.map((item, i) => <UnconfirmedUser onProcessed={refetch} item={item} key={i} />)}
-  </div>;
+  </Item>;
 };
+
+UnconfirmedUsers.getLayout = (page: React.ReactElement) => (
+  <Layout list={<UserList />} isDetail>{page}</Layout>
+);
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peUsers, PermissionLevel.P_OWNED,

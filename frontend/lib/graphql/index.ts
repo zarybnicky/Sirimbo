@@ -3234,6 +3234,8 @@ export type LogoutPayload = {
 
 export type Member = {
   __typename?: 'Member';
+  newestPayment: Maybe<Scalars['Date']>;
+  oldestPayment: Maybe<Scalars['Date']>;
   paymentValid: Maybe<Scalars['Boolean']>;
   sColorRgb: Maybe<Scalars['String']>;
   sColorText: Maybe<Scalars['String']>;
@@ -3278,6 +3280,10 @@ export type Member = {
 
 /** A condition to be used against `Member` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type MemberCondition = {
+  /** Checks for equality with the object’s `newestPayment` field. */
+  newestPayment?: InputMaybe<Scalars['Date']>;
+  /** Checks for equality with the object’s `oldestPayment` field. */
+  oldestPayment?: InputMaybe<Scalars['Date']>;
   /** Checks for equality with the object’s `paymentValid` field. */
   paymentValid?: InputMaybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `sColorRgb` field. */
@@ -3385,6 +3391,10 @@ export type MembersEdge = {
 /** Methods to use when ordering `Member`. */
 export enum MembersOrderBy {
   Natural = 'NATURAL',
+  NewestPaymentAsc = 'NEWEST_PAYMENT_ASC',
+  NewestPaymentDesc = 'NEWEST_PAYMENT_DESC',
+  OldestPaymentAsc = 'OLDEST_PAYMENT_ASC',
+  OldestPaymentDesc = 'OLDEST_PAYMENT_DESC',
   PaymentValidAsc = 'PAYMENT_VALID_ASC',
   PaymentValidDesc = 'PAYMENT_VALID_DESC',
   SColorRgbAsc = 'S_COLOR_RGB_ASC',

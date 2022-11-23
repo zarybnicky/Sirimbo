@@ -1364,6 +1364,26 @@ CREATE VIEW public.members AS
              JOIN public.platby_category_group ON ((platby_category_group.pcg_id_category = platby_category.pc_id)))
              JOIN public.platby_group ON ((platby_group.pg_id = platby_category_group.pcg_id_group)))
           WHERE ((platby_group.pg_type = '1'::numeric) AND (CURRENT_DATE >= platby_category.pc_valid_from) AND (CURRENT_DATE <= platby_category.pc_valid_to))
+        ), oldest_payments AS (
+         SELECT DISTINCT ON (platby_item.pi_id_user) platby_item.pi_id,
+            platby_item.pi_id_user,
+            platby_item.pi_id_category,
+            platby_item.pi_id_raw,
+            platby_item.pi_amount,
+            platby_item.pi_date,
+            platby_item.pi_prefix
+           FROM public.platby_item
+          ORDER BY platby_item.pi_id_user, platby_item.pi_date
+        ), newest_payments AS (
+         SELECT DISTINCT ON (platby_item.pi_id_user) platby_item.pi_id,
+            platby_item.pi_id_user,
+            platby_item.pi_id_category,
+            platby_item.pi_id_raw,
+            platby_item.pi_amount,
+            platby_item.pi_date,
+            platby_item.pi_prefix
+           FROM public.platby_item
+          ORDER BY platby_item.pi_id_user, platby_item.pi_date DESC
         )
  SELECT users.u_id,
     users.u_login,
@@ -1406,7 +1426,13 @@ CREATE VIEW public.members AS
     skupiny.s_visible,
     ( SELECT (EXISTS ( SELECT current_payments.pi_id
                    FROM current_payments
-                  WHERE (current_payments.pi_id_user = users.u_id))) AS "exists") AS payment_valid
+                  WHERE (current_payments.pi_id_user = users.u_id))) AS "exists") AS payment_valid,
+    ( SELECT oldest_payments.pi_date
+           FROM oldest_payments
+          WHERE (oldest_payments.pi_id_user = users.u_id)) AS oldest_payment,
+    ( SELECT newest_payments.pi_date
+           FROM newest_payments
+          WHERE (newest_payments.pi_id_user = users.u_id)) AS newest_payment
    FROM (public.users
      JOIN public.skupiny ON ((skupiny.s_id = users.u_skupina)))
   WHERE ((users.u_confirmed = true) AND (users.u_system = false) AND (users.u_ban = false))

@@ -13,24 +13,7 @@ fragment Event on Akce {
   aVisible
 }
 
-fragment EventWithItems on Akce {
-  ...Event
-  akceItemsByAiIdRodic {
-    totalCount
-    nodes {
-      __typename
-      id: aiId
-      userByAiUser {
-        id: uId
-        uJmeno
-        uPrijmeni
-      }
-    }
-  }
-}
-
 fragment EventItem on AkceItem {
-  __typename
   id: aiId
   userByAiUser {
     uJmeno
@@ -41,16 +24,19 @@ fragment EventItem on AkceItem {
   }
 }
 
-query EventParticipants($id: BigInt!) {
-  akce(aId: $id) {
-    id: aId
-    aId
-    aJmeno
-    akceItemsByAiIdRodic {
-      nodes {
-        ...EventItem
-      }
+fragment EventWithItems on Akce {
+  ...Event
+  akceItemsByAiIdRodic {
+    totalCount
+    nodes {
+      ...EventItem
     }
+  }
+}
+
+query Event($id: BigInt!) {
+  akce(aId: $id) {
+    ...EventWithItems
   }
 }
 
@@ -60,12 +46,6 @@ query EventList($limit: Int, $offset: Int, $visible: Boolean) {
     nodes {
       ...EventWithItems
     }
-  }
-}
-
-query Event($id: BigInt!) {
-  akce(aId: $id) {
-    ...Event
   }
 }
 

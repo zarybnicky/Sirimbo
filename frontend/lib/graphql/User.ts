@@ -14,12 +14,19 @@ export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', uLo
 
 export type UserListQueryVariables = Types.Exact<{
   confirmed?: Types.InputMaybe<Types.Scalars['Boolean']>;
+  system?: Types.InputMaybe<Types.Scalars['Boolean']>;
+  ban?: Types.InputMaybe<Types.Scalars['Boolean']>;
   limit?: Types.InputMaybe<Types.Scalars['Int']>;
   offset?: Types.InputMaybe<Types.Scalars['Int']>;
 }>;
 
 
 export type UserListQuery = { __typename?: 'Query', users: { __typename?: 'UsersConnection', totalCount: number, nodes: Array<{ __typename?: 'User', uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, id: string }> } | null };
+
+export type MsmtExportQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type MsmtExportQuery = { __typename?: 'Query', members: { __typename?: 'MembersConnection', nodes: Array<{ __typename?: 'Member', uJmeno: string | null, uPrijmeni: string | null, uEmail: string | null, uTelefon: string | null, uRodneCislo: string | null, uNationality: string | null, uNarozeni: string | null, uCity: string | null, uDistrict: string | null, uConscriptionNumber: string | null, uOrientationNumber: string | null, uPostalCode: string | null, uStreet: string | null, sId: string | null, sName: string | null, sColorRgb: string | null, sDescription: string | null, sVisible: boolean | null, paymentValid: boolean | null, oldestPayment: string | null, newestPayment: string | null, uGroup: string | null, id: string | null }> } | null };
 
 export type MemberListQueryVariables = Types.Exact<{
   cohortId?: Types.InputMaybe<Types.Scalars['BigInt']>;
@@ -90,8 +97,12 @@ useUserQuery.getKey = (variables: UserQueryVariables) => ['User', variables];
 
 useUserQuery.fetcher = (variables: UserQueryVariables, options?: RequestInit['headers']) => fetcher<UserQuery, UserQueryVariables>(UserDocument, variables, options);
 export const UserListDocument = `
-    query UserList($confirmed: Boolean, $limit: Int, $offset: Int) {
-  users(condition: {uConfirmed: $confirmed}, offset: $offset, first: $limit) {
+    query UserList($confirmed: Boolean, $system: Boolean = false, $ban: Boolean = false, $limit: Int, $offset: Int) {
+  users(
+    condition: {uBan: $ban, uSystem: $system, uConfirmed: $confirmed}
+    offset: $offset
+    first: $limit
+  ) {
     totalCount
     nodes {
       ...User
@@ -116,6 +127,54 @@ useUserListQuery.getKey = (variables?: UserListQueryVariables) => variables === 
 ;
 
 useUserListQuery.fetcher = (variables?: UserListQueryVariables, options?: RequestInit['headers']) => fetcher<UserListQuery, UserListQueryVariables>(UserListDocument, variables, options);
+export const MsmtExportDocument = `
+    query MsmtExport {
+  members(condition: {sVisible: true}) {
+    nodes {
+      id: uId
+      uJmeno
+      uPrijmeni
+      uEmail
+      uTelefon
+      uRodneCislo
+      uNationality
+      uNarozeni
+      uCity
+      uDistrict
+      uConscriptionNumber
+      uOrientationNumber
+      uPostalCode
+      uStreet
+      sId
+      sName
+      sColorRgb
+      sDescription
+      sVisible
+      paymentValid
+      oldestPayment
+      newestPayment
+      uGroup
+    }
+  }
+}
+    `;
+export const useMsmtExportQuery = <
+      TData = MsmtExportQuery,
+      TError = unknown
+    >(
+      variables?: MsmtExportQueryVariables,
+      options?: UseQueryOptions<MsmtExportQuery, TError, TData>
+    ) =>
+    useQuery<MsmtExportQuery, TError, TData>(
+      variables === undefined ? ['MsmtExport'] : ['MsmtExport', variables],
+      fetcher<MsmtExportQuery, MsmtExportQueryVariables>(MsmtExportDocument, variables),
+      options
+    );
+
+useMsmtExportQuery.getKey = (variables?: MsmtExportQueryVariables) => variables === undefined ? ['MsmtExport'] : ['MsmtExport', variables];
+;
+
+useMsmtExportQuery.fetcher = (variables?: MsmtExportQueryVariables, options?: RequestInit['headers']) => fetcher<MsmtExportQuery, MsmtExportQueryVariables>(MsmtExportDocument, variables, options);
 export const MemberListDocument = `
     query MemberList($cohortId: BigInt) {
   members(condition: {sId: $cohortId}) {

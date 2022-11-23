@@ -18,7 +18,7 @@ function ListTitleBar({ title, children }: {
   children?: React.ReactNode;
 }) {
   return (
-    <div className="p-4 flex items-center justify-between">
+    <div className="p-4 flex items-center justify-between flex-wrap">
       <div className="font-bold">{title}</div>
       {children}
     </div>

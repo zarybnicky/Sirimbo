@@ -1,13 +1,19 @@
 import { UserForm } from "components/UserForm";
-import { useRouter } from "next/router";
-import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
+import { Layout } from 'components/layout/Layout';
+import { UserList } from 'components/UserList';
+import { withServerPermissions, PermissionKey, PermissionLevel } from "lib/data/use-server-permissions";
+import { Item } from "components/layout/Item";
 
 export default function UserAddPage() {
-  const router = useRouter();
-  return <div className="container mx-auto max-w-3xl mt-12 mb-8">
-    <UserForm onSuccess={() => router.back()} />
-  </div>;
+  return <Item>
+    <Item.Titlebar backHref="/admin/users" title="Nový uživatel" />
+    <UserForm />
+  </Item>;
 };
+
+UserAddPage.getLayout = (page: React.ReactElement) => (
+  <Layout list={<UserList />} isDetail>{page}</Layout>
+);
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peUsers, PermissionLevel.P_OWNED,

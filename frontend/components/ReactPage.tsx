@@ -2,7 +2,6 @@ import * as React from 'react';
 import type { CellPlugin, EditorProps, BottomToolbarProps } from '@react-page/editor';
 import Editor, { BottomToolbar } from '@react-page/editor';
 import image from '@react-page/plugins-image';
-import video from '@react-page/plugins-video';
 import { CallToActionPlugin } from './CallToAction';
 import { ContainerPlugin } from './Container';
 import { ProspectFormPlugin } from './ProspectForm';
@@ -20,7 +19,6 @@ import '@react-page/plugins-image/lib/index.css';
 export const cellPlugins: CellPlugin<any, any>[] = [
   defaultSlate,
   image,
-  video as CellPlugin<any, any>,
   ProspectFormPlugin,
   ProspectFormEmailPlugin,
   ServiceCardPlugin,

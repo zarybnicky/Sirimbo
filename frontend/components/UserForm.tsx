@@ -1,4 +1,4 @@
-import { useCreateUserMutation, useUpdateUserMutation } from 'lib/graphql/User';
+import { useCreateUserMutation, useUpdateUserMutation, useUserListQuery } from 'lib/graphql/User';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { SelectElement } from 'components/SelectElement';
@@ -13,6 +13,7 @@ import { UserInput } from 'lib/graphql';
 import { UserFragment } from 'lib/graphql/CurrentUser';
 import { useCohortListQuery } from 'lib/graphql/Cohorts';
 import { useRoleListQuery } from 'lib/graphql/Roles';
+import { useQueryClient } from '@tanstack/react-query';
 
 type FormProps = Pick<UserInput, 'uLogin' | 'uJmeno' | 'uPrijmeni' | 'uNarozeni'
   | 'uRodneCislo' | 'uPohlavi' | 'uEmail' | 'uTelefon' | 'uStreet' |
@@ -23,8 +24,12 @@ type FormProps = Pick<UserInput, 'uLogin' | 'uJmeno' | 'uPrijmeni' | 'uNarozeni'
 
 export const UserForm: React.FC<{
   data?: UserFragment;
-  onSuccess: () => void;
-}> = ({ data, onSuccess }) => {
+}> = ({ data }) => {
+  const queryClient = useQueryClient();
+  const onSuccess = React.useCallback(() => {
+    queryClient.invalidateQueries(useUserListQuery.getKey());
+  }, [queryClient]);
+
   const { mutateAsync: doCreate } = useCreateUserMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateUserMutation({ onSuccess });
 
@@ -74,7 +79,7 @@ export const UserForm: React.FC<{
   });
 
   return (
-    <form className="grid grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+    <form className="grid lg:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
       {!data && <>
         <TextFieldElement control={control} name="uLogin" label="Uživatelské jméno" required />

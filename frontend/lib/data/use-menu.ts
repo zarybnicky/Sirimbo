@@ -39,8 +39,8 @@ const publicMenu: MenuStructItem[] = [
     type: "menu", title: "Klub", children: [
       { type: "link", title: "O nás", "href": "/o-nas" },
       { type: "link", title: "Kde trénujeme", "href": "/o-nas/kde-trenujeme" },
-      { type: "link", title: "Trenéři", "href": "/o-nas/treneri" },
       { type: "link", title: "Tréninkové skupiny", "href": "/o-nas/treninkove-skupiny" },
+      { type: "link", title: "Trenéři", "href": "/o-nas/treneri" },
       { type: "link", title: "Benefity členství", "href": "/o-nas/clenstvi" },
       { type: "link", title: "Galerie mistrů", "href": "/o-nas/galerie-mistru" }
     ]

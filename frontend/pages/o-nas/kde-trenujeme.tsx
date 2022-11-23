@@ -18,7 +18,7 @@ export default function LocationsPage() {
 
 const useLocations = () => [
   {
-    image: getPlaceholder(360, 240),
+    image: "https://tkolymp.cz/fotogalerie/223/foto/10089",
     name: 'Taneční centrum při FZŠ Holečkova',
     address: 'Holečkova 10, 779 00, Olomouc (vchod brankou u zastávy Povel - škola)',
     href: 'https://www.zsholeckova.cz/',

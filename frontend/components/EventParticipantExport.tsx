@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { saveAs } from 'file-saver';
-import { useEventParticipantsQuery } from 'lib/graphql/Event';
+import { useEventQuery } from 'lib/graphql/Event';
 import { Button } from './Button';
 
 export function EventParticipantExport({ id }: { id: string; }) {
-  const { data } = useEventParticipantsQuery({ id });
+  const { data } = useEventQuery({ id });
 
   const saveData = React.useCallback(async (e?: React.MouseEvent) => {
     e?.preventDefault();

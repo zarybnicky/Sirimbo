@@ -3635,6 +3635,8 @@ type LogoutPayload {
 }
 
 type Member {
+  newestPayment: Date
+  oldestPayment: Date
   paymentValid: Boolean
   sColorRgb: String
   sColorText: String
@@ -3681,6 +3683,12 @@ type Member {
 A condition to be used against `Member` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
 input MemberCondition {
+  """Checks for equality with the object’s `newestPayment` field."""
+  newestPayment: Date
+
+  """Checks for equality with the object’s `oldestPayment` field."""
+  oldestPayment: Date
+
   """Checks for equality with the object’s `paymentValid` field."""
   paymentValid: Boolean
 
@@ -3831,6 +3839,10 @@ type MembersEdge {
 """Methods to use when ordering `Member`."""
 enum MembersOrderBy {
   NATURAL
+  NEWEST_PAYMENT_ASC
+  NEWEST_PAYMENT_DESC
+  OLDEST_PAYMENT_ASC
+  OLDEST_PAYMENT_DESC
   PAYMENT_VALID_ASC
   PAYMENT_VALID_DESC
   S_COLOR_RGB_ASC

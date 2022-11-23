@@ -43,6 +43,16 @@ fragment CouplePartial on Pary {
   pIdPartner
   pIdPartnerka
   pArchiv
+  userByPIdPartner {
+    id: uId
+    uJmeno
+    uPrijmeni
+  }
+  userByPIdPartnerka {
+    id: uId
+    uJmeno
+    uPrijmeni
+  }
 }
 
 query CurrentUser {
