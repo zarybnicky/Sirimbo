@@ -15,7 +15,7 @@ export default function ChampionsPage() {
 
     <div className="col-popout">
       {couples.map(couple => (
-        <ServiceCard header={couple.header} image={couple.image}>
+        <ServiceCard key={couple.header} header={couple.header} image={couple.image}>
           <SlateReadonly value={couple.content} />
         </ServiceCard>
       ))}
