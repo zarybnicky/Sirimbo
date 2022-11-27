@@ -65,7 +65,7 @@ export const LessonButton = ({ schedule, lesson, showTrainer }: {
       "radix-state-open:bg-red-500 radix-state-open:text-white hover:radix-state-open:bg-red-500",
       (canBook || canCancel) && 'cursor-pointer hover:bg-stone-50',
       canBook && 'border border-red-200',
-      isMyLesson && 'border border-red-500',
+      (!showTrainer && isMyLesson) && 'border border-red-500',
     )}>
       <div className="text-stone-600 group-radix-state-open:text-white">{lesson.riOd.substring(0, 5)}</div>
       <div className="grow">{canBook ? "VOLNÁ" : lesson.paryByRiPartner ? name : '-'}</div>
