@@ -4,7 +4,15 @@ import * as Types from './index';
 
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
-export type AnnouncementFragment = { __typename: 'Upozorneni', upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, id: string, userByUpKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sName: string, sDescription: string, sColorText: string, sColorRgb: string, id: string } | null }> } };
+export type AnnouncementFragment = { __typename: 'Upozorneni', upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, scheduledSince: string | null, scheduledUntil: string | null, id: string, userByUpKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sName: string, sDescription: string, sColorText: string, sColorRgb: string, id: string } | null }> } };
+
+export type MyAnnouncementsQueryVariables = Types.Exact<{
+  limit?: Types.InputMaybe<Types.Scalars['Int']>;
+  offset?: Types.InputMaybe<Types.Scalars['Int']>;
+}>;
+
+
+export type MyAnnouncementsQuery = { __typename?: 'Query', myAnnouncements: { __typename?: 'UpozornenisConnection', totalCount: number, nodes: Array<{ __typename: 'Upozorneni', upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, scheduledSince: string | null, scheduledUntil: string | null, id: string, userByUpKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sName: string, sDescription: string, sColorText: string, sColorRgb: string, id: string } | null }> } }> } | null };
 
 export type AnnouncementListQueryVariables = Types.Exact<{
   limit?: Types.InputMaybe<Types.Scalars['Int']>;
@@ -12,14 +20,14 @@ export type AnnouncementListQueryVariables = Types.Exact<{
 }>;
 
 
-export type AnnouncementListQuery = { __typename?: 'Query', upozornenis: { __typename?: 'UpozornenisConnection', totalCount: number, nodes: Array<{ __typename: 'Upozorneni', upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, id: string, userByUpKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sName: string, sDescription: string, sColorText: string, sColorRgb: string, id: string } | null }> } }> } | null };
+export type AnnouncementListQuery = { __typename?: 'Query', upozornenis: { __typename?: 'UpozornenisConnection', totalCount: number, nodes: Array<{ __typename: 'Upozorneni', upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, scheduledSince: string | null, scheduledUntil: string | null, id: string, userByUpKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sName: string, sDescription: string, sColorText: string, sColorRgb: string, id: string } | null }> } }> } | null };
 
 export type AnnouncementQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
 }>;
 
 
-export type AnnouncementQuery = { __typename?: 'Query', upozorneni: { __typename: 'Upozorneni', upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, id: string, userByUpKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sName: string, sDescription: string, sColorText: string, sColorRgb: string, id: string } | null }> } } | null };
+export type AnnouncementQuery = { __typename?: 'Query', upozorneni: { __typename: 'Upozorneni', upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, scheduledSince: string | null, scheduledUntil: string | null, id: string, userByUpKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename?: 'Skupiny', sName: string, sDescription: string, sColorText: string, sColorRgb: string, id: string } | null }> } } | null };
 
 export type CreateAnnouncementMutationVariables = Types.Exact<{
   input: Types.UpozorneniInput;
@@ -69,8 +77,37 @@ export const AnnouncementFragmentDoc = `
       }
     }
   }
+  scheduledSince
+  scheduledUntil
 }
     `;
+export const MyAnnouncementsDocument = `
+    query MyAnnouncements($limit: Int, $offset: Int) {
+  myAnnouncements(first: $limit, offset: $offset) {
+    totalCount
+    nodes {
+      ...Announcement
+    }
+  }
+}
+    ${AnnouncementFragmentDoc}`;
+export const useMyAnnouncementsQuery = <
+      TData = MyAnnouncementsQuery,
+      TError = unknown
+    >(
+      variables?: MyAnnouncementsQueryVariables,
+      options?: UseQueryOptions<MyAnnouncementsQuery, TError, TData>
+    ) =>
+    useQuery<MyAnnouncementsQuery, TError, TData>(
+      variables === undefined ? ['MyAnnouncements'] : ['MyAnnouncements', variables],
+      fetcher<MyAnnouncementsQuery, MyAnnouncementsQueryVariables>(MyAnnouncementsDocument, variables),
+      options
+    );
+
+useMyAnnouncementsQuery.getKey = (variables?: MyAnnouncementsQueryVariables) => variables === undefined ? ['MyAnnouncements'] : ['MyAnnouncements', variables];
+;
+
+useMyAnnouncementsQuery.fetcher = (variables?: MyAnnouncementsQueryVariables, options?: RequestInit['headers']) => fetcher<MyAnnouncementsQuery, MyAnnouncementsQueryVariables>(MyAnnouncementsDocument, variables, options);
 export const AnnouncementListDocument = `
     query AnnouncementList($limit: Int, $offset: Int) {
   upozornenis(first: $limit, offset: $offset, orderBy: [UP_TIMESTAMP_ADD_DESC]) {

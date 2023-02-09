@@ -15,7 +15,9 @@ export default function UserEditPage() {
     onSuccess: () => router.push('/admin/users'),
   });
   return <Item>
-    <Item.Titlebar backHref="/admin/users" title={data?.user?.uJmeno || '(Bez názvu)'}>
+    <Item.Titlebar backHref="/admin/users" title={
+      `${data?.user?.uJmeno} ${data?.user?.uPrijmeni}` || '(Bez názvu)'
+    }>
       <DeleteButton onDelete={() => doDelete({ id: id as string })} title="smazat uživatele" />
     </Item.Titlebar>
     {data && <UserForm data={data.user || undefined} />}

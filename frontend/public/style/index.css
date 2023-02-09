@@ -21,6 +21,9 @@
 .button-red {
     @apply px-3 py-2 text-white bg-red-500 text-sm uppercase tracking-normal font-medium;
 }
+.button-white {
+    @apply px-3 py-2 text-red-500 bg-white border border-red-500 text-sm uppercase tracking-normal font-medium;
+}
 .button-secondary {
     @apply px-3 py-2 text-stone-700 bg-stone-300 text-sm uppercase tracking-normal font-medium;
 }

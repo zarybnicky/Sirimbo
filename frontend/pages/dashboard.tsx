@@ -3,12 +3,14 @@ import { MyAnnouncements } from 'components/MyAnnouncements';
 import { MyLessonsList } from 'components/MyLessonsList';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 import { Item } from 'components/layout/Item';
+import { TenantInformation } from 'components/TenantInformation';
 
 export default function DashboardPage() {
-  return <Item className="col-feature">
-    <div className="grid lg:grid-cols-2">
+  return <Item className="col-full">
+    <div className="grid lg:grid-cols-3">
       <MyLessonsList />
       <MyAnnouncements />
+      <TenantInformation />
     </div>
   </Item>;
 }

@@ -98,3 +98,9 @@ mutation ResetPassword($input: ResetPasswordInput!) {
     __typename
   }
 }
+
+mutation ChangePassword($input: ChangePasswordInput!) {
+  changePassword(input:  $input) {
+    __typename
+  }
+}

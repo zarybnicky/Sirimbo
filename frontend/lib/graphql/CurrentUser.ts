@@ -43,6 +43,13 @@ export type ResetPasswordMutationVariables = Types.Exact<{
 
 export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword: { __typename: 'ResetPasswordPayload' } | null };
 
+export type ChangePasswordMutationVariables = Types.Exact<{
+  input: Types.ChangePasswordInput;
+}>;
+
+
+export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename: 'ChangePasswordPayload' } | null };
+
 export const UserFragmentDoc = `
     fragment User on User {
   id: uId
@@ -219,3 +226,22 @@ export const useResetPasswordMutation = <
 useResetPasswordMutation.getKey = () => ['ResetPassword'];
 
 useResetPasswordMutation.fetcher = (variables: ResetPasswordMutationVariables, options?: RequestInit['headers']) => fetcher<ResetPasswordMutation, ResetPasswordMutationVariables>(ResetPasswordDocument, variables, options);
+export const ChangePasswordDocument = `
+    mutation ChangePassword($input: ChangePasswordInput!) {
+  changePassword(input: $input) {
+    __typename
+  }
+}
+    `;
+export const useChangePasswordMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<ChangePasswordMutation, TError, ChangePasswordMutationVariables, TContext>) =>
+    useMutation<ChangePasswordMutation, TError, ChangePasswordMutationVariables, TContext>(
+      ['ChangePassword'],
+      (variables?: ChangePasswordMutationVariables) => fetcher<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument, variables)(),
+      options
+    );
+useChangePasswordMutation.getKey = () => ['ChangePassword'];
+
+useChangePasswordMutation.fetcher = (variables: ChangePasswordMutationVariables, options?: RequestInit['headers']) => fetcher<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument, variables, options);

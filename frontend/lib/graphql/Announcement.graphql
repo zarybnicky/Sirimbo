@@ -23,10 +23,28 @@ fragment Announcement on Upozorneni {
       }
     }
   }
+  scheduledSince
+  scheduledUntil
+}
+
+query MyAnnouncements($limit: Int, $offset: Int) {
+  myAnnouncements(
+    first: $limit,
+    offset: $offset,
+  ) {
+    totalCount
+    nodes {
+      ...Announcement
+    }
+  }
 }
 
 query AnnouncementList($limit: Int, $offset: Int) {
-  upozornenis(first: $limit, offset: $offset, orderBy: [UP_TIMESTAMP_ADD_DESC]) {
+  upozornenis(
+    first: $limit,
+    offset: $offset,
+    orderBy: [UP_TIMESTAMP_ADD_DESC],
+  ) {
     totalCount
     nodes {
       ...Announcement

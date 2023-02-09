@@ -33,7 +33,7 @@ function ListTitleButton({ active, icon: Icon, children, href, onClick }: {
   onClick?: () => void;
 }) {
   const cx = classNames(
-    "shadow-md flex items-center gap-1 px-3 rounded-2xl py-1 text-xs tracking-tight font-bold",
+    "shadow-md inline-flex items-center gap-1 px-3 rounded-2xl py-1 text-xs tracking-tight font-bold",
     active ? 'tracking-wide bg-red-500 text-white' : 'bg-white hover:bg-stone-50',
   );
   return href ? (

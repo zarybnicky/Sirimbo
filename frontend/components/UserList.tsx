@@ -116,7 +116,6 @@ export const UserList = () => {
     return index.search(search).map(({ id }) => nodesById[id]!);
   }, [index, search]);
 
-  // MŠMT export
   // Sign in as
 
   return <List>
@@ -125,11 +124,13 @@ export const UserList = () => {
         Nový uživatel
       </List.TitleButton>
 
-      <List.TitleButton active={router.asPath.endsWith('unconfirmed')} href="/admin/users/unconfirmed">
-        Nově registrovaní
-      </List.TitleButton>
+      <div className="mt-2 w-full flex gap-2 justify-end">
+        <List.TitleButton active={router.asPath.endsWith('unconfirmed')} href="/admin/users/unconfirmed">
+          Nově registrovaní
+        </List.TitleButton>
 
-      <List.TitleButton onClick={exportMSMT}>MŠMT Export</List.TitleButton>
+        <List.TitleButton onClick={exportMSMT}>MŠMT Export</List.TitleButton>
+      </div>
 
       <TextField
         type="search" className="w-full mt-2" placeholder="Vyhledat..."

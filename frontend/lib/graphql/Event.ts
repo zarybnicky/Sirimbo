@@ -56,6 +56,27 @@ export type DeleteEventMutationVariables = Types.Exact<{
 
 export type DeleteEventMutation = { __typename?: 'Mutation', deleteAkce: { __typename: 'DeleteAkcePayload' } | null };
 
+export type MyEventFragment = { __typename?: 'MyEventsRecord', id: string | null, since: string | null, until: string | null, info: string | null, name: string | null, location: string | null, hasCapacity: boolean | null, signedUp: boolean | null, myNotes: string | null };
+
+export type MyEventsQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type MyEventsQuery = { __typename?: 'Query', myEvents: { __typename?: 'MyEventsConnection', nodes: Array<{ __typename?: 'MyEventsRecord', id: string | null, since: string | null, until: string | null, info: string | null, name: string | null, location: string | null, hasCapacity: boolean | null, signedUp: boolean | null, myNotes: string | null }> } | null };
+
+export type CreateParticipationMutationVariables = Types.Exact<{
+  input: Types.CreateParticipationInput;
+}>;
+
+
+export type CreateParticipationMutation = { __typename?: 'Mutation', createParticipation: { __typename: 'CreateParticipationPayload' } | null };
+
+export type CancelParticipationMutationVariables = Types.Exact<{
+  input: Types.CancelParticipationInput;
+}>;
+
+
+export type CancelParticipationMutation = { __typename?: 'Mutation', cancelParticipation: { __typename: 'CancelParticipationPayload' } | null };
+
 export const EventFragmentDoc = `
     fragment Event on Akce {
   __typename
@@ -96,6 +117,19 @@ export const EventWithItemsFragmentDoc = `
 }
     ${EventFragmentDoc}
 ${EventItemFragmentDoc}`;
+export const MyEventFragmentDoc = `
+    fragment MyEvent on MyEventsRecord {
+  id
+  since
+  until
+  info
+  name
+  location
+  hasCapacity
+  signedUp
+  myNotes
+}
+    `;
 export const EventDocument = `
     query Event($id: BigInt!) {
   akce(aId: $id) {
@@ -232,3 +266,67 @@ export const useDeleteEventMutation = <
 useDeleteEventMutation.getKey = () => ['DeleteEvent'];
 
 useDeleteEventMutation.fetcher = (variables: DeleteEventMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteEventMutation, DeleteEventMutationVariables>(DeleteEventDocument, variables, options);
+export const MyEventsDocument = `
+    query MyEvents {
+  myEvents {
+    nodes {
+      ...MyEvent
+    }
+  }
+}
+    ${MyEventFragmentDoc}`;
+export const useMyEventsQuery = <
+      TData = MyEventsQuery,
+      TError = unknown
+    >(
+      variables?: MyEventsQueryVariables,
+      options?: UseQueryOptions<MyEventsQuery, TError, TData>
+    ) =>
+    useQuery<MyEventsQuery, TError, TData>(
+      variables === undefined ? ['MyEvents'] : ['MyEvents', variables],
+      fetcher<MyEventsQuery, MyEventsQueryVariables>(MyEventsDocument, variables),
+      options
+    );
+
+useMyEventsQuery.getKey = (variables?: MyEventsQueryVariables) => variables === undefined ? ['MyEvents'] : ['MyEvents', variables];
+;
+
+useMyEventsQuery.fetcher = (variables?: MyEventsQueryVariables, options?: RequestInit['headers']) => fetcher<MyEventsQuery, MyEventsQueryVariables>(MyEventsDocument, variables, options);
+export const CreateParticipationDocument = `
+    mutation CreateParticipation($input: CreateParticipationInput!) {
+  createParticipation(input: $input) {
+    __typename
+  }
+}
+    `;
+export const useCreateParticipationMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreateParticipationMutation, TError, CreateParticipationMutationVariables, TContext>) =>
+    useMutation<CreateParticipationMutation, TError, CreateParticipationMutationVariables, TContext>(
+      ['CreateParticipation'],
+      (variables?: CreateParticipationMutationVariables) => fetcher<CreateParticipationMutation, CreateParticipationMutationVariables>(CreateParticipationDocument, variables)(),
+      options
+    );
+useCreateParticipationMutation.getKey = () => ['CreateParticipation'];
+
+useCreateParticipationMutation.fetcher = (variables: CreateParticipationMutationVariables, options?: RequestInit['headers']) => fetcher<CreateParticipationMutation, CreateParticipationMutationVariables>(CreateParticipationDocument, variables, options);
+export const CancelParticipationDocument = `
+    mutation CancelParticipation($input: CancelParticipationInput!) {
+  cancelParticipation(input: $input) {
+    __typename
+  }
+}
+    `;
+export const useCancelParticipationMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CancelParticipationMutation, TError, CancelParticipationMutationVariables, TContext>) =>
+    useMutation<CancelParticipationMutation, TError, CancelParticipationMutationVariables, TContext>(
+      ['CancelParticipation'],
+      (variables?: CancelParticipationMutationVariables) => fetcher<CancelParticipationMutation, CancelParticipationMutationVariables>(CancelParticipationDocument, variables)(),
+      options
+    );
+useCancelParticipationMutation.getKey = () => ['CancelParticipation'];
+
+useCancelParticipationMutation.fetcher = (variables: CancelParticipationMutationVariables, options?: RequestInit['headers']) => fetcher<CancelParticipationMutation, CancelParticipationMutationVariables>(CancelParticipationDocument, variables, options);

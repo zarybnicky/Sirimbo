@@ -65,6 +65,17 @@ CREATE TYPE app_private.crm_cohort AS ENUM (
 
 
 --
+-- Name: gender_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.gender_type AS ENUM (
+    'men',
+    'woman',
+    'unspecified'
+);
+
+
+--
 -- Name: pary_p_lat_trida; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -104,6 +115,17 @@ CREATE TYPE public.prospect_data AS (
 	email text,
 	phone text,
 	yearofbirth text
+);
+
+
+--
+-- Name: tenant_attachment_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.tenant_attachment_type AS ENUM (
+    'logo',
+    'photo',
+    'map'
 );
 
 
@@ -359,6 +381,53 @@ $$;
 
 
 --
+-- Name: cancel_participation(bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.cancel_participation(event_id bigint) RETURNS void
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
+    AS $$
+declare
+  event akce;
+begin
+  select * into event from akce where a_id=event_id;
+  if event is null then
+    raise exception 'ITEM_NOT_FOUND' using errcode = '28000';
+  end if;
+
+  if event.a_lock then
+    raise exception 'ITEM_LOCKED' using errcode = '42501';
+  end if;
+
+  delete from akce_item where ai_id_rodic=event.a_id and ai_user=current_user_id();
+end;
+$$;
+
+
+--
+-- Name: change_password(character varying, character varying); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.change_password(old_pass character varying, new_pass character varying) RETURNS void
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
+    AS $$
+declare
+  usr users;
+  v_salt varchar;
+begin
+  select users.* into usr from users where u_id = current_user_id() limit 1;
+
+  select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
+  if usr.u_pass != encode(digest(v_salt || old_pass || v_salt, 'sha1'), 'hex') then
+    raise exception 'INVALID_PASSWORD' using errcode = '28P01';
+  end if;
+
+  update users set u_pass = new_pass where u_id = usr.u_id;
+end;
+$$;
+
+
+--
 -- Name: confirm_user(bigint, bigint, bigint); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -410,6 +479,35 @@ begin
   update pary set p_archiv=true where p_id = couple_woman.p_id;
 
   return query insert into pary (p_id_partner, p_id_partnerka) VALUES (man, woman) returning *;
+end;
+$$;
+
+
+--
+-- Name: create_participation(bigint, integer, text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.create_participation(event_id bigint, year_of_birth integer, my_notes text) RETURNS void
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
+    AS $$
+declare
+  event akce;
+begin
+  select * into event from akce where a_id=event_id;
+  if event is null then
+    raise exception 'ITEM_NOT_FOUND' using errcode = '28000';
+  end if;
+
+  if event.a_lock then
+    raise exception 'ITEM_LOCKED' using errcode = '42501';
+  end if;
+
+  INSERT INTO akce_item
+    (ai_id_rodic, ai_user, ai_rok_narozeni, notes)
+  values
+    (event_id, current_user_id(), year_of_birth, my_notes)
+  ON CONFLICT (ai_id_rodic, ai_user)
+  DO UPDATE SET notes = my_notes, ai_rok_narozeni=year_of_birth;
 end;
 $$;
 
@@ -479,7 +577,18 @@ $$;
 CREATE FUNCTION public.current_session_id() RETURNS text
     LANGUAGE sql STABLE
     AS $$
-  select nullif(current_setting('jwt.claims.user_id', true), '')::integer;
+  select nullif(current_setting('jwt.claims.session_id', true), '')::text;
+$$;
+
+
+--
+-- Name: current_tenant_id(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.current_tenant_id() RETURNS bigint
+    LANGUAGE sql STABLE
+    AS $$
+  select 1;
 $$;
 
 
@@ -519,6 +628,28 @@ CREATE FUNCTION public.get_current_couple() RETURNS public.pary
     LANGUAGE sql STABLE SECURITY DEFINER
     AS $$
   SELECT * FROM pary WHERE p_id in (select * from current_couple_ids()) limit 1;
+$$;
+
+
+--
+-- Name: tenant; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tenant (
+    id bigint NOT NULL,
+    name text NOT NULL,
+    member_info jsonb NOT NULL
+);
+
+
+--
+-- Name: get_current_tenant(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.get_current_tenant() RETURNS public.tenant
+    LANGUAGE sql STABLE SECURITY DEFINER
+    AS $$
+  SELECT * FROM tenant WHERE id = current_tenant_id();
 $$;
 
 
@@ -637,6 +768,59 @@ CREATE FUNCTION public.logout() RETURNS void
 begin
   delete from session where ss_id=current_session_id();
 end;
+$$;
+
+
+--
+-- Name: upozorneni; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.upozorneni (
+    up_id bigint NOT NULL,
+    up_kdo bigint,
+    up_nadpis text NOT NULL,
+    up_text text NOT NULL,
+    up_barvy bigint DEFAULT '0'::bigint NOT NULL,
+    up_lock boolean DEFAULT false NOT NULL,
+    up_timestamp timestamp with time zone,
+    up_timestamp_add timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    scheduled_since timestamp with time zone,
+    scheduled_until timestamp with time zone
+);
+
+
+--
+-- Name: my_announcements(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.my_announcements() RETURNS SETOF public.upozorneni
+    LANGUAGE sql STABLE
+    AS $$
+  select upozorneni.* from upozorneni
+  where (scheduled_since is null or scheduled_since <= now())
+    and (scheduled_until is null or scheduled_until >= now());
+$$;
+
+
+--
+-- Name: my_events(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.my_events() RETURNS TABLE(id bigint, since timestamp with time zone, until timestamp with time zone, info text, name text, location text, has_capacity boolean, signed_up boolean, my_notes text)
+    LANGUAGE sql STABLE
+    AS $$
+  select
+    a_id as id,
+    a_od as since,
+    a_do as until,
+    a_info as info,
+    a_jmeno as name,
+    a_kde as location,
+    (select count(*) < a_kapacita from akce_item where ai_id_rodic = a_id) as has_capacity,
+    (select exists (select ai_id from akce_item where ai_id_rodic=a_id and ai_user=current_user_id())) as signed_up,
+    (select notes from akce_item where ai_id_rodic=a_id and ai_user=current_user_id()) as my_notes
+  from akce
+  where a_visible = true -- a_do is null or a_do >= now()
 $$;
 
 
@@ -1094,7 +1278,8 @@ CREATE TABLE public.akce_item (
     ai_id bigint NOT NULL,
     ai_id_rodic bigint NOT NULL,
     ai_user bigint NOT NULL,
-    ai_rok_narozeni smallint NOT NULL
+    ai_rok_narozeni smallint NOT NULL,
+    notes text DEFAULT ''::text NOT NULL
 );
 
 
@@ -1152,6 +1337,18 @@ CREATE SEQUENCE public.aktuality_at_id_seq
 --
 
 ALTER SEQUENCE public.aktuality_at_id_seq OWNED BY public.aktuality.at_id;
+
+
+--
+-- Name: attachment; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.attachment (
+    object_name text NOT NULL,
+    preview_object_name text,
+    uploaded_by bigint,
+    uploaded_at timestamp with time zone DEFAULT now() NOT NULL
+);
 
 
 --
@@ -1252,6 +1449,42 @@ CREATE SEQUENCE public.galerie_foto_gf_id_seq
 --
 
 ALTER SEQUENCE public.galerie_foto_gf_id_seq OWNED BY public.galerie_foto.gf_id;
+
+
+--
+-- Name: location; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.location (
+    id bigint NOT NULL,
+    name text NOT NULL,
+    description jsonb NOT NULL,
+    tenant bigint
+);
+
+
+--
+-- Name: location_attachment; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.location_attachment (
+    location_id bigint NOT NULL,
+    object_name text NOT NULL
+);
+
+
+--
+-- Name: location_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.location ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.location_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
 
 
 --
@@ -1636,6 +1869,32 @@ ALTER SEQUENCE public.permissions_pe_id_seq OWNED BY public.permissions.pe_id;
 
 
 --
+-- Name: person; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person (
+    id bigint NOT NULL,
+    first_name text NOT NULL,
+    last_name text NOT NULL,
+    gender public.gender_type NOT NULL
+);
+
+
+--
+-- Name: person_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.person ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.person_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: platby_category_group_pcg_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1774,6 +2033,42 @@ ALTER SEQUENCE public.platby_raw_pr_id_seq OWNED BY public.platby_raw.pr_id;
 
 
 --
+-- Name: room; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.room (
+    id bigint NOT NULL,
+    name text NOT NULL,
+    description jsonb NOT NULL,
+    location bigint
+);
+
+
+--
+-- Name: room_attachment; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.room_attachment (
+    room_id bigint NOT NULL,
+    object_name text NOT NULL
+);
+
+
+--
+-- Name: room_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.room ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.room_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: rozpis_item_ri_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1831,18 +2126,37 @@ ALTER SEQUENCE public.skupiny_s_id_seq OWNED BY public.skupiny.s_id;
 
 
 --
--- Name: upozorneni; Type: TABLE; Schema: public; Owner: -
+-- Name: tenant_attachment; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.upozorneni (
-    up_id bigint NOT NULL,
-    up_kdo bigint,
-    up_nadpis text NOT NULL,
-    up_text text NOT NULL,
-    up_barvy bigint DEFAULT '0'::bigint NOT NULL,
-    up_lock boolean DEFAULT false NOT NULL,
-    up_timestamp timestamp with time zone,
-    up_timestamp_add timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+CREATE TABLE public.tenant_attachment (
+    tenant_id bigint NOT NULL,
+    object_name text NOT NULL,
+    type public.tenant_attachment_type
+);
+
+
+--
+-- Name: tenant_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.tenant ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.tenant_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: tenant_person; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tenant_person (
+    tenant_id bigint NOT NULL,
+    person_id bigint NOT NULL
 );
 
 
@@ -2222,6 +2536,22 @@ ALTER TABLE ONLY app_private.crm_prospect
 
 
 --
+-- Name: akce_item akce_item_unique_user_event_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.akce_item
+    ADD CONSTRAINT akce_item_unique_user_event_key UNIQUE (ai_user, ai_id_rodic);
+
+
+--
+-- Name: attachment attachment_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.attachment
+    ADD CONSTRAINT attachment_pkey PRIMARY KEY (object_name);
+
+
+--
 -- Name: akce idx_23735_primary; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2446,6 +2776,22 @@ ALTER TABLE ONLY public.video_source
 
 
 --
+-- Name: location_attachment location_attachment_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.location_attachment
+    ADD CONSTRAINT location_attachment_pkey PRIMARY KEY (location_id, object_name);
+
+
+--
+-- Name: location location_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.location
+    ADD CONSTRAINT location_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: page page_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2467,6 +2813,54 @@ ALTER TABLE ONLY public.page_revision
 
 ALTER TABLE ONLY public.page
     ADD CONSTRAINT page_url_key UNIQUE (url);
+
+
+--
+-- Name: person person_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.person
+    ADD CONSTRAINT person_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: room_attachment room_attachment_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.room_attachment
+    ADD CONSTRAINT room_attachment_pkey PRIMARY KEY (room_id, object_name);
+
+
+--
+-- Name: room room_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.room
+    ADD CONSTRAINT room_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tenant_attachment tenant_attachment_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_attachment
+    ADD CONSTRAINT tenant_attachment_pkey PRIMARY KEY (tenant_id, object_name);
+
+
+--
+-- Name: tenant_person tenant_person_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_person
+    ADD CONSTRAINT tenant_person_pkey PRIMARY KEY (tenant_id, person_id);
+
+
+--
+-- Name: tenant tenant_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant
+    ADD CONSTRAINT tenant_pkey PRIMARY KEY (id);
 
 
 --
@@ -2909,6 +3303,14 @@ ALTER TABLE ONLY public.aktuality
 
 
 --
+-- Name: attachment attachment_uploaded_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.attachment
+    ADD CONSTRAINT attachment_uploaded_by_fkey FOREIGN KEY (uploaded_by) REFERENCES public.users(u_id);
+
+
+--
 -- Name: dokumenty dokumenty_d_kdo_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2930,6 +3332,30 @@ ALTER TABLE ONLY public.galerie_foto
 
 ALTER TABLE ONLY public.galerie_foto
     ADD CONSTRAINT galerie_foto_gf_kdo_fkey FOREIGN KEY (gf_kdo) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: location_attachment location_attachment_location_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.location_attachment
+    ADD CONSTRAINT location_attachment_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.location(id);
+
+
+--
+-- Name: location_attachment location_attachment_object_name_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.location_attachment
+    ADD CONSTRAINT location_attachment_object_name_fkey FOREIGN KEY (object_name) REFERENCES public.attachment(object_name);
+
+
+--
+-- Name: location location_tenant_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.location
+    ADD CONSTRAINT location_tenant_fkey FOREIGN KEY (tenant) REFERENCES public.tenant(id);
 
 
 --
@@ -3045,6 +3471,30 @@ ALTER TABLE ONLY public.platby_item
 
 
 --
+-- Name: room_attachment room_attachment_object_name_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.room_attachment
+    ADD CONSTRAINT room_attachment_object_name_fkey FOREIGN KEY (object_name) REFERENCES public.attachment(object_name);
+
+
+--
+-- Name: room_attachment room_attachment_room_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.room_attachment
+    ADD CONSTRAINT room_attachment_room_id_fkey FOREIGN KEY (room_id) REFERENCES public.room(id);
+
+
+--
+-- Name: room room_location_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.room
+    ADD CONSTRAINT room_location_fkey FOREIGN KEY (location) REFERENCES public.location(id);
+
+
+--
 -- Name: rozpis_item rozpis_item_ri_id_rodic_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3074,6 +3524,38 @@ ALTER TABLE ONLY public.rozpis
 
 ALTER TABLE ONLY public.session
     ADD CONSTRAINT session_ss_user_fkey FOREIGN KEY (ss_user) REFERENCES public.users(u_id) ON DELETE CASCADE;
+
+
+--
+-- Name: tenant_attachment tenant_attachment_object_name_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_attachment
+    ADD CONSTRAINT tenant_attachment_object_name_fkey FOREIGN KEY (object_name) REFERENCES public.attachment(object_name);
+
+
+--
+-- Name: tenant_attachment tenant_attachment_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_attachment
+    ADD CONSTRAINT tenant_attachment_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
+
+
+--
+-- Name: tenant_person tenant_person_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_person
+    ADD CONSTRAINT tenant_person_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id);
+
+
+--
+-- Name: tenant_person tenant_person_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_person
+    ADD CONSTRAINT tenant_person_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenant(id);
 
 
 --
@@ -3792,6 +4274,20 @@ GRANT ALL ON FUNCTION public.cancel_lesson(lesson_id bigint) TO member;
 
 
 --
+-- Name: FUNCTION cancel_participation(event_id bigint); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.cancel_participation(event_id bigint) TO member;
+
+
+--
+-- Name: FUNCTION change_password(old_pass character varying, new_pass character varying); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.change_password(old_pass character varying, new_pass character varying) TO member;
+
+
+--
 -- Name: FUNCTION confirm_user(id bigint, grp bigint, cohort bigint); Type: ACL; Schema: public; Owner: -
 --
 
@@ -3803,6 +4299,13 @@ GRANT ALL ON FUNCTION public.confirm_user(id bigint, grp bigint, cohort bigint) 
 --
 
 GRANT ALL ON FUNCTION public.create_couple(man bigint, woman bigint) TO administrator;
+
+
+--
+-- Name: FUNCTION create_participation(event_id bigint, year_of_birth integer, my_notes text); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.create_participation(event_id bigint, year_of_birth integer, my_notes text) TO member;
 
 
 --
@@ -3827,6 +4330,13 @@ GRANT ALL ON FUNCTION public.current_session_id() TO anonymous;
 
 
 --
+-- Name: FUNCTION current_tenant_id(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.current_tenant_id() TO anonymous;
+
+
+--
 -- Name: FUNCTION current_user_id(); Type: ACL; Schema: public; Owner: -
 --
 
@@ -3845,6 +4355,14 @@ GRANT ALL ON FUNCTION public.fix_unpaired_couples() TO administrator;
 --
 
 GRANT ALL ON FUNCTION public.get_current_couple() TO anonymous;
+
+
+--
+-- Name: TABLE tenant; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT ON TABLE public.tenant TO anonymous;
+GRANT ALL ON TABLE public.tenant TO administrator;
 
 
 --
@@ -4006,6 +4524,27 @@ GRANT ALL ON FUNCTION public.login(login character varying, passwd character var
 --
 
 GRANT ALL ON FUNCTION public.logout() TO anonymous;
+
+
+--
+-- Name: TABLE upozorneni; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.upozorneni TO member;
+
+
+--
+-- Name: FUNCTION my_announcements(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.my_announcements() TO member;
+
+
+--
+-- Name: FUNCTION my_events(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.my_events() TO member;
 
 
 --
@@ -4171,6 +4710,14 @@ GRANT SELECT,USAGE ON SEQUENCE public.aktuality_at_id_seq TO anonymous;
 
 
 --
+-- Name: TABLE attachment; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT ON TABLE public.attachment TO anonymous;
+GRANT ALL ON TABLE public.attachment TO member;
+
+
+--
 -- Name: TABLE dokumenty; Type: ACL; Schema: public; Owner: -
 --
 
@@ -4210,6 +4757,22 @@ GRANT ALL ON TABLE public.galerie_foto TO anonymous;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.galerie_foto_gf_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE location; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT ON TABLE public.location TO anonymous;
+GRANT ALL ON TABLE public.location TO administrator;
+
+
+--
+-- Name: TABLE location_attachment; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT ON TABLE public.location_attachment TO anonymous;
+GRANT ALL ON TABLE public.location_attachment TO administrator;
 
 
 --
@@ -4332,6 +4895,14 @@ GRANT SELECT,USAGE ON SEQUENCE public.permissions_pe_id_seq TO anonymous;
 
 
 --
+-- Name: TABLE person; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT ON TABLE public.person TO anonymous;
+GRANT ALL ON TABLE public.person TO administrator;
+
+
+--
 -- Name: SEQUENCE platby_category_group_pcg_id_seq; Type: ACL; Schema: public; Owner: -
 --
 
@@ -4388,6 +4959,21 @@ GRANT SELECT,USAGE ON SEQUENCE public.platby_raw_pr_id_seq TO anonymous;
 
 
 --
+-- Name: TABLE room; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.room TO anonymous;
+
+
+--
+-- Name: TABLE room_attachment; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT ON TABLE public.room_attachment TO anonymous;
+GRANT ALL ON TABLE public.room_attachment TO administrator;
+
+
+--
 -- Name: SEQUENCE rozpis_item_ri_id_seq; Type: ACL; Schema: public; Owner: -
 --
 
@@ -4409,10 +4995,19 @@ GRANT SELECT,USAGE ON SEQUENCE public.skupiny_s_id_seq TO anonymous;
 
 
 --
--- Name: TABLE upozorneni; Type: ACL; Schema: public; Owner: -
+-- Name: TABLE tenant_attachment; Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE public.upozorneni TO member;
+GRANT SELECT ON TABLE public.tenant_attachment TO anonymous;
+GRANT ALL ON TABLE public.tenant_attachment TO administrator;
+
+
+--
+-- Name: TABLE tenant_person; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT ON TABLE public.tenant_person TO anonymous;
+GRANT ALL ON TABLE public.tenant_person TO administrator;
 
 
 --

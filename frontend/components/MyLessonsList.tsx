@@ -52,19 +52,19 @@ export const MyLessonsList: React.FC = () => {
 
   return <div className="flex flex-col items-center">
     <h4 className="text-2xl tracking-wide">Moje lekce</h4>
-    <div className=" text-stone-700">
-      {fullDateFormatter.formatRange(startDate, lastDayOfWeek(startDate))}
-    </div>
-    <div className="flex items-center text-stone-700">
-      <button className="button button-icon" onClick={setPrevWeek}>
+    <div className="flex items-center">
+      <button className="button button-icon text-stone-500" onClick={setPrevWeek}>
         <ChevronLeft />
       </button>
-      <div className="text-lg">
-        {getWeek(startDate, { weekStartsOn: 2 })}. týden
+      <div className="text-stone-500">
+        {fullDateFormatter.formatRange(startDate, lastDayOfWeek(startDate))}
       </div>
-      <button className="button button-icon" onClick={setNextWeek}>
+      <button className="button button-icon text-stone-500" onClick={setNextWeek}>
         <ChevronRight />
       </button>
+    </div>
+    <div className="text-lg">
+      {getWeek(startDate, { weekStartsOn: 2 })}. týden
     </div>
 
     {!isLoading && !data?.myLessons?.nodes?.length && (

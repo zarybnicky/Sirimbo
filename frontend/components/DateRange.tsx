@@ -4,7 +4,7 @@ import { DatePickerCalendar, DateRangePicker, DatePicker } from "@axel-dev/react
 import '@axel-dev/react-nice-dates/build/style.css';
 import cs from 'date-fns/locale/cs';
 
-type DateRange = [Date | undefined, Date | undefined];
+export type DateRange = [Date | undefined, Date | undefined];
 
 type DateRangeInputProps<T extends FieldValues> = {
   validation?: ControllerProps['rules'];

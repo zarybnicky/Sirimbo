@@ -10,7 +10,7 @@ export const Pagination = ({ total, limit, page, setPage }: {
 }) => {
   return <ReactPaginate
     breakLabel="..."
-    containerClassName="flex flex-wrap gap-1 mb-4"
+    containerClassName="flex flex-wrap gap-1 mb-4 text-red-500"
     breakClassName="flex mx-1 items-center"
     previousLinkClassName="w-6 h-10 inline-flex items-center justify-center rounded-full"
     nextLinkClassName="w-6 h-10 inline-flex items-center justify-center rounded-full"

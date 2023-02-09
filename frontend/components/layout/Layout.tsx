@@ -18,7 +18,7 @@ export const Layout: React.FC<{
       {list ? <>
         <div className={classNames(
           "grow",
-          isDetail ? 'hidden lg:flex flex-col' : 'max-h-screen min-h-screen w-full',
+          isDetail ? 'hidden lg:flex lg:grow-0 flex-col' : 'max-h-screen min-h-screen w-full',
         )}>
           {list}
         </div>

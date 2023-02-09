@@ -1,15 +1,17 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextAreaElement, TextFieldElement } from 'components/TextField';
-import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { UpozorneniInput } from 'lib/graphql';
 import { AnnouncementFragment, useAnnouncementListQuery, useCreateAnnouncementMutation, useUpdateAnnouncementMutation } from 'lib/graphql/Announcement';
 import { useQueryClient } from '@tanstack/react-query';
+import { DateRange, DateRangeInput } from './DateRange';
 
-type FormProps = Pick<UpozorneniInput, 'upNadpis' | 'upText' | 'upLock'>;
+type FormProps = Pick<UpozorneniInput, 'upNadpis' | 'upText'> & {
+  schedule: DateRange;
+};
 
 export const AnnouncementForm: React.FC<{
   data?: AnnouncementFragment;
@@ -26,7 +28,10 @@ export const AnnouncementForm: React.FC<{
     defaultValues: {
       upNadpis: data?.upNadpis,
       upText: data?.upText,
-      upLock: data?.upLock,
+      schedule: [
+        data?.scheduledSince ? new Date(data.scheduledSince) : undefined,
+        data?.scheduledUntil ? new Date(data.scheduledUntil) : undefined,
+      ],
     },
   });
 
@@ -34,7 +39,14 @@ export const AnnouncementForm: React.FC<{
     if (data) {
       await doUpdate({ id: data.id, patch: values });
     } else {
-      await doCreate({ input: values });
+      await doCreate({
+        input: {
+          upNadpis: values.upNadpis,
+          upText: values.upText,
+          scheduledSince: values.schedule[0]?.toISOString(),
+          scheduledUntil: values.schedule[1]?.toDateString(),
+        }
+      });
     }
   });
 
@@ -43,7 +55,7 @@ export const AnnouncementForm: React.FC<{
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="upNadpis" label="Nadpis" required />
       <TextAreaElement control={control} name="upText" label="Text" rows={20} required />
-      <CheckboxElement control={control} name="upLock" value="1" label="Uzamčená" />
+      <DateRangeInput control={control} name="schedule" label="Publikováno od/do" />
       <SubmitButton loading={onSubmit.loading} />
     </form>
   );

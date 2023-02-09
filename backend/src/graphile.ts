@@ -1,8 +1,19 @@
 import express from 'express';
-import { makePluginHook, Build, PostGraphileOptions } from 'postgraphile';
+import { makePluginHook, Build, PostGraphileOptions, makeExtendSchemaPlugin } from 'postgraphile';
 import operationHooks, { AddOperationHookFn, OperationHookGenerator } from '@graphile/operation-hooks';
 import path from 'path';
+import * as Minio from 'minio';
 import { pool } from './db';
+import { gql } from 'graphile-utils';
+
+const minioClient = new Minio.Client({
+  endPoint: process.env.MINIO_DOMAIN!,
+  port: parseInt(process.env.MINIO_PORT!, 10),
+  accessKey: process.env.MINIO_ACCESS_KEY!,
+  secretKey: process.env.MINIO_SECRET_KEY!,
+  useSSL: false,
+  pathStyle: true,
+});
 
 const useAuthCredentials: (build: Build) => OperationHookGenerator = _ => ctx => {
   if (ctx.scope.isRootMutation && ctx.scope.pgFieldIntrospection?.name === "login") {
@@ -97,6 +108,36 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
         return _;
       });
     },
+    makeExtendSchemaPlugin(_build => ({
+      typeDefs: gql`
+type UploadFilePayload {
+  uploadUrl: String!
+  objectName: String!
+}
+
+extend type Mutation {
+  uploadFile(fileName: String!): UploadFilePayload!
+  downloadFile(id: Int!): String!
+}`,
+      resolvers: {
+        Mutation: {
+          uploadFile: async (_query, { fileName }, context) => {
+            // check auth
+            const objectName = `${Date.now()}-${fileName}`;
+            await context.pgClient.query('INSERT INTO attachment (object_name) ($1)', [objectName]);
+            const uploadUrl = await minioClient.presignedPutObject('public', objectName);
+            return { objectName, uploadUrl };
+          },
+          downloadFile: async (_query, { id }, context) => {
+            // check auth
+            const { rows: [file] } = await context.pgClient.query(
+              'SELECT * FROM attachment where id=$1', [id],
+            );
+            return await minioClient.presignedGetObject('public', file.object_name);
+          },
+        },
+      },
+    })),
   ],
 };
 

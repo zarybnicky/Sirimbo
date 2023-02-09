@@ -13,7 +13,7 @@ export const LessonButton = ({ schedule, lesson, showTrainer }: {
   schedule: ScheduleBasicFragment;
   showTrainer?: boolean;
 }) => {
-  const { user, couple: coupleData } = useAuth();
+  const { user } = useAuth();
   const perms = usePermissions();
   const [isOpen, setIsOpen] = React.useState(false);
   const queryClient = useQueryClient();

@@ -8,14 +8,11 @@ yarn2nix-moretea.mkYarnPackage {
   packageJSON = ./package.json;
   yarnLock = ../yarn.lock;
   installPhase = ''
-    # Inline watch-fixtures.sql
-    sed -i \
-      -e '/readFile(WATCH_FIXTURES_PATH,/d' \
-      -e 's|const WATCH_FIXTURES_PATH.*|var watchSqlInner = require("!!raw-loader!../../res/watch-fixtures.sql").default;|' \
-      node_modules/graphile-build-pg/node8plus/plugins/PgIntrospectionPlugin.js
     ${ncc}/bin/ncc build ./deps/sirimbo-backend/src/index.ts
+    sed -i '/\/nix\/store/d' dist/index.js
     mkdir -p $out/bin
     cp dist/index.js $out/bin/sirimbo-backend
+    cp node_modules/graphile-build-pg/res/watch-fixtures.sql $out/bin/
     cp -r ./deps/sirimbo-backend/src/tasks/templates $out/bin/templates
     cp -r ./node_modules/graphile-worker/sql $out/bin/sql
   '';

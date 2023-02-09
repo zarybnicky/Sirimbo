@@ -9,7 +9,8 @@ import { formatFullDate, fullDateFormatter } from 'lib/format-date';
 export function MyAnnouncements() {
   const [limit] = React.useState(3);
   const [page, setPage] = React.useState(1);
-  const { data, isLoading } = useAnnouncementListQuery({ limit, offset: (page - 1) * limit });
+  const { data } = useAnnouncementListQuery({ limit, offset: (page - 1) * limit });
+
   if (!data?.upozornenis) {
     // react-skeleton
     return null;
@@ -19,11 +20,15 @@ export function MyAnnouncements() {
   const hasNext = total >= page * limit;
   const hasPrev = 0 < (page - 1) * limit;
 
-  return <div>
-    <h4 className="ml-6 text-2xl tracking-wide">Nástěnka</h4>
+  return <div className="flex flex-col items-center">
+    <h4 className="text-2xl tracking-wide">Nástěnka</h4>
     <div className="flex items-center mb-4">
-      {hasPrev && (
+      {hasPrev ? (
         <button className="button button-icon text-stone-500" onClick={() => setPage(page - 1)}>
+          <ChevronLeft />
+        </button>
+      ) : (
+        <button className="button button-icon text-stone-300">
           <ChevronLeft />
         </button>
       )}
@@ -32,17 +37,19 @@ export function MyAnnouncements() {
         {nodes.length > 0 ? fullDateFormatter.formatRange(new Date(nodes[0]!.upTimestampAdd), new Date(nodes[nodes.length - 1]!.upTimestampAdd)) : ''}
       </span>
 
-      {hasNext && (
+      {hasNext ? (
         <button className="button button-icon text-stone-500" onClick={() => setPage(page + 1)}>
+          <ChevronRight />
+        </button>
+      ) : (
+        <button className="button button-icon text-stone-300">
           <ChevronRight />
         </button>
       )}
     </div>
 
     {nodes.map((a) => <Card key={a.id} className="mb-4">
-      <h2 className="text-2xl">
-        {a.upNadpis}
-      </h2>
+      <h2 className="text-2xl">{a.upNadpis}</h2>
       <div className="text-stone-500 flex justify-between flex-wrap mb-4">
         <div>
           {[

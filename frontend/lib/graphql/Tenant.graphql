@@ -1,0 +1,18 @@
+fragment Tenant on Tenant {
+  id
+  name
+  memberInfo
+  locationsByTenant {
+    nodes {
+      id
+      name
+      description
+    }
+  }
+}
+
+query CurrentTenant {
+  getCurrentTenant {
+    ...Tenant
+  }
+}

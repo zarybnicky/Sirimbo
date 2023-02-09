@@ -145,6 +145,7 @@ type AkceItem implements Node {
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
+  notes: String!
 
   """Reads a single `User` that is related to this `AkceItem`."""
   userByAiUser: User
@@ -166,6 +167,9 @@ input AkceItemCondition {
 
   """Checks for equality with the object’s `aiUser` field."""
   aiUser: BigInt
+
+  """Checks for equality with the object’s `notes` field."""
+  notes: String
 }
 
 """An input for mutations affecting `AkceItem`"""
@@ -174,6 +178,7 @@ input AkceItemInput {
   aiIdRodic: BigInt!
   aiRokNarozeni: Int!
   aiUser: BigInt!
+  notes: String
 }
 
 """
@@ -184,6 +189,7 @@ input AkceItemPatch {
   aiIdRodic: BigInt
   aiRokNarozeni: Int
   aiUser: BigInt
+  notes: String
 }
 
 """A connection to a list of `AkceItem` values."""
@@ -223,6 +229,8 @@ enum AkceItemsOrderBy {
   AI_USER_ASC
   AI_USER_DESC
   NATURAL
+  NOTES_ASC
+  NOTES_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -440,6 +448,184 @@ input AktualityPatch {
   atTimestampAdd: Datetime
 }
 
+type Attachment implements Node {
+  """Reads and enables pagination through a set of `LocationAttachment`."""
+  locationAttachmentsByObjectName(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LocationAttachmentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `LocationAttachment`."""
+    orderBy: [LocationAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): LocationAttachmentsConnection!
+
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  objectName: String!
+  previewObjectName: String
+
+  """Reads and enables pagination through a set of `RoomAttachment`."""
+  roomAttachmentsByObjectName(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RoomAttachmentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `RoomAttachment`."""
+    orderBy: [RoomAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RoomAttachmentsConnection!
+
+  """Reads and enables pagination through a set of `TenantAttachment`."""
+  tenantAttachmentsByObjectName(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantAttachmentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `TenantAttachment`."""
+    orderBy: [TenantAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantAttachmentsConnection!
+  uploadedAt: Datetime!
+  uploadedBy: BigInt
+
+  """Reads a single `User` that is related to this `Attachment`."""
+  userByUploadedBy: User
+}
+
+"""
+A condition to be used against `Attachment` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input AttachmentCondition {
+  """Checks for equality with the object’s `objectName` field."""
+  objectName: String
+
+  """Checks for equality with the object’s `previewObjectName` field."""
+  previewObjectName: String
+
+  """Checks for equality with the object’s `uploadedAt` field."""
+  uploadedAt: Datetime
+
+  """Checks for equality with the object’s `uploadedBy` field."""
+  uploadedBy: BigInt
+}
+
+"""An input for mutations affecting `Attachment`"""
+input AttachmentInput {
+  objectName: String!
+  previewObjectName: String
+  uploadedAt: Datetime
+  uploadedBy: BigInt
+}
+
+"""
+Represents an update to a `Attachment`. Fields that are set will be updated.
+"""
+input AttachmentPatch {
+  objectName: String
+  previewObjectName: String
+  uploadedAt: Datetime
+  uploadedBy: BigInt
+}
+
+"""A connection to a list of `Attachment` values."""
+type AttachmentsConnection {
+  """
+  A list of edges which contains the `Attachment` and cursor to aid in pagination.
+  """
+  edges: [AttachmentsEdge!]!
+
+  """A list of `Attachment` objects."""
+  nodes: [Attachment!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Attachment` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Attachment` edge in the connection."""
+type AttachmentsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Attachment` at the end of the edge."""
+  node: Attachment!
+}
+
+"""Methods to use when ordering `Attachment`."""
+enum AttachmentsOrderBy {
+  NATURAL
+  OBJECT_NAME_ASC
+  OBJECT_NAME_DESC
+  PREVIEW_OBJECT_NAME_ASC
+  PREVIEW_OBJECT_NAME_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  UPLOADED_AT_ASC
+  UPLOADED_AT_DESC
+  UPLOADED_BY_ASC
+  UPLOADED_BY_DESC
+}
+
 """
 A floating point number that requires more precision than IEEE 754 binary 64
 """
@@ -500,6 +686,55 @@ type CancelLessonPayload {
   """
   query: Query
   rozpisItems: [RozpisItem!]
+}
+
+"""All input for the `cancelParticipation` mutation."""
+input CancelParticipationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  eventId: BigInt!
+}
+
+"""The output of our `cancelParticipation` mutation."""
+type CancelParticipationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `changePassword` mutation."""
+input ChangePasswordInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  newPass: String!
+  oldPass: String!
+}
+
+"""The output of our `changePassword` mutation."""
+type ChangePasswordPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
 }
 
 """All input for the `confirmUser` mutation."""
@@ -645,6 +880,44 @@ type CreateAktualityPayload {
   userByAtKdo: User
 }
 
+"""All input for the create `Attachment` mutation."""
+input CreateAttachmentInput {
+  """The `Attachment` to be created by this mutation."""
+  attachment: AttachmentInput!
+
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+}
+
+"""The output of our create `Attachment` mutation."""
+type CreateAttachmentPayload {
+  """The `Attachment` that was created by this mutation."""
+  attachment: Attachment
+
+  """An edge for our `Attachment`. May be used by Relay 1."""
+  attachmentEdge(
+    """The method to use when ordering `Attachment`."""
+    orderBy: [AttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AttachmentsEdge
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `User` that is related to this `Attachment`."""
+  userByUploadedBy: User
+}
+
 """All input for the `createCouple` mutation."""
 input CreateCoupleInput {
   """
@@ -783,6 +1056,89 @@ type CreateGalerieFotoPayload {
 
   """Reads a single `User` that is related to this `GalerieFoto`."""
   userByGfKdo: User
+}
+
+"""All input for the create `LocationAttachment` mutation."""
+input CreateLocationAttachmentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `LocationAttachment` to be created by this mutation."""
+  locationAttachment: LocationAttachmentInput!
+}
+
+"""The output of our create `LocationAttachment` mutation."""
+type CreateLocationAttachmentPayload {
+  """
+  Reads a single `Attachment` that is related to this `LocationAttachment`.
+  """
+  attachmentByObjectName: Attachment
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Reads a single `Location` that is related to this `LocationAttachment`.
+  """
+  location: Location
+
+  """The `LocationAttachment` that was created by this mutation."""
+  locationAttachment: LocationAttachment
+
+  """An edge for our `LocationAttachment`. May be used by Relay 1."""
+  locationAttachmentEdge(
+    """The method to use when ordering `LocationAttachment`."""
+    orderBy: [LocationAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): LocationAttachmentsEdge
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the create `Location` mutation."""
+input CreateLocationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Location` to be created by this mutation."""
+  location: LocationInput!
+}
+
+"""The output of our create `Location` mutation."""
+type CreateLocationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Location` that was created by this mutation."""
+  location: Location
+
+  """An edge for our `Location`. May be used by Relay 1."""
+  locationEdge(
+    """The method to use when ordering `Location`."""
+    orderBy: [LocationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): LocationsEdge
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `Location`."""
+  tenantByTenant: Tenant
 }
 
 """All input for the create `Nabidka` mutation."""
@@ -934,6 +1290,32 @@ type CreateParameterPayload {
   query: Query
 }
 
+"""All input for the `createParticipation` mutation."""
+input CreateParticipationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  eventId: BigInt!
+  myNotes: String!
+  yearOfBirth: Int!
+}
+
+"""The output of our `createParticipation` mutation."""
+type CreateParticipationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
 """All input for the create `Pary` mutation."""
 input CreateParyInput {
   """
@@ -1047,6 +1429,41 @@ type CreatePermissionPayload {
     """The method to use when ordering `Permission`."""
     orderBy: [PermissionsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PermissionsEdge
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the create `Person` mutation."""
+input CreatePersonInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Person` to be created by this mutation."""
+  person: PersonInput!
+}
+
+"""The output of our create `Person` mutation."""
+type CreatePersonPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Person` that was created by this mutation."""
+  person: Person
+
+  """An edge for our `Person`. May be used by Relay 1."""
+  personEdge(
+    """The method to use when ordering `Person`."""
+    orderBy: [PeopleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PeopleEdge
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -1291,6 +1708,85 @@ type CreatePlatbyRawPayload {
   query: Query
 }
 
+"""All input for the create `RoomAttachment` mutation."""
+input CreateRoomAttachmentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `RoomAttachment` to be created by this mutation."""
+  roomAttachment: RoomAttachmentInput!
+}
+
+"""The output of our create `RoomAttachment` mutation."""
+type CreateRoomAttachmentPayload {
+  """Reads a single `Attachment` that is related to this `RoomAttachment`."""
+  attachmentByObjectName: Attachment
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Room` that is related to this `RoomAttachment`."""
+  room: Room
+
+  """The `RoomAttachment` that was created by this mutation."""
+  roomAttachment: RoomAttachment
+
+  """An edge for our `RoomAttachment`. May be used by Relay 1."""
+  roomAttachmentEdge(
+    """The method to use when ordering `RoomAttachment`."""
+    orderBy: [RoomAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RoomAttachmentsEdge
+}
+
+"""All input for the create `Room` mutation."""
+input CreateRoomInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Room` to be created by this mutation."""
+  room: RoomInput!
+}
+
+"""The output of our create `Room` mutation."""
+type CreateRoomPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Location` that is related to this `Room`."""
+  locationByLocation: Location
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """The `Room` that was created by this mutation."""
+  room: Room
+
+  """An edge for our `Room`. May be used by Relay 1."""
+  roomEdge(
+    """The method to use when ordering `Room`."""
+    orderBy: [RoomsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RoomsEdge
+}
+
 """All input for the create `Rozpi` mutation."""
 input CreateRozpiInput {
   """
@@ -1441,6 +1937,125 @@ type CreateSkupinyPayload {
     """The method to use when ordering `Skupiny`."""
     orderBy: [SkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
   ): SkupiniesEdge
+}
+
+"""All input for the create `TenantAttachment` mutation."""
+input CreateTenantAttachmentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `TenantAttachment` to be created by this mutation."""
+  tenantAttachment: TenantAttachmentInput!
+}
+
+"""The output of our create `TenantAttachment` mutation."""
+type CreateTenantAttachmentPayload {
+  """
+  Reads a single `Attachment` that is related to this `TenantAttachment`.
+  """
+  attachmentByObjectName: Attachment
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `TenantAttachment`."""
+  tenant: Tenant
+
+  """The `TenantAttachment` that was created by this mutation."""
+  tenantAttachment: TenantAttachment
+
+  """An edge for our `TenantAttachment`. May be used by Relay 1."""
+  tenantAttachmentEdge(
+    """The method to use when ordering `TenantAttachment`."""
+    orderBy: [TenantAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantAttachmentsEdge
+}
+
+"""All input for the create `Tenant` mutation."""
+input CreateTenantInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Tenant` to be created by this mutation."""
+  tenant: TenantInput!
+}
+
+"""The output of our create `Tenant` mutation."""
+type CreateTenantPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """The `Tenant` that was created by this mutation."""
+  tenant: Tenant
+
+  """An edge for our `Tenant`. May be used by Relay 1."""
+  tenantEdge(
+    """The method to use when ordering `Tenant`."""
+    orderBy: [TenantsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantsEdge
+}
+
+"""All input for the create `TenantPerson` mutation."""
+input CreateTenantPersonInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `TenantPerson` to be created by this mutation."""
+  tenantPerson: TenantPersonInput!
+}
+
+"""The output of our create `TenantPerson` mutation."""
+type CreateTenantPersonPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Person` that is related to this `TenantPerson`."""
+  person: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `TenantPerson`."""
+  tenant: Tenant
+
+  """The `TenantPerson` that was created by this mutation."""
+  tenantPerson: TenantPerson
+
+  """An edge for our `TenantPerson`. May be used by Relay 1."""
+  tenantPersonEdge(
+    """The method to use when ordering `TenantPerson`."""
+    orderBy: [TenantPeopleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantPeopleEdge
 }
 
 """All input for the create `Upozorneni` mutation."""
@@ -1738,6 +2353,18 @@ input DeleteAkceInput {
   clientMutationId: String
 }
 
+"""All input for the `deleteAkceItemByAiUserAndAiIdRodic` mutation."""
+input DeleteAkceItemByAiUserAndAiIdRodicInput {
+  aiIdRodic: BigInt!
+  aiUser: BigInt!
+
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+}
+
 """All input for the `deleteAkceItemByNodeId` mutation."""
 input DeleteAkceItemByNodeIdInput {
   """
@@ -1870,6 +2497,57 @@ type DeleteAktualityPayload {
 
   """Reads a single `User` that is related to this `Aktuality`."""
   userByAtKdo: User
+}
+
+"""All input for the `deleteAttachmentByNodeId` mutation."""
+input DeleteAttachmentByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Attachment` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteAttachment` mutation."""
+input DeleteAttachmentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  objectName: String!
+}
+
+"""The output of our delete `Attachment` mutation."""
+type DeleteAttachmentPayload {
+  """The `Attachment` that was deleted by this mutation."""
+  attachment: Attachment
+
+  """An edge for our `Attachment`. May be used by Relay 1."""
+  attachmentEdge(
+    """The method to use when ordering `Attachment`."""
+    orderBy: [AttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AttachmentsEdge
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  deletedAttachmentNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `User` that is related to this `Attachment`."""
+  userByUploadedBy: User
 }
 
 """All input for the `deleteDokumentyByNodeId` mutation."""
@@ -2023,6 +2701,116 @@ type DeleteGalerieFotoPayload {
 
   """Reads a single `User` that is related to this `GalerieFoto`."""
   userByGfKdo: User
+}
+
+"""All input for the `deleteLocationAttachmentByNodeId` mutation."""
+input DeleteLocationAttachmentByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `LocationAttachment` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteLocationAttachment` mutation."""
+input DeleteLocationAttachmentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  locationId: BigInt!
+  objectName: String!
+}
+
+"""The output of our delete `LocationAttachment` mutation."""
+type DeleteLocationAttachmentPayload {
+  """
+  Reads a single `Attachment` that is related to this `LocationAttachment`.
+  """
+  attachmentByObjectName: Attachment
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  deletedLocationAttachmentNodeId: ID
+
+  """
+  Reads a single `Location` that is related to this `LocationAttachment`.
+  """
+  location: Location
+
+  """The `LocationAttachment` that was deleted by this mutation."""
+  locationAttachment: LocationAttachment
+
+  """An edge for our `LocationAttachment`. May be used by Relay 1."""
+  locationAttachmentEdge(
+    """The method to use when ordering `LocationAttachment`."""
+    orderBy: [LocationAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): LocationAttachmentsEdge
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `deleteLocationByNodeId` mutation."""
+input DeleteLocationByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Location` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteLocation` mutation."""
+input DeleteLocationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
+"""The output of our delete `Location` mutation."""
+type DeleteLocationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  deletedLocationNodeId: ID
+
+  """The `Location` that was deleted by this mutation."""
+  location: Location
+
+  """An edge for our `Location`. May be used by Relay 1."""
+  locationEdge(
+    """The method to use when ordering `Location`."""
+    orderBy: [LocationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): LocationsEdge
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `Location`."""
+  tenantByTenant: Tenant
 }
 
 """All input for the `deleteNabidkaByNodeId` mutation."""
@@ -2330,6 +3118,54 @@ type DeletePermissionPayload {
     """The method to use when ordering `Permission`."""
     orderBy: [PermissionsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PermissionsEdge
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `deletePersonByNodeId` mutation."""
+input DeletePersonByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Person` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deletePerson` mutation."""
+input DeletePersonInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
+"""The output of our delete `Person` mutation."""
+type DeletePersonPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  deletedPersonNodeId: ID
+
+  """The `Person` that was deleted by this mutation."""
+  person: Person
+
+  """An edge for our `Person`. May be used by Relay 1."""
+  personEdge(
+    """The method to use when ordering `Person`."""
+    orderBy: [PeopleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PeopleEdge
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -2652,6 +3488,112 @@ type DeletePlatbyRawPayload {
   query: Query
 }
 
+"""All input for the `deleteRoomAttachmentByNodeId` mutation."""
+input DeleteRoomAttachmentByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `RoomAttachment` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteRoomAttachment` mutation."""
+input DeleteRoomAttachmentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  objectName: String!
+  roomId: BigInt!
+}
+
+"""The output of our delete `RoomAttachment` mutation."""
+type DeleteRoomAttachmentPayload {
+  """Reads a single `Attachment` that is related to this `RoomAttachment`."""
+  attachmentByObjectName: Attachment
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  deletedRoomAttachmentNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Room` that is related to this `RoomAttachment`."""
+  room: Room
+
+  """The `RoomAttachment` that was deleted by this mutation."""
+  roomAttachment: RoomAttachment
+
+  """An edge for our `RoomAttachment`. May be used by Relay 1."""
+  roomAttachmentEdge(
+    """The method to use when ordering `RoomAttachment`."""
+    orderBy: [RoomAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RoomAttachmentsEdge
+}
+
+"""All input for the `deleteRoomByNodeId` mutation."""
+input DeleteRoomByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Room` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteRoom` mutation."""
+input DeleteRoomInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
+"""The output of our delete `Room` mutation."""
+type DeleteRoomPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  deletedRoomNodeId: ID
+
+  """Reads a single `Location` that is related to this `Room`."""
+  locationByLocation: Location
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """The `Room` that was deleted by this mutation."""
+  room: Room
+
+  """An edge for our `Room`. May be used by Relay 1."""
+  roomEdge(
+    """The method to use when ordering `Room`."""
+    orderBy: [RoomsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RoomsEdge
+}
+
 """All input for the `deleteRozpiByNodeId` mutation."""
 input DeleteRozpiByNodeIdInput {
   """
@@ -2854,6 +3796,166 @@ type DeleteSkupinyPayload {
     """The method to use when ordering `Skupiny`."""
     orderBy: [SkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
   ): SkupiniesEdge
+}
+
+"""All input for the `deleteTenantAttachmentByNodeId` mutation."""
+input DeleteTenantAttachmentByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `TenantAttachment` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteTenantAttachment` mutation."""
+input DeleteTenantAttachmentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  objectName: String!
+  tenantId: BigInt!
+}
+
+"""The output of our delete `TenantAttachment` mutation."""
+type DeleteTenantAttachmentPayload {
+  """
+  Reads a single `Attachment` that is related to this `TenantAttachment`.
+  """
+  attachmentByObjectName: Attachment
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  deletedTenantAttachmentNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `TenantAttachment`."""
+  tenant: Tenant
+
+  """The `TenantAttachment` that was deleted by this mutation."""
+  tenantAttachment: TenantAttachment
+
+  """An edge for our `TenantAttachment`. May be used by Relay 1."""
+  tenantAttachmentEdge(
+    """The method to use when ordering `TenantAttachment`."""
+    orderBy: [TenantAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantAttachmentsEdge
+}
+
+"""All input for the `deleteTenantByNodeId` mutation."""
+input DeleteTenantByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Tenant` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteTenant` mutation."""
+input DeleteTenantInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
+"""The output of our delete `Tenant` mutation."""
+type DeleteTenantPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  deletedTenantNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """The `Tenant` that was deleted by this mutation."""
+  tenant: Tenant
+
+  """An edge for our `Tenant`. May be used by Relay 1."""
+  tenantEdge(
+    """The method to use when ordering `Tenant`."""
+    orderBy: [TenantsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantsEdge
+}
+
+"""All input for the `deleteTenantPersonByNodeId` mutation."""
+input DeleteTenantPersonByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `TenantPerson` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteTenantPerson` mutation."""
+input DeleteTenantPersonInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  personId: BigInt!
+  tenantId: BigInt!
+}
+
+"""The output of our delete `TenantPerson` mutation."""
+type DeleteTenantPersonPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  deletedTenantPersonNodeId: ID
+
+  """Reads a single `Person` that is related to this `TenantPerson`."""
+  person: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `TenantPerson`."""
+  tenant: Tenant
+
+  """The `TenantPerson` that was deleted by this mutation."""
+  tenantPerson: TenantPerson
+
+  """An edge for our `TenantPerson`. May be used by Relay 1."""
+  tenantPersonEdge(
+    """The method to use when ordering `TenantPerson`."""
+    orderBy: [TenantPeopleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantPeopleEdge
 }
 
 """All input for the `deleteUpozorneniByNodeId` mutation."""
@@ -3573,10 +4675,250 @@ enum GalerieFotosOrderBy {
   PRIMARY_KEY_DESC
 }
 
+enum GenderType {
+  MEN
+  UNSPECIFIED
+  WOMAN
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
 scalar JSON
+
+type Location implements Node {
+  description: JSON!
+  id: BigInt!
+
+  """Reads and enables pagination through a set of `LocationAttachment`."""
+  locationAttachments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LocationAttachmentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `LocationAttachment`."""
+    orderBy: [LocationAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): LocationAttachmentsConnection!
+  name: String!
+
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+
+  """Reads and enables pagination through a set of `Room`."""
+  roomsByLocation(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RoomCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Room`."""
+    orderBy: [RoomsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RoomsConnection!
+  tenant: BigInt
+
+  """Reads a single `Tenant` that is related to this `Location`."""
+  tenantByTenant: Tenant
+}
+
+type LocationAttachment implements Node {
+  """
+  Reads a single `Attachment` that is related to this `LocationAttachment`.
+  """
+  attachmentByObjectName: Attachment
+
+  """
+  Reads a single `Location` that is related to this `LocationAttachment`.
+  """
+  location: Location
+  locationId: BigInt!
+
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  objectName: String!
+}
+
+"""
+A condition to be used against `LocationAttachment` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input LocationAttachmentCondition {
+  """Checks for equality with the object’s `locationId` field."""
+  locationId: BigInt
+
+  """Checks for equality with the object’s `objectName` field."""
+  objectName: String
+}
+
+"""An input for mutations affecting `LocationAttachment`"""
+input LocationAttachmentInput {
+  locationId: BigInt!
+  objectName: String!
+}
+
+"""
+Represents an update to a `LocationAttachment`. Fields that are set will be updated.
+"""
+input LocationAttachmentPatch {
+  locationId: BigInt
+  objectName: String
+}
+
+"""A connection to a list of `LocationAttachment` values."""
+type LocationAttachmentsConnection {
+  """
+  A list of edges which contains the `LocationAttachment` and cursor to aid in pagination.
+  """
+  edges: [LocationAttachmentsEdge!]!
+
+  """A list of `LocationAttachment` objects."""
+  nodes: [LocationAttachment!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `LocationAttachment` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `LocationAttachment` edge in the connection."""
+type LocationAttachmentsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `LocationAttachment` at the end of the edge."""
+  node: LocationAttachment!
+}
+
+"""Methods to use when ordering `LocationAttachment`."""
+enum LocationAttachmentsOrderBy {
+  LOCATION_ID_ASC
+  LOCATION_ID_DESC
+  NATURAL
+  OBJECT_NAME_ASC
+  OBJECT_NAME_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `Location` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input LocationCondition {
+  """Checks for equality with the object’s `description` field."""
+  description: JSON
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `tenant` field."""
+  tenant: BigInt
+}
+
+"""An input for mutations affecting `Location`"""
+input LocationInput {
+  description: JSON!
+  id: BigInt
+  name: String!
+  tenant: BigInt
+}
+
+"""
+Represents an update to a `Location`. Fields that are set will be updated.
+"""
+input LocationPatch {
+  description: JSON
+  id: BigInt
+  name: String
+  tenant: BigInt
+}
+
+"""A connection to a list of `Location` values."""
+type LocationsConnection {
+  """
+  A list of edges which contains the `Location` and cursor to aid in pagination.
+  """
+  edges: [LocationsEdge!]!
+
+  """A list of `Location` objects."""
+  nodes: [Location!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Location` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Location` edge in the connection."""
+type LocationsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Location` at the end of the edge."""
+  node: Location!
+}
+
+"""Methods to use when ordering `Location`."""
+enum LocationsOrderBy {
+  DESCRIPTION_ASC
+  DESCRIPTION_DESC
+  ID_ASC
+  ID_DESC
+  NAME_ASC
+  NAME_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TENANT_ASC
+  TENANT_DESC
+}
 
 """All input for the `login` mutation."""
 input LoginInput {
@@ -3941,6 +5283,18 @@ type Mutation {
     """
     input: CancelLessonInput!
   ): CancelLessonPayload
+  cancelParticipation(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CancelParticipationInput!
+  ): CancelParticipationPayload
+  changePassword(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: ChangePasswordInput!
+  ): ChangePasswordPayload
   confirmUser(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -3971,6 +5325,14 @@ type Mutation {
     """
     input: CreateAktualityInput!
   ): CreateAktualityPayload
+
+  """Creates a single `Attachment`."""
+  createAttachment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateAttachmentInput!
+  ): CreateAttachmentPayload
   createCouple(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -4001,6 +5363,22 @@ type Mutation {
     """
     input: CreateGalerieFotoInput!
   ): CreateGalerieFotoPayload
+
+  """Creates a single `Location`."""
+  createLocation(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateLocationInput!
+  ): CreateLocationPayload
+
+  """Creates a single `LocationAttachment`."""
+  createLocationAttachment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateLocationAttachmentInput!
+  ): CreateLocationAttachmentPayload
 
   """Creates a single `Nabidka`."""
   createNabidka(
@@ -4033,6 +5411,12 @@ type Mutation {
     """
     input: CreateParameterInput!
   ): CreateParameterPayload
+  createParticipation(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateParticipationInput!
+  ): CreateParticipationPayload
 
   """Creates a single `Pary`."""
   createPary(
@@ -4057,6 +5441,14 @@ type Mutation {
     """
     input: CreatePermissionInput!
   ): CreatePermissionPayload
+
+  """Creates a single `Person`."""
+  createPerson(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreatePersonInput!
+  ): CreatePersonPayload
 
   """Creates a single `PlatbyCategory`."""
   createPlatbyCategory(
@@ -4106,6 +5498,22 @@ type Mutation {
     input: CreatePlatbyRawInput!
   ): CreatePlatbyRawPayload
 
+  """Creates a single `Room`."""
+  createRoom(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateRoomInput!
+  ): CreateRoomPayload
+
+  """Creates a single `RoomAttachment`."""
+  createRoomAttachment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateRoomAttachmentInput!
+  ): CreateRoomAttachmentPayload
+
   """Creates a single `Rozpi`."""
   createRozpi(
     """
@@ -4137,6 +5545,30 @@ type Mutation {
     """
     input: CreateSkupinyInput!
   ): CreateSkupinyPayload
+
+  """Creates a single `Tenant`."""
+  createTenant(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateTenantInput!
+  ): CreateTenantPayload
+
+  """Creates a single `TenantAttachment`."""
+  createTenantAttachment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateTenantAttachmentInput!
+  ): CreateTenantAttachmentPayload
+
+  """Creates a single `TenantPerson`."""
+  createTenantPerson(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateTenantPersonInput!
+  ): CreateTenantPersonPayload
 
   """Creates a single `Upozorneni`."""
   createUpozorneni(
@@ -4210,6 +5642,14 @@ type Mutation {
     input: DeleteAkceItemInput!
   ): DeleteAkceItemPayload
 
+  """Deletes a single `AkceItem` using a unique key."""
+  deleteAkceItemByAiUserAndAiIdRodic(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAkceItemByAiUserAndAiIdRodicInput!
+  ): DeleteAkceItemPayload
+
   """Deletes a single `AkceItem` using its globally unique id."""
   deleteAkceItemByNodeId(
     """
@@ -4233,6 +5673,22 @@ type Mutation {
     """
     input: DeleteAktualityByNodeIdInput!
   ): DeleteAktualityPayload
+
+  """Deletes a single `Attachment` using a unique key."""
+  deleteAttachment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAttachmentInput!
+  ): DeleteAttachmentPayload
+
+  """Deletes a single `Attachment` using its globally unique id."""
+  deleteAttachmentByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAttachmentByNodeIdInput!
+  ): DeleteAttachmentPayload
 
   """Deletes a single `Dokumenty` using a unique key."""
   deleteDokumenty(
@@ -4281,6 +5737,38 @@ type Mutation {
     """
     input: DeleteGalerieFotoByNodeIdInput!
   ): DeleteGalerieFotoPayload
+
+  """Deletes a single `Location` using a unique key."""
+  deleteLocation(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLocationInput!
+  ): DeleteLocationPayload
+
+  """Deletes a single `LocationAttachment` using a unique key."""
+  deleteLocationAttachment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLocationAttachmentInput!
+  ): DeleteLocationAttachmentPayload
+
+  """Deletes a single `LocationAttachment` using its globally unique id."""
+  deleteLocationAttachmentByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLocationAttachmentByNodeIdInput!
+  ): DeleteLocationAttachmentPayload
+
+  """Deletes a single `Location` using its globally unique id."""
+  deleteLocationByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLocationByNodeIdInput!
+  ): DeleteLocationPayload
 
   """Deletes a single `Nabidka` using a unique key."""
   deleteNabidka(
@@ -4378,6 +5866,22 @@ type Mutation {
     input: DeletePermissionByNodeIdInput!
   ): DeletePermissionPayload
 
+  """Deletes a single `Person` using a unique key."""
+  deletePerson(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePersonInput!
+  ): DeletePersonPayload
+
+  """Deletes a single `Person` using its globally unique id."""
+  deletePersonByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePersonByNodeIdInput!
+  ): DeletePersonPayload
+
   """Deletes a single `PlatbyCategory` using a unique key."""
   deletePlatbyCategory(
     """
@@ -4474,6 +5978,38 @@ type Mutation {
     input: DeletePlatbyRawByNodeIdInput!
   ): DeletePlatbyRawPayload
 
+  """Deletes a single `Room` using a unique key."""
+  deleteRoom(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRoomInput!
+  ): DeleteRoomPayload
+
+  """Deletes a single `RoomAttachment` using a unique key."""
+  deleteRoomAttachment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRoomAttachmentInput!
+  ): DeleteRoomAttachmentPayload
+
+  """Deletes a single `RoomAttachment` using its globally unique id."""
+  deleteRoomAttachmentByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRoomAttachmentByNodeIdInput!
+  ): DeleteRoomAttachmentPayload
+
+  """Deletes a single `Room` using its globally unique id."""
+  deleteRoomByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRoomByNodeIdInput!
+  ): DeleteRoomPayload
+
   """Deletes a single `Rozpi` using a unique key."""
   deleteRozpi(
     """
@@ -4537,6 +6073,54 @@ type Mutation {
     """
     input: DeleteSkupinyByNodeIdInput!
   ): DeleteSkupinyPayload
+
+  """Deletes a single `Tenant` using a unique key."""
+  deleteTenant(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTenantInput!
+  ): DeleteTenantPayload
+
+  """Deletes a single `TenantAttachment` using a unique key."""
+  deleteTenantAttachment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTenantAttachmentInput!
+  ): DeleteTenantAttachmentPayload
+
+  """Deletes a single `TenantAttachment` using its globally unique id."""
+  deleteTenantAttachmentByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTenantAttachmentByNodeIdInput!
+  ): DeleteTenantAttachmentPayload
+
+  """Deletes a single `Tenant` using its globally unique id."""
+  deleteTenantByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTenantByNodeIdInput!
+  ): DeleteTenantPayload
+
+  """Deletes a single `TenantPerson` using a unique key."""
+  deleteTenantPerson(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTenantPersonInput!
+  ): DeleteTenantPersonPayload
+
+  """Deletes a single `TenantPerson` using its globally unique id."""
+  deleteTenantPersonByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTenantPersonByNodeIdInput!
+  ): DeleteTenantPersonPayload
 
   """Deletes a single `Upozorneni` using a unique key."""
   deleteUpozorneni(
@@ -4633,6 +6217,7 @@ type Mutation {
     """
     input: DeleteVideoSourceByNodeIdInput!
   ): DeleteVideoSourcePayload
+  downloadFile(id: Int!): String!
   fixUnpairedCouples(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -4688,6 +6273,14 @@ type Mutation {
     input: UpdateAkceItemInput!
   ): UpdateAkceItemPayload
 
+  """Updates a single `AkceItem` using a unique key and a patch."""
+  updateAkceItemByAiUserAndAiIdRodic(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAkceItemByAiUserAndAiIdRodicInput!
+  ): UpdateAkceItemPayload
+
   """Updates a single `AkceItem` using its globally unique id and a patch."""
   updateAkceItemByNodeId(
     """
@@ -4711,6 +6304,24 @@ type Mutation {
     """
     input: UpdateAktualityByNodeIdInput!
   ): UpdateAktualityPayload
+
+  """Updates a single `Attachment` using a unique key and a patch."""
+  updateAttachment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAttachmentInput!
+  ): UpdateAttachmentPayload
+
+  """
+  Updates a single `Attachment` using its globally unique id and a patch.
+  """
+  updateAttachmentByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAttachmentByNodeIdInput!
+  ): UpdateAttachmentPayload
 
   """Updates a single `Dokumenty` using a unique key and a patch."""
   updateDokumenty(
@@ -4763,6 +6374,40 @@ type Mutation {
     """
     input: UpdateGalerieFotoByNodeIdInput!
   ): UpdateGalerieFotoPayload
+
+  """Updates a single `Location` using a unique key and a patch."""
+  updateLocation(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLocationInput!
+  ): UpdateLocationPayload
+
+  """Updates a single `LocationAttachment` using a unique key and a patch."""
+  updateLocationAttachment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLocationAttachmentInput!
+  ): UpdateLocationAttachmentPayload
+
+  """
+  Updates a single `LocationAttachment` using its globally unique id and a patch.
+  """
+  updateLocationAttachmentByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLocationAttachmentByNodeIdInput!
+  ): UpdateLocationAttachmentPayload
+
+  """Updates a single `Location` using its globally unique id and a patch."""
+  updateLocationByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLocationByNodeIdInput!
+  ): UpdateLocationPayload
 
   """Updates a single `Nabidka` using a unique key and a patch."""
   updateNabidka(
@@ -4888,6 +6533,22 @@ type Mutation {
     input: UpdatePermissionByNodeIdInput!
   ): UpdatePermissionPayload
 
+  """Updates a single `Person` using a unique key and a patch."""
+  updatePerson(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePersonInput!
+  ): UpdatePersonPayload
+
+  """Updates a single `Person` using its globally unique id and a patch."""
+  updatePersonByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePersonByNodeIdInput!
+  ): UpdatePersonPayload
+
   """Updates a single `PlatbyCategory` using a unique key and a patch."""
   updatePlatbyCategory(
     """
@@ -4994,6 +6655,40 @@ type Mutation {
     input: UpdatePlatbyRawByNodeIdInput!
   ): UpdatePlatbyRawPayload
 
+  """Updates a single `Room` using a unique key and a patch."""
+  updateRoom(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRoomInput!
+  ): UpdateRoomPayload
+
+  """Updates a single `RoomAttachment` using a unique key and a patch."""
+  updateRoomAttachment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRoomAttachmentInput!
+  ): UpdateRoomAttachmentPayload
+
+  """
+  Updates a single `RoomAttachment` using its globally unique id and a patch.
+  """
+  updateRoomAttachmentByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRoomAttachmentByNodeIdInput!
+  ): UpdateRoomAttachmentPayload
+
+  """Updates a single `Room` using its globally unique id and a patch."""
+  updateRoomByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRoomByNodeIdInput!
+  ): UpdateRoomPayload
+
   """Updates a single `Rozpi` using a unique key and a patch."""
   updateRozpi(
     """
@@ -5059,6 +6754,58 @@ type Mutation {
     """
     input: UpdateSkupinyByNodeIdInput!
   ): UpdateSkupinyPayload
+
+  """Updates a single `Tenant` using a unique key and a patch."""
+  updateTenant(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTenantInput!
+  ): UpdateTenantPayload
+
+  """Updates a single `TenantAttachment` using a unique key and a patch."""
+  updateTenantAttachment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTenantAttachmentInput!
+  ): UpdateTenantAttachmentPayload
+
+  """
+  Updates a single `TenantAttachment` using its globally unique id and a patch.
+  """
+  updateTenantAttachmentByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTenantAttachmentByNodeIdInput!
+  ): UpdateTenantAttachmentPayload
+
+  """Updates a single `Tenant` using its globally unique id and a patch."""
+  updateTenantByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTenantByNodeIdInput!
+  ): UpdateTenantPayload
+
+  """Updates a single `TenantPerson` using a unique key and a patch."""
+  updateTenantPerson(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTenantPersonInput!
+  ): UpdateTenantPersonPayload
+
+  """
+  Updates a single `TenantPerson` using its globally unique id and a patch.
+  """
+  updateTenantPersonByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTenantPersonByNodeIdInput!
+  ): UpdateTenantPersonPayload
 
   """Updates a single `Upozorneni` using a unique key and a patch."""
   updateUpozorneni(
@@ -5161,6 +6908,43 @@ type Mutation {
     """
     input: UpdateVideoSourceByNodeIdInput!
   ): UpdateVideoSourcePayload
+  uploadFile(fileName: String!): UploadFilePayload!
+}
+
+"""A `MyEventsRecord` edge in the connection."""
+type MyEventEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `MyEventsRecord` at the end of the edge."""
+  node: MyEventsRecord!
+}
+
+"""A connection to a list of `MyEventsRecord` values."""
+type MyEventsConnection {
+  """
+  A list of edges which contains the `MyEventsRecord` and cursor to aid in pagination.
+  """
+  edges: [MyEventEdge!]!
+
+  """A list of `MyEventsRecord` objects."""
+  nodes: [MyEventsRecord!]!
+
+  """The count of *all* `MyEventsRecord` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""The return type of our `myEvents` query."""
+type MyEventsRecord {
+  hasCapacity: Boolean
+  id: BigInt
+  info: String
+  location: String
+  myNotes: String
+  name: String
+  signedUp: Boolean
+  since: Datetime
+  until: Datetime
 }
 
 type Nabidka implements Node {
@@ -6060,6 +7844,47 @@ enum ParyPSttTrida {
   Z
 }
 
+"""A connection to a list of `Person` values."""
+type PeopleConnection {
+  """
+  A list of edges which contains the `Person` and cursor to aid in pagination.
+  """
+  edges: [PeopleEdge!]!
+
+  """A list of `Person` objects."""
+  nodes: [Person!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Person` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Person` edge in the connection."""
+type PeopleEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Person` at the end of the edge."""
+  node: Person!
+}
+
+"""Methods to use when ordering `Person`."""
+enum PeopleOrderBy {
+  FIRST_NAME_ASC
+  FIRST_NAME_DESC
+  GENDER_ASC
+  GENDER_DESC
+  ID_ASC
+  ID_DESC
+  LAST_NAME_ASC
+  LAST_NAME_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
 type Permission implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -6303,6 +8128,82 @@ enum PermissionsOrderBy {
   PE_USERS_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+}
+
+type Person implements Node {
+  firstName: String!
+  gender: GenderType!
+  id: BigInt!
+  lastName: String!
+
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+
+  """Reads and enables pagination through a set of `TenantPerson`."""
+  tenantPeople(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantPersonCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `TenantPerson`."""
+    orderBy: [TenantPeopleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantPeopleConnection!
+}
+
+"""
+A condition to be used against `Person` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input PersonCondition {
+  """Checks for equality with the object’s `firstName` field."""
+  firstName: String
+
+  """Checks for equality with the object’s `gender` field."""
+  gender: GenderType
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `lastName` field."""
+  lastName: String
+}
+
+"""An input for mutations affecting `Person`"""
+input PersonInput {
+  firstName: String!
+  gender: GenderType!
+  id: BigInt
+  lastName: String!
+}
+
+"""
+Represents an update to a `Person`. Fields that are set will be updated.
+"""
+input PersonPatch {
+  firstName: String
+  gender: GenderType
+  id: BigInt
+  lastName: String
 }
 
 """A connection to a list of `PlatbyCategory` values."""
@@ -7182,6 +9083,7 @@ type Query implements Node {
     nodeId: ID!
   ): Akce
   akceItem(aiId: BigInt!): AkceItem
+  akceItemByAiUserAndAiIdRodic(aiIdRodic: BigInt!, aiUser: BigInt!): AkceItem
 
   """Reads a single `AkceItem` using its globally unique `ID`."""
   akceItemByNodeId(
@@ -7282,6 +9184,44 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `Aktuality`."""
     nodeId: ID!
   ): Aktuality
+  attachment(objectName: String!): Attachment
+
+  """Reads a single `Attachment` using its globally unique `ID`."""
+  attachmentByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `Attachment`.
+    """
+    nodeId: ID!
+  ): Attachment
+
+  """Reads and enables pagination through a set of `Attachment`."""
+  attachments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AttachmentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Attachment`."""
+    orderBy: [AttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AttachmentsConnection
   currentCoupleIds(
     """Read all values in the set after (below) this cursor."""
     after: Cursor
@@ -7323,6 +9263,7 @@ type Query implements Node {
     offset: Int
   ): PermissionsConnection
   currentSessionId: String
+  currentTenantId: BigInt
   currentUserId: BigInt
 
   """Reads and enables pagination through a set of `Dokumenty`."""
@@ -7437,7 +9378,82 @@ type Query implements Node {
     orderBy: [GalerieFotosOrderBy!] = [PRIMARY_KEY_ASC]
   ): GalerieFotosConnection
   getCurrentCouple: Pary
+  getCurrentTenant: Tenant
   getCurrentUser: User
+  location(id: BigInt!): Location
+  locationAttachment(locationId: BigInt!, objectName: String!): LocationAttachment
+
+  """Reads a single `LocationAttachment` using its globally unique `ID`."""
+  locationAttachmentByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `LocationAttachment`.
+    """
+    nodeId: ID!
+  ): LocationAttachment
+
+  """Reads and enables pagination through a set of `LocationAttachment`."""
+  locationAttachments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LocationAttachmentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `LocationAttachment`."""
+    orderBy: [LocationAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): LocationAttachmentsConnection
+
+  """Reads a single `Location` using its globally unique `ID`."""
+  locationByNodeId(
+    """The globally unique `ID` to be used in selecting a single `Location`."""
+    nodeId: ID!
+  ): Location
+
+  """Reads and enables pagination through a set of `Location`."""
+  locations(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LocationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Location`."""
+    orderBy: [LocationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): LocationsConnection
 
   """Reads and enables pagination through a set of `Member`."""
   members(
@@ -7467,6 +9483,46 @@ type Query implements Node {
     """The method to use when ordering `Member`."""
     orderBy: [MembersOrderBy!] = [NATURAL]
   ): MembersConnection
+
+  """Reads and enables pagination through a set of `Upozorneni`."""
+  myAnnouncements(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+  ): UpozornenisConnection
+  myEvents(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+  ): MyEventsConnection
 
   """Reads and enables pagination through a set of `RozpisItem`."""
   myLessons(
@@ -7758,6 +9814,35 @@ type Query implements Node {
     """The method to use when ordering `ParyNavrh`."""
     orderBy: [ParyNavrhsOrderBy!] = [PRIMARY_KEY_ASC]
   ): ParyNavrhsConnection
+
+  """Reads and enables pagination through a set of `Person`."""
+  people(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PersonCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Person`."""
+    orderBy: [PeopleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PeopleConnection
   permission(peId: BigInt!): Permission
 
   """Reads a single `Permission` using its globally unique `ID`."""
@@ -7796,6 +9881,13 @@ type Query implements Node {
     """The method to use when ordering `Permission`."""
     orderBy: [PermissionsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PermissionsConnection
+  person(id: BigInt!): Person
+
+  """Reads a single `Person` using its globally unique `ID`."""
+  personByNodeId(
+    """The globally unique `ID` to be used in selecting a single `Person`."""
+    nodeId: ID!
+  ): Person
 
   """Reads and enables pagination through a set of `PlatbyCategory`."""
   platbyCategories(
@@ -8051,6 +10143,80 @@ type Query implements Node {
     offset: Int
     startDate: Date
   ): NabidkasConnection
+  room(id: BigInt!): Room
+  roomAttachment(objectName: String!, roomId: BigInt!): RoomAttachment
+
+  """Reads a single `RoomAttachment` using its globally unique `ID`."""
+  roomAttachmentByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `RoomAttachment`.
+    """
+    nodeId: ID!
+  ): RoomAttachment
+
+  """Reads and enables pagination through a set of `RoomAttachment`."""
+  roomAttachments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RoomAttachmentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `RoomAttachment`."""
+    orderBy: [RoomAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RoomAttachmentsConnection
+
+  """Reads a single `Room` using its globally unique `ID`."""
+  roomByNodeId(
+    """The globally unique `ID` to be used in selecting a single `Room`."""
+    nodeId: ID!
+  ): Room
+
+  """Reads and enables pagination through a set of `Room`."""
+  rooms(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RoomCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Room`."""
+    orderBy: [RoomsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RoomsConnection
   rozpi(rId: BigInt!): Rozpi
 
   """Reads a single `Rozpi` using its globally unique `ID`."""
@@ -8220,6 +10386,118 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `Skupiny`."""
     nodeId: ID!
   ): Skupiny
+  tenant(id: BigInt!): Tenant
+  tenantAttachment(objectName: String!, tenantId: BigInt!): TenantAttachment
+
+  """Reads a single `TenantAttachment` using its globally unique `ID`."""
+  tenantAttachmentByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `TenantAttachment`.
+    """
+    nodeId: ID!
+  ): TenantAttachment
+
+  """Reads and enables pagination through a set of `TenantAttachment`."""
+  tenantAttachments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantAttachmentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `TenantAttachment`."""
+    orderBy: [TenantAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantAttachmentsConnection
+
+  """Reads a single `Tenant` using its globally unique `ID`."""
+  tenantByNodeId(
+    """The globally unique `ID` to be used in selecting a single `Tenant`."""
+    nodeId: ID!
+  ): Tenant
+
+  """Reads and enables pagination through a set of `TenantPerson`."""
+  tenantPeople(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantPersonCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `TenantPerson`."""
+    orderBy: [TenantPeopleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantPeopleConnection
+  tenantPerson(personId: BigInt!, tenantId: BigInt!): TenantPerson
+
+  """Reads a single `TenantPerson` using its globally unique `ID`."""
+  tenantPersonByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `TenantPerson`.
+    """
+    nodeId: ID!
+  ): TenantPerson
+
+  """Reads and enables pagination through a set of `Tenant`."""
+  tenants(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Tenant`."""
+    orderBy: [TenantsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantsConnection
 
   """Reads and enables pagination through a set of `Video`."""
   titleVideos(
@@ -8509,6 +10787,202 @@ type ResetPasswordPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
+}
+
+type Room implements Node {
+  description: JSON!
+  id: BigInt!
+  location: BigInt
+
+  """Reads a single `Location` that is related to this `Room`."""
+  locationByLocation: Location
+  name: String!
+
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+
+  """Reads and enables pagination through a set of `RoomAttachment`."""
+  roomAttachments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RoomAttachmentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `RoomAttachment`."""
+    orderBy: [RoomAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RoomAttachmentsConnection!
+}
+
+type RoomAttachment implements Node {
+  """Reads a single `Attachment` that is related to this `RoomAttachment`."""
+  attachmentByObjectName: Attachment
+
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  objectName: String!
+
+  """Reads a single `Room` that is related to this `RoomAttachment`."""
+  room: Room
+  roomId: BigInt!
+}
+
+"""
+A condition to be used against `RoomAttachment` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input RoomAttachmentCondition {
+  """Checks for equality with the object’s `objectName` field."""
+  objectName: String
+
+  """Checks for equality with the object’s `roomId` field."""
+  roomId: BigInt
+}
+
+"""An input for mutations affecting `RoomAttachment`"""
+input RoomAttachmentInput {
+  objectName: String!
+  roomId: BigInt!
+}
+
+"""
+Represents an update to a `RoomAttachment`. Fields that are set will be updated.
+"""
+input RoomAttachmentPatch {
+  objectName: String
+  roomId: BigInt
+}
+
+"""A connection to a list of `RoomAttachment` values."""
+type RoomAttachmentsConnection {
+  """
+  A list of edges which contains the `RoomAttachment` and cursor to aid in pagination.
+  """
+  edges: [RoomAttachmentsEdge!]!
+
+  """A list of `RoomAttachment` objects."""
+  nodes: [RoomAttachment!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `RoomAttachment` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `RoomAttachment` edge in the connection."""
+type RoomAttachmentsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `RoomAttachment` at the end of the edge."""
+  node: RoomAttachment!
+}
+
+"""Methods to use when ordering `RoomAttachment`."""
+enum RoomAttachmentsOrderBy {
+  NATURAL
+  OBJECT_NAME_ASC
+  OBJECT_NAME_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROOM_ID_ASC
+  ROOM_ID_DESC
+}
+
+"""
+A condition to be used against `Room` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input RoomCondition {
+  """Checks for equality with the object’s `description` field."""
+  description: JSON
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `location` field."""
+  location: BigInt
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+}
+
+"""An input for mutations affecting `Room`"""
+input RoomInput {
+  description: JSON!
+  id: BigInt
+  location: BigInt
+  name: String!
+}
+
+"""Represents an update to a `Room`. Fields that are set will be updated."""
+input RoomPatch {
+  description: JSON
+  id: BigInt
+  location: BigInt
+  name: String
+}
+
+"""A connection to a list of `Room` values."""
+type RoomsConnection {
+  """
+  A list of edges which contains the `Room` and cursor to aid in pagination.
+  """
+  edges: [RoomsEdge!]!
+
+  """A list of `Room` objects."""
+  nodes: [Room!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Room` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Room` edge in the connection."""
+type RoomsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Room` at the end of the edge."""
+  node: Room!
+}
+
+"""Methods to use when ordering `Room`."""
+enum RoomsOrderBy {
+  DESCRIPTION_ASC
+  DESCRIPTION_DESC
+  ID_ASC
+  ID_DESC
+  LOCATION_ASC
+  LOCATION_DESC
+  NAME_ASC
+  NAME_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
 }
 
 type Rozpi implements Node {
@@ -9052,6 +11526,347 @@ input SkupinyPatch {
   sVisible: Boolean
 }
 
+type Tenant implements Node {
+  id: BigInt!
+
+  """Reads and enables pagination through a set of `Location`."""
+  locationsByTenant(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LocationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Location`."""
+    orderBy: [LocationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): LocationsConnection!
+  memberInfo: JSON!
+  name: String!
+
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+
+  """Reads and enables pagination through a set of `TenantAttachment`."""
+  tenantAttachments(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantAttachmentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `TenantAttachment`."""
+    orderBy: [TenantAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantAttachmentsConnection!
+
+  """Reads and enables pagination through a set of `TenantPerson`."""
+  tenantPeople(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantPersonCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `TenantPerson`."""
+    orderBy: [TenantPeopleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantPeopleConnection!
+}
+
+type TenantAttachment implements Node {
+  """
+  Reads a single `Attachment` that is related to this `TenantAttachment`.
+  """
+  attachmentByObjectName: Attachment
+
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  objectName: String!
+
+  """Reads a single `Tenant` that is related to this `TenantAttachment`."""
+  tenant: Tenant
+  tenantId: BigInt!
+  type: TenantAttachmentType
+}
+
+"""
+A condition to be used against `TenantAttachment` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input TenantAttachmentCondition {
+  """Checks for equality with the object’s `objectName` field."""
+  objectName: String
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+
+  """Checks for equality with the object’s `type` field."""
+  type: TenantAttachmentType
+}
+
+"""An input for mutations affecting `TenantAttachment`"""
+input TenantAttachmentInput {
+  objectName: String!
+  tenantId: BigInt!
+  type: TenantAttachmentType
+}
+
+"""
+Represents an update to a `TenantAttachment`. Fields that are set will be updated.
+"""
+input TenantAttachmentPatch {
+  objectName: String
+  tenantId: BigInt
+  type: TenantAttachmentType
+}
+
+"""A connection to a list of `TenantAttachment` values."""
+type TenantAttachmentsConnection {
+  """
+  A list of edges which contains the `TenantAttachment` and cursor to aid in pagination.
+  """
+  edges: [TenantAttachmentsEdge!]!
+
+  """A list of `TenantAttachment` objects."""
+  nodes: [TenantAttachment!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `TenantAttachment` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `TenantAttachment` edge in the connection."""
+type TenantAttachmentsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `TenantAttachment` at the end of the edge."""
+  node: TenantAttachment!
+}
+
+"""Methods to use when ordering `TenantAttachment`."""
+enum TenantAttachmentsOrderBy {
+  NATURAL
+  OBJECT_NAME_ASC
+  OBJECT_NAME_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+  TYPE_ASC
+  TYPE_DESC
+}
+
+enum TenantAttachmentType {
+  LOGO
+  MAP
+  PHOTO
+}
+
+"""
+A condition to be used against `Tenant` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input TenantCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `memberInfo` field."""
+  memberInfo: JSON
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+}
+
+"""An input for mutations affecting `Tenant`"""
+input TenantInput {
+  id: BigInt
+  memberInfo: JSON!
+  name: String!
+}
+
+"""
+Represents an update to a `Tenant`. Fields that are set will be updated.
+"""
+input TenantPatch {
+  id: BigInt
+  memberInfo: JSON
+  name: String
+}
+
+"""A connection to a list of `TenantPerson` values."""
+type TenantPeopleConnection {
+  """
+  A list of edges which contains the `TenantPerson` and cursor to aid in pagination.
+  """
+  edges: [TenantPeopleEdge!]!
+
+  """A list of `TenantPerson` objects."""
+  nodes: [TenantPerson!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `TenantPerson` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `TenantPerson` edge in the connection."""
+type TenantPeopleEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `TenantPerson` at the end of the edge."""
+  node: TenantPerson!
+}
+
+"""Methods to use when ordering `TenantPerson`."""
+enum TenantPeopleOrderBy {
+  NATURAL
+  PERSON_ID_ASC
+  PERSON_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+}
+
+type TenantPerson implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+
+  """Reads a single `Person` that is related to this `TenantPerson`."""
+  person: Person
+  personId: BigInt!
+
+  """Reads a single `Tenant` that is related to this `TenantPerson`."""
+  tenant: Tenant
+  tenantId: BigInt!
+}
+
+"""
+A condition to be used against `TenantPerson` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input TenantPersonCondition {
+  """Checks for equality with the object’s `personId` field."""
+  personId: BigInt
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+}
+
+"""An input for mutations affecting `TenantPerson`"""
+input TenantPersonInput {
+  personId: BigInt!
+  tenantId: BigInt!
+}
+
+"""
+Represents an update to a `TenantPerson`. Fields that are set will be updated.
+"""
+input TenantPersonPatch {
+  personId: BigInt
+  tenantId: BigInt
+}
+
+"""A connection to a list of `Tenant` values."""
+type TenantsConnection {
+  """
+  A list of edges which contains the `Tenant` and cursor to aid in pagination.
+  """
+  edges: [TenantsEdge!]!
+
+  """A list of `Tenant` objects."""
+  nodes: [Tenant!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Tenant` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Tenant` edge in the connection."""
+type TenantsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Tenant` at the end of the edge."""
+  node: Tenant!
+}
+
+"""Methods to use when ordering `Tenant`."""
+enum TenantsOrderBy {
+  ID_ASC
+  ID_DESC
+  MEMBER_INFO_ASC
+  MEMBER_INFO_DESC
+  NAME_ASC
+  NAME_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
 """
 The exact time of day, does not include the date. May or may not have a timezone offset.
 """
@@ -9090,6 +11905,23 @@ input UpdateAkceInput {
   An object where the defined keys will be set on the `Akce` being updated.
   """
   patch: AkcePatch!
+}
+
+"""All input for the `updateAkceItemByAiUserAndAiIdRodic` mutation."""
+input UpdateAkceItemByAiUserAndAiIdRodicInput {
+  aiIdRodic: BigInt!
+  aiUser: BigInt!
+
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `AkceItem` being updated.
+  """
+  patch: AkceItemPatch!
 }
 
 """All input for the `updateAkceItemByNodeId` mutation."""
@@ -9241,6 +12073,66 @@ type UpdateAktualityPayload {
 
   """Reads a single `User` that is related to this `Aktuality`."""
   userByAtKdo: User
+}
+
+"""All input for the `updateAttachmentByNodeId` mutation."""
+input UpdateAttachmentByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Attachment` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `Attachment` being updated.
+  """
+  patch: AttachmentPatch!
+}
+
+"""All input for the `updateAttachment` mutation."""
+input UpdateAttachmentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  objectName: String!
+
+  """
+  An object where the defined keys will be set on the `Attachment` being updated.
+  """
+  patch: AttachmentPatch!
+}
+
+"""The output of our update `Attachment` mutation."""
+type UpdateAttachmentPayload {
+  """The `Attachment` that was updated by this mutation."""
+  attachment: Attachment
+
+  """An edge for our `Attachment`. May be used by Relay 1."""
+  attachmentEdge(
+    """The method to use when ordering `Attachment`."""
+    orderBy: [AttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AttachmentsEdge
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `User` that is related to this `Attachment`."""
+  userByUploadedBy: User
 }
 
 """All input for the `updateDokumentyByNodeId` mutation."""
@@ -9421,6 +12313,134 @@ type UpdateGalerieFotoPayload {
 
   """Reads a single `User` that is related to this `GalerieFoto`."""
   userByGfKdo: User
+}
+
+"""All input for the `updateLocationAttachmentByNodeId` mutation."""
+input UpdateLocationAttachmentByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `LocationAttachment` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `LocationAttachment` being updated.
+  """
+  patch: LocationAttachmentPatch!
+}
+
+"""All input for the `updateLocationAttachment` mutation."""
+input UpdateLocationAttachmentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  locationId: BigInt!
+  objectName: String!
+
+  """
+  An object where the defined keys will be set on the `LocationAttachment` being updated.
+  """
+  patch: LocationAttachmentPatch!
+}
+
+"""The output of our update `LocationAttachment` mutation."""
+type UpdateLocationAttachmentPayload {
+  """
+  Reads a single `Attachment` that is related to this `LocationAttachment`.
+  """
+  attachmentByObjectName: Attachment
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Reads a single `Location` that is related to this `LocationAttachment`.
+  """
+  location: Location
+
+  """The `LocationAttachment` that was updated by this mutation."""
+  locationAttachment: LocationAttachment
+
+  """An edge for our `LocationAttachment`. May be used by Relay 1."""
+  locationAttachmentEdge(
+    """The method to use when ordering `LocationAttachment`."""
+    orderBy: [LocationAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): LocationAttachmentsEdge
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `updateLocationByNodeId` mutation."""
+input UpdateLocationByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Location` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `Location` being updated.
+  """
+  patch: LocationPatch!
+}
+
+"""All input for the `updateLocation` mutation."""
+input UpdateLocationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `Location` being updated.
+  """
+  patch: LocationPatch!
+}
+
+"""The output of our update `Location` mutation."""
+type UpdateLocationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Location` that was updated by this mutation."""
+  location: Location
+
+  """An edge for our `Location`. May be used by Relay 1."""
+  locationEdge(
+    """The method to use when ordering `Location`."""
+    orderBy: [LocationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): LocationsEdge
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `Location`."""
+  tenantByTenant: Tenant
 }
 
 """All input for the `updateNabidkaByNodeId` mutation."""
@@ -9861,6 +12881,63 @@ type UpdatePermissionPayload {
   query: Query
 }
 
+"""All input for the `updatePersonByNodeId` mutation."""
+input UpdatePersonByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Person` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `Person` being updated.
+  """
+  patch: PersonPatch!
+}
+
+"""All input for the `updatePerson` mutation."""
+input UpdatePersonInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `Person` being updated.
+  """
+  patch: PersonPatch!
+}
+
+"""The output of our update `Person` mutation."""
+type UpdatePersonPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Person` that was updated by this mutation."""
+  person: Person
+
+  """An edge for our `Person`. May be used by Relay 1."""
+  personEdge(
+    """The method to use when ordering `Person`."""
+    orderBy: [PeopleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PeopleEdge
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
 """All input for the `updatePlatbyCategoryByNodeId` mutation."""
 input UpdatePlatbyCategoryByNodeIdInput {
   """
@@ -10230,6 +13307,130 @@ type UpdatePlatbyRawPayload {
   query: Query
 }
 
+"""All input for the `updateRoomAttachmentByNodeId` mutation."""
+input UpdateRoomAttachmentByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `RoomAttachment` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `RoomAttachment` being updated.
+  """
+  patch: RoomAttachmentPatch!
+}
+
+"""All input for the `updateRoomAttachment` mutation."""
+input UpdateRoomAttachmentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  objectName: String!
+
+  """
+  An object where the defined keys will be set on the `RoomAttachment` being updated.
+  """
+  patch: RoomAttachmentPatch!
+  roomId: BigInt!
+}
+
+"""The output of our update `RoomAttachment` mutation."""
+type UpdateRoomAttachmentPayload {
+  """Reads a single `Attachment` that is related to this `RoomAttachment`."""
+  attachmentByObjectName: Attachment
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Room` that is related to this `RoomAttachment`."""
+  room: Room
+
+  """The `RoomAttachment` that was updated by this mutation."""
+  roomAttachment: RoomAttachment
+
+  """An edge for our `RoomAttachment`. May be used by Relay 1."""
+  roomAttachmentEdge(
+    """The method to use when ordering `RoomAttachment`."""
+    orderBy: [RoomAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RoomAttachmentsEdge
+}
+
+"""All input for the `updateRoomByNodeId` mutation."""
+input UpdateRoomByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Room` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `Room` being updated.
+  """
+  patch: RoomPatch!
+}
+
+"""All input for the `updateRoom` mutation."""
+input UpdateRoomInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `Room` being updated.
+  """
+  patch: RoomPatch!
+}
+
+"""The output of our update `Room` mutation."""
+type UpdateRoomPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Location` that is related to this `Room`."""
+  locationByLocation: Location
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """The `Room` that was updated by this mutation."""
+  room: Room
+
+  """An edge for our `Room`. May be used by Relay 1."""
+  roomEdge(
+    """The method to use when ordering `Room`."""
+    orderBy: [RoomsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RoomsEdge
+}
+
 """All input for the `updateRozpiByNodeId` mutation."""
 input UpdateRozpiByNodeIdInput {
   """
@@ -10468,6 +13669,193 @@ type UpdateSkupinyPayload {
     """The method to use when ordering `Skupiny`."""
     orderBy: [SkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
   ): SkupiniesEdge
+}
+
+"""All input for the `updateTenantAttachmentByNodeId` mutation."""
+input UpdateTenantAttachmentByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `TenantAttachment` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `TenantAttachment` being updated.
+  """
+  patch: TenantAttachmentPatch!
+}
+
+"""All input for the `updateTenantAttachment` mutation."""
+input UpdateTenantAttachmentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  objectName: String!
+
+  """
+  An object where the defined keys will be set on the `TenantAttachment` being updated.
+  """
+  patch: TenantAttachmentPatch!
+  tenantId: BigInt!
+}
+
+"""The output of our update `TenantAttachment` mutation."""
+type UpdateTenantAttachmentPayload {
+  """
+  Reads a single `Attachment` that is related to this `TenantAttachment`.
+  """
+  attachmentByObjectName: Attachment
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `TenantAttachment`."""
+  tenant: Tenant
+
+  """The `TenantAttachment` that was updated by this mutation."""
+  tenantAttachment: TenantAttachment
+
+  """An edge for our `TenantAttachment`. May be used by Relay 1."""
+  tenantAttachmentEdge(
+    """The method to use when ordering `TenantAttachment`."""
+    orderBy: [TenantAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantAttachmentsEdge
+}
+
+"""All input for the `updateTenantByNodeId` mutation."""
+input UpdateTenantByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Tenant` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `Tenant` being updated.
+  """
+  patch: TenantPatch!
+}
+
+"""All input for the `updateTenant` mutation."""
+input UpdateTenantInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `Tenant` being updated.
+  """
+  patch: TenantPatch!
+}
+
+"""The output of our update `Tenant` mutation."""
+type UpdateTenantPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """The `Tenant` that was updated by this mutation."""
+  tenant: Tenant
+
+  """An edge for our `Tenant`. May be used by Relay 1."""
+  tenantEdge(
+    """The method to use when ordering `Tenant`."""
+    orderBy: [TenantsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantsEdge
+}
+
+"""All input for the `updateTenantPersonByNodeId` mutation."""
+input UpdateTenantPersonByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `TenantPerson` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `TenantPerson` being updated.
+  """
+  patch: TenantPersonPatch!
+}
+
+"""All input for the `updateTenantPerson` mutation."""
+input UpdateTenantPersonInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `TenantPerson` being updated.
+  """
+  patch: TenantPersonPatch!
+  personId: BigInt!
+  tenantId: BigInt!
+}
+
+"""The output of our update `TenantPerson` mutation."""
+type UpdateTenantPersonPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Person` that is related to this `TenantPerson`."""
+  person: Person
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `TenantPerson`."""
+  tenant: Tenant
+
+  """The `TenantPerson` that was updated by this mutation."""
+  tenantPerson: TenantPerson
+
+  """An edge for our `TenantPerson`. May be used by Relay 1."""
+  tenantPersonEdge(
+    """The method to use when ordering `TenantPerson`."""
+    orderBy: [TenantPeopleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantPeopleEdge
 }
 
 """All input for the `updateUpozorneniByNodeId` mutation."""
@@ -10829,11 +14217,18 @@ type UpdateVideoSourcePayload {
   ): VideoSourcesEdge
 }
 
+type UploadFilePayload {
+  objectName: String!
+  uploadUrl: String!
+}
+
 type Upozorneni implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
+  scheduledSince: Datetime
+  scheduledUntil: Datetime
   upBarvy: BigInt!
   upId: BigInt!
   upKdo: BigInt
@@ -10881,6 +14276,12 @@ A condition to be used against `Upozorneni` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input UpozorneniCondition {
+  """Checks for equality with the object’s `scheduledSince` field."""
+  scheduledSince: Datetime
+
+  """Checks for equality with the object’s `scheduledUntil` field."""
+  scheduledUntil: Datetime
+
   """Checks for equality with the object’s `upBarvy` field."""
   upBarvy: BigInt
 
@@ -10908,6 +14309,8 @@ input UpozorneniCondition {
 
 """An input for mutations affecting `Upozorneni`"""
 input UpozorneniInput {
+  scheduledSince: Datetime
+  scheduledUntil: Datetime
   upBarvy: BigInt
   upId: BigInt
   upKdo: BigInt
@@ -10922,6 +14325,8 @@ input UpozorneniInput {
 Represents an update to a `Upozorneni`. Fields that are set will be updated.
 """
 input UpozorneniPatch {
+  scheduledSince: Datetime
+  scheduledUntil: Datetime
   upBarvy: BigInt
   upId: BigInt
   upKdo: BigInt
@@ -11069,6 +14474,10 @@ enum UpozornenisOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  SCHEDULED_SINCE_ASC
+  SCHEDULED_SINCE_DESC
+  SCHEDULED_UNTIL_ASC
+  SCHEDULED_UNTIL_DESC
   UP_BARVY_ASC
   UP_BARVY_DESC
   UP_ID_ASC
@@ -11145,6 +14554,35 @@ type User implements Node {
     """The method to use when ordering `Aktuality`."""
     orderBy: [AktualitiesOrderBy!] = [PRIMARY_KEY_ASC]
   ): AktualitiesConnection!
+
+  """Reads and enables pagination through a set of `Attachment`."""
+  attachmentsByUploadedBy(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AttachmentCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Attachment`."""
+    orderBy: [AttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AttachmentsConnection!
 
   """Reads and enables pagination through a set of `Dokumenty`."""
   dokumentiesByDKdo(

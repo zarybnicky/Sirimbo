@@ -36,6 +36,7 @@
     packages.x86_64-linux = {
       inherit (pkgs) sirimbo-frontend-beta;
       sirimbo-frontend = pkgs.sirimbo-frontend-beta;
+      sirimbo-backend = pkgs.sirimbo-backend-beta;
     };
 
     nixosConfigurations.container = nixpkgs.lib.nixosSystem {
@@ -72,6 +73,7 @@
           services.mailhog.enable = true;
           services.olymp-beta = {
             enable = true;
+            debug = true;
             dbConnString = "dbname=olymp";
             stateDir = "/var/lib/olymp";
             domain = "olymp-test";
@@ -83,6 +85,9 @@
             smtpTLS = false;
             smtpHost = "127.0.0.1";
             smtpPort = 1025;
+
+            minioAccessKey = "00000000";
+            minioSecretKey = "000000000000";
           };
         })
       ];

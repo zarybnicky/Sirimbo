@@ -18,6 +18,7 @@ in {
     };
 
     ssl = lib.mkEnableOption "${pkgName} enable ssl";
+    debug = lib.mkEnableOption "${pkgName} enable debug mode";
 
     jsPort = lib.mkOption {
       type = lib.types.int;
@@ -70,6 +71,20 @@ in {
       type = lib.types.str;
       description = "${pkgName} state directory";
     };
+
+    minioPort = lib.mkOption {
+      type = lib.types.int;
+      description = "${pkgName} internal Minio port";
+      default = 9000;
+    };
+    minioAccessKey = lib.mkOption {
+      type = lib.types.str;
+      description = "${pkgName} Minio access key";
+    };
+    minioSecretKey = lib.mkOption {
+      type = lib.types.str;
+      description = "${pkgName} Minio secret key";
+    };
   };
 
   config = lib.mkMerge [
@@ -105,8 +120,16 @@ in {
         virtualHosts.${cfg.domain} = {
           enableACME = cfg.ssl;
           forceSSL = cfg.ssl;
-
           serverAliases = cfg.domainAliases;
+
+          extraConfig = ''
+            # To allow special characters in headers
+            ignore_invalid_headers off;
+            # Allow any size file to be uploaded.
+            client_max_body_size 0;
+            # To disable buffering
+            proxy_buffering off;
+          '';
 
           locations."/gallery".root = cfg.stateDir;
           locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
@@ -119,14 +142,51 @@ in {
             proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
             proxyWebsockets = true;
           };
-          locations."/upload" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
-          };
           locations."/" = {
             proxyPass = "http://127.0.0.1:${toString cfg.frontendPort}";
             proxyWebsockets = true;
           };
         };
+      };
+
+      services.minio = {
+        enable = true;
+        browser = false;
+        listenAddress = ":${toString cfg.minioPort}";
+        configDir = "${cfg.stateDir}/minio-config";
+        dataDir = ["${cfg.stateDir}/minio-data"];
+        accessKey = cfg.minioAccessKey;
+        secretKey = cfg.minioSecretKey;
+      };
+      networking.firewall.allowedTCPPorts = [cfg.minioPort];
+
+      systemd.services.minio = {
+        serviceConfig = {
+          ExecStartPost= ''
+            ${pkgs.coreutils}/bin/timeout 30 ${pkgs.bash}/bin/bash -c \
+              'while ! ${pkgs.curl}/bin/curl --silent --fail http://localhost:${toString cfg.minioPort}/minio/health/cluster; do sleep 1; done'
+          '';
+        };
+      };
+
+      systemd.services.minio-config = {
+        path = [pkgs.minio pkgs.minio-client];
+        requiredBy = ["multi-user.target"];
+        after = ["minio.service"];
+        serviceConfig = {
+          Type = "simple";
+          User = "minio";
+          Group = "minio";
+          WorkingDirectory = config.services.minio.configDir;
+        };
+        script = ''
+          set -e
+          mc --config-dir . config host add minio \
+            http://localhost:${toString cfg.minioPort} "${cfg.minioAccessKey}" "${cfg.minioSecretKey}"
+          mc --config-dir . mb --ignore-existing minio/private
+          mc --config-dir . mb --ignore-existing minio/public
+          mc --config-dir . policy set download minio/public
+        '';
       };
 
       systemd.services.sirimbo-frontend-beta = {
@@ -168,6 +228,11 @@ in {
           SMTP_PORT = toString cfg.smtpPort;
           SMTP_USER = cfg.smtpUser;
           SMTP_PASS = cfg.smtpPass;
+          MINIO_DOMAIN = cfg.domain;
+          MINIO_PORT = toString cfg.minioPort;
+          MINIO_ACCESS_KEY = cfg.minioAccessKey;
+          MINIO_SECRET_KEY = cfg.minioSecretKey;
+          DEBUG = if cfg.debug then "1" else "";
         };
 
         serviceConfig = {

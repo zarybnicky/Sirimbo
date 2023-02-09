@@ -7,6 +7,8 @@ import { getAgeGroup } from 'lib/get-age-group';
 import { useCohortListQuery } from "lib/graphql/Cohorts";
 import React from "react";
 import { Edit } from "react-feather";
+import { PersonalInfoForm } from "components/PersonalInfoForm";
+import { ChangePasswordForm } from "components/ChangePasswordForm";
 
 export default function ProfilePage() {
   const { user, couple } = useAuth();
@@ -20,21 +22,28 @@ export default function ProfilePage() {
         title="Osobní údaje"
         button={<List.TitleButton icon={Edit}>Upravit osobní údaje</List.TitleButton>}
       >
+        {({ close }) => <PersonalInfoForm onSuccess={close} />}
+      </SimpleDialog>
 
+      <SimpleDialog
+        title="Změnit heslo"
+        button={<List.TitleButton icon={Edit}>Změnit heslo</List.TitleButton>}
+      >
+        {({ close }) => <ChangePasswordForm onSuccess={close} />}
       </SimpleDialog>
     </Item.Titlebar>
 
-    Variabilní symbol: {user.id.padStart(6, '0')}
+    <p>Variabilní symbol: {user.id.padStart(6, '0')}</p>
 
-    Věková kategorie: {getAgeGroup(new Date(user?.uNarozeni).getFullYear())}
+    <p>Věková kategorie: {getAgeGroup(new Date(user?.uNarozeni).getFullYear())}</p>
 
-    Tréninková skupina: {cohorts?.skupinies?.nodes.find(x => x.id === user.uSkupina)?.sName}
+    <p>Tréninková skupina: {cohorts?.skupinies?.nodes.find(x => x.id === user.uSkupina)?.sName}</p>
 
-    Aktuální partner: {couple?.pIdPartner === user.id ? (
+    <p>Aktuální partner: {couple?.pIdPartner === user.id ? (
       `${couple?.userByPIdPartnerka?.uJmeno} ${couple?.userByPIdPartnerka?.uPrijmeni}`
     ) : (
       `${couple?.userByPIdPartner?.uJmeno} ${couple?.userByPIdPartner?.uPrijmeni}`
-    )}
+    )}</p>
   </Item>
 }
 

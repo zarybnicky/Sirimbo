@@ -76,3 +76,35 @@ mutation DeleteEvent($id: BigInt!) {
     __typename
   }
 }
+
+fragment MyEvent on MyEventsRecord {
+  id
+  since
+  until
+  info
+  name
+  location
+  hasCapacity
+  signedUp
+  myNotes
+}
+
+query MyEvents {
+  myEvents {
+    nodes {
+      ...MyEvent
+    }
+  }
+}
+
+mutation CreateParticipation($input: CreateParticipationInput!) {
+  createParticipation(input: $input) {
+    __typename
+  }
+}
+
+mutation CancelParticipation($input: CancelParticipationInput!) {
+  cancelParticipation(input: $input) {
+    __typename
+  }
+}
