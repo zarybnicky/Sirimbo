@@ -1,4 +1,4 @@
-export const origin = typeof window === 'undefined'
+const origin = typeof window === 'undefined'
   ? (process.env.GRAPHQL_BACKEND || `http://localhost:${process.env.PORT || 3000}`) : '';
 
 export const fetcher = <TData, TVariables>(

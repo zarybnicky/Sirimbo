@@ -1,4 +1,3 @@
-import { useAuth } from './use-auth';
 import { PermissionKey, PermissionLevel, usePermissions } from './use-permissions';
 
 export type MenuLink = {
