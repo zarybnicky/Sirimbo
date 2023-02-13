@@ -1,9 +1,14 @@
+import { useAuth } from "lib/data/use-auth";
+import { useCohortQuery } from "lib/graphql/Cohorts";
 import { useCurrentTenantQuery } from "lib/graphql/Tenant";
-import { SlateReadonly } from "./SlateReadonly";
+import { RichTextView } from "./RichTextView";
 
 export function TenantInformation() {
+  const { user } = useAuth();
+  const { data: cohortData } = useCohortQuery({ id: user?.uSkupina! });
   const { data: tenant } = useCurrentTenantQuery();
   const data = tenant?.getCurrentTenant;
+  const cohort = cohortData?.skupiny;
   if (!data) {
     return null;
   }
@@ -12,19 +17,23 @@ export function TenantInformation() {
     <h3 className="text-2xl tracking-wide">{data.name}</h3>
 
     <div className="w-full px-4">
-      <p>Sídlo spolku/společnosti</p>
-      <p>Statutární orgány</p>
-      <p>Pobočky, sály na nich</p>
-      <p>Platební informace</p>
-      <SlateReadonly value={data.memberInfo as any[]} />
+      <RichTextView value={data.memberInfo} />
     </div>
 
-    <h3 className="mt-4 text-2xl tracking-wide">Místa</h3>
-    {data.locationsByTenant.nodes.map(item => (
-      <div key={item.id}>
-        <h4 className="text-xl tracking-wide">{item.name}</h4>
-        <SlateReadonly value={item.description as any[]} />
+    {cohort && cohort.sVisible && <>
+      <h3 className="text-2xl tracking-wide">{cohort.sName}</h3>
+      <div className="w-full px-4">
+        <RichTextView value={cohort.sDescription} />
+        <RichTextView value={cohort.internalInfo} />
       </div>
-    ))}
+    </>}
+
+    {/* <h3 className="mt-4 text-2xl tracking-wide">Místa</h3>
+        {data.locationsByTenant.nodes.map(item => (
+        <div key={item.id}>
+        <h4 className="text-xl tracking-wide">{item.name}</h4>
+        <RichTextView value={item.description} />
+        </div>
+        ))} */}
   </div>;
 }

@@ -1,27 +1,36 @@
 import * as React from 'react';
-import { Control, FieldValues, ControllerProps, Path, useController } from 'react-hook-form';
+import { Control, FieldValues, ControllerProps, Path, useController, FieldError } from 'react-hook-form';
 import { DatePickerCalendar, DateRangePicker, DatePicker } from "@axel-dev/react-nice-dates";
 import '@axel-dev/react-nice-dates/build/style.css';
 import cs from 'date-fns/locale/cs';
+import classNames from 'classnames';
+import { ArrowRight } from 'react-feather';
 
-export type DateRange = [Date | undefined, Date | undefined];
+export type DateRange = [Date, Date];
 
 type DateRangeInputProps<T extends FieldValues> = {
   validation?: ControllerProps['rules'];
   name: Path<T>;
   control?: Control<T>;
-  label?: React.ReactNode;
   required?: boolean;
 }
 
+type Extras = {
+  className?: string;
+  label?: React.ReactNode;
+  helperText?: React.ReactNode;
+  parseError?: (error: FieldError) => React.ReactNode;
+};
+
 export function DateRangeInput<TFieldValues extends FieldValues>({
-  name, control, validation = {}, label, required,
-}: DateRangeInputProps<TFieldValues>) {
+  name, control, validation = {}, label, required, className, helperText, parseError
+}: DateRangeInputProps<TFieldValues> & Extras) {
   if (required && !validation?.required) {
     validation.required = 'Toto pole je povinné';
   }
 
-  const { field: { value, onChange } } = useController({ control, name, rules: validation });
+  const { field: { value, onChange }, fieldState: { error } } = useController({ control, name, rules: validation });
+  const parsedHelperText = !error ? helperText : parseError ? parseError(error) : error.message;
 
   return (
     <DateRangePicker
@@ -32,33 +41,57 @@ export function DateRangeInput<TFieldValues extends FieldValues>({
       locale={cs}
     >
       {({ startDateInputProps, endDateInputProps }) => (
-        <div className="date-range flex flex-col gap-4">
-          {label}
-          <input
-            className="input"
-            {...startDateInputProps}
-            placeholder="From"
-          />
-          <span className="date-range_arrow" />
-          <input className="input" {...endDateInputProps} placeholder="To" />
+        <div className={className}>
+          <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+            {label}
+          </label>
+          <div className="date-range flex flex-row gap-4">
+            <input
+              className="block w-full border-red-400 text-stone-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
+              {...startDateInputProps}
+              placeholder="Od"
+            />
+            <ArrowRight className="shrink-0 self-center" />
+            <input
+              className="block w-full border-red-400 text-stone-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
+              {...endDateInputProps}
+              placeholder="Do"
+            />
+          </div>
+          {parsedHelperText && (
+            <p className={classNames("mt-2 text-sm", error ? 'text-red-600' : 'text-gray-500')}>{parsedHelperText}</p>
+          )}
         </div>
       )}
-    </DateRangePicker>
+    </DateRangePicker >
   );
 };
 
 export function DatePickerElement<TFieldValues extends FieldValues>({
-  name, control, validation = {}, label, required,
-}: DateRangeInputProps<TFieldValues>) {
+  name, control, validation = {}, label, required, className, helperText, parseError
+}: DateRangeInputProps<TFieldValues> & Extras) {
   if (required && !validation?.required) {
     validation.required = 'Toto pole je povinné';
   }
-  const { field: { value, onChange } } = useController({ control, name, rules: validation });
+  const { field: { value, onChange }, fieldState: { error } } = useController({ control, name, rules: validation });
+  const parsedHelperText = !error ? helperText : parseError ? parseError(error) : error.message;
+
   return <DatePicker date={value} onDateChange={onChange} locale={cs}>
-    {({ inputProps }) => <>
-      {label}
-      <input className="input" {...inputProps} placeholder="Date" />
-    </>}
+    {({ inputProps }) => (
+      <div className={className}>
+        <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+          {label}
+        </label>
+        <input
+          className="block w-full border-red-400 text-stone-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
+          {...inputProps}
+          placeholder="Datum"
+        />
+        {parsedHelperText && (
+          <p className={classNames("mt-2 text-sm", error ? 'text-red-600' : 'text-gray-500')}>{parsedHelperText}</p>
+        )}
+      </div>
+    )}
   </DatePicker>;
 }
 

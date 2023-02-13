@@ -62,7 +62,8 @@ export const Footer: React.FC = () => {
 
         <div className="mt-12">Verze: {process.env.BUILD_ID?.substring(0, 7)}</div>
         <div>Realizace: Jakub Zárybnický</div>
-        <div>© 2022 Taneční klub Olymp Olomouc, z. s.</div>
+        <div>© 2023 Taneční klub Olymp Olomouc, z. s.</div>
+        <div>Verze: {process.env.BUILD_ID?.substring(0, 7)}</div>
       </div>
 
       <div>

@@ -6,6 +6,7 @@ fragment Cohort on Skupiny {
   sLocation
   sVisible
   sColorRgb
+  internalInfo
 }
 
 query CohortList($visible: Boolean) {

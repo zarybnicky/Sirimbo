@@ -9,7 +9,6 @@ import { TextFieldElement } from "components/TextField";
 import { toast } from 'react-toastify';
 import { useResetPasswordMutation } from "lib/graphql/CurrentUser";
 import { withServerLoggedOut } from "lib/data/use-server-permissions";
-import { Layout } from "components/layout/Layout";
 
 export default function ForgottenPassword() {
   const { control, handleSubmit } = useForm();
@@ -30,7 +29,7 @@ export default function ForgottenPassword() {
           Pokud jste zapomněli heslo, pošleme Vám nové na e-mail, který jste zadali při registraci.
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 mb-4">
           <TextFieldElement control={control} name="login" label="Přihlašovací jméno" autoComplete="login" required />
           <TextFieldElement control={control} type="email" name="email" label="E-mail" autoComplete="email" required />
           <ErrorBox error={onSubmit.error} default="Nepodařilo se změnit heslo, prosím kontaktujte administrátora." />
@@ -44,5 +43,3 @@ export default function ForgottenPassword() {
 }
 
 export const getServerSideProps = withServerLoggedOut;
-
-ForgottenPassword.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;

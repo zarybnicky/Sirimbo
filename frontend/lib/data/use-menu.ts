@@ -59,8 +59,16 @@ const publicMenu: MenuStructItem[] = [
 
 const adminMenu: MenuLink[] = [
   {
+    type: "link", title: "Organizace", href: "/admin/tenant",
+    auth: [PermissionKey.peUsers, PermissionLevel.P_ADMIN],
+  },
+  {
     type: "link", title: 'Uživatelé', href: '/admin/users',
     auth: [PermissionKey.peUsers, PermissionLevel.P_OWNED]
+  },
+  {
+    type: "link", title: "Chci tančit!", href: "/crm",
+    auth: [PermissionKey.peNastenka, PermissionLevel.P_ADMIN],
   },
   {
     type: "link", title: 'Skupiny', href: '/admin/skupiny',
@@ -95,23 +103,11 @@ const adminMenu: MenuLink[] = [
     auth: [PermissionKey.peAkce, PermissionLevel.P_OWNED]
   },
   {
-    type: "link", title: 'Galerie', href: '/admin/galerie',
-    auth: [PermissionKey.peGalerie, PermissionLevel.P_OWNED]
-  },
-  {
-    type: "link", title: 'Video', href: '/admin/video',
-    auth: [PermissionKey.peAktuality, PermissionLevel.P_OWNED]
-  },
-  {
     type: "link", title: 'Dokumenty', href: '/admin/dokumenty',
     auth: [PermissionKey.peDokumenty, PermissionLevel.P_OWNED]
   },
   {
-    type: "link", title: 'Oprávnění', href: '/admin/permissions',
+    type: "link", title: '(Oprávnění)', href: '/admin/permissions',
     auth: [PermissionKey.pePermissions, PermissionLevel.P_OWNED]
-  },
-  {
-    type: "link", title: "Zájemci", href: "/crm",
-    auth: [PermissionKey.peNastenka, PermissionLevel.P_ADMIN],
   },
 ];

@@ -31,6 +31,8 @@ export type Scalars = {
   Datetime: string;
   /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: { [key: string]: any };
+  /** A builtin object identifier type for a function name */
+  RegProc: any;
   /** The exact time of day, does not include the date. May or may not have a timezone offset. */
   Time: string;
 };
@@ -72,13 +74,13 @@ export type Akce = Node & {
   aInfo: Scalars['String'];
   aJmeno: Scalars['String'];
   aKapacita: Scalars['BigInt'];
+  /** Reads and enables pagination through a set of `AkceItem`. */
+  akceItemsByAiIdRodic: AkceItemsConnection;
   aKde: Scalars['String'];
   aLock: Scalars['Boolean'];
   aOd: Scalars['Date'];
   aTimestamp: Maybe<Scalars['Datetime']>;
   aVisible: Scalars['Boolean'];
-  /** Reads and enables pagination through a set of `AkceItem`. */
-  akceItemsByAiIdRodic: AkceItemsConnection;
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
 };
@@ -263,10 +265,10 @@ export type AkcesEdge = {
 
 /** Methods to use when ordering `Akce`. */
 export enum AkcesOrderBy {
-  ADokumentyAsc = 'A_DOKUMENTY_ASC',
-  ADokumentyDesc = 'A_DOKUMENTY_DESC',
   ADoAsc = 'A_DO_ASC',
   ADoDesc = 'A_DO_DESC',
+  ADokumentyAsc = 'A_DOKUMENTY_ASC',
+  ADokumentyDesc = 'A_DOKUMENTY_DESC',
   AIdAsc = 'A_ID_ASC',
   AIdDesc = 'A_ID_DESC',
   AInfoAsc = 'A_INFO_ASC',
@@ -2513,6 +2515,17 @@ export type DeleteNabidkaInput = {
   nId: Scalars['BigInt'];
 };
 
+/** All input for the `deleteNabidkaItemByNiPartnerAndNiIdRodic` mutation. */
+export type DeleteNabidkaItemByNiPartnerAndNiIdRodicInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  niIdRodic: Scalars['BigInt'];
+  niPartner: Scalars['BigInt'];
+};
+
 /** All input for the `deleteNabidkaItemByNodeId` mutation. */
 export type DeleteNabidkaItemByNodeIdInput = {
   /**
@@ -4734,6 +4747,8 @@ export type Mutation = {
   deleteNabidkaByNodeId: Maybe<DeleteNabidkaPayload>;
   /** Deletes a single `NabidkaItem` using a unique key. */
   deleteNabidkaItem: Maybe<DeleteNabidkaItemPayload>;
+  /** Deletes a single `NabidkaItem` using a unique key. */
+  deleteNabidkaItemByNiPartnerAndNiIdRodic: Maybe<DeleteNabidkaItemPayload>;
   /** Deletes a single `NabidkaItem` using its globally unique id. */
   deleteNabidkaItemByNodeId: Maybe<DeleteNabidkaItemPayload>;
   /** Deletes a single `Parameter` using a unique key. */
@@ -4845,6 +4860,7 @@ export type Mutation = {
   login: Maybe<LoginPayload>;
   logout: Maybe<LogoutPayload>;
   prospectFormDancer: Maybe<ProspectFormDancerPayload>;
+  reservationSetDesiredLessons: Maybe<ReservationSetDesiredLessonsPayload>;
   resetPassword: Maybe<ResetPasswordPayload>;
   /** Updates a single `Akce` using a unique key and a patch. */
   updateAkce: Maybe<UpdateAkcePayload>;
@@ -4890,6 +4906,8 @@ export type Mutation = {
   updateNabidkaByNodeId: Maybe<UpdateNabidkaPayload>;
   /** Updates a single `NabidkaItem` using a unique key and a patch. */
   updateNabidkaItem: Maybe<UpdateNabidkaItemPayload>;
+  /** Updates a single `NabidkaItem` using a unique key and a patch. */
+  updateNabidkaItemByNiPartnerAndNiIdRodic: Maybe<UpdateNabidkaItemPayload>;
   /** Updates a single `NabidkaItem` using its globally unique id and a patch. */
   updateNabidkaItemByNodeId: Maybe<UpdateNabidkaItemPayload>;
   /** Updates a single `Page` using a unique key and a patch. */
@@ -5003,6 +5021,7 @@ export type Mutation = {
   /** Updates a single `VideoSource` using its globally unique id and a patch. */
   updateVideoSourceByNodeId: Maybe<UpdateVideoSourcePayload>;
   uploadFile: UploadFilePayload;
+  verifyFunction: Maybe<VerifyFunctionPayload>;
 };
 
 
@@ -5409,6 +5428,12 @@ export type MutationDeleteNabidkaItemArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteNabidkaItemByNiPartnerAndNiIdRodicArgs = {
+  input: DeleteNabidkaItemByNiPartnerAndNiIdRodicInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteNabidkaItemByNodeIdArgs = {
   input: DeleteNabidkaItemByNodeIdInput;
 };
@@ -5757,6 +5782,12 @@ export type MutationProspectFormDancerArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationReservationSetDesiredLessonsArgs = {
+  input: ReservationSetDesiredLessonsInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationResetPasswordArgs = {
   input: ResetPasswordInput;
 };
@@ -5891,6 +5922,12 @@ export type MutationUpdateNabidkaByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateNabidkaItemArgs = {
   input: UpdateNabidkaItemInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateNabidkaItemByNiPartnerAndNiIdRodicArgs = {
+  input: UpdateNabidkaItemByNiPartnerAndNiIdRodicInput;
 };
 
 
@@ -6235,6 +6272,12 @@ export type MutationUploadFileArgs = {
   fileName: Scalars['String'];
 };
 
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationVerifyFunctionArgs = {
+  input: VerifyFunctionInput;
+};
+
 /** A `MyEventsRecord` edge in the connection. */
 export type MyEventEdge = {
   __typename?: 'MyEventEdge';
@@ -6271,19 +6314,21 @@ export type MyEventsRecord = {
 
 export type Nabidka = Node & {
   __typename?: 'Nabidka';
+  freeLessons: Maybe<Scalars['Int']>;
+  myLessons: Maybe<Scalars['Int']>;
+  /** Reads and enables pagination through a set of `NabidkaItem`. */
+  nabidkaItemsByNiIdRodic: NabidkaItemsConnection;
   nDo: Scalars['Date'];
   nId: Scalars['BigInt'];
   nLock: Scalars['Boolean'];
   nMaxPocetHod: Scalars['Int'];
   nOd: Scalars['Date'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
   nPocetHod: Scalars['Int'];
   nTimestamp: Maybe<Scalars['Datetime']>;
   nTrener: Scalars['BigInt'];
   nVisible: Scalars['Boolean'];
-  /** Reads and enables pagination through a set of `NabidkaItem`. */
-  nabidkaItemsByNiIdRodic: NabidkaItemsConnection;
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   /** Reads a single `User` that is related to this `Nabidka`. */
   userByNTrener: Maybe<User>;
 };
@@ -6460,7 +6505,6 @@ export type NabidkasEdge = {
 
 /** Methods to use when ordering `Nabidka`. */
 export enum NabidkasOrderBy {
-  Natural = 'NATURAL',
   NDoAsc = 'N_DO_ASC',
   NDoDesc = 'N_DO_DESC',
   NIdAsc = 'N_ID_ASC',
@@ -6479,6 +6523,7 @@ export enum NabidkasOrderBy {
   NTrenerDesc = 'N_TRENER_DESC',
   NVisibleAsc = 'N_VISIBLE_ASC',
   NVisibleDesc = 'N_VISIBLE_DESC',
+  Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -6767,18 +6812,16 @@ export type PariesEdge = {
 /** Methods to use when ordering `Pary`. */
 export enum PariesOrderBy {
   Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   PArchivAsc = 'P_ARCHIV_ASC',
   PArchivDesc = 'P_ARCHIV_DESC',
   PHodnoceniAsc = 'P_HODNOCENI_ASC',
   PHodnoceniDesc = 'P_HODNOCENI_DESC',
   PIdAsc = 'P_ID_ASC',
   PIdDesc = 'P_ID_DESC',
-  PIdPartnerkaAsc = 'P_ID_PARTNERKA_ASC',
-  PIdPartnerkaDesc = 'P_ID_PARTNERKA_DESC',
   PIdPartnerAsc = 'P_ID_PARTNER_ASC',
   PIdPartnerDesc = 'P_ID_PARTNER_DESC',
+  PIdPartnerkaAsc = 'P_ID_PARTNERKA_ASC',
+  PIdPartnerkaDesc = 'P_ID_PARTNERKA_DESC',
   PLatBodyAsc = 'P_LAT_BODY_ASC',
   PLatBodyDesc = 'P_LAT_BODY_DESC',
   PLatFinaleAsc = 'P_LAT_FINALE_ASC',
@@ -6794,7 +6837,9 @@ export enum PariesOrderBy {
   PTimestampAddAsc = 'P_TIMESTAMP_ADD_ASC',
   PTimestampAddDesc = 'P_TIMESTAMP_ADD_DESC',
   PTimestampArchiveAsc = 'P_TIMESTAMP_ARCHIVE_ASC',
-  PTimestampArchiveDesc = 'P_TIMESTAMP_ARCHIVE_DESC'
+  PTimestampArchiveDesc = 'P_TIMESTAMP_ARCHIVE_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
 export type Pary = Node & {
@@ -6969,13 +7014,30 @@ export enum ParyNavrhsOrderBy {
   PnIdDesc = 'PN_ID_DESC',
   PnNavrhlAsc = 'PN_NAVRHL_ASC',
   PnNavrhlDesc = 'PN_NAVRHL_DESC',
-  PnPartnerkaAsc = 'PN_PARTNERKA_ASC',
-  PnPartnerkaDesc = 'PN_PARTNERKA_DESC',
   PnPartnerAsc = 'PN_PARTNER_ASC',
   PnPartnerDesc = 'PN_PARTNER_DESC',
+  PnPartnerkaAsc = 'PN_PARTNERKA_ASC',
+  PnPartnerkaDesc = 'PN_PARTNERKA_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
+
+/** Represents an update to a `Pary`. Fields that are set will be updated. */
+export type ParyPatch = {
+  pArchiv?: InputMaybe<Scalars['Boolean']>;
+  pHodnoceni?: InputMaybe<Scalars['Int']>;
+  pId?: InputMaybe<Scalars['BigInt']>;
+  pIdPartner?: InputMaybe<Scalars['BigInt']>;
+  pIdPartnerka?: InputMaybe<Scalars['BigInt']>;
+  pLatBody?: InputMaybe<Scalars['Int']>;
+  pLatFinale?: InputMaybe<Scalars['Boolean']>;
+  pLatTrida?: InputMaybe<ParyPLatTrida>;
+  pSttBody?: InputMaybe<Scalars['Int']>;
+  pSttFinale?: InputMaybe<Scalars['Boolean']>;
+  pSttTrida?: InputMaybe<ParyPSttTrida>;
+  pTimestampAdd?: InputMaybe<Scalars['Datetime']>;
+  pTimestampArchive?: InputMaybe<Scalars['Datetime']>;
+};
 
 export enum ParyPLatTrida {
   A = 'A',
@@ -6996,23 +7058,6 @@ export enum ParyPSttTrida {
   M = 'M',
   Z = 'Z'
 }
-
-/** Represents an update to a `Pary`. Fields that are set will be updated. */
-export type ParyPatch = {
-  pArchiv?: InputMaybe<Scalars['Boolean']>;
-  pHodnoceni?: InputMaybe<Scalars['Int']>;
-  pId?: InputMaybe<Scalars['BigInt']>;
-  pIdPartner?: InputMaybe<Scalars['BigInt']>;
-  pIdPartnerka?: InputMaybe<Scalars['BigInt']>;
-  pLatBody?: InputMaybe<Scalars['Int']>;
-  pLatFinale?: InputMaybe<Scalars['Boolean']>;
-  pLatTrida?: InputMaybe<ParyPLatTrida>;
-  pSttBody?: InputMaybe<Scalars['Int']>;
-  pSttFinale?: InputMaybe<Scalars['Boolean']>;
-  pSttTrida?: InputMaybe<ParyPSttTrida>;
-  pTimestampAdd?: InputMaybe<Scalars['Datetime']>;
-  pTimestampArchive?: InputMaybe<Scalars['Datetime']>;
-};
 
 /** A connection to a list of `Person` values. */
 export type PeopleConnection = {
@@ -7605,6 +7650,28 @@ export type PlatbyGroupPatch = {
   pgType?: InputMaybe<Scalars['BigFloat']>;
 };
 
+/** A connection to a list of `PlatbyGroup` values. */
+export type PlatbyGroupsConnection = {
+  __typename?: 'PlatbyGroupsConnection';
+  /** A list of edges which contains the `PlatbyGroup` and cursor to aid in pagination. */
+  edges: Array<PlatbyGroupsEdge>;
+  /** A list of `PlatbyGroup` objects. */
+  nodes: Array<PlatbyGroup>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `PlatbyGroup` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `PlatbyGroup` edge in the connection. */
+export type PlatbyGroupsEdge = {
+  __typename?: 'PlatbyGroupsEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']>;
+  /** The `PlatbyGroup` at the end of the edge. */
+  node: PlatbyGroup;
+};
+
 export type PlatbyGroupSkupina = Node & {
   __typename?: 'PlatbyGroupSkupina';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -7679,28 +7746,6 @@ export enum PlatbyGroupSkupinasOrderBy {
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
-
-/** A connection to a list of `PlatbyGroup` values. */
-export type PlatbyGroupsConnection = {
-  __typename?: 'PlatbyGroupsConnection';
-  /** A list of edges which contains the `PlatbyGroup` and cursor to aid in pagination. */
-  edges: Array<PlatbyGroupsEdge>;
-  /** A list of `PlatbyGroup` objects. */
-  nodes: Array<PlatbyGroup>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `PlatbyGroup` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `PlatbyGroup` edge in the connection. */
-export type PlatbyGroupsEdge = {
-  __typename?: 'PlatbyGroupsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
-  /** The `PlatbyGroup` at the end of the edge. */
-  node: PlatbyGroup;
-};
 
 /** Methods to use when ordering `PlatbyGroup`. */
 export enum PlatbyGroupsOrderBy {
@@ -7908,8 +7953,6 @@ export type PlatbyRawsEdge = {
 /** Methods to use when ordering `PlatbyRaw`. */
 export enum PlatbyRawsOrderBy {
   Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   PrDiscardedAsc = 'PR_DISCARDED_ASC',
   PrDiscardedDesc = 'PR_DISCARDED_DESC',
   PrHashAsc = 'PR_HASH_ASC',
@@ -7919,7 +7962,9 @@ export enum PlatbyRawsOrderBy {
   PrRawAsc = 'PR_RAW_ASC',
   PrRawDesc = 'PR_RAW_DESC',
   PrSortedAsc = 'PR_SORTED_ASC',
-  PrSortedDesc = 'PR_SORTED_DESC'
+  PrSortedDesc = 'PR_SORTED_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
 export type ProspectDatum = {
@@ -8037,6 +8082,7 @@ export type Query = Node & {
   /** Reads a single `Nabidka` using its globally unique `ID`. */
   nabidkaByNodeId: Maybe<Nabidka>;
   nabidkaItem: Maybe<NabidkaItem>;
+  nabidkaItemByNiPartnerAndNiIdRodic: Maybe<NabidkaItem>;
   /** Reads a single `NabidkaItem` using its globally unique `ID`. */
   nabidkaItemByNodeId: Maybe<NabidkaItem>;
   /** Reads and enables pagination through a set of `NabidkaItem`. */
@@ -8096,13 +8142,13 @@ export type Query = Node & {
   platbyGroup: Maybe<PlatbyGroup>;
   /** Reads a single `PlatbyGroup` using its globally unique `ID`. */
   platbyGroupByNodeId: Maybe<PlatbyGroup>;
+  /** Reads and enables pagination through a set of `PlatbyGroup`. */
+  platbyGroups: Maybe<PlatbyGroupsConnection>;
   platbyGroupSkupina: Maybe<PlatbyGroupSkupina>;
   /** Reads a single `PlatbyGroupSkupina` using its globally unique `ID`. */
   platbyGroupSkupinaByNodeId: Maybe<PlatbyGroupSkupina>;
   /** Reads and enables pagination through a set of `PlatbyGroupSkupina`. */
   platbyGroupSkupinas: Maybe<PlatbyGroupSkupinasConnection>;
-  /** Reads and enables pagination through a set of `PlatbyGroup`. */
-  platbyGroups: Maybe<PlatbyGroupsConnection>;
   platbyItem: Maybe<PlatbyItem>;
   /** Reads a single `PlatbyItem` using its globally unique `ID`. */
   platbyItemByNodeId: Maybe<PlatbyItem>;
@@ -8174,13 +8220,13 @@ export type Query = Node & {
   upozorneni: Maybe<Upozorneni>;
   /** Reads a single `Upozorneni` using its globally unique `ID`. */
   upozorneniByNodeId: Maybe<Upozorneni>;
+  /** Reads and enables pagination through a set of `Upozorneni`. */
+  upozornenis: Maybe<UpozornenisConnection>;
   /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
   upozorneniSkupinies: Maybe<UpozorneniSkupiniesConnection>;
   upozorneniSkupiny: Maybe<UpozorneniSkupiny>;
   /** Reads a single `UpozorneniSkupiny` using its globally unique `ID`. */
   upozorneniSkupinyByNodeId: Maybe<UpozorneniSkupiny>;
-  /** Reads and enables pagination through a set of `Upozorneni`. */
-  upozornenis: Maybe<UpozornenisConnection>;
   user: Maybe<User>;
   /** Reads a single `User` using its globally unique `ID`. */
   userByNodeId: Maybe<User>;
@@ -8194,13 +8240,13 @@ export type Query = Node & {
   videoListByNodeId: Maybe<VideoList>;
   /** Reads and enables pagination through a set of `VideoList`. */
   videoLists: Maybe<VideoListsConnection>;
+  /** Reads and enables pagination through a set of `Video`. */
+  videos: Maybe<VideosConnection>;
   videoSource: Maybe<VideoSource>;
   /** Reads a single `VideoSource` using its globally unique `ID`. */
   videoSourceByNodeId: Maybe<VideoSource>;
   /** Reads and enables pagination through a set of `VideoSource`. */
   videoSources: Maybe<VideoSourcesConnection>;
-  /** Reads and enables pagination through a set of `Video`. */
-  videos: Maybe<VideosConnection>;
 };
 
 
@@ -8531,6 +8577,13 @@ export type QueryNabidkaItemArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryNabidkaItemByNiPartnerAndNiIdRodicArgs = {
+  niIdRodic: Scalars['BigInt'];
+  niPartner: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryNabidkaItemByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
@@ -8802,6 +8855,18 @@ export type QueryPlatbyGroupByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryPlatbyGroupsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<PlatbyGroupCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PlatbyGroupsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryPlatbyGroupSkupinaArgs = {
   pgsId: Scalars['BigInt'];
 };
@@ -8822,18 +8887,6 @@ export type QueryPlatbyGroupSkupinasArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<PlatbyGroupSkupinasOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryPlatbyGroupsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<PlatbyGroupCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<PlatbyGroupsOrderBy>>;
 };
 
 
@@ -9161,6 +9214,18 @@ export type QueryUpozorneniByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryUpozornenisArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<UpozorneniCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryUpozorneniSkupiniesArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -9181,18 +9246,6 @@ export type QueryUpozorneniSkupinyArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryUpozorneniSkupinyByNodeIdArgs = {
   nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryUpozornenisArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<UpozorneniCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
 };
 
 
@@ -9257,6 +9310,18 @@ export type QueryVideoListsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryVideosArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<VideoCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<VideosOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryVideoSourceArgs = {
   vsId: Scalars['BigInt'];
 };
@@ -9279,16 +9344,38 @@ export type QueryVideoSourcesArgs = {
   orderBy?: InputMaybe<Array<VideoSourcesOrderBy>>;
 };
 
+/** All input for the `reservationSetDesiredLessons` mutation. */
+export type ReservationSetDesiredLessonsInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  lessonCount: Scalars['Int'];
+  reservationId: Scalars['BigInt'];
+};
 
-/** The root query type which gives access points into the data universe. */
-export type QueryVideosArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<VideoCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<VideosOrderBy>>;
+/** The output of our `reservationSetDesiredLessons` mutation. */
+export type ReservationSetDesiredLessonsPayload = {
+  __typename?: 'ReservationSetDesiredLessonsPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** An edge for our `Nabidka`. May be used by Relay 1. */
+  nabidkaEdge: Maybe<NabidkasEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  reservation: Maybe<Nabidka>;
+  /** Reads a single `User` that is related to this `Nabidka`. */
+  userByNTrener: Maybe<User>;
+};
+
+
+/** The output of our `reservationSetDesiredLessons` mutation. */
+export type ReservationSetDesiredLessonsPayloadNabidkaEdgeArgs = {
+  orderBy?: InputMaybe<Array<NabidkasOrderBy>>;
 };
 
 /** All input for the `resetPassword` mutation. */
@@ -9480,11 +9567,11 @@ export type Rozpi = Node & {
   rId: Scalars['BigInt'];
   rKde: Scalars['String'];
   rLock: Scalars['Boolean'];
+  /** Reads and enables pagination through a set of `RozpisItem`. */
+  rozpisItemsByRiIdRodic: RozpisItemsConnection;
   rTimestamp: Maybe<Scalars['Datetime']>;
   rTrener: Scalars['BigInt'];
   rVisible: Scalars['Boolean'];
-  /** Reads and enables pagination through a set of `RozpisItem`. */
-  rozpisItemsByRiIdRodic: RozpisItemsConnection;
   /** Reads a single `User` that is related to this `Rozpi`. */
   userByRTrener: Maybe<User>;
 };
@@ -9780,6 +9867,8 @@ export type SkupiniesEdge = {
 
 /** Methods to use when ordering `Skupiny`. */
 export enum SkupiniesOrderBy {
+  InternalInfoAsc = 'INTERNAL_INFO_ASC',
+  InternalInfoDesc = 'INTERNAL_INFO_DESC',
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
@@ -9801,6 +9890,7 @@ export enum SkupiniesOrderBy {
 
 export type Skupiny = Node & {
   __typename?: 'Skupiny';
+  internalInfo: Scalars['JSON'];
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   /** Reads and enables pagination through a set of `PlatbyGroupSkupina`. */
@@ -9853,6 +9943,8 @@ export type SkupinyUsersByUSkupinaArgs = {
 
 /** A condition to be used against `Skupiny` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type SkupinyCondition = {
+  /** Checks for equality with the object’s `internalInfo` field. */
+  internalInfo?: InputMaybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `sColorRgb` field. */
   sColorRgb?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `sColorText` field. */
@@ -9871,8 +9963,9 @@ export type SkupinyCondition = {
 
 /** An input for mutations affecting `Skupiny` */
 export type SkupinyInput = {
+  internalInfo?: InputMaybe<Scalars['JSON']>;
   sColorRgb: Scalars['String'];
-  sColorText: Scalars['String'];
+  sColorText?: InputMaybe<Scalars['String']>;
   sDescription: Scalars['String'];
   sId?: InputMaybe<Scalars['BigInt']>;
   sLocation?: InputMaybe<Scalars['String']>;
@@ -9882,6 +9975,7 @@ export type SkupinyInput = {
 
 /** Represents an update to a `Skupiny`. Fields that are set will be updated. */
 export type SkupinyPatch = {
+  internalInfo?: InputMaybe<Scalars['JSON']>;
   sColorRgb?: InputMaybe<Scalars['String']>;
   sColorText?: InputMaybe<Scalars['String']>;
   sDescription?: InputMaybe<Scalars['String']>;
@@ -9979,12 +10073,6 @@ export type TenantAttachmentPatch = {
   type?: InputMaybe<TenantAttachmentType>;
 };
 
-export enum TenantAttachmentType {
-  Logo = 'LOGO',
-  Map = 'MAP',
-  Photo = 'PHOTO'
-}
-
 /** A connection to a list of `TenantAttachment` values. */
 export type TenantAttachmentsConnection = {
   __typename?: 'TenantAttachmentsConnection';
@@ -10018,6 +10106,12 @@ export enum TenantAttachmentsOrderBy {
   TenantIdDesc = 'TENANT_ID_DESC',
   TypeAsc = 'TYPE_ASC',
   TypeDesc = 'TYPE_DESC'
+}
+
+export enum TenantAttachmentType {
+  Logo = 'LOGO',
+  Map = 'MAP',
+  Photo = 'PHOTO'
 }
 
 /** A condition to be used against `Tenant` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -10631,6 +10725,19 @@ export type UpdateNabidkaInput = {
   patch: NabidkaPatch;
 };
 
+/** All input for the `updateNabidkaItemByNiPartnerAndNiIdRodic` mutation. */
+export type UpdateNabidkaItemByNiPartnerAndNiIdRodicInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  niIdRodic: Scalars['BigInt'];
+  niPartner: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `NabidkaItem` being updated. */
+  patch: NabidkaItemPatch;
+};
+
 /** All input for the `updateNabidkaItemByNodeId` mutation. */
 export type UpdateNabidkaItemByNodeIdInput = {
   /**
@@ -10832,9 +10939,9 @@ export type UpdateParyInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']>;
-  pId: Scalars['BigInt'];
   /** An object where the defined keys will be set on the `Pary` being updated. */
   patch: ParyPatch;
+  pId: Scalars['BigInt'];
 };
 
 /** All input for the `updateParyNavrhByNodeId` mutation. */
@@ -12063,11 +12170,11 @@ export type Upozorneni = Node & {
   upKdo: Maybe<Scalars['BigInt']>;
   upLock: Scalars['Boolean'];
   upNadpis: Scalars['String'];
+  /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
+  upozorneniSkupiniesByUpsIdRodic: UpozorneniSkupiniesConnection;
   upText: Scalars['String'];
   upTimestamp: Maybe<Scalars['Datetime']>;
   upTimestampAdd: Scalars['Datetime'];
-  /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
-  upozorneniSkupiniesByUpsIdRodic: UpozorneniSkupiniesConnection;
   /** Reads a single `User` that is related to this `Upozorneni`. */
   userByUpKdo: Maybe<User>;
 };
@@ -12136,6 +12243,28 @@ export type UpozorneniPatch = {
   upText?: InputMaybe<Scalars['String']>;
   upTimestamp?: InputMaybe<Scalars['Datetime']>;
   upTimestampAdd?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** A connection to a list of `Upozorneni` values. */
+export type UpozornenisConnection = {
+  __typename?: 'UpozornenisConnection';
+  /** A list of edges which contains the `Upozorneni` and cursor to aid in pagination. */
+  edges: Array<UpozornenisEdge>;
+  /** A list of `Upozorneni` objects. */
+  nodes: Array<Upozorneni>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Upozorneni` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Upozorneni` edge in the connection. */
+export type UpozornenisEdge = {
+  __typename?: 'UpozornenisEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']>;
+  /** The `Upozorneni` at the end of the edge. */
+  node: Upozorneni;
 };
 
 /** A connection to a list of `UpozorneniSkupiny` values. */
@@ -12227,28 +12356,6 @@ export type UpozorneniSkupinyPatch = {
   upsPopis?: InputMaybe<Scalars['String']>;
 };
 
-/** A connection to a list of `Upozorneni` values. */
-export type UpozornenisConnection = {
-  __typename?: 'UpozornenisConnection';
-  /** A list of edges which contains the `Upozorneni` and cursor to aid in pagination. */
-  edges: Array<UpozornenisEdge>;
-  /** A list of `Upozorneni` objects. */
-  nodes: Array<Upozorneni>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Upozorneni` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `Upozorneni` edge in the connection. */
-export type UpozornenisEdge = {
-  __typename?: 'UpozornenisEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
-  /** The `Upozorneni` at the end of the edge. */
-  node: Upozorneni;
-};
-
 /** Methods to use when ordering `Upozorneni`. */
 export enum UpozornenisOrderBy {
   Natural = 'NATURAL',
@@ -12286,6 +12393,7 @@ export type User = Node & {
   attachmentsByUploadedBy: AttachmentsConnection;
   /** Reads and enables pagination through a set of `Dokumenty`. */
   dokumentiesByDKdo: DokumentiesConnection;
+  fullName: Maybe<Scalars['String']>;
   /** Reads and enables pagination through a set of `GalerieFoto`. */
   galerieFotosByGfKdo: GalerieFotosConnection;
   /** Reads and enables pagination through a set of `Nabidka`. */
@@ -12336,6 +12444,8 @@ export type User = Node & {
   uPohlavi: Scalars['String'];
   uPostalCode: Scalars['String'];
   uPoznamky: Scalars['String'];
+  /** Reads and enables pagination through a set of `Upozorneni`. */
+  upozornenisByUpKdo: UpozornenisConnection;
   uPrijmeni: Scalars['String'];
   uRodneCislo: Maybe<Scalars['String']>;
   uSkupina: Scalars['BigInt'];
@@ -12344,8 +12454,6 @@ export type User = Node & {
   uTeacher: Scalars['Boolean'];
   uTelefon: Scalars['String'];
   uTimestamp: Scalars['Datetime'];
-  /** Reads and enables pagination through a set of `Upozorneni`. */
-  upozornenisByUpKdo: UpozornenisConnection;
 };
 
 
@@ -12746,6 +12854,28 @@ export enum UsersOrderBy {
   UTimestampDesc = 'U_TIMESTAMP_DESC'
 }
 
+/** All input for the `verifyFunction` mutation. */
+export type VerifyFunctionInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  f?: InputMaybe<Scalars['RegProc']>;
+};
+
+/** The output of our `verifyFunction` mutation. */
+export type VerifyFunctionPayload = {
+  __typename?: 'VerifyFunctionPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
 export type Video = Node & {
   __typename?: 'Video';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -12903,6 +13033,51 @@ export type VideoPatch = {
   vUri?: InputMaybe<Scalars['String']>;
 };
 
+/** A connection to a list of `Video` values. */
+export type VideosConnection = {
+  __typename?: 'VideosConnection';
+  /** A list of edges which contains the `Video` and cursor to aid in pagination. */
+  edges: Array<VideosEdge>;
+  /** A list of `Video` objects. */
+  nodes: Array<Video>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Video` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Video` edge in the connection. */
+export type VideosEdge = {
+  __typename?: 'VideosEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']>;
+  /** The `Video` at the end of the edge. */
+  node: Video;
+};
+
+/** Methods to use when ordering `Video`. */
+export enum VideosOrderBy {
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  VAuthorAsc = 'V_AUTHOR_ASC',
+  VAuthorDesc = 'V_AUTHOR_DESC',
+  VCreatedAtAsc = 'V_CREATED_AT_ASC',
+  VCreatedAtDesc = 'V_CREATED_AT_DESC',
+  VDescriptionAsc = 'V_DESCRIPTION_ASC',
+  VDescriptionDesc = 'V_DESCRIPTION_DESC',
+  VIdAsc = 'V_ID_ASC',
+  VIdDesc = 'V_ID_DESC',
+  VPlaylistAsc = 'V_PLAYLIST_ASC',
+  VPlaylistDesc = 'V_PLAYLIST_DESC',
+  VTitleAsc = 'V_TITLE_ASC',
+  VTitleDesc = 'V_TITLE_DESC',
+  VUpdatedAtAsc = 'V_UPDATED_AT_ASC',
+  VUpdatedAtDesc = 'V_UPDATED_AT_DESC',
+  VUriAsc = 'V_URI_ASC',
+  VUriDesc = 'V_URI_DESC'
+}
+
 export type VideoSource = Node & {
   __typename?: 'VideoSource';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -12993,49 +13168,4 @@ export enum VideoSourcesOrderBy {
   VsTitleDesc = 'VS_TITLE_DESC',
   VsUrlAsc = 'VS_URL_ASC',
   VsUrlDesc = 'VS_URL_DESC'
-}
-
-/** A connection to a list of `Video` values. */
-export type VideosConnection = {
-  __typename?: 'VideosConnection';
-  /** A list of edges which contains the `Video` and cursor to aid in pagination. */
-  edges: Array<VideosEdge>;
-  /** A list of `Video` objects. */
-  nodes: Array<Video>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Video` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `Video` edge in the connection. */
-export type VideosEdge = {
-  __typename?: 'VideosEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
-  /** The `Video` at the end of the edge. */
-  node: Video;
-};
-
-/** Methods to use when ordering `Video`. */
-export enum VideosOrderBy {
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  VAuthorAsc = 'V_AUTHOR_ASC',
-  VAuthorDesc = 'V_AUTHOR_DESC',
-  VCreatedAtAsc = 'V_CREATED_AT_ASC',
-  VCreatedAtDesc = 'V_CREATED_AT_DESC',
-  VDescriptionAsc = 'V_DESCRIPTION_ASC',
-  VDescriptionDesc = 'V_DESCRIPTION_DESC',
-  VIdAsc = 'V_ID_ASC',
-  VIdDesc = 'V_ID_DESC',
-  VPlaylistAsc = 'V_PLAYLIST_ASC',
-  VPlaylistDesc = 'V_PLAYLIST_DESC',
-  VTitleAsc = 'V_TITLE_ASC',
-  VTitleDesc = 'V_TITLE_DESC',
-  VUpdatedAtAsc = 'V_UPDATED_AT_ASC',
-  VUpdatedAtDesc = 'V_UPDATED_AT_DESC',
-  VUriAsc = 'V_URI_ASC',
-  VUriDesc = 'V_URI_DESC'
 }

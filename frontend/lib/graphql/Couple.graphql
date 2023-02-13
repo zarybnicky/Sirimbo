@@ -1,16 +1,25 @@
+fragment CouplePartial on Pary {
+  id: pId
+  pIdPartner
+  pIdPartnerka
+  pArchiv
+  userByPIdPartner {
+    id: uId
+    uJmeno
+    uPrijmeni
+  }
+  userByPIdPartnerka {
+    id: uId
+    uJmeno
+    uPrijmeni
+  }
+}
+
 query CoupleList {
   activeCouples {
     totalCount
     nodes {
-      id: pId
-      userByPIdPartner {
-        uJmeno
-        uPrijmeni
-      }
-      userByPIdPartnerka {
-        uJmeno
-        uPrijmeni
-      }
+      ...CouplePartial
     }
   }
 }

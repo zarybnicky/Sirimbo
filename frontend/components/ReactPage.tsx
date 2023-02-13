@@ -6,7 +6,7 @@ import { CallToActionPlugin } from './CallToAction';
 import { ContainerPlugin } from './Container';
 import { ProspectFormPlugin } from './ProspectForm';
 import { HeadingPlugin } from './Heading';
-import { defaultSlate } from './SlateReadonly';
+import { defaultSlate } from './Slate';
 import { ServiceCardPlugin } from './cards/ServiceCard';
 import { LocationCardPlugin } from './cards/LocationCard';
 import { TrainerCardPlugin } from './cards/TrainerCard';

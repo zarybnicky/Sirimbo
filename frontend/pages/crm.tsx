@@ -9,8 +9,8 @@ import { Item } from 'components/layout/Item';
 export default function CrmPage() {
   const { data } = useActiveProspectsQuery();
 
-  return <Item>
-    <Item.Titlebar title="Zájemci" />
+  return <Item className="col-feature">
+    <Item.Titlebar title="Chci tančit!" />
 
     <DataGrid
       autoHeight={true}

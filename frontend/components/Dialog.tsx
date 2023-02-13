@@ -5,7 +5,7 @@ import React from "react";
 import { X as CloseIcon } from 'react-feather';
 
 export const SimpleDialog = ({ title, children, button }: {
-  title: string | null;
+  title: React.ReactNode;
   children: React.ReactNode | ((props: { close: () => void }) => React.ReactNode);
   button: React.ReactNode;
 }) => {

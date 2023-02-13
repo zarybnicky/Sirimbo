@@ -7,6 +7,7 @@ import { X as Cross } from 'react-feather';
 import { SubmitButton } from './SubmitButton';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from 'lib/data/use-auth';
+import { formatCoupleName } from 'lib/format-name';
 
 export const LessonButton = ({ schedule, lesson, showTrainer }: {
   lesson: ScheduleItemBasicFragment;
@@ -38,21 +39,9 @@ export const LessonButton = ({ schedule, lesson, showTrainer }: {
 
   const trainer = schedule.userByRTrener;
   const couple = lesson.paryByRiPartner;
-  const man = couple?.userByPIdPartner;
-  const woman = couple?.userByPIdPartnerka;
-  const isMyLesson = user?.id === man?.id || user?.id === woman?.id;
+  const isMyLesson = user?.id === couple?.userByPIdPartner?.id || user?.id === couple?.userByPIdPartnerka?.id;
 
-  let name = '';
-
-  if (showTrainer) {
-    name = `${trainer?.uJmeno} ${trainer?.uPrijmeni}`;
-  } else if (!woman) {
-    name = (['.', ',', '', undefined].includes(man?.uPrijmeni) ? man?.uJmeno
-      : ['.', ',', '', undefined].includes(man?.uJmeno) ? man?.uPrijmeni
-        : `${man?.uJmeno} ${man?.uPrijmeni}`) ?? '';
-  } else {
-    name = `${man?.uPrijmeni} - ${woman.uPrijmeni}`;
-  }
+  const name = showTrainer ? `${trainer?.uJmeno} ${trainer?.uPrijmeni}` : formatCoupleName(couple);
 
   const [fromH = '0', fromM = '0'] = lesson.riOd.split(':');
   const [toH = '0', toM = '0'] = lesson.riDo.split(':');
@@ -63,9 +52,9 @@ export const LessonButton = ({ schedule, lesson, showTrainer }: {
       "group flex gap-3 p-2.5 rounded-lg",
       "leading-4 text-sm tabular-nums",
       "radix-state-open:bg-red-500 radix-state-open:text-white hover:radix-state-open:bg-red-500",
-      (canBook || canCancel) && 'cursor-pointer hover:bg-stone-50',
-      canBook && 'border border-red-200',
-      (!showTrainer && isMyLesson) && 'border border-red-500',
+      (canBook || canCancel) && 'cursor-pointer hover:bg-red-50',
+      canBook && 'bg-green-100 text-green-900 border border-green-200',
+      (!showTrainer && isMyLesson) && 'bg-red-100',
     )}>
       <div className="text-stone-600 group-radix-state-open:text-white">{lesson.riOd.substring(0, 5)}</div>
       <div className="grow">{canBook ? "VOLNÁ" : lesson.paryByRiPartner ? name : '-'}</div>
@@ -93,11 +82,11 @@ export const LessonButton = ({ schedule, lesson, showTrainer }: {
         >
           <PopoverPrimitive.Arrow className="fill-current text-white dark:text-gray-800" />
 
-          {canBook ? (
+          {canBook && (
             <SubmitButton loading={isBooking} onClick={() => bookLesson({ id: lesson.id })}>
               Přihlásit
             </SubmitButton>
-          ) : null}
+          )}
           {canCancel && (
             <SubmitButton loading={isCanceling} onClick={() => cancelLesson({ id: lesson.id })}>
               Zrušit

@@ -65,8 +65,8 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: {
             children: [
               { type: "link", title: 'Nástěnka', "href": '/dashboard' },
               { type: "link", title: 'Tréninky', "href": '/schedule' },
-              { type: "link", title: 'Soustředění', "href": '/events' },
-              // { type: "link", title: 'Dokumenty', "href": '/documents' },
+              { type: "link", title: 'Akce', "href": '/events' },
+              { type: "link", title: 'Dokumenty', "href": '/documents' },
               { type: "link", title: 'Členové', "href": '/cohorts' },
               { type: "link", title: 'Profil', "href": '/profile' },
             ],
@@ -83,7 +83,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: {
         {topMenu.map(x => <SidebarSection key={x.title} item={x} />)}
 
         <div className="mt-4 text-xs text-stone-700 lg:text-white p-4 grid gap-2">
-          <div>© 2022 Taneční klub Olymp Olomouc, z. s.</div>
+          <div>© 2023 Taneční klub Olymp Olomouc, z. s.</div>
           <div>Verze: {process.env.BUILD_ID?.substring(0, 7)}</div>
         </div>
       </div>

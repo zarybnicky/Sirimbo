@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
-import { SlateReadonly } from 'components/SlateReadonly';
+import { SlateEditor } from 'components/Slate';
 import { Layout } from 'components/layout/Layout';
 import { Heading } from 'components/Heading';
 
@@ -17,7 +17,7 @@ export default function AboutPage() {
         <img src="https://tkolymp.cz/galerie/clanky/293547069655557869525116228763683690860426o.jpg" />
       </div>
       <div className="col-span-2 -order-1 md:order-1">
-        <SlateReadonly value={text} />
+        <SlateEditor readOnly value={text} />
       </div>
     </div>
 

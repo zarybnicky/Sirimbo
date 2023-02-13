@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Card } from 'components/Card';
 import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
-import { HtmlView } from 'components/HtmlView';
 import { useCohortListQuery } from 'lib/graphql/Cohorts';
 import { Layout } from 'components/layout/Layout';
+import { RichTextView } from 'components/RichTextView';
 
 export default function CohortsPage() {
   const { data: cohorts } = useCohortListQuery({ visible: true });
@@ -18,7 +18,7 @@ export default function CohortsPage() {
           <div className="">
             <h5 className="text-xl font-bold mb-2">{x.sName}</h5>
             <h6 className="font-bold mb-2">{x.sLocation}</h6>
-            <HtmlView content={x.sDescription.replace('&nbsp;', ' ').replace('<br />', '')} />
+            <RichTextView value={x.sDescription.replace('&nbsp;', ' ').replace('<br />', '')} />
           </div>
         </Card>
       ))}

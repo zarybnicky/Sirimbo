@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
-import { SlateReadonly } from 'components/SlateReadonly';
 import { Layout } from 'components/layout/Layout';
-import { Heading } from 'components/Heading';
-import { TrainerCard } from 'components/cards/TrainerCard';
-import { Descendant } from 'slate';
 import { ProspectForm } from 'components/ProspectForm';
 import { LocationCard } from 'components/cards/LocationCard';
 

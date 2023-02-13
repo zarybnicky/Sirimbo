@@ -40,9 +40,9 @@ export default function ProfilePage() {
     <p>Tréninková skupina: {cohorts?.skupinies?.nodes.find(x => x.id === user.uSkupina)?.sName}</p>
 
     <p>Aktuální partner: {couple?.pIdPartner === user.id ? (
-      `${couple?.userByPIdPartnerka?.uJmeno} ${couple?.userByPIdPartnerka?.uPrijmeni}`
+      <>{couple?.userByPIdPartnerka?.uJmeno} {couple?.userByPIdPartnerka?.uPrijmeni}</>
     ) : (
-      `${couple?.userByPIdPartner?.uJmeno} ${couple?.userByPIdPartner?.uPrijmeni}`
+      <>{couple?.userByPIdPartner?.uJmeno} {couple?.userByPIdPartner?.uPrijmeni}</>
     )}</p>
   </Item>
 }

@@ -39,6 +39,7 @@ export const UserForm: React.FC<{
 
   const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
+      uLogin: data?.uLogin,
       uJmeno: data?.uJmeno,
       uPrijmeni: data?.uPrijmeni,
       uNarozeni: data?.uNarozeni,
@@ -65,13 +66,14 @@ export const UserForm: React.FC<{
   });
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
+    const { uLogin: _uLogin, ...patch } = values;
     if (data) {
-      await doUpdate({ id: data.id, patch: values });
+      await doUpdate({ id: data.id, patch });
     } else {
       await doCreate({
         input: {
-          ...values,
-          uLogin: values.uLogin.toLowerCase(),
+          ...patch,
+          uLogin: _uLogin.toLowerCase(),
           uLock: false,
         }
       });
@@ -81,7 +83,9 @@ export const UserForm: React.FC<{
   return (
     <form className="grid lg:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
-      {!data && <>
+      {data ? (
+        <TextFieldElement control={control} name="uLogin" label="Uživatelské jméno" disabled />
+      ) : <>
         <TextFieldElement control={control} name="uLogin" label="Uživatelské jméno" required />
         <TextFieldElement control={control} type="password" name="uPass" label="Heslo" required />
       </>}
@@ -139,7 +143,7 @@ export const UserForm: React.FC<{
           options={cohorts?.skupinies?.nodes?.map(x => ({ id: x.id, label: x.sName })) || []}
         />
 
-        <TextAreaElement control={control} name="uPoznamky" label="Poznámka" rows={3} required />
+        <TextAreaElement control={control} name="uPoznamky" label="Poznámka" rows={3} />
 
         <CheckboxElement control={control} name="uDancer" value="1" label="Aktivní tanečník" />
         <CheckboxElement control={control} name="uTeacher" value="1" label="Trenér" />

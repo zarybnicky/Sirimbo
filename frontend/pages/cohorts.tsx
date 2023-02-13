@@ -3,12 +3,12 @@ import { CohortExport } from 'components/CohortExport';
 import { TabMenu } from 'components/TabMenu';
 import { AtSign as EmailIcon, Phone as PhoneIcon } from 'react-feather';
 import { useMemberListQuery } from 'lib/graphql/User';
-import { HtmlView } from 'components/HtmlView';
 import { Card } from 'components/Card';
 import { SimpleDialog } from 'components/Dialog';
 import { UserFragment } from 'lib/graphql/CurrentUser';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 import { Item } from 'components/layout/Item';
+import { RichTextView } from 'components/RichTextView';
 
 export default function CohortsPage() {
   const { data: members } = useMemberListQuery();
@@ -36,7 +36,7 @@ export default function CohortsPage() {
   }, [members]);
   const [variant, setVariant] = React.useState('all');
 
-  return <Item>
+  return <Item className="col-feature">
     <div className="flex items-center justify-between gap-2 pb-2">
       <TabMenu selected={variant} onSelect={setVariant} options={[
         { id: 'cohortsOnly', label: 'Tréninkové skupiny' },
@@ -56,8 +56,8 @@ export default function CohortsPage() {
             <CohortExport id={cohort.sId} name={cohort.sName} />
           </div>
 
-          {(variant === 'cohortsOnly') ? (
-            <HtmlView content={cohort.sDescription.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', '')} />
+          {variant === 'cohortsOnly' ? (
+            <RichTextView value={cohort.sDescription.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', '')} />
           ) : (
             <div className="flex flex-col items-start">
               {cohort.members.map((member) => <UserDetailButton key={member.uId} user={member} />)}
@@ -71,12 +71,12 @@ export default function CohortsPage() {
 
 const UserDetailButton: React.FC<{ user: UserFragment }> = ({ user }) => {
   return <SimpleDialog
-    title={`${user.uJmeno} ${user.uPrijmeni}`}
+    title={<div className="text-xl">{user.uJmeno} {user.uPrijmeni}</div>}
     button={<button className="underline text-stone-700">{user.uPrijmeni}, {user.uJmeno}</button>}
   >
-    <ul className="flex flex-col gap-3 m-4 mt-0">
-      <li><EmailIcon /> {user.uEmail}</li>
-      <li><PhoneIcon /> {user.uTelefon}</li>
+    <ul className="flex flex-col gap-3 m-4">
+      <li><EmailIcon className="inline" /> {user.uEmail}</li>
+      <li><PhoneIcon className="inline" /> {user.uTelefon}</li>
     </ul>
   </SimpleDialog>
 }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
-import { SlateReadonly } from 'components/SlateReadonly';
+import { SlateEditor } from 'components/Slate';
 import { Layout } from 'components/layout/Layout';
 import { Heading } from 'components/Heading';
 import { TrainerCard } from 'components/cards/TrainerCard';
@@ -21,7 +21,7 @@ export default function AboutPage() {
     <div className="col-feature my-4 grid gap-8 lg:grid-cols-2">
       {internal.map(item => (
         <TrainerCard key={item.name} name={item.name} image={item.image}>
-          <SlateReadonly value={item.content} />
+          <SlateEditor readOnly value={item.content} />
         </TrainerCard>
       ))}
     </div>
@@ -33,7 +33,7 @@ export default function AboutPage() {
     <div className="col-feature mt-4 mb-16 grid gap-8 lg:grid-cols-2">
       {internal.map(item => (
         <TrainerCard key={item.name} name={item.name} image={item.image}>
-          <SlateReadonly value={item.content} />
+          <SlateEditor readOnly value={item.content} />
         </TrainerCard>
       ))}
     </div>

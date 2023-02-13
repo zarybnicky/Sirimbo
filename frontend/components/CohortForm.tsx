@@ -9,8 +9,9 @@ import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { ColorPicker } from './ColorPicker';
 import { useQueryClient } from '@tanstack/react-query';
+import { SlateEditorElement } from './Slate';
 
-type FormProps = Pick<SkupinyInput, 'sName' | 'sDescription' | 'sLocation' | 'sVisible' | 'sColorRgb'>;
+type FormProps = Pick<SkupinyInput, 'internalInfo' | 'sName' | 'sDescription' | 'sLocation' | 'sVisible' | 'sColorRgb'>;
 
 export const CohortForm: React.FC<{ data?: CohortFragment; }> = ({ data }) => {
   const queryClient = useQueryClient();
@@ -35,7 +36,7 @@ export const CohortForm: React.FC<{ data?: CohortFragment; }> = ({ data }) => {
     if (data) {
       await doUpdate({ id: data.id, patch: values });
     } else {
-      await doCreate({ input: { ...values, sColorText: '' } });
+      await doCreate({ input: values });
     }
   });
 
@@ -46,6 +47,7 @@ export const CohortForm: React.FC<{ data?: CohortFragment; }> = ({ data }) => {
       <TextFieldElement control={control} name="sLocation" label="Město/místo" required />
       <ColorPicker name="sColorRgb" control={control} />
       <TextAreaElement control={control} name="sDescription" label="Popis" rows={10} required />
+      <SlateEditorElement control={control} name="internalInfo" label="Interní informace" />
       <CheckboxElement control={control} name="sVisible" value="1" label="Viditelná pro registraci" />
       <SubmitButton loading={onSubmit.loading} />
     </form>

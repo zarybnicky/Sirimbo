@@ -1,5 +1,26 @@
+import { SlateEditor } from "./Slate";
 import Link from "next/link"
 import parse, { domToReact, DOMNode, Element, HTMLReactParserOptions } from "html-react-parser"
+
+export const RichTextView = ({ value, className }: {
+  value: string | any[] | object;
+  className?: string;
+}) => {
+  if (Array.isArray(value)) {
+    return <div className={className}>
+      <SlateEditor readOnly value={value} />
+    </div>
+  }
+  if (typeof value === 'object') {
+    return <>Neplatný obsah, nahlašte to prosím správci obsahu</>;
+  }
+  if (value.startsWith('[')) {
+    return <div className={className}>
+      <SlateEditor readOnly value={JSON.parse(value) as any[]} />
+    </div>
+  }
+  return <HtmlView className={className} content={value} />
+};
 
 const isElement = (domNode: DOMNode): domNode is Element => {
   const isTag = domNode.type === "tag";

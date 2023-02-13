@@ -38,23 +38,6 @@ fragment UserAuth on User {
   }
 }
 
-fragment CouplePartial on Pary {
-  id: pId
-  pIdPartner
-  pIdPartnerka
-  pArchiv
-  userByPIdPartner {
-    id: uId
-    uJmeno
-    uPrijmeni
-  }
-  userByPIdPartnerka {
-    id: uId
-    uJmeno
-    uPrijmeni
-  }
-}
-
 query CurrentUser {
   getCurrentUser {
     ...UserAuth

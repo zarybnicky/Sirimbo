@@ -4,10 +4,12 @@ import * as Types from './index';
 
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
+export type CouplePartialFragment = { __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean, id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null };
+
 export type CoupleListQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type CoupleListQuery = { __typename?: 'Query', activeCouples: { __typename?: 'PariesConnection', totalCount: number, nodes: Array<{ __typename?: 'Pary', id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string } | null }> } | null };
+export type CoupleListQuery = { __typename?: 'Query', activeCouples: { __typename?: 'PariesConnection', totalCount: number, nodes: Array<{ __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean, id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null }> } | null };
 
 export type CreateCoupleMutationVariables = Types.Exact<{
   man: Types.Scalars['BigInt'];
@@ -29,25 +31,34 @@ export type FixUnpairedCouplesMutationVariables = Types.Exact<{ [key: string]: n
 
 export type FixUnpairedCouplesMutation = { __typename?: 'Mutation', fixUnpairedCouples: { __typename?: 'FixUnpairedCouplesPayload', paries: Array<{ __typename?: 'Pary', id: string }> | null } | null };
 
-
+export const CouplePartialFragmentDoc = `
+    fragment CouplePartial on Pary {
+  id: pId
+  pIdPartner
+  pIdPartnerka
+  pArchiv
+  userByPIdPartner {
+    id: uId
+    uJmeno
+    uPrijmeni
+  }
+  userByPIdPartnerka {
+    id: uId
+    uJmeno
+    uPrijmeni
+  }
+}
+    `;
 export const CoupleListDocument = `
     query CoupleList {
   activeCouples {
     totalCount
     nodes {
-      id: pId
-      userByPIdPartner {
-        uJmeno
-        uPrijmeni
-      }
-      userByPIdPartnerka {
-        uJmeno
-        uPrijmeni
-      }
+      ...CouplePartial
     }
   }
 }
-    `;
+    ${CouplePartialFragmentDoc}`;
 export const useCoupleListQuery = <
       TData = CoupleListQuery,
       TError = unknown

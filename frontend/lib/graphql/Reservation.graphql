@@ -5,19 +5,7 @@ fragment ReservationItemBasic on NabidkaItem {
   niPocetHod
   niLock
   paryByNiPartner {
-    id: pId
-    pIdPartner
-    pIdPartnerka
-    userByPIdPartner {
-      uJmeno
-      uPrijmeni
-      id: uId
-    }
-    userByPIdPartnerka {
-      uJmeno
-      uPrijmeni
-      id: uId
-    }
+    ...CouplePartial
   }
 }
 
@@ -32,6 +20,7 @@ fragment ReservationBasic on Nabidka {
   nVisible
   nTrener
   userByNTrener {
+    fullName
     uJmeno
     uPrijmeni
     id: uId
@@ -47,10 +36,16 @@ fragment Reservation on Nabidka {
   }
 }
 
+fragment MyReservation on Nabidka {
+  ...Reservation
+  myLessons
+  freeLessons
+}
+
 query ReservationList($limit: Int, $offset: Int) {
   nabidkas(first: $limit, offset: $offset, orderBy: [N_OD_DESC]) {
     nodes {
-      ...Reservation
+      ...ReservationBasic
     }
     totalCount
   }
@@ -65,7 +60,16 @@ query Reservation($id: BigInt!) {
 query ReservationRange($startDate: Date!, $endDate: Date!) {
   reservationsForRange(startDate: $startDate, endDate: $endDate) {
     nodes {
-      ...Reservation
+      ...MyReservation
+    }
+  }
+}
+
+mutation SetDesiredLessons($id: BigInt!, $lessonCount: Int!) {
+  reservationSetDesiredLessons(input: {reservationId: $id, lessonCount: $lessonCount}) {
+    reservation {
+      myLessons
+      freeLessons
     }
   }
 }

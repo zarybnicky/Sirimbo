@@ -36,17 +36,16 @@ export const AnnouncementForm: React.FC<{
   });
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
+    const patch = {
+      upNadpis: values.upNadpis,
+      upText: values.upText,
+      scheduledSince: values.schedule[0]?.toISOString(),
+      scheduledUntil: values.schedule[1]?.toDateString(),
+    };
     if (data) {
-      await doUpdate({ id: data.id, patch: values });
+      await doUpdate({ id: data.id, patch });
     } else {
-      await doCreate({
-        input: {
-          upNadpis: values.upNadpis,
-          upText: values.upText,
-          scheduledSince: values.schedule[0]?.toISOString(),
-          scheduledUntil: values.schedule[1]?.toDateString(),
-        }
-      });
+      await doCreate({ input: patch });
     }
   });
 

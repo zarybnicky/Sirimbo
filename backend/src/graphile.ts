@@ -124,7 +124,7 @@ extend type Mutation {
           uploadFile: async (_query, { fileName }, context) => {
             // check auth
             const objectName = `${Date.now()}-${fileName}`;
-            await context.pgClient.query('INSERT INTO attachment (object_name) ($1)', [objectName]);
+            await context.pgClient.query('INSERT INTO attachment (object_name) VALUES ($1)', [objectName]);
             const uploadUrl = await minioClient.presignedPutObject('public', objectName);
             return { objectName, uploadUrl };
           },

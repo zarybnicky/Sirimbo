@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Layout } from "components/layout/Layout";
-import { SlateReadonly } from 'components/SlateReadonly';
+import { SlateEditor } from 'components/Slate';
 import { Heading } from 'components/Heading';
 
 export default function TermsConditions() {
@@ -9,7 +9,7 @@ export default function TermsConditions() {
       text="Ochrana osobních údajů" image="/images/mohelnice2021-title.jpg"
       color={{ r: 216, g: 28, b: 58, a: 0.6 }}
     />
-    <SlateReadonly value={text} />
+    <SlateEditor readOnly value={text} />
   </>;
 }
 

@@ -1,157 +1,147 @@
 import * as React from 'react';
 import { usePermissions } from 'lib/data/use-permissions';
-import { ReservationFragment, useReservationRangeQuery } from 'lib/graphql/Reservation';
+import { MyReservationFragment, useReservationRangeQuery } from 'lib/graphql/Reservation';
 import { ScheduleFragment, useScheduleRangeQuery } from 'lib/graphql/Schedule';
 import { Dropdown } from 'components/Dropdown';
-import { Button } from 'components/Button';
 import { LessonButton } from 'components/LessonButton';
 import { Card } from 'components/Card';
 import { MoreVertical } from 'react-feather';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
-import { formatLongDateRange, formatWeekDay } from 'lib/format-date';
-import lastDayOfWeek from 'date-fns/lastDayOfWeek';
+import { formatShortDateRange, formatWeekDay } from 'lib/format-date';
+import { formatCoupleName } from 'lib/format-name';
+import startOfWeek from 'date-fns/startOfWeek';
+import endOfWeek from 'date-fns/endOfWeek';
+import endOfYear from 'date-fns/endOfYear';
+import classNames from 'classnames';
+import { ReservationButton } from 'components/ReservationButton';
+import { useAuth } from 'lib/data/use-auth';
 
 export default function SchedulePage() {
-  const perms = usePermissions();
-  const [startDate, setStartDate] = React.useState(() => {
-    const today = new Date();
-    const first = today.getDate() - today.getDay() + 1;
-    const monday = new Date(today.setDate(first));
-    return monday;
-  });
+  const [startDate, setStartDate] = React.useState(() => startOfWeek(new Date(), { weekStartsOn: 1 }));
 
   const { data: schedules } = useScheduleRangeQuery({
     startDate: startDate.toISOString().substring(0, 10),
-    endDate: lastDayOfWeek(startDate).toISOString().substring(0, 10),
+    endDate: endOfWeek(startDate, { weekStartsOn: 1 }).toISOString().substring(0, 10),
   });
   const { data: reservations } = useReservationRangeQuery({
     startDate: startDate.toISOString().substring(0, 10),
-    endDate: lastDayOfWeek(startDate).toISOString().substring(0, 10),
+    endDate: endOfYear(startDate).toISOString().substring(0, 10),
   });
 
-  const planList = React.useMemo(() => {
-    const obj: { [date: string]: (ReservationFragment | ScheduleFragment)[] } = {};
+  const scheduleByDay = React.useMemo(() => {
+    const obj: { [date: string]: ScheduleFragment[] } = {};
     schedules?.schedulesForRange?.nodes?.forEach(item => {
       const arr = obj[item.rDatum] || [];
       arr.push(item);
       obj[item.rDatum] = arr;
     });
-    reservations?.reservationsForRange?.nodes?.forEach(item => {
-      const arr = obj[item.nOd] || [];
-      arr.push(item);
-      obj[item.nOd] = arr;
-    });
     return obj;
-  }, [schedules, reservations])
+  }, [schedules])
 
-  const reserveLessons = React.useCallback((id: string) => {
-    // check lock
-    // check lesson count
-    /* if (!\Session::getZaplacenoPar()) {
-     *   \Message::danger('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
-     * } elseif ($data['n_max_pocet_hod'] > 0 &&
-     *           (\DBNabidka::getNabidkaLessons($id, $par['p_id']) + $_POST['hodiny']) > $data['n_max_pocet_hod']
-     *             ) {
-     *   \Message::danger('Maximální počet hodin na pár je ' . $data['n_max_pocet_hod'] . '!');
-     * } elseif (($data['n_pocet_hod'] - \DBNabidka::getReservationLessons($id)) < $_POST['hodiny']) {
-     *   \Message::danger('Tolik volných hodin tu není');
-     * } else {
-     *   \DBNabidka::addNabidkaItemLessons($par['p_id'], $id, $_POST['hodiny']);
-     * } */
-  }, []);
+  return <div className="col-full mt-12 mb-8 mx-4">
+    <h4 className="text-2xl ml-3 tracking-wide">Tréninky</h4>
 
-  const cancelLessonsReservation = React.useCallback((id: string) => {
-    // check lock
-    // check lesson count
-    /* if (!\DBNabidka::getNabidkaLessons($id, $_POST['p_id'])) {
-     *   \Message::danger('Neplatný požadavek!');
-     * } elseif ($_POST['p_id'] != $par['p_id'] &&
-     *           !\Permissions::check('nabidka', P_OWNED, $data['n_trener'])
-     * ) {
-     *   \Message::danger('Nedostatečná oprávnění!');
-     * } else {
-     *   \DBNabidka::removeNabidkaItem($id, $_POST['p_id']);
-     * } */
-  }, []);
+    <h4 className="text-2xl ml-3 tracking-wide">Nabídky nadcházejících tréninků</h4>
+    <div className="flex flex-wrap gap-4">
+      {reservations?.reservationsForRange?.nodes.map((item, i) => (
+        <ReservationItem key={i} item={item} />
+      ))}
+    </div>
 
-  return <div className="col-feature mt-12 mb-8">
-    {Object.entries(planList).map(([date, items], i) => <>
-      <div key={i} className="text-xl font-bold text-stone-700 mt-6 ml-3 mb-4">
+    {Object.entries(scheduleByDay).map(([date, items], i) => <React.Fragment key={i}>
+      <div className="text-xl font-bold text-stone-700 mt-6 ml-3 mb-4">
         {formatWeekDay(new Date(date))}
       </div>
+
       <div className="flex flex-wrap gap-4">
-        {items.map((item, i) => item.__typename === 'Rozpi' ? (
-          <div key={i} className="group relative min-w-[200px]">
-            <div className="ml-3 mb-0.5">
-              {perms.canEditSchedule(item) && (
-                <div className="absolute right-2 top-2">
-                  <Dropdown align="end"
-                    button={<MoreVertical className="text-stone-500 w-6 invisible ui-open:visible group-hover:visible" />}
-                    options={[
-                      { title: "Upravit", href: `/admin/rozpis/${item.id}` },
-                      { title: "Upravit rezervace", href: `/admin/rozpis/detail/${item.id}` },
-                    ]}
-                  />
-                </div>
-              )}
-
-              <div className="text-sm text-stone-500">{item.rKde}</div>
-              <div className="text-xl">
-                {item.userByRTrener?.uJmeno} {item.userByRTrener?.uPrijmeni}
-              </div>
-            </div>
-
-            <Card className="grid mx-auto w-72 rounded-lg border-stone-200 border">
-              {item.rozpisItemsByRiIdRodic.nodes?.map((lesson, i) => (
-                <LessonButton key={i} schedule={item} lesson={lesson} />
-              ))}
-            </Card>
-          </div>
-        ) : item.__typename === 'Nabidka' ? (
-          <div key={i}>
-            {perms.canEditReservation(item) && <Dropdown align="center"
-              button={<img className="w-4 absolute top-2 right-2" alt="Upravit" src="/style/icon-gear.png" />}
-              options={[
-                { title: "Upravit", href: `/admin/nabidka/${item.id}` },
-                { title: "Upravit rezervace", href: `/admin/nabidka/detail/${item.id}` },
-              ]}
-            />}
-            <div className="h5 mb-0">{item.userByNTrener?.uJmeno} {item.userByNTrener?.uPrijmeni}</div>
-            <div className="font-bold">{formatLongDateRange(new Date(item.nOd), new Date(item.nDo))}</div>
-
-            {item.nMaxPocetHod > 0 && <>
-              <span className="text-stone-500">Maximálně hodin/pár:</span>
-              <span className="text-lg">{item.nMaxPocetHod}</span>
-            </>}
-            <div>
-              <span className="text-stone-500">Volných hodin: </span>
-              <span className="text-lg">
-                {item.nPocetHod - item.nabidkaItemsByNiIdRodic.nodes.reduce((n, x) => n + x.niPocetHod, 0)} z {item.nPocetHod} nabízených
-              </span>
-            </div>
-            <hr />
-            {item.nabidkaItemsByNiIdRodic.nodes.map((lesson, i) => (
-              <div className="mx-auto mb-1 no-gutters" key={i}>
-                {lesson.niPocetHod}{'x '}
-                {lesson.paryByNiPartner?.userByPIdPartner?.uJmeno}{' '}
-                {lesson.paryByNiPartner?.userByPIdPartner?.uPrijmeni}
-                {perms.canCancelReservation(item, lesson) && (
-                  <Button name="p_id" value="{lesson.p_id}" className="pl-2">&times;</Button>
-                )}
-              </div>
-            ))}
-            {perms.canMakeReservation(item) && (
-              <div className="form-inline text-center" style={{ padding: '10px 0 5px' }}>
-                <input className="w-auto form-control" type="text" placeholder="Počet hodin" name="hodiny" />
-                <Button onClick={() => reserveLessons(item.id)}>Rezervovat</Button>
-              </div>
-            )}
-          </div>
-        ) : null)}
+        {items.map((item, i) => <ScheduleItem key={i} item={item} />)}
       </div>
-    </>)}
+    </React.Fragment>)}
   </div>;
 }
+
+const ReservationItem = ({ item }: { item: MyReservationFragment; }) => {
+  const { couple } = useAuth();
+  const perms = usePermissions();
+
+  return (
+    <div className="group relative min-w-[200px]">
+      {perms.canEditReservation(item) && (
+        <div className="absolute right-2 top-2">
+          <Dropdown align="end"
+            button={<MoreVertical className="text-stone-500 w-6 invisible ui-open:visible group-hover:visible" />}
+            options={[
+              { title: "Upravit", href: `/admin/nabidka/${item.id}` },
+              { title: "Upravit rezervace", href: `/admin/nabidka/detail/${item.id}` },
+            ]}
+          />
+        </div>
+      )}
+
+      <div className="ml-3 mb-0.5">
+        <div className="font-bold">{formatShortDateRange(new Date(item.nOd), new Date(item.nDo))}</div>
+        <div className="text-xl">{item.userByNTrener?.fullName}</div>
+
+        {item.nMaxPocetHod > 0 && (
+          <div>
+            <span className="text-stone-500">Maximálně hodin/pár:</span>
+            <span className="text-lg">{item.nMaxPocetHod}</span>
+          </div>
+        )}
+        <div>
+          <span className="text-stone-500">Volných hodin: </span>
+          <span className="text-lg">{item.freeLessons} z {item.nPocetHod} nabízených</span>
+        </div>
+      </div>
+
+      <Card className="grid mx-auto w-72 rounded-lg border-stone-200 border">
+        {item.nabidkaItemsByNiIdRodic.nodes.filter(x => x.niPartner !== couple?.id).map((lesson, i) => (
+          <div key={i} className={classNames(
+            "group flex gap-3 p-2.5 rounded-lg",
+            "leading-4 text-sm tabular-nums",
+          )}>
+            <div>{formatCoupleName(lesson.paryByNiPartner)}</div>
+            <div className="grow text-right">{lesson.niPocetHod}x</div>
+          </div>
+        ))}
+        {(perms.canMakeReservation(item) || item.myLessons) && (
+          <ReservationButton item={item} />
+        )}
+      </Card>
+    </div>
+  );
+};
+
+const ScheduleItem = ({ item }: { item: ScheduleFragment; }) => {
+  const perms = usePermissions();
+
+  return (
+    <div className="group relative min-w-[200px]">
+      <div className="ml-3 mb-0.5">
+        {perms.canEditSchedule(item) && (
+          <div className="absolute right-2 top-2">
+            <Dropdown align="end"
+              button={<MoreVertical className="text-stone-500 w-6 invisible ui-open:visible group-hover:visible" />}
+              options={[
+                { title: "Upravit", href: `/admin/rozpis/${item.id}` },
+                { title: "Upravit rezervace", href: `/admin/rozpis/detail/${item.id}` },
+              ]}
+            />
+          </div>
+        )}
+
+        <div className="text-sm text-stone-500">{item.rKde}</div>
+        <div className="text-xl">{item.userByRTrener?.fullName}</div>
+      </div>
+
+      <Card className="grid mx-auto w-72 rounded-lg border-stone-200 border">
+        {item.rozpisItemsByRiIdRodic.nodes?.map((lesson, i) => (
+          <LessonButton key={i} schedule={item} lesson={lesson} />
+        ))}
+      </Card>
+    </div>
+  );
+};
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peRozpis, PermissionLevel.P_MEMBER,

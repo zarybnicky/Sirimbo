@@ -153,8 +153,8 @@ in {
         enable = true;
         browser = false;
         listenAddress = ":${toString cfg.minioPort}";
-        configDir = "${cfg.stateDir}/minio-config";
-        dataDir = ["${cfg.stateDir}/minio-data"];
+        configDir = lib.mkForce "${cfg.stateDir}/minio-config";
+        dataDir = lib.mkForce ["${cfg.stateDir}/minio-data"];
         accessKey = cfg.minioAccessKey;
         secretKey = cfg.minioSecretKey;
       };

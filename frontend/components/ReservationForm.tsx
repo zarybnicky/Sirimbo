@@ -9,8 +9,11 @@ import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { NabidkaInput } from 'lib/graphql';
 import { useTrainerListQuery } from 'lib/graphql/User';
+import { DateRange, DateRangeInput } from './DateRange';
 
-type FormProps = Pick<NabidkaInput, 'nTrener' | 'nPocetHod' | 'nMaxPocetHod' | 'nOd' | 'nDo' | 'nVisible' | 'nLock'>;
+type FormProps = Pick<NabidkaInput, 'nTrener' | 'nPocetHod' | 'nMaxPocetHod' | 'nVisible' | 'nLock'> & {
+  schedule: DateRange;
+};;
 
 export const ReservationForm: React.FC<{
   data?: ReservationFragment;
@@ -26,18 +29,29 @@ export const ReservationForm: React.FC<{
       nTrener: data?.nTrener,
       nPocetHod: data?.nPocetHod,
       nMaxPocetHod: data?.nMaxPocetHod,
-      nOd: data?.nOd,
-      nDo: data?.nDo,
       nVisible: data?.nVisible,
       nLock: data?.nLock,
+      schedule: [
+        data?.nOd ? new Date(data?.nOd) : undefined,
+        data?.nDo ? new Date(data?.nDo) : undefined,
+      ],
     },
   });
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
+    const patch = {
+      nTrener: values.nTrener,
+      nPocetHod: values.nPocetHod,
+      nMaxPocetHod: values.nMaxPocetHod,
+      nVisible: values.nVisible,
+      nLock: values.nLock,
+      nOd: values.schedule[0]?.toISOString(),
+      nDo: values.schedule[1]?.toDateString(),
+    };
     if (data) {
-      await doUpdate({ id: data.id, patch: values });
+      await doUpdate({ id: data.id, patch });
     } else {
-      await doCreate({ input: values });
+      await doCreate({ input: patch });
     }
   });
 
@@ -50,8 +64,7 @@ export const ReservationForm: React.FC<{
       />
       <TextFieldElement control={control} name="nPocetHod" label="Počet hodin" required />
       <TextFieldElement control={control} name="nMaxPocetHod" label="Max.počet hodin" required />
-      <TextFieldElement control={control} type="date" label="Od" name="nOd" required />
-      <TextFieldElement control={control} type="date" label="Do" name="nDo" required />
+      <DateRangeInput control={control} name="schedule" label="Publikováno od/do" />
       <CheckboxElement control={control} name="nVisible" value="1" label="Viditelný" />
       <CheckboxElement control={control} name="nLock" value="1" label="Uzamčený" />
       <SubmitButton loading={onSubmit.loading} />

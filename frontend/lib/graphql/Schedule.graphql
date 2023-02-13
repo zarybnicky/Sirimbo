@@ -10,6 +10,7 @@ fragment ScheduleBasic on Rozpi {
     id: uId
     uJmeno
     uPrijmeni
+    fullName
   }
 }
 
@@ -21,19 +22,7 @@ fragment ScheduleItemBasic on RozpisItem {
   riLock
   riPartner
   paryByRiPartner {
-    id: pId
-    pIdPartner
-    pIdPartnerka
-    userByPIdPartner {
-      uJmeno
-      id: uId
-      uPrijmeni
-    }
-    userByPIdPartnerka {
-      id: uId
-      uJmeno
-      uPrijmeni
-    }
+    ...CouplePartial
   }
 }
 

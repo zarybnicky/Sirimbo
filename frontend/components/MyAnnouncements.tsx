@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { ChevronLeft, ChevronRight } from 'react-feather';
 import { useAnnouncementListQuery } from 'lib/graphql/Announcement';
-import { HtmlView } from './HtmlView';
 import { Card } from 'components/Card';
 import { Pagination } from './Pagination';
 import { formatFullDate, fullDateFormatter } from 'lib/format-date';
+import { RichTextView } from './RichTextView';
 
 export function MyAnnouncements() {
   const [limit] = React.useState(3);
@@ -70,7 +70,7 @@ export function MyAnnouncements() {
         )}
       </div>
 
-      <HtmlView content={a.upText} />
+      <RichTextView value={a.upText} />
     </Card>)}
 
     <Pagination {...{ total, limit, page, setPage }} />

@@ -2,7 +2,7 @@
 /* eslint-disable */
 import * as Types from './index';
 
-import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
 export type TenantFragment = { __typename?: 'Tenant', id: string, name: string, memberInfo: { [key: string]: any }, locationsByTenant: { __typename?: 'LocationsConnection', nodes: Array<{ __typename?: 'Location', id: string, name: string, description: { [key: string]: any } }> } };
 
@@ -10,6 +10,13 @@ export type CurrentTenantQueryVariables = Types.Exact<{ [key: string]: never; }>
 
 
 export type CurrentTenantQuery = { __typename?: 'Query', getCurrentTenant: { __typename?: 'Tenant', id: string, name: string, memberInfo: { [key: string]: any }, locationsByTenant: { __typename?: 'LocationsConnection', nodes: Array<{ __typename?: 'Location', id: string, name: string, description: { [key: string]: any } }> } } | null };
+
+export type UpdateTenantMutationVariables = Types.Exact<{
+  input: Types.UpdateTenantInput;
+}>;
+
+
+export type UpdateTenantMutation = { __typename?: 'Mutation', updateTenant: { __typename: 'UpdateTenantPayload' } | null };
 
 export const TenantFragmentDoc = `
     fragment Tenant on Tenant {
@@ -49,3 +56,22 @@ useCurrentTenantQuery.getKey = (variables?: CurrentTenantQueryVariables) => vari
 ;
 
 useCurrentTenantQuery.fetcher = (variables?: CurrentTenantQueryVariables, options?: RequestInit['headers']) => fetcher<CurrentTenantQuery, CurrentTenantQueryVariables>(CurrentTenantDocument, variables, options);
+export const UpdateTenantDocument = `
+    mutation UpdateTenant($input: UpdateTenantInput!) {
+  updateTenant(input: $input) {
+    __typename
+  }
+}
+    `;
+export const useUpdateTenantMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<UpdateTenantMutation, TError, UpdateTenantMutationVariables, TContext>) =>
+    useMutation<UpdateTenantMutation, TError, UpdateTenantMutationVariables, TContext>(
+      ['UpdateTenant'],
+      (variables?: UpdateTenantMutationVariables) => fetcher<UpdateTenantMutation, UpdateTenantMutationVariables>(UpdateTenantDocument, variables)(),
+      options
+    );
+useUpdateTenantMutation.getKey = () => ['UpdateTenant'];
+
+useUpdateTenantMutation.fetcher = (variables: UpdateTenantMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateTenantMutation, UpdateTenantMutationVariables>(UpdateTenantDocument, variables, options);

@@ -2,10 +2,10 @@ import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { HtmlView } from 'components/HtmlView';
 import { useArticleQuery } from 'lib/graphql/Articles';
 import { formatFullDate } from 'lib/format-date';
 import { Layout } from 'components/layout/Layout';
+import { RichTextView } from 'components/RichTextView';
 
 export default function ArticlePage() {
   const router = useRouter();
@@ -30,7 +30,7 @@ export default function ArticlePage() {
       {x.atTimestampAdd && formatFullDate(new Date(x.atTimestampAdd))}
     </div>
     <h3 className="text-3xl font-bold mb-4">{x.atJmeno}</h3>
-    <HtmlView content={x.atText} />
+    <RichTextView value={x.atText} />
     <CallToAction />
   </>;
 };

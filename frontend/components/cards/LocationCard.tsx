@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CellPlugin } from '@react-page/editor';
-import { defaultSlate } from '../SlateReadonly';
+import { defaultSlate } from '../Slate';
 import { Map } from 'components/Map';
 import { Card } from 'components/Card';
 import classNames from 'classnames';

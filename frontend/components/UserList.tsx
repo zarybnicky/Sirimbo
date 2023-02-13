@@ -86,7 +86,7 @@ export const UserList = () => {
     });
 
     const buf = await workbook.csv.writeBuffer();
-    saveAs(new Blob([buf]), "Olymp-MSMT-2022.csv");
+    saveAs(new Blob([buf]), "Olymp-MSMT-2023.csv");
   }, [id]);
 
   const nodesById = React.useMemo(() => {

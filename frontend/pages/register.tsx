@@ -164,5 +164,3 @@ export default function RegisterPage() {
 };
 
 export const getServerSideProps = withServerLoggedOut;
-
-RegisterPage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
-import { SlateReadonly } from 'components/SlateReadonly';
+import { SlateEditor } from 'components/Slate';
 import { Layout } from 'components/layout/Layout';
 import { Heading } from 'components/Heading';
 import { ServiceCard } from 'components/cards/ServiceCard';
@@ -16,7 +16,7 @@ export default function ChampionsPage() {
     <div className="col-popout">
       {couples.map(couple => (
         <ServiceCard key={couple.header} header={couple.header} image={couple.image}>
-          <SlateReadonly value={couple.content} />
+          <SlateEditor value={couple.content} />
         </ServiceCard>
       ))}
     </div>
