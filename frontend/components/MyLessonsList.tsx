@@ -1,41 +1,16 @@
 import * as React from 'react';
 import { useMyLessonsQuery, ScheduleItemFragment } from 'lib/graphql/Schedule';
 import { useAuth } from 'lib/data/use-auth';
-import { ChevronLeft, ChevronRight } from 'react-feather';
-import { lastDayOfWeek } from 'date-fns';
 import { LessonButton } from './LessonButton';
 import { Card } from './Card';
-import { formatWeekDay, fullDateFormatter } from 'lib/format-date';
-import getWeek from 'date-fns/getWeek';
+import { formatWeekDay } from 'lib/format-date';
+import { WeekPicker, mondayToWeekRange, getCurrentMonday } from './WeekPicker';
 
 export const MyLessonsList: React.FC = () => {
   const { user } = useAuth();
-  const [startDate, setStartDate] = React.useState(() => {
-    const today = new Date();
-    const first = today.getDate() - today.getDay() + 1;
-    const monday = new Date(today.setDate(first));
-    return monday;
-  });
+  const [startDate, setStartDate] = React.useState(getCurrentMonday);
 
-  const setPrevWeek = React.useCallback(() => {
-    setStartDate((startDate) => {
-      const monday = new Date(startDate);
-      monday.setDate(monday.getDate() - 7);
-      return monday;
-    });
-  }, [])
-  const setNextWeek = React.useCallback(() => {
-    setStartDate((startDate) => {
-      const monday = new Date(startDate);
-      monday.setDate(monday.getDate() + 7);
-      return monday;
-    });
-  }, [])
-
-  const { data, isLoading } = useMyLessonsQuery({
-    startDate: startDate.toISOString().substring(0, 10),
-    endDate: lastDayOfWeek(startDate).toISOString().substring(0, 10),
-  });
+  const { data, isLoading } = useMyLessonsQuery(mondayToWeekRange(startDate));
 
   const lessonsPerDay = React.useMemo(() => {
     const lessonsPerDay: { [day: string]: ScheduleItemFragment[] } = {};
@@ -51,21 +26,7 @@ export const MyLessonsList: React.FC = () => {
   }, [data]);
 
   return <div className="flex flex-col items-center">
-    <h4 className="text-2xl tracking-wide">Moje lekce</h4>
-    <div className="flex items-center">
-      <button className="button button-icon text-stone-500" onClick={setPrevWeek}>
-        <ChevronLeft />
-      </button>
-      <div className="text-stone-500">
-        {fullDateFormatter.formatRange(startDate, lastDayOfWeek(startDate))}
-      </div>
-      <button className="button button-icon text-stone-500" onClick={setNextWeek}>
-        <ChevronRight />
-      </button>
-    </div>
-    <div className="text-lg">
-      {getWeek(startDate, { weekStartsOn: 2 })}. týden
-    </div>
+    <WeekPicker title="Moje lekce" startDate={startDate} onChange={setStartDate} />
 
     {!isLoading && !data?.myLessons?.nodes?.length && (
       <div className="text-stone-600 p-4 text-center">
@@ -85,5 +46,5 @@ export const MyLessonsList: React.FC = () => {
         ))}
       </Card>
     </React.Fragment>)}
-  </div>;
+  </div >;
 };

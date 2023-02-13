@@ -8,7 +8,7 @@ import { TabMenu } from 'components/TabMenu';
 export default function DashboardPage() {
   const [variant, setVariant] = React.useState('myLessons');
 
-  return <div className="col-feature lg:col-full mt-2">
+  return <div className="col-feature lg:col-full mt-12 mb-8 mx-4">
     <div className="lg:hidden">
       <TabMenu selected={variant} onSelect={setVariant} options={[
         { id: 'myLessons', label: 'Moje lekce' },
