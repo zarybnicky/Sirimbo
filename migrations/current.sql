@@ -1,21 +1,20 @@
 -- Write your migration here
 
-create or replace function verify_function(f regproc, relid regclass DEFAULT 0) returns void as $$
+ create or replace function verify_function(f regproc, relid regclass DEFAULT 0) returns void as $$
 declare
   error text[];
   count int;
 begin
   select array_agg(plpgsql_check_function) into error
   from plpgsql_check_function(
-    f,
-    relid,
+    funcoid => f,
+    relid => relid,
     performance_warnings => true,
     extra_warnings => true,
-    security_warnings => true,
-    compatibility_warnings => true
+    security_warnings => true
   );
   if array_length(error, 1) > 0 then
-    raise exception using message = array_to_string(error, E'\n');
+    raise exception 'Error when checking function %', f using detail = array_to_string(error, E'\n');
   end if;
 end;
 $$ language plpgsql volatile security definer;
@@ -44,7 +43,7 @@ ADD CONSTRAINT nabidka_item_unique_user_nabidka_key UNIQUE (ni_partner, ni_id_ro
 
 
 create or replace function reservation_set_desired_lessons(
-  reservation_id bigint, lesson_count int,
+  reservation_id bigint, lesson_count smallint,
   out reservation nabidka
 ) as $$
 begin
@@ -56,7 +55,7 @@ begin
   end if;
 
   if lesson_count > (nabidka_my_lessons(reservation) + nabidka_free_lessons(reservation)) then
-    select (nabidka_my_lessons(reservation) + nabidka_free_lessons(reservation)) into lesson_count;
+    select (nabidka_my_lessons(reservation) + nabidka_free_lessons(reservation))::smallint into lesson_count;
   end if;
   if reservation.n_max_pocet_hod > 0 and lesson_count > reservation.n_max_pocet_hod then
     select reservation.n_max_pocet_hod into lesson_count;
@@ -76,12 +75,6 @@ select verify_function('reservation_set_desired_lessons');
 grant execute on function reservation_set_desired_lessons to member;
 
 
-alter table skupiny alter column s_color_text set default '';
-
-alter table skupiny drop column if exists internal_info cascade;
-alter table skupiny add column internal_info jsonb not null default '[]'::jsonb;
-
-
 create or replace function public.reservations_for_range(start_date date, end_date date) returns setof nabidka as $$
   select * from nabidka
   where n_visible=true
@@ -89,3 +82,41 @@ create or replace function public.reservations_for_range(start_date date, end_da
   order by n_od asc;
 $$ language sql stable;
 grant execute on function public.reservations_for_range TO member;
+
+
+alter table skupiny alter column s_color_text set default '';
+
+alter table skupiny drop column if exists internal_info cascade;
+alter table skupiny add column internal_info jsonb not null default '[]'::jsonb;
+
+alter table akce drop column if exists summary cascade;
+alter table akce add column summary jsonb not null default '[]'::jsonb;
+
+alter table akce drop column if exists is_public cascade;
+alter table akce add column is_public boolean not null default false;
+
+alter table akce drop column if exists enable_notes cascade;
+alter table akce add column enable_notes boolean not null default false;
+
+
+create or replace function akce_free_slots(a akce) returns int as $$
+  select a.a_kapacita - (select count(*) from akce_item where ai_id_rodic = a.a_id);
+$$ language sql stable;
+grant execute on function akce_has_capacity to anonymous;
+
+create or replace function akce_has_capacity(a akce) returns boolean as $$
+  select count(*) < a.a_kapacita from akce_item where ai_id_rodic = a.a_id;
+$$ language sql stable;
+grant execute on function akce_has_capacity to anonymous;
+
+create or replace function akce_signed_up(a akce) returns boolean as $$
+  select exists (select ai_id from akce_item where ai_id_rodic=a.a_id and ai_user=current_user_id());
+$$ language sql stable;
+grant execute on function akce_has_capacity to anonymous;
+
+create or replace function akce_my_notes (a akce) returns text as $$
+  select notes from akce_item where ai_id_rodic=a.a_id and ai_user=current_user_id();
+$$ language sql stable;
+grant execute on function akce_has_capacity to anonymous;
+
+drop function if exists my_events();

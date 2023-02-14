@@ -7,7 +7,7 @@ export default function TenantEditPage() {
   const { data } = useCurrentTenantQuery();
   return <Item>
     <Item.Titlebar title={data?.getCurrentTenant?.name || '(Bez názvu)'} />
-    {data && <TenantForm data={data.getCurrentTenant || undefined} />}
+    {data?.getCurrentTenant && <TenantForm data={data.getCurrentTenant} />}
   </Item>;
 };
 

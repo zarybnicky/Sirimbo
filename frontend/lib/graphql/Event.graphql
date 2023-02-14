@@ -3,6 +3,7 @@ fragment Event on Akce {
   id: aId
   aOd
   aDo
+  summary
   aInfo
   aDokumenty
   aJmeno
@@ -11,10 +12,14 @@ fragment Event on Akce {
   aLock
   aTimestamp
   aVisible
+  isPublic
+  enableNotes
 }
 
 fragment EventItem on AkceItem {
   id: aiId
+  notes
+  aiRokNarozeni
   userByAiUser {
     uJmeno
     uPrijmeni
@@ -77,20 +82,16 @@ mutation DeleteEvent($id: BigInt!) {
   }
 }
 
-fragment MyEvent on MyEventsRecord {
-  id
-  since
-  until
-  info
-  name
-  location
-  hasCapacity
-  signedUp
+fragment MyEvent on Akce {
+  ...Event
   myNotes
+  hasCapacity
+  freeSlots
+  signedUp
 }
 
 query MyEvents {
-  myEvents {
+  akces(condition: {aVisible: true}) {
     nodes {
       ...MyEvent
     }

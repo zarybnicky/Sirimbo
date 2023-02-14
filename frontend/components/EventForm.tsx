@@ -7,13 +7,14 @@ import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
+import { SlateEditorElement } from './Slate';
 
-type FormProps = Pick<AkceInput, 'aJmeno' | 'aKde' | 'aInfo' | 'aOd' | 'aDo' |
-  'aKapacita' | 'aVisible' | 'aLock'>;
+type FormProps = Pick<AkceInput, 'aJmeno' | 'aKde' | 'summary' | 'aInfo' | 'aOd' | 'aDo' |
+  'aKapacita' | 'aVisible' | 'isPublic' | 'enableNotes' | 'aLock'>;
 
 export const EventForm: React.FC<{
   data?: EventFragment;
-  onSuccess: () => void;
+  onSuccess?: () => void;
 }> = ({ data, onSuccess }) => {
   const { mutateAsync: doCreate } = useCreateEventMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateEventMutation({ onSuccess });
@@ -22,11 +23,14 @@ export const EventForm: React.FC<{
     defaultValues: {
       aJmeno: data?.aJmeno,
       aKde: data?.aKde,
+      summary: data?.summary,
       aInfo: data?.aInfo,
       aOd: data?.aOd,
       aDo: data?.aDo,
       aKapacita: data?.aKapacita,
       aVisible: data?.aVisible,
+      isPublic: data?.isPublic,
+      enableNotes: data?.enableNotes,
       aLock: data?.aLock,
     },
   });
@@ -44,11 +48,14 @@ export const EventForm: React.FC<{
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="aJmeno" label="Název" required />
       <TextFieldElement control={control} name="aKde" label="Místo akce" required />
+      <SlateEditorElement control={control} name="summary" label="Shrnutí" required />
       <TextAreaElement control={control} name="aInfo" label="Další info" rows={3} required />
       <TextFieldElement control={control} type="date" label="Od" name="aOd" required />
       <TextFieldElement type="date" helperText="(pokud je prázdné, počítá se jako 'Od')" control={control} label="Do" name="aDo" required />
       <TextFieldElement control={control} type="number" name="aKapacita" label="Kapacita" required />
-      <CheckboxElement control={control} name="aVisible" value="1" label="Zviditelnit" />
+      <CheckboxElement control={control} name="aVisible" value="1" label="Zviditelnit pro členy" />
+      <CheckboxElement control={control} name="isPublic" value="1" label="Zviditelnit pro veřejnost" />
+      <CheckboxElement control={control} name="enableNotes" value="1" label="Povolit poznámky k přihlášce" />
       <CheckboxElement control={control} name="aLock" value="1" label="Uzamčená" />
       <SubmitButton loading={onSubmit.loading} />
     </form>

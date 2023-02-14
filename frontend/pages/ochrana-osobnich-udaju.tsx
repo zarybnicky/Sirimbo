@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Layout } from "components/layout/Layout";
-import { SlateEditor } from 'components/Slate';
+import { MyValue, SlateEditor } from 'components/Slate';
 import { Heading } from 'components/Heading';
 
 export default function TermsConditions() {
@@ -15,24 +15,21 @@ export default function TermsConditions() {
 
 TermsConditions.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;
 
-const text = [
+const text: MyValue = [
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
     "children": [
       {
-        "text": " "
-      },
-      {
         "text": "I. Základní ustanovení",
-        "EMPHASIZE/STRONG": true
+        "bold": true
       }
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
@@ -42,14 +39,14 @@ const text = [
       },
       {
         "text": "GDPR",
-        "EMPHASIZE/STRONG": true
+        "bold": true
       },
       {
         "text": "”) je Taneční klub Olymp Olomou, z. s.., IČ 68347286 se sídlem Jiráskova 25, 77900, Olomouc. (dále jen: „"
       },
       {
         "text": "správce",
-        "EMPHASIZE/STRONG": true
+        "bold": true
       },
       {
         "text": "“)."
@@ -57,7 +54,7 @@ const text = [
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
@@ -68,7 +65,7 @@ const text = [
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
@@ -79,7 +76,7 @@ const text = [
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
@@ -90,7 +87,7 @@ const text = [
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
@@ -101,19 +98,19 @@ const text = [
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
     "children": [
       {
         "text": "II. Zdroje a kategorie zpracovávaných osobních údajů",
-        "EMPHASIZE/STRONG": true
+        "bold": true
       }
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
@@ -124,7 +121,7 @@ const text = [
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
@@ -135,19 +132,19 @@ const text = [
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
     "children": [
       {
         "text": "III. Zákonný důvod a účel zpracování osobních údajů",
-        "EMPHASIZE/STRONG": true
+        "bold": true
       }
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
@@ -158,13 +155,13 @@ const text = [
     ]
   },
   {
-    "type": "LISTS/UNORDERED-LIST",
+    "type": "ul",
     "data": {
       "align": "start"
     },
     "children": [
       {
-        "type": "LISTS/LIST-ITEM",
+        "type": "li",
         "children": [
           {
             "text": "plnění smlouvy mezi Vámi a správcem podle čl. 6 odst. 1 písm. b) GDPR,"
@@ -172,7 +169,7 @@ const text = [
         ]
       },
       {
-        "type": "LISTS/LIST-ITEM",
+        "type": "li",
         "children": [
           {
             "text": "oprávněný zájem správce na poskytování přímého marketingu (zejména pro zasílání obchodních sdělení a newsletterů) podle čl. 6 odst. 1 písm. f) GDPR,"
@@ -180,7 +177,7 @@ const text = [
         ]
       },
       {
-        "type": "LISTS/LIST-ITEM",
+        "type": "li",
         "children": [
           {
             "text": "Váš souhlas se zpracováním pro účely poskytování přímého marketingu (zejména pro zasílání obchodních sdělení a newsletterů) podle čl. 6 odst. 1 písm. a) GDPR ve spojení s § 7 odst. 2 zákona č. 480/2004 Sb., o některých službách informační společnosti v případě, že nedošlo k objednávce zboží nebo služby."
@@ -190,7 +187,7 @@ const text = [
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
@@ -201,13 +198,13 @@ const text = [
     ]
   },
   {
-    "type": "LISTS/UNORDERED-LIST",
+    "type": "ul",
     "data": {
       "align": "start"
     },
     "children": [
       {
-        "type": "LISTS/LIST-ITEM",
+        "type": "li",
         "children": [
           {
             "text": "vyřízení Vaší objednávky a výkon práv a povinností vyplývajících ze smluvního vztahu mezi Vámi a správcem; při objednávce jsou vyžadovány osobní údaje, které jsou nutné pro úspěšné vyřízení objednávky (jméno a adresa, kontakt), poskytnutí osobních údajů je nutným požadavkem pro uzavření a plnění smlouvy, bez poskytnutí osobních údajů není možné smlouvu uzavřít či jí ze strany správce plnit,"
@@ -215,7 +212,7 @@ const text = [
         ]
       },
       {
-        "type": "LISTS/LIST-ITEM",
+        "type": "li",
         "children": [
           {
             "text": "zasílání obchodních sdělení a činění dalších marketingových aktivit."
@@ -225,7 +222,7 @@ const text = [
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
@@ -236,19 +233,19 @@ const text = [
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
     "children": [
       {
         "text": "IV. Doba uchovávání údajů",
-        "EMPHASIZE/STRONG": true
+        "bold": true
       }
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
@@ -259,13 +256,13 @@ const text = [
     ]
   },
   {
-    "type": "LISTS/UNORDERED-LIST",
+    "type": "ul",
     "data": {
       "align": "start"
     },
     "children": [
       {
-        "type": "LISTS/LIST-ITEM",
+        "type": "li",
         "children": [
           {
             "text": "po dobu nezbytnou k výkonu práv a povinností vyplývajících ze smluvního vztahu mezi Vámi a správcem a uplatňování nároků z těchto smluvních vztahů (po dobu 15 let od ukončení smluvního vztahu). "
@@ -273,7 +270,7 @@ const text = [
         ]
       },
       {
-        "type": "LISTS/LIST-ITEM",
+        "type": "li",
         "children": [
           {
             "text": "po dobu, než je odvolán souhlas se zpracováním osobních údajů pro účely marketingu, nejdéle 10 let, jsou-li osobní údaje zpracovávány na základě souhlasu."
@@ -283,7 +280,7 @@ const text = [
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
@@ -294,19 +291,19 @@ const text = [
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
     "children": [
       {
         "text": "V. Příjemci osobních údajů (subdodavatelé správce)",
-        "EMPHASIZE/STRONG": true
+        "bold": true
       }
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
@@ -317,13 +314,13 @@ const text = [
     ]
   },
   {
-    "type": "LISTS/UNORDERED-LIST",
+    "type": "ul",
     "data": {
       "align": "start"
     },
     "children": [
       {
-        "type": "LISTS/LIST-ITEM",
+        "type": "li",
         "children": [
           {
             "text": "podílející se na dodání zboží / služeb / realizaci plateb na základě smlouvy, "
@@ -331,7 +328,7 @@ const text = [
         ]
       },
       {
-        "type": "LISTS/LIST-ITEM",
+        "type": "li",
         "children": [
           {
             "text": "zajišťující služby provozování e-shopu (Shoptet) a další služby v souvislosti s provozováním e-shopu,"
@@ -339,7 +336,7 @@ const text = [
         ]
       },
       {
-        "type": "LISTS/LIST-ITEM",
+        "type": "li",
         "children": [
           {
             "text": "zajišťující marketingové služby."
@@ -349,7 +346,7 @@ const text = [
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
@@ -360,19 +357,19 @@ const text = [
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
     "children": [
       {
         "text": "VI. Vaše práva",
-        "EMPHASIZE/STRONG": true
+        "bold": true
       }
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
@@ -383,13 +380,13 @@ const text = [
     ]
   },
   {
-    "type": "LISTS/UNORDERED-LIST",
+    "type": "ul",
     "data": {
       "align": "start"
     },
     "children": [
       {
-        "type": "LISTS/LIST-ITEM",
+        "type": "li",
         "children": [
           {
             "text": "právo na přístup ke svým osobním údajům dle čl. 15 GDPR, "
@@ -397,7 +394,7 @@ const text = [
         ]
       },
       {
-        "type": "LISTS/LIST-ITEM",
+        "type": "li",
         "children": [
           {
             "text": "právo opravu osobních údajů dle čl. 16 GDPR, popřípadě omezení zpracování dle čl. 18 GDPR. "
@@ -405,7 +402,7 @@ const text = [
         ]
       },
       {
-        "type": "LISTS/LIST-ITEM",
+        "type": "li",
         "children": [
           {
             "text": "právo na výmaz osobních údajů dle čl. 17 GDPR. "
@@ -413,7 +410,7 @@ const text = [
         ]
       },
       {
-        "type": "LISTS/LIST-ITEM",
+        "type": "li",
         "children": [
           {
             "text": "právo vznést námitku proti zpracování dle čl. 21 GDPR a "
@@ -421,7 +418,7 @@ const text = [
         ]
       },
       {
-        "type": "LISTS/LIST-ITEM",
+        "type": "li",
         "children": [
           {
             "text": "právo na přenositelnost údajů dle čl. 20 GDPR. "
@@ -429,7 +426,7 @@ const text = [
         ]
       },
       {
-        "type": "LISTS/LIST-ITEM",
+        "type": "li",
         "children": [
           {
             "text": "právo odvolat souhlas se zpracováním písemně nebo elektronicky na adresu nebo email správce uvedený v čl. III těchto podmínek."
@@ -439,7 +436,7 @@ const text = [
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
@@ -450,19 +447,19 @@ const text = [
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
     "children": [
       {
         "text": "VII. Podmínky zabezpečení osobních údajů",
-        "EMPHASIZE/STRONG": true
+        "bold": true
       }
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
@@ -473,7 +470,7 @@ const text = [
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
@@ -484,7 +481,7 @@ const text = [
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
@@ -495,19 +492,19 @@ const text = [
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
     "children": [
       {
         "text": "VIII. Závěrečná ustanovení",
-        "EMPHASIZE/STRONG": true
+        "bold": true
       }
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
@@ -518,7 +515,7 @@ const text = [
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
@@ -529,7 +526,7 @@ const text = [
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },
@@ -540,7 +537,7 @@ const text = [
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
+    "type": "p",
     "data": {
       "align": "start"
     },

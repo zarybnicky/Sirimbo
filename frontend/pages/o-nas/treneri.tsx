@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
-import { SlateEditor } from 'components/Slate';
+import { MyValue, SlateEditor } from 'components/Slate';
 import { Layout } from 'components/layout/Layout';
 import { Heading } from 'components/Heading';
 import { TrainerCard } from 'components/cards/TrainerCard';
-import { Descendant } from 'slate';
 
 export default function AboutPage() {
   return <>
@@ -31,7 +30,7 @@ export default function AboutPage() {
     </div>
 
     <div className="col-feature mt-4 mb-16 grid gap-8 lg:grid-cols-2">
-      {internal.map(item => (
+      {external.map(item => (
         <TrainerCard key={item.name} name={item.name} image={item.image}>
           <SlateEditor readOnly value={item.content} />
         </TrainerCard>
@@ -49,13 +48,13 @@ const mirek = {
   "image": "/images/services-pripravka.png",
   content: [
     {
-      "type": "LISTS/UNORDERED-LIST",
+      "type": "ul",
       "data": {
         "align": "start"
       },
       "children": [
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Předseda, šéftrenér TK Olymp"
@@ -63,7 +62,7 @@ const mirek = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Trenér mistrů ČR"
@@ -71,7 +70,7 @@ const mirek = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Vicemistr ČR ve standardních tancích v hlavní kategorii 2018"
@@ -79,7 +78,7 @@ const mirek = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "3x mistr ČR v kategorii juniorů"
@@ -87,7 +86,7 @@ const mirek = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Finalista Akademického mistrovství Evropy 2016"
@@ -95,7 +94,7 @@ const mirek = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Držitel ocenění TOP 30 sportovních trenérů mládeže 2017"
@@ -104,7 +103,7 @@ const mirek = {
         }
       ]
     }
-  ],
+  ] as MyValue
 };
 
 const filip = {
@@ -112,13 +111,13 @@ const filip = {
   "image": "/images/treneri/filip.jpg",
   content: [
     {
-      "type": "LISTS/UNORDERED-LIST",
+      "type": "ul",
       "data": {
         "align": "start"
       },
       "children": [
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Trenér a porotce II. třídy"
@@ -126,7 +125,7 @@ const filip = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "2x mistr ČR v latinsko-amerických tancích v kategorii profesionálů"
@@ -134,7 +133,7 @@ const filip = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "3x mistr ČR v latinsko-amerických tancích v hlavní kategorii"
@@ -142,7 +141,7 @@ const filip = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Semifinalista mistrovství světa a Evropy v kategorii profesionálů"
@@ -150,7 +149,7 @@ const filip = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Semifinalista mistrovství Evropy v hlavní kategorii"
@@ -158,7 +157,7 @@ const filip = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Čtvrtfinalista mistrovství světa v hlavní kategorii"
@@ -166,7 +165,7 @@ const filip = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Finalista GOC ve Stuttgartu kategorii profesionálů"
@@ -174,7 +173,7 @@ const filip = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Semifinalista Světových her v Kolumbii"
@@ -182,7 +181,7 @@ const filip = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Předseda Komise sportovců (or r. 2017)"
@@ -191,7 +190,7 @@ const filip = {
         }
       ]
     }
-  ]
+  ] as MyValue
 };
 
 const marie = {
@@ -199,13 +198,13 @@ const marie = {
   "image": "/images/treneri/marie2.jpg",
   content: [
     {
-      "type": "LISTS/UNORDERED-LIST",
+      "type": "ul",
       "data": {
         "align": "start"
       },
       "children": [
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Trenér a porotce I. třídy"
@@ -213,7 +212,7 @@ const marie = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Dlouholetá tanečnice mezinárodní třídy"
@@ -221,7 +220,7 @@ const marie = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Zkušená trenérka dětských a juniorských přípravek"
@@ -229,7 +228,7 @@ const marie = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Švadlena tanečního oblečení (řadu let šatí finalisty i medailisty mistrovství ČR)"
@@ -238,7 +237,7 @@ const marie = {
         }
       ]
     }
-  ]
+  ] as MyValue
 };
 
 const lucka = {
@@ -246,13 +245,13 @@ const lucka = {
   "image": "/images/treneri/lucka3.jpg",
   content: [
     {
-      "type": "LISTS/UNORDERED-LIST",
+      "type": "ul",
       "data": {
         "align": "start"
       },
       "children": [
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Absolventka kvalifikačního studia pro trenéry a porotce II.třídy"
@@ -260,7 +259,7 @@ const lucka = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Semifinalistka mistrovství ČR v hlavní kategorii (v deseti tancích a ve standardních tancích)"
@@ -268,7 +267,7 @@ const lucka = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "3x finalistka mistrovství ČR juniorů a mládeže (titul druhý vicemistr ČR ve standardních tancích v kategorii mládež)"
@@ -276,7 +275,7 @@ const lucka = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "2. místo v Taneční lize (žebříček párů mezinárodní třídy)"
@@ -284,7 +283,7 @@ const lucka = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Trenérka dětských a juniorských přípravek (12 let praxe)"
@@ -292,7 +291,7 @@ const lucka = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Trenérka finalistů mistrovství ČR juniorů"
@@ -300,7 +299,7 @@ const lucka = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Absolventka Fakulty tělesné kultury na UP v Olomouci (obor: Tělesná výchova a sport)"
@@ -309,7 +308,7 @@ const lucka = {
         }
       ]
     }
-  ]
+  ] as MyValue
 };
 
 const grepi = {
@@ -317,13 +316,13 @@ const grepi = {
   "image": "/images/treneri/pavel2.jpg",
   content: [
     {
-      "type": "LISTS/UNORDERED-LIST",
+      "type": "ul",
       "data": {
         "align": "start"
       },
       "children": [
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Absolvent kvalifikačního studia pro trenéry a porotce II. třídy"
@@ -331,7 +330,7 @@ const grepi = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Tanečník mezinárodní třídy"
@@ -339,7 +338,7 @@ const grepi = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Finalista Akademického mistrovství ČR ve standardních tancích"
@@ -347,7 +346,7 @@ const grepi = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Student Fakulty tělesné kultury na UP v Olomouci (obor: Trenérství a sport)"
@@ -355,7 +354,7 @@ const grepi = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Trenér atletiky III. třídy a plavání III. třídy"
@@ -364,7 +363,7 @@ const grepi = {
         }
       ]
     }
-  ]
+  ] as MyValue
 };
 
 const maruska = {
@@ -372,13 +371,13 @@ const maruska = {
   "image": "/images/treneri/maruska.jpg",
   content: [
     {
-      "type": "LISTS/UNORDERED-LIST",
+      "type": "ul",
       "data": {
         "align": "start"
       },
       "children": [
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Absolventka kvalifikačního studia pro trenéry a porotce II. třídy"
@@ -386,7 +385,7 @@ const maruska = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Finalistka mistrovství ČR v deseti tancích"
@@ -394,7 +393,7 @@ const maruska = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Semifinalistka mistrovství ČR ve standardních tancích"
@@ -402,7 +401,7 @@ const maruska = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Čtvrtfinalistka mistrovství ČR v latinskoamerických tancích"
@@ -411,20 +410,20 @@ const maruska = {
         }
       ]
     }
-  ]
+  ] as MyValue
 };
 
 const roman = {
   "name": "Bc. Roman Pecha",
   content: [
     {
-      "type": "LISTS/UNORDERED-LIST",
+      "type": "ul",
       "data": {
         "align": "start"
       },
       "children": [
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Absolvent kvalifikačního studia pro trenéry a porotce II. třídy"
@@ -432,7 +431,7 @@ const roman = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Tanečník mezinárodní třídy"
@@ -440,7 +439,7 @@ const roman = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Finalista mistrovství ČR v hlavní kategorii (ve standardních tancích)"
@@ -448,7 +447,7 @@ const roman = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "2x mistr ČR v kategorii U21 (v deseti tancích a ve standardních tancích)"
@@ -456,7 +455,7 @@ const roman = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Čtvrtfinalista mistrovství světa a Evropy v kategorii mládež ve standardních tancích"
@@ -464,7 +463,7 @@ const roman = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Čtvrtfinalista mistrovství světa v kategorii mládež a U21 v deseti tancích"
@@ -472,7 +471,7 @@ const roman = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Student MVŠO"
@@ -481,20 +480,20 @@ const roman = {
         }
       ]
     }
-  ]
+  ] as MyValue
 };
 
 const hanka = {
   "name": "Hana Anna Šišková",
   content: [
     {
-      "type": "LISTS/UNORDERED-LIST",
+      "type": "ul",
       "data": {
         "align": "start"
       },
       "children": [
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Absolventka kvalifikačního studia pro trenéry a porotce III. třídy"
@@ -502,7 +501,7 @@ const hanka = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Tanečnice mezinárodní třídy"
@@ -510,7 +509,7 @@ const hanka = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "4x finalistka mistrovství ČR v kategorii U21 (titul vicemistr ČR v deseti tancích, titul druhý vicemistr ČR ve standardních tancích a titul druhý vicemistr ČR v latinskoamerických tancích)"
@@ -518,7 +517,7 @@ const hanka = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Studentka Fakulty tělesné kultury na UP v Olomouci (obor: Tělesná výchova a sport)"
@@ -527,20 +526,20 @@ const hanka = {
         }
       ]
     }
-  ]
+  ] as MyValue
 };
 
 const nela = {
   "name": "Nela Šírová",
   content: [
     {
-      "type": "LISTS/UNORDERED-LIST",
+      "type": "ul",
       "data": {
         "align": "start"
       },
       "children": [
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Absolventka kvalifikačního studia pro trenéry a porotce III. třídy"
@@ -548,7 +547,7 @@ const nela = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Tanečnice mezinárodní třídy"
@@ -556,7 +555,7 @@ const nela = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "3x finalistka mistrovství ČR juniorů a mládeže"
@@ -564,7 +563,7 @@ const nela = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Studentka Lékařské fakulty na UP v Olomouci"
@@ -573,7 +572,7 @@ const nela = {
         }
       ]
     }
-  ]
+  ] as MyValue
 };
 
 const matej = {
@@ -581,13 +580,13 @@ const matej = {
   "image": "/images/treneri/matej.jpg",
   content: [
     {
-      "type": "LISTS/UNORDERED-LIST",
+      "type": "ul",
       "data": {
         "align": "start"
       },
       "children": [
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Absolvent kvalifikačního studia pro trenéry a porotce III. třídy"
@@ -595,7 +594,7 @@ const matej = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "2x finalista mistrovství ČR mládeže"
@@ -603,7 +602,7 @@ const matej = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "3x finalista mistrovství ČR v kategorii U21 (vicemistr ČR v deseti tancích)"
@@ -611,7 +610,7 @@ const matej = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Student VUT FEKT"
@@ -620,7 +619,7 @@ const matej = {
         }
       ]
     }
-  ]
+  ] as MyValue
 };
 
 const martin = {
@@ -628,13 +627,13 @@ const martin = {
   "image": "/images/treneri/martin.jpg",
   content: [
     {
-      "type": "LISTS/UNORDERED-LIST",
+      "type": "ul",
       "data": {
         "align": "start"
       },
       "children": [
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Prezident DSP Kometa Brno"
@@ -642,7 +641,7 @@ const martin = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Trenér finalistů mistrovství světa a medailistů mistrovství Evropy"
@@ -650,7 +649,7 @@ const martin = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Trenér mistrů České republiky všech věkových kategorií"
@@ -658,7 +657,7 @@ const martin = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "6x mistr ČR v deseti tancích (1995-2000)"
@@ -666,7 +665,7 @@ const martin = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Mistr ČR ve standardních tancích (2000)"
@@ -674,7 +673,7 @@ const martin = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Trenér a porotce I. třídy"
@@ -682,7 +681,7 @@ const martin = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Porotce s nejvyšší mezinárodní licencí WDSF"
@@ -690,7 +689,7 @@ const martin = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Porotce mistrovství světa a Evropy"
@@ -699,7 +698,7 @@ const martin = {
         }
       ]
     }
-  ]
+  ] as MyValue
 };
 
 const pavla = {
@@ -707,13 +706,13 @@ const pavla = {
   "image": "/images/treneri/pavla.jpg",
   content: [
     {
-      "type": "LISTS/UNORDERED-LIST",
+      "type": "ul",
       "data": {
         "align": "start"
       },
       "children": [
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Trenérka mistrů České republiky ve standardních tancích"
@@ -721,7 +720,7 @@ const pavla = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Finalistka mistrovství ČSSR ve standardních tancích"
@@ -729,7 +728,7 @@ const pavla = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Mistryně ČR ve standardních tancích v kategorii senior (1996)"
@@ -737,7 +736,7 @@ const pavla = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Trenérka a porotkyně I. třídy"
@@ -746,7 +745,7 @@ const pavla = {
         }
       ]
     }
-  ]
+  ] as MyValue
 };
 
 const jerry = {
@@ -754,13 +753,13 @@ const jerry = {
   "image": "/images/treneri/jerry.jpg",
   content: [
     {
-      "type": "LISTS/UNORDERED-LIST",
+      "type": "ul",
       "data": {
         "align": "start"
       },
       "children": [
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Předseda trenérské rady projektu Sportovně talentované mládeže ČSTS"
@@ -768,7 +767,7 @@ const jerry = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Trenér finalistů mistrovství světa a medailistů mistrovství Evropy"
@@ -776,7 +775,7 @@ const jerry = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Trenér mistrů České republiky všech věkových kategorií"
@@ -784,7 +783,7 @@ const jerry = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Vicemistr ČR v latinskoamerických tancích (1992, 1993, 1995)"
@@ -792,7 +791,7 @@ const jerry = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Finalista mistrovství ČR v deseti tancích (1993)"
@@ -800,7 +799,7 @@ const jerry = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Trenér a porotce i. třídy"
@@ -808,7 +807,7 @@ const jerry = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Porotce s nejvyšší mezinárodní licencí WDSF"
@@ -816,7 +815,7 @@ const jerry = {
           ]
         },
         {
-          "type": "LISTS/LIST-ITEM",
+          "type": "li",
           "children": [
             {
               "text": "Porotce mistrovství Evropy"
@@ -825,13 +824,13 @@ const jerry = {
         }
       ]
     }
-  ]
+  ] as MyValue
 };
 
 const internal: {
-  name: string; image?: string; content: Descendant[];
+  name: string; image?: string; content: MyValue;
 }[] = [mirek, filip, marie, lucka, grepi, maruska, roman, hanka, nela, matej];
 
 const external: {
-  name: string; image?: string; content: Descendant[];
+  name: string; image?: string; content: MyValue;
 }[] = [martin, pavla, jerry];

@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { CellPlugin } from '@react-page/editor';
-import { defaultSlate } from '../Slate';
 import { Card } from 'components/Card';
 
 type ServiceCardProps = {
@@ -19,32 +17,4 @@ export const ServiceCard = (props: ServiceCardProps & { children: React.ReactNod
       {props.children}
     </div>
   </Card >;
-};
-
-export const ServiceCardPlugin: CellPlugin<ServiceCardProps> = {
-  Renderer: ({ children, data }) => <ServiceCard {...data}>
-    {children}
-  </ServiceCard>,
-
-  id: 'app-service-card-plugin',
-  title: 'ServiceCard',
-  version: 1,
-  createInitialData: () => ({
-    header: 'Tréninkový program',
-    image: '/images/services-pripravka.png',
-  }),
-  createInitialChildren: () => [[{ plugin: defaultSlate }]],
-  childConstraints: {
-    maxChildren: 1,
-  },
-  controls: {
-    type: 'autoform',
-    schema: {
-      required: [],
-      properties: {
-        header: { type: 'string' },
-        image: { type: 'string' },
-      },
-    },
-  },
 };

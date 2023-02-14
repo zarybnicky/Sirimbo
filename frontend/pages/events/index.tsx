@@ -9,7 +9,7 @@ export default function EventListPage() {
 
   return <Item>
     <Item.Titlebar title="Nadcházející akce" />
-    {data?.myEvents?.nodes.map(event => <EventItem key={event.id} event={event} />)}
+    {data?.akces?.nodes.map(event => <EventItem key={event.id} event={event} />)}
   </Item>;
 }
 

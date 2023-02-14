@@ -51,6 +51,15 @@ query ReservationList($limit: Int, $offset: Int) {
   }
 }
 
+query ReservationDetailList($limit: Int, $offset: Int) {
+  nabidkas(first: $limit, offset: $offset, orderBy: [N_OD_DESC]) {
+    nodes {
+      ...Reservation
+    }
+    totalCount
+  }
+}
+
 query Reservation($id: BigInt!) {
   nabidka(nId: $id) {
     ...Reservation

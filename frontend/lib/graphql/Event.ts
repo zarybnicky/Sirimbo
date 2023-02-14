@@ -4,18 +4,18 @@ import * as Types from './index';
 
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
-export type EventFragment = { __typename: 'Akce', aOd: string, aDo: string, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean, id: string };
+export type EventFragment = { __typename: 'Akce', aOd: string, aDo: string, summary: { [key: string]: any }, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean, isPublic: boolean, enableNotes: boolean, id: string };
 
-export type EventItemFragment = { __typename?: 'AkceItem', id: string, userByAiUser: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string } | null };
+export type EventItemFragment = { __typename?: 'AkceItem', notes: string, aiRokNarozeni: number, id: string, userByAiUser: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string } | null };
 
-export type EventWithItemsFragment = { __typename: 'Akce', aOd: string, aDo: string, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean, id: string, akceItemsByAiIdRodic: { __typename?: 'AkceItemsConnection', totalCount: number, nodes: Array<{ __typename?: 'AkceItem', id: string, userByAiUser: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string } | null }> } };
+export type EventWithItemsFragment = { __typename: 'Akce', aOd: string, aDo: string, summary: { [key: string]: any }, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean, isPublic: boolean, enableNotes: boolean, id: string, akceItemsByAiIdRodic: { __typename?: 'AkceItemsConnection', totalCount: number, nodes: Array<{ __typename?: 'AkceItem', notes: string, aiRokNarozeni: number, id: string, userByAiUser: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string } | null }> } };
 
 export type EventQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
 }>;
 
 
-export type EventQuery = { __typename?: 'Query', akce: { __typename: 'Akce', aOd: string, aDo: string, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean, id: string, akceItemsByAiIdRodic: { __typename?: 'AkceItemsConnection', totalCount: number, nodes: Array<{ __typename?: 'AkceItem', id: string, userByAiUser: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string } | null }> } } | null };
+export type EventQuery = { __typename?: 'Query', akce: { __typename: 'Akce', aOd: string, aDo: string, summary: { [key: string]: any }, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean, isPublic: boolean, enableNotes: boolean, id: string, akceItemsByAiIdRodic: { __typename?: 'AkceItemsConnection', totalCount: number, nodes: Array<{ __typename?: 'AkceItem', notes: string, aiRokNarozeni: number, id: string, userByAiUser: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string } | null }> } } | null };
 
 export type EventListQueryVariables = Types.Exact<{
   limit?: Types.InputMaybe<Types.Scalars['Int']>;
@@ -24,7 +24,7 @@ export type EventListQueryVariables = Types.Exact<{
 }>;
 
 
-export type EventListQuery = { __typename?: 'Query', akces: { __typename?: 'AkcesConnection', totalCount: number, nodes: Array<{ __typename: 'Akce', aOd: string, aDo: string, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean, id: string, akceItemsByAiIdRodic: { __typename?: 'AkceItemsConnection', totalCount: number, nodes: Array<{ __typename?: 'AkceItem', id: string, userByAiUser: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string } | null }> } }> } | null };
+export type EventListQuery = { __typename?: 'Query', akces: { __typename?: 'AkcesConnection', totalCount: number, nodes: Array<{ __typename: 'Akce', aOd: string, aDo: string, summary: { [key: string]: any }, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean, isPublic: boolean, enableNotes: boolean, id: string, akceItemsByAiIdRodic: { __typename?: 'AkceItemsConnection', totalCount: number, nodes: Array<{ __typename?: 'AkceItem', notes: string, aiRokNarozeni: number, id: string, userByAiUser: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string } | null }> } }> } | null };
 
 export type ToggleEventVisibleMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -56,12 +56,12 @@ export type DeleteEventMutationVariables = Types.Exact<{
 
 export type DeleteEventMutation = { __typename?: 'Mutation', deleteAkce: { __typename: 'DeleteAkcePayload' } | null };
 
-export type MyEventFragment = { __typename?: 'MyEventsRecord', id: string | null, since: string | null, until: string | null, info: string | null, name: string | null, location: string | null, hasCapacity: boolean | null, signedUp: boolean | null, myNotes: string | null };
+export type MyEventFragment = { __typename: 'Akce', myNotes: string | null, hasCapacity: boolean | null, freeSlots: number | null, signedUp: boolean | null, aOd: string, aDo: string, summary: { [key: string]: any }, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean, isPublic: boolean, enableNotes: boolean, id: string };
 
 export type MyEventsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type MyEventsQuery = { __typename?: 'Query', myEvents: { __typename?: 'MyEventsConnection', nodes: Array<{ __typename?: 'MyEventsRecord', id: string | null, since: string | null, until: string | null, info: string | null, name: string | null, location: string | null, hasCapacity: boolean | null, signedUp: boolean | null, myNotes: string | null }> } | null };
+export type MyEventsQuery = { __typename?: 'Query', akces: { __typename?: 'AkcesConnection', nodes: Array<{ __typename: 'Akce', myNotes: string | null, hasCapacity: boolean | null, freeSlots: number | null, signedUp: boolean | null, aOd: string, aDo: string, summary: { [key: string]: any }, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: string, aKde: string, aLock: boolean, aTimestamp: string | null, aVisible: boolean, isPublic: boolean, enableNotes: boolean, id: string }> } | null };
 
 export type CreateParticipationMutationVariables = Types.Exact<{
   input: Types.CreateParticipationInput;
@@ -83,6 +83,7 @@ export const EventFragmentDoc = `
   id: aId
   aOd
   aDo
+  summary
   aInfo
   aDokumenty
   aJmeno
@@ -91,11 +92,15 @@ export const EventFragmentDoc = `
   aLock
   aTimestamp
   aVisible
+  isPublic
+  enableNotes
 }
     `;
 export const EventItemFragmentDoc = `
     fragment EventItem on AkceItem {
   id: aiId
+  notes
+  aiRokNarozeni
   userByAiUser {
     uJmeno
     uPrijmeni
@@ -118,18 +123,14 @@ export const EventWithItemsFragmentDoc = `
     ${EventFragmentDoc}
 ${EventItemFragmentDoc}`;
 export const MyEventFragmentDoc = `
-    fragment MyEvent on MyEventsRecord {
-  id
-  since
-  until
-  info
-  name
-  location
-  hasCapacity
-  signedUp
+    fragment MyEvent on Akce {
+  ...Event
   myNotes
+  hasCapacity
+  freeSlots
+  signedUp
 }
-    `;
+    ${EventFragmentDoc}`;
 export const EventDocument = `
     query Event($id: BigInt!) {
   akce(aId: $id) {
@@ -268,7 +269,7 @@ useDeleteEventMutation.getKey = () => ['DeleteEvent'];
 useDeleteEventMutation.fetcher = (variables: DeleteEventMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteEventMutation, DeleteEventMutationVariables>(DeleteEventDocument, variables, options);
 export const MyEventsDocument = `
     query MyEvents {
-  myEvents {
+  akces(condition: {aVisible: true}) {
     nodes {
       ...MyEvent
     }

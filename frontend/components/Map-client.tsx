@@ -7,10 +7,8 @@ import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
 import iconUrl from 'leaflet/dist/images/marker-icon.png';
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 
-const { MapContainer, MapConsumer, } = ReactLeaflet;
-
 const Map: React.FC<{
-  children: (x: typeof ReactLeaflet, map: L.Map) => React.ReactElement;
+  children: (x: typeof ReactLeaflet) => React.ReactElement;
 } & ReactLeaflet.MapContainerProps> = ({ children, ...rest }) => {
   useEffect(() => {
     (async function init() {
@@ -25,11 +23,9 @@ const Map: React.FC<{
   }, []);
 
   return (
-    <MapContainer {...rest}>
-      <MapConsumer>
-        {(map) => children(ReactLeaflet, map)}
-      </MapConsumer>
-    </MapContainer>
+    <ReactLeaflet.MapContainer {...rest}>
+      {children(ReactLeaflet)}
+    </ReactLeaflet.MapContainer>
   )
 }
 

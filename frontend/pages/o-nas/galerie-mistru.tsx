@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
-import { SlateEditor } from 'components/Slate';
+import { MyValue, SlateEditor } from 'components/Slate';
 import { Layout } from 'components/layout/Layout';
 import { Heading } from 'components/Heading';
 import { ServiceCard } from 'components/cards/ServiceCard';
+import { ELEMENT_H3 } from '@udecode/plate-heading';
 
 export default function ChampionsPage() {
   return <>
@@ -36,7 +37,7 @@ const mirek = {
   "image": "https://tkolymp.cz/galerie/clanky/Týmové-foto-1.jpg",
   content: [
     {
-      "type": "HEADINGS/HEADING-THREE",
+      "type": ELEMENT_H3,
       "children": [
         {
           "text": "Mistři ČR Junioři I 2000 – Standardní tance (Pardubice)",
@@ -45,7 +46,7 @@ const mirek = {
       ]
     },
     {
-      "type": "HEADINGS/HEADING-THREE",
+      "type": ELEMENT_H3,
       "children": [
         {
           "text": "Mistři ČR Junioři I 2000 – Latinskoamerické tance (Ostrava)",
@@ -54,7 +55,7 @@ const mirek = {
       ]
     },
     {
-      "type": "HEADINGS/HEADING-THREE",
+      "type": ELEMENT_H3,
       "children": [
         {
           "text": "Mistři ČR Junioři I 2000 – 10 tanců (Brno)",
@@ -62,7 +63,7 @@ const mirek = {
         }
       ]
     }
-  ]
+  ] as MyValue
 };
 
 const boruvci = {
@@ -70,7 +71,7 @@ const boruvci = {
   "image": "https://tkolymp.cz/galerie/clanky/286188899543293480751554738291220210599381o.jpg",
   content: [
     {
-      "type": "HEADINGS/HEADING-THREE",
+      "type": ELEMENT_H3,
       "children": [
         {
           "text": "Mistři ČR Junioři I 2015 – Standardní tance (Otrokovice)"
@@ -78,7 +79,7 @@ const boruvci = {
       ]
     },
     {
-      "type": "HEADINGS/HEADING-THREE",
+      "type": ELEMENT_H3,
       "children": [
         {
           "text": "Mistři ČR Junioři I 2016 – Standardní tance (Praha)"
@@ -86,7 +87,7 @@ const boruvci = {
       ]
     },
     {
-      "type": "HEADINGS/HEADING-THREE",
+      "type": ELEMENT_H3,
       "children": [
         {
           "text": "Mistři ČR Junioři I 2016 – Latinskoamerické tance (Olomouc)"
@@ -94,7 +95,7 @@ const boruvci = {
       ]
     },
     {
-      "type": "HEADINGS/HEADING-THREE",
+      "type": ELEMENT_H3,
       "children": [
         {
           "text": "Mistři ČR Junioři I 2016 – 10 tanců (Zlín)"
@@ -102,14 +103,14 @@ const boruvci = {
       ]
     },
     {
-      "type": "HEADINGS/HEADING-THREE",
+      "type": ELEMENT_H3,
       "children": [
         {
           "text": "Mistři ČR Junioři II 2016 – 10 tanců (Zlín)"
         }
       ]
     }
-  ]
+  ] as MyValue
 };
 
 const roman = {
@@ -117,7 +118,7 @@ const roman = {
   "image": "https://tkolymp.cz/galerie/clanky/297501089656914702722766426355566753321169o.jpg",
   content: [
     {
-      "type": "HEADINGS/HEADING-THREE",
+      "type": ELEMENT_H3,
       "children": [
         {
           "text": "Mistři ČR U21 2018 – Standardní tance (Třinec)"
@@ -125,14 +126,14 @@ const roman = {
       ]
     },
     {
-      "type": "HEADINGS/HEADING-THREE",
+      "type": ELEMENT_H3,
       "children": [
         {
           "text": "Mistři ČR U21 2018 – 10 tanců (Kojetín)"
         }
       ]
     }
-  ]
+  ] as MyValue
 };
 
 const veverka = {
@@ -140,14 +141,14 @@ const veverka = {
   "image": "https://tkolymp.cz/galerie/clanky/1721220812868224647286412094096557593334562o.jpg",
   content: [
     {
-      "type": "HEADINGS/HEADING-THREE",
+      "type": ELEMENT_H3,
       "children": [
         {
           "text": "Mistři ČR Junioři I 2018 – Standardní tance (Třinec)"
         }
       ]
     }
-  ]
+  ] as MyValue
 };
 
 const sirovi = {
@@ -155,14 +156,14 @@ const sirovi = {
   "image": "https://tkolymp.cz/galerie/clanky/1709720611681431199719363523339610656928229o.jpg",
   content: [
     {
-      "type": "HEADINGS/HEADING-THREE",
+      "type": ELEMENT_H3,
       "children": [
         {
           "text": "Mistři ČR U21 2017 – Latinskoamerické tance (Praha)"
         }
       ]
     }
-  ]
+  ] as MyValue
 };
 
 const selsdon = {
@@ -170,14 +171,14 @@ const selsdon = {
   "image": "https://tkolymp.cz/galerie/clanky/27773020721464630255284428646841465494972563n.jpg",
   content: [
     {
-      "type": "HEADINGS/HEADING-THREE",
+      "type": ELEMENT_H3,
       "children": [
         {
           "text": "Mistři ČR Junioři I 2022 – Latinskoamerické tance (Praha)"
         }
       ]
     }
-  ]
+  ] as MyValue
 };
 
 const couples = [mirek, boruvci, roman, veverka, sirovi, selsdon];

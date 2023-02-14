@@ -1,83 +1,32 @@
 import * as React from 'react';
-import { Checkbox } from 'components/Checkbox';
-import { useDeleteReservationMutation, useReservationListQuery, useToggleReservationVisibleMutation } from 'lib/graphql/Reservation';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
-import { Edit as EditIcon, Copy as ContentCopyIcon } from 'react-feather';
-import { DeleteButton } from 'components/DeleteButton';
+import { useReservationListQuery } from 'lib/graphql/Reservation';
 import { useRouter } from 'next/router';
 import { Button } from 'components/Button';
 import { formatLongDateRange } from 'lib/format-date';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
+import { List } from "components/layout/List";
+import { FuzzyList } from "components/FuzzyList";
 
 export default function ReservationAdminList() {
   const router = useRouter();
-  const [limit] = React.useState(30);
-  const [page, setPage] = React.useState(0);
-  const { data, refetch } = useReservationListQuery({ limit, offset: page * limit });
-  const { mutateAsync: toggleVisible } = useToggleReservationVisibleMutation({
-    onSuccess: () => refetch(),
-  });
-  const { mutateAsync: doDelete } = useDeleteReservationMutation({
-    onSuccess: () => refetch(),
-  });
-
-  const rowCount = data?.nabidkas?.totalCount || 0;
-  const [rowCountState, setRowCountState] = React.useState(rowCount);
-  React.useEffect(() => {
-    setRowCountState((prev) => rowCount !== undefined ? rowCount : prev);
-  }, [rowCount]);
+  const { id } = router.query;
+  const active = id ? id as string : null;
+  const [search, setSearch] = React.useState('');
+  const { data } = useReservationListQuery();
 
   return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
     <Button href="/admin/nabidka/add">Nová nabídka</Button>
-
-    <DataGrid
-      page={page}
-      onPageChange={setPage}
-      pageSize={limit}
-      rowsPerPageOptions={[limit]}
-      rowCount={rowCountState}
-      pagination
-      paginationMode="server"
-      autoHeight={true}
-      rows={data?.nabidkas?.nodes || []}
-      columns={[
-        {
-          field: 'actions',
-          type: 'actions',
-          getActions: ({ id }) => [
-            <GridActionsCellItem key="edit"
-              icon={<EditIcon />}
-              onClick={() => router.push(`/admin/nabidka/${id}`)}
-              label="Upravit"
-            />,
-            <GridActionsCellItem key="edit-lessons"
-              icon={<EditIcon />}
-              onClick={() => router.push(`/admin/nabidka/detail/${id}`)}
-              label="Upravit lekce"
-            />,
-            <GridActionsCellItem key="duplicate"
-              icon={<ContentCopyIcon />}
-              onClick={() => router.push(`/admin/nabidka/duplicate/${id}`)}
-              label="Duplikovat"
-            />,
-            <DeleteButton key="del" onDelete={() => doDelete({ id: id as string })} title="smazat nabídku" />,
-          ], flex: 1,
-        },
-        {
-          field: 'userByNTrener', headerName: 'Trenér', flex: 1,
-          renderCell: ({ row }) => `${row.userByNTrener?.uJmeno} ${row.userByNTrener?.uPrijmeni}`,
-        },
-        {
-          field: 'nOd', headerName: 'Datum', flex: 1,
-          renderCell: ({ row }) => formatLongDateRange(new Date(row.nOd), new Date(row.nDo)),
-        },
-        {
-          field: 'nVisible', headerName: 'Viditelný', flex: 1,
-          renderCell: ({ row }) => (
-            <Checkbox checked={row.nVisible} onChange={() => toggleVisible({ id: row.id, visible: !row.nVisible })} />
-          ),
-        },
-      ]}
+    <FuzzyList
+      data={data?.nabidkas?.nodes || []}
+      fields={['id', 'userByNTrener']}
+      search={search}
+      renderItem={(item) => (
+        <List.Item
+          key={item.id}
+          active={active === item.id} href={`/admin/nabidka/${item.id}`}
+          title={`${formatLongDateRange(new Date(item.nOd), new Date(item.nDo))} ${item.userByNTrener?.fullName}`}
+        />
+      )}
     />
   </div>;
 }

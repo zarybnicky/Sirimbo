@@ -21,6 +21,14 @@ export type ReservationListQueryVariables = Types.Exact<{
 
 export type ReservationListQuery = { __typename?: 'Query', nabidkas: { __typename?: 'NabidkasConnection', totalCount: number, nodes: Array<{ __typename?: 'Nabidka', nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, id: string, userByNTrener: { __typename?: 'User', fullName: string | null, uJmeno: string, uPrijmeni: string, id: string } | null }> } | null };
 
+export type ReservationDetailListQueryVariables = Types.Exact<{
+  limit?: Types.InputMaybe<Types.Scalars['Int']>;
+  offset?: Types.InputMaybe<Types.Scalars['Int']>;
+}>;
+
+
+export type ReservationDetailListQuery = { __typename?: 'Query', nabidkas: { __typename?: 'NabidkasConnection', totalCount: number, nodes: Array<{ __typename?: 'Nabidka', nOd: string, nDo: string, nPocetHod: number, nMaxPocetHod: number, nLock: boolean, nTimestamp: string | null, nVisible: boolean, nTrener: string, id: string, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename: 'NabidkaItem', niPartner: string, niPocetHod: number, niLock: boolean, id: string, paryByNiPartner: { __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean, id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null }> }, userByNTrener: { __typename?: 'User', fullName: string | null, uJmeno: string, uPrijmeni: string, id: string } | null }> } | null };
+
 export type ReservationQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
 }>;
@@ -150,6 +158,33 @@ useReservationListQuery.getKey = (variables?: ReservationListQueryVariables) => 
 ;
 
 useReservationListQuery.fetcher = (variables?: ReservationListQueryVariables, options?: RequestInit['headers']) => fetcher<ReservationListQuery, ReservationListQueryVariables>(ReservationListDocument, variables, options);
+export const ReservationDetailListDocument = `
+    query ReservationDetailList($limit: Int, $offset: Int) {
+  nabidkas(first: $limit, offset: $offset, orderBy: [N_OD_DESC]) {
+    nodes {
+      ...Reservation
+    }
+    totalCount
+  }
+}
+    ${ReservationFragmentDoc}`;
+export const useReservationDetailListQuery = <
+      TData = ReservationDetailListQuery,
+      TError = unknown
+    >(
+      variables?: ReservationDetailListQueryVariables,
+      options?: UseQueryOptions<ReservationDetailListQuery, TError, TData>
+    ) =>
+    useQuery<ReservationDetailListQuery, TError, TData>(
+      variables === undefined ? ['ReservationDetailList'] : ['ReservationDetailList', variables],
+      fetcher<ReservationDetailListQuery, ReservationDetailListQueryVariables>(ReservationDetailListDocument, variables),
+      options
+    );
+
+useReservationDetailListQuery.getKey = (variables?: ReservationDetailListQueryVariables) => variables === undefined ? ['ReservationDetailList'] : ['ReservationDetailList', variables];
+;
+
+useReservationDetailListQuery.fetcher = (variables?: ReservationDetailListQueryVariables, options?: RequestInit['headers']) => fetcher<ReservationDetailListQuery, ReservationDetailListQueryVariables>(ReservationDetailListDocument, variables, options);
 export const ReservationDocument = `
     query Reservation($id: BigInt!) {
   nabidka(nId: $id) {

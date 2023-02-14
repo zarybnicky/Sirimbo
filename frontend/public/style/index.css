@@ -1,7 +1,5 @@
 @import 'glider-js/glider.min.css';
 @import "nprogress/nprogress.css";
-@import '@react-page/plugins-slate/lib/index.css';
-@import '@react-page/plugins-image/lib/index.css';
 @import "react-toastify/dist/ReactToastify.css";
 
 .content > * {
@@ -37,9 +35,6 @@
     @apply h-5 w-5;
 }
 
-.react-page-cell-inner.slate {
-    @apply prose;
-}
 .avoid-trainer-pictures .slate li:nth-of-type(1) {
     padding-right: 115px;
 }

@@ -106,8 +106,4 @@ const adminMenu: MenuLink[] = [
     type: "link", title: 'Dokumenty', href: '/admin/dokumenty',
     auth: [PermissionKey.peDokumenty, PermissionLevel.P_OWNED]
   },
-  {
-    type: "link", title: '(Oprávnění)', href: '/admin/permissions',
-    auth: [PermissionKey.pePermissions, PermissionLevel.P_OWNED]
-  },
 ];

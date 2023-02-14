@@ -1,5 +1,4 @@
 import * as React from 'react';
-import type { CellPlugin } from '@react-page/editor';
 import { Card } from 'components/Card';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
@@ -15,7 +14,7 @@ type ProspectFormEmailProps = {
   title?: string;
 };
 
-export const ProspectFormEmail = ({ title }: ProspectFormEmailProps) => {
+export const ProspectFormEmail = ({ title = 'Nemůžete přijít? Zanechte nám kontakt:' }: ProspectFormEmailProps) => {
   const { mutateAsync: submit } = useSubmitProspectFormMutation();
   const { control, handleSubmit } = useForm();
 
@@ -45,27 +44,4 @@ export const ProspectFormEmail = ({ title }: ProspectFormEmailProps) => {
       </form>
     </Card>
   );
-};
-
-export const ProspectFormEmailPlugin: CellPlugin<ProspectFormEmailProps> = {
-  Renderer: ({ data }) => <ProspectFormEmail {...data} />,
-
-  id: 'app-prospect-form-email',
-  title: 'Prospect Form Email',
-  description: undefined,
-  version: 2,
-
-  createInitialData: () => ({
-    title: 'Nemůžete přijít? Zanechte nám kontakt:',
-  }),
-  controls: {
-    type: 'autoform',
-    schema: {
-      properties: {
-        title: {
-          type: 'string',
-        },
-      },
-    },
-  },
 };

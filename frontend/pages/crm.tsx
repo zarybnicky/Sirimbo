@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
 import { useActiveProspectsQuery } from 'lib/graphql/Crm';
-import { Layout } from 'components/layout/Layout';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 import { formatFullDate } from 'lib/format-date';
 import { Item } from 'components/layout/Item';
@@ -12,33 +10,29 @@ export default function CrmPage() {
   return <Item className="col-feature">
     <Item.Titlebar title="Chci tančit!" />
 
-    <DataGrid
-      autoHeight={true}
-      rows={data?.activeProspects?.nodes || []}
-      columns={[
-        {
-          field: 'name', headerName: 'Jméno', flex: 1,
-          valueGetter: ({ row }) => `${row.data?.name} ${row.data?.surname}`,
-        },
-        {
-          field: 'email', headerName: 'E-mail', flex: 1,
-          valueGetter: ({ row }) => row.data?.email,
-        },
-        {
-          field: 'phone', headerName: 'Telefon', flex: 1,
-          valueGetter: ({ row }) => row.data?.phone,
-        },
-        {
-          field: 'birthyear', headerName: 'Rok narození', flex: 1,
-          valueGetter: ({ row }) => row.data?.yearofbirth,
-        },
-        { field: 'cohort', headerName: 'Zdroj', flex: 1 },
-        {
-          field: 'updatedAd', headerName: 'Poslední aktivita', flex: 1,
-          renderCell: ({ row }) => row.updatedAt ? formatFullDate(new Date(row.updatedAt)) : '',
-        },
-      ]}
-    />
+    <table>
+      <thead>
+        <tr>
+          <th>Jméno</th>
+          <th>E-mail</th>
+          <th>Rok narození</th>
+          <th>Zdroj</th>
+          <th>Poslední aktivita</th>
+        </tr>
+      </thead>
+      <tbody>
+        {(data?.activeProspects?.nodes || []).map((row, i) => (
+          <tr key={i}>
+            <td>{row.data?.name} {row.data?.surname}</td>
+            <td>{row.data?.email}</td>
+            <td>{row.data?.phone}</td>
+            <td>{row.data?.yearofbirth}</td>
+            <td>{row.cohort}</td>
+            <td>{row.updatedAt ? formatFullDate(new Date(row.updatedAt)) : ''}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   </Item>;
 }
 

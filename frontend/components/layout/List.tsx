@@ -53,7 +53,7 @@ function ListItem({ active, children, href, title, subtitle }: {
   children?: React.ReactNode;
   active?: boolean;
   href: string;
-  title: string;
+  title: React.ReactNode;
   subtitle?: React.ReactNode;
 }) {
   return (

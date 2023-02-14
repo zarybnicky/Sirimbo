@@ -1,5 +1,4 @@
 import * as React from 'react';
-import type { CellPlugin } from '@react-page/editor';
 import { Card } from 'components/Card';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
@@ -15,7 +14,7 @@ type ProspectFormProps = {
   title?: string;
 };
 
-export const ProspectForm = ({ title }: ProspectFormProps) => {
+export const ProspectForm = ({ title = "Chci úvodní hodinu ZDARMA!" }: ProspectFormProps) => {
   const { mutateAsync: submit } = useSubmitProspectFormMutation();
   const { control, handleSubmit } = useForm();
 
@@ -52,27 +51,4 @@ export const ProspectForm = ({ title }: ProspectFormProps) => {
       </form>
     </Card>
   );
-};
-
-export const ProspectFormPlugin: CellPlugin<ProspectFormProps> = {
-  Renderer: ({ data }) => <ProspectForm {...data} />,
-
-  id: 'app-prospect-form',
-  title: 'Prospect Form',
-  description: undefined,
-  version: 2,
-
-  createInitialData: () => ({
-    title: 'Chci úvodní hodinu ZDARMA!',
-  }),
-  controls: {
-    type: 'autoform',
-    schema: {
-      properties: {
-        title: {
-          type: 'string',
-        },
-      },
-    },
-  },
 };

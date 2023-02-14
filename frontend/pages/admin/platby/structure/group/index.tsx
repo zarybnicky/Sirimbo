@@ -1,45 +1,34 @@
+import * as React from 'react';
 import { useRouter } from 'next/router';
-import { usePaymentGroupListQuery, useDeletePaymentGroupMutation } from "lib/graphql/Payment";
-import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
-import { Edit as EditIcon } from 'react-feather';
-import { DeleteButton } from 'components/DeleteButton';
+import { usePaymentGroupListQuery } from "lib/graphql/Payment";
 import { Button } from 'components/Button';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
+import { List } from "components/layout/List";
+import { FuzzyList } from "components/FuzzyList";
 
 export default function PlatbyGroupListPage() {
   const router = useRouter();
+  const { id } = router.query;
+  const active = id ? id as string : null;
+  const [search, setSearch] = React.useState('');
   const { data, refetch } = usePaymentGroupListQuery();
-  const { mutateAsync: doDelete } = useDeletePaymentGroupMutation({
-    onSuccess: () => refetch(),
-  });
 
   return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
     <Button href="/admin/platby/structure/group/add">
       Nová skupina plateb
     </Button>
 
-    <DataGrid
-      autoHeight={true}
-      rows={data?.platbyGroups?.nodes || []}
-      columns={[
-        {
-          field: 'actions',
-          type: 'actions',
-          getActions: ({ id }: GridRowParams) => [
-            <GridActionsCellItem key="edit"
-              icon={<EditIcon />}
-              onClick={() => router.push(`/admin/platby/structure/group/${id}`)}
-              label="Upravit"
-            />,
-            <DeleteButton key="del" onDelete={() => doDelete({ id: id as string })} title="smazat skupinu plateb" />,
-          ]
-        },
-        { field: 'pgName', headerName: 'Jméno', flex: 1 },
-        {
-          field: 'pgType', headerName: 'Typ', flex: 1,
-          renderCell: ({ row }) => row.pgType ? 'Členské příspěvky' : 'Běžné platby',
-        },
-      ]}
+    <FuzzyList
+      data={data?.platbyGroups?.nodes || []}
+      fields={['id', 'pgName']}
+      search={search}
+      renderItem={(item) => (
+        <List.Item
+          key={item.id}
+          active={active === item.id} href={`/admin/platby/structure/group/${item.id}`}
+          title={item.pgName}
+        />
+      )}
     />
   </div>;
 }

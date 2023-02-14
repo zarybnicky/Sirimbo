@@ -18,11 +18,11 @@ export const EventItem = ({ event, expanded: expandedInit = false }: {
     <Card className="break-inside-avoid">
       <div className="flex flex-col-reverse lg:flex-row justify-between">
         <div className="text-lg text-stone-600">
-          {fullDateFormatter.formatRange(new Date(event.since || ''), new Date(event.until || ''))}
+          {fullDateFormatter.formatRange(new Date(event.aOd || ''), new Date(event.aDo || ''))}
         </div>
 
         {(event.signedUp || event.hasCapacity) ? <div>
-          <SimpleDialog title={event.name} button={<Button>
+          <SimpleDialog title={event.aJmeno} button={<Button>
             {event.signedUp ? "Upravit přihlášku" : "Přihlásit"}
           </Button>}>
             {({ close }) => <ParticipationForm data={event} onSuccess={close} />}
@@ -30,18 +30,19 @@ export const EventItem = ({ event, expanded: expandedInit = false }: {
         </div> : null}
       </div>
 
-      <div className="text-4xl text-stone-800">{event.name}</div>
-      <div className="text-xl text-stone-500">{event.location}</div>
+      <div className="text-4xl text-stone-800">{event.aJmeno}</div>
+      <div className="text-xl text-stone-500">{event.aKde}</div>
+      <div className="text-stone-500">Zbývá {event.freeSlots} z {event.aKapacita} míst</div>
 
       <div
         className={expanded ? '' : "cursor-pointer"}
         onClick={!expanded ? open : undefined}
       >
-        <RichTextView
-          className={expanded ? "" : "line-clamp-3 after"}
-          value={(event.info || '').replaceAll('\n', '<br/>')}
-        />
-        {!expanded && (
+        <RichTextView value={event.summary} />
+
+        {expanded ? (
+          <RichTextView value={(event.aInfo || '').replaceAll('\n', '<br/>')} />
+        ) : (
           <div className="text-red-500 font-bold mt-3">Zobrazit více...</div>
         )}
       </div>

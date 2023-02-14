@@ -3,9 +3,12 @@ import Link from "next/link"
 import parse, { domToReact, DOMNode, Element, HTMLReactParserOptions } from "html-react-parser"
 
 export const RichTextView = ({ value, className }: {
-  value: string | any[] | object;
+  value: string | any[] | object | undefined | null;
   className?: string;
 }) => {
+  if (!value) {
+    return null;
+  }
   if (Array.isArray(value)) {
     return <div className={className}>
       <SlateEditor readOnly value={value} />

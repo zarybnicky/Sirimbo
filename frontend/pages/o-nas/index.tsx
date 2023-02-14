@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
-import { SlateEditor } from 'components/Slate';
+import { MyValue, SlateEditor } from 'components/Slate';
 import { Layout } from 'components/layout/Layout';
 import { Heading } from 'components/Heading';
+import { ELEMENT_PARAGRAPH } from '@udecode/plate-paragraph';
+import { ELEMENT_H1 } from '@udecode/plate-heading';
 
 export default function AboutPage() {
   return <>
@@ -29,34 +31,34 @@ AboutPage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</
 
 const text = [
   {
-    type: 'heading-one',
+    type: ELEMENT_H1,
     children: [
       { text: 'OLYMP', primary: true, bold: true },
       { text: ' V TANEČNÍM SVĚTĚ', bold: true },
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
-    "children": [
+    type: ELEMENT_PARAGRAPH,
+    children: [
       {
-        "text": "Taneční klub byl jedním z prvních klubů v České republice, který v počátku devadesátých let 20. století začal systematicky zaměřovat na práci s dětmi a mládeží. Jsme klubem s více než třicetiletou tradicí. Zabýváme se výchovou tanečních sportovců od dětí až po dospělé. Vytvořili jsme provázaný systém téninkových programů pro začínající, výkonnostní i vrcholoví sportovce. Využíváme moderní tréninkové metody a pravidelně je zdokonalujeme ve spolupráci s odborníky z Fakulty tělesné kultury Univerzity Palackého v Olomouci a mezinárodními trenéry World Dance Sport Organisation"
+        text: "Taneční klub byl jedním z prvních klubů v České republice, který v počátku devadesátých let 20. století začal systematicky zaměřovat na práci s dětmi a mládeží. Jsme klubem s více než třicetiletou tradicí. Zabýváme se výchovou tanečních sportovců od dětí až po dospělé. Vytvořili jsme provázaný systém téninkových programů pro začínající, výkonnostní i vrcholoví sportovce. Využíváme moderní tréninkové metody a pravidelně je zdokonalujeme ve spolupráci s odborníky z Fakulty tělesné kultury Univerzity Palackého v Olomouci a mezinárodními trenéry World Dance Sport Organisation"
       }
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
-    "children": [
+    type: ELEMENT_PARAGRAPH,
+    children: [
       {
-        "text": "V rámci Českého svazu tanečního sportu jsme jediným klubem z Olomouckého kraje se statutem Sportovního centra mládeže. Pravidelně dodáváme členy národnímu reprezentačnímu týmu a dlouhodobě patříme mezi nejlepší české kluby v práci s dětmi a mládeží. "
+        text: "V rámci Českého svazu tanečního sportu jsme jediným klubem z Olomouckého kraje se statutem Sportovního centra mládeže. Pravidelně dodáváme členy národnímu reprezentačnímu týmu a dlouhodobě patříme mezi nejlepší české kluby v práci s dětmi a mládeží. "
       }
     ]
   },
   {
-    "type": "PARAGRAPH/PARAGRAPH",
-    "children": [
+    type: ELEMENT_PARAGRAPH,
+    children: [
       {
-        "text": "Působíme v Olomouci a Prostějově. "
+        text: "Působíme v Olomouci a Prostějově. "
       }
     ]
   }
-]
+] as MyValue

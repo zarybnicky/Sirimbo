@@ -12,8 +12,12 @@ export default function GalleryPage() {
     />
 
     <div className="col-feature my-16 grid gap-16 px-4 md:grid-cols-2">
-      <div>Facebook alba fotek</div>
-      <div>YouTube videa</div>
+      <a target="_blank" rel="noreferrer" href="https://www.facebook.com/tkolymp/photos_albums?locale=cs_CZ">
+        Facebook alba fotek
+      </a>
+      <a target="_blank" rel="noreferrer" href="https://www.youtube.com/user/TheMamcro">
+        YouTube videa
+      </a>
     </div>
 
     <CallToAction />

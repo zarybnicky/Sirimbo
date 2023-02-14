@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { CellPlugin } from '@react-page/editor';
 
 type HeadingProps = {
   color: string | { r: number; g: number; b: number; a: number; };
@@ -25,36 +24,4 @@ export const Heading = ({ color, image, text }: HeadingProps) => {
       </div>
     </div>
   </div>;
-};
-
-export const HeadingPlugin: CellPlugin<HeadingProps> = {
-  Renderer: ({ data }) => <Heading {...data} />,
-
-  id: 'app-heading-plugin',
-  title: 'Heading',
-  description: undefined,
-  version: 1,
-  createInitialData: () => ({
-    text: '...nadpis',
-    color: { r: 216, g: 28, b: 58, a: 0.6 },
-    image: '/images/mohelnice2021-title.jpg',
-  }),
-  controls: {
-    type: 'autoform',
-    schema: {
-      required: [],
-      properties: {
-        text: { type: 'string' },
-        image: { type: 'string' },
-        color: {
-          type: 'string',
-          default: 'black',
-          uniforms: {
-            label: 'Barva překryvu (chybí chytrý výběr barvy, nefunguje)',
-            /* component: ColorPickerField, */
-          },
-        },
-      },
-    },
-  },
 };

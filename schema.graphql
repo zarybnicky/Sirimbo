@@ -72,11 +72,18 @@ type Akce implements Node {
   aOd: Date!
   aTimestamp: Datetime
   aVisible: Boolean!
+  enableNotes: Boolean!
+  freeSlots: Int
+  hasCapacity: Boolean
+  isPublic: Boolean!
+  myNotes: String
 
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
+  signedUp: Boolean
+  summary: JSON!
 }
 
 """
@@ -115,6 +122,15 @@ input AkceCondition {
 
   """Checks for equality with the object’s `aVisible` field."""
   aVisible: Boolean
+
+  """Checks for equality with the object’s `enableNotes` field."""
+  enableNotes: Boolean
+
+  """Checks for equality with the object’s `isPublic` field."""
+  isPublic: Boolean
+
+  """Checks for equality with the object’s `summary` field."""
+  summary: JSON
 }
 
 """An input for mutations affecting `Akce`"""
@@ -130,6 +146,9 @@ input AkceInput {
   aOd: Date!
   aTimestamp: Datetime
   aVisible: Boolean
+  enableNotes: Boolean
+  isPublic: Boolean
+  summary: JSON
 }
 
 type AkceItem implements Node {
@@ -248,6 +267,9 @@ input AkcePatch {
   aOd: Date
   aTimestamp: Datetime
   aVisible: Boolean
+  enableNotes: Boolean
+  isPublic: Boolean
+  summary: JSON
 }
 
 """A connection to a list of `Akce` values."""
@@ -300,9 +322,15 @@ enum AkcesOrderBy {
   A_TIMESTAMP_DESC
   A_VISIBLE_ASC
   A_VISIBLE_DESC
+  ENABLE_NOTES_ASC
+  ENABLE_NOTES_DESC
+  IS_PUBLIC_ASC
+  IS_PUBLIC_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  SUMMARY_ASC
+  SUMMARY_DESC
 }
 
 """A connection to a list of `Aktuality` values."""
@@ -6950,42 +6978,6 @@ type Mutation {
   ): VerifyFunctionPayload
 }
 
-"""A `MyEventsRecord` edge in the connection."""
-type MyEventEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `MyEventsRecord` at the end of the edge."""
-  node: MyEventsRecord!
-}
-
-"""A connection to a list of `MyEventsRecord` values."""
-type MyEventsConnection {
-  """
-  A list of edges which contains the `MyEventsRecord` and cursor to aid in pagination.
-  """
-  edges: [MyEventEdge!]!
-
-  """A list of `MyEventsRecord` objects."""
-  nodes: [MyEventsRecord!]!
-
-  """The count of *all* `MyEventsRecord` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""The return type of our `myEvents` query."""
-type MyEventsRecord {
-  hasCapacity: Boolean
-  id: BigInt
-  info: String
-  location: String
-  myNotes: String
-  name: String
-  signedUp: Boolean
-  since: Datetime
-  until: Datetime
-}
-
 type Nabidka implements Node {
   freeLessons: Int
   myLessons: Int
@@ -9546,25 +9538,6 @@ type Query implements Node {
     """
     offset: Int
   ): UpozornenisConnection
-  myEvents(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-  ): MyEventsConnection
 
   """Reads and enables pagination through a set of `RozpisItem`."""
   myLessons(
@@ -10806,6 +10779,9 @@ type Query implements Node {
     orderBy: [VideoSourcesOrderBy!] = [PRIMARY_KEY_ASC]
   ): VideoSourcesConnection
 }
+
+"""A builtin object identifier type for a relation name"""
+scalar RegClass
 
 """A builtin object identifier type for a function name"""
 scalar RegProc
@@ -15361,6 +15337,7 @@ input VerifyFunctionInput {
   """
   clientMutationId: String
   f: RegProc
+  relid: RegClass
 }
 
 """The output of our `verifyFunction` mutation."""

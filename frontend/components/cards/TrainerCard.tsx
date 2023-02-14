@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { CellPlugin } from '@react-page/editor';
-import { defaultSlate } from '../Slate';
 import { Card } from 'components/Card';
 
 type TrainerCardProps = {
@@ -20,32 +18,4 @@ export const TrainerCard = (props: TrainerCardProps & { children: React.ReactNod
       <img className="w-[100px] h-[120px] object-cover absolute top-4 right-4" src={props.image} alt={props.name} />
     )}
   </Card>;
-};
-
-export const TrainerCardPlugin: CellPlugin<TrainerCardProps> = {
-  Renderer: ({ children, data }) => <TrainerCard {...data}>
-    {children}
-  </TrainerCard>,
-
-  id: 'app-trainer-card-plugin',
-  title: 'TrainerCard',
-  version: 1,
-  createInitialData: () => ({
-    name: 'Franta Nový',
-    image: '/images/services-pripravka.png',
-  }),
-  createInitialChildren: () => [[{ plugin: defaultSlate }]],
-  childConstraints: {
-    maxChildren: 1,
-  },
-  controls: {
-    type: 'autoform',
-    schema: {
-      required: [],
-      properties: {
-        name: { type: 'string' },
-        image: { type: 'string' },
-      },
-    },
-  },
 };

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { usePermissions } from 'lib/data/use-permissions';
-import { ReservationFragment, useReservationListQuery } from 'lib/graphql/Reservation';
+import { ReservationFragment, useReservationDetailListQuery } from 'lib/graphql/Reservation';
 import { Dropdown } from 'components/Dropdown';
 import { formatShortDateRange } from 'lib/format-date';
 
@@ -58,7 +58,7 @@ const ReservationView = (x: ReservationFragment) => {
 }
 
 export function ReservationSelect() {
-  const { data: reservations } = useReservationListQuery({ limit: 30, offset: 0 });
+  const { data: reservations } = useReservationDetailListQuery({ limit: 30, offset: 0 });
   const [reservation, setReservation] = React.useState<ReservationFragment | undefined>();
   const onChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     setReservation(reservations?.nabidkas?.nodes?.find(x => x.id === event.target.value));

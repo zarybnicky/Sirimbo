@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { CellPlugin } from '@react-page/editor';
-import { defaultSlate } from '../Slate';
 import { Map } from 'components/Map';
 import { Card } from 'components/Card';
 import classNames from 'classnames';
@@ -52,47 +50,4 @@ export const LocationCard = ({ item: x }: { item: Location; }) => {
       <CardMap className="h-[150px] mt-4" name={x.name} {...x.map} />
     </div>
   </Card>;
-};
-
-
-export const LocationCardPlugin: CellPlugin<Location> = {
-  Renderer: ({ data }) => <LocationCard item={data} />,
-
-  id: 'app-location-card-plugin',
-  title: 'LocationCard',
-  version: 1,
-  createInitialData: () => ({
-    image: '',
-    name: 'Taneční centrum při FZŠ Holečkova',
-    address: 'Holečkova 10, 779 00, Olomouc (vchod brankou u zastávy Povel - škola)',
-    href: 'https://www.zsholeckova.cz/',
-    mapHref: 'https://goo.gl/maps/swv3trZB2uvjcQfR6',
-    map: {
-      lat: 49.57963,
-      lng: 17.2495939,
-      zoom: 12,
-    },
-  }),
-  createInitialChildren: () => [[{ plugin: defaultSlate }]],
-  controls: {
-    type: 'autoform',
-    schema: {
-      required: [],
-      properties: {
-        image: { type: 'string' },
-        name: { type: 'string' },
-        address: { type: 'string' },
-        href: { type: 'string' },
-        mapHref: { type: 'string' },
-        map: {
-          type: 'object',
-          properties: {
-            lat: { type: 'number' },
-            lng: { type: 'number' },
-            zoom: { type: 'integer' },
-          },
-        },
-      },
-    },
-  },
 };

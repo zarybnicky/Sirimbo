@@ -47,11 +47,17 @@ export const ParticipationForm: React.FC<{
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement disabled control={control} label="Člen" name="yearOfBirth" value={`${user?.uJmeno} ${user?.uPrijmeni}`} />
       <TextFieldElement disabled control={control} label="Rok narození" name="yearOfBirth" />
-      <TextAreaElement autoFocus control={control} label="Požadavky na lekce, stravu apod." name="myNotes" />
+      {(data.enableNotes || data.myNotes) ? (
+        <TextAreaElement autoFocus control={control} label="Požadavky na lekce, stravu apod." name="myNotes" />
+      ) : null}
       <SubmitButton loading={onSubmit.loading}>
         {data.signedUp ? "Upravit přihlášku" : "Přihlásit"}
       </SubmitButton>
-      {data?.signedUp && <button className="button button-white" onClick={onCancel.execute}>Zrušit přihlášku</button>}
+      {data?.signedUp && (
+        <button className="button button-white" onClick={onCancel.execute}>
+          Zrušit přihlášku
+        </button>
+      )}
     </form>
   );
 };

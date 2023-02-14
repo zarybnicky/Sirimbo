@@ -1,5 +1,4 @@
 import * as React from 'react';
-import type { CellPlugin } from '@react-page/editor';
 import CtaImage from 'public/images/call-to-action.png';
 import Link from 'next/link';
 import { ChevronRight } from 'react-feather';
@@ -29,12 +28,3 @@ export function CallToAction() {
     </div>
   </div>;
 }
-
-export const CallToActionPlugin: CellPlugin<{}> = {
-  Renderer: () => <CallToAction />,
-
-  id: 'app-cta-plugin',
-  title: 'Call to Action',
-  description: undefined,
-  version: 1,
-};
