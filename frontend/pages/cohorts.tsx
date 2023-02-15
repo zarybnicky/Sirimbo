@@ -47,7 +47,7 @@ export default function CohortsPage() {
 
     <div className="gap-4 lg:columns-2">
       {Object.values(cohorts).map(cohort => (
-        <Card key={cohort.sId} className="break-inside-avoid mb-4 p-8">
+        <Card key={cohort.sId} className="relative break-inside-avoid mb-4 p-8 pl-8">
           <div className="flex items-start justify-between mb-3">
             <div>
               {cohort.members.length} členů
@@ -63,6 +63,7 @@ export default function CohortsPage() {
               {cohort.members.map((member) => <UserDetailButton key={member.uId} user={member} />)}
             </div>
           )}
+          <div className="absolute rounded-l-lg w-4 shadow-sm top-0 bottom-0 left-0" style={{ backgroundColor: cohort.sColorRgb }} />
         </Card>
       ))}
     </div>

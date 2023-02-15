@@ -12,8 +12,8 @@ export default function DashboardPage() {
     <div className="lg:hidden">
       <TabMenu selected={variant} onSelect={setVariant} options={[
         { id: 'myLessons', label: 'Moje lekce' },
-        { id: 'myAnnouncements', label: 'Nástěnka' },
-        { id: 'importantInfo', label: 'Důležité informace' },
+        { id: 'myAnnouncements', label: 'Aktuality' },
+        { id: 'importantInfo', label: 'Stálé informace' },
       ]} />
       <div className="pt-2">
         {variant === 'myLessons' ? <MyLessonsList /> :
@@ -22,7 +22,7 @@ export default function DashboardPage() {
       </div>
     </div>
 
-    <div className="hidden lg:grid grid-cols-3">
+    <div className="hidden lg:grid grid-cols-3 gap-4">
       <MyLessonsList />
       <MyAnnouncements />
       <TenantInformation />

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useScheduleListQuery } from 'lib/graphql/Schedule';
 import { useRouter } from 'next/router';
 import { Button } from 'components/Button';
-import { formatFullDate } from 'lib/format-date';
+import { GfullDateFormatter } from 'lib/format-date';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 import { List } from "components/layout/List";
 import { FuzzyList } from "components/FuzzyList";
@@ -26,7 +26,7 @@ export default function RozpisAdminList() {
           key={item.id}
           active={active === item.id} href={`/admin/rozpis/${item.id}`}
           title={item.userByRTrener?.fullName}
-          subtitle={item.rDatum ? formatFullDate(new Date(item.rDatum)) : ''}
+          subtitle={item.rDatum ? fullDateFormatter.format(new Date(item.rDatum)) : ''}
         />
       )}
     />

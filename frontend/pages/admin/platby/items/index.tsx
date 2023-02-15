@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { usePaymentItemListQuery } from "lib/graphql/Payment";
 import { Button } from 'components/Button';
-import { formatFullDate } from 'lib/format-date';
+import { fullDateFormatter } from 'lib/format-date';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 import { List } from "components/layout/List";
 import { FuzzyList } from "components/FuzzyList";
@@ -25,7 +25,7 @@ export default function PlatbyItemListPage() {
         <List.Item
           key={item.id}
           active={active === item.id} href={`/admin/platby/items/${item.id}`}
-          title={`${item.piAmount} ${item.platbyCategoryByPiIdCategory?.pcName} ${formatFullDate(new Date(item.piDate))} ${item.userByPiIdUser?.uJmeno} ${item.userByPiIdUser?.uPrijmeni}`}
+          title={`${item.piAmount} ${item.platbyCategoryByPiIdCategory?.pcName} ${fullDateFormatter.format(new Date(item.piDate))} ${item.userByPiIdUser?.uJmeno} ${item.userByPiIdUser?.uPrijmeni}`}
         />
       )}
     />

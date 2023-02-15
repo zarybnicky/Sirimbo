@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useActiveProspectsQuery } from 'lib/graphql/Crm';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
-import { formatFullDate } from 'lib/format-date';
+import { fullDateFormatter } from 'lib/format-date';
 import { Item } from 'components/layout/Item';
 
 export default function CrmPage() {
@@ -28,7 +28,7 @@ export default function CrmPage() {
             <td>{row.data?.phone}</td>
             <td>{row.data?.yearofbirth}</td>
             <td>{row.cohort}</td>
-            <td>{row.updatedAt ? formatFullDate(new Date(row.updatedAt)) : ''}</td>
+            <td>{row.updatedAt ? fullDateFormatter.format(new Date(row.updatedAt)) : ''}</td>
           </tr>
         ))}
       </tbody>

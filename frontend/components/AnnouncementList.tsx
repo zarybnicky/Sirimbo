@@ -2,7 +2,7 @@ import { useAnnouncementListQuery } from "lib/graphql/Announcement";
 import { Plus } from 'react-feather';
 import { useRouter } from "next/router";
 import { List } from "components/layout/List";
-import { formatFullDate } from "lib/format-date";
+import { fullDateFormatter } from "lib/format-date";
 import React from "react";
 import { Pagination } from "./Pagination";
 
@@ -33,7 +33,7 @@ export function AnnouncementList() {
             <div>
               {[
                 item.userByUpKdo && `${item.userByUpKdo.uJmeno} ${item.userByUpKdo.uPrijmeni}`,
-                formatFullDate(new Date(item.upTimestampAdd)),
+                fullDateFormatter.format(new Date(item.upTimestampAdd)),
               ].filter(Boolean).join(', ')}
             </div>
             <div className="inline-flex gap-1 ml-3">

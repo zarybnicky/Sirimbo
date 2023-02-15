@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useReservationListQuery } from 'lib/graphql/Reservation';
 import { useRouter } from 'next/router';
 import { Button } from 'components/Button';
-import { formatLongDateRange } from 'lib/format-date';
+import { fullDateFormatter } from 'lib/format-date';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 import { List } from "components/layout/List";
 import { FuzzyList } from "components/FuzzyList";
@@ -24,7 +24,7 @@ export default function ReservationAdminList() {
         <List.Item
           key={item.id}
           active={active === item.id} href={`/admin/nabidka/${item.id}`}
-          title={`${formatLongDateRange(new Date(item.nOd), new Date(item.nDo))} ${item.userByNTrener?.fullName}`}
+          title={`${fullDateFormatter.formatRange(new Date(item.nOd), new Date(item.nDo))} ${item.userByNTrener?.fullName}`}
         />
       )}
     />

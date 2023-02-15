@@ -5,7 +5,7 @@ import { List } from "components/layout/List";
 import { TextField } from "components/TextField";
 import { FuzzyList } from "components/FuzzyList";
 import { useEventListQuery } from "lib/graphql/Event";
-import { formatLongDateRange } from "lib/format-date";
+import { fullDateFormatter } from "lib/format-date";
 
 export const EventList = () => {
   const router = useRouter();
@@ -36,7 +36,7 @@ export const EventList = () => {
             key={item.id}
             active={active === item.id} href={`/admin/akce/${item.id}`}
             title={item.aJmeno}
-            subtitle={formatLongDateRange(new Date(item.aOd), new Date(item.aDo))}
+            subtitle={fullDateFormatter.formatRange(new Date(item.aOd), new Date(item.aDo))}
           />
         )}
       />

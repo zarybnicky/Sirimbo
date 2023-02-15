@@ -1,6 +1,7 @@
 import { useAuth } from "lib/data/use-auth";
 import { useCohortQuery } from "lib/graphql/Cohorts";
 import { useCurrentTenantQuery } from "lib/graphql/Tenant";
+import { Card } from "./Card";
 import { RichTextView } from "./RichTextView";
 
 export function TenantInformation() {
@@ -14,18 +15,20 @@ export function TenantInformation() {
   }
 
   return <div className="flex flex-col items-center">
-    <h3 className="text-2xl tracking-wide">{data.name}</h3>
+    <h3 className="text-2xl tracking-wide">Stálá nástěnka</h3>
+    <div className="flex items-center mb-4">&nbsp;</div>
 
-    <div className="w-full px-4">
+    <Card className="w-full px-4">
       <RichTextView value={data.memberInfo} />
-    </div>
+    </Card>
 
     {cohort && cohort.sVisible && <>
-      <h3 className="text-2xl tracking-wide">{cohort.sName}</h3>
-      <div className="w-full px-4">
+      <h3 className="text-2xl tracking-wide mt-8 mb-4">{cohort.sName}</h3>
+      <Card className="w-full px-4 relative pl-8">
         <RichTextView value={cohort.sDescription} />
         <RichTextView value={cohort.internalInfo} />
-      </div>
+        <div className="absolute rounded-l-lg w-4 shadow-sm top-0 bottom-0 left-0" style={{ backgroundColor: cohort.sColorRgb }} />
+      </Card>
     </>}
 
     {/* <h3 className="mt-4 text-2xl tracking-wide">Místa</h3>

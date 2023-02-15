@@ -29,20 +29,20 @@ export default function SchedulePage() {
     </div>
 
     {(reservations?.reservationsForRange?.nodes.length ?? 0) > 0 && <>
-      <div className="text-xl font-bold text-stone-700 mt-6 ml-3 mb-4">
+      <div className="text-2xl font-bold tracking-wide text-stone-700 mt-6 ml-3 mb-4">
         Nabídky tréninků
       </div>
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-4 lg:ml-6 lg:pl-6 border-l-4 border-red-200">
         {reservations?.reservationsForRange?.nodes.map((item, i) => <ReservationItem key={i} item={item} />)}
       </div>
     </>}
 
     {Object.entries(scheduleByDay).map(([date, items], i) => <React.Fragment key={i}>
-      <div className="text-xl font-bold text-stone-700 mt-6 ml-3 mb-4">
+      <div className="text-2xl font-bold tracking-wide text-stone-700 mt-6 ml-3 mb-4">
         {formatWeekDay(new Date(date))}
       </div>
 
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-4 lg:ml-6 lg:pl-6 border-l-4 border-red-200">
         {items.map((item, i) => <ScheduleItem key={i} item={item} />)}
       </div>
     </React.Fragment>)}

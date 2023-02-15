@@ -51,14 +51,14 @@ export const LessonButton = ({ schedule, lesson, showTrainer }: {
     <div className={classNames(
       "group flex gap-3 p-2.5 rounded-lg",
       "leading-4 text-sm tabular-nums",
-      "radix-state-open:bg-red-500 radix-state-open:text-white hover:radix-state-open:bg-red-500",
-      (canBook || canCancel) && 'cursor-pointer hover:bg-red-50',
-      canBook && 'bg-green-100 text-green-900 border border-green-200',
+      canCancel && 'cursor-pointer hover:bg-red-50 border-2 border-red-200',
+      canBook && 'cursor-pointer hover:bg-green-50 bg-green-100 text-green-900 border-2 border-green-200',
       (!showTrainer && isMyLesson) && 'bg-red-100',
+      //"radix-state-open:bg-red-500 radix-state-open:text-white hover:radix-state-open:bg-red-500",
     )}>
-      <div className="text-stone-600 group-radix-state-open:text-white">{lesson.riOd.substring(0, 5)}</div>
+      <div className="text-stone-600">{lesson.riOd.substring(0, 5)}</div>
       <div className="grow">{canBook ? "VOLNÁ" : lesson.paryByRiPartner ? name : '-'}</div>
-      <div className="text-stone-600 group-radix-state-open:text-white">{duration}&apos;</div>
+      <div className="text-stone-600">{duration}&apos;</div>
     </div>
   );
   if (!canBook && !canCancel) {

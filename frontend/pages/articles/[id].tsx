@@ -3,7 +3,7 @@ import { CallToAction } from 'components/CallToAction';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useArticleQuery } from 'lib/graphql/Articles';
-import { formatFullDate } from 'lib/format-date';
+import { fullDateFormatter } from 'lib/format-date';
 import { Layout } from 'components/layout/Layout';
 import { RichTextView } from 'components/RichTextView';
 
@@ -27,7 +27,7 @@ export default function ArticlePage() {
       <meta property="og:description" content="{x.atPreview}" />
     </Head>
     <div className="text-stone-600 mt-20">
-      {x.atTimestampAdd && formatFullDate(new Date(x.atTimestampAdd))}
+      {x.atTimestampAdd && fullDateFormatter.format(new Date(x.atTimestampAdd))}
     </div>
     <h3 className="text-3xl font-bold mb-4">{x.atJmeno}</h3>
     <RichTextView value={x.atText} />

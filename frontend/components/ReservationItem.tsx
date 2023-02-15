@@ -4,7 +4,7 @@ import { MyReservationFragment } from 'lib/graphql/Reservation';
 import { Dropdown } from 'components/Dropdown';
 import { Card } from 'components/Card';
 import { MoreVertical } from 'react-feather';
-import { formatShortDateRange } from 'lib/format-date';
+import { shortDateFormatter } from 'lib/format-date';
 import { formatCoupleName } from 'lib/format-name';
 import classNames from 'classnames';
 import { ReservationButton } from 'components/ReservationButton';
@@ -29,7 +29,7 @@ export const ReservationItem = ({ item }: { item: MyReservationFragment; }) => {
       )}
 
       <div className="ml-3 mb-0.5">
-        <div className="font-bold">{formatShortDateRange(new Date(item.nOd), new Date(item.nDo))}</div>
+        <div className="font-bold">{shortDateFormatter.formatRange(new Date(item.nOd), new Date(item.nDo))}</div>
         <div className="text-xl">{item.userByNTrener?.fullName}</div>
 
         {item.nMaxPocetHod > 0 && (

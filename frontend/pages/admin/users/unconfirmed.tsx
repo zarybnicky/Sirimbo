@@ -8,7 +8,7 @@ import React from "react";
 import { UserFragment } from 'lib/graphql/CurrentUser';
 import { useCohortListQuery } from 'lib/graphql/Cohorts';
 import { useRoleListQuery } from 'lib/graphql/Roles';
-import { formatFullDate } from 'lib/format-date';
+import { fullDateFormatter } from 'lib/format-date';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 import { UserList } from 'components/UserList';
 import { Layout } from 'components/layout/Layout';
@@ -53,7 +53,7 @@ const UnconfirmedUser: React.FC<{
             <b>Login:</b> {item.uLogin}
           </div>
           <div>
-            <b>Datum narození:</b> {formatFullDate(new Date(item.uNarozeni))}
+            <b>Datum narození:</b> {fullDateFormatter.format(new Date(item.uNarozeni))}
           </div>
           <div>
             <b>E-mail:</b> {item.uEmail}

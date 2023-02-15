@@ -3,9 +3,11 @@ import { SocialButtons } from './SocialButtons';
 import { Map } from 'components/Map';
 import { Card } from 'components/Card';
 
-import CstsLogo from 'public/images/csts-logo.svg';
-import OlomoucLogo from 'public/style/logo-olomouc.jpg';
-import KrajLogo from 'public/style/logo-kraj.png';
+import LogoCsts from 'public/images/logo-csts.svg';
+import LogoNsa from 'public/images/logo-nsa.svg';
+import LogoProstejov from 'public/images/logo-prostejov.svg';
+import LogoOlomouc from 'public/images/logo-olomouc.jpg';
+import LogoKraj from 'public/images/logo-kraj.png';
 
 export const FooterMap = ({ height = '200px' }) => {
   const position = [49.58727525, 17.25661055] as [number, number];
@@ -71,23 +73,34 @@ export const Footer: React.FC = () => {
         <div className="flex justify-end my-8">
           <SocialButtons variant="large" />
         </div>
-
-        <Card className="p-4">
-          <h2 className="text-xl text-red-500 font-bold mb-4">Podporují nás</h2>
-
-          <div className="grid grid-cols-2 gap-2 text-center">
-            <div className="row-span-2">
-              <img alt="ČSTS" style={{ width: '100%', height: 'auto' }} src={CstsLogo.src} />
-            </div>
-            <div>
-              <img alt="Olomoucký kraj" style={{ width: '100%', height: 'auto' }} src={KrajLogo.src} />
-            </div>
-            <div>
-              <img alt="Město Olomouc" style={{ width: '100%', height: 'auto' }} src={OlomoucLogo.src} />
-            </div>
-          </div>
-        </Card>
       </div>
+
+      <Card className="p-4 col-span-2">
+        <h2 className="text-xl text-red-500 font-bold mb-4">Podporují nás</h2>
+
+        <div className="flex flex-wrap lg:flex-nowrap m-4 gap-4 items-end justify-center text-center text-stone-500">
+          <div>
+            <img alt="Český svaz tanečního sportu" style={{ width: '100%', height: 'auto' }} src={LogoCsts.src} />
+            <div className="h-12 mt-4">Český svaz tanečního sportu</div>
+          </div>
+          <div>
+            <img alt="Město Olomouc" style={{ width: '100%', height: 'auto' }} src={LogoOlomouc.src} />
+            <div className="h-12 mt-4">Město Olomouc</div>
+          </div>
+          <div>
+            <img alt="Olomoucký kraj" style={{ width: '100%', height: 'auto' }} src={LogoKraj.src} />
+            <div className="h-12 mt-4">Olomoucký kraj</div>
+          </div>
+          <div>
+            <img alt="Město Prostějov" style={{ width: '100%', height: 'auto' }} src={LogoProstejov.src} />
+            <div className="h-12 mt-4">Město Prostějov</div>
+          </div>
+          <div>
+            <img alt="Národní sportovní agentura" style={{ width: '100%', height: 'auto' }} src={LogoNsa.src} />
+            <div className="h-12 mt-4">Národní sportovní agentura</div>
+          </div>
+        </div>
+      </Card>
     </div>
   </div>;
 };

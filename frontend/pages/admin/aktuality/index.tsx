@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useArticlesQuery } from 'lib/graphql/Articles';
 import { useRouter } from 'next/router';
 import { Button } from 'components/Button';
-import { formatFullDate } from 'lib/format-date';
+import { fullDateFormatter } from 'lib/format-date';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 import { List } from "components/layout/List";
 import { FuzzyList } from "components/FuzzyList";
@@ -25,7 +25,7 @@ export default function ArticleAdminList() {
           key={item.id}
           active={active === item.id} href={`/admin/aktuality/${item.id}`}
           title={item.atJmeno}
-          subtitle={item.atTimestampAdd ? formatFullDate(new Date(item.atTimestampAdd)) : ''}
+          subtitle={item.atTimestampAdd ? fullDateFormatter.format(new Date(item.atTimestampAdd)) : ''}
         />
       )}
     />

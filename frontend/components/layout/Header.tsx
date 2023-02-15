@@ -81,9 +81,9 @@ const AuthButton = () => {
     </div>
   );
   return <Dropdown buttonClassName="min-h-[48px] md:min-h-[64px]" align="end" button={button} options={[
-    { title: 'Moje lekce', href: '/dashboard' },
-    { title: 'Profil', href: '/profile' },
-    { title: 'Odhlásit se', onClick: signOut }
+    { title: 'Nástěnka', href: '/dashboard' },
+    { title: 'Můj profil', href: '/profile' },
+    { title: 'Odhlásit se', onClick: signOut },
   ]} />;
 };
 

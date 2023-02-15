@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useFileListQuery } from 'lib/graphql/Documents';
 import { useRouter } from 'next/router';
 import { Button } from 'components/Button';
-import { formatFullDate } from 'lib/format-date';
+import { fullDateFormatter } from 'lib/format-date';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 import { List } from "components/layout/List";
 import { FuzzyList } from "components/FuzzyList";
@@ -47,7 +47,7 @@ export default function FileAdminList() {
           key={item.id}
           active={active === item.id} href={`/admin/dokumenty/${item.id}`}
           title={<a target="_blank" rel="noreferrer" href={`/old/member/download?id=${item.id}`}>{item.dName}</a>}
-          subtitle={item.dTimestamp ? formatFullDate(new Date(item.dTimestamp)) : ''}
+          subtitle={item.dTimestamp ? fullDateFormatter.format(new Date(item.dTimestamp)) : ''}
         />
       )}
     />

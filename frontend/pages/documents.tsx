@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { SelectElement } from 'components/SelectElement';
 import { useFileListQuery } from "lib/graphql/Documents";
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
-import { formatFullDate } from "lib/format-date";
+import { fullDateFormatter } from "lib/format-date";
 import { Item } from "components/layout/Item";
 import { Card } from "components/Card";
 
@@ -26,10 +26,11 @@ export default function FileListPage() {
       <SelectElement control={control} name="category" label="Kategorie" required options={categories} />
     </Item.Titlebar>
 
-    {(data?.dokumenties?.nodes || []).map((row, i) => <Card key={i}>
+    {(data?.dokumenties?.nodes || []).map((row, i) => <Card key={i}
+      className="flex justify-between">
       <a target="_blank" rel="noreferrer" href={`/old/member/download?id=${row.id}`}>{row.dName}</a>
-      {categories.find(x => x.id === row.dKategorie.toString())?.label}
-      {row.dTimestamp ? formatFullDate(new Date(row.dTimestamp)) : ''}
+      <span>{row.dTimestamp ? fullDateFormatter.format(new Date(row.dTimestamp)) : ''}</span>
+      <span>{categories.find(x => x.id === row.dKategorie.toString())?.label}</span>
     </Card>)}
   </Item>;
 }
