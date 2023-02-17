@@ -28,13 +28,13 @@ export const ReservationItem = ({ item }: { item: MyReservationFragment; }) => {
         </div>
       )}
 
-      <div className="ml-3 mb-0.5">
+      <div className="mb-0.5">
         <div className="font-bold">{shortDateFormatter.formatRange(new Date(item.nOd), new Date(item.nDo))}</div>
         <div className="text-xl">{item.userByNTrener?.fullName}</div>
 
         {item.nMaxPocetHod > 0 && (
           <div>
-            <span className="text-stone-500">Maximálně hodin/pár:</span>
+            <span className="text-stone-500">Maximálně hodin/pár: </span>
             <span className="text-lg">{item.nMaxPocetHod}</span>
           </div>
         )}

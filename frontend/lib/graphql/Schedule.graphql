@@ -60,11 +60,6 @@ query ScheduleList($limit: Int, $offset: Int) {
 }
 
 query MyLessons($startDate: Date, $endDate: Date) {
-  currentCoupleIds {
-    nodes
-  }
-  currentSessionId
-  currentUserId
   myLessons(startDate: $startDate, endDate: $endDate) {
     nodes {
       ...ScheduleItem

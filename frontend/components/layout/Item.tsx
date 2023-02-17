@@ -5,7 +5,7 @@ export function Item({ className = '', children }: {
   children: React.ReactNode;
   className?: string;
 }) {
-  return <div className={"py-12 " + className}>
+  return <div className={"py-12 px-8 " + className}>
     {children}
   </div>;
 }
@@ -26,7 +26,7 @@ function ItemTitleBar({ backHref, title, children }: {
       </div>
     )}
     <div className="flex gap-2 flex-wrap mb-4 grow-0 h-min justify-between">
-      <div className="text-2xl font-bold order-2 w-full md:w-auto md:order-none">{title}</div>
+      <h4 className="text-3xl tracking-wide mb-4 order-2 w-full md:w-auto md:order-none">{title}</h4>
       <div>{children}</div>
     </div>
   </>;

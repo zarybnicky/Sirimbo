@@ -30,9 +30,9 @@ export const EventItem = ({ event, expanded: expandedInit = false }: {
         </div> : null}
       </div>
 
-      <div className="text-4xl text-stone-800">{event.aJmeno}</div>
+      <div className="text-2xl text-stone-800">{event.aJmeno}</div>
       <div className="text-xl text-stone-500">{event.aKde}</div>
-      <div className="text-stone-500">Zbývá {event.freeSlots} z {event.aKapacita} míst</div>
+      <div className="text-stone-500">Zbývá {event.freeSlots} míst z {event.aKapacita}</div>
 
       <div
         className={expanded ? '' : "cursor-pointer"}

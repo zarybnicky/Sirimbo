@@ -28,24 +28,25 @@ export const FooterMap = ({ height = '200px' }) => {
 };
 
 export const Footer: React.FC = () => {
-  return <div className="col-full-width content bg-stone-800 text-white pt-12 pb-20">
+  return <div className="col-full-width content bg-stone-800 text-white py-12">
     <div className="col-feature grid grid-cols-1 md:grid-cols-2 gap-2">
+      <h2 className="col-span-2 text-3xl font-bold">Kontakt:</h2>
       <div>
-        <h2 className="text-3xl font-bold">Kontakt:</h2>
+        <h3 className="text-lg tracking-wide mt-2 text-red-500 font-bold">Taneční klub</h3>
 
-        <h3 className="text-lg tracking-wide mt-4 text-red-500 font-bold">Taneční klub</h3>
-
-        <h4 className="text-lg mt-4 font-black">Taneční klub Olymp Olomouc</h4>
+        <h4 className="text-lg mt-2 font-black">Taneční klub Olymp Olomouc</h4>
 
         <div>
           Jiráskova 25, 779 00 Olomouc<br />
           IČO: 68347286<br />
           miroslav.hyza@tkolymp.cz
         </div>
+        <div className="my-8">
+          <SocialButtons variant="large" />
+        </div>
+      </div>
 
-        <br />
-        <br />
-
+      <div>
         <h3 className="text-lg tracking-wide mt-2 text-red-500 font-bold">Taneční sály</h3>
 
         <h4 className="text-lg mt-2 font-black">Taneční centrum při FZŠ Holečkova</h4>
@@ -61,21 +62,9 @@ export const Footer: React.FC = () => {
           Jiřího z Poděbrad 13, 779 00 Olomouc<br />
           (vchod bránou z ulice U reálky)
         </div>
-
-        <div className="mt-12">Verze: {process.env.BUILD_ID?.substring(0, 7)}</div>
-        <div>Realizace: Jakub Zárybnický</div>
-        <div>© 2023 Taneční klub Olymp Olomouc, z. s.</div>
-        <div>Verze: {process.env.BUILD_ID?.substring(0, 7)}</div>
       </div>
 
-      <div>
-        <FooterMap />
-        <div className="flex justify-end my-8">
-          <SocialButtons variant="large" />
-        </div>
-      </div>
-
-      <Card className="p-4 col-span-2">
+      <Card className="my-8 p-4 col-span-2">
         <h2 className="text-xl text-red-500 font-bold mb-4">Podporují nás</h2>
 
         <div className="flex flex-wrap lg:flex-nowrap m-4 gap-4 items-end justify-center text-center text-stone-500">
@@ -101,6 +90,14 @@ export const Footer: React.FC = () => {
           </div>
         </div>
       </Card>
+
+      <div className="mt-8 col-span-2 flex flex-wrap justify-between">
+        <div>© 2023 Taneční klub Olymp Olomouc, z. s.</div>
+        <div>
+          <div>Realizace: Jakub Zárybnický</div>
+          <div>Verze: {process.env.BUILD_ID?.substring(0, 7)}</div>
+        </div>
+      </div>
     </div>
   </div>;
 };

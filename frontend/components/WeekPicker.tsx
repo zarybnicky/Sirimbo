@@ -28,8 +28,7 @@ export const WeekPicker = ({ title, startDate, onChange }: {
     });
   }, [])
 
-  return <div className="flex flex-col items-center px-8">
-    <h4 className="text-2xl ml-3 tracking-wide">{title}: {getWeek(startDate, { weekStartsOn: 1 })}. týden</h4>
+  return <div className="flex flex-col mb-4">
     <div className="flex items-center">
       <button className="button button-icon text-stone-500" onClick={setPrevWeek}>
         <ChevronLeft />
@@ -41,6 +40,7 @@ export const WeekPicker = ({ title, startDate, onChange }: {
         <ChevronRight />
       </button>
     </div>
+    <h4 className="text-3xl tracking-wide">{title} ({getWeek(startDate, { weekStartsOn: 1 })}. týden)</h4>
   </div>;
 };
 

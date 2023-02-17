@@ -7,17 +7,13 @@ fragment Cohort on Skupiny {
   sVisible
   sColorRgb
   internalInfo
+  ordering
 }
 
 query CohortList($visible: Boolean) {
-  skupinies(condition: {sVisible: $visible}) {
+  skupinies(condition: {sVisible: $visible}, orderBy: [ORDERING_ASC]) {
     nodes {
       ...Cohort
-      platbyGroupSkupinasByPgsIdSkupina {
-        nodes {
-          pgsIdGroup
-        }
-      }
     }
   }
 }

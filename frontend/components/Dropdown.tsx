@@ -41,7 +41,7 @@ export const Dropdown = ({ align, button, className, buttonClassName, options }:
         leaveTo="transform opacity-0 scale-95"
       >
         <Menu.Items className={classNames(
-          "z-50 absolute w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none",
+          "z-[1100] absolute w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none",
           align === 'center' ? 'origin-top-right right-1/2 transform translate-x-1/2' :
             align === 'start' ? 'origin-top-left left-0' :
               'origin-top-right right-0'

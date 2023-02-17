@@ -26,12 +26,15 @@ export default function FileListPage() {
       <SelectElement control={control} name="category" label="Kategorie" required options={categories} />
     </Item.Titlebar>
 
-    {(data?.dokumenties?.nodes || []).map((row, i) => <Card key={i}
-      className="flex justify-between">
-      <a target="_blank" rel="noreferrer" href={`/old/member/download?id=${row.id}`}>{row.dName}</a>
-      <span>{row.dTimestamp ? fullDateFormatter.format(new Date(row.dTimestamp)) : ''}</span>
-      <span>{categories.find(x => x.id === row.dKategorie.toString())?.label}</span>
-    </Card>)}
+    {(data?.dokumenties?.nodes || []).map((row, i) => (
+      <Card key={i}>
+        <a target="_blank" rel="noreferrer" href={`/old/member/download?id=${row.id}`} className="flex justify-between">
+          <span>{row.dName}</span>
+          <span>{row.dTimestamp ? fullDateFormatter.format(new Date(row.dTimestamp)) : ''}</span>
+          <span>{categories.find(x => x.id === row.dKategorie.toString())?.label}</span>
+        </a>
+      </Card>
+    ))}
   </Item>;
 }
 

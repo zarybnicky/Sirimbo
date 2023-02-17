@@ -35,7 +35,7 @@ export type MyLessonsQueryVariables = Types.Exact<{
 }>;
 
 
-export type MyLessonsQuery = { __typename?: 'Query', currentSessionId: string | null, currentUserId: string | null, currentCoupleIds: { __typename?: 'CurrentCoupleIdsConnection', nodes: Array<string | null> } | null, myLessons: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riLock: boolean, riPartner: string | null, id: string, rozpiByRiIdRodic: { __typename: 'Rozpi', rDatum: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, id: string, userByRTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, fullName: string | null, id: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean, id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null }> } | null };
+export type MyLessonsQuery = { __typename?: 'Query', myLessons: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riLock: boolean, riPartner: string | null, id: string, rozpiByRiIdRodic: { __typename: 'Rozpi', rDatum: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, id: string, userByRTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, fullName: string | null, id: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean, id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null }> } | null };
 
 export type ScheduleQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -193,11 +193,6 @@ useScheduleListQuery.getKey = (variables?: ScheduleListQueryVariables) => variab
 useScheduleListQuery.fetcher = (variables?: ScheduleListQueryVariables, options?: RequestInit['headers']) => fetcher<ScheduleListQuery, ScheduleListQueryVariables>(ScheduleListDocument, variables, options);
 export const MyLessonsDocument = `
     query MyLessons($startDate: Date, $endDate: Date) {
-  currentCoupleIds {
-    nodes
-  }
-  currentSessionId
-  currentUserId
   myLessons(startDate: $startDate, endDate: $endDate) {
     nodes {
       ...ScheduleItem

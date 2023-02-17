@@ -9,7 +9,7 @@ export function MyAnnouncements() {
   const [limit] = React.useState(5);
   const [page, setPage] = React.useState(1);
   const { data } = useAnnouncementListQuery({ limit, offset: (page - 1) * limit });
-
+  console.log(limit, page, data);
   if (!data?.upozornenis) {
     // react-skeleton
     return null;
@@ -19,36 +19,32 @@ export function MyAnnouncements() {
   const hasNext = total >= page * limit;
   const hasPrev = 0 < (page - 1) * limit;
 
-  return <div className="flex flex-col items-center">
-    <h4 className="text-2xl tracking-wide">Aktuality</h4>
-    <div className="flex items-center mb-4">
-      {hasPrev ? (
-        <button className="button button-icon text-stone-500" onClick={() => setPage(page - 1)}>
-          <ChevronLeft />
-        </button>
-      ) : (
-        <button className="button button-icon text-stone-300">
-          <ChevronLeft />
-        </button>
-      )}
+  return <div className="flex flex-col">
+    <div className="flex items-center">
+      <button
+        className="button button-icon text-stone-500 disabled:text-stone-300"
+        onClick={() => setPage(page + 1)}
+        disabled={hasPrev}
+      >
+        <ChevronLeft />
+      </button>
 
       <span className="text-stone-500">
         {nodes.length > 0 ? fullDateFormatter.formatRange(
-          new Date(nodes[0]!.upTimestampAdd),
           new Date(nodes[nodes.length - 1]!.upTimestampAdd),
+          new Date(nodes[0]!.upTimestampAdd),
         ) : ''}
       </span>
 
-      {hasNext ? (
-        <button className="button button-icon text-stone-500" onClick={() => setPage(page + 1)}>
-          <ChevronRight />
-        </button>
-      ) : (
-        <button className="button button-icon text-stone-300">
-          <ChevronRight />
-        </button>
-      )}
+      <button
+        className="button button-icon text-stone-500 disabled:text-stone-400"
+        onClick={() => setPage(page - 1)}
+        disabled={hasNext}
+      >
+        <ChevronRight />
+      </button>
     </div>
+    <h4 className="text-3xl tracking-wide mb-4">Aktuality</h4>
 
     {nodes.map((a) => <AnnouncementItem key={a.id} item={a} />)}
 

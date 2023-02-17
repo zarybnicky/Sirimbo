@@ -9852,6 +9852,8 @@ export enum SkupiniesOrderBy {
   InternalInfoAsc = 'INTERNAL_INFO_ASC',
   InternalInfoDesc = 'INTERNAL_INFO_DESC',
   Natural = 'NATURAL',
+  OrderingAsc = 'ORDERING_ASC',
+  OrderingDesc = 'ORDERING_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   SColorRgbAsc = 'S_COLOR_RGB_ASC',
@@ -9875,6 +9877,7 @@ export type Skupiny = Node & {
   internalInfo: Scalars['JSON'];
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
+  ordering: Scalars['Int'];
   /** Reads and enables pagination through a set of `PlatbyGroupSkupina`. */
   platbyGroupSkupinasByPgsIdSkupina: PlatbyGroupSkupinasConnection;
   sColorRgb: Scalars['String'];
@@ -9927,6 +9930,8 @@ export type SkupinyUsersByUSkupinaArgs = {
 export type SkupinyCondition = {
   /** Checks for equality with the object’s `internalInfo` field. */
   internalInfo?: InputMaybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `ordering` field. */
+  ordering?: InputMaybe<Scalars['Int']>;
   /** Checks for equality with the object’s `sColorRgb` field. */
   sColorRgb?: InputMaybe<Scalars['String']>;
   /** Checks for equality with the object’s `sColorText` field. */
@@ -9946,6 +9951,7 @@ export type SkupinyCondition = {
 /** An input for mutations affecting `Skupiny` */
 export type SkupinyInput = {
   internalInfo?: InputMaybe<Scalars['JSON']>;
+  ordering?: InputMaybe<Scalars['Int']>;
   sColorRgb: Scalars['String'];
   sColorText?: InputMaybe<Scalars['String']>;
   sDescription: Scalars['String'];
@@ -9958,6 +9964,7 @@ export type SkupinyInput = {
 /** Represents an update to a `Skupiny`. Fields that are set will be updated. */
 export type SkupinyPatch = {
   internalInfo?: InputMaybe<Scalars['JSON']>;
+  ordering?: InputMaybe<Scalars['Int']>;
   sColorRgb?: InputMaybe<Scalars['String']>;
   sColorText?: InputMaybe<Scalars['String']>;
   sDescription?: InputMaybe<Scalars['String']>;

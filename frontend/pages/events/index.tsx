@@ -7,7 +7,7 @@ import { EventItem } from 'components/EventItem';
 export default function EventListPage() {
   const { data } = useMyEventsQuery();
 
-  return <Item>
+  return <Item className="col-full-width">
     <Item.Titlebar title="Nadcházející akce" />
     {data?.akces?.nodes.map(event => <EventItem key={event.id} event={event} />)}
   </Item>;

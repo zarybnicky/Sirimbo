@@ -86,17 +86,12 @@ grant execute on function public.reservations_for_range TO member;
 
 alter table skupiny alter column s_color_text set default '';
 
-alter table skupiny drop column if exists internal_info cascade;
-alter table skupiny add column internal_info jsonb not null default '[]'::jsonb;
+alter table skupiny add column if not exists ordering int not null default 1;
+alter table skupiny add column if not exists internal_info jsonb not null default '[]'::jsonb;
 
-alter table akce drop column if exists summary cascade;
-alter table akce add column summary jsonb not null default '[]'::jsonb;
-
-alter table akce drop column if exists is_public cascade;
-alter table akce add column is_public boolean not null default false;
-
-alter table akce drop column if exists enable_notes cascade;
-alter table akce add column enable_notes boolean not null default false;
+alter table akce add column if not exists summary jsonb not null default '[]'::jsonb;
+alter table akce add column if not exists is_public boolean not null default false;
+alter table akce add column if not exists enable_notes boolean not null default false;
 
 
 create or replace function akce_free_slots(a akce) returns int as $$

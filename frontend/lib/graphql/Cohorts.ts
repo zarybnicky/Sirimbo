@@ -4,14 +4,14 @@ import * as Types from './index';
 
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
-export type CohortFragment = { __typename: 'Skupiny', sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string, internalInfo: { [key: string]: any }, id: string };
+export type CohortFragment = { __typename: 'Skupiny', sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string, internalInfo: { [key: string]: any }, ordering: number, id: string };
 
 export type CohortListQueryVariables = Types.Exact<{
   visible?: Types.InputMaybe<Types.Scalars['Boolean']>;
 }>;
 
 
-export type CohortListQuery = { __typename?: 'Query', skupinies: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename: 'Skupiny', sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string, internalInfo: { [key: string]: any }, id: string, platbyGroupSkupinasByPgsIdSkupina: { __typename?: 'PlatbyGroupSkupinasConnection', nodes: Array<{ __typename?: 'PlatbyGroupSkupina', pgsIdGroup: string }> } }> } | null };
+export type CohortListQuery = { __typename?: 'Query', skupinies: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename: 'Skupiny', sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string, internalInfo: { [key: string]: any }, ordering: number, id: string }> } | null };
 
 export type CohortMembersQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -25,7 +25,7 @@ export type CohortQueryVariables = Types.Exact<{
 }>;
 
 
-export type CohortQuery = { __typename?: 'Query', skupiny: { __typename: 'Skupiny', sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string, internalInfo: { [key: string]: any }, id: string } | null };
+export type CohortQuery = { __typename?: 'Query', skupiny: { __typename: 'Skupiny', sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string, internalInfo: { [key: string]: any }, ordering: number, id: string } | null };
 
 export type CreateCohortMutationVariables = Types.Exact<{
   input: Types.SkupinyInput;
@@ -59,18 +59,14 @@ export const CohortFragmentDoc = `
   sVisible
   sColorRgb
   internalInfo
+  ordering
 }
     `;
 export const CohortListDocument = `
     query CohortList($visible: Boolean) {
-  skupinies(condition: {sVisible: $visible}) {
+  skupinies(condition: {sVisible: $visible}, orderBy: [ORDERING_ASC]) {
     nodes {
       ...Cohort
-      platbyGroupSkupinasByPgsIdSkupina {
-        nodes {
-          pgsIdGroup
-        }
-      }
     }
   }
 }

@@ -11,7 +11,8 @@ import { ColorPicker } from './ColorPicker';
 import { useQueryClient } from '@tanstack/react-query';
 import { SlateEditorElement } from './Slate';
 
-type FormProps = Pick<SkupinyInput, 'internalInfo' | 'sName' | 'sDescription' | 'sLocation' | 'sVisible' | 'sColorRgb'>;
+type FormProps = Pick<SkupinyInput, 'internalInfo' | 'sName' | 'sDescription' |
+  'sLocation' | 'sVisible' | 'sColorRgb' | 'ordering'>;
 
 export const CohortForm: React.FC<{ data?: CohortFragment; }> = ({ data }) => {
   const queryClient = useQueryClient();
@@ -29,6 +30,8 @@ export const CohortForm: React.FC<{ data?: CohortFragment; }> = ({ data }) => {
       sLocation: data?.sLocation,
       sVisible: data?.sVisible,
       sColorRgb: data?.sColorRgb || '#FF0000',
+      internalInfo: data?.internalInfo,
+      ordering: data?.ordering,
     },
   });
 
@@ -48,7 +51,8 @@ export const CohortForm: React.FC<{ data?: CohortFragment; }> = ({ data }) => {
       <ColorPicker name="sColorRgb" control={control} />
       <TextAreaElement control={control} name="sDescription" label="Popis" rows={10} required />
       <SlateEditorElement control={control} name="internalInfo" label="Interní informace" />
-      <CheckboxElement control={control} name="sVisible" value="1" label="Viditelná pro registraci" />
+      <CheckboxElement control={control} name="sVisible" value="1" label="Viditelná v seznamech" />
+      <TextFieldElement control={control} name="ordering" label="Pořadí v seznamech skupin (1 = první, 999 = poslední)" />
       <SubmitButton loading={onSubmit.loading} />
     </form>
   );

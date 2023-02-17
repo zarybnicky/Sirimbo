@@ -40,6 +40,9 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: {
         )}
 
         <div className="flex lg:hidden items-stretch justify-between min-h-[48px] md:min-h-[64px] p-2">
+          <button className="button button-icon p-0 m-1" onClick={() => setIsOpen(!isOpen)}>
+            <MenuIcon />
+          </button>
           <MobileLogo />
           {auth.user ? (
             <Link href="/profile" passHref>
@@ -54,9 +57,6 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: {
               </a>
             </Link>
           )}
-          <button className="button button-icon p-0 m-1" onClick={() => setIsOpen(!isOpen)}>
-            <MenuIcon />
-          </button>
         </div>
       </div>
     </div>

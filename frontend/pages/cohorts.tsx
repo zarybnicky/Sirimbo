@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { CohortExport } from 'components/CohortExport';
-import { TabMenu } from 'components/TabMenu';
 import { AtSign as EmailIcon, Phone as PhoneIcon } from 'react-feather';
 import { useMemberListQuery } from 'lib/graphql/User';
 import { Card } from 'components/Card';
@@ -34,18 +33,11 @@ export default function CohortsPage() {
     });
     return cohorts;
   }, [members]);
-  const [variant, setVariant] = React.useState('all');
 
-  return <Item className="col-feature">
-    <div className="flex items-center justify-between gap-2 pb-2">
-      <TabMenu selected={variant} onSelect={setVariant} options={[
-        { id: 'cohortsOnly', label: 'Tréninkové skupiny' },
-        { id: 'all', label: 'Členové dle skupin' },
-      ]} />
-      <CohortExport />
-    </div>
+  return <Item className="col-full-width">
+    <Item.Titlebar title="Tréninkové skupiny" />
 
-    <div className="gap-4 lg:columns-2">
+    <div className="gap-4 lg:columns-2 xl:columns-3">
       {Object.values(cohorts).map(cohort => (
         <Card key={cohort.sId} className="relative break-inside-avoid mb-4 p-8 pl-8">
           <div className="flex items-start justify-between mb-3">
@@ -55,15 +47,18 @@ export default function CohortsPage() {
             </div>
             <CohortExport id={cohort.sId} name={cohort.sName} />
           </div>
+          <RichTextView value={cohort.sDescription.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', '')} />
 
-          {variant === 'cohortsOnly' ? (
-            <RichTextView value={cohort.sDescription.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', '')} />
-          ) : (
+          <SimpleDialog
+            title="Seznam členů"
+            button={<button className="mt-2 button button-red">Seznam členů</button>}
+          >
             <div className="flex flex-col items-start">
               {cohort.members.map((member) => <UserDetailButton key={member.uId} user={member} />)}
             </div>
-          )}
-          <div className="absolute rounded-l-lg w-4 shadow-sm top-0 bottom-0 left-0" style={{ backgroundColor: cohort.sColorRgb }} />
+          </SimpleDialog>
+
+          <div className="absolute rounded-l-lg w-4 border-r border-stone-200 shadow-sm top-0 bottom-0 left-0" style={{ backgroundColor: cohort.sColorRgb }} />
         </Card>
       ))}
     </div>

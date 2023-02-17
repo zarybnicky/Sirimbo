@@ -9,14 +9,24 @@ import React from "react";
 import { Edit } from "react-feather";
 import { PersonalInfoForm } from "components/PersonalInfoForm";
 import { ChangePasswordForm } from "components/ChangePasswordForm";
+import { useMyLessonsQuery } from "lib/graphql/Schedule";
 
 export default function ProfilePage() {
   const { user, couple } = useAuth();
   const { data: cohorts } = useCohortListQuery();
 
+  const { data: pastLessons } = useMyLessonsQuery({
+    startDate: new Date(23, 1).toISOString().substring(0, 10),
+    endDate: new Date().toISOString().substring(0, 10),
+  });
+  const { data: upcomingLessons } = useMyLessonsQuery({
+    startDate: new Date().toISOString().substring(0, 10),
+    endDate: new Date(12023, 1).toISOString().substring(0, 10),
+  });
+
   if (!user) return null;
 
-  return <Item>
+  return <Item className="col-full-width px-4">
     <Item.Titlebar title={`${user.uJmeno} ${user.uPrijmeni}`}>
       <SimpleDialog
         title="Osobní údaje"
@@ -40,10 +50,23 @@ export default function ProfilePage() {
     <p>Tréninková skupina: {cohorts?.skupinies?.nodes.find(x => x.id === user.uSkupina)?.sName}</p>
 
     <p>Aktuální partner: {couple?.pIdPartner === user.id ? (
-      <>{couple?.userByPIdPartnerka?.uJmeno} {couple?.userByPIdPartnerka?.uPrijmeni}</>
+      `${couple?.userByPIdPartnerka?.uJmeno} ${couple?.userByPIdPartnerka?.uPrijmeni}`
     ) : (
-      <>{couple?.userByPIdPartner?.uJmeno} {couple?.userByPIdPartner?.uPrijmeni}</>
+      `${couple?.userByPIdPartner?.uJmeno} ${couple?.userByPIdPartner?.uPrijmeni}`
     )}</p>
+
+    <div>
+      Nadcházející lekce
+      {upcomingLessons?.myLessons?.nodes.map(item => (
+        <div key={item.id}>{item.rozpiByRiIdRodic?.rDatum}</div>
+      ))}
+    </div>
+    <div>
+      Minulé lekce
+      {pastLessons?.myLessons?.nodes.map(item => (
+        <div key={item.id}>{item.rozpiByRiIdRodic?.rDatum}</div>
+      ))}
+    </div>
   </Item>
 }
 

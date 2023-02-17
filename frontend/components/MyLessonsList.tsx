@@ -25,11 +25,11 @@ export const MyLessonsList: React.FC = () => {
     return lessonsPerDay;
   }, [data]);
 
-  return <div className="flex flex-col items-center">
+  return <div className="flex flex-col">
     <WeekPicker title="Moje lekce" startDate={startDate} onChange={setStartDate} />
 
     {!isLoading && !data?.myLessons?.nodes?.length && (
-      <div className="text-stone-600 p-4 text-center">
+      <div className="text-stone-600">
         Žádné lekce tento týden
       </div>
     )}

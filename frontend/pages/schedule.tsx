@@ -6,6 +6,7 @@ import { formatWeekDay } from 'lib/format-date';
 import { ScheduleItem } from 'components/ScheduleItem';
 import { ReservationItem } from 'components/ReservationItem';
 import { getCurrentMonday, mondayToWeekRange, mondayToYearRange, WeekPicker } from 'components/WeekPicker';
+import { Item } from 'components/layout/Item';
 
 export default function SchedulePage() {
   const [startDate, setStartDate] = React.useState(getCurrentMonday);
@@ -23,30 +24,28 @@ export default function SchedulePage() {
     return obj;
   }, [schedules])
 
-  return <div className="col-full mt-12 mb-8 mx-4">
-    <div className="flex items-start">
-      <WeekPicker title="Tréninky" startDate={startDate} onChange={setStartDate} />
-    </div>
+  return <Item className="col-full-width">
+    <WeekPicker title="Tréninky" startDate={startDate} onChange={setStartDate} />
 
     {(reservations?.reservationsForRange?.nodes.length ?? 0) > 0 && <>
-      <div className="text-2xl font-bold tracking-wide text-stone-700 mt-6 ml-3 mb-4">
+      <div className="text-xl tracking-wide text-stone-700 mb-2">
         Nabídky tréninků
       </div>
-      <div className="flex flex-wrap gap-4 lg:ml-6 lg:pl-6 border-l-4 border-red-200">
+      <div className="flex flex-wrap gap-4 lg:ml-2 lg:pl-5 border-l-4 border-red-200">
         {reservations?.reservationsForRange?.nodes.map((item, i) => <ReservationItem key={i} item={item} />)}
       </div>
     </>}
 
     {Object.entries(scheduleByDay).map(([date, items], i) => <React.Fragment key={i}>
-      <div className="text-2xl font-bold tracking-wide text-stone-700 mt-6 ml-3 mb-4">
+      <div className="text-xl tracking-wide text-stone-700 mt-8 mb-2">
         {formatWeekDay(new Date(date))}
       </div>
 
-      <div className="flex flex-wrap gap-4 lg:ml-6 lg:pl-6 border-l-4 border-red-200">
+      <div className="flex flex-wrap gap-4 lg:ml-2 lg:pl-5 border-l-4 border-red-200">
         {items.map((item, i) => <ScheduleItem key={i} item={item} />)}
       </div>
     </React.Fragment>)}
-  </div>;
+  </Item>;
 }
 
 export const getServerSideProps = withServerPermissions(
