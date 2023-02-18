@@ -2,30 +2,35 @@
 /* eslint-disable */
 import * as Types from './index';
 
+import { UserPublicFragmentDoc } from './User';
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
-export type CohortFragment = { __typename: 'Skupiny', sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string, internalInfo: { [key: string]: any }, ordering: number, id: string };
+export type CohortBasicFragment = { __typename: 'Skupiny', sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string };
+
+export type CohortFragment = { __typename: 'Skupiny', sDescription: string, internalInfo: { [key: string]: any }, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string };
+
+export type CohortWithMembersFragment = { __typename: 'Skupiny', sDescription: string, internalInfo: { [key: string]: any }, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string, usersByUSkupina: { __typename?: 'UsersConnection', nodes: Array<{ __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string, id: string }> } };
 
 export type CohortListQueryVariables = Types.Exact<{
   visible?: Types.InputMaybe<Types.Scalars['Boolean']>;
 }>;
 
 
-export type CohortListQuery = { __typename?: 'Query', skupinies: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename: 'Skupiny', sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string, internalInfo: { [key: string]: any }, ordering: number, id: string }> } | null };
+export type CohortListQuery = { __typename?: 'Query', skupinies: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename: 'Skupiny', sDescription: string, internalInfo: { [key: string]: any }, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string }> } | null };
 
-export type CohortMembersQueryVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+export type CohortListWithMembersQueryVariables = Types.Exact<{
+  visible?: Types.InputMaybe<Types.Scalars['Boolean']>;
 }>;
 
 
-export type CohortMembersQuery = { __typename?: 'Query', members: { __typename?: 'MembersConnection', nodes: Array<{ __typename?: 'Member', uJmeno: string | null, uPrijmeni: string | null, uRodneCislo: string | null, uTelefon: string | null, uEmail: string | null, id: string | null }> } | null };
+export type CohortListWithMembersQuery = { __typename?: 'Query', skupinies: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename: 'Skupiny', sDescription: string, internalInfo: { [key: string]: any }, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string, usersByUSkupina: { __typename?: 'UsersConnection', nodes: Array<{ __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string, id: string }> } }> } | null };
 
 export type CohortQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
 }>;
 
 
-export type CohortQuery = { __typename?: 'Query', skupiny: { __typename: 'Skupiny', sName: string, sDescription: string, sLocation: string, sVisible: boolean, sColorRgb: string, internalInfo: { [key: string]: any }, ordering: number, id: string } | null };
+export type CohortQuery = { __typename?: 'Query', skupiny: { __typename: 'Skupiny', sDescription: string, internalInfo: { [key: string]: any }, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string } | null };
 
 export type CreateCohortMutationVariables = Types.Exact<{
   input: Types.SkupinyInput;
@@ -49,19 +54,39 @@ export type DeleteCohortMutationVariables = Types.Exact<{
 
 export type DeleteCohortMutation = { __typename?: 'Mutation', deleteSkupiny: { __typename: 'DeleteSkupinyPayload' } | null };
 
-export const CohortFragmentDoc = `
-    fragment Cohort on Skupiny {
+export const CohortBasicFragmentDoc = `
+    fragment CohortBasic on Skupiny {
   __typename
   id: sId
   sName
-  sDescription
   sLocation
   sVisible
   sColorRgb
-  internalInfo
   ordering
 }
     `;
+export const CohortFragmentDoc = `
+    fragment Cohort on Skupiny {
+  ...CohortBasic
+  __typename
+  sDescription
+  internalInfo
+}
+    ${CohortBasicFragmentDoc}`;
+export const CohortWithMembersFragmentDoc = `
+    fragment CohortWithMembers on Skupiny {
+  ...Cohort
+  usersByUSkupina(
+    condition: {uBan: false, uSystem: false, uConfirmed: true}
+    orderBy: [U_PRIJMENI_ASC, U_JMENO_ASC]
+  ) {
+    nodes {
+      ...UserPublic
+    }
+  }
+}
+    ${CohortFragmentDoc}
+${UserPublicFragmentDoc}`;
 export const CohortListDocument = `
     query CohortList($visible: Boolean) {
   skupinies(condition: {sVisible: $visible}, orderBy: [ORDERING_ASC]) {
@@ -88,37 +113,32 @@ useCohortListQuery.getKey = (variables?: CohortListQueryVariables) => variables 
 ;
 
 useCohortListQuery.fetcher = (variables?: CohortListQueryVariables, options?: RequestInit['headers']) => fetcher<CohortListQuery, CohortListQueryVariables>(CohortListDocument, variables, options);
-export const CohortMembersDocument = `
-    query CohortMembers($id: BigInt!) {
-  members(condition: {sId: $id}) {
+export const CohortListWithMembersDocument = `
+    query CohortListWithMembers($visible: Boolean) {
+  skupinies(condition: {sVisible: $visible}, orderBy: [ORDERING_ASC]) {
     nodes {
-      id: uId
-      uJmeno
-      uPrijmeni
-      uRodneCislo
-      uTelefon
-      uEmail
+      ...CohortWithMembers
     }
   }
 }
-    `;
-export const useCohortMembersQuery = <
-      TData = CohortMembersQuery,
+    ${CohortWithMembersFragmentDoc}`;
+export const useCohortListWithMembersQuery = <
+      TData = CohortListWithMembersQuery,
       TError = unknown
     >(
-      variables: CohortMembersQueryVariables,
-      options?: UseQueryOptions<CohortMembersQuery, TError, TData>
+      variables?: CohortListWithMembersQueryVariables,
+      options?: UseQueryOptions<CohortListWithMembersQuery, TError, TData>
     ) =>
-    useQuery<CohortMembersQuery, TError, TData>(
-      ['CohortMembers', variables],
-      fetcher<CohortMembersQuery, CohortMembersQueryVariables>(CohortMembersDocument, variables),
+    useQuery<CohortListWithMembersQuery, TError, TData>(
+      variables === undefined ? ['CohortListWithMembers'] : ['CohortListWithMembers', variables],
+      fetcher<CohortListWithMembersQuery, CohortListWithMembersQueryVariables>(CohortListWithMembersDocument, variables),
       options
     );
 
-useCohortMembersQuery.getKey = (variables: CohortMembersQueryVariables) => ['CohortMembers', variables];
+useCohortListWithMembersQuery.getKey = (variables?: CohortListWithMembersQueryVariables) => variables === undefined ? ['CohortListWithMembers'] : ['CohortListWithMembers', variables];
 ;
 
-useCohortMembersQuery.fetcher = (variables: CohortMembersQueryVariables, options?: RequestInit['headers']) => fetcher<CohortMembersQuery, CohortMembersQueryVariables>(CohortMembersDocument, variables, options);
+useCohortListWithMembersQuery.fetcher = (variables?: CohortListWithMembersQueryVariables, options?: RequestInit['headers']) => fetcher<CohortListWithMembersQuery, CohortListWithMembersQueryVariables>(CohortListWithMembersDocument, variables, options);
 export const CohortDocument = `
     query Cohort($id: BigInt!) {
   skupiny(sId: $id) {

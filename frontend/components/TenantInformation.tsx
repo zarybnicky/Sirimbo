@@ -6,7 +6,7 @@ import { RichTextView } from "./RichTextView";
 
 export function TenantInformation() {
   const { user } = useAuth();
-  const { data: cohortData } = useCohortQuery({ id: user?.uSkupina! });
+  const { data: cohortData } = useCohortQuery({ id: user?.uSkupina! }, { enabled: !!user?.uSkupina });
   const { data: tenant } = useCurrentTenantQuery();
   const data = tenant?.getCurrentTenant;
   const cohort = cohortData?.skupiny;
@@ -24,11 +24,10 @@ export function TenantInformation() {
 
     {cohort && cohort.sVisible && <>
       <h3 className="text-2xl tracking-wide mt-8 mb-4">Moje tréninková skupina</h3>
-      <Card className="w-full px-4 relative pl-8">
+      <Card cohort={cohort}>
         <h3 className="text-2xl tracking-wide mb-4">{cohort.sName}</h3>
         <RichTextView value={cohort.sDescription} />
         <RichTextView value={cohort.internalInfo} />
-        <div className="absolute rounded-l-lg w-4 shadow-sm top-0 bottom-0 left-0" style={{ backgroundColor: cohort.sColorRgb }} />
       </Card>
     </>}
 

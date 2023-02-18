@@ -3,7 +3,6 @@ import { usePermissions } from 'lib/data/use-permissions';
 import { MyReservationFragment } from 'lib/graphql/Reservation';
 import { Dropdown } from 'components/Dropdown';
 import { Card } from 'components/Card';
-import { MoreVertical } from 'react-feather';
 import { shortDateFormatter } from 'lib/format-date';
 import { formatCoupleName } from 'lib/format-name';
 import classNames from 'classnames';
@@ -17,15 +16,11 @@ export const ReservationItem = ({ item }: { item: MyReservationFragment; }) => {
   return (
     <div className="group relative min-w-[200px]">
       {perms.canEditReservation(item) && (
-        <div className="absolute right-2 top-2">
-          <Dropdown align="end"
-            button={<MoreVertical className="text-stone-500 w-6 invisible ui-open:visible group-hover:visible" />}
-            options={[
-              { title: "Upravit", href: `/admin/nabidka/${item.id}` },
-              { title: "Upravit rezervace", href: `/admin/nabidka/detail/${item.id}` },
-            ]}
-          />
-        </div>
+        <Dropdown
+          className="absolute right-1 top-1"
+          align="end"
+          options={[{ title: "Upravit", href: `/admin/nabidka/${item.id}` }]}
+        />
       )}
 
       <div className="mb-0.5">

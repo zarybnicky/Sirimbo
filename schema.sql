@@ -309,6 +309,72 @@ $$;
 
 
 --
+-- Name: akce; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.akce (
+    a_id bigint NOT NULL,
+    a_jmeno text NOT NULL,
+    a_kde text NOT NULL,
+    a_info text NOT NULL,
+    a_od date NOT NULL,
+    a_do date NOT NULL,
+    a_kapacita bigint DEFAULT '0'::bigint NOT NULL,
+    a_dokumenty text NOT NULL,
+    a_timestamp timestamp with time zone,
+    a_lock boolean DEFAULT false NOT NULL,
+    a_visible boolean DEFAULT false NOT NULL,
+    summary jsonb DEFAULT '[]'::jsonb NOT NULL,
+    is_public boolean DEFAULT false NOT NULL,
+    enable_notes boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: akce_free_slots(public.akce); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.akce_free_slots(a public.akce) RETURNS integer
+    LANGUAGE sql STABLE
+    AS $$
+  select a.a_kapacita - (select count(*) from akce_item where ai_id_rodic = a.a_id);
+$$;
+
+
+--
+-- Name: akce_has_capacity(public.akce); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.akce_has_capacity(a public.akce) RETURNS boolean
+    LANGUAGE sql STABLE
+    AS $$
+  select count(*) < a.a_kapacita from akce_item where ai_id_rodic = a.a_id;
+$$;
+
+
+--
+-- Name: akce_my_notes(public.akce); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.akce_my_notes(a public.akce) RETURNS text
+    LANGUAGE sql STABLE
+    AS $$
+  select notes from akce_item where ai_id_rodic=a.a_id and ai_user=current_user_id();
+$$;
+
+
+--
+-- Name: akce_signed_up(public.akce); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.akce_signed_up(a public.akce) RETURNS boolean
+    LANGUAGE sql STABLE
+    AS $$
+  select exists (select ai_id from akce_item where ai_id_rodic=a.a_id and ai_user=current_user_id());
+$$;
+
+
+--
 -- Name: rozpis_item; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -803,28 +869,6 @@ $$;
 
 
 --
--- Name: my_events(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.my_events() RETURNS TABLE(id bigint, since timestamp with time zone, until timestamp with time zone, info text, name text, location text, has_capacity boolean, signed_up boolean, my_notes text)
-    LANGUAGE sql STABLE
-    AS $$
-  select
-    a_id as id,
-    a_od as since,
-    a_do as until,
-    a_info as info,
-    a_jmeno as name,
-    a_kde as location,
-    (select count(*) < a_kapacita from akce_item where ai_id_rodic = a_id) as has_capacity,
-    (select exists (select ai_id from akce_item where ai_id_rodic=a_id and ai_user=current_user_id())) as signed_up,
-    (select notes from akce_item where ai_id_rodic=a_id and ai_user=current_user_id()) as my_notes
-  from akce
-  where a_visible = true -- a_do is null or a_do >= now()
-$$;
-
-
---
 -- Name: my_lessons(date, date); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -841,6 +885,46 @@ CREATE FUNCTION public.my_lessons(start_date date, end_date date) RETURNS SETOF 
      or pary.p_id_partnerka = current_user_id()
   ) and rozpis.r_visible = true and r_datum >= start_date and r_datum <= end_date
   order by rozpis.r_datum, rozpis_item.ri_od
+$$;
+
+
+--
+-- Name: nabidka; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.nabidka (
+    n_id bigint NOT NULL,
+    n_trener bigint NOT NULL,
+    n_pocet_hod smallint DEFAULT '1'::smallint NOT NULL,
+    n_max_pocet_hod smallint DEFAULT '0'::bigint NOT NULL,
+    n_od date NOT NULL,
+    n_do date NOT NULL,
+    n_visible boolean DEFAULT true NOT NULL,
+    n_lock boolean DEFAULT true NOT NULL,
+    n_timestamp timestamp with time zone
+);
+
+
+--
+-- Name: nabidka_free_lessons(public.nabidka); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.nabidka_free_lessons(n public.nabidka) RETURNS integer
+    LANGUAGE sql STABLE
+    AS $$
+  select n.n_pocet_hod - (select sum(ni_pocet_hod) from nabidka_item where ni_id_rodic = n.n_id);
+$$;
+
+
+--
+-- Name: nabidka_my_lessons(public.nabidka); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.nabidka_my_lessons(n public.nabidka) RETURNS integer
+    LANGUAGE sql STABLE
+    AS $$
+  select COALESCE(ni_pocet_hod, 0) from nabidka_item where n.n_id = ni_id_rodic
+  and ni_partner in (select * from current_couple_ids());
 $$;
 
 
@@ -1021,20 +1105,37 @@ $$;
 
 
 --
--- Name: nabidka; Type: TABLE; Schema: public; Owner: -
+-- Name: reservation_set_desired_lessons(bigint, smallint); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE TABLE public.nabidka (
-    n_id bigint NOT NULL,
-    n_trener bigint NOT NULL,
-    n_pocet_hod smallint DEFAULT '1'::smallint NOT NULL,
-    n_max_pocet_hod smallint DEFAULT '0'::bigint NOT NULL,
-    n_od date NOT NULL,
-    n_do date NOT NULL,
-    n_visible boolean DEFAULT true NOT NULL,
-    n_lock boolean DEFAULT true NOT NULL,
-    n_timestamp timestamp with time zone
-);
+CREATE FUNCTION public.reservation_set_desired_lessons(reservation_id bigint, lesson_count smallint, OUT reservation public.nabidka) RETURNS public.nabidka
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
+    AS $$
+begin
+  select * into reservation from nabidka where n_id = reservation_id;
+
+  if lesson_count = 0 then
+    delete from nabidka_item where ni_id_rodic = reservation_id and ni_partner in (select * from current_couple_ids());
+    return;
+  end if;
+
+  if lesson_count > (nabidka_my_lessons(reservation) + nabidka_free_lessons(reservation)) then
+    select (nabidka_my_lessons(reservation) + nabidka_free_lessons(reservation))::smallint into lesson_count;
+  end if;
+  if reservation.n_max_pocet_hod > 0 and lesson_count > reservation.n_max_pocet_hod then
+    select reservation.n_max_pocet_hod into lesson_count;
+  end if;
+
+  INSERT INTO nabidka_item
+    (ni_id_rodic, ni_partner, ni_pocet_hod)
+  values
+    (reservation_id, (select current_couple_ids() limit 1), lesson_count)
+  ON CONFLICT (ni_id_rodic, ni_partner)
+  DO UPDATE SET ni_pocet_hod = lesson_count;
+
+  select * into reservation from nabidka where n_id = reservation_id;
+end;
+$$;
 
 
 --
@@ -1046,7 +1147,7 @@ CREATE FUNCTION public.reservations_for_range(start_date date, end_date date) RE
     AS $$
   select * from nabidka
   where n_visible=true
-  and n_od <= start_date and n_do >= end_date
+  and n_do >= start_date and n_od <= end_date
   order by n_od asc;
 $$;
 
@@ -1152,6 +1253,43 @@ $$;
 
 
 --
+-- Name: users_full_name(public.users); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.users_full_name(u public.users) RETURNS text
+    LANGUAGE sql STABLE
+    AS $$
+  select trim(both from COALESCE(u.u_jmeno, '') || ' ' || COALESCE(u.u_prijmeni, ''));
+$$;
+
+
+--
+-- Name: verify_function(regproc, regclass); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.verify_function(f regproc, relid regclass DEFAULT 0) RETURNS void
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $$
+declare
+  error text[];
+  count int;
+begin
+  select array_agg(plpgsql_check_function) into error
+  from plpgsql_check_function(
+    funcoid => f,
+    relid => relid,
+    performance_warnings => true,
+    extra_warnings => true,
+    security_warnings => true
+  );
+  if array_length(error, 1) > 0 then
+    raise exception 'Error when checking function %', f using detail = array_to_string(error, E'\n');
+  end if;
+end;
+$$;
+
+
+--
 -- Name: crm_activity; Type: TABLE; Schema: app_private; Owner: -
 --
 
@@ -1230,25 +1368,6 @@ CREATE SEQUENCE app_private.crm_prospect_id_seq
 --
 
 ALTER SEQUENCE app_private.crm_prospect_id_seq OWNED BY app_private.crm_prospect.id;
-
-
---
--- Name: akce; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.akce (
-    a_id bigint NOT NULL,
-    a_jmeno text NOT NULL,
-    a_kde text NOT NULL,
-    a_info text NOT NULL,
-    a_od date NOT NULL,
-    a_do date NOT NULL,
-    a_kapacita bigint DEFAULT '0'::bigint NOT NULL,
-    a_dokumenty text NOT NULL,
-    a_timestamp timestamp with time zone,
-    a_lock boolean DEFAULT false NOT NULL,
-    a_visible boolean DEFAULT false NOT NULL
-);
 
 
 --
@@ -1554,9 +1673,11 @@ CREATE TABLE public.skupiny (
     s_name text NOT NULL,
     s_description text NOT NULL,
     s_color_rgb text NOT NULL,
-    s_color_text text NOT NULL,
+    s_color_text text DEFAULT ''::text NOT NULL,
     s_location text DEFAULT ''::text NOT NULL,
-    s_visible boolean DEFAULT true NOT NULL
+    s_visible boolean DEFAULT true NOT NULL,
+    ordering integer DEFAULT 1 NOT NULL,
+    internal_info jsonb DEFAULT '[]'::jsonb NOT NULL
 );
 
 
@@ -2789,6 +2910,14 @@ ALTER TABLE ONLY public.location_attachment
 
 ALTER TABLE ONLY public.location
     ADD CONSTRAINT location_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: nabidka_item nabidka_item_unique_user_nabidka_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.nabidka_item
+    ADD CONSTRAINT nabidka_item_unique_user_nabidka_key UNIQUE (ni_partner, ni_id_rodic);
 
 
 --
@@ -4253,6 +4382,41 @@ GRANT ALL ON FUNCTION public.active_prospects() TO administrator;
 
 
 --
+-- Name: TABLE akce; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.akce TO anonymous;
+
+
+--
+-- Name: FUNCTION akce_free_slots(a public.akce); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.akce_free_slots(a public.akce) TO anonymous;
+
+
+--
+-- Name: FUNCTION akce_has_capacity(a public.akce); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.akce_has_capacity(a public.akce) TO anonymous;
+
+
+--
+-- Name: FUNCTION akce_my_notes(a public.akce); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.akce_my_notes(a public.akce) TO anonymous;
+
+
+--
+-- Name: FUNCTION akce_signed_up(a public.akce); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.akce_signed_up(a public.akce) TO anonymous;
+
+
+--
 -- Name: TABLE rozpis_item; Type: ACL; Schema: public; Owner: -
 --
 
@@ -4541,17 +4705,31 @@ GRANT ALL ON FUNCTION public.my_announcements() TO member;
 
 
 --
--- Name: FUNCTION my_events(); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.my_events() TO member;
-
-
---
 -- Name: FUNCTION my_lessons(start_date date, end_date date); Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON FUNCTION public.my_lessons(start_date date, end_date date) TO member;
+
+
+--
+-- Name: TABLE nabidka; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.nabidka TO member;
+
+
+--
+-- Name: FUNCTION nabidka_free_lessons(n public.nabidka); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.nabidka_free_lessons(n public.nabidka) TO anonymous;
+
+
+--
+-- Name: FUNCTION nabidka_my_lessons(n public.nabidka); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.nabidka_my_lessons(n public.nabidka) TO anonymous;
 
 
 --
@@ -4619,10 +4797,10 @@ GRANT ALL ON FUNCTION public.on_update_current_timestamp_users() TO anonymous;
 
 
 --
--- Name: TABLE nabidka; Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION reservation_set_desired_lessons(reservation_id bigint, lesson_count smallint, OUT reservation public.nabidka); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE public.nabidka TO member;
+GRANT ALL ON FUNCTION public.reservation_set_desired_lessons(reservation_id bigint, lesson_count smallint, OUT reservation public.nabidka) TO member;
 
 
 --
@@ -4668,10 +4846,10 @@ GRANT ALL ON FUNCTION public.trainers() TO member;
 
 
 --
--- Name: TABLE akce; Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION users_full_name(u public.users); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE public.akce TO anonymous;
+GRANT ALL ON FUNCTION public.users_full_name(u public.users) TO anonymous;
 
 
 --

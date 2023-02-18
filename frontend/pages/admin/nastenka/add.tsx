@@ -6,7 +6,7 @@ import { PermissionKey, PermissionLevel, withServerPermissions } from "lib/data/
 
 export default function AnnouncementAddPage() {
   return <Item>
-    <Item.Titlebar backHref="/admin/skupiny" title="Nový příspěvek" />
+    <Item.Titlebar backHref="/admin/nabidka" title="Nový příspěvek" />
     <AnnouncementForm />
   </Item>;
 };

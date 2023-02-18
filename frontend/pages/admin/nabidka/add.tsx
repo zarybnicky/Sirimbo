@@ -1,13 +1,19 @@
 import { ReservationForm } from "components/ReservationForm";
-import { useRouter } from "next/router";
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
+import { ReservationList } from "components/ReservationList";
+import { Layout } from "components/layout/Layout";
+import { Item } from "components/layout/Item";
 
 export default function ReservationAddPage() {
-  const router = useRouter();
-  return <div className="container mx-auto max-w-3xl mt-12 mb-8">
-    <ReservationForm onSuccess={() => router.back()} />
-  </div>;
+  return <Item>
+    <Item.Titlebar backHref="/admin/nabidka" title="Nová nabídka" />
+    <ReservationForm />
+  </Item>;
 };
+
+ReservationAddPage.getLayout = (page: React.ReactElement) => (
+  <Layout list={<ReservationList />} isDetail>{page}</Layout>
+);
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peNabidka, PermissionLevel.P_OWNED,

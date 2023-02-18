@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { Control, FieldValues, ControllerProps, FieldError, Path, useController } from 'react-hook-form';
 import classNames from 'classnames';
-import { createPlugins, EElement, Plate, PlateEditor, PlateId, PlatePlugin, PluginOptions, TElement, TNodeEntry, TText } from '@udecode/plate-core';
+import { createPluginFactory, createPlugins, deserializeHtml, EElement, getPluginType, HotkeyPlugin, Plate, PlateEditor, PlateId, PlatePlugin, PlateProvider, PluginOptions, TElement, TNodeEntry, TText, useEditorRef, useEditorState, useEventPlateId, usePlateActions, usePlateEditorRef, usePlateEditorState, usePlateSelectors, usePlateStates } from '@udecode/plate-core';
 import { createTablePlugin, ELEMENT_TABLE, ELEMENT_TD, ELEMENT_TR, TTableElement } from '@udecode/plate-table';
 import { createParagraphPlugin, ELEMENT_PARAGRAPH } from '@udecode/plate-paragraph';
 import { createHeadingPlugin, ELEMENT_H1, ELEMENT_H2, ELEMENT_H3 } from '@udecode/plate-heading';
 import { createLinkPlugin, ELEMENT_LINK, TLinkElement } from '@udecode/plate-link';
 import { createListPlugin, ELEMENT_UL, ELEMENT_OL, ELEMENT_LI } from '@udecode/plate-list';
 import { createImagePlugin, ELEMENT_IMAGE, TImageElement } from '@udecode/plate-media';
-import { createBasicMarksPlugin } from '@udecode/plate-basic-marks';
-import { createPlateUI } from '@udecode/plate-ui';
+import { createFontBackgroundColorPlugin, createFontColorPlugin, createFontFamilyPlugin, createFontSizePlugin, createFontWeightPlugin, MARK_BG_COLOR, MARK_COLOR } from '@udecode/plate-font';
+import { createBasicMarksPlugin, MARK_BOLD, MARK_ITALIC, MARK_STRIKETHROUGH, MARK_SUBSCRIPT, MARK_SUPERSCRIPT, MARK_UNDERLINE } from '@udecode/plate-basic-marks';
+import { BlockToolbarButton, ColorPickerToolbarDropdown, createPlateUI, ListToolbarButton, MarkToolbarButton, Toolbar } from '@udecode/plate-ui';
+import { LooksOne, LooksTwo, Looks3, FormatListBulleted, FormatListNumbered, FormatBold, FormatItalic, FormatUnderlined, FormatStrikethrough, Superscript, Subscript, FormatColorText, Check, FontDownload } from '@styled-icons/material';
 
 const noop = () => { };
 
@@ -41,6 +43,19 @@ export function SlateEditorElement<TFieldValues extends FieldValues>({
 };
 
 const plugins: MyPlatePlugin[] = createPlugins([
+  createPluginFactory<HotkeyPlugin>({
+    key: 'initialize_from_html',
+    isElement: false,
+    then: (editor) => ({
+      normalizeInitialValue(initialValue: any) {
+        if (typeof initialValue === 'string') {
+          const result = deserializeHtml(editor, { element: initialValue });
+          return result;
+        }
+        return initialValue;
+      },
+    }),
+  })(),
   createParagraphPlugin(),
   createTablePlugin(),
   createHeadingPlugin(),
@@ -49,6 +64,11 @@ const plugins: MyPlatePlugin[] = createPlugins([
   createListPlugin(),
   createImagePlugin(),
   createBasicMarksPlugin(),
+  createFontBackgroundColorPlugin(),
+  createFontColorPlugin(),
+  createFontFamilyPlugin(),
+  createFontSizePlugin(),
+  createFontWeightPlugin(),
 ], {
   components: createPlateUI(),
 });
@@ -69,24 +89,112 @@ export function SlateEditor({ value, onChange = noop, readOnly = false, error, c
         </label>
       )}
       <div className={!readOnly ? 'border border-red-500 rounded-md px-2' : ''}>
-        <Plate<MyValue>
-          readOnly={readOnly}
-          editableProps={{
-            spellCheck: false,
-            autoFocus: false,
-            placeholder: 'Popis…',
-          }}
+        <PlateProvider<MyValue>
           initialValue={value}
           onChange={onChange}
           plugins={plugins}
-        />
+          normalizeInitialValue={true}
+        >
+          {!readOnly && <Toolbar><BasicElementToolbarButtons /></Toolbar>}
+
+          <Plate<MyValue>
+            editableProps={{
+              readOnly: readOnly,
+              spellCheck: false,
+              autoFocus: false,
+              placeholder: 'Popis…',
+            }}
+          />
+        </PlateProvider>
       </div>
       {parsedHelperText && (
         <p className={classNames("mt-2 text-sm", error ? 'text-red-600' : 'text-gray-500')}>{parsedHelperText}</p>
       )}
-    </div>
+    </div >
   );
 };
+
+export const useMyEditorRef = () => useEditorRef<MyValue, MyEditor>();
+export const useMyEditorState = () => useEditorState<MyValue, MyEditor>();
+export const useMyPlateEditorRef = (id?: PlateId) =>
+  usePlateEditorRef<MyValue, MyEditor>(id);
+export const useMyPlateEditorState = (id?: PlateId) =>
+  usePlateEditorState<MyValue, MyEditor>(id);
+export const useMyPlateSelectors = (id?: PlateId) =>
+  usePlateSelectors<MyValue, MyEditor>(id);
+export const useMyPlateActions = (id?: PlateId) =>
+  usePlateActions<MyValue, MyEditor>(id);
+export const useMyPlateStates = (id?: PlateId) =>
+  usePlateStates<MyValue, MyEditor>(id);
+
+const BasicElementToolbarButtons = () => {
+  const editor = useMyPlateEditorRef(useEventPlateId());
+
+  return (
+    <>
+      <BlockToolbarButton
+        type={getPluginType(editor, ELEMENT_H1)}
+        icon={<LooksOne />}
+      />
+      <BlockToolbarButton
+        type={getPluginType(editor, ELEMENT_H2)}
+        icon={<LooksTwo />}
+      />
+      <BlockToolbarButton
+        type={getPluginType(editor, ELEMENT_H3)}
+        icon={<Looks3 />}
+      />
+      <ListToolbarButton
+        type={getPluginType(editor, ELEMENT_UL)}
+        icon={<FormatListBulleted />}
+      />
+      <ListToolbarButton
+        type={getPluginType(editor, ELEMENT_OL)}
+        icon={<FormatListNumbered />}
+      />
+      <MarkToolbarButton
+        type={getPluginType(editor, MARK_BOLD)}
+        icon={<FormatBold />}
+      />
+      <MarkToolbarButton
+        type={getPluginType(editor, MARK_ITALIC)}
+        icon={<FormatItalic />}
+      />
+      <MarkToolbarButton
+        type={getPluginType(editor, MARK_UNDERLINE)}
+        icon={<FormatUnderlined />}
+      />
+      <MarkToolbarButton
+        type={getPluginType(editor, MARK_STRIKETHROUGH)}
+        icon={<FormatStrikethrough />}
+      />
+      <MarkToolbarButton
+        type={getPluginType(editor, MARK_SUPERSCRIPT)}
+        clear={getPluginType(editor, MARK_SUBSCRIPT)}
+        icon={<Superscript />}
+      />
+      <MarkToolbarButton
+        type={getPluginType(editor, MARK_SUBSCRIPT)}
+        clear={getPluginType(editor, MARK_SUPERSCRIPT)}
+        icon={<Subscript />}
+      />
+      <ColorPickerToolbarDropdown
+        pluginKey={MARK_COLOR}
+        icon={<FormatColorText />}
+        selectedIcon={<Check />}
+        tooltip={{ content: 'Barva textu' }}
+      />
+      <ColorPickerToolbarDropdown
+        pluginKey={MARK_BG_COLOR}
+        icon={<FontDownload />}
+        selectedIcon={<Check />}
+        tooltip={{ content: 'Barva pozadí' }}
+      />
+
+    </>
+  );
+};
+
 
 
 export type EmptyText = {

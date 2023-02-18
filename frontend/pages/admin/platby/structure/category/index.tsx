@@ -23,8 +23,10 @@ export default function PlatbyCategoryListPage() {
       renderItem={(item) => (
         <List.Item
           key={item.id}
-          active={active === item.id} href={`/admin/platby/structure/category/${item.id}`}
-          title={item.pcName} subtitle={item.pcSymbol}
+          active={active === item.id}
+          href={`/admin/platby/structure/category/${item.id}`}
+          title={item.pcName}
+          subtitle={item.pcSymbol}
         />
       )}
     />

@@ -2,7 +2,7 @@ import { AkceInput } from 'lib/graphql';
 import { EventFragment, useCreateEventMutation, useUpdateEventMutation } from 'lib/graphql/Event';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { TextAreaElement, TextFieldElement } from 'components/TextField';
+import { TextFieldElement } from 'components/TextField';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
@@ -48,8 +48,8 @@ export const EventForm: React.FC<{
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="aJmeno" label="Název" required />
       <TextFieldElement control={control} name="aKde" label="Místo akce" required />
-      <SlateEditorElement control={control} name="summary" label="Shrnutí" required />
-      <TextAreaElement control={control} name="aInfo" label="Další info" rows={3} required />
+      <SlateEditorElement control={control} name="summary" label="Shrnutí" />
+      <SlateEditorElement control={control} name="aInfo" label="Další info" />
       <TextFieldElement control={control} type="date" label="Od" name="aOd" required />
       <TextFieldElement type="date" helperText="(pokud je prázdné, počítá se jako 'Od')" control={control} label="Do" name="aDo" required />
       <TextFieldElement control={control} type="number" name="aKapacita" label="Kapacita" required />

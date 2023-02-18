@@ -9,7 +9,6 @@ export function MyAnnouncements() {
   const [limit] = React.useState(5);
   const [page, setPage] = React.useState(1);
   const { data } = useAnnouncementListQuery({ limit, offset: (page - 1) * limit });
-  console.log(limit, page, data);
   if (!data?.upozornenis) {
     // react-skeleton
     return null;

@@ -34,6 +34,7 @@ export function useSideMenu(): MenuStructItem[] {
 }
 
 const publicMenu: MenuStructItem[] = [
+  { type: "link", title: "Domů", "href": "/" },
   {
     type: "menu", title: "Klub", children: [
       { type: "link", title: "O nás", "href": "/o-nas" },
@@ -41,20 +42,19 @@ const publicMenu: MenuStructItem[] = [
       { type: "link", title: "Tréninkové skupiny", "href": "/o-nas/treninkove-skupiny" },
       { type: "link", title: "Trenéři", "href": "/o-nas/treneri" },
       { type: "link", title: "Benefity členství", "href": "/o-nas/clenstvi" },
-      { type: "link", title: "Galerie mistrů", "href": "/o-nas/galerie-mistru" }
+      { type: "link", title: "Galerie mistrů", "href": "/o-nas/galerie-mistru" },
     ]
   },
   {
     type: "menu", title: "Nabízíme", children: [
-      { type: "link", title: "Tréninkové programy", "href": "/nabizime/treninkove-programy" },
+      { type: "link", title: "Vystoupení na akcích", "href": "/nabizime/vystoupení" },
       { type: "link", title: "Školní taneční kroužky", "href": "/nabizime/skolni-krouzky" },
-      { type: "link", title: "Vystoupení na akcích", "href": "/nabizime/vystoupení" }
     ]
   },
   { type: "link", title: "Aktuality", "href": "/articles" },
   { type: "link", title: "Galerie", "href": "/gallery" },
   { type: "link", title: "Akce", "href": "/events/public" },
-  { type: "link", title: "Kontakt", "href": "/contact" }
+  { type: "link", title: "Kontakt", "href": "/contact" },
 ];
 
 const adminMenu: MenuLink[] = [
@@ -73,10 +73,6 @@ const adminMenu: MenuLink[] = [
   {
     type: "link", title: 'Skupiny', href: '/admin/skupiny',
     auth: [PermissionKey.peSkupiny, PermissionLevel.P_OWNED]
-  },
-  {
-    type: "link", title: 'Platby', href: '/admin/platby',
-    auth: [PermissionKey.pePlatby, PermissionLevel.P_OWNED]
   },
   {
     type: "link", title: 'Páry', href: '/admin/pary',

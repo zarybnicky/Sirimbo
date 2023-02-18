@@ -5,6 +5,8 @@ import * as Types from './index';
 import { UserFragmentDoc } from './CurrentUser';
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
+export type UserPublicFragment = { __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string, id: string };
+
 export type UserQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
 }>;
@@ -71,7 +73,16 @@ export type DeleteUserMutationVariables = Types.Exact<{
 
 export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: { __typename: 'DeleteUserPayload' } | null };
 
-
+export const UserPublicFragmentDoc = `
+    fragment UserPublic on User {
+  id: uId
+  uJmeno
+  uPrijmeni
+  uRodneCislo
+  uTelefon
+  uEmail
+}
+    `;
 export const UserDocument = `
     query User($id: BigInt!) {
   user(uId: $id) {

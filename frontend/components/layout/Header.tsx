@@ -40,23 +40,15 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: {
         )}
 
         <div className="flex lg:hidden items-stretch justify-between min-h-[48px] md:min-h-[64px] p-2">
-          <button className="button button-icon p-0 m-1" onClick={() => setIsOpen(!isOpen)}>
-            <MenuIcon />
+          <button className="flex items-center button-icon p-0 m-1" onClick={() => setIsOpen(!isOpen)}>
+            <MenuIcon className="w-5 h-5" />
           </button>
           <MobileLogo />
-          {auth.user ? (
-            <Link href="/profile" passHref>
-              <a className="button button-icon p-0 m-1" >
-                <Account />
-              </a>
-            </Link>
-          ) : (
-            <Link href="/login" passHref>
-              <a className="button button-icon p-0 m-1" >
-                <Account />
-              </a>
-            </Link>
-          )}
+          <Link href={auth.user ? "/profile" : "/login"} passHref>
+            <a className="flex items-center button-icon p-0 m-1" >
+              <Account className="w-5 h-5" />
+            </a>
+          </Link>
         </div>
       </div>
     </div>
@@ -110,7 +102,7 @@ const DesktopLogo = () => (
 
 const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {
   const { pathname } = useRouter();
-  const inPath = !!getHrefs(x).find(y => pathname.startsWith(y));
+  const inPath = !!getHrefs(x).find(y => y === "/" ? pathname === "/" : pathname.startsWith(y));
 
   const cx = classNames(
     "flex gap-1 rounded-none transition-colors",

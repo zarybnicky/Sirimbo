@@ -2,7 +2,7 @@ import { SkupinyInput } from 'lib/graphql';
 import { CohortFragment, useCohortListQuery, useCreateCohortMutation, useUpdateCohortMutation } from 'lib/graphql/Cohorts';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { TextAreaElement, TextFieldElement } from 'components/TextField';
+import { TextFieldElement } from 'components/TextField';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
@@ -49,7 +49,7 @@ export const CohortForm: React.FC<{ data?: CohortFragment; }> = ({ data }) => {
       <TextFieldElement control={control} name="sName" label="Název" required />
       <TextFieldElement control={control} name="sLocation" label="Město/místo" required />
       <ColorPicker name="sColorRgb" control={control} />
-      <TextAreaElement control={control} name="sDescription" label="Popis" rows={10} required />
+      <SlateEditorElement control={control} name="sDescription" label="Popis" />
       <SlateEditorElement control={control} name="internalInfo" label="Interní informace" />
       <CheckboxElement control={control} name="sVisible" value="1" label="Viditelná v seznamech" />
       <TextFieldElement control={control} name="ordering" label="Pořadí v seznamech skupin (1 = první, 999 = poslední)" />

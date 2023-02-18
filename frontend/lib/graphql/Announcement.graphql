@@ -7,6 +7,7 @@ fragment Announcement on Upozorneni {
   upText
   upTimestamp
   upTimestampAdd
+  upKdo
   userByUpKdo {
     id: uId
     uJmeno
@@ -15,11 +16,7 @@ fragment Announcement on Upozorneni {
   upozorneniSkupiniesByUpsIdRodic {
     nodes {
       skupinyByUpsIdSkupina {
-        id: sId
-        sName
-        sDescription
-        sColorText
-        sColorRgb
+        ...CohortBasic
       }
     }
   }

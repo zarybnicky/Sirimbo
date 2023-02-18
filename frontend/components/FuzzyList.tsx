@@ -1,7 +1,7 @@
 import React from "react";
 import MiniSearch from 'minisearch';
 
-export const FuzzyList = <T extends { id: string }>({
+export const FuzzyList = <T extends { id: any }>({
   data, fields, search, renderItem,
 }: {
   data: T[];

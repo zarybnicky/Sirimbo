@@ -31,6 +31,23 @@ fragment User on User {
   uCity
 }
 
+fragment CouplePartial on Pary {
+  id: pId
+  pIdPartner
+  pIdPartnerka
+  pArchiv
+  userByPIdPartner {
+    id: uId
+    uJmeno
+    uPrijmeni
+  }
+  userByPIdPartnerka {
+    id: uId
+    uJmeno
+    uPrijmeni
+  }
+}
+
 fragment UserAuth on User {
   ...User
   permissionByUGroup {

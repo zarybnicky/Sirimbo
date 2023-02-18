@@ -18,7 +18,7 @@ function ListTitleBar({ title, children }: {
   children?: React.ReactNode;
 }) {
   return (
-    <div className="p-4 flex items-center justify-between flex-wrap">
+    <div className="px-1 py-4 flex items-center justify-between flex-wrap">
       <div className="font-bold">{title}</div>
       {children}
     </div>
@@ -49,21 +49,23 @@ function ListTitleButton({ active, icon: Icon, children, href, onClick }: {
   );
 }
 
-function ListItem({ active, children, href, title, subtitle }: {
+function ListItem({ className, active, children, href, title, subtitle }: {
   children?: React.ReactNode;
   active?: boolean;
   href: string;
   title: React.ReactNode;
   subtitle?: React.ReactNode;
+  className?: string;
 }) {
   return (
     <Link key={href} href={href} passHref>
       <a className={classNames(
-        "relative p-1 pl-6 m-2 rounded-lg grid",
+        "relative p-2 mr-2 my-1 ml-0 rounded-lg grid",
         active ? 'font-semibold bg-red-500 text-white shadow-md' : 'hover:bg-stone-200',
+        className,
       )}>
         <div>{title}</div>
-        <div className={classNames("text-sm", active ? '' : '')}>{subtitle}</div>
+        <div className={classNames("text-sm", active ? 'text-stone-200' : 'text-stone-500')}>{subtitle}</div>
         {children}
       </a>
     </Link>

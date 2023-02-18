@@ -2,14 +2,22 @@
 /* eslint-disable */
 import * as Types from './index';
 
+import { CouplePartialFragmentDoc } from './CurrentUser';
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
-export type CouplePartialFragment = { __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean, id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null };
+export type CoupleExtendedFragment = { __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean, id: string, rozpisItemsByRiPartner: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename?: 'RozpisItem', riOd: string, riDo: string, id: string, rozpiByRiIdRodic: { __typename?: 'Rozpi', rKde: string, rDatum: string, id: string, userByRTrener: { __typename?: 'User', fullName: string | null } | null } | null }> }, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null };
 
 export type CoupleListQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
 export type CoupleListQuery = { __typename?: 'Query', activeCouples: { __typename?: 'PariesConnection', totalCount: number, nodes: Array<{ __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean, id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null }> } | null };
+
+export type CoupleQueryVariables = Types.Exact<{
+  id: Types.Scalars['BigInt'];
+}>;
+
+
+export type CoupleQuery = { __typename?: 'Query', pary: { __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean, id: string, rozpisItemsByRiPartner: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename?: 'RozpisItem', riOd: string, riDo: string, id: string, rozpiByRiIdRodic: { __typename?: 'Rozpi', rKde: string, rDatum: string, id: string, userByRTrener: { __typename?: 'User', fullName: string | null } | null } | null }> }, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null };
 
 export type CreateCoupleMutationVariables = Types.Exact<{
   man: Types.Scalars['BigInt'];
@@ -31,24 +39,26 @@ export type FixUnpairedCouplesMutationVariables = Types.Exact<{ [key: string]: n
 
 export type FixUnpairedCouplesMutation = { __typename?: 'Mutation', fixUnpairedCouples: { __typename?: 'FixUnpairedCouplesPayload', paries: Array<{ __typename?: 'Pary', id: string }> | null } | null };
 
-export const CouplePartialFragmentDoc = `
-    fragment CouplePartial on Pary {
-  id: pId
-  pIdPartner
-  pIdPartnerka
-  pArchiv
-  userByPIdPartner {
-    id: uId
-    uJmeno
-    uPrijmeni
-  }
-  userByPIdPartnerka {
-    id: uId
-    uJmeno
-    uPrijmeni
+export const CoupleExtendedFragmentDoc = `
+    fragment CoupleExtended on Pary {
+  ...CouplePartial
+  rozpisItemsByRiPartner(orderBy: [ROZPI_BY_RI_ID_RODIC__R_DATUM_DESC]) {
+    nodes {
+      id: riId
+      riOd
+      riDo
+      rozpiByRiIdRodic {
+        id: rId
+        rKde
+        rDatum
+        userByRTrener {
+          fullName
+        }
+      }
+    }
   }
 }
-    `;
+    ${CouplePartialFragmentDoc}`;
 export const CoupleListDocument = `
     query CoupleList {
   activeCouples {
@@ -76,6 +86,30 @@ useCoupleListQuery.getKey = (variables?: CoupleListQueryVariables) => variables 
 ;
 
 useCoupleListQuery.fetcher = (variables?: CoupleListQueryVariables, options?: RequestInit['headers']) => fetcher<CoupleListQuery, CoupleListQueryVariables>(CoupleListDocument, variables, options);
+export const CoupleDocument = `
+    query Couple($id: BigInt!) {
+  pary(pId: $id) {
+    ...CoupleExtended
+  }
+}
+    ${CoupleExtendedFragmentDoc}`;
+export const useCoupleQuery = <
+      TData = CoupleQuery,
+      TError = unknown
+    >(
+      variables: CoupleQueryVariables,
+      options?: UseQueryOptions<CoupleQuery, TError, TData>
+    ) =>
+    useQuery<CoupleQuery, TError, TData>(
+      ['Couple', variables],
+      fetcher<CoupleQuery, CoupleQueryVariables>(CoupleDocument, variables),
+      options
+    );
+
+useCoupleQuery.getKey = (variables: CoupleQueryVariables) => ['Couple', variables];
+;
+
+useCoupleQuery.fetcher = (variables: CoupleQueryVariables, options?: RequestInit['headers']) => fetcher<CoupleQuery, CoupleQueryVariables>(CoupleDocument, variables, options);
 export const CreateCoupleDocument = `
     mutation CreateCouple($man: BigInt!, $woman: BigInt!) {
   createCouple(input: {man: $man, woman: $woman}) {

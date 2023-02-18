@@ -9,7 +9,7 @@ import { Item } from 'components/layout/Item';
 export default function DashboardPage() {
   const [variant, setVariant] = React.useState('myLessons');
 
-  return <Item className="col-feature xl:col-full">
+  return <Item className="col-full-width">
     <div className="xl:hidden">
       <TabMenu selected={variant} onSelect={setVariant} options={[
         { id: 'myLessons', label: 'Moje lekce' },

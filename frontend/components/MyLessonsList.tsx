@@ -35,13 +35,17 @@ export const MyLessonsList: React.FC = () => {
     )}
 
     {Object.entries(lessonsPerDay).map(([key, lessons]) => <React.Fragment key={key}>
-      <h6 className="text-lg font-bold mb-1 mt-4">{key}</h6>
+      <h6 className="text-lg font-bold mb-1 mt-4">
+        {key.split(' ').map(x => <div key={x}>{x}</div>)}
+      </h6>
 
       <Card className="grid w-72 rounded-lg border-stone-200 border">
         {lessons.map((lesson, i) => (
           <LessonButton
+            key={i}
+            lesson={lesson}
+            schedule={lesson.rozpiByRiIdRodic!}
             showTrainer={lesson.rozpiByRiIdRodic?.rTrener !== user?.id}
-            key={i} schedule={lesson.rozpiByRiIdRodic!} lesson={lesson}
           />
         ))}
       </Card>

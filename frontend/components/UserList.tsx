@@ -18,10 +18,22 @@ export const UserList = () => {
   const { data: roles } = useRoleListQuery();
   const { data: cohorts } = useCohortListQuery();
 
+  const nodes = React.useMemo(() => {
+    return (data?.users?.nodes || []).map(item => ({
+      id: item.id,
+      name: `${item.uJmeno} ${item.uPrijmeni}`,
+      role: roles?.permissions?.nodes.find(x => x.id === item.uGroup)?.peName,
+      cohort: cohorts?.skupinies?.nodes.find(x => x.id === item.uSkupina)?.sName,
+      yearOfBirth: new Date(item.uNarozeni).getFullYear(),
+      cohortColor: cohorts?.skupinies?.nodes.find(x => x.id === item.uSkupina)?.sColorRgb,
+    }));
+  }, [data, roles?.permissions?.nodes, cohorts?.skupinies?.nodes]);
+
   const doExportMSMT = React.useCallback((e?: React.MouseEvent) => {
     e?.preventDefault();
     exportMSMT();
-  }, [id]);
+  }, []);
+
   const [search, setSearch] = React.useState('');
 
   // Sign in as
@@ -48,18 +60,20 @@ export const UserList = () => {
 
     <List.Scroll>
       <FuzzyList
-        data={data?.users?.nodes || []}
-        fields={['id', 'uJmeno', 'uPrijmeni']}
+        data={nodes}
+        fields={['id', 'name', 'role', 'cohort', 'yearOfBirth']}
         search={search}
         renderItem={(item) => (
           <List.Item
             key={item.id}
-            active={active === item.id} href={`/admin/users/${item.id}`}
-            title={`${item.uJmeno} ${item.uPrijmeni}`}
-            subtitle={new Date(item.uNarozeni).getFullYear() + ', ' + roles?.permissions?.nodes.find(x => x.id === item.uGroup)?.peName}
+            className="pl-6"
+            active={active === item.id}
+            href={`/admin/users/${item.id}`}
+            title={item.name}
+            subtitle={item.yearOfBirth + ', ' + item.role}
           >
             <div className="absolute rounded-l-lg w-4 shadow-sm top-0 bottom-0 left-0" style={{
-              backgroundColor: cohorts?.skupinies?.nodes.find(x => x.id === item.uSkupina)?.sColorRgb,
+              backgroundColor: item.cohortColor,
             }} />
           </List.Item>
         )}

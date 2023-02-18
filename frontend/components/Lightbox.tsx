@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useSwipeable } from 'react-swipeable';
 import { Card } from 'components/Card';
 import { ChevronLeft, ChevronRight } from 'react-feather';
-import { GalleryItem } from 'lib/data/use-gallery';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
 import { Transition } from '@headlessui/react';
@@ -10,7 +9,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 
 export interface LightboxProps {
   dirHref: string;
-  images: GalleryItem[];
+  images: { id: string; href: string; img: string; name: string; }[];
   initial: string;
 }
 

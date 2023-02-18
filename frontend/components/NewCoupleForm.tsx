@@ -13,7 +13,7 @@ type FormProps = {
 };
 
 export const NewCoupleForm: React.FC<{
-  onSuccess: () => void;
+  onSuccess?: () => void;
 }> = ({ onSuccess }) => {
   const { data: users } = useUserListQuery();
   const men = React.useMemo(() => (users?.users?.nodes || [])

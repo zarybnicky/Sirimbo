@@ -43,18 +43,6 @@ const useLocations = () => [
   },
   {
     image: getPlaceholder(360, 240),
-    name: 'T.J. Sokol Přerov',
-    address: 'Brabansko 2, 750 02 Přerov',
-    href: 'https://www.sokolprerov.cz/',
-    mapHref: 'https://goo.gl/maps/gP5cDBxJwgUS3hyz6',
-    map: {
-      lat: 49.4574331,
-      lng: 17.4480036,
-      zoom: 12,
-    },
-  },
-  {
-    image: getPlaceholder(360, 240),
     name: 'Taneční sál Gala',
     address: 'Západní 1, 796 04 Prostějov-Krasice (vchod vedle podnikové prodejny Gala)',
     href: null,

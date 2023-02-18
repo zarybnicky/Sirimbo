@@ -11,7 +11,7 @@ export default function PlatbyGroupListPage() {
   const { id } = router.query;
   const active = id ? id as string : null;
   const [search, setSearch] = React.useState('');
-  const { data, refetch } = usePaymentGroupListQuery();
+  const { data } = usePaymentGroupListQuery();
 
   return <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
     <Button href="/admin/platby/structure/group/add">
@@ -25,7 +25,8 @@ export default function PlatbyGroupListPage() {
       renderItem={(item) => (
         <List.Item
           key={item.id}
-          active={active === item.id} href={`/admin/platby/structure/group/${item.id}`}
+          active={active === item.id}
+          href={`/admin/platby/structure/group/${item.id}`}
           title={item.pgName}
         />
       )}

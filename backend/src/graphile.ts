@@ -101,6 +101,7 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
 
   appendPlugins: [
     require("@graphile-contrib/pg-simplify-inflector"),
+    require("@graphile-contrib/pg-order-by-related"),
     function OperationHookPlugin(builder) {
       builder.hook("init", (_, build) => {
         const addOperationHook: AddOperationHookFn = build.addOperationHook;

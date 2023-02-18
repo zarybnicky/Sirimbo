@@ -21,7 +21,7 @@ export default function FileListPage() {
     category: category ? parseInt(category, 10) : undefined,
   });
 
-  return <Item>
+  return <Item className="col-full-width">
     <Item.Titlebar title="Dokumenty">
       <SelectElement control={control} name="category" label="Kategorie" required options={categories} />
     </Item.Titlebar>
@@ -30,8 +30,10 @@ export default function FileListPage() {
       <Card key={i}>
         <a target="_blank" rel="noreferrer" href={`/old/member/download?id=${row.id}`} className="flex justify-between">
           <span>{row.dName}</span>
-          <span>{row.dTimestamp ? fullDateFormatter.format(new Date(row.dTimestamp)) : ''}</span>
-          <span>{categories.find(x => x.id === row.dKategorie.toString())?.label}</span>
+          <div className="flex gap-4">
+            <span>{row.dTimestamp ? fullDateFormatter.format(new Date(row.dTimestamp)) : ''}</span>
+            <span>{categories.find(x => x.id === row.dKategorie.toString())?.label}</span>
+          </div>
         </a>
       </Card>
     ))}

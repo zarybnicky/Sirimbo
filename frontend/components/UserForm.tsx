@@ -3,7 +3,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { SelectElement } from 'components/SelectElement';
 import { RadioButtonGroupElement } from 'components/RadioButtomGroupElement';
-import { TextAreaElement, TextFieldElement } from 'components/TextField';
+import { TextFieldElement } from 'components/TextField';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
@@ -14,6 +14,7 @@ import { UserFragment } from 'lib/graphql/CurrentUser';
 import { useCohortListQuery } from 'lib/graphql/Cohorts';
 import { useRoleListQuery } from 'lib/graphql/Roles';
 import { useQueryClient } from '@tanstack/react-query';
+import { SlateEditorElement } from './Slate';
 
 type FormProps = Pick<UserInput, 'uLogin' | 'uJmeno' | 'uPrijmeni' | 'uNarozeni'
   | 'uRodneCislo' | 'uPohlavi' | 'uEmail' | 'uTelefon' | 'uStreet' |
@@ -143,7 +144,7 @@ export const UserForm: React.FC<{
           options={cohorts?.skupinies?.nodes?.map(x => ({ id: x.id, label: x.sName })) || []}
         />
 
-        <TextAreaElement control={control} name="uPoznamky" label="Poznámka" rows={3} />
+        <SlateEditorElement control={control} name="uPoznamky" label="Poznámka" />
 
         <CheckboxElement control={control} name="uDancer" value="1" label="Aktivní tanečník" />
         <CheckboxElement control={control} name="uTeacher" value="1" label="Trenér" />

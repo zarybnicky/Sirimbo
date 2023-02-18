@@ -39,31 +39,3 @@ function OldLink({ href, passHref, as, children, ...props }: OldLinkProps) {
 
   return React.cloneElement(children, { href, target: "_blank", rel: "noreferrer" });
 }
-
-
-
-interface NextLinkComposedProps
-  extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'>,
-  Omit<NextLinkProps, 'onClick' | 'onMouseEnter' | 'onTouchStart'> {
-}
-
-export const NextLinkComposed = React.forwardRef<HTMLAnchorElement, NextLinkComposedProps>(
-  function NextLinkComposed(props, ref) {
-    const { href, as, replace, scroll, shallow, prefetch, locale, ...other } = props;
-
-    return (
-      <NextLink
-        href={href}
-        prefetch={prefetch}
-        as={as}
-        replace={replace}
-        scroll={scroll}
-        shallow={shallow}
-        passHref
-        locale={locale}
-      >
-        <a ref={ref} {...other} />
-      </NextLink>
-    );
-  },
-);

@@ -1,7 +1,6 @@
 import * as React from "react";
-import { UserAuthFragment, useCurrentUserQuery, useLoginMutation, useLogoutMutation } from 'lib/graphql/CurrentUser';
+import { CouplePartialFragment, UserAuthFragment, useCurrentUserQuery, useLoginMutation, useLogoutMutation } from 'lib/graphql/CurrentUser';
 import { useQueryClient } from "@tanstack/react-query";
-import { CouplePartialFragment } from "lib/graphql/Couple";
 
 interface AuthContextType {
   isLoading: boolean,

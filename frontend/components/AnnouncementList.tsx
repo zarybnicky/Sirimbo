@@ -5,6 +5,7 @@ import { List } from "components/layout/List";
 import { fullDateFormatter } from "lib/format-date";
 import React from "react";
 import { Pagination } from "./Pagination";
+import { CohortColorBoxes } from "./CohortColorBox";
 
 export function AnnouncementList() {
   const router = useRouter();
@@ -27,26 +28,19 @@ export function AnnouncementList() {
       {data?.upozornenis?.nodes?.map((item) => (
         <List.Item
           key={item.id}
-          active={active === item.id} href={`/admin/nastenka/${item.id}`}
+          active={active === item.id}
+          href={`/admin/nastenka/${item.id}`}
           title={item.upNadpis}
-          subtitle={<div className="flex justify-between flex-wrap">
+          subtitle={<div className="flex flex-wrap justify-between items-baseline gap-4">
             <div>
               {[
                 item.userByUpKdo && `${item.userByUpKdo.uJmeno} ${item.userByUpKdo.uPrijmeni}`,
                 fullDateFormatter.format(new Date(item.upTimestampAdd)),
               ].filter(Boolean).join(', ')}
             </div>
-            <div className="inline-flex gap-1 ml-3">
-              {item.upozorneniSkupiniesByUpsIdRodic?.nodes?.length <= 0 ? null : (
-                item.upozorneniSkupiniesByUpsIdRodic.nodes.map((g) =>
-                  <div className="w-3.5 h-3.5"
-                    key={g.skupinyByUpsIdSkupina?.id}
-                    title={g.skupinyByUpsIdSkupina?.sName}
-                    style={{ backgroundColor: g.skupinyByUpsIdSkupina?.sColorRgb }}
-                  />
-                )
-              )}
-            </div>
+            <CohortColorBoxes
+              items={item.upozorneniSkupiniesByUpsIdRodic?.nodes.map(x => x.skupinyByUpsIdSkupina)}
+            />
           </div>}
         />
       ))}

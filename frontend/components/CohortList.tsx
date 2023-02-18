@@ -22,6 +22,7 @@ export const CohortsList = () => {
           key={item.id}
           active={active === item.id} href={`/admin/skupiny/${item.id}`}
           title={item.sName}
+          className="pl-6"
           subtitle={[!item.sVisible ? "Skrytá" : null, item.sLocation].filter(Boolean).join(', ')}
         >
           <div className="absolute rounded-l-lg w-4 shadow-sm top-0 bottom-0 left-0" style={{ backgroundColor: item.sColorRgb }} />

@@ -20,15 +20,15 @@ type FormProps = Pick<UserInput, 'uJmeno' | 'uPrijmeni' | 'uNarozeni'
 
 export const PersonalInfoForm: React.FC<{
   onSuccess: () => void;
-}> = ({ onSuccess: onSuccessExternal }) => {
+}> = ({ onSuccess: realOnSuccess }) => {
   const { user } = useAuth();
   const countries = useCountries();
 
   const queryClient = useQueryClient();
   const onSuccess = React.useCallback(() => {
     queryClient.invalidateQueries(useCurrentUserQuery.getKey());
-    onSuccessExternal();
-  }, [queryClient]);
+    realOnSuccess();
+  }, [realOnSuccess]);
 
   const { mutateAsync: doUpdate } = useUpdateUserMutation({ onSuccess });
 

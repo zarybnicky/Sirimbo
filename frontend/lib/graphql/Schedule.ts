@@ -2,7 +2,7 @@
 /* eslint-disable */
 import * as Types from './index';
 
-import { CouplePartialFragmentDoc } from './Couple';
+import { CouplePartialFragmentDoc } from './CurrentUser';
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
 export type ScheduleBasicFragment = { __typename: 'Rozpi', rDatum: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, id: string, userByRTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, fullName: string | null, id: string } | null };

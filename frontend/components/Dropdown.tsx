@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import Link from 'next/link';
 import { Menu, Transition } from '@headlessui/react'
+import { MoreVertical } from 'react-feather';
 
 const MenuLink = React.forwardRef<
   HTMLAnchorElement,
@@ -16,8 +17,10 @@ const MenuLink = React.forwardRef<
   );
 });
 
-export const Dropdown = ({ align, button, className, buttonClassName, options }: {
-  button: React.ReactNode;
+const defaultDropdown = <MoreVertical className="text-stone-500 w-6 invisible ui-open:visible group-hover:visible" />;
+
+export const Dropdown = ({ align, button = defaultDropdown, className, buttonClassName, options }: {
+  button?: React.ReactNode;
   className?: string;
   buttonClassName?: string;
   options: {
@@ -29,7 +32,7 @@ export const Dropdown = ({ align, button, className, buttonClassName, options }:
   align: "start" | "end" | "center";
 }) => {
   return (
-    <Menu as="div" className={`relative ${className}`}>
+    <Menu as="div" className={classNames(!className?.includes('absolute') && 'relative', className)}>
       <Menu.Button className={buttonClassName}>{button}</Menu.Button>
       <Transition
         as={React.Fragment}

@@ -1,13 +1,27 @@
-fragment Cohort on Skupiny {
+fragment CohortBasic on Skupiny {
   __typename
   id: sId
   sName
-  sDescription
   sLocation
   sVisible
   sColorRgb
-  internalInfo
   ordering
+}
+
+fragment Cohort on Skupiny {
+  ...CohortBasic
+  __typename
+  sDescription
+  internalInfo
+}
+
+fragment CohortWithMembers on Skupiny {
+  ...Cohort
+  usersByUSkupina(condition: {uBan: false, uSystem: false, uConfirmed: true}, orderBy: [U_PRIJMENI_ASC, U_JMENO_ASC]) {
+    nodes {
+      ...UserPublic
+    }
+  }
 }
 
 query CohortList($visible: Boolean) {
@@ -18,15 +32,10 @@ query CohortList($visible: Boolean) {
   }
 }
 
-query CohortMembers($id: BigInt!) {
-  members(condition: {sId: $id}) {
+query CohortListWithMembers($visible: Boolean) {
+  skupinies(condition: {sVisible: $visible}, orderBy: [ORDERING_ASC]) {
     nodes {
-      id: uId
-      uJmeno
-      uPrijmeni
-      uRodneCislo
-      uTelefon
-      uEmail
+      ...CohortWithMembers
     }
   }
 }

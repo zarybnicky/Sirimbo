@@ -25,7 +25,7 @@ const ReactQueryDevtools = dynamic(
   { ssr: false },
 );
 
-const WithProviders = (children: React.ReactNode, pageProps: AppProps['pageProps']) => {
+const WithProviders = <T extends { dehydratedState?: object }>(children: React.ReactNode, pageProps: AppProps<T>['pageProps']) => {
   const queryClientRef = React.useRef<QueryClient>()
   if (!queryClientRef.current) {
     queryClientRef.current = new QueryClient({
@@ -70,8 +70,8 @@ export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: React.ReactElement) => React.ReactNode
 }
 
-type AppPropsWithLayout = AppProps & {
-  Component: NextPageWithLayout
+type AppPropsWithLayout<T extends { dehydratedState?: object } = { dehydratedState?: object }> = AppProps<T> & {
+  Component: NextPageWithLayout<T>
 }
 
 const defaultLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;

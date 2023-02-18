@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useScheduleListQuery } from 'lib/graphql/Schedule';
 import { useRouter } from 'next/router';
 import { Button } from 'components/Button';
-import { GfullDateFormatter } from 'lib/format-date';
+import { fullDateFormatter } from 'lib/format-date';
 import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
 import { List } from "components/layout/List";
 import { FuzzyList } from "components/FuzzyList";

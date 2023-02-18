@@ -22,7 +22,7 @@ export const ParticipationForm: React.FC<{
   const onSuccess = React.useCallback(() => {
     queryClient.invalidateQueries(useMyEventsQuery.getKey());
     realOnSuccess();
-  }, []);
+  }, [queryClient, realOnSuccess]);
 
   const { mutateAsync: doUpsert } = useCreateParticipationMutation({ onSuccess });
   const { mutateAsync: doCancel } = useCancelParticipationMutation({ onSuccess });

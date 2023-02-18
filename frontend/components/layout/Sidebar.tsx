@@ -102,6 +102,7 @@ const SidebarLink = ({ item, onClick }: {
 }) => {
   const { pathname } = useRouter();
   const inPath = pathname.startsWith(item.href) && item.href !== '/';
+
   return (
     <Link href={item.href} passHref>
       <a onClick={onClick} className={classNames(

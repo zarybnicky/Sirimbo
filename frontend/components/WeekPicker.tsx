@@ -18,7 +18,7 @@ export const WeekPicker = ({ title, startDate, onChange }: {
       monday.setDate(monday.getDate() - 7);
       return monday;
     });
-  }, [])
+  }, [onChange]);
 
   const setNextWeek = React.useCallback(() => {
     onChange((startDate) => {
@@ -26,7 +26,7 @@ export const WeekPicker = ({ title, startDate, onChange }: {
       monday.setDate(monday.getDate() + 7);
       return monday;
     });
-  }, [])
+  }, [onChange]);
 
   return <div className="flex flex-col mb-4">
     <div className="flex items-center">

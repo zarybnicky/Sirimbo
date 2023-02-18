@@ -13,14 +13,10 @@ const ReservationView = (x: ReservationFragment) => {
         <div className="title">
           {x.userByNTrener?.uJmeno} {x.userByNTrener?.uPrijmeni}
           {perms.canEditReservation(x) && (
-            <Dropdown
-              align="center"
-              button={<img alt="Upravit" width="16" src="/style/icon-gear.png" />}
-              options={[
-                { title: "Upravit", href: `/admin/nabidka/${x.id}` },
-                { title: "Upravit rezervace", href: `/admin/nabidka/detail/${x.id}` },
-              ]}
-            />
+            <Dropdown align="center" options={[
+              { title: "Upravit", href: `/admin/nabidka/${x.id}` },
+              { title: "Upravit rezervace", href: `/admin/nabidka/detail/${x.id}` },
+            ]} />
           )}
         </div>
         <div className="font-bold">{shortDateFormatter.formatRange(new Date(x.nOd), new Date(x.nDo))}</div>

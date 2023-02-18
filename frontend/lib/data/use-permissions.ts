@@ -113,6 +113,18 @@ export class PermissionChecker {
     );
   }
 
+  public canEditAnnouncement(item: { upKdo?: string | null }) {
+    return (
+      (this.perms.peNastenka >= PermissionLevel.P_OWNED && this.userId === item.upKdo) ||
+      this.perms.peNastenka >= PermissionLevel.P_ADMIN
+    );
+  }
+  public canEditCohort(_item: {}) {
+    return (
+      this.perms.peSkupiny >= PermissionLevel.P_ADMIN
+    );
+  }
+
   public canEditReservation(reservation: { nTrener: string; }) {
     return (
       (this.perms.peNabidka >= PermissionLevel.P_OWNED && this.userId === reservation.nTrener) ||

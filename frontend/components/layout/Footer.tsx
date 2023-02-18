@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { SocialButtons } from './SocialButtons';
-import { Map } from 'components/Map';
 import { Card } from 'components/Card';
 
 import LogoCsts from 'public/images/logo-csts.svg';
@@ -8,24 +7,6 @@ import LogoNsa from 'public/images/logo-nsa.svg';
 import LogoProstejov from 'public/images/logo-prostejov.svg';
 import LogoOlomouc from 'public/images/logo-olomouc.jpg';
 import LogoKraj from 'public/images/logo-kraj.png';
-
-export const FooterMap = ({ height = '200px' }) => {
-  const position = [49.58727525, 17.25661055] as [number, number];
-  const holeckova = [49.57963, 17.2495939] as [number, number];
-  const slovan = [49.59490, 17.26340] as [number, number];
-
-  return <Map center={position} zoom={12} scrollWheelZoom={false} style={{ height }}>
-    {({ TileLayer, Marker, Popup }) => <>
-      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-      <Marker position={holeckova}>
-        <Popup>Taneční centrum při FZŠ Holečkova</Popup>
-      </Marker>
-      <Marker position={slovan}>
-        <Popup>Tělocvična Slovanského gymnázia</Popup>
-      </Marker>
-    </>}
-  </Map>;
-};
 
 export const Footer: React.FC = () => {
   return <div className="col-full-width content bg-stone-800 text-white py-12">

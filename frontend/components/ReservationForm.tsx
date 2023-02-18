@@ -17,7 +17,7 @@ type FormProps = Pick<NabidkaInput, 'nTrener' | 'nPocetHod' | 'nMaxPocetHod' | '
 
 export const ReservationForm: React.FC<{
   data?: ReservationFragment;
-  onSuccess: () => void;
+  onSuccess?: () => void;
 }> = ({ data, onSuccess }) => {
   const { mutateAsync: doCreate } = useCreateReservationMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateReservationMutation({ onSuccess });

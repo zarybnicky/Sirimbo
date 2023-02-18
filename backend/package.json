@@ -12,6 +12,7 @@
     "start": "tsnd --respawn src/index.ts"
   },
   "dependencies": {
+    "@graphile-contrib/pg-order-by-related": "^1.0.0",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
     "@graphile/operation-hooks": "^1.0.0",
     "@tsconfig/node12": "^1.0.9",

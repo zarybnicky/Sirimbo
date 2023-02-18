@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { TextAreaElement, TextFieldElement } from 'components/TextField';
+import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook'
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
@@ -8,6 +8,7 @@ import { UpozorneniInput } from 'lib/graphql';
 import { AnnouncementFragment, useAnnouncementListQuery, useCreateAnnouncementMutation, useUpdateAnnouncementMutation } from 'lib/graphql/Announcement';
 import { useQueryClient } from '@tanstack/react-query';
 import { DateRange, DateRangeInput } from './DateRange';
+import { SlateEditorElement } from './Slate';
 
 type FormProps = Pick<UpozorneniInput, 'upNadpis' | 'upText'> & {
   schedule: DateRange;
@@ -53,7 +54,7 @@ export const AnnouncementForm: React.FC<{
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="upNadpis" label="Nadpis" required />
-      <TextAreaElement control={control} name="upText" label="Text" rows={20} required />
+      <SlateEditorElement control={control} name="upText" label="Text" />
       <DateRangeInput control={control} name="schedule" label="Publikováno od/do" />
       <SubmitButton loading={onSubmit.loading} />
     </form>
