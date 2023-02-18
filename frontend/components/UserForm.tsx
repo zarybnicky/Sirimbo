@@ -67,13 +67,20 @@ export const UserForm: React.FC<{
   });
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    const { uLogin: _uLogin, ...patch } = values;
+    const { uLogin: _uLogin, uPoznamky, ...patch } = values;
     if (data) {
-      await doUpdate({ id: data.id, patch });
+      await doUpdate({
+        id: data.id,
+        patch: {
+          ...patch,
+          uPoznamky: JSON.stringify(uPoznamky),
+        },
+      });
     } else {
       await doCreate({
         input: {
           ...patch,
+          uPoznamky: JSON.stringify(uPoznamky),
           uLogin: _uLogin.toLowerCase(),
           uLock: false,
         }

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Control, FieldValues, ControllerProps, FieldError, Path, useController } from 'react-hook-form';
 import classNames from 'classnames';
-import { createPluginFactory, createPlugins, deserializeHtml, EElement, getPluginType, HotkeyPlugin, Plate, PlateEditor, PlateId, PlatePlugin, PlateProvider, PluginOptions, TElement, TNodeEntry, TText, useEditorRef, useEditorState, useEventPlateId, usePlateActions, usePlateEditorRef, usePlateEditorState, usePlateSelectors, usePlateStates } from '@udecode/plate-core';
+import { createPluginFactory, createPlugins, deserializeHtml, EElement, getPluginType, HotkeyPlugin, Plate, PlateEditor, PlateId, PlatePlugin, PlateProvider, PluginOptions, RenderAfterEditable, TElement, TNodeEntry, TText, useEditorRef, useEditorState, useEventPlateId, usePlateActions, usePlateEditorRef, usePlateEditorState, usePlateSelectors, usePlateStates } from '@udecode/plate-core';
 import { createTablePlugin, ELEMENT_TABLE, ELEMENT_TD, ELEMENT_TR, TTableElement } from '@udecode/plate-table';
 import { createParagraphPlugin, ELEMENT_PARAGRAPH } from '@udecode/plate-paragraph';
 import { createHeadingPlugin, ELEMENT_H1, ELEMENT_H2, ELEMENT_H3 } from '@udecode/plate-heading';
@@ -10,8 +10,8 @@ import { createListPlugin, ELEMENT_UL, ELEMENT_OL, ELEMENT_LI } from '@udecode/p
 import { createImagePlugin, ELEMENT_IMAGE, TImageElement } from '@udecode/plate-media';
 import { createFontBackgroundColorPlugin, createFontColorPlugin, createFontFamilyPlugin, createFontSizePlugin, createFontWeightPlugin, MARK_BG_COLOR, MARK_COLOR } from '@udecode/plate-font';
 import { createBasicMarksPlugin, MARK_BOLD, MARK_ITALIC, MARK_STRIKETHROUGH, MARK_SUBSCRIPT, MARK_SUPERSCRIPT, MARK_UNDERLINE } from '@udecode/plate-basic-marks';
-import { BlockToolbarButton, ColorPickerToolbarDropdown, createPlateUI, ListToolbarButton, MarkToolbarButton, Toolbar } from '@udecode/plate-ui';
-import { LooksOne, LooksTwo, Looks3, FormatListBulleted, FormatListNumbered, FormatBold, FormatItalic, FormatUnderlined, FormatStrikethrough, Superscript, Subscript, FormatColorText, Check, FontDownload } from '@styled-icons/material';
+import { BlockToolbarButton, ColorPickerToolbarDropdown, createPlateUI, ImageToolbarButton, LinkToolbarButton, ListToolbarButton, MarkToolbarButton, PlateFloatingLink, Toolbar } from '@udecode/plate-ui';
+import { Image, Link, LooksOne, LooksTwo, Looks3, FormatListBulleted, FormatListNumbered, FormatBold, FormatItalic, FormatUnderlined, FormatStrikethrough, Superscript, Subscript, FormatColorText, Check, FontDownload } from '@styled-icons/material';
 
 const noop = () => { };
 
@@ -49,8 +49,13 @@ const plugins: MyPlatePlugin[] = createPlugins([
     then: (editor) => ({
       normalizeInitialValue(initialValue: any) {
         if (typeof initialValue === 'string') {
-          const result = deserializeHtml(editor, { element: initialValue });
-          return result;
+          if (initialValue.startsWith('[')) {
+            return JSON.parse(initialValue);
+          }
+          return deserializeHtml(editor, { element: initialValue });
+        }
+        if (!initialValue || !initialValue.length) {
+          return [{ type: "p", children: [{ text: "" }] }];
         }
         return initialValue;
       },
@@ -60,7 +65,9 @@ const plugins: MyPlatePlugin[] = createPlugins([
   createTablePlugin(),
   createHeadingPlugin(),
   createTablePlugin(),
-  createLinkPlugin(),
+  createLinkPlugin({
+    renderAfterEditable: PlateFloatingLink as RenderAfterEditable<MyValue>,
+  }),
   createListPlugin(),
   createImagePlugin(),
   createBasicMarksPlugin(),
@@ -80,20 +87,22 @@ export function SlateEditor({ value, onChange = noop, readOnly = false, error, c
   error?: FieldError;
 } & Extras) {
   const parsedHelperText = !error ? helperText : parseError ? parseError(error) : error.message;
+  if (readOnly && typeof value === 'object' && value.length === 1 && value[0] && value[0].type === 'p' && value[0]?.children.length === 1 && value[0].children[0] && value[0].children[0].text === "") {
+    return null;
+  }
 
   return (
-    <div className={classNames('prose', className)}>
+    <div className={classNames('prose', readOnly && 'readonly', className)}>
       {label && (
         <label className="block text-sm font-medium text-gray-700">
           {label}
         </label>
       )}
-      <div className={!readOnly ? 'border border-red-500 rounded-md px-2' : ''}>
+      <div className={!readOnly ? 'border border-red-500 rounded-md px-2 pb-2' : ''}>
         <PlateProvider<MyValue>
           initialValue={value}
           onChange={onChange}
           plugins={plugins}
-          normalizeInitialValue={true}
         >
           {!readOnly && <Toolbar><BasicElementToolbarButtons /></Toolbar>}
 
@@ -190,7 +199,8 @@ const BasicElementToolbarButtons = () => {
         selectedIcon={<Check />}
         tooltip={{ content: 'Barva pozadí' }}
       />
-
+      <LinkToolbarButton icon={<Link />} />
+      <ImageToolbarButton icon={<Image />} />
     </>
   );
 };

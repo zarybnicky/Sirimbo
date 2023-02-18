@@ -36,10 +36,15 @@ export const EventForm: React.FC<{
   });
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
+    const patch = {
+      ...values,
+      aInfo: JSON.stringify(values.aInfo),
+      aDokumenty: '',
+    };
     if (data) {
-      await doUpdate({ id: data.id, patch: values });
+      await doUpdate({ id: data.id, patch });
     } else {
-      await doCreate({ input: { ...values, aDokumenty: '' } });
+      await doCreate({ input: patch });
     }
   });
 

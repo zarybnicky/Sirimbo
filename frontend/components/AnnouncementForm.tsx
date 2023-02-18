@@ -39,7 +39,7 @@ export const AnnouncementForm: React.FC<{
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     const patch = {
       upNadpis: values.upNadpis,
-      upText: values.upText,
+      upText: JSON.stringify(values.upText),
       scheduledSince: values.schedule[0]?.toISOString(),
       scheduledUntil: values.schedule[1]?.toDateString(),
     };

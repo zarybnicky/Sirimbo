@@ -26,10 +26,15 @@ export const ArticleForm: React.FC<{
   });
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
+    const patch = {
+      ...values,
+      atText: JSON.stringify(values.atText),
+      atKat: '1',
+    };
     if (data) {
-      await doUpdate({ id: data.id, patch: values });
+      await doUpdate({ id: data.id, patch });
     } else {
-      await doCreate({ input: { ...values, atKat: '1' } });
+      await doCreate({ input: patch });
     }
   });
 

@@ -36,10 +36,14 @@ export const CohortForm: React.FC<{ data?: CohortFragment; }> = ({ data }) => {
   });
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
+    const patch = {
+      ...values,
+      sDescription: JSON.stringify(values.sDescription),
+    };
     if (data) {
-      await doUpdate({ id: data.id, patch: values });
+      await doUpdate({ id: data.id, patch });
     } else {
-      await doCreate({ input: values });
+      await doCreate({ input: patch });
     }
   });
 
