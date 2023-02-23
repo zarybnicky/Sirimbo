@@ -1,16 +1,17 @@
 const colors = require("tailwindcss/colors");
 
+// https://www.tints.dev/red/ED1734
 const red = {
-  50: '#fdf4f5',
-  100: '#fbe8eb',
-  200: '#f5c6ce',
-  300: '#efa4b0',
-  400: '#e46075',
-  500: '#d81c3a',
-  600: '#c21934',
-  700: '#a2152c',
-  800: '#821123',
-  900: '#6a0e1c'
+  50: "#FDE7EA",
+  100: "#FBD0D5",
+  200: "#F8A0AC",
+  300: "#F47687",
+  400: "#F1465D",
+  500: "#ED1734",
+  600: "#C20F27",
+  700: "#930B1D",
+  800: "#5F0713",
+  900: "#2F0409",
 };
 
 module.exports = {
