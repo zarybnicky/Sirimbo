@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { OlympLogoOneline } from 'components/Icons';
 import { useAuth } from 'lib/data/use-auth';
-import { MenuLink, MenuStructItem, useSideMenu, useTopMenu } from 'lib/data/use-menu';
+import { MenuLink, MenuStructItem, useMemberMenu, useSideMenu } from 'lib/data/use-menu';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -13,7 +13,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: {
 }) => {
   const router = useRouter();
   const sideMenu = useSideMenu();
-  const topMenu = useTopMenu();
+  const memberMenu = useMemberMenu();
   const auth = useAuth();
   React.useEffect(() => {
     const track = () => setIsOpen(false);
@@ -45,11 +45,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: {
         <div className="hidden lg:flex">
           <Link href="/" passHref>
             <a className="h-20 p-3 bg-red-500 mx-auto">
-              <OlympLogoOneline viewBox="0 0 381.82217 111.78744"
-                className="h-full w-full text-white" style={{
-                  color: 'white',
-                  fill: 'white !important',
-                }} />
+              <OlympLogoOneline className="h-full w-full text-white !fill-white" />
             </a>
           </Link>
         </div>
@@ -59,28 +55,14 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: {
         "scrollbar-thin scrollbar-track-transparent scrollbar-thumb-red-700/80 hover:scrollbar-thumb-red-700/90",
       )}>
         {auth.user ? <>
-          <SidebarSection item={{
-            type: 'menu',
-            title: 'Pro členy',
-            children: [
-              { type: "link", title: 'Nástěnka', "href": '/dashboard' },
-              { type: "link", title: 'Tréninky', "href": '/schedule' },
-              { type: "link", title: 'Akce', "href": '/events' },
-              { type: "link", title: 'Dokumenty', "href": '/documents' },
-              { type: "link", title: 'Členové', "href": '/cohorts' },
-              { type: "link", title: 'Profil', "href": '/profile' },
-            ],
-          }} />
-          <SidebarLink item={{ type: 'link', title: 'Odhlásit se', href: '/' }} onClick={() => {
-            router.push('/');
-            auth.signOut();
-          }} />
+          <SidebarSection item={{ type: 'menu', title: 'Pro členy', children: memberMenu }} />
+          <SidebarLink item={{ type: 'link', title: 'Odhlásit se', href: '/' }} onClick={auth.signOut} />
         </> : (
           <SidebarLink item={{ type: 'link', title: 'Přihlásit se', href: '/login' }} />
         )}
         {sideMenu.map(x => <SidebarSection key={x.title} item={x} />)}
         {auth.user && <div className="h-8" />}
-        {topMenu.map(x => <SidebarSection key={x.title} item={x} />)}
+        <SidebarLink item={{ type: 'link', title: 'Pro veřejnoust', href: '/' }} />
 
         <div className="mt-4 text-xs text-stone-700 lg:text-white p-4 grid gap-2">
           <div>© 2023 Taneční klub Olymp Olomouc, z. s.</div>

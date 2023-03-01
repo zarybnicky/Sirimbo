@@ -1,8 +1,8 @@
 import classNames from 'classnames';
-import { Dropdown } from 'components/Dropdown';
+import { Dropdown, DropdownItem } from 'components/Dropdown';
 import { OlympLogoVertical } from 'components/Icons';
 import { SocialButtons } from './SocialButtons';
-import { getHrefs, MenuStructItem, useTopMenu } from 'lib/data/use-menu';
+import { getHrefs, MenuStructItem, useMemberMenu, useTopMenu } from 'lib/data/use-menu';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -57,11 +57,7 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: {
 
 const AuthButton = () => {
   const auth = useAuth();
-  const router = useRouter();
-  const signOut = React.useCallback(() => {
-    auth.signOut();
-    router.push('/');
-  }, [router, auth]);
+  const memberMenu = useMemberMenu();
 
   const button = (
     <div className="flex normal-case button button-text gap-2 items-center">
@@ -72,11 +68,14 @@ const AuthButton = () => {
       </div>
     </div>
   );
-  return <Dropdown buttonClassName="min-h-[48px] md:min-h-[64px]" align="end" button={button} options={[
-    { title: 'Nástěnka', href: '/dashboard' },
-    { title: 'Můj profil', href: '/profile' },
-    { title: 'Odhlásit se', onClick: signOut },
-  ]} />;
+  return <Dropdown
+    buttonClassName="min-h-[48px] md:min-h-[64px]"
+    align="end"
+    button={button}
+    options={(memberMenu as DropdownItem[]).concat([
+      { title: 'Odhlásit se', onClick: auth.signOut },
+    ])}
+  />;
 };
 
 const DesktopLogo = () => (

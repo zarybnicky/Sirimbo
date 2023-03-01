@@ -1,6 +1,7 @@
 import * as React from "react";
 import { CouplePartialFragment, UserAuthFragment, useCurrentUserQuery, useLoginMutation, useLogoutMutation } from 'lib/graphql/CurrentUser';
 import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/router";
 
 interface AuthContextType {
   isLoading: boolean,
@@ -15,6 +16,7 @@ interface AuthContextType {
 const authContext = React.createContext<AuthContextType | undefined>(undefined);
 
 export const ProvideAuth: React.FC = ({ children }) => {
+  const router = useRouter();
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
@@ -44,6 +46,7 @@ export const ProvideAuth: React.FC = ({ children }) => {
   }, [doSignIn]);
   const signOut = React.useCallback(async () => {
     await doSignOut({});
+    router.push('/');
   }, [doSignOut]);
 
   const context = { isLoading, user, couple, signIn, signOut };

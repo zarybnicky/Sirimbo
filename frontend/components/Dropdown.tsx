@@ -19,16 +19,18 @@ const MenuLink = React.forwardRef<
 
 const defaultDropdown = <MoreVertical className="text-stone-500 w-6 invisible ui-open:visible group-hover:visible" />;
 
+export type DropdownItem = {
+  icon?: React.ReactNode;
+  title: string;
+  href?: string;
+  onClick?: () => void;
+};
+
 export const Dropdown = ({ align, button = defaultDropdown, className, buttonClassName, options }: {
   button?: React.ReactNode;
   className?: string;
   buttonClassName?: string;
-  options: {
-    icon?: React.ReactNode;
-    title: string;
-    href?: string;
-    onClick?: () => void;
-  }[];
+  options: DropdownItem[];
   align: "start" | "end" | "center";
 }) => {
   return (

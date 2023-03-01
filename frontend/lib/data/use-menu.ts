@@ -20,20 +20,7 @@ export function getHrefs(x: MenuStructItem): string[] {
     : (x.hrefRoot ? [x.hrefRoot] : []).concat(...x.children.map(getHrefs));
 }
 
-export function useTopMenu(): MenuStructItem[] {
-  return publicMenu;
-}
-
-export function useSideMenu(): MenuStructItem[] {
-  const permissions = usePermissions();
-  return (permissions.hasPermission(PermissionKey.peNastenka, PermissionLevel.P_OWNED)) ? [{
-    type: 'menu',
-    title: 'Správa',
-    children: adminMenu.filter(item => !item.auth || permissions.hasPermission(...item.auth)),
-  }] : [];
-}
-
-const publicMenu: MenuStructItem[] = [
+export const useTopMenu = (): MenuStructItem[] => ([
   { type: "link", title: "Domů", "href": "/" },
   {
     type: "menu", title: "Klub", children: [
@@ -55,6 +42,24 @@ const publicMenu: MenuStructItem[] = [
   { type: "link", title: "Galerie", "href": "/gallery" },
   { type: "link", title: "Akce", "href": "/events/public" },
   { type: "link", title: "Kontakt", "href": "/contact" },
+]);
+
+export function useSideMenu(): MenuStructItem[] {
+  const permissions = usePermissions();
+  return (permissions.hasPermission(PermissionKey.peNastenka, PermissionLevel.P_OWNED)) ? [{
+    type: 'menu',
+    title: 'Správa',
+    children: adminMenu.filter(item => !item.auth || permissions.hasPermission(...item.auth)),
+  }] : [];
+}
+
+export const useMemberMenu = (): MenuLink[] => [
+  { type: "link", title: 'Nástěnka', "href": '/dashboard' },
+  { type: "link", title: 'Tréninky', "href": '/schedule' },
+  { type: "link", title: 'Akce', "href": '/events' },
+  { type: "link", title: 'Dokumenty', "href": '/documents' },
+  { type: "link", title: 'Členové', "href": '/cohorts' },
+  { type: "link", title: 'Profil', "href": '/profile' },
 ];
 
 const adminMenu: MenuLink[] = [
