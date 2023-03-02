@@ -1,0 +1,42 @@
+fragment CohortGroup on CohortGroup {
+  __typename
+  id
+  name
+  description
+  isPublic
+  ordering
+}
+
+query CohortGroupList($isPublic: Boolean) {
+  cohortGroups(condition: {isPublic: $isPublic}, orderBy: [ORDERING_ASC]) {
+    nodes {
+      ...CohortGroup
+    }
+  }
+}
+
+query CohortGroup($id: BigInt!) {
+  cohortGroup(id: $id) {
+    ...CohortGroup
+  }
+}
+
+mutation CreateCohortGroup($input: CohortGroupInput!) {
+  createCohortGroup(input: {cohortGroup: $input}) {
+    cohortGroup {
+      id
+    }
+  }
+}
+
+mutation UpdateCohortGroup($id: BigInt!, $patch: CohortGroupPatch!) {
+  updateCohortGroup(input: {id: $id, patch: $patch}) {
+    __typename
+  }
+}
+
+mutation DeleteCohortGroup($id: BigInt!) {
+  deleteCohortGroup(input: {id: $id}) {
+    __typename
+  }
+}

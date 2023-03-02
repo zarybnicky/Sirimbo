@@ -893,6 +893,121 @@ export type ChangePasswordPayload = {
   query: Maybe<Query>;
 };
 
+export type CohortGroup = Node & {
+  __typename?: 'CohortGroup';
+  description: Scalars['JSON'];
+  id: Scalars['BigInt'];
+  isPublic: Scalars['Boolean'];
+  name: Scalars['String'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  ordering: Scalars['Int'];
+  /** Reads and enables pagination through a set of `Skupiny`. */
+  skupiniesByCohortGroup: SkupiniesConnection;
+  tenant: Maybe<Scalars['BigInt']>;
+  /** Reads a single `Tenant` that is related to this `CohortGroup`. */
+  tenantByTenant: Maybe<Tenant>;
+};
+
+
+export type CohortGroupSkupiniesByCohortGroupArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<SkupinyCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<SkupiniesOrderBy>>;
+};
+
+/**
+ * A condition to be used against `CohortGroup` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type CohortGroupCondition = {
+  /** Checks for equality with the object’s `description` field. */
+  description?: InputMaybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `isPublic` field. */
+  isPublic?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `ordering` field. */
+  ordering?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `tenant` field. */
+  tenant?: InputMaybe<Scalars['BigInt']>;
+};
+
+/** An input for mutations affecting `CohortGroup` */
+export type CohortGroupInput = {
+  description?: InputMaybe<Scalars['JSON']>;
+  id?: InputMaybe<Scalars['BigInt']>;
+  isPublic?: InputMaybe<Scalars['Boolean']>;
+  name: Scalars['String'];
+  ordering?: InputMaybe<Scalars['Int']>;
+  tenant?: InputMaybe<Scalars['BigInt']>;
+};
+
+/** Represents an update to a `CohortGroup`. Fields that are set will be updated. */
+export type CohortGroupPatch = {
+  description?: InputMaybe<Scalars['JSON']>;
+  id?: InputMaybe<Scalars['BigInt']>;
+  isPublic?: InputMaybe<Scalars['Boolean']>;
+  name?: InputMaybe<Scalars['String']>;
+  ordering?: InputMaybe<Scalars['Int']>;
+  tenant?: InputMaybe<Scalars['BigInt']>;
+};
+
+/** A connection to a list of `CohortGroup` values. */
+export type CohortGroupsConnection = {
+  __typename?: 'CohortGroupsConnection';
+  /** A list of edges which contains the `CohortGroup` and cursor to aid in pagination. */
+  edges: Array<CohortGroupsEdge>;
+  /** A list of `CohortGroup` objects. */
+  nodes: Array<CohortGroup>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CohortGroup` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `CohortGroup` edge in the connection. */
+export type CohortGroupsEdge = {
+  __typename?: 'CohortGroupsEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']>;
+  /** The `CohortGroup` at the end of the edge. */
+  node: CohortGroup;
+};
+
+/** Methods to use when ordering `CohortGroup`. */
+export enum CohortGroupsOrderBy {
+  DescriptionAsc = 'DESCRIPTION_ASC',
+  DescriptionDesc = 'DESCRIPTION_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  IsPublicAsc = 'IS_PUBLIC_ASC',
+  IsPublicDesc = 'IS_PUBLIC_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL',
+  OrderingAsc = 'ORDERING_ASC',
+  OrderingDesc = 'ORDERING_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  SkupiniesByCohortGroupCountAsc = 'SKUPINIES_BY_COHORT_GROUP__COUNT_ASC',
+  SkupiniesByCohortGroupCountDesc = 'SKUPINIES_BY_COHORT_GROUP__COUNT_DESC',
+  TenantAsc = 'TENANT_ASC',
+  TenantByTenantIdAsc = 'TENANT_BY_TENANT__ID_ASC',
+  TenantByTenantIdDesc = 'TENANT_BY_TENANT__ID_DESC',
+  TenantByTenantMemberInfoAsc = 'TENANT_BY_TENANT__MEMBER_INFO_ASC',
+  TenantByTenantMemberInfoDesc = 'TENANT_BY_TENANT__MEMBER_INFO_DESC',
+  TenantByTenantNameAsc = 'TENANT_BY_TENANT__NAME_ASC',
+  TenantByTenantNameDesc = 'TENANT_BY_TENANT__NAME_DESC',
+  TenantDesc = 'TENANT_DESC'
+}
+
 /** All input for the `confirmUser` mutation. */
 export type ConfirmUserInput = {
   /**
@@ -1057,6 +1172,41 @@ export type CreateAttachmentPayload = {
 /** The output of our create `Attachment` mutation. */
 export type CreateAttachmentPayloadAttachmentEdgeArgs = {
   orderBy?: InputMaybe<Array<AttachmentsOrderBy>>;
+};
+
+/** All input for the create `CohortGroup` mutation. */
+export type CreateCohortGroupInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `CohortGroup` to be created by this mutation. */
+  cohortGroup: CohortGroupInput;
+};
+
+/** The output of our create `CohortGroup` mutation. */
+export type CreateCohortGroupPayload = {
+  __typename?: 'CreateCohortGroupPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `CohortGroup` that was created by this mutation. */
+  cohortGroup: Maybe<CohortGroup>;
+  /** An edge for our `CohortGroup`. May be used by Relay 1. */
+  cohortGroupEdge: Maybe<CohortGroupsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `CohortGroup`. */
+  tenantByTenant: Maybe<Tenant>;
+};
+
+
+/** The output of our create `CohortGroup` mutation. */
+export type CreateCohortGroupPayloadCohortGroupEdgeArgs = {
+  orderBy?: InputMaybe<Array<CohortGroupsOrderBy>>;
 };
 
 /** All input for the `createCouple` mutation. */
@@ -1974,6 +2124,8 @@ export type CreateSkupinyPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId: Maybe<Scalars['String']>;
+  /** Reads a single `CohortGroup` that is related to this `Skupiny`. */
+  cohortGroupByCohortGroup: Maybe<CohortGroup>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** The `Skupiny` that was created by this mutation. */
@@ -2526,6 +2678,52 @@ export type DeleteAttachmentPayload = {
 /** The output of our delete `Attachment` mutation. */
 export type DeleteAttachmentPayloadAttachmentEdgeArgs = {
   orderBy?: InputMaybe<Array<AttachmentsOrderBy>>;
+};
+
+/** All input for the `deleteCohortGroupByNodeId` mutation. */
+export type DeleteCohortGroupByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `CohortGroup` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteCohortGroup` mutation. */
+export type DeleteCohortGroupInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['BigInt'];
+};
+
+/** The output of our delete `CohortGroup` mutation. */
+export type DeleteCohortGroupPayload = {
+  __typename?: 'DeleteCohortGroupPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `CohortGroup` that was deleted by this mutation. */
+  cohortGroup: Maybe<CohortGroup>;
+  /** An edge for our `CohortGroup`. May be used by Relay 1. */
+  cohortGroupEdge: Maybe<CohortGroupsEdge>;
+  deletedCohortGroupNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `CohortGroup`. */
+  tenantByTenant: Maybe<Tenant>;
+};
+
+
+/** The output of our delete `CohortGroup` mutation. */
+export type DeleteCohortGroupPayloadCohortGroupEdgeArgs = {
+  orderBy?: InputMaybe<Array<CohortGroupsOrderBy>>;
 };
 
 /** All input for the `deleteDokumentyByNodeId` mutation. */
@@ -3638,6 +3836,8 @@ export type DeleteSkupinyPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId: Maybe<Scalars['String']>;
+  /** Reads a single `CohortGroup` that is related to this `Skupiny`. */
+  cohortGroupByCohortGroup: Maybe<CohortGroup>;
   deletedSkupinyNodeId: Maybe<Scalars['ID']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
@@ -5070,6 +5270,8 @@ export type Mutation = {
   createAktuality: Maybe<CreateAktualityPayload>;
   /** Creates a single `Attachment`. */
   createAttachment: Maybe<CreateAttachmentPayload>;
+  /** Creates a single `CohortGroup`. */
+  createCohortGroup: Maybe<CreateCohortGroupPayload>;
   createCouple: Maybe<CreateCouplePayload>;
   /** Creates a single `Dokumenty`. */
   createDokumenty: Maybe<CreateDokumentyPayload>;
@@ -5158,6 +5360,10 @@ export type Mutation = {
   deleteAttachment: Maybe<DeleteAttachmentPayload>;
   /** Deletes a single `Attachment` using its globally unique id. */
   deleteAttachmentByNodeId: Maybe<DeleteAttachmentPayload>;
+  /** Deletes a single `CohortGroup` using a unique key. */
+  deleteCohortGroup: Maybe<DeleteCohortGroupPayload>;
+  /** Deletes a single `CohortGroup` using its globally unique id. */
+  deleteCohortGroupByNodeId: Maybe<DeleteCohortGroupPayload>;
   /** Deletes a single `Dokumenty` using a unique key. */
   deleteDokumenty: Maybe<DeleteDokumentyPayload>;
   /** Deletes a single `Dokumenty` using its globally unique id. */
@@ -5317,6 +5523,10 @@ export type Mutation = {
   updateAttachment: Maybe<UpdateAttachmentPayload>;
   /** Updates a single `Attachment` using its globally unique id and a patch. */
   updateAttachmentByNodeId: Maybe<UpdateAttachmentPayload>;
+  /** Updates a single `CohortGroup` using a unique key and a patch. */
+  updateCohortGroup: Maybe<UpdateCohortGroupPayload>;
+  /** Updates a single `CohortGroup` using its globally unique id and a patch. */
+  updateCohortGroupByNodeId: Maybe<UpdateCohortGroupPayload>;
   /** Updates a single `Dokumenty` using a unique key and a patch. */
   updateDokumenty: Maybe<UpdateDokumentyPayload>;
   /** Updates a single `Dokumenty` using its globally unique id and a patch. */
@@ -5513,6 +5723,12 @@ export type MutationCreateAktualityArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateAttachmentArgs = {
   input: CreateAttachmentInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateCohortGroupArgs = {
+  input: CreateCohortGroupInput;
 };
 
 
@@ -5783,6 +5999,18 @@ export type MutationDeleteAttachmentArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteAttachmentByNodeIdArgs = {
   input: DeleteAttachmentByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteCohortGroupArgs = {
+  input: DeleteCohortGroupInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteCohortGroupByNodeIdArgs = {
+  input: DeleteCohortGroupByNodeIdInput;
 };
 
 
@@ -6281,6 +6509,18 @@ export type MutationUpdateAttachmentArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateAttachmentByNodeIdArgs = {
   input: UpdateAttachmentByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateCohortGroupArgs = {
+  input: UpdateCohortGroupInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateCohortGroupByNodeIdArgs = {
+  input: UpdateCohortGroupByNodeIdInput;
 };
 
 
@@ -8610,6 +8850,8 @@ export enum PlatbyGroupSkupinasOrderBy {
   PlatbyGroupByPgsIdGroupPgTypeDesc = 'PLATBY_GROUP_BY_PGS_ID_GROUP__PG_TYPE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  SkupinyByPgsIdSkupinaCohortGroupAsc = 'SKUPINY_BY_PGS_ID_SKUPINA__COHORT_GROUP_ASC',
+  SkupinyByPgsIdSkupinaCohortGroupDesc = 'SKUPINY_BY_PGS_ID_SKUPINA__COHORT_GROUP_DESC',
   SkupinyByPgsIdSkupinaInternalInfoAsc = 'SKUPINY_BY_PGS_ID_SKUPINA__INTERNAL_INFO_ASC',
   SkupinyByPgsIdSkupinaInternalInfoDesc = 'SKUPINY_BY_PGS_ID_SKUPINA__INTERNAL_INFO_DESC',
   SkupinyByPgsIdSkupinaOrderingAsc = 'SKUPINY_BY_PGS_ID_SKUPINA__ORDERING_ASC',
@@ -9044,6 +9286,11 @@ export type Query = Node & {
   attachmentByNodeId: Maybe<Attachment>;
   /** Reads and enables pagination through a set of `Attachment`. */
   attachments: Maybe<AttachmentsConnection>;
+  cohortGroup: Maybe<CohortGroup>;
+  /** Reads a single `CohortGroup` using its globally unique `ID`. */
+  cohortGroupByNodeId: Maybe<CohortGroup>;
+  /** Reads and enables pagination through a set of `CohortGroup`. */
+  cohortGroups: Maybe<CohortGroupsConnection>;
   currentCoupleIds: Maybe<CurrentCoupleIdsConnection>;
   /** Reads and enables pagination through a set of `Permission`. */
   currentPermissions: Maybe<PermissionsConnection>;
@@ -9376,6 +9623,30 @@ export type QueryAttachmentsArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<AttachmentsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCohortGroupArgs = {
+  id: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCohortGroupByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCohortGroupsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<CohortGroupCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<CohortGroupsOrderBy>>;
 };
 
 
@@ -11059,6 +11330,20 @@ export type SkupiniesEdge = {
 
 /** Methods to use when ordering `Skupiny`. */
 export enum SkupiniesOrderBy {
+  CohortGroupAsc = 'COHORT_GROUP_ASC',
+  CohortGroupByCohortGroupDescriptionAsc = 'COHORT_GROUP_BY_COHORT_GROUP__DESCRIPTION_ASC',
+  CohortGroupByCohortGroupDescriptionDesc = 'COHORT_GROUP_BY_COHORT_GROUP__DESCRIPTION_DESC',
+  CohortGroupByCohortGroupIdAsc = 'COHORT_GROUP_BY_COHORT_GROUP__ID_ASC',
+  CohortGroupByCohortGroupIdDesc = 'COHORT_GROUP_BY_COHORT_GROUP__ID_DESC',
+  CohortGroupByCohortGroupIsPublicAsc = 'COHORT_GROUP_BY_COHORT_GROUP__IS_PUBLIC_ASC',
+  CohortGroupByCohortGroupIsPublicDesc = 'COHORT_GROUP_BY_COHORT_GROUP__IS_PUBLIC_DESC',
+  CohortGroupByCohortGroupNameAsc = 'COHORT_GROUP_BY_COHORT_GROUP__NAME_ASC',
+  CohortGroupByCohortGroupNameDesc = 'COHORT_GROUP_BY_COHORT_GROUP__NAME_DESC',
+  CohortGroupByCohortGroupOrderingAsc = 'COHORT_GROUP_BY_COHORT_GROUP__ORDERING_ASC',
+  CohortGroupByCohortGroupOrderingDesc = 'COHORT_GROUP_BY_COHORT_GROUP__ORDERING_DESC',
+  CohortGroupByCohortGroupTenantAsc = 'COHORT_GROUP_BY_COHORT_GROUP__TENANT_ASC',
+  CohortGroupByCohortGroupTenantDesc = 'COHORT_GROUP_BY_COHORT_GROUP__TENANT_DESC',
+  CohortGroupDesc = 'COHORT_GROUP_DESC',
   InternalInfoAsc = 'INTERNAL_INFO_ASC',
   InternalInfoDesc = 'INTERNAL_INFO_DESC',
   Natural = 'NATURAL',
@@ -11090,6 +11375,9 @@ export enum SkupiniesOrderBy {
 
 export type Skupiny = Node & {
   __typename?: 'Skupiny';
+  cohortGroup: Maybe<Scalars['BigInt']>;
+  /** Reads a single `CohortGroup` that is related to this `Skupiny`. */
+  cohortGroupByCohortGroup: Maybe<CohortGroup>;
   internalInfo: Scalars['JSON'];
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
@@ -11144,6 +11432,8 @@ export type SkupinyUsersByUSkupinaArgs = {
 
 /** A condition to be used against `Skupiny` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type SkupinyCondition = {
+  /** Checks for equality with the object’s `cohortGroup` field. */
+  cohortGroup?: InputMaybe<Scalars['BigInt']>;
   /** Checks for equality with the object’s `internalInfo` field. */
   internalInfo?: InputMaybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `ordering` field. */
@@ -11166,6 +11456,7 @@ export type SkupinyCondition = {
 
 /** An input for mutations affecting `Skupiny` */
 export type SkupinyInput = {
+  cohortGroup?: InputMaybe<Scalars['BigInt']>;
   internalInfo?: InputMaybe<Scalars['JSON']>;
   ordering?: InputMaybe<Scalars['Int']>;
   sColorRgb: Scalars['String'];
@@ -11179,6 +11470,7 @@ export type SkupinyInput = {
 
 /** Represents an update to a `Skupiny`. Fields that are set will be updated. */
 export type SkupinyPatch = {
+  cohortGroup?: InputMaybe<Scalars['BigInt']>;
   internalInfo?: InputMaybe<Scalars['JSON']>;
   ordering?: InputMaybe<Scalars['Int']>;
   sColorRgb?: InputMaybe<Scalars['String']>;
@@ -11192,6 +11484,8 @@ export type SkupinyPatch = {
 
 export type Tenant = Node & {
   __typename?: 'Tenant';
+  /** Reads and enables pagination through a set of `CohortGroup`. */
+  cohortGroupsByTenant: CohortGroupsConnection;
   id: Scalars['BigInt'];
   /** Reads and enables pagination through a set of `Location`. */
   locationsByTenant: LocationsConnection;
@@ -11203,6 +11497,17 @@ export type Tenant = Node & {
   tenantAttachments: TenantAttachmentsConnection;
   /** Reads and enables pagination through a set of `TenantPerson`. */
   tenantPeople: TenantPeopleConnection;
+};
+
+
+export type TenantCohortGroupsByTenantArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<CohortGroupCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<CohortGroupsOrderBy>>;
 };
 
 
@@ -11463,6 +11768,8 @@ export type TenantsEdge = {
 
 /** Methods to use when ordering `Tenant`. */
 export enum TenantsOrderBy {
+  CohortGroupsByTenantCountAsc = 'COHORT_GROUPS_BY_TENANT__COUNT_ASC',
+  CohortGroupsByTenantCountDesc = 'COHORT_GROUPS_BY_TENANT__COUNT_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
   LocationsByTenantCountAsc = 'LOCATIONS_BY_TENANT__COUNT_ASC',
@@ -11689,6 +11996,55 @@ export type UpdateAttachmentPayload = {
 /** The output of our update `Attachment` mutation. */
 export type UpdateAttachmentPayloadAttachmentEdgeArgs = {
   orderBy?: InputMaybe<Array<AttachmentsOrderBy>>;
+};
+
+/** All input for the `updateCohortGroupByNodeId` mutation. */
+export type UpdateCohortGroupByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `CohortGroup` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `CohortGroup` being updated. */
+  patch: CohortGroupPatch;
+};
+
+/** All input for the `updateCohortGroup` mutation. */
+export type UpdateCohortGroupInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `CohortGroup` being updated. */
+  patch: CohortGroupPatch;
+};
+
+/** The output of our update `CohortGroup` mutation. */
+export type UpdateCohortGroupPayload = {
+  __typename?: 'UpdateCohortGroupPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `CohortGroup` that was updated by this mutation. */
+  cohortGroup: Maybe<CohortGroup>;
+  /** An edge for our `CohortGroup`. May be used by Relay 1. */
+  cohortGroupEdge: Maybe<CohortGroupsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Tenant` that is related to this `CohortGroup`. */
+  tenantByTenant: Maybe<Tenant>;
+};
+
+
+/** The output of our update `CohortGroup` mutation. */
+export type UpdateCohortGroupPayloadCohortGroupEdgeArgs = {
+  orderBy?: InputMaybe<Array<CohortGroupsOrderBy>>;
 };
 
 /** All input for the `updateDokumentyByNodeId` mutation. */
@@ -12935,6 +13291,8 @@ export type UpdateSkupinyPayload = {
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId: Maybe<Scalars['String']>;
+  /** Reads a single `CohortGroup` that is related to this `Skupiny`. */
+  cohortGroupByCohortGroup: Maybe<CohortGroup>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** The `Skupiny` that was updated by this mutation. */
@@ -13511,6 +13869,8 @@ export enum UpozorneniSkupiniesOrderBy {
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  SkupinyByUpsIdSkupinaCohortGroupAsc = 'SKUPINY_BY_UPS_ID_SKUPINA__COHORT_GROUP_ASC',
+  SkupinyByUpsIdSkupinaCohortGroupDesc = 'SKUPINY_BY_UPS_ID_SKUPINA__COHORT_GROUP_DESC',
   SkupinyByUpsIdSkupinaInternalInfoAsc = 'SKUPINY_BY_UPS_ID_SKUPINA__INTERNAL_INFO_ASC',
   SkupinyByUpsIdSkupinaInternalInfoDesc = 'SKUPINY_BY_UPS_ID_SKUPINA__INTERNAL_INFO_DESC',
   SkupinyByUpsIdSkupinaOrderingAsc = 'SKUPINY_BY_UPS_ID_SKUPINA__ORDERING_ASC',
@@ -14199,6 +14559,8 @@ export enum UsersOrderBy {
   RozpisByRTrenerCountDesc = 'ROZPIS_BY_R_TRENER__COUNT_DESC',
   SessionsBySsUserCountAsc = 'SESSIONS_BY_SS_USER__COUNT_ASC',
   SessionsBySsUserCountDesc = 'SESSIONS_BY_SS_USER__COUNT_DESC',
+  SkupinyByUSkupinaCohortGroupAsc = 'SKUPINY_BY_U_SKUPINA__COHORT_GROUP_ASC',
+  SkupinyByUSkupinaCohortGroupDesc = 'SKUPINY_BY_U_SKUPINA__COHORT_GROUP_DESC',
   SkupinyByUSkupinaInternalInfoAsc = 'SKUPINY_BY_U_SKUPINA__INTERNAL_INFO_ASC',
   SkupinyByUSkupinaInternalInfoDesc = 'SKUPINY_BY_U_SKUPINA__INTERNAL_INFO_DESC',
   SkupinyByUSkupinaOrderingAsc = 'SKUPINY_BY_U_SKUPINA__ORDERING_ASC',

@@ -10,15 +10,19 @@ import { SubmitButton } from './SubmitButton';
 import { ColorPicker } from './ColorPicker';
 import { useQueryClient } from '@tanstack/react-query';
 import { SlateEditorElement } from './Slate';
+import { useCohortGroupListQuery } from 'lib/graphql/CohortGroup';
+import { SelectElement } from './SelectElement';
 
 type FormProps = Pick<SkupinyInput, 'internalInfo' | 'sName' | 'sDescription' |
-  'sLocation' | 'sVisible' | 'sColorRgb' | 'ordering'>;
+  'sLocation' | 'sVisible' | 'sColorRgb' | 'ordering' | 'cohortGroup'>;
 
 export const CohortForm: React.FC<{ data?: CohortFragment; }> = ({ data }) => {
   const queryClient = useQueryClient();
   const onSuccess = React.useCallback(() => {
     queryClient.invalidateQueries(useCohortListQuery.getKey());
   }, [queryClient]);
+
+  const { data: cohortGroups } = useCohortGroupListQuery();
 
   const { mutateAsync: doCreate } = useCreateCohortMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateCohortMutation({ onSuccess });
@@ -56,6 +60,10 @@ export const CohortForm: React.FC<{ data?: CohortFragment; }> = ({ data }) => {
       <SlateEditorElement control={control} name="sDescription" label="Popis" />
       <SlateEditorElement control={control} name="internalInfo" label="Interní informace" />
       <CheckboxElement control={control} name="sVisible" value="1" label="Viditelná v seznamech" />
+      <SelectElement control={control}
+        label="Tréninkový program" name="cohortGroup"
+        options={cohortGroups?.cohortGroups?.nodes?.map(x => ({ id: x.id, label: x.name })) || []}
+      />
       <TextFieldElement control={control} name="ordering" label="Pořadí v seznamech skupin (1 = první, 999 = poslední)" />
       <SubmitButton loading={onSubmit.loading} />
     </form>

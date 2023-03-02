@@ -62,7 +62,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: {
         )}
         {sideMenu.map(x => <SidebarSection key={x.title} item={x} />)}
         {auth.user && <div className="h-8" />}
-        <SidebarLink item={{ type: 'link', title: 'Pro veřejnoust', href: '/' }} />
+        <SidebarLink item={{ type: 'link', title: 'Pro veřejnost', href: '/' }} />
 
         <div className="mt-4 text-xs text-stone-700 lg:text-white p-4 grid gap-2">
           <div>© 2023 Taneční klub Olymp Olomouc, z. s.</div>

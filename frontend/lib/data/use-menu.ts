@@ -76,6 +76,10 @@ const adminMenu: MenuLink[] = [
     auth: [PermissionKey.peNastenka, PermissionLevel.P_ADMIN],
   },
   {
+    type: "link", title: 'Tréninkové programy', href: '/admin/cohort-group',
+    auth: [PermissionKey.peSkupiny, PermissionLevel.P_OWNED]
+  },
+  {
     type: "link", title: 'Skupiny', href: '/admin/skupiny',
     auth: [PermissionKey.peSkupiny, PermissionLevel.P_OWNED]
   },

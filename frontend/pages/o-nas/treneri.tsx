@@ -55,51 +55,27 @@ const mirek = {
       "children": [
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Předseda, šéftrenér TK Olymp"
-            }
-          ]
+          "children": [{ "text": "Předseda, šéftrenér TK Olymp" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Trenér mistrů ČR"
-            }
-          ]
+          "children": [{ "text": "Trenér mistrů ČR" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Vicemistr ČR ve standardních tancích v hlavní kategorii 2018"
-            }
-          ]
+          "children": [{ "text": "Vicemistr ČR ve standardních tancích v hlavní kategorii 2018" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "3x mistr ČR v kategorii juniorů"
-            }
-          ]
+          "children": [{ "text": "3x mistr ČR v kategorii juniorů" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Finalista Akademického mistrovství Evropy 2016"
-            }
-          ]
+          "children": [{ "text": "Finalista Akademického mistrovství Evropy 2016" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Držitel ocenění TOP 30 sportovních trenérů mládeže 2017"
-            }
-          ]
+          "children": [{ "text": "Držitel ocenění TOP 30 sportovních trenérů mládeže 2017" }]
         }
       ]
     }
@@ -118,75 +94,39 @@ const filip = {
       "children": [
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Trenér a porotce II. třídy"
-            }
-          ]
+          "children": [{ "text": "Trenér a porotce I. třídy" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "2x mistr ČR v latinsko-amerických tancích v kategorii profesionálů"
-            }
-          ]
+          "children": [{ "text": "3x mistr ČR v latinsko-amerických tancích v kategorii Dopspělí" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "3x mistr ČR v latinsko-amerických tancích v hlavní kategorii"
-            }
-          ]
+          "children": [{ "text": "2x mistr ČR v latinsko-amerických tancích v kategorii Profesionálů" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Semifinalista mistrovství světa a Evropy v kategorii profesionálů"
-            }
-          ]
+          "children": [{ "text": "Čtvrtfinalista mistrovství světa a Evropy v kategorii Dospělí" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Semifinalista mistrovství Evropy v hlavní kategorii"
-            }
-          ]
+          "children": [{ "text": "Semifinalista mistrovství světa a Evropy v kategorii Profesionálové" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Čtvrtfinalista mistrovství světa v hlavní kategorii"
-            }
-          ]
+          "children": [{ "text": "Finalista German Open Championship (Stuttgart) v kategorii Profesionálové" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Finalista GOC ve Stuttgartu kategorii profesionálů"
-            }
-          ]
+          "children": [{ "text": "Semifinalista Světových her v Kolumbii v roce 2013" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Semifinalista Světových her v Kolumbii"
-            }
-          ]
+          "children": [{ "text": "Předseda Komise sportovců ČSTS (2017-2019)" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Předseda Komise sportovců (or r. 2017)"
-            }
-          ]
+          "children": [{ "text": "Viceprezident ČSTS (od roku 2019)" }]
         }
       ]
     }
@@ -205,35 +145,19 @@ const marie = {
       "children": [
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Trenér a porotce I. třídy"
-            }
-          ]
+          "children": [{ "text": "Trenér a porotce I. třídy" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Dlouholetá tanečnice mezinárodní třídy"
-            }
-          ]
+          "children": [{ "text": "Dlouholetá tanečnice mezinárodní třídy" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Zkušená trenérka dětských a juniorských přípravek"
-            }
-          ]
+          "children": [{ "text": "Zkušená trenérka dětských a juniorských přípravek" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Švadlena tanečního oblečení (řadu let šatí finalisty i medailisty mistrovství ČR)"
-            }
-          ]
+          "children": [{ "text": "Švadlena tanečního oblečení (řadu let šatí finalisty i medailisty mistrovství ČR)" }]
         }
       ]
     }
@@ -252,59 +176,31 @@ const lucka = {
       "children": [
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Absolventka kvalifikačního studia pro trenéry a porotce II.třídy"
-            }
-          ]
+          "children": [{ "text": "Absolventka kvalifikačního studia pro trenéry a porotce II.třídy" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Semifinalistka mistrovství ČR v hlavní kategorii (v deseti tancích a ve standardních tancích)"
-            }
-          ]
+          "children": [{ "text": "Semifinalistka mistrovství ČR v hlavní kategorii (v deseti tancích a ve standardních tancích)" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "3x finalistka mistrovství ČR juniorů a mládeže (titul druhý vicemistr ČR ve standardních tancích v kategorii mládež)"
-            }
-          ]
+          "children": [{ "text": "3x finalistka mistrovství ČR juniorů a mládeže (titul druhý vicemistr ČR ve standardních tancích v kategorii mládež)" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "2. místo v Taneční lize (žebříček párů mezinárodní třídy)"
-            }
-          ]
+          "children": [{ "text": "2. místo v Taneční lize (žebříček párů mezinárodní třídy)" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Trenérka dětských a juniorských přípravek (12 let praxe)"
-            }
-          ]
+          "children": [{ "text": "Trenérka dětských a juniorských přípravek (12 let praxe)" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Trenérka finalistů mistrovství ČR juniorů"
-            }
-          ]
+          "children": [{ "text": "Trenérka finalistů mistrovství ČR juniorů" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Absolventka Fakulty tělesné kultury na UP v Olomouci (obor: Tělesná výchova a sport)"
-            }
-          ]
+          "children": [{ "text": "Absolventka Fakulty tělesné kultury na UP v Olomouci (obor: Tělesná výchova a sport)" }]
         }
       ]
     }
@@ -323,43 +219,27 @@ const grepi = {
       "children": [
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Absolvent kvalifikačního studia pro trenéry a porotce II. třídy"
-            }
-          ]
+          "children": [{ "text": "Absolvent kvalifikačního studia pro trenéry a porotce II. třídy" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Tanečník mezinárodní třídy"
-            }
-          ]
+          "children": [{ "text": "Tanečník mezinárodní třídy" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Finalista Akademického mistrovství ČR ve standardních tancích"
-            }
-          ]
+          "children": [{ "text": "Finalista Akademického mistrovství ČR ve standardních tancích" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Student Fakulty tělesné kultury na UP v Olomouci (obor: Trenérství a sport)"
-            }
-          ]
+          "children": [{ "text": "Student doktorského studia na Fakultě tělesné kultury UP v Olomouci (zátěžová fyziologie; od roku 2021)" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Trenér atletiky III. třídy a plavání III. třídy"
-            }
-          ]
+          "children": [{ "text": "Absolvent magisterského studia na Fakultě tělesné kultury UP v Olomouci (obor: Analýza pohybu)" }]
+        },
+        {
+          "type": "li",
+          "children": [{ "text": "Trenér atletiky III. třídy a plavání III. třídy" }]
         }
       ]
     }
@@ -378,35 +258,19 @@ const maruska = {
       "children": [
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Absolventka kvalifikačního studia pro trenéry a porotce II. třídy"
-            }
-          ]
+          "children": [{ "text": "Absolventka kvalifikačního studia pro trenéry a porotce II. třídy" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Finalistka mistrovství ČR v deseti tancích"
-            }
-          ]
+          "children": [{ "text": "Finalistka mistrovství ČR v deseti tancích" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Semifinalistka mistrovství ČR ve standardních tancích"
-            }
-          ]
+          "children": [{ "text": "Semifinalistka mistrovství ČR ve standardních tancích" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Čtvrtfinalistka mistrovství ČR v latinskoamerických tancích"
-            }
-          ]
+          "children": [{ "text": "Čtvrtfinalistka mistrovství ČR v latinskoamerických tancích" }]
         }
       ]
     }
@@ -424,59 +288,35 @@ const roman = {
       "children": [
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Absolvent kvalifikačního studia pro trenéry a porotce II. třídy"
-            }
-          ]
+          "children": [{ "text": "Absolvent kvalifikačního studia pro trenéry a porotce II. třídy" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Tanečník mezinárodní třídy"
-            }
-          ]
+          "children": [{ "text": "Tanečník mezinárodní třídy" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Finalista mistrovství ČR v hlavní kategorii (ve standardních tancích)"
-            }
-          ]
+          "children": [{ "text": "3x 3. místo na MČR v kategorii Dospělí (v deseti tancích)" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "2x mistr ČR v kategorii U21 (v deseti tancích a ve standardních tancích)"
-            }
-          ]
+          "children": [{ "text": "3x finalista mistrovství ČR v kategorii Dospělí (ve standardních tancích)" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Čtvrtfinalista mistrovství světa a Evropy v kategorii mládež ve standardních tancích"
-            }
-          ]
+          "children": [{ "text": "2x mistr ČR v kategorii U21 (v deseti tancích a ve standardních tancích)" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Čtvrtfinalista mistrovství světa v kategorii mládež a U21 v deseti tancích"
-            }
-          ]
+          "children": [{ "text": "Čtvrtfinalista mistrovství světa a Evropy v kategorii mládež ve standardních tancích" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Student MVŠO"
-            }
-          ]
+          "children": [{ "text": "Čtvrtfinalista mistrovství světa v kategorii mládež a U21 v deseti tancích" }]
+        },
+        {
+          "type": "li",
+          "children": [{ "text": "Student MVŠO" }]
         }
       ]
     }
@@ -494,35 +334,23 @@ const hanka = {
       "children": [
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Absolventka kvalifikačního studia pro trenéry a porotce III. třídy"
-            }
-          ]
+          "children": [{ "text": "Absolventka kvalifikačního studia pro trenéry a porotce II. třídy" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Tanečnice mezinárodní třídy"
-            }
-          ]
+          "children": [{ "text": "Tanečnice mezinárodní třídy" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "4x finalistka mistrovství ČR v kategorii U21 (titul vicemistr ČR v deseti tancích, titul druhý vicemistr ČR ve standardních tancích a titul druhý vicemistr ČR v latinskoamerických tancích)"
-            }
-          ]
+          "children": [{ "text": "Finalistka mistrovství ČR v hlavní kategorii (10ti tanců)" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Studentka Fakulty tělesné kultury na UP v Olomouci (obor: Tělesná výchova a sport)"
-            }
-          ]
+          "children": [{ "text": "4x finalistka mistrovství ČR v kategorii U21 (titul vicemistr ČR v deseti tancích, titul druhý vicemistr ČR ve standardních tancích a titul druhý vicemistr ČR v latinskoamerických tancích)" }]
+        },
+        {
+          "type": "li",
+          "children": [{ "text": "Studentka Fakulty tělesné kultury na UP v Olomouci (obor: Tělesná výchova a sport)" }]
         }
       ]
     }
@@ -540,35 +368,19 @@ const nela = {
       "children": [
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Absolventka kvalifikačního studia pro trenéry a porotce III. třídy"
-            }
-          ]
+          "children": [{ "text": "Absolventka kvalifikačního studia pro trenéry a porotce II. třídy" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Tanečnice mezinárodní třídy"
-            }
-          ]
+          "children": [{ "text": "Tanečnice mezinárodní třídy" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "3x finalistka mistrovství ČR juniorů a mládeže"
-            }
-          ]
+          "children": [{ "text": "3x finalistka mistrovství ČR juniorů a mládeže" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Studentka Lékařské fakulty na UP v Olomouci"
-            }
-          ]
+          "children": [{ "text": "Studentka Lékařské fakulty na UP v Olomouci" }]
         }
       ]
     }
@@ -587,35 +399,19 @@ const matej = {
       "children": [
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Absolvent kvalifikačního studia pro trenéry a porotce III. třídy"
-            }
-          ]
+          "children": [{ "text": "Absolvent kvalifikačního studia pro trenéry a porotce III. třídy" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "2x finalista mistrovství ČR mládeže"
-            }
-          ]
+          "children": [{ "text": "2x finalista mistrovství ČR mládeže" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "3x finalista mistrovství ČR v kategorii U21 (vicemistr ČR v deseti tancích)"
-            }
-          ]
+          "children": [{ "text": "3x finalista mistrovství ČR v kategorii U21 (vicemistr ČR v deseti tancích)" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Student VUT FEKT"
-            }
-          ]
+          "children": [{ "text": "Student VUT FEKT" }]
         }
       ]
     }
@@ -634,67 +430,35 @@ const martin = {
       "children": [
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Prezident DSP Kometa Brno"
-            }
-          ]
+          "children": [{ "text": "Prezident DSP Kometa Brno" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Trenér finalistů mistrovství světa a medailistů mistrovství Evropy"
-            }
-          ]
+          "children": [{ "text": "Trenér finalistů mistrovství světa a medailistů mistrovství Evropy" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Trenér mistrů České republiky všech věkových kategorií"
-            }
-          ]
+          "children": [{ "text": "Trenér mistrů České republiky všech věkových kategorií" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "6x mistr ČR v deseti tancích (1995-2000)"
-            }
-          ]
+          "children": [{ "text": "6x mistr ČR v deseti tancích (1995-2000)" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Mistr ČR ve standardních tancích (2000)"
-            }
-          ]
+          "children": [{ "text": "Mistr ČR ve standardních tancích (2000)" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Trenér a porotce I. třídy"
-            }
-          ]
+          "children": [{ "text": "Trenér a porotce I. třídy" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Porotce s nejvyšší mezinárodní licencí WDSF"
-            }
-          ]
+          "children": [{ "text": "Porotce s nejvyšší mezinárodní licencí WDSF" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Porotce mistrovství světa a Evropy"
-            }
-          ]
+          "children": [{ "text": "Porotce mistrovství světa a Evropy" }]
         }
       ]
     }
@@ -713,35 +477,19 @@ const pavla = {
       "children": [
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Trenérka mistrů České republiky ve standardních tancích"
-            }
-          ]
+          "children": [{ "text": "Trenérka mistrů České republiky ve standardních tancích" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Finalistka mistrovství ČSSR ve standardních tancích"
-            }
-          ]
+          "children": [{ "text": "Finalistka mistrovství ČSSR ve standardních tancích" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Mistryně ČR ve standardních tancích v kategorii senior (1996)"
-            }
-          ]
+          "children": [{ "text": "Mistryně ČR ve standardních tancích v kategorii senior (1996)" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Trenérka a porotkyně I. třídy"
-            }
-          ]
+          "children": [{ "text": "Trenérka a porotkyně I. třídy" }]
         }
       ]
     }
@@ -760,67 +508,35 @@ const jerry = {
       "children": [
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Předseda trenérské rady projektu Sportovně talentované mládeže ČSTS"
-            }
-          ]
+          "children": [{ "text": "Předseda trenérské rady projektu Sportovně talentované mládeže ČSTS" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Trenér finalistů mistrovství světa a medailistů mistrovství Evropy"
-            }
-          ]
+          "children": [{ "text": "Trenér finalistů mistrovství světa a medailistů mistrovství Evropy" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Trenér mistrů České republiky všech věkových kategorií"
-            }
-          ]
+          "children": [{ "text": "Trenér mistrů České republiky všech věkových kategorií" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Vicemistr ČR v latinskoamerických tancích (1992, 1993, 1995)"
-            }
-          ]
+          "children": [{ "text": "Vicemistr ČR v latinskoamerických tancích (1992, 1993, 1995)" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Finalista mistrovství ČR v deseti tancích (1993)"
-            }
-          ]
+          "children": [{ "text": "Finalista mistrovství ČR v deseti tancích (1993)" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Trenér a porotce i. třídy"
-            }
-          ]
+          "children": [{ "text": "Trenér a porotce i. třídy" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Porotce s nejvyšší mezinárodní licencí WDSF"
-            }
-          ]
+          "children": [{ "text": "Porotce s nejvyšší mezinárodní licencí WDSF" }]
         },
         {
           "type": "li",
-          "children": [
-            {
-              "text": "Porotce mistrovství Evropy"
-            }
-          ]
+          "children": [{ "text": "Porotce mistrovství Evropy" }]
         }
       ]
     }
