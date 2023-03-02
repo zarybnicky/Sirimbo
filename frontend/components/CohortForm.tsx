@@ -64,7 +64,7 @@ export const CohortForm: React.FC<{ data?: CohortFragment; }> = ({ data }) => {
         label="Tréninkový program" name="cohortGroup"
         options={cohortGroups?.cohortGroups?.nodes?.map(x => ({ id: x.id, label: x.name })) || []}
       />
-      <TextFieldElement control={control} name="ordering" label="Pořadí v seznamech skupin (1 = první, 999 = poslední)" />
+      <TextFieldElement control={control} type="number" name="ordering" label="Pořadí v seznamech skupin (1 = první, 999 = poslední)" />
       <SubmitButton loading={onSubmit.loading} />
     </form>
   );

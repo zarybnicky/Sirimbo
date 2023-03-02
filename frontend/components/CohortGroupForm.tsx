@@ -44,7 +44,7 @@ export const CohortGroupForm: React.FC<{ data?: CohortGroupFragment; }> = ({ dat
       <TextFieldElement control={control} name="name" label="Název" required />
       <SlateEditorElement control={control} name="description" label="Popis" />
       <CheckboxElement control={control} name="isPublic" value="1" label="Veřejně viditelná" />
-      <TextFieldElement control={control} name="ordering" label="Pořadí v seznamech skupin (1 = první, 999 = poslední)" />
+      <TextFieldElement control={control} type="number" name="ordering" label="Pořadí v seznamech skupin (1 = první, 999 = poslední)" />
       <SubmitButton loading={onSubmit.loading} />
     </form>
   );
