@@ -25,16 +25,17 @@ export const AnnouncementForm: React.FC<{
   const { mutateAsync: doCreate } = useCreateAnnouncementMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateAnnouncementMutation({ onSuccess });
 
-  const { control, handleSubmit } = useForm<FormProps>({
-    defaultValues: {
+  const { reset, control, handleSubmit } = useForm<FormProps>();
+  React.useEffect(() => {
+    reset({
       upNadpis: data?.upNadpis,
       upText: data?.upText,
       schedule: [
         data?.scheduledSince ? new Date(data.scheduledSince) : undefined,
         data?.scheduledUntil ? new Date(data.scheduledUntil) : undefined,
       ],
-    },
-  });
+    });
+  }, [data, reset]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     const patch = {

@@ -21,15 +21,16 @@ export const ScheduleForm: React.FC<{
 
   const { data: trainers } = useTrainerListQuery();
 
-  const { control, handleSubmit } = useForm<FormProps>({
-    defaultValues: {
+  const { reset, control, handleSubmit } = useForm<FormProps>();
+  React.useEffect(() => {
+    reset({
       rKde: data?.rKde,
       rDatum: data?.rDatum,
       rTrener: data?.rTrener,
       rVisible: data?.rVisible,
       rLock: data?.rLock,
-    },
-  });
+    });
+  }, [data, reset]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     if (data) {

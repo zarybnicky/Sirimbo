@@ -5,6 +5,8 @@ import { Item } from "components/layout/Item";
 import { DeleteButton } from "components/DeleteButton";
 import { Layout } from "components/layout/Layout";
 import { CoupleList } from "components/CoupleList";
+import { shortDateFormatter } from "lib/format-date";
+import { Card } from "components/Card";
 
 export default function CoupleEditPage() {
   const router = useRouter();
@@ -13,10 +15,11 @@ export default function CoupleEditPage() {
   const { mutateAsync: doDelete } = useDeleteCoupleMutation({
     onSuccess: () => router.push('/admin/nastenka'),
   });
+  const item = data?.pary;
   return <Item>
     <Item.Titlebar
       backHref="/admin/pary"
-      title={`${data?.pary?.userByPIdPartner?.uPrijmeni}-${data?.pary?.userByPIdPartnerka?.uPrijmeni}`}
+      title={`${item?.userByPIdPartner?.uJmeno} ${item?.userByPIdPartner?.uPrijmeni} - ${item?.userByPIdPartnerka?.uJmeno} ${item?.userByPIdPartnerka?.uPrijmeni}`}
     >
       <DeleteButton onDelete={() => doDelete({ id: id as string })} title="smazat pár" />
     </Item.Titlebar>
@@ -24,7 +27,10 @@ export default function CoupleEditPage() {
     Lekce
 
     {data?.pary?.rozpisItemsByRiPartner?.nodes.map(item => (
-      <div key={item.id}>{item.rozpiByRiIdRodic?.rDatum} {item?.rozpiByRiIdRodic?.userByRTrener?.fullName}</div>
+      <Card key={item.id}>
+        {item.rozpiByRiIdRodic?.rDatum && shortDateFormatter.format(new Date(item.rozpiByRiIdRodic?.rDatum))}
+        {' '}{item?.rozpiByRiIdRodic?.userByRTrener?.fullName}
+      </Card>
     ))}
   </Item>;
 };

@@ -24,8 +24,9 @@ export const ReservationForm: React.FC<{
 
   const { data: trainers } = useTrainerListQuery();
 
-  const { control, handleSubmit } = useForm<FormProps>({
-    defaultValues: {
+  const { reset, control, handleSubmit } = useForm<FormProps>();
+  React.useEffect(() => {
+    reset({
       nTrener: data?.nTrener,
       nPocetHod: data?.nPocetHod,
       nMaxPocetHod: data?.nMaxPocetHod,
@@ -35,8 +36,8 @@ export const ReservationForm: React.FC<{
         data?.nOd ? new Date(data?.nOd) : undefined,
         data?.nDo ? new Date(data?.nDo) : undefined,
       ],
-    },
-  });
+    });
+  }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     const patch = {

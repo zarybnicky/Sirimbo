@@ -17,8 +17,9 @@ export const PaymentCategoryForm: React.FC<{
   const { mutateAsync: doCreate } = useCreatePaymentCategoryMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdatePaymentCategoryMutation({ onSuccess });
 
-  const { control, handleSubmit } = useForm<FormProps>({
-    defaultValues: {
+  const { reset, control, handleSubmit } = useForm<FormProps>();
+  React.useEffect(() => {
+    reset({
       pcName: data?.pcName,
       pcSymbol: data?.pcSymbol,
       pcAmount: data?.pcAmount,
@@ -28,8 +29,8 @@ export const PaymentCategoryForm: React.FC<{
       pcUsePrefix: data?.pcUsePrefix,
       pcArchive: data?.pcArchive,
       pcVisible: data?.pcVisible,
-    },
-  });
+    });
+  }, [data, reset]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     if (data) {

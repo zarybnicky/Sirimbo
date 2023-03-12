@@ -17,13 +17,14 @@ export const ArticleForm: React.FC<{
   const { mutateAsync: doCreate } = useCreateArticleMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateArticleMutation({ onSuccess });
 
-  const { control, handleSubmit } = useForm<FormProps>({
-    defaultValues: {
+  const { reset, control, handleSubmit } = useForm<FormProps>();
+  React.useEffect(() => {
+    reset({
       atJmeno: data?.atJmeno,
       atPreview: data?.atPreview,
       atText: data?.atText,
-    },
-  });
+    });
+  }, [data, reset]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     const patch = {

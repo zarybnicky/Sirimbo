@@ -16,13 +16,14 @@ export const PaymentGroupForm: React.FC<{
   const { mutateAsync: doCreate } = useCreatePaymentGroupMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdatePaymentGroupMutation({ onSuccess });
 
-  const { control, handleSubmit } = useForm<FormProps>({
-    defaultValues: {
+  const { reset, control, handleSubmit } = useForm<FormProps>();
+  React.useEffect(() => {
+    reset({
       pgName: data?.pgName,
       pgDescription: data?.pgDescription,
       pgBase: data?.pgBase,
-    },
-  });
+    });
+  }, [data, reset]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     if (data) {

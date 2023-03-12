@@ -83,6 +83,7 @@ export function TextFieldElement<TFieldValues extends FieldValues>({
   if (required && !validation?.required) {
     validation.required = 'Toto pole je povinné';
   }
+  const valueAsNumber = props?.type === 'number';
 
   if (props?.type === 'email' && !validation.pattern) {
     validation.pattern = {
@@ -91,12 +92,12 @@ export function TextFieldElement<TFieldValues extends FieldValues>({
     };
   }
   const { field: { value, onChange }, fieldState: { error } } = useController({
-    name, control, rules: validation
+    name, control, rules: validation,
   });
 
   return <TextField
     name={name} value={value} error={error} {...props}
-    onChange={(e) => onChange(e.currentTarget.value)}
+    onChange={(e) => onChange(valueAsNumber ? parseInt(e.currentTarget.value, 10) : e.currentTarget.value)}
   />;
 };
 

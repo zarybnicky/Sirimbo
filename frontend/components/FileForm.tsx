@@ -15,11 +15,12 @@ export const FileForm: React.FC<{
 }> = ({ data, onSuccess }) => {
   const { mutateAsync: doUpdate } = useUpdateFileMutation({ onSuccess });
 
-  const { control, handleSubmit } = useForm<FormProps>({
-    defaultValues: {
+  const { reset, control, handleSubmit } = useForm<FormProps>();
+  React.useEffect(() => {
+    reset({
       dName: data?.dName,
-    },
-  });
+    });
+  }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await doUpdate({ id: data.id, patch: values });

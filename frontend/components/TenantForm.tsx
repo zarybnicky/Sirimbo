@@ -21,12 +21,13 @@ export const TenantForm: React.FC<{
 
   const { mutateAsync: doUpdate } = useUpdateTenantMutation({ onSuccess });
 
-  const { control, handleSubmit } = useForm<FormProps>({
-    defaultValues: {
+  const { reset, control, handleSubmit } = useForm<FormProps>();
+  React.useEffect(() => {
+    reset({
       name: data?.name,
       memberInfo: data?.memberInfo,
-    },
-  });
+    });
+  }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await doUpdate({ input: { id: data.id, patch: values } });

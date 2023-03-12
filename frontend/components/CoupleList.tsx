@@ -37,7 +37,7 @@ export function CoupleList() {
           key={item.id}
           active={active === item.id}
           href={`/admin/pary/${item.id}`}
-          title={`${item.userByPIdPartner?.uPrijmeni}-${item.userByPIdPartnerka?.uPrijmeni}`}
+          title={`${item.userByPIdPartner?.uJmeno} ${item.userByPIdPartner?.uPrijmeni} - ${item.userByPIdPartnerka?.uJmeno} ${item.userByPIdPartnerka?.uPrijmeni}`}
         />
       ))}
     </List.Scroll>

@@ -5,7 +5,7 @@ export function Item({ className = '', children }: {
   children: React.ReactNode;
   className?: string;
 }) {
-  return <div className={"py-4 lg:py-12 px-8 " + className}>
+  return <div className={"py-4 lg:py-12 lg:px-8 " + className}>
     {children}
   </div>;
 }

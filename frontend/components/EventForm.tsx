@@ -19,8 +19,9 @@ export const EventForm: React.FC<{
   const { mutateAsync: doCreate } = useCreateEventMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateEventMutation({ onSuccess });
 
-  const { control, handleSubmit } = useForm<FormProps>({
-    defaultValues: {
+  const { reset, control, handleSubmit } = useForm<FormProps>();
+  React.useEffect(() => {
+    reset({
       aJmeno: data?.aJmeno,
       aKde: data?.aKde,
       summary: data?.summary,
@@ -32,8 +33,8 @@ export const EventForm: React.FC<{
       isPublic: data?.isPublic,
       enableNotes: data?.enableNotes,
       aLock: data?.aLock,
-    },
-  });
+    });
+  }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     const patch = {

@@ -32,8 +32,9 @@ export const PersonalInfoForm: React.FC<{
 
   const { mutateAsync: doUpdate } = useUpdateUserMutation({ onSuccess });
 
-  const { control, handleSubmit } = useForm<FormProps>({
-    defaultValues: {
+  const { reset, control, handleSubmit } = useForm<FormProps>();
+  React.useEffect(() => {
+    reset({
       uJmeno: user?.uJmeno,
       uPrijmeni: user?.uPrijmeni,
       uNarozeni: user?.uNarozeni,
@@ -49,8 +50,8 @@ export const PersonalInfoForm: React.FC<{
       uPostalCode: user?.uPostalCode,
       uNationality: user?.uNationality,
       uPoznamky: user?.uPoznamky,
-    },
-  });
+    });
+  }, [reset]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await doUpdate({ id: user?.id!, patch: values });

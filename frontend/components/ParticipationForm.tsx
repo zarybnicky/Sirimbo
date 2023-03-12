@@ -27,12 +27,13 @@ export const ParticipationForm: React.FC<{
   const { mutateAsync: doUpsert } = useCreateParticipationMutation({ onSuccess });
   const { mutateAsync: doCancel } = useCancelParticipationMutation({ onSuccess });
 
-  const { control, handleSubmit } = useForm<FormProps>({
-    defaultValues: {
+  const { reset, control, handleSubmit } = useForm<FormProps>();
+  React.useEffect(() => {
+    reset({
       myNotes: data.myNotes || '',
       yearOfBirth: new Date(user?.uNarozeni || '').getFullYear(),
-    },
-  });
+    });
+  }, [reset, user, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await doUpsert({ input: { eventId: data.id!, ...values } });

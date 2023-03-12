@@ -25,15 +25,16 @@ export const PaymentItemForm: React.FC<{
   // php-unserialize-js the blob
   // on delete, mark raw as !sorted and discarded
 
-  const { control, handleSubmit } = useForm<FormProps>({
-    defaultValues: {
+  const { reset, control, handleSubmit } = useForm<FormProps>();
+  React.useEffect(() => {
+    reset({
       piAmount: data?.piAmount,
       piDate: data?.piDate,
       piIdCategory: data?.piIdCategory,
       piIdUser: data?.piIdUser,
       piPrefix: data?.piPrefix,
-    },
-  });
+    });
+  }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     if (data) {

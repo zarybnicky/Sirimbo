@@ -27,8 +27,9 @@ export const CohortForm: React.FC<{ data?: CohortFragment; }> = ({ data }) => {
   const { mutateAsync: doCreate } = useCreateCohortMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateCohortMutation({ onSuccess });
 
-  const { control, handleSubmit } = useForm<FormProps>({
-    defaultValues: {
+  const { reset, control, handleSubmit } = useForm<FormProps>();
+  React.useEffect(() => {
+    reset({
       sName: data?.sName,
       sDescription: data?.sDescription,
       sLocation: data?.sLocation,
@@ -36,8 +37,8 @@ export const CohortForm: React.FC<{ data?: CohortFragment; }> = ({ data }) => {
       sColorRgb: data?.sColorRgb || '#FF0000',
       internalInfo: data?.internalInfo,
       ordering: data?.ordering,
-    },
-  });
+    });
+  }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     const patch = {

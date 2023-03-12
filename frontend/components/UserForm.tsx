@@ -38,8 +38,9 @@ export const UserForm: React.FC<{
   const { data: cohorts } = useCohortListQuery();
   const { data: roles } = useRoleListQuery();
 
-  const { control, handleSubmit } = useForm<FormProps>({
-    defaultValues: {
+  const { reset, control, handleSubmit } = useForm<FormProps>();
+  React.useEffect(() => {
+    reset({
       uLogin: data?.uLogin,
       uJmeno: data?.uJmeno,
       uPrijmeni: data?.uPrijmeni,
@@ -63,8 +64,8 @@ export const UserForm: React.FC<{
       uSystem: data?.uSystem,
       uGroup: data?.uGroup,
       uSkupina: data?.uSkupina,
-    },
-  });
+    });
+  }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     const { uLogin: _uLogin, uPoznamky, ...patch } = values;
