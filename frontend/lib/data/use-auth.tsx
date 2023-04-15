@@ -1,10 +1,16 @@
-import * as React from "react";
-import { CouplePartialFragment, UserAuthFragment, useCurrentUserQuery, useLoginMutation, useLogoutMutation } from 'lib/graphql/CurrentUser';
-import { useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/router";
+import * as React from 'react';
+import {
+  CouplePartialFragment,
+  UserAuthFragment,
+  useCurrentUserQuery,
+  useLoginMutation,
+  useLogoutMutation,
+} from 'lib/graphql/CurrentUser';
+import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
 
 interface AuthContextType {
-  isLoading: boolean,
+  isLoading: boolean;
   user: UserAuthFragment | null;
   couple: CouplePartialFragment | null;
   signIn: (email: string, password: string) => Promise<void>;
@@ -20,9 +26,12 @@ export const ProvideAuth: React.FC = ({ children }) => {
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
-  const { data: currentUser } = useCurrentUserQuery({}, {
-    onSettled: () => setIsLoading(false),
-  });
+  const { data: currentUser } = useCurrentUserQuery(
+    {},
+    {
+      onSettled: () => setIsLoading(false),
+    },
+  );
 
   const user = currentUser?.getCurrentUser || null;
   const couple = currentUser?.getCurrentCouple || null;
@@ -31,7 +40,7 @@ export const ProvideAuth: React.FC = ({ children }) => {
       queryClient.setQueryData(['CurrentUser', {}], {
         getCurrentUser: data.login?.result?.usr,
         getCurrentCouple: data.login?.result?.couple,
-      })
+      });
     },
   });
   const { mutateAsync: doSignOut } = useLogoutMutation({
@@ -40,10 +49,13 @@ export const ProvideAuth: React.FC = ({ children }) => {
     },
   });
 
-  const signIn = React.useCallback(async (login: string, passwd: string) => {
-    setIsLoading(true);
-    await doSignIn({ login, passwd });
-  }, [doSignIn]);
+  const signIn = React.useCallback(
+    async (login: string, passwd: string) => {
+      setIsLoading(true);
+      await doSignIn({ login, passwd });
+    },
+    [doSignIn],
+  );
   const signOut = React.useCallback(async () => {
     await doSignOut({});
     router.push('/');
@@ -51,7 +63,7 @@ export const ProvideAuth: React.FC = ({ children }) => {
 
   const context = { isLoading, user, couple, signIn, signOut };
   return <authContext.Provider value={context}>{children}</authContext.Provider>;
-}
+};
 
 export const useAuth = () => {
   const auth = React.useContext(authContext);
@@ -59,4 +71,4 @@ export const useAuth = () => {
     throw new Error('You can only use `useAuth` from inside an AuthProvider');
   }
   return auth;
-}
+};

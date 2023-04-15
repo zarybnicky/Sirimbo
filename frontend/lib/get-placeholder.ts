@@ -15,9 +15,14 @@ export function getPlaceholder(
     <rect fill="${bgColor}" width="${width}" height="${height}"/>
     <text fill="${textColor}" font-family="${fontFamily}" font-size="${fontSize}" dy="${dy}" font-weight="${fontWeight}" x="50%" y="50%" text-anchor="middle">${text}</text>
   </svg>`;
-  const cleaned = str.replace(/[\t\n\r]/gim, '').replace(/\s\s+/g, ' ').replace(/'/gim, '\\i');
+  const cleaned = str
+    .replace(/[\t\n\r]/gim, '')
+    .replace(/\s\s+/g, ' ')
+    .replace(/'/gim, '\\i');
   if (dataUri) {
-    const encoded = encodeURIComponent(cleaned).replace(/\(/g, '%28').replace(/\)/g, '%29');
+    const encoded = encodeURIComponent(cleaned)
+      .replace(/\(/g, '%28')
+      .replace(/\)/g, '%29');
     return `data:image/svg+xml;charset=${charset},${encoded}`;
   }
   return cleaned;

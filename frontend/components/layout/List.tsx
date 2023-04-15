@@ -1,19 +1,23 @@
-import classNames from "classnames";
-import Link from "next/link";
+import classNames from 'classnames';
+import Link from 'next/link';
 
-export function List({ children }: {
-  children: React.ReactNode;
-}) {
+export function List({ children }: { children: React.ReactNode }) {
   return (
-    <div className={classNames(
-      "flex flex-col px-2 max-h-screen min-h-screen flex-none w-full lg:w-80 xl:w-96",
-      "border-r dark:border-gray-800 lg:border-stone-150 lg:bg-stone-50 lg:dark:bg-gray-900")}>
+    <div
+      className={classNames(
+        'flex flex-col px-2 max-h-screen min-h-screen flex-none w-full lg:w-80 xl:w-96',
+        'border-r dark:border-gray-800 lg:border-stone-150 lg:bg-stone-50 lg:dark:bg-gray-900',
+      )}
+    >
       {children}
     </div>
   );
 }
 
-function ListTitleBar({ title, children }: {
+function ListTitleBar({
+  title,
+  children,
+}: {
   title: React.ReactNode;
   children?: React.ReactNode;
 }) {
@@ -25,7 +29,13 @@ function ListTitleBar({ title, children }: {
   );
 }
 
-function ListTitleButton({ active, icon: Icon, children, href, onClick }: {
+function ListTitleButton({
+  active,
+  icon: Icon,
+  children,
+  href,
+  onClick,
+}: {
   children: React.ReactNode;
   active?: boolean;
   icon?: React.ElementType<{ className?: string }>;
@@ -33,7 +43,7 @@ function ListTitleButton({ active, icon: Icon, children, href, onClick }: {
   onClick?: () => void;
 }) {
   const cx = classNames(
-    "shadow-md inline-flex items-center gap-1 px-3 rounded-2xl py-1 text-xs tracking-tight font-bold",
+    'shadow-md inline-flex items-center gap-1 px-3 rounded-2xl py-1 text-xs tracking-tight font-bold',
     active ? 'tracking-wide bg-red-500 text-white' : 'bg-white hover:bg-stone-50',
   );
   return href ? (
@@ -49,7 +59,14 @@ function ListTitleButton({ active, icon: Icon, children, href, onClick }: {
   );
 }
 
-function ListItem({ className, active, children, href, title, subtitle }: {
+function ListItem({
+  className,
+  active,
+  children,
+  href,
+  title,
+  subtitle,
+}: {
   children?: React.ReactNode;
   active?: boolean;
   href: string;
@@ -59,27 +76,33 @@ function ListItem({ className, active, children, href, title, subtitle }: {
 }) {
   return (
     <Link key={href} href={href} passHref>
-      <a className={classNames(
-        "relative p-2 mr-2 my-1 ml-0 rounded-lg grid",
-        active ? 'font-semibold bg-red-500 text-white shadow-md' : 'hover:bg-stone-200',
-        className,
-      )}>
+      <a
+        className={classNames(
+          'relative p-2 mr-2 my-1 ml-0 rounded-lg grid',
+          active ? 'font-semibold bg-red-500 text-white shadow-md' : 'hover:bg-stone-200',
+          className,
+        )}
+      >
         <div>{title}</div>
-        <div className={classNames("text-sm", active ? 'text-stone-200' : 'text-stone-500')}>{subtitle}</div>
+        <div
+          className={classNames('text-sm', active ? 'text-stone-200' : 'text-stone-500')}
+        >
+          {subtitle}
+        </div>
         {children}
       </a>
     </Link>
   );
 }
 
-function ListScroll({ children }: {
-  children: React.ReactNode;
-}) {
+function ListScroll({ children }: { children: React.ReactNode }) {
   return (
-    <div className={classNames(
-      "scrollbar-thin scrollbar-track-transparent scrollbar-thumb-stone-800/20 hover:scrollbar-thumb-stone-800/50",
-      "relative h-full overflow-y-auto",
-    )}>
+    <div
+      className={classNames(
+        'scrollbar-thin scrollbar-track-transparent scrollbar-thumb-stone-800/20 hover:scrollbar-thumb-stone-800/50',
+        'relative h-full overflow-y-auto',
+      )}
+    >
       {children}
     </div>
   );

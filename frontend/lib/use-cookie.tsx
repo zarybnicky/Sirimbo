@@ -1,5 +1,5 @@
-import React from "react";
-import { getCookie, setCookies } from "cookies-next";
+import React from 'react';
+import { getCookie, setCookies } from 'cookies-next';
 
 export const useCookie = (key: string, defaultValue: string | undefined = undefined) => {
   const [cookie, setCookie] = React.useState<string | undefined>(defaultValue);

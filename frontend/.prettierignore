@@ -1,0 +1,11 @@
+node_modules
+*.json
+*.scss
+*.css
+*.graphql
+lib/graphql/
+
+# Ignore artifacts:
+build
+coverage
+dist

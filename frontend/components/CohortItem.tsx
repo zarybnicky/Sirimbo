@@ -9,7 +9,7 @@ import { RichTextView } from 'components/RichTextView';
 import { Dropdown } from './Dropdown';
 import { usePermissions } from 'lib/data/use-permissions';
 
-export function CohortItem({ item: item }: { item: CohortWithMembersFragment; }) {
+export function CohortItem({ item: item }: { item: CohortWithMembersFragment }) {
   const perms = usePermissions();
 
   return (
@@ -18,7 +18,7 @@ export function CohortItem({ item: item }: { item: CohortWithMembersFragment; })
         <Dropdown
           className="absolute right-1 top-1"
           align="end"
-          options={[{ title: "Upravit", href: `/admin/skupiny/${item.id}` }]}
+          options={[{ title: 'Upravit', href: `/admin/skupiny/${item.id}` }]}
         />
       )}
 
@@ -26,7 +26,9 @@ export function CohortItem({ item: item }: { item: CohortWithMembersFragment; })
         {item.usersByUSkupina?.nodes?.length} členů
         <div className="text-lg">{item.sName}</div>
       </div>
-      <RichTextView value={item.sDescription.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', '')} />
+      <RichTextView
+        value={item.sDescription.replaceAll('&nbsp;', ' ').replaceAll('<br /> ', '')}
+      />
 
       <div className="flex flex-wrap gap-2 mt-3">
         <SimpleDialog
@@ -34,7 +36,9 @@ export function CohortItem({ item: item }: { item: CohortWithMembersFragment; })
           button={<button className="button button-red">Seznam členů</button>}
         >
           <div className="flex flex-col items-start">
-            {item.usersByUSkupina?.nodes?.map((member) => <UserDetailButton key={member.id} user={member} />)}
+            {item.usersByUSkupina?.nodes?.map((member) => (
+              <UserDetailButton key={member.id} user={member} />
+            ))}
           </div>
         </SimpleDialog>
         <CohortExport id={item.id} name={item.sName} />
@@ -44,13 +48,27 @@ export function CohortItem({ item: item }: { item: CohortWithMembersFragment; })
 }
 
 const UserDetailButton: React.FC<{ user: UserPublicFragment }> = ({ user }) => {
-  return <SimpleDialog
-    title={<div className="text-xl">{user.uJmeno} {user.uPrijmeni}</div>}
-    button={<button className="underline text-stone-700">{user.uPrijmeni}, {user.uJmeno}</button>}
-  >
-    <ul className="flex flex-col gap-3 m-4">
-      <li><EmailIcon className="inline" /> {user.uEmail}</li>
-      <li><PhoneIcon className="inline" /> {user.uTelefon}</li>
-    </ul>
-  </SimpleDialog>
-}
+  return (
+    <SimpleDialog
+      title={
+        <div className="text-xl">
+          {user.uJmeno} {user.uPrijmeni}
+        </div>
+      }
+      button={
+        <button className="underline text-stone-700">
+          {user.uPrijmeni}, {user.uJmeno}
+        </button>
+      }
+    >
+      <ul className="flex flex-col gap-3 m-4">
+        <li>
+          <EmailIcon className="inline" /> {user.uEmail}
+        </li>
+        <li>
+          <PhoneIcon className="inline" /> {user.uTelefon}
+        </li>
+      </ul>
+    </SimpleDialog>
+  );
+};

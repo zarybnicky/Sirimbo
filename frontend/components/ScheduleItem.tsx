@@ -5,7 +5,7 @@ import { Dropdown } from 'components/Dropdown';
 import { LessonButton } from 'components/LessonButton';
 import { Card } from 'components/Card';
 
-export const ScheduleItem = ({ item }: { item: ScheduleFragment; }) => {
+export const ScheduleItem = ({ item }: { item: ScheduleFragment }) => {
   const perms = usePermissions();
 
   return (
@@ -15,7 +15,7 @@ export const ScheduleItem = ({ item }: { item: ScheduleFragment; }) => {
           <Dropdown
             className="absolute right-1 top-1"
             align="end"
-            options={[{ title: "Upravit", href: `/admin/rozpis/${item.id}` }]}
+            options={[{ title: 'Upravit', href: `/admin/rozpis/${item.id}` }]}
           />
         )}
 

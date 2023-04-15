@@ -1,9 +1,14 @@
-import { CohortGroupFragment, useCohortGroupListQuery, useCreateCohortGroupMutation, useUpdateCohortGroupMutation } from 'lib/graphql/CohortGroup';
+import {
+  CohortGroupFragment,
+  useCohortGroupListQuery,
+  useCreateCohortGroupMutation,
+  useUpdateCohortGroupMutation,
+} from 'lib/graphql/CohortGroup';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
 import { CheckboxElement } from 'components/Checkbox';
-import { useAsyncCallback } from 'react-async-hook'
+import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { useQueryClient } from '@tanstack/react-query';
@@ -13,7 +18,7 @@ import { toast } from 'react-toastify';
 
 type FormProps = Pick<CohortGroupInput, 'name' | 'description' | 'isPublic' | 'ordering'>;
 
-export const CohortGroupForm: React.FC<{ data?: CohortGroupFragment; }> = ({ data }) => {
+export const CohortGroupForm: React.FC<{ data?: CohortGroupFragment }> = ({ data }) => {
   const queryClient = useQueryClient();
   const onSuccess = React.useCallback(() => {
     queryClient.invalidateQueries(useCohortGroupListQuery.getKey());
@@ -47,8 +52,18 @@ export const CohortGroupForm: React.FC<{ data?: CohortGroupFragment; }> = ({ dat
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="name" label="Název" required />
       <SlateEditorElement control={control} name="description" label="Popis" />
-      <CheckboxElement control={control} name="isPublic" value="1" label="Veřejně viditelná" />
-      <TextFieldElement control={control} type="number" name="ordering" label="Pořadí v seznamech skupin (1 = první, 999 = poslední)" />
+      <CheckboxElement
+        control={control}
+        name="isPublic"
+        value="1"
+        label="Veřejně viditelná"
+      />
+      <TextFieldElement
+        control={control}
+        type="number"
+        name="ordering"
+        label="Pořadí v seznamech skupin (1 = první, 999 = poslední)"
+      />
       <SubmitButton loading={onSubmit.loading} />
     </form>
   );

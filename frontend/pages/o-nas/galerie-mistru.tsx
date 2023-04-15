@@ -7,178 +7,187 @@ import { ServiceCard } from 'components/cards/ServiceCard';
 import { ELEMENT_H3 } from '@udecode/plate-heading';
 
 export default function ChampionsPage() {
-  return <>
-    <Heading
-      text="Galerie mistrů"
-      image="https://tkolymp.cz/galerie/clanky/Sn%C3%ADmek-obrazovky-2022-08-29-v%C2%A011.26.17.png"
-      color={{ r: 216, g: 28, b: 58, a: 0.4 }}
-    />
+  return (
+    <>
+      <Heading
+        text="Galerie mistrů"
+        image="https://tkolymp.cz/galerie/clanky/Sn%C3%ADmek-obrazovky-2022-08-29-v%C2%A011.26.17.png"
+        color={{ r: 216, g: 28, b: 58, a: 0.4 }}
+      />
 
-    <div className="col-popout">
-      {couples.map(couple => (
-        <ServiceCard key={couple.header} header={couple.header} image={couple.image}>
-          <SlateEditor readOnly value={couple.content} />
-        </ServiceCard>
-      ))}
-    </div>
+      <div className="col-popout">
+        {couples.map((couple) => (
+          <ServiceCard key={couple.header} header={couple.header} image={couple.image}>
+            <SlateEditor readOnly value={couple.content} />
+          </ServiceCard>
+        ))}
+      </div>
 
-    <div className="my-16 prose text-center">
-      <h1>Staň se dalším Mistrem ty!</h1>
-    </div>
+      <div className="my-16 prose text-center">
+        <h1>Staň se dalším Mistrem ty!</h1>
+      </div>
 
-    <CallToAction />
-  </>;
-};
+      <CallToAction />
+    </>
+  );
+}
 
-ChampionsPage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;
+ChampionsPage.getLayout = (page: React.ReactElement) => (
+  <Layout showTopMenu>{page}</Layout>
+);
 
 const mirek = {
-  "header": "Miroslav Hýža - Denisa Walterová",
-  "image": "https://tkolymp.cz/galerie/clanky/Týmové-foto-1.jpg",
+  header: 'Miroslav Hýža - Denisa Walterová',
+  image: 'https://tkolymp.cz/galerie/clanky/Týmové-foto-1.jpg',
   content: [
     {
-      "type": ELEMENT_H3,
-      "children": [
+      type: ELEMENT_H3,
+      children: [
         {
-          "text": "Mistři ČR Junioři I 2000 – Standardní tance (Pardubice)",
-          "EMPHASIZE/STRONG": true
-        }
-      ]
+          text: 'Mistři ČR Junioři I 2000 – Standardní tance (Pardubice)',
+          'EMPHASIZE/STRONG': true,
+        },
+      ],
     },
     {
-      "type": ELEMENT_H3,
-      "children": [
+      type: ELEMENT_H3,
+      children: [
         {
-          "text": "Mistři ČR Junioři I 2000 – Latinskoamerické tance (Ostrava)",
-          "EMPHASIZE/STRONG": true
-        }
-      ]
+          text: 'Mistři ČR Junioři I 2000 – Latinskoamerické tance (Ostrava)',
+          'EMPHASIZE/STRONG': true,
+        },
+      ],
     },
     {
-      "type": ELEMENT_H3,
-      "children": [
+      type: ELEMENT_H3,
+      children: [
         {
-          "text": "Mistři ČR Junioři I 2000 – 10 tanců (Brno)",
-          "EMPHASIZE/STRONG": true
-        }
-      ]
-    }
-  ] as MyValue
+          text: 'Mistři ČR Junioři I 2000 – 10 tanců (Brno)',
+          'EMPHASIZE/STRONG': true,
+        },
+      ],
+    },
+  ] as MyValue,
 };
 
 const boruvci = {
-  "header": "Daniel Borůvka - Barbora Borůvková",
-  "image": "https://tkolymp.cz/galerie/clanky/286188899543293480751554738291220210599381o.jpg",
+  header: 'Daniel Borůvka - Barbora Borůvková',
+  image:
+    'https://tkolymp.cz/galerie/clanky/286188899543293480751554738291220210599381o.jpg',
   content: [
     {
-      "type": ELEMENT_H3,
-      "children": [
+      type: ELEMENT_H3,
+      children: [
         {
-          "text": "Mistři ČR Junioři I 2015 – Standardní tance (Otrokovice)"
-        }
-      ]
+          text: 'Mistři ČR Junioři I 2015 – Standardní tance (Otrokovice)',
+        },
+      ],
     },
     {
-      "type": ELEMENT_H3,
-      "children": [
+      type: ELEMENT_H3,
+      children: [
         {
-          "text": "Mistři ČR Junioři I 2016 – Standardní tance (Praha)"
-        }
-      ]
+          text: 'Mistři ČR Junioři I 2016 – Standardní tance (Praha)',
+        },
+      ],
     },
     {
-      "type": ELEMENT_H3,
-      "children": [
+      type: ELEMENT_H3,
+      children: [
         {
-          "text": "Mistři ČR Junioři I 2016 – Latinskoamerické tance (Olomouc)"
-        }
-      ]
+          text: 'Mistři ČR Junioři I 2016 – Latinskoamerické tance (Olomouc)',
+        },
+      ],
     },
     {
-      "type": ELEMENT_H3,
-      "children": [
+      type: ELEMENT_H3,
+      children: [
         {
-          "text": "Mistři ČR Junioři I 2016 – 10 tanců (Zlín)"
-        }
-      ]
+          text: 'Mistři ČR Junioři I 2016 – 10 tanců (Zlín)',
+        },
+      ],
     },
     {
-      "type": ELEMENT_H3,
-      "children": [
+      type: ELEMENT_H3,
+      children: [
         {
-          "text": "Mistři ČR Junioři II 2016 – 10 tanců (Zlín)"
-        }
-      ]
-    }
-  ] as MyValue
+          text: 'Mistři ČR Junioři II 2016 – 10 tanců (Zlín)',
+        },
+      ],
+    },
+  ] as MyValue,
 };
 
 const roman = {
-  "header": "Roman Pecha - Eliška Koldová",
-  "image": "https://tkolymp.cz/galerie/clanky/297501089656914702722766426355566753321169o.jpg",
+  header: 'Roman Pecha - Eliška Koldová',
+  image:
+    'https://tkolymp.cz/galerie/clanky/297501089656914702722766426355566753321169o.jpg',
   content: [
     {
-      "type": ELEMENT_H3,
-      "children": [
+      type: ELEMENT_H3,
+      children: [
         {
-          "text": "Mistři ČR U21 2018 – Standardní tance (Třinec)"
-        }
-      ]
+          text: 'Mistři ČR U21 2018 – Standardní tance (Třinec)',
+        },
+      ],
     },
     {
-      "type": ELEMENT_H3,
-      "children": [
+      type: ELEMENT_H3,
+      children: [
         {
-          "text": "Mistři ČR U21 2018 – 10 tanců (Kojetín)"
-        }
-      ]
-    }
-  ] as MyValue
+          text: 'Mistři ČR U21 2018 – 10 tanců (Kojetín)',
+        },
+      ],
+    },
+  ] as MyValue,
 };
 
 const veverka = {
-  "header": "Dominik Veverka - Aneta Zymová",
-  "image": "https://tkolymp.cz/galerie/clanky/1721220812868224647286412094096557593334562o.jpg",
+  header: 'Dominik Veverka - Aneta Zymová',
+  image:
+    'https://tkolymp.cz/galerie/clanky/1721220812868224647286412094096557593334562o.jpg',
   content: [
     {
-      "type": ELEMENT_H3,
-      "children": [
+      type: ELEMENT_H3,
+      children: [
         {
-          "text": "Mistři ČR Junioři I 2018 – Standardní tance (Třinec)"
-        }
-      ]
-    }
-  ] as MyValue
+          text: 'Mistři ČR Junioři I 2018 – Standardní tance (Třinec)',
+        },
+      ],
+    },
+  ] as MyValue,
 };
 
 const sirovi = {
-  "header": "Vilém Šír - Anna Slouková",
-  "image": "https://tkolymp.cz/galerie/clanky/1709720611681431199719363523339610656928229o.jpg",
+  header: 'Vilém Šír - Anna Slouková',
+  image:
+    'https://tkolymp.cz/galerie/clanky/1709720611681431199719363523339610656928229o.jpg',
   content: [
     {
-      "type": ELEMENT_H3,
-      "children": [
+      type: ELEMENT_H3,
+      children: [
         {
-          "text": "Mistři ČR U21 2017 – Latinskoamerické tance (Praha)"
-        }
-      ]
-    }
-  ] as MyValue
+          text: 'Mistři ČR U21 2017 – Latinskoamerické tance (Praha)',
+        },
+      ],
+    },
+  ] as MyValue,
 };
 
 const selsdon = {
-  "header": "Kaiem Selsdon - Viktorie Vágnerová",
-  "image": "https://tkolymp.cz/galerie/clanky/27773020721464630255284428646841465494972563n.jpg",
+  header: 'Kaiem Selsdon - Viktorie Vágnerová',
+  image:
+    'https://tkolymp.cz/galerie/clanky/27773020721464630255284428646841465494972563n.jpg',
   content: [
     {
-      "type": ELEMENT_H3,
-      "children": [
+      type: ELEMENT_H3,
+      children: [
         {
-          "text": "Mistři ČR Junioři I 2022 – Latinskoamerické tance (Praha)"
-        }
-      ]
-    }
-  ] as MyValue
+          text: 'Mistři ČR Junioři I 2022 – Latinskoamerické tance (Praha)',
+        },
+      ],
+    },
+  ] as MyValue,
 };
 
 const couples = [mirek, boruvci, roman, veverka, sirovi, selsdon];

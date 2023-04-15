@@ -9,19 +9,27 @@ import { RichTextView } from 'components/RichTextView';
 export default function CohortsPage() {
   const { data: cohorts } = useCohortListQuery({ visible: true });
 
-  return <>
-    <Heading color={{ r: 20, g: 20, b: 200, a: .5 }} text="Tréninkové skupiny" image="" />
-    <div className="container mx-auto max-w-3xl mt-8 mb-8">
-      {cohorts?.skupinies?.nodes?.map((x, i) => (
-        <Card key={i} cohort={x}>
-          <h5 className="text-xl font-bold">{x.sName}</h5>
-          <h6 className="font-bold mb-2">{x.sLocation}</h6>
-          <RichTextView value={x.sDescription.replace('&nbsp;', ' ').replace('<br />', '')} />
-        </Card>
-      ))}
-    </div>
-    <CallToAction />
-  </>;
-};
+  return (
+    <>
+      <Heading
+        color={{ r: 20, g: 20, b: 200, a: 0.5 }}
+        text="Tréninkové skupiny"
+        image=""
+      />
+      <div className="container mx-auto max-w-3xl mt-8 mb-8">
+        {cohorts?.skupinies?.nodes?.map((x, i) => (
+          <Card key={i} cohort={x}>
+            <h5 className="text-xl font-bold">{x.sName}</h5>
+            <h6 className="font-bold mb-2">{x.sLocation}</h6>
+            <RichTextView
+              value={x.sDescription.replace('&nbsp;', ' ').replace('<br />', '')}
+            />
+          </Card>
+        ))}
+      </div>
+      <CallToAction />
+    </>
+  );
+}
 
 CohortsPage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;

@@ -1,32 +1,35 @@
-import * as React from "react";
+import * as React from 'react';
 import { AppProps, NextWebVitalsMetric } from 'next/app';
-import Router from "next/router";
-import NProgress from "nprogress";
-import { event } from "nextjs-google-analytics";
+import Router from 'next/router';
+import NProgress from 'nprogress';
+import { event } from 'nextjs-google-analytics';
 import { ProvideAuth } from 'lib/data/use-auth';
-import { Hydrate, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Hydrate, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
-import { Layout } from "components/layout/Layout";
-import { ProvideMeta } from "lib/use-meta";
+import { Layout } from 'components/layout/Layout';
+import { ProvideMeta } from 'lib/use-meta';
 import 'public/style/index.css';
-import { Tracking } from "components/Tracking";
+import { Tracking } from 'components/Tracking';
 import { ToastContainer } from 'react-toastify';
 import { ConfirmProvider } from 'components/Confirm';
-import { NextPage } from "next";
-import dynamic from "next/dynamic";
+import { NextPage } from 'next';
+import dynamic from 'next/dynamic';
 
-Router.events.on("routeChangeStart", () => NProgress.start());
-Router.events.on("routeChangeComplete", () => NProgress.done());
-Router.events.on("routeChangeError", () => NProgress.done());
+Router.events.on('routeChangeStart', () => NProgress.start());
+Router.events.on('routeChangeComplete', () => NProgress.done());
+Router.events.on('routeChangeError', () => NProgress.done());
 
 const ReactQueryDevtools = dynamic(
-  () => import('@tanstack/react-query-devtools').then(x => x.ReactQueryDevtools),
+  () => import('@tanstack/react-query-devtools').then((x) => x.ReactQueryDevtools),
   { ssr: false },
 );
 
-const WithProviders = <T extends { dehydratedState?: object }>(children: React.ReactNode, pageProps: AppProps<T>['pageProps']) => {
-  const queryClientRef = React.useRef<QueryClient>()
+const WithProviders = <T extends { dehydratedState?: object }>(
+  children: React.ReactNode,
+  pageProps: AppProps<T>['pageProps'],
+) => {
+  const queryClientRef = React.useRef<QueryClient>();
   if (!queryClientRef.current) {
     queryClientRef.current = new QueryClient({
       defaultOptions: {
@@ -44,13 +47,15 @@ const WithProviders = <T extends { dehydratedState?: object }>(children: React.R
           storage: window.localStorage,
           key: 'REACT_QUERY_OFFLINE_CACHE_1.0',
         }),
-      })
-    };
+      });
+    }
   }
 
   return (
     <QueryClientProvider client={queryClientRef.current}>
-      {process.env.NODE_ENV === "development" && <ReactQueryDevtools initialIsOpen={false} />}
+      {process.env.NODE_ENV === 'development' && (
+        <ReactQueryDevtools initialIsOpen={false} />
+      )}
       <Hydrate state={pageProps.dehydratedState}>
         <ProvideAuth>
           <ProvideMeta>
@@ -67,12 +72,14 @@ const WithProviders = <T extends { dehydratedState?: object }>(children: React.R
 };
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
-  getLayout?: (page: React.ReactElement) => React.ReactNode
-}
+  getLayout?: (page: React.ReactElement) => React.ReactNode;
+};
 
-type AppPropsWithLayout<T extends { dehydratedState?: object } = { dehydratedState?: object }> = AppProps<T> & {
-  Component: NextPageWithLayout<T>
-}
+type AppPropsWithLayout<
+  T extends { dehydratedState?: object } = { dehydratedState?: object },
+> = AppProps<T> & {
+  Component: NextPageWithLayout<T>;
+};
 
 const defaultLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 
@@ -82,10 +89,10 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 }
 
 export function reportWebVitals({ id, name, label, value }: NextWebVitalsMetric) {
-  if (label === "web-vital") {
+  if (label === 'web-vital') {
     event(name, {
-      category: "Web Vitals",
-      value: Math.round(name === "CLS" ? value * 1000 : value), // values must be integers
+      category: 'Web Vitals',
+      value: Math.round(name === 'CLS' ? value * 1000 : value), // values must be integers
       label: id, // id unique to current page load
       nonInteraction: true, // avoids affecting bounce rate.
     });

@@ -1,550 +1,555 @@
 import * as React from 'react';
-import { Layout } from "components/layout/Layout";
+import { Layout } from 'components/layout/Layout';
 import { MyValue, SlateEditor } from 'components/Slate';
 import { Heading } from 'components/Heading';
 
 export default function TermsConditions() {
-  return <>
-    <Heading
-      text="Ochrana osobních údajů" image="/images/mohelnice2021-title.jpg"
-      color={{ r: 216, g: 28, b: 58, a: 0.6 }}
-    />
-    <SlateEditor readOnly value={text} />
-  </>;
+  return (
+    <>
+      <Heading
+        text="Ochrana osobních údajů"
+        image="/images/mohelnice2021-title.jpg"
+        color={{ r: 216, g: 28, b: 58, a: 0.6 }}
+      />
+      <SlateEditor readOnly value={text} />
+    </>
+  );
 }
 
-TermsConditions.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;
+TermsConditions.getLayout = (page: React.ReactElement) => (
+  <Layout showTopMenu>{page}</Layout>
+);
 
 const text: MyValue = [
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "I. Základní ustanovení",
-        "bold": true
-      }
-    ]
+        text: 'I. Základní ustanovení',
+        bold: true,
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "1. Správcem osobních údajů podle čl. 4 bod 7 nařízení Evropského parlamentu a Rady (EU) 2016/679 o ochraně fyzických osob v souvislosti se zpracováním osobních údajů a o volném pohybu těchto údajů (dále jen: „"
+        text: '1. Správcem osobních údajů podle čl. 4 bod 7 nařízení Evropského parlamentu a Rady (EU) 2016/679 o ochraně fyzických osob v souvislosti se zpracováním osobních údajů a o volném pohybu těchto údajů (dále jen: „',
       },
       {
-        "text": "GDPR",
-        "bold": true
+        text: 'GDPR',
+        bold: true,
       },
       {
-        "text": "”) je Taneční klub Olymp Olomou, z. s.., IČ 68347286 se sídlem Jiráskova 25, 77900, Olomouc. (dále jen: „"
+        text: '”) je Taneční klub Olymp Olomou, z. s.., IČ 68347286 se sídlem Jiráskova 25, 77900, Olomouc. (dále jen: „',
       },
       {
-        "text": "správce",
-        "bold": true
+        text: 'správce',
+        bold: true,
       },
       {
-        "text": "“)."
-      }
-    ]
+        text: '“).',
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "2. Kontaktní údaje správce jsou"
-      }
-    ]
+        text: '2. Kontaktní údaje správce jsou',
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "Adresa: Jiráskova 25, 77900, Olomouc"
-      }
-    ]
+        text: 'Adresa: Jiráskova 25, 77900, Olomouc',
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "Email: miroslav.hyza@tkolymp.cz"
-      }
-    ]
+        text: 'Email: miroslav.hyza@tkolymp.cz',
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "3. Osobními údaji se rozumí veškeré informace o identifikované nebo identifikovatelné fyzické osobě; identifikovatelnou fyzickou osobou je fyzická osoba, kterou lze přímo či nepřímo identifikovat, zejména odkazem na určitý identifikátor, například jméno, identifikační číslo, lokační údaje, síťový identifikátor nebo na jeden či více zvláštních prvků fyzické, fyziologické, genetické, psychické, ekonomické, kulturní nebo společenské identity této fyzické osoby."
-      }
-    ]
+        text: '3. Osobními údaji se rozumí veškeré informace o identifikované nebo identifikovatelné fyzické osobě; identifikovatelnou fyzickou osobou je fyzická osoba, kterou lze přímo či nepřímo identifikovat, zejména odkazem na určitý identifikátor, například jméno, identifikační číslo, lokační údaje, síťový identifikátor nebo na jeden či více zvláštních prvků fyzické, fyziologické, genetické, psychické, ekonomické, kulturní nebo společenské identity této fyzické osoby.',
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "II. Zdroje a kategorie zpracovávaných osobních údajů",
-        "bold": true
-      }
-    ]
+        text: 'II. Zdroje a kategorie zpracovávaných osobních údajů',
+        bold: true,
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "1. Správce zpracovává osobní údaje, které jste mu poskytl/a nebo osobní údaje, které správce získal na základě plnění Vaší objednávky."
-      }
-    ]
+        text: '1. Správce zpracovává osobní údaje, které jste mu poskytl/a nebo osobní údaje, které správce získal na základě plnění Vaší objednávky.',
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "2. Správce zpracovává Vaše identifikační a kontaktní údaje a údaje nezbytné pro plnění smlouvy."
-      }
-    ]
+        text: '2. Správce zpracovává Vaše identifikační a kontaktní údaje a údaje nezbytné pro plnění smlouvy.',
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "III. Zákonný důvod a účel zpracování osobních údajů",
-        "bold": true
-      }
-    ]
+        text: 'III. Zákonný důvod a účel zpracování osobních údajů',
+        bold: true,
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "1. Zákonným důvodem zpracování osobních údajů je "
-      }
-    ]
+        text: '1. Zákonným důvodem zpracování osobních údajů je ',
+      },
+    ],
   },
   {
-    "type": "ul",
-    "data": {
-      "align": "start"
+    type: 'ul',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "type": "li",
-        "children": [
+        type: 'li',
+        children: [
           {
-            "text": "plnění smlouvy mezi Vámi a správcem podle čl. 6 odst. 1 písm. b) GDPR,"
-          }
-        ]
+            text: 'plnění smlouvy mezi Vámi a správcem podle čl. 6 odst. 1 písm. b) GDPR,',
+          },
+        ],
       },
       {
-        "type": "li",
-        "children": [
+        type: 'li',
+        children: [
           {
-            "text": "oprávněný zájem správce na poskytování přímého marketingu (zejména pro zasílání obchodních sdělení a newsletterů) podle čl. 6 odst. 1 písm. f) GDPR,"
-          }
-        ]
+            text: 'oprávněný zájem správce na poskytování přímého marketingu (zejména pro zasílání obchodních sdělení a newsletterů) podle čl. 6 odst. 1 písm. f) GDPR,',
+          },
+        ],
       },
       {
-        "type": "li",
-        "children": [
+        type: 'li',
+        children: [
           {
-            "text": "Váš souhlas se zpracováním pro účely poskytování přímého marketingu (zejména pro zasílání obchodních sdělení a newsletterů) podle čl. 6 odst. 1 písm. a) GDPR ve spojení s § 7 odst. 2 zákona č. 480/2004 Sb., o některých službách informační společnosti v případě, že nedošlo k objednávce zboží nebo služby."
-          }
-        ]
-      }
-    ]
+            text: 'Váš souhlas se zpracováním pro účely poskytování přímého marketingu (zejména pro zasílání obchodních sdělení a newsletterů) podle čl. 6 odst. 1 písm. a) GDPR ve spojení s § 7 odst. 2 zákona č. 480/2004 Sb., o některých službách informační společnosti v případě, že nedošlo k objednávce zboží nebo služby.',
+          },
+        ],
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": " 2. Účelem zpracování osobních údajů je"
-      }
-    ]
+        text: ' 2. Účelem zpracování osobních údajů je',
+      },
+    ],
   },
   {
-    "type": "ul",
-    "data": {
-      "align": "start"
+    type: 'ul',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "type": "li",
-        "children": [
+        type: 'li',
+        children: [
           {
-            "text": "vyřízení Vaší objednávky a výkon práv a povinností vyplývajících ze smluvního vztahu mezi Vámi a správcem; při objednávce jsou vyžadovány osobní údaje, které jsou nutné pro úspěšné vyřízení objednávky (jméno a adresa, kontakt), poskytnutí osobních údajů je nutným požadavkem pro uzavření a plnění smlouvy, bez poskytnutí osobních údajů není možné smlouvu uzavřít či jí ze strany správce plnit,"
-          }
-        ]
+            text: 'vyřízení Vaší objednávky a výkon práv a povinností vyplývajících ze smluvního vztahu mezi Vámi a správcem; při objednávce jsou vyžadovány osobní údaje, které jsou nutné pro úspěšné vyřízení objednávky (jméno a adresa, kontakt), poskytnutí osobních údajů je nutným požadavkem pro uzavření a plnění smlouvy, bez poskytnutí osobních údajů není možné smlouvu uzavřít či jí ze strany správce plnit,',
+          },
+        ],
       },
       {
-        "type": "li",
-        "children": [
+        type: 'li',
+        children: [
           {
-            "text": "zasílání obchodních sdělení a činění dalších marketingových aktivit."
-          }
-        ]
-      }
-    ]
+            text: 'zasílání obchodních sdělení a činění dalších marketingových aktivit.',
+          },
+        ],
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": " 3. Ze strany správce dochází k automatickému individuálnímu rozhodování ve smyslu čl. 22 GDPR. S takovým zpracováním jste poskytl/a svůj výslovný souhlas."
-      }
-    ]
+        text: ' 3. Ze strany správce dochází k automatickému individuálnímu rozhodování ve smyslu čl. 22 GDPR. S takovým zpracováním jste poskytl/a svůj výslovný souhlas.',
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "IV. Doba uchovávání údajů",
-        "bold": true
-      }
-    ]
+        text: 'IV. Doba uchovávání údajů',
+        bold: true,
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "1. Správce uchovává osobní údaje"
-      }
-    ]
+        text: '1. Správce uchovává osobní údaje',
+      },
+    ],
   },
   {
-    "type": "ul",
-    "data": {
-      "align": "start"
+    type: 'ul',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "type": "li",
-        "children": [
+        type: 'li',
+        children: [
           {
-            "text": "po dobu nezbytnou k výkonu práv a povinností vyplývajících ze smluvního vztahu mezi Vámi a správcem a uplatňování nároků z těchto smluvních vztahů (po dobu 15 let od ukončení smluvního vztahu). "
-          }
-        ]
+            text: 'po dobu nezbytnou k výkonu práv a povinností vyplývajících ze smluvního vztahu mezi Vámi a správcem a uplatňování nároků z těchto smluvních vztahů (po dobu 15 let od ukončení smluvního vztahu). ',
+          },
+        ],
       },
       {
-        "type": "li",
-        "children": [
+        type: 'li',
+        children: [
           {
-            "text": "po dobu, než je odvolán souhlas se zpracováním osobních údajů pro účely marketingu, nejdéle 10 let, jsou-li osobní údaje zpracovávány na základě souhlasu."
-          }
-        ]
-      }
-    ]
+            text: 'po dobu, než je odvolán souhlas se zpracováním osobních údajů pro účely marketingu, nejdéle 10 let, jsou-li osobní údaje zpracovávány na základě souhlasu.',
+          },
+        ],
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": " 2. Po uplynutí doby uchovávání osobních údajů správce osobní údaje vymaže."
-      }
-    ]
+        text: ' 2. Po uplynutí doby uchovávání osobních údajů správce osobní údaje vymaže.',
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "V. Příjemci osobních údajů (subdodavatelé správce)",
-        "bold": true
-      }
-    ]
+        text: 'V. Příjemci osobních údajů (subdodavatelé správce)',
+        bold: true,
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "1. Příjemci osobních údajů jsou osoby "
-      }
-    ]
+        text: '1. Příjemci osobních údajů jsou osoby ',
+      },
+    ],
   },
   {
-    "type": "ul",
-    "data": {
-      "align": "start"
+    type: 'ul',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "type": "li",
-        "children": [
+        type: 'li',
+        children: [
           {
-            "text": "podílející se na dodání zboží / služeb / realizaci plateb na základě smlouvy, "
-          }
-        ]
+            text: 'podílející se na dodání zboží / služeb / realizaci plateb na základě smlouvy, ',
+          },
+        ],
       },
       {
-        "type": "li",
-        "children": [
+        type: 'li',
+        children: [
           {
-            "text": "zajišťující služby provozování e-shopu (Shoptet) a další služby v souvislosti s provozováním e-shopu,"
-          }
-        ]
+            text: 'zajišťující služby provozování e-shopu (Shoptet) a další služby v souvislosti s provozováním e-shopu,',
+          },
+        ],
       },
       {
-        "type": "li",
-        "children": [
+        type: 'li',
+        children: [
           {
-            "text": "zajišťující marketingové služby."
-          }
-        ]
-      }
-    ]
+            text: 'zajišťující marketingové služby.',
+          },
+        ],
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": " 2. Správce má v úmyslu předat osobní údaje do třetí země (do země mimo EU) nebo mezinárodní organizaci. Příjemci osobních údajů ve třetích zemích jsou poskytovatelé mailingových služeb a cloudových služeb. "
-      }
-    ]
+        text: ' 2. Správce má v úmyslu předat osobní údaje do třetí země (do země mimo EU) nebo mezinárodní organizaci. Příjemci osobních údajů ve třetích zemích jsou poskytovatelé mailingových služeb a cloudových služeb. ',
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "VI. Vaše práva",
-        "bold": true
-      }
-    ]
+        text: 'VI. Vaše práva',
+        bold: true,
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "1. Za podmínek stanovených v GDPR máte "
-      }
-    ]
+        text: '1. Za podmínek stanovených v GDPR máte ',
+      },
+    ],
   },
   {
-    "type": "ul",
-    "data": {
-      "align": "start"
+    type: 'ul',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "type": "li",
-        "children": [
+        type: 'li',
+        children: [
           {
-            "text": "právo na přístup ke svým osobním údajům dle čl. 15 GDPR, "
-          }
-        ]
+            text: 'právo na přístup ke svým osobním údajům dle čl. 15 GDPR, ',
+          },
+        ],
       },
       {
-        "type": "li",
-        "children": [
+        type: 'li',
+        children: [
           {
-            "text": "právo opravu osobních údajů dle čl. 16 GDPR, popřípadě omezení zpracování dle čl. 18 GDPR. "
-          }
-        ]
+            text: 'právo opravu osobních údajů dle čl. 16 GDPR, popřípadě omezení zpracování dle čl. 18 GDPR. ',
+          },
+        ],
       },
       {
-        "type": "li",
-        "children": [
+        type: 'li',
+        children: [
           {
-            "text": "právo na výmaz osobních údajů dle čl. 17 GDPR. "
-          }
-        ]
+            text: 'právo na výmaz osobních údajů dle čl. 17 GDPR. ',
+          },
+        ],
       },
       {
-        "type": "li",
-        "children": [
+        type: 'li',
+        children: [
           {
-            "text": "právo vznést námitku proti zpracování dle čl. 21 GDPR a "
-          }
-        ]
+            text: 'právo vznést námitku proti zpracování dle čl. 21 GDPR a ',
+          },
+        ],
       },
       {
-        "type": "li",
-        "children": [
+        type: 'li',
+        children: [
           {
-            "text": "právo na přenositelnost údajů dle čl. 20 GDPR. "
-          }
-        ]
+            text: 'právo na přenositelnost údajů dle čl. 20 GDPR. ',
+          },
+        ],
       },
       {
-        "type": "li",
-        "children": [
+        type: 'li',
+        children: [
           {
-            "text": "právo odvolat souhlas se zpracováním písemně nebo elektronicky na adresu nebo email správce uvedený v čl. III těchto podmínek."
-          }
-        ]
-      }
-    ]
+            text: 'právo odvolat souhlas se zpracováním písemně nebo elektronicky na adresu nebo email správce uvedený v čl. III těchto podmínek.',
+          },
+        ],
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": " 2. Dále máte právo podat stížnost u Úřadu pro ochranu osobních údajů v případě, že se domníváte, že bylo porušeno Vaší právo na ochranu osobních údajů."
-      }
-    ]
+        text: ' 2. Dále máte právo podat stížnost u Úřadu pro ochranu osobních údajů v případě, že se domníváte, že bylo porušeno Vaší právo na ochranu osobních údajů.',
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "VII. Podmínky zabezpečení osobních údajů",
-        "bold": true
-      }
-    ]
+        text: 'VII. Podmínky zabezpečení osobních údajů',
+        bold: true,
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "1. Správce prohlašuje, že přijal veškerá vhodná technická a organizační opatření k zabezpečení osobních údajů."
-      }
-    ]
+        text: '1. Správce prohlašuje, že přijal veškerá vhodná technická a organizační opatření k zabezpečení osobních údajů.',
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "2. Správce přijal technická opatření k zabezpečení datových úložišť a úložišť osobních údajů v listinné podobě."
-      }
-    ]
+        text: '2. Správce přijal technická opatření k zabezpečení datových úložišť a úložišť osobních údajů v listinné podobě.',
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "3. Správce prohlašuje, že k osobním údajům mají přístup pouze jím pověřené osoby."
-      }
-    ]
+        text: '3. Správce prohlašuje, že k osobním údajům mají přístup pouze jím pověřené osoby.',
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "VIII. Závěrečná ustanovení",
-        "bold": true
-      }
-    ]
+        text: 'VIII. Závěrečná ustanovení',
+        bold: true,
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "1. Odesláním objednávky z internetového objednávkového formuláře potvrzujete, že jste seznámen/a s podmínkami ochrany osobních údajů a že je v celém rozsahu přijímáte."
-      }
-    ]
+        text: '1. Odesláním objednávky z internetového objednávkového formuláře potvrzujete, že jste seznámen/a s podmínkami ochrany osobních údajů a že je v celém rozsahu přijímáte.',
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "2. S těmito podmínkami souhlasíte zaškrtnutím souhlasu prostřednictvím internetového formuláře. Zaškrtnutím souhlasu potvrzujete, že jste seznámen/a s podmínkami ochrany osobních údajů a že je v celém rozsahu přijímáte."
-      }
-    ]
+        text: '2. S těmito podmínkami souhlasíte zaškrtnutím souhlasu prostřednictvím internetového formuláře. Zaškrtnutím souhlasu potvrzujete, že jste seznámen/a s podmínkami ochrany osobních údajů a že je v celém rozsahu přijímáte.',
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "3. Správce je oprávněn tyto podmínky změnit. Novou verzi podmínek ochrany osobních údajů zveřejní na svých internetových stránkách a zároveň Vám zašle novou verzi těchto podmínek Vaši e-mailovou adresu, kterou jste správci poskytl/a."
-      }
-    ]
+        text: '3. Správce je oprávněn tyto podmínky změnit. Novou verzi podmínek ochrany osobních údajů zveřejní na svých internetových stránkách a zároveň Vám zašle novou verzi těchto podmínek Vaši e-mailovou adresu, kterou jste správci poskytl/a.',
+      },
+    ],
   },
   {
-    "type": "p",
-    "data": {
-      "align": "start"
+    type: 'p',
+    data: {
+      align: 'start',
     },
-    "children": [
+    children: [
       {
-        "text": "Tyto podmínky nabývají účinnosti dnem 1.9.2020."
-      }
-    ]
-  }
+        text: 'Tyto podmínky nabývají účinnosti dnem 1.9.2020.',
+      },
+    ],
+  },
 ];

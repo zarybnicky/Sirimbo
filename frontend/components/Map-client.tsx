@@ -7,9 +7,11 @@ import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
 import iconUrl from 'leaflet/dist/images/marker-icon.png';
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 
-const Map: React.FC<{
-  children: (x: typeof ReactLeaflet) => React.ReactElement;
-} & ReactLeaflet.MapContainerProps> = ({ children, ...rest }) => {
+const Map: React.FC<
+  {
+    children: (x: typeof ReactLeaflet) => React.ReactElement;
+  } & ReactLeaflet.MapContainerProps
+> = ({ children, ...rest }) => {
   useEffect(() => {
     (async function init() {
       delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -26,7 +28,7 @@ const Map: React.FC<{
     <ReactLeaflet.MapContainer {...rest}>
       {children(ReactLeaflet)}
     </ReactLeaflet.MapContainer>
-  )
-}
+  );
+};
 
 export default Map;

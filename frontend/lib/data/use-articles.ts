@@ -8,13 +8,16 @@ export interface Article {
   preview: string;
 }
 
-export const useArticles = (limit: number, offset: number): {
+export const useArticles = (
+  limit: number,
+  offset: number,
+): {
   articles: Article[];
   count: number;
 } => {
   const { data } = useArticlesQuery({ limit, offset });
   return {
-    articles: (data?.aktualities?.nodes || []).map(x => ({
+    articles: (data?.aktualities?.nodes || []).map((x) => ({
       href: `/articles/${x.id}`,
       img: `/galerie/${x.galerieFotoByAtFotoMain?.gfPath}`,
       imgThumb: `/galerie/thumbnails/${x.galerieFotoByAtFotoMain?.gfPath}`,

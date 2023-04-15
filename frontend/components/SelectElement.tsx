@@ -1,8 +1,15 @@
 import React from 'react';
-import { Combobox, Transition } from '@headlessui/react'
-import { useController, FieldError, FieldValues, Path, Control, ControllerProps } from 'react-hook-form';
+import { Combobox, Transition } from '@headlessui/react';
+import {
+  useController,
+  FieldError,
+  FieldValues,
+  Path,
+  Control,
+  ControllerProps,
+} from 'react-hook-form';
 import classNames from 'classnames';
-import { ChevronsDown as UnfoldMoreIcon, Check as CheckIcon } from 'react-feather'
+import { ChevronsDown as UnfoldMoreIcon, Check as CheckIcon } from 'react-feather';
 
 type Extras = {
   className?: string;
@@ -21,23 +28,41 @@ type SelectElementProps<T extends FieldValues> = {
 } & Extras;
 
 export function SelectElement<TFieldValues extends FieldValues>({
-  name, control, validation = {}, required, options, className, helperText, parseError, label,
+  name,
+  control,
+  validation = {},
+  required,
+  options,
+  className,
+  helperText,
+  parseError,
+  label,
 }: SelectElementProps<TFieldValues>) {
   if (required && !validation?.required) {
     validation.required = 'Toto pole je povinné';
   }
 
-  const { field: { value, onChange }, fieldState: { error } } = useController({
-    name, control, rules: validation,
+  const {
+    field: { value, onChange },
+    fieldState: { error },
+  } = useController({
+    name,
+    control,
+    rules: validation,
   });
-  const [query, setQuery] = React.useState('')
+  const [query, setQuery] = React.useState('');
 
-  const filtered = query === '' ? options : options.filter(item =>
-    item.label.toLowerCase().includes(query.toLowerCase()),
-  );
+  const filtered =
+    query === ''
+      ? options
+      : options.filter((item) => item.label.toLowerCase().includes(query.toLowerCase()));
 
-  const parsedHelperText = !error ? helperText : parseError ? parseError(error) : error.message;
-  const valueObject = options.find(x => x.id === value);
+  const parsedHelperText = !error
+    ? helperText
+    : parseError
+    ? parseError(error)
+    : error.message;
+  const valueObject = options.find((x) => x.id === value);
 
   return (
     <Combobox value={valueObject} onChange={(x) => onChange(x.id)}>
@@ -68,19 +93,35 @@ export function SelectElement<TFieldValues extends FieldValues>({
               </div>
             ) : (
               filtered.map((person) => (
-                <Combobox.Option key={person.id} value={person} className={({ active }) =>
-                  `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-red-600 text-white' : 'text-gray-900'}`
-                }>
-                  {({ selected, active }) => <>
-                    <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>
-                      {person.label}
-                    </span>
-                    {selected && (
-                      <span className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-red-600'}`}>
-                        <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                <Combobox.Option
+                  key={person.id}
+                  value={person}
+                  className={({ active }) =>
+                    `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                      active ? 'bg-red-600 text-white' : 'text-gray-900'
+                    }`
+                  }
+                >
+                  {({ selected, active }) => (
+                    <>
+                      <span
+                        className={`block truncate ${
+                          selected ? 'font-medium' : 'font-normal'
+                        }`}
+                      >
+                        {person.label}
                       </span>
-                    )}
-                  </>}
+                      {selected && (
+                        <span
+                          className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
+                            active ? 'text-white' : 'text-red-600'
+                          }`}
+                        >
+                          <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                        </span>
+                      )}
+                    </>
+                  )}
                 </Combobox.Option>
               ))
             )}
@@ -88,7 +129,11 @@ export function SelectElement<TFieldValues extends FieldValues>({
         </Transition>
       </div>
       {parsedHelperText && (
-        <p className={classNames("mt-2 text-sm", error ? 'text-red-600' : 'text-gray-500')}>{parsedHelperText}</p>
+        <p
+          className={classNames('mt-2 text-sm', error ? 'text-red-600' : 'text-gray-500')}
+        >
+          {parsedHelperText}
+        </p>
       )}
     </Combobox>
   );

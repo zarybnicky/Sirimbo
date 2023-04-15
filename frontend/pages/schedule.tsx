@@ -1,11 +1,20 @@
 import * as React from 'react';
 import { useReservationRangeQuery } from 'lib/graphql/Reservation';
 import { ScheduleFragment, useScheduleRangeQuery } from 'lib/graphql/Schedule';
-import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
+import {
+  withServerPermissions,
+  PermissionKey,
+  PermissionLevel,
+} from 'lib/data/use-server-permissions';
 import { formatWeekDay } from 'lib/format-date';
 import { ScheduleItem } from 'components/ScheduleItem';
 import { ReservationItem } from 'components/ReservationItem';
-import { getCurrentMonday, mondayToWeekRange, mondayToYearRange, WeekPicker } from 'components/WeekPicker';
+import {
+  getCurrentMonday,
+  mondayToWeekRange,
+  mondayToYearRange,
+  WeekPicker,
+} from 'components/WeekPicker';
 import { Item } from 'components/layout/Item';
 
 export default function SchedulePage() {
@@ -16,38 +25,49 @@ export default function SchedulePage() {
 
   const scheduleByDay = React.useMemo(() => {
     const obj: { [date: string]: ScheduleFragment[] } = {};
-    schedules?.schedulesForRange?.nodes?.forEach(item => {
+    schedules?.schedulesForRange?.nodes?.forEach((item) => {
       const arr = obj[item.rDatum] || [];
       arr.push(item);
       obj[item.rDatum] = arr;
     });
     return obj;
-  }, [schedules])
+  }, [schedules]);
 
-  return <Item className="col-full-width">
-    <WeekPicker title="Tréninky" startDate={startDate} onChange={setStartDate} />
+  return (
+    <Item className="col-full-width">
+      <WeekPicker title="Tréninky" startDate={startDate} onChange={setStartDate} />
 
-    {(reservations?.reservationsForRange?.nodes.length ?? 0) > 0 && <>
-      <div className="text-xl tracking-wide text-stone-700 mb-2">
-        Nabídky tréninků
-      </div>
-      <div className="flex flex-wrap gap-4 ml-2 pl-5 border-l-4 border-red-200">
-        {reservations?.reservationsForRange?.nodes.map((item, i) => <ReservationItem key={i} item={item} />)}
-      </div>
-    </>}
+      {(reservations?.reservationsForRange?.nodes.length ?? 0) > 0 && (
+        <>
+          <div className="text-xl tracking-wide text-stone-700 mb-2">
+            Nabídky tréninků
+          </div>
+          <div className="flex flex-wrap gap-4 ml-2 pl-5 border-l-4 border-red-200">
+            {reservations?.reservationsForRange?.nodes.map((item, i) => (
+              <ReservationItem key={i} item={item} />
+            ))}
+          </div>
+        </>
+      )}
 
-    {Object.entries(scheduleByDay).map(([date, items], i) => <React.Fragment key={i}>
-      <div className="text-xl tracking-wide text-stone-700 mt-8 mb-2">
-        {formatWeekDay(new Date(date))}
-      </div>
+      {Object.entries(scheduleByDay).map(([date, items], i) => (
+        <React.Fragment key={i}>
+          <div className="text-xl tracking-wide text-stone-700 mt-8 mb-2">
+            {formatWeekDay(new Date(date))}
+          </div>
 
-      <div className="flex flex-wrap gap-4 ml-2 pl-5 border-l-4 border-red-200">
-        {items.map((item, i) => <ScheduleItem key={i} item={item} />)}
-      </div>
-    </React.Fragment>)}
-  </Item>;
+          <div className="flex flex-wrap gap-4 ml-2 pl-5 border-l-4 border-red-200">
+            {items.map((item, i) => (
+              <ScheduleItem key={i} item={item} />
+            ))}
+          </div>
+        </React.Fragment>
+      ))}
+    </Item>
+  );
 }
 
 export const getServerSideProps = withServerPermissions(
-  PermissionKey.peRozpis, PermissionLevel.P_MEMBER,
+  PermissionKey.peRozpis,
+  PermissionLevel.P_MEMBER,
 );

@@ -3,9 +3,12 @@ const errorTranslation: { [key: string]: string } = {
   INVALID_PASSWORD: 'Nesprávné heslo',
   ACCOUNT_DISABLED: 'Učet byl zablokován',
   ACCOUNT_NOT_CONFIRMED: 'Účet ještě nebyl potvrzen',
-}
+};
 
-export const ErrorBox = ({ error: e, default: def }: {
+export const ErrorBox = ({
+  error: e,
+  default: def,
+}: {
   error: any;
   default?: string;
 }): JSX.Element | null => {
@@ -22,10 +25,18 @@ export const ErrorBox = ({ error: e, default: def }: {
     return null;
   }
 
-  return <div className="rounded-lg px-4 py-2 bg-red-500 text-white col-full">
-    {errorTranslation[error] ? errorTranslation[error] : <>
-      <div className="font-bold">{def || 'Něco se nepovedlo, zkuste to prosím znovu'}</div>
-      <div className="text-sm">{error}</div>
-    </>}
-  </div>;
+  return (
+    <div className="rounded-lg px-4 py-2 bg-red-500 text-white col-full">
+      {errorTranslation[error] ? (
+        errorTranslation[error]
+      ) : (
+        <>
+          <div className="font-bold">
+            {def || 'Něco se nepovedlo, zkuste to prosím znovu'}
+          </div>
+          <div className="text-sm">{error}</div>
+        </>
+      )}
+    </div>
+  );
 };

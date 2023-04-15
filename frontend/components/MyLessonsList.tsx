@@ -14,7 +14,7 @@ export const MyLessonsList: React.FC = () => {
 
   const lessonsPerDay = React.useMemo(() => {
     const lessonsPerDay: { [day: string]: ScheduleItemFragment[] } = {};
-    data?.myLessons?.nodes?.forEach(lesson => {
+    data?.myLessons?.nodes?.forEach((lesson) => {
       const date = lesson.rozpiByRiIdRodic?.rDatum;
       const place = lesson.rozpiByRiIdRodic?.rKde;
       let key = date ? formatWeekDay(new Date(date)) : '';
@@ -25,30 +25,34 @@ export const MyLessonsList: React.FC = () => {
     return lessonsPerDay;
   }, [data]);
 
-  return <div className="flex flex-col">
-    <WeekPicker title="Moje lekce" startDate={startDate} onChange={setStartDate} />
+  return (
+    <div className="flex flex-col">
+      <WeekPicker title="Moje lekce" startDate={startDate} onChange={setStartDate} />
 
-    {!isLoading && !data?.myLessons?.nodes?.length && (
-      <div className="text-stone-600">
-        Žádné lekce tento týden
-      </div>
-    )}
+      {!isLoading && !data?.myLessons?.nodes?.length && (
+        <div className="text-stone-600">Žádné lekce tento týden</div>
+      )}
 
-    {Object.entries(lessonsPerDay).map(([key, lessons]) => <React.Fragment key={key}>
-      <h6 className="text-lg font-bold mb-1 mt-4">
-        {key.split(' ').map(x => <div key={x}>{x}</div>)}
-      </h6>
+      {Object.entries(lessonsPerDay).map(([key, lessons]) => (
+        <React.Fragment key={key}>
+          <h6 className="text-lg font-bold mb-1 mt-4">
+            {key.split(' ').map((x) => (
+              <div key={x}>{x}</div>
+            ))}
+          </h6>
 
-      <Card className="grid w-72 rounded-lg border-stone-200 border">
-        {lessons.map((lesson, i) => (
-          <LessonButton
-            key={i}
-            lesson={lesson}
-            schedule={lesson.rozpiByRiIdRodic!}
-            showTrainer={lesson.rozpiByRiIdRodic?.rTrener !== user?.id}
-          />
-        ))}
-      </Card>
-    </React.Fragment>)}
-  </div >;
+          <Card className="grid w-72 rounded-lg border-stone-200 border">
+            {lessons.map((lesson, i) => (
+              <LessonButton
+                key={i}
+                lesson={lesson}
+                schedule={lesson.rozpiByRiIdRodic!}
+                showTrainer={lesson.rozpiByRiIdRodic?.rTrener !== user?.id}
+              />
+            ))}
+          </Card>
+        </React.Fragment>
+      ))}
+    </div>
+  );
 };

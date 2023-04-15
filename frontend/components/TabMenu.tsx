@@ -1,8 +1,12 @@
-import classNames from "classnames";
-import React from "react";
+import classNames from 'classnames';
+import React from 'react';
 
-export const TabMenu = React.memo(function TabMenu({ options, selected, onSelect }: {
-  options: { id: string; label: React.ReactNode; }[];
+export const TabMenu = React.memo(function TabMenu({
+  options,
+  selected,
+  onSelect,
+}: {
+  options: { id: string; label: React.ReactNode }[];
   selected: string;
   onSelect: (x: string) => void;
 }) {
@@ -24,14 +28,15 @@ export const TabMenu = React.memo(function TabMenu({ options, selected, onSelect
       <nav className="-mb-px flex space-x-8" aria-label="Tabs">
         {options.map((tab) => (
           <a
-            key={tab.id} href="#"
+            key={tab.id}
+            href="#"
             onClick={() => onSelect(tab.id)}
             aria-current={tab.id === selected ? 'page' : undefined}
             className={classNames(
               tab.id === selected
                 ? 'border-red-500 text-red-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
-              'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'
+              'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm',
             )}
           >
             {tab.label}

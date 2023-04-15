@@ -14,7 +14,9 @@ type ProspectFormEmailProps = {
   title?: string;
 };
 
-export const ProspectFormEmail = ({ title = 'Nemůžete přijít? Zanechte nám kontakt:' }: ProspectFormEmailProps) => {
+export const ProspectFormEmail = ({
+  title = 'Nemůžete přijít? Zanechte nám kontakt:',
+}: ProspectFormEmailProps) => {
   const { mutateAsync: submit } = useSubmitProspectFormMutation();
   const { control, handleSubmit } = useForm();
 
@@ -22,7 +24,11 @@ export const ProspectFormEmail = ({ title = 'Nemůžete přijít? Zanechte nám 
     if (typeof fbq !== 'undefined') {
       fbq('track', 'Lead');
     }
-    await submit({ cohort: CrmCohort.ContactMeLater, prospectData, origin: window.location.toString() });
+    await submit({
+      cohort: CrmCohort.ContactMeLater,
+      prospectData,
+      origin: window.location.toString(),
+    });
     toast.success('Brzy se vám ozveme!');
   });
 
@@ -31,12 +37,48 @@ export const ProspectFormEmail = ({ title = 'Nemůžete přijít? Zanechte nám 
       <form className="grid grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
         <h4 className="text-xl font-bold mb-2 col-full">{title}</h4>
 
-        <TextFieldElement control={control} name="name" label="Jméno" autoComplete="given-name" required />
-        <TextFieldElement control={control} name="surname" label="Příjmení" autoComplete="family-name" required />
-        <TextFieldElement className="col-full" control={control} name="email" type="email" autoComplete="email" required />
-        <CheckboxElement className="col-full mt-4 mb-2" control={control} name="op" value="agreed" required label={
-          <>Souhlasím se <a className="text-red-500" rel="noreferrer" target="_blank" href="/ochrana-osobnich-udaju">zpracováním osobních údajů</a></>
-        } />
+        <TextFieldElement
+          control={control}
+          name="name"
+          label="Jméno"
+          autoComplete="given-name"
+          required
+        />
+        <TextFieldElement
+          control={control}
+          name="surname"
+          label="Příjmení"
+          autoComplete="family-name"
+          required
+        />
+        <TextFieldElement
+          className="col-full"
+          control={control}
+          name="email"
+          type="email"
+          autoComplete="email"
+          required
+        />
+        <CheckboxElement
+          className="col-full mt-4 mb-2"
+          control={control}
+          name="op"
+          value="agreed"
+          required
+          label={
+            <>
+              Souhlasím se{' '}
+              <a
+                className="text-red-500"
+                rel="noreferrer"
+                target="_blank"
+                href="/ochrana-osobnich-udaju"
+              >
+                zpracováním osobních údajů
+              </a>
+            </>
+          }
+        />
         <ErrorBox error={onSubmit.error} />
         <SubmitButton className="col-full w-full" loading={onSubmit.loading}>
           Ozvěte se mi

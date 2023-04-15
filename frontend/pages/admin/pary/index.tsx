@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
+import {
+  withServerPermissions,
+  PermissionKey,
+  PermissionLevel,
+} from 'lib/data/use-server-permissions';
 import { CoupleList } from 'components/CoupleList';
 import { Layout } from 'components/layout/Layout';
 
@@ -12,5 +16,6 @@ CoupleAdminList.getLayout = (page: React.ReactElement) => (
 );
 
 export const getServerSideProps = withServerPermissions(
-  PermissionKey.pePary, PermissionLevel.P_OWNED,
+  PermissionKey.pePary,
+  PermissionLevel.P_OWNED,
 );

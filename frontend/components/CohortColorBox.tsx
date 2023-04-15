@@ -1,7 +1,9 @@
-import { CohortBasicFragment } from "lib/graphql/Cohorts";
-import React from "react";
+import { CohortBasicFragment } from 'lib/graphql/Cohorts';
+import React from 'react';
 
-export function CohortColorBoxes({ items }: {
+export function CohortColorBoxes({
+  items,
+}: {
   items?: (CohortBasicFragment | null)[] | null;
 }) {
   if (!items || !items.length) {
@@ -9,13 +11,18 @@ export function CohortColorBoxes({ items }: {
   }
   return (
     <div className="flex gap-1 border border-gray-300">
-      {items.map((g, i) => !g ? <React.Fragment key={i} /> : (
-        <div className="w-3 h-3"
-          key={g.sColorRgb}
-          title={g.sName}
-          style={{ backgroundColor: g.sColorRgb }}
-        />
-      ))}
+      {items.map((g, i) =>
+        !g ? (
+          <React.Fragment key={i} />
+        ) : (
+          <div
+            className="w-3 h-3"
+            key={g.sColorRgb}
+            title={g.sName}
+            style={{ backgroundColor: g.sColorRgb }}
+          />
+        ),
+      )}
     </div>
   );
 }

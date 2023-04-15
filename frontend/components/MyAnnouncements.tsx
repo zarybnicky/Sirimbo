@@ -18,35 +18,41 @@ export function MyAnnouncements() {
   const hasNext = total >= page * limit;
   const hasPrev = 0 < (page - 1) * limit;
 
-  return <div className="flex flex-col">
-    <div className="flex items-center">
-      <button
-        className="button button-icon text-stone-500 disabled:text-stone-300"
-        onClick={() => setPage(page + 1)}
-        disabled={hasPrev}
-      >
-        <ChevronLeft />
-      </button>
+  return (
+    <div className="flex flex-col">
+      <div className="flex items-center">
+        <button
+          className="button button-icon text-stone-500 disabled:text-stone-300"
+          onClick={() => setPage(page + 1)}
+          disabled={hasPrev}
+        >
+          <ChevronLeft />
+        </button>
 
-      <span className="text-stone-500">
-        {nodes.length > 0 ? fullDateFormatter.formatRange(
-          new Date(nodes[nodes.length - 1]!.upTimestampAdd),
-          new Date(nodes[0]!.upTimestampAdd),
-        ) : ''}
-      </span>
+        <span className="text-stone-500">
+          {nodes.length > 0
+            ? fullDateFormatter.formatRange(
+                new Date(nodes[nodes.length - 1]!.upTimestampAdd),
+                new Date(nodes[0]!.upTimestampAdd),
+              )
+            : ''}
+        </span>
 
-      <button
-        className="button button-icon text-stone-500 disabled:text-stone-400"
-        onClick={() => setPage(page - 1)}
-        disabled={hasNext}
-      >
-        <ChevronRight />
-      </button>
+        <button
+          className="button button-icon text-stone-500 disabled:text-stone-400"
+          onClick={() => setPage(page - 1)}
+          disabled={hasNext}
+        >
+          <ChevronRight />
+        </button>
+      </div>
+      <h4 className="text-3xl tracking-wide mb-4">Aktuality</h4>
+
+      {nodes.map((a) => (
+        <AnnouncementItem key={a.id} item={a} />
+      ))}
+
+      <Pagination {...{ total, limit, page, setPage }} />
     </div>
-    <h4 className="text-3xl tracking-wide mb-4">Aktuality</h4>
-
-    {nodes.map((a) => <AnnouncementItem key={a.id} item={a} />)}
-
-    <Pagination {...{ total, limit, page, setPage }} />
-  </div>;
+  );
 }

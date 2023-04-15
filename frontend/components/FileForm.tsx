@@ -3,7 +3,7 @@ import { FileFragment, useUpdateFileMutation } from 'lib/graphql/Documents';
 import { DokumentyInput } from 'lib/graphql';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
-import { useAsyncCallback } from 'react-async-hook'
+import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 

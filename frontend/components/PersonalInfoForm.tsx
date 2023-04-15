@@ -1,22 +1,36 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "lib/data/use-auth";
-import { useCurrentUserQuery } from "lib/graphql/CurrentUser";
-import { useUpdateUserMutation } from "lib/graphql/User";
-import React from "react";
+import { useQueryClient } from '@tanstack/react-query';
+import { useAuth } from 'lib/data/use-auth';
+import { useCurrentUserQuery } from 'lib/graphql/CurrentUser';
+import { useUpdateUserMutation } from 'lib/graphql/User';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { SelectElement } from 'components/SelectElement';
 import { RadioButtonGroupElement } from 'components/RadioButtomGroupElement';
 import { TextFieldElement } from 'components/TextField';
-import { useAsyncCallback } from 'react-async-hook'
+import { useAsyncCallback } from 'react-async-hook';
 import { useCountries } from 'lib/data/use-countries';
-import { UserInput } from "lib/graphql";
-import { ErrorBox } from "components/ErrorBox";
-import { SubmitButton } from "./SubmitButton";
+import { UserInput } from 'lib/graphql';
+import { ErrorBox } from 'components/ErrorBox';
+import { SubmitButton } from './SubmitButton';
 
-type FormProps = Pick<UserInput, 'uJmeno' | 'uPrijmeni' | 'uNarozeni'
-  | 'uRodneCislo' | 'uPohlavi' | 'uEmail' | 'uTelefon' | 'uStreet' |
-  'uConscriptionNumber' | 'uOrientationNumber' | 'uCity' |
-  'uDistrict' | 'uPostalCode' | 'uNationality' | 'uPoznamky'>;
+type FormProps = Pick<
+  UserInput,
+  | 'uJmeno'
+  | 'uPrijmeni'
+  | 'uNarozeni'
+  | 'uRodneCislo'
+  | 'uPohlavi'
+  | 'uEmail'
+  | 'uTelefon'
+  | 'uStreet'
+  | 'uConscriptionNumber'
+  | 'uOrientationNumber'
+  | 'uCity'
+  | 'uDistrict'
+  | 'uPostalCode'
+  | 'uNationality'
+  | 'uPoznamky'
+>;
 
 export const PersonalInfoForm: React.FC<{
   onSuccess: () => void;
@@ -64,8 +78,19 @@ export const PersonalInfoForm: React.FC<{
       <TextFieldElement control={control} name="uJmeno" label="Jméno" required />
       <TextFieldElement control={control} name="uPrijmeni" label="Příjmení" required />
 
-      <TextFieldElement type="date" control={control} label="Datum narození" name="uNarozeni" required />
-      <TextFieldElement control={control} name="uRodneCislo" label="Rodné číslo" required placeholder="1111119999"
+      <TextFieldElement
+        type="date"
+        control={control}
+        label="Datum narození"
+        name="uNarozeni"
+        required
+      />
+      <TextFieldElement
+        control={control}
+        name="uRodneCislo"
+        label="Rodné číslo"
+        required
+        placeholder="1111119999"
         validation={{
           pattern: {
             value: /[0-9]{9,10}/,
@@ -76,23 +101,52 @@ export const PersonalInfoForm: React.FC<{
 
       <div>
         <RadioButtonGroupElement
-          control={control} name="uPohlavi" required
-          options={[{ id: 'm', label: 'Muž' }, { id: 'f', label: 'Žena' }]}
+          control={control}
+          name="uPohlavi"
+          required
+          options={[
+            { id: 'm', label: 'Muž' },
+            { id: 'f', label: 'Žena' },
+          ]}
         />
       </div>
 
-      <div className="tracking-wide uppercase text-stone-700 text-xs col-full mt-4">Kontaktní údaje</div>
+      <div className="tracking-wide uppercase text-stone-700 text-xs col-full mt-4">
+        Kontaktní údaje
+      </div>
 
-      <TextFieldElement control={control} type="email" name="uEmail" label="E-mail" required />
-      <TextFieldElement control={control} type="tel" name="uTelefon" label="Telefon" required />
+      <TextFieldElement
+        control={control}
+        type="email"
+        name="uEmail"
+        label="E-mail"
+        required
+      />
+      <TextFieldElement
+        control={control}
+        type="tel"
+        name="uTelefon"
+        label="Telefon"
+        required
+      />
 
-      <div className="tracking-wide uppercase text-stone-700 text-xs col-full mt-4">Bydliště</div>
+      <div className="tracking-wide uppercase text-stone-700 text-xs col-full mt-4">
+        Bydliště
+      </div>
 
       <TextFieldElement control={control} name="uStreet" label="Ulice" required />
 
       <div className="grid grid-cols-2 gap-2">
-        <TextFieldElement control={control} name="uConscriptionNumber" label="Č.popisné" />
-        <TextFieldElement control={control} name="uOrientationNumber" label="Č.orientační" />
+        <TextFieldElement
+          control={control}
+          name="uConscriptionNumber"
+          label="Č.popisné"
+        />
+        <TextFieldElement
+          control={control}
+          name="uOrientationNumber"
+          label="Č.orientační"
+        />
       </div>
 
       <TextFieldElement control={control} name="uCity" label="Město" required />
@@ -100,9 +154,12 @@ export const PersonalInfoForm: React.FC<{
       <TextFieldElement control={control} name="uPostalCode" label="PSČ" />
 
       <div className="col-full">
-        <SelectElement control={control}
-          label="Národnost" name="uNationality" required
-          options={countries.map(x => ({ id: x.code.toString(), label: x.label }))}
+        <SelectElement
+          control={control}
+          label="Národnost"
+          name="uNationality"
+          required
+          options={countries.map((x) => ({ id: x.code.toString(), label: x.label }))}
         />
       </div>
       <SubmitButton loading={onSubmit.loading} />

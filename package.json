@@ -10,7 +10,8 @@
     "graphql": "15.4.0"
   },
   "devDependencies": {
-    "concurrently": "^7.0.0"
+    "concurrently": "^7.0.0",
+    "prettier": "^2.8.7"
   },
   "scripts": {
     "frontend": "yarn workspace sirimbo-frontend dev",

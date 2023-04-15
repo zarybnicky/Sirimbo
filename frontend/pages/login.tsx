@@ -22,7 +22,7 @@ export default function LoginPage() {
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await signIn(values.login, values.passwd);
-    router.push(router.query?.from as string || '/dashboard');
+    router.push((router.query?.from as string) || '/dashboard');
   });
 
   return (
@@ -33,13 +33,20 @@ export default function LoginPage() {
 
           <ErrorBox error={onSubmit.error} />
           <TextFieldElement
-            control={control} name="login"
-            label="E-mail nebo přihlašovací jméno" autoComplete="username"
-            required autoFocus
+            control={control}
+            name="login"
+            label="E-mail nebo přihlašovací jméno"
+            autoComplete="username"
+            required
+            autoFocus
           />
           <TextFieldElement
-            control={control} name="passwd" type="password"
-            label="Heslo" autoComplete="current-password" required
+            control={control}
+            name="passwd"
+            type="password"
+            label="Heslo"
+            autoComplete="current-password"
+            required
           />
           <SubmitButton className="w-full my-2" loading={onSubmit.loading}>
             Přihlásit
@@ -61,6 +68,6 @@ export default function LoginPage() {
       </Card>
     </div>
   );
-};
+}
 
 export const getServerSideProps = withServerLoggedOut;

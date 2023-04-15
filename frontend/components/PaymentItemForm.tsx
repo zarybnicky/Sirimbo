@@ -1,15 +1,23 @@
 import React from 'react';
-import { PaymentItemFragment, useCreatePaymentItemMutation, usePaymentCategoryListQuery, useUpdatePaymentItemMutation } from 'lib/graphql/Payment';
+import {
+  PaymentItemFragment,
+  useCreatePaymentItemMutation,
+  usePaymentCategoryListQuery,
+  useUpdatePaymentItemMutation,
+} from 'lib/graphql/Payment';
 import { useForm } from 'react-hook-form';
 import { SelectElement } from 'components/SelectElement';
 import { TextFieldElement } from 'components/TextField';
-import { useAsyncCallback } from 'react-async-hook'
+import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { PlatbyItemInput } from 'lib/graphql';
 import { useUserListQuery } from 'lib/graphql/User';
 
-type FormProps = Pick<PlatbyItemInput, 'piAmount' | 'piDate' | 'piIdCategory' | 'piIdUser' | 'piPrefix'>;
+type FormProps = Pick<
+  PlatbyItemInput,
+  'piAmount' | 'piDate' | 'piIdCategory' | 'piIdUser' | 'piPrefix'
+>;
 
 export const PaymentItemForm: React.FC<{
   data?: PaymentItemFragment;
@@ -47,18 +55,32 @@ export const PaymentItemForm: React.FC<{
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
-      <TextFieldElement control={control} type="date" label="Datum" name="piDate" required />
+      <TextFieldElement
+        control={control}
+        type="date"
+        label="Datum"
+        name="piDate"
+        required
+      />
       <TextFieldElement control={control} name="piAmount" label="Částka (Kč)" required />
       <SelectElement
-        control={control} name="piIdUser" label="Uživatel" required
-        options={(users?.users?.nodes || []).map(x => ({
-          id: x.id, label: `${x.id.padStart(6, '0')} - ${x.uJmeno} ${x.uPrijmeni}`
+        control={control}
+        name="piIdUser"
+        label="Uživatel"
+        required
+        options={(users?.users?.nodes || []).map((x) => ({
+          id: x.id,
+          label: `${x.id.padStart(6, '0')} - ${x.uJmeno} ${x.uPrijmeni}`,
         }))}
       />
       <SelectElement
-        control={control} name="piIdUser" label="Uživatel" required
-        options={(categories?.platbyCategories?.nodes || []).map(x => ({
-          id: x.id, label: `${x.id} - ${x.pcName}`
+        control={control}
+        name="piIdUser"
+        label="Uživatel"
+        required
+        options={(categories?.platbyCategories?.nodes || []).map((x) => ({
+          id: x.id,
+          label: `${x.id} - ${x.pcName}`,
         }))}
       />
       <TextFieldElement control={control} name="piPrefix" label="Prefix (rok)" required />

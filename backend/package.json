@@ -56,5 +56,8 @@
     "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1",
     "zapatos": "^5.0.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.8.7"
   }
 }

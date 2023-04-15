@@ -9,7 +9,7 @@ import classNames from 'classnames';
 import { ReservationButton } from 'components/ReservationButton';
 import { useAuth } from 'lib/data/use-auth';
 
-export const ReservationItem = ({ item }: { item: MyReservationFragment; }) => {
+export const ReservationItem = ({ item }: { item: MyReservationFragment }) => {
   const { couple } = useAuth();
   const perms = usePermissions();
 
@@ -19,12 +19,14 @@ export const ReservationItem = ({ item }: { item: MyReservationFragment; }) => {
         <Dropdown
           className="absolute right-1 top-1"
           align="end"
-          options={[{ title: "Upravit", href: `/admin/nabidka/${item.id}` }]}
+          options={[{ title: 'Upravit', href: `/admin/nabidka/${item.id}` }]}
         />
       )}
 
       <div className="mb-0.5">
-        <div className="font-bold">{shortDateFormatter.formatRange(new Date(item.nOd), new Date(item.nDo))}</div>
+        <div className="font-bold">
+          {shortDateFormatter.formatRange(new Date(item.nOd), new Date(item.nDo))}
+        </div>
         <div className="text-xl">{item.userByNTrener?.fullName}</div>
 
         {item.nMaxPocetHod > 0 && (
@@ -35,20 +37,27 @@ export const ReservationItem = ({ item }: { item: MyReservationFragment; }) => {
         )}
         <div>
           <span className="text-stone-500">Volných hodin: </span>
-          <span className="text-lg">{item.freeLessons} z {item.nPocetHod} nabízených</span>
+          <span className="text-lg">
+            {item.freeLessons} z {item.nPocetHod} nabízených
+          </span>
         </div>
       </div>
 
       <Card className="grid mx-auto w-72 rounded-lg border-stone-200 border">
-        {item.nabidkaItemsByNiIdRodic.nodes.filter(x => x.niPartner !== couple?.id).map((lesson, i) => (
-          <div key={i} className={classNames(
-            "group flex gap-3 p-2.5 rounded-lg",
-            "leading-4 text-sm tabular-nums",
-          )}>
-            <div>{formatCoupleName(lesson.paryByNiPartner)}</div>
-            <div className="grow text-right">{lesson.niPocetHod}x</div>
-          </div>
-        ))}
+        {item.nabidkaItemsByNiIdRodic.nodes
+          .filter((x) => x.niPartner !== couple?.id)
+          .map((lesson, i) => (
+            <div
+              key={i}
+              className={classNames(
+                'group flex gap-3 p-2.5 rounded-lg',
+                'leading-4 text-sm tabular-nums',
+              )}
+            >
+              <div>{formatCoupleName(lesson.paryByNiPartner)}</div>
+              <div className="grow text-right">{lesson.niPocetHod}x</div>
+            </div>
+          ))}
         {(perms.canMakeReservation(item) || item.myLessons) && (
           <ReservationButton item={item} />
         )}

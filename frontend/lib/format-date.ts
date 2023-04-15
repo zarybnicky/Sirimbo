@@ -1,4 +1,4 @@
-import { capitalize } from "./capitalize";
+import { capitalize } from './capitalize';
 
 const weekDayFormatter = new Intl.DateTimeFormat('cs-CZ', {
   weekday: 'long',

@@ -16,12 +16,20 @@ export const NewCoupleForm: React.FC<{
   onSuccess?: () => void;
 }> = ({ onSuccess }) => {
   const { data: users } = useUserListQuery();
-  const men = React.useMemo(() => (users?.users?.nodes || [])
-    .filter(x => x.uPohlavi === 'm')
-    .map(x => ({ id: x.id, label: `${x.uJmeno} ${x.uPrijmeni} (${x.id})` })), [users]);
-  const women = React.useMemo(() => (users?.users?.nodes || [])
-    .filter(x => x.uPohlavi === 'f')
-    .map(x => ({ id: x.id, label: `${x.uJmeno} ${x.uPrijmeni} (${x.id})` })), [users])
+  const men = React.useMemo(
+    () =>
+      (users?.users?.nodes || [])
+        .filter((x) => x.uPohlavi === 'm')
+        .map((x) => ({ id: x.id, label: `${x.uJmeno} ${x.uPrijmeni} (${x.id})` })),
+    [users],
+  );
+  const women = React.useMemo(
+    () =>
+      (users?.users?.nodes || [])
+        .filter((x) => x.uPohlavi === 'f')
+        .map((x) => ({ id: x.id, label: `${x.uJmeno} ${x.uPrijmeni} (${x.id})` })),
+    [users],
+  );
 
   const { mutateAsync: doCreate } = useCreateCoupleMutation({ onSuccess });
 
@@ -34,11 +42,17 @@ export const NewCoupleForm: React.FC<{
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
       <SelectElement
-        control={control} name="man" label="Partner" required
+        control={control}
+        name="man"
+        label="Partner"
+        required
         options={men}
       />
       <SelectElement
-        control={control} name="woman" label="Partnerka" required
+        control={control}
+        name="woman"
+        label="Partnerka"
+        required
         options={women}
       />
       <SubmitButton className="w-full" loading={onSubmit.loading}>

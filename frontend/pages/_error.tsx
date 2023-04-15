@@ -23,11 +23,13 @@ import NextErrorComponent, { ErrorProps } from 'next/error';
 
 export default function CustomErrorComponent(props: ErrorProps) {
   return <NextErrorComponent statusCode={props.statusCode} />;
-};
+}
 
 CustomErrorComponent.getInitialProps = async (contextData: NextPageContext) => {
   await Sentry.captureUnderscoreErrorException(contextData);
   return NextErrorComponent.getInitialProps(contextData);
 };
 
-CustomErrorComponent.getLayout = (page: React.ReactNode) => <Layout showTopMenu>{page}</Layout>;
+CustomErrorComponent.getLayout = (page: React.ReactNode) => (
+  <Layout showTopMenu>{page}</Layout>
+);

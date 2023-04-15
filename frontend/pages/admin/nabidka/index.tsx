@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { withServerPermissions, PermissionKey, PermissionLevel } from 'lib/data/use-server-permissions';
+import {
+  withServerPermissions,
+  PermissionKey,
+  PermissionLevel,
+} from 'lib/data/use-server-permissions';
 import { ReservationList } from 'components/ReservationList';
 import { Layout } from 'components/layout/Layout';
 
@@ -12,5 +16,6 @@ ReservationListPage.getLayout = (page: React.ReactElement) => (
 );
 
 export const getServerSideProps = withServerPermissions(
-  PermissionKey.peNabidka, PermissionLevel.P_VIEW,
+  PermissionKey.peNabidka,
+  PermissionLevel.P_VIEW,
 );

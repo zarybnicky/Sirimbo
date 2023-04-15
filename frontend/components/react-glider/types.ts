@@ -1,10 +1,10 @@
-import Glider from "glider-js";
+import Glider from 'glider-js';
 
 interface BreakPoint {
   breakpoint: number;
   settings: {
-    slidesToShow?: number | "auto";
-    slidesToScroll?: number | "auto";
+    slidesToShow?: number | 'auto';
+    slidesToScroll?: number | 'auto';
     itemWidth?: number;
     duration?: number;
   };
@@ -30,7 +30,7 @@ export interface GliderProps {
    *
    * @default 1
    */
-  slidesToShow?: number | "auto";
+  slidesToShow?: number | 'auto';
   /**
    * The number of slides to scroll when arrow navigation
    * is used. If this value is set to auto, it will match
@@ -38,7 +38,7 @@ export interface GliderProps {
    *
    * @default 1
    */
-  slidesToScroll?: number | "auto";
+  slidesToScroll?: number | 'auto';
   /** This value is ignored unless slidesToShow is set to auto, in which it is then required. */
   itemWidth?: number;
   /**
@@ -145,22 +145,22 @@ export interface GliderProps {
 
 type GliderOptions = Pick<
   GliderProps,
-  | "arrows"
-  | "dots"
-  | "slidesToShow"
-  | "slidesToScroll"
-  | "itemWidth"
-  | "exactWidth"
-  | "scrollLock"
-  | "scrollLockDelay"
-  | "resizeLock"
-  | "responsive"
-  | "rewind"
-  | "scrollPropagate"
-  | "draggable"
-  | "dragVelocity"
-  | "duration"
-  | "skipTrack"
+  | 'arrows'
+  | 'dots'
+  | 'slidesToShow'
+  | 'slidesToScroll'
+  | 'itemWidth'
+  | 'exactWidth'
+  | 'scrollLock'
+  | 'scrollLockDelay'
+  | 'resizeLock'
+  | 'responsive'
+  | 'rewind'
+  | 'scrollPropagate'
+  | 'draggable'
+  | 'dragVelocity'
+  | 'duration'
+  | 'skipTrack'
 >;
 
 export interface GliderMethods {

@@ -7,18 +7,22 @@ import { Layout } from 'components/layout/Layout';
 
 export default function LocationsPage() {
   const items = useLocations();
-  return <>
-    <Heading color={{ r: 20, g: 200, b: 20, a: .5 }} text="Kde trénujeme" image="" />
-    <div className="container mx-auto max-w-3xl mt-8 mb-8">
-      {items.map((x, i) => <LocationCard item={x} key={i} />)}
-    </div>
-    <CallToAction />
-  </>;
-};
+  return (
+    <>
+      <Heading color={{ r: 20, g: 200, b: 20, a: 0.5 }} text="Kde trénujeme" image="" />
+      <div className="container mx-auto max-w-3xl mt-8 mb-8">
+        {items.map((x, i) => (
+          <LocationCard item={x} key={i} />
+        ))}
+      </div>
+      <CallToAction />
+    </>
+  );
+}
 
 const useLocations = () => [
   {
-    image: "https://tkolymp.cz/fotogalerie/223/foto/10089",
+    image: 'https://tkolymp.cz/fotogalerie/223/foto/10089',
     name: 'Taneční centrum při FZŠ Holečkova',
     address: 'Holečkova 10, 779 00, Olomouc (vchod brankou u zastávy Povel - škola)',
     href: 'https://www.zsholeckova.cz/',
@@ -36,8 +40,8 @@ const useLocations = () => [
     href: 'https://www.sgo.cz/',
     mapHref: 'https://goo.gl/maps/PgsEra8TnYV4V7KGA',
     map: {
-      lat: 49.59490,
-      lng: 17.26340,
+      lat: 49.5949,
+      lng: 17.2634,
       zoom: 12,
     },
   },
@@ -55,4 +59,6 @@ const useLocations = () => [
   },
 ];
 
-LocationsPage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;
+LocationsPage.getLayout = (page: React.ReactElement) => (
+  <Layout showTopMenu>{page}</Layout>
+);

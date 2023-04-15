@@ -1,8 +1,12 @@
-import { PaymentGroupFragment, useCreatePaymentGroupMutation, useUpdatePaymentGroupMutation } from 'lib/graphql/Payment';
+import {
+  PaymentGroupFragment,
+  useCreatePaymentGroupMutation,
+  useUpdatePaymentGroupMutation,
+} from 'lib/graphql/Payment';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextAreaElement, TextFieldElement } from 'components/TextField';
-import { useAsyncCallback } from 'react-async-hook'
+import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { PlatbyGroupInput } from 'lib/graphql';
@@ -37,8 +41,20 @@ export const PaymentGroupForm: React.FC<{
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="pgName" label="Název" required />
-      <TextAreaElement control={control} name="pgDescription" label="Shrnutí" rows={3} required />
-      <TextFieldElement control={control} type="number" name="pgBase" label="Násobitel částky" required />
+      <TextAreaElement
+        control={control}
+        name="pgDescription"
+        label="Shrnutí"
+        rows={3}
+        required
+      />
+      <TextFieldElement
+        control={control}
+        type="number"
+        name="pgBase"
+        label="Násobitel částky"
+        required
+      />
       <SubmitButton loading={onSubmit.loading} />
     </form>
   );

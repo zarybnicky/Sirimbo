@@ -1,10 +1,14 @@
-import { ScheduleFragment, useCreateScheduleMutation, useUpdateScheduleMutation } from 'lib/graphql/Schedule';
+import {
+  ScheduleFragment,
+  useCreateScheduleMutation,
+  useUpdateScheduleMutation,
+} from 'lib/graphql/Schedule';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { SelectElement } from 'components/SelectElement';
 import { TextFieldElement } from 'components/TextField';
 import { CheckboxElement } from 'components/Checkbox';
-import { useAsyncCallback } from 'react-async-hook'
+import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { RozpiInput } from 'lib/graphql';
@@ -44,11 +48,23 @@ export const ScheduleForm: React.FC<{
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
       <SelectElement
-        control={control} name="rTrener" label="Trenér" required
-        options={(trainers?.trainers?.nodes || []).map(x => ({ id: x.id, label: `${x.uJmeno} ${x.uPrijmeni}` }))}
+        control={control}
+        name="rTrener"
+        label="Trenér"
+        required
+        options={(trainers?.trainers?.nodes || []).map((x) => ({
+          id: x.id,
+          label: `${x.uJmeno} ${x.uPrijmeni}`,
+        }))}
       />
       <TextFieldElement control={control} name="rKde" label="Místo" required />
-      <TextFieldElement control={control} type="date" label="Datum" name="rDatum" required />
+      <TextFieldElement
+        control={control}
+        type="date"
+        label="Datum"
+        name="rDatum"
+        required
+      />
       <CheckboxElement control={control} name="rVisible" value="1" label="Viditelný" />
       <CheckboxElement control={control} name="rLock" value="1" label="Uzamčený" />
       <SubmitButton loading={onSubmit.loading} />

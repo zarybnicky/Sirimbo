@@ -1,12 +1,12 @@
-import { useMsmtExportQuery } from "lib/graphql/User";
-import { saveAs } from "file-saver";
-import format from "date-fns/format";
+import { useMsmtExportQuery } from 'lib/graphql/User';
+import { saveAs } from 'file-saver';
+import format from 'date-fns/format';
 
 export const exportMSMT = async () => {
   const { Workbook } = await import('exceljs');
   const data = await useMsmtExportQuery.fetcher()();
   const workbook = new Workbook();
-  const worksheet = workbook.addWorksheet("MŠMT Export");
+  const worksheet = workbook.addWorksheet('MŠMT Export');
 
   worksheet.columns = [
     { header: 'JMENO', key: 'firstName' },
@@ -37,12 +37,12 @@ export const exportMSMT = async () => {
   ];
 
   worksheet.getRow(1).font = { bold: true };
-  worksheet.columns.forEach(column => {
+  worksheet.columns.forEach((column) => {
     column.width = (column?.header?.length || 0) + 10;
     column.alignment = { horizontal: 'center' };
   });
 
-  data.members?.nodes.forEach(x => {
+  data.members?.nodes.forEach((x) => {
     worksheet.addRow({
       firstName: x.uJmeno,
       lastName: x.uPrijmeni,
@@ -66,5 +66,5 @@ export const exportMSMT = async () => {
   });
 
   const buf = await workbook.csv.writeBuffer();
-  saveAs(new Blob([buf]), "Olymp-MSMT-2023.csv");
+  saveAs(new Blob([buf]), 'Olymp-MSMT-2023.csv');
 };

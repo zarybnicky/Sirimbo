@@ -1,5 +1,8 @@
 import { ScheduleBasicFragment, ScheduleItemBasicFragment } from 'lib/graphql/Schedule';
-import { ReservationBasicFragment, ReservationItemBasicFragment } from 'lib/graphql/Reservation';
+import {
+  ReservationBasicFragment,
+  ReservationItemBasicFragment,
+} from 'lib/graphql/Reservation';
 import { keysOf } from 'lib/keys-of';
 import { useAuth } from './use-auth';
 
@@ -26,9 +29,11 @@ export enum PermissionKey {
   peSkupiny,
   peUsers,
   peMain,
-};
+}
 
-export const defaultPermissions: { [key in keyof typeof PermissionKey]: PermissionLevel } = {
+export const defaultPermissions: {
+  [key in keyof typeof PermissionKey]: PermissionLevel;
+} = {
   peAkce: 1,
   peAktuality: 2,
   peDokumenty: 1,
@@ -45,7 +50,9 @@ export const defaultPermissions: { [key in keyof typeof PermissionKey]: Permissi
   peMain: 2,
 };
 
-export const allowedPermissions: { [key in keyof typeof PermissionKey]: PermissionLevel[] } = {
+export const allowedPermissions: {
+  [key in keyof typeof PermissionKey]: PermissionLevel[];
+} = {
   peAkce: [1, 2, 4, 8, 16],
   peAktuality: [2, 8, 16],
   peDokumenty: [1, 4, 8, 16],
@@ -62,24 +69,24 @@ export const allowedPermissions: { [key in keyof typeof PermissionKey]: Permissi
   peMain: [2],
 };
 
-export const permissionLabels: { [key in keyof typeof PermissionKey]: string } = {
-  peAkce: "Akce",
-  peAktuality: "Aktuality",
-  peDokumenty: "Dokumenty",
-  peGalerie: "Galerie",
-  peNabidka: "Nabídky",
-  peNastenka: "Nástěnka",
-  peNovinky: "Novinky",
-  pePary: "Páry",
-  pePlatby: "Platby",
-  pePermissions: "Uživatelské role",
-  peRozpis: "Rozpisy",
-  peSkupiny: "Skupiny",
-  peUsers: "Uživatelé",
-  peMain: "Veřejná sekce",
+export const permissionLabels: {
+  [key in keyof typeof PermissionKey]: string;
+} = {
+  peAkce: 'Akce',
+  peAktuality: 'Aktuality',
+  peDokumenty: 'Dokumenty',
+  peGalerie: 'Galerie',
+  peNabidka: 'Nabídky',
+  peNastenka: 'Nástěnka',
+  peNovinky: 'Novinky',
+  pePary: 'Páry',
+  pePlatby: 'Platby',
+  pePermissions: 'Uživatelské role',
+  peRozpis: 'Rozpisy',
+  peSkupiny: 'Skupiny',
+  peUsers: 'Uživatelé',
+  peMain: 'Veřejná sekce',
 };
-
-export const realPermissionKeys = keysOf(PermissionKey).filter(key => (!~~key && key.toString() !== "0"));
 
 export const permissionMarks = [
   { value: 0, realValue: PermissionLevel.P_NONE, label: 'žádná' },
@@ -92,14 +99,14 @@ export const permissionMarks = [
 export function usePermissions() {
   const { user } = useAuth();
   const perms = user?.permissionByUGroup || defaultPermissions;
-  return new PermissionChecker(user?.id || "0", perms);
-};
+  return new PermissionChecker(user?.id || '0', perms);
+}
 
 export class PermissionChecker {
   constructor(
     public userId: string,
-    public perms: { [key in keyof typeof PermissionKey]: number }
-  ) { }
+    public perms: { [key in keyof typeof PermissionKey]: number },
+  ) {}
 
   public hasPermission(key: PermissionKey, level: PermissionLevel) {
     const perm = PermissionKey[key] as keyof typeof PermissionKey;
@@ -108,7 +115,8 @@ export class PermissionChecker {
 
   public canEditSchedule(schedule: { rTrener: string }) {
     return (
-      (this.perms.peRozpis >= PermissionLevel.P_OWNED && this.userId === schedule.rTrener) ||
+      (this.perms.peRozpis >= PermissionLevel.P_OWNED &&
+        this.userId === schedule.rTrener) ||
       this.perms.peRozpis >= PermissionLevel.P_ADMIN
     );
   }
@@ -119,23 +127,28 @@ export class PermissionChecker {
       this.perms.peNastenka >= PermissionLevel.P_ADMIN
     );
   }
+
   public canEditCohort(_item: {}) {
-    return (
-      this.perms.peSkupiny >= PermissionLevel.P_ADMIN
-    );
+    return this.perms.peSkupiny >= PermissionLevel.P_ADMIN;
   }
 
-  public canEditReservation(reservation: { nTrener: string; }) {
+  public canEditReservation(reservation: { nTrener: string }) {
     return (
-      (this.perms.peNabidka >= PermissionLevel.P_OWNED && this.userId === reservation.nTrener) ||
+      (this.perms.peNabidka >= PermissionLevel.P_OWNED &&
+        this.userId === reservation.nTrener) ||
       this.perms.peNabidka >= PermissionLevel.P_ADMIN
     );
   }
 
-  public canSignUp(item: { rLock: boolean; rTrener: string; }, lesson: { riLock: boolean; riPartner: string | null; }) {
+  public canSignUp(
+    item: { rLock: boolean; rTrener: string },
+    lesson: { riLock: boolean; riPartner: string | null },
+  ) {
     return (
       this.perms.peRozpis >= PermissionLevel.P_MEMBER &&
-      (!lesson.riPartner || lesson.riPartner === '0') && !item.rLock && !lesson.riLock
+      (!lesson.riPartner || lesson.riPartner === '0') &&
+      !item.rLock &&
+      !lesson.riLock
     );
   }
 
@@ -144,32 +157,44 @@ export class PermissionChecker {
     const woman = lesson.paryByRiPartner?.userByPIdPartner;
     const isMyLesson = this.userId === man?.id || this.userId === woman?.id;
     return (
-      (lesson.riPartner && lesson.riPartner !== '0') && !item.rLock && !lesson.riLock && (
-        (this.perms.peRozpis >= PermissionLevel.P_MEMBER && isMyLesson) ||
+      lesson.riPartner &&
+      lesson.riPartner !== '0' &&
+      !item.rLock &&
+      !lesson.riLock &&
+      ((this.perms.peRozpis >= PermissionLevel.P_MEMBER && isMyLesson) ||
         (this.perms.peRozpis >= PermissionLevel.P_OWNED && this.userId == item.rTrener) ||
-        this.perms.peRozpis >= PermissionLevel.P_ADMIN
-      )
+        this.perms.peRozpis >= PermissionLevel.P_ADMIN)
     );
   }
 
   public canMakeReservation(item: {
-    nabidkaItemsByNiIdRodic: { nodes: { niPocetHod: number; }[] };
-    nTrener: string; nLock: boolean; nPocetHod: number;
+    nabidkaItemsByNiIdRodic: { nodes: { niPocetHod: number }[] };
+    nTrener: string;
+    nLock: boolean;
+    nPocetHod: number;
   }) {
     return (
-      this.perms.peNabidka >= PermissionLevel.P_MEMBER && !item.nLock &&
-      item.nPocetHod > item.nabidkaItemsByNiIdRodic.nodes.reduce((n, x) => n + x.niPocetHod, 0)
+      this.perms.peNabidka >= PermissionLevel.P_MEMBER &&
+      !item.nLock &&
+      item.nPocetHod >
+        item.nabidkaItemsByNiIdRodic.nodes.reduce((n, x) => n + x.niPocetHod, 0)
     );
   }
 
-  public canCancelReservation(item: ReservationBasicFragment, lesson: ReservationItemBasicFragment) {
+  public canCancelReservation(
+    item: ReservationBasicFragment,
+    lesson: ReservationItemBasicFragment,
+  ) {
     const man = lesson.paryByNiPartner?.userByPIdPartner;
     const woman = lesson.paryByNiPartner?.userByPIdPartner;
     const isMyLesson = this.userId === man?.id || this.userId === woman?.id;
-    return !item.nLock && !lesson.niLock && (
-      (this.perms.peNabidka >= PermissionLevel.P_MEMBER && isMyLesson) ||
-      (this.perms.peNabidka >= PermissionLevel.P_OWNED && this.userId == item.nTrener) ||
-      this.perms.peNabidka >= PermissionLevel.P_ADMIN
+    return (
+      !item.nLock &&
+      !lesson.niLock &&
+      ((this.perms.peNabidka >= PermissionLevel.P_MEMBER && isMyLesson) ||
+        (this.perms.peNabidka >= PermissionLevel.P_OWNED &&
+          this.userId == item.nTrener) ||
+        this.perms.peNabidka >= PermissionLevel.P_ADMIN)
     );
   }
 }
