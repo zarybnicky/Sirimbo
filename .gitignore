@@ -10,3 +10,4 @@ vendor/
 result
 .cache
 .next
+.devenv

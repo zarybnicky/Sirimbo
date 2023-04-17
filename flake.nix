@@ -1,8 +1,9 @@
 {
-  inputs.nixpkgs.url = github:NixOS/nixpkgs/release-22.05;
+  inputs.nixpkgs.url = github:NixOS/nixpkgs/release-22.11;
+  inputs.devenv.url = github:cachix/devenv;
   inputs.migrate = { flake = false; url = github:graphile/migrate/main; };
 
-  outputs = { self, nixpkgs, migrate }: let
+  outputs = { self, nixpkgs, devenv, migrate } @ inputs: let
     inherit (nixpkgs.lib) flip mapAttrs mapAttrsToList;
 
     pkgs = import nixpkgs {
@@ -21,15 +22,26 @@
       sirimbo-migrations-beta = final.callPackage ./migrations/package.nix {};
     };
 
-    devShell.x86_64-linux = pkgs.mkShell {
-      nativeBuildInputs = [
-        pkgs.graphile-migrate
-        pkgs.yarn
-        pkgs.nodePackages.typescript
-        pkgs.yarn2nix
-        pkgs.postgresql_13
-        pkgs.ncc
-        pkgs.squawk
+    devShell.x86_64-linux = devenv.lib.mkShell {
+      inherit inputs pkgs;
+      modules = [
+        ({ pkgs, ... }: {
+          packages = [
+            pkgs.graphile-migrate
+            pkgs.yarn
+            pkgs.nodePackages.typescript
+            pkgs.yarn2nix
+            pkgs.postgresql_13
+            pkgs.ncc
+            # pkgs.squawk
+          ];
+
+          enterShell = ''
+            hello
+          '';
+
+          processes.run.exec = "hello";
+        })
       ];
     };
 
