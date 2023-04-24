@@ -36,18 +36,18 @@ export const EventList = () => {
 
       <List.Scroll>
         <FuzzyList
-          data={data?.akces?.nodes || []}
-          fields={['id', 'aJmeno']}
+          data={data?.events?.nodes || []}
+          fields={['id', 'name']}
           search={search}
           renderItem={(item) => (
             <List.Item
               key={item.id}
               active={active === item.id}
               href={`/admin/akce/${item.id}`}
-              title={item.aJmeno}
+              title={item.name}
               subtitle={fullDateFormatter.formatRange(
-                new Date(item.aOd),
-                new Date(item.aDo),
+                new Date(item.since),
+                new Date(item.until),
               )}
             />
           )}

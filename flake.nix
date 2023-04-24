@@ -33,11 +33,11 @@
             pkgs.yarn2nix
             pkgs.postgresql_13
             pkgs.ncc
+            pkgs.sqlint
             # pkgs.squawk
           ];
 
           enterShell = ''
-            hello
           '';
 
           processes.run.exec = "hello";

@@ -1,4 +1,4 @@
-import { AkceInput } from 'lib/graphql';
+import { EventInput } from 'lib/graphql';
 import {
   EventFragment,
   useCreateEventMutation,
@@ -14,18 +14,18 @@ import { SubmitButton } from './SubmitButton';
 import { SlateEditorElement } from './Slate';
 
 type FormProps = Pick<
-  AkceInput,
-  | 'aJmeno'
-  | 'aKde'
+  EventInput,
+  | 'name'
+  | 'locationText'
   | 'summary'
-  | 'aInfo'
-  | 'aOd'
-  | 'aDo'
-  | 'aKapacita'
-  | 'aVisible'
+  | 'description'
+  | 'since'
+  | 'until'
+  | 'capacity'
+  | 'isVisible'
   | 'isPublic'
   | 'enableNotes'
-  | 'aLock'
+  | 'isLocked'
 >;
 
 export const EventForm: React.FC<{
@@ -38,25 +38,25 @@ export const EventForm: React.FC<{
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
     reset({
-      aJmeno: data?.aJmeno,
-      aKde: data?.aKde,
+      name: data?.name,
+      locationText: data?.locationText,
       summary: data?.summary,
-      aInfo: data?.aInfo,
-      aOd: data?.aOd,
-      aDo: data?.aDo,
-      aKapacita: data?.aKapacita,
-      aVisible: data?.aVisible,
+      description: data?.description,
+      since: data?.since,
+      until: data?.until,
+      capacity: data?.capacity,
+      isVisible: data?.isVisible,
       isPublic: data?.isPublic,
       enableNotes: data?.enableNotes,
-      aLock: data?.aLock,
+      isLocked: data?.isLocked,
     });
   }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     const patch = {
       ...values,
-      aInfo: JSON.stringify(values.aInfo),
-      aDokumenty: '',
+      description: JSON.stringify(values.description),
+      filesLegacy: '',
     };
     if (data) {
       await doUpdate({ id: data.id, patch });
@@ -68,29 +68,34 @@ export const EventForm: React.FC<{
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
-      <TextFieldElement control={control} name="aJmeno" label="Název" required />
-      <TextFieldElement control={control} name="aKde" label="Místo akce" required />
+      <TextFieldElement control={control} name="name" label="Název" required />
+      <TextFieldElement
+        control={control}
+        name="locationText"
+        label="Místo akce"
+        required
+      />
       <SlateEditorElement control={control} name="summary" label="Shrnutí" />
-      <SlateEditorElement control={control} name="aInfo" label="Další info" />
-      <TextFieldElement control={control} type="date" label="Od" name="aOd" required />
+      <SlateEditorElement control={control} name="description" label="Další info" />
+      <TextFieldElement control={control} type="date" label="Od" name="since" required />
       <TextFieldElement
         type="date"
         helperText="(pokud je prázdné, počítá se jako 'Od')"
         control={control}
         label="Do"
-        name="aDo"
+        name="until"
         required
       />
       <TextFieldElement
         control={control}
         type="number"
-        name="aKapacita"
+        name="capacity"
         label="Kapacita"
         required
       />
       <CheckboxElement
         control={control}
-        name="aVisible"
+        name="isVisible"
         value="1"
         label="Zviditelnit pro členy"
       />
@@ -106,7 +111,7 @@ export const EventForm: React.FC<{
         value="1"
         label="Povolit poznámky k přihlášce"
       />
-      <CheckboxElement control={control} name="aLock" value="1" label="Uzamčená" />
+      <CheckboxElement control={control} name="isLocked" value="1" label="Uzamčená" />
       <SubmitButton loading={onSubmit.loading} />
     </form>
   );

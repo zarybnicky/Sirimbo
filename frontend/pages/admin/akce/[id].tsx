@@ -20,13 +20,13 @@ export default function EventEditPage() {
   });
   return (
     <Item>
-      <Item.Titlebar backHref="/admin/users" title={data?.akce?.aJmeno || '(Bez názvu)'}>
+      <Item.Titlebar backHref="/admin/users" title={data?.event?.name || '(Bez názvu)'}>
         <DeleteButton
           onDelete={() => doDelete({ id: id as string })}
           title="smazat uživatele"
         />
       </Item.Titlebar>
-      {data && <EventForm data={data?.akce || undefined} />}
+      {data && <EventForm data={data?.event || undefined} />}
     </Item>
   );
 }

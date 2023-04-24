@@ -1,26 +1,26 @@
-fragment Event on Akce {
+fragment Event on Event {
   __typename
-  id: aId
-  aOd
-  aDo
+  id
+  since
+  until
   summary
-  aInfo
-  aDokumenty
-  aJmeno
-  aKapacita
-  aKde
-  aLock
-  aTimestamp
-  aVisible
+  description
+  filesLegacy
+  name
+  capacity
+  remainingSpots
+  locationText
+  isLocked
+  isVisible
   isPublic
   enableNotes
 }
 
-fragment EventItem on AkceItem {
-  id: aiId
+fragment EventItem on AttendeeUser {
+  id
   notes
-  aiRokNarozeni
-  userByAiUser {
+  birthYear
+  user {
     uJmeno
     uPrijmeni
     uRodneCislo
@@ -29,9 +29,9 @@ fragment EventItem on AkceItem {
   }
 }
 
-fragment EventWithItems on Akce {
+fragment EventWithItems on Event {
   ...Event
-  akceItemsByAiIdRodic {
+  attendeeUsers {
     totalCount
     nodes {
       ...EventItem
@@ -40,13 +40,13 @@ fragment EventWithItems on Akce {
 }
 
 query Event($id: BigInt!) {
-  akce(aId: $id) {
+  event(id: $id) {
     ...EventWithItems
   }
 }
 
 query EventList($limit: Int, $offset: Int, $visible: Boolean) {
-  akces(first: $limit, offset: $offset, orderBy: [A_OD_DESC], condition: {aVisible: $visible}) {
+  events(first: $limit, offset: $offset, orderBy: [SINCE_DESC], condition: {isVisible: $visible}) {
     totalCount
     nodes {
       ...EventWithItems
@@ -55,43 +55,56 @@ query EventList($limit: Int, $offset: Int, $visible: Boolean) {
 }
 
 mutation ToggleEventVisible($id: BigInt!, $visible: Boolean!) {
-  updateAkce(input: {aId: $id, patch: {aVisible: $visible}}) {
-    akce {
-      aId
+  updateEvent(input: {id: $id, patch: {isVisible: $visible}}) {
+    event {
+      id
     }
   }
 }
 
-mutation CreateEvent($input: AkceInput!) {
-  createAkce(input: {akce: $input}) {
-    akce {
-      id: aId
+mutation CreateEvent($input: EventInput!) {
+  createEvent(input: {event: $input}) {
+    event {
+      id
     }
   }
 }
 
-mutation UpdateEvent($id: BigInt!, $patch: AkcePatch!) {
-  updateAkce(input: {aId: $id, patch: $patch}) {
+mutation UpdateEvent($id: BigInt!, $patch: EventPatch!) {
+  updateEvent(input: {id: $id, patch: $patch}) {
     __typename
   }
 }
 
 mutation DeleteEvent($id: BigInt!) {
-  deleteAkce(input: {aId: $id}) {
+  deleteEvent(input: {id: $id}) {
     __typename
   }
 }
 
-fragment MyEvent on Akce {
+fragment MyEvent on Event {
   ...Event
-  myNotes
-  hasCapacity
-  freeSlots
-  signedUp
+  attendeeExternals {
+    nodes {
+      firstName
+      lastName
+    }
+  }
+  attendeeUsers {
+    nodes {
+      notes
+      user {
+        uId
+        uJmeno
+        uPrijmeni
+        uNarozeni
+      }
+    }
+  }
 }
 
 query MyEvents {
-  akces(condition: {aVisible: true}) {
+  events(condition: {isVisible: true}) {
     nodes {
       ...MyEvent
     }

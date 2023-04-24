@@ -8,13 +8,12 @@ import { ParticipationForm } from './ParticipationForm';
 import { RichTextView } from './RichTextView';
 import classNames from 'classnames';
 
-export const EventItem = ({
-  event,
-  expanded: expandedInit = false,
-}: {
+interface Props {
   event: MyEventFragment;
   expanded?: boolean;
-}) => {
+}
+
+export const EventItem = ({ event, expanded: expandedInit = false }: Props) => {
   const [expanded, setExpanded] = React.useState(expandedInit);
   const open = React.useCallback(() => setExpanded(true), []);
 
@@ -23,16 +22,16 @@ export const EventItem = ({
       <div className="flex justify-between flex-wrap text-stone-600">
         <div>
           {fullDateFormatter.formatRange(
-            new Date(event.aOd || ''),
-            new Date(event.aDo || ''),
+            new Date(event.since || ''),
+            new Date(event.until || ''),
           )}
         </div>
         <div>
-          Zbývá {event.freeSlots} míst z {event.aKapacita}
+          Zbývá {event.remainingSpots} míst z {event.capacity}
         </div>
       </div>
-      <div className="text-2xl text-stone-900">{event.aJmeno}</div>
-      <div className="text-stone-600">{event.aKde}</div>
+      <div className="text-2xl text-stone-900">{event.name}</div>
+      <div className="text-stone-600">{event.locationText}</div>
 
       <div
         className={classNames('mb-2', !expanded && 'cursor-pointer')}
@@ -41,21 +40,40 @@ export const EventItem = ({
         <RichTextView value={event.summary} />
 
         {expanded ? (
-          <RichTextView value={(event.aInfo || '').replaceAll('\n', '<br/>')} />
+          <RichTextView value={(event.description || '').replaceAll('\n', '<br/>')} />
         ) : (
           <div className="text-red-500 font-bold mt-3">Zobrazit více...</div>
         )}
       </div>
-      {event.signedUp || event.hasCapacity ? (
+      {(event.attendeeUsers.nodes.length > 0 || (event.remainingSpots || 0) > 0) && (
         <div>
           <SimpleDialog
-            title={event.aJmeno}
-            button={<Button>{event.signedUp ? 'Upravit přihlášku' : 'Přihlásit'}</Button>}
+            title={event.name}
+            button={
+              <Button>
+                {event.attendeeUsers.nodes.length > 0 ? 'Upravit přihlášku' : 'Přihlásit'}
+              </Button>
+            }
           >
             {({ close }) => <ParticipationForm data={event} onSuccess={close} />}
           </SimpleDialog>
+          <SimpleDialog
+            title="Účastníci"
+            button={<Button>Účastníci ({event.attendeeUsers.nodes.length})</Button>}
+          >
+            {event.attendeeUsers.nodes.forEach((x) => (
+              <div>
+                {x.user?.uJmeno} {x.user?.uPrijmeni}
+              </div>
+            ))}
+            {event.attendeeExternals.nodes.forEach((x) => (
+              <div>
+                {x.firstName} {x.lastName}
+              </div>
+            ))}
+          </SimpleDialog>
         </div>
-      ) : null}
+      )}
     </Card>
   );
 };

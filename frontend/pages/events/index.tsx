@@ -14,7 +14,7 @@ export default function EventListPage() {
   return (
     <Item className="col-full-width">
       <Item.Titlebar title="Nadcházející akce" />
-      {data?.akces?.nodes.map((event) => (
+      {data?.events?.nodes.map((event) => (
         <EventItem key={event.id} event={event} />
       ))}
     </Item>

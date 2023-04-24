@@ -68,41 +68,22 @@ export type ActiveProspectsRecord = {
   updatedAt: Maybe<Scalars['Datetime']>;
 };
 
-export type Akce = Node & {
+export type Akce = {
   __typename?: 'Akce';
-  aDo: Scalars['Date'];
-  aDokumenty: Scalars['String'];
-  aId: Scalars['BigInt'];
-  aInfo: Scalars['String'];
-  aJmeno: Scalars['String'];
-  aKapacita: Scalars['BigInt'];
-  aKde: Scalars['String'];
-  aLock: Scalars['Boolean'];
-  aOd: Scalars['Date'];
+  aDo: Maybe<Scalars['Date']>;
+  aDokumenty: Maybe<Scalars['String']>;
+  aId: Maybe<Scalars['BigInt']>;
+  aInfo: Maybe<Scalars['String']>;
+  aJmeno: Maybe<Scalars['String']>;
+  aKapacita: Maybe<Scalars['BigInt']>;
+  aKde: Maybe<Scalars['String']>;
+  aLock: Maybe<Scalars['Boolean']>;
+  aOd: Maybe<Scalars['Date']>;
   aTimestamp: Maybe<Scalars['Datetime']>;
-  aVisible: Scalars['Boolean'];
-  /** Reads and enables pagination through a set of `AkceItem`. */
-  akceItemsByAiIdRodic: AkceItemsConnection;
-  enableNotes: Scalars['Boolean'];
-  freeSlots: Maybe<Scalars['Int']>;
-  hasCapacity: Maybe<Scalars['Boolean']>;
-  isPublic: Scalars['Boolean'];
-  myNotes: Maybe<Scalars['String']>;
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  signedUp: Maybe<Scalars['Boolean']>;
-  summary: Scalars['JSON'];
-};
-
-
-export type AkceAkceItemsByAiIdRodicArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<AkceItemCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<AkceItemsOrderBy>>;
+  aVisible: Maybe<Scalars['Boolean']>;
+  enableNotes: Maybe<Scalars['Boolean']>;
+  isPublic: Maybe<Scalars['Boolean']>;
+  summary: Maybe<Scalars['JSON']>;
 };
 
 /** A condition to be used against `Akce` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -139,15 +120,15 @@ export type AkceCondition = {
 
 /** An input for mutations affecting `Akce` */
 export type AkceInput = {
-  aDo: Scalars['Date'];
-  aDokumenty: Scalars['String'];
+  aDo?: InputMaybe<Scalars['Date']>;
+  aDokumenty?: InputMaybe<Scalars['String']>;
   aId?: InputMaybe<Scalars['BigInt']>;
-  aInfo: Scalars['String'];
-  aJmeno: Scalars['String'];
+  aInfo?: InputMaybe<Scalars['String']>;
+  aJmeno?: InputMaybe<Scalars['String']>;
   aKapacita?: InputMaybe<Scalars['BigInt']>;
-  aKde: Scalars['String'];
+  aKde?: InputMaybe<Scalars['String']>;
   aLock?: InputMaybe<Scalars['Boolean']>;
-  aOd: Scalars['Date'];
+  aOd?: InputMaybe<Scalars['Date']>;
   aTimestamp?: InputMaybe<Scalars['Datetime']>;
   aVisible?: InputMaybe<Scalars['Boolean']>;
   enableNotes?: InputMaybe<Scalars['Boolean']>;
@@ -155,19 +136,13 @@ export type AkceInput = {
   summary?: InputMaybe<Scalars['JSON']>;
 };
 
-export type AkceItem = Node & {
+export type AkceItem = {
   __typename?: 'AkceItem';
-  aiId: Scalars['BigInt'];
-  aiIdRodic: Scalars['BigInt'];
-  aiRokNarozeni: Scalars['Int'];
-  aiUser: Scalars['BigInt'];
-  /** Reads a single `Akce` that is related to this `AkceItem`. */
-  akceByAiIdRodic: Maybe<Akce>;
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  notes: Scalars['String'];
-  /** Reads a single `User` that is related to this `AkceItem`. */
-  userByAiUser: Maybe<User>;
+  aiId: Maybe<Scalars['BigInt']>;
+  aiIdRodic: Maybe<Scalars['BigInt']>;
+  aiRokNarozeni: Maybe<Scalars['Int']>;
+  aiUser: Maybe<Scalars['BigInt']>;
+  notes: Maybe<Scalars['String']>;
 };
 
 /**
@@ -189,15 +164,6 @@ export type AkceItemCondition = {
 
 /** An input for mutations affecting `AkceItem` */
 export type AkceItemInput = {
-  aiId?: InputMaybe<Scalars['BigInt']>;
-  aiIdRodic: Scalars['BigInt'];
-  aiRokNarozeni: Scalars['Int'];
-  aiUser: Scalars['BigInt'];
-  notes?: InputMaybe<Scalars['String']>;
-};
-
-/** Represents an update to a `AkceItem`. Fields that are set will be updated. */
-export type AkceItemPatch = {
   aiId?: InputMaybe<Scalars['BigInt']>;
   aiIdRodic?: InputMaybe<Scalars['BigInt']>;
   aiRokNarozeni?: InputMaybe<Scalars['Int']>;
@@ -237,122 +203,10 @@ export enum AkceItemsOrderBy {
   AiRokNarozeniDesc = 'AI_ROK_NAROZENI_DESC',
   AiUserAsc = 'AI_USER_ASC',
   AiUserDesc = 'AI_USER_DESC',
-  AkceByAiIdRodicADokumentyAsc = 'AKCE_BY_AI_ID_RODIC__A_DOKUMENTY_ASC',
-  AkceByAiIdRodicADokumentyDesc = 'AKCE_BY_AI_ID_RODIC__A_DOKUMENTY_DESC',
-  AkceByAiIdRodicADoAsc = 'AKCE_BY_AI_ID_RODIC__A_DO_ASC',
-  AkceByAiIdRodicADoDesc = 'AKCE_BY_AI_ID_RODIC__A_DO_DESC',
-  AkceByAiIdRodicAIdAsc = 'AKCE_BY_AI_ID_RODIC__A_ID_ASC',
-  AkceByAiIdRodicAIdDesc = 'AKCE_BY_AI_ID_RODIC__A_ID_DESC',
-  AkceByAiIdRodicAInfoAsc = 'AKCE_BY_AI_ID_RODIC__A_INFO_ASC',
-  AkceByAiIdRodicAInfoDesc = 'AKCE_BY_AI_ID_RODIC__A_INFO_DESC',
-  AkceByAiIdRodicAJmenoAsc = 'AKCE_BY_AI_ID_RODIC__A_JMENO_ASC',
-  AkceByAiIdRodicAJmenoDesc = 'AKCE_BY_AI_ID_RODIC__A_JMENO_DESC',
-  AkceByAiIdRodicAKapacitaAsc = 'AKCE_BY_AI_ID_RODIC__A_KAPACITA_ASC',
-  AkceByAiIdRodicAKapacitaDesc = 'AKCE_BY_AI_ID_RODIC__A_KAPACITA_DESC',
-  AkceByAiIdRodicAKdeAsc = 'AKCE_BY_AI_ID_RODIC__A_KDE_ASC',
-  AkceByAiIdRodicAKdeDesc = 'AKCE_BY_AI_ID_RODIC__A_KDE_DESC',
-  AkceByAiIdRodicALockAsc = 'AKCE_BY_AI_ID_RODIC__A_LOCK_ASC',
-  AkceByAiIdRodicALockDesc = 'AKCE_BY_AI_ID_RODIC__A_LOCK_DESC',
-  AkceByAiIdRodicAOdAsc = 'AKCE_BY_AI_ID_RODIC__A_OD_ASC',
-  AkceByAiIdRodicAOdDesc = 'AKCE_BY_AI_ID_RODIC__A_OD_DESC',
-  AkceByAiIdRodicATimestampAsc = 'AKCE_BY_AI_ID_RODIC__A_TIMESTAMP_ASC',
-  AkceByAiIdRodicATimestampDesc = 'AKCE_BY_AI_ID_RODIC__A_TIMESTAMP_DESC',
-  AkceByAiIdRodicAVisibleAsc = 'AKCE_BY_AI_ID_RODIC__A_VISIBLE_ASC',
-  AkceByAiIdRodicAVisibleDesc = 'AKCE_BY_AI_ID_RODIC__A_VISIBLE_DESC',
-  AkceByAiIdRodicEnableNotesAsc = 'AKCE_BY_AI_ID_RODIC__ENABLE_NOTES_ASC',
-  AkceByAiIdRodicEnableNotesDesc = 'AKCE_BY_AI_ID_RODIC__ENABLE_NOTES_DESC',
-  AkceByAiIdRodicIsPublicAsc = 'AKCE_BY_AI_ID_RODIC__IS_PUBLIC_ASC',
-  AkceByAiIdRodicIsPublicDesc = 'AKCE_BY_AI_ID_RODIC__IS_PUBLIC_DESC',
-  AkceByAiIdRodicSummaryAsc = 'AKCE_BY_AI_ID_RODIC__SUMMARY_ASC',
-  AkceByAiIdRodicSummaryDesc = 'AKCE_BY_AI_ID_RODIC__SUMMARY_DESC',
   Natural = 'NATURAL',
   NotesAsc = 'NOTES_ASC',
-  NotesDesc = 'NOTES_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  UserByAiUserUBanAsc = 'USER_BY_AI_USER__U_BAN_ASC',
-  UserByAiUserUBanDesc = 'USER_BY_AI_USER__U_BAN_DESC',
-  UserByAiUserUCityAsc = 'USER_BY_AI_USER__U_CITY_ASC',
-  UserByAiUserUCityDesc = 'USER_BY_AI_USER__U_CITY_DESC',
-  UserByAiUserUConfirmedAsc = 'USER_BY_AI_USER__U_CONFIRMED_ASC',
-  UserByAiUserUConfirmedDesc = 'USER_BY_AI_USER__U_CONFIRMED_DESC',
-  UserByAiUserUConscriptionNumberAsc = 'USER_BY_AI_USER__U_CONSCRIPTION_NUMBER_ASC',
-  UserByAiUserUConscriptionNumberDesc = 'USER_BY_AI_USER__U_CONSCRIPTION_NUMBER_DESC',
-  UserByAiUserUCreatedAtAsc = 'USER_BY_AI_USER__U_CREATED_AT_ASC',
-  UserByAiUserUCreatedAtDesc = 'USER_BY_AI_USER__U_CREATED_AT_DESC',
-  UserByAiUserUDancerAsc = 'USER_BY_AI_USER__U_DANCER_ASC',
-  UserByAiUserUDancerDesc = 'USER_BY_AI_USER__U_DANCER_DESC',
-  UserByAiUserUDistrictAsc = 'USER_BY_AI_USER__U_DISTRICT_ASC',
-  UserByAiUserUDistrictDesc = 'USER_BY_AI_USER__U_DISTRICT_DESC',
-  UserByAiUserUEmailAsc = 'USER_BY_AI_USER__U_EMAIL_ASC',
-  UserByAiUserUEmailDesc = 'USER_BY_AI_USER__U_EMAIL_DESC',
-  UserByAiUserUGdprSignedAtAsc = 'USER_BY_AI_USER__U_GDPR_SIGNED_AT_ASC',
-  UserByAiUserUGdprSignedAtDesc = 'USER_BY_AI_USER__U_GDPR_SIGNED_AT_DESC',
-  UserByAiUserUGroupAsc = 'USER_BY_AI_USER__U_GROUP_ASC',
-  UserByAiUserUGroupDesc = 'USER_BY_AI_USER__U_GROUP_DESC',
-  UserByAiUserUIdAsc = 'USER_BY_AI_USER__U_ID_ASC',
-  UserByAiUserUIdDesc = 'USER_BY_AI_USER__U_ID_DESC',
-  UserByAiUserUJmenoAsc = 'USER_BY_AI_USER__U_JMENO_ASC',
-  UserByAiUserUJmenoDesc = 'USER_BY_AI_USER__U_JMENO_DESC',
-  UserByAiUserULevelAsc = 'USER_BY_AI_USER__U_LEVEL_ASC',
-  UserByAiUserULevelDesc = 'USER_BY_AI_USER__U_LEVEL_DESC',
-  UserByAiUserULockAsc = 'USER_BY_AI_USER__U_LOCK_ASC',
-  UserByAiUserULockDesc = 'USER_BY_AI_USER__U_LOCK_DESC',
-  UserByAiUserULoginAsc = 'USER_BY_AI_USER__U_LOGIN_ASC',
-  UserByAiUserULoginDesc = 'USER_BY_AI_USER__U_LOGIN_DESC',
-  UserByAiUserUMemberSinceAsc = 'USER_BY_AI_USER__U_MEMBER_SINCE_ASC',
-  UserByAiUserUMemberSinceDesc = 'USER_BY_AI_USER__U_MEMBER_SINCE_DESC',
-  UserByAiUserUMemberUntilAsc = 'USER_BY_AI_USER__U_MEMBER_UNTIL_ASC',
-  UserByAiUserUMemberUntilDesc = 'USER_BY_AI_USER__U_MEMBER_UNTIL_DESC',
-  UserByAiUserUNarozeniAsc = 'USER_BY_AI_USER__U_NAROZENI_ASC',
-  UserByAiUserUNarozeniDesc = 'USER_BY_AI_USER__U_NAROZENI_DESC',
-  UserByAiUserUNationalityAsc = 'USER_BY_AI_USER__U_NATIONALITY_ASC',
-  UserByAiUserUNationalityDesc = 'USER_BY_AI_USER__U_NATIONALITY_DESC',
-  UserByAiUserUOrientationNumberAsc = 'USER_BY_AI_USER__U_ORIENTATION_NUMBER_ASC',
-  UserByAiUserUOrientationNumberDesc = 'USER_BY_AI_USER__U_ORIENTATION_NUMBER_DESC',
-  UserByAiUserUPassAsc = 'USER_BY_AI_USER__U_PASS_ASC',
-  UserByAiUserUPassDesc = 'USER_BY_AI_USER__U_PASS_DESC',
-  UserByAiUserUPohlaviAsc = 'USER_BY_AI_USER__U_POHLAVI_ASC',
-  UserByAiUserUPohlaviDesc = 'USER_BY_AI_USER__U_POHLAVI_DESC',
-  UserByAiUserUPostalCodeAsc = 'USER_BY_AI_USER__U_POSTAL_CODE_ASC',
-  UserByAiUserUPostalCodeDesc = 'USER_BY_AI_USER__U_POSTAL_CODE_DESC',
-  UserByAiUserUPoznamkyAsc = 'USER_BY_AI_USER__U_POZNAMKY_ASC',
-  UserByAiUserUPoznamkyDesc = 'USER_BY_AI_USER__U_POZNAMKY_DESC',
-  UserByAiUserUPrijmeniAsc = 'USER_BY_AI_USER__U_PRIJMENI_ASC',
-  UserByAiUserUPrijmeniDesc = 'USER_BY_AI_USER__U_PRIJMENI_DESC',
-  UserByAiUserURodneCisloAsc = 'USER_BY_AI_USER__U_RODNE_CISLO_ASC',
-  UserByAiUserURodneCisloDesc = 'USER_BY_AI_USER__U_RODNE_CISLO_DESC',
-  UserByAiUserUSkupinaAsc = 'USER_BY_AI_USER__U_SKUPINA_ASC',
-  UserByAiUserUSkupinaDesc = 'USER_BY_AI_USER__U_SKUPINA_DESC',
-  UserByAiUserUStreetAsc = 'USER_BY_AI_USER__U_STREET_ASC',
-  UserByAiUserUStreetDesc = 'USER_BY_AI_USER__U_STREET_DESC',
-  UserByAiUserUSystemAsc = 'USER_BY_AI_USER__U_SYSTEM_ASC',
-  UserByAiUserUSystemDesc = 'USER_BY_AI_USER__U_SYSTEM_DESC',
-  UserByAiUserUTeacherAsc = 'USER_BY_AI_USER__U_TEACHER_ASC',
-  UserByAiUserUTeacherDesc = 'USER_BY_AI_USER__U_TEACHER_DESC',
-  UserByAiUserUTelefonAsc = 'USER_BY_AI_USER__U_TELEFON_ASC',
-  UserByAiUserUTelefonDesc = 'USER_BY_AI_USER__U_TELEFON_DESC',
-  UserByAiUserUTimestampAsc = 'USER_BY_AI_USER__U_TIMESTAMP_ASC',
-  UserByAiUserUTimestampDesc = 'USER_BY_AI_USER__U_TIMESTAMP_DESC'
+  NotesDesc = 'NOTES_DESC'
 }
-
-/** Represents an update to a `Akce`. Fields that are set will be updated. */
-export type AkcePatch = {
-  aDo?: InputMaybe<Scalars['Date']>;
-  aDokumenty?: InputMaybe<Scalars['String']>;
-  aId?: InputMaybe<Scalars['BigInt']>;
-  aInfo?: InputMaybe<Scalars['String']>;
-  aJmeno?: InputMaybe<Scalars['String']>;
-  aKapacita?: InputMaybe<Scalars['BigInt']>;
-  aKde?: InputMaybe<Scalars['String']>;
-  aLock?: InputMaybe<Scalars['Boolean']>;
-  aOd?: InputMaybe<Scalars['Date']>;
-  aTimestamp?: InputMaybe<Scalars['Datetime']>;
-  aVisible?: InputMaybe<Scalars['Boolean']>;
-  enableNotes?: InputMaybe<Scalars['Boolean']>;
-  isPublic?: InputMaybe<Scalars['Boolean']>;
-  summary?: InputMaybe<Scalars['JSON']>;
-};
 
 /** A connection to a list of `Akce` values. */
 export type AkcesConnection = {
@@ -378,8 +232,6 @@ export type AkcesEdge = {
 
 /** Methods to use when ordering `Akce`. */
 export enum AkcesOrderBy {
-  AkceItemsByAiIdRodicCountAsc = 'AKCE_ITEMS_BY_AI_ID_RODIC__COUNT_ASC',
-  AkceItemsByAiIdRodicCountDesc = 'AKCE_ITEMS_BY_AI_ID_RODIC__COUNT_DESC',
   ADokumentyAsc = 'A_DOKUMENTY_ASC',
   ADokumentyDesc = 'A_DOKUMENTY_DESC',
   ADoAsc = 'A_DO_ASC',
@@ -407,8 +259,6 @@ export enum AkcesOrderBy {
   IsPublicAsc = 'IS_PUBLIC_ASC',
   IsPublicDesc = 'IS_PUBLIC_DESC',
   Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   SummaryAsc = 'SUMMARY_ASC',
   SummaryDesc = 'SUMMARY_DESC'
 }
@@ -802,6 +652,349 @@ export enum AttachmentsOrderBy {
   UserByUploadedByUTimestampDesc = 'USER_BY_UPLOADED_BY__U_TIMESTAMP_DESC'
 }
 
+export type AttendeeExternal = Node & {
+  __typename?: 'AttendeeExternal';
+  birthNumber: Maybe<Scalars['String']>;
+  createdAt: Scalars['Datetime'];
+  email: Scalars['String'];
+  /** Reads a single `Event` that is related to this `AttendeeExternal`. */
+  event: Maybe<Event>;
+  eventId: Maybe<Scalars['BigInt']>;
+  firstName: Scalars['String'];
+  guardianName: Scalars['String'];
+  id: Scalars['BigInt'];
+  isConfirmed: Scalars['Boolean'];
+  lastName: Scalars['String'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  notes: Scalars['String'];
+  phone: Scalars['String'];
+  updatedAt: Scalars['Datetime'];
+};
+
+/**
+ * A condition to be used against `AttendeeExternal` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type AttendeeExternalCondition = {
+  /** Checks for equality with the object’s `birthNumber` field. */
+  birthNumber?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `email` field. */
+  email?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `eventId` field. */
+  eventId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `firstName` field. */
+  firstName?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `guardianName` field. */
+  guardianName?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `isConfirmed` field. */
+  isConfirmed?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `lastName` field. */
+  lastName?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `notes` field. */
+  notes?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `phone` field. */
+  phone?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** An input for mutations affecting `AttendeeExternal` */
+export type AttendeeExternalInput = {
+  birthNumber?: InputMaybe<Scalars['String']>;
+  createdAt?: InputMaybe<Scalars['Datetime']>;
+  email: Scalars['String'];
+  eventId?: InputMaybe<Scalars['BigInt']>;
+  firstName: Scalars['String'];
+  guardianName?: InputMaybe<Scalars['String']>;
+  isConfirmed?: InputMaybe<Scalars['Boolean']>;
+  lastName: Scalars['String'];
+  notes: Scalars['String'];
+  phone: Scalars['String'];
+  updatedAt?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** Represents an update to a `AttendeeExternal`. Fields that are set will be updated. */
+export type AttendeeExternalPatch = {
+  birthNumber?: InputMaybe<Scalars['String']>;
+  createdAt?: InputMaybe<Scalars['Datetime']>;
+  email?: InputMaybe<Scalars['String']>;
+  eventId?: InputMaybe<Scalars['BigInt']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  guardianName?: InputMaybe<Scalars['String']>;
+  isConfirmed?: InputMaybe<Scalars['Boolean']>;
+  lastName?: InputMaybe<Scalars['String']>;
+  notes?: InputMaybe<Scalars['String']>;
+  phone?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** A connection to a list of `AttendeeExternal` values. */
+export type AttendeeExternalsConnection = {
+  __typename?: 'AttendeeExternalsConnection';
+  /** A list of edges which contains the `AttendeeExternal` and cursor to aid in pagination. */
+  edges: Array<AttendeeExternalsEdge>;
+  /** A list of `AttendeeExternal` objects. */
+  nodes: Array<AttendeeExternal>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AttendeeExternal` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `AttendeeExternal` edge in the connection. */
+export type AttendeeExternalsEdge = {
+  __typename?: 'AttendeeExternalsEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']>;
+  /** The `AttendeeExternal` at the end of the edge. */
+  node: AttendeeExternal;
+};
+
+/** Methods to use when ordering `AttendeeExternal`. */
+export enum AttendeeExternalsOrderBy {
+  BirthNumberAsc = 'BIRTH_NUMBER_ASC',
+  BirthNumberDesc = 'BIRTH_NUMBER_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  EmailAsc = 'EMAIL_ASC',
+  EmailDesc = 'EMAIL_DESC',
+  EventByEventIdCapacityAsc = 'EVENT_BY_EVENT_ID__CAPACITY_ASC',
+  EventByEventIdCapacityDesc = 'EVENT_BY_EVENT_ID__CAPACITY_DESC',
+  EventByEventIdDescriptionAsc = 'EVENT_BY_EVENT_ID__DESCRIPTION_ASC',
+  EventByEventIdDescriptionDesc = 'EVENT_BY_EVENT_ID__DESCRIPTION_DESC',
+  EventByEventIdEnableNotesAsc = 'EVENT_BY_EVENT_ID__ENABLE_NOTES_ASC',
+  EventByEventIdEnableNotesDesc = 'EVENT_BY_EVENT_ID__ENABLE_NOTES_DESC',
+  EventByEventIdFilesLegacyAsc = 'EVENT_BY_EVENT_ID__FILES_LEGACY_ASC',
+  EventByEventIdFilesLegacyDesc = 'EVENT_BY_EVENT_ID__FILES_LEGACY_DESC',
+  EventByEventIdIdAsc = 'EVENT_BY_EVENT_ID__ID_ASC',
+  EventByEventIdIdDesc = 'EVENT_BY_EVENT_ID__ID_DESC',
+  EventByEventIdIsLockedAsc = 'EVENT_BY_EVENT_ID__IS_LOCKED_ASC',
+  EventByEventIdIsLockedDesc = 'EVENT_BY_EVENT_ID__IS_LOCKED_DESC',
+  EventByEventIdIsPublicAsc = 'EVENT_BY_EVENT_ID__IS_PUBLIC_ASC',
+  EventByEventIdIsPublicDesc = 'EVENT_BY_EVENT_ID__IS_PUBLIC_DESC',
+  EventByEventIdIsVisibleAsc = 'EVENT_BY_EVENT_ID__IS_VISIBLE_ASC',
+  EventByEventIdIsVisibleDesc = 'EVENT_BY_EVENT_ID__IS_VISIBLE_DESC',
+  EventByEventIdLocationTextAsc = 'EVENT_BY_EVENT_ID__LOCATION_TEXT_ASC',
+  EventByEventIdLocationTextDesc = 'EVENT_BY_EVENT_ID__LOCATION_TEXT_DESC',
+  EventByEventIdNameAsc = 'EVENT_BY_EVENT_ID__NAME_ASC',
+  EventByEventIdNameDesc = 'EVENT_BY_EVENT_ID__NAME_DESC',
+  EventByEventIdSinceAsc = 'EVENT_BY_EVENT_ID__SINCE_ASC',
+  EventByEventIdSinceDesc = 'EVENT_BY_EVENT_ID__SINCE_DESC',
+  EventByEventIdSummaryAsc = 'EVENT_BY_EVENT_ID__SUMMARY_ASC',
+  EventByEventIdSummaryDesc = 'EVENT_BY_EVENT_ID__SUMMARY_DESC',
+  EventByEventIdUntilAsc = 'EVENT_BY_EVENT_ID__UNTIL_ASC',
+  EventByEventIdUntilDesc = 'EVENT_BY_EVENT_ID__UNTIL_DESC',
+  EventByEventIdUpdatedAtAsc = 'EVENT_BY_EVENT_ID__UPDATED_AT_ASC',
+  EventByEventIdUpdatedAtDesc = 'EVENT_BY_EVENT_ID__UPDATED_AT_DESC',
+  EventIdAsc = 'EVENT_ID_ASC',
+  EventIdDesc = 'EVENT_ID_DESC',
+  FirstNameAsc = 'FIRST_NAME_ASC',
+  FirstNameDesc = 'FIRST_NAME_DESC',
+  GuardianNameAsc = 'GUARDIAN_NAME_ASC',
+  GuardianNameDesc = 'GUARDIAN_NAME_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  IsConfirmedAsc = 'IS_CONFIRMED_ASC',
+  IsConfirmedDesc = 'IS_CONFIRMED_DESC',
+  LastNameAsc = 'LAST_NAME_ASC',
+  LastNameDesc = 'LAST_NAME_DESC',
+  Natural = 'NATURAL',
+  NotesAsc = 'NOTES_ASC',
+  NotesDesc = 'NOTES_DESC',
+  PhoneAsc = 'PHONE_ASC',
+  PhoneDesc = 'PHONE_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
+}
+
+export type AttendeeUser = Node & {
+  __typename?: 'AttendeeUser';
+  birthYear: Scalars['Int'];
+  /** Reads a single `Event` that is related to this `AttendeeUser`. */
+  event: Maybe<Event>;
+  eventId: Scalars['BigInt'];
+  id: Scalars['BigInt'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  notes: Scalars['String'];
+  /** Reads a single `User` that is related to this `AttendeeUser`. */
+  user: Maybe<User>;
+  userId: Scalars['BigInt'];
+};
+
+/**
+ * A condition to be used against `AttendeeUser` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type AttendeeUserCondition = {
+  /** Checks for equality with the object’s `birthYear` field. */
+  birthYear?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `eventId` field. */
+  eventId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `notes` field. */
+  notes?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: InputMaybe<Scalars['BigInt']>;
+};
+
+/** An input for mutations affecting `AttendeeUser` */
+export type AttendeeUserInput = {
+  birthYear: Scalars['Int'];
+  eventId: Scalars['BigInt'];
+  id?: InputMaybe<Scalars['BigInt']>;
+  notes?: InputMaybe<Scalars['String']>;
+  userId: Scalars['BigInt'];
+};
+
+/** Represents an update to a `AttendeeUser`. Fields that are set will be updated. */
+export type AttendeeUserPatch = {
+  birthYear?: InputMaybe<Scalars['Int']>;
+  eventId?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']>;
+  notes?: InputMaybe<Scalars['String']>;
+  userId?: InputMaybe<Scalars['BigInt']>;
+};
+
+/** A connection to a list of `AttendeeUser` values. */
+export type AttendeeUsersConnection = {
+  __typename?: 'AttendeeUsersConnection';
+  /** A list of edges which contains the `AttendeeUser` and cursor to aid in pagination. */
+  edges: Array<AttendeeUsersEdge>;
+  /** A list of `AttendeeUser` objects. */
+  nodes: Array<AttendeeUser>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AttendeeUser` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `AttendeeUser` edge in the connection. */
+export type AttendeeUsersEdge = {
+  __typename?: 'AttendeeUsersEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']>;
+  /** The `AttendeeUser` at the end of the edge. */
+  node: AttendeeUser;
+};
+
+/** Methods to use when ordering `AttendeeUser`. */
+export enum AttendeeUsersOrderBy {
+  BirthYearAsc = 'BIRTH_YEAR_ASC',
+  BirthYearDesc = 'BIRTH_YEAR_DESC',
+  EventByEventIdCapacityAsc = 'EVENT_BY_EVENT_ID__CAPACITY_ASC',
+  EventByEventIdCapacityDesc = 'EVENT_BY_EVENT_ID__CAPACITY_DESC',
+  EventByEventIdDescriptionAsc = 'EVENT_BY_EVENT_ID__DESCRIPTION_ASC',
+  EventByEventIdDescriptionDesc = 'EVENT_BY_EVENT_ID__DESCRIPTION_DESC',
+  EventByEventIdEnableNotesAsc = 'EVENT_BY_EVENT_ID__ENABLE_NOTES_ASC',
+  EventByEventIdEnableNotesDesc = 'EVENT_BY_EVENT_ID__ENABLE_NOTES_DESC',
+  EventByEventIdFilesLegacyAsc = 'EVENT_BY_EVENT_ID__FILES_LEGACY_ASC',
+  EventByEventIdFilesLegacyDesc = 'EVENT_BY_EVENT_ID__FILES_LEGACY_DESC',
+  EventByEventIdIdAsc = 'EVENT_BY_EVENT_ID__ID_ASC',
+  EventByEventIdIdDesc = 'EVENT_BY_EVENT_ID__ID_DESC',
+  EventByEventIdIsLockedAsc = 'EVENT_BY_EVENT_ID__IS_LOCKED_ASC',
+  EventByEventIdIsLockedDesc = 'EVENT_BY_EVENT_ID__IS_LOCKED_DESC',
+  EventByEventIdIsPublicAsc = 'EVENT_BY_EVENT_ID__IS_PUBLIC_ASC',
+  EventByEventIdIsPublicDesc = 'EVENT_BY_EVENT_ID__IS_PUBLIC_DESC',
+  EventByEventIdIsVisibleAsc = 'EVENT_BY_EVENT_ID__IS_VISIBLE_ASC',
+  EventByEventIdIsVisibleDesc = 'EVENT_BY_EVENT_ID__IS_VISIBLE_DESC',
+  EventByEventIdLocationTextAsc = 'EVENT_BY_EVENT_ID__LOCATION_TEXT_ASC',
+  EventByEventIdLocationTextDesc = 'EVENT_BY_EVENT_ID__LOCATION_TEXT_DESC',
+  EventByEventIdNameAsc = 'EVENT_BY_EVENT_ID__NAME_ASC',
+  EventByEventIdNameDesc = 'EVENT_BY_EVENT_ID__NAME_DESC',
+  EventByEventIdSinceAsc = 'EVENT_BY_EVENT_ID__SINCE_ASC',
+  EventByEventIdSinceDesc = 'EVENT_BY_EVENT_ID__SINCE_DESC',
+  EventByEventIdSummaryAsc = 'EVENT_BY_EVENT_ID__SUMMARY_ASC',
+  EventByEventIdSummaryDesc = 'EVENT_BY_EVENT_ID__SUMMARY_DESC',
+  EventByEventIdUntilAsc = 'EVENT_BY_EVENT_ID__UNTIL_ASC',
+  EventByEventIdUntilDesc = 'EVENT_BY_EVENT_ID__UNTIL_DESC',
+  EventByEventIdUpdatedAtAsc = 'EVENT_BY_EVENT_ID__UPDATED_AT_ASC',
+  EventByEventIdUpdatedAtDesc = 'EVENT_BY_EVENT_ID__UPDATED_AT_DESC',
+  EventIdAsc = 'EVENT_ID_ASC',
+  EventIdDesc = 'EVENT_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  NotesAsc = 'NOTES_ASC',
+  NotesDesc = 'NOTES_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UserByUserIdUBanAsc = 'USER_BY_USER_ID__U_BAN_ASC',
+  UserByUserIdUBanDesc = 'USER_BY_USER_ID__U_BAN_DESC',
+  UserByUserIdUCityAsc = 'USER_BY_USER_ID__U_CITY_ASC',
+  UserByUserIdUCityDesc = 'USER_BY_USER_ID__U_CITY_DESC',
+  UserByUserIdUConfirmedAsc = 'USER_BY_USER_ID__U_CONFIRMED_ASC',
+  UserByUserIdUConfirmedDesc = 'USER_BY_USER_ID__U_CONFIRMED_DESC',
+  UserByUserIdUConscriptionNumberAsc = 'USER_BY_USER_ID__U_CONSCRIPTION_NUMBER_ASC',
+  UserByUserIdUConscriptionNumberDesc = 'USER_BY_USER_ID__U_CONSCRIPTION_NUMBER_DESC',
+  UserByUserIdUCreatedAtAsc = 'USER_BY_USER_ID__U_CREATED_AT_ASC',
+  UserByUserIdUCreatedAtDesc = 'USER_BY_USER_ID__U_CREATED_AT_DESC',
+  UserByUserIdUDancerAsc = 'USER_BY_USER_ID__U_DANCER_ASC',
+  UserByUserIdUDancerDesc = 'USER_BY_USER_ID__U_DANCER_DESC',
+  UserByUserIdUDistrictAsc = 'USER_BY_USER_ID__U_DISTRICT_ASC',
+  UserByUserIdUDistrictDesc = 'USER_BY_USER_ID__U_DISTRICT_DESC',
+  UserByUserIdUEmailAsc = 'USER_BY_USER_ID__U_EMAIL_ASC',
+  UserByUserIdUEmailDesc = 'USER_BY_USER_ID__U_EMAIL_DESC',
+  UserByUserIdUGdprSignedAtAsc = 'USER_BY_USER_ID__U_GDPR_SIGNED_AT_ASC',
+  UserByUserIdUGdprSignedAtDesc = 'USER_BY_USER_ID__U_GDPR_SIGNED_AT_DESC',
+  UserByUserIdUGroupAsc = 'USER_BY_USER_ID__U_GROUP_ASC',
+  UserByUserIdUGroupDesc = 'USER_BY_USER_ID__U_GROUP_DESC',
+  UserByUserIdUIdAsc = 'USER_BY_USER_ID__U_ID_ASC',
+  UserByUserIdUIdDesc = 'USER_BY_USER_ID__U_ID_DESC',
+  UserByUserIdUJmenoAsc = 'USER_BY_USER_ID__U_JMENO_ASC',
+  UserByUserIdUJmenoDesc = 'USER_BY_USER_ID__U_JMENO_DESC',
+  UserByUserIdULevelAsc = 'USER_BY_USER_ID__U_LEVEL_ASC',
+  UserByUserIdULevelDesc = 'USER_BY_USER_ID__U_LEVEL_DESC',
+  UserByUserIdULockAsc = 'USER_BY_USER_ID__U_LOCK_ASC',
+  UserByUserIdULockDesc = 'USER_BY_USER_ID__U_LOCK_DESC',
+  UserByUserIdULoginAsc = 'USER_BY_USER_ID__U_LOGIN_ASC',
+  UserByUserIdULoginDesc = 'USER_BY_USER_ID__U_LOGIN_DESC',
+  UserByUserIdUMemberSinceAsc = 'USER_BY_USER_ID__U_MEMBER_SINCE_ASC',
+  UserByUserIdUMemberSinceDesc = 'USER_BY_USER_ID__U_MEMBER_SINCE_DESC',
+  UserByUserIdUMemberUntilAsc = 'USER_BY_USER_ID__U_MEMBER_UNTIL_ASC',
+  UserByUserIdUMemberUntilDesc = 'USER_BY_USER_ID__U_MEMBER_UNTIL_DESC',
+  UserByUserIdUNarozeniAsc = 'USER_BY_USER_ID__U_NAROZENI_ASC',
+  UserByUserIdUNarozeniDesc = 'USER_BY_USER_ID__U_NAROZENI_DESC',
+  UserByUserIdUNationalityAsc = 'USER_BY_USER_ID__U_NATIONALITY_ASC',
+  UserByUserIdUNationalityDesc = 'USER_BY_USER_ID__U_NATIONALITY_DESC',
+  UserByUserIdUOrientationNumberAsc = 'USER_BY_USER_ID__U_ORIENTATION_NUMBER_ASC',
+  UserByUserIdUOrientationNumberDesc = 'USER_BY_USER_ID__U_ORIENTATION_NUMBER_DESC',
+  UserByUserIdUPassAsc = 'USER_BY_USER_ID__U_PASS_ASC',
+  UserByUserIdUPassDesc = 'USER_BY_USER_ID__U_PASS_DESC',
+  UserByUserIdUPohlaviAsc = 'USER_BY_USER_ID__U_POHLAVI_ASC',
+  UserByUserIdUPohlaviDesc = 'USER_BY_USER_ID__U_POHLAVI_DESC',
+  UserByUserIdUPostalCodeAsc = 'USER_BY_USER_ID__U_POSTAL_CODE_ASC',
+  UserByUserIdUPostalCodeDesc = 'USER_BY_USER_ID__U_POSTAL_CODE_DESC',
+  UserByUserIdUPoznamkyAsc = 'USER_BY_USER_ID__U_POZNAMKY_ASC',
+  UserByUserIdUPoznamkyDesc = 'USER_BY_USER_ID__U_POZNAMKY_DESC',
+  UserByUserIdUPrijmeniAsc = 'USER_BY_USER_ID__U_PRIJMENI_ASC',
+  UserByUserIdUPrijmeniDesc = 'USER_BY_USER_ID__U_PRIJMENI_DESC',
+  UserByUserIdURodneCisloAsc = 'USER_BY_USER_ID__U_RODNE_CISLO_ASC',
+  UserByUserIdURodneCisloDesc = 'USER_BY_USER_ID__U_RODNE_CISLO_DESC',
+  UserByUserIdUSkupinaAsc = 'USER_BY_USER_ID__U_SKUPINA_ASC',
+  UserByUserIdUSkupinaDesc = 'USER_BY_USER_ID__U_SKUPINA_DESC',
+  UserByUserIdUStreetAsc = 'USER_BY_USER_ID__U_STREET_ASC',
+  UserByUserIdUStreetDesc = 'USER_BY_USER_ID__U_STREET_DESC',
+  UserByUserIdUSystemAsc = 'USER_BY_USER_ID__U_SYSTEM_ASC',
+  UserByUserIdUSystemDesc = 'USER_BY_USER_ID__U_SYSTEM_DESC',
+  UserByUserIdUTeacherAsc = 'USER_BY_USER_ID__U_TEACHER_ASC',
+  UserByUserIdUTeacherDesc = 'USER_BY_USER_ID__U_TEACHER_DESC',
+  UserByUserIdUTelefonAsc = 'USER_BY_USER_ID__U_TELEFON_ASC',
+  UserByUserIdUTelefonDesc = 'USER_BY_USER_ID__U_TELEFON_DESC',
+  UserByUserIdUTimestampAsc = 'USER_BY_USER_ID__U_TIMESTAMP_ASC',
+  UserByUserIdUTimestampDesc = 'USER_BY_USER_ID__U_TIMESTAMP_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC'
+}
+
 /** All input for the `bookLesson` mutation. */
 export type BookLessonInput = {
   /**
@@ -1057,8 +1250,6 @@ export type CreateAkceItemInput = {
 /** The output of our create `AkceItem` mutation. */
 export type CreateAkceItemPayload = {
   __typename?: 'CreateAkceItemPayload';
-  /** Reads a single `Akce` that is related to this `AkceItem`. */
-  akceByAiIdRodic: Maybe<Akce>;
   /** The `AkceItem` that was created by this mutation. */
   akceItem: Maybe<AkceItem>;
   /** An edge for our `AkceItem`. May be used by Relay 1. */
@@ -1070,8 +1261,6 @@ export type CreateAkceItemPayload = {
   clientMutationId: Maybe<Scalars['String']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
-  /** Reads a single `User` that is related to this `AkceItem`. */
-  userByAiUser: Maybe<User>;
 };
 
 
@@ -1174,6 +1363,78 @@ export type CreateAttachmentPayloadAttachmentEdgeArgs = {
   orderBy?: InputMaybe<Array<AttachmentsOrderBy>>;
 };
 
+/** All input for the create `AttendeeExternal` mutation. */
+export type CreateAttendeeExternalInput = {
+  /** The `AttendeeExternal` to be created by this mutation. */
+  attendeeExternal: AttendeeExternalInput;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+};
+
+/** The output of our create `AttendeeExternal` mutation. */
+export type CreateAttendeeExternalPayload = {
+  __typename?: 'CreateAttendeeExternalPayload';
+  /** The `AttendeeExternal` that was created by this mutation. */
+  attendeeExternal: Maybe<AttendeeExternal>;
+  /** An edge for our `AttendeeExternal`. May be used by Relay 1. */
+  attendeeExternalEdge: Maybe<AttendeeExternalsEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** Reads a single `Event` that is related to this `AttendeeExternal`. */
+  event: Maybe<Event>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+
+/** The output of our create `AttendeeExternal` mutation. */
+export type CreateAttendeeExternalPayloadAttendeeExternalEdgeArgs = {
+  orderBy?: InputMaybe<Array<AttendeeExternalsOrderBy>>;
+};
+
+/** All input for the create `AttendeeUser` mutation. */
+export type CreateAttendeeUserInput = {
+  /** The `AttendeeUser` to be created by this mutation. */
+  attendeeUser: AttendeeUserInput;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+};
+
+/** The output of our create `AttendeeUser` mutation. */
+export type CreateAttendeeUserPayload = {
+  __typename?: 'CreateAttendeeUserPayload';
+  /** The `AttendeeUser` that was created by this mutation. */
+  attendeeUser: Maybe<AttendeeUser>;
+  /** An edge for our `AttendeeUser`. May be used by Relay 1. */
+  attendeeUserEdge: Maybe<AttendeeUsersEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** Reads a single `Event` that is related to this `AttendeeUser`. */
+  event: Maybe<Event>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `User` that is related to this `AttendeeUser`. */
+  user: Maybe<User>;
+};
+
+
+/** The output of our create `AttendeeUser` mutation. */
+export type CreateAttendeeUserPayloadAttendeeUserEdgeArgs = {
+  orderBy?: InputMaybe<Array<AttendeeUsersOrderBy>>;
+};
+
 /** All input for the create `CohortGroup` mutation. */
 export type CreateCohortGroupInput = {
   /**
@@ -1266,6 +1527,39 @@ export type CreateDokumentyPayload = {
 /** The output of our create `Dokumenty` mutation. */
 export type CreateDokumentyPayloadDokumentyEdgeArgs = {
   orderBy?: InputMaybe<Array<DokumentiesOrderBy>>;
+};
+
+/** All input for the create `Event` mutation. */
+export type CreateEventInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `Event` to be created by this mutation. */
+  event: EventInput;
+};
+
+/** The output of our create `Event` mutation. */
+export type CreateEventPayload = {
+  __typename?: 'CreateEventPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `Event` that was created by this mutation. */
+  event: Maybe<Event>;
+  /** An edge for our `Event`. May be used by Relay 1. */
+  eventEdge: Maybe<EventsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+
+/** The output of our create `Event` mutation. */
+export type CreateEventPayloadEventEdgeArgs = {
+  orderBy?: InputMaybe<Array<EventsOrderBy>>;
 };
 
 /** All input for the create `GalerieDir` mutation. */
@@ -2483,109 +2777,6 @@ export type CurrentCoupleIdsConnection = {
   totalCount: Scalars['Int'];
 };
 
-/** All input for the `deleteAkceByNodeId` mutation. */
-export type DeleteAkceByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Akce` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** All input for the `deleteAkce` mutation. */
-export type DeleteAkceInput = {
-  aId: Scalars['BigInt'];
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-};
-
-/** All input for the `deleteAkceItemByAiUserAndAiIdRodic` mutation. */
-export type DeleteAkceItemByAiUserAndAiIdRodicInput = {
-  aiIdRodic: Scalars['BigInt'];
-  aiUser: Scalars['BigInt'];
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-};
-
-/** All input for the `deleteAkceItemByNodeId` mutation. */
-export type DeleteAkceItemByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `AkceItem` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** All input for the `deleteAkceItem` mutation. */
-export type DeleteAkceItemInput = {
-  aiId: Scalars['BigInt'];
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-};
-
-/** The output of our delete `AkceItem` mutation. */
-export type DeleteAkceItemPayload = {
-  __typename?: 'DeleteAkceItemPayload';
-  /** Reads a single `Akce` that is related to this `AkceItem`. */
-  akceByAiIdRodic: Maybe<Akce>;
-  /** The `AkceItem` that was deleted by this mutation. */
-  akceItem: Maybe<AkceItem>;
-  /** An edge for our `AkceItem`. May be used by Relay 1. */
-  akceItemEdge: Maybe<AkceItemsEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedAkceItemNodeId: Maybe<Scalars['ID']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** Reads a single `User` that is related to this `AkceItem`. */
-  userByAiUser: Maybe<User>;
-};
-
-
-/** The output of our delete `AkceItem` mutation. */
-export type DeleteAkceItemPayloadAkceItemEdgeArgs = {
-  orderBy?: InputMaybe<Array<AkceItemsOrderBy>>;
-};
-
-/** The output of our delete `Akce` mutation. */
-export type DeleteAkcePayload = {
-  __typename?: 'DeleteAkcePayload';
-  /** The `Akce` that was deleted by this mutation. */
-  akce: Maybe<Akce>;
-  /** An edge for our `Akce`. May be used by Relay 1. */
-  akceEdge: Maybe<AkcesEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedAkceNodeId: Maybe<Scalars['ID']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-};
-
-
-/** The output of our delete `Akce` mutation. */
-export type DeleteAkcePayloadAkceEdgeArgs = {
-  orderBy?: InputMaybe<Array<AkcesOrderBy>>;
-};
-
 /** All input for the `deleteAktualityByNodeId` mutation. */
 export type DeleteAktualityByNodeIdInput = {
   /**
@@ -2680,6 +2871,111 @@ export type DeleteAttachmentPayloadAttachmentEdgeArgs = {
   orderBy?: InputMaybe<Array<AttachmentsOrderBy>>;
 };
 
+/** All input for the `deleteAttendeeExternalByNodeId` mutation. */
+export type DeleteAttendeeExternalByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `AttendeeExternal` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteAttendeeExternal` mutation. */
+export type DeleteAttendeeExternalInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['BigInt'];
+};
+
+/** The output of our delete `AttendeeExternal` mutation. */
+export type DeleteAttendeeExternalPayload = {
+  __typename?: 'DeleteAttendeeExternalPayload';
+  /** The `AttendeeExternal` that was deleted by this mutation. */
+  attendeeExternal: Maybe<AttendeeExternal>;
+  /** An edge for our `AttendeeExternal`. May be used by Relay 1. */
+  attendeeExternalEdge: Maybe<AttendeeExternalsEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  deletedAttendeeExternalNodeId: Maybe<Scalars['ID']>;
+  /** Reads a single `Event` that is related to this `AttendeeExternal`. */
+  event: Maybe<Event>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+
+/** The output of our delete `AttendeeExternal` mutation. */
+export type DeleteAttendeeExternalPayloadAttendeeExternalEdgeArgs = {
+  orderBy?: InputMaybe<Array<AttendeeExternalsOrderBy>>;
+};
+
+/** All input for the `deleteAttendeeUserByNodeId` mutation. */
+export type DeleteAttendeeUserByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `AttendeeUser` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteAttendeeUserByUserIdAndEventId` mutation. */
+export type DeleteAttendeeUserByUserIdAndEventIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  eventId: Scalars['BigInt'];
+  userId: Scalars['BigInt'];
+};
+
+/** All input for the `deleteAttendeeUser` mutation. */
+export type DeleteAttendeeUserInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['BigInt'];
+};
+
+/** The output of our delete `AttendeeUser` mutation. */
+export type DeleteAttendeeUserPayload = {
+  __typename?: 'DeleteAttendeeUserPayload';
+  /** The `AttendeeUser` that was deleted by this mutation. */
+  attendeeUser: Maybe<AttendeeUser>;
+  /** An edge for our `AttendeeUser`. May be used by Relay 1. */
+  attendeeUserEdge: Maybe<AttendeeUsersEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  deletedAttendeeUserNodeId: Maybe<Scalars['ID']>;
+  /** Reads a single `Event` that is related to this `AttendeeUser`. */
+  event: Maybe<Event>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `User` that is related to this `AttendeeUser`. */
+  user: Maybe<User>;
+};
+
+
+/** The output of our delete `AttendeeUser` mutation. */
+export type DeleteAttendeeUserPayloadAttendeeUserEdgeArgs = {
+  orderBy?: InputMaybe<Array<AttendeeUsersOrderBy>>;
+};
+
 /** All input for the `deleteCohortGroupByNodeId` mutation. */
 export type DeleteCohortGroupByNodeIdInput = {
   /**
@@ -2770,6 +3066,50 @@ export type DeleteDokumentyPayload = {
 /** The output of our delete `Dokumenty` mutation. */
 export type DeleteDokumentyPayloadDokumentyEdgeArgs = {
   orderBy?: InputMaybe<Array<DokumentiesOrderBy>>;
+};
+
+/** All input for the `deleteEventByNodeId` mutation. */
+export type DeleteEventByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Event` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteEvent` mutation. */
+export type DeleteEventInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['BigInt'];
+};
+
+/** The output of our delete `Event` mutation. */
+export type DeleteEventPayload = {
+  __typename?: 'DeleteEventPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  deletedEventNodeId: Maybe<Scalars['ID']>;
+  /** The `Event` that was deleted by this mutation. */
+  event: Maybe<Event>;
+  /** An edge for our `Event`. May be used by Relay 1. */
+  eventEdge: Maybe<EventsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+
+/** The output of our delete `Event` mutation. */
+export type DeleteEventPayloadEventEdgeArgs = {
+  orderBy?: InputMaybe<Array<EventsOrderBy>>;
 };
 
 /** All input for the `deleteGalerieDirByNodeId` mutation. */
@@ -4434,6 +4774,182 @@ export type DokumentyPatch = {
   dTimestamp?: InputMaybe<Scalars['Datetime']>;
 };
 
+export type Event = Node & {
+  __typename?: 'Event';
+  /** Reads and enables pagination through a set of `AttendeeExternal`. */
+  attendeeExternals: AttendeeExternalsConnection;
+  /** Reads and enables pagination through a set of `AttendeeUser`. */
+  attendeeUsers: AttendeeUsersConnection;
+  capacity: Scalars['BigInt'];
+  description: Scalars['String'];
+  enableNotes: Scalars['Boolean'];
+  filesLegacy: Scalars['String'];
+  id: Scalars['BigInt'];
+  isLocked: Scalars['Boolean'];
+  isPublic: Scalars['Boolean'];
+  isVisible: Scalars['Boolean'];
+  locationText: Scalars['String'];
+  name: Scalars['String'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  remainingSpots: Maybe<Scalars['Int']>;
+  since: Scalars['Date'];
+  summary: Scalars['JSON'];
+  until: Scalars['Date'];
+  updatedAt: Maybe<Scalars['Datetime']>;
+};
+
+
+export type EventAttendeeExternalsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<AttendeeExternalCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<AttendeeExternalsOrderBy>>;
+};
+
+
+export type EventAttendeeUsersArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<AttendeeUserCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<AttendeeUsersOrderBy>>;
+};
+
+/** A condition to be used against `Event` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type EventCondition = {
+  /** Checks for equality with the object’s `capacity` field. */
+  capacity?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `enableNotes` field. */
+  enableNotes?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `filesLegacy` field. */
+  filesLegacy?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `isLocked` field. */
+  isLocked?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `isPublic` field. */
+  isPublic?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `isVisible` field. */
+  isVisible?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `locationText` field. */
+  locationText?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `since` field. */
+  since?: InputMaybe<Scalars['Date']>;
+  /** Checks for equality with the object’s `summary` field. */
+  summary?: InputMaybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `until` field. */
+  until?: InputMaybe<Scalars['Date']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** An input for mutations affecting `Event` */
+export type EventInput = {
+  capacity?: InputMaybe<Scalars['BigInt']>;
+  description: Scalars['String'];
+  enableNotes?: InputMaybe<Scalars['Boolean']>;
+  filesLegacy: Scalars['String'];
+  id?: InputMaybe<Scalars['BigInt']>;
+  isLocked?: InputMaybe<Scalars['Boolean']>;
+  isPublic?: InputMaybe<Scalars['Boolean']>;
+  isVisible?: InputMaybe<Scalars['Boolean']>;
+  locationText: Scalars['String'];
+  name: Scalars['String'];
+  since: Scalars['Date'];
+  summary?: InputMaybe<Scalars['JSON']>;
+  until: Scalars['Date'];
+  updatedAt?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** Represents an update to a `Event`. Fields that are set will be updated. */
+export type EventPatch = {
+  capacity?: InputMaybe<Scalars['BigInt']>;
+  description?: InputMaybe<Scalars['String']>;
+  enableNotes?: InputMaybe<Scalars['Boolean']>;
+  filesLegacy?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['BigInt']>;
+  isLocked?: InputMaybe<Scalars['Boolean']>;
+  isPublic?: InputMaybe<Scalars['Boolean']>;
+  isVisible?: InputMaybe<Scalars['Boolean']>;
+  locationText?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  since?: InputMaybe<Scalars['Date']>;
+  summary?: InputMaybe<Scalars['JSON']>;
+  until?: InputMaybe<Scalars['Date']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** A connection to a list of `Event` values. */
+export type EventsConnection = {
+  __typename?: 'EventsConnection';
+  /** A list of edges which contains the `Event` and cursor to aid in pagination. */
+  edges: Array<EventsEdge>;
+  /** A list of `Event` objects. */
+  nodes: Array<Event>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Event` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Event` edge in the connection. */
+export type EventsEdge = {
+  __typename?: 'EventsEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']>;
+  /** The `Event` at the end of the edge. */
+  node: Event;
+};
+
+/** Methods to use when ordering `Event`. */
+export enum EventsOrderBy {
+  AttendeeExternalsByEventIdCountAsc = 'ATTENDEE_EXTERNALS_BY_EVENT_ID__COUNT_ASC',
+  AttendeeExternalsByEventIdCountDesc = 'ATTENDEE_EXTERNALS_BY_EVENT_ID__COUNT_DESC',
+  AttendeeUsersByEventIdCountAsc = 'ATTENDEE_USERS_BY_EVENT_ID__COUNT_ASC',
+  AttendeeUsersByEventIdCountDesc = 'ATTENDEE_USERS_BY_EVENT_ID__COUNT_DESC',
+  CapacityAsc = 'CAPACITY_ASC',
+  CapacityDesc = 'CAPACITY_DESC',
+  DescriptionAsc = 'DESCRIPTION_ASC',
+  DescriptionDesc = 'DESCRIPTION_DESC',
+  EnableNotesAsc = 'ENABLE_NOTES_ASC',
+  EnableNotesDesc = 'ENABLE_NOTES_DESC',
+  FilesLegacyAsc = 'FILES_LEGACY_ASC',
+  FilesLegacyDesc = 'FILES_LEGACY_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  IsLockedAsc = 'IS_LOCKED_ASC',
+  IsLockedDesc = 'IS_LOCKED_DESC',
+  IsPublicAsc = 'IS_PUBLIC_ASC',
+  IsPublicDesc = 'IS_PUBLIC_DESC',
+  IsVisibleAsc = 'IS_VISIBLE_ASC',
+  IsVisibleDesc = 'IS_VISIBLE_DESC',
+  LocationTextAsc = 'LOCATION_TEXT_ASC',
+  LocationTextDesc = 'LOCATION_TEXT_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  SinceAsc = 'SINCE_ASC',
+  SinceDesc = 'SINCE_DESC',
+  SummaryAsc = 'SUMMARY_ASC',
+  SummaryDesc = 'SUMMARY_DESC',
+  UntilAsc = 'UNTIL_ASC',
+  UntilDesc = 'UNTIL_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
+}
+
 /** All input for the `fixUnpairedCouples` mutation. */
 export type FixUnpairedCouplesInput = {
   /**
@@ -5270,11 +5786,17 @@ export type Mutation = {
   createAktuality: Maybe<CreateAktualityPayload>;
   /** Creates a single `Attachment`. */
   createAttachment: Maybe<CreateAttachmentPayload>;
+  /** Creates a single `AttendeeExternal`. */
+  createAttendeeExternal: Maybe<CreateAttendeeExternalPayload>;
+  /** Creates a single `AttendeeUser`. */
+  createAttendeeUser: Maybe<CreateAttendeeUserPayload>;
   /** Creates a single `CohortGroup`. */
   createCohortGroup: Maybe<CreateCohortGroupPayload>;
   createCouple: Maybe<CreateCouplePayload>;
   /** Creates a single `Dokumenty`. */
   createDokumenty: Maybe<CreateDokumentyPayload>;
+  /** Creates a single `Event`. */
+  createEvent: Maybe<CreateEventPayload>;
   /** Creates a single `GalerieDir`. */
   createGalerieDir: Maybe<CreateGalerieDirPayload>;
   /** Creates a single `GalerieFoto`. */
@@ -5342,16 +5864,6 @@ export type Mutation = {
   createVideoList: Maybe<CreateVideoListPayload>;
   /** Creates a single `VideoSource`. */
   createVideoSource: Maybe<CreateVideoSourcePayload>;
-  /** Deletes a single `Akce` using a unique key. */
-  deleteAkce: Maybe<DeleteAkcePayload>;
-  /** Deletes a single `Akce` using its globally unique id. */
-  deleteAkceByNodeId: Maybe<DeleteAkcePayload>;
-  /** Deletes a single `AkceItem` using a unique key. */
-  deleteAkceItem: Maybe<DeleteAkceItemPayload>;
-  /** Deletes a single `AkceItem` using a unique key. */
-  deleteAkceItemByAiUserAndAiIdRodic: Maybe<DeleteAkceItemPayload>;
-  /** Deletes a single `AkceItem` using its globally unique id. */
-  deleteAkceItemByNodeId: Maybe<DeleteAkceItemPayload>;
   /** Deletes a single `Aktuality` using a unique key. */
   deleteAktuality: Maybe<DeleteAktualityPayload>;
   /** Deletes a single `Aktuality` using its globally unique id. */
@@ -5360,6 +5872,16 @@ export type Mutation = {
   deleteAttachment: Maybe<DeleteAttachmentPayload>;
   /** Deletes a single `Attachment` using its globally unique id. */
   deleteAttachmentByNodeId: Maybe<DeleteAttachmentPayload>;
+  /** Deletes a single `AttendeeExternal` using a unique key. */
+  deleteAttendeeExternal: Maybe<DeleteAttendeeExternalPayload>;
+  /** Deletes a single `AttendeeExternal` using its globally unique id. */
+  deleteAttendeeExternalByNodeId: Maybe<DeleteAttendeeExternalPayload>;
+  /** Deletes a single `AttendeeUser` using a unique key. */
+  deleteAttendeeUser: Maybe<DeleteAttendeeUserPayload>;
+  /** Deletes a single `AttendeeUser` using its globally unique id. */
+  deleteAttendeeUserByNodeId: Maybe<DeleteAttendeeUserPayload>;
+  /** Deletes a single `AttendeeUser` using a unique key. */
+  deleteAttendeeUserByUserIdAndEventId: Maybe<DeleteAttendeeUserPayload>;
   /** Deletes a single `CohortGroup` using a unique key. */
   deleteCohortGroup: Maybe<DeleteCohortGroupPayload>;
   /** Deletes a single `CohortGroup` using its globally unique id. */
@@ -5368,6 +5890,10 @@ export type Mutation = {
   deleteDokumenty: Maybe<DeleteDokumentyPayload>;
   /** Deletes a single `Dokumenty` using its globally unique id. */
   deleteDokumentyByNodeId: Maybe<DeleteDokumentyPayload>;
+  /** Deletes a single `Event` using a unique key. */
+  deleteEvent: Maybe<DeleteEventPayload>;
+  /** Deletes a single `Event` using its globally unique id. */
+  deleteEventByNodeId: Maybe<DeleteEventPayload>;
   /** Deletes a single `GalerieDir` using a unique key. */
   deleteGalerieDir: Maybe<DeleteGalerieDirPayload>;
   /** Deletes a single `GalerieDir` using its globally unique id. */
@@ -5505,16 +6031,6 @@ export type Mutation = {
   prospectFormDancer: Maybe<ProspectFormDancerPayload>;
   reservationSetDesiredLessons: Maybe<ReservationSetDesiredLessonsPayload>;
   resetPassword: Maybe<ResetPasswordPayload>;
-  /** Updates a single `Akce` using a unique key and a patch. */
-  updateAkce: Maybe<UpdateAkcePayload>;
-  /** Updates a single `Akce` using its globally unique id and a patch. */
-  updateAkceByNodeId: Maybe<UpdateAkcePayload>;
-  /** Updates a single `AkceItem` using a unique key and a patch. */
-  updateAkceItem: Maybe<UpdateAkceItemPayload>;
-  /** Updates a single `AkceItem` using a unique key and a patch. */
-  updateAkceItemByAiUserAndAiIdRodic: Maybe<UpdateAkceItemPayload>;
-  /** Updates a single `AkceItem` using its globally unique id and a patch. */
-  updateAkceItemByNodeId: Maybe<UpdateAkceItemPayload>;
   /** Updates a single `Aktuality` using a unique key and a patch. */
   updateAktuality: Maybe<UpdateAktualityPayload>;
   /** Updates a single `Aktuality` using its globally unique id and a patch. */
@@ -5523,6 +6039,16 @@ export type Mutation = {
   updateAttachment: Maybe<UpdateAttachmentPayload>;
   /** Updates a single `Attachment` using its globally unique id and a patch. */
   updateAttachmentByNodeId: Maybe<UpdateAttachmentPayload>;
+  /** Updates a single `AttendeeExternal` using a unique key and a patch. */
+  updateAttendeeExternal: Maybe<UpdateAttendeeExternalPayload>;
+  /** Updates a single `AttendeeExternal` using its globally unique id and a patch. */
+  updateAttendeeExternalByNodeId: Maybe<UpdateAttendeeExternalPayload>;
+  /** Updates a single `AttendeeUser` using a unique key and a patch. */
+  updateAttendeeUser: Maybe<UpdateAttendeeUserPayload>;
+  /** Updates a single `AttendeeUser` using its globally unique id and a patch. */
+  updateAttendeeUserByNodeId: Maybe<UpdateAttendeeUserPayload>;
+  /** Updates a single `AttendeeUser` using a unique key and a patch. */
+  updateAttendeeUserByUserIdAndEventId: Maybe<UpdateAttendeeUserPayload>;
   /** Updates a single `CohortGroup` using a unique key and a patch. */
   updateCohortGroup: Maybe<UpdateCohortGroupPayload>;
   /** Updates a single `CohortGroup` using its globally unique id and a patch. */
@@ -5531,6 +6057,10 @@ export type Mutation = {
   updateDokumenty: Maybe<UpdateDokumentyPayload>;
   /** Updates a single `Dokumenty` using its globally unique id and a patch. */
   updateDokumentyByNodeId: Maybe<UpdateDokumentyPayload>;
+  /** Updates a single `Event` using a unique key and a patch. */
+  updateEvent: Maybe<UpdateEventPayload>;
+  /** Updates a single `Event` using its globally unique id and a patch. */
+  updateEventByNodeId: Maybe<UpdateEventPayload>;
   /** Updates a single `GalerieDir` using a unique key and a patch. */
   updateGalerieDir: Maybe<UpdateGalerieDirPayload>;
   /** Updates a single `GalerieDir` using its globally unique id and a patch. */
@@ -5727,6 +6257,18 @@ export type MutationCreateAttachmentArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateAttendeeExternalArgs = {
+  input: CreateAttendeeExternalInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateAttendeeUserArgs = {
+  input: CreateAttendeeUserInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateCohortGroupArgs = {
   input: CreateCohortGroupInput;
 };
@@ -5741,6 +6283,12 @@ export type MutationCreateCoupleArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateDokumentyArgs = {
   input: CreateDokumentyInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateEventArgs = {
+  input: CreateEventInput;
 };
 
 
@@ -5949,36 +6497,6 @@ export type MutationCreateVideoSourceArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteAkceArgs = {
-  input: DeleteAkceInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteAkceByNodeIdArgs = {
-  input: DeleteAkceByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteAkceItemArgs = {
-  input: DeleteAkceItemInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteAkceItemByAiUserAndAiIdRodicArgs = {
-  input: DeleteAkceItemByAiUserAndAiIdRodicInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteAkceItemByNodeIdArgs = {
-  input: DeleteAkceItemByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteAktualityArgs = {
   input: DeleteAktualityInput;
 };
@@ -6003,6 +6521,36 @@ export type MutationDeleteAttachmentByNodeIdArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteAttendeeExternalArgs = {
+  input: DeleteAttendeeExternalInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteAttendeeExternalByNodeIdArgs = {
+  input: DeleteAttendeeExternalByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteAttendeeUserArgs = {
+  input: DeleteAttendeeUserInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteAttendeeUserByNodeIdArgs = {
+  input: DeleteAttendeeUserByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteAttendeeUserByUserIdAndEventIdArgs = {
+  input: DeleteAttendeeUserByUserIdAndEventIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteCohortGroupArgs = {
   input: DeleteCohortGroupInput;
 };
@@ -6023,6 +6571,18 @@ export type MutationDeleteDokumentyArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteDokumentyByNodeIdArgs = {
   input: DeleteDokumentyByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteEventArgs = {
+  input: DeleteEventInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteEventByNodeIdArgs = {
+  input: DeleteEventByNodeIdInput;
 };
 
 
@@ -6459,36 +7019,6 @@ export type MutationResetPasswordArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateAkceArgs = {
-  input: UpdateAkceInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateAkceByNodeIdArgs = {
-  input: UpdateAkceByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateAkceItemArgs = {
-  input: UpdateAkceItemInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateAkceItemByAiUserAndAiIdRodicArgs = {
-  input: UpdateAkceItemByAiUserAndAiIdRodicInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateAkceItemByNodeIdArgs = {
-  input: UpdateAkceItemByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateAktualityArgs = {
   input: UpdateAktualityInput;
 };
@@ -6513,6 +7043,36 @@ export type MutationUpdateAttachmentByNodeIdArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateAttendeeExternalArgs = {
+  input: UpdateAttendeeExternalInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateAttendeeExternalByNodeIdArgs = {
+  input: UpdateAttendeeExternalByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateAttendeeUserArgs = {
+  input: UpdateAttendeeUserInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateAttendeeUserByNodeIdArgs = {
+  input: UpdateAttendeeUserByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateAttendeeUserByUserIdAndEventIdArgs = {
+  input: UpdateAttendeeUserByUserIdAndEventIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateCohortGroupArgs = {
   input: UpdateCohortGroupInput;
 };
@@ -6533,6 +7093,18 @@ export type MutationUpdateDokumentyArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateDokumentyByNodeIdArgs = {
   input: UpdateDokumentyByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateEventArgs = {
+  input: UpdateEventInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateEventByNodeIdArgs = {
+  input: UpdateEventByNodeIdInput;
 };
 
 
@@ -9265,13 +9837,6 @@ export type Query = Node & {
   /** Reads and enables pagination through a set of `Pary`. */
   activeCouples: Maybe<PariesConnection>;
   activeProspects: Maybe<ActiveProspectsConnection>;
-  akce: Maybe<Akce>;
-  /** Reads a single `Akce` using its globally unique `ID`. */
-  akceByNodeId: Maybe<Akce>;
-  akceItem: Maybe<AkceItem>;
-  akceItemByAiUserAndAiIdRodic: Maybe<AkceItem>;
-  /** Reads a single `AkceItem` using its globally unique `ID`. */
-  akceItemByNodeId: Maybe<AkceItem>;
   /** Reads and enables pagination through a set of `AkceItem`. */
   akceItems: Maybe<AkceItemsConnection>;
   /** Reads and enables pagination through a set of `Akce`. */
@@ -9286,6 +9851,17 @@ export type Query = Node & {
   attachmentByNodeId: Maybe<Attachment>;
   /** Reads and enables pagination through a set of `Attachment`. */
   attachments: Maybe<AttachmentsConnection>;
+  attendeeExternal: Maybe<AttendeeExternal>;
+  /** Reads a single `AttendeeExternal` using its globally unique `ID`. */
+  attendeeExternalByNodeId: Maybe<AttendeeExternal>;
+  /** Reads and enables pagination through a set of `AttendeeExternal`. */
+  attendeeExternals: Maybe<AttendeeExternalsConnection>;
+  attendeeUser: Maybe<AttendeeUser>;
+  /** Reads a single `AttendeeUser` using its globally unique `ID`. */
+  attendeeUserByNodeId: Maybe<AttendeeUser>;
+  attendeeUserByUserIdAndEventId: Maybe<AttendeeUser>;
+  /** Reads and enables pagination through a set of `AttendeeUser`. */
+  attendeeUsers: Maybe<AttendeeUsersConnection>;
   cohortGroup: Maybe<CohortGroup>;
   /** Reads a single `CohortGroup` using its globally unique `ID`. */
   cohortGroupByNodeId: Maybe<CohortGroup>;
@@ -9302,6 +9878,11 @@ export type Query = Node & {
   dokumenty: Maybe<Dokumenty>;
   /** Reads a single `Dokumenty` using its globally unique `ID`. */
   dokumentyByNodeId: Maybe<Dokumenty>;
+  event: Maybe<Event>;
+  /** Reads a single `Event` using its globally unique `ID`. */
+  eventByNodeId: Maybe<Event>;
+  /** Reads and enables pagination through a set of `Event`. */
+  events: Maybe<EventsConnection>;
   galerieDir: Maybe<GalerieDir>;
   /** Reads a single `GalerieDir` using its globally unique `ID`. */
   galerieDirByNodeId: Maybe<GalerieDir>;
@@ -9524,37 +10105,6 @@ export type QueryActiveProspectsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryAkceArgs = {
-  aId: Scalars['BigInt'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryAkceByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryAkceItemArgs = {
-  aiId: Scalars['BigInt'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryAkceItemByAiUserAndAiIdRodicArgs = {
-  aiIdRodic: Scalars['BigInt'];
-  aiUser: Scalars['BigInt'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryAkceItemByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryAkceItemsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -9627,6 +10177,61 @@ export type QueryAttachmentsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryAttendeeExternalArgs = {
+  id: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAttendeeExternalByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAttendeeExternalsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<AttendeeExternalCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<AttendeeExternalsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAttendeeUserArgs = {
+  id: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAttendeeUserByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAttendeeUserByUserIdAndEventIdArgs = {
+  eventId: Scalars['BigInt'];
+  userId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAttendeeUsersArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<AttendeeUserCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<AttendeeUsersOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryCohortGroupArgs = {
   id: Scalars['BigInt'];
 };
@@ -9691,6 +10296,30 @@ export type QueryDokumentyArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryDokumentyByNodeIdArgs = {
   nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventArgs = {
+  id: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<EventCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<EventsOrderBy>>;
 };
 
 
@@ -11787,117 +12416,6 @@ export enum TenantsOrderBy {
   TenantPeopleByTenantIdCountDesc = 'TENANT_PEOPLE_BY_TENANT_ID__COUNT_DESC'
 }
 
-/** All input for the `updateAkceByNodeId` mutation. */
-export type UpdateAkceByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Akce` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `Akce` being updated. */
-  patch: AkcePatch;
-};
-
-/** All input for the `updateAkce` mutation. */
-export type UpdateAkceInput = {
-  aId: Scalars['BigInt'];
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `Akce` being updated. */
-  patch: AkcePatch;
-};
-
-/** All input for the `updateAkceItemByAiUserAndAiIdRodic` mutation. */
-export type UpdateAkceItemByAiUserAndAiIdRodicInput = {
-  aiIdRodic: Scalars['BigInt'];
-  aiUser: Scalars['BigInt'];
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `AkceItem` being updated. */
-  patch: AkceItemPatch;
-};
-
-/** All input for the `updateAkceItemByNodeId` mutation. */
-export type UpdateAkceItemByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `AkceItem` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `AkceItem` being updated. */
-  patch: AkceItemPatch;
-};
-
-/** All input for the `updateAkceItem` mutation. */
-export type UpdateAkceItemInput = {
-  aiId: Scalars['BigInt'];
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `AkceItem` being updated. */
-  patch: AkceItemPatch;
-};
-
-/** The output of our update `AkceItem` mutation. */
-export type UpdateAkceItemPayload = {
-  __typename?: 'UpdateAkceItemPayload';
-  /** Reads a single `Akce` that is related to this `AkceItem`. */
-  akceByAiIdRodic: Maybe<Akce>;
-  /** The `AkceItem` that was updated by this mutation. */
-  akceItem: Maybe<AkceItem>;
-  /** An edge for our `AkceItem`. May be used by Relay 1. */
-  akceItemEdge: Maybe<AkceItemsEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** Reads a single `User` that is related to this `AkceItem`. */
-  userByAiUser: Maybe<User>;
-};
-
-
-/** The output of our update `AkceItem` mutation. */
-export type UpdateAkceItemPayloadAkceItemEdgeArgs = {
-  orderBy?: InputMaybe<Array<AkceItemsOrderBy>>;
-};
-
-/** The output of our update `Akce` mutation. */
-export type UpdateAkcePayload = {
-  __typename?: 'UpdateAkcePayload';
-  /** The `Akce` that was updated by this mutation. */
-  akce: Maybe<Akce>;
-  /** An edge for our `Akce`. May be used by Relay 1. */
-  akceEdge: Maybe<AkcesEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-};
-
-
-/** The output of our update `Akce` mutation. */
-export type UpdateAkcePayloadAkceEdgeArgs = {
-  orderBy?: InputMaybe<Array<AkcesOrderBy>>;
-};
-
 /** All input for the `updateAktualityByNodeId` mutation. */
 export type UpdateAktualityByNodeIdInput = {
   /**
@@ -11998,6 +12516,119 @@ export type UpdateAttachmentPayloadAttachmentEdgeArgs = {
   orderBy?: InputMaybe<Array<AttachmentsOrderBy>>;
 };
 
+/** All input for the `updateAttendeeExternalByNodeId` mutation. */
+export type UpdateAttendeeExternalByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `AttendeeExternal` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `AttendeeExternal` being updated. */
+  patch: AttendeeExternalPatch;
+};
+
+/** All input for the `updateAttendeeExternal` mutation. */
+export type UpdateAttendeeExternalInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `AttendeeExternal` being updated. */
+  patch: AttendeeExternalPatch;
+};
+
+/** The output of our update `AttendeeExternal` mutation. */
+export type UpdateAttendeeExternalPayload = {
+  __typename?: 'UpdateAttendeeExternalPayload';
+  /** The `AttendeeExternal` that was updated by this mutation. */
+  attendeeExternal: Maybe<AttendeeExternal>;
+  /** An edge for our `AttendeeExternal`. May be used by Relay 1. */
+  attendeeExternalEdge: Maybe<AttendeeExternalsEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** Reads a single `Event` that is related to this `AttendeeExternal`. */
+  event: Maybe<Event>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+
+/** The output of our update `AttendeeExternal` mutation. */
+export type UpdateAttendeeExternalPayloadAttendeeExternalEdgeArgs = {
+  orderBy?: InputMaybe<Array<AttendeeExternalsOrderBy>>;
+};
+
+/** All input for the `updateAttendeeUserByNodeId` mutation. */
+export type UpdateAttendeeUserByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `AttendeeUser` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `AttendeeUser` being updated. */
+  patch: AttendeeUserPatch;
+};
+
+/** All input for the `updateAttendeeUserByUserIdAndEventId` mutation. */
+export type UpdateAttendeeUserByUserIdAndEventIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  eventId: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `AttendeeUser` being updated. */
+  patch: AttendeeUserPatch;
+  userId: Scalars['BigInt'];
+};
+
+/** All input for the `updateAttendeeUser` mutation. */
+export type UpdateAttendeeUserInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `AttendeeUser` being updated. */
+  patch: AttendeeUserPatch;
+};
+
+/** The output of our update `AttendeeUser` mutation. */
+export type UpdateAttendeeUserPayload = {
+  __typename?: 'UpdateAttendeeUserPayload';
+  /** The `AttendeeUser` that was updated by this mutation. */
+  attendeeUser: Maybe<AttendeeUser>;
+  /** An edge for our `AttendeeUser`. May be used by Relay 1. */
+  attendeeUserEdge: Maybe<AttendeeUsersEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** Reads a single `Event` that is related to this `AttendeeUser`. */
+  event: Maybe<Event>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `User` that is related to this `AttendeeUser`. */
+  user: Maybe<User>;
+};
+
+
+/** The output of our update `AttendeeUser` mutation. */
+export type UpdateAttendeeUserPayloadAttendeeUserEdgeArgs = {
+  orderBy?: InputMaybe<Array<AttendeeUsersOrderBy>>;
+};
+
 /** All input for the `updateCohortGroupByNodeId` mutation. */
 export type UpdateCohortGroupByNodeIdInput = {
   /**
@@ -12094,6 +12725,53 @@ export type UpdateDokumentyPayload = {
 /** The output of our update `Dokumenty` mutation. */
 export type UpdateDokumentyPayloadDokumentyEdgeArgs = {
   orderBy?: InputMaybe<Array<DokumentiesOrderBy>>;
+};
+
+/** All input for the `updateEventByNodeId` mutation. */
+export type UpdateEventByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Event` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `Event` being updated. */
+  patch: EventPatch;
+};
+
+/** All input for the `updateEvent` mutation. */
+export type UpdateEventInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `Event` being updated. */
+  patch: EventPatch;
+};
+
+/** The output of our update `Event` mutation. */
+export type UpdateEventPayload = {
+  __typename?: 'UpdateEventPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `Event` that was updated by this mutation. */
+  event: Maybe<Event>;
+  /** An edge for our `Event`. May be used by Relay 1. */
+  eventEdge: Maybe<EventsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+
+/** The output of our update `Event` mutation. */
+export type UpdateEventPayloadEventEdgeArgs = {
+  orderBy?: InputMaybe<Array<EventsOrderBy>>;
 };
 
 /** All input for the `updateGalerieDirByNodeId` mutation. */
@@ -14088,12 +14766,12 @@ export enum UpozornenisOrderBy {
 
 export type User = Node & {
   __typename?: 'User';
-  /** Reads and enables pagination through a set of `AkceItem`. */
-  akceItemsByAiUser: AkceItemsConnection;
   /** Reads and enables pagination through a set of `Aktuality`. */
   aktualitiesByAtKdo: AktualitiesConnection;
   /** Reads and enables pagination through a set of `Attachment`. */
   attachmentsByUploadedBy: AttachmentsConnection;
+  /** Reads and enables pagination through a set of `AttendeeUser`. */
+  attendeeUsers: AttendeeUsersConnection;
   /** Reads and enables pagination through a set of `Dokumenty`. */
   dokumentiesByDKdo: DokumentiesConnection;
   fullName: Maybe<Scalars['String']>;
@@ -14160,17 +14838,6 @@ export type User = Node & {
 };
 
 
-export type UserAkceItemsByAiUserArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<AkceItemCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<AkceItemsOrderBy>>;
-};
-
-
 export type UserAktualitiesByAtKdoArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -14190,6 +14857,17 @@ export type UserAttachmentsByUploadedByArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<AttachmentsOrderBy>>;
+};
+
+
+export type UserAttendeeUsersArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<AttendeeUserCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<AttendeeUsersOrderBy>>;
 };
 
 
@@ -14488,12 +15166,12 @@ export type UsersEdge = {
 
 /** Methods to use when ordering `User`. */
 export enum UsersOrderBy {
-  AkceItemsByAiUserCountAsc = 'AKCE_ITEMS_BY_AI_USER__COUNT_ASC',
-  AkceItemsByAiUserCountDesc = 'AKCE_ITEMS_BY_AI_USER__COUNT_DESC',
   AktualitiesByAtKdoCountAsc = 'AKTUALITIES_BY_AT_KDO__COUNT_ASC',
   AktualitiesByAtKdoCountDesc = 'AKTUALITIES_BY_AT_KDO__COUNT_DESC',
   AttachmentsByUploadedByCountAsc = 'ATTACHMENTS_BY_UPLOADED_BY__COUNT_ASC',
   AttachmentsByUploadedByCountDesc = 'ATTACHMENTS_BY_UPLOADED_BY__COUNT_DESC',
+  AttendeeUsersByUserIdCountAsc = 'ATTENDEE_USERS_BY_USER_ID__COUNT_ASC',
+  AttendeeUsersByUserIdCountDesc = 'ATTENDEE_USERS_BY_USER_ID__COUNT_DESC',
   DokumentiesByDKdoCountAsc = 'DOKUMENTIES_BY_D_KDO__COUNT_ASC',
   DokumentiesByDKdoCountDesc = 'DOKUMENTIES_BY_D_KDO__COUNT_DESC',
   GalerieFotosByGfKdoCountAsc = 'GALERIE_FOTOS_BY_GF_KDO__COUNT_ASC',

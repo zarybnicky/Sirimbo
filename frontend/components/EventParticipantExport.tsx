@@ -14,7 +14,7 @@ export function EventParticipantExport({ id }: { id: string }) {
       }
       const { Workbook } = await import('exceljs');
       const workbook = new Workbook();
-      const worksheet = workbook.addWorksheet(data.akce?.aJmeno || 'Sheet 1');
+      const worksheet = workbook.addWorksheet(data.event?.name || 'Sheet 1');
 
       worksheet.columns = [
         { header: 'Jméno', key: 'firstName' },
@@ -30,18 +30,18 @@ export function EventParticipantExport({ id }: { id: string }) {
         column.alignment = { horizontal: 'center' };
       });
 
-      data.akce?.akceItemsByAiIdRodic.nodes.forEach((x) =>
+      data.event?.attendeeUsers.nodes.forEach((x) =>
         worksheet.addRow({
-          firstName: x.userByAiUser?.uJmeno,
-          lastName: x.userByAiUser?.uPrijmeni,
-          birthNumber: x.userByAiUser?.uRodneCislo,
-          phone: x.userByAiUser?.uTelefon,
-          email: x.userByAiUser?.uEmail,
+          firstName: x.user?.uJmeno,
+          lastName: x.user?.uPrijmeni,
+          birthNumber: x.user?.uRodneCislo,
+          phone: x.user?.uTelefon,
+          email: x.user?.uEmail,
         }),
       );
 
       const buf = await workbook.xlsx.writeBuffer();
-      saveAs(new Blob([buf]), `${data.akce?.aJmeno || 'export-akce'}.xlsx`);
+      saveAs(new Blob([buf]), `${data.event?.name || 'export-akce'}.xlsx`);
     },
     [data],
   );

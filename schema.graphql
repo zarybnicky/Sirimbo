@@ -31,59 +31,21 @@ type ActiveProspectsRecord {
   updatedAt: Datetime
 }
 
-type Akce implements Node {
-  aDo: Date!
-  aDokumenty: String!
-  aId: BigInt!
-  aInfo: String!
-  aJmeno: String!
-  aKapacita: BigInt!
-
-  """Reads and enables pagination through a set of `AkceItem`."""
-  akceItemsByAiIdRodic(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AkceItemCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `AkceItem`."""
-    orderBy: [AkceItemsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AkceItemsConnection!
-  aKde: String!
-  aLock: Boolean!
-  aOd: Date!
+type Akce {
+  aDo: Date
+  aDokumenty: String
+  aId: BigInt
+  aInfo: String
+  aJmeno: String
+  aKapacita: BigInt
+  aKde: String
+  aLock: Boolean
+  aOd: Date
   aTimestamp: Datetime
-  aVisible: Boolean!
-  enableNotes: Boolean!
-  freeSlots: Int
-  hasCapacity: Boolean
-  isPublic: Boolean!
-  myNotes: String
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-  signedUp: Boolean
-  summary: JSON!
+  aVisible: Boolean
+  enableNotes: Boolean
+  isPublic: Boolean
+  summary: JSON
 }
 
 """
@@ -135,15 +97,15 @@ input AkceCondition {
 
 """An input for mutations affecting `Akce`"""
 input AkceInput {
-  aDo: Date!
-  aDokumenty: String!
+  aDo: Date
+  aDokumenty: String
   aId: BigInt
-  aInfo: String!
-  aJmeno: String!
+  aInfo: String
+  aJmeno: String
   aKapacita: BigInt
-  aKde: String!
+  aKde: String
   aLock: Boolean
-  aOd: Date!
+  aOd: Date
   aTimestamp: Datetime
   aVisible: Boolean
   enableNotes: Boolean
@@ -151,23 +113,12 @@ input AkceInput {
   summary: JSON
 }
 
-type AkceItem implements Node {
-  aiId: BigInt!
-  aiIdRodic: BigInt!
-  aiRokNarozeni: Int!
-  aiUser: BigInt!
-
-  """Reads a single `Akce` that is related to this `AkceItem`."""
-  akceByAiIdRodic: Akce
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-  notes: String!
-
-  """Reads a single `User` that is related to this `AkceItem`."""
-  userByAiUser: User
+type AkceItem {
+  aiId: BigInt
+  aiIdRodic: BigInt
+  aiRokNarozeni: Int
+  aiUser: BigInt
+  notes: String
 }
 
 """
@@ -193,17 +144,6 @@ input AkceItemCondition {
 
 """An input for mutations affecting `AkceItem`"""
 input AkceItemInput {
-  aiId: BigInt
-  aiIdRodic: BigInt!
-  aiRokNarozeni: Int!
-  aiUser: BigInt!
-  notes: String
-}
-
-"""
-Represents an update to a `AkceItem`. Fields that are set will be updated.
-"""
-input AkceItemPatch {
   aiId: BigInt
   aiIdRodic: BigInt
   aiRokNarozeni: Int
@@ -247,121 +187,9 @@ enum AkceItemsOrderBy {
   AI_ROK_NAROZENI_DESC
   AI_USER_ASC
   AI_USER_DESC
-  AKCE_BY_AI_ID_RODIC__A_DO_ASC
-  AKCE_BY_AI_ID_RODIC__A_DO_DESC
-  AKCE_BY_AI_ID_RODIC__A_DOKUMENTY_ASC
-  AKCE_BY_AI_ID_RODIC__A_DOKUMENTY_DESC
-  AKCE_BY_AI_ID_RODIC__A_ID_ASC
-  AKCE_BY_AI_ID_RODIC__A_ID_DESC
-  AKCE_BY_AI_ID_RODIC__A_INFO_ASC
-  AKCE_BY_AI_ID_RODIC__A_INFO_DESC
-  AKCE_BY_AI_ID_RODIC__A_JMENO_ASC
-  AKCE_BY_AI_ID_RODIC__A_JMENO_DESC
-  AKCE_BY_AI_ID_RODIC__A_KAPACITA_ASC
-  AKCE_BY_AI_ID_RODIC__A_KAPACITA_DESC
-  AKCE_BY_AI_ID_RODIC__A_KDE_ASC
-  AKCE_BY_AI_ID_RODIC__A_KDE_DESC
-  AKCE_BY_AI_ID_RODIC__A_LOCK_ASC
-  AKCE_BY_AI_ID_RODIC__A_LOCK_DESC
-  AKCE_BY_AI_ID_RODIC__A_OD_ASC
-  AKCE_BY_AI_ID_RODIC__A_OD_DESC
-  AKCE_BY_AI_ID_RODIC__A_TIMESTAMP_ASC
-  AKCE_BY_AI_ID_RODIC__A_TIMESTAMP_DESC
-  AKCE_BY_AI_ID_RODIC__A_VISIBLE_ASC
-  AKCE_BY_AI_ID_RODIC__A_VISIBLE_DESC
-  AKCE_BY_AI_ID_RODIC__ENABLE_NOTES_ASC
-  AKCE_BY_AI_ID_RODIC__ENABLE_NOTES_DESC
-  AKCE_BY_AI_ID_RODIC__IS_PUBLIC_ASC
-  AKCE_BY_AI_ID_RODIC__IS_PUBLIC_DESC
-  AKCE_BY_AI_ID_RODIC__SUMMARY_ASC
-  AKCE_BY_AI_ID_RODIC__SUMMARY_DESC
   NATURAL
   NOTES_ASC
   NOTES_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  USER_BY_AI_USER__U_BAN_ASC
-  USER_BY_AI_USER__U_BAN_DESC
-  USER_BY_AI_USER__U_CITY_ASC
-  USER_BY_AI_USER__U_CITY_DESC
-  USER_BY_AI_USER__U_CONFIRMED_ASC
-  USER_BY_AI_USER__U_CONFIRMED_DESC
-  USER_BY_AI_USER__U_CONSCRIPTION_NUMBER_ASC
-  USER_BY_AI_USER__U_CONSCRIPTION_NUMBER_DESC
-  USER_BY_AI_USER__U_CREATED_AT_ASC
-  USER_BY_AI_USER__U_CREATED_AT_DESC
-  USER_BY_AI_USER__U_DANCER_ASC
-  USER_BY_AI_USER__U_DANCER_DESC
-  USER_BY_AI_USER__U_DISTRICT_ASC
-  USER_BY_AI_USER__U_DISTRICT_DESC
-  USER_BY_AI_USER__U_EMAIL_ASC
-  USER_BY_AI_USER__U_EMAIL_DESC
-  USER_BY_AI_USER__U_GDPR_SIGNED_AT_ASC
-  USER_BY_AI_USER__U_GDPR_SIGNED_AT_DESC
-  USER_BY_AI_USER__U_GROUP_ASC
-  USER_BY_AI_USER__U_GROUP_DESC
-  USER_BY_AI_USER__U_ID_ASC
-  USER_BY_AI_USER__U_ID_DESC
-  USER_BY_AI_USER__U_JMENO_ASC
-  USER_BY_AI_USER__U_JMENO_DESC
-  USER_BY_AI_USER__U_LEVEL_ASC
-  USER_BY_AI_USER__U_LEVEL_DESC
-  USER_BY_AI_USER__U_LOCK_ASC
-  USER_BY_AI_USER__U_LOCK_DESC
-  USER_BY_AI_USER__U_LOGIN_ASC
-  USER_BY_AI_USER__U_LOGIN_DESC
-  USER_BY_AI_USER__U_MEMBER_SINCE_ASC
-  USER_BY_AI_USER__U_MEMBER_SINCE_DESC
-  USER_BY_AI_USER__U_MEMBER_UNTIL_ASC
-  USER_BY_AI_USER__U_MEMBER_UNTIL_DESC
-  USER_BY_AI_USER__U_NAROZENI_ASC
-  USER_BY_AI_USER__U_NAROZENI_DESC
-  USER_BY_AI_USER__U_NATIONALITY_ASC
-  USER_BY_AI_USER__U_NATIONALITY_DESC
-  USER_BY_AI_USER__U_ORIENTATION_NUMBER_ASC
-  USER_BY_AI_USER__U_ORIENTATION_NUMBER_DESC
-  USER_BY_AI_USER__U_PASS_ASC
-  USER_BY_AI_USER__U_PASS_DESC
-  USER_BY_AI_USER__U_POHLAVI_ASC
-  USER_BY_AI_USER__U_POHLAVI_DESC
-  USER_BY_AI_USER__U_POSTAL_CODE_ASC
-  USER_BY_AI_USER__U_POSTAL_CODE_DESC
-  USER_BY_AI_USER__U_POZNAMKY_ASC
-  USER_BY_AI_USER__U_POZNAMKY_DESC
-  USER_BY_AI_USER__U_PRIJMENI_ASC
-  USER_BY_AI_USER__U_PRIJMENI_DESC
-  USER_BY_AI_USER__U_RODNE_CISLO_ASC
-  USER_BY_AI_USER__U_RODNE_CISLO_DESC
-  USER_BY_AI_USER__U_SKUPINA_ASC
-  USER_BY_AI_USER__U_SKUPINA_DESC
-  USER_BY_AI_USER__U_STREET_ASC
-  USER_BY_AI_USER__U_STREET_DESC
-  USER_BY_AI_USER__U_SYSTEM_ASC
-  USER_BY_AI_USER__U_SYSTEM_DESC
-  USER_BY_AI_USER__U_TEACHER_ASC
-  USER_BY_AI_USER__U_TEACHER_DESC
-  USER_BY_AI_USER__U_TELEFON_ASC
-  USER_BY_AI_USER__U_TELEFON_DESC
-  USER_BY_AI_USER__U_TIMESTAMP_ASC
-  USER_BY_AI_USER__U_TIMESTAMP_DESC
-}
-
-"""Represents an update to a `Akce`. Fields that are set will be updated."""
-input AkcePatch {
-  aDo: Date
-  aDokumenty: String
-  aId: BigInt
-  aInfo: String
-  aJmeno: String
-  aKapacita: BigInt
-  aKde: String
-  aLock: Boolean
-  aOd: Date
-  aTimestamp: Datetime
-  aVisible: Boolean
-  enableNotes: Boolean
-  isPublic: Boolean
-  summary: JSON
 }
 
 """A connection to a list of `Akce` values."""
@@ -414,15 +242,11 @@ enum AkcesOrderBy {
   A_TIMESTAMP_DESC
   A_VISIBLE_ASC
   A_VISIBLE_DESC
-  AKCE_ITEMS_BY_AI_ID_RODIC__COUNT_ASC
-  AKCE_ITEMS_BY_AI_ID_RODIC__COUNT_DESC
   ENABLE_NOTES_ASC
   ENABLE_NOTES_DESC
   IS_PUBLIC_ASC
   IS_PUBLIC_DESC
   NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
   SUMMARY_ASC
   SUMMARY_DESC
 }
@@ -894,6 +718,385 @@ enum AttachmentsOrderBy {
   USER_BY_UPLOADED_BY__U_TIMESTAMP_DESC
 }
 
+type AttendeeExternal implements Node {
+  birthNumber: String
+  createdAt: Datetime!
+  email: String!
+
+  """Reads a single `Event` that is related to this `AttendeeExternal`."""
+  event: Event
+  eventId: BigInt
+  firstName: String!
+  guardianName: String!
+  id: BigInt!
+  isConfirmed: Boolean!
+  lastName: String!
+
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  notes: String!
+  phone: String!
+  updatedAt: Datetime!
+}
+
+"""
+A condition to be used against `AttendeeExternal` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input AttendeeExternalCondition {
+  """Checks for equality with the object’s `birthNumber` field."""
+  birthNumber: String
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `email` field."""
+  email: String
+
+  """Checks for equality with the object’s `eventId` field."""
+  eventId: BigInt
+
+  """Checks for equality with the object’s `firstName` field."""
+  firstName: String
+
+  """Checks for equality with the object’s `guardianName` field."""
+  guardianName: String
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `isConfirmed` field."""
+  isConfirmed: Boolean
+
+  """Checks for equality with the object’s `lastName` field."""
+  lastName: String
+
+  """Checks for equality with the object’s `notes` field."""
+  notes: String
+
+  """Checks for equality with the object’s `phone` field."""
+  phone: String
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""An input for mutations affecting `AttendeeExternal`"""
+input AttendeeExternalInput {
+  birthNumber: String
+  createdAt: Datetime
+  email: String!
+  eventId: BigInt
+  firstName: String!
+  guardianName: String
+  isConfirmed: Boolean
+  lastName: String!
+  notes: String!
+  phone: String!
+  updatedAt: Datetime
+}
+
+"""
+Represents an update to a `AttendeeExternal`. Fields that are set will be updated.
+"""
+input AttendeeExternalPatch {
+  birthNumber: String
+  createdAt: Datetime
+  email: String
+  eventId: BigInt
+  firstName: String
+  guardianName: String
+  isConfirmed: Boolean
+  lastName: String
+  notes: String
+  phone: String
+  updatedAt: Datetime
+}
+
+"""A connection to a list of `AttendeeExternal` values."""
+type AttendeeExternalsConnection {
+  """
+  A list of edges which contains the `AttendeeExternal` and cursor to aid in pagination.
+  """
+  edges: [AttendeeExternalsEdge!]!
+
+  """A list of `AttendeeExternal` objects."""
+  nodes: [AttendeeExternal!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `AttendeeExternal` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `AttendeeExternal` edge in the connection."""
+type AttendeeExternalsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `AttendeeExternal` at the end of the edge."""
+  node: AttendeeExternal!
+}
+
+"""Methods to use when ordering `AttendeeExternal`."""
+enum AttendeeExternalsOrderBy {
+  BIRTH_NUMBER_ASC
+  BIRTH_NUMBER_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  EMAIL_ASC
+  EMAIL_DESC
+  EVENT_BY_EVENT_ID__CAPACITY_ASC
+  EVENT_BY_EVENT_ID__CAPACITY_DESC
+  EVENT_BY_EVENT_ID__DESCRIPTION_ASC
+  EVENT_BY_EVENT_ID__DESCRIPTION_DESC
+  EVENT_BY_EVENT_ID__ENABLE_NOTES_ASC
+  EVENT_BY_EVENT_ID__ENABLE_NOTES_DESC
+  EVENT_BY_EVENT_ID__FILES_LEGACY_ASC
+  EVENT_BY_EVENT_ID__FILES_LEGACY_DESC
+  EVENT_BY_EVENT_ID__ID_ASC
+  EVENT_BY_EVENT_ID__ID_DESC
+  EVENT_BY_EVENT_ID__IS_LOCKED_ASC
+  EVENT_BY_EVENT_ID__IS_LOCKED_DESC
+  EVENT_BY_EVENT_ID__IS_PUBLIC_ASC
+  EVENT_BY_EVENT_ID__IS_PUBLIC_DESC
+  EVENT_BY_EVENT_ID__IS_VISIBLE_ASC
+  EVENT_BY_EVENT_ID__IS_VISIBLE_DESC
+  EVENT_BY_EVENT_ID__LOCATION_TEXT_ASC
+  EVENT_BY_EVENT_ID__LOCATION_TEXT_DESC
+  EVENT_BY_EVENT_ID__NAME_ASC
+  EVENT_BY_EVENT_ID__NAME_DESC
+  EVENT_BY_EVENT_ID__SINCE_ASC
+  EVENT_BY_EVENT_ID__SINCE_DESC
+  EVENT_BY_EVENT_ID__SUMMARY_ASC
+  EVENT_BY_EVENT_ID__SUMMARY_DESC
+  EVENT_BY_EVENT_ID__UNTIL_ASC
+  EVENT_BY_EVENT_ID__UNTIL_DESC
+  EVENT_BY_EVENT_ID__UPDATED_AT_ASC
+  EVENT_BY_EVENT_ID__UPDATED_AT_DESC
+  EVENT_ID_ASC
+  EVENT_ID_DESC
+  FIRST_NAME_ASC
+  FIRST_NAME_DESC
+  GUARDIAN_NAME_ASC
+  GUARDIAN_NAME_DESC
+  ID_ASC
+  ID_DESC
+  IS_CONFIRMED_ASC
+  IS_CONFIRMED_DESC
+  LAST_NAME_ASC
+  LAST_NAME_DESC
+  NATURAL
+  NOTES_ASC
+  NOTES_DESC
+  PHONE_ASC
+  PHONE_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
+type AttendeeUser implements Node {
+  birthYear: Int!
+
+  """Reads a single `Event` that is related to this `AttendeeUser`."""
+  event: Event
+  eventId: BigInt!
+  id: BigInt!
+
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  notes: String!
+
+  """Reads a single `User` that is related to this `AttendeeUser`."""
+  user: User
+  userId: BigInt!
+}
+
+"""
+A condition to be used against `AttendeeUser` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input AttendeeUserCondition {
+  """Checks for equality with the object’s `birthYear` field."""
+  birthYear: Int
+
+  """Checks for equality with the object’s `eventId` field."""
+  eventId: BigInt
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `notes` field."""
+  notes: String
+
+  """Checks for equality with the object’s `userId` field."""
+  userId: BigInt
+}
+
+"""An input for mutations affecting `AttendeeUser`"""
+input AttendeeUserInput {
+  birthYear: Int!
+  eventId: BigInt!
+  id: BigInt
+  notes: String
+  userId: BigInt!
+}
+
+"""
+Represents an update to a `AttendeeUser`. Fields that are set will be updated.
+"""
+input AttendeeUserPatch {
+  birthYear: Int
+  eventId: BigInt
+  id: BigInt
+  notes: String
+  userId: BigInt
+}
+
+"""A connection to a list of `AttendeeUser` values."""
+type AttendeeUsersConnection {
+  """
+  A list of edges which contains the `AttendeeUser` and cursor to aid in pagination.
+  """
+  edges: [AttendeeUsersEdge!]!
+
+  """A list of `AttendeeUser` objects."""
+  nodes: [AttendeeUser!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `AttendeeUser` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `AttendeeUser` edge in the connection."""
+type AttendeeUsersEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `AttendeeUser` at the end of the edge."""
+  node: AttendeeUser!
+}
+
+"""Methods to use when ordering `AttendeeUser`."""
+enum AttendeeUsersOrderBy {
+  BIRTH_YEAR_ASC
+  BIRTH_YEAR_DESC
+  EVENT_BY_EVENT_ID__CAPACITY_ASC
+  EVENT_BY_EVENT_ID__CAPACITY_DESC
+  EVENT_BY_EVENT_ID__DESCRIPTION_ASC
+  EVENT_BY_EVENT_ID__DESCRIPTION_DESC
+  EVENT_BY_EVENT_ID__ENABLE_NOTES_ASC
+  EVENT_BY_EVENT_ID__ENABLE_NOTES_DESC
+  EVENT_BY_EVENT_ID__FILES_LEGACY_ASC
+  EVENT_BY_EVENT_ID__FILES_LEGACY_DESC
+  EVENT_BY_EVENT_ID__ID_ASC
+  EVENT_BY_EVENT_ID__ID_DESC
+  EVENT_BY_EVENT_ID__IS_LOCKED_ASC
+  EVENT_BY_EVENT_ID__IS_LOCKED_DESC
+  EVENT_BY_EVENT_ID__IS_PUBLIC_ASC
+  EVENT_BY_EVENT_ID__IS_PUBLIC_DESC
+  EVENT_BY_EVENT_ID__IS_VISIBLE_ASC
+  EVENT_BY_EVENT_ID__IS_VISIBLE_DESC
+  EVENT_BY_EVENT_ID__LOCATION_TEXT_ASC
+  EVENT_BY_EVENT_ID__LOCATION_TEXT_DESC
+  EVENT_BY_EVENT_ID__NAME_ASC
+  EVENT_BY_EVENT_ID__NAME_DESC
+  EVENT_BY_EVENT_ID__SINCE_ASC
+  EVENT_BY_EVENT_ID__SINCE_DESC
+  EVENT_BY_EVENT_ID__SUMMARY_ASC
+  EVENT_BY_EVENT_ID__SUMMARY_DESC
+  EVENT_BY_EVENT_ID__UNTIL_ASC
+  EVENT_BY_EVENT_ID__UNTIL_DESC
+  EVENT_BY_EVENT_ID__UPDATED_AT_ASC
+  EVENT_BY_EVENT_ID__UPDATED_AT_DESC
+  EVENT_ID_ASC
+  EVENT_ID_DESC
+  ID_ASC
+  ID_DESC
+  NATURAL
+  NOTES_ASC
+  NOTES_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  USER_BY_USER_ID__U_BAN_ASC
+  USER_BY_USER_ID__U_BAN_DESC
+  USER_BY_USER_ID__U_CITY_ASC
+  USER_BY_USER_ID__U_CITY_DESC
+  USER_BY_USER_ID__U_CONFIRMED_ASC
+  USER_BY_USER_ID__U_CONFIRMED_DESC
+  USER_BY_USER_ID__U_CONSCRIPTION_NUMBER_ASC
+  USER_BY_USER_ID__U_CONSCRIPTION_NUMBER_DESC
+  USER_BY_USER_ID__U_CREATED_AT_ASC
+  USER_BY_USER_ID__U_CREATED_AT_DESC
+  USER_BY_USER_ID__U_DANCER_ASC
+  USER_BY_USER_ID__U_DANCER_DESC
+  USER_BY_USER_ID__U_DISTRICT_ASC
+  USER_BY_USER_ID__U_DISTRICT_DESC
+  USER_BY_USER_ID__U_EMAIL_ASC
+  USER_BY_USER_ID__U_EMAIL_DESC
+  USER_BY_USER_ID__U_GDPR_SIGNED_AT_ASC
+  USER_BY_USER_ID__U_GDPR_SIGNED_AT_DESC
+  USER_BY_USER_ID__U_GROUP_ASC
+  USER_BY_USER_ID__U_GROUP_DESC
+  USER_BY_USER_ID__U_ID_ASC
+  USER_BY_USER_ID__U_ID_DESC
+  USER_BY_USER_ID__U_JMENO_ASC
+  USER_BY_USER_ID__U_JMENO_DESC
+  USER_BY_USER_ID__U_LEVEL_ASC
+  USER_BY_USER_ID__U_LEVEL_DESC
+  USER_BY_USER_ID__U_LOCK_ASC
+  USER_BY_USER_ID__U_LOCK_DESC
+  USER_BY_USER_ID__U_LOGIN_ASC
+  USER_BY_USER_ID__U_LOGIN_DESC
+  USER_BY_USER_ID__U_MEMBER_SINCE_ASC
+  USER_BY_USER_ID__U_MEMBER_SINCE_DESC
+  USER_BY_USER_ID__U_MEMBER_UNTIL_ASC
+  USER_BY_USER_ID__U_MEMBER_UNTIL_DESC
+  USER_BY_USER_ID__U_NAROZENI_ASC
+  USER_BY_USER_ID__U_NAROZENI_DESC
+  USER_BY_USER_ID__U_NATIONALITY_ASC
+  USER_BY_USER_ID__U_NATIONALITY_DESC
+  USER_BY_USER_ID__U_ORIENTATION_NUMBER_ASC
+  USER_BY_USER_ID__U_ORIENTATION_NUMBER_DESC
+  USER_BY_USER_ID__U_PASS_ASC
+  USER_BY_USER_ID__U_PASS_DESC
+  USER_BY_USER_ID__U_POHLAVI_ASC
+  USER_BY_USER_ID__U_POHLAVI_DESC
+  USER_BY_USER_ID__U_POSTAL_CODE_ASC
+  USER_BY_USER_ID__U_POSTAL_CODE_DESC
+  USER_BY_USER_ID__U_POZNAMKY_ASC
+  USER_BY_USER_ID__U_POZNAMKY_DESC
+  USER_BY_USER_ID__U_PRIJMENI_ASC
+  USER_BY_USER_ID__U_PRIJMENI_DESC
+  USER_BY_USER_ID__U_RODNE_CISLO_ASC
+  USER_BY_USER_ID__U_RODNE_CISLO_DESC
+  USER_BY_USER_ID__U_SKUPINA_ASC
+  USER_BY_USER_ID__U_SKUPINA_DESC
+  USER_BY_USER_ID__U_STREET_ASC
+  USER_BY_USER_ID__U_STREET_DESC
+  USER_BY_USER_ID__U_SYSTEM_ASC
+  USER_BY_USER_ID__U_SYSTEM_DESC
+  USER_BY_USER_ID__U_TEACHER_ASC
+  USER_BY_USER_ID__U_TEACHER_DESC
+  USER_BY_USER_ID__U_TELEFON_ASC
+  USER_BY_USER_ID__U_TELEFON_DESC
+  USER_BY_USER_ID__U_TIMESTAMP_ASC
+  USER_BY_USER_ID__U_TIMESTAMP_DESC
+  USER_ID_ASC
+  USER_ID_DESC
+}
+
 """
 A floating point number that requires more precision than IEEE 754 binary 64
 """
@@ -1202,16 +1405,13 @@ input CreateAkceItemInput {
 
 """The output of our create `AkceItem` mutation."""
 type CreateAkceItemPayload {
-  """Reads a single `Akce` that is related to this `AkceItem`."""
-  akceByAiIdRodic: Akce
-
   """The `AkceItem` that was created by this mutation."""
   akceItem: AkceItem
 
   """An edge for our `AkceItem`. May be used by Relay 1."""
   akceItemEdge(
     """The method to use when ordering `AkceItem`."""
-    orderBy: [AkceItemsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [AkceItemsOrderBy!] = [NATURAL]
   ): AkceItemsEdge
 
   """
@@ -1224,9 +1424,6 @@ type CreateAkceItemPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-
-  """Reads a single `User` that is related to this `AkceItem`."""
-  userByAiUser: User
 }
 
 """The output of our create `Akce` mutation."""
@@ -1237,7 +1434,7 @@ type CreateAkcePayload {
   """An edge for our `Akce`. May be used by Relay 1."""
   akceEdge(
     """The method to use when ordering `Akce`."""
-    orderBy: [AkcesOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [AkcesOrderBy!] = [NATURAL]
   ): AkcesEdge
 
   """
@@ -1329,6 +1526,85 @@ type CreateAttachmentPayload {
 
   """Reads a single `User` that is related to this `Attachment`."""
   userByUploadedBy: User
+}
+
+"""All input for the create `AttendeeExternal` mutation."""
+input CreateAttendeeExternalInput {
+  """The `AttendeeExternal` to be created by this mutation."""
+  attendeeExternal: AttendeeExternalInput!
+
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+}
+
+"""The output of our create `AttendeeExternal` mutation."""
+type CreateAttendeeExternalPayload {
+  """The `AttendeeExternal` that was created by this mutation."""
+  attendeeExternal: AttendeeExternal
+
+  """An edge for our `AttendeeExternal`. May be used by Relay 1."""
+  attendeeExternalEdge(
+    """The method to use when ordering `AttendeeExternal`."""
+    orderBy: [AttendeeExternalsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AttendeeExternalsEdge
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Event` that is related to this `AttendeeExternal`."""
+  event: Event
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the create `AttendeeUser` mutation."""
+input CreateAttendeeUserInput {
+  """The `AttendeeUser` to be created by this mutation."""
+  attendeeUser: AttendeeUserInput!
+
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+}
+
+"""The output of our create `AttendeeUser` mutation."""
+type CreateAttendeeUserPayload {
+  """The `AttendeeUser` that was created by this mutation."""
+  attendeeUser: AttendeeUser
+
+  """An edge for our `AttendeeUser`. May be used by Relay 1."""
+  attendeeUserEdge(
+    """The method to use when ordering `AttendeeUser`."""
+    orderBy: [AttendeeUsersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AttendeeUsersEdge
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Event` that is related to this `AttendeeUser`."""
+  event: Event
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `User` that is related to this `AttendeeUser`."""
+  user: User
 }
 
 """All input for the create `CohortGroup` mutation."""
@@ -1431,6 +1707,41 @@ type CreateDokumentyPayload {
 
   """Reads a single `User` that is related to this `Dokumenty`."""
   userByDKdo: User
+}
+
+"""All input for the create `Event` mutation."""
+input CreateEventInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Event` to be created by this mutation."""
+  event: EventInput!
+}
+
+"""The output of our create `Event` mutation."""
+type CreateEventPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Event` that was created by this mutation."""
+  event: Event
+
+  """An edge for our `Event`. May be used by Relay 1."""
+  eventEdge(
+    """The method to use when ordering `Event`."""
+    orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventsEdge
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
 }
 
 """All input for the create `GalerieDir` mutation."""
@@ -2782,122 +3093,6 @@ A point in time as described by the [ISO
 """
 scalar Datetime
 
-"""All input for the `deleteAkceByNodeId` mutation."""
-input DeleteAkceByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Akce` to be deleted.
-  """
-  nodeId: ID!
-}
-
-"""All input for the `deleteAkce` mutation."""
-input DeleteAkceInput {
-  aId: BigInt!
-
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-}
-
-"""All input for the `deleteAkceItemByAiUserAndAiIdRodic` mutation."""
-input DeleteAkceItemByAiUserAndAiIdRodicInput {
-  aiIdRodic: BigInt!
-  aiUser: BigInt!
-
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-}
-
-"""All input for the `deleteAkceItemByNodeId` mutation."""
-input DeleteAkceItemByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `AkceItem` to be deleted.
-  """
-  nodeId: ID!
-}
-
-"""All input for the `deleteAkceItem` mutation."""
-input DeleteAkceItemInput {
-  aiId: BigInt!
-
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-}
-
-"""The output of our delete `AkceItem` mutation."""
-type DeleteAkceItemPayload {
-  """Reads a single `Akce` that is related to this `AkceItem`."""
-  akceByAiIdRodic: Akce
-
-  """The `AkceItem` that was deleted by this mutation."""
-  akceItem: AkceItem
-
-  """An edge for our `AkceItem`. May be used by Relay 1."""
-  akceItemEdge(
-    """The method to use when ordering `AkceItem`."""
-    orderBy: [AkceItemsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AkceItemsEdge
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedAkceItemNodeId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `User` that is related to this `AkceItem`."""
-  userByAiUser: User
-}
-
-"""The output of our delete `Akce` mutation."""
-type DeleteAkcePayload {
-  """The `Akce` that was deleted by this mutation."""
-  akce: Akce
-
-  """An edge for our `Akce`. May be used by Relay 1."""
-  akceEdge(
-    """The method to use when ordering `Akce`."""
-    orderBy: [AkcesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AkcesEdge
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedAkceNodeId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
 """All input for the `deleteAktualityByNodeId` mutation."""
 input DeleteAktualityByNodeIdInput {
   """
@@ -3004,6 +3199,122 @@ type DeleteAttachmentPayload {
   userByUploadedBy: User
 }
 
+"""All input for the `deleteAttendeeExternalByNodeId` mutation."""
+input DeleteAttendeeExternalByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `AttendeeExternal` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteAttendeeExternal` mutation."""
+input DeleteAttendeeExternalInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
+"""The output of our delete `AttendeeExternal` mutation."""
+type DeleteAttendeeExternalPayload {
+  """The `AttendeeExternal` that was deleted by this mutation."""
+  attendeeExternal: AttendeeExternal
+
+  """An edge for our `AttendeeExternal`. May be used by Relay 1."""
+  attendeeExternalEdge(
+    """The method to use when ordering `AttendeeExternal`."""
+    orderBy: [AttendeeExternalsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AttendeeExternalsEdge
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  deletedAttendeeExternalNodeId: ID
+
+  """Reads a single `Event` that is related to this `AttendeeExternal`."""
+  event: Event
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `deleteAttendeeUserByNodeId` mutation."""
+input DeleteAttendeeUserByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `AttendeeUser` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteAttendeeUserByUserIdAndEventId` mutation."""
+input DeleteAttendeeUserByUserIdAndEventIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  eventId: BigInt!
+  userId: BigInt!
+}
+
+"""All input for the `deleteAttendeeUser` mutation."""
+input DeleteAttendeeUserInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
+"""The output of our delete `AttendeeUser` mutation."""
+type DeleteAttendeeUserPayload {
+  """The `AttendeeUser` that was deleted by this mutation."""
+  attendeeUser: AttendeeUser
+
+  """An edge for our `AttendeeUser`. May be used by Relay 1."""
+  attendeeUserEdge(
+    """The method to use when ordering `AttendeeUser`."""
+    orderBy: [AttendeeUsersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AttendeeUsersEdge
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  deletedAttendeeUserNodeId: ID
+
+  """Reads a single `Event` that is related to this `AttendeeUser`."""
+  event: Event
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `User` that is related to this `AttendeeUser`."""
+  user: User
+}
+
 """All input for the `deleteCohortGroupByNodeId` mutation."""
 input DeleteCohortGroupByNodeIdInput {
   """
@@ -3104,6 +3415,54 @@ type DeleteDokumentyPayload {
 
   """Reads a single `User` that is related to this `Dokumenty`."""
   userByDKdo: User
+}
+
+"""All input for the `deleteEventByNodeId` mutation."""
+input DeleteEventByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Event` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteEvent` mutation."""
+input DeleteEventInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+}
+
+"""The output of our delete `Event` mutation."""
+type DeleteEventPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  deletedEventNodeId: ID
+
+  """The `Event` that was deleted by this mutation."""
+  event: Event
+
+  """An edge for our `Event`. May be used by Relay 1."""
+  eventEdge(
+    """The method to use when ordering `Event`."""
+    orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventsEdge
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
 }
 
 """All input for the `deleteGalerieDirByNodeId` mutation."""
@@ -4962,6 +5321,236 @@ input DokumentyPatch {
   dTimestamp: Datetime
 }
 
+type Event implements Node {
+  """Reads and enables pagination through a set of `AttendeeExternal`."""
+  attendeeExternals(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AttendeeExternalCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `AttendeeExternal`."""
+    orderBy: [AttendeeExternalsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AttendeeExternalsConnection!
+
+  """Reads and enables pagination through a set of `AttendeeUser`."""
+  attendeeUsers(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AttendeeUserCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `AttendeeUser`."""
+    orderBy: [AttendeeUsersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AttendeeUsersConnection!
+  capacity: BigInt!
+  description: String!
+  enableNotes: Boolean!
+  filesLegacy: String!
+  id: BigInt!
+  isLocked: Boolean!
+  isPublic: Boolean!
+  isVisible: Boolean!
+  locationText: String!
+  name: String!
+
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  remainingSpots: Int
+  since: Date!
+  summary: JSON!
+  until: Date!
+  updatedAt: Datetime
+}
+
+"""
+A condition to be used against `Event` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input EventCondition {
+  """Checks for equality with the object’s `capacity` field."""
+  capacity: BigInt
+
+  """Checks for equality with the object’s `description` field."""
+  description: String
+
+  """Checks for equality with the object’s `enableNotes` field."""
+  enableNotes: Boolean
+
+  """Checks for equality with the object’s `filesLegacy` field."""
+  filesLegacy: String
+
+  """Checks for equality with the object’s `id` field."""
+  id: BigInt
+
+  """Checks for equality with the object’s `isLocked` field."""
+  isLocked: Boolean
+
+  """Checks for equality with the object’s `isPublic` field."""
+  isPublic: Boolean
+
+  """Checks for equality with the object’s `isVisible` field."""
+  isVisible: Boolean
+
+  """Checks for equality with the object’s `locationText` field."""
+  locationText: String
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `since` field."""
+  since: Date
+
+  """Checks for equality with the object’s `summary` field."""
+  summary: JSON
+
+  """Checks for equality with the object’s `until` field."""
+  until: Date
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""An input for mutations affecting `Event`"""
+input EventInput {
+  capacity: BigInt
+  description: String!
+  enableNotes: Boolean
+  filesLegacy: String!
+  id: BigInt
+  isLocked: Boolean
+  isPublic: Boolean
+  isVisible: Boolean
+  locationText: String!
+  name: String!
+  since: Date!
+  summary: JSON
+  until: Date!
+  updatedAt: Datetime
+}
+
+"""
+Represents an update to a `Event`. Fields that are set will be updated.
+"""
+input EventPatch {
+  capacity: BigInt
+  description: String
+  enableNotes: Boolean
+  filesLegacy: String
+  id: BigInt
+  isLocked: Boolean
+  isPublic: Boolean
+  isVisible: Boolean
+  locationText: String
+  name: String
+  since: Date
+  summary: JSON
+  until: Date
+  updatedAt: Datetime
+}
+
+"""A connection to a list of `Event` values."""
+type EventsConnection {
+  """
+  A list of edges which contains the `Event` and cursor to aid in pagination.
+  """
+  edges: [EventsEdge!]!
+
+  """A list of `Event` objects."""
+  nodes: [Event!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Event` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Event` edge in the connection."""
+type EventsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Event` at the end of the edge."""
+  node: Event!
+}
+
+"""Methods to use when ordering `Event`."""
+enum EventsOrderBy {
+  ATTENDEE_EXTERNALS_BY_EVENT_ID__COUNT_ASC
+  ATTENDEE_EXTERNALS_BY_EVENT_ID__COUNT_DESC
+  ATTENDEE_USERS_BY_EVENT_ID__COUNT_ASC
+  ATTENDEE_USERS_BY_EVENT_ID__COUNT_DESC
+  CAPACITY_ASC
+  CAPACITY_DESC
+  DESCRIPTION_ASC
+  DESCRIPTION_DESC
+  ENABLE_NOTES_ASC
+  ENABLE_NOTES_DESC
+  FILES_LEGACY_ASC
+  FILES_LEGACY_DESC
+  ID_ASC
+  ID_DESC
+  IS_LOCKED_ASC
+  IS_LOCKED_DESC
+  IS_PUBLIC_ASC
+  IS_PUBLIC_DESC
+  IS_VISIBLE_ASC
+  IS_VISIBLE_DESC
+  LOCATION_TEXT_ASC
+  LOCATION_TEXT_DESC
+  NAME_ASC
+  NAME_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  SINCE_ASC
+  SINCE_DESC
+  SUMMARY_ASC
+  SUMMARY_DESC
+  UNTIL_ASC
+  UNTIL_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
+}
+
 """All input for the `fixUnpairedCouples` mutation."""
 input FixUnpairedCouplesInput {
   """
@@ -6023,6 +6612,22 @@ type Mutation {
     input: CreateAttachmentInput!
   ): CreateAttachmentPayload
 
+  """Creates a single `AttendeeExternal`."""
+  createAttendeeExternal(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateAttendeeExternalInput!
+  ): CreateAttendeeExternalPayload
+
+  """Creates a single `AttendeeUser`."""
+  createAttendeeUser(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateAttendeeUserInput!
+  ): CreateAttendeeUserPayload
+
   """Creates a single `CohortGroup`."""
   createCohortGroup(
     """
@@ -6044,6 +6649,14 @@ type Mutation {
     """
     input: CreateDokumentyInput!
   ): CreateDokumentyPayload
+
+  """Creates a single `Event`."""
+  createEvent(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateEventInput!
+  ): CreateEventPayload
 
   """Creates a single `GalerieDir`."""
   createGalerieDir(
@@ -6315,46 +6928,6 @@ type Mutation {
     input: CreateVideoSourceInput!
   ): CreateVideoSourcePayload
 
-  """Deletes a single `Akce` using a unique key."""
-  deleteAkce(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAkceInput!
-  ): DeleteAkcePayload
-
-  """Deletes a single `Akce` using its globally unique id."""
-  deleteAkceByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAkceByNodeIdInput!
-  ): DeleteAkcePayload
-
-  """Deletes a single `AkceItem` using a unique key."""
-  deleteAkceItem(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAkceItemInput!
-  ): DeleteAkceItemPayload
-
-  """Deletes a single `AkceItem` using a unique key."""
-  deleteAkceItemByAiUserAndAiIdRodic(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAkceItemByAiUserAndAiIdRodicInput!
-  ): DeleteAkceItemPayload
-
-  """Deletes a single `AkceItem` using its globally unique id."""
-  deleteAkceItemByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAkceItemByNodeIdInput!
-  ): DeleteAkceItemPayload
-
   """Deletes a single `Aktuality` using a unique key."""
   deleteAktuality(
     """
@@ -6387,6 +6960,46 @@ type Mutation {
     input: DeleteAttachmentByNodeIdInput!
   ): DeleteAttachmentPayload
 
+  """Deletes a single `AttendeeExternal` using a unique key."""
+  deleteAttendeeExternal(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAttendeeExternalInput!
+  ): DeleteAttendeeExternalPayload
+
+  """Deletes a single `AttendeeExternal` using its globally unique id."""
+  deleteAttendeeExternalByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAttendeeExternalByNodeIdInput!
+  ): DeleteAttendeeExternalPayload
+
+  """Deletes a single `AttendeeUser` using a unique key."""
+  deleteAttendeeUser(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAttendeeUserInput!
+  ): DeleteAttendeeUserPayload
+
+  """Deletes a single `AttendeeUser` using its globally unique id."""
+  deleteAttendeeUserByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAttendeeUserByNodeIdInput!
+  ): DeleteAttendeeUserPayload
+
+  """Deletes a single `AttendeeUser` using a unique key."""
+  deleteAttendeeUserByUserIdAndEventId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAttendeeUserByUserIdAndEventIdInput!
+  ): DeleteAttendeeUserPayload
+
   """Deletes a single `CohortGroup` using a unique key."""
   deleteCohortGroup(
     """
@@ -6418,6 +7031,22 @@ type Mutation {
     """
     input: DeleteDokumentyByNodeIdInput!
   ): DeleteDokumentyPayload
+
+  """Deletes a single `Event` using a unique key."""
+  deleteEvent(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEventInput!
+  ): DeleteEventPayload
+
+  """Deletes a single `Event` using its globally unique id."""
+  deleteEventByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEventByNodeIdInput!
+  ): DeleteEventPayload
 
   """Deletes a single `GalerieDir` using a unique key."""
   deleteGalerieDir(
@@ -6976,46 +7605,6 @@ type Mutation {
     input: ResetPasswordInput!
   ): ResetPasswordPayload
 
-  """Updates a single `Akce` using a unique key and a patch."""
-  updateAkce(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAkceInput!
-  ): UpdateAkcePayload
-
-  """Updates a single `Akce` using its globally unique id and a patch."""
-  updateAkceByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAkceByNodeIdInput!
-  ): UpdateAkcePayload
-
-  """Updates a single `AkceItem` using a unique key and a patch."""
-  updateAkceItem(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAkceItemInput!
-  ): UpdateAkceItemPayload
-
-  """Updates a single `AkceItem` using a unique key and a patch."""
-  updateAkceItemByAiUserAndAiIdRodic(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAkceItemByAiUserAndAiIdRodicInput!
-  ): UpdateAkceItemPayload
-
-  """Updates a single `AkceItem` using its globally unique id and a patch."""
-  updateAkceItemByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAkceItemByNodeIdInput!
-  ): UpdateAkceItemPayload
-
   """Updates a single `Aktuality` using a unique key and a patch."""
   updateAktuality(
     """
@@ -7050,6 +7639,50 @@ type Mutation {
     input: UpdateAttachmentByNodeIdInput!
   ): UpdateAttachmentPayload
 
+  """Updates a single `AttendeeExternal` using a unique key and a patch."""
+  updateAttendeeExternal(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAttendeeExternalInput!
+  ): UpdateAttendeeExternalPayload
+
+  """
+  Updates a single `AttendeeExternal` using its globally unique id and a patch.
+  """
+  updateAttendeeExternalByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAttendeeExternalByNodeIdInput!
+  ): UpdateAttendeeExternalPayload
+
+  """Updates a single `AttendeeUser` using a unique key and a patch."""
+  updateAttendeeUser(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAttendeeUserInput!
+  ): UpdateAttendeeUserPayload
+
+  """
+  Updates a single `AttendeeUser` using its globally unique id and a patch.
+  """
+  updateAttendeeUserByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAttendeeUserByNodeIdInput!
+  ): UpdateAttendeeUserPayload
+
+  """Updates a single `AttendeeUser` using a unique key and a patch."""
+  updateAttendeeUserByUserIdAndEventId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAttendeeUserByUserIdAndEventIdInput!
+  ): UpdateAttendeeUserPayload
+
   """Updates a single `CohortGroup` using a unique key and a patch."""
   updateCohortGroup(
     """
@@ -7083,6 +7716,22 @@ type Mutation {
     """
     input: UpdateDokumentyByNodeIdInput!
   ): UpdateDokumentyPayload
+
+  """Updates a single `Event` using a unique key and a patch."""
+  updateEvent(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateEventInput!
+  ): UpdateEventPayload
+
+  """Updates a single `Event` using its globally unique id and a patch."""
+  updateEventByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateEventByNodeIdInput!
+  ): UpdateEventPayload
 
   """Updates a single `GalerieDir` using a unique key and a patch."""
   updateGalerieDir(
@@ -10407,21 +11056,6 @@ type Query implements Node {
     """
     offset: Int
   ): ActiveProspectsConnection
-  akce(aId: BigInt!): Akce
-
-  """Reads a single `Akce` using its globally unique `ID`."""
-  akceByNodeId(
-    """The globally unique `ID` to be used in selecting a single `Akce`."""
-    nodeId: ID!
-  ): Akce
-  akceItem(aiId: BigInt!): AkceItem
-  akceItemByAiUserAndAiIdRodic(aiIdRodic: BigInt!, aiUser: BigInt!): AkceItem
-
-  """Reads a single `AkceItem` using its globally unique `ID`."""
-  akceItemByNodeId(
-    """The globally unique `ID` to be used in selecting a single `AkceItem`."""
-    nodeId: ID!
-  ): AkceItem
 
   """Reads and enables pagination through a set of `AkceItem`."""
   akceItems(
@@ -10449,7 +11083,7 @@ type Query implements Node {
     offset: Int
 
     """The method to use when ordering `AkceItem`."""
-    orderBy: [AkceItemsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [AkceItemsOrderBy!] = [NATURAL]
   ): AkceItemsConnection
 
   """Reads and enables pagination through a set of `Akce`."""
@@ -10478,7 +11112,7 @@ type Query implements Node {
     offset: Int
 
     """The method to use when ordering `Akce`."""
-    orderBy: [AkcesOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [AkcesOrderBy!] = [NATURAL]
   ): AkcesConnection
 
   """Reads and enables pagination through a set of `Aktuality`."""
@@ -10554,6 +11188,83 @@ type Query implements Node {
     """The method to use when ordering `Attachment`."""
     orderBy: [AttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): AttachmentsConnection
+  attendeeExternal(id: BigInt!): AttendeeExternal
+
+  """Reads a single `AttendeeExternal` using its globally unique `ID`."""
+  attendeeExternalByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `AttendeeExternal`.
+    """
+    nodeId: ID!
+  ): AttendeeExternal
+
+  """Reads and enables pagination through a set of `AttendeeExternal`."""
+  attendeeExternals(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AttendeeExternalCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `AttendeeExternal`."""
+    orderBy: [AttendeeExternalsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AttendeeExternalsConnection
+  attendeeUser(id: BigInt!): AttendeeUser
+
+  """Reads a single `AttendeeUser` using its globally unique `ID`."""
+  attendeeUserByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `AttendeeUser`.
+    """
+    nodeId: ID!
+  ): AttendeeUser
+  attendeeUserByUserIdAndEventId(eventId: BigInt!, userId: BigInt!): AttendeeUser
+
+  """Reads and enables pagination through a set of `AttendeeUser`."""
+  attendeeUsers(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AttendeeUserCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `AttendeeUser`."""
+    orderBy: [AttendeeUsersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AttendeeUsersConnection
   cohortGroup(id: BigInt!): CohortGroup
 
   """Reads a single `CohortGroup` using its globally unique `ID`."""
@@ -10671,6 +11382,42 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `Dokumenty`."""
     nodeId: ID!
   ): Dokumenty
+  event(id: BigInt!): Event
+
+  """Reads a single `Event` using its globally unique `ID`."""
+  eventByNodeId(
+    """The globally unique `ID` to be used in selecting a single `Event`."""
+    nodeId: ID!
+  ): Event
+
+  """Reads and enables pagination through a set of `Event`."""
+  events(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EventCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `Event`."""
+    orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventsConnection
   galerieDir(gdId: BigInt!): GalerieDir
 
   """Reads a single `GalerieDir` using its globally unique `ID`."""
@@ -13571,145 +14318,6 @@ The exact time of day, does not include the date. May or may not have a timezone
 """
 scalar Time
 
-"""All input for the `updateAkceByNodeId` mutation."""
-input UpdateAkceByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Akce` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `Akce` being updated.
-  """
-  patch: AkcePatch!
-}
-
-"""All input for the `updateAkce` mutation."""
-input UpdateAkceInput {
-  aId: BigInt!
-
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  An object where the defined keys will be set on the `Akce` being updated.
-  """
-  patch: AkcePatch!
-}
-
-"""All input for the `updateAkceItemByAiUserAndAiIdRodic` mutation."""
-input UpdateAkceItemByAiUserAndAiIdRodicInput {
-  aiIdRodic: BigInt!
-  aiUser: BigInt!
-
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  An object where the defined keys will be set on the `AkceItem` being updated.
-  """
-  patch: AkceItemPatch!
-}
-
-"""All input for the `updateAkceItemByNodeId` mutation."""
-input UpdateAkceItemByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `AkceItem` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `AkceItem` being updated.
-  """
-  patch: AkceItemPatch!
-}
-
-"""All input for the `updateAkceItem` mutation."""
-input UpdateAkceItemInput {
-  aiId: BigInt!
-
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  An object where the defined keys will be set on the `AkceItem` being updated.
-  """
-  patch: AkceItemPatch!
-}
-
-"""The output of our update `AkceItem` mutation."""
-type UpdateAkceItemPayload {
-  """Reads a single `Akce` that is related to this `AkceItem`."""
-  akceByAiIdRodic: Akce
-
-  """The `AkceItem` that was updated by this mutation."""
-  akceItem: AkceItem
-
-  """An edge for our `AkceItem`. May be used by Relay 1."""
-  akceItemEdge(
-    """The method to use when ordering `AkceItem`."""
-    orderBy: [AkceItemsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AkceItemsEdge
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `User` that is related to this `AkceItem`."""
-  userByAiUser: User
-}
-
-"""The output of our update `Akce` mutation."""
-type UpdateAkcePayload {
-  """The `Akce` that was updated by this mutation."""
-  akce: Akce
-
-  """An edge for our `Akce`. May be used by Relay 1."""
-  akceEdge(
-    """The method to use when ordering `Akce`."""
-    orderBy: [AkcesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AkcesEdge
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
 """All input for the `updateAktualityByNodeId` mutation."""
 input UpdateAktualityByNodeIdInput {
   """
@@ -13834,6 +14442,145 @@ type UpdateAttachmentPayload {
   userByUploadedBy: User
 }
 
+"""All input for the `updateAttendeeExternalByNodeId` mutation."""
+input UpdateAttendeeExternalByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `AttendeeExternal` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `AttendeeExternal` being updated.
+  """
+  patch: AttendeeExternalPatch!
+}
+
+"""All input for the `updateAttendeeExternal` mutation."""
+input UpdateAttendeeExternalInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `AttendeeExternal` being updated.
+  """
+  patch: AttendeeExternalPatch!
+}
+
+"""The output of our update `AttendeeExternal` mutation."""
+type UpdateAttendeeExternalPayload {
+  """The `AttendeeExternal` that was updated by this mutation."""
+  attendeeExternal: AttendeeExternal
+
+  """An edge for our `AttendeeExternal`. May be used by Relay 1."""
+  attendeeExternalEdge(
+    """The method to use when ordering `AttendeeExternal`."""
+    orderBy: [AttendeeExternalsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AttendeeExternalsEdge
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Event` that is related to this `AttendeeExternal`."""
+  event: Event
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `updateAttendeeUserByNodeId` mutation."""
+input UpdateAttendeeUserByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `AttendeeUser` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `AttendeeUser` being updated.
+  """
+  patch: AttendeeUserPatch!
+}
+
+"""All input for the `updateAttendeeUserByUserIdAndEventId` mutation."""
+input UpdateAttendeeUserByUserIdAndEventIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  eventId: BigInt!
+
+  """
+  An object where the defined keys will be set on the `AttendeeUser` being updated.
+  """
+  patch: AttendeeUserPatch!
+  userId: BigInt!
+}
+
+"""All input for the `updateAttendeeUser` mutation."""
+input UpdateAttendeeUserInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `AttendeeUser` being updated.
+  """
+  patch: AttendeeUserPatch!
+}
+
+"""The output of our update `AttendeeUser` mutation."""
+type UpdateAttendeeUserPayload {
+  """The `AttendeeUser` that was updated by this mutation."""
+  attendeeUser: AttendeeUser
+
+  """An edge for our `AttendeeUser`. May be used by Relay 1."""
+  attendeeUserEdge(
+    """The method to use when ordering `AttendeeUser`."""
+    orderBy: [AttendeeUsersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AttendeeUsersEdge
+
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Event` that is related to this `AttendeeUser`."""
+  event: Event
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `User` that is related to this `AttendeeUser`."""
+  user: User
+}
+
 """All input for the `updateCohortGroupByNodeId` mutation."""
 input UpdateCohortGroupByNodeIdInput {
   """
@@ -13952,6 +14699,63 @@ type UpdateDokumentyPayload {
 
   """Reads a single `User` that is related to this `Dokumenty`."""
   userByDKdo: User
+}
+
+"""All input for the `updateEventByNodeId` mutation."""
+input UpdateEventByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Event` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `Event` being updated.
+  """
+  patch: EventPatch!
+}
+
+"""All input for the `updateEvent` mutation."""
+input UpdateEventInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: BigInt!
+
+  """
+  An object where the defined keys will be set on the `Event` being updated.
+  """
+  patch: EventPatch!
+}
+
+"""The output of our update `Event` mutation."""
+type UpdateEventPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Event` that was updated by this mutation."""
+  event: Event
+
+  """An edge for our `Event`. May be used by Relay 1."""
+  eventEdge(
+    """The method to use when ordering `Event`."""
+    orderBy: [EventsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EventsEdge
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
 }
 
 """All input for the `updateGalerieDirByNodeId` mutation."""
@@ -16381,35 +17185,6 @@ enum UpozornenisOrderBy {
 }
 
 type User implements Node {
-  """Reads and enables pagination through a set of `AkceItem`."""
-  akceItemsByAiUser(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AkceItemCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `AkceItem`."""
-    orderBy: [AkceItemsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AkceItemsConnection!
-
   """Reads and enables pagination through a set of `Aktuality`."""
   aktualitiesByAtKdo(
     """Read all values in the set after (below) this cursor."""
@@ -16467,6 +17242,35 @@ type User implements Node {
     """The method to use when ordering `Attachment`."""
     orderBy: [AttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): AttachmentsConnection!
+
+  """Reads and enables pagination through a set of `AttendeeUser`."""
+  attendeeUsers(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AttendeeUserCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `AttendeeUser`."""
+    orderBy: [AttendeeUsersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AttendeeUsersConnection!
 
   """Reads and enables pagination through a set of `Dokumenty`."""
   dokumentiesByDKdo(
@@ -17062,12 +17866,12 @@ type UsersEdge {
 
 """Methods to use when ordering `User`."""
 enum UsersOrderBy {
-  AKCE_ITEMS_BY_AI_USER__COUNT_ASC
-  AKCE_ITEMS_BY_AI_USER__COUNT_DESC
   AKTUALITIES_BY_AT_KDO__COUNT_ASC
   AKTUALITIES_BY_AT_KDO__COUNT_DESC
   ATTACHMENTS_BY_UPLOADED_BY__COUNT_ASC
   ATTACHMENTS_BY_UPLOADED_BY__COUNT_DESC
+  ATTENDEE_USERS_BY_USER_ID__COUNT_ASC
+  ATTENDEE_USERS_BY_USER_ID__COUNT_DESC
   DOKUMENTIES_BY_D_KDO__COUNT_ASC
   DOKUMENTIES_BY_D_KDO__COUNT_DESC
   GALERIE_FOTOS_BY_GF_KDO__COUNT_ASC
