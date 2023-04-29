@@ -41,7 +41,7 @@ export const useMeta = (props: MetaProps) => {
   return meta;
 };
 
-export const ProvideMeta: React.FC = React.memo(function ProvideMeta({ children }) {
+export const ProvideMeta = React.memo(function ProvideMeta({ children }: {children:React.ReactNode}) {
   const router = useRouter();
   const [meta, setMeta] = React.useState<MetaProps>({
     title: '',

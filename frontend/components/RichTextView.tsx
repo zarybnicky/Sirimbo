@@ -7,14 +7,13 @@ import parse, {
   HTMLReactParserOptions,
 } from 'html-react-parser';
 
-export const RichTextView = ({
-  value,
-  className,
-}: {
+interface Props {
   value: string | any[] | object | undefined | null;
   className?: string;
-}) => {
-  if (!value) {
+}
+
+export const RichTextView = ({ value, className }: Props) => {
+  if (!value || (Array.isArray(value) && !value.length)) {
     return null;
   }
   if (Array.isArray(value)) {
@@ -53,10 +52,8 @@ const options: HTMLReactParserOptions = {
     if (domNode.name === 'a') {
       const { href, class: className, ...rest } = domNode.attribs;
       return (
-        <Link href={href || '#'} passHref>
-          <a className={className} {...rest}>
-            {domToReact(domNode.children as DOMNode[])}
-          </a>
+        <Link href={href || '#'} className={className} {...rest}>
+          {domToReact(domNode.children as DOMNode[])}
         </Link>
       );
     }

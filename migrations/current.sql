@@ -69,17 +69,19 @@ CREATE TABLE attendee_external (
     email text not null,
     phone text not null,
 
-    notes text not null,
+    notes text not null default '',
     birth_number text default null,
     guardian_name text not null default '',
 
-    is_confirmed boolean not null default false,
+    managed_by bigint REFERENCES users default null,
+    confirmed_by bigint REFERENCES users default null,
+    confirmed_at timestamptz default null,
     created_at timestamptz not null default now(),
     updated_at timestamptz not null default now()
 );
 alter table attendee_external enable row level security;
 create policy manage_all on attendee_external to administrator using (true) with check (true);
-create policy insert_all on attendee_external for insert to anonymous with check (is_confirmed = false);
+create policy insert_all on attendee_external for insert to anonymous with check (confirmed_by is null);
 create policy select_member on attendee_external for select to member using (true);
 grant all on attendee_external to anonymous;
 
@@ -87,3 +89,20 @@ create or replace function event_remaining_spots (a event) returns int as $$
   select a.capacity - (select count(*) from attendee_user where event_id = a.id) - (select count(*) from attendee_external where event_id = a.id);
 $$ language sql stable;
 grant execute on function event_remaining_spots to anonymous;
+
+drop TRIGGER if exists on_update_current_timestamp on event cascade;
+drop function if exists on_update_current_timestamp_akce() cascade;
+
+CREATE or replace FUNCTION public.on_update_event_timestamp() RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+   NEW.updated_at = now();
+   RETURN NEW;
+END;
+$$;
+select * from plpgsql_check_function('public.on_update_event_timestamp', 'event');
+
+drop trigger if exists on_update_event_timestamp on public.event;
+create trigger on_update_event_timestamp
+  before insert or update on public.event
+  for each row
+  execute procedure public.on_update_event_timestamp();

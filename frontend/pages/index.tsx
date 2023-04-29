@@ -13,7 +13,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <div className="col-feature mb-4">
+      <div className="col-feature my-4">
         {services.map((x, i) => (
           <ServiceCard key={i} href={x.href} image={x.image} header={x.header}>
             {x.text}

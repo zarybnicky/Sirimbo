@@ -4,14 +4,13 @@ import { Card } from 'components/Card';
 type TrainerCardProps = {
   image?: string;
   name: string;
+  children: React.ReactNode;
 };
 
-export const TrainerCard = (
-  props: TrainerCardProps & { children: React.ReactNode | React.ReactChildren },
-) => {
+export const TrainerCard = (props: TrainerCardProps) => {
   return (
     <Card className="relative h-full p-0">
-      <div className="bg-stone-800 text-white font-bold mb-0 p-4 border-l-8 border-red-500 header">
+      <div className="bg-stone-800 text-white mb-0 p-4 border-l-8 border-red-500 header">
         <div className="font-bold mb-2">{props.name}</div>
       </div>
       <div className="avoid-trainer-pictures pt-0 p-4">{props.children}</div>

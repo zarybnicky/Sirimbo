@@ -1,15 +1,11 @@
 import * as React from 'react';
-import { useMyEventsQuery } from 'lib/graphql/Event';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
+import { usePublicEventsQuery } from 'lib/graphql/Event';
 import { Item } from 'components/layout/Item';
 import { EventItem } from 'components/EventItem';
+import { Layout } from 'components/layout/Layout';
 
-export default function EventListPage() {
-  const { data } = useMyEventsQuery();
+export default function PublicEventListPage() {
+  const { data } = usePublicEventsQuery();
 
   return (
     <Item className="col-full-width p-2">
@@ -21,7 +17,4 @@ export default function EventListPage() {
   );
 }
 
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peAkce,
-  PermissionLevel.P_MEMBER,
-);
+PublicEventListPage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;

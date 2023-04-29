@@ -4,18 +4,6 @@ import Link from 'next/link';
 import { Menu, Transition } from '@headlessui/react';
 import { MoreVertical } from 'react-feather';
 
-const MenuLink = React.forwardRef<HTMLAnchorElement, React.HTMLProps<HTMLAnchorElement>>(
-  function MenuLink({ href, children, ...rest }, ref) {
-    return (
-      <Link href={href as string} passHref>
-        <a ref={ref} {...rest}>
-          {children}
-        </a>
-      </Link>
-    );
-  },
-);
-
 const defaultDropdown = (
   <MoreVertical className="text-stone-500 w-6 invisible ui-open:visible group-hover:visible" />
 );
@@ -27,25 +15,27 @@ export type DropdownItem = {
   onClick?: () => void;
 };
 
-export const Dropdown = ({
-  align,
-  button = defaultDropdown,
-  className,
-  buttonClassName,
-  options,
-}: {
+type DropdownProps = {
   button?: React.ReactNode;
   className?: string;
   buttonClassName?: string;
   options: DropdownItem[];
   align: 'start' | 'end' | 'center';
-}) => {
+};
+
+export function Dropdown({
+  align,
+  button,
+  className,
+  buttonClassName,
+  options,
+}: DropdownProps) {
   return (
     <Menu
       as="div"
       className={classNames(!className?.includes('absolute') && 'relative', className)}
     >
-      <Menu.Button className={buttonClassName}>{button}</Menu.Button>
+      <Menu.Button className={buttonClassName}>{button || defaultDropdown}</Menu.Button>
       <Transition
         as={React.Fragment}
         enter="transition ease-out duration-200"
@@ -69,7 +59,7 @@ export const Dropdown = ({
             <Menu.Item key={i}>
               {({ active }) =>
                 href ? (
-                  <MenuLink
+                  <Link
                     href={href}
                     className={classNames(
                       active ? 'bg-gray-100' : '',
@@ -77,7 +67,7 @@ export const Dropdown = ({
                     )}
                   >
                     {icon} {title}
-                  </MenuLink>
+                  </Link>
                 ) : (
                   <button
                     onClick={onClick}
@@ -96,4 +86,4 @@ export const Dropdown = ({
       </Transition>
     </Menu>
   );
-};
+}

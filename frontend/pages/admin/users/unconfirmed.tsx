@@ -22,6 +22,11 @@ import { UserList } from 'components/UserList';
 import { Layout } from 'components/layout/Layout';
 import { Item } from 'components/layout/Item';
 
+type FormProps = {
+  cohort: string;
+  role: string
+}
+
 const UnconfirmedUser: React.FC<{
   item: UserFragment;
   onProcessed: () => void;
@@ -29,18 +34,15 @@ const UnconfirmedUser: React.FC<{
   const confirm = useConfirm();
   const { data: cohorts } = useCohortListQuery({ visible: undefined });
   const { data: roles } = useRoleListQuery();
-  const { control, handleSubmit } = useForm({
-    defaultValues: {
-      cohort: item.uSkupina,
-      role: undefined as number | undefined,
-    },
+  const { control, handleSubmit } = useForm<FormProps>({
+    defaultValues: {cohort: item.uSkupina},
   });
 
   const { mutateAsync: confirmUser } = useConfirmUserMutation();
   const { mutateAsync: deleteUser } = useDeleteUserMutation();
 
   const onSubmit = React.useCallback(
-    async (values) => {
+    async (values: FormProps) => {
       await confirmUser({ id: item.id, cohort: values.cohort, role: values.role });
       onProcessed();
     },

@@ -19,11 +19,9 @@ export function CallToAction() {
 
         <div className="font-bold text-2xl md:text-3xl">A OBJEV LÁSKU K TANCI</div>
 
-        <Link href="/prijdtancit" passHref>
-          <a className="mt-4 font-bold tracking-wider button text-white button-lg bg-stone-800 hover:bg-stone-900">
-            Chci tančit
-            <ChevronRight className="mt-0.5 ml-2 -mr-2" />
-          </a>
+        <Link href="/prijdtancit" className="mt-4 font-bold tracking-wider button text-white button-lg bg-stone-800 hover:bg-stone-900">
+          Chci tančit
+          <ChevronRight className="mt-0.5 ml-2 -mr-2" />
         </Link>
       </div>
     </div>

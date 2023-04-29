@@ -4,11 +4,14 @@ import { Footer } from './Footer';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 
-export const Layout: React.FC<{
+type Props = {
   showTopMenu?: boolean;
   list?: React.ReactNode;
   isDetail?: boolean;
-}> = ({ children, showTopMenu, list, isDetail }) => {
+  children?: React.ReactNode;
+};
+
+export function Layout({ children, showTopMenu, list, isDetail }: Props) {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
@@ -51,4 +54,4 @@ export const Layout: React.FC<{
       </div>
     </div>
   );
-};
+}

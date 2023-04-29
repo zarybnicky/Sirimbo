@@ -42,7 +42,7 @@ export const Tracking = React.memo(function Tracking() {
     })();
   }, []);
 
-  const track = React.useCallback((path) => {
+  const track = React.useCallback((path: string) => {
     if (process.env.NODE_ENV === 'development') return;
     if (path === lastTrackedPath.current) return;
     lastTrackedPath.current = path;

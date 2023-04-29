@@ -24,10 +24,8 @@ function ItemTitleBar({
     <>
       {backHref && (
         <div className="block lg:hidden mb-4">
-          <Link href={backHref} passHref>
-            <a className="flex gap-2 text-red-500 items-center text-sm">
-              <UpIcon className="inline-block w-4 h-4" /> Zpět na seznam
-            </a>
+          <Link href={backHref} className="flex gap-2 text-red-500 items-center text-sm">
+            <UpIcon className="inline-block w-4 h-4" /> Zpět na seznam
           </Link>
         </div>
       )}

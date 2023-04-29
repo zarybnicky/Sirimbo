@@ -14,8 +14,8 @@ export const Button = React.memo(function Button({
     : 'button text-center button-red';
   if (href) {
     return (
-      <Link href={href} passHref>
-        <a className={color}>{children}</a>
+      <Link href={href} className={color}>
+        {children}
       </Link>
     );
   }

@@ -52,10 +52,8 @@ export const Sidebar = ({
       >
         {!showTopMenu && (
           <div className="hidden lg:flex">
-            <Link href="/" passHref>
-              <a className="h-20 p-3 bg-red-500 mx-auto">
-                <OlympLogoOneline className="h-full w-full text-white !fill-white" />
-              </a>
+            <Link href="/" className="h-20 p-3 bg-red-500 mx-auto">
+              <OlympLogoOneline className="h-full w-full text-white !fill-white" />
             </Link>
           </div>
         )}
@@ -113,18 +111,17 @@ const SidebarLink = ({
   const inPath = pathname.startsWith(item.href) && item.href !== '/';
 
   return (
-    <Link href={item.href} passHref>
-      <a
-        onClick={onClick}
-        className={classNames(
-          'rounded-2xl px-3 py-1.5',
-          'flex items-center grow mx-2 hover:bg-red-700 hover:text-white',
-          'tracking-wider text-sm',
-          inPath ? 'underline font-bold bg-stone-700 text-white lg:bg-red-900' : '',
-        )}
-      >
-        {item.title}
-      </a>
+    <Link
+      href={item.href}
+      onClick={onClick}
+      className={classNames(
+        'rounded-2xl px-3 py-1.5',
+        'flex items-center grow mx-2 hover:bg-red-700 hover:text-white',
+        'tracking-wider text-sm',
+        inPath ? 'underline font-bold bg-stone-700 text-white lg:bg-red-900' : '',
+      )}
+    >
+      {item.title}
     </Link>
   );
 };

@@ -48,9 +48,11 @@ export function MyAnnouncements() {
       </div>
       <h4 className="text-3xl tracking-wide mb-4">Aktuality</h4>
 
+      <div className="flex flex-col rounded-lg bg-stone-200/80">
       {nodes.map((a) => (
         <AnnouncementItem key={a.id} item={a} />
       ))}
+      </div>
 
       <Pagination {...{ total, limit, page, setPage }} />
     </div>

@@ -103,6 +103,14 @@ fragment MyEvent on Event {
   }
 }
 
+query PublicEvents {
+  events(condition: {isVisible: true, isPublic: true}) {
+    nodes {
+      ...Event
+    }
+  }
+}
+
 query MyEvents {
   events(condition: {isVisible: true}) {
     nodes {

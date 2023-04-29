@@ -58,6 +58,11 @@ export type DeleteEventMutation = { __typename?: 'Mutation', deleteEvent: { __ty
 
 export type MyEventFragment = { __typename: 'Event', id: string, since: string, until: string, summary: { [key: string]: any }, description: string, filesLegacy: string, name: string, capacity: string, remainingSpots: number | null, locationText: string, isLocked: boolean, isVisible: boolean, isPublic: boolean, enableNotes: boolean, attendeeExternals: { __typename?: 'AttendeeExternalsConnection', nodes: Array<{ __typename?: 'AttendeeExternal', firstName: string, lastName: string }> }, attendeeUsers: { __typename?: 'AttendeeUsersConnection', nodes: Array<{ __typename?: 'AttendeeUser', notes: string, user: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string, uNarozeni: string } | null }> } };
 
+export type PublicEventsQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type PublicEventsQuery = { __typename?: 'Query', events: { __typename?: 'EventsConnection', nodes: Array<{ __typename: 'Event', id: string, since: string, until: string, summary: { [key: string]: any }, description: string, filesLegacy: string, name: string, capacity: string, remainingSpots: number | null, locationText: string, isLocked: boolean, isVisible: boolean, isPublic: boolean, enableNotes: boolean }> } | null };
+
 export type MyEventsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -280,6 +285,32 @@ export const useDeleteEventMutation = <
 useDeleteEventMutation.getKey = () => ['DeleteEvent'];
 
 useDeleteEventMutation.fetcher = (variables: DeleteEventMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteEventMutation, DeleteEventMutationVariables>(DeleteEventDocument, variables, options);
+export const PublicEventsDocument = `
+    query PublicEvents {
+  events(condition: {isVisible: true, isPublic: true}) {
+    nodes {
+      ...Event
+    }
+  }
+}
+    ${EventFragmentDoc}`;
+export const usePublicEventsQuery = <
+      TData = PublicEventsQuery,
+      TError = unknown
+    >(
+      variables?: PublicEventsQueryVariables,
+      options?: UseQueryOptions<PublicEventsQuery, TError, TData>
+    ) =>
+    useQuery<PublicEventsQuery, TError, TData>(
+      variables === undefined ? ['PublicEvents'] : ['PublicEvents', variables],
+      fetcher<PublicEventsQuery, PublicEventsQueryVariables>(PublicEventsDocument, variables),
+      options
+    );
+
+usePublicEventsQuery.getKey = (variables?: PublicEventsQueryVariables) => variables === undefined ? ['PublicEvents'] : ['PublicEvents', variables];
+;
+
+usePublicEventsQuery.fetcher = (variables?: PublicEventsQueryVariables, options?: RequestInit['headers']) => fetcher<PublicEventsQuery, PublicEventsQueryVariables>(PublicEventsDocument, variables, options);
 export const MyEventsDocument = `
     query MyEvents {
   events(condition: {isVisible: true}) {

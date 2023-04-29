@@ -10,15 +10,13 @@ import { ChevronDown, Menu as MenuIcon, User as Account } from 'react-feather';
 import { MobileLogo } from './MobileLogo';
 import { useAuth } from 'lib/data/use-auth';
 
-export const Header = ({
-  isOpen,
-  setIsOpen,
-  showTopMenu,
-}: {
+type Props = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   showTopMenu?: boolean;
-}) => {
+};
+
+export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
   const topMenu = useTopMenu();
   const auth = useAuth();
 
@@ -34,11 +32,12 @@ export const Header = ({
             {auth.user ? (
               <AuthButton />
             ) : (
-              <Link href="/login" passHref>
-                <a className="flex items-center gap-2 uppercase font-bold text-sm">
-                  <Account className="h-4 w-4" />
-                  Pro členy
-                </a>
+              <Link
+                href="/login"
+                className="flex items-center gap-2 uppercase font-bold text-sm"
+              >
+                <Account className="h-4 w-4" />
+                Pro členy
               </Link>
             )}
             <SocialButtons variant="medium" />
@@ -53,10 +52,11 @@ export const Header = ({
             <MenuIcon className="w-5 h-5" />
           </button>
           <MobileLogo />
-          <Link href={auth.user ? '/profile' : '/login'} passHref>
-            <a className="flex items-center button-icon p-0 m-1">
-              <Account className="w-5 h-5" />
-            </a>
+          <Link
+            href={auth.user ? '/profile' : '/login'}
+            className="flex items-center button-icon p-0 m-1"
+          >
+            <Account className="w-5 h-5" />
           </Link>
         </div>
       </div>
@@ -97,21 +97,19 @@ const AuthButton = () => {
 const DesktopLogo = () => (
   <div className="relative overflow-visible min-w-[104px]">
     <div className="w-[104px] h-[130px] text-white bg-red-500 z-50 shadow-red-900/40 shadow-lg absolute top-0 left-0 right-0">
-      <Link passHref href="/">
-        <a className="block p-0 m-0 h-full w-full relative">
-          <OlympLogoVertical
-            style={{
-              filter: 'drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.2))',
-              position: 'absolute',
-              left: 0,
-              bottom: 0,
-              width: '104px',
-              height: '104px',
-              color: 'white',
-              fill: 'white !important',
-            }}
-          />
-        </a>
+      <Link href="/" className="block p-0 m-0 h-full w-full relative">
+        <OlympLogoVertical
+          style={{
+            filter: 'drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.2))',
+            position: 'absolute',
+            left: 0,
+            bottom: 0,
+            width: '104px',
+            height: '104px',
+            color: 'white',
+            fill: 'white !important',
+          }}
+        />
       </Link>
     </div>
   </div>
@@ -131,8 +129,8 @@ const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {
   );
   if (x.type === 'link') {
     return (
-      <Link href={x.href} passHref>
-        <a className={cx}>{x.title}</a>
+      <Link href={x.href} className={cx}>
+        {x.title}
       </Link>
     );
   }

@@ -7,11 +7,10 @@ type ServiceCardProps = {
   image: string;
   header: string;
   href?: string;
+  children: React.ReactNode;
 };
 
-export function ServiceCard(
-  props: ServiceCardProps & { children: React.ReactNode | React.ReactChildren },
-) {
+export function ServiceCard(props: ServiceCardProps) {
   const content = (
     <div
       className={classNames(
@@ -48,9 +47,5 @@ export function ServiceCard(
     return content;
   }
 
-  return (
-    <Link href={props.href} passHref>
-      <a>{content}</a>
-    </Link>
-  );
+  return <Link href={props.href}>{content}</Link>;
 }

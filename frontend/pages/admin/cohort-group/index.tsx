@@ -14,7 +14,4 @@ CohortGroupsPage.getLayout = (page: React.ReactElement) => (
   <Layout list={<CohortGroupList />}>{page}</Layout>
 );
 
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peSkupiny,
-  PermissionLevel.P_OWNED,
-);
+export const getServerSideProps = withServerPermissions(PermissionKey.peSkupiny, PermissionLevel.P_OWNED);

@@ -21,7 +21,7 @@ interface AuthContextType {
 
 const authContext = React.createContext<AuthContextType | undefined>(undefined);
 
-export const ProvideAuth: React.FC = ({ children }) => {
+export const ProvideAuth = ({ children }: React.PropsWithChildren) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = React.useState<boolean>(true);

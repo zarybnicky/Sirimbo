@@ -3,7 +3,6 @@ import {
   ReservationBasicFragment,
   ReservationItemBasicFragment,
 } from 'lib/graphql/Reservation';
-import { keysOf } from 'lib/keys-of';
 import { useAuth } from './use-auth';
 
 export enum PermissionLevel {
@@ -130,6 +129,10 @@ export class PermissionChecker {
 
   public canEditCohort(_item: {}) {
     return this.perms.peSkupiny >= PermissionLevel.P_ADMIN;
+  }
+
+  public canEditEvent(_item: {}) {
+    return this.perms.peAkce >= PermissionLevel.P_OWNED;
   }
 
   public canEditReservation(reservation: { nTrener: string }) {

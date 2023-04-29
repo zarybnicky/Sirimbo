@@ -47,10 +47,8 @@ function ListTitleButton({
     active ? 'tracking-wide bg-red-500 text-white' : 'bg-white hover:bg-stone-50',
   );
   return href ? (
-    <Link href={href} passHref>
-      <a className={cx}>
-        {Icon && <Icon className="w-4" />} {children}
-      </a>
+    <Link href={href} className={cx}>
+      {Icon && <Icon className="w-4" />} {children}
     </Link>
   ) : (
     <button className={cx} onClick={onClick}>
@@ -75,22 +73,22 @@ function ListItem({
   className?: string;
 }) {
   return (
-    <Link key={href} href={href} passHref>
-      <a
-        className={classNames(
-          'relative p-2 mr-2 my-1 ml-0 rounded-lg grid',
-          active ? 'font-semibold bg-red-500 text-white shadow-md' : 'hover:bg-stone-200',
-          className,
-        )}
+    <Link
+      key={href}
+      href={href}
+      className={classNames(
+        'relative p-2 mr-2 my-1 ml-0 rounded-lg grid',
+        active ? 'font-semibold bg-red-500 text-white shadow-md' : 'hover:bg-stone-200',
+        className,
+      )}
+    >
+      <div>{title}</div>
+      <div
+        className={classNames('text-sm', active ? 'text-stone-200' : 'text-stone-500')}
       >
-        <div>{title}</div>
-        <div
-          className={classNames('text-sm', active ? 'text-stone-200' : 'text-stone-500')}
-        >
-          {subtitle}
-        </div>
-        {children}
-      </a>
+        {subtitle}
+      </div>
+      {children}
     </Link>
   );
 }

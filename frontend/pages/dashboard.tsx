@@ -14,7 +14,7 @@ export default function DashboardPage() {
   const [variant, setVariant] = React.useState('myLessons');
 
   return (
-    <Item className="col-full-width">
+    <Item className="col-full-width p-2">
       <div className="xl:hidden">
         <TabMenu
           selected={variant}

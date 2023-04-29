@@ -30,7 +30,7 @@ type FormProps = Pick<
   | 'cohortGroup'
 >;
 
-export const CohortForm: React.FC<{ data?: CohortFragment }> = ({ data }) => {
+export const CohortForm = ({ data }: { data?: CohortFragment }) => {
   const queryClient = useQueryClient();
   const onSuccess = React.useCallback(() => {
     queryClient.invalidateQueries(useCohortListQuery.getKey());

@@ -17,7 +17,7 @@ export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
     <Card
       onClick={expanded ? undefined : open}
       className={classNames(
-        'group mb-4 odd:bg-white even:bg-red-100/30',
+        'group mb-4',
         !expanded && 'cursor-pointer',
       )}
     >

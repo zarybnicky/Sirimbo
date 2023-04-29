@@ -10,7 +10,7 @@ import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 const Map: React.FC<
   {
     children: (x: typeof ReactLeaflet) => React.ReactElement;
-  } & ReactLeaflet.MapContainerProps
+  } & Omit<ReactLeaflet.MapContainerProps, 'children'>
 > = ({ children, ...rest }) => {
   useEffect(() => {
     (async function init() {

@@ -53,15 +53,17 @@ export default function LoginPage() {
           </SubmitButton>
 
           <div className="flex justify-between flex-wrap gap-2">
-            <Link href="/register" passHref>
-              <a className="uppercase rounded-md px-3 text-sm py-2 text-red-500 hover:bg-red-100 text-left">
-                Registrovat se
-              </a>
+            <Link
+              href="/register"
+              className="uppercase rounded-md px-3 text-sm py-2 text-red-500 hover:bg-red-100 text-left"
+            >
+              Registrovat se
             </Link>
-            <Link href="/forgotten-password" passHref>
-              <a className="uppercase rounded-md px-3 text-sm py-2 text-red-500 hover:bg-red-100 text-right">
-                Zapomněli jste heslo?
-              </a>
+            <Link
+              href="/forgotten-password"
+              className="uppercase rounded-md px-3 text-sm py-2 text-red-500 hover:bg-red-100 text-right"
+            >
+              Zapomněli jste heslo?
             </Link>
           </div>
         </form>

@@ -34,10 +34,15 @@ export default function SchedulePage() {
   }, [schedules]);
 
   return (
-    <Item className="col-full-width">
+    <Item className="col-full-width p-2">
       <WeekPicker title="Tréninky" startDate={startDate} onChange={setStartDate} />
 
-      {(reservations?.reservationsForRange?.nodes.length ?? 0) > 0 && (
+      {!reservations?.reservationsForRange?.nodes?.length && !schedules?.schedulesForRange?.nodes?.length && (
+        <div className="border p-2 bg-red-50">
+          Žádné tréninky pro tento týden
+        </div>
+      )}
+      {!!reservations?.reservationsForRange?.nodes?.length && (
         <>
           <div className="text-xl tracking-wide text-stone-700 mb-2">
             Nabídky tréninků

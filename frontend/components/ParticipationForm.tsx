@@ -1,4 +1,5 @@
 import {
+  EventFragment,
   MyEventFragment,
   useCancelParticipationMutation,
   useCreateParticipationMutation,
@@ -12,9 +13,11 @@ import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { useAuth } from 'lib/data/use-auth';
 import { useQueryClient } from '@tanstack/react-query';
+import { SimpleDialog } from './Dialog';
+import { Button } from './Button';
 
 interface Props {
-  data: MyEventFragment;
+  data: EventFragment & Partial<MyEventFragment>;
   onSuccess: () => void;
 }
 
@@ -30,7 +33,7 @@ export const ParticipationForm = ({ data, onSuccess: realOnSuccess }: Props) => 
     realOnSuccess();
   }, [queryClient, realOnSuccess]);
 
-  const myRegistration = data.attendeeUsers.nodes.find(x => x.user?.uId === user?.id);
+  const myRegistration = data.attendeeUsers?.nodes?.find((x) => x.user?.uId === user?.id);
 
   const { mutateAsync: doUpsert } = useCreateParticipationMutation({ onSuccess });
   const { mutateAsync: doCancel } = useCancelParticipationMutation({ onSuccess });
@@ -45,16 +48,15 @@ export const ParticipationForm = ({ data, onSuccess: realOnSuccess }: Props) => 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await doUpsert({ input: { eventId: data.id!, ...values, yearOfBirth: 0 } });
   });
-  const onCancel = useAsyncCallback(async (e?: React.FormEvent) => {
-    e?.preventDefault();
+  const onCancel = useAsyncCallback(async () => {
     await doCancel({ input: { eventId: data.id! } });
   });
 
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
-      <TextField disabled  label="Člen" value={`${user?.uJmeno} ${user?.uPrijmeni}`} />
-      {(data.enableNotes || myRegistration?.notes) ? (
+      <TextField disabled label="Člen" value={`${user?.uJmeno} ${user?.uPrijmeni}`} />
+      {data.enableNotes || myRegistration?.notes ? (
         <TextAreaElement
           autoFocus
           control={control}
@@ -66,10 +68,29 @@ export const ParticipationForm = ({ data, onSuccess: realOnSuccess }: Props) => 
         {myRegistration ? 'Upravit přihlášku' : 'Přihlásit'}
       </SubmitButton>
       {myRegistration && (
-        <button className="button button-white" onClick={onCancel.execute}>
+        <button type="button" className="button button-white" onClick={onCancel.execute}>
           Zrušit přihlášku
         </button>
       )}
     </form>
+  );
+};
+
+interface DialogProps {
+  data: EventFragment & Partial<MyEventFragment>;
+}
+
+export const ParticipationDialog = ({ data }: DialogProps) => {
+  const { user } = useAuth();
+  const myRegistration = data.attendeeUsers?.nodes?.find((x) => x.user?.uId === user?.id);
+
+  if (data.isLocked || (!myRegistration && (data.remainingSpots ?? 0) < 1)) {
+    return null;
+  }
+  const button = <Button>{myRegistration ? 'Upravit přihlášku' : 'Přihlásit'}</Button>;
+  return (
+    <SimpleDialog title="Přihlásit na akci" button={button}>
+      {({ close }) => <ParticipationForm data={data} onSuccess={close} />}
+    </SimpleDialog>
   );
 };
