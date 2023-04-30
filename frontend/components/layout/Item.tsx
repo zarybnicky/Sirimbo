@@ -30,7 +30,7 @@ function ItemTitleBar({
         </div>
       )}
       <div className="flex gap-2 flex-wrap mb-4 grow-0 h-min justify-between">
-        <h4 className="text-3xl tracking-wide mb-4 order-2 w-full md:w-auto md:order-none">
+        <h4 className="text-2xl tracking-wide mb-4 order-2 w-full md:w-auto md:order-none">
           {title}
         </h4>
         <div>{children}</div>

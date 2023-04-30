@@ -34,7 +34,7 @@ export default function SchedulePage() {
   }, [schedules]);
 
   return (
-    <Item className="col-full-width p-2">
+    <Item className="col-full-width p-2 bg-stone-100">
       <WeekPicker title="Tréninky" startDate={startDate} onChange={setStartDate} />
 
       {!reservations?.reservationsForRange?.nodes?.length && !schedules?.schedulesForRange?.nodes?.length && (
@@ -47,7 +47,7 @@ export default function SchedulePage() {
           <div className="text-xl tracking-wide text-stone-700 mb-2">
             Nabídky tréninků
           </div>
-          <div className="flex flex-wrap gap-4 ml-2 pl-5 border-l-4 border-red-200">
+          <div className="flex justify-start flex-wrap gap-4 ml-2 pl-5 border-l-4 border-red-200">
             {reservations?.reservationsForRange?.nodes.map((item, i) => (
               <ReservationItem key={i} item={item} />
             ))}
@@ -57,11 +57,11 @@ export default function SchedulePage() {
 
       {Object.entries(scheduleByDay).map(([date, items], i) => (
         <React.Fragment key={i}>
-          <div className="text-xl tracking-wide text-stone-700 mt-8 mb-2">
+          <div className="text-2xl tracking-wide text-stone-700 mt-8 mb-2">
             {formatWeekDay(new Date(date))}
           </div>
 
-          <div className="flex flex-wrap gap-4 ml-2 pl-5 border-l-4 border-red-200">
+          <div className="flex justify-start flex-wrap gap-2 ml-2 pl-5 border-l-4 border-red-200">
             {items.map((item, i) => (
               <ScheduleItem key={i} item={item} />
             ))}

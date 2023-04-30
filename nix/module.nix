@@ -134,6 +134,9 @@ in {
           locations."/gallery".root = cfg.stateDir;
           locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
 
+          locations."/member/download" = {
+            proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
+          };
           locations."/graphql" = {
             proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
             proxyWebsockets = true;
@@ -206,6 +209,7 @@ in {
           User = cfg.user;
           Group = cfg.group;
           ExecStart = "${pkgs.nodejs}/bin/node ${pkgs.sirimbo-frontend-beta}/server.js";
+          WorkingDirectory = config.stateDir;
           Restart = "always";
           RestartSec = "10s";
         };
@@ -232,13 +236,14 @@ in {
           MINIO_PORT = toString cfg.minioPort;
           MINIO_ACCESS_KEY = cfg.minioAccessKey;
           MINIO_SECRET_KEY = cfg.minioSecretKey;
-          DEBUG = if cfg.debug then "1" else "";
+          DEBUG = if cfg.debug then "postgraphile:postgres,postgraphile:postgres:error" else "";
         };
 
         serviceConfig = {
           User = cfg.user;
           Group = cfg.group;
           ExecStart = "${pkgs.nodejs}/bin/node ${pkgs.sirimbo-backend-beta}/bin/sirimbo-backend";
+          WorkingDirectory = config.stateDir;
           Restart = "always";
           RestartSec = "10s";
         };

@@ -8,7 +8,7 @@ export default function PublicEventListPage() {
   const { data } = usePublicEventsQuery();
 
   return (
-    <Item className="col-full-width p-2">
+    <Item className="feature p-2">
       <Item.Titlebar title="Nadcházející akce" />
       {data?.events?.nodes.map((event) => (
         <EventItem key={event.id} event={event} />

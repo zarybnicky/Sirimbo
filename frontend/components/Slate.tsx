@@ -116,12 +116,14 @@ type Extras = {
 export type SlateEditorElementProps<T extends FieldValues> = {
   validation?: ControllerProps['rules'];
   name: Path<T>;
+  iter: number;
   control?: Control<T>;
   required?: boolean;
 } & Extras;
 
 export function SlateEditorElement<TFieldValues extends FieldValues>({
   name,
+  iter,
   required,
   control,
   validation = {},
@@ -139,7 +141,7 @@ export function SlateEditorElement<TFieldValues extends FieldValues>({
     rules: validation,
   });
 
-  return <SlateEditor value={value} onChange={onChange} error={error} {...props} />;
+  return <SlateEditor name={name} iter={iter} value={value} onChange={onChange} error={error} {...props} />;
 }
 
 const plugins: MyPlatePlugin[] = createPlugins(
@@ -192,7 +194,11 @@ export function SlateEditor({
   label,
   helperText,
   parseError,
+  name,
+  iter,
 }: {
+  name: string;
+  iter?: number;
   value: MyValue;
   onChange?: (nodes: MyValue) => void;
   readOnly?: boolean;
@@ -226,6 +232,7 @@ export function SlateEditor({
           initialValue={value}
           onChange={onChange}
           plugins={plugins}
+          id={name + (iter ?? '')}
         >
           {!readOnly && (
             <Toolbar>
@@ -234,6 +241,7 @@ export function SlateEditor({
           )}
 
           <Plate<MyValue>
+            id={name + (iter ?? '')}
             editableProps={{
               readOnly: readOnly,
               spellCheck: false,

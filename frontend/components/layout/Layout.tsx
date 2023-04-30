@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import { useRouter } from 'next/router';
 import React from 'react';
 import { Footer } from './Footer';
 import { Header } from './Header';
@@ -13,6 +14,14 @@ type Props = {
 
 export function Layout({ children, showTopMenu, list, isDetail }: Props) {
   const [isOpen, setIsOpen] = React.useState(false);
+  const router = useRouter();
+
+  React.useEffect(() => {
+    const scroll = () =>
+      document.querySelector('[data-nextjs-scroll-focus-boundary]')?.scrollTo(0, 0);
+    router.events.on('routeChangeComplete', scroll);
+    return () => router.events.off('routeChangeComplete', scroll);
+  }, [router]);
 
   return (
     <div className="h-screen flex flex-col w-full relative overflow-hidden">
@@ -32,9 +41,10 @@ export function Layout({ children, showTopMenu, list, isDetail }: Props) {
               {list}
             </div>
             <div
+              data-nextjs-scroll-focus-boundary
               className={classNames(
                 isDetail ? 'grow content min-h-0 overflow-y-auto' : 'hidden lg:flex',
-                'scrollbar-thin scrollbar-track-transparent scrollbar-thumb-stone-800/20 hover:scrollbar-thumb-stone-800/50',
+                'scrollbar',
               )}
             >
               {children}
@@ -42,10 +52,8 @@ export function Layout({ children, showTopMenu, list, isDetail }: Props) {
           </>
         ) : (
           <div
-            className={classNames(
-              'relative h-full grow overflow-y-auto content',
-              'scrollbar-thin scrollbar-track-transparent scrollbar-thumb-stone-800/20 hover:scrollbar-thumb-stone-800/50',
-            )}
+            data-nextjs-scroll-focus-boundary
+            className="scrollbar relative h-full grow overflow-y-auto content"
           >
             {children}
             {showTopMenu && <Footer />}

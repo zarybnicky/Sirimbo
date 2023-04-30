@@ -53,7 +53,8 @@ module.exports = withBundleAnalyzer(
           permanent: true,
         },
         { source: '/member', destination: '/dashboard', permanent: true },
-        { source: '/member/home', destination: '/dashboard', permanent: true },
+        { source: '/member/akce', destination: '/events', permanent: true },
+        { source: '/member/rozpis', destination: '/schedule', permanent: true },
         { source: '/member/rozpis', destination: '/schedule', permanent: true },
         { source: '/member/nabidka', destination: '/schedule', permanent: true },
         { source: '/member/treninky', destination: '/schedule', permanent: true },
@@ -72,6 +73,7 @@ module.exports = withBundleAnalyzer(
           })}`;
         }
         return [
+          { source: '/member/download', destination: `${graphqlUrl}/member/download` },
           { source: '/graphql', destination: `${graphqlUrl}/graphql` },
           { source: '/graphqli', destination: `${graphqlUrl}/graphqli` },
           { source: '/old/:path*', destination: `${phpUrl}/old/:path*` },

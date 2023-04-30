@@ -17,6 +17,14 @@
 @tailwind components;
 @tailwind utilities;
 
+.prose h1, .prose h2, .prose h3 {
+    @apply text-red-600;
+}
+
+.scrollbar {
+    @apply scrollbar-thin scrollbar-track-transparent scrollbar-thumb-stone-800/20 hover:scrollbar-thumb-stone-800/50;
+}
+
 .button {
     @apply relative inline-flex justify-center items-center shadow-md rounded-lg;
 }

@@ -28,13 +28,15 @@ export const CohortGroupForm: React.FC<{ data?: CohortGroupFragment }> = ({ data
   const { mutateAsync: doUpdate } = useUpdateCohortGroupMutation({ onSuccess });
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
+  const [iter, setIter] = React.useState(0);
   React.useEffect(() => {
     reset({
       name: data?.name || '',
       description: data?.description || [],
       isPublic: data?.isPublic || false,
       ordering: data?.ordering || 0,
-    });
+    }, { keepDirtyValues: true });
+    setIter(x => x + 1);
   }, [data, reset]);
 
   const onSubmit = useAsyncCallback(async (patch: FormProps) => {
@@ -51,13 +53,8 @@ export const CohortGroupForm: React.FC<{ data?: CohortGroupFragment }> = ({ data
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="name" label="Název" required />
-      <SlateEditorElement control={control} name="description" label="Popis" />
-      <CheckboxElement
-        control={control}
-        name="isPublic"
-        value="1"
-        label="Veřejně viditelná"
-      />
+      <SlateEditorElement control={control} iter={iter} name="description" label="Popis" />
+      <CheckboxElement control={control} name="isPublic" label="Zobrazit pro veřejnost" />
       <TextFieldElement
         control={control}
         type="number"

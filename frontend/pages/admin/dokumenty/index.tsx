@@ -53,11 +53,7 @@ export default function FileAdminList() {
             active={active === item.id}
             href={`/admin/dokumenty/${item.id}`}
             title={
-              <a
-                target="_blank"
-                rel="noreferrer"
-                href={`/old/member/download?id=${item.id}`}
-              >
+              <a target="_blank" rel="noreferrer" href={`/member/download?id=${item.id}`}>
                 {item.dName}
               </a>
             }

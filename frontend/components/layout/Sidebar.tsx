@@ -57,12 +57,7 @@ export const Sidebar = ({
             </Link>
           </div>
         )}
-        <div
-          className={classNames(
-            'grid gap-1 pt-3 mr-1 oveflow-y-auto max-h-full',
-            'scrollbar-thin scrollbar-track-transparent scrollbar-thumb-red-700/80 hover:scrollbar-thumb-red-700/90',
-          )}
-        >
+        <div className="scrollbar grid gap-1 pt-3 mr-1 oveflow-y-auto max-h-full">
           {auth.user ? (
             <>
               <SidebarSection

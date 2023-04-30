@@ -36,6 +36,7 @@ export const EventForm: React.FC<{
   const { mutateAsync: doUpdate } = useUpdateEventMutation({ onSuccess });
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
+  const [iter, setIter] = React.useState(0);
   React.useEffect(() => {
     reset({
       name: data?.name,
@@ -50,6 +51,7 @@ export const EventForm: React.FC<{
       enableNotes: data?.enableNotes,
       isLocked: data?.isLocked,
     });
+    setIter(x => x + 1);
   }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
@@ -75,8 +77,8 @@ export const EventForm: React.FC<{
         label="Místo akce"
         required
       />
-      <SlateEditorElement control={control} name="summary" label="Shrnutí" />
-      <SlateEditorElement control={control} name="description" label="Další info" />
+      <SlateEditorElement control={control} iter={iter} name="summary" label="Shrnutí" />
+      <SlateEditorElement control={control} iter={iter} name="description" label="Další info" />
       <TextFieldElement control={control} type="date" label="Od" name="since" required />
       <TextFieldElement
         type="date"

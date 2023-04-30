@@ -31,6 +31,7 @@ export const AnnouncementForm: React.FC<{
   const { mutateAsync: doUpdate } = useUpdateAnnouncementMutation({ onSuccess });
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
+  const [iter, setIter] = React.useState(0);
   React.useEffect(() => {
     reset({
       upNadpis: data?.upNadpis,
@@ -40,6 +41,7 @@ export const AnnouncementForm: React.FC<{
         data?.scheduledUntil ? new Date(data.scheduledUntil) : undefined,
       ],
     });
+    setIter(x => x + 1);
   }, [data, reset]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
@@ -60,7 +62,7 @@ export const AnnouncementForm: React.FC<{
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="upNadpis" label="Nadpis" required />
-      <SlateEditorElement control={control} name="upText" label="Text" />
+      <SlateEditorElement control={control} iter={iter} name="upText" label="Text" />
       <DateRangeInput control={control} name="schedule" label="Publikováno od/do" />
       <SubmitButton loading={onSubmit.loading} />
     </form>

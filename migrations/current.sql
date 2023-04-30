@@ -63,7 +63,7 @@ CREATE VIEW akce_item as
 DROP TABLE IF EXISTS attendee_external CASCADE;
 CREATE TABLE attendee_external (
     id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    event_id bigint REFERENCES event,
+    event_id bigint not null REFERENCES event,
     first_name text not null,
     last_name text not null,
     email text not null,
@@ -88,6 +88,7 @@ grant all on attendee_external to anonymous;
 create or replace function event_remaining_spots (a event) returns int as $$
   select a.capacity - (select count(*) from attendee_user where event_id = a.id) - (select count(*) from attendee_external where event_id = a.id);
 $$ language sql stable;
+
 grant execute on function event_remaining_spots to anonymous;
 
 drop TRIGGER if exists on_update_current_timestamp on event cascade;
@@ -106,3 +107,5 @@ create trigger on_update_event_timestamp
   before insert or update on public.event
   for each row
   execute procedure public.on_update_event_timestamp();
+
+alter table dokumenty alter column d_timestamp set default current_timestamp;

@@ -18,6 +18,22 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.text({ type: 'application/graphql' }));
 
+app.get('/member/download', async function (req, res) {
+  const {rows} = await pool.query('select * from dokumenty where d_id=$1', [req.query.id]);
+  if (rows.length < 1 ) {
+    res.status(404).send('Nenalezeno');
+    return
+  }
+
+  let path = rows[0].d_path;
+  path = path.replace('/var/lib/olymp/uploads/', 'uploads/');
+  path = path.replace('upload/', 'uploads/');
+  if (process.env.TS_NODE_DEV) {
+    path = `../${path}`;
+  }
+  res.download(path, rows[0].d_filename);
+});
+
 app.use(postgraphile(pool, ['public'], graphileOptions));
 
 (async function runWorker() {

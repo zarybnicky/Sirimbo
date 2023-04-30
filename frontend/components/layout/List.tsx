@@ -94,16 +94,7 @@ function ListItem({
 }
 
 function ListScroll({ children }: { children: React.ReactNode }) {
-  return (
-    <div
-      className={classNames(
-        'scrollbar-thin scrollbar-track-transparent scrollbar-thumb-stone-800/20 hover:scrollbar-thumb-stone-800/50',
-        'relative h-full overflow-y-auto',
-      )}
-    >
-      {children}
-    </div>
-  );
+  return <div className="scrollbar relative h-full overflow-y-auto">{children}</div>;
 }
 
 List.TitleBar = ListTitleBar;

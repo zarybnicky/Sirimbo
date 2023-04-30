@@ -59,8 +59,8 @@ export function DateRangeInput<TFieldValues extends FieldValues>({
 
   return (
     <DateRangePicker
-      startDate={value[0]}
-      endDate={value[1]}
+      startDate={value?.[0]}
+      endDate={value?.[1]}
       onStartDateChange={(newStartDate) => onChange([newStartDate, value[1]])}
       onEndDateChange={(newEndDate) => onChange([value[0], newEndDate])}
       locale={cs}

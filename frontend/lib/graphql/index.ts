@@ -232,10 +232,10 @@ export type AkcesEdge = {
 
 /** Methods to use when ordering `Akce`. */
 export enum AkcesOrderBy {
-  ADoAsc = 'A_DO_ASC',
-  ADoDesc = 'A_DO_DESC',
   ADokumentyAsc = 'A_DOKUMENTY_ASC',
   ADokumentyDesc = 'A_DOKUMENTY_DESC',
+  ADoAsc = 'A_DO_ASC',
+  ADoDesc = 'A_DO_DESC',
   AIdAsc = 'A_ID_ASC',
   AIdDesc = 'A_ID_DESC',
   AInfoAsc = 'A_INFO_ASC',
@@ -661,7 +661,7 @@ export type AttendeeExternal = Node & {
   email: Scalars['String'];
   /** Reads a single `Event` that is related to this `AttendeeExternal`. */
   event: Maybe<Event>;
-  eventId: Maybe<Scalars['BigInt']>;
+  eventId: Scalars['BigInt'];
   firstName: Scalars['String'];
   guardianName: Scalars['String'];
   id: Scalars['BigInt'];
@@ -720,7 +720,7 @@ export type AttendeeExternalInput = {
   confirmedBy?: InputMaybe<Scalars['BigInt']>;
   createdAt?: InputMaybe<Scalars['Datetime']>;
   email: Scalars['String'];
-  eventId?: InputMaybe<Scalars['BigInt']>;
+  eventId: Scalars['BigInt'];
   firstName: Scalars['String'];
   guardianName?: InputMaybe<Scalars['String']>;
   lastName: Scalars['String'];
@@ -7685,19 +7685,19 @@ export type Nabidka = Node & {
   __typename?: 'Nabidka';
   freeLessons: Maybe<Scalars['Int']>;
   myLessons: Maybe<Scalars['Int']>;
-  /** Reads and enables pagination through a set of `NabidkaItem`. */
-  nabidkaItemsByNiIdRodic: NabidkaItemsConnection;
   nDo: Scalars['Date'];
   nId: Scalars['BigInt'];
   nLock: Scalars['Boolean'];
   nMaxPocetHod: Scalars['Int'];
   nOd: Scalars['Date'];
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   nPocetHod: Scalars['Int'];
   nTimestamp: Maybe<Scalars['Datetime']>;
   nTrener: Scalars['BigInt'];
   nVisible: Scalars['Boolean'];
+  /** Reads and enables pagination through a set of `NabidkaItem`. */
+  nabidkaItemsByNiIdRodic: NabidkaItemsConnection;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
   /** Reads a single `User` that is related to this `Nabidka`. */
   userByNTrener: Maybe<User>;
 };
@@ -7857,10 +7857,10 @@ export enum NabidkaItemsOrderBy {
   ParyByNiPartnerPHodnoceniDesc = 'PARY_BY_NI_PARTNER__P_HODNOCENI_DESC',
   ParyByNiPartnerPIdAsc = 'PARY_BY_NI_PARTNER__P_ID_ASC',
   ParyByNiPartnerPIdDesc = 'PARY_BY_NI_PARTNER__P_ID_DESC',
-  ParyByNiPartnerPIdPartnerAsc = 'PARY_BY_NI_PARTNER__P_ID_PARTNER_ASC',
-  ParyByNiPartnerPIdPartnerDesc = 'PARY_BY_NI_PARTNER__P_ID_PARTNER_DESC',
   ParyByNiPartnerPIdPartnerkaAsc = 'PARY_BY_NI_PARTNER__P_ID_PARTNERKA_ASC',
   ParyByNiPartnerPIdPartnerkaDesc = 'PARY_BY_NI_PARTNER__P_ID_PARTNERKA_DESC',
+  ParyByNiPartnerPIdPartnerAsc = 'PARY_BY_NI_PARTNER__P_ID_PARTNER_ASC',
+  ParyByNiPartnerPIdPartnerDesc = 'PARY_BY_NI_PARTNER__P_ID_PARTNER_DESC',
   ParyByNiPartnerPLatBodyAsc = 'PARY_BY_NI_PARTNER__P_LAT_BODY_ASC',
   ParyByNiPartnerPLatBodyDesc = 'PARY_BY_NI_PARTNER__P_LAT_BODY_DESC',
   ParyByNiPartnerPLatFinaleAsc = 'PARY_BY_NI_PARTNER__P_LAT_FINALE_ASC',
@@ -7918,6 +7918,9 @@ export type NabidkasEdge = {
 
 /** Methods to use when ordering `Nabidka`. */
 export enum NabidkasOrderBy {
+  NabidkaItemsByNiIdRodicCountAsc = 'NABIDKA_ITEMS_BY_NI_ID_RODIC__COUNT_ASC',
+  NabidkaItemsByNiIdRodicCountDesc = 'NABIDKA_ITEMS_BY_NI_ID_RODIC__COUNT_DESC',
+  Natural = 'NATURAL',
   NDoAsc = 'N_DO_ASC',
   NDoDesc = 'N_DO_DESC',
   NIdAsc = 'N_ID_ASC',
@@ -7936,9 +7939,6 @@ export enum NabidkasOrderBy {
   NTrenerDesc = 'N_TRENER_DESC',
   NVisibleAsc = 'N_VISIBLE_ASC',
   NVisibleDesc = 'N_VISIBLE_DESC',
-  NabidkaItemsByNiIdRodicCountAsc = 'NABIDKA_ITEMS_BY_NI_ID_RODIC__COUNT_ASC',
-  NabidkaItemsByNiIdRodicCountDesc = 'NABIDKA_ITEMS_BY_NI_ID_RODIC__COUNT_DESC',
-  Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   UserByNTrenerUBanAsc = 'USER_BY_N_TRENER__U_BAN_ASC',
@@ -8293,16 +8293,18 @@ export enum PariesOrderBy {
   NabidkaItemsByNiPartnerCountAsc = 'NABIDKA_ITEMS_BY_NI_PARTNER__COUNT_ASC',
   NabidkaItemsByNiPartnerCountDesc = 'NABIDKA_ITEMS_BY_NI_PARTNER__COUNT_DESC',
   Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   PArchivAsc = 'P_ARCHIV_ASC',
   PArchivDesc = 'P_ARCHIV_DESC',
   PHodnoceniAsc = 'P_HODNOCENI_ASC',
   PHodnoceniDesc = 'P_HODNOCENI_DESC',
   PIdAsc = 'P_ID_ASC',
   PIdDesc = 'P_ID_DESC',
-  PIdPartnerAsc = 'P_ID_PARTNER_ASC',
-  PIdPartnerDesc = 'P_ID_PARTNER_DESC',
   PIdPartnerkaAsc = 'P_ID_PARTNERKA_ASC',
   PIdPartnerkaDesc = 'P_ID_PARTNERKA_DESC',
+  PIdPartnerAsc = 'P_ID_PARTNER_ASC',
+  PIdPartnerDesc = 'P_ID_PARTNER_DESC',
   PLatBodyAsc = 'P_LAT_BODY_ASC',
   PLatBodyDesc = 'P_LAT_BODY_DESC',
   PLatFinaleAsc = 'P_LAT_FINALE_ASC',
@@ -8319,74 +8321,8 @@ export enum PariesOrderBy {
   PTimestampAddDesc = 'P_TIMESTAMP_ADD_DESC',
   PTimestampArchiveAsc = 'P_TIMESTAMP_ARCHIVE_ASC',
   PTimestampArchiveDesc = 'P_TIMESTAMP_ARCHIVE_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   RozpisItemsByRiPartnerCountAsc = 'ROZPIS_ITEMS_BY_RI_PARTNER__COUNT_ASC',
   RozpisItemsByRiPartnerCountDesc = 'ROZPIS_ITEMS_BY_RI_PARTNER__COUNT_DESC',
-  UserByPIdPartnerUBanAsc = 'USER_BY_P_ID_PARTNER__U_BAN_ASC',
-  UserByPIdPartnerUBanDesc = 'USER_BY_P_ID_PARTNER__U_BAN_DESC',
-  UserByPIdPartnerUCityAsc = 'USER_BY_P_ID_PARTNER__U_CITY_ASC',
-  UserByPIdPartnerUCityDesc = 'USER_BY_P_ID_PARTNER__U_CITY_DESC',
-  UserByPIdPartnerUConfirmedAsc = 'USER_BY_P_ID_PARTNER__U_CONFIRMED_ASC',
-  UserByPIdPartnerUConfirmedDesc = 'USER_BY_P_ID_PARTNER__U_CONFIRMED_DESC',
-  UserByPIdPartnerUConscriptionNumberAsc = 'USER_BY_P_ID_PARTNER__U_CONSCRIPTION_NUMBER_ASC',
-  UserByPIdPartnerUConscriptionNumberDesc = 'USER_BY_P_ID_PARTNER__U_CONSCRIPTION_NUMBER_DESC',
-  UserByPIdPartnerUCreatedAtAsc = 'USER_BY_P_ID_PARTNER__U_CREATED_AT_ASC',
-  UserByPIdPartnerUCreatedAtDesc = 'USER_BY_P_ID_PARTNER__U_CREATED_AT_DESC',
-  UserByPIdPartnerUDancerAsc = 'USER_BY_P_ID_PARTNER__U_DANCER_ASC',
-  UserByPIdPartnerUDancerDesc = 'USER_BY_P_ID_PARTNER__U_DANCER_DESC',
-  UserByPIdPartnerUDistrictAsc = 'USER_BY_P_ID_PARTNER__U_DISTRICT_ASC',
-  UserByPIdPartnerUDistrictDesc = 'USER_BY_P_ID_PARTNER__U_DISTRICT_DESC',
-  UserByPIdPartnerUEmailAsc = 'USER_BY_P_ID_PARTNER__U_EMAIL_ASC',
-  UserByPIdPartnerUEmailDesc = 'USER_BY_P_ID_PARTNER__U_EMAIL_DESC',
-  UserByPIdPartnerUGdprSignedAtAsc = 'USER_BY_P_ID_PARTNER__U_GDPR_SIGNED_AT_ASC',
-  UserByPIdPartnerUGdprSignedAtDesc = 'USER_BY_P_ID_PARTNER__U_GDPR_SIGNED_AT_DESC',
-  UserByPIdPartnerUGroupAsc = 'USER_BY_P_ID_PARTNER__U_GROUP_ASC',
-  UserByPIdPartnerUGroupDesc = 'USER_BY_P_ID_PARTNER__U_GROUP_DESC',
-  UserByPIdPartnerUIdAsc = 'USER_BY_P_ID_PARTNER__U_ID_ASC',
-  UserByPIdPartnerUIdDesc = 'USER_BY_P_ID_PARTNER__U_ID_DESC',
-  UserByPIdPartnerUJmenoAsc = 'USER_BY_P_ID_PARTNER__U_JMENO_ASC',
-  UserByPIdPartnerUJmenoDesc = 'USER_BY_P_ID_PARTNER__U_JMENO_DESC',
-  UserByPIdPartnerULevelAsc = 'USER_BY_P_ID_PARTNER__U_LEVEL_ASC',
-  UserByPIdPartnerULevelDesc = 'USER_BY_P_ID_PARTNER__U_LEVEL_DESC',
-  UserByPIdPartnerULockAsc = 'USER_BY_P_ID_PARTNER__U_LOCK_ASC',
-  UserByPIdPartnerULockDesc = 'USER_BY_P_ID_PARTNER__U_LOCK_DESC',
-  UserByPIdPartnerULoginAsc = 'USER_BY_P_ID_PARTNER__U_LOGIN_ASC',
-  UserByPIdPartnerULoginDesc = 'USER_BY_P_ID_PARTNER__U_LOGIN_DESC',
-  UserByPIdPartnerUMemberSinceAsc = 'USER_BY_P_ID_PARTNER__U_MEMBER_SINCE_ASC',
-  UserByPIdPartnerUMemberSinceDesc = 'USER_BY_P_ID_PARTNER__U_MEMBER_SINCE_DESC',
-  UserByPIdPartnerUMemberUntilAsc = 'USER_BY_P_ID_PARTNER__U_MEMBER_UNTIL_ASC',
-  UserByPIdPartnerUMemberUntilDesc = 'USER_BY_P_ID_PARTNER__U_MEMBER_UNTIL_DESC',
-  UserByPIdPartnerUNarozeniAsc = 'USER_BY_P_ID_PARTNER__U_NAROZENI_ASC',
-  UserByPIdPartnerUNarozeniDesc = 'USER_BY_P_ID_PARTNER__U_NAROZENI_DESC',
-  UserByPIdPartnerUNationalityAsc = 'USER_BY_P_ID_PARTNER__U_NATIONALITY_ASC',
-  UserByPIdPartnerUNationalityDesc = 'USER_BY_P_ID_PARTNER__U_NATIONALITY_DESC',
-  UserByPIdPartnerUOrientationNumberAsc = 'USER_BY_P_ID_PARTNER__U_ORIENTATION_NUMBER_ASC',
-  UserByPIdPartnerUOrientationNumberDesc = 'USER_BY_P_ID_PARTNER__U_ORIENTATION_NUMBER_DESC',
-  UserByPIdPartnerUPassAsc = 'USER_BY_P_ID_PARTNER__U_PASS_ASC',
-  UserByPIdPartnerUPassDesc = 'USER_BY_P_ID_PARTNER__U_PASS_DESC',
-  UserByPIdPartnerUPohlaviAsc = 'USER_BY_P_ID_PARTNER__U_POHLAVI_ASC',
-  UserByPIdPartnerUPohlaviDesc = 'USER_BY_P_ID_PARTNER__U_POHLAVI_DESC',
-  UserByPIdPartnerUPostalCodeAsc = 'USER_BY_P_ID_PARTNER__U_POSTAL_CODE_ASC',
-  UserByPIdPartnerUPostalCodeDesc = 'USER_BY_P_ID_PARTNER__U_POSTAL_CODE_DESC',
-  UserByPIdPartnerUPoznamkyAsc = 'USER_BY_P_ID_PARTNER__U_POZNAMKY_ASC',
-  UserByPIdPartnerUPoznamkyDesc = 'USER_BY_P_ID_PARTNER__U_POZNAMKY_DESC',
-  UserByPIdPartnerUPrijmeniAsc = 'USER_BY_P_ID_PARTNER__U_PRIJMENI_ASC',
-  UserByPIdPartnerUPrijmeniDesc = 'USER_BY_P_ID_PARTNER__U_PRIJMENI_DESC',
-  UserByPIdPartnerURodneCisloAsc = 'USER_BY_P_ID_PARTNER__U_RODNE_CISLO_ASC',
-  UserByPIdPartnerURodneCisloDesc = 'USER_BY_P_ID_PARTNER__U_RODNE_CISLO_DESC',
-  UserByPIdPartnerUSkupinaAsc = 'USER_BY_P_ID_PARTNER__U_SKUPINA_ASC',
-  UserByPIdPartnerUSkupinaDesc = 'USER_BY_P_ID_PARTNER__U_SKUPINA_DESC',
-  UserByPIdPartnerUStreetAsc = 'USER_BY_P_ID_PARTNER__U_STREET_ASC',
-  UserByPIdPartnerUStreetDesc = 'USER_BY_P_ID_PARTNER__U_STREET_DESC',
-  UserByPIdPartnerUSystemAsc = 'USER_BY_P_ID_PARTNER__U_SYSTEM_ASC',
-  UserByPIdPartnerUSystemDesc = 'USER_BY_P_ID_PARTNER__U_SYSTEM_DESC',
-  UserByPIdPartnerUTeacherAsc = 'USER_BY_P_ID_PARTNER__U_TEACHER_ASC',
-  UserByPIdPartnerUTeacherDesc = 'USER_BY_P_ID_PARTNER__U_TEACHER_DESC',
-  UserByPIdPartnerUTelefonAsc = 'USER_BY_P_ID_PARTNER__U_TELEFON_ASC',
-  UserByPIdPartnerUTelefonDesc = 'USER_BY_P_ID_PARTNER__U_TELEFON_DESC',
-  UserByPIdPartnerUTimestampAsc = 'USER_BY_P_ID_PARTNER__U_TIMESTAMP_ASC',
-  UserByPIdPartnerUTimestampDesc = 'USER_BY_P_ID_PARTNER__U_TIMESTAMP_DESC',
   UserByPIdPartnerkaUBanAsc = 'USER_BY_P_ID_PARTNERKA__U_BAN_ASC',
   UserByPIdPartnerkaUBanDesc = 'USER_BY_P_ID_PARTNERKA__U_BAN_DESC',
   UserByPIdPartnerkaUCityAsc = 'USER_BY_P_ID_PARTNERKA__U_CITY_ASC',
@@ -8450,7 +8386,71 @@ export enum PariesOrderBy {
   UserByPIdPartnerkaUTelefonAsc = 'USER_BY_P_ID_PARTNERKA__U_TELEFON_ASC',
   UserByPIdPartnerkaUTelefonDesc = 'USER_BY_P_ID_PARTNERKA__U_TELEFON_DESC',
   UserByPIdPartnerkaUTimestampAsc = 'USER_BY_P_ID_PARTNERKA__U_TIMESTAMP_ASC',
-  UserByPIdPartnerkaUTimestampDesc = 'USER_BY_P_ID_PARTNERKA__U_TIMESTAMP_DESC'
+  UserByPIdPartnerkaUTimestampDesc = 'USER_BY_P_ID_PARTNERKA__U_TIMESTAMP_DESC',
+  UserByPIdPartnerUBanAsc = 'USER_BY_P_ID_PARTNER__U_BAN_ASC',
+  UserByPIdPartnerUBanDesc = 'USER_BY_P_ID_PARTNER__U_BAN_DESC',
+  UserByPIdPartnerUCityAsc = 'USER_BY_P_ID_PARTNER__U_CITY_ASC',
+  UserByPIdPartnerUCityDesc = 'USER_BY_P_ID_PARTNER__U_CITY_DESC',
+  UserByPIdPartnerUConfirmedAsc = 'USER_BY_P_ID_PARTNER__U_CONFIRMED_ASC',
+  UserByPIdPartnerUConfirmedDesc = 'USER_BY_P_ID_PARTNER__U_CONFIRMED_DESC',
+  UserByPIdPartnerUConscriptionNumberAsc = 'USER_BY_P_ID_PARTNER__U_CONSCRIPTION_NUMBER_ASC',
+  UserByPIdPartnerUConscriptionNumberDesc = 'USER_BY_P_ID_PARTNER__U_CONSCRIPTION_NUMBER_DESC',
+  UserByPIdPartnerUCreatedAtAsc = 'USER_BY_P_ID_PARTNER__U_CREATED_AT_ASC',
+  UserByPIdPartnerUCreatedAtDesc = 'USER_BY_P_ID_PARTNER__U_CREATED_AT_DESC',
+  UserByPIdPartnerUDancerAsc = 'USER_BY_P_ID_PARTNER__U_DANCER_ASC',
+  UserByPIdPartnerUDancerDesc = 'USER_BY_P_ID_PARTNER__U_DANCER_DESC',
+  UserByPIdPartnerUDistrictAsc = 'USER_BY_P_ID_PARTNER__U_DISTRICT_ASC',
+  UserByPIdPartnerUDistrictDesc = 'USER_BY_P_ID_PARTNER__U_DISTRICT_DESC',
+  UserByPIdPartnerUEmailAsc = 'USER_BY_P_ID_PARTNER__U_EMAIL_ASC',
+  UserByPIdPartnerUEmailDesc = 'USER_BY_P_ID_PARTNER__U_EMAIL_DESC',
+  UserByPIdPartnerUGdprSignedAtAsc = 'USER_BY_P_ID_PARTNER__U_GDPR_SIGNED_AT_ASC',
+  UserByPIdPartnerUGdprSignedAtDesc = 'USER_BY_P_ID_PARTNER__U_GDPR_SIGNED_AT_DESC',
+  UserByPIdPartnerUGroupAsc = 'USER_BY_P_ID_PARTNER__U_GROUP_ASC',
+  UserByPIdPartnerUGroupDesc = 'USER_BY_P_ID_PARTNER__U_GROUP_DESC',
+  UserByPIdPartnerUIdAsc = 'USER_BY_P_ID_PARTNER__U_ID_ASC',
+  UserByPIdPartnerUIdDesc = 'USER_BY_P_ID_PARTNER__U_ID_DESC',
+  UserByPIdPartnerUJmenoAsc = 'USER_BY_P_ID_PARTNER__U_JMENO_ASC',
+  UserByPIdPartnerUJmenoDesc = 'USER_BY_P_ID_PARTNER__U_JMENO_DESC',
+  UserByPIdPartnerULevelAsc = 'USER_BY_P_ID_PARTNER__U_LEVEL_ASC',
+  UserByPIdPartnerULevelDesc = 'USER_BY_P_ID_PARTNER__U_LEVEL_DESC',
+  UserByPIdPartnerULockAsc = 'USER_BY_P_ID_PARTNER__U_LOCK_ASC',
+  UserByPIdPartnerULockDesc = 'USER_BY_P_ID_PARTNER__U_LOCK_DESC',
+  UserByPIdPartnerULoginAsc = 'USER_BY_P_ID_PARTNER__U_LOGIN_ASC',
+  UserByPIdPartnerULoginDesc = 'USER_BY_P_ID_PARTNER__U_LOGIN_DESC',
+  UserByPIdPartnerUMemberSinceAsc = 'USER_BY_P_ID_PARTNER__U_MEMBER_SINCE_ASC',
+  UserByPIdPartnerUMemberSinceDesc = 'USER_BY_P_ID_PARTNER__U_MEMBER_SINCE_DESC',
+  UserByPIdPartnerUMemberUntilAsc = 'USER_BY_P_ID_PARTNER__U_MEMBER_UNTIL_ASC',
+  UserByPIdPartnerUMemberUntilDesc = 'USER_BY_P_ID_PARTNER__U_MEMBER_UNTIL_DESC',
+  UserByPIdPartnerUNarozeniAsc = 'USER_BY_P_ID_PARTNER__U_NAROZENI_ASC',
+  UserByPIdPartnerUNarozeniDesc = 'USER_BY_P_ID_PARTNER__U_NAROZENI_DESC',
+  UserByPIdPartnerUNationalityAsc = 'USER_BY_P_ID_PARTNER__U_NATIONALITY_ASC',
+  UserByPIdPartnerUNationalityDesc = 'USER_BY_P_ID_PARTNER__U_NATIONALITY_DESC',
+  UserByPIdPartnerUOrientationNumberAsc = 'USER_BY_P_ID_PARTNER__U_ORIENTATION_NUMBER_ASC',
+  UserByPIdPartnerUOrientationNumberDesc = 'USER_BY_P_ID_PARTNER__U_ORIENTATION_NUMBER_DESC',
+  UserByPIdPartnerUPassAsc = 'USER_BY_P_ID_PARTNER__U_PASS_ASC',
+  UserByPIdPartnerUPassDesc = 'USER_BY_P_ID_PARTNER__U_PASS_DESC',
+  UserByPIdPartnerUPohlaviAsc = 'USER_BY_P_ID_PARTNER__U_POHLAVI_ASC',
+  UserByPIdPartnerUPohlaviDesc = 'USER_BY_P_ID_PARTNER__U_POHLAVI_DESC',
+  UserByPIdPartnerUPostalCodeAsc = 'USER_BY_P_ID_PARTNER__U_POSTAL_CODE_ASC',
+  UserByPIdPartnerUPostalCodeDesc = 'USER_BY_P_ID_PARTNER__U_POSTAL_CODE_DESC',
+  UserByPIdPartnerUPoznamkyAsc = 'USER_BY_P_ID_PARTNER__U_POZNAMKY_ASC',
+  UserByPIdPartnerUPoznamkyDesc = 'USER_BY_P_ID_PARTNER__U_POZNAMKY_DESC',
+  UserByPIdPartnerUPrijmeniAsc = 'USER_BY_P_ID_PARTNER__U_PRIJMENI_ASC',
+  UserByPIdPartnerUPrijmeniDesc = 'USER_BY_P_ID_PARTNER__U_PRIJMENI_DESC',
+  UserByPIdPartnerURodneCisloAsc = 'USER_BY_P_ID_PARTNER__U_RODNE_CISLO_ASC',
+  UserByPIdPartnerURodneCisloDesc = 'USER_BY_P_ID_PARTNER__U_RODNE_CISLO_DESC',
+  UserByPIdPartnerUSkupinaAsc = 'USER_BY_P_ID_PARTNER__U_SKUPINA_ASC',
+  UserByPIdPartnerUSkupinaDesc = 'USER_BY_P_ID_PARTNER__U_SKUPINA_DESC',
+  UserByPIdPartnerUStreetAsc = 'USER_BY_P_ID_PARTNER__U_STREET_ASC',
+  UserByPIdPartnerUStreetDesc = 'USER_BY_P_ID_PARTNER__U_STREET_DESC',
+  UserByPIdPartnerUSystemAsc = 'USER_BY_P_ID_PARTNER__U_SYSTEM_ASC',
+  UserByPIdPartnerUSystemDesc = 'USER_BY_P_ID_PARTNER__U_SYSTEM_DESC',
+  UserByPIdPartnerUTeacherAsc = 'USER_BY_P_ID_PARTNER__U_TEACHER_ASC',
+  UserByPIdPartnerUTeacherDesc = 'USER_BY_P_ID_PARTNER__U_TEACHER_DESC',
+  UserByPIdPartnerUTelefonAsc = 'USER_BY_P_ID_PARTNER__U_TELEFON_ASC',
+  UserByPIdPartnerUTelefonDesc = 'USER_BY_P_ID_PARTNER__U_TELEFON_DESC',
+  UserByPIdPartnerUTimestampAsc = 'USER_BY_P_ID_PARTNER__U_TIMESTAMP_ASC',
+  UserByPIdPartnerUTimestampDesc = 'USER_BY_P_ID_PARTNER__U_TIMESTAMP_DESC'
 }
 
 export type Pary = Node & {
@@ -8625,10 +8625,10 @@ export enum ParyNavrhsOrderBy {
   PnIdDesc = 'PN_ID_DESC',
   PnNavrhlAsc = 'PN_NAVRHL_ASC',
   PnNavrhlDesc = 'PN_NAVRHL_DESC',
-  PnPartnerAsc = 'PN_PARTNER_ASC',
-  PnPartnerDesc = 'PN_PARTNER_DESC',
   PnPartnerkaAsc = 'PN_PARTNERKA_ASC',
   PnPartnerkaDesc = 'PN_PARTNERKA_DESC',
+  PnPartnerAsc = 'PN_PARTNER_ASC',
+  PnPartnerDesc = 'PN_PARTNER_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   UserByPnNavrhlUBanAsc = 'USER_BY_PN_NAVRHL__U_BAN_ASC',
@@ -8695,70 +8695,6 @@ export enum ParyNavrhsOrderBy {
   UserByPnNavrhlUTelefonDesc = 'USER_BY_PN_NAVRHL__U_TELEFON_DESC',
   UserByPnNavrhlUTimestampAsc = 'USER_BY_PN_NAVRHL__U_TIMESTAMP_ASC',
   UserByPnNavrhlUTimestampDesc = 'USER_BY_PN_NAVRHL__U_TIMESTAMP_DESC',
-  UserByPnPartnerUBanAsc = 'USER_BY_PN_PARTNER__U_BAN_ASC',
-  UserByPnPartnerUBanDesc = 'USER_BY_PN_PARTNER__U_BAN_DESC',
-  UserByPnPartnerUCityAsc = 'USER_BY_PN_PARTNER__U_CITY_ASC',
-  UserByPnPartnerUCityDesc = 'USER_BY_PN_PARTNER__U_CITY_DESC',
-  UserByPnPartnerUConfirmedAsc = 'USER_BY_PN_PARTNER__U_CONFIRMED_ASC',
-  UserByPnPartnerUConfirmedDesc = 'USER_BY_PN_PARTNER__U_CONFIRMED_DESC',
-  UserByPnPartnerUConscriptionNumberAsc = 'USER_BY_PN_PARTNER__U_CONSCRIPTION_NUMBER_ASC',
-  UserByPnPartnerUConscriptionNumberDesc = 'USER_BY_PN_PARTNER__U_CONSCRIPTION_NUMBER_DESC',
-  UserByPnPartnerUCreatedAtAsc = 'USER_BY_PN_PARTNER__U_CREATED_AT_ASC',
-  UserByPnPartnerUCreatedAtDesc = 'USER_BY_PN_PARTNER__U_CREATED_AT_DESC',
-  UserByPnPartnerUDancerAsc = 'USER_BY_PN_PARTNER__U_DANCER_ASC',
-  UserByPnPartnerUDancerDesc = 'USER_BY_PN_PARTNER__U_DANCER_DESC',
-  UserByPnPartnerUDistrictAsc = 'USER_BY_PN_PARTNER__U_DISTRICT_ASC',
-  UserByPnPartnerUDistrictDesc = 'USER_BY_PN_PARTNER__U_DISTRICT_DESC',
-  UserByPnPartnerUEmailAsc = 'USER_BY_PN_PARTNER__U_EMAIL_ASC',
-  UserByPnPartnerUEmailDesc = 'USER_BY_PN_PARTNER__U_EMAIL_DESC',
-  UserByPnPartnerUGdprSignedAtAsc = 'USER_BY_PN_PARTNER__U_GDPR_SIGNED_AT_ASC',
-  UserByPnPartnerUGdprSignedAtDesc = 'USER_BY_PN_PARTNER__U_GDPR_SIGNED_AT_DESC',
-  UserByPnPartnerUGroupAsc = 'USER_BY_PN_PARTNER__U_GROUP_ASC',
-  UserByPnPartnerUGroupDesc = 'USER_BY_PN_PARTNER__U_GROUP_DESC',
-  UserByPnPartnerUIdAsc = 'USER_BY_PN_PARTNER__U_ID_ASC',
-  UserByPnPartnerUIdDesc = 'USER_BY_PN_PARTNER__U_ID_DESC',
-  UserByPnPartnerUJmenoAsc = 'USER_BY_PN_PARTNER__U_JMENO_ASC',
-  UserByPnPartnerUJmenoDesc = 'USER_BY_PN_PARTNER__U_JMENO_DESC',
-  UserByPnPartnerULevelAsc = 'USER_BY_PN_PARTNER__U_LEVEL_ASC',
-  UserByPnPartnerULevelDesc = 'USER_BY_PN_PARTNER__U_LEVEL_DESC',
-  UserByPnPartnerULockAsc = 'USER_BY_PN_PARTNER__U_LOCK_ASC',
-  UserByPnPartnerULockDesc = 'USER_BY_PN_PARTNER__U_LOCK_DESC',
-  UserByPnPartnerULoginAsc = 'USER_BY_PN_PARTNER__U_LOGIN_ASC',
-  UserByPnPartnerULoginDesc = 'USER_BY_PN_PARTNER__U_LOGIN_DESC',
-  UserByPnPartnerUMemberSinceAsc = 'USER_BY_PN_PARTNER__U_MEMBER_SINCE_ASC',
-  UserByPnPartnerUMemberSinceDesc = 'USER_BY_PN_PARTNER__U_MEMBER_SINCE_DESC',
-  UserByPnPartnerUMemberUntilAsc = 'USER_BY_PN_PARTNER__U_MEMBER_UNTIL_ASC',
-  UserByPnPartnerUMemberUntilDesc = 'USER_BY_PN_PARTNER__U_MEMBER_UNTIL_DESC',
-  UserByPnPartnerUNarozeniAsc = 'USER_BY_PN_PARTNER__U_NAROZENI_ASC',
-  UserByPnPartnerUNarozeniDesc = 'USER_BY_PN_PARTNER__U_NAROZENI_DESC',
-  UserByPnPartnerUNationalityAsc = 'USER_BY_PN_PARTNER__U_NATIONALITY_ASC',
-  UserByPnPartnerUNationalityDesc = 'USER_BY_PN_PARTNER__U_NATIONALITY_DESC',
-  UserByPnPartnerUOrientationNumberAsc = 'USER_BY_PN_PARTNER__U_ORIENTATION_NUMBER_ASC',
-  UserByPnPartnerUOrientationNumberDesc = 'USER_BY_PN_PARTNER__U_ORIENTATION_NUMBER_DESC',
-  UserByPnPartnerUPassAsc = 'USER_BY_PN_PARTNER__U_PASS_ASC',
-  UserByPnPartnerUPassDesc = 'USER_BY_PN_PARTNER__U_PASS_DESC',
-  UserByPnPartnerUPohlaviAsc = 'USER_BY_PN_PARTNER__U_POHLAVI_ASC',
-  UserByPnPartnerUPohlaviDesc = 'USER_BY_PN_PARTNER__U_POHLAVI_DESC',
-  UserByPnPartnerUPostalCodeAsc = 'USER_BY_PN_PARTNER__U_POSTAL_CODE_ASC',
-  UserByPnPartnerUPostalCodeDesc = 'USER_BY_PN_PARTNER__U_POSTAL_CODE_DESC',
-  UserByPnPartnerUPoznamkyAsc = 'USER_BY_PN_PARTNER__U_POZNAMKY_ASC',
-  UserByPnPartnerUPoznamkyDesc = 'USER_BY_PN_PARTNER__U_POZNAMKY_DESC',
-  UserByPnPartnerUPrijmeniAsc = 'USER_BY_PN_PARTNER__U_PRIJMENI_ASC',
-  UserByPnPartnerUPrijmeniDesc = 'USER_BY_PN_PARTNER__U_PRIJMENI_DESC',
-  UserByPnPartnerURodneCisloAsc = 'USER_BY_PN_PARTNER__U_RODNE_CISLO_ASC',
-  UserByPnPartnerURodneCisloDesc = 'USER_BY_PN_PARTNER__U_RODNE_CISLO_DESC',
-  UserByPnPartnerUSkupinaAsc = 'USER_BY_PN_PARTNER__U_SKUPINA_ASC',
-  UserByPnPartnerUSkupinaDesc = 'USER_BY_PN_PARTNER__U_SKUPINA_DESC',
-  UserByPnPartnerUStreetAsc = 'USER_BY_PN_PARTNER__U_STREET_ASC',
-  UserByPnPartnerUStreetDesc = 'USER_BY_PN_PARTNER__U_STREET_DESC',
-  UserByPnPartnerUSystemAsc = 'USER_BY_PN_PARTNER__U_SYSTEM_ASC',
-  UserByPnPartnerUSystemDesc = 'USER_BY_PN_PARTNER__U_SYSTEM_DESC',
-  UserByPnPartnerUTeacherAsc = 'USER_BY_PN_PARTNER__U_TEACHER_ASC',
-  UserByPnPartnerUTeacherDesc = 'USER_BY_PN_PARTNER__U_TEACHER_DESC',
-  UserByPnPartnerUTelefonAsc = 'USER_BY_PN_PARTNER__U_TELEFON_ASC',
-  UserByPnPartnerUTelefonDesc = 'USER_BY_PN_PARTNER__U_TELEFON_DESC',
-  UserByPnPartnerUTimestampAsc = 'USER_BY_PN_PARTNER__U_TIMESTAMP_ASC',
-  UserByPnPartnerUTimestampDesc = 'USER_BY_PN_PARTNER__U_TIMESTAMP_DESC',
   UserByPnPartnerkaUBanAsc = 'USER_BY_PN_PARTNERKA__U_BAN_ASC',
   UserByPnPartnerkaUBanDesc = 'USER_BY_PN_PARTNERKA__U_BAN_DESC',
   UserByPnPartnerkaUCityAsc = 'USER_BY_PN_PARTNERKA__U_CITY_ASC',
@@ -8822,25 +8758,72 @@ export enum ParyNavrhsOrderBy {
   UserByPnPartnerkaUTelefonAsc = 'USER_BY_PN_PARTNERKA__U_TELEFON_ASC',
   UserByPnPartnerkaUTelefonDesc = 'USER_BY_PN_PARTNERKA__U_TELEFON_DESC',
   UserByPnPartnerkaUTimestampAsc = 'USER_BY_PN_PARTNERKA__U_TIMESTAMP_ASC',
-  UserByPnPartnerkaUTimestampDesc = 'USER_BY_PN_PARTNERKA__U_TIMESTAMP_DESC'
+  UserByPnPartnerkaUTimestampDesc = 'USER_BY_PN_PARTNERKA__U_TIMESTAMP_DESC',
+  UserByPnPartnerUBanAsc = 'USER_BY_PN_PARTNER__U_BAN_ASC',
+  UserByPnPartnerUBanDesc = 'USER_BY_PN_PARTNER__U_BAN_DESC',
+  UserByPnPartnerUCityAsc = 'USER_BY_PN_PARTNER__U_CITY_ASC',
+  UserByPnPartnerUCityDesc = 'USER_BY_PN_PARTNER__U_CITY_DESC',
+  UserByPnPartnerUConfirmedAsc = 'USER_BY_PN_PARTNER__U_CONFIRMED_ASC',
+  UserByPnPartnerUConfirmedDesc = 'USER_BY_PN_PARTNER__U_CONFIRMED_DESC',
+  UserByPnPartnerUConscriptionNumberAsc = 'USER_BY_PN_PARTNER__U_CONSCRIPTION_NUMBER_ASC',
+  UserByPnPartnerUConscriptionNumberDesc = 'USER_BY_PN_PARTNER__U_CONSCRIPTION_NUMBER_DESC',
+  UserByPnPartnerUCreatedAtAsc = 'USER_BY_PN_PARTNER__U_CREATED_AT_ASC',
+  UserByPnPartnerUCreatedAtDesc = 'USER_BY_PN_PARTNER__U_CREATED_AT_DESC',
+  UserByPnPartnerUDancerAsc = 'USER_BY_PN_PARTNER__U_DANCER_ASC',
+  UserByPnPartnerUDancerDesc = 'USER_BY_PN_PARTNER__U_DANCER_DESC',
+  UserByPnPartnerUDistrictAsc = 'USER_BY_PN_PARTNER__U_DISTRICT_ASC',
+  UserByPnPartnerUDistrictDesc = 'USER_BY_PN_PARTNER__U_DISTRICT_DESC',
+  UserByPnPartnerUEmailAsc = 'USER_BY_PN_PARTNER__U_EMAIL_ASC',
+  UserByPnPartnerUEmailDesc = 'USER_BY_PN_PARTNER__U_EMAIL_DESC',
+  UserByPnPartnerUGdprSignedAtAsc = 'USER_BY_PN_PARTNER__U_GDPR_SIGNED_AT_ASC',
+  UserByPnPartnerUGdprSignedAtDesc = 'USER_BY_PN_PARTNER__U_GDPR_SIGNED_AT_DESC',
+  UserByPnPartnerUGroupAsc = 'USER_BY_PN_PARTNER__U_GROUP_ASC',
+  UserByPnPartnerUGroupDesc = 'USER_BY_PN_PARTNER__U_GROUP_DESC',
+  UserByPnPartnerUIdAsc = 'USER_BY_PN_PARTNER__U_ID_ASC',
+  UserByPnPartnerUIdDesc = 'USER_BY_PN_PARTNER__U_ID_DESC',
+  UserByPnPartnerUJmenoAsc = 'USER_BY_PN_PARTNER__U_JMENO_ASC',
+  UserByPnPartnerUJmenoDesc = 'USER_BY_PN_PARTNER__U_JMENO_DESC',
+  UserByPnPartnerULevelAsc = 'USER_BY_PN_PARTNER__U_LEVEL_ASC',
+  UserByPnPartnerULevelDesc = 'USER_BY_PN_PARTNER__U_LEVEL_DESC',
+  UserByPnPartnerULockAsc = 'USER_BY_PN_PARTNER__U_LOCK_ASC',
+  UserByPnPartnerULockDesc = 'USER_BY_PN_PARTNER__U_LOCK_DESC',
+  UserByPnPartnerULoginAsc = 'USER_BY_PN_PARTNER__U_LOGIN_ASC',
+  UserByPnPartnerULoginDesc = 'USER_BY_PN_PARTNER__U_LOGIN_DESC',
+  UserByPnPartnerUMemberSinceAsc = 'USER_BY_PN_PARTNER__U_MEMBER_SINCE_ASC',
+  UserByPnPartnerUMemberSinceDesc = 'USER_BY_PN_PARTNER__U_MEMBER_SINCE_DESC',
+  UserByPnPartnerUMemberUntilAsc = 'USER_BY_PN_PARTNER__U_MEMBER_UNTIL_ASC',
+  UserByPnPartnerUMemberUntilDesc = 'USER_BY_PN_PARTNER__U_MEMBER_UNTIL_DESC',
+  UserByPnPartnerUNarozeniAsc = 'USER_BY_PN_PARTNER__U_NAROZENI_ASC',
+  UserByPnPartnerUNarozeniDesc = 'USER_BY_PN_PARTNER__U_NAROZENI_DESC',
+  UserByPnPartnerUNationalityAsc = 'USER_BY_PN_PARTNER__U_NATIONALITY_ASC',
+  UserByPnPartnerUNationalityDesc = 'USER_BY_PN_PARTNER__U_NATIONALITY_DESC',
+  UserByPnPartnerUOrientationNumberAsc = 'USER_BY_PN_PARTNER__U_ORIENTATION_NUMBER_ASC',
+  UserByPnPartnerUOrientationNumberDesc = 'USER_BY_PN_PARTNER__U_ORIENTATION_NUMBER_DESC',
+  UserByPnPartnerUPassAsc = 'USER_BY_PN_PARTNER__U_PASS_ASC',
+  UserByPnPartnerUPassDesc = 'USER_BY_PN_PARTNER__U_PASS_DESC',
+  UserByPnPartnerUPohlaviAsc = 'USER_BY_PN_PARTNER__U_POHLAVI_ASC',
+  UserByPnPartnerUPohlaviDesc = 'USER_BY_PN_PARTNER__U_POHLAVI_DESC',
+  UserByPnPartnerUPostalCodeAsc = 'USER_BY_PN_PARTNER__U_POSTAL_CODE_ASC',
+  UserByPnPartnerUPostalCodeDesc = 'USER_BY_PN_PARTNER__U_POSTAL_CODE_DESC',
+  UserByPnPartnerUPoznamkyAsc = 'USER_BY_PN_PARTNER__U_POZNAMKY_ASC',
+  UserByPnPartnerUPoznamkyDesc = 'USER_BY_PN_PARTNER__U_POZNAMKY_DESC',
+  UserByPnPartnerUPrijmeniAsc = 'USER_BY_PN_PARTNER__U_PRIJMENI_ASC',
+  UserByPnPartnerUPrijmeniDesc = 'USER_BY_PN_PARTNER__U_PRIJMENI_DESC',
+  UserByPnPartnerURodneCisloAsc = 'USER_BY_PN_PARTNER__U_RODNE_CISLO_ASC',
+  UserByPnPartnerURodneCisloDesc = 'USER_BY_PN_PARTNER__U_RODNE_CISLO_DESC',
+  UserByPnPartnerUSkupinaAsc = 'USER_BY_PN_PARTNER__U_SKUPINA_ASC',
+  UserByPnPartnerUSkupinaDesc = 'USER_BY_PN_PARTNER__U_SKUPINA_DESC',
+  UserByPnPartnerUStreetAsc = 'USER_BY_PN_PARTNER__U_STREET_ASC',
+  UserByPnPartnerUStreetDesc = 'USER_BY_PN_PARTNER__U_STREET_DESC',
+  UserByPnPartnerUSystemAsc = 'USER_BY_PN_PARTNER__U_SYSTEM_ASC',
+  UserByPnPartnerUSystemDesc = 'USER_BY_PN_PARTNER__U_SYSTEM_DESC',
+  UserByPnPartnerUTeacherAsc = 'USER_BY_PN_PARTNER__U_TEACHER_ASC',
+  UserByPnPartnerUTeacherDesc = 'USER_BY_PN_PARTNER__U_TEACHER_DESC',
+  UserByPnPartnerUTelefonAsc = 'USER_BY_PN_PARTNER__U_TELEFON_ASC',
+  UserByPnPartnerUTelefonDesc = 'USER_BY_PN_PARTNER__U_TELEFON_DESC',
+  UserByPnPartnerUTimestampAsc = 'USER_BY_PN_PARTNER__U_TIMESTAMP_ASC',
+  UserByPnPartnerUTimestampDesc = 'USER_BY_PN_PARTNER__U_TIMESTAMP_DESC'
 }
-
-/** Represents an update to a `Pary`. Fields that are set will be updated. */
-export type ParyPatch = {
-  pArchiv?: InputMaybe<Scalars['Boolean']>;
-  pHodnoceni?: InputMaybe<Scalars['Int']>;
-  pId?: InputMaybe<Scalars['BigInt']>;
-  pIdPartner?: InputMaybe<Scalars['BigInt']>;
-  pIdPartnerka?: InputMaybe<Scalars['BigInt']>;
-  pLatBody?: InputMaybe<Scalars['Int']>;
-  pLatFinale?: InputMaybe<Scalars['Boolean']>;
-  pLatTrida?: InputMaybe<ParyPLatTrida>;
-  pSttBody?: InputMaybe<Scalars['Int']>;
-  pSttFinale?: InputMaybe<Scalars['Boolean']>;
-  pSttTrida?: InputMaybe<ParyPSttTrida>;
-  pTimestampAdd?: InputMaybe<Scalars['Datetime']>;
-  pTimestampArchive?: InputMaybe<Scalars['Datetime']>;
-};
 
 export enum ParyPLatTrida {
   A = 'A',
@@ -8861,6 +8844,23 @@ export enum ParyPSttTrida {
   M = 'M',
   Z = 'Z'
 }
+
+/** Represents an update to a `Pary`. Fields that are set will be updated. */
+export type ParyPatch = {
+  pArchiv?: InputMaybe<Scalars['Boolean']>;
+  pHodnoceni?: InputMaybe<Scalars['Int']>;
+  pId?: InputMaybe<Scalars['BigInt']>;
+  pIdPartner?: InputMaybe<Scalars['BigInt']>;
+  pIdPartnerka?: InputMaybe<Scalars['BigInt']>;
+  pLatBody?: InputMaybe<Scalars['Int']>;
+  pLatFinale?: InputMaybe<Scalars['Boolean']>;
+  pLatTrida?: InputMaybe<ParyPLatTrida>;
+  pSttBody?: InputMaybe<Scalars['Int']>;
+  pSttFinale?: InputMaybe<Scalars['Boolean']>;
+  pSttTrida?: InputMaybe<ParyPSttTrida>;
+  pTimestampAdd?: InputMaybe<Scalars['Datetime']>;
+  pTimestampArchive?: InputMaybe<Scalars['Datetime']>;
+};
 
 /** A connection to a list of `Person` values. */
 export type PeopleConnection = {
@@ -9493,28 +9493,6 @@ export type PlatbyGroupPatch = {
   pgType?: InputMaybe<Scalars['BigFloat']>;
 };
 
-/** A connection to a list of `PlatbyGroup` values. */
-export type PlatbyGroupsConnection = {
-  __typename?: 'PlatbyGroupsConnection';
-  /** A list of edges which contains the `PlatbyGroup` and cursor to aid in pagination. */
-  edges: Array<PlatbyGroupsEdge>;
-  /** A list of `PlatbyGroup` objects. */
-  nodes: Array<PlatbyGroup>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `PlatbyGroup` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `PlatbyGroup` edge in the connection. */
-export type PlatbyGroupsEdge = {
-  __typename?: 'PlatbyGroupsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
-  /** The `PlatbyGroup` at the end of the edge. */
-  node: PlatbyGroup;
-};
-
 export type PlatbyGroupSkupina = Node & {
   __typename?: 'PlatbyGroupSkupina';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -9619,6 +9597,28 @@ export enum PlatbyGroupSkupinasOrderBy {
   SkupinyByPgsIdSkupinaSVisibleAsc = 'SKUPINY_BY_PGS_ID_SKUPINA__S_VISIBLE_ASC',
   SkupinyByPgsIdSkupinaSVisibleDesc = 'SKUPINY_BY_PGS_ID_SKUPINA__S_VISIBLE_DESC'
 }
+
+/** A connection to a list of `PlatbyGroup` values. */
+export type PlatbyGroupsConnection = {
+  __typename?: 'PlatbyGroupsConnection';
+  /** A list of edges which contains the `PlatbyGroup` and cursor to aid in pagination. */
+  edges: Array<PlatbyGroupsEdge>;
+  /** A list of `PlatbyGroup` objects. */
+  nodes: Array<PlatbyGroup>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `PlatbyGroup` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `PlatbyGroup` edge in the connection. */
+export type PlatbyGroupsEdge = {
+  __typename?: 'PlatbyGroupsEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']>;
+  /** The `PlatbyGroup` at the end of the edge. */
+  node: PlatbyGroup;
+};
 
 /** Methods to use when ordering `PlatbyGroup`. */
 export enum PlatbyGroupsOrderBy {
@@ -9928,6 +9928,8 @@ export enum PlatbyRawsOrderBy {
   Natural = 'NATURAL',
   PlatbyItemsByPiIdRawCountAsc = 'PLATBY_ITEMS_BY_PI_ID_RAW__COUNT_ASC',
   PlatbyItemsByPiIdRawCountDesc = 'PLATBY_ITEMS_BY_PI_ID_RAW__COUNT_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   PrDiscardedAsc = 'PR_DISCARDED_ASC',
   PrDiscardedDesc = 'PR_DISCARDED_DESC',
   PrHashAsc = 'PR_HASH_ASC',
@@ -9937,9 +9939,7 @@ export enum PlatbyRawsOrderBy {
   PrRawAsc = 'PR_RAW_ASC',
   PrRawDesc = 'PR_RAW_DESC',
   PrSortedAsc = 'PR_SORTED_ASC',
-  PrSortedDesc = 'PR_SORTED_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+  PrSortedDesc = 'PR_SORTED_DESC'
 }
 
 export type ProspectDatum = {
@@ -10130,13 +10130,13 @@ export type Query = Node & {
   platbyGroup: Maybe<PlatbyGroup>;
   /** Reads a single `PlatbyGroup` using its globally unique `ID`. */
   platbyGroupByNodeId: Maybe<PlatbyGroup>;
-  /** Reads and enables pagination through a set of `PlatbyGroup`. */
-  platbyGroups: Maybe<PlatbyGroupsConnection>;
   platbyGroupSkupina: Maybe<PlatbyGroupSkupina>;
   /** Reads a single `PlatbyGroupSkupina` using its globally unique `ID`. */
   platbyGroupSkupinaByNodeId: Maybe<PlatbyGroupSkupina>;
   /** Reads and enables pagination through a set of `PlatbyGroupSkupina`. */
   platbyGroupSkupinas: Maybe<PlatbyGroupSkupinasConnection>;
+  /** Reads and enables pagination through a set of `PlatbyGroup`. */
+  platbyGroups: Maybe<PlatbyGroupsConnection>;
   platbyItem: Maybe<PlatbyItem>;
   /** Reads a single `PlatbyItem` using its globally unique `ID`. */
   platbyItemByNodeId: Maybe<PlatbyItem>;
@@ -10208,13 +10208,13 @@ export type Query = Node & {
   upozorneni: Maybe<Upozorneni>;
   /** Reads a single `Upozorneni` using its globally unique `ID`. */
   upozorneniByNodeId: Maybe<Upozorneni>;
-  /** Reads and enables pagination through a set of `Upozorneni`. */
-  upozornenis: Maybe<UpozornenisConnection>;
   /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
   upozorneniSkupinies: Maybe<UpozorneniSkupiniesConnection>;
   upozorneniSkupiny: Maybe<UpozorneniSkupiny>;
   /** Reads a single `UpozorneniSkupiny` using its globally unique `ID`. */
   upozorneniSkupinyByNodeId: Maybe<UpozorneniSkupiny>;
+  /** Reads and enables pagination through a set of `Upozorneni`. */
+  upozornenis: Maybe<UpozornenisConnection>;
   user: Maybe<User>;
   /** Reads a single `User` using its globally unique `ID`. */
   userByNodeId: Maybe<User>;
@@ -10228,13 +10228,13 @@ export type Query = Node & {
   videoListByNodeId: Maybe<VideoList>;
   /** Reads and enables pagination through a set of `VideoList`. */
   videoLists: Maybe<VideoListsConnection>;
-  /** Reads and enables pagination through a set of `Video`. */
-  videos: Maybe<VideosConnection>;
   videoSource: Maybe<VideoSource>;
   /** Reads a single `VideoSource` using its globally unique `ID`. */
   videoSourceByNodeId: Maybe<VideoSource>;
   /** Reads and enables pagination through a set of `VideoSource`. */
   videoSources: Maybe<VideoSourcesConnection>;
+  /** Reads and enables pagination through a set of `Video`. */
+  videos: Maybe<VideosConnection>;
 };
 
 
@@ -10905,18 +10905,6 @@ export type QueryPlatbyGroupByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryPlatbyGroupsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<PlatbyGroupCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<PlatbyGroupsOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryPlatbyGroupSkupinaArgs = {
   pgsId: Scalars['BigInt'];
 };
@@ -10937,6 +10925,18 @@ export type QueryPlatbyGroupSkupinasArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<PlatbyGroupSkupinasOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPlatbyGroupsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<PlatbyGroupCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PlatbyGroupsOrderBy>>;
 };
 
 
@@ -11264,18 +11264,6 @@ export type QueryUpozorneniByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryUpozornenisArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<UpozorneniCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryUpozorneniSkupiniesArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -11296,6 +11284,18 @@ export type QueryUpozorneniSkupinyArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryUpozorneniSkupinyByNodeIdArgs = {
   nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUpozornenisArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<UpozorneniCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
 };
 
 
@@ -11360,18 +11360,6 @@ export type QueryVideoListsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryVideosArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<VideoCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<VideosOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryVideoSourceArgs = {
   vsId: Scalars['BigInt'];
 };
@@ -11392,6 +11380,18 @@ export type QueryVideoSourcesArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<VideoSourcesOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVideosArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<VideoCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<VideosOrderBy>>;
 };
 
 /** All input for the `reservationSetDesiredLessons` mutation. */
@@ -11643,11 +11643,11 @@ export type Rozpi = Node & {
   rId: Scalars['BigInt'];
   rKde: Scalars['String'];
   rLock: Scalars['Boolean'];
-  /** Reads and enables pagination through a set of `RozpisItem`. */
-  rozpisItemsByRiIdRodic: RozpisItemsConnection;
   rTimestamp: Maybe<Scalars['Datetime']>;
   rTrener: Scalars['BigInt'];
   rVisible: Scalars['Boolean'];
+  /** Reads and enables pagination through a set of `RozpisItem`. */
+  rozpisItemsByRiIdRodic: RozpisItemsConnection;
   /** Reads a single `User` that is related to this `Rozpi`. */
   userByRTrener: Maybe<User>;
 };
@@ -11811,10 +11811,10 @@ export enum RozpisItemsOrderBy {
   ParyByRiPartnerPHodnoceniDesc = 'PARY_BY_RI_PARTNER__P_HODNOCENI_DESC',
   ParyByRiPartnerPIdAsc = 'PARY_BY_RI_PARTNER__P_ID_ASC',
   ParyByRiPartnerPIdDesc = 'PARY_BY_RI_PARTNER__P_ID_DESC',
-  ParyByRiPartnerPIdPartnerAsc = 'PARY_BY_RI_PARTNER__P_ID_PARTNER_ASC',
-  ParyByRiPartnerPIdPartnerDesc = 'PARY_BY_RI_PARTNER__P_ID_PARTNER_DESC',
   ParyByRiPartnerPIdPartnerkaAsc = 'PARY_BY_RI_PARTNER__P_ID_PARTNERKA_ASC',
   ParyByRiPartnerPIdPartnerkaDesc = 'PARY_BY_RI_PARTNER__P_ID_PARTNERKA_DESC',
+  ParyByRiPartnerPIdPartnerAsc = 'PARY_BY_RI_PARTNER__P_ID_PARTNER_ASC',
+  ParyByRiPartnerPIdPartnerDesc = 'PARY_BY_RI_PARTNER__P_ID_PARTNER_DESC',
   ParyByRiPartnerPLatBodyAsc = 'PARY_BY_RI_PARTNER__P_LAT_BODY_ASC',
   ParyByRiPartnerPLatBodyDesc = 'PARY_BY_RI_PARTNER__P_LAT_BODY_DESC',
   ParyByRiPartnerPLatFinaleAsc = 'PARY_BY_RI_PARTNER__P_LAT_FINALE_ASC',
@@ -11866,6 +11866,8 @@ export enum RozpisOrderBy {
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RozpisItemsByRiIdRodicCountAsc = 'ROZPIS_ITEMS_BY_RI_ID_RODIC__COUNT_ASC',
+  RozpisItemsByRiIdRodicCountDesc = 'ROZPIS_ITEMS_BY_RI_ID_RODIC__COUNT_DESC',
   RDatumAsc = 'R_DATUM_ASC',
   RDatumDesc = 'R_DATUM_DESC',
   RIdAsc = 'R_ID_ASC',
@@ -11880,8 +11882,6 @@ export enum RozpisOrderBy {
   RTrenerDesc = 'R_TRENER_DESC',
   RVisibleAsc = 'R_VISIBLE_ASC',
   RVisibleDesc = 'R_VISIBLE_DESC',
-  RozpisItemsByRiIdRodicCountAsc = 'ROZPIS_ITEMS_BY_RI_ID_RODIC__COUNT_ASC',
-  RozpisItemsByRiIdRodicCountDesc = 'ROZPIS_ITEMS_BY_RI_ID_RODIC__COUNT_DESC',
   UserByRTrenerUBanAsc = 'USER_BY_R_TRENER__U_BAN_ASC',
   UserByRTrenerUBanDesc = 'USER_BY_R_TRENER__U_BAN_DESC',
   UserByRTrenerUCityAsc = 'USER_BY_R_TRENER__U_CITY_ASC',
@@ -12366,6 +12366,12 @@ export type TenantAttachmentPatch = {
   type?: InputMaybe<TenantAttachmentType>;
 };
 
+export enum TenantAttachmentType {
+  Logo = 'LOGO',
+  Map = 'MAP',
+  Photo = 'PHOTO'
+}
+
 /** A connection to a list of `TenantAttachment` values. */
 export type TenantAttachmentsConnection = {
   __typename?: 'TenantAttachmentsConnection';
@@ -12413,12 +12419,6 @@ export enum TenantAttachmentsOrderBy {
   TenantIdDesc = 'TENANT_ID_DESC',
   TypeAsc = 'TYPE_ASC',
   TypeDesc = 'TYPE_DESC'
-}
-
-export enum TenantAttachmentType {
-  Logo = 'LOGO',
-  Map = 'MAP',
-  Photo = 'PHOTO'
 }
 
 /** A condition to be used against `Tenant` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -13370,9 +13370,9 @@ export type UpdateParyInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']>;
+  pId: Scalars['BigInt'];
   /** An object where the defined keys will be set on the `Pary` being updated. */
   patch: ParyPatch;
-  pId: Scalars['BigInt'];
 };
 
 /** All input for the `updateParyNavrhByNodeId` mutation. */
@@ -14603,11 +14603,11 @@ export type Upozorneni = Node & {
   upKdo: Maybe<Scalars['BigInt']>;
   upLock: Scalars['Boolean'];
   upNadpis: Scalars['String'];
-  /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
-  upozorneniSkupiniesByUpsIdRodic: UpozorneniSkupiniesConnection;
   upText: Scalars['String'];
   upTimestamp: Maybe<Scalars['Datetime']>;
   upTimestampAdd: Scalars['Datetime'];
+  /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
+  upozorneniSkupiniesByUpsIdRodic: UpozorneniSkupiniesConnection;
   /** Reads a single `User` that is related to this `Upozorneni`. */
   userByUpKdo: Maybe<User>;
 };
@@ -14676,28 +14676,6 @@ export type UpozorneniPatch = {
   upText?: InputMaybe<Scalars['String']>;
   upTimestamp?: InputMaybe<Scalars['Datetime']>;
   upTimestampAdd?: InputMaybe<Scalars['Datetime']>;
-};
-
-/** A connection to a list of `Upozorneni` values. */
-export type UpozornenisConnection = {
-  __typename?: 'UpozornenisConnection';
-  /** A list of edges which contains the `Upozorneni` and cursor to aid in pagination. */
-  edges: Array<UpozornenisEdge>;
-  /** A list of `Upozorneni` objects. */
-  nodes: Array<Upozorneni>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Upozorneni` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `Upozorneni` edge in the connection. */
-export type UpozornenisEdge = {
-  __typename?: 'UpozornenisEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
-  /** The `Upozorneni` at the end of the edge. */
-  node: Upozorneni;
 };
 
 /** A connection to a list of `UpozorneniSkupiny` values. */
@@ -14829,6 +14807,28 @@ export type UpozorneniSkupinyPatch = {
   upsPopis?: InputMaybe<Scalars['String']>;
 };
 
+/** A connection to a list of `Upozorneni` values. */
+export type UpozornenisConnection = {
+  __typename?: 'UpozornenisConnection';
+  /** A list of edges which contains the `Upozorneni` and cursor to aid in pagination. */
+  edges: Array<UpozornenisEdge>;
+  /** A list of `Upozorneni` objects. */
+  nodes: Array<Upozorneni>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Upozorneni` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Upozorneni` edge in the connection. */
+export type UpozornenisEdge = {
+  __typename?: 'UpozornenisEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']>;
+  /** The `Upozorneni` at the end of the edge. */
+  node: Upozorneni;
+};
+
 /** Methods to use when ordering `Upozorneni`. */
 export enum UpozornenisOrderBy {
   Natural = 'NATURAL',
@@ -14838,6 +14838,8 @@ export enum UpozornenisOrderBy {
   ScheduledSinceDesc = 'SCHEDULED_SINCE_DESC',
   ScheduledUntilAsc = 'SCHEDULED_UNTIL_ASC',
   ScheduledUntilDesc = 'SCHEDULED_UNTIL_DESC',
+  UpozorneniSkupiniesByUpsIdRodicCountAsc = 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_ASC',
+  UpozorneniSkupiniesByUpsIdRodicCountDesc = 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_DESC',
   UpBarvyAsc = 'UP_BARVY_ASC',
   UpBarvyDesc = 'UP_BARVY_DESC',
   UpIdAsc = 'UP_ID_ASC',
@@ -14854,8 +14856,6 @@ export enum UpozornenisOrderBy {
   UpTimestampAddDesc = 'UP_TIMESTAMP_ADD_DESC',
   UpTimestampAsc = 'UP_TIMESTAMP_ASC',
   UpTimestampDesc = 'UP_TIMESTAMP_DESC',
-  UpozorneniSkupiniesByUpsIdRodicCountAsc = 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_ASC',
-  UpozorneniSkupiniesByUpsIdRodicCountDesc = 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_DESC',
   UserByUpKdoUBanAsc = 'USER_BY_UP_KDO__U_BAN_ASC',
   UserByUpKdoUBanDesc = 'USER_BY_UP_KDO__U_BAN_DESC',
   UserByUpKdoUCityAsc = 'USER_BY_UP_KDO__U_CITY_ASC',
@@ -14987,8 +14987,6 @@ export type User = Node & {
   uPohlavi: Scalars['String'];
   uPostalCode: Scalars['String'];
   uPoznamky: Scalars['String'];
-  /** Reads and enables pagination through a set of `Upozorneni`. */
-  upozornenisByUpKdo: UpozornenisConnection;
   uPrijmeni: Scalars['String'];
   uRodneCislo: Maybe<Scalars['String']>;
   uSkupina: Scalars['BigInt'];
@@ -14997,6 +14995,8 @@ export type User = Node & {
   uTeacher: Scalars['Boolean'];
   uTelefon: Scalars['String'];
   uTimestamp: Scalars['Datetime'];
+  /** Reads and enables pagination through a set of `Upozorneni`. */
+  upozornenisByUpKdo: UpozornenisConnection;
 };
 
 
@@ -15367,16 +15367,16 @@ export enum UsersOrderBy {
   NabidkasByNTrenerCountAsc = 'NABIDKAS_BY_N_TRENER__COUNT_ASC',
   NabidkasByNTrenerCountDesc = 'NABIDKAS_BY_N_TRENER__COUNT_DESC',
   Natural = 'NATURAL',
-  PariesByPIdPartnerCountAsc = 'PARIES_BY_P_ID_PARTNER__COUNT_ASC',
-  PariesByPIdPartnerCountDesc = 'PARIES_BY_P_ID_PARTNER__COUNT_DESC',
   PariesByPIdPartnerkaCountAsc = 'PARIES_BY_P_ID_PARTNERKA__COUNT_ASC',
   PariesByPIdPartnerkaCountDesc = 'PARIES_BY_P_ID_PARTNERKA__COUNT_DESC',
+  PariesByPIdPartnerCountAsc = 'PARIES_BY_P_ID_PARTNER__COUNT_ASC',
+  PariesByPIdPartnerCountDesc = 'PARIES_BY_P_ID_PARTNER__COUNT_DESC',
   ParyNavrhsByPnNavrhlCountAsc = 'PARY_NAVRHS_BY_PN_NAVRHL__COUNT_ASC',
   ParyNavrhsByPnNavrhlCountDesc = 'PARY_NAVRHS_BY_PN_NAVRHL__COUNT_DESC',
-  ParyNavrhsByPnPartnerCountAsc = 'PARY_NAVRHS_BY_PN_PARTNER__COUNT_ASC',
-  ParyNavrhsByPnPartnerCountDesc = 'PARY_NAVRHS_BY_PN_PARTNER__COUNT_DESC',
   ParyNavrhsByPnPartnerkaCountAsc = 'PARY_NAVRHS_BY_PN_PARTNERKA__COUNT_ASC',
   ParyNavrhsByPnPartnerkaCountDesc = 'PARY_NAVRHS_BY_PN_PARTNERKA__COUNT_DESC',
+  ParyNavrhsByPnPartnerCountAsc = 'PARY_NAVRHS_BY_PN_PARTNER__COUNT_ASC',
+  ParyNavrhsByPnPartnerCountDesc = 'PARY_NAVRHS_BY_PN_PARTNER__COUNT_DESC',
   PermissionByUGroupPeAkceAsc = 'PERMISSION_BY_U_GROUP__PE_AKCE_ASC',
   PermissionByUGroupPeAkceDesc = 'PERMISSION_BY_U_GROUP__PE_AKCE_DESC',
   PermissionByUGroupPeAktualityAsc = 'PERMISSION_BY_U_GROUP__PE_AKTUALITY_ASC',
@@ -15445,6 +15445,8 @@ export enum UsersOrderBy {
   SkupinyByUSkupinaSNameDesc = 'SKUPINY_BY_U_SKUPINA__S_NAME_DESC',
   SkupinyByUSkupinaSVisibleAsc = 'SKUPINY_BY_U_SKUPINA__S_VISIBLE_ASC',
   SkupinyByUSkupinaSVisibleDesc = 'SKUPINY_BY_U_SKUPINA__S_VISIBLE_DESC',
+  UpozornenisByUpKdoCountAsc = 'UPOZORNENIS_BY_UP_KDO__COUNT_ASC',
+  UpozornenisByUpKdoCountDesc = 'UPOZORNENIS_BY_UP_KDO__COUNT_DESC',
   UBanAsc = 'U_BAN_ASC',
   UBanDesc = 'U_BAN_DESC',
   UCityAsc = 'U_CITY_ASC',
@@ -15508,9 +15510,7 @@ export enum UsersOrderBy {
   UTelefonAsc = 'U_TELEFON_ASC',
   UTelefonDesc = 'U_TELEFON_DESC',
   UTimestampAsc = 'U_TIMESTAMP_ASC',
-  UTimestampDesc = 'U_TIMESTAMP_DESC',
-  UpozornenisByUpKdoCountAsc = 'UPOZORNENIS_BY_UP_KDO__COUNT_ASC',
-  UpozornenisByUpKdoCountDesc = 'UPOZORNENIS_BY_UP_KDO__COUNT_DESC'
+  UTimestampDesc = 'U_TIMESTAMP_DESC'
 }
 
 /** All input for the `verifyFunction` mutation. */
@@ -15693,51 +15693,6 @@ export type VideoPatch = {
   vUri?: InputMaybe<Scalars['String']>;
 };
 
-/** A connection to a list of `Video` values. */
-export type VideosConnection = {
-  __typename?: 'VideosConnection';
-  /** A list of edges which contains the `Video` and cursor to aid in pagination. */
-  edges: Array<VideosEdge>;
-  /** A list of `Video` objects. */
-  nodes: Array<Video>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Video` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `Video` edge in the connection. */
-export type VideosEdge = {
-  __typename?: 'VideosEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
-  /** The `Video` at the end of the edge. */
-  node: Video;
-};
-
-/** Methods to use when ordering `Video`. */
-export enum VideosOrderBy {
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  VAuthorAsc = 'V_AUTHOR_ASC',
-  VAuthorDesc = 'V_AUTHOR_DESC',
-  VCreatedAtAsc = 'V_CREATED_AT_ASC',
-  VCreatedAtDesc = 'V_CREATED_AT_DESC',
-  VDescriptionAsc = 'V_DESCRIPTION_ASC',
-  VDescriptionDesc = 'V_DESCRIPTION_DESC',
-  VIdAsc = 'V_ID_ASC',
-  VIdDesc = 'V_ID_DESC',
-  VPlaylistAsc = 'V_PLAYLIST_ASC',
-  VPlaylistDesc = 'V_PLAYLIST_DESC',
-  VTitleAsc = 'V_TITLE_ASC',
-  VTitleDesc = 'V_TITLE_DESC',
-  VUpdatedAtAsc = 'V_UPDATED_AT_ASC',
-  VUpdatedAtDesc = 'V_UPDATED_AT_DESC',
-  VUriAsc = 'V_URI_ASC',
-  VUriDesc = 'V_URI_DESC'
-}
-
 export type VideoSource = Node & {
   __typename?: 'VideoSource';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -15828,4 +15783,49 @@ export enum VideoSourcesOrderBy {
   VsTitleDesc = 'VS_TITLE_DESC',
   VsUrlAsc = 'VS_URL_ASC',
   VsUrlDesc = 'VS_URL_DESC'
+}
+
+/** A connection to a list of `Video` values. */
+export type VideosConnection = {
+  __typename?: 'VideosConnection';
+  /** A list of edges which contains the `Video` and cursor to aid in pagination. */
+  edges: Array<VideosEdge>;
+  /** A list of `Video` objects. */
+  nodes: Array<Video>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Video` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Video` edge in the connection. */
+export type VideosEdge = {
+  __typename?: 'VideosEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']>;
+  /** The `Video` at the end of the edge. */
+  node: Video;
+};
+
+/** Methods to use when ordering `Video`. */
+export enum VideosOrderBy {
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  VAuthorAsc = 'V_AUTHOR_ASC',
+  VAuthorDesc = 'V_AUTHOR_DESC',
+  VCreatedAtAsc = 'V_CREATED_AT_ASC',
+  VCreatedAtDesc = 'V_CREATED_AT_DESC',
+  VDescriptionAsc = 'V_DESCRIPTION_ASC',
+  VDescriptionDesc = 'V_DESCRIPTION_DESC',
+  VIdAsc = 'V_ID_ASC',
+  VIdDesc = 'V_ID_DESC',
+  VPlaylistAsc = 'V_PLAYLIST_ASC',
+  VPlaylistDesc = 'V_PLAYLIST_DESC',
+  VTitleAsc = 'V_TITLE_ASC',
+  VTitleDesc = 'V_TITLE_DESC',
+  VUpdatedAtAsc = 'V_UPDATED_AT_ASC',
+  VUpdatedAtDesc = 'V_UPDATED_AT_DESC',
+  VUriAsc = 'V_URI_ASC',
+  VUriDesc = 'V_URI_DESC'
 }

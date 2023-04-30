@@ -17,14 +17,18 @@ export function TenantInformation() {
     return null;
   }
 
+  if (!cohort?.sVisible) {
+    return null;
+  }
+
   return (
     <div className="flex flex-col">
       <div className="flex items-center">&nbsp;</div>
-      <h3 className="text-3xl tracking-wide mb-4">Můj klub</h3>
+          {/* <h3 className="text-3xl tracking-wide mb-4">Můj klub</h3>
 
       <Card className="w-full px-4">
         <RichTextView value={data.memberInfo} />
-      </Card>
+      </Card> */}
 
       {cohort && cohort.sVisible && (
         <>

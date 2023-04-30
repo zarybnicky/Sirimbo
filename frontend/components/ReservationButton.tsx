@@ -53,7 +53,7 @@ export const ReservationButton = ({ item }: { item: MyReservationFragment }) => 
       className={classNames(
         'group flex gap-3 p-2.5 rounded-lg',
         'leading-4 text-sm tabular-nums',
-        canEdit && 'cursor-pointer bg-red-100 border border-red-200  hover:bg-red-50',
+        canEdit && 'cursor-pointer bg-yellow-100 border border-yellow-200 hover:bg-yellow-50',
       )}
     >
       <div>{formatCoupleName(couple)}</div>

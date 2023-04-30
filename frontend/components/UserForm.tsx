@@ -64,6 +64,7 @@ export const UserForm: React.FC<{
   const { data: roles } = useRoleListQuery();
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
+  const [iter, setIter] = React.useState(0);
   React.useEffect(() => {
     reset({
       uLogin: data?.uLogin,
@@ -90,6 +91,7 @@ export const UserForm: React.FC<{
       uGroup: data?.uGroup,
       uSkupina: data?.uSkupina,
     });
+    setIter(x => x + 1);
   }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
@@ -244,7 +246,7 @@ export const UserForm: React.FC<{
           }
         />
 
-        <SlateEditorElement control={control} name="uPoznamky" label="Poznámka" />
+        <SlateEditorElement control={control} iter={iter} name="uPoznamky" label="Poznámka" />
 
         <CheckboxElement
           control={control}

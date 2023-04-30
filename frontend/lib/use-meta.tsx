@@ -57,7 +57,7 @@ export const ProvideMeta = React.memo(function ProvideMeta({ children }: {childr
     <MetaContext.Provider value={[meta, setMeta]}>
       <Head>
         <link rel="canonical" href={`${base}${canonical}`} />
-        <title>{meta?.title ? `${meta?.title} • ` : ''}TK Olymp</title>
+        <title>{meta?.title ? `${meta?.title} • TK Olymp` : 'TK Olymp'}</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta

@@ -22,12 +22,14 @@ export const ArticleForm: React.FC<{
   const { mutateAsync: doUpdate } = useUpdateArticleMutation({ onSuccess });
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
+  const [iter, setIter] = React.useState(0);
   React.useEffect(() => {
     reset({
       atJmeno: data?.atJmeno,
       atPreview: data?.atPreview,
       atText: data?.atText,
     });
+    setIter(x => x + 1);
   }, [data, reset]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
@@ -47,8 +49,8 @@ export const ArticleForm: React.FC<{
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="atJmeno" label="Název" required />
-      <SlateEditorElement control={control} name="atPreview" label="Shrnutí" />
-      <SlateEditorElement control={control} name="atText" label="Text" />
+      <SlateEditorElement control={control} iter={iter} name="atPreview" label="Shrnutí" />
+      <SlateEditorElement control={control} iter={iter} name="atText" label="Text" />
       <SubmitButton loading={onSubmit.loading} />
     </form>
   );

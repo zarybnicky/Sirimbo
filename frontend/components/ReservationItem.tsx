@@ -5,7 +5,6 @@ import { Dropdown } from 'components/Dropdown';
 import { Card } from 'components/Card';
 import { shortDateFormatter } from 'lib/format-date';
 import { formatCoupleName } from 'lib/format-name';
-import classNames from 'classnames';
 import { ReservationButton } from 'components/ReservationButton';
 import { useAuth } from 'lib/data/use-auth';
 
@@ -14,7 +13,7 @@ export const ReservationItem = ({ item }: { item: MyReservationFragment }) => {
   const perms = usePermissions();
 
   return (
-    <div className="group relative min-w-[200px]">
+    <Card className="group relative min-w-[200px] grid w-72 rounded-lg border-stone-200 border">
       {perms.canEditReservation(item) && (
         <Dropdown
           className="absolute right-1 top-1"
@@ -35,33 +34,25 @@ export const ReservationItem = ({ item }: { item: MyReservationFragment }) => {
             <span className="text-lg">{item.nMaxPocetHod}</span>
           </div>
         )}
-        <div>
-          <span className="text-stone-500">Volných hodin: </span>
-          <span className="text-lg">
-            {item.freeLessons} z {item.nPocetHod} nabízených
-          </span>
+        <div className="text-sm text-stone-500">
+          Zbývá {item.freeLessons} z {item.nPocetHod} nabízených
         </div>
       </div>
 
-      <Card className="grid mx-auto w-72 rounded-lg border-stone-200 border">
-        {item.nabidkaItemsByNiIdRodic.nodes
-          .filter((x) => x.niPartner !== couple?.id)
-          .map((lesson, i) => (
-            <div
-              key={i}
-              className={classNames(
-                'group flex gap-3 p-2.5 rounded-lg',
-                'leading-4 text-sm tabular-nums',
-              )}
-            >
-              <div>{formatCoupleName(lesson.paryByNiPartner)}</div>
-              <div className="grow text-right">{lesson.niPocetHod}x</div>
-            </div>
-          ))}
-        {(perms.canMakeReservation(item) || item.myLessons) && (
-          <ReservationButton item={item} />
-        )}
-      </Card>
-    </div>
+      {item.nabidkaItemsByNiIdRodic.nodes
+        .filter((x) => x.niPartner !== couple?.id)
+        .map((lesson, i) => (
+          <div
+            key={i}
+            className="group flex gap-3 p-2.5 rounded-lg leading-4 text-sm tabular-nums"
+          >
+            <div>{formatCoupleName(lesson.paryByNiPartner)}</div>
+            <div className="grow text-right">{lesson.niPocetHod}x</div>
+          </div>
+        ))}
+      {(perms.canMakeReservation(item) || item.myLessons) && (
+        <ReservationButton item={item} />
+      )}
+    </Card>
   );
 };

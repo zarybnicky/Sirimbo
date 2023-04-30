@@ -17,12 +17,14 @@ interface Props {
 
 export const EventItem = ({ event, expanded: expandedInit = false }: Props) => {
   const [expanded, setExpanded] = React.useState(expandedInit);
-    const perms = usePermissions();
+  const perms = usePermissions();
   const open = React.useCallback(() => setExpanded(true), []);
-
+  const total =
+    (event.attendeeUsers?.nodes?.length ?? 0) +
+    (event.attendeeExternals?.nodes?.length ?? 0);
   return (
-    <Card className="break-inside-avoid odd:bg-white even:bg-red-100/20">
-      {perms.canEditCohort(event) && (
+    <Card className="break-inside-avoid">
+      {perms.canEditEvent(event) && (
         <Dropdown
           className="absolute right-1 top-1"
           align="end"
@@ -55,13 +57,11 @@ export const EventItem = ({ event, expanded: expandedInit = false }: Props) => {
           <div className="text-red-500 font-bold mt-3">Zobrazit více...</div>
         )}
       </div>
-      {((event.attendeeUsers?.nodes?.length ?? 0) > 0 || (event.remainingSpots || 0) > 0) && (
-        <div className="flex gap-1 flex-wrap">
-          <ParticipationDialog data={event} />
-          <SimpleDialog
-            title="Účastníci"
-            button={<Button>Účastníci ({event.attendeeUsers?.nodes?.length})</Button>}
-          >
+
+      <div className="flex gap-1 flex-wrap">
+        <ParticipationDialog data={event} />
+        {total > 0 && (
+          <SimpleDialog title="Účastníci" button={<Button>Účastníci ({total})</Button>}>
             {!!event.attendeeUsers?.nodes?.length && <u>Členové</u>}
             {(event.attendeeUsers?.nodes ?? []).map((x) => (
               <div>
@@ -75,8 +75,8 @@ export const EventItem = ({ event, expanded: expandedInit = false }: Props) => {
               </div>
             ))}
           </SimpleDialog>
-        </div>
-      )}
+        )}
+      </div>
     </Card>
   );
 };

@@ -16,10 +16,7 @@ export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
   return (
     <Card
       onClick={expanded ? undefined : open}
-      className={classNames(
-        'group mb-4',
-        !expanded && 'cursor-pointer',
-      )}
+      className={classNames('group', !expanded && 'cursor-pointer',)}
     >
       {perms.canEditAnnouncement(item) && (
         <Dropdown

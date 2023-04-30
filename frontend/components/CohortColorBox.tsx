@@ -10,13 +10,13 @@ export function CohortColorBoxes({
     return null;
   }
   return (
-    <div className="flex gap-1 border border-gray-300">
+    <div className="flex gap-0.5">
       {items.map((g, i) =>
         !g ? (
           <React.Fragment key={i} />
         ) : (
           <div
-            className="w-3 h-3"
+            className="w-3 h-3 border border-stone-200"
             key={g.sColorRgb}
             title={g.sName}
             style={{ backgroundColor: g.sColorRgb }}

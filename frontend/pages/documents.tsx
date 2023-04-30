@@ -37,12 +37,12 @@ export default function FileListPage() {
         />
       </Item.Titlebar>
 
-      {(data?.dokumenties?.nodes || []).map((row, i) => (
+      {data?.dokumenties?.nodes?.map((row, i) => (
         <Card key={i}>
           <a
             target="_blank"
             rel="noreferrer"
-            href={`/old/member/download?id=${row.id}`}
+            href={`/member/download?id=${row.id}`}
             className="flex justify-between"
           >
             <span>{row.dName}</span>

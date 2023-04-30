@@ -67,11 +67,9 @@ export const LessonButton = ({
       className={classNames(
         'group flex gap-3 p-2.5 rounded-lg',
         'leading-4 text-sm tabular-nums',
-        canCancel && 'cursor-pointer hover:bg-red-50 border-2 border-red-200',
-        canBook &&
-          'cursor-pointer hover:bg-green-50 bg-green-100 text-green-900 border-2 border-green-200',
-        !showTrainer && isMyLesson && 'bg-red-100',
-        //"radix-state-open:bg-red-500 radix-state-open:text-white hover:radix-state-open:bg-red-500",
+        canCancel && 'cursor-pointer hover:bg-yellow-50',
+        canBook && 'cursor-pointer hover:bg-green-100/80 bg-green-100 text-green-900',
+        !showTrainer && isMyLesson && 'bg-yellow-100',
       )}
     >
       <div className="text-stone-600">{lesson.riOd.substring(0, 5)}</div>
@@ -81,9 +79,6 @@ export const LessonButton = ({
       <div className="text-stone-600">{duration}&apos;</div>
     </div>
   );
-  if (!canBook && !canCancel) {
-    return trigger;
-  }
 
   return (
     <div className="relative">
@@ -108,6 +103,7 @@ export const LessonButton = ({
               Přihlásit
             </SubmitButton>
           )}
+
           {canCancel && (
             <SubmitButton
               loading={isCanceling}

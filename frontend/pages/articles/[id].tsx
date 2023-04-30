@@ -33,7 +33,7 @@ export default function ArticlePage() {
       <div className="text-stone-600 mt-20">
         {x.atTimestampAdd && fullDateFormatter.format(new Date(x.atTimestampAdd))}
       </div>
-      <h3 className="text-3xl font-bold mb-4">{x.atJmeno}</h3>
+      <h3 className="text-3xl font-bold text-red-500 mb-4">{x.atJmeno}</h3>
       <RichTextView value={x.atText} />
       <CallToAction />
     </>

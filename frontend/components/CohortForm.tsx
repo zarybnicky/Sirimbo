@@ -42,6 +42,7 @@ export const CohortForm = ({ data }: { data?: CohortFragment }) => {
   const { mutateAsync: doUpdate } = useUpdateCohortMutation({ onSuccess });
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
+  const [iter, setIter] = React.useState(0);
   React.useEffect(() => {
     reset({
       sName: data?.sName,
@@ -52,6 +53,7 @@ export const CohortForm = ({ data }: { data?: CohortFragment }) => {
       internalInfo: data?.internalInfo,
       ordering: data?.ordering,
     });
+    setIter(x => x + 1);
   }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
@@ -72,9 +74,10 @@ export const CohortForm = ({ data }: { data?: CohortFragment }) => {
       <TextFieldElement control={control} name="sName" label="Název" required />
       <TextFieldElement control={control} name="sLocation" label="Město/místo" required />
       <ColorPicker name="sColorRgb" control={control} />
-      <SlateEditorElement control={control} name="sDescription" label="Popis" />
+      <SlateEditorElement control={control} iter={iter} name="sDescription" label="Popis" />
       <SlateEditorElement
         control={control}
+        iter={iter}
         name="internalInfo"
         label="Interní informace"
       />

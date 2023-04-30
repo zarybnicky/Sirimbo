@@ -727,7 +727,7 @@ type AttendeeExternal implements Node {
 
   """Reads a single `Event` that is related to this `AttendeeExternal`."""
   event: Event
-  eventId: BigInt
+  eventId: BigInt!
   firstName: String!
   guardianName: String!
   id: BigInt!
@@ -804,7 +804,7 @@ input AttendeeExternalInput {
   confirmedBy: BigInt
   createdAt: Datetime
   email: String!
-  eventId: BigInt
+  eventId: BigInt!
   firstName: String!
   guardianName: String
   lastName: String!

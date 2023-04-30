@@ -9,7 +9,7 @@ export const ScheduleItem = ({ item }: { item: ScheduleFragment }) => {
   const perms = usePermissions();
 
   return (
-    <div className="group relative min-w-[200px]">
+    <Card className="group min-w-[200px] w-72 rounded-lg border-stone-200 border">
       <div className="ml-3 mb-0.5">
         {perms.canEditSchedule(item) && (
           <Dropdown
@@ -22,12 +22,11 @@ export const ScheduleItem = ({ item }: { item: ScheduleFragment }) => {
         <div className="text-sm text-stone-500">{item.rKde}</div>
         <div className="text-xl">{item.userByRTrener?.fullName}</div>
       </div>
-
-      <Card className="grid mx-auto w-72 rounded-lg border-stone-200 border">
+      <div className="flex gap-[1px] flex-col">
         {item.rozpisItemsByRiIdRodic.nodes?.map((lesson, i) => (
           <LessonButton key={i} schedule={item} lesson={lesson} />
         ))}
-      </Card>
-    </div>
+      </div>
+    </Card>
   );
 };

@@ -8,14 +8,14 @@ type SocialButtonsProps = {
 
 export const SocialButtons = ({ variant }: SocialButtonsProps) => {
   return (
-    <div className="flex gap-3 items-center">
+    <div className="flex gap-2 items-center">
       <a
         target="_blank"
         rel="noreferrer"
         href="https://www.facebook.com/tkolymp"
         className="p-1"
       >
-        <Facebook className={`text-red-500 ${variant === 'large' && 'w-10 h-10'}`} />
+        <Facebook className={`text-red-600/90 ${variant === 'large' && 'w-10 h-10'}`} />
       </a>
       <a
         target="_blank"
@@ -31,7 +31,7 @@ export const SocialButtons = ({ variant }: SocialButtonsProps) => {
         href="https://www.youtube.com/user/TheMamcro"
         className="p-1"
       >
-        <Youtube className={`text-gray-200 ${variant === 'large' && 'w-10 h-10'}`} />
+        <Youtube className={`text-slate-100 ${variant === 'large' && 'w-10 h-10'}`} />
       </a>
     </div>
   );
