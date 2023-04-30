@@ -209,7 +209,7 @@ in {
           User = cfg.user;
           Group = cfg.group;
           ExecStart = "${pkgs.nodejs}/bin/node ${pkgs.sirimbo-frontend-beta}/server.js";
-          WorkingDirectory = config.stateDir;
+          WorkingDirectory = cfg.stateDir;
           Restart = "always";
           RestartSec = "10s";
         };
@@ -243,7 +243,7 @@ in {
           User = cfg.user;
           Group = cfg.group;
           ExecStart = "${pkgs.nodejs}/bin/node ${pkgs.sirimbo-backend-beta}/bin/sirimbo-backend";
-          WorkingDirectory = config.stateDir;
+          WorkingDirectory = cfg.stateDir;
           Restart = "always";
           RestartSec = "10s";
         };
