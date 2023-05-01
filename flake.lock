@@ -3,11 +3,11 @@
     "migrate": {
       "flake": false,
       "locked": {
-        "lastModified": 1637000941,
-        "narHash": "sha256-xugkSBPxr9cAI0LhA2ZATCngvD9UQHHUkKBQbhokgu0=",
+        "lastModified": 1676388391,
+        "narHash": "sha256-QZoDVE4+mpQesPZAEx4Lubo1z9EHIaBxtzIRIcYHZOY=",
         "owner": "graphile",
         "repo": "migrate",
-        "rev": "7478ffa4d7101f155e3f14d5be4e4f94bf60c7d6",
+        "rev": "56b4db70d1acd04bfc4d50ceaf99057fbdb5496c",
         "type": "github"
       },
       "original": {
@@ -19,10 +19,10 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1646651580,
-        "narHash": "sha256-iTTFMAafwj+iX9v5lPA5oF9NcJ36idT/Boh9X9x5buM=",
-        "path": "/nix/store/xdifcm490002nqmis1xgk05bq3ciay6n-source",
-        "rev": "17ee68bc368e175369258b97316328d6bca11d3b",
+        "lastModified": 1680122840,
+        "narHash": "sha256-zCQ/9iFHzCW5JMYkkHMwgK1/1/kTMgCMHq4THPINpAU=",
+        "path": "/nix/store/0v3c43fqlq4fk4j5rpqkfxjpxj04dp7g-source",
+        "rev": "a575c243c23e2851b78c00e9fa245232926ec32f",
         "type": "path"
       },
       "original": {

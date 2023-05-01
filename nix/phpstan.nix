@@ -1,4 +1,4 @@
-{lib, stdenv, makeWrapper, php74}:
+{lib, stdenv, makeWrapper, php82}:
 
 stdenv.mkDerivation {
   pname = "phpstan";
@@ -12,7 +12,7 @@ stdenv.mkDerivation {
   installPhase = ''
     mkdir -p $out/bin
     install -D $src $out/libexec/phpstan/phpstan.phar
-    makeWrapper ${php74}/bin/php $out/bin/phpstan \
+    makeWrapper ${php82}/bin/php $out/bin/phpstan \
       --add-flags "$out/libexec/phpstan/phpstan.phar"
   '';
 }
