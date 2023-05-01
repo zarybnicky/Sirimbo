@@ -216,7 +216,7 @@ in {
           "php_admin_value[post_max_size]" = "40M";
         };
         phpPackage = pkgs.php.withExtensions ({ all, ... }: with all; [
-          curl imagick opcache pdo openssl posix
+          curl imagick opcache pdo openssl posix filter
           mbstring session ctype exif gd zlib pdo_pgsql
         ]);
       };
