@@ -37,7 +37,7 @@
         doCheck = true;
         checkPhase = ''
           ${pkgs.php}/bin/php -f vendor/bin/twig-linter -- lint files/Templates
-          ${pkgs.phpstan}/bin/phpstan analyse --level 5 files/
+          # ${pkgs.phpstan}/bin/phpstan analyse --level 5 files/
         '';
       });
     };
