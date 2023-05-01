@@ -4,7 +4,7 @@ import { fullDateFormatter } from 'lib/format-date';
 import { Button } from './Button';
 import { SimpleDialog } from './Dialog';
 import { EventFragment, MyEventFragment } from 'lib/graphql/Event';
-import { ParticipationDialog, ParticipationForm } from './ParticipationForm';
+import { ParticipationDialog } from './ParticipationForm';
 import { RichTextView } from './RichTextView';
 import classNames from 'classnames';
 import { usePermissions } from 'lib/data/use-permissions';
@@ -64,13 +64,13 @@ export const EventItem = ({ event, expanded: expandedInit = false }: Props) => {
           <SimpleDialog title="Účastníci" button={<Button>Účastníci ({total})</Button>}>
             {!!event.attendeeUsers?.nodes?.length && <u>Členové</u>}
             {(event.attendeeUsers?.nodes ?? []).map((x) => (
-              <div>
+              <div key={x.user?.uId}>
                 {x.user?.uJmeno} {x.user?.uPrijmeni}
               </div>
             ))}
             {!!event.attendeeExternals?.nodes?.length && <u>Externí</u>}
-            {(event.attendeeExternals?.nodes ?? []).map((x) => (
-              <div>
+            {(event.attendeeExternals?.nodes ?? []).map((x, i) => (
+              <div key={i}>
                 {x.firstName} {x.lastName}
               </div>
             ))}

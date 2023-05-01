@@ -26,11 +26,13 @@ export const TenantForm: React.FC<{
   const { mutateAsync: doUpdate } = useUpdateTenantMutation({ onSuccess });
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
+  const [iter, setIter] = React.useState(0);
   React.useEffect(() => {
     reset({
       name: data?.name,
       memberInfo: data?.memberInfo,
     });
+    setIter(x => x + 1);
   }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
@@ -42,6 +44,7 @@ export const TenantForm: React.FC<{
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="name" label="Název organizace" required />
       <SlateEditorElement
+        iter={iter}
         control={control}
         name="memberInfo"
         label="Informace pro členy"

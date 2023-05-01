@@ -18,7 +18,7 @@ export default function MembershipPage() {
           <img src="https://tkolymp.cz/galerie/clanky/293547069655557869525116228763683690860426o.jpg" />
         </div>
         <div className="col-span-2 -order-1 md:order-1">
-          <SlateEditor readOnly value={text} />
+          <SlateEditor readOnly name="clenstvi" value={text} />
         </div>
       </div>
 

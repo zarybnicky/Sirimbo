@@ -19,7 +19,7 @@ export const RichTextView = ({ value, className }: Props) => {
   if (Array.isArray(value)) {
     return (
       <div className={className}>
-        <SlateEditor readOnly value={value} />
+        <SlateEditor name="viewOnly" readOnly value={value} />
       </div>
     );
   }
@@ -29,7 +29,7 @@ export const RichTextView = ({ value, className }: Props) => {
   if (value.startsWith('[')) {
     return (
       <div className={className}>
-        <SlateEditor readOnly value={JSON.parse(value) as any[]} />
+        <SlateEditor name="viewOnly" readOnly value={JSON.parse(value) as any[]} />
       </div>
     );
   }

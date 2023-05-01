@@ -21,7 +21,7 @@ export default function AboutPage() {
       <div className="col-feature my-4 grid gap-8 lg:grid-cols-2">
         {internal.map((item) => (
           <TrainerCard key={item.name} name={item.name} image={item.image}>
-            <SlateEditor readOnly value={item.content} />
+            <SlateEditor name={item.name} readOnly value={item.content} />
           </TrainerCard>
         ))}
       </div>
@@ -33,7 +33,7 @@ export default function AboutPage() {
       <div className="col-feature mt-4 mb-16 grid gap-8 lg:grid-cols-2">
         {external.map((item) => (
           <TrainerCard key={item.name} name={item.name} image={item.image}>
-            <SlateEditor readOnly value={item.content} />
+            <SlateEditor name={item.name} readOnly value={item.content} />
           </TrainerCard>
         ))}
       </div>

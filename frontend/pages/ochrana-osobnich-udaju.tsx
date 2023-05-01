@@ -11,7 +11,7 @@ export default function TermsConditions() {
         image="/images/mohelnice2021-title.jpg"
         color={{ r: 216, g: 28, b: 58, a: 0.6 }}
       />
-      <SlateEditor readOnly value={text} />
+      <SlateEditor name="terms-co" readOnly value={text} />
     </>
   );
 }
