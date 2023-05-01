@@ -12,7 +12,7 @@ yarn2nix-moretea.mkYarnPackage {
   packageJSON = "${src}/package.json";
   yarnLock = "${src}/yarn.lock";
   installPhase = ''
-    NODE_OPTIONS='--openssl-legacy-provider' ${ncc}/bin/ncc build ./deps/graphile-migrate/src/cli.ts
+    ${ncc}/bin/ncc build ./deps/graphile-migrate/src/cli.ts
     mkdir -p $out/{bin,libexec}
     cp -r dist/* $out/libexec
     cat > $out/bin/graphile-migrate <<EOS

@@ -21,7 +21,7 @@
       sirimbo-migrations = final.callPackage ./migrations/package.nix {};
 
       sirimbo-php = (final.callPackage ./sirimbo-php/composer-project.nix {
-        php = final.php82;
+        php = final.php74;
       } (
         pkgs.nix-gitignore.gitignoreSourcePure [./.gitignore] ./sirimbo-php
       )).overrideAttrs (oldAttrs: {
@@ -57,7 +57,7 @@
         pkgs.yarn2nix
         pkgs.postgresql
         pkgs.ncc
-        # pkgs.squawk
+        pkgs.squawk
       ];
       DATABASE_URL = "postgres://olymp@olymp-test/olymp";
       SHADOW_DATABASE_URL = "postgres://olymp@olymp-test/olymp_shadow";
