@@ -11,9 +11,9 @@ import LogoKraj from 'public/images/logo-kraj.png';
 export const Footer: React.FC = () => {
   return (
     <div className="col-full-width content bg-stone-800 text-white py-12">
-      <div className="col-feature grid grid-cols-1 lg:grid-cols-2 gap-2">
+      <div className="col-feature grid grid-cols-2 gap-2">
         <h2 className="col-span-2 text-3xl font-bold">Kontakt</h2>
-        <div>
+        <div className="col-span-2 md:col-span-1">
           <h3 className="text-lg tracking-wide mt-2 text-red-500 font-bold">
             Taneční klub
           </h3>
@@ -32,7 +32,7 @@ export const Footer: React.FC = () => {
           </div>
         </div>
 
-        <div>
+        <div className="col-span-2 md:col-span-1">
           <h3 className="text-lg tracking-wide mt-2 text-red-500 font-bold">
             Taneční sály
           </h3>
