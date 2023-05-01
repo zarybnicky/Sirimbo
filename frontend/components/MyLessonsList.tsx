@@ -17,8 +17,7 @@ export const MyLessonsList: React.FC = () => {
     data?.myLessons?.nodes?.forEach((lesson) => {
       const date = lesson.rozpiByRiIdRodic?.rDatum;
       const place = lesson.rozpiByRiIdRodic?.rKde;
-      let key = date ? formatWeekDay(new Date(date)) : '';
-      key += key ? ` ${place}` : place;
+      const key = date ? `${place} ${formatWeekDay(new Date(date))}` : place ?? '';
       lessonsPerDay[key] = lessonsPerDay[key] || [];
       lessonsPerDay[key]!.push(lesson);
     });
@@ -35,9 +34,9 @@ export const MyLessonsList: React.FC = () => {
 
       {Object.entries(lessonsPerDay).map(([key, lessons]) => (
         <Card key={key} className="grid w-72 rounded-lg border-stone-200 border">
-          <h6 className="text-lg font-bold mb-1">
-            {key.split(' ').map((x) => (
-              <div key={x}>{x}</div>
+          <h6 >
+            {key.split(' ').map((x, i) => (
+              <div key={x} className={i ? 'font-bold mb-1' : 'text-sm text-stone-500'}>{x}</div>
             ))}
           </h6>
           {lessons.map((lesson, i) => (

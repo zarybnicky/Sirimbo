@@ -26,7 +26,7 @@ export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
         />
       )}
 
-      <div className="text-stone-500 flex flex-wrap items-baseline gap-4">
+      <div className="text-stone-500 text-sm flex flex-wrap items-baseline gap-4">
         <div>
           {[
             fullDateFormatter.format(new Date(item.upTimestampAdd)),
@@ -42,7 +42,7 @@ export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
           )}
         />
       </div>
-      <h2 className="text-2xl mb-4">{item.upNadpis}</h2>
+      <h2 className="text-lg font-bold mb-4">{item.upNadpis}</h2>
 
       <RichTextView
         className={expanded ? '' : 'line-clamp-3 after'}
