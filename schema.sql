@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 13.2
--- Dumped by pg_dump version 13.2
+-- Dumped from database version 13.10
+-- Dumped by pg_dump version 13.10
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -309,21 +309,21 @@ $$;
 
 
 --
--- Name: akce; Type: TABLE; Schema: public; Owner: -
+-- Name: event; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.akce (
-    a_id bigint NOT NULL,
-    a_jmeno text NOT NULL,
-    a_kde text NOT NULL,
-    a_info text NOT NULL,
-    a_od date NOT NULL,
-    a_do date NOT NULL,
-    a_kapacita bigint DEFAULT '0'::bigint NOT NULL,
-    a_dokumenty text NOT NULL,
-    a_timestamp timestamp with time zone,
-    a_lock boolean DEFAULT false NOT NULL,
-    a_visible boolean DEFAULT false NOT NULL,
+CREATE TABLE public.event (
+    id bigint NOT NULL,
+    name text NOT NULL,
+    location_text text NOT NULL,
+    description text NOT NULL,
+    since date NOT NULL,
+    until date NOT NULL,
+    capacity bigint DEFAULT '0'::bigint NOT NULL,
+    files_legacy text NOT NULL,
+    updated_at timestamp with time zone,
+    is_locked boolean DEFAULT false NOT NULL,
+    is_visible boolean DEFAULT false NOT NULL,
     summary jsonb DEFAULT '[]'::jsonb NOT NULL,
     is_public boolean DEFAULT false NOT NULL,
     enable_notes boolean DEFAULT false NOT NULL
@@ -331,10 +331,10 @@ CREATE TABLE public.akce (
 
 
 --
--- Name: akce_free_slots(public.akce); Type: FUNCTION; Schema: public; Owner: -
+-- Name: akce_free_slots(public.event); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.akce_free_slots(a public.akce) RETURNS integer
+CREATE FUNCTION public.akce_free_slots(a public.event) RETURNS integer
     LANGUAGE sql STABLE
     AS $$
   select a.a_kapacita - (select count(*) from akce_item where ai_id_rodic = a.a_id);
@@ -342,10 +342,10 @@ $$;
 
 
 --
--- Name: akce_has_capacity(public.akce); Type: FUNCTION; Schema: public; Owner: -
+-- Name: akce_has_capacity(public.event); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.akce_has_capacity(a public.akce) RETURNS boolean
+CREATE FUNCTION public.akce_has_capacity(a public.event) RETURNS boolean
     LANGUAGE sql STABLE
     AS $$
   select count(*) < a.a_kapacita from akce_item where ai_id_rodic = a.a_id;
@@ -353,10 +353,10 @@ $$;
 
 
 --
--- Name: akce_my_notes(public.akce); Type: FUNCTION; Schema: public; Owner: -
+-- Name: akce_my_notes(public.event); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.akce_my_notes(a public.akce) RETURNS text
+CREATE FUNCTION public.akce_my_notes(a public.event) RETURNS text
     LANGUAGE sql STABLE
     AS $$
   select notes from akce_item where ai_id_rodic=a.a_id and ai_user=current_user_id();
@@ -364,10 +364,10 @@ $$;
 
 
 --
--- Name: akce_signed_up(public.akce); Type: FUNCTION; Schema: public; Owner: -
+-- Name: akce_signed_up(public.event); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.akce_signed_up(a public.akce) RETURNS boolean
+CREATE FUNCTION public.akce_signed_up(a public.event) RETURNS boolean
     LANGUAGE sql STABLE
     AS $$
   select exists (select ai_id from akce_item where ai_id_rodic=a.a_id and ai_user=current_user_id());
@@ -666,6 +666,17 @@ CREATE FUNCTION public.current_user_id() RETURNS bigint
     LANGUAGE sql STABLE
     AS $$
   SELECT current_setting('jwt.claims.user_id', true)::bigint;
+$$;
+
+
+--
+-- Name: event_remaining_spots(public.event); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_remaining_spots(a public.event) RETURNS integer
+    LANGUAGE sql STABLE
+    AS $$
+  select a.capacity - (select count(*) from attendee_user where event_id = a.id) - (select count(*) from attendee_external where event_id = a.id);
 $$;
 
 
@@ -973,20 +984,6 @@ $$;
 
 
 --
--- Name: on_update_current_timestamp_akce(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.on_update_current_timestamp_akce() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-   NEW.a_timestamp = now();
-   RETURN NEW;
-END;
-$$;
-
-
---
 -- Name: on_update_current_timestamp_aktuality(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1079,6 +1076,20 @@ CREATE FUNCTION public.on_update_current_timestamp_users() RETURNS trigger
     AS $$
 BEGIN
    NEW.u_timestamp = now();
+   RETURN NEW;
+END;
+$$;
+
+
+--
+-- Name: on_update_event_timestamp(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.on_update_event_timestamp() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+   NEW.updated_at = now();
    RETURN NEW;
 END;
 $$;
@@ -1371,6 +1382,28 @@ ALTER SEQUENCE app_private.crm_prospect_id_seq OWNED BY app_private.crm_prospect
 
 
 --
+-- Name: akce; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.akce AS
+ SELECT event.id AS a_id,
+    event.name AS a_jmeno,
+    event.location_text AS a_kde,
+    event.description AS a_info,
+    event.since AS a_od,
+    event.until AS a_do,
+    event.capacity AS a_kapacita,
+    event.files_legacy AS a_dokumenty,
+    event.updated_at AS a_timestamp,
+    event.is_locked AS a_lock,
+    event.is_visible AS a_visible,
+    event.summary,
+    event.is_public,
+    event.enable_notes
+   FROM public.event;
+
+
+--
 -- Name: akce_a_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1386,20 +1419,33 @@ CREATE SEQUENCE public.akce_a_id_seq
 -- Name: akce_a_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.akce_a_id_seq OWNED BY public.akce.a_id;
+ALTER SEQUENCE public.akce_a_id_seq OWNED BY public.event.id;
 
 
 --
--- Name: akce_item; Type: TABLE; Schema: public; Owner: -
+-- Name: attendee_user; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.akce_item (
-    ai_id bigint NOT NULL,
-    ai_id_rodic bigint NOT NULL,
-    ai_user bigint NOT NULL,
-    ai_rok_narozeni smallint NOT NULL,
+CREATE TABLE public.attendee_user (
+    id bigint NOT NULL,
+    event_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    birth_year smallint NOT NULL,
     notes text DEFAULT ''::text NOT NULL
 );
+
+
+--
+-- Name: akce_item; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.akce_item AS
+ SELECT attendee_user.id AS ai_id,
+    attendee_user.event_id AS ai_id_rodic,
+    attendee_user.user_id AS ai_user,
+    attendee_user.birth_year AS ai_rok_narozeni,
+    attendee_user.notes
+   FROM public.attendee_user;
 
 
 --
@@ -1418,7 +1464,7 @@ CREATE SEQUENCE public.akce_item_ai_id_seq
 -- Name: akce_item_ai_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.akce_item_ai_id_seq OWNED BY public.akce_item.ai_id;
+ALTER SEQUENCE public.akce_item_ai_id_seq OWNED BY public.attendee_user.id;
 
 
 --
@@ -1471,6 +1517,42 @@ CREATE TABLE public.attachment (
 
 
 --
+-- Name: attendee_external; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.attendee_external (
+    id bigint NOT NULL,
+    event_id bigint NOT NULL,
+    first_name text NOT NULL,
+    last_name text NOT NULL,
+    email text NOT NULL,
+    phone text NOT NULL,
+    notes text DEFAULT ''::text NOT NULL,
+    birth_number text,
+    guardian_name text DEFAULT ''::text NOT NULL,
+    managed_by bigint,
+    confirmed_by bigint,
+    confirmed_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: attendee_external_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.attendee_external ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.attendee_external_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: cohort_group; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1509,7 +1591,7 @@ CREATE TABLE public.dokumenty (
     d_filename text NOT NULL,
     d_kategorie smallint NOT NULL,
     d_kdo bigint NOT NULL,
-    d_timestamp timestamp with time zone
+    d_timestamp timestamp with time zone DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -2481,20 +2563,6 @@ ALTER TABLE ONLY app_private.crm_prospect ALTER COLUMN id SET DEFAULT nextval('a
 
 
 --
--- Name: akce a_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.akce ALTER COLUMN a_id SET DEFAULT nextval('public.akce_a_id_seq'::regclass);
-
-
---
--- Name: akce_item ai_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.akce_item ALTER COLUMN ai_id SET DEFAULT nextval('public.akce_item_ai_id_seq'::regclass);
-
-
---
 -- Name: aktuality at_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2502,10 +2570,24 @@ ALTER TABLE ONLY public.aktuality ALTER COLUMN at_id SET DEFAULT nextval('public
 
 
 --
+-- Name: attendee_user id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.attendee_user ALTER COLUMN id SET DEFAULT nextval('public.akce_item_ai_id_seq'::regclass);
+
+
+--
 -- Name: dokumenty d_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.dokumenty ALTER COLUMN d_id SET DEFAULT nextval('public.dokumenty_d_id_seq'::regclass);
+
+
+--
+-- Name: event id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event ALTER COLUMN id SET DEFAULT nextval('public.akce_a_id_seq'::regclass);
 
 
 --
@@ -2686,11 +2768,11 @@ ALTER TABLE ONLY app_private.crm_prospect
 
 
 --
--- Name: akce_item akce_item_unique_user_event_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: attendee_user akce_item_unique_user_event_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.akce_item
-    ADD CONSTRAINT akce_item_unique_user_event_key UNIQUE (ai_user, ai_id_rodic);
+ALTER TABLE ONLY public.attendee_user
+    ADD CONSTRAINT akce_item_unique_user_event_key UNIQUE (user_id, event_id);
 
 
 --
@@ -2702,6 +2784,14 @@ ALTER TABLE ONLY public.attachment
 
 
 --
+-- Name: attendee_external attendee_external_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.attendee_external
+    ADD CONSTRAINT attendee_external_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: cohort_group cohort_group_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2710,19 +2800,19 @@ ALTER TABLE ONLY public.cohort_group
 
 
 --
--- Name: akce idx_23735_primary; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: event idx_23735_primary; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.akce
-    ADD CONSTRAINT idx_23735_primary PRIMARY KEY (a_id);
+ALTER TABLE ONLY public.event
+    ADD CONSTRAINT idx_23735_primary PRIMARY KEY (id);
 
 
 --
--- Name: akce_item idx_23747_primary; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: attendee_user idx_23747_primary; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.akce_item
-    ADD CONSTRAINT idx_23747_primary PRIMARY KEY (ai_id);
+ALTER TABLE ONLY public.attendee_user
+    ADD CONSTRAINT idx_23747_primary PRIMARY KEY (id);
 
 
 --
@@ -3033,14 +3123,14 @@ ALTER TABLE ONLY public.tenant
 -- Name: idx_23747_akce_item_ai_id_rodic_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_23747_akce_item_ai_id_rodic_fkey ON public.akce_item USING btree (ai_id_rodic);
+CREATE INDEX idx_23747_akce_item_ai_id_rodic_fkey ON public.attendee_user USING btree (event_id);
 
 
 --
 -- Name: idx_23747_akce_item_ai_user_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_23747_akce_item_ai_user_fkey ON public.akce_item USING btree (ai_user);
+CREATE INDEX idx_23747_akce_item_ai_user_fkey ON public.attendee_user USING btree (user_id);
 
 
 --
@@ -3373,13 +3463,6 @@ CREATE TRIGGER on_update_author_upozorneni BEFORE INSERT OR UPDATE ON public.upo
 
 
 --
--- Name: akce on_update_current_timestamp; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.akce FOR EACH ROW EXECUTE FUNCTION public.on_update_current_timestamp_akce();
-
-
---
 -- Name: aktuality on_update_current_timestamp; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -3429,6 +3512,13 @@ CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.users FOR EAC
 
 
 --
+-- Name: event on_update_event_timestamp; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER on_update_event_timestamp BEFORE INSERT OR UPDATE ON public.event FOR EACH ROW EXECUTE FUNCTION public.on_update_event_timestamp();
+
+
+--
 -- Name: crm_activity crm_activity_prospect_fkey; Type: FK CONSTRAINT; Schema: app_private; Owner: -
 --
 
@@ -3437,19 +3527,19 @@ ALTER TABLE ONLY app_private.crm_activity
 
 
 --
--- Name: akce_item akce_item_ai_id_rodic_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: attendee_user akce_item_ai_id_rodic_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.akce_item
-    ADD CONSTRAINT akce_item_ai_id_rodic_fkey FOREIGN KEY (ai_id_rodic) REFERENCES public.akce(a_id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.attendee_user
+    ADD CONSTRAINT akce_item_ai_id_rodic_fkey FOREIGN KEY (event_id) REFERENCES public.event(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: akce_item akce_item_ai_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: attendee_user akce_item_ai_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.akce_item
-    ADD CONSTRAINT akce_item_ai_user_fkey FOREIGN KEY (ai_user) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY public.attendee_user
+    ADD CONSTRAINT akce_item_ai_user_fkey FOREIGN KEY (user_id) REFERENCES public.users(u_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
 --
@@ -3474,6 +3564,30 @@ ALTER TABLE ONLY public.aktuality
 
 ALTER TABLE ONLY public.attachment
     ADD CONSTRAINT attachment_uploaded_by_fkey FOREIGN KEY (uploaded_by) REFERENCES public.users(u_id);
+
+
+--
+-- Name: attendee_external attendee_external_confirmed_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.attendee_external
+    ADD CONSTRAINT attendee_external_confirmed_by_fkey FOREIGN KEY (confirmed_by) REFERENCES public.users(u_id);
+
+
+--
+-- Name: attendee_external attendee_external_event_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.attendee_external
+    ADD CONSTRAINT attendee_external_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.event(id);
+
+
+--
+-- Name: attendee_external attendee_external_managed_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.attendee_external
+    ADD CONSTRAINT attendee_external_managed_by_fkey FOREIGN KEY (managed_by) REFERENCES public.users(u_id);
 
 
 --
@@ -3781,17 +3895,17 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: akce_item admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.akce_item TO administrator USING (true) WITH CHECK (true);
-
-
---
 -- Name: aktuality admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
 CREATE POLICY admin_all ON public.aktuality TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: attendee_user admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.attendee_user TO administrator USING (true) WITH CHECK (true);
 
 
 --
@@ -3970,35 +4084,23 @@ CREATE POLICY admin_all ON public.video_source TO administrator USING (true) WIT
 
 
 --
--- Name: akce; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.akce ENABLE ROW LEVEL SECURITY;
-
---
--- Name: akce_item; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.akce_item ENABLE ROW LEVEL SECURITY;
-
---
 -- Name: aktuality; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
 ALTER TABLE public.aktuality ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: akce_item all_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY all_view ON public.akce_item FOR SELECT USING (true);
-
-
---
 -- Name: aktuality all_view; Type: POLICY; Schema: public; Owner: -
 --
 
 CREATE POLICY all_view ON public.aktuality FOR SELECT USING (true);
+
+
+--
+-- Name: attendee_user all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.attendee_user FOR SELECT USING (true);
 
 
 --
@@ -4177,10 +4279,28 @@ CREATE POLICY all_view ON public.video_source FOR SELECT USING (true);
 
 
 --
+-- Name: attendee_external; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.attendee_external ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: attendee_user; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.attendee_user ENABLE ROW LEVEL SECURITY;
+
+--
 -- Name: dokumenty; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
 ALTER TABLE public.dokumenty ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: event; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.event ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: galerie_dir; Type: ROW SECURITY; Schema: public; Owner: -
@@ -4195,17 +4315,31 @@ ALTER TABLE public.galerie_dir ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.galerie_foto ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: akce manage_all; Type: POLICY; Schema: public; Owner: -
+-- Name: attendee_external insert_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY manage_all ON public.akce TO administrator USING (true) WITH CHECK (true);
+CREATE POLICY insert_all ON public.attendee_external FOR INSERT TO anonymous WITH CHECK ((confirmed_by IS NULL));
 
 
 --
--- Name: akce_item manage_own; Type: POLICY; Schema: public; Owner: -
+-- Name: attendee_external manage_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY manage_own ON public.akce_item TO member USING ((ai_user = public.current_user_id())) WITH CHECK ((ai_user = public.current_user_id()));
+CREATE POLICY manage_all ON public.attendee_external TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: event manage_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY manage_all ON public.event TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: attendee_user manage_own; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY manage_own ON public.attendee_user TO member USING ((user_id = public.current_user_id())) WITH CHECK ((user_id = public.current_user_id()));
 
 
 --
@@ -4341,10 +4475,17 @@ ALTER TABLE public.rozpis ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.rozpis_item ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: akce select_all; Type: POLICY; Schema: public; Owner: -
+-- Name: event select_all; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY select_all ON public.akce FOR SELECT USING (true);
+CREATE POLICY select_all ON public.event FOR SELECT USING (true);
+
+
+--
+-- Name: attendee_external select_member; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY select_member ON public.attendee_external FOR SELECT TO member USING (true);
 
 
 --
@@ -4435,38 +4576,38 @@ GRANT ALL ON FUNCTION public.active_prospects() TO administrator;
 
 
 --
--- Name: TABLE akce; Type: ACL; Schema: public; Owner: -
+-- Name: TABLE event; Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE public.akce TO anonymous;
-
-
---
--- Name: FUNCTION akce_free_slots(a public.akce); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.akce_free_slots(a public.akce) TO anonymous;
+GRANT ALL ON TABLE public.event TO anonymous;
 
 
 --
--- Name: FUNCTION akce_has_capacity(a public.akce); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION akce_free_slots(a public.event); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.akce_has_capacity(a public.akce) TO anonymous;
-
-
---
--- Name: FUNCTION akce_my_notes(a public.akce); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.akce_my_notes(a public.akce) TO anonymous;
+GRANT ALL ON FUNCTION public.akce_free_slots(a public.event) TO anonymous;
 
 
 --
--- Name: FUNCTION akce_signed_up(a public.akce); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION akce_has_capacity(a public.event); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.akce_signed_up(a public.akce) TO anonymous;
+GRANT ALL ON FUNCTION public.akce_has_capacity(a public.event) TO anonymous;
+
+
+--
+-- Name: FUNCTION akce_my_notes(a public.event); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.akce_my_notes(a public.event) TO anonymous;
+
+
+--
+-- Name: FUNCTION akce_signed_up(a public.event); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.akce_signed_up(a public.event) TO anonymous;
 
 
 --
@@ -4558,6 +4699,13 @@ GRANT ALL ON FUNCTION public.current_tenant_id() TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.current_user_id() TO anonymous;
+
+
+--
+-- Name: FUNCTION event_remaining_spots(a public.event); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.event_remaining_spots(a public.event) TO anonymous;
 
 
 --
@@ -4786,14 +4934,6 @@ GRANT ALL ON FUNCTION public.nabidka_my_lessons(n public.nabidka) TO anonymous;
 
 
 --
--- Name: FUNCTION on_update_current_timestamp_akce(); Type: ACL; Schema: public; Owner: -
---
-
-REVOKE ALL ON FUNCTION public.on_update_current_timestamp_akce() FROM PUBLIC;
-GRANT ALL ON FUNCTION public.on_update_current_timestamp_akce() TO anonymous;
-
-
---
 -- Name: FUNCTION on_update_current_timestamp_aktuality(); Type: ACL; Schema: public; Owner: -
 --
 
@@ -4913,10 +5053,10 @@ GRANT SELECT,USAGE ON SEQUENCE public.akce_a_id_seq TO anonymous;
 
 
 --
--- Name: TABLE akce_item; Type: ACL; Schema: public; Owner: -
+-- Name: TABLE attendee_user; Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON TABLE public.akce_item TO anonymous;
+GRANT ALL ON TABLE public.attendee_user TO anonymous;
 
 
 --
@@ -4946,6 +5086,13 @@ GRANT SELECT,USAGE ON SEQUENCE public.aktuality_at_id_seq TO anonymous;
 
 GRANT SELECT ON TABLE public.attachment TO anonymous;
 GRANT ALL ON TABLE public.attachment TO member;
+
+
+--
+-- Name: TABLE attendee_external; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.attendee_external TO anonymous;
 
 
 --
@@ -5316,7 +5463,6 @@ GRANT SELECT,USAGE ON SEQUENCE public.video_v_id_seq TO anonymous;
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public REVOKE ALL ON SEQUENCES  FROM postgres;
 ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO anonymous;
 
 
@@ -5324,8 +5470,6 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT SELECT,USAGE O
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public REVOKE ALL ON FUNCTIONS  FROM postgres;
 ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON FUNCTIONS  TO anonymous;
 
 

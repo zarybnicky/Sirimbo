@@ -93,11 +93,11 @@
     "migrate": {
       "flake": false,
       "locked": {
-        "lastModified": 1660645687,
-        "narHash": "sha256-zLlYu4aWE5qcRoafP8jLXaGScorBtsXaNxyT4PgsX88=",
+        "lastModified": 1676388391,
+        "narHash": "sha256-QZoDVE4+mpQesPZAEx4Lubo1z9EHIaBxtzIRIcYHZOY=",
         "owner": "graphile",
         "repo": "migrate",
-        "rev": "16275140e1e5b03c1fc9f1d6f4de44cc57e5f015",
+        "rev": "56b4db70d1acd04bfc4d50ceaf99057fbdb5496c",
         "type": "github"
       },
       "original": {
