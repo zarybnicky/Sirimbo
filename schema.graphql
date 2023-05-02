@@ -38,6 +38,35 @@ type Akce {
   aInfo: String
   aJmeno: String
   aKapacita: BigInt
+
+  """Reads and enables pagination through a set of `AkceItem`."""
+  akceItemsByAiIdRodic(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AkceItemCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `AkceItem`."""
+    orderBy: [AkceItemsOrderBy!] = [NATURAL]
+  ): AkceItemsConnection!
   aKde: String
   aLock: Boolean
   aOd: Date
@@ -45,7 +74,7 @@ type Akce {
   aVisible: Boolean
   enableNotes: Boolean
   isPublic: Boolean
-  summary: JSON
+  summary: String
 }
 
 """
@@ -92,7 +121,7 @@ input AkceCondition {
   isPublic: Boolean
 
   """Checks for equality with the object’s `summary` field."""
-  summary: JSON
+  summary: String
 }
 
 """An input for mutations affecting `Akce`"""
@@ -110,7 +139,7 @@ input AkceInput {
   aVisible: Boolean
   enableNotes: Boolean
   isPublic: Boolean
-  summary: JSON
+  summary: String
 }
 
 type AkceItem {
@@ -118,6 +147,9 @@ type AkceItem {
   aiIdRodic: BigInt
   aiRokNarozeni: Int
   aiUser: BigInt
+
+  """Reads a single `Akce` that is related to this `AkceItem`."""
+  akceByAiIdRodic: Akce
   notes: String
 }
 
@@ -187,6 +219,34 @@ enum AkceItemsOrderBy {
   AI_ROK_NAROZENI_DESC
   AI_USER_ASC
   AI_USER_DESC
+  AKCE_BY_AI_ID_RODIC__A_DO_ASC
+  AKCE_BY_AI_ID_RODIC__A_DO_DESC
+  AKCE_BY_AI_ID_RODIC__A_DOKUMENTY_ASC
+  AKCE_BY_AI_ID_RODIC__A_DOKUMENTY_DESC
+  AKCE_BY_AI_ID_RODIC__A_ID_ASC
+  AKCE_BY_AI_ID_RODIC__A_ID_DESC
+  AKCE_BY_AI_ID_RODIC__A_INFO_ASC
+  AKCE_BY_AI_ID_RODIC__A_INFO_DESC
+  AKCE_BY_AI_ID_RODIC__A_JMENO_ASC
+  AKCE_BY_AI_ID_RODIC__A_JMENO_DESC
+  AKCE_BY_AI_ID_RODIC__A_KAPACITA_ASC
+  AKCE_BY_AI_ID_RODIC__A_KAPACITA_DESC
+  AKCE_BY_AI_ID_RODIC__A_KDE_ASC
+  AKCE_BY_AI_ID_RODIC__A_KDE_DESC
+  AKCE_BY_AI_ID_RODIC__A_LOCK_ASC
+  AKCE_BY_AI_ID_RODIC__A_LOCK_DESC
+  AKCE_BY_AI_ID_RODIC__A_OD_ASC
+  AKCE_BY_AI_ID_RODIC__A_OD_DESC
+  AKCE_BY_AI_ID_RODIC__A_TIMESTAMP_ASC
+  AKCE_BY_AI_ID_RODIC__A_TIMESTAMP_DESC
+  AKCE_BY_AI_ID_RODIC__A_VISIBLE_ASC
+  AKCE_BY_AI_ID_RODIC__A_VISIBLE_DESC
+  AKCE_BY_AI_ID_RODIC__ENABLE_NOTES_ASC
+  AKCE_BY_AI_ID_RODIC__ENABLE_NOTES_DESC
+  AKCE_BY_AI_ID_RODIC__IS_PUBLIC_ASC
+  AKCE_BY_AI_ID_RODIC__IS_PUBLIC_DESC
+  AKCE_BY_AI_ID_RODIC__SUMMARY_ASC
+  AKCE_BY_AI_ID_RODIC__SUMMARY_DESC
   NATURAL
   NOTES_ASC
   NOTES_DESC
@@ -242,6 +302,8 @@ enum AkcesOrderBy {
   A_TIMESTAMP_DESC
   A_VISIBLE_ASC
   A_VISIBLE_DESC
+  AKCE_ITEMS_BY_AI_ID_RODIC__COUNT_ASC
+  AKCE_ITEMS_BY_AI_ID_RODIC__COUNT_DESC
   ENABLE_NOTES_ASC
   ENABLE_NOTES_DESC
   IS_PUBLIC_ASC
@@ -446,7 +508,7 @@ input AktualityInput {
   atFotoMain: BigInt
   atId: BigInt
   atJmeno: String!
-  atKat: String!
+  atKat: String
   atKdo: BigInt
   atPreview: String!
   atText: String!
@@ -1359,7 +1421,7 @@ type ChangePasswordPayload {
 }
 
 type CohortGroup implements Node {
-  description: JSON!
+  description: String!
   id: BigInt!
   isPublic: Boolean!
   name: String!
@@ -1410,7 +1472,7 @@ for equality and combined with a logical ‘and.’
 """
 input CohortGroupCondition {
   """Checks for equality with the object’s `description` field."""
-  description: JSON
+  description: String
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
@@ -1430,7 +1492,7 @@ input CohortGroupCondition {
 
 """An input for mutations affecting `CohortGroup`"""
 input CohortGroupInput {
-  description: JSON
+  description: String
   id: BigInt
   isPublic: Boolean
   name: String!
@@ -1442,7 +1504,7 @@ input CohortGroupInput {
 Represents an update to a `CohortGroup`. Fields that are set will be updated.
 """
 input CohortGroupPatch {
-  description: JSON
+  description: String
   id: BigInt
   isPublic: Boolean
   name: String
@@ -1555,6 +1617,9 @@ input CreateAkceItemInput {
 
 """The output of our create `AkceItem` mutation."""
 type CreateAkceItemPayload {
+  """Reads a single `Akce` that is related to this `AkceItem`."""
+  akceByAiIdRodic: Akce
+
   """The `AkceItem` that was created by this mutation."""
   akceItem: AkceItem
 
@@ -5558,7 +5623,7 @@ type Event implements Node {
   nodeId: ID!
   remainingSpots: Int
   since: Date!
-  summary: JSON!
+  summary: String!
   until: Date!
   updatedAt: Datetime
 }
@@ -5601,7 +5666,7 @@ input EventCondition {
   since: Date
 
   """Checks for equality with the object’s `summary` field."""
-  summary: JSON
+  summary: String
 
   """Checks for equality with the object’s `until` field."""
   until: Date
@@ -5615,7 +5680,7 @@ input EventInput {
   capacity: BigInt
   description: String!
   enableNotes: Boolean
-  filesLegacy: String!
+  filesLegacy: String
   id: BigInt
   isLocked: Boolean
   isPublic: Boolean
@@ -5623,7 +5688,7 @@ input EventInput {
   locationText: String!
   name: String!
   since: Date!
-  summary: JSON
+  summary: String
   until: Date!
   updatedAt: Datetime
 }
@@ -5643,7 +5708,7 @@ input EventPatch {
   locationText: String
   name: String
   since: Date
-  summary: JSON
+  summary: String
   until: Date
   updatedAt: Datetime
 }
@@ -13902,7 +13967,7 @@ type Skupiny implements Node {
 
   """Reads a single `CohortGroup` that is related to this `Skupiny`."""
   cohortGroupByCohortGroup: CohortGroup
-  internalInfo: JSON!
+  internalInfo: String!
 
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -14013,7 +14078,7 @@ input SkupinyCondition {
   cohortGroup: BigInt
 
   """Checks for equality with the object’s `internalInfo` field."""
-  internalInfo: JSON
+  internalInfo: String
 
   """Checks for equality with the object’s `ordering` field."""
   ordering: Int
@@ -14043,7 +14108,7 @@ input SkupinyCondition {
 """An input for mutations affecting `Skupiny`"""
 input SkupinyInput {
   cohortGroup: BigInt
-  internalInfo: JSON
+  internalInfo: String
   ordering: Int
   sColorRgb: String!
   sColorText: String
@@ -14059,7 +14124,7 @@ Represents an update to a `Skupiny`. Fields that are set will be updated.
 """
 input SkupinyPatch {
   cohortGroup: BigInt
-  internalInfo: JSON
+  internalInfo: String
   ordering: Int
   sColorRgb: String
   sColorText: String
@@ -14129,7 +14194,7 @@ type Tenant implements Node {
     """The method to use when ordering `Location`."""
     orderBy: [LocationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): LocationsConnection!
-  memberInfo: JSON!
+  memberInfo: String!
   name: String!
 
   """
@@ -14314,7 +14379,7 @@ input TenantCondition {
   id: BigInt
 
   """Checks for equality with the object’s `memberInfo` field."""
-  memberInfo: JSON
+  memberInfo: String
 
   """Checks for equality with the object’s `name` field."""
   name: String
@@ -14323,7 +14388,7 @@ input TenantCondition {
 """An input for mutations affecting `Tenant`"""
 input TenantInput {
   id: BigInt
-  memberInfo: JSON!
+  memberInfo: String!
   name: String!
 }
 
@@ -14332,7 +14397,7 @@ Represents an update to a `Tenant`. Fields that are set will be updated.
 """
 input TenantPatch {
   id: BigInt
-  memberInfo: JSON
+  memberInfo: String
   name: String
 }
 

@@ -12,9 +12,10 @@ import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { useQueryClient } from '@tanstack/react-query';
-import { SlateEditorElement } from './Slate';
 import { CohortGroupInput } from 'lib/graphql';
 import { toast } from 'react-toastify';
+import dynamic from 'next/dynamic';
+const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
 type FormProps = Pick<CohortGroupInput, 'name' | 'description' | 'isPublic' | 'ordering'>;
 
@@ -28,15 +29,13 @@ export const CohortGroupForm: React.FC<{ data?: CohortGroupFragment }> = ({ data
   const { mutateAsync: doUpdate } = useUpdateCohortGroupMutation({ onSuccess });
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
-  const [iter, setIter] = React.useState(0);
   React.useEffect(() => {
     reset({
       name: data?.name || '',
-      description: data?.description || [],
+      description: data?.description,
       isPublic: data?.isPublic || false,
       ordering: data?.ordering || 0,
     }, { keepDirtyValues: true });
-    setIter(x => x + 1);
   }, [data, reset]);
 
   const onSubmit = useAsyncCallback(async (patch: FormProps) => {
@@ -53,7 +52,7 @@ export const CohortGroupForm: React.FC<{ data?: CohortGroupFragment }> = ({ data
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="name" label="Název" required />
-      <SlateEditorElement control={control} iter={iter} name="description" label="Popis" />
+      <RichTextEditor control={control} initialState={data?.description} name="description" label="Popis" />
       <CheckboxElement control={control} name="isPublic" label="Zobrazit pro veřejnost" />
       <TextFieldElement
         control={control}

@@ -89,7 +89,7 @@ export const Sidebar = ({
           )}
 
           <div className="mt-4 text-xs text-stone-700 lg:text-white p-4 grid gap-2">
-            <div>© 2023 Taneční klub Olymp Olomouc, z. s.</div>
+            <div>© 2023 TK Olymp Olomouc, z. s.</div>
             <div>Verze: {process.env.BUILD_ID?.substring(0, 7)}</div>
           </div>
         </div>

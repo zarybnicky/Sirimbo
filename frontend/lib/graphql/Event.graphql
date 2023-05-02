@@ -19,7 +19,6 @@ fragment Event on Event {
 fragment EventItem on AttendeeUser {
   id
   notes
-  birthYear
   user {
     uJmeno
     uPrijmeni
@@ -31,10 +30,24 @@ fragment EventItem on AttendeeUser {
 
 fragment EventWithItems on Event {
   ...Event
-  attendeeUsers {
-    totalCount
+  attendeeExternals {
     nodes {
-      ...EventItem
+      firstName
+      lastName
+    }
+  }
+  attendeeUsers {
+    nodes {
+      notes
+      user {
+        uId
+        uJmeno
+        uPrijmeni
+        uNarozeni
+        uTelefon
+        uEmail
+        uRodneCislo
+      }
     }
   }
 }
@@ -83,36 +96,11 @@ mutation DeleteEvent($id: BigInt!) {
 }
 
 fragment MyEvent on Event {
-  ...Event
-  attendeeExternals {
-    nodes {
-      firstName
-      lastName
-    }
-  }
-  attendeeUsers {
-    nodes {
-      notes
-      user {
-        uId
-        uJmeno
-        uPrijmeni
-        uNarozeni
-      }
-    }
-  }
-}
-
-query PublicEvents {
-  events(condition: {isVisible: true, isPublic: true}) {
-    nodes {
-      ...Event
-    }
-  }
+  ...EventWithItems
 }
 
 query MyEvents {
-  events(condition: {isVisible: true}) {
+  events(condition: {isVisible: true}, orderBy: [SINCE_ASC]) {
     nodes {
       ...MyEvent
     }

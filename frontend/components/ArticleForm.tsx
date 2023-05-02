@@ -10,7 +10,7 @@ import {
   useCreateArticleMutation,
   useUpdateArticleMutation,
 } from 'lib/graphql/Articles';
-import { SlateEditorElement } from './Slate';
+import { RichTextEditor } from './RichTextEditor';
 
 type FormProps = Pick<AktualityInput, 'atJmeno' | 'atPreview' | 'atText'>;
 
@@ -22,20 +22,17 @@ export const ArticleForm: React.FC<{
   const { mutateAsync: doUpdate } = useUpdateArticleMutation({ onSuccess });
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
-  const [iter, setIter] = React.useState(0);
   React.useEffect(() => {
     reset({
       atJmeno: data?.atJmeno,
       atPreview: data?.atPreview,
       atText: data?.atText,
     });
-    setIter(x => x + 1);
   }, [data, reset]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     const patch = {
       ...values,
-      atText: JSON.stringify(values.atText),
       atKat: '1',
     };
     if (data) {
@@ -49,8 +46,8 @@ export const ArticleForm: React.FC<{
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="atJmeno" label="Název" required />
-      <SlateEditorElement control={control} iter={iter} name="atPreview" label="Shrnutí" />
-      <SlateEditorElement control={control} iter={iter} name="atText" label="Text" />
+      <RichTextEditor control={control} initialState={data?.atPreview} name="atPreview" label="Shrnutí" />
+      <RichTextEditor control={control} initialState={data?.atText} name="atText" label="Text" />
       <SubmitButton loading={onSubmit.loading} />
     </form>
   );

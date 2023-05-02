@@ -4,18 +4,18 @@ import * as Types from './index';
 
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
-export type EventFragment = { __typename: 'Event', id: string, since: string, until: string, summary: { [key: string]: any }, description: string, filesLegacy: string, name: string, capacity: string, remainingSpots: number | null, locationText: string, isLocked: boolean, isVisible: boolean, isPublic: boolean, enableNotes: boolean };
+export type EventFragment = { __typename: 'Event', id: string, since: string, until: string, summary: string, description: string, filesLegacy: string, name: string, capacity: string, remainingSpots: number | null, locationText: string, isLocked: boolean, isVisible: boolean, isPublic: boolean, enableNotes: boolean };
 
-export type EventItemFragment = { __typename?: 'AttendeeUser', id: string, notes: string, birthYear: number, user: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string } | null };
+export type EventItemFragment = { __typename?: 'AttendeeUser', id: string, notes: string, user: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string } | null };
 
-export type EventWithItemsFragment = { __typename: 'Event', id: string, since: string, until: string, summary: { [key: string]: any }, description: string, filesLegacy: string, name: string, capacity: string, remainingSpots: number | null, locationText: string, isLocked: boolean, isVisible: boolean, isPublic: boolean, enableNotes: boolean, attendeeUsers: { __typename?: 'AttendeeUsersConnection', totalCount: number, nodes: Array<{ __typename?: 'AttendeeUser', id: string, notes: string, birthYear: number, user: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string } | null }> } };
+export type EventWithItemsFragment = { __typename: 'Event', id: string, since: string, until: string, summary: string, description: string, filesLegacy: string, name: string, capacity: string, remainingSpots: number | null, locationText: string, isLocked: boolean, isVisible: boolean, isPublic: boolean, enableNotes: boolean, attendeeExternals: { __typename?: 'AttendeeExternalsConnection', nodes: Array<{ __typename?: 'AttendeeExternal', firstName: string, lastName: string }> }, attendeeUsers: { __typename?: 'AttendeeUsersConnection', nodes: Array<{ __typename?: 'AttendeeUser', notes: string, user: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string, uNarozeni: string, uTelefon: string, uEmail: string, uRodneCislo: string | null } | null }> } };
 
 export type EventQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
 }>;
 
 
-export type EventQuery = { __typename?: 'Query', event: { __typename: 'Event', id: string, since: string, until: string, summary: { [key: string]: any }, description: string, filesLegacy: string, name: string, capacity: string, remainingSpots: number | null, locationText: string, isLocked: boolean, isVisible: boolean, isPublic: boolean, enableNotes: boolean, attendeeUsers: { __typename?: 'AttendeeUsersConnection', totalCount: number, nodes: Array<{ __typename?: 'AttendeeUser', id: string, notes: string, birthYear: number, user: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string } | null }> } } | null };
+export type EventQuery = { __typename?: 'Query', event: { __typename: 'Event', id: string, since: string, until: string, summary: string, description: string, filesLegacy: string, name: string, capacity: string, remainingSpots: number | null, locationText: string, isLocked: boolean, isVisible: boolean, isPublic: boolean, enableNotes: boolean, attendeeExternals: { __typename?: 'AttendeeExternalsConnection', nodes: Array<{ __typename?: 'AttendeeExternal', firstName: string, lastName: string }> }, attendeeUsers: { __typename?: 'AttendeeUsersConnection', nodes: Array<{ __typename?: 'AttendeeUser', notes: string, user: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string, uNarozeni: string, uTelefon: string, uEmail: string, uRodneCislo: string | null } | null }> } } | null };
 
 export type EventListQueryVariables = Types.Exact<{
   limit?: Types.InputMaybe<Types.Scalars['Int']>;
@@ -24,7 +24,7 @@ export type EventListQueryVariables = Types.Exact<{
 }>;
 
 
-export type EventListQuery = { __typename?: 'Query', events: { __typename?: 'EventsConnection', totalCount: number, nodes: Array<{ __typename: 'Event', id: string, since: string, until: string, summary: { [key: string]: any }, description: string, filesLegacy: string, name: string, capacity: string, remainingSpots: number | null, locationText: string, isLocked: boolean, isVisible: boolean, isPublic: boolean, enableNotes: boolean, attendeeUsers: { __typename?: 'AttendeeUsersConnection', totalCount: number, nodes: Array<{ __typename?: 'AttendeeUser', id: string, notes: string, birthYear: number, user: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string } | null }> } }> } | null };
+export type EventListQuery = { __typename?: 'Query', events: { __typename?: 'EventsConnection', totalCount: number, nodes: Array<{ __typename: 'Event', id: string, since: string, until: string, summary: string, description: string, filesLegacy: string, name: string, capacity: string, remainingSpots: number | null, locationText: string, isLocked: boolean, isVisible: boolean, isPublic: boolean, enableNotes: boolean, attendeeExternals: { __typename?: 'AttendeeExternalsConnection', nodes: Array<{ __typename?: 'AttendeeExternal', firstName: string, lastName: string }> }, attendeeUsers: { __typename?: 'AttendeeUsersConnection', nodes: Array<{ __typename?: 'AttendeeUser', notes: string, user: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string, uNarozeni: string, uTelefon: string, uEmail: string, uRodneCislo: string | null } | null }> } }> } | null };
 
 export type ToggleEventVisibleMutationVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
@@ -56,17 +56,12 @@ export type DeleteEventMutationVariables = Types.Exact<{
 
 export type DeleteEventMutation = { __typename?: 'Mutation', deleteEvent: { __typename: 'DeleteEventPayload' } | null };
 
-export type MyEventFragment = { __typename: 'Event', id: string, since: string, until: string, summary: { [key: string]: any }, description: string, filesLegacy: string, name: string, capacity: string, remainingSpots: number | null, locationText: string, isLocked: boolean, isVisible: boolean, isPublic: boolean, enableNotes: boolean, attendeeExternals: { __typename?: 'AttendeeExternalsConnection', nodes: Array<{ __typename?: 'AttendeeExternal', firstName: string, lastName: string }> }, attendeeUsers: { __typename?: 'AttendeeUsersConnection', nodes: Array<{ __typename?: 'AttendeeUser', notes: string, user: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string, uNarozeni: string } | null }> } };
-
-export type PublicEventsQueryVariables = Types.Exact<{ [key: string]: never; }>;
-
-
-export type PublicEventsQuery = { __typename?: 'Query', events: { __typename?: 'EventsConnection', nodes: Array<{ __typename: 'Event', id: string, since: string, until: string, summary: { [key: string]: any }, description: string, filesLegacy: string, name: string, capacity: string, remainingSpots: number | null, locationText: string, isLocked: boolean, isVisible: boolean, isPublic: boolean, enableNotes: boolean }> } | null };
+export type MyEventFragment = { __typename: 'Event', id: string, since: string, until: string, summary: string, description: string, filesLegacy: string, name: string, capacity: string, remainingSpots: number | null, locationText: string, isLocked: boolean, isVisible: boolean, isPublic: boolean, enableNotes: boolean, attendeeExternals: { __typename?: 'AttendeeExternalsConnection', nodes: Array<{ __typename?: 'AttendeeExternal', firstName: string, lastName: string }> }, attendeeUsers: { __typename?: 'AttendeeUsersConnection', nodes: Array<{ __typename?: 'AttendeeUser', notes: string, user: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string, uNarozeni: string, uTelefon: string, uEmail: string, uRodneCislo: string | null } | null }> } };
 
 export type MyEventsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type MyEventsQuery = { __typename?: 'Query', events: { __typename?: 'EventsConnection', nodes: Array<{ __typename: 'Event', id: string, since: string, until: string, summary: { [key: string]: any }, description: string, filesLegacy: string, name: string, capacity: string, remainingSpots: number | null, locationText: string, isLocked: boolean, isVisible: boolean, isPublic: boolean, enableNotes: boolean, attendeeExternals: { __typename?: 'AttendeeExternalsConnection', nodes: Array<{ __typename?: 'AttendeeExternal', firstName: string, lastName: string }> }, attendeeUsers: { __typename?: 'AttendeeUsersConnection', nodes: Array<{ __typename?: 'AttendeeUser', notes: string, user: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string, uNarozeni: string } | null }> } }> } | null };
+export type MyEventsQuery = { __typename?: 'Query', events: { __typename?: 'EventsConnection', nodes: Array<{ __typename: 'Event', id: string, since: string, until: string, summary: string, description: string, filesLegacy: string, name: string, capacity: string, remainingSpots: number | null, locationText: string, isLocked: boolean, isVisible: boolean, isPublic: boolean, enableNotes: boolean, attendeeExternals: { __typename?: 'AttendeeExternalsConnection', nodes: Array<{ __typename?: 'AttendeeExternal', firstName: string, lastName: string }> }, attendeeUsers: { __typename?: 'AttendeeUsersConnection', nodes: Array<{ __typename?: 'AttendeeUser', notes: string, user: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string, uNarozeni: string, uTelefon: string, uEmail: string, uRodneCislo: string | null } | null }> } }> } | null };
 
 export type CreateParticipationMutationVariables = Types.Exact<{
   input: Types.CreateParticipationInput;
@@ -82,6 +77,19 @@ export type CancelParticipationMutationVariables = Types.Exact<{
 
 export type CancelParticipationMutation = { __typename?: 'Mutation', cancelParticipation: { __typename: 'CancelParticipationPayload' } | null };
 
+export const EventItemFragmentDoc = `
+    fragment EventItem on AttendeeUser {
+  id
+  notes
+  user {
+    uJmeno
+    uPrijmeni
+    uRodneCislo
+    uTelefon
+    uEmail
+  }
+}
+    `;
 export const EventFragmentDoc = `
     fragment Event on Event {
   __typename
@@ -101,34 +109,8 @@ export const EventFragmentDoc = `
   enableNotes
 }
     `;
-export const EventItemFragmentDoc = `
-    fragment EventItem on AttendeeUser {
-  id
-  notes
-  birthYear
-  user {
-    uJmeno
-    uPrijmeni
-    uRodneCislo
-    uTelefon
-    uEmail
-  }
-}
-    `;
 export const EventWithItemsFragmentDoc = `
     fragment EventWithItems on Event {
-  ...Event
-  attendeeUsers {
-    totalCount
-    nodes {
-      ...EventItem
-    }
-  }
-}
-    ${EventFragmentDoc}
-${EventItemFragmentDoc}`;
-export const MyEventFragmentDoc = `
-    fragment MyEvent on Event {
   ...Event
   attendeeExternals {
     nodes {
@@ -144,11 +126,19 @@ export const MyEventFragmentDoc = `
         uJmeno
         uPrijmeni
         uNarozeni
+        uTelefon
+        uEmail
+        uRodneCislo
       }
     }
   }
 }
     ${EventFragmentDoc}`;
+export const MyEventFragmentDoc = `
+    fragment MyEvent on Event {
+  ...EventWithItems
+}
+    ${EventWithItemsFragmentDoc}`;
 export const EventDocument = `
     query Event($id: BigInt!) {
   event(id: $id) {
@@ -285,35 +275,9 @@ export const useDeleteEventMutation = <
 useDeleteEventMutation.getKey = () => ['DeleteEvent'];
 
 useDeleteEventMutation.fetcher = (variables: DeleteEventMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteEventMutation, DeleteEventMutationVariables>(DeleteEventDocument, variables, options);
-export const PublicEventsDocument = `
-    query PublicEvents {
-  events(condition: {isVisible: true, isPublic: true}) {
-    nodes {
-      ...Event
-    }
-  }
-}
-    ${EventFragmentDoc}`;
-export const usePublicEventsQuery = <
-      TData = PublicEventsQuery,
-      TError = unknown
-    >(
-      variables?: PublicEventsQueryVariables,
-      options?: UseQueryOptions<PublicEventsQuery, TError, TData>
-    ) =>
-    useQuery<PublicEventsQuery, TError, TData>(
-      variables === undefined ? ['PublicEvents'] : ['PublicEvents', variables],
-      fetcher<PublicEventsQuery, PublicEventsQueryVariables>(PublicEventsDocument, variables),
-      options
-    );
-
-usePublicEventsQuery.getKey = (variables?: PublicEventsQueryVariables) => variables === undefined ? ['PublicEvents'] : ['PublicEvents', variables];
-;
-
-usePublicEventsQuery.fetcher = (variables?: PublicEventsQueryVariables, options?: RequestInit['headers']) => fetcher<PublicEventsQuery, PublicEventsQueryVariables>(PublicEventsDocument, variables, options);
 export const MyEventsDocument = `
     query MyEvents {
-  events(condition: {isVisible: true}) {
+  events(condition: {isVisible: true}, orderBy: [SINCE_ASC]) {
     nodes {
       ...MyEvent
     }

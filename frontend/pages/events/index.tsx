@@ -1,29 +1,19 @@
 import * as React from 'react';
-import { useMyEventsQuery } from 'lib/graphql/Event';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
 import { Item } from 'components/layout/Item';
-import { EventItem } from 'components/EventItem';
+import { useAuth } from 'lib/data/use-auth';
+import { Layout } from 'components/layout/Layout';
+import { EventMemberList } from 'components/EventMemberList';
 
 export default function EventListPage() {
-  const { data } = useMyEventsQuery();
-
   return (
-    <Item className="col-full-width p-2 bg-stone-100">
+    <Item className="col-feature mt-6">
       <Item.Titlebar title="Nadcházející akce" />
-      <div className="grid grid-cols-2 gap-2">
-        {data?.events?.nodes.map((event) => (
-          <EventItem key={event.id} event={event} />
-        ))}
-      </div>
+      <EventMemberList/>
     </Item>
   );
 }
 
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peAkce,
-  PermissionLevel.P_MEMBER,
-);
+EventListPage.Layout = ({ children }: { children: React.ReactNode }) => {
+  const { user } = useAuth();
+  return <Layout showTopMenu={!user}>{children}</Layout>;
+};

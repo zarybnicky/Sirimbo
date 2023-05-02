@@ -14,9 +14,10 @@ import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { ColorPicker } from './ColorPicker';
 import { useQueryClient } from '@tanstack/react-query';
-import { SlateEditorElement } from './Slate';
 import { useCohortGroupListQuery } from 'lib/graphql/CohortGroup';
 import { SelectElement } from './SelectElement';
+import dynamic from 'next/dynamic';
+const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
 type FormProps = Pick<
   SkupinyInput,
@@ -56,11 +57,7 @@ export const CohortForm = ({ data }: { data?: CohortFragment }) => {
     setIter(x => x + 1);
   }, [reset, data]);
 
-  const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    const patch = {
-      ...values,
-      sDescription: JSON.stringify(values.sDescription),
-    };
+  const onSubmit = useAsyncCallback(async (patch: FormProps) => {
     if (data) {
       await doUpdate({ id: data.id, patch });
     } else {
@@ -74,10 +71,10 @@ export const CohortForm = ({ data }: { data?: CohortFragment }) => {
       <TextFieldElement control={control} name="sName" label="Název" required />
       <TextFieldElement control={control} name="sLocation" label="Město/místo" required />
       <ColorPicker name="sColorRgb" control={control} />
-      <SlateEditorElement control={control} iter={iter} name="sDescription" label="Popis" />
-      <SlateEditorElement
+      <RichTextEditor control={control} initialState={data?.sDescription} name="sDescription" label="Popis" />
+      <RichTextEditor
         control={control}
-        iter={iter}
+        initialState={data?.internalInfo}
         name="internalInfo"
         label="Interní informace"
       />

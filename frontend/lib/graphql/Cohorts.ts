@@ -7,30 +7,30 @@ import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tan
 import { fetcher } from 'lib/query';
 export type CohortBasicFragment = { __typename: 'Skupiny', sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string };
 
-export type CohortFragment = { __typename: 'Skupiny', sDescription: string, internalInfo: { [key: string]: any }, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string };
+export type CohortFragment = { __typename: 'Skupiny', sDescription: string, internalInfo: string, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string };
 
-export type CohortWithMembersFragment = { __typename: 'Skupiny', sDescription: string, internalInfo: { [key: string]: any }, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string, usersByUSkupina: { __typename?: 'UsersConnection', nodes: Array<{ __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string, id: string }> } };
+export type CohortWithMembersFragment = { __typename: 'Skupiny', sDescription: string, internalInfo: string, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string, usersByUSkupina: { __typename?: 'UsersConnection', nodes: Array<{ __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string, id: string }> } };
 
 export type CohortListQueryVariables = Types.Exact<{
   visible?: Types.InputMaybe<Types.Scalars['Boolean']>;
 }>;
 
 
-export type CohortListQuery = { __typename?: 'Query', skupinies: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename: 'Skupiny', sDescription: string, internalInfo: { [key: string]: any }, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string }> } | null };
+export type CohortListQuery = { __typename?: 'Query', skupinies: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename: 'Skupiny', sDescription: string, internalInfo: string, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string }> } | null };
 
 export type CohortListWithMembersQueryVariables = Types.Exact<{
   visible?: Types.InputMaybe<Types.Scalars['Boolean']>;
 }>;
 
 
-export type CohortListWithMembersQuery = { __typename?: 'Query', skupinies: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename: 'Skupiny', sDescription: string, internalInfo: { [key: string]: any }, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string, usersByUSkupina: { __typename?: 'UsersConnection', nodes: Array<{ __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string, id: string }> } }> } | null };
+export type CohortListWithMembersQuery = { __typename?: 'Query', skupinies: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename: 'Skupiny', sDescription: string, internalInfo: string, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string, usersByUSkupina: { __typename?: 'UsersConnection', nodes: Array<{ __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string, id: string }> } }> } | null };
 
 export type CohortQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
 }>;
 
 
-export type CohortQuery = { __typename?: 'Query', skupiny: { __typename: 'Skupiny', sDescription: string, internalInfo: { [key: string]: any }, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string } | null };
+export type CohortQuery = { __typename?: 'Query', skupiny: { __typename: 'Skupiny', sDescription: string, internalInfo: string, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string } | null };
 
 export type CreateCohortMutationVariables = Types.Exact<{
   input: Types.SkupinyInput;

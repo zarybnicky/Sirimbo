@@ -1,4 +1,3 @@
-import { SlateEditor } from './Slate';
 import Link from 'next/link';
 import parse, {
   domToReact,
@@ -8,7 +7,7 @@ import parse, {
 } from 'html-react-parser';
 
 interface Props {
-  value: string | any[] | object | undefined | null;
+  value: string; // | any[] | object | undefined | null;
   className?: string;
 }
 
@@ -16,23 +15,23 @@ export const RichTextView = ({ value, className }: Props) => {
   if (!value || (Array.isArray(value) && !value.length)) {
     return null;
   }
-  if (Array.isArray(value)) {
-    return (
-      <div className={className}>
-        <SlateEditor name="viewOnly" readOnly value={value} />
-      </div>
-    );
-  }
-  if (typeof value === 'object') {
-    return <>Neplatný obsah, nahlašte to prosím správci obsahu</>;
-  }
-  if (value.startsWith('[')) {
-    return (
-      <div className={className}>
-        <SlateEditor name="viewOnly" readOnly value={JSON.parse(value) as any[]} />
-      </div>
-    );
-  }
+  /* if (Array.isArray(value)) {
+   *   return (
+   *     <div className={className}>
+   *       <SlateEditor name="viewOnly" readOnly value={value} />
+   *     </div>
+   *   );
+   * }
+   * if (typeof value === 'object') {
+   *   return <>Neplatný obsah, nahlašte to prosím správci obsahu</>;
+   * }
+   * if (value.startsWith('[')) {
+   *   return (
+   *     <div className={className}>
+   *       <SlateEditor name="viewOnly" readOnly value={JSON.parse(value) as any[]} />
+   *     </div>
+   *   );
+   * } */
   return <HtmlView className={className} content={value} />;
 };
 

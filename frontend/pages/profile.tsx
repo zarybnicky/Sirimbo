@@ -14,6 +14,7 @@ import { Edit } from 'react-feather';
 import { PersonalInfoForm } from 'components/PersonalInfoForm';
 import { ChangePasswordForm } from 'components/ChangePasswordForm';
 import { useMyLessonsQuery } from 'lib/graphql/Schedule';
+import { LessonButton } from 'components/LessonButton';
 
 export default function ProfilePage() {
   const { user, couple } = useAuth();
@@ -25,13 +26,13 @@ export default function ProfilePage() {
   });
   const { data: upcomingLessons } = useMyLessonsQuery({
     startDate: new Date().toISOString().substring(0, 10),
-    endDate: new Date(12023, 1).toISOString().substring(0, 10),
+    endDate: new Date(2123, 1).toISOString().substring(0, 10),
   });
 
   if (!user) return null;
 
   return (
-    <Item className="col-full-width px-4">
+    <Item className="col-full-width px-4 bg-stone-100">
       <Item.Titlebar title={`${user.uJmeno} ${user.uPrijmeni}`}>
         <SimpleDialog
           title="Osobní údaje"
@@ -57,23 +58,26 @@ export default function ProfilePage() {
         {cohorts?.skupinies?.nodes.find((x) => x.id === user.uSkupina)?.sName}
       </p>
 
-      <p>
-        Aktuální partner:{' '}
-        {couple?.pIdPartner === user.id
-          ? `${couple?.userByPIdPartnerka?.uJmeno} ${couple?.userByPIdPartnerka?.uPrijmeni}`
-          : `${couple?.userByPIdPartner?.uJmeno} ${couple?.userByPIdPartner?.uPrijmeni}`}
-      </p>
+      {(couple?.userByPIdPartner || couple?.userByPIdPartnerka) && (
+        <p>
+          Aktuální partner:{' '}
+          {couple?.pIdPartner === user.id
+            ? `${couple?.userByPIdPartnerka?.uJmeno} ${couple?.userByPIdPartnerka?.uPrijmeni}`
+            : `${couple?.userByPIdPartner?.uJmeno} ${couple?.userByPIdPartner?.uPrijmeni}`}
+        </p>
+      )}
 
-      <div>
-        Nadcházející lekce
+      <h3>Nadcházející lekce</h3>
+      <div className="flex flex-col gap-[1px] w-80">
         {upcomingLessons?.myLessons?.nodes.map((item) => (
-          <div key={item.id}>{item.rozpiByRiIdRodic?.rDatum}</div>
+          <LessonButton lesson={item} schedule={item.rozpiByRiIdRodic!} showTrainer showDate />
         ))}
       </div>
-      <div>
-        Minulé lekce
+
+      <h3>Minulé lekce</h3>
+      <div className="flex flex-col-reverse gap-[1px] w-80">
         {pastLessons?.myLessons?.nodes.map((item) => (
-          <div key={item.id}>{item.rozpiByRiIdRodic?.rDatum}</div>
+          <LessonButton lesson={item} schedule={item.rozpiByRiIdRodic!} showTrainer showDate />
         ))}
       </div>
     </Item>

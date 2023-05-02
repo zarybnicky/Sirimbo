@@ -14,16 +14,16 @@ import { SubmitButton } from './SubmitButton';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from 'lib/data/use-auth';
 import { formatCoupleName } from 'lib/format-name';
+import { fullDateFormatter, shortDateFormatter } from 'lib/format-date';
 
-export const LessonButton = ({
-  schedule,
-  lesson,
-  showTrainer,
-}: {
+type Props = {
   lesson: ScheduleItemBasicFragment;
   schedule: ScheduleBasicFragment;
   showTrainer?: boolean;
-}) => {
+  showDate?: boolean;
+};
+
+export const LessonButton = ({ schedule, lesson, showTrainer, showDate }: Props) => {
   const { user } = useAuth();
   const perms = usePermissions();
   const [isOpen, setIsOpen] = React.useState(false);
@@ -72,7 +72,10 @@ export const LessonButton = ({
         !showTrainer && isMyLesson && 'bg-yellow-100',
       )}
     >
-      <div className="text-stone-600">{lesson.riOd.substring(0, 5)}</div>
+      <div className="text-stone-600">
+        {showDate ? shortDateFormatter.format(new Date(schedule.rDatum)) + ' ' : ''}
+        {lesson.riOd.substring(0, 5)}
+      </div>
       <div className="grow">
         {canBook ? 'VOLNÁ' : lesson.paryByRiPartner ? name : '-'}
       </div>

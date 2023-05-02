@@ -13,7 +13,7 @@ export default function CohortsPage() {
   const { data: members } = useCohortListWithMembersQuery({ visible: true });
 
   return (
-    <Item className="col-full-width">
+    <Item className="col-full-width bg-stone-100">
       <Item.Titlebar title="Tréninkové skupiny">
         <CohortExport />
       </Item.Titlebar>

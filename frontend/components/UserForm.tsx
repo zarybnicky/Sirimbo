@@ -18,7 +18,8 @@ import { UserFragment } from 'lib/graphql/CurrentUser';
 import { useCohortListQuery } from 'lib/graphql/Cohorts';
 import { useRoleListQuery } from 'lib/graphql/Roles';
 import { useQueryClient } from '@tanstack/react-query';
-import { SlateEditorElement } from './Slate';
+import dynamic from 'next/dynamic';
+const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
 type FormProps = Pick<
   UserInput,
@@ -64,7 +65,6 @@ export const UserForm: React.FC<{
   const { data: roles } = useRoleListQuery();
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
-  const [iter, setIter] = React.useState(0);
   React.useEffect(() => {
     reset({
       uLogin: data?.uLogin,
@@ -91,24 +91,16 @@ export const UserForm: React.FC<{
       uGroup: data?.uGroup,
       uSkupina: data?.uSkupina,
     });
-    setIter(x => x + 1);
   }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    const { uLogin: _uLogin, uPoznamky, ...patch } = values;
+    const { uLogin: _uLogin, ...patch } = values;
     if (data) {
-      await doUpdate({
-        id: data.id,
-        patch: {
-          ...patch,
-          uPoznamky: JSON.stringify(uPoznamky),
-        },
-      });
+      await doUpdate({id: data.id, patch});
     } else {
       await doCreate({
         input: {
           ...patch,
-          uPoznamky: JSON.stringify(uPoznamky),
           uLogin: _uLogin.toLowerCase(),
           uLock: false,
         },
@@ -246,7 +238,7 @@ export const UserForm: React.FC<{
           }
         />
 
-        <SlateEditorElement control={control} iter={iter} name="uPoznamky" label="Poznámka" />
+        <RichTextEditor initialState={data?.uPoznamky} control={control} name="uPoznamky" label="Poznámka" />
 
         <CheckboxElement
           control={control}

@@ -4,21 +4,21 @@ import * as Types from './index';
 
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
-export type CohortGroupFragment = { __typename: 'CohortGroup', id: string, name: string, description: { [key: string]: any }, isPublic: boolean, ordering: number };
+export type CohortGroupFragment = { __typename: 'CohortGroup', id: string, name: string, description: string, isPublic: boolean, ordering: number };
 
 export type CohortGroupListQueryVariables = Types.Exact<{
   isPublic?: Types.InputMaybe<Types.Scalars['Boolean']>;
 }>;
 
 
-export type CohortGroupListQuery = { __typename?: 'Query', cohortGroups: { __typename?: 'CohortGroupsConnection', nodes: Array<{ __typename: 'CohortGroup', id: string, name: string, description: { [key: string]: any }, isPublic: boolean, ordering: number }> } | null };
+export type CohortGroupListQuery = { __typename?: 'Query', cohortGroups: { __typename?: 'CohortGroupsConnection', nodes: Array<{ __typename: 'CohortGroup', id: string, name: string, description: string, isPublic: boolean, ordering: number }> } | null };
 
 export type CohortGroupQueryVariables = Types.Exact<{
   id: Types.Scalars['BigInt'];
 }>;
 
 
-export type CohortGroupQuery = { __typename?: 'Query', cohortGroup: { __typename: 'CohortGroup', id: string, name: string, description: { [key: string]: any }, isPublic: boolean, ordering: number } | null };
+export type CohortGroupQuery = { __typename?: 'Query', cohortGroup: { __typename: 'CohortGroup', id: string, name: string, description: string, isPublic: boolean, ordering: number } | null };
 
 export type CreateCohortGroupMutationVariables = Types.Exact<{
   input: Types.CohortGroupInput;

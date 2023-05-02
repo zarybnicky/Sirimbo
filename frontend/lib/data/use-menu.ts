@@ -46,7 +46,7 @@ export const useTopMenu = (): MenuStructItem[] => [
   },
   { type: 'link', title: 'Aktuality', href: '/articles' },
   { type: 'link', title: 'Galerie', href: '/gallery' },
-  { type: 'link', title: 'Akce', href: '/events/public' },
+  { type: 'link', title: 'Akce', href: '/events' },
   { type: 'link', title: 'Kontakt', href: '/contact' },
 ];
 

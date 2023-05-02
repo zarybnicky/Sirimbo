@@ -4,12 +4,12 @@ import * as Types from './index';
 
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
-export type TenantFragment = { __typename?: 'Tenant', id: string, name: string, memberInfo: { [key: string]: any }, locationsByTenant: { __typename?: 'LocationsConnection', nodes: Array<{ __typename?: 'Location', id: string, name: string, description: { [key: string]: any } }> } };
+export type TenantFragment = { __typename?: 'Tenant', id: string, name: string, memberInfo: string, locationsByTenant: { __typename?: 'LocationsConnection', nodes: Array<{ __typename?: 'Location', id: string, name: string, description: { [key: string]: any } }> } };
 
 export type CurrentTenantQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type CurrentTenantQuery = { __typename?: 'Query', getCurrentTenant: { __typename?: 'Tenant', id: string, name: string, memberInfo: { [key: string]: any }, locationsByTenant: { __typename?: 'LocationsConnection', nodes: Array<{ __typename?: 'Location', id: string, name: string, description: { [key: string]: any } }> } } | null };
+export type CurrentTenantQuery = { __typename?: 'Query', getCurrentTenant: { __typename?: 'Tenant', id: string, name: string, memberInfo: string, locationsByTenant: { __typename?: 'LocationsConnection', nodes: Array<{ __typename?: 'Location', id: string, name: string, description: { [key: string]: any } }> } } | null };
 
 export type UpdateTenantMutationVariables = Types.Exact<{
   input: Types.UpdateTenantInput;

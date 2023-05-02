@@ -26,7 +26,7 @@ export default function FileListPage() {
   });
 
   return (
-    <Item className="col-full-width">
+    <Item className="col-full-width bg-stone-100">
       <Item.Titlebar title="Dokumenty">
         <SelectElement
           control={control}

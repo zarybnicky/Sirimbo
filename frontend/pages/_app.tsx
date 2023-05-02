@@ -73,6 +73,7 @@ const WithProviders = <T extends { dehydratedState?: object }>(
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: React.ReactElement) => React.ReactNode;
+  Layout?: React.FC<{children?: React.ReactNode}>;
 };
 
 type AppPropsWithLayout<
@@ -84,6 +85,9 @@ type AppPropsWithLayout<
 const defaultLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
+  if (Component.Layout) {
+    return WithProviders(<Component.Layout><Component {...pageProps} /></Component.Layout>, pageProps);
+  }
   const getLayout = Component.getLayout ?? defaultLayout;
   return WithProviders(getLayout(<Component {...pageProps} />), pageProps);
 }
