@@ -10,7 +10,8 @@ import {
   useCreateArticleMutation,
   useUpdateArticleMutation,
 } from 'lib/graphql/Articles';
-import { RichTextEditor } from './RichTextEditor';
+import dynamic from 'next/dynamic';
+const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
 type FormProps = Pick<AktualityInput, 'atJmeno' | 'atPreview' | 'atText'>;
 
