@@ -320,11 +320,11 @@ CREATE TABLE public.event (
     since date NOT NULL,
     until date NOT NULL,
     capacity bigint DEFAULT '0'::bigint NOT NULL,
-    files_legacy text NOT NULL,
+    files_legacy text DEFAULT ''::text NOT NULL,
     updated_at timestamp with time zone,
     is_locked boolean DEFAULT false NOT NULL,
     is_visible boolean DEFAULT false NOT NULL,
-    summary jsonb DEFAULT '[]'::jsonb NOT NULL,
+    summary text DEFAULT '[]'::jsonb NOT NULL,
     is_public boolean DEFAULT false NOT NULL,
     enable_notes boolean DEFAULT false NOT NULL
 );
@@ -715,7 +715,7 @@ $$;
 CREATE TABLE public.tenant (
     id bigint NOT NULL,
     name text NOT NULL,
-    member_info jsonb NOT NULL
+    member_info text NOT NULL
 );
 
 
@@ -1449,6 +1449,13 @@ CREATE VIEW public.akce_item AS
 
 
 --
+-- Name: VIEW akce_item; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON VIEW public.akce_item IS '@foreignKey (ai_id_rodic) references akce (a_id)';
+
+
+--
 -- Name: akce_item_ai_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1474,7 +1481,7 @@ ALTER SEQUENCE public.akce_item_ai_id_seq OWNED BY public.attendee_user.id;
 CREATE TABLE public.aktuality (
     at_id bigint NOT NULL,
     at_kdo bigint,
-    at_kat text NOT NULL,
+    at_kat text DEFAULT '1'::text NOT NULL,
     at_jmeno text NOT NULL,
     at_text text NOT NULL,
     at_preview text NOT NULL,
@@ -1559,7 +1566,7 @@ ALTER TABLE public.attendee_external ALTER COLUMN id ADD GENERATED ALWAYS AS IDE
 CREATE TABLE public.cohort_group (
     id bigint NOT NULL,
     name text NOT NULL,
-    description jsonb DEFAULT '[]'::jsonb NOT NULL,
+    description text DEFAULT '[]'::jsonb NOT NULL,
     ordering integer DEFAULT 1 NOT NULL,
     is_public boolean DEFAULT true NOT NULL,
     tenant bigint
@@ -1787,7 +1794,7 @@ CREATE TABLE public.skupiny (
     s_location text DEFAULT ''::text NOT NULL,
     s_visible boolean DEFAULT true NOT NULL,
     ordering integer DEFAULT 1 NOT NULL,
-    internal_info jsonb DEFAULT '[]'::jsonb NOT NULL,
+    internal_info text DEFAULT '[]'::jsonb NOT NULL,
     cohort_group bigint
 );
 
@@ -4475,17 +4482,24 @@ ALTER TABLE public.rozpis ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.rozpis_item ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: event select_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY select_all ON public.event FOR SELECT USING (true);
-
-
---
 -- Name: attendee_external select_member; Type: POLICY; Schema: public; Owner: -
 --
 
 CREATE POLICY select_member ON public.attendee_external FOR SELECT TO member USING (true);
+
+
+--
+-- Name: event select_member; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY select_member ON public.event FOR SELECT TO member USING (true);
+
+
+--
+-- Name: event select_public; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY select_public ON public.event FOR SELECT TO anonymous USING ((is_public = true));
 
 
 --
@@ -4728,6 +4742,13 @@ GRANT ALL ON FUNCTION public.get_current_couple() TO anonymous;
 
 GRANT SELECT ON TABLE public.tenant TO anonymous;
 GRANT ALL ON TABLE public.tenant TO administrator;
+
+
+--
+-- Name: FUNCTION get_current_tenant(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.get_current_tenant() TO anonymous;
 
 
 --
