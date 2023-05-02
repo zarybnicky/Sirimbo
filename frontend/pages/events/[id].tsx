@@ -20,7 +20,7 @@ export default function EventItemPage() {
   );
 }
 
-EventItemPage.Layout = ({ children }: { children: React.ReactNode }) => {
+EventItemPage.Layout = function ThisLayout({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   return <Layout showTopMenu={!user}>{children}</Layout>;
 };

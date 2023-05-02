@@ -70,14 +70,14 @@ export default function ProfilePage() {
       <h3>Nadcházející lekce</h3>
       <div className="flex flex-col gap-[1px] w-80">
         {upcomingLessons?.myLessons?.nodes.map((item) => (
-          <LessonButton lesson={item} schedule={item.rozpiByRiIdRodic!} showTrainer showDate />
+          <LessonButton key={item.id} lesson={item} schedule={item.rozpiByRiIdRodic!} showTrainer showDate />
         ))}
       </div>
 
       <h3>Minulé lekce</h3>
       <div className="flex flex-col-reverse gap-[1px] w-80">
         {pastLessons?.myLessons?.nodes.map((item) => (
-          <LessonButton lesson={item} schedule={item.rozpiByRiIdRodic!} showTrainer showDate />
+          <LessonButton key={item.id} lesson={item} schedule={item.rozpiByRiIdRodic!} showTrainer showDate />
         ))}
       </div>
     </Item>

@@ -13,7 +13,7 @@ export default function EventListPage() {
   );
 }
 
-EventListPage.Layout = ({ children }: { children: React.ReactNode }) => {
+EventListPage.Layout = function ThisLayout({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   return <Layout showTopMenu={!user}>{children}</Layout>;
 };
