@@ -151,6 +151,9 @@ type AkceItem {
   """Reads a single `Akce` that is related to this `AkceItem`."""
   akceByAiIdRodic: Akce
   notes: String
+
+  """Reads a single `User` that is related to this `AkceItem`."""
+  userByAiUser: User
 }
 
 """
@@ -250,6 +253,70 @@ enum AkceItemsOrderBy {
   NATURAL
   NOTES_ASC
   NOTES_DESC
+  USER_BY_AI_USER__U_BAN_ASC
+  USER_BY_AI_USER__U_BAN_DESC
+  USER_BY_AI_USER__U_CITY_ASC
+  USER_BY_AI_USER__U_CITY_DESC
+  USER_BY_AI_USER__U_CONFIRMED_ASC
+  USER_BY_AI_USER__U_CONFIRMED_DESC
+  USER_BY_AI_USER__U_CONSCRIPTION_NUMBER_ASC
+  USER_BY_AI_USER__U_CONSCRIPTION_NUMBER_DESC
+  USER_BY_AI_USER__U_CREATED_AT_ASC
+  USER_BY_AI_USER__U_CREATED_AT_DESC
+  USER_BY_AI_USER__U_DANCER_ASC
+  USER_BY_AI_USER__U_DANCER_DESC
+  USER_BY_AI_USER__U_DISTRICT_ASC
+  USER_BY_AI_USER__U_DISTRICT_DESC
+  USER_BY_AI_USER__U_EMAIL_ASC
+  USER_BY_AI_USER__U_EMAIL_DESC
+  USER_BY_AI_USER__U_GDPR_SIGNED_AT_ASC
+  USER_BY_AI_USER__U_GDPR_SIGNED_AT_DESC
+  USER_BY_AI_USER__U_GROUP_ASC
+  USER_BY_AI_USER__U_GROUP_DESC
+  USER_BY_AI_USER__U_ID_ASC
+  USER_BY_AI_USER__U_ID_DESC
+  USER_BY_AI_USER__U_JMENO_ASC
+  USER_BY_AI_USER__U_JMENO_DESC
+  USER_BY_AI_USER__U_LEVEL_ASC
+  USER_BY_AI_USER__U_LEVEL_DESC
+  USER_BY_AI_USER__U_LOCK_ASC
+  USER_BY_AI_USER__U_LOCK_DESC
+  USER_BY_AI_USER__U_LOGIN_ASC
+  USER_BY_AI_USER__U_LOGIN_DESC
+  USER_BY_AI_USER__U_MEMBER_SINCE_ASC
+  USER_BY_AI_USER__U_MEMBER_SINCE_DESC
+  USER_BY_AI_USER__U_MEMBER_UNTIL_ASC
+  USER_BY_AI_USER__U_MEMBER_UNTIL_DESC
+  USER_BY_AI_USER__U_NAROZENI_ASC
+  USER_BY_AI_USER__U_NAROZENI_DESC
+  USER_BY_AI_USER__U_NATIONALITY_ASC
+  USER_BY_AI_USER__U_NATIONALITY_DESC
+  USER_BY_AI_USER__U_ORIENTATION_NUMBER_ASC
+  USER_BY_AI_USER__U_ORIENTATION_NUMBER_DESC
+  USER_BY_AI_USER__U_PASS_ASC
+  USER_BY_AI_USER__U_PASS_DESC
+  USER_BY_AI_USER__U_POHLAVI_ASC
+  USER_BY_AI_USER__U_POHLAVI_DESC
+  USER_BY_AI_USER__U_POSTAL_CODE_ASC
+  USER_BY_AI_USER__U_POSTAL_CODE_DESC
+  USER_BY_AI_USER__U_POZNAMKY_ASC
+  USER_BY_AI_USER__U_POZNAMKY_DESC
+  USER_BY_AI_USER__U_PRIJMENI_ASC
+  USER_BY_AI_USER__U_PRIJMENI_DESC
+  USER_BY_AI_USER__U_RODNE_CISLO_ASC
+  USER_BY_AI_USER__U_RODNE_CISLO_DESC
+  USER_BY_AI_USER__U_SKUPINA_ASC
+  USER_BY_AI_USER__U_SKUPINA_DESC
+  USER_BY_AI_USER__U_STREET_ASC
+  USER_BY_AI_USER__U_STREET_DESC
+  USER_BY_AI_USER__U_SYSTEM_ASC
+  USER_BY_AI_USER__U_SYSTEM_DESC
+  USER_BY_AI_USER__U_TEACHER_ASC
+  USER_BY_AI_USER__U_TEACHER_DESC
+  USER_BY_AI_USER__U_TELEFON_ASC
+  USER_BY_AI_USER__U_TELEFON_DESC
+  USER_BY_AI_USER__U_TIMESTAMP_ASC
+  USER_BY_AI_USER__U_TIMESTAMP_DESC
 }
 
 """A connection to a list of `Akce` values."""
@@ -1639,6 +1706,9 @@ type CreateAkceItemPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
+
+  """Reads a single `User` that is related to this `AkceItem`."""
+  userByAiUser: User
 }
 
 """The output of our create `Akce` mutation."""
@@ -17418,6 +17488,35 @@ enum UpozornenisOrderBy {
 }
 
 type User implements Node {
+  """Reads and enables pagination through a set of `AkceItem`."""
+  akceItemsByAiUser(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AkceItemCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `AkceItem`."""
+    orderBy: [AkceItemsOrderBy!] = [NATURAL]
+  ): AkceItemsConnection!
+
   """Reads and enables pagination through a set of `Aktuality`."""
   aktualitiesByAtKdo(
     """Read all values in the set after (below) this cursor."""
@@ -18157,6 +18256,8 @@ type UsersEdge {
 
 """Methods to use when ordering `User`."""
 enum UsersOrderBy {
+  AKCE_ITEMS_BY_AI_USER__COUNT_ASC
+  AKCE_ITEMS_BY_AI_USER__COUNT_DESC
   AKTUALITIES_BY_AT_KDO__COUNT_ASC
   AKTUALITIES_BY_AT_KDO__COUNT_DESC
   ATTACHMENTS_BY_UPLOADED_BY__COUNT_ASC

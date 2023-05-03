@@ -1452,7 +1452,8 @@ CREATE VIEW public.akce_item AS
 -- Name: VIEW akce_item; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON VIEW public.akce_item IS '@foreignKey (ai_id_rodic) references akce (a_id)';
+COMMENT ON VIEW public.akce_item IS '@foreignKey (ai_id_rodic) references akce (a_id)
+@foreignKey (ai_user) references users (u_id)';
 
 
 --
@@ -4756,6 +4757,7 @@ GRANT ALL ON FUNCTION public.get_current_tenant() TO anonymous;
 --
 
 GRANT ALL ON TABLE public.users TO member;
+GRANT SELECT ON TABLE public.users TO anonymous;
 
 
 --
@@ -5067,6 +5069,13 @@ GRANT ALL ON FUNCTION public.users_full_name(u public.users) TO anonymous;
 
 
 --
+-- Name: TABLE akce; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.akce TO anonymous;
+
+
+--
 -- Name: SEQUENCE akce_a_id_seq; Type: ACL; Schema: public; Owner: -
 --
 
@@ -5078,6 +5087,13 @@ GRANT SELECT,USAGE ON SEQUENCE public.akce_a_id_seq TO anonymous;
 --
 
 GRANT ALL ON TABLE public.attendee_user TO anonymous;
+
+
+--
+-- Name: TABLE akce_item; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.akce_item TO anonymous;
 
 
 --

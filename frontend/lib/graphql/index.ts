@@ -158,6 +158,8 @@ export type AkceItem = {
   /** Reads a single `Akce` that is related to this `AkceItem`. */
   akceByAiIdRodic: Maybe<Akce>;
   notes: Maybe<Scalars['String']>;
+  /** Reads a single `User` that is related to this `AkceItem`. */
+  userByAiUser: Maybe<User>;
 };
 
 /**
@@ -248,7 +250,71 @@ export enum AkceItemsOrderBy {
   AkceByAiIdRodicSummaryDesc = 'AKCE_BY_AI_ID_RODIC__SUMMARY_DESC',
   Natural = 'NATURAL',
   NotesAsc = 'NOTES_ASC',
-  NotesDesc = 'NOTES_DESC'
+  NotesDesc = 'NOTES_DESC',
+  UserByAiUserUBanAsc = 'USER_BY_AI_USER__U_BAN_ASC',
+  UserByAiUserUBanDesc = 'USER_BY_AI_USER__U_BAN_DESC',
+  UserByAiUserUCityAsc = 'USER_BY_AI_USER__U_CITY_ASC',
+  UserByAiUserUCityDesc = 'USER_BY_AI_USER__U_CITY_DESC',
+  UserByAiUserUConfirmedAsc = 'USER_BY_AI_USER__U_CONFIRMED_ASC',
+  UserByAiUserUConfirmedDesc = 'USER_BY_AI_USER__U_CONFIRMED_DESC',
+  UserByAiUserUConscriptionNumberAsc = 'USER_BY_AI_USER__U_CONSCRIPTION_NUMBER_ASC',
+  UserByAiUserUConscriptionNumberDesc = 'USER_BY_AI_USER__U_CONSCRIPTION_NUMBER_DESC',
+  UserByAiUserUCreatedAtAsc = 'USER_BY_AI_USER__U_CREATED_AT_ASC',
+  UserByAiUserUCreatedAtDesc = 'USER_BY_AI_USER__U_CREATED_AT_DESC',
+  UserByAiUserUDancerAsc = 'USER_BY_AI_USER__U_DANCER_ASC',
+  UserByAiUserUDancerDesc = 'USER_BY_AI_USER__U_DANCER_DESC',
+  UserByAiUserUDistrictAsc = 'USER_BY_AI_USER__U_DISTRICT_ASC',
+  UserByAiUserUDistrictDesc = 'USER_BY_AI_USER__U_DISTRICT_DESC',
+  UserByAiUserUEmailAsc = 'USER_BY_AI_USER__U_EMAIL_ASC',
+  UserByAiUserUEmailDesc = 'USER_BY_AI_USER__U_EMAIL_DESC',
+  UserByAiUserUGdprSignedAtAsc = 'USER_BY_AI_USER__U_GDPR_SIGNED_AT_ASC',
+  UserByAiUserUGdprSignedAtDesc = 'USER_BY_AI_USER__U_GDPR_SIGNED_AT_DESC',
+  UserByAiUserUGroupAsc = 'USER_BY_AI_USER__U_GROUP_ASC',
+  UserByAiUserUGroupDesc = 'USER_BY_AI_USER__U_GROUP_DESC',
+  UserByAiUserUIdAsc = 'USER_BY_AI_USER__U_ID_ASC',
+  UserByAiUserUIdDesc = 'USER_BY_AI_USER__U_ID_DESC',
+  UserByAiUserUJmenoAsc = 'USER_BY_AI_USER__U_JMENO_ASC',
+  UserByAiUserUJmenoDesc = 'USER_BY_AI_USER__U_JMENO_DESC',
+  UserByAiUserULevelAsc = 'USER_BY_AI_USER__U_LEVEL_ASC',
+  UserByAiUserULevelDesc = 'USER_BY_AI_USER__U_LEVEL_DESC',
+  UserByAiUserULockAsc = 'USER_BY_AI_USER__U_LOCK_ASC',
+  UserByAiUserULockDesc = 'USER_BY_AI_USER__U_LOCK_DESC',
+  UserByAiUserULoginAsc = 'USER_BY_AI_USER__U_LOGIN_ASC',
+  UserByAiUserULoginDesc = 'USER_BY_AI_USER__U_LOGIN_DESC',
+  UserByAiUserUMemberSinceAsc = 'USER_BY_AI_USER__U_MEMBER_SINCE_ASC',
+  UserByAiUserUMemberSinceDesc = 'USER_BY_AI_USER__U_MEMBER_SINCE_DESC',
+  UserByAiUserUMemberUntilAsc = 'USER_BY_AI_USER__U_MEMBER_UNTIL_ASC',
+  UserByAiUserUMemberUntilDesc = 'USER_BY_AI_USER__U_MEMBER_UNTIL_DESC',
+  UserByAiUserUNarozeniAsc = 'USER_BY_AI_USER__U_NAROZENI_ASC',
+  UserByAiUserUNarozeniDesc = 'USER_BY_AI_USER__U_NAROZENI_DESC',
+  UserByAiUserUNationalityAsc = 'USER_BY_AI_USER__U_NATIONALITY_ASC',
+  UserByAiUserUNationalityDesc = 'USER_BY_AI_USER__U_NATIONALITY_DESC',
+  UserByAiUserUOrientationNumberAsc = 'USER_BY_AI_USER__U_ORIENTATION_NUMBER_ASC',
+  UserByAiUserUOrientationNumberDesc = 'USER_BY_AI_USER__U_ORIENTATION_NUMBER_DESC',
+  UserByAiUserUPassAsc = 'USER_BY_AI_USER__U_PASS_ASC',
+  UserByAiUserUPassDesc = 'USER_BY_AI_USER__U_PASS_DESC',
+  UserByAiUserUPohlaviAsc = 'USER_BY_AI_USER__U_POHLAVI_ASC',
+  UserByAiUserUPohlaviDesc = 'USER_BY_AI_USER__U_POHLAVI_DESC',
+  UserByAiUserUPostalCodeAsc = 'USER_BY_AI_USER__U_POSTAL_CODE_ASC',
+  UserByAiUserUPostalCodeDesc = 'USER_BY_AI_USER__U_POSTAL_CODE_DESC',
+  UserByAiUserUPoznamkyAsc = 'USER_BY_AI_USER__U_POZNAMKY_ASC',
+  UserByAiUserUPoznamkyDesc = 'USER_BY_AI_USER__U_POZNAMKY_DESC',
+  UserByAiUserUPrijmeniAsc = 'USER_BY_AI_USER__U_PRIJMENI_ASC',
+  UserByAiUserUPrijmeniDesc = 'USER_BY_AI_USER__U_PRIJMENI_DESC',
+  UserByAiUserURodneCisloAsc = 'USER_BY_AI_USER__U_RODNE_CISLO_ASC',
+  UserByAiUserURodneCisloDesc = 'USER_BY_AI_USER__U_RODNE_CISLO_DESC',
+  UserByAiUserUSkupinaAsc = 'USER_BY_AI_USER__U_SKUPINA_ASC',
+  UserByAiUserUSkupinaDesc = 'USER_BY_AI_USER__U_SKUPINA_DESC',
+  UserByAiUserUStreetAsc = 'USER_BY_AI_USER__U_STREET_ASC',
+  UserByAiUserUStreetDesc = 'USER_BY_AI_USER__U_STREET_DESC',
+  UserByAiUserUSystemAsc = 'USER_BY_AI_USER__U_SYSTEM_ASC',
+  UserByAiUserUSystemDesc = 'USER_BY_AI_USER__U_SYSTEM_DESC',
+  UserByAiUserUTeacherAsc = 'USER_BY_AI_USER__U_TEACHER_ASC',
+  UserByAiUserUTeacherDesc = 'USER_BY_AI_USER__U_TEACHER_DESC',
+  UserByAiUserUTelefonAsc = 'USER_BY_AI_USER__U_TELEFON_ASC',
+  UserByAiUserUTelefonDesc = 'USER_BY_AI_USER__U_TELEFON_DESC',
+  UserByAiUserUTimestampAsc = 'USER_BY_AI_USER__U_TIMESTAMP_ASC',
+  UserByAiUserUTimestampDesc = 'USER_BY_AI_USER__U_TIMESTAMP_DESC'
 }
 
 /** A connection to a list of `Akce` values. */
@@ -1454,6 +1520,8 @@ export type CreateAkceItemPayload = {
   clientMutationId: Maybe<Scalars['String']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+  /** Reads a single `User` that is related to this `AkceItem`. */
+  userByAiUser: Maybe<User>;
 };
 
 
@@ -14971,6 +15039,8 @@ export enum UpozornenisOrderBy {
 
 export type User = Node & {
   __typename?: 'User';
+  /** Reads and enables pagination through a set of `AkceItem`. */
+  akceItemsByAiUser: AkceItemsConnection;
   /** Reads and enables pagination through a set of `Aktuality`. */
   aktualitiesByAtKdo: AktualitiesConnection;
   /** Reads and enables pagination through a set of `Attachment`. */
@@ -15044,6 +15114,17 @@ export type User = Node & {
   uTeacher: Scalars['Boolean'];
   uTelefon: Scalars['String'];
   uTimestamp: Scalars['Datetime'];
+};
+
+
+export type UserAkceItemsByAiUserArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<AkceItemCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<AkceItemsOrderBy>>;
 };
 
 
@@ -15397,6 +15478,8 @@ export type UsersEdge = {
 
 /** Methods to use when ordering `User`. */
 export enum UsersOrderBy {
+  AkceItemsByAiUserCountAsc = 'AKCE_ITEMS_BY_AI_USER__COUNT_ASC',
+  AkceItemsByAiUserCountDesc = 'AKCE_ITEMS_BY_AI_USER__COUNT_DESC',
   AktualitiesByAtKdoCountAsc = 'AKTUALITIES_BY_AT_KDO__COUNT_ASC',
   AktualitiesByAtKdoCountDesc = 'AKTUALITIES_BY_AT_KDO__COUNT_DESC',
   AttachmentsByUploadedByCountAsc = 'ATTACHMENTS_BY_UPLOADED_BY__COUNT_ASC',

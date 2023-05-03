@@ -166,7 +166,7 @@ export function TextFieldElement<TFieldValues extends FieldValues>({
   return (
     <TextField
       name={name}
-      value={value}
+      value={value || ''}
       error={error}
       {...props}
       onChange={(e) =>
