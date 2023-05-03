@@ -36,7 +36,7 @@ export const ReservationButton = ({ item }: { item: MyReservationFragment }) => 
         id: item.id,
         lessonCount: Math.min(myLessons + 1, myLessons + freeLessons),
       }),
-    [item, myLessons],
+    [freeLessons, modifyLessons, item, myLessons],
   );
   const removeLesson = React.useCallback(
     () =>
@@ -44,7 +44,7 @@ export const ReservationButton = ({ item }: { item: MyReservationFragment }) => 
         id: item.id,
         lessonCount: Math.max(myLessons - 1, 0),
       }),
-    [item, myLessons],
+    [modifyLessons, item, myLessons],
   );
 
   const canEdit = perms.canMakeReservation(item) || (item.myLessons && !item.nLock);

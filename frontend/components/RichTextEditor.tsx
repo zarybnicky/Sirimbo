@@ -36,7 +36,7 @@ export default function RichTextEditor({
 
   React.useEffect(() => {
     editor?.setData(initialState || '');
-  }, [initialState]);
+  }, [editor, initialState]);
 
   const { field, fieldState } = useController({ name, control });
 

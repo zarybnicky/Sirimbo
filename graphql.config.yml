@@ -6,6 +6,7 @@ config:
     field: true
     inputValue: false
     object: false
+  constEnums: true
   scalars:
     Datetime: "string"
     Date: "string"

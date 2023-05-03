@@ -59,7 +59,7 @@ export const ProvideAuth = ({ children }: React.PropsWithChildren) => {
   const signOut = React.useCallback(async () => {
     await doSignOut({});
     router.push('/');
-  }, [doSignOut]);
+  }, [router, doSignOut]);
 
   const context = { isLoading, user, couple, signIn, signOut };
   return <authContext.Provider value={context}>{children}</authContext.Provider>;

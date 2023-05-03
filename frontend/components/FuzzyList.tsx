@@ -29,14 +29,14 @@ export const FuzzyList = <T extends { id: any }>({
     });
     index.addAll(data);
     return index;
-  }, [data]);
+  }, [fields, data]);
 
   const nodes = React.useMemo(() => {
     if (!search) {
       return data;
     }
     return index.search(search).map(({ id }) => nodesById[id]!);
-  }, [index, search]);
+  }, [data, nodesById, index, search]);
 
   return <>{nodes.map(renderItem)}</>;
 };

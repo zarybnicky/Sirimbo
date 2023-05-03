@@ -32,7 +32,18 @@ export const RichTextView = ({ value, className }: Props) => {
    *     </div>
    *   );
    * } */
-  return <HtmlView className={className} content={value} />;
+  return (
+    <div
+      className={`prose ${className}`}
+      style={{
+        overflowWrap: 'break-word',
+        wordWrap: 'break-word',
+        wordBreak: 'break-word',
+      }}
+    >
+      {parse(value, options)}
+    </div>
+  );
 };
 
 const isElement = (domNode: DOMNode): domNode is Element => {
@@ -64,22 +75,4 @@ const options: HTMLReactParserOptions = {
       return domNode;
     }
   },
-};
-
-export const HtmlView: React.FC<{
-  content: string;
-  className?: string;
-}> = ({ content, className }) => {
-  return (
-    <div
-      className={`prose ${className}`}
-      style={{
-        overflowWrap: 'break-word',
-        wordWrap: 'break-word',
-        wordBreak: 'break-word',
-      }}
-    >
-      {parse(content, options)}
-    </div>
-  );
 };

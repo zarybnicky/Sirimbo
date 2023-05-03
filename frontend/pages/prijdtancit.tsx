@@ -16,7 +16,7 @@ export default function AboutPage() {
       />
 
       <div className="mt-16 prose text-center">
-        <h1>Přijďte si vyzkoušet, jak vypadá taneční trénink!</h1>
+        <h1 className="!text-stone-800">Přijďte si vyzkoušet, jak vypadá taneční trénink!</h1>
       </div>
 
       <div className="col-feature my-8 grid lg:grid-cols-2 gap-4">

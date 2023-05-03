@@ -42,7 +42,7 @@ export const PersonalInfoForm: React.FC<{
   const onSuccess = React.useCallback(() => {
     queryClient.invalidateQueries(useCurrentUserQuery.getKey());
     realOnSuccess();
-  }, [realOnSuccess]);
+  }, [queryClient, realOnSuccess]);
 
   const { mutateAsync: doUpdate } = useUpdateUserMutation({ onSuccess });
 
@@ -65,7 +65,7 @@ export const PersonalInfoForm: React.FC<{
       uNationality: user?.uNationality,
       uPoznamky: user?.uPoznamky,
     });
-  }, [reset]);
+  }, [reset, user]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await doUpdate({ id: user?.id!, patch: values });

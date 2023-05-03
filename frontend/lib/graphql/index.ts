@@ -211,7 +211,7 @@ export type AkceItemsEdge = {
 };
 
 /** Methods to use when ordering `AkceItem`. */
-export enum AkceItemsOrderBy {
+export const enum AkceItemsOrderBy {
   AiIdAsc = 'AI_ID_ASC',
   AiIdDesc = 'AI_ID_DESC',
   AiIdRodicAsc = 'AI_ID_RODIC_ASC',
@@ -315,7 +315,7 @@ export enum AkceItemsOrderBy {
   UserByAiUserUTelefonDesc = 'USER_BY_AI_USER__U_TELEFON_DESC',
   UserByAiUserUTimestampAsc = 'USER_BY_AI_USER__U_TIMESTAMP_ASC',
   UserByAiUserUTimestampDesc = 'USER_BY_AI_USER__U_TIMESTAMP_DESC'
-}
+};
 
 /** A connection to a list of `Akce` values. */
 export type AkcesConnection = {
@@ -340,7 +340,7 @@ export type AkcesEdge = {
 };
 
 /** Methods to use when ordering `Akce`. */
-export enum AkcesOrderBy {
+export const enum AkcesOrderBy {
   ADoAsc = 'A_DO_ASC',
   ADoDesc = 'A_DO_DESC',
   ADokumentyAsc = 'A_DOKUMENTY_ASC',
@@ -372,7 +372,7 @@ export enum AkcesOrderBy {
   Natural = 'NATURAL',
   SummaryAsc = 'SUMMARY_ASC',
   SummaryDesc = 'SUMMARY_DESC'
-}
+};
 
 /** A connection to a list of `Aktuality` values. */
 export type AktualitiesConnection = {
@@ -397,7 +397,7 @@ export type AktualitiesEdge = {
 };
 
 /** Methods to use when ordering `Aktuality`. */
-export enum AktualitiesOrderBy {
+export const enum AktualitiesOrderBy {
   AtFotoAsc = 'AT_FOTO_ASC',
   AtFotoDesc = 'AT_FOTO_DESC',
   AtFotoMainAsc = 'AT_FOTO_MAIN_ASC',
@@ -497,7 +497,7 @@ export enum AktualitiesOrderBy {
   UserByAtKdoUTelefonDesc = 'USER_BY_AT_KDO__U_TELEFON_DESC',
   UserByAtKdoUTimestampAsc = 'USER_BY_AT_KDO__U_TIMESTAMP_ASC',
   UserByAtKdoUTimestampDesc = 'USER_BY_AT_KDO__U_TIMESTAMP_DESC'
-}
+};
 
 export type Aktuality = Node & {
   __typename?: 'Aktuality';
@@ -679,7 +679,7 @@ export type AttachmentsEdge = {
 };
 
 /** Methods to use when ordering `Attachment`. */
-export enum AttachmentsOrderBy {
+export const enum AttachmentsOrderBy {
   LocationAttachmentsByObjectNameCountAsc = 'LOCATION_ATTACHMENTS_BY_OBJECT_NAME__COUNT_ASC',
   LocationAttachmentsByObjectNameCountDesc = 'LOCATION_ATTACHMENTS_BY_OBJECT_NAME__COUNT_DESC',
   Natural = 'NATURAL',
@@ -761,7 +761,7 @@ export enum AttachmentsOrderBy {
   UserByUploadedByUTelefonDesc = 'USER_BY_UPLOADED_BY__U_TELEFON_DESC',
   UserByUploadedByUTimestampAsc = 'USER_BY_UPLOADED_BY__U_TIMESTAMP_ASC',
   UserByUploadedByUTimestampDesc = 'USER_BY_UPLOADED_BY__U_TIMESTAMP_DESC'
-}
+};
 
 export type AttendeeExternal = Node & {
   __typename?: 'AttendeeExternal';
@@ -881,7 +881,7 @@ export type AttendeeExternalsEdge = {
 };
 
 /** Methods to use when ordering `AttendeeExternal`. */
-export enum AttendeeExternalsOrderBy {
+export const enum AttendeeExternalsOrderBy {
   BirthNumberAsc = 'BIRTH_NUMBER_ASC',
   BirthNumberDesc = 'BIRTH_NUMBER_DESC',
   ConfirmedAtAsc = 'CONFIRMED_AT_ASC',
@@ -1069,7 +1069,7 @@ export enum AttendeeExternalsOrderBy {
   UserByManagedByUTelefonDesc = 'USER_BY_MANAGED_BY__U_TELEFON_DESC',
   UserByManagedByUTimestampAsc = 'USER_BY_MANAGED_BY__U_TIMESTAMP_ASC',
   UserByManagedByUTimestampDesc = 'USER_BY_MANAGED_BY__U_TIMESTAMP_DESC'
-}
+};
 
 export type AttendeeUser = Node & {
   __typename?: 'AttendeeUser';
@@ -1144,7 +1144,7 @@ export type AttendeeUsersEdge = {
 };
 
 /** Methods to use when ordering `AttendeeUser`. */
-export enum AttendeeUsersOrderBy {
+export const enum AttendeeUsersOrderBy {
   BirthYearAsc = 'BIRTH_YEAR_ASC',
   BirthYearDesc = 'BIRTH_YEAR_DESC',
   EventByEventIdCapacityAsc = 'EVENT_BY_EVENT_ID__CAPACITY_ASC',
@@ -1250,7 +1250,7 @@ export enum AttendeeUsersOrderBy {
   UserByUserIdUTimestampDesc = 'USER_BY_USER_ID__U_TIMESTAMP_DESC',
   UserIdAsc = 'USER_ID_ASC',
   UserIdDesc = 'USER_ID_DESC'
-}
+};
 
 /** All input for the `bookLesson` mutation. */
 export type BookLessonInput = {
@@ -1432,7 +1432,7 @@ export type CohortGroupsEdge = {
 };
 
 /** Methods to use when ordering `CohortGroup`. */
-export enum CohortGroupsOrderBy {
+export const enum CohortGroupsOrderBy {
   DescriptionAsc = 'DESCRIPTION_ASC',
   DescriptionDesc = 'DESCRIPTION_DESC',
   IdAsc = 'ID_ASC',
@@ -1456,7 +1456,7 @@ export enum CohortGroupsOrderBy {
   TenantByTenantNameAsc = 'TENANT_BY_TENANT__NAME_ASC',
   TenantByTenantNameDesc = 'TENANT_BY_TENANT__NAME_DESC',
   TenantDesc = 'TENANT_DESC'
-}
+};
 
 /** All input for the `confirmUser` mutation. */
 export type ConfirmUserInput = {
@@ -3043,13 +3043,13 @@ export type CreateVideoSourcePayloadVideoSourceEdgeArgs = {
   orderBy?: InputMaybe<Array<VideoSourcesOrderBy>>;
 };
 
-export enum CrmCohort {
+export const enum CrmCohort {
   ContactMeLater = 'CONTACT_ME_LATER',
   Dancer = 'DANCER',
   FreeLesson = 'FREE_LESSON',
   Hobbyist = 'HOBBYIST',
   Showdance = 'SHOWDANCE'
-}
+};
 
 /** A `BigInt` edge in the connection. */
 export type CurrentCoupleIdEdge = {
@@ -4930,7 +4930,7 @@ export type DokumentiesEdge = {
 };
 
 /** Methods to use when ordering `Dokumenty`. */
-export enum DokumentiesOrderBy {
+export const enum DokumentiesOrderBy {
   DFilenameAsc = 'D_FILENAME_ASC',
   DFilenameDesc = 'D_FILENAME_DESC',
   DIdAsc = 'D_ID_ASC',
@@ -5012,7 +5012,7 @@ export enum DokumentiesOrderBy {
   UserByDKdoUTelefonDesc = 'USER_BY_D_KDO__U_TELEFON_DESC',
   UserByDKdoUTimestampAsc = 'USER_BY_D_KDO__U_TIMESTAMP_ASC',
   UserByDKdoUTimestampDesc = 'USER_BY_D_KDO__U_TIMESTAMP_DESC'
-}
+};
 
 export type Dokumenty = Node & {
   __typename?: 'Dokumenty';
@@ -5210,7 +5210,7 @@ export type EventsEdge = {
 };
 
 /** Methods to use when ordering `Event`. */
-export enum EventsOrderBy {
+export const enum EventsOrderBy {
   AttendeeExternalsByEventIdCountAsc = 'ATTENDEE_EXTERNALS_BY_EVENT_ID__COUNT_ASC',
   AttendeeExternalsByEventIdCountDesc = 'ATTENDEE_EXTERNALS_BY_EVENT_ID__COUNT_DESC',
   AttendeeUsersByEventIdCountAsc = 'ATTENDEE_USERS_BY_EVENT_ID__COUNT_ASC',
@@ -5246,7 +5246,7 @@ export enum EventsOrderBy {
   UntilDesc = 'UNTIL_DESC',
   UpdatedAtAsc = 'UPDATED_AT_ASC',
   UpdatedAtDesc = 'UPDATED_AT_DESC'
-}
+};
 
 /** All input for the `fixUnpairedCouples` mutation. */
 export type FixUnpairedCouplesInput = {
@@ -5357,7 +5357,7 @@ export type GalerieDirsEdge = {
 };
 
 /** Methods to use when ordering `GalerieDir`. */
-export enum GalerieDirsOrderBy {
+export const enum GalerieDirsOrderBy {
   GalerieFotosByGfIdRodicCountAsc = 'GALERIE_FOTOS_BY_GF_ID_RODIC__COUNT_ASC',
   GalerieFotosByGfIdRodicCountDesc = 'GALERIE_FOTOS_BY_GF_ID_RODIC__COUNT_DESC',
   GdHiddenAsc = 'GD_HIDDEN_ASC',
@@ -5375,7 +5375,7 @@ export enum GalerieDirsOrderBy {
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
+};
 
 export type GalerieFoto = Node & {
   __typename?: 'GalerieFoto';
@@ -5468,7 +5468,7 @@ export type GalerieFotosEdge = {
 };
 
 /** Methods to use when ordering `GalerieFoto`. */
-export enum GalerieFotosOrderBy {
+export const enum GalerieFotosOrderBy {
   AktualitiesByAtFotoMainCountAsc = 'AKTUALITIES_BY_AT_FOTO_MAIN__COUNT_ASC',
   AktualitiesByAtFotoMainCountDesc = 'AKTUALITIES_BY_AT_FOTO_MAIN__COUNT_DESC',
   GalerieDirByGfIdRodicGdHiddenAsc = 'GALERIE_DIR_BY_GF_ID_RODIC__GD_HIDDEN_ASC',
@@ -5562,13 +5562,13 @@ export enum GalerieFotosOrderBy {
   UserByGfKdoUTelefonDesc = 'USER_BY_GF_KDO__U_TELEFON_DESC',
   UserByGfKdoUTimestampAsc = 'USER_BY_GF_KDO__U_TIMESTAMP_ASC',
   UserByGfKdoUTimestampDesc = 'USER_BY_GF_KDO__U_TIMESTAMP_DESC'
-}
+};
 
-export enum GenderType {
+export const enum GenderType {
   Men = 'MEN',
   Unspecified = 'UNSPECIFIED',
   Woman = 'WOMAN'
-}
+};
 
 export type Location = Node & {
   __typename?: 'Location';
@@ -5666,7 +5666,7 @@ export type LocationAttachmentsEdge = {
 };
 
 /** Methods to use when ordering `LocationAttachment`. */
-export enum LocationAttachmentsOrderBy {
+export const enum LocationAttachmentsOrderBy {
   AttachmentByObjectNameObjectNameAsc = 'ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_ASC',
   AttachmentByObjectNameObjectNameDesc = 'ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_DESC',
   AttachmentByObjectNamePreviewObjectNameAsc = 'ATTACHMENT_BY_OBJECT_NAME__PREVIEW_OBJECT_NAME_ASC',
@@ -5690,7 +5690,7 @@ export enum LocationAttachmentsOrderBy {
   ObjectNameDesc = 'OBJECT_NAME_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
+};
 
 /**
  * A condition to be used against `Location` object types. All fields are tested
@@ -5746,7 +5746,7 @@ export type LocationsEdge = {
 };
 
 /** Methods to use when ordering `Location`. */
-export enum LocationsOrderBy {
+export const enum LocationsOrderBy {
   DescriptionAsc = 'DESCRIPTION_ASC',
   DescriptionDesc = 'DESCRIPTION_DESC',
   IdAsc = 'ID_ASC',
@@ -5768,7 +5768,7 @@ export enum LocationsOrderBy {
   TenantByTenantNameAsc = 'TENANT_BY_TENANT__NAME_ASC',
   TenantByTenantNameDesc = 'TENANT_BY_TENANT__NAME_DESC',
   TenantDesc = 'TENANT_DESC'
-}
+};
 
 /** All input for the `login` mutation. */
 export type LoginInput = {
@@ -5980,7 +5980,7 @@ export type MembersEdge = {
 };
 
 /** Methods to use when ordering `Member`. */
-export enum MembersOrderBy {
+export const enum MembersOrderBy {
   Natural = 'NATURAL',
   NewestPaymentAsc = 'NEWEST_PAYMENT_ASC',
   NewestPaymentDesc = 'NEWEST_PAYMENT_DESC',
@@ -6066,7 +6066,7 @@ export enum MembersOrderBy {
   UTelefonDesc = 'U_TELEFON_DESC',
   UTimestampAsc = 'U_TIMESTAMP_ASC',
   UTimestampDesc = 'U_TIMESTAMP_DESC'
-}
+};
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
@@ -7972,7 +7972,7 @@ export type NabidkaItemsEdge = {
 };
 
 /** Methods to use when ordering `NabidkaItem`. */
-export enum NabidkaItemsOrderBy {
+export const enum NabidkaItemsOrderBy {
   NabidkaByNiIdRodicNDoAsc = 'NABIDKA_BY_NI_ID_RODIC__N_DO_ASC',
   NabidkaByNiIdRodicNDoDesc = 'NABIDKA_BY_NI_ID_RODIC__N_DO_DESC',
   NabidkaByNiIdRodicNIdAsc = 'NABIDKA_BY_NI_ID_RODIC__N_ID_ASC',
@@ -8030,7 +8030,7 @@ export enum NabidkaItemsOrderBy {
   ParyByNiPartnerPTimestampArchiveDesc = 'PARY_BY_NI_PARTNER__P_TIMESTAMP_ARCHIVE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
+};
 
 /** Represents an update to a `Nabidka`. Fields that are set will be updated. */
 export type NabidkaPatch = {
@@ -8068,7 +8068,7 @@ export type NabidkasEdge = {
 };
 
 /** Methods to use when ordering `Nabidka`. */
-export enum NabidkasOrderBy {
+export const enum NabidkasOrderBy {
   NDoAsc = 'N_DO_ASC',
   NDoDesc = 'N_DO_DESC',
   NIdAsc = 'N_ID_ASC',
@@ -8156,7 +8156,7 @@ export enum NabidkasOrderBy {
   UserByNTrenerUTelefonDesc = 'USER_BY_N_TRENER__U_TELEFON_DESC',
   UserByNTrenerUTimestampAsc = 'USER_BY_N_TRENER__U_TIMESTAMP_ASC',
   UserByNTrenerUTimestampDesc = 'USER_BY_N_TRENER__U_TIMESTAMP_DESC'
-}
+};
 
 /** An object with a globally unique `ID`. */
 export type Node = {
@@ -8288,7 +8288,7 @@ export type PageRevisionsEdge = {
 };
 
 /** Methods to use when ordering `PageRevision`. */
-export enum PageRevisionsOrderBy {
+export const enum PageRevisionsOrderBy {
   ContentAsc = 'CONTENT_ASC',
   ContentDesc = 'CONTENT_DESC',
   CreatedAtAsc = 'CREATED_AT_ASC',
@@ -8310,7 +8310,7 @@ export enum PageRevisionsOrderBy {
   UpdatedAtDesc = 'UPDATED_AT_DESC',
   UrlAsc = 'URL_ASC',
   UrlDesc = 'URL_DESC'
-}
+};
 
 /** A connection to a list of `Page` values. */
 export type PagesConnection = {
@@ -8335,7 +8335,7 @@ export type PagesEdge = {
 };
 
 /** Methods to use when ordering `Page`. */
-export enum PagesOrderBy {
+export const enum PagesOrderBy {
   ContentAsc = 'CONTENT_ASC',
   ContentDesc = 'CONTENT_DESC',
   CreatedAtAsc = 'CREATED_AT_ASC',
@@ -8351,7 +8351,7 @@ export enum PagesOrderBy {
   UpdatedAtDesc = 'UPDATED_AT_DESC',
   UrlAsc = 'URL_ASC',
   UrlDesc = 'URL_DESC'
-}
+};
 
 export type Parameter = Node & {
   __typename?: 'Parameter';
@@ -8407,7 +8407,7 @@ export type ParametersEdge = {
 };
 
 /** Methods to use when ordering `Parameter`. */
-export enum ParametersOrderBy {
+export const enum ParametersOrderBy {
   Natural = 'NATURAL',
   PaNameAsc = 'PA_NAME_ASC',
   PaNameDesc = 'PA_NAME_DESC',
@@ -8415,7 +8415,7 @@ export enum ParametersOrderBy {
   PaValueDesc = 'PA_VALUE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
+};
 
 /** A connection to a list of `Pary` values. */
 export type PariesConnection = {
@@ -8440,7 +8440,7 @@ export type PariesEdge = {
 };
 
 /** Methods to use when ordering `Pary`. */
-export enum PariesOrderBy {
+export const enum PariesOrderBy {
   NabidkaItemsByNiPartnerCountAsc = 'NABIDKA_ITEMS_BY_NI_PARTNER__COUNT_ASC',
   NabidkaItemsByNiPartnerCountDesc = 'NABIDKA_ITEMS_BY_NI_PARTNER__COUNT_DESC',
   Natural = 'NATURAL',
@@ -8602,7 +8602,7 @@ export enum PariesOrderBy {
   UserByPIdPartnerkaUTelefonDesc = 'USER_BY_P_ID_PARTNERKA__U_TELEFON_DESC',
   UserByPIdPartnerkaUTimestampAsc = 'USER_BY_P_ID_PARTNERKA__U_TIMESTAMP_ASC',
   UserByPIdPartnerkaUTimestampDesc = 'USER_BY_P_ID_PARTNERKA__U_TIMESTAMP_DESC'
-}
+};
 
 export type Pary = Node & {
   __typename?: 'Pary';
@@ -8770,7 +8770,7 @@ export type ParyNavrhsEdge = {
 };
 
 /** Methods to use when ordering `ParyNavrh`. */
-export enum ParyNavrhsOrderBy {
+export const enum ParyNavrhsOrderBy {
   Natural = 'NATURAL',
   PnIdAsc = 'PN_ID_ASC',
   PnIdDesc = 'PN_ID_DESC',
@@ -8974,7 +8974,7 @@ export enum ParyNavrhsOrderBy {
   UserByPnPartnerkaUTelefonDesc = 'USER_BY_PN_PARTNERKA__U_TELEFON_DESC',
   UserByPnPartnerkaUTimestampAsc = 'USER_BY_PN_PARTNERKA__U_TIMESTAMP_ASC',
   UserByPnPartnerkaUTimestampDesc = 'USER_BY_PN_PARTNERKA__U_TIMESTAMP_DESC'
-}
+};
 
 /** Represents an update to a `Pary`. Fields that are set will be updated. */
 export type ParyPatch = {
@@ -8993,7 +8993,7 @@ export type ParyPatch = {
   pTimestampArchive?: InputMaybe<Scalars['Datetime']>;
 };
 
-export enum ParyPLatTrida {
+export const enum ParyPLatTrida {
   A = 'A',
   B = 'B',
   C = 'C',
@@ -9001,9 +9001,9 @@ export enum ParyPLatTrida {
   H = 'H',
   M = 'M',
   Z = 'Z'
-}
+};
 
-export enum ParyPSttTrida {
+export const enum ParyPSttTrida {
   A = 'A',
   B = 'B',
   C = 'C',
@@ -9011,7 +9011,7 @@ export enum ParyPSttTrida {
   H = 'H',
   M = 'M',
   Z = 'Z'
-}
+};
 
 /** A connection to a list of `Person` values. */
 export type PeopleConnection = {
@@ -9036,7 +9036,7 @@ export type PeopleEdge = {
 };
 
 /** Methods to use when ordering `Person`. */
-export enum PeopleOrderBy {
+export const enum PeopleOrderBy {
   FirstNameAsc = 'FIRST_NAME_ASC',
   FirstNameDesc = 'FIRST_NAME_DESC',
   GenderAsc = 'GENDER_ASC',
@@ -9050,7 +9050,7 @@ export enum PeopleOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   TenantPeopleByPersonIdCountAsc = 'TENANT_PEOPLE_BY_PERSON_ID__COUNT_ASC',
   TenantPeopleByPersonIdCountDesc = 'TENANT_PEOPLE_BY_PERSON_ID__COUNT_DESC'
-}
+};
 
 export type Permission = Node & {
   __typename?: 'Permission';
@@ -9209,7 +9209,7 @@ export type PermissionsEdge = {
 };
 
 /** Methods to use when ordering `Permission`. */
-export enum PermissionsOrderBy {
+export const enum PermissionsOrderBy {
   Natural = 'NATURAL',
   PeAkceAsc = 'PE_AKCE_ASC',
   PeAkceDesc = 'PE_AKCE_DESC',
@@ -9255,7 +9255,7 @@ export enum PermissionsOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   UsersByUGroupCountAsc = 'USERS_BY_U_GROUP__COUNT_ASC',
   UsersByUGroupCountDesc = 'USERS_BY_U_GROUP__COUNT_DESC'
-}
+};
 
 export type Person = Node & {
   __typename?: 'Person';
@@ -9331,7 +9331,7 @@ export type PlatbyCategoriesEdge = {
 };
 
 /** Methods to use when ordering `PlatbyCategory`. */
-export enum PlatbyCategoriesOrderBy {
+export const enum PlatbyCategoriesOrderBy {
   Natural = 'NATURAL',
   PcAmountAsc = 'PC_AMOUNT_ASC',
   PcAmountDesc = 'PC_AMOUNT_DESC',
@@ -9361,7 +9361,7 @@ export enum PlatbyCategoriesOrderBy {
   PlatbyItemsByPiIdCategoryCountDesc = 'PLATBY_ITEMS_BY_PI_ID_CATEGORY__COUNT_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
+};
 
 export type PlatbyCategory = Node & {
   __typename?: 'PlatbyCategory';
@@ -9498,7 +9498,7 @@ export type PlatbyCategoryGroupsEdge = {
 };
 
 /** Methods to use when ordering `PlatbyCategoryGroup`. */
-export enum PlatbyCategoryGroupsOrderBy {
+export const enum PlatbyCategoryGroupsOrderBy {
   Natural = 'NATURAL',
   PcgIdAsc = 'PCG_ID_ASC',
   PcgIdCategoryAsc = 'PCG_ID_CATEGORY_ASC',
@@ -9540,7 +9540,7 @@ export enum PlatbyCategoryGroupsOrderBy {
   PlatbyGroupByPcgIdGroupPgTypeDesc = 'PLATBY_GROUP_BY_PCG_ID_GROUP__PG_TYPE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
+};
 
 /** An input for mutations affecting `PlatbyCategory` */
 export type PlatbyCategoryInput = {
@@ -9729,7 +9729,7 @@ export type PlatbyGroupSkupinasEdge = {
 };
 
 /** Methods to use when ordering `PlatbyGroupSkupina`. */
-export enum PlatbyGroupSkupinasOrderBy {
+export const enum PlatbyGroupSkupinasOrderBy {
   Natural = 'NATURAL',
   PgsIdAsc = 'PGS_ID_ASC',
   PgsIdDesc = 'PGS_ID_DESC',
@@ -9769,10 +9769,10 @@ export enum PlatbyGroupSkupinasOrderBy {
   SkupinyByPgsIdSkupinaSNameDesc = 'SKUPINY_BY_PGS_ID_SKUPINA__S_NAME_DESC',
   SkupinyByPgsIdSkupinaSVisibleAsc = 'SKUPINY_BY_PGS_ID_SKUPINA__S_VISIBLE_ASC',
   SkupinyByPgsIdSkupinaSVisibleDesc = 'SKUPINY_BY_PGS_ID_SKUPINA__S_VISIBLE_DESC'
-}
+};
 
 /** Methods to use when ordering `PlatbyGroup`. */
-export enum PlatbyGroupsOrderBy {
+export const enum PlatbyGroupsOrderBy {
   Natural = 'NATURAL',
   PgBaseAsc = 'PG_BASE_ASC',
   PgBaseDesc = 'PG_BASE_DESC',
@@ -9790,7 +9790,7 @@ export enum PlatbyGroupsOrderBy {
   PlatbyGroupSkupinasByPgsIdGroupCountDesc = 'PLATBY_GROUP_SKUPINAS_BY_PGS_ID_GROUP__COUNT_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
+};
 
 export type PlatbyItem = Node & {
   __typename?: 'PlatbyItem';
@@ -9877,7 +9877,7 @@ export type PlatbyItemsEdge = {
 };
 
 /** Methods to use when ordering `PlatbyItem`. */
-export enum PlatbyItemsOrderBy {
+export const enum PlatbyItemsOrderBy {
   Natural = 'NATURAL',
   PiAmountAsc = 'PI_AMOUNT_ASC',
   PiAmountDesc = 'PI_AMOUNT_DESC',
@@ -9991,7 +9991,7 @@ export enum PlatbyItemsOrderBy {
   UserByPiIdUserUTelefonDesc = 'USER_BY_PI_ID_USER__U_TELEFON_DESC',
   UserByPiIdUserUTimestampAsc = 'USER_BY_PI_ID_USER__U_TIMESTAMP_ASC',
   UserByPiIdUserUTimestampDesc = 'USER_BY_PI_ID_USER__U_TIMESTAMP_DESC'
-}
+};
 
 export type PlatbyRaw = Node & {
   __typename?: 'PlatbyRaw';
@@ -10075,7 +10075,7 @@ export type PlatbyRawsEdge = {
 };
 
 /** Methods to use when ordering `PlatbyRaw`. */
-export enum PlatbyRawsOrderBy {
+export const enum PlatbyRawsOrderBy {
   Natural = 'NATURAL',
   PlatbyItemsByPiIdRawCountAsc = 'PLATBY_ITEMS_BY_PI_ID_RAW__COUNT_ASC',
   PlatbyItemsByPiIdRawCountDesc = 'PLATBY_ITEMS_BY_PI_ID_RAW__COUNT_DESC',
@@ -10091,7 +10091,7 @@ export enum PlatbyRawsOrderBy {
   PrSortedDesc = 'PR_SORTED_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
+};
 
 export type ProspectDatum = {
   __typename?: 'ProspectDatum';
@@ -11685,7 +11685,7 @@ export type RoomAttachmentsEdge = {
 };
 
 /** Methods to use when ordering `RoomAttachment`. */
-export enum RoomAttachmentsOrderBy {
+export const enum RoomAttachmentsOrderBy {
   AttachmentByObjectNameObjectNameAsc = 'ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_ASC',
   AttachmentByObjectNameObjectNameDesc = 'ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_DESC',
   AttachmentByObjectNamePreviewObjectNameAsc = 'ATTACHMENT_BY_OBJECT_NAME__PREVIEW_OBJECT_NAME_ASC',
@@ -11709,7 +11709,7 @@ export enum RoomAttachmentsOrderBy {
   RoomByRoomIdNameDesc = 'ROOM_BY_ROOM_ID__NAME_DESC',
   RoomIdAsc = 'ROOM_ID_ASC',
   RoomIdDesc = 'ROOM_ID_DESC'
-}
+};
 
 /** A condition to be used against `Room` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type RoomCondition = {
@@ -11762,7 +11762,7 @@ export type RoomsEdge = {
 };
 
 /** Methods to use when ordering `Room`. */
-export enum RoomsOrderBy {
+export const enum RoomsOrderBy {
   DescriptionAsc = 'DESCRIPTION_ASC',
   DescriptionDesc = 'DESCRIPTION_DESC',
   IdAsc = 'ID_ASC',
@@ -11784,7 +11784,7 @@ export enum RoomsOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   RoomAttachmentsByRoomIdCountAsc = 'ROOM_ATTACHMENTS_BY_ROOM_ID__COUNT_ASC',
   RoomAttachmentsByRoomIdCountDesc = 'ROOM_ATTACHMENTS_BY_ROOM_ID__COUNT_DESC'
-}
+};
 
 export type Rozpi = Node & {
   __typename?: 'Rozpi';
@@ -11954,7 +11954,7 @@ export type RozpisItemsEdge = {
 };
 
 /** Methods to use when ordering `RozpisItem`. */
-export enum RozpisItemsOrderBy {
+export const enum RozpisItemsOrderBy {
   Natural = 'NATURAL',
   ParyByRiPartnerPArchivAsc = 'PARY_BY_RI_PARTNER__P_ARCHIV_ASC',
   ParyByRiPartnerPArchivDesc = 'PARY_BY_RI_PARTNER__P_ARCHIV_DESC',
@@ -12010,10 +12010,10 @@ export enum RozpisItemsOrderBy {
   RozpiByRiIdRodicRTrenerDesc = 'ROZPI_BY_RI_ID_RODIC__R_TRENER_DESC',
   RozpiByRiIdRodicRVisibleAsc = 'ROZPI_BY_RI_ID_RODIC__R_VISIBLE_ASC',
   RozpiByRiIdRodicRVisibleDesc = 'ROZPI_BY_RI_ID_RODIC__R_VISIBLE_DESC'
-}
+};
 
 /** Methods to use when ordering `Rozpi`. */
-export enum RozpisOrderBy {
+export const enum RozpisOrderBy {
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
@@ -12097,7 +12097,7 @@ export enum RozpisOrderBy {
   UserByRTrenerUTelefonDesc = 'USER_BY_R_TRENER__U_TELEFON_DESC',
   UserByRTrenerUTimestampAsc = 'USER_BY_R_TRENER__U_TIMESTAMP_ASC',
   UserByRTrenerUTimestampDesc = 'USER_BY_R_TRENER__U_TIMESTAMP_DESC'
-}
+};
 
 export type Session = Node & {
   __typename?: 'Session';
@@ -12162,7 +12162,7 @@ export type SessionsEdge = {
 };
 
 /** Methods to use when ordering `Session`. */
-export enum SessionsOrderBy {
+export const enum SessionsOrderBy {
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
@@ -12238,7 +12238,7 @@ export enum SessionsOrderBy {
   UserBySsUserUTelefonDesc = 'USER_BY_SS_USER__U_TELEFON_DESC',
   UserBySsUserUTimestampAsc = 'USER_BY_SS_USER__U_TIMESTAMP_ASC',
   UserBySsUserUTimestampDesc = 'USER_BY_SS_USER__U_TIMESTAMP_DESC'
-}
+};
 
 /** A connection to a list of `Skupiny` values. */
 export type SkupiniesConnection = {
@@ -12263,7 +12263,7 @@ export type SkupiniesEdge = {
 };
 
 /** Methods to use when ordering `Skupiny`. */
-export enum SkupiniesOrderBy {
+export const enum SkupiniesOrderBy {
   CohortGroupAsc = 'COHORT_GROUP_ASC',
   CohortGroupByCohortGroupDescriptionAsc = 'COHORT_GROUP_BY_COHORT_GROUP__DESCRIPTION_ASC',
   CohortGroupByCohortGroupDescriptionDesc = 'COHORT_GROUP_BY_COHORT_GROUP__DESCRIPTION_DESC',
@@ -12305,7 +12305,7 @@ export enum SkupiniesOrderBy {
   UpozorneniSkupiniesByUpsIdSkupinaCountDesc = 'UPOZORNENI_SKUPINIES_BY_UPS_ID_SKUPINA__COUNT_DESC',
   UsersByUSkupinaCountAsc = 'USERS_BY_U_SKUPINA__COUNT_ASC',
   UsersByUSkupinaCountDesc = 'USERS_BY_U_SKUPINA__COUNT_DESC'
-}
+};
 
 export type Skupiny = Node & {
   __typename?: 'Skupiny';
@@ -12540,7 +12540,7 @@ export type TenantAttachmentsEdge = {
 };
 
 /** Methods to use when ordering `TenantAttachment`. */
-export enum TenantAttachmentsOrderBy {
+export const enum TenantAttachmentsOrderBy {
   AttachmentByObjectNameObjectNameAsc = 'ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_ASC',
   AttachmentByObjectNameObjectNameDesc = 'ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_DESC',
   AttachmentByObjectNamePreviewObjectNameAsc = 'ATTACHMENT_BY_OBJECT_NAME__PREVIEW_OBJECT_NAME_ASC',
@@ -12564,13 +12564,13 @@ export enum TenantAttachmentsOrderBy {
   TenantIdDesc = 'TENANT_ID_DESC',
   TypeAsc = 'TYPE_ASC',
   TypeDesc = 'TYPE_DESC'
-}
+};
 
-export enum TenantAttachmentType {
+export const enum TenantAttachmentType {
   Logo = 'LOGO',
   Map = 'MAP',
   Photo = 'PHOTO'
-}
+};
 
 /** A condition to be used against `Tenant` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type TenantCondition = {
@@ -12619,7 +12619,7 @@ export type TenantPeopleEdge = {
 };
 
 /** Methods to use when ordering `TenantPerson`. */
-export enum TenantPeopleOrderBy {
+export const enum TenantPeopleOrderBy {
   Natural = 'NATURAL',
   PersonByPersonIdFirstNameAsc = 'PERSON_BY_PERSON_ID__FIRST_NAME_ASC',
   PersonByPersonIdFirstNameDesc = 'PERSON_BY_PERSON_ID__FIRST_NAME_DESC',
@@ -12641,7 +12641,7 @@ export enum TenantPeopleOrderBy {
   TenantByTenantIdNameDesc = 'TENANT_BY_TENANT_ID__NAME_DESC',
   TenantIdAsc = 'TENANT_ID_ASC',
   TenantIdDesc = 'TENANT_ID_DESC'
-}
+};
 
 export type TenantPerson = Node & {
   __typename?: 'TenantPerson';
@@ -12701,7 +12701,7 @@ export type TenantsEdge = {
 };
 
 /** Methods to use when ordering `Tenant`. */
-export enum TenantsOrderBy {
+export const enum TenantsOrderBy {
   CohortGroupsByTenantCountAsc = 'COHORT_GROUPS_BY_TENANT__COUNT_ASC',
   CohortGroupsByTenantCountDesc = 'COHORT_GROUPS_BY_TENANT__COUNT_DESC',
   IdAsc = 'ID_ASC',
@@ -12719,7 +12719,7 @@ export enum TenantsOrderBy {
   TenantAttachmentsByTenantIdCountDesc = 'TENANT_ATTACHMENTS_BY_TENANT_ID__COUNT_DESC',
   TenantPeopleByTenantIdCountAsc = 'TENANT_PEOPLE_BY_TENANT_ID__COUNT_ASC',
   TenantPeopleByTenantIdCountDesc = 'TENANT_PEOPLE_BY_TENANT_ID__COUNT_DESC'
-}
+};
 
 /** All input for the `updateAktualityByNodeId` mutation. */
 export type UpdateAktualityByNodeIdInput = {
@@ -14874,7 +14874,7 @@ export type UpozorneniSkupiniesEdge = {
 };
 
 /** Methods to use when ordering `UpozorneniSkupiny`. */
-export enum UpozorneniSkupiniesOrderBy {
+export const enum UpozorneniSkupiniesOrderBy {
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
@@ -14928,7 +14928,7 @@ export enum UpozorneniSkupiniesOrderBy {
   UpsIdSkupinaDesc = 'UPS_ID_SKUPINA_DESC',
   UpsPopisAsc = 'UPS_POPIS_ASC',
   UpsPopisDesc = 'UPS_POPIS_DESC'
-}
+};
 
 export type UpozorneniSkupiny = Node & {
   __typename?: 'UpozorneniSkupiny';
@@ -14981,7 +14981,7 @@ export type UpozorneniSkupinyPatch = {
 };
 
 /** Methods to use when ordering `Upozorneni`. */
-export enum UpozornenisOrderBy {
+export const enum UpozornenisOrderBy {
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
@@ -15071,7 +15071,7 @@ export enum UpozornenisOrderBy {
   UserByUpKdoUTelefonDesc = 'USER_BY_UP_KDO__U_TELEFON_DESC',
   UserByUpKdoUTimestampAsc = 'USER_BY_UP_KDO__U_TIMESTAMP_ASC',
   UserByUpKdoUTimestampDesc = 'USER_BY_UP_KDO__U_TIMESTAMP_DESC'
-}
+};
 
 export type User = Node & {
   __typename?: 'User';
@@ -15513,7 +15513,7 @@ export type UsersEdge = {
 };
 
 /** Methods to use when ordering `User`. */
-export enum UsersOrderBy {
+export const enum UsersOrderBy {
   AkceItemsByAiUserCountAsc = 'AKCE_ITEMS_BY_AI_USER__COUNT_ASC',
   AkceItemsByAiUserCountDesc = 'AKCE_ITEMS_BY_AI_USER__COUNT_DESC',
   AktualitiesByAtKdoCountAsc = 'AKTUALITIES_BY_AT_KDO__COUNT_ASC',
@@ -15677,7 +15677,7 @@ export enum UsersOrderBy {
   UTimestampDesc = 'U_TIMESTAMP_DESC',
   UpozornenisByUpKdoCountAsc = 'UPOZORNENIS_BY_UP_KDO__COUNT_ASC',
   UpozornenisByUpKdoCountDesc = 'UPOZORNENIS_BY_UP_KDO__COUNT_DESC'
-}
+};
 
 /** All input for the `verifyFunction` mutation. */
 export type VerifyFunctionInput = {
@@ -15827,7 +15827,7 @@ export type VideoListsEdge = {
 };
 
 /** Methods to use when ordering `VideoList`. */
-export enum VideoListsOrderBy {
+export const enum VideoListsOrderBy {
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
@@ -15845,7 +15845,7 @@ export enum VideoListsOrderBy {
   VlTitleDesc = 'VL_TITLE_DESC',
   VlUrlAsc = 'VL_URL_ASC',
   VlUrlDesc = 'VL_URL_DESC'
-}
+};
 
 /** Represents an update to a `Video`. Fields that are set will be updated. */
 export type VideoPatch = {
@@ -15882,7 +15882,7 @@ export type VideosEdge = {
 };
 
 /** Methods to use when ordering `Video`. */
-export enum VideosOrderBy {
+export const enum VideosOrderBy {
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
@@ -15902,7 +15902,7 @@ export enum VideosOrderBy {
   VUpdatedAtDesc = 'V_UPDATED_AT_DESC',
   VUriAsc = 'V_URI_ASC',
   VUriDesc = 'V_URI_DESC'
-}
+};
 
 export type VideoSource = Node & {
   __typename?: 'VideoSource';
@@ -15978,7 +15978,7 @@ export type VideoSourcesEdge = {
 };
 
 /** Methods to use when ordering `VideoSource`. */
-export enum VideoSourcesOrderBy {
+export const enum VideoSourcesOrderBy {
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
@@ -15994,4 +15994,4 @@ export enum VideoSourcesOrderBy {
   VsTitleDesc = 'VS_TITLE_DESC',
   VsUrlAsc = 'VS_URL_ASC',
   VsUrlDesc = 'VS_URL_DESC'
-}
+};
