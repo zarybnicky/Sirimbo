@@ -53,6 +53,7 @@ export const EventItem = ({ event, expanded: expandedInit = false }: Props) => {
 
       <div className="flex gap-1 flex-wrap my-4">
         <ParticipationDialog data={event} />
+
         {total > 0 && (
           <SimpleDialog title="Účastníci" button={<Button>Účastníci ({total})</Button>}>
             {perms.canEditEvent(event) && (
@@ -77,7 +78,7 @@ export const EventItem = ({ event, expanded: expandedInit = false }: Props) => {
       </div>
 
       <RichTextView value={event.summary} />
-      <RichTextView value={(event.description || '').replaceAll('\n', '<br/>')} />
+      <RichTextView value={event.description} />
     </Card>
   );
 };

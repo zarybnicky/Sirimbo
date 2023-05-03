@@ -2107,6 +2107,35 @@ export type CreateParameterPayloadParameterEdgeArgs = {
   orderBy?: InputMaybe<Array<ParametersOrderBy>>;
 };
 
+/** All input for the `createParticipationExternal` mutation. */
+export type CreateParticipationExternalInput = {
+  birthNumber: Scalars['String'];
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  email: Scalars['String'];
+  eventId: Scalars['BigInt'];
+  firstName: Scalars['String'];
+  guardianName: Scalars['String'];
+  lastName: Scalars['String'];
+  notes: Scalars['String'];
+  phone: Scalars['String'];
+};
+
+/** The output of our `createParticipationExternal` mutation. */
+export type CreateParticipationExternalPayload = {
+  __typename?: 'CreateParticipationExternalPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
 /** All input for the `createParticipation` mutation. */
 export type CreateParticipationInput = {
   /**
@@ -6083,6 +6112,7 @@ export type Mutation = {
   /** Creates a single `Parameter`. */
   createParameter: Maybe<CreateParameterPayload>;
   createParticipation: Maybe<CreateParticipationPayload>;
+  createParticipationExternal: Maybe<CreateParticipationExternalPayload>;
   /** Creates a single `Pary`. */
   createPary: Maybe<CreateParyPayload>;
   /** Creates a single `ParyNavrh`. */
@@ -6612,6 +6642,12 @@ export type MutationCreateParameterArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateParticipationArgs = {
   input: CreateParticipationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateParticipationExternalArgs = {
+  input: CreateParticipationExternalInput;
 };
 
 

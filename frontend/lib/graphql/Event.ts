@@ -63,6 +63,13 @@ export type MyEventsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 export type MyEventsQuery = { __typename?: 'Query', events: { __typename?: 'EventsConnection', nodes: Array<{ __typename: 'Event', id: string, since: string, until: string, summary: string, description: string, filesLegacy: string, name: string, capacity: string, remainingSpots: number | null, locationText: string, isLocked: boolean, isVisible: boolean, isPublic: boolean, enableNotes: boolean, attendeeExternals: { __typename?: 'AttendeeExternalsConnection', nodes: Array<{ __typename?: 'AttendeeExternal', firstName: string, lastName: string }> }, attendeeUsers: { __typename?: 'AttendeeUsersConnection', nodes: Array<{ __typename?: 'AttendeeUser', notes: string, user: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string, uNarozeni: string, uTelefon: string, uEmail: string, uRodneCislo: string | null } | null }> } }> } | null };
 
+export type CreateAttendeeExternalMutationVariables = Types.Exact<{
+  input: Types.CreateParticipationExternalInput;
+}>;
+
+
+export type CreateAttendeeExternalMutation = { __typename?: 'Mutation', createParticipationExternal: { __typename: 'CreateParticipationExternalPayload' } | null };
+
 export type CreateParticipationMutationVariables = Types.Exact<{
   input: Types.CreateParticipationInput;
 }>;
@@ -301,6 +308,25 @@ useMyEventsQuery.getKey = (variables?: MyEventsQueryVariables) => variables === 
 ;
 
 useMyEventsQuery.fetcher = (variables?: MyEventsQueryVariables, options?: RequestInit['headers']) => fetcher<MyEventsQuery, MyEventsQueryVariables>(MyEventsDocument, variables, options);
+export const CreateAttendeeExternalDocument = `
+    mutation CreateAttendeeExternal($input: CreateParticipationExternalInput!) {
+  createParticipationExternal(input: $input) {
+    __typename
+  }
+}
+    `;
+export const useCreateAttendeeExternalMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreateAttendeeExternalMutation, TError, CreateAttendeeExternalMutationVariables, TContext>) =>
+    useMutation<CreateAttendeeExternalMutation, TError, CreateAttendeeExternalMutationVariables, TContext>(
+      ['CreateAttendeeExternal'],
+      (variables?: CreateAttendeeExternalMutationVariables) => fetcher<CreateAttendeeExternalMutation, CreateAttendeeExternalMutationVariables>(CreateAttendeeExternalDocument, variables)(),
+      options
+    );
+useCreateAttendeeExternalMutation.getKey = () => ['CreateAttendeeExternal'];
+
+useCreateAttendeeExternalMutation.fetcher = (variables: CreateAttendeeExternalMutationVariables, options?: RequestInit['headers']) => fetcher<CreateAttendeeExternalMutation, CreateAttendeeExternalMutationVariables>(CreateAttendeeExternalDocument, variables, options);
 export const CreateParticipationDocument = `
     mutation CreateParticipation($input: CreateParticipationInput!) {
   createParticipation(input: $input) {

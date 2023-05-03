@@ -6,13 +6,15 @@ import { useAuth } from 'lib/data/use-auth';
 import { Layout } from 'components/layout/Layout';
 import { EventMemberList } from 'components/EventMemberList';
 import { useRouter } from 'next/router';
+import classNames from 'classnames';
 
 export default function EventItemPage() {
   const router = useRouter();
+  const { user } = useAuth();
   const { id } = router.query;
   const { data } = useEventQuery({ id: id as string }, { enabled: !!id });
   return (
-    <Item className="col-full-width p-2 bg-stone-100">
+    <Item className={classNames(user ? 'col-full bg-stone-100' : 'col-feature mt-6')}>
       <Item.Titlebar title="Nadcházející akce" />
       <EventMemberList selected={id as string} />
       <div className="mt-6">{data?.event && <EventItem event={data.event} />}</div>

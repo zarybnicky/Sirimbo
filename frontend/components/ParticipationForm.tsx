@@ -2,6 +2,7 @@ import {
   EventFragment,
   MyEventFragment,
   useCancelParticipationMutation,
+  useCreateAttendeeExternalMutation,
   useCreateParticipationMutation,
   useMyEventsQuery,
 } from 'lib/graphql/Event';
@@ -15,6 +16,12 @@ import { useAuth } from 'lib/data/use-auth';
 import { useQueryClient } from '@tanstack/react-query';
 import { SimpleDialog } from './Dialog';
 import { Button } from './Button';
+import {
+  AttendeeExternalInput,
+  CreateAttendeeExternalInput,
+  CreateAttendeeExternalPayload,
+} from 'lib/graphql';
+import { toast } from 'react-toastify';
 
 interface Props {
   data: EventFragment & Partial<MyEventFragment>;
@@ -25,7 +32,102 @@ type FormProps = {
   myNotes: string;
 };
 
-export const ParticipationForm = ({ data, onSuccess: realOnSuccess }: Props) => {
+type ExternalFormProps = Pick<
+  AttendeeExternalInput,
+  'firstName' | 'lastName' | 'guardianName' | 'email' | 'phone' | 'notes' | 'birthNumber'
+>;
+
+export function ExternalParticipationForm({ data, onSuccess: realOnSuccess }: Props) {
+  const queryClient = useQueryClient();
+  const onSuccess = React.useCallback(() => {
+    queryClient.invalidateQueries(useMyEventsQuery.getKey());
+    realOnSuccess();
+  }, [queryClient, realOnSuccess]);
+
+  const { mutateAsync: doCreate } = useCreateAttendeeExternalMutation({ onSuccess });
+  const { reset, control, handleSubmit } = useForm<ExternalFormProps>();
+
+  const onSubmit = useAsyncCallback(async (values: ExternalFormProps) => {
+    console.log(values);
+    await doCreate({
+      input: { ...values, guardianName: values.guardianName || '', notes: values.notes || '', eventId: data.id },
+    });
+    toast.success("Registrace proběhla úspěšně.");
+  });
+
+  return (
+    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <div className="h3">Přihlášení na akci</div>
+      <div className="flex flex-wrap gap-1 w-full">
+        <TextFieldElement
+          className="grow"
+          control={control}
+          name="firstName"
+          label="Jméno účastníka"
+          required
+        />
+        <TextFieldElement
+          className="grow"
+          control={control}
+          name="lastName"
+          label="Příjmení účastníka"
+          required
+        />
+      </div>
+      <TextFieldElement
+        control={control}
+        name="birthNumber"
+        label="Rodné číslo účastníka"
+        required
+        placeholder="1111119999"
+        validation={{
+          pattern: {
+            value: /[0-9]{9,10}/,
+            message: 'Neplatné rodné číslo',
+          },
+        }}
+      />
+
+      <div className="h3 mt-2">Kontaktní údaje</div>
+      <TextFieldElement
+        control={control}
+        name="guardianName"
+        label="Jméno zákonného zástupce (pro mladší 18 let)"
+        defaultValue=""
+      />
+      <div className="flex flex-wrap gap-1 w-full mb-2">
+        <TextFieldElement
+          className="grow"
+          control={control}
+          name="email"
+          type="email"
+          placeholder="@"
+          label="E-mail"
+          required
+        />
+        <TextFieldElement
+          className="grow"
+          control={control}
+          name="phone"
+          type="tel"
+          placeholder="+420"
+          label="Telefon"
+          required
+        />
+      </div>
+      {data.enableNotes && (
+        <TextAreaElement
+          control={control}
+          name="notes"
+          label="Požadavky na lekce, stravu, ..."
+        />
+      )}
+      <SubmitButton loading={onSubmit.loading}>Přihlásit</SubmitButton>
+    </form>
+  );
+}
+
+export function ParticipationForm({ data, onSuccess: realOnSuccess }: Props) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const onSuccess = React.useCallback(() => {
@@ -74,7 +176,7 @@ export const ParticipationForm = ({ data, onSuccess: realOnSuccess }: Props) => 
       )}
     </form>
   );
-};
+}
 
 interface DialogProps {
   data: EventFragment & Partial<MyEventFragment>;
@@ -89,8 +191,14 @@ export const ParticipationDialog = ({ data }: DialogProps) => {
   }
   const button = <Button>{myRegistration ? 'Upravit přihlášku' : 'Přihlásit'}</Button>;
   return (
-    <SimpleDialog title="Přihlásit na akci" button={button}>
-      {({ close }) => <ParticipationForm data={data} onSuccess={close} />}
+    <SimpleDialog button={button}>
+      {({ close }) =>
+        user ? (
+          <ParticipationForm data={data} onSuccess={close} />
+        ) : (
+          <ExternalParticipationForm data={data} onSuccess={close} />
+        )
+      }
     </SimpleDialog>
   );
 };

@@ -579,6 +579,31 @@ $$;
 
 
 --
+-- Name: create_participation_external(bigint, text, text, text, text, text, text, text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.create_participation_external(event_id bigint, first_name text, last_name text, guardian_name text, email text, phone text, notes text, birth_number text) RETURNS void
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
+    AS $$
+declare
+  event akce;
+begin
+  select * into event from akce where a_id=event_id;
+  if event is null then
+    raise exception 'ITEM_NOT_FOUND' using errcode = '28000';
+  end if;
+
+  if event.a_lock then
+    raise exception 'ITEM_LOCKED' using errcode = '42501';
+  end if;
+
+  INSERT INTO attendee_external (event_id, first_name, last_name, guardian_name, email, phone, notes, birth_number)
+  values (event_id, first_name, last_name, guardian_name, email, phone, notes, birth_number);
+end;
+$$;
+
+
+--
 -- Name: current_couple_ids(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -4323,13 +4348,6 @@ ALTER TABLE public.galerie_dir ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.galerie_foto ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: attendee_external insert_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY insert_all ON public.attendee_external FOR INSERT TO anonymous WITH CHECK ((confirmed_by IS NULL));
-
-
---
 -- Name: attendee_external manage_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -4679,6 +4697,13 @@ GRANT ALL ON FUNCTION public.create_couple(man bigint, woman bigint) TO administ
 --
 
 GRANT ALL ON FUNCTION public.create_participation(event_id bigint, year_of_birth integer, my_notes text) TO member;
+
+
+--
+-- Name: FUNCTION create_participation_external(event_id bigint, first_name text, last_name text, guardian_name text, email text, phone text, notes text, birth_number text); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.create_participation_external(event_id bigint, first_name text, last_name text, guardian_name text, email text, phone text, notes text, birth_number text) TO anonymous;
 
 
 --

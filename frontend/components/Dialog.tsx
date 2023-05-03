@@ -4,15 +4,13 @@ import classNames from 'classnames';
 import React from 'react';
 import { X as CloseIcon } from 'react-feather';
 
-export const SimpleDialog = ({
-  title,
-  children,
-  button,
-}: {
-  title: React.ReactNode;
+type Props = {
+  title?: React.ReactNode;
   children: React.ReactNode | ((props: { close: () => void }) => React.ReactNode);
   button: React.ReactNode;
-}) => {
+};
+
+export const SimpleDialog = ({ title, children, button }: Props) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const contentProps = React.useMemo(() => ({ close: () => setIsOpen(false) }), []);
 
@@ -55,9 +53,11 @@ export const SimpleDialog = ({
                 'focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75',
               )}
             >
-              <DialogPrimitive.Title className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                {title}
-              </DialogPrimitive.Title>
+              {title && (
+                <DialogPrimitive.Title className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                  {title}
+                </DialogPrimitive.Title>
+              )}
 
               {typeof children === 'function' ? children(contentProps) : children}
 

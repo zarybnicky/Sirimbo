@@ -5,13 +5,12 @@ const errorTranslation: { [key: string]: string } = {
   ACCOUNT_NOT_CONFIRMED: 'Účet ještě nebyl potvrzen',
 };
 
-export const ErrorBox = ({
-  error: e,
-  default: def,
-}: {
+type Props = {
   error: any;
   default?: string;
-}): JSX.Element | null => {
+};
+
+export const ErrorBox = ({ error: e, default: def }: Props) => {
   let error: string | null = null;
 
   if (typeof e === 'object' && Array.isArray((e as any)?.response?.errors)) {
@@ -27,9 +26,7 @@ export const ErrorBox = ({
 
   return (
     <div className="rounded-lg px-4 py-2 bg-red-500 text-white col-full">
-      {errorTranslation[error] ? (
-        errorTranslation[error]
-      ) : (
+      {errorTranslation[error] || (
         <>
           <div className="font-bold">
             {def || 'Něco se nepovedlo, zkuste to prosím znovu'}

@@ -107,6 +107,12 @@ query MyEvents {
   }
 }
 
+mutation CreateAttendeeExternal($input: CreateParticipationExternalInput!) {
+  createParticipationExternal(input: $input) {
+    __typename
+  }
+}
+
 mutation CreateParticipation($input: CreateParticipationInput!) {
   createParticipation(input: $input) {
     __typename

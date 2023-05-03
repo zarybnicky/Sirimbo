@@ -9,7 +9,7 @@
   "scripts": {
     "build": "webpack --progress",
     "worker-schema": "tsnd src/worker-schema.ts",
-    "start": "tsnd --respawn src/index.ts"
+    "start": "DEBUG=postgraphile:postgres,postgraphile:postgres:error tsnd --respawn src/index.ts"
   },
   "dependencies": {
     "@graphile-contrib/pg-order-by-related": "^1.0.0",
