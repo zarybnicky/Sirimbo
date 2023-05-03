@@ -22,7 +22,7 @@ export default function HomePage() {
       </div>
 
       <div className="my-8">
-        <h4 className="text-2xl font-bold mb-2">Představujeme klub</h4>
+        <h4 className="text-3xl font-bold text-red-500 mb-2">Představujeme klub</h4>
         <YoutubeEmbed
           title="Taneční soutěž - Národní sportovní centrum Prostějov"
           thumbnail="https://i3.ytimg.com/vi/bgUYrFexFr4/maxresdefault.jpg"
@@ -41,7 +41,7 @@ export default function HomePage() {
       <CallToAction />
 
       <div className="my-12">
-        <h4 className="text-2xl font-bold">Aktuálně</h4>
+        <h4 className="text-3xl font-bold text-red-500">Aktuálně</h4>
         {articles.map((x, i) => (
           <ServiceCard key={i} href={x.href} image={x.imgThumb} header={x.header}>
             {x.preview}

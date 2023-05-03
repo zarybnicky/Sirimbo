@@ -7,18 +7,29 @@ import { Layout } from 'components/layout/Layout';
 import { EventMemberList } from 'components/EventMemberList';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
+import { Heading } from 'components/Heading';
 
 export default function EventItemPage() {
   const router = useRouter();
   const { user } = useAuth();
   const { id } = router.query;
   const { data } = useEventQuery({ id: id as string }, { enabled: !!id });
+
   return (
-    <Item className={classNames(user ? 'col-full bg-stone-100' : 'col-feature mt-6')}>
-      <Item.Titlebar title="Nadcházející akce" />
-      <EventMemberList selected={id as string} />
-      <div className="mt-6">{data?.event && <EventItem event={data.event} />}</div>
-    </Item>
+    <>
+      {!user && (
+        <Heading
+          image=""
+          text="Nadcházející akce"
+          color={{ r: 255, g: 60, b: 60, a: 90 }}
+        />
+      )}
+      <Item className={classNames(user ? 'col-full bg-stone-100' : 'col-feature')}>
+        {user && <Item.Titlebar title="Nadcházející akce" />}
+        <EventMemberList selected={id as string} />
+        <div className="mt-6">{data?.event && <EventItem event={data.event} />}</div>
+      </Item>
+    </>
   );
 }
 

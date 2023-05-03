@@ -30,10 +30,10 @@ export default function ArticlePage() {
         <meta property="og:site_name" content="TK Olymp" />
         <meta property="og:description" content="{x.atPreview}" />
       </Head>
-      <div className="text-stone-600 mt-20">
+      <h3 className="text-3xl font-bold text-red-500 mt-20">{x.atJmeno}</h3>
+      <div className="text-stone-600 mt-3 mb-6">
         {x.atTimestampAdd && fullDateFormatter.format(new Date(x.atTimestampAdd))}
       </div>
-      <h3 className="text-2xl font-bold text-red-500 mb-4">{x.atJmeno}</h3>
       <RichTextView value={x.atText} />
       <CallToAction />
     </>

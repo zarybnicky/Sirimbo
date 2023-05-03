@@ -182,7 +182,6 @@ export default function AboutPage() {
 
       <LocationCard
         item={{
-          image: '',
           name: 'Taneční centrum při FZŠ Holečkova',
           address:
             'Holečkova 10, 779 00, Olomouc (vchod brankou u zastávy Povel - škola)',

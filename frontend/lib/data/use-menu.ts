@@ -40,7 +40,7 @@ export const useTopMenu = (): MenuStructItem[] => [
     type: 'menu',
     title: 'Nabízíme',
     children: [
-      { type: 'link', title: 'Vystoupení na akcích', href: '/nabizime/vystoupení' },
+      { type: 'link', title: 'Vystoupení na akcích', href: '/nabizime/vystoupeni' },
       { type: 'link', title: 'Školní taneční kroužky', href: '/nabizime/skolni-krouzky' },
     ],
   },

@@ -48,11 +48,16 @@ export function ExternalParticipationForm({ data, onSuccess: realOnSuccess }: Pr
   const { reset, control, handleSubmit } = useForm<ExternalFormProps>();
 
   const onSubmit = useAsyncCallback(async (values: ExternalFormProps) => {
-    console.log(values);
     await doCreate({
-      input: { ...values, guardianName: values.guardianName || '', notes: values.notes || '', eventId: data.id },
+      input: {
+        ...values,
+        birthNumber: values.birthNumber || '',
+        guardianName: values.guardianName || '',
+        notes: values.notes || '',
+        eventId: data.id,
+      },
     });
-    toast.success("Registrace proběhla úspěšně.");
+    toast.success('Registrace proběhla úspěšně.');
   });
 
   return (

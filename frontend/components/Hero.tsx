@@ -62,7 +62,7 @@ export const Hero = ({}) => {
     >
       {articles.map((x, i) => (
         <Link key={i} href={x.href} className="group relative w-full oveflow-hidden">
-          <div className="absolute left-0 right-0 bottom-0 z-10 bg-red-black-red p-4 text-white group-hover:underline text-2xl lg:text-3xl text-center py-4">
+          <div className="absolute left-0 right-0 bottom-0 z-10 bg-red-black-red p-4 text-white group-hover:underline text-2xl lg:text-3xl text-center py-4 font-bold">
             {x.header}
           </div>
           <img

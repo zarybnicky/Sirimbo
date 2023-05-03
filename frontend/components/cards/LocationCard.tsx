@@ -11,30 +11,27 @@ const CardMap = (props: {
   className?: string;
 }) => {
   return (
-    <Card>
-      <Map
-        className={classNames('map', props.className)}
-        center={props}
-        zoom={props.zoom}
-        scrollWheelZoom={false}
-      >
-        {({ TileLayer, Marker, Popup }) => (
-          <>
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            <Marker position={props}>
-              <Popup>{props.name}</Popup>
-            </Marker>
-          </>
-        )}
-      </Map>
-    </Card>
+    <Map
+      className={classNames('map', props.className)}
+      center={props}
+      zoom={props.zoom}
+      scrollWheelZoom={false}
+    >
+      {({ TileLayer, Marker, Popup }) => (
+        <>
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          <Marker position={props}>
+            <Popup>{props.name}</Popup>
+          </Marker>
+        </>
+      )}
+    </Map>
   );
 };
 
 type Location = {
-  image: string;
   name: string;
-  address: string;
+  address: React.ReactNode;
   href: string | null;
   mapHref: string;
   map: {
@@ -46,27 +43,19 @@ type Location = {
 
 export const LocationCard = ({ item: x }: { item: Location }) => {
   return (
-    <Card className="my-8">
-      {/*grid md:grid-cols-[1fr_2fr]">*/}
-      {/*<div className="relative -order-1 md:order-1">
-      <img className="w-full h-full object-cover" src={x.image} alt={x.name} />
-    </div>*/}
-      <div className="prose p-8 pb-4 grow basis-4 text-gray-800">
-        <h5 className="text-lg font-bold mb-2">{x.name}</h5>
-        <p>{x.address}</p>
-        <p>
-          {x.href && (
-            <a href={x.href} rel="noreferrer" target="_blank">
-              {x.href}
-            </a>
-          )}
-        </p>
-        <p>
-          <a href={x.mapHref} rel="noreferrer" target="_blank">
-            Otevřít mapu
+    <Card className="grid md:grid-cols-[1fr_2fr] gap-4 items-center">
+      <CardMap className="h-[200px]" name={x.name} {...x.map} />
+      <div className="grow text-gray-800">
+        <h5 className="text-red-600 text-xl font-bold">{x.name}</h5>
+        <div className="py-2">{x.address}</div>
+        {x.href && (
+          <a href={x.href} rel="noreferrer" target="_blank" className="block underline">
+            {x.href}
           </a>
-        </p>
-        <CardMap className="h-[150px] mt-4" name={x.name} {...x.map} />
+        )}
+        <a href={x.mapHref} rel="noreferrer" target="_blank" className="block underline">
+          Otevřít mapu
+        </a>
       </div>
     </Card>
   );

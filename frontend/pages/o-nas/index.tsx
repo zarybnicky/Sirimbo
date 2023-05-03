@@ -18,7 +18,7 @@ export default function AboutPage() {
         </div>
         <div className="prose col-span-2 -order-1 md:order-1">
           <h1>
-            <span className="text-red-500">OLYMP</span> V TANEČNÍM SVĚTĚ
+            <span className="text-red-800">OLYMP</span> V TANEČNÍM SVĚTĚ
           </h1>
           <p>
             Taneční klub byl jedním z prvních klubů v České republice, který v počátku
