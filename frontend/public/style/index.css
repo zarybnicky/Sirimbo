@@ -21,6 +21,10 @@
     @apply text-red-500;
 }
 
+.ck-content {
+    @apply prose;
+}
+
 .scrollbar {
     @apply scrollbar-thin scrollbar-track-transparent scrollbar-thumb-stone-800/20 hover:scrollbar-thumb-stone-800/50;
 }

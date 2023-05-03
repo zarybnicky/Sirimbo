@@ -46,6 +46,7 @@ export default function RichTextEditor({
     ? parseError(fieldState.error)
     : fieldState.error.message;
 
+  const _ckContent = <div className="ck-content"/>; // for tailwind's JIT
   return (
     <div className={className}>
       <label htmlFor={name} className="block text-sm font-medium text-gray-700">
