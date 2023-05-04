@@ -67,7 +67,7 @@ export function DateRangeInput<TFieldValues extends FieldValues>({
     >
       {({ startDateInputProps, endDateInputProps }) => (
         <div className={className}>
-          <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+          <label htmlFor={name} className="block text-sm font-medium text-gray-700 my-1">
             {label}
           </label>
           <div className="date-range flex flex-row gap-4">
@@ -126,7 +126,7 @@ export function DatePickerElement<TFieldValues extends FieldValues>({
     <DatePicker date={value} onDateChange={onChange} locale={cs}>
       {({ inputProps }) => (
         <div className={className}>
-          <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+          <label htmlFor={name} className="block text-sm font-medium text-gray-700 my-1">
             {label}
           </label>
           <input

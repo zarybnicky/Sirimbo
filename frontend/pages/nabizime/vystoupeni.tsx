@@ -1,3 +1,4 @@
+import { ExhibitionRequestForm } from "components/ExhibitionRequestForm";
 import { Heading } from "components/Heading";
 import { Layout } from "components/layout/Layout";
 
@@ -23,7 +24,7 @@ export default function ExhibitionsPage() {
 
         video
 
-        formulář
+        <ExhibitionRequestForm />
     </>;
 }
 

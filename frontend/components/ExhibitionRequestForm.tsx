@@ -1,19 +1,16 @@
-import * as React from 'react';
-import { Card } from 'components/Card';
-import { useForm } from 'react-hook-form';
-import { TextFieldElement } from 'components/TextField';
+import { TextAreaElement, TextFieldElement } from 'components/TextField';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { toast } from 'react-toastify';
 import { useSubmitFormMutation } from 'lib/graphql/Crm';
+import { DatePickerElement } from './DateRange';
+import { RadioButtonGroup } from './RadioButtonGroup';
+import { useForm } from 'react-hook-form';
+import { Card } from './Card';
 
-type ProspectFormProps = {
-  title: string;
-};
-
-export const ProspectForm = ({ title }: ProspectFormProps) => {
+export const ExhibitionRequestForm = () => {
   const { mutateAsync: submit } = useSubmitFormMutation();
   const { control, handleSubmit } = useForm();
 
@@ -22,37 +19,43 @@ export const ProspectForm = ({ title }: ProspectFormProps) => {
       fbq('track', 'SubmitApplication');
     }
     const url = window.location.toString();
-    await submit({ type: 'Přijď tančit!', data, url });
+    await submit({ type: 'Zájemce o vystoupení', data, url });
     toast.success('Brzy se vám ozveme!');
   });
 
   return (
     <Card>
       <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
-        <h4 className="text-xl font-bold mb-2 col-full">{title}</h4>
-        <div className="grid md:grid-cols-3 gap-2">
+        <h4 className="text-xl font-bold mb-2 col-full">
+          Nezávazná poptávka tanečního vystoupení
+        </h4>
+
+        <div className="grid md:grid-cols-2 gap-2">
+          <DatePickerElement control={control} name="date" label="Termín" required />
           <TextFieldElement
             control={control}
-            name="name"
-            label="Jméno"
-            autoComplete="given-name"
-            required
-          />
-          <TextFieldElement
-            control={control}
-            name="surname"
-            label="Příjmení"
-            autoComplete="family-name"
-            required
-          />
-          <TextFieldElement
-            control={control}
-            name="yearofbirth"
-            label="Rok narození"
-            autoComplete="bday-year"
+            name="time"
+            label="Čas"
+            type="time"
             required
           />
         </div>
+
+        <TextFieldElement control={control} name="location" label="Místo" required />
+        <TextFieldElement control={control} name="event" label="Název akce" required />
+
+        <RadioButtonGroup
+          control={control}
+          label="Typ vystoupení"
+          name="exhibition"
+          options={[
+            { value: 'Standardní tance', label: 'Standardní tance' },
+            { value: 'Latinskoamerické tance', label: 'Latinskoamerické tance' },
+            { value: 'Obě disciplíny', label: 'Obě disciplíny' },
+            { value: 'Nevím', label: 'Nevím' },
+            { value: 'Jiné', label: 'Jiné (doplňte v poznámce)' },
+          ]}
+        />
 
         <div className="grid sm:grid-cols-2 gap-2">
           <TextFieldElement
@@ -63,6 +66,7 @@ export const ProspectForm = ({ title }: ProspectFormProps) => {
             autoComplete="tel"
             required
           />
+
           <TextFieldElement
             control={control}
             name="email"
@@ -72,6 +76,8 @@ export const ProspectForm = ({ title }: ProspectFormProps) => {
             required
           />
         </div>
+
+        <TextAreaElement control={control} name="notes" label="Poznámky" />
 
         <CheckboxElement
           className="my-2"
@@ -93,10 +99,11 @@ export const ProspectForm = ({ title }: ProspectFormProps) => {
             </>
           }
         />
+
+        <p>Ozveme se Vám co nejdříve. V případě potřeby volejte 737 545 525.</p>
+
         <ErrorBox error={onSubmit.error} />
-        <SubmitButton className="w-full" loading={onSubmit.loading}>
-          Chci tančit!
-        </SubmitButton>
+        <SubmitButton loading={onSubmit.loading}>Odeslat</SubmitButton>
       </form>
     </Card>
   );
