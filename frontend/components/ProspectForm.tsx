@@ -25,7 +25,7 @@ export const ProspectForm = ({
       fbq('track', 'SubmitApplication');
     }
     await submit({
-      cohort: CrmCohort.FreeLesson,
+      cohort: 'FREE_LESSON',
       prospectData,
       origin: window.location.toString(),
     });

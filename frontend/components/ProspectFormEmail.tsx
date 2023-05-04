@@ -25,7 +25,7 @@ export const ProspectFormEmail = ({
       fbq('track', 'Lead');
     }
     await submit({
-      cohort: CrmCohort.ContactMeLater,
+      cohort: 'CONTACT_ME_LATER',
       prospectData,
       origin: window.location.toString(),
     });

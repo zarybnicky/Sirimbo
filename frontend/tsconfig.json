@@ -18,26 +18,6 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "baseUrl": "./",
-    "paths": {
-      "@/components/*": [
-        "src/components/*"
-      ],
-      "@/nodes/*": [
-        "src/nodes/*"
-      ],
-      "@/paragraphs/*": [
-        "src/paragraphs/*"
-      ],
-      "@/views/*": [
-        "src/views/*"
-      ],
-      "@utils/*": [
-        "src/utils/*"
-      ],
-      "@/config": [
-        "src/config"
-      ]
-    },
     "incremental": true,
     "allowJs": true
   },
