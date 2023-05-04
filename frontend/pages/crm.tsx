@@ -1,22 +1,18 @@
 import * as React from 'react';
-import { useActiveProspectsQuery } from 'lib/graphql/Crm';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
+import {withServerPermissions, PermissionKey, PermissionLevel} from 'lib/data/use-server-permissions';
 import { fullDateFormatter } from 'lib/format-date';
 import { Item } from 'components/layout/Item';
 import { Button } from 'components/Button';
 import { saveAs } from 'file-saver';
+import { useFormResponsesQuery } from 'lib/graphql/Crm';
 
 export default function CrmPage() {
-  const { data } = useActiveProspectsQuery();
+  const { data } = useFormResponsesQuery();
   const saveData = React.useCallback(
     async (e?: React.MouseEvent) => {
       e?.preventDefault();
 
-      const nodes = data?.activeProspects?.nodes || [];
+      const nodes = data?.formResponses?.nodes || [];
       const { Workbook } = await import('exceljs');
       const workbook = new Workbook();
       const worksheet = workbook.addWorksheet('Zájemci');
@@ -28,7 +24,7 @@ export default function CrmPage() {
         { header: 'Telefon', key: 'phone' },
         { header: 'Narození', key: 'born' },
         { header: 'Zdroj', key: 'source' },
-        { header: 'Poslední aktivita', key: 'updatedAt' },
+        { header: 'Poslední aktivita', key: 'createdAt' },
       ];
 
       worksheet.getRow(1).font = { bold: true };
@@ -44,9 +40,9 @@ export default function CrmPage() {
           email: x.data?.email,
           phone: x.data?.phone,
           born: x.data?.yearofbirth,
-          source: x.cohort,
-          updatedAt: x.updatedAt
-            ? new Date(x.updatedAt).toISOString().substring(0, 10)
+          source: x.url,
+          createdAt: x.createdAt
+            ? new Date(x.createdAt).toISOString().substring(0, 10)
             : '',
         }),
       );
@@ -78,7 +74,7 @@ export default function CrmPage() {
           </tr>
         </thead>
         <tbody>
-          {(data?.activeProspects?.nodes || []).map((row, i) => (
+          {data?.formResponses?.nodes?.map((row, i) => (
             <tr key={i} className="even:bg-white odd:bg-stone-200 border-b">
               <td className="py-1">
                 {row.data?.name} {row.data?.surname}
@@ -86,9 +82,9 @@ export default function CrmPage() {
               <td>{row.data?.email}</td>
               <td>{row.data?.phone}</td>
               <td>{row.data?.yearofbirth}</td>
-              <td>{row.cohort}</td>
+              <td>{row.type}</td>
               <td className="text-right">
-                {row.updatedAt ? fullDateFormatter.format(new Date(row.updatedAt)) : ''}
+                {row.createdAt ? fullDateFormatter.format(new Date(row.createdAt)) : ''}
               </td>
             </tr>
           ))}

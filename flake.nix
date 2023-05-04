@@ -34,6 +34,7 @@
             pkgs.postgresql_13
             pkgs.ncc
             pkgs.sqlint
+            pkgs.pgformatter
             # pkgs.squawk
           ];
 

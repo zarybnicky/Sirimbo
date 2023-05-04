@@ -4,75 +4,70 @@ import * as Types from './index';
 
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 import { fetcher } from 'lib/query';
-export type ActiveProspectsQueryVariables = Types.Exact<{ [key: string]: never; }>;
-
-
-export type ActiveProspectsQuery = { __typename?: 'Query', activeProspects: { __typename?: 'ActiveProspectsConnection', totalCount: number, nodes: Array<{ __typename?: 'ActiveProspectsRecord', id: string | null, cohort: Types.CrmCohort | null, updatedAt: string | null, data: { __typename?: 'ProspectDatum', name: string | null, surname: string | null, email: string | null, phone: string | null, yearofbirth: string | null } | null }> } | null };
-
-export type SubmitProspectFormMutationVariables = Types.Exact<{
-  cohort: Types.CrmCohort;
-  origin: Types.Scalars['String'];
-  prospectData: Types.ProspectDatumInput;
+export type FormResponsesQueryVariables = Types.Exact<{
+  type?: Types.InputMaybe<Types.Scalars['String']>;
 }>;
 
 
-export type SubmitProspectFormMutation = { __typename?: 'Mutation', prospectFormDancer: { __typename?: 'ProspectFormDancerPayload', clientMutationId: string | null } | null };
+export type FormResponsesQuery = { __typename?: 'Query', formResponses: { __typename?: 'FormResponsesConnection', totalCount: number, nodes: Array<{ __typename?: 'FormResponse', id: string, data: { [key: string]: any }, type: string, url: string, createdAt: string }> } | null };
+
+export type SubmitFormMutationVariables = Types.Exact<{
+  type: Types.Scalars['String'];
+  url: Types.Scalars['String'];
+  data: Types.Scalars['JSON'];
+}>;
 
 
-export const ActiveProspectsDocument = `
-    query ActiveProspects {
-  activeProspects {
+export type SubmitFormMutation = { __typename?: 'Mutation', submitForm: { __typename?: 'SubmitFormPayload', clientMutationId: string | null } | null };
+
+
+export const FormResponsesDocument = `
+    query FormResponses($type: String) {
+  formResponses(condition: {type: $type}, orderBy: UPDATED_AT_DESC) {
     totalCount
     nodes {
       id
-      data {
-        name
-        surname
-        email
-        phone
-        yearofbirth
-      }
-      cohort
-      updatedAt
+      data
+      type
+      url
+      createdAt
     }
   }
 }
     `;
-export const useActiveProspectsQuery = <
-      TData = ActiveProspectsQuery,
+export const useFormResponsesQuery = <
+      TData = FormResponsesQuery,
       TError = unknown
     >(
-      variables?: ActiveProspectsQueryVariables,
-      options?: UseQueryOptions<ActiveProspectsQuery, TError, TData>
+      variables?: FormResponsesQueryVariables,
+      options?: UseQueryOptions<FormResponsesQuery, TError, TData>
     ) =>
-    useQuery<ActiveProspectsQuery, TError, TData>(
-      variables === undefined ? ['ActiveProspects'] : ['ActiveProspects', variables],
-      fetcher<ActiveProspectsQuery, ActiveProspectsQueryVariables>(ActiveProspectsDocument, variables),
+    useQuery<FormResponsesQuery, TError, TData>(
+      variables === undefined ? ['FormResponses'] : ['FormResponses', variables],
+      fetcher<FormResponsesQuery, FormResponsesQueryVariables>(FormResponsesDocument, variables),
       options
     );
 
-useActiveProspectsQuery.getKey = (variables?: ActiveProspectsQueryVariables) => variables === undefined ? ['ActiveProspects'] : ['ActiveProspects', variables];
+useFormResponsesQuery.getKey = (variables?: FormResponsesQueryVariables) => variables === undefined ? ['FormResponses'] : ['FormResponses', variables];
 ;
 
-useActiveProspectsQuery.fetcher = (variables?: ActiveProspectsQueryVariables, options?: RequestInit['headers']) => fetcher<ActiveProspectsQuery, ActiveProspectsQueryVariables>(ActiveProspectsDocument, variables, options);
-export const SubmitProspectFormDocument = `
-    mutation SubmitProspectForm($cohort: CrmCohort!, $origin: String!, $prospectData: ProspectDatumInput!) {
-  prospectFormDancer(
-    input: {cohort: $cohort, origin: $origin, prospectData: $prospectData, note: ""}
-  ) {
+useFormResponsesQuery.fetcher = (variables?: FormResponsesQueryVariables, options?: RequestInit['headers']) => fetcher<FormResponsesQuery, FormResponsesQueryVariables>(FormResponsesDocument, variables, options);
+export const SubmitFormDocument = `
+    mutation SubmitForm($type: String!, $url: String!, $data: JSON!) {
+  submitForm(input: {type: $type, url: $url, data: $data}) {
     clientMutationId
   }
 }
     `;
-export const useSubmitProspectFormMutation = <
+export const useSubmitFormMutation = <
       TError = unknown,
       TContext = unknown
-    >(options?: UseMutationOptions<SubmitProspectFormMutation, TError, SubmitProspectFormMutationVariables, TContext>) =>
-    useMutation<SubmitProspectFormMutation, TError, SubmitProspectFormMutationVariables, TContext>(
-      ['SubmitProspectForm'],
-      (variables?: SubmitProspectFormMutationVariables) => fetcher<SubmitProspectFormMutation, SubmitProspectFormMutationVariables>(SubmitProspectFormDocument, variables)(),
+    >(options?: UseMutationOptions<SubmitFormMutation, TError, SubmitFormMutationVariables, TContext>) =>
+    useMutation<SubmitFormMutation, TError, SubmitFormMutationVariables, TContext>(
+      ['SubmitForm'],
+      (variables?: SubmitFormMutationVariables) => fetcher<SubmitFormMutation, SubmitFormMutationVariables>(SubmitFormDocument, variables)(),
       options
     );
-useSubmitProspectFormMutation.getKey = () => ['SubmitProspectForm'];
+useSubmitFormMutation.getKey = () => ['SubmitForm'];
 
-useSubmitProspectFormMutation.fetcher = (variables: SubmitProspectFormMutationVariables, options?: RequestInit['headers']) => fetcher<SubmitProspectFormMutation, SubmitProspectFormMutationVariables>(SubmitProspectFormDocument, variables, options);
+useSubmitFormMutation.fetcher = (variables: SubmitFormMutationVariables, options?: RequestInit['headers']) => fetcher<SubmitFormMutation, SubmitFormMutationVariables>(SubmitFormDocument, variables, options);

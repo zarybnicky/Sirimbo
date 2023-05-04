@@ -1820,6 +1820,39 @@ export type CreateEventPayloadEventEdgeArgs = {
   orderBy?: InputMaybe<Array<EventsOrderBy>>;
 };
 
+/** All input for the create `FormResponse` mutation. */
+export type CreateFormResponseInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `FormResponse` to be created by this mutation. */
+  formResponse: FormResponseInput;
+};
+
+/** The output of our create `FormResponse` mutation. */
+export type CreateFormResponsePayload = {
+  __typename?: 'CreateFormResponsePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `FormResponse` that was created by this mutation. */
+  formResponse: Maybe<FormResponse>;
+  /** An edge for our `FormResponse`. May be used by Relay 1. */
+  formResponseEdge: Maybe<FormResponsesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+
+/** The output of our create `FormResponse` mutation. */
+export type CreateFormResponsePayloadFormResponseEdgeArgs = {
+  orderBy?: InputMaybe<Array<FormResponsesOrderBy>>;
+};
+
 /** All input for the create `GalerieDir` mutation. */
 export type CreateGalerieDirInput = {
   /**
@@ -3400,6 +3433,50 @@ export type DeleteEventPayload = {
 /** The output of our delete `Event` mutation. */
 export type DeleteEventPayloadEventEdgeArgs = {
   orderBy?: InputMaybe<Array<EventsOrderBy>>;
+};
+
+/** All input for the `deleteFormResponseByNodeId` mutation. */
+export type DeleteFormResponseByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `FormResponse` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteFormResponse` mutation. */
+export type DeleteFormResponseInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['BigInt'];
+};
+
+/** The output of our delete `FormResponse` mutation. */
+export type DeleteFormResponsePayload = {
+  __typename?: 'DeleteFormResponsePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  deletedFormResponseNodeId: Maybe<Scalars['ID']>;
+  /** The `FormResponse` that was deleted by this mutation. */
+  formResponse: Maybe<FormResponse>;
+  /** An edge for our `FormResponse`. May be used by Relay 1. */
+  formResponseEdge: Maybe<FormResponsesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+
+/** The output of our delete `FormResponse` mutation. */
+export type DeleteFormResponsePayloadFormResponseEdgeArgs = {
+  orderBy?: InputMaybe<Array<FormResponsesOrderBy>>;
 };
 
 /** All input for the `deleteGalerieDirByNodeId` mutation. */
@@ -5260,6 +5337,97 @@ export type FixUnpairedCouplesPayload = {
   query: Maybe<Query>;
 };
 
+export type FormResponse = Node & {
+  __typename?: 'FormResponse';
+  createdAt: Scalars['Datetime'];
+  data: Scalars['JSON'];
+  id: Scalars['BigInt'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  type: Scalars['String'];
+  updatedAt: Scalars['Datetime'];
+  url: Scalars['String'];
+};
+
+/**
+ * A condition to be used against `FormResponse` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type FormResponseCondition = {
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `data` field. */
+  data?: InputMaybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `type` field. */
+  type?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `url` field. */
+  url?: InputMaybe<Scalars['String']>;
+};
+
+/** An input for mutations affecting `FormResponse` */
+export type FormResponseInput = {
+  createdAt?: InputMaybe<Scalars['Datetime']>;
+  data: Scalars['JSON'];
+  id?: InputMaybe<Scalars['BigInt']>;
+  type: Scalars['String'];
+  updatedAt?: InputMaybe<Scalars['Datetime']>;
+  url: Scalars['String'];
+};
+
+/** Represents an update to a `FormResponse`. Fields that are set will be updated. */
+export type FormResponsePatch = {
+  createdAt?: InputMaybe<Scalars['Datetime']>;
+  data?: InputMaybe<Scalars['JSON']>;
+  id?: InputMaybe<Scalars['BigInt']>;
+  type?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']>;
+  url?: InputMaybe<Scalars['String']>;
+};
+
+/** A connection to a list of `FormResponse` values. */
+export type FormResponsesConnection = {
+  __typename?: 'FormResponsesConnection';
+  /** A list of edges which contains the `FormResponse` and cursor to aid in pagination. */
+  edges: Array<FormResponsesEdge>;
+  /** A list of `FormResponse` objects. */
+  nodes: Array<FormResponse>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `FormResponse` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `FormResponse` edge in the connection. */
+export type FormResponsesEdge = {
+  __typename?: 'FormResponsesEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']>;
+  /** The `FormResponse` at the end of the edge. */
+  node: FormResponse;
+};
+
+/** Methods to use when ordering `FormResponse`. */
+export type FormResponsesOrderBy =
+  | 'CREATED_AT_ASC'
+  | 'CREATED_AT_DESC'
+  | 'DATA_ASC'
+  | 'DATA_DESC'
+  | 'ID_ASC'
+  | 'ID_DESC'
+  | 'NATURAL'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
+  | 'TYPE_ASC'
+  | 'TYPE_DESC'
+  | 'UPDATED_AT_ASC'
+  | 'UPDATED_AT_DESC'
+  | 'URL_ASC'
+  | 'URL_DESC';
+
 export type GalerieDir = Node & {
   __typename?: 'GalerieDir';
   /** Reads and enables pagination through a set of `GalerieFoto`. */
@@ -6079,6 +6247,8 @@ export type Mutation = {
   createDokumenty: Maybe<CreateDokumentyPayload>;
   /** Creates a single `Event`. */
   createEvent: Maybe<CreateEventPayload>;
+  /** Creates a single `FormResponse`. */
+  createFormResponse: Maybe<CreateFormResponsePayload>;
   /** Creates a single `GalerieDir`. */
   createGalerieDir: Maybe<CreateGalerieDirPayload>;
   /** Creates a single `GalerieFoto`. */
@@ -6177,6 +6347,10 @@ export type Mutation = {
   deleteEvent: Maybe<DeleteEventPayload>;
   /** Deletes a single `Event` using its globally unique id. */
   deleteEventByNodeId: Maybe<DeleteEventPayload>;
+  /** Deletes a single `FormResponse` using a unique key. */
+  deleteFormResponse: Maybe<DeleteFormResponsePayload>;
+  /** Deletes a single `FormResponse` using its globally unique id. */
+  deleteFormResponseByNodeId: Maybe<DeleteFormResponsePayload>;
   /** Deletes a single `GalerieDir` using a unique key. */
   deleteGalerieDir: Maybe<DeleteGalerieDirPayload>;
   /** Deletes a single `GalerieDir` using its globally unique id. */
@@ -6314,6 +6488,7 @@ export type Mutation = {
   prospectFormDancer: Maybe<ProspectFormDancerPayload>;
   reservationSetDesiredLessons: Maybe<ReservationSetDesiredLessonsPayload>;
   resetPassword: Maybe<ResetPasswordPayload>;
+  submitForm: Maybe<SubmitFormPayload>;
   /** Updates a single `Aktuality` using a unique key and a patch. */
   updateAktuality: Maybe<UpdateAktualityPayload>;
   /** Updates a single `Aktuality` using its globally unique id and a patch. */
@@ -6344,6 +6519,10 @@ export type Mutation = {
   updateEvent: Maybe<UpdateEventPayload>;
   /** Updates a single `Event` using its globally unique id and a patch. */
   updateEventByNodeId: Maybe<UpdateEventPayload>;
+  /** Updates a single `FormResponse` using a unique key and a patch. */
+  updateFormResponse: Maybe<UpdateFormResponsePayload>;
+  /** Updates a single `FormResponse` using its globally unique id and a patch. */
+  updateFormResponseByNodeId: Maybe<UpdateFormResponsePayload>;
   /** Updates a single `GalerieDir` using a unique key and a patch. */
   updateGalerieDir: Maybe<UpdateGalerieDirPayload>;
   /** Updates a single `GalerieDir` using its globally unique id and a patch. */
@@ -6572,6 +6751,12 @@ export type MutationCreateDokumentyArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateEventArgs = {
   input: CreateEventInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateFormResponseArgs = {
+  input: CreateFormResponseInput;
 };
 
 
@@ -6872,6 +7057,18 @@ export type MutationDeleteEventArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteEventByNodeIdArgs = {
   input: DeleteEventByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteFormResponseArgs = {
+  input: DeleteFormResponseInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteFormResponseByNodeIdArgs = {
+  input: DeleteFormResponseByNodeIdInput;
 };
 
 
@@ -7308,6 +7505,12 @@ export type MutationResetPasswordArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationSubmitFormArgs = {
+  input: SubmitFormInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateAktualityArgs = {
   input: UpdateAktualityInput;
 };
@@ -7394,6 +7597,18 @@ export type MutationUpdateEventArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateEventByNodeIdArgs = {
   input: UpdateEventByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateFormResponseArgs = {
+  input: UpdateFormResponseInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateFormResponseByNodeIdArgs = {
+  input: UpdateFormResponseByNodeIdInput;
 };
 
 
@@ -10155,6 +10370,11 @@ export type Query = Node & {
   eventByNodeId: Maybe<Event>;
   /** Reads and enables pagination through a set of `Event`. */
   events: Maybe<EventsConnection>;
+  formResponse: Maybe<FormResponse>;
+  /** Reads a single `FormResponse` using its globally unique `ID`. */
+  formResponseByNodeId: Maybe<FormResponse>;
+  /** Reads and enables pagination through a set of `FormResponse`. */
+  formResponses: Maybe<FormResponsesConnection>;
   galerieDir: Maybe<GalerieDir>;
   /** Reads a single `GalerieDir` using its globally unique `ID`. */
   galerieDirByNodeId: Maybe<GalerieDir>;
@@ -10592,6 +10812,30 @@ export type QueryEventsArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<EventsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryFormResponseArgs = {
+  id: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryFormResponseByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryFormResponsesArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<FormResponseCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<FormResponsesOrderBy>>;
 };
 
 
@@ -12377,6 +12621,30 @@ export type SkupinyPatch = {
   sVisible?: InputMaybe<Scalars['Boolean']>;
 };
 
+/** All input for the `submitForm` mutation. */
+export type SubmitFormInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  data: Scalars['JSON'];
+  type: Scalars['String'];
+  url: Scalars['String'];
+};
+
+/** The output of our `submitForm` mutation. */
+export type SubmitFormPayload = {
+  __typename?: 'SubmitFormPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
 export type Tenant = Node & {
   __typename?: 'Tenant';
   /** Reads and enables pagination through a set of `CohortGroup`. */
@@ -13038,6 +13306,53 @@ export type UpdateEventPayload = {
 /** The output of our update `Event` mutation. */
 export type UpdateEventPayloadEventEdgeArgs = {
   orderBy?: InputMaybe<Array<EventsOrderBy>>;
+};
+
+/** All input for the `updateFormResponseByNodeId` mutation. */
+export type UpdateFormResponseByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `FormResponse` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `FormResponse` being updated. */
+  patch: FormResponsePatch;
+};
+
+/** All input for the `updateFormResponse` mutation. */
+export type UpdateFormResponseInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `FormResponse` being updated. */
+  patch: FormResponsePatch;
+};
+
+/** The output of our update `FormResponse` mutation. */
+export type UpdateFormResponsePayload = {
+  __typename?: 'UpdateFormResponsePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `FormResponse` that was updated by this mutation. */
+  formResponse: Maybe<FormResponse>;
+  /** An edge for our `FormResponse`. May be used by Relay 1. */
+  formResponseEdge: Maybe<FormResponsesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+
+/** The output of our update `FormResponse` mutation. */
+export type UpdateFormResponsePayloadFormResponseEdgeArgs = {
+  orderBy?: InputMaybe<Array<FormResponsesOrderBy>>;
 };
 
 /** All input for the `updateGalerieDirByNodeId` mutation. */

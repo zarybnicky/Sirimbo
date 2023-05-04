@@ -3,12 +3,11 @@ import { Card } from 'components/Card';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
 import { CheckboxElement } from 'components/Checkbox';
-import { useSubmitProspectFormMutation } from 'lib/graphql/Crm';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { toast } from 'react-toastify';
-import { CrmCohort } from 'lib/graphql';
+import { useSubmitFormMutation } from 'lib/graphql/Crm';
 
 type ProspectFormProps = {
   title?: string;
@@ -17,18 +16,15 @@ type ProspectFormProps = {
 export const ProspectForm = ({
   title = 'Chci úvodní hodinu ZDARMA!',
 }: ProspectFormProps) => {
-  const { mutateAsync: submit } = useSubmitProspectFormMutation();
+  const { mutateAsync: submit } = useSubmitFormMutation();
   const { control, handleSubmit } = useForm();
 
-  const onSubmit = useAsyncCallback(async ({ op, ...prospectData }: any) => {
+  const onSubmit = useAsyncCallback(async ({ op, ...data }: any) => {
     if (typeof fbq !== 'undefined') {
       fbq('track', 'SubmitApplication');
     }
-    await submit({
-      cohort: 'FREE_LESSON',
-      prospectData,
-      origin: window.location.toString(),
-    });
+    const url = window.location.toString();
+    await submit({ type: 'Přijď tančit!', data, url });
     toast.success('Brzy se vám ozveme!');
   });
 

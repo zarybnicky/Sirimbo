@@ -1,30 +1,18 @@
-query ActiveProspects {
-  activeProspects {
+query FormResponses($type: String) {
+  formResponses(condition: {type: $type}, orderBy: UPDATED_AT_DESC) {
     totalCount
     nodes {
       id
-      data {
-        name
-        surname
-        email
-        phone
-        yearofbirth
-      }
-      cohort
-      updatedAt
+      data
+      type
+      url
+      createdAt
     }
   }
 }
 
-mutation SubmitProspectForm($cohort: CrmCohort!, $origin: String!, $prospectData: ProspectDatumInput!) {
-  prospectFormDancer(
-    input: {
-      cohort: $cohort,
-      origin: $origin,
-      prospectData: $prospectData,
-      note: "",
-    }
-  ) {
+mutation SubmitForm($type: String!, $url: String!, $data: JSON!) {
+  submitForm(input: { type: $type, url: $url, data: $data }) {
     clientMutationId
   }
 }
