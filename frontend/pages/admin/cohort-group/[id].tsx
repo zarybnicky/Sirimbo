@@ -15,6 +15,8 @@ import {
   PermissionLevel,
 } from 'lib/data/use-server-permissions';
 import { useQueryClient } from '@tanstack/react-query';
+import { SelectElement } from 'components/SelectElement';
+import { CohortListForm } from 'components/CohortListForm';
 
 export default function CohortGroupEditPage() {
   const router = useRouter();
@@ -42,6 +44,7 @@ export default function CohortGroupEditPage() {
         />
       </Item.Titlebar>
       {data && <CohortGroupForm data={data.cohortGroup || undefined} />}
+      {data?.cohortGroup && <CohortListForm data={data.cohortGroup}/>}
     </Item>
   );
 }

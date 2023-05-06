@@ -5,6 +5,11 @@ fragment CohortGroup on CohortGroup {
   description
   isPublic
   ordering
+  skupiniesByCohortGroup(orderBy: ORDERING_ASC) {
+    nodes {
+      ...CohortBasic
+    }
+  }
 }
 
 query CohortGroupList($isPublic: Boolean) {

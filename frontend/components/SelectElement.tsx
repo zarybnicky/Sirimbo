@@ -64,7 +64,7 @@ export function SelectElement<TFieldValues extends FieldValues>({
     : error.message;
   let valueObject = options.find((x) => x.id === value);
   if (!value && !valueObject) {
-    valueObject = options.find((x) => !x.id);
+    valueObject = options.find((x) => !x.id) || {id: null, label: ''};
   }
 
   return (

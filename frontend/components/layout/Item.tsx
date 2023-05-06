@@ -33,7 +33,7 @@ function ItemTitleBar({
         <h4 className="text-2xl tracking-wide mb-4 order-2 w-full md:w-auto md:order-none">
           {title}
         </h4>
-        <div className="flex flex-row flex-wrap">{children}</div>
+        <div className="flex items-center flex-wrap">{children}</div>
       </div>
     </>
   );
