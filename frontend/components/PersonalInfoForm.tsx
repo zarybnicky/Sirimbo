@@ -12,25 +12,27 @@ import { useCountries } from 'lib/data/use-countries';
 import { UserInput } from 'lib/graphql';
 import { ErrorBox } from 'components/ErrorBox';
 import { SubmitButton } from './SubmitButton';
+import { pipe } from 'fp-ts/lib/function';
+import { pick } from 'lib/form-utils';
 
-type FormProps = Pick<
-  UserInput,
-  | 'uJmeno'
-  | 'uPrijmeni'
-  | 'uNarozeni'
-  | 'uRodneCislo'
-  | 'uPohlavi'
-  | 'uEmail'
-  | 'uTelefon'
-  | 'uStreet'
-  | 'uConscriptionNumber'
-  | 'uOrientationNumber'
-  | 'uCity'
-  | 'uDistrict'
-  | 'uPostalCode'
-  | 'uNationality'
-  | 'uPoznamky'
->;
+const fields = [
+  'uJmeno',
+  'uPrijmeni',
+  'uNarozeni',
+  'uRodneCislo',
+  'uPohlavi',
+  'uEmail',
+  'uTelefon',
+  'uStreet',
+  'uConscriptionNumber',
+  'uOrientationNumber',
+  'uCity',
+  'uDistrict',
+  'uPostalCode',
+  'uNationality',
+  'uPoznamky',
+] as const;
+type FormProps = Pick<UserInput, (typeof fields)[number]>;
 
 export const PersonalInfoForm: React.FC<{
   onSuccess: () => void;
@@ -48,23 +50,9 @@ export const PersonalInfoForm: React.FC<{
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
-    reset({
-      uJmeno: user?.uJmeno,
-      uPrijmeni: user?.uPrijmeni,
-      uNarozeni: user?.uNarozeni,
-      uRodneCislo: user?.uRodneCislo,
-      uPohlavi: user?.uPohlavi,
-      uEmail: user?.uEmail,
-      uTelefon: user?.uTelefon,
-      uStreet: user?.uStreet,
-      uConscriptionNumber: user?.uConscriptionNumber,
-      uOrientationNumber: user?.uOrientationNumber,
-      uCity: user?.uCity,
-      uDistrict: user?.uDistrict,
-      uPostalCode: user?.uPostalCode,
-      uNationality: user?.uNationality,
-      uPoznamky: user?.uPoznamky,
-    });
+    if (user) {
+      reset(pipe(user, pick(fields)));
+    }
   }, [reset, user]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {

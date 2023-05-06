@@ -11,19 +11,21 @@ import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { PlatbyCategoryInput } from 'lib/graphql';
+import { pipe } from 'fp-ts/lib/function';
+import { pick } from 'lib/form-utils';
 
-type FormProps = Pick<
-  PlatbyCategoryInput,
-  | 'pcName'
-  | 'pcSymbol'
-  | 'pcAmount'
-  | 'pcDateDue'
-  | 'pcValidFrom'
-  | 'pcValidTo'
-  | 'pcUsePrefix'
-  | 'pcArchive'
-  | 'pcVisible'
->;
+const fields = [
+  'pcName',
+  'pcSymbol',
+  'pcAmount',
+  'pcDateDue',
+  'pcValidFrom',
+  'pcValidTo',
+  'pcUsePrefix',
+  'pcArchive',
+  'pcVisible',
+] as const;
+type FormProps = Pick<PlatbyCategoryInput, (typeof fields)[number]>;
 
 export const PaymentCategoryForm: React.FC<{
   data?: PaymentCategoryFragment;
@@ -34,24 +36,16 @@ export const PaymentCategoryForm: React.FC<{
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
-    reset({
-      pcName: data?.pcName,
-      pcSymbol: data?.pcSymbol,
-      pcAmount: data?.pcAmount,
-      pcDateDue: data?.pcDateDue,
-      pcValidFrom: data?.pcValidFrom,
-      pcValidTo: data?.pcValidTo,
-      pcUsePrefix: data?.pcUsePrefix,
-      pcArchive: data?.pcArchive,
-      pcVisible: data?.pcVisible,
-    });
+    if (data) {
+      reset(pipe(data, pick(fields)));
+    }
   }, [data, reset]);
 
-  const onSubmit = useAsyncCallback(async (values: FormProps) => {
+  const onSubmit = useAsyncCallback(async (patch: FormProps) => {
     if (data) {
-      await doUpdate({ id: data.id, patch: values });
+      await doUpdate({ id: data.id, patch });
     } else {
-      await doCreate({ input: { ...values, pcUseBase: false } });
+      await doCreate({ input: patch });
     }
   });
 

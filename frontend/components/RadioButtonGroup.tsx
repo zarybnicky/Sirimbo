@@ -77,7 +77,7 @@ export const RadioButtonGroup = <T extends FieldValues>({
     <div className={cx('flex flex-col ml-1 gap-4', { 'opacity-50': isDisabled })}>
       <label
         htmlFor={name}
-        className="block text-sm font-medium text-stone-700 mt-1 -mb-1 -ml-1"
+        className="block text-sm text-stone-700 mt-1 -mb-1 -ml-1"
       >
         {label}
       </label>

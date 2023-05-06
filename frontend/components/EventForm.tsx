@@ -12,22 +12,24 @@ import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import dynamic from 'next/dynamic';
+import { pick } from 'lib/form-utils';
+import { pipe } from 'fp-ts/lib/function';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
-type FormProps = Pick<
-  EventInput,
-  | 'name'
-  | 'locationText'
-  | 'summary'
-  | 'description'
-  | 'since'
-  | 'until'
-  | 'capacity'
-  | 'isVisible'
-  | 'isPublic'
-  | 'enableNotes'
-  | 'isLocked'
->;
+const fields = [
+  'name',
+  'locationText',
+  'summary',
+  'description',
+  'since',
+  'until',
+  'capacity',
+  'isVisible',
+  'isPublic',
+  'enableNotes',
+  'isLocked',
+] as const;
+type FormProps = Pick<EventInput, (typeof fields)[number]>;
 
 export const EventForm: React.FC<{
   data?: EventFragment;
@@ -38,26 +40,12 @@ export const EventForm: React.FC<{
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
-    reset({
-      name: data?.name,
-      locationText: data?.locationText,
-      summary: data?.summary,
-      description: data?.description,
-      since: data?.since,
-      until: data?.until,
-      capacity: data?.capacity,
-      isVisible: data?.isVisible,
-      isPublic: data?.isPublic,
-      enableNotes: data?.enableNotes,
-      isLocked: data?.isLocked,
-    });
+    if (data) {
+      reset(pipe(data, pick(fields)));
+    }
   }, [reset, data]);
 
-  const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    const patch = {
-      ...values,
-      filesLegacy: '',
-    };
+  const onSubmit = useAsyncCallback(async (patch: FormProps) => {
     if (data) {
       await doUpdate({ id: data.id, patch });
     } else {

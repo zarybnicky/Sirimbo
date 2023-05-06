@@ -15,11 +15,18 @@ import { useQueryClient } from '@tanstack/react-query';
 import { CohortGroupInput } from 'lib/graphql';
 import { toast } from 'react-toastify';
 import dynamic from 'next/dynamic';
+import { pipe } from 'fp-ts/lib/function';
+import { pick } from 'lib/form-utils';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
-type FormProps = Pick<CohortGroupInput, 'name' | 'description' | 'isPublic' | 'ordering'>;
+const fields = ['name', 'description', 'isPublic', 'ordering'] as const;
+type FormProps = Pick<CohortGroupInput, (typeof fields)[number]>;
 
-export const CohortGroupForm: React.FC<{ data?: CohortGroupFragment }> = ({ data }) => {
+type Props = {
+  data?: CohortGroupFragment;
+};
+
+export function CohortGroupForm({ data }: Props) {
   const queryClient = useQueryClient();
   const onSuccess = React.useCallback(() => {
     queryClient.invalidateQueries(useCohortGroupListQuery.getKey());
@@ -30,12 +37,9 @@ export const CohortGroupForm: React.FC<{ data?: CohortGroupFragment }> = ({ data
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
-    reset({
-      name: data?.name || '',
-      description: data?.description,
-      isPublic: data?.isPublic || false,
-      ordering: data?.ordering || 0,
-    }, { keepDirtyValues: true });
+    if (data) {
+      reset(pipe(data, pick(fields)));
+    }
   }, [data, reset]);
 
   const onSubmit = useAsyncCallback(async (patch: FormProps) => {
@@ -44,7 +48,7 @@ export const CohortGroupForm: React.FC<{ data?: CohortGroupFragment }> = ({ data
     } else {
       await doCreate({ input: patch });
       toast.success('Přidáno.');
-      reset(undefined, { keepValues: false });
+      reset(undefined);
     }
   });
 
@@ -52,7 +56,12 @@ export const CohortGroupForm: React.FC<{ data?: CohortGroupFragment }> = ({ data
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="name" label="Název" required />
-      <RichTextEditor control={control} initialState={data?.description} name="description" label="Popis" />
+      <RichTextEditor
+        control={control}
+        initialState={data?.description}
+        name="description"
+        label="Popis"
+      />
       <CheckboxElement control={control} name="isPublic" label="Zobrazit pro veřejnost" />
       <TextFieldElement
         control={control}
@@ -63,4 +72,4 @@ export const CohortGroupForm: React.FC<{ data?: CohortGroupFragment }> = ({ data
       <SubmitButton loading={onSubmit.loading} />
     </form>
   );
-};
+}

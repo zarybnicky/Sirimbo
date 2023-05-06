@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import cx from 'classnames';
 import { AlertCircle as ReportProblemIcon } from 'react-feather';
 import {
   Control,
@@ -46,7 +46,7 @@ export function TextArea({
 
   return (
     <div className={className}>
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+      <label htmlFor={name} className="block text-sm text-gray-700">
         {label}
       </label>
       <div className="mt-1 relative rounded-md shadow-sm">
@@ -63,9 +63,7 @@ export function TextArea({
         )}
       </div>
       {parsedHelperText && (
-        <p
-          className={classNames('mt-2 text-sm', error ? 'text-red-600' : 'text-gray-500')}
-        >
+        <p className={cx('mt-2 text-sm', error ? 'text-red-600' : 'text-gray-500')}>
           {parsedHelperText}
         </p>
       )}
@@ -104,10 +102,7 @@ export function TextField({
 
   return (
     <div className={className || ''}>
-      <label
-        htmlFor={name}
-        className="block text-sm font-medium text-stone-700 mt-1 mb-1"
-      >
+      <label htmlFor={name} className="block text-sm text-stone-700 mt-1 mb-1">
         {label}
       </label>
       <div className="relative rounded-md shadow-sm">
@@ -125,9 +120,7 @@ export function TextField({
         )}
       </div>
       {parsedHelperText && (
-        <p
-          className={classNames('mt-2 text-sm', error ? 'text-red-600' : 'text-gray-500')}
-        >
+        <p className={cx('mt-2 text-sm', error ? 'text-red-600' : 'text-gray-500')}>
           {parsedHelperText}
         </p>
       )}

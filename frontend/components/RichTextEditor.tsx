@@ -7,7 +7,7 @@ import {
   Path,
   useController,
 } from 'react-hook-form';
-import classNames from 'classnames';
+import cx from 'classnames';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
@@ -46,10 +46,10 @@ export default function RichTextEditor({
     ? parseError(fieldState.error)
     : fieldState.error.message;
 
-  const _ckContent = <div className="ck-content"/>; // for tailwind's JIT
+  const _ckContent = <div className="ck-content" />; // for tailwind's JIT
   return (
     <div className={className}>
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+      <label htmlFor={name} className="block text-sm text-gray-700">
         {label}
       </label>
       <div className="mt-1 relative rounded-md shadow-sm">
@@ -68,7 +68,7 @@ export default function RichTextEditor({
       </div>
       {parsedHelperText && (
         <p
-          className={classNames(
+          className={cx(
             'mt-2 text-sm',
             fieldState.error ? 'text-red-600' : 'text-gray-500',
           )}

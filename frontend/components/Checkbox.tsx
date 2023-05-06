@@ -52,7 +52,7 @@ export function Checkbox({
         />
       </div>
       <div className="ml-3 text-sm">
-        <label htmlFor={name} className="font-medium text-gray-700">
+        <label htmlFor={name} className="text-gray-700">
           {label}
           {required && <sup>*</sup>}
         </label>

@@ -18,18 +18,20 @@ import { useCohortGroupListQuery } from 'lib/graphql/CohortGroup';
 import { SelectElement } from './SelectElement';
 import dynamic from 'next/dynamic';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
+import { pick } from 'lib/form-utils';
+import { pipe } from 'fp-ts/function';
 
-type FormProps = Pick<
-  SkupinyInput,
-  | 'internalInfo'
-  | 'sName'
-  | 'sDescription'
-  | 'sLocation'
-  | 'sVisible'
-  | 'sColorRgb'
-  | 'ordering'
-  | 'cohortGroup'
->;
+const fields = [
+  'sName',
+  'sDescription',
+  'sLocation',
+  'sVisible',
+  'sColorRgb',
+  'internalInfo',
+  'ordering',
+  'cohortGroup',
+] as const;
+type FormProps = Pick<SkupinyInput, (typeof fields)[number]>;
 
 export const CohortForm = ({ data }: { data?: CohortFragment }) => {
   const queryClient = useQueryClient();
@@ -42,19 +44,13 @@ export const CohortForm = ({ data }: { data?: CohortFragment }) => {
   const { mutateAsync: doCreate } = useCreateCohortMutation({ onSuccess });
   const { mutateAsync: doUpdate } = useUpdateCohortMutation({ onSuccess });
 
-  const { reset, control, handleSubmit } = useForm<FormProps>();
-  const [iter, setIter] = React.useState(0);
+  const { reset, control, handleSubmit } = useForm<FormProps>({
+    defaultValues: { sColorRgb: '#ff0000' }
+  });
   React.useEffect(() => {
-    reset({
-      sName: data?.sName,
-      sDescription: data?.sDescription,
-      sLocation: data?.sLocation,
-      sVisible: data?.sVisible,
-      sColorRgb: data?.sColorRgb || '#FF0000',
-      internalInfo: data?.internalInfo,
-      ordering: data?.ordering,
-    });
-    setIter(x => x + 1);
+    if (data) {
+      reset(pipe(data, pick(fields)));
+    }
   }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (patch: FormProps) => {
@@ -70,34 +66,44 @@ export const CohortForm = ({ data }: { data?: CohortFragment }) => {
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="sName" label="Název" required />
       <TextFieldElement control={control} name="sLocation" label="Město/místo" required />
-      <ColorPicker name="sColorRgb" control={control} />
-      <RichTextEditor control={control} initialState={data?.sDescription} name="sDescription" label="Popis" />
-      <RichTextEditor
-        control={control}
-        initialState={data?.internalInfo}
-        name="internalInfo"
-        label="Interní informace"
-      />
+
+      <div className="flex flex-wrap gap-2">
+        <SelectElement
+          control={control}
+          className="grow"
+          label="Tréninkový program"
+          name="cohortGroup"
+          options={(cohortGroups?.cohortGroups?.nodes || [])
+            .map((x) => ({ id: x.id || null, label: x.name }))
+            .concat([{ id: null, label: 'Žádný' }])}
+        />
+        <TextFieldElement
+          control={control}
+          className="grow"
+          type="number"
+          name="ordering"
+          label="Pořadí v seznamech skupin (1 = první)"
+        />
+      </div>
       <CheckboxElement
         control={control}
         name="sVisible"
         value="1"
         label="Viditelná v seznamech"
       />
-      <SelectElement
+
+      <ColorPicker label="Barva skupiny" name="sColorRgb" control={control} />
+      <RichTextEditor
         control={control}
-        label="Tréninkový program"
-        name="cohortGroup"
-        options={
-          cohortGroups?.cohortGroups?.nodes?.map((x) => ({ id: x.id, label: x.name })) ||
-          []
-        }
+        initialState={data?.sDescription}
+        name="sDescription"
+        label="Popis"
       />
-      <TextFieldElement
+      <RichTextEditor
         control={control}
-        type="number"
-        name="ordering"
-        label="Pořadí v seznamech skupin (1 = první, 999 = poslední)"
+        initialState={data?.internalInfo}
+        name="internalInfo"
+        label="Interní informace"
       />
       <SubmitButton loading={onSubmit.loading} />
     </form>

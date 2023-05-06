@@ -12,9 +12,12 @@ import {
   useUpdateTenantMutation,
 } from 'lib/graphql/Tenant';
 import dynamic from 'next/dynamic';
+import { pipe } from 'fp-ts/lib/function';
+import { pick } from 'lib/form-utils';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
-type FormProps = Pick<TenantInput, 'name' | 'memberInfo'>;
+const fields = ['name', 'memberInfo'] as const;
+type FormProps = Pick<TenantInput, (typeof fields)[number]>;
 
 export const TenantForm: React.FC<{
   data: TenantFragment;
@@ -28,10 +31,9 @@ export const TenantForm: React.FC<{
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
-    reset({
-      name: data?.name,
-      memberInfo: data?.memberInfo,
-    });
+    if (data) {
+      reset(pipe(data, pick(fields)));
+    }
   }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {

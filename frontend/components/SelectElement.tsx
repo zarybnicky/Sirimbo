@@ -8,7 +8,7 @@ import {
   Control,
   ControllerProps,
 } from 'react-hook-form';
-import classNames from 'classnames';
+import cx from 'classnames';
 import { ChevronsDown as UnfoldMoreIcon, Check as CheckIcon } from 'react-feather';
 
 type Extras = {
@@ -18,7 +18,7 @@ type Extras = {
   parseError?: (error: FieldError) => React.ReactNode;
 };
 
-type Item = { id: string; label: string };
+type Item = { id: string | null; label: string };
 type SelectElementProps<T extends FieldValues> = {
   validation?: ControllerProps['rules'];
   name: Path<T>;
@@ -62,7 +62,10 @@ export function SelectElement<TFieldValues extends FieldValues>({
     : parseError
     ? parseError(error)
     : error.message;
-  const valueObject = options.find((x) => x.id === value);
+  let valueObject = options.find((x) => x.id === value);
+  if (!value && !valueObject) {
+    valueObject = options.find((x) => !x.id);
+  }
 
   return (
     <Combobox value={valueObject} onChange={(x) => onChange(x.id)}>
@@ -97,25 +100,28 @@ export function SelectElement<TFieldValues extends FieldValues>({
                   key={person.id}
                   value={person}
                   className={({ active }) =>
-                    `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                      active ? 'bg-red-600 text-white' : 'text-gray-900'
-                    }`
+                    cx(
+                      'relative cursor-default select-none py-2 pl-10 pr-4',
+                      active ? 'bg-red-600 text-white' : 'text-gray-900',
+                    )
                   }
                 >
                   {({ selected, active }) => (
                     <>
                       <span
-                        className={`block truncate ${
-                          selected ? 'font-medium' : 'font-normal'
-                        }`}
+                        className={cx(
+                          'block truncate',
+                          selected ? 'font-medium' : 'font-normal',
+                        )}
                       >
                         {person.label}
                       </span>
                       {selected && (
                         <span
-                          className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                            active ? 'text-white' : 'text-red-600'
-                          }`}
+                          className={cx(
+                            'absolute inset-y-0 left-0 flex items-center pl-3',
+                            active ? 'text-white' : 'text-red-600',
+                          )}
                         >
                           <CheckIcon className="h-5 w-5" aria-hidden="true" />
                         </span>
@@ -129,9 +135,7 @@ export function SelectElement<TFieldValues extends FieldValues>({
         </Transition>
       </div>
       {parsedHelperText && (
-        <p
-          className={classNames('mt-2 text-sm', error ? 'text-red-600' : 'text-gray-500')}
-        >
+        <p className={cx('mt-2 text-sm', error ? 'text-red-600' : 'text-gray-500')}>
           {parsedHelperText}
         </p>
       )}

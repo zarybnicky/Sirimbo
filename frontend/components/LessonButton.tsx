@@ -66,9 +66,8 @@ export const LessonButton = ({ schedule, lesson, showTrainer, showDate }: Props)
     <div
       className={classNames(
         'group flex gap-3 p-2.5 rounded-lg',
-        'leading-4 text-sm tabular-nums',
-        canCancel && 'cursor-pointer hover:bg-yellow-50',
-        canBook && 'cursor-pointer hover:bg-green-100/80 bg-green-100 text-green-900',
+        'leading-4 text-sm tabular-nums cursor-pointer',
+        canBook ? 'hover:bg-green-100/80 bg-green-100 text-green-900' : 'hover:bg-yellow-50',
         !showTrainer && isMyLesson && 'bg-yellow-100',
       )}
     >
