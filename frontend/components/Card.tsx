@@ -1,14 +1,14 @@
 import classNames from 'classnames';
 import { CohortFragment } from 'lib/graphql/Cohorts';
 import React from 'react';
+import { Dropdown, DropdownItem } from './Dropdown';
 
-export function Card({
-  cohort,
-  children,
-  ...props
-}: {
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   cohort?: CohortFragment;
-} & React.HTMLAttributes<HTMLDivElement>) {
+  menu?: DropdownItem[];
+}
+
+export function Card({ menu, cohort, children, ...props }: CardProps) {
   return (
     <div
       {...props}
@@ -18,6 +18,9 @@ export function Card({
         props.className,
       )}
     >
+      {menu && menu.length > 0 && (
+        <Dropdown className="absolute right-1 top-2" align="end" options={menu} />
+      )}
       {children}
       {cohort && (
         <div

@@ -1,32 +1,22 @@
 import classNames from 'classnames';
-import { usePermissions } from 'lib/data/use-permissions';
 import { fullDateFormatter } from 'lib/format-date';
 import { AnnouncementFragment } from 'lib/graphql/Announcement';
 import React from 'react';
 import { Card } from './Card';
 import { CohortColorBoxes } from './CohortColorBox';
-import { Dropdown } from './Dropdown';
 import { RichTextView } from './RichTextView';
-import * as announcement from 'lib/entities/announcement';
+import { Announcement } from 'lib/entities';
 
 export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
   const [expanded, setExpanded] = React.useState(false);
   const open = React.useCallback(() => setExpanded(true), []);
-  const perms = usePermissions();
 
   return (
     <Card
+      menu={Announcement.getMenu(item)}
       onClick={expanded ? undefined : open}
       className={classNames('group', !expanded && 'cursor-pointer')}
     >
-      {perms.canEditAnnouncement(item) && (
-        <Dropdown
-          className="absolute right-1 top-2"
-          align="end"
-          options={announcement.getMenu(item)}
-        />
-      )}
-
       <div className="text-stone-500 text-sm flex flex-wrap items-baseline gap-4">
         <div>
           {[
