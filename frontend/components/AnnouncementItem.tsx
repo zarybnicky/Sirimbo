@@ -13,7 +13,7 @@ export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
 
   return (
     <Card
-      menu={Announcement.getMenu(item)}
+      menu={Announcement.useMenu(item)}
       onClick={expanded ? undefined : open}
       className={classNames('group', !expanded && 'cursor-pointer')}
     >
