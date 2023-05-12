@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useArticleQuery } from 'lib/graphql/Articles';
 import { fullDateFormatter } from 'lib/format-date';
 import { Layout } from 'components/layout/Layout';
 import { RichTextView } from 'components/RichTextView';
+import { NextSeo } from 'next-seo';
 
 export default function ArticlePage() {
   const router = useRouter();
@@ -18,18 +18,16 @@ export default function ArticlePage() {
 
   return (
     <>
-      <Head>
-        <title>{x.atJmeno} | TK Olymp</title>
-        <meta property="og:title" content="{x.atJmeno}" />
-        <meta property="og:type" content="article" />
-        <meta property="og:url" content="https://tkolymp.cz/articles/{x.atId}" />
-        <meta
-          property="og:image"
-          content="https://tkolymp.cz/galerie/thumbnails/{x.atFotoMain}"
-        />
-        <meta property="og:site_name" content="TK Olymp" />
-        <meta property="og:description" content="{x.atPreview}" />
-      </Head>
+      <NextSeo
+        title={x.atJmeno}
+        openGraph={{
+          type: 'article',
+          title: x.atJmeno,
+          url: 'https://tkolymp.cz/articles/${x.atId}',
+          images: [{ url: 'https://tkolymp.cz/galerie/thumbnails/{x.atFotoMain}' }],
+          description: x.atPreview,
+        }}
+      />
       <h3 className="text-3xl font-bold text-red-500 mt-20">{x.atJmeno}</h3>
       <div className="text-stone-600 mt-3 mb-6">
         {x.atTimestampAdd && fullDateFormatter.format(new Date(x.atTimestampAdd))}

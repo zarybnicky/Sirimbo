@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import Link from 'next/link';
+import { Route } from 'nextjs-routes';
 
 export function List({ children }: { children: React.ReactNode }) {
   return (
@@ -39,7 +40,7 @@ function ListTitleButton({
   children: React.ReactNode;
   active?: boolean;
   icon?: React.ElementType<{ className?: string }>;
-  href?: string;
+  href?: Route | Exclude<Route, { query: any }>['pathname'];
   onClick?: () => void;
 }) {
   const cx = classNames(
@@ -67,14 +68,14 @@ function ListItem({
 }: {
   children?: React.ReactNode;
   active?: boolean;
-  href: string;
+  href: Route | Exclude<Route, { query: any }>['pathname'];
   title: React.ReactNode;
   subtitle?: React.ReactNode;
   className?: string;
 }) {
   return (
     <Link
-      key={href}
+      key={JSON.stringify(href)}
       href={href}
       className={classNames(
         'relative p-2 mr-2 my-1 ml-0 rounded-lg grid',

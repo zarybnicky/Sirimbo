@@ -26,7 +26,7 @@ export function CohortGroupList() {
           <List.Item
             key={item.id}
             active={active === item.id}
-            href={`/admin/cohort-group/${item.id}`}
+            href={{ pathname: '/admin/cohort-group/[id]', query: { id: item.id } }}
             title={item.name}
             className="pl-6"
             subtitle={!item.isPublic ? 'Skrytý' : null}

@@ -14,7 +14,6 @@ export default function PlatbyGroupListPage() {
   const router = useRouter();
   const { id } = router.query;
   const active = id ? (id as string) : null;
-  const [search, setSearch] = React.useState('');
   const { data } = usePaymentGroupListQuery();
 
   return (
@@ -24,12 +23,11 @@ export default function PlatbyGroupListPage() {
       <FuzzyList
         data={data?.platbyGroups?.nodes || []}
         fields={['id', 'pgName']}
-        search={search}
         renderItem={(item) => (
           <List.Item
             key={item.id}
             active={active === item.id}
-            href={`/admin/platby/structure/group/${item.id}`}
+            href={{pathname: '/admin/platby/structure/group/[id]', query: {id: item.id}}}
             title={item.pgName}
           />
         )}

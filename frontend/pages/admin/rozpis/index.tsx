@@ -15,7 +15,6 @@ export default function RozpisAdminList() {
   const router = useRouter();
   const { id } = router.query;
   const active = id ? (id as string) : null;
-  const [search, setSearch] = React.useState('');
   const { data } = useScheduleListQuery();
 
   return (
@@ -25,12 +24,11 @@ export default function RozpisAdminList() {
       <FuzzyList
         data={data?.rozpis?.nodes || []}
         fields={['id', 'userByRTrener', 'rDatum']}
-        search={search}
         renderItem={(item) => (
           <List.Item
             key={item.id}
             active={active === item.id}
-            href={`/admin/rozpis/${item.id}`}
+            href={{pathname: '/admin/rozpis/[id]', query: {id: item.id}}}
             title={item.userByRTrener?.fullName}
             subtitle={item.rDatum ? fullDateFormatter.format(new Date(item.rDatum)) : ''}
           />

@@ -9,6 +9,7 @@ import { ErrorBox } from 'components/ErrorBox';
 import { useAsyncCallback } from 'react-async-hook';
 import { SubmitButton } from 'components/SubmitButton';
 import { withServerLoggedOut } from 'lib/data/use-server-permissions';
+import { Route } from 'nextjs-routes';
 
 type FormProps = {
   login: string;
@@ -22,7 +23,7 @@ export default function LoginPage() {
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await signIn(values.login, values.passwd);
-    router.push((router.query?.from as string) || '/dashboard');
+    router.push((router.query?.from as any as Route) || '/dashboard');
   });
 
   return (

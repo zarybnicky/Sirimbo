@@ -38,6 +38,9 @@ module.exports = {
         red,
         primary: red,
         secondary: colors.stone,
+        prose: {
+          bullets: red['500'],
+        },
 
         success: '#90CA63',
         warning: '#e6be2a',
@@ -55,6 +58,13 @@ module.exports = {
         'red-black-red':
           'linear-gradient(90deg, rgba(216,28,58,.8) 0%, rgba(0,0,0,0.8) 50%, rgba(216,28,58,.8) 100%)',
       },
+      typography: ({ theme }) => ({
+        DEFAULT: {
+          css: {
+            '--tw-prose-bullets': theme('colors.red[500]'),
+          },
+        },
+      }),
     },
   },
 };

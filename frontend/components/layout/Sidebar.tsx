@@ -10,17 +10,16 @@ import {
 } from 'lib/data/use-menu';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { Route, route } from 'nextjs-routes';
 import React from 'react';
 
-export const Sidebar = ({
-  isOpen,
-  setIsOpen,
-  showTopMenu,
-}: {
+type SidebarProps = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   showTopMenu?: boolean;
-}) => {
+};
+
+export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
   const router = useRouter();
   const topMenu = useTopMenu();
   const sideMenu = useSideMenu();
@@ -114,7 +113,8 @@ const SidebarLink = ({
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 }) => {
   const { pathname } = useRouter();
-  const inPath = pathname.startsWith(item.href) && item.href !== '/';
+  const realHref = typeof item.href === 'string' ? item.href : route(item.href as Route);
+  const inPath = pathname.startsWith(realHref) && realHref !== '/';
 
   return (
     <Link

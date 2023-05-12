@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import Link from 'next/link';
 import { Menu, Transition } from '@headlessui/react';
 import { MoreVertical } from 'react-feather';
+import { Route } from 'nextjs-routes';
 
 const defaultDropdown = (
   <MoreVertical className="text-stone-500 w-6 invisible ui-open:visible group-hover:visible" />
@@ -11,7 +12,7 @@ const defaultDropdown = (
 export type DropdownItem = {
   icon?: React.ReactNode;
   title: string;
-  href?: string;
+  href?: Route | Exclude<Route, { query: any }>["pathname"] | Omit<Route, "pathname">;
   onClick?: () => void;
 };
 

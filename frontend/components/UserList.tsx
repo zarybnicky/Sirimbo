@@ -80,7 +80,7 @@ export const UserList = () => {
               key={item.id}
               className="pl-6"
               active={active === item.id}
-              href={`/admin/users/${item.id}`}
+              href={{ pathname: '/admin/users/[id]', query: { id: item.id } }}
               title={item.name}
               subtitle={item.yearOfBirth + ', ' + item.role}
             >

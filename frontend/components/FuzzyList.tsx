@@ -9,7 +9,7 @@ export const FuzzyList = <T extends { id: any }>({
 }: {
   data: T[];
   fields: (keyof T)[] & string[];
-  search: string | undefined;
+  search?: string | undefined;
   renderItem: (item: T) => React.ReactNode;
 }) => {
   const nodesById = React.useMemo(() => {

@@ -1,7 +1,8 @@
 import { useArticlesQuery } from 'lib/graphql/Articles';
+import { Route } from 'nextjs-routes';
 
 export interface Article {
-  href: string;
+  href: Route;
   img: string;
   imgThumb: string;
   header: string;
@@ -18,7 +19,7 @@ export const useArticles = (
   const { data } = useArticlesQuery({ limit, offset });
   return {
     articles: (data?.aktualities?.nodes || []).map((x) => ({
-      href: `/articles/${x.id}`,
+      href: { pathname: '/articles/[id]', query: { id: x.id } },
       img: `/galerie/${x.galerieFotoByAtFotoMain?.gfPath}`,
       imgThumb: `/galerie/thumbnails/${x.galerieFotoByAtFotoMain?.gfPath}`,
       header: x.atJmeno,

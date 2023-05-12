@@ -43,7 +43,7 @@ export const EventList = () => {
             <List.Item
               key={item.id}
               active={active === item.id}
-              href={`/admin/akce/${item.id}`}
+              href={{ pathname: '/admin/akce/[id]', query: { id: item.id } }}
               title={item.name}
               subtitle={fullDateFormatter.formatRange(
                 new Date(item.since),

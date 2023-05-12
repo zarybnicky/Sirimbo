@@ -3,7 +3,6 @@ import { Instagram, Facebook, Youtube } from 'react-feather';
 
 type SocialButtonsProps = {
   variant: 'small' | 'medium' | 'large';
-  className?: string;
 };
 
 export const SocialButtons = ({ variant }: SocialButtonsProps) => {

@@ -74,10 +74,7 @@ export function CheckboxElement<TFieldValues extends FieldValues>({
   if (required && !validation?.required) {
     validation.required = 'Toto pole je povinné';
   }
-  const {
-    field: { value, onChange },
-    fieldState: { error },
-  } = useController({
+  const {field, fieldState} = useController({
     name,
     rules: validation,
     control,
@@ -86,11 +83,11 @@ export function CheckboxElement<TFieldValues extends FieldValues>({
   return (
     <Checkbox
       name={name}
-      value={value}
-      checked={!!value}
-      error={error}
+      value={field.value}
+      checked={!!field.value}
+      error={fieldState.error}
       {...props}
-      onChange={() => onChange(!value)}
+      onChange={() => field.onChange(!field.value)}
     />
   );
 }

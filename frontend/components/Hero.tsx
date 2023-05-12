@@ -5,18 +5,7 @@ import Link from 'next/link';
 import GliderJs from 'glider-js';
 
 export const Hero = ({}) => {
-  let { articles } = useArticles(3, 0);
-  if (!articles.length) {
-    articles = [
-      {
-        href: '#',
-        img: '',
-        imgThumb: '',
-        header: '',
-        preview: '',
-      },
-    ];
-  }
+  const { articles } = useArticles(3, 0);
 
   const intervalRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const gliderRef = React.useRef<Glider | null>(null);

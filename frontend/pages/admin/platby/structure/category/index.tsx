@@ -29,7 +29,7 @@ export default function PlatbyCategoryListPage() {
           <List.Item
             key={item.id}
             active={active === item.id}
-            href={`/admin/platby/structure/category/${item.id}`}
+            href={{pathname: '/admin/platby/structure/category/[id]', query: {id: item.id}}}
             title={item.pcName}
             subtitle={item.pcSymbol}
           />

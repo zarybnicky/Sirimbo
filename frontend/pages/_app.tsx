@@ -8,13 +8,13 @@ import { Hydrate, QueryClient, QueryClientProvider } from '@tanstack/react-query
 import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import { Layout } from 'components/layout/Layout';
-import { ProvideMeta } from 'lib/use-meta';
 import 'public/style/index.css';
 import { Tracking } from 'components/Tracking';
 import { ToastContainer } from 'react-toastify';
 import { ConfirmProvider } from 'components/Confirm';
 import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
+import { DefaultSeo } from 'next-seo';
 
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
@@ -58,13 +58,36 @@ const WithProviders = <T extends { dehydratedState?: object }>(
       )}
       <Hydrate state={pageProps.dehydratedState}>
         <ProvideAuth>
-          <ProvideMeta>
-            <ConfirmProvider>
-              <Tracking />
-              {children}
-              <ToastContainer limit={3} />
-            </ConfirmProvider>
-          </ProvideMeta>
+          <ConfirmProvider>
+            <Tracking />
+            <DefaultSeo
+              titleTemplate="%s · TK Olymp"
+              defaultTitle="TK Olymp"
+              themeColor="#ED1734"
+              facebook={{ appId: '704526480597551' }}
+              openGraph={{
+                siteName: 'TK Olymp',
+              }}
+              additionalLinkTags={[
+                {
+                  rel: 'apple-touch-icon',
+                  sizes: '180x180',
+                  href: '/apple-touch-icon.png?v=2',
+                },
+                { rel: 'icon', sizes: '32x32', href: '/favicon-32x32.png?v=2' },
+                { rel: 'icon', sizes: '16x16', href: '/favicon-16x16.png?v=2' },
+                { rel: 'shortcut icon', href: '/favicon.ico?v=2' },
+                { rel: 'manifest', href: '/site.webmanifest?v=2' },
+                {
+                  rel: 'mask-icon',
+                  color: '#5bbad5',
+                  href: '/safari-pinned-tab.svg?v=2',
+                },
+              ]}
+            />
+            {children}
+            <ToastContainer limit={3} />
+          </ConfirmProvider>
         </ProvideAuth>
       </Hydrate>
     </QueryClientProvider>
@@ -73,7 +96,7 @@ const WithProviders = <T extends { dehydratedState?: object }>(
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: React.ReactElement) => React.ReactNode;
-  Layout?: React.FC<{children?: React.ReactNode}>;
+  Layout?: React.FC<{ children?: React.ReactNode }>;
 };
 
 type AppPropsWithLayout<
@@ -86,7 +109,12 @@ const defaultLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   if (Component.Layout) {
-    return WithProviders(<Component.Layout><Component {...pageProps} /></Component.Layout>, pageProps);
+    return WithProviders(
+      <Component.Layout>
+        <Component {...pageProps} />
+      </Component.Layout>,
+      pageProps,
+    );
   }
   const getLayout = Component.getLayout ?? defaultLayout;
   return WithProviders(getLayout(<Component {...pageProps} />), pageProps);

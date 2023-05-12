@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Route } from 'nextjs-routes';
 import { CornerLeftUp as UpIcon } from 'react-feather';
 
 export function Item({
@@ -11,15 +12,13 @@ export function Item({
   return <div className={'py-4 lg:py-12 lg:px-8 ' + className}>{children}</div>;
 }
 
-function ItemTitleBar({
-  backHref,
-  title,
-  children,
-}: {
+type TitleBarProps = {
   title: string;
-  backHref?: string;
+  backHref?: Route | Exclude<Route, {query: any}>["pathname"];
   children?: React.ReactNode;
-}) {
+};
+
+function ItemTitleBar({backHref, title, children,}: TitleBarProps) {
   return (
     <>
       {backHref && (

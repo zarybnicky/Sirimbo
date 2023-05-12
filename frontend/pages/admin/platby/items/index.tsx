@@ -30,7 +30,7 @@ export default function PlatbyItemListPage() {
           <List.Item
             key={item.id}
             active={active === item.id}
-            href={`/admin/platby/items/${item.id}`}
+            href={{pathname: '/admin/platby/items/[id]', query: {id: item.id}}}
             title={`${item.piAmount} ${
               item.platbyCategoryByPiIdCategory?.pcName
             } ${fullDateFormatter.format(new Date(item.piDate))} ${

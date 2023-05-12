@@ -13,13 +13,9 @@ async function loadServerPermissions(context: GetServerSidePropsContext) {
   const {
     rows: [session],
   } = await pool.query(`
-SELECT u_id, u_group, p_id, ss_id, permissions.* FROM session
+SELECT u_id, permissions.* FROM session
 LEFT JOIN users ON u_id=ss_user
 LEFT JOIN permissions ON u_group=pe_id
-LEFT JOIN public.pary ON (
-  (p_id_partner = u_id and p_archiv = false) or
-  (p_id_partnerka = u_id and p_archiv = false)
-)
 WHERE ss_id='${context.req.cookies.PHPSESSID}'
   `);
   return new ServerPermissionChecker(

@@ -26,10 +26,10 @@ export const CohortsList = () => {
           <List.Item
             key={item.id}
             active={active === item.id}
-            href={`/admin/skupiny/${item.id}`}
+            href={{ pathname: '/admin/skupiny/[id]', query: { id: item.id } }}
             title={item.sName}
             className="pl-6"
-            subtitle={[!item.sVisible ? 'Skrytá' : null, item.sLocation]
+            subtitle={[!item.sVisible && 'Skrytá', item.sLocation]
               .filter(Boolean)
               .join(', ')}
           >

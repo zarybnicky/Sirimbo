@@ -41,7 +41,7 @@ export default function FileAdminList() {
 
   return (
     <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
-      <Button href="/admin/dokumenty/add">Nový soubor</Button>
+          {/* <Button href="/admin/dokumenty/add">Nový soubor</Button> */}
 
       <FuzzyList
         data={data?.dokumenties?.nodes || []}
@@ -51,7 +51,7 @@ export default function FileAdminList() {
           <List.Item
             key={item.id}
             active={active === item.id}
-            href={`/admin/dokumenty/${item.id}`}
+            href={{pathname: '/admin/dokumenty/[id]', query: {id: item.id}}}
             title={
               <a target="_blank" rel="noreferrer" href={`/member/download?id=${item.id}`}>
                 {item.dName}

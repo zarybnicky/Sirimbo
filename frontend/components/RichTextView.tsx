@@ -62,7 +62,7 @@ const options: HTMLReactParserOptions = {
     if (domNode.name === 'a') {
       const { href, class: className, ...rest } = domNode.attribs;
       return (
-        <Link href={href || '#'} className={className} {...rest}>
+        <Link href={href as any || '#'} className={className} {...rest}>
           {domToReact(domNode.children as DOMNode[])}
         </Link>
       );

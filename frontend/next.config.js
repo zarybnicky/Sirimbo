@@ -18,7 +18,7 @@ let withSentryConfig = (x) => x;
 //   });
 // }
 
-module.exports = withBundleAnalyzer(
+module.exports = require("nextjs-routes/config")()(withBundleAnalyzer(
   withSentryConfig({
     reactStrictMode: true,
     poweredByHeader: false,
@@ -92,4 +92,4 @@ module.exports = withBundleAnalyzer(
       return config;
     },
   }),
-);
+));

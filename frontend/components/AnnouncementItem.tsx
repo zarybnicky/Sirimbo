@@ -7,6 +7,7 @@ import { Card } from './Card';
 import { CohortColorBoxes } from './CohortColorBox';
 import { Dropdown } from './Dropdown';
 import { RichTextView } from './RichTextView';
+import * as announcement from 'lib/entities/announcement';
 
 export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
   const [expanded, setExpanded] = React.useState(false);
@@ -16,13 +17,13 @@ export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
   return (
     <Card
       onClick={expanded ? undefined : open}
-      className={classNames('group', !expanded && 'cursor-pointer',)}
+      className={classNames('group', !expanded && 'cursor-pointer')}
     >
       {perms.canEditAnnouncement(item) && (
         <Dropdown
           className="absolute right-1 top-2"
           align="end"
-          options={[{ title: 'Upravit', href: `/admin/nastenka/${item.id}` }]}
+          options={announcement.getMenu(item)}
         />
       )}
 

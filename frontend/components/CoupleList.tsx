@@ -41,7 +41,7 @@ export function CoupleList() {
           <List.Item
             key={item.id}
             active={active === item.id}
-            href={`/admin/pary/${item.id}`}
+            href={{pathname: '/admin/pary/[id]', query: {id: item.id}}}
             title={`${item.userByPIdPartner?.uJmeno} ${item.userByPIdPartner?.uPrijmeni} - ${item.userByPIdPartnerka?.uJmeno} ${item.userByPIdPartnerka?.uPrijmeni}`}
           />
         ))}

@@ -29,7 +29,7 @@ export default function ArticleAdminList() {
           <List.Item
             key={item.id}
             active={active === item.id}
-            href={`/admin/aktuality/${item.id}`}
+            href={{pathname: '/admin/aktuality/[id]', query: {id: item.id}}}
             title={item.atJmeno}
             subtitle={
               item.atTimestampAdd

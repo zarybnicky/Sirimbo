@@ -5,6 +5,7 @@ import { CallToAction } from 'components/CallToAction';
 import { useArticles } from 'lib/data/use-articles';
 import { Layout } from 'components/layout/Layout';
 import { YoutubeEmbed } from 'components/YoutubeEmbed';
+import { Route } from 'nextjs-routes';
 
 export default function HomePage() {
   const { articles } = useArticles(2, 3);
@@ -52,7 +53,12 @@ export default function HomePage() {
   );
 }
 
-const useServices = () => [
+const useServices = (): {
+  href: Exclude<Route, { query: any }>['pathname'];
+  image: string;
+  header: string;
+  text: string;
+}[] => [
   {
     href: '/nabizime/skolni-krouzky',
     image: '/images/services-pripravka.png',

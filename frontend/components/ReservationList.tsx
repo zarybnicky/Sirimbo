@@ -50,7 +50,7 @@ export function ReservationList() {
           <List.Item
             key={item.id}
             active={active === item.id}
-            href={`/admin/nabidka/${item.id}`}
+            href={{pathname: '/admin/nabidka/[id]', query: {id: item.id}}}
             title={`${item.date} ${item.trainer}`}
           />
         )}

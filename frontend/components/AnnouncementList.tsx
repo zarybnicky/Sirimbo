@@ -34,7 +34,7 @@ export function AnnouncementList() {
           <List.Item
             key={item.id}
             active={active === item.id}
-            href={`/admin/nastenka/${item.id}`}
+            href={{ pathname: '/admin/nastenka/[id]', query: { id: item.id } }}
             title={item.upNadpis}
             subtitle={
               <div className="flex flex-wrap justify-between items-baseline gap-4">
