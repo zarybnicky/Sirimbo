@@ -1,7 +1,7 @@
 import { Item } from 'components/layout/Item';
 import { Layout } from 'components/layout/Layout';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { NextSeo } from 'next-seo';
 
 export default function ErrorPage() {
   const router = useRouter();
@@ -9,9 +9,7 @@ export default function ErrorPage() {
 
   return (
     <>
-      <Head>
-        <title>Chyba</title>
-      </Head>
+      <NextSeo title="Chyba" />
 
       <Item>
         <div className="rounded-lg p-4 border-2 border-red-500 mb-48">

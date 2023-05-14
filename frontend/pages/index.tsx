@@ -60,25 +60,25 @@ const useServices = (): {
   text: string;
 }[] => [
   {
-    href: '/nabizime/skolni-krouzky',
+    href: '/skolni-krouzky',
     image: '/images/services-pripravka.png',
     header: 'Přípravka tanečního sportu',
     text: 'První kroky do světa tanečního sportu pro děti od 5 do 10 let. Všeobecná taneční průprava a základy tanečních kroků pro budoucí hvězdy.',
   },
   {
-    href: '/o-nas/treninkove-skupiny',
+    href: '/treninkove-skupiny',
     image: '/images/services-pro-deti.png',
     header: 'Základy tanečního sportu',
     text: 'Tréninkové programy pro začínající a mírně pokročilé tanečníky ve věkových skupinách juniorů (12-15 let), mládež a dospělí (16+ let).',
   },
   {
-    href: '/o-nas/treninkove-skupiny',
+    href: '/treninkove-skupiny',
     image: '/images/services-pro-zacatecniky.png',
     header: 'Výkonnostní sport',
     text: 'Tréninkové programy pro soutěžní tanečníky ve všech věkových skupinách a výkonnostních třídách uzpůsobené podle potřeb v jednotlivých výkonnostních stupních.',
   },
   {
-    href: '/o-nas/treninkove-skupiny',
+    href: '/treninkove-skupiny',
     image: '/images/services-soutezni.png',
     header: 'Sportovní centrum mládeže',
     text: 'Tréninkový program pro vrcholové sportovce, reprezentanty ČR se špičkovými českými trenéry, speciální kondiční přípravou a moderními metodami sportovního tréninku. Jsme jediným klubem v Olomouckém kraji se statutem Sprtovního centra mládeže dle MŠMT.',

@@ -8,7 +8,7 @@ export function CallToAction() {
     <div
       className="col-full-width content mt-4 bg-red-500"
       style={{
-        backgroundImage: `linear-gradient(90deg, rgba(216,28,58,0.6) 30%, rgba(0,0,0,0) 70%), url(${CtaImage.src})`,
+        backgroundImage: `linear-gradient(90deg, rgba(216,28,58,0.8) 30%, rgba(255,255,255,0) 70%), url(${CtaImage.src})`,
         backgroundPosition: 'left, 85% 50%',
         backgroundRepeat: 'no-repeat, no-repeat',
         backgroundSize: '100%, auto 100%',

@@ -29,19 +29,19 @@ export const useTopMenu = (): MenuStructItem[] => [
     title: 'Klub',
     children: [
       { type: 'link', title: 'O nás', href: '/o-nas' },
-      { type: 'link', title: 'Kde trénujeme', href: '/o-nas/kde-trenujeme' },
-      { type: 'link', title: 'Tréninkové skupiny', href: '/o-nas/treninkove-skupiny' },
-      { type: 'link', title: 'Trenéři', href: '/o-nas/treneri' },
-      { type: 'link', title: 'Benefity členství', href: '/o-nas/clenstvi' },
-      { type: 'link', title: 'Galerie mistrů', href: '/o-nas/galerie-mistru' },
+      { type: 'link', title: 'Kde trénujeme', href: '/kde-trenujeme' },
+      { type: 'link', title: 'Tréninkové skupiny', href: '/treninkove-skupiny' },
+      { type: 'link', title: 'Trenéři', href: '/treneri' },
+      { type: 'link', title: 'Výhody členství', href: '/vyhody-clenstvi' },
+      { type: 'link', title: 'Galerie mistrů', href: '/galerie-mistru' },
     ],
   },
   {
     type: 'menu',
     title: 'Nabízíme',
     children: [
-      { type: 'link', title: 'Vystoupení na akcích', href: '/nabizime/vystoupeni' },
-      { type: 'link', title: 'Školní taneční kroužky', href: '/nabizime/skolni-krouzky' },
+      { type: 'link', title: 'Vystoupení na akcích', href: '/vystoupeni' },
+      { type: 'link', title: 'Školní taneční kroužky', href: '/skolni-krouzky' },
     ],
   },
   { type: 'link', title: 'Aktuality', href: '/articles' },
@@ -70,7 +70,7 @@ export const useMemberMenu = (): MenuLink[] => [
   { type: 'link', title: 'Tréninky', href: '/schedule' },
   { type: 'link', title: 'Akce', href: '/events' },
   { type: 'link', title: 'Dokumenty', href: '/documents' },
-  { type: 'link', title: 'Členové', href: '/cohorts' },
+  { type: 'link', title: 'Členové', href: '/treninkove-skupiny' },
   { type: 'link', title: 'Profil', href: '/profile' },
 ];
 

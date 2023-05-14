@@ -29,7 +29,7 @@ export default function ContactPage() {
         <div className="prose">
           <h3>Statutární zástupce:</h3>
           <p>
-            Mgr. Miroslav Hýža
+            <b>Mgr. Miroslav Hýža</b>
             <br />
             Předseda, šéftrenér
             <br />
@@ -40,7 +40,7 @@ export default function ContactPage() {
 
           <h3>Fakturace:</h3>
           <p>
-            Ing. Aleš Pala
+            <b>Ing. Aleš Pala</b>
             <br />
             Ekonom
             <br />
@@ -51,7 +51,7 @@ export default function ContactPage() {
             Platby členských příspěvků, noví zájemci - Olomouc, potvrzení o platbách
           </h3>
           <p>
-            Mgr. Lucie Benýšková
+            <b>Mgr. Lucie Benýšková</b>
             <br />
             Vedoucí členských agend
             <br />
@@ -60,7 +60,7 @@ export default function ContactPage() {
 
           <h3>Taneční kroužky OlympDance</h3>
           <p>
-            Martin Matýsek
+            <b>Martin Matýsek</b>
             <br />
             Vedoucí projektu OlympDance
             <br />
@@ -73,7 +73,7 @@ export default function ContactPage() {
         <div className="prose">
           <h3>Prostějov - noví zájemci i členové</h3>
           <p>
-            Roman Pecha
+            <b>Roman Pecha</b>
             <br />
             Vedoucí pobočky
             <br />
@@ -84,7 +84,7 @@ export default function ContactPage() {
 
           <h3>Přerov - noví zájemci i členové</h3>
           <p>
-            Marie Hýžová ml.
+            <b>Marie Hýžová ml.</b>
             <br />
             Vedoucí pobočky
             <br />
@@ -95,7 +95,7 @@ export default function ContactPage() {
 
           <h3>Dětské skupiny na ZŠ Holečkova</h3>
           <p>
-            Mgr. Marie Hýžová
+            <b>Mgr. Marie Hýžová</b>
             <br />
             Místopředseda z. s.
             <br />
@@ -106,7 +106,7 @@ export default function ContactPage() {
 
           <h3>Pro-Am sekce</h3>
           <p>
-            Vilém Šír
+            <b>Vilém Šír</b>
             <br />
             Vedoucí lektor Pra-Am
             <br />

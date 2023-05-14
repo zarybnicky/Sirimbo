@@ -2,10 +2,10 @@ import * as React from 'react';
 import { ArticleCard } from 'components/cards/ArticleCard';
 import { useArticles } from 'lib/data/use-articles';
 import { CallToAction } from 'components/CallToAction';
-import Head from 'next/head';
 import { Pagination } from 'components/Pagination';
 import { Layout } from 'components/layout/Layout';
 import { Heading } from 'components/Heading';
+import { NextSeo } from 'next-seo';
 
 export default function ArticleListPage() {
   const [limit] = React.useState(12);
@@ -14,9 +14,7 @@ export default function ArticleListPage() {
 
   return (
     <>
-      <Head>
-        <title>Články | TK Olymp</title>
-      </Head>
+      <NextSeo title="Články" />
       <Heading>Aktuálně</Heading>
 
       <div className="col-feature grid place-items-stretch gap-4 grid-cols-2 lg:grid-cols-3 mb-6">

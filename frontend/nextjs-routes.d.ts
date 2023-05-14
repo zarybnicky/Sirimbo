@@ -53,7 +53,6 @@ declare module "nextjs-routes" {
     | StaticRoute<"/admin/users/unconfirmed">
     | DynamicRoute<"/articles/[id]", { "id": string }>
     | StaticRoute<"/articles">
-    | StaticRoute<"/cohorts">
     | StaticRoute<"/contact">
     | StaticRoute<"/crm">
     | StaticRoute<"/dashboard">
@@ -62,24 +61,24 @@ declare module "nextjs-routes" {
     | DynamicRoute<"/events/[id]", { "id": string }>
     | StaticRoute<"/events">
     | StaticRoute<"/forgotten-password">
+    | StaticRoute<"/galerie-mistru">
     | StaticRoute<"/gallery">
     | StaticRoute<"/">
+    | StaticRoute<"/kde-trenujeme">
     | StaticRoute<"/login">
     | StaticRoute<"/logout">
-    | StaticRoute<"/nabizime/skolni-krouzky">
-    | StaticRoute<"/nabizime/vystoupeni">
-    | StaticRoute<"/o-nas/clenstvi">
-    | StaticRoute<"/o-nas/galerie-mistru">
     | StaticRoute<"/o-nas">
-    | StaticRoute<"/o-nas/kde-trenujeme">
-    | StaticRoute<"/o-nas/treneri">
-    | StaticRoute<"/o-nas/treninkove-skupiny">
     | StaticRoute<"/ochrana-osobnich-udaju">
     | StaticRoute<"/prijdtancit">
     | StaticRoute<"/profile">
     | DynamicRoute<"/programy/[id]/[...slug]", { "id": string; "slug": string[] }>
     | StaticRoute<"/register">
-    | StaticRoute<"/schedule">;
+    | StaticRoute<"/schedule">
+    | StaticRoute<"/skolni-krouzky">
+    | StaticRoute<"/treneri">
+    | StaticRoute<"/treninkove-skupiny">
+    | StaticRoute<"/vyhody-clenstvi">
+    | StaticRoute<"/vystoupeni">;
 
   interface StaticRoute<Pathname> {
     pathname: Pathname;

@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 import { Dropdown, DropdownItem } from 'components/Dropdown';
 import { OlympLogoVertical } from 'components/Icons';
-import { SocialButtons } from './SocialButtons';
 import { getHrefs, MenuStructItem, useMemberMenu, useTopMenu } from 'lib/data/use-menu';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -9,6 +8,7 @@ import React from 'react';
 import { ChevronDown, Menu as MenuIcon, User as Account } from 'react-feather';
 import { MobileLogo } from './MobileLogo';
 import { useAuth } from 'lib/data/use-auth';
+import { Instagram, Facebook, Youtube } from 'react-feather';
 
 type Props = {
   isOpen: boolean;
@@ -21,7 +21,7 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
   const auth = useAuth();
 
   return (
-    <div className="static w-full text-white bg-stone-800">
+    <div className="static w-full text-white bg-red-500">
       <div className="container relative max-w-5xl mx-auto">
         {showTopMenu && (
           <div className="relative hidden lg:flex items-stretch justify-between min-h-[48px] md:min-h-[64px]">
@@ -40,7 +40,32 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
                 Pro členy
               </Link>
             )}
-            <SocialButtons variant="medium" />
+            <div className="flex gap-1 items-center">
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href="https://www.facebook.com/tkolymp"
+                className="p-1"
+              >
+                <Facebook className="text-stone-200" />
+              </a>
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href="https://www.instagram.com/tanecni_klub_olymp"
+                className="p-1"
+              >
+                <Instagram className="text-stone-100" />
+              </a>
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href="https://www.youtube.com/user/TheMamcro"
+                className="p-1"
+              >
+                <Youtube className="text-white" />
+              </a>
+            </div>
           </div>
         )}
 
@@ -69,7 +94,7 @@ const AuthButton = () => {
   const memberMenu = useMemberMenu();
 
   const button = (
-    <div className="flex normal-case button button-text gap-2 items-center">
+    <div className="flex gap-2 items-center drop-shadow">
       <Account className="h-4 w-4" />
       <div
         className="flex flex-col justify-center items-start"
@@ -96,7 +121,7 @@ const AuthButton = () => {
 
 const DesktopLogo = () => (
   <div className="relative overflow-visible min-w-[104px]">
-    <div className="w-[104px] h-[130px] text-white bg-red-500 z-50 shadow-red-900/40 shadow-lg absolute top-0 left-0 right-0">
+    <div className="w-[104px] h-[130px] text-white bg-stone-800 z-50 shadow-stone-900/40 shadow-lg absolute top-0 left-0 right-0">
       <Link href="/" className="block p-0 m-0 h-full w-full relative">
         <OlympLogoVertical
           style={{
@@ -125,7 +150,9 @@ const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {
     'flex gap-1 rounded-none transition-colors',
     'uppercase text-sm font-bold justify-center items-center',
     'hover:text-white hover:border-b-[3px] border-white',
-    inPath ? 'text-white border-b-[3px] tracking-wide' : 'text-stone-300',
+    inPath
+      ? 'text-white drop-shadow-xl border-b-[3px] tracking-wide'
+      : 'text-stone-100 drop-shadow',
   );
   if (x.type === 'link') {
     return (

@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { OlympLogoOneline } from 'components/Icons';
+import { OlympLogoOneline, OlympLogoVertical } from 'components/Icons';
 import { useAuth } from 'lib/data/use-auth';
 import {
   MenuLink,
@@ -58,8 +58,8 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
       >
         {!showTopMenu && (
           <div className="hidden lg:flex">
-            <Link href="/" className="h-20 p-3 bg-red-500 mx-auto">
-              <OlympLogoOneline className="h-full w-full text-white !fill-white" />
+            <Link href="/" className="h-24 mt-3 p-2 bg-black mx-auto">
+              <OlympLogoVertical className="h-full w-full text-white !fill-white" />
             </Link>
           </div>
         )}
@@ -105,13 +105,12 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
   );
 };
 
-const SidebarLink = ({
-  item,
-  onClick,
-}: {
+type SidebarLinkProps = {
   item: MenuLink;
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;
-}) => {
+};
+
+const SidebarLink = ({ item, onClick }: SidebarLinkProps) => {
   const { pathname } = useRouter();
   const realHref = typeof item.href === 'string' ? item.href : route(item.href as Route);
   const inPath = pathname.startsWith(realHref) && realHref !== '/';

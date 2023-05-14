@@ -18,78 +18,80 @@ let withSentryConfig = (x) => x;
 //   });
 // }
 
-module.exports = require("nextjs-routes/config")()(withBundleAnalyzer(
-  withSentryConfig({
-    reactStrictMode: true,
-    poweredByHeader: false,
-    swcMinify: true,
+module.exports = require('nextjs-routes/config')()(
+  withBundleAnalyzer(
+    withSentryConfig({
+      reactStrictMode: true,
+      poweredByHeader: false,
+      swcMinify: true,
 
-    output: 'standalone',
-    experimental: {
-      outputFileTracingRoot: path.join(__dirname, '../'),
-    },
+      output: 'standalone',
+      experimental: {
+        outputFileTracingRoot: path.join(__dirname, '../'),
+      },
 
-    images: {
-      domains: ['tkolymp.cz', 'www.tkolymp.cz'],
-    },
+      images: {
+        domains: ['tkolymp.cz', 'www.tkolymp.cz'],
+      },
 
-    async redirects() {
-      return [
-        { source: '/home', destination: '/', permanent: true },
-        { source: '/aktualne', destination: '/articles', permanent: true },
-        { source: '/aktualne/:path*', destination: '/articles/:path*', permanent: true },
-        { source: '/nopassword', destination: '/forgotten-password', permanent: true },
-        { source: '/registrace', destination: '/register', permanent: true },
-        { source: '/kontakt', destination: '/contact', permanent: true },
-        { source: '/oklubu/saly', destination: '/o-nas/kde-trenujeme', permanent: true },
-        {
-          source: '/oklubu/klubovi-treneri',
-          destination: '/o-nas/treneri',
-          permanent: true,
-        },
-        {
-          source: '/oklubu/externi-treneri',
-          destination: '/o-nas/treneri',
-          permanent: true,
-        },
-        { source: '/member', destination: '/dashboard', permanent: true },
-        { source: '/member/akce', destination: '/events', permanent: true },
-        { source: '/member/rozpis', destination: '/schedule', permanent: true },
-        { source: '/member/rozpis', destination: '/schedule', permanent: true },
-        { source: '/member/nabidka', destination: '/schedule', permanent: true },
-        { source: '/member/treninky', destination: '/schedule', permanent: true },
-        { source: '/member/dokumenty', destination: '/documents', permanent: true },
-        { source: '/member/profil', destination: '/profile', permanent: true },
-      ];
-    },
-
-    async rewrites() {
-      if (process.env.NODE_ENV !== 'production') {
-        const graphqlUrl = process.env.GRAPHQL_BACKEND || 'http://localhost:4000';
-        let phpUrl = process.env.NEXT_PUBLIC_BASE_URL;
-        if (!phpUrl) {
-          phpUrl = `http://${execSync('nixos-container show-ip olymp-test', {
-            encoding: 'utf8',
-          })}`;
-        }
+      async redirects() {
         return [
-          { source: '/member/download', destination: `${graphqlUrl}/member/download` },
-          { source: '/graphql', destination: `${graphqlUrl}/graphql` },
-          { source: '/graphqli', destination: `${graphqlUrl}/graphqli` },
-          { source: '/old/:path*', destination: `${phpUrl}/old/:path*` },
-          { source: '/galerie/:path*', destination: `${phpUrl}/galerie/:path*` },
+          { source: '/home', destination: '/', permanent: true },
+          { source: '/aktualne', destination: '/articles', permanent: true },
+          {
+            source: '/aktualne/:path*',
+            destination: '/articles/:path*',
+            permanent: true,
+          },
+          { source: '/nopassword', destination: '/forgotten-password', permanent: true },
+          { source: '/registrace', destination: '/register', permanent: true },
+          { source: '/kontakt', destination: '/contact', permanent: true },
+          {
+            source: '/oklubu/saly',
+            destination: '/kde-trenujeme',
+            permanent: true,
+          },
+          { source: '/oklubu/klubovi-treneri', destination: '/treneri', permanent: true },
+          { source: '/oklubu/externi-treneri', destination: '/treneri', permanent: true },
+          { source: '/member', destination: '/dashboard', permanent: true },
+          { source: '/member/akce', destination: '/events', permanent: true },
+          { source: '/member/rozpis', destination: '/schedule', permanent: true },
+          { source: '/member/rozpis', destination: '/schedule', permanent: true },
+          { source: '/member/nabidka', destination: '/schedule', permanent: true },
+          { source: '/member/treninky', destination: '/schedule', permanent: true },
+          { source: '/member/dokumenty', destination: '/documents', permanent: true },
+          { source: '/member/profil', destination: '/profile', permanent: true },
         ];
-      } else {
-        return [];
-      }
-    },
+      },
 
-    webpack: function (config, { isServer, webpack, buildId }) {
-      const defines = {
-        'process.env.BUILD_ID': JSON.stringify(buildId),
-      };
-      config.plugins.push(new webpack.DefinePlugin(defines));
-      return config;
-    },
-  }),
-));
+      async rewrites() {
+        if (process.env.NODE_ENV !== 'production') {
+          const graphqlUrl = process.env.GRAPHQL_BACKEND || 'http://localhost:4000';
+          let phpUrl = process.env.NEXT_PUBLIC_BASE_URL;
+          if (!phpUrl) {
+            phpUrl = `http://${execSync('nixos-container show-ip olymp-test', {
+              encoding: 'utf8',
+            })}`;
+          }
+          return [
+            { source: '/member/download', destination: `${graphqlUrl}/member/download` },
+            { source: '/graphql', destination: `${graphqlUrl}/graphql` },
+            { source: '/graphqli', destination: `${graphqlUrl}/graphqli` },
+            { source: '/old/:path*', destination: `${phpUrl}/old/:path*` },
+            { source: '/galerie/:path*', destination: `${phpUrl}/galerie/:path*` },
+          ];
+        } else {
+          return [];
+        }
+      },
+
+      webpack: function (config, { isServer, webpack, buildId }) {
+        const defines = {
+          'process.env.BUILD_ID': JSON.stringify(buildId),
+        };
+        config.plugins.push(new webpack.DefinePlugin(defines));
+        return config;
+      },
+    }),
+  ),
+);

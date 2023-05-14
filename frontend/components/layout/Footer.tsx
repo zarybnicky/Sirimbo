@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SocialButtons } from './SocialButtons';
+import { Instagram, Facebook, Youtube } from 'react-feather';
 import { Card } from 'components/Card';
 
 import LogoCsts from 'public/images/logo-csts.svg';
@@ -27,8 +27,31 @@ export const Footer: React.FC = () => {
             <br />
             miroslav.hyza@tkolymp.cz
           </div>
-          <div className="my-8">
-            <SocialButtons variant="large" />
+          <div className="my-8 flex gap-2 items-center">
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href="https://www.facebook.com/tkolymp"
+              className="p-1"
+            >
+              <Facebook className="text-red-600/90 w-10 h-10" />
+            </a>
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href="https://www.instagram.com/tanecni_klub_olymp"
+              className="p-1"
+            >
+              <Instagram className="text-red-400 w-10 h-10" />
+            </a>
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href="https://www.youtube.com/user/TheMamcro"
+              className="p-1"
+            >
+              <Youtube className="text-slate-100 w-10 h-10" />
+            </a>
           </div>
         </div>
 
