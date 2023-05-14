@@ -63,7 +63,7 @@ const WithProviders = <T extends { dehydratedState?: object }>(
             <DefaultSeo
               titleTemplate="%s · TK Olymp"
               defaultTitle="TK Olymp"
-              themeColor="#ED1734"
+              themeColor="#000"
               facebook={{ appId: '704526480597551' }}
               openGraph={{
                 siteName: 'TK Olymp',
@@ -72,16 +72,16 @@ const WithProviders = <T extends { dehydratedState?: object }>(
                 {
                   rel: 'apple-touch-icon',
                   sizes: '180x180',
-                  href: '/apple-touch-icon.png?v=2',
+                  href: '/apple-touch-icon.png?v=3',
                 },
-                { rel: 'icon', sizes: '32x32', href: '/favicon-32x32.png?v=2' },
-                { rel: 'icon', sizes: '16x16', href: '/favicon-16x16.png?v=2' },
-                { rel: 'shortcut icon', href: '/favicon.ico?v=2' },
-                { rel: 'manifest', href: '/site.webmanifest?v=2' },
+                { rel: 'icon', sizes: '32x32', href: '/favicon-32x32.png?v=3' },
+                { rel: 'icon', sizes: '16x16', href: '/favicon-16x16.png?v=3' },
+                { rel: 'shortcut icon', href: '/favicon.ico?v=3' },
+                { rel: 'manifest', href: '/site.webmanifest?v=3' },
                 {
                   rel: 'mask-icon',
                   color: '#5bbad5',
-                  href: '/safari-pinned-tab.svg?v=2',
+                  href: '/safari-pinned-tab.svg?v=3',
                 },
               ]}
             />
