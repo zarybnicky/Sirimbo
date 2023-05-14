@@ -12,15 +12,15 @@ import { RadioButtonGroupElement } from 'components/RadioButtomGroupElement';
 import { toast } from 'react-toastify';
 import { useCohortListQuery } from 'lib/graphql/Cohorts';
 import { useRegisterMutation } from 'lib/graphql/CurrentUser';
-import { withServerLoggedOut } from 'lib/data/use-server-permissions';
 import { Item } from 'components/layout/Item';
+import { useAuth } from 'lib/data/use-auth';
 
 export default function RegisterPage() {
+  const { user } = useAuth();
   const router = useRouter();
   const countries = useCountries();
   const { data: cohorts } = useCohortListQuery({ visible: true });
   const { control, handleSubmit, watch } = useForm();
-
   const { mutateAsync: register } = useRegisterMutation();
 
   const onSubmit = useAsyncCallback(async (values: any) => {
@@ -47,6 +47,10 @@ export default function RegisterPage() {
     );
     router.push('/');
   });
+
+  if (user) {
+    router.replace('/dashboard');
+  }
 
   return (
     <Item>
@@ -284,5 +288,3 @@ export default function RegisterPage() {
     </Item>
   );
 }
-
-export const getServerSideProps = withServerLoggedOut;

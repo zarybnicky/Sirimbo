@@ -1,14 +1,14 @@
 import { NewCoupleForm } from 'components/NewCoupleForm';
 import { CoupleList } from 'components/CoupleList';
 import { Item } from 'components/layout/Item';
-import { Layout } from 'components/layout/Layout';
 import {
   PermissionKey,
   PermissionLevel,
   withServerPermissions,
 } from 'lib/data/use-server-permissions';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function CoupleAddPage() {
+const Page: NextPageWithLayout = () => {
   return (
     <Item>
       <Item.Titlebar backHref="/admin/pary" title="Nový pár" />
@@ -17,11 +17,10 @@ export default function CoupleAddPage() {
   );
 }
 
-CoupleAddPage.getLayout = (page: React.ReactElement) => (
-  <Layout list={<CoupleList />} isDetail>
-    {page}
-  </Layout>
-);
+Page.list = <CoupleList />;
+Page.isDetail = true;
+
+export default Page;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.pePary,

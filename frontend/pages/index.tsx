@@ -3,11 +3,11 @@ import { Hero } from 'components/Hero';
 import { ServiceCard } from 'components/cards/ServiceCard';
 import { CallToAction } from 'components/CallToAction';
 import { useArticles } from 'lib/data/use-articles';
-import { Layout } from 'components/layout/Layout';
 import { YoutubeEmbed } from 'components/YoutubeEmbed';
 import { Route } from 'nextjs-routes';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function HomePage() {
+const Page: NextPageWithLayout = () => {
   const { articles } = useArticles(2, 3);
   const services = useServices();
 
@@ -85,4 +85,6 @@ const useServices = (): {
   },
 ];
 
-HomePage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;
+Page.showTopMenu = true;
+
+export default Page;

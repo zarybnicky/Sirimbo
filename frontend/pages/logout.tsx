@@ -1,9 +1,9 @@
 import React from 'react';
 import { useAuth } from 'lib/data/use-auth';
 import { useRouter } from 'next/router';
-import { Layout } from 'components/layout/Layout';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function LogoutPage() {
+const Page: NextPageWithLayout = () => {
   const { signOut } = useAuth();
   const router = useRouter();
   React.useEffect(() => {
@@ -13,4 +13,6 @@ export default function LogoutPage() {
   return null;
 }
 
-LogoutPage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;
+Page.showTopMenu = true;
+
+export default Page;

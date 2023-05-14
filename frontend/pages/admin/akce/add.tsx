@@ -5,8 +5,10 @@ import {
   PermissionLevel,
 } from 'lib/data/use-server-permissions';
 import { Item } from 'components/layout/Item';
+import { type NextPageWithLayout } from 'pages/_app';
+import { EventList } from 'components/EventList';
 
-export default function EventAddPage() {
+const Page: NextPageWithLayout = () => {
   return (
     <Item>
       <Item.Titlebar backHref="/admin/akce" title="Nová akce" />
@@ -14,6 +16,11 @@ export default function EventAddPage() {
     </Item>
   );
 }
+
+Page.list = <EventList />;
+Page.isDetail = true;
+
+export default Page;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peAkce,

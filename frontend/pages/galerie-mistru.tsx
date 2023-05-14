@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
-import { Layout } from 'components/layout/Layout';
 import { ServiceCard } from 'components/cards/ServiceCard';
 import { Heading } from 'components/Heading';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function ChampionsPage() {
+const Page: NextPageWithLayout = () => {
   return (
     <>
       <Heading>Galerie mistrů</Heading>
@@ -26,9 +26,9 @@ export default function ChampionsPage() {
   );
 }
 
-ChampionsPage.getLayout = (page: React.ReactElement) => (
-  <Layout showTopMenu>{page}</Layout>
-);
+Page.showTopMenu = true;
+
+export default Page;
 
 const mirek = {
   header: 'Miroslav Hýža - Denisa Walterová',

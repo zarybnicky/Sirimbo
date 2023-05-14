@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { List } from 'components/layout/List';
 import React from 'react';
 import { toast } from 'react-toastify';
+import { fromSlugArray } from 'lib/slugify';
 
 export function CoupleList() {
   const router = useRouter();
@@ -12,8 +13,7 @@ export function CoupleList() {
     onSuccess: () => refetch(),
   });
 
-  const { id } = router.query;
-  const active = id ? (id as string) : null;
+  const id = fromSlugArray(router.query.id);
 
   const fix = React.useCallback(async () => {
     const data = await doFix({});
@@ -40,7 +40,7 @@ export function CoupleList() {
         {data?.activeCouples?.nodes?.map((item) => (
           <List.Item
             key={item.id}
-            active={active === item.id}
+            active={id === item.id}
             href={{pathname: '/admin/pary/[id]', query: {id: item.id}}}
             title={`${item.userByPIdPartner?.uJmeno} ${item.userByPIdPartner?.uPrijmeni} - ${item.userByPIdPartnerka?.uJmeno} ${item.userByPIdPartnerka?.uPrijmeni}`}
           />

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
-import { Layout } from 'components/layout/Layout';
 import { ProspectForm } from 'components/ProspectForm';
 import { LocationCard } from 'components/cards/LocationCard';
 import { Heading } from 'components/Heading';
 import { YoutubeEmbed } from 'components/YoutubeEmbed';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function AboutPage() {
+const Page: NextPageWithLayout = () => {
   return (
     <>
       <Heading>Přijďte si vyzkoušet, jak vypadá taneční trénink!</Heading>
@@ -188,4 +188,6 @@ export default function AboutPage() {
   );
 }
 
-AboutPage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;
+Page.showTopMenu = true;
+
+export default Page;

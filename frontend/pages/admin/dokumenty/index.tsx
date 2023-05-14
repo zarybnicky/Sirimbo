@@ -10,6 +10,7 @@ import {
 } from 'lib/data/use-server-permissions';
 import { List } from 'components/layout/List';
 import { FuzzyList } from 'components/FuzzyList';
+import { fromSlugArray } from 'lib/slugify';
 
 const categories = [
   { id: 1, label: 'Schůze,\u{00A0}rady' },
@@ -20,10 +21,9 @@ const categories = [
 
 export default function FileAdminList() {
   const router = useRouter();
-  const { id } = router.query;
-  const active = id ? (id as string) : null;
   const [search, setSearch] = React.useState('');
   const { data, refetch } = useFileListQuery();
+  const id = fromSlugArray(router.query.id);
 
   // $fileUpload = $_FILES['file']['tmp_name'];
   // $fileName = str_replace(
@@ -50,7 +50,7 @@ export default function FileAdminList() {
         renderItem={(item) => (
           <List.Item
             key={item.id}
-            active={active === item.id}
+            active={id === item.id}
             href={{pathname: '/admin/dokumenty/[id]', query: {id: item.id}}}
             title={
               <a target="_blank" rel="noreferrer" href={`/member/download?id=${item.id}`}>

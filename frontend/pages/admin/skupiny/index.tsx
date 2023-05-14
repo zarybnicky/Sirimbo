@@ -1,18 +1,17 @@
-import { Layout } from 'components/layout/Layout';
 import { CohortsList } from 'components/CohortList';
 import {
   withServerPermissions,
   PermissionKey,
   PermissionLevel,
 } from 'lib/data/use-server-permissions';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function CohortsPage() {
-  return null;
-}
+const Page: NextPageWithLayout = () => null;
 
-CohortsPage.getLayout = (page: React.ReactElement) => (
-  <Layout list={<CohortsList />}>{page}</Layout>
-);
+Page.list = <CohortsList />;
+Page.isDetail = true;
+
+export default Page;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peSkupiny,

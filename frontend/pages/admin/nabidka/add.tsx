@@ -5,10 +5,10 @@ import {
   PermissionLevel,
 } from 'lib/data/use-server-permissions';
 import { ReservationList } from 'components/ReservationList';
-import { Layout } from 'components/layout/Layout';
 import { Item } from 'components/layout/Item';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function ReservationAddPage() {
+const Page: NextPageWithLayout = () => {
   return (
     <Item>
       <Item.Titlebar backHref="/admin/nabidka" title="Nová nabídka" />
@@ -17,11 +17,10 @@ export default function ReservationAddPage() {
   );
 }
 
-ReservationAddPage.getLayout = (page: React.ReactElement) => (
-  <Layout list={<ReservationList />} isDetail>
-    {page}
-  </Layout>
-);
+Page.list = <ReservationList />;
+Page.isDetail = true;
+
+export default Page;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peNabidka,

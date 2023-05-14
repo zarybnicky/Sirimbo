@@ -8,16 +8,16 @@ import { TextFieldElement } from 'components/TextField';
 import { ErrorBox } from 'components/ErrorBox';
 import { useAsyncCallback } from 'react-async-hook';
 import { SubmitButton } from 'components/SubmitButton';
-import { withServerLoggedOut } from 'lib/data/use-server-permissions';
 import { Route } from 'nextjs-routes';
+import { type NextPageWithLayout } from 'pages/_app';
 
 type FormProps = {
   login: string;
   passwd: string;
 };
 
-export default function LoginPage() {
-  const { signIn } = useAuth();
+const Page: NextPageWithLayout = () => {
+  const { user, signIn } = useAuth();
   const router = useRouter();
   const { control, handleSubmit } = useForm<FormProps>();
 
@@ -25,6 +25,11 @@ export default function LoginPage() {
     await signIn(values.login, values.passwd);
     router.push((router.query?.from as any as Route) || '/dashboard');
   });
+
+  if (user) {
+    router.replace('/dashboard');
+    // TODO: show "signing in" indicator on login page
+  }
 
   return (
     <div className="flex items-center justify-center min-h-[50vh]">
@@ -73,4 +78,4 @@ export default function LoginPage() {
   );
 }
 
-export const getServerSideProps = withServerLoggedOut;
+export default Page;

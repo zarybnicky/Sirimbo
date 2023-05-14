@@ -7,15 +7,16 @@ import {
 } from 'lib/data/use-server-permissions';
 import { Item } from 'components/layout/Item';
 import { DeleteButton } from 'components/DeleteButton';
-import { Layout } from 'components/layout/Layout';
 import { CoupleList } from 'components/CoupleList';
 import { shortDateFormatter } from 'lib/format-date';
 import { Card } from 'components/Card';
+import { fromSlugArray } from 'lib/slugify';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function CoupleEditPage() {
+const Page: NextPageWithLayout = () => {
   const router = useRouter();
-  const { id } = router.query;
-  const { data } = useCoupleQuery({ id: id as string }, { enabled: !!id, cacheTime: 0 });
+  const id = fromSlugArray(router.query.id);
+  const { data } = useCoupleQuery({ id }, { enabled: !!id, cacheTime: 0 });
   const { mutateAsync: doDelete } = useDeleteCoupleMutation({
     onSuccess: () => router.push('/admin/nastenka'),
   });
@@ -27,7 +28,7 @@ export default function CoupleEditPage() {
         title={`${item?.userByPIdPartner?.uJmeno} ${item?.userByPIdPartner?.uPrijmeni} - ${item?.userByPIdPartnerka?.uJmeno} ${item?.userByPIdPartnerka?.uPrijmeni}`}
       >
         <DeleteButton
-          onDelete={() => doDelete({ id: id as string })}
+          onDelete={() => doDelete({ id })}
           title="smazat pár"
         />
       </Item.Titlebar>
@@ -43,11 +44,10 @@ export default function CoupleEditPage() {
   );
 }
 
-CoupleEditPage.getLayout = (page: React.ReactElement) => (
-  <Layout list={<CoupleList />} isDetail>
-    {page}
-  </Layout>
-);
+Page.list = <CoupleList />;
+Page.isDetail = true;
+
+export default Page;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.pePary,

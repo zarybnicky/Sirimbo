@@ -8,6 +8,7 @@ import {
 } from 'lib/graphql/CurrentUser';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
+import { defaultPermissions, PermissionChecker } from './use-permissions';
 
 interface AuthContextType {
   isLoading: boolean;
@@ -15,8 +16,7 @@ interface AuthContextType {
   couple: CouplePartialFragment | null;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  // sendPasswordResetEmail: (email: string) => Promise<void>;
-  // confirmPasswordReset: (code: string, password: string) => Promise<void>;
+  perms: PermissionChecker;
 }
 
 const authContext = React.createContext<AuthContextType | undefined>(undefined);
@@ -28,9 +28,7 @@ export const ProvideAuth = ({ children }: React.PropsWithChildren) => {
 
   const { data: currentUser } = useCurrentUserQuery(
     {},
-    {
-      onSettled: () => setIsLoading(false),
-    },
+    { onSettled: () => setIsLoading(false) },
   );
 
   const user = currentUser?.getCurrentUser || null;
@@ -61,9 +59,19 @@ export const ProvideAuth = ({ children }: React.PropsWithChildren) => {
     router.push('/');
   }, [router, doSignOut]);
 
-  const context = { isLoading, user, couple, signIn, signOut };
+  const perms = React.useMemo(() => {
+    const perms = user?.permissionByUGroup || defaultPermissions;
+    latestUser = user;
+    latestPerms = new PermissionChecker(user?.id || '0', perms);
+    return latestPerms;
+  }, [user]);
+
+  const context = { isLoading, user, couple, signIn, signOut, perms };
   return <authContext.Provider value={context}>{children}</authContext.Provider>;
 };
+
+export let latestUser: UserAuthFragment | null = null;
+export let latestPerms: PermissionChecker | undefined;
 
 export const useAuth = () => {
   const auth = React.useContext(authContext);

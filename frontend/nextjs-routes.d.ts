@@ -51,6 +51,7 @@ declare module "nextjs-routes" {
     | StaticRoute<"/admin/users/add">
     | StaticRoute<"/admin/users">
     | StaticRoute<"/admin/users/unconfirmed">
+    | DynamicRoute<"/articles/[id]/[...slug]", { "id": string; "slug": string[] }>
     | DynamicRoute<"/articles/[id]", { "id": string }>
     | StaticRoute<"/articles">
     | StaticRoute<"/contact">
@@ -72,6 +73,7 @@ declare module "nextjs-routes" {
     | StaticRoute<"/prijdtancit">
     | StaticRoute<"/profile">
     | DynamicRoute<"/programy/[id]/[...slug]", { "id": string; "slug": string[] }>
+    | DynamicRoute<"/programy/[id]", { "id": string }>
     | StaticRoute<"/register">
     | StaticRoute<"/schedule">
     | StaticRoute<"/skolni-krouzky">

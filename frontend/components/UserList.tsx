@@ -8,15 +8,14 @@ import { TextField } from './TextField';
 import React from 'react';
 import { FuzzyList } from './FuzzyList';
 import { exportMSMT } from 'lib/export-msmt';
+import { fromSlugArray } from 'lib/slugify';
 
 export const UserList = () => {
   const router = useRouter();
-  const { id } = router.query;
-  const active = id ? (id as string) : null;
-
   const { data } = useUserListQuery();
   const { data: roles } = useRoleListQuery();
   const { data: cohorts } = useCohortListQuery();
+  const id = fromSlugArray(router.query.id);
 
   const nodes = React.useMemo(() => {
     return (data?.users?.nodes || []).map((item) => ({
@@ -79,7 +78,7 @@ export const UserList = () => {
             <List.Item
               key={item.id}
               className="pl-6"
-              active={active === item.id}
+              active={id === item.id}
               href={{ pathname: '/admin/users/[id]', query: { id: item.id } }}
               title={item.name}
               subtitle={item.yearOfBirth + ', ' + item.role}

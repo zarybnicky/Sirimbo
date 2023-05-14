@@ -2,9 +2,9 @@ import * as React from 'react';
 import { LocationCard } from 'components/cards/LocationCard';
 import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
-import { Layout } from 'components/layout/Layout';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function LocationsPage() {
+const Page: NextPageWithLayout = () => {
   return (
     <>
       <Heading>Kde trénujeme</Heading>
@@ -51,6 +51,6 @@ export default function LocationsPage() {
   );
 }
 
-LocationsPage.getLayout = (page: React.ReactElement) => (
-  <Layout showTopMenu>{page}</Layout>
-);
+Page.showTopMenu = true;
+
+export default Page;

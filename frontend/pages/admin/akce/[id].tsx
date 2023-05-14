@@ -7,14 +7,15 @@ import {
   PermissionLevel,
 } from 'lib/data/use-server-permissions';
 import { EventList } from 'components/EventList';
-import { Layout } from 'components/layout/Layout';
 import { Item } from 'components/layout/Item';
 import { DeleteButton } from 'components/DeleteButton';
+import { type NextPageWithLayout } from 'pages/_app';
+import { fromSlugArray } from 'lib/slugify';
 
-export default function EventEditPage() {
+const Page: NextPageWithLayout = () => {
   const router = useRouter();
-  const { id } = router.query;
-  const { data } = useEventQuery({ id: id as string }, { enabled: !!id, cacheTime: 0 });
+  const id = fromSlugArray(router.query.id);
+  const { data } = useEventQuery({ id }, { enabled: !!id, cacheTime: 0 });
   const { mutateAsync: doDelete } = useDeleteEventMutation({
     onSuccess: () => router.push('/admin/akce'),
   });
@@ -22,7 +23,7 @@ export default function EventEditPage() {
     <Item>
       <Item.Titlebar backHref="/admin/users" title={data?.event?.name || '(Bez názvu)'}>
         <DeleteButton
-          onDelete={() => doDelete({ id: id as string })}
+          onDelete={() => doDelete({ id })}
           title="smazat uživatele"
         />
       </Item.Titlebar>
@@ -31,11 +32,10 @@ export default function EventEditPage() {
   );
 }
 
-EventEditPage.getLayout = (page: React.ReactElement) => (
-  <Layout list={<EventList />} isDetail>
-    {page}
-  </Layout>
-);
+Page.list = <EventList />;
+Page.isDetail = true;
+
+export default Page;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peAkce,

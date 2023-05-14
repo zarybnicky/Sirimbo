@@ -1,9 +1,9 @@
 import { Item } from 'components/layout/Item';
-import { Layout } from 'components/layout/Layout';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function ErrorPage() {
+const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const errorCode = router.query.id;
 
@@ -81,4 +81,6 @@ export default function ErrorPage() {
   );
 }
 
-ErrorPage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;
+Page.showTopMenu = true;
+
+export default Page;

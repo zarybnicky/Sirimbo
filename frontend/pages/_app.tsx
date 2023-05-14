@@ -7,7 +7,7 @@ import { ProvideAuth } from 'lib/data/use-auth';
 import { Hydrate, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
-import { Layout } from 'components/layout/Layout';
+import { Layout, type LayoutProps } from 'components/layout/Layout';
 import 'public/style/index.css';
 import { Tracking } from 'components/Tracking';
 import { ToastContainer } from 'react-toastify';
@@ -27,7 +27,7 @@ const ReactQueryDevtools = dynamic(
 
 const WithProviders = <T extends { dehydratedState?: object }>(
   children: React.ReactNode,
-  pageProps: AppProps<T>['pageProps'],
+  pageProps: T,
 ) => {
   const queryClientRef = React.useRef<QueryClient>();
   if (!queryClientRef.current) {
@@ -94,10 +94,7 @@ const WithProviders = <T extends { dehydratedState?: object }>(
   );
 };
 
-export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
-  getLayout?: (page: React.ReactElement) => React.ReactNode;
-  Layout?: React.FC<{ children?: React.ReactNode }>;
-};
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & Omit<LayoutProps, 'children'>;
 
 type AppPropsWithLayout<
   T extends { dehydratedState?: object } = { dehydratedState?: object },
@@ -105,19 +102,14 @@ type AppPropsWithLayout<
   Component: NextPageWithLayout<T>;
 };
 
-const defaultLayout = (page: React.ReactElement) => <Layout>{page}</Layout>;
-
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
-  if (Component.Layout) {
-    return WithProviders(
-      <Component.Layout>
-        <Component {...pageProps} />
-      </Component.Layout>,
-      pageProps,
-    );
-  }
-  const getLayout = Component.getLayout ?? defaultLayout;
-  return WithProviders(getLayout(<Component {...pageProps} />), pageProps);
+  const { isDetail, list, showTopMenu, hideTopMenuIfLoggedIn } = Component;
+  return WithProviders(
+    <Layout {...{ isDetail, list, showTopMenu, hideTopMenuIfLoggedIn }}>
+      <Component {...pageProps} />
+    </Layout>,
+    pageProps,
+  );
 }
 
 export function reportWebVitals({ id, name, label, value }: NextWebVitalsMetric) {

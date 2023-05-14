@@ -2,7 +2,6 @@ import { CohortForm } from 'components/CohortForm';
 import { DeleteButton } from 'components/DeleteButton';
 import { useCohortQuery, useDeleteCohortMutation } from 'lib/graphql/Cohorts';
 import { useRouter } from 'next/router';
-import { Layout } from 'components/layout/Layout';
 import { Item } from 'components/layout/Item';
 import { CohortsList } from 'components/CohortList';
 import {
@@ -10,11 +9,13 @@ import {
   PermissionKey,
   PermissionLevel,
 } from 'lib/data/use-server-permissions';
+import { fromSlugArray } from 'lib/slugify';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function CohortEditPage() {
+const Page: NextPageWithLayout = () => {
   const router = useRouter();
-  const { id } = router.query;
-  const { data } = useCohortQuery({ id: id as string }, { enabled: !!id, cacheTime: 0 });
+  const id = fromSlugArray(router.query.id);
+  const { data } = useCohortQuery({ id }, { enabled: !!id, cacheTime: 0 });
   const { mutateAsync: doDelete } = useDeleteCohortMutation({
     onSuccess: () => router.push('/admin/skupiny'),
   });
@@ -24,21 +25,17 @@ export default function CohortEditPage() {
         backHref="/admin/skupiny"
         title={data?.skupiny?.sName || '(Bez názvu)'}
       >
-        <DeleteButton
-          onDelete={() => doDelete({ id: id as string })}
-          title="smazat skupinu"
-        />
+        <DeleteButton onDelete={() => doDelete({ id })} title="smazat skupinu" />
       </Item.Titlebar>
       {data && <CohortForm data={data.skupiny || undefined} />}
     </Item>
   );
-}
+};
 
-CohortEditPage.getLayout = (page: React.ReactElement) => (
-  <Layout list={<CohortsList />} isDetail>
-    {page}
-  </Layout>
-);
+Page.list = <CohortsList />;
+Page.isDetail = true;
+
+export default Page;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peSkupiny,

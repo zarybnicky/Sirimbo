@@ -1,18 +1,16 @@
 import { EventList } from 'components/EventList';
-import { Layout } from 'components/layout/Layout';
 import {
   withServerPermissions,
   PermissionKey,
   PermissionLevel,
 } from 'lib/data/use-server-permissions';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function EventPage() {
-  return null;
-}
+const Page: NextPageWithLayout = () => null;
 
-EventPage.getLayout = (page: React.ReactElement) => (
-  <Layout list={<EventList />}>{page}</Layout>
-);
+Page.list = <EventList />;
+
+export default Page;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peAkce,

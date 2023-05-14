@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { usePermissions } from 'lib/data/use-permissions';
 import { MyReservationFragment } from 'lib/graphql/Reservation';
 import { Card } from 'components/Card';
 import { shortDateFormatter } from 'lib/format-date';
@@ -9,8 +8,7 @@ import { useAuth } from 'lib/data/use-auth';
 import { Reservation } from 'lib/entities';
 
 export const ReservationItem = ({ item }: { item: MyReservationFragment }) => {
-  const { couple } = useAuth();
-  const perms = usePermissions();
+  const { couple, perms} = useAuth();
 
   return (
     <Card

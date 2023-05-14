@@ -11,16 +11,14 @@ import {
 } from 'lib/data/use-server-permissions';
 import { Item } from 'components/layout/Item';
 import { DeleteButton } from 'components/DeleteButton';
-import { Layout } from 'components/layout/Layout';
 import { AnnouncementList } from 'components/AnnouncementList';
+import { fromSlugArray } from 'lib/slugify';
+import { NextPageWithLayout } from 'pages/_app';
 
-export default function AnnouncementEditPage() {
+const Page: NextPageWithLayout = () => {
   const router = useRouter();
-  const { id } = router.query;
-  const { data } = useAnnouncementQuery(
-    { id: id as string },
-    { enabled: !!id, cacheTime: 0 },
-  );
+  const id = fromSlugArray(router.query.id);
+  const { data } = useAnnouncementQuery({ id }, { enabled: !!id, cacheTime: 0 },);
   const { mutateAsync: doDelete } = useDeleteAnnouncementMutation({
     onSuccess: () => router.push('/admin/nastenka'),
   });
@@ -31,7 +29,7 @@ export default function AnnouncementEditPage() {
         title={data?.upozorneni?.upNadpis || '(Bez názvu)'}
       >
         <DeleteButton
-          onDelete={() => doDelete({ id: id as string })}
+          onDelete={() => doDelete({ id })}
           title="smazat příspěvek"
         />
       </Item.Titlebar>
@@ -40,11 +38,10 @@ export default function AnnouncementEditPage() {
   );
 }
 
-AnnouncementEditPage.getLayout = (page: React.ReactElement) => (
-  <Layout list={<AnnouncementList />} isDetail>
-    {page}
-  </Layout>
-);
+Page.list = <AnnouncementList />;
+Page.isDetail = true;
+
+export default Page;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peNastenka,

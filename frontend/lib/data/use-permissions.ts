@@ -95,12 +95,6 @@ export const permissionMarks = [
   { value: 4, realValue: PermissionLevel.P_ADMIN, label: 'správa všech' },
 ];
 
-export function usePermissions() {
-  const { user } = useAuth();
-  const perms = user?.permissionByUGroup || defaultPermissions;
-  return new PermissionChecker(user?.id || '0', perms);
-}
-
 export class PermissionChecker {
   constructor(
     public userId: string,

@@ -10,13 +10,13 @@ import {
 import { List } from 'components/layout/List';
 import { FuzzyList } from 'components/FuzzyList';
 import React from 'react';
+import { fromSlugArray } from 'lib/slugify';
 
 export default function PlatbyItemListPage() {
   const router = useRouter();
-  const { id } = router.query;
-  const active = id ? (id as string) : null;
   const { data } = usePaymentItemListQuery();
   const [search, setSearch] = React.useState('');
+  const id = fromSlugArray(router.query.id);
 
   return (
     <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>
@@ -29,8 +29,8 @@ export default function PlatbyItemListPage() {
         renderItem={(item) => (
           <List.Item
             key={item.id}
-            active={active === item.id}
-            href={{pathname: '/admin/platby/items/[id]', query: {id: item.id}}}
+            active={id === item.id}
+            href={{ pathname: '/admin/platby/items/[id]', query: { id: item.id } }}
             title={`${item.piAmount} ${
               item.platbyCategoryByPiIdCategory?.pcName
             } ${fullDateFormatter.format(new Date(item.piDate))} ${

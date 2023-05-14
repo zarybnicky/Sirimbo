@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Item } from 'components/layout/Item';
 import { useAuth } from 'lib/data/use-auth';
-import { Layout } from 'components/layout/Layout';
 import { EventMemberList } from 'components/EventMemberList';
 import classNames from 'classnames';
 import { Heading } from 'components/Heading';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function EventListPage() {
+const Page: NextPageWithLayout = () => {
   const { user } = useAuth();
   return (
     <>
@@ -19,7 +19,6 @@ export default function EventListPage() {
   );
 }
 
-EventListPage.Layout = function ThisLayout({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth();
-  return <Layout showTopMenu={!user}>{children}</Layout>;
-};
+Page.hideTopMenuIfLoggedIn = true;
+
+export default Page;

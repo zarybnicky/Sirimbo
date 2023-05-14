@@ -6,13 +6,13 @@ import { TextField } from 'components/TextField';
 import { FuzzyList } from 'components/FuzzyList';
 import { useEventListQuery } from 'lib/graphql/Event';
 import { fullDateFormatter } from 'lib/format-date';
+import { fromSlugArray } from 'lib/slugify';
 
 export const EventList = () => {
   const router = useRouter();
-  const { id } = router.query;
-  const active = id ? (id as string) : null;
   const [search, setSearch] = React.useState('');
   const { data } = useEventListQuery();
+  const id = fromSlugArray(router.query.id);
 
   return (
     <List>
@@ -42,7 +42,7 @@ export const EventList = () => {
           renderItem={(item) => (
             <List.Item
               key={item.id}
-              active={active === item.id}
+              active={id === item.id}
               href={{ pathname: '/admin/akce/[id]', query: { id: item.id } }}
               title={item.name}
               subtitle={fullDateFormatter.formatRange(

@@ -1,25 +1,17 @@
-import { useReservationListQuery } from 'lib/graphql/Reservation';
-import { Plus } from 'react-feather';
+import * as React from 'react';
+import { useArticlesQuery } from 'lib/graphql/Articles';
 import { useRouter } from 'next/router';
-import { List } from 'components/layout/List';
+import { Plus } from 'react-feather';
 import { fullDateFormatter } from 'lib/format-date';
-import React from 'react';
-import { FuzzyList } from './FuzzyList';
+import { List } from 'components/layout/List';
+import { FuzzyList } from 'components/FuzzyList';
 import { TextField } from './TextField';
 import { fromSlugArray } from 'lib/slugify';
 
-export function ReservationList() {
+export function ArticleList() {
   const router = useRouter();
   const [search, setSearch] = React.useState('');
-  const { data } = useReservationListQuery();
-  const nodes = React.useMemo(() => {
-    return (data?.nabidkas?.nodes || []).map((item) => ({
-      id: item.id,
-      date: fullDateFormatter.formatRange(new Date(item.nOd), new Date(item.nDo)),
-      trainer: item.userByNTrener?.fullName,
-    }));
-  }, [data]);
-
+  const { data, refetch } = useArticlesQuery();
   const id = fromSlugArray(router.query.id);
 
   return (
@@ -28,9 +20,9 @@ export function ReservationList() {
         <List.TitleButton
           active={router.asPath.endsWith('add')}
           icon={Plus}
-          href="/admin/nabidka/add"
+          href="/admin/aktuality/add"
         >
-          Nová nabídka
+          Nový článek
         </List.TitleButton>
 
         <TextField
@@ -43,15 +35,20 @@ export function ReservationList() {
       </List.TitleBar>
 
       <FuzzyList
-        data={nodes}
-        fields={['id', 'date', 'trainer']}
+        data={data?.aktualities?.nodes || []}
+        fields={['id', 'atJmeno']}
         search={search}
         renderItem={(item) => (
           <List.Item
             key={item.id}
             active={id === item.id}
-            href={{pathname: '/admin/nabidka/[id]', query: {id: item.id}}}
-            title={`${item.date} ${item.trainer}`}
+            href={{ pathname: '/admin/aktuality/[id]', query: { id: item.id } }}
+            title={item.atJmeno}
+            subtitle={
+              item.atTimestampAdd
+                ? fullDateFormatter.format(new Date(item.atTimestampAdd))
+                : ''
+            }
           />
         )}
       />

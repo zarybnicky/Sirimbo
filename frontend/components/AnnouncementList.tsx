@@ -6,6 +6,7 @@ import { fullDateFormatter } from 'lib/format-date';
 import React from 'react';
 import { Pagination } from './Pagination';
 import { CohortColorBoxes } from './CohortColorBox';
+import { fromSlugArray } from 'lib/slugify';
 
 export function AnnouncementList() {
   const router = useRouter();
@@ -13,8 +14,7 @@ export function AnnouncementList() {
   const [page, setPage] = React.useState(1);
   const { data } = useAnnouncementListQuery({ limit, offset: (page - 1) * limit });
 
-  const { id } = router.query;
-  const active = id ? (id as string) : null;
+  const id = fromSlugArray(router.query.id);
   const total = data?.upozornenis?.totalCount || 0;
 
   return (
@@ -33,7 +33,7 @@ export function AnnouncementList() {
         {data?.upozornenis?.nodes?.map((item) => (
           <List.Item
             key={item.id}
-            active={active === item.id}
+            active={id === item.id}
             href={{ pathname: '/admin/nastenka/[id]', query: { id: item.id } }}
             title={item.upNadpis}
             subtitle={

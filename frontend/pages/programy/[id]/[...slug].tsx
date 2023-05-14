@@ -1,17 +1,17 @@
 import { Card } from 'components/Card';
 import { Heading } from 'components/Heading';
 import { Item } from 'components/layout/Item';
-import { Layout } from 'components/layout/Layout';
 import { RichTextView } from 'components/RichTextView';
 import { CohortGroupFragment, useCohortGroupQuery } from 'lib/graphql/CohortGroup';
 import { fromSlugArray, slugify } from 'lib/slugify';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import { type NextPageWithLayout } from 'pages/_app';
 
 type PageProps = {
   item: CohortGroupFragment;
 };
 
-export default function CohortGroupPage({ item }: PageProps) {
+const Page: NextPageWithLayout<PageProps> = ({ item }) => {
   return (
     <>
       <Heading>{item.name}</Heading>
@@ -29,17 +29,13 @@ export default function CohortGroupPage({ item }: PageProps) {
       </Item>
     </>
   );
-}
+};
 
-CohortGroupPage.getLayout = (page: React.ReactElement) => (
-  <Layout showTopMenu>{page}</Layout>
-);
+Page.showTopMenu = true;
 
-export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: [],
-  fallback: 'blocking',
-});
+export default Page;
 
+export const getStaticPaths = async () => ({ paths: [], fallback: 'blocking' });
 export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
   const id = fromSlugArray(context.params?.id) || fromSlugArray(context.params?.slug);
   const query = await useCohortGroupQuery

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
-import { Layout } from 'components/layout/Layout';
 import { Heading } from 'components/Heading';
+import { type NextPageWithLayout } from 'pages/_app';
 
 type TrainerCardProps = {
   image?: string;
@@ -27,7 +27,7 @@ export function TrainerCard(props: TrainerCardProps) {
   );
 }
 
-export default function AboutPage() {
+const Page: NextPageWithLayout = () => {
   return (
     <>
       <Heading>Naši trenéři</Heading>
@@ -74,7 +74,9 @@ export default function AboutPage() {
   );
 }
 
-AboutPage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;
+Page.showTopMenu = true;
+
+export default Page;
 
 const mirek: TrainerCardProps = {
   name: 'Mgr. Miroslav Hýža',

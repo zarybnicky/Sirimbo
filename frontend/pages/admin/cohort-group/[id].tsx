@@ -6,7 +6,6 @@ import {
   useDeleteCohortGroupMutation,
 } from 'lib/graphql/CohortGroup';
 import { useRouter } from 'next/router';
-import { Layout } from 'components/layout/Layout';
 import { Item } from 'components/layout/Item';
 import { CohortGroupList } from 'components/CohortGroupList';
 import {
@@ -15,17 +14,15 @@ import {
   PermissionLevel,
 } from 'lib/data/use-server-permissions';
 import { useQueryClient } from '@tanstack/react-query';
-import { SelectElement } from 'components/SelectElement';
 import { CohortListForm } from 'components/CohortListForm';
+import { type NextPageWithLayout } from 'pages/_app';
+import { fromSlugArray } from 'lib/slugify';
 
-export default function CohortGroupEditPage() {
+const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { id } = router.query;
-  const { data } = useCohortGroupQuery(
-    { id: id as string },
-    { enabled: !!id, cacheTime: 0 },
-  );
+  const id = fromSlugArray(router.query.id);
+  const { data } = useCohortGroupQuery({ id }, { enabled: !!id, cacheTime: 0 });
   const { mutateAsync: doDelete } = useDeleteCohortGroupMutation({
     onSuccess() {
       router.push('/admin/cohort-group');
@@ -39,7 +36,7 @@ export default function CohortGroupEditPage() {
         title={data?.cohortGroup?.name || '(Bez názvu)'}
       >
         <DeleteButton
-          onDelete={() => doDelete({ id: id as string })}
+          onDelete={() => doDelete({ id })}
           title="smazat tréninkový program"
         />
       </Item.Titlebar>
@@ -49,11 +46,10 @@ export default function CohortGroupEditPage() {
   );
 }
 
-CohortGroupEditPage.getLayout = (page: React.ReactElement) => (
-  <Layout list={<CohortGroupList />} isDetail>
-    {page}
-  </Layout>
-);
+Page.list = <CohortGroupList />;
+Page.isDetail = true;
+
+export default Page;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peSkupiny,

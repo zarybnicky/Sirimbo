@@ -2,12 +2,12 @@ import { useCohortGroupListQuery } from 'lib/graphql/CohortGroup';
 import { Plus } from 'react-feather';
 import { useRouter } from 'next/router';
 import { List } from 'components/layout/List';
+import { fromSlugArray } from 'lib/slugify';
 
 export function CohortGroupList() {
   const router = useRouter();
-  const { id } = router.query;
   const { data } = useCohortGroupListQuery();
-  const active = id ? (id as string) : null;
+  const id = fromSlugArray(router.query.id);
 
   return (
     <List>
@@ -25,7 +25,7 @@ export function CohortGroupList() {
         {data?.cohortGroups?.nodes?.map((item) => (
           <List.Item
             key={item.id}
-            active={active === item.id}
+            active={id === item.id}
             href={{ pathname: '/admin/cohort-group/[id]', query: { id: item.id } }}
             title={item.name}
             className="pl-6"

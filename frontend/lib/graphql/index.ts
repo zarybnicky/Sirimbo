@@ -76,13 +76,13 @@ export type Akce = {
   aInfo: Maybe<Scalars['String']>;
   aJmeno: Maybe<Scalars['String']>;
   aKapacita: Maybe<Scalars['BigInt']>;
+  /** Reads and enables pagination through a set of `AkceItem`. */
+  akceItemsByAiIdRodic: AkceItemsConnection;
   aKde: Maybe<Scalars['String']>;
   aLock: Maybe<Scalars['Boolean']>;
   aOd: Maybe<Scalars['Date']>;
   aTimestamp: Maybe<Scalars['Datetime']>;
   aVisible: Maybe<Scalars['Boolean']>;
-  /** Reads and enables pagination through a set of `AkceItem`. */
-  akceItemsByAiIdRodic: AkceItemsConnection;
   enableNotes: Maybe<Scalars['Boolean']>;
   isPublic: Maybe<Scalars['Boolean']>;
   summary: Maybe<Scalars['String']>;
@@ -220,10 +220,10 @@ export type AkceItemsOrderBy =
   | 'AI_ROK_NAROZENI_DESC'
   | 'AI_USER_ASC'
   | 'AI_USER_DESC'
-  | 'AKCE_BY_AI_ID_RODIC__A_DOKUMENTY_ASC'
-  | 'AKCE_BY_AI_ID_RODIC__A_DOKUMENTY_DESC'
   | 'AKCE_BY_AI_ID_RODIC__A_DO_ASC'
   | 'AKCE_BY_AI_ID_RODIC__A_DO_DESC'
+  | 'AKCE_BY_AI_ID_RODIC__A_DOKUMENTY_ASC'
+  | 'AKCE_BY_AI_ID_RODIC__A_DOKUMENTY_DESC'
   | 'AKCE_BY_AI_ID_RODIC__A_ID_ASC'
   | 'AKCE_BY_AI_ID_RODIC__A_ID_DESC'
   | 'AKCE_BY_AI_ID_RODIC__A_INFO_ASC'
@@ -340,12 +340,10 @@ export type AkcesEdge = {
 
 /** Methods to use when ordering `Akce`. */
 export type AkcesOrderBy =
-  | 'AKCE_ITEMS_BY_AI_ID_RODIC__COUNT_ASC'
-  | 'AKCE_ITEMS_BY_AI_ID_RODIC__COUNT_DESC'
-  | 'A_DOKUMENTY_ASC'
-  | 'A_DOKUMENTY_DESC'
   | 'A_DO_ASC'
   | 'A_DO_DESC'
+  | 'A_DOKUMENTY_ASC'
+  | 'A_DOKUMENTY_DESC'
   | 'A_ID_ASC'
   | 'A_ID_DESC'
   | 'A_INFO_ASC'
@@ -364,6 +362,8 @@ export type AkcesOrderBy =
   | 'A_TIMESTAMP_DESC'
   | 'A_VISIBLE_ASC'
   | 'A_VISIBLE_DESC'
+  | 'AKCE_ITEMS_BY_AI_ID_RODIC__COUNT_ASC'
+  | 'AKCE_ITEMS_BY_AI_ID_RODIC__COUNT_DESC'
   | 'ENABLE_NOTES_ASC'
   | 'ENABLE_NOTES_DESC'
   | 'IS_PUBLIC_ASC'
@@ -8035,19 +8035,19 @@ export type Nabidka = Node & {
   __typename?: 'Nabidka';
   freeLessons: Maybe<Scalars['Int']>;
   myLessons: Maybe<Scalars['Int']>;
+  /** Reads and enables pagination through a set of `NabidkaItem`. */
+  nabidkaItemsByNiIdRodic: NabidkaItemsConnection;
   nDo: Scalars['Date'];
   nId: Scalars['BigInt'];
   nLock: Scalars['Boolean'];
   nMaxPocetHod: Scalars['Int'];
   nOd: Scalars['Date'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
   nPocetHod: Scalars['Int'];
   nTimestamp: Maybe<Scalars['Datetime']>;
   nTrener: Scalars['BigInt'];
   nVisible: Scalars['Boolean'];
-  /** Reads and enables pagination through a set of `NabidkaItem`. */
-  nabidkaItemsByNiIdRodic: NabidkaItemsConnection;
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   /** Reads a single `User` that is related to this `Nabidka`. */
   userByNTrener: Maybe<User>;
 };
@@ -8207,10 +8207,10 @@ export type NabidkaItemsOrderBy =
   | 'PARY_BY_NI_PARTNER__P_HODNOCENI_DESC'
   | 'PARY_BY_NI_PARTNER__P_ID_ASC'
   | 'PARY_BY_NI_PARTNER__P_ID_DESC'
-  | 'PARY_BY_NI_PARTNER__P_ID_PARTNERKA_ASC'
-  | 'PARY_BY_NI_PARTNER__P_ID_PARTNERKA_DESC'
   | 'PARY_BY_NI_PARTNER__P_ID_PARTNER_ASC'
   | 'PARY_BY_NI_PARTNER__P_ID_PARTNER_DESC'
+  | 'PARY_BY_NI_PARTNER__P_ID_PARTNERKA_ASC'
+  | 'PARY_BY_NI_PARTNER__P_ID_PARTNERKA_DESC'
   | 'PARY_BY_NI_PARTNER__P_LAT_BODY_ASC'
   | 'PARY_BY_NI_PARTNER__P_LAT_BODY_DESC'
   | 'PARY_BY_NI_PARTNER__P_LAT_FINALE_ASC'
@@ -8267,9 +8267,6 @@ export type NabidkasEdge = {
 
 /** Methods to use when ordering `Nabidka`. */
 export type NabidkasOrderBy =
-  | 'NABIDKA_ITEMS_BY_NI_ID_RODIC__COUNT_ASC'
-  | 'NABIDKA_ITEMS_BY_NI_ID_RODIC__COUNT_DESC'
-  | 'NATURAL'
   | 'N_DO_ASC'
   | 'N_DO_DESC'
   | 'N_ID_ASC'
@@ -8288,6 +8285,9 @@ export type NabidkasOrderBy =
   | 'N_TRENER_DESC'
   | 'N_VISIBLE_ASC'
   | 'N_VISIBLE_DESC'
+  | 'NABIDKA_ITEMS_BY_NI_ID_RODIC__COUNT_ASC'
+  | 'NABIDKA_ITEMS_BY_NI_ID_RODIC__COUNT_DESC'
+  | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
   | 'USER_BY_N_TRENER__U_BAN_ASC'
@@ -8638,18 +8638,16 @@ export type PariesOrderBy =
   | 'NABIDKA_ITEMS_BY_NI_PARTNER__COUNT_ASC'
   | 'NABIDKA_ITEMS_BY_NI_PARTNER__COUNT_DESC'
   | 'NATURAL'
-  | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC'
   | 'P_ARCHIV_ASC'
   | 'P_ARCHIV_DESC'
   | 'P_HODNOCENI_ASC'
   | 'P_HODNOCENI_DESC'
   | 'P_ID_ASC'
   | 'P_ID_DESC'
-  | 'P_ID_PARTNERKA_ASC'
-  | 'P_ID_PARTNERKA_DESC'
   | 'P_ID_PARTNER_ASC'
   | 'P_ID_PARTNER_DESC'
+  | 'P_ID_PARTNERKA_ASC'
+  | 'P_ID_PARTNERKA_DESC'
   | 'P_LAT_BODY_ASC'
   | 'P_LAT_BODY_DESC'
   | 'P_LAT_FINALE_ASC'
@@ -8666,72 +8664,10 @@ export type PariesOrderBy =
   | 'P_TIMESTAMP_ADD_DESC'
   | 'P_TIMESTAMP_ARCHIVE_ASC'
   | 'P_TIMESTAMP_ARCHIVE_DESC'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
   | 'ROZPIS_ITEMS_BY_RI_PARTNER__COUNT_ASC'
   | 'ROZPIS_ITEMS_BY_RI_PARTNER__COUNT_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_BAN_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_BAN_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_CITY_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_CITY_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_CONFIRMED_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_CONFIRMED_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_CONSCRIPTION_NUMBER_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_CONSCRIPTION_NUMBER_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_CREATED_AT_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_CREATED_AT_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_DANCER_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_DANCER_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_DISTRICT_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_DISTRICT_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_EMAIL_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_EMAIL_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_GDPR_SIGNED_AT_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_GDPR_SIGNED_AT_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_GROUP_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_GROUP_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_ID_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_ID_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_JMENO_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_JMENO_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_LEVEL_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_LEVEL_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_LOCK_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_LOCK_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_LOGIN_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_LOGIN_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_MEMBER_SINCE_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_MEMBER_SINCE_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_MEMBER_UNTIL_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_MEMBER_UNTIL_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_NAROZENI_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_NAROZENI_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_NATIONALITY_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_NATIONALITY_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_ORIENTATION_NUMBER_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_ORIENTATION_NUMBER_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_PASS_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_PASS_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_POHLAVI_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_POHLAVI_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_POSTAL_CODE_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_POSTAL_CODE_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_POZNAMKY_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_POZNAMKY_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_PRIJMENI_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_PRIJMENI_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_RODNE_CISLO_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_RODNE_CISLO_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_SKUPINA_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_SKUPINA_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_STREET_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_STREET_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_SYSTEM_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_SYSTEM_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_TEACHER_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_TEACHER_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_TELEFON_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_TELEFON_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_TIMESTAMP_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_TIMESTAMP_DESC'
   | 'USER_BY_P_ID_PARTNER__U_BAN_ASC'
   | 'USER_BY_P_ID_PARTNER__U_BAN_DESC'
   | 'USER_BY_P_ID_PARTNER__U_CITY_ASC'
@@ -8795,7 +8731,71 @@ export type PariesOrderBy =
   | 'USER_BY_P_ID_PARTNER__U_TELEFON_ASC'
   | 'USER_BY_P_ID_PARTNER__U_TELEFON_DESC'
   | 'USER_BY_P_ID_PARTNER__U_TIMESTAMP_ASC'
-  | 'USER_BY_P_ID_PARTNER__U_TIMESTAMP_DESC';
+  | 'USER_BY_P_ID_PARTNER__U_TIMESTAMP_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_BAN_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_BAN_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_CITY_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_CITY_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_CONFIRMED_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_CONFIRMED_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_CONSCRIPTION_NUMBER_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_CONSCRIPTION_NUMBER_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_CREATED_AT_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_CREATED_AT_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_DANCER_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_DANCER_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_DISTRICT_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_DISTRICT_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_EMAIL_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_EMAIL_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_GDPR_SIGNED_AT_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_GDPR_SIGNED_AT_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_GROUP_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_GROUP_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_ID_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_ID_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_JMENO_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_JMENO_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_LEVEL_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_LEVEL_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_LOCK_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_LOCK_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_LOGIN_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_LOGIN_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_MEMBER_SINCE_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_MEMBER_SINCE_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_MEMBER_UNTIL_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_MEMBER_UNTIL_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_NAROZENI_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_NAROZENI_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_NATIONALITY_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_NATIONALITY_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_ORIENTATION_NUMBER_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_ORIENTATION_NUMBER_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_PASS_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_PASS_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_POHLAVI_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_POHLAVI_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_POSTAL_CODE_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_POSTAL_CODE_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_POZNAMKY_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_POZNAMKY_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_PRIJMENI_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_PRIJMENI_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_RODNE_CISLO_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_RODNE_CISLO_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_SKUPINA_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_SKUPINA_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_STREET_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_STREET_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_SYSTEM_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_SYSTEM_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_TEACHER_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_TEACHER_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_TELEFON_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_TELEFON_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_TIMESTAMP_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_TIMESTAMP_DESC';
 
 export type Pary = Node & {
   __typename?: 'Pary';
@@ -8969,10 +8969,10 @@ export type ParyNavrhsOrderBy =
   | 'PN_ID_DESC'
   | 'PN_NAVRHL_ASC'
   | 'PN_NAVRHL_DESC'
-  | 'PN_PARTNERKA_ASC'
-  | 'PN_PARTNERKA_DESC'
   | 'PN_PARTNER_ASC'
   | 'PN_PARTNER_DESC'
+  | 'PN_PARTNERKA_ASC'
+  | 'PN_PARTNERKA_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
   | 'USER_BY_PN_NAVRHL__U_BAN_ASC'
@@ -9039,70 +9039,6 @@ export type ParyNavrhsOrderBy =
   | 'USER_BY_PN_NAVRHL__U_TELEFON_DESC'
   | 'USER_BY_PN_NAVRHL__U_TIMESTAMP_ASC'
   | 'USER_BY_PN_NAVRHL__U_TIMESTAMP_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_BAN_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_BAN_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_CITY_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_CITY_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_CONFIRMED_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_CONFIRMED_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_CONSCRIPTION_NUMBER_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_CONSCRIPTION_NUMBER_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_CREATED_AT_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_CREATED_AT_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_DANCER_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_DANCER_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_DISTRICT_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_DISTRICT_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_EMAIL_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_EMAIL_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_GDPR_SIGNED_AT_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_GDPR_SIGNED_AT_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_GROUP_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_GROUP_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_ID_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_ID_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_JMENO_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_JMENO_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_LEVEL_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_LEVEL_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_LOCK_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_LOCK_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_LOGIN_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_LOGIN_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_MEMBER_SINCE_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_MEMBER_SINCE_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_MEMBER_UNTIL_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_MEMBER_UNTIL_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_NAROZENI_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_NAROZENI_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_NATIONALITY_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_NATIONALITY_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_ORIENTATION_NUMBER_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_ORIENTATION_NUMBER_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_PASS_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_PASS_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_POHLAVI_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_POHLAVI_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_POSTAL_CODE_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_POSTAL_CODE_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_POZNAMKY_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_POZNAMKY_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_PRIJMENI_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_PRIJMENI_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_RODNE_CISLO_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_RODNE_CISLO_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_SKUPINA_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_SKUPINA_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_STREET_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_STREET_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_SYSTEM_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_SYSTEM_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_TEACHER_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_TEACHER_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_TELEFON_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_TELEFON_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_TIMESTAMP_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_TIMESTAMP_DESC'
   | 'USER_BY_PN_PARTNER__U_BAN_ASC'
   | 'USER_BY_PN_PARTNER__U_BAN_DESC'
   | 'USER_BY_PN_PARTNER__U_CITY_ASC'
@@ -9166,7 +9102,88 @@ export type ParyNavrhsOrderBy =
   | 'USER_BY_PN_PARTNER__U_TELEFON_ASC'
   | 'USER_BY_PN_PARTNER__U_TELEFON_DESC'
   | 'USER_BY_PN_PARTNER__U_TIMESTAMP_ASC'
-  | 'USER_BY_PN_PARTNER__U_TIMESTAMP_DESC';
+  | 'USER_BY_PN_PARTNER__U_TIMESTAMP_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_BAN_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_BAN_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_CITY_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_CITY_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_CONFIRMED_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_CONFIRMED_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_CONSCRIPTION_NUMBER_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_CONSCRIPTION_NUMBER_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_CREATED_AT_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_CREATED_AT_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_DANCER_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_DANCER_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_DISTRICT_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_DISTRICT_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_EMAIL_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_EMAIL_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_GDPR_SIGNED_AT_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_GDPR_SIGNED_AT_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_GROUP_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_GROUP_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_ID_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_ID_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_JMENO_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_JMENO_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_LEVEL_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_LEVEL_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_LOCK_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_LOCK_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_LOGIN_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_LOGIN_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_MEMBER_SINCE_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_MEMBER_SINCE_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_MEMBER_UNTIL_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_MEMBER_UNTIL_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_NAROZENI_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_NAROZENI_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_NATIONALITY_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_NATIONALITY_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_ORIENTATION_NUMBER_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_ORIENTATION_NUMBER_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_PASS_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_PASS_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_POHLAVI_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_POHLAVI_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_POSTAL_CODE_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_POSTAL_CODE_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_POZNAMKY_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_POZNAMKY_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_PRIJMENI_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_PRIJMENI_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_RODNE_CISLO_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_RODNE_CISLO_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_SKUPINA_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_SKUPINA_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_STREET_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_STREET_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_SYSTEM_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_SYSTEM_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_TEACHER_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_TEACHER_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_TELEFON_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_TELEFON_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_TIMESTAMP_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_TIMESTAMP_DESC';
+
+/** Represents an update to a `Pary`. Fields that are set will be updated. */
+export type ParyPatch = {
+  pArchiv?: InputMaybe<Scalars['Boolean']>;
+  pHodnoceni?: InputMaybe<Scalars['Int']>;
+  pId?: InputMaybe<Scalars['BigInt']>;
+  pIdPartner?: InputMaybe<Scalars['BigInt']>;
+  pIdPartnerka?: InputMaybe<Scalars['BigInt']>;
+  pLatBody?: InputMaybe<Scalars['Int']>;
+  pLatFinale?: InputMaybe<Scalars['Boolean']>;
+  pLatTrida?: InputMaybe<ParyPLatTrida>;
+  pSttBody?: InputMaybe<Scalars['Int']>;
+  pSttFinale?: InputMaybe<Scalars['Boolean']>;
+  pSttTrida?: InputMaybe<ParyPSttTrida>;
+  pTimestampAdd?: InputMaybe<Scalars['Datetime']>;
+  pTimestampArchive?: InputMaybe<Scalars['Datetime']>;
+};
 
 export type ParyPLatTrida =
   | 'A'
@@ -9185,23 +9202,6 @@ export type ParyPSttTrida =
   | 'H'
   | 'M'
   | 'Z';
-
-/** Represents an update to a `Pary`. Fields that are set will be updated. */
-export type ParyPatch = {
-  pArchiv?: InputMaybe<Scalars['Boolean']>;
-  pHodnoceni?: InputMaybe<Scalars['Int']>;
-  pId?: InputMaybe<Scalars['BigInt']>;
-  pIdPartner?: InputMaybe<Scalars['BigInt']>;
-  pIdPartnerka?: InputMaybe<Scalars['BigInt']>;
-  pLatBody?: InputMaybe<Scalars['Int']>;
-  pLatFinale?: InputMaybe<Scalars['Boolean']>;
-  pLatTrida?: InputMaybe<ParyPLatTrida>;
-  pSttBody?: InputMaybe<Scalars['Int']>;
-  pSttFinale?: InputMaybe<Scalars['Boolean']>;
-  pSttTrida?: InputMaybe<ParyPSttTrida>;
-  pTimestampAdd?: InputMaybe<Scalars['Datetime']>;
-  pTimestampArchive?: InputMaybe<Scalars['Datetime']>;
-};
 
 /** A connection to a list of `Person` values. */
 export type PeopleConnection = {
@@ -9830,6 +9830,28 @@ export type PlatbyGroupPatch = {
   pgType?: InputMaybe<Scalars['BigFloat']>;
 };
 
+/** A connection to a list of `PlatbyGroup` values. */
+export type PlatbyGroupsConnection = {
+  __typename?: 'PlatbyGroupsConnection';
+  /** A list of edges which contains the `PlatbyGroup` and cursor to aid in pagination. */
+  edges: Array<PlatbyGroupsEdge>;
+  /** A list of `PlatbyGroup` objects. */
+  nodes: Array<PlatbyGroup>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `PlatbyGroup` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `PlatbyGroup` edge in the connection. */
+export type PlatbyGroupsEdge = {
+  __typename?: 'PlatbyGroupsEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']>;
+  /** The `PlatbyGroup` at the end of the edge. */
+  node: PlatbyGroup;
+};
+
 export type PlatbyGroupSkupina = Node & {
   __typename?: 'PlatbyGroupSkupina';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -9933,28 +9955,6 @@ export type PlatbyGroupSkupinasOrderBy =
   | 'SKUPINY_BY_PGS_ID_SKUPINA__S_NAME_DESC'
   | 'SKUPINY_BY_PGS_ID_SKUPINA__S_VISIBLE_ASC'
   | 'SKUPINY_BY_PGS_ID_SKUPINA__S_VISIBLE_DESC';
-
-/** A connection to a list of `PlatbyGroup` values. */
-export type PlatbyGroupsConnection = {
-  __typename?: 'PlatbyGroupsConnection';
-  /** A list of edges which contains the `PlatbyGroup` and cursor to aid in pagination. */
-  edges: Array<PlatbyGroupsEdge>;
-  /** A list of `PlatbyGroup` objects. */
-  nodes: Array<PlatbyGroup>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `PlatbyGroup` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `PlatbyGroup` edge in the connection. */
-export type PlatbyGroupsEdge = {
-  __typename?: 'PlatbyGroupsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
-  /** The `PlatbyGroup` at the end of the edge. */
-  node: PlatbyGroup;
-};
 
 /** Methods to use when ordering `PlatbyGroup`. */
 export type PlatbyGroupsOrderBy =
@@ -10262,8 +10262,6 @@ export type PlatbyRawsOrderBy =
   | 'NATURAL'
   | 'PLATBY_ITEMS_BY_PI_ID_RAW__COUNT_ASC'
   | 'PLATBY_ITEMS_BY_PI_ID_RAW__COUNT_DESC'
-  | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC'
   | 'PR_DISCARDED_ASC'
   | 'PR_DISCARDED_DESC'
   | 'PR_HASH_ASC'
@@ -10273,7 +10271,9 @@ export type PlatbyRawsOrderBy =
   | 'PR_RAW_ASC'
   | 'PR_RAW_DESC'
   | 'PR_SORTED_ASC'
-  | 'PR_SORTED_DESC';
+  | 'PR_SORTED_DESC'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC';
 
 export type ProspectDatum = {
   __typename?: 'ProspectDatum';
@@ -10468,13 +10468,13 @@ export type Query = Node & {
   platbyGroup: Maybe<PlatbyGroup>;
   /** Reads a single `PlatbyGroup` using its globally unique `ID`. */
   platbyGroupByNodeId: Maybe<PlatbyGroup>;
+  /** Reads and enables pagination through a set of `PlatbyGroup`. */
+  platbyGroups: Maybe<PlatbyGroupsConnection>;
   platbyGroupSkupina: Maybe<PlatbyGroupSkupina>;
   /** Reads a single `PlatbyGroupSkupina` using its globally unique `ID`. */
   platbyGroupSkupinaByNodeId: Maybe<PlatbyGroupSkupina>;
   /** Reads and enables pagination through a set of `PlatbyGroupSkupina`. */
   platbyGroupSkupinas: Maybe<PlatbyGroupSkupinasConnection>;
-  /** Reads and enables pagination through a set of `PlatbyGroup`. */
-  platbyGroups: Maybe<PlatbyGroupsConnection>;
   platbyItem: Maybe<PlatbyItem>;
   /** Reads a single `PlatbyItem` using its globally unique `ID`. */
   platbyItemByNodeId: Maybe<PlatbyItem>;
@@ -10546,13 +10546,13 @@ export type Query = Node & {
   upozorneni: Maybe<Upozorneni>;
   /** Reads a single `Upozorneni` using its globally unique `ID`. */
   upozorneniByNodeId: Maybe<Upozorneni>;
+  /** Reads and enables pagination through a set of `Upozorneni`. */
+  upozornenis: Maybe<UpozornenisConnection>;
   /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
   upozorneniSkupinies: Maybe<UpozorneniSkupiniesConnection>;
   upozorneniSkupiny: Maybe<UpozorneniSkupiny>;
   /** Reads a single `UpozorneniSkupiny` using its globally unique `ID`. */
   upozorneniSkupinyByNodeId: Maybe<UpozorneniSkupiny>;
-  /** Reads and enables pagination through a set of `Upozorneni`. */
-  upozornenis: Maybe<UpozornenisConnection>;
   user: Maybe<User>;
   /** Reads a single `User` using its globally unique `ID`. */
   userByNodeId: Maybe<User>;
@@ -10566,13 +10566,13 @@ export type Query = Node & {
   videoListByNodeId: Maybe<VideoList>;
   /** Reads and enables pagination through a set of `VideoList`. */
   videoLists: Maybe<VideoListsConnection>;
+  /** Reads and enables pagination through a set of `Video`. */
+  videos: Maybe<VideosConnection>;
   videoSource: Maybe<VideoSource>;
   /** Reads a single `VideoSource` using its globally unique `ID`. */
   videoSourceByNodeId: Maybe<VideoSource>;
   /** Reads and enables pagination through a set of `VideoSource`. */
   videoSources: Maybe<VideoSourcesConnection>;
-  /** Reads and enables pagination through a set of `Video`. */
-  videos: Maybe<VideosConnection>;
 };
 
 
@@ -11267,6 +11267,18 @@ export type QueryPlatbyGroupByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryPlatbyGroupsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<PlatbyGroupCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PlatbyGroupsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryPlatbyGroupSkupinaArgs = {
   pgsId: Scalars['BigInt'];
 };
@@ -11287,18 +11299,6 @@ export type QueryPlatbyGroupSkupinasArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<PlatbyGroupSkupinasOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryPlatbyGroupsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<PlatbyGroupCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<PlatbyGroupsOrderBy>>;
 };
 
 
@@ -11626,6 +11626,18 @@ export type QueryUpozorneniByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryUpozornenisArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<UpozorneniCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryUpozorneniSkupiniesArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -11646,18 +11658,6 @@ export type QueryUpozorneniSkupinyArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryUpozorneniSkupinyByNodeIdArgs = {
   nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryUpozornenisArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<UpozorneniCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
 };
 
 
@@ -11722,6 +11722,18 @@ export type QueryVideoListsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryVideosArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<VideoCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<VideosOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryVideoSourceArgs = {
   vsId: Scalars['BigInt'];
 };
@@ -11742,18 +11754,6 @@ export type QueryVideoSourcesArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<VideoSourcesOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryVideosArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<VideoCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<VideosOrderBy>>;
 };
 
 /** All input for the `reservationSetDesiredLessons` mutation. */
@@ -12003,11 +12003,11 @@ export type Rozpi = Node & {
   rId: Scalars['BigInt'];
   rKde: Scalars['String'];
   rLock: Scalars['Boolean'];
+  /** Reads and enables pagination through a set of `RozpisItem`. */
+  rozpisItemsByRiIdRodic: RozpisItemsConnection;
   rTimestamp: Maybe<Scalars['Datetime']>;
   rTrener: Scalars['BigInt'];
   rVisible: Scalars['Boolean'];
-  /** Reads and enables pagination through a set of `RozpisItem`. */
-  rozpisItemsByRiIdRodic: RozpisItemsConnection;
   /** Reads a single `User` that is related to this `Rozpi`. */
   userByRTrener: Maybe<User>;
 };
@@ -12171,10 +12171,10 @@ export type RozpisItemsOrderBy =
   | 'PARY_BY_RI_PARTNER__P_HODNOCENI_DESC'
   | 'PARY_BY_RI_PARTNER__P_ID_ASC'
   | 'PARY_BY_RI_PARTNER__P_ID_DESC'
-  | 'PARY_BY_RI_PARTNER__P_ID_PARTNERKA_ASC'
-  | 'PARY_BY_RI_PARTNER__P_ID_PARTNERKA_DESC'
   | 'PARY_BY_RI_PARTNER__P_ID_PARTNER_ASC'
   | 'PARY_BY_RI_PARTNER__P_ID_PARTNER_DESC'
+  | 'PARY_BY_RI_PARTNER__P_ID_PARTNERKA_ASC'
+  | 'PARY_BY_RI_PARTNER__P_ID_PARTNERKA_DESC'
   | 'PARY_BY_RI_PARTNER__P_LAT_BODY_ASC'
   | 'PARY_BY_RI_PARTNER__P_LAT_BODY_DESC'
   | 'PARY_BY_RI_PARTNER__P_LAT_FINALE_ASC'
@@ -12225,8 +12225,6 @@ export type RozpisOrderBy =
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
-  | 'ROZPIS_ITEMS_BY_RI_ID_RODIC__COUNT_ASC'
-  | 'ROZPIS_ITEMS_BY_RI_ID_RODIC__COUNT_DESC'
   | 'R_DATUM_ASC'
   | 'R_DATUM_DESC'
   | 'R_ID_ASC'
@@ -12241,6 +12239,8 @@ export type RozpisOrderBy =
   | 'R_TRENER_DESC'
   | 'R_VISIBLE_ASC'
   | 'R_VISIBLE_DESC'
+  | 'ROZPIS_ITEMS_BY_RI_ID_RODIC__COUNT_ASC'
+  | 'ROZPIS_ITEMS_BY_RI_ID_RODIC__COUNT_DESC'
   | 'USER_BY_R_TRENER__U_BAN_ASC'
   | 'USER_BY_R_TRENER__U_BAN_DESC'
   | 'USER_BY_R_TRENER__U_CITY_ASC'
@@ -12746,11 +12746,6 @@ export type TenantAttachmentPatch = {
   type?: InputMaybe<TenantAttachmentType>;
 };
 
-export type TenantAttachmentType =
-  | 'LOGO'
-  | 'MAP'
-  | 'PHOTO';
-
 /** A connection to a list of `TenantAttachment` values. */
 export type TenantAttachmentsConnection = {
   __typename?: 'TenantAttachmentsConnection';
@@ -12798,6 +12793,11 @@ export type TenantAttachmentsOrderBy =
   | 'TENANT_ID_DESC'
   | 'TYPE_ASC'
   | 'TYPE_DESC';
+
+export type TenantAttachmentType =
+  | 'LOGO'
+  | 'MAP'
+  | 'PHOTO';
 
 /** A condition to be used against `Tenant` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type TenantCondition = {
@@ -13793,9 +13793,9 @@ export type UpdateParyInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']>;
-  pId: Scalars['BigInt'];
   /** An object where the defined keys will be set on the `Pary` being updated. */
   patch: ParyPatch;
+  pId: Scalars['BigInt'];
 };
 
 /** All input for the `updateParyNavrhByNodeId` mutation. */
@@ -15026,11 +15026,11 @@ export type Upozorneni = Node & {
   upKdo: Maybe<Scalars['BigInt']>;
   upLock: Scalars['Boolean'];
   upNadpis: Scalars['String'];
+  /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
+  upozorneniSkupiniesByUpsIdRodic: UpozorneniSkupiniesConnection;
   upText: Scalars['String'];
   upTimestamp: Maybe<Scalars['Datetime']>;
   upTimestampAdd: Scalars['Datetime'];
-  /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
-  upozorneniSkupiniesByUpsIdRodic: UpozorneniSkupiniesConnection;
   /** Reads a single `User` that is related to this `Upozorneni`. */
   userByUpKdo: Maybe<User>;
 };
@@ -15099,6 +15099,28 @@ export type UpozorneniPatch = {
   upText?: InputMaybe<Scalars['String']>;
   upTimestamp?: InputMaybe<Scalars['Datetime']>;
   upTimestampAdd?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** A connection to a list of `Upozorneni` values. */
+export type UpozornenisConnection = {
+  __typename?: 'UpozornenisConnection';
+  /** A list of edges which contains the `Upozorneni` and cursor to aid in pagination. */
+  edges: Array<UpozornenisEdge>;
+  /** A list of `Upozorneni` objects. */
+  nodes: Array<Upozorneni>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Upozorneni` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Upozorneni` edge in the connection. */
+export type UpozornenisEdge = {
+  __typename?: 'UpozornenisEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']>;
+  /** The `Upozorneni` at the end of the edge. */
+  node: Upozorneni;
 };
 
 /** A connection to a list of `UpozorneniSkupiny` values. */
@@ -15229,28 +15251,6 @@ export type UpozorneniSkupinyPatch = {
   upsPopis?: InputMaybe<Scalars['String']>;
 };
 
-/** A connection to a list of `Upozorneni` values. */
-export type UpozornenisConnection = {
-  __typename?: 'UpozornenisConnection';
-  /** A list of edges which contains the `Upozorneni` and cursor to aid in pagination. */
-  edges: Array<UpozornenisEdge>;
-  /** A list of `Upozorneni` objects. */
-  nodes: Array<Upozorneni>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Upozorneni` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `Upozorneni` edge in the connection. */
-export type UpozornenisEdge = {
-  __typename?: 'UpozornenisEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
-  /** The `Upozorneni` at the end of the edge. */
-  node: Upozorneni;
-};
-
 /** Methods to use when ordering `Upozorneni`. */
 export type UpozornenisOrderBy =
   | 'NATURAL'
@@ -15260,8 +15260,6 @@ export type UpozornenisOrderBy =
   | 'SCHEDULED_SINCE_DESC'
   | 'SCHEDULED_UNTIL_ASC'
   | 'SCHEDULED_UNTIL_DESC'
-  | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_ASC'
-  | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_DESC'
   | 'UP_BARVY_ASC'
   | 'UP_BARVY_DESC'
   | 'UP_ID_ASC'
@@ -15278,6 +15276,8 @@ export type UpozornenisOrderBy =
   | 'UP_TIMESTAMP_ADD_DESC'
   | 'UP_TIMESTAMP_ASC'
   | 'UP_TIMESTAMP_DESC'
+  | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_ASC'
+  | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_DESC'
   | 'USER_BY_UP_KDO__U_BAN_ASC'
   | 'USER_BY_UP_KDO__U_BAN_DESC'
   | 'USER_BY_UP_KDO__U_CITY_ASC'
@@ -15410,6 +15410,8 @@ export type User = Node & {
   uPohlavi: Scalars['String'];
   uPostalCode: Scalars['String'];
   uPoznamky: Scalars['String'];
+  /** Reads and enables pagination through a set of `Upozorneni`. */
+  upozornenisByUpKdo: UpozornenisConnection;
   uPrijmeni: Scalars['String'];
   uRodneCislo: Maybe<Scalars['String']>;
   uSkupina: Scalars['BigInt'];
@@ -15418,8 +15420,6 @@ export type User = Node & {
   uTeacher: Scalars['Boolean'];
   uTelefon: Scalars['String'];
   uTimestamp: Scalars['Datetime'];
-  /** Reads and enables pagination through a set of `Upozorneni`. */
-  upozornenisByUpKdo: UpozornenisConnection;
 };
 
 
@@ -15803,16 +15803,16 @@ export type UsersOrderBy =
   | 'NABIDKAS_BY_N_TRENER__COUNT_ASC'
   | 'NABIDKAS_BY_N_TRENER__COUNT_DESC'
   | 'NATURAL'
-  | 'PARIES_BY_P_ID_PARTNERKA__COUNT_ASC'
-  | 'PARIES_BY_P_ID_PARTNERKA__COUNT_DESC'
   | 'PARIES_BY_P_ID_PARTNER__COUNT_ASC'
   | 'PARIES_BY_P_ID_PARTNER__COUNT_DESC'
+  | 'PARIES_BY_P_ID_PARTNERKA__COUNT_ASC'
+  | 'PARIES_BY_P_ID_PARTNERKA__COUNT_DESC'
   | 'PARY_NAVRHS_BY_PN_NAVRHL__COUNT_ASC'
   | 'PARY_NAVRHS_BY_PN_NAVRHL__COUNT_DESC'
-  | 'PARY_NAVRHS_BY_PN_PARTNERKA__COUNT_ASC'
-  | 'PARY_NAVRHS_BY_PN_PARTNERKA__COUNT_DESC'
   | 'PARY_NAVRHS_BY_PN_PARTNER__COUNT_ASC'
   | 'PARY_NAVRHS_BY_PN_PARTNER__COUNT_DESC'
+  | 'PARY_NAVRHS_BY_PN_PARTNERKA__COUNT_ASC'
+  | 'PARY_NAVRHS_BY_PN_PARTNERKA__COUNT_DESC'
   | 'PERMISSION_BY_U_GROUP__PE_AKCE_ASC'
   | 'PERMISSION_BY_U_GROUP__PE_AKCE_DESC'
   | 'PERMISSION_BY_U_GROUP__PE_AKTUALITY_ASC'
@@ -15881,8 +15881,6 @@ export type UsersOrderBy =
   | 'SKUPINY_BY_U_SKUPINA__S_NAME_DESC'
   | 'SKUPINY_BY_U_SKUPINA__S_VISIBLE_ASC'
   | 'SKUPINY_BY_U_SKUPINA__S_VISIBLE_DESC'
-  | 'UPOZORNENIS_BY_UP_KDO__COUNT_ASC'
-  | 'UPOZORNENIS_BY_UP_KDO__COUNT_DESC'
   | 'U_BAN_ASC'
   | 'U_BAN_DESC'
   | 'U_CITY_ASC'
@@ -15946,7 +15944,9 @@ export type UsersOrderBy =
   | 'U_TELEFON_ASC'
   | 'U_TELEFON_DESC'
   | 'U_TIMESTAMP_ASC'
-  | 'U_TIMESTAMP_DESC';
+  | 'U_TIMESTAMP_DESC'
+  | 'UPOZORNENIS_BY_UP_KDO__COUNT_ASC'
+  | 'UPOZORNENIS_BY_UP_KDO__COUNT_DESC';
 
 /** All input for the `verifyFunction` mutation. */
 export type VerifyFunctionInput = {
@@ -16127,6 +16127,50 @@ export type VideoPatch = {
   vUri?: InputMaybe<Scalars['String']>;
 };
 
+/** A connection to a list of `Video` values. */
+export type VideosConnection = {
+  __typename?: 'VideosConnection';
+  /** A list of edges which contains the `Video` and cursor to aid in pagination. */
+  edges: Array<VideosEdge>;
+  /** A list of `Video` objects. */
+  nodes: Array<Video>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Video` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Video` edge in the connection. */
+export type VideosEdge = {
+  __typename?: 'VideosEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']>;
+  /** The `Video` at the end of the edge. */
+  node: Video;
+};
+
+/** Methods to use when ordering `Video`. */
+export type VideosOrderBy =
+  | 'NATURAL'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
+  | 'V_AUTHOR_ASC'
+  | 'V_AUTHOR_DESC'
+  | 'V_CREATED_AT_ASC'
+  | 'V_CREATED_AT_DESC'
+  | 'V_DESCRIPTION_ASC'
+  | 'V_DESCRIPTION_DESC'
+  | 'V_ID_ASC'
+  | 'V_ID_DESC'
+  | 'V_PLAYLIST_ASC'
+  | 'V_PLAYLIST_DESC'
+  | 'V_TITLE_ASC'
+  | 'V_TITLE_DESC'
+  | 'V_UPDATED_AT_ASC'
+  | 'V_UPDATED_AT_DESC'
+  | 'V_URI_ASC'
+  | 'V_URI_DESC';
+
 export type VideoSource = Node & {
   __typename?: 'VideoSource';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -16217,47 +16261,3 @@ export type VideoSourcesOrderBy =
   | 'VS_TITLE_DESC'
   | 'VS_URL_ASC'
   | 'VS_URL_DESC';
-
-/** A connection to a list of `Video` values. */
-export type VideosConnection = {
-  __typename?: 'VideosConnection';
-  /** A list of edges which contains the `Video` and cursor to aid in pagination. */
-  edges: Array<VideosEdge>;
-  /** A list of `Video` objects. */
-  nodes: Array<Video>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Video` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `Video` edge in the connection. */
-export type VideosEdge = {
-  __typename?: 'VideosEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
-  /** The `Video` at the end of the edge. */
-  node: Video;
-};
-
-/** Methods to use when ordering `Video`. */
-export type VideosOrderBy =
-  | 'NATURAL'
-  | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC'
-  | 'V_AUTHOR_ASC'
-  | 'V_AUTHOR_DESC'
-  | 'V_CREATED_AT_ASC'
-  | 'V_CREATED_AT_DESC'
-  | 'V_DESCRIPTION_ASC'
-  | 'V_DESCRIPTION_DESC'
-  | 'V_ID_ASC'
-  | 'V_ID_DESC'
-  | 'V_PLAYLIST_ASC'
-  | 'V_PLAYLIST_DESC'
-  | 'V_TITLE_ASC'
-  | 'V_TITLE_DESC'
-  | 'V_UPDATED_AT_ASC'
-  | 'V_UPDATED_AT_DESC'
-  | 'V_URI_ASC'
-  | 'V_URI_DESC';

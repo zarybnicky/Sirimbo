@@ -6,11 +6,11 @@ import { SimpleDialog } from 'components/Dialog';
 import { CohortWithMembersFragment } from 'lib/graphql/Cohorts';
 import { UserPublicFragment } from 'lib/graphql/User';
 import { RichTextView } from 'components/RichTextView';
-import { usePermissions } from 'lib/data/use-permissions';
 import { Cohort } from 'lib/entities';
+import { useAuth } from 'lib/data/use-auth';
 
 export function CohortItem({ item }: { item: CohortWithMembersFragment }) {
-  const perms = usePermissions();
+  const { perms } = useAuth();
 
   return (
     <Card menu={Cohort.useMenu(item)} cohort={item} className="group break-inside-avoid">

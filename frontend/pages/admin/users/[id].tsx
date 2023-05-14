@@ -2,7 +2,6 @@ import { UserForm } from 'components/UserForm';
 import { DeleteButton } from 'components/DeleteButton';
 import { useUserQuery, useDeleteUserMutation } from 'lib/graphql/User';
 import { useRouter } from 'next/router';
-import { Layout } from 'components/layout/Layout';
 import { Item } from 'components/layout/Item';
 import { UserList } from 'components/UserList';
 import {
@@ -10,11 +9,13 @@ import {
   PermissionKey,
   PermissionLevel,
 } from 'lib/data/use-server-permissions';
+import { fromSlugArray } from 'lib/slugify';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function UserEditPage() {
+const Page: NextPageWithLayout = () => {
   const router = useRouter();
-  const { id } = router.query;
-  const { data } = useUserQuery({ id: id as string }, { enabled: !!id, cacheTime: 0 });
+  const id = fromSlugArray(router.query.id);
+  const { data } = useUserQuery({ id }, { enabled: !!id, cacheTime: 0 });
   const { mutateAsync: doDelete } = useDeleteUserMutation({
     onSuccess: () => router.push('/admin/users'),
   });
@@ -24,21 +25,17 @@ export default function UserEditPage() {
         backHref="/admin/users"
         title={`${data?.user?.uJmeno} ${data?.user?.uPrijmeni}` || '(Bez názvu)'}
       >
-        <DeleteButton
-          onDelete={() => doDelete({ id: id as string })}
-          title="smazat uživatele"
-        />
+        <DeleteButton onDelete={() => doDelete({ id })} title="smazat uživatele" />
       </Item.Titlebar>
       {data && <UserForm data={data.user || undefined} />}
     </Item>
   );
 }
 
-UserEditPage.getLayout = (page: React.ReactElement) => (
-  <Layout list={<UserList />} isDetail>
-    {page}
-  </Layout>
-);
+Page.list = <UserList />;
+Page.isDetail = true;
+
+export default Page;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peUsers,

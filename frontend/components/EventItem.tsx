@@ -10,9 +10,9 @@ import {
 } from 'lib/graphql/Event';
 import { ParticipationDialog } from './ParticipationForm';
 import { RichTextView } from './RichTextView';
-import { usePermissions } from 'lib/data/use-permissions';
 import { EventParticipantExport } from './EventParticipantExport';
 import { Event } from 'lib/entities';
+import { useAuth } from 'lib/data/use-auth';
 
 interface Props {
   event: EventWithItemsFragment;
@@ -21,7 +21,7 @@ interface Props {
 
 export const EventItem = ({ event, expanded: expandedInit = false }: Props) => {
   const [expanded, setExpanded] = React.useState(expandedInit);
-  const perms = usePermissions();
+  const { perms } = useAuth();
   const open = React.useCallback(() => setExpanded(true), []);
   const total =
     (event.attendeeUsers?.nodes?.length ?? 0) +

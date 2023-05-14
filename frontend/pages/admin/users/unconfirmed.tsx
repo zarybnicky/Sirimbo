@@ -19,8 +19,8 @@ import {
   PermissionLevel,
 } from 'lib/data/use-server-permissions';
 import { UserList } from 'components/UserList';
-import { Layout } from 'components/layout/Layout';
 import { Item } from 'components/layout/Item';
+import { NextPageWithLayout } from 'pages/_app';
 
 type FormProps = {
   cohort: string;
@@ -124,7 +124,7 @@ const UnconfirmedUser: React.FC<{
   );
 };
 
-export default function UnconfirmedUsers() {
+const Page: NextPageWithLayout = () => {
   const { data: users, refetch } = useUserListQuery({ confirmed: false });
 
   return (
@@ -137,11 +137,10 @@ export default function UnconfirmedUsers() {
   );
 }
 
-UnconfirmedUsers.getLayout = (page: React.ReactElement) => (
-  <Layout list={<UserList />} isDetail>
-    {page}
-  </Layout>
-);
+Page.list = <UserList />;
+Page.isDetail = true;
+
+export default Page;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peUsers,

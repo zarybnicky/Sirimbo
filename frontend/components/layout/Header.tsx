@@ -21,7 +21,7 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
   const auth = useAuth();
 
   return (
-    <div className="static w-full text-white bg-red-500">
+    <div className="static w-full text-white bg-red-500 shadow-lg border-b border-red-700">
       <div className="container relative max-w-5xl mx-auto">
         {showTopMenu && (
           <div className="relative hidden lg:flex items-stretch justify-between min-h-[48px] md:min-h-[64px]">
@@ -151,7 +151,7 @@ const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {
     'uppercase text-sm font-bold justify-center items-center',
     'hover:text-white hover:border-b-[3px] border-white',
     inPath
-      ? 'text-white drop-shadow-xl border-b-[3px] tracking-wide'
+      ? 'text-white drop-shadow-xl border-b-[3px] tracking-wide -mb-[1px]'
       : 'text-stone-100 drop-shadow',
   );
   if (x.type === 'link') {

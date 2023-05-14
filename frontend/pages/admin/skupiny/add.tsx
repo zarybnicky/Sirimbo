@@ -1,5 +1,4 @@
 import { CohortForm } from 'components/CohortForm';
-import { Layout } from 'components/layout/Layout';
 import { CohortsList } from 'components/CohortList';
 import {
   withServerPermissions,
@@ -7,21 +6,21 @@ import {
   PermissionLevel,
 } from 'lib/data/use-server-permissions';
 import { Item } from 'components/layout/Item';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function CohortAddPage() {
+const Page: NextPageWithLayout = () => {
   return (
     <Item>
       <Item.Titlebar backHref="/admin/skupiny" title="Nová skupina" />
       <CohortForm />
     </Item>
   );
-}
+};
 
-CohortAddPage.getLayout = (page: React.ReactElement) => (
-  <Layout list={<CohortsList />} isDetail>
-    {page}
-  </Layout>
-);
+Page.list = <CohortsList />;
+Page.isDetail = true;
+
+export default Page;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peSkupiny,

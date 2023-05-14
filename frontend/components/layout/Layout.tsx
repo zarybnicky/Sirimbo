@@ -1,20 +1,26 @@
 import classNames from 'classnames';
+import { useAuth } from 'lib/data/use-auth';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { Footer } from './Footer';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 
-type Props = {
+export type LayoutProps = {
+  hideTopMenuIfLoggedIn?: boolean;
   showTopMenu?: boolean;
   list?: React.ReactNode;
   isDetail?: boolean;
   children?: React.ReactNode;
 };
 
-export function Layout({ children, showTopMenu, list, isDetail }: Props) {
+export function Layout({ children, showTopMenu, hideTopMenuIfLoggedIn, list, isDetail }: LayoutProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const router = useRouter();
+  const { user } = useAuth();
+  if (hideTopMenuIfLoggedIn) {
+    showTopMenu = !!user;
+  }
 
   React.useEffect(() => {
     const scroll = () =>

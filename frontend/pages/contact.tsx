@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
-import { Layout } from 'components/layout/Layout';
+import { NextSeo } from 'next-seo';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function ContactPage() {
+const Page: NextPageWithLayout = () => {
   return (
     <>
+      <NextSeo title="Kontakt" />
       <Heading>Kontakt</Heading>
 
       <div className="prose mt-8">
@@ -122,4 +124,6 @@ export default function ContactPage() {
   );
 }
 
-ContactPage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</Layout>;
+Page.hideTopMenuIfLoggedIn = true;
+
+export default Page;

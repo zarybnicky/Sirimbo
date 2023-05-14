@@ -1,13 +1,12 @@
 import * as React from 'react';
-import { usePermissions } from 'lib/data/use-permissions';
 import { ScheduleFragment } from 'lib/graphql/Schedule';
-import { Dropdown } from 'components/Dropdown';
 import { LessonButton } from 'components/LessonButton';
 import { Card } from 'components/Card';
 import { Schedule } from 'lib/entities';
+import { useAuth } from 'lib/data/use-auth';
 
 export const ScheduleItem = ({ item }: { item: ScheduleFragment }) => {
-  const perms = usePermissions();
+  const { perms } = useAuth();
 
   return (
     <Card

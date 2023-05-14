@@ -1,8 +1,8 @@
 import { ExhibitionRequestForm } from 'components/ExhibitionRequestForm';
 import { Heading } from 'components/Heading';
-import { Layout } from 'components/layout/Layout';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function ExhibitionsPage() {
+const Page: NextPageWithLayout = () => {
   return (
     <>
       <Heading>Taneční vystoupení</Heading>
@@ -33,6 +33,6 @@ export default function ExhibitionsPage() {
   );
 }
 
-ExhibitionsPage.getLayout = (page: React.ReactElement) => (
-  <Layout showTopMenu>{page}</Layout>
-);
+Page.showTopMenu = true;
+
+export default Page;

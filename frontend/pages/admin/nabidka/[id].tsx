@@ -9,18 +9,16 @@ import {
   PermissionKey,
   PermissionLevel,
 } from 'lib/data/use-server-permissions';
-import { Layout } from 'components/layout/Layout';
 import { ReservationList } from 'components/ReservationList';
 import { Item } from 'components/layout/Item';
 import { DeleteButton } from 'components/DeleteButton';
+import { fromSlugArray } from 'lib/slugify';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function ReservationEditPage() {
+const Page: NextPageWithLayout = () => {
   const router = useRouter();
-  const { id } = router.query;
-  const { data } = useReservationQuery(
-    { id: id as string },
-    { enabled: !!id, cacheTime: 0 },
-  );
+  const id = fromSlugArray(router.query.id);
+  const { data } = useReservationQuery({ id }, { enabled: !!id, cacheTime: 0 });
   const { mutateAsync: doDelete } = useDeleteReservationMutation({
     onSuccess: () => router.push('/admin/nabidka'),
   });
@@ -30,21 +28,17 @@ export default function ReservationEditPage() {
         backHref="/admin/nabidka"
         title={data?.nabidka?.userByNTrener?.fullName || '(Bez názvu)'}
       >
-        <DeleteButton
-          onDelete={() => doDelete({ id: id as string })}
-          title="smazat příspěvek"
-        />
+        <DeleteButton onDelete={() => doDelete({ id })} title="smazat příspěvek" />
       </Item.Titlebar>
       {data && <ReservationForm data={data.nabidka || undefined} />}
     </Item>
   );
-}
+};
 
-ReservationEditPage.getLayout = (page: React.ReactElement) => (
-  <Layout list={<ReservationList />} isDetail>
-    {page}
-  </Layout>
-);
+Page.list = <ReservationList />;
+Page.isDetail = true;
+
+export default Page;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peNabidka,

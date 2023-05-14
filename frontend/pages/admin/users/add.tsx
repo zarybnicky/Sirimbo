@@ -1,5 +1,4 @@
 import { UserForm } from 'components/UserForm';
-import { Layout } from 'components/layout/Layout';
 import { UserList } from 'components/UserList';
 import {
   withServerPermissions,
@@ -7,8 +6,9 @@ import {
   PermissionLevel,
 } from 'lib/data/use-server-permissions';
 import { Item } from 'components/layout/Item';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function UserAddPage() {
+const Page: NextPageWithLayout = () => {
   return (
     <Item>
       <Item.Titlebar backHref="/admin/users" title="Nový uživatel" />
@@ -17,11 +17,10 @@ export default function UserAddPage() {
   );
 }
 
-UserAddPage.getLayout = (page: React.ReactElement) => (
-  <Layout list={<UserList />} isDetail>
-    {page}
-  </Layout>
-);
+Page.list = <UserList />;
+Page.isDetail = true;
+
+export default Page;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peUsers,

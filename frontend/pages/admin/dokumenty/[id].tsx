@@ -6,11 +6,12 @@ import {
   PermissionKey,
   PermissionLevel,
 } from 'lib/data/use-server-permissions';
+import { fromSlugArray } from 'lib/slugify';
 
 export default function FileEditPage() {
   const router = useRouter();
-  const { id } = router.query;
-  const { data } = useFileQuery({ id: id as string }, { enabled: !!id, cacheTime: 0 });
+  const id = fromSlugArray(router.query.id);
+  const { data } = useFileQuery({ id }, { enabled: !!id, cacheTime: 0 });
   return (
     <div className="container mx-auto max-w-3xl mt-12 mb-8">
       {data?.dokumenty && (

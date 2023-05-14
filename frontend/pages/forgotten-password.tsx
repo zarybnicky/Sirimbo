@@ -8,9 +8,10 @@ import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
 import { toast } from 'react-toastify';
 import { useResetPasswordMutation } from 'lib/graphql/CurrentUser';
-import { withServerLoggedOut } from 'lib/data/use-server-permissions';
+import { useAuth } from 'lib/data/use-auth';
 
 export default function ForgottenPassword() {
+  const {user} = useAuth()
   const { control, handleSubmit } = useForm();
   const { mutateAsync: resetPassword } = useResetPasswordMutation();
   const router = useRouter();
@@ -22,6 +23,10 @@ export default function ForgottenPassword() {
     );
     router.push('/');
   });
+
+  if (user) {
+    router.replace('/dashboard');
+  }
 
   return (
     <div className="container mx-auto max-w-md mt-16 mb-20">
@@ -62,5 +67,3 @@ export default function ForgottenPassword() {
     </div>
   );
 }
-
-export const getServerSideProps = withServerLoggedOut;

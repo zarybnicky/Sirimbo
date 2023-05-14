@@ -8,12 +8,10 @@ import {
   MyReservationFragment,
   useSetDesiredLessonsMutation,
 } from 'lib/graphql/Reservation';
-import { usePermissions } from 'lib/data/use-permissions';
 import { useQueryClient } from '@tanstack/react-query';
 
 export const ReservationButton = ({ item }: { item: MyReservationFragment }) => {
-  const perms = usePermissions();
-  const { couple } = useAuth();
+  const { perms, couple } = useAuth();
   const [isOpen, setIsOpen] = React.useState(false);
   const queryClient = useQueryClient();
   const myLessons = item.myLessons || 0;

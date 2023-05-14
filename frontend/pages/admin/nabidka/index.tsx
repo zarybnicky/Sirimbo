@@ -5,15 +5,13 @@ import {
   PermissionLevel,
 } from 'lib/data/use-server-permissions';
 import { ReservationList } from 'components/ReservationList';
-import { Layout } from 'components/layout/Layout';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function ReservationListPage() {
-  return null;
-}
+const Page: NextPageWithLayout = () => null;
 
-ReservationListPage.getLayout = (page: React.ReactElement) => (
-  <Layout list={<ReservationList />}>{page}</Layout>
-);
+Page.list = <ReservationList />;
+
+export default Page;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peNabidka,

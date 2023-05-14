@@ -1,14 +1,14 @@
 import { AnnouncementForm } from 'components/AnnouncementForm';
 import { AnnouncementList } from 'components/AnnouncementList';
 import { Item } from 'components/layout/Item';
-import { Layout } from 'components/layout/Layout';
 import {
   PermissionKey,
   PermissionLevel,
   withServerPermissions,
 } from 'lib/data/use-server-permissions';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function AnnouncementAddPage() {
+const Page: NextPageWithLayout = () => {
   return (
     <Item>
       <Item.Titlebar backHref="/admin/nabidka" title="Nový příspěvek" />
@@ -17,11 +17,10 @@ export default function AnnouncementAddPage() {
   );
 }
 
-AnnouncementAddPage.getLayout = (page: React.ReactElement) => (
-  <Layout list={<AnnouncementList />} isDetail>
-    {page}
-  </Layout>
-);
+Page.list = <AnnouncementList />;
+Page.isDetail = true;
+
+export default Page;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peNastenka,

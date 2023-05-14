@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Layout } from 'components/layout/Layout';
 import { Heading } from 'components/Heading';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function TermsConditions() {
+const Page: NextPageWithLayout = () => {
   return (
     <>
       <Heading>Ochrana osobních údajů</Heading>
@@ -172,6 +172,6 @@ export default function TermsConditions() {
   );
 }
 
-TermsConditions.getLayout = (page: React.ReactElement) => (
-  <Layout showTopMenu>{page}</Layout>
-);
+Page.showTopMenu = true;
+
+export default Page;

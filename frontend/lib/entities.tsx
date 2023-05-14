@@ -1,6 +1,6 @@
 import { DropdownItem } from 'components/Dropdown';
 import { AnnouncementFragment } from 'lib/graphql/Announcement';
-import { usePermissions } from './data/use-permissions';
+import { useAuth } from './data/use-auth';
 import { CohortBasicFragment } from './graphql/Cohorts';
 import { EventFragment } from './graphql/Event';
 import { ReservationBasicFragment } from './graphql/Reservation';
@@ -8,7 +8,7 @@ import { ScheduleBasicFragment } from './graphql/Schedule';
 
 export const Announcement = {
   useMenu(item: AnnouncementFragment): DropdownItem[] {
-    const perms = usePermissions();
+    const { perms } = useAuth();
     if (!perms.canEditAnnouncement(item)) {
       return [];
     }
@@ -23,7 +23,7 @@ export const Announcement = {
 
 export const Schedule = {
   useMenu(item: ScheduleBasicFragment): DropdownItem[] {
-    const perms = usePermissions();
+    const { perms } = useAuth();
     if (!perms.canEditSchedule(item)) {
       return [];
     }
@@ -38,7 +38,7 @@ export const Schedule = {
 
 export const Reservation = {
   useMenu(item: ReservationBasicFragment): DropdownItem[] {
-    const perms = usePermissions();
+    const { perms } = useAuth();
     if (!perms.canEditReservation(item)) {
       return [];
     }
@@ -53,7 +53,7 @@ export const Reservation = {
 
 export const Event = {
   useMenu(item: EventFragment): DropdownItem[] {
-    const perms = usePermissions();
+    const { perms } = useAuth();
     if (!perms.canEditEvent(item)) {
       return [];
     }
@@ -68,7 +68,7 @@ export const Event = {
 
 export const Cohort = {
   useMenu(item: CohortBasicFragment): DropdownItem[] {
-    const perms = usePermissions();
+    const { perms } = useAuth();
     if (!perms.canEditCohort(item)) {
       return [];
     }

@@ -2,14 +2,14 @@ import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
 import { useCohortListWithMembersQuery } from 'lib/graphql/Cohorts';
-import { Layout } from 'components/layout/Layout';
 import { useAuth } from 'lib/data/use-auth';
 import { CohortExport } from 'components/CohortExport';
 import { Item } from 'components/layout/Item';
 import { CohortItem } from 'components/CohortItem';
 import classNames from 'classnames';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function CohortsPage() {
+const Page: NextPageWithLayout = () => {
   const { user } = useAuth();
   const { data: cohorts } = useCohortListWithMembersQuery({ visible: true });
 
@@ -34,7 +34,6 @@ export default function CohortsPage() {
   );
 }
 
-CohortsPage.Layout = function ThisLayout({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth();
-  return <Layout showTopMenu={!user}>{children}</Layout>;
-};
+Page.showTopMenu = true;
+
+export default Page;

@@ -1,5 +1,6 @@
 import { Route, route } from 'nextjs-routes';
-import { PermissionKey, PermissionLevel, usePermissions } from './use-permissions';
+import { useAuth } from './use-auth';
+import { PermissionKey, PermissionLevel } from './use-permissions';
 
 export type MenuLink = {
   type: 'link';
@@ -51,14 +52,14 @@ export const useTopMenu = (): MenuStructItem[] => [
 ];
 
 export function useSideMenu(): MenuStructItem[] {
-  const permissions = usePermissions();
-  return permissions.hasPermission(PermissionKey.peNastenka, PermissionLevel.P_OWNED)
+  const { perms } = useAuth();
+  return perms.hasPermission(PermissionKey.peNastenka, PermissionLevel.P_OWNED)
     ? [
         {
           type: 'menu',
           title: 'Správa',
           children: adminMenu.filter(
-            (item) => !item.auth || permissions.hasPermission(...item.auth),
+            (item) => !item.auth || perms.hasPermission(...item.auth),
           ),
         },
       ]

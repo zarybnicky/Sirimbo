@@ -5,15 +5,13 @@ import {
   PermissionLevel,
 } from 'lib/data/use-server-permissions';
 import { CoupleList } from 'components/CoupleList';
-import { Layout } from 'components/layout/Layout';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function CoupleAdminList() {
-  return null;
-}
+const Page: NextPageWithLayout = () => null;
 
-CoupleAdminList.getLayout = (page: React.ReactElement) => (
-  <Layout list={<CoupleList />}>{page}</Layout>
-);
+Page.list = <CoupleList />;
+
+export default Page;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.pePary,

@@ -1,7 +1,9 @@
 import { useArticlesQuery } from 'lib/graphql/Articles';
+import { slugify } from 'lib/slugify';
 import { Route } from 'nextjs-routes';
 
 export interface Article {
+  id: string;
   href: Route;
   img: string;
   imgThumb: string;
@@ -19,7 +21,8 @@ export const useArticles = (
   const { data } = useArticlesQuery({ limit, offset });
   return {
     articles: (data?.aktualities?.nodes || []).map((x) => ({
-      href: { pathname: '/articles/[id]', query: { id: x.id } },
+      id: x.id,
+      href: { pathname: '/articles/[id]/[...slug]', query: { id: x.id, slug: [slugify(x.atJmeno)] } },
       img: `/galerie/${x.galerieFotoByAtFotoMain?.gfPath}`,
       imgThumb: `/galerie/thumbnails/${x.galerieFotoByAtFotoMain?.gfPath}`,
       header: x.atJmeno,

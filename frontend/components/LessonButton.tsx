@@ -1,4 +1,3 @@
-import { usePermissions } from 'lib/data/use-permissions';
 import {
   useBookLessonMutation,
   useCancelLessonMutation,
@@ -24,8 +23,7 @@ type Props = {
 };
 
 export const LessonButton = ({ schedule, lesson, showTrainer, showDate }: Props) => {
-  const { user } = useAuth();
-  const perms = usePermissions();
+  const { user, perms } = useAuth();
   const [isOpen, setIsOpen] = React.useState(false);
   const queryClient = useQueryClient();
 

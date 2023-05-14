@@ -5,14 +5,13 @@ import {
   PermissionKey,
   PermissionLevel,
 } from 'lib/data/use-server-permissions';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function UserPage() {
-  return null;
-}
+const Page: NextPageWithLayout = () => null;
 
-UserPage.getLayout = (page: React.ReactElement) => (
-  <Layout list={<UserList />}>{page}</Layout>
-);
+Page.list = <UserList />;
+
+export default Page;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peUsers,

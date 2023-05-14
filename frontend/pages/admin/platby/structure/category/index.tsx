@@ -9,11 +9,11 @@ import {
 } from 'lib/data/use-server-permissions';
 import { List } from 'components/layout/List';
 import { FuzzyList } from 'components/FuzzyList';
+import { fromSlugArray } from 'lib/slugify';
 
 export default function PlatbyCategoryListPage() {
   const router = useRouter();
-  const { id } = router.query;
-  const active = id ? (id as string) : null;
+  const id = fromSlugArray(router.query.id);
   const [search, setSearch] = React.useState('');
   const { data } = usePaymentCategoryListQuery();
 
@@ -28,7 +28,7 @@ export default function PlatbyCategoryListPage() {
         renderItem={(item) => (
           <List.Item
             key={item.id}
-            active={active === item.id}
+            active={id === item.id}
             href={{pathname: '/admin/platby/structure/category/[id]', query: {id: item.id}}}
             title={item.pcName}
             subtitle={item.pcSymbol}

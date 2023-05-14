@@ -5,8 +5,10 @@ import {
   PermissionKey,
   PermissionLevel,
 } from 'lib/data/use-server-permissions';
+import { type NextPageWithLayout } from 'pages/_app';
+import { ArticleList } from 'components/ArticleList';
 
-export default function ArticleAddPage() {
+const Page: NextPageWithLayout = () => {
   const router = useRouter();
   return (
     <div className="container mx-auto max-w-3xl mt-12 mb-8">
@@ -14,6 +16,11 @@ export default function ArticleAddPage() {
     </div>
   );
 }
+
+Page.list = <ArticleList />;
+Page.isDetail = true;
+
+export default Page;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peAktuality,

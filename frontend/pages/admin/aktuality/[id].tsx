@@ -6,11 +6,14 @@ import {
   PermissionKey,
   PermissionLevel,
 } from 'lib/data/use-server-permissions';
+import { type NextPageWithLayout } from 'pages/_app';
+import { fromSlugArray } from 'lib/slugify';
+import { ArticleList } from 'components/ArticleList';
 
-export default function ArticleEditPage() {
+const Page: NextPageWithLayout = () => {
   const router = useRouter();
-  const { id } = router.query;
-  const { data } = useArticleQuery({ id: id as string }, { enabled: !!id, cacheTime: 0 });
+  const id = fromSlugArray(router.query.id);
+  const { data } = useArticleQuery({ id }, { enabled: !!id, cacheTime: 0 });
   return (
     <div className="container mx-auto max-w-3xl mt-12 mb-8">
       {data && (
@@ -22,6 +25,10 @@ export default function ArticleEditPage() {
     </div>
   );
 }
+
+Page.list = <ArticleList />;
+
+export default Page;
 
 export const getServerSideProps = withServerPermissions(
   PermissionKey.peAktuality,

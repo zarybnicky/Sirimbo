@@ -9,17 +9,16 @@ import {
 
 export { PermissionKey, PermissionLevel };
 
-async function loadServerPermissions(context: GetServerSidePropsContext) {
+async function loadServerPermissions(req: GetServerSidePropsContext['req']) {
   const {
     rows: [session],
   } = await pool.query(`
 SELECT u_id, permissions.* FROM session
 LEFT JOIN users ON u_id=ss_user
 LEFT JOIN permissions ON u_group=pe_id
-WHERE ss_id='${context.req.cookies.PHPSESSID}'
+WHERE ss_id='${req.cookies.PHPSESSID}'
   `);
-  return new ServerPermissionChecker(
-    context,
+  return new PermissionChecker(
     session?.u_id,
     !session
       ? defaultPermissions
@@ -42,19 +41,6 @@ WHERE ss_id='${context.req.cookies.PHPSESSID}'
   );
 }
 
-export const withServerLoggedOut: GetServerSideProps = async (context) => {
-  const perms = await loadServerPermissions(context);
-  if (perms.userId) {
-    return {
-      redirect: {
-        statusCode: 301,
-        destination: '/dashboard',
-      },
-    };
-  }
-  return { props: {} };
-};
-
 export const withServerPermissions =
   (
     key: PermissionKey,
@@ -62,8 +48,7 @@ export const withServerPermissions =
     callback?: (context: GetServerSidePropsContext) => Promise<object>,
   ): GetServerSideProps =>
   async (context) => {
-    const perms = await loadServerPermissions(context);
-
+    const perms = await loadServerPermissions(context.req);
     if (!perms.hasPermission(key, level)) {
       const params = new URLSearchParams({ from: context.resolvedUrl });
       return {
@@ -75,13 +60,3 @@ export const withServerPermissions =
     }
     return { props: callback ? await callback(context) : {} };
   };
-
-class ServerPermissionChecker extends PermissionChecker {
-  constructor(
-    public context: GetServerSidePropsContext,
-    userId: string,
-    perms: { [key in keyof typeof PermissionKey]: number },
-  ) {
-    super(userId, perms);
-  }
-}

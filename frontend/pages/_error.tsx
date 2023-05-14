@@ -17,7 +17,6 @@
  */
 
 import * as Sentry from '@sentry/nextjs';
-import { Layout } from 'components/layout/Layout';
 import { NextPageContext } from 'next';
 import NextErrorComponent, { ErrorProps } from 'next/error';
 
@@ -30,6 +29,4 @@ CustomErrorComponent.getInitialProps = async (contextData: NextPageContext) => {
   return NextErrorComponent.getInitialProps(contextData);
 };
 
-CustomErrorComponent.getLayout = (page: React.ReactNode) => (
-  <Layout showTopMenu>{page}</Layout>
-);
+CustomErrorComponent.showTopMenu = true;

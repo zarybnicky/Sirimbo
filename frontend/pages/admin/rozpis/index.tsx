@@ -10,11 +10,11 @@ import {
 } from 'lib/data/use-server-permissions';
 import { List } from 'components/layout/List';
 import { FuzzyList } from 'components/FuzzyList';
+import { fromSlugArray } from 'lib/slugify';
 
 export default function RozpisAdminList() {
   const router = useRouter();
-  const { id } = router.query;
-  const active = id ? (id as string) : null;
+  const id = fromSlugArray(router.query.id);
   const { data } = useScheduleListQuery();
 
   return (
@@ -27,7 +27,7 @@ export default function RozpisAdminList() {
         renderItem={(item) => (
           <List.Item
             key={item.id}
-            active={active === item.id}
+            active={id === item.id}
             href={{pathname: '/admin/rozpis/[id]', query: {id: item.id}}}
             title={item.userByRTrener?.fullName}
             subtitle={item.rDatum ? fullDateFormatter.format(new Date(item.rDatum)) : ''}

@@ -2,12 +2,12 @@ import { useCohortListQuery } from 'lib/graphql/Cohorts';
 import { Plus } from 'react-feather';
 import { useRouter } from 'next/router';
 import { List } from 'components/layout/List';
+import { fromSlugArray } from 'lib/slugify';
 
 export const CohortsList = () => {
   const router = useRouter();
-  const { id } = router.query;
   const { data } = useCohortListQuery();
-  const active = id ? (id as string) : null;
+  const id = fromSlugArray(router.query.id);
 
   return (
     <List>
@@ -25,7 +25,7 @@ export const CohortsList = () => {
         {data?.skupinies?.nodes?.map((item) => (
           <List.Item
             key={item.id}
-            active={active === item.id}
+            active={id === item.id}
             href={{ pathname: '/admin/skupiny/[id]', query: { id: item.id } }}
             title={item.sName}
             className="pl-6"

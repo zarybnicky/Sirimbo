@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { saveAs } from 'file-saver';
-import { PermissionKey, PermissionLevel, usePermissions } from 'lib/data/use-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { Button } from './Button';
 import { useMemberListQuery } from 'lib/graphql/User';
+import { useAuth } from 'lib/data/use-auth';
 
 export function CohortExport({ id, name }: { id?: string; name?: string }) {
-  const perms = usePermissions();
+  const { perms } = useAuth();
   const saveData = React.useCallback(
     async (e?: React.MouseEvent) => {
       e?.preventDefault();
