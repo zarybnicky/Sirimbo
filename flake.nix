@@ -86,7 +86,7 @@
           services.mailhog.enable = true;
           services.olymp-beta = {
             enable = true;
-            debug = true;
+            # debug = true;
             dbConnString = "dbname=olymp";
             stateDir = "/var/lib/olymp";
             domain = "olymp-test";

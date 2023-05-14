@@ -6,13 +6,9 @@ import { Layout } from 'components/layout/Layout';
 export default function ContactPage() {
   return (
     <>
-      <Heading
-        color={{ r: 216, g: 28, b: 58, a: 0.6 }}
-        text="Kontakt"
-        image="/images/mohelnice2021-title.jpg"
-      />
+      <Heading>Kontakt</Heading>
 
-      <div className="col-popout prose mt-8">
+      <div className="prose mt-8">
         <h2>Fakturační údaje:</h2>
         <p>
           Taneční klub Olymp Olomouc, z. s.
@@ -23,11 +19,13 @@ export default function ContactPage() {
           <br />
           Datová schránka: g2q66be
         </p>
-
-        <h2>Kontaktní osoby:</h2>
       </div>
 
       <div className="col-popout gap-4 my-8 grid lg:grid-cols-2">
+        <div className="lg:col-span-2 prose">
+          <h2>Kontaktní osoby:</h2>
+        </div>
+
         <div className="prose">
           <h3>Statutární zástupce:</h3>
           <p>

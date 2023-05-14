@@ -47,7 +47,7 @@ export default function SchedulePage() {
           <div className="text-xl tracking-wide text-stone-700 mb-2">
             Nabídky tréninků
           </div>
-          <div className="flex justify-start flex-wrap gap-4 ml-2 pl-5 border-l-4 border-red-200">
+          <div className="flex justify-start flex-wrap gap-4 ml-2 pl-5 border-l-4 border-red-400">
             {reservations?.reservationsForRange?.nodes.map((item, i) => (
               <ReservationItem key={i} item={item} />
             ))}
@@ -61,7 +61,7 @@ export default function SchedulePage() {
             {formatWeekDay(new Date(date))}
           </div>
 
-          <div className="flex justify-start flex-wrap gap-2 ml-2 pl-5 border-l-4 border-red-200">
+          <div className="flex justify-start flex-wrap gap-2 ml-2 pl-5 border-l-4 border-red-400">
             {items.map((item, i) => (
               <ScheduleItem key={i} item={item} />
             ))}

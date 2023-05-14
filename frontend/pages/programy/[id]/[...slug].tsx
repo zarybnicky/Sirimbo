@@ -14,8 +14,8 @@ type PageProps = {
 export default function CohortGroupPage({ item }: PageProps) {
   return (
     <>
-      <Heading color={{ r: 20, g: 20, b: 200, a: 0.5 }} text={item.name} image="" />
-      <Item className="">
+      <Heading>{item.name}</Heading>
+      <Item>
         <RichTextView className="mb-10" value={item.description} />
         {item.skupiniesByCohortGroup.nodes.map((x) => (
           <Card key={x.id} cohort={x}>

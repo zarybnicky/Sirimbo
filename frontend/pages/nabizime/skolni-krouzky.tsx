@@ -2,19 +2,14 @@ import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
 import { Layout } from 'components/layout/Layout';
 import { Heading } from 'components/Heading';
-import { YoutubeEmbed } from 'components/YoutubeEmbed';
 
 export default function ExtracurricularsPage() {
   return (
     <>
-      <Heading
-        text="OLYMP DANCE"
-        image="https://tkolymp.cz/galerie/clanky/prijdtancit2.jpg"
-        color={{ r: 216, g: 28, b: 58, a: 0.4 }}
-      />
+      <Heading>Olymp Dance</Heading>
 
       <div className="mt-6 prose">
-        <h1>Tanči s námi na své škole!</h1>
+        <h2>Tanči s námi na své škole!</h2>
 
         <p>
           Projekt Taneční kroužky Olymp DANCE vznikl v roce 2019 za hlavním účelem
@@ -50,7 +45,7 @@ export default function ExtracurricularsPage() {
         </a>
       </div>
 
-      <img src="https://tkolymp.cz/galerie/clanky/Týmové-foto-1.jpg" />
+      <img className="my-8" src="https://tkolymp.cz/galerie/clanky/Týmové-foto-1.jpg" />
 
       <CallToAction />
     </>

@@ -31,8 +31,8 @@ const CardMap = (props: {
 
 type Location = {
   name: string;
-  address: React.ReactNode;
-  href: string | null;
+  children: React.ReactNode;
+  href?: string;
   mapHref: string;
   map: {
     lat: number;
@@ -41,13 +41,13 @@ type Location = {
   };
 };
 
-export const LocationCard = ({ item: x }: { item: Location }) => {
+export const LocationCard = (x: Location) => {
   return (
-    <Card className="grid md:grid-cols-[1fr_2fr] gap-4 items-center">
+    <div className="grid md:grid-cols-[1fr_2fr] gap-4 items-center">
       <CardMap className="h-[200px]" name={x.name} {...x.map} />
       <div className="grow text-gray-800">
-        <h5 className="text-red-600 text-xl font-bold">{x.name}</h5>
-        <div className="py-2">{x.address}</div>
+        <h5 className="text-red-500 text-xl font-bold">{x.name}</h5>
+        <div className="py-2">{x.children}</div>
         {x.href && (
           <a href={x.href} rel="noreferrer" target="_blank" className="block underline">
             {x.href}
@@ -57,6 +57,6 @@ export const LocationCard = ({ item: x }: { item: Location }) => {
           Otevřít mapu
         </a>
       </div>
-    </Card>
+    </div>
   );
 };

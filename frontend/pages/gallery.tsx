@@ -7,11 +7,7 @@ import classNames from 'classnames';
 export default function GalleryPage() {
   return (
     <>
-      <Heading
-        text="Galerie"
-        image="https://tkolymp.cz/galerie/clanky/289541739553776446369923521898551803548994o.jpg"
-        color={{ r: 111, g: 61, b: 1, a: 0.7 }}
-      />
+      <Heading>Galerie</Heading>
 
       <div className="col-feature my-16 grid gap-16 px-4 md:grid-cols-2">
         {[

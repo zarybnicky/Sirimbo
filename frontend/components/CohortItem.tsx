@@ -6,22 +6,14 @@ import { SimpleDialog } from 'components/Dialog';
 import { CohortWithMembersFragment } from 'lib/graphql/Cohorts';
 import { UserPublicFragment } from 'lib/graphql/User';
 import { RichTextView } from 'components/RichTextView';
-import { Dropdown } from './Dropdown';
 import { usePermissions } from 'lib/data/use-permissions';
+import { Cohort } from 'lib/entities';
 
-export function CohortItem({ item: item }: { item: CohortWithMembersFragment }) {
+export function CohortItem({ item }: { item: CohortWithMembersFragment }) {
   const perms = usePermissions();
 
   return (
-    <Card key={item.id} cohort={item} className="group break-inside-avoid">
-      {perms.canEditCohort(item) && (
-        <Dropdown
-          className="absolute right-1 top-1"
-          align="end"
-          options={[{ title: 'Upravit', href: `/admin/skupiny/${item.id}` }]}
-        />
-      )}
-
+    <Card menu={Cohort.useMenu(item)} cohort={item} className="group break-inside-avoid">
       <div>
         {item.usersByUSkupina?.nodes?.length} členů
         <div className="text-lg">{item.sName}</div>

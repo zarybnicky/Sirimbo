@@ -6,13 +6,9 @@ import { Heading } from 'components/Heading';
 export default function MembershipPage() {
   return (
     <>
-      <Heading
-        text="Členství v Olympu"
-        image="https://tkolymp.cz/galerie/clanky/289541739553776446369923521898551803548994o.jpg"
-        color={{ r: 111, g: 61, b: 1, a: 0.7 }}
-      />
+      <Heading>Členství v Olympu</Heading>
 
-      <div className="col-feature my-16 grid gap-16 px-4 md:grid-cols-3">
+      <div className="col-feature mt-8 mb-16 grid gap-16 px-4 md:grid-cols-3">
         <div className="flex items-center justify-center">
           <img src="https://tkolymp.cz/galerie/clanky/293547069655557869525116228763683690860426o.jpg" />
         </div>

@@ -1,17 +1,13 @@
 import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
 import { Layout } from 'components/layout/Layout';
-import { Heading } from 'components/Heading';
 import { ServiceCard } from 'components/cards/ServiceCard';
+import { Heading } from 'components/Heading';
 
 export default function ChampionsPage() {
   return (
     <>
-      <Heading
-        text="Galerie mistrů"
-        image="https://tkolymp.cz/galerie/clanky/Sn%C3%ADmek-obrazovky-2022-08-29-v%C2%A011.26.17.png"
-        color={{ r: 216, g: 28, b: 58, a: 0.4 }}
-      />
+      <Heading>Galerie mistrů</Heading>
 
       <div className="col-popout">
         {couples.map((couple) => (

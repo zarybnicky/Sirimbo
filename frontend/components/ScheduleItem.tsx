@@ -4,21 +4,17 @@ import { ScheduleFragment } from 'lib/graphql/Schedule';
 import { Dropdown } from 'components/Dropdown';
 import { LessonButton } from 'components/LessonButton';
 import { Card } from 'components/Card';
+import { Schedule } from 'lib/entities';
 
 export const ScheduleItem = ({ item }: { item: ScheduleFragment }) => {
   const perms = usePermissions();
 
   return (
-    <Card className="group min-w-[200px] w-72 rounded-lg border-stone-200 border">
+    <Card
+      menu={Schedule.useMenu(item)}
+      className="group min-w-[200px] w-72 rounded-lg border-stone-200 border"
+    >
       <div className="ml-3 mb-0.5">
-        {perms.canEditSchedule(item) && (
-          <Dropdown
-            className="absolute right-1 top-1"
-            align="end"
-            options={[{ title: 'Upravit', href: `/admin/rozpis/${item.id}` }]}
-          />
-        )}
-
         <div className="text-sm text-stone-500">{item.rKde}</div>
         <div className="text-xl">{item.userByRTrener?.fullName}</div>
       </div>

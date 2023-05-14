@@ -6,6 +6,7 @@ import { fullDateFormatter } from 'lib/format-date';
 import { Layout } from 'components/layout/Layout';
 import { RichTextView } from 'components/RichTextView';
 import { NextSeo } from 'next-seo';
+import { Heading } from 'components/Heading';
 
 export default function ArticlePage() {
   const router = useRouter();
@@ -28,8 +29,8 @@ export default function ArticlePage() {
           description: x.atPreview,
         }}
       />
-      <h3 className="text-3xl font-bold text-red-500 mt-20">{x.atJmeno}</h3>
-      <div className="text-stone-600 mt-3 mb-6">
+      <Heading>{x.atJmeno}</Heading>
+      <div className="text-stone-600 mb-6">
         {x.atTimestampAdd && fullDateFormatter.format(new Date(x.atTimestampAdd))}
       </div>
       <RichTextView value={x.atText} />

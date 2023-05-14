@@ -10,13 +10,7 @@ export default function EventListPage() {
   const { user } = useAuth();
   return (
     <>
-      {!user && (
-        <Heading
-          image=""
-          text="Nadcházející akce"
-          color={{ r: 255, g: 60, b: 60, a: 90 }}
-        />
-      )}
+      {!user && <Heading>Nadcházející akce</Heading>}
       <Item className={classNames(user ? 'col-full bg-stone-100' : 'col-feature')}>
         {user && <Item.Titlebar title="Nadcházející akce" />}
         <EventMemberList />

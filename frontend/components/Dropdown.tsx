@@ -6,7 +6,7 @@ import { MoreVertical } from 'react-feather';
 import { Route } from 'nextjs-routes';
 
 const defaultDropdown = (
-  <MoreVertical className="text-stone-500 w-6 invisible ui-open:visible group-hover:visible" />
+  <MoreVertical className="text-stone-300 w-6 ui-open:text-stone-500 group-hover:text-stone-400 hover:text-stone-500" />
 );
 
 export type DropdownItem = {

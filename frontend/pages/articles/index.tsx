@@ -17,7 +17,7 @@ export default function ArticleListPage() {
       <Head>
         <title>Články | TK Olymp</title>
       </Head>
-      <Heading color={{ r: 190, g: 10, b: 10, a: 0.5 }} text="Aktuálně" image="" />
+      <Heading>Aktuálně</Heading>
 
       <div className="col-feature grid place-items-stretch gap-4 grid-cols-2 lg:grid-cols-3 mb-6">
         {articles.map((x, i) => (

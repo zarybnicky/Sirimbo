@@ -9,15 +9,7 @@ import { YoutubeEmbed } from 'components/YoutubeEmbed';
 export default function AboutPage() {
   return (
     <>
-      <Heading
-        text="Přijď tančit!"
-        image="https://tkolymp.cz/galerie/clanky/prijdtancit2.jpg"
-        color={{ r: 216, g: 28, b: 58, a: 0.4 }}
-      />
-
-      <div className="mt-16 prose text-center">
-        <h1 className="!text-stone-800">Přijďte si vyzkoušet, jak vypadá taneční trénink!</h1>
-      </div>
+      <Heading>Přijďte si vyzkoušet, jak vypadá taneční trénink!</Heading>
 
       <div className="col-feature my-8 grid lg:grid-cols-2 gap-4">
         <div className="prose">
@@ -54,7 +46,7 @@ export default function AboutPage() {
 
       <img src="https://tkolymp.cz/galerie/clanky/Týmové-foto-1.jpg" />
 
-      <div className="col-feature my-8 grid lg:grid-cols-2 gap-4">
+      <div className="col-feature my-16 grid lg:grid-cols-2 gap-4">
         <div className="prose">
           <h2>Informace k tréninku</h2>
           <ul>
@@ -88,7 +80,7 @@ export default function AboutPage() {
 
       <ProspectForm title="Zapiš se na první hodinu ZDARMA!" />
 
-      <div className="col-feature my-8 grid lg:grid-cols-2 gap-4">
+      <div className="col-feature my-16 grid lg:grid-cols-2 gap-4">
         <YoutubeEmbed
           title=""
           thumbnail="https://i3.ytimg.com/vi/MSahpLevS2g/maxresdefault.jpg"
@@ -103,7 +95,7 @@ export default function AboutPage() {
           ></iframe>
         </YoutubeEmbed>
 
-        <div className="prose">
+        <div className="prose self-center">
           <h3>
             Znáte StarDance? A připadá vám někdy neuvěřitelné naučit se těžké kroky do
             velkého množství tanců?
@@ -148,7 +140,7 @@ export default function AboutPage() {
         </YoutubeEmbed>
       </div>
 
-      <div className="prose text-center">
+      <div className="my-8 prose text-center">
         <h2>
           Nečekejte, až vaše děti vyrostou, vrcholoví sportovci začínají již v dětském
           věku.
@@ -181,19 +173,15 @@ export default function AboutPage() {
       </div>
 
       <LocationCard
-        item={{
-          name: 'Taneční centrum při FZŠ Holečkova',
-          address:
-            'Holečkova 10, 779 00, Olomouc (vchod brankou u zastávy Povel - škola)',
-          href: 'https://www.zsholeckova.cz/',
-          mapHref: 'https://goo.gl/maps/swv3trZB2uvjcQfR6',
-          map: {
-            lat: 49.57963,
-            lng: 17.2495939,
-            zoom: 12,
-          },
-        }}
-      />
+        name="Taneční centrum při FZŠ Holečkova"
+        href="https://www.zsholeckova.cz/"
+        mapHref="https://goo.gl/maps/swv3trZB2uvjcQfR6"
+        map={{ lat: 49.57963, lng: 17.2495939, zoom: 12 }}
+      >
+        Holečkova 10, 779 00, Olomouc
+        <br />
+        (vchod brankou u zastávy Povel - škola)
+      </LocationCard>
 
       <CallToAction />
     </>

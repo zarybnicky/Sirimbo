@@ -23,7 +23,6 @@ module.exports = {
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
     require('@tailwindcss/aspect-ratio'),
-    require('@tailwindcss/line-clamp'),
     require('tailwindcss-opentype'),
     require('tailwindcss-radix')(),
     require('tailwind-scrollbar'),
@@ -65,6 +64,42 @@ module.exports = {
           },
         },
       }),
+      keyframes: {
+        overlayShow: {
+          from: { opacity: '0' },
+          to: { opacity: '1' },
+        },
+        overlayHide: {
+          from: { opacity: '1' },
+          to: { opacity: '0' },
+        },
+        contentShow: {
+          from: {
+            opacity: '0',
+            transform: 'translate(-50%, -48%) scale(0.96)',
+          },
+          to: {
+            opacity: '1',
+            transform: 'translate(-50%, -50%) scale(1)',
+          },
+        },
+        contentHide: {
+          from: {
+            opacity: '1',
+            transform: 'translate(-50%, -50%) scale(1)',
+          },
+          to: {
+            opacity: '0',
+            transform: 'translate(-50%, -48%) scale(0.96)',
+          },
+        },
+      },
+      animation: {
+        overlayShow: 'overlayShow 350ms cubic-bezier(0.16, 1, 0.3, 1)',
+        contentShow: 'contentShow 350ms cubic-bezier(0.16, 1, 0.3, 1)',
+        overlayHide: 'overlayHide 350ms cubic-bezier(0.16, 1, 0.3, 1)',
+        contentHide: 'contentHide 350ms cubic-bezier(0.16, 1, 0.3, 1)',
+      },
     },
   },
 };

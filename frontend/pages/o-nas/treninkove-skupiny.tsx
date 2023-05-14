@@ -11,11 +11,8 @@ export default function CohortsPage() {
 
   return (
     <>
-      <Heading
-        color={{ r: 20, g: 20, b: 200, a: 0.5 }}
-        text="Tréninkové skupiny"
-        image=""
-      />
+      <Heading>Tréninkové skupiny</Heading>
+
       <div className="container mx-auto max-w-3xl mt-8 mb-8">
         {cohorts?.skupinies?.nodes?.map((x, i) => (
           <Card key={i} cohort={x}>

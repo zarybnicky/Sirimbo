@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
 import { Layout } from 'components/layout/Layout';
-import Image, { StaticImageData } from 'next/image';
+import { Heading } from 'components/Heading';
 
 type TrainerCardProps = {
-  image?: StaticImageData;
+  image?: string;
   name: string;
   children: React.ReactNode;
 };
@@ -13,17 +13,16 @@ export function TrainerCard(props: TrainerCardProps) {
   return (
     <div className="mb-14 relative">
       {props.image && (
-      <div className="shrink-0 relative ml-8 lg:ml-0 mb-4 lg:mb-0 lg:absolute lg:-left-44 lg:top-10 w-[200px] h-[266px] lg:w-[150px] lg:h-[200px]">
-        <Image
-          className="object-cover drop-shadow"
+        <img
+          className="object-cover shrink-0 ml-8 lg:ml-0 mb-4 lg:mb-0 lg:absolute lg:-left-44 lg:top-14 drop-shadow"
           src={props.image}
           alt={props.name}
-          fill
+          height={220}
+          width={165}
         />
-      </div>
       )}
       <h3 className="text-4xl mb-4 text-red-500 drop-shadow">{props.name}</h3>
-      <div className="prose">{props.children}</div>
+      <div className="prose lg:min-h-[220px]">{props.children}</div>
     </div>
   );
 }
@@ -31,11 +30,9 @@ export function TrainerCard(props: TrainerCardProps) {
 export default function AboutPage() {
   return (
     <>
-      <div className="my-12">
-        <h1 className="mb-8 text-5xl text-red-500 drop-shadow tracking-wide">
-          Naši trenéři
-        </h1>
+      <Heading>Naši trenéři</Heading>
 
+      <div className="mb-12">
         <p className="prose">
           Taneční klub se pyšní týmem trenérů, kteří představují základ dlouholeté úspěšné
           historie. Trenéři disponují vysokou odborností, bohatými zkušenostmi a vášní pro
@@ -53,11 +50,9 @@ export default function AboutPage() {
         </TrainerCard>
       ))}
 
-      <div className="my-12">
-        <h1 className="mb-8 text-5xl text-red-500 drop-shadow tracking-wide">
-          Externí trenéři
-        </h1>
+      <Heading>Externí trenéři</Heading>
 
+      <div className="mb-12">
         <p className="prose">
           V rámci klubu spolupracujeme s významnými odborníky tanečního světa z různých
           částí republiky, kteří s námi sdílí své znalosti a dovednosti. Externí odborníci
@@ -83,7 +78,7 @@ AboutPage.getLayout = (page: React.ReactElement) => <Layout showTopMenu>{page}</
 
 const mirek: TrainerCardProps = {
   name: 'Mgr. Miroslav Hýža',
-  image: imgMirek,
+  image: '/images/treneri-2023/mirek.jpg',
   children: (
     <ul>
       <li>Předseda, šéftrenér TK Olymp</li>
@@ -98,7 +93,7 @@ const mirek: TrainerCardProps = {
 
 const filip: TrainerCardProps = {
   name: 'Ing. Filip Karásek',
-  image: imgFilip,
+  image: '/images/treneri-2023/filip.jpg',
   children: (
     <ul>
       <li>Trenér a porotce I. třídy</li>
@@ -116,7 +111,7 @@ const filip: TrainerCardProps = {
 
 const marie: TrainerCardProps = {
   name: 'Mgr. Marie Hýžová',
-  image: imgMarie,
+  image: '/images/treneri-2023/marie.jpg',
   children: (
     <ul>
       <li>Trenér a porotce I. třídy</li>
@@ -131,7 +126,7 @@ const marie: TrainerCardProps = {
 
 const lucka: TrainerCardProps = {
   name: 'Mgr. Lucie Benýšková',
-  image: imgLucka,
+  image: '/images/treneri/lucka3.jpg',
   children: (
     <ul>
       <li>Absolventka kvalifikačního studia pro trenéry a porotce II.třídy</li>
@@ -156,7 +151,7 @@ const lucka: TrainerCardProps = {
 
 const grepi: TrainerCardProps = {
   name: 'Mgr. Pavel Grepl',
-  image: imgPavel,
+  image: '/images/treneri/pavel2.jpg',
   children: (
     <ul>
       <li>Absolvent kvalifikačního studia pro trenéry a porotce II. třídy</li>
@@ -177,7 +172,7 @@ const grepi: TrainerCardProps = {
 
 const maruska: TrainerCardProps = {
   name: 'Bc. Marie Hýžová ml.',
-  image: imgMaruska,
+  image: '/images/treneri/maruska.jpg',
   children: (
     <ul>
       <li>Absolventka kvalifikačního studia pro trenéry a porotce II. třídy</li>
@@ -190,7 +185,7 @@ const maruska: TrainerCardProps = {
 
 const roman: TrainerCardProps = {
   name: 'Bc. Roman Pecha',
-  image: imgRoman,
+  image: '/images/treneri-2023/roman.jpg',
   children: (
     <ul>
       <li>Absolvent kvalifikačního studia pro trenéry a porotce II. třídy</li>
@@ -210,7 +205,7 @@ const roman: TrainerCardProps = {
 
 const hanka: TrainerCardProps = {
   name: 'Hana Anna Šišková',
-  image: imgHanka,
+  image: '/images/treneri-2023/hanka.jpg',
   children: (
     <ul>
       <li>Absolventka kvalifikačního studia pro trenéry a porotce II. třídy</li>
@@ -230,7 +225,7 @@ const hanka: TrainerCardProps = {
 
 const nela: TrainerCardProps = {
   name: 'Nela Šírová',
-  image: imgNela,
+  image: '/images/treneri-2023/nela.jpg',
   children: (
     <ul>
       <li>Absolventka kvalifikačního studia pro trenéry a porotce II. třídy</li>
@@ -241,25 +236,9 @@ const nela: TrainerCardProps = {
   ),
 };
 
-import imgMirek from 'public/images/treneri-2023/mirek.jpg';
-import imgFilip from 'public/images/treneri-2023/filip.jpg';
-import imgMarie from 'public/images/treneri-2023/marie.jpg';
-import imgHanka from 'public/images/treneri-2023/hanka.jpg';
-import imgRoman from 'public/images/treneri-2023/roman.jpg';
-import imgNela from 'public/images/treneri-2023/nela.jpg';
-import imgLucka from 'public/images/treneri/lucka3.jpg';
-import imgPavel from 'public/images/treneri/pavel2.jpg';
-import imgMaruska from 'public/images/treneri/maruska.jpg';
-import imgMatej from 'public/images/treneri/matej.jpg';
-import imgMartin from 'public/images/treneri-2023/martin.jpg';
-import imgDavid from 'public/images/treneri-2023/david.jpg';
-import imgTara from 'public/images/treneri-2023/tara.jpg';
-import imgPavla from 'public/images/treneri/pavla.jpg';
-import imgJerry from 'public/images/treneri/jerry.jpg';
-
 const matej: TrainerCardProps = {
   name: 'Matěj Očenášek',
-  image: imgMatej,
+  image: '/images/treneri/matej.jpg',
   children: (
     <ul>
       <li>Absolvent kvalifikačního studia pro trenéry a porotce III. třídy</li>
@@ -272,7 +251,7 @@ const matej: TrainerCardProps = {
 
 const martin: TrainerCardProps = {
   name: 'Martin Odstrčil',
-  image: imgMartin,
+  image: '/images/treneri-2023/martin.jpg',
   children: (
     <ul>
       <li>Prezident DSP Kometa Brno</li>
@@ -287,10 +266,9 @@ const martin: TrainerCardProps = {
   ),
 };
 
-
 const david: TrainerCardProps = {
   name: 'David Odstrčil',
-  image: imgDavid,
+  image: '/images/treneri-2023/david.jpg',
   children: (
     <ul>
       <li>Mistr světa v deseti tancích (2022)</li>
@@ -302,10 +280,9 @@ const david: TrainerCardProps = {
   ),
 };
 
-
 const tara: TrainerCardProps = {
   name: 'Tara Bohak',
-  image: imgTara,
+  image: '/images/treneri-2023/tara.jpg',
   children: (
     <ul>
       <li>Mistryně světa v deseti tancích (2022)</li>
@@ -319,7 +296,7 @@ const tara: TrainerCardProps = {
 
 const pavla: TrainerCardProps = {
   name: 'Pavla Landsfeldová',
-  image: imgPavla,
+  image: '/images/treneri/pavla.jpg',
   children: (
     <ul>
       <li>Trenérka mistrů České republiky ve standardních tancích</li>
@@ -332,7 +309,7 @@ const pavla: TrainerCardProps = {
 
 const jerry: TrainerCardProps = {
   name: 'Ing. Jaroslav Kučera',
-  image: imgJerry,
+  image: "/images/treneri/jerry.jpg",
   children: (
     <ul>
       <li>Předseda trenérské rady projektu Sportovně talentované mládeže ČSTS</li>
@@ -347,5 +324,5 @@ const jerry: TrainerCardProps = {
   ),
 };
 
-const internal = [mirek, filip, marie, roman, hanka, nela, lucka, grepi, maruska, matej];
+const internal = [mirek, filip, marie, roman, hanka, nela, lucka, grepi, maruska];
 const external = [martin, david, tara, pavla, jerry];

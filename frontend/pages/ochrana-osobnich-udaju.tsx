@@ -5,11 +5,8 @@ import { Heading } from 'components/Heading';
 export default function TermsConditions() {
   return (
     <>
-      <Heading
-        text="Ochrana osobních údajů"
-        image="/images/mohelnice2021-title.jpg"
-        color={{ r: 216, g: 28, b: 58, a: 0.6 }}
-      />
+      <Heading>Ochrana osobních údajů</Heading>
+
       <div className="prose">
         <p>
           <b>I. Základní ustanovení</b>

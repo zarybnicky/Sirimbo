@@ -10,10 +10,9 @@ import {
 } from 'lib/graphql/Event';
 import { ParticipationDialog } from './ParticipationForm';
 import { RichTextView } from './RichTextView';
-import classNames from 'classnames';
 import { usePermissions } from 'lib/data/use-permissions';
-import { Dropdown } from './Dropdown';
 import { EventParticipantExport } from './EventParticipantExport';
+import { Event } from 'lib/entities';
 
 interface Props {
   event: EventWithItemsFragment;
@@ -29,14 +28,7 @@ export const EventItem = ({ event, expanded: expandedInit = false }: Props) => {
     (event.attendeeExternals?.nodes?.length ?? 0);
 
   return (
-    <Card className="break-inside-avoid">
-      {perms.canEditEvent(event) && (
-        <Dropdown
-          className="absolute right-1 top-1"
-          align="end"
-          options={[{ title: 'Upravit', href: `/admin/akce/${event.id}` }]}
-        />
-      )}
+    <Card menu={Event.useMenu(event)} className="break-inside-avoid">
       <div className="flex justify-between flex-wrap text-stone-600">
         <div>
           {fullDateFormatter.formatRange(
@@ -56,9 +48,7 @@ export const EventItem = ({ event, expanded: expandedInit = false }: Props) => {
 
         {total > 0 && (
           <SimpleDialog title="Účastníci" button={<Button>Účastníci ({total})</Button>}>
-            {perms.canEditEvent(event) && (
-              <EventParticipantExport id={event.id} />
-            )}
+            {perms.canEditEvent(event) && <EventParticipantExport id={event.id} />}
 
             {!!event.attendeeUsers?.nodes?.length && <u>Členové</u>}
             {event.attendeeUsers?.nodes?.map((x) => (

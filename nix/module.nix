@@ -205,6 +205,10 @@ in {
           NEXT_PUBLIC_BASE_URL = "http${if cfg.ssl then "s" else ""}://${cfg.domain}";
         };
 
+        preStart = ''
+          mkdir -p $(readlink ${pkgs.sirimbo-frontend-beta}/.next/cache)
+        '';
+
         serviceConfig = {
           User = cfg.user;
           Group = cfg.group;
