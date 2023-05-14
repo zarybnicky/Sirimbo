@@ -28,8 +28,6 @@ yarn2nix-moretea.mkYarnPackage {
     cp -r public package.json $out/
     cp -r .next/standalone/frontend/* $out/
     cp -r .next/static $out/.next/
-    rm -rf $out/node_modules/sharp
-    cp -r node_modules/sharp $out/node_modules/
     PATTERN=/nix/store/
     ln -s /tmp/''${out//$PATTERN/} $out/.next/cache
   '';
