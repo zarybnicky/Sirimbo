@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEventQuery } from 'lib/graphql/Event';
+import { EventDocument } from 'lib/graphql/Event';
 import { Item } from 'components/layout/Item';
 import { EventItem } from 'components/EventItem';
 import { useAuth } from 'lib/data/use-auth';
@@ -10,12 +10,13 @@ import { Heading } from 'components/Heading';
 import { type NextPageWithLayout } from 'pages/_app';
 import { fromSlugArray } from 'lib/slugify';
 import { NextSeo } from 'next-seo';
+import { useGqlQuery } from 'lib/query';
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const { user } = useAuth();
   const id = fromSlugArray(router.query.id);
-  const { data } = useEventQuery({ id }, { enabled: !!id });
+  const { data } = useGqlQuery(EventDocument, { id }, { enabled: !!id });
 
   return (
     <>

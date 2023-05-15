@@ -1,4 +1,5 @@
-import { useArticlesQuery } from 'lib/graphql/Articles';
+import { ArticlesDocument } from 'lib/graphql/Articles';
+import { useGqlQuery } from 'lib/query';
 import { slugify } from 'lib/slugify';
 import { Route } from 'nextjs-routes';
 
@@ -18,11 +19,14 @@ export const useArticles = (
   articles: Article[];
   count: number;
 } => {
-  const { data } = useArticlesQuery({ limit, offset });
+  const { data } = useGqlQuery(ArticlesDocument, { limit, offset });
   return {
     articles: (data?.aktualities?.nodes || []).map((x) => ({
       id: x.id,
-      href: { pathname: '/articles/[id]/[...slug]', query: { id: x.id, slug: [slugify(x.atJmeno)] } },
+      href: {
+        pathname: '/articles/[id]/[...slug]',
+        query: { id: x.id, slug: [slugify(x.atJmeno)] },
+      },
       img: `/galerie/${x.galerieFotoByAtFotoMain?.gfPath}`,
       imgThumb: `/galerie/thumbnails/${x.galerieFotoByAtFotoMain?.gfPath}`,
       header: x.atJmeno,

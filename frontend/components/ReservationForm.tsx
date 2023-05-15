@@ -1,7 +1,6 @@
 import {
-  ReservationFragment,
-  useCreateReservationMutation,
-  useUpdateReservationMutation,
+    CreateReservationDocument,
+  ReservationFragment, UpdateReservationDocument,
 } from 'lib/graphql/Reservation';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -12,8 +11,9 @@ import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { NabidkaInput } from 'lib/graphql';
-import { useTrainerListQuery } from 'lib/graphql/User';
 import { DateRange, DateRangeInput } from './DateRange';
+import { useGqlMutation, useGqlQuery } from 'lib/query';
+import { TrainerListDocument } from 'lib/graphql/User';
 
 type FormProps = Pick<
   NabidkaInput,
@@ -26,10 +26,9 @@ export const ReservationForm: React.FC<{
   data?: ReservationFragment;
   onSuccess?: () => void;
 }> = ({ data, onSuccess }) => {
-  const { mutateAsync: doCreate } = useCreateReservationMutation({ onSuccess });
-  const { mutateAsync: doUpdate } = useUpdateReservationMutation({ onSuccess });
-
-  const { data: trainers } = useTrainerListQuery();
+  const { mutateAsync: doCreate } = useGqlMutation(CreateReservationDocument, { onSuccess });
+  const { mutateAsync: doUpdate } = useGqlMutation(UpdateReservationDocument, { onSuccess });
+  const { data: trainers } = useGqlQuery(TrainerListDocument, {});
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {

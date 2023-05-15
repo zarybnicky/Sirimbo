@@ -1,6 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { CohortGroupFragment, useCohortGroupQuery } from 'lib/graphql/CohortGroup';
-import { useCohortListQuery, useUpdateCohortMutation } from 'lib/graphql/Cohorts';
+import { CohortGroupDocument, CohortGroupFragment } from 'lib/graphql/CohortGroup';
+import { CohortListDocument, UpdateCohortDocument } from 'lib/graphql/Cohorts';
+import { getGqlKey, useGqlMutation, useGqlQuery } from 'lib/query';
 import React from 'react';
 import { PlusCircle, Trash2 } from 'react-feather';
 import { useForm } from 'react-hook-form';
@@ -12,16 +13,16 @@ type Props = {
 
 export function CohortListForm({ data }: Props) {
   const queryClient = useQueryClient();
-  const { data: cohorts } = useCohortListQuery();
+  const { data: cohorts } = useGqlQuery(CohortListDocument, {});
   const remaining = React.useMemo(() => {
     const used = data.skupiniesByCohortGroup.nodes.map((x) => x.id);
     const others = (cohorts?.skupinies?.nodes || []).filter((x) => !used.includes(x.id));
     return others.map((x) => ({ id: x.id, label: x.sName }));
   }, [cohorts, data]);
 
-  const { mutateAsync: update } = useUpdateCohortMutation({
+  const { mutateAsync: update } = useGqlMutation(UpdateCohortDocument, {
     onSuccess() {
-      queryClient.invalidateQueries(useCohortGroupQuery.getKey({ id: data.id }));
+      queryClient.invalidateQueries(getGqlKey(CohortGroupDocument, { id: data.id }));
     },
   });
 
@@ -29,11 +30,16 @@ export function CohortListForm({ data }: Props) {
 
   return (
     <div className="grid grid-cols-[2fr_1fr] gap-2 py-2 my-2">
-      <div className="col-span-2 text-stone-700 text-sm ">Tréninkové skupiny v programu</div>
+      <div className="col-span-2 text-stone-700 text-sm ">
+        Tréninkové skupiny v programu
+      </div>
       {data.skupiniesByCohortGroup.nodes.map((x) => (
         <>
           <div>{x.sName}</div>
-          <button className="text-red-700 w-4" onClick={() => update({ id: x.id, patch: { cohortGroup: null } })}>
+          <button
+            className="text-red-700 w-4"
+            onClick={() => update({ id: x.id, patch: { cohortGroup: null } })}
+          >
             <Trash2 />
           </button>
         </>

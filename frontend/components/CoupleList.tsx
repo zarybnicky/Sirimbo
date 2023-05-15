@@ -1,15 +1,16 @@
-import { useCoupleListQuery, useFixUnpairedCouplesMutation } from 'lib/graphql/Couple';
 import { Plus } from 'react-feather';
 import { useRouter } from 'next/router';
 import { List } from 'components/layout/List';
 import React from 'react';
 import { toast } from 'react-toastify';
 import { fromSlugArray } from 'lib/slugify';
+import { useGqlMutation, useGqlQuery } from 'lib/query';
+import { CoupleListDocument, FixUnpairedCouplesDocument } from 'lib/graphql/Couple';
 
 export function CoupleList() {
   const router = useRouter();
-  const { data, refetch } = useCoupleListQuery();
-  const { mutateAsync: doFix } = useFixUnpairedCouplesMutation({
+    const { data, refetch } = useGqlQuery(CoupleListDocument, {});
+  const { mutateAsync: doFix } = useGqlMutation(FixUnpairedCouplesDocument, {
     onSuccess: () => refetch(),
   });
 

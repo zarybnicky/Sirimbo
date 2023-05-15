@@ -1,11 +1,12 @@
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { Item } from 'components/layout/Item';
-import { useCurrentTenantQuery } from 'lib/graphql/Tenant';
+import { CurrentTenantDocument } from 'lib/graphql/Tenant';
 import { TenantForm } from 'components/TenantForm';
 import { type NextPageWithLayout } from 'pages/_app';
+import { useGqlQuery } from 'lib/query';
 
 const Page: NextPageWithLayout = () => {
-  const { data } = useCurrentTenantQuery();
+  const { data } = useGqlQuery(CurrentTenantDocument, {});
   return (
     <Item>
       <Item.Titlebar title={data?.getCurrentTenant?.name || '(Bez názvu)'} />

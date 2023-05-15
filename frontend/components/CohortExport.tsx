@@ -2,8 +2,9 @@ import * as React from 'react';
 import { saveAs } from 'file-saver';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { Button } from './Button';
-import { useMemberListQuery } from 'lib/graphql/User';
 import { useAuth } from 'lib/data/use-auth';
+import { fetchGql } from 'lib/query';
+import { MemberListDocument } from 'lib/graphql/User';
 
 export function CohortExport({ id, name }: { id?: string; name?: string }) {
   const { perms } = useAuth();
@@ -12,7 +13,7 @@ export function CohortExport({ id, name }: { id?: string; name?: string }) {
       e?.preventDefault();
 
       const { Workbook } = await import('exceljs');
-      const data = await useMemberListQuery.fetcher({ cohortId: id })();
+      const data = await fetchGql(MemberListDocument, {cohortId: id});
       const workbook = new Workbook();
       const worksheet = workbook.addWorksheet(name || 'Sheet 1');
 

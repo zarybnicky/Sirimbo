@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { usePaymentItemListQuery } from 'lib/graphql/Payment';
+import { PaymentItemListDocument } from 'lib/graphql/Payment';
 import { Button } from 'components/Button';
 import { fullDateFormatter } from 'lib/format-date';
 import { List } from 'components/layout/List';
@@ -8,10 +8,11 @@ import React from 'react';
 import { fromSlugArray } from 'lib/slugify';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { type NextPageWithLayout } from 'pages/_app';
+import { useGqlQuery } from 'lib/query';
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
-  const { data } = usePaymentItemListQuery();
+  const { data } = useGqlQuery(PaymentItemListDocument, {});
   const [search, setSearch] = React.useState('');
   const id = fromSlugArray(router.query.id);
 

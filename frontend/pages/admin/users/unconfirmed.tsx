@@ -1,8 +1,8 @@
 import { Card } from 'components/Card';
 import {
-  useDeleteUserMutation,
-  useConfirmUserMutation,
-  useUserListQuery,
+  ConfirmUserDocument,
+  DeleteUserDocument,
+  UserListDocument,
 } from 'lib/graphql/User';
 import { SelectElement } from 'components/SelectElement';
 import { useForm } from 'react-hook-form';
@@ -10,32 +10,33 @@ import { Trash2 as DeleteIcon, Check as CheckIcon } from 'react-feather';
 import { useConfirm } from 'components/Confirm';
 import React from 'react';
 import { UserFragment } from 'lib/graphql/CurrentUser';
-import { useCohortListQuery } from 'lib/graphql/Cohorts';
-import { useRoleListQuery } from 'lib/graphql/Roles';
+import { CohortListDocument } from 'lib/graphql/Cohorts';
+import { RoleListDocument } from 'lib/graphql/Roles';
 import { fullDateFormatter } from 'lib/format-date';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { UserList } from 'components/UserList';
 import { Item } from 'components/layout/Item';
 import { NextPageWithLayout } from 'pages/_app';
+import { useGqlMutation, useGqlQuery } from 'lib/query';
 
 type FormProps = {
   cohort: string;
-  role: string
-}
+  role: string;
+};
 
 const UnconfirmedUser: React.FC<{
   item: UserFragment;
   onProcessed: () => void;
 }> = ({ item, onProcessed }) => {
   const confirm = useConfirm();
-  const { data: cohorts } = useCohortListQuery({ visible: undefined });
-  const { data: roles } = useRoleListQuery();
   const { control, handleSubmit } = useForm<FormProps>({
-    defaultValues: {cohort: item.uSkupina},
+    defaultValues: { cohort: item.uSkupina },
   });
 
-  const { mutateAsync: confirmUser } = useConfirmUserMutation();
-  const { mutateAsync: deleteUser } = useDeleteUserMutation();
+  const { data: cohorts } = useGqlQuery(CohortListDocument, {});
+  const { data: roles } = useGqlQuery(RoleListDocument, {});
+  const { mutateAsync: confirmUser } = useGqlMutation(ConfirmUserDocument);
+  const { mutateAsync: deleteUser } = useGqlMutation(DeleteUserDocument);
 
   const onSubmit = React.useCallback(
     async (values: FormProps) => {
@@ -121,7 +122,7 @@ const UnconfirmedUser: React.FC<{
 };
 
 const Page: NextPageWithLayout = () => {
-  const { data: users, refetch } = useUserListQuery({ confirmed: false });
+  const { data: users, refetch } = useGqlQuery(UserListDocument, { confirmed: false });
 
   return (
     <Item>
@@ -131,11 +132,11 @@ const Page: NextPageWithLayout = () => {
       ))}
     </Item>
   );
-}
+};
 
 Page.list = <UserList />;
 Page.isDetail = true;
 Page.permissions = [PermissionKey.peUsers, PermissionLevel.P_OWNED];
-Page.staticTitle = "Uživatelé";
+Page.staticTitle = 'Uživatelé';
 
 export default Page;

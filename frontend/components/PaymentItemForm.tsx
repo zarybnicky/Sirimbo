@@ -1,9 +1,9 @@
 import React from 'react';
 import {
+  CreatePaymentItemDocument,
+  PaymentCategoryListDocument,
   PaymentItemFragment,
-  useCreatePaymentItemMutation,
-  usePaymentCategoryListQuery,
-  useUpdatePaymentItemMutation,
+  UpdatePaymentItemDocument,
 } from 'lib/graphql/Payment';
 import { useForm } from 'react-hook-form';
 import { SelectElement } from 'components/SelectElement';
@@ -12,7 +12,8 @@ import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { PlatbyItemInput } from 'lib/graphql';
-import { useUserListQuery } from 'lib/graphql/User';
+import { useGqlMutation, useGqlQuery } from 'lib/query';
+import { UserListDocument } from 'lib/graphql/User';
 
 type FormProps = Pick<
   PlatbyItemInput,
@@ -23,11 +24,15 @@ export const PaymentItemForm: React.FC<{
   data?: PaymentItemFragment;
   onSuccess: () => void;
 }> = ({ data, onSuccess }) => {
-  const { mutateAsync: doCreate } = useCreatePaymentItemMutation({ onSuccess });
-  const { mutateAsync: doUpdate } = useUpdatePaymentItemMutation({ onSuccess });
+  const { mutateAsync: doCreate } = useGqlMutation(CreatePaymentItemDocument, {
+    onSuccess,
+  });
+  const { mutateAsync: doUpdate } = useGqlMutation(UpdatePaymentItemDocument, {
+    onSuccess,
+  });
 
-  const { data: users } = useUserListQuery();
-  const { data: categories } = usePaymentCategoryListQuery();
+  const { data: users } = useGqlQuery(UserListDocument, {});
+  const { data: categories } = useGqlQuery(PaymentCategoryListDocument, {});
 
   // load also platby_raw linked to this one
   // php-unserialize-js the blob

@@ -7,13 +7,14 @@ import { SubmitButton } from './SubmitButton';
 import { UpozorneniInput } from 'lib/graphql';
 import {
   AnnouncementFragment,
-  useAnnouncementListQuery,
-  useCreateAnnouncementMutation,
-  useUpdateAnnouncementMutation,
+  AnnouncementListDocument,
+  CreateAnnouncementDocument,
+  UpdateAnnouncementDocument,
 } from 'lib/graphql/Announcement';
 import { useQueryClient } from '@tanstack/react-query';
 import { DateRange, DateRangeInput } from './DateRange';
 import dynamic from 'next/dynamic';
+import { getGqlKey, useGqlMutation } from 'lib/query';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
 type FormProps = Pick<UpozorneniInput, 'upNadpis' | 'upText'> & {
@@ -25,11 +26,15 @@ export const AnnouncementForm: React.FC<{
 }> = ({ data }) => {
   const queryClient = useQueryClient();
   const onSuccess = React.useCallback(() => {
-    queryClient.invalidateQueries(useAnnouncementListQuery.getKey());
+    queryClient.invalidateQueries(getGqlKey(AnnouncementListDocument, {}));
   }, [queryClient]);
 
-  const { mutateAsync: doCreate } = useCreateAnnouncementMutation({ onSuccess });
-  const { mutateAsync: doUpdate } = useUpdateAnnouncementMutation({ onSuccess });
+  const { mutateAsync: doCreate } = useGqlMutation(CreateAnnouncementDocument, {
+    onSuccess,
+  });
+  const { mutateAsync: doUpdate } = useGqlMutation(UpdateAnnouncementDocument, {
+    onSuccess,
+  });
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
@@ -61,7 +66,12 @@ export const AnnouncementForm: React.FC<{
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="upNadpis" label="Nadpis" required />
-      <RichTextEditor initialState={data?.upText} control={control} name="upText" label="Text" />
+      <RichTextEditor
+        initialState={data?.upText}
+        control={control}
+        name="upText"
+        label="Text"
+      />
       <DateRangeInput control={control} name="schedule" label="Publikováno od/do" />
       <SubmitButton loading={onSubmit.loading} />
     </form>

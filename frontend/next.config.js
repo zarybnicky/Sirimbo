@@ -18,7 +18,7 @@ let withSentryConfig = (x) => x;
 //   });
 // }
 
-module.exports = require('nextjs-routes/config')()(
+module.exports = require('nextjs-routes/config')({ outDir: '.' })(
   withBundleAnalyzer(
     withSentryConfig({
       reactStrictMode: true,

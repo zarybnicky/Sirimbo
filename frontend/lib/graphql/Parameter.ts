@@ -2,8 +2,7 @@
 /* eslint-disable */
 import * as Types from './index';
 
-import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
-import { fetcher } from 'lib/query';
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type MenuQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -37,112 +36,8 @@ export type DeleteParameterMutationVariables = Types.Exact<{
 export type DeleteParameterMutation = { __typename?: 'Mutation', deleteParameter: { __typename: 'DeleteParameterPayload' } | null };
 
 
-export const MenuDocument = `
-    query Menu {
-  parameter(paName: "menu") {
-    paValue
-  }
-}
-    `;
-export const useMenuQuery = <
-      TData = MenuQuery,
-      TError = unknown
-    >(
-      variables?: MenuQueryVariables,
-      options?: UseQueryOptions<MenuQuery, TError, TData>
-    ) =>
-    useQuery<MenuQuery, TError, TData>(
-      variables === undefined ? ['Menu'] : ['Menu', variables],
-      fetcher<MenuQuery, MenuQueryVariables>(MenuDocument, variables),
-      options
-    );
-
-useMenuQuery.getKey = (variables?: MenuQueryVariables) => variables === undefined ? ['Menu'] : ['Menu', variables];
-;
-
-useMenuQuery.fetcher = (variables?: MenuQueryVariables, options?: RequestInit['headers']) => fetcher<MenuQuery, MenuQueryVariables>(MenuDocument, variables, options);
-export const ParameterListDocument = `
-    query ParameterList {
-  parameters {
-    totalCount
-    nodes {
-      paName
-      paValue
-    }
-  }
-}
-    `;
-export const useParameterListQuery = <
-      TData = ParameterListQuery,
-      TError = unknown
-    >(
-      variables?: ParameterListQueryVariables,
-      options?: UseQueryOptions<ParameterListQuery, TError, TData>
-    ) =>
-    useQuery<ParameterListQuery, TError, TData>(
-      variables === undefined ? ['ParameterList'] : ['ParameterList', variables],
-      fetcher<ParameterListQuery, ParameterListQueryVariables>(ParameterListDocument, variables),
-      options
-    );
-
-useParameterListQuery.getKey = (variables?: ParameterListQueryVariables) => variables === undefined ? ['ParameterList'] : ['ParameterList', variables];
-;
-
-useParameterListQuery.fetcher = (variables?: ParameterListQueryVariables, options?: RequestInit['headers']) => fetcher<ParameterListQuery, ParameterListQueryVariables>(ParameterListDocument, variables, options);
-export const CreateParameterDocument = `
-    mutation CreateParameter($input: ParameterInput!) {
-  createParameter(input: {parameter: $input}) {
-    __typename
-  }
-}
-    `;
-export const useCreateParameterMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<CreateParameterMutation, TError, CreateParameterMutationVariables, TContext>) =>
-    useMutation<CreateParameterMutation, TError, CreateParameterMutationVariables, TContext>(
-      ['CreateParameter'],
-      (variables?: CreateParameterMutationVariables) => fetcher<CreateParameterMutation, CreateParameterMutationVariables>(CreateParameterDocument, variables)(),
-      options
-    );
-useCreateParameterMutation.getKey = () => ['CreateParameter'];
-
-useCreateParameterMutation.fetcher = (variables: CreateParameterMutationVariables, options?: RequestInit['headers']) => fetcher<CreateParameterMutation, CreateParameterMutationVariables>(CreateParameterDocument, variables, options);
-export const UpdateParameterDocument = `
-    mutation UpdateParameter($id: String!, $value: String!) {
-  updateParameter(input: {paName: $id, patch: {paValue: $value}}) {
-    __typename
-  }
-}
-    `;
-export const useUpdateParameterMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<UpdateParameterMutation, TError, UpdateParameterMutationVariables, TContext>) =>
-    useMutation<UpdateParameterMutation, TError, UpdateParameterMutationVariables, TContext>(
-      ['UpdateParameter'],
-      (variables?: UpdateParameterMutationVariables) => fetcher<UpdateParameterMutation, UpdateParameterMutationVariables>(UpdateParameterDocument, variables)(),
-      options
-    );
-useUpdateParameterMutation.getKey = () => ['UpdateParameter'];
-
-useUpdateParameterMutation.fetcher = (variables: UpdateParameterMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateParameterMutation, UpdateParameterMutationVariables>(UpdateParameterDocument, variables, options);
-export const DeleteParameterDocument = `
-    mutation DeleteParameter($id: String!) {
-  deleteParameter(input: {paName: $id}) {
-    __typename
-  }
-}
-    `;
-export const useDeleteParameterMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<DeleteParameterMutation, TError, DeleteParameterMutationVariables, TContext>) =>
-    useMutation<DeleteParameterMutation, TError, DeleteParameterMutationVariables, TContext>(
-      ['DeleteParameter'],
-      (variables?: DeleteParameterMutationVariables) => fetcher<DeleteParameterMutation, DeleteParameterMutationVariables>(DeleteParameterDocument, variables)(),
-      options
-    );
-useDeleteParameterMutation.getKey = () => ['DeleteParameter'];
-
-useDeleteParameterMutation.fetcher = (variables: DeleteParameterMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteParameterMutation, DeleteParameterMutationVariables>(DeleteParameterDocument, variables, options);
+export const MenuDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Menu"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"parameter"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"paName"},"value":{"kind":"StringValue","value":"menu","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"paValue"}}]}}]}}]} as unknown as DocumentNode<MenuQuery, MenuQueryVariables>;
+export const ParameterListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ParameterList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"parameters"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"paName"}},{"kind":"Field","name":{"kind":"Name","value":"paValue"}}]}}]}}]}}]} as unknown as DocumentNode<ParameterListQuery, ParameterListQueryVariables>;
+export const CreateParameterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateParameter"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ParameterInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createParameter"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"parameter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}}]}}]} as unknown as DocumentNode<CreateParameterMutation, CreateParameterMutationVariables>;
+export const UpdateParameterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateParameter"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"value"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateParameter"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"paName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"patch"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"paValue"},"value":{"kind":"Variable","name":{"kind":"Name","value":"value"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}}]}}]} as unknown as DocumentNode<UpdateParameterMutation, UpdateParameterMutationVariables>;
+export const DeleteParameterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteParameter"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteParameter"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"paName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}}]}}]} as unknown as DocumentNode<DeleteParameterMutation, DeleteParameterMutationVariables>;

@@ -1,8 +1,4 @@
 import { ReservationForm } from 'components/ReservationForm';
-import {
-  useDeleteReservationMutation,
-  useReservationQuery,
-} from 'lib/graphql/Reservation';
 import { useRouter } from 'next/router';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { ReservationList } from 'components/ReservationList';
@@ -10,12 +6,18 @@ import { Item } from 'components/layout/Item';
 import { DeleteButton } from 'components/DeleteButton';
 import { fromSlugArray } from 'lib/slugify';
 import { type NextPageWithLayout } from 'pages/_app';
+import { useGqlMutation, useGqlQuery } from 'lib/query';
+import { DeleteReservationDocument, ReservationDocument } from 'lib/graphql/Reservation';
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const id = fromSlugArray(router.query.id);
-  const { data } = useReservationQuery({ id }, { enabled: !!id, cacheTime: 0 });
-  const { mutateAsync: doDelete } = useDeleteReservationMutation({
+  const { data } = useGqlQuery(
+    ReservationDocument,
+    { id },
+    { enabled: !!id, cacheTime: 0 },
+  );
+  const { mutateAsync: doDelete } = useGqlMutation(DeleteReservationDocument, {
     onSuccess: () => router.push('/admin/nabidka'),
   });
   return (
@@ -34,6 +36,6 @@ const Page: NextPageWithLayout = () => {
 Page.list = <ReservationList />;
 Page.isDetail = true;
 Page.permissions = [PermissionKey.peNabidka, PermissionLevel.P_OWNED];
-Page.staticTitle = "Nabídky";
+Page.staticTitle = 'Nabídky';
 
 export default Page;

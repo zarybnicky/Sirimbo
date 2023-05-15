@@ -2,8 +2,7 @@
 /* eslint-disable */
 import * as Types from './index';
 
-import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
-import { fetcher } from 'lib/query';
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type FileFragment = { __typename: 'Dokumenty', dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null, id: string };
 
 export type FileListQueryVariables = Types.Exact<{
@@ -44,132 +43,9 @@ export type DeleteFileMutationVariables = Types.Exact<{
 
 export type DeleteFileMutation = { __typename?: 'Mutation', deleteDokumenty: { __typename: 'DeleteDokumentyPayload' } | null };
 
-export const FileFragmentDoc = `
-    fragment File on Dokumenty {
-  __typename
-  id: dId
-  dName
-  dFilename
-  dKategorie
-  dTimestamp
-}
-    `;
-export const FileListDocument = `
-    query FileList($limit: Int, $offset: Int, $category: Int) {
-  dokumenties(
-    offset: $offset
-    first: $limit
-    condition: {dKategorie: $category}
-    orderBy: D_TIMESTAMP_DESC
-  ) {
-    totalCount
-    nodes {
-      ...File
-      userByDKdo {
-        uJmeno
-        uPrijmeni
-      }
-    }
-  }
-}
-    ${FileFragmentDoc}`;
-export const useFileListQuery = <
-      TData = FileListQuery,
-      TError = unknown
-    >(
-      variables?: FileListQueryVariables,
-      options?: UseQueryOptions<FileListQuery, TError, TData>
-    ) =>
-    useQuery<FileListQuery, TError, TData>(
-      variables === undefined ? ['FileList'] : ['FileList', variables],
-      fetcher<FileListQuery, FileListQueryVariables>(FileListDocument, variables),
-      options
-    );
-
-useFileListQuery.getKey = (variables?: FileListQueryVariables) => variables === undefined ? ['FileList'] : ['FileList', variables];
-;
-
-useFileListQuery.fetcher = (variables?: FileListQueryVariables, options?: RequestInit['headers']) => fetcher<FileListQuery, FileListQueryVariables>(FileListDocument, variables, options);
-export const FileDocument = `
-    query File($id: BigInt!) {
-  dokumenty(dId: $id) {
-    ...File
-  }
-}
-    ${FileFragmentDoc}`;
-export const useFileQuery = <
-      TData = FileQuery,
-      TError = unknown
-    >(
-      variables: FileQueryVariables,
-      options?: UseQueryOptions<FileQuery, TError, TData>
-    ) =>
-    useQuery<FileQuery, TError, TData>(
-      ['File', variables],
-      fetcher<FileQuery, FileQueryVariables>(FileDocument, variables),
-      options
-    );
-
-useFileQuery.getKey = (variables: FileQueryVariables) => ['File', variables];
-;
-
-useFileQuery.fetcher = (variables: FileQueryVariables, options?: RequestInit['headers']) => fetcher<FileQuery, FileQueryVariables>(FileDocument, variables, options);
-export const CreateFileDocument = `
-    mutation CreateFile($input: DokumentyInput!) {
-  createDokumenty(input: {dokumenty: $input}) {
-    dokumenty {
-      id: dId
-    }
-  }
-}
-    `;
-export const useCreateFileMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<CreateFileMutation, TError, CreateFileMutationVariables, TContext>) =>
-    useMutation<CreateFileMutation, TError, CreateFileMutationVariables, TContext>(
-      ['CreateFile'],
-      (variables?: CreateFileMutationVariables) => fetcher<CreateFileMutation, CreateFileMutationVariables>(CreateFileDocument, variables)(),
-      options
-    );
-useCreateFileMutation.getKey = () => ['CreateFile'];
-
-useCreateFileMutation.fetcher = (variables: CreateFileMutationVariables, options?: RequestInit['headers']) => fetcher<CreateFileMutation, CreateFileMutationVariables>(CreateFileDocument, variables, options);
-export const UpdateFileDocument = `
-    mutation UpdateFile($id: BigInt!, $patch: DokumentyPatch!) {
-  updateDokumenty(input: {dId: $id, patch: $patch}) {
-    __typename
-  }
-}
-    `;
-export const useUpdateFileMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<UpdateFileMutation, TError, UpdateFileMutationVariables, TContext>) =>
-    useMutation<UpdateFileMutation, TError, UpdateFileMutationVariables, TContext>(
-      ['UpdateFile'],
-      (variables?: UpdateFileMutationVariables) => fetcher<UpdateFileMutation, UpdateFileMutationVariables>(UpdateFileDocument, variables)(),
-      options
-    );
-useUpdateFileMutation.getKey = () => ['UpdateFile'];
-
-useUpdateFileMutation.fetcher = (variables: UpdateFileMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateFileMutation, UpdateFileMutationVariables>(UpdateFileDocument, variables, options);
-export const DeleteFileDocument = `
-    mutation DeleteFile($id: BigInt!) {
-  deleteDokumenty(input: {dId: $id}) {
-    __typename
-  }
-}
-    `;
-export const useDeleteFileMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<DeleteFileMutation, TError, DeleteFileMutationVariables, TContext>) =>
-    useMutation<DeleteFileMutation, TError, DeleteFileMutationVariables, TContext>(
-      ['DeleteFile'],
-      (variables?: DeleteFileMutationVariables) => fetcher<DeleteFileMutation, DeleteFileMutationVariables>(DeleteFileDocument, variables)(),
-      options
-    );
-useDeleteFileMutation.getKey = () => ['DeleteFile'];
-
-useDeleteFileMutation.fetcher = (variables: DeleteFileMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteFileMutation, DeleteFileMutationVariables>(DeleteFileDocument, variables, options);
+export const FileFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"File"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Dokumenty"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"dId"}},{"kind":"Field","name":{"kind":"Name","value":"dName"}},{"kind":"Field","name":{"kind":"Name","value":"dFilename"}},{"kind":"Field","name":{"kind":"Name","value":"dKategorie"}},{"kind":"Field","name":{"kind":"Name","value":"dTimestamp"}}]}}]} as unknown as DocumentNode<FileFragment, unknown>;
+export const FileListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FileList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"category"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"dokumenties"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"condition"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"dKategorie"},"value":{"kind":"Variable","name":{"kind":"Name","value":"category"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"D_TIMESTAMP_DESC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"File"}},{"kind":"Field","name":{"kind":"Name","value":"userByDKdo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"File"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Dokumenty"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"dId"}},{"kind":"Field","name":{"kind":"Name","value":"dName"}},{"kind":"Field","name":{"kind":"Name","value":"dFilename"}},{"kind":"Field","name":{"kind":"Name","value":"dKategorie"}},{"kind":"Field","name":{"kind":"Name","value":"dTimestamp"}}]}}]} as unknown as DocumentNode<FileListQuery, FileListQueryVariables>;
+export const FileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"File"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"dokumenty"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"dId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"File"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"File"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Dokumenty"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"dId"}},{"kind":"Field","name":{"kind":"Name","value":"dName"}},{"kind":"Field","name":{"kind":"Name","value":"dFilename"}},{"kind":"Field","name":{"kind":"Name","value":"dKategorie"}},{"kind":"Field","name":{"kind":"Name","value":"dTimestamp"}}]}}]} as unknown as DocumentNode<FileQuery, FileQueryVariables>;
+export const CreateFileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateFile"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DokumentyInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createDokumenty"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"dokumenty"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"dokumenty"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"dId"}}]}}]}}]}}]} as unknown as DocumentNode<CreateFileMutation, CreateFileMutationVariables>;
+export const UpdateFileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateFile"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"patch"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DokumentyPatch"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateDokumenty"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"dId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"patch"},"value":{"kind":"Variable","name":{"kind":"Name","value":"patch"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}}]}}]} as unknown as DocumentNode<UpdateFileMutation, UpdateFileMutationVariables>;
+export const DeleteFileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteFile"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteDokumenty"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"dId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}}]}}]} as unknown as DocumentNode<DeleteFileMutation, DeleteFileMutationVariables>;

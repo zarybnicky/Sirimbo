@@ -1,7 +1,7 @@
 import {
+    CreateScheduleDocument,
   ScheduleFragment,
-  useCreateScheduleMutation,
-  useUpdateScheduleMutation,
+  UpdateScheduleDocument,
 } from 'lib/graphql/Schedule';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -12,7 +12,8 @@ import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { RozpiInput } from 'lib/graphql';
-import { useTrainerListQuery } from 'lib/graphql/User';
+import { useGqlMutation, useGqlQuery } from 'lib/query';
+import { TrainerListDocument } from 'lib/graphql/User';
 
 type FormProps = Pick<RozpiInput, 'rTrener' | 'rKde' | 'rDatum' | 'rVisible' | 'rLock'>;
 
@@ -20,10 +21,10 @@ export const ScheduleForm: React.FC<{
   data?: ScheduleFragment;
   onSuccess: () => void;
 }> = ({ data, onSuccess }) => {
-  const { mutateAsync: doCreate } = useCreateScheduleMutation({ onSuccess });
-  const { mutateAsync: doUpdate } = useUpdateScheduleMutation({ onSuccess });
+  const { mutateAsync: doCreate } = useGqlMutation(CreateScheduleDocument, { onSuccess });
+  const { mutateAsync: doUpdate } = useGqlMutation(UpdateScheduleDocument, { onSuccess });
 
-  const { data: trainers } = useTrainerListQuery();
+    const { data: trainers } = useGqlQuery(TrainerListDocument, {});
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {

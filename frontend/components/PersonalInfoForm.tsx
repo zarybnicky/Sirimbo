@@ -1,7 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from 'lib/data/use-auth';
-import { useCurrentUserQuery } from 'lib/graphql/CurrentUser';
-import { useUpdateUserMutation } from 'lib/graphql/User';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { SelectElement } from 'components/SelectElement';
@@ -14,6 +12,9 @@ import { ErrorBox } from 'components/ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { pipe } from 'fp-ts/lib/function';
 import { pick } from 'lib/form-utils';
+import { getGqlKey, useGqlMutation } from 'lib/query';
+import { CurrentUserDocument } from 'lib/graphql/CurrentUser';
+import { UpdateUserDocument } from 'lib/graphql/User';
 
 const fields = [
   'uJmeno',
@@ -42,11 +43,11 @@ export const PersonalInfoForm: React.FC<{
 
   const queryClient = useQueryClient();
   const onSuccess = React.useCallback(() => {
-    queryClient.invalidateQueries(useCurrentUserQuery.getKey());
+    queryClient.invalidateQueries(getGqlKey(CurrentUserDocument, {}));
     realOnSuccess();
   }, [queryClient, realOnSuccess]);
 
-  const { mutateAsync: doUpdate } = useUpdateUserMutation({ onSuccess });
+  const { mutateAsync: doUpdate } = useGqlMutation(UpdateUserDocument, { onSuccess });
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {

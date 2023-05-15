@@ -1,4 +1,3 @@
-import { useCoupleQuery, useDeleteCoupleMutation } from 'lib/graphql/Couple';
 import { useRouter } from 'next/router';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { Item } from 'components/layout/Item';
@@ -8,12 +7,14 @@ import { shortDateFormatter } from 'lib/format-date';
 import { Card } from 'components/Card';
 import { fromSlugArray } from 'lib/slugify';
 import { type NextPageWithLayout } from 'pages/_app';
+import { useGqlMutation, useGqlQuery } from 'lib/query';
+import { CoupleDocument, DeleteCoupleDocument } from 'lib/graphql/Couple';
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const id = fromSlugArray(router.query.id);
-  const { data } = useCoupleQuery({ id }, { enabled: !!id, cacheTime: 0 });
-  const { mutateAsync: doDelete } = useDeleteCoupleMutation({
+    const { data } = useGqlQuery(CoupleDocument, { id }, { enabled: !!id, cacheTime: 0 });
+  const { mutateAsync: doDelete } = useGqlMutation(DeleteCoupleDocument, {
     onSuccess: () => router.push('/admin/nastenka'),
   });
   const item = data?.pary;

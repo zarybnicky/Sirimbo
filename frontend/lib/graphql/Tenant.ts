@@ -2,8 +2,7 @@
 /* eslint-disable */
 import * as Types from './index';
 
-import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
-import { fetcher } from 'lib/query';
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type TenantFragment = { __typename?: 'Tenant', id: string, name: string, memberInfo: string, locationsByTenant: { __typename?: 'LocationsConnection', nodes: Array<{ __typename?: 'Location', id: string, name: string, description: { [key: string]: any } }> } };
 
 export type CurrentTenantQueryVariables = Types.Exact<{ [key: string]: never; }>;
@@ -18,60 +17,6 @@ export type UpdateTenantMutationVariables = Types.Exact<{
 
 export type UpdateTenantMutation = { __typename?: 'Mutation', updateTenant: { __typename: 'UpdateTenantPayload' } | null };
 
-export const TenantFragmentDoc = `
-    fragment Tenant on Tenant {
-  id
-  name
-  memberInfo
-  locationsByTenant {
-    nodes {
-      id
-      name
-      description
-    }
-  }
-}
-    `;
-export const CurrentTenantDocument = `
-    query CurrentTenant {
-  getCurrentTenant {
-    ...Tenant
-  }
-}
-    ${TenantFragmentDoc}`;
-export const useCurrentTenantQuery = <
-      TData = CurrentTenantQuery,
-      TError = unknown
-    >(
-      variables?: CurrentTenantQueryVariables,
-      options?: UseQueryOptions<CurrentTenantQuery, TError, TData>
-    ) =>
-    useQuery<CurrentTenantQuery, TError, TData>(
-      variables === undefined ? ['CurrentTenant'] : ['CurrentTenant', variables],
-      fetcher<CurrentTenantQuery, CurrentTenantQueryVariables>(CurrentTenantDocument, variables),
-      options
-    );
-
-useCurrentTenantQuery.getKey = (variables?: CurrentTenantQueryVariables) => variables === undefined ? ['CurrentTenant'] : ['CurrentTenant', variables];
-;
-
-useCurrentTenantQuery.fetcher = (variables?: CurrentTenantQueryVariables, options?: RequestInit['headers']) => fetcher<CurrentTenantQuery, CurrentTenantQueryVariables>(CurrentTenantDocument, variables, options);
-export const UpdateTenantDocument = `
-    mutation UpdateTenant($input: UpdateTenantInput!) {
-  updateTenant(input: $input) {
-    __typename
-  }
-}
-    `;
-export const useUpdateTenantMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<UpdateTenantMutation, TError, UpdateTenantMutationVariables, TContext>) =>
-    useMutation<UpdateTenantMutation, TError, UpdateTenantMutationVariables, TContext>(
-      ['UpdateTenant'],
-      (variables?: UpdateTenantMutationVariables) => fetcher<UpdateTenantMutation, UpdateTenantMutationVariables>(UpdateTenantDocument, variables)(),
-      options
-    );
-useUpdateTenantMutation.getKey = () => ['UpdateTenant'];
-
-useUpdateTenantMutation.fetcher = (variables: UpdateTenantMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateTenantMutation, UpdateTenantMutationVariables>(UpdateTenantDocument, variables, options);
+export const TenantFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Tenant"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Tenant"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"memberInfo"}},{"kind":"Field","name":{"kind":"Name","value":"locationsByTenant"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]}}]}}]} as unknown as DocumentNode<TenantFragment, unknown>;
+export const CurrentTenantDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CurrentTenant"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getCurrentTenant"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Tenant"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Tenant"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Tenant"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"memberInfo"}},{"kind":"Field","name":{"kind":"Name","value":"locationsByTenant"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]}}]}}]} as unknown as DocumentNode<CurrentTenantQuery, CurrentTenantQueryVariables>;
+export const UpdateTenantDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTenant"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateTenantInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTenant"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}}]}}]} as unknown as DocumentNode<UpdateTenantMutation, UpdateTenantMutationVariables>;

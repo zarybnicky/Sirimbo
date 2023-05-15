@@ -4,14 +4,15 @@ import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { toast } from 'react-toastify';
-import { useSubmitFormMutation } from 'lib/graphql/Crm';
 import { DatePickerElement } from './DateRange';
 import { RadioButtonGroup } from './RadioButtonGroup';
 import { useForm } from 'react-hook-form';
 import { Card } from './Card';
+import { useGqlMutation } from 'lib/query';
+import { SubmitFormDocument } from 'lib/graphql/Crm';
 
 export const ExhibitionRequestForm = () => {
-  const { mutateAsync: submit } = useSubmitFormMutation();
+  const mutation = useGqlMutation(SubmitFormDocument, {});
   const { control, handleSubmit } = useForm();
 
   const onSubmit = useAsyncCallback(async ({ op, ...data }: any) => {
@@ -19,7 +20,7 @@ export const ExhibitionRequestForm = () => {
       fbq('track', 'SubmitApplication');
     }
     const url = window.location.toString();
-    await submit({ type: 'Zájemce o vystoupení', data, url });
+    await mutation.mutateAsync({ type: 'Zájemce o vystoupení', data, url });
     toast.success('Brzy se vám ozveme!');
   });
 

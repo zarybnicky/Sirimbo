@@ -1,12 +1,13 @@
-import { useCohortGroupListQuery } from 'lib/graphql/CohortGroup';
 import { Plus } from 'react-feather';
 import { useRouter } from 'next/router';
 import { List } from 'components/layout/List';
 import { fromSlugArray } from 'lib/slugify';
+import { useGqlQuery } from 'lib/query';
+import { CohortGroupListDocument } from 'lib/graphql/CohortGroup';
 
 export function CohortGroupList() {
   const router = useRouter();
-  const { data } = useCohortGroupListQuery();
+  const { data } = useGqlQuery(CohortGroupListDocument, {});
   const id = fromSlugArray(router.query.id);
 
   return (

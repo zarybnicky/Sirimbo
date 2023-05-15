@@ -2,8 +2,7 @@
 /* eslint-disable */
 import * as Types from './index';
 
-import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
-import { fetcher } from 'lib/query';
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type FormResponsesQueryVariables = Types.Exact<{
   type?: Types.InputMaybe<Types.Scalars['String']>;
 }>;
@@ -21,53 +20,5 @@ export type SubmitFormMutationVariables = Types.Exact<{
 export type SubmitFormMutation = { __typename?: 'Mutation', submitForm: { __typename?: 'SubmitFormPayload', clientMutationId: string | null } | null };
 
 
-export const FormResponsesDocument = `
-    query FormResponses($type: String) {
-  formResponses(condition: {type: $type}, orderBy: UPDATED_AT_DESC) {
-    totalCount
-    nodes {
-      id
-      data
-      type
-      url
-      createdAt
-    }
-  }
-}
-    `;
-export const useFormResponsesQuery = <
-      TData = FormResponsesQuery,
-      TError = unknown
-    >(
-      variables?: FormResponsesQueryVariables,
-      options?: UseQueryOptions<FormResponsesQuery, TError, TData>
-    ) =>
-    useQuery<FormResponsesQuery, TError, TData>(
-      variables === undefined ? ['FormResponses'] : ['FormResponses', variables],
-      fetcher<FormResponsesQuery, FormResponsesQueryVariables>(FormResponsesDocument, variables),
-      options
-    );
-
-useFormResponsesQuery.getKey = (variables?: FormResponsesQueryVariables) => variables === undefined ? ['FormResponses'] : ['FormResponses', variables];
-;
-
-useFormResponsesQuery.fetcher = (variables?: FormResponsesQueryVariables, options?: RequestInit['headers']) => fetcher<FormResponsesQuery, FormResponsesQueryVariables>(FormResponsesDocument, variables, options);
-export const SubmitFormDocument = `
-    mutation SubmitForm($type: String!, $url: String!, $data: JSON!) {
-  submitForm(input: {type: $type, url: $url, data: $data}) {
-    clientMutationId
-  }
-}
-    `;
-export const useSubmitFormMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<SubmitFormMutation, TError, SubmitFormMutationVariables, TContext>) =>
-    useMutation<SubmitFormMutation, TError, SubmitFormMutationVariables, TContext>(
-      ['SubmitForm'],
-      (variables?: SubmitFormMutationVariables) => fetcher<SubmitFormMutation, SubmitFormMutationVariables>(SubmitFormDocument, variables)(),
-      options
-    );
-useSubmitFormMutation.getKey = () => ['SubmitForm'];
-
-useSubmitFormMutation.fetcher = (variables: SubmitFormMutationVariables, options?: RequestInit['headers']) => fetcher<SubmitFormMutation, SubmitFormMutationVariables>(SubmitFormDocument, variables, options);
+export const FormResponsesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FormResponses"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"type"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"formResponses"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"condition"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"type"},"value":{"kind":"Variable","name":{"kind":"Name","value":"type"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"UPDATED_AT_DESC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"data"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]}}]} as unknown as DocumentNode<FormResponsesQuery, FormResponsesQueryVariables>;
+export const SubmitFormDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SubmitForm"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"type"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"url"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submitForm"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"type"},"value":{"kind":"Variable","name":{"kind":"Name","value":"type"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"url"},"value":{"kind":"Variable","name":{"kind":"Name","value":"url"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"clientMutationId"}}]}}]}}]} as unknown as DocumentNode<SubmitFormMutation, SubmitFormMutationVariables>;

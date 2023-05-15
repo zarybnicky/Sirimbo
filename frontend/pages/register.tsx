@@ -10,17 +10,18 @@ import { useRouter } from 'next/router';
 import { SubmitButton } from 'components/SubmitButton';
 import { RadioButtonGroupElement } from 'components/RadioButtomGroupElement';
 import { toast } from 'react-toastify';
-import { useCohortListQuery } from 'lib/graphql/Cohorts';
-import { useRegisterMutation } from 'lib/graphql/CurrentUser';
+import { CohortListDocument } from 'lib/graphql/Cohorts';
+import { RegisterDocument } from 'lib/graphql/CurrentUser';
 import { Item } from 'components/layout/Item';
 import { type NextPageWithLayout } from 'pages/_app';
+import { useGqlMutation, useGqlQuery } from 'lib/query';
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const countries = useCountries();
-  const { data: cohorts } = useCohortListQuery({ visible: true });
+  const { data: cohorts } = useGqlQuery(CohortListDocument, { visible: true });
+  const { mutateAsync: register } = useGqlMutation(RegisterDocument);
   const { control, handleSubmit, watch } = useForm();
-  const { mutateAsync: register } = useRegisterMutation();
 
   const onSubmit = useAsyncCallback(async (values: any) => {
     await register({

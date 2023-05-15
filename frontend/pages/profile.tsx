@@ -3,25 +3,26 @@ import { Item } from 'components/layout/Item';
 import { List } from 'components/layout/List';
 import { useAuth } from 'lib/data/use-auth';
 import { getAgeGroup } from 'lib/get-age-group';
-import { useCohortListQuery } from 'lib/graphql/Cohorts';
+import { CohortListDocument } from 'lib/graphql/Cohorts';
+import { MyLessonsDocument } from 'lib/graphql/Schedule';
 import React from 'react';
 import { Edit } from 'react-feather';
 import { PersonalInfoForm } from 'components/PersonalInfoForm';
 import { ChangePasswordForm } from 'components/ChangePasswordForm';
-import { useMyLessonsQuery } from 'lib/graphql/Schedule';
 import { LessonButton } from 'components/LessonButton';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { type NextPageWithLayout } from 'pages/_app';
+import { useGqlQuery } from 'lib/query';
 
 const Page: NextPageWithLayout = () => {
   const { user, couple } = useAuth();
-  const { data: cohorts } = useCohortListQuery();
+  const { data: cohorts } = useGqlQuery(CohortListDocument, {});
 
-  const { data: pastLessons } = useMyLessonsQuery({
+  const { data: pastLessons } = useGqlQuery(MyLessonsDocument, {
     startDate: new Date(23, 1).toISOString().substring(0, 10),
     endDate: new Date().toISOString().substring(0, 10),
   });
-  const { data: upcomingLessons } = useMyLessonsQuery({
+  const { data: upcomingLessons } = useGqlQuery(MyLessonsDocument, {
     startDate: new Date().toISOString().substring(0, 10),
     endDate: new Date(2123, 1).toISOString().substring(0, 10),
   });
@@ -93,7 +94,7 @@ const Page: NextPageWithLayout = () => {
   );
 };
 
-Page.staticTitle = "Profil";
+Page.staticTitle = 'Profil';
 Page.permissions = [PermissionKey.peNastenka, PermissionLevel.P_VIEW];
 
 export default Page;

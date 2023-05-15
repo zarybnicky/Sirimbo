@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useScheduleListQuery } from 'lib/graphql/Schedule';
+import { ScheduleListDocument } from 'lib/graphql/Schedule';
 import { useRouter } from 'next/router';
 import { Button } from 'components/Button';
 import { fullDateFormatter } from 'lib/format-date';
@@ -8,11 +8,12 @@ import { List } from 'components/layout/List';
 import { FuzzyList } from 'components/FuzzyList';
 import { fromSlugArray } from 'lib/slugify';
 import { type NextPageWithLayout } from 'pages/_app';
+import { useGqlQuery } from 'lib/query';
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const id = fromSlugArray(router.query.id);
-  const { data } = useScheduleListQuery();
+  const { data } = useGqlQuery(ScheduleListDocument, {});
 
   return (
     <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>

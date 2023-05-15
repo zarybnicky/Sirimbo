@@ -1,10 +1,11 @@
-import { useMsmtExportQuery } from 'lib/graphql/User';
 import { saveAs } from 'file-saver';
 import format from 'date-fns/format';
+import { fetchGql } from './query';
+import { MsmtExportDocument } from './graphql/User';
 
-export const exportMSMT = async () => {
+export async function exportMSMT() {
   const { Workbook } = await import('exceljs');
-  const data = await useMsmtExportQuery.fetcher()();
+  const data = await fetchGql(MsmtExportDocument, {});
   const workbook = new Workbook();
   const worksheet = workbook.addWorksheet('MŠMT Export');
 
@@ -67,4 +68,4 @@ export const exportMSMT = async () => {
 
   const buf = await workbook.csv.writeBuffer();
   saveAs(new Blob([buf]), 'Olymp-MSMT-2023.csv');
-};
+}

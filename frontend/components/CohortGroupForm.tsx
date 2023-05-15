@@ -1,8 +1,8 @@
 import {
   CohortGroupFragment,
-  useCohortGroupListQuery,
-  useCreateCohortGroupMutation,
-  useUpdateCohortGroupMutation,
+  CohortGroupListDocument,
+  CreateCohortGroupDocument,
+  UpdateCohortGroupDocument,
 } from 'lib/graphql/CohortGroup';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -17,6 +17,7 @@ import { toast } from 'react-toastify';
 import dynamic from 'next/dynamic';
 import { pipe } from 'fp-ts/lib/function';
 import { pick } from 'lib/form-utils';
+import { getGqlKey, useGqlMutation } from 'lib/query';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
 const fields = ['name', 'description', 'isPublic', 'ordering'] as const;
@@ -29,11 +30,15 @@ type Props = {
 export function CohortGroupForm({ data }: Props) {
   const queryClient = useQueryClient();
   const onSuccess = React.useCallback(() => {
-    queryClient.invalidateQueries(useCohortGroupListQuery.getKey());
+    queryClient.invalidateQueries(getGqlKey(CohortGroupListDocument, {}));
   }, [queryClient]);
 
-  const { mutateAsync: doCreate } = useCreateCohortGroupMutation({ onSuccess });
-  const { mutateAsync: doUpdate } = useUpdateCohortGroupMutation({ onSuccess });
+  const { mutateAsync: doCreate } = useGqlMutation(CreateCohortGroupDocument, {
+    onSuccess,
+  });
+  const { mutateAsync: doUpdate } = useGqlMutation(UpdateCohortGroupDocument, {
+    onSuccess,
+  });
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {

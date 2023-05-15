@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { useRouter } from 'next/router';
-import { usePaymentGroupListQuery } from 'lib/graphql/Payment';
 import { Button } from 'components/Button';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { List } from 'components/layout/List';
 import { FuzzyList } from 'components/FuzzyList';
 import { fromSlugArray } from 'lib/slugify';
 import { type NextPageWithLayout } from 'pages/_app';
+import { useGqlQuery } from 'lib/query';
+import { PaymentGroupListDocument } from 'lib/graphql/Payment';
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const id = fromSlugArray(router.query.id);
-  const { data } = usePaymentGroupListQuery();
+  const { data } = useGqlQuery(PaymentGroupListDocument, {});
 
   return (
     <div className="container mx-auto max-w-5xl" style={{ padding: '4rem 0 6rem' }}>

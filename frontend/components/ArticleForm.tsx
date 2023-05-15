@@ -7,10 +7,11 @@ import { SubmitButton } from './SubmitButton';
 import { AktualityInput } from 'lib/graphql';
 import {
   ArticleFragment,
-  useCreateArticleMutation,
-  useUpdateArticleMutation,
+  CreateArticleDocument,
+  UpdateArticleDocument,
 } from 'lib/graphql/Articles';
 import dynamic from 'next/dynamic';
+import { useGqlMutation } from 'lib/query';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
 type FormProps = Pick<AktualityInput, 'atJmeno' | 'atPreview' | 'atText'>;
@@ -19,8 +20,8 @@ export const ArticleForm: React.FC<{
   data?: ArticleFragment;
   onSuccess: () => void;
 }> = ({ data, onSuccess }) => {
-  const { mutateAsync: doCreate } = useCreateArticleMutation({ onSuccess });
-  const { mutateAsync: doUpdate } = useUpdateArticleMutation({ onSuccess });
+  const { mutateAsync: doCreate } = useGqlMutation(CreateArticleDocument, { onSuccess });
+  const { mutateAsync: doUpdate } = useGqlMutation(UpdateArticleDocument, { onSuccess });
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
@@ -47,8 +48,18 @@ export const ArticleForm: React.FC<{
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="atJmeno" label="Název" required />
-      <RichTextEditor control={control} initialState={data?.atPreview} name="atPreview" label="Shrnutí" />
-      <RichTextEditor control={control} initialState={data?.atText} name="atText" label="Text" />
+      <RichTextEditor
+        control={control}
+        initialState={data?.atPreview}
+        name="atPreview"
+        label="Shrnutí"
+      />
+      <RichTextEditor
+        control={control}
+        initialState={data?.atText}
+        name="atText"
+        label="Text"
+      />
       <SubmitButton loading={onSubmit.loading} />
     </form>
   );

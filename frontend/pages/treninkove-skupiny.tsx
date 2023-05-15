@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
-import { useCohortListWithMembersQuery } from 'lib/graphql/Cohorts';
+import { CohortListWithMembersDocument } from 'lib/graphql/Cohorts';
 import { useAuth } from 'lib/data/use-auth';
 import { CohortExport } from 'components/CohortExport';
 import { Item } from 'components/layout/Item';
 import { CohortItem } from 'components/CohortItem';
 import classNames from 'classnames';
 import { type NextPageWithLayout } from 'pages/_app';
+import { useGqlQuery } from 'lib/query';
 
 const Page: NextPageWithLayout = () => {
   const { user } = useAuth();
-  const { data: cohorts } = useCohortListWithMembersQuery({ visible: true });
+  const { data: cohorts } = useGqlQuery(CohortListWithMembersDocument, { visible: true });
 
   return (
     <>

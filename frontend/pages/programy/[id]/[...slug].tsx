@@ -2,7 +2,8 @@ import { Card } from 'components/Card';
 import { Heading } from 'components/Heading';
 import { Item } from 'components/layout/Item';
 import { RichTextView } from 'components/RichTextView';
-import { CohortGroupFragment, useCohortGroupQuery } from 'lib/graphql/CohortGroup';
+import { CohortGroupFragment, CohortGroupDocument } from 'lib/graphql/CohortGroup';
+import { fetchGql } from 'lib/query';
 import { fromSlugArray, slugify } from 'lib/slugify';
 import { GetStaticProps } from 'next';
 import { NextSeo } from 'next-seo';
@@ -40,10 +41,7 @@ export default Page;
 export const getStaticPaths = async () => ({ paths: [], fallback: 'blocking' });
 export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
   const id = fromSlugArray(context.params?.id) || fromSlugArray(context.params?.slug);
-  const query = await useCohortGroupQuery
-    .fetcher({ id })()
-    .catch(() => null);
-  const item = query?.cohortGroup;
+  const item = await fetchGql(CohortGroupDocument, {id}).then(x => x.cohortGroup);
 
   if (!item) {
     return {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useArticlesQuery } from 'lib/graphql/Articles';
+import { ArticlesDocument } from 'lib/graphql/Articles';
 import { useRouter } from 'next/router';
 import { Plus } from 'react-feather';
 import { fullDateFormatter } from 'lib/format-date';
@@ -7,11 +7,12 @@ import { List } from 'components/layout/List';
 import { FuzzyList } from 'components/FuzzyList';
 import { TextField } from './TextField';
 import { fromSlugArray } from 'lib/slugify';
+import { useGqlQuery } from 'lib/query';
 
 export function ArticleList() {
   const router = useRouter();
   const [search, setSearch] = React.useState('');
-  const { data, refetch } = useArticlesQuery();
+  const { data } = useGqlQuery(ArticlesDocument, {});
   const id = fromSlugArray(router.query.id);
 
   return (

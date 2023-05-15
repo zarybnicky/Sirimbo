@@ -1,14 +1,15 @@
 import * as React from 'react';
 import {
   CouplePartialFragment,
+  CurrentUserDocument,
+  LoginDocument,
+  LogoutDocument,
   UserAuthFragment,
-  useCurrentUserQuery,
-  useLoginMutation,
-  useLogoutMutation,
 } from 'lib/graphql/CurrentUser';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { defaultPermissions, PermissionChecker } from './use-permissions';
+import { useGqlMutation, useGqlQuery } from 'lib/query';
 
 interface AuthContextType {
   isLoading: boolean;
@@ -26,14 +27,15 @@ export const ProvideAuth = ({ children }: React.PropsWithChildren) => {
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
-  const { data: currentUser } = useCurrentUserQuery(
+  const { data: currentUser } = useGqlQuery(
+    CurrentUserDocument,
     {},
     { onSettled: () => setIsLoading(false) },
   );
 
   const user = currentUser?.getCurrentUser || null;
   const couple = currentUser?.getCurrentCouple || null;
-  const { mutateAsync: doSignIn } = useLoginMutation({
+  const { mutateAsync: doSignIn } = useGqlMutation(LoginDocument, {
     onSuccess: (data) => {
       queryClient.setQueryData(['CurrentUser', {}], {
         getCurrentUser: data.login?.result?.usr,
@@ -41,7 +43,7 @@ export const ProvideAuth = ({ children }: React.PropsWithChildren) => {
       });
     },
   });
-  const { mutateAsync: doSignOut } = useLogoutMutation({
+  const { mutateAsync: doSignOut } = useGqlMutation(LogoutDocument, {
     onSuccess: () => {
       queryClient.resetQueries(['CurrentUser', {}]);
     },

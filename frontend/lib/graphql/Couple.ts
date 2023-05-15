@@ -2,9 +2,7 @@
 /* eslint-disable */
 import * as Types from './index';
 
-import { CouplePartialFragmentDoc } from './CurrentUser';
-import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
-import { fetcher } from 'lib/query';
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type CoupleExtendedFragment = { __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean, id: string, rozpisItemsByRiPartner: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename?: 'RozpisItem', riOd: string, riDo: string, id: string, rozpiByRiIdRodic: { __typename?: 'Rozpi', rKde: string, rDatum: string, id: string, userByRTrener: { __typename?: 'User', fullName: string | null } | null } | null }> }, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null };
 
 export type CoupleListQueryVariables = Types.Exact<{ [key: string]: never; }>;
@@ -39,135 +37,9 @@ export type FixUnpairedCouplesMutationVariables = Types.Exact<{ [key: string]: n
 
 export type FixUnpairedCouplesMutation = { __typename?: 'Mutation', fixUnpairedCouples: { __typename?: 'FixUnpairedCouplesPayload', paries: Array<{ __typename?: 'Pary', id: string }> | null } | null };
 
-export const CoupleExtendedFragmentDoc = `
-    fragment CoupleExtended on Pary {
-  ...CouplePartial
-  rozpisItemsByRiPartner(orderBy: [ROZPI_BY_RI_ID_RODIC__R_DATUM_DESC]) {
-    nodes {
-      id: riId
-      riOd
-      riDo
-      rozpiByRiIdRodic {
-        id: rId
-        rKde
-        rDatum
-        userByRTrener {
-          fullName
-        }
-      }
-    }
-  }
-}
-    ${CouplePartialFragmentDoc}`;
-export const CoupleListDocument = `
-    query CoupleList {
-  activeCouples {
-    totalCount
-    nodes {
-      ...CouplePartial
-    }
-  }
-}
-    ${CouplePartialFragmentDoc}`;
-export const useCoupleListQuery = <
-      TData = CoupleListQuery,
-      TError = unknown
-    >(
-      variables?: CoupleListQueryVariables,
-      options?: UseQueryOptions<CoupleListQuery, TError, TData>
-    ) =>
-    useQuery<CoupleListQuery, TError, TData>(
-      variables === undefined ? ['CoupleList'] : ['CoupleList', variables],
-      fetcher<CoupleListQuery, CoupleListQueryVariables>(CoupleListDocument, variables),
-      options
-    );
-
-useCoupleListQuery.getKey = (variables?: CoupleListQueryVariables) => variables === undefined ? ['CoupleList'] : ['CoupleList', variables];
-;
-
-useCoupleListQuery.fetcher = (variables?: CoupleListQueryVariables, options?: RequestInit['headers']) => fetcher<CoupleListQuery, CoupleListQueryVariables>(CoupleListDocument, variables, options);
-export const CoupleDocument = `
-    query Couple($id: BigInt!) {
-  pary(pId: $id) {
-    ...CoupleExtended
-  }
-}
-    ${CoupleExtendedFragmentDoc}`;
-export const useCoupleQuery = <
-      TData = CoupleQuery,
-      TError = unknown
-    >(
-      variables: CoupleQueryVariables,
-      options?: UseQueryOptions<CoupleQuery, TError, TData>
-    ) =>
-    useQuery<CoupleQuery, TError, TData>(
-      ['Couple', variables],
-      fetcher<CoupleQuery, CoupleQueryVariables>(CoupleDocument, variables),
-      options
-    );
-
-useCoupleQuery.getKey = (variables: CoupleQueryVariables) => ['Couple', variables];
-;
-
-useCoupleQuery.fetcher = (variables: CoupleQueryVariables, options?: RequestInit['headers']) => fetcher<CoupleQuery, CoupleQueryVariables>(CoupleDocument, variables, options);
-export const CreateCoupleDocument = `
-    mutation CreateCouple($man: BigInt!, $woman: BigInt!) {
-  createCouple(input: {man: $man, woman: $woman}) {
-    paries {
-      id: pId
-    }
-  }
-}
-    `;
-export const useCreateCoupleMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<CreateCoupleMutation, TError, CreateCoupleMutationVariables, TContext>) =>
-    useMutation<CreateCoupleMutation, TError, CreateCoupleMutationVariables, TContext>(
-      ['CreateCouple'],
-      (variables?: CreateCoupleMutationVariables) => fetcher<CreateCoupleMutation, CreateCoupleMutationVariables>(CreateCoupleDocument, variables)(),
-      options
-    );
-useCreateCoupleMutation.getKey = () => ['CreateCouple'];
-
-useCreateCoupleMutation.fetcher = (variables: CreateCoupleMutationVariables, options?: RequestInit['headers']) => fetcher<CreateCoupleMutation, CreateCoupleMutationVariables>(CreateCoupleDocument, variables, options);
-export const DeleteCoupleDocument = `
-    mutation DeleteCouple($id: BigInt!) {
-  deletePary(input: {pId: $id}) {
-    __typename
-  }
-}
-    `;
-export const useDeleteCoupleMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<DeleteCoupleMutation, TError, DeleteCoupleMutationVariables, TContext>) =>
-    useMutation<DeleteCoupleMutation, TError, DeleteCoupleMutationVariables, TContext>(
-      ['DeleteCouple'],
-      (variables?: DeleteCoupleMutationVariables) => fetcher<DeleteCoupleMutation, DeleteCoupleMutationVariables>(DeleteCoupleDocument, variables)(),
-      options
-    );
-useDeleteCoupleMutation.getKey = () => ['DeleteCouple'];
-
-useDeleteCoupleMutation.fetcher = (variables: DeleteCoupleMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteCoupleMutation, DeleteCoupleMutationVariables>(DeleteCoupleDocument, variables, options);
-export const FixUnpairedCouplesDocument = `
-    mutation FixUnpairedCouples {
-  fixUnpairedCouples(input: {}) {
-    paries {
-      id: pId
-    }
-  }
-}
-    `;
-export const useFixUnpairedCouplesMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<FixUnpairedCouplesMutation, TError, FixUnpairedCouplesMutationVariables, TContext>) =>
-    useMutation<FixUnpairedCouplesMutation, TError, FixUnpairedCouplesMutationVariables, TContext>(
-      ['FixUnpairedCouples'],
-      (variables?: FixUnpairedCouplesMutationVariables) => fetcher<FixUnpairedCouplesMutation, FixUnpairedCouplesMutationVariables>(FixUnpairedCouplesDocument, variables)(),
-      options
-    );
-useFixUnpairedCouplesMutation.getKey = () => ['FixUnpairedCouples'];
-
-useFixUnpairedCouplesMutation.fetcher = (variables?: FixUnpairedCouplesMutationVariables, options?: RequestInit['headers']) => fetcher<FixUnpairedCouplesMutation, FixUnpairedCouplesMutationVariables>(FixUnpairedCouplesDocument, variables, options);
+export const CoupleExtendedFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CoupleExtended"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Pary"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CouplePartial"}},{"kind":"Field","name":{"kind":"Name","value":"rozpisItemsByRiPartner"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"ListValue","values":[{"kind":"EnumValue","value":"ROZPI_BY_RI_ID_RODIC__R_DATUM_DESC"}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"riId"}},{"kind":"Field","name":{"kind":"Name","value":"riOd"}},{"kind":"Field","name":{"kind":"Name","value":"riDo"}},{"kind":"Field","name":{"kind":"Name","value":"rozpiByRiIdRodic"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"rId"}},{"kind":"Field","name":{"kind":"Name","value":"rKde"}},{"kind":"Field","name":{"kind":"Name","value":"rDatum"}},{"kind":"Field","name":{"kind":"Name","value":"userByRTrener"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fullName"}}]}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CouplePartial"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Pary"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"pId"}},{"kind":"Field","name":{"kind":"Name","value":"pIdPartner"}},{"kind":"Field","name":{"kind":"Name","value":"pIdPartnerka"}},{"kind":"Field","name":{"kind":"Name","value":"pArchiv"}},{"kind":"Field","name":{"kind":"Name","value":"userByPIdPartner"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"uId"}},{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}}]}},{"kind":"Field","name":{"kind":"Name","value":"userByPIdPartnerka"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"uId"}},{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}}]}}]}}]} as unknown as DocumentNode<CoupleExtendedFragment, unknown>;
+export const CoupleListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CoupleList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"activeCouples"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CouplePartial"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CouplePartial"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Pary"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"pId"}},{"kind":"Field","name":{"kind":"Name","value":"pIdPartner"}},{"kind":"Field","name":{"kind":"Name","value":"pIdPartnerka"}},{"kind":"Field","name":{"kind":"Name","value":"pArchiv"}},{"kind":"Field","name":{"kind":"Name","value":"userByPIdPartner"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"uId"}},{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}}]}},{"kind":"Field","name":{"kind":"Name","value":"userByPIdPartnerka"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"uId"}},{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}}]}}]}}]} as unknown as DocumentNode<CoupleListQuery, CoupleListQueryVariables>;
+export const CoupleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Couple"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pary"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CoupleExtended"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CouplePartial"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Pary"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"pId"}},{"kind":"Field","name":{"kind":"Name","value":"pIdPartner"}},{"kind":"Field","name":{"kind":"Name","value":"pIdPartnerka"}},{"kind":"Field","name":{"kind":"Name","value":"pArchiv"}},{"kind":"Field","name":{"kind":"Name","value":"userByPIdPartner"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"uId"}},{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}}]}},{"kind":"Field","name":{"kind":"Name","value":"userByPIdPartnerka"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"uId"}},{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CoupleExtended"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Pary"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CouplePartial"}},{"kind":"Field","name":{"kind":"Name","value":"rozpisItemsByRiPartner"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"ListValue","values":[{"kind":"EnumValue","value":"ROZPI_BY_RI_ID_RODIC__R_DATUM_DESC"}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"riId"}},{"kind":"Field","name":{"kind":"Name","value":"riOd"}},{"kind":"Field","name":{"kind":"Name","value":"riDo"}},{"kind":"Field","name":{"kind":"Name","value":"rozpiByRiIdRodic"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"rId"}},{"kind":"Field","name":{"kind":"Name","value":"rKde"}},{"kind":"Field","name":{"kind":"Name","value":"rDatum"}},{"kind":"Field","name":{"kind":"Name","value":"userByRTrener"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fullName"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<CoupleQuery, CoupleQueryVariables>;
+export const CreateCoupleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateCouple"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"man"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"woman"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createCouple"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"man"},"value":{"kind":"Variable","name":{"kind":"Name","value":"man"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"woman"},"value":{"kind":"Variable","name":{"kind":"Name","value":"woman"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"paries"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"pId"}}]}}]}}]}}]} as unknown as DocumentNode<CreateCoupleMutation, CreateCoupleMutationVariables>;
+export const DeleteCoupleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteCouple"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deletePary"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"pId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}}]}}]} as unknown as DocumentNode<DeleteCoupleMutation, DeleteCoupleMutationVariables>;
+export const FixUnpairedCouplesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"FixUnpairedCouples"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fixUnpairedCouples"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"paries"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"pId"}}]}}]}}]}}]} as unknown as DocumentNode<FixUnpairedCouplesMutation, FixUnpairedCouplesMutationVariables>;

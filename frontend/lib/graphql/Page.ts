@@ -2,8 +2,7 @@
 /* eslint-disable */
 import * as Types from './index';
 
-import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
-import { fetcher } from 'lib/query';
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type PageFragment = { __typename: 'Page', id: number, url: string, title: string, content: { [key: string]: any }, createdAt: string, updatedAt: string };
 
 export type PageQueryVariables = Types.Exact<{
@@ -47,164 +46,10 @@ export type UpdatePageMutationVariables = Types.Exact<{
 
 export type UpdatePageMutation = { __typename?: 'Mutation', updatePage: { __typename?: 'UpdatePagePayload', page: { __typename: 'Page', id: number, url: string, title: string, content: { [key: string]: any }, createdAt: string, updatedAt: string } | null } | null };
 
-export const PageFragmentDoc = `
-    fragment Page on Page {
-  __typename
-  id
-  url
-  title
-  content
-  createdAt
-  updatedAt
-}
-    `;
-export const PageDocument = `
-    query Page($url: String!) {
-  pageByUrl(url: $url) {
-    content
-  }
-}
-    `;
-export const usePageQuery = <
-      TData = PageQuery,
-      TError = unknown
-    >(
-      variables: PageQueryVariables,
-      options?: UseQueryOptions<PageQuery, TError, TData>
-    ) =>
-    useQuery<PageQuery, TError, TData>(
-      ['Page', variables],
-      fetcher<PageQuery, PageQueryVariables>(PageDocument, variables),
-      options
-    );
-
-usePageQuery.getKey = (variables: PageQueryVariables) => ['Page', variables];
-;
-
-usePageQuery.fetcher = (variables: PageQueryVariables, options?: RequestInit['headers']) => fetcher<PageQuery, PageQueryVariables>(PageDocument, variables, options);
-export const PageByIdDocument = `
-    query PageById($id: Int!) {
-  page(id: $id) {
-    ...Page
-  }
-}
-    ${PageFragmentDoc}`;
-export const usePageByIdQuery = <
-      TData = PageByIdQuery,
-      TError = unknown
-    >(
-      variables: PageByIdQueryVariables,
-      options?: UseQueryOptions<PageByIdQuery, TError, TData>
-    ) =>
-    useQuery<PageByIdQuery, TError, TData>(
-      ['PageById', variables],
-      fetcher<PageByIdQuery, PageByIdQueryVariables>(PageByIdDocument, variables),
-      options
-    );
-
-usePageByIdQuery.getKey = (variables: PageByIdQueryVariables) => ['PageById', variables];
-;
-
-usePageByIdQuery.fetcher = (variables: PageByIdQueryVariables, options?: RequestInit['headers']) => fetcher<PageByIdQuery, PageByIdQueryVariables>(PageByIdDocument, variables, options);
-export const PageListDocument = `
-    query PageList {
-  pages(orderBy: URL_ASC) {
-    nodes {
-      ...Page
-    }
-  }
-}
-    ${PageFragmentDoc}`;
-export const usePageListQuery = <
-      TData = PageListQuery,
-      TError = unknown
-    >(
-      variables?: PageListQueryVariables,
-      options?: UseQueryOptions<PageListQuery, TError, TData>
-    ) =>
-    useQuery<PageListQuery, TError, TData>(
-      variables === undefined ? ['PageList'] : ['PageList', variables],
-      fetcher<PageListQuery, PageListQueryVariables>(PageListDocument, variables),
-      options
-    );
-
-usePageListQuery.getKey = (variables?: PageListQueryVariables) => variables === undefined ? ['PageList'] : ['PageList', variables];
-;
-
-usePageListQuery.fetcher = (variables?: PageListQueryVariables, options?: RequestInit['headers']) => fetcher<PageListQuery, PageListQueryVariables>(PageListDocument, variables, options);
-export const PageRevisionsDocument = `
-    query PageRevisions($id: Int!) {
-  pageRevisions(condition: {id: $id}) {
-    nodes {
-      revNumber
-      revOperation
-      revTimestamp
-      id
-      url
-      title
-      content
-      createdAt
-      updatedAt
-    }
-  }
-}
-    `;
-export const usePageRevisionsQuery = <
-      TData = PageRevisionsQuery,
-      TError = unknown
-    >(
-      variables: PageRevisionsQueryVariables,
-      options?: UseQueryOptions<PageRevisionsQuery, TError, TData>
-    ) =>
-    useQuery<PageRevisionsQuery, TError, TData>(
-      ['PageRevisions', variables],
-      fetcher<PageRevisionsQuery, PageRevisionsQueryVariables>(PageRevisionsDocument, variables),
-      options
-    );
-
-usePageRevisionsQuery.getKey = (variables: PageRevisionsQueryVariables) => ['PageRevisions', variables];
-;
-
-usePageRevisionsQuery.fetcher = (variables: PageRevisionsQueryVariables, options?: RequestInit['headers']) => fetcher<PageRevisionsQuery, PageRevisionsQueryVariables>(PageRevisionsDocument, variables, options);
-export const CreatePageDocument = `
-    mutation CreatePage($input: PageInput!) {
-  createPage(input: {page: $input}) {
-    page {
-      ...Page
-    }
-  }
-}
-    ${PageFragmentDoc}`;
-export const useCreatePageMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<CreatePageMutation, TError, CreatePageMutationVariables, TContext>) =>
-    useMutation<CreatePageMutation, TError, CreatePageMutationVariables, TContext>(
-      ['CreatePage'],
-      (variables?: CreatePageMutationVariables) => fetcher<CreatePageMutation, CreatePageMutationVariables>(CreatePageDocument, variables)(),
-      options
-    );
-useCreatePageMutation.getKey = () => ['CreatePage'];
-
-useCreatePageMutation.fetcher = (variables: CreatePageMutationVariables, options?: RequestInit['headers']) => fetcher<CreatePageMutation, CreatePageMutationVariables>(CreatePageDocument, variables, options);
-export const UpdatePageDocument = `
-    mutation UpdatePage($id: Int!, $patch: PagePatch!) {
-  updatePage(input: {id: $id, patch: $patch}) {
-    page {
-      ...Page
-    }
-  }
-}
-    ${PageFragmentDoc}`;
-export const useUpdatePageMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<UpdatePageMutation, TError, UpdatePageMutationVariables, TContext>) =>
-    useMutation<UpdatePageMutation, TError, UpdatePageMutationVariables, TContext>(
-      ['UpdatePage'],
-      (variables?: UpdatePageMutationVariables) => fetcher<UpdatePageMutation, UpdatePageMutationVariables>(UpdatePageDocument, variables)(),
-      options
-    );
-useUpdatePageMutation.getKey = () => ['UpdatePage'];
-
-useUpdatePageMutation.fetcher = (variables: UpdatePageMutationVariables, options?: RequestInit['headers']) => fetcher<UpdatePageMutation, UpdatePageMutationVariables>(UpdatePageDocument, variables, options);
+export const PageFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Page"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Page"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]} as unknown as DocumentNode<PageFragment, unknown>;
+export const PageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Page"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"url"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pageByUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"url"},"value":{"kind":"Variable","name":{"kind":"Name","value":"url"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"content"}}]}}]}}]} as unknown as DocumentNode<PageQuery, PageQueryVariables>;
+export const PageByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"page"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Page"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Page"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Page"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]} as unknown as DocumentNode<PageByIdQuery, PageByIdQueryVariables>;
+export const PageListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pages"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"URL_ASC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Page"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Page"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Page"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]} as unknown as DocumentNode<PageListQuery, PageListQueryVariables>;
+export const PageRevisionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageRevisions"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pageRevisions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"condition"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"revNumber"}},{"kind":"Field","name":{"kind":"Name","value":"revOperation"}},{"kind":"Field","name":{"kind":"Name","value":"revTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]}}]} as unknown as DocumentNode<PageRevisionsQuery, PageRevisionsQueryVariables>;
+export const CreatePageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreatePage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PageInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createPage"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"page"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"page"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Page"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Page"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Page"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]} as unknown as DocumentNode<CreatePageMutation, CreatePageMutationVariables>;
+export const UpdatePageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdatePage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"patch"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PagePatch"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updatePage"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"patch"},"value":{"kind":"Variable","name":{"kind":"Name","value":"patch"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"page"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Page"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Page"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Page"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]} as unknown as DocumentNode<UpdatePageMutation, UpdatePageMutationVariables>;

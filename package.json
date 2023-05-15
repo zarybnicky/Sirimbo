@@ -6,9 +6,6 @@
     "backend",
     "schema"
   ],
-  "resolutions": {
-    "graphql": "15.4.0"
-  },
   "devDependencies": {
     "concurrently": "^7.0.0",
     "prettier": "^2.8.7"

@@ -2,9 +2,7 @@
 /* eslint-disable */
 import * as Types from './index';
 
-import { CohortFragmentDoc } from './Cohorts';
-import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
-import { fetcher } from 'lib/query';
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type CohortGroupFragment = { __typename: 'CohortGroup', id: string, name: string, description: string, isPublic: boolean, ordering: number, skupiniesByCohortGroup: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename: 'Skupiny', sDescription: string, internalInfo: string, cohortGroup: string | null, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string }> } };
 
 export type CohortGroupListQueryVariables = Types.Exact<{
@@ -43,127 +41,9 @@ export type DeleteCohortGroupMutationVariables = Types.Exact<{
 
 export type DeleteCohortGroupMutation = { __typename?: 'Mutation', deleteCohortGroup: { __typename: 'DeleteCohortGroupPayload' } | null };
 
-export const CohortGroupFragmentDoc = `
-    fragment CohortGroup on CohortGroup {
-  __typename
-  id
-  name
-  description
-  isPublic
-  ordering
-  skupiniesByCohortGroup(orderBy: ORDERING_ASC) {
-    nodes {
-      ...Cohort
-    }
-  }
-}
-    ${CohortFragmentDoc}`;
-export const CohortGroupListDocument = `
-    query CohortGroupList($isPublic: Boolean) {
-  cohortGroups(condition: {isPublic: $isPublic}, orderBy: [ORDERING_ASC]) {
-    nodes {
-      ...CohortGroup
-    }
-  }
-}
-    ${CohortGroupFragmentDoc}`;
-export const useCohortGroupListQuery = <
-      TData = CohortGroupListQuery,
-      TError = unknown
-    >(
-      variables?: CohortGroupListQueryVariables,
-      options?: UseQueryOptions<CohortGroupListQuery, TError, TData>
-    ) =>
-    useQuery<CohortGroupListQuery, TError, TData>(
-      variables === undefined ? ['CohortGroupList'] : ['CohortGroupList', variables],
-      fetcher<CohortGroupListQuery, CohortGroupListQueryVariables>(CohortGroupListDocument, variables),
-      options
-    );
-
-useCohortGroupListQuery.getKey = (variables?: CohortGroupListQueryVariables) => variables === undefined ? ['CohortGroupList'] : ['CohortGroupList', variables];
-;
-
-useCohortGroupListQuery.fetcher = (variables?: CohortGroupListQueryVariables, options?: RequestInit['headers']) => fetcher<CohortGroupListQuery, CohortGroupListQueryVariables>(CohortGroupListDocument, variables, options);
-export const CohortGroupDocument = `
-    query CohortGroup($id: BigInt!) {
-  cohortGroup(id: $id) {
-    ...CohortGroup
-  }
-}
-    ${CohortGroupFragmentDoc}`;
-export const useCohortGroupQuery = <
-      TData = CohortGroupQuery,
-      TError = unknown
-    >(
-      variables: CohortGroupQueryVariables,
-      options?: UseQueryOptions<CohortGroupQuery, TError, TData>
-    ) =>
-    useQuery<CohortGroupQuery, TError, TData>(
-      ['CohortGroup', variables],
-      fetcher<CohortGroupQuery, CohortGroupQueryVariables>(CohortGroupDocument, variables),
-      options
-    );
-
-useCohortGroupQuery.getKey = (variables: CohortGroupQueryVariables) => ['CohortGroup', variables];
-;
-
-useCohortGroupQuery.fetcher = (variables: CohortGroupQueryVariables, options?: RequestInit['headers']) => fetcher<CohortGroupQuery, CohortGroupQueryVariables>(CohortGroupDocument, variables, options);
-export const CreateCohortGroupDocument = `
-    mutation CreateCohortGroup($input: CohortGroupInput!) {
-  createCohortGroup(input: {cohortGroup: $input}) {
-    cohortGroup {
-      id
-    }
-  }
-}
-    `;
-export const useCreateCohortGroupMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<CreateCohortGroupMutation, TError, CreateCohortGroupMutationVariables, TContext>) =>
-    useMutation<CreateCohortGroupMutation, TError, CreateCohortGroupMutationVariables, TContext>(
-      ['CreateCohortGroup'],
-      (variables?: CreateCohortGroupMutationVariables) => fetcher<CreateCohortGroupMutation, CreateCohortGroupMutationVariables>(CreateCohortGroupDocument, variables)(),
-      options
-    );
-useCreateCohortGroupMutation.getKey = () => ['CreateCohortGroup'];
-
-useCreateCohortGroupMutation.fetcher = (variables: CreateCohortGroupMutationVariables, options?: RequestInit['headers']) => fetcher<CreateCohortGroupMutation, CreateCohortGroupMutationVariables>(CreateCohortGroupDocument, variables, options);
-export const UpdateCohortGroupDocument = `
-    mutation UpdateCohortGroup($id: BigInt!, $patch: CohortGroupPatch!) {
-  updateCohortGroup(input: {id: $id, patch: $patch}) {
-    __typename
-  }
-}
-    `;
-export const useUpdateCohortGroupMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<UpdateCohortGroupMutation, TError, UpdateCohortGroupMutationVariables, TContext>) =>
-    useMutation<UpdateCohortGroupMutation, TError, UpdateCohortGroupMutationVariables, TContext>(
-      ['UpdateCohortGroup'],
-      (variables?: UpdateCohortGroupMutationVariables) => fetcher<UpdateCohortGroupMutation, UpdateCohortGroupMutationVariables>(UpdateCohortGroupDocument, variables)(),
-      options
-    );
-useUpdateCohortGroupMutation.getKey = () => ['UpdateCohortGroup'];
-
-useUpdateCohortGroupMutation.fetcher = (variables: UpdateCohortGroupMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateCohortGroupMutation, UpdateCohortGroupMutationVariables>(UpdateCohortGroupDocument, variables, options);
-export const DeleteCohortGroupDocument = `
-    mutation DeleteCohortGroup($id: BigInt!) {
-  deleteCohortGroup(input: {id: $id}) {
-    __typename
-  }
-}
-    `;
-export const useDeleteCohortGroupMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<DeleteCohortGroupMutation, TError, DeleteCohortGroupMutationVariables, TContext>) =>
-    useMutation<DeleteCohortGroupMutation, TError, DeleteCohortGroupMutationVariables, TContext>(
-      ['DeleteCohortGroup'],
-      (variables?: DeleteCohortGroupMutationVariables) => fetcher<DeleteCohortGroupMutation, DeleteCohortGroupMutationVariables>(DeleteCohortGroupDocument, variables)(),
-      options
-    );
-useDeleteCohortGroupMutation.getKey = () => ['DeleteCohortGroup'];
-
-useDeleteCohortGroupMutation.fetcher = (variables: DeleteCohortGroupMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteCohortGroupMutation, DeleteCohortGroupMutationVariables>(DeleteCohortGroupDocument, variables, options);
+export const CohortGroupFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CohortGroup"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CohortGroup"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"isPublic"}},{"kind":"Field","name":{"kind":"Name","value":"ordering"}},{"kind":"Field","name":{"kind":"Name","value":"skupiniesByCohortGroup"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"ORDERING_ASC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Cohort"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CohortBasic"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Skupiny"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"sId"}},{"kind":"Field","name":{"kind":"Name","value":"sName"}},{"kind":"Field","name":{"kind":"Name","value":"sLocation"}},{"kind":"Field","name":{"kind":"Name","value":"sVisible"}},{"kind":"Field","name":{"kind":"Name","value":"sColorRgb"}},{"kind":"Field","name":{"kind":"Name","value":"ordering"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Cohort"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Skupiny"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CohortBasic"}},{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"sDescription"}},{"kind":"Field","name":{"kind":"Name","value":"internalInfo"}},{"kind":"Field","name":{"kind":"Name","value":"cohortGroup"}}]}}]} as unknown as DocumentNode<CohortGroupFragment, unknown>;
+export const CohortGroupListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CohortGroupList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"isPublic"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cohortGroups"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"condition"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"isPublic"},"value":{"kind":"Variable","name":{"kind":"Name","value":"isPublic"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"ListValue","values":[{"kind":"EnumValue","value":"ORDERING_ASC"}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CohortGroup"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CohortBasic"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Skupiny"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"sId"}},{"kind":"Field","name":{"kind":"Name","value":"sName"}},{"kind":"Field","name":{"kind":"Name","value":"sLocation"}},{"kind":"Field","name":{"kind":"Name","value":"sVisible"}},{"kind":"Field","name":{"kind":"Name","value":"sColorRgb"}},{"kind":"Field","name":{"kind":"Name","value":"ordering"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Cohort"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Skupiny"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CohortBasic"}},{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"sDescription"}},{"kind":"Field","name":{"kind":"Name","value":"internalInfo"}},{"kind":"Field","name":{"kind":"Name","value":"cohortGroup"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CohortGroup"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CohortGroup"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"isPublic"}},{"kind":"Field","name":{"kind":"Name","value":"ordering"}},{"kind":"Field","name":{"kind":"Name","value":"skupiniesByCohortGroup"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"ORDERING_ASC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Cohort"}}]}}]}}]}}]} as unknown as DocumentNode<CohortGroupListQuery, CohortGroupListQueryVariables>;
+export const CohortGroupDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CohortGroup"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cohortGroup"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CohortGroup"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CohortBasic"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Skupiny"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"sId"}},{"kind":"Field","name":{"kind":"Name","value":"sName"}},{"kind":"Field","name":{"kind":"Name","value":"sLocation"}},{"kind":"Field","name":{"kind":"Name","value":"sVisible"}},{"kind":"Field","name":{"kind":"Name","value":"sColorRgb"}},{"kind":"Field","name":{"kind":"Name","value":"ordering"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Cohort"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Skupiny"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CohortBasic"}},{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"sDescription"}},{"kind":"Field","name":{"kind":"Name","value":"internalInfo"}},{"kind":"Field","name":{"kind":"Name","value":"cohortGroup"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CohortGroup"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CohortGroup"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"isPublic"}},{"kind":"Field","name":{"kind":"Name","value":"ordering"}},{"kind":"Field","name":{"kind":"Name","value":"skupiniesByCohortGroup"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"ORDERING_ASC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Cohort"}}]}}]}}]}}]} as unknown as DocumentNode<CohortGroupQuery, CohortGroupQueryVariables>;
+export const CreateCohortGroupDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateCohortGroup"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CohortGroupInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createCohortGroup"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"cohortGroup"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cohortGroup"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<CreateCohortGroupMutation, CreateCohortGroupMutationVariables>;
+export const UpdateCohortGroupDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateCohortGroup"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"patch"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CohortGroupPatch"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateCohortGroup"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"patch"},"value":{"kind":"Variable","name":{"kind":"Name","value":"patch"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}}]}}]} as unknown as DocumentNode<UpdateCohortGroupMutation, UpdateCohortGroupMutationVariables>;
+export const DeleteCohortGroupDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteCohortGroup"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteCohortGroup"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}}]}}]} as unknown as DocumentNode<DeleteCohortGroupMutation, DeleteCohortGroupMutationVariables>;

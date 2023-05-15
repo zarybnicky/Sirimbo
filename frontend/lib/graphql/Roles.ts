@@ -2,8 +2,7 @@
 /* eslint-disable */
 import * as Types from './index';
 
-import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
-import { fetcher } from 'lib/query';
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type RoleFragment = { __typename: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number, id: string };
 
 export type RoleListQueryVariables = Types.Exact<{ [key: string]: never; }>;
@@ -40,138 +39,9 @@ export type DeleteRoleMutationVariables = Types.Exact<{
 
 export type DeleteRoleMutation = { __typename?: 'Mutation', deletePermission: { __typename: 'DeletePermissionPayload' } | null };
 
-export const RoleFragmentDoc = `
-    fragment Role on Permission {
-  __typename
-  id: peId
-  peAkce
-  peAnkety
-  peAktuality
-  peDescription
-  peDokumenty
-  peGalerie
-  peKonzole
-  peInzerce
-  peNabidka
-  peMain
-  peName
-  peNastenka
-  peNovinky
-  pePary
-  pePermissions
-  pePlatby
-  peRozpis
-  peSkupiny
-  peUsers
-}
-    `;
-export const RoleListDocument = `
-    query RoleList {
-  permissions {
-    totalCount
-    nodes {
-      ...Role
-    }
-  }
-}
-    ${RoleFragmentDoc}`;
-export const useRoleListQuery = <
-      TData = RoleListQuery,
-      TError = unknown
-    >(
-      variables?: RoleListQueryVariables,
-      options?: UseQueryOptions<RoleListQuery, TError, TData>
-    ) =>
-    useQuery<RoleListQuery, TError, TData>(
-      variables === undefined ? ['RoleList'] : ['RoleList', variables],
-      fetcher<RoleListQuery, RoleListQueryVariables>(RoleListDocument, variables),
-      options
-    );
-
-useRoleListQuery.getKey = (variables?: RoleListQueryVariables) => variables === undefined ? ['RoleList'] : ['RoleList', variables];
-;
-
-useRoleListQuery.fetcher = (variables?: RoleListQueryVariables, options?: RequestInit['headers']) => fetcher<RoleListQuery, RoleListQueryVariables>(RoleListDocument, variables, options);
-export const RoleDocument = `
-    query Role($id: BigInt!) {
-  permission(peId: $id) {
-    ...Role
-  }
-}
-    ${RoleFragmentDoc}`;
-export const useRoleQuery = <
-      TData = RoleQuery,
-      TError = unknown
-    >(
-      variables: RoleQueryVariables,
-      options?: UseQueryOptions<RoleQuery, TError, TData>
-    ) =>
-    useQuery<RoleQuery, TError, TData>(
-      ['Role', variables],
-      fetcher<RoleQuery, RoleQueryVariables>(RoleDocument, variables),
-      options
-    );
-
-useRoleQuery.getKey = (variables: RoleQueryVariables) => ['Role', variables];
-;
-
-useRoleQuery.fetcher = (variables: RoleQueryVariables, options?: RequestInit['headers']) => fetcher<RoleQuery, RoleQueryVariables>(RoleDocument, variables, options);
-export const CreateRoleDocument = `
-    mutation CreateRole($input: PermissionInput!) {
-  createPermission(input: {permission: $input}) {
-    permission {
-      id: peId
-    }
-  }
-}
-    `;
-export const useCreateRoleMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<CreateRoleMutation, TError, CreateRoleMutationVariables, TContext>) =>
-    useMutation<CreateRoleMutation, TError, CreateRoleMutationVariables, TContext>(
-      ['CreateRole'],
-      (variables?: CreateRoleMutationVariables) => fetcher<CreateRoleMutation, CreateRoleMutationVariables>(CreateRoleDocument, variables)(),
-      options
-    );
-useCreateRoleMutation.getKey = () => ['CreateRole'];
-
-useCreateRoleMutation.fetcher = (variables: CreateRoleMutationVariables, options?: RequestInit['headers']) => fetcher<CreateRoleMutation, CreateRoleMutationVariables>(CreateRoleDocument, variables, options);
-export const UpdateRoleDocument = `
-    mutation UpdateRole($id: BigInt!, $patch: PermissionPatch!) {
-  updatePermission(input: {peId: $id, patch: $patch}) {
-    __typename
-  }
-}
-    `;
-export const useUpdateRoleMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<UpdateRoleMutation, TError, UpdateRoleMutationVariables, TContext>) =>
-    useMutation<UpdateRoleMutation, TError, UpdateRoleMutationVariables, TContext>(
-      ['UpdateRole'],
-      (variables?: UpdateRoleMutationVariables) => fetcher<UpdateRoleMutation, UpdateRoleMutationVariables>(UpdateRoleDocument, variables)(),
-      options
-    );
-useUpdateRoleMutation.getKey = () => ['UpdateRole'];
-
-useUpdateRoleMutation.fetcher = (variables: UpdateRoleMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateRoleMutation, UpdateRoleMutationVariables>(UpdateRoleDocument, variables, options);
-export const DeleteRoleDocument = `
-    mutation DeleteRole($id: BigInt!) {
-  deletePermission(input: {peId: $id}) {
-    __typename
-  }
-}
-    `;
-export const useDeleteRoleMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<DeleteRoleMutation, TError, DeleteRoleMutationVariables, TContext>) =>
-    useMutation<DeleteRoleMutation, TError, DeleteRoleMutationVariables, TContext>(
-      ['DeleteRole'],
-      (variables?: DeleteRoleMutationVariables) => fetcher<DeleteRoleMutation, DeleteRoleMutationVariables>(DeleteRoleDocument, variables)(),
-      options
-    );
-useDeleteRoleMutation.getKey = () => ['DeleteRole'];
-
-useDeleteRoleMutation.fetcher = (variables: DeleteRoleMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteRoleMutation, DeleteRoleMutationVariables>(DeleteRoleDocument, variables, options);
+export const RoleFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Role"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Permission"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"peId"}},{"kind":"Field","name":{"kind":"Name","value":"peAkce"}},{"kind":"Field","name":{"kind":"Name","value":"peAnkety"}},{"kind":"Field","name":{"kind":"Name","value":"peAktuality"}},{"kind":"Field","name":{"kind":"Name","value":"peDescription"}},{"kind":"Field","name":{"kind":"Name","value":"peDokumenty"}},{"kind":"Field","name":{"kind":"Name","value":"peGalerie"}},{"kind":"Field","name":{"kind":"Name","value":"peKonzole"}},{"kind":"Field","name":{"kind":"Name","value":"peInzerce"}},{"kind":"Field","name":{"kind":"Name","value":"peNabidka"}},{"kind":"Field","name":{"kind":"Name","value":"peMain"}},{"kind":"Field","name":{"kind":"Name","value":"peName"}},{"kind":"Field","name":{"kind":"Name","value":"peNastenka"}},{"kind":"Field","name":{"kind":"Name","value":"peNovinky"}},{"kind":"Field","name":{"kind":"Name","value":"pePary"}},{"kind":"Field","name":{"kind":"Name","value":"pePermissions"}},{"kind":"Field","name":{"kind":"Name","value":"pePlatby"}},{"kind":"Field","name":{"kind":"Name","value":"peRozpis"}},{"kind":"Field","name":{"kind":"Name","value":"peSkupiny"}},{"kind":"Field","name":{"kind":"Name","value":"peUsers"}}]}}]} as unknown as DocumentNode<RoleFragment, unknown>;
+export const RoleListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"RoleList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"permissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Role"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Role"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Permission"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"peId"}},{"kind":"Field","name":{"kind":"Name","value":"peAkce"}},{"kind":"Field","name":{"kind":"Name","value":"peAnkety"}},{"kind":"Field","name":{"kind":"Name","value":"peAktuality"}},{"kind":"Field","name":{"kind":"Name","value":"peDescription"}},{"kind":"Field","name":{"kind":"Name","value":"peDokumenty"}},{"kind":"Field","name":{"kind":"Name","value":"peGalerie"}},{"kind":"Field","name":{"kind":"Name","value":"peKonzole"}},{"kind":"Field","name":{"kind":"Name","value":"peInzerce"}},{"kind":"Field","name":{"kind":"Name","value":"peNabidka"}},{"kind":"Field","name":{"kind":"Name","value":"peMain"}},{"kind":"Field","name":{"kind":"Name","value":"peName"}},{"kind":"Field","name":{"kind":"Name","value":"peNastenka"}},{"kind":"Field","name":{"kind":"Name","value":"peNovinky"}},{"kind":"Field","name":{"kind":"Name","value":"pePary"}},{"kind":"Field","name":{"kind":"Name","value":"pePermissions"}},{"kind":"Field","name":{"kind":"Name","value":"pePlatby"}},{"kind":"Field","name":{"kind":"Name","value":"peRozpis"}},{"kind":"Field","name":{"kind":"Name","value":"peSkupiny"}},{"kind":"Field","name":{"kind":"Name","value":"peUsers"}}]}}]} as unknown as DocumentNode<RoleListQuery, RoleListQueryVariables>;
+export const RoleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Role"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"permission"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"peId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Role"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Role"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Permission"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"peId"}},{"kind":"Field","name":{"kind":"Name","value":"peAkce"}},{"kind":"Field","name":{"kind":"Name","value":"peAnkety"}},{"kind":"Field","name":{"kind":"Name","value":"peAktuality"}},{"kind":"Field","name":{"kind":"Name","value":"peDescription"}},{"kind":"Field","name":{"kind":"Name","value":"peDokumenty"}},{"kind":"Field","name":{"kind":"Name","value":"peGalerie"}},{"kind":"Field","name":{"kind":"Name","value":"peKonzole"}},{"kind":"Field","name":{"kind":"Name","value":"peInzerce"}},{"kind":"Field","name":{"kind":"Name","value":"peNabidka"}},{"kind":"Field","name":{"kind":"Name","value":"peMain"}},{"kind":"Field","name":{"kind":"Name","value":"peName"}},{"kind":"Field","name":{"kind":"Name","value":"peNastenka"}},{"kind":"Field","name":{"kind":"Name","value":"peNovinky"}},{"kind":"Field","name":{"kind":"Name","value":"pePary"}},{"kind":"Field","name":{"kind":"Name","value":"pePermissions"}},{"kind":"Field","name":{"kind":"Name","value":"pePlatby"}},{"kind":"Field","name":{"kind":"Name","value":"peRozpis"}},{"kind":"Field","name":{"kind":"Name","value":"peSkupiny"}},{"kind":"Field","name":{"kind":"Name","value":"peUsers"}}]}}]} as unknown as DocumentNode<RoleQuery, RoleQueryVariables>;
+export const CreateRoleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateRole"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PermissionInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createPermission"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"permission"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"permission"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"peId"}}]}}]}}]}}]} as unknown as DocumentNode<CreateRoleMutation, CreateRoleMutationVariables>;
+export const UpdateRoleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateRole"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"patch"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PermissionPatch"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updatePermission"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"peId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"patch"},"value":{"kind":"Variable","name":{"kind":"Name","value":"patch"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}}]}}]} as unknown as DocumentNode<UpdateRoleMutation, UpdateRoleMutationVariables>;
+export const DeleteRoleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteRole"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deletePermission"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"peId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}}]}}]} as unknown as DocumentNode<DeleteRoleMutation, DeleteRoleMutationVariables>;

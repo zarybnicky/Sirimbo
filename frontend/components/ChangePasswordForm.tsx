@@ -4,7 +4,8 @@ import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from 'components/ErrorBox';
 import { SubmitButton } from './SubmitButton';
-import { useChangePasswordMutation } from 'lib/graphql/CurrentUser';
+import { useGqlMutation } from 'lib/query';
+import { ChangePasswordDocument } from 'lib/graphql/CurrentUser';
 
 type FormProps = {
   oldPass: string;
@@ -15,7 +16,7 @@ type FormProps = {
 export const ChangePasswordForm: React.FC<{
   onSuccess: () => void;
 }> = ({ onSuccess }) => {
-  const { mutateAsync: doUpdate } = useChangePasswordMutation({ onSuccess });
+  const { mutateAsync: doUpdate } = useGqlMutation(ChangePasswordDocument, { onSuccess });
   const { control, getValues, handleSubmit } = useForm<FormProps>();
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await doUpdate({ input: { oldPass: values.oldPass, newPass: values.newPass } });

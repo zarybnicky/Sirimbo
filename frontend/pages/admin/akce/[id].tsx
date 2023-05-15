@@ -1,5 +1,4 @@
 import { EventForm } from 'components/EventForm';
-import { useDeleteEventMutation, useEventQuery } from 'lib/graphql/Event';
 import { useRouter } from 'next/router';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { EventList } from 'components/EventList';
@@ -7,12 +6,14 @@ import { Item } from 'components/layout/Item';
 import { DeleteButton } from 'components/DeleteButton';
 import { type NextPageWithLayout } from 'pages/_app';
 import { fromSlugArray } from 'lib/slugify';
+import { useGqlMutation, useGqlQuery } from 'lib/query';
+import { DeleteEventDocument, EventDocument } from 'lib/graphql/Event';
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const id = fromSlugArray(router.query.id);
-  const { data } = useEventQuery({ id }, { enabled: !!id, cacheTime: 0 });
-  const { mutateAsync: doDelete } = useDeleteEventMutation({
+  const { data } = useGqlQuery(EventDocument, { id }, { enabled: !!id, cacheTime: 0 });
+  const { mutateAsync: doDelete } = useGqlMutation(DeleteEventDocument, {
     onSuccess: () => router.push('/admin/akce'),
   });
   return (
@@ -28,6 +29,6 @@ const Page: NextPageWithLayout = () => {
 Page.list = <EventList />;
 Page.isDetail = true;
 Page.permissions = [PermissionKey.peAkce, PermissionLevel.P_OWNED];
-Page.staticTitle = "Akce";
+Page.staticTitle = 'Akce';
 
 export default Page;

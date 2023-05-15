@@ -4,14 +4,15 @@ import { useRouter } from 'next/router';
 import { List } from 'components/layout/List';
 import { TextField } from 'components/TextField';
 import { FuzzyList } from 'components/FuzzyList';
-import { useEventListQuery } from 'lib/graphql/Event';
 import { fullDateFormatter } from 'lib/format-date';
 import { fromSlugArray } from 'lib/slugify';
+import { useGqlQuery } from 'lib/query';
+import { EventListDocument } from 'lib/graphql/Event';
 
 export const EventList = () => {
   const router = useRouter();
   const [search, setSearch] = React.useState('');
-  const { data } = useEventListQuery();
+    const { data } = useGqlQuery(EventListDocument, {});
   const id = fromSlugArray(router.query.id);
 
   return (

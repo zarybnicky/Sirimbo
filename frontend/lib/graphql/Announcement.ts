@@ -2,9 +2,7 @@
 /* eslint-disable */
 import * as Types from './index';
 
-import { CohortBasicFragmentDoc } from './Cohorts';
-import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
-import { fetcher } from 'lib/query';
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type AnnouncementFragment = { __typename: 'Upozorneni', upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, scheduledSince: string | null, scheduledUntil: string | null, id: string, userByUpKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina: { __typename: 'Skupiny', sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string } | null }> } };
 
 export type MyAnnouncementsQueryVariables = Types.Exact<{
@@ -52,167 +50,10 @@ export type DeleteAnnouncementMutationVariables = Types.Exact<{
 
 export type DeleteAnnouncementMutation = { __typename?: 'Mutation', deleteUpozorneni: { __typename: 'DeleteUpozorneniPayload' } | null };
 
-export const AnnouncementFragmentDoc = `
-    fragment Announcement on Upozorneni {
-  __typename
-  id: upId
-  upKdo
-  upLock
-  upNadpis
-  upText
-  upTimestamp
-  upTimestampAdd
-  upKdo
-  userByUpKdo {
-    id: uId
-    uJmeno
-    uPrijmeni
-  }
-  upozorneniSkupiniesByUpsIdRodic {
-    nodes {
-      skupinyByUpsIdSkupina {
-        ...CohortBasic
-      }
-    }
-  }
-  scheduledSince
-  scheduledUntil
-}
-    ${CohortBasicFragmentDoc}`;
-export const MyAnnouncementsDocument = `
-    query MyAnnouncements($limit: Int, $offset: Int) {
-  myAnnouncements(first: $limit, offset: $offset) {
-    totalCount
-    nodes {
-      ...Announcement
-    }
-  }
-}
-    ${AnnouncementFragmentDoc}`;
-export const useMyAnnouncementsQuery = <
-      TData = MyAnnouncementsQuery,
-      TError = unknown
-    >(
-      variables?: MyAnnouncementsQueryVariables,
-      options?: UseQueryOptions<MyAnnouncementsQuery, TError, TData>
-    ) =>
-    useQuery<MyAnnouncementsQuery, TError, TData>(
-      variables === undefined ? ['MyAnnouncements'] : ['MyAnnouncements', variables],
-      fetcher<MyAnnouncementsQuery, MyAnnouncementsQueryVariables>(MyAnnouncementsDocument, variables),
-      options
-    );
-
-useMyAnnouncementsQuery.getKey = (variables?: MyAnnouncementsQueryVariables) => variables === undefined ? ['MyAnnouncements'] : ['MyAnnouncements', variables];
-;
-
-useMyAnnouncementsQuery.fetcher = (variables?: MyAnnouncementsQueryVariables, options?: RequestInit['headers']) => fetcher<MyAnnouncementsQuery, MyAnnouncementsQueryVariables>(MyAnnouncementsDocument, variables, options);
-export const AnnouncementListDocument = `
-    query AnnouncementList($limit: Int, $offset: Int) {
-  upozornenis(first: $limit, offset: $offset, orderBy: [UP_TIMESTAMP_ADD_DESC]) {
-    totalCount
-    nodes {
-      ...Announcement
-    }
-  }
-}
-    ${AnnouncementFragmentDoc}`;
-export const useAnnouncementListQuery = <
-      TData = AnnouncementListQuery,
-      TError = unknown
-    >(
-      variables?: AnnouncementListQueryVariables,
-      options?: UseQueryOptions<AnnouncementListQuery, TError, TData>
-    ) =>
-    useQuery<AnnouncementListQuery, TError, TData>(
-      variables === undefined ? ['AnnouncementList'] : ['AnnouncementList', variables],
-      fetcher<AnnouncementListQuery, AnnouncementListQueryVariables>(AnnouncementListDocument, variables),
-      options
-    );
-
-useAnnouncementListQuery.getKey = (variables?: AnnouncementListQueryVariables) => variables === undefined ? ['AnnouncementList'] : ['AnnouncementList', variables];
-;
-
-useAnnouncementListQuery.fetcher = (variables?: AnnouncementListQueryVariables, options?: RequestInit['headers']) => fetcher<AnnouncementListQuery, AnnouncementListQueryVariables>(AnnouncementListDocument, variables, options);
-export const AnnouncementDocument = `
-    query Announcement($id: BigInt!) {
-  upozorneni(upId: $id) {
-    ...Announcement
-  }
-}
-    ${AnnouncementFragmentDoc}`;
-export const useAnnouncementQuery = <
-      TData = AnnouncementQuery,
-      TError = unknown
-    >(
-      variables: AnnouncementQueryVariables,
-      options?: UseQueryOptions<AnnouncementQuery, TError, TData>
-    ) =>
-    useQuery<AnnouncementQuery, TError, TData>(
-      ['Announcement', variables],
-      fetcher<AnnouncementQuery, AnnouncementQueryVariables>(AnnouncementDocument, variables),
-      options
-    );
-
-useAnnouncementQuery.getKey = (variables: AnnouncementQueryVariables) => ['Announcement', variables];
-;
-
-useAnnouncementQuery.fetcher = (variables: AnnouncementQueryVariables, options?: RequestInit['headers']) => fetcher<AnnouncementQuery, AnnouncementQueryVariables>(AnnouncementDocument, variables, options);
-export const CreateAnnouncementDocument = `
-    mutation CreateAnnouncement($input: UpozorneniInput!) {
-  createUpozorneni(input: {upozorneni: $input}) {
-    upozorneni {
-      id: upId
-    }
-  }
-}
-    `;
-export const useCreateAnnouncementMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<CreateAnnouncementMutation, TError, CreateAnnouncementMutationVariables, TContext>) =>
-    useMutation<CreateAnnouncementMutation, TError, CreateAnnouncementMutationVariables, TContext>(
-      ['CreateAnnouncement'],
-      (variables?: CreateAnnouncementMutationVariables) => fetcher<CreateAnnouncementMutation, CreateAnnouncementMutationVariables>(CreateAnnouncementDocument, variables)(),
-      options
-    );
-useCreateAnnouncementMutation.getKey = () => ['CreateAnnouncement'];
-
-useCreateAnnouncementMutation.fetcher = (variables: CreateAnnouncementMutationVariables, options?: RequestInit['headers']) => fetcher<CreateAnnouncementMutation, CreateAnnouncementMutationVariables>(CreateAnnouncementDocument, variables, options);
-export const UpdateAnnouncementDocument = `
-    mutation UpdateAnnouncement($id: BigInt!, $patch: UpozorneniPatch!) {
-  updateUpozorneni(input: {upId: $id, patch: $patch}) {
-    __typename
-  }
-}
-    `;
-export const useUpdateAnnouncementMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<UpdateAnnouncementMutation, TError, UpdateAnnouncementMutationVariables, TContext>) =>
-    useMutation<UpdateAnnouncementMutation, TError, UpdateAnnouncementMutationVariables, TContext>(
-      ['UpdateAnnouncement'],
-      (variables?: UpdateAnnouncementMutationVariables) => fetcher<UpdateAnnouncementMutation, UpdateAnnouncementMutationVariables>(UpdateAnnouncementDocument, variables)(),
-      options
-    );
-useUpdateAnnouncementMutation.getKey = () => ['UpdateAnnouncement'];
-
-useUpdateAnnouncementMutation.fetcher = (variables: UpdateAnnouncementMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateAnnouncementMutation, UpdateAnnouncementMutationVariables>(UpdateAnnouncementDocument, variables, options);
-export const DeleteAnnouncementDocument = `
-    mutation DeleteAnnouncement($id: BigInt!) {
-  deleteUpozorneni(input: {upId: $id}) {
-    __typename
-  }
-}
-    `;
-export const useDeleteAnnouncementMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<DeleteAnnouncementMutation, TError, DeleteAnnouncementMutationVariables, TContext>) =>
-    useMutation<DeleteAnnouncementMutation, TError, DeleteAnnouncementMutationVariables, TContext>(
-      ['DeleteAnnouncement'],
-      (variables?: DeleteAnnouncementMutationVariables) => fetcher<DeleteAnnouncementMutation, DeleteAnnouncementMutationVariables>(DeleteAnnouncementDocument, variables)(),
-      options
-    );
-useDeleteAnnouncementMutation.getKey = () => ['DeleteAnnouncement'];
-
-useDeleteAnnouncementMutation.fetcher = (variables: DeleteAnnouncementMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteAnnouncementMutation, DeleteAnnouncementMutationVariables>(DeleteAnnouncementDocument, variables, options);
+export const AnnouncementFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Announcement"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Upozorneni"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"upId"}},{"kind":"Field","name":{"kind":"Name","value":"upKdo"}},{"kind":"Field","name":{"kind":"Name","value":"upLock"}},{"kind":"Field","name":{"kind":"Name","value":"upNadpis"}},{"kind":"Field","name":{"kind":"Name","value":"upText"}},{"kind":"Field","name":{"kind":"Name","value":"upTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"upTimestampAdd"}},{"kind":"Field","name":{"kind":"Name","value":"upKdo"}},{"kind":"Field","name":{"kind":"Name","value":"userByUpKdo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"uId"}},{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}}]}},{"kind":"Field","name":{"kind":"Name","value":"upozorneniSkupiniesByUpsIdRodic"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"skupinyByUpsIdSkupina"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CohortBasic"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"scheduledSince"}},{"kind":"Field","name":{"kind":"Name","value":"scheduledUntil"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CohortBasic"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Skupiny"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"sId"}},{"kind":"Field","name":{"kind":"Name","value":"sName"}},{"kind":"Field","name":{"kind":"Name","value":"sLocation"}},{"kind":"Field","name":{"kind":"Name","value":"sVisible"}},{"kind":"Field","name":{"kind":"Name","value":"sColorRgb"}},{"kind":"Field","name":{"kind":"Name","value":"ordering"}}]}}]} as unknown as DocumentNode<AnnouncementFragment, unknown>;
+export const MyAnnouncementsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"MyAnnouncements"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"myAnnouncements"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Announcement"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CohortBasic"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Skupiny"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"sId"}},{"kind":"Field","name":{"kind":"Name","value":"sName"}},{"kind":"Field","name":{"kind":"Name","value":"sLocation"}},{"kind":"Field","name":{"kind":"Name","value":"sVisible"}},{"kind":"Field","name":{"kind":"Name","value":"sColorRgb"}},{"kind":"Field","name":{"kind":"Name","value":"ordering"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Announcement"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Upozorneni"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"upId"}},{"kind":"Field","name":{"kind":"Name","value":"upKdo"}},{"kind":"Field","name":{"kind":"Name","value":"upLock"}},{"kind":"Field","name":{"kind":"Name","value":"upNadpis"}},{"kind":"Field","name":{"kind":"Name","value":"upText"}},{"kind":"Field","name":{"kind":"Name","value":"upTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"upTimestampAdd"}},{"kind":"Field","name":{"kind":"Name","value":"upKdo"}},{"kind":"Field","name":{"kind":"Name","value":"userByUpKdo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"uId"}},{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}}]}},{"kind":"Field","name":{"kind":"Name","value":"upozorneniSkupiniesByUpsIdRodic"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"skupinyByUpsIdSkupina"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CohortBasic"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"scheduledSince"}},{"kind":"Field","name":{"kind":"Name","value":"scheduledUntil"}}]}}]} as unknown as DocumentNode<MyAnnouncementsQuery, MyAnnouncementsQueryVariables>;
+export const AnnouncementListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AnnouncementList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"upozornenis"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"ListValue","values":[{"kind":"EnumValue","value":"UP_TIMESTAMP_ADD_DESC"}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Announcement"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CohortBasic"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Skupiny"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"sId"}},{"kind":"Field","name":{"kind":"Name","value":"sName"}},{"kind":"Field","name":{"kind":"Name","value":"sLocation"}},{"kind":"Field","name":{"kind":"Name","value":"sVisible"}},{"kind":"Field","name":{"kind":"Name","value":"sColorRgb"}},{"kind":"Field","name":{"kind":"Name","value":"ordering"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Announcement"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Upozorneni"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"upId"}},{"kind":"Field","name":{"kind":"Name","value":"upKdo"}},{"kind":"Field","name":{"kind":"Name","value":"upLock"}},{"kind":"Field","name":{"kind":"Name","value":"upNadpis"}},{"kind":"Field","name":{"kind":"Name","value":"upText"}},{"kind":"Field","name":{"kind":"Name","value":"upTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"upTimestampAdd"}},{"kind":"Field","name":{"kind":"Name","value":"upKdo"}},{"kind":"Field","name":{"kind":"Name","value":"userByUpKdo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"uId"}},{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}}]}},{"kind":"Field","name":{"kind":"Name","value":"upozorneniSkupiniesByUpsIdRodic"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"skupinyByUpsIdSkupina"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CohortBasic"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"scheduledSince"}},{"kind":"Field","name":{"kind":"Name","value":"scheduledUntil"}}]}}]} as unknown as DocumentNode<AnnouncementListQuery, AnnouncementListQueryVariables>;
+export const AnnouncementDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Announcement"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"upozorneni"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"upId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Announcement"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CohortBasic"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Skupiny"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"sId"}},{"kind":"Field","name":{"kind":"Name","value":"sName"}},{"kind":"Field","name":{"kind":"Name","value":"sLocation"}},{"kind":"Field","name":{"kind":"Name","value":"sVisible"}},{"kind":"Field","name":{"kind":"Name","value":"sColorRgb"}},{"kind":"Field","name":{"kind":"Name","value":"ordering"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Announcement"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Upozorneni"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"upId"}},{"kind":"Field","name":{"kind":"Name","value":"upKdo"}},{"kind":"Field","name":{"kind":"Name","value":"upLock"}},{"kind":"Field","name":{"kind":"Name","value":"upNadpis"}},{"kind":"Field","name":{"kind":"Name","value":"upText"}},{"kind":"Field","name":{"kind":"Name","value":"upTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"upTimestampAdd"}},{"kind":"Field","name":{"kind":"Name","value":"upKdo"}},{"kind":"Field","name":{"kind":"Name","value":"userByUpKdo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"uId"}},{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}}]}},{"kind":"Field","name":{"kind":"Name","value":"upozorneniSkupiniesByUpsIdRodic"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"skupinyByUpsIdSkupina"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CohortBasic"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"scheduledSince"}},{"kind":"Field","name":{"kind":"Name","value":"scheduledUntil"}}]}}]} as unknown as DocumentNode<AnnouncementQuery, AnnouncementQueryVariables>;
+export const CreateAnnouncementDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateAnnouncement"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpozorneniInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createUpozorneni"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"upozorneni"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"upozorneni"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"upId"}}]}}]}}]}}]} as unknown as DocumentNode<CreateAnnouncementMutation, CreateAnnouncementMutationVariables>;
+export const UpdateAnnouncementDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateAnnouncement"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"patch"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpozorneniPatch"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateUpozorneni"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"upId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"patch"},"value":{"kind":"Variable","name":{"kind":"Name","value":"patch"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}}]}}]} as unknown as DocumentNode<UpdateAnnouncementMutation, UpdateAnnouncementMutationVariables>;
+export const DeleteAnnouncementDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteAnnouncement"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteUpozorneni"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"upId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}}]}}]} as unknown as DocumentNode<DeleteAnnouncementMutation, DeleteAnnouncementMutationVariables>;

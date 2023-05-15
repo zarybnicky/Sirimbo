@@ -1,8 +1,3 @@
-import {
-  useCreateUserMutation,
-  useUpdateUserMutation,
-  useUserListQuery,
-} from 'lib/graphql/User';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { SelectElement } from 'components/SelectElement';
@@ -15,10 +10,16 @@ import { useCountries } from 'lib/data/use-countries';
 import { SubmitButton } from './SubmitButton';
 import { UserInput } from 'lib/graphql';
 import { UserFragment } from 'lib/graphql/CurrentUser';
-import { useCohortListQuery } from 'lib/graphql/Cohorts';
-import { useRoleListQuery } from 'lib/graphql/Roles';
 import { useQueryClient } from '@tanstack/react-query';
 import dynamic from 'next/dynamic';
+import { getGqlKey, useGqlMutation, useGqlQuery } from 'lib/query';
+import { RoleListDocument } from 'lib/graphql/Roles';
+import { CohortListDocument } from 'lib/graphql/Cohorts';
+import {
+  CreateUserDocument,
+  UpdateUserDocument,
+  UserListDocument,
+} from 'lib/graphql/User';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
 type FormProps = Pick<
@@ -54,15 +55,15 @@ export const UserForm: React.FC<{
 }> = ({ data }) => {
   const queryClient = useQueryClient();
   const onSuccess = React.useCallback(() => {
-    queryClient.invalidateQueries(useUserListQuery.getKey());
+    queryClient.invalidateQueries(getGqlKey(UserListDocument, {}));
   }, [queryClient]);
 
-  const { mutateAsync: doCreate } = useCreateUserMutation({ onSuccess });
-  const { mutateAsync: doUpdate } = useUpdateUserMutation({ onSuccess });
+  const { mutateAsync: doCreate } = useGqlMutation(CreateUserDocument, { onSuccess });
+  const { mutateAsync: doUpdate } = useGqlMutation(UpdateUserDocument, { onSuccess });
 
   const countries = useCountries();
-  const { data: cohorts } = useCohortListQuery();
-  const { data: roles } = useRoleListQuery();
+  const { data: roles } = useGqlQuery(RoleListDocument, {});
+  const { data: cohorts } = useGqlQuery(CohortListDocument, {});
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
@@ -96,7 +97,7 @@ export const UserForm: React.FC<{
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     const { uLogin: _uLogin, ...patch } = values;
     if (data) {
-      await doUpdate({id: data.id, patch});
+      await doUpdate({ id: data.id, patch });
     } else {
       await doCreate({
         input: {
@@ -238,7 +239,12 @@ export const UserForm: React.FC<{
           }
         />
 
-        <RichTextEditor initialState={data?.uPoznamky} control={control} name="uPoznamky" label="Poznámka" />
+        <RichTextEditor
+          initialState={data?.uPoznamky}
+          control={control}
+          name="uPoznamky"
+          label="Poznámka"
+        />
 
         <CheckboxElement
           control={control}

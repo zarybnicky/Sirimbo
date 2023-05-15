@@ -1,8 +1,8 @@
 import { EventInput } from 'lib/graphql';
 import {
+  CreateEventDocument,
   EventFragment,
-  useCreateEventMutation,
-  useUpdateEventMutation,
+  UpdateEventDocument,
 } from 'lib/graphql/Event';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -14,6 +14,7 @@ import { SubmitButton } from './SubmitButton';
 import dynamic from 'next/dynamic';
 import { pick } from 'lib/form-utils';
 import { pipe } from 'fp-ts/lib/function';
+import { useGqlMutation } from 'lib/query';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
 const fields = [
@@ -35,8 +36,8 @@ export const EventForm: React.FC<{
   data?: EventFragment;
   onSuccess?: () => void;
 }> = ({ data, onSuccess }) => {
-  const { mutateAsync: doCreate } = useCreateEventMutation({ onSuccess });
-  const { mutateAsync: doUpdate } = useUpdateEventMutation({ onSuccess });
+  const { mutateAsync: doCreate } = useGqlMutation(CreateEventDocument, { onSuccess });
+  const { mutateAsync: doUpdate } = useGqlMutation(UpdateEventDocument, { onSuccess });
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {

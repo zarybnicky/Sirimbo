@@ -1,16 +1,18 @@
 import { useAuth } from 'lib/data/use-auth';
-import { useCohortQuery } from 'lib/graphql/Cohorts';
-import { useCurrentTenantQuery } from 'lib/graphql/Tenant';
+import { CohortDocument } from 'lib/graphql/Cohorts';
+import { CurrentTenantDocument } from 'lib/graphql/Tenant';
+import { useGqlQuery } from 'lib/query';
 import { Card } from './Card';
 import { RichTextView } from './RichTextView';
 
 export function TenantInformation() {
   const { user } = useAuth();
-  const { data: cohortData } = useCohortQuery(
+  const { data: cohortData } = useGqlQuery(
+    CohortDocument,
     { id: user?.uSkupina! },
     { enabled: !!user?.uSkupina },
   );
-  const { data: tenant } = useCurrentTenantQuery();
+  const { data: tenant } = useGqlQuery(CurrentTenantDocument, {});
   const data = tenant?.getCurrentTenant;
   const cohort = cohortData?.skupiny;
   if (!data) {

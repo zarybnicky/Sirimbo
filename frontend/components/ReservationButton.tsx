@@ -6,9 +6,10 @@ import { useAuth } from 'lib/data/use-auth';
 import { formatCoupleName } from 'lib/format-name';
 import {
   MyReservationFragment,
-  useSetDesiredLessonsMutation,
+  SetDesiredLessonsDocument,
 } from 'lib/graphql/Reservation';
 import { useQueryClient } from '@tanstack/react-query';
+import { useGqlMutation } from 'lib/query';
 
 export const ReservationButton = ({ item }: { item: MyReservationFragment }) => {
   const { perms, couple } = useAuth();
@@ -17,33 +18,30 @@ export const ReservationButton = ({ item }: { item: MyReservationFragment }) => 
   const myLessons = item.myLessons || 0;
   const freeLessons = item.freeLessons || 0;
 
-  const { isLoading, mutateAsync: modifyLessons } = useSetDesiredLessonsMutation({
+  const setMutation = useGqlMutation(SetDesiredLessonsDocument, {
     onSuccess() {
       queryClient.invalidateQueries(['ReservationRange']);
     },
   });
-  const disableRemove = isLoading || myLessons <= 0;
+  const disableRemove = setMutation.isLoading || myLessons <= 0;
   const disableAdd =
-    isLoading ||
+    setMutation.isLoading ||
     freeLessons < 1 ||
     (item.nMaxPocetHod > 0 && myLessons >= item.nMaxPocetHod);
 
-  const addLesson = React.useCallback(
-    () =>
-      modifyLessons({
-        id: item.id,
-        lessonCount: Math.min(myLessons + 1, myLessons + freeLessons),
-      }),
-    [freeLessons, modifyLessons, item, myLessons],
-  );
-  const removeLesson = React.useCallback(
-    () =>
-      modifyLessons({
-        id: item.id,
-        lessonCount: Math.max(myLessons - 1, 0),
-      }),
-    [modifyLessons, item, myLessons],
-  );
+  const addLesson = React.useCallback(() => {
+    setMutation.mutateAsync({
+      id: item.id,
+      lessonCount: Math.min(myLessons + 1, myLessons + freeLessons),
+    });
+  }, [freeLessons, setMutation, item, myLessons]);
+
+  const removeLesson = React.useCallback(() => {
+    setMutation.mutateAsync({
+      id: item.id,
+      lessonCount: Math.max(myLessons - 1, 0),
+    });
+  }, [setMutation, item, myLessons]);
 
   const canEdit = perms.canMakeReservation(item) || (item.myLessons && !item.nLock);
   const trigger = (
@@ -51,7 +49,8 @@ export const ReservationButton = ({ item }: { item: MyReservationFragment }) => 
       className={classNames(
         'group flex gap-3 p-2.5 rounded-lg',
         'leading-4 text-sm tabular-nums',
-        canEdit && 'cursor-pointer bg-yellow-100 border border-yellow-200 hover:bg-yellow-50',
+        canEdit &&
+          'cursor-pointer bg-yellow-100 border border-yellow-200 hover:bg-yellow-50',
       )}
     >
       <div>{formatCoupleName(couple)}</div>

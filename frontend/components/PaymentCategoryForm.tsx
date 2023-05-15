@@ -1,8 +1,4 @@
-import {
-  PaymentCategoryFragment,
-  useCreatePaymentCategoryMutation,
-  useUpdatePaymentCategoryMutation,
-} from 'lib/graphql/Payment';
+import {CreatePaymentCategoryDocument, PaymentCategoryFragment, UpdatePaymentCategoryDocument,} from 'lib/graphql/Payment';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
@@ -13,6 +9,7 @@ import { SubmitButton } from './SubmitButton';
 import { PlatbyCategoryInput } from 'lib/graphql';
 import { pipe } from 'fp-ts/lib/function';
 import { pick } from 'lib/form-utils';
+import { useGqlMutation } from 'lib/query';
 
 const fields = [
   'pcName',
@@ -31,8 +28,8 @@ export const PaymentCategoryForm: React.FC<{
   data?: PaymentCategoryFragment;
   onSuccess: () => void;
 }> = ({ data, onSuccess }) => {
-  const { mutateAsync: doCreate } = useCreatePaymentCategoryMutation({ onSuccess });
-  const { mutateAsync: doUpdate } = useUpdatePaymentCategoryMutation({ onSuccess });
+  const { mutateAsync: doCreate } = useGqlMutation(CreatePaymentCategoryDocument, { onSuccess });
+  const { mutateAsync: doUpdate } = useGqlMutation(UpdatePaymentCategoryDocument, { onSuccess });
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {

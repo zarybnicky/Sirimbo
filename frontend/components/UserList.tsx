@@ -1,20 +1,21 @@
-import { useUserListQuery } from 'lib/graphql/User';
 import { Plus } from 'react-feather';
 import { useRouter } from 'next/router';
 import { List } from 'components/layout/List';
-import { useRoleListQuery } from 'lib/graphql/Roles';
-import { useCohortListQuery } from 'lib/graphql/Cohorts';
+import { RoleListDocument } from 'lib/graphql/Roles';
+import { CohortListDocument } from 'lib/graphql/Cohorts';
 import { TextField } from './TextField';
 import React from 'react';
 import { FuzzyList } from './FuzzyList';
 import { exportMSMT } from 'lib/export-msmt';
 import { fromSlugArray } from 'lib/slugify';
+import { useGqlQuery } from 'lib/query';
+import { UserListDocument } from 'lib/graphql/User';
 
 export const UserList = () => {
   const router = useRouter();
-  const { data } = useUserListQuery();
-  const { data: roles } = useRoleListQuery();
-  const { data: cohorts } = useCohortListQuery();
+  const { data } = useGqlQuery(UserListDocument, {});
+  const { data: roles } = useGqlQuery(RoleListDocument, {});
+  const { data: cohorts } = useGqlQuery(CohortListDocument, {});
   const id = fromSlugArray(router.query.id);
 
   const nodes = React.useMemo(() => {

@@ -2,8 +2,7 @@
 /* eslint-disable */
 import * as Types from './index';
 
-import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
-import { fetcher } from 'lib/query';
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type ArticleFragment = { __typename: 'Aktuality', atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, id: string, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null };
 
 export type ArticleQueryVariables = Types.Exact<{
@@ -43,129 +42,9 @@ export type DeleteArticleMutationVariables = Types.Exact<{
 
 export type DeleteArticleMutation = { __typename?: 'Mutation', deleteAktuality: { __typename: 'DeleteAktualityPayload' } | null };
 
-export const ArticleFragmentDoc = `
-    fragment Article on Aktuality {
-  __typename
-  id: atId
-  atPreview
-  atJmeno
-  atText
-  atFoto
-  atFotoMain
-  atTimestamp
-  atTimestampAdd
-  galerieFotoByAtFotoMain {
-    gfPath
-  }
-}
-    `;
-export const ArticleDocument = `
-    query Article($id: BigInt!) {
-  aktuality(atId: $id) {
-    ...Article
-  }
-}
-    ${ArticleFragmentDoc}`;
-export const useArticleQuery = <
-      TData = ArticleQuery,
-      TError = unknown
-    >(
-      variables: ArticleQueryVariables,
-      options?: UseQueryOptions<ArticleQuery, TError, TData>
-    ) =>
-    useQuery<ArticleQuery, TError, TData>(
-      ['Article', variables],
-      fetcher<ArticleQuery, ArticleQueryVariables>(ArticleDocument, variables),
-      options
-    );
-
-useArticleQuery.getKey = (variables: ArticleQueryVariables) => ['Article', variables];
-;
-
-useArticleQuery.fetcher = (variables: ArticleQueryVariables, options?: RequestInit['headers']) => fetcher<ArticleQuery, ArticleQueryVariables>(ArticleDocument, variables, options);
-export const ArticlesDocument = `
-    query Articles($limit: Int, $offset: Int) {
-  aktualities(first: $limit, offset: $offset, orderBy: [AT_TIMESTAMP_ADD_DESC]) {
-    totalCount
-    nodes {
-      ...Article
-    }
-  }
-}
-    ${ArticleFragmentDoc}`;
-export const useArticlesQuery = <
-      TData = ArticlesQuery,
-      TError = unknown
-    >(
-      variables?: ArticlesQueryVariables,
-      options?: UseQueryOptions<ArticlesQuery, TError, TData>
-    ) =>
-    useQuery<ArticlesQuery, TError, TData>(
-      variables === undefined ? ['Articles'] : ['Articles', variables],
-      fetcher<ArticlesQuery, ArticlesQueryVariables>(ArticlesDocument, variables),
-      options
-    );
-
-useArticlesQuery.getKey = (variables?: ArticlesQueryVariables) => variables === undefined ? ['Articles'] : ['Articles', variables];
-;
-
-useArticlesQuery.fetcher = (variables?: ArticlesQueryVariables, options?: RequestInit['headers']) => fetcher<ArticlesQuery, ArticlesQueryVariables>(ArticlesDocument, variables, options);
-export const CreateArticleDocument = `
-    mutation CreateArticle($input: AktualityInput!) {
-  createAktuality(input: {aktuality: $input}) {
-    aktuality {
-      id: atId
-    }
-  }
-}
-    `;
-export const useCreateArticleMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<CreateArticleMutation, TError, CreateArticleMutationVariables, TContext>) =>
-    useMutation<CreateArticleMutation, TError, CreateArticleMutationVariables, TContext>(
-      ['CreateArticle'],
-      (variables?: CreateArticleMutationVariables) => fetcher<CreateArticleMutation, CreateArticleMutationVariables>(CreateArticleDocument, variables)(),
-      options
-    );
-useCreateArticleMutation.getKey = () => ['CreateArticle'];
-
-useCreateArticleMutation.fetcher = (variables: CreateArticleMutationVariables, options?: RequestInit['headers']) => fetcher<CreateArticleMutation, CreateArticleMutationVariables>(CreateArticleDocument, variables, options);
-export const UpdateArticleDocument = `
-    mutation UpdateArticle($id: BigInt!, $patch: AktualityPatch!) {
-  updateAktuality(input: {atId: $id, patch: $patch}) {
-    __typename
-  }
-}
-    `;
-export const useUpdateArticleMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<UpdateArticleMutation, TError, UpdateArticleMutationVariables, TContext>) =>
-    useMutation<UpdateArticleMutation, TError, UpdateArticleMutationVariables, TContext>(
-      ['UpdateArticle'],
-      (variables?: UpdateArticleMutationVariables) => fetcher<UpdateArticleMutation, UpdateArticleMutationVariables>(UpdateArticleDocument, variables)(),
-      options
-    );
-useUpdateArticleMutation.getKey = () => ['UpdateArticle'];
-
-useUpdateArticleMutation.fetcher = (variables: UpdateArticleMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateArticleMutation, UpdateArticleMutationVariables>(UpdateArticleDocument, variables, options);
-export const DeleteArticleDocument = `
-    mutation DeleteArticle($id: BigInt!) {
-  deleteAktuality(input: {atId: $id}) {
-    __typename
-  }
-}
-    `;
-export const useDeleteArticleMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<DeleteArticleMutation, TError, DeleteArticleMutationVariables, TContext>) =>
-    useMutation<DeleteArticleMutation, TError, DeleteArticleMutationVariables, TContext>(
-      ['DeleteArticle'],
-      (variables?: DeleteArticleMutationVariables) => fetcher<DeleteArticleMutation, DeleteArticleMutationVariables>(DeleteArticleDocument, variables)(),
-      options
-    );
-useDeleteArticleMutation.getKey = () => ['DeleteArticle'];
-
-useDeleteArticleMutation.fetcher = (variables: DeleteArticleMutationVariables, options?: RequestInit['headers']) => fetcher<DeleteArticleMutation, DeleteArticleMutationVariables>(DeleteArticleDocument, variables, options);
+export const ArticleFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Article"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Aktuality"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"atId"}},{"kind":"Field","name":{"kind":"Name","value":"atPreview"}},{"kind":"Field","name":{"kind":"Name","value":"atJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"atText"}},{"kind":"Field","name":{"kind":"Name","value":"atFoto"}},{"kind":"Field","name":{"kind":"Name","value":"atFotoMain"}},{"kind":"Field","name":{"kind":"Name","value":"atTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"atTimestampAdd"}},{"kind":"Field","name":{"kind":"Name","value":"galerieFotoByAtFotoMain"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gfPath"}}]}}]}}]} as unknown as DocumentNode<ArticleFragment, unknown>;
+export const ArticleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Article"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aktuality"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"atId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Article"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Article"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Aktuality"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"atId"}},{"kind":"Field","name":{"kind":"Name","value":"atPreview"}},{"kind":"Field","name":{"kind":"Name","value":"atJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"atText"}},{"kind":"Field","name":{"kind":"Name","value":"atFoto"}},{"kind":"Field","name":{"kind":"Name","value":"atFotoMain"}},{"kind":"Field","name":{"kind":"Name","value":"atTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"atTimestampAdd"}},{"kind":"Field","name":{"kind":"Name","value":"galerieFotoByAtFotoMain"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gfPath"}}]}}]}}]} as unknown as DocumentNode<ArticleQuery, ArticleQueryVariables>;
+export const ArticlesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Articles"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aktualities"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"ListValue","values":[{"kind":"EnumValue","value":"AT_TIMESTAMP_ADD_DESC"}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Article"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Article"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Aktuality"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"atId"}},{"kind":"Field","name":{"kind":"Name","value":"atPreview"}},{"kind":"Field","name":{"kind":"Name","value":"atJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"atText"}},{"kind":"Field","name":{"kind":"Name","value":"atFoto"}},{"kind":"Field","name":{"kind":"Name","value":"atFotoMain"}},{"kind":"Field","name":{"kind":"Name","value":"atTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"atTimestampAdd"}},{"kind":"Field","name":{"kind":"Name","value":"galerieFotoByAtFotoMain"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gfPath"}}]}}]}}]} as unknown as DocumentNode<ArticlesQuery, ArticlesQueryVariables>;
+export const CreateArticleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateArticle"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AktualityInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createAktuality"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"aktuality"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aktuality"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"id"},"name":{"kind":"Name","value":"atId"}}]}}]}}]}}]} as unknown as DocumentNode<CreateArticleMutation, CreateArticleMutationVariables>;
+export const UpdateArticleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateArticle"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"patch"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AktualityPatch"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateAktuality"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"atId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"patch"},"value":{"kind":"Variable","name":{"kind":"Name","value":"patch"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}}]}}]} as unknown as DocumentNode<UpdateArticleMutation, UpdateArticleMutationVariables>;
+export const DeleteArticleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteArticle"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteAktuality"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"atId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}}]}}]} as unknown as DocumentNode<DeleteArticleMutation, DeleteArticleMutationVariables>;

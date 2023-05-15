@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
-import { ArticleFragment, useArticleQuery } from 'lib/graphql/Articles';
+import { ArticleDocument, ArticleFragment } from 'lib/graphql/Articles';
 import { fullDateFormatter } from 'lib/format-date';
 import { RichTextView } from 'components/RichTextView';
 import { NextSeo } from 'next-seo';
@@ -8,6 +8,7 @@ import { Heading } from 'components/Heading';
 import { type NextPageWithLayout } from 'pages/_app';
 import { GetStaticProps } from 'next';
 import { fromSlugArray, slugify } from 'lib/slugify';
+import { fetchGql } from 'lib/query';
 
 type PageProps = {
   item: ArticleFragment;
@@ -44,12 +45,7 @@ export default Page;
 export const getStaticPaths = async () => ({ paths: [], fallback: 'blocking' });
 export const getStaticProps: GetStaticProps<PageProps> = async (context) => {
   const id = fromSlugArray(context.params?.id) || fromSlugArray(context.params?.slug);
-  const item = await useArticleQuery
-    .fetcher({ id })()
-    .then(
-      (query) => query.aktuality,
-      () => null,
-    );
+  const item = await fetchGql(ArticleDocument, {id}).then(x => x.aktuality);
 
   if (!item) {
     return {

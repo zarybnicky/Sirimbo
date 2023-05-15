@@ -1,11 +1,12 @@
 import { useForm } from 'react-hook-form';
 import { SelectElement } from 'components/SelectElement';
-import { useFileListQuery } from 'lib/graphql/Documents';
+import { FileListDocument } from 'lib/graphql/Documents';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { fullDateFormatter } from 'lib/format-date';
 import { Item } from 'components/layout/Item';
 import { Card } from 'components/Card';
 import { type NextPageWithLayout } from 'pages/_app';
+import { useGqlQuery } from 'lib/query';
 
 const categories = [
   { id: '1', label: 'Schůze,\u{00A0}rady' },
@@ -18,7 +19,7 @@ const Page: NextPageWithLayout = () => {
   const { control, watch } = useForm<{ category: string }>();
   const category = watch('category');
 
-  const { data } = useFileListQuery({
+  const { data } = useGqlQuery(FileListDocument, {
     category: category ? parseInt(category, 10) : undefined,
   });
 
@@ -58,7 +59,7 @@ const Page: NextPageWithLayout = () => {
   );
 };
 
-Page.staticTitle = "Dokumenty";
+Page.staticTitle = 'Dokumenty';
 Page.permissions = [PermissionKey.peNastenka, PermissionLevel.P_VIEW];
 
 export default Page;

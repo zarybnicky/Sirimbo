@@ -1,9 +1,8 @@
 import {
-  useBookLessonMutation,
-  useCancelLessonMutation,
+  BookLessonDocument,
+  CancelLessonDocument,
   ScheduleBasicFragment,
   ScheduleItemBasicFragment,
-  useMyLessonsQuery,
 } from 'lib/graphql/Schedule';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import React from 'react';
@@ -13,7 +12,8 @@ import { SubmitButton } from './SubmitButton';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from 'lib/data/use-auth';
 import { formatCoupleName } from 'lib/format-name';
-import { fullDateFormatter, shortDateFormatter } from 'lib/format-date';
+import { shortDateFormatter } from 'lib/format-date';
+import { useGqlMutation } from 'lib/query';
 
 type Props = {
   lesson: ScheduleItemBasicFragment;
@@ -26,21 +26,13 @@ export const LessonButton = ({ schedule, lesson, showTrainer, showDate }: Props)
   const { user, perms } = useAuth();
   const [isOpen, setIsOpen] = React.useState(false);
   const queryClient = useQueryClient();
-
-  const { mutateAsync: bookLesson, isLoading: isBooking } = useBookLessonMutation({
-    onSuccess() {
-      setIsOpen(false);
-      queryClient.invalidateQueries(useMyLessonsQuery.getKey());
-      queryClient.invalidateQueries(['ScheduleRange']);
-    },
-  });
-  const { mutateAsync: cancelLesson, isLoading: isCanceling } = useCancelLessonMutation({
-    onSuccess() {
-      setIsOpen(false);
-      queryClient.invalidateQueries(useMyLessonsQuery.getKey());
-      queryClient.invalidateQueries(['ScheduleRange']);
-    },
-  });
+  const onSuccess = React.useCallback(() => {
+    setIsOpen(false);
+    queryClient.invalidateQueries(['MyLessonsQuery']);
+    queryClient.invalidateQueries(['ScheduleRange']);
+  }, [queryClient]);
+  const bookMutation = useGqlMutation(BookLessonDocument, { onSuccess });
+  const cancelMutation = useGqlMutation(CancelLessonDocument, { onSuccess });
 
   const canBook = perms.canSignUp(schedule, lesson);
   const canCancel = perms.canSignOut(schedule, lesson);
@@ -65,7 +57,9 @@ export const LessonButton = ({ schedule, lesson, showTrainer, showDate }: Props)
       className={classNames(
         'group flex gap-3 p-2.5 rounded-lg',
         'leading-4 text-sm tabular-nums cursor-pointer',
-        canBook ? 'hover:bg-green-100/80 bg-green-100 text-green-900' : 'hover:bg-yellow-50',
+        canBook
+          ? 'hover:bg-green-100/80 bg-green-100 text-green-900'
+          : 'hover:bg-yellow-50',
         !showTrainer && isMyLesson && 'bg-yellow-100',
       )}
     >
@@ -97,8 +91,8 @@ export const LessonButton = ({ schedule, lesson, showTrainer, showDate }: Props)
 
           {canBook && (
             <SubmitButton
-              loading={isBooking}
-              onClick={() => bookLesson({ id: lesson.id })}
+              loading={bookMutation.isLoading}
+              onClick={() => bookMutation.mutateAsync({ id: lesson.id })}
             >
               Přihlásit
             </SubmitButton>
@@ -106,8 +100,8 @@ export const LessonButton = ({ schedule, lesson, showTrainer, showDate }: Props)
 
           {canCancel && (
             <SubmitButton
-              loading={isCanceling}
-              onClick={() => cancelLesson({ id: lesson.id })}
+              loading={cancelMutation.isLoading}
+              onClick={() => cancelMutation.mutateAsync({ id: lesson.id })}
             >
               Zrušit
             </SubmitButton>

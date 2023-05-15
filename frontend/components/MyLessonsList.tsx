@@ -1,16 +1,17 @@
 import * as React from 'react';
-import { useMyLessonsQuery, ScheduleItemFragment } from 'lib/graphql/Schedule';
+import { MyLessonsDocument, ScheduleItemFragment } from 'lib/graphql/Schedule';
 import { useAuth } from 'lib/data/use-auth';
 import { LessonButton } from './LessonButton';
 import { Card } from './Card';
 import { formatWeekDay } from 'lib/format-date';
 import { WeekPicker, mondayToWeekRange, getCurrentMonday } from './WeekPicker';
+import { useGqlQuery } from 'lib/query';
 
 export const MyLessonsList: React.FC = () => {
   const { user } = useAuth();
   const [startDate, setStartDate] = React.useState(getCurrentMonday);
 
-  const { data, isLoading } = useMyLessonsQuery(mondayToWeekRange(startDate));
+  const { data, isLoading } = useGqlQuery(MyLessonsDocument, mondayToWeekRange(startDate));
 
   const lessonsPerDay = React.useMemo(() => {
     const lessonsPerDay: { [day: string]: ScheduleItemFragment[] } = {};

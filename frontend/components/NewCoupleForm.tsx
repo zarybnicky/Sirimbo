@@ -1,11 +1,12 @@
-import { useUserListQuery } from 'lib/graphql/User';
-import { useCreateCoupleMutation } from 'lib/graphql/Couple';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
 import { SelectElement } from 'components/SelectElement';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
+import { useGqlMutation, useGqlQuery } from 'lib/query';
+import { UserListDocument } from 'lib/graphql/User';
+import { CreateCoupleDocument } from 'lib/graphql/Couple';
 
 type FormProps = {
   man: string;
@@ -15,7 +16,7 @@ type FormProps = {
 export const NewCoupleForm: React.FC<{
   onSuccess?: () => void;
 }> = ({ onSuccess }) => {
-  const { data: users } = useUserListQuery();
+  const { data: users } = useGqlQuery(UserListDocument, {});
   const men = React.useMemo(
     () =>
       (users?.users?.nodes || [])
@@ -31,7 +32,7 @@ export const NewCoupleForm: React.FC<{
     [users],
   );
 
-  const { mutateAsync: doCreate } = useCreateCoupleMutation({ onSuccess });
+  const { mutateAsync: doCreate } = useGqlMutation(CreateCoupleDocument, { onSuccess });
 
   const { control, handleSubmit } = useForm<FormProps>();
   const onSubmit = useAsyncCallback(async (values: FormProps) => {

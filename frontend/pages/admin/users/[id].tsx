@@ -1,18 +1,19 @@
 import { UserForm } from 'components/UserForm';
 import { DeleteButton } from 'components/DeleteButton';
-import { useUserQuery, useDeleteUserMutation } from 'lib/graphql/User';
+import { DeleteUserDocument, UserDocument } from 'lib/graphql/User';
 import { useRouter } from 'next/router';
 import { Item } from 'components/layout/Item';
 import { UserList } from 'components/UserList';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { fromSlugArray } from 'lib/slugify';
 import { type NextPageWithLayout } from 'pages/_app';
+import { useGqlMutation, useGqlQuery } from 'lib/query';
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const id = fromSlugArray(router.query.id);
-  const { data } = useUserQuery({ id }, { enabled: !!id, cacheTime: 0 });
-  const { mutateAsync: doDelete } = useDeleteUserMutation({
+  const { data } = useGqlQuery(UserDocument, { id }, { enabled: !!id, cacheTime: 0 });
+  const { mutateAsync: doDelete } = useGqlMutation(DeleteUserDocument, {
     onSuccess: () => router.push('/admin/users'),
   });
   return (

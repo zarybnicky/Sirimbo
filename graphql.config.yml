@@ -33,9 +33,4 @@ generates:
       - add:
           content: "/* eslint-disable */"
       - "typescript-operations"
-      - "typescript-react-query"
-    config:
-      exposeQueryKeys: true
-      exposeMutationKeys: true
-      exposeFetcher: true
-      fetcher: 'lib/query#fetcher'
+      - "typed-document-node"

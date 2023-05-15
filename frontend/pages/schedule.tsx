@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useReservationRangeQuery } from 'lib/graphql/Reservation';
-import { ScheduleFragment, useScheduleRangeQuery } from 'lib/graphql/Schedule';
+import { ReservationRangeDocument } from 'lib/graphql/Reservation';
+import { ScheduleFragment, ScheduleRangeDocument } from 'lib/graphql/Schedule';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { formatWeekDay } from 'lib/format-date';
 import { ScheduleItem } from 'components/ScheduleItem';
@@ -13,12 +13,13 @@ import {
 } from 'components/WeekPicker';
 import { Item } from 'components/layout/Item';
 import { type NextPageWithLayout } from 'pages/_app';
+import { useGqlQuery } from 'lib/query';
 
 const Page: NextPageWithLayout = () => {
   const [startDate, setStartDate] = React.useState(getCurrentMonday);
 
-  const { data: schedules } = useScheduleRangeQuery(mondayToWeekRange(startDate));
-  const { data: reservations } = useReservationRangeQuery(mondayToYearRange(startDate));
+  const { data: schedules } = useGqlQuery(ScheduleRangeDocument, mondayToWeekRange(startDate));
+  const { data: reservations } = useGqlQuery(ReservationRangeDocument, mondayToYearRange(startDate));
 
   const scheduleByDay = React.useMemo(() => {
     const obj: { [date: string]: ScheduleFragment[] } = {};

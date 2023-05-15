@@ -1,4 +1,3 @@
-import { useReservationListQuery } from 'lib/graphql/Reservation';
 import { Plus } from 'react-feather';
 import { useRouter } from 'next/router';
 import { List } from 'components/layout/List';
@@ -7,11 +6,13 @@ import React from 'react';
 import { FuzzyList } from './FuzzyList';
 import { TextField } from './TextField';
 import { fromSlugArray } from 'lib/slugify';
+import { useGqlQuery } from 'lib/query';
+import { ReservationListDocument } from 'lib/graphql/Reservation';
 
 export function ReservationList() {
   const router = useRouter();
   const [search, setSearch] = React.useState('');
-  const { data } = useReservationListQuery();
+  const { data } = useGqlQuery(ReservationListDocument, {});
   const nodes = React.useMemo(() => {
     return (data?.nabidkas?.nodes || []).map((item) => ({
       id: item.id,
