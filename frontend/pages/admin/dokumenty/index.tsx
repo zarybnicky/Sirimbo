@@ -1,16 +1,12 @@
 import * as React from 'react';
 import { useFileListQuery } from 'lib/graphql/Documents';
 import { useRouter } from 'next/router';
-import { Button } from 'components/Button';
 import { fullDateFormatter } from 'lib/format-date';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { List } from 'components/layout/List';
 import { FuzzyList } from 'components/FuzzyList';
 import { fromSlugArray } from 'lib/slugify';
+import { type NextPageWithLayout } from 'pages/_app';
 
 const categories = [
   { id: 1, label: 'Schůze,\u{00A0}rady' },
@@ -19,7 +15,7 @@ const categories = [
   { id: 0, label: 'Ostatní' },
 ];
 
-export default function FileAdminList() {
+const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const [search, setSearch] = React.useState('');
   const { data, refetch } = useFileListQuery();
@@ -67,7 +63,6 @@ export default function FileAdminList() {
   );
 }
 
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peDokumenty,
-  PermissionLevel.P_OWNED,
-);
+Page.permissions = [PermissionKey.peDokumenty, PermissionLevel.P_OWNED];
+
+export default Page;

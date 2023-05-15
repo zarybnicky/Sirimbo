@@ -13,11 +13,7 @@ import { UserFragment } from 'lib/graphql/CurrentUser';
 import { useCohortListQuery } from 'lib/graphql/Cohorts';
 import { useRoleListQuery } from 'lib/graphql/Roles';
 import { fullDateFormatter } from 'lib/format-date';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { UserList } from 'components/UserList';
 import { Item } from 'components/layout/Item';
 import { NextPageWithLayout } from 'pages/_app';
@@ -139,10 +135,6 @@ const Page: NextPageWithLayout = () => {
 
 Page.list = <UserList />;
 Page.isDetail = true;
+Page.permissions = [PermissionKey.peUsers, PermissionLevel.P_OWNED];
 
 export default Page;
-
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peUsers,
-  PermissionLevel.P_OWNED,
-);

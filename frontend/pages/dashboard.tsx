@@ -1,16 +1,13 @@
 import * as React from 'react';
 import { MyAnnouncements } from 'components/MyAnnouncements';
 import { MyLessonsList } from 'components/MyLessonsList';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { TenantInformation } from 'components/TenantInformation';
 import { TabMenu } from 'components/TabMenu';
 import { Item } from 'components/layout/Item';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function DashboardPage() {
+const Page: NextPageWithLayout = () => {
   const [variant, setVariant] = React.useState('myLessons');
 
   return (
@@ -45,7 +42,6 @@ export default function DashboardPage() {
   );
 }
 
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peNastenka,
-  PermissionLevel.P_VIEW,
-);
+Page.permissions = [PermissionKey.peNastenka, PermissionLevel.P_VIEW];
+
+export default Page;

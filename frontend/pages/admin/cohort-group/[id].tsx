@@ -8,15 +8,11 @@ import {
 import { useRouter } from 'next/router';
 import { Item } from 'components/layout/Item';
 import { CohortGroupList } from 'components/CohortGroupList';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { useQueryClient } from '@tanstack/react-query';
 import { CohortListForm } from 'components/CohortListForm';
-import { type NextPageWithLayout } from 'pages/_app';
 import { fromSlugArray } from 'lib/slugify';
+import { type NextPageWithLayout } from 'pages/_app';
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
@@ -41,17 +37,13 @@ const Page: NextPageWithLayout = () => {
         />
       </Item.Titlebar>
       {data && <CohortGroupForm data={data.cohortGroup || undefined} />}
-      {data?.cohortGroup && <CohortListForm data={data.cohortGroup}/>}
+      {data?.cohortGroup && <CohortListForm data={data.cohortGroup} />}
     </Item>
   );
-}
+};
 
 Page.list = <CohortGroupList />;
 Page.isDetail = true;
+Page.permissions = [PermissionKey.peSkupiny, PermissionLevel.P_OWNED];
 
 export default Page;
-
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peSkupiny,
-  PermissionLevel.P_OWNED,
-);

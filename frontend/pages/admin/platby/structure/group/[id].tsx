@@ -1,14 +1,11 @@
 import { PaymentGroupForm } from 'components/PaymentGroupForm';
 import { usePaymentGroupQuery } from 'lib/graphql/Payment';
 import { useRouter } from 'next/router';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
 import { fromSlugArray } from 'lib/slugify';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function PaymentGroupEditPage() {
+const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const id = fromSlugArray(router.query.id);
   const { data } = usePaymentGroupQuery({ id }, { enabled: !!id, cacheTime: 0 });
@@ -24,7 +21,6 @@ export default function PaymentGroupEditPage() {
   );
 }
 
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.pePlatby,
-  PermissionLevel.P_OWNED,
-);
+Page.permissions = [PermissionKey.pePlatby, PermissionLevel.P_OWNED];
+
+export default Page;

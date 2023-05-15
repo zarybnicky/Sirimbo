@@ -1,10 +1,6 @@
 import { CohortGroupForm } from 'components/CohortGroupForm';
 import { CohortGroupList } from 'components/CohortGroupList';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { Item } from 'components/layout/Item';
 import { type NextPageWithLayout } from 'pages/_app';
 
@@ -19,10 +15,6 @@ const Page: NextPageWithLayout = () => {
 
 Page.list = <CohortGroupList />;
 Page.isDetail = true;
+Page.permissions = [PermissionKey.peAktuality, PermissionLevel.P_OWNED];
 
 export default Page;
-
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peSkupiny,
-  PermissionLevel.P_OWNED,
-);

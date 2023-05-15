@@ -16,11 +16,7 @@ import { useAuth } from 'lib/data/use-auth';
 import { useQueryClient } from '@tanstack/react-query';
 import { SimpleDialog } from './Dialog';
 import { Button } from './Button';
-import {
-  AttendeeExternalInput,
-  CreateAttendeeExternalInput,
-  CreateAttendeeExternalPayload,
-} from 'lib/graphql';
+import type { AttendeeExternalInput } from 'lib/graphql';
 import { toast } from 'react-toastify';
 
 interface Props {
@@ -37,15 +33,16 @@ type ExternalFormProps = Pick<
   'firstName' | 'lastName' | 'guardianName' | 'email' | 'phone' | 'notes' | 'birthNumber'
 >;
 
-export function ExternalParticipationForm({ data, onSuccess: realOnSuccess }: Props) {
+function ExternalParticipationForm({ data, onSuccess: realOnSuccess }: Props) {
   const queryClient = useQueryClient();
   const onSuccess = React.useCallback(() => {
+    toast.success('Registrace proběhla úspěšně.');
     queryClient.invalidateQueries(useMyEventsQuery.getKey());
     realOnSuccess();
   }, [queryClient, realOnSuccess]);
 
   const { mutateAsync: doCreate } = useCreateAttendeeExternalMutation({ onSuccess });
-  const { reset, control, handleSubmit } = useForm<ExternalFormProps>();
+  const { control, handleSubmit } = useForm<ExternalFormProps>();
 
   const onSubmit = useAsyncCallback(async (values: ExternalFormProps) => {
     await doCreate({
@@ -57,7 +54,6 @@ export function ExternalParticipationForm({ data, onSuccess: realOnSuccess }: Pr
         eventId: data.id,
       },
     });
-    toast.success('Registrace proběhla úspěšně.');
   });
 
   return (
@@ -132,7 +128,7 @@ export function ExternalParticipationForm({ data, onSuccess: realOnSuccess }: Pr
   );
 }
 
-export function ParticipationForm({ data, onSuccess: realOnSuccess }: Props) {
+function ParticipationForm({ data, onSuccess: realOnSuccess }: Props) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const onSuccess = React.useCallback(() => {

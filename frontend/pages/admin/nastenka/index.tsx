@@ -1,18 +1,10 @@
 import { AnnouncementList } from 'components/AnnouncementList';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { type NextPageWithLayout } from 'pages/_app';
 
 const Page: NextPageWithLayout = () => null;
 
 Page.list = <AnnouncementList />;
+Page.permissions = [PermissionKey.peAktuality, PermissionLevel.P_OWNED];
 
 export default Page;
-
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peSkupiny,
-  PermissionLevel.P_OWNED,
-);

@@ -1,12 +1,9 @@
 import { PaymentCategoryForm } from 'components/PaymentCategoryForm';
 import { useRouter } from 'next/router';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function PaymentCategoryAddPage() {
+const Page: NextPageWithLayout = () => {
   const router = useRouter();
   return (
     <div className="container mx-auto max-w-3xl mt-12 mb-8">
@@ -15,7 +12,6 @@ export default function PaymentCategoryAddPage() {
   );
 }
 
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.pePlatby,
-  PermissionLevel.P_OWNED,
-);
+Page.permissions = [PermissionKey.pePlatby, PermissionLevel.P_OWNED];
+
+export default Page;

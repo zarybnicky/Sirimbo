@@ -1,11 +1,7 @@
 import * as React from 'react';
 import { useReservationRangeQuery } from 'lib/graphql/Reservation';
 import { ScheduleFragment, useScheduleRangeQuery } from 'lib/graphql/Schedule';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { formatWeekDay } from 'lib/format-date';
 import { ScheduleItem } from 'components/ScheduleItem';
 import { ReservationItem } from 'components/ReservationItem';
@@ -16,8 +12,9 @@ import {
   WeekPicker,
 } from 'components/WeekPicker';
 import { Item } from 'components/layout/Item';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function SchedulePage() {
+const Page: NextPageWithLayout = () => {
   const [startDate, setStartDate] = React.useState(getCurrentMonday);
 
   const { data: schedules } = useScheduleRangeQuery(mondayToWeekRange(startDate));
@@ -34,14 +31,13 @@ export default function SchedulePage() {
   }, [schedules]);
 
   return (
-    <Item className="col-full-width p-2 bg-stone-100">
+    <Item className="col-full-width bg-stone-100">
       <WeekPicker title="Tréninky" startDate={startDate} onChange={setStartDate} />
 
-      {!reservations?.reservationsForRange?.nodes?.length && !schedules?.schedulesForRange?.nodes?.length && (
-        <div className="border p-2 bg-red-50">
-          Žádné tréninky pro tento týden
-        </div>
-      )}
+      {!reservations?.reservationsForRange?.nodes?.length &&
+        !schedules?.schedulesForRange?.nodes?.length && (
+          <div className="border p-2 bg-red-50">Žádné tréninky pro tento týden</div>
+        )}
       {!!reservations?.reservationsForRange?.nodes?.length && (
         <>
           <div className="text-xl tracking-wide text-stone-700 mb-2">
@@ -70,9 +66,8 @@ export default function SchedulePage() {
       ))}
     </Item>
   );
-}
+};
 
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peRozpis,
-  PermissionLevel.P_MEMBER,
-);
+Page.permissions = [PermissionKey.peRozpis, PermissionLevel.P_MEMBER];
+
+export default Page;

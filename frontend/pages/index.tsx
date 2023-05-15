@@ -6,9 +6,10 @@ import { useArticles } from 'lib/data/use-articles';
 import { YoutubeEmbed } from 'components/YoutubeEmbed';
 import { Route } from 'nextjs-routes';
 import { type NextPageWithLayout } from 'pages/_app';
+import { ArticleCard } from 'components/cards/ArticleCard';
 
 const Page: NextPageWithLayout = () => {
-  const { articles } = useArticles(2, 3);
+  const { articles } = useArticles(3, 3);
   const services = useServices();
 
   return (
@@ -41,17 +42,17 @@ const Page: NextPageWithLayout = () => {
 
       <CallToAction />
 
-      <div className="my-12">
+      <div className="col-feature my-12">
         <h4 className="text-3xl font-bold text-red-500">Aktuálně</h4>
-        {articles.map((x, i) => (
-          <ServiceCard key={i} href={x.href} image={x.imgThumb} header={x.header}>
-            {x.preview}
-          </ServiceCard>
-        ))}
+        <div className="grid place-items-stretch gap-4 grid-cols-2 lg:grid-cols-3 mt-3 mb-6">
+          {articles.map((x, i) => (
+            <ArticleCard key={i} item={x} />
+          ))}
+        </div>
       </div>
     </>
   );
-}
+};
 
 const useServices = (): {
   href: Exclude<Route, { query: any }>['pathname'];

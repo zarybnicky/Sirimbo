@@ -1,11 +1,7 @@
 import { NewCoupleForm } from 'components/NewCoupleForm';
 import { CoupleList } from 'components/CoupleList';
 import { Item } from 'components/layout/Item';
-import {
-  PermissionKey,
-  PermissionLevel,
-  withServerPermissions,
-} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { type NextPageWithLayout } from 'pages/_app';
 
 const Page: NextPageWithLayout = () => {
@@ -19,10 +15,6 @@ const Page: NextPageWithLayout = () => {
 
 Page.list = <CoupleList />;
 Page.isDetail = true;
+Page.permissions = [PermissionKey.pePary, PermissionLevel.P_OWNED];
 
 export default Page;
-
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.pePary,
-  PermissionLevel.P_OWNED,
-);

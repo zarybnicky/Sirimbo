@@ -1,11 +1,7 @@
 import { ArticleForm } from 'components/ArticleForm';
 import { useArticleQuery } from 'lib/graphql/Articles';
 import { useRouter } from 'next/router';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { type NextPageWithLayout } from 'pages/_app';
 import { fromSlugArray } from 'lib/slugify';
 import { ArticleList } from 'components/ArticleList';
@@ -27,10 +23,6 @@ const Page: NextPageWithLayout = () => {
 }
 
 Page.list = <ArticleList />;
+Page.permissions = [PermissionKey.peAktuality, PermissionLevel.P_OWNED];
 
 export default Page;
-
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peAktuality,
-  PermissionLevel.P_OWNED,
-);

@@ -1,10 +1,6 @@
 import { useCoupleQuery, useDeleteCoupleMutation } from 'lib/graphql/Couple';
 import { useRouter } from 'next/router';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { Item } from 'components/layout/Item';
 import { DeleteButton } from 'components/DeleteButton';
 import { CoupleList } from 'components/CoupleList';
@@ -27,10 +23,7 @@ const Page: NextPageWithLayout = () => {
         backHref="/admin/pary"
         title={`${item?.userByPIdPartner?.uJmeno} ${item?.userByPIdPartner?.uPrijmeni} - ${item?.userByPIdPartnerka?.uJmeno} ${item?.userByPIdPartnerka?.uPrijmeni}`}
       >
-        <DeleteButton
-          onDelete={() => doDelete({ id })}
-          title="smazat pár"
-        />
+        <DeleteButton onDelete={() => doDelete({ id })} title="smazat pár" />
       </Item.Titlebar>
       Lekce
       {data?.pary?.rozpisItemsByRiPartner?.nodes.map((item) => (
@@ -42,14 +35,10 @@ const Page: NextPageWithLayout = () => {
       ))}
     </Item>
   );
-}
+};
 
 Page.list = <CoupleList />;
 Page.isDetail = true;
+Page.permissions = [PermissionKey.pePary, PermissionLevel.P_OWNED];
 
 export default Page;
-
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.pePary,
-  PermissionLevel.P_OWNED,
-);

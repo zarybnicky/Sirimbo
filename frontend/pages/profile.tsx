@@ -2,11 +2,6 @@ import { SimpleDialog } from 'components/Dialog';
 import { Item } from 'components/layout/Item';
 import { List } from 'components/layout/List';
 import { useAuth } from 'lib/data/use-auth';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
 import { getAgeGroup } from 'lib/get-age-group';
 import { useCohortListQuery } from 'lib/graphql/Cohorts';
 import React from 'react';
@@ -15,8 +10,10 @@ import { PersonalInfoForm } from 'components/PersonalInfoForm';
 import { ChangePasswordForm } from 'components/ChangePasswordForm';
 import { useMyLessonsQuery } from 'lib/graphql/Schedule';
 import { LessonButton } from 'components/LessonButton';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function ProfilePage() {
+const Page: NextPageWithLayout = () => {
   const { user, couple } = useAuth();
   const { data: cohorts } = useCohortListQuery();
 
@@ -70,21 +67,32 @@ export default function ProfilePage() {
       <h3>Nadcházející lekce</h3>
       <div className="flex flex-col gap-[1px] w-80">
         {upcomingLessons?.myLessons?.nodes.map((item) => (
-          <LessonButton key={item.id} lesson={item} schedule={item.rozpiByRiIdRodic!} showTrainer showDate />
+          <LessonButton
+            key={item.id}
+            lesson={item}
+            schedule={item.rozpiByRiIdRodic!}
+            showTrainer
+            showDate
+          />
         ))}
       </div>
 
       <h3>Minulé lekce</h3>
       <div className="flex flex-col-reverse gap-[1px] w-80">
         {pastLessons?.myLessons?.nodes.map((item) => (
-          <LessonButton key={item.id} lesson={item} schedule={item.rozpiByRiIdRodic!} showTrainer showDate />
+          <LessonButton
+            key={item.id}
+            lesson={item}
+            schedule={item.rozpiByRiIdRodic!}
+            showTrainer
+            showDate
+          />
         ))}
       </div>
     </Item>
   );
-}
+};
 
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peNastenka,
-  PermissionLevel.P_VIEW,
-);
+Page.permissions = [PermissionKey.peNastenka, PermissionLevel.P_VIEW];
+
+export default Page;

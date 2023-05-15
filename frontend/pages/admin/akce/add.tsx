@@ -1,9 +1,5 @@
 import { EventForm } from 'components/EventForm';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { Item } from 'components/layout/Item';
 import { type NextPageWithLayout } from 'pages/_app';
 import { EventList } from 'components/EventList';
@@ -15,14 +11,10 @@ const Page: NextPageWithLayout = () => {
       <EventForm />
     </Item>
   );
-}
+};
 
 Page.list = <EventList />;
 Page.isDetail = true;
+Page.permissions = [PermissionKey.peAkce, PermissionLevel.P_OWNED];
 
 export default Page;
-
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peAkce,
-  PermissionLevel.P_OWNED,
-);

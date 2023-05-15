@@ -1,14 +1,11 @@
 import { FileForm } from 'components/FileForm';
 import { useFileQuery } from 'lib/graphql/Documents';
 import { useRouter } from 'next/router';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { fromSlugArray } from 'lib/slugify';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function FileEditPage() {
+const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const id = fromSlugArray(router.query.id);
   const { data } = useFileQuery({ id }, { enabled: !!id, cacheTime: 0 });
@@ -21,7 +18,6 @@ export default function FileEditPage() {
   );
 }
 
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peDokumenty,
-  PermissionLevel.P_OWNED,
-);
+Page.permissions = [PermissionKey.peDokumenty, PermissionLevel.P_OWNED];
+
+export default Page;

@@ -12,18 +12,22 @@ type ServiceCardProps = {
 };
 
 export function ServiceCard(props: ServiceCardProps) {
-  let content = (
-    <>
-      <div className="h-full relative">
-        <div className="absolute block inset-0 overflow-hidden">
-          <img
-            className="sm:rounded-l-lg w-full h-full object-cover object-[50%_30%] transform transition duration-300 group-hover:scale-110"
-            src={props.image}
-            alt={props.header}
-          />
-        </div>
+  return (
+    <Link
+      href={props.href || ('#' as any as Route)}
+      className={classNames(
+        'group p-0 my-4 flex flex-col md:grid md:grid-cols-[1fr_4px_2fr]',
+        'bg-white relative border border-stone-200 shadow-sm sm:rounded-lg mb-2',
+      )}
+    >
+      <div className="relative overflow-hidden max-h-[300px]">
+        <img
+          className="sm:rounded-l-lg w-full h-full object-cover object-[50%_30%] transform transition duration-300 group-hover:scale-110"
+          src={props.image}
+          alt={props.header}
+        />
       </div>
-      <div className="bg-stone-800 group-even:bg-red-500 w-3" />
+      <div className="bg-stone-800 group-even:bg-red-500 h-3 md:h-auto md:w-3" />
       <div className="grow basis-4 px-4 py-6 md:px-8 md:py-8">
         <div className="text-2xl text-stone-800 group-odd:text-red-500 font-bold mb-2 md:mb-4">
           {props.header}
@@ -37,17 +41,6 @@ export function ServiceCard(props: ServiceCardProps) {
           </div>
         )}
       </div>
-    </>
-  );
-  return (
-    <Link
-      href={props.href || ('#' as any as Route)}
-      className={classNames(
-        'group p-0 my-4 grid md:grid-cols-[1fr_4px_2fr]',
-        'bg-white relative border border-stone-200 shadow-sm sm:rounded-lg p-3 mb-2',
-      )}
-    >
-      {content}
     </Link>
   );
 }

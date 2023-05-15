@@ -1,18 +1,10 @@
 import { EventList } from 'components/EventList';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { type NextPageWithLayout } from 'pages/_app';
 
 const Page: NextPageWithLayout = () => null;
 
 Page.list = <EventList />;
+Page.permissions = [PermissionKey.peAkce, PermissionLevel.P_OWNED];
 
 export default Page;
-
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peAkce,
-  PermissionLevel.P_OWNED,
-);

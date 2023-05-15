@@ -4,11 +4,7 @@ import {
   useReservationQuery,
 } from 'lib/graphql/Reservation';
 import { useRouter } from 'next/router';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { ReservationList } from 'components/ReservationList';
 import { Item } from 'components/layout/Item';
 import { DeleteButton } from 'components/DeleteButton';
@@ -37,10 +33,6 @@ const Page: NextPageWithLayout = () => {
 
 Page.list = <ReservationList />;
 Page.isDetail = true;
+Page.permissions = [PermissionKey.peNabidka, PermissionLevel.P_OWNED];
 
 export default Page;
-
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peNabidka,
-  PermissionLevel.P_OWNED,
-);

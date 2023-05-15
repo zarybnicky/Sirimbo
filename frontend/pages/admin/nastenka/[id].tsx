@@ -4,11 +4,7 @@ import {
   useDeleteAnnouncementMutation,
 } from 'lib/graphql/Announcement';
 import { useRouter } from 'next/router';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { Item } from 'components/layout/Item';
 import { DeleteButton } from 'components/DeleteButton';
 import { AnnouncementList } from 'components/AnnouncementList';
@@ -40,10 +36,6 @@ const Page: NextPageWithLayout = () => {
 
 Page.list = <AnnouncementList />;
 Page.isDetail = true;
+Page.permissions = [PermissionKey.peNastenka, PermissionLevel.P_OWNED];
 
 export default Page;
-
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peNastenka,
-  PermissionLevel.P_OWNED,
-);

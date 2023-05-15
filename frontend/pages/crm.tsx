@@ -1,12 +1,13 @@
 import * as React from 'react';
-import {withServerPermissions, PermissionKey, PermissionLevel} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { fullDateFormatter } from 'lib/format-date';
 import { Item } from 'components/layout/Item';
 import { Button } from 'components/Button';
 import { saveAs } from 'file-saver';
 import { useFormResponsesQuery } from 'lib/graphql/Crm';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function CrmPage() {
+const Page: NextPageWithLayout = () => {
   const { data } = useFormResponsesQuery();
   const saveData = React.useCallback(
     async (e?: React.MouseEvent) => {
@@ -94,7 +95,6 @@ export default function CrmPage() {
   );
 }
 
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peNastenka,
-  PermissionLevel.P_ADMIN,
-);
+Page.permissions = [PermissionKey.peNastenka, PermissionLevel.P_ADMIN];
+
+export default Page;

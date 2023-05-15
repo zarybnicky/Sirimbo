@@ -1,11 +1,7 @@
 import { AnnouncementForm } from 'components/AnnouncementForm';
 import { AnnouncementList } from 'components/AnnouncementList';
 import { Item } from 'components/layout/Item';
-import {
-  PermissionKey,
-  PermissionLevel,
-  withServerPermissions,
-} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { type NextPageWithLayout } from 'pages/_app';
 
 const Page: NextPageWithLayout = () => {
@@ -19,10 +15,6 @@ const Page: NextPageWithLayout = () => {
 
 Page.list = <AnnouncementList />;
 Page.isDetail = true;
+Page.permissions = [PermissionKey.peNastenka, PermissionLevel.P_OWNED];
 
 export default Page;
-
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peNastenka,
-  PermissionLevel.P_OWNED,
-);

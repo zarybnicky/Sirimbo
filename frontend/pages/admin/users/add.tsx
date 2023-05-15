@@ -1,10 +1,6 @@
 import { UserForm } from 'components/UserForm';
 import { UserList } from 'components/UserList';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { Item } from 'components/layout/Item';
 import { type NextPageWithLayout } from 'pages/_app';
 
@@ -19,10 +15,6 @@ const Page: NextPageWithLayout = () => {
 
 Page.list = <UserList />;
 Page.isDetail = true;
+Page.permissions = [PermissionKey.peUsers, PermissionLevel.P_OWNED];
 
 export default Page;
-
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peUsers,
-  PermissionLevel.P_OWNED,
-);

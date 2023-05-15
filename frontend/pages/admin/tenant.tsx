@@ -1,13 +1,10 @@
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { Item } from 'components/layout/Item';
 import { useCurrentTenantQuery } from 'lib/graphql/Tenant';
 import { TenantForm } from 'components/TenantForm';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function TenantEditPage() {
+const Page: NextPageWithLayout = () => {
   const { data } = useCurrentTenantQuery();
   return (
     <Item>
@@ -17,7 +14,6 @@ export default function TenantEditPage() {
   );
 }
 
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peNastenka,
-  PermissionLevel.P_ADMIN,
-);
+Page.permissions = [PermissionKey.peNastenka, PermissionLevel.P_ADMIN];
+
+export default Page;

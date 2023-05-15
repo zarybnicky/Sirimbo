@@ -7,10 +7,10 @@ import { ChevronRight } from 'react-feather';
 export const ArticleCard = ({ item: x }: { item: Article }) => {
   return (
     <Link href={x.href}>
-      <Card className="h-full flex flex-col">
-        <div className="-m-3 mb-2">
+      <Card className="h-full flex flex-col group">
+        <div className="-m-3 mb-2 overflow-hidden">
           <img
-            className="object-cover w-full"
+            className="object-cover object-[50%_30%] w-full transform transition duration-300 group-hover:scale-110"
             style={{ height: 240 }}
             src={x.img}
             title={x.header}

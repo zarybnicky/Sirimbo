@@ -1,14 +1,11 @@
 import { ScheduleForm } from 'components/ScheduleForm';
 import { useScheduleQuery } from 'lib/graphql/Schedule';
 import { useRouter } from 'next/router';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { fromSlugArray } from 'lib/slugify';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function ScheduleEditPage() {
+const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const id = fromSlugArray(router.query.id);
   const { data } = useScheduleQuery({ id }, { enabled: !!id, cacheTime: 0 });
@@ -19,9 +16,8 @@ export default function ScheduleEditPage() {
       )}
     </div>
   );
-}
+};
 
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peRozpis,
-  PermissionLevel.P_OWNED,
-);
+Page.permissions = [PermissionKey.peRozpis, PermissionLevel.P_OWNED];
+
+export default Page;

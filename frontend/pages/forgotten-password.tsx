@@ -9,8 +9,9 @@ import { TextFieldElement } from 'components/TextField';
 import { toast } from 'react-toastify';
 import { useResetPasswordMutation } from 'lib/graphql/CurrentUser';
 import { useAuth } from 'lib/data/use-auth';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function ForgottenPassword() {
+const Page: NextPageWithLayout = () => {
   const {user} = useAuth()
   const { control, handleSubmit } = useForm();
   const { mutateAsync: resetPassword } = useResetPasswordMutation();
@@ -67,3 +68,5 @@ export default function ForgottenPassword() {
     </div>
   );
 }
+
+export default Page;

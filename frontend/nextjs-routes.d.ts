@@ -58,7 +58,6 @@ declare module "nextjs-routes" {
     | StaticRoute<"/crm">
     | StaticRoute<"/dashboard">
     | StaticRoute<"/documents">
-    | StaticRoute<"/error">
     | DynamicRoute<"/events/[id]", { "id": string }>
     | StaticRoute<"/events">
     | StaticRoute<"/forgotten-password">

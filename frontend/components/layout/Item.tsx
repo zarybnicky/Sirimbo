@@ -1,15 +1,15 @@
 import Link from 'next/link';
 import { Route } from 'nextjs-routes';
 import { CornerLeftUp as UpIcon } from 'react-feather';
+import cx from 'classnames';
 
-export function Item({
-  className = '',
-  children,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return <div className={'py-4 lg:py-12 lg:px-8 ' + className}>{children}</div>;
+type ItemProps = {
+    children: React.ReactNode;
+    className?: string;
+};
+
+export function Item({className, children}: ItemProps) {
+  return <div className={cx('px-2 py-4 lg:py-12 lg:px-8', className)}>{children}</div>;
 }
 
 type TitleBarProps = {

@@ -1,10 +1,6 @@
 import { ArticleForm } from 'components/ArticleForm';
 import { useRouter } from 'next/router';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { type NextPageWithLayout } from 'pages/_app';
 import { ArticleList } from 'components/ArticleList';
 
@@ -15,14 +11,10 @@ const Page: NextPageWithLayout = () => {
       <ArticleForm onSuccess={() => router.back()} />
     </div>
   );
-}
+};
 
 Page.list = <ArticleList />;
 Page.isDetail = true;
+Page.permissions = [PermissionKey.peAktuality, PermissionLevel.P_OWNED];
 
 export default Page;
-
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peAktuality,
-  PermissionLevel.P_OWNED,
-);

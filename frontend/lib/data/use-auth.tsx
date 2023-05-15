@@ -61,17 +61,12 @@ export const ProvideAuth = ({ children }: React.PropsWithChildren) => {
 
   const perms = React.useMemo(() => {
     const perms = user?.permissionByUGroup || defaultPermissions;
-    latestUser = user;
-    latestPerms = new PermissionChecker(user?.id || '0', perms);
-    return latestPerms;
+    return new PermissionChecker(user?.id || '', perms);
   }, [user]);
 
   const context = { isLoading, user, couple, signIn, signOut, perms };
   return <authContext.Provider value={context}>{children}</authContext.Provider>;
 };
-
-export let latestUser: UserAuthFragment | null = null;
-export let latestPerms: PermissionChecker | undefined;
 
 export const useAuth = () => {
   const auth = React.useContext(authContext);

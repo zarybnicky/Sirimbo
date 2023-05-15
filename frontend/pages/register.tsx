@@ -14,8 +14,9 @@ import { useCohortListQuery } from 'lib/graphql/Cohorts';
 import { useRegisterMutation } from 'lib/graphql/CurrentUser';
 import { Item } from 'components/layout/Item';
 import { useAuth } from 'lib/data/use-auth';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function RegisterPage() {
+const Page: NextPageWithLayout = () => {
   const { user } = useAuth();
   const router = useRouter();
   const countries = useCountries();
@@ -288,3 +289,5 @@ export default function RegisterPage() {
     </Item>
   );
 }
+
+export default Page;

@@ -1,9 +1,5 @@
 import { ReservationForm } from 'components/ReservationForm';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { ReservationList } from 'components/ReservationList';
 import { Item } from 'components/layout/Item';
 import { type NextPageWithLayout } from 'pages/_app';
@@ -19,10 +15,6 @@ const Page: NextPageWithLayout = () => {
 
 Page.list = <ReservationList />;
 Page.isDetail = true;
+Page.permissions = [PermissionKey.peNabidka, PermissionLevel.P_OWNED];
 
 export default Page;
-
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peNabidka,
-  PermissionLevel.P_OWNED,
-);

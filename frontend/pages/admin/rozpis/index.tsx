@@ -3,16 +3,13 @@ import { useScheduleListQuery } from 'lib/graphql/Schedule';
 import { useRouter } from 'next/router';
 import { Button } from 'components/Button';
 import { fullDateFormatter } from 'lib/format-date';
-import {
-  withServerPermissions,
-  PermissionKey,
-  PermissionLevel,
-} from 'lib/data/use-server-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { List } from 'components/layout/List';
 import { FuzzyList } from 'components/FuzzyList';
 import { fromSlugArray } from 'lib/slugify';
+import { type NextPageWithLayout } from 'pages/_app';
 
-export default function RozpisAdminList() {
+const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const id = fromSlugArray(router.query.id);
   const { data } = useScheduleListQuery();
@@ -38,7 +35,6 @@ export default function RozpisAdminList() {
   );
 }
 
-export const getServerSideProps = withServerPermissions(
-  PermissionKey.peRozpis,
-  PermissionLevel.P_VIEW,
-);
+Page.permissions = [PermissionKey.peRozpis, PermissionLevel.P_OWNED];
+
+export default Page;
