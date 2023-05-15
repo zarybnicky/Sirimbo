@@ -36,7 +36,7 @@ export function Layout({
   }, [router]);
 
   if (hideTopMenuIfLoggedIn) {
-    showTopMenu = !!user;
+    showTopMenu = !user;
   }
   if (!isLoading && permissions) {
     if (!perms.hasPermission(permissions[0], permissions[1])) {

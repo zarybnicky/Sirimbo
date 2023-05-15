@@ -34,6 +34,6 @@ const Page: NextPageWithLayout = () => {
   );
 }
 
-Page.showTopMenu = true;
+Page.hideTopMenuIfLoggedIn = true;
 
 export default Page;
