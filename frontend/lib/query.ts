@@ -1,4 +1,4 @@
-import { type TypedDocumentNode } from '@graphql-typed-document-node/core';
+import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import {
   QueryKey,
   useMutation,
@@ -62,9 +62,9 @@ export function useGqlQuery<TResult, TVariables>(
   return useQuery(key, () => fetchGql(document, variables), options);
 }
 
-export const useGqlMutation = <TData, TVariables, TError = unknown, TContext = unknown>(
+export function useGqlMutation<TData, TVariables, TError = unknown, TContext = unknown>(
   document: TypedDocumentNode<TData, TVariables>,
   options?: UseMutationOptions<TData, TError, TVariables, TContext>,
-): UseMutationResult<TData, TError, TVariables, TContext> => {
+): UseMutationResult<TData, TError, TVariables, TContext> {
   return useMutation((variables: TVariables) => fetchGql(document, variables), options);
-};
+}

@@ -18,6 +18,7 @@
     "@ckeditor/ckeditor5-react": "^6.0.0",
     "@ckeditor/ckeditor5-utils": "^37.1.0",
     "@ckeditor/ckeditor5-watchdog": "^37.1.0",
+    "@graphql-typed-document-node/core": "^3.2.0",
     "@headlessui/react": "^1.7.4",
     "@headlessui/tailwindcss": "^0.1.1",
     "@next/bundle-analyzer": "^12.3.0",
@@ -50,7 +51,6 @@
     "date-fns": "^2.24.0",
     "eslint": "^8.20.0",
     "eslint-config-next": "^12.2.3",
-    "evolve-ts": "^2.2.0",
     "exceljs": "^4.3.0",
     "file-saver": "^2.0.5",
     "fp-ts": "^2.14.0",
@@ -60,7 +60,7 @@
     "iban": "^0.0.14",
     "leaflet": "^1.9.3",
     "minisearch": "^5.1.0",
-    "next": "^13.3.1",
+    "next": "13.3.4",
     "next-seo": "^6.0.0",
     "nextjs-google-analytics": "^2.1.0",
     "nextjs-routes": "^2.0.0",
@@ -88,7 +88,7 @@
     "tailwindcss-opentype": "^1.1.0",
     "tailwindcss-radix": "^2.6.1",
     "ts-node": "^10.9.1",
-    "typescript": "4.8.2",
+    "typescript": "^4.9.5",
     "use-deep-compare-effect": "^1.8.1",
     "webpack": "^5.74.0"
   }

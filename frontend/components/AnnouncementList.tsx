@@ -1,19 +1,22 @@
-import { AnnouncementListDocument } from 'lib/graphql/Announcement';
-import { Plus } from 'react-feather';
-import { useRouter } from 'next/router';
 import { List } from 'components/layout/List';
 import { fullDateFormatter } from 'lib/format-date';
-import React from 'react';
-import { Pagination } from './Pagination';
-import { CohortColorBoxes } from './CohortColorBox';
-import { fromSlugArray } from 'lib/slugify';
+import { AnnouncementListDocument } from 'lib/graphql/Announcement';
 import { useGqlQuery } from 'lib/query';
+import { fromSlugArray } from 'lib/slugify';
+import { useRouter } from 'next/router';
+import React from 'react';
+import { Plus } from 'react-feather';
+import { CohortColorBoxes } from './CohortColorBox';
+import { Pagination } from './Pagination';
 
 export function AnnouncementList() {
   const router = useRouter();
   const [limit] = React.useState(12);
   const [page, setPage] = React.useState(1);
-    const { data } = useGqlQuery(AnnouncementListDocument, { limit, offset: (page - 1) * limit });
+  const { data } = useGqlQuery(AnnouncementListDocument, {
+    limit,
+    offset: (page - 1) * limit,
+  });
 
   const id = fromSlugArray(router.query.id);
   const total = data?.upozornenis?.totalCount || 0;
