@@ -16,5 +16,6 @@ const Page: NextPageWithLayout = () => {
 Page.list = <ArticleList />;
 Page.isDetail = true;
 Page.permissions = [PermissionKey.peAktuality, PermissionLevel.P_OWNED];
+Page.staticTitle = "Aktuality";
 
 export default Page;

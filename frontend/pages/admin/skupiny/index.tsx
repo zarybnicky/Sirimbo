@@ -5,7 +5,7 @@ import { type NextPageWithLayout } from 'pages/_app';
 const Page: NextPageWithLayout = () => null;
 
 Page.list = <CohortsList />;
-Page.isDetail = true;
 Page.permissions = [PermissionKey.peSkupiny, PermissionLevel.P_OWNED];
+Page.staticTitle = "Skupiny";
 
 export default Page;

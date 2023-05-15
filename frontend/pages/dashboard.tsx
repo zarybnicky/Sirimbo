@@ -42,6 +42,7 @@ const Page: NextPageWithLayout = () => {
   );
 }
 
+Page.staticTitle = "Nástěnka";
 Page.permissions = [PermissionKey.peNastenka, PermissionLevel.P_VIEW];
 
 export default Page;

@@ -16,5 +16,6 @@ const Page: NextPageWithLayout = () => {
 Page.list = <AnnouncementList />;
 Page.isDetail = true;
 Page.permissions = [PermissionKey.peNastenka, PermissionLevel.P_OWNED];
+Page.staticTitle = "Nástěnka";
 
 export default Page;

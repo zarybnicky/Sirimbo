@@ -7,5 +7,6 @@ const Page: NextPageWithLayout = () => null;
 
 Page.list = <ReservationList />;
 Page.permissions = [PermissionKey.peNabidka, PermissionLevel.P_OWNED];
+Page.staticTitle = "Nabídky";
 
 export default Page;

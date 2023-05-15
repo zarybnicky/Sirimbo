@@ -103,9 +103,9 @@ type AppPropsWithLayout<
 };
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
-  const { isDetail, list, showTopMenu, hideTopMenuIfLoggedIn, permissions } = Component;
+  const { isDetail, list, showTopMenu, hideTopMenuIfLoggedIn, permissions, staticTitle, requireLoggedOut } = Component;
   return WithProviders(
-    <Layout {...{ isDetail, list, showTopMenu, hideTopMenuIfLoggedIn, permissions }}>
+    <Layout {...{ isDetail, list, showTopMenu, hideTopMenuIfLoggedIn, permissions, staticTitle, requireLoggedOut }}>
       <Component {...pageProps} />
     </Layout>,
     pageProps,

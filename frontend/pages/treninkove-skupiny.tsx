@@ -35,5 +35,6 @@ const Page: NextPageWithLayout = () => {
 }
 
 Page.hideTopMenuIfLoggedIn = true;
+Page.staticTitle = "Tréninkové skupiny";
 
 export default Page;

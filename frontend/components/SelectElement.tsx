@@ -1,5 +1,5 @@
 import React from 'react';
-import { Combobox, Transition } from '@headlessui/react';
+import { Combobox } from '@headlessui/react';
 import {
   useController,
   FieldError,
@@ -30,26 +30,19 @@ type SelectElementProps<T extends FieldValues> = {
 export function SelectElement<TFieldValues extends FieldValues>({
   name,
   control,
-  validation = {},
+  validation: rules = {},
   required,
   options,
-  className,
+  className = '',
   helperText,
   parseError,
   label,
 }: SelectElementProps<TFieldValues>) {
-  if (required && !validation?.required) {
-    validation.required = 'Toto pole je povinné';
+  if (required && !rules?.required) {
+    rules.required = 'Toto pole je povinné';
   }
 
-  const {
-    field: { value, onChange },
-    fieldState: { error },
-  } = useController({
-    name,
-    control,
-    rules: validation,
-  });
+  const { field, fieldState } = useController({ name, control, rules });
   const [query, setQuery] = React.useState('');
 
   const filtered =
@@ -57,18 +50,18 @@ export function SelectElement<TFieldValues extends FieldValues>({
       ? options
       : options.filter((item) => item.label.toLowerCase().includes(query.toLowerCase()));
 
-  const parsedHelperText = !error
+  const parsedHelperText = !fieldState.error
     ? helperText
     : parseError
-    ? parseError(error)
-    : error.message;
-  let valueObject = options.find((x) => x.id === value);
-  if (!value && !valueObject) {
-    valueObject = options.find((x) => !x.id) || {id: null, label: ''};
+    ? parseError(fieldState.error)
+    : fieldState.error.message;
+  let valueObject = options.find((x) => x.id === field.value);
+  if (!field.value && !valueObject) {
+    valueObject = options.find((x) => !x.id) || { id: null, label: '' };
   }
 
   return (
-    <Combobox value={valueObject} onChange={(x) => onChange(x.id)}>
+    <Combobox value={valueObject} onChange={(x) => field.onChange(x.id)}>
       <div className={`relative mt-1 ${className}`}>
         <div className="text-stone-700 text-sm mb-1">{label}</div>
         <div className="relative w-full cursor-default overflow-hidden border-red-500 border focus-within:border-3 rounded-lg bg-white text-left shadow-sm focus:outline-none sm:text-sm">
@@ -81,61 +74,58 @@ export function SelectElement<TFieldValues extends FieldValues>({
             <UnfoldMoreIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
           </Combobox.Button>
         </div>
-        <Transition
-          as={React.Fragment}
-          leave="transition ease-in duration-100"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-          afterLeave={() => setQuery('')}
-        >
-          <Combobox.Options className="z-10 absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-            {/* {query.length > 0 && <Combobox.Option value={{ id: null, label: query }}>Create "{query}"</Combobox.Option>} */}
-            {filtered.length === 0 && query !== '' ? (
-              <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
-                Nic nenalezeno.
-              </div>
-            ) : (
-              filtered.map((person) => (
-                <Combobox.Option
-                  key={person.id}
-                  value={person}
-                  className={({ active }) =>
-                    cx(
-                      'relative cursor-default select-none py-2 pl-10 pr-4',
-                      active ? 'bg-red-600 text-white' : 'text-gray-900',
-                    )
-                  }
-                >
-                  {({ selected, active }) => (
-                    <>
+        <Combobox.Options className="z-10 absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+          {/* {query.length > 0 && <Combobox.Option value={{ id: null, label: query }}>Create "{query}"</Combobox.Option>} */}
+          {filtered.length === 0 && query !== '' ? (
+            <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
+              Nic nenalezeno.
+            </div>
+          ) : (
+            filtered.map((person) => (
+              <Combobox.Option
+                key={person.id}
+                value={person}
+                className={({ active }) =>
+                  cx(
+                    'relative cursor-default select-none py-2 pl-10 pr-4',
+                    active ? 'bg-red-600 text-white' : 'text-gray-900',
+                  )
+                }
+              >
+                {({ selected, active }) => (
+                  <>
+                    <span
+                      className={cx(
+                        'block truncate',
+                        selected ? 'font-medium' : 'font-normal',
+                      )}
+                    >
+                      {person.label}
+                    </span>
+                    {selected && (
                       <span
                         className={cx(
-                          'block truncate',
-                          selected ? 'font-medium' : 'font-normal',
+                          'absolute inset-y-0 left-0 flex items-center pl-3',
+                          active ? 'text-white' : 'text-red-600',
                         )}
                       >
-                        {person.label}
+                        <CheckIcon className="h-5 w-5" aria-hidden="true" />
                       </span>
-                      {selected && (
-                        <span
-                          className={cx(
-                            'absolute inset-y-0 left-0 flex items-center pl-3',
-                            active ? 'text-white' : 'text-red-600',
-                          )}
-                        >
-                          <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                        </span>
-                      )}
-                    </>
-                  )}
-                </Combobox.Option>
-              ))
-            )}
-          </Combobox.Options>
-        </Transition>
+                    )}
+                  </>
+                )}
+              </Combobox.Option>
+            ))
+          )}
+        </Combobox.Options>
       </div>
       {parsedHelperText && (
-        <p className={cx('mt-2 text-sm', error ? 'text-red-600' : 'text-gray-500')}>
+        <p
+          className={cx(
+            'mt-2 text-sm',
+            fieldState.error ? 'text-red-600' : 'text-gray-500',
+          )}
+        >
           {parsedHelperText}
         </p>
       )}

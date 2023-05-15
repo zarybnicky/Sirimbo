@@ -52,6 +52,7 @@ const Page: NextPageWithLayout = () => {
   );
 }
 
+Page.staticTitle = "Kroužky";
 Page.showTopMenu = true;
 
 export default Page;

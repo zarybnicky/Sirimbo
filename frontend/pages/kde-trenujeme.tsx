@@ -51,6 +51,7 @@ const Page: NextPageWithLayout = () => {
   );
 }
 
+Page.staticTitle = "Kde trénujeme";
 Page.showTopMenu = true;
 
 export default Page;

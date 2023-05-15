@@ -4,7 +4,6 @@ import { useArticles } from 'lib/data/use-articles';
 import { CallToAction } from 'components/CallToAction';
 import { Pagination } from 'components/Pagination';
 import { Heading } from 'components/Heading';
-import { NextSeo } from 'next-seo';
 import { type NextPageWithLayout } from 'pages/_app';
 
 const Page: NextPageWithLayout = () => {
@@ -14,7 +13,6 @@ const Page: NextPageWithLayout = () => {
 
   return (
     <>
-      <NextSeo title="Články" />
       <Heading>Aktuálně</Heading>
 
       <div className="col-feature grid place-items-stretch gap-4 grid-cols-2 lg:grid-cols-3 mb-6">
@@ -29,6 +27,7 @@ const Page: NextPageWithLayout = () => {
   );
 }
 
+Page.staticTitle = "Články";
 Page.showTopMenu = true;
 
 export default Page;

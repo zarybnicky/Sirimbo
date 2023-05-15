@@ -40,5 +40,6 @@ const Page: NextPageWithLayout = () => {
 }
 
 Page.showTopMenu = true;
+Page.staticTitle = "O klubu";
 
 export default Page;

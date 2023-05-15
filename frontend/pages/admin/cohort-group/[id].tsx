@@ -45,5 +45,6 @@ const Page: NextPageWithLayout = () => {
 Page.list = <CohortGroupList />;
 Page.isDetail = true;
 Page.permissions = [PermissionKey.peSkupiny, PermissionLevel.P_OWNED];
+Page.staticTitle = "Tréninkové programy";
 
 export default Page;

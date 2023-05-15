@@ -64,5 +64,6 @@ const Page: NextPageWithLayout = () => {
 }
 
 Page.permissions = [PermissionKey.peDokumenty, PermissionLevel.P_OWNED];
+Page.staticTitle = "Dokumenty";
 
 export default Page;

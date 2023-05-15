@@ -1,13 +1,11 @@
 import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
-import { NextSeo } from 'next-seo';
 import { type NextPageWithLayout } from 'pages/_app';
 
 const Page: NextPageWithLayout = () => {
   return (
     <>
-      <NextSeo title="Kontakt" />
       <Heading>Kontakt</Heading>
 
       <div className="prose mt-8">
@@ -124,6 +122,7 @@ const Page: NextPageWithLayout = () => {
   );
 }
 
+Page.staticTitle = "Kontakt";
 Page.hideTopMenuIfLoggedIn = true;
 
 export default Page;

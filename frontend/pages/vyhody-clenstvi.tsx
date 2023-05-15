@@ -41,6 +41,7 @@ const Page: NextPageWithLayout = () => {
   );
 }
 
+Page.staticTitle = "Výhody členství";
 Page.showTopMenu = true;
 
 export default Page;

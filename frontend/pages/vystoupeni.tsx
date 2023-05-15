@@ -33,6 +33,7 @@ const Page: NextPageWithLayout = () => {
   );
 }
 
+Page.staticTitle = "Taneční vystoupení";
 Page.showTopMenu = true;
 
 export default Page;

@@ -186,8 +186,9 @@ const Page: NextPageWithLayout = () => {
       <CallToAction />
     </>
   );
-}
+};
 
 Page.showTopMenu = true;
+Page.staticTitle = 'Přijď tančit!';
 
 export default Page;

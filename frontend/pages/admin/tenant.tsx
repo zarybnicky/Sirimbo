@@ -15,5 +15,6 @@ const Page: NextPageWithLayout = () => {
 }
 
 Page.permissions = [PermissionKey.peNastenka, PermissionLevel.P_ADMIN];
+Page.staticTitle = "Organizace";
 
 export default Page;

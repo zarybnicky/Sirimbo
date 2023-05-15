@@ -19,6 +19,7 @@ const Page: NextPageWithLayout = () => {
   );
 }
 
+Page.staticTitle = "Nadcházející akce";
 Page.hideTopMenuIfLoggedIn = true;
 
 export default Page;

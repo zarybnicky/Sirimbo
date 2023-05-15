@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
-import { useRouter } from 'next/router';
 import { ArticleFragment, useArticleQuery } from 'lib/graphql/Articles';
 import { fullDateFormatter } from 'lib/format-date';
 import { RichTextView } from 'components/RichTextView';
@@ -15,7 +14,6 @@ type PageProps = {
 };
 
 const Page: NextPageWithLayout<PageProps> = ({ item }) => {
-  const router = useRouter();
 
   return (
     <>

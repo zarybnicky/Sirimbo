@@ -173,5 +173,6 @@ const Page: NextPageWithLayout = () => {
 }
 
 Page.showTopMenu = true;
+Page.staticTitle = "Ochrana osobních údajů";
 
 export default Page;

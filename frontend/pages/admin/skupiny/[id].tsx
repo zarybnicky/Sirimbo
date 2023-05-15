@@ -31,5 +31,6 @@ const Page: NextPageWithLayout = () => {
 Page.list = <CohortsList />;
 Page.isDetail = true;
 Page.permissions = [PermissionKey.peAktuality, PermissionLevel.P_OWNED];
+Page.staticTitle = "Skupiny";
 
 export default Page;

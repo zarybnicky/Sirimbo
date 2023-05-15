@@ -13,5 +13,6 @@ const Page: NextPageWithLayout = () => {
 };
 
 Page.permissions = [PermissionKey.peRozpis, PermissionLevel.P_OWNED];
+Page.staticTitle = "Rozpisy";
 
 export default Page;

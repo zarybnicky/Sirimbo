@@ -40,5 +40,6 @@ const Page: NextPageWithLayout = () => {
 Page.list = <CoupleList />;
 Page.isDetail = true;
 Page.permissions = [PermissionKey.pePary, PermissionLevel.P_OWNED];
+Page.staticTitle = "Páry";
 
 export default Page;

@@ -13,11 +13,9 @@ import { toast } from 'react-toastify';
 import { useCohortListQuery } from 'lib/graphql/Cohorts';
 import { useRegisterMutation } from 'lib/graphql/CurrentUser';
 import { Item } from 'components/layout/Item';
-import { useAuth } from 'lib/data/use-auth';
 import { type NextPageWithLayout } from 'pages/_app';
 
 const Page: NextPageWithLayout = () => {
-  const { user } = useAuth();
   const router = useRouter();
   const countries = useCountries();
   const { data: cohorts } = useCohortListQuery({ visible: true });
@@ -48,10 +46,6 @@ const Page: NextPageWithLayout = () => {
     );
     router.push('/');
   });
-
-  if (user) {
-    router.replace('/dashboard');
-  }
 
   return (
     <Item>
@@ -289,5 +283,8 @@ const Page: NextPageWithLayout = () => {
     </Item>
   );
 }
+
+Page.staticTitle = "Registrace";
+Page.requireLoggedOut = true;
 
 export default Page;

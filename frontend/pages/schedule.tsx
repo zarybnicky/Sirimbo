@@ -68,6 +68,7 @@ const Page: NextPageWithLayout = () => {
   );
 };
 
+Page.staticTitle = "Rozpis";
 Page.permissions = [PermissionKey.peRozpis, PermissionLevel.P_MEMBER];
 
 export default Page;

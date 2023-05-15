@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEventQuery, useMyEventsQuery } from 'lib/graphql/Event';
+import { useEventQuery } from 'lib/graphql/Event';
 import { Item } from 'components/layout/Item';
 import { EventItem } from 'components/EventItem';
 import { useAuth } from 'lib/data/use-auth';
@@ -9,6 +9,7 @@ import classNames from 'classnames';
 import { Heading } from 'components/Heading';
 import { type NextPageWithLayout } from 'pages/_app';
 import { fromSlugArray } from 'lib/slugify';
+import { NextSeo } from 'next-seo';
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
@@ -18,6 +19,7 @@ const Page: NextPageWithLayout = () => {
 
   return (
     <>
+      <NextSeo title={data?.event?.name || 'Nadcházející akce'} />
       {!user && <Heading>Nadcházející akce</Heading>}
       <Item className={classNames(user ? 'col-full bg-stone-100' : 'col-feature')}>
         {user && <Item.Titlebar title="Nadcházející akce" />}

@@ -59,7 +59,7 @@ const Page: NextPageWithLayout = () => {
 
   return (
     <Item className="col-feature">
-      <Item.Titlebar title="Chci tančit">
+      <Item.Titlebar title="Odeslané formuláře">
         <Button onClick={saveData}>Export všech</Button>
       </Item.Titlebar>
 
@@ -95,6 +95,7 @@ const Page: NextPageWithLayout = () => {
   );
 }
 
+Page.staticTitle = "Odeslané formuláře";
 Page.permissions = [PermissionKey.peNastenka, PermissionLevel.P_ADMIN];
 
 export default Page;

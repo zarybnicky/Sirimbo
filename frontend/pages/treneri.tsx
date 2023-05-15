@@ -74,6 +74,7 @@ const Page: NextPageWithLayout = () => {
   );
 }
 
+Page.staticTitle = "Trenéři";
 Page.showTopMenu = true;
 
 export default Page;

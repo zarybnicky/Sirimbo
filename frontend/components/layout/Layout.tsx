@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import { ErrorPage } from 'components/ErrorPage';
 import { useAuth } from 'lib/data/use-auth';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
+import { NextSeo } from 'next-seo';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { Footer } from './Footer';
@@ -14,6 +15,8 @@ export type LayoutProps = {
   list?: React.ReactNode;
   isDetail?: boolean;
   permissions?: [PermissionKey, PermissionLevel];
+  requireLoggedOut?: boolean;
+  staticTitle?: string;
   children?: React.ReactNode;
 };
 
@@ -24,10 +27,13 @@ export function Layout({
   list,
   isDetail,
   permissions,
+  staticTitle,
+  requireLoggedOut,
 }: LayoutProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const router = useRouter();
   const { user, isLoading, perms } = useAuth();
+
   React.useEffect(() => {
     const scroll = () =>
       document.querySelector('[data-nextjs-scroll-focus-boundary]')?.scrollTo(0, 0);
@@ -37,6 +43,10 @@ export function Layout({
 
   if (hideTopMenuIfLoggedIn) {
     showTopMenu = !user;
+  }
+
+  if (!isLoading && user && requireLoggedOut) {
+    router.replace('/dashboard');
   }
   if (!isLoading && permissions) {
     if (!perms.hasPermission(permissions[0], permissions[1])) {
@@ -56,6 +66,7 @@ export function Layout({
 
   return (
     <div className="h-screen flex flex-col w-full relative overflow-hidden">
+      {staticTitle && <NextSeo title={staticTitle} />}
       <Header {...{ isOpen, setIsOpen, showTopMenu }} />
       <div className="relative grow flex overflow-hidden">
         <Sidebar {...{ isOpen, setIsOpen, showTopMenu }} />

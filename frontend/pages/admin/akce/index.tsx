@@ -6,5 +6,6 @@ const Page: NextPageWithLayout = () => null;
 
 Page.list = <EventList />;
 Page.permissions = [PermissionKey.peAkce, PermissionLevel.P_OWNED];
+Page.staticTitle = "Akce";
 
 export default Page;

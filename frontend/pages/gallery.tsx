@@ -62,6 +62,7 @@ const Page: NextPageWithLayout = () => {
   );
 }
 
+Page.staticTitle = "Galerie";
 Page.showTopMenu = true;
 
 export default Page;

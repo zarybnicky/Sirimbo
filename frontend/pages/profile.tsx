@@ -93,6 +93,7 @@ const Page: NextPageWithLayout = () => {
   );
 };
 
+Page.staticTitle = "Profil";
 Page.permissions = [PermissionKey.peNastenka, PermissionLevel.P_VIEW];
 
 export default Page;

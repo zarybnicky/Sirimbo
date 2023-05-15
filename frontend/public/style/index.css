@@ -24,6 +24,9 @@
 .ck-content {
     @apply prose;
 }
+.ck.ck-toolbar.ck-toolbar_grouping > .ck-toolbar__items {
+    flex-wrap: wrap !important;
+}
 
 .scrollbar {
    @apply scrollbar-thin scrollbar-track-transparent scrollbar-thumb-stone-800/20 hover:scrollbar-thumb-stone-800/50;

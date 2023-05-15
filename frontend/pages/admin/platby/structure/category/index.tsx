@@ -37,5 +37,6 @@ const Page: NextPageWithLayout = () => {
 }
 
 Page.permissions = [PermissionKey.pePlatby, PermissionLevel.P_OWNED];
+Page.staticTitle = "Platby";
 
 export default Page;

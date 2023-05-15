@@ -7,5 +7,6 @@ const Page: NextPageWithLayout = () => null;
 
 Page.list = <CoupleList />;
 Page.permissions = [PermissionKey.pePary, PermissionLevel.P_OWNED];
+Page.staticTitle = "Páry";
 
 export default Page;

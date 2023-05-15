@@ -8,11 +8,9 @@ import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
 import { toast } from 'react-toastify';
 import { useResetPasswordMutation } from 'lib/graphql/CurrentUser';
-import { useAuth } from 'lib/data/use-auth';
 import { type NextPageWithLayout } from 'pages/_app';
 
 const Page: NextPageWithLayout = () => {
-  const {user} = useAuth()
   const { control, handleSubmit } = useForm();
   const { mutateAsync: resetPassword } = useResetPasswordMutation();
   const router = useRouter();
@@ -24,10 +22,6 @@ const Page: NextPageWithLayout = () => {
     );
     router.push('/');
   });
-
-  if (user) {
-    router.replace('/dashboard');
-  }
 
   return (
     <div className="container mx-auto max-w-md mt-16 mb-20">
@@ -67,6 +61,9 @@ const Page: NextPageWithLayout = () => {
       </Card>
     </div>
   );
-}
+};
+
+Page.staticTitle = "Zapomenuté heslo";
+Page.requireLoggedOut = true;
 
 export default Page;

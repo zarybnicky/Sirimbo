@@ -4,7 +4,8 @@ import { Item } from 'components/layout/Item';
 import { RichTextView } from 'components/RichTextView';
 import { CohortGroupFragment, useCohortGroupQuery } from 'lib/graphql/CohortGroup';
 import { fromSlugArray, slugify } from 'lib/slugify';
-import { GetStaticPaths, GetStaticProps } from 'next';
+import { GetStaticProps } from 'next';
+import { NextSeo } from 'next-seo';
 import { type NextPageWithLayout } from 'pages/_app';
 
 type PageProps = {
@@ -14,6 +15,7 @@ type PageProps = {
 const Page: NextPageWithLayout<PageProps> = ({ item }) => {
   return (
     <>
+      <NextSeo title={item.name} />
       <Heading>{item.name}</Heading>
       <Item>
         <RichTextView className="mb-10" value={item.description} />

@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { SelectElement } from 'components/SelectElement';
 import { useFileListQuery } from 'lib/graphql/Documents';
-import {PermissionKey, PermissionLevel} from 'lib/data/use-permissions';
+import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { fullDateFormatter } from 'lib/format-date';
 import { Item } from 'components/layout/Item';
 import { Card } from 'components/Card';
@@ -56,8 +56,9 @@ const Page: NextPageWithLayout = () => {
       ))}
     </Item>
   );
-}
+};
 
+Page.staticTitle = "Dokumenty";
 Page.permissions = [PermissionKey.peNastenka, PermissionLevel.P_VIEW];
 
 export default Page;

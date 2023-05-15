@@ -26,6 +26,7 @@ const Page: NextPageWithLayout = () => {
   );
 }
 
+Page.staticTitle = "Galerie mistrů"
 Page.showTopMenu = true;
 
 export default Page;

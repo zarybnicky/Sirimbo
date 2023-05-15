@@ -26,11 +26,6 @@ const Page: NextPageWithLayout = () => {
     router.push((router.query?.from as any as Route) || '/dashboard');
   });
 
-  if (user) {
-    router.replace('/dashboard');
-    // TODO: show "signing in" indicator on login page
-  }
-
   return (
     <div className="flex items-center justify-center min-h-[50vh]">
       <Card>
@@ -76,6 +71,9 @@ const Page: NextPageWithLayout = () => {
       </Card>
     </div>
   );
-}
+};
+
+Page.staticTitle = "Přihlášení";
+Page.requireLoggedOut = true;
 
 export default Page;
