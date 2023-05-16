@@ -15,6 +15,6 @@
     "schema": "yarn workspace sirimbo-schema dev",
     "backend": "yarn workspace sirimbo-backend start",
     "migrate": "graphile-migrate watch",
-    "start": "DEBUG=true concurrently --kill-others-on-fail 'yarn migrate' 'yarn frontend' 'yarn backend' 'yarn schema'"
+    "start": "concurrently --kill-others-on-fail 'yarn migrate' 'yarn frontend' 'yarn backend' 'yarn schema'"
   }
 }
