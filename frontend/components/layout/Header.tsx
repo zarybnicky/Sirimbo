@@ -94,7 +94,7 @@ const AuthButton = () => {
   const memberMenu = useMemberMenu();
 
   const button = (
-    <div className="flex gap-2 items-center drop-shadow">
+    <button className="min-h-[48px] md:min-h-[64px] flex gap-2 items-center drop-shadow">
       <Account className="h-4 w-4" />
       <div
         className="flex flex-col justify-center items-start"
@@ -105,11 +105,10 @@ const AuthButton = () => {
           {auth.user?.uJmeno} {auth.user?.uPrijmeni}
         </span>
       </div>
-    </div>
+    </button>
   );
   return (
     <Dropdown
-      buttonClassName="min-h-[48px] md:min-h-[64px]"
       align="end"
       button={button}
       options={(memberMenu as DropdownItem[]).concat([
@@ -149,7 +148,7 @@ const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {
   const cx = classNames(
     'flex gap-1 rounded-none transition-colors',
     'uppercase text-sm font-bold justify-center items-center',
-    'hover:text-white hover:border-b-[3px] border-white',
+    'hover:text-white hover:border-b-[3px] border-white data-[state=open]:border-b-[3px]',
     inPath
       ? 'text-white drop-shadow-xl border-b-[3px] tracking-wide -mb-[1px]'
       : 'text-stone-100 drop-shadow',
@@ -164,13 +163,12 @@ const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {
   return (
     <Dropdown
       align="center"
-      buttonClassName={'h-full ' + cx}
-      button={
-        <>
-          {x.title} <ChevronDown className="w-4 h-4" />
-        </>
-      }
       options={x.children}
+      button={
+        <button className={'block ' + cx}>
+          {x.title} <ChevronDown className="w-4 h-4" />
+        </button>
+      }
     />
   );
 };

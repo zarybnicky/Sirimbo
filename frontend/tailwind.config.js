@@ -65,6 +65,22 @@ module.exports = {
         },
       }),
       keyframes: {
+        slideDownAndFade: {
+          from: { opacity: 0, transform: 'translateY(-2px)' },
+          to: { opacity: 1, transform: 'translateY(0)' },
+        },
+        slideLeftAndFade: {
+          from: { opacity: 0, transform: 'translateX(2px)' },
+          to: { opacity: 1, transform: 'translateX(0)' },
+        },
+        slideUpAndFade: {
+          from: { opacity: 0, transform: 'translateY(2px)' },
+          to: { opacity: 1, transform: 'translateY(0)' },
+        },
+        slideRightAndFade: {
+          from: { opacity: 0, transform: 'translateX(-2px)' },
+          to: { opacity: 1, transform: 'translateX(0)' },
+        },
         overlayShow: {
           from: { opacity: '0' },
           to: { opacity: '1' },
@@ -74,27 +90,19 @@ module.exports = {
           to: { opacity: '0' },
         },
         contentShow: {
-          from: {
-            opacity: '0',
-            transform: 'translate(-50%, -48%) scale(0.96)',
-          },
-          to: {
-            opacity: '1',
-            transform: 'translate(-50%, -50%) scale(1)',
-          },
+          from: { opacity: '0', transform: 'translate(-50%, -48%) scale(0.96)' },
+          to: { opacity: '1', transform: 'translate(-50%, -50%) scale(1)' },
         },
         contentHide: {
-          from: {
-            opacity: '1',
-            transform: 'translate(-50%, -50%) scale(1)',
-          },
-          to: {
-            opacity: '0',
-            transform: 'translate(-50%, -48%) scale(0.96)',
-          },
+          from: { opacity: '1', transform: 'translate(-50%, -50%) scale(1)' },
+          to: { opacity: '0', transform: 'translate(-50%, -48%) scale(0.96)' },
         },
       },
       animation: {
+        slideDownAndFade: 'slideDownAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+        slideLeftAndFade: 'slideLeftAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+        slideUpAndFade: 'slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+        slideRightAndFade: 'slideRightAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
         overlayShow: 'overlayShow 350ms cubic-bezier(0.16, 1, 0.3, 1)',
         contentShow: 'contentShow 350ms cubic-bezier(0.16, 1, 0.3, 1)',
         overlayHide: 'overlayHide 350ms cubic-bezier(0.16, 1, 0.3, 1)',

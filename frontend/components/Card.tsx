@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import { CohortFragment } from 'lib/graphql/Cohorts';
 import React from 'react';
+import { MoreVertical } from 'react-feather';
 import { Dropdown, DropdownItem } from './Dropdown';
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -19,7 +20,18 @@ export function Card({ menu, cohort, children, ...props }: CardProps) {
       )}
     >
       {menu && menu.length > 0 && (
-        <Dropdown className="absolute right-1 top-2" align="end" options={menu} />
+        <div className="absolute right-1 top-2">
+          <Dropdown
+            button={
+              <button>
+                <MoreVertical className="text-stone-300 w-6 ui-open:text-stone-500 group-hover:text-stone-400 hover:text-stone-500" />
+              </button>
+            }
+            modal={false}
+            align="end"
+            options={menu}
+          />
+        </div>
       )}
       {children}
       {cohort && (

@@ -26,18 +26,16 @@ export function PermissionSlider<TFieldValues extends FieldValues>({
   label,
   validation = {},
 }: PermissionSliderProps<TFieldValues>) {
-  const {
-    field: { value, onChange },
-  } = useController({
-    name,
-    control,
-    rules: validation,
-  });
+  const { field } = useController({ name, control, rules: validation });
   return (
     <div className="grid relative my-1">
       <div className="text-stone-700 text-sm mb-1">{label}</div>
 
-      <ToggleGroupPrimitive.Root value={value} onValueChange={onChange} type="single">
+      <ToggleGroupPrimitive.Root
+        value={field.value}
+        onValueChange={field.onChange}
+        type="single"
+      >
         {permissionMarks.map(({ realValue, label }) => (
           <ToggleGroupPrimitive.Item
             key={realValue}
