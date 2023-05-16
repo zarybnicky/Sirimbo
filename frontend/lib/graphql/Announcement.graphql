@@ -22,6 +22,7 @@ fragment Announcement on Upozorneni {
   }
   scheduledSince
   scheduledUntil
+  isVisible
 }
 
 query MyAnnouncements($limit: Int, $offset: Int) {
@@ -48,6 +49,15 @@ query AnnouncementList($limit: Int, $offset: Int) {
     }
   }
 }
+
+mutation ToggleUpozorneniVisible($id: BigInt!, $visible: Boolean!) {
+  updateUpozorneni(input: {upId: $id, patch: {isVisible: $visible}}) {
+    upozorneni {
+      id: upId
+    }
+  }
+}
+
 
 query Announcement($id: BigInt!) {
   upozorneni(upId: $id) {

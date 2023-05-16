@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { OlympLogoOneline, OlympLogoVertical } from 'components/Icons';
+import { OlympLogoVertical } from 'components/Icons';
 import { useAuth } from 'lib/data/use-auth';
 import {
   MenuLink,

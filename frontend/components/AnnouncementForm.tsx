@@ -9,15 +9,17 @@ import {
   AnnouncementFragment,
   AnnouncementListDocument,
   CreateAnnouncementDocument,
+  MyAnnouncementsDocument,
   UpdateAnnouncementDocument,
 } from 'lib/graphql/Announcement';
 import { useQueryClient } from '@tanstack/react-query';
 import { DateRange, DateRangeInput } from './DateRange';
 import dynamic from 'next/dynamic';
 import { getGqlKey, useGqlMutation } from 'lib/query';
+import { CheckboxElement } from './Checkbox';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
-type FormProps = Pick<UpozorneniInput, 'upNadpis' | 'upText'> & {
+type FormProps = Pick<UpozorneniInput, 'upNadpis' | 'upText' | 'isVisible'> & {
   schedule: DateRange;
 };
 
@@ -26,6 +28,7 @@ export const AnnouncementForm: React.FC<{
 }> = ({ data }) => {
   const queryClient = useQueryClient();
   const onSuccess = React.useCallback(() => {
+    queryClient.invalidateQueries(getGqlKey(MyAnnouncementsDocument, {}));
     queryClient.invalidateQueries(getGqlKey(AnnouncementListDocument, {}));
   }, [queryClient]);
 
@@ -41,6 +44,7 @@ export const AnnouncementForm: React.FC<{
     reset({
       upNadpis: data?.upNadpis,
       upText: data?.upText,
+      isVisible: data?.isVisible,
       schedule: [
         data?.scheduledSince ? new Date(data.scheduledSince) : undefined,
         data?.scheduledUntil ? new Date(data.scheduledUntil) : undefined,
@@ -52,6 +56,7 @@ export const AnnouncementForm: React.FC<{
     const patch = {
       upNadpis: values.upNadpis,
       upText: values.upText,
+      isVisible: values.isVisible,
       scheduledSince: values.schedule[0]?.toISOString(),
       scheduledUntil: values.schedule[1]?.toDateString(),
     };
@@ -66,13 +71,14 @@ export const AnnouncementForm: React.FC<{
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="upNadpis" label="Nadpis" required />
+      <DateRangeInput control={control} name="schedule" label="Publikováno od/do" />
+      <CheckboxElement control={control} name="isVisible" value="1" label="Viditelný" />
       <RichTextEditor
         initialState={data?.upText}
         control={control}
         name="upText"
         label="Text"
       />
-      <DateRangeInput control={control} name="schedule" label="Publikováno od/do" />
       <SubmitButton loading={onSubmit.loading} />
     </form>
   );

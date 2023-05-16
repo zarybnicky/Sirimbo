@@ -17503,6 +17503,8 @@ type UploadFilePayload {
 }
 
 type Upozorneni implements Node {
+  isVisible: Boolean
+
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
@@ -17556,6 +17558,9 @@ A condition to be used against `Upozorneni` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input UpozorneniCondition {
+  """Checks for equality with the object’s `isVisible` field."""
+  isVisible: Boolean
+
   """Checks for equality with the object’s `scheduledSince` field."""
   scheduledSince: Datetime
 
@@ -17589,6 +17594,7 @@ input UpozorneniCondition {
 
 """An input for mutations affecting `Upozorneni`"""
 input UpozorneniInput {
+  isVisible: Boolean
   scheduledSince: Datetime
   scheduledUntil: Datetime
   upBarvy: BigInt
@@ -17605,6 +17611,7 @@ input UpozorneniInput {
 Represents an update to a `Upozorneni`. Fields that are set will be updated.
 """
 input UpozorneniPatch {
+  isVisible: Boolean
   scheduledSince: Datetime
   scheduledUntil: Datetime
   upBarvy: BigInt
@@ -17696,6 +17703,8 @@ enum UpozorneniSkupiniesOrderBy {
   SKUPINY_BY_UPS_ID_SKUPINA__S_NAME_DESC
   SKUPINY_BY_UPS_ID_SKUPINA__S_VISIBLE_ASC
   SKUPINY_BY_UPS_ID_SKUPINA__S_VISIBLE_DESC
+  UPOZORNENI_BY_UPS_ID_RODIC__IS_VISIBLE_ASC
+  UPOZORNENI_BY_UPS_ID_RODIC__IS_VISIBLE_DESC
   UPOZORNENI_BY_UPS_ID_RODIC__SCHEDULED_SINCE_ASC
   UPOZORNENI_BY_UPS_ID_RODIC__SCHEDULED_SINCE_DESC
   UPOZORNENI_BY_UPS_ID_RODIC__SCHEDULED_UNTIL_ASC
@@ -17791,6 +17800,8 @@ input UpozorneniSkupinyPatch {
 
 """Methods to use when ordering `Upozorneni`."""
 enum UpozornenisOrderBy {
+  IS_VISIBLE_ASC
+  IS_VISIBLE_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC

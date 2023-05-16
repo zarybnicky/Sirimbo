@@ -17,3 +17,14 @@ begin
   return NEW;
 end;
 $$ language plpgsql volatile;
+
+alter table upozorneni add column if not exists is_visible boolean default true;
+
+create or replace function my_announcements() returns setof upozorneni as $$
+  select upozorneni.* from upozorneni
+  where is_visible = true
+    and (scheduled_since is null or scheduled_since <= now())
+    and (scheduled_until is null or scheduled_until >= now())
+  order by up_timestamp_add desc;
+$$ language sql stable;
+grant execute on function my_announcements to member;

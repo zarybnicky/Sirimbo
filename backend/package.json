@@ -9,7 +9,7 @@
   "scripts": {
     "build": "webpack --progress",
     "worker-schema": "nodemon src/worker-schema.ts",
-    "start": "nodemon src/index.ts"
+    "start": "NODE_ENV=development nodemon src/index.ts"
   },
   "dependencies": {
     "@graphile-contrib/pg-order-by-related": "^1.0.0",

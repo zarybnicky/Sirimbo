@@ -66,7 +66,7 @@ const loadUserFromSession = async (req: express.Request): Promise<{ [k: string]:
   return settings;
 }
 
-const isDevelopment = !!process.env.DEBUG;
+const isDevelopment = process.env.NODE_ENV === 'development';
 
 export const graphileOptions: PostGraphileOptions<express.Request, express.Response> = {
   // subscriptions: true,

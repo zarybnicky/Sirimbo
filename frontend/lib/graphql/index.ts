@@ -15017,6 +15017,7 @@ export type UploadFilePayload = {
 
 export type Upozorneni = Node & {
   __typename?: 'Upozorneni';
+  isVisible: Maybe<Scalars['Boolean']>;
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   scheduledSince: Maybe<Scalars['Datetime']>;
@@ -15051,6 +15052,8 @@ export type UpozorneniUpozorneniSkupiniesByUpsIdRodicArgs = {
  * for equality and combined with a logical ‘and.’
  */
 export type UpozorneniCondition = {
+  /** Checks for equality with the object’s `isVisible` field. */
+  isVisible?: InputMaybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `scheduledSince` field. */
   scheduledSince?: InputMaybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `scheduledUntil` field. */
@@ -15075,6 +15078,7 @@ export type UpozorneniCondition = {
 
 /** An input for mutations affecting `Upozorneni` */
 export type UpozorneniInput = {
+  isVisible?: InputMaybe<Scalars['Boolean']>;
   scheduledSince?: InputMaybe<Scalars['Datetime']>;
   scheduledUntil?: InputMaybe<Scalars['Datetime']>;
   upBarvy?: InputMaybe<Scalars['BigInt']>;
@@ -15089,6 +15093,7 @@ export type UpozorneniInput = {
 
 /** Represents an update to a `Upozorneni`. Fields that are set will be updated. */
 export type UpozorneniPatch = {
+  isVisible?: InputMaybe<Scalars['Boolean']>;
   scheduledSince?: InputMaybe<Scalars['Datetime']>;
   scheduledUntil?: InputMaybe<Scalars['Datetime']>;
   upBarvy?: InputMaybe<Scalars['BigInt']>;
@@ -15148,6 +15153,8 @@ export type UpozorneniSkupiniesOrderBy =
   | 'SKUPINY_BY_UPS_ID_SKUPINA__S_NAME_DESC'
   | 'SKUPINY_BY_UPS_ID_SKUPINA__S_VISIBLE_ASC'
   | 'SKUPINY_BY_UPS_ID_SKUPINA__S_VISIBLE_DESC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__IS_VISIBLE_ASC'
+  | 'UPOZORNENI_BY_UPS_ID_RODIC__IS_VISIBLE_DESC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__SCHEDULED_SINCE_ASC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__SCHEDULED_SINCE_DESC'
   | 'UPOZORNENI_BY_UPS_ID_RODIC__SCHEDULED_UNTIL_ASC'
@@ -15253,6 +15260,8 @@ export type UpozornenisEdge = {
 
 /** Methods to use when ordering `Upozorneni`. */
 export type UpozornenisOrderBy =
+  | 'IS_VISIBLE_ASC'
+  | 'IS_VISIBLE_DESC'
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'

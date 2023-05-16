@@ -2,21 +2,21 @@ import * as React from 'react';
 import { Pagination } from './Pagination';
 import { AnnouncementItem } from './AnnouncementItem';
 import { useGqlQuery } from 'lib/query';
-import { AnnouncementListDocument } from 'lib/graphql/Announcement';
+import { MyAnnouncementsDocument } from 'lib/graphql/Announcement';
 
 export function MyAnnouncements() {
   const [limit] = React.useState(5);
   const [page, setPage] = React.useState(1);
-  const { data } = useGqlQuery(AnnouncementListDocument, {
+  const { data } = useGqlQuery(MyAnnouncementsDocument, {
     limit,
     offset: (page - 1) * limit,
   });
-  if (!data?.upozornenis) {
+  if (!data?.myAnnouncements) {
     // react-skeleton
     return null;
   }
-  const nodes = data.upozornenis.nodes;
-  const total = data.upozornenis.totalCount;
+  const nodes = data.myAnnouncements.nodes;
+  const total = data.myAnnouncements.totalCount;
 
   return (
     <div className="flex flex-col">

@@ -6,12 +6,23 @@ import { Card } from './Card';
 import { formatWeekDay } from 'lib/format-date';
 import { WeekPicker, mondayToWeekRange, getCurrentMonday } from './WeekPicker';
 import { useGqlQuery } from 'lib/query';
+import { CohortDocument } from 'lib/graphql/Cohorts';
+import { RichTextView } from './RichTextView';
 
 export const MyLessonsList: React.FC = () => {
   const { user } = useAuth();
   const [startDate, setStartDate] = React.useState(getCurrentMonday);
+  const { data: cohortData } = useGqlQuery(
+    CohortDocument,
+    { id: user?.uSkupina! },
+    { enabled: !!user?.uSkupina },
+  );
+  const cohort = cohortData?.skupiny;
 
-  const { data, isLoading } = useGqlQuery(MyLessonsDocument, mondayToWeekRange(startDate));
+  const { data, isLoading } = useGqlQuery(
+    MyLessonsDocument,
+    mondayToWeekRange(startDate),
+  );
 
   const lessonsPerDay = React.useMemo(() => {
     const lessonsPerDay: { [day: string]: ScheduleItemFragment[] } = {};
@@ -35,9 +46,11 @@ export const MyLessonsList: React.FC = () => {
 
       {Object.entries(lessonsPerDay).map(([key, lessons]) => (
         <Card key={key} className="grid w-72 rounded-lg border-stone-200 border">
-          <h6 >
+          <h6>
             {key.split(' ').map((x, i) => (
-              <div key={x} className={i ? 'font-bold mb-1' : 'text-sm text-stone-500'}>{x}</div>
+              <div key={x} className={i ? 'font-bold mb-1' : 'text-sm text-stone-500'}>
+                {x}
+              </div>
             ))}
           </h6>
           {lessons.map((lesson, i) => (
@@ -50,6 +63,17 @@ export const MyLessonsList: React.FC = () => {
           ))}
         </Card>
       ))}
+
+      {cohort && cohort.sVisible && (
+        <>
+          <h3 className="text-2xl tracking-wide mt-12 mb-4">Moje tréninková skupina</h3>
+          <Card cohort={cohort}>
+            <h3 className="text-2xl tracking-wide mb-4">{cohort.sName}</h3>
+            <RichTextView value={cohort.sDescription} />
+            <RichTextView value={cohort.internalInfo} />
+          </Card>
+        </>
+      )}
     </div>
   );
 };

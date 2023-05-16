@@ -2,7 +2,6 @@ import * as React from 'react';
 import { MyAnnouncements } from 'components/MyAnnouncements';
 import { MyLessonsList } from 'components/MyLessonsList';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
-import { TenantInformation } from 'components/TenantInformation';
 import { TabMenu } from 'components/TabMenu';
 import { Item } from 'components/layout/Item';
 import { type NextPageWithLayout } from 'pages/_app';
@@ -19,24 +18,20 @@ const Page: NextPageWithLayout = () => {
           options={[
             { id: 'myLessons', label: 'Moje lekce' },
             { id: 'myAnnouncements', label: 'Aktuality' },
-            { id: 'importantInfo', label: 'Stálé informace' },
           ]}
         />
         <div className="mt-4">
           {variant === 'myLessons' ? (
             <MyLessonsList />
-          ) : variant === 'myAnnouncements' ? (
-            <MyAnnouncements />
           ) : (
-            <TenantInformation />
+            <MyAnnouncements />
           )}
         </div>
       </div>
 
-      <div className="hidden xl:grid grid-cols-3 gap-4">
+      <div className="hidden xl:grid grid-cols-2 gap-4">
         <MyLessonsList />
         <MyAnnouncements />
-        <TenantInformation />
       </div>
     </Item>
   );
