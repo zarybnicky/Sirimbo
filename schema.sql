@@ -190,6 +190,20 @@ $_$;
 
 
 --
+-- Name: tg__tenant(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg__tenant() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+begin
+  NEW.tenant = (case when TG_OP = 'INSERT' then get_current_tenant() else OLD.tenant end);
+  return NEW;
+end;
+$$;
+
+
+--
 -- Name: tg__timestamps(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -905,7 +919,8 @@ CREATE TABLE public.upozorneni (
     up_timestamp timestamp with time zone,
     up_timestamp_add timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     scheduled_since timestamp with time zone,
-    scheduled_until timestamp with time zone
+    scheduled_until timestamp with time zone,
+    is_visible boolean DEFAULT true
 );
 
 
@@ -917,8 +932,10 @@ CREATE FUNCTION public.my_announcements() RETURNS SETOF public.upozorneni
     LANGUAGE sql STABLE
     AS $$
   select upozorneni.* from upozorneni
-  where (scheduled_since is null or scheduled_since <= now())
-    and (scheduled_until is null or scheduled_until >= now());
+  where is_visible = true
+    and (scheduled_since is null or scheduled_since <= now())
+    and (scheduled_until is null or scheduled_until >= now())
+  order by up_timestamp_add desc;
 $$;
 
 
@@ -1269,10 +1286,10 @@ $$;
 
 
 --
--- Name: video; Type: TABLE; Schema: public; Owner: -
+-- Name: video; Type: TABLE; Schema: app_private; Owner: -
 --
 
-CREATE TABLE public.video (
+CREATE TABLE app_private.video (
     v_id bigint NOT NULL,
     v_uri text NOT NULL,
     v_title text NOT NULL,
@@ -1288,7 +1305,7 @@ CREATE TABLE public.video (
 -- Name: title_videos(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.title_videos() RETURNS SETOF public.video
+CREATE FUNCTION public.title_videos() RETURNS SETOF app_private.video
     LANGUAGE sql STABLE
     AS $$
   select * from video where v_id in (
@@ -1435,6 +1452,92 @@ CREATE SEQUENCE app_private.crm_prospect_id_seq
 --
 
 ALTER SEQUENCE app_private.crm_prospect_id_seq OWNED BY app_private.crm_prospect.id;
+
+
+--
+-- Name: video_list; Type: TABLE; Schema: app_private; Owner: -
+--
+
+CREATE TABLE app_private.video_list (
+    vl_id bigint NOT NULL,
+    vl_url text NOT NULL,
+    vl_title text NOT NULL,
+    vl_description text NOT NULL,
+    vl_count bigint NOT NULL,
+    vl_created_at timestamp with time zone NOT NULL,
+    vl_last_checked timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+--
+-- Name: video_list_vl_id_seq; Type: SEQUENCE; Schema: app_private; Owner: -
+--
+
+CREATE SEQUENCE app_private.video_list_vl_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: video_list_vl_id_seq; Type: SEQUENCE OWNED BY; Schema: app_private; Owner: -
+--
+
+ALTER SEQUENCE app_private.video_list_vl_id_seq OWNED BY app_private.video_list.vl_id;
+
+
+--
+-- Name: video_source; Type: TABLE; Schema: app_private; Owner: -
+--
+
+CREATE TABLE app_private.video_source (
+    vs_id bigint NOT NULL,
+    vs_url text NOT NULL,
+    vs_title text,
+    vs_description text,
+    vs_created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    vs_last_checked timestamp with time zone
+);
+
+
+--
+-- Name: video_source_vs_id_seq; Type: SEQUENCE; Schema: app_private; Owner: -
+--
+
+CREATE SEQUENCE app_private.video_source_vs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: video_source_vs_id_seq; Type: SEQUENCE OWNED BY; Schema: app_private; Owner: -
+--
+
+ALTER SEQUENCE app_private.video_source_vs_id_seq OWNED BY app_private.video_source.vs_id;
+
+
+--
+-- Name: video_v_id_seq; Type: SEQUENCE; Schema: app_private; Owner: -
+--
+
+CREATE SEQUENCE app_private.video_v_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: video_v_id_seq; Type: SEQUENCE OWNED BY; Schema: app_private; Owner: -
+--
+
+ALTER SEQUENCE app_private.video_v_id_seq OWNED BY app_private.video.v_id;
 
 
 --
@@ -2555,92 +2658,6 @@ ALTER SEQUENCE public.users_u_id_seq OWNED BY public.users.u_id;
 
 
 --
--- Name: video_list; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.video_list (
-    vl_id bigint NOT NULL,
-    vl_url text NOT NULL,
-    vl_title text NOT NULL,
-    vl_description text NOT NULL,
-    vl_count bigint NOT NULL,
-    vl_created_at timestamp with time zone NOT NULL,
-    vl_last_checked timestamp with time zone DEFAULT CURRENT_TIMESTAMP
-);
-
-
---
--- Name: video_list_vl_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.video_list_vl_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: video_list_vl_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.video_list_vl_id_seq OWNED BY public.video_list.vl_id;
-
-
---
--- Name: video_source; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.video_source (
-    vs_id bigint NOT NULL,
-    vs_url text NOT NULL,
-    vs_title text,
-    vs_description text,
-    vs_created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    vs_last_checked timestamp with time zone
-);
-
-
---
--- Name: video_source_vs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.video_source_vs_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: video_source_vs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.video_source_vs_id_seq OWNED BY public.video_source.vs_id;
-
-
---
--- Name: video_v_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.video_v_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: video_v_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.video_v_id_seq OWNED BY public.video.v_id;
-
-
---
 -- Name: crm_activity id; Type: DEFAULT; Schema: app_private; Owner: -
 --
 
@@ -2652,6 +2669,27 @@ ALTER TABLE ONLY app_private.crm_activity ALTER COLUMN id SET DEFAULT nextval('a
 --
 
 ALTER TABLE ONLY app_private.crm_prospect ALTER COLUMN id SET DEFAULT nextval('app_private.crm_prospect_id_seq'::regclass);
+
+
+--
+-- Name: video v_id; Type: DEFAULT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.video ALTER COLUMN v_id SET DEFAULT nextval('app_private.video_v_id_seq'::regclass);
+
+
+--
+-- Name: video_list vl_id; Type: DEFAULT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.video_list ALTER COLUMN vl_id SET DEFAULT nextval('app_private.video_list_vl_id_seq'::regclass);
+
+
+--
+-- Name: video_source vs_id; Type: DEFAULT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.video_source ALTER COLUMN vs_id SET DEFAULT nextval('app_private.video_source_vs_id_seq'::regclass);
 
 
 --
@@ -2823,27 +2861,6 @@ ALTER TABLE ONLY public.users ALTER COLUMN u_id SET DEFAULT nextval('public.user
 
 
 --
--- Name: video v_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.video ALTER COLUMN v_id SET DEFAULT nextval('public.video_v_id_seq'::regclass);
-
-
---
--- Name: video_list vl_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.video_list ALTER COLUMN vl_id SET DEFAULT nextval('public.video_list_vl_id_seq'::regclass);
-
-
---
--- Name: video_source vs_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.video_source ALTER COLUMN vs_id SET DEFAULT nextval('public.video_source_vs_id_seq'::regclass);
-
-
---
 -- Name: crm_activity crm_activity_pkey; Type: CONSTRAINT; Schema: app_private; Owner: -
 --
 
@@ -2857,6 +2874,30 @@ ALTER TABLE ONLY app_private.crm_activity
 
 ALTER TABLE ONLY app_private.crm_prospect
     ADD CONSTRAINT crm_prospect_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: video idx_23999_primary; Type: CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.video
+    ADD CONSTRAINT idx_23999_primary PRIMARY KEY (v_id);
+
+
+--
+-- Name: video_list idx_24009_primary; Type: CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.video_list
+    ADD CONSTRAINT idx_24009_primary PRIMARY KEY (vl_id);
+
+
+--
+-- Name: video_source idx_24019_primary; Type: CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.video_source
+    ADD CONSTRAINT idx_24019_primary PRIMARY KEY (vs_id);
 
 
 --
@@ -3097,30 +3138,6 @@ ALTER TABLE ONLY public.upozorneni_skupiny
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT idx_23964_primary PRIMARY KEY (u_id);
-
-
---
--- Name: video idx_23999_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.video
-    ADD CONSTRAINT idx_23999_primary PRIMARY KEY (v_id);
-
-
---
--- Name: video_list idx_24009_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.video_list
-    ADD CONSTRAINT idx_24009_primary PRIMARY KEY (vl_id);
-
-
---
--- Name: video_source idx_24019_primary; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.video_source
-    ADD CONSTRAINT idx_24019_primary PRIMARY KEY (vs_id);
 
 
 --
@@ -4009,6 +4026,66 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: video admin_all; Type: POLICY; Schema: app_private; Owner: -
+--
+
+CREATE POLICY admin_all ON app_private.video TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: video_list admin_all; Type: POLICY; Schema: app_private; Owner: -
+--
+
+CREATE POLICY admin_all ON app_private.video_list TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: video_source admin_all; Type: POLICY; Schema: app_private; Owner: -
+--
+
+CREATE POLICY admin_all ON app_private.video_source TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: video all_view; Type: POLICY; Schema: app_private; Owner: -
+--
+
+CREATE POLICY all_view ON app_private.video FOR SELECT USING (true);
+
+
+--
+-- Name: video_list all_view; Type: POLICY; Schema: app_private; Owner: -
+--
+
+CREATE POLICY all_view ON app_private.video_list FOR SELECT USING (true);
+
+
+--
+-- Name: video_source all_view; Type: POLICY; Schema: app_private; Owner: -
+--
+
+CREATE POLICY all_view ON app_private.video_source FOR SELECT USING (true);
+
+
+--
+-- Name: video; Type: ROW SECURITY; Schema: app_private; Owner: -
+--
+
+ALTER TABLE app_private.video ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: video_list; Type: ROW SECURITY; Schema: app_private; Owner: -
+--
+
+ALTER TABLE app_private.video_list ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: video_source; Type: ROW SECURITY; Schema: app_private; Owner: -
+--
+
+ALTER TABLE app_private.video_source ENABLE ROW LEVEL SECURITY;
+
+--
 -- Name: aktuality admin_all; Type: POLICY; Schema: public; Owner: -
 --
 
@@ -4174,27 +4251,6 @@ CREATE POLICY admin_all ON public.upozorneni_skupiny TO administrator USING (tru
 --
 
 CREATE POLICY admin_all ON public.users TO administrator USING (true) WITH CHECK (true);
-
-
---
--- Name: video admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.video TO administrator USING (true) WITH CHECK (true);
-
-
---
--- Name: video_list admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.video_list TO administrator USING (true) WITH CHECK (true);
-
-
---
--- Name: video_source admin_all; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY admin_all ON public.video_source TO administrator USING (true) WITH CHECK (true);
 
 
 --
@@ -4368,28 +4424,7 @@ CREATE POLICY all_view ON public.upozorneni_skupiny FOR SELECT USING (true);
 -- Name: users all_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY all_view ON public.users FOR SELECT USING (true);
-
-
---
--- Name: video all_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY all_view ON public.video FOR SELECT USING (true);
-
-
---
--- Name: video_list all_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY all_view ON public.video_list FOR SELECT USING (true);
-
-
---
--- Name: video_source all_view; Type: POLICY; Schema: public; Owner: -
---
-
-CREATE POLICY all_view ON public.video_source FOR SELECT USING (true);
+CREATE POLICY all_view ON public.users FOR SELECT TO member USING (true);
 
 
 --
@@ -4427,6 +4462,13 @@ ALTER TABLE public.galerie_dir ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.galerie_foto ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: person manage_admin; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY manage_admin ON public.person TO administrator USING (true) WITH CHECK (true);
+
 
 --
 -- Name: attendee_external manage_all; Type: POLICY; Schema: public; Owner: -
@@ -4525,6 +4567,12 @@ ALTER TABLE public.pary ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.permissions ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: person; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.person ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: platby_category; Type: ROW SECURITY; Schema: public; Owner: -
@@ -4633,22 +4681,11 @@ ALTER TABLE public.upozorneni_skupiny ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 
 --
--- Name: video; Type: ROW SECURITY; Schema: public; Owner: -
+-- Name: person view_all; Type: POLICY; Schema: public; Owner: -
 --
 
-ALTER TABLE public.video ENABLE ROW LEVEL SECURITY;
+CREATE POLICY view_all ON public.person FOR SELECT USING (true);
 
---
--- Name: video_list; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.video_list ENABLE ROW LEVEL SECURITY;
-
---
--- Name: video_source; Type: ROW SECURITY; Schema: public; Owner: -
---
-
-ALTER TABLE public.video_source ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: SCHEMA app_private; Type: ACL; Schema: -; Owner: -
@@ -4863,7 +4900,7 @@ GRANT ALL ON FUNCTION public.get_current_tenant() TO anonymous;
 --
 
 GRANT ALL ON TABLE public.users TO member;
-GRANT SELECT ON TABLE public.users TO anonymous;
+GRANT ALL ON TABLE public.users TO anonymous;
 
 
 --
@@ -5154,10 +5191,10 @@ GRANT ALL ON FUNCTION public.schedules_for_range(start_date date, end_date date)
 
 
 --
--- Name: TABLE video; Type: ACL; Schema: public; Owner: -
+-- Name: TABLE video; Type: ACL; Schema: app_private; Owner: -
 --
 
-GRANT ALL ON TABLE public.video TO anonymous;
+GRANT ALL ON TABLE app_private.video TO anonymous;
 
 
 --
@@ -5172,6 +5209,41 @@ GRANT ALL ON FUNCTION public.trainers() TO member;
 --
 
 GRANT ALL ON FUNCTION public.users_full_name(u public.users) TO anonymous;
+
+
+--
+-- Name: TABLE video_list; Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON TABLE app_private.video_list TO anonymous;
+
+
+--
+-- Name: SEQUENCE video_list_vl_id_seq; Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_private.video_list_vl_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE video_source; Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT ALL ON TABLE app_private.video_source TO anonymous;
+
+
+--
+-- Name: SEQUENCE video_source_vs_id_seq; Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_private.video_source_vs_id_seq TO anonymous;
+
+
+--
+-- Name: SEQUENCE video_v_id_seq; Type: ACL; Schema: app_private; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_private.video_v_id_seq TO anonymous;
 
 
 --
@@ -5427,8 +5499,7 @@ GRANT SELECT,USAGE ON SEQUENCE public.permissions_pe_id_seq TO anonymous;
 -- Name: TABLE person; Type: ACL; Schema: public; Owner: -
 --
 
-GRANT SELECT ON TABLE public.person TO anonymous;
-GRANT ALL ON TABLE public.person TO administrator;
+GRANT ALL ON TABLE public.person TO anonymous;
 
 
 --
@@ -5565,41 +5636,6 @@ GRANT SELECT,USAGE ON SEQUENCE public.upozorneni_up_id_seq TO anonymous;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.users_u_id_seq TO anonymous;
-
-
---
--- Name: TABLE video_list; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.video_list TO anonymous;
-
-
---
--- Name: SEQUENCE video_list_vl_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.video_list_vl_id_seq TO anonymous;
-
-
---
--- Name: TABLE video_source; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.video_source TO anonymous;
-
-
---
--- Name: SEQUENCE video_source_vs_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.video_source_vs_id_seq TO anonymous;
-
-
---
--- Name: SEQUENCE video_v_id_seq; Type: ACL; Schema: public; Owner: -
---
-
-GRANT SELECT,USAGE ON SEQUENCE public.video_v_id_seq TO anonymous;
 
 
 --
