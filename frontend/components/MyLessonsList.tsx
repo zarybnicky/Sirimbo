@@ -46,30 +46,14 @@ export const MyLessonsList: React.FC = () => {
       )}
 
       <div className="flex flex-wrap gap-x-2">
-      {Object.entries(lessonsPerDay).map(([key, lessons]) => (
-        <Card
-          key={key}
-          className="grid w-72 rounded-lg border-stone-200 border"
-          menu={(lessons[0] && lessons.every((x, _, arr) => x.rozpiByRiIdRodic?.rTrener === arr[0]?.rozpiByRiIdRodic?.rTrener))
-              ? Schedule.useMenu(lessons[0].rozpiByRiIdRodic!) : []}
-        >
-          <h6>
-            {key.split(' ').map((x, i) => (
-              <div key={x} className={i ? 'font-bold mb-1' : 'text-sm text-stone-500'}>
-                {x}
-              </div>
-            ))}
-          </h6>
-          {lessons.map((lesson, i) => (
-            <LessonButton
-              key={i}
-              lesson={lesson}
-              schedule={lesson.rozpiByRiIdRodic!}
-              showTrainer={lesson.rozpiByRiIdRodic?.rTrener !== user?.id}
-            />
-          ))}
-        </Card>
-      ))}
+        {Object.entries(lessonsPerDay).map(([key, lessons]) => (
+          <LessonList
+            key={key}
+            location={key.split(' ')[0]!}
+            day={key.split(' ')[1]!}
+            lessons={lessons}
+          />
+        ))}
       </div>
 
       {cohort && cohort.sVisible && (
@@ -85,3 +69,35 @@ export const MyLessonsList: React.FC = () => {
     </div>
   );
 };
+
+type LessonListProps = {
+  day: string;
+  location: string;
+  lessons: ScheduleItemFragment[];
+};
+function LessonList({ day, location, lessons }: LessonListProps) {
+  const { user } = useAuth();
+  const menu = Schedule.useMenu(lessons[0]?.rozpiByRiIdRodic || undefined);
+  const isSameTrainer = lessons.every(
+    (x, _, arr) => x.rozpiByRiIdRodic?.rTrener === arr[0]?.rozpiByRiIdRodic?.rTrener,
+  );
+  return (
+    <Card
+      className="grid w-72 rounded-lg border-stone-200 border"
+      menu={isSameTrainer ? menu : []}
+    >
+      <h6>
+        <div className="text-sm text-stone-500">{location}</div>
+        <div className="font-bold mb-1">{day}</div>
+      </h6>
+      {lessons.map((lesson, i) => (
+        <LessonButton
+          key={i}
+          lesson={lesson}
+          schedule={lesson.rozpiByRiIdRodic!}
+          showTrainer={lesson.rozpiByRiIdRodic?.rTrener !== user?.id}
+        />
+      ))}
+    </Card>
+  );
+}

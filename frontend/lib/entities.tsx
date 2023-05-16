@@ -35,9 +35,9 @@ export const Announcement = {
 };
 
 export const Schedule = {
-  useMenu(item: ScheduleBasicFragment): DropdownItem[] {
+  useMenu(item?: ScheduleBasicFragment): DropdownItem[] {
     const { perms } = useAuth();
-    if (!perms.canEditSchedule(item)) {
+    if (!item || !perms.canEditSchedule(item)) {
       return [];
     }
     return [
