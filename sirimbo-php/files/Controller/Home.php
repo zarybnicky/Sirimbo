@@ -26,27 +26,9 @@ class Home
             'title_photo_uri' => $val['at_foto_main'] ? '/galerie/' . $val['gf_path'] : ''
         ]);
 
-        $videos = array_map(
-            function ($id) {
-                $x = \DBVideo::getSingle($id);
-                list($id, $query) = array_merge(explode('?', $x['v_uri']), ['']);
-                return [
-                    'title' => $x['v_title'],
-                    'link' => "https://www.youtube.com/watch?v=$id" . ($query ? "&amp;$query" : ''),
-                    'image' => "https://i3.ytimg.com/vi/$id/hqdefault.jpg"
-                ];
-            },
-            array_filter([
-                \DBParameters::get('title_video1'),
-                \DBParameters::get('title_video2'),
-                \DBParameters::get('title_video3')
-            ])
-        );
-
         \Render::twig('Main/Home.twig', [
             'highlights' => $highlights,
-            'moreArticles' => $moreArticles,
-            'videos' => $videos
+            'moreArticles' => $moreArticles
         ]);
     }
 }

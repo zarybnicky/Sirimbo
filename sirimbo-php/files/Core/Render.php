@@ -39,7 +39,6 @@ class Render
                 ['Kde trénujeme', '/oklubu/saly'],
             ]],
             ['Aktuality', '/aktualne'],
-            ['Videa', '/video'],
             ['Fotogalerie', '/fotogalerie'],
             ['Kontakt', '/kontakt'],
         ]];
@@ -63,7 +62,6 @@ class Render
                     ['Nabídka', '/admin/nabidka', [],['nabidka', P_OWNED]],
                     ['Akce', '/admin/akce', [], ['akce', P_OWNED]],
                     ['Galerie', '/admin/galerie', [], ['galerie', P_OWNED]],
-                    ['Video', '/admin/video', [], ['aktuality', P_OWNED]],
                     ['Dokumenty', '/admin/dokumenty', [], ['dokumenty', P_OWNED]],
                     ['Oprávnění', '/admin/permissions', [], ['permissions', P_OWNED]],
                 ], ['nastenka', P_OWNED]]

@@ -118,7 +118,6 @@ function makeRouter()
     $router->get('/app/(.*)', '@StaticContent::app');
     $router->get('/home', '@Home::get');
     $router->get('/error', '@Error::get');
-    $router->get('/video', '@Video::get');
 
     $router->get('/prijdtancit', '@Page::get');
     $router->get('/ochrana-osobnich-udaju', '@Page::get');
@@ -194,27 +193,6 @@ function makeRouter()
     $router->post('/admin/aktuality/remove/([0-9]+)', '@Admin.Aktuality::removePost');
     $router->get('/admin/aktuality/foto/([0-9]+)', '@Admin.Aktuality::foto');
     $router->post('/admin/aktuality/foto/([0-9]+)', '@Admin.Aktuality::fotoPost');
-
-    $router->get('/admin/video', '@Admin.Video::orphan');
-    $router->get('/admin/video/orphan', '@Admin.Video::orphan');
-    $router->get('/admin/video/title', '@Admin.Video::title');
-    $router->post('/admin/video/title', '@Admin.Video::titlePost');
-    $router->get('/admin/video/playlist', '@Admin.Video::playlistList');
-    $router->get('/admin/video/playlist/([0-9]+)', '@Admin.Video::playlist');
-    $router->get('/admin/video/add', '@Admin.Video::add');
-    $router->post('/admin/video/add', '@Admin.Video::addPost');
-    $router->get('/admin/video/edit/([0-9]+)', '@Admin.Video::edit');
-    $router->post('/admin/video/edit/([0-9]+)', '@Admin.Video::editPost');
-    $router->get('/admin/video/remove/([0-9]+)', '@Admin.Video::remove');
-    $router->post('/admin/video/remove/([0-9]+)', '@Admin.Video::removePost');
-
-    $router->get('/admin/video/source', '@Admin.VideoSource::list');
-    $router->get('/admin/video/source/add', '@Admin.VideoSource::add');
-    $router->post('/admin/video/source/add', '@Admin.VideoSource::addPost');
-    $router->get('/admin/video/source/edit/([0-9]+)', '@Admin.VideoSource::edit');
-    $router->post('/admin/video/source/edit/([0-9]+)', '@Admin.VideoSource::editPost');
-    $router->get('/admin/video/source/remove/([0-9]+)', '@Admin.VideoSource::remove');
-    $router->post('/admin/video/source/remove/([0-9]+)', '@Admin.VideoSource::removePost');
 
     $router->get('/admin/nastenka', '@Admin.Nastenka::list');
     $router->get('/admin/nastenka/add', '@Admin.Nastenka::add');

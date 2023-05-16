@@ -22,3 +22,4 @@ result
 *.graphql.d.ts
 *.graphqls.d.ts
 .cache
+.devenv/
