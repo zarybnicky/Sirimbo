@@ -12,10 +12,10 @@ type Props = {
 
 export const ErrorBox = ({ error: e, default: def }: Props) => {
   let error: string | null = null;
-
-  if (typeof e === 'object' && Array.isArray((e as any)?.response?.errors)) {
-    error = (e as any).response.errors.map((x: any) => x.message).join(', ');
-  } else if (e instanceof Error) {
+  if (!e) {
+    return null;
+  }
+  if (e instanceof Error || (e as any).message) {
     error = e.message;
   } else if (e) {
     error = e.toString();

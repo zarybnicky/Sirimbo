@@ -20,7 +20,7 @@ export function MyAnnouncements() {
 
   return (
     <div className="flex flex-col">
-      <h4 className="text-2xl tracking-wide mb-4">Aktuality</h4>
+      <h4 className="text-2xl tracking-wide mb-10">Aktuality</h4>
 
       <div className="flex flex-col gap-2 rounded-lg">
         {nodes.map((a) => (

@@ -2970,105 +2970,6 @@ export type CreateUserPayloadUserEdgeArgs = {
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
 };
 
-/** All input for the create `Video` mutation. */
-export type CreateVideoInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The `Video` to be created by this mutation. */
-  video: VideoInput;
-};
-
-/** All input for the create `VideoList` mutation. */
-export type CreateVideoListInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The `VideoList` to be created by this mutation. */
-  videoList: VideoListInput;
-};
-
-/** The output of our create `VideoList` mutation. */
-export type CreateVideoListPayload = {
-  __typename?: 'CreateVideoListPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** The `VideoList` that was created by this mutation. */
-  videoList: Maybe<VideoList>;
-  /** An edge for our `VideoList`. May be used by Relay 1. */
-  videoListEdge: Maybe<VideoListsEdge>;
-};
-
-
-/** The output of our create `VideoList` mutation. */
-export type CreateVideoListPayloadVideoListEdgeArgs = {
-  orderBy?: InputMaybe<Array<VideoListsOrderBy>>;
-};
-
-/** The output of our create `Video` mutation. */
-export type CreateVideoPayload = {
-  __typename?: 'CreateVideoPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** The `Video` that was created by this mutation. */
-  video: Maybe<Video>;
-  /** An edge for our `Video`. May be used by Relay 1. */
-  videoEdge: Maybe<VideosEdge>;
-};
-
-
-/** The output of our create `Video` mutation. */
-export type CreateVideoPayloadVideoEdgeArgs = {
-  orderBy?: InputMaybe<Array<VideosOrderBy>>;
-};
-
-/** All input for the create `VideoSource` mutation. */
-export type CreateVideoSourceInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The `VideoSource` to be created by this mutation. */
-  videoSource: VideoSourceInput;
-};
-
-/** The output of our create `VideoSource` mutation. */
-export type CreateVideoSourcePayload = {
-  __typename?: 'CreateVideoSourcePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** The `VideoSource` that was created by this mutation. */
-  videoSource: Maybe<VideoSource>;
-  /** An edge for our `VideoSource`. May be used by Relay 1. */
-  videoSourceEdge: Maybe<VideoSourcesEdge>;
-};
-
-
-/** The output of our create `VideoSource` mutation. */
-export type CreateVideoSourcePayloadVideoSourceEdgeArgs = {
-  orderBy?: InputMaybe<Array<VideoSourcesOrderBy>>;
-};
-
 export type CrmCohort =
   | 'CONTACT_ME_LATER'
   | 'DANCER'
@@ -4844,138 +4745,6 @@ export type DeleteUserPayloadUserEdgeArgs = {
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
 };
 
-/** All input for the `deleteVideoByNodeId` mutation. */
-export type DeleteVideoByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Video` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** All input for the `deleteVideo` mutation. */
-export type DeleteVideoInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  vId: Scalars['BigInt'];
-};
-
-/** All input for the `deleteVideoListByNodeId` mutation. */
-export type DeleteVideoListByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `VideoList` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** All input for the `deleteVideoList` mutation. */
-export type DeleteVideoListInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  vlId: Scalars['BigInt'];
-};
-
-/** The output of our delete `VideoList` mutation. */
-export type DeleteVideoListPayload = {
-  __typename?: 'DeleteVideoListPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedVideoListNodeId: Maybe<Scalars['ID']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** The `VideoList` that was deleted by this mutation. */
-  videoList: Maybe<VideoList>;
-  /** An edge for our `VideoList`. May be used by Relay 1. */
-  videoListEdge: Maybe<VideoListsEdge>;
-};
-
-
-/** The output of our delete `VideoList` mutation. */
-export type DeleteVideoListPayloadVideoListEdgeArgs = {
-  orderBy?: InputMaybe<Array<VideoListsOrderBy>>;
-};
-
-/** The output of our delete `Video` mutation. */
-export type DeleteVideoPayload = {
-  __typename?: 'DeleteVideoPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedVideoNodeId: Maybe<Scalars['ID']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** The `Video` that was deleted by this mutation. */
-  video: Maybe<Video>;
-  /** An edge for our `Video`. May be used by Relay 1. */
-  videoEdge: Maybe<VideosEdge>;
-};
-
-
-/** The output of our delete `Video` mutation. */
-export type DeleteVideoPayloadVideoEdgeArgs = {
-  orderBy?: InputMaybe<Array<VideosOrderBy>>;
-};
-
-/** All input for the `deleteVideoSourceByNodeId` mutation. */
-export type DeleteVideoSourceByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `VideoSource` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** All input for the `deleteVideoSource` mutation. */
-export type DeleteVideoSourceInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  vsId: Scalars['BigInt'];
-};
-
-/** The output of our delete `VideoSource` mutation. */
-export type DeleteVideoSourcePayload = {
-  __typename?: 'DeleteVideoSourcePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedVideoSourceNodeId: Maybe<Scalars['ID']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** The `VideoSource` that was deleted by this mutation. */
-  videoSource: Maybe<VideoSource>;
-  /** An edge for our `VideoSource`. May be used by Relay 1. */
-  videoSourceEdge: Maybe<VideoSourcesEdge>;
-};
-
-
-/** The output of our delete `VideoSource` mutation. */
-export type DeleteVideoSourcePayloadVideoSourceEdgeArgs = {
-  orderBy?: InputMaybe<Array<VideoSourcesOrderBy>>;
-};
-
 /** A connection to a list of `Dokumenty` values. */
 export type DokumentiesConnection = {
   __typename?: 'DokumentiesConnection';
@@ -6311,12 +6080,6 @@ export type Mutation = {
   createUpozorneniSkupiny: Maybe<CreateUpozorneniSkupinyPayload>;
   /** Creates a single `User`. */
   createUser: Maybe<CreateUserPayload>;
-  /** Creates a single `Video`. */
-  createVideo: Maybe<CreateVideoPayload>;
-  /** Creates a single `VideoList`. */
-  createVideoList: Maybe<CreateVideoListPayload>;
-  /** Creates a single `VideoSource`. */
-  createVideoSource: Maybe<CreateVideoSourcePayload>;
   /** Deletes a single `Aktuality` using a unique key. */
   deleteAktuality: Maybe<DeleteAktualityPayload>;
   /** Deletes a single `Aktuality` using its globally unique id. */
@@ -6469,18 +6232,6 @@ export type Mutation = {
   deleteUser: Maybe<DeleteUserPayload>;
   /** Deletes a single `User` using its globally unique id. */
   deleteUserByNodeId: Maybe<DeleteUserPayload>;
-  /** Deletes a single `Video` using a unique key. */
-  deleteVideo: Maybe<DeleteVideoPayload>;
-  /** Deletes a single `Video` using its globally unique id. */
-  deleteVideoByNodeId: Maybe<DeleteVideoPayload>;
-  /** Deletes a single `VideoList` using a unique key. */
-  deleteVideoList: Maybe<DeleteVideoListPayload>;
-  /** Deletes a single `VideoList` using its globally unique id. */
-  deleteVideoListByNodeId: Maybe<DeleteVideoListPayload>;
-  /** Deletes a single `VideoSource` using a unique key. */
-  deleteVideoSource: Maybe<DeleteVideoSourcePayload>;
-  /** Deletes a single `VideoSource` using its globally unique id. */
-  deleteVideoSourceByNodeId: Maybe<DeleteVideoSourcePayload>;
   downloadFile: Scalars['String'];
   fixUnpairedCouples: Maybe<FixUnpairedCouplesPayload>;
   login: Maybe<LoginPayload>;
@@ -6647,18 +6398,6 @@ export type Mutation = {
   updateUser: Maybe<UpdateUserPayload>;
   /** Updates a single `User` using its globally unique id and a patch. */
   updateUserByNodeId: Maybe<UpdateUserPayload>;
-  /** Updates a single `Video` using a unique key and a patch. */
-  updateVideo: Maybe<UpdateVideoPayload>;
-  /** Updates a single `Video` using its globally unique id and a patch. */
-  updateVideoByNodeId: Maybe<UpdateVideoPayload>;
-  /** Updates a single `VideoList` using a unique key and a patch. */
-  updateVideoList: Maybe<UpdateVideoListPayload>;
-  /** Updates a single `VideoList` using its globally unique id and a patch. */
-  updateVideoListByNodeId: Maybe<UpdateVideoListPayload>;
-  /** Updates a single `VideoSource` using a unique key and a patch. */
-  updateVideoSource: Maybe<UpdateVideoSourcePayload>;
-  /** Updates a single `VideoSource` using its globally unique id and a patch. */
-  updateVideoSourceByNodeId: Maybe<UpdateVideoSourcePayload>;
   uploadFile: UploadFilePayload;
   verifyFunction: Maybe<VerifyFunctionPayload>;
 };
@@ -6949,24 +6688,6 @@ export type MutationCreateUpozorneniSkupinyArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateUserArgs = {
   input: CreateUserInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateVideoArgs = {
-  input: CreateVideoInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateVideoListArgs = {
-  input: CreateVideoListInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateVideoSourceArgs = {
-  input: CreateVideoSourceInput;
 };
 
 
@@ -7423,42 +7144,6 @@ export type MutationDeleteUserArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteUserByNodeIdArgs = {
   input: DeleteUserByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteVideoArgs = {
-  input: DeleteVideoInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteVideoByNodeIdArgs = {
-  input: DeleteVideoByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteVideoListArgs = {
-  input: DeleteVideoListInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteVideoListByNodeIdArgs = {
-  input: DeleteVideoListByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteVideoSourceArgs = {
-  input: DeleteVideoSourceInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteVideoSourceByNodeIdArgs = {
-  input: DeleteVideoSourceByNodeIdInput;
 };
 
 
@@ -7981,42 +7666,6 @@ export type MutationUpdateUserArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateUserByNodeIdArgs = {
   input: UpdateUserByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateVideoArgs = {
-  input: UpdateVideoInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateVideoByNodeIdArgs = {
-  input: UpdateVideoByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateVideoListArgs = {
-  input: UpdateVideoListInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateVideoListByNodeIdArgs = {
-  input: UpdateVideoListByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateVideoSourceArgs = {
-  input: UpdateVideoSourceInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateVideoSourceByNodeIdArgs = {
-  input: UpdateVideoSourceByNodeIdInput;
 };
 
 
@@ -10558,21 +10207,6 @@ export type Query = Node & {
   userByNodeId: Maybe<User>;
   /** Reads and enables pagination through a set of `User`. */
   users: Maybe<UsersConnection>;
-  video: Maybe<Video>;
-  /** Reads a single `Video` using its globally unique `ID`. */
-  videoByNodeId: Maybe<Video>;
-  videoList: Maybe<VideoList>;
-  /** Reads a single `VideoList` using its globally unique `ID`. */
-  videoListByNodeId: Maybe<VideoList>;
-  /** Reads and enables pagination through a set of `VideoList`. */
-  videoLists: Maybe<VideoListsConnection>;
-  videoSource: Maybe<VideoSource>;
-  /** Reads a single `VideoSource` using its globally unique `ID`. */
-  videoSourceByNodeId: Maybe<VideoSource>;
-  /** Reads and enables pagination through a set of `VideoSource`. */
-  videoSources: Maybe<VideoSourcesConnection>;
-  /** Reads and enables pagination through a set of `Video`. */
-  videos: Maybe<VideosConnection>;
 };
 
 
@@ -11682,78 +11316,6 @@ export type QueryUsersArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryVideoArgs = {
-  vId: Scalars['BigInt'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryVideoByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryVideoListArgs = {
-  vlId: Scalars['BigInt'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryVideoListByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryVideoListsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<VideoListCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<VideoListsOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryVideoSourceArgs = {
-  vsId: Scalars['BigInt'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryVideoSourceByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryVideoSourcesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<VideoSourceCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<VideoSourcesOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryVideosArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<VideoCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<VideosOrderBy>>;
 };
 
 /** All input for the `reservationSetDesiredLessons` mutation. */
@@ -14868,147 +14430,6 @@ export type UpdateUserPayloadUserEdgeArgs = {
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
 };
 
-/** All input for the `updateVideoByNodeId` mutation. */
-export type UpdateVideoByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Video` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `Video` being updated. */
-  patch: VideoPatch;
-};
-
-/** All input for the `updateVideo` mutation. */
-export type UpdateVideoInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `Video` being updated. */
-  patch: VideoPatch;
-  vId: Scalars['BigInt'];
-};
-
-/** All input for the `updateVideoListByNodeId` mutation. */
-export type UpdateVideoListByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `VideoList` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `VideoList` being updated. */
-  patch: VideoListPatch;
-};
-
-/** All input for the `updateVideoList` mutation. */
-export type UpdateVideoListInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `VideoList` being updated. */
-  patch: VideoListPatch;
-  vlId: Scalars['BigInt'];
-};
-
-/** The output of our update `VideoList` mutation. */
-export type UpdateVideoListPayload = {
-  __typename?: 'UpdateVideoListPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** The `VideoList` that was updated by this mutation. */
-  videoList: Maybe<VideoList>;
-  /** An edge for our `VideoList`. May be used by Relay 1. */
-  videoListEdge: Maybe<VideoListsEdge>;
-};
-
-
-/** The output of our update `VideoList` mutation. */
-export type UpdateVideoListPayloadVideoListEdgeArgs = {
-  orderBy?: InputMaybe<Array<VideoListsOrderBy>>;
-};
-
-/** The output of our update `Video` mutation. */
-export type UpdateVideoPayload = {
-  __typename?: 'UpdateVideoPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** The `Video` that was updated by this mutation. */
-  video: Maybe<Video>;
-  /** An edge for our `Video`. May be used by Relay 1. */
-  videoEdge: Maybe<VideosEdge>;
-};
-
-
-/** The output of our update `Video` mutation. */
-export type UpdateVideoPayloadVideoEdgeArgs = {
-  orderBy?: InputMaybe<Array<VideosOrderBy>>;
-};
-
-/** All input for the `updateVideoSourceByNodeId` mutation. */
-export type UpdateVideoSourceByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `VideoSource` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `VideoSource` being updated. */
-  patch: VideoSourcePatch;
-};
-
-/** All input for the `updateVideoSource` mutation. */
-export type UpdateVideoSourceInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `VideoSource` being updated. */
-  patch: VideoSourcePatch;
-  vsId: Scalars['BigInt'];
-};
-
-/** The output of our update `VideoSource` mutation. */
-export type UpdateVideoSourcePayload = {
-  __typename?: 'UpdateVideoSourcePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId: Maybe<Scalars['String']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query: Maybe<Query>;
-  /** The `VideoSource` that was updated by this mutation. */
-  videoSource: Maybe<VideoSource>;
-  /** An edge for our `VideoSource`. May be used by Relay 1. */
-  videoSourceEdge: Maybe<VideoSourcesEdge>;
-};
-
-
-/** The output of our update `VideoSource` mutation. */
-export type UpdateVideoSourcePayloadVideoSourceEdgeArgs = {
-  orderBy?: InputMaybe<Array<VideoSourcesOrderBy>>;
-};
-
 export type UploadFilePayload = {
   __typename?: 'UploadFilePayload';
   objectName: Scalars['String'];
@@ -15980,10 +15401,8 @@ export type VerifyFunctionPayload = {
   query: Maybe<Query>;
 };
 
-export type Video = Node & {
+export type Video = {
   __typename?: 'Video';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   vAuthor: Scalars['String'];
   vCreatedAt: Scalars['Datetime'];
   vDescription: Scalars['String'];
@@ -15993,239 +15412,6 @@ export type Video = Node & {
   vUpdatedAt: Scalars['Datetime'];
   vUri: Scalars['String'];
 };
-
-/** A condition to be used against `Video` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type VideoCondition = {
-  /** Checks for equality with the object’s `vAuthor` field. */
-  vAuthor?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `vCreatedAt` field. */
-  vCreatedAt?: InputMaybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `vDescription` field. */
-  vDescription?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `vId` field. */
-  vId?: InputMaybe<Scalars['BigInt']>;
-  /** Checks for equality with the object’s `vPlaylist` field. */
-  vPlaylist?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `vTitle` field. */
-  vTitle?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `vUpdatedAt` field. */
-  vUpdatedAt?: InputMaybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `vUri` field. */
-  vUri?: InputMaybe<Scalars['String']>;
-};
-
-/** An input for mutations affecting `Video` */
-export type VideoInput = {
-  vAuthor: Scalars['String'];
-  vCreatedAt?: InputMaybe<Scalars['Datetime']>;
-  vDescription: Scalars['String'];
-  vId?: InputMaybe<Scalars['BigInt']>;
-  vPlaylist?: InputMaybe<Scalars['String']>;
-  vTitle: Scalars['String'];
-  vUpdatedAt?: InputMaybe<Scalars['Datetime']>;
-  vUri: Scalars['String'];
-};
-
-export type VideoList = Node & {
-  __typename?: 'VideoList';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  vlCount: Scalars['BigInt'];
-  vlCreatedAt: Scalars['Datetime'];
-  vlDescription: Scalars['String'];
-  vlId: Scalars['BigInt'];
-  vlLastChecked: Maybe<Scalars['Datetime']>;
-  vlTitle: Scalars['String'];
-  vlUrl: Scalars['String'];
-};
-
-/**
- * A condition to be used against `VideoList` object types. All fields are tested
- * for equality and combined with a logical ‘and.’
- */
-export type VideoListCondition = {
-  /** Checks for equality with the object’s `vlCount` field. */
-  vlCount?: InputMaybe<Scalars['BigInt']>;
-  /** Checks for equality with the object’s `vlCreatedAt` field. */
-  vlCreatedAt?: InputMaybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `vlDescription` field. */
-  vlDescription?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `vlId` field. */
-  vlId?: InputMaybe<Scalars['BigInt']>;
-  /** Checks for equality with the object’s `vlLastChecked` field. */
-  vlLastChecked?: InputMaybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `vlTitle` field. */
-  vlTitle?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `vlUrl` field. */
-  vlUrl?: InputMaybe<Scalars['String']>;
-};
-
-/** An input for mutations affecting `VideoList` */
-export type VideoListInput = {
-  vlCount: Scalars['BigInt'];
-  vlCreatedAt: Scalars['Datetime'];
-  vlDescription: Scalars['String'];
-  vlId?: InputMaybe<Scalars['BigInt']>;
-  vlLastChecked?: InputMaybe<Scalars['Datetime']>;
-  vlTitle: Scalars['String'];
-  vlUrl: Scalars['String'];
-};
-
-/** Represents an update to a `VideoList`. Fields that are set will be updated. */
-export type VideoListPatch = {
-  vlCount?: InputMaybe<Scalars['BigInt']>;
-  vlCreatedAt?: InputMaybe<Scalars['Datetime']>;
-  vlDescription?: InputMaybe<Scalars['String']>;
-  vlId?: InputMaybe<Scalars['BigInt']>;
-  vlLastChecked?: InputMaybe<Scalars['Datetime']>;
-  vlTitle?: InputMaybe<Scalars['String']>;
-  vlUrl?: InputMaybe<Scalars['String']>;
-};
-
-/** A connection to a list of `VideoList` values. */
-export type VideoListsConnection = {
-  __typename?: 'VideoListsConnection';
-  /** A list of edges which contains the `VideoList` and cursor to aid in pagination. */
-  edges: Array<VideoListsEdge>;
-  /** A list of `VideoList` objects. */
-  nodes: Array<VideoList>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `VideoList` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `VideoList` edge in the connection. */
-export type VideoListsEdge = {
-  __typename?: 'VideoListsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
-  /** The `VideoList` at the end of the edge. */
-  node: VideoList;
-};
-
-/** Methods to use when ordering `VideoList`. */
-export type VideoListsOrderBy =
-  | 'NATURAL'
-  | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC'
-  | 'VL_COUNT_ASC'
-  | 'VL_COUNT_DESC'
-  | 'VL_CREATED_AT_ASC'
-  | 'VL_CREATED_AT_DESC'
-  | 'VL_DESCRIPTION_ASC'
-  | 'VL_DESCRIPTION_DESC'
-  | 'VL_ID_ASC'
-  | 'VL_ID_DESC'
-  | 'VL_LAST_CHECKED_ASC'
-  | 'VL_LAST_CHECKED_DESC'
-  | 'VL_TITLE_ASC'
-  | 'VL_TITLE_DESC'
-  | 'VL_URL_ASC'
-  | 'VL_URL_DESC';
-
-/** Represents an update to a `Video`. Fields that are set will be updated. */
-export type VideoPatch = {
-  vAuthor?: InputMaybe<Scalars['String']>;
-  vCreatedAt?: InputMaybe<Scalars['Datetime']>;
-  vDescription?: InputMaybe<Scalars['String']>;
-  vId?: InputMaybe<Scalars['BigInt']>;
-  vPlaylist?: InputMaybe<Scalars['String']>;
-  vTitle?: InputMaybe<Scalars['String']>;
-  vUpdatedAt?: InputMaybe<Scalars['Datetime']>;
-  vUri?: InputMaybe<Scalars['String']>;
-};
-
-export type VideoSource = Node & {
-  __typename?: 'VideoSource';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  vsCreatedAt: Scalars['Datetime'];
-  vsDescription: Maybe<Scalars['String']>;
-  vsId: Scalars['BigInt'];
-  vsLastChecked: Maybe<Scalars['Datetime']>;
-  vsTitle: Maybe<Scalars['String']>;
-  vsUrl: Scalars['String'];
-};
-
-/**
- * A condition to be used against `VideoSource` object types. All fields are tested
- * for equality and combined with a logical ‘and.’
- */
-export type VideoSourceCondition = {
-  /** Checks for equality with the object’s `vsCreatedAt` field. */
-  vsCreatedAt?: InputMaybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `vsDescription` field. */
-  vsDescription?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `vsId` field. */
-  vsId?: InputMaybe<Scalars['BigInt']>;
-  /** Checks for equality with the object’s `vsLastChecked` field. */
-  vsLastChecked?: InputMaybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `vsTitle` field. */
-  vsTitle?: InputMaybe<Scalars['String']>;
-  /** Checks for equality with the object’s `vsUrl` field. */
-  vsUrl?: InputMaybe<Scalars['String']>;
-};
-
-/** An input for mutations affecting `VideoSource` */
-export type VideoSourceInput = {
-  vsCreatedAt?: InputMaybe<Scalars['Datetime']>;
-  vsDescription?: InputMaybe<Scalars['String']>;
-  vsId?: InputMaybe<Scalars['BigInt']>;
-  vsLastChecked?: InputMaybe<Scalars['Datetime']>;
-  vsTitle?: InputMaybe<Scalars['String']>;
-  vsUrl: Scalars['String'];
-};
-
-/** Represents an update to a `VideoSource`. Fields that are set will be updated. */
-export type VideoSourcePatch = {
-  vsCreatedAt?: InputMaybe<Scalars['Datetime']>;
-  vsDescription?: InputMaybe<Scalars['String']>;
-  vsId?: InputMaybe<Scalars['BigInt']>;
-  vsLastChecked?: InputMaybe<Scalars['Datetime']>;
-  vsTitle?: InputMaybe<Scalars['String']>;
-  vsUrl?: InputMaybe<Scalars['String']>;
-};
-
-/** A connection to a list of `VideoSource` values. */
-export type VideoSourcesConnection = {
-  __typename?: 'VideoSourcesConnection';
-  /** A list of edges which contains the `VideoSource` and cursor to aid in pagination. */
-  edges: Array<VideoSourcesEdge>;
-  /** A list of `VideoSource` objects. */
-  nodes: Array<VideoSource>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `VideoSource` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `VideoSource` edge in the connection. */
-export type VideoSourcesEdge = {
-  __typename?: 'VideoSourcesEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
-  /** The `VideoSource` at the end of the edge. */
-  node: VideoSource;
-};
-
-/** Methods to use when ordering `VideoSource`. */
-export type VideoSourcesOrderBy =
-  | 'NATURAL'
-  | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC'
-  | 'VS_CREATED_AT_ASC'
-  | 'VS_CREATED_AT_DESC'
-  | 'VS_DESCRIPTION_ASC'
-  | 'VS_DESCRIPTION_DESC'
-  | 'VS_ID_ASC'
-  | 'VS_ID_DESC'
-  | 'VS_LAST_CHECKED_ASC'
-  | 'VS_LAST_CHECKED_DESC'
-  | 'VS_TITLE_ASC'
-  | 'VS_TITLE_DESC'
-  | 'VS_URL_ASC'
-  | 'VS_URL_DESC';
 
 /** A connection to a list of `Video` values. */
 export type VideosConnection = {
@@ -16248,25 +15434,3 @@ export type VideosEdge = {
   /** The `Video` at the end of the edge. */
   node: Video;
 };
-
-/** Methods to use when ordering `Video`. */
-export type VideosOrderBy =
-  | 'NATURAL'
-  | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC'
-  | 'V_AUTHOR_ASC'
-  | 'V_AUTHOR_DESC'
-  | 'V_CREATED_AT_ASC'
-  | 'V_CREATED_AT_DESC'
-  | 'V_DESCRIPTION_ASC'
-  | 'V_DESCRIPTION_DESC'
-  | 'V_ID_ASC'
-  | 'V_ID_DESC'
-  | 'V_PLAYLIST_ASC'
-  | 'V_PLAYLIST_DESC'
-  | 'V_TITLE_ASC'
-  | 'V_TITLE_DESC'
-  | 'V_UPDATED_AT_ASC'
-  | 'V_UPDATED_AT_DESC'
-  | 'V_URI_ASC'
-  | 'V_URI_DESC';

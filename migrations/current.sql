@@ -28,3 +28,13 @@ create or replace function my_announcements() returns setof upozorneni as $$
   order by up_timestamp_add desc;
 $$ language sql stable;
 grant execute on function my_announcements to member;
+
+alter table if exists video set schema app_private;
+alter table if exists video_list set schema app_private;
+alter table if exists video_source set schema app_private;
+
+alter table person enable row level security;
+grant all on person to anonymous;
+revoke all on person from administrator;
+create policy manage_admin on person to administrator using (true) with check (true);
+create policy view_all on person for select using (true);

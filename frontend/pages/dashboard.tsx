@@ -30,8 +30,8 @@ const Page: NextPageWithLayout = () => {
       </div>
 
       <div className="hidden xl:grid grid-cols-2 gap-4">
-        <MyLessonsList />
         <MyAnnouncements />
+        <MyLessonsList />
       </div>
     </Item>
   );

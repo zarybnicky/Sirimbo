@@ -7,12 +7,12 @@ import {
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import React from 'react';
 import classNames from 'classnames';
-import { X as Cross } from 'react-feather';
+import { Calendar, Clock, User, Users, X as Cross } from 'react-feather';
 import { SubmitButton } from './SubmitButton';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from 'lib/data/use-auth';
 import { formatCoupleName } from 'lib/format-name';
-import { shortDateFormatter } from 'lib/format-date';
+import { fullDateFormatter, shortDateFormatter } from 'lib/format-date';
 import { useGqlMutation } from 'lib/query';
 
 type Props = {
@@ -25,12 +25,14 @@ type Props = {
 export const LessonButton = ({ schedule, lesson, showTrainer, showDate }: Props) => {
   const { user, perms } = useAuth();
   const [isOpen, setIsOpen] = React.useState(false);
+
   const queryClient = useQueryClient();
   const onSuccess = React.useCallback(() => {
     setIsOpen(false);
     queryClient.invalidateQueries(['MyLessonsQuery']);
     queryClient.invalidateQueries(['ScheduleRange']);
   }, [queryClient]);
+
   const bookMutation = useGqlMutation(BookLessonDocument, { onSuccess });
   const cancelMutation = useGqlMutation(CancelLessonDocument, { onSuccess });
 
@@ -84,36 +86,57 @@ export const LessonButton = ({ schedule, lesson, showTrainer, showDate }: Props)
           className={classNames(
             'z-20 radix-side-top:animate-slide-up radix-side-bottom:animate-slide-down',
             'w-48 rounded-lg p-4 shadow-md md:w-56',
-            'bg-white dark:bg-gray-800',
+            'bg-white dark:bg-stone-800',
           )}
         >
-          <PopoverPrimitive.Arrow className="fill-current text-white dark:text-gray-800" />
+          <PopoverPrimitive.Arrow className="fill-current text-white dark:text-stone-800" />
 
-          {canBook && (
-            <SubmitButton
-              loading={bookMutation.isLoading}
-              onClick={() => bookMutation.mutateAsync({ id: lesson.id })}
-            >
-              Přihlásit
-            </SubmitButton>
-          )}
+          <div className="grid grid-cols-[1fr_5fr] gap-2">
+            <Calendar className="text-red-500" />
+            {fullDateFormatter.format(new Date(schedule.rDatum))}
+            <Clock className="text-red-500" />
+            <span>
+              {lesson.riOd.substring(0, 5)} - {lesson.riDo.substring(0, 5)}
+            </span>
+            <User className="text-red-500" />
+            <span>
+              {trainer?.uJmeno} {trainer?.uPrijmeni}
+            </span>
 
-          {canCancel && (
-            <SubmitButton
-              loading={cancelMutation.isLoading}
-              onClick={() => cancelMutation.mutateAsync({ id: lesson.id })}
-            >
-              Zrušit
-            </SubmitButton>
-          )}
+            <Users className="text-red-500" />
+            <span>Obsazená: {couple ? 1 : 0}/1</span>
+
+            <div />
+            <span>{formatCoupleName(couple)}</span>
+
+            {canBook && (
+              <SubmitButton
+                className="col-span-2"
+                loading={bookMutation.isLoading}
+                onClick={() => bookMutation.mutateAsync({ id: lesson.id })}
+              >
+                Přihlásit
+              </SubmitButton>
+            )}
+
+            {canCancel && (
+              <SubmitButton
+                className="col-span-2"
+                loading={cancelMutation.isLoading}
+                onClick={() => cancelMutation.mutateAsync({ id: lesson.id })}
+              >
+                Zrušit
+              </SubmitButton>
+            )}
+          </div>
 
           <PopoverPrimitive.Close
             className={classNames(
               'absolute top-3.5 right-3.5 inline-flex items-center justify-center rounded-full p-1',
-              'focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75',
+              'focus:outline-none focus-visible:ring focus-visible:ring-red-500 focus-visible:ring-opacity-75',
             )}
           >
-            <Cross className="h-4 w-4 text-gray-500 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-400" />
+            <Cross className="h-4 w-4 text-stone-500 hover:text-stone-700 dark:text-stone-500 dark:hover:text-stone-400" />
           </PopoverPrimitive.Close>
         </PopoverPrimitive.Content>
       </PopoverPrimitive.Root>
