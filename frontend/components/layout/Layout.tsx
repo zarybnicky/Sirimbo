@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import { ErrorPage } from 'components/ErrorPage';
-import { FeedbackForm } from 'components/FeedbackForm';
 import { useAuth } from 'lib/data/use-auth';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { NextSeo } from 'next-seo';
@@ -9,6 +8,8 @@ import React from 'react';
 import { Footer } from './Footer';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
+import dynamic from 'next/dynamic';
+const FeedbackForm = dynamic(() => import('components/FeedbackForm'), { ssr: false });
 
 export type LayoutProps = {
   hideTopMenuIfLoggedIn?: boolean;

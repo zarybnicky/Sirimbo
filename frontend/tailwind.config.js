@@ -26,7 +26,6 @@ module.exports = {
     require('tailwindcss-opentype'),
     require('tailwindcss-radix')(),
     require('tailwind-scrollbar'),
-    require('@headlessui/tailwindcss'),
   ],
   theme: {
     extend: {

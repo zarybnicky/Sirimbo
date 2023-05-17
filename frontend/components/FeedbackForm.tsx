@@ -9,11 +9,11 @@ import { useGqlMutation } from 'lib/query';
 import { SubmitFormDocument } from 'lib/graphql/Crm';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
-import dynamic from 'next/dynamic';
 import { useCookie } from 'lib/use-cookie';
+import dynamic from 'next/dynamic';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
-export function FeedbackForm() {
+function FeedbackForm() {
   const [isOpen, setIsOpen] = React.useState(false);
   const { control, handleSubmit } = useForm();
   const { mutateAsync: submit } = useGqlMutation(SubmitFormDocument, {});
@@ -92,3 +92,5 @@ export function FeedbackForm() {
     </div>
   );
 }
+
+export default FeedbackForm;

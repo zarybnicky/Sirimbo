@@ -50,6 +50,10 @@ export const Announcement = {
 };
 
 export const Schedule = {
+  name: (n: number) => (n === 1 ? 'rozpis' : n > 1 && n < 5 ? 'rozpisy' : 'rozpisů'),
+  addRoute: { pathname: '/admin/rozpis/add' } as Route,
+  editRoute: (id: string) =>
+    ({ pathname: '/admin/rozpis/[id]', query: { id } } as Route),
   useMenu(item?: ScheduleBasicFragment): DropdownItem[] {
     const { perms } = useAuth();
     if (!item || !perms.canEditSchedule(item)) {

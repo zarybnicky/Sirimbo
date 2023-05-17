@@ -5,6 +5,7 @@ import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { fromSlugArray } from 'lib/slugify';
 import { type NextPageWithLayout } from 'pages/_app';
 import { useGqlQuery } from 'lib/query';
+import { ScheduleList } from 'lib/entity-lists';
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
@@ -19,6 +20,8 @@ const Page: NextPageWithLayout = () => {
   );
 };
 
+Page.list = <ScheduleList />;
+Page.isDetail = true;
 Page.permissions = [PermissionKey.peRozpis, PermissionLevel.P_OWNED];
 Page.staticTitle = 'Rozpisy';
 

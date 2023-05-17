@@ -38,5 +38,5 @@ export const FuzzyList = <T extends { id: string | number }>({
     return index.search(search).map(({ id }) => nodesById[id]!);
   }, [data, nodesById, index, search]);
 
-  return <>{nodes.map(renderItem)}</>;
+  return <div className="overflow-y-auto scrollbar">{nodes.map(renderItem)}</div>;
 };

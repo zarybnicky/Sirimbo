@@ -29,25 +29,30 @@ export function CohortListForm({ data }: Props) {
   const { control, watch, getValues, setValue } = useForm();
 
   return (
-    <div className="grid grid-cols-[2fr_1fr] gap-2 py-2 my-2">
-      <div className="col-span-2 text-stone-700 text-sm ">
+    <div className="py-2 mt-4 mb-2">
+      <div className="col-span-2 text-stone-700 text-sm pb-1">
         Tréninkové skupiny v programu
       </div>
-      {data.skupiniesByCohortGroup.nodes.map((x) => (
-        <>
-          <div>{x.sName}</div>
-          <button
-            className="text-red-700 w-4"
-            onClick={() => update({ id: x.id, patch: { cohortGroup: null } })}
-          >
-            <Trash2 />
-          </button>
-        </>
-      ))}
-      <>
-        <SelectElement control={control} name="id" options={remaining} />
+      <div className="grid grid-cols-[7fr_1fr] gap-2 border rounded-lg w-fit">
+        {data.skupiniesByCohortGroup.nodes.map((x) => (
+          <>
+            <div className="p-2">{x.sName}</div>
+            <button
+              className="text-red-500"
+              onClick={() => update({ id: x.id, patch: { cohortGroup: null } })}
+            >
+              <Trash2 />
+            </button>
+          </>
+        ))}
+        <SelectElement
+          className="min-w-[250px]"
+          control={control}
+          name="id"
+          options={remaining}
+        />
         <button
-          className="text-red-700 disabled:text-red-700/70 w-4"
+          className="text-red-500 disabled:text-red-200 pr-2"
           disabled={!watch('id')}
           onClick={() => {
             update({ id: getValues('id'), patch: { cohortGroup: data.id } });
@@ -56,7 +61,7 @@ export function CohortListForm({ data }: Props) {
         >
           <PlusCircle />
         </button>
-      </>
+      </div>
     </div>
   );
 }

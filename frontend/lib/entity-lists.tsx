@@ -1,11 +1,12 @@
 import { FixCouplesButton } from 'components/FixCouplesButton';
 import { makeAdminList } from 'components/generic/AdminEntityList';
-import { Article, Couple, Reservation } from './entities';
+import { Article, Couple, Reservation, Schedule } from './entities';
 import { fullDateFormatter } from './format-date';
 import { formatCoupleName } from './format-name';
 import { ArticlesDocument } from './graphql/Articles';
 import { CoupleListDocument } from './graphql/Couple';
 import { ReservationListDocument } from './graphql/Reservation';
+import { ScheduleListDocument } from './graphql/Schedule';
 
 export const ArticleList = makeAdminList(
   Article,
@@ -25,6 +26,17 @@ export const ReservationList = makeAdminList(
   id: x.id,
   title: x.userByNTrener?.fullName || '',
   subtitle: fullDateFormatter.formatRange(new Date(x.nOd), new Date(x.nDo)),
+}))({
+  indexedFields: ['id', 'title', 'subtitle'],
+});
+
+export const ScheduleList = makeAdminList(
+  Schedule,
+  ScheduleListDocument,
+)((x) => x.rozpis?.nodes)((x) => ({
+  id: x.id,
+  title: x.userByRTrener?.fullName || '',
+  subtitle: fullDateFormatter.format(new Date(x.rDatum)),
 }))({
   indexedFields: ['id', 'title', 'subtitle'],
 });

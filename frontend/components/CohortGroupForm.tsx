@@ -61,18 +61,18 @@ export function CohortGroupForm({ data }: Props) {
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="name" label="Název" required />
-      <RichTextEditor
-        control={control}
-        initialState={data?.description}
-        name="description"
-        label="Popis"
-      />
       <CheckboxElement control={control} name="isPublic" label="Zobrazit pro veřejnost" />
       <TextFieldElement
         control={control}
         type="number"
         name="ordering"
         label="Pořadí v seznamech skupin (1 = první, 999 = poslední)"
+      />
+      <RichTextEditor
+        control={control}
+        initialState={data?.description}
+        name="description"
+        label="Popis"
       />
       <SubmitButton loading={onSubmit.loading} />
     </form>
