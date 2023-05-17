@@ -2,7 +2,7 @@ import { ArticleForm } from 'components/ArticleForm';
 import { useRouter } from 'next/router';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { type NextPageWithLayout } from 'pages/_app';
-import { ArticleList } from 'components/ArticleList';
+import { ArticleList } from 'lib/entity-lists';
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();

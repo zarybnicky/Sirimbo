@@ -138,14 +138,15 @@ export class PermissionChecker {
   }
 
   public canSignUp(
-    item: { rLock: boolean; rTrener: string },
+    item: { rDatum: string; rLock: boolean; rTrener: string },
     lesson: { riLock: boolean; riPartner: string | null },
   ) {
     return (
       this.perms.peRozpis >= PermissionLevel.P_MEMBER &&
       (!lesson.riPartner || lesson.riPartner === '0') &&
       !item.rLock &&
-      !lesson.riLock
+      !lesson.riLock &&
+      +new Date(item.rDatum) >= +new Date()
     );
   }
 
@@ -158,6 +159,7 @@ export class PermissionChecker {
       lesson.riPartner !== '0' &&
       !item.rLock &&
       !lesson.riLock &&
+      +new Date(item.rDatum) >= +new Date() &&
       ((this.perms.peRozpis >= PermissionLevel.P_MEMBER && isMyLesson) ||
         (this.perms.peRozpis >= PermissionLevel.P_OWNED && this.userId == item.rTrener) ||
         this.perms.peRozpis >= PermissionLevel.P_ADMIN)

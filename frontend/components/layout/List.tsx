@@ -24,25 +24,21 @@ function ListTitleBar({
 }) {
   return (
     <div className="px-1 py-4 flex items-center justify-between flex-wrap">
-      <div className="font-bold">{title}</div>
+      <div className="font-bold first-letter:uppercase">{title}</div>
       {children}
     </div>
   );
 }
 
-function ListTitleButton({
-  active,
-  icon: Icon,
-  children,
-  href,
-  onClick,
-}: {
+type ListTitleButtonProps = {
   children: React.ReactNode;
   active?: boolean;
   icon?: React.ElementType<{ className?: string }>;
   href?: Route | Exclude<Route, { query: any }>['pathname'];
   onClick?: () => void;
-}) {
+};
+
+function ListTitleButton({ active, icon: Icon, children, href, onClick }: ListTitleButtonProps) {
   const cx = classNames(
     'shadow-md inline-flex items-center gap-1 px-3 rounded-2xl py-1 text-xs tracking-tight font-bold',
     active ? 'tracking-wide bg-red-500 text-white' : 'bg-white hover:bg-stone-50',

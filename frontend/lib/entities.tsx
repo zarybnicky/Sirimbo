@@ -8,6 +8,21 @@ import { ToggleUpozorneniVisibleDocument } from './graphql/Announcement';
 import { ScheduleBasicFragment } from './graphql/Schedule';
 import { useGqlMutation } from './query';
 import { useQueryClient } from '@tanstack/react-query';
+import { Route } from 'nextjs-routes';
+
+export const Article = {
+  name: (n: number) => (n === 1 ? 'článek' : n > 1 && n < 5 ? 'články' : 'článků'),
+  addRoute: { pathname: '/admin/aktuality/add' } as Route,
+  editRoute: (id: string) =>
+    ({ pathname: '/admin/aktuality/[id]', query: { id } } as Route),
+}
+
+export const Couple = {
+  name: (n: number) => (n === 1 ? "pár" : n > 1 && n < 5 ? "páry":"párů"),
+  addRoute: { pathname: '/admin/pary/add' } as Route,
+  editRoute: (id: string) =>
+    ({ pathname: '/admin/pary/[id]', query: { id } } as Route),
+};
 
 export const Announcement = {
   useMenu(item: AnnouncementFragment): DropdownItem[] {
@@ -50,6 +65,10 @@ export const Schedule = {
 };
 
 export const Reservation = {
+  name: (n: number) => (n === 1 ? 'nabídka' : n > 1 && n < 5 ? 'nabídky' : 'nabídek'),
+  addRoute: { pathname: '/admin/nabidka/add' } as Route,
+  editRoute: (id: string) =>
+    ({ pathname: '/admin/nabidka/[id]', query: { id } } as Route),
   useMenu(item: ReservationBasicFragment): DropdownItem[] {
     const { perms } = useAuth();
     if (!perms.canEditReservation(item)) {

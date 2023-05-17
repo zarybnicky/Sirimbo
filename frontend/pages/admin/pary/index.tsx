@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
-import { CoupleList } from 'components/CoupleList';
 import { type NextPageWithLayout } from 'pages/_app';
+import { CoupleList } from 'lib/entity-lists';
 
 const Page: NextPageWithLayout = () => null;
 

@@ -2,17 +2,7 @@ fragment CoupleExtended on Pary {
   ...CouplePartial
   rozpisItemsByRiPartner(orderBy: [ROZPI_BY_RI_ID_RODIC__R_DATUM_DESC]) {
     nodes {
-      id: riId
-      riOd
-      riDo
-      rozpiByRiIdRodic {
-        id: rId
-        rKde
-        rDatum
-        userByRTrener {
-          fullName
-        }
-      }
+      ...ScheduleItem
     }
   }
 }

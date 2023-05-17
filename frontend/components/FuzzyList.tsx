@@ -1,14 +1,14 @@
 import React from 'react';
 import MiniSearch from 'minisearch';
 
-export const FuzzyList = <T extends { id: any }>({
+export const FuzzyList = <T extends { id: string | number }>({
   data,
   fields,
   search,
   renderItem,
 }: {
   data: T[];
-  fields: (keyof T)[] & string[];
+  fields: (keyof T)[];
   search?: string | undefined;
   renderItem: (item: T) => React.ReactNode;
 }) => {
@@ -21,7 +21,7 @@ export const FuzzyList = <T extends { id: any }>({
 
   const index = React.useMemo(() => {
     const index = new MiniSearch({
-      fields: fields,
+      fields: fields as string[],
       searchOptions: {
         fuzzy: 0.2,
         prefix: true,

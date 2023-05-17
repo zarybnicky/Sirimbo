@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { ReservationList } from 'components/ReservationList';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { type NextPageWithLayout } from 'pages/_app';
+import { ReservationList } from 'lib/entity-lists';
 
 const Page: NextPageWithLayout = () => null;
 

@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { type NextPageWithLayout } from 'pages/_app';
 import { fromSlugArray } from 'lib/slugify';
-import { ArticleList } from 'components/ArticleList';
+import { ArticleList } from 'lib/entity-lists';
 import { useGqlQuery } from 'lib/query';
 import { ArticleDocument } from 'lib/graphql/Articles';
 
@@ -26,5 +26,6 @@ const Page: NextPageWithLayout = () => {
 Page.list = <ArticleList />;
 Page.permissions = [PermissionKey.peAktuality, PermissionLevel.P_OWNED];
 Page.staticTitle = "Aktuality";
+Page.isDetail = true;
 
 export default Page;

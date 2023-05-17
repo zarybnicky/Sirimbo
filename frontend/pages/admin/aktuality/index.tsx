@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
-import { ArticleList } from 'components/ArticleList';
+import { ArticleList } from 'lib/entity-lists';
 import { type NextPageWithLayout } from 'pages/_app';
 
 const Page: NextPageWithLayout = () => null;

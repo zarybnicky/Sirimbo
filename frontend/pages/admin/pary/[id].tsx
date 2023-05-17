@@ -2,13 +2,13 @@ import { useRouter } from 'next/router';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { Item } from 'components/layout/Item';
 import { DeleteButton } from 'components/DeleteButton';
-import { CoupleList } from 'components/CoupleList';
-import { shortDateFormatter } from 'lib/format-date';
-import { Card } from 'components/Card';
 import { fromSlugArray } from 'lib/slugify';
 import { type NextPageWithLayout } from 'pages/_app';
 import { useGqlMutation, useGqlQuery } from 'lib/query';
 import { CoupleDocument, DeleteCoupleDocument } from 'lib/graphql/Couple';
+import { LessonButton } from 'components/LessonButton';
+import { CoupleList } from 'lib/entity-lists';
+import { formatCoupleName } from 'lib/format-name';
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
@@ -18,21 +18,18 @@ const Page: NextPageWithLayout = () => {
     onSuccess: () => router.push('/admin/nastenka'),
   });
   const item = data?.pary;
+  if (!item) {
+    return null;
+  }
   return (
     <Item>
-      <Item.Titlebar
-        backHref="/admin/pary"
-        title={`${item?.userByPIdPartner?.uJmeno} ${item?.userByPIdPartner?.uPrijmeni} - ${item?.userByPIdPartnerka?.uJmeno} ${item?.userByPIdPartnerka?.uPrijmeni}`}
-      >
+      <Item.Titlebar backHref="/admin/pary" title={formatCoupleName(item)}>
         <DeleteButton onDelete={() => doDelete({ id })} title="smazat pár" />
       </Item.Titlebar>
-      Lekce
+
+      Minulé lekce
       {data?.pary?.rozpisItemsByRiPartner?.nodes.map((item) => (
-        <Card key={item.id}>
-          {item.rozpiByRiIdRodic?.rDatum &&
-            shortDateFormatter.format(new Date(item.rozpiByRiIdRodic?.rDatum))}{' '}
-          {item?.rozpiByRiIdRodic?.userByRTrener?.fullName}
-        </Card>
+        <LessonButton key={item.id} schedule={item.rozpiByRiIdRodic!} lesson={item} showTrainer showDate />
       ))}
     </Item>
   );
