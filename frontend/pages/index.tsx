@@ -57,7 +57,7 @@ const Page: NextPageWithLayout = () => {
 };
 
 const useServices = (): {
-  href: Exclude<Route, { query: any }>['pathname'];
+  href: Route | Exclude<Route, { query: any }>['pathname'];
   image: string;
   header: string;
   text: string;
@@ -69,19 +69,19 @@ const useServices = (): {
     text: 'První kroky do světa tanečního sportu pro děti od 5 do 10 let. Všeobecná taneční průprava a základy tanečních kroků pro budoucí hvězdy.',
   },
   {
-    href: '/treninkove-skupiny',
+    href: { pathname: '/programy/[id]/[...slug]', query: {id: '1', slug: ['treninkovy-program-basic']}},
     image: '/images/services-pro-deti.png',
     header: 'Základy tanečního sportu',
     text: 'Tréninkové programy pro začínající a mírně pokročilé tanečníky ve věkových skupinách juniorů (12-15 let), mládež a dospělí (16+ let).',
   },
   {
-    href: '/treninkove-skupiny',
+    href: { pathname: '/programy/[id]/[...slug]', query: {id: '2', slug: ['treninkovy-program-sport']}},
     image: '/images/services-pro-zacatecniky.png',
     header: 'Výkonnostní sport',
     text: 'Tréninkové programy pro soutěžní tanečníky ve všech věkových skupinách a výkonnostních třídách uzpůsobené podle potřeb v jednotlivých výkonnostních stupních.',
   },
   {
-    href: '/treninkove-skupiny',
+    href: { pathname: '/programy/[id]/[...slug]', query: {id: '3', slug: ['treninkovy-program-top']}},
     image: '/images/services-soutezni.png',
     header: 'Sportovní centrum mládeže',
     text: 'Tréninkový program pro vrcholové sportovce, reprezentanty ČR se špičkovými českými trenéry, speciální kondiční přípravou a moderními metodami sportovního tréninku. Jsme jediným klubem v Olomouckém kraji se statutem Sprtovního centra mládeže dle MŠMT.',
