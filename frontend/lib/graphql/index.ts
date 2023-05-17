@@ -47,13 +47,13 @@ export type Akce = {
   aInfo: Maybe<Scalars['String']>;
   aJmeno: Maybe<Scalars['String']>;
   aKapacita: Maybe<Scalars['BigInt']>;
+  /** Reads and enables pagination through a set of `AkceItem`. */
+  akceItemsByAiIdRodic: AkceItemsConnection;
   aKde: Maybe<Scalars['String']>;
   aLock: Maybe<Scalars['Boolean']>;
   aOd: Maybe<Scalars['Date']>;
   aTimestamp: Maybe<Scalars['Datetime']>;
   aVisible: Maybe<Scalars['Boolean']>;
-  /** Reads and enables pagination through a set of `AkceItem`. */
-  akceItemsByAiIdRodic: AkceItemsConnection;
   enableNotes: Maybe<Scalars['Boolean']>;
   isPublic: Maybe<Scalars['Boolean']>;
   summary: Maybe<Scalars['String']>;
@@ -191,10 +191,10 @@ export type AkceItemsOrderBy =
   | 'AI_ROK_NAROZENI_DESC'
   | 'AI_USER_ASC'
   | 'AI_USER_DESC'
-  | 'AKCE_BY_AI_ID_RODIC__A_DOKUMENTY_ASC'
-  | 'AKCE_BY_AI_ID_RODIC__A_DOKUMENTY_DESC'
   | 'AKCE_BY_AI_ID_RODIC__A_DO_ASC'
   | 'AKCE_BY_AI_ID_RODIC__A_DO_DESC'
+  | 'AKCE_BY_AI_ID_RODIC__A_DOKUMENTY_ASC'
+  | 'AKCE_BY_AI_ID_RODIC__A_DOKUMENTY_DESC'
   | 'AKCE_BY_AI_ID_RODIC__A_ID_ASC'
   | 'AKCE_BY_AI_ID_RODIC__A_ID_DESC'
   | 'AKCE_BY_AI_ID_RODIC__A_INFO_ASC'
@@ -311,12 +311,10 @@ export type AkcesEdge = {
 
 /** Methods to use when ordering `Akce`. */
 export type AkcesOrderBy =
-  | 'AKCE_ITEMS_BY_AI_ID_RODIC__COUNT_ASC'
-  | 'AKCE_ITEMS_BY_AI_ID_RODIC__COUNT_DESC'
-  | 'A_DOKUMENTY_ASC'
-  | 'A_DOKUMENTY_DESC'
   | 'A_DO_ASC'
   | 'A_DO_DESC'
+  | 'A_DOKUMENTY_ASC'
+  | 'A_DOKUMENTY_DESC'
   | 'A_ID_ASC'
   | 'A_ID_DESC'
   | 'A_INFO_ASC'
@@ -335,6 +333,8 @@ export type AkcesOrderBy =
   | 'A_TIMESTAMP_DESC'
   | 'A_VISIBLE_ASC'
   | 'A_VISIBLE_DESC'
+  | 'AKCE_ITEMS_BY_AI_ID_RODIC__COUNT_ASC'
+  | 'AKCE_ITEMS_BY_AI_ID_RODIC__COUNT_DESC'
   | 'ENABLE_NOTES_ASC'
   | 'ENABLE_NOTES_DESC'
   | 'IS_PUBLIC_ASC'
@@ -467,7 +467,7 @@ export type AktualitiesOrderBy =
   | 'USER_BY_AT_KDO__U_TIMESTAMP_ASC'
   | 'USER_BY_AT_KDO__U_TIMESTAMP_DESC';
 
-export type Aktuality = Node & {
+export type Aktuality = {
   __typename?: 'Aktuality';
   atFoto: Maybe<Scalars['BigInt']>;
   atFotoMain: Maybe<Scalars['BigInt']>;
@@ -481,8 +481,6 @@ export type Aktuality = Node & {
   atTimestampAdd: Maybe<Scalars['Datetime']>;
   /** Reads a single `GalerieFoto` that is related to this `Aktuality`. */
   galerieFotoByAtFotoMain: Maybe<GalerieFoto>;
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   /** Reads a single `User` that is related to this `Aktuality`. */
   userByAtKdo: Maybe<User>;
 };
@@ -542,12 +540,10 @@ export type AktualityPatch = {
   atTimestampAdd?: InputMaybe<Scalars['Datetime']>;
 };
 
-export type Attachment = Node & {
+export type Attachment = {
   __typename?: 'Attachment';
   /** Reads and enables pagination through a set of `LocationAttachment`. */
   locationAttachmentsByObjectName: LocationAttachmentsConnection;
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   objectName: Scalars['String'];
   previewObjectName: Maybe<Scalars['String']>;
   /** Reads and enables pagination through a set of `RoomAttachment`. */
@@ -730,7 +726,7 @@ export type AttachmentsOrderBy =
   | 'USER_BY_UPLOADED_BY__U_TIMESTAMP_ASC'
   | 'USER_BY_UPLOADED_BY__U_TIMESTAMP_DESC';
 
-export type AttendeeExternal = Node & {
+export type AttendeeExternal = {
   __typename?: 'AttendeeExternal';
   birthNumber: Maybe<Scalars['String']>;
   confirmedAt: Maybe<Scalars['Datetime']>;
@@ -745,8 +741,6 @@ export type AttendeeExternal = Node & {
   id: Scalars['BigInt'];
   lastName: Scalars['String'];
   managedBy: Maybe<Scalars['BigInt']>;
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   notes: Scalars['String'];
   phone: Scalars['String'];
   updatedAt: Scalars['Datetime'];
@@ -1037,15 +1031,13 @@ export type AttendeeExternalsOrderBy =
   | 'USER_BY_MANAGED_BY__U_TIMESTAMP_ASC'
   | 'USER_BY_MANAGED_BY__U_TIMESTAMP_DESC';
 
-export type AttendeeUser = Node & {
+export type AttendeeUser = {
   __typename?: 'AttendeeUser';
   birthYear: Scalars['Int'];
   /** Reads a single `Event` that is related to this `AttendeeUser`. */
   event: Maybe<Event>;
   eventId: Scalars['BigInt'];
   id: Scalars['BigInt'];
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   notes: Scalars['String'];
   /** Reads a single `User` that is related to this `AttendeeUser`. */
   user: Maybe<User>;
@@ -1308,14 +1300,12 @@ export type ChangePasswordPayload = {
   query: Maybe<Query>;
 };
 
-export type CohortGroup = Node & {
+export type CohortGroup = {
   __typename?: 'CohortGroup';
   description: Scalars['String'];
   id: Scalars['BigInt'];
   isPublic: Scalars['Boolean'];
   name: Scalars['String'];
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   ordering: Scalars['Int'];
   /** Reads and enables pagination through a set of `Skupiny`. */
   skupiniesByCohortGroup: SkupiniesConnection;
@@ -2968,17 +2958,6 @@ export type CurrentCoupleIdsConnection = {
   totalCount: Scalars['Int'];
 };
 
-/** All input for the `deleteAktualityByNodeId` mutation. */
-export type DeleteAktualityByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Aktuality` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
 /** All input for the `deleteAktuality` mutation. */
 export type DeleteAktualityInput = {
   atId: Scalars['BigInt'];
@@ -3016,17 +2995,6 @@ export type DeleteAktualityPayloadAktualityEdgeArgs = {
   orderBy?: InputMaybe<Array<AktualitiesOrderBy>>;
 };
 
-/** All input for the `deleteAttachmentByNodeId` mutation. */
-export type DeleteAttachmentByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Attachment` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
 /** All input for the `deleteAttachment` mutation. */
 export type DeleteAttachmentInput = {
   /**
@@ -3060,17 +3028,6 @@ export type DeleteAttachmentPayload = {
 /** The output of our delete `Attachment` mutation. */
 export type DeleteAttachmentPayloadAttachmentEdgeArgs = {
   orderBy?: InputMaybe<Array<AttachmentsOrderBy>>;
-};
-
-/** All input for the `deleteAttendeeExternalByNodeId` mutation. */
-export type DeleteAttendeeExternalByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `AttendeeExternal` to be deleted. */
-  nodeId: Scalars['ID'];
 };
 
 /** All input for the `deleteAttendeeExternal` mutation. */
@@ -3110,17 +3067,6 @@ export type DeleteAttendeeExternalPayload = {
 /** The output of our delete `AttendeeExternal` mutation. */
 export type DeleteAttendeeExternalPayloadAttendeeExternalEdgeArgs = {
   orderBy?: InputMaybe<Array<AttendeeExternalsOrderBy>>;
-};
-
-/** All input for the `deleteAttendeeUserByNodeId` mutation. */
-export type DeleteAttendeeUserByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `AttendeeUser` to be deleted. */
-  nodeId: Scalars['ID'];
 };
 
 /** All input for the `deleteAttendeeUserByUserIdAndEventId` mutation. */
@@ -3171,17 +3117,6 @@ export type DeleteAttendeeUserPayloadAttendeeUserEdgeArgs = {
   orderBy?: InputMaybe<Array<AttendeeUsersOrderBy>>;
 };
 
-/** All input for the `deleteCohortGroupByNodeId` mutation. */
-export type DeleteCohortGroupByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `CohortGroup` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
 /** All input for the `deleteCohortGroup` mutation. */
 export type DeleteCohortGroupInput = {
   /**
@@ -3215,17 +3150,6 @@ export type DeleteCohortGroupPayload = {
 /** The output of our delete `CohortGroup` mutation. */
 export type DeleteCohortGroupPayloadCohortGroupEdgeArgs = {
   orderBy?: InputMaybe<Array<CohortGroupsOrderBy>>;
-};
-
-/** All input for the `deleteDokumentyByNodeId` mutation. */
-export type DeleteDokumentyByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Dokumenty` to be deleted. */
-  nodeId: Scalars['ID'];
 };
 
 /** All input for the `deleteDokumenty` mutation. */
@@ -3263,17 +3187,6 @@ export type DeleteDokumentyPayloadDokumentyEdgeArgs = {
   orderBy?: InputMaybe<Array<DokumentiesOrderBy>>;
 };
 
-/** All input for the `deleteEventByNodeId` mutation. */
-export type DeleteEventByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Event` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
 /** All input for the `deleteEvent` mutation. */
 export type DeleteEventInput = {
   /**
@@ -3305,17 +3218,6 @@ export type DeleteEventPayload = {
 /** The output of our delete `Event` mutation. */
 export type DeleteEventPayloadEventEdgeArgs = {
   orderBy?: InputMaybe<Array<EventsOrderBy>>;
-};
-
-/** All input for the `deleteFormResponseByNodeId` mutation. */
-export type DeleteFormResponseByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `FormResponse` to be deleted. */
-  nodeId: Scalars['ID'];
 };
 
 /** All input for the `deleteFormResponse` mutation. */
@@ -3351,17 +3253,6 @@ export type DeleteFormResponsePayloadFormResponseEdgeArgs = {
   orderBy?: InputMaybe<Array<FormResponsesOrderBy>>;
 };
 
-/** All input for the `deleteGalerieDirByNodeId` mutation. */
-export type DeleteGalerieDirByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `GalerieDir` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
 /** All input for the `deleteGalerieDir` mutation. */
 export type DeleteGalerieDirInput = {
   /**
@@ -3393,17 +3284,6 @@ export type DeleteGalerieDirPayload = {
 /** The output of our delete `GalerieDir` mutation. */
 export type DeleteGalerieDirPayloadGalerieDirEdgeArgs = {
   orderBy?: InputMaybe<Array<GalerieDirsOrderBy>>;
-};
-
-/** All input for the `deleteGalerieFotoByNodeId` mutation. */
-export type DeleteGalerieFotoByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `GalerieFoto` to be deleted. */
-  nodeId: Scalars['ID'];
 };
 
 /** All input for the `deleteGalerieFoto` mutation. */
@@ -3441,17 +3321,6 @@ export type DeleteGalerieFotoPayload = {
 /** The output of our delete `GalerieFoto` mutation. */
 export type DeleteGalerieFotoPayloadGalerieFotoEdgeArgs = {
   orderBy?: InputMaybe<Array<GalerieFotosOrderBy>>;
-};
-
-/** All input for the `deleteLocationAttachmentByNodeId` mutation. */
-export type DeleteLocationAttachmentByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `LocationAttachment` to be deleted. */
-  nodeId: Scalars['ID'];
 };
 
 /** All input for the `deleteLocationAttachment` mutation. */
@@ -3492,17 +3361,6 @@ export type DeleteLocationAttachmentPayloadLocationAttachmentEdgeArgs = {
   orderBy?: InputMaybe<Array<LocationAttachmentsOrderBy>>;
 };
 
-/** All input for the `deleteLocationByNodeId` mutation. */
-export type DeleteLocationByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Location` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
 /** All input for the `deleteLocation` mutation. */
 export type DeleteLocationInput = {
   /**
@@ -3538,17 +3396,6 @@ export type DeleteLocationPayloadLocationEdgeArgs = {
   orderBy?: InputMaybe<Array<LocationsOrderBy>>;
 };
 
-/** All input for the `deleteNabidkaByNodeId` mutation. */
-export type DeleteNabidkaByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Nabidka` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
 /** All input for the `deleteNabidka` mutation. */
 export type DeleteNabidkaInput = {
   /**
@@ -3568,17 +3415,6 @@ export type DeleteNabidkaItemByNiPartnerAndNiIdRodicInput = {
   clientMutationId?: InputMaybe<Scalars['String']>;
   niIdRodic: Scalars['BigInt'];
   niPartner: Scalars['BigInt'];
-};
-
-/** All input for the `deleteNabidkaItemByNodeId` mutation. */
-export type DeleteNabidkaItemByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `NabidkaItem` to be deleted. */
-  nodeId: Scalars['ID'];
 };
 
 /** All input for the `deleteNabidkaItem` mutation. */
@@ -3643,17 +3479,6 @@ export type DeleteNabidkaPayloadNabidkaEdgeArgs = {
   orderBy?: InputMaybe<Array<NabidkasOrderBy>>;
 };
 
-/** All input for the `deleteParameterByNodeId` mutation. */
-export type DeleteParameterByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Parameter` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
 /** All input for the `deleteParameter` mutation. */
 export type DeleteParameterInput = {
   /**
@@ -3687,17 +3512,6 @@ export type DeleteParameterPayloadParameterEdgeArgs = {
   orderBy?: InputMaybe<Array<ParametersOrderBy>>;
 };
 
-/** All input for the `deleteParyByNodeId` mutation. */
-export type DeleteParyByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Pary` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
 /** All input for the `deletePary` mutation. */
 export type DeleteParyInput = {
   /**
@@ -3706,17 +3520,6 @@ export type DeleteParyInput = {
    */
   clientMutationId?: InputMaybe<Scalars['String']>;
   pId: Scalars['BigInt'];
-};
-
-/** All input for the `deleteParyNavrhByNodeId` mutation. */
-export type DeleteParyNavrhByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `ParyNavrh` to be deleted. */
-  nodeId: Scalars['ID'];
 };
 
 /** All input for the `deleteParyNavrh` mutation. */
@@ -3785,17 +3588,6 @@ export type DeleteParyPayloadParyEdgeArgs = {
   orderBy?: InputMaybe<Array<PariesOrderBy>>;
 };
 
-/** All input for the `deletePermissionByNodeId` mutation. */
-export type DeletePermissionByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Permission` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
 /** All input for the `deletePermission` mutation. */
 export type DeletePermissionInput = {
   /**
@@ -3829,17 +3621,6 @@ export type DeletePermissionPayloadPermissionEdgeArgs = {
   orderBy?: InputMaybe<Array<PermissionsOrderBy>>;
 };
 
-/** All input for the `deletePersonByNodeId` mutation. */
-export type DeletePersonByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Person` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
 /** All input for the `deletePerson` mutation. */
 export type DeletePersonInput = {
   /**
@@ -3871,28 +3652,6 @@ export type DeletePersonPayload = {
 /** The output of our delete `Person` mutation. */
 export type DeletePersonPayloadPersonEdgeArgs = {
   orderBy?: InputMaybe<Array<PeopleOrderBy>>;
-};
-
-/** All input for the `deletePlatbyCategoryByNodeId` mutation. */
-export type DeletePlatbyCategoryByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `PlatbyCategory` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** All input for the `deletePlatbyCategoryGroupByNodeId` mutation. */
-export type DeletePlatbyCategoryGroupByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `PlatbyCategoryGroup` to be deleted. */
-  nodeId: Scalars['ID'];
 };
 
 /** All input for the `deletePlatbyCategoryGroup` mutation. */
@@ -3965,17 +3724,6 @@ export type DeletePlatbyCategoryPayloadPlatbyCategoryEdgeArgs = {
   orderBy?: InputMaybe<Array<PlatbyCategoriesOrderBy>>;
 };
 
-/** All input for the `deletePlatbyGroupByNodeId` mutation. */
-export type DeletePlatbyGroupByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `PlatbyGroup` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
 /** All input for the `deletePlatbyGroup` mutation. */
 export type DeletePlatbyGroupInput = {
   /**
@@ -4007,17 +3755,6 @@ export type DeletePlatbyGroupPayload = {
 /** The output of our delete `PlatbyGroup` mutation. */
 export type DeletePlatbyGroupPayloadPlatbyGroupEdgeArgs = {
   orderBy?: InputMaybe<Array<PlatbyGroupsOrderBy>>;
-};
-
-/** All input for the `deletePlatbyGroupSkupinaByNodeId` mutation. */
-export type DeletePlatbyGroupSkupinaByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `PlatbyGroupSkupina` to be deleted. */
-  nodeId: Scalars['ID'];
 };
 
 /** All input for the `deletePlatbyGroupSkupina` mutation. */
@@ -4055,17 +3792,6 @@ export type DeletePlatbyGroupSkupinaPayload = {
 /** The output of our delete `PlatbyGroupSkupina` mutation. */
 export type DeletePlatbyGroupSkupinaPayloadPlatbyGroupSkupinaEdgeArgs = {
   orderBy?: InputMaybe<Array<PlatbyGroupSkupinasOrderBy>>;
-};
-
-/** All input for the `deletePlatbyItemByNodeId` mutation. */
-export type DeletePlatbyItemByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `PlatbyItem` to be deleted. */
-  nodeId: Scalars['ID'];
 };
 
 /** All input for the `deletePlatbyItem` mutation. */
@@ -4107,17 +3833,6 @@ export type DeletePlatbyItemPayloadPlatbyItemEdgeArgs = {
   orderBy?: InputMaybe<Array<PlatbyItemsOrderBy>>;
 };
 
-/** All input for the `deletePlatbyRawByNodeId` mutation. */
-export type DeletePlatbyRawByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `PlatbyRaw` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
 /** All input for the `deletePlatbyRaw` mutation. */
 export type DeletePlatbyRawInput = {
   /**
@@ -4149,17 +3864,6 @@ export type DeletePlatbyRawPayload = {
 /** The output of our delete `PlatbyRaw` mutation. */
 export type DeletePlatbyRawPayloadPlatbyRawEdgeArgs = {
   orderBy?: InputMaybe<Array<PlatbyRawsOrderBy>>;
-};
-
-/** All input for the `deleteRoomAttachmentByNodeId` mutation. */
-export type DeleteRoomAttachmentByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `RoomAttachment` to be deleted. */
-  nodeId: Scalars['ID'];
 };
 
 /** All input for the `deleteRoomAttachment` mutation. */
@@ -4200,17 +3904,6 @@ export type DeleteRoomAttachmentPayloadRoomAttachmentEdgeArgs = {
   orderBy?: InputMaybe<Array<RoomAttachmentsOrderBy>>;
 };
 
-/** All input for the `deleteRoomByNodeId` mutation. */
-export type DeleteRoomByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Room` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
 /** All input for the `deleteRoom` mutation. */
 export type DeleteRoomInput = {
   /**
@@ -4246,17 +3939,6 @@ export type DeleteRoomPayloadRoomEdgeArgs = {
   orderBy?: InputMaybe<Array<RoomsOrderBy>>;
 };
 
-/** All input for the `deleteRozpiByNodeId` mutation. */
-export type DeleteRozpiByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Rozpi` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
 /** All input for the `deleteRozpi` mutation. */
 export type DeleteRozpiInput = {
   /**
@@ -4290,17 +3972,6 @@ export type DeleteRozpiPayload = {
 /** The output of our delete `Rozpi` mutation. */
 export type DeleteRozpiPayloadRozpiEdgeArgs = {
   orderBy?: InputMaybe<Array<RozpisOrderBy>>;
-};
-
-/** All input for the `deleteRozpisItemByNodeId` mutation. */
-export type DeleteRozpisItemByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `RozpisItem` to be deleted. */
-  nodeId: Scalars['ID'];
 };
 
 /** All input for the `deleteRozpisItem` mutation. */
@@ -4340,17 +4011,6 @@ export type DeleteRozpisItemPayloadRozpisItemEdgeArgs = {
   orderBy?: InputMaybe<Array<RozpisItemsOrderBy>>;
 };
 
-/** All input for the `deleteSessionByNodeId` mutation. */
-export type DeleteSessionByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Session` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
 /** All input for the `deleteSession` mutation. */
 export type DeleteSessionInput = {
   /**
@@ -4386,17 +4046,6 @@ export type DeleteSessionPayloadSessionEdgeArgs = {
   orderBy?: InputMaybe<Array<SessionsOrderBy>>;
 };
 
-/** All input for the `deleteSkupinyByNodeId` mutation. */
-export type DeleteSkupinyByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Skupiny` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
 /** All input for the `deleteSkupiny` mutation. */
 export type DeleteSkupinyInput = {
   /**
@@ -4430,17 +4079,6 @@ export type DeleteSkupinyPayload = {
 /** The output of our delete `Skupiny` mutation. */
 export type DeleteSkupinyPayloadSkupinyEdgeArgs = {
   orderBy?: InputMaybe<Array<SkupiniesOrderBy>>;
-};
-
-/** All input for the `deleteTenantAttachmentByNodeId` mutation. */
-export type DeleteTenantAttachmentByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `TenantAttachment` to be deleted. */
-  nodeId: Scalars['ID'];
 };
 
 /** All input for the `deleteTenantAttachment` mutation. */
@@ -4481,17 +4119,6 @@ export type DeleteTenantAttachmentPayloadTenantAttachmentEdgeArgs = {
   orderBy?: InputMaybe<Array<TenantAttachmentsOrderBy>>;
 };
 
-/** All input for the `deleteTenantByNodeId` mutation. */
-export type DeleteTenantByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Tenant` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
 /** All input for the `deleteTenant` mutation. */
 export type DeleteTenantInput = {
   /**
@@ -4523,17 +4150,6 @@ export type DeleteTenantPayload = {
 /** The output of our delete `Tenant` mutation. */
 export type DeleteTenantPayloadTenantEdgeArgs = {
   orderBy?: InputMaybe<Array<TenantsOrderBy>>;
-};
-
-/** All input for the `deleteTenantPersonByNodeId` mutation. */
-export type DeleteTenantPersonByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `TenantPerson` to be deleted. */
-  nodeId: Scalars['ID'];
 };
 
 /** All input for the `deleteTenantPerson` mutation. */
@@ -4574,17 +4190,6 @@ export type DeleteTenantPersonPayloadTenantPersonEdgeArgs = {
   orderBy?: InputMaybe<Array<TenantPeopleOrderBy>>;
 };
 
-/** All input for the `deleteUpozorneniByNodeId` mutation. */
-export type DeleteUpozorneniByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Upozorneni` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
 /** All input for the `deleteUpozorneni` mutation. */
 export type DeleteUpozorneniInput = {
   /**
@@ -4618,17 +4223,6 @@ export type DeleteUpozorneniPayload = {
 /** The output of our delete `Upozorneni` mutation. */
 export type DeleteUpozorneniPayloadUpozorneniEdgeArgs = {
   orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
-};
-
-/** All input for the `deleteUpozorneniSkupinyByNodeId` mutation. */
-export type DeleteUpozorneniSkupinyByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `UpozorneniSkupiny` to be deleted. */
-  nodeId: Scalars['ID'];
 };
 
 /** All input for the `deleteUpozorneniSkupiny` mutation. */
@@ -4666,17 +4260,6 @@ export type DeleteUpozorneniSkupinyPayload = {
 /** The output of our delete `UpozorneniSkupiny` mutation. */
 export type DeleteUpozorneniSkupinyPayloadUpozorneniSkupinyEdgeArgs = {
   orderBy?: InputMaybe<Array<UpozorneniSkupiniesOrderBy>>;
-};
-
-/** All input for the `deleteUserByNodeId` mutation. */
-export type DeleteUserByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `User` to be deleted. */
-  nodeId: Scalars['ID'];
 };
 
 /** All input for the `deleteUser` mutation. */
@@ -4822,7 +4405,7 @@ export type DokumentiesOrderBy =
   | 'USER_BY_D_KDO__U_TIMESTAMP_ASC'
   | 'USER_BY_D_KDO__U_TIMESTAMP_DESC';
 
-export type Dokumenty = Node & {
+export type Dokumenty = {
   __typename?: 'Dokumenty';
   dFilename: Scalars['String'];
   dId: Scalars['BigInt'];
@@ -4831,8 +4414,6 @@ export type Dokumenty = Node & {
   dName: Scalars['String'];
   dPath: Scalars['String'];
   dTimestamp: Maybe<Scalars['Datetime']>;
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   /** Reads a single `User` that is related to this `Dokumenty`. */
   userByDKdo: Maybe<User>;
 };
@@ -4880,7 +4461,7 @@ export type DokumentyPatch = {
   dTimestamp?: InputMaybe<Scalars['Datetime']>;
 };
 
-export type Event = Node & {
+export type Event = {
   __typename?: 'Event';
   /** Reads and enables pagination through a set of `AttendeeExternal`. */
   attendeeExternals: AttendeeExternalsConnection;
@@ -4896,8 +4477,6 @@ export type Event = Node & {
   isVisible: Scalars['Boolean'];
   locationText: Scalars['String'];
   name: Scalars['String'];
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   remainingSpots: Maybe<Scalars['Int']>;
   since: Scalars['Date'];
   summary: Scalars['String'];
@@ -5077,13 +4656,11 @@ export type FixUnpairedCouplesPayload = {
   query: Maybe<Query>;
 };
 
-export type FormResponse = Node & {
+export type FormResponse = {
   __typename?: 'FormResponse';
   createdAt: Scalars['Datetime'];
   data: Scalars['JSON'];
   id: Scalars['BigInt'];
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   type: Scalars['String'];
   updatedAt: Scalars['Datetime'];
   url: Scalars['String'];
@@ -5168,7 +4745,7 @@ export type FormResponsesOrderBy =
   | 'URL_ASC'
   | 'URL_DESC';
 
-export type GalerieDir = Node & {
+export type GalerieDir = {
   __typename?: 'GalerieDir';
   /** Reads and enables pagination through a set of `GalerieFoto`. */
   galerieFotosByGfIdRodic: GalerieFotosConnection;
@@ -5178,8 +4755,6 @@ export type GalerieDir = Node & {
   gdLevel: Scalars['Int'];
   gdName: Scalars['String'];
   gdPath: Scalars['String'];
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
 };
 
 
@@ -5274,7 +4849,7 @@ export type GalerieDirsOrderBy =
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC';
 
-export type GalerieFoto = Node & {
+export type GalerieFoto = {
   __typename?: 'GalerieFoto';
   /** Reads and enables pagination through a set of `Aktuality`. */
   aktualitiesByAtFotoMain: AktualitiesConnection;
@@ -5286,8 +4861,6 @@ export type GalerieFoto = Node & {
   gfName: Scalars['String'];
   gfPath: Scalars['String'];
   gfTimestamp: Maybe<Scalars['Datetime']>;
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   /** Reads a single `User` that is related to this `GalerieFoto`. */
   userByGfKdo: Maybe<User>;
 };
@@ -5465,15 +5038,13 @@ export type GenderType =
   | 'UNSPECIFIED'
   | 'WOMAN';
 
-export type Location = Node & {
+export type Location = {
   __typename?: 'Location';
   description: Scalars['JSON'];
   id: Scalars['BigInt'];
   /** Reads and enables pagination through a set of `LocationAttachment`. */
   locationAttachments: LocationAttachmentsConnection;
   name: Scalars['String'];
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   /** Reads and enables pagination through a set of `Room`. */
   roomsByLocation: RoomsConnection;
   tenant: Maybe<Scalars['BigInt']>;
@@ -5503,15 +5074,13 @@ export type LocationRoomsByLocationArgs = {
   orderBy?: InputMaybe<Array<RoomsOrderBy>>;
 };
 
-export type LocationAttachment = Node & {
+export type LocationAttachment = {
   __typename?: 'LocationAttachment';
   /** Reads a single `Attachment` that is related to this `LocationAttachment`. */
   attachmentByObjectName: Maybe<Attachment>;
   /** Reads a single `Location` that is related to this `LocationAttachment`. */
   location: Maybe<Location>;
   locationId: Scalars['BigInt'];
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   objectName: Scalars['String'];
 };
 
@@ -6053,156 +5622,82 @@ export type Mutation = {
   createUser: Maybe<CreateUserPayload>;
   /** Deletes a single `Aktuality` using a unique key. */
   deleteAktuality: Maybe<DeleteAktualityPayload>;
-  /** Deletes a single `Aktuality` using its globally unique id. */
-  deleteAktualityByNodeId: Maybe<DeleteAktualityPayload>;
   /** Deletes a single `Attachment` using a unique key. */
   deleteAttachment: Maybe<DeleteAttachmentPayload>;
-  /** Deletes a single `Attachment` using its globally unique id. */
-  deleteAttachmentByNodeId: Maybe<DeleteAttachmentPayload>;
   /** Deletes a single `AttendeeExternal` using a unique key. */
   deleteAttendeeExternal: Maybe<DeleteAttendeeExternalPayload>;
-  /** Deletes a single `AttendeeExternal` using its globally unique id. */
-  deleteAttendeeExternalByNodeId: Maybe<DeleteAttendeeExternalPayload>;
   /** Deletes a single `AttendeeUser` using a unique key. */
   deleteAttendeeUser: Maybe<DeleteAttendeeUserPayload>;
-  /** Deletes a single `AttendeeUser` using its globally unique id. */
-  deleteAttendeeUserByNodeId: Maybe<DeleteAttendeeUserPayload>;
   /** Deletes a single `AttendeeUser` using a unique key. */
   deleteAttendeeUserByUserIdAndEventId: Maybe<DeleteAttendeeUserPayload>;
   /** Deletes a single `CohortGroup` using a unique key. */
   deleteCohortGroup: Maybe<DeleteCohortGroupPayload>;
-  /** Deletes a single `CohortGroup` using its globally unique id. */
-  deleteCohortGroupByNodeId: Maybe<DeleteCohortGroupPayload>;
   /** Deletes a single `Dokumenty` using a unique key. */
   deleteDokumenty: Maybe<DeleteDokumentyPayload>;
-  /** Deletes a single `Dokumenty` using its globally unique id. */
-  deleteDokumentyByNodeId: Maybe<DeleteDokumentyPayload>;
   /** Deletes a single `Event` using a unique key. */
   deleteEvent: Maybe<DeleteEventPayload>;
-  /** Deletes a single `Event` using its globally unique id. */
-  deleteEventByNodeId: Maybe<DeleteEventPayload>;
   /** Deletes a single `FormResponse` using a unique key. */
   deleteFormResponse: Maybe<DeleteFormResponsePayload>;
-  /** Deletes a single `FormResponse` using its globally unique id. */
-  deleteFormResponseByNodeId: Maybe<DeleteFormResponsePayload>;
   /** Deletes a single `GalerieDir` using a unique key. */
   deleteGalerieDir: Maybe<DeleteGalerieDirPayload>;
-  /** Deletes a single `GalerieDir` using its globally unique id. */
-  deleteGalerieDirByNodeId: Maybe<DeleteGalerieDirPayload>;
   /** Deletes a single `GalerieFoto` using a unique key. */
   deleteGalerieFoto: Maybe<DeleteGalerieFotoPayload>;
-  /** Deletes a single `GalerieFoto` using its globally unique id. */
-  deleteGalerieFotoByNodeId: Maybe<DeleteGalerieFotoPayload>;
   /** Deletes a single `Location` using a unique key. */
   deleteLocation: Maybe<DeleteLocationPayload>;
   /** Deletes a single `LocationAttachment` using a unique key. */
   deleteLocationAttachment: Maybe<DeleteLocationAttachmentPayload>;
-  /** Deletes a single `LocationAttachment` using its globally unique id. */
-  deleteLocationAttachmentByNodeId: Maybe<DeleteLocationAttachmentPayload>;
-  /** Deletes a single `Location` using its globally unique id. */
-  deleteLocationByNodeId: Maybe<DeleteLocationPayload>;
   /** Deletes a single `Nabidka` using a unique key. */
   deleteNabidka: Maybe<DeleteNabidkaPayload>;
-  /** Deletes a single `Nabidka` using its globally unique id. */
-  deleteNabidkaByNodeId: Maybe<DeleteNabidkaPayload>;
   /** Deletes a single `NabidkaItem` using a unique key. */
   deleteNabidkaItem: Maybe<DeleteNabidkaItemPayload>;
   /** Deletes a single `NabidkaItem` using a unique key. */
   deleteNabidkaItemByNiPartnerAndNiIdRodic: Maybe<DeleteNabidkaItemPayload>;
-  /** Deletes a single `NabidkaItem` using its globally unique id. */
-  deleteNabidkaItemByNodeId: Maybe<DeleteNabidkaItemPayload>;
   /** Deletes a single `Parameter` using a unique key. */
   deleteParameter: Maybe<DeleteParameterPayload>;
-  /** Deletes a single `Parameter` using its globally unique id. */
-  deleteParameterByNodeId: Maybe<DeleteParameterPayload>;
   /** Deletes a single `Pary` using a unique key. */
   deletePary: Maybe<DeleteParyPayload>;
-  /** Deletes a single `Pary` using its globally unique id. */
-  deleteParyByNodeId: Maybe<DeleteParyPayload>;
   /** Deletes a single `ParyNavrh` using a unique key. */
   deleteParyNavrh: Maybe<DeleteParyNavrhPayload>;
-  /** Deletes a single `ParyNavrh` using its globally unique id. */
-  deleteParyNavrhByNodeId: Maybe<DeleteParyNavrhPayload>;
   /** Deletes a single `Permission` using a unique key. */
   deletePermission: Maybe<DeletePermissionPayload>;
-  /** Deletes a single `Permission` using its globally unique id. */
-  deletePermissionByNodeId: Maybe<DeletePermissionPayload>;
   /** Deletes a single `Person` using a unique key. */
   deletePerson: Maybe<DeletePersonPayload>;
-  /** Deletes a single `Person` using its globally unique id. */
-  deletePersonByNodeId: Maybe<DeletePersonPayload>;
   /** Deletes a single `PlatbyCategory` using a unique key. */
   deletePlatbyCategory: Maybe<DeletePlatbyCategoryPayload>;
-  /** Deletes a single `PlatbyCategory` using its globally unique id. */
-  deletePlatbyCategoryByNodeId: Maybe<DeletePlatbyCategoryPayload>;
   /** Deletes a single `PlatbyCategoryGroup` using a unique key. */
   deletePlatbyCategoryGroup: Maybe<DeletePlatbyCategoryGroupPayload>;
-  /** Deletes a single `PlatbyCategoryGroup` using its globally unique id. */
-  deletePlatbyCategoryGroupByNodeId: Maybe<DeletePlatbyCategoryGroupPayload>;
   /** Deletes a single `PlatbyGroup` using a unique key. */
   deletePlatbyGroup: Maybe<DeletePlatbyGroupPayload>;
-  /** Deletes a single `PlatbyGroup` using its globally unique id. */
-  deletePlatbyGroupByNodeId: Maybe<DeletePlatbyGroupPayload>;
   /** Deletes a single `PlatbyGroupSkupina` using a unique key. */
   deletePlatbyGroupSkupina: Maybe<DeletePlatbyGroupSkupinaPayload>;
-  /** Deletes a single `PlatbyGroupSkupina` using its globally unique id. */
-  deletePlatbyGroupSkupinaByNodeId: Maybe<DeletePlatbyGroupSkupinaPayload>;
   /** Deletes a single `PlatbyItem` using a unique key. */
   deletePlatbyItem: Maybe<DeletePlatbyItemPayload>;
-  /** Deletes a single `PlatbyItem` using its globally unique id. */
-  deletePlatbyItemByNodeId: Maybe<DeletePlatbyItemPayload>;
   /** Deletes a single `PlatbyRaw` using a unique key. */
   deletePlatbyRaw: Maybe<DeletePlatbyRawPayload>;
-  /** Deletes a single `PlatbyRaw` using its globally unique id. */
-  deletePlatbyRawByNodeId: Maybe<DeletePlatbyRawPayload>;
   /** Deletes a single `Room` using a unique key. */
   deleteRoom: Maybe<DeleteRoomPayload>;
   /** Deletes a single `RoomAttachment` using a unique key. */
   deleteRoomAttachment: Maybe<DeleteRoomAttachmentPayload>;
-  /** Deletes a single `RoomAttachment` using its globally unique id. */
-  deleteRoomAttachmentByNodeId: Maybe<DeleteRoomAttachmentPayload>;
-  /** Deletes a single `Room` using its globally unique id. */
-  deleteRoomByNodeId: Maybe<DeleteRoomPayload>;
   /** Deletes a single `Rozpi` using a unique key. */
   deleteRozpi: Maybe<DeleteRozpiPayload>;
-  /** Deletes a single `Rozpi` using its globally unique id. */
-  deleteRozpiByNodeId: Maybe<DeleteRozpiPayload>;
   /** Deletes a single `RozpisItem` using a unique key. */
   deleteRozpisItem: Maybe<DeleteRozpisItemPayload>;
-  /** Deletes a single `RozpisItem` using its globally unique id. */
-  deleteRozpisItemByNodeId: Maybe<DeleteRozpisItemPayload>;
   /** Deletes a single `Session` using a unique key. */
   deleteSession: Maybe<DeleteSessionPayload>;
-  /** Deletes a single `Session` using its globally unique id. */
-  deleteSessionByNodeId: Maybe<DeleteSessionPayload>;
   /** Deletes a single `Skupiny` using a unique key. */
   deleteSkupiny: Maybe<DeleteSkupinyPayload>;
-  /** Deletes a single `Skupiny` using its globally unique id. */
-  deleteSkupinyByNodeId: Maybe<DeleteSkupinyPayload>;
   /** Deletes a single `Tenant` using a unique key. */
   deleteTenant: Maybe<DeleteTenantPayload>;
   /** Deletes a single `TenantAttachment` using a unique key. */
   deleteTenantAttachment: Maybe<DeleteTenantAttachmentPayload>;
-  /** Deletes a single `TenantAttachment` using its globally unique id. */
-  deleteTenantAttachmentByNodeId: Maybe<DeleteTenantAttachmentPayload>;
-  /** Deletes a single `Tenant` using its globally unique id. */
-  deleteTenantByNodeId: Maybe<DeleteTenantPayload>;
   /** Deletes a single `TenantPerson` using a unique key. */
   deleteTenantPerson: Maybe<DeleteTenantPersonPayload>;
-  /** Deletes a single `TenantPerson` using its globally unique id. */
-  deleteTenantPersonByNodeId: Maybe<DeleteTenantPersonPayload>;
   /** Deletes a single `Upozorneni` using a unique key. */
   deleteUpozorneni: Maybe<DeleteUpozorneniPayload>;
-  /** Deletes a single `Upozorneni` using its globally unique id. */
-  deleteUpozorneniByNodeId: Maybe<DeleteUpozorneniPayload>;
   /** Deletes a single `UpozorneniSkupiny` using a unique key. */
   deleteUpozorneniSkupiny: Maybe<DeleteUpozorneniSkupinyPayload>;
-  /** Deletes a single `UpozorneniSkupiny` using its globally unique id. */
-  deleteUpozorneniSkupinyByNodeId: Maybe<DeleteUpozorneniSkupinyPayload>;
   /** Deletes a single `User` using a unique key. */
   deleteUser: Maybe<DeleteUserPayload>;
-  /** Deletes a single `User` using its globally unique id. */
-  deleteUserByNodeId: Maybe<DeleteUserPayload>;
   downloadFile: Scalars['String'];
   fixUnpairedCouples: Maybe<FixUnpairedCouplesPayload>;
   login: Maybe<LoginPayload>;
@@ -6213,162 +5708,86 @@ export type Mutation = {
   submitForm: Maybe<SubmitFormPayload>;
   /** Updates a single `Aktuality` using a unique key and a patch. */
   updateAktuality: Maybe<UpdateAktualityPayload>;
-  /** Updates a single `Aktuality` using its globally unique id and a patch. */
-  updateAktualityByNodeId: Maybe<UpdateAktualityPayload>;
   /** Updates a single `Attachment` using a unique key and a patch. */
   updateAttachment: Maybe<UpdateAttachmentPayload>;
-  /** Updates a single `Attachment` using its globally unique id and a patch. */
-  updateAttachmentByNodeId: Maybe<UpdateAttachmentPayload>;
   /** Updates a single `AttendeeExternal` using a unique key and a patch. */
   updateAttendeeExternal: Maybe<UpdateAttendeeExternalPayload>;
-  /** Updates a single `AttendeeExternal` using its globally unique id and a patch. */
-  updateAttendeeExternalByNodeId: Maybe<UpdateAttendeeExternalPayload>;
   /** Updates a single `AttendeeUser` using a unique key and a patch. */
   updateAttendeeUser: Maybe<UpdateAttendeeUserPayload>;
-  /** Updates a single `AttendeeUser` using its globally unique id and a patch. */
-  updateAttendeeUserByNodeId: Maybe<UpdateAttendeeUserPayload>;
   /** Updates a single `AttendeeUser` using a unique key and a patch. */
   updateAttendeeUserByUserIdAndEventId: Maybe<UpdateAttendeeUserPayload>;
   /** Updates a single `CohortGroup` using a unique key and a patch. */
   updateCohortGroup: Maybe<UpdateCohortGroupPayload>;
-  /** Updates a single `CohortGroup` using its globally unique id and a patch. */
-  updateCohortGroupByNodeId: Maybe<UpdateCohortGroupPayload>;
   /** Updates a single `Dokumenty` using a unique key and a patch. */
   updateDokumenty: Maybe<UpdateDokumentyPayload>;
-  /** Updates a single `Dokumenty` using its globally unique id and a patch. */
-  updateDokumentyByNodeId: Maybe<UpdateDokumentyPayload>;
   /** Updates a single `Event` using a unique key and a patch. */
   updateEvent: Maybe<UpdateEventPayload>;
-  /** Updates a single `Event` using its globally unique id and a patch. */
-  updateEventByNodeId: Maybe<UpdateEventPayload>;
   /** Updates a single `FormResponse` using a unique key and a patch. */
   updateFormResponse: Maybe<UpdateFormResponsePayload>;
-  /** Updates a single `FormResponse` using its globally unique id and a patch. */
-  updateFormResponseByNodeId: Maybe<UpdateFormResponsePayload>;
   /** Updates a single `GalerieDir` using a unique key and a patch. */
   updateGalerieDir: Maybe<UpdateGalerieDirPayload>;
-  /** Updates a single `GalerieDir` using its globally unique id and a patch. */
-  updateGalerieDirByNodeId: Maybe<UpdateGalerieDirPayload>;
   /** Updates a single `GalerieFoto` using a unique key and a patch. */
   updateGalerieFoto: Maybe<UpdateGalerieFotoPayload>;
-  /** Updates a single `GalerieFoto` using its globally unique id and a patch. */
-  updateGalerieFotoByNodeId: Maybe<UpdateGalerieFotoPayload>;
   /** Updates a single `Location` using a unique key and a patch. */
   updateLocation: Maybe<UpdateLocationPayload>;
   /** Updates a single `LocationAttachment` using a unique key and a patch. */
   updateLocationAttachment: Maybe<UpdateLocationAttachmentPayload>;
-  /** Updates a single `LocationAttachment` using its globally unique id and a patch. */
-  updateLocationAttachmentByNodeId: Maybe<UpdateLocationAttachmentPayload>;
-  /** Updates a single `Location` using its globally unique id and a patch. */
-  updateLocationByNodeId: Maybe<UpdateLocationPayload>;
   /** Updates a single `Nabidka` using a unique key and a patch. */
   updateNabidka: Maybe<UpdateNabidkaPayload>;
-  /** Updates a single `Nabidka` using its globally unique id and a patch. */
-  updateNabidkaByNodeId: Maybe<UpdateNabidkaPayload>;
   /** Updates a single `NabidkaItem` using a unique key and a patch. */
   updateNabidkaItem: Maybe<UpdateNabidkaItemPayload>;
   /** Updates a single `NabidkaItem` using a unique key and a patch. */
   updateNabidkaItemByNiPartnerAndNiIdRodic: Maybe<UpdateNabidkaItemPayload>;
-  /** Updates a single `NabidkaItem` using its globally unique id and a patch. */
-  updateNabidkaItemByNodeId: Maybe<UpdateNabidkaItemPayload>;
   /** Updates a single `Page` using a unique key and a patch. */
   updatePage: Maybe<UpdatePagePayload>;
-  /** Updates a single `Page` using its globally unique id and a patch. */
-  updatePageByNodeId: Maybe<UpdatePagePayload>;
   /** Updates a single `Page` using a unique key and a patch. */
   updatePageByUrl: Maybe<UpdatePagePayload>;
   /** Updates a single `Parameter` using a unique key and a patch. */
   updateParameter: Maybe<UpdateParameterPayload>;
-  /** Updates a single `Parameter` using its globally unique id and a patch. */
-  updateParameterByNodeId: Maybe<UpdateParameterPayload>;
   /** Updates a single `Pary` using a unique key and a patch. */
   updatePary: Maybe<UpdateParyPayload>;
-  /** Updates a single `Pary` using its globally unique id and a patch. */
-  updateParyByNodeId: Maybe<UpdateParyPayload>;
   /** Updates a single `ParyNavrh` using a unique key and a patch. */
   updateParyNavrh: Maybe<UpdateParyNavrhPayload>;
-  /** Updates a single `ParyNavrh` using its globally unique id and a patch. */
-  updateParyNavrhByNodeId: Maybe<UpdateParyNavrhPayload>;
   /** Updates a single `Permission` using a unique key and a patch. */
   updatePermission: Maybe<UpdatePermissionPayload>;
-  /** Updates a single `Permission` using its globally unique id and a patch. */
-  updatePermissionByNodeId: Maybe<UpdatePermissionPayload>;
   /** Updates a single `Person` using a unique key and a patch. */
   updatePerson: Maybe<UpdatePersonPayload>;
-  /** Updates a single `Person` using its globally unique id and a patch. */
-  updatePersonByNodeId: Maybe<UpdatePersonPayload>;
   /** Updates a single `PlatbyCategory` using a unique key and a patch. */
   updatePlatbyCategory: Maybe<UpdatePlatbyCategoryPayload>;
-  /** Updates a single `PlatbyCategory` using its globally unique id and a patch. */
-  updatePlatbyCategoryByNodeId: Maybe<UpdatePlatbyCategoryPayload>;
   /** Updates a single `PlatbyCategoryGroup` using a unique key and a patch. */
   updatePlatbyCategoryGroup: Maybe<UpdatePlatbyCategoryGroupPayload>;
-  /** Updates a single `PlatbyCategoryGroup` using its globally unique id and a patch. */
-  updatePlatbyCategoryGroupByNodeId: Maybe<UpdatePlatbyCategoryGroupPayload>;
   /** Updates a single `PlatbyGroup` using a unique key and a patch. */
   updatePlatbyGroup: Maybe<UpdatePlatbyGroupPayload>;
-  /** Updates a single `PlatbyGroup` using its globally unique id and a patch. */
-  updatePlatbyGroupByNodeId: Maybe<UpdatePlatbyGroupPayload>;
   /** Updates a single `PlatbyGroupSkupina` using a unique key and a patch. */
   updatePlatbyGroupSkupina: Maybe<UpdatePlatbyGroupSkupinaPayload>;
-  /** Updates a single `PlatbyGroupSkupina` using its globally unique id and a patch. */
-  updatePlatbyGroupSkupinaByNodeId: Maybe<UpdatePlatbyGroupSkupinaPayload>;
   /** Updates a single `PlatbyItem` using a unique key and a patch. */
   updatePlatbyItem: Maybe<UpdatePlatbyItemPayload>;
-  /** Updates a single `PlatbyItem` using its globally unique id and a patch. */
-  updatePlatbyItemByNodeId: Maybe<UpdatePlatbyItemPayload>;
   /** Updates a single `PlatbyRaw` using a unique key and a patch. */
   updatePlatbyRaw: Maybe<UpdatePlatbyRawPayload>;
-  /** Updates a single `PlatbyRaw` using its globally unique id and a patch. */
-  updatePlatbyRawByNodeId: Maybe<UpdatePlatbyRawPayload>;
   /** Updates a single `Room` using a unique key and a patch. */
   updateRoom: Maybe<UpdateRoomPayload>;
   /** Updates a single `RoomAttachment` using a unique key and a patch. */
   updateRoomAttachment: Maybe<UpdateRoomAttachmentPayload>;
-  /** Updates a single `RoomAttachment` using its globally unique id and a patch. */
-  updateRoomAttachmentByNodeId: Maybe<UpdateRoomAttachmentPayload>;
-  /** Updates a single `Room` using its globally unique id and a patch. */
-  updateRoomByNodeId: Maybe<UpdateRoomPayload>;
   /** Updates a single `Rozpi` using a unique key and a patch. */
   updateRozpi: Maybe<UpdateRozpiPayload>;
-  /** Updates a single `Rozpi` using its globally unique id and a patch. */
-  updateRozpiByNodeId: Maybe<UpdateRozpiPayload>;
   /** Updates a single `RozpisItem` using a unique key and a patch. */
   updateRozpisItem: Maybe<UpdateRozpisItemPayload>;
-  /** Updates a single `RozpisItem` using its globally unique id and a patch. */
-  updateRozpisItemByNodeId: Maybe<UpdateRozpisItemPayload>;
   /** Updates a single `Session` using a unique key and a patch. */
   updateSession: Maybe<UpdateSessionPayload>;
-  /** Updates a single `Session` using its globally unique id and a patch. */
-  updateSessionByNodeId: Maybe<UpdateSessionPayload>;
   /** Updates a single `Skupiny` using a unique key and a patch. */
   updateSkupiny: Maybe<UpdateSkupinyPayload>;
-  /** Updates a single `Skupiny` using its globally unique id and a patch. */
-  updateSkupinyByNodeId: Maybe<UpdateSkupinyPayload>;
   /** Updates a single `Tenant` using a unique key and a patch. */
   updateTenant: Maybe<UpdateTenantPayload>;
   /** Updates a single `TenantAttachment` using a unique key and a patch. */
   updateTenantAttachment: Maybe<UpdateTenantAttachmentPayload>;
-  /** Updates a single `TenantAttachment` using its globally unique id and a patch. */
-  updateTenantAttachmentByNodeId: Maybe<UpdateTenantAttachmentPayload>;
-  /** Updates a single `Tenant` using its globally unique id and a patch. */
-  updateTenantByNodeId: Maybe<UpdateTenantPayload>;
   /** Updates a single `TenantPerson` using a unique key and a patch. */
   updateTenantPerson: Maybe<UpdateTenantPersonPayload>;
-  /** Updates a single `TenantPerson` using its globally unique id and a patch. */
-  updateTenantPersonByNodeId: Maybe<UpdateTenantPersonPayload>;
   /** Updates a single `Upozorneni` using a unique key and a patch. */
   updateUpozorneni: Maybe<UpdateUpozorneniPayload>;
-  /** Updates a single `Upozorneni` using its globally unique id and a patch. */
-  updateUpozorneniByNodeId: Maybe<UpdateUpozorneniPayload>;
   /** Updates a single `UpozorneniSkupiny` using a unique key and a patch. */
   updateUpozorneniSkupiny: Maybe<UpdateUpozorneniSkupinyPayload>;
-  /** Updates a single `UpozorneniSkupiny` using its globally unique id and a patch. */
-  updateUpozorneniSkupinyByNodeId: Maybe<UpdateUpozorneniSkupinyPayload>;
   /** Updates a single `User` using a unique key and a patch. */
   updateUser: Maybe<UpdateUserPayload>;
-  /** Updates a single `User` using its globally unique id and a patch. */
-  updateUserByNodeId: Maybe<UpdateUserPayload>;
   uploadFile: UploadFilePayload;
   verifyFunction: Maybe<VerifyFunctionPayload>;
 };
@@ -6669,20 +6088,8 @@ export type MutationDeleteAktualityArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteAktualityByNodeIdArgs = {
-  input: DeleteAktualityByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteAttachmentArgs = {
   input: DeleteAttachmentInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteAttachmentByNodeIdArgs = {
-  input: DeleteAttachmentByNodeIdInput;
 };
 
 
@@ -6693,20 +6100,8 @@ export type MutationDeleteAttendeeExternalArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteAttendeeExternalByNodeIdArgs = {
-  input: DeleteAttendeeExternalByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteAttendeeUserArgs = {
   input: DeleteAttendeeUserInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteAttendeeUserByNodeIdArgs = {
-  input: DeleteAttendeeUserByNodeIdInput;
 };
 
 
@@ -6723,20 +6118,8 @@ export type MutationDeleteCohortGroupArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteCohortGroupByNodeIdArgs = {
-  input: DeleteCohortGroupByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteDokumentyArgs = {
   input: DeleteDokumentyInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteDokumentyByNodeIdArgs = {
-  input: DeleteDokumentyByNodeIdInput;
 };
 
 
@@ -6747,20 +6130,8 @@ export type MutationDeleteEventArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteEventByNodeIdArgs = {
-  input: DeleteEventByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteFormResponseArgs = {
   input: DeleteFormResponseInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteFormResponseByNodeIdArgs = {
-  input: DeleteFormResponseByNodeIdInput;
 };
 
 
@@ -6771,20 +6142,8 @@ export type MutationDeleteGalerieDirArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteGalerieDirByNodeIdArgs = {
-  input: DeleteGalerieDirByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteGalerieFotoArgs = {
   input: DeleteGalerieFotoInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteGalerieFotoByNodeIdArgs = {
-  input: DeleteGalerieFotoByNodeIdInput;
 };
 
 
@@ -6801,26 +6160,8 @@ export type MutationDeleteLocationAttachmentArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteLocationAttachmentByNodeIdArgs = {
-  input: DeleteLocationAttachmentByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteLocationByNodeIdArgs = {
-  input: DeleteLocationByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteNabidkaArgs = {
   input: DeleteNabidkaInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteNabidkaByNodeIdArgs = {
-  input: DeleteNabidkaByNodeIdInput;
 };
 
 
@@ -6837,20 +6178,8 @@ export type MutationDeleteNabidkaItemByNiPartnerAndNiIdRodicArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteNabidkaItemByNodeIdArgs = {
-  input: DeleteNabidkaItemByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteParameterArgs = {
   input: DeleteParameterInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteParameterByNodeIdArgs = {
-  input: DeleteParameterByNodeIdInput;
 };
 
 
@@ -6861,20 +6190,8 @@ export type MutationDeleteParyArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteParyByNodeIdArgs = {
-  input: DeleteParyByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteParyNavrhArgs = {
   input: DeleteParyNavrhInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteParyNavrhByNodeIdArgs = {
-  input: DeleteParyNavrhByNodeIdInput;
 };
 
 
@@ -6885,20 +6202,8 @@ export type MutationDeletePermissionArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeletePermissionByNodeIdArgs = {
-  input: DeletePermissionByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeletePersonArgs = {
   input: DeletePersonInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeletePersonByNodeIdArgs = {
-  input: DeletePersonByNodeIdInput;
 };
 
 
@@ -6909,20 +6214,8 @@ export type MutationDeletePlatbyCategoryArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeletePlatbyCategoryByNodeIdArgs = {
-  input: DeletePlatbyCategoryByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeletePlatbyCategoryGroupArgs = {
   input: DeletePlatbyCategoryGroupInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeletePlatbyCategoryGroupByNodeIdArgs = {
-  input: DeletePlatbyCategoryGroupByNodeIdInput;
 };
 
 
@@ -6933,20 +6226,8 @@ export type MutationDeletePlatbyGroupArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeletePlatbyGroupByNodeIdArgs = {
-  input: DeletePlatbyGroupByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeletePlatbyGroupSkupinaArgs = {
   input: DeletePlatbyGroupSkupinaInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeletePlatbyGroupSkupinaByNodeIdArgs = {
-  input: DeletePlatbyGroupSkupinaByNodeIdInput;
 };
 
 
@@ -6957,20 +6238,8 @@ export type MutationDeletePlatbyItemArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeletePlatbyItemByNodeIdArgs = {
-  input: DeletePlatbyItemByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeletePlatbyRawArgs = {
   input: DeletePlatbyRawInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeletePlatbyRawByNodeIdArgs = {
-  input: DeletePlatbyRawByNodeIdInput;
 };
 
 
@@ -6987,26 +6256,8 @@ export type MutationDeleteRoomAttachmentArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteRoomAttachmentByNodeIdArgs = {
-  input: DeleteRoomAttachmentByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteRoomByNodeIdArgs = {
-  input: DeleteRoomByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteRozpiArgs = {
   input: DeleteRozpiInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteRozpiByNodeIdArgs = {
-  input: DeleteRozpiByNodeIdInput;
 };
 
 
@@ -7017,32 +6268,14 @@ export type MutationDeleteRozpisItemArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteRozpisItemByNodeIdArgs = {
-  input: DeleteRozpisItemByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteSessionArgs = {
   input: DeleteSessionInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteSessionByNodeIdArgs = {
-  input: DeleteSessionByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteSkupinyArgs = {
   input: DeleteSkupinyInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteSkupinyByNodeIdArgs = {
-  input: DeleteSkupinyByNodeIdInput;
 };
 
 
@@ -7059,26 +6292,8 @@ export type MutationDeleteTenantAttachmentArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteTenantAttachmentByNodeIdArgs = {
-  input: DeleteTenantAttachmentByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteTenantByNodeIdArgs = {
-  input: DeleteTenantByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteTenantPersonArgs = {
   input: DeleteTenantPersonInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteTenantPersonByNodeIdArgs = {
-  input: DeleteTenantPersonByNodeIdInput;
 };
 
 
@@ -7089,32 +6304,14 @@ export type MutationDeleteUpozorneniArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteUpozorneniByNodeIdArgs = {
-  input: DeleteUpozorneniByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteUpozorneniSkupinyArgs = {
   input: DeleteUpozorneniSkupinyInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteUpozorneniSkupinyByNodeIdArgs = {
-  input: DeleteUpozorneniSkupinyByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteUserArgs = {
   input: DeleteUserInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteUserByNodeIdArgs = {
-  input: DeleteUserByNodeIdInput;
 };
 
 
@@ -7173,20 +6370,8 @@ export type MutationUpdateAktualityArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateAktualityByNodeIdArgs = {
-  input: UpdateAktualityByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateAttachmentArgs = {
   input: UpdateAttachmentInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateAttachmentByNodeIdArgs = {
-  input: UpdateAttachmentByNodeIdInput;
 };
 
 
@@ -7197,20 +6382,8 @@ export type MutationUpdateAttendeeExternalArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateAttendeeExternalByNodeIdArgs = {
-  input: UpdateAttendeeExternalByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateAttendeeUserArgs = {
   input: UpdateAttendeeUserInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateAttendeeUserByNodeIdArgs = {
-  input: UpdateAttendeeUserByNodeIdInput;
 };
 
 
@@ -7227,20 +6400,8 @@ export type MutationUpdateCohortGroupArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateCohortGroupByNodeIdArgs = {
-  input: UpdateCohortGroupByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateDokumentyArgs = {
   input: UpdateDokumentyInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateDokumentyByNodeIdArgs = {
-  input: UpdateDokumentyByNodeIdInput;
 };
 
 
@@ -7251,20 +6412,8 @@ export type MutationUpdateEventArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateEventByNodeIdArgs = {
-  input: UpdateEventByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateFormResponseArgs = {
   input: UpdateFormResponseInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateFormResponseByNodeIdArgs = {
-  input: UpdateFormResponseByNodeIdInput;
 };
 
 
@@ -7275,20 +6424,8 @@ export type MutationUpdateGalerieDirArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateGalerieDirByNodeIdArgs = {
-  input: UpdateGalerieDirByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateGalerieFotoArgs = {
   input: UpdateGalerieFotoInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateGalerieFotoByNodeIdArgs = {
-  input: UpdateGalerieFotoByNodeIdInput;
 };
 
 
@@ -7305,26 +6442,8 @@ export type MutationUpdateLocationAttachmentArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateLocationAttachmentByNodeIdArgs = {
-  input: UpdateLocationAttachmentByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateLocationByNodeIdArgs = {
-  input: UpdateLocationByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateNabidkaArgs = {
   input: UpdateNabidkaInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateNabidkaByNodeIdArgs = {
-  input: UpdateNabidkaByNodeIdInput;
 };
 
 
@@ -7341,20 +6460,8 @@ export type MutationUpdateNabidkaItemByNiPartnerAndNiIdRodicArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateNabidkaItemByNodeIdArgs = {
-  input: UpdateNabidkaItemByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdatePageArgs = {
   input: UpdatePageInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdatePageByNodeIdArgs = {
-  input: UpdatePageByNodeIdInput;
 };
 
 
@@ -7371,20 +6478,8 @@ export type MutationUpdateParameterArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateParameterByNodeIdArgs = {
-  input: UpdateParameterByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateParyArgs = {
   input: UpdateParyInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateParyByNodeIdArgs = {
-  input: UpdateParyByNodeIdInput;
 };
 
 
@@ -7395,20 +6490,8 @@ export type MutationUpdateParyNavrhArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateParyNavrhByNodeIdArgs = {
-  input: UpdateParyNavrhByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdatePermissionArgs = {
   input: UpdatePermissionInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdatePermissionByNodeIdArgs = {
-  input: UpdatePermissionByNodeIdInput;
 };
 
 
@@ -7419,20 +6502,8 @@ export type MutationUpdatePersonArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdatePersonByNodeIdArgs = {
-  input: UpdatePersonByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdatePlatbyCategoryArgs = {
   input: UpdatePlatbyCategoryInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdatePlatbyCategoryByNodeIdArgs = {
-  input: UpdatePlatbyCategoryByNodeIdInput;
 };
 
 
@@ -7443,20 +6514,8 @@ export type MutationUpdatePlatbyCategoryGroupArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdatePlatbyCategoryGroupByNodeIdArgs = {
-  input: UpdatePlatbyCategoryGroupByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdatePlatbyGroupArgs = {
   input: UpdatePlatbyGroupInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdatePlatbyGroupByNodeIdArgs = {
-  input: UpdatePlatbyGroupByNodeIdInput;
 };
 
 
@@ -7467,32 +6526,14 @@ export type MutationUpdatePlatbyGroupSkupinaArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdatePlatbyGroupSkupinaByNodeIdArgs = {
-  input: UpdatePlatbyGroupSkupinaByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdatePlatbyItemArgs = {
   input: UpdatePlatbyItemInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdatePlatbyItemByNodeIdArgs = {
-  input: UpdatePlatbyItemByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdatePlatbyRawArgs = {
   input: UpdatePlatbyRawInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdatePlatbyRawByNodeIdArgs = {
-  input: UpdatePlatbyRawByNodeIdInput;
 };
 
 
@@ -7509,26 +6550,8 @@ export type MutationUpdateRoomAttachmentArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateRoomAttachmentByNodeIdArgs = {
-  input: UpdateRoomAttachmentByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateRoomByNodeIdArgs = {
-  input: UpdateRoomByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateRozpiArgs = {
   input: UpdateRozpiInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateRozpiByNodeIdArgs = {
-  input: UpdateRozpiByNodeIdInput;
 };
 
 
@@ -7539,32 +6562,14 @@ export type MutationUpdateRozpisItemArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateRozpisItemByNodeIdArgs = {
-  input: UpdateRozpisItemByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateSessionArgs = {
   input: UpdateSessionInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateSessionByNodeIdArgs = {
-  input: UpdateSessionByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateSkupinyArgs = {
   input: UpdateSkupinyInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateSkupinyByNodeIdArgs = {
-  input: UpdateSkupinyByNodeIdInput;
 };
 
 
@@ -7581,26 +6586,8 @@ export type MutationUpdateTenantAttachmentArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateTenantAttachmentByNodeIdArgs = {
-  input: UpdateTenantAttachmentByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateTenantByNodeIdArgs = {
-  input: UpdateTenantByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateTenantPersonArgs = {
   input: UpdateTenantPersonInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateTenantPersonByNodeIdArgs = {
-  input: UpdateTenantPersonByNodeIdInput;
 };
 
 
@@ -7611,32 +6598,14 @@ export type MutationUpdateUpozorneniArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateUpozorneniByNodeIdArgs = {
-  input: UpdateUpozorneniByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateUpozorneniSkupinyArgs = {
   input: UpdateUpozorneniSkupinyInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateUpozorneniSkupinyByNodeIdArgs = {
-  input: UpdateUpozorneniSkupinyByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateUserArgs = {
   input: UpdateUserInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateUserByNodeIdArgs = {
-  input: UpdateUserByNodeIdInput;
 };
 
 
@@ -7651,10 +6620,12 @@ export type MutationVerifyFunctionArgs = {
   input: VerifyFunctionInput;
 };
 
-export type Nabidka = Node & {
+export type Nabidka = {
   __typename?: 'Nabidka';
   freeLessons: Maybe<Scalars['Int']>;
   myLessons: Maybe<Scalars['Int']>;
+  /** Reads and enables pagination through a set of `NabidkaItem`. */
+  nabidkaItemsByNiIdRodic: NabidkaItemsConnection;
   nDo: Scalars['Date'];
   nId: Scalars['BigInt'];
   nLock: Scalars['Boolean'];
@@ -7664,10 +6635,6 @@ export type Nabidka = Node & {
   nTimestamp: Maybe<Scalars['Datetime']>;
   nTrener: Scalars['BigInt'];
   nVisible: Scalars['Boolean'];
-  /** Reads and enables pagination through a set of `NabidkaItem`. */
-  nabidkaItemsByNiIdRodic: NabidkaItemsConnection;
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   /** Reads a single `User` that is related to this `Nabidka`. */
   userByNTrener: Maybe<User>;
 };
@@ -7718,7 +6685,7 @@ export type NabidkaInput = {
   nVisible?: InputMaybe<Scalars['Boolean']>;
 };
 
-export type NabidkaItem = Node & {
+export type NabidkaItem = {
   __typename?: 'NabidkaItem';
   /** Reads a single `Nabidka` that is related to this `NabidkaItem`. */
   nabidkaByNiIdRodic: Maybe<Nabidka>;
@@ -7727,8 +6694,6 @@ export type NabidkaItem = Node & {
   niLock: Scalars['Boolean'];
   niPartner: Scalars['BigInt'];
   niPocetHod: Scalars['Int'];
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   /** Reads a single `Pary` that is related to this `NabidkaItem`. */
   paryByNiPartner: Maybe<Pary>;
 };
@@ -7827,10 +6792,10 @@ export type NabidkaItemsOrderBy =
   | 'PARY_BY_NI_PARTNER__P_HODNOCENI_DESC'
   | 'PARY_BY_NI_PARTNER__P_ID_ASC'
   | 'PARY_BY_NI_PARTNER__P_ID_DESC'
-  | 'PARY_BY_NI_PARTNER__P_ID_PARTNERKA_ASC'
-  | 'PARY_BY_NI_PARTNER__P_ID_PARTNERKA_DESC'
   | 'PARY_BY_NI_PARTNER__P_ID_PARTNER_ASC'
   | 'PARY_BY_NI_PARTNER__P_ID_PARTNER_DESC'
+  | 'PARY_BY_NI_PARTNER__P_ID_PARTNERKA_ASC'
+  | 'PARY_BY_NI_PARTNER__P_ID_PARTNERKA_DESC'
   | 'PARY_BY_NI_PARTNER__P_LAT_BODY_ASC'
   | 'PARY_BY_NI_PARTNER__P_LAT_BODY_DESC'
   | 'PARY_BY_NI_PARTNER__P_LAT_FINALE_ASC'
@@ -7887,9 +6852,6 @@ export type NabidkasEdge = {
 
 /** Methods to use when ordering `Nabidka`. */
 export type NabidkasOrderBy =
-  | 'NABIDKA_ITEMS_BY_NI_ID_RODIC__COUNT_ASC'
-  | 'NABIDKA_ITEMS_BY_NI_ID_RODIC__COUNT_DESC'
-  | 'NATURAL'
   | 'N_DO_ASC'
   | 'N_DO_DESC'
   | 'N_ID_ASC'
@@ -7908,6 +6870,9 @@ export type NabidkasOrderBy =
   | 'N_TRENER_DESC'
   | 'N_VISIBLE_ASC'
   | 'N_VISIBLE_DESC'
+  | 'NABIDKA_ITEMS_BY_NI_ID_RODIC__COUNT_ASC'
+  | 'NABIDKA_ITEMS_BY_NI_ID_RODIC__COUNT_DESC'
+  | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
   | 'USER_BY_N_TRENER__U_BAN_ASC'
@@ -7975,19 +6940,11 @@ export type NabidkasOrderBy =
   | 'USER_BY_N_TRENER__U_TIMESTAMP_ASC'
   | 'USER_BY_N_TRENER__U_TIMESTAMP_DESC';
 
-/** An object with a globally unique `ID`. */
-export type Node = {
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-};
-
-export type Page = Node & {
+export type Page = {
   __typename?: 'Page';
   content: Scalars['JSON'];
   createdAt: Scalars['Datetime'];
   id: Scalars['Int'];
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   title: Scalars['String'];
   updatedAt: Scalars['Datetime'];
   url: Scalars['String'];
@@ -8042,13 +6999,11 @@ export type PagePatch = {
   url?: InputMaybe<Scalars['String']>;
 };
 
-export type PageRevision = Node & {
+export type PageRevision = {
   __typename?: 'PageRevision';
   content: Scalars['JSON'];
   createdAt: Scalars['Datetime'];
   id: Scalars['Int'];
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   revNumber: Scalars['Int'];
   revOperation: Scalars['String'];
   revTimestamp: Maybe<Scalars['Datetime']>;
@@ -8168,10 +7123,8 @@ export type PagesOrderBy =
   | 'URL_ASC'
   | 'URL_DESC';
 
-export type Parameter = Node & {
+export type Parameter = {
   __typename?: 'Parameter';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   paName: Scalars['String'];
   paValue: Scalars['String'];
 };
@@ -8258,18 +7211,16 @@ export type PariesOrderBy =
   | 'NABIDKA_ITEMS_BY_NI_PARTNER__COUNT_ASC'
   | 'NABIDKA_ITEMS_BY_NI_PARTNER__COUNT_DESC'
   | 'NATURAL'
-  | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC'
   | 'P_ARCHIV_ASC'
   | 'P_ARCHIV_DESC'
   | 'P_HODNOCENI_ASC'
   | 'P_HODNOCENI_DESC'
   | 'P_ID_ASC'
   | 'P_ID_DESC'
-  | 'P_ID_PARTNERKA_ASC'
-  | 'P_ID_PARTNERKA_DESC'
   | 'P_ID_PARTNER_ASC'
   | 'P_ID_PARTNER_DESC'
+  | 'P_ID_PARTNERKA_ASC'
+  | 'P_ID_PARTNERKA_DESC'
   | 'P_LAT_BODY_ASC'
   | 'P_LAT_BODY_DESC'
   | 'P_LAT_FINALE_ASC'
@@ -8286,72 +7237,10 @@ export type PariesOrderBy =
   | 'P_TIMESTAMP_ADD_DESC'
   | 'P_TIMESTAMP_ARCHIVE_ASC'
   | 'P_TIMESTAMP_ARCHIVE_DESC'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
   | 'ROZPIS_ITEMS_BY_RI_PARTNER__COUNT_ASC'
   | 'ROZPIS_ITEMS_BY_RI_PARTNER__COUNT_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_BAN_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_BAN_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_CITY_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_CITY_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_CONFIRMED_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_CONFIRMED_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_CONSCRIPTION_NUMBER_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_CONSCRIPTION_NUMBER_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_CREATED_AT_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_CREATED_AT_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_DANCER_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_DANCER_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_DISTRICT_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_DISTRICT_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_EMAIL_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_EMAIL_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_GDPR_SIGNED_AT_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_GDPR_SIGNED_AT_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_GROUP_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_GROUP_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_ID_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_ID_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_JMENO_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_JMENO_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_LEVEL_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_LEVEL_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_LOCK_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_LOCK_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_LOGIN_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_LOGIN_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_MEMBER_SINCE_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_MEMBER_SINCE_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_MEMBER_UNTIL_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_MEMBER_UNTIL_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_NAROZENI_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_NAROZENI_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_NATIONALITY_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_NATIONALITY_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_ORIENTATION_NUMBER_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_ORIENTATION_NUMBER_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_PASS_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_PASS_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_POHLAVI_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_POHLAVI_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_POSTAL_CODE_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_POSTAL_CODE_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_POZNAMKY_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_POZNAMKY_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_PRIJMENI_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_PRIJMENI_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_RODNE_CISLO_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_RODNE_CISLO_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_SKUPINA_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_SKUPINA_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_STREET_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_STREET_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_SYSTEM_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_SYSTEM_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_TEACHER_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_TEACHER_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_TELEFON_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_TELEFON_DESC'
-  | 'USER_BY_P_ID_PARTNERKA__U_TIMESTAMP_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_TIMESTAMP_DESC'
   | 'USER_BY_P_ID_PARTNER__U_BAN_ASC'
   | 'USER_BY_P_ID_PARTNER__U_BAN_DESC'
   | 'USER_BY_P_ID_PARTNER__U_CITY_ASC'
@@ -8415,14 +7304,76 @@ export type PariesOrderBy =
   | 'USER_BY_P_ID_PARTNER__U_TELEFON_ASC'
   | 'USER_BY_P_ID_PARTNER__U_TELEFON_DESC'
   | 'USER_BY_P_ID_PARTNER__U_TIMESTAMP_ASC'
-  | 'USER_BY_P_ID_PARTNER__U_TIMESTAMP_DESC';
+  | 'USER_BY_P_ID_PARTNER__U_TIMESTAMP_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_BAN_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_BAN_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_CITY_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_CITY_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_CONFIRMED_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_CONFIRMED_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_CONSCRIPTION_NUMBER_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_CONSCRIPTION_NUMBER_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_CREATED_AT_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_CREATED_AT_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_DANCER_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_DANCER_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_DISTRICT_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_DISTRICT_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_EMAIL_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_EMAIL_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_GDPR_SIGNED_AT_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_GDPR_SIGNED_AT_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_GROUP_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_GROUP_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_ID_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_ID_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_JMENO_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_JMENO_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_LEVEL_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_LEVEL_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_LOCK_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_LOCK_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_LOGIN_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_LOGIN_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_MEMBER_SINCE_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_MEMBER_SINCE_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_MEMBER_UNTIL_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_MEMBER_UNTIL_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_NAROZENI_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_NAROZENI_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_NATIONALITY_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_NATIONALITY_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_ORIENTATION_NUMBER_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_ORIENTATION_NUMBER_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_PASS_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_PASS_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_POHLAVI_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_POHLAVI_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_POSTAL_CODE_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_POSTAL_CODE_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_POZNAMKY_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_POZNAMKY_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_PRIJMENI_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_PRIJMENI_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_RODNE_CISLO_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_RODNE_CISLO_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_SKUPINA_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_SKUPINA_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_STREET_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_STREET_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_SYSTEM_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_SYSTEM_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_TEACHER_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_TEACHER_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_TELEFON_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_TELEFON_DESC'
+  | 'USER_BY_P_ID_PARTNERKA__U_TIMESTAMP_ASC'
+  | 'USER_BY_P_ID_PARTNERKA__U_TIMESTAMP_DESC';
 
-export type Pary = Node & {
+export type Pary = {
   __typename?: 'Pary';
   /** Reads and enables pagination through a set of `NabidkaItem`. */
   nabidkaItemsByNiPartner: NabidkaItemsConnection;
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   pArchiv: Scalars['Boolean'];
   pHodnoceni: Scalars['Int'];
   pId: Scalars['BigInt'];
@@ -8513,10 +7464,8 @@ export type ParyInput = {
   pTimestampArchive?: InputMaybe<Scalars['Datetime']>;
 };
 
-export type ParyNavrh = Node & {
+export type ParyNavrh = {
   __typename?: 'ParyNavrh';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   pnId: Scalars['BigInt'];
   pnNavrhl: Scalars['BigInt'];
   pnPartner: Scalars['BigInt'];
@@ -8589,10 +7538,10 @@ export type ParyNavrhsOrderBy =
   | 'PN_ID_DESC'
   | 'PN_NAVRHL_ASC'
   | 'PN_NAVRHL_DESC'
-  | 'PN_PARTNERKA_ASC'
-  | 'PN_PARTNERKA_DESC'
   | 'PN_PARTNER_ASC'
   | 'PN_PARTNER_DESC'
+  | 'PN_PARTNERKA_ASC'
+  | 'PN_PARTNERKA_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
   | 'USER_BY_PN_NAVRHL__U_BAN_ASC'
@@ -8659,70 +7608,6 @@ export type ParyNavrhsOrderBy =
   | 'USER_BY_PN_NAVRHL__U_TELEFON_DESC'
   | 'USER_BY_PN_NAVRHL__U_TIMESTAMP_ASC'
   | 'USER_BY_PN_NAVRHL__U_TIMESTAMP_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_BAN_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_BAN_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_CITY_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_CITY_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_CONFIRMED_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_CONFIRMED_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_CONSCRIPTION_NUMBER_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_CONSCRIPTION_NUMBER_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_CREATED_AT_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_CREATED_AT_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_DANCER_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_DANCER_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_DISTRICT_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_DISTRICT_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_EMAIL_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_EMAIL_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_GDPR_SIGNED_AT_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_GDPR_SIGNED_AT_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_GROUP_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_GROUP_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_ID_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_ID_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_JMENO_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_JMENO_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_LEVEL_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_LEVEL_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_LOCK_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_LOCK_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_LOGIN_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_LOGIN_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_MEMBER_SINCE_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_MEMBER_SINCE_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_MEMBER_UNTIL_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_MEMBER_UNTIL_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_NAROZENI_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_NAROZENI_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_NATIONALITY_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_NATIONALITY_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_ORIENTATION_NUMBER_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_ORIENTATION_NUMBER_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_PASS_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_PASS_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_POHLAVI_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_POHLAVI_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_POSTAL_CODE_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_POSTAL_CODE_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_POZNAMKY_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_POZNAMKY_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_PRIJMENI_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_PRIJMENI_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_RODNE_CISLO_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_RODNE_CISLO_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_SKUPINA_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_SKUPINA_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_STREET_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_STREET_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_SYSTEM_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_SYSTEM_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_TEACHER_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_TEACHER_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_TELEFON_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_TELEFON_DESC'
-  | 'USER_BY_PN_PARTNERKA__U_TIMESTAMP_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_TIMESTAMP_DESC'
   | 'USER_BY_PN_PARTNER__U_BAN_ASC'
   | 'USER_BY_PN_PARTNER__U_BAN_DESC'
   | 'USER_BY_PN_PARTNER__U_CITY_ASC'
@@ -8786,7 +7671,88 @@ export type ParyNavrhsOrderBy =
   | 'USER_BY_PN_PARTNER__U_TELEFON_ASC'
   | 'USER_BY_PN_PARTNER__U_TELEFON_DESC'
   | 'USER_BY_PN_PARTNER__U_TIMESTAMP_ASC'
-  | 'USER_BY_PN_PARTNER__U_TIMESTAMP_DESC';
+  | 'USER_BY_PN_PARTNER__U_TIMESTAMP_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_BAN_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_BAN_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_CITY_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_CITY_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_CONFIRMED_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_CONFIRMED_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_CONSCRIPTION_NUMBER_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_CONSCRIPTION_NUMBER_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_CREATED_AT_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_CREATED_AT_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_DANCER_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_DANCER_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_DISTRICT_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_DISTRICT_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_EMAIL_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_EMAIL_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_GDPR_SIGNED_AT_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_GDPR_SIGNED_AT_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_GROUP_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_GROUP_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_ID_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_ID_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_JMENO_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_JMENO_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_LEVEL_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_LEVEL_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_LOCK_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_LOCK_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_LOGIN_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_LOGIN_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_MEMBER_SINCE_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_MEMBER_SINCE_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_MEMBER_UNTIL_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_MEMBER_UNTIL_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_NAROZENI_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_NAROZENI_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_NATIONALITY_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_NATIONALITY_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_ORIENTATION_NUMBER_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_ORIENTATION_NUMBER_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_PASS_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_PASS_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_POHLAVI_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_POHLAVI_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_POSTAL_CODE_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_POSTAL_CODE_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_POZNAMKY_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_POZNAMKY_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_PRIJMENI_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_PRIJMENI_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_RODNE_CISLO_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_RODNE_CISLO_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_SKUPINA_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_SKUPINA_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_STREET_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_STREET_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_SYSTEM_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_SYSTEM_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_TEACHER_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_TEACHER_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_TELEFON_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_TELEFON_DESC'
+  | 'USER_BY_PN_PARTNERKA__U_TIMESTAMP_ASC'
+  | 'USER_BY_PN_PARTNERKA__U_TIMESTAMP_DESC';
+
+/** Represents an update to a `Pary`. Fields that are set will be updated. */
+export type ParyPatch = {
+  pArchiv?: InputMaybe<Scalars['Boolean']>;
+  pHodnoceni?: InputMaybe<Scalars['Int']>;
+  pId?: InputMaybe<Scalars['BigInt']>;
+  pIdPartner?: InputMaybe<Scalars['BigInt']>;
+  pIdPartnerka?: InputMaybe<Scalars['BigInt']>;
+  pLatBody?: InputMaybe<Scalars['Int']>;
+  pLatFinale?: InputMaybe<Scalars['Boolean']>;
+  pLatTrida?: InputMaybe<ParyPLatTrida>;
+  pSttBody?: InputMaybe<Scalars['Int']>;
+  pSttFinale?: InputMaybe<Scalars['Boolean']>;
+  pSttTrida?: InputMaybe<ParyPSttTrida>;
+  pTimestampAdd?: InputMaybe<Scalars['Datetime']>;
+  pTimestampArchive?: InputMaybe<Scalars['Datetime']>;
+};
 
 export type ParyPLatTrida =
   | 'A'
@@ -8805,23 +7771,6 @@ export type ParyPSttTrida =
   | 'H'
   | 'M'
   | 'Z';
-
-/** Represents an update to a `Pary`. Fields that are set will be updated. */
-export type ParyPatch = {
-  pArchiv?: InputMaybe<Scalars['Boolean']>;
-  pHodnoceni?: InputMaybe<Scalars['Int']>;
-  pId?: InputMaybe<Scalars['BigInt']>;
-  pIdPartner?: InputMaybe<Scalars['BigInt']>;
-  pIdPartnerka?: InputMaybe<Scalars['BigInt']>;
-  pLatBody?: InputMaybe<Scalars['Int']>;
-  pLatFinale?: InputMaybe<Scalars['Boolean']>;
-  pLatTrida?: InputMaybe<ParyPLatTrida>;
-  pSttBody?: InputMaybe<Scalars['Int']>;
-  pSttFinale?: InputMaybe<Scalars['Boolean']>;
-  pSttTrida?: InputMaybe<ParyPSttTrida>;
-  pTimestampAdd?: InputMaybe<Scalars['Datetime']>;
-  pTimestampArchive?: InputMaybe<Scalars['Datetime']>;
-};
 
 /** A connection to a list of `Person` values. */
 export type PeopleConnection = {
@@ -8861,10 +7810,8 @@ export type PeopleOrderBy =
   | 'TENANT_PEOPLE_BY_PERSON_ID__COUNT_ASC'
   | 'TENANT_PEOPLE_BY_PERSON_ID__COUNT_DESC';
 
-export type Permission = Node & {
+export type Permission = {
   __typename?: 'Permission';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   peAkce: Scalars['Int'];
   peAktuality: Scalars['Int'];
   peAnkety: Scalars['Int'];
@@ -9065,14 +8012,12 @@ export type PermissionsOrderBy =
   | 'USERS_BY_U_GROUP__COUNT_ASC'
   | 'USERS_BY_U_GROUP__COUNT_DESC';
 
-export type Person = Node & {
+export type Person = {
   __typename?: 'Person';
   firstName: Scalars['String'];
   gender: GenderType;
   id: Scalars['BigInt'];
   lastName: Scalars['String'];
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   /** Reads and enables pagination through a set of `TenantPerson`. */
   tenantPeople: TenantPeopleConnection;
 };
@@ -9170,10 +8115,8 @@ export type PlatbyCategoriesOrderBy =
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC';
 
-export type PlatbyCategory = Node & {
+export type PlatbyCategory = {
   __typename?: 'PlatbyCategory';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   pcAmount: Scalars['BigFloat'];
   pcArchive: Scalars['Boolean'];
   pcDateDue: Scalars['Date'];
@@ -9242,10 +8185,8 @@ export type PlatbyCategoryCondition = {
   pcVisible?: InputMaybe<Scalars['Boolean']>;
 };
 
-export type PlatbyCategoryGroup = Node & {
+export type PlatbyCategoryGroup = {
   __typename?: 'PlatbyCategoryGroup';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   pcgId: Scalars['BigInt'];
   pcgIdCategory: Scalars['BigInt'];
   pcgIdGroup: Scalars['BigInt'];
@@ -9378,10 +8319,8 @@ export type PlatbyCategoryPatch = {
   pcVisible?: InputMaybe<Scalars['Boolean']>;
 };
 
-export type PlatbyGroup = Node & {
+export type PlatbyGroup = {
   __typename?: 'PlatbyGroup';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   pgBase: Scalars['BigInt'];
   pgDescription: Scalars['String'];
   pgId: Scalars['BigInt'];
@@ -9450,10 +8389,30 @@ export type PlatbyGroupPatch = {
   pgType?: InputMaybe<Scalars['BigFloat']>;
 };
 
-export type PlatbyGroupSkupina = Node & {
+/** A connection to a list of `PlatbyGroup` values. */
+export type PlatbyGroupsConnection = {
+  __typename?: 'PlatbyGroupsConnection';
+  /** A list of edges which contains the `PlatbyGroup` and cursor to aid in pagination. */
+  edges: Array<PlatbyGroupsEdge>;
+  /** A list of `PlatbyGroup` objects. */
+  nodes: Array<PlatbyGroup>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `PlatbyGroup` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `PlatbyGroup` edge in the connection. */
+export type PlatbyGroupsEdge = {
+  __typename?: 'PlatbyGroupsEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']>;
+  /** The `PlatbyGroup` at the end of the edge. */
+  node: PlatbyGroup;
+};
+
+export type PlatbyGroupSkupina = {
   __typename?: 'PlatbyGroupSkupina';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   pgsId: Scalars['BigInt'];
   pgsIdGroup: Scalars['BigInt'];
   pgsIdSkupina: Scalars['BigInt'];
@@ -9554,28 +8513,6 @@ export type PlatbyGroupSkupinasOrderBy =
   | 'SKUPINY_BY_PGS_ID_SKUPINA__S_VISIBLE_ASC'
   | 'SKUPINY_BY_PGS_ID_SKUPINA__S_VISIBLE_DESC';
 
-/** A connection to a list of `PlatbyGroup` values. */
-export type PlatbyGroupsConnection = {
-  __typename?: 'PlatbyGroupsConnection';
-  /** A list of edges which contains the `PlatbyGroup` and cursor to aid in pagination. */
-  edges: Array<PlatbyGroupsEdge>;
-  /** A list of `PlatbyGroup` objects. */
-  nodes: Array<PlatbyGroup>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `PlatbyGroup` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `PlatbyGroup` edge in the connection. */
-export type PlatbyGroupsEdge = {
-  __typename?: 'PlatbyGroupsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
-  /** The `PlatbyGroup` at the end of the edge. */
-  node: PlatbyGroup;
-};
-
 /** Methods to use when ordering `PlatbyGroup`. */
 export type PlatbyGroupsOrderBy =
   | 'NATURAL'
@@ -9596,10 +8533,8 @@ export type PlatbyGroupsOrderBy =
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC';
 
-export type PlatbyItem = Node & {
+export type PlatbyItem = {
   __typename?: 'PlatbyItem';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   piAmount: Scalars['BigFloat'];
   piDate: Scalars['Date'];
   piId: Scalars['BigInt'];
@@ -9796,10 +8731,8 @@ export type PlatbyItemsOrderBy =
   | 'USER_BY_PI_ID_USER__U_TIMESTAMP_ASC'
   | 'USER_BY_PI_ID_USER__U_TIMESTAMP_DESC';
 
-export type PlatbyRaw = Node & {
+export type PlatbyRaw = {
   __typename?: 'PlatbyRaw';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   /** Reads and enables pagination through a set of `PlatbyItem`. */
   platbyItemsByPiIdRaw: PlatbyItemsConnection;
   prDiscarded: Scalars['Boolean'];
@@ -9882,8 +8815,6 @@ export type PlatbyRawsOrderBy =
   | 'NATURAL'
   | 'PLATBY_ITEMS_BY_PI_ID_RAW__COUNT_ASC'
   | 'PLATBY_ITEMS_BY_PI_ID_RAW__COUNT_DESC'
-  | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC'
   | 'PR_DISCARDED_ASC'
   | 'PR_DISCARDED_DESC'
   | 'PR_HASH_ASC'
@@ -9893,7 +8824,9 @@ export type PlatbyRawsOrderBy =
   | 'PR_RAW_ASC'
   | 'PR_RAW_DESC'
   | 'PR_SORTED_ASC'
-  | 'PR_SORTED_DESC';
+  | 'PR_SORTED_DESC'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC';
 
 /** An input for mutations affecting `ProspectDatum` */
 export type ProspectDatumInput = {
@@ -9930,7 +8863,7 @@ export type ProspectFormDancerPayload = {
 };
 
 /** The root query type which gives access points into the data universe. */
-export type Query = Node & {
+export type Query = {
   __typename?: 'Query';
   /** Reads and enables pagination through a set of `Pary`. */
   activeCouples: Maybe<PariesConnection>;
@@ -9941,27 +8874,17 @@ export type Query = Node & {
   /** Reads and enables pagination through a set of `Aktuality`. */
   aktualities: Maybe<AktualitiesConnection>;
   aktuality: Maybe<Aktuality>;
-  /** Reads a single `Aktuality` using its globally unique `ID`. */
-  aktualityByNodeId: Maybe<Aktuality>;
   attachment: Maybe<Attachment>;
-  /** Reads a single `Attachment` using its globally unique `ID`. */
-  attachmentByNodeId: Maybe<Attachment>;
   /** Reads and enables pagination through a set of `Attachment`. */
   attachments: Maybe<AttachmentsConnection>;
   attendeeExternal: Maybe<AttendeeExternal>;
-  /** Reads a single `AttendeeExternal` using its globally unique `ID`. */
-  attendeeExternalByNodeId: Maybe<AttendeeExternal>;
   /** Reads and enables pagination through a set of `AttendeeExternal`. */
   attendeeExternals: Maybe<AttendeeExternalsConnection>;
   attendeeUser: Maybe<AttendeeUser>;
-  /** Reads a single `AttendeeUser` using its globally unique `ID`. */
-  attendeeUserByNodeId: Maybe<AttendeeUser>;
   attendeeUserByUserIdAndEventId: Maybe<AttendeeUser>;
   /** Reads and enables pagination through a set of `AttendeeUser`. */
   attendeeUsers: Maybe<AttendeeUsersConnection>;
   cohortGroup: Maybe<CohortGroup>;
-  /** Reads a single `CohortGroup` using its globally unique `ID`. */
-  cohortGroupByNodeId: Maybe<CohortGroup>;
   /** Reads and enables pagination through a set of `CohortGroup`. */
   cohortGroups: Maybe<CohortGroupsConnection>;
   currentCoupleIds: Maybe<CurrentCoupleIdsConnection>;
@@ -9973,26 +8896,16 @@ export type Query = Node & {
   /** Reads and enables pagination through a set of `Dokumenty`. */
   dokumenties: Maybe<DokumentiesConnection>;
   dokumenty: Maybe<Dokumenty>;
-  /** Reads a single `Dokumenty` using its globally unique `ID`. */
-  dokumentyByNodeId: Maybe<Dokumenty>;
   event: Maybe<Event>;
-  /** Reads a single `Event` using its globally unique `ID`. */
-  eventByNodeId: Maybe<Event>;
   /** Reads and enables pagination through a set of `Event`. */
   events: Maybe<EventsConnection>;
   formResponse: Maybe<FormResponse>;
-  /** Reads a single `FormResponse` using its globally unique `ID`. */
-  formResponseByNodeId: Maybe<FormResponse>;
   /** Reads and enables pagination through a set of `FormResponse`. */
   formResponses: Maybe<FormResponsesConnection>;
   galerieDir: Maybe<GalerieDir>;
-  /** Reads a single `GalerieDir` using its globally unique `ID`. */
-  galerieDirByNodeId: Maybe<GalerieDir>;
   /** Reads and enables pagination through a set of `GalerieDir`. */
   galerieDirs: Maybe<GalerieDirsConnection>;
   galerieFoto: Maybe<GalerieFoto>;
-  /** Reads a single `GalerieFoto` using its globally unique `ID`. */
-  galerieFotoByNodeId: Maybe<GalerieFoto>;
   /** Reads and enables pagination through a set of `GalerieFoto`. */
   galerieFotos: Maybe<GalerieFotosConnection>;
   getCurrentCouple: Maybe<Pary>;
@@ -10000,12 +8913,8 @@ export type Query = Node & {
   getCurrentUser: Maybe<User>;
   location: Maybe<Location>;
   locationAttachment: Maybe<LocationAttachment>;
-  /** Reads a single `LocationAttachment` using its globally unique `ID`. */
-  locationAttachmentByNodeId: Maybe<LocationAttachment>;
   /** Reads and enables pagination through a set of `LocationAttachment`. */
   locationAttachments: Maybe<LocationAttachmentsConnection>;
-  /** Reads a single `Location` using its globally unique `ID`. */
-  locationByNodeId: Maybe<Location>;
   /** Reads and enables pagination through a set of `Location`. */
   locations: Maybe<LocationsConnection>;
   /** Reads and enables pagination through a set of `Member`. */
@@ -10015,84 +8924,50 @@ export type Query = Node & {
   /** Reads and enables pagination through a set of `RozpisItem`. */
   myLessons: Maybe<RozpisItemsConnection>;
   nabidka: Maybe<Nabidka>;
-  /** Reads a single `Nabidka` using its globally unique `ID`. */
-  nabidkaByNodeId: Maybe<Nabidka>;
   nabidkaItem: Maybe<NabidkaItem>;
   nabidkaItemByNiPartnerAndNiIdRodic: Maybe<NabidkaItem>;
-  /** Reads a single `NabidkaItem` using its globally unique `ID`. */
-  nabidkaItemByNodeId: Maybe<NabidkaItem>;
   /** Reads and enables pagination through a set of `NabidkaItem`. */
   nabidkaItems: Maybe<NabidkaItemsConnection>;
   /** Reads and enables pagination through a set of `Nabidka`. */
   nabidkas: Maybe<NabidkasConnection>;
-  /** Fetches an object given its globally unique `ID`. */
-  node: Maybe<Node>;
-  /** The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`. */
-  nodeId: Scalars['ID'];
   page: Maybe<Page>;
-  /** Reads a single `Page` using its globally unique `ID`. */
-  pageByNodeId: Maybe<Page>;
   pageByUrl: Maybe<Page>;
   pageRevision: Maybe<PageRevision>;
-  /** Reads a single `PageRevision` using its globally unique `ID`. */
-  pageRevisionByNodeId: Maybe<PageRevision>;
   /** Reads and enables pagination through a set of `PageRevision`. */
   pageRevisions: Maybe<PageRevisionsConnection>;
   /** Reads and enables pagination through a set of `Page`. */
   pages: Maybe<PagesConnection>;
   parameter: Maybe<Parameter>;
-  /** Reads a single `Parameter` using its globally unique `ID`. */
-  parameterByNodeId: Maybe<Parameter>;
   /** Reads and enables pagination through a set of `Parameter`. */
   parameters: Maybe<ParametersConnection>;
   /** Reads and enables pagination through a set of `Pary`. */
   paries: Maybe<PariesConnection>;
   pary: Maybe<Pary>;
-  /** Reads a single `Pary` using its globally unique `ID`. */
-  paryByNodeId: Maybe<Pary>;
   paryNavrh: Maybe<ParyNavrh>;
-  /** Reads a single `ParyNavrh` using its globally unique `ID`. */
-  paryNavrhByNodeId: Maybe<ParyNavrh>;
   /** Reads and enables pagination through a set of `ParyNavrh`. */
   paryNavrhs: Maybe<ParyNavrhsConnection>;
   /** Reads and enables pagination through a set of `Person`. */
   people: Maybe<PeopleConnection>;
   permission: Maybe<Permission>;
-  /** Reads a single `Permission` using its globally unique `ID`. */
-  permissionByNodeId: Maybe<Permission>;
   /** Reads and enables pagination through a set of `Permission`. */
   permissions: Maybe<PermissionsConnection>;
   person: Maybe<Person>;
-  /** Reads a single `Person` using its globally unique `ID`. */
-  personByNodeId: Maybe<Person>;
   /** Reads and enables pagination through a set of `PlatbyCategory`. */
   platbyCategories: Maybe<PlatbyCategoriesConnection>;
   platbyCategory: Maybe<PlatbyCategory>;
-  /** Reads a single `PlatbyCategory` using its globally unique `ID`. */
-  platbyCategoryByNodeId: Maybe<PlatbyCategory>;
   platbyCategoryGroup: Maybe<PlatbyCategoryGroup>;
-  /** Reads a single `PlatbyCategoryGroup` using its globally unique `ID`. */
-  platbyCategoryGroupByNodeId: Maybe<PlatbyCategoryGroup>;
   /** Reads and enables pagination through a set of `PlatbyCategoryGroup`. */
   platbyCategoryGroups: Maybe<PlatbyCategoryGroupsConnection>;
   platbyGroup: Maybe<PlatbyGroup>;
-  /** Reads a single `PlatbyGroup` using its globally unique `ID`. */
-  platbyGroupByNodeId: Maybe<PlatbyGroup>;
-  platbyGroupSkupina: Maybe<PlatbyGroupSkupina>;
-  /** Reads a single `PlatbyGroupSkupina` using its globally unique `ID`. */
-  platbyGroupSkupinaByNodeId: Maybe<PlatbyGroupSkupina>;
-  /** Reads and enables pagination through a set of `PlatbyGroupSkupina`. */
-  platbyGroupSkupinas: Maybe<PlatbyGroupSkupinasConnection>;
   /** Reads and enables pagination through a set of `PlatbyGroup`. */
   platbyGroups: Maybe<PlatbyGroupsConnection>;
+  platbyGroupSkupina: Maybe<PlatbyGroupSkupina>;
+  /** Reads and enables pagination through a set of `PlatbyGroupSkupina`. */
+  platbyGroupSkupinas: Maybe<PlatbyGroupSkupinasConnection>;
   platbyItem: Maybe<PlatbyItem>;
-  /** Reads a single `PlatbyItem` using its globally unique `ID`. */
-  platbyItemByNodeId: Maybe<PlatbyItem>;
   /** Reads and enables pagination through a set of `PlatbyItem`. */
   platbyItems: Maybe<PlatbyItemsConnection>;
   platbyRaw: Maybe<PlatbyRaw>;
-  /** Reads a single `PlatbyRaw` using its globally unique `ID`. */
-  platbyRawByNodeId: Maybe<PlatbyRaw>;
   /** Reads and enables pagination through a set of `PlatbyRaw`. */
   platbyRaws: Maybe<PlatbyRawsConnection>;
   /**
@@ -10104,49 +8979,31 @@ export type Query = Node & {
   reservationsForRange: Maybe<NabidkasConnection>;
   room: Maybe<Room>;
   roomAttachment: Maybe<RoomAttachment>;
-  /** Reads a single `RoomAttachment` using its globally unique `ID`. */
-  roomAttachmentByNodeId: Maybe<RoomAttachment>;
   /** Reads and enables pagination through a set of `RoomAttachment`. */
   roomAttachments: Maybe<RoomAttachmentsConnection>;
-  /** Reads a single `Room` using its globally unique `ID`. */
-  roomByNodeId: Maybe<Room>;
   /** Reads and enables pagination through a set of `Room`. */
   rooms: Maybe<RoomsConnection>;
   rozpi: Maybe<Rozpi>;
-  /** Reads a single `Rozpi` using its globally unique `ID`. */
-  rozpiByNodeId: Maybe<Rozpi>;
   /** Reads and enables pagination through a set of `Rozpi`. */
   rozpis: Maybe<RozpisConnection>;
   rozpisItem: Maybe<RozpisItem>;
-  /** Reads a single `RozpisItem` using its globally unique `ID`. */
-  rozpisItemByNodeId: Maybe<RozpisItem>;
   /** Reads and enables pagination through a set of `RozpisItem`. */
   rozpisItems: Maybe<RozpisItemsConnection>;
   /** Reads and enables pagination through a set of `Rozpi`. */
   schedulesForRange: Maybe<RozpisConnection>;
   session: Maybe<Session>;
-  /** Reads a single `Session` using its globally unique `ID`. */
-  sessionByNodeId: Maybe<Session>;
   /** Reads and enables pagination through a set of `Session`. */
   sessions: Maybe<SessionsConnection>;
   /** Reads and enables pagination through a set of `Skupiny`. */
   skupinies: Maybe<SkupiniesConnection>;
   skupiny: Maybe<Skupiny>;
-  /** Reads a single `Skupiny` using its globally unique `ID`. */
-  skupinyByNodeId: Maybe<Skupiny>;
   tenant: Maybe<Tenant>;
   tenantAttachment: Maybe<TenantAttachment>;
-  /** Reads a single `TenantAttachment` using its globally unique `ID`. */
-  tenantAttachmentByNodeId: Maybe<TenantAttachment>;
   /** Reads and enables pagination through a set of `TenantAttachment`. */
   tenantAttachments: Maybe<TenantAttachmentsConnection>;
-  /** Reads a single `Tenant` using its globally unique `ID`. */
-  tenantByNodeId: Maybe<Tenant>;
   /** Reads and enables pagination through a set of `TenantPerson`. */
   tenantPeople: Maybe<TenantPeopleConnection>;
   tenantPerson: Maybe<TenantPerson>;
-  /** Reads a single `TenantPerson` using its globally unique `ID`. */
-  tenantPersonByNodeId: Maybe<TenantPerson>;
   /** Reads and enables pagination through a set of `Tenant`. */
   tenants: Maybe<TenantsConnection>;
   /** Reads and enables pagination through a set of `Video`. */
@@ -10154,18 +9011,12 @@ export type Query = Node & {
   /** Reads and enables pagination through a set of `User`. */
   trainers: Maybe<UsersConnection>;
   upozorneni: Maybe<Upozorneni>;
-  /** Reads a single `Upozorneni` using its globally unique `ID`. */
-  upozorneniByNodeId: Maybe<Upozorneni>;
+  /** Reads and enables pagination through a set of `Upozorneni`. */
+  upozornenis: Maybe<UpozornenisConnection>;
   /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
   upozorneniSkupinies: Maybe<UpozorneniSkupiniesConnection>;
   upozorneniSkupiny: Maybe<UpozorneniSkupiny>;
-  /** Reads a single `UpozorneniSkupiny` using its globally unique `ID`. */
-  upozorneniSkupinyByNodeId: Maybe<UpozorneniSkupiny>;
-  /** Reads and enables pagination through a set of `Upozorneni`. */
-  upozornenis: Maybe<UpozornenisConnection>;
   user: Maybe<User>;
-  /** Reads a single `User` using its globally unique `ID`. */
-  userByNodeId: Maybe<User>;
   /** Reads and enables pagination through a set of `User`. */
   users: Maybe<UsersConnection>;
 };
@@ -10224,20 +9075,8 @@ export type QueryAktualityArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryAktualityByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryAttachmentArgs = {
   objectName: Scalars['String'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryAttachmentByNodeIdArgs = {
-  nodeId: Scalars['ID'];
 };
 
 
@@ -10260,12 +9099,6 @@ export type QueryAttendeeExternalArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryAttendeeExternalByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryAttendeeExternalsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -10280,12 +9113,6 @@ export type QueryAttendeeExternalsArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryAttendeeUserArgs = {
   id: Scalars['BigInt'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryAttendeeUserByNodeIdArgs = {
-  nodeId: Scalars['ID'];
 };
 
 
@@ -10311,12 +9138,6 @@ export type QueryAttendeeUsersArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryCohortGroupArgs = {
   id: Scalars['BigInt'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryCohortGroupByNodeIdArgs = {
-  nodeId: Scalars['ID'];
 };
 
 
@@ -10371,20 +9192,8 @@ export type QueryDokumentyArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryDokumentyByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryEventArgs = {
   id: Scalars['BigInt'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryEventByNodeIdArgs = {
-  nodeId: Scalars['ID'];
 };
 
 
@@ -10407,12 +9216,6 @@ export type QueryFormResponseArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryFormResponseByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryFormResponsesArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -10431,12 +9234,6 @@ export type QueryGalerieDirArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryGalerieDirByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryGalerieDirsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -10451,12 +9248,6 @@ export type QueryGalerieDirsArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryGalerieFotoArgs = {
   gfId: Scalars['BigInt'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryGalerieFotoByNodeIdArgs = {
-  nodeId: Scalars['ID'];
 };
 
 
@@ -10486,12 +9277,6 @@ export type QueryLocationAttachmentArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryLocationAttachmentByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryLocationAttachmentsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -10500,12 +9285,6 @@ export type QueryLocationAttachmentsArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<LocationAttachmentsOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryLocationByNodeIdArgs = {
-  nodeId: Scalars['ID'];
 };
 
 
@@ -10562,12 +9341,6 @@ export type QueryNabidkaArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryNabidkaByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryNabidkaItemArgs = {
   niId: Scalars['BigInt'];
 };
@@ -10577,12 +9350,6 @@ export type QueryNabidkaItemArgs = {
 export type QueryNabidkaItemByNiPartnerAndNiIdRodicArgs = {
   niIdRodic: Scalars['BigInt'];
   niPartner: Scalars['BigInt'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryNabidkaItemByNodeIdArgs = {
-  nodeId: Scalars['ID'];
 };
 
 
@@ -10611,20 +9378,8 @@ export type QueryNabidkasArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryNodeArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryPageArgs = {
   id: Scalars['Int'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryPageByNodeIdArgs = {
-  nodeId: Scalars['ID'];
 };
 
 
@@ -10638,12 +9393,6 @@ export type QueryPageByUrlArgs = {
 export type QueryPageRevisionArgs = {
   id: Scalars['Int'];
   revNumber: Scalars['Int'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryPageRevisionByNodeIdArgs = {
-  nodeId: Scalars['ID'];
 };
 
 
@@ -10678,12 +9427,6 @@ export type QueryParameterArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryParameterByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryParametersArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -10714,20 +9457,8 @@ export type QueryParyArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryParyByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryParyNavrhArgs = {
   pnId: Scalars['BigInt'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryParyNavrhByNodeIdArgs = {
-  nodeId: Scalars['ID'];
 };
 
 
@@ -10762,12 +9493,6 @@ export type QueryPermissionArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryPermissionByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryPermissionsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -10782,12 +9507,6 @@ export type QueryPermissionsArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryPersonArgs = {
   id: Scalars['BigInt'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryPersonByNodeIdArgs = {
-  nodeId: Scalars['ID'];
 };
 
 
@@ -10810,20 +9529,8 @@ export type QueryPlatbyCategoryArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryPlatbyCategoryByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryPlatbyCategoryGroupArgs = {
   pcgId: Scalars['BigInt'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryPlatbyCategoryGroupByNodeIdArgs = {
-  nodeId: Scalars['ID'];
 };
 
 
@@ -10846,20 +9553,20 @@ export type QueryPlatbyGroupArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryPlatbyGroupByNodeIdArgs = {
-  nodeId: Scalars['ID'];
+export type QueryPlatbyGroupsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<PlatbyGroupCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PlatbyGroupsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPlatbyGroupSkupinaArgs = {
   pgsId: Scalars['BigInt'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryPlatbyGroupSkupinaByNodeIdArgs = {
-  nodeId: Scalars['ID'];
 };
 
 
@@ -10876,26 +9583,8 @@ export type QueryPlatbyGroupSkupinasArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryPlatbyGroupsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<PlatbyGroupCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<PlatbyGroupsOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryPlatbyItemArgs = {
   piId: Scalars['BigInt'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryPlatbyItemByNodeIdArgs = {
-  nodeId: Scalars['ID'];
 };
 
 
@@ -10914,12 +9603,6 @@ export type QueryPlatbyItemsArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryPlatbyRawArgs = {
   prId: Scalars['BigInt'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryPlatbyRawByNodeIdArgs = {
-  nodeId: Scalars['ID'];
 };
 
 
@@ -10961,12 +9644,6 @@ export type QueryRoomAttachmentArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryRoomAttachmentByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryRoomAttachmentsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -10975,12 +9652,6 @@ export type QueryRoomAttachmentsArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<RoomAttachmentsOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryRoomByNodeIdArgs = {
-  nodeId: Scalars['ID'];
 };
 
 
@@ -11003,12 +9674,6 @@ export type QueryRozpiArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryRozpiByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryRozpisArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -11023,12 +9688,6 @@ export type QueryRozpisArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryRozpisItemArgs = {
   riId: Scalars['BigInt'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryRozpisItemByNodeIdArgs = {
-  nodeId: Scalars['ID'];
 };
 
 
@@ -11063,12 +9722,6 @@ export type QuerySessionArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QuerySessionByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QuerySessionsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -11099,12 +9752,6 @@ export type QuerySkupinyArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QuerySkupinyByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryTenantArgs = {
   id: Scalars['BigInt'];
 };
@@ -11118,12 +9765,6 @@ export type QueryTenantAttachmentArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryTenantAttachmentByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryTenantAttachmentsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -11132,12 +9773,6 @@ export type QueryTenantAttachmentsArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<TenantAttachmentsOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryTenantByNodeIdArgs = {
-  nodeId: Scalars['ID'];
 };
 
 
@@ -11157,12 +9792,6 @@ export type QueryTenantPeopleArgs = {
 export type QueryTenantPersonArgs = {
   personId: Scalars['BigInt'];
   tenantId: Scalars['BigInt'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryTenantPersonByNodeIdArgs = {
-  nodeId: Scalars['ID'];
 };
 
 
@@ -11205,8 +9834,14 @@ export type QueryUpozorneniArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryUpozorneniByNodeIdArgs = {
-  nodeId: Scalars['ID'];
+export type QueryUpozornenisArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<UpozorneniCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
 };
 
 
@@ -11229,32 +9864,8 @@ export type QueryUpozorneniSkupinyArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryUpozorneniSkupinyByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryUpozornenisArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<UpozorneniCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryUserArgs = {
   uId: Scalars['BigInt'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryUserByNodeIdArgs = {
-  nodeId: Scalars['ID'];
 };
 
 
@@ -11326,7 +9937,7 @@ export type ResetPasswordPayload = {
   query: Maybe<Query>;
 };
 
-export type Room = Node & {
+export type Room = {
   __typename?: 'Room';
   description: Scalars['JSON'];
   id: Scalars['BigInt'];
@@ -11334,8 +9945,6 @@ export type Room = Node & {
   /** Reads a single `Location` that is related to this `Room`. */
   locationByLocation: Maybe<Location>;
   name: Scalars['String'];
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   /** Reads and enables pagination through a set of `RoomAttachment`. */
   roomAttachments: RoomAttachmentsConnection;
 };
@@ -11351,12 +9960,10 @@ export type RoomRoomAttachmentsArgs = {
   orderBy?: InputMaybe<Array<RoomAttachmentsOrderBy>>;
 };
 
-export type RoomAttachment = Node & {
+export type RoomAttachment = {
   __typename?: 'RoomAttachment';
   /** Reads a single `Attachment` that is related to this `RoomAttachment`. */
   attachmentByObjectName: Maybe<Attachment>;
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   objectName: Scalars['String'];
   /** Reads a single `Room` that is related to this `RoomAttachment`. */
   room: Maybe<Room>;
@@ -11508,19 +10115,17 @@ export type RoomsOrderBy =
   | 'ROOM_ATTACHMENTS_BY_ROOM_ID__COUNT_ASC'
   | 'ROOM_ATTACHMENTS_BY_ROOM_ID__COUNT_DESC';
 
-export type Rozpi = Node & {
+export type Rozpi = {
   __typename?: 'Rozpi';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   rDatum: Scalars['Date'];
   rId: Scalars['BigInt'];
   rKde: Scalars['String'];
   rLock: Scalars['Boolean'];
+  /** Reads and enables pagination through a set of `RozpisItem`. */
+  rozpisItemsByRiIdRodic: RozpisItemsConnection;
   rTimestamp: Maybe<Scalars['Datetime']>;
   rTrener: Scalars['BigInt'];
   rVisible: Scalars['Boolean'];
-  /** Reads and enables pagination through a set of `RozpisItem`. */
-  rozpisItemsByRiIdRodic: RozpisItemsConnection;
   /** Reads a single `User` that is related to this `Rozpi`. */
   userByRTrener: Maybe<User>;
 };
@@ -11598,10 +10203,8 @@ export type RozpisEdge = {
   node: Rozpi;
 };
 
-export type RozpisItem = Node & {
+export type RozpisItem = {
   __typename?: 'RozpisItem';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   /** Reads a single `Pary` that is related to this `RozpisItem`. */
   paryByRiPartner: Maybe<Pary>;
   riDo: Scalars['Time'];
@@ -11684,10 +10287,10 @@ export type RozpisItemsOrderBy =
   | 'PARY_BY_RI_PARTNER__P_HODNOCENI_DESC'
   | 'PARY_BY_RI_PARTNER__P_ID_ASC'
   | 'PARY_BY_RI_PARTNER__P_ID_DESC'
-  | 'PARY_BY_RI_PARTNER__P_ID_PARTNERKA_ASC'
-  | 'PARY_BY_RI_PARTNER__P_ID_PARTNERKA_DESC'
   | 'PARY_BY_RI_PARTNER__P_ID_PARTNER_ASC'
   | 'PARY_BY_RI_PARTNER__P_ID_PARTNER_DESC'
+  | 'PARY_BY_RI_PARTNER__P_ID_PARTNERKA_ASC'
+  | 'PARY_BY_RI_PARTNER__P_ID_PARTNERKA_DESC'
   | 'PARY_BY_RI_PARTNER__P_LAT_BODY_ASC'
   | 'PARY_BY_RI_PARTNER__P_LAT_BODY_DESC'
   | 'PARY_BY_RI_PARTNER__P_LAT_FINALE_ASC'
@@ -11738,8 +10341,6 @@ export type RozpisOrderBy =
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
-  | 'ROZPIS_ITEMS_BY_RI_ID_RODIC__COUNT_ASC'
-  | 'ROZPIS_ITEMS_BY_RI_ID_RODIC__COUNT_DESC'
   | 'R_DATUM_ASC'
   | 'R_DATUM_DESC'
   | 'R_ID_ASC'
@@ -11754,6 +10355,8 @@ export type RozpisOrderBy =
   | 'R_TRENER_DESC'
   | 'R_VISIBLE_ASC'
   | 'R_VISIBLE_DESC'
+  | 'ROZPIS_ITEMS_BY_RI_ID_RODIC__COUNT_ASC'
+  | 'ROZPIS_ITEMS_BY_RI_ID_RODIC__COUNT_DESC'
   | 'USER_BY_R_TRENER__U_BAN_ASC'
   | 'USER_BY_R_TRENER__U_BAN_DESC'
   | 'USER_BY_R_TRENER__U_CITY_ASC'
@@ -11819,10 +10422,8 @@ export type RozpisOrderBy =
   | 'USER_BY_R_TRENER__U_TIMESTAMP_ASC'
   | 'USER_BY_R_TRENER__U_TIMESTAMP_DESC';
 
-export type Session = Node & {
+export type Session = {
   __typename?: 'Session';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   ssId: Scalars['String'];
   ssLifetime: Scalars['BigInt'];
   ssUpdatedAt: Scalars['Datetime'];
@@ -12025,14 +10626,12 @@ export type SkupiniesOrderBy =
   | 'USERS_BY_U_SKUPINA__COUNT_ASC'
   | 'USERS_BY_U_SKUPINA__COUNT_DESC';
 
-export type Skupiny = Node & {
+export type Skupiny = {
   __typename?: 'Skupiny';
   cohortGroup: Maybe<Scalars['BigInt']>;
   /** Reads a single `CohortGroup` that is related to this `Skupiny`. */
   cohortGroupByCohortGroup: Maybe<CohortGroup>;
   internalInfo: Scalars['String'];
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   ordering: Scalars['Int'];
   /** Reads and enables pagination through a set of `PlatbyGroupSkupina`. */
   platbyGroupSkupinasByPgsIdSkupina: PlatbyGroupSkupinasConnection;
@@ -12158,7 +10757,7 @@ export type SubmitFormPayload = {
   query: Maybe<Query>;
 };
 
-export type Tenant = Node & {
+export type Tenant = {
   __typename?: 'Tenant';
   /** Reads and enables pagination through a set of `CohortGroup`. */
   cohortGroupsByTenant: CohortGroupsConnection;
@@ -12167,8 +10766,6 @@ export type Tenant = Node & {
   locationsByTenant: LocationsConnection;
   memberInfo: Scalars['String'];
   name: Scalars['String'];
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   /** Reads and enables pagination through a set of `TenantAttachment`. */
   tenantAttachments: TenantAttachmentsConnection;
   /** Reads and enables pagination through a set of `TenantPerson`. */
@@ -12219,12 +10816,10 @@ export type TenantTenantPeopleArgs = {
   orderBy?: InputMaybe<Array<TenantPeopleOrderBy>>;
 };
 
-export type TenantAttachment = Node & {
+export type TenantAttachment = {
   __typename?: 'TenantAttachment';
   /** Reads a single `Attachment` that is related to this `TenantAttachment`. */
   attachmentByObjectName: Maybe<Attachment>;
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   objectName: Scalars['String'];
   /** Reads a single `Tenant` that is related to this `TenantAttachment`. */
   tenant: Maybe<Tenant>;
@@ -12258,11 +10853,6 @@ export type TenantAttachmentPatch = {
   tenantId?: InputMaybe<Scalars['BigInt']>;
   type?: InputMaybe<TenantAttachmentType>;
 };
-
-export type TenantAttachmentType =
-  | 'LOGO'
-  | 'MAP'
-  | 'PHOTO';
 
 /** A connection to a list of `TenantAttachment` values. */
 export type TenantAttachmentsConnection = {
@@ -12311,6 +10901,11 @@ export type TenantAttachmentsOrderBy =
   | 'TENANT_ID_DESC'
   | 'TYPE_ASC'
   | 'TYPE_DESC';
+
+export type TenantAttachmentType =
+  | 'LOGO'
+  | 'MAP'
+  | 'PHOTO';
 
 /** A condition to be used against `Tenant` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type TenantCondition = {
@@ -12382,10 +10977,8 @@ export type TenantPeopleOrderBy =
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC';
 
-export type TenantPerson = Node & {
+export type TenantPerson = {
   __typename?: 'TenantPerson';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   /** Reads a single `Person` that is related to this `TenantPerson`. */
   person: Maybe<Person>;
   personId: Scalars['BigInt'];
@@ -12459,19 +11052,6 @@ export type TenantsOrderBy =
   | 'TENANT_PEOPLE_BY_TENANT_ID__COUNT_ASC'
   | 'TENANT_PEOPLE_BY_TENANT_ID__COUNT_DESC';
 
-/** All input for the `updateAktualityByNodeId` mutation. */
-export type UpdateAktualityByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Aktuality` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `Aktuality` being updated. */
-  patch: AktualityPatch;
-};
-
 /** All input for the `updateAktuality` mutation. */
 export type UpdateAktualityInput = {
   atId: Scalars['BigInt'];
@@ -12510,19 +11090,6 @@ export type UpdateAktualityPayloadAktualityEdgeArgs = {
   orderBy?: InputMaybe<Array<AktualitiesOrderBy>>;
 };
 
-/** All input for the `updateAttachmentByNodeId` mutation. */
-export type UpdateAttachmentByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Attachment` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `Attachment` being updated. */
-  patch: AttachmentPatch;
-};
-
 /** All input for the `updateAttachment` mutation. */
 export type UpdateAttachmentInput = {
   /**
@@ -12557,19 +11124,6 @@ export type UpdateAttachmentPayload = {
 /** The output of our update `Attachment` mutation. */
 export type UpdateAttachmentPayloadAttachmentEdgeArgs = {
   orderBy?: InputMaybe<Array<AttachmentsOrderBy>>;
-};
-
-/** All input for the `updateAttendeeExternalByNodeId` mutation. */
-export type UpdateAttendeeExternalByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `AttendeeExternal` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `AttendeeExternal` being updated. */
-  patch: AttendeeExternalPatch;
 };
 
 /** All input for the `updateAttendeeExternal` mutation. */
@@ -12610,19 +11164,6 @@ export type UpdateAttendeeExternalPayload = {
 /** The output of our update `AttendeeExternal` mutation. */
 export type UpdateAttendeeExternalPayloadAttendeeExternalEdgeArgs = {
   orderBy?: InputMaybe<Array<AttendeeExternalsOrderBy>>;
-};
-
-/** All input for the `updateAttendeeUserByNodeId` mutation. */
-export type UpdateAttendeeUserByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `AttendeeUser` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `AttendeeUser` being updated. */
-  patch: AttendeeUserPatch;
 };
 
 /** All input for the `updateAttendeeUserByUserIdAndEventId` mutation. */
@@ -12676,19 +11217,6 @@ export type UpdateAttendeeUserPayloadAttendeeUserEdgeArgs = {
   orderBy?: InputMaybe<Array<AttendeeUsersOrderBy>>;
 };
 
-/** All input for the `updateCohortGroupByNodeId` mutation. */
-export type UpdateCohortGroupByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `CohortGroup` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `CohortGroup` being updated. */
-  patch: CohortGroupPatch;
-};
-
 /** All input for the `updateCohortGroup` mutation. */
 export type UpdateCohortGroupInput = {
   /**
@@ -12723,19 +11251,6 @@ export type UpdateCohortGroupPayload = {
 /** The output of our update `CohortGroup` mutation. */
 export type UpdateCohortGroupPayloadCohortGroupEdgeArgs = {
   orderBy?: InputMaybe<Array<CohortGroupsOrderBy>>;
-};
-
-/** All input for the `updateDokumentyByNodeId` mutation. */
-export type UpdateDokumentyByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Dokumenty` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `Dokumenty` being updated. */
-  patch: DokumentyPatch;
 };
 
 /** All input for the `updateDokumenty` mutation. */
@@ -12774,19 +11289,6 @@ export type UpdateDokumentyPayloadDokumentyEdgeArgs = {
   orderBy?: InputMaybe<Array<DokumentiesOrderBy>>;
 };
 
-/** All input for the `updateEventByNodeId` mutation. */
-export type UpdateEventByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Event` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `Event` being updated. */
-  patch: EventPatch;
-};
-
 /** All input for the `updateEvent` mutation. */
 export type UpdateEventInput = {
   /**
@@ -12819,19 +11321,6 @@ export type UpdateEventPayload = {
 /** The output of our update `Event` mutation. */
 export type UpdateEventPayloadEventEdgeArgs = {
   orderBy?: InputMaybe<Array<EventsOrderBy>>;
-};
-
-/** All input for the `updateFormResponseByNodeId` mutation. */
-export type UpdateFormResponseByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `FormResponse` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `FormResponse` being updated. */
-  patch: FormResponsePatch;
 };
 
 /** All input for the `updateFormResponse` mutation. */
@@ -12868,19 +11357,6 @@ export type UpdateFormResponsePayloadFormResponseEdgeArgs = {
   orderBy?: InputMaybe<Array<FormResponsesOrderBy>>;
 };
 
-/** All input for the `updateGalerieDirByNodeId` mutation. */
-export type UpdateGalerieDirByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `GalerieDir` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `GalerieDir` being updated. */
-  patch: GalerieDirPatch;
-};
-
 /** All input for the `updateGalerieDir` mutation. */
 export type UpdateGalerieDirInput = {
   /**
@@ -12913,19 +11389,6 @@ export type UpdateGalerieDirPayload = {
 /** The output of our update `GalerieDir` mutation. */
 export type UpdateGalerieDirPayloadGalerieDirEdgeArgs = {
   orderBy?: InputMaybe<Array<GalerieDirsOrderBy>>;
-};
-
-/** All input for the `updateGalerieFotoByNodeId` mutation. */
-export type UpdateGalerieFotoByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `GalerieFoto` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `GalerieFoto` being updated. */
-  patch: GalerieFotoPatch;
 };
 
 /** All input for the `updateGalerieFoto` mutation. */
@@ -12964,19 +11427,6 @@ export type UpdateGalerieFotoPayload = {
 /** The output of our update `GalerieFoto` mutation. */
 export type UpdateGalerieFotoPayloadGalerieFotoEdgeArgs = {
   orderBy?: InputMaybe<Array<GalerieFotosOrderBy>>;
-};
-
-/** All input for the `updateLocationAttachmentByNodeId` mutation. */
-export type UpdateLocationAttachmentByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `LocationAttachment` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `LocationAttachment` being updated. */
-  patch: LocationAttachmentPatch;
 };
 
 /** All input for the `updateLocationAttachment` mutation. */
@@ -13018,19 +11468,6 @@ export type UpdateLocationAttachmentPayloadLocationAttachmentEdgeArgs = {
   orderBy?: InputMaybe<Array<LocationAttachmentsOrderBy>>;
 };
 
-/** All input for the `updateLocationByNodeId` mutation. */
-export type UpdateLocationByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Location` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `Location` being updated. */
-  patch: LocationPatch;
-};
-
 /** All input for the `updateLocation` mutation. */
 export type UpdateLocationInput = {
   /**
@@ -13067,19 +11504,6 @@ export type UpdateLocationPayloadLocationEdgeArgs = {
   orderBy?: InputMaybe<Array<LocationsOrderBy>>;
 };
 
-/** All input for the `updateNabidkaByNodeId` mutation. */
-export type UpdateNabidkaByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Nabidka` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `Nabidka` being updated. */
-  patch: NabidkaPatch;
-};
-
 /** All input for the `updateNabidka` mutation. */
 export type UpdateNabidkaInput = {
   /**
@@ -13101,19 +11525,6 @@ export type UpdateNabidkaItemByNiPartnerAndNiIdRodicInput = {
   clientMutationId?: InputMaybe<Scalars['String']>;
   niIdRodic: Scalars['BigInt'];
   niPartner: Scalars['BigInt'];
-  /** An object where the defined keys will be set on the `NabidkaItem` being updated. */
-  patch: NabidkaItemPatch;
-};
-
-/** All input for the `updateNabidkaItemByNodeId` mutation. */
-export type UpdateNabidkaItemByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `NabidkaItem` to be updated. */
-  nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `NabidkaItem` being updated. */
   patch: NabidkaItemPatch;
 };
@@ -13180,19 +11591,6 @@ export type UpdateNabidkaPayloadNabidkaEdgeArgs = {
   orderBy?: InputMaybe<Array<NabidkasOrderBy>>;
 };
 
-/** All input for the `updatePageByNodeId` mutation. */
-export type UpdatePageByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Page` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `Page` being updated. */
-  patch: PagePatch;
-};
-
 /** All input for the `updatePageByUrl` mutation. */
 export type UpdatePageByUrlInput = {
   /**
@@ -13239,19 +11637,6 @@ export type UpdatePagePayloadPageEdgeArgs = {
   orderBy?: InputMaybe<Array<PagesOrderBy>>;
 };
 
-/** All input for the `updateParameterByNodeId` mutation. */
-export type UpdateParameterByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Parameter` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `Parameter` being updated. */
-  patch: ParameterPatch;
-};
-
 /** All input for the `updateParameter` mutation. */
 export type UpdateParameterInput = {
   /**
@@ -13286,19 +11671,6 @@ export type UpdateParameterPayloadParameterEdgeArgs = {
   orderBy?: InputMaybe<Array<ParametersOrderBy>>;
 };
 
-/** All input for the `updateParyByNodeId` mutation. */
-export type UpdateParyByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Pary` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `Pary` being updated. */
-  patch: ParyPatch;
-};
-
 /** All input for the `updatePary` mutation. */
 export type UpdateParyInput = {
   /**
@@ -13306,22 +11678,9 @@ export type UpdateParyInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']>;
-  pId: Scalars['BigInt'];
   /** An object where the defined keys will be set on the `Pary` being updated. */
   patch: ParyPatch;
-};
-
-/** All input for the `updateParyNavrhByNodeId` mutation. */
-export type UpdateParyNavrhByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `ParyNavrh` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `ParyNavrh` being updated. */
-  patch: ParyNavrhPatch;
+  pId: Scalars['BigInt'];
 };
 
 /** All input for the `updateParyNavrh` mutation. */
@@ -13390,19 +11749,6 @@ export type UpdateParyPayloadParyEdgeArgs = {
   orderBy?: InputMaybe<Array<PariesOrderBy>>;
 };
 
-/** All input for the `updatePermissionByNodeId` mutation. */
-export type UpdatePermissionByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Permission` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `Permission` being updated. */
-  patch: PermissionPatch;
-};
-
 /** All input for the `updatePermission` mutation. */
 export type UpdatePermissionInput = {
   /**
@@ -13437,19 +11783,6 @@ export type UpdatePermissionPayloadPermissionEdgeArgs = {
   orderBy?: InputMaybe<Array<PermissionsOrderBy>>;
 };
 
-/** All input for the `updatePersonByNodeId` mutation. */
-export type UpdatePersonByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Person` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `Person` being updated. */
-  patch: PersonPatch;
-};
-
 /** All input for the `updatePerson` mutation. */
 export type UpdatePersonInput = {
   /**
@@ -13482,32 +11815,6 @@ export type UpdatePersonPayload = {
 /** The output of our update `Person` mutation. */
 export type UpdatePersonPayloadPersonEdgeArgs = {
   orderBy?: InputMaybe<Array<PeopleOrderBy>>;
-};
-
-/** All input for the `updatePlatbyCategoryByNodeId` mutation. */
-export type UpdatePlatbyCategoryByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `PlatbyCategory` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `PlatbyCategory` being updated. */
-  patch: PlatbyCategoryPatch;
-};
-
-/** All input for the `updatePlatbyCategoryGroupByNodeId` mutation. */
-export type UpdatePlatbyCategoryGroupByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `PlatbyCategoryGroup` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `PlatbyCategoryGroup` being updated. */
-  patch: PlatbyCategoryGroupPatch;
 };
 
 /** All input for the `updatePlatbyCategoryGroup` mutation. */
@@ -13582,19 +11889,6 @@ export type UpdatePlatbyCategoryPayloadPlatbyCategoryEdgeArgs = {
   orderBy?: InputMaybe<Array<PlatbyCategoriesOrderBy>>;
 };
 
-/** All input for the `updatePlatbyGroupByNodeId` mutation. */
-export type UpdatePlatbyGroupByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `PlatbyGroup` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `PlatbyGroup` being updated. */
-  patch: PlatbyGroupPatch;
-};
-
 /** All input for the `updatePlatbyGroup` mutation. */
 export type UpdatePlatbyGroupInput = {
   /**
@@ -13627,19 +11921,6 @@ export type UpdatePlatbyGroupPayload = {
 /** The output of our update `PlatbyGroup` mutation. */
 export type UpdatePlatbyGroupPayloadPlatbyGroupEdgeArgs = {
   orderBy?: InputMaybe<Array<PlatbyGroupsOrderBy>>;
-};
-
-/** All input for the `updatePlatbyGroupSkupinaByNodeId` mutation. */
-export type UpdatePlatbyGroupSkupinaByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `PlatbyGroupSkupina` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `PlatbyGroupSkupina` being updated. */
-  patch: PlatbyGroupSkupinaPatch;
 };
 
 /** All input for the `updatePlatbyGroupSkupina` mutation. */
@@ -13678,19 +11959,6 @@ export type UpdatePlatbyGroupSkupinaPayload = {
 /** The output of our update `PlatbyGroupSkupina` mutation. */
 export type UpdatePlatbyGroupSkupinaPayloadPlatbyGroupSkupinaEdgeArgs = {
   orderBy?: InputMaybe<Array<PlatbyGroupSkupinasOrderBy>>;
-};
-
-/** All input for the `updatePlatbyItemByNodeId` mutation. */
-export type UpdatePlatbyItemByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `PlatbyItem` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `PlatbyItem` being updated. */
-  patch: PlatbyItemPatch;
 };
 
 /** All input for the `updatePlatbyItem` mutation. */
@@ -13733,19 +12001,6 @@ export type UpdatePlatbyItemPayloadPlatbyItemEdgeArgs = {
   orderBy?: InputMaybe<Array<PlatbyItemsOrderBy>>;
 };
 
-/** All input for the `updatePlatbyRawByNodeId` mutation. */
-export type UpdatePlatbyRawByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `PlatbyRaw` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `PlatbyRaw` being updated. */
-  patch: PlatbyRawPatch;
-};
-
 /** All input for the `updatePlatbyRaw` mutation. */
 export type UpdatePlatbyRawInput = {
   /**
@@ -13778,19 +12033,6 @@ export type UpdatePlatbyRawPayload = {
 /** The output of our update `PlatbyRaw` mutation. */
 export type UpdatePlatbyRawPayloadPlatbyRawEdgeArgs = {
   orderBy?: InputMaybe<Array<PlatbyRawsOrderBy>>;
-};
-
-/** All input for the `updateRoomAttachmentByNodeId` mutation. */
-export type UpdateRoomAttachmentByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `RoomAttachment` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `RoomAttachment` being updated. */
-  patch: RoomAttachmentPatch;
 };
 
 /** All input for the `updateRoomAttachment` mutation. */
@@ -13832,19 +12074,6 @@ export type UpdateRoomAttachmentPayloadRoomAttachmentEdgeArgs = {
   orderBy?: InputMaybe<Array<RoomAttachmentsOrderBy>>;
 };
 
-/** All input for the `updateRoomByNodeId` mutation. */
-export type UpdateRoomByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Room` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `Room` being updated. */
-  patch: RoomPatch;
-};
-
 /** All input for the `updateRoom` mutation. */
 export type UpdateRoomInput = {
   /**
@@ -13881,19 +12110,6 @@ export type UpdateRoomPayloadRoomEdgeArgs = {
   orderBy?: InputMaybe<Array<RoomsOrderBy>>;
 };
 
-/** All input for the `updateRozpiByNodeId` mutation. */
-export type UpdateRozpiByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Rozpi` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `Rozpi` being updated. */
-  patch: RozpiPatch;
-};
-
 /** All input for the `updateRozpi` mutation. */
 export type UpdateRozpiInput = {
   /**
@@ -13928,19 +12144,6 @@ export type UpdateRozpiPayload = {
 /** The output of our update `Rozpi` mutation. */
 export type UpdateRozpiPayloadRozpiEdgeArgs = {
   orderBy?: InputMaybe<Array<RozpisOrderBy>>;
-};
-
-/** All input for the `updateRozpisItemByNodeId` mutation. */
-export type UpdateRozpisItemByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `RozpisItem` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `RozpisItem` being updated. */
-  patch: RozpisItemPatch;
 };
 
 /** All input for the `updateRozpisItem` mutation. */
@@ -13981,19 +12184,6 @@ export type UpdateRozpisItemPayloadRozpisItemEdgeArgs = {
   orderBy?: InputMaybe<Array<RozpisItemsOrderBy>>;
 };
 
-/** All input for the `updateSessionByNodeId` mutation. */
-export type UpdateSessionByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Session` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `Session` being updated. */
-  patch: SessionPatch;
-};
-
 /** All input for the `updateSession` mutation. */
 export type UpdateSessionInput = {
   /**
@@ -14030,19 +12220,6 @@ export type UpdateSessionPayloadSessionEdgeArgs = {
   orderBy?: InputMaybe<Array<SessionsOrderBy>>;
 };
 
-/** All input for the `updateSkupinyByNodeId` mutation. */
-export type UpdateSkupinyByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Skupiny` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `Skupiny` being updated. */
-  patch: SkupinyPatch;
-};
-
 /** All input for the `updateSkupiny` mutation. */
 export type UpdateSkupinyInput = {
   /**
@@ -14077,19 +12254,6 @@ export type UpdateSkupinyPayload = {
 /** The output of our update `Skupiny` mutation. */
 export type UpdateSkupinyPayloadSkupinyEdgeArgs = {
   orderBy?: InputMaybe<Array<SkupiniesOrderBy>>;
-};
-
-/** All input for the `updateTenantAttachmentByNodeId` mutation. */
-export type UpdateTenantAttachmentByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `TenantAttachment` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `TenantAttachment` being updated. */
-  patch: TenantAttachmentPatch;
 };
 
 /** All input for the `updateTenantAttachment` mutation. */
@@ -14131,19 +12295,6 @@ export type UpdateTenantAttachmentPayloadTenantAttachmentEdgeArgs = {
   orderBy?: InputMaybe<Array<TenantAttachmentsOrderBy>>;
 };
 
-/** All input for the `updateTenantByNodeId` mutation. */
-export type UpdateTenantByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Tenant` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `Tenant` being updated. */
-  patch: TenantPatch;
-};
-
 /** All input for the `updateTenant` mutation. */
 export type UpdateTenantInput = {
   /**
@@ -14176,19 +12327,6 @@ export type UpdateTenantPayload = {
 /** The output of our update `Tenant` mutation. */
 export type UpdateTenantPayloadTenantEdgeArgs = {
   orderBy?: InputMaybe<Array<TenantsOrderBy>>;
-};
-
-/** All input for the `updateTenantPersonByNodeId` mutation. */
-export type UpdateTenantPersonByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `TenantPerson` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `TenantPerson` being updated. */
-  patch: TenantPersonPatch;
 };
 
 /** All input for the `updateTenantPerson` mutation. */
@@ -14230,19 +12368,6 @@ export type UpdateTenantPersonPayloadTenantPersonEdgeArgs = {
   orderBy?: InputMaybe<Array<TenantPeopleOrderBy>>;
 };
 
-/** All input for the `updateUpozorneniByNodeId` mutation. */
-export type UpdateUpozorneniByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `Upozorneni` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `Upozorneni` being updated. */
-  patch: UpozorneniPatch;
-};
-
 /** All input for the `updateUpozorneni` mutation. */
 export type UpdateUpozorneniInput = {
   /**
@@ -14277,19 +12402,6 @@ export type UpdateUpozorneniPayload = {
 /** The output of our update `Upozorneni` mutation. */
 export type UpdateUpozorneniPayloadUpozorneniEdgeArgs = {
   orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
-};
-
-/** All input for the `updateUpozorneniSkupinyByNodeId` mutation. */
-export type UpdateUpozorneniSkupinyByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `UpozorneniSkupiny` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `UpozorneniSkupiny` being updated. */
-  patch: UpozorneniSkupinyPatch;
 };
 
 /** All input for the `updateUpozorneniSkupiny` mutation. */
@@ -14328,19 +12440,6 @@ export type UpdateUpozorneniSkupinyPayload = {
 /** The output of our update `UpozorneniSkupiny` mutation. */
 export type UpdateUpozorneniSkupinyPayloadUpozorneniSkupinyEdgeArgs = {
   orderBy?: InputMaybe<Array<UpozorneniSkupiniesOrderBy>>;
-};
-
-/** All input for the `updateUserByNodeId` mutation. */
-export type UpdateUserByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `User` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `User` being updated. */
-  patch: UserPatch;
 };
 
 /** All input for the `updateUser` mutation. */
@@ -14387,11 +12486,9 @@ export type UploadFilePayload = {
   uploadUrl: Scalars['String'];
 };
 
-export type Upozorneni = Node & {
+export type Upozorneni = {
   __typename?: 'Upozorneni';
   isVisible: Maybe<Scalars['Boolean']>;
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   scheduledSince: Maybe<Scalars['Datetime']>;
   scheduledUntil: Maybe<Scalars['Datetime']>;
   upBarvy: Scalars['BigInt'];
@@ -14399,11 +12496,11 @@ export type Upozorneni = Node & {
   upKdo: Maybe<Scalars['BigInt']>;
   upLock: Scalars['Boolean'];
   upNadpis: Scalars['String'];
+  /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
+  upozorneniSkupiniesByUpsIdRodic: UpozorneniSkupiniesConnection;
   upText: Scalars['String'];
   upTimestamp: Maybe<Scalars['Datetime']>;
   upTimestampAdd: Scalars['Datetime'];
-  /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
-  upozorneniSkupiniesByUpsIdRodic: UpozorneniSkupiniesConnection;
   /** Reads a single `User` that is related to this `Upozorneni`. */
   userByUpKdo: Maybe<User>;
 };
@@ -14476,6 +12573,28 @@ export type UpozorneniPatch = {
   upText?: InputMaybe<Scalars['String']>;
   upTimestamp?: InputMaybe<Scalars['Datetime']>;
   upTimestampAdd?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** A connection to a list of `Upozorneni` values. */
+export type UpozornenisConnection = {
+  __typename?: 'UpozornenisConnection';
+  /** A list of edges which contains the `Upozorneni` and cursor to aid in pagination. */
+  edges: Array<UpozornenisEdge>;
+  /** A list of `Upozorneni` objects. */
+  nodes: Array<Upozorneni>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Upozorneni` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Upozorneni` edge in the connection. */
+export type UpozornenisEdge = {
+  __typename?: 'UpozornenisEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']>;
+  /** The `Upozorneni` at the end of the edge. */
+  node: Upozorneni;
 };
 
 /** A connection to a list of `UpozorneniSkupiny` values. */
@@ -14558,10 +12677,8 @@ export type UpozorneniSkupiniesOrderBy =
   | 'UPS_POPIS_ASC'
   | 'UPS_POPIS_DESC';
 
-export type UpozorneniSkupiny = Node & {
+export type UpozorneniSkupiny = {
   __typename?: 'UpozorneniSkupiny';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   /** Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`. */
   skupinyByUpsIdSkupina: Maybe<Skupiny>;
   /** Reads a single `Upozorneni` that is related to this `UpozorneniSkupiny`. */
@@ -14608,28 +12725,6 @@ export type UpozorneniSkupinyPatch = {
   upsPopis?: InputMaybe<Scalars['String']>;
 };
 
-/** A connection to a list of `Upozorneni` values. */
-export type UpozornenisConnection = {
-  __typename?: 'UpozornenisConnection';
-  /** A list of edges which contains the `Upozorneni` and cursor to aid in pagination. */
-  edges: Array<UpozornenisEdge>;
-  /** A list of `Upozorneni` objects. */
-  nodes: Array<Upozorneni>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Upozorneni` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `Upozorneni` edge in the connection. */
-export type UpozornenisEdge = {
-  __typename?: 'UpozornenisEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
-  /** The `Upozorneni` at the end of the edge. */
-  node: Upozorneni;
-};
-
 /** Methods to use when ordering `Upozorneni`. */
 export type UpozornenisOrderBy =
   | 'IS_VISIBLE_ASC'
@@ -14641,8 +12736,6 @@ export type UpozornenisOrderBy =
   | 'SCHEDULED_SINCE_DESC'
   | 'SCHEDULED_UNTIL_ASC'
   | 'SCHEDULED_UNTIL_DESC'
-  | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_ASC'
-  | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_DESC'
   | 'UP_BARVY_ASC'
   | 'UP_BARVY_DESC'
   | 'UP_ID_ASC'
@@ -14659,6 +12752,8 @@ export type UpozornenisOrderBy =
   | 'UP_TIMESTAMP_ADD_DESC'
   | 'UP_TIMESTAMP_ASC'
   | 'UP_TIMESTAMP_DESC'
+  | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_ASC'
+  | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_DESC'
   | 'USER_BY_UP_KDO__U_BAN_ASC'
   | 'USER_BY_UP_KDO__U_BAN_DESC'
   | 'USER_BY_UP_KDO__U_CITY_ASC'
@@ -14724,7 +12819,7 @@ export type UpozornenisOrderBy =
   | 'USER_BY_UP_KDO__U_TIMESTAMP_ASC'
   | 'USER_BY_UP_KDO__U_TIMESTAMP_DESC';
 
-export type User = Node & {
+export type User = {
   __typename?: 'User';
   /** Reads and enables pagination through a set of `AkceItem`. */
   akceItemsByAiUser: AkceItemsConnection;
@@ -14745,8 +12840,6 @@ export type User = Node & {
   galerieFotosByGfKdo: GalerieFotosConnection;
   /** Reads and enables pagination through a set of `Nabidka`. */
   nabidkasByNTrener: NabidkasConnection;
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
   /** Reads and enables pagination through a set of `Pary`. */
   pariesByPIdPartner: PariesConnection;
   /** Reads and enables pagination through a set of `Pary`. */
@@ -14791,6 +12884,8 @@ export type User = Node & {
   uPohlavi: Scalars['String'];
   uPostalCode: Scalars['String'];
   uPoznamky: Scalars['String'];
+  /** Reads and enables pagination through a set of `Upozorneni`. */
+  upozornenisByUpKdo: UpozornenisConnection;
   uPrijmeni: Scalars['String'];
   uRodneCislo: Maybe<Scalars['String']>;
   uSkupina: Scalars['BigInt'];
@@ -14799,8 +12894,6 @@ export type User = Node & {
   uTeacher: Scalars['Boolean'];
   uTelefon: Scalars['String'];
   uTimestamp: Scalars['Datetime'];
-  /** Reads and enables pagination through a set of `Upozorneni`. */
-  upozornenisByUpKdo: UpozornenisConnection;
 };
 
 
@@ -15184,16 +13277,16 @@ export type UsersOrderBy =
   | 'NABIDKAS_BY_N_TRENER__COUNT_ASC'
   | 'NABIDKAS_BY_N_TRENER__COUNT_DESC'
   | 'NATURAL'
-  | 'PARIES_BY_P_ID_PARTNERKA__COUNT_ASC'
-  | 'PARIES_BY_P_ID_PARTNERKA__COUNT_DESC'
   | 'PARIES_BY_P_ID_PARTNER__COUNT_ASC'
   | 'PARIES_BY_P_ID_PARTNER__COUNT_DESC'
+  | 'PARIES_BY_P_ID_PARTNERKA__COUNT_ASC'
+  | 'PARIES_BY_P_ID_PARTNERKA__COUNT_DESC'
   | 'PARY_NAVRHS_BY_PN_NAVRHL__COUNT_ASC'
   | 'PARY_NAVRHS_BY_PN_NAVRHL__COUNT_DESC'
-  | 'PARY_NAVRHS_BY_PN_PARTNERKA__COUNT_ASC'
-  | 'PARY_NAVRHS_BY_PN_PARTNERKA__COUNT_DESC'
   | 'PARY_NAVRHS_BY_PN_PARTNER__COUNT_ASC'
   | 'PARY_NAVRHS_BY_PN_PARTNER__COUNT_DESC'
+  | 'PARY_NAVRHS_BY_PN_PARTNERKA__COUNT_ASC'
+  | 'PARY_NAVRHS_BY_PN_PARTNERKA__COUNT_DESC'
   | 'PERMISSION_BY_U_GROUP__PE_AKCE_ASC'
   | 'PERMISSION_BY_U_GROUP__PE_AKCE_DESC'
   | 'PERMISSION_BY_U_GROUP__PE_AKTUALITY_ASC'
@@ -15262,8 +13355,6 @@ export type UsersOrderBy =
   | 'SKUPINY_BY_U_SKUPINA__S_NAME_DESC'
   | 'SKUPINY_BY_U_SKUPINA__S_VISIBLE_ASC'
   | 'SKUPINY_BY_U_SKUPINA__S_VISIBLE_DESC'
-  | 'UPOZORNENIS_BY_UP_KDO__COUNT_ASC'
-  | 'UPOZORNENIS_BY_UP_KDO__COUNT_DESC'
   | 'U_BAN_ASC'
   | 'U_BAN_DESC'
   | 'U_CITY_ASC'
@@ -15327,7 +13418,9 @@ export type UsersOrderBy =
   | 'U_TELEFON_ASC'
   | 'U_TELEFON_DESC'
   | 'U_TIMESTAMP_ASC'
-  | 'U_TIMESTAMP_DESC';
+  | 'U_TIMESTAMP_DESC'
+  | 'UPOZORNENIS_BY_UP_KDO__COUNT_ASC'
+  | 'UPOZORNENIS_BY_UP_KDO__COUNT_DESC';
 
 /** All input for the `verifyFunction` mutation. */
 export type VerifyFunctionInput = {

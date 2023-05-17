@@ -476,7 +476,7 @@ enum AktualitiesOrderBy {
   USER_BY_AT_KDO__U_TIMESTAMP_DESC
 }
 
-type Aktuality implements Node {
+type Aktuality {
   atFoto: BigInt
   atFotoMain: BigInt
   atId: BigInt!
@@ -490,11 +490,6 @@ type Aktuality implements Node {
 
   """Reads a single `GalerieFoto` that is related to this `Aktuality`."""
   galerieFotoByAtFotoMain: GalerieFoto
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
 
   """Reads a single `User` that is related to this `Aktuality`."""
   userByAtKdo: User
@@ -566,7 +561,7 @@ input AktualityPatch {
   atTimestampAdd: Datetime
 }
 
-type Attachment implements Node {
+type Attachment {
   """Reads and enables pagination through a set of `LocationAttachment`."""
   locationAttachmentsByObjectName(
     """Read all values in the set after (below) this cursor."""
@@ -595,11 +590,6 @@ type Attachment implements Node {
     """The method to use when ordering `LocationAttachment`."""
     orderBy: [LocationAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): LocationAttachmentsConnection!
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
   objectName: String!
   previewObjectName: String
 
@@ -814,7 +804,7 @@ enum AttachmentsOrderBy {
   USER_BY_UPLOADED_BY__U_TIMESTAMP_DESC
 }
 
-type AttendeeExternal implements Node {
+type AttendeeExternal {
   birthNumber: String
   confirmedAt: Datetime
   confirmedBy: BigInt
@@ -829,11 +819,6 @@ type AttendeeExternal implements Node {
   id: BigInt!
   lastName: String!
   managedBy: BigInt
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
   notes: String!
   phone: String!
   updatedAt: Datetime!
@@ -1148,18 +1133,13 @@ enum AttendeeExternalsOrderBy {
   USER_BY_MANAGED_BY__U_TIMESTAMP_DESC
 }
 
-type AttendeeUser implements Node {
+type AttendeeUser {
   birthYear: Int!
 
   """Reads a single `Event` that is related to this `AttendeeUser`."""
   event: Event
   eventId: BigInt!
   id: BigInt!
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
   notes: String!
 
   """Reads a single `User` that is related to this `AttendeeUser`."""
@@ -1454,16 +1434,11 @@ type ChangePasswordPayload {
   query: Query
 }
 
-type CohortGroup implements Node {
+type CohortGroup {
   description: String!
   id: BigInt!
   isPublic: Boolean!
   name: String!
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
   ordering: Int!
 
   """Reads and enables pagination through a set of `Skupiny`."""
@@ -3313,20 +3288,6 @@ A point in time as described by the [ISO
 """
 scalar Datetime
 
-"""All input for the `deleteAktualityByNodeId` mutation."""
-input DeleteAktualityByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Aktuality` to be deleted.
-  """
-  nodeId: ID!
-}
-
 """All input for the `deleteAktuality` mutation."""
 input DeleteAktualityInput {
   atId: BigInt!
@@ -3368,20 +3329,6 @@ type DeleteAktualityPayload {
   userByAtKdo: User
 }
 
-"""All input for the `deleteAttachmentByNodeId` mutation."""
-input DeleteAttachmentByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Attachment` to be deleted.
-  """
-  nodeId: ID!
-}
-
 """All input for the `deleteAttachment` mutation."""
 input DeleteAttachmentInput {
   """
@@ -3417,20 +3364,6 @@ type DeleteAttachmentPayload {
 
   """Reads a single `User` that is related to this `Attachment`."""
   userByUploadedBy: User
-}
-
-"""All input for the `deleteAttendeeExternalByNodeId` mutation."""
-input DeleteAttendeeExternalByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `AttendeeExternal` to be deleted.
-  """
-  nodeId: ID!
 }
 
 """All input for the `deleteAttendeeExternal` mutation."""
@@ -3474,20 +3407,6 @@ type DeleteAttendeeExternalPayload {
 
   """Reads a single `User` that is related to this `AttendeeExternal`."""
   userByManagedBy: User
-}
-
-"""All input for the `deleteAttendeeUserByNodeId` mutation."""
-input DeleteAttendeeUserByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `AttendeeUser` to be deleted.
-  """
-  nodeId: ID!
 }
 
 """All input for the `deleteAttendeeUserByUserIdAndEventId` mutation."""
@@ -3541,20 +3460,6 @@ type DeleteAttendeeUserPayload {
   user: User
 }
 
-"""All input for the `deleteCohortGroupByNodeId` mutation."""
-input DeleteCohortGroupByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `CohortGroup` to be deleted.
-  """
-  nodeId: ID!
-}
-
 """All input for the `deleteCohortGroup` mutation."""
 input DeleteCohortGroupInput {
   """
@@ -3590,20 +3495,6 @@ type DeleteCohortGroupPayload {
 
   """Reads a single `Tenant` that is related to this `CohortGroup`."""
   tenantByTenant: Tenant
-}
-
-"""All input for the `deleteDokumentyByNodeId` mutation."""
-input DeleteDokumentyByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Dokumenty` to be deleted.
-  """
-  nodeId: ID!
 }
 
 """All input for the `deleteDokumenty` mutation."""
@@ -3643,20 +3534,6 @@ type DeleteDokumentyPayload {
   userByDKdo: User
 }
 
-"""All input for the `deleteEventByNodeId` mutation."""
-input DeleteEventByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Event` to be deleted.
-  """
-  nodeId: ID!
-}
-
 """All input for the `deleteEvent` mutation."""
 input DeleteEventInput {
   """
@@ -3689,20 +3566,6 @@ type DeleteEventPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-}
-
-"""All input for the `deleteFormResponseByNodeId` mutation."""
-input DeleteFormResponseByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `FormResponse` to be deleted.
-  """
-  nodeId: ID!
 }
 
 """All input for the `deleteFormResponse` mutation."""
@@ -3739,20 +3602,6 @@ type DeleteFormResponsePayload {
   query: Query
 }
 
-"""All input for the `deleteGalerieDirByNodeId` mutation."""
-input DeleteGalerieDirByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `GalerieDir` to be deleted.
-  """
-  nodeId: ID!
-}
-
 """All input for the `deleteGalerieDir` mutation."""
 input DeleteGalerieDirInput {
   """
@@ -3785,20 +3634,6 @@ type DeleteGalerieDirPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-}
-
-"""All input for the `deleteGalerieFotoByNodeId` mutation."""
-input DeleteGalerieFotoByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `GalerieFoto` to be deleted.
-  """
-  nodeId: ID!
 }
 
 """All input for the `deleteGalerieFoto` mutation."""
@@ -3839,20 +3674,6 @@ type DeleteGalerieFotoPayload {
 
   """Reads a single `User` that is related to this `GalerieFoto`."""
   userByGfKdo: User
-}
-
-"""All input for the `deleteLocationAttachmentByNodeId` mutation."""
-input DeleteLocationAttachmentByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `LocationAttachment` to be deleted.
-  """
-  nodeId: ID!
 }
 
 """All input for the `deleteLocationAttachment` mutation."""
@@ -3900,20 +3721,6 @@ type DeleteLocationAttachmentPayload {
   query: Query
 }
 
-"""All input for the `deleteLocationByNodeId` mutation."""
-input DeleteLocationByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Location` to be deleted.
-  """
-  nodeId: ID!
-}
-
 """All input for the `deleteLocation` mutation."""
 input DeleteLocationInput {
   """
@@ -3951,20 +3758,6 @@ type DeleteLocationPayload {
   tenantByTenant: Tenant
 }
 
-"""All input for the `deleteNabidkaByNodeId` mutation."""
-input DeleteNabidkaByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Nabidka` to be deleted.
-  """
-  nodeId: ID!
-}
-
 """All input for the `deleteNabidka` mutation."""
 input DeleteNabidkaInput {
   """
@@ -3984,20 +3777,6 @@ input DeleteNabidkaItemByNiPartnerAndNiIdRodicInput {
   clientMutationId: String
   niIdRodic: BigInt!
   niPartner: BigInt!
-}
-
-"""All input for the `deleteNabidkaItemByNodeId` mutation."""
-input DeleteNabidkaItemByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `NabidkaItem` to be deleted.
-  """
-  nodeId: ID!
 }
 
 """All input for the `deleteNabidkaItem` mutation."""
@@ -4067,20 +3846,6 @@ type DeleteNabidkaPayload {
   userByNTrener: User
 }
 
-"""All input for the `deleteParameterByNodeId` mutation."""
-input DeleteParameterByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Parameter` to be deleted.
-  """
-  nodeId: ID!
-}
-
 """All input for the `deleteParameter` mutation."""
 input DeleteParameterInput {
   """
@@ -4115,20 +3880,6 @@ type DeleteParameterPayload {
   query: Query
 }
 
-"""All input for the `deleteParyByNodeId` mutation."""
-input DeleteParyByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Pary` to be deleted.
-  """
-  nodeId: ID!
-}
-
 """All input for the `deletePary` mutation."""
 input DeleteParyInput {
   """
@@ -4137,20 +3888,6 @@ input DeleteParyInput {
   """
   clientMutationId: String
   pId: BigInt!
-}
-
-"""All input for the `deleteParyNavrhByNodeId` mutation."""
-input DeleteParyNavrhByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `ParyNavrh` to be deleted.
-  """
-  nodeId: ID!
 }
 
 """All input for the `deleteParyNavrh` mutation."""
@@ -4226,20 +3963,6 @@ type DeleteParyPayload {
   userByPIdPartnerka: User
 }
 
-"""All input for the `deletePermissionByNodeId` mutation."""
-input DeletePermissionByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Permission` to be deleted.
-  """
-  nodeId: ID!
-}
-
 """All input for the `deletePermission` mutation."""
 input DeletePermissionInput {
   """
@@ -4274,20 +3997,6 @@ type DeletePermissionPayload {
   query: Query
 }
 
-"""All input for the `deletePersonByNodeId` mutation."""
-input DeletePersonByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Person` to be deleted.
-  """
-  nodeId: ID!
-}
-
 """All input for the `deletePerson` mutation."""
 input DeletePersonInput {
   """
@@ -4320,34 +4029,6 @@ type DeletePersonPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-}
-
-"""All input for the `deletePlatbyCategoryByNodeId` mutation."""
-input DeletePlatbyCategoryByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `PlatbyCategory` to be deleted.
-  """
-  nodeId: ID!
-}
-
-"""All input for the `deletePlatbyCategoryGroupByNodeId` mutation."""
-input DeletePlatbyCategoryGroupByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `PlatbyCategoryGroup` to be deleted.
-  """
-  nodeId: ID!
 }
 
 """All input for the `deletePlatbyCategoryGroup` mutation."""
@@ -4428,20 +4109,6 @@ type DeletePlatbyCategoryPayload {
   query: Query
 }
 
-"""All input for the `deletePlatbyGroupByNodeId` mutation."""
-input DeletePlatbyGroupByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `PlatbyGroup` to be deleted.
-  """
-  nodeId: ID!
-}
-
 """All input for the `deletePlatbyGroup` mutation."""
 input DeletePlatbyGroupInput {
   """
@@ -4474,20 +4141,6 @@ type DeletePlatbyGroupPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-}
-
-"""All input for the `deletePlatbyGroupSkupinaByNodeId` mutation."""
-input DeletePlatbyGroupSkupinaByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `PlatbyGroupSkupina` to be deleted.
-  """
-  nodeId: ID!
 }
 
 """All input for the `deletePlatbyGroupSkupina` mutation."""
@@ -4530,20 +4183,6 @@ type DeletePlatbyGroupSkupinaPayload {
 
   """Reads a single `Skupiny` that is related to this `PlatbyGroupSkupina`."""
   skupinyByPgsIdSkupina: Skupiny
-}
-
-"""All input for the `deletePlatbyItemByNodeId` mutation."""
-input DeletePlatbyItemByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `PlatbyItem` to be deleted.
-  """
-  nodeId: ID!
 }
 
 """All input for the `deletePlatbyItem` mutation."""
@@ -4589,20 +4228,6 @@ type DeletePlatbyItemPayload {
   userByPiIdUser: User
 }
 
-"""All input for the `deletePlatbyRawByNodeId` mutation."""
-input DeletePlatbyRawByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `PlatbyRaw` to be deleted.
-  """
-  nodeId: ID!
-}
-
 """All input for the `deletePlatbyRaw` mutation."""
 input DeletePlatbyRawInput {
   """
@@ -4635,20 +4260,6 @@ type DeletePlatbyRawPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-}
-
-"""All input for the `deleteRoomAttachmentByNodeId` mutation."""
-input DeleteRoomAttachmentByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `RoomAttachment` to be deleted.
-  """
-  nodeId: ID!
 }
 
 """All input for the `deleteRoomAttachment` mutation."""
@@ -4692,20 +4303,6 @@ type DeleteRoomAttachmentPayload {
   ): RoomAttachmentsEdge
 }
 
-"""All input for the `deleteRoomByNodeId` mutation."""
-input DeleteRoomByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Room` to be deleted.
-  """
-  nodeId: ID!
-}
-
 """All input for the `deleteRoom` mutation."""
 input DeleteRoomInput {
   """
@@ -4743,20 +4340,6 @@ type DeleteRoomPayload {
   ): RoomsEdge
 }
 
-"""All input for the `deleteRozpiByNodeId` mutation."""
-input DeleteRozpiByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Rozpi` to be deleted.
-  """
-  nodeId: ID!
-}
-
 """All input for the `deleteRozpi` mutation."""
 input DeleteRozpiInput {
   """
@@ -4792,20 +4375,6 @@ type DeleteRozpiPayload {
 
   """Reads a single `User` that is related to this `Rozpi`."""
   userByRTrener: User
-}
-
-"""All input for the `deleteRozpisItemByNodeId` mutation."""
-input DeleteRozpisItemByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `RozpisItem` to be deleted.
-  """
-  nodeId: ID!
 }
 
 """All input for the `deleteRozpisItem` mutation."""
@@ -4848,20 +4417,6 @@ type DeleteRozpisItemPayload {
   ): RozpisItemsEdge
 }
 
-"""All input for the `deleteSessionByNodeId` mutation."""
-input DeleteSessionByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Session` to be deleted.
-  """
-  nodeId: ID!
-}
-
 """All input for the `deleteSession` mutation."""
 input DeleteSessionInput {
   """
@@ -4899,20 +4454,6 @@ type DeleteSessionPayload {
   userBySsUser: User
 }
 
-"""All input for the `deleteSkupinyByNodeId` mutation."""
-input DeleteSkupinyByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Skupiny` to be deleted.
-  """
-  nodeId: ID!
-}
-
 """All input for the `deleteSkupiny` mutation."""
 input DeleteSkupinyInput {
   """
@@ -4948,20 +4489,6 @@ type DeleteSkupinyPayload {
     """The method to use when ordering `Skupiny`."""
     orderBy: [SkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
   ): SkupiniesEdge
-}
-
-"""All input for the `deleteTenantAttachmentByNodeId` mutation."""
-input DeleteTenantAttachmentByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `TenantAttachment` to be deleted.
-  """
-  nodeId: ID!
 }
 
 """All input for the `deleteTenantAttachment` mutation."""
@@ -5007,20 +4534,6 @@ type DeleteTenantAttachmentPayload {
   ): TenantAttachmentsEdge
 }
 
-"""All input for the `deleteTenantByNodeId` mutation."""
-input DeleteTenantByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Tenant` to be deleted.
-  """
-  nodeId: ID!
-}
-
 """All input for the `deleteTenant` mutation."""
 input DeleteTenantInput {
   """
@@ -5053,20 +4566,6 @@ type DeleteTenantPayload {
     """The method to use when ordering `Tenant`."""
     orderBy: [TenantsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TenantsEdge
-}
-
-"""All input for the `deleteTenantPersonByNodeId` mutation."""
-input DeleteTenantPersonByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `TenantPerson` to be deleted.
-  """
-  nodeId: ID!
 }
 
 """All input for the `deleteTenantPerson` mutation."""
@@ -5110,20 +4609,6 @@ type DeleteTenantPersonPayload {
   ): TenantPeopleEdge
 }
 
-"""All input for the `deleteUpozorneniByNodeId` mutation."""
-input DeleteUpozorneniByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Upozorneni` to be deleted.
-  """
-  nodeId: ID!
-}
-
 """All input for the `deleteUpozorneni` mutation."""
 input DeleteUpozorneniInput {
   """
@@ -5159,20 +4644,6 @@ type DeleteUpozorneniPayload {
 
   """Reads a single `User` that is related to this `Upozorneni`."""
   userByUpKdo: User
-}
-
-"""All input for the `deleteUpozorneniSkupinyByNodeId` mutation."""
-input DeleteUpozorneniSkupinyByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `UpozorneniSkupiny` to be deleted.
-  """
-  nodeId: ID!
 }
 
 """All input for the `deleteUpozorneniSkupiny` mutation."""
@@ -5215,20 +4686,6 @@ type DeleteUpozorneniSkupinyPayload {
     """The method to use when ordering `UpozorneniSkupiny`."""
     orderBy: [UpozorneniSkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
   ): UpozorneniSkupiniesEdge
-}
-
-"""All input for the `deleteUserByNodeId` mutation."""
-input DeleteUserByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `User` to be deleted.
-  """
-  nodeId: ID!
 }
 
 """All input for the `deleteUser` mutation."""
@@ -5382,7 +4839,7 @@ enum DokumentiesOrderBy {
   USER_BY_D_KDO__U_TIMESTAMP_DESC
 }
 
-type Dokumenty implements Node {
+type Dokumenty {
   dFilename: String!
   dId: BigInt!
   dKategorie: Int!
@@ -5390,11 +4847,6 @@ type Dokumenty implements Node {
   dName: String!
   dPath: String!
   dTimestamp: Datetime
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
 
   """Reads a single `User` that is related to this `Dokumenty`."""
   userByDKdo: User
@@ -5451,7 +4903,7 @@ input DokumentyPatch {
   dTimestamp: Datetime
 }
 
-type Event implements Node {
+type Event {
   """Reads and enables pagination through a set of `AttendeeExternal`."""
   attendeeExternals(
     """Read all values in the set after (below) this cursor."""
@@ -5519,11 +4971,6 @@ type Event implements Node {
   isVisible: Boolean!
   locationText: String!
   name: String!
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
   remainingSpots: Int
   since: Date!
   summary: String!
@@ -5705,15 +5152,10 @@ type FixUnpairedCouplesPayload {
   query: Query
 }
 
-type FormResponse implements Node {
+type FormResponse {
   createdAt: Datetime!
   data: JSON!
   id: BigInt!
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
   type: String!
   updatedAt: Datetime!
   url: String!
@@ -5810,7 +5252,7 @@ enum FormResponsesOrderBy {
   URL_DESC
 }
 
-type GalerieDir implements Node {
+type GalerieDir {
   """Reads and enables pagination through a set of `GalerieFoto`."""
   galerieFotosByGfIdRodic(
     """Read all values in the set after (below) this cursor."""
@@ -5845,11 +5287,6 @@ type GalerieDir implements Node {
   gdLevel: Int!
   gdName: String!
   gdPath: String!
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
 }
 
 """
@@ -5945,7 +5382,7 @@ enum GalerieDirsOrderBy {
   PRIMARY_KEY_DESC
 }
 
-type GalerieFoto implements Node {
+type GalerieFoto {
   """Reads and enables pagination through a set of `Aktuality`."""
   aktualitiesByAtFotoMain(
     """Read all values in the set after (below) this cursor."""
@@ -5983,11 +5420,6 @@ type GalerieFoto implements Node {
   gfName: String!
   gfPath: String!
   gfTimestamp: Datetime
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
 
   """Reads a single `User` that is related to this `GalerieFoto`."""
   userByGfKdo: User
@@ -6173,7 +5605,7 @@ The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://
 """
 scalar JSON
 
-type Location implements Node {
+type Location {
   description: JSON!
   id: BigInt!
 
@@ -6206,11 +5638,6 @@ type Location implements Node {
     orderBy: [LocationAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): LocationAttachmentsConnection!
   name: String!
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
 
   """Reads and enables pagination through a set of `Room`."""
   roomsByLocation(
@@ -6246,7 +5673,7 @@ type Location implements Node {
   tenantByTenant: Tenant
 }
 
-type LocationAttachment implements Node {
+type LocationAttachment {
   """
   Reads a single `Attachment` that is related to this `LocationAttachment`.
   """
@@ -6257,11 +5684,6 @@ type LocationAttachment implements Node {
   """
   location: Location
   locationId: BigInt!
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
   objectName: String!
 }
 
@@ -7161,28 +6583,12 @@ type Mutation {
     input: DeleteAktualityInput!
   ): DeleteAktualityPayload
 
-  """Deletes a single `Aktuality` using its globally unique id."""
-  deleteAktualityByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAktualityByNodeIdInput!
-  ): DeleteAktualityPayload
-
   """Deletes a single `Attachment` using a unique key."""
   deleteAttachment(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteAttachmentInput!
-  ): DeleteAttachmentPayload
-
-  """Deletes a single `Attachment` using its globally unique id."""
-  deleteAttachmentByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAttachmentByNodeIdInput!
   ): DeleteAttachmentPayload
 
   """Deletes a single `AttendeeExternal` using a unique key."""
@@ -7193,28 +6599,12 @@ type Mutation {
     input: DeleteAttendeeExternalInput!
   ): DeleteAttendeeExternalPayload
 
-  """Deletes a single `AttendeeExternal` using its globally unique id."""
-  deleteAttendeeExternalByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAttendeeExternalByNodeIdInput!
-  ): DeleteAttendeeExternalPayload
-
   """Deletes a single `AttendeeUser` using a unique key."""
   deleteAttendeeUser(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteAttendeeUserInput!
-  ): DeleteAttendeeUserPayload
-
-  """Deletes a single `AttendeeUser` using its globally unique id."""
-  deleteAttendeeUserByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteAttendeeUserByNodeIdInput!
   ): DeleteAttendeeUserPayload
 
   """Deletes a single `AttendeeUser` using a unique key."""
@@ -7233,28 +6623,12 @@ type Mutation {
     input: DeleteCohortGroupInput!
   ): DeleteCohortGroupPayload
 
-  """Deletes a single `CohortGroup` using its globally unique id."""
-  deleteCohortGroupByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteCohortGroupByNodeIdInput!
-  ): DeleteCohortGroupPayload
-
   """Deletes a single `Dokumenty` using a unique key."""
   deleteDokumenty(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteDokumentyInput!
-  ): DeleteDokumentyPayload
-
-  """Deletes a single `Dokumenty` using its globally unique id."""
-  deleteDokumentyByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteDokumentyByNodeIdInput!
   ): DeleteDokumentyPayload
 
   """Deletes a single `Event` using a unique key."""
@@ -7265,28 +6639,12 @@ type Mutation {
     input: DeleteEventInput!
   ): DeleteEventPayload
 
-  """Deletes a single `Event` using its globally unique id."""
-  deleteEventByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteEventByNodeIdInput!
-  ): DeleteEventPayload
-
   """Deletes a single `FormResponse` using a unique key."""
   deleteFormResponse(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteFormResponseInput!
-  ): DeleteFormResponsePayload
-
-  """Deletes a single `FormResponse` using its globally unique id."""
-  deleteFormResponseByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteFormResponseByNodeIdInput!
   ): DeleteFormResponsePayload
 
   """Deletes a single `GalerieDir` using a unique key."""
@@ -7297,28 +6655,12 @@ type Mutation {
     input: DeleteGalerieDirInput!
   ): DeleteGalerieDirPayload
 
-  """Deletes a single `GalerieDir` using its globally unique id."""
-  deleteGalerieDirByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteGalerieDirByNodeIdInput!
-  ): DeleteGalerieDirPayload
-
   """Deletes a single `GalerieFoto` using a unique key."""
   deleteGalerieFoto(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteGalerieFotoInput!
-  ): DeleteGalerieFotoPayload
-
-  """Deletes a single `GalerieFoto` using its globally unique id."""
-  deleteGalerieFotoByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteGalerieFotoByNodeIdInput!
   ): DeleteGalerieFotoPayload
 
   """Deletes a single `Location` using a unique key."""
@@ -7337,36 +6679,12 @@ type Mutation {
     input: DeleteLocationAttachmentInput!
   ): DeleteLocationAttachmentPayload
 
-  """Deletes a single `LocationAttachment` using its globally unique id."""
-  deleteLocationAttachmentByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteLocationAttachmentByNodeIdInput!
-  ): DeleteLocationAttachmentPayload
-
-  """Deletes a single `Location` using its globally unique id."""
-  deleteLocationByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteLocationByNodeIdInput!
-  ): DeleteLocationPayload
-
   """Deletes a single `Nabidka` using a unique key."""
   deleteNabidka(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteNabidkaInput!
-  ): DeleteNabidkaPayload
-
-  """Deletes a single `Nabidka` using its globally unique id."""
-  deleteNabidkaByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteNabidkaByNodeIdInput!
   ): DeleteNabidkaPayload
 
   """Deletes a single `NabidkaItem` using a unique key."""
@@ -7385,28 +6703,12 @@ type Mutation {
     input: DeleteNabidkaItemByNiPartnerAndNiIdRodicInput!
   ): DeleteNabidkaItemPayload
 
-  """Deletes a single `NabidkaItem` using its globally unique id."""
-  deleteNabidkaItemByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteNabidkaItemByNodeIdInput!
-  ): DeleteNabidkaItemPayload
-
   """Deletes a single `Parameter` using a unique key."""
   deleteParameter(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteParameterInput!
-  ): DeleteParameterPayload
-
-  """Deletes a single `Parameter` using its globally unique id."""
-  deleteParameterByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteParameterByNodeIdInput!
   ): DeleteParameterPayload
 
   """Deletes a single `Pary` using a unique key."""
@@ -7417,28 +6719,12 @@ type Mutation {
     input: DeleteParyInput!
   ): DeleteParyPayload
 
-  """Deletes a single `Pary` using its globally unique id."""
-  deleteParyByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteParyByNodeIdInput!
-  ): DeleteParyPayload
-
   """Deletes a single `ParyNavrh` using a unique key."""
   deleteParyNavrh(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteParyNavrhInput!
-  ): DeleteParyNavrhPayload
-
-  """Deletes a single `ParyNavrh` using its globally unique id."""
-  deleteParyNavrhByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteParyNavrhByNodeIdInput!
   ): DeleteParyNavrhPayload
 
   """Deletes a single `Permission` using a unique key."""
@@ -7449,28 +6735,12 @@ type Mutation {
     input: DeletePermissionInput!
   ): DeletePermissionPayload
 
-  """Deletes a single `Permission` using its globally unique id."""
-  deletePermissionByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePermissionByNodeIdInput!
-  ): DeletePermissionPayload
-
   """Deletes a single `Person` using a unique key."""
   deletePerson(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeletePersonInput!
-  ): DeletePersonPayload
-
-  """Deletes a single `Person` using its globally unique id."""
-  deletePersonByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePersonByNodeIdInput!
   ): DeletePersonPayload
 
   """Deletes a single `PlatbyCategory` using a unique key."""
@@ -7481,28 +6751,12 @@ type Mutation {
     input: DeletePlatbyCategoryInput!
   ): DeletePlatbyCategoryPayload
 
-  """Deletes a single `PlatbyCategory` using its globally unique id."""
-  deletePlatbyCategoryByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePlatbyCategoryByNodeIdInput!
-  ): DeletePlatbyCategoryPayload
-
   """Deletes a single `PlatbyCategoryGroup` using a unique key."""
   deletePlatbyCategoryGroup(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeletePlatbyCategoryGroupInput!
-  ): DeletePlatbyCategoryGroupPayload
-
-  """Deletes a single `PlatbyCategoryGroup` using its globally unique id."""
-  deletePlatbyCategoryGroupByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePlatbyCategoryGroupByNodeIdInput!
   ): DeletePlatbyCategoryGroupPayload
 
   """Deletes a single `PlatbyGroup` using a unique key."""
@@ -7513,28 +6767,12 @@ type Mutation {
     input: DeletePlatbyGroupInput!
   ): DeletePlatbyGroupPayload
 
-  """Deletes a single `PlatbyGroup` using its globally unique id."""
-  deletePlatbyGroupByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePlatbyGroupByNodeIdInput!
-  ): DeletePlatbyGroupPayload
-
   """Deletes a single `PlatbyGroupSkupina` using a unique key."""
   deletePlatbyGroupSkupina(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeletePlatbyGroupSkupinaInput!
-  ): DeletePlatbyGroupSkupinaPayload
-
-  """Deletes a single `PlatbyGroupSkupina` using its globally unique id."""
-  deletePlatbyGroupSkupinaByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePlatbyGroupSkupinaByNodeIdInput!
   ): DeletePlatbyGroupSkupinaPayload
 
   """Deletes a single `PlatbyItem` using a unique key."""
@@ -7545,28 +6783,12 @@ type Mutation {
     input: DeletePlatbyItemInput!
   ): DeletePlatbyItemPayload
 
-  """Deletes a single `PlatbyItem` using its globally unique id."""
-  deletePlatbyItemByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePlatbyItemByNodeIdInput!
-  ): DeletePlatbyItemPayload
-
   """Deletes a single `PlatbyRaw` using a unique key."""
   deletePlatbyRaw(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeletePlatbyRawInput!
-  ): DeletePlatbyRawPayload
-
-  """Deletes a single `PlatbyRaw` using its globally unique id."""
-  deletePlatbyRawByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePlatbyRawByNodeIdInput!
   ): DeletePlatbyRawPayload
 
   """Deletes a single `Room` using a unique key."""
@@ -7585,36 +6807,12 @@ type Mutation {
     input: DeleteRoomAttachmentInput!
   ): DeleteRoomAttachmentPayload
 
-  """Deletes a single `RoomAttachment` using its globally unique id."""
-  deleteRoomAttachmentByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteRoomAttachmentByNodeIdInput!
-  ): DeleteRoomAttachmentPayload
-
-  """Deletes a single `Room` using its globally unique id."""
-  deleteRoomByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteRoomByNodeIdInput!
-  ): DeleteRoomPayload
-
   """Deletes a single `Rozpi` using a unique key."""
   deleteRozpi(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteRozpiInput!
-  ): DeleteRozpiPayload
-
-  """Deletes a single `Rozpi` using its globally unique id."""
-  deleteRozpiByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteRozpiByNodeIdInput!
   ): DeleteRozpiPayload
 
   """Deletes a single `RozpisItem` using a unique key."""
@@ -7625,14 +6823,6 @@ type Mutation {
     input: DeleteRozpisItemInput!
   ): DeleteRozpisItemPayload
 
-  """Deletes a single `RozpisItem` using its globally unique id."""
-  deleteRozpisItemByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteRozpisItemByNodeIdInput!
-  ): DeleteRozpisItemPayload
-
   """Deletes a single `Session` using a unique key."""
   deleteSession(
     """
@@ -7641,28 +6831,12 @@ type Mutation {
     input: DeleteSessionInput!
   ): DeleteSessionPayload
 
-  """Deletes a single `Session` using its globally unique id."""
-  deleteSessionByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteSessionByNodeIdInput!
-  ): DeleteSessionPayload
-
   """Deletes a single `Skupiny` using a unique key."""
   deleteSkupiny(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteSkupinyInput!
-  ): DeleteSkupinyPayload
-
-  """Deletes a single `Skupiny` using its globally unique id."""
-  deleteSkupinyByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteSkupinyByNodeIdInput!
   ): DeleteSkupinyPayload
 
   """Deletes a single `Tenant` using a unique key."""
@@ -7681,36 +6855,12 @@ type Mutation {
     input: DeleteTenantAttachmentInput!
   ): DeleteTenantAttachmentPayload
 
-  """Deletes a single `TenantAttachment` using its globally unique id."""
-  deleteTenantAttachmentByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteTenantAttachmentByNodeIdInput!
-  ): DeleteTenantAttachmentPayload
-
-  """Deletes a single `Tenant` using its globally unique id."""
-  deleteTenantByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteTenantByNodeIdInput!
-  ): DeleteTenantPayload
-
   """Deletes a single `TenantPerson` using a unique key."""
   deleteTenantPerson(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteTenantPersonInput!
-  ): DeleteTenantPersonPayload
-
-  """Deletes a single `TenantPerson` using its globally unique id."""
-  deleteTenantPersonByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteTenantPersonByNodeIdInput!
   ): DeleteTenantPersonPayload
 
   """Deletes a single `Upozorneni` using a unique key."""
@@ -7721,14 +6871,6 @@ type Mutation {
     input: DeleteUpozorneniInput!
   ): DeleteUpozorneniPayload
 
-  """Deletes a single `Upozorneni` using its globally unique id."""
-  deleteUpozorneniByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUpozorneniByNodeIdInput!
-  ): DeleteUpozorneniPayload
-
   """Deletes a single `UpozorneniSkupiny` using a unique key."""
   deleteUpozorneniSkupiny(
     """
@@ -7737,28 +6879,12 @@ type Mutation {
     input: DeleteUpozorneniSkupinyInput!
   ): DeleteUpozorneniSkupinyPayload
 
-  """Deletes a single `UpozorneniSkupiny` using its globally unique id."""
-  deleteUpozorneniSkupinyByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUpozorneniSkupinyByNodeIdInput!
-  ): DeleteUpozorneniSkupinyPayload
-
   """Deletes a single `User` using a unique key."""
   deleteUser(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteUserInput!
-  ): DeleteUserPayload
-
-  """Deletes a single `User` using its globally unique id."""
-  deleteUserByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteUserByNodeIdInput!
   ): DeleteUserPayload
   downloadFile(id: Int!): String!
   fixUnpairedCouples(
@@ -7812,30 +6938,12 @@ type Mutation {
     input: UpdateAktualityInput!
   ): UpdateAktualityPayload
 
-  """Updates a single `Aktuality` using its globally unique id and a patch."""
-  updateAktualityByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAktualityByNodeIdInput!
-  ): UpdateAktualityPayload
-
   """Updates a single `Attachment` using a unique key and a patch."""
   updateAttachment(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateAttachmentInput!
-  ): UpdateAttachmentPayload
-
-  """
-  Updates a single `Attachment` using its globally unique id and a patch.
-  """
-  updateAttachmentByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAttachmentByNodeIdInput!
   ): UpdateAttachmentPayload
 
   """Updates a single `AttendeeExternal` using a unique key and a patch."""
@@ -7846,32 +6954,12 @@ type Mutation {
     input: UpdateAttendeeExternalInput!
   ): UpdateAttendeeExternalPayload
 
-  """
-  Updates a single `AttendeeExternal` using its globally unique id and a patch.
-  """
-  updateAttendeeExternalByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAttendeeExternalByNodeIdInput!
-  ): UpdateAttendeeExternalPayload
-
   """Updates a single `AttendeeUser` using a unique key and a patch."""
   updateAttendeeUser(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateAttendeeUserInput!
-  ): UpdateAttendeeUserPayload
-
-  """
-  Updates a single `AttendeeUser` using its globally unique id and a patch.
-  """
-  updateAttendeeUserByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateAttendeeUserByNodeIdInput!
   ): UpdateAttendeeUserPayload
 
   """Updates a single `AttendeeUser` using a unique key and a patch."""
@@ -7890,30 +6978,12 @@ type Mutation {
     input: UpdateCohortGroupInput!
   ): UpdateCohortGroupPayload
 
-  """
-  Updates a single `CohortGroup` using its globally unique id and a patch.
-  """
-  updateCohortGroupByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateCohortGroupByNodeIdInput!
-  ): UpdateCohortGroupPayload
-
   """Updates a single `Dokumenty` using a unique key and a patch."""
   updateDokumenty(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateDokumentyInput!
-  ): UpdateDokumentyPayload
-
-  """Updates a single `Dokumenty` using its globally unique id and a patch."""
-  updateDokumentyByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateDokumentyByNodeIdInput!
   ): UpdateDokumentyPayload
 
   """Updates a single `Event` using a unique key and a patch."""
@@ -7924,30 +6994,12 @@ type Mutation {
     input: UpdateEventInput!
   ): UpdateEventPayload
 
-  """Updates a single `Event` using its globally unique id and a patch."""
-  updateEventByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateEventByNodeIdInput!
-  ): UpdateEventPayload
-
   """Updates a single `FormResponse` using a unique key and a patch."""
   updateFormResponse(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateFormResponseInput!
-  ): UpdateFormResponsePayload
-
-  """
-  Updates a single `FormResponse` using its globally unique id and a patch.
-  """
-  updateFormResponseByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateFormResponseByNodeIdInput!
   ): UpdateFormResponsePayload
 
   """Updates a single `GalerieDir` using a unique key and a patch."""
@@ -7958,32 +7010,12 @@ type Mutation {
     input: UpdateGalerieDirInput!
   ): UpdateGalerieDirPayload
 
-  """
-  Updates a single `GalerieDir` using its globally unique id and a patch.
-  """
-  updateGalerieDirByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateGalerieDirByNodeIdInput!
-  ): UpdateGalerieDirPayload
-
   """Updates a single `GalerieFoto` using a unique key and a patch."""
   updateGalerieFoto(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateGalerieFotoInput!
-  ): UpdateGalerieFotoPayload
-
-  """
-  Updates a single `GalerieFoto` using its globally unique id and a patch.
-  """
-  updateGalerieFotoByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateGalerieFotoByNodeIdInput!
   ): UpdateGalerieFotoPayload
 
   """Updates a single `Location` using a unique key and a patch."""
@@ -8002,38 +7034,12 @@ type Mutation {
     input: UpdateLocationAttachmentInput!
   ): UpdateLocationAttachmentPayload
 
-  """
-  Updates a single `LocationAttachment` using its globally unique id and a patch.
-  """
-  updateLocationAttachmentByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateLocationAttachmentByNodeIdInput!
-  ): UpdateLocationAttachmentPayload
-
-  """Updates a single `Location` using its globally unique id and a patch."""
-  updateLocationByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateLocationByNodeIdInput!
-  ): UpdateLocationPayload
-
   """Updates a single `Nabidka` using a unique key and a patch."""
   updateNabidka(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateNabidkaInput!
-  ): UpdateNabidkaPayload
-
-  """Updates a single `Nabidka` using its globally unique id and a patch."""
-  updateNabidkaByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateNabidkaByNodeIdInput!
   ): UpdateNabidkaPayload
 
   """Updates a single `NabidkaItem` using a unique key and a patch."""
@@ -8052,30 +7058,12 @@ type Mutation {
     input: UpdateNabidkaItemByNiPartnerAndNiIdRodicInput!
   ): UpdateNabidkaItemPayload
 
-  """
-  Updates a single `NabidkaItem` using its globally unique id and a patch.
-  """
-  updateNabidkaItemByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateNabidkaItemByNodeIdInput!
-  ): UpdateNabidkaItemPayload
-
   """Updates a single `Page` using a unique key and a patch."""
   updatePage(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdatePageInput!
-  ): UpdatePagePayload
-
-  """Updates a single `Page` using its globally unique id and a patch."""
-  updatePageByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePageByNodeIdInput!
   ): UpdatePagePayload
 
   """Updates a single `Page` using a unique key and a patch."""
@@ -8094,28 +7082,12 @@ type Mutation {
     input: UpdateParameterInput!
   ): UpdateParameterPayload
 
-  """Updates a single `Parameter` using its globally unique id and a patch."""
-  updateParameterByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateParameterByNodeIdInput!
-  ): UpdateParameterPayload
-
   """Updates a single `Pary` using a unique key and a patch."""
   updatePary(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateParyInput!
-  ): UpdateParyPayload
-
-  """Updates a single `Pary` using its globally unique id and a patch."""
-  updateParyByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateParyByNodeIdInput!
   ): UpdateParyPayload
 
   """Updates a single `ParyNavrh` using a unique key and a patch."""
@@ -8126,30 +7098,12 @@ type Mutation {
     input: UpdateParyNavrhInput!
   ): UpdateParyNavrhPayload
 
-  """Updates a single `ParyNavrh` using its globally unique id and a patch."""
-  updateParyNavrhByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateParyNavrhByNodeIdInput!
-  ): UpdateParyNavrhPayload
-
   """Updates a single `Permission` using a unique key and a patch."""
   updatePermission(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdatePermissionInput!
-  ): UpdatePermissionPayload
-
-  """
-  Updates a single `Permission` using its globally unique id and a patch.
-  """
-  updatePermissionByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePermissionByNodeIdInput!
   ): UpdatePermissionPayload
 
   """Updates a single `Person` using a unique key and a patch."""
@@ -8160,30 +7114,12 @@ type Mutation {
     input: UpdatePersonInput!
   ): UpdatePersonPayload
 
-  """Updates a single `Person` using its globally unique id and a patch."""
-  updatePersonByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePersonByNodeIdInput!
-  ): UpdatePersonPayload
-
   """Updates a single `PlatbyCategory` using a unique key and a patch."""
   updatePlatbyCategory(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdatePlatbyCategoryInput!
-  ): UpdatePlatbyCategoryPayload
-
-  """
-  Updates a single `PlatbyCategory` using its globally unique id and a patch.
-  """
-  updatePlatbyCategoryByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePlatbyCategoryByNodeIdInput!
   ): UpdatePlatbyCategoryPayload
 
   """Updates a single `PlatbyCategoryGroup` using a unique key and a patch."""
@@ -8194,32 +7130,12 @@ type Mutation {
     input: UpdatePlatbyCategoryGroupInput!
   ): UpdatePlatbyCategoryGroupPayload
 
-  """
-  Updates a single `PlatbyCategoryGroup` using its globally unique id and a patch.
-  """
-  updatePlatbyCategoryGroupByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePlatbyCategoryGroupByNodeIdInput!
-  ): UpdatePlatbyCategoryGroupPayload
-
   """Updates a single `PlatbyGroup` using a unique key and a patch."""
   updatePlatbyGroup(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdatePlatbyGroupInput!
-  ): UpdatePlatbyGroupPayload
-
-  """
-  Updates a single `PlatbyGroup` using its globally unique id and a patch.
-  """
-  updatePlatbyGroupByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePlatbyGroupByNodeIdInput!
   ): UpdatePlatbyGroupPayload
 
   """Updates a single `PlatbyGroupSkupina` using a unique key and a patch."""
@@ -8230,16 +7146,6 @@ type Mutation {
     input: UpdatePlatbyGroupSkupinaInput!
   ): UpdatePlatbyGroupSkupinaPayload
 
-  """
-  Updates a single `PlatbyGroupSkupina` using its globally unique id and a patch.
-  """
-  updatePlatbyGroupSkupinaByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePlatbyGroupSkupinaByNodeIdInput!
-  ): UpdatePlatbyGroupSkupinaPayload
-
   """Updates a single `PlatbyItem` using a unique key and a patch."""
   updatePlatbyItem(
     """
@@ -8248,30 +7154,12 @@ type Mutation {
     input: UpdatePlatbyItemInput!
   ): UpdatePlatbyItemPayload
 
-  """
-  Updates a single `PlatbyItem` using its globally unique id and a patch.
-  """
-  updatePlatbyItemByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePlatbyItemByNodeIdInput!
-  ): UpdatePlatbyItemPayload
-
   """Updates a single `PlatbyRaw` using a unique key and a patch."""
   updatePlatbyRaw(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdatePlatbyRawInput!
-  ): UpdatePlatbyRawPayload
-
-  """Updates a single `PlatbyRaw` using its globally unique id and a patch."""
-  updatePlatbyRawByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdatePlatbyRawByNodeIdInput!
   ): UpdatePlatbyRawPayload
 
   """Updates a single `Room` using a unique key and a patch."""
@@ -8290,38 +7178,12 @@ type Mutation {
     input: UpdateRoomAttachmentInput!
   ): UpdateRoomAttachmentPayload
 
-  """
-  Updates a single `RoomAttachment` using its globally unique id and a patch.
-  """
-  updateRoomAttachmentByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateRoomAttachmentByNodeIdInput!
-  ): UpdateRoomAttachmentPayload
-
-  """Updates a single `Room` using its globally unique id and a patch."""
-  updateRoomByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateRoomByNodeIdInput!
-  ): UpdateRoomPayload
-
   """Updates a single `Rozpi` using a unique key and a patch."""
   updateRozpi(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateRozpiInput!
-  ): UpdateRozpiPayload
-
-  """Updates a single `Rozpi` using its globally unique id and a patch."""
-  updateRozpiByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateRozpiByNodeIdInput!
   ): UpdateRozpiPayload
 
   """Updates a single `RozpisItem` using a unique key and a patch."""
@@ -8332,16 +7194,6 @@ type Mutation {
     input: UpdateRozpisItemInput!
   ): UpdateRozpisItemPayload
 
-  """
-  Updates a single `RozpisItem` using its globally unique id and a patch.
-  """
-  updateRozpisItemByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateRozpisItemByNodeIdInput!
-  ): UpdateRozpisItemPayload
-
   """Updates a single `Session` using a unique key and a patch."""
   updateSession(
     """
@@ -8350,28 +7202,12 @@ type Mutation {
     input: UpdateSessionInput!
   ): UpdateSessionPayload
 
-  """Updates a single `Session` using its globally unique id and a patch."""
-  updateSessionByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateSessionByNodeIdInput!
-  ): UpdateSessionPayload
-
   """Updates a single `Skupiny` using a unique key and a patch."""
   updateSkupiny(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateSkupinyInput!
-  ): UpdateSkupinyPayload
-
-  """Updates a single `Skupiny` using its globally unique id and a patch."""
-  updateSkupinyByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateSkupinyByNodeIdInput!
   ): UpdateSkupinyPayload
 
   """Updates a single `Tenant` using a unique key and a patch."""
@@ -8390,40 +7226,12 @@ type Mutation {
     input: UpdateTenantAttachmentInput!
   ): UpdateTenantAttachmentPayload
 
-  """
-  Updates a single `TenantAttachment` using its globally unique id and a patch.
-  """
-  updateTenantAttachmentByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateTenantAttachmentByNodeIdInput!
-  ): UpdateTenantAttachmentPayload
-
-  """Updates a single `Tenant` using its globally unique id and a patch."""
-  updateTenantByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateTenantByNodeIdInput!
-  ): UpdateTenantPayload
-
   """Updates a single `TenantPerson` using a unique key and a patch."""
   updateTenantPerson(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateTenantPersonInput!
-  ): UpdateTenantPersonPayload
-
-  """
-  Updates a single `TenantPerson` using its globally unique id and a patch.
-  """
-  updateTenantPersonByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateTenantPersonByNodeIdInput!
   ): UpdateTenantPersonPayload
 
   """Updates a single `Upozorneni` using a unique key and a patch."""
@@ -8434,16 +7242,6 @@ type Mutation {
     input: UpdateUpozorneniInput!
   ): UpdateUpozorneniPayload
 
-  """
-  Updates a single `Upozorneni` using its globally unique id and a patch.
-  """
-  updateUpozorneniByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUpozorneniByNodeIdInput!
-  ): UpdateUpozorneniPayload
-
   """Updates a single `UpozorneniSkupiny` using a unique key and a patch."""
   updateUpozorneniSkupiny(
     """
@@ -8452,30 +7250,12 @@ type Mutation {
     input: UpdateUpozorneniSkupinyInput!
   ): UpdateUpozorneniSkupinyPayload
 
-  """
-  Updates a single `UpozorneniSkupiny` using its globally unique id and a patch.
-  """
-  updateUpozorneniSkupinyByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUpozorneniSkupinyByNodeIdInput!
-  ): UpdateUpozorneniSkupinyPayload
-
   """Updates a single `User` using a unique key and a patch."""
   updateUser(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateUserInput!
-  ): UpdateUserPayload
-
-  """Updates a single `User` using its globally unique id and a patch."""
-  updateUserByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateUserByNodeIdInput!
   ): UpdateUserPayload
   uploadFile(fileName: String!): UploadFilePayload!
   verifyFunction(
@@ -8486,7 +7266,7 @@ type Mutation {
   ): VerifyFunctionPayload
 }
 
-type Nabidka implements Node {
+type Nabidka {
   freeLessons: Int
   myLessons: Int
 
@@ -8523,11 +7303,6 @@ type Nabidka implements Node {
   nLock: Boolean!
   nMaxPocetHod: Int!
   nOd: Date!
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
   nPocetHod: Int!
   nTimestamp: Datetime
   nTrener: BigInt!
@@ -8582,7 +7357,7 @@ input NabidkaInput {
   nVisible: Boolean
 }
 
-type NabidkaItem implements Node {
+type NabidkaItem {
   """Reads a single `Nabidka` that is related to this `NabidkaItem`."""
   nabidkaByNiIdRodic: Nabidka
   niId: BigInt!
@@ -8590,11 +7365,6 @@ type NabidkaItem implements Node {
   niLock: Boolean!
   niPartner: BigInt!
   niPocetHod: Int!
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
 
   """Reads a single `Pary` that is related to this `NabidkaItem`."""
   paryByNiPartner: Pary
@@ -8860,23 +7630,10 @@ enum NabidkasOrderBy {
   USER_BY_N_TRENER__U_TIMESTAMP_DESC
 }
 
-"""An object with a globally unique `ID`."""
-interface Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-}
-
-type Page implements Node {
+type Page {
   content: JSON!
   createdAt: Datetime!
   id: Int!
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
   title: String!
   updatedAt: Datetime!
   url: String!
@@ -8940,15 +7697,10 @@ input PagePatch {
   url: String
 }
 
-type PageRevision implements Node {
+type PageRevision {
   content: JSON!
   createdAt: Datetime!
   id: Int!
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
   revNumber: Int!
   revOperation: String!
   revTimestamp: Datetime
@@ -9086,11 +7838,7 @@ enum PagesOrderBy {
   URL_DESC
 }
 
-type Parameter implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
+type Parameter {
   paName: String!
   paValue: String!
 }
@@ -9349,7 +8097,7 @@ enum PariesOrderBy {
   USER_BY_P_ID_PARTNERKA__U_TIMESTAMP_DESC
 }
 
-type Pary implements Node {
+type Pary {
   """Reads and enables pagination through a set of `NabidkaItem`."""
   nabidkaItemsByNiPartner(
     """Read all values in the set after (below) this cursor."""
@@ -9378,11 +8126,6 @@ type Pary implements Node {
     """The method to use when ordering `NabidkaItem`."""
     orderBy: [NabidkaItemsOrderBy!] = [PRIMARY_KEY_ASC]
   ): NabidkaItemsConnection!
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
   pArchiv: Boolean!
   pHodnoceni: Int!
   pId: BigInt!
@@ -9494,11 +8237,7 @@ input ParyInput {
   pTimestampArchive: Datetime
 }
 
-type ParyNavrh implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
+type ParyNavrh {
   pnId: BigInt!
   pnNavrhl: BigInt!
   pnPartner: BigInt!
@@ -9863,11 +8602,7 @@ enum PeopleOrderBy {
   TENANT_PEOPLE_BY_PERSON_ID__COUNT_DESC
 }
 
-type Permission implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
+type Permission {
   peAkce: Int!
   peAktuality: Int!
   peAnkety: Int!
@@ -10110,16 +8845,11 @@ enum PermissionsOrderBy {
   USERS_BY_U_GROUP__COUNT_DESC
 }
 
-type Person implements Node {
+type Person {
   firstName: String!
   gender: GenderType!
   id: BigInt!
   lastName: String!
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
 
   """Reads and enables pagination through a set of `TenantPerson`."""
   tenantPeople(
@@ -10245,11 +8975,7 @@ enum PlatbyCategoriesOrderBy {
   PRIMARY_KEY_DESC
 }
 
-type PlatbyCategory implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
+type PlatbyCategory {
   pcAmount: BigFloat!
   pcArchive: Boolean!
   pcDateDue: Date!
@@ -10360,11 +9086,7 @@ input PlatbyCategoryCondition {
   pcVisible: Boolean
 }
 
-type PlatbyCategoryGroup implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
+type PlatbyCategoryGroup {
   pcgId: BigInt!
   pcgIdCategory: BigInt!
   pcgIdGroup: BigInt!
@@ -10516,11 +9238,7 @@ input PlatbyCategoryPatch {
   pcVisible: Boolean
 }
 
-type PlatbyGroup implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
+type PlatbyGroup {
   pgBase: BigInt!
   pgDescription: String!
   pgId: BigInt!
@@ -10653,11 +9371,7 @@ type PlatbyGroupsEdge {
   node: PlatbyGroup!
 }
 
-type PlatbyGroupSkupina implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
+type PlatbyGroupSkupina {
   pgsId: BigInt!
   pgsIdGroup: BigInt!
   pgsIdSkupina: BigInt!
@@ -10794,11 +9508,7 @@ enum PlatbyGroupsOrderBy {
   PRIMARY_KEY_DESC
 }
 
-type PlatbyItem implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
+type PlatbyItem {
   piAmount: BigFloat!
   piDate: Date!
   piId: BigInt!
@@ -11011,12 +9721,7 @@ enum PlatbyItemsOrderBy {
   USER_BY_PI_ID_USER__U_TIMESTAMP_DESC
 }
 
-type PlatbyRaw implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-
+type PlatbyRaw {
   """Reads and enables pagination through a set of `PlatbyItem`."""
   platbyItemsByPiIdRaw(
     """Read all values in the set after (below) this cursor."""
@@ -11175,7 +9880,7 @@ type ProspectFormDancerPayload {
 }
 
 """The root query type which gives access points into the data universe."""
-type Query implements Node {
+type Query {
   """Reads and enables pagination through a set of `Pary`."""
   activeCouples(
     """Read all values in the set after (below) this cursor."""
@@ -11284,21 +9989,7 @@ type Query implements Node {
     orderBy: [AktualitiesOrderBy!] = [PRIMARY_KEY_ASC]
   ): AktualitiesConnection
   aktuality(atId: BigInt!): Aktuality
-
-  """Reads a single `Aktuality` using its globally unique `ID`."""
-  aktualityByNodeId(
-    """The globally unique `ID` to be used in selecting a single `Aktuality`."""
-    nodeId: ID!
-  ): Aktuality
   attachment(objectName: String!): Attachment
-
-  """Reads a single `Attachment` using its globally unique `ID`."""
-  attachmentByNodeId(
-    """
-    The globally unique `ID` to be used in selecting a single `Attachment`.
-    """
-    nodeId: ID!
-  ): Attachment
 
   """Reads and enables pagination through a set of `Attachment`."""
   attachments(
@@ -11330,14 +10021,6 @@ type Query implements Node {
   ): AttachmentsConnection
   attendeeExternal(id: BigInt!): AttendeeExternal
 
-  """Reads a single `AttendeeExternal` using its globally unique `ID`."""
-  attendeeExternalByNodeId(
-    """
-    The globally unique `ID` to be used in selecting a single `AttendeeExternal`.
-    """
-    nodeId: ID!
-  ): AttendeeExternal
-
   """Reads and enables pagination through a set of `AttendeeExternal`."""
   attendeeExternals(
     """Read all values in the set after (below) this cursor."""
@@ -11367,14 +10050,6 @@ type Query implements Node {
     orderBy: [AttendeeExternalsOrderBy!] = [PRIMARY_KEY_ASC]
   ): AttendeeExternalsConnection
   attendeeUser(id: BigInt!): AttendeeUser
-
-  """Reads a single `AttendeeUser` using its globally unique `ID`."""
-  attendeeUserByNodeId(
-    """
-    The globally unique `ID` to be used in selecting a single `AttendeeUser`.
-    """
-    nodeId: ID!
-  ): AttendeeUser
   attendeeUserByUserIdAndEventId(eventId: BigInt!, userId: BigInt!): AttendeeUser
 
   """Reads and enables pagination through a set of `AttendeeUser`."""
@@ -11406,14 +10081,6 @@ type Query implements Node {
     orderBy: [AttendeeUsersOrderBy!] = [PRIMARY_KEY_ASC]
   ): AttendeeUsersConnection
   cohortGroup(id: BigInt!): CohortGroup
-
-  """Reads a single `CohortGroup` using its globally unique `ID`."""
-  cohortGroupByNodeId(
-    """
-    The globally unique `ID` to be used in selecting a single `CohortGroup`.
-    """
-    nodeId: ID!
-  ): CohortGroup
 
   """Reads and enables pagination through a set of `CohortGroup`."""
   cohortGroups(
@@ -11516,19 +10183,7 @@ type Query implements Node {
     orderBy: [DokumentiesOrderBy!] = [PRIMARY_KEY_ASC]
   ): DokumentiesConnection
   dokumenty(dId: BigInt!): Dokumenty
-
-  """Reads a single `Dokumenty` using its globally unique `ID`."""
-  dokumentyByNodeId(
-    """The globally unique `ID` to be used in selecting a single `Dokumenty`."""
-    nodeId: ID!
-  ): Dokumenty
   event(id: BigInt!): Event
-
-  """Reads a single `Event` using its globally unique `ID`."""
-  eventByNodeId(
-    """The globally unique `ID` to be used in selecting a single `Event`."""
-    nodeId: ID!
-  ): Event
 
   """Reads and enables pagination through a set of `Event`."""
   events(
@@ -11560,14 +10215,6 @@ type Query implements Node {
   ): EventsConnection
   formResponse(id: BigInt!): FormResponse
 
-  """Reads a single `FormResponse` using its globally unique `ID`."""
-  formResponseByNodeId(
-    """
-    The globally unique `ID` to be used in selecting a single `FormResponse`.
-    """
-    nodeId: ID!
-  ): FormResponse
-
   """Reads and enables pagination through a set of `FormResponse`."""
   formResponses(
     """Read all values in the set after (below) this cursor."""
@@ -11598,14 +10245,6 @@ type Query implements Node {
   ): FormResponsesConnection
   galerieDir(gdId: BigInt!): GalerieDir
 
-  """Reads a single `GalerieDir` using its globally unique `ID`."""
-  galerieDirByNodeId(
-    """
-    The globally unique `ID` to be used in selecting a single `GalerieDir`.
-    """
-    nodeId: ID!
-  ): GalerieDir
-
   """Reads and enables pagination through a set of `GalerieDir`."""
   galerieDirs(
     """Read all values in the set after (below) this cursor."""
@@ -11635,14 +10274,6 @@ type Query implements Node {
     orderBy: [GalerieDirsOrderBy!] = [PRIMARY_KEY_ASC]
   ): GalerieDirsConnection
   galerieFoto(gfId: BigInt!): GalerieFoto
-
-  """Reads a single `GalerieFoto` using its globally unique `ID`."""
-  galerieFotoByNodeId(
-    """
-    The globally unique `ID` to be used in selecting a single `GalerieFoto`.
-    """
-    nodeId: ID!
-  ): GalerieFoto
 
   """Reads and enables pagination through a set of `GalerieFoto`."""
   galerieFotos(
@@ -11678,14 +10309,6 @@ type Query implements Node {
   location(id: BigInt!): Location
   locationAttachment(locationId: BigInt!, objectName: String!): LocationAttachment
 
-  """Reads a single `LocationAttachment` using its globally unique `ID`."""
-  locationAttachmentByNodeId(
-    """
-    The globally unique `ID` to be used in selecting a single `LocationAttachment`.
-    """
-    nodeId: ID!
-  ): LocationAttachment
-
   """Reads and enables pagination through a set of `LocationAttachment`."""
   locationAttachments(
     """Read all values in the set after (below) this cursor."""
@@ -11714,12 +10337,6 @@ type Query implements Node {
     """The method to use when ordering `LocationAttachment`."""
     orderBy: [LocationAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): LocationAttachmentsConnection
-
-  """Reads a single `Location` using its globally unique `ID`."""
-  locationByNodeId(
-    """The globally unique `ID` to be used in selecting a single `Location`."""
-    nodeId: ID!
-  ): Location
 
   """Reads and enables pagination through a set of `Location`."""
   locations(
@@ -11823,22 +10440,8 @@ type Query implements Node {
     startDate: Date
   ): RozpisItemsConnection
   nabidka(nId: BigInt!): Nabidka
-
-  """Reads a single `Nabidka` using its globally unique `ID`."""
-  nabidkaByNodeId(
-    """The globally unique `ID` to be used in selecting a single `Nabidka`."""
-    nodeId: ID!
-  ): Nabidka
   nabidkaItem(niId: BigInt!): NabidkaItem
   nabidkaItemByNiPartnerAndNiIdRodic(niIdRodic: BigInt!, niPartner: BigInt!): NabidkaItem
-
-  """Reads a single `NabidkaItem` using its globally unique `ID`."""
-  nabidkaItemByNodeId(
-    """
-    The globally unique `ID` to be used in selecting a single `NabidkaItem`.
-    """
-    nodeId: ID!
-  ): NabidkaItem
 
   """Reads and enables pagination through a set of `NabidkaItem`."""
   nabidkaItems(
@@ -11897,34 +10500,9 @@ type Query implements Node {
     """The method to use when ordering `Nabidka`."""
     orderBy: [NabidkasOrderBy!] = [PRIMARY_KEY_ASC]
   ): NabidkasConnection
-
-  """Fetches an object given its globally unique `ID`."""
-  node(
-    """The globally unique `ID`."""
-    nodeId: ID!
-  ): Node
-
-  """
-  The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`.
-  """
-  nodeId: ID!
   page(id: Int!): Page
-
-  """Reads a single `Page` using its globally unique `ID`."""
-  pageByNodeId(
-    """The globally unique `ID` to be used in selecting a single `Page`."""
-    nodeId: ID!
-  ): Page
   pageByUrl(url: String!): Page
   pageRevision(id: Int!, revNumber: Int!): PageRevision
-
-  """Reads a single `PageRevision` using its globally unique `ID`."""
-  pageRevisionByNodeId(
-    """
-    The globally unique `ID` to be used in selecting a single `PageRevision`.
-    """
-    nodeId: ID!
-  ): PageRevision
 
   """Reads and enables pagination through a set of `PageRevision`."""
   pageRevisions(
@@ -11985,12 +10563,6 @@ type Query implements Node {
   ): PagesConnection
   parameter(paName: String!): Parameter
 
-  """Reads a single `Parameter` using its globally unique `ID`."""
-  parameterByNodeId(
-    """The globally unique `ID` to be used in selecting a single `Parameter`."""
-    nodeId: ID!
-  ): Parameter
-
   """Reads and enables pagination through a set of `Parameter`."""
   parameters(
     """Read all values in the set after (below) this cursor."""
@@ -12049,19 +10621,7 @@ type Query implements Node {
     orderBy: [PariesOrderBy!] = [PRIMARY_KEY_ASC]
   ): PariesConnection
   pary(pId: BigInt!): Pary
-
-  """Reads a single `Pary` using its globally unique `ID`."""
-  paryByNodeId(
-    """The globally unique `ID` to be used in selecting a single `Pary`."""
-    nodeId: ID!
-  ): Pary
   paryNavrh(pnId: BigInt!): ParyNavrh
-
-  """Reads a single `ParyNavrh` using its globally unique `ID`."""
-  paryNavrhByNodeId(
-    """The globally unique `ID` to be used in selecting a single `ParyNavrh`."""
-    nodeId: ID!
-  ): ParyNavrh
 
   """Reads and enables pagination through a set of `ParyNavrh`."""
   paryNavrhs(
@@ -12122,14 +10682,6 @@ type Query implements Node {
   ): PeopleConnection
   permission(peId: BigInt!): Permission
 
-  """Reads a single `Permission` using its globally unique `ID`."""
-  permissionByNodeId(
-    """
-    The globally unique `ID` to be used in selecting a single `Permission`.
-    """
-    nodeId: ID!
-  ): Permission
-
   """Reads and enables pagination through a set of `Permission`."""
   permissions(
     """Read all values in the set after (below) this cursor."""
@@ -12160,12 +10712,6 @@ type Query implements Node {
   ): PermissionsConnection
   person(id: BigInt!): Person
 
-  """Reads a single `Person` using its globally unique `ID`."""
-  personByNodeId(
-    """The globally unique `ID` to be used in selecting a single `Person`."""
-    nodeId: ID!
-  ): Person
-
   """Reads and enables pagination through a set of `PlatbyCategory`."""
   platbyCategories(
     """Read all values in the set after (below) this cursor."""
@@ -12195,23 +10741,7 @@ type Query implements Node {
     orderBy: [PlatbyCategoriesOrderBy!] = [PRIMARY_KEY_ASC]
   ): PlatbyCategoriesConnection
   platbyCategory(pcId: BigInt!): PlatbyCategory
-
-  """Reads a single `PlatbyCategory` using its globally unique `ID`."""
-  platbyCategoryByNodeId(
-    """
-    The globally unique `ID` to be used in selecting a single `PlatbyCategory`.
-    """
-    nodeId: ID!
-  ): PlatbyCategory
   platbyCategoryGroup(pcgId: BigInt!): PlatbyCategoryGroup
-
-  """Reads a single `PlatbyCategoryGroup` using its globally unique `ID`."""
-  platbyCategoryGroupByNodeId(
-    """
-    The globally unique `ID` to be used in selecting a single `PlatbyCategoryGroup`.
-    """
-    nodeId: ID!
-  ): PlatbyCategoryGroup
 
   """Reads and enables pagination through a set of `PlatbyCategoryGroup`."""
   platbyCategoryGroups(
@@ -12243,14 +10773,6 @@ type Query implements Node {
   ): PlatbyCategoryGroupsConnection
   platbyGroup(pgId: BigInt!): PlatbyGroup
 
-  """Reads a single `PlatbyGroup` using its globally unique `ID`."""
-  platbyGroupByNodeId(
-    """
-    The globally unique `ID` to be used in selecting a single `PlatbyGroup`.
-    """
-    nodeId: ID!
-  ): PlatbyGroup
-
   """Reads and enables pagination through a set of `PlatbyGroup`."""
   platbyGroups(
     """Read all values in the set after (below) this cursor."""
@@ -12280,14 +10802,6 @@ type Query implements Node {
     orderBy: [PlatbyGroupsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PlatbyGroupsConnection
   platbyGroupSkupina(pgsId: BigInt!): PlatbyGroupSkupina
-
-  """Reads a single `PlatbyGroupSkupina` using its globally unique `ID`."""
-  platbyGroupSkupinaByNodeId(
-    """
-    The globally unique `ID` to be used in selecting a single `PlatbyGroupSkupina`.
-    """
-    nodeId: ID!
-  ): PlatbyGroupSkupina
 
   """Reads and enables pagination through a set of `PlatbyGroupSkupina`."""
   platbyGroupSkupinas(
@@ -12319,14 +10833,6 @@ type Query implements Node {
   ): PlatbyGroupSkupinasConnection
   platbyItem(piId: BigInt!): PlatbyItem
 
-  """Reads a single `PlatbyItem` using its globally unique `ID`."""
-  platbyItemByNodeId(
-    """
-    The globally unique `ID` to be used in selecting a single `PlatbyItem`.
-    """
-    nodeId: ID!
-  ): PlatbyItem
-
   """Reads and enables pagination through a set of `PlatbyItem`."""
   platbyItems(
     """Read all values in the set after (below) this cursor."""
@@ -12356,12 +10862,6 @@ type Query implements Node {
     orderBy: [PlatbyItemsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PlatbyItemsConnection
   platbyRaw(prId: BigInt!): PlatbyRaw
-
-  """Reads a single `PlatbyRaw` using its globally unique `ID`."""
-  platbyRawByNodeId(
-    """The globally unique `ID` to be used in selecting a single `PlatbyRaw`."""
-    nodeId: ID!
-  ): PlatbyRaw
 
   """Reads and enables pagination through a set of `PlatbyRaw`."""
   platbyRaws(
@@ -12423,14 +10923,6 @@ type Query implements Node {
   room(id: BigInt!): Room
   roomAttachment(objectName: String!, roomId: BigInt!): RoomAttachment
 
-  """Reads a single `RoomAttachment` using its globally unique `ID`."""
-  roomAttachmentByNodeId(
-    """
-    The globally unique `ID` to be used in selecting a single `RoomAttachment`.
-    """
-    nodeId: ID!
-  ): RoomAttachment
-
   """Reads and enables pagination through a set of `RoomAttachment`."""
   roomAttachments(
     """Read all values in the set after (below) this cursor."""
@@ -12459,12 +10951,6 @@ type Query implements Node {
     """The method to use when ordering `RoomAttachment`."""
     orderBy: [RoomAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): RoomAttachmentsConnection
-
-  """Reads a single `Room` using its globally unique `ID`."""
-  roomByNodeId(
-    """The globally unique `ID` to be used in selecting a single `Room`."""
-    nodeId: ID!
-  ): Room
 
   """Reads and enables pagination through a set of `Room`."""
   rooms(
@@ -12496,12 +10982,6 @@ type Query implements Node {
   ): RoomsConnection
   rozpi(rId: BigInt!): Rozpi
 
-  """Reads a single `Rozpi` using its globally unique `ID`."""
-  rozpiByNodeId(
-    """The globally unique `ID` to be used in selecting a single `Rozpi`."""
-    nodeId: ID!
-  ): Rozpi
-
   """Reads and enables pagination through a set of `Rozpi`."""
   rozpis(
     """Read all values in the set after (below) this cursor."""
@@ -12531,14 +11011,6 @@ type Query implements Node {
     orderBy: [RozpisOrderBy!] = [PRIMARY_KEY_ASC]
   ): RozpisConnection
   rozpisItem(riId: BigInt!): RozpisItem
-
-  """Reads a single `RozpisItem` using its globally unique `ID`."""
-  rozpisItemByNodeId(
-    """
-    The globally unique `ID` to be used in selecting a single `RozpisItem`.
-    """
-    nodeId: ID!
-  ): RozpisItem
 
   """Reads and enables pagination through a set of `RozpisItem`."""
   rozpisItems(
@@ -12592,12 +11064,6 @@ type Query implements Node {
     startDate: Date
   ): RozpisConnection
   session(ssId: String!): Session
-
-  """Reads a single `Session` using its globally unique `ID`."""
-  sessionByNodeId(
-    """The globally unique `ID` to be used in selecting a single `Session`."""
-    nodeId: ID!
-  ): Session
 
   """Reads and enables pagination through a set of `Session`."""
   sessions(
@@ -12657,22 +11123,8 @@ type Query implements Node {
     orderBy: [SkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
   ): SkupiniesConnection
   skupiny(sId: BigInt!): Skupiny
-
-  """Reads a single `Skupiny` using its globally unique `ID`."""
-  skupinyByNodeId(
-    """The globally unique `ID` to be used in selecting a single `Skupiny`."""
-    nodeId: ID!
-  ): Skupiny
   tenant(id: BigInt!): Tenant
   tenantAttachment(objectName: String!, tenantId: BigInt!): TenantAttachment
-
-  """Reads a single `TenantAttachment` using its globally unique `ID`."""
-  tenantAttachmentByNodeId(
-    """
-    The globally unique `ID` to be used in selecting a single `TenantAttachment`.
-    """
-    nodeId: ID!
-  ): TenantAttachment
 
   """Reads and enables pagination through a set of `TenantAttachment`."""
   tenantAttachments(
@@ -12703,12 +11155,6 @@ type Query implements Node {
     orderBy: [TenantAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TenantAttachmentsConnection
 
-  """Reads a single `Tenant` using its globally unique `ID`."""
-  tenantByNodeId(
-    """The globally unique `ID` to be used in selecting a single `Tenant`."""
-    nodeId: ID!
-  ): Tenant
-
   """Reads and enables pagination through a set of `TenantPerson`."""
   tenantPeople(
     """Read all values in the set after (below) this cursor."""
@@ -12738,14 +11184,6 @@ type Query implements Node {
     orderBy: [TenantPeopleOrderBy!] = [PRIMARY_KEY_ASC]
   ): TenantPeopleConnection
   tenantPerson(personId: BigInt!, tenantId: BigInt!): TenantPerson
-
-  """Reads a single `TenantPerson` using its globally unique `ID`."""
-  tenantPersonByNodeId(
-    """
-    The globally unique `ID` to be used in selecting a single `TenantPerson`.
-    """
-    nodeId: ID!
-  ): TenantPerson
 
   """Reads and enables pagination through a set of `Tenant`."""
   tenants(
@@ -12819,14 +11257,6 @@ type Query implements Node {
   ): UsersConnection
   upozorneni(upId: BigInt!): Upozorneni
 
-  """Reads a single `Upozorneni` using its globally unique `ID`."""
-  upozorneniByNodeId(
-    """
-    The globally unique `ID` to be used in selecting a single `Upozorneni`.
-    """
-    nodeId: ID!
-  ): Upozorneni
-
   """Reads and enables pagination through a set of `Upozorneni`."""
   upozornenis(
     """Read all values in the set after (below) this cursor."""
@@ -12885,21 +11315,7 @@ type Query implements Node {
     orderBy: [UpozorneniSkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
   ): UpozorneniSkupiniesConnection
   upozorneniSkupiny(upsId: BigInt!): UpozorneniSkupiny
-
-  """Reads a single `UpozorneniSkupiny` using its globally unique `ID`."""
-  upozorneniSkupinyByNodeId(
-    """
-    The globally unique `ID` to be used in selecting a single `UpozorneniSkupiny`.
-    """
-    nodeId: ID!
-  ): UpozorneniSkupiny
   user(uId: BigInt!): User
-
-  """Reads a single `User` using its globally unique `ID`."""
-  userByNodeId(
-    """The globally unique `ID` to be used in selecting a single `User`."""
-    nodeId: ID!
-  ): User
 
   """Reads and enables pagination through a set of `User`."""
   users(
@@ -12997,7 +11413,7 @@ type ResetPasswordPayload {
   query: Query
 }
 
-type Room implements Node {
+type Room {
   description: JSON!
   id: BigInt!
   location: BigInt
@@ -13005,11 +11421,6 @@ type Room implements Node {
   """Reads a single `Location` that is related to this `Room`."""
   locationByLocation: Location
   name: String!
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
 
   """Reads and enables pagination through a set of `RoomAttachment`."""
   roomAttachments(
@@ -13041,14 +11452,9 @@ type Room implements Node {
   ): RoomAttachmentsConnection!
 }
 
-type RoomAttachment implements Node {
+type RoomAttachment {
   """Reads a single `Attachment` that is related to this `RoomAttachment`."""
   attachmentByObjectName: Attachment
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
   objectName: String!
 
   """Reads a single `Room` that is related to this `RoomAttachment`."""
@@ -13219,11 +11625,7 @@ enum RoomsOrderBy {
   ROOM_ATTACHMENTS_BY_ROOM_ID__COUNT_DESC
 }
 
-type Rozpi implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
+type Rozpi {
   rDatum: Date!
   rId: BigInt!
   rKde: String!
@@ -13341,12 +11743,7 @@ type RozpisEdge {
   node: Rozpi!
 }
 
-type RozpisItem implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-
+type RozpisItem {
   """Reads a single `Pary` that is related to this `RozpisItem`."""
   paryByRiPartner: Pary
   riDo: Time!
@@ -13578,11 +11975,7 @@ enum RozpisOrderBy {
   USER_BY_R_TRENER__U_TIMESTAMP_DESC
 }
 
-type Session implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
+type Session {
   ssId: String!
   ssLifetime: BigInt!
   ssUpdatedAt: Datetime!
@@ -13803,17 +12196,12 @@ enum SkupiniesOrderBy {
   USERS_BY_U_SKUPINA__COUNT_DESC
 }
 
-type Skupiny implements Node {
+type Skupiny {
   cohortGroup: BigInt
 
   """Reads a single `CohortGroup` that is related to this `Skupiny`."""
   cohortGroupByCohortGroup: CohortGroup
   internalInfo: String!
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
   ordering: Int!
 
   """Reads and enables pagination through a set of `PlatbyGroupSkupina`."""
@@ -14002,7 +12390,7 @@ type SubmitFormPayload {
   query: Query
 }
 
-type Tenant implements Node {
+type Tenant {
   """Reads and enables pagination through a set of `CohortGroup`."""
   cohortGroupsByTenant(
     """Read all values in the set after (below) this cursor."""
@@ -14064,11 +12452,6 @@ type Tenant implements Node {
   memberInfo: String!
   name: String!
 
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-
   """Reads and enables pagination through a set of `TenantAttachment`."""
   tenantAttachments(
     """Read all values in the set after (below) this cursor."""
@@ -14128,16 +12511,11 @@ type Tenant implements Node {
   ): TenantPeopleConnection!
 }
 
-type TenantAttachment implements Node {
+type TenantAttachment {
   """
   Reads a single `Attachment` that is related to this `TenantAttachment`.
   """
   attachmentByObjectName: Attachment
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
   objectName: String!
 
   """Reads a single `Tenant` that is related to this `TenantAttachment`."""
@@ -14319,12 +12697,7 @@ enum TenantPeopleOrderBy {
   TENANT_ID_DESC
 }
 
-type TenantPerson implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-
+type TenantPerson {
   """Reads a single `Person` that is related to this `TenantPerson`."""
   person: Person
   personId: BigInt!
@@ -14412,25 +12785,6 @@ The exact time of day, does not include the date. May or may not have a timezone
 """
 scalar Time
 
-"""All input for the `updateAktualityByNodeId` mutation."""
-input UpdateAktualityByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Aktuality` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `Aktuality` being updated.
-  """
-  patch: AktualityPatch!
-}
-
 """All input for the `updateAktuality` mutation."""
 input UpdateAktualityInput {
   atId: BigInt!
@@ -14476,25 +12830,6 @@ type UpdateAktualityPayload {
   userByAtKdo: User
 }
 
-"""All input for the `updateAttachmentByNodeId` mutation."""
-input UpdateAttachmentByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Attachment` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `Attachment` being updated.
-  """
-  patch: AttachmentPatch!
-}
-
 """All input for the `updateAttachment` mutation."""
 input UpdateAttachmentInput {
   """
@@ -14534,25 +12869,6 @@ type UpdateAttachmentPayload {
 
   """Reads a single `User` that is related to this `Attachment`."""
   userByUploadedBy: User
-}
-
-"""All input for the `updateAttendeeExternalByNodeId` mutation."""
-input UpdateAttendeeExternalByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `AttendeeExternal` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `AttendeeExternal` being updated.
-  """
-  patch: AttendeeExternalPatch!
 }
 
 """All input for the `updateAttendeeExternal` mutation."""
@@ -14600,25 +12916,6 @@ type UpdateAttendeeExternalPayload {
 
   """Reads a single `User` that is related to this `AttendeeExternal`."""
   userByManagedBy: User
-}
-
-"""All input for the `updateAttendeeUserByNodeId` mutation."""
-input UpdateAttendeeUserByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `AttendeeUser` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `AttendeeUser` being updated.
-  """
-  patch: AttendeeUserPatch!
 }
 
 """All input for the `updateAttendeeUserByUserIdAndEventId` mutation."""
@@ -14681,25 +12978,6 @@ type UpdateAttendeeUserPayload {
   user: User
 }
 
-"""All input for the `updateCohortGroupByNodeId` mutation."""
-input UpdateCohortGroupByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `CohortGroup` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `CohortGroup` being updated.
-  """
-  patch: CohortGroupPatch!
-}
-
 """All input for the `updateCohortGroup` mutation."""
 input UpdateCohortGroupInput {
   """
@@ -14739,25 +13017,6 @@ type UpdateCohortGroupPayload {
 
   """Reads a single `Tenant` that is related to this `CohortGroup`."""
   tenantByTenant: Tenant
-}
-
-"""All input for the `updateDokumentyByNodeId` mutation."""
-input UpdateDokumentyByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Dokumenty` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `Dokumenty` being updated.
-  """
-  patch: DokumentyPatch!
 }
 
 """All input for the `updateDokumenty` mutation."""
@@ -14801,25 +13060,6 @@ type UpdateDokumentyPayload {
   userByDKdo: User
 }
 
-"""All input for the `updateEventByNodeId` mutation."""
-input UpdateEventByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Event` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `Event` being updated.
-  """
-  patch: EventPatch!
-}
-
 """All input for the `updateEvent` mutation."""
 input UpdateEventInput {
   """
@@ -14856,25 +13096,6 @@ type UpdateEventPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-}
-
-"""All input for the `updateFormResponseByNodeId` mutation."""
-input UpdateFormResponseByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `FormResponse` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `FormResponse` being updated.
-  """
-  patch: FormResponsePatch!
 }
 
 """All input for the `updateFormResponse` mutation."""
@@ -14915,25 +13136,6 @@ type UpdateFormResponsePayload {
   query: Query
 }
 
-"""All input for the `updateGalerieDirByNodeId` mutation."""
-input UpdateGalerieDirByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `GalerieDir` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `GalerieDir` being updated.
-  """
-  patch: GalerieDirPatch!
-}
-
 """All input for the `updateGalerieDir` mutation."""
 input UpdateGalerieDirInput {
   """
@@ -14970,25 +13172,6 @@ type UpdateGalerieDirPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-}
-
-"""All input for the `updateGalerieFotoByNodeId` mutation."""
-input UpdateGalerieFotoByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `GalerieFoto` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `GalerieFoto` being updated.
-  """
-  patch: GalerieFotoPatch!
 }
 
 """All input for the `updateGalerieFoto` mutation."""
@@ -15033,25 +13216,6 @@ type UpdateGalerieFotoPayload {
 
   """Reads a single `User` that is related to this `GalerieFoto`."""
   userByGfKdo: User
-}
-
-"""All input for the `updateLocationAttachmentByNodeId` mutation."""
-input UpdateLocationAttachmentByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `LocationAttachment` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `LocationAttachment` being updated.
-  """
-  patch: LocationAttachmentPatch!
 }
 
 """All input for the `updateLocationAttachment` mutation."""
@@ -15103,25 +13267,6 @@ type UpdateLocationAttachmentPayload {
   query: Query
 }
 
-"""All input for the `updateLocationByNodeId` mutation."""
-input UpdateLocationByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Location` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `Location` being updated.
-  """
-  patch: LocationPatch!
-}
-
 """All input for the `updateLocation` mutation."""
 input UpdateLocationInput {
   """
@@ -15163,25 +13308,6 @@ type UpdateLocationPayload {
   tenantByTenant: Tenant
 }
 
-"""All input for the `updateNabidkaByNodeId` mutation."""
-input UpdateNabidkaByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Nabidka` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `Nabidka` being updated.
-  """
-  patch: NabidkaPatch!
-}
-
 """All input for the `updateNabidka` mutation."""
 input UpdateNabidkaInput {
   """
@@ -15206,25 +13332,6 @@ input UpdateNabidkaItemByNiPartnerAndNiIdRodicInput {
   clientMutationId: String
   niIdRodic: BigInt!
   niPartner: BigInt!
-
-  """
-  An object where the defined keys will be set on the `NabidkaItem` being updated.
-  """
-  patch: NabidkaItemPatch!
-}
-
-"""All input for the `updateNabidkaItemByNodeId` mutation."""
-input UpdateNabidkaItemByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `NabidkaItem` to be updated.
-  """
-  nodeId: ID!
 
   """
   An object where the defined keys will be set on the `NabidkaItem` being updated.
@@ -15302,25 +13409,6 @@ type UpdateNabidkaPayload {
   userByNTrener: User
 }
 
-"""All input for the `updatePageByNodeId` mutation."""
-input UpdatePageByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Page` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `Page` being updated.
-  """
-  patch: PagePatch!
-}
-
 """All input for the `updatePageByUrl` mutation."""
 input UpdatePageByUrlInput {
   """
@@ -15374,25 +13462,6 @@ type UpdatePagePayload {
   query: Query
 }
 
-"""All input for the `updateParameterByNodeId` mutation."""
-input UpdateParameterByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Parameter` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `Parameter` being updated.
-  """
-  patch: ParameterPatch!
-}
-
 """All input for the `updateParameter` mutation."""
 input UpdateParameterInput {
   """
@@ -15431,25 +13500,6 @@ type UpdateParameterPayload {
   query: Query
 }
 
-"""All input for the `updateParyByNodeId` mutation."""
-input UpdateParyByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Pary` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `Pary` being updated.
-  """
-  patch: ParyPatch!
-}
-
 """All input for the `updatePary` mutation."""
 input UpdateParyInput {
   """
@@ -15463,25 +13513,6 @@ input UpdateParyInput {
   """
   patch: ParyPatch!
   pId: BigInt!
-}
-
-"""All input for the `updateParyNavrhByNodeId` mutation."""
-input UpdateParyNavrhByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `ParyNavrh` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `ParyNavrh` being updated.
-  """
-  patch: ParyNavrhPatch!
 }
 
 """All input for the `updateParyNavrh` mutation."""
@@ -15560,25 +13591,6 @@ type UpdateParyPayload {
   userByPIdPartnerka: User
 }
 
-"""All input for the `updatePermissionByNodeId` mutation."""
-input UpdatePermissionByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Permission` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `Permission` being updated.
-  """
-  patch: PermissionPatch!
-}
-
 """All input for the `updatePermission` mutation."""
 input UpdatePermissionInput {
   """
@@ -15617,25 +13629,6 @@ type UpdatePermissionPayload {
   query: Query
 }
 
-"""All input for the `updatePersonByNodeId` mutation."""
-input UpdatePersonByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Person` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `Person` being updated.
-  """
-  patch: PersonPatch!
-}
-
 """All input for the `updatePerson` mutation."""
 input UpdatePersonInput {
   """
@@ -15672,44 +13665,6 @@ type UpdatePersonPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-}
-
-"""All input for the `updatePlatbyCategoryByNodeId` mutation."""
-input UpdatePlatbyCategoryByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `PlatbyCategory` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `PlatbyCategory` being updated.
-  """
-  patch: PlatbyCategoryPatch!
-}
-
-"""All input for the `updatePlatbyCategoryGroupByNodeId` mutation."""
-input UpdatePlatbyCategoryGroupByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `PlatbyCategoryGroup` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `PlatbyCategoryGroup` being updated.
-  """
-  patch: PlatbyCategoryGroupPatch!
 }
 
 """All input for the `updatePlatbyCategoryGroup` mutation."""
@@ -15798,25 +13753,6 @@ type UpdatePlatbyCategoryPayload {
   query: Query
 }
 
-"""All input for the `updatePlatbyGroupByNodeId` mutation."""
-input UpdatePlatbyGroupByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `PlatbyGroup` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `PlatbyGroup` being updated.
-  """
-  patch: PlatbyGroupPatch!
-}
-
 """All input for the `updatePlatbyGroup` mutation."""
 input UpdatePlatbyGroupInput {
   """
@@ -15853,25 +13789,6 @@ type UpdatePlatbyGroupPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-}
-
-"""All input for the `updatePlatbyGroupSkupinaByNodeId` mutation."""
-input UpdatePlatbyGroupSkupinaByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `PlatbyGroupSkupina` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `PlatbyGroupSkupina` being updated.
-  """
-  patch: PlatbyGroupSkupinaPatch!
 }
 
 """All input for the `updatePlatbyGroupSkupina` mutation."""
@@ -15918,25 +13835,6 @@ type UpdatePlatbyGroupSkupinaPayload {
 
   """Reads a single `Skupiny` that is related to this `PlatbyGroupSkupina`."""
   skupinyByPgsIdSkupina: Skupiny
-}
-
-"""All input for the `updatePlatbyItemByNodeId` mutation."""
-input UpdatePlatbyItemByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `PlatbyItem` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `PlatbyItem` being updated.
-  """
-  patch: PlatbyItemPatch!
 }
 
 """All input for the `updatePlatbyItem` mutation."""
@@ -15986,25 +13884,6 @@ type UpdatePlatbyItemPayload {
   userByPiIdUser: User
 }
 
-"""All input for the `updatePlatbyRawByNodeId` mutation."""
-input UpdatePlatbyRawByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `PlatbyRaw` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `PlatbyRaw` being updated.
-  """
-  patch: PlatbyRawPatch!
-}
-
 """All input for the `updatePlatbyRaw` mutation."""
 input UpdatePlatbyRawInput {
   """
@@ -16041,25 +13920,6 @@ type UpdatePlatbyRawPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-}
-
-"""All input for the `updateRoomAttachmentByNodeId` mutation."""
-input UpdateRoomAttachmentByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `RoomAttachment` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `RoomAttachment` being updated.
-  """
-  patch: RoomAttachmentPatch!
 }
 
 """All input for the `updateRoomAttachment` mutation."""
@@ -16107,25 +13967,6 @@ type UpdateRoomAttachmentPayload {
   ): RoomAttachmentsEdge
 }
 
-"""All input for the `updateRoomByNodeId` mutation."""
-input UpdateRoomByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Room` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `Room` being updated.
-  """
-  patch: RoomPatch!
-}
-
 """All input for the `updateRoom` mutation."""
 input UpdateRoomInput {
   """
@@ -16167,25 +14008,6 @@ type UpdateRoomPayload {
   ): RoomsEdge
 }
 
-"""All input for the `updateRozpiByNodeId` mutation."""
-input UpdateRozpiByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Rozpi` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `Rozpi` being updated.
-  """
-  patch: RozpiPatch!
-}
-
 """All input for the `updateRozpi` mutation."""
 input UpdateRozpiInput {
   """
@@ -16225,25 +14047,6 @@ type UpdateRozpiPayload {
 
   """Reads a single `User` that is related to this `Rozpi`."""
   userByRTrener: User
-}
-
-"""All input for the `updateRozpisItemByNodeId` mutation."""
-input UpdateRozpisItemByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `RozpisItem` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `RozpisItem` being updated.
-  """
-  patch: RozpisItemPatch!
 }
 
 """All input for the `updateRozpisItem` mutation."""
@@ -16290,25 +14093,6 @@ type UpdateRozpisItemPayload {
   ): RozpisItemsEdge
 }
 
-"""All input for the `updateSessionByNodeId` mutation."""
-input UpdateSessionByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Session` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `Session` being updated.
-  """
-  patch: SessionPatch!
-}
-
 """All input for the `updateSession` mutation."""
 input UpdateSessionInput {
   """
@@ -16350,25 +14134,6 @@ type UpdateSessionPayload {
   userBySsUser: User
 }
 
-"""All input for the `updateSkupinyByNodeId` mutation."""
-input UpdateSkupinyByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Skupiny` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `Skupiny` being updated.
-  """
-  patch: SkupinyPatch!
-}
-
 """All input for the `updateSkupiny` mutation."""
 input UpdateSkupinyInput {
   """
@@ -16408,25 +14173,6 @@ type UpdateSkupinyPayload {
     """The method to use when ordering `Skupiny`."""
     orderBy: [SkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
   ): SkupiniesEdge
-}
-
-"""All input for the `updateTenantAttachmentByNodeId` mutation."""
-input UpdateTenantAttachmentByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `TenantAttachment` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `TenantAttachment` being updated.
-  """
-  patch: TenantAttachmentPatch!
 }
 
 """All input for the `updateTenantAttachment` mutation."""
@@ -16476,25 +14222,6 @@ type UpdateTenantAttachmentPayload {
   ): TenantAttachmentsEdge
 }
 
-"""All input for the `updateTenantByNodeId` mutation."""
-input UpdateTenantByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Tenant` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `Tenant` being updated.
-  """
-  patch: TenantPatch!
-}
-
 """All input for the `updateTenant` mutation."""
 input UpdateTenantInput {
   """
@@ -16531,25 +14258,6 @@ type UpdateTenantPayload {
     """The method to use when ordering `Tenant`."""
     orderBy: [TenantsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TenantsEdge
-}
-
-"""All input for the `updateTenantPersonByNodeId` mutation."""
-input UpdateTenantPersonByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `TenantPerson` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `TenantPerson` being updated.
-  """
-  patch: TenantPersonPatch!
 }
 
 """All input for the `updateTenantPerson` mutation."""
@@ -16597,25 +14305,6 @@ type UpdateTenantPersonPayload {
   ): TenantPeopleEdge
 }
 
-"""All input for the `updateUpozorneniByNodeId` mutation."""
-input UpdateUpozorneniByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Upozorneni` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `Upozorneni` being updated.
-  """
-  patch: UpozorneniPatch!
-}
-
 """All input for the `updateUpozorneni` mutation."""
 input UpdateUpozorneniInput {
   """
@@ -16655,25 +14344,6 @@ type UpdateUpozorneniPayload {
 
   """Reads a single `User` that is related to this `Upozorneni`."""
   userByUpKdo: User
-}
-
-"""All input for the `updateUpozorneniSkupinyByNodeId` mutation."""
-input UpdateUpozorneniSkupinyByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `UpozorneniSkupiny` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `UpozorneniSkupiny` being updated.
-  """
-  patch: UpozorneniSkupinyPatch!
 }
 
 """All input for the `updateUpozorneniSkupiny` mutation."""
@@ -16720,25 +14390,6 @@ type UpdateUpozorneniSkupinyPayload {
     """The method to use when ordering `UpozorneniSkupiny`."""
     orderBy: [UpozorneniSkupiniesOrderBy!] = [PRIMARY_KEY_ASC]
   ): UpozorneniSkupiniesEdge
-}
-
-"""All input for the `updateUserByNodeId` mutation."""
-input UpdateUserByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `User` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `User` being updated.
-  """
-  patch: UserPatch!
 }
 
 """All input for the `updateUser` mutation."""
@@ -16790,13 +14441,8 @@ type UploadFilePayload {
   uploadUrl: String!
 }
 
-type Upozorneni implements Node {
+type Upozorneni {
   isVisible: Boolean
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
   scheduledSince: Datetime
   scheduledUntil: Datetime
   upBarvy: BigInt!
@@ -17025,12 +14671,7 @@ enum UpozorneniSkupiniesOrderBy {
   UPS_POPIS_DESC
 }
 
-type UpozorneniSkupiny implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-
+type UpozorneniSkupiny {
   """Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`."""
   skupinyByUpsIdSkupina: Skupiny
 
@@ -17181,7 +14822,7 @@ enum UpozornenisOrderBy {
   USER_BY_UP_KDO__U_TIMESTAMP_DESC
 }
 
-type User implements Node {
+type User {
   """Reads and enables pagination through a set of `AkceItem`."""
   akceItemsByAiUser(
     """Read all values in the set after (below) this cursor."""
@@ -17443,11 +15084,6 @@ type User implements Node {
     """The method to use when ordering `Nabidka`."""
     orderBy: [NabidkasOrderBy!] = [PRIMARY_KEY_ASC]
   ): NabidkasConnection!
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
 
   """Reads and enables pagination through a set of `Pary`."""
   pariesByPIdPartner(

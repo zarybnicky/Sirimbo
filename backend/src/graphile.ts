@@ -5,6 +5,7 @@ import path from 'path';
 import * as Minio from 'minio';
 import { pool } from './db';
 import { gql } from 'graphile-utils';
+import { NodePlugin } from 'graphile-build';
 
 const minioClient = new Minio.Client({
   endPoint: process.env.MINIO_DOMAIN!,
@@ -98,6 +99,8 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
       },
     };
   },
+
+  skipPlugins: [NodePlugin],
 
   appendPlugins: [
     require("@graphile-contrib/pg-simplify-inflector"),

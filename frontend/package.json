@@ -55,7 +55,7 @@
     "file-saver": "^2.0.5",
     "fp-ts": "^2.14.0",
     "glider-js": "^1.7.8",
-    "graphql": "^16.6.0",
+    "graphql": "15.4.0",
     "html-react-parser": "^3.0.4",
     "iban": "^0.0.14",
     "leaflet": "^1.9.3",
