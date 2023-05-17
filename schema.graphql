@@ -1,36 +1,3 @@
-"""A `ActiveProspectsRecord` edge in the connection."""
-type ActiveProspectEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `ActiveProspectsRecord` at the end of the edge."""
-  node: ActiveProspectsRecord!
-}
-
-"""A connection to a list of `ActiveProspectsRecord` values."""
-type ActiveProspectsConnection {
-  """
-  A list of edges which contains the `ActiveProspectsRecord` and cursor to aid in pagination.
-  """
-  edges: [ActiveProspectEdge!]!
-
-  """A list of `ActiveProspectsRecord` objects."""
-  nodes: [ActiveProspectsRecord!]!
-
-  """
-  The count of *all* `ActiveProspectsRecord` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-"""The return type of our `activeProspects` query."""
-type ActiveProspectsRecord {
-  cohort: CrmCohort
-  data: ProspectDatum
-  id: BigInt
-  updatedAt: Datetime
-}
-
 type Akce {
   aDo: Date
   aDokumenty: String
@@ -11171,14 +11138,6 @@ enum PlatbyRawsOrderBy {
   PRIMARY_KEY_DESC
 }
 
-type ProspectDatum {
-  email: String
-  name: String
-  phone: String
-  surname: String
-  yearofbirth: String
-}
-
 """An input for mutations affecting `ProspectDatum`"""
 input ProspectDatumInput {
   email: String
@@ -11237,25 +11196,6 @@ type Query implements Node {
     """
     offset: Int
   ): PariesConnection
-  activeProspects(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-  ): ActiveProspectsConnection
 
   """Reads and enables pagination through a set of `AkceItem`."""
   akceItems(

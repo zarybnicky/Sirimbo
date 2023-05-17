@@ -39,35 +39,6 @@ export type Scalars = {
   Time: string;
 };
 
-/** A `ActiveProspectsRecord` edge in the connection. */
-export type ActiveProspectEdge = {
-  __typename?: 'ActiveProspectEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
-  /** The `ActiveProspectsRecord` at the end of the edge. */
-  node: ActiveProspectsRecord;
-};
-
-/** A connection to a list of `ActiveProspectsRecord` values. */
-export type ActiveProspectsConnection = {
-  __typename?: 'ActiveProspectsConnection';
-  /** A list of edges which contains the `ActiveProspectsRecord` and cursor to aid in pagination. */
-  edges: Array<ActiveProspectEdge>;
-  /** A list of `ActiveProspectsRecord` objects. */
-  nodes: Array<ActiveProspectsRecord>;
-  /** The count of *all* `ActiveProspectsRecord` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** The return type of our `activeProspects` query. */
-export type ActiveProspectsRecord = {
-  __typename?: 'ActiveProspectsRecord';
-  cohort: Maybe<CrmCohort>;
-  data: Maybe<ProspectDatum>;
-  id: Maybe<Scalars['BigInt']>;
-  updatedAt: Maybe<Scalars['Datetime']>;
-};
-
 export type Akce = {
   __typename?: 'Akce';
   aDo: Maybe<Scalars['Date']>;
@@ -9924,15 +9895,6 @@ export type PlatbyRawsOrderBy =
   | 'PR_SORTED_ASC'
   | 'PR_SORTED_DESC';
 
-export type ProspectDatum = {
-  __typename?: 'ProspectDatum';
-  email: Maybe<Scalars['String']>;
-  name: Maybe<Scalars['String']>;
-  phone: Maybe<Scalars['String']>;
-  surname: Maybe<Scalars['String']>;
-  yearofbirth: Maybe<Scalars['String']>;
-};
-
 /** An input for mutations affecting `ProspectDatum` */
 export type ProspectDatumInput = {
   email?: InputMaybe<Scalars['String']>;
@@ -9972,7 +9934,6 @@ export type Query = Node & {
   __typename?: 'Query';
   /** Reads and enables pagination through a set of `Pary`. */
   activeCouples: Maybe<PariesConnection>;
-  activeProspects: Maybe<ActiveProspectsConnection>;
   /** Reads and enables pagination through a set of `AkceItem`. */
   akceItems: Maybe<AkceItemsConnection>;
   /** Reads and enables pagination through a set of `Akce`. */
@@ -10212,16 +10173,6 @@ export type Query = Node & {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryActiveCouplesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryActiveProspectsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
   first?: InputMaybe<Scalars['Int']>;

@@ -88,6 +88,10 @@ export const Reservation = {
 };
 
 export const Event = {
+  name: (n: number) => (n === 1 ? 'akce' : n > 1 && n < 5 ? 'akce' : 'akcí'),
+  addRoute: { pathname: '/admin/akce/add' } as Route,
+  editRoute: (id: string) =>
+    ({ pathname: '/admin/akce/[id]', query: { id } } as Route),
   useMenu(item: EventFragment): DropdownItem[] {
     const { perms } = useAuth();
     if (!perms.canEditEvent(item)) {

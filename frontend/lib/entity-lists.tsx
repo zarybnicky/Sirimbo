@@ -1,10 +1,11 @@
 import { FixCouplesButton } from 'components/FixCouplesButton';
 import { makeAdminList } from 'components/generic/AdminEntityList';
-import { Article, Couple, Reservation, Schedule } from './entities';
+import { Article, Couple, Event, Reservation, Schedule } from './entities';
 import { fullDateFormatter } from './format-date';
 import { formatCoupleName } from './format-name';
 import { ArticlesDocument } from './graphql/Articles';
 import { CoupleListDocument } from './graphql/Couple';
+import { EventListDocument } from './graphql/Event';
 import { ReservationListDocument } from './graphql/Reservation';
 import { ScheduleListDocument } from './graphql/Schedule';
 
@@ -50,3 +51,12 @@ export const CoupleList = makeAdminList(
 }))({
   headerExtra: <FixCouplesButton />,
 });
+
+export const EventList = makeAdminList(
+  Event,
+  EventListDocument,
+)(x => x.events?.nodes)(x => ({
+  id: x.id,
+  title: x.name,
+  subtitle: fullDateFormatter.formatRange(new Date(x.since), new Date(x.until)),
+}))({});

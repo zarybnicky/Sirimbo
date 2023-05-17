@@ -1,13 +1,13 @@
 import { EventForm } from 'components/EventForm';
 import { useRouter } from 'next/router';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
-import { EventList } from 'components/EventList';
 import { Item } from 'components/layout/Item';
 import { DeleteButton } from 'components/DeleteButton';
 import { type NextPageWithLayout } from 'pages/_app';
 import { fromSlugArray } from 'lib/slugify';
 import { useGqlMutation, useGqlQuery } from 'lib/query';
 import { DeleteEventDocument, EventDocument } from 'lib/graphql/Event';
+import { EventList } from 'lib/entity-lists';
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();

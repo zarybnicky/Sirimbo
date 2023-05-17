@@ -17,7 +17,7 @@ type FormProps = {
 };
 
 const Page: NextPageWithLayout = () => {
-  const { user, signIn } = useAuth();
+  const { signIn } = useAuth();
   const router = useRouter();
   const { control, handleSubmit } = useForm<FormProps>();
 
