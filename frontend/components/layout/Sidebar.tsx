@@ -54,6 +54,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
           'w-3/4 sm:w-1/2 md:w-1/3 lg:w-56 xl:w-64 2xl:w-72 3xl:w-80',
           'z-30 h-full max-h-screen min-h-screen flex-none transform pb-10 transition duration-200 ease-in-out sm:pb-0 md:w-1/3 lg:relative lg:z-auto lg:translate-x-0',
           'bg-white dark:bg-gray-900 lg:bg-red-500 lg:text-white',
+          'overflow-y-auto scrollbar'
         )}
       >
         {!showTopMenu && (
@@ -63,7 +64,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
             </Link>
           </div>
         )}
-        <div className="scrollbar grid gap-1 pt-3 mr-1 oveflow-y-auto max-h-full">
+        <div className="flex flex-col gap-1 pt-3 mr-1">
           {auth.user ? (
             <>
               <SidebarSection

@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { ErrorPage } from 'components/ErrorPage';
+import { FeedbackForm } from 'components/FeedbackForm';
 import { useAuth } from 'lib/data/use-auth';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { NextSeo } from 'next-seo';
@@ -94,6 +95,7 @@ export function Layout({
           {children}
           {showTopMenu && <Footer />}
         </div>
+        <FeedbackForm />
       </div>
     </div>
   );
