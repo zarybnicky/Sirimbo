@@ -22,8 +22,6 @@ declare module "nextjs-routes" {
     | DynamicRoute<"/admin/cohort-group/[id]", { "id": string }>
     | StaticRoute<"/admin/cohort-group/add">
     | StaticRoute<"/admin/cohort-group">
-    | DynamicRoute<"/admin/dokumenty/[id]", { "id": string }>
-    | StaticRoute<"/admin/dokumenty">
     | DynamicRoute<"/admin/nabidka/[id]", { "id": string }>
     | StaticRoute<"/admin/nabidka/add">
     | StaticRoute<"/admin/nabidka">

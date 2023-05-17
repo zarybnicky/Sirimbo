@@ -142,10 +142,4 @@ const adminMenu: MenuLink[] = [
     href: '/admin/akce',
     auth: [PermissionKey.peAkce, PermissionLevel.P_OWNED],
   },
-  {
-    type: 'link',
-    title: 'Dokumenty',
-    href: '/admin/dokumenty',
-    auth: [PermissionKey.peDokumenty, PermissionLevel.P_OWNED],
-  },
 ];
