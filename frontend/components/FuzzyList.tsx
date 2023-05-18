@@ -1,5 +1,6 @@
 import React from 'react';
 import MiniSearch from 'minisearch';
+import { Virtuoso } from 'react-virtuoso';
 
 export const FuzzyList = <T extends { id: string | number }>({
   data,
@@ -10,7 +11,7 @@ export const FuzzyList = <T extends { id: string | number }>({
   data: T[];
   fields: (keyof T)[];
   search?: string | undefined;
-  renderItem: (item: T) => React.ReactNode;
+  renderItem: (index: number, item: T) => React.ReactNode;
 }) => {
   const nodesById = React.useMemo(() => {
     return data.reduce((byId, document) => {
@@ -38,5 +39,11 @@ export const FuzzyList = <T extends { id: string | number }>({
     return index.search(search).map(({ id }) => nodesById[id]!);
   }, [data, nodesById, index, search]);
 
-  return <div className="overflow-y-auto scrollbar">{nodes.map(renderItem)}</div>;
+  return (
+    <Virtuoso
+      className="grow h-full overflow-y-auto scrollbar"
+      data={nodes}
+      itemContent={renderItem}
+    />
+  );
 };

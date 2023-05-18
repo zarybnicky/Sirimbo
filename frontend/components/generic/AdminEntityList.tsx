@@ -18,20 +18,39 @@ export interface AdminListEntity {
 export const makeAdminList =
   <T,>(entity: AdminListEntity, document: TypedDocumentNode<T, {}>) =>
   <Orig,>(getter: (x: T) => Orig[] | undefined) =>
-  <New extends { id: string; title?: string; subtitle?: ReactNode }>(
+  <
+    New extends {
+      id: string;
+      title?: string;
+      subtitle?: ReactNode;
+      children?: ReactNode;
+    },
+  >(
     mapper: (x: Orig) => New,
   ) =>
-    ({indexedFields = ['id', 'title'], headerExtra}: {
-      indexedFields?: (keyof New)[];
-      headerExtra?: React.ReactNode;
-    }): React.JSXElementConstructor<{}> =>
+  ({
+    indexedFields = ['id', 'title'],
+    headerExtra,
+  }: {
+    indexedFields?: (keyof New)[];
+    headerExtra?: React.ReactNode;
+  }): React.JSXElementConstructor<{}> =>
     function AdminEntityList() {
       const { data } = useGqlQuery(document, {});
       const nodes = React.useMemo(() => {
-        return data ? (getter(data) || []).map(mapper) : [];
+        if (!data) {
+          return [];
+        }
+        return (getter(data) || []).map((x) => {
+          const y = mapper(x);
+          return {
+            ...y,
+            href: entity.editRoute(y.id),
+          };
+        });
       }, [data]);
-      const router = useRouter();
       const [search, setSearch] = React.useState('');
+      const router = useRouter();
       const id = fromSlugArray(router.query.id);
 
       return (
@@ -62,16 +81,33 @@ export const makeAdminList =
             data={nodes}
             fields={indexedFields}
             search={search}
-            renderItem={(item) => (
-              <List.Item
-                key={item.id}
-                active={id === item.id}
-                href={entity.editRoute(item.id)}
-                title={item.title}
-                subtitle={item.subtitle}
-              />
-            )}
+            renderItem={RenderItem}
           />
         </List>
       );
     };
+
+function RenderItem(
+  n: number,
+  item: {
+    id: string;
+    href: Route | Exclude<Route, { query: any }>['pathname'];
+    title?: ReactNode;
+    subtitle?: ReactNode;
+    children?: ReactNode;
+  },
+) {
+  const router = useRouter();
+  const id = fromSlugArray(router.query.id);
+  return (
+    <List.Item
+      key={item.id}
+      active={id === item.id}
+      href={item.href}
+      title={item.title}
+      subtitle={item.subtitle}
+    >
+      {item.children}
+    </List.Item>
+  );
+}

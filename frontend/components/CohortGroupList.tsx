@@ -4,6 +4,7 @@ import { List } from 'components/layout/List';
 import { fromSlugArray } from 'lib/slugify';
 import { useGqlQuery } from 'lib/query';
 import { CohortGroupListDocument } from 'lib/graphql/CohortGroup';
+import { FuzzyList } from './FuzzyList';
 
 export function CohortGroupList() {
   const router = useRouter();
@@ -22,8 +23,10 @@ export function CohortGroupList() {
         </List.TitleButton>
       </List.TitleBar>
 
-      <List.Scroll>
-        {data?.cohortGroups?.nodes?.map((item) => (
+      <FuzzyList
+        data={data?.cohortGroups?.nodes || []}
+        fields={['id', 'name']}
+        renderItem={(n, item) => (
           <List.Item
             key={item.id}
             active={id === item.id}
@@ -32,8 +35,8 @@ export function CohortGroupList() {
             className="pl-6"
             subtitle={!item.isPublic ? 'Skrytý' : null}
           />
-        ))}
-      </List.Scroll>
+        )}
+      />
     </List>
   );
 }

@@ -24,7 +24,7 @@ const Page: NextPageWithLayout = () => {
         data={data?.platbyItems?.nodes || []}
         fields={['id', 'piAmount', 'piDate', 'piIdUser', 'piIdCategory']}
         search={search}
-        renderItem={(item) => (
+        renderItem={(n, item) => (
           <List.Item
             key={item.id}
             active={id === item.id}

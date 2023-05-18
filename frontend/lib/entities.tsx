@@ -107,6 +107,10 @@ export const Event = {
 };
 
 export const Cohort = {
+  name: (n: number) => (n === 1 ? 'skupina' : n > 1 && n < 5 ? 'skupiny' : 'skupin'),
+  addRoute: { pathname: '/admin/skupiny/add' } as Route,
+  editRoute: (id: string) =>
+    ({ pathname: '/admin/skupiny/[id]', query: { id } } as Route),
   useMenu(item: CohortBasicFragment): DropdownItem[] {
     const { perms } = useAuth();
     if (!perms.canEditCohort(item)) {

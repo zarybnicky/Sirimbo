@@ -90,11 +90,6 @@ function ListItem({
   );
 }
 
-function ListScroll({ children }: { children: React.ReactNode }) {
-  return <div className="scrollbar relative h-full overflow-y-auto">{children}</div>;
-}
-
 List.TitleBar = ListTitleBar;
 List.TitleButton = ListTitleButton;
 List.Item = ListItem;
-List.Scroll = ListScroll;

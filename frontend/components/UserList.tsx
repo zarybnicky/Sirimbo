@@ -70,30 +70,28 @@ export const UserList = () => {
         />
       </List.TitleBar>
 
-      <List.Scroll>
-        <FuzzyList
-          data={nodes}
-          fields={['id', 'name', 'role', 'cohort', 'yearOfBirth']}
-          search={search}
-          renderItem={(item) => (
-            <List.Item
-              key={item.id}
-              className="pl-6"
-              active={id === item.id}
-              href={{ pathname: '/admin/users/[id]', query: { id: item.id } }}
-              title={item.name}
-              subtitle={item.yearOfBirth + ', ' + item.role}
-            >
-              <div
-                className="absolute rounded-l-lg w-4 shadow-sm top-0 bottom-0 left-0"
-                style={{
-                  backgroundColor: item.cohortColor,
-                }}
-              />
-            </List.Item>
-          )}
-        />
-      </List.Scroll>
+      <FuzzyList
+        data={nodes}
+        fields={['id', 'name', 'role', 'cohort', 'yearOfBirth']}
+        search={search}
+        renderItem={(n, item) => (
+          <List.Item
+            key={item.id}
+            className="pl-6"
+            active={id === item.id}
+            href={{ pathname: '/admin/users/[id]', query: { id: item.id } }}
+            title={item.name}
+            subtitle={item.yearOfBirth + ', ' + item.role}
+          >
+            <div
+              className="absolute rounded-l-lg w-4 shadow-sm top-0 bottom-0 left-0"
+              style={{
+                backgroundColor: item.cohortColor,
+              }}
+            />
+          </List.Item>
+        )}
+      />
     </List>
   );
 };

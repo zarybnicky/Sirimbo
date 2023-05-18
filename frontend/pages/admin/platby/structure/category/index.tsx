@@ -23,7 +23,7 @@ const Page: NextPageWithLayout = () => {
         data={data?.platbyCategories?.nodes || []}
         fields={['id', 'pcName', 'pcSymbol']}
         search={search}
-        renderItem={(item) => (
+        renderItem={(n, item) => (
           <List.Item
             key={item.id}
             active={id === item.id}

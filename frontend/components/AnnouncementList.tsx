@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { Plus } from 'react-feather';
 import { CohortColorBoxes } from './CohortColorBox';
+import { FuzzyList } from './FuzzyList';
 import { Pagination } from './Pagination';
 
 export function AnnouncementList() {
@@ -33,8 +34,10 @@ export function AnnouncementList() {
         </List.TitleButton>
       </List.TitleBar>
 
-      <List.Scroll>
-        {data?.upozornenis?.nodes?.map((item) => (
+      <FuzzyList
+        data={data?.upozornenis?.nodes || []}
+        fields={['id', 'upNadpis']}
+        renderItem={(n, item) => (
           <List.Item
             key={item.id}
             active={id === item.id}
@@ -59,8 +62,8 @@ export function AnnouncementList() {
               </div>
             }
           />
-        ))}
-      </List.Scroll>
+        )}
+      />
 
       <Pagination {...{ total, limit, page, setPage }} />
     </List>

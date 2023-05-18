@@ -21,7 +21,7 @@ const Page: NextPageWithLayout = () => {
       <FuzzyList
         data={data?.platbyGroups?.nodes || []}
         fields={['id', 'pgName']}
-        renderItem={(item) => (
+        renderItem={(n, item) => (
           <List.Item
             key={item.id}
             active={id === item.id}
