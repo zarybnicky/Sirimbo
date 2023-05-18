@@ -9,9 +9,6 @@
 .prose p:empty {
     display: none;
 }
-.prose.readonly [data-slate-placeholder="true"] {
-    display: none !important;
-}
 
 @tailwind base;
 @tailwind components;
@@ -30,6 +27,33 @@
 html, body {
     --ck-color-base-border: #F1465D;
     --ck-color-toolbar-border: #F1465D;
+}
+
+.CollapsibleContent {
+  overflow: hidden;
+}
+.CollapsibleContent[data-state='open'] {
+  animation: slideDown 300ms ease-out;
+}
+.CollapsibleContent[data-state='closed'] {
+  animation: slideUp 300ms ease-out;
+}
+@keyframes slideDown {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-collapsible-content-height);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    height: var(--radix-collapsible-content-height);
+  }
+  to {
+    height: 0;
+  }
 }
 
 .scrollbar {
@@ -59,13 +83,6 @@ html, body {
 }
 .button-lg svg {
     @apply h-5 w-5;
-}
-
-.avoid-trainer-pictures .slate li:nth-of-type(1) {
-    padding-right: 115px;
-}
-.avoid-trainer-pictures .slate li:nth-of-type(2) {
-    padding-right: 115px;
 }
 
 .glider-contain {

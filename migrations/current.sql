@@ -40,7 +40,7 @@ grant all on cohort_group to anonymous;
 alter table cohort_group enable row level security;
 select app_private.drop_policies('public.cohort_group');
 create policy admin_all on cohort_group to administrator using (true) with check (true);
-create policy all_view on cohort_group for select to anonymous;
+create policy public_view on cohort_group for select to anonymous;
 
 revoke all on users from member;
 
@@ -87,7 +87,7 @@ grant all on attachment to anonymous;
 select app_private.drop_policies('public.attachment');
 alter table attachment enable row level security;
 create policy admin_all on attachment to administrator using (true) with check (true);
-create policy all_view on attachment for select to anonymous;
+create policy public_view on attachment for select to anonymous;
 
 revoke all on rozpis_item from member;
 grant all on rozpis_item to anonymous;
@@ -106,7 +106,7 @@ grant all on room to anonymous;
 alter table room enable row level security;
 select app_private.drop_policies('public.room');
 create policy admin_all on room to administrator using (true) with check (true);
-create policy all_view on room for select to anonymous;
+create policy public_view on room for select to anonymous;
 
 revoke all on room_attachment from administrator;
 revoke all on room_attachment from member;
@@ -114,7 +114,7 @@ grant all on room_attachment to anonymous;
 alter table room_attachment enable row level security;
 select app_private.drop_policies('public.room_attachment');
 create policy admin_all on room_attachment to administrator using (true) with check (true);
-create policy all_view on room_attachment for select to anonymous;
+create policy public_view on room_attachment for select to anonymous;
 
 revoke all on location from administrator;
 revoke all on location from member;
@@ -122,7 +122,7 @@ grant all on location to anonymous;
 alter table location enable row level security;
 select app_private.drop_policies('public.location');
 create policy admin_all on location to administrator using (true) with check (true);
-create policy all_view on location for select to anonymous;
+create policy public_view on location for select to anonymous;
 
 revoke all on location_attachment from administrator;
 revoke all on location_attachment from member;
@@ -130,7 +130,7 @@ grant all on location_attachment to anonymous;
 alter table location_attachment enable row level security;
 select app_private.drop_policies('public.location_attachment');
 create policy admin_all on location_attachment to administrator using (true) with check (true);
-create policy all_view on location_attachment for select to anonymous;
+create policy public_view on location_attachment for select to anonymous;
 
 revoke all on tenant from administrator;
 revoke all on tenant from member;
@@ -138,7 +138,7 @@ grant all on tenant to anonymous;
 alter table tenant enable row level security;
 select app_private.drop_policies('public.tenant');
 create policy admin_all on tenant to administrator using (true) with check (true);
-create policy all_view on tenant for select to anonymous;
+create policy public_view on tenant for select to anonymous;
 
 revoke all on tenant_attachment from administrator;
 revoke all on tenant_attachment from member;
@@ -146,7 +146,7 @@ grant all on tenant_attachment to anonymous;
 alter table tenant_attachment enable row level security;
 select app_private.drop_policies('public.tenant_attachment');
 create policy admin_all on tenant_attachment to administrator using (true) with check (true);
-create policy all_view on tenant_attachment for select to anonymous;
+create policy public_view on tenant_attachment for select to anonymous;
 
 revoke all on tenant_person from administrator;
 revoke all on tenant_person from member;
@@ -154,7 +154,7 @@ grant all on tenant_person to anonymous;
 alter table tenant_person enable row level security;
 select app_private.drop_policies('public.tenant_person');
 create policy admin_all on tenant_person to administrator using (true) with check (true);
-create policy all_view on tenant_person for select to anonymous;
+create policy public_view on tenant_person for select to anonymous;
 
 revoke all on pary_navrh from member;
 grant all on pary_navrh to anonymous;
@@ -210,7 +210,7 @@ create policy member_view on platby_raw for select to member using (exists (sele
 select app_private.drop_policies('public.dokumenty');
 alter table dokumenty enable row level security;
 create policy admin_all on dokumenty to administrator using (true) with check (true);
-create policy all_view on dokumenty for select to member;
+create policy public_view on dokumenty for select to member;
 revoke all on dokumenty from member;
 grant all on dokumenty to anonymous;
 
