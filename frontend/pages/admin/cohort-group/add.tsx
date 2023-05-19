@@ -1,8 +1,8 @@
 import { CohortGroupForm } from 'components/CohortGroupForm';
-import { CohortGroupList } from 'components/CohortGroupList';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { Item } from 'components/layout/Item';
 import { type NextPageWithLayout } from 'pages/_app';
+import { CohortGroupList } from 'lib/entity-lists';
 
 const Page: NextPageWithLayout = () => {
   return (

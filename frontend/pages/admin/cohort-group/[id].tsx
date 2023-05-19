@@ -2,7 +2,6 @@ import { CohortGroupForm } from 'components/CohortGroupForm';
 import { DeleteButton } from 'components/DeleteButton';
 import { useRouter } from 'next/router';
 import { Item } from 'components/layout/Item';
-import { CohortGroupList } from 'components/CohortGroupList';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { useQueryClient } from '@tanstack/react-query';
 import { CohortListForm } from 'components/CohortListForm';
@@ -14,6 +13,7 @@ import {
   CohortGroupListDocument,
   DeleteCohortGroupDocument,
 } from 'lib/graphql/CohortGroup';
+import { CohortGroupList } from 'lib/entity-lists';
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();

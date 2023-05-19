@@ -1,9 +1,10 @@
 import { FixCouplesButton } from 'components/FixCouplesButton';
 import { makeAdminList } from 'components/generic/AdminEntityList';
-import { Article, Cohort, Couple, Event, Reservation, Schedule } from './entities';
+import { Article, Cohort, CohortGroup, Couple, Event, Reservation, Schedule } from './entities';
 import { fullDateFormatter } from './format-date';
 import { formatCoupleName } from './format-name';
 import { ArticlesDocument } from './graphql/Articles';
+import { CohortGroupListDocument } from './graphql/CohortGroup';
 import { CohortListDocument } from './graphql/Cohorts';
 import { CoupleListDocument } from './graphql/Couple';
 import { EventListDocument } from './graphql/Event';
@@ -76,3 +77,12 @@ export const CohortList = makeAdminList(
     />
   ),
 }))({})
+
+export const CohortGroupList = makeAdminList(
+  CohortGroup,
+  CohortGroupListDocument,
+)(x => x.cohortGroups?.nodes)((x) => ({
+  id: x.id,
+  title: x.name,
+  subtitle: x.isPublic ? '' : 'Skrytý',
+}))({});

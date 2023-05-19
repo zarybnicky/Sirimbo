@@ -124,3 +124,10 @@ export const Cohort = {
     ];
   },
 };
+
+export const CohortGroup = {
+  name: (n: number) => (n === 1 ? 'tréninkový program' : n > 1 && n < 5 ? 'tréninkové programy' : 'tréninkových programů'),
+  addRoute: { pathname: '/admin/cohort-group/add' } as Route,
+  editRoute: (id: string) =>
+    ({ pathname: '/admin/cohort-group/[id]', query: { id } } as Route),
+};
