@@ -45,13 +45,6 @@
   dependencies:
     node-fetch "^2.6.1"
 
-"@axel-dev/react-nice-dates@^3.1.0":
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/@axel-dev/react-nice-dates/-/react-nice-dates-3.1.3.tgz#2a4bb7c8760e763cc771b2da69834bdf2adc3463"
-  integrity sha512-2iLZ6m6e2h8FyANxuXaJzXyZzRsX2k/kBeE4Gh/T1utE/2HcObEnb0aAit1bbbO3LTwrPAnGbfGiAFr2Ssn5Fg==
-  dependencies:
-    classnames "^2.2.6"
-
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.18.6", "@babel/code-frame@^7.21.4":
   version "7.21.4"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.21.4.tgz#d0fa9e4413aca81f2b23b9442797bda1826edb39"
@@ -4180,7 +4173,7 @@ ckeditor5@^37.1.0:
     "@ckeditor/ckeditor5-watchdog" "^37.1.0"
     "@ckeditor/ckeditor5-widget" "^37.1.0"
 
-classnames@^2.2.6, classnames@^2.3.2:
+classnames@^2.3.2:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.2.tgz#351d813bf0137fcc6a76a16b88208d2560a0d924"
   integrity sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==
@@ -8583,6 +8576,11 @@ react-colorful@^5.6.1:
   version "5.6.1"
   resolved "https://registry.yarnpkg.com/react-colorful/-/react-colorful-5.6.1.tgz#7dc2aed2d7c72fac89694e834d179e32f3da563b"
   integrity sha512-1exovf0uGTGyq5mXQT0zgQ80uvj2PCwvF8zY1RN9/vbJVSjSo3fsB/4L3ObbF7u70NduSiK4xu4Y6q1MHoUGEw==
+
+react-day-picker@^8.7.1:
+  version "8.7.1"
+  resolved "https://registry.yarnpkg.com/react-day-picker/-/react-day-picker-8.7.1.tgz#b8388c2afa69d4a6da4c5fde5323fae884acfe2f"
+  integrity sha512-Gv426AW8b151CZfh3aP5RUGztLwHB/EyJgWZ5iMgtzbFBkjHfG6Y66CIQFMWGLnYjsQ9DYSJRmJ5S0Pg5HWKjA==
 
 react-dom@^18.2.0:
   version "18.2.0"

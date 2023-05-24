@@ -38,10 +38,10 @@ export const ReservationForm: React.FC<{
       nMaxPocetHod: data?.nMaxPocetHod,
       nVisible: data?.nVisible,
       nLock: data?.nLock,
-      schedule: [
-        data?.nOd ? new Date(data?.nOd) : undefined,
-        data?.nDo ? new Date(data?.nDo) : undefined,
-      ],
+      schedule: {
+        from: data?.nOd ? new Date(data?.nOd) : undefined,
+        to: data?.nDo ? new Date(data?.nDo) : undefined,
+      },
     });
   }, [reset, data]);
 
@@ -52,8 +52,8 @@ export const ReservationForm: React.FC<{
       nMaxPocetHod: values.nMaxPocetHod,
       nVisible: values.nVisible,
       nLock: values.nLock,
-      nOd: values.schedule[0]?.toISOString(),
-      nDo: values.schedule[1]?.toDateString(),
+      nOd: values.schedule.from?.toISOString() || '',
+      nDo: values.schedule.to?.toDateString() || '',
     };
     if (data) {
       await doUpdate({ id: data.id, patch });

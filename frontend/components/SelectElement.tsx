@@ -23,7 +23,7 @@ type SelectElementProps<T extends FieldValues> = {
   validation?: ControllerProps['rules'];
   name: Path<T>;
   control?: Control<T>;
-  options: Item[];
+  options?: Item[];
   required?: boolean;
 } & Extras;
 
@@ -32,7 +32,7 @@ export function SelectElement<TFieldValues extends FieldValues>({
   control,
   validation: rules = {},
   required,
-  options,
+  options = [],
   className = '',
   helperText,
   parseError,

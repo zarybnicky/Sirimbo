@@ -234,9 +234,7 @@ export const UserForm: React.FC<{
           control={control}
           label="Tréninková skupina"
           name="uSkupina"
-          options={
-            cohorts?.skupinies?.nodes?.map((x) => ({ id: x.id, label: x.sName })) || []
-          }
+          options={cohorts?.skupinies?.nodes?.map((x) => ({ id: x.id, label: x.sName }))}
         />
 
         <RichTextEditor

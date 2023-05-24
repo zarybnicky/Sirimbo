@@ -7,17 +7,55 @@ import {
   useController,
   FieldError,
 } from 'react-hook-form';
-import {
-  DatePickerCalendar,
-  DateRangePicker,
-  DatePicker,
-} from '@axel-dev/react-nice-dates';
-import '@axel-dev/react-nice-dates/build/style.css';
 import cs from 'date-fns/locale/cs';
-import classNames from 'classnames';
-import { ArrowRight } from 'react-feather';
+import cx from 'classnames';
+import { ChevronLeft, ChevronRight } from 'react-feather';
+import { DayPicker, DateRange } from 'react-day-picker';
 
-export type DateRange = [Date, Date];
+export type { DateRange };
+
+export function Calendar({
+  className,
+  classNames,
+  showOutsideDays = true,
+  ...props
+}: React.ComponentProps<typeof DayPicker>) {
+  return (
+    <DayPicker
+      showOutsideDays={showOutsideDays}
+      className={cx('py-2 flex flex-row', className)}
+      classNames={{
+        months:
+          'p-1 border rounded-lg border-red-500 space-y-4 sm:space-x-4 sm:space-y-0',
+        month: 'space-y-4',
+        caption: 'flex justify-center pt-1 mx-2 relative justify-between items-center',
+        caption_label: 'text-sm font-medium',
+        nav: 'gap-1 flex items-center',
+        nav_button: 'button button-red opacity-80 hover:opacity-100',
+        table: 'w-full border-collapse space-y-1',
+        head_row: 'flex',
+        head_cell: 'text-stone-700 rounded-md w-9 text-[0.8rem]',
+        row: 'flex w-full mt-2',
+        cell: 'text-center text-sm p-0 relative [&:has([aria-selected])]:bg-red-100 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
+        day: 'flex justify-center items-center rounded-lg hover:bg-stone-200 h-9 w-9 p-0 aria-selected:opacity-100',
+        day_selected:
+          'bg-red-500 text-white font-bold hover:bg-red-500 hover:text-white focus:bg-red-500 focus:text-white',
+        day_today: 'bg-stone-200 text-black',
+        day_outside: 'text-stone-700 opacity-50',
+        day_disabled: 'text-stone-700 opacity-50',
+        day_range_middle:
+          'aria-selected:bg-red-100 aria-selected:text-stone-700 aria-selected:font-normal',
+        day_hidden: 'invisible',
+        ...classNames,
+      }}
+      components={{
+        IconLeft: () => <ChevronLeft className="h-4 w-4" />,
+        IconRight: () => <ChevronRight className="h-4 w-4" />,
+      }}
+      {...props}
+    />
+  );
+}
 
 type DateRangeInputProps<T extends FieldValues> = {
   validation?: ControllerProps['rules'];
@@ -47,55 +85,36 @@ export function DateRangeInput<TFieldValues extends FieldValues>({
     validation.required = 'Toto pole je povinné';
   }
 
-  const {
-    field: { value, onChange },
-    fieldState: { error },
-  } = useController({ control, name, rules: validation });
-  const parsedHelperText = !error
+  const { field, fieldState } = useController({ control, name, rules: validation });
+  const parsedHelperText = !fieldState.error
     ? helperText
     : parseError
-    ? parseError(error)
-    : error.message;
+    ? parseError(fieldState.error)
+    : fieldState.error.message;
 
   return (
-    <DateRangePicker
-      startDate={value?.[0]}
-      endDate={value?.[1]}
-      onStartDateChange={(newStartDate) => onChange([newStartDate, value[1]])}
-      onEndDateChange={(newEndDate) => onChange([value[0], newEndDate])}
-      locale={cs}
-    >
-      {({ startDateInputProps, endDateInputProps }) => (
-        <div className={className}>
-          <label htmlFor={name} className="block text-sm text-gray-700 my-1">
-            {label}
-          </label>
-          <div className="date-range flex flex-row gap-4">
-            <input
-              className="block w-full border-red-400 text-stone-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
-              {...startDateInputProps}
-              placeholder="Od"
-            />
-            <ArrowRight className="shrink-0 self-center" />
-            <input
-              className="block w-full border-red-400 text-stone-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
-              {...endDateInputProps}
-              placeholder="Do"
-            />
-          </div>
-          {parsedHelperText && (
-            <p
-              className={classNames(
-                'mt-2 text-sm',
-                error ? 'text-red-600' : 'text-gray-500',
-              )}
-            >
-              {parsedHelperText}
-            </p>
+    <div className={className}>
+      <label htmlFor={name} className="block text-sm text-gray-700 mt-1">
+        {label}
+      </label>
+
+      <Calendar
+        mode="range"
+        selected={field.value}
+        onSelect={field.onChange}
+        locale={cs}
+      />
+      {parsedHelperText && (
+        <p
+          className={cx(
+            'mt-2 text-sm',
+            fieldState.error ? 'text-red-600' : 'text-gray-500',
           )}
-        </div>
+        >
+          {parsedHelperText}
+        </p>
       )}
-    </DateRangePicker>
+    </div>
   );
 }
 
@@ -112,51 +131,42 @@ export function DatePickerElement<TFieldValues extends FieldValues>({
   if (required && !validation?.required) {
     validation.required = 'Toto pole je povinné';
   }
-  const {
-    field: { value, onChange },
-    fieldState: { error },
-  } = useController({ control, name, rules: validation });
-  const parsedHelperText = !error
+  const { field, fieldState } = useController({ control, name, rules: validation });
+  const parsedHelperText = !fieldState.error
     ? helperText
     : parseError
-    ? parseError(error)
-    : error.message;
+    ? parseError(fieldState.error)
+    : fieldState.error.message;
+
+  const [month, setMonth] = React.useState(new Date());
+  React.useEffect(() => {
+    setMonth(field.value);
+  }, [field.value]);
 
   return (
-    <DatePicker date={value} onDateChange={onChange} locale={cs}>
-      {({ inputProps }) => (
-        <div className={className}>
-          <label htmlFor={name} className="block text-sm text-gray-700 my-1">
-            {label}
-          </label>
-          <input
-            className="block w-full border-red-400 text-stone-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
-            {...inputProps}
-            placeholder="Datum"
-          />
-          {parsedHelperText && (
-            <p
-              className={classNames(
-                'mt-2 text-sm',
-                error ? 'text-red-600' : 'text-gray-500',
-              )}
-            >
-              {parsedHelperText}
-            </p>
+    <div className={className}>
+      <label htmlFor={name} className="block text-sm text-gray-700 my-1">
+        {label}
+      </label>
+      <Calendar
+        mode="single"
+        defaultMonth={field.value}
+        month={month}
+        onMonthChange={setMonth}
+        selected={field.value}
+        onSelect={field.onChange}
+        locale={cs}
+      />
+      {parsedHelperText && (
+        <p
+          className={cx(
+            'mt-2 text-sm',
+            fieldState.error ? 'text-red-600' : 'text-gray-500',
           )}
-        </div>
+        >
+          {parsedHelperText}
+        </p>
       )}
-    </DatePicker>
+    </div>
   );
-}
-
-export function DateCalendarElement<TFieldValues extends FieldValues>({
-  name,
-  control,
-  validation,
-}: DateRangeInputProps<TFieldValues>) {
-  const {
-    field: { value, onChange },
-  } = useController({ control, name, rules: validation });
-  return <DatePickerCalendar date={value} onDateChange={onChange} locale={cs} />;
 }

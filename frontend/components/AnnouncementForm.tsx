@@ -13,14 +13,18 @@ import {
   UpdateAnnouncementDocument,
 } from 'lib/graphql/Announcement';
 import { useQueryClient } from '@tanstack/react-query';
-import { DateRange, DateRangeInput } from './DateRange';
+import { DatePickerElement } from './DateRange';
 import dynamic from 'next/dynamic';
 import { getGqlKey, useGqlMutation } from 'lib/query';
 import { CheckboxElement } from './Checkbox';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
-type FormProps = Pick<UpozorneniInput, 'upNadpis' | 'upText' | 'isVisible'> & {
-  schedule: DateRange;
+type FormProps = Pick<
+  UpozorneniInput,
+  'upNadpis' | 'upText' | 'isVisible'
+> & {
+  scheduledSince: Date | undefined;
+  scheduledUntil: Date | undefined;
 };
 
 export const AnnouncementForm: React.FC<{
@@ -45,10 +49,8 @@ export const AnnouncementForm: React.FC<{
       upNadpis: data?.upNadpis,
       upText: data?.upText,
       isVisible: data?.isVisible,
-      schedule: [
-        data?.scheduledSince ? new Date(data.scheduledSince) : undefined,
-        data?.scheduledUntil ? new Date(data.scheduledUntil) : undefined,
-      ],
+      scheduledSince: data?.scheduledSince ? new Date(data.scheduledSince) : undefined,
+      scheduledUntil: data?.scheduledUntil ? new Date(data.scheduledUntil) : undefined,
     });
   }, [data, reset]);
 
@@ -57,8 +59,8 @@ export const AnnouncementForm: React.FC<{
       upNadpis: values.upNadpis,
       upText: values.upText,
       isVisible: values.isVisible,
-      scheduledSince: values.schedule[0]?.toISOString(),
-      scheduledUntil: values.schedule[1]?.toDateString(),
+      scheduledSince: values.scheduledSince?.toISOString(),
+      scheduledUntil: values.scheduledUntil?.toISOString(),
     };
     if (data) {
       await doUpdate({ id: data.id, patch });
@@ -71,7 +73,16 @@ export const AnnouncementForm: React.FC<{
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="upNadpis" label="Nadpis" required />
-      <DateRangeInput control={control} name="schedule" label="Publikováno od/do" />
+      <DatePickerElement
+        control={control}
+        name="scheduledSince"
+        label="Odložit zveřejnění na den"
+      />
+      <DatePickerElement
+        control={control}
+        name="scheduledUntil"
+        label="Skrýt příspěvek dne"
+      />
       <CheckboxElement control={control} name="isVisible" value="1" label="Viditelný" />
       <RichTextEditor
         initialState={data?.upText}
