@@ -4,22 +4,26 @@ import { CohortFragment } from 'lib/graphql/Cohorts';
 import React from 'react';
 import { ChevronDown } from 'react-feather';
 
-interface CollapsibleCardProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
+interface CollapsibleCardProps {
   title: React.ReactNode;
   cohort?: CohortFragment;
+  children: React.ReactNode;
 }
 
 export function CollapsibleCard({
   title,
   cohort,
   children,
-  ...props
 }: CollapsibleCardProps) {
   return (
-      <Collapsible.Root className={classNames("relative border flex flex-col mb-1 rounded-lg", cohort && 'pl-3')}>
+    <Collapsible.Root
+      className={classNames(
+        'relative border flex flex-col mb-1 rounded-lg',
+        cohort && 'pl-3',
+      )}
+    >
       <Collapsible.Trigger className="group flex justify-between p-2">
-      <div>{title}</div>
+        <div>{title}</div>
         <ChevronDown className="text-stone-400 transform duration-300 ease-in-out group-radix-state-open:rotate-180" />
       </Collapsible.Trigger>
       <Collapsible.Content className="CollapsibleContent">

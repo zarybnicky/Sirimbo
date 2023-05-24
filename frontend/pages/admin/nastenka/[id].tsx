@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { Item } from 'components/layout/Item';
 import { DeleteButton } from 'components/DeleteButton';
-import { AnnouncementList } from 'components/AnnouncementList';
 import { fromSlugArray } from 'lib/slugify';
 import { NextPageWithLayout } from 'pages/_app';
 import { useGqlMutation, useGqlQuery } from 'lib/query';
@@ -11,6 +10,7 @@ import {
   AnnouncementDocument,
   DeleteAnnouncementDocument,
 } from 'lib/graphql/Announcement';
+import { AnnouncementList } from 'lib/entity-lists';
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();

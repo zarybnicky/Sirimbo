@@ -5,11 +5,12 @@ import { RoleListDocument } from 'lib/graphql/Roles';
 import { CohortListDocument } from 'lib/graphql/Cohorts';
 import { TextField } from './TextField';
 import React from 'react';
-import { FuzzyList } from './FuzzyList';
 import { exportMSMT } from 'lib/export-msmt';
 import { fromSlugArray } from 'lib/slugify';
 import { useGqlQuery } from 'lib/query';
 import { UserListDocument } from 'lib/graphql/User';
+import { useFuzzySearch } from 'lib/use-fuzzy-search';
+import { Virtuoso } from 'react-virtuoso';
 
 export const UserList = () => {
   const router = useRouter();
@@ -36,6 +37,11 @@ export const UserList = () => {
   }, []);
 
   const [search, setSearch] = React.useState('');
+  const fuzzy = useFuzzySearch(
+    nodes,
+    ['id', 'name', 'role', 'cohort', 'yearOfBirth'],
+    search,
+  );
 
   // Sign in as
 
@@ -70,11 +76,10 @@ export const UserList = () => {
         />
       </List.TitleBar>
 
-      <FuzzyList
-        data={nodes}
-        fields={['id', 'name', 'role', 'cohort', 'yearOfBirth']}
-        search={search}
-        renderItem={(n, item) => (
+      <Virtuoso
+        className="grow h-full overflow-y-auto scrollbar"
+        data={fuzzy}
+        itemContent={(_n, item) => (
           <List.Item
             key={item.id}
             className="pl-6"

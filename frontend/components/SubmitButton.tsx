@@ -10,7 +10,7 @@ export const SubmitButton = React.forwardRef(function SubmitButton(
     className,
     children = 'Uložit',
     ...props
-  }: Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type' | 'disabled'> & {
+  }: Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'disabled'> & {
     disabled?: boolean;
     loading?: boolean;
   },

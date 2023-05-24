@@ -26,7 +26,6 @@ export const SimpleDialog = ({ title, children, button }: Props) => {
             )}
           />
           <DialogPrimitive.Content
-            forceMount
             className={cx(
               'fixed z-50 overflow-y-auto',
               'w-[95vw] max-h-[95vh] max-w-xl rounded-lg p-4 md:w-full',

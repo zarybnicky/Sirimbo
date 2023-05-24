@@ -24,7 +24,32 @@ export const Couple = {
     ({ pathname: '/admin/pary/[id]', query: { id } } as Route),
 };
 
+export const PaymentItem = {
+  name: (n: number) => (n === 1 ? "platba" : n > 1 && n < 5 ? "platby":"plateb"),
+  addRoute: { pathname: '/admin/platby/items/add' } as Route,
+  editRoute: (id: string) =>
+    ({ pathname: '/admin/platby/items/[id]', query: { id } } as Route),
+};
+
+export const PaymentCategory = {
+  name: (n: number) => (n === 1 ? "kategorie" : n > 1 && n < 5 ? "kategorie":"kategorií"),
+  addRoute: { pathname: '/admin/platby/structure/category/add' } as Route,
+  editRoute: (id: string) =>
+    ({ pathname: '/admin/platby/structure/category/[id]', query: { id } } as Route),
+};
+
+export const PaymentGroup = {
+  name: (n: number) => (n === 1 ? "skupina" : n > 1 && n < 5 ? "skupiny":"skupin"),
+  addRoute: { pathname: '/admin/platby/structure/group/add' } as Route,
+  editRoute: (id: string) =>
+    ({ pathname: '/admin/platby/structure/group/[id]', query: { id } } as Route),
+};
+
 export const Announcement = {
+  name: (n: number) => (n === 1 ? "příspěvek" : n > 1 && n < 5 ? "příspěvky":"příspěvků"),
+  addRoute: { pathname: '/admin/nastenka/add' } as Route,
+  editRoute: (id: string) =>
+    ({ pathname: '/admin/nastenka/[id]', query: { id } } as Route),
   useMenu(item: AnnouncementFragment): DropdownItem[] {
     const { perms } = useAuth();
     const queryClient = useQueryClient();

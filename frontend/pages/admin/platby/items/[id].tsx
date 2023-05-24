@@ -5,6 +5,7 @@ import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { type NextPageWithLayout } from 'pages/_app';
 import { useGqlQuery } from 'lib/query';
 import { PaymentItemDocument } from 'lib/graphql/Payment';
+import { PaymentItemList } from 'lib/entity-lists';
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
@@ -26,6 +27,7 @@ const Page: NextPageWithLayout = () => {
   );
 };
 
+Page.list = <PaymentItemList />;
 Page.permissions = [PermissionKey.pePlatby, PermissionLevel.P_OWNED];
 Page.staticTitle = 'Platby';
 

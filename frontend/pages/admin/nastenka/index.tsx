@@ -1,5 +1,5 @@
-import { AnnouncementList } from 'components/AnnouncementList';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
+import { AnnouncementList } from 'lib/entity-lists';
 import { type NextPageWithLayout } from 'pages/_app';
 
 const Page: NextPageWithLayout = () => null;

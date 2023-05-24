@@ -5,7 +5,7 @@ import { CohortGroupDocument, CohortGroupFragment } from 'lib/graphql/CohortGrou
 import { CohortListDocument, UpdateCohortDocument } from 'lib/graphql/Cohorts';
 import { getGqlKey, useGqlMutation, useGqlQuery } from 'lib/query';
 import React from 'react';
-import { ChevronDown, Plus, Search, Trash2 } from 'react-feather';
+import { Plus, Search, Trash2 } from 'react-feather';
 import { CollapsibleCard } from './CollapsibleCard';
 
 type Props = {
