@@ -4,7 +4,7 @@ import {
   ScheduleBasicFragment,
   ScheduleItemBasicFragment,
 } from 'lib/graphql/Schedule';
-import * as PopoverPrimitive from '@radix-ui/react-popover';
+import * as Popover from '@radix-ui/react-popover';
 import React from 'react';
 import classNames from 'classnames';
 import { Calendar, Clock, User, Users, X as Cross } from 'react-feather';
@@ -78,9 +78,9 @@ export const LessonButton = ({ schedule, lesson, showTrainer, showDate }: Props)
 
   return (
     <div className="relative">
-      <PopoverPrimitive.Root open={isOpen} onOpenChange={setIsOpen}>
-        <PopoverPrimitive.Trigger asChild>{trigger}</PopoverPrimitive.Trigger>
-        <PopoverPrimitive.Content
+      <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
+        <Popover.Trigger asChild>{trigger}</Popover.Trigger>
+        <Popover.Content
           align="start"
           sideOffset={4}
           className={classNames(
@@ -89,7 +89,7 @@ export const LessonButton = ({ schedule, lesson, showTrainer, showDate }: Props)
             'bg-white dark:bg-stone-800',
           )}
         >
-          <PopoverPrimitive.Arrow className="fill-current text-white dark:text-stone-800" />
+          <Popover.Arrow className="fill-current text-white dark:text-stone-800" />
 
           <div className="grid grid-cols-[1fr_5fr] gap-2">
             <Calendar className="text-red-500" />
@@ -130,16 +130,16 @@ export const LessonButton = ({ schedule, lesson, showTrainer, showDate }: Props)
             )}
           </div>
 
-          <PopoverPrimitive.Close
+          <Popover.Close
             className={classNames(
               'absolute top-3.5 right-3.5 inline-flex items-center justify-center rounded-full p-1',
               'focus:outline-none focus-visible:ring focus-visible:ring-red-500 focus-visible:ring-opacity-75',
             )}
           >
             <Cross className="h-4 w-4 text-stone-500 hover:text-stone-700 dark:text-stone-500 dark:hover:text-stone-400" />
-          </PopoverPrimitive.Close>
-        </PopoverPrimitive.Content>
-      </PopoverPrimitive.Root>
+          </Popover.Close>
+        </Popover.Content>
+      </Popover.Root>
     </div>
   );
 };

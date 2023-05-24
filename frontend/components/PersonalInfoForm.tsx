@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from 'lib/data/use-auth';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { SelectElement } from 'components/SelectElement';
+import { ComboboxElement } from 'components/Combobox';
 import { RadioButtonGroupElement } from 'components/RadioButtomGroupElement';
 import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook';
@@ -143,7 +143,7 @@ export const PersonalInfoForm: React.FC<{
       <TextFieldElement control={control} name="uPostalCode" label="PSČ" />
 
       <div className="col-full">
-        <SelectElement
+        <ComboboxElement
           control={control}
           label="Národnost"
           name="uNationality"

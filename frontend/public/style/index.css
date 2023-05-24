@@ -32,6 +32,11 @@ body {
   --ck-color-toolbar-border: #f1465d;
 }
 
+.PopoverContent {
+  width: var(--radix-popper-anchor-width);
+  max-height: var(--radix-popover-content-available-height);
+}
+
 .CollapsibleContent {
   overflow: hidden;
 }

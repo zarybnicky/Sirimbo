@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
-import { SelectElement } from 'components/SelectElement';
+import { ComboboxElement } from 'components/Combobox';
 import { TextFieldElement } from 'components/TextField';
 import { useCountries } from 'lib/data/use-countries';
 import { useAsyncCallback } from 'react-async-hook';
@@ -118,7 +118,7 @@ const Page: NextPageWithLayout = () => {
           />
 
           <div className="col-full grid gap-2">
-            <SelectElement
+            <ComboboxElement
               control={control}
               label="Národnost"
               name="nationality"
@@ -202,7 +202,7 @@ const Page: NextPageWithLayout = () => {
           </div>
 
           <div className="col-full md:col-span-2">
-            <SelectElement
+            <ComboboxElement
               control={control}
               label="Tréninková skupina"
               name="skupina"

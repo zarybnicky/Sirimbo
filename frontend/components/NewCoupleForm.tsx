@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
-import { SelectElement } from 'components/SelectElement';
+import { ComboboxElement } from 'components/Combobox';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { useGqlMutation, useGqlQuery } from 'lib/query';
@@ -42,14 +42,14 @@ export const NewCoupleForm: React.FC<{
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
-      <SelectElement
+      <ComboboxElement
         control={control}
         name="man"
         label="Partner"
         required
         options={men}
       />
-      <SelectElement
+      <ComboboxElement
         control={control}
         name="woman"
         label="Partnerka"

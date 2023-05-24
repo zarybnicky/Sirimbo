@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { SelectElement } from 'components/SelectElement';
+import { ComboboxElement } from 'components/Combobox';
 import { RadioButtonGroupElement } from 'components/RadioButtomGroupElement';
 import { TextFieldElement } from 'components/TextField';
 import { CheckboxElement } from 'components/Checkbox';
@@ -216,7 +216,7 @@ export const UserForm: React.FC<{
       <TextFieldElement control={control} name="uPostalCode" label="PSČ" />
 
       <div className="col-full">
-        <SelectElement
+        <ComboboxElement
           control={control}
           label="Národnost"
           name="uNationality"
@@ -230,7 +230,7 @@ export const UserForm: React.FC<{
       </div>
 
       <div className="col-full grid gap-2">
-        <SelectElement
+        <ComboboxElement
           control={control}
           label="Tréninková skupina"
           name="uSkupina"
@@ -258,7 +258,7 @@ export const UserForm: React.FC<{
       </div>
 
       <div className="col-full grid gap-2">
-        <SelectElement
+        <ComboboxElement
           control={control}
           label="Uživatelská role"
           name="uGroup"

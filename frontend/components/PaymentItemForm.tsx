@@ -6,7 +6,7 @@ import {
   UpdatePaymentItemDocument,
 } from 'lib/graphql/Payment';
 import { useForm } from 'react-hook-form';
-import { SelectElement } from 'components/SelectElement';
+import { ComboboxElement } from 'components/Combobox';
 import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
@@ -68,7 +68,7 @@ export const PaymentItemForm: React.FC<{
         required
       />
       <TextFieldElement control={control} name="piAmount" label="Částka (Kč)" required />
-      <SelectElement
+      <ComboboxElement
         control={control}
         name="piIdUser"
         label="Uživatel"
@@ -78,7 +78,7 @@ export const PaymentItemForm: React.FC<{
           label: `${x.id.padStart(6, '0')} - ${x.uJmeno} ${x.uPrijmeni}`,
         }))}
       />
-      <SelectElement
+      <ComboboxElement
         control={control}
         name="piIdUser"
         label="Uživatel"

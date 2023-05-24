@@ -7,6 +7,7 @@ import { getGqlKey, useGqlMutation, useGqlQuery } from 'lib/query';
 import React from 'react';
 import { Plus, Search, Trash2 } from 'react-feather';
 import { CollapsibleCard } from './CollapsibleCard';
+import { ComboboxElement } from './Combobox';
 
 type Props = {
   data: CohortGroupFragment;
@@ -33,6 +34,7 @@ export function CohortListForm({ data }: Props) {
       <div className="col-span-2 text-stone-700 text-sm pb-1">
         Tréninkové skupiny v programu
       </div>
+
       {data.skupiniesByCohortGroup.nodes.map((x) => (
         <CollapsibleCard key={x.id} title={x.sName} cohort={x}>
           <button

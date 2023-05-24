@@ -15,7 +15,7 @@ import { SubmitButton } from './SubmitButton';
 import { ColorPicker } from './ColorPicker';
 import { useQueryClient } from '@tanstack/react-query';
 import { CohortGroupListDocument } from 'lib/graphql/CohortGroup';
-import { SelectElement } from './SelectElement';
+import { ComboboxElement } from './Combobox';
 import dynamic from 'next/dynamic';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 import { pick } from 'lib/form-utils';
@@ -68,7 +68,7 @@ export const CohortForm = ({ data }: { data?: CohortFragment }) => {
       <TextFieldElement control={control} name="sLocation" label="Město/místo" required />
 
       <div className="flex flex-wrap gap-2">
-        <SelectElement
+        <ComboboxElement
           control={control}
           className="grow"
           label="Tréninkový program"

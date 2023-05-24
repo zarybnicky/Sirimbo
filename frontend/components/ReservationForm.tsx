@@ -4,7 +4,7 @@ import {
 } from 'lib/graphql/Reservation';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { SelectElement } from 'components/SelectElement';
+import { ComboboxElement } from 'components/Combobox';
 import { TextFieldElement } from 'components/TextField';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook';
@@ -65,7 +65,7 @@ export const ReservationForm: React.FC<{
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <ErrorBox error={onSubmit.error} />
-      <SelectElement
+      <ComboboxElement
         control={control}
         name="nTrener"
         label="Trenér"

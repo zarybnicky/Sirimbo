@@ -4,7 +4,7 @@ import {
   DeleteUserDocument,
   UserListDocument,
 } from 'lib/graphql/User';
-import { SelectElement } from 'components/SelectElement';
+import { ComboboxElement } from 'components/Combobox';
 import { useForm } from 'react-hook-form';
 import { Trash2 as DeleteIcon, Check as CheckIcon } from 'react-feather';
 import { useConfirm } from 'components/Confirm';
@@ -79,7 +79,7 @@ const UnconfirmedUser: React.FC<{
         </div>
 
         <div className="flex gap-2">
-          <SelectElement
+          <ComboboxElement
             required
             control={control}
             name="cohort"
@@ -89,14 +89,14 @@ const UnconfirmedUser: React.FC<{
               label: item.sName,
             }))}
           />
-          <SelectElement
+          <ComboboxElement
             required
             control={control}
             name="role"
             label="Role oprávnění"
-            options={(roles?.permissions?.nodes || []).map((item) => ({
-              id: item.id,
-              label: item.peName,
+            options={roles?.permissions?.nodes?.map((x) => ({
+              id: x.id,
+              label: x.peName,
             }))}
           />
         </div>
