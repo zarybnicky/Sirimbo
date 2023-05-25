@@ -12,7 +12,7 @@ import {
   WeekPicker,
 } from 'components/WeekPicker';
 import { Item } from 'components/layout/Item';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 import { useGqlQuery } from 'lib/query';
 
 const Page: NextPageWithLayout = () => {

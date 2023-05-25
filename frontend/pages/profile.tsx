@@ -11,7 +11,7 @@ import { PersonalInfoForm } from 'components/PersonalInfoForm';
 import { ChangePasswordForm } from 'components/ChangePasswordForm';
 import { LessonButton } from 'components/LessonButton';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 import { useGqlQuery } from 'lib/query';
 
 const Page: NextPageWithLayout = () => {

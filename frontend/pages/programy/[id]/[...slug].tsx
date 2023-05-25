@@ -7,7 +7,7 @@ import { fetchGql } from 'lib/query';
 import { fromSlugArray, slugify } from 'lib/slugify';
 import { GetStaticProps } from 'next';
 import { NextSeo } from 'next-seo';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 
 type PageProps = {
   item: CohortGroupFragment;

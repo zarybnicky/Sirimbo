@@ -1,7 +1,7 @@
 import { NewCoupleForm } from 'components/NewCoupleForm';
 import { Item } from 'components/layout/Item';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 import { CoupleList } from 'lib/entity-lists';
 
 const Page: NextPageWithLayout = () => {

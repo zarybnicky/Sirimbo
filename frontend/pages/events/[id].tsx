@@ -7,7 +7,7 @@ import { EventMemberList } from 'components/EventMemberList';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
 import { Heading } from 'components/Heading';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 import { fromSlugArray } from 'lib/slugify';
 import { NextSeo } from 'next-seo';
 import { useGqlQuery } from 'lib/query';

@@ -9,7 +9,7 @@ import { ErrorBox } from 'components/ErrorBox';
 import { useAsyncCallback } from 'react-async-hook';
 import { SubmitButton } from 'components/SubmitButton';
 import { Route } from 'nextjs-routes';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 
 type FormProps = {
   login: string;

@@ -3,7 +3,7 @@ import { ScheduleDocument } from 'lib/graphql/Schedule';
 import { useRouter } from 'next/router';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { fromSlugArray } from 'lib/slugify';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 import { useGqlQuery } from 'lib/query';
 import { ScheduleList } from 'lib/entity-lists';
 

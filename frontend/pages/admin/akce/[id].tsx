@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { Item } from 'components/layout/Item';
 import { DeleteButton } from 'components/DeleteButton';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 import { fromSlugArray } from 'lib/slugify';
 import { useGqlMutation, useGqlQuery } from 'lib/query';
 import { DeleteEventDocument, EventDocument } from 'lib/graphql/Event';

@@ -1,7 +1,7 @@
 import { PaymentCategoryForm } from 'components/PaymentCategoryForm';
 import { useRouter } from 'next/router';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 import { PaymentCategoryList } from 'lib/entity-lists';
 
 const Page: NextPageWithLayout = () => {

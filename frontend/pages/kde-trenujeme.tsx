@@ -2,7 +2,7 @@ import * as React from 'react';
 import { LocationCard } from 'components/cards/LocationCard';
 import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 
 const Page: NextPageWithLayout = () => {
   return (

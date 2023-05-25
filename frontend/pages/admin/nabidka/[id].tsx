@@ -4,7 +4,7 @@ import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { Item } from 'components/layout/Item';
 import { DeleteButton } from 'components/DeleteButton';
 import { fromSlugArray } from 'lib/slugify';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 import { useGqlMutation, useGqlQuery } from 'lib/query';
 import { DeleteReservationDocument, ReservationDocument } from 'lib/graphql/Reservation';
 import { ReservationList } from 'lib/entity-lists';

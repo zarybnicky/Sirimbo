@@ -5,7 +5,7 @@ import { fullDateFormatter } from 'lib/format-date';
 import { RichTextView } from 'components/RichTextView';
 import { NextSeo } from 'next-seo';
 import { Heading } from 'components/Heading';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 import { GetStaticProps } from 'next';
 import { fromSlugArray, slugify } from 'lib/slugify';
 import { fetchGql } from 'lib/query';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from 'lib/data/use-auth';
 import { useRouter } from 'next/router';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 
 const Page: NextPageWithLayout = () => {
   const { signOut } = useAuth();

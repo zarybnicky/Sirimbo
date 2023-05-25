@@ -13,7 +13,7 @@ import { toast } from 'react-toastify';
 import { CohortListDocument } from 'lib/graphql/Cohorts';
 import { RegisterDocument } from 'lib/graphql/CurrentUser';
 import { Item } from 'components/layout/Item';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 import { useGqlMutation, useGqlQuery } from 'lib/query';
 
 const Page: NextPageWithLayout = () => {

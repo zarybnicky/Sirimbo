@@ -2,7 +2,7 @@ import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { Item } from 'components/layout/Item';
 import { CurrentTenantDocument } from 'lib/graphql/Tenant';
 import { TenantForm } from 'components/TenantForm';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 import { useGqlQuery } from 'lib/query';
 
 const Page: NextPageWithLayout = () => {

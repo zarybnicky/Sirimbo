@@ -1,7 +1,7 @@
 import { ScheduleForm } from 'components/ScheduleForm';
 import { useRouter } from 'next/router';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 import { ScheduleList } from 'lib/entity-lists';
 
 const Page: NextPageWithLayout = () => {

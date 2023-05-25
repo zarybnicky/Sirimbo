@@ -5,7 +5,7 @@ import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { fullDateFormatter } from 'lib/format-date';
 import { Item } from 'components/layout/Item';
 import { Card } from 'components/Card';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 import { useGqlQuery } from 'lib/query';
 
 const categories = [

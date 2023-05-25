@@ -5,7 +5,7 @@ import { CallToAction } from 'components/CallToAction';
 import { useArticles } from 'lib/data/use-articles';
 import { YoutubeEmbed } from 'components/YoutubeEmbed';
 import { Route } from 'nextjs-routes';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 import { ArticleCard } from 'components/cards/ArticleCard';
 import { NextSeo } from 'next-seo';
 

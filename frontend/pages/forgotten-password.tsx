@@ -7,7 +7,7 @@ import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
 import { toast } from 'react-toastify';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 import { useGqlMutation } from 'lib/query';
 import { ResetPasswordDocument } from 'lib/graphql/CurrentUser';
 

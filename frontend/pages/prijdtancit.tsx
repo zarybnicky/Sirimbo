@@ -4,7 +4,7 @@ import { ProspectForm } from 'components/ProspectForm';
 import { LocationCard } from 'components/cards/LocationCard';
 import { Heading } from 'components/Heading';
 import { YoutubeEmbed } from 'components/YoutubeEmbed';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 
 const Page: NextPageWithLayout = () => {
   return (

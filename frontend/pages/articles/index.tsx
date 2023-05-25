@@ -4,7 +4,7 @@ import { useArticles } from 'lib/data/use-articles';
 import { CallToAction } from 'components/CallToAction';
 import { Pagination } from 'components/Pagination';
 import { Heading } from 'components/Heading';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 
 const Page: NextPageWithLayout = () => {
   const [limit] = React.useState(12);

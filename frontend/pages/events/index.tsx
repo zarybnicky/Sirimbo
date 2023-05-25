@@ -4,7 +4,7 @@ import { useAuth } from 'lib/data/use-auth';
 import { EventMemberList } from 'components/EventMemberList';
 import classNames from 'classnames';
 import { Heading } from 'components/Heading';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 
 const Page: NextPageWithLayout = () => {
   const { user } = useAuth();

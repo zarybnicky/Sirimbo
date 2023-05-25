@@ -6,7 +6,7 @@ import { Item } from 'components/layout/Item';
 import { UserList } from 'components/UserList';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { fromSlugArray } from 'lib/slugify';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 import { useGqlMutation, useGqlQuery } from 'lib/query';
 
 const Page: NextPageWithLayout = () => {

@@ -2,7 +2,7 @@ import { PaymentCategoryForm } from 'components/PaymentCategoryForm';
 import { useRouter } from 'next/router';
 import { fromSlugArray } from 'lib/slugify';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 import { useGqlQuery } from 'lib/query';
 import { PaymentCategoryDocument } from 'lib/graphql/Payment';
 import { PaymentCategoryList } from 'lib/entity-lists';

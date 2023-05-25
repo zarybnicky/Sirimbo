@@ -5,7 +5,7 @@ import { Item } from 'components/layout/Item';
 import { Button } from 'components/Button';
 import { saveAs } from 'file-saver';
 import { FormResponsesDocument } from 'lib/graphql/Crm';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 import { useGqlQuery } from 'lib/query';
 
 const Page: NextPageWithLayout = () => {

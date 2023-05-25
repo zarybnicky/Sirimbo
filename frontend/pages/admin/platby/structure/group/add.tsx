@@ -1,7 +1,7 @@
 import { PaymentGroupForm } from 'components/PaymentGroupForm';
 import { useRouter } from 'next/router';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 import { PaymentGroupList } from 'lib/entity-lists';
 
 const Page: NextPageWithLayout = () => {

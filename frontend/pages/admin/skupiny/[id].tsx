@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { Item } from 'components/layout/Item';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { fromSlugArray } from 'lib/slugify';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 import { useGqlMutation, useGqlQuery } from 'lib/query';
 import { CohortList } from 'lib/entity-lists';
 

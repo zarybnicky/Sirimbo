@@ -7,7 +7,7 @@ import { CohortExport } from 'components/CohortExport';
 import { Item } from 'components/layout/Item';
 import { CohortItem } from 'components/CohortItem';
 import classNames from 'classnames';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 import { useGqlQuery } from 'lib/query';
 
 const Page: NextPageWithLayout = () => {

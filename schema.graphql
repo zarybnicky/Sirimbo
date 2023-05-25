@@ -14,11 +14,6 @@ type Akce {
     """Read all values in the set before (above) this cursor."""
     before: Cursor
 
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AkceItemCondition
-
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -41,53 +36,6 @@ type Akce {
   aVisible: Boolean
   enableNotes: Boolean
   isPublic: Boolean
-  summary: String
-}
-
-"""
-A condition to be used against `Akce` object types. All fields are tested for equality and combined with a logical ‘and.’
-"""
-input AkceCondition {
-  """Checks for equality with the object’s `aDo` field."""
-  aDo: Date
-
-  """Checks for equality with the object’s `aDokumenty` field."""
-  aDokumenty: String
-
-  """Checks for equality with the object’s `aId` field."""
-  aId: BigInt
-
-  """Checks for equality with the object’s `aInfo` field."""
-  aInfo: String
-
-  """Checks for equality with the object’s `aJmeno` field."""
-  aJmeno: String
-
-  """Checks for equality with the object’s `aKapacita` field."""
-  aKapacita: BigInt
-
-  """Checks for equality with the object’s `aKde` field."""
-  aKde: String
-
-  """Checks for equality with the object’s `aLock` field."""
-  aLock: Boolean
-
-  """Checks for equality with the object’s `aOd` field."""
-  aOd: Date
-
-  """Checks for equality with the object’s `aTimestamp` field."""
-  aTimestamp: Datetime
-
-  """Checks for equality with the object’s `aVisible` field."""
-  aVisible: Boolean
-
-  """Checks for equality with the object’s `enableNotes` field."""
-  enableNotes: Boolean
-
-  """Checks for equality with the object’s `isPublic` field."""
-  isPublic: Boolean
-
-  """Checks for equality with the object’s `summary` field."""
   summary: String
 }
 
@@ -121,27 +69,6 @@ type AkceItem {
 
   """Reads a single `User` that is related to this `AkceItem`."""
   userByAiUser: User
-}
-
-"""
-A condition to be used against `AkceItem` object types. All fields are tested
-for equality and combined with a logical ‘and.’
-"""
-input AkceItemCondition {
-  """Checks for equality with the object’s `aiId` field."""
-  aiId: BigInt
-
-  """Checks for equality with the object’s `aiIdRodic` field."""
-  aiIdRodic: BigInt
-
-  """Checks for equality with the object’s `aiRokNarozeni` field."""
-  aiRokNarozeni: Int
-
-  """Checks for equality with the object’s `aiUser` field."""
-  aiUser: BigInt
-
-  """Checks for equality with the object’s `notes` field."""
-  notes: String
 }
 
 """An input for mutations affecting `AkceItem`"""
@@ -181,109 +108,27 @@ type AkceItemsEdge {
 
 """Methods to use when ordering `AkceItem`."""
 enum AkceItemsOrderBy {
-  AI_ID_ASC
-  AI_ID_DESC
-  AI_ID_RODIC_ASC
-  AI_ID_RODIC_DESC
-  AI_ROK_NAROZENI_ASC
-  AI_ROK_NAROZENI_DESC
-  AI_USER_ASC
-  AI_USER_DESC
-  AKCE_BY_AI_ID_RODIC__A_DO_ASC
-  AKCE_BY_AI_ID_RODIC__A_DO_DESC
-  AKCE_BY_AI_ID_RODIC__A_DOKUMENTY_ASC
-  AKCE_BY_AI_ID_RODIC__A_DOKUMENTY_DESC
-  AKCE_BY_AI_ID_RODIC__A_ID_ASC
-  AKCE_BY_AI_ID_RODIC__A_ID_DESC
-  AKCE_BY_AI_ID_RODIC__A_INFO_ASC
-  AKCE_BY_AI_ID_RODIC__A_INFO_DESC
-  AKCE_BY_AI_ID_RODIC__A_JMENO_ASC
-  AKCE_BY_AI_ID_RODIC__A_JMENO_DESC
-  AKCE_BY_AI_ID_RODIC__A_KAPACITA_ASC
-  AKCE_BY_AI_ID_RODIC__A_KAPACITA_DESC
-  AKCE_BY_AI_ID_RODIC__A_KDE_ASC
-  AKCE_BY_AI_ID_RODIC__A_KDE_DESC
-  AKCE_BY_AI_ID_RODIC__A_LOCK_ASC
-  AKCE_BY_AI_ID_RODIC__A_LOCK_DESC
-  AKCE_BY_AI_ID_RODIC__A_OD_ASC
-  AKCE_BY_AI_ID_RODIC__A_OD_DESC
-  AKCE_BY_AI_ID_RODIC__A_TIMESTAMP_ASC
-  AKCE_BY_AI_ID_RODIC__A_TIMESTAMP_DESC
-  AKCE_BY_AI_ID_RODIC__A_VISIBLE_ASC
-  AKCE_BY_AI_ID_RODIC__A_VISIBLE_DESC
-  AKCE_BY_AI_ID_RODIC__ENABLE_NOTES_ASC
-  AKCE_BY_AI_ID_RODIC__ENABLE_NOTES_DESC
-  AKCE_BY_AI_ID_RODIC__IS_PUBLIC_ASC
-  AKCE_BY_AI_ID_RODIC__IS_PUBLIC_DESC
-  AKCE_BY_AI_ID_RODIC__SUMMARY_ASC
-  AKCE_BY_AI_ID_RODIC__SUMMARY_DESC
   NATURAL
-  NOTES_ASC
-  NOTES_DESC
   USER_BY_AI_USER__U_BAN_ASC
   USER_BY_AI_USER__U_BAN_DESC
-  USER_BY_AI_USER__U_CITY_ASC
-  USER_BY_AI_USER__U_CITY_DESC
   USER_BY_AI_USER__U_CONFIRMED_ASC
   USER_BY_AI_USER__U_CONFIRMED_DESC
-  USER_BY_AI_USER__U_CONSCRIPTION_NUMBER_ASC
-  USER_BY_AI_USER__U_CONSCRIPTION_NUMBER_DESC
-  USER_BY_AI_USER__U_CREATED_AT_ASC
-  USER_BY_AI_USER__U_CREATED_AT_DESC
-  USER_BY_AI_USER__U_DANCER_ASC
-  USER_BY_AI_USER__U_DANCER_DESC
-  USER_BY_AI_USER__U_DISTRICT_ASC
-  USER_BY_AI_USER__U_DISTRICT_DESC
-  USER_BY_AI_USER__U_EMAIL_ASC
-  USER_BY_AI_USER__U_EMAIL_DESC
-  USER_BY_AI_USER__U_GDPR_SIGNED_AT_ASC
-  USER_BY_AI_USER__U_GDPR_SIGNED_AT_DESC
   USER_BY_AI_USER__U_GROUP_ASC
   USER_BY_AI_USER__U_GROUP_DESC
   USER_BY_AI_USER__U_ID_ASC
   USER_BY_AI_USER__U_ID_DESC
   USER_BY_AI_USER__U_JMENO_ASC
   USER_BY_AI_USER__U_JMENO_DESC
-  USER_BY_AI_USER__U_LEVEL_ASC
-  USER_BY_AI_USER__U_LEVEL_DESC
-  USER_BY_AI_USER__U_LOCK_ASC
-  USER_BY_AI_USER__U_LOCK_DESC
   USER_BY_AI_USER__U_LOGIN_ASC
   USER_BY_AI_USER__U_LOGIN_DESC
-  USER_BY_AI_USER__U_MEMBER_SINCE_ASC
-  USER_BY_AI_USER__U_MEMBER_SINCE_DESC
-  USER_BY_AI_USER__U_MEMBER_UNTIL_ASC
-  USER_BY_AI_USER__U_MEMBER_UNTIL_DESC
   USER_BY_AI_USER__U_NAROZENI_ASC
   USER_BY_AI_USER__U_NAROZENI_DESC
-  USER_BY_AI_USER__U_NATIONALITY_ASC
-  USER_BY_AI_USER__U_NATIONALITY_DESC
-  USER_BY_AI_USER__U_ORIENTATION_NUMBER_ASC
-  USER_BY_AI_USER__U_ORIENTATION_NUMBER_DESC
-  USER_BY_AI_USER__U_PASS_ASC
-  USER_BY_AI_USER__U_PASS_DESC
-  USER_BY_AI_USER__U_POHLAVI_ASC
-  USER_BY_AI_USER__U_POHLAVI_DESC
-  USER_BY_AI_USER__U_POSTAL_CODE_ASC
-  USER_BY_AI_USER__U_POSTAL_CODE_DESC
-  USER_BY_AI_USER__U_POZNAMKY_ASC
-  USER_BY_AI_USER__U_POZNAMKY_DESC
   USER_BY_AI_USER__U_PRIJMENI_ASC
   USER_BY_AI_USER__U_PRIJMENI_DESC
-  USER_BY_AI_USER__U_RODNE_CISLO_ASC
-  USER_BY_AI_USER__U_RODNE_CISLO_DESC
   USER_BY_AI_USER__U_SKUPINA_ASC
   USER_BY_AI_USER__U_SKUPINA_DESC
-  USER_BY_AI_USER__U_STREET_ASC
-  USER_BY_AI_USER__U_STREET_DESC
   USER_BY_AI_USER__U_SYSTEM_ASC
   USER_BY_AI_USER__U_SYSTEM_DESC
-  USER_BY_AI_USER__U_TEACHER_ASC
-  USER_BY_AI_USER__U_TEACHER_DESC
-  USER_BY_AI_USER__U_TELEFON_ASC
-  USER_BY_AI_USER__U_TELEFON_DESC
-  USER_BY_AI_USER__U_TIMESTAMP_ASC
-  USER_BY_AI_USER__U_TIMESTAMP_DESC
 }
 
 """A connection to a list of `Akce` values."""
@@ -314,37 +159,9 @@ type AkcesEdge {
 
 """Methods to use when ordering `Akce`."""
 enum AkcesOrderBy {
-  A_DO_ASC
-  A_DO_DESC
-  A_DOKUMENTY_ASC
-  A_DOKUMENTY_DESC
-  A_ID_ASC
-  A_ID_DESC
-  A_INFO_ASC
-  A_INFO_DESC
-  A_JMENO_ASC
-  A_JMENO_DESC
-  A_KAPACITA_ASC
-  A_KAPACITA_DESC
-  A_KDE_ASC
-  A_KDE_DESC
-  A_LOCK_ASC
-  A_LOCK_DESC
-  A_OD_ASC
-  A_OD_DESC
-  A_TIMESTAMP_ASC
-  A_TIMESTAMP_DESC
-  A_VISIBLE_ASC
-  A_VISIBLE_DESC
   AKCE_ITEMS_BY_AI_ID_RODIC__COUNT_ASC
   AKCE_ITEMS_BY_AI_ID_RODIC__COUNT_DESC
-  ENABLE_NOTES_ASC
-  ENABLE_NOTES_DESC
-  IS_PUBLIC_ASC
-  IS_PUBLIC_DESC
   NATURAL
-  SUMMARY_ASC
-  SUMMARY_DESC
 }
 
 """A connection to a list of `Aktuality` values."""
@@ -375,105 +192,43 @@ type AktualitiesEdge {
 
 """Methods to use when ordering `Aktuality`."""
 enum AktualitiesOrderBy {
-  AT_FOTO_ASC
-  AT_FOTO_DESC
   AT_FOTO_MAIN_ASC
   AT_FOTO_MAIN_DESC
   AT_ID_ASC
   AT_ID_DESC
-  AT_JMENO_ASC
-  AT_JMENO_DESC
-  AT_KAT_ASC
-  AT_KAT_DESC
   AT_KDO_ASC
   AT_KDO_DESC
-  AT_PREVIEW_ASC
-  AT_PREVIEW_DESC
-  AT_TEXT_ASC
-  AT_TEXT_DESC
   AT_TIMESTAMP_ADD_ASC
   AT_TIMESTAMP_ADD_DESC
-  AT_TIMESTAMP_ASC
-  AT_TIMESTAMP_DESC
   GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_ASC
   GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_DESC
   GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_RODIC_ASC
   GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_RODIC_DESC
   GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_KDO_ASC
   GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_KDO_DESC
-  GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_NAME_ASC
-  GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_NAME_DESC
-  GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_PATH_ASC
-  GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_PATH_DESC
-  GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_TIMESTAMP_ASC
-  GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_TIMESTAMP_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   USER_BY_AT_KDO__U_BAN_ASC
   USER_BY_AT_KDO__U_BAN_DESC
-  USER_BY_AT_KDO__U_CITY_ASC
-  USER_BY_AT_KDO__U_CITY_DESC
   USER_BY_AT_KDO__U_CONFIRMED_ASC
   USER_BY_AT_KDO__U_CONFIRMED_DESC
-  USER_BY_AT_KDO__U_CONSCRIPTION_NUMBER_ASC
-  USER_BY_AT_KDO__U_CONSCRIPTION_NUMBER_DESC
-  USER_BY_AT_KDO__U_CREATED_AT_ASC
-  USER_BY_AT_KDO__U_CREATED_AT_DESC
-  USER_BY_AT_KDO__U_DANCER_ASC
-  USER_BY_AT_KDO__U_DANCER_DESC
-  USER_BY_AT_KDO__U_DISTRICT_ASC
-  USER_BY_AT_KDO__U_DISTRICT_DESC
-  USER_BY_AT_KDO__U_EMAIL_ASC
-  USER_BY_AT_KDO__U_EMAIL_DESC
-  USER_BY_AT_KDO__U_GDPR_SIGNED_AT_ASC
-  USER_BY_AT_KDO__U_GDPR_SIGNED_AT_DESC
   USER_BY_AT_KDO__U_GROUP_ASC
   USER_BY_AT_KDO__U_GROUP_DESC
   USER_BY_AT_KDO__U_ID_ASC
   USER_BY_AT_KDO__U_ID_DESC
   USER_BY_AT_KDO__U_JMENO_ASC
   USER_BY_AT_KDO__U_JMENO_DESC
-  USER_BY_AT_KDO__U_LEVEL_ASC
-  USER_BY_AT_KDO__U_LEVEL_DESC
-  USER_BY_AT_KDO__U_LOCK_ASC
-  USER_BY_AT_KDO__U_LOCK_DESC
   USER_BY_AT_KDO__U_LOGIN_ASC
   USER_BY_AT_KDO__U_LOGIN_DESC
-  USER_BY_AT_KDO__U_MEMBER_SINCE_ASC
-  USER_BY_AT_KDO__U_MEMBER_SINCE_DESC
-  USER_BY_AT_KDO__U_MEMBER_UNTIL_ASC
-  USER_BY_AT_KDO__U_MEMBER_UNTIL_DESC
   USER_BY_AT_KDO__U_NAROZENI_ASC
   USER_BY_AT_KDO__U_NAROZENI_DESC
-  USER_BY_AT_KDO__U_NATIONALITY_ASC
-  USER_BY_AT_KDO__U_NATIONALITY_DESC
-  USER_BY_AT_KDO__U_ORIENTATION_NUMBER_ASC
-  USER_BY_AT_KDO__U_ORIENTATION_NUMBER_DESC
-  USER_BY_AT_KDO__U_PASS_ASC
-  USER_BY_AT_KDO__U_PASS_DESC
-  USER_BY_AT_KDO__U_POHLAVI_ASC
-  USER_BY_AT_KDO__U_POHLAVI_DESC
-  USER_BY_AT_KDO__U_POSTAL_CODE_ASC
-  USER_BY_AT_KDO__U_POSTAL_CODE_DESC
-  USER_BY_AT_KDO__U_POZNAMKY_ASC
-  USER_BY_AT_KDO__U_POZNAMKY_DESC
   USER_BY_AT_KDO__U_PRIJMENI_ASC
   USER_BY_AT_KDO__U_PRIJMENI_DESC
-  USER_BY_AT_KDO__U_RODNE_CISLO_ASC
-  USER_BY_AT_KDO__U_RODNE_CISLO_DESC
   USER_BY_AT_KDO__U_SKUPINA_ASC
   USER_BY_AT_KDO__U_SKUPINA_DESC
-  USER_BY_AT_KDO__U_STREET_ASC
-  USER_BY_AT_KDO__U_STREET_DESC
   USER_BY_AT_KDO__U_SYSTEM_ASC
   USER_BY_AT_KDO__U_SYSTEM_DESC
-  USER_BY_AT_KDO__U_TEACHER_ASC
-  USER_BY_AT_KDO__U_TEACHER_DESC
-  USER_BY_AT_KDO__U_TELEFON_ASC
-  USER_BY_AT_KDO__U_TELEFON_DESC
-  USER_BY_AT_KDO__U_TIMESTAMP_ASC
-  USER_BY_AT_KDO__U_TIMESTAMP_DESC
 }
 
 type Aktuality {
@@ -500,32 +255,14 @@ A condition to be used against `Aktuality` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input AktualityCondition {
-  """Checks for equality with the object’s `atFoto` field."""
-  atFoto: BigInt
-
   """Checks for equality with the object’s `atFotoMain` field."""
   atFotoMain: BigInt
 
   """Checks for equality with the object’s `atId` field."""
   atId: BigInt
 
-  """Checks for equality with the object’s `atJmeno` field."""
-  atJmeno: String
-
-  """Checks for equality with the object’s `atKat` field."""
-  atKat: String
-
   """Checks for equality with the object’s `atKdo` field."""
   atKdo: BigInt
-
-  """Checks for equality with the object’s `atPreview` field."""
-  atPreview: String
-
-  """Checks for equality with the object’s `atText` field."""
-  atText: String
-
-  """Checks for equality with the object’s `atTimestamp` field."""
-  atTimestamp: Datetime
 
   """Checks for equality with the object’s `atTimestampAdd` field."""
   atTimestampAdd: Datetime
@@ -665,12 +402,6 @@ input AttachmentCondition {
   """Checks for equality with the object’s `objectName` field."""
   objectName: String
 
-  """Checks for equality with the object’s `previewObjectName` field."""
-  previewObjectName: String
-
-  """Checks for equality with the object’s `uploadedAt` field."""
-  uploadedAt: Datetime
-
   """Checks for equality with the object’s `uploadedBy` field."""
   uploadedBy: BigInt
 }
@@ -726,82 +457,34 @@ enum AttachmentsOrderBy {
   NATURAL
   OBJECT_NAME_ASC
   OBJECT_NAME_DESC
-  PREVIEW_OBJECT_NAME_ASC
-  PREVIEW_OBJECT_NAME_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   ROOM_ATTACHMENTS_BY_OBJECT_NAME__COUNT_ASC
   ROOM_ATTACHMENTS_BY_OBJECT_NAME__COUNT_DESC
   TENANT_ATTACHMENTS_BY_OBJECT_NAME__COUNT_ASC
   TENANT_ATTACHMENTS_BY_OBJECT_NAME__COUNT_DESC
-  UPLOADED_AT_ASC
-  UPLOADED_AT_DESC
   UPLOADED_BY_ASC
   UPLOADED_BY_DESC
   USER_BY_UPLOADED_BY__U_BAN_ASC
   USER_BY_UPLOADED_BY__U_BAN_DESC
-  USER_BY_UPLOADED_BY__U_CITY_ASC
-  USER_BY_UPLOADED_BY__U_CITY_DESC
   USER_BY_UPLOADED_BY__U_CONFIRMED_ASC
   USER_BY_UPLOADED_BY__U_CONFIRMED_DESC
-  USER_BY_UPLOADED_BY__U_CONSCRIPTION_NUMBER_ASC
-  USER_BY_UPLOADED_BY__U_CONSCRIPTION_NUMBER_DESC
-  USER_BY_UPLOADED_BY__U_CREATED_AT_ASC
-  USER_BY_UPLOADED_BY__U_CREATED_AT_DESC
-  USER_BY_UPLOADED_BY__U_DANCER_ASC
-  USER_BY_UPLOADED_BY__U_DANCER_DESC
-  USER_BY_UPLOADED_BY__U_DISTRICT_ASC
-  USER_BY_UPLOADED_BY__U_DISTRICT_DESC
-  USER_BY_UPLOADED_BY__U_EMAIL_ASC
-  USER_BY_UPLOADED_BY__U_EMAIL_DESC
-  USER_BY_UPLOADED_BY__U_GDPR_SIGNED_AT_ASC
-  USER_BY_UPLOADED_BY__U_GDPR_SIGNED_AT_DESC
   USER_BY_UPLOADED_BY__U_GROUP_ASC
   USER_BY_UPLOADED_BY__U_GROUP_DESC
   USER_BY_UPLOADED_BY__U_ID_ASC
   USER_BY_UPLOADED_BY__U_ID_DESC
   USER_BY_UPLOADED_BY__U_JMENO_ASC
   USER_BY_UPLOADED_BY__U_JMENO_DESC
-  USER_BY_UPLOADED_BY__U_LEVEL_ASC
-  USER_BY_UPLOADED_BY__U_LEVEL_DESC
-  USER_BY_UPLOADED_BY__U_LOCK_ASC
-  USER_BY_UPLOADED_BY__U_LOCK_DESC
   USER_BY_UPLOADED_BY__U_LOGIN_ASC
   USER_BY_UPLOADED_BY__U_LOGIN_DESC
-  USER_BY_UPLOADED_BY__U_MEMBER_SINCE_ASC
-  USER_BY_UPLOADED_BY__U_MEMBER_SINCE_DESC
-  USER_BY_UPLOADED_BY__U_MEMBER_UNTIL_ASC
-  USER_BY_UPLOADED_BY__U_MEMBER_UNTIL_DESC
   USER_BY_UPLOADED_BY__U_NAROZENI_ASC
   USER_BY_UPLOADED_BY__U_NAROZENI_DESC
-  USER_BY_UPLOADED_BY__U_NATIONALITY_ASC
-  USER_BY_UPLOADED_BY__U_NATIONALITY_DESC
-  USER_BY_UPLOADED_BY__U_ORIENTATION_NUMBER_ASC
-  USER_BY_UPLOADED_BY__U_ORIENTATION_NUMBER_DESC
-  USER_BY_UPLOADED_BY__U_PASS_ASC
-  USER_BY_UPLOADED_BY__U_PASS_DESC
-  USER_BY_UPLOADED_BY__U_POHLAVI_ASC
-  USER_BY_UPLOADED_BY__U_POHLAVI_DESC
-  USER_BY_UPLOADED_BY__U_POSTAL_CODE_ASC
-  USER_BY_UPLOADED_BY__U_POSTAL_CODE_DESC
-  USER_BY_UPLOADED_BY__U_POZNAMKY_ASC
-  USER_BY_UPLOADED_BY__U_POZNAMKY_DESC
   USER_BY_UPLOADED_BY__U_PRIJMENI_ASC
   USER_BY_UPLOADED_BY__U_PRIJMENI_DESC
-  USER_BY_UPLOADED_BY__U_RODNE_CISLO_ASC
-  USER_BY_UPLOADED_BY__U_RODNE_CISLO_DESC
   USER_BY_UPLOADED_BY__U_SKUPINA_ASC
   USER_BY_UPLOADED_BY__U_SKUPINA_DESC
-  USER_BY_UPLOADED_BY__U_STREET_ASC
-  USER_BY_UPLOADED_BY__U_STREET_DESC
   USER_BY_UPLOADED_BY__U_SYSTEM_ASC
   USER_BY_UPLOADED_BY__U_SYSTEM_DESC
-  USER_BY_UPLOADED_BY__U_TEACHER_ASC
-  USER_BY_UPLOADED_BY__U_TEACHER_DESC
-  USER_BY_UPLOADED_BY__U_TELEFON_ASC
-  USER_BY_UPLOADED_BY__U_TELEFON_DESC
-  USER_BY_UPLOADED_BY__U_TIMESTAMP_ASC
-  USER_BY_UPLOADED_BY__U_TIMESTAMP_DESC
 }
 
 type AttendeeExternal {
@@ -835,47 +518,17 @@ A condition to be used against `AttendeeExternal` object types. All fields are
 tested for equality and combined with a logical ‘and.’
 """
 input AttendeeExternalCondition {
-  """Checks for equality with the object’s `birthNumber` field."""
-  birthNumber: String
-
-  """Checks for equality with the object’s `confirmedAt` field."""
-  confirmedAt: Datetime
-
   """Checks for equality with the object’s `confirmedBy` field."""
   confirmedBy: BigInt
-
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s `email` field."""
-  email: String
 
   """Checks for equality with the object’s `eventId` field."""
   eventId: BigInt
 
-  """Checks for equality with the object’s `firstName` field."""
-  firstName: String
-
-  """Checks for equality with the object’s `guardianName` field."""
-  guardianName: String
-
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
-  """Checks for equality with the object’s `lastName` field."""
-  lastName: String
-
   """Checks for equality with the object’s `managedBy` field."""
   managedBy: BigInt
-
-  """Checks for equality with the object’s `notes` field."""
-  notes: String
-
-  """Checks for equality with the object’s `phone` field."""
-  phone: String
-
-  """Checks for equality with the object’s `updatedAt` field."""
-  updatedAt: Datetime
 }
 
 """An input for mutations affecting `AttendeeExternal`"""
@@ -944,193 +597,63 @@ type AttendeeExternalsEdge {
 
 """Methods to use when ordering `AttendeeExternal`."""
 enum AttendeeExternalsOrderBy {
-  BIRTH_NUMBER_ASC
-  BIRTH_NUMBER_DESC
-  CONFIRMED_AT_ASC
-  CONFIRMED_AT_DESC
   CONFIRMED_BY_ASC
   CONFIRMED_BY_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  EMAIL_ASC
-  EMAIL_DESC
-  EVENT_BY_EVENT_ID__CAPACITY_ASC
-  EVENT_BY_EVENT_ID__CAPACITY_DESC
-  EVENT_BY_EVENT_ID__DESCRIPTION_ASC
-  EVENT_BY_EVENT_ID__DESCRIPTION_DESC
-  EVENT_BY_EVENT_ID__ENABLE_NOTES_ASC
-  EVENT_BY_EVENT_ID__ENABLE_NOTES_DESC
-  EVENT_BY_EVENT_ID__FILES_LEGACY_ASC
-  EVENT_BY_EVENT_ID__FILES_LEGACY_DESC
   EVENT_BY_EVENT_ID__ID_ASC
   EVENT_BY_EVENT_ID__ID_DESC
-  EVENT_BY_EVENT_ID__IS_LOCKED_ASC
-  EVENT_BY_EVENT_ID__IS_LOCKED_DESC
-  EVENT_BY_EVENT_ID__IS_PUBLIC_ASC
-  EVENT_BY_EVENT_ID__IS_PUBLIC_DESC
   EVENT_BY_EVENT_ID__IS_VISIBLE_ASC
   EVENT_BY_EVENT_ID__IS_VISIBLE_DESC
-  EVENT_BY_EVENT_ID__LOCATION_TEXT_ASC
-  EVENT_BY_EVENT_ID__LOCATION_TEXT_DESC
-  EVENT_BY_EVENT_ID__NAME_ASC
-  EVENT_BY_EVENT_ID__NAME_DESC
   EVENT_BY_EVENT_ID__SINCE_ASC
   EVENT_BY_EVENT_ID__SINCE_DESC
-  EVENT_BY_EVENT_ID__SUMMARY_ASC
-  EVENT_BY_EVENT_ID__SUMMARY_DESC
-  EVENT_BY_EVENT_ID__UNTIL_ASC
-  EVENT_BY_EVENT_ID__UNTIL_DESC
-  EVENT_BY_EVENT_ID__UPDATED_AT_ASC
-  EVENT_BY_EVENT_ID__UPDATED_AT_DESC
   EVENT_ID_ASC
   EVENT_ID_DESC
-  FIRST_NAME_ASC
-  FIRST_NAME_DESC
-  GUARDIAN_NAME_ASC
-  GUARDIAN_NAME_DESC
   ID_ASC
   ID_DESC
-  LAST_NAME_ASC
-  LAST_NAME_DESC
   MANAGED_BY_ASC
   MANAGED_BY_DESC
   NATURAL
-  NOTES_ASC
-  NOTES_DESC
-  PHONE_ASC
-  PHONE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
   USER_BY_CONFIRMED_BY__U_BAN_ASC
   USER_BY_CONFIRMED_BY__U_BAN_DESC
-  USER_BY_CONFIRMED_BY__U_CITY_ASC
-  USER_BY_CONFIRMED_BY__U_CITY_DESC
   USER_BY_CONFIRMED_BY__U_CONFIRMED_ASC
   USER_BY_CONFIRMED_BY__U_CONFIRMED_DESC
-  USER_BY_CONFIRMED_BY__U_CONSCRIPTION_NUMBER_ASC
-  USER_BY_CONFIRMED_BY__U_CONSCRIPTION_NUMBER_DESC
-  USER_BY_CONFIRMED_BY__U_CREATED_AT_ASC
-  USER_BY_CONFIRMED_BY__U_CREATED_AT_DESC
-  USER_BY_CONFIRMED_BY__U_DANCER_ASC
-  USER_BY_CONFIRMED_BY__U_DANCER_DESC
-  USER_BY_CONFIRMED_BY__U_DISTRICT_ASC
-  USER_BY_CONFIRMED_BY__U_DISTRICT_DESC
-  USER_BY_CONFIRMED_BY__U_EMAIL_ASC
-  USER_BY_CONFIRMED_BY__U_EMAIL_DESC
-  USER_BY_CONFIRMED_BY__U_GDPR_SIGNED_AT_ASC
-  USER_BY_CONFIRMED_BY__U_GDPR_SIGNED_AT_DESC
   USER_BY_CONFIRMED_BY__U_GROUP_ASC
   USER_BY_CONFIRMED_BY__U_GROUP_DESC
   USER_BY_CONFIRMED_BY__U_ID_ASC
   USER_BY_CONFIRMED_BY__U_ID_DESC
   USER_BY_CONFIRMED_BY__U_JMENO_ASC
   USER_BY_CONFIRMED_BY__U_JMENO_DESC
-  USER_BY_CONFIRMED_BY__U_LEVEL_ASC
-  USER_BY_CONFIRMED_BY__U_LEVEL_DESC
-  USER_BY_CONFIRMED_BY__U_LOCK_ASC
-  USER_BY_CONFIRMED_BY__U_LOCK_DESC
   USER_BY_CONFIRMED_BY__U_LOGIN_ASC
   USER_BY_CONFIRMED_BY__U_LOGIN_DESC
-  USER_BY_CONFIRMED_BY__U_MEMBER_SINCE_ASC
-  USER_BY_CONFIRMED_BY__U_MEMBER_SINCE_DESC
-  USER_BY_CONFIRMED_BY__U_MEMBER_UNTIL_ASC
-  USER_BY_CONFIRMED_BY__U_MEMBER_UNTIL_DESC
   USER_BY_CONFIRMED_BY__U_NAROZENI_ASC
   USER_BY_CONFIRMED_BY__U_NAROZENI_DESC
-  USER_BY_CONFIRMED_BY__U_NATIONALITY_ASC
-  USER_BY_CONFIRMED_BY__U_NATIONALITY_DESC
-  USER_BY_CONFIRMED_BY__U_ORIENTATION_NUMBER_ASC
-  USER_BY_CONFIRMED_BY__U_ORIENTATION_NUMBER_DESC
-  USER_BY_CONFIRMED_BY__U_PASS_ASC
-  USER_BY_CONFIRMED_BY__U_PASS_DESC
-  USER_BY_CONFIRMED_BY__U_POHLAVI_ASC
-  USER_BY_CONFIRMED_BY__U_POHLAVI_DESC
-  USER_BY_CONFIRMED_BY__U_POSTAL_CODE_ASC
-  USER_BY_CONFIRMED_BY__U_POSTAL_CODE_DESC
-  USER_BY_CONFIRMED_BY__U_POZNAMKY_ASC
-  USER_BY_CONFIRMED_BY__U_POZNAMKY_DESC
   USER_BY_CONFIRMED_BY__U_PRIJMENI_ASC
   USER_BY_CONFIRMED_BY__U_PRIJMENI_DESC
-  USER_BY_CONFIRMED_BY__U_RODNE_CISLO_ASC
-  USER_BY_CONFIRMED_BY__U_RODNE_CISLO_DESC
   USER_BY_CONFIRMED_BY__U_SKUPINA_ASC
   USER_BY_CONFIRMED_BY__U_SKUPINA_DESC
-  USER_BY_CONFIRMED_BY__U_STREET_ASC
-  USER_BY_CONFIRMED_BY__U_STREET_DESC
   USER_BY_CONFIRMED_BY__U_SYSTEM_ASC
   USER_BY_CONFIRMED_BY__U_SYSTEM_DESC
-  USER_BY_CONFIRMED_BY__U_TEACHER_ASC
-  USER_BY_CONFIRMED_BY__U_TEACHER_DESC
-  USER_BY_CONFIRMED_BY__U_TELEFON_ASC
-  USER_BY_CONFIRMED_BY__U_TELEFON_DESC
-  USER_BY_CONFIRMED_BY__U_TIMESTAMP_ASC
-  USER_BY_CONFIRMED_BY__U_TIMESTAMP_DESC
   USER_BY_MANAGED_BY__U_BAN_ASC
   USER_BY_MANAGED_BY__U_BAN_DESC
-  USER_BY_MANAGED_BY__U_CITY_ASC
-  USER_BY_MANAGED_BY__U_CITY_DESC
   USER_BY_MANAGED_BY__U_CONFIRMED_ASC
   USER_BY_MANAGED_BY__U_CONFIRMED_DESC
-  USER_BY_MANAGED_BY__U_CONSCRIPTION_NUMBER_ASC
-  USER_BY_MANAGED_BY__U_CONSCRIPTION_NUMBER_DESC
-  USER_BY_MANAGED_BY__U_CREATED_AT_ASC
-  USER_BY_MANAGED_BY__U_CREATED_AT_DESC
-  USER_BY_MANAGED_BY__U_DANCER_ASC
-  USER_BY_MANAGED_BY__U_DANCER_DESC
-  USER_BY_MANAGED_BY__U_DISTRICT_ASC
-  USER_BY_MANAGED_BY__U_DISTRICT_DESC
-  USER_BY_MANAGED_BY__U_EMAIL_ASC
-  USER_BY_MANAGED_BY__U_EMAIL_DESC
-  USER_BY_MANAGED_BY__U_GDPR_SIGNED_AT_ASC
-  USER_BY_MANAGED_BY__U_GDPR_SIGNED_AT_DESC
   USER_BY_MANAGED_BY__U_GROUP_ASC
   USER_BY_MANAGED_BY__U_GROUP_DESC
   USER_BY_MANAGED_BY__U_ID_ASC
   USER_BY_MANAGED_BY__U_ID_DESC
   USER_BY_MANAGED_BY__U_JMENO_ASC
   USER_BY_MANAGED_BY__U_JMENO_DESC
-  USER_BY_MANAGED_BY__U_LEVEL_ASC
-  USER_BY_MANAGED_BY__U_LEVEL_DESC
-  USER_BY_MANAGED_BY__U_LOCK_ASC
-  USER_BY_MANAGED_BY__U_LOCK_DESC
   USER_BY_MANAGED_BY__U_LOGIN_ASC
   USER_BY_MANAGED_BY__U_LOGIN_DESC
-  USER_BY_MANAGED_BY__U_MEMBER_SINCE_ASC
-  USER_BY_MANAGED_BY__U_MEMBER_SINCE_DESC
-  USER_BY_MANAGED_BY__U_MEMBER_UNTIL_ASC
-  USER_BY_MANAGED_BY__U_MEMBER_UNTIL_DESC
   USER_BY_MANAGED_BY__U_NAROZENI_ASC
   USER_BY_MANAGED_BY__U_NAROZENI_DESC
-  USER_BY_MANAGED_BY__U_NATIONALITY_ASC
-  USER_BY_MANAGED_BY__U_NATIONALITY_DESC
-  USER_BY_MANAGED_BY__U_ORIENTATION_NUMBER_ASC
-  USER_BY_MANAGED_BY__U_ORIENTATION_NUMBER_DESC
-  USER_BY_MANAGED_BY__U_PASS_ASC
-  USER_BY_MANAGED_BY__U_PASS_DESC
-  USER_BY_MANAGED_BY__U_POHLAVI_ASC
-  USER_BY_MANAGED_BY__U_POHLAVI_DESC
-  USER_BY_MANAGED_BY__U_POSTAL_CODE_ASC
-  USER_BY_MANAGED_BY__U_POSTAL_CODE_DESC
-  USER_BY_MANAGED_BY__U_POZNAMKY_ASC
-  USER_BY_MANAGED_BY__U_POZNAMKY_DESC
   USER_BY_MANAGED_BY__U_PRIJMENI_ASC
   USER_BY_MANAGED_BY__U_PRIJMENI_DESC
-  USER_BY_MANAGED_BY__U_RODNE_CISLO_ASC
-  USER_BY_MANAGED_BY__U_RODNE_CISLO_DESC
   USER_BY_MANAGED_BY__U_SKUPINA_ASC
   USER_BY_MANAGED_BY__U_SKUPINA_DESC
-  USER_BY_MANAGED_BY__U_STREET_ASC
-  USER_BY_MANAGED_BY__U_STREET_DESC
   USER_BY_MANAGED_BY__U_SYSTEM_ASC
   USER_BY_MANAGED_BY__U_SYSTEM_DESC
-  USER_BY_MANAGED_BY__U_TEACHER_ASC
-  USER_BY_MANAGED_BY__U_TEACHER_DESC
-  USER_BY_MANAGED_BY__U_TELEFON_ASC
-  USER_BY_MANAGED_BY__U_TELEFON_DESC
-  USER_BY_MANAGED_BY__U_TIMESTAMP_ASC
-  USER_BY_MANAGED_BY__U_TIMESTAMP_DESC
 }
 
 type AttendeeUser {
@@ -1152,17 +675,11 @@ A condition to be used against `AttendeeUser` object types. All fields are
 tested for equality and combined with a logical ‘and.’
 """
 input AttendeeUserCondition {
-  """Checks for equality with the object’s `birthYear` field."""
-  birthYear: Int
-
   """Checks for equality with the object’s `eventId` field."""
   eventId: BigInt
 
   """Checks for equality with the object’s `id` field."""
   id: BigInt
-
-  """Checks for equality with the object’s `notes` field."""
-  notes: String
 
   """Checks for equality with the object’s `userId` field."""
   userId: BigInt
@@ -1216,109 +733,39 @@ type AttendeeUsersEdge {
 
 """Methods to use when ordering `AttendeeUser`."""
 enum AttendeeUsersOrderBy {
-  BIRTH_YEAR_ASC
-  BIRTH_YEAR_DESC
-  EVENT_BY_EVENT_ID__CAPACITY_ASC
-  EVENT_BY_EVENT_ID__CAPACITY_DESC
-  EVENT_BY_EVENT_ID__DESCRIPTION_ASC
-  EVENT_BY_EVENT_ID__DESCRIPTION_DESC
-  EVENT_BY_EVENT_ID__ENABLE_NOTES_ASC
-  EVENT_BY_EVENT_ID__ENABLE_NOTES_DESC
-  EVENT_BY_EVENT_ID__FILES_LEGACY_ASC
-  EVENT_BY_EVENT_ID__FILES_LEGACY_DESC
   EVENT_BY_EVENT_ID__ID_ASC
   EVENT_BY_EVENT_ID__ID_DESC
-  EVENT_BY_EVENT_ID__IS_LOCKED_ASC
-  EVENT_BY_EVENT_ID__IS_LOCKED_DESC
-  EVENT_BY_EVENT_ID__IS_PUBLIC_ASC
-  EVENT_BY_EVENT_ID__IS_PUBLIC_DESC
   EVENT_BY_EVENT_ID__IS_VISIBLE_ASC
   EVENT_BY_EVENT_ID__IS_VISIBLE_DESC
-  EVENT_BY_EVENT_ID__LOCATION_TEXT_ASC
-  EVENT_BY_EVENT_ID__LOCATION_TEXT_DESC
-  EVENT_BY_EVENT_ID__NAME_ASC
-  EVENT_BY_EVENT_ID__NAME_DESC
   EVENT_BY_EVENT_ID__SINCE_ASC
   EVENT_BY_EVENT_ID__SINCE_DESC
-  EVENT_BY_EVENT_ID__SUMMARY_ASC
-  EVENT_BY_EVENT_ID__SUMMARY_DESC
-  EVENT_BY_EVENT_ID__UNTIL_ASC
-  EVENT_BY_EVENT_ID__UNTIL_DESC
-  EVENT_BY_EVENT_ID__UPDATED_AT_ASC
-  EVENT_BY_EVENT_ID__UPDATED_AT_DESC
   EVENT_ID_ASC
   EVENT_ID_DESC
   ID_ASC
   ID_DESC
   NATURAL
-  NOTES_ASC
-  NOTES_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   USER_BY_USER_ID__U_BAN_ASC
   USER_BY_USER_ID__U_BAN_DESC
-  USER_BY_USER_ID__U_CITY_ASC
-  USER_BY_USER_ID__U_CITY_DESC
   USER_BY_USER_ID__U_CONFIRMED_ASC
   USER_BY_USER_ID__U_CONFIRMED_DESC
-  USER_BY_USER_ID__U_CONSCRIPTION_NUMBER_ASC
-  USER_BY_USER_ID__U_CONSCRIPTION_NUMBER_DESC
-  USER_BY_USER_ID__U_CREATED_AT_ASC
-  USER_BY_USER_ID__U_CREATED_AT_DESC
-  USER_BY_USER_ID__U_DANCER_ASC
-  USER_BY_USER_ID__U_DANCER_DESC
-  USER_BY_USER_ID__U_DISTRICT_ASC
-  USER_BY_USER_ID__U_DISTRICT_DESC
-  USER_BY_USER_ID__U_EMAIL_ASC
-  USER_BY_USER_ID__U_EMAIL_DESC
-  USER_BY_USER_ID__U_GDPR_SIGNED_AT_ASC
-  USER_BY_USER_ID__U_GDPR_SIGNED_AT_DESC
   USER_BY_USER_ID__U_GROUP_ASC
   USER_BY_USER_ID__U_GROUP_DESC
   USER_BY_USER_ID__U_ID_ASC
   USER_BY_USER_ID__U_ID_DESC
   USER_BY_USER_ID__U_JMENO_ASC
   USER_BY_USER_ID__U_JMENO_DESC
-  USER_BY_USER_ID__U_LEVEL_ASC
-  USER_BY_USER_ID__U_LEVEL_DESC
-  USER_BY_USER_ID__U_LOCK_ASC
-  USER_BY_USER_ID__U_LOCK_DESC
   USER_BY_USER_ID__U_LOGIN_ASC
   USER_BY_USER_ID__U_LOGIN_DESC
-  USER_BY_USER_ID__U_MEMBER_SINCE_ASC
-  USER_BY_USER_ID__U_MEMBER_SINCE_DESC
-  USER_BY_USER_ID__U_MEMBER_UNTIL_ASC
-  USER_BY_USER_ID__U_MEMBER_UNTIL_DESC
   USER_BY_USER_ID__U_NAROZENI_ASC
   USER_BY_USER_ID__U_NAROZENI_DESC
-  USER_BY_USER_ID__U_NATIONALITY_ASC
-  USER_BY_USER_ID__U_NATIONALITY_DESC
-  USER_BY_USER_ID__U_ORIENTATION_NUMBER_ASC
-  USER_BY_USER_ID__U_ORIENTATION_NUMBER_DESC
-  USER_BY_USER_ID__U_PASS_ASC
-  USER_BY_USER_ID__U_PASS_DESC
-  USER_BY_USER_ID__U_POHLAVI_ASC
-  USER_BY_USER_ID__U_POHLAVI_DESC
-  USER_BY_USER_ID__U_POSTAL_CODE_ASC
-  USER_BY_USER_ID__U_POSTAL_CODE_DESC
-  USER_BY_USER_ID__U_POZNAMKY_ASC
-  USER_BY_USER_ID__U_POZNAMKY_DESC
   USER_BY_USER_ID__U_PRIJMENI_ASC
   USER_BY_USER_ID__U_PRIJMENI_DESC
-  USER_BY_USER_ID__U_RODNE_CISLO_ASC
-  USER_BY_USER_ID__U_RODNE_CISLO_DESC
   USER_BY_USER_ID__U_SKUPINA_ASC
   USER_BY_USER_ID__U_SKUPINA_DESC
-  USER_BY_USER_ID__U_STREET_ASC
-  USER_BY_USER_ID__U_STREET_DESC
   USER_BY_USER_ID__U_SYSTEM_ASC
   USER_BY_USER_ID__U_SYSTEM_DESC
-  USER_BY_USER_ID__U_TEACHER_ASC
-  USER_BY_USER_ID__U_TEACHER_DESC
-  USER_BY_USER_ID__U_TELEFON_ASC
-  USER_BY_USER_ID__U_TELEFON_DESC
-  USER_BY_USER_ID__U_TIMESTAMP_ASC
-  USER_BY_USER_ID__U_TIMESTAMP_DESC
   USER_ID_ASC
   USER_ID_DESC
 }
@@ -1480,17 +927,11 @@ A condition to be used against `CohortGroup` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input CohortGroupCondition {
-  """Checks for equality with the object’s `description` field."""
-  description: String
-
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
   """Checks for equality with the object’s `isPublic` field."""
   isPublic: Boolean
-
-  """Checks for equality with the object’s `name` field."""
-  name: String
 
   """Checks for equality with the object’s `ordering` field."""
   ordering: Int
@@ -1549,14 +990,10 @@ type CohortGroupsEdge {
 
 """Methods to use when ordering `CohortGroup`."""
 enum CohortGroupsOrderBy {
-  DESCRIPTION_ASC
-  DESCRIPTION_DESC
   ID_ASC
   ID_DESC
   IS_PUBLIC_ASC
   IS_PUBLIC_DESC
-  NAME_ASC
-  NAME_DESC
   NATURAL
   ORDERING_ASC
   ORDERING_DESC
@@ -1567,10 +1004,6 @@ enum CohortGroupsOrderBy {
   TENANT_ASC
   TENANT_BY_TENANT__ID_ASC
   TENANT_BY_TENANT__ID_DESC
-  TENANT_BY_TENANT__MEMBER_INFO_ASC
-  TENANT_BY_TENANT__MEMBER_INFO_DESC
-  TENANT_BY_TENANT__NAME_ASC
-  TENANT_BY_TENANT__NAME_DESC
   TENANT_DESC
 }
 
@@ -4756,16 +4189,12 @@ type DokumentiesEdge {
 
 """Methods to use when ordering `Dokumenty`."""
 enum DokumentiesOrderBy {
-  D_FILENAME_ASC
-  D_FILENAME_DESC
   D_ID_ASC
   D_ID_DESC
   D_KATEGORIE_ASC
   D_KATEGORIE_DESC
   D_KDO_ASC
   D_KDO_DESC
-  D_NAME_ASC
-  D_NAME_DESC
   D_PATH_ASC
   D_PATH_DESC
   D_TIMESTAMP_ASC
@@ -4775,68 +4204,24 @@ enum DokumentiesOrderBy {
   PRIMARY_KEY_DESC
   USER_BY_D_KDO__U_BAN_ASC
   USER_BY_D_KDO__U_BAN_DESC
-  USER_BY_D_KDO__U_CITY_ASC
-  USER_BY_D_KDO__U_CITY_DESC
   USER_BY_D_KDO__U_CONFIRMED_ASC
   USER_BY_D_KDO__U_CONFIRMED_DESC
-  USER_BY_D_KDO__U_CONSCRIPTION_NUMBER_ASC
-  USER_BY_D_KDO__U_CONSCRIPTION_NUMBER_DESC
-  USER_BY_D_KDO__U_CREATED_AT_ASC
-  USER_BY_D_KDO__U_CREATED_AT_DESC
-  USER_BY_D_KDO__U_DANCER_ASC
-  USER_BY_D_KDO__U_DANCER_DESC
-  USER_BY_D_KDO__U_DISTRICT_ASC
-  USER_BY_D_KDO__U_DISTRICT_DESC
-  USER_BY_D_KDO__U_EMAIL_ASC
-  USER_BY_D_KDO__U_EMAIL_DESC
-  USER_BY_D_KDO__U_GDPR_SIGNED_AT_ASC
-  USER_BY_D_KDO__U_GDPR_SIGNED_AT_DESC
   USER_BY_D_KDO__U_GROUP_ASC
   USER_BY_D_KDO__U_GROUP_DESC
   USER_BY_D_KDO__U_ID_ASC
   USER_BY_D_KDO__U_ID_DESC
   USER_BY_D_KDO__U_JMENO_ASC
   USER_BY_D_KDO__U_JMENO_DESC
-  USER_BY_D_KDO__U_LEVEL_ASC
-  USER_BY_D_KDO__U_LEVEL_DESC
-  USER_BY_D_KDO__U_LOCK_ASC
-  USER_BY_D_KDO__U_LOCK_DESC
   USER_BY_D_KDO__U_LOGIN_ASC
   USER_BY_D_KDO__U_LOGIN_DESC
-  USER_BY_D_KDO__U_MEMBER_SINCE_ASC
-  USER_BY_D_KDO__U_MEMBER_SINCE_DESC
-  USER_BY_D_KDO__U_MEMBER_UNTIL_ASC
-  USER_BY_D_KDO__U_MEMBER_UNTIL_DESC
   USER_BY_D_KDO__U_NAROZENI_ASC
   USER_BY_D_KDO__U_NAROZENI_DESC
-  USER_BY_D_KDO__U_NATIONALITY_ASC
-  USER_BY_D_KDO__U_NATIONALITY_DESC
-  USER_BY_D_KDO__U_ORIENTATION_NUMBER_ASC
-  USER_BY_D_KDO__U_ORIENTATION_NUMBER_DESC
-  USER_BY_D_KDO__U_PASS_ASC
-  USER_BY_D_KDO__U_PASS_DESC
-  USER_BY_D_KDO__U_POHLAVI_ASC
-  USER_BY_D_KDO__U_POHLAVI_DESC
-  USER_BY_D_KDO__U_POSTAL_CODE_ASC
-  USER_BY_D_KDO__U_POSTAL_CODE_DESC
-  USER_BY_D_KDO__U_POZNAMKY_ASC
-  USER_BY_D_KDO__U_POZNAMKY_DESC
   USER_BY_D_KDO__U_PRIJMENI_ASC
   USER_BY_D_KDO__U_PRIJMENI_DESC
-  USER_BY_D_KDO__U_RODNE_CISLO_ASC
-  USER_BY_D_KDO__U_RODNE_CISLO_DESC
   USER_BY_D_KDO__U_SKUPINA_ASC
   USER_BY_D_KDO__U_SKUPINA_DESC
-  USER_BY_D_KDO__U_STREET_ASC
-  USER_BY_D_KDO__U_STREET_DESC
   USER_BY_D_KDO__U_SYSTEM_ASC
   USER_BY_D_KDO__U_SYSTEM_DESC
-  USER_BY_D_KDO__U_TEACHER_ASC
-  USER_BY_D_KDO__U_TEACHER_DESC
-  USER_BY_D_KDO__U_TELEFON_ASC
-  USER_BY_D_KDO__U_TELEFON_DESC
-  USER_BY_D_KDO__U_TIMESTAMP_ASC
-  USER_BY_D_KDO__U_TIMESTAMP_DESC
 }
 
 type Dokumenty {
@@ -4857,9 +4242,6 @@ A condition to be used against `Dokumenty` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input DokumentyCondition {
-  """Checks for equality with the object’s `dFilename` field."""
-  dFilename: String
-
   """Checks for equality with the object’s `dId` field."""
   dId: BigInt
 
@@ -4868,9 +4250,6 @@ input DokumentyCondition {
 
   """Checks for equality with the object’s `dKdo` field."""
   dKdo: BigInt
-
-  """Checks for equality with the object’s `dName` field."""
-  dName: String
 
   """Checks for equality with the object’s `dPath` field."""
   dPath: String
@@ -4982,47 +4361,14 @@ type Event {
 A condition to be used against `Event` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
 input EventCondition {
-  """Checks for equality with the object’s `capacity` field."""
-  capacity: BigInt
-
-  """Checks for equality with the object’s `description` field."""
-  description: String
-
-  """Checks for equality with the object’s `enableNotes` field."""
-  enableNotes: Boolean
-
-  """Checks for equality with the object’s `filesLegacy` field."""
-  filesLegacy: String
-
   """Checks for equality with the object’s `id` field."""
   id: BigInt
-
-  """Checks for equality with the object’s `isLocked` field."""
-  isLocked: Boolean
-
-  """Checks for equality with the object’s `isPublic` field."""
-  isPublic: Boolean
 
   """Checks for equality with the object’s `isVisible` field."""
   isVisible: Boolean
 
-  """Checks for equality with the object’s `locationText` field."""
-  locationText: String
-
-  """Checks for equality with the object’s `name` field."""
-  name: String
-
   """Checks for equality with the object’s `since` field."""
   since: Date
-
-  """Checks for equality with the object’s `summary` field."""
-  summary: String
-
-  """Checks for equality with the object’s `until` field."""
-  until: Date
-
-  """Checks for equality with the object’s `updatedAt` field."""
-  updatedAt: Datetime
 }
 
 """An input for mutations affecting `Event`"""
@@ -5095,37 +4441,15 @@ enum EventsOrderBy {
   ATTENDEE_EXTERNALS_BY_EVENT_ID__COUNT_DESC
   ATTENDEE_USERS_BY_EVENT_ID__COUNT_ASC
   ATTENDEE_USERS_BY_EVENT_ID__COUNT_DESC
-  CAPACITY_ASC
-  CAPACITY_DESC
-  DESCRIPTION_ASC
-  DESCRIPTION_DESC
-  ENABLE_NOTES_ASC
-  ENABLE_NOTES_DESC
-  FILES_LEGACY_ASC
-  FILES_LEGACY_DESC
   ID_ASC
   ID_DESC
-  IS_LOCKED_ASC
-  IS_LOCKED_DESC
-  IS_PUBLIC_ASC
-  IS_PUBLIC_DESC
   IS_VISIBLE_ASC
   IS_VISIBLE_DESC
-  LOCATION_TEXT_ASC
-  LOCATION_TEXT_DESC
-  NAME_ASC
-  NAME_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   SINCE_ASC
   SINCE_DESC
-  SUMMARY_ASC
-  SUMMARY_DESC
-  UNTIL_ASC
-  UNTIL_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
 }
 
 """All input for the `fixUnpairedCouples` mutation."""
@@ -5166,12 +4490,6 @@ A condition to be used against `FormResponse` object types. All fields are
 tested for equality and combined with a logical ‘and.’
 """
 input FormResponseCondition {
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s `data` field."""
-  data: JSON
-
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
@@ -5180,9 +4498,6 @@ input FormResponseCondition {
 
   """Checks for equality with the object’s `updatedAt` field."""
   updatedAt: Datetime
-
-  """Checks for equality with the object’s `url` field."""
-  url: String
 }
 
 """An input for mutations affecting `FormResponse`"""
@@ -5235,10 +4550,6 @@ type FormResponsesEdge {
 
 """Methods to use when ordering `FormResponse`."""
 enum FormResponsesOrderBy {
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  DATA_ASC
-  DATA_DESC
   ID_ASC
   ID_DESC
   NATURAL
@@ -5248,8 +4559,6 @@ enum FormResponsesOrderBy {
   TYPE_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
-  URL_ASC
-  URL_DESC
 }
 
 type GalerieDir {
@@ -5294,23 +4603,11 @@ A condition to be used against `GalerieDir` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input GalerieDirCondition {
-  """Checks for equality with the object’s `gdHidden` field."""
-  gdHidden: Boolean
-
   """Checks for equality with the object’s `gdId` field."""
   gdId: BigInt
 
   """Checks for equality with the object’s `gdIdRodic` field."""
   gdIdRodic: BigInt
-
-  """Checks for equality with the object’s `gdLevel` field."""
-  gdLevel: Int
-
-  """Checks for equality with the object’s `gdName` field."""
-  gdName: String
-
-  """Checks for equality with the object’s `gdPath` field."""
-  gdPath: String
 }
 
 """An input for mutations affecting `GalerieDir`"""
@@ -5365,18 +4662,10 @@ type GalerieDirsEdge {
 enum GalerieDirsOrderBy {
   GALERIE_FOTOS_BY_GF_ID_RODIC__COUNT_ASC
   GALERIE_FOTOS_BY_GF_ID_RODIC__COUNT_DESC
-  GD_HIDDEN_ASC
-  GD_HIDDEN_DESC
   GD_ID_ASC
   GD_ID_DESC
   GD_ID_RODIC_ASC
   GD_ID_RODIC_DESC
-  GD_LEVEL_ASC
-  GD_LEVEL_DESC
-  GD_NAME_ASC
-  GD_NAME_DESC
-  GD_PATH_ASC
-  GD_PATH_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
@@ -5438,15 +4727,6 @@ input GalerieFotoCondition {
 
   """Checks for equality with the object’s `gfKdo` field."""
   gfKdo: BigInt
-
-  """Checks for equality with the object’s `gfName` field."""
-  gfName: String
-
-  """Checks for equality with the object’s `gfPath` field."""
-  gfPath: String
-
-  """Checks for equality with the object’s `gfTimestamp` field."""
-  gfTimestamp: Datetime
 }
 
 """An input for mutations affecting `GalerieFoto`"""
@@ -5501,97 +4781,39 @@ type GalerieFotosEdge {
 enum GalerieFotosOrderBy {
   AKTUALITIES_BY_AT_FOTO_MAIN__COUNT_ASC
   AKTUALITIES_BY_AT_FOTO_MAIN__COUNT_DESC
-  GALERIE_DIR_BY_GF_ID_RODIC__GD_HIDDEN_ASC
-  GALERIE_DIR_BY_GF_ID_RODIC__GD_HIDDEN_DESC
   GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_ASC
   GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_DESC
   GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_RODIC_ASC
   GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_RODIC_DESC
-  GALERIE_DIR_BY_GF_ID_RODIC__GD_LEVEL_ASC
-  GALERIE_DIR_BY_GF_ID_RODIC__GD_LEVEL_DESC
-  GALERIE_DIR_BY_GF_ID_RODIC__GD_NAME_ASC
-  GALERIE_DIR_BY_GF_ID_RODIC__GD_NAME_DESC
-  GALERIE_DIR_BY_GF_ID_RODIC__GD_PATH_ASC
-  GALERIE_DIR_BY_GF_ID_RODIC__GD_PATH_DESC
   GF_ID_ASC
   GF_ID_DESC
   GF_ID_RODIC_ASC
   GF_ID_RODIC_DESC
   GF_KDO_ASC
   GF_KDO_DESC
-  GF_NAME_ASC
-  GF_NAME_DESC
-  GF_PATH_ASC
-  GF_PATH_DESC
-  GF_TIMESTAMP_ASC
-  GF_TIMESTAMP_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   USER_BY_GF_KDO__U_BAN_ASC
   USER_BY_GF_KDO__U_BAN_DESC
-  USER_BY_GF_KDO__U_CITY_ASC
-  USER_BY_GF_KDO__U_CITY_DESC
   USER_BY_GF_KDO__U_CONFIRMED_ASC
   USER_BY_GF_KDO__U_CONFIRMED_DESC
-  USER_BY_GF_KDO__U_CONSCRIPTION_NUMBER_ASC
-  USER_BY_GF_KDO__U_CONSCRIPTION_NUMBER_DESC
-  USER_BY_GF_KDO__U_CREATED_AT_ASC
-  USER_BY_GF_KDO__U_CREATED_AT_DESC
-  USER_BY_GF_KDO__U_DANCER_ASC
-  USER_BY_GF_KDO__U_DANCER_DESC
-  USER_BY_GF_KDO__U_DISTRICT_ASC
-  USER_BY_GF_KDO__U_DISTRICT_DESC
-  USER_BY_GF_KDO__U_EMAIL_ASC
-  USER_BY_GF_KDO__U_EMAIL_DESC
-  USER_BY_GF_KDO__U_GDPR_SIGNED_AT_ASC
-  USER_BY_GF_KDO__U_GDPR_SIGNED_AT_DESC
   USER_BY_GF_KDO__U_GROUP_ASC
   USER_BY_GF_KDO__U_GROUP_DESC
   USER_BY_GF_KDO__U_ID_ASC
   USER_BY_GF_KDO__U_ID_DESC
   USER_BY_GF_KDO__U_JMENO_ASC
   USER_BY_GF_KDO__U_JMENO_DESC
-  USER_BY_GF_KDO__U_LEVEL_ASC
-  USER_BY_GF_KDO__U_LEVEL_DESC
-  USER_BY_GF_KDO__U_LOCK_ASC
-  USER_BY_GF_KDO__U_LOCK_DESC
   USER_BY_GF_KDO__U_LOGIN_ASC
   USER_BY_GF_KDO__U_LOGIN_DESC
-  USER_BY_GF_KDO__U_MEMBER_SINCE_ASC
-  USER_BY_GF_KDO__U_MEMBER_SINCE_DESC
-  USER_BY_GF_KDO__U_MEMBER_UNTIL_ASC
-  USER_BY_GF_KDO__U_MEMBER_UNTIL_DESC
   USER_BY_GF_KDO__U_NAROZENI_ASC
   USER_BY_GF_KDO__U_NAROZENI_DESC
-  USER_BY_GF_KDO__U_NATIONALITY_ASC
-  USER_BY_GF_KDO__U_NATIONALITY_DESC
-  USER_BY_GF_KDO__U_ORIENTATION_NUMBER_ASC
-  USER_BY_GF_KDO__U_ORIENTATION_NUMBER_DESC
-  USER_BY_GF_KDO__U_PASS_ASC
-  USER_BY_GF_KDO__U_PASS_DESC
-  USER_BY_GF_KDO__U_POHLAVI_ASC
-  USER_BY_GF_KDO__U_POHLAVI_DESC
-  USER_BY_GF_KDO__U_POSTAL_CODE_ASC
-  USER_BY_GF_KDO__U_POSTAL_CODE_DESC
-  USER_BY_GF_KDO__U_POZNAMKY_ASC
-  USER_BY_GF_KDO__U_POZNAMKY_DESC
   USER_BY_GF_KDO__U_PRIJMENI_ASC
   USER_BY_GF_KDO__U_PRIJMENI_DESC
-  USER_BY_GF_KDO__U_RODNE_CISLO_ASC
-  USER_BY_GF_KDO__U_RODNE_CISLO_DESC
   USER_BY_GF_KDO__U_SKUPINA_ASC
   USER_BY_GF_KDO__U_SKUPINA_DESC
-  USER_BY_GF_KDO__U_STREET_ASC
-  USER_BY_GF_KDO__U_STREET_DESC
   USER_BY_GF_KDO__U_SYSTEM_ASC
   USER_BY_GF_KDO__U_SYSTEM_DESC
-  USER_BY_GF_KDO__U_TEACHER_ASC
-  USER_BY_GF_KDO__U_TEACHER_DESC
-  USER_BY_GF_KDO__U_TELEFON_ASC
-  USER_BY_GF_KDO__U_TELEFON_DESC
-  USER_BY_GF_KDO__U_TIMESTAMP_ASC
-  USER_BY_GF_KDO__U_TIMESTAMP_DESC
 }
 
 enum GenderType {
@@ -5745,18 +4967,10 @@ type LocationAttachmentsEdge {
 enum LocationAttachmentsOrderBy {
   ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_ASC
   ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_DESC
-  ATTACHMENT_BY_OBJECT_NAME__PREVIEW_OBJECT_NAME_ASC
-  ATTACHMENT_BY_OBJECT_NAME__PREVIEW_OBJECT_NAME_DESC
-  ATTACHMENT_BY_OBJECT_NAME__UPLOADED_AT_ASC
-  ATTACHMENT_BY_OBJECT_NAME__UPLOADED_AT_DESC
   ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_ASC
   ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_DESC
-  LOCATION_BY_LOCATION_ID__DESCRIPTION_ASC
-  LOCATION_BY_LOCATION_ID__DESCRIPTION_DESC
   LOCATION_BY_LOCATION_ID__ID_ASC
   LOCATION_BY_LOCATION_ID__ID_DESC
-  LOCATION_BY_LOCATION_ID__NAME_ASC
-  LOCATION_BY_LOCATION_ID__NAME_DESC
   LOCATION_BY_LOCATION_ID__TENANT_ASC
   LOCATION_BY_LOCATION_ID__TENANT_DESC
   LOCATION_ID_ASC
@@ -5773,14 +4987,8 @@ A condition to be used against `Location` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input LocationCondition {
-  """Checks for equality with the object’s `description` field."""
-  description: JSON
-
   """Checks for equality with the object’s `id` field."""
   id: BigInt
-
-  """Checks for equality with the object’s `name` field."""
-  name: String
 
   """Checks for equality with the object’s `tenant` field."""
   tenant: BigInt
@@ -5832,14 +5040,10 @@ type LocationsEdge {
 
 """Methods to use when ordering `Location`."""
 enum LocationsOrderBy {
-  DESCRIPTION_ASC
-  DESCRIPTION_DESC
   ID_ASC
   ID_DESC
   LOCATION_ATTACHMENTS_BY_LOCATION_ID__COUNT_ASC
   LOCATION_ATTACHMENTS_BY_LOCATION_ID__COUNT_DESC
-  NAME_ASC
-  NAME_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
@@ -5848,10 +5052,6 @@ enum LocationsOrderBy {
   TENANT_ASC
   TENANT_BY_TENANT__ID_ASC
   TENANT_BY_TENANT__ID_DESC
-  TENANT_BY_TENANT__MEMBER_INFO_ASC
-  TENANT_BY_TENANT__MEMBER_INFO_DESC
-  TENANT_BY_TENANT__NAME_ASC
-  TENANT_BY_TENANT__NAME_DESC
   TENANT_DESC
 }
 
@@ -5956,137 +5156,6 @@ type Member {
   uTimestamp: Datetime
 }
 
-"""
-A condition to be used against `Member` object types. All fields are tested for equality and combined with a logical ‘and.’
-"""
-input MemberCondition {
-  """Checks for equality with the object’s `newestPayment` field."""
-  newestPayment: Date
-
-  """Checks for equality with the object’s `oldestPayment` field."""
-  oldestPayment: Date
-
-  """Checks for equality with the object’s `paymentValid` field."""
-  paymentValid: Boolean
-
-  """Checks for equality with the object’s `sColorRgb` field."""
-  sColorRgb: String
-
-  """Checks for equality with the object’s `sColorText` field."""
-  sColorText: String
-
-  """Checks for equality with the object’s `sDescription` field."""
-  sDescription: String
-
-  """Checks for equality with the object’s `sId` field."""
-  sId: BigInt
-
-  """Checks for equality with the object’s `sLocation` field."""
-  sLocation: String
-
-  """Checks for equality with the object’s `sName` field."""
-  sName: String
-
-  """Checks for equality with the object’s `sVisible` field."""
-  sVisible: Boolean
-
-  """Checks for equality with the object’s `uBan` field."""
-  uBan: Boolean
-
-  """Checks for equality with the object’s `uCity` field."""
-  uCity: String
-
-  """Checks for equality with the object’s `uConfirmed` field."""
-  uConfirmed: Boolean
-
-  """Checks for equality with the object’s `uConscriptionNumber` field."""
-  uConscriptionNumber: String
-
-  """Checks for equality with the object’s `uCreatedAt` field."""
-  uCreatedAt: Datetime
-
-  """Checks for equality with the object’s `uDancer` field."""
-  uDancer: Boolean
-
-  """Checks for equality with the object’s `uDistrict` field."""
-  uDistrict: String
-
-  """Checks for equality with the object’s `uEmail` field."""
-  uEmail: String
-
-  """Checks for equality with the object’s `uGdprSignedAt` field."""
-  uGdprSignedAt: Datetime
-
-  """Checks for equality with the object’s `uGroup` field."""
-  uGroup: BigInt
-
-  """Checks for equality with the object’s `uId` field."""
-  uId: BigInt
-
-  """Checks for equality with the object’s `uJmeno` field."""
-  uJmeno: String
-
-  """Checks for equality with the object’s `uLevel` field."""
-  uLevel: Int
-
-  """Checks for equality with the object’s `uLock` field."""
-  uLock: Boolean
-
-  """Checks for equality with the object’s `uLogin` field."""
-  uLogin: String
-
-  """Checks for equality with the object’s `uMemberSince` field."""
-  uMemberSince: Datetime
-
-  """Checks for equality with the object’s `uMemberUntil` field."""
-  uMemberUntil: Datetime
-
-  """Checks for equality with the object’s `uNarozeni` field."""
-  uNarozeni: Date
-
-  """Checks for equality with the object’s `uNationality` field."""
-  uNationality: String
-
-  """Checks for equality with the object’s `uOrientationNumber` field."""
-  uOrientationNumber: String
-
-  """Checks for equality with the object’s `uPass` field."""
-  uPass: String
-
-  """Checks for equality with the object’s `uPohlavi` field."""
-  uPohlavi: String
-
-  """Checks for equality with the object’s `uPostalCode` field."""
-  uPostalCode: String
-
-  """Checks for equality with the object’s `uPoznamky` field."""
-  uPoznamky: String
-
-  """Checks for equality with the object’s `uPrijmeni` field."""
-  uPrijmeni: String
-
-  """Checks for equality with the object’s `uRodneCislo` field."""
-  uRodneCislo: String
-
-  """Checks for equality with the object’s `uSkupina` field."""
-  uSkupina: BigInt
-
-  """Checks for equality with the object’s `uStreet` field."""
-  uStreet: String
-
-  """Checks for equality with the object’s `uSystem` field."""
-  uSystem: Boolean
-
-  """Checks for equality with the object’s `uTeacher` field."""
-  uTeacher: Boolean
-
-  """Checks for equality with the object’s `uTelefon` field."""
-  uTelefon: String
-
-  """Checks for equality with the object’s `uTimestamp` field."""
-  uTimestamp: Datetime
-}
-
 """A connection to a list of `Member` values."""
 type MembersConnection {
   """
@@ -6116,90 +5185,6 @@ type MembersEdge {
 """Methods to use when ordering `Member`."""
 enum MembersOrderBy {
   NATURAL
-  NEWEST_PAYMENT_ASC
-  NEWEST_PAYMENT_DESC
-  OLDEST_PAYMENT_ASC
-  OLDEST_PAYMENT_DESC
-  PAYMENT_VALID_ASC
-  PAYMENT_VALID_DESC
-  S_COLOR_RGB_ASC
-  S_COLOR_RGB_DESC
-  S_COLOR_TEXT_ASC
-  S_COLOR_TEXT_DESC
-  S_DESCRIPTION_ASC
-  S_DESCRIPTION_DESC
-  S_ID_ASC
-  S_ID_DESC
-  S_LOCATION_ASC
-  S_LOCATION_DESC
-  S_NAME_ASC
-  S_NAME_DESC
-  S_VISIBLE_ASC
-  S_VISIBLE_DESC
-  U_BAN_ASC
-  U_BAN_DESC
-  U_CITY_ASC
-  U_CITY_DESC
-  U_CONFIRMED_ASC
-  U_CONFIRMED_DESC
-  U_CONSCRIPTION_NUMBER_ASC
-  U_CONSCRIPTION_NUMBER_DESC
-  U_CREATED_AT_ASC
-  U_CREATED_AT_DESC
-  U_DANCER_ASC
-  U_DANCER_DESC
-  U_DISTRICT_ASC
-  U_DISTRICT_DESC
-  U_EMAIL_ASC
-  U_EMAIL_DESC
-  U_GDPR_SIGNED_AT_ASC
-  U_GDPR_SIGNED_AT_DESC
-  U_GROUP_ASC
-  U_GROUP_DESC
-  U_ID_ASC
-  U_ID_DESC
-  U_JMENO_ASC
-  U_JMENO_DESC
-  U_LEVEL_ASC
-  U_LEVEL_DESC
-  U_LOCK_ASC
-  U_LOCK_DESC
-  U_LOGIN_ASC
-  U_LOGIN_DESC
-  U_MEMBER_SINCE_ASC
-  U_MEMBER_SINCE_DESC
-  U_MEMBER_UNTIL_ASC
-  U_MEMBER_UNTIL_DESC
-  U_NAROZENI_ASC
-  U_NAROZENI_DESC
-  U_NATIONALITY_ASC
-  U_NATIONALITY_DESC
-  U_ORIENTATION_NUMBER_ASC
-  U_ORIENTATION_NUMBER_DESC
-  U_PASS_ASC
-  U_PASS_DESC
-  U_POHLAVI_ASC
-  U_POHLAVI_DESC
-  U_POSTAL_CODE_ASC
-  U_POSTAL_CODE_DESC
-  U_POZNAMKY_ASC
-  U_POZNAMKY_DESC
-  U_PRIJMENI_ASC
-  U_PRIJMENI_DESC
-  U_RODNE_CISLO_ASC
-  U_RODNE_CISLO_DESC
-  U_SKUPINA_ASC
-  U_SKUPINA_DESC
-  U_STREET_ASC
-  U_STREET_DESC
-  U_SYSTEM_ASC
-  U_SYSTEM_DESC
-  U_TEACHER_ASC
-  U_TEACHER_DESC
-  U_TELEFON_ASC
-  U_TELEFON_DESC
-  U_TIMESTAMP_ASC
-  U_TIMESTAMP_DESC
 }
 
 """
@@ -7316,32 +6301,14 @@ type Nabidka {
 A condition to be used against `Nabidka` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
 input NabidkaCondition {
-  """Checks for equality with the object’s `nDo` field."""
-  nDo: Date
-
   """Checks for equality with the object’s `nId` field."""
   nId: BigInt
-
-  """Checks for equality with the object’s `nLock` field."""
-  nLock: Boolean
-
-  """Checks for equality with the object’s `nMaxPocetHod` field."""
-  nMaxPocetHod: Int
 
   """Checks for equality with the object’s `nOd` field."""
   nOd: Date
 
-  """Checks for equality with the object’s `nPocetHod` field."""
-  nPocetHod: Int
-
-  """Checks for equality with the object’s `nTimestamp` field."""
-  nTimestamp: Datetime
-
   """Checks for equality with the object’s `nTrener` field."""
   nTrener: BigInt
-
-  """Checks for equality with the object’s `nVisible` field."""
-  nVisible: Boolean
 }
 
 """An input for mutations affecting `Nabidka`"""
@@ -7381,14 +6348,8 @@ input NabidkaItemCondition {
   """Checks for equality with the object’s `niIdRodic` field."""
   niIdRodic: BigInt
 
-  """Checks for equality with the object’s `niLock` field."""
-  niLock: Boolean
-
   """Checks for equality with the object’s `niPartner` field."""
   niPartner: BigInt
-
-  """Checks for equality with the object’s `niPocetHod` field."""
-  niPocetHod: Int
 }
 
 """An input for mutations affecting `NabidkaItem`"""
@@ -7439,37 +6400,19 @@ type NabidkaItemsEdge {
 
 """Methods to use when ordering `NabidkaItem`."""
 enum NabidkaItemsOrderBy {
-  NABIDKA_BY_NI_ID_RODIC__N_DO_ASC
-  NABIDKA_BY_NI_ID_RODIC__N_DO_DESC
   NABIDKA_BY_NI_ID_RODIC__N_ID_ASC
   NABIDKA_BY_NI_ID_RODIC__N_ID_DESC
-  NABIDKA_BY_NI_ID_RODIC__N_LOCK_ASC
-  NABIDKA_BY_NI_ID_RODIC__N_LOCK_DESC
-  NABIDKA_BY_NI_ID_RODIC__N_MAX_POCET_HOD_ASC
-  NABIDKA_BY_NI_ID_RODIC__N_MAX_POCET_HOD_DESC
   NABIDKA_BY_NI_ID_RODIC__N_OD_ASC
   NABIDKA_BY_NI_ID_RODIC__N_OD_DESC
-  NABIDKA_BY_NI_ID_RODIC__N_POCET_HOD_ASC
-  NABIDKA_BY_NI_ID_RODIC__N_POCET_HOD_DESC
-  NABIDKA_BY_NI_ID_RODIC__N_TIMESTAMP_ASC
-  NABIDKA_BY_NI_ID_RODIC__N_TIMESTAMP_DESC
   NABIDKA_BY_NI_ID_RODIC__N_TRENER_ASC
   NABIDKA_BY_NI_ID_RODIC__N_TRENER_DESC
-  NABIDKA_BY_NI_ID_RODIC__N_VISIBLE_ASC
-  NABIDKA_BY_NI_ID_RODIC__N_VISIBLE_DESC
   NATURAL
   NI_ID_ASC
   NI_ID_DESC
   NI_ID_RODIC_ASC
   NI_ID_RODIC_DESC
-  NI_LOCK_ASC
-  NI_LOCK_DESC
   NI_PARTNER_ASC
   NI_PARTNER_DESC
-  NI_POCET_HOD_ASC
-  NI_POCET_HOD_DESC
-  PARY_BY_NI_PARTNER__P_ARCHIV_ASC
-  PARY_BY_NI_PARTNER__P_ARCHIV_DESC
   PARY_BY_NI_PARTNER__P_HODNOCENI_ASC
   PARY_BY_NI_PARTNER__P_HODNOCENI_DESC
   PARY_BY_NI_PARTNER__P_ID_ASC
@@ -7478,22 +6421,6 @@ enum NabidkaItemsOrderBy {
   PARY_BY_NI_PARTNER__P_ID_PARTNER_DESC
   PARY_BY_NI_PARTNER__P_ID_PARTNERKA_ASC
   PARY_BY_NI_PARTNER__P_ID_PARTNERKA_DESC
-  PARY_BY_NI_PARTNER__P_LAT_BODY_ASC
-  PARY_BY_NI_PARTNER__P_LAT_BODY_DESC
-  PARY_BY_NI_PARTNER__P_LAT_FINALE_ASC
-  PARY_BY_NI_PARTNER__P_LAT_FINALE_DESC
-  PARY_BY_NI_PARTNER__P_LAT_TRIDA_ASC
-  PARY_BY_NI_PARTNER__P_LAT_TRIDA_DESC
-  PARY_BY_NI_PARTNER__P_STT_BODY_ASC
-  PARY_BY_NI_PARTNER__P_STT_BODY_DESC
-  PARY_BY_NI_PARTNER__P_STT_FINALE_ASC
-  PARY_BY_NI_PARTNER__P_STT_FINALE_DESC
-  PARY_BY_NI_PARTNER__P_STT_TRIDA_ASC
-  PARY_BY_NI_PARTNER__P_STT_TRIDA_DESC
-  PARY_BY_NI_PARTNER__P_TIMESTAMP_ADD_ASC
-  PARY_BY_NI_PARTNER__P_TIMESTAMP_ADD_DESC
-  PARY_BY_NI_PARTNER__P_TIMESTAMP_ARCHIVE_ASC
-  PARY_BY_NI_PARTNER__P_TIMESTAMP_ARCHIVE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -7541,24 +6468,12 @@ type NabidkasEdge {
 
 """Methods to use when ordering `Nabidka`."""
 enum NabidkasOrderBy {
-  N_DO_ASC
-  N_DO_DESC
   N_ID_ASC
   N_ID_DESC
-  N_LOCK_ASC
-  N_LOCK_DESC
-  N_MAX_POCET_HOD_ASC
-  N_MAX_POCET_HOD_DESC
   N_OD_ASC
   N_OD_DESC
-  N_POCET_HOD_ASC
-  N_POCET_HOD_DESC
-  N_TIMESTAMP_ASC
-  N_TIMESTAMP_DESC
   N_TRENER_ASC
   N_TRENER_DESC
-  N_VISIBLE_ASC
-  N_VISIBLE_DESC
   NABIDKA_ITEMS_BY_NI_ID_RODIC__COUNT_ASC
   NABIDKA_ITEMS_BY_NI_ID_RODIC__COUNT_DESC
   NATURAL
@@ -7566,68 +6481,24 @@ enum NabidkasOrderBy {
   PRIMARY_KEY_DESC
   USER_BY_N_TRENER__U_BAN_ASC
   USER_BY_N_TRENER__U_BAN_DESC
-  USER_BY_N_TRENER__U_CITY_ASC
-  USER_BY_N_TRENER__U_CITY_DESC
   USER_BY_N_TRENER__U_CONFIRMED_ASC
   USER_BY_N_TRENER__U_CONFIRMED_DESC
-  USER_BY_N_TRENER__U_CONSCRIPTION_NUMBER_ASC
-  USER_BY_N_TRENER__U_CONSCRIPTION_NUMBER_DESC
-  USER_BY_N_TRENER__U_CREATED_AT_ASC
-  USER_BY_N_TRENER__U_CREATED_AT_DESC
-  USER_BY_N_TRENER__U_DANCER_ASC
-  USER_BY_N_TRENER__U_DANCER_DESC
-  USER_BY_N_TRENER__U_DISTRICT_ASC
-  USER_BY_N_TRENER__U_DISTRICT_DESC
-  USER_BY_N_TRENER__U_EMAIL_ASC
-  USER_BY_N_TRENER__U_EMAIL_DESC
-  USER_BY_N_TRENER__U_GDPR_SIGNED_AT_ASC
-  USER_BY_N_TRENER__U_GDPR_SIGNED_AT_DESC
   USER_BY_N_TRENER__U_GROUP_ASC
   USER_BY_N_TRENER__U_GROUP_DESC
   USER_BY_N_TRENER__U_ID_ASC
   USER_BY_N_TRENER__U_ID_DESC
   USER_BY_N_TRENER__U_JMENO_ASC
   USER_BY_N_TRENER__U_JMENO_DESC
-  USER_BY_N_TRENER__U_LEVEL_ASC
-  USER_BY_N_TRENER__U_LEVEL_DESC
-  USER_BY_N_TRENER__U_LOCK_ASC
-  USER_BY_N_TRENER__U_LOCK_DESC
   USER_BY_N_TRENER__U_LOGIN_ASC
   USER_BY_N_TRENER__U_LOGIN_DESC
-  USER_BY_N_TRENER__U_MEMBER_SINCE_ASC
-  USER_BY_N_TRENER__U_MEMBER_SINCE_DESC
-  USER_BY_N_TRENER__U_MEMBER_UNTIL_ASC
-  USER_BY_N_TRENER__U_MEMBER_UNTIL_DESC
   USER_BY_N_TRENER__U_NAROZENI_ASC
   USER_BY_N_TRENER__U_NAROZENI_DESC
-  USER_BY_N_TRENER__U_NATIONALITY_ASC
-  USER_BY_N_TRENER__U_NATIONALITY_DESC
-  USER_BY_N_TRENER__U_ORIENTATION_NUMBER_ASC
-  USER_BY_N_TRENER__U_ORIENTATION_NUMBER_DESC
-  USER_BY_N_TRENER__U_PASS_ASC
-  USER_BY_N_TRENER__U_PASS_DESC
-  USER_BY_N_TRENER__U_POHLAVI_ASC
-  USER_BY_N_TRENER__U_POHLAVI_DESC
-  USER_BY_N_TRENER__U_POSTAL_CODE_ASC
-  USER_BY_N_TRENER__U_POSTAL_CODE_DESC
-  USER_BY_N_TRENER__U_POZNAMKY_ASC
-  USER_BY_N_TRENER__U_POZNAMKY_DESC
   USER_BY_N_TRENER__U_PRIJMENI_ASC
   USER_BY_N_TRENER__U_PRIJMENI_DESC
-  USER_BY_N_TRENER__U_RODNE_CISLO_ASC
-  USER_BY_N_TRENER__U_RODNE_CISLO_DESC
   USER_BY_N_TRENER__U_SKUPINA_ASC
   USER_BY_N_TRENER__U_SKUPINA_DESC
-  USER_BY_N_TRENER__U_STREET_ASC
-  USER_BY_N_TRENER__U_STREET_DESC
   USER_BY_N_TRENER__U_SYSTEM_ASC
   USER_BY_N_TRENER__U_SYSTEM_DESC
-  USER_BY_N_TRENER__U_TEACHER_ASC
-  USER_BY_N_TRENER__U_TEACHER_DESC
-  USER_BY_N_TRENER__U_TELEFON_ASC
-  USER_BY_N_TRENER__U_TELEFON_DESC
-  USER_BY_N_TRENER__U_TIMESTAMP_ASC
-  USER_BY_N_TRENER__U_TIMESTAMP_DESC
 }
 
 type Page {
@@ -7643,20 +6514,8 @@ type Page {
 A condition to be used against `Page` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
 input PageCondition {
-  """Checks for equality with the object’s `content` field."""
-  content: JSON
-
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-
   """Checks for equality with the object’s `id` field."""
   id: Int
-
-  """Checks for equality with the object’s `title` field."""
-  title: String
-
-  """Checks for equality with the object’s `updatedAt` field."""
-  updatedAt: Datetime
 
   """Checks for equality with the object’s `url` field."""
   url: String
@@ -7714,32 +6573,8 @@ A condition to be used against `PageRevision` object types. All fields are
 tested for equality and combined with a logical ‘and.’
 """
 input PageRevisionCondition {
-  """Checks for equality with the object’s `content` field."""
-  content: JSON
-
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s `id` field."""
-  id: Int
-
   """Checks for equality with the object’s `revNumber` field."""
   revNumber: Int
-
-  """Checks for equality with the object’s `revOperation` field."""
-  revOperation: String
-
-  """Checks for equality with the object’s `revTimestamp` field."""
-  revTimestamp: Datetime
-
-  """Checks for equality with the object’s `title` field."""
-  title: String
-
-  """Checks for equality with the object’s `updatedAt` field."""
-  updatedAt: Datetime
-
-  """Checks for equality with the object’s `url` field."""
-  url: String
 }
 
 """A connection to a list of `PageRevision` values."""
@@ -7770,27 +6605,11 @@ type PageRevisionsEdge {
 
 """Methods to use when ordering `PageRevision`."""
 enum PageRevisionsOrderBy {
-  CONTENT_ASC
-  CONTENT_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  ID_ASC
-  ID_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   REV_NUMBER_ASC
   REV_NUMBER_DESC
-  REV_OPERATION_ASC
-  REV_OPERATION_DESC
-  REV_TIMESTAMP_ASC
-  REV_TIMESTAMP_DESC
-  TITLE_ASC
-  TITLE_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
-  URL_ASC
-  URL_DESC
 }
 
 """A connection to a list of `Page` values."""
@@ -7821,19 +6640,11 @@ type PagesEdge {
 
 """Methods to use when ordering `Page`."""
 enum PagesOrderBy {
-  CONTENT_ASC
-  CONTENT_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
   ID_ASC
   ID_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  TITLE_ASC
-  TITLE_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
   URL_ASC
   URL_DESC
 }
@@ -7850,9 +6661,6 @@ for equality and combined with a logical ‘and.’
 input ParameterCondition {
   """Checks for equality with the object’s `paName` field."""
   paName: String
-
-  """Checks for equality with the object’s `paValue` field."""
-  paValue: String
 }
 
 """An input for mutations affecting `Parameter`"""
@@ -7900,8 +6708,6 @@ enum ParametersOrderBy {
   NATURAL
   PA_NAME_ASC
   PA_NAME_DESC
-  PA_VALUE_ASC
-  PA_VALUE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -7937,8 +6743,6 @@ enum PariesOrderBy {
   NABIDKA_ITEMS_BY_NI_PARTNER__COUNT_ASC
   NABIDKA_ITEMS_BY_NI_PARTNER__COUNT_DESC
   NATURAL
-  P_ARCHIV_ASC
-  P_ARCHIV_DESC
   P_HODNOCENI_ASC
   P_HODNOCENI_DESC
   P_ID_ASC
@@ -7947,154 +6751,50 @@ enum PariesOrderBy {
   P_ID_PARTNER_DESC
   P_ID_PARTNERKA_ASC
   P_ID_PARTNERKA_DESC
-  P_LAT_BODY_ASC
-  P_LAT_BODY_DESC
-  P_LAT_FINALE_ASC
-  P_LAT_FINALE_DESC
-  P_LAT_TRIDA_ASC
-  P_LAT_TRIDA_DESC
-  P_STT_BODY_ASC
-  P_STT_BODY_DESC
-  P_STT_FINALE_ASC
-  P_STT_FINALE_DESC
-  P_STT_TRIDA_ASC
-  P_STT_TRIDA_DESC
-  P_TIMESTAMP_ADD_ASC
-  P_TIMESTAMP_ADD_DESC
-  P_TIMESTAMP_ARCHIVE_ASC
-  P_TIMESTAMP_ARCHIVE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   ROZPIS_ITEMS_BY_RI_PARTNER__COUNT_ASC
   ROZPIS_ITEMS_BY_RI_PARTNER__COUNT_DESC
   USER_BY_P_ID_PARTNER__U_BAN_ASC
   USER_BY_P_ID_PARTNER__U_BAN_DESC
-  USER_BY_P_ID_PARTNER__U_CITY_ASC
-  USER_BY_P_ID_PARTNER__U_CITY_DESC
   USER_BY_P_ID_PARTNER__U_CONFIRMED_ASC
   USER_BY_P_ID_PARTNER__U_CONFIRMED_DESC
-  USER_BY_P_ID_PARTNER__U_CONSCRIPTION_NUMBER_ASC
-  USER_BY_P_ID_PARTNER__U_CONSCRIPTION_NUMBER_DESC
-  USER_BY_P_ID_PARTNER__U_CREATED_AT_ASC
-  USER_BY_P_ID_PARTNER__U_CREATED_AT_DESC
-  USER_BY_P_ID_PARTNER__U_DANCER_ASC
-  USER_BY_P_ID_PARTNER__U_DANCER_DESC
-  USER_BY_P_ID_PARTNER__U_DISTRICT_ASC
-  USER_BY_P_ID_PARTNER__U_DISTRICT_DESC
-  USER_BY_P_ID_PARTNER__U_EMAIL_ASC
-  USER_BY_P_ID_PARTNER__U_EMAIL_DESC
-  USER_BY_P_ID_PARTNER__U_GDPR_SIGNED_AT_ASC
-  USER_BY_P_ID_PARTNER__U_GDPR_SIGNED_AT_DESC
   USER_BY_P_ID_PARTNER__U_GROUP_ASC
   USER_BY_P_ID_PARTNER__U_GROUP_DESC
   USER_BY_P_ID_PARTNER__U_ID_ASC
   USER_BY_P_ID_PARTNER__U_ID_DESC
   USER_BY_P_ID_PARTNER__U_JMENO_ASC
   USER_BY_P_ID_PARTNER__U_JMENO_DESC
-  USER_BY_P_ID_PARTNER__U_LEVEL_ASC
-  USER_BY_P_ID_PARTNER__U_LEVEL_DESC
-  USER_BY_P_ID_PARTNER__U_LOCK_ASC
-  USER_BY_P_ID_PARTNER__U_LOCK_DESC
   USER_BY_P_ID_PARTNER__U_LOGIN_ASC
   USER_BY_P_ID_PARTNER__U_LOGIN_DESC
-  USER_BY_P_ID_PARTNER__U_MEMBER_SINCE_ASC
-  USER_BY_P_ID_PARTNER__U_MEMBER_SINCE_DESC
-  USER_BY_P_ID_PARTNER__U_MEMBER_UNTIL_ASC
-  USER_BY_P_ID_PARTNER__U_MEMBER_UNTIL_DESC
   USER_BY_P_ID_PARTNER__U_NAROZENI_ASC
   USER_BY_P_ID_PARTNER__U_NAROZENI_DESC
-  USER_BY_P_ID_PARTNER__U_NATIONALITY_ASC
-  USER_BY_P_ID_PARTNER__U_NATIONALITY_DESC
-  USER_BY_P_ID_PARTNER__U_ORIENTATION_NUMBER_ASC
-  USER_BY_P_ID_PARTNER__U_ORIENTATION_NUMBER_DESC
-  USER_BY_P_ID_PARTNER__U_PASS_ASC
-  USER_BY_P_ID_PARTNER__U_PASS_DESC
-  USER_BY_P_ID_PARTNER__U_POHLAVI_ASC
-  USER_BY_P_ID_PARTNER__U_POHLAVI_DESC
-  USER_BY_P_ID_PARTNER__U_POSTAL_CODE_ASC
-  USER_BY_P_ID_PARTNER__U_POSTAL_CODE_DESC
-  USER_BY_P_ID_PARTNER__U_POZNAMKY_ASC
-  USER_BY_P_ID_PARTNER__U_POZNAMKY_DESC
   USER_BY_P_ID_PARTNER__U_PRIJMENI_ASC
   USER_BY_P_ID_PARTNER__U_PRIJMENI_DESC
-  USER_BY_P_ID_PARTNER__U_RODNE_CISLO_ASC
-  USER_BY_P_ID_PARTNER__U_RODNE_CISLO_DESC
   USER_BY_P_ID_PARTNER__U_SKUPINA_ASC
   USER_BY_P_ID_PARTNER__U_SKUPINA_DESC
-  USER_BY_P_ID_PARTNER__U_STREET_ASC
-  USER_BY_P_ID_PARTNER__U_STREET_DESC
   USER_BY_P_ID_PARTNER__U_SYSTEM_ASC
   USER_BY_P_ID_PARTNER__U_SYSTEM_DESC
-  USER_BY_P_ID_PARTNER__U_TEACHER_ASC
-  USER_BY_P_ID_PARTNER__U_TEACHER_DESC
-  USER_BY_P_ID_PARTNER__U_TELEFON_ASC
-  USER_BY_P_ID_PARTNER__U_TELEFON_DESC
-  USER_BY_P_ID_PARTNER__U_TIMESTAMP_ASC
-  USER_BY_P_ID_PARTNER__U_TIMESTAMP_DESC
   USER_BY_P_ID_PARTNERKA__U_BAN_ASC
   USER_BY_P_ID_PARTNERKA__U_BAN_DESC
-  USER_BY_P_ID_PARTNERKA__U_CITY_ASC
-  USER_BY_P_ID_PARTNERKA__U_CITY_DESC
   USER_BY_P_ID_PARTNERKA__U_CONFIRMED_ASC
   USER_BY_P_ID_PARTNERKA__U_CONFIRMED_DESC
-  USER_BY_P_ID_PARTNERKA__U_CONSCRIPTION_NUMBER_ASC
-  USER_BY_P_ID_PARTNERKA__U_CONSCRIPTION_NUMBER_DESC
-  USER_BY_P_ID_PARTNERKA__U_CREATED_AT_ASC
-  USER_BY_P_ID_PARTNERKA__U_CREATED_AT_DESC
-  USER_BY_P_ID_PARTNERKA__U_DANCER_ASC
-  USER_BY_P_ID_PARTNERKA__U_DANCER_DESC
-  USER_BY_P_ID_PARTNERKA__U_DISTRICT_ASC
-  USER_BY_P_ID_PARTNERKA__U_DISTRICT_DESC
-  USER_BY_P_ID_PARTNERKA__U_EMAIL_ASC
-  USER_BY_P_ID_PARTNERKA__U_EMAIL_DESC
-  USER_BY_P_ID_PARTNERKA__U_GDPR_SIGNED_AT_ASC
-  USER_BY_P_ID_PARTNERKA__U_GDPR_SIGNED_AT_DESC
   USER_BY_P_ID_PARTNERKA__U_GROUP_ASC
   USER_BY_P_ID_PARTNERKA__U_GROUP_DESC
   USER_BY_P_ID_PARTNERKA__U_ID_ASC
   USER_BY_P_ID_PARTNERKA__U_ID_DESC
   USER_BY_P_ID_PARTNERKA__U_JMENO_ASC
   USER_BY_P_ID_PARTNERKA__U_JMENO_DESC
-  USER_BY_P_ID_PARTNERKA__U_LEVEL_ASC
-  USER_BY_P_ID_PARTNERKA__U_LEVEL_DESC
-  USER_BY_P_ID_PARTNERKA__U_LOCK_ASC
-  USER_BY_P_ID_PARTNERKA__U_LOCK_DESC
   USER_BY_P_ID_PARTNERKA__U_LOGIN_ASC
   USER_BY_P_ID_PARTNERKA__U_LOGIN_DESC
-  USER_BY_P_ID_PARTNERKA__U_MEMBER_SINCE_ASC
-  USER_BY_P_ID_PARTNERKA__U_MEMBER_SINCE_DESC
-  USER_BY_P_ID_PARTNERKA__U_MEMBER_UNTIL_ASC
-  USER_BY_P_ID_PARTNERKA__U_MEMBER_UNTIL_DESC
   USER_BY_P_ID_PARTNERKA__U_NAROZENI_ASC
   USER_BY_P_ID_PARTNERKA__U_NAROZENI_DESC
-  USER_BY_P_ID_PARTNERKA__U_NATIONALITY_ASC
-  USER_BY_P_ID_PARTNERKA__U_NATIONALITY_DESC
-  USER_BY_P_ID_PARTNERKA__U_ORIENTATION_NUMBER_ASC
-  USER_BY_P_ID_PARTNERKA__U_ORIENTATION_NUMBER_DESC
-  USER_BY_P_ID_PARTNERKA__U_PASS_ASC
-  USER_BY_P_ID_PARTNERKA__U_PASS_DESC
-  USER_BY_P_ID_PARTNERKA__U_POHLAVI_ASC
-  USER_BY_P_ID_PARTNERKA__U_POHLAVI_DESC
-  USER_BY_P_ID_PARTNERKA__U_POSTAL_CODE_ASC
-  USER_BY_P_ID_PARTNERKA__U_POSTAL_CODE_DESC
-  USER_BY_P_ID_PARTNERKA__U_POZNAMKY_ASC
-  USER_BY_P_ID_PARTNERKA__U_POZNAMKY_DESC
   USER_BY_P_ID_PARTNERKA__U_PRIJMENI_ASC
   USER_BY_P_ID_PARTNERKA__U_PRIJMENI_DESC
-  USER_BY_P_ID_PARTNERKA__U_RODNE_CISLO_ASC
-  USER_BY_P_ID_PARTNERKA__U_RODNE_CISLO_DESC
   USER_BY_P_ID_PARTNERKA__U_SKUPINA_ASC
   USER_BY_P_ID_PARTNERKA__U_SKUPINA_DESC
-  USER_BY_P_ID_PARTNERKA__U_STREET_ASC
-  USER_BY_P_ID_PARTNERKA__U_STREET_DESC
   USER_BY_P_ID_PARTNERKA__U_SYSTEM_ASC
   USER_BY_P_ID_PARTNERKA__U_SYSTEM_DESC
-  USER_BY_P_ID_PARTNERKA__U_TEACHER_ASC
-  USER_BY_P_ID_PARTNERKA__U_TEACHER_DESC
-  USER_BY_P_ID_PARTNERKA__U_TELEFON_ASC
-  USER_BY_P_ID_PARTNERKA__U_TELEFON_DESC
-  USER_BY_P_ID_PARTNERKA__U_TIMESTAMP_ASC
-  USER_BY_P_ID_PARTNERKA__U_TIMESTAMP_DESC
 }
 
 type Pary {
@@ -8180,9 +6880,6 @@ type Pary {
 A condition to be used against `Pary` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
 input ParyCondition {
-  """Checks for equality with the object’s `pArchiv` field."""
-  pArchiv: Boolean
-
   """Checks for equality with the object’s `pHodnoceni` field."""
   pHodnoceni: Int
 
@@ -8194,30 +6891,6 @@ input ParyCondition {
 
   """Checks for equality with the object’s `pIdPartnerka` field."""
   pIdPartnerka: BigInt
-
-  """Checks for equality with the object’s `pLatBody` field."""
-  pLatBody: Int
-
-  """Checks for equality with the object’s `pLatFinale` field."""
-  pLatFinale: Boolean
-
-  """Checks for equality with the object’s `pLatTrida` field."""
-  pLatTrida: ParyPLatTrida
-
-  """Checks for equality with the object’s `pSttBody` field."""
-  pSttBody: Int
-
-  """Checks for equality with the object’s `pSttFinale` field."""
-  pSttFinale: Boolean
-
-  """Checks for equality with the object’s `pSttTrida` field."""
-  pSttTrida: ParyPSttTrida
-
-  """Checks for equality with the object’s `pTimestampAdd` field."""
-  pTimestampAdd: Datetime
-
-  """Checks for equality with the object’s `pTimestampArchive` field."""
-  pTimestampArchive: Datetime
 }
 
 """An input for mutations affecting `Pary`"""
@@ -8330,196 +7003,64 @@ enum ParyNavrhsOrderBy {
   PRIMARY_KEY_DESC
   USER_BY_PN_NAVRHL__U_BAN_ASC
   USER_BY_PN_NAVRHL__U_BAN_DESC
-  USER_BY_PN_NAVRHL__U_CITY_ASC
-  USER_BY_PN_NAVRHL__U_CITY_DESC
   USER_BY_PN_NAVRHL__U_CONFIRMED_ASC
   USER_BY_PN_NAVRHL__U_CONFIRMED_DESC
-  USER_BY_PN_NAVRHL__U_CONSCRIPTION_NUMBER_ASC
-  USER_BY_PN_NAVRHL__U_CONSCRIPTION_NUMBER_DESC
-  USER_BY_PN_NAVRHL__U_CREATED_AT_ASC
-  USER_BY_PN_NAVRHL__U_CREATED_AT_DESC
-  USER_BY_PN_NAVRHL__U_DANCER_ASC
-  USER_BY_PN_NAVRHL__U_DANCER_DESC
-  USER_BY_PN_NAVRHL__U_DISTRICT_ASC
-  USER_BY_PN_NAVRHL__U_DISTRICT_DESC
-  USER_BY_PN_NAVRHL__U_EMAIL_ASC
-  USER_BY_PN_NAVRHL__U_EMAIL_DESC
-  USER_BY_PN_NAVRHL__U_GDPR_SIGNED_AT_ASC
-  USER_BY_PN_NAVRHL__U_GDPR_SIGNED_AT_DESC
   USER_BY_PN_NAVRHL__U_GROUP_ASC
   USER_BY_PN_NAVRHL__U_GROUP_DESC
   USER_BY_PN_NAVRHL__U_ID_ASC
   USER_BY_PN_NAVRHL__U_ID_DESC
   USER_BY_PN_NAVRHL__U_JMENO_ASC
   USER_BY_PN_NAVRHL__U_JMENO_DESC
-  USER_BY_PN_NAVRHL__U_LEVEL_ASC
-  USER_BY_PN_NAVRHL__U_LEVEL_DESC
-  USER_BY_PN_NAVRHL__U_LOCK_ASC
-  USER_BY_PN_NAVRHL__U_LOCK_DESC
   USER_BY_PN_NAVRHL__U_LOGIN_ASC
   USER_BY_PN_NAVRHL__U_LOGIN_DESC
-  USER_BY_PN_NAVRHL__U_MEMBER_SINCE_ASC
-  USER_BY_PN_NAVRHL__U_MEMBER_SINCE_DESC
-  USER_BY_PN_NAVRHL__U_MEMBER_UNTIL_ASC
-  USER_BY_PN_NAVRHL__U_MEMBER_UNTIL_DESC
   USER_BY_PN_NAVRHL__U_NAROZENI_ASC
   USER_BY_PN_NAVRHL__U_NAROZENI_DESC
-  USER_BY_PN_NAVRHL__U_NATIONALITY_ASC
-  USER_BY_PN_NAVRHL__U_NATIONALITY_DESC
-  USER_BY_PN_NAVRHL__U_ORIENTATION_NUMBER_ASC
-  USER_BY_PN_NAVRHL__U_ORIENTATION_NUMBER_DESC
-  USER_BY_PN_NAVRHL__U_PASS_ASC
-  USER_BY_PN_NAVRHL__U_PASS_DESC
-  USER_BY_PN_NAVRHL__U_POHLAVI_ASC
-  USER_BY_PN_NAVRHL__U_POHLAVI_DESC
-  USER_BY_PN_NAVRHL__U_POSTAL_CODE_ASC
-  USER_BY_PN_NAVRHL__U_POSTAL_CODE_DESC
-  USER_BY_PN_NAVRHL__U_POZNAMKY_ASC
-  USER_BY_PN_NAVRHL__U_POZNAMKY_DESC
   USER_BY_PN_NAVRHL__U_PRIJMENI_ASC
   USER_BY_PN_NAVRHL__U_PRIJMENI_DESC
-  USER_BY_PN_NAVRHL__U_RODNE_CISLO_ASC
-  USER_BY_PN_NAVRHL__U_RODNE_CISLO_DESC
   USER_BY_PN_NAVRHL__U_SKUPINA_ASC
   USER_BY_PN_NAVRHL__U_SKUPINA_DESC
-  USER_BY_PN_NAVRHL__U_STREET_ASC
-  USER_BY_PN_NAVRHL__U_STREET_DESC
   USER_BY_PN_NAVRHL__U_SYSTEM_ASC
   USER_BY_PN_NAVRHL__U_SYSTEM_DESC
-  USER_BY_PN_NAVRHL__U_TEACHER_ASC
-  USER_BY_PN_NAVRHL__U_TEACHER_DESC
-  USER_BY_PN_NAVRHL__U_TELEFON_ASC
-  USER_BY_PN_NAVRHL__U_TELEFON_DESC
-  USER_BY_PN_NAVRHL__U_TIMESTAMP_ASC
-  USER_BY_PN_NAVRHL__U_TIMESTAMP_DESC
   USER_BY_PN_PARTNER__U_BAN_ASC
   USER_BY_PN_PARTNER__U_BAN_DESC
-  USER_BY_PN_PARTNER__U_CITY_ASC
-  USER_BY_PN_PARTNER__U_CITY_DESC
   USER_BY_PN_PARTNER__U_CONFIRMED_ASC
   USER_BY_PN_PARTNER__U_CONFIRMED_DESC
-  USER_BY_PN_PARTNER__U_CONSCRIPTION_NUMBER_ASC
-  USER_BY_PN_PARTNER__U_CONSCRIPTION_NUMBER_DESC
-  USER_BY_PN_PARTNER__U_CREATED_AT_ASC
-  USER_BY_PN_PARTNER__U_CREATED_AT_DESC
-  USER_BY_PN_PARTNER__U_DANCER_ASC
-  USER_BY_PN_PARTNER__U_DANCER_DESC
-  USER_BY_PN_PARTNER__U_DISTRICT_ASC
-  USER_BY_PN_PARTNER__U_DISTRICT_DESC
-  USER_BY_PN_PARTNER__U_EMAIL_ASC
-  USER_BY_PN_PARTNER__U_EMAIL_DESC
-  USER_BY_PN_PARTNER__U_GDPR_SIGNED_AT_ASC
-  USER_BY_PN_PARTNER__U_GDPR_SIGNED_AT_DESC
   USER_BY_PN_PARTNER__U_GROUP_ASC
   USER_BY_PN_PARTNER__U_GROUP_DESC
   USER_BY_PN_PARTNER__U_ID_ASC
   USER_BY_PN_PARTNER__U_ID_DESC
   USER_BY_PN_PARTNER__U_JMENO_ASC
   USER_BY_PN_PARTNER__U_JMENO_DESC
-  USER_BY_PN_PARTNER__U_LEVEL_ASC
-  USER_BY_PN_PARTNER__U_LEVEL_DESC
-  USER_BY_PN_PARTNER__U_LOCK_ASC
-  USER_BY_PN_PARTNER__U_LOCK_DESC
   USER_BY_PN_PARTNER__U_LOGIN_ASC
   USER_BY_PN_PARTNER__U_LOGIN_DESC
-  USER_BY_PN_PARTNER__U_MEMBER_SINCE_ASC
-  USER_BY_PN_PARTNER__U_MEMBER_SINCE_DESC
-  USER_BY_PN_PARTNER__U_MEMBER_UNTIL_ASC
-  USER_BY_PN_PARTNER__U_MEMBER_UNTIL_DESC
   USER_BY_PN_PARTNER__U_NAROZENI_ASC
   USER_BY_PN_PARTNER__U_NAROZENI_DESC
-  USER_BY_PN_PARTNER__U_NATIONALITY_ASC
-  USER_BY_PN_PARTNER__U_NATIONALITY_DESC
-  USER_BY_PN_PARTNER__U_ORIENTATION_NUMBER_ASC
-  USER_BY_PN_PARTNER__U_ORIENTATION_NUMBER_DESC
-  USER_BY_PN_PARTNER__U_PASS_ASC
-  USER_BY_PN_PARTNER__U_PASS_DESC
-  USER_BY_PN_PARTNER__U_POHLAVI_ASC
-  USER_BY_PN_PARTNER__U_POHLAVI_DESC
-  USER_BY_PN_PARTNER__U_POSTAL_CODE_ASC
-  USER_BY_PN_PARTNER__U_POSTAL_CODE_DESC
-  USER_BY_PN_PARTNER__U_POZNAMKY_ASC
-  USER_BY_PN_PARTNER__U_POZNAMKY_DESC
   USER_BY_PN_PARTNER__U_PRIJMENI_ASC
   USER_BY_PN_PARTNER__U_PRIJMENI_DESC
-  USER_BY_PN_PARTNER__U_RODNE_CISLO_ASC
-  USER_BY_PN_PARTNER__U_RODNE_CISLO_DESC
   USER_BY_PN_PARTNER__U_SKUPINA_ASC
   USER_BY_PN_PARTNER__U_SKUPINA_DESC
-  USER_BY_PN_PARTNER__U_STREET_ASC
-  USER_BY_PN_PARTNER__U_STREET_DESC
   USER_BY_PN_PARTNER__U_SYSTEM_ASC
   USER_BY_PN_PARTNER__U_SYSTEM_DESC
-  USER_BY_PN_PARTNER__U_TEACHER_ASC
-  USER_BY_PN_PARTNER__U_TEACHER_DESC
-  USER_BY_PN_PARTNER__U_TELEFON_ASC
-  USER_BY_PN_PARTNER__U_TELEFON_DESC
-  USER_BY_PN_PARTNER__U_TIMESTAMP_ASC
-  USER_BY_PN_PARTNER__U_TIMESTAMP_DESC
   USER_BY_PN_PARTNERKA__U_BAN_ASC
   USER_BY_PN_PARTNERKA__U_BAN_DESC
-  USER_BY_PN_PARTNERKA__U_CITY_ASC
-  USER_BY_PN_PARTNERKA__U_CITY_DESC
   USER_BY_PN_PARTNERKA__U_CONFIRMED_ASC
   USER_BY_PN_PARTNERKA__U_CONFIRMED_DESC
-  USER_BY_PN_PARTNERKA__U_CONSCRIPTION_NUMBER_ASC
-  USER_BY_PN_PARTNERKA__U_CONSCRIPTION_NUMBER_DESC
-  USER_BY_PN_PARTNERKA__U_CREATED_AT_ASC
-  USER_BY_PN_PARTNERKA__U_CREATED_AT_DESC
-  USER_BY_PN_PARTNERKA__U_DANCER_ASC
-  USER_BY_PN_PARTNERKA__U_DANCER_DESC
-  USER_BY_PN_PARTNERKA__U_DISTRICT_ASC
-  USER_BY_PN_PARTNERKA__U_DISTRICT_DESC
-  USER_BY_PN_PARTNERKA__U_EMAIL_ASC
-  USER_BY_PN_PARTNERKA__U_EMAIL_DESC
-  USER_BY_PN_PARTNERKA__U_GDPR_SIGNED_AT_ASC
-  USER_BY_PN_PARTNERKA__U_GDPR_SIGNED_AT_DESC
   USER_BY_PN_PARTNERKA__U_GROUP_ASC
   USER_BY_PN_PARTNERKA__U_GROUP_DESC
   USER_BY_PN_PARTNERKA__U_ID_ASC
   USER_BY_PN_PARTNERKA__U_ID_DESC
   USER_BY_PN_PARTNERKA__U_JMENO_ASC
   USER_BY_PN_PARTNERKA__U_JMENO_DESC
-  USER_BY_PN_PARTNERKA__U_LEVEL_ASC
-  USER_BY_PN_PARTNERKA__U_LEVEL_DESC
-  USER_BY_PN_PARTNERKA__U_LOCK_ASC
-  USER_BY_PN_PARTNERKA__U_LOCK_DESC
   USER_BY_PN_PARTNERKA__U_LOGIN_ASC
   USER_BY_PN_PARTNERKA__U_LOGIN_DESC
-  USER_BY_PN_PARTNERKA__U_MEMBER_SINCE_ASC
-  USER_BY_PN_PARTNERKA__U_MEMBER_SINCE_DESC
-  USER_BY_PN_PARTNERKA__U_MEMBER_UNTIL_ASC
-  USER_BY_PN_PARTNERKA__U_MEMBER_UNTIL_DESC
   USER_BY_PN_PARTNERKA__U_NAROZENI_ASC
   USER_BY_PN_PARTNERKA__U_NAROZENI_DESC
-  USER_BY_PN_PARTNERKA__U_NATIONALITY_ASC
-  USER_BY_PN_PARTNERKA__U_NATIONALITY_DESC
-  USER_BY_PN_PARTNERKA__U_ORIENTATION_NUMBER_ASC
-  USER_BY_PN_PARTNERKA__U_ORIENTATION_NUMBER_DESC
-  USER_BY_PN_PARTNERKA__U_PASS_ASC
-  USER_BY_PN_PARTNERKA__U_PASS_DESC
-  USER_BY_PN_PARTNERKA__U_POHLAVI_ASC
-  USER_BY_PN_PARTNERKA__U_POHLAVI_DESC
-  USER_BY_PN_PARTNERKA__U_POSTAL_CODE_ASC
-  USER_BY_PN_PARTNERKA__U_POSTAL_CODE_DESC
-  USER_BY_PN_PARTNERKA__U_POZNAMKY_ASC
-  USER_BY_PN_PARTNERKA__U_POZNAMKY_DESC
   USER_BY_PN_PARTNERKA__U_PRIJMENI_ASC
   USER_BY_PN_PARTNERKA__U_PRIJMENI_DESC
-  USER_BY_PN_PARTNERKA__U_RODNE_CISLO_ASC
-  USER_BY_PN_PARTNERKA__U_RODNE_CISLO_DESC
   USER_BY_PN_PARTNERKA__U_SKUPINA_ASC
   USER_BY_PN_PARTNERKA__U_SKUPINA_DESC
-  USER_BY_PN_PARTNERKA__U_STREET_ASC
-  USER_BY_PN_PARTNERKA__U_STREET_DESC
   USER_BY_PN_PARTNERKA__U_SYSTEM_ASC
   USER_BY_PN_PARTNERKA__U_SYSTEM_DESC
-  USER_BY_PN_PARTNERKA__U_TEACHER_ASC
-  USER_BY_PN_PARTNERKA__U_TEACHER_DESC
-  USER_BY_PN_PARTNERKA__U_TELEFON_ASC
-  USER_BY_PN_PARTNERKA__U_TELEFON_DESC
-  USER_BY_PN_PARTNERKA__U_TIMESTAMP_ASC
-  USER_BY_PN_PARTNERKA__U_TIMESTAMP_DESC
 }
 
 """Represents an update to a `Pary`. Fields that are set will be updated."""
@@ -8587,14 +7128,8 @@ type PeopleEdge {
 
 """Methods to use when ordering `Person`."""
 enum PeopleOrderBy {
-  FIRST_NAME_ASC
-  FIRST_NAME_DESC
-  GENDER_ASC
-  GENDER_DESC
   ID_ASC
   ID_DESC
-  LAST_NAME_ASC
-  LAST_NAME_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
@@ -8659,65 +7194,8 @@ A condition to be used against `Permission` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input PermissionCondition {
-  """Checks for equality with the object’s `peAkce` field."""
-  peAkce: Int
-
-  """Checks for equality with the object’s `peAktuality` field."""
-  peAktuality: Int
-
-  """Checks for equality with the object’s `peAnkety` field."""
-  peAnkety: Int
-
-  """Checks for equality with the object’s `peDescription` field."""
-  peDescription: String
-
-  """Checks for equality with the object’s `peDokumenty` field."""
-  peDokumenty: Int
-
-  """Checks for equality with the object’s `peGalerie` field."""
-  peGalerie: Int
-
   """Checks for equality with the object’s `peId` field."""
   peId: BigInt
-
-  """Checks for equality with the object’s `peInzerce` field."""
-  peInzerce: Int
-
-  """Checks for equality with the object’s `peKonzole` field."""
-  peKonzole: Int
-
-  """Checks for equality with the object’s `peMain` field."""
-  peMain: Int
-
-  """Checks for equality with the object’s `peNabidka` field."""
-  peNabidka: Int
-
-  """Checks for equality with the object’s `peName` field."""
-  peName: String
-
-  """Checks for equality with the object’s `peNastenka` field."""
-  peNastenka: Int
-
-  """Checks for equality with the object’s `peNovinky` field."""
-  peNovinky: Int
-
-  """Checks for equality with the object’s `pePary` field."""
-  pePary: Int
-
-  """Checks for equality with the object’s `pePermissions` field."""
-  pePermissions: Int
-
-  """Checks for equality with the object’s `pePlatby` field."""
-  pePlatby: Int
-
-  """Checks for equality with the object’s `peRozpis` field."""
-  peRozpis: Int
-
-  """Checks for equality with the object’s `peSkupiny` field."""
-  peSkupiny: Int
-
-  """Checks for equality with the object’s `peUsers` field."""
-  peUsers: Int
 }
 
 """An input for mutations affecting `Permission`"""
@@ -8799,46 +7277,8 @@ type PermissionsEdge {
 """Methods to use when ordering `Permission`."""
 enum PermissionsOrderBy {
   NATURAL
-  PE_AKCE_ASC
-  PE_AKCE_DESC
-  PE_AKTUALITY_ASC
-  PE_AKTUALITY_DESC
-  PE_ANKETY_ASC
-  PE_ANKETY_DESC
-  PE_DESCRIPTION_ASC
-  PE_DESCRIPTION_DESC
-  PE_DOKUMENTY_ASC
-  PE_DOKUMENTY_DESC
-  PE_GALERIE_ASC
-  PE_GALERIE_DESC
   PE_ID_ASC
   PE_ID_DESC
-  PE_INZERCE_ASC
-  PE_INZERCE_DESC
-  PE_KONZOLE_ASC
-  PE_KONZOLE_DESC
-  PE_MAIN_ASC
-  PE_MAIN_DESC
-  PE_NABIDKA_ASC
-  PE_NABIDKA_DESC
-  PE_NAME_ASC
-  PE_NAME_DESC
-  PE_NASTENKA_ASC
-  PE_NASTENKA_DESC
-  PE_NOVINKY_ASC
-  PE_NOVINKY_DESC
-  PE_PARY_ASC
-  PE_PARY_DESC
-  PE_PERMISSIONS_ASC
-  PE_PERMISSIONS_DESC
-  PE_PLATBY_ASC
-  PE_PLATBY_DESC
-  PE_ROZPIS_ASC
-  PE_ROZPIS_DESC
-  PE_SKUPINY_ASC
-  PE_SKUPINY_DESC
-  PE_USERS_ASC
-  PE_USERS_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   USERS_BY_U_GROUP__COUNT_ASC
@@ -8885,17 +7325,8 @@ type Person {
 A condition to be used against `Person` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
 input PersonCondition {
-  """Checks for equality with the object’s `firstName` field."""
-  firstName: String
-
-  """Checks for equality with the object’s `gender` field."""
-  gender: GenderType
-
   """Checks for equality with the object’s `id` field."""
   id: BigInt
-
-  """Checks for equality with the object’s `lastName` field."""
-  lastName: String
 }
 
 """An input for mutations affecting `Person`"""
@@ -8945,28 +7376,10 @@ type PlatbyCategoriesEdge {
 """Methods to use when ordering `PlatbyCategory`."""
 enum PlatbyCategoriesOrderBy {
   NATURAL
-  PC_AMOUNT_ASC
-  PC_AMOUNT_DESC
-  PC_ARCHIVE_ASC
-  PC_ARCHIVE_DESC
-  PC_DATE_DUE_ASC
-  PC_DATE_DUE_DESC
   PC_ID_ASC
   PC_ID_DESC
-  PC_NAME_ASC
-  PC_NAME_DESC
   PC_SYMBOL_ASC
   PC_SYMBOL_DESC
-  PC_USE_BASE_ASC
-  PC_USE_BASE_DESC
-  PC_USE_PREFIX_ASC
-  PC_USE_PREFIX_DESC
-  PC_VALID_FROM_ASC
-  PC_VALID_FROM_DESC
-  PC_VALID_TO_ASC
-  PC_VALID_TO_DESC
-  PC_VISIBLE_ASC
-  PC_VISIBLE_DESC
   PLATBY_CATEGORY_GROUPS_BY_PCG_ID_CATEGORY__COUNT_ASC
   PLATBY_CATEGORY_GROUPS_BY_PCG_ID_CATEGORY__COUNT_DESC
   PLATBY_ITEMS_BY_PI_ID_CATEGORY__COUNT_ASC
@@ -9052,38 +7465,11 @@ A condition to be used against `PlatbyCategory` object types. All fields are
 tested for equality and combined with a logical ‘and.’
 """
 input PlatbyCategoryCondition {
-  """Checks for equality with the object’s `pcAmount` field."""
-  pcAmount: BigFloat
-
-  """Checks for equality with the object’s `pcArchive` field."""
-  pcArchive: Boolean
-
-  """Checks for equality with the object’s `pcDateDue` field."""
-  pcDateDue: Date
-
   """Checks for equality with the object’s `pcId` field."""
   pcId: BigInt
 
-  """Checks for equality with the object’s `pcName` field."""
-  pcName: String
-
   """Checks for equality with the object’s `pcSymbol` field."""
   pcSymbol: BigInt
-
-  """Checks for equality with the object’s `pcUseBase` field."""
-  pcUseBase: Boolean
-
-  """Checks for equality with the object’s `pcUsePrefix` field."""
-  pcUsePrefix: Boolean
-
-  """Checks for equality with the object’s `pcValidFrom` field."""
-  pcValidFrom: Date
-
-  """Checks for equality with the object’s `pcValidTo` field."""
-  pcValidTo: Date
-
-  """Checks for equality with the object’s `pcVisible` field."""
-  pcVisible: Boolean
 }
 
 type PlatbyCategoryGroup {
@@ -9170,38 +7556,12 @@ enum PlatbyCategoryGroupsOrderBy {
   PCG_ID_DESC
   PCG_ID_GROUP_ASC
   PCG_ID_GROUP_DESC
-  PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_AMOUNT_ASC
-  PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_AMOUNT_DESC
-  PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_ARCHIVE_ASC
-  PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_ARCHIVE_DESC
-  PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_DATE_DUE_ASC
-  PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_DATE_DUE_DESC
   PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_ID_ASC
   PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_ID_DESC
-  PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_NAME_ASC
-  PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_NAME_DESC
   PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_SYMBOL_ASC
   PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_SYMBOL_DESC
-  PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_USE_BASE_ASC
-  PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_USE_BASE_DESC
-  PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_USE_PREFIX_ASC
-  PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_USE_PREFIX_DESC
-  PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_VALID_FROM_ASC
-  PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_VALID_FROM_DESC
-  PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_VALID_TO_ASC
-  PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_VALID_TO_DESC
-  PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_VISIBLE_ASC
-  PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_VISIBLE_DESC
-  PLATBY_GROUP_BY_PCG_ID_GROUP__PG_BASE_ASC
-  PLATBY_GROUP_BY_PCG_ID_GROUP__PG_BASE_DESC
-  PLATBY_GROUP_BY_PCG_ID_GROUP__PG_DESCRIPTION_ASC
-  PLATBY_GROUP_BY_PCG_ID_GROUP__PG_DESCRIPTION_DESC
   PLATBY_GROUP_BY_PCG_ID_GROUP__PG_ID_ASC
   PLATBY_GROUP_BY_PCG_ID_GROUP__PG_ID_DESC
-  PLATBY_GROUP_BY_PCG_ID_GROUP__PG_NAME_ASC
-  PLATBY_GROUP_BY_PCG_ID_GROUP__PG_NAME_DESC
-  PLATBY_GROUP_BY_PCG_ID_GROUP__PG_TYPE_ASC
-  PLATBY_GROUP_BY_PCG_ID_GROUP__PG_TYPE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -9309,20 +7669,8 @@ A condition to be used against `PlatbyGroup` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input PlatbyGroupCondition {
-  """Checks for equality with the object’s `pgBase` field."""
-  pgBase: BigInt
-
-  """Checks for equality with the object’s `pgDescription` field."""
-  pgDescription: String
-
   """Checks for equality with the object’s `pgId` field."""
   pgId: BigInt
-
-  """Checks for equality with the object’s `pgName` field."""
-  pgName: String
-
-  """Checks for equality with the object’s `pgType` field."""
-  pgType: BigFloat
 }
 
 """An input for mutations affecting `PlatbyGroup`"""
@@ -9453,36 +7801,16 @@ enum PlatbyGroupSkupinasOrderBy {
   PGS_ID_GROUP_DESC
   PGS_ID_SKUPINA_ASC
   PGS_ID_SKUPINA_DESC
-  PLATBY_GROUP_BY_PGS_ID_GROUP__PG_BASE_ASC
-  PLATBY_GROUP_BY_PGS_ID_GROUP__PG_BASE_DESC
-  PLATBY_GROUP_BY_PGS_ID_GROUP__PG_DESCRIPTION_ASC
-  PLATBY_GROUP_BY_PGS_ID_GROUP__PG_DESCRIPTION_DESC
   PLATBY_GROUP_BY_PGS_ID_GROUP__PG_ID_ASC
   PLATBY_GROUP_BY_PGS_ID_GROUP__PG_ID_DESC
-  PLATBY_GROUP_BY_PGS_ID_GROUP__PG_NAME_ASC
-  PLATBY_GROUP_BY_PGS_ID_GROUP__PG_NAME_DESC
-  PLATBY_GROUP_BY_PGS_ID_GROUP__PG_TYPE_ASC
-  PLATBY_GROUP_BY_PGS_ID_GROUP__PG_TYPE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   SKUPINY_BY_PGS_ID_SKUPINA__COHORT_GROUP_ASC
   SKUPINY_BY_PGS_ID_SKUPINA__COHORT_GROUP_DESC
-  SKUPINY_BY_PGS_ID_SKUPINA__INTERNAL_INFO_ASC
-  SKUPINY_BY_PGS_ID_SKUPINA__INTERNAL_INFO_DESC
   SKUPINY_BY_PGS_ID_SKUPINA__ORDERING_ASC
   SKUPINY_BY_PGS_ID_SKUPINA__ORDERING_DESC
-  SKUPINY_BY_PGS_ID_SKUPINA__S_COLOR_RGB_ASC
-  SKUPINY_BY_PGS_ID_SKUPINA__S_COLOR_RGB_DESC
-  SKUPINY_BY_PGS_ID_SKUPINA__S_COLOR_TEXT_ASC
-  SKUPINY_BY_PGS_ID_SKUPINA__S_COLOR_TEXT_DESC
-  SKUPINY_BY_PGS_ID_SKUPINA__S_DESCRIPTION_ASC
-  SKUPINY_BY_PGS_ID_SKUPINA__S_DESCRIPTION_DESC
   SKUPINY_BY_PGS_ID_SKUPINA__S_ID_ASC
   SKUPINY_BY_PGS_ID_SKUPINA__S_ID_DESC
-  SKUPINY_BY_PGS_ID_SKUPINA__S_LOCATION_ASC
-  SKUPINY_BY_PGS_ID_SKUPINA__S_LOCATION_DESC
-  SKUPINY_BY_PGS_ID_SKUPINA__S_NAME_ASC
-  SKUPINY_BY_PGS_ID_SKUPINA__S_NAME_DESC
   SKUPINY_BY_PGS_ID_SKUPINA__S_VISIBLE_ASC
   SKUPINY_BY_PGS_ID_SKUPINA__S_VISIBLE_DESC
 }
@@ -9490,16 +7818,8 @@ enum PlatbyGroupSkupinasOrderBy {
 """Methods to use when ordering `PlatbyGroup`."""
 enum PlatbyGroupsOrderBy {
   NATURAL
-  PG_BASE_ASC
-  PG_BASE_DESC
-  PG_DESCRIPTION_ASC
-  PG_DESCRIPTION_DESC
   PG_ID_ASC
   PG_ID_DESC
-  PG_NAME_ASC
-  PG_NAME_DESC
-  PG_TYPE_ASC
-  PG_TYPE_DESC
   PLATBY_CATEGORY_GROUPS_BY_PCG_ID_GROUP__COUNT_ASC
   PLATBY_CATEGORY_GROUPS_BY_PCG_ID_GROUP__COUNT_DESC
   PLATBY_GROUP_SKUPINAS_BY_PGS_ID_GROUP__COUNT_ASC
@@ -9532,12 +7852,6 @@ A condition to be used against `PlatbyItem` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input PlatbyItemCondition {
-  """Checks for equality with the object’s `piAmount` field."""
-  piAmount: BigFloat
-
-  """Checks for equality with the object’s `piDate` field."""
-  piDate: Date
-
   """Checks for equality with the object’s `piId` field."""
   piId: BigInt
 
@@ -9549,9 +7863,6 @@ input PlatbyItemCondition {
 
   """Checks for equality with the object’s `piIdUser` field."""
   piIdUser: BigInt
-
-  """Checks for equality with the object’s `piPrefix` field."""
-  piPrefix: Int
 }
 
 """An input for mutations affecting `PlatbyItem`"""
@@ -9607,10 +7918,6 @@ type PlatbyItemsEdge {
 """Methods to use when ordering `PlatbyItem`."""
 enum PlatbyItemsOrderBy {
   NATURAL
-  PI_AMOUNT_ASC
-  PI_AMOUNT_DESC
-  PI_DATE_ASC
-  PI_DATE_DESC
   PI_ID_ASC
   PI_ID_CATEGORY_ASC
   PI_ID_CATEGORY_DESC
@@ -9619,106 +7926,36 @@ enum PlatbyItemsOrderBy {
   PI_ID_RAW_DESC
   PI_ID_USER_ASC
   PI_ID_USER_DESC
-  PI_PREFIX_ASC
-  PI_PREFIX_DESC
-  PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_AMOUNT_ASC
-  PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_AMOUNT_DESC
-  PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_ARCHIVE_ASC
-  PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_ARCHIVE_DESC
-  PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_DATE_DUE_ASC
-  PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_DATE_DUE_DESC
   PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_ID_ASC
   PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_ID_DESC
-  PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_NAME_ASC
-  PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_NAME_DESC
   PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_SYMBOL_ASC
   PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_SYMBOL_DESC
-  PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_USE_BASE_ASC
-  PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_USE_BASE_DESC
-  PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_USE_PREFIX_ASC
-  PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_USE_PREFIX_DESC
-  PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_VALID_FROM_ASC
-  PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_VALID_FROM_DESC
-  PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_VALID_TO_ASC
-  PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_VALID_TO_DESC
-  PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_VISIBLE_ASC
-  PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_VISIBLE_DESC
-  PLATBY_RAW_BY_PI_ID_RAW__PR_DISCARDED_ASC
-  PLATBY_RAW_BY_PI_ID_RAW__PR_DISCARDED_DESC
   PLATBY_RAW_BY_PI_ID_RAW__PR_HASH_ASC
   PLATBY_RAW_BY_PI_ID_RAW__PR_HASH_DESC
   PLATBY_RAW_BY_PI_ID_RAW__PR_ID_ASC
   PLATBY_RAW_BY_PI_ID_RAW__PR_ID_DESC
-  PLATBY_RAW_BY_PI_ID_RAW__PR_RAW_ASC
-  PLATBY_RAW_BY_PI_ID_RAW__PR_RAW_DESC
-  PLATBY_RAW_BY_PI_ID_RAW__PR_SORTED_ASC
-  PLATBY_RAW_BY_PI_ID_RAW__PR_SORTED_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   USER_BY_PI_ID_USER__U_BAN_ASC
   USER_BY_PI_ID_USER__U_BAN_DESC
-  USER_BY_PI_ID_USER__U_CITY_ASC
-  USER_BY_PI_ID_USER__U_CITY_DESC
   USER_BY_PI_ID_USER__U_CONFIRMED_ASC
   USER_BY_PI_ID_USER__U_CONFIRMED_DESC
-  USER_BY_PI_ID_USER__U_CONSCRIPTION_NUMBER_ASC
-  USER_BY_PI_ID_USER__U_CONSCRIPTION_NUMBER_DESC
-  USER_BY_PI_ID_USER__U_CREATED_AT_ASC
-  USER_BY_PI_ID_USER__U_CREATED_AT_DESC
-  USER_BY_PI_ID_USER__U_DANCER_ASC
-  USER_BY_PI_ID_USER__U_DANCER_DESC
-  USER_BY_PI_ID_USER__U_DISTRICT_ASC
-  USER_BY_PI_ID_USER__U_DISTRICT_DESC
-  USER_BY_PI_ID_USER__U_EMAIL_ASC
-  USER_BY_PI_ID_USER__U_EMAIL_DESC
-  USER_BY_PI_ID_USER__U_GDPR_SIGNED_AT_ASC
-  USER_BY_PI_ID_USER__U_GDPR_SIGNED_AT_DESC
   USER_BY_PI_ID_USER__U_GROUP_ASC
   USER_BY_PI_ID_USER__U_GROUP_DESC
   USER_BY_PI_ID_USER__U_ID_ASC
   USER_BY_PI_ID_USER__U_ID_DESC
   USER_BY_PI_ID_USER__U_JMENO_ASC
   USER_BY_PI_ID_USER__U_JMENO_DESC
-  USER_BY_PI_ID_USER__U_LEVEL_ASC
-  USER_BY_PI_ID_USER__U_LEVEL_DESC
-  USER_BY_PI_ID_USER__U_LOCK_ASC
-  USER_BY_PI_ID_USER__U_LOCK_DESC
   USER_BY_PI_ID_USER__U_LOGIN_ASC
   USER_BY_PI_ID_USER__U_LOGIN_DESC
-  USER_BY_PI_ID_USER__U_MEMBER_SINCE_ASC
-  USER_BY_PI_ID_USER__U_MEMBER_SINCE_DESC
-  USER_BY_PI_ID_USER__U_MEMBER_UNTIL_ASC
-  USER_BY_PI_ID_USER__U_MEMBER_UNTIL_DESC
   USER_BY_PI_ID_USER__U_NAROZENI_ASC
   USER_BY_PI_ID_USER__U_NAROZENI_DESC
-  USER_BY_PI_ID_USER__U_NATIONALITY_ASC
-  USER_BY_PI_ID_USER__U_NATIONALITY_DESC
-  USER_BY_PI_ID_USER__U_ORIENTATION_NUMBER_ASC
-  USER_BY_PI_ID_USER__U_ORIENTATION_NUMBER_DESC
-  USER_BY_PI_ID_USER__U_PASS_ASC
-  USER_BY_PI_ID_USER__U_PASS_DESC
-  USER_BY_PI_ID_USER__U_POHLAVI_ASC
-  USER_BY_PI_ID_USER__U_POHLAVI_DESC
-  USER_BY_PI_ID_USER__U_POSTAL_CODE_ASC
-  USER_BY_PI_ID_USER__U_POSTAL_CODE_DESC
-  USER_BY_PI_ID_USER__U_POZNAMKY_ASC
-  USER_BY_PI_ID_USER__U_POZNAMKY_DESC
   USER_BY_PI_ID_USER__U_PRIJMENI_ASC
   USER_BY_PI_ID_USER__U_PRIJMENI_DESC
-  USER_BY_PI_ID_USER__U_RODNE_CISLO_ASC
-  USER_BY_PI_ID_USER__U_RODNE_CISLO_DESC
   USER_BY_PI_ID_USER__U_SKUPINA_ASC
   USER_BY_PI_ID_USER__U_SKUPINA_DESC
-  USER_BY_PI_ID_USER__U_STREET_ASC
-  USER_BY_PI_ID_USER__U_STREET_DESC
   USER_BY_PI_ID_USER__U_SYSTEM_ASC
   USER_BY_PI_ID_USER__U_SYSTEM_DESC
-  USER_BY_PI_ID_USER__U_TEACHER_ASC
-  USER_BY_PI_ID_USER__U_TEACHER_DESC
-  USER_BY_PI_ID_USER__U_TELEFON_ASC
-  USER_BY_PI_ID_USER__U_TELEFON_DESC
-  USER_BY_PI_ID_USER__U_TIMESTAMP_ASC
-  USER_BY_PI_ID_USER__U_TIMESTAMP_DESC
 }
 
 type PlatbyRaw {
@@ -9762,20 +7999,11 @@ A condition to be used against `PlatbyRaw` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input PlatbyRawCondition {
-  """Checks for equality with the object’s `prDiscarded` field."""
-  prDiscarded: Boolean
-
   """Checks for equality with the object’s `prHash` field."""
   prHash: String
 
   """Checks for equality with the object’s `prId` field."""
   prId: BigInt
-
-  """Checks for equality with the object’s `prRaw` field."""
-  prRaw: String
-
-  """Checks for equality with the object’s `prSorted` field."""
-  prSorted: Boolean
 }
 
 """An input for mutations affecting `PlatbyRaw`"""
@@ -9829,16 +8057,10 @@ enum PlatbyRawsOrderBy {
   NATURAL
   PLATBY_ITEMS_BY_PI_ID_RAW__COUNT_ASC
   PLATBY_ITEMS_BY_PI_ID_RAW__COUNT_DESC
-  PR_DISCARDED_ASC
-  PR_DISCARDED_DESC
   PR_HASH_ASC
   PR_HASH_DESC
   PR_ID_ASC
   PR_ID_DESC
-  PR_RAW_ASC
-  PR_RAW_DESC
-  PR_SORTED_ASC
-  PR_SORTED_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -9910,11 +8132,6 @@ type Query {
     """Read all values in the set before (above) this cursor."""
     before: Cursor
 
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AkceItemCondition
-
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -9938,11 +8155,6 @@ type Query {
 
     """Read all values in the set before (above) this cursor."""
     before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AkceCondition
 
     """Only read the first `n` values of the set."""
     first: Int
@@ -10374,11 +8586,6 @@ type Query {
 
     """Read all values in the set before (above) this cursor."""
     before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: MemberCondition
 
     """Only read the first `n` values of the set."""
     first: Int
@@ -11518,10 +9725,6 @@ type RoomAttachmentsEdge {
 enum RoomAttachmentsOrderBy {
   ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_ASC
   ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_DESC
-  ATTACHMENT_BY_OBJECT_NAME__PREVIEW_OBJECT_NAME_ASC
-  ATTACHMENT_BY_OBJECT_NAME__PREVIEW_OBJECT_NAME_DESC
-  ATTACHMENT_BY_OBJECT_NAME__UPLOADED_AT_ASC
-  ATTACHMENT_BY_OBJECT_NAME__UPLOADED_AT_DESC
   ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_ASC
   ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_DESC
   NATURAL
@@ -11529,14 +9732,10 @@ enum RoomAttachmentsOrderBy {
   OBJECT_NAME_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  ROOM_BY_ROOM_ID__DESCRIPTION_ASC
-  ROOM_BY_ROOM_ID__DESCRIPTION_DESC
   ROOM_BY_ROOM_ID__ID_ASC
   ROOM_BY_ROOM_ID__ID_DESC
   ROOM_BY_ROOM_ID__LOCATION_ASC
   ROOM_BY_ROOM_ID__LOCATION_DESC
-  ROOM_BY_ROOM_ID__NAME_ASC
-  ROOM_BY_ROOM_ID__NAME_DESC
   ROOM_ID_ASC
   ROOM_ID_DESC
 }
@@ -11545,17 +9744,11 @@ enum RoomAttachmentsOrderBy {
 A condition to be used against `Room` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
 input RoomCondition {
-  """Checks for equality with the object’s `description` field."""
-  description: JSON
-
   """Checks for equality with the object’s `id` field."""
   id: BigInt
 
   """Checks for equality with the object’s `location` field."""
   location: BigInt
-
-  """Checks for equality with the object’s `name` field."""
-  name: String
 }
 
 """An input for mutations affecting `Room`"""
@@ -11602,22 +9795,14 @@ type RoomsEdge {
 
 """Methods to use when ordering `Room`."""
 enum RoomsOrderBy {
-  DESCRIPTION_ASC
-  DESCRIPTION_DESC
   ID_ASC
   ID_DESC
   LOCATION_ASC
-  LOCATION_BY_LOCATION__DESCRIPTION_ASC
-  LOCATION_BY_LOCATION__DESCRIPTION_DESC
   LOCATION_BY_LOCATION__ID_ASC
   LOCATION_BY_LOCATION__ID_DESC
-  LOCATION_BY_LOCATION__NAME_ASC
-  LOCATION_BY_LOCATION__NAME_DESC
   LOCATION_BY_LOCATION__TENANT_ASC
   LOCATION_BY_LOCATION__TENANT_DESC
   LOCATION_DESC
-  NAME_ASC
-  NAME_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
@@ -11677,20 +9862,8 @@ input RozpiCondition {
   """Checks for equality with the object’s `rId` field."""
   rId: BigInt
 
-  """Checks for equality with the object’s `rKde` field."""
-  rKde: String
-
-  """Checks for equality with the object’s `rLock` field."""
-  rLock: Boolean
-
-  """Checks for equality with the object’s `rTimestamp` field."""
-  rTimestamp: Datetime
-
   """Checks for equality with the object’s `rTrener` field."""
   rTrener: BigInt
-
-  """Checks for equality with the object’s `rVisible` field."""
-  rVisible: Boolean
 }
 
 """An input for mutations affecting `Rozpi`"""
@@ -11762,17 +9935,11 @@ A condition to be used against `RozpisItem` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input RozpisItemCondition {
-  """Checks for equality with the object’s `riDo` field."""
-  riDo: Time
-
   """Checks for equality with the object’s `riId` field."""
   riId: BigInt
 
   """Checks for equality with the object’s `riIdRodic` field."""
   riIdRodic: BigInt
-
-  """Checks for equality with the object’s `riLock` field."""
-  riLock: Boolean
 
   """Checks for equality with the object’s `riOd` field."""
   riOd: Time
@@ -11832,8 +9999,6 @@ type RozpisItemsEdge {
 """Methods to use when ordering `RozpisItem`."""
 enum RozpisItemsOrderBy {
   NATURAL
-  PARY_BY_RI_PARTNER__P_ARCHIV_ASC
-  PARY_BY_RI_PARTNER__P_ARCHIV_DESC
   PARY_BY_RI_PARTNER__P_HODNOCENI_ASC
   PARY_BY_RI_PARTNER__P_HODNOCENI_DESC
   PARY_BY_RI_PARTNER__P_ID_ASC
@@ -11842,32 +10007,12 @@ enum RozpisItemsOrderBy {
   PARY_BY_RI_PARTNER__P_ID_PARTNER_DESC
   PARY_BY_RI_PARTNER__P_ID_PARTNERKA_ASC
   PARY_BY_RI_PARTNER__P_ID_PARTNERKA_DESC
-  PARY_BY_RI_PARTNER__P_LAT_BODY_ASC
-  PARY_BY_RI_PARTNER__P_LAT_BODY_DESC
-  PARY_BY_RI_PARTNER__P_LAT_FINALE_ASC
-  PARY_BY_RI_PARTNER__P_LAT_FINALE_DESC
-  PARY_BY_RI_PARTNER__P_LAT_TRIDA_ASC
-  PARY_BY_RI_PARTNER__P_LAT_TRIDA_DESC
-  PARY_BY_RI_PARTNER__P_STT_BODY_ASC
-  PARY_BY_RI_PARTNER__P_STT_BODY_DESC
-  PARY_BY_RI_PARTNER__P_STT_FINALE_ASC
-  PARY_BY_RI_PARTNER__P_STT_FINALE_DESC
-  PARY_BY_RI_PARTNER__P_STT_TRIDA_ASC
-  PARY_BY_RI_PARTNER__P_STT_TRIDA_DESC
-  PARY_BY_RI_PARTNER__P_TIMESTAMP_ADD_ASC
-  PARY_BY_RI_PARTNER__P_TIMESTAMP_ADD_DESC
-  PARY_BY_RI_PARTNER__P_TIMESTAMP_ARCHIVE_ASC
-  PARY_BY_RI_PARTNER__P_TIMESTAMP_ARCHIVE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  RI_DO_ASC
-  RI_DO_DESC
   RI_ID_ASC
   RI_ID_DESC
   RI_ID_RODIC_ASC
   RI_ID_RODIC_DESC
-  RI_LOCK_ASC
-  RI_LOCK_DESC
   RI_OD_ASC
   RI_OD_DESC
   RI_PARTNER_ASC
@@ -11876,16 +10021,8 @@ enum RozpisItemsOrderBy {
   ROZPI_BY_RI_ID_RODIC__R_DATUM_DESC
   ROZPI_BY_RI_ID_RODIC__R_ID_ASC
   ROZPI_BY_RI_ID_RODIC__R_ID_DESC
-  ROZPI_BY_RI_ID_RODIC__R_KDE_ASC
-  ROZPI_BY_RI_ID_RODIC__R_KDE_DESC
-  ROZPI_BY_RI_ID_RODIC__R_LOCK_ASC
-  ROZPI_BY_RI_ID_RODIC__R_LOCK_DESC
-  ROZPI_BY_RI_ID_RODIC__R_TIMESTAMP_ASC
-  ROZPI_BY_RI_ID_RODIC__R_TIMESTAMP_DESC
   ROZPI_BY_RI_ID_RODIC__R_TRENER_ASC
   ROZPI_BY_RI_ID_RODIC__R_TRENER_DESC
-  ROZPI_BY_RI_ID_RODIC__R_VISIBLE_ASC
-  ROZPI_BY_RI_ID_RODIC__R_VISIBLE_DESC
 }
 
 """Methods to use when ordering `Rozpi`."""
@@ -11897,82 +10034,30 @@ enum RozpisOrderBy {
   R_DATUM_DESC
   R_ID_ASC
   R_ID_DESC
-  R_KDE_ASC
-  R_KDE_DESC
-  R_LOCK_ASC
-  R_LOCK_DESC
-  R_TIMESTAMP_ASC
-  R_TIMESTAMP_DESC
   R_TRENER_ASC
   R_TRENER_DESC
-  R_VISIBLE_ASC
-  R_VISIBLE_DESC
   ROZPIS_ITEMS_BY_RI_ID_RODIC__COUNT_ASC
   ROZPIS_ITEMS_BY_RI_ID_RODIC__COUNT_DESC
   USER_BY_R_TRENER__U_BAN_ASC
   USER_BY_R_TRENER__U_BAN_DESC
-  USER_BY_R_TRENER__U_CITY_ASC
-  USER_BY_R_TRENER__U_CITY_DESC
   USER_BY_R_TRENER__U_CONFIRMED_ASC
   USER_BY_R_TRENER__U_CONFIRMED_DESC
-  USER_BY_R_TRENER__U_CONSCRIPTION_NUMBER_ASC
-  USER_BY_R_TRENER__U_CONSCRIPTION_NUMBER_DESC
-  USER_BY_R_TRENER__U_CREATED_AT_ASC
-  USER_BY_R_TRENER__U_CREATED_AT_DESC
-  USER_BY_R_TRENER__U_DANCER_ASC
-  USER_BY_R_TRENER__U_DANCER_DESC
-  USER_BY_R_TRENER__U_DISTRICT_ASC
-  USER_BY_R_TRENER__U_DISTRICT_DESC
-  USER_BY_R_TRENER__U_EMAIL_ASC
-  USER_BY_R_TRENER__U_EMAIL_DESC
-  USER_BY_R_TRENER__U_GDPR_SIGNED_AT_ASC
-  USER_BY_R_TRENER__U_GDPR_SIGNED_AT_DESC
   USER_BY_R_TRENER__U_GROUP_ASC
   USER_BY_R_TRENER__U_GROUP_DESC
   USER_BY_R_TRENER__U_ID_ASC
   USER_BY_R_TRENER__U_ID_DESC
   USER_BY_R_TRENER__U_JMENO_ASC
   USER_BY_R_TRENER__U_JMENO_DESC
-  USER_BY_R_TRENER__U_LEVEL_ASC
-  USER_BY_R_TRENER__U_LEVEL_DESC
-  USER_BY_R_TRENER__U_LOCK_ASC
-  USER_BY_R_TRENER__U_LOCK_DESC
   USER_BY_R_TRENER__U_LOGIN_ASC
   USER_BY_R_TRENER__U_LOGIN_DESC
-  USER_BY_R_TRENER__U_MEMBER_SINCE_ASC
-  USER_BY_R_TRENER__U_MEMBER_SINCE_DESC
-  USER_BY_R_TRENER__U_MEMBER_UNTIL_ASC
-  USER_BY_R_TRENER__U_MEMBER_UNTIL_DESC
   USER_BY_R_TRENER__U_NAROZENI_ASC
   USER_BY_R_TRENER__U_NAROZENI_DESC
-  USER_BY_R_TRENER__U_NATIONALITY_ASC
-  USER_BY_R_TRENER__U_NATIONALITY_DESC
-  USER_BY_R_TRENER__U_ORIENTATION_NUMBER_ASC
-  USER_BY_R_TRENER__U_ORIENTATION_NUMBER_DESC
-  USER_BY_R_TRENER__U_PASS_ASC
-  USER_BY_R_TRENER__U_PASS_DESC
-  USER_BY_R_TRENER__U_POHLAVI_ASC
-  USER_BY_R_TRENER__U_POHLAVI_DESC
-  USER_BY_R_TRENER__U_POSTAL_CODE_ASC
-  USER_BY_R_TRENER__U_POSTAL_CODE_DESC
-  USER_BY_R_TRENER__U_POZNAMKY_ASC
-  USER_BY_R_TRENER__U_POZNAMKY_DESC
   USER_BY_R_TRENER__U_PRIJMENI_ASC
   USER_BY_R_TRENER__U_PRIJMENI_DESC
-  USER_BY_R_TRENER__U_RODNE_CISLO_ASC
-  USER_BY_R_TRENER__U_RODNE_CISLO_DESC
   USER_BY_R_TRENER__U_SKUPINA_ASC
   USER_BY_R_TRENER__U_SKUPINA_DESC
-  USER_BY_R_TRENER__U_STREET_ASC
-  USER_BY_R_TRENER__U_STREET_DESC
   USER_BY_R_TRENER__U_SYSTEM_ASC
   USER_BY_R_TRENER__U_SYSTEM_DESC
-  USER_BY_R_TRENER__U_TEACHER_ASC
-  USER_BY_R_TRENER__U_TEACHER_DESC
-  USER_BY_R_TRENER__U_TELEFON_ASC
-  USER_BY_R_TRENER__U_TELEFON_DESC
-  USER_BY_R_TRENER__U_TIMESTAMP_ASC
-  USER_BY_R_TRENER__U_TIMESTAMP_DESC
 }
 
 type Session {
@@ -11991,12 +10076,6 @@ A condition to be used against `Session` object types. All fields are tested for
 input SessionCondition {
   """Checks for equality with the object’s `ssId` field."""
   ssId: String
-
-  """Checks for equality with the object’s `ssLifetime` field."""
-  ssLifetime: BigInt
-
-  """Checks for equality with the object’s `ssUpdatedAt` field."""
-  ssUpdatedAt: Datetime
 
   """Checks for equality with the object’s `ssUser` field."""
   ssUser: BigInt
@@ -12053,76 +10132,28 @@ enum SessionsOrderBy {
   PRIMARY_KEY_DESC
   SS_ID_ASC
   SS_ID_DESC
-  SS_LIFETIME_ASC
-  SS_LIFETIME_DESC
-  SS_UPDATED_AT_ASC
-  SS_UPDATED_AT_DESC
   SS_USER_ASC
   SS_USER_DESC
   USER_BY_SS_USER__U_BAN_ASC
   USER_BY_SS_USER__U_BAN_DESC
-  USER_BY_SS_USER__U_CITY_ASC
-  USER_BY_SS_USER__U_CITY_DESC
   USER_BY_SS_USER__U_CONFIRMED_ASC
   USER_BY_SS_USER__U_CONFIRMED_DESC
-  USER_BY_SS_USER__U_CONSCRIPTION_NUMBER_ASC
-  USER_BY_SS_USER__U_CONSCRIPTION_NUMBER_DESC
-  USER_BY_SS_USER__U_CREATED_AT_ASC
-  USER_BY_SS_USER__U_CREATED_AT_DESC
-  USER_BY_SS_USER__U_DANCER_ASC
-  USER_BY_SS_USER__U_DANCER_DESC
-  USER_BY_SS_USER__U_DISTRICT_ASC
-  USER_BY_SS_USER__U_DISTRICT_DESC
-  USER_BY_SS_USER__U_EMAIL_ASC
-  USER_BY_SS_USER__U_EMAIL_DESC
-  USER_BY_SS_USER__U_GDPR_SIGNED_AT_ASC
-  USER_BY_SS_USER__U_GDPR_SIGNED_AT_DESC
   USER_BY_SS_USER__U_GROUP_ASC
   USER_BY_SS_USER__U_GROUP_DESC
   USER_BY_SS_USER__U_ID_ASC
   USER_BY_SS_USER__U_ID_DESC
   USER_BY_SS_USER__U_JMENO_ASC
   USER_BY_SS_USER__U_JMENO_DESC
-  USER_BY_SS_USER__U_LEVEL_ASC
-  USER_BY_SS_USER__U_LEVEL_DESC
-  USER_BY_SS_USER__U_LOCK_ASC
-  USER_BY_SS_USER__U_LOCK_DESC
   USER_BY_SS_USER__U_LOGIN_ASC
   USER_BY_SS_USER__U_LOGIN_DESC
-  USER_BY_SS_USER__U_MEMBER_SINCE_ASC
-  USER_BY_SS_USER__U_MEMBER_SINCE_DESC
-  USER_BY_SS_USER__U_MEMBER_UNTIL_ASC
-  USER_BY_SS_USER__U_MEMBER_UNTIL_DESC
   USER_BY_SS_USER__U_NAROZENI_ASC
   USER_BY_SS_USER__U_NAROZENI_DESC
-  USER_BY_SS_USER__U_NATIONALITY_ASC
-  USER_BY_SS_USER__U_NATIONALITY_DESC
-  USER_BY_SS_USER__U_ORIENTATION_NUMBER_ASC
-  USER_BY_SS_USER__U_ORIENTATION_NUMBER_DESC
-  USER_BY_SS_USER__U_PASS_ASC
-  USER_BY_SS_USER__U_PASS_DESC
-  USER_BY_SS_USER__U_POHLAVI_ASC
-  USER_BY_SS_USER__U_POHLAVI_DESC
-  USER_BY_SS_USER__U_POSTAL_CODE_ASC
-  USER_BY_SS_USER__U_POSTAL_CODE_DESC
-  USER_BY_SS_USER__U_POZNAMKY_ASC
-  USER_BY_SS_USER__U_POZNAMKY_DESC
   USER_BY_SS_USER__U_PRIJMENI_ASC
   USER_BY_SS_USER__U_PRIJMENI_DESC
-  USER_BY_SS_USER__U_RODNE_CISLO_ASC
-  USER_BY_SS_USER__U_RODNE_CISLO_DESC
   USER_BY_SS_USER__U_SKUPINA_ASC
   USER_BY_SS_USER__U_SKUPINA_DESC
-  USER_BY_SS_USER__U_STREET_ASC
-  USER_BY_SS_USER__U_STREET_DESC
   USER_BY_SS_USER__U_SYSTEM_ASC
   USER_BY_SS_USER__U_SYSTEM_DESC
-  USER_BY_SS_USER__U_TEACHER_ASC
-  USER_BY_SS_USER__U_TEACHER_DESC
-  USER_BY_SS_USER__U_TELEFON_ASC
-  USER_BY_SS_USER__U_TELEFON_DESC
-  USER_BY_SS_USER__U_TIMESTAMP_ASC
-  USER_BY_SS_USER__U_TIMESTAMP_DESC
 }
 
 """A connection to a list of `Skupiny` values."""
@@ -12154,21 +10185,15 @@ type SkupiniesEdge {
 """Methods to use when ordering `Skupiny`."""
 enum SkupiniesOrderBy {
   COHORT_GROUP_ASC
-  COHORT_GROUP_BY_COHORT_GROUP__DESCRIPTION_ASC
-  COHORT_GROUP_BY_COHORT_GROUP__DESCRIPTION_DESC
   COHORT_GROUP_BY_COHORT_GROUP__ID_ASC
   COHORT_GROUP_BY_COHORT_GROUP__ID_DESC
   COHORT_GROUP_BY_COHORT_GROUP__IS_PUBLIC_ASC
   COHORT_GROUP_BY_COHORT_GROUP__IS_PUBLIC_DESC
-  COHORT_GROUP_BY_COHORT_GROUP__NAME_ASC
-  COHORT_GROUP_BY_COHORT_GROUP__NAME_DESC
   COHORT_GROUP_BY_COHORT_GROUP__ORDERING_ASC
   COHORT_GROUP_BY_COHORT_GROUP__ORDERING_DESC
   COHORT_GROUP_BY_COHORT_GROUP__TENANT_ASC
   COHORT_GROUP_BY_COHORT_GROUP__TENANT_DESC
   COHORT_GROUP_DESC
-  INTERNAL_INFO_ASC
-  INTERNAL_INFO_DESC
   NATURAL
   ORDERING_ASC
   ORDERING_DESC
@@ -12176,18 +10201,8 @@ enum SkupiniesOrderBy {
   PLATBY_GROUP_SKUPINAS_BY_PGS_ID_SKUPINA__COUNT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  S_COLOR_RGB_ASC
-  S_COLOR_RGB_DESC
-  S_COLOR_TEXT_ASC
-  S_COLOR_TEXT_DESC
-  S_DESCRIPTION_ASC
-  S_DESCRIPTION_DESC
   S_ID_ASC
   S_ID_DESC
-  S_LOCATION_ASC
-  S_LOCATION_DESC
-  S_NAME_ASC
-  S_NAME_DESC
   S_VISIBLE_ASC
   S_VISIBLE_DESC
   UPOZORNENI_SKUPINIES_BY_UPS_ID_SKUPINA__COUNT_ASC
@@ -12306,29 +10321,11 @@ input SkupinyCondition {
   """Checks for equality with the object’s `cohortGroup` field."""
   cohortGroup: BigInt
 
-  """Checks for equality with the object’s `internalInfo` field."""
-  internalInfo: String
-
   """Checks for equality with the object’s `ordering` field."""
   ordering: Int
 
-  """Checks for equality with the object’s `sColorRgb` field."""
-  sColorRgb: String
-
-  """Checks for equality with the object’s `sColorText` field."""
-  sColorText: String
-
-  """Checks for equality with the object’s `sDescription` field."""
-  sDescription: String
-
   """Checks for equality with the object’s `sId` field."""
   sId: BigInt
-
-  """Checks for equality with the object’s `sLocation` field."""
-  sLocation: String
-
-  """Checks for equality with the object’s `sName` field."""
-  sName: String
 
   """Checks for equality with the object’s `sVisible` field."""
   sVisible: Boolean
@@ -12534,9 +10531,6 @@ input TenantAttachmentCondition {
 
   """Checks for equality with the object’s `tenantId` field."""
   tenantId: BigInt
-
-  """Checks for equality with the object’s `type` field."""
-  type: TenantAttachmentType
 }
 
 """An input for mutations affecting `TenantAttachment`"""
@@ -12587,10 +10581,6 @@ type TenantAttachmentsEdge {
 enum TenantAttachmentsOrderBy {
   ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_ASC
   ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_DESC
-  ATTACHMENT_BY_OBJECT_NAME__PREVIEW_OBJECT_NAME_ASC
-  ATTACHMENT_BY_OBJECT_NAME__PREVIEW_OBJECT_NAME_DESC
-  ATTACHMENT_BY_OBJECT_NAME__UPLOADED_AT_ASC
-  ATTACHMENT_BY_OBJECT_NAME__UPLOADED_AT_DESC
   ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_ASC
   ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_DESC
   NATURAL
@@ -12600,14 +10590,8 @@ enum TenantAttachmentsOrderBy {
   PRIMARY_KEY_DESC
   TENANT_BY_TENANT_ID__ID_ASC
   TENANT_BY_TENANT_ID__ID_DESC
-  TENANT_BY_TENANT_ID__MEMBER_INFO_ASC
-  TENANT_BY_TENANT_ID__MEMBER_INFO_DESC
-  TENANT_BY_TENANT_ID__NAME_ASC
-  TENANT_BY_TENANT_ID__NAME_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
-  TYPE_ASC
-  TYPE_DESC
 }
 
 enum TenantAttachmentType {
@@ -12622,12 +10606,6 @@ A condition to be used against `Tenant` object types. All fields are tested for 
 input TenantCondition {
   """Checks for equality with the object’s `id` field."""
   id: BigInt
-
-  """Checks for equality with the object’s `memberInfo` field."""
-  memberInfo: String
-
-  """Checks for equality with the object’s `name` field."""
-  name: String
 }
 
 """An input for mutations affecting `Tenant`"""
@@ -12675,24 +10653,14 @@ type TenantPeopleEdge {
 """Methods to use when ordering `TenantPerson`."""
 enum TenantPeopleOrderBy {
   NATURAL
-  PERSON_BY_PERSON_ID__FIRST_NAME_ASC
-  PERSON_BY_PERSON_ID__FIRST_NAME_DESC
-  PERSON_BY_PERSON_ID__GENDER_ASC
-  PERSON_BY_PERSON_ID__GENDER_DESC
   PERSON_BY_PERSON_ID__ID_ASC
   PERSON_BY_PERSON_ID__ID_DESC
-  PERSON_BY_PERSON_ID__LAST_NAME_ASC
-  PERSON_BY_PERSON_ID__LAST_NAME_DESC
   PERSON_ID_ASC
   PERSON_ID_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   TENANT_BY_TENANT_ID__ID_ASC
   TENANT_BY_TENANT_ID__ID_DESC
-  TENANT_BY_TENANT_ID__MEMBER_INFO_ASC
-  TENANT_BY_TENANT_ID__MEMBER_INFO_DESC
-  TENANT_BY_TENANT_ID__NAME_ASC
-  TENANT_BY_TENANT_ID__NAME_DESC
   TENANT_ID_ASC
   TENANT_ID_DESC
 }
@@ -12767,10 +10735,6 @@ enum TenantsOrderBy {
   ID_DESC
   LOCATIONS_BY_TENANT__COUNT_ASC
   LOCATIONS_BY_TENANT__COUNT_DESC
-  MEMBER_INFO_ASC
-  MEMBER_INFO_DESC
-  NAME_ASC
-  NAME_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
@@ -14492,35 +12456,11 @@ A condition to be used against `Upozorneni` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input UpozorneniCondition {
-  """Checks for equality with the object’s `isVisible` field."""
-  isVisible: Boolean
-
-  """Checks for equality with the object’s `scheduledSince` field."""
-  scheduledSince: Datetime
-
-  """Checks for equality with the object’s `scheduledUntil` field."""
-  scheduledUntil: Datetime
-
-  """Checks for equality with the object’s `upBarvy` field."""
-  upBarvy: BigInt
-
   """Checks for equality with the object’s `upId` field."""
   upId: BigInt
 
   """Checks for equality with the object’s `upKdo` field."""
   upKdo: BigInt
-
-  """Checks for equality with the object’s `upLock` field."""
-  upLock: Boolean
-
-  """Checks for equality with the object’s `upNadpis` field."""
-  upNadpis: String
-
-  """Checks for equality with the object’s `upText` field."""
-  upText: String
-
-  """Checks for equality with the object’s `upTimestamp` field."""
-  upTimestamp: Datetime
 
   """Checks for equality with the object’s `upTimestampAdd` field."""
   upTimestampAdd: Datetime
@@ -14619,56 +12559,24 @@ enum UpozorneniSkupiniesOrderBy {
   PRIMARY_KEY_DESC
   SKUPINY_BY_UPS_ID_SKUPINA__COHORT_GROUP_ASC
   SKUPINY_BY_UPS_ID_SKUPINA__COHORT_GROUP_DESC
-  SKUPINY_BY_UPS_ID_SKUPINA__INTERNAL_INFO_ASC
-  SKUPINY_BY_UPS_ID_SKUPINA__INTERNAL_INFO_DESC
   SKUPINY_BY_UPS_ID_SKUPINA__ORDERING_ASC
   SKUPINY_BY_UPS_ID_SKUPINA__ORDERING_DESC
-  SKUPINY_BY_UPS_ID_SKUPINA__S_COLOR_RGB_ASC
-  SKUPINY_BY_UPS_ID_SKUPINA__S_COLOR_RGB_DESC
-  SKUPINY_BY_UPS_ID_SKUPINA__S_COLOR_TEXT_ASC
-  SKUPINY_BY_UPS_ID_SKUPINA__S_COLOR_TEXT_DESC
-  SKUPINY_BY_UPS_ID_SKUPINA__S_DESCRIPTION_ASC
-  SKUPINY_BY_UPS_ID_SKUPINA__S_DESCRIPTION_DESC
   SKUPINY_BY_UPS_ID_SKUPINA__S_ID_ASC
   SKUPINY_BY_UPS_ID_SKUPINA__S_ID_DESC
-  SKUPINY_BY_UPS_ID_SKUPINA__S_LOCATION_ASC
-  SKUPINY_BY_UPS_ID_SKUPINA__S_LOCATION_DESC
-  SKUPINY_BY_UPS_ID_SKUPINA__S_NAME_ASC
-  SKUPINY_BY_UPS_ID_SKUPINA__S_NAME_DESC
   SKUPINY_BY_UPS_ID_SKUPINA__S_VISIBLE_ASC
   SKUPINY_BY_UPS_ID_SKUPINA__S_VISIBLE_DESC
-  UPOZORNENI_BY_UPS_ID_RODIC__IS_VISIBLE_ASC
-  UPOZORNENI_BY_UPS_ID_RODIC__IS_VISIBLE_DESC
-  UPOZORNENI_BY_UPS_ID_RODIC__SCHEDULED_SINCE_ASC
-  UPOZORNENI_BY_UPS_ID_RODIC__SCHEDULED_SINCE_DESC
-  UPOZORNENI_BY_UPS_ID_RODIC__SCHEDULED_UNTIL_ASC
-  UPOZORNENI_BY_UPS_ID_RODIC__SCHEDULED_UNTIL_DESC
-  UPOZORNENI_BY_UPS_ID_RODIC__UP_BARVY_ASC
-  UPOZORNENI_BY_UPS_ID_RODIC__UP_BARVY_DESC
   UPOZORNENI_BY_UPS_ID_RODIC__UP_ID_ASC
   UPOZORNENI_BY_UPS_ID_RODIC__UP_ID_DESC
   UPOZORNENI_BY_UPS_ID_RODIC__UP_KDO_ASC
   UPOZORNENI_BY_UPS_ID_RODIC__UP_KDO_DESC
-  UPOZORNENI_BY_UPS_ID_RODIC__UP_LOCK_ASC
-  UPOZORNENI_BY_UPS_ID_RODIC__UP_LOCK_DESC
-  UPOZORNENI_BY_UPS_ID_RODIC__UP_NADPIS_ASC
-  UPOZORNENI_BY_UPS_ID_RODIC__UP_NADPIS_DESC
-  UPOZORNENI_BY_UPS_ID_RODIC__UP_TEXT_ASC
-  UPOZORNENI_BY_UPS_ID_RODIC__UP_TEXT_DESC
   UPOZORNENI_BY_UPS_ID_RODIC__UP_TIMESTAMP_ADD_ASC
   UPOZORNENI_BY_UPS_ID_RODIC__UP_TIMESTAMP_ADD_DESC
-  UPOZORNENI_BY_UPS_ID_RODIC__UP_TIMESTAMP_ASC
-  UPOZORNENI_BY_UPS_ID_RODIC__UP_TIMESTAMP_DESC
-  UPS_COLOR_ASC
-  UPS_COLOR_DESC
   UPS_ID_ASC
   UPS_ID_DESC
   UPS_ID_RODIC_ASC
   UPS_ID_RODIC_DESC
   UPS_ID_SKUPINA_ASC
   UPS_ID_SKUPINA_DESC
-  UPS_POPIS_ASC
-  UPS_POPIS_DESC
 }
 
 type UpozorneniSkupiny {
@@ -14691,9 +12599,6 @@ A condition to be used against `UpozorneniSkupiny` object types. All fields are
 tested for equality and combined with a logical ‘and.’
 """
 input UpozorneniSkupinyCondition {
-  """Checks for equality with the object’s `upsColor` field."""
-  upsColor: String
-
   """Checks for equality with the object’s `upsId` field."""
   upsId: BigInt
 
@@ -14702,9 +12607,6 @@ input UpozorneniSkupinyCondition {
 
   """Checks for equality with the object’s `upsIdSkupina` field."""
   upsIdSkupina: BigInt
-
-  """Checks for equality with the object’s `upsPopis` field."""
-  upsPopis: String
 }
 
 """An input for mutations affecting `UpozorneniSkupiny`"""
@@ -14729,97 +12631,37 @@ input UpozorneniSkupinyPatch {
 
 """Methods to use when ordering `Upozorneni`."""
 enum UpozornenisOrderBy {
-  IS_VISIBLE_ASC
-  IS_VISIBLE_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
-  SCHEDULED_SINCE_ASC
-  SCHEDULED_SINCE_DESC
-  SCHEDULED_UNTIL_ASC
-  SCHEDULED_UNTIL_DESC
-  UP_BARVY_ASC
-  UP_BARVY_DESC
   UP_ID_ASC
   UP_ID_DESC
   UP_KDO_ASC
   UP_KDO_DESC
-  UP_LOCK_ASC
-  UP_LOCK_DESC
-  UP_NADPIS_ASC
-  UP_NADPIS_DESC
-  UP_TEXT_ASC
-  UP_TEXT_DESC
   UP_TIMESTAMP_ADD_ASC
   UP_TIMESTAMP_ADD_DESC
-  UP_TIMESTAMP_ASC
-  UP_TIMESTAMP_DESC
   UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_ASC
   UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_DESC
   USER_BY_UP_KDO__U_BAN_ASC
   USER_BY_UP_KDO__U_BAN_DESC
-  USER_BY_UP_KDO__U_CITY_ASC
-  USER_BY_UP_KDO__U_CITY_DESC
   USER_BY_UP_KDO__U_CONFIRMED_ASC
   USER_BY_UP_KDO__U_CONFIRMED_DESC
-  USER_BY_UP_KDO__U_CONSCRIPTION_NUMBER_ASC
-  USER_BY_UP_KDO__U_CONSCRIPTION_NUMBER_DESC
-  USER_BY_UP_KDO__U_CREATED_AT_ASC
-  USER_BY_UP_KDO__U_CREATED_AT_DESC
-  USER_BY_UP_KDO__U_DANCER_ASC
-  USER_BY_UP_KDO__U_DANCER_DESC
-  USER_BY_UP_KDO__U_DISTRICT_ASC
-  USER_BY_UP_KDO__U_DISTRICT_DESC
-  USER_BY_UP_KDO__U_EMAIL_ASC
-  USER_BY_UP_KDO__U_EMAIL_DESC
-  USER_BY_UP_KDO__U_GDPR_SIGNED_AT_ASC
-  USER_BY_UP_KDO__U_GDPR_SIGNED_AT_DESC
   USER_BY_UP_KDO__U_GROUP_ASC
   USER_BY_UP_KDO__U_GROUP_DESC
   USER_BY_UP_KDO__U_ID_ASC
   USER_BY_UP_KDO__U_ID_DESC
   USER_BY_UP_KDO__U_JMENO_ASC
   USER_BY_UP_KDO__U_JMENO_DESC
-  USER_BY_UP_KDO__U_LEVEL_ASC
-  USER_BY_UP_KDO__U_LEVEL_DESC
-  USER_BY_UP_KDO__U_LOCK_ASC
-  USER_BY_UP_KDO__U_LOCK_DESC
   USER_BY_UP_KDO__U_LOGIN_ASC
   USER_BY_UP_KDO__U_LOGIN_DESC
-  USER_BY_UP_KDO__U_MEMBER_SINCE_ASC
-  USER_BY_UP_KDO__U_MEMBER_SINCE_DESC
-  USER_BY_UP_KDO__U_MEMBER_UNTIL_ASC
-  USER_BY_UP_KDO__U_MEMBER_UNTIL_DESC
   USER_BY_UP_KDO__U_NAROZENI_ASC
   USER_BY_UP_KDO__U_NAROZENI_DESC
-  USER_BY_UP_KDO__U_NATIONALITY_ASC
-  USER_BY_UP_KDO__U_NATIONALITY_DESC
-  USER_BY_UP_KDO__U_ORIENTATION_NUMBER_ASC
-  USER_BY_UP_KDO__U_ORIENTATION_NUMBER_DESC
-  USER_BY_UP_KDO__U_PASS_ASC
-  USER_BY_UP_KDO__U_PASS_DESC
-  USER_BY_UP_KDO__U_POHLAVI_ASC
-  USER_BY_UP_KDO__U_POHLAVI_DESC
-  USER_BY_UP_KDO__U_POSTAL_CODE_ASC
-  USER_BY_UP_KDO__U_POSTAL_CODE_DESC
-  USER_BY_UP_KDO__U_POZNAMKY_ASC
-  USER_BY_UP_KDO__U_POZNAMKY_DESC
   USER_BY_UP_KDO__U_PRIJMENI_ASC
   USER_BY_UP_KDO__U_PRIJMENI_DESC
-  USER_BY_UP_KDO__U_RODNE_CISLO_ASC
-  USER_BY_UP_KDO__U_RODNE_CISLO_DESC
   USER_BY_UP_KDO__U_SKUPINA_ASC
   USER_BY_UP_KDO__U_SKUPINA_DESC
-  USER_BY_UP_KDO__U_STREET_ASC
-  USER_BY_UP_KDO__U_STREET_DESC
   USER_BY_UP_KDO__U_SYSTEM_ASC
   USER_BY_UP_KDO__U_SYSTEM_DESC
-  USER_BY_UP_KDO__U_TEACHER_ASC
-  USER_BY_UP_KDO__U_TEACHER_DESC
-  USER_BY_UP_KDO__U_TELEFON_ASC
-  USER_BY_UP_KDO__U_TELEFON_DESC
-  USER_BY_UP_KDO__U_TIMESTAMP_ASC
-  USER_BY_UP_KDO__U_TIMESTAMP_DESC
 }
 
 type User {
@@ -14830,11 +12672,6 @@ type User {
 
     """Read all values in the set before (above) this cursor."""
     before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AkceItemCondition
 
     """Only read the first `n` values of the set."""
     first: Int
@@ -15392,29 +13229,8 @@ input UserCondition {
   """Checks for equality with the object’s `uBan` field."""
   uBan: Boolean
 
-  """Checks for equality with the object’s `uCity` field."""
-  uCity: String
-
   """Checks for equality with the object’s `uConfirmed` field."""
   uConfirmed: Boolean
-
-  """Checks for equality with the object’s `uConscriptionNumber` field."""
-  uConscriptionNumber: String
-
-  """Checks for equality with the object’s `uCreatedAt` field."""
-  uCreatedAt: Datetime
-
-  """Checks for equality with the object’s `uDancer` field."""
-  uDancer: Boolean
-
-  """Checks for equality with the object’s `uDistrict` field."""
-  uDistrict: String
-
-  """Checks for equality with the object’s `uEmail` field."""
-  uEmail: String
-
-  """Checks for equality with the object’s `uGdprSignedAt` field."""
-  uGdprSignedAt: Datetime
 
   """Checks for equality with the object’s `uGroup` field."""
   uGroup: BigInt
@@ -15425,65 +13241,20 @@ input UserCondition {
   """Checks for equality with the object’s `uJmeno` field."""
   uJmeno: String
 
-  """Checks for equality with the object’s `uLevel` field."""
-  uLevel: Int
-
-  """Checks for equality with the object’s `uLock` field."""
-  uLock: Boolean
-
   """Checks for equality with the object’s `uLogin` field."""
   uLogin: String
-
-  """Checks for equality with the object’s `uMemberSince` field."""
-  uMemberSince: Datetime
-
-  """Checks for equality with the object’s `uMemberUntil` field."""
-  uMemberUntil: Datetime
 
   """Checks for equality with the object’s `uNarozeni` field."""
   uNarozeni: Date
 
-  """Checks for equality with the object’s `uNationality` field."""
-  uNationality: String
-
-  """Checks for equality with the object’s `uOrientationNumber` field."""
-  uOrientationNumber: String
-
-  """Checks for equality with the object’s `uPass` field."""
-  uPass: String
-
-  """Checks for equality with the object’s `uPohlavi` field."""
-  uPohlavi: String
-
-  """Checks for equality with the object’s `uPostalCode` field."""
-  uPostalCode: String
-
-  """Checks for equality with the object’s `uPoznamky` field."""
-  uPoznamky: String
-
   """Checks for equality with the object’s `uPrijmeni` field."""
   uPrijmeni: String
-
-  """Checks for equality with the object’s `uRodneCislo` field."""
-  uRodneCislo: String
 
   """Checks for equality with the object’s `uSkupina` field."""
   uSkupina: BigInt
 
-  """Checks for equality with the object’s `uStreet` field."""
-  uStreet: String
-
   """Checks for equality with the object’s `uSystem` field."""
   uSystem: Boolean
-
-  """Checks for equality with the object’s `uTeacher` field."""
-  uTeacher: Boolean
-
-  """Checks for equality with the object’s `uTelefon` field."""
-  uTelefon: String
-
-  """Checks for equality with the object’s `uTimestamp` field."""
-  uTimestamp: Datetime
 }
 
 """An input for mutations affecting `User`"""
@@ -15615,46 +13386,8 @@ enum UsersOrderBy {
   PARY_NAVRHS_BY_PN_PARTNER__COUNT_DESC
   PARY_NAVRHS_BY_PN_PARTNERKA__COUNT_ASC
   PARY_NAVRHS_BY_PN_PARTNERKA__COUNT_DESC
-  PERMISSION_BY_U_GROUP__PE_AKCE_ASC
-  PERMISSION_BY_U_GROUP__PE_AKCE_DESC
-  PERMISSION_BY_U_GROUP__PE_AKTUALITY_ASC
-  PERMISSION_BY_U_GROUP__PE_AKTUALITY_DESC
-  PERMISSION_BY_U_GROUP__PE_ANKETY_ASC
-  PERMISSION_BY_U_GROUP__PE_ANKETY_DESC
-  PERMISSION_BY_U_GROUP__PE_DESCRIPTION_ASC
-  PERMISSION_BY_U_GROUP__PE_DESCRIPTION_DESC
-  PERMISSION_BY_U_GROUP__PE_DOKUMENTY_ASC
-  PERMISSION_BY_U_GROUP__PE_DOKUMENTY_DESC
-  PERMISSION_BY_U_GROUP__PE_GALERIE_ASC
-  PERMISSION_BY_U_GROUP__PE_GALERIE_DESC
   PERMISSION_BY_U_GROUP__PE_ID_ASC
   PERMISSION_BY_U_GROUP__PE_ID_DESC
-  PERMISSION_BY_U_GROUP__PE_INZERCE_ASC
-  PERMISSION_BY_U_GROUP__PE_INZERCE_DESC
-  PERMISSION_BY_U_GROUP__PE_KONZOLE_ASC
-  PERMISSION_BY_U_GROUP__PE_KONZOLE_DESC
-  PERMISSION_BY_U_GROUP__PE_MAIN_ASC
-  PERMISSION_BY_U_GROUP__PE_MAIN_DESC
-  PERMISSION_BY_U_GROUP__PE_NABIDKA_ASC
-  PERMISSION_BY_U_GROUP__PE_NABIDKA_DESC
-  PERMISSION_BY_U_GROUP__PE_NAME_ASC
-  PERMISSION_BY_U_GROUP__PE_NAME_DESC
-  PERMISSION_BY_U_GROUP__PE_NASTENKA_ASC
-  PERMISSION_BY_U_GROUP__PE_NASTENKA_DESC
-  PERMISSION_BY_U_GROUP__PE_NOVINKY_ASC
-  PERMISSION_BY_U_GROUP__PE_NOVINKY_DESC
-  PERMISSION_BY_U_GROUP__PE_PARY_ASC
-  PERMISSION_BY_U_GROUP__PE_PARY_DESC
-  PERMISSION_BY_U_GROUP__PE_PERMISSIONS_ASC
-  PERMISSION_BY_U_GROUP__PE_PERMISSIONS_DESC
-  PERMISSION_BY_U_GROUP__PE_PLATBY_ASC
-  PERMISSION_BY_U_GROUP__PE_PLATBY_DESC
-  PERMISSION_BY_U_GROUP__PE_ROZPIS_ASC
-  PERMISSION_BY_U_GROUP__PE_ROZPIS_DESC
-  PERMISSION_BY_U_GROUP__PE_SKUPINY_ASC
-  PERMISSION_BY_U_GROUP__PE_SKUPINY_DESC
-  PERMISSION_BY_U_GROUP__PE_USERS_ASC
-  PERMISSION_BY_U_GROUP__PE_USERS_DESC
   PLATBY_ITEMS_BY_PI_ID_USER__COUNT_ASC
   PLATBY_ITEMS_BY_PI_ID_USER__COUNT_DESC
   PRIMARY_KEY_ASC
@@ -15665,88 +13398,32 @@ enum UsersOrderBy {
   SESSIONS_BY_SS_USER__COUNT_DESC
   SKUPINY_BY_U_SKUPINA__COHORT_GROUP_ASC
   SKUPINY_BY_U_SKUPINA__COHORT_GROUP_DESC
-  SKUPINY_BY_U_SKUPINA__INTERNAL_INFO_ASC
-  SKUPINY_BY_U_SKUPINA__INTERNAL_INFO_DESC
   SKUPINY_BY_U_SKUPINA__ORDERING_ASC
   SKUPINY_BY_U_SKUPINA__ORDERING_DESC
-  SKUPINY_BY_U_SKUPINA__S_COLOR_RGB_ASC
-  SKUPINY_BY_U_SKUPINA__S_COLOR_RGB_DESC
-  SKUPINY_BY_U_SKUPINA__S_COLOR_TEXT_ASC
-  SKUPINY_BY_U_SKUPINA__S_COLOR_TEXT_DESC
-  SKUPINY_BY_U_SKUPINA__S_DESCRIPTION_ASC
-  SKUPINY_BY_U_SKUPINA__S_DESCRIPTION_DESC
   SKUPINY_BY_U_SKUPINA__S_ID_ASC
   SKUPINY_BY_U_SKUPINA__S_ID_DESC
-  SKUPINY_BY_U_SKUPINA__S_LOCATION_ASC
-  SKUPINY_BY_U_SKUPINA__S_LOCATION_DESC
-  SKUPINY_BY_U_SKUPINA__S_NAME_ASC
-  SKUPINY_BY_U_SKUPINA__S_NAME_DESC
   SKUPINY_BY_U_SKUPINA__S_VISIBLE_ASC
   SKUPINY_BY_U_SKUPINA__S_VISIBLE_DESC
   U_BAN_ASC
   U_BAN_DESC
-  U_CITY_ASC
-  U_CITY_DESC
   U_CONFIRMED_ASC
   U_CONFIRMED_DESC
-  U_CONSCRIPTION_NUMBER_ASC
-  U_CONSCRIPTION_NUMBER_DESC
-  U_CREATED_AT_ASC
-  U_CREATED_AT_DESC
-  U_DANCER_ASC
-  U_DANCER_DESC
-  U_DISTRICT_ASC
-  U_DISTRICT_DESC
-  U_EMAIL_ASC
-  U_EMAIL_DESC
-  U_GDPR_SIGNED_AT_ASC
-  U_GDPR_SIGNED_AT_DESC
   U_GROUP_ASC
   U_GROUP_DESC
   U_ID_ASC
   U_ID_DESC
   U_JMENO_ASC
   U_JMENO_DESC
-  U_LEVEL_ASC
-  U_LEVEL_DESC
-  U_LOCK_ASC
-  U_LOCK_DESC
   U_LOGIN_ASC
   U_LOGIN_DESC
-  U_MEMBER_SINCE_ASC
-  U_MEMBER_SINCE_DESC
-  U_MEMBER_UNTIL_ASC
-  U_MEMBER_UNTIL_DESC
   U_NAROZENI_ASC
   U_NAROZENI_DESC
-  U_NATIONALITY_ASC
-  U_NATIONALITY_DESC
-  U_ORIENTATION_NUMBER_ASC
-  U_ORIENTATION_NUMBER_DESC
-  U_PASS_ASC
-  U_PASS_DESC
-  U_POHLAVI_ASC
-  U_POHLAVI_DESC
-  U_POSTAL_CODE_ASC
-  U_POSTAL_CODE_DESC
-  U_POZNAMKY_ASC
-  U_POZNAMKY_DESC
   U_PRIJMENI_ASC
   U_PRIJMENI_DESC
-  U_RODNE_CISLO_ASC
-  U_RODNE_CISLO_DESC
   U_SKUPINA_ASC
   U_SKUPINA_DESC
-  U_STREET_ASC
-  U_STREET_DESC
   U_SYSTEM_ASC
   U_SYSTEM_DESC
-  U_TEACHER_ASC
-  U_TEACHER_DESC
-  U_TELEFON_ASC
-  U_TELEFON_DESC
-  U_TIMESTAMP_ASC
-  U_TIMESTAMP_DESC
   UPOZORNENIS_BY_UP_KDO__COUNT_ASC
   UPOZORNENIS_BY_UP_KDO__COUNT_DESC
 }

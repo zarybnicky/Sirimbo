@@ -75,6 +75,7 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
   dynamicJson: true,
   setofFunctionsContainNulls: false,
   ignoreRBAC: false,
+  ignoreIndexes: false,
   extendedErrors: ['hint', 'detail', 'errcode', 'where'],
   showErrorStack: "json",
   pgSettings: loadUserFromSession,

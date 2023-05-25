@@ -1,6 +1,6 @@
 import { ExhibitionRequestForm } from 'components/ExhibitionRequestForm';
 import { Heading } from 'components/Heading';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 
 const Page: NextPageWithLayout = () => {
   return (

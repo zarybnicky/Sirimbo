@@ -1,7 +1,7 @@
 import { ArticleForm } from 'components/ArticleForm';
 import { useRouter } from 'next/router';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 import { fromSlugArray } from 'lib/slugify';
 import { ArticleList } from 'lib/entity-lists';
 import { useGqlQuery } from 'lib/query';

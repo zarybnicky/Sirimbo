@@ -6,7 +6,7 @@ import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { useQueryClient } from '@tanstack/react-query';
 import { CohortListForm } from 'components/CohortListForm';
 import { fromSlugArray } from 'lib/slugify';
-import { type NextPageWithLayout } from 'pages/_app';
+import type { NextPageWithLayout } from 'pages/_app';
 import { getGqlKey, useGqlMutation, useGqlQuery } from 'lib/query';
 import {
   CohortGroupDocument,

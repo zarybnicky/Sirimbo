@@ -29,7 +29,7 @@ fragment ReservationBasic on Nabidka {
 
 fragment Reservation on Nabidka {
   ...ReservationBasic
-  nabidkaItemsByNiIdRodic(orderBy: [NI_POCET_HOD_DESC]) {
+  nabidkaItemsByNiIdRodic {
     nodes {
       ...ReservationItemBasic
     }
