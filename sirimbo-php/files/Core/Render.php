@@ -26,7 +26,6 @@ class Render
             'currentUri' => $uri,
             'currentUser' => \Session::getUser(),
             'navbar' => static::getNavbar(),
-            'frontendHash' => FRONTEND_HASH,
         ];
     }
 
@@ -63,7 +62,6 @@ class Render
                     ['Akce', '/admin/akce', [], ['akce', P_OWNED]],
                     ['Galerie', '/admin/galerie', [], ['galerie', P_OWNED]],
                     ['Dokumenty', '/admin/dokumenty', [], ['dokumenty', P_OWNED]],
-                    ['Oprávnění', '/admin/permissions', [], ['permissions', P_OWNED]],
                 ], ['nastenka', P_OWNED]]
             ];
         }

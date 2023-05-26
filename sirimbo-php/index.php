@@ -169,9 +169,6 @@ function makeRouter()
     $router->post('/member/profil/par/partner', '@Member.ProfilPar::partnerPost');
     $router->post('/member/profil/par/zadost', '@Member.ProfilPar::zadost');
 
-    $router->get('/admin/konzole', '@Admin.Repl::get');
-    $router->post('/admin/konzole', '@Admin.Repl::post');
-
     $router->get('/admin/akce', '@Admin.Akce::list');
     $router->get('/admin/akce/add', '@Admin.Akce::add');
     $router->post('/admin/akce/add', '@Admin.Akce::addPost');
@@ -264,14 +261,6 @@ function makeRouter()
     $router->get('/admin/pary/edit/([0-9]+)', '@Admin.Pary::edit');
     $router->post('/admin/pary/edit/([0-9]+)', '@Admin.Pary::editPost');
     $router->get('/admin/pary/remove/([0-9]+)', '@Admin.Pary::remove');
-
-    $router->get('/admin/permissions', '@Admin.Permissions::list');
-    $router->get('/admin/permissions/add', '@Admin.Permissions::add');
-    $router->post('/admin/permissions/add', '@Admin.Permissions::addPost');
-    $router->get('/admin/permissions/edit/([0-9]+)', '@Admin.Permissions::edit');
-    $router->post('/admin/permissions/edit/([0-9]+)', '@Admin.Permissions::editPost');
-    $router->get('/admin/permissions/remove/([0-9]+)', '@Admin.Permissions::remove');
-    $router->post('/admin/permissions/remove/([0-9]+)', '@Admin.Permissions::removePost');
 
     $router->get('/admin/skupiny', '@Admin.Skupiny::list');
     $router->get('/admin/skupiny/add', '@Admin.Skupiny::add');
