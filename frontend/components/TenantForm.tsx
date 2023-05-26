@@ -4,7 +4,6 @@ import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
-import { TenantInput } from 'lib/graphql';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   CurrentTenantDocument,
@@ -12,13 +11,16 @@ import {
   UpdateTenantDocument,
 } from 'lib/graphql/Tenant';
 import dynamic from 'next/dynamic';
-import { pipe } from 'fp-ts/lib/function';
-import { pick } from 'lib/form-utils';
 import { getGqlKey, useGqlMutation } from 'lib/query';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-const fields = ['name', 'memberInfo'] as const;
-type FormProps = Pick<TenantInput, (typeof fields)[number]>;
+const Form = z.object({
+  name: z.string(),
+  memberInfo: z.string(),
+});
+type FormProps = z.infer<typeof Form>;
 
 export const TenantForm: React.FC<{
   data: TenantFragment;
@@ -30,11 +32,12 @@ export const TenantForm: React.FC<{
 
   const { mutateAsync: doUpdate } = useGqlMutation(UpdateTenantDocument, { onSuccess });
 
-  const { reset, control, handleSubmit } = useForm<FormProps>();
+  const { reset, control, handleSubmit } = useForm<FormProps>({
+    resolver: zodResolver(Form),
+  });
   React.useEffect(() => {
-    if (data) {
-      reset(pipe(data, pick(fields)));
-    }
+    reset(Form.parse(data));
+    // TODO: increment richtexteditor key
   }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {

@@ -6,18 +6,26 @@ import { ErrorBox } from 'components/ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { useGqlMutation } from 'lib/query';
 import { ChangePasswordDocument } from 'lib/graphql/CurrentUser';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-type FormProps = {
-  oldPass: string;
-  newPass: string;
-  checkPass: string;
-};
+const Form = z
+  .object({
+    oldPass: z.string(),
+    newPass: z.string(),
+    checkPass: z.string(),
+  })
+  .refine((data) => data.newPass === data.checkPass, {
+    message: 'Nová hesla se neshodují',
+    path: ['checkPass'],
+  });
+type FormProps = z.infer<typeof Form>;
 
 export const ChangePasswordForm: React.FC<{
   onSuccess: () => void;
 }> = ({ onSuccess }) => {
   const { mutateAsync: doUpdate } = useGqlMutation(ChangePasswordDocument, { onSuccess });
-  const { control, getValues, handleSubmit } = useForm<FormProps>();
+  const { control, handleSubmit } = useForm<FormProps>({ resolver: zodResolver(Form) });
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await doUpdate({ input: { oldPass: values.oldPass, newPass: values.newPass } });
   });
@@ -49,13 +57,6 @@ export const ChangePasswordForm: React.FC<{
         type="password"
         autoComplete="new-password"
         required
-        validation={{
-          validate: (val) => {
-            if (val && getValues('newPass') !== val) {
-              return 'Nová hesla se neshodují';
-            }
-          },
-        }}
       />
 
       <SubmitButton loading={onSubmit.loading} />

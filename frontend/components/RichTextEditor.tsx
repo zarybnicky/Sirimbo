@@ -30,7 +30,6 @@ export default function RichTextEditor({
   helperText,
   parseError,
   initialState,
-  ...props
 }: RichTextEditorProps) {
   const [editor, setEditor] = React.useState<ClassicEditor | null>(null);
 
