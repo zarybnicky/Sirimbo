@@ -3,6 +3,7 @@ import {
   CreateEventDocument,
   DeleteEventDocument,
   EventDocument,
+  EventListDocument,
   UpdateEventDocument,
 } from 'lib/graphql/Event';
 import React from 'react';
@@ -13,40 +14,44 @@ import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import dynamic from 'next/dynamic';
-import { pick } from 'lib/form-utils';
-import { pipe } from 'fp-ts/lib/function';
-import { useGqlMutation, useGqlQuery } from 'lib/query';
+import { getGqlKey, useGqlMutation, useGqlQuery } from 'lib/query';
 import { useRouter } from 'next/router';
 import { Item } from './layout/Item';
 import { DeleteButton } from './DeleteButton';
 import { Route } from 'nextjs-routes';
+import { useQueryClient } from '@tanstack/react-query';
+import { DateRange } from 'react-day-picker';
+import { DateRangeInput } from './DateRange';
+import { ErrorPage } from './ErrorPage';
+import { toast } from 'react-toastify';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
-const fields = [
-  'name',
-  'locationText',
-  'summary',
-  'description',
-  'since',
-  'until',
-  'capacity',
-  'isVisible',
-  'isPublic',
-  'enableNotes',
-  'isLocked',
-] as const;
-type FormProps = Pick<EventInput, (typeof fields)[number]>;
+type FormProps = Pick<
+  EventInput,
+  | 'name'
+  | 'locationText'
+  | 'summary'
+  | 'description'
+  | 'capacity'
+  | 'isVisible'
+  | 'isPublic'
+  | 'enableNotes'
+  | 'isLocked'
+> & {
+  schedule: DateRange;
+};
 
 const backHref: Route = { pathname: '/admin/akce' };
 
-export const EventForm: React.FC<{
-  id?: string;
-}> = ({ id = '' }) => {
+export const EventForm = ({ id = '' }: { id?: string }) => {
   const router = useRouter();
   const query = useGqlQuery(EventDocument, { id }, { enabled: !!id, cacheTime: 0 });
   const data = query.data?.event;
 
-  const onSuccess = React.useCallback(() => {}, []);
+  const queryClient = useQueryClient();
+  const onSuccess = React.useCallback(() => {
+    queryClient.invalidateQueries(getGqlKey(EventListDocument, {}));
+  }, [queryClient]);
 
   const create = useGqlMutation(CreateEventDocument, { onSuccess });
   const update = useGqlMutation(UpdateEventDocument, { onSuccess });
@@ -54,17 +59,55 @@ export const EventForm: React.FC<{
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
     if (data) {
-      reset(pipe(data, pick(fields)));
+      reset({
+        name: data?.name,
+        locationText: data?.locationText,
+        summary: data?.summary,
+        description: data?.description,
+        capacity: data?.capacity,
+        isVisible: data?.isVisible,
+        isPublic: data?.isPublic,
+        isLocked: data?.isLocked,
+        enableNotes: data?.enableNotes,
+        schedule: {
+          from: data?.since ? new Date(data?.since) : undefined,
+          to: data?.until ? new Date(data?.until) : undefined,
+        },
+      });
     }
   }, [reset, data]);
 
-  const onSubmit = useAsyncCallback(async (patch: FormProps) => {
+  const onSubmit = useAsyncCallback(async (values: FormProps) => {
+    const patch = {
+      name: values.name,
+      locationText: values.locationText,
+      summary: values.summary,
+      description: values.description,
+      capacity: values.capacity,
+      isVisible: values.isVisible,
+      isPublic: values.isPublic,
+      isLocked: values.isLocked,
+      enableNotes: values.enableNotes,
+      since: values.schedule.from?.toISOString() || '',
+      until: values.schedule.to?.toDateString() || '',
+    };
     if (id) {
       await update.mutateAsync({ id, patch });
     } else {
-      await create.mutateAsync({ input: patch });
+      const res = await create.mutateAsync({ input: patch });
+      const id = res.createEvent?.event?.id;
+      toast.success('Přidáno.');
+      if (id) {
+        router.replace({ pathname: '/admin/nabidka/[id]', query: { id } });
+      } else {
+        reset(undefined);
+      }
     }
   });
+
+  if (query.data && query.data.event === null) {
+    return <ErrorPage error="Nenalezeno" />;
+  }
 
   return (
     <form
@@ -80,7 +123,10 @@ export const EventForm: React.FC<{
             doc={DeleteEventDocument}
             id={id}
             title="smazat akci"
-            onDelete={() => router.push(backHref)}
+            onDelete={() => {
+              router.push(backHref);
+              queryClient.invalidateQueries(getGqlKey(EventListDocument, {}));
+            }}
           />
         )}
         <SubmitButton loading={onSubmit.loading} />
@@ -94,27 +140,7 @@ export const EventForm: React.FC<{
         label="Místo akce"
         required
       />
-      <RichTextEditor
-        control={control}
-        initialState={data?.summary}
-        name="summary"
-        label="Shrnutí"
-      />
-      <RichTextEditor
-        control={control}
-        initialState={data?.description}
-        name="description"
-        label="Další info"
-      />
-      <TextFieldElement control={control} type="date" label="Od" name="since" required />
-      <TextFieldElement
-        type="date"
-        helperText="(pokud je prázdné, počítá se jako 'Od')"
-        control={control}
-        label="Do"
-        name="until"
-        required
-      />
+      <DateRangeInput control={control} name="schedule" label="Datum" />
       <TextFieldElement
         control={control}
         type="number"
@@ -134,13 +160,25 @@ export const EventForm: React.FC<{
         value="1"
         label="Zviditelnit pro veřejnost"
       />
+      <CheckboxElement control={control} name="isLocked" value="1" label="Uzamčená" />
       <CheckboxElement
         control={control}
         name="enableNotes"
         value="1"
         label="Povolit poznámky k přihlášce"
       />
-      <CheckboxElement control={control} name="isLocked" value="1" label="Uzamčená" />
+      <RichTextEditor
+        control={control}
+        initialState={data?.summary}
+        name="summary"
+        label="Shrnutí"
+      />
+      <RichTextEditor
+        control={control}
+        initialState={data?.description}
+        name="description"
+        label="Další info"
+      />
     </form>
   );
 };

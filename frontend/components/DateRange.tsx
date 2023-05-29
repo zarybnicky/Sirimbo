@@ -26,7 +26,7 @@ export function Calendar({
       className={cx('py-2 flex flex-row', className)}
       classNames={{
         months:
-          'p-1 border rounded-lg border-red-500 space-y-4 sm:space-x-4 sm:space-y-0',
+          'p-1 border rounded-lg border-red-500 bg-white space-y-4 sm:space-x-4 sm:space-y-0',
         month: 'space-y-4',
         caption: 'flex justify-center pt-1 mx-2 relative justify-between items-center',
         caption_label: 'text-sm font-medium',
@@ -84,8 +84,14 @@ export function DateRangeInput<TFieldValues extends FieldValues>({
   if (required && !validation?.required) {
     validation.required = 'Toto pole je povinné';
   }
-
   const { field, fieldState } = useController({ control, name, rules: validation });
+
+  const [month, setMonth] = React.useState(new Date());
+  React.useEffect(() => {
+    const m = field.value?.from || field.value?.to || new Date();
+    setMonth(m);
+  }, [field.value]);
+
   const parsedHelperText = !fieldState.error
     ? helperText
     : parseError
@@ -100,6 +106,8 @@ export function DateRangeInput<TFieldValues extends FieldValues>({
 
       <Calendar
         mode="range"
+        month={month}
+        onMonthChange={setMonth}
         selected={field.value}
         onSelect={field.onChange}
         locale={cs}
@@ -150,7 +158,6 @@ export function DatePickerElement<TFieldValues extends FieldValues>({
       </label>
       <Calendar
         mode="single"
-        defaultMonth={field.value}
         month={month}
         onMonthChange={setMonth}
         selected={field.value}

@@ -1,6 +1,10 @@
 import {
-    CreateReservationDocument,
-  ReservationFragment, UpdateReservationDocument,
+  CreateReservationDocument,
+  DeleteReservationDocument,
+  ReservationDocument,
+  ReservationFragment,
+  ReservationListDocument,
+  UpdateReservationDocument,
 } from 'lib/graphql/Reservation';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -12,8 +16,15 @@ import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { NabidkaInput } from 'lib/graphql';
 import { DateRange, DateRangeInput } from './DateRange';
-import { useGqlMutation, useGqlQuery } from 'lib/query';
+import { getGqlKey, useGqlMutation, useGqlQuery } from 'lib/query';
 import { TrainerListDocument } from 'lib/graphql/User';
+import { Item } from './layout/Item';
+import { DeleteButton } from './DeleteButton';
+import { Route } from 'nextjs-routes';
+import { useRouter } from 'next/router';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
+import { ErrorPage } from './ErrorPage';
 
 type FormProps = Pick<
   NabidkaInput,
@@ -22,12 +33,20 @@ type FormProps = Pick<
   schedule: DateRange;
 };
 
-export const ReservationForm: React.FC<{
-  data?: ReservationFragment;
-  onSuccess?: () => void;
-}> = ({ data, onSuccess }) => {
-  const { mutateAsync: doCreate } = useGqlMutation(CreateReservationDocument, { onSuccess });
-  const { mutateAsync: doUpdate } = useGqlMutation(UpdateReservationDocument, { onSuccess });
+const backHref: Route = { pathname: '/admin/nabidka' };
+
+export const ReservationForm = ({ id = '' }: { id?: string }) => {
+  const router = useRouter();
+  const query = useGqlQuery(ReservationDocument, { id }, { enabled: !!id, cacheTime: 0 });
+  const data = query.data?.nabidka;
+
+  const queryClient = useQueryClient();
+  const onSuccess = React.useCallback(() => {
+    queryClient.invalidateQueries(getGqlKey(ReservationListDocument, {}));
+  }, [queryClient]);
+
+  const create = useGqlMutation(CreateReservationDocument, { onSuccess });
+  const update = useGqlMutation(UpdateReservationDocument, { onSuccess });
   const { data: trainers } = useGqlQuery(TrainerListDocument, {});
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
@@ -55,15 +74,47 @@ export const ReservationForm: React.FC<{
       nOd: values.schedule.from?.toISOString() || '',
       nDo: values.schedule.to?.toDateString() || '',
     };
-    if (data) {
-      await doUpdate({ id: data.id, patch });
+    if (id) {
+      await update.mutateAsync({ id, patch });
     } else {
-      await doCreate({ input: patch });
+      const res = await create.mutateAsync({ input: patch });
+      const id = res.createNabidka?.nabidka?.id;
+      toast.success('Přidáno.');
+      if (id) {
+        router.replace({ pathname: '/admin/nabidka/[id]', query: { id } });
+      } else {
+        reset(undefined);
+      }
     }
   });
 
+  if (query.data && query.data.nabidka === null) {
+    return <ErrorPage error="Nenalezeno" />;
+  }
+
   return (
-    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+    <form
+      className="container flex flex-col gap-2"
+      onSubmit={handleSubmit(onSubmit.execute)}
+    >
+      <Item.Titlebar
+        backHref={backHref}
+        title={id ? data?.userByNTrener?.fullName || '(Bez názvu)' : 'Nová nabídka'}
+      >
+        {id && (
+          <DeleteButton
+            doc={DeleteReservationDocument}
+            id={id}
+            title="smazat nabídku"
+            onDelete={() => {
+              router.push(backHref);
+              queryClient.invalidateQueries(getGqlKey(ReservationListDocument, {}));
+            }}
+          />
+        )}
+        <SubmitButton loading={onSubmit.loading} />
+      </Item.Titlebar>
+
       <ErrorBox error={onSubmit.error} />
       <ComboboxElement
         control={control}
@@ -82,10 +133,9 @@ export const ReservationForm: React.FC<{
         label="Max.počet hodin"
         required
       />
-      <DateRangeInput control={control} name="schedule" label="Publikováno od/do" />
+      <DateRangeInput control={control} name="schedule" label="Datum" />
       <CheckboxElement control={control} name="nVisible" value="1" label="Viditelný" />
       <CheckboxElement control={control} name="nLock" value="1" label="Uzamčený" />
-      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };
