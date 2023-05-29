@@ -4,7 +4,7 @@ import { TextField } from 'components/TextField';
 import React from 'react';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import classNames from 'classnames';
-import { X as Cross } from 'react-feather';
+import { X as Cross } from 'lucide-react';
 
 type ColorPickerProps<T extends FieldValues> = {
   name: Path<T>;
@@ -17,7 +17,6 @@ export function ColorPicker<TFieldValues extends FieldValues>({
   control,
   label,
 }: ColorPickerProps<TFieldValues>) {
-  const [isOpen, setIsOpen] = React.useState(false);
   const { field } = useController({ name, control });
 
   return (
@@ -25,7 +24,7 @@ export function ColorPicker<TFieldValues extends FieldValues>({
       <label htmlFor={name} className="block text-sm text-stone-700 mt-1 mb-1">
         {label}
       </label>
-      <PopoverPrimitive.Root open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverPrimitive.Root>
         <PopoverPrimitive.Trigger asChild>
           <div className="w-16 h-8 border" style={{ backgroundColor: field.value }} />
         </PopoverPrimitive.Trigger>

@@ -1,7 +1,7 @@
 import React from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import cx from 'classnames';
-import { Edit3, X as CloseIcon } from 'react-feather';
+import { Edit3, X as CloseIcon } from 'lucide-react';
 import { TextFieldElement } from './TextField';
 import { SubmitButton } from './SubmitButton';
 import { useForm } from 'react-hook-form';

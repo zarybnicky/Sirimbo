@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Route } from 'nextjs-routes';
-import { CornerLeftUp as UpIcon } from 'react-feather';
+import { CornerLeftUp as UpIcon } from 'lucide-react';
 import cx from 'classnames';
 
 type ItemProps = {
@@ -9,7 +9,7 @@ type ItemProps = {
 };
 
 export function Item({className, children}: ItemProps) {
-  return <div className={cx('px-2 py-4 lg:py-12 lg:px-8', className)}>{children}</div>;
+  return <div className={cx('container py-4 lg:py-12', className)}>{children}</div>;
 }
 
 type TitleBarProps = {
@@ -20,21 +20,21 @@ type TitleBarProps = {
 
 function ItemTitleBar({backHref, title, children,}: TitleBarProps) {
   return (
-    <>
+    <div className="my-4 lg:mt-8">
       {backHref && (
-        <div className="block lg:hidden mb-4">
+        <div className="block lg:hidden">
           <Link href={backHref} className="flex gap-2 text-red-500 items-center text-sm">
             <UpIcon className="inline-block w-4 h-4" /> Zpět na seznam
           </Link>
         </div>
       )}
-      <div className="flex gap-2 flex-wrap mb-4 grow-0 h-min justify-between">
+      <div className="flex gap-2 flex-wrap grow-0 h-min justify-between items-start">
         <h4 className="text-2xl tracking-wide mb-4 order-2 w-full md:w-auto md:order-none first-letter:uppercase">
           {title}
         </h4>
-        <div className="flex items-center flex-wrap">{children}</div>
+        <div className="flex items-center flex-wrap gap-2">{children}</div>
       </div>
-    </>
+    </div>
   );
 }
 

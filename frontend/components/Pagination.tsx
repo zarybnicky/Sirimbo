@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ReactPaginate from 'react-paginate';
-import { ChevronsLeft, ChevronsRight } from 'react-feather';
+import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 
 export const Pagination = ({
   total,

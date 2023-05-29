@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Instagram, Facebook, Youtube } from 'react-feather';
+import { Instagram, Facebook, Youtube } from 'lucide-react';
 import { Card } from 'components/Card';
 
 import LogoCsts from 'public/images/logo-csts.svg';

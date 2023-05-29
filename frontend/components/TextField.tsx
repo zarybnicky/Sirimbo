@@ -1,5 +1,5 @@
 import cx from 'classnames';
-import { AlertCircle as ReportProblemIcon } from 'react-feather';
+import { AlertCircle as ReportProblemIcon } from 'lucide-react';
 import {
   Control,
   FieldValues,

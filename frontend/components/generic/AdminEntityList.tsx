@@ -7,7 +7,7 @@ import { fromSlugArray } from 'lib/slugify';
 import { useRouter } from 'next/router';
 import { Route } from 'nextjs-routes';
 import React, { ReactNode } from 'react';
-import { Plus } from 'react-feather';
+import { Plus } from 'lucide-react';
 import { Virtuoso } from 'react-virtuoso';
 import { SubmitButton } from 'components/SubmitButton';
 import { useFuzzySearch } from 'lib/use-fuzzy-search';
@@ -80,7 +80,7 @@ export const makeAdminList =
               icon={Plus}
               href={entity.addRoute}
             >
-              Nový {entity.name(1)}
+              Vytvořit
             </List.TitleButton>
 
             {Header && (

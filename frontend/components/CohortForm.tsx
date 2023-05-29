@@ -49,7 +49,7 @@ export const CohortForm = ({ data }: { data?: CohortFragment }) => {
   });
   React.useEffect(() => {
     if (data) {
-      reset(pipe(data, pick(fields)));
+      reset(pipe(data, pick(fields))); //TODO: replace
     }
   }, [reset, data]);
 

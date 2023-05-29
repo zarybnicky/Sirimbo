@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronLeft, ChevronRight } from 'react-feather';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { fullDateFormatter } from 'lib/format-date';
 import startOfWeek from 'date-fns/startOfWeek';
 import lastDayOfWeek from 'date-fns/lastDayOfWeek';

@@ -17,7 +17,7 @@ const Page: NextPageWithLayout = () => {
   return (
     <>
       {!user && <Heading>Tréninkové skupiny</Heading>}
-      <Item className={classNames(user ? 'col-full bg-stone-100' : 'col-popout')}>
+      <div className={classNames(user ? 'col-full-width p-4' : 'col-popout')}>
         {user && (
           <Item.Titlebar title="Tréninkové skupiny">
             <CohortExport />
@@ -29,7 +29,7 @@ const Page: NextPageWithLayout = () => {
             <CohortItem key={item.id} item={item} />
           ))}
         </div>
-      </Item>
+      </div>
       {!user && <CallToAction />}
     </>
   );

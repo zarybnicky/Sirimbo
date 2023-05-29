@@ -9,7 +9,7 @@ import {
 } from 'react-hook-form';
 import cs from 'date-fns/locale/cs';
 import cx from 'classnames';
-import { ChevronLeft, ChevronRight } from 'react-feather';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { DayPicker, DateRange } from 'react-day-picker';
 
 export type { DateRange };

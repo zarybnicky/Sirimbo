@@ -24,12 +24,13 @@ const Page: NextPageWithLayout = () => {
   });
 
   return (
-    <Item className="col-full-width bg-stone-100">
+    <div className="container p-4 lg:py-12">
       <Item.Titlebar title="Dokumenty">
         <ComboboxElement
+          align="end"
           control={control}
           name="category"
-          label="Kategorie"
+                  placeholder='Vybrat kategorii'
           required
           options={categories}
         />
@@ -55,7 +56,7 @@ const Page: NextPageWithLayout = () => {
           </a>
         </Card>
       ))}
-    </Item>
+    </div>
   );
 };
 

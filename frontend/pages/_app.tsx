@@ -15,11 +15,22 @@ import { ConfirmProvider } from 'components/Confirm';
 import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import { DefaultSeo } from 'next-seo';
+import i18next from "i18next";
+import { z } from "zod";
+import { zodI18nMap } from "zod-i18n-map";
+import csZodTranslation from "public/locales/cs/zod.json";
 
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
 Router.events.on('routeChangeError', () => NProgress.done());
 
+i18next.init({
+  lng: "cs",
+  resources: {
+    cs: { zod: csZodTranslation },
+  },
+});
+z.setErrorMap(zodI18nMap);
 const ReactQueryDevtools = dynamic(
   () => import('@tanstack/react-query-devtools').then((x) => x.ReactQueryDevtools),
   { ssr: false },

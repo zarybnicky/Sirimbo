@@ -3,14 +3,13 @@ import { MyAnnouncements } from 'components/MyAnnouncements';
 import { MyLessonsList } from 'components/MyLessonsList';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { TabMenu } from 'components/TabMenu';
-import { Item } from 'components/layout/Item';
 import type { NextPageWithLayout } from 'pages/_app';
 
 const Page: NextPageWithLayout = () => {
   const [variant, setVariant] = React.useState('myLessons');
 
   return (
-    <Item className="col-full-width p-2 bg-stone-100">
+    <div className="col-full-width p-4 lg:py-8">
       <div className="xl:hidden">
         <TabMenu
           selected={variant}
@@ -33,7 +32,7 @@ const Page: NextPageWithLayout = () => {
         <MyAnnouncements />
         <MyLessonsList />
       </div>
-    </Item>
+    </div>
   );
 }
 

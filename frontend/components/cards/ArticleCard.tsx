@@ -2,7 +2,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Card } from 'components/Card';
 import { Article } from 'lib/data/use-articles';
-import { ChevronRight } from 'react-feather';
+import { ChevronRight } from 'lucide-react';
 
 export const ArticleCard = ({ item: x }: { item: Article }) => {
   return (

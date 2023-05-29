@@ -1,0 +1,112 @@
+{
+  "errors": {
+    "invalid_type": "Zadaná hodnota je {{received}}, ale očekávaný typ je {{expected}}",
+    "invalid_type_received_undefined": "Povinné",
+    "invalid_literal": "Neplatný literál, očekávaná hodnota je {{expected}}",
+    "unrecognized_keys": "Neznámý klíč v objektu: {{- keys}}",
+    "invalid_union": "Neplatný vstup",
+    "invalid_union_discriminator": "Neplatný rozlišovač (možné hodnoty jsou {{- options}})",
+    "invalid_enum_value": "Neplatná hodnota '{{received}}' (možné hodnoty jsou {{- options}})",
+    "invalid_arguments": "Neplatné parametry funkce",
+    "invalid_return_type": "Neplatný návratový typ funkce",
+    "invalid_date": "Neplatné datum",
+    "custom": "Neplatný vstup",
+    "invalid_intersection_types": "Intersection results could not be merged",
+    "not_multiple_of": "Číslo musí být násobek {{multipleOf}}",
+    "not_finite": "Číslo musí být konečné",
+    "invalid_string": {
+      "email": "Neplatný {{validation}}",
+      "url": "Neplatný {{validation}}",
+      "uuid": "Neplatný {{validation}}",
+      "cuid": "Neplatný {{validation}}",
+      "regex": "Neplatný",
+      "datetime": "Neplatný {{validation}}",
+      "startsWith": "Neplatný input: must start with \"{{startsWith}}\"",
+      "endsWith": "Neplatný input: must end with \"{{endsWith}}\""
+    },
+    "too_small": {
+      "array": {
+        "exact": "Pole musí mít přesně {{minimum}} prvky",
+        "inclusive": "Pole musí mít alespoň {{minimum}} prvky",
+        "not_inclusive": "Pole musí mít více než {{minimum}} prvků"
+      },
+      "string": {
+        "exact": "Text musí mít přesně {{maximum}} znaků",
+        "inclusive": "Text musí mít alespoň {{maximum}} znaků",
+        "not_inclusive": "Text musí mít víc než {{maximum}} znaky"
+      },
+      "number": {
+        "exact": "Číslo musí být přesně {{minimum}}",
+        "inclusive": "Číslo musí být nejméně {{minimum}}",
+        "not_inclusive": "Číslo musí být větši než {{minimum}}"
+      },
+      "set": {
+        "exact": "Neplatný vstup",
+        "inclusive": "Neplatný vstup",
+        "not_inclusive": "Neplatný vstup"
+      },
+      "date": {
+        "exact": "Datum musí být přesně {{- minimum, datetime}}",
+        "inclusive": "Datum musí být nejdříve {{- minimum, datetime}}",
+        "not_inclusive": "Datum musí být později než {{- minimum, datetime}}"
+      }
+    },
+    "too_big": {
+      "array": {
+        "exact": "Pole musí obsahovat přesně {{maximum}} prvky",
+        "inclusive": "Pole musí obsahovat maximálně {{maximum}} prvky",
+        "not_inclusive": "Pole musí být kratší než {{maximum}} prvků"
+      },
+      "string": {
+        "exact": "Text musí mít přesně {{maximum}} znaků",
+        "inclusive": "Text musí mít maximálně {{maximum}} znaků",
+        "not_inclusive": "Text musí být kratší než {{maximum}} znaky"
+      },
+      "number": {
+        "exact": "Číslo musí být přesně {{maximum}}",
+        "inclusive": "Číslo musí být nejvýše {{maximum}}",
+        "not_inclusive": "Číslo musí být menší než {{maximum}}"
+      },
+      "set": {
+        "exact": "Neplatná hodnota",
+        "inclusive": "Neplatná hodnota",
+        "not_inclusive": "Neplatná hodnota"
+      },
+      "date": {
+        "exact": "Datum musí být {{- maximum, datetime}}",
+        "inclusive": "Datum musí být nejvýše {{- maximum, datetime}}",
+        "not_inclusive": "Datum musí být dřívější než {{- maximum, datetime}}"
+      }
+    }
+  },
+  "validations": {
+    "email": "e-mail",
+    "url": "URL",
+    "uuid": "UUID",
+    "cuid": "CUID",
+    "regex": "RegEx",
+    "datetime": "datum/čas"
+  },
+  "types": {
+    "function": "funkce",
+    "number": "číslo",
+    "string": "text",
+    "nan": "nan",
+    "integer": "celé číslo",
+    "float": "desetinné číslo",
+    "boolean": "boolean",
+    "date": "datum",
+    "bigint": "číslo",
+    "undefined": "undefined",
+    "symbol": "symbol",
+    "null": "null",
+    "array": "pole",
+    "object": "objekt",
+    "unknown": "neznámé",
+    "promise": "promise",
+    "void": "void",
+    "never": "never",
+    "map": "mapa",
+    "set": "množina"
+  }
+}

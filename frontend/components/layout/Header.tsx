@@ -5,10 +5,10 @@ import { getHrefs, MenuStructItem, useMemberMenu, useTopMenu } from 'lib/data/us
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { ChevronDown, Menu as MenuIcon, User as Account } from 'react-feather';
+import { ChevronDown, Menu as MenuIcon, User as Account } from 'lucide-react';
 import { MobileLogo } from './MobileLogo';
 import { useAuth } from 'lib/data/use-auth';
-import { Instagram, Facebook, Youtube } from 'react-feather';
+import { Instagram, Facebook, Youtube } from 'lucide-react';
 
 type Props = {
   isOpen: boolean;

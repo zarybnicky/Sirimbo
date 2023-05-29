@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronRight } from 'react-feather';
+import { ChevronRight } from 'lucide-react';
 import classNames from 'classnames';
 import { Spinner } from './Spinner';
 

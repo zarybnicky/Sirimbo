@@ -1,7 +1,7 @@
 import React from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import cx from 'classnames';
-import { X as CloseIcon } from 'react-feather';
+import { X as CloseIcon } from 'lucide-react';
 
 type ConfirmOptions = {
   title: React.ReactNode;

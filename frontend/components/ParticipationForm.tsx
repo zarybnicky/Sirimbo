@@ -13,11 +13,11 @@ import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { useAuth } from 'lib/data/use-auth';
 import { useQueryClient } from '@tanstack/react-query';
-import { SimpleDialog } from './Dialog';
 import { Button } from './Button';
 import type { AttendeeExternalInput } from 'lib/graphql';
 import { toast } from 'react-toastify';
 import { useGqlMutation } from 'lib/query';
+import { Dialog, DialogContent, DialogTrigger } from './ui/dialog';
 
 interface Props {
   data: EventFragment & Partial<MyEventFragment>;
@@ -187,22 +187,26 @@ interface DialogProps {
 }
 
 export const ParticipationDialog = ({ data }: DialogProps) => {
+  const [open, setOpen] = React.useState(false);
+  const close = React.useCallback(() => setOpen(false), []);
   const { user } = useAuth();
   const myRegistration = data.attendeeUsers?.nodes?.find((x) => x.user?.uId === user?.id);
 
   if (data.isLocked || (!myRegistration && (data.remainingSpots ?? 0) < 1)) {
     return null;
   }
-  const button = <Button>{myRegistration ? 'Upravit přihlášku' : 'Přihlásit'}</Button>;
   return (
-    <SimpleDialog button={button}>
-      {({ close }) =>
-        user ? (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger>
+        <Button>{myRegistration ? 'Upravit přihlášku' : 'Přihlásit'}</Button>
+      </DialogTrigger>
+      <DialogContent>
+        {user ? (
           <ParticipationForm data={data} onSuccess={close} />
         ) : (
           <ExternalParticipationForm data={data} onSuccess={close} />
-        )
-      }
-    </SimpleDialog>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 };

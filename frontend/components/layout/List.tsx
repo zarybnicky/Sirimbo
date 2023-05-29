@@ -41,7 +41,7 @@ type ListTitleButtonProps = {
 function ListTitleButton({ active, icon: Icon, children, href, onClick }: ListTitleButtonProps) {
   const cx = classNames(
     'shadow-md inline-flex items-center gap-1 px-3 rounded-2xl py-1 text-xs tracking-tight font-bold',
-    active ? 'tracking-wide bg-red-500 text-white' : 'bg-white hover:bg-stone-50',
+    active ? 'bg-red-500 text-white' : 'bg-white hover:bg-stone-50',
   );
   return href ? (
     <Link href={href} className={cx}>

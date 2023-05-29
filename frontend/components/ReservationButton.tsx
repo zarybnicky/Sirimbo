@@ -1,7 +1,7 @@
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import React from 'react';
 import classNames from 'classnames';
-import { X as Cross, Plus, Minus } from 'react-feather';
+import { X as Cross, Plus, Minus } from 'lucide-react';
 import { useAuth } from 'lib/data/use-auth';
 import { formatCoupleName } from 'lib/format-name';
 import {

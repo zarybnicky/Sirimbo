@@ -11,7 +11,6 @@ import {
   mondayToYearRange,
   WeekPicker,
 } from 'components/WeekPicker';
-import { Item } from 'components/layout/Item';
 import type { NextPageWithLayout } from 'pages/_app';
 import { useGqlQuery } from 'lib/query';
 
@@ -32,12 +31,12 @@ const Page: NextPageWithLayout = () => {
   }, [schedules]);
 
   return (
-    <Item className="col-full-width bg-stone-100">
+    <div className="col-full-width p-4 lg:py-8">
       <WeekPicker title="Tréninky" startDate={startDate} onChange={setStartDate} />
 
       {!reservations?.reservationsForRange?.nodes?.length &&
         !schedules?.schedulesForRange?.nodes?.length && (
-          <div className="border p-2 bg-red-50">Žádné tréninky pro tento týden</div>
+          <div className="border p-2 bg-red-500 text-white rounded-md">Žádné tréninky pro tento týden</div>
         )}
       {!!reservations?.reservationsForRange?.nodes?.length && (
         <>
@@ -65,7 +64,7 @@ const Page: NextPageWithLayout = () => {
           </div>
         </React.Fragment>
       ))}
-    </Item>
+    </div>
   );
 };
 

@@ -7,7 +7,7 @@ import {
 import * as Popover from '@radix-ui/react-popover';
 import React from 'react';
 import classNames from 'classnames';
-import { Calendar, Clock, User, Users, X as Cross } from 'react-feather';
+import { Calendar, Clock, User, Users, X as Cross } from 'lucide-react';
 import { SubmitButton } from './SubmitButton';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from 'lib/data/use-auth';

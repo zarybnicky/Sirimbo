@@ -1,7 +1,7 @@
 import * as React from 'react';
 import CtaImage from 'public/images/call-to-action.png';
 import Link from 'next/link';
-import { ChevronRight } from 'react-feather';
+import { ChevronRight } from 'lucide-react';
 
 export function CallToAction() {
   return (

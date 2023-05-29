@@ -11,10 +11,10 @@ const Page: NextPageWithLayout = () => {
   return (
     <>
       {!user && <Heading>Nadcházející akce</Heading>}
-      <Item className={classNames(user ? 'col-full bg-stone-100' : 'col-feature')}>
+      <div className={classNames(user ? 'col-full-width p-4 lg:py-8' : 'col-feature')}>
         {user && <Item.Titlebar title="Nadcházející akce" />}
         <EventMemberList />
-      </Item>
+      </div>
     </>
   );
 }

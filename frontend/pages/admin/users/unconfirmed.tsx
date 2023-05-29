@@ -6,7 +6,7 @@ import {
 } from 'lib/graphql/User';
 import { ComboboxElement } from 'components/Combobox';
 import { useForm } from 'react-hook-form';
-import { Trash2 as DeleteIcon, Check as CheckIcon } from 'react-feather';
+import { Trash2 as DeleteIcon, Check as CheckIcon } from 'lucide-react';
 import { useConfirm } from 'components/Confirm';
 import React from 'react';
 import { UserFragment } from 'lib/graphql/CurrentUser';

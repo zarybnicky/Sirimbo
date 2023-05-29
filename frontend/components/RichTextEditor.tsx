@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertCircle as ReportProblemIcon } from 'react-feather';
+import { AlertCircle as ReportProblemIcon } from 'lucide-react';
 import {
   FieldValues,
   ControllerProps,

@@ -28,6 +28,7 @@
 }
 html,
 body {
+  --ck-border-radius: .5rem;
   --ck-color-base-border: #f1465d;
   --ck-color-toolbar-border: #f1465d;
 }

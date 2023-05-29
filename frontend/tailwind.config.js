@@ -28,6 +28,13 @@ module.exports = {
     require('tailwind-scrollbar'),
   ],
   theme: {
+    container: {
+      center: true,
+      padding: {
+        DEFAULT: '.5rem',
+        md: '2rem',
+      },
+    },
     extend: {
       width: {
         fit: 'fit-content',

@@ -1,4 +1,4 @@
-import { Plus } from 'react-feather';
+import { Plus } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { List } from 'components/layout/List';
 import { RoleListDocument } from 'lib/graphql/Roles';

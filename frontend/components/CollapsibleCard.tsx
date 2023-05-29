@@ -2,7 +2,7 @@ import * as Collapsible from '@radix-ui/react-collapsible';
 import classNames from 'classnames';
 import { CohortFragment } from 'lib/graphql/Cohorts';
 import React from 'react';
-import { ChevronDown } from 'react-feather';
+import { ChevronDown } from 'lucide-react';
 
 interface CollapsibleCardProps {
   title: React.ReactNode;
@@ -10,15 +10,11 @@ interface CollapsibleCardProps {
   children: React.ReactNode;
 }
 
-export function CollapsibleCard({
-  title,
-  cohort,
-  children,
-}: CollapsibleCardProps) {
+export function CollapsibleCard({title, cohort, children}: CollapsibleCardProps) {
   return (
     <Collapsible.Root
       className={classNames(
-        'relative border flex flex-col mb-1 rounded-lg',
+        'relative border flex flex-col mb-1 rounded-lg bg-white',
         cohort && 'pl-3',
       )}
     >

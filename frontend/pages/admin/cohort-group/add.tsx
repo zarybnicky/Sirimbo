@@ -1,17 +1,9 @@
 import { CohortGroupForm } from 'components/CohortGroupForm';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
-import { Item } from 'components/layout/Item';
 import type { NextPageWithLayout } from 'pages/_app';
 import { CohortGroupList } from 'lib/entity-lists';
 
-const Page: NextPageWithLayout = () => {
-  return (
-    <Item>
-      <Item.Titlebar backHref="/admin/cohort-group" title="Nový tréninkový program" />
-      <CohortGroupForm />
-    </Item>
-  );
-}
+const Page: NextPageWithLayout = () => <CohortGroupForm />;
 
 Page.list = <CohortGroupList />;
 Page.isDetail = true;

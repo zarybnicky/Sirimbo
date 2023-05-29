@@ -1,5 +1,5 @@
 import cx from 'classnames';
-import { ChevronsDown, Check, Search, XCircle } from 'react-feather';
+import { ChevronsDown, Check, Search, XCircle } from 'lucide-react';
 import * as Popover from '@radix-ui/react-popover';
 import { Command } from 'cmdk';
 import {
@@ -35,7 +35,9 @@ export function ComboboxElement<TFieldValues extends FieldValues>({
   required,
   options = [],
   label,
-}: ComboboxElementProps<TFieldValues>) {
+  placeholder,
+  ...props
+}: ComboboxElementProps<TFieldValues> &Popover.PopoverContentProps) {
   if (required && !rules?.required) {
     rules.required = 'Toto pole je povinné';
   }
@@ -52,19 +54,19 @@ export function ComboboxElement<TFieldValues extends FieldValues>({
           type="button"
           role="combobox"
           className={cx(
-            'flex px-3 py-2 text-sm border rounded-md border-red-500 justify-between items-center',
+            'flex bg-white px-3 py-2 text-sm border rounded-md border-red-500 justify-between items-center',
             !field.value && 'text-stone-700',
           )}
         >
           {field.value
             ? options.find((item) => item.id === field.value)?.label
-            : 'Vybrat...'}
+            : (placeholder || 'Vybrat...')}
           <ChevronsDown className="h-4 w-4 shrink-0 opacity-50" />
         </button>
       </Popover.Trigger>
 
       <Popover.Portal>
-        <Popover.Content align="start" sideOffset={5}>
+        <Popover.Content align="start" sideOffset={5} {...props}>
           <Command
             className={cx(
               'border rounded-md bg-white h-full max-h-full relative ',

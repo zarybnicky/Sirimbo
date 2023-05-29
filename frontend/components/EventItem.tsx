@@ -2,33 +2,28 @@ import * as React from 'react';
 import { Card } from 'components/Card';
 import { fullDateFormatter } from 'lib/format-date';
 import { Button } from './Button';
-import { SimpleDialog } from './Dialog';
-import {
-  EventFragment,
-  EventWithItemsFragment,
-  MyEventFragment,
-} from 'lib/graphql/Event';
+import { EventWithItemsFragment } from 'lib/graphql/Event';
 import { ParticipationDialog } from './ParticipationForm';
 import { RichTextView } from './RichTextView';
 import { EventParticipantExport } from './EventParticipantExport';
 import { Event } from 'lib/entities';
 import { useAuth } from 'lib/data/use-auth';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from './ui/dialog';
 
 interface Props {
   event: EventWithItemsFragment;
   expanded?: boolean;
 }
 
-export const EventItem = ({ event, expanded: expandedInit = false }: Props) => {
-  const [expanded, setExpanded] = React.useState(expandedInit);
+export const EventItem = ({ event }: Props) => {
   const { perms } = useAuth();
-  const open = React.useCallback(() => setExpanded(true), []);
+  const menu = Event.useMenu(event);
   const total =
     (event.attendeeUsers?.nodes?.length ?? 0) +
     (event.attendeeExternals?.nodes?.length ?? 0);
 
   return (
-    <Card menu={Event.useMenu(event)} className="break-inside-avoid">
+    <Card menu={menu} className="break-inside-avoid">
       <div className="flex justify-between flex-wrap text-stone-600">
         <div>
           {fullDateFormatter.formatRange(
@@ -47,23 +42,29 @@ export const EventItem = ({ event, expanded: expandedInit = false }: Props) => {
         <ParticipationDialog data={event} />
 
         {total > 0 && (
-          <SimpleDialog title="Účastníci" button={<Button>Účastníci ({total})</Button>}>
-            {perms.canEditEvent(event) && <EventParticipantExport id={event.id} />}
+          <Dialog>
+            <DialogTrigger>
+              <Button>Účastníci ({total})</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogTitle>Účastníci</DialogTitle>
+              {perms.canEditEvent(event) && <EventParticipantExport id={event.id} />}
 
-            {!!event.attendeeUsers?.nodes?.length && <u>Členové</u>}
-            {event.attendeeUsers?.nodes?.map((x) => (
-              <div key={x.user?.uId}>
-                {x.user?.uJmeno} {x.user?.uPrijmeni}
-              </div>
-            ))}
+              {!!event.attendeeUsers?.nodes?.length && <u>Členové</u>}
+              {event.attendeeUsers?.nodes?.map((x) => (
+                <div key={x.user?.uId}>
+                  {x.user?.uJmeno} {x.user?.uPrijmeni}
+                </div>
+              ))}
 
-            {!!event.attendeeExternals?.nodes?.length && <u>Externí</u>}
-            {event.attendeeExternals?.nodes?.map((x, i) => (
-              <div key={i}>
-                {x.firstName} {x.lastName}
-              </div>
-            ))}
-          </SimpleDialog>
+              {!!event.attendeeExternals?.nodes?.length && <u>Externí</u>}
+              {event.attendeeExternals?.nodes?.map((x, i) => (
+                <div key={i}>
+                  {x.firstName} {x.lastName}
+                </div>
+              ))}
+            </DialogContent>
+          </Dialog>
         )}
       </div>
 

@@ -1,4 +1,3 @@
-import { SimpleDialog } from 'components/Dialog';
 import { Item } from 'components/layout/Item';
 import { List } from 'components/layout/List';
 import { useAuth } from 'lib/data/use-auth';
@@ -6,13 +5,14 @@ import { getAgeGroup } from 'lib/get-age-group';
 import { CohortListDocument } from 'lib/graphql/Cohorts';
 import { MyLessonsDocument } from 'lib/graphql/Schedule';
 import React from 'react';
-import { Edit } from 'react-feather';
+import { Edit } from 'lucide-react';
 import { PersonalInfoForm } from 'components/PersonalInfoForm';
 import { ChangePasswordForm } from 'components/ChangePasswordForm';
 import { LessonButton } from 'components/LessonButton';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import type { NextPageWithLayout } from 'pages/_app';
 import { useGqlQuery } from 'lib/query';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from 'components/ui/dialog';
 
 const Page: NextPageWithLayout = () => {
   const { user, couple } = useAuth();
@@ -26,25 +26,35 @@ const Page: NextPageWithLayout = () => {
     startDate: new Date().toISOString().substring(0, 10),
     endDate: new Date(2123, 1).toISOString().substring(0, 10),
   });
+  const [editOpen, setEditOpen] = React.useState(false);
+  const editClose = React.useCallback(()=>setEditOpen(false), []);
+  const [passOpen, setPassOpen] = React.useState(false);
+  const passClose = React.useCallback(()=>setPassOpen(false), []);
 
   if (!user) return null;
 
   return (
-    <Item className="col-full-width px-4 bg-stone-100">
+    <div className="container p-4 lg:py-8">
       <Item.Titlebar title={`${user.uJmeno} ${user.uPrijmeni}`}>
-        <SimpleDialog
-          title="Osobní údaje"
-          button={<List.TitleButton icon={Edit}>Upravit osobní údaje</List.TitleButton>}
-        >
-          {({ close }) => <PersonalInfoForm onSuccess={close} />}
-        </SimpleDialog>
+        <Dialog open={editOpen} onOpenChange={setEditOpen}>
+          <DialogTrigger>
+            <List.TitleButton icon={Edit}>Upravit osobní údaje</List.TitleButton>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogTitle>Osobní údaje</DialogTitle>
+            <PersonalInfoForm onSuccess={editClose} />
+          </DialogContent>
+        </Dialog>
 
-        <SimpleDialog
-          title="Změnit heslo"
-          button={<List.TitleButton icon={Edit}>Změnit heslo</List.TitleButton>}
-        >
-          {({ close }) => <ChangePasswordForm onSuccess={close} />}
-        </SimpleDialog>
+        <Dialog open={passOpen} onOpenChange={setPassOpen}>
+          <DialogTrigger>
+            <List.TitleButton icon={Edit}>Upravit heslo</List.TitleButton>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogTitle>Změnit heslo</DialogTitle>
+            <ChangePasswordForm onSuccess={passClose} />
+          </DialogContent>
+        </Dialog>
       </Item.Titlebar>
 
       <p>Variabilní symbol: {user.id.padStart(6, '0')}</p>
@@ -58,10 +68,9 @@ const Page: NextPageWithLayout = () => {
 
       {(couple?.userByPIdPartner || couple?.userByPIdPartnerka) && (
         <p>
-          Aktuální partner:{' '}
           {couple?.pIdPartner === user.id
-            ? `${couple?.userByPIdPartnerka?.uJmeno} ${couple?.userByPIdPartnerka?.uPrijmeni}`
-            : `${couple?.userByPIdPartner?.uJmeno} ${couple?.userByPIdPartner?.uPrijmeni}`}
+          ? (couple?.userByPIdPartnerka && `Aktuální partnerka: ${couple?.userByPIdPartnerka?.uJmeno} ${couple?.userByPIdPartnerka?.uPrijmeni}`)
+          : (couple?.userByPIdPartner && `Aktuální partner: ${couple?.userByPIdPartner?.uJmeno} ${couple?.userByPIdPartner?.uPrijmeni}`)}
         </p>
       )}
 
@@ -90,7 +99,7 @@ const Page: NextPageWithLayout = () => {
           />
         ))}
       </div>
-    </Item>
+    </div>
   );
 };
 

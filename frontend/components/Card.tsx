@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { CohortFragment } from 'lib/graphql/Cohorts';
 import React from 'react';
-import { MoreVertical } from 'react-feather';
+import { MoreVertical } from 'lucide-react';
 import { Dropdown, DropdownItem } from './Dropdown';
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {

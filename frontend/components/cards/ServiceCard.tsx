@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import classNames from 'classnames';
-import { ArrowRight } from 'react-feather';
+import { ArrowRight } from 'lucide-react';
 import { Route } from 'nextjs-routes';
 
 type ServiceCardProps = {

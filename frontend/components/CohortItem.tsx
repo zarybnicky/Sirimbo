@@ -1,19 +1,17 @@
 import * as React from 'react';
 import { CohortExport } from 'components/CohortExport';
-import { AtSign as EmailIcon, Phone as PhoneIcon } from 'react-feather';
+import { AtSign as EmailIcon, Phone as PhoneIcon } from 'lucide-react';
 import { Card } from 'components/Card';
-import { SimpleDialog } from 'components/Dialog';
 import { CohortWithMembersFragment } from 'lib/graphql/Cohorts';
 import { UserPublicFragment } from 'lib/graphql/User';
 import { RichTextView } from 'components/RichTextView';
 import { Cohort } from 'lib/entities';
-import { useAuth } from 'lib/data/use-auth';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from './ui/dialog';
 
 export function CohortItem({ item }: { item: CohortWithMembersFragment }) {
-  const { perms } = useAuth();
-
+  const menu = Cohort.useMenu(item);
   return (
-    <Card menu={Cohort.useMenu(item)} cohort={item} className="group break-inside-avoid">
+    <Card menu={menu} cohort={item} className="group break-inside-avoid">
       <div>
         {!!item.usersByUSkupina.nodes.length && (
           <>{item.usersByUSkupina?.nodes?.length} členů</>
@@ -27,16 +25,19 @@ export function CohortItem({ item }: { item: CohortWithMembersFragment }) {
 
       {!!item.usersByUSkupina.nodes.length && (
         <div className="flex flex-wrap gap-2 mt-3">
-          <SimpleDialog
-            title="Seznam členů"
-            button={<button className="button button-red">Seznam členů</button>}
-          >
-            <div className="flex flex-col items-start">
-              {item.usersByUSkupina?.nodes?.map((member) => (
-                <UserDetailButton key={member.id} user={member} />
-              ))}
-            </div>
-          </SimpleDialog>
+          <Dialog>
+            <DialogTrigger asChild>
+              <button className="button button-red">Seznam členů</button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogTitle>Seznam členů</DialogTitle>
+              <div className="flex flex-col items-start">
+                {item.usersByUSkupina?.nodes?.map((member) => (
+                  <UserDetailButton key={member.id} user={member} />
+                ))}
+              </div>
+            </DialogContent>
+          </Dialog>
           <CohortExport id={item.id} name={item.sName} />
         </div>
       )}
@@ -46,26 +47,25 @@ export function CohortItem({ item }: { item: CohortWithMembersFragment }) {
 
 const UserDetailButton: React.FC<{ user: UserPublicFragment }> = ({ user }) => {
   return (
-    <SimpleDialog
-      title={
-        <div className="text-xl">
-          {user.uJmeno} {user.uPrijmeni}
-        </div>
-      }
-      button={
+    <Dialog>
+      <DialogTrigger>
         <button className="underline text-stone-700">
           {user.uPrijmeni}, {user.uJmeno}
         </button>
-      }
-    >
-      <ul className="flex flex-col gap-3 m-4">
-        <li>
-          <EmailIcon className="inline" /> {user.uEmail}
-        </li>
-        <li>
-          <PhoneIcon className="inline" /> {user.uTelefon}
-        </li>
-      </ul>
-    </SimpleDialog>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogTitle className="text-xl">
+          {user.uJmeno} {user.uPrijmeni}
+        </DialogTitle>
+        <ul className="flex flex-col gap-3 m-4">
+          <li>
+            <EmailIcon className="inline" /> {user.uEmail}
+          </li>
+          <li>
+            <PhoneIcon className="inline" /> {user.uTelefon}
+          </li>
+        </ul>
+      </DialogContent>
+    </Dialog>
   );
 };
