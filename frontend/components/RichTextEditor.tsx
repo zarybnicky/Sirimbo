@@ -34,7 +34,9 @@ export default function RichTextEditor({
   const [editor, setEditor] = React.useState<ClassicEditor | null>(null);
 
   React.useEffect(() => {
-    editor?.setData(initialState || '');
+    if (editor) {
+      editor.setData(initialState || '');
+    }
   }, [editor, initialState]);
 
   const { field, fieldState } = useController({ name, control });
@@ -54,7 +56,7 @@ export default function RichTextEditor({
       <div className="mt-1 relative rounded-md shadow-sm">
         <CKEditor
           editor={ClassicEditor}
-          data={initialState}
+          data={initialState || ''}
           onChange={(event, editor) => field.onChange(editor.getData())}
           onReady={setEditor}
           onBlur={field.onBlur}

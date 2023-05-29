@@ -11,6 +11,7 @@ import { Plus } from 'lucide-react';
 import { Virtuoso } from 'react-virtuoso';
 import { SubmitButton } from 'components/SubmitButton';
 import { useFuzzySearch } from 'lib/use-fuzzy-search';
+import { NextRouter } from 'next/router';
 
 export interface AdminListEntity {
   name: (num: number) => string;
@@ -101,7 +102,7 @@ export const makeAdminList =
             data={fuzzy}
             itemContent={RenderItem}
             components={{ Footer: pageSize ? Footer : undefined }}
-            context={{ loading: isFetchingNextPage, loadMore: fetchNextPage }}
+            context={{ router, loading: isFetchingNextPage, loadMore: fetchNextPage }}
           />
         </List>
       );
@@ -116,8 +117,8 @@ function RenderItem(
     subtitle?: ReactNode;
     children?: ReactNode;
   },
+  { router }: FooterContext,
 ) {
-  const router = useRouter();
   const id = fromSlugArray(router.query.id);
   return (
     <List.Item
@@ -132,7 +133,7 @@ function RenderItem(
   );
 }
 
-type FooterContext = { loadMore: () => {}; loading: boolean };
+type FooterContext = { router: NextRouter; loadMore: () => {}; loading: boolean };
 const Footer = ({ context }: { context?: FooterContext }) => {
   return (
     <div className="p-2 flex justify-center">

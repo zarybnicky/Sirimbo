@@ -1,7 +1,8 @@
 import { EventInput } from 'lib/graphql';
 import {
   CreateEventDocument,
-  EventFragment,
+  DeleteEventDocument,
+  EventDocument,
   UpdateEventDocument,
 } from 'lib/graphql/Event';
 import React from 'react';
@@ -14,7 +15,11 @@ import { SubmitButton } from './SubmitButton';
 import dynamic from 'next/dynamic';
 import { pick } from 'lib/form-utils';
 import { pipe } from 'fp-ts/lib/function';
-import { useGqlMutation } from 'lib/query';
+import { useGqlMutation, useGqlQuery } from 'lib/query';
+import { useRouter } from 'next/router';
+import { Item } from './layout/Item';
+import { DeleteButton } from './DeleteButton';
+import { Route } from 'nextjs-routes';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
 const fields = [
@@ -32,12 +37,19 @@ const fields = [
 ] as const;
 type FormProps = Pick<EventInput, (typeof fields)[number]>;
 
+const backHref: Route = { pathname: '/admin/akce' };
+
 export const EventForm: React.FC<{
-  data?: EventFragment;
-  onSuccess?: () => void;
-}> = ({ data, onSuccess }) => {
-  const { mutateAsync: doCreate } = useGqlMutation(CreateEventDocument, { onSuccess });
-  const { mutateAsync: doUpdate } = useGqlMutation(UpdateEventDocument, { onSuccess });
+  id?: string;
+}> = ({ id = '' }) => {
+  const router = useRouter();
+  const query = useGqlQuery(EventDocument, { id }, { enabled: !!id, cacheTime: 0 });
+  const data = query.data?.event;
+
+  const onSuccess = React.useCallback(() => {}, []);
+
+  const create = useGqlMutation(CreateEventDocument, { onSuccess });
+  const update = useGqlMutation(UpdateEventDocument, { onSuccess });
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
@@ -47,15 +59,33 @@ export const EventForm: React.FC<{
   }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (patch: FormProps) => {
-    if (data) {
-      await doUpdate({ id: data.id, patch });
+    if (id) {
+      await update.mutateAsync({ id, patch });
     } else {
-      await doCreate({ input: patch });
+      await create.mutateAsync({ input: patch });
     }
   });
 
   return (
-    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+    <form
+      className="container flex flex-col gap-2"
+      onSubmit={handleSubmit(onSubmit.execute)}
+    >
+      <Item.Titlebar
+        backHref={backHref}
+        title={id ? data?.name || '(Bez názvu)' : 'Nová akce'}
+      >
+        {id && (
+          <DeleteButton
+            doc={DeleteEventDocument}
+            id={id}
+            title="smazat akci"
+            onDelete={() => router.push(backHref)}
+          />
+        )}
+        <SubmitButton loading={onSubmit.loading} />
+      </Item.Titlebar>
+
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="name" label="Název" required />
       <TextFieldElement
@@ -111,7 +141,6 @@ export const EventForm: React.FC<{
         label="Povolit poznámky k přihlášce"
       />
       <CheckboxElement control={control} name="isLocked" value="1" label="Uzamčená" />
-      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };
