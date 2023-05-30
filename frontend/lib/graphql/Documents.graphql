@@ -7,8 +7,8 @@ fragment File on Dokumenty {
   dTimestamp
 }
 
-query FileList($limit: Int, $offset: Int, $category: Int) {
-  dokumenties(offset: $offset, first: $limit, condition: {dKategorie: $category}, orderBy: D_TIMESTAMP_DESC) {
+query FileList($first: Int, $offset: Int, $category: Int) {
+  dokumenties(offset: $offset, first: $first, condition: {dKategorie: $category}, orderBy: D_TIMESTAMP_DESC) {
     totalCount
     nodes {
       ...File

@@ -15,6 +15,7 @@ fragment Announcement on Upozorneni {
   }
   upozorneniSkupiniesByUpsIdRodic {
     nodes {
+      id: upsId
       skupinyByUpsIdSkupina {
         ...CohortBasic
       }
@@ -25,9 +26,9 @@ fragment Announcement on Upozorneni {
   isVisible
 }
 
-query MyAnnouncements($limit: Int, $offset: Int) {
+query MyAnnouncements($first: Int, $offset: Int) {
   myAnnouncements(
-    first: $limit,
+    first: $first,
     offset: $offset,
   ) {
     totalCount
@@ -37,15 +38,20 @@ query MyAnnouncements($limit: Int, $offset: Int) {
   }
 }
 
-query AnnouncementList($limit: Int, $offset: Int) {
+query AnnouncementList($first: Int, $cursor: Cursor) {
   upozornenis(
-    first: $limit,
-    offset: $offset,
+    first: $first,
+    after: $cursor,
     orderBy: [UP_TIMESTAMP_ADD_DESC],
   ) {
     totalCount
     nodes {
       ...Announcement
+    }
+    pageInfo {
+      __typename
+      hasNextPage
+      endCursor
     }
   }
 }

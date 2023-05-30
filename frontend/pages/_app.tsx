@@ -115,10 +115,7 @@ export default withUrqlClient(
     exchanges: [
       process.env.NODE_ENV !== 'production' ? devtoolsExchange : (({forward}) => forward),
       refocusExchange(),
-      requestPolicyExchange({
-        ttl: 60 * 1000, // 1 minute.
-        shouldUpgrade: operation => operation.context.requestPolicy !== 'cache-only',
-      }),
+      requestPolicyExchange({ttl: 60 * 1000}),
       typeof window !== 'undefined' ? offlineExchange({
         schema,
         storage: makeDefaultStorage({

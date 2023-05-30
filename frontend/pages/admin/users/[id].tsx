@@ -12,7 +12,7 @@ import { useQuery } from 'urql';
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const id = fromSlugArray(router.query.id);
-  const [{ data }] = useQuery({query: UserDocument, variables: { id }, pause: !!id });
+  const [{ data }] = useQuery({query: UserDocument, variables: { id }, pause: !id });
   return (
     <Item>
       <Item.Titlebar

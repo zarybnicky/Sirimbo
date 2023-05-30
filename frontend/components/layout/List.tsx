@@ -74,7 +74,7 @@ function ListItem({
       key={JSON.stringify(href)}
       href={href}
       className={classNames(
-        'relative p-2 mr-2 my-1 ml-0 rounded-lg grid',
+        'relative p-2 pl-5 mr-2 my-1 rounded-lg grid',
         active ? 'font-semibold bg-red-500 text-white shadow-md' : 'hover:bg-stone-200',
         className,
       )}

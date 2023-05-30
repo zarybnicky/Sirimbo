@@ -7,8 +7,8 @@ fragment CoupleExtended on Pary {
   }
 }
 
-query CoupleList($limit: Int, $offset: Int) {
-  activeCouples(first: $limit, offset: $offset) {
+query CoupleList($first: Int, $offset: Int) {
+  activeCouples(first: $first, offset: $offset) {
     totalCount
     nodes {
       ...CouplePartial

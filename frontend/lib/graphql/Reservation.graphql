@@ -42,8 +42,8 @@ fragment MyReservation on Nabidka {
   freeLessons
 }
 
-query ReservationList($limit: Int, $offset: Int) {
-  nabidkas(first: $limit, offset: $offset, orderBy: [N_OD_DESC]) {
+query ReservationList($first: Int, $offset: Int) {
+  nabidkas(first: $first, offset: $offset, orderBy: [N_OD_DESC]) {
     nodes {
       ...ReservationBasic
     }
@@ -51,8 +51,8 @@ query ReservationList($limit: Int, $offset: Int) {
   }
 }
 
-query ReservationDetailList($limit: Int, $offset: Int) {
-  nabidkas(first: $limit, offset: $offset, orderBy: [N_OD_DESC]) {
+query ReservationDetailList($first: Int, $offset: Int) {
+  nabidkas(first: $first, offset: $offset, orderBy: [N_OD_DESC]) {
     nodes {
       ...Reservation
     }

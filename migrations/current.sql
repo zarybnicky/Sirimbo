@@ -275,20 +275,23 @@ create or replace function public.users_has_valid_payment(a public.users) return
       AND pi_id_user = a.u_id
   )
 $$;
+grant all on function public.users_has_valid_payment to anonymous;
 
 create or replace function public.users_date_of_newest_payment(a public.users) returns date
     language sql stable as $$
   SELECT max(pi_date)
   FROM platby_item
   where pi_id_user = a.u_id
-$$;
+$$ security definer;
+grant all on function public.users_date_of_newest_payment to anonymous;
 
 create or replace function public.users_date_of_oldest_payment(a public.users) returns date
     language sql stable as $$
   SELECT min(pi_date)
   FROM platby_item
   where pi_id_user = a.u_id
-$$;
+$$ security definer;
+grant all on function public.users_date_of_oldest_payment to anonymous;
 
 create or replace function public.users_in_public_cohort(a public.users) returns boolean
     language sql stable as $$
@@ -298,6 +301,7 @@ create or replace function public.users_in_public_cohort(a public.users) returns
   where u_id = a.u_id
 $$;
 comment on function users_in_public_cohort(public.users) is E'@filterable';
+grant all on function public.users_in_public_cohort to anonymous;
 
 drop view if exists members;
 

@@ -12,8 +12,8 @@ fragment CohortGroup on CohortGroup {
   }
 }
 
-query CohortGroupList($limit: Int, $offset: Int, $isPublic: Boolean) {
-  cohortGroups(first: $limit, offset: $offset, condition: {isPublic: $isPublic}, orderBy: [ORDERING_ASC]) {
+query CohortGroupList($first: Int, $offset: Int, $isPublic: Boolean) {
+  cohortGroups(first: $first, offset: $offset, condition: {isPublic: $isPublic}, orderBy: [ORDERING_ASC]) {
     nodes {
       ...CohortGroup
     }

@@ -2,7 +2,7 @@ import type { ExecutionResult, TypedDocumentNode } from 'urql';
 import { print } from '@0no-co/graphql.web';
 import type { GraphCacheConfig } from 'lib/graphql';
 import { CurrentUserDocument, CurrentUserQuery } from './graphql/CurrentUser';
-import { simplePagination } from '@urql/exchange-graphcache/extras';
+import { relayPagination } from '@urql/exchange-graphcache/extras';
 
 export const origin =
   typeof window === 'undefined'
@@ -45,9 +45,7 @@ export const cacheConfig: Partial<GraphCacheConfig> = {
   },
   resolvers: {
     Query: {
-      upozornenis: simplePagination({
-        limitArgument: 'offset',
-      }),
+      upozornenis: relayPagination(),
     },
   },
   updates: {

@@ -19,8 +19,8 @@ query Article($id: BigInt!) {
   }
 }
 
-query Articles($limit: Int, $offset: Int) {
-  aktualities(first: $limit, offset: $offset, orderBy: [AT_TIMESTAMP_ADD_DESC]) {
+query Articles($first: Int, $offset: Int) {
+  aktualities(first: $first, offset: $offset, orderBy: [AT_TIMESTAMP_ADD_DESC]) {
     totalCount
     nodes {
       ...Article

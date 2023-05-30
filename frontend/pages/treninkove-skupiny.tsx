@@ -12,8 +12,11 @@ import { useQuery } from 'urql';
 
 const Page: NextPageWithLayout = () => {
   const { user } = useAuth();
-  const [{ data: cohorts }] = useQuery({query: CohortListWithMembersDocument, variables: { visible: true }});
-
+  const [{ data: cohorts }] = useQuery({
+    query: CohortListWithMembersDocument,
+    variables: { visible: true },
+  });
+console.log(cohorts);
   return (
     <>
       {!user && <Heading>Tréninkové skupiny</Heading>}
@@ -33,9 +36,9 @@ const Page: NextPageWithLayout = () => {
       {!user && <CallToAction />}
     </>
   );
-}
+};
 
 Page.hideTopMenuIfLoggedIn = true;
-Page.staticTitle = "Tréninkové skupiny";
+Page.staticTitle = 'Tréninkové skupiny';
 
 export default Page;

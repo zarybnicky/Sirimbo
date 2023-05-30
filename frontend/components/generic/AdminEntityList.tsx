@@ -25,10 +25,34 @@ type ListItem = {
   children?: ReactNode;
 };
 
+interface PageInfo {
+  __typename: string;
+  endCursor: null | number;
+  startCursor: null | number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+type NullArray<T> = Array<null | T | NullArray<T>>;
+interface Page {
+  __typename: string;
+  edges: NullArray<string>;
+  nodes: NullArray<string>;
+  pageInfo: PageInfo;
+}
+function getPageInfo<T>(data?: T): PageInfo | undefined {
+  if (!data) return;
+  for (const key in data) {
+    const page = data?.[key] as Page;
+    if (page?.pageInfo) {
+      return page?.pageInfo;
+    }
+  }
+};
+
 export const makeAdminList =
-  <T,>(
+  <T extends object>(
     entity: AdminListEntity,
-    document: TypedDocumentNode<T, { limit?: number; offset?: number }>,
+    document: TypedDocumentNode<T, { first?: number; cursor?: number }>,
   ) =>
   <Orig,>(getList: (x: T) => Orig[] | undefined) =>
   <New extends ListItem>(mapper: (x: Orig) => New) =>
@@ -42,14 +66,16 @@ export const makeAdminList =
     Header?: React.JSXElementConstructor<{}>;
   }): React.JSXElementConstructor<{}> =>
     function AdminEntityList() {
-      const [variables, setVariables] = React.useState({
-        limit: pageSize || undefined,
-        offset: 0,
-      });
+      const [cursor, setCursor] = React.useState<number|undefined>(undefined);
+      const [{ data, fetching }] = useQuery({query: document, variables: { first: pageSize, cursor } });
       const loadMore = React.useCallback(() => {
-        setVariables(x => ({...x, offset: x.offset + (x.limit ?? 0)}))
+        const info = getPageInfo(data);
+        if (info?.endCursor) {
+          setCursor(info.endCursor);
+        }
       }, []);
-      const [{ data, fetching }] = useQuery({query: document, variables });
+      const hasMore = getPageInfo(data)?.hasNextPage !== false;
+
       const nodes = React.useMemo(() => {
         if (!data) {
           return [];
@@ -91,7 +117,7 @@ export const makeAdminList =
             className="grow h-full overflow-y-auto scrollbar"
             data={fuzzy}
             itemContent={RenderItem}
-            components={{ Footer: pageSize ? Footer : undefined }}
+            components={{ Footer: (hasMore && pageSize) ? Footer : undefined }}
             context={{ router, loading: fetching, loadMore }}
           />
         </List>

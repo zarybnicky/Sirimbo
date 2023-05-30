@@ -26,8 +26,8 @@ fragment CohortWithMembers on Skupiny {
   }
 }
 
-query CohortList($limit: Int, $offset: Int, $visible: Boolean) {
-  skupinies(first: $limit, offset: $offset, condition: {sVisible: $visible}, orderBy: [ORDERING_ASC]) {
+query CohortList($first: Int, $offset: Int, $visible: Boolean) {
+  skupinies(first: $first, offset: $offset, condition: {sVisible: $visible}, orderBy: [ORDERING_ASC]) {
     nodes {
       ...Cohort
     }

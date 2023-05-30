@@ -19,7 +19,7 @@ export const useArticles = (
   articles: Article[];
   count: number;
 } => {
-  const [{ data }] = useQuery({query: ArticlesDocument, variables: { limit, offset }});
+  const [{ data }] = useQuery({query: ArticlesDocument, variables: { first: limit, offset }});
   return {
     articles: (data?.aktualities?.nodes || []).map((x) => ({
       id: x.id,

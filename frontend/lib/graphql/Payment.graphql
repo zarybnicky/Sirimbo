@@ -7,8 +7,8 @@ fragment PaymentGroup on PlatbyGroup {
   pgBase
 }
 
-query PaymentGroupList($limit: Int, $offset: Int) {
-  platbyGroups(first: $limit, offset: $offset) {
+query PaymentGroupList($first: Int, $offset: Int) {
+  platbyGroups(first: $first, offset: $offset) {
     totalCount
     nodes {
       ...PaymentGroup
@@ -65,8 +65,8 @@ fragment PaymentItem on PlatbyItem {
   }
 }
 
-query PaymentItemList($limit: Int, $offset: Int) {
-  platbyItems(first: $limit, offset: $offset) {
+query PaymentItemList($first: Int, $offset: Int) {
+  platbyItems(first: $first, offset: $offset) {
     totalCount
     nodes {
       ...PaymentItem
@@ -118,8 +118,8 @@ fragment PaymentCategory on PlatbyCategory {
   pcVisible
 }
 
-query PaymentCategoryList($limit: Int, $offset: Int) {
-  platbyCategories(first: $limit, offset: $offset) {
+query PaymentCategoryList($first: Int, $offset: Int) {
+  platbyCategories(first: $first, offset: $offset) {
     totalCount
     nodes {
       ...PaymentCategory

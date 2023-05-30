@@ -72,7 +72,7 @@ export const useMemberMenu = (): MenuLink[] => [
   { type: 'link', title: 'Akce', href: '/events' },
   { type: 'link', title: 'Dokumenty', href: '/documents' },
   { type: 'link', title: 'Členové', href: '/treninkove-skupiny' },
-  { type: 'link', title: 'Profil', href: '/profile' },
+  { type: 'link', title: 'Můj profil', href: '/profile' },
 ];
 
 const adminMenu: MenuLink[] = [
