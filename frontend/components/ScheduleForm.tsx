@@ -1,6 +1,9 @@
 import {
-    CreateScheduleDocument,
-  ScheduleFragment,
+  CreateScheduleDocument,
+  DeleteScheduleDocument,
+  ScheduleDocument,
+  DeleteLessonDocument,
+  ScheduleItemBasicFragment,
   UpdateScheduleDocument,
 } from 'lib/graphql/Schedule';
 import React from 'react';
@@ -11,20 +14,31 @@ import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { RozpiInput } from 'lib/graphql';
-import { useGqlMutation, useGqlQuery } from 'lib/query';
 import { TrainerListDocument } from 'lib/graphql/User';
+import { useRouter } from 'next/router';
 import { ComboboxElement } from './Combobox';
+import { Route } from 'nextjs-routes';
+import { toast } from 'react-toastify';
+import { ErrorPage } from './ErrorPage';
+import { DeleteButton } from './DeleteButton';
+import { Item } from './layout/Item';
+import { formatCoupleName } from 'lib/format-name';
+import { Clock, Pencil, X, Check, Users } from 'lucide-react';
+import { useMutation, useQuery } from 'urql';
 
 type FormProps = Pick<RozpiInput, 'rTrener' | 'rKde' | 'rDatum' | 'rVisible' | 'rLock'>;
 
-export const ScheduleForm: React.FC<{
-  data?: ScheduleFragment;
-  onSuccess: () => void;
-}> = ({ data, onSuccess }) => {
-  const { mutateAsync: doCreate } = useGqlMutation(CreateScheduleDocument, { onSuccess });
-  const { mutateAsync: doUpdate } = useGqlMutation(UpdateScheduleDocument, { onSuccess });
+const backHref: Route = { pathname: '/admin/akce' };
 
-    const { data: trainers } = useGqlQuery(TrainerListDocument, {});
+export const ScheduleForm = ({ id = '' }: { id?: string }) => {
+  const router = useRouter();
+  const [query] = useQuery({query: ScheduleDocument, variables: { id }});
+  const data = query.data?.rozpi;
+
+  const [_create, create] = useMutation(CreateScheduleDocument);
+  const [_update, update] = useMutation(UpdateScheduleDocument);
+
+  const [{ data: trainers }] = useQuery({query: TrainerListDocument});
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
@@ -39,14 +53,43 @@ export const ScheduleForm: React.FC<{
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     if (data) {
-      await doUpdate({ id: data.id, patch: values });
+      await update({ id, patch: values });
     } else {
-      await doCreate({ input: values });
+      const res = await create({ input: values });
+      const id = res.data?.createRozpi?.rozpi?.id;
+      toast.success('Přidáno.');
+      if (id) {
+        router.replace({ pathname: '/admin/rozpis/[id]', query: { id } });
+      } else {
+        reset(undefined);
+      }
     }
   });
 
+  if (query.data && query.data.rozpi === null) {
+    return <ErrorPage error="Nenalezeno" />;
+  }
+
   return (
-    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+    <form
+      className="container flex flex-col gap-2"
+      onSubmit={handleSubmit(onSubmit.execute)}
+    >
+      <Item.Titlebar
+        backHref={backHref}
+        title={id ? data?.userByRTrener?.fullName || '(Bez názvu)' : 'Nový rozpis'}
+      >
+        {id && (
+          <DeleteButton
+            doc={DeleteScheduleDocument}
+            id={id}
+            title="smazat rozpis"
+            onDelete={() => router.push(backHref)}
+          />
+        )}
+        <SubmitButton loading={onSubmit.loading} />
+      </Item.Titlebar>
+
       <ErrorBox error={onSubmit.error} />
       <ComboboxElement
         control={control}
@@ -68,7 +111,68 @@ export const ScheduleForm: React.FC<{
       />
       <CheckboxElement control={control} name="rVisible" value="1" label="Viditelný" />
       <CheckboxElement control={control} name="rLock" value="1" label="Uzamčený" />
-      <SubmitButton loading={onSubmit.loading} />
+
+      {id && (
+        <div className="mt-1 pb-8 bg-white p-3 rounded-md border border-red-500">
+          {data?.rozpisItemsByRiIdRodic.nodes.map((x) => (
+            <LessonAdminForm key={x.id} lesson={x} />
+          ))}
+        </div>
+      )}
     </form>
   );
 };
+
+function LessonAdminForm({ lesson }: { lesson: ScheduleItemBasicFragment }) {
+  const [mode, setMode] = React.useState<'view' | 'edit'>('view');
+  const { reset, control, handleSubmit } = useForm();
+  const couple = lesson.paryByRiPartner;
+
+  const onSubmit = React.useCallback(() => {
+    setMode('view');
+  }, []);
+
+  return mode === 'view' ? (
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center gap-2">
+        <Clock className="w-6 h-6 text-red-500" />
+        {lesson.riOd.substring(0, 5)} - {lesson.riDo.substring(0, 5)}
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Users className="w-6 h-6 text-red-500" />
+        <span>{couple ? formatCoupleName(couple) : 'VOLNÁ'}</span>
+      </div>
+
+      <button type="button" onClick={() => setMode('edit')}>
+        <Pencil />
+      </button>
+    </div>
+  ) : (
+    <form className="" onSubmit={handleSubmit(onSubmit)}>
+      <button
+        type="button"
+        onClick={() => {
+          setMode('view');
+          reset({
+            from: lesson.riOd,
+            to: lesson.riDo,
+            couple: lesson.riPartner,
+            lock: lesson.riLock,
+          });
+        }}
+      >
+        <X />
+      </button>
+      <button type="submit">
+        <Check />
+      </button>
+
+      <TextFieldElement control={control} name="from" type="text" />
+      <TextFieldElement control={control} name="to" type="text" />
+      <ComboboxElement control={control} name="couple" options={[]} />
+      <CheckboxElement control={control} name="lock" />
+      <DeleteButton doc={DeleteLessonDocument} id={lesson.id} title="smazat lekci" />
+    </form>
+  );
+}

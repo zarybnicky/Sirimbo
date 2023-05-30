@@ -7,15 +7,15 @@ import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { toast } from 'react-toastify';
-import { useGqlMutation } from 'lib/query';
 import { SubmitFormDocument } from 'lib/graphql/Crm';
+import { useMutation } from 'urql';
 
 type ProspectFormProps = {
   title: string;
 };
 
 export const ProspectForm = ({ title }: ProspectFormProps) => {
-  const { mutateAsync: submit } = useGqlMutation(SubmitFormDocument, {});
+  const submit = useMutation(SubmitFormDocument)[1];
   const { control, handleSubmit } = useForm();
 
   const onSubmit = useAsyncCallback(async ({ op, ...data }: any) => {

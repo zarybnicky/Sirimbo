@@ -11,7 +11,7 @@ import {
   UpdateArticleDocument,
 } from 'lib/graphql/Articles';
 import dynamic from 'next/dynamic';
-import { useGqlMutation } from 'lib/query';
+import { useMutation } from 'urql';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
 type FormProps = Pick<AktualityInput, 'atJmeno' | 'atPreview' | 'atText'>;
@@ -20,8 +20,8 @@ export const ArticleForm: React.FC<{
   data?: ArticleFragment;
   onSuccess: () => void;
 }> = ({ data, onSuccess }) => {
-  const { mutateAsync: doCreate } = useGqlMutation(CreateArticleDocument, { onSuccess });
-  const { mutateAsync: doUpdate } = useGqlMutation(UpdateArticleDocument, { onSuccess });
+  const doCreate = useMutation(CreateArticleDocument)[1];
+  const doUpdate = useMutation(UpdateArticleDocument)[1];
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
@@ -42,6 +42,7 @@ export const ArticleForm: React.FC<{
     } else {
       await doCreate({ input: patch });
     }
+    onSuccess();
   });
 
   return (

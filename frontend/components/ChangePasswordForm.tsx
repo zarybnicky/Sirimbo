@@ -4,10 +4,10 @@ import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from 'components/ErrorBox';
 import { SubmitButton } from './SubmitButton';
-import { useGqlMutation } from 'lib/query';
 import { ChangePasswordDocument } from 'lib/graphql/CurrentUser';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from 'urql';
 
 const Form = z
   .object({
@@ -24,10 +24,11 @@ type FormProps = z.infer<typeof Form>;
 export const ChangePasswordForm: React.FC<{
   onSuccess: () => void;
 }> = ({ onSuccess }) => {
-  const { mutateAsync: doUpdate } = useGqlMutation(ChangePasswordDocument, { onSuccess });
+  const doUpdate = useMutation(ChangePasswordDocument)[1];
   const { control, handleSubmit } = useForm<FormProps>({ resolver: zodResolver(Form) });
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await doUpdate({ input: { oldPass: values.oldPass, newPass: values.newPass } });
+    onSuccess?.();
   });
 
   return (

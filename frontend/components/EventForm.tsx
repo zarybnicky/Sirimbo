@@ -3,7 +3,6 @@ import {
   CreateEventDocument,
   DeleteEventDocument,
   EventDocument,
-  EventListDocument,
   UpdateEventDocument,
 } from 'lib/graphql/Event';
 import React from 'react';
@@ -14,16 +13,15 @@ import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import dynamic from 'next/dynamic';
-import { getGqlKey, useGqlMutation, useGqlQuery } from 'lib/query';
 import { useRouter } from 'next/router';
 import { Item } from './layout/Item';
 import { DeleteButton } from './DeleteButton';
 import { Route } from 'nextjs-routes';
-import { useQueryClient } from '@tanstack/react-query';
 import { DateRange } from 'react-day-picker';
 import { DateRangeInput } from './DateRange';
 import { ErrorPage } from './ErrorPage';
 import { toast } from 'react-toastify';
+import { useMutation, useQuery } from 'urql';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
 type FormProps = Pick<
@@ -45,16 +43,11 @@ const backHref: Route = { pathname: '/admin/akce' };
 
 export const EventForm = ({ id = '' }: { id?: string }) => {
   const router = useRouter();
-  const query = useGqlQuery(EventDocument, { id }, { enabled: !!id, cacheTime: 0 });
+  const [query] = useQuery({query: EventDocument, variables: { id }, pause: !id });
   const data = query.data?.event;
 
-  const queryClient = useQueryClient();
-  const onSuccess = React.useCallback(() => {
-    queryClient.invalidateQueries(getGqlKey(EventListDocument, {}));
-  }, [queryClient]);
-
-  const create = useGqlMutation(CreateEventDocument, { onSuccess });
-  const update = useGqlMutation(UpdateEventDocument, { onSuccess });
+  const create = useMutation(CreateEventDocument)[1];
+  const update = useMutation(UpdateEventDocument)[1];
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
@@ -92,10 +85,10 @@ export const EventForm = ({ id = '' }: { id?: string }) => {
       until: values.schedule.to?.toDateString() || '',
     };
     if (id) {
-      await update.mutateAsync({ id, patch });
+      await update({ id, patch });
     } else {
-      const res = await create.mutateAsync({ input: patch });
-      const id = res.createEvent?.event?.id;
+      const res = await create({ input: patch });
+      const id = res.data!.createEvent?.event?.id;
       toast.success('Přidáno.');
       if (id) {
         router.replace({ pathname: '/admin/nabidka/[id]', query: { id } });
@@ -125,7 +118,6 @@ export const EventForm = ({ id = '' }: { id?: string }) => {
             title="smazat akci"
             onDelete={() => {
               router.push(backHref);
-              queryClient.invalidateQueries(getGqlKey(EventListDocument, {}));
             }}
           />
         )}

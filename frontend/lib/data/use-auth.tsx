@@ -6,10 +6,9 @@ import {
   LogoutDocument,
   UserAuthFragment,
 } from 'lib/graphql/CurrentUser';
-import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { defaultPermissions, PermissionChecker } from './use-permissions';
-import { useGqlMutation, useGqlQuery } from 'lib/query';
+import { useMutation, useQuery } from 'urql';
 
 interface AuthContextType {
   isLoading: boolean;
@@ -24,41 +23,31 @@ const authContext = React.createContext<AuthContextType | undefined>(undefined);
 
 export const ProvideAuth = ({ children }: React.PropsWithChildren) => {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
-  const { data: currentUser } = useGqlQuery(
-    CurrentUserDocument,
-    {},
-    { onSettled: () => setIsLoading(false) },
-  );
+  const [{ data: currentUser, fetching }] = useQuery({query: CurrentUserDocument});
+  React.useEffect(() => {
+    if (!fetching) {
+      setIsLoading(false);
+    }
+  }, [fetching]);
 
   const user = currentUser?.getCurrentUser || null;
   const couple = currentUser?.getCurrentCouple || null;
-  const { mutateAsync: doSignIn } = useGqlMutation(LoginDocument, {
-    onSuccess: (data) => {
-      queryClient.setQueryData(['CurrentUser', {}], {
-        getCurrentUser: data.login?.result?.usr,
-        getCurrentCouple: data.login?.result?.couple,
-      });
-    },
-  });
-  const { mutateAsync: doSignOut } = useGqlMutation(LogoutDocument, {
-    onSuccess: () => {
-      queryClient.resetQueries(['CurrentUser', {}]);
-    },
-  });
+  const doSignIn = useMutation(LoginDocument)[1];
+  const doSignOut = useMutation(LogoutDocument)[1];
 
   const signIn = React.useCallback(
     async (login: string, passwd: string) => {
       setIsLoading(true);
       await doSignIn({ login, passwd });
+      setIsLoading(false);
     },
     [doSignIn],
   );
   const signOut = React.useCallback(async () => {
-    await doSignOut({});
     router.push('/');
+    await doSignOut({});
   }, [router, doSignOut]);
 
   const perms = React.useMemo(() => {

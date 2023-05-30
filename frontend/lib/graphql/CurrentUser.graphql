@@ -71,9 +71,7 @@ mutation Login($login: String!, $passwd: String!) {
         ...UserAuth
       }
       couple {
-        id: pId
-        pIdPartner
-        pIdPartnerka
+        ...CouplePartial
       }
     }
   }

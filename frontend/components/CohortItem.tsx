@@ -45,7 +45,7 @@ export function CohortItem({ item }: { item: CohortWithMembersFragment }) {
   );
 }
 
-const UserDetailButton: React.FC<{ user: UserPublicFragment }> = ({ user }) => {
+const UserDetailButton: React.FC<{ user: UserPublicFragment & { hasValidPayment: boolean | null } }> = ({ user }) => {
   return (
     <Dialog>
       <DialogTrigger>

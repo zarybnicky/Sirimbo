@@ -7,16 +7,16 @@ import { TextField } from './TextField';
 import React from 'react';
 import { exportMSMT } from 'lib/export-msmt';
 import { fromSlugArray } from 'lib/slugify';
-import { useGqlQuery } from 'lib/query';
 import { UserListDocument } from 'lib/graphql/User';
 import { useFuzzySearch } from 'lib/use-fuzzy-search';
 import { Virtuoso } from 'react-virtuoso';
+import { useQuery } from 'urql';
 
 export const UserList = () => {
   const router = useRouter();
-  const { data } = useGqlQuery(UserListDocument, {});
-  const { data: roles } = useGqlQuery(RoleListDocument, {});
-  const { data: cohorts } = useGqlQuery(CohortListDocument, {});
+  const [{ data }] = useQuery({query: UserListDocument});
+  const [{ data: roles }] = useQuery({query: RoleListDocument});
+  const [{ data: cohorts }] = useQuery({query: CohortListDocument});
   const id = fromSlugArray(router.query.id);
 
   const nodes = React.useMemo(() => {

@@ -6,7 +6,7 @@ import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
-import { useGqlMutation } from 'lib/query';
+import { useMutation } from 'urql';
 
 type FormProps = Pick<DokumentyInput, 'dName'>;
 
@@ -14,17 +14,16 @@ export const FileForm: React.FC<{
   data: FileFragment;
   onSuccess: () => void;
 }> = ({ data, onSuccess }) => {
-  const { mutateAsync: doUpdate } = useGqlMutation(UpdateFileDocument, { onSuccess });
+  const doUpdate = useMutation(UpdateFileDocument)[1];
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
-    reset({
-      dName: data?.dName,
-    });
+    reset({dName: data?.dName});
   }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await doUpdate({ id: data.id, patch: values });
+    onSuccess()
   });
 
   return (

@@ -1,7 +1,7 @@
 import { ArticlesDocument } from 'lib/graphql/Articles';
-import { useGqlQuery } from 'lib/query';
 import { slugify } from 'lib/slugify';
 import { Route } from 'nextjs-routes';
+import { useQuery } from 'urql';
 
 export interface Article {
   id: string;
@@ -19,7 +19,7 @@ export const useArticles = (
   articles: Article[];
   count: number;
 } => {
-  const { data } = useGqlQuery(ArticlesDocument, { limit, offset });
+  const [{ data }] = useQuery({query: ArticlesDocument, variables: { limit, offset }});
   return {
     articles: (data?.aktualities?.nodes || []).map((x) => ({
       id: x.id,

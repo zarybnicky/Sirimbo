@@ -24,9 +24,8 @@ import { EventListDocument } from './graphql/Event';
 import { ReservationListDocument } from './graphql/Reservation';
 import { ScheduleListDocument } from './graphql/Schedule';
 import { toast } from 'react-toastify';
-import { useGqlMutation } from 'lib/query';
+import { useMutation } from 'urql';
 import { FixUnpairedCouplesDocument } from 'lib/graphql/Couple';
-import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { List } from 'components/layout/List';
 import { PaymentCategoryListDocument, PaymentGroupListDocument, PaymentItemListDocument } from './graphql/Payment';
@@ -72,16 +71,13 @@ export const CoupleList = makeAdminList(
   title: formatCoupleName(x),
 }))({
   Header() {
-    const queryClient = useQueryClient();
-    const { mutateAsync: doFix } = useGqlMutation(FixUnpairedCouplesDocument, {
-      onSuccess(data) {
-        toast.info(`Opraveno ${data.fixUnpairedCouples?.paries?.length || 0} záznamů`);
-        queryClient.invalidateQueries(['CoupleList']);
-      },
-    });
+    const doFix = useMutation(FixUnpairedCouplesDocument)[1];
 
     return (
-      <List.TitleButton onClick={() => doFix({})}>
+      <List.TitleButton onClick={async () => {
+        const {data} = await doFix({});
+        toast.info(`Opraveno ${data?.fixUnpairedCouples?.paries?.length || 0} záznamů`);
+      }}>
         Opravit nespárované páry
       </List.TitleButton>
     );

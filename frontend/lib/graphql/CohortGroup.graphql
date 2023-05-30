@@ -29,14 +29,16 @@ query CohortGroup($id: BigInt!) {
 mutation CreateCohortGroup($input: CohortGroupInput!) {
   createCohortGroup(input: {cohortGroup: $input}) {
     cohortGroup {
-      id
+      ...CohortGroup
     }
   }
 }
 
 mutation UpdateCohortGroup($id: BigInt!, $patch: CohortGroupPatch!) {
   updateCohortGroup(input: {id: $id, patch: $patch}) {
-    __typename
+    cohortGroup {
+      ...CohortGroup
+    }
   }
 }
 

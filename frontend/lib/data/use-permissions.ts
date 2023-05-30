@@ -68,25 +68,6 @@ export const allowedPermissions: {
   peMain: [2],
 };
 
-export const permissionLabels: {
-  [key in keyof typeof PermissionKey]: string;
-} = {
-  peAkce: 'Akce',
-  peAktuality: 'Aktuality',
-  peDokumenty: 'Dokumenty',
-  peGalerie: 'Galerie',
-  peNabidka: 'Nabídky',
-  peNastenka: 'Nástěnka',
-  peNovinky: 'Novinky',
-  pePary: 'Páry',
-  pePlatby: 'Platby',
-  pePermissions: 'Uživatelské role',
-  peRozpis: 'Rozpisy',
-  peSkupiny: 'Skupiny',
-  peUsers: 'Uživatelé',
-  peMain: 'Veřejná sekce',
-};
-
 export const permissionMarks = [
   { value: 0, realValue: PermissionLevel.P_NONE, label: 'žádná' },
   { value: 1, realValue: PermissionLevel.P_VIEW, label: 'zobrazení' },

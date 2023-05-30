@@ -29,14 +29,16 @@ query File($id: BigInt!) {
 mutation CreateFile($input: DokumentyInput!) {
   createDokumenty(input: {dokumenty: $input}) {
    dokumenty {
-      id: dId
+      ...File
     }
   }
 }
 
 mutation UpdateFile($id: BigInt!, $patch: DokumentyPatch!) {
   updateDokumenty(input: {dId: $id, patch: $patch}) {
-    __typename
+    dokumenty {
+      ...File
+    }
   }
 }
 

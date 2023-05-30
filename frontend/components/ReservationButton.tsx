@@ -8,63 +8,63 @@ import {
   MyReservationFragment,
   SetDesiredLessonsDocument,
 } from 'lib/graphql/Reservation';
-import { useQueryClient } from '@tanstack/react-query';
-import { useGqlMutation } from 'lib/query';
+import { useMutation } from 'urql';
 
 export const ReservationButton = ({ item }: { item: MyReservationFragment }) => {
   const { perms, couple } = useAuth();
   const [isOpen, setIsOpen] = React.useState(false);
-  const queryClient = useQueryClient();
   const myLessons = item.myLessons || 0;
   const freeLessons = item.freeLessons || 0;
 
-  const setMutation = useGqlMutation(SetDesiredLessonsDocument, {
-    onSuccess() {
-      queryClient.invalidateQueries(['ReservationRange']);
-    },
-  });
-  const disableRemove = setMutation.isLoading || myLessons <= 0;
+  const [{ fetching }, setMutation] = useMutation(SetDesiredLessonsDocument);
+  const disableRemove = fetching || myLessons <= 0;
   const disableAdd =
-    setMutation.isLoading ||
+    fetching ||
     freeLessons < 1 ||
     (item.nMaxPocetHod > 0 && myLessons >= item.nMaxPocetHod);
 
   const addLesson = React.useCallback(() => {
-    setMutation.mutateAsync({
-      id: item.id,
-      lessonCount: Math.min(myLessons + 1, myLessons + freeLessons),
-    });
+    const lessonCount = Math.min(myLessons + 1, myLessons + freeLessons);
+    setMutation({ id: item.id, lessonCount });
   }, [freeLessons, setMutation, item, myLessons]);
 
   const removeLesson = React.useCallback(() => {
-    setMutation.mutateAsync({
-      id: item.id,
-      lessonCount: Math.max(myLessons - 1, 0),
-    });
+    const lessonCount = Math.max(myLessons - 1, 0);
+    setMutation({ id: item.id, lessonCount });
   }, [setMutation, item, myLessons]);
 
   const canEdit = perms.canMakeReservation(item) || (item.myLessons && !item.nLock);
-  const trigger = (
-    <div
-      className={classNames(
-        'group flex gap-3 p-2.5 rounded-lg',
-        'leading-4 text-sm tabular-nums',
-        canEdit &&
-          'cursor-pointer bg-yellow-100 border border-yellow-200 hover:bg-yellow-50',
-      )}
-    >
-      <div>{formatCoupleName(couple)}</div>
-      <div className="grow text-right">{myLessons}x</div>
-    </div>
-  );
+  const trigger =
+    myLessons === 0 ? (!canEdit ? null : (
+      <div
+        className={classNames(
+          'group flex justify-between gap-3 px-2.5 py-2 rounded-lg text-sm items-center',
+          canEdit && 'cursor-pointer border border-red-500 hover:bg-red-50',
+        )}
+      >
+        <div>Rezervovat</div>
+        <Plus className="w-4 h-4" />
+      </div>
+    )) : (
+      <div
+        className={classNames(
+          'group flex justify-between gap-3 px-2.5 py-2 rounded-lg leading-4 text-sm tabular-nums',
+          canEdit &&
+            'cursor-pointer bg-yellow-100 border border-yellow-200 hover:bg-yellow-50',
+        )}
+      >
+        <div>{formatCoupleName(couple)}</div>
+        <div>{myLessons}x</div>
+      </div>
+    );
   if (!canEdit) {
     return trigger;
   }
 
   return (
-    <div className="relative">
-      <PopoverPrimitive.Root open={isOpen} onOpenChange={setIsOpen}>
-        <PopoverPrimitive.Trigger asChild>{trigger}</PopoverPrimitive.Trigger>
+    <PopoverPrimitive.Root open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverPrimitive.Trigger asChild>{trigger}</PopoverPrimitive.Trigger>
+      <PopoverPrimitive.Portal>
         <PopoverPrimitive.Content
           align="start"
           sideOffset={4}
@@ -103,7 +103,7 @@ export const ReservationButton = ({ item }: { item: MyReservationFragment }) => 
             <Cross className="h-4 w-4 text-gray-500 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-400" />
           </PopoverPrimitive.Close>
         </PopoverPrimitive.Content>
-      </PopoverPrimitive.Root>
-    </div>
+      </PopoverPrimitive.Portal>
+    </PopoverPrimitive.Root>
   );
 };

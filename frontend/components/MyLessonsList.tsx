@@ -5,25 +5,22 @@ import { LessonButton } from './LessonButton';
 import { Card } from './Card';
 import { formatWeekDay } from 'lib/format-date';
 import { WeekPicker, mondayToWeekRange, getCurrentMonday } from './WeekPicker';
-import { useGqlQuery } from 'lib/query';
 import { CohortDocument } from 'lib/graphql/Cohorts';
 import { RichTextView } from './RichTextView';
 import { Schedule } from 'lib/entities';
+import { useQuery } from 'urql';
 
 export const MyLessonsList: React.FC = () => {
   const { user } = useAuth();
   const [startDate, setStartDate] = React.useState(getCurrentMonday);
-  const { data: cohortData } = useGqlQuery(
-    CohortDocument,
-    { id: user?.uSkupina! },
-    { enabled: !!user?.uSkupina },
-  );
+  const [{ data: cohortData }] = useQuery({
+    query: CohortDocument,
+    variables: { id: user?.uSkupina! },
+    pause: !user?.uSkupina,
+  });
   const cohort = cohortData?.skupiny;
 
-  const { data, isLoading } = useGqlQuery(
-    MyLessonsDocument,
-    mondayToWeekRange(startDate),
-  );
+  const [{ data, fetching }] = useQuery({query: MyLessonsDocument, variables: mondayToWeekRange(startDate)})
 
   const lessonsPerDay = React.useMemo(() => {
     const lessonsPerDay: { [day: string]: ScheduleItemFragment[] } = {};
@@ -41,7 +38,7 @@ export const MyLessonsList: React.FC = () => {
     <div className="flex flex-col">
       <WeekPicker title="Moje lekce" startDate={startDate} onChange={setStartDate} />
 
-      {!isLoading && !data?.myLessons?.nodes?.length && (
+      {!fetching && !data?.myLessons?.nodes?.length && (
         <div className="text-stone-600">Žádné lekce tento týden</div>
       )}
 

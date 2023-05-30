@@ -5,18 +5,18 @@ import { Edit3, X as CloseIcon } from 'lucide-react';
 import { TextFieldElement } from './TextField';
 import { SubmitButton } from './SubmitButton';
 import { useForm } from 'react-hook-form';
-import { useGqlMutation } from 'lib/query';
 import { SubmitFormDocument } from 'lib/graphql/Crm';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useCookie } from 'lib/use-cookie';
 import dynamic from 'next/dynamic';
+import { useMutation } from 'urql';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
 function FeedbackForm() {
   const [isOpen, setIsOpen] = React.useState(false);
   const { control, handleSubmit } = useForm();
-  const { mutateAsync: submit } = useGqlMutation(SubmitFormDocument, {});
+  const submit = useMutation(SubmitFormDocument)[1];
   const [isSubmitted, setSubmitted] = useCookie('feedback-submitted', 'true');
 
   const onSubmit = useAsyncCallback(async (data: any) => {

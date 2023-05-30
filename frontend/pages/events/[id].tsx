@@ -10,13 +10,13 @@ import { Heading } from 'components/Heading';
 import type { NextPageWithLayout } from 'pages/_app';
 import { fromSlugArray } from 'lib/slugify';
 import { NextSeo } from 'next-seo';
-import { useGqlQuery } from 'lib/query';
+import { useQuery } from 'urql';
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const { user } = useAuth();
   const id = fromSlugArray(router.query.id);
-  const { data } = useGqlQuery(EventDocument, { id }, { enabled: !!id });
+  const [{ data }] = useQuery({query:EventDocument, variables:{ id }, pause: !id });
 
   return (
     <>

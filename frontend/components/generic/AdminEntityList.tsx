@@ -1,8 +1,6 @@
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
-import { useInfiniteQuery } from '@tanstack/react-query';
 import { List } from 'components/layout/List';
 import { TextField } from 'components/TextField';
-import { fetchGql, getGqlKey } from 'lib/query';
 import { fromSlugArray } from 'lib/slugify';
 import { useRouter } from 'next/router';
 import { Route } from 'nextjs-routes';
@@ -12,6 +10,7 @@ import { Virtuoso } from 'react-virtuoso';
 import { SubmitButton } from 'components/SubmitButton';
 import { useFuzzySearch } from 'lib/use-fuzzy-search';
 import { NextRouter } from 'next/router';
+import { useQuery } from 'urql';
 
 export interface AdminListEntity {
   name: (num: number) => string;
@@ -43,31 +42,22 @@ export const makeAdminList =
     Header?: React.JSXElementConstructor<{}>;
   }): React.JSXElementConstructor<{}> =>
     function AdminEntityList() {
-      const { data, isFetchingNextPage, fetchNextPage } = useInfiniteQuery<T>(
-        getGqlKey(document, {}),
-        ({ pageParam = { limit: pageSize, offset: 0 } }) => fetchGql(document, pageParam),
-        {
-          getNextPageParam(lastPage, allPages) {
-            if (!pageSize || getList(lastPage)?.length !== pageSize) {
-              return undefined;
-            }
-            return { limit: pageSize, offset: (allPages.length + 1) * pageSize };
-          },
-        },
-      );
+      const [variables, setVariables] = React.useState({
+        limit: pageSize || undefined,
+        offset: 0,
+      });
+      const loadMore = React.useCallback(() => {
+        setVariables(x => ({...x, offset: x.offset + (x.limit ?? 0)}))
+      }, []);
+      const [{ data, fetching }] = useQuery({query: document, variables });
       const nodes = React.useMemo(() => {
         if (!data) {
           return [];
         }
-        return data.pages
-          .flatMap((x) => getList(x) || [])
-          .map((x) => {
-            const y = mapper(x);
-            return {
-              ...y,
-              href: entity.editRoute(y.id),
-            };
-          });
+        return (getList(data) || []).map((x) => {
+          const y = mapper(x);
+          return {...y, href: entity.editRoute(y.id) };
+        });
       }, [data]);
       const router = useRouter();
       const [search, setSearch] = React.useState('');
@@ -102,7 +92,7 @@ export const makeAdminList =
             data={fuzzy}
             itemContent={RenderItem}
             components={{ Footer: pageSize ? Footer : undefined }}
-            context={{ router, loading: isFetchingNextPage, loadMore: fetchNextPage }}
+            context={{ router, loading: fetching, loadMore }}
           />
         </List>
       );
@@ -133,7 +123,7 @@ function RenderItem(
   );
 }
 
-type FooterContext = { router: NextRouter; loadMore: () => {}; loading: boolean };
+type FooterContext = { router: NextRouter; loadMore: () => void; loading: boolean };
 const Footer = ({ context }: { context?: FooterContext }) => {
   return (
     <div className="p-2 flex justify-center">

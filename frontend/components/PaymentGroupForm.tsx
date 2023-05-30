@@ -10,7 +10,7 @@ import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { PlatbyGroupInput } from 'lib/graphql';
-import { useGqlMutation } from 'lib/query';
+import { useMutation } from 'urql';
 
 type FormProps = Pick<PlatbyGroupInput, 'pgName' | 'pgDescription' | 'pgBase'>;
 
@@ -18,8 +18,8 @@ export const PaymentGroupForm: React.FC<{
   data?: PaymentGroupFragment;
   onSuccess: () => void;
 }> = ({ data, onSuccess }) => {
-  const { mutateAsync: doCreate } = useGqlMutation(CreatePaymentGroupDocument, { onSuccess });
-  const { mutateAsync: doUpdate } = useGqlMutation(UpdatePaymentGroupDocument, { onSuccess });
+  const doCreate = useMutation(CreatePaymentGroupDocument)[1];
+  const doUpdate = useMutation(UpdatePaymentGroupDocument)[1];
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
@@ -36,6 +36,7 @@ export const PaymentGroupForm: React.FC<{
     } else {
       await doCreate({ input: { ...values, pgType: '1' } });
     }
+    onSuccess()
   });
 
   return (

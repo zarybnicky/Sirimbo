@@ -77,8 +77,7 @@ query ReservationRange($startDate: Date!, $endDate: Date!) {
 mutation SetDesiredLessons($id: BigInt!, $lessonCount: Int!) {
   reservationSetDesiredLessons(input: {reservationId: $id, lessonCount: $lessonCount}) {
     reservation {
-      myLessons
-      freeLessons
+      ...MyReservation
     }
   }
 }
@@ -86,7 +85,7 @@ mutation SetDesiredLessons($id: BigInt!, $lessonCount: Int!) {
 mutation ToggleReservationVisible($id: BigInt!, $visible: Boolean!) {
   updateNabidka(input: {nId: $id, patch: {nVisible: $visible}}) {
     nabidka {
-      id: nId
+      ...Reservation
     }
   }
 }
@@ -94,14 +93,16 @@ mutation ToggleReservationVisible($id: BigInt!, $visible: Boolean!) {
 mutation CreateReservation($input: NabidkaInput!) {
   createNabidka(input: {nabidka: $input}) {
     nabidka {
-      id: nId
+      ...Reservation
     }
   }
 }
 
 mutation UpdateReservation($id: BigInt!, $patch: NabidkaPatch!) {
   updateNabidka(input: {nId: $id, patch: $patch}) {
-    __typename
+    nabidka {
+      ...Reservation
+    }
   }
 }
 

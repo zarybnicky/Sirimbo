@@ -8,11 +8,11 @@ import { Item } from 'components/layout/Item';
 import { CohortItem } from 'components/CohortItem';
 import classNames from 'classnames';
 import type { NextPageWithLayout } from 'pages/_app';
-import { useGqlQuery } from 'lib/query';
+import { useQuery } from 'urql';
 
 const Page: NextPageWithLayout = () => {
   const { user } = useAuth();
-  const { data: cohorts } = useGqlQuery(CohortListWithMembersDocument, { visible: true });
+  const [{ data: cohorts }] = useQuery({query: CohortListWithMembersDocument, variables: { visible: true }});
 
   return (
     <>

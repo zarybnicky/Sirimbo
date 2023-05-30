@@ -14,13 +14,13 @@ import { CohortListDocument } from 'lib/graphql/Cohorts';
 import { RegisterDocument } from 'lib/graphql/CurrentUser';
 import { Item } from 'components/layout/Item';
 import type { NextPageWithLayout } from 'pages/_app';
-import { useGqlMutation, useGqlQuery } from 'lib/query';
+import { useMutation, useQuery } from 'urql';
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const countries = useCountries();
-  const { data: cohorts } = useGqlQuery(CohortListDocument, { visible: true });
-  const { mutateAsync: register } = useGqlMutation(RegisterDocument);
+  const [{ data: cohorts }] = useQuery({query: CohortListDocument, variables: { visible: true }});
+  const register = useMutation(RegisterDocument)[1];
   const { control, handleSubmit, watch } = useForm();
 
   const onSubmit = useAsyncCallback(async (values: any) => {

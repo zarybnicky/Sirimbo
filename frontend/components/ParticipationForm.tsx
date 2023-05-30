@@ -12,12 +12,11 @@ import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { useAuth } from 'lib/data/use-auth';
-import { useQueryClient } from '@tanstack/react-query';
 import { Button } from './Button';
 import type { AttendeeExternalInput } from 'lib/graphql';
 import { toast } from 'react-toastify';
-import { useGqlMutation } from 'lib/query';
 import { Dialog, DialogContent, DialogTrigger } from './ui/dialog';
+import { useMutation } from 'urql';
 
 interface Props {
   data: EventFragment & Partial<MyEventFragment>;
@@ -33,19 +32,12 @@ type ExternalFormProps = Pick<
   'firstName' | 'lastName' | 'guardianName' | 'email' | 'phone' | 'notes' | 'birthNumber'
 >;
 
-function ExternalParticipationForm({ data, onSuccess: realOnSuccess }: Props) {
-  const queryClient = useQueryClient();
-  const onSuccess = React.useCallback(() => {
-    toast.success('Registrace proběhla úspěšně.');
-    queryClient.invalidateQueries(['MyEvents']);
-    realOnSuccess();
-  }, [queryClient, realOnSuccess]);
-
-  const createMutation = useGqlMutation(CreateAttendeeExternalDocument, { onSuccess });
+function ExternalParticipationForm({ data, onSuccess }: Props) {
+  const create = useMutation(CreateAttendeeExternalDocument)[1];
   const { control, handleSubmit } = useForm<ExternalFormProps>();
 
   const onSubmit = useAsyncCallback(async (values: ExternalFormProps) => {
-    await createMutation.mutateAsync({
+    await create({
       input: {
         ...values,
         birthNumber: values.birthNumber || '',
@@ -54,6 +46,8 @@ function ExternalParticipationForm({ data, onSuccess: realOnSuccess }: Props) {
         eventId: data.id,
       },
     });
+    toast.success('Registrace proběhla úspěšně.');
+    onSuccess?.();
   });
 
   return (
@@ -128,19 +122,12 @@ function ExternalParticipationForm({ data, onSuccess: realOnSuccess }: Props) {
   );
 }
 
-function ParticipationForm({ data, onSuccess: realOnSuccess }: Props) {
+function ParticipationForm({ data, onSuccess }: Props) {
   const { user } = useAuth();
-  const queryClient = useQueryClient();
-  const onSuccess = React.useCallback(() => {
-    toast.success('Registrace proběhla úspěšně.');
-    queryClient.invalidateQueries(['MyEvents']);
-    realOnSuccess();
-  }, [queryClient, realOnSuccess]);
-
   const myRegistration = data.attendeeUsers?.nodes?.find((x) => x.user?.uId === user?.id);
 
-  const createMutation = useGqlMutation(CreateParticipationDocument, { onSuccess });
-  const cancelMutation = useGqlMutation(CancelParticipationDocument, { onSuccess });
+  const create = useMutation(CreateParticipationDocument)[1];
+  const cancel = useMutation(CancelParticipationDocument)[1];
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
@@ -150,12 +137,14 @@ function ParticipationForm({ data, onSuccess: realOnSuccess }: Props) {
   }, [reset, user, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    await createMutation.mutateAsync({
-      input: { eventId: data.id!, ...values, yearOfBirth: 0 },
-    });
+    await create({input: { eventId: data.id!, ...values, yearOfBirth: 0 }});
+    toast.success('Registrace proběhla úspěšně.');
+    onSuccess?.();
   });
   const onCancel = useAsyncCallback(async () => {
-    await cancelMutation.mutateAsync({ input: { eventId: data.id! } });
+    await cancel({ input: { eventId: data.id! } });
+    toast.success('Registrace zrušena úspěšně.');
+    onSuccess?.();
   });
 
   return (

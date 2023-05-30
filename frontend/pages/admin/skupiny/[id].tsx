@@ -6,16 +6,13 @@ import { Item } from 'components/layout/Item';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { fromSlugArray } from 'lib/slugify';
 import type { NextPageWithLayout } from 'pages/_app';
-import { useGqlMutation, useGqlQuery } from 'lib/query';
 import { CohortList } from 'lib/entity-lists';
+import { useQuery } from 'urql';
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const id = fromSlugArray(router.query.id);
-  const { data } = useGqlQuery(CohortDocument, { id }, { enabled: !!id, cacheTime: 0 });
-  const { mutateAsync: doDelete } = useGqlMutation(DeleteCohortDocument, {
-    onSuccess: () => router.push('/admin/skupiny'),
-  });
+  const [{ data }] = useQuery({query: CohortDocument, variables: { id }, pause: !!id });
 
   return (
     <Item>
@@ -23,7 +20,12 @@ const Page: NextPageWithLayout = () => {
         backHref="/admin/skupiny"
         title={data?.skupiny?.sName || '(Bez názvu)'}
       >
-        <DeleteButton onDelete={() => doDelete({ id })} title="smazat skupinu" />
+        <DeleteButton
+          doc={DeleteCohortDocument}
+          id={id}
+          onDelete={() => router.push('/admin/skupiny')}
+          title="smazat skupinu"
+        />
       </Item.Titlebar>
       {data && <CohortForm data={data.skupiny || undefined} />}
     </Item>

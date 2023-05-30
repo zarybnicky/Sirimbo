@@ -1,17 +1,10 @@
-import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
-import {
-  QueryKey,
-  useMutation,
-  UseMutationOptions,
-  UseMutationResult,
-  useQuery,
-  UseQueryOptions,
-  type UseQueryResult,
-} from '@tanstack/react-query';
-import type { ExecutionResult } from 'graphql';
-import { print } from 'graphql/language/printer';
+import type { ExecutionResult, TypedDocumentNode } from 'urql';
+import { print } from '@0no-co/graphql.web';
+import type { GraphCacheConfig } from 'lib/graphql';
+import { CurrentUserDocument, CurrentUserQuery } from './graphql/CurrentUser';
+import { simplePagination } from '@urql/exchange-graphcache/extras';
 
-const origin =
+export const origin =
   typeof window === 'undefined'
     ? process.env.GRAPHQL_BACKEND || `http://localhost:${process.env.PORT || 3000}`
     : '';
@@ -36,35 +29,78 @@ export async function fetchGql<TResult, TVariables>(
     );
   }
 
-  const result: ExecutionResult<TResult> = await response.json();
+  const result: ExecutionResult = await response.json();
   if (result.errors?.length) {
     const rawError = result.errors[0];
     if (rawError) {
       throw rawError;
     }
   }
-  return result.data!;
+  return result.data! as TResult;
 }
 
-export function getGqlKey<TResult, TVariables>(
-  document: TypedDocumentNode<TResult, TVariables>,
-  variables: TVariables,
-): QueryKey {
-  return [(document.definitions[0] as any).name.value, variables];
-}
+export const cacheConfig: Partial<GraphCacheConfig> = {
+  keys: {
+    Attachment: (x) => x.objectName || null,
+  },
+  resolvers: {
+    Query: {
+      upozornenis: simplePagination({
+        limitArgument: 'offset',
+      }),
+    },
+  },
+  updates: {
+    Mutation: {
+      deleteRozpi(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'Rozpis', id: args.input.rId});
+      },
+      updateSkupiny(_result, args, cache, _info) {
+        if (args.input.patch.cohortGroup) {
+          cache.invalidate({ __typename: 'CohortGroup', id: args.input.patch.cohortGroup});
+        }
+      },
+      deleteSkupiny(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'Skupiny', id: args.input.sId});
+      },
+      deleteUpozorneni(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'Upozorneni', id: args.input.upId});
+      },
+      deleteUser(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'User', id: args.input.uId});
+      },
+      deleteEvent(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'Event', id: args.input.id});
+      },
+      deleteCohortGroup(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'CohortGroup', id: args.input.id});
+      },
+      deleteNabidka(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'Nabidka', id: args.input.nId});
+      },
+      createParticipationExternal(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'Event', id: args.input.eventId});
+      },
+      createParticipation(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'Event', id: args.input.eventId});
+      },
+      cancelParticipation(_result, args, cache, _info) {
+        cache.invalidate({ __typename: 'Event', id: args.input.eventId});
+      },
 
-export function useGqlQuery<TResult, TVariables>(
-  document: TypedDocumentNode<TResult, TVariables>,
-  variables: TVariables,
-  options?: UseQueryOptions<TResult>,
-): UseQueryResult<TResult> {
-  const key = getGqlKey(document, variables);
-  return useQuery(key, () => fetchGql(document, variables), options);
-}
-
-export function useGqlMutation<TData, TVariables, TError = unknown, TContext = unknown>(
-  document: TypedDocumentNode<TData, TVariables>,
-  options?: UseMutationOptions<TData, TError, TVariables, TContext>,
-): UseMutationResult<TData, TError, TVariables, TContext> {
-  return useMutation((variables: TVariables) => fetchGql(document, variables), options);
-}
+      login(_result, args, cache, _info) {
+        cache.updateQuery({ query: CurrentUserDocument }, (old) => {
+          const login = _result.login?.result;
+          if (!login) return old;
+          return {
+            getCurrentUser: login.usr,
+            getCurrentCouple: login.couple,
+          } as CurrentUserQuery;
+        });
+      },
+      logout(_result, args, cache, _info) {
+        cache.updateQuery({query: CurrentUserDocument}, () => null);
+      },
+    },
+  },
+};

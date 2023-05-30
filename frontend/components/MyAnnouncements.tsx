@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { Pagination } from './Pagination';
 import { AnnouncementItem } from './AnnouncementItem';
-import { useGqlQuery } from 'lib/query';
 import { MyAnnouncementsDocument } from 'lib/graphql/Announcement';
+import { useQuery } from 'urql';
 
 export function MyAnnouncements() {
   const [limit] = React.useState(5);
   const [page, setPage] = React.useState(1);
-  const { data } = useGqlQuery(MyAnnouncementsDocument, {
-    limit,
-    offset: (page - 1) * limit,
+  const [{ data }] = useQuery({
+    query: MyAnnouncementsDocument,
+    variables: {limit, offset: (page - 1) * limit},
   });
   if (!data?.myAnnouncements) {
     // react-skeleton

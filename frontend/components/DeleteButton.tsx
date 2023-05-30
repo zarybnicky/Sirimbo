@@ -3,13 +3,13 @@ import { useConfirm } from 'components/Confirm';
 import { Trash2 as DeleteIcon } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
-import { useGqlMutation } from 'lib/query';
+import { useMutation } from 'urql';
 
 type DeleteButtonProps = {
   title: string;
   doc: TypedDocumentNode<any, { id: string }>;
   id: string;
-  onDelete: () => any;
+  onDelete?: () => any;
 };
 
 export const DeleteButton = React.memo(function DeleteButton({
@@ -19,12 +19,13 @@ export const DeleteButton = React.memo(function DeleteButton({
   onDelete,
 }: DeleteButtonProps) {
   const confirm = useConfirm();
-  const deleteMutation = useGqlMutation(doc, { onSuccess: onDelete });
+  const deleteMutation = useMutation(doc)[1];
 
   const deleteItem = React.useCallback(async () => {
     await confirm({ description: `Opravdu chcete smazat ${title}?` });
     try {
-      await deleteMutation.mutateAsync({ id });
+      await deleteMutation({ id });
+      onDelete?.();
       toast.success('Smazáno');
     } catch (e) {
       if (e instanceof Error) {

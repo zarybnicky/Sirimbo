@@ -12,8 +12,8 @@ import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { PlatbyItemInput } from 'lib/graphql';
-import { useGqlMutation, useGqlQuery } from 'lib/query';
 import { UserListDocument } from 'lib/graphql/User';
+import { useMutation, useQuery } from 'urql';
 
 type FormProps = Pick<
   PlatbyItemInput,
@@ -24,15 +24,11 @@ export const PaymentItemForm: React.FC<{
   data?: PaymentItemFragment;
   onSuccess: () => void;
 }> = ({ data, onSuccess }) => {
-  const { mutateAsync: doCreate } = useGqlMutation(CreatePaymentItemDocument, {
-    onSuccess,
-  });
-  const { mutateAsync: doUpdate } = useGqlMutation(UpdatePaymentItemDocument, {
-    onSuccess,
-  });
+  const doCreate = useMutation(CreatePaymentItemDocument)[1];
+  const doUpdate = useMutation(UpdatePaymentItemDocument)[1];
 
-  const { data: users } = useGqlQuery(UserListDocument, {});
-  const { data: categories } = useGqlQuery(PaymentCategoryListDocument, {});
+  const [{ data: users }] = useQuery({query: UserListDocument});
+  const [{ data: categories }] = useQuery({query: PaymentCategoryListDocument});
 
   // load also platby_raw linked to this one
   // php-unserialize-js the blob
@@ -55,6 +51,7 @@ export const PaymentItemForm: React.FC<{
     } else {
       await doCreate({ input: { ...values } });
     }
+    onSuccess();
   });
 
   return (

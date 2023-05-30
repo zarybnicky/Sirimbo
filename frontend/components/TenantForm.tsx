@@ -4,14 +4,12 @@ import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
-import { useQueryClient } from '@tanstack/react-query';
 import {
-  CurrentTenantDocument,
   TenantFragment,
   UpdateTenantDocument,
 } from 'lib/graphql/Tenant';
 import dynamic from 'next/dynamic';
-import { getGqlKey, useGqlMutation } from 'lib/query';
+import { useMutation } from 'urql';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -25,12 +23,7 @@ type FormProps = z.infer<typeof Form>;
 export const TenantForm: React.FC<{
   data: TenantFragment;
 }> = ({ data }) => {
-  const queryClient = useQueryClient();
-  const onSuccess = React.useCallback(() => {
-    queryClient.invalidateQueries(getGqlKey(CurrentTenantDocument, {}));
-  }, [queryClient]);
-
-  const { mutateAsync: doUpdate } = useGqlMutation(UpdateTenantDocument, { onSuccess });
+  const doUpdate = useMutation(UpdateTenantDocument)[1];
 
   const { reset, control, handleSubmit } = useForm<FormProps>({
     resolver: zodResolver(Form),

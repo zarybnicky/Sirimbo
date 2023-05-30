@@ -30,27 +30,3 @@ query RoleList {
     }
   }
 }
-
-query Role($id: BigInt!) {
-  permission(peId: $id) {
-    ...Role
-  }
-}
-
-mutation CreateRole($input: PermissionInput!) {
-  createPermission(input: {permission: $input}) {
-    permission {
-      id: peId
-    }
-  }
-}
-mutation UpdateRole($id: BigInt!, $patch: PermissionPatch!) {
-  updatePermission(input: {peId: $id, patch: $patch}) {
-    __typename
-  }
-}
-mutation DeleteRole($id: BigInt!) {
-  deletePermission(input: {peId: $id}) {
-    __typename
-  }
-}

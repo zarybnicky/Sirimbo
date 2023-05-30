@@ -12,13 +12,13 @@ import {
   WeekPicker,
 } from 'components/WeekPicker';
 import type { NextPageWithLayout } from 'pages/_app';
-import { useGqlQuery } from 'lib/query';
+import { useQuery } from 'urql';
 
 const Page: NextPageWithLayout = () => {
   const [startDate, setStartDate] = React.useState(getCurrentMonday);
 
-  const { data: schedules } = useGqlQuery(ScheduleRangeDocument, mondayToWeekRange(startDate));
-  const { data: reservations } = useGqlQuery(ReservationRangeDocument, mondayToYearRange(startDate));
+  const [{ data: schedules }] = useQuery({query: ScheduleRangeDocument, variables: mondayToWeekRange(startDate)});
+  const [{ data: reservations }] = useQuery({query: ReservationRangeDocument, variables: mondayToYearRange(startDate)});
 
   const scheduleByDay = React.useMemo(() => {
     const obj: { [date: string]: ScheduleFragment[] } = {};

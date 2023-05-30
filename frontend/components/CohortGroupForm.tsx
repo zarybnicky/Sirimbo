@@ -1,6 +1,5 @@
 import {
   CohortGroupDocument,
-  CohortGroupListDocument,
   CreateCohortGroupDocument,
   DeleteCohortGroupDocument,
   UpdateCohortGroupDocument,
@@ -12,14 +11,11 @@ import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
-import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import dynamic from 'next/dynamic';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 import { CohortListDocument, UpdateCohortDocument } from 'lib/graphql/Cohorts';
-import { getGqlKey, useGqlMutation, useGqlQuery } from 'lib/query';
-import { Plus, Trash2 } from 'lucide-react';
-import { CollapsibleCard } from './CollapsibleCard';
+import { Plus } from 'lucide-react';
 import { Command, CommandItem, CommandInput, CommandList } from 'components/ui/command';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -28,6 +24,10 @@ import { useRouter } from 'next/router';
 import { DeleteButton } from './DeleteButton';
 import { Route } from 'nextjs-routes';
 import { ErrorPage } from './ErrorPage';
+import { Card } from './Card';
+import * as Popover from '@radix-ui/react-popover';
+import { cn } from 'lib/utils';
+import { useMutation, useQuery } from 'urql';
 
 const Form = z.object({
   name: z.string(),
@@ -45,23 +45,18 @@ const backHref: Route = { pathname: '/admin/cohort-group' };
 
 export function CohortGroupForm({ id = '' }: Props) {
   const router = useRouter();
-  const queryClient = useQueryClient();
-  const onSuccess = React.useCallback(() => {
-    queryClient.invalidateQueries(getGqlKey(CohortGroupListDocument, {}));
-  }, [queryClient]);
-  const query = useGqlQuery(CohortGroupDocument, { id }, { enabled: !!id, cacheTime: 0 });
+  const [{ data: cohorts }] = useQuery({query: CohortListDocument});
+  const [query] = useQuery({query: CohortGroupDocument, variables: { id }, pause: !id });
   const data = query.data?.cohortGroup;
 
-  const create = useGqlMutation(CreateCohortGroupDocument, { onSuccess });
-  const update = useGqlMutation(UpdateCohortGroupDocument, { onSuccess });
+  const create = useMutation(CreateCohortGroupDocument)[1];
+  const update = useMutation(UpdateCohortGroupDocument)[1];
+  const updateCohort = useMutation(UpdateCohortDocument)[1];
 
-  const { data: cohorts } = useGqlQuery(CohortListDocument, {});
   const remaining = React.useMemo(() => {
     const used = (data?.skupiniesByCohortGroup?.nodes || []).map((x) => x.id);
     return (cohorts?.skupinies?.nodes || []).filter((x) => !used.includes(x.id));
   }, [cohorts, data]);
-
-  const updateCohort = useGqlMutation(UpdateCohortDocument, { onSuccess });
 
   const { reset, control, handleSubmit } = useForm<FormProps>({
     resolver: zodResolver(Form),
@@ -72,10 +67,10 @@ export function CohortGroupForm({ id = '' }: Props) {
 
   const onSubmit = useAsyncCallback(async (patch: FormProps) => {
     if (id) {
-      await update.mutateAsync({ id, patch });
+      await update({ id, patch });
     } else {
-      const res = await create.mutateAsync({ input: patch });
-      const id = res.createCohortGroup?.cohortGroup?.id;
+      const res = await create({ input: patch });
+      const id = res.data!.createCohortGroup?.cohortGroup?.id;
       toast.success('Přidáno.');
       if (id) {
         router.replace({ pathname: '/admin/cohort-group/[id]', query: { id } });
@@ -103,10 +98,7 @@ export function CohortGroupForm({ id = '' }: Props) {
             doc={DeleteCohortGroupDocument}
             id={id}
             title="smazat tréninkový program"
-            onDelete={() => {
-              router.push(backHref);
-              queryClient.invalidateQueries(getGqlKey(CohortGroupListDocument, {}));
-            }}
+            onDelete={() => router.push(backHref)}
           />
         )}
         <SubmitButton loading={onSubmit.loading} />
@@ -128,47 +120,57 @@ export function CohortGroupForm({ id = '' }: Props) {
         label="Popis"
       />
 
-      {data && (
+      {id && (
         <div className="mt-1 pb-8">
           <div className="text-stone-700 text-sm pb-1">Tréninkové skupiny v programu</div>
 
-          {data.skupiniesByCohortGroup.nodes.map((x) => (
-            <CollapsibleCard key={x.id} title={x.sName} cohort={x}>
-              <button
-                className="button button-white gap-2"
-                onClick={() =>
-                  updateCohort.mutate({ id: x.id, patch: { cohortGroup: null } })
-                }
-              >
-                <Trash2 /> Odstranit
-              </button>
-            </CollapsibleCard>
+          {data?.skupiniesByCohortGroup.nodes.map((x) => (
+            <Card
+              key={x.id}
+              cohort={x}
+              menu={[
+                {
+                  title: 'Odebrat',
+                  onClick: () => updateCohort({ id: x.id, patch: { cohortGroup: null } }),
+                },
+              ]}
+            >
+              {x.sName}
+            </Card>
           ))}
 
-          <CollapsibleCard
-            title={
-              <span>
-                <Plus className="inline w-4 h-4 text-stone-600" /> Přidat skupinu
-              </span>
-            }
-          >
-            <Command className="border">
-              <CommandInput placeholder="Vyhledat..." />
-              <CommandList>
-                {remaining.map((x) => (
-                  <CommandItem
-                    key={x.id}
-                    value={x.sName}
-                    onSelect={() =>
-                      updateCohort.mutate({ id: x.id, patch: { cohortGroup: data.id } })
-                    }
-                  >
-                    {x.sName}
-                  </CommandItem>
-                ))}
-              </CommandList>
-            </Command>
-          </CollapsibleCard>
+          <Popover.Root>
+            <Popover.Trigger asChild>
+              <button className="button button-white">
+                  <Plus className="inline w-4 h-4" /> Přidat skupinu
+              </button>
+            </Popover.Trigger>
+            <Popover.Content
+              align="start"
+              sideOffset={4}
+              className={cn(
+                'z-20 radix-side-top:animate-slide-up radix-side-bottom:animate-slide-down',
+                'w-48 rounded-lg shadow-md md:w-56',
+                'bg-white dark:bg-stone-800',
+              )}
+            >
+              <Popover.Arrow className="fill-current text-white dark:text-stone-800" />
+              <Command className="border">
+                <CommandInput autoFocus placeholder="Vyhledat..." />
+                <CommandList>
+                  {remaining.map((x) => (
+                    <CommandItem
+                      key={x.id}
+                      value={x.sName}
+                      onSelect={() => updateCohort({ id: x.id, patch: { cohortGroup: id } })}
+                    >
+                      {x.sName}
+                    </CommandItem>
+                  ))}
+                </CommandList>
+              </Command>
+            </Popover.Content>
+          </Popover.Root>
         </div>
       )}
     </form>

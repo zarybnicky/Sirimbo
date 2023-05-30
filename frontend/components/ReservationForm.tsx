@@ -2,8 +2,6 @@ import {
   CreateReservationDocument,
   DeleteReservationDocument,
   ReservationDocument,
-  ReservationFragment,
-  ReservationListDocument,
   UpdateReservationDocument,
 } from 'lib/graphql/Reservation';
 import React from 'react';
@@ -16,15 +14,14 @@ import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { NabidkaInput } from 'lib/graphql';
 import { DateRange, DateRangeInput } from './DateRange';
-import { getGqlKey, useGqlMutation, useGqlQuery } from 'lib/query';
 import { TrainerListDocument } from 'lib/graphql/User';
 import { Item } from './layout/Item';
 import { DeleteButton } from './DeleteButton';
 import { Route } from 'nextjs-routes';
 import { useRouter } from 'next/router';
-import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { ErrorPage } from './ErrorPage';
+import { useMutation, useQuery } from 'urql';
 
 type FormProps = Pick<
   NabidkaInput,
@@ -37,17 +34,12 @@ const backHref: Route = { pathname: '/admin/nabidka' };
 
 export const ReservationForm = ({ id = '' }: { id?: string }) => {
   const router = useRouter();
-  const query = useGqlQuery(ReservationDocument, { id }, { enabled: !!id, cacheTime: 0 });
+  const [query] = useQuery({query: ReservationDocument, variables: { id }, pause: !id });
   const data = query.data?.nabidka;
 
-  const queryClient = useQueryClient();
-  const onSuccess = React.useCallback(() => {
-    queryClient.invalidateQueries(getGqlKey(ReservationListDocument, {}));
-  }, [queryClient]);
-
-  const create = useGqlMutation(CreateReservationDocument, { onSuccess });
-  const update = useGqlMutation(UpdateReservationDocument, { onSuccess });
-  const { data: trainers } = useGqlQuery(TrainerListDocument, {});
+  const create = useMutation(CreateReservationDocument)[1];
+  const update = useMutation(UpdateReservationDocument)[1];
+  const [{ data: trainers }] = useQuery({query: TrainerListDocument});
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
@@ -75,10 +67,10 @@ export const ReservationForm = ({ id = '' }: { id?: string }) => {
       nDo: values.schedule.to?.toDateString() || '',
     };
     if (id) {
-      await update.mutateAsync({ id, patch });
+      await update({ id, patch });
     } else {
-      const res = await create.mutateAsync({ input: patch });
-      const id = res.createNabidka?.nabidka?.id;
+      const res = await create({ input: patch });
+      const id = res.data!.createNabidka?.nabidka?.id;
       toast.success('Přidáno.');
       if (id) {
         router.replace({ pathname: '/admin/nabidka/[id]', query: { id } });
@@ -106,10 +98,7 @@ export const ReservationForm = ({ id = '' }: { id?: string }) => {
             doc={DeleteReservationDocument}
             id={id}
             title="smazat nabídku"
-            onDelete={() => {
-              router.push(backHref);
-              queryClient.invalidateQueries(getGqlKey(ReservationListDocument, {}));
-            }}
+            onDelete={() => router.push(backHref)}
           />
         )}
         <SubmitButton loading={onSubmit.loading} />

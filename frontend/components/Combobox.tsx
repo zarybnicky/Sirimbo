@@ -37,7 +37,7 @@ export function ComboboxElement<TFieldValues extends FieldValues>({
   label,
   placeholder,
   ...props
-}: ComboboxElementProps<TFieldValues> &Popover.PopoverContentProps) {
+}: ComboboxElementProps<TFieldValues> & Popover.PopoverContentProps) {
   if (required && !rules?.required) {
     rules.required = 'Toto pole je povinné';
   }
@@ -60,7 +60,7 @@ export function ComboboxElement<TFieldValues extends FieldValues>({
         >
           {field.value
             ? options.find((item) => item.id === field.value)?.label
-            : (placeholder || 'Vybrat...')}
+            : placeholder || 'Vybrat...'}
           <ChevronsDown className="h-4 w-4 shrink-0 opacity-50" />
         </button>
       </Popover.Trigger>

@@ -6,7 +6,7 @@ import { fullDateFormatter } from 'lib/format-date';
 import { Item } from 'components/layout/Item';
 import { Card } from 'components/Card';
 import type { NextPageWithLayout } from 'pages/_app';
-import { useGqlQuery } from 'lib/query';
+import { useQuery } from 'urql';
 
 const categories = [
   { id: '1', label: 'Schůze,\u{00A0}rady' },
@@ -19,12 +19,15 @@ const Page: NextPageWithLayout = () => {
   const { control, watch } = useForm<{ category: string }>();
   const category = watch('category');
 
-  const { data } = useGqlQuery(FileListDocument, {
-    category: category ? parseInt(category, 10) : undefined,
+  const [{ data }] = useQuery({
+    query:FileListDocument,
+    variables: {
+      category: category ? parseInt(category, 10) : undefined,
+    },
   });
 
   return (
-    <div className="container p-4 lg:py-12">
+    <div className="container p-4 lg:py-8">
       <Item.Titlebar title="Dokumenty">
         <ComboboxElement
           align="end"

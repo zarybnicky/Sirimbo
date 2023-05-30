@@ -245,6 +245,7 @@ type Aktuality {
 
   """Reads a single `GalerieFoto` that is related to this `Aktuality`."""
   galerieFotoByAtFotoMain: GalerieFoto
+  id: BigInt
 
   """Reads a single `User` that is related to this `Aktuality`."""
   userByAtKdo: User
@@ -280,6 +281,7 @@ input AktualityInput {
   atText: String!
   atTimestamp: Datetime
   atTimestampAdd: Datetime
+  id: BigInt
 }
 
 """
@@ -296,6 +298,7 @@ input AktualityPatch {
   atText: String
   atTimestamp: Datetime
   atTimestampAdd: Datetime
+  id: BigInt
 }
 
 type Attachment {
@@ -2361,44 +2364,6 @@ type CreateRozpisItemPayload {
   ): RozpisItemsEdge
 }
 
-"""All input for the create `Session` mutation."""
-input CreateSessionInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Session` to be created by this mutation."""
-  session: SessionInput!
-}
-
-"""The output of our create `Session` mutation."""
-type CreateSessionPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """The `Session` that was created by this mutation."""
-  session: Session
-
-  """An edge for our `Session`. May be used by Relay 1."""
-  sessionEdge(
-    """The method to use when ordering `Session`."""
-    orderBy: [SessionsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): SessionsEdge
-
-  """Reads a single `User` that is related to this `Session`."""
-  userBySsUser: User
-}
-
 """All input for the create `Skupiny` mutation."""
 input CreateSkupinyInput {
   """
@@ -3850,43 +3815,6 @@ type DeleteRozpisItemPayload {
   ): RozpisItemsEdge
 }
 
-"""All input for the `deleteSession` mutation."""
-input DeleteSessionInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  ssId: String!
-}
-
-"""The output of our delete `Session` mutation."""
-type DeleteSessionPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-  deletedSessionNodeId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """The `Session` that was deleted by this mutation."""
-  session: Session
-
-  """An edge for our `Session`. May be used by Relay 1."""
-  sessionEdge(
-    """The method to use when ordering `Session`."""
-    orderBy: [SessionsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): SessionsEdge
-
-  """Reads a single `User` that is related to this `Session`."""
-  userBySsUser: User
-}
-
 """All input for the `deleteSkupiny` mutation."""
 input DeleteSkupinyInput {
   """
@@ -4232,6 +4160,7 @@ type Dokumenty {
   dName: String!
   dPath: String!
   dTimestamp: Datetime
+  id: BigInt
 
   """Reads a single `User` that is related to this `Dokumenty`."""
   userByDKdo: User
@@ -4267,6 +4196,7 @@ input DokumentyInput {
   dName: String!
   dPath: String!
   dTimestamp: Datetime
+  id: BigInt
 }
 
 """
@@ -4280,6 +4210,7 @@ input DokumentyPatch {
   dName: String
   dPath: String
   dTimestamp: Datetime
+  id: BigInt
 }
 
 type Event {
@@ -4596,6 +4527,7 @@ type GalerieDir {
   gdLevel: Int!
   gdName: String!
   gdPath: String!
+  id: BigInt
 }
 
 """
@@ -4618,6 +4550,7 @@ input GalerieDirInput {
   gdLevel: Int
   gdName: String!
   gdPath: String!
+  id: BigInt
 }
 
 """
@@ -4630,6 +4563,7 @@ input GalerieDirPatch {
   gdLevel: Int
   gdName: String
   gdPath: String
+  id: BigInt
 }
 
 """A connection to a list of `GalerieDir` values."""
@@ -4709,6 +4643,7 @@ type GalerieFoto {
   gfName: String!
   gfPath: String!
   gfTimestamp: Datetime
+  id: BigInt
 
   """Reads a single `User` that is related to this `GalerieFoto`."""
   userByGfKdo: User
@@ -4737,6 +4672,7 @@ input GalerieFotoInput {
   gfName: String!
   gfPath: String!
   gfTimestamp: Datetime
+  id: BigInt
 }
 
 """
@@ -4749,6 +4685,7 @@ input GalerieFotoPatch {
   gfName: String
   gfPath: String
   gfTimestamp: Datetime
+  id: BigInt
 }
 
 """A connection to a list of `GalerieFoto` values."""
@@ -5111,82 +5048,6 @@ type LogoutPayload {
   query: Query
 }
 
-type Member {
-  newestPayment: Date
-  oldestPayment: Date
-  paymentValid: Boolean
-  sColorRgb: String
-  sColorText: String
-  sDescription: String
-  sId: BigInt
-  sLocation: String
-  sName: String
-  sVisible: Boolean
-  uBan: Boolean
-  uCity: String
-  uConfirmed: Boolean
-  uConscriptionNumber: String
-  uCreatedAt: Datetime
-  uDancer: Boolean
-  uDistrict: String
-  uEmail: String
-  uGdprSignedAt: Datetime
-  uGroup: BigInt
-  uId: BigInt
-  uJmeno: String
-  uLevel: Int
-  uLock: Boolean
-  uLogin: String
-  uMemberSince: Datetime
-  uMemberUntil: Datetime
-  uNarozeni: Date
-  uNationality: String
-  uOrientationNumber: String
-  uPass: String
-  uPohlavi: String
-  uPostalCode: String
-  uPoznamky: String
-  uPrijmeni: String
-  uRodneCislo: String
-  uSkupina: BigInt
-  uStreet: String
-  uSystem: Boolean
-  uTeacher: Boolean
-  uTelefon: String
-  uTimestamp: Datetime
-}
-
-"""A connection to a list of `Member` values."""
-type MembersConnection {
-  """
-  A list of edges which contains the `Member` and cursor to aid in pagination.
-  """
-  edges: [MembersEdge!]!
-
-  """A list of `Member` objects."""
-  nodes: [Member!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `Member` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `Member` edge in the connection."""
-type MembersEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Member` at the end of the edge."""
-  node: Member!
-}
-
-"""Methods to use when ordering `Member`."""
-enum MembersOrderBy {
-  NATURAL
-}
-
 """
 The root mutation type which contains root level fields which mutate data.
 """
@@ -5496,14 +5357,6 @@ type Mutation {
     input: CreateRozpisItemInput!
   ): CreateRozpisItemPayload
 
-  """Creates a single `Session`."""
-  createSession(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateSessionInput!
-  ): CreateSessionPayload
-
   """Creates a single `Skupiny`."""
   createSkupiny(
     """
@@ -5807,14 +5660,6 @@ type Mutation {
     """
     input: DeleteRozpisItemInput!
   ): DeleteRozpisItemPayload
-
-  """Deletes a single `Session` using a unique key."""
-  deleteSession(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteSessionInput!
-  ): DeleteSessionPayload
 
   """Deletes a single `Skupiny` using a unique key."""
   deleteSkupiny(
@@ -6179,14 +6024,6 @@ type Mutation {
     input: UpdateRozpisItemInput!
   ): UpdateRozpisItemPayload
 
-  """Updates a single `Session` using a unique key and a patch."""
-  updateSession(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateSessionInput!
-  ): UpdateSessionPayload
-
   """Updates a single `Skupiny` using a unique key and a patch."""
   updateSkupiny(
     """
@@ -6253,6 +6090,7 @@ type Mutation {
 
 type Nabidka {
   freeLessons: Int
+  id: BigInt
   myLessons: Int
 
   """Reads and enables pagination through a set of `NabidkaItem`."""
@@ -6313,6 +6151,7 @@ input NabidkaCondition {
 
 """An input for mutations affecting `Nabidka`"""
 input NabidkaInput {
+  id: BigInt
   nDo: Date!
   nId: BigInt
   nLock: Boolean
@@ -6325,6 +6164,8 @@ input NabidkaInput {
 }
 
 type NabidkaItem {
+  id: BigInt
+
   """Reads a single `Nabidka` that is related to this `NabidkaItem`."""
   nabidkaByNiIdRodic: Nabidka
   niId: BigInt!
@@ -6354,6 +6195,7 @@ input NabidkaItemCondition {
 
 """An input for mutations affecting `NabidkaItem`"""
 input NabidkaItemInput {
+  id: BigInt
   niId: BigInt
   niIdRodic: BigInt!
   niLock: Boolean
@@ -6365,6 +6207,7 @@ input NabidkaItemInput {
 Represents an update to a `NabidkaItem`. Fields that are set will be updated.
 """
 input NabidkaItemPatch {
+  id: BigInt
   niId: BigInt
   niIdRodic: BigInt
   niLock: Boolean
@@ -6429,6 +6272,7 @@ enum NabidkaItemsOrderBy {
 Represents an update to a `Nabidka`. Fields that are set will be updated.
 """
 input NabidkaPatch {
+  id: BigInt
   nDo: Date
   nId: BigInt
   nLock: Boolean
@@ -6798,6 +6642,8 @@ enum PariesOrderBy {
 }
 
 type Pary {
+  id: BigInt
+
   """Reads and enables pagination through a set of `NabidkaItem`."""
   nabidkaItemsByNiPartner(
     """Read all values in the set after (below) this cursor."""
@@ -6895,6 +6741,7 @@ input ParyCondition {
 
 """An input for mutations affecting `Pary`"""
 input ParyInput {
+  id: BigInt
   pArchiv: Boolean
   pHodnoceni: Int
   pId: BigInt
@@ -6911,6 +6758,7 @@ input ParyInput {
 }
 
 type ParyNavrh {
+  id: BigInt
   pnId: BigInt!
   pnNavrhl: BigInt!
   pnPartner: BigInt!
@@ -6946,6 +6794,7 @@ input ParyNavrhCondition {
 
 """An input for mutations affecting `ParyNavrh`"""
 input ParyNavrhInput {
+  id: BigInt
   pnId: BigInt
   pnNavrhl: BigInt!
   pnPartner: BigInt!
@@ -6956,6 +6805,7 @@ input ParyNavrhInput {
 Represents an update to a `ParyNavrh`. Fields that are set will be updated.
 """
 input ParyNavrhPatch {
+  id: BigInt
   pnId: BigInt
   pnNavrhl: BigInt
   pnPartner: BigInt
@@ -7065,6 +6915,7 @@ enum ParyNavrhsOrderBy {
 
 """Represents an update to a `Pary`. Fields that are set will be updated."""
 input ParyPatch {
+  id: BigInt
   pArchiv: Boolean
   pHodnoceni: Int
   pId: BigInt
@@ -7138,6 +6989,7 @@ enum PeopleOrderBy {
 }
 
 type Permission {
+  id: BigInt
   peAkce: Int!
   peAktuality: Int!
   peAnkety: Int!
@@ -7200,6 +7052,7 @@ input PermissionCondition {
 
 """An input for mutations affecting `Permission`"""
 input PermissionInput {
+  id: BigInt
   peAkce: Int!
   peAktuality: Int!
   peAnkety: Int!
@@ -7226,6 +7079,7 @@ input PermissionInput {
 Represents an update to a `Permission`. Fields that are set will be updated.
 """
 input PermissionPatch {
+  id: BigInt
   peAkce: Int
   peAktuality: Int
   peAnkety: Int
@@ -7389,6 +7243,7 @@ enum PlatbyCategoriesOrderBy {
 }
 
 type PlatbyCategory {
+  id: BigInt
   pcAmount: BigFloat!
   pcArchive: Boolean!
   pcDateDue: Date!
@@ -7473,6 +7328,7 @@ input PlatbyCategoryCondition {
 }
 
 type PlatbyCategoryGroup {
+  id: BigInt
   pcgId: BigInt!
   pcgIdCategory: BigInt!
   pcgIdGroup: BigInt!
@@ -7505,6 +7361,7 @@ input PlatbyCategoryGroupCondition {
 
 """An input for mutations affecting `PlatbyCategoryGroup`"""
 input PlatbyCategoryGroupInput {
+  id: BigInt
   pcgId: BigInt
   pcgIdCategory: BigInt!
   pcgIdGroup: BigInt!
@@ -7514,6 +7371,7 @@ input PlatbyCategoryGroupInput {
 Represents an update to a `PlatbyCategoryGroup`. Fields that are set will be updated.
 """
 input PlatbyCategoryGroupPatch {
+  id: BigInt
   pcgId: BigInt
   pcgIdCategory: BigInt
   pcgIdGroup: BigInt
@@ -7568,6 +7426,7 @@ enum PlatbyCategoryGroupsOrderBy {
 
 """An input for mutations affecting `PlatbyCategory`"""
 input PlatbyCategoryInput {
+  id: BigInt
   pcAmount: BigFloat!
   pcArchive: Boolean
   pcDateDue: Date!
@@ -7585,6 +7444,7 @@ input PlatbyCategoryInput {
 Represents an update to a `PlatbyCategory`. Fields that are set will be updated.
 """
 input PlatbyCategoryPatch {
+  id: BigInt
   pcAmount: BigFloat
   pcArchive: Boolean
   pcDateDue: Date
@@ -7599,6 +7459,7 @@ input PlatbyCategoryPatch {
 }
 
 type PlatbyGroup {
+  id: BigInt
   pgBase: BigInt!
   pgDescription: String!
   pgId: BigInt!
@@ -7675,6 +7536,7 @@ input PlatbyGroupCondition {
 
 """An input for mutations affecting `PlatbyGroup`"""
 input PlatbyGroupInput {
+  id: BigInt
   pgBase: BigInt
   pgDescription: String!
   pgId: BigInt
@@ -7686,6 +7548,7 @@ input PlatbyGroupInput {
 Represents an update to a `PlatbyGroup`. Fields that are set will be updated.
 """
 input PlatbyGroupPatch {
+  id: BigInt
   pgBase: BigInt
   pgDescription: String
   pgId: BigInt
@@ -7720,6 +7583,7 @@ type PlatbyGroupsEdge {
 }
 
 type PlatbyGroupSkupina {
+  id: BigInt
   pgsId: BigInt!
   pgsIdGroup: BigInt!
   pgsIdSkupina: BigInt!
@@ -7750,6 +7614,7 @@ input PlatbyGroupSkupinaCondition {
 
 """An input for mutations affecting `PlatbyGroupSkupina`"""
 input PlatbyGroupSkupinaInput {
+  id: BigInt
   pgsId: BigInt
   pgsIdGroup: BigInt!
   pgsIdSkupina: BigInt!
@@ -7759,6 +7624,7 @@ input PlatbyGroupSkupinaInput {
 Represents an update to a `PlatbyGroupSkupina`. Fields that are set will be updated.
 """
 input PlatbyGroupSkupinaPatch {
+  id: BigInt
   pgsId: BigInt
   pgsIdGroup: BigInt
   pgsIdSkupina: BigInt
@@ -7829,6 +7695,7 @@ enum PlatbyGroupsOrderBy {
 }
 
 type PlatbyItem {
+  id: BigInt
   piAmount: BigFloat!
   piDate: Date!
   piId: BigInt!
@@ -7867,6 +7734,7 @@ input PlatbyItemCondition {
 
 """An input for mutations affecting `PlatbyItem`"""
 input PlatbyItemInput {
+  id: BigInt
   piAmount: BigFloat!
   piDate: Date!
   piId: BigInt
@@ -7880,6 +7748,7 @@ input PlatbyItemInput {
 Represents an update to a `PlatbyItem`. Fields that are set will be updated.
 """
 input PlatbyItemPatch {
+  id: BigInt
   piAmount: BigFloat
   piDate: Date
   piId: BigInt
@@ -7959,6 +7828,8 @@ enum PlatbyItemsOrderBy {
 }
 
 type PlatbyRaw {
+  id: BigInt
+
   """Reads and enables pagination through a set of `PlatbyItem`."""
   platbyItemsByPiIdRaw(
     """Read all values in the set after (below) this cursor."""
@@ -8008,6 +7879,7 @@ input PlatbyRawCondition {
 
 """An input for mutations affecting `PlatbyRaw`"""
 input PlatbyRawInput {
+  id: BigInt
   prDiscarded: Boolean
   prHash: String!
   prId: BigInt
@@ -8019,6 +7891,7 @@ input PlatbyRawInput {
 Represents an update to a `PlatbyRaw`. Fields that are set will be updated.
 """
 input PlatbyRawPatch {
+  id: BigInt
   prDiscarded: Boolean
   prHash: String
   prId: BigInt
@@ -8578,30 +8451,6 @@ type Query {
     """The method to use when ordering `Location`."""
     orderBy: [LocationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): LocationsConnection
-
-  """Reads and enables pagination through a set of `Member`."""
-  members(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Member`."""
-    orderBy: [MembersOrderBy!] = [NATURAL]
-  ): MembersConnection
 
   """Reads and enables pagination through a set of `Upozorneni`."""
   myAnnouncements(
@@ -9811,6 +9660,7 @@ enum RoomsOrderBy {
 }
 
 type Rozpi {
+  id: BigInt
   rDatum: Date!
   rId: BigInt!
   rKde: String!
@@ -9868,6 +9718,7 @@ input RozpiCondition {
 
 """An input for mutations affecting `Rozpi`"""
 input RozpiInput {
+  id: BigInt
   rDatum: Date!
   rId: BigInt
   rKde: String!
@@ -9881,6 +9732,7 @@ input RozpiInput {
 Represents an update to a `Rozpi`. Fields that are set will be updated.
 """
 input RozpiPatch {
+  id: BigInt
   rDatum: Date
   rId: BigInt
   rKde: String
@@ -9917,6 +9769,8 @@ type RozpisEdge {
 }
 
 type RozpisItem {
+  id: BigInt
+
   """Reads a single `Pary` that is related to this `RozpisItem`."""
   paryByRiPartner: Pary
   riDo: Time!
@@ -9950,6 +9804,7 @@ input RozpisItemCondition {
 
 """An input for mutations affecting `RozpisItem`"""
 input RozpisItemInput {
+  id: BigInt
   riDo: Time!
   riId: BigInt
   riIdRodic: BigInt!
@@ -9962,6 +9817,7 @@ input RozpisItemInput {
 Represents an update to a `RozpisItem`. Fields that are set will be updated.
 """
 input RozpisItemPatch {
+  id: BigInt
   riDo: Time
   riId: BigInt
   riIdRodic: BigInt
@@ -10078,24 +9934,6 @@ input SessionCondition {
   ssId: String
 
   """Checks for equality with the object’s `ssUser` field."""
-  ssUser: BigInt
-}
-
-"""An input for mutations affecting `Session`"""
-input SessionInput {
-  ssId: String!
-  ssLifetime: BigInt!
-  ssUpdatedAt: Datetime
-  ssUser: BigInt
-}
-
-"""
-Represents an update to a `Session`. Fields that are set will be updated.
-"""
-input SessionPatch {
-  ssId: String
-  ssLifetime: BigInt
-  ssUpdatedAt: Datetime
   ssUser: BigInt
 }
 
@@ -10216,6 +10054,7 @@ type Skupiny {
 
   """Reads a single `CohortGroup` that is related to this `Skupiny`."""
   cohortGroupByCohortGroup: CohortGroup
+  id: BigInt
   internalInfo: String!
   ordering: Int!
 
@@ -10334,6 +10173,7 @@ input SkupinyCondition {
 """An input for mutations affecting `Skupiny`"""
 input SkupinyInput {
   cohortGroup: BigInt
+  id: BigInt
   internalInfo: String
   ordering: Int
   sColorRgb: String!
@@ -10350,6 +10190,7 @@ Represents an update to a `Skupiny`. Fields that are set will be updated.
 """
 input SkupinyPatch {
   cohortGroup: BigInt
+  id: BigInt
   internalInfo: String
   ordering: Int
   sColorRgb: String
@@ -12057,47 +11898,6 @@ type UpdateRozpisItemPayload {
   ): RozpisItemsEdge
 }
 
-"""All input for the `updateSession` mutation."""
-input UpdateSessionInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  An object where the defined keys will be set on the `Session` being updated.
-  """
-  patch: SessionPatch!
-  ssId: String!
-}
-
-"""The output of our update `Session` mutation."""
-type UpdateSessionPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """The `Session` that was updated by this mutation."""
-  session: Session
-
-  """An edge for our `Session`. May be used by Relay 1."""
-  sessionEdge(
-    """The method to use when ordering `Session`."""
-    orderBy: [SessionsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): SessionsEdge
-
-  """Reads a single `User` that is related to this `Session`."""
-  userBySsUser: User
-}
-
 """All input for the `updateSkupiny` mutation."""
 input UpdateSkupinyInput {
   """
@@ -12406,6 +12206,7 @@ type UploadFilePayload {
 }
 
 type Upozorneni {
+  id: BigInt
   isVisible: Boolean
   scheduledSince: Datetime
   scheduledUntil: Datetime
@@ -12468,6 +12269,7 @@ input UpozorneniCondition {
 
 """An input for mutations affecting `Upozorneni`"""
 input UpozorneniInput {
+  id: BigInt
   isVisible: Boolean
   scheduledSince: Datetime
   scheduledUntil: Datetime
@@ -12485,6 +12287,7 @@ input UpozorneniInput {
 Represents an update to a `Upozorneni`. Fields that are set will be updated.
 """
 input UpozorneniPatch {
+  id: BigInt
   isVisible: Boolean
   scheduledSince: Datetime
   scheduledUntil: Datetime
@@ -12580,6 +12383,8 @@ enum UpozorneniSkupiniesOrderBy {
 }
 
 type UpozorneniSkupiny {
+  id: BigInt
+
   """Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`."""
   skupinyByUpsIdSkupina: Skupiny
 
@@ -12611,6 +12416,7 @@ input UpozorneniSkupinyCondition {
 
 """An input for mutations affecting `UpozorneniSkupiny`"""
 input UpozorneniSkupinyInput {
+  id: BigInt
   upsColor: String!
   upsId: BigInt
   upsIdRodic: BigInt!
@@ -12622,6 +12428,7 @@ input UpozorneniSkupinyInput {
 Represents an update to a `UpozorneniSkupiny`. Fields that are set will be updated.
 """
 input UpozorneniSkupinyPatch {
+  id: BigInt
   upsColor: String
   upsId: BigInt
   upsIdRodic: BigInt
@@ -12833,6 +12640,8 @@ type User {
     """The method to use when ordering `AttendeeUser`."""
     orderBy: [AttendeeUsersOrderBy!] = [PRIMARY_KEY_ASC]
   ): AttendeeUsersConnection!
+  dateOfNewestPayment: Date
+  dateOfOldestPayment: Date
 
   """Reads and enables pagination through a set of `Dokumenty`."""
   dokumentiesByDKdo(
@@ -12892,6 +12701,9 @@ type User {
     """The method to use when ordering `GalerieFoto`."""
     orderBy: [GalerieFotosOrderBy!] = [PRIMARY_KEY_ASC]
   ): GalerieFotosConnection!
+  hasValidPayment: Boolean
+  id: BigInt
+  inPublicCohort: Boolean
 
   """Reads and enables pagination through a set of `Nabidka`."""
   nabidkasByNTrener(
@@ -13226,6 +13038,9 @@ type User {
 A condition to be used against `User` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
 input UserCondition {
+  """Checks for equality with the object’s `inPublicCohort` field."""
+  inPublicCohort: Boolean
+
   """Checks for equality with the object’s `uBan` field."""
   uBan: Boolean
 
@@ -13259,6 +13074,7 @@ input UserCondition {
 
 """An input for mutations affecting `User`"""
 input UserInput {
+  id: BigInt
   uBan: Boolean
   uCity: String!
   uConfirmed: Boolean
@@ -13295,6 +13111,7 @@ input UserInput {
 
 """Represents an update to a `User`. Fields that are set will be updated."""
 input UserPatch {
+  id: BigInt
   uBan: Boolean
   uCity: String
   uConfirmed: Boolean

@@ -6,10 +6,10 @@ import { Button } from 'components/Button';
 import { saveAs } from 'file-saver';
 import { FormResponsesDocument } from 'lib/graphql/Crm';
 import type { NextPageWithLayout } from 'pages/_app';
-import { useGqlQuery } from 'lib/query';
+import { useQuery } from 'urql';
 
 const Page: NextPageWithLayout = () => {
-  const { data } = useGqlQuery(FormResponsesDocument, {});
+  const [{ data }] = useQuery({query: FormResponsesDocument});
   const saveData = React.useCallback(
     async (e?: React.MouseEvent) => {
       e?.preventDefault();

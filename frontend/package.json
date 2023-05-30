@@ -17,6 +17,7 @@
     "@ckeditor/ckeditor5-react": "^6.0.0",
     "@ckeditor/ckeditor5-utils": "^37.1.0",
     "@ckeditor/ckeditor5-watchdog": "^37.1.0",
+    "@graphql-codegen/typescript-urql-graphcache": "^2.4.5",
     "@graphql-typed-document-node/core": "^3.2.0",
     "@hookform/resolvers": "^3.1.0",
     "@next/bundle-analyzer": "^12.3.0",
@@ -30,10 +31,6 @@
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.7",
-    "@tanstack/query-sync-storage-persister": "^4.29.5",
-    "@tanstack/react-query": "^4.29.5",
-    "@tanstack/react-query-devtools": "^4.29.5",
-    "@tanstack/react-query-persist-client": "^4.29.5",
     "@types/facebook-pixel": "^0.0.24",
     "@types/file-saver": "^2.0.5",
     "@types/glider-js": "^1.7.6",
@@ -46,7 +43,10 @@
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.1",
     "@types/react-paginate": "^7.1.1",
+    "@urql/devtools": "^2.0.3",
     "@urql/exchange-graphcache": "^6.0.4",
+    "@urql/exchange-persisted": "^4.0.0",
+    "@urql/exchange-populate": "^1.1.2",
     "@urql/exchange-refocus": "^1.0.2",
     "@urql/exchange-request-policy": "^1.0.2",
     "@urql/exchange-retry": "^1.1.1",
@@ -63,6 +63,7 @@
     "fp-ts": "^2.14.0",
     "glider-js": "^1.7.8",
     "graphql": "15.4.0",
+    "graphql-tag": "^2.12.6",
     "html-react-parser": "^3.0.4",
     "i18next": "^22.5.0",
     "iban": "^0.0.14",
@@ -70,7 +71,9 @@
     "lucide-react": "^0.221.0",
     "minisearch": "^5.1.0",
     "next": "13.3.4",
+    "next-pwa": "^5.6.0",
     "next-seo": "^6.0.0",
+    "next-urql": "^5.0.1",
     "nextjs-google-analytics": "^2.1.0",
     "nextjs-routes": "^2.0.0",
     "nprogress": "^0.2.0",
@@ -107,5 +110,8 @@
     "zod": "^3.21.4",
     "zod-i18n": "^0.0.1",
     "zod-i18n-map": "^2.13.0"
+  },
+  "devDependencies": {
+    "@graphql-codegen/urql-introspection": "^2.2.1"
   }
 }

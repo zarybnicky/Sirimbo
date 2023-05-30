@@ -3,10 +3,10 @@ import { Item } from 'components/layout/Item';
 import { CurrentTenantDocument } from 'lib/graphql/Tenant';
 import { TenantForm } from 'components/TenantForm';
 import type { NextPageWithLayout } from 'pages/_app';
-import { useGqlQuery } from 'lib/query';
+import { useQuery } from 'urql';
 
 const Page: NextPageWithLayout = () => {
-  const { data } = useGqlQuery(CurrentTenantDocument, {});
+  const [{ data }] = useQuery({query: CurrentTenantDocument});
   return (
     <Item>
       <Item.Titlebar title={data?.getCurrentTenant?.name || '(Bez názvu)'} />

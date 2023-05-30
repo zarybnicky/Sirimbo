@@ -31,14 +31,16 @@ query Articles($limit: Int, $offset: Int) {
 mutation CreateArticle($input: AktualityInput!) {
   createAktuality(input: {aktuality: $input}) {
     aktuality {
-      id: atId
+      ...Article
     }
   }
 }
 
 mutation UpdateArticle($id: BigInt!, $patch: AktualityPatch!) {
   updateAktuality(input: {atId: $id, patch: $patch}) {
-    __typename
+    aktuality {
+      ...Article
+    }
   }
 }
 

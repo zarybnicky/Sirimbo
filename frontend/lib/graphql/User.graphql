@@ -23,7 +23,7 @@ query UserList($confirmed: Boolean, $system: Boolean = false, $ban: Boolean = fa
 }
 
 query MsmtExport {
-  members(condition: {sVisible: true}) {
+  users(condition: {uConfirmed: true, uSystem: false, uBan: false, inPublicCohort: true}) {
     nodes {
       id: uId
       uJmeno
@@ -39,21 +39,23 @@ query MsmtExport {
       uOrientationNumber
       uPostalCode
       uStreet
-      sId
-      sName
-      sColorRgb
-      sDescription
-      sVisible
-      paymentValid
-      oldestPayment
-      newestPayment
       uGroup
+      skupinyByUSkupina {
+        sId
+        sName
+        sColorRgb
+        sDescription
+        sVisible
+      }
+      hasValidPayment
+      dateOfOldestPayment
+      dateOfNewestPayment
     }
   }
 }
 
 query MemberList($cohortId: BigInt) {
-  members(condition: {sId: $cohortId}) {
+  users(condition: {uConfirmed: true, uSystem: false, uBan: false, uSkupina: $cohortId}) {
     totalCount
     nodes {
       id: uId
@@ -62,12 +64,14 @@ query MemberList($cohortId: BigInt) {
       uEmail
       uTelefon
       uRodneCislo
-      sId
-      sName
-      sColorRgb
-      sDescription
-      sVisible
-      paymentValid
+      skupinyByUSkupina {
+        sId
+        sName
+        sColorRgb
+        sDescription
+        sVisible
+      }
+      hasValidPayment
     }
   }
 }
@@ -90,14 +94,16 @@ mutation ConfirmUser($id: BigInt!, $role: BigInt!, $cohort: BigInt!) {
 mutation CreateUser($input: UserInput!) {
   createUser(input: {user: $input}) {
     user {
-      id: uId
+      ...User
     }
   }
 }
 
 mutation UpdateUser($id: BigInt!, $patch: UserPatch!) {
   updateUser(input: {uId: $id, patch: $patch}) {
-    __typename
+    user {
+      ...User
+    }
   }
 }
 

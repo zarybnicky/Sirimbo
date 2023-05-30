@@ -4,14 +4,28 @@ create or replace view app_private.app_table_overview as
   select
     c.relname,
     case c.relrowsecurity when true then '' else 'NO RLS' end as rls,
-    case exists (select 1 from information_schema.columns where table_name = c.relname and table_schema = n.nspname and column_name='tenant')
-      when true then '' else 'NO TENANT' end as has_tenant,
-    case (select array_agg(grantee order by grantee asc)::text[]
-          FROM information_schema.role_table_grants
-          WHERE table_name = c.relname and table_schema = 'public' AND privilege_type = 'SELECT'
-          group by table_name)
-      when ARRAY['anonymous', 'olymp'] then null
-      else
+    case exists (
+      select 1
+      from information_schema.columns
+      where table_name = c.relname and table_schema = n.nspname and column_name='id'
+    )
+    when true then ''
+    else 'NO ID' end as has_id,
+    case exists (
+      select 1
+      from information_schema.columns
+      where table_name = c.relname and table_schema = n.nspname and column_name='tenant'
+    )
+    when true then ''
+    else 'NO TENANT' end as has_tenant,
+    case (
+      select array_agg(grantee order by grantee asc)::text[]
+      FROM information_schema.role_table_grants
+      WHERE table_name = c.relname and table_schema = 'public' AND privilege_type = 'SELECT'
+      group by table_name
+    )
+    when ARRAY['anonymous', 'olymp'] then null
+    else
         (select array_agg(grantee order by grantee asc)
          from information_schema.role_table_grants
          where table_name = c.relname and table_schema = 'public' AND privilege_type = 'SELECT'
@@ -246,3 +260,67 @@ create index on public.skupiny (ordering);
 create index on public.event (is_visible);
 create index on public.event (since);
 create index on public.rozpis (r_datum);
+
+create or replace function public.users_has_valid_payment(a public.users) returns boolean
+    language sql stable as $$
+  SELECT EXISTS (
+    SELECT pi_id
+    FROM platby_item
+      INNER JOIN platby_category ON pi_id_category=pc_id
+      INNER JOIN platby_category_group ON pcg_id_category=pc_id
+      INNER JOIN platby_group ON pg_id=pcg_id_group
+    WHERE pg_type='1'
+      AND CURRENT_DATE >= pc_valid_from
+      AND CURRENT_DATE <= pc_valid_to
+      AND pi_id_user = a.u_id
+  )
+$$;
+
+create or replace function public.users_date_of_newest_payment(a public.users) returns date
+    language sql stable as $$
+  SELECT max(pi_date)
+  FROM platby_item
+  where pi_id_user = a.u_id
+$$;
+
+create or replace function public.users_date_of_oldest_payment(a public.users) returns date
+    language sql stable as $$
+  SELECT min(pi_date)
+  FROM platby_item
+  where pi_id_user = a.u_id
+$$;
+
+create or replace function public.users_in_public_cohort(a public.users) returns boolean
+    language sql stable as $$
+  SELECT s_visible
+  FROM skupiny
+  inner join users on s_id = u_skupina
+  where u_id = a.u_id
+$$;
+comment on function users_in_public_cohort(public.users) is E'@filterable';
+
+drop view if exists members;
+
+comment on table session is E'@omit create,update,delete';
+
+alter table aktuality add column if not exists id bigint generated always as (at_id) stored;
+alter table dokumenty add column if not exists id bigint generated always as (d_id) stored;
+alter table galerie_dir add column if not exists id bigint generated always as (gd_id) stored;
+alter table galerie_foto add column if not exists id bigint generated always as (gf_id) stored;
+alter table nabidka add column if not exists id bigint generated always as (n_id) stored;
+alter table nabidka_item add column if not exists id bigint generated always as (ni_id) stored;
+alter table rozpis add column if not exists id bigint generated always as (r_id) stored;
+alter table rozpis_item add column if not exists id bigint generated always as (ri_id) stored;
+alter table skupiny add column if not exists id bigint generated always as (s_id) stored;
+alter table upozorneni add column if not exists id bigint generated always as (up_id) stored;
+alter table users add column if not exists id bigint generated always as (u_id) stored;
+alter table platby_category add column if not exists id bigint generated always as (pc_id) stored;
+alter table platby_category_group add column if not exists id bigint generated always as (pcg_id) stored;
+alter table platby_group add column if not exists id bigint generated always as (pg_id) stored;
+alter table platby_group_skupina add column if not exists id bigint generated always as (pgs_id) stored;
+alter table platby_item add column if not exists id bigint generated always as (pi_id) stored;
+alter table platby_raw add column if not exists id bigint generated always as (pr_id) stored;
+alter table pary add column if not exists id bigint generated always as (p_id) stored;
+alter table pary_navrh add column if not exists id bigint generated always as (pn_id) stored;
+alter table upozorneni_skupiny add column if not exists id bigint generated always as (ups_id) stored;
+alter table permissions add column if not exists id bigint generated always as (pe_id) stored;

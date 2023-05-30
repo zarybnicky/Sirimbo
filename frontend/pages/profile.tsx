@@ -11,25 +11,31 @@ import { ChangePasswordForm } from 'components/ChangePasswordForm';
 import { LessonButton } from 'components/LessonButton';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import type { NextPageWithLayout } from 'pages/_app';
-import { useGqlQuery } from 'lib/query';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from 'components/ui/dialog';
+import { useQuery } from 'urql';
 
 const Page: NextPageWithLayout = () => {
   const { user, couple } = useAuth();
-  const { data: cohorts } = useGqlQuery(CohortListDocument, {});
+  const [{ data: cohorts }] = useQuery({query: CohortListDocument});
 
-  const { data: pastLessons } = useGqlQuery(MyLessonsDocument, {
-    startDate: new Date(23, 1).toISOString().substring(0, 10),
-    endDate: new Date().toISOString().substring(0, 10),
+  const [{ data: pastLessons }] = useQuery({
+    query: MyLessonsDocument,
+    variables: {
+      startDate: new Date(23, 1).toISOString().substring(0, 10),
+      endDate: new Date().toISOString().substring(0, 10),
+    },
   });
-  const { data: upcomingLessons } = useGqlQuery(MyLessonsDocument, {
-    startDate: new Date().toISOString().substring(0, 10),
-    endDate: new Date(2123, 1).toISOString().substring(0, 10),
+  const [{ data: upcomingLessons }] = useQuery({
+    query: MyLessonsDocument,
+    variables: {
+      startDate: new Date().toISOString().substring(0, 10),
+      endDate: new Date(2123, 1).toISOString().substring(0, 10),
+    },
   });
   const [editOpen, setEditOpen] = React.useState(false);
-  const editClose = React.useCallback(()=>setEditOpen(false), []);
+  const editClose = React.useCallback(() => setEditOpen(false), []);
   const [passOpen, setPassOpen] = React.useState(false);
-  const passClose = React.useCallback(()=>setPassOpen(false), []);
+  const passClose = React.useCallback(() => setPassOpen(false), []);
 
   if (!user) return null;
 
@@ -37,7 +43,7 @@ const Page: NextPageWithLayout = () => {
     <div className="container p-4 lg:py-8">
       <Item.Titlebar title={`${user.uJmeno} ${user.uPrijmeni}`}>
         <Dialog open={editOpen} onOpenChange={setEditOpen}>
-          <DialogTrigger>
+          <DialogTrigger asChild>
             <List.TitleButton icon={Edit}>Upravit osobní údaje</List.TitleButton>
           </DialogTrigger>
           <DialogContent>
@@ -47,7 +53,7 @@ const Page: NextPageWithLayout = () => {
         </Dialog>
 
         <Dialog open={passOpen} onOpenChange={setPassOpen}>
-          <DialogTrigger>
+          <DialogTrigger asChild>
             <List.TitleButton icon={Edit}>Upravit heslo</List.TitleButton>
           </DialogTrigger>
           <DialogContent>

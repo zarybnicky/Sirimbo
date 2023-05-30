@@ -10,16 +10,11 @@ import { useCountries } from 'lib/data/use-countries';
 import { SubmitButton } from './SubmitButton';
 import { UserInput } from 'lib/graphql';
 import { UserFragment } from 'lib/graphql/CurrentUser';
-import { useQueryClient } from '@tanstack/react-query';
 import dynamic from 'next/dynamic';
-import { getGqlKey, useGqlMutation, useGqlQuery } from 'lib/query';
 import { RoleListDocument } from 'lib/graphql/Roles';
 import { CohortListDocument } from 'lib/graphql/Cohorts';
-import {
-  CreateUserDocument,
-  UpdateUserDocument,
-  UserListDocument,
-} from 'lib/graphql/User';
+import {CreateUserDocument, UpdateUserDocument} from 'lib/graphql/User';
+import { useMutation, useQuery } from 'urql';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
 type FormProps = Pick<
@@ -50,20 +45,13 @@ type FormProps = Pick<
   | 'uPass'
 >;
 
-export const UserForm: React.FC<{
-  data?: UserFragment;
-}> = ({ data }) => {
-  const queryClient = useQueryClient();
-  const onSuccess = React.useCallback(() => {
-    queryClient.invalidateQueries(getGqlKey(UserListDocument, {}));
-  }, [queryClient]);
-
-  const { mutateAsync: doCreate } = useGqlMutation(CreateUserDocument, { onSuccess });
-  const { mutateAsync: doUpdate } = useGqlMutation(UpdateUserDocument, { onSuccess });
+export const UserForm = ({ data }: { data?: UserFragment}) => {
+  const doCreate = useMutation(CreateUserDocument)[1];
+  const doUpdate = useMutation(UpdateUserDocument)[1];
 
   const countries = useCountries();
-  const { data: roles } = useGqlQuery(RoleListDocument, {});
-  const { data: cohorts } = useGqlQuery(CohortListDocument, {});
+  const [{ data: roles }] = useQuery({query: RoleListDocument});
+  const [{ data: cohorts }] = useQuery({query: CohortListDocument});
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {

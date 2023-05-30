@@ -19,6 +19,8 @@ query CurrentTenant {
 
 mutation UpdateTenant($input: UpdateTenantInput!) {
   updateTenant(input: $input) {
-    __typename
+    tenant {
+      ...Tenant
+    }
   }
 }

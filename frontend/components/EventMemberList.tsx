@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 import { fullDateFormatter } from 'lib/format-date';
 import { MyEventsDocument } from 'lib/graphql/Event';
-import { useGqlQuery } from 'lib/query';
 import Link from 'next/link';
+import { useQuery } from 'urql';
 import { Card } from './Card';
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 };
 
 export function EventMemberList({ selected }: Props) {
-  const { data } = useGqlQuery(MyEventsDocument, {});
+  const [{ data }] = useQuery({query: MyEventsDocument});
   return (
     <>
       {data?.events?.nodes.map((event) => (

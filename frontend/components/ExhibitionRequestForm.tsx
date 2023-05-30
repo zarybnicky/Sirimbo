@@ -8,11 +8,11 @@ import { DatePickerElement } from './DateRange';
 import { RadioButtonGroup } from './RadioButtonGroup';
 import { useForm } from 'react-hook-form';
 import { Card } from './Card';
-import { useGqlMutation } from 'lib/query';
+import { useMutation } from 'urql';
 import { SubmitFormDocument } from 'lib/graphql/Crm';
 
 export const ExhibitionRequestForm = () => {
-  const mutation = useGqlMutation(SubmitFormDocument, {});
+  const submit = useMutation(SubmitFormDocument)[1];
   const { control, handleSubmit } = useForm();
 
   const onSubmit = useAsyncCallback(async ({ op, ...data }: any) => {
@@ -20,7 +20,7 @@ export const ExhibitionRequestForm = () => {
       fbq('track', 'SubmitApplication');
     }
     const url = window.location.toString();
-    await mutation.mutateAsync({ type: 'Zájemce o vystoupení', data, url });
+    await submit({ type: 'Zájemce o vystoupení', data, url });
     toast.success('Brzy se vám ozveme!');
   });
 

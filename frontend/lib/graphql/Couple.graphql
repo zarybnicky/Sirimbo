@@ -25,7 +25,7 @@ query Couple($id: BigInt!) {
 mutation CreateCouple($man: BigInt!, $woman: BigInt!) {
   createCouple(input: {man: $man, woman: $woman}) {
     paries {
-      id: pId
+      ...CouplePartial
     }
   }
 }

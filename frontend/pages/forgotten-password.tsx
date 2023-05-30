@@ -8,12 +8,12 @@ import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
 import { toast } from 'react-toastify';
 import type { NextPageWithLayout } from 'pages/_app';
-import { useGqlMutation } from 'lib/query';
 import { ResetPasswordDocument } from 'lib/graphql/CurrentUser';
+import { useMutation } from 'urql';
 
 const Page: NextPageWithLayout = () => {
   const { control, handleSubmit } = useForm();
-  const { mutateAsync: resetPassword } = useGqlMutation(ResetPasswordDocument);
+  const resetPassword = useMutation(ResetPasswordDocument)[1];
   const router = useRouter();
 
   const onSubmit = useAsyncCallback(async (data: any) => {

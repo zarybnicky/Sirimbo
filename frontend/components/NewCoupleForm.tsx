@@ -4,9 +4,9 @@ import { useForm } from 'react-hook-form';
 import { ComboboxElement } from 'components/Combobox';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
-import { useGqlMutation, useGqlQuery } from 'lib/query';
 import { UserListDocument } from 'lib/graphql/User';
 import { CreateCoupleDocument } from 'lib/graphql/Couple';
+import { useMutation, useQuery } from 'urql';
 
 type FormProps = {
   man: string;
@@ -16,7 +16,7 @@ type FormProps = {
 export const NewCoupleForm: React.FC<{
   onSuccess?: () => void;
 }> = ({ onSuccess }) => {
-  const { data: users } = useGqlQuery(UserListDocument, {});
+  const [{ data: users }] = useQuery({query: UserListDocument});
   const men = React.useMemo(
     () =>
       (users?.users?.nodes || [])
@@ -32,11 +32,12 @@ export const NewCoupleForm: React.FC<{
     [users],
   );
 
-  const { mutateAsync: doCreate } = useGqlMutation(CreateCoupleDocument, { onSuccess });
+  const doCreate = useMutation(CreateCoupleDocument)[1];
 
   const { control, handleSubmit } = useForm<FormProps>();
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await doCreate({ man: values.man, woman: values.woman });
+    onSuccess?.();
   });
 
   return (

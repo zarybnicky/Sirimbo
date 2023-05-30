@@ -21,6 +21,7 @@ fragment CohortWithMembers on Skupiny {
   usersByUSkupina(condition: {uBan: false, uSystem: false, uConfirmed: true}, orderBy: [U_PRIJMENI_ASC, U_JMENO_ASC]) {
     nodes {
       ...UserPublic
+      hasValidPayment
     }
   }
 }
@@ -50,14 +51,16 @@ query Cohort($id: BigInt!) {
 mutation CreateCohort($input: SkupinyInput!) {
   createSkupiny(input: {skupiny: $input}) {
     skupiny {
-      id: sId
+      ...Cohort
     }
   }
 }
 
 mutation UpdateCohort($id: BigInt!, $patch: SkupinyPatch!) {
   updateSkupiny(input: {sId: $id, patch: $patch}) {
-    __typename
+    skupiny {
+      ...Cohort
+    }
   }
 }
 

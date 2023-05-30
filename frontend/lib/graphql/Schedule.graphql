@@ -76,7 +76,7 @@ query Schedule($id: BigInt!) {
 mutation ToggleScheduleVisible($id: BigInt!, $visible: Boolean!) {
   updateRozpi(input: {rId: $id, patch: {rVisible: $visible}}) {
     rozpi {
-      id: rId
+      ...ScheduleBasic
     }
   }
 }
@@ -84,14 +84,16 @@ mutation ToggleScheduleVisible($id: BigInt!, $visible: Boolean!) {
 mutation CreateSchedule($input: RozpiInput!) {
   createRozpi(input: {rozpi: $input}) {
     rozpi {
-      id: rId
+      ...ScheduleBasic
     }
   }
 }
 
 mutation UpdateSchedule($id: BigInt!, $patch: RozpiPatch!) {
   updateRozpi(input: {rId: $id, patch: $patch}) {
-    __typename
+    rozpi {
+      ...ScheduleBasic
+    }
   }
 }
 
@@ -103,12 +105,38 @@ mutation DeleteSchedule($id: BigInt!) {
 
 mutation BookLesson($id: BigInt!) {
   bookLesson(input: {lessonId: $id}) {
-    __typename
+    rozpisItems {
+      ...ScheduleItem
+    }
   }
 }
 
 mutation CancelLesson($id: BigInt!) {
   cancelLesson(input: {lessonId: $id}) {
+    rozpisItems {
+      ...ScheduleItemBasic
+    }
+  }
+}
+
+mutation CreateLesson($input: RozpisItemInput!) {
+  createRozpisItem(input: {rozpisItem: $input}) {
+    rozpisItem {
+      ...ScheduleItem
+    }
+  }
+}
+
+mutation UpdateLesson($id: BigInt!, $patch: RozpisItemPatch!) {
+  updateRozpisItem(input: {riId: $id, patch: $patch}) {
+    rozpisItem {
+      ...ScheduleItem
+    }
+  }
+}
+
+mutation DeleteLesson($id: BigInt!) {
+  deleteRozpisItem(input: {riId: $id}) {
     __typename
   }
 }

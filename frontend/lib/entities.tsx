@@ -6,8 +6,7 @@ import { EventFragment } from './graphql/Event';
 import { ReservationBasicFragment } from './graphql/Reservation';
 import { ToggleUpozorneniVisibleDocument } from './graphql/Announcement';
 import { ScheduleBasicFragment } from './graphql/Schedule';
-import { useGqlMutation } from './query';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation } from 'urql';
 import { Route } from 'nextjs-routes';
 
 export const Article = {
@@ -52,12 +51,7 @@ export const Announcement = {
     ({ pathname: '/admin/nastenka/[id]', query: { id } } as Route),
   useMenu(item: AnnouncementFragment): DropdownItem[] {
     const { perms } = useAuth();
-    const queryClient = useQueryClient();
-    const hideMutation = useGqlMutation(ToggleUpozorneniVisibleDocument, {
-      onSuccess() {
-        queryClient.invalidateQueries(['MyAnnouncements']);
-      },
-    });
+    const hideMutation = useMutation(ToggleUpozorneniVisibleDocument)[1];
     if (!perms.canEditAnnouncement(item)) {
       return [];
     }
@@ -68,7 +62,7 @@ export const Announcement = {
       },
       {
         title: 'Skrýt',
-        onClick: () => hideMutation.mutateAsync({ id: item.id, visible: false }),
+        onClick: () => hideMutation({ id: item.id, visible: false }),
       },
     ];
   },

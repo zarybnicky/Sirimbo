@@ -43,7 +43,7 @@ export async function exportMSMT() {
     column.alignment = { horizontal: 'center' };
   });
 
-  data.members?.nodes.forEach((x) => {
+  data.users?.nodes.forEach((x) => {
     worksheet.addRow({
       firstName: x.uJmeno,
       lastName: x.uPrijmeni,
@@ -61,7 +61,7 @@ export async function exportMSMT() {
       isCompeting: x.uGroup !== '3' ? '1' : '0',
       isTrainer: x.uGroup !== '3' ? '1' : '0',
       sportTypeTrainer: x.uGroup !== '3' ? '66' : '',
-      athleteSince: x.oldestPayment ? format(new Date(x.oldestPayment), 'd.M.yyyy') : '',
+      athleteSince: x.dateOfOldestPayment ? format(new Date(x.dateOfOldestPayment), 'd.M.yyyy') : '',
       extId: x.id,
     });
   });

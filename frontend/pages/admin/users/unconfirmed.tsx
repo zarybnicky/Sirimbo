@@ -17,7 +17,7 @@ import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { UserList } from 'components/UserList';
 import { Item } from 'components/layout/Item';
 import { NextPageWithLayout } from 'pages/_app';
-import { useGqlMutation, useGqlQuery } from 'lib/query';
+import { useMutation, useQuery } from 'urql';
 
 type FormProps = {
   cohort: string;
@@ -33,10 +33,10 @@ const UnconfirmedUser: React.FC<{
     defaultValues: { cohort: item.uSkupina },
   });
 
-  const { data: cohorts } = useGqlQuery(CohortListDocument, {});
-  const { data: roles } = useGqlQuery(RoleListDocument, {});
-  const { mutateAsync: confirmUser } = useGqlMutation(ConfirmUserDocument);
-  const { mutateAsync: deleteUser } = useGqlMutation(DeleteUserDocument);
+  const [{ data: cohorts }] = useQuery({query: CohortListDocument});
+  const [{ data: roles }] = useQuery({query: RoleListDocument});
+  const confirmUser = useMutation(ConfirmUserDocument)[1];
+  const deleteUser = useMutation(DeleteUserDocument)[1];
 
   const onSubmit = React.useCallback(
     async (values: FormProps) => {
@@ -122,7 +122,7 @@ const UnconfirmedUser: React.FC<{
 };
 
 const Page: NextPageWithLayout = () => {
-  const { data: users, refetch } = useGqlQuery(UserListDocument, { confirmed: false });
+  const [{data: users}, refetch] = useQuery({query: UserListDocument, variables:{ confirmed: false }});
 
   return (
     <Item>

@@ -53,7 +53,7 @@ query AnnouncementList($limit: Int, $offset: Int) {
 mutation ToggleUpozorneniVisible($id: BigInt!, $visible: Boolean!) {
   updateUpozorneni(input: {upId: $id, patch: {isVisible: $visible}}) {
     upozorneni {
-      id: upId
+      ...Announcement
     }
   }
 }
@@ -68,14 +68,16 @@ query Announcement($id: BigInt!) {
 mutation CreateAnnouncement($input: UpozorneniInput!) {
   createUpozorneni(input: {upozorneni: $input}) {
     upozorneni {
-      id: upId
+      ...Announcement
     }
   }
 }
 
 mutation UpdateAnnouncement($id: BigInt!, $patch: UpozorneniPatch!) {
   updateUpozorneni(input: {upId: $id, patch: $patch}) {
-    __typename
+    upozorneni {
+      ...Announcement
+    }
   }
 }
 

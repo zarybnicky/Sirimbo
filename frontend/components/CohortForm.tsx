@@ -1,7 +1,6 @@
 import { SkupinyInput } from 'lib/graphql';
 import {
   CohortFragment,
-  CohortListDocument,
   CreateCohortDocument,
   UpdateCohortDocument,
 } from 'lib/graphql/Cohorts';
@@ -13,14 +12,13 @@ import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { ColorPicker } from './ColorPicker';
-import { useQueryClient } from '@tanstack/react-query';
 import { CohortGroupListDocument } from 'lib/graphql/CohortGroup';
 import { ComboboxElement } from './Combobox';
 import dynamic from 'next/dynamic';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 import { pick } from 'lib/form-utils';
 import { pipe } from 'fp-ts/function';
-import { getGqlKey, useGqlMutation, useGqlQuery } from 'lib/query';
+import { useMutation, useQuery } from 'urql';
 
 const fields = [
   'sName',
@@ -35,14 +33,9 @@ const fields = [
 type FormProps = Pick<SkupinyInput, (typeof fields)[number]>;
 
 export const CohortForm = ({ data }: { data?: CohortFragment }) => {
-  const queryClient = useQueryClient();
-  const onSuccess = React.useCallback(() => {
-    queryClient.invalidateQueries(getGqlKey(CohortListDocument, {}));
-  }, [queryClient]);
-
-  const { data: cohortGroups } = useGqlQuery(CohortGroupListDocument, {});
-  const { mutateAsync: doCreate } = useGqlMutation(CreateCohortDocument, { onSuccess });
-  const { mutateAsync: doUpdate } = useGqlMutation(UpdateCohortDocument, { onSuccess });
+  const [{ data: cohortGroups }] = useQuery({query: CohortGroupListDocument });
+  const doCreate = useMutation(CreateCohortDocument)[1];
+  const doUpdate = useMutation(UpdateCohortDocument)[1];
 
   const { reset, control, handleSubmit } = useForm<FormProps>({
     defaultValues: { sColorRgb: '#ff0000' },

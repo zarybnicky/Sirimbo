@@ -31,7 +31,7 @@ export function CohortExport({ id, name }: { id?: string; name?: string }) {
         column.alignment = { horizontal: 'center' };
       });
 
-      data.members?.nodes.forEach((x) =>
+      data.users?.nodes.forEach((x) =>
         worksheet.addRow({
           firstName: x.uJmeno,
           lastName: x.uPrijmeni,

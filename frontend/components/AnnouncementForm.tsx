@@ -6,17 +6,21 @@ import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { UpozorneniInput } from 'lib/graphql';
 import {
-  AnnouncementFragment,
-  AnnouncementListDocument,
+  AnnouncementDocument,
   CreateAnnouncementDocument,
-  MyAnnouncementsDocument,
+  DeleteAnnouncementDocument,
   UpdateAnnouncementDocument,
 } from 'lib/graphql/Announcement';
-import { useQueryClient } from '@tanstack/react-query';
 import { DatePickerElement } from './DateRange';
 import dynamic from 'next/dynamic';
-import { getGqlKey, useGqlMutation } from 'lib/query';
+import { useMutation, useQuery } from 'urql';
 import { CheckboxElement } from './Checkbox';
+import { DeleteButton } from './DeleteButton';
+import { Item } from './layout/Item';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
+import { Route } from 'nextjs-routes';
+import { ErrorPage } from './ErrorPage';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
 type FormProps = Pick<
@@ -27,21 +31,15 @@ type FormProps = Pick<
   scheduledUntil: Date | undefined;
 };
 
-export const AnnouncementForm: React.FC<{
-  data?: AnnouncementFragment;
-}> = ({ data }) => {
-  const queryClient = useQueryClient();
-  const onSuccess = React.useCallback(() => {
-    queryClient.invalidateQueries(getGqlKey(MyAnnouncementsDocument, {}));
-    queryClient.invalidateQueries(getGqlKey(AnnouncementListDocument, {}));
-  }, [queryClient]);
+const backHref: Route = { pathname: '/admin/nastenka' };
 
-  const { mutateAsync: doCreate } = useGqlMutation(CreateAnnouncementDocument, {
-    onSuccess,
-  });
-  const { mutateAsync: doUpdate } = useGqlMutation(UpdateAnnouncementDocument, {
-    onSuccess,
-  });
+export const AnnouncementForm = ({ id = '' }: {id?: string}) => {
+  const router = useRouter();
+  const [query] = useQuery({query: AnnouncementDocument, variables: { id }});
+  const data = query.data?.upozorneni;
+
+  const create = useMutation(CreateAnnouncementDocument)[1];
+  const update = useMutation(UpdateAnnouncementDocument)[1];
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
@@ -62,15 +60,44 @@ export const AnnouncementForm: React.FC<{
       scheduledSince: values.scheduledSince?.toISOString(),
       scheduledUntil: values.scheduledUntil?.toISOString(),
     };
-    if (data) {
-      await doUpdate({ id: data.id, patch });
+    if (id) {
+      await update({ id, patch });
     } else {
-      await doCreate({ input: patch });
+      const res = await create({ input: patch });
+      const id = res.data?.createUpozorneni?.upozorneni?.id;
+      toast.success('Přidáno.');
+      if (id) {
+        router.replace({ pathname: '/admin/nastenka/[id]', query: { id } });
+      } else {
+        reset(undefined);
+      }
     }
   });
 
+  if (query.data && query.data.upozorneni === null) {
+    return <ErrorPage error="Nenalezeno" />;
+  }
+
   return (
-    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+    <form
+      className="container flex flex-col gap-2"
+      onSubmit={handleSubmit(onSubmit.execute)}
+    >
+      <Item.Titlebar
+        backHref={backHref}
+        title={id ? data?.upNadpis || '(Bez názvu)' : 'Nový příspěvek'}
+      >
+        {id && (
+          <DeleteButton
+            doc={DeleteAnnouncementDocument}
+            id={id}
+            title="smazat příspěvek"
+            onDelete={() => router.push(backHref)}
+          />
+        )}
+        <SubmitButton loading={onSubmit.loading} />
+      </Item.Titlebar>
+
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="upNadpis" label="Nadpis" required />
       <DatePickerElement

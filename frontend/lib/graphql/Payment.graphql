@@ -25,14 +25,16 @@ query PaymentGroup($id: BigInt!) {
 mutation CreatePaymentGroup($input: PlatbyGroupInput!) {
   createPlatbyGroup(input: {platbyGroup: $input}) {
     platbyGroup {
-      id: pgId
+      ...PaymentGroup
     }
   }
 }
 
 mutation UpdatePaymentGroup($id: BigInt!, $patch: PlatbyGroupPatch!) {
   updatePlatbyGroup (input: {pgId: $id, patch: $patch}) {
-    __typename
+    platbyGroup {
+      ...PaymentGroup
+    }
   }
 }
 
@@ -81,14 +83,16 @@ query PaymentItem($id: BigInt!) {
 mutation CreatePaymentItem($input: PlatbyItemInput!) {
   createPlatbyItem(input: {platbyItem: $input}) {
     platbyItem {
-      id: piId
+      ...PaymentItem
     }
   }
 }
 
 mutation UpdatePaymentItem($id: BigInt!, $patch: PlatbyItemPatch!) {
   updatePlatbyItem (input: {piId: $id, patch: $patch}) {
-    __typename
+    platbyItem {
+      ...PaymentItem
+    }
   }
 }
 
@@ -132,14 +136,16 @@ query PaymentCategory($id: BigInt!) {
 mutation CreatePaymentCategory($input: PlatbyCategoryInput!) {
   createPlatbyCategory(input: {platbyCategory: $input}) {
     platbyCategory {
-      id: pcId
+      ...PaymentCategory
     }
   }
 }
 
 mutation UpdatePaymentCategory($id: BigInt!, $patch: PlatbyCategoryPatch!) {
   updatePlatbyCategory(input: {pcId: $id, patch: $patch}) {
-    __typename
+    platbyCategory {
+      ...PaymentCategory
+    }
   }
 }
 
