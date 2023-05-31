@@ -57,7 +57,7 @@ const UserDetailButton: React.FC<{ user: UserPublicFragment & { hasValidPayment:
         <DialogTitle className="text-xl">
           {user.uJmeno} {user.uPrijmeni}
         </DialogTitle>
-        <ul className="flex flex-col gap-3 m-4">
+        <ul className="space-y-3 m-4">
           <li>
             <EmailIcon className="inline" /> {user.uEmail}
           </li>

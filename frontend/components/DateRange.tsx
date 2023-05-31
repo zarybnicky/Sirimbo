@@ -39,7 +39,7 @@ export function Calendar({
         cell: 'text-center text-sm p-0 relative [&:has([aria-selected])]:bg-red-100 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
         day: 'flex justify-center items-center rounded-lg hover:bg-stone-200 h-9 w-9 p-0 aria-selected:opacity-100',
         day_selected:
-          'bg-red-500 text-white font-bold hover:bg-red-500 hover:text-white focus:bg-red-500 focus:text-white',
+          'bg-red-500 text-white font-bold hover:!bg-red-500 hover:text-white focus:bg-red-500 focus:text-white',
         day_today: 'bg-stone-200 text-black',
         day_outside: 'text-stone-700 opacity-50',
         day_disabled: 'text-stone-700 opacity-50',
@@ -88,8 +88,9 @@ export function DateRangeInput<TFieldValues extends FieldValues>({
 
   const [month, setMonth] = React.useState(new Date());
   React.useEffect(() => {
-    const m = field.value?.from || field.value?.to || new Date();
-    setMonth(m);
+    const m = field.value?.from || field.value?.to;
+    if (m) setMonth(m);
+    console.log(field.value)
   }, [field.value]);
 
   const parsedHelperText = !fieldState.error
@@ -106,6 +107,7 @@ export function DateRangeInput<TFieldValues extends FieldValues>({
 
       <Calendar
         mode="range"
+        defaultMonth={new Date()}
         month={month}
         onMonthChange={setMonth}
         selected={field.value}

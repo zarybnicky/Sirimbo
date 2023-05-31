@@ -85,10 +85,7 @@ export function CohortGroupForm({ id = '' }: Props) {
   }
 
   return (
-    <form
-      className="container flex flex-col gap-2"
-      onSubmit={handleSubmit(onSubmit.execute)}
-    >
+    <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <Item.Titlebar
         backHref={backHref}
         title={data ? data.name || '(Bez názvu)' : 'Nový tréninkový program'}

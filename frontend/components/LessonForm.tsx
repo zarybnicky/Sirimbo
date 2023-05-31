@@ -30,7 +30,7 @@ export function LessonForm({schedule, lesson, onSuccess}: LessonFormProps) {
   const couple = lesson.paryByRiPartner;
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="space-y-2">
       <div className="flex items-center gap-2">
         <Calendar className="w-6 h-6 text-red-500" />
         {fullDateFormatter.format(new Date(schedule.rDatum))}

@@ -4,15 +4,13 @@ import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
-import {
-  TenantFragment,
-  UpdateTenantDocument,
-} from 'lib/graphql/Tenant';
+import {CurrentTenantDocument, UpdateTenantDocument} from 'lib/graphql/Tenant';
 import dynamic from 'next/dynamic';
-import { useMutation } from 'urql';
+import { useMutation, useQuery } from 'urql';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Item } from './layout/Item';
 
 const Form = z.object({
   name: z.string(),
@@ -20,9 +18,9 @@ const Form = z.object({
 });
 type FormProps = z.infer<typeof Form>;
 
-export const TenantForm: React.FC<{
-  data: TenantFragment;
-}> = ({ data }) => {
+export const TenantForm = () => {
+  const [query] = useQuery({query: CurrentTenantDocument});
+  const data = query.data?.getCurrentTenant;
   const doUpdate = useMutation(UpdateTenantDocument)[1];
 
   const { reset, control, handleSubmit } = useForm<FormProps>({
@@ -34,11 +32,14 @@ export const TenantForm: React.FC<{
   }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    await doUpdate({ input: { id: data.id, patch: values } });
+    await doUpdate({ input: { id: data!.id, patch: values } });
   });
 
   return (
-    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+    <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <Item.Titlebar title={data?.name || '(Bez názvu)'}>
+        <SubmitButton loading={onSubmit.loading} />
+      </Item.Titlebar>
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="name" label="Název organizace" required />
       <RichTextEditor
@@ -47,7 +48,6 @@ export const TenantForm: React.FC<{
         name="memberInfo"
         label="Informace pro členy"
       />
-      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };

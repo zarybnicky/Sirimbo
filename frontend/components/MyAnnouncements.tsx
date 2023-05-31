@@ -14,20 +14,23 @@ export function MyAnnouncements() {
     // react-skeleton
     return null;
   }
-  const nodes = data.myAnnouncements.nodes;
-  const total = data.myAnnouncements.totalCount;
 
   return (
     <div className="flex flex-col">
       <h4 className="text-2xl tracking-wide mb-10">Aktuality</h4>
 
-      <div className="flex flex-col gap-2 rounded-lg">
-        {nodes.map((a) => (
+      <div className="space-y-2 rounded-lg">
+        {data.myAnnouncements.nodes.map((a) => (
           <AnnouncementItem key={a.id} item={a} />
         ))}
       </div>
 
-      <Pagination {...{ total, limit: 5, page, setPage }} />
+      <Pagination
+        total={data.myAnnouncements.totalCount}
+        limit={5}
+        page={page}
+        setPage={setPage}
+      />
     </div>
   );
 }

@@ -9,7 +9,7 @@ const Page: NextPageWithLayout = () => {
     <>
       <Heading>Kde trénujeme</Heading>
 
-      <div className="my-16 flex flex-col gap-4">
+      <div className="my-16 space-y-4">
         <h2 className="text-3xl text-red-500 drop-shadow tracking-wide">V Olomouci</h2>
         <LocationCard
           name="Taneční centrum při FZŠ Holečkova"

@@ -57,9 +57,7 @@ export const NewCoupleForm: React.FC<{
         required
         options={women}
       />
-      <SubmitButton className="w-full" loading={onSubmit.loading}>
-        Spárovat
-      </SubmitButton>
+      <SubmitButton loading={onSubmit.loading}>Spárovat</SubmitButton>
     </form>
   );
 };

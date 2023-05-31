@@ -79,10 +79,7 @@ export const AnnouncementForm = ({ id = '' }: {id?: string}) => {
   }
 
   return (
-    <form
-      className="container flex flex-col gap-2"
-      onSubmit={handleSubmit(onSubmit.execute)}
-    >
+    <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <Item.Titlebar
         backHref={backHref}
         title={id ? data?.upNadpis || '(Bez názvu)' : 'Nový příspěvek'}
@@ -117,7 +114,6 @@ export const AnnouncementForm = ({ id = '' }: {id?: string}) => {
         name="upText"
         label="Text"
       />
-      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };

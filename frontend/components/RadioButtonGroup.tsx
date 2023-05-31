@@ -74,7 +74,7 @@ export const RadioButtonGroup = <T extends FieldValues>({
 }: RadioButtonGroupProps<T>) => {
   const { field } = useController({ name, control });
   return (
-    <div className={cx('flex flex-col ml-1 gap-4', { 'opacity-50': isDisabled })}>
+    <div className={cx('space-y-4 ml-1', { 'opacity-50': isDisabled })}>
       <label
         htmlFor={name}
         className="block text-sm text-stone-700 mt-1 -mb-1 -ml-1"

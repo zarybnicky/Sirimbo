@@ -99,6 +99,8 @@ export const UserForm = ({ data }: { data?: UserFragment}) => {
 
   return (
     <form className="grid lg:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <SubmitButton loading={onSubmit.loading} />
+
       <ErrorBox error={onSubmit.error} />
       {data ? (
         <TextFieldElement
@@ -268,8 +270,6 @@ export const UserForm = ({ data }: { data?: UserFragment}) => {
           label="Systémový uživatel"
         />
       </div>
-
-      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };

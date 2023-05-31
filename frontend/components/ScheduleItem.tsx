@@ -3,11 +3,8 @@ import { ScheduleFragment } from 'lib/graphql/Schedule';
 import { LessonButton } from 'components/LessonButton';
 import { Card } from 'components/Card';
 import { Schedule } from 'lib/entities';
-import { useAuth } from 'lib/data/use-auth';
 
 export const ScheduleItem = ({ item }: { item: ScheduleFragment }) => {
-  const { perms } = useAuth();
-
   return (
     <Card
       menu={Schedule.useMenu(item)}
@@ -17,7 +14,7 @@ export const ScheduleItem = ({ item }: { item: ScheduleFragment }) => {
         <div className="text-sm text-stone-500">{item.rKde}</div>
         <div className="text-xl">{item.userByRTrener?.fullName}</div>
       </div>
-      <div className="flex gap-[1px] flex-col">
+      <div className="space-y-[1px]">
         {item.rozpisItemsByRiIdRodic.nodes?.map((lesson, i) => (
           <LessonButton key={i} schedule={item} lesson={lesson} />
         ))}

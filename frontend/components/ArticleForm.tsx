@@ -5,23 +5,28 @@ import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { AktualityInput } from 'lib/graphql';
-import {
-  ArticleFragment,
-  CreateArticleDocument,
-  UpdateArticleDocument,
-} from 'lib/graphql/Articles';
+import {ArticleDocument, CreateArticleDocument, DeleteArticleDocument, UpdateArticleDocument} from 'lib/graphql/Articles';
 import dynamic from 'next/dynamic';
-import { useMutation } from 'urql';
+import { useMutation, useQuery } from 'urql';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
+import { ErrorPage } from './ErrorPage';
+import { DeleteButton } from './DeleteButton';
+import { Item } from './layout/Item';
+import { Route } from 'nextjs-routes';
 const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 
 type FormProps = Pick<AktualityInput, 'atJmeno' | 'atPreview' | 'atText'>;
 
-export const ArticleForm: React.FC<{
-  data?: ArticleFragment;
-  onSuccess: () => void;
-}> = ({ data, onSuccess }) => {
-  const doCreate = useMutation(CreateArticleDocument)[1];
-  const doUpdate = useMutation(UpdateArticleDocument)[1];
+const backHref: Route = { pathname: '/admin/aktuality' };
+
+export const ArticleForm = ({ id = '' }: { id?: string }) => {
+  const router = useRouter();
+  const [query] = useQuery({ query: ArticleDocument, variables: { id } });
+  const data = query.data?.aktuality;
+
+  const create = useMutation(CreateArticleDocument)[1];
+  const update = useMutation(UpdateArticleDocument)[1];
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
@@ -32,21 +37,43 @@ export const ArticleForm: React.FC<{
     });
   }, [data, reset]);
 
-  const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    const patch = {
-      ...values,
-      atKat: '1',
-    };
+  const onSubmit = useAsyncCallback(async (patch: FormProps) => {
     if (data) {
-      await doUpdate({ id: data.id, patch });
+      await update({ id: data.id, patch });
     } else {
-      await doCreate({ input: patch });
+      await create({ input: patch });
+      const res = await create({ input: patch });
+      const id = res.data?.createAktuality?.aktuality?.id;
+      toast.success('Přidáno.');
+      if (id) {
+        router.replace({ pathname: '/admin/aktuality/[id]', query: { id } });
+      } else {
+        reset(undefined);
+      }
     }
-    onSuccess();
   });
 
+  if (query.data && query.data.aktuality === null) {
+    return <ErrorPage error="Nenalezeno" />;
+  }
+
   return (
-    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+    <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <Item.Titlebar
+        backHref={backHref}
+        title={id ? data?.atJmeno || '(Bez názvu)' : 'Nový článek'}
+      >
+        {id && (
+          <DeleteButton
+            doc={DeleteArticleDocument}
+            id={id}
+            title="smazat článek"
+            onDelete={() => router.push(backHref)}
+          />
+        )}
+        <SubmitButton loading={onSubmit.loading} />
+      </Item.Titlebar>
+
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="atJmeno" label="Název" required />
       <RichTextEditor
@@ -61,7 +88,6 @@ export const ArticleForm: React.FC<{
         name="atText"
         label="Text"
       />
-      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };

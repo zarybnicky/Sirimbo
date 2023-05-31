@@ -81,7 +81,7 @@ const Page: NextPageWithLayout = () => {
       )}
 
       <h3>Nadcházející lekce</h3>
-      <div className="flex flex-col gap-[1px] w-80">
+      <div className="space-y-[1px] w-80">
         {upcomingLessons?.myLessons?.nodes.map((item) => (
           <LessonButton
             key={item.id}

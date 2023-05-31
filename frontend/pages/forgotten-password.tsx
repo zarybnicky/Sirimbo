@@ -34,7 +34,7 @@ const Page: NextPageWithLayout = () => {
             registraci.
           </div>
 
-          <div className="flex flex-col gap-4 mb-4">
+          <div className="space-y-4 mb-4">
             <TextFieldElement
               control={control}
               name="login"

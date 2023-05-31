@@ -23,7 +23,7 @@ import { ErrorPage } from './ErrorPage';
 import { DeleteButton } from './DeleteButton';
 import { Item } from './layout/Item';
 import { formatCoupleName } from 'lib/format-name';
-import { Clock, Pencil, X, Check, Users } from 'lucide-react';
+import { Pencil, X, Check } from 'lucide-react';
 import { useMutation, useQuery } from 'urql';
 
 type FormProps = Pick<RozpiInput, 'rTrener' | 'rKde' | 'rDatum' | 'rVisible' | 'rLock'>;
@@ -32,13 +32,13 @@ const backHref: Route = { pathname: '/admin/akce' };
 
 export const ScheduleForm = ({ id = '' }: { id?: string }) => {
   const router = useRouter();
-  const [query] = useQuery({query: ScheduleDocument, variables: { id }});
+  const [query] = useQuery({ query: ScheduleDocument, variables: { id } });
   const data = query.data?.rozpi;
 
-  const [_create, create] = useMutation(CreateScheduleDocument);
-  const [_update, update] = useMutation(UpdateScheduleDocument);
+  const create = useMutation(CreateScheduleDocument)[1];
+  const update = useMutation(UpdateScheduleDocument)[1];
 
-  const [{ data: trainers }] = useQuery({query: TrainerListDocument});
+  const [{ data: trainers }] = useQuery({ query: TrainerListDocument });
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
@@ -71,10 +71,7 @@ export const ScheduleForm = ({ id = '' }: { id?: string }) => {
   }
 
   return (
-    <form
-      className="container flex flex-col gap-2"
-      onSubmit={handleSubmit(onSubmit.execute)}
-    >
+    <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <Item.Titlebar
         backHref={backHref}
         title={id ? data?.userByRTrener?.fullName || '(Bez názvu)' : 'Nový rozpis'}
@@ -113,10 +110,11 @@ export const ScheduleForm = ({ id = '' }: { id?: string }) => {
       <CheckboxElement control={control} name="rLock" value="1" label="Uzamčený" />
 
       {id && (
-        <div className="mt-1 pb-8 bg-white p-3 rounded-md border border-red-500">
+        <div className="mt-1 pb-8 bg-white p-3 rounded-md border border-red-500 space-y-2">
           {data?.rozpisItemsByRiIdRodic.nodes.map((x) => (
             <LessonAdminForm key={x.id} lesson={x} />
           ))}
+                  {/* <LessonAddForm /> */}
         </div>
       )}
     </form>
@@ -133,23 +131,17 @@ function LessonAdminForm({ lesson }: { lesson: ScheduleItemBasicFragment }) {
   }, []);
 
   return mode === 'view' ? (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-center gap-2">
-        <Clock className="w-6 h-6 text-red-500" />
+    <div className="flex gap-2 tabular-nums">
+      <div>
         {lesson.riOd.substring(0, 5)} - {lesson.riDo.substring(0, 5)}
       </div>
-
-      <div className="flex items-center gap-2">
-        <Users className="w-6 h-6 text-red-500" />
-        <span>{couple ? formatCoupleName(couple) : 'VOLNÁ'}</span>
-      </div>
-
+      <div className="grow">{couple ? formatCoupleName(couple) : 'VOLNÁ'}</div>
       <button type="button" onClick={() => setMode('edit')}>
         <Pencil />
       </button>
     </div>
   ) : (
-    <form className="" onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <button
         type="button"
         onClick={() => {

@@ -22,8 +22,7 @@ type FormProps = Pick<
 
 export const PaymentItemForm: React.FC<{
   data?: PaymentItemFragment;
-  onSuccess: () => void;
-}> = ({ data, onSuccess }) => {
+}> = ({ data }) => {
   const doCreate = useMutation(CreatePaymentItemDocument)[1];
   const doUpdate = useMutation(UpdatePaymentItemDocument)[1];
 
@@ -51,11 +50,12 @@ export const PaymentItemForm: React.FC<{
     } else {
       await doCreate({ input: { ...values } });
     }
-    onSuccess();
   });
 
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <SubmitButton loading={onSubmit.loading} />
+
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement
         control={control}
@@ -86,7 +86,6 @@ export const PaymentItemForm: React.FC<{
         }))}
       />
       <TextFieldElement control={control} name="piPrefix" label="Prefix (rok)" required />
-      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };

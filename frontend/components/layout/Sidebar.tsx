@@ -72,7 +72,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
             </Link>
           </div>
         )}
-        <div className="flex flex-col gap-1 pt-3 mr-1">
+        <div className="space-y-1 pt-3 mr-1">
           {auth.user ? (
             <>
               <SidebarSection

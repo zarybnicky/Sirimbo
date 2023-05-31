@@ -1,7 +1,8 @@
 import { SkupinyInput } from 'lib/graphql';
 import {
-  CohortFragment,
+  CohortDocument,
   CreateCohortDocument,
+  DeleteCohortDocument,
   UpdateCohortDocument,
 } from 'lib/graphql/Cohorts';
 import React from 'react';
@@ -19,6 +20,12 @@ const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false })
 import { pick } from 'lib/form-utils';
 import { pipe } from 'fp-ts/function';
 import { useMutation, useQuery } from 'urql';
+import { DeleteButton } from './DeleteButton';
+import { useRouter } from 'next/router';
+import { Route } from 'nextjs-routes';
+import { Item } from './layout/Item';
+import { ErrorPage } from './ErrorPage';
+import { toast } from 'react-toastify';
 
 const fields = [
   'sName',
@@ -32,10 +39,15 @@ const fields = [
 ] as const;
 type FormProps = Pick<SkupinyInput, (typeof fields)[number]>;
 
-export const CohortForm = ({ data }: { data?: CohortFragment }) => {
+const backHref: Route = {pathname: '/admin/skupiny' };
+
+export const CohortForm = ({ id = '' }: { id?: string }) => {
+  const router = useRouter();
+  const [query] = useQuery({query: CohortDocument, variables: { id }, pause: !!id });
+  const data = query.data?.skupiny;
   const [{ data: cohortGroups }] = useQuery({query: CohortGroupListDocument });
-  const doCreate = useMutation(CreateCohortDocument)[1];
-  const doUpdate = useMutation(UpdateCohortDocument)[1];
+  const create = useMutation(CreateCohortDocument)[1];
+  const update = useMutation(UpdateCohortDocument)[1];
 
   const { reset, control, handleSubmit } = useForm<FormProps>({
     defaultValues: { sColorRgb: '#ff0000' },
@@ -48,14 +60,35 @@ export const CohortForm = ({ data }: { data?: CohortFragment }) => {
 
   const onSubmit = useAsyncCallback(async (patch: FormProps) => {
     if (data) {
-      await doUpdate({ id: data.id, patch });
+      await update({ id: data.id, patch });
     } else {
-      await doCreate({ input: patch });
+      const res = await create({ input: patch });
+      const id = res.data?.createSkupiny?.skupiny?.id;
+      toast.success('Přidáno.');
+      if (id) {
+        router.replace({ pathname: '/admin/skupiny/[id]', query: { id } });
+      } else {
+        reset(undefined);
+      }
     }
   });
 
+  if (query.data && query.data.skupiny === null) {
+    return <ErrorPage error="Nenalezeno" />;
+  }
+
   return (
-    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+    <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <Item.Titlebar backHref={backHref} title={id ? (data?.sName || '(Bez názvu)') : 'Nová skupina'}>
+        <DeleteButton
+          doc={DeleteCohortDocument}
+          id={id}
+          onDelete={() => router.push('/admin/skupiny')}
+          title="smazat skupinu"
+        />
+        <SubmitButton loading={onSubmit.loading} />
+      </Item.Titlebar>
+
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="sName" label="Název" required />
       <TextFieldElement control={control} name="sLocation" label="Město/místo" required />
@@ -98,7 +131,6 @@ export const CohortForm = ({ data }: { data?: CohortFragment }) => {
         name="internalInfo"
         label="Interní informace"
       />
-      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };

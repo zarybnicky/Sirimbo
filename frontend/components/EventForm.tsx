@@ -103,10 +103,7 @@ export const EventForm = ({ id = '' }: { id?: string }) => {
   }
 
   return (
-    <form
-      className="container flex flex-col gap-2"
-      onSubmit={handleSubmit(onSubmit.execute)}
-    >
+    <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <Item.Titlebar
         backHref={backHref}
         title={id ? data?.name || '(Bez názvu)' : 'Nová akce'}

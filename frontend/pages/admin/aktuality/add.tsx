@@ -1,17 +1,9 @@
 import { ArticleForm } from 'components/ArticleForm';
-import { useRouter } from 'next/router';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import type { NextPageWithLayout } from 'pages/_app';
 import { ArticleList } from 'lib/entity-lists';
 
-const Page: NextPageWithLayout = () => {
-  const router = useRouter();
-  return (
-    <div className="container mx-auto max-w-3xl mt-12 mb-8">
-      <ArticleForm onSuccess={() => router.back()} />
-    </div>
-  );
-};
+const Page: NextPageWithLayout = () => <ArticleForm />;
 
 Page.list = <ArticleList />;
 Page.isDetail = true;

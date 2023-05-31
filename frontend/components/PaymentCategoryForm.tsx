@@ -49,6 +49,8 @@ export const PaymentCategoryForm: React.FC<{
 
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <SubmitButton loading={onSubmit.loading} />
+
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="pcName" label="Název" required />
       <TextFieldElement
@@ -93,7 +95,6 @@ export const PaymentCategoryForm: React.FC<{
       />
       <CheckboxElement control={control} name="pcArchive" value="1" label="Archiv" />
       <CheckboxElement control={control} name="pcVisible" value="1" label="Viditelný" />
-      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };

@@ -41,6 +41,8 @@ export const PaymentGroupForm: React.FC<{
 
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <SubmitButton loading={onSubmit.loading} />
+
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="pgName" label="Název" required />
       <TextAreaElement
@@ -57,7 +59,6 @@ export const PaymentGroupForm: React.FC<{
         label="Násobitel částky"
         required
       />
-      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };

@@ -85,10 +85,7 @@ export const ReservationForm = ({ id = '' }: { id?: string }) => {
   }
 
   return (
-    <form
-      className="container flex flex-col gap-2"
-      onSubmit={handleSubmit(onSubmit.execute)}
-    >
+    <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <Item.Titlebar
         backHref={backHref}
         title={id ? data?.userByNTrener?.fullName || '(Bez názvu)' : 'Nová nabídka'}
