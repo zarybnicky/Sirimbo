@@ -15,17 +15,16 @@ import { SubmitButton } from './SubmitButton';
 import { ColorPicker } from './ColorPicker';
 import { CohortGroupListDocument } from 'lib/graphql/CohortGroup';
 import { ComboboxElement } from './Combobox';
-import dynamic from 'next/dynamic';
-const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 import { pick } from 'lib/form-utils';
 import { pipe } from 'fp-ts/function';
 import { useMutation, useQuery } from 'urql';
 import { DeleteButton } from './DeleteButton';
 import { useRouter } from 'next/router';
 import { Route } from 'nextjs-routes';
-import { Item } from './layout/Item';
 import { ErrorPage } from './ErrorPage';
 import { toast } from 'react-toastify';
+import { RichTextEditor } from './RichTextEditor';
+import { TitleBar } from './layout/TitleBar';
 
 const fields = [
   'sName',
@@ -45,6 +44,8 @@ export const CohortForm = ({ id = '' }: { id?: string }) => {
   const router = useRouter();
   const [query] = useQuery({query: CohortDocument, variables: { id }, pause: !!id });
   const data = query.data?.skupiny;
+  const title = id ? (data?.sName || '(Bez názvu)') : 'Nová skupina';
+
   const [{ data: cohortGroups }] = useQuery({query: CohortGroupListDocument });
   const create = useMutation(CreateCohortDocument)[1];
   const update = useMutation(UpdateCohortDocument)[1];
@@ -59,8 +60,8 @@ export const CohortForm = ({ id = '' }: { id?: string }) => {
   }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (patch: FormProps) => {
-    if (data) {
-      await update({ id: data.id, patch });
+    if (id) {
+      await update({ id, patch });
     } else {
       const res = await create({ input: patch });
       const id = res.data?.createSkupiny?.skupiny?.id;
@@ -79,7 +80,7 @@ export const CohortForm = ({ id = '' }: { id?: string }) => {
 
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <Item.Titlebar backHref={backHref} title={id ? (data?.sName || '(Bez názvu)') : 'Nová skupina'}>
+      <TitleBar backHref={backHref} title={title}>
         <DeleteButton
           doc={DeleteCohortDocument}
           id={id}
@@ -87,7 +88,7 @@ export const CohortForm = ({ id = '' }: { id?: string }) => {
           title="smazat skupinu"
         />
         <SubmitButton loading={onSubmit.loading} />
-      </Item.Titlebar>
+      </TitleBar>
 
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="sName" label="Název" required />

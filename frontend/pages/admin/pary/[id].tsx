@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
-import { Item } from 'components/layout/Item';
 import { DeleteButton } from 'components/DeleteButton';
 import { fromSlugArray } from 'lib/slugify';
 import type { NextPageWithLayout } from 'pages/_app';
@@ -9,6 +8,7 @@ import { LessonButton } from 'components/LessonButton';
 import { CoupleList } from 'lib/entity-lists';
 import { formatCoupleName } from 'lib/format-name';
 import { useQuery } from 'urql';
+import { TitleBar } from 'components/layout/TitleBar';
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
@@ -19,21 +19,21 @@ const Page: NextPageWithLayout = () => {
     return null;
   }
   return (
-    <Item>
-      <Item.Titlebar backHref="/admin/pary" title={formatCoupleName(item)}>
+    <div className="container py-4">
+      <TitleBar backHref="/admin/pary" title={formatCoupleName(item)}>
         <DeleteButton
           doc={DeleteCoupleDocument}
           id={id}
           onDelete={() => router.push('/admin/nastenka')}
           title="smazat pár"
         />
-      </Item.Titlebar>
+      </TitleBar>
 
       Minulé lekce
-      {data?.pary?.rozpisItemsByRiPartner?.nodes.map((item) => (
+      {item.rozpisItemsByRiPartner?.nodes.map((item) => (
         <LessonButton key={item.id} schedule={item.rozpiByRiIdRodic!} lesson={item} showTrainer showDate />
       ))}
-    </Item>
+    </div>
   );
 };
 

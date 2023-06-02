@@ -15,13 +15,13 @@ import { SubmitButton } from './SubmitButton';
 import { NabidkaInput } from 'lib/graphql';
 import { DateRange, DateRangeInput } from './DateRange';
 import { TrainerListDocument } from 'lib/graphql/User';
-import { Item } from './layout/Item';
 import { DeleteButton } from './DeleteButton';
 import { Route } from 'nextjs-routes';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { ErrorPage } from './ErrorPage';
 import { useMutation, useQuery } from 'urql';
+import { TitleBar } from './layout/TitleBar';
 
 type FormProps = Pick<
   NabidkaInput,
@@ -36,6 +36,7 @@ export const ReservationForm = ({ id = '' }: { id?: string }) => {
   const router = useRouter();
   const [query] = useQuery({query: ReservationDocument, variables: { id }, pause: !id });
   const data = query.data?.nabidka;
+  const title = id ? data?.userByNTrener?.fullName || '(Bez názvu)' : 'Nová nabídka';
 
   const create = useMutation(CreateReservationDocument)[1];
   const update = useMutation(UpdateReservationDocument)[1];
@@ -86,10 +87,7 @@ export const ReservationForm = ({ id = '' }: { id?: string }) => {
 
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <Item.Titlebar
-        backHref={backHref}
-        title={id ? data?.userByNTrener?.fullName || '(Bez názvu)' : 'Nová nabídka'}
-      >
+      <TitleBar backHref={backHref} title={title}>
         {id && (
           <DeleteButton
             doc={DeleteReservationDocument}
@@ -99,7 +97,7 @@ export const ReservationForm = ({ id = '' }: { id?: string }) => {
           />
         )}
         <SubmitButton loading={onSubmit.loading} />
-      </Item.Titlebar>
+      </TitleBar>
 
       <ErrorBox error={onSubmit.error} />
       <ComboboxElement

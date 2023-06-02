@@ -649,6 +649,17 @@
             "args": []
           },
           {
+            "name": "tenant",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "userByAtKdo",
             "type": {
               "kind": "OBJECT",
@@ -7517,6 +7528,17 @@
             "args": []
           },
           {
+            "name": "tenant",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "userByDKdo",
             "type": {
               "kind": "OBJECT",
@@ -7809,6 +7831,17 @@
             "args": []
           },
           {
+            "name": "tenant",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "until",
             "type": {
               "kind": "NON_NULL",
@@ -7990,6 +8023,17 @@
           },
           {
             "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -8273,6 +8317,17 @@
               "name": "Any"
             },
             "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
           }
         ],
         "interfaces": []
@@ -8519,6 +8574,17 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
@@ -12049,6 +12115,17 @@
             "args": []
           },
           {
+            "name": "tenant",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "userByNTrener",
             "type": {
               "kind": "OBJECT",
@@ -14410,6 +14487,17 @@
                 }
               }
             ]
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
           }
         ],
         "interfaces": []
@@ -14775,6 +14863,17 @@
                 }
               }
             ]
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
           }
         ],
         "interfaces": []
@@ -15133,6 +15232,17 @@
             "args": []
           },
           {
+            "name": "tenant",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "userByPiIdUser",
             "type": {
               "kind": "OBJECT",
@@ -15363,6 +15473,17 @@
           },
           {
             "name": "prSorted",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -20172,6 +20293,17 @@
             "args": []
           },
           {
+            "name": "tenant",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "userByRTrener",
             "type": {
               "kind": "OBJECT",
@@ -20895,6 +21027,17 @@
           },
           {
             "name": "sVisible",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -24308,6 +24451,17 @@
             "type": {
               "kind": "SCALAR",
               "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },

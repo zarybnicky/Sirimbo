@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { fullDateFormatter } from 'lib/format-date';
-import { Item } from 'components/layout/Item';
 import { Button } from 'components/Button';
 import { saveAs } from 'file-saver';
 import { FormResponsesDocument } from 'lib/graphql/Crm';
 import type { NextPageWithLayout } from 'pages/_app';
 import { useQuery } from 'urql';
+import { TitleBar } from 'components/layout/TitleBar';
 
 const Page: NextPageWithLayout = () => {
   const [{ data }] = useQuery({query: FormResponsesDocument});
@@ -59,10 +59,10 @@ const Page: NextPageWithLayout = () => {
   );
 
   return (
-    <Item className="col-feature">
-      <Item.Titlebar title="Odeslané formuláře">
+    <div className="container col-feature">
+      <TitleBar title="Odeslané formuláře">
         <Button onClick={saveData}>Export všech</Button>
-      </Item.Titlebar>
+      </TitleBar>
 
       <table className="w-full text-sm text-left text-stone-900">
         <thead>
@@ -92,7 +92,7 @@ const Page: NextPageWithLayout = () => {
           ))}
         </tbody>
       </table>
-    </Item>
+    </div>
   );
 }
 

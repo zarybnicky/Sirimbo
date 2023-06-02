@@ -12,14 +12,11 @@ import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { toast } from 'react-toastify';
-import dynamic from 'next/dynamic';
-const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 import { CohortListDocument, UpdateCohortDocument } from 'lib/graphql/Cohorts';
 import { Plus } from 'lucide-react';
 import { Command, CommandItem, CommandInput, CommandList } from 'components/ui/command';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Item } from './layout/Item';
 import { useRouter } from 'next/router';
 import { DeleteButton } from './DeleteButton';
 import { Route } from 'nextjs-routes';
@@ -28,6 +25,8 @@ import { Card } from './Card';
 import * as Popover from '@radix-ui/react-popover';
 import { cn } from 'lib/utils';
 import { useMutation, useQuery } from 'urql';
+import { RichTextEditor } from './RichTextEditor';
+import { TitleBar } from './layout/TitleBar';
 
 const Form = z.object({
   name: z.string(),
@@ -45,9 +44,11 @@ const backHref: Route = { pathname: '/admin/cohort-group' };
 
 export function CohortGroupForm({ id = '' }: Props) {
   const router = useRouter();
-  const [{ data: cohorts }] = useQuery({query: CohortListDocument});
   const [query] = useQuery({query: CohortGroupDocument, variables: { id }, pause: !id });
   const data = query.data?.cohortGroup;
+  const title = data ? data.name || '(Bez názvu)' : 'Nový tréninkový program';
+
+  const [{ data: cohorts }] = useQuery({query: CohortListDocument});
 
   const create = useMutation(CreateCohortGroupDocument)[1];
   const update = useMutation(UpdateCohortGroupDocument)[1];
@@ -86,10 +87,7 @@ export function CohortGroupForm({ id = '' }: Props) {
 
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <Item.Titlebar
-        backHref={backHref}
-        title={data ? data.name || '(Bez názvu)' : 'Nový tréninkový program'}
-      >
+      <TitleBar backHref={backHref} title={title} >
         {data && (
           <DeleteButton
             doc={DeleteCohortGroupDocument}
@@ -99,7 +97,7 @@ export function CohortGroupForm({ id = '' }: Props) {
           />
         )}
         <SubmitButton loading={onSubmit.loading} />
-      </Item.Titlebar>
+      </TitleBar>
 
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="name" label="Název" required />

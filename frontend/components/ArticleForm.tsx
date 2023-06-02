@@ -6,15 +6,14 @@ import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { AktualityInput } from 'lib/graphql';
 import {ArticleDocument, CreateArticleDocument, DeleteArticleDocument, UpdateArticleDocument} from 'lib/graphql/Articles';
-import dynamic from 'next/dynamic';
 import { useMutation, useQuery } from 'urql';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { ErrorPage } from './ErrorPage';
 import { DeleteButton } from './DeleteButton';
-import { Item } from './layout/Item';
 import { Route } from 'nextjs-routes';
-const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
+import { RichTextEditor } from './RichTextEditor';
+import { TitleBar } from './layout/TitleBar';
 
 type FormProps = Pick<AktualityInput, 'atJmeno' | 'atPreview' | 'atText'>;
 
@@ -24,6 +23,7 @@ export const ArticleForm = ({ id = '' }: { id?: string }) => {
   const router = useRouter();
   const [query] = useQuery({ query: ArticleDocument, variables: { id } });
   const data = query.data?.aktuality;
+  const title = id ? data?.atJmeno || '(Bez názvu)' : 'Nový článek';
 
   const create = useMutation(CreateArticleDocument)[1];
   const update = useMutation(UpdateArticleDocument)[1];
@@ -38,8 +38,8 @@ export const ArticleForm = ({ id = '' }: { id?: string }) => {
   }, [data, reset]);
 
   const onSubmit = useAsyncCallback(async (patch: FormProps) => {
-    if (data) {
-      await update({ id: data.id, patch });
+    if (id) {
+      await update({ id, patch });
     } else {
       await create({ input: patch });
       const res = await create({ input: patch });
@@ -59,10 +59,7 @@ export const ArticleForm = ({ id = '' }: { id?: string }) => {
 
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <Item.Titlebar
-        backHref={backHref}
-        title={id ? data?.atJmeno || '(Bez názvu)' : 'Nový článek'}
-      >
+      <TitleBar backHref={backHref} title={title}>
         {id && (
           <DeleteButton
             doc={DeleteArticleDocument}
@@ -72,7 +69,7 @@ export const ArticleForm = ({ id = '' }: { id?: string }) => {
           />
         )}
         <SubmitButton loading={onSubmit.loading} />
-      </Item.Titlebar>
+      </TitleBar>
 
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="atJmeno" label="Název" required />

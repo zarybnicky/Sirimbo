@@ -1,4 +1,3 @@
-import { Item } from 'components/layout/Item';
 import { List } from 'components/layout/List';
 import { useAuth } from 'lib/data/use-auth';
 import { getAgeGroup } from 'lib/get-age-group';
@@ -13,6 +12,7 @@ import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import type { NextPageWithLayout } from 'pages/_app';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from 'components/ui/dialog';
 import { useQuery } from 'urql';
+import { TitleBar } from 'components/layout/TitleBar';
 
 const Page: NextPageWithLayout = () => {
   const { user, couple } = useAuth();
@@ -41,7 +41,7 @@ const Page: NextPageWithLayout = () => {
 
   return (
     <div className="container p-4 lg:py-8">
-      <Item.Titlebar title={`${user.uJmeno} ${user.uPrijmeni}`}>
+      <TitleBar title={`${user.uJmeno} ${user.uPrijmeni}`}>
         <Dialog open={editOpen} onOpenChange={setEditOpen}>
           <DialogTrigger asChild>
             <List.TitleButton icon={Edit}>Upravit osobní údaje</List.TitleButton>
@@ -61,7 +61,7 @@ const Page: NextPageWithLayout = () => {
             <ChangePasswordForm onSuccess={passClose} />
           </DialogContent>
         </Dialog>
-      </Item.Titlebar>
+      </TitleBar>
 
       <p>Variabilní symbol: {user.id.padStart(6, '0')}</p>
 

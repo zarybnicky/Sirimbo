@@ -12,7 +12,6 @@ import { RadioButtonGroupElement } from 'components/RadioButtomGroupElement';
 import { toast } from 'react-toastify';
 import { CohortListDocument } from 'lib/graphql/Cohorts';
 import { RegisterDocument } from 'lib/graphql/CurrentUser';
-import { Item } from 'components/layout/Item';
 import type { NextPageWithLayout } from 'pages/_app';
 import { useMutation, useQuery } from 'urql';
 
@@ -49,7 +48,7 @@ const Page: NextPageWithLayout = () => {
   });
 
   return (
-    <Item>
+    <div className="container">
       <Card>
         <form
           className="grid md:grid-cols-2 gap-2"
@@ -281,7 +280,7 @@ const Page: NextPageWithLayout = () => {
           </SubmitButton>
         </form>
       </Card>
-    </Item>
+    </div>
   );
 }
 

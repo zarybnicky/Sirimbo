@@ -9,9 +9,8 @@ import { SubmitFormDocument } from 'lib/graphql/Crm';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useCookie } from 'lib/use-cookie';
-import dynamic from 'next/dynamic';
 import { useMutation } from 'urql';
-const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
+import { RichTextEditor } from './RichTextEditor';
 
 function FeedbackForm() {
   const [isOpen, setIsOpen] = React.useState(false);

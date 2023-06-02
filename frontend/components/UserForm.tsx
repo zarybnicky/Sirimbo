@@ -9,13 +9,17 @@ import { ErrorBox } from './ErrorBox';
 import { useCountries } from 'lib/data/use-countries';
 import { SubmitButton } from './SubmitButton';
 import { UserInput } from 'lib/graphql';
-import { UserFragment } from 'lib/graphql/CurrentUser';
-import dynamic from 'next/dynamic';
 import { RoleListDocument } from 'lib/graphql/Roles';
 import { CohortListDocument } from 'lib/graphql/Cohorts';
-import {CreateUserDocument, UpdateUserDocument} from 'lib/graphql/User';
+import {CreateUserDocument, DeleteUserDocument, UpdateUserDocument, UserDocument} from 'lib/graphql/User';
 import { useMutation, useQuery } from 'urql';
-const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
+import { ErrorPage } from './ErrorPage';
+import { DeleteButton } from './DeleteButton';
+import { User } from 'lib/entities';
+import { RichTextEditor } from './RichTextEditor';
+import { TitleBar } from './layout/TitleBar';
 
 type FormProps = Pick<
   UserInput,
@@ -45,9 +49,16 @@ type FormProps = Pick<
   | 'uPass'
 >;
 
-export const UserForm = ({ data }: { data?: UserFragment}) => {
-  const doCreate = useMutation(CreateUserDocument)[1];
-  const doUpdate = useMutation(UpdateUserDocument)[1];
+const entity = User;
+
+export const UserForm = ({ id = '' }: { id?: string; }) => {
+  const router = useRouter();
+  const [query] = useQuery({ query: UserDocument, variables: { id } });
+  const data = query.data?.user;
+  const title = id ? `${data?.uJmeno??''} ${data?.uPrijmeni ??''}}` : 'Nový uživatel';
+
+  const create = useMutation(CreateUserDocument)[1];
+  const update = useMutation(UpdateUserDocument)[1];
 
   const countries = useCountries();
   const [{ data: roles }] = useQuery({query: RoleListDocument});
@@ -84,25 +95,46 @@ export const UserForm = ({ data }: { data?: UserFragment}) => {
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     const { uLogin: _uLogin, ...patch } = values;
-    if (data) {
-      await doUpdate({ id: data.id, patch });
+    if (id) {
+      await update({ id, patch });
     } else {
-      await doCreate({
+      const res = await create({
         input: {
           ...patch,
           uLogin: _uLogin.toLowerCase(),
           uLock: false,
         },
       });
+      const id = res.data?.createUser?.user?.id;
+      toast.success('Přidáno.');
+      if (id) {
+        router.replace(entity.editRoute(id));
+      } else {
+        reset(undefined);
+      }
     }
   });
 
+  if (query.data && query.data.user === null) {
+    return <ErrorPage error="Nenalezeno" />;
+  }
+
   return (
     <form className="grid lg:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <SubmitButton loading={onSubmit.loading} />
+      <TitleBar backHref={entity.listRoute} title={title} >
+        {id && (
+          <DeleteButton
+            doc={DeleteUserDocument}
+            id={id}
+            title="smazat uživatele"
+            onDelete={() => router.push(entity.listRoute)}
+          />
+        )}
+        <SubmitButton loading={onSubmit.loading} />
+      </TitleBar>
 
       <ErrorBox error={onSubmit.error} />
-      {data ? (
+      {id ? (
         <TextFieldElement
           control={control}
           name="uLogin"

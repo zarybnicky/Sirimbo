@@ -246,6 +246,7 @@ type Aktuality {
   """Reads a single `GalerieFoto` that is related to this `Aktuality`."""
   galerieFotoByAtFotoMain: GalerieFoto
   id: BigInt
+  tenant: BigInt!
 
   """Reads a single `User` that is related to this `Aktuality`."""
   userByAtKdo: User
@@ -282,6 +283,7 @@ input AktualityInput {
   atTimestamp: Datetime
   atTimestampAdd: Datetime
   id: BigInt
+  tenant: BigInt
 }
 
 """
@@ -299,6 +301,7 @@ input AktualityPatch {
   atTimestamp: Datetime
   atTimestampAdd: Datetime
   id: BigInt
+  tenant: BigInt
 }
 
 type Attachment {
@@ -4161,6 +4164,7 @@ type Dokumenty {
   dPath: String!
   dTimestamp: Datetime
   id: BigInt
+  tenant: BigInt!
 
   """Reads a single `User` that is related to this `Dokumenty`."""
   userByDKdo: User
@@ -4197,6 +4201,7 @@ input DokumentyInput {
   dPath: String!
   dTimestamp: Datetime
   id: BigInt
+  tenant: BigInt
 }
 
 """
@@ -4211,6 +4216,7 @@ input DokumentyPatch {
   dPath: String
   dTimestamp: Datetime
   id: BigInt
+  tenant: BigInt
 }
 
 type Event {
@@ -4284,6 +4290,7 @@ type Event {
   remainingSpots: Int
   since: Date!
   summary: String!
+  tenant: BigInt!
   until: Date!
   updatedAt: Datetime
 }
@@ -4316,6 +4323,7 @@ input EventInput {
   name: String!
   since: Date!
   summary: String
+  tenant: BigInt
   until: Date!
   updatedAt: Datetime
 }
@@ -4336,6 +4344,7 @@ input EventPatch {
   name: String
   since: Date
   summary: String
+  tenant: BigInt
   until: Date
   updatedAt: Datetime
 }
@@ -4411,6 +4420,7 @@ type FormResponse {
   createdAt: Datetime!
   data: JSON!
   id: BigInt!
+  tenant: BigInt!
   type: String!
   updatedAt: Datetime!
   url: String!
@@ -4436,6 +4446,7 @@ input FormResponseInput {
   createdAt: Datetime
   data: JSON!
   id: BigInt
+  tenant: BigInt
   type: String!
   updatedAt: Datetime
   url: String!
@@ -4448,6 +4459,7 @@ input FormResponsePatch {
   createdAt: Datetime
   data: JSON
   id: BigInt
+  tenant: BigInt
   type: String
   updatedAt: Datetime
   url: String
@@ -4528,6 +4540,7 @@ type GalerieDir {
   gdName: String!
   gdPath: String!
   id: BigInt
+  tenant: BigInt!
 }
 
 """
@@ -4551,6 +4564,7 @@ input GalerieDirInput {
   gdName: String!
   gdPath: String!
   id: BigInt
+  tenant: BigInt
 }
 
 """
@@ -4564,6 +4578,7 @@ input GalerieDirPatch {
   gdName: String
   gdPath: String
   id: BigInt
+  tenant: BigInt
 }
 
 """A connection to a list of `GalerieDir` values."""
@@ -4644,6 +4659,7 @@ type GalerieFoto {
   gfPath: String!
   gfTimestamp: Datetime
   id: BigInt
+  tenant: BigInt!
 
   """Reads a single `User` that is related to this `GalerieFoto`."""
   userByGfKdo: User
@@ -4673,6 +4689,7 @@ input GalerieFotoInput {
   gfPath: String!
   gfTimestamp: Datetime
   id: BigInt
+  tenant: BigInt
 }
 
 """
@@ -4686,6 +4703,7 @@ input GalerieFotoPatch {
   gfPath: String
   gfTimestamp: Datetime
   id: BigInt
+  tenant: BigInt
 }
 
 """A connection to a list of `GalerieFoto` values."""
@@ -6130,6 +6148,7 @@ type Nabidka {
   nTimestamp: Datetime
   nTrener: BigInt!
   nVisible: Boolean!
+  tenant: BigInt!
 
   """Reads a single `User` that is related to this `Nabidka`."""
   userByNTrener: User
@@ -6161,6 +6180,7 @@ input NabidkaInput {
   nTimestamp: Datetime
   nTrener: BigInt!
   nVisible: Boolean
+  tenant: BigInt
 }
 
 type NabidkaItem {
@@ -6282,6 +6302,7 @@ input NabidkaPatch {
   nTimestamp: Datetime
   nTrener: BigInt
   nVisible: Boolean
+  tenant: BigInt
 }
 
 """A connection to a list of `Nabidka` values."""
@@ -7313,6 +7334,7 @@ type PlatbyCategory {
     """The method to use when ordering `PlatbyItem`."""
     orderBy: [PlatbyItemsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PlatbyItemsConnection!
+  tenant: BigInt!
 }
 
 """
@@ -7438,6 +7460,7 @@ input PlatbyCategoryInput {
   pcValidFrom: Date!
   pcValidTo: Date!
   pcVisible: Boolean
+  tenant: BigInt
 }
 
 """
@@ -7456,6 +7479,7 @@ input PlatbyCategoryPatch {
   pcValidFrom: Date
   pcValidTo: Date
   pcVisible: Boolean
+  tenant: BigInt
 }
 
 type PlatbyGroup {
@@ -7523,6 +7547,7 @@ type PlatbyGroup {
     """The method to use when ordering `PlatbyGroupSkupina`."""
     orderBy: [PlatbyGroupSkupinasOrderBy!] = [PRIMARY_KEY_ASC]
   ): PlatbyGroupSkupinasConnection!
+  tenant: BigInt!
 }
 
 """
@@ -7542,6 +7567,7 @@ input PlatbyGroupInput {
   pgId: BigInt
   pgName: String!
   pgType: BigFloat
+  tenant: BigInt
 }
 
 """
@@ -7554,6 +7580,7 @@ input PlatbyGroupPatch {
   pgId: BigInt
   pgName: String
   pgType: BigFloat
+  tenant: BigInt
 }
 
 """A connection to a list of `PlatbyGroup` values."""
@@ -7709,6 +7736,7 @@ type PlatbyItem {
 
   """Reads a single `PlatbyRaw` that is related to this `PlatbyItem`."""
   platbyRawByPiIdRaw: PlatbyRaw
+  tenant: BigInt!
 
   """Reads a single `User` that is related to this `PlatbyItem`."""
   userByPiIdUser: User
@@ -7742,6 +7770,7 @@ input PlatbyItemInput {
   piIdRaw: BigInt
   piIdUser: BigInt
   piPrefix: Int
+  tenant: BigInt
 }
 
 """
@@ -7756,6 +7785,7 @@ input PlatbyItemPatch {
   piIdRaw: BigInt
   piIdUser: BigInt
   piPrefix: Int
+  tenant: BigInt
 }
 
 """A connection to a list of `PlatbyItem` values."""
@@ -7863,6 +7893,7 @@ type PlatbyRaw {
   prId: BigInt!
   prRaw: String!
   prSorted: Boolean!
+  tenant: BigInt!
 }
 
 """
@@ -7885,6 +7916,7 @@ input PlatbyRawInput {
   prId: BigInt
   prRaw: String!
   prSorted: Boolean
+  tenant: BigInt
 }
 
 """
@@ -7897,6 +7929,7 @@ input PlatbyRawPatch {
   prId: BigInt
   prRaw: String
   prSorted: Boolean
+  tenant: BigInt
 }
 
 """A connection to a list of `PlatbyRaw` values."""
@@ -9697,6 +9730,7 @@ type Rozpi {
   rTimestamp: Datetime
   rTrener: BigInt!
   rVisible: Boolean!
+  tenant: BigInt!
 
   """Reads a single `User` that is related to this `Rozpi`."""
   userByRTrener: User
@@ -9726,6 +9760,7 @@ input RozpiInput {
   rTimestamp: Datetime
   rTrener: BigInt!
   rVisible: Boolean
+  tenant: BigInt
 }
 
 """
@@ -9740,6 +9775,7 @@ input RozpiPatch {
   rTimestamp: Datetime
   rTrener: BigInt
   rVisible: Boolean
+  tenant: BigInt
 }
 
 """A connection to a list of `Rozpi` values."""
@@ -10093,6 +10129,7 @@ type Skupiny {
   sLocation: String!
   sName: String!
   sVisible: Boolean!
+  tenant: BigInt!
 
   """Reads and enables pagination through a set of `UpozorneniSkupiny`."""
   upozorneniSkupiniesByUpsIdSkupina(
@@ -10183,6 +10220,7 @@ input SkupinyInput {
   sLocation: String
   sName: String!
   sVisible: Boolean
+  tenant: BigInt
 }
 
 """
@@ -10200,6 +10238,7 @@ input SkupinyPatch {
   sLocation: String
   sName: String
   sVisible: Boolean
+  tenant: BigInt
 }
 
 """All input for the `submitForm` mutation."""
@@ -12210,6 +12249,7 @@ type Upozorneni {
   isVisible: Boolean
   scheduledSince: Datetime
   scheduledUntil: Datetime
+  tenant: BigInt!
   upBarvy: BigInt!
   upId: BigInt!
   upKdo: BigInt
@@ -12273,6 +12313,7 @@ input UpozorneniInput {
   isVisible: Boolean
   scheduledSince: Datetime
   scheduledUntil: Datetime
+  tenant: BigInt
   upBarvy: BigInt
   upId: BigInt
   upKdo: BigInt
@@ -12291,6 +12332,7 @@ input UpozorneniPatch {
   isVisible: Boolean
   scheduledSince: Datetime
   scheduledUntil: Datetime
+  tenant: BigInt
   upBarvy: BigInt
   upId: BigInt
   upKdo: BigInt

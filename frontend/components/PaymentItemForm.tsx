@@ -1,8 +1,9 @@
 import React from 'react';
 import {
   CreatePaymentItemDocument,
+  DeletePaymentItemDocument,
   PaymentCategoryListDocument,
-  PaymentItemFragment,
+  PaymentItemDocument,
   UpdatePaymentItemDocument,
 } from 'lib/graphql/Payment';
 import { useForm } from 'react-hook-form';
@@ -14,17 +15,27 @@ import { SubmitButton } from './SubmitButton';
 import { PlatbyItemInput } from 'lib/graphql';
 import { UserListDocument } from 'lib/graphql/User';
 import { useMutation, useQuery } from 'urql';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
+import { ErrorPage } from './ErrorPage';
+import { DeleteButton } from './DeleteButton';
+import { PaymentItem } from 'lib/entities';
+import { TitleBar } from './layout/TitleBar';
 
 type FormProps = Pick<
   PlatbyItemInput,
   'piAmount' | 'piDate' | 'piIdCategory' | 'piIdUser' | 'piPrefix'
 >;
+const entity = PaymentItem;
 
-export const PaymentItemForm: React.FC<{
-  data?: PaymentItemFragment;
-}> = ({ data }) => {
-  const doCreate = useMutation(CreatePaymentItemDocument)[1];
-  const doUpdate = useMutation(UpdatePaymentItemDocument)[1];
+export const PaymentItemForm = ({id = ''}: {id?: string}) => {
+  const router = useRouter();
+  const [query] = useQuery({query: PaymentItemDocument, variables: { id }, pause: !id});
+  const data = query.data?.platbyItem;
+  const title = id ? 'Platba' : 'Nová platba';
+
+  const create = useMutation(CreatePaymentItemDocument)[1];
+  const update = useMutation(UpdatePaymentItemDocument)[1];
 
   const [{ data: users }] = useQuery({query: UserListDocument});
   const [{ data: categories }] = useQuery({query: PaymentCategoryListDocument});
@@ -44,16 +55,39 @@ export const PaymentItemForm: React.FC<{
     });
   }, [reset, data]);
 
-  const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    if (data) {
-      await doUpdate({ id: data.id, patch: values });
+  const onSubmit = useAsyncCallback(async (patch: FormProps) => {
+    if (id) {
+      await update({ id, patch });
     } else {
-      await doCreate({ input: { ...values } });
+      const res = await create({ input: patch });
+      const id = res.data?.createPlatbyItem?.platbyItem?.id;
+      toast.success('Přidáno.');
+      if (id) {
+        router.replace(entity.editRoute(id));
+      } else {
+        reset(undefined);
+      }
     }
   });
 
+  if (query.data && query.data.platbyItem === null) {
+    return <ErrorPage error="Nenalezeno" />;
+  }
+
   return (
-    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
+    <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <TitleBar backHref={entity.listRoute} title={title}>
+        {id && (
+          <DeleteButton
+            doc={DeletePaymentItemDocument}
+            id={id}
+            title="smazat platbu"
+            onDelete={() => router.push(entity.listRoute)}
+          />
+        )}
+        <SubmitButton loading={onSubmit.loading} />
+      </TitleBar>
+
       <SubmitButton loading={onSubmit.loading} />
 
       <ErrorBox error={onSubmit.error} />

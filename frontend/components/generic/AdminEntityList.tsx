@@ -73,7 +73,7 @@ export const makeAdminList =
         if (info?.endCursor) {
           setCursor(info.endCursor);
         }
-      }, []);
+      }, [data]);
       const hasMore = getPageInfo(data)?.hasNextPage !== false;
 
       const nodes = React.useMemo(() => {

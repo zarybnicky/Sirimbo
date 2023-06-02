@@ -1,4 +1,4 @@
-import {CreatePaymentCategoryDocument, PaymentCategoryFragment, UpdatePaymentCategoryDocument,} from 'lib/graphql/Payment';
+import {CreatePaymentCategoryDocument, DeletePaymentCategoryDocument, PaymentCategoryDocument, UpdatePaymentCategoryDocument,} from 'lib/graphql/Payment';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
@@ -9,7 +9,13 @@ import { SubmitButton } from './SubmitButton';
 import { PlatbyCategoryInput } from 'lib/graphql';
 import { pipe } from 'fp-ts/lib/function';
 import { pick } from 'lib/form-utils';
-import { useMutation } from 'urql';
+import { useMutation, useQuery } from 'urql';
+import { useRouter } from 'next/router';
+import { ErrorPage } from './ErrorPage';
+import { toast } from 'react-toastify';
+import { DeleteButton } from './DeleteButton';
+import { Route } from 'nextjs-routes';
+import { TitleBar } from './layout/TitleBar';
 
 const fields = [
   'pcName',
@@ -24,12 +30,16 @@ const fields = [
 ] as const;
 type FormProps = Pick<PlatbyCategoryInput, (typeof fields)[number]>;
 
-export const PaymentCategoryForm: React.FC<{
-  data?: PaymentCategoryFragment;
-  onSuccess: () => void;
-}> = ({ data, onSuccess }) => {
-  const doCreate = useMutation(CreatePaymentCategoryDocument)[1];
-  const doUpdate = useMutation(UpdatePaymentCategoryDocument)[1];
+const backHref: Route = { pathname: '/admin/platby/structure/category' };
+
+export const PaymentCategoryForm = ({ id = '' }: { id?: string }) => {
+  const router = useRouter();
+  const [query] = useQuery({query: PaymentCategoryDocument, variables: { id }, pause: !id});
+  const data = query.data?.platbyCategory;
+  const title = id ? data?.pcName || '(Bez názvu)' : 'Nová platba';
+
+  const create = useMutation(CreatePaymentCategoryDocument)[1];
+  const update = useMutation(UpdatePaymentCategoryDocument)[1];
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
@@ -39,17 +49,37 @@ export const PaymentCategoryForm: React.FC<{
   }, [data, reset]);
 
   const onSubmit = useAsyncCallback(async (patch: FormProps) => {
-    if (data) {
-      await doUpdate({ id: data.id, patch });
+    if (id) {
+      await update({ id, patch });
     } else {
-      await doCreate({ input: patch });
+      const res = await create({ input: patch });
+      const id = res.data?.createPlatbyCategory?.platbyCategory?.id;
+      toast.success('Přidáno.');
+      if (id) {
+        router.replace({ pathname: '/admin/rozpis/[id]', query: { id } });
+      } else {
+        reset(undefined);
+      }
     }
-    onSuccess();
   });
 
+  if (query.data && query.data.platbyCategory === null) {
+    return <ErrorPage error="Nenalezeno" />;
+  }
+
   return (
-    <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <SubmitButton loading={onSubmit.loading} />
+    <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
+      <TitleBar backHref={backHref} title={title}>
+        {id && (
+          <DeleteButton
+            doc={DeletePaymentCategoryDocument}
+            id={id}
+            title="smazat rozpis"
+            onDelete={() => router.push(backHref)}
+          />
+        )}
+        <SubmitButton loading={onSubmit.loading} />
+      </TitleBar>
 
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="pcName" label="Název" required />

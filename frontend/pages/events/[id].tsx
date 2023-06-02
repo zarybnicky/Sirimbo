@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { EventDocument } from 'lib/graphql/Event';
-import { Item } from 'components/layout/Item';
 import { EventItem } from 'components/EventItem';
 import { useAuth } from 'lib/data/use-auth';
 import { EventMemberList } from 'components/EventMemberList';
@@ -11,6 +10,7 @@ import type { NextPageWithLayout } from 'pages/_app';
 import { fromSlugArray } from 'lib/slugify';
 import { NextSeo } from 'next-seo';
 import { useQuery } from 'urql';
+import { TitleBar } from 'components/layout/TitleBar';
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
@@ -23,7 +23,7 @@ const Page: NextPageWithLayout = () => {
       <NextSeo title={data?.event?.name || 'Nadcházející akce'} />
       {!user && <Heading>Nadcházející akce</Heading>}
       <div className={classNames(user ? 'col-full-width p-4 lg:py-8' : 'col-feature')}>
-        {user && <Item.Titlebar title="Nadcházející akce" />}
+        {user && <TitleBar title="Nadcházející akce" />}
         <EventMemberList selected={id} />
         <div className="mt-6">{data?.event && <EventItem event={data.event} />}</div>
       </div>

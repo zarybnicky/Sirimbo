@@ -1,15 +1,15 @@
 import { NewCoupleForm } from 'components/NewCoupleForm';
-import { Item } from 'components/layout/Item';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import type { NextPageWithLayout } from 'pages/_app';
 import { CoupleList } from 'lib/entity-lists';
+import { TitleBar } from 'components/layout/TitleBar';
 
 const Page: NextPageWithLayout = () => {
   return (
-    <Item>
-      <Item.Titlebar backHref="/admin/pary" title="Nový pár" />
+    <div className="container py-4">
+      <TitleBar backHref="/admin/pary" title="Nový pár" />
       <NewCoupleForm />
-    </Item>
+    </div>
   );
 }
 

@@ -4,11 +4,11 @@ import { Heading } from 'components/Heading';
 import { CohortListWithMembersDocument } from 'lib/graphql/Cohorts';
 import { useAuth } from 'lib/data/use-auth';
 import { CohortExport } from 'components/CohortExport';
-import { Item } from 'components/layout/Item';
 import { CohortItem } from 'components/CohortItem';
 import classNames from 'classnames';
 import type { NextPageWithLayout } from 'pages/_app';
 import { useQuery } from 'urql';
+import { TitleBar } from 'components/layout/TitleBar';
 
 const Page: NextPageWithLayout = () => {
   const { user } = useAuth();
@@ -22,9 +22,9 @@ console.log(cohorts);
       {!user && <Heading>Tréninkové skupiny</Heading>}
       <div className={classNames(user ? 'col-full-width p-4' : 'col-popout')}>
         {user && (
-          <Item.Titlebar title="Tréninkové skupiny">
+          <TitleBar title="Tréninkové skupiny">
             <CohortExport />
-          </Item.Titlebar>
+          </TitleBar>
         )}
 
         <div className={classNames(user ? 'gap-4 lg:columns-2 xl:columns-3' : '')}>

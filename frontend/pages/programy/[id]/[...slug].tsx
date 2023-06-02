@@ -1,6 +1,5 @@
 import { Card } from 'components/Card';
 import { Heading } from 'components/Heading';
-import { Item } from 'components/layout/Item';
 import { RichTextView } from 'components/RichTextView';
 import { CohortGroupFragment, CohortGroupDocument } from 'lib/graphql/CohortGroup';
 import { fetchGql } from 'lib/query';
@@ -18,7 +17,7 @@ const Page: NextPageWithLayout<PageProps> = ({ item }) => {
     <>
       <NextSeo title={item.name} />
       <Heading>{item.name}</Heading>
-      <Item>
+      <div className="container py-4">
         <RichTextView className="mb-10" value={item.description} />
         {item.skupiniesByCohortGroup.nodes.map((x) => (
           <Card key={x.id} cohort={x}>
@@ -29,7 +28,7 @@ const Page: NextPageWithLayout<PageProps> = ({ item }) => {
             />
           </Card>
         ))}
-      </Item>
+      </div>
     </>
   );
 };

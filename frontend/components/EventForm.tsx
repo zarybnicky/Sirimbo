@@ -12,9 +12,7 @@ import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { Item } from './layout/Item';
 import { DeleteButton } from './DeleteButton';
 import { Route } from 'nextjs-routes';
 import { DateRange } from 'react-day-picker';
@@ -22,7 +20,8 @@ import { DateRangeInput } from './DateRange';
 import { ErrorPage } from './ErrorPage';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
-const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
+import { RichTextEditor } from './RichTextEditor';
+import { TitleBar } from './layout/TitleBar';
 
 type FormProps = Pick<
   EventInput,
@@ -45,6 +44,7 @@ export const EventForm = ({ id = '' }: { id?: string }) => {
   const router = useRouter();
   const [query] = useQuery({query: EventDocument, variables: { id }, pause: !id });
   const data = query.data?.event;
+  const title = id ? data?.name || '(Bez názvu)' : 'Nová akce';
 
   const create = useMutation(CreateEventDocument)[1];
   const update = useMutation(UpdateEventDocument)[1];
@@ -104,10 +104,7 @@ export const EventForm = ({ id = '' }: { id?: string }) => {
 
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <Item.Titlebar
-        backHref={backHref}
-        title={id ? data?.name || '(Bez názvu)' : 'Nová akce'}
-      >
+      <TitleBar backHref={backHref} title={title} >
         {id && (
           <DeleteButton
             doc={DeleteEventDocument}
@@ -119,7 +116,7 @@ export const EventForm = ({ id = '' }: { id?: string }) => {
           />
         )}
         <SubmitButton loading={onSubmit.loading} />
-      </Item.Titlebar>
+      </TitleBar>
 
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="name" label="Název" required />

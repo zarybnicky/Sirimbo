@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Item } from 'components/layout/Item';
 import { useAuth } from 'lib/data/use-auth';
 import { EventMemberList } from 'components/EventMemberList';
 import classNames from 'classnames';
 import { Heading } from 'components/Heading';
 import type { NextPageWithLayout } from 'pages/_app';
+import { TitleBar } from 'components/layout/TitleBar';
 
 const Page: NextPageWithLayout = () => {
   const { user } = useAuth();
@@ -12,7 +12,7 @@ const Page: NextPageWithLayout = () => {
     <>
       {!user && <Heading>Nadcházející akce</Heading>}
       <div className={classNames(user ? 'col-full-width p-4 lg:py-8' : 'col-feature')}>
-        {user && <Item.Titlebar title="Nadcházející akce" />}
+        {user && <TitleBar title="Nadcházející akce" />}
         <EventMemberList />
       </div>
     </>

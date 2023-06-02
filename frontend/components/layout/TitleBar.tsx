@@ -1,16 +1,6 @@
 import Link from 'next/link';
 import { Route } from 'nextjs-routes';
 import { CornerLeftUp as UpIcon } from 'lucide-react';
-import cx from 'classnames';
-
-type ItemProps = {
-    children: React.ReactNode;
-    className?: string;
-};
-
-export function Item({className, children}: ItemProps) {
-  return <div className={cx('container py-4 lg:py-12', className)}>{children}</div>;
-}
 
 type TitleBarProps = {
   title: string;
@@ -18,7 +8,7 @@ type TitleBarProps = {
   children?: React.ReactNode;
 };
 
-function ItemTitleBar({backHref, title, children,}: TitleBarProps) {
+export function TitleBar({backHref, title, children,}: TitleBarProps) {
   return (
     <div className="my-4 lg:mt-8">
       {backHref && (
@@ -37,5 +27,3 @@ function ItemTitleBar({backHref, title, children,}: TitleBarProps) {
     </div>
   );
 }
-
-Item.Titlebar = ItemTitleBar;

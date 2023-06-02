@@ -23,8 +23,16 @@ export const Couple = {
     ({ pathname: '/admin/pary/[id]', query: { id } } as Route),
 };
 
+export const User = {
+  name: (n: number) => (n === 1 ? "uživatel" : n > 1 && n < 5 ? "uživatelé" : "uživatelů"),
+  listRoute: { pathname: '/admin/users' } as Route,
+  addRoute: { pathname: '/admin/users/add' } as Route,
+  editRoute: (id: string) => ({ pathname: '/admin/users/[id]', query: { id } } as Route),
+};
+
 export const PaymentItem = {
   name: (n: number) => (n === 1 ? "platba" : n > 1 && n < 5 ? "platby":"plateb"),
+  listRoute: { pathname: '/admin/platby/items' } as Route,
   addRoute: { pathname: '/admin/platby/items/add' } as Route,
   editRoute: (id: string) =>
     ({ pathname: '/admin/platby/items/[id]', query: { id } } as Route),

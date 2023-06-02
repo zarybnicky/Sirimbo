@@ -3,10 +3,10 @@ import { ComboboxElement } from 'components/Combobox';
 import { FileListDocument } from 'lib/graphql/Documents';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { fullDateFormatter } from 'lib/format-date';
-import { Item } from 'components/layout/Item';
 import { Card } from 'components/Card';
 import type { NextPageWithLayout } from 'pages/_app';
 import { useQuery } from 'urql';
+import { TitleBar } from 'components/layout/TitleBar';
 
 const categories = [
   { id: '1', label: 'Schůze,\u{00A0}rady' },
@@ -28,16 +28,16 @@ const Page: NextPageWithLayout = () => {
 
   return (
     <div className="container p-4 lg:py-8">
-      <Item.Titlebar title="Dokumenty">
+      <TitleBar title="Dokumenty">
         <ComboboxElement
           align="end"
           control={control}
           name="category"
-                  placeholder='Vybrat kategorii'
+          placeholder='Vybrat kategorii'
           required
           options={categories}
         />
-      </Item.Titlebar>
+      </TitleBar>
 
       {data?.dokumenties?.nodes?.map((row, i) => (
         <Card key={i}>

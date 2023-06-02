@@ -5,12 +5,11 @@ import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import {CurrentTenantDocument, UpdateTenantDocument} from 'lib/graphql/Tenant';
-import dynamic from 'next/dynamic';
 import { useMutation, useQuery } from 'urql';
-const RichTextEditor = dynamic(() => import('./RichTextEditor'), { ssr: false });
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Item } from './layout/Item';
+import { RichTextEditor } from './RichTextEditor';
+import { TitleBar } from './layout/TitleBar';
 
 const Form = z.object({
   name: z.string(),
@@ -37,9 +36,9 @@ export const TenantForm = () => {
 
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <Item.Titlebar title={data?.name || '(Bez názvu)'}>
+      <TitleBar title={data?.name || '(Bez názvu)'}>
         <SubmitButton loading={onSubmit.loading} />
-      </Item.Titlebar>
+      </TitleBar>
       <ErrorBox error={onSubmit.error} />
       <TextFieldElement control={control} name="name" label="Název organizace" required />
       <RichTextEditor

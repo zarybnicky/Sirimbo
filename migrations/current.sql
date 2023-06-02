@@ -44,27 +44,6 @@ drop function if exists active_prospects();
 
 grant all on function submit_form to anonymous;
 
-select app_private.drop_policies('public.form_responses');
-grant all on table form_responses to anonymous;
-alter table form_responses enable row level security;
-create policy admin_all on form_responses to administrator using (true) with check (true);
-
-revoke all on cohort_group from administrator;
-grant all on cohort_group to anonymous;
-alter table cohort_group enable row level security;
-select app_private.drop_policies('public.cohort_group');
-create policy admin_all on cohort_group to administrator using (true) with check (true);
-create policy public_view on cohort_group for select to anonymous;
-
-revoke all on users from member;
-
-revoke all on upozorneni from member;
-grant all on upozorneni to anonymous;
-alter table upozorneni enable row level security;
-select app_private.drop_policies('public.upozorneni');
-create policy admin_all on upozorneni to administrator using (true) with check (true);
-create policy member_view on upozorneni for select to member;
-
 revoke all on upozorneni_skupiny from member;
 grant all on upozorneni_skupiny to anonymous;
 alter table upozorneni_skupiny enable row level security;
@@ -72,45 +51,12 @@ select app_private.drop_policies('public.upozorneni_skupiny');
 create policy admin_all on upozorneni_skupiny to administrator using (true) with check (true);
 create policy member_view on upozorneni_skupiny for select to member;
 
-revoke all on nabidka from member;
-grant all on nabidka to anonymous;
-select app_private.drop_policies('public.nabidka');
-alter table nabidka enable row level security;
-create policy admin_all on nabidka to administrator using (true) with check (true);
-create policy member_view on nabidka for select to member;
-
-revoke all on nabidka_item from member;
-grant all on nabidka_item to anonymous;
-select app_private.drop_policies('public.nabidka_item');
-alter table nabidka_item enable row level security;
-create policy admin_all on nabidka_item to administrator using (true) with check (true);
-create policy member_view on nabidka_item for select to member;
-create policy manage_own on nabidka_item for all to member
-  using (ni_partner in (select current_couple_ids()))
-  with check (ni_partner in (select current_couple_ids()));
-
-revoke all on rozpis from member;
-grant all on rozpis to anonymous;
-select app_private.drop_policies('public.rozpis');
-alter table rozpis enable row level security;
-create policy admin_all on rozpis to administrator using (true) with check (true);
-create policy member_view on rozpis for select to member;
-
 revoke all on attachment from member;
 grant all on attachment to anonymous;
 select app_private.drop_policies('public.attachment');
 alter table attachment enable row level security;
 create policy admin_all on attachment to administrator using (true) with check (true);
 create policy public_view on attachment for select to anonymous;
-
-revoke all on rozpis_item from member;
-grant all on rozpis_item to anonymous;
-select app_private.drop_policies('public.rozpis_item');
-create policy admin_all on rozpis_item to administrator using (true) with check (true);
-create policy member_view on rozpis_item for select to member;
-create policy manage_own on rozpis_item for all to member
-  using (ri_partner in (select current_couple_ids()))
-  with check (ri_partner in (select current_couple_ids()));
 
 grant all on session to anonymous;
 
@@ -146,14 +92,6 @@ select app_private.drop_policies('public.location_attachment');
 create policy admin_all on location_attachment to administrator using (true) with check (true);
 create policy public_view on location_attachment for select to anonymous;
 
-revoke all on tenant from administrator;
-revoke all on tenant from member;
-grant all on tenant to anonymous;
-alter table tenant enable row level security;
-select app_private.drop_policies('public.tenant');
-create policy admin_all on tenant to administrator using (true) with check (true);
-create policy public_view on tenant for select to anonymous;
-
 revoke all on tenant_attachment from administrator;
 revoke all on tenant_attachment from member;
 grant all on tenant_attachment to anonymous;
@@ -179,87 +117,38 @@ create policy manage_own on pary_navrh for all
   using (pn_navrhl = current_user_id() or pn_partner = current_user_id() or pn_partnerka = current_user_id())
   with check (pn_navrhl = current_user_id() and (pn_partner = current_user_id() or pn_partnerka = current_user_id()));
 
-revoke all on platby_category from member;
-grant all on platby_category to anonymous;
-select app_private.drop_policies('public.platby_category');
-alter table platby_category enable row level security;
-create policy admin_all on platby_category to administrator using (true) with check (true);
-create policy member_view on platby_category for select to member ;
+CREATE INDEX if not exists "object_name" ON "public"."location_attachment"("object_name");
+CREATE INDEX if not exists "object_name" ON "public"."room_attachment"("object_name");
+CREATE INDEX if not exists "object_name" ON "public"."tenant_attachment"("object_name");
+CREATE INDEX if not exists "uploaded_by" ON "public"."attachment"("uploaded_by");
+CREATE INDEX if not exists "event_id" ON "public"."attendee_external"("event_id");
+CREATE INDEX if not exists "managed_by" ON "public"."attendee_external"("managed_by");
+CREATE INDEX if not exists "confirmed_by" ON "public"."attendee_external"("confirmed_by");
+CREATE INDEX if not exists "cohort_group" ON "public"."skupiny"("cohort_group");
+CREATE INDEX if not exists "tenant" ON "public"."cohort_group"("tenant");
+CREATE INDEX if not exists "location" ON "public"."room"("location");
+CREATE INDEX if not exists "tenant" ON "public"."location"("tenant");
+CREATE INDEX if not exists "person_id" ON "public"."tenant_person"("person_id");
+CREATE INDEX if not exists "ss_user" ON "public"."session"("ss_user");
 
-revoke all on platby_category_group from member;
-grant all on platby_category_group to anonymous;
-select app_private.drop_policies('public.platby_category_group');
-alter table platby_category_group enable row level security;
-create policy admin_all on platby_category_group to administrator using (true) with check (true);
-create policy member_view on platby_category_group for select to member ;
-
-revoke all on platby_group from member;
-grant all on platby_group to anonymous;
-select app_private.drop_policies('public.platby_group');
-alter table platby_group enable row level security;
-create policy admin_all on platby_group to administrator using (true) with check (true);
-create policy member_view on platby_group for select to member ;
-
-revoke all on platby_group_skupina from member;
-grant all on platby_group_skupina to anonymous;
-select app_private.drop_policies('public.platby_group_skupina');
-alter table platby_group_skupina enable row level security;
-create policy admin_all on platby_group_skupina to administrator using (true) with check (true);
-create policy member_view on platby_group_skupina for select to member ;
-
-revoke all on platby_item from member;
-grant all on platby_item to anonymous;
-select app_private.drop_policies('public.platby_item');
-alter table platby_item enable row level security;
-create policy admin_all on platby_item to administrator using (true) with check (true);
-create policy member_view on platby_item for select to member using (pi_id_user = current_user_id());
-
-revoke all on platby_raw from member;
-grant all on platby_raw to anonymous;
-select app_private.drop_policies('public.platby_raw');
-alter table platby_raw enable row level security;
-create policy admin_all on platby_raw to administrator using (true) with check (true);
-create policy member_view on platby_raw for select to member using (exists (select from platby_item where pi_id_raw = pr_id and pi_id_user = current_user_id()));
-
-select app_private.drop_policies('public.dokumenty');
-alter table dokumenty enable row level security;
-create policy admin_all on dokumenty to administrator using (true) with check (true);
-create policy public_view on dokumenty for select to member;
-revoke all on dokumenty from member;
-grant all on dokumenty to anonymous;
-
-CREATE INDEX ON "public"."location_attachment"("object_name");
-CREATE INDEX ON "public"."room_attachment"("object_name");
-CREATE INDEX ON "public"."tenant_attachment"("object_name");
-CREATE INDEX ON "public"."attachment"("uploaded_by");
-CREATE INDEX ON "public"."attendee_external"("event_id");
-CREATE INDEX ON "public"."attendee_external"("managed_by");
-CREATE INDEX ON "public"."attendee_external"("confirmed_by");
-CREATE INDEX ON "public"."skupiny"("cohort_group");
-CREATE INDEX ON "public"."cohort_group"("tenant");
-CREATE INDEX ON "public"."room"("location");
-CREATE INDEX ON "public"."location"("tenant");
-CREATE INDEX ON "public"."tenant_person"("person_id");
-CREATE INDEX ON "public"."session"("ss_user");
-
-create index on public.dokumenty (d_kategorie);
-create index on public.dokumenty (d_timestamp);
-create index on public.rozpis_item (ri_od);
-create index on public.nabidka (n_od);
-create index on public.form_responses (updated_at);
-create index on public.form_responses (type);
-create index on public.users (u_system);
-create index on public.users (u_confirmed);
-create index on public.users (u_ban);
-create index on public.users (u_prijmeni);
-create index on public.users (u_jmeno);
-create index on public.cohort_group (is_public);
-create index on public.cohort_group (ordering);
-create index on public.skupiny (s_visible);
-create index on public.skupiny (ordering);
-create index on public.event (is_visible);
-create index on public.event (since);
-create index on public.rozpis (r_datum);
+create index if not exists "d_kategorie" on public.dokumenty (d_kategorie);
+create index if not exists "d_timestamp" on public.dokumenty (d_timestamp);
+create index if not exists "ri_od" on public.rozpis_item (ri_od);
+create index if not exists "n_od" on public.nabidka (n_od);
+create index if not exists "updated_at" on public.form_responses (updated_at);
+create index if not exists "type" on public.form_responses (type);
+create index if not exists "u_system" on public.users (u_system);
+create index if not exists "u_confirmed" on public.users (u_confirmed);
+create index if not exists "u_ban" on public.users (u_ban);
+create index if not exists "u_prijmeni" on public.users (u_prijmeni);
+create index if not exists "u_jmeno" on public.users (u_jmeno);
+create index if not exists "is_public" on public.cohort_group (is_public);
+create index if not exists "ordering" on public.cohort_group (ordering);
+create index if not exists "s_visible" on public.skupiny (s_visible);
+create index if not exists "ordering" on public.skupiny (ordering);
+create index if not exists "is_visible" on public.event (is_visible);
+create index if not exists "since" on public.event (since);
+create index if not exists "r_datum" on public.rozpis (r_datum);
 
 create or replace function public.users_has_valid_payment(a public.users) returns boolean
     language sql stable as $$
@@ -328,3 +217,185 @@ alter table pary add column if not exists id bigint generated always as (p_id) s
 alter table pary_navrh add column if not exists id bigint generated always as (pn_id) stored;
 alter table upozorneni_skupiny add column if not exists id bigint generated always as (ups_id) stored;
 alter table permissions add column if not exists id bigint generated always as (pe_id) stored;
+
+alter table aktuality add column if not exists tenant bigint not null default current_tenant_id();
+CREATE INDEX if not exists "tenant" ON aktuality (tenant);
+select app_private.drop_policies('public.aktuality');
+create policy admin_all on aktuality to administrator using (true) with check (true);
+create policy all_view on aktuality for select using (true);
+create policy my_tenant on aktuality as restrictive using (tenant = current_tenant_id()) with check (tenant = current_tenant_id());
+
+alter table dokumenty add column if not exists tenant bigint not null default current_tenant_id();
+CREATE INDEX if not exists "tenant" ON dokumenty (tenant);
+select app_private.drop_policies('public.dokumenty');
+alter table dokumenty enable row level security;
+create policy admin_all on dokumenty to administrator using (true) with check (true);
+create policy public_view on dokumenty for select to member;
+create policy my_tenant on dokumenty as restrictive using (tenant = current_tenant_id()) with check (tenant = current_tenant_id());
+revoke all on dokumenty from member;
+grant all on dokumenty to anonymous;
+
+alter table event add column if not exists tenant bigint not null default current_tenant_id();
+CREATE INDEX if not exists "tenant" ON event (tenant);
+select app_private.drop_policies('public.event');
+create policy manage_all on event to administrator using (true) with check (true);
+create policy select_member on event for select to member using (true);
+create policy select_public on event for select to anonymous using (is_public = true);
+create policy my_tenant on event as restrictive using (tenant = current_tenant_id()) with check (tenant = current_tenant_id());
+
+alter table form_responses add column if not exists tenant bigint not null default current_tenant_id();
+CREATE INDEX if not exists "tenant" ON form_responses (tenant);
+grant all on table form_responses to anonymous;
+revoke all on form_responses from member;
+alter table form_responses enable row level security;
+select app_private.drop_policies('public.form_responses');
+create policy admin_all on form_responses to administrator using (true) with check (true);
+create policy my_tenant on form_responses as restrictive using (tenant = current_tenant_id()) with check (tenant = current_tenant_id());
+
+alter table galerie_dir add column if not exists tenant bigint not null default current_tenant_id();
+CREATE INDEX if not exists "tenant" ON galerie_dir (tenant);
+create policy my_tenant on galerie_dir as restrictive using (tenant = current_tenant_id()) with check (tenant = current_tenant_id());
+
+alter table galerie_foto add column if not exists tenant bigint not null default current_tenant_id();
+CREATE INDEX if not exists "tenant" ON galerie_foto (tenant);
+create policy my_tenant on galerie_foto as restrictive using (tenant = current_tenant_id()) with check (tenant = current_tenant_id());
+
+alter table nabidka add column if not exists tenant bigint not null default current_tenant_id();
+CREATE INDEX if not exists "tenant" ON nabidka (tenant);
+revoke all on nabidka from member;
+grant all on nabidka to anonymous;
+select app_private.drop_policies('public.nabidka');
+alter table nabidka enable row level security;
+create policy admin_all on nabidka to administrator using (true) with check (true);
+create policy member_view on nabidka for select to member;
+create policy my_tenant on nabidka as restrictive using (tenant = current_tenant_id()) with check (tenant = current_tenant_id());
+
+alter table nabidka_item add column if not exists tenant bigint not null default current_tenant_id();
+CREATE INDEX if not exists "tenant" ON nabidka_item (tenant);
+revoke all on nabidka_item from member;
+grant all on nabidka_item to anonymous;
+select app_private.drop_policies('public.nabidka_item');
+alter table nabidka_item enable row level security;
+create policy admin_all on nabidka_item to administrator using (true) with check (true);
+create policy member_view on nabidka_item for select to member;
+create policy manage_own on nabidka_item for all to member
+  using (ni_partner in (select current_couple_ids()))
+  with check (ni_partner in (select current_couple_ids()));
+create policy my_tenant on nabidka_item as restrictive using (tenant = current_tenant_id()) with check (tenant = current_tenant_id());
+
+alter table platby_group add column if not exists tenant bigint not null default current_tenant_id();
+CREATE INDEX if not exists "tenant" ON platby_group (tenant);
+revoke all on platby_group from member;
+grant all on platby_group to anonymous;
+select app_private.drop_policies('public.platby_group');
+alter table platby_group enable row level security;
+create policy admin_all on platby_group to administrator using (true) with check (true);
+create policy member_view on platby_group for select to member ;
+create policy my_tenant on platby_group as restrictive using (tenant = current_tenant_id()) with check (tenant = current_tenant_id());
+
+alter table platby_category add column if not exists tenant bigint not null default current_tenant_id();
+CREATE INDEX if not exists "tenant" ON platby_category (tenant);
+revoke all on platby_category from member;
+grant all on platby_category to anonymous;
+select app_private.drop_policies('public.platby_category');
+alter table platby_category enable row level security;
+create policy admin_all on platby_category to administrator using (true) with check (true);
+create policy member_view on platby_category for select to member ;
+create policy my_tenant on platby_category as restrictive using (tenant = current_tenant_id()) with check (tenant = current_tenant_id());
+
+alter table platby_item add column if not exists tenant bigint not null default current_tenant_id();
+CREATE INDEX if not exists "tenant" ON platby_item (tenant);
+revoke all on platby_item from member;
+grant all on platby_item to anonymous;
+select app_private.drop_policies('public.platby_item');
+alter table platby_item enable row level security;
+create policy admin_all on platby_item to administrator using (true) with check (true);
+create policy member_view on platby_item for select to member using (pi_id_user = current_user_id());
+create policy my_tenant on platby_item as restrictive using (tenant = current_tenant_id()) with check (tenant = current_tenant_id());
+
+alter table platby_raw add column if not exists tenant bigint not null default current_tenant_id();
+CREATE INDEX if not exists "tenant" ON platby_raw (tenant);
+revoke all on platby_raw from member;
+grant all on platby_raw to anonymous;
+select app_private.drop_policies('public.platby_raw');
+alter table platby_raw enable row level security;
+create policy admin_all on platby_raw to administrator using (true) with check (true);
+create policy member_view on platby_raw for select to member using (exists (select from platby_item where pi_id_raw = pr_id and pi_id_user = current_user_id()));
+create policy my_tenant on platby_raw as restrictive using (tenant = current_tenant_id()) with check (tenant = current_tenant_id());
+
+alter table platby_category_group add column if not exists tenant bigint not null default current_tenant_id();
+CREATE INDEX if not exists "tenant" ON platby_category_group (tenant);
+revoke all on platby_category_group from member;
+grant all on platby_category_group to anonymous;
+select app_private.drop_policies('public.platby_category_group');
+alter table platby_category_group enable row level security;
+create policy admin_all on platby_category_group to administrator using (true) with check (true);
+create policy member_view on platby_category_group for select to member ;
+create policy my_tenant on platby_category_group as restrictive using (tenant = current_tenant_id()) with check (tenant = current_tenant_id());
+
+revoke all on tenant from administrator;
+revoke all on tenant from member;
+grant all on tenant to anonymous;
+alter table tenant enable row level security;
+select app_private.drop_policies('public.tenant');
+create policy admin_all on tenant to administrator using (true) with check (true);
+create policy public_view on tenant for select to anonymous;
+create policy my_tenant on tenant as restrictive using (id = current_tenant_id()) with check (id = current_tenant_id());
+
+alter table platby_group_skupina add column if not exists tenant bigint not null default current_tenant_id();
+CREATE INDEX if not exists "tenant" ON platby_group_skupina (tenant);
+revoke all on platby_group_skupina from member;
+grant all on platby_group_skupina to anonymous;
+select app_private.drop_policies('public.platby_group_skupina');
+alter table platby_group_skupina enable row level security;
+create policy admin_all on platby_group_skupina to administrator using (true) with check (true);
+create policy member_view on platby_group_skupina for select to member ;
+
+alter table rozpis add column if not exists tenant bigint not null default current_tenant_id();
+CREATE INDEX if not exists "tenant" ON rozpis (tenant);
+revoke all on rozpis from member;
+grant all on rozpis to anonymous;
+select app_private.drop_policies('public.rozpis');
+alter table rozpis enable row level security;
+create policy admin_all on rozpis to administrator using (true) with check (true);
+create policy member_view on rozpis for select to member;
+create policy my_tenant on rozpis as restrictive using (tenant = current_tenant_id()) with check (tenant = current_tenant_id());
+
+alter table rozpis_item add column if not exists tenant bigint not null default current_tenant_id();
+CREATE INDEX if not exists "tenant" ON rozpis_item (tenant);
+revoke all on rozpis_item from member;
+grant all on rozpis_item to anonymous;
+select app_private.drop_policies('public.rozpis_item');
+create policy admin_all on rozpis_item to administrator using (true) with check (true);
+create policy member_view on rozpis_item for select to member;
+create policy manage_own on rozpis_item for all to member
+  using (ri_partner in (select current_couple_ids()))
+  with check (ri_partner in (select current_couple_ids()));
+create policy my_tenant on rozpis_item as restrictive using (tenant = current_tenant_id()) with check (tenant = current_tenant_id());
+
+alter table skupiny add column if not exists tenant bigint not null default current_tenant_id();
+CREATE INDEX if not exists "tenant" ON skupiny (tenant);
+create policy my_tenant on skupiny as restrictive using (tenant = current_tenant_id()) with check (tenant = current_tenant_id());
+
+alter table upozorneni add column if not exists tenant bigint not null default current_tenant_id();
+CREATE INDEX if not exists "tenant" ON upozorneni (tenant);
+revoke all on upozorneni from member;
+grant all on upozorneni to anonymous;
+alter table upozorneni enable row level security;
+select app_private.drop_policies('public.upozorneni');
+create policy admin_all on upozorneni to administrator using (true) with check (true);
+create policy member_view on upozorneni for select to member;
+create policy my_tenant on upozorneni as restrictive using (tenant = current_tenant_id()) with check (tenant = current_tenant_id());
+
+alter table users add column if not exists tenant bigint not null default current_tenant_id();
+CREATE INDEX if not exists "tenant" ON users (tenant);
+create policy my_tenant on users as restrictive using (tenant = current_tenant_id()) with check (tenant = current_tenant_id());
+revoke all on users from member;
+
+revoke all on cohort_group from administrator;
+grant all on cohort_group to anonymous;
+alter table cohort_group enable row level security;
+select app_private.drop_policies('public.cohort_group');
+create policy admin_all on cohort_group to administrator using (true) with check (true);
+create policy public_view on cohort_group for select to anonymous;
+create policy my_tenant on cohort_group as restrictive using (tenant = current_tenant_id()) with check (tenant = current_tenant_id());

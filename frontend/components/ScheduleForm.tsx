@@ -5,6 +5,7 @@ import {
   DeleteLessonDocument,
   ScheduleItemBasicFragment,
   UpdateScheduleDocument,
+  UpdateLessonDocument,
 } from 'lib/graphql/Schedule';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -21,10 +22,14 @@ import { Route } from 'nextjs-routes';
 import { toast } from 'react-toastify';
 import { ErrorPage } from './ErrorPage';
 import { DeleteButton } from './DeleteButton';
-import { Item } from './layout/Item';
 import { formatCoupleName } from 'lib/format-name';
-import { Pencil, X, Check } from 'lucide-react';
+import { X, Check } from 'lucide-react';
 import { useMutation, useQuery } from 'urql';
+import { TitleBar } from './layout/TitleBar';
+import { Card } from './Card';
+import { CoupleListDocument } from 'lib/graphql/Couple';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 type FormProps = Pick<RozpiInput, 'rTrener' | 'rKde' | 'rDatum' | 'rVisible' | 'rLock'>;
 
@@ -34,6 +39,7 @@ export const ScheduleForm = ({ id = '' }: { id?: string }) => {
   const router = useRouter();
   const [query] = useQuery({ query: ScheduleDocument, variables: { id } });
   const data = query.data?.rozpi;
+  const title = id ? data?.userByRTrener?.fullName || '(Bez názvu)' : 'Nový rozpis';
 
   const create = useMutation(CreateScheduleDocument)[1];
   const update = useMutation(UpdateScheduleDocument)[1];
@@ -72,10 +78,7 @@ export const ScheduleForm = ({ id = '' }: { id?: string }) => {
 
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <Item.Titlebar
-        backHref={backHref}
-        title={id ? data?.userByRTrener?.fullName || '(Bez názvu)' : 'Nový rozpis'}
-      >
+      <TitleBar backHref={backHref} title={title}>
         {id && (
           <DeleteButton
             doc={DeleteScheduleDocument}
@@ -85,7 +88,7 @@ export const ScheduleForm = ({ id = '' }: { id?: string }) => {
           />
         )}
         <SubmitButton loading={onSubmit.loading} />
-      </Item.Titlebar>
+      </TitleBar>
 
       <ErrorBox error={onSubmit.error} />
       <ComboboxElement
@@ -114,57 +117,68 @@ export const ScheduleForm = ({ id = '' }: { id?: string }) => {
           {data?.rozpisItemsByRiIdRodic.nodes.map((x) => (
             <LessonAdminForm key={x.id} lesson={x} />
           ))}
-                  {/* <LessonAddForm /> */}
+          {/* <LessonAddForm /> */}
         </div>
       )}
     </form>
   );
 };
 
+const LessonForm = z.object({
+  riOd: z.string().regex(/[0-9]{1,2}:[0-9]{2}(:[0-9]{2})?/),
+  riDo: z.string().regex(/[0-9]{1,2}:[0-9]{2}(:[0-9]{2})?/),
+  riPartner: z.string(),
+  riLock: z.boolean().optional(),
+}).refine((form) => form.riOd < form.riDo, 'Čas začátku musí být před časem konce')
+type LessonFormProps = z.infer<typeof LessonForm>;
+
 function LessonAdminForm({ lesson }: { lesson: ScheduleItemBasicFragment }) {
+  const [{ data: couples }] = useQuery({ query: CoupleListDocument });
+  const update = useMutation(UpdateLessonDocument)[1];
   const [mode, setMode] = React.useState<'view' | 'edit'>('view');
-  const { reset, control, handleSubmit } = useForm();
+  const { reset, control, handleSubmit } = useForm<LessonFormProps>({
+    resolver: zodResolver(LessonForm),
+  });
   const couple = lesson.paryByRiPartner;
 
-  const onSubmit = React.useCallback(() => {
+  React.useEffect(() => {
+    reset(LessonForm.optional().parse(lesson));
+  }, [mode, reset, lesson]);
+
+  const onSubmit = React.useCallback((patch: LessonFormProps) => {
     setMode('view');
+    update({ id: lesson.id, patch})
   }, []);
 
   return mode === 'view' ? (
-    <div className="flex gap-2 tabular-nums">
+    <Card
+      className="flex gap-2 tabular-nums cursor-pointer"
+      onClick={() => setMode('edit')}
+    >
       <div>
         {lesson.riOd.substring(0, 5)} - {lesson.riDo.substring(0, 5)}
       </div>
       <div className="grow">{couple ? formatCoupleName(couple) : 'VOLNÁ'}</div>
-      <button type="button" onClick={() => setMode('edit')}>
-        <Pencil />
-      </button>
-    </div>
+    </Card>
   ) : (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <button
-        type="button"
-        onClick={() => {
-          setMode('view');
-          reset({
-            from: lesson.riOd,
-            to: lesson.riDo,
-            couple: lesson.riPartner,
-            lock: lesson.riLock,
-          });
-        }}
-      >
-        <X />
-      </button>
-      <button type="submit">
-        <Check />
-      </button>
+    <Card>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <button
+          type="button"
+          onClick={() => setMode('view')}
+        >
+          <X />
+        </button>
+        <button type="submit">
+          <Check />
+        </button>
 
-      <TextFieldElement control={control} name="from" type="text" />
-      <TextFieldElement control={control} name="to" type="text" />
-      <ComboboxElement control={control} name="couple" options={[]} />
-      <CheckboxElement control={control} name="lock" />
-      <DeleteButton doc={DeleteLessonDocument} id={lesson.id} title="smazat lekci" />
-    </form>
+        <TextFieldElement control={control} name="riOd" type="text" />
+        <TextFieldElement control={control} name="riDo" type="text" />
+        <ComboboxElement control={control} name="riPartner" options={(couples?.activeCouples?.nodes || []).map(x => ({ id: x.id, label: formatCoupleName(x) }))} />
+        <CheckboxElement control={control} name="riLock" />
+        <DeleteButton doc={DeleteLessonDocument} id={lesson.id} title="smazat lekci" />
+      </form>
+    </Card>
   );
 }

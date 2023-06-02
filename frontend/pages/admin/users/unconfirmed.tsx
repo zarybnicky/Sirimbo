@@ -15,9 +15,9 @@ import { RoleListDocument } from 'lib/graphql/Roles';
 import { fullDateFormatter } from 'lib/format-date';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { UserList } from 'components/UserList';
-import { Item } from 'components/layout/Item';
 import { NextPageWithLayout } from 'pages/_app';
 import { useMutation, useQuery } from 'urql';
+import { TitleBar } from 'components/layout/TitleBar';
 
 type FormProps = {
   cohort: string;
@@ -125,12 +125,12 @@ const Page: NextPageWithLayout = () => {
   const [{data: users}, refetch] = useQuery({query: UserListDocument, variables:{ confirmed: false }});
 
   return (
-    <Item>
-      <Item.Titlebar backHref="/admin/users" title="Nepotvrzení uživatelé" />
+    <div className="container py-4">
+    <TitleBar backHref="/admin/users" title="Nepotvrzení uživatelé" />
       {users?.users?.nodes?.map((item, i) => (
         <UnconfirmedUser onProcessed={refetch} item={item} key={i} />
       ))}
-    </Item>
+    </div>
   );
 };
 
