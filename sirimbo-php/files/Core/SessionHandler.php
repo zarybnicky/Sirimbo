@@ -1,12 +1,12 @@
 <?php
 class DbSessionHandler extends Database implements SessionHandlerInterface
 {
-    public function open($savePath, $sessionName)
+    public function open(string $savePath, string $sessionName): bool
     {
         return true;
     }
 
-    public function read($sessionId)
+    public function read(string $sessionId): string | false
     {
         $stmt = self::prepare(
             "SELECT * FROM session WHERE ss_id=? AND (extract(epoch from ss_updated_at) + ss_lifetime) > extract(epoch from now())",
@@ -18,7 +18,7 @@ class DbSessionHandler extends Database implements SessionHandlerInterface
         return serialize(["id" => $result['ss_user']]);
     }
 
-    public function write($sessionId, $data)
+    public function write(string $sessionId, string $data): bool
     {
         setcookie(session_name(), $sessionId, time() + 86400, '/');
         $sessionData = unserialize($data);
@@ -36,7 +36,7 @@ class DbSessionHandler extends Database implements SessionHandlerInterface
         return !!$stmt;
     }
 
-    public function gc($maxLifetime)
+    public function gc(int $maxLifetime): int | false
     {
         $stmt = self::prepare(
             "DELETE FROM session WHERE (extract(epoch from ss_updated_at) + ss_lifetime) < extract(epoch from now())"
@@ -44,14 +44,14 @@ class DbSessionHandler extends Database implements SessionHandlerInterface
         return !!$stmt->execute();
     }
 
-    public function destroy($sessionId)
+    public function destroy(string $sessionId): bool
     {
         setcookie(session_name(), '', -1, '/');
         $stmt = self::prepare("DELETE FROM session WHERE ss_id=?");
         return !!$stmt->execute([$sessionId]);
     }
 
-    public function close()
+    public function close(): bool
     {
         return true;
     }
