@@ -660,6 +660,17 @@
             "args": []
           },
           {
+            "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "userByAtKdo",
             "type": {
               "kind": "OBJECT",
@@ -1167,6 +1178,17 @@
             "args": []
           },
           {
+            "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "updatedAt",
             "type": {
               "kind": "NON_NULL",
@@ -1339,6 +1361,17 @@
           },
           {
             "name": "notes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "tenantId",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -1731,6 +1764,17 @@
               "kind": "OBJECT",
               "name": "Tenant",
               "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           }
@@ -2814,15 +2858,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "tenantByTenant",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Tenant",
               "ofType": null
             },
             "args": []
@@ -4216,6 +4251,80 @@
       },
       {
         "kind": "OBJECT",
+        "name": "CreateTenantLocationPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "location",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Location",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "query",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Query",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantLocation",
+            "type": {
+              "kind": "OBJECT",
+              "name": "TenantLocation",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantLocationEdge",
+            "type": {
+              "kind": "OBJECT",
+              "name": "TenantLocationsEdge",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "CreateTenantPayload",
         "fields": [
           {
@@ -5517,15 +5626,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "tenantByTenant",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Tenant",
               "ofType": null
             },
             "args": []
@@ -6967,6 +7067,88 @@
       },
       {
         "kind": "OBJECT",
+        "name": "DeleteTenantLocationPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "deletedTenantLocationNodeId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "location",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Location",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "query",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Query",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantLocation",
+            "type": {
+              "kind": "OBJECT",
+              "name": "TenantLocation",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantLocationEdge",
+            "type": {
+              "kind": "OBJECT",
+              "name": "TenantLocationsEdge",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "DeleteTenantPayload",
         "fields": [
           {
@@ -7539,6 +7721,17 @@
             "args": []
           },
           {
+            "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "userByDKdo",
             "type": {
               "kind": "OBJECT",
@@ -7842,6 +8035,17 @@
             "args": []
           },
           {
+            "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "until",
             "type": {
               "kind": "NON_NULL",
@@ -8034,6 +8238,17 @@
           },
           {
             "name": "tenant",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "tenantId",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -8328,6 +8543,17 @@
               }
             },
             "args": []
+          },
+          {
+            "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
           }
         ],
         "interfaces": []
@@ -8579,6 +8805,17 @@
           },
           {
             "name": "tenant",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "tenantId",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -8867,21 +9104,72 @@
             ]
           },
           {
-            "name": "tenant",
+            "name": "tenantLocations",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "TenantLocationsConnection",
+                "ofType": null
+              }
             },
-            "args": []
-          },
-          {
-            "name": "tenantByTenant",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Tenant",
-              "ofType": null
-            },
-            "args": []
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
           }
         ],
         "interfaces": []
@@ -10075,6 +10363,26 @@
             ]
           },
           {
+            "name": "createTenantLocation",
+            "type": {
+              "kind": "OBJECT",
+              "name": "CreateTenantLocationPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "createTenantPerson",
             "type": {
               "kind": "OBJECT",
@@ -10819,6 +11127,26 @@
             "type": {
               "kind": "OBJECT",
               "name": "DeleteTenantAttachmentPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "deleteTenantLocation",
+            "type": {
+              "kind": "OBJECT",
+              "name": "DeleteTenantLocationPayload",
               "ofType": null
             },
             "args": [
@@ -11797,6 +12125,26 @@
             ]
           },
           {
+            "name": "updateTenantLocation",
+            "type": {
+              "kind": "OBJECT",
+              "name": "UpdateTenantLocationPayload",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "input",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "updateTenantPerson",
             "type": {
               "kind": "OBJECT",
@@ -12126,6 +12474,17 @@
             "args": []
           },
           {
+            "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "userByNTrener",
             "type": {
               "kind": "OBJECT",
@@ -12219,6 +12578,17 @@
               "kind": "OBJECT",
               "name": "Pary",
               "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           }
@@ -14498,6 +14868,17 @@
               }
             },
             "args": []
+          },
+          {
+            "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
           }
         ],
         "interfaces": []
@@ -14562,6 +14943,17 @@
               "kind": "OBJECT",
               "name": "PlatbyGroup",
               "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           }
@@ -14874,6 +15266,17 @@
               }
             },
             "args": []
+          },
+          {
+            "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
           }
         ],
         "interfaces": []
@@ -15031,6 +15434,17 @@
               "kind": "OBJECT",
               "name": "Skupiny",
               "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           }
@@ -15233,6 +15647,17 @@
           },
           {
             "name": "tenant",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "tenantId",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -15484,6 +15909,17 @@
           },
           {
             "name": "tenant",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "tenantId",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -19184,6 +19620,101 @@
             ]
           },
           {
+            "name": "tenantLocation",
+            "type": {
+              "kind": "OBJECT",
+              "name": "TenantLocation",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "locationId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              },
+              {
+                "name": "tenantId",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "tenantLocations",
+            "type": {
+              "kind": "OBJECT",
+              "name": "TenantLocationsConnection",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "condition",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "tenantPeople",
             "type": {
               "kind": "OBJECT",
@@ -20304,6 +20835,17 @@
             "args": []
           },
           {
+            "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "userByRTrener",
             "type": {
               "kind": "OBJECT",
@@ -20498,6 +21040,17 @@
               "kind": "OBJECT",
               "name": "Rozpi",
               "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           }
@@ -21048,6 +21601,17 @@
             "args": []
           },
           {
+            "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "upozorneniSkupiniesByUpsIdSkupina",
             "type": {
               "kind": "NON_NULL",
@@ -21294,12 +21858,34 @@
             "args": []
           },
           {
-            "name": "locationsByTenant",
+            "name": "memberInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "name",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "tenantAttachments",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "LocationsConnection",
+                "name": "TenantAttachmentsConnection",
                 "ofType": null
               }
             },
@@ -21362,34 +21948,12 @@
             ]
           },
           {
-            "name": "memberInfo",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "name",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "tenantAttachments",
+            "name": "tenantLocations",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
                 "kind": "OBJECT",
-                "name": "TenantAttachmentsConnection",
+                "name": "TenantLocationsConnection",
                 "ofType": null
               }
             },
@@ -21662,6 +22226,146 @@
               "ofType": {
                 "kind": "OBJECT",
                 "name": "TenantAttachment",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "TenantLocation",
+        "fields": [
+          {
+            "name": "location",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Location",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "locationId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "TenantLocationsConnection",
+        "fields": [
+          {
+            "name": "edges",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "TenantLocationsEdge",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "nodes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "TenantLocation",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "pageInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "PageInfo",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "totalCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "TenantLocationsEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "TenantLocation",
                 "ofType": null
               }
             },
@@ -22694,15 +23398,6 @@
             "type": {
               "kind": "OBJECT",
               "name": "Query",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "tenantByTenant",
-            "type": {
-              "kind": "OBJECT",
-              "name": "Tenant",
               "ofType": null
             },
             "args": []
@@ -24048,6 +24743,80 @@
       },
       {
         "kind": "OBJECT",
+        "name": "UpdateTenantLocationPayload",
+        "fields": [
+          {
+            "name": "clientMutationId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "location",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Location",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "query",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Query",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantLocation",
+            "type": {
+              "kind": "OBJECT",
+              "name": "TenantLocation",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantLocationEdge",
+            "type": {
+              "kind": "OBJECT",
+              "name": "TenantLocationsEdge",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "UpdateTenantPayload",
         "fields": [
           {
@@ -24466,6 +25235,17 @@
             "args": []
           },
           {
+            "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "upBarvy",
             "type": {
               "kind": "NON_NULL",
@@ -24831,6 +25611,17 @@
               "kind": "OBJECT",
               "name": "Skupiny",
               "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
@@ -26117,6 +26908,17 @@
               "kind": "OBJECT",
               "name": "Skupiny",
               "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },

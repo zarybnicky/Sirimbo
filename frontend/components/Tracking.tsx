@@ -20,7 +20,7 @@ export const Tracking = React.memo(function Tracking() {
     (async () => {
       const posthog = (await import('posthog-js')).posthog;
       posthog.init('phc_H2WM9q2xXVFl1wEak9TcQVAsOpWNGuauzAvyOmBquYQ', {
-        api_host: 'https://eu.posthog.com',
+        api_host: 'https://tkolymp.cz/ingest',
       });
       posthogRef.current = posthog;
     })();

@@ -209,6 +209,8 @@ enum AktualitiesOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
   USER_BY_AT_KDO__U_BAN_ASC
   USER_BY_AT_KDO__U_BAN_DESC
   USER_BY_AT_KDO__U_CONFIRMED_ASC
@@ -247,6 +249,7 @@ type Aktuality {
   galerieFotoByAtFotoMain: GalerieFoto
   id: BigInt
   tenant: BigInt!
+  tenantId: BigInt!
 
   """Reads a single `User` that is related to this `Aktuality`."""
   userByAtKdo: User
@@ -268,6 +271,9 @@ input AktualityCondition {
 
   """Checks for equality with the object’s `atTimestampAdd` field."""
   atTimestampAdd: Datetime
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
 }
 
 """An input for mutations affecting `Aktuality`"""
@@ -284,6 +290,7 @@ input AktualityInput {
   atTimestampAdd: Datetime
   id: BigInt
   tenant: BigInt
+  tenantId: BigInt
 }
 
 """
@@ -302,6 +309,7 @@ input AktualityPatch {
   atTimestampAdd: Datetime
   id: BigInt
   tenant: BigInt
+  tenantId: BigInt
 }
 
 type Attachment {
@@ -510,6 +518,7 @@ type AttendeeExternal {
   managedBy: BigInt
   notes: String!
   phone: String!
+  tenantId: BigInt!
   updatedAt: Datetime!
 
   """Reads a single `User` that is related to this `AttendeeExternal`."""
@@ -551,6 +560,7 @@ input AttendeeExternalInput {
   managedBy: BigInt
   notes: String
   phone: String!
+  tenantId: BigInt
   updatedAt: Datetime
 }
 
@@ -570,6 +580,7 @@ input AttendeeExternalPatch {
   managedBy: BigInt
   notes: String
   phone: String
+  tenantId: BigInt
   updatedAt: Datetime
 }
 
@@ -670,6 +681,7 @@ type AttendeeUser {
   eventId: BigInt!
   id: BigInt!
   notes: String!
+  tenantId: BigInt!
 
   """Reads a single `User` that is related to this `AttendeeUser`."""
   user: User
@@ -697,6 +709,7 @@ input AttendeeUserInput {
   eventId: BigInt!
   id: BigInt
   notes: String
+  tenantId: BigInt
   userId: BigInt!
 }
 
@@ -708,6 +721,7 @@ input AttendeeUserPatch {
   eventId: BigInt
   id: BigInt
   notes: String
+  tenantId: BigInt
   userId: BigInt
 }
 
@@ -926,6 +940,7 @@ type CohortGroup {
 
   """Reads a single `Tenant` that is related to this `CohortGroup`."""
   tenantByTenant: Tenant
+  tenantId: BigInt!
 }
 
 """
@@ -954,6 +969,7 @@ input CohortGroupInput {
   name: String!
   ordering: Int
   tenant: BigInt
+  tenantId: BigInt
 }
 
 """
@@ -966,6 +982,7 @@ input CohortGroupPatch {
   name: String
   ordering: Int
   tenant: BigInt
+  tenantId: BigInt
 }
 
 """A connection to a list of `CohortGroup` values."""
@@ -1605,9 +1622,6 @@ type CreateLocationPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-
-  """Reads a single `Tenant` that is related to this `Location`."""
-  tenantByTenant: Tenant
 }
 
 """All input for the create `Nabidka` mutation."""
@@ -2460,6 +2474,47 @@ input CreateTenantInput {
   tenant: TenantInput!
 }
 
+"""All input for the create `TenantLocation` mutation."""
+input CreateTenantLocationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `TenantLocation` to be created by this mutation."""
+  tenantLocation: TenantLocationInput!
+}
+
+"""The output of our create `TenantLocation` mutation."""
+type CreateTenantLocationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Location` that is related to this `TenantLocation`."""
+  location: Location
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `TenantLocation`."""
+  tenant: Tenant
+
+  """The `TenantLocation` that was created by this mutation."""
+  tenantLocation: TenantLocation
+
+  """An edge for our `TenantLocation`. May be used by Relay 1."""
+  tenantLocationEdge(
+    """The method to use when ordering `TenantLocation`."""
+    orderBy: [TenantLocationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantLocationsEdge
+}
+
 """The output of our create `Tenant` mutation."""
 type CreateTenantPayload {
   """
@@ -3154,9 +3209,6 @@ type DeleteLocationPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-
-  """Reads a single `Tenant` that is related to this `Location`."""
-  tenantByTenant: Tenant
 }
 
 """All input for the `deleteNabidka` mutation."""
@@ -3908,6 +3960,47 @@ input DeleteTenantInput {
   id: BigInt!
 }
 
+"""All input for the `deleteTenantLocation` mutation."""
+input DeleteTenantLocationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  locationId: BigInt!
+  tenantId: BigInt!
+}
+
+"""The output of our delete `TenantLocation` mutation."""
+type DeleteTenantLocationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  deletedTenantLocationNodeId: ID
+
+  """Reads a single `Location` that is related to this `TenantLocation`."""
+  location: Location
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `TenantLocation`."""
+  tenant: Tenant
+
+  """The `TenantLocation` that was deleted by this mutation."""
+  tenantLocation: TenantLocation
+
+  """An edge for our `TenantLocation`. May be used by Relay 1."""
+  tenantLocationEdge(
+    """The method to use when ordering `TenantLocation`."""
+    orderBy: [TenantLocationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantLocationsEdge
+}
+
 """The output of our delete `Tenant` mutation."""
 type DeleteTenantPayload {
   """
@@ -4165,6 +4258,7 @@ type Dokumenty {
   dTimestamp: Datetime
   id: BigInt
   tenant: BigInt!
+  tenantId: BigInt!
 
   """Reads a single `User` that is related to this `Dokumenty`."""
   userByDKdo: User
@@ -4202,6 +4296,7 @@ input DokumentyInput {
   dTimestamp: Datetime
   id: BigInt
   tenant: BigInt
+  tenantId: BigInt
 }
 
 """
@@ -4217,6 +4312,7 @@ input DokumentyPatch {
   dTimestamp: Datetime
   id: BigInt
   tenant: BigInt
+  tenantId: BigInt
 }
 
 type Event {
@@ -4291,6 +4387,7 @@ type Event {
   since: Date!
   summary: String!
   tenant: BigInt!
+  tenantId: BigInt!
   until: Date!
   updatedAt: Datetime
 }
@@ -4324,6 +4421,7 @@ input EventInput {
   since: Date!
   summary: String
   tenant: BigInt
+  tenantId: BigInt
   until: Date!
   updatedAt: Datetime
 }
@@ -4345,6 +4443,7 @@ input EventPatch {
   since: Date
   summary: String
   tenant: BigInt
+  tenantId: BigInt
   until: Date
   updatedAt: Datetime
 }
@@ -4421,6 +4520,7 @@ type FormResponse {
   data: JSON!
   id: BigInt!
   tenant: BigInt!
+  tenantId: BigInt!
   type: String!
   updatedAt: Datetime!
   url: String!
@@ -4447,6 +4547,7 @@ input FormResponseInput {
   data: JSON!
   id: BigInt
   tenant: BigInt
+  tenantId: BigInt
   type: String!
   updatedAt: Datetime
   url: String!
@@ -4460,6 +4561,7 @@ input FormResponsePatch {
   data: JSON
   id: BigInt
   tenant: BigInt
+  tenantId: BigInt
   type: String
   updatedAt: Datetime
   url: String
@@ -4541,6 +4643,7 @@ type GalerieDir {
   gdPath: String!
   id: BigInt
   tenant: BigInt!
+  tenantId: BigInt!
 }
 
 """
@@ -4565,6 +4668,7 @@ input GalerieDirInput {
   gdPath: String!
   id: BigInt
   tenant: BigInt
+  tenantId: BigInt
 }
 
 """
@@ -4579,6 +4683,7 @@ input GalerieDirPatch {
   gdPath: String
   id: BigInt
   tenant: BigInt
+  tenantId: BigInt
 }
 
 """A connection to a list of `GalerieDir` values."""
@@ -4660,6 +4765,7 @@ type GalerieFoto {
   gfTimestamp: Datetime
   id: BigInt
   tenant: BigInt!
+  tenantId: BigInt!
 
   """Reads a single `User` that is related to this `GalerieFoto`."""
   userByGfKdo: User
@@ -4690,6 +4796,7 @@ input GalerieFotoInput {
   gfTimestamp: Datetime
   id: BigInt
   tenant: BigInt
+  tenantId: BigInt
 }
 
 """
@@ -4704,6 +4811,7 @@ input GalerieFotoPatch {
   gfTimestamp: Datetime
   id: BigInt
   tenant: BigInt
+  tenantId: BigInt
 }
 
 """A connection to a list of `GalerieFoto` values."""
@@ -4844,10 +4952,35 @@ type Location {
     """The method to use when ordering `Room`."""
     orderBy: [RoomsOrderBy!] = [PRIMARY_KEY_ASC]
   ): RoomsConnection!
-  tenant: BigInt
 
-  """Reads a single `Tenant` that is related to this `Location`."""
-  tenantByTenant: Tenant
+  """Reads and enables pagination through a set of `TenantLocation`."""
+  tenantLocations(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantLocationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `TenantLocation`."""
+    orderBy: [TenantLocationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantLocationsConnection!
 }
 
 type LocationAttachment {
@@ -4926,8 +5059,6 @@ enum LocationAttachmentsOrderBy {
   ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_DESC
   LOCATION_BY_LOCATION_ID__ID_ASC
   LOCATION_BY_LOCATION_ID__ID_DESC
-  LOCATION_BY_LOCATION_ID__TENANT_ASC
-  LOCATION_BY_LOCATION_ID__TENANT_DESC
   LOCATION_ID_ASC
   LOCATION_ID_DESC
   NATURAL
@@ -4944,9 +5075,6 @@ for equality and combined with a logical ‘and.’
 input LocationCondition {
   """Checks for equality with the object’s `id` field."""
   id: BigInt
-
-  """Checks for equality with the object’s `tenant` field."""
-  tenant: BigInt
 }
 
 """An input for mutations affecting `Location`"""
@@ -4954,7 +5082,6 @@ input LocationInput {
   description: JSON!
   id: BigInt
   name: String!
-  tenant: BigInt
 }
 
 """
@@ -4964,7 +5091,6 @@ input LocationPatch {
   description: JSON
   id: BigInt
   name: String
-  tenant: BigInt
 }
 
 """A connection to a list of `Location` values."""
@@ -5004,10 +5130,8 @@ enum LocationsOrderBy {
   PRIMARY_KEY_DESC
   ROOMS_BY_LOCATION__COUNT_ASC
   ROOMS_BY_LOCATION__COUNT_DESC
-  TENANT_ASC
-  TENANT_BY_TENANT__ID_ASC
-  TENANT_BY_TENANT__ID_DESC
-  TENANT_DESC
+  TENANT_LOCATIONS_BY_LOCATION_ID__COUNT_ASC
+  TENANT_LOCATIONS_BY_LOCATION_ID__COUNT_DESC
 }
 
 """All input for the `login` mutation."""
@@ -5399,6 +5523,14 @@ type Mutation {
     input: CreateTenantAttachmentInput!
   ): CreateTenantAttachmentPayload
 
+  """Creates a single `TenantLocation`."""
+  createTenantLocation(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateTenantLocationInput!
+  ): CreateTenantLocationPayload
+
   """Creates a single `TenantPerson`."""
   createTenantPerson(
     """
@@ -5702,6 +5834,14 @@ type Mutation {
     """
     input: DeleteTenantAttachmentInput!
   ): DeleteTenantAttachmentPayload
+
+  """Deletes a single `TenantLocation` using a unique key."""
+  deleteTenantLocation(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTenantLocationInput!
+  ): DeleteTenantLocationPayload
 
   """Deletes a single `TenantPerson` using a unique key."""
   deleteTenantPerson(
@@ -6066,6 +6206,14 @@ type Mutation {
     input: UpdateTenantAttachmentInput!
   ): UpdateTenantAttachmentPayload
 
+  """Updates a single `TenantLocation` using a unique key and a patch."""
+  updateTenantLocation(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTenantLocationInput!
+  ): UpdateTenantLocationPayload
+
   """Updates a single `TenantPerson` using a unique key and a patch."""
   updateTenantPerson(
     """
@@ -6149,6 +6297,7 @@ type Nabidka {
   nTrener: BigInt!
   nVisible: Boolean!
   tenant: BigInt!
+  tenantId: BigInt!
 
   """Reads a single `User` that is related to this `Nabidka`."""
   userByNTrener: User
@@ -6181,6 +6330,7 @@ input NabidkaInput {
   nTrener: BigInt!
   nVisible: Boolean
   tenant: BigInt
+  tenantId: BigInt
 }
 
 type NabidkaItem {
@@ -6196,6 +6346,7 @@ type NabidkaItem {
 
   """Reads a single `Pary` that is related to this `NabidkaItem`."""
   paryByNiPartner: Pary
+  tenantId: BigInt!
 }
 
 """
@@ -6221,6 +6372,7 @@ input NabidkaItemInput {
   niLock: Boolean
   niPartner: BigInt!
   niPocetHod: Int
+  tenantId: BigInt
 }
 
 """
@@ -6233,6 +6385,7 @@ input NabidkaItemPatch {
   niLock: Boolean
   niPartner: BigInt
   niPocetHod: Int
+  tenantId: BigInt
 }
 
 """A connection to a list of `NabidkaItem` values."""
@@ -6303,6 +6456,7 @@ input NabidkaPatch {
   nTrener: BigInt
   nVisible: Boolean
   tenant: BigInt
+  tenantId: BigInt
 }
 
 """A connection to a list of `Nabidka` values."""
@@ -7335,6 +7489,7 @@ type PlatbyCategory {
     orderBy: [PlatbyItemsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PlatbyItemsConnection!
   tenant: BigInt!
+  tenantId: BigInt!
 }
 
 """
@@ -7364,6 +7519,7 @@ type PlatbyCategoryGroup {
   Reads a single `PlatbyGroup` that is related to this `PlatbyCategoryGroup`.
   """
   platbyGroupByPcgIdGroup: PlatbyGroup
+  tenantId: BigInt!
 }
 
 """
@@ -7387,6 +7543,7 @@ input PlatbyCategoryGroupInput {
   pcgId: BigInt
   pcgIdCategory: BigInt!
   pcgIdGroup: BigInt!
+  tenantId: BigInt
 }
 
 """
@@ -7397,6 +7554,7 @@ input PlatbyCategoryGroupPatch {
   pcgId: BigInt
   pcgIdCategory: BigInt
   pcgIdGroup: BigInt
+  tenantId: BigInt
 }
 
 """A connection to a list of `PlatbyCategoryGroup` values."""
@@ -7461,6 +7619,7 @@ input PlatbyCategoryInput {
   pcValidTo: Date!
   pcVisible: Boolean
   tenant: BigInt
+  tenantId: BigInt
 }
 
 """
@@ -7480,6 +7639,7 @@ input PlatbyCategoryPatch {
   pcValidTo: Date
   pcVisible: Boolean
   tenant: BigInt
+  tenantId: BigInt
 }
 
 type PlatbyGroup {
@@ -7548,6 +7708,7 @@ type PlatbyGroup {
     orderBy: [PlatbyGroupSkupinasOrderBy!] = [PRIMARY_KEY_ASC]
   ): PlatbyGroupSkupinasConnection!
   tenant: BigInt!
+  tenantId: BigInt!
 }
 
 """
@@ -7568,6 +7729,7 @@ input PlatbyGroupInput {
   pgName: String!
   pgType: BigFloat
   tenant: BigInt
+  tenantId: BigInt
 }
 
 """
@@ -7581,6 +7743,7 @@ input PlatbyGroupPatch {
   pgName: String
   pgType: BigFloat
   tenant: BigInt
+  tenantId: BigInt
 }
 
 """A connection to a list of `PlatbyGroup` values."""
@@ -7622,6 +7785,7 @@ type PlatbyGroupSkupina {
 
   """Reads a single `Skupiny` that is related to this `PlatbyGroupSkupina`."""
   skupinyByPgsIdSkupina: Skupiny
+  tenantId: BigInt!
 }
 
 """
@@ -7645,6 +7809,7 @@ input PlatbyGroupSkupinaInput {
   pgsId: BigInt
   pgsIdGroup: BigInt!
   pgsIdSkupina: BigInt!
+  tenantId: BigInt
 }
 
 """
@@ -7655,6 +7820,7 @@ input PlatbyGroupSkupinaPatch {
   pgsId: BigInt
   pgsIdGroup: BigInt
   pgsIdSkupina: BigInt
+  tenantId: BigInt
 }
 
 """A connection to a list of `PlatbyGroupSkupina` values."""
@@ -7737,6 +7903,7 @@ type PlatbyItem {
   """Reads a single `PlatbyRaw` that is related to this `PlatbyItem`."""
   platbyRawByPiIdRaw: PlatbyRaw
   tenant: BigInt!
+  tenantId: BigInt!
 
   """Reads a single `User` that is related to this `PlatbyItem`."""
   userByPiIdUser: User
@@ -7771,6 +7938,7 @@ input PlatbyItemInput {
   piIdUser: BigInt
   piPrefix: Int
   tenant: BigInt
+  tenantId: BigInt
 }
 
 """
@@ -7786,6 +7954,7 @@ input PlatbyItemPatch {
   piIdUser: BigInt
   piPrefix: Int
   tenant: BigInt
+  tenantId: BigInt
 }
 
 """A connection to a list of `PlatbyItem` values."""
@@ -7894,6 +8063,7 @@ type PlatbyRaw {
   prRaw: String!
   prSorted: Boolean!
   tenant: BigInt!
+  tenantId: BigInt!
 }
 
 """
@@ -7917,6 +8087,7 @@ input PlatbyRawInput {
   prRaw: String!
   prSorted: Boolean
   tenant: BigInt
+  tenantId: BigInt
 }
 
 """
@@ -7930,6 +8101,7 @@ input PlatbyRawPatch {
   prRaw: String
   prSorted: Boolean
   tenant: BigInt
+  tenantId: BigInt
 }
 
 """A connection to a list of `PlatbyRaw` values."""
@@ -9243,6 +9415,36 @@ type Query {
     """The method to use when ordering `TenantAttachment`."""
     orderBy: [TenantAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TenantAttachmentsConnection
+  tenantLocation(locationId: BigInt!, tenantId: BigInt!): TenantLocation
+
+  """Reads and enables pagination through a set of `TenantLocation`."""
+  tenantLocations(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantLocationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `TenantLocation`."""
+    orderBy: [TenantLocationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantLocationsConnection
 
   """Reads and enables pagination through a set of `TenantPerson`."""
   tenantPeople(
@@ -9682,8 +9884,6 @@ enum RoomsOrderBy {
   LOCATION_ASC
   LOCATION_BY_LOCATION__ID_ASC
   LOCATION_BY_LOCATION__ID_DESC
-  LOCATION_BY_LOCATION__TENANT_ASC
-  LOCATION_BY_LOCATION__TENANT_DESC
   LOCATION_DESC
   NATURAL
   PRIMARY_KEY_ASC
@@ -9731,6 +9931,7 @@ type Rozpi {
   rTrener: BigInt!
   rVisible: Boolean!
   tenant: BigInt!
+  tenantId: BigInt!
 
   """Reads a single `User` that is related to this `Rozpi`."""
   userByRTrener: User
@@ -9761,6 +9962,7 @@ input RozpiInput {
   rTrener: BigInt!
   rVisible: Boolean
   tenant: BigInt
+  tenantId: BigInt
 }
 
 """
@@ -9776,6 +9978,7 @@ input RozpiPatch {
   rTrener: BigInt
   rVisible: Boolean
   tenant: BigInt
+  tenantId: BigInt
 }
 
 """A connection to a list of `Rozpi` values."""
@@ -9818,6 +10021,7 @@ type RozpisItem {
 
   """Reads a single `Rozpi` that is related to this `RozpisItem`."""
   rozpiByRiIdRodic: Rozpi
+  tenantId: BigInt!
 }
 
 """
@@ -9847,6 +10051,7 @@ input RozpisItemInput {
   riLock: Boolean
   riOd: Time!
   riPartner: BigInt
+  tenantId: BigInt
 }
 
 """
@@ -9860,6 +10065,7 @@ input RozpisItemPatch {
   riLock: Boolean
   riOd: Time
   riPartner: BigInt
+  tenantId: BigInt
 }
 
 """A connection to a list of `RozpisItem` values."""
@@ -10130,6 +10336,7 @@ type Skupiny {
   sName: String!
   sVisible: Boolean!
   tenant: BigInt!
+  tenantId: BigInt!
 
   """Reads and enables pagination through a set of `UpozorneniSkupiny`."""
   upozorneniSkupiniesByUpsIdSkupina(
@@ -10221,6 +10428,7 @@ input SkupinyInput {
   sName: String!
   sVisible: Boolean
   tenant: BigInt
+  tenantId: BigInt
 }
 
 """
@@ -10239,6 +10447,7 @@ input SkupinyPatch {
   sName: String
   sVisible: Boolean
   tenant: BigInt
+  tenantId: BigInt
 }
 
 """All input for the `submitForm` mutation."""
@@ -10297,35 +10506,6 @@ type Tenant {
     orderBy: [CohortGroupsOrderBy!] = [PRIMARY_KEY_ASC]
   ): CohortGroupsConnection!
   id: BigInt!
-
-  """Reads and enables pagination through a set of `Location`."""
-  locationsByTenant(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LocationCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Location`."""
-    orderBy: [LocationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): LocationsConnection!
   memberInfo: String!
   name: String!
 
@@ -10357,6 +10537,35 @@ type Tenant {
     """The method to use when ordering `TenantAttachment`."""
     orderBy: [TenantAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TenantAttachmentsConnection!
+
+  """Reads and enables pagination through a set of `TenantLocation`."""
+  tenantLocations(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TenantLocationCondition
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `TenantLocation`."""
+    orderBy: [TenantLocationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantLocationsConnection!
 
   """Reads and enables pagination through a set of `TenantPerson`."""
   tenantPeople(
@@ -10495,6 +10704,83 @@ input TenantInput {
   name: String!
 }
 
+type TenantLocation {
+  """Reads a single `Location` that is related to this `TenantLocation`."""
+  location: Location
+  locationId: BigInt!
+
+  """Reads a single `Tenant` that is related to this `TenantLocation`."""
+  tenant: Tenant
+  tenantId: BigInt!
+}
+
+"""
+A condition to be used against `TenantLocation` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input TenantLocationCondition {
+  """Checks for equality with the object’s `locationId` field."""
+  locationId: BigInt
+
+  """Checks for equality with the object’s `tenantId` field."""
+  tenantId: BigInt
+}
+
+"""An input for mutations affecting `TenantLocation`"""
+input TenantLocationInput {
+  locationId: BigInt!
+  tenantId: BigInt!
+}
+
+"""
+Represents an update to a `TenantLocation`. Fields that are set will be updated.
+"""
+input TenantLocationPatch {
+  locationId: BigInt
+  tenantId: BigInt
+}
+
+"""A connection to a list of `TenantLocation` values."""
+type TenantLocationsConnection {
+  """
+  A list of edges which contains the `TenantLocation` and cursor to aid in pagination.
+  """
+  edges: [TenantLocationsEdge!]!
+
+  """A list of `TenantLocation` objects."""
+  nodes: [TenantLocation!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `TenantLocation` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `TenantLocation` edge in the connection."""
+type TenantLocationsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `TenantLocation` at the end of the edge."""
+  node: TenantLocation!
+}
+
+"""Methods to use when ordering `TenantLocation`."""
+enum TenantLocationsOrderBy {
+  LOCATION_BY_LOCATION_ID__ID_ASC
+  LOCATION_BY_LOCATION_ID__ID_DESC
+  LOCATION_ID_ASC
+  LOCATION_ID_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  TENANT_BY_TENANT_ID__ID_ASC
+  TENANT_BY_TENANT_ID__ID_DESC
+  TENANT_ID_ASC
+  TENANT_ID_DESC
+}
+
 """
 Represents an update to a `Tenant`. Fields that are set will be updated.
 """
@@ -10613,13 +10899,13 @@ enum TenantsOrderBy {
   COHORT_GROUPS_BY_TENANT__COUNT_DESC
   ID_ASC
   ID_DESC
-  LOCATIONS_BY_TENANT__COUNT_ASC
-  LOCATIONS_BY_TENANT__COUNT_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
   TENANT_ATTACHMENTS_BY_TENANT_ID__COUNT_ASC
   TENANT_ATTACHMENTS_BY_TENANT_ID__COUNT_DESC
+  TENANT_LOCATIONS_BY_TENANT_ID__COUNT_ASC
+  TENANT_LOCATIONS_BY_TENANT_ID__COUNT_DESC
   TENANT_PEOPLE_BY_TENANT_ID__COUNT_ASC
   TENANT_PEOPLE_BY_TENANT_ID__COUNT_DESC
 }
@@ -11147,9 +11433,6 @@ type UpdateLocationPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
-
-  """Reads a single `Tenant` that is related to this `Location`."""
-  tenantByTenant: Tenant
 }
 
 """All input for the `updateNabidka` mutation."""
@@ -12040,6 +12323,51 @@ input UpdateTenantInput {
   patch: TenantPatch!
 }
 
+"""All input for the `updateTenantLocation` mutation."""
+input UpdateTenantLocationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  locationId: BigInt!
+
+  """
+  An object where the defined keys will be set on the `TenantLocation` being updated.
+  """
+  patch: TenantLocationPatch!
+  tenantId: BigInt!
+}
+
+"""The output of our update `TenantLocation` mutation."""
+type UpdateTenantLocationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """Reads a single `Location` that is related to this `TenantLocation`."""
+  location: Location
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Tenant` that is related to this `TenantLocation`."""
+  tenant: Tenant
+
+  """The `TenantLocation` that was updated by this mutation."""
+  tenantLocation: TenantLocation
+
+  """An edge for our `TenantLocation`. May be used by Relay 1."""
+  tenantLocationEdge(
+    """The method to use when ordering `TenantLocation`."""
+    orderBy: [TenantLocationsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TenantLocationsEdge
+}
+
 """The output of our update `Tenant` mutation."""
 type UpdateTenantPayload {
   """
@@ -12250,6 +12578,7 @@ type Upozorneni {
   scheduledSince: Datetime
   scheduledUntil: Datetime
   tenant: BigInt!
+  tenantId: BigInt!
   upBarvy: BigInt!
   upId: BigInt!
   upKdo: BigInt
@@ -12314,6 +12643,7 @@ input UpozorneniInput {
   scheduledSince: Datetime
   scheduledUntil: Datetime
   tenant: BigInt
+  tenantId: BigInt
   upBarvy: BigInt
   upId: BigInt
   upKdo: BigInt
@@ -12333,6 +12663,7 @@ input UpozorneniPatch {
   scheduledSince: Datetime
   scheduledUntil: Datetime
   tenant: BigInt
+  tenantId: BigInt
   upBarvy: BigInt
   upId: BigInt
   upKdo: BigInt
@@ -12429,6 +12760,7 @@ type UpozorneniSkupiny {
 
   """Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`."""
   skupinyByUpsIdSkupina: Skupiny
+  tenantId: BigInt!
 
   """
   Reads a single `Upozorneni` that is related to this `UpozorneniSkupiny`.
@@ -12459,6 +12791,7 @@ input UpozorneniSkupinyCondition {
 """An input for mutations affecting `UpozorneniSkupiny`"""
 input UpozorneniSkupinyInput {
   id: BigInt
+  tenantId: BigInt
   upsColor: String!
   upsId: BigInt
   upsIdRodic: BigInt!
@@ -12471,6 +12804,7 @@ Represents an update to a `UpozorneniSkupiny`. Fields that are set will be updat
 """
 input UpozorneniSkupinyPatch {
   id: BigInt
+  tenantId: BigInt
   upsColor: String
   upsId: BigInt
   upsIdRodic: BigInt
@@ -13013,6 +13347,7 @@ type User {
 
   """Reads a single `Skupiny` that is related to this `User`."""
   skupinyByUSkupina: Skupiny
+  tenantId: BigInt!
   uBan: Boolean!
   uCity: String!
   uConfirmed: Boolean!
@@ -13117,6 +13452,7 @@ input UserCondition {
 """An input for mutations affecting `User`"""
 input UserInput {
   id: BigInt
+  tenantId: BigInt
   uBan: Boolean
   uCity: String!
   uConfirmed: Boolean
@@ -13154,6 +13490,7 @@ input UserInput {
 """Represents an update to a `User`. Fields that are set will be updated."""
 input UserPatch {
   id: BigInt
+  tenantId: BigInt
   uBan: Boolean
   uCity: String
   uConfirmed: Boolean

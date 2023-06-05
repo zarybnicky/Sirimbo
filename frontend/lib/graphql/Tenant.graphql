@@ -2,11 +2,13 @@ fragment Tenant on Tenant {
   id
   name
   memberInfo
-  locationsByTenant {
+  tenantLocations {
     nodes {
-      id
-      name
-      description
+      location {
+        id
+        name
+        description
+      }
     }
   }
 }

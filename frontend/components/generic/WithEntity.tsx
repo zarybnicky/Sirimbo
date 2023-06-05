@@ -7,13 +7,13 @@ import React from 'react';
 import { useQuery, type UseQueryResponse } from 'urql';
 
 type EntityFetcher<U> = {
-  use: (id?: string) => UseQueryResponse<U, { id: string }>;
+  useQuery: (id?: string) => UseQueryResponse<U, { id: string }>;
 };
 
 export const makeEntityFetcher =
   <T extends object>(query: TypedDocumentNode<T, { id: string }>) =>
-  <U,>(get: (x: T | undefined) => U | undefined) => ({
-    use: (id: string = ''): UseQueryResponse<U, { id: string }> => {
+  <U,>(get: (x: T | undefined) => U | undefined): EntityFetcher<U> => ({
+    useQuery: (id: string = ''): UseQueryResponse<U, { id: string }> => {
       const [result, refetch] = useQuery({ query, variables: { id }, pause: !id });
       return [
         {
@@ -38,7 +38,7 @@ export const WithEntity = <T,>({
   children: ({ data, id }: { data?: T; id?: string }) => React.ReactNode;
   onSuccess?: () => void;
 }) => {
-  const [{ data, fetching }] = fetcher.use(id);
+  const [{ data, fetching }] = fetcher.useQuery(id);
   const { perms: myPerms } = useAuth();
   const props = React.useMemo(() => ({ data, id, onSuccess    }), [data, id]);
   if (!myPerms.hasPermission(perms[0], perms[1])) return <ErrorPage error="Přístup zakázán" />;
