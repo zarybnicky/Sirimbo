@@ -265,7 +265,6 @@ export type Aktuality = {
   /** Reads a single `GalerieFoto` that is related to this `Aktuality`. */
   galerieFotoByAtFotoMain: Maybe<GalerieFoto>;
   id: Maybe<Scalars['BigInt']>;
-  tenant: Scalars['BigInt'];
   tenantId: Scalars['BigInt'];
   /** Reads a single `User` that is related to this `Aktuality`. */
   userByAtKdo: Maybe<User>;
@@ -301,7 +300,6 @@ export type AktualityInput = {
   atTimestamp?: InputMaybe<Scalars['Datetime']>;
   atTimestampAdd?: InputMaybe<Scalars['Datetime']>;
   id?: InputMaybe<Scalars['BigInt']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
 };
 
@@ -318,7 +316,6 @@ export type AktualityPatch = {
   atTimestamp?: InputMaybe<Scalars['Datetime']>;
   atTimestampAdd?: InputMaybe<Scalars['Datetime']>;
   id?: InputMaybe<Scalars['BigInt']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
 };
 
@@ -3871,7 +3868,6 @@ export type Dokumenty = {
   dPath: Scalars['String'];
   dTimestamp: Maybe<Scalars['Datetime']>;
   id: Maybe<Scalars['BigInt']>;
-  tenant: Scalars['BigInt'];
   tenantId: Scalars['BigInt'];
   /** Reads a single `User` that is related to this `Dokumenty`. */
   userByDKdo: Maybe<User>;
@@ -3904,7 +3900,6 @@ export type DokumentyInput = {
   dPath: Scalars['String'];
   dTimestamp?: InputMaybe<Scalars['Datetime']>;
   id?: InputMaybe<Scalars['BigInt']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
 };
 
@@ -3918,7 +3913,6 @@ export type DokumentyPatch = {
   dPath?: InputMaybe<Scalars['String']>;
   dTimestamp?: InputMaybe<Scalars['Datetime']>;
   id?: InputMaybe<Scalars['BigInt']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
 };
 
@@ -3941,7 +3935,6 @@ export type Event = {
   remainingSpots: Maybe<Scalars['Int']>;
   since: Scalars['Date'];
   summary: Scalars['String'];
-  tenant: Scalars['BigInt'];
   tenantId: Scalars['BigInt'];
   until: Scalars['Date'];
   updatedAt: Maybe<Scalars['Datetime']>;
@@ -3993,7 +3986,6 @@ export type EventInput = {
   name: Scalars['String'];
   since: Scalars['Date'];
   summary?: InputMaybe<Scalars['String']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
   until: Scalars['Date'];
   updatedAt?: InputMaybe<Scalars['Datetime']>;
@@ -4013,7 +4005,6 @@ export type EventPatch = {
   name?: InputMaybe<Scalars['String']>;
   since?: InputMaybe<Scalars['Date']>;
   summary?: InputMaybe<Scalars['String']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
   until?: InputMaybe<Scalars['Date']>;
   updatedAt?: InputMaybe<Scalars['Datetime']>;
@@ -4084,7 +4075,6 @@ export type FormResponse = {
   createdAt: Scalars['Datetime'];
   data: Scalars['JSON'];
   id: Scalars['BigInt'];
-  tenant: Scalars['BigInt'];
   tenantId: Scalars['BigInt'];
   type: Scalars['String'];
   updatedAt: Scalars['Datetime'];
@@ -4109,7 +4099,6 @@ export type FormResponseInput = {
   createdAt?: InputMaybe<Scalars['Datetime']>;
   data: Scalars['JSON'];
   id?: InputMaybe<Scalars['BigInt']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
   type: Scalars['String'];
   updatedAt?: InputMaybe<Scalars['Datetime']>;
@@ -4121,7 +4110,6 @@ export type FormResponsePatch = {
   createdAt?: InputMaybe<Scalars['Datetime']>;
   data?: InputMaybe<Scalars['JSON']>;
   id?: InputMaybe<Scalars['BigInt']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
   type?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['Datetime']>;
@@ -4173,7 +4161,6 @@ export type GalerieDir = {
   gdName: Scalars['String'];
   gdPath: Scalars['String'];
   id: Maybe<Scalars['BigInt']>;
-  tenant: Scalars['BigInt'];
   tenantId: Scalars['BigInt'];
 };
 
@@ -4208,7 +4195,6 @@ export type GalerieDirInput = {
   gdName: Scalars['String'];
   gdPath: Scalars['String'];
   id?: InputMaybe<Scalars['BigInt']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
 };
 
@@ -4221,7 +4207,6 @@ export type GalerieDirPatch = {
   gdName?: InputMaybe<Scalars['String']>;
   gdPath?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['BigInt']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
 };
 
@@ -4272,7 +4257,6 @@ export type GalerieFoto = {
   gfPath: Scalars['String'];
   gfTimestamp: Maybe<Scalars['Datetime']>;
   id: Maybe<Scalars['BigInt']>;
-  tenant: Scalars['BigInt'];
   tenantId: Scalars['BigInt'];
   /** Reads a single `User` that is related to this `GalerieFoto`. */
   userByGfKdo: Maybe<User>;
@@ -4311,7 +4295,6 @@ export type GalerieFotoInput = {
   gfPath: Scalars['String'];
   gfTimestamp?: InputMaybe<Scalars['Datetime']>;
   id?: InputMaybe<Scalars['BigInt']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
 };
 
@@ -4324,7 +4307,6 @@ export type GalerieFotoPatch = {
   gfPath?: InputMaybe<Scalars['String']>;
   gfTimestamp?: InputMaybe<Scalars['Datetime']>;
   id?: InputMaybe<Scalars['BigInt']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
 };
 
@@ -5729,7 +5711,6 @@ export type Nabidka = {
   nTimestamp: Maybe<Scalars['Datetime']>;
   nTrener: Scalars['BigInt'];
   nVisible: Scalars['Boolean'];
-  tenant: Scalars['BigInt'];
   tenantId: Scalars['BigInt'];
   /** Reads a single `User` that is related to this `Nabidka`. */
   userByNTrener: Maybe<User>;
@@ -5768,7 +5749,6 @@ export type NabidkaInput = {
   nTimestamp?: InputMaybe<Scalars['Datetime']>;
   nTrener: Scalars['BigInt'];
   nVisible?: InputMaybe<Scalars['Boolean']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
 };
 
@@ -5882,7 +5862,6 @@ export type NabidkaPatch = {
   nTimestamp?: InputMaybe<Scalars['Datetime']>;
   nTrener?: InputMaybe<Scalars['BigInt']>;
   nVisible?: InputMaybe<Scalars['Boolean']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
 };
 
@@ -6730,7 +6709,6 @@ export type PlatbyCategory = {
   platbyCategoryGroupsByPcgIdCategory: PlatbyCategoryGroupsConnection;
   /** Reads and enables pagination through a set of `PlatbyItem`. */
   platbyItemsByPiIdCategory: PlatbyItemsConnection;
-  tenant: Scalars['BigInt'];
   tenantId: Scalars['BigInt'];
 };
 
@@ -6865,7 +6843,6 @@ export type PlatbyCategoryInput = {
   pcValidFrom: Scalars['Date'];
   pcValidTo: Scalars['Date'];
   pcVisible?: InputMaybe<Scalars['Boolean']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
 };
 
@@ -6883,7 +6860,6 @@ export type PlatbyCategoryPatch = {
   pcValidFrom?: InputMaybe<Scalars['Date']>;
   pcValidTo?: InputMaybe<Scalars['Date']>;
   pcVisible?: InputMaybe<Scalars['Boolean']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
 };
 
@@ -6899,7 +6875,6 @@ export type PlatbyGroup = {
   platbyCategoryGroupsByPcgIdGroup: PlatbyCategoryGroupsConnection;
   /** Reads and enables pagination through a set of `PlatbyGroupSkupina`. */
   platbyGroupSkupinasByPgsIdGroup: PlatbyGroupSkupinasConnection;
-  tenant: Scalars['BigInt'];
   tenantId: Scalars['BigInt'];
 };
 
@@ -6942,7 +6917,6 @@ export type PlatbyGroupInput = {
   pgId?: InputMaybe<Scalars['BigInt']>;
   pgName: Scalars['String'];
   pgType?: InputMaybe<Scalars['BigFloat']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
 };
 
@@ -6954,7 +6928,6 @@ export type PlatbyGroupPatch = {
   pgId?: InputMaybe<Scalars['BigInt']>;
   pgName?: InputMaybe<Scalars['String']>;
   pgType?: InputMaybe<Scalars['BigFloat']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
 };
 
@@ -7094,7 +7067,6 @@ export type PlatbyItem = {
   platbyCategoryByPiIdCategory: Maybe<PlatbyCategory>;
   /** Reads a single `PlatbyRaw` that is related to this `PlatbyItem`. */
   platbyRawByPiIdRaw: Maybe<PlatbyRaw>;
-  tenant: Scalars['BigInt'];
   tenantId: Scalars['BigInt'];
   /** Reads a single `User` that is related to this `PlatbyItem`. */
   userByPiIdUser: Maybe<User>;
@@ -7125,7 +7097,6 @@ export type PlatbyItemInput = {
   piIdRaw?: InputMaybe<Scalars['BigInt']>;
   piIdUser?: InputMaybe<Scalars['BigInt']>;
   piPrefix?: InputMaybe<Scalars['Int']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
 };
 
@@ -7139,7 +7110,6 @@ export type PlatbyItemPatch = {
   piIdRaw?: InputMaybe<Scalars['BigInt']>;
   piIdUser?: InputMaybe<Scalars['BigInt']>;
   piPrefix?: InputMaybe<Scalars['Int']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
 };
 
@@ -7217,7 +7187,6 @@ export type PlatbyRaw = {
   prId: Scalars['BigInt'];
   prRaw: Scalars['String'];
   prSorted: Scalars['Boolean'];
-  tenant: Scalars['BigInt'];
   tenantId: Scalars['BigInt'];
 };
 
@@ -7251,7 +7220,6 @@ export type PlatbyRawInput = {
   prId?: InputMaybe<Scalars['BigInt']>;
   prRaw: Scalars['String'];
   prSorted?: InputMaybe<Scalars['Boolean']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
 };
 
@@ -7263,7 +7231,6 @@ export type PlatbyRawPatch = {
   prId?: InputMaybe<Scalars['BigInt']>;
   prRaw?: InputMaybe<Scalars['String']>;
   prSorted?: InputMaybe<Scalars['Boolean']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
 };
 
@@ -8584,7 +8551,6 @@ export type Rozpi = {
   rTimestamp: Maybe<Scalars['Datetime']>;
   rTrener: Scalars['BigInt'];
   rVisible: Scalars['Boolean'];
-  tenant: Scalars['BigInt'];
   tenantId: Scalars['BigInt'];
   /** Reads a single `User` that is related to this `Rozpi`. */
   userByRTrener: Maybe<User>;
@@ -8621,7 +8587,6 @@ export type RozpiInput = {
   rTimestamp?: InputMaybe<Scalars['Datetime']>;
   rTrener: Scalars['BigInt'];
   rVisible?: InputMaybe<Scalars['Boolean']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
 };
 
@@ -8635,7 +8600,6 @@ export type RozpiPatch = {
   rTimestamp?: InputMaybe<Scalars['Datetime']>;
   rTrener?: InputMaybe<Scalars['BigInt']>;
   rVisible?: InputMaybe<Scalars['Boolean']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
 };
 
@@ -8937,7 +8901,6 @@ export type Skupiny = {
   sLocation: Scalars['String'];
   sName: Scalars['String'];
   sVisible: Scalars['Boolean'];
-  tenant: Scalars['BigInt'];
   tenantId: Scalars['BigInt'];
   /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
   upozorneniSkupiniesByUpsIdSkupina: UpozorneniSkupiniesConnection;
@@ -9003,7 +8966,6 @@ export type SkupinyInput = {
   sLocation?: InputMaybe<Scalars['String']>;
   sName: Scalars['String'];
   sVisible?: InputMaybe<Scalars['Boolean']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
 };
 
@@ -9020,7 +8982,6 @@ export type SkupinyPatch = {
   sLocation?: InputMaybe<Scalars['String']>;
   sName?: InputMaybe<Scalars['String']>;
   sVisible?: InputMaybe<Scalars['Boolean']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
 };
 
@@ -10826,7 +10787,6 @@ export type Upozorneni = {
   isVisible: Maybe<Scalars['Boolean']>;
   scheduledSince: Maybe<Scalars['Datetime']>;
   scheduledUntil: Maybe<Scalars['Datetime']>;
-  tenant: Scalars['BigInt'];
   tenantId: Scalars['BigInt'];
   upBarvy: Scalars['BigInt'];
   upId: Scalars['BigInt'];
@@ -10872,7 +10832,6 @@ export type UpozorneniInput = {
   isVisible?: InputMaybe<Scalars['Boolean']>;
   scheduledSince?: InputMaybe<Scalars['Datetime']>;
   scheduledUntil?: InputMaybe<Scalars['Datetime']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
   upBarvy?: InputMaybe<Scalars['BigInt']>;
   upId?: InputMaybe<Scalars['BigInt']>;
@@ -10890,7 +10849,6 @@ export type UpozorneniPatch = {
   isVisible?: InputMaybe<Scalars['Boolean']>;
   scheduledSince?: InputMaybe<Scalars['Datetime']>;
   scheduledUntil?: InputMaybe<Scalars['Datetime']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
   upBarvy?: InputMaybe<Scalars['BigInt']>;
   upId?: InputMaybe<Scalars['BigInt']>;
@@ -12032,7 +11990,6 @@ export type GraphCacheResolvers = {
     atTimestampAdd?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['Datetime'] | string>,
     galerieFotoByAtFotoMain?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, WithTypename<GalerieFoto> | string>,
     id?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['BigInt'] | string>,
-    tenant?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['BigInt'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, Scalars['BigInt'] | string>,
     userByAtKdo?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, WithTypename<User> | string>
   },
@@ -12785,7 +12742,6 @@ export type GraphCacheResolvers = {
     dPath?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, Scalars['String'] | string>,
     dTimestamp?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, Scalars['Datetime'] | string>,
     id?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, Scalars['BigInt'] | string>,
-    tenant?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, Scalars['BigInt'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, Scalars['BigInt'] | string>,
     userByDKdo?: GraphCacheResolver<WithTypename<Dokumenty>, Record<string, never>, WithTypename<User> | string>
   },
@@ -12805,7 +12761,6 @@ export type GraphCacheResolvers = {
     remainingSpots?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Int'] | string>,
     since?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Date'] | string>,
     summary?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
-    tenant?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['BigInt'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['BigInt'] | string>,
     until?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Date'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Datetime'] | string>
@@ -12829,7 +12784,6 @@ export type GraphCacheResolvers = {
     createdAt?: GraphCacheResolver<WithTypename<FormResponse>, Record<string, never>, Scalars['Datetime'] | string>,
     data?: GraphCacheResolver<WithTypename<FormResponse>, Record<string, never>, Scalars['JSON'] | string>,
     id?: GraphCacheResolver<WithTypename<FormResponse>, Record<string, never>, Scalars['BigInt'] | string>,
-    tenant?: GraphCacheResolver<WithTypename<FormResponse>, Record<string, never>, Scalars['BigInt'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<FormResponse>, Record<string, never>, Scalars['BigInt'] | string>,
     type?: GraphCacheResolver<WithTypename<FormResponse>, Record<string, never>, Scalars['String'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<FormResponse>, Record<string, never>, Scalars['Datetime'] | string>,
@@ -12854,7 +12808,6 @@ export type GraphCacheResolvers = {
     gdName?: GraphCacheResolver<WithTypename<GalerieDir>, Record<string, never>, Scalars['String'] | string>,
     gdPath?: GraphCacheResolver<WithTypename<GalerieDir>, Record<string, never>, Scalars['String'] | string>,
     id?: GraphCacheResolver<WithTypename<GalerieDir>, Record<string, never>, Scalars['BigInt'] | string>,
-    tenant?: GraphCacheResolver<WithTypename<GalerieDir>, Record<string, never>, Scalars['BigInt'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<GalerieDir>, Record<string, never>, Scalars['BigInt'] | string>
   },
   GalerieDirsConnection?: {
@@ -12877,7 +12830,6 @@ export type GraphCacheResolvers = {
     gfPath?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, Scalars['String'] | string>,
     gfTimestamp?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, Scalars['Datetime'] | string>,
     id?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, Scalars['BigInt'] | string>,
-    tenant?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, Scalars['BigInt'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, Scalars['BigInt'] | string>,
     userByGfKdo?: GraphCacheResolver<WithTypename<GalerieFoto>, Record<string, never>, WithTypename<User> | string>
   },
@@ -12953,7 +12905,6 @@ export type GraphCacheResolvers = {
     nTimestamp?: GraphCacheResolver<WithTypename<Nabidka>, Record<string, never>, Scalars['Datetime'] | string>,
     nTrener?: GraphCacheResolver<WithTypename<Nabidka>, Record<string, never>, Scalars['BigInt'] | string>,
     nVisible?: GraphCacheResolver<WithTypename<Nabidka>, Record<string, never>, Scalars['Boolean'] | string>,
-    tenant?: GraphCacheResolver<WithTypename<Nabidka>, Record<string, never>, Scalars['BigInt'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<Nabidka>, Record<string, never>, Scalars['BigInt'] | string>,
     userByNTrener?: GraphCacheResolver<WithTypename<Nabidka>, Record<string, never>, WithTypename<User> | string>
   },
@@ -13173,7 +13124,6 @@ export type GraphCacheResolvers = {
     pcVisible?: GraphCacheResolver<WithTypename<PlatbyCategory>, Record<string, never>, Scalars['Boolean'] | string>,
     platbyCategoryGroupsByPcgIdCategory?: GraphCacheResolver<WithTypename<PlatbyCategory>, PlatbyCategoryPlatbyCategoryGroupsByPcgIdCategoryArgs, WithTypename<PlatbyCategoryGroupsConnection> | string>,
     platbyItemsByPiIdCategory?: GraphCacheResolver<WithTypename<PlatbyCategory>, PlatbyCategoryPlatbyItemsByPiIdCategoryArgs, WithTypename<PlatbyItemsConnection> | string>,
-    tenant?: GraphCacheResolver<WithTypename<PlatbyCategory>, Record<string, never>, Scalars['BigInt'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<PlatbyCategory>, Record<string, never>, Scalars['BigInt'] | string>
   },
   PlatbyCategoryGroup?: {
@@ -13204,7 +13154,6 @@ export type GraphCacheResolvers = {
     pgType?: GraphCacheResolver<WithTypename<PlatbyGroup>, Record<string, never>, Scalars['BigFloat'] | string>,
     platbyCategoryGroupsByPcgIdGroup?: GraphCacheResolver<WithTypename<PlatbyGroup>, PlatbyGroupPlatbyCategoryGroupsByPcgIdGroupArgs, WithTypename<PlatbyCategoryGroupsConnection> | string>,
     platbyGroupSkupinasByPgsIdGroup?: GraphCacheResolver<WithTypename<PlatbyGroup>, PlatbyGroupPlatbyGroupSkupinasByPgsIdGroupArgs, WithTypename<PlatbyGroupSkupinasConnection> | string>,
-    tenant?: GraphCacheResolver<WithTypename<PlatbyGroup>, Record<string, never>, Scalars['BigInt'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<PlatbyGroup>, Record<string, never>, Scalars['BigInt'] | string>
   },
   PlatbyGroupsConnection?: {
@@ -13247,7 +13196,6 @@ export type GraphCacheResolvers = {
     piPrefix?: GraphCacheResolver<WithTypename<PlatbyItem>, Record<string, never>, Scalars['Int'] | string>,
     platbyCategoryByPiIdCategory?: GraphCacheResolver<WithTypename<PlatbyItem>, Record<string, never>, WithTypename<PlatbyCategory> | string>,
     platbyRawByPiIdRaw?: GraphCacheResolver<WithTypename<PlatbyItem>, Record<string, never>, WithTypename<PlatbyRaw> | string>,
-    tenant?: GraphCacheResolver<WithTypename<PlatbyItem>, Record<string, never>, Scalars['BigInt'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<PlatbyItem>, Record<string, never>, Scalars['BigInt'] | string>,
     userByPiIdUser?: GraphCacheResolver<WithTypename<PlatbyItem>, Record<string, never>, WithTypename<User> | string>
   },
@@ -13269,7 +13217,6 @@ export type GraphCacheResolvers = {
     prId?: GraphCacheResolver<WithTypename<PlatbyRaw>, Record<string, never>, Scalars['BigInt'] | string>,
     prRaw?: GraphCacheResolver<WithTypename<PlatbyRaw>, Record<string, never>, Scalars['String'] | string>,
     prSorted?: GraphCacheResolver<WithTypename<PlatbyRaw>, Record<string, never>, Scalars['Boolean'] | string>,
-    tenant?: GraphCacheResolver<WithTypename<PlatbyRaw>, Record<string, never>, Scalars['BigInt'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<PlatbyRaw>, Record<string, never>, Scalars['BigInt'] | string>
   },
   PlatbyRawsConnection?: {
@@ -13341,7 +13288,6 @@ export type GraphCacheResolvers = {
     rTimestamp?: GraphCacheResolver<WithTypename<Rozpi>, Record<string, never>, Scalars['Datetime'] | string>,
     rTrener?: GraphCacheResolver<WithTypename<Rozpi>, Record<string, never>, Scalars['BigInt'] | string>,
     rVisible?: GraphCacheResolver<WithTypename<Rozpi>, Record<string, never>, Scalars['Boolean'] | string>,
-    tenant?: GraphCacheResolver<WithTypename<Rozpi>, Record<string, never>, Scalars['BigInt'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<Rozpi>, Record<string, never>, Scalars['BigInt'] | string>,
     userByRTrener?: GraphCacheResolver<WithTypename<Rozpi>, Record<string, never>, WithTypename<User> | string>
   },
@@ -13418,7 +13364,6 @@ export type GraphCacheResolvers = {
     sLocation?: GraphCacheResolver<WithTypename<Skupiny>, Record<string, never>, Scalars['String'] | string>,
     sName?: GraphCacheResolver<WithTypename<Skupiny>, Record<string, never>, Scalars['String'] | string>,
     sVisible?: GraphCacheResolver<WithTypename<Skupiny>, Record<string, never>, Scalars['Boolean'] | string>,
-    tenant?: GraphCacheResolver<WithTypename<Skupiny>, Record<string, never>, Scalars['BigInt'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<Skupiny>, Record<string, never>, Scalars['BigInt'] | string>,
     upozorneniSkupiniesByUpsIdSkupina?: GraphCacheResolver<WithTypename<Skupiny>, SkupinyUpozorneniSkupiniesByUpsIdSkupinaArgs, WithTypename<UpozorneniSkupiniesConnection> | string>,
     usersByUSkupina?: GraphCacheResolver<WithTypename<Skupiny>, SkupinyUsersByUSkupinaArgs, WithTypename<UsersConnection> | string>
@@ -13780,7 +13725,6 @@ export type GraphCacheResolvers = {
     isVisible?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Boolean'] | string>,
     scheduledSince?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Datetime'] | string>,
     scheduledUntil?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Datetime'] | string>,
-    tenant?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['BigInt'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['BigInt'] | string>,
     upBarvy?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['BigInt'] | string>,
     upId?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['BigInt'] | string>,

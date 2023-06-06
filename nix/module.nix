@@ -129,6 +129,10 @@ in {
             client_max_body_size 0;
             # To disable buffering
             proxy_buffering off;
+            add_header Access-Control-Allow-Credentials true;
+            add_header Access-Control-Allow-Origin *;
+            add_header Access-Control-Allow-Methods GET,OPTIONS,PATCH,DELETE,POST,PUT;
+            add_header Access-Control-Allow-Headers X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version;
           '';
 
           locations."/gallery".root = cfg.stateDir;
@@ -201,6 +205,7 @@ in {
           PGHOST = "/run/postgresql";
           PORT = toString cfg.frontendPort;
           GRAPHQL_BACKEND = "http://localhost:${toString cfg.jsPort}";
+          NEXT_PUBLIC_GRAPHQL_BACKEND = "";
           NEXT_PUBLIC_SENTRY_ENVIRONMENT = cfg.domain;
           NEXT_PUBLIC_BASE_URL = "http${if cfg.ssl then "s" else ""}://${cfg.domain}";
         };

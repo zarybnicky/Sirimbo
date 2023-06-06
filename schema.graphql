@@ -248,7 +248,6 @@ type Aktuality {
   """Reads a single `GalerieFoto` that is related to this `Aktuality`."""
   galerieFotoByAtFotoMain: GalerieFoto
   id: BigInt
-  tenant: BigInt!
   tenantId: BigInt!
 
   """Reads a single `User` that is related to this `Aktuality`."""
@@ -289,7 +288,6 @@ input AktualityInput {
   atTimestamp: Datetime
   atTimestampAdd: Datetime
   id: BigInt
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -308,7 +306,6 @@ input AktualityPatch {
   atTimestamp: Datetime
   atTimestampAdd: Datetime
   id: BigInt
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -4257,7 +4254,6 @@ type Dokumenty {
   dPath: String!
   dTimestamp: Datetime
   id: BigInt
-  tenant: BigInt!
   tenantId: BigInt!
 
   """Reads a single `User` that is related to this `Dokumenty`."""
@@ -4295,7 +4291,6 @@ input DokumentyInput {
   dPath: String!
   dTimestamp: Datetime
   id: BigInt
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -4311,7 +4306,6 @@ input DokumentyPatch {
   dPath: String
   dTimestamp: Datetime
   id: BigInt
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -4386,7 +4380,6 @@ type Event {
   remainingSpots: Int
   since: Date!
   summary: String!
-  tenant: BigInt!
   tenantId: BigInt!
   until: Date!
   updatedAt: Datetime
@@ -4420,7 +4413,6 @@ input EventInput {
   name: String!
   since: Date!
   summary: String
-  tenant: BigInt
   tenantId: BigInt
   until: Date!
   updatedAt: Datetime
@@ -4442,7 +4434,6 @@ input EventPatch {
   name: String
   since: Date
   summary: String
-  tenant: BigInt
   tenantId: BigInt
   until: Date
   updatedAt: Datetime
@@ -4519,7 +4510,6 @@ type FormResponse {
   createdAt: Datetime!
   data: JSON!
   id: BigInt!
-  tenant: BigInt!
   tenantId: BigInt!
   type: String!
   updatedAt: Datetime!
@@ -4546,7 +4536,6 @@ input FormResponseInput {
   createdAt: Datetime
   data: JSON!
   id: BigInt
-  tenant: BigInt
   tenantId: BigInt
   type: String!
   updatedAt: Datetime
@@ -4560,7 +4549,6 @@ input FormResponsePatch {
   createdAt: Datetime
   data: JSON
   id: BigInt
-  tenant: BigInt
   tenantId: BigInt
   type: String
   updatedAt: Datetime
@@ -4642,7 +4630,6 @@ type GalerieDir {
   gdName: String!
   gdPath: String!
   id: BigInt
-  tenant: BigInt!
   tenantId: BigInt!
 }
 
@@ -4667,7 +4654,6 @@ input GalerieDirInput {
   gdName: String!
   gdPath: String!
   id: BigInt
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -4682,7 +4668,6 @@ input GalerieDirPatch {
   gdName: String
   gdPath: String
   id: BigInt
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -4764,7 +4749,6 @@ type GalerieFoto {
   gfPath: String!
   gfTimestamp: Datetime
   id: BigInt
-  tenant: BigInt!
   tenantId: BigInt!
 
   """Reads a single `User` that is related to this `GalerieFoto`."""
@@ -4795,7 +4779,6 @@ input GalerieFotoInput {
   gfPath: String!
   gfTimestamp: Datetime
   id: BigInt
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -4810,7 +4793,6 @@ input GalerieFotoPatch {
   gfPath: String
   gfTimestamp: Datetime
   id: BigInt
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -6296,7 +6278,6 @@ type Nabidka {
   nTimestamp: Datetime
   nTrener: BigInt!
   nVisible: Boolean!
-  tenant: BigInt!
   tenantId: BigInt!
 
   """Reads a single `User` that is related to this `Nabidka`."""
@@ -6329,7 +6310,6 @@ input NabidkaInput {
   nTimestamp: Datetime
   nTrener: BigInt!
   nVisible: Boolean
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -6455,7 +6435,6 @@ input NabidkaPatch {
   nTimestamp: Datetime
   nTrener: BigInt
   nVisible: Boolean
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -7488,7 +7467,6 @@ type PlatbyCategory {
     """The method to use when ordering `PlatbyItem`."""
     orderBy: [PlatbyItemsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PlatbyItemsConnection!
-  tenant: BigInt!
   tenantId: BigInt!
 }
 
@@ -7618,7 +7596,6 @@ input PlatbyCategoryInput {
   pcValidFrom: Date!
   pcValidTo: Date!
   pcVisible: Boolean
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -7638,7 +7615,6 @@ input PlatbyCategoryPatch {
   pcValidFrom: Date
   pcValidTo: Date
   pcVisible: Boolean
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -7707,7 +7683,6 @@ type PlatbyGroup {
     """The method to use when ordering `PlatbyGroupSkupina`."""
     orderBy: [PlatbyGroupSkupinasOrderBy!] = [PRIMARY_KEY_ASC]
   ): PlatbyGroupSkupinasConnection!
-  tenant: BigInt!
   tenantId: BigInt!
 }
 
@@ -7728,7 +7703,6 @@ input PlatbyGroupInput {
   pgId: BigInt
   pgName: String!
   pgType: BigFloat
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -7742,7 +7716,6 @@ input PlatbyGroupPatch {
   pgId: BigInt
   pgName: String
   pgType: BigFloat
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -7902,7 +7875,6 @@ type PlatbyItem {
 
   """Reads a single `PlatbyRaw` that is related to this `PlatbyItem`."""
   platbyRawByPiIdRaw: PlatbyRaw
-  tenant: BigInt!
   tenantId: BigInt!
 
   """Reads a single `User` that is related to this `PlatbyItem`."""
@@ -7937,7 +7909,6 @@ input PlatbyItemInput {
   piIdRaw: BigInt
   piIdUser: BigInt
   piPrefix: Int
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -7953,7 +7924,6 @@ input PlatbyItemPatch {
   piIdRaw: BigInt
   piIdUser: BigInt
   piPrefix: Int
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -8062,7 +8032,6 @@ type PlatbyRaw {
   prId: BigInt!
   prRaw: String!
   prSorted: Boolean!
-  tenant: BigInt!
   tenantId: BigInt!
 }
 
@@ -8086,7 +8055,6 @@ input PlatbyRawInput {
   prId: BigInt
   prRaw: String!
   prSorted: Boolean
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -8100,7 +8068,6 @@ input PlatbyRawPatch {
   prId: BigInt
   prRaw: String
   prSorted: Boolean
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -9930,7 +9897,6 @@ type Rozpi {
   rTimestamp: Datetime
   rTrener: BigInt!
   rVisible: Boolean!
-  tenant: BigInt!
   tenantId: BigInt!
 
   """Reads a single `User` that is related to this `Rozpi`."""
@@ -9961,7 +9927,6 @@ input RozpiInput {
   rTimestamp: Datetime
   rTrener: BigInt!
   rVisible: Boolean
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -9977,7 +9942,6 @@ input RozpiPatch {
   rTimestamp: Datetime
   rTrener: BigInt
   rVisible: Boolean
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -10335,7 +10299,6 @@ type Skupiny {
   sLocation: String!
   sName: String!
   sVisible: Boolean!
-  tenant: BigInt!
   tenantId: BigInt!
 
   """Reads and enables pagination through a set of `UpozorneniSkupiny`."""
@@ -10427,7 +10390,6 @@ input SkupinyInput {
   sLocation: String
   sName: String!
   sVisible: Boolean
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -10446,7 +10408,6 @@ input SkupinyPatch {
   sLocation: String
   sName: String
   sVisible: Boolean
-  tenant: BigInt
   tenantId: BigInt
 }
 
@@ -12580,7 +12541,6 @@ type Upozorneni {
   isVisible: Boolean
   scheduledSince: Datetime
   scheduledUntil: Datetime
-  tenant: BigInt!
   tenantId: BigInt!
   upBarvy: BigInt!
   upId: BigInt!
@@ -12645,7 +12605,6 @@ input UpozorneniInput {
   isVisible: Boolean
   scheduledSince: Datetime
   scheduledUntil: Datetime
-  tenant: BigInt
   tenantId: BigInt
   upBarvy: BigInt
   upId: BigInt
@@ -12665,7 +12624,6 @@ input UpozorneniPatch {
   isVisible: Boolean
   scheduledSince: Datetime
   scheduledUntil: Datetime
-  tenant: BigInt
   tenantId: BigInt
   upBarvy: BigInt
   upId: BigInt
