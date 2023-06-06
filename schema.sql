@@ -317,7 +317,7 @@ $$;
 CREATE FUNCTION public.current_tenant_id() RETURNS bigint
     LANGUAGE sql STABLE
     AS $$
-  select 1;
+  select nullif(current_setting('jwt.claims.tenant_id', '1')::bigint, 1);
 $$;
 
 
@@ -764,7 +764,8 @@ $$;
 CREATE TABLE public.tenant (
     id bigint NOT NULL,
     name text NOT NULL,
-    member_info text NOT NULL
+    member_info text NOT NULL,
+    origins text[] DEFAULT ARRAY[]::text[] NOT NULL
 );
 
 

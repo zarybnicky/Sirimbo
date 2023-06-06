@@ -10508,6 +10508,7 @@ type Tenant {
   id: BigInt!
   memberInfo: String!
   name: String!
+  origins: [String]!
 
   """Reads and enables pagination through a set of `TenantAttachment`."""
   tenantAttachments(
@@ -10702,6 +10703,7 @@ input TenantInput {
   id: BigInt
   memberInfo: String!
   name: String!
+  origins: [String]
 }
 
 type TenantLocation {
@@ -10788,6 +10790,7 @@ input TenantPatch {
   id: BigInt
   memberInfo: String
   name: String
+  origins: [String]
 }
 
 """A connection to a list of `TenantPerson` values."""

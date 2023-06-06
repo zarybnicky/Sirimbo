@@ -9055,6 +9055,7 @@ export type Tenant = {
   id: Scalars['BigInt'];
   memberInfo: Scalars['String'];
   name: Scalars['String'];
+  origins: Array<Maybe<Scalars['String']>>;
   /** Reads and enables pagination through a set of `TenantAttachment`. */
   tenantAttachments: TenantAttachmentsConnection;
   /** Reads and enables pagination through a set of `TenantLocation`. */
@@ -9197,6 +9198,7 @@ export type TenantInput = {
   id?: InputMaybe<Scalars['BigInt']>;
   memberInfo: Scalars['String'];
   name: Scalars['String'];
+  origins?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type TenantLocation = {
@@ -9273,6 +9275,7 @@ export type TenantPatch = {
   id?: InputMaybe<Scalars['BigInt']>;
   memberInfo?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
+  origins?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 /** A connection to a list of `TenantPerson` values. */
@@ -13429,6 +13432,7 @@ export type GraphCacheResolvers = {
     id?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['BigInt'] | string>,
     memberInfo?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String'] | string>,
     name?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String'] | string>,
+    origins?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Array<Scalars['String'] | string>>,
     tenantAttachments?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantAttachmentsArgs, WithTypename<TenantAttachmentsConnection> | string>,
     tenantLocations?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantLocationsArgs, WithTypename<TenantLocationsConnection> | string>,
     tenantPeople?: GraphCacheResolver<WithTypename<Tenant>, TenantTenantPeopleArgs, WithTypename<TenantPeopleConnection> | string>

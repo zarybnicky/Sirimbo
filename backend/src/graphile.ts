@@ -1,6 +1,14 @@
 import express from 'express';
-import { makePluginHook, Build, PostGraphileOptions, makeExtendSchemaPlugin } from 'postgraphile';
-import operationHooks, { AddOperationHookFn, OperationHookGenerator } from '@graphile/operation-hooks';
+import {
+  makePluginHook,
+  Build,
+  PostGraphileOptions,
+  makeExtendSchemaPlugin,
+} from 'postgraphile';
+import operationHooks, {
+  AddOperationHookFn,
+  OperationHookGenerator,
+} from '@graphile/operation-hooks';
 import path from 'path';
 import * as Minio from 'minio';
 import { pool } from './db';
@@ -16,52 +24,73 @@ const minioClient = new Minio.Client({
   pathStyle: true,
 });
 
-const useAuthCredentials: (build: Build) => OperationHookGenerator = _ => ctx => {
-  if (ctx.scope.isRootMutation && ctx.scope.pgFieldIntrospection?.name === "login") {
+const useAuthCredentials: (build: Build) => OperationHookGenerator = (_) => (ctx) => {
+  if (ctx.scope.isRootMutation && ctx.scope.pgFieldIntrospection?.name === 'login') {
     return {
-      after: [{
-        priority: 1000,
-        callback: (result, _, context) => {
-          context.setAuthCookie(result.data.value.sess.ss_id);
-          return result;
+      after: [
+        {
+          priority: 1000,
+          callback: (result, _, context) => {
+            context.setAuthCookie(result.data.value.sess.ss_id);
+            return result;
+          },
         },
-      }],
+      ],
     };
   }
 
-  if (ctx.scope.isRootMutation && ctx.scope.pgFieldIntrospection?.name === "logout") {
+  if (ctx.scope.isRootMutation && ctx.scope.pgFieldIntrospection?.name === 'logout') {
     return {
-      after: [{
-        priority: 1000,
-        callback: (result, _, context) => {
-          context.unsetAuthCookie();
-          return result;
+      after: [
+        {
+          priority: 1000,
+          callback: (result, _, context) => {
+            context.unsetAuthCookie();
+            return result;
+          },
         },
-      }],
+      ],
     };
   }
 
   return {};
 };
 
-const loadUserFromSession = async (req: express.Request): Promise<{ [k: string]: any }> => {
+async function loadUserFromSession(req: express.Request): Promise<{ [k: string]: any }> {
   const settings = {
     role: 'anonymous',
     'jwt.claims.session_id': null,
     'jwt.claims.user_id': null,
+    'jwt.claims.tenant_id': 1,
   };
 
-  const { rows: [session] } = await pool.query(
-    `SELECT u_id, u_group, ss_id FROM session LEFT JOIN users on u_id=ss_user WHERE ss_id='${req.cookies.PHPSESSID}'`
+  const {
+    rows: [host],
+  } = await pool.query('select id from tenant where $1 = any (origins)', [
+    req.headers.host,
+  ]);
+  if (host) {
+    settings['jwt.claims.tenant_id'] = host.id;
+  }
+
+  const {
+    rows: [session],
+  } = await pool.query(
+    `SELECT u_id, u_group, ss_id
+     FROM session LEFT JOIN users on u_id=ss_user
+     WHERE ss_id=$1`,
+    [req.cookies.PHPSESSID],
   );
   if (session) {
     settings['jwt.claims.session_id'] = session.ss_id;
-    settings['jwt.claims.user_id'] = session.u_id;;
+    settings['jwt.claims.user_id'] = session.u_id;
 
     settings['role'] =
-      session.u_group == "0" ? "anonymous" :
-        session.u_group == "1" ? "administrator" :
-          "member";
+      session.u_group == '0'
+        ? 'anonymous'
+        : session.u_group == '1'
+        ? 'administrator'
+        : 'member';
   }
 
   return settings;
@@ -77,7 +106,7 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
   ignoreRBAC: false,
   ignoreIndexes: false,
   extendedErrors: ['hint', 'detail', 'errcode', 'where'],
-  showErrorStack: "json",
+  showErrorStack: 'json',
   pgSettings: loadUserFromSession,
   watchPg: true,
   legacyRelations: 'omit',
@@ -104,40 +133,46 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
   skipPlugins: [NodePlugin],
 
   appendPlugins: [
-    require("@graphile-contrib/pg-simplify-inflector"),
-    require("@graphile-contrib/pg-order-by-related"),
+    require('@graphile-contrib/pg-simplify-inflector'),
+    require('@graphile-contrib/pg-order-by-related'),
     function OperationHookPlugin(builder) {
-      builder.hook("init", (_, build) => {
+      builder.hook('init', (_, build) => {
         const addOperationHook: AddOperationHookFn = build.addOperationHook;
         addOperationHook(useAuthCredentials(build));
         return _;
       });
     },
-    makeExtendSchemaPlugin(_build => ({
+    makeExtendSchemaPlugin((_build) => ({
       typeDefs: gql`
-type UploadFilePayload {
-  uploadUrl: String!
-  objectName: String!
-}
+        type UploadFilePayload {
+          uploadUrl: String!
+          objectName: String!
+        }
 
-extend type Mutation {
-  uploadFile(fileName: String!): UploadFilePayload!
-  downloadFile(id: Int!): String!
-}`,
+        extend type Mutation {
+          uploadFile(fileName: String!): UploadFilePayload!
+          downloadFile(id: Int!): String!
+        }
+      `,
       resolvers: {
         Mutation: {
           uploadFile: async (_query, { fileName }, context) => {
             // check auth
             const objectName = `${Date.now()}-${fileName}`;
-            await context.pgClient.query('INSERT INTO attachment (object_name) VALUES ($1)', [objectName]);
+            await context.pgClient.query(
+              'INSERT INTO attachment (object_name) VALUES ($1)',
+              [objectName],
+            );
             const uploadUrl = await minioClient.presignedPutObject('public', objectName);
             return { objectName, uploadUrl };
           },
           downloadFile: async (_query, { id }, context) => {
             // check auth
-            const { rows: [file] } = await context.pgClient.query(
-              'SELECT * FROM attachment where id=$1', [id],
-            );
+            const {
+              rows: [file],
+            } = await context.pgClient.query('SELECT * FROM attachment where id=$1', [
+              id,
+            ]);
             return await minioClient.presignedGetObject('public', file.object_name);
           },
         },

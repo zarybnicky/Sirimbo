@@ -21880,6 +21880,20 @@
             "args": []
           },
           {
+            "name": "origins",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              }
+            },
+            "args": []
+          },
+          {
             "name": "tenantAttachments",
             "type": {
               "kind": "NON_NULL",
