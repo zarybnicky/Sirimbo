@@ -91,8 +91,9 @@ in {
         example = 3002;
       };
       backend = lib.mkOption {
-        type = lib.types.optional lib.types.str;
+        type = lib.types.nullOr lib.types.str;
         description = "${pkgName} backend";
+        default = null;
         example = "api.rozpisovnik.cz";
       };
 
@@ -135,8 +136,8 @@ in {
 
         environment = {
           PORT = toString cfg.frontend.port;
-          GRAPHQL_BACKEND = if cfg.frontend.backend then cfg.frontend.backend else "http://localhost:${toString cfg.backend.port}";
-          NEXT_PUBLIC_GRAPHQL_BACKEND = if cfg.frontend.backend then cfg.frontend.backend else cfg.backend.domain;
+          GRAPHQL_BACKEND = cfg.frontend.backend or "http://localhost:${toString cfg.backend.port}";
+          NEXT_PUBLIC_GRAPHQL_BACKEND = cfg.frontend.backend or cfg.backend.domain;
           NEXT_PUBLIC_SENTRY_ENVIRONMENT = cfg.frontend.domain;
         };
 
@@ -187,7 +188,7 @@ in {
       };
     })
 
-    (lib.mkId cfg.minio.enable {
+    (lib.mkIf cfg.minio.enable {
       services.minio = {
         enable = true;
         browser = false;
@@ -307,7 +308,7 @@ in {
         wantedBy = [ "multi-user.target" ];
         after = [ "network-online.target" "postgresql.service" ];
         requires = [ "postgresql.service" ];
-        environment.DATABASE_URL = "postgres://${cfg.user}@localhost/olymp";
+        environment.DATABASE_URL = "postgres://${cfg.user}@localhost/${cfg.backend.database}";
         serviceConfig = {
           User = cfg.user;
           Group = cfg.group;

@@ -85,22 +85,33 @@
 
           services.mailhog.enable = true;
           services.olymp-beta = {
-            enable = true;
-            # debug = true;
-            dbConnString = "dbname=olymp";
             stateDir = "/var/lib/olymp";
-            domain = "olymp-test";
-            ssl = false;
-            jsPort = 4000;
-            frontendPort = 3030;
 
-            smtpAuth = false;
-            smtpTLS = false;
-            smtpHost = "127.0.0.1";
-            smtpPort = 1025;
-
-            minioAccessKey = "00000000";
-            minioSecretKey = "000000000000";
+            backend = {
+              enable = true;
+              domain = "olymp-test";
+              # debug = true;
+              ssl = false;
+              port = 4000;
+              database = "olymp";
+            };
+            frontend = {
+              enable = true;
+              port = 3030;
+              domain = "olymp-test";
+              ssl = false;
+            };
+            smtp = {
+              auth = false;
+              tls = false;
+              host = "127.0.0.1";
+              port = 1025;
+            };
+            minio = {
+              enable = true;
+              accessKey = "00000000";
+              secretKey = "000000000000";
+            };
           };
         })
       ];
