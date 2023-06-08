@@ -10787,6 +10787,7 @@ export type Upozorneni = {
   isVisible: Maybe<Scalars['Boolean']>;
   scheduledSince: Maybe<Scalars['Datetime']>;
   scheduledUntil: Maybe<Scalars['Datetime']>;
+  sticky: Scalars['Boolean'];
   tenantId: Scalars['BigInt'];
   upBarvy: Scalars['BigInt'];
   upId: Scalars['BigInt'];
@@ -10832,6 +10833,7 @@ export type UpozorneniInput = {
   isVisible?: InputMaybe<Scalars['Boolean']>;
   scheduledSince?: InputMaybe<Scalars['Datetime']>;
   scheduledUntil?: InputMaybe<Scalars['Datetime']>;
+  sticky?: InputMaybe<Scalars['Boolean']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
   upBarvy?: InputMaybe<Scalars['BigInt']>;
   upId?: InputMaybe<Scalars['BigInt']>;
@@ -10849,6 +10851,7 @@ export type UpozorneniPatch = {
   isVisible?: InputMaybe<Scalars['Boolean']>;
   scheduledSince?: InputMaybe<Scalars['Datetime']>;
   scheduledUntil?: InputMaybe<Scalars['Datetime']>;
+  sticky?: InputMaybe<Scalars['Boolean']>;
   tenantId?: InputMaybe<Scalars['BigInt']>;
   upBarvy?: InputMaybe<Scalars['BigInt']>;
   upId?: InputMaybe<Scalars['BigInt']>;
@@ -13725,6 +13728,7 @@ export type GraphCacheResolvers = {
     isVisible?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Boolean'] | string>,
     scheduledSince?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Datetime'] | string>,
     scheduledUntil?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Datetime'] | string>,
+    sticky?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Boolean'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['BigInt'] | string>,
     upBarvy?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['BigInt'] | string>,
     upId?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['BigInt'] | string>,

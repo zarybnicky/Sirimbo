@@ -3,18 +3,17 @@ import classNames from 'classnames';
 import React from 'react';
 import {
   useController,
-  FieldError,
   FieldValues,
   Path,
   Control,
   ControllerProps,
 } from 'react-hook-form';
+import { FieldHelper, FieldLabel } from './ui/form';
 
 type Extras = {
   className?: string;
   label?: React.ReactNode;
   helperText?: React.ReactNode;
-  parseError?: (error: FieldError) => React.ReactNode;
 };
 
 type Item = { id: string; label: string; disabled?: boolean };
@@ -34,31 +33,22 @@ export function RadioButtonGroupElement<TFieldValues extends FieldValues>({
   options,
   className,
   helperText,
-  parseError,
   label,
 }: RadioButtonGroupElementProps<TFieldValues>) {
   if (required && !validation?.required) {
     validation.required = 'Toto pole je povinné';
   }
 
-  const {
-    field: { value, onChange },
-    fieldState: { error },
-  } = useController({
-    name,
-    control,
-    rules: validation,
-  });
-  const parsedHelperText = !error
-    ? helperText
-    : parseError
-    ? parseError(error)
-    : error.message;
+  const { field, fieldState } = useController({ name, control, rules: validation });
 
   return (
     <div className={`relative my-2 ${className}`}>
-      <div className="text-stone-700 text-sm mb-1">{label}</div>
-      <ToggleGroupPrimitive.Root value={value} onValueChange={onChange} type="single">
+      <FieldLabel htmlFor={name}>{label}</FieldLabel>
+      <ToggleGroupPrimitive.Root
+        value={field.value}
+        onValueChange={field.onChange}
+        type="single"
+      >
         {options.map(({ label, id, disabled }) => (
           <ToggleGroupPrimitive.Item
             key={`group-item-${id}-${label}`}
@@ -75,13 +65,7 @@ export function RadioButtonGroupElement<TFieldValues extends FieldValues>({
           </ToggleGroupPrimitive.Item>
         ))}
       </ToggleGroupPrimitive.Root>
-      {parsedHelperText && (
-        <p
-          className={classNames('mt-2 text-sm', error ? 'text-red-600' : 'text-gray-500')}
-        >
-          {parsedHelperText}
-        </p>
-      )}
+      <FieldHelper error={fieldState.error} helperText={helperText} />
     </div>
   );
 }

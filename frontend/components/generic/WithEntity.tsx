@@ -34,14 +34,14 @@ export const WithEntity = <T,>({
 }: {
   fetcher: EntityFetcher<T>;
   id?: string;
-  perms: [PermissionKey, PermissionLevel];
-  children: ({ data, id }: { data?: T; id?: string }) => React.ReactNode;
+  perms?: [PermissionKey, PermissionLevel];
+  children: ({ data, id }: { data?: T; id?: string }) => JSX.Element;
   onSuccess?: () => void;
-}) => {
+}): JSX.Element => {
   const [{ data, fetching }] = fetcher.useQuery(id);
   const { perms: myPerms } = useAuth();
   const props = React.useMemo(() => ({ data, id, onSuccess    }), [data, id]);
-  if (!myPerms.hasPermission(perms[0], perms[1])) return <ErrorPage error="Přístup zakázán" />;
+  if (perms && !myPerms.hasPermission(perms[0], perms[1])) return <ErrorPage error="Přístup zakázán" />;
   if (fetching) return <Loader />;
   if (!fetching && !data) return <ErrorPage error="Nenalezeno" />;
   return children(props);

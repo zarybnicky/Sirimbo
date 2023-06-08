@@ -12541,6 +12541,7 @@ type Upozorneni {
   isVisible: Boolean
   scheduledSince: Datetime
   scheduledUntil: Datetime
+  sticky: Boolean!
   tenantId: BigInt!
   upBarvy: BigInt!
   upId: BigInt!
@@ -12605,6 +12606,7 @@ input UpozorneniInput {
   isVisible: Boolean
   scheduledSince: Datetime
   scheduledUntil: Datetime
+  sticky: Boolean
   tenantId: BigInt
   upBarvy: BigInt
   upId: BigInt
@@ -12624,6 +12626,7 @@ input UpozorneniPatch {
   isVisible: Boolean
   scheduledSince: Datetime
   scheduledUntil: Datetime
+  sticky: Boolean
   tenantId: BigInt
   upBarvy: BigInt
   upId: BigInt

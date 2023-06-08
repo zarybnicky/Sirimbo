@@ -11,6 +11,7 @@ import { Route } from 'nextjs-routes';
 
 export const Article = {
   name: (n: number) => (n === 1 ? 'článek' : n > 1 && n < 5 ? 'články' : 'článků'),
+  listRoute: { pathname: '/admin/aktuality' } as Route,
   addRoute: { pathname: '/admin/aktuality/add' } as Route,
   editRoute: (id: string) =>
     ({ pathname: '/admin/aktuality/[id]', query: { id } } as Route),
@@ -18,6 +19,7 @@ export const Article = {
 
 export const Couple = {
   name: (n: number) => (n === 1 ? "pár" : n > 1 && n < 5 ? "páry":"párů"),
+  listRoute: { pathname: '/admin/pary' } as Route,
   addRoute: { pathname: '/admin/pary/add' } as Route,
   editRoute: (id: string) =>
     ({ pathname: '/admin/pary/[id]', query: { id } } as Route),
@@ -40,6 +42,7 @@ export const PaymentItem = {
 
 export const PaymentCategory = {
   name: (n: number) => (n === 1 ? "kategorie" : n > 1 && n < 5 ? "kategorie":"kategorií"),
+  listRoute: { pathname: '/admin/platby/structure/category' } as Route,
   addRoute: { pathname: '/admin/platby/structure/category/add' } as Route,
   editRoute: (id: string) =>
     ({ pathname: '/admin/platby/structure/category/[id]', query: { id } } as Route),
@@ -47,6 +50,7 @@ export const PaymentCategory = {
 
 export const PaymentGroup = {
   name: (n: number) => (n === 1 ? "skupina" : n > 1 && n < 5 ? "skupiny":"skupin"),
+  listRoute: { pathname: '/admin/platby/structure/group' } as Route,
   addRoute: { pathname: '/admin/platby/structure/group/add' } as Route,
   editRoute: (id: string) =>
     ({ pathname: '/admin/platby/structure/group/[id]', query: { id } } as Route),
@@ -54,6 +58,8 @@ export const PaymentGroup = {
 
 export const Announcement = {
   name: (n: number) => (n === 1 ? "příspěvek" : n > 1 && n < 5 ? "příspěvky":"příspěvků"),
+  title: (data?: AnnouncementFragment | null) => data?.upNadpis || '(Bez názvu)',
+  listRoute: { pathname: '/admin/nastenka' } as Route,
   addRoute: { pathname: '/admin/nastenka/add' } as Route,
   editRoute: (id: string) =>
     ({ pathname: '/admin/nastenka/[id]', query: { id } } as Route),
@@ -78,6 +84,7 @@ export const Announcement = {
 
 export const Schedule = {
   name: (n: number) => (n === 1 ? 'rozpis' : n > 1 && n < 5 ? 'rozpisy' : 'rozpisů'),
+  listRoute: { pathname: '/admin/rozpis' } as Route,
   addRoute: { pathname: '/admin/rozpis/add' } as Route,
   editRoute: (id: string) =>
     ({ pathname: '/admin/rozpis/[id]', query: { id } } as Route),
@@ -97,6 +104,7 @@ export const Schedule = {
 
 export const Reservation = {
   name: (n: number) => (n === 1 ? 'nabídka' : n > 1 && n < 5 ? 'nabídky' : 'nabídek'),
+  listRoute: { pathname: '/admin/nabidka' } as Route,
   addRoute: { pathname: '/admin/nabidka/add' } as Route,
   editRoute: (id: string) =>
     ({ pathname: '/admin/nabidka/[id]', query: { id } } as Route),
@@ -116,6 +124,7 @@ export const Reservation = {
 
 export const Event = {
   name: (n: number) => (n === 1 ? 'akce' : n > 1 && n < 5 ? 'akce' : 'akcí'),
+  listRoute: { pathname: '/admin/akce' } as Route,
   addRoute: { pathname: '/admin/akce/add' } as Route,
   editRoute: (id: string) =>
     ({ pathname: '/admin/akce/[id]', query: { id } } as Route),
@@ -135,6 +144,7 @@ export const Event = {
 
 export const Cohort = {
   name: (n: number) => (n === 1 ? 'skupina' : n > 1 && n < 5 ? 'skupiny' : 'skupin'),
+  listRoute: { pathname: '/admin/skupiny' } as Route,
   addRoute: { pathname: '/admin/skupiny/add' } as Route,
   editRoute: (id: string) =>
     ({ pathname: '/admin/skupiny/[id]', query: { id } } as Route),
@@ -154,6 +164,7 @@ export const Cohort = {
 
 export const CohortGroup = {
   name: (n: number) => (n === 1 ? 'tréninkový program' : n > 1 && n < 5 ? 'tréninkové programy' : 'tréninkových programů'),
+  listRoute: { pathname: '/admin/cohort-group' } as Route,
   addRoute: { pathname: '/admin/cohort-group/add' } as Route,
   editRoute: (id: string) =>
     ({ pathname: '/admin/cohort-group/[id]', query: { id } } as Route),

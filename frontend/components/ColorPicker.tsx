@@ -5,6 +5,7 @@ import React from 'react';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import classNames from 'classnames';
 import { X as Cross } from 'lucide-react';
+import { FieldLabel } from './ui/form';
 
 type ColorPickerProps<T extends FieldValues> = {
   name: Path<T>;
@@ -12,18 +13,16 @@ type ColorPickerProps<T extends FieldValues> = {
   label?: string;
 };
 
-export function ColorPicker<TFieldValues extends FieldValues>({
+export function ColorPicker<T extends FieldValues>({
   name,
   control,
   label,
-}: ColorPickerProps<TFieldValues>) {
+}: ColorPickerProps<T>) {
   const { field } = useController({ name, control });
 
   return (
     <div className="relative">
-      <label htmlFor={name} className="block text-sm text-stone-700 mt-1 mb-1">
-        {label}
-      </label>
+      <FieldLabel htmlFor={name}>{label}</FieldLabel>
       <PopoverPrimitive.Root>
         <PopoverPrimitive.Trigger asChild>
           <div className="w-16 h-8 border" style={{ backgroundColor: field.value }} />

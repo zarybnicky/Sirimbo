@@ -1,19 +1,17 @@
-import cx from 'classnames';
 import { AlertCircle as ReportProblemIcon } from 'lucide-react';
 import {
   Control,
   FieldValues,
   ControllerProps,
-  FieldError,
   Path,
   useController,
 } from 'react-hook-form';
+import { FieldHelper, FieldHelperProps, FieldLabel } from './ui/form';
 
 type Extras = {
   className?: string;
   label?: React.ReactNode;
-  helperText?: React.ReactNode;
-  parseError?: (error: FieldError) => React.ReactNode;
+  helperText?: string;
 };
 
 export type TextAreaElementProps<T extends FieldValues> = Omit<
@@ -31,24 +29,12 @@ export function TextArea({
   className,
   error,
   helperText,
-  parseError,
   required,
   ...props
-}: {
-  error?: FieldError;
-} & Extras &
-  Omit<React.HTMLProps<HTMLTextAreaElement>, 'label'>) {
-  const parsedHelperText = !error
-    ? helperText
-    : parseError
-    ? parseError(error)
-    : error.message;
-
+}: FieldHelperProps & Extras & Omit<React.HTMLProps<HTMLTextAreaElement>, 'label'>) {
   return (
     <div className={className}>
-      <label htmlFor={name} className="block text-sm text-gray-700">
-        {label}
-      </label>
+      <FieldLabel htmlFor={name}>{label}</FieldLabel>
       <div className="mt-1 relative rounded-md shadow-sm">
         <textarea
           id={name}
@@ -62,11 +48,7 @@ export function TextArea({
           </div>
         )}
       </div>
-      {parsedHelperText && (
-        <p className={cx('mt-2 text-sm', error ? 'text-red-600' : 'text-gray-500')}>
-          {parsedHelperText}
-        </p>
-      )}
+      <FieldHelper error={error} helperText={helperText} />
     </div>
   );
 }
@@ -87,24 +69,12 @@ export function TextField({
   label,
   error,
   helperText,
-  parseError,
   required,
   ...props
-}: {
-  error?: FieldError;
-} & Extras &
-  Omit<React.HTMLProps<HTMLInputElement>, 'label'>) {
-  const parsedHelperText = !error
-    ? helperText
-    : parseError
-    ? parseError(error)
-    : error.message;
-
+}: FieldHelperProps & Extras & Omit<React.HTMLProps<HTMLInputElement>, 'label'>) {
   return (
     <div className={className || ''}>
-      <label htmlFor={name} className="block text-sm text-stone-700 mt-1 mb-1">
-        {label}
-      </label>
+      <FieldLabel htmlFor={name}>{label}</FieldLabel>
       <div className="relative rounded-md shadow-sm">
         <input
           id={name}
@@ -119,11 +89,7 @@ export function TextField({
           </div>
         )}
       </div>
-      {parsedHelperText && (
-        <p className={cx('mt-2 text-sm', error ? 'text-red-600' : 'text-gray-500')}>
-          {parsedHelperText}
-        </p>
-      )}
+      <FieldHelper error={error} helperText={helperText} />
     </div>
   );
 }
@@ -147,23 +113,16 @@ export function TextFieldElement<TFieldValues extends FieldValues>({
       message: 'Zadejte platný e-mail',
     };
   }
-  const {
-    field: { value, onChange },
-    fieldState: { error },
-  } = useController({
-    name,
-    control,
-    rules: validation,
-  });
+  const { field, fieldState } = useController({ name, control, rules: validation });
 
   return (
     <TextField
       name={name}
-      value={value || ''}
-      error={error}
+      value={field.value || ''}
+      error={fieldState.error}
       {...props}
       onChange={(e) =>
-        onChange(
+        field.onChange(
           valueAsNumber ? parseInt(e.currentTarget.value, 10) : e.currentTarget.value,
         )
       }
@@ -181,22 +140,15 @@ export function TextAreaElement<TFieldValues extends FieldValues>({
   if (required && !validation?.required) {
     validation.required = 'Toto pole je povinné';
   }
-  const {
-    field: { value, onChange },
-    fieldState: { error },
-  } = useController({
-    name,
-    control,
-    rules: validation,
-  });
+  const { field, fieldState } = useController({ name, control, rules: validation });
 
   return (
     <TextArea
       name={name}
-      value={value}
-      error={error}
+      value={field.value}
+      error={fieldState.error}
       {...props}
-      onChange={(e) => onChange(e.currentTarget.value)}
+      onChange={(e) => field.onChange(e.currentTarget.value)}
     />
   );
 }

@@ -25095,6 +25095,17 @@
             "args": []
           },
           {
+            "name": "sticky",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "tenantId",
             "type": {
               "kind": "NON_NULL",

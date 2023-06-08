@@ -16,7 +16,6 @@ type Extras = {
   className?: string;
   label?: React.ReactNode;
   helperText?: React.ReactNode;
-  parseError?: (error: FieldError) => React.ReactNode;
 };
 
 type Item = { id: string | null; label: string };

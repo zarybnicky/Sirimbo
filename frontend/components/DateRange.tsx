@@ -5,12 +5,12 @@ import {
   ControllerProps,
   Path,
   useController,
-  FieldError,
 } from 'react-hook-form';
 import cs from 'date-fns/locale/cs';
 import cx from 'classnames';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { DayPicker, DateRange } from 'react-day-picker';
+import { FieldHelper, FieldLabel } from './ui/form';
 
 export type { DateRange };
 
@@ -68,7 +68,6 @@ type Extras = {
   className?: string;
   label?: React.ReactNode;
   helperText?: React.ReactNode;
-  parseError?: (error: FieldError) => React.ReactNode;
 };
 
 export function DateRangeInput<TFieldValues extends FieldValues>({
@@ -79,7 +78,6 @@ export function DateRangeInput<TFieldValues extends FieldValues>({
   required,
   className,
   helperText,
-  parseError,
 }: DateRangeInputProps<TFieldValues> & Extras) {
   if (required && !validation?.required) {
     validation.required = 'Toto pole je povinné';
@@ -93,18 +91,9 @@ export function DateRangeInput<TFieldValues extends FieldValues>({
     console.log(field.value)
   }, [field.value]);
 
-  const parsedHelperText = !fieldState.error
-    ? helperText
-    : parseError
-    ? parseError(fieldState.error)
-    : fieldState.error.message;
-
   return (
     <div className={className}>
-      <label htmlFor={name} className="block text-sm text-gray-700 mt-1">
-        {label}
-      </label>
-
+      <FieldLabel htmlFor={name}>{label}</FieldLabel>
       <Calendar
         mode="range"
         defaultMonth={new Date()}
@@ -114,16 +103,7 @@ export function DateRangeInput<TFieldValues extends FieldValues>({
         onSelect={field.onChange}
         locale={cs}
       />
-      {parsedHelperText && (
-        <p
-          className={cx(
-            'mt-2 text-sm',
-            fieldState.error ? 'text-red-600' : 'text-gray-500',
-          )}
-        >
-          {parsedHelperText}
-        </p>
-      )}
+      <FieldHelper error={fieldState.error} helperText={helperText} />
     </div>
   );
 }
@@ -136,17 +116,11 @@ export function DatePickerElement<TFieldValues extends FieldValues>({
   required,
   className,
   helperText,
-  parseError,
 }: DateRangeInputProps<TFieldValues> & Extras) {
   if (required && !validation?.required) {
     validation.required = 'Toto pole je povinné';
   }
   const { field, fieldState } = useController({ control, name, rules: validation });
-  const parsedHelperText = !fieldState.error
-    ? helperText
-    : parseError
-    ? parseError(fieldState.error)
-    : fieldState.error.message;
 
   const [month, setMonth] = React.useState(new Date());
   React.useEffect(() => {
@@ -155,9 +129,7 @@ export function DatePickerElement<TFieldValues extends FieldValues>({
 
   return (
     <div className={className}>
-      <label htmlFor={name} className="block text-sm text-gray-700 my-1">
-        {label}
-      </label>
+      <FieldLabel htmlFor={name}>{label}</FieldLabel>
       <Calendar
         mode="single"
         month={month}
@@ -166,16 +138,7 @@ export function DatePickerElement<TFieldValues extends FieldValues>({
         onSelect={field.onChange}
         locale={cs}
       />
-      {parsedHelperText && (
-        <p
-          className={cx(
-            'mt-2 text-sm',
-            fieldState.error ? 'text-red-600' : 'text-gray-500',
-          )}
-        >
-          {parsedHelperText}
-        </p>
-      )}
+      <FieldHelper error={fieldState.error} helperText={helperText} />
     </div>
   );
 }

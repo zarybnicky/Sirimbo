@@ -7,36 +7,38 @@ import { SubmitButton } from './SubmitButton';
 import { UpozorneniInput } from 'lib/graphql';
 import {
   AnnouncementDocument,
+  AnnouncementFragment,
   CreateAnnouncementDocument,
   DeleteAnnouncementDocument,
   UpdateAnnouncementDocument,
 } from 'lib/graphql/Announcement';
 import { DatePickerElement } from './DateRange';
-import { useMutation, useQuery } from 'urql';
+import { useMutation } from 'urql';
 import { CheckboxElement } from './Checkbox';
 import { DeleteButton } from './DeleteButton';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
-import { Route } from 'nextjs-routes';
-import { ErrorPage } from './ErrorPage';
 import { RichTextEditor } from './RichTextEditor';
 import { TitleBar } from './layout/TitleBar';
+import { Announcement } from 'lib/entities';
+import { makeEntityFetcher } from './generic/WithEntity';
 
-type FormProps = Pick<
-  UpozorneniInput,
-  'upNadpis' | 'upText' | 'isVisible'
-> & {
+type FormProps = Pick<UpozorneniInput, 'upNadpis' | 'upText' | 'isVisible' | 'sticky'> & {
   scheduledSince: Date | undefined;
   scheduledUntil: Date | undefined;
 };
 
-const backHref: Route = { pathname: '/admin/nastenka' };
+const entity = Announcement;
 
-export const AnnouncementForm = ({ id = '' }: {id?: string}) => {
+export function AnnouncementForm({
+  id,
+  data,
+}: {
+  id?: string;
+  data?: AnnouncementFragment | null;
+}) {
   const router = useRouter();
-  const [query] = useQuery({query: AnnouncementDocument, variables: { id }});
-  const data = query.data?.upozorneni;
-  const title = id ? data?.upNadpis || '(Bez názvu)' : 'Nový příspěvek';
+  const title = id ? entity.title(data) : 'Nový příspěvek';
 
   const create = useMutation(CreateAnnouncementDocument)[1];
   const update = useMutation(UpdateAnnouncementDocument)[1];
@@ -67,26 +69,22 @@ export const AnnouncementForm = ({ id = '' }: {id?: string}) => {
       const id = res.data?.createUpozorneni?.upozorneni?.id;
       toast.success('Přidáno.');
       if (id) {
-        router.replace({ pathname: '/admin/nastenka/[id]', query: { id } });
+        router.replace(entity.editRoute(id));
       } else {
         reset(undefined);
       }
     }
   });
 
-  if (query.data && query.data.upozorneni === null) {
-    return <ErrorPage error="Nenalezeno" />;
-  }
-
   return (
     <form className="space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <TitleBar backHref={backHref} title={title}>
+      <TitleBar backHref={entity.listRoute} title={title}>
         {id && (
           <DeleteButton
             doc={DeleteAnnouncementDocument}
             id={id}
             title="smazat příspěvek"
-            onDelete={() => router.push(backHref)}
+            onDelete={() => router.push(entity.listRoute)}
           />
         )}
         <SubmitButton loading={onSubmit.loading} />
@@ -105,6 +103,12 @@ export const AnnouncementForm = ({ id = '' }: {id?: string}) => {
         label="Skrýt příspěvek dne"
       />
       <CheckboxElement control={control} name="isVisible" value="1" label="Viditelný" />
+      <CheckboxElement
+        control={control}
+        name="sticky"
+        value="1"
+        label="Připnutý nahoru"
+      />
       <RichTextEditor
         initialState={data?.upText}
         control={control}
@@ -113,4 +117,6 @@ export const AnnouncementForm = ({ id = '' }: {id?: string}) => {
       />
     </form>
   );
-};
+}
+
+AnnouncementForm.fetcher = makeEntityFetcher(AnnouncementDocument)((x) => x?.upozorneni);

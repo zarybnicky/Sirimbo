@@ -17,6 +17,9 @@ export async function fetchGql<TResult, TVariables>(
     method: 'POST',
     headers: {
       'content-type': 'application/json',
+      ...(process.env.NEXT_PUBLIC_TENANT_ID ? {
+        'x-tenant-id': process.env.NEXT_PUBLIC_TENANT_ID,
+      } : {}),
     },
     body: JSON.stringify({
       query: print(document),

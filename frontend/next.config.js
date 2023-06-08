@@ -7,16 +7,16 @@ if (process.env.ANALYZE === 'true') {
 }
 
 let withSentryConfig = (x) => x;
-// if (process.env.NODE_ENV === 'production') {
-//   withSentryConfig = cfg => require('@sentry/nextjs').withSentryConfig({
-//     ...cfg,
-//     sentry: {
-//       hideSourceMaps: true,
-//     },
-//   }, {
-//     silent: true, // Suppresses all logs
-//   });
-// }
+if (process.env.NODE_ENV === 'production') {
+  withSentryConfig = cfg => require('@sentry/nextjs').withSentryConfig({
+    ...cfg,
+    sentry: {
+      hideSourceMaps: true,
+    },
+  }, {
+    silent: true,  // Suppresses all logs
+  });
+}
 
 module.exports = require('nextjs-routes/config')({ outDir: '.' })(
   withBundleAnalyzer(
@@ -38,19 +38,11 @@ module.exports = require('nextjs-routes/config')({ outDir: '.' })(
         return [
           { source: '/home', destination: '/', permanent: true },
           { source: '/aktualne', destination: '/articles', permanent: true },
-          {
-            source: '/aktualne/:path*',
-            destination: '/articles/:path*',
-            permanent: true,
-          },
+          { source: '/aktualne/:path*', destination: '/articles/:path*', permanent: true },
           { source: '/nopassword', destination: '/forgotten-password', permanent: true },
           { source: '/registrace', destination: '/register', permanent: true },
           { source: '/kontakt', destination: '/contact', permanent: true },
-          {
-            source: '/oklubu/saly',
-            destination: '/kde-trenujeme',
-            permanent: true,
-          },
+          { source: '/oklubu/saly', destination: '/kde-trenujeme', permanent: true },
           { source: '/oklubu/klubovi-treneri', destination: '/treneri', permanent: true },
           { source: '/oklubu/externi-treneri', destination: '/treneri', permanent: true },
           { source: '/member', destination: '/dashboard', permanent: true },

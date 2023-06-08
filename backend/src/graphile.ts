@@ -61,16 +61,21 @@ async function loadUserFromSession(req: express.Request): Promise<{ [k: string]:
     role: 'anonymous',
     'jwt.claims.session_id': null,
     'jwt.claims.user_id': null,
-    'jwt.claims.tenant_id': 1,
+    'jwt.claims.tenant_id': '1',
   };
 
-  const {
-    rows: [host],
-  } = await pool.query('select id from tenant where $1 = any (origins)', [
-    req.headers.host,
-  ]);
-  if (host) {
-    settings['jwt.claims.tenant_id'] = host.id;
+  if (req.headersDistinct['x-tenant-id']?.length) {
+    settings['jwt.claims.tenant_id'] = req.headersDistinct['x-tenant-id'][0];
+  } else {
+    const {
+      rows: [host],
+    } = await pool.query(
+      'select id from tenant where $1 = any (origins) or $2 = any (origins)',
+      [req.headers.host, req.headers.origin],
+    );
+    if (host) {
+      settings['jwt.claims.tenant_id'] = host.id;
+    }
   }
 
   const {
