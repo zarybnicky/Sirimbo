@@ -31,14 +31,12 @@ in {
         description = "${pkgName} Nginx vhost domain";
         example = "tkolymp.cz";
       };
-      domainAliases = lib.mkOption {
-        type = lib.types.listOf lib.types.str;
-        description = "${pkgName} Nginx vhost domain aliases";
-        default = [];
-        example = "[www.tkolymp.cz]";
-      };
       ssl = lib.mkEnableOption "${pkgName} enable ssl";
       debug = lib.mkEnableOption "${pkgName} enable debug mode";
+      database = lib.mkOption {
+        type = lib.types.str;
+        description = "${pkgName} Postgres DB";
+      };
     };
 
     smtp = {
@@ -64,7 +62,12 @@ in {
       };
     };
 
+    migrations = {
+      enable = lib.mkEnableOption "${pkgName}";
+    };
+
     minio = {
+      enable = lib.mkEnableOption "${pkgName}";
       port = lib.mkOption {
         type = lib.types.int;
         description = "${pkgName} internal Minio port";
@@ -86,6 +89,11 @@ in {
         type = lib.types.int;
         description = "${pkgName} Next.js port";
         example = 3002;
+      };
+      backend = lib.mkOption {
+        type = lib.types.optional lib.types.str;
+        description = "${pkgName} backend";
+        example = "api.rozpisovnik.cz";
       };
 
       domain = lib.mkOption {
@@ -126,12 +134,10 @@ in {
         wantedBy = [ "multi-user.target" ];
 
         environment = {
-          PGDATABASE = "olymp";
-          PGHOST = "/run/postgresql";
           PORT = toString cfg.frontend.port;
-          GRAPHQL_BACKEND = "http://localhost:${toString cfg.backend.port}";
-          NEXT_PUBLIC_GRAPHQL_BACKEND = "";
-          NEXT_PUBLIC_SENTRY_ENVIRONMENT = cfg.domain;
+          GRAPHQL_BACKEND = if cfg.frontend.backend then cfg.frontend.backend else "http://localhost:${toString cfg.backend.port}";
+          NEXT_PUBLIC_GRAPHQL_BACKEND = if cfg.frontend.backend then cfg.frontend.backend else cfg.backend.domain;
+          NEXT_PUBLIC_SENTRY_ENVIRONMENT = cfg.frontend.domain;
         };
 
         preStart = ''
@@ -157,15 +163,12 @@ in {
         recommendedProxySettings = true;
 
         virtualHosts.${cfg.frontend.domain} = {
-          enableACME = cfg.ssl;
-          forceSSL = cfg.ssl;
+          enableACME = cfg.frontend.ssl;
+          forceSSL = cfg.frontend.ssl;
 
           extraConfig = ''
-            # To allow special characters in headers
             ignore_invalid_headers off;
-            # Allow any size file to be uploaded.
             client_max_body_size 0;
-            # To disable buffering
             proxy_buffering off;
             add_header Access-Control-Allow-Credentials true;
             add_header Access-Control-Allow-Origin *;
@@ -184,7 +187,7 @@ in {
       };
     })
 
-    (lib.mkIf cfg.backend.enable {
+    (lib.mkId cfg.minio.enable {
       services.minio = {
         enable = true;
         browser = false;
@@ -224,13 +227,15 @@ in {
           mc --config-dir . policy set download minio/public
         '';
       };
+    })
 
+    (lib.mkIf cfg.backend.enable {
       systemd.services.sirimbo-backend-beta = {
         after = [ "network.target" ];
         wantedBy = [ "multi-user.target" ];
 
         environment = {
-          PGDATABASE = "olymp";
+          PGDATABASE = cfg.backend.database;
           PGHOST = "/run/postgresql";
           PORT = toString cfg.backend.port;
           DOMAIN = cfg.backend.domain;
@@ -259,22 +264,6 @@ in {
         };
       };
 
-      systemd.services.sirimbo-migrate-beta = {
-        description = "${pkgName} Migrations";
-        wantedBy = [ "multi-user.target" ];
-        after = [ "network-online.target" "postgresql.service" ];
-        requires = [ "postgresql.service" ];
-        environment.DATABASE_URL = "postgres://${cfg.user}@localhost/olymp";
-        serviceConfig = {
-          User = cfg.user;
-          Group = cfg.group;
-          Type = "oneshot";
-          RemainAfterExit = "true";
-          WorkingDirectory = pkgs.sirimbo-migrations-beta;
-          ExecStart = "${pkgs.graphile-migrate}/bin/graphile-migrate migrate";
-        };
-      };
-
       services.nginx = {
         enable = true;
         enableReload = true;
@@ -286,14 +275,10 @@ in {
         virtualHosts.${cfg.backend.domain} = {
           enableACME = cfg.backend.ssl;
           forceSSL = cfg.backend.ssl;
-          serverAliases = cfg.backend.domainAliases;
 
           extraConfig = ''
-            # To allow special characters in headers
             ignore_invalid_headers off;
-            # Allow any size file to be uploaded.
             client_max_body_size 0;
-            # To disable buffering
             proxy_buffering off;
             add_header Access-Control-Allow-Credentials true;
             add_header Access-Control-Allow-Origin *;
@@ -312,6 +297,24 @@ in {
             proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";
             proxyWebsockets = true;
           };
+        };
+      };
+    })
+
+    (lib.mkIf cfg.migrations.enable {
+      systemd.services.sirimbo-migrate-beta = {
+        description = "${pkgName} Migrations";
+        wantedBy = [ "multi-user.target" ];
+        after = [ "network-online.target" "postgresql.service" ];
+        requires = [ "postgresql.service" ];
+        environment.DATABASE_URL = "postgres://${cfg.user}@localhost/olymp";
+        serviceConfig = {
+          User = cfg.user;
+          Group = cfg.group;
+          Type = "oneshot";
+          RemainAfterExit = "true";
+          WorkingDirectory = pkgs.sirimbo-migrations-beta;
+          ExecStart = "${pkgs.graphile-migrate}/bin/graphile-migrate migrate";
         };
       };
     })
