@@ -4,6 +4,7 @@ import type { init, pageView } from 'react-facebook-pixel';
 import { useRouter } from 'next/router';
 import { GoogleAnalytics } from 'nextjs-google-analytics';
 import { useAuth } from 'lib/data/use-auth';
+import { origin } from 'lib/query';
 
 export const Tracking = React.memo(function Tracking() {
   const router = useRouter();
@@ -20,7 +21,7 @@ export const Tracking = React.memo(function Tracking() {
     (async () => {
       const posthog = (await import('posthog-js')).posthog;
       posthog.init('phc_H2WM9q2xXVFl1wEak9TcQVAsOpWNGuauzAvyOmBquYQ', {
-        api_host: 'https://tkolymp.cz/ingest',
+        api_host: `${origin}/ingest`,
       });
       posthogRef.current = posthog;
     })();

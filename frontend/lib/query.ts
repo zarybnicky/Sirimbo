@@ -7,7 +7,7 @@ import { relayPagination } from '@urql/exchange-graphcache/extras';
 export const origin =
   typeof window === 'undefined'
   ? (process.env.GRAPHQL_BACKEND ?? `http://localhost:${process.env.PORT || 3000}`)
-  : (process.env.NEXT_PUBLIC_GRAPHQL_BACKEND ?? '')
+  : (process.env.NEXT_PUBLIC_GRAPHQL_BACKEND ?? window.origin);
 
 export async function fetchGql<TResult, TVariables>(
   document: TypedDocumentNode<TResult, TVariables>,
