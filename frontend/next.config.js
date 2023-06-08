@@ -69,7 +69,6 @@ module.exports = require('nextjs-routes/config')({ outDir: '.' })(
             { source: '/member/download', destination: `${graphqlUrl}/member/download` },
             { source: '/graphql', destination: `${graphqlUrl}/graphql` },
             { source: '/graphqli', destination: `${graphqlUrl}/graphqli` },
-            { source: '/old/:path*', destination: `${phpUrl}/old/:path*` },
             { source: '/galerie/:path*', destination: `${phpUrl}/galerie/:path*` },
           ];
         } else {
