@@ -167,15 +167,19 @@ in {
           enableACME = cfg.frontend.ssl;
           forceSSL = cfg.frontend.ssl;
 
-          extraConfig = ''
+          extraConfig = if cfg.frontend.domain != cfg.backend.domain then ''
             ignore_invalid_headers off;
             client_max_body_size 0;
             proxy_buffering off;
-            add_header Access-Control-Allow-Credentials true;
-            add_header Access-Control-Allow-Origin *;
-            add_header Access-Control-Allow-Methods GET,OPTIONS,PATCH,DELETE,POST,PUT;
-            add_header Access-Control-Allow-Headers X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version;
-          '';
+            if ($http_origin = '''){
+              set $http_origin "*";
+            }
+            proxy_hide_header Access-Control-Allow-Origin;
+            add_header Access-Control-Allow-Origin $http_origin always;
+            add_header Access-Control-Allow-Credentials 'true' always;
+            add_header Access-Control-Allow-Methods 'GET,OPTIONS,PATCH,DELETE,POST,PUT' always;
+            add_header Access-Control-Allow-Headers 'X-CSRF-Token,X-Requested-With,Accept,Accept-Version,Content-Length,Content-MD5,Content-Type,Date,X-Api-Version' always;
+          '' else "";
 
           locations."/gallery".root = cfg.stateDir;
           locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
@@ -281,10 +285,14 @@ in {
             ignore_invalid_headers off;
             client_max_body_size 0;
             proxy_buffering off;
-            add_header Access-Control-Allow-Credentials true;
-            add_header Access-Control-Allow-Origin *;
-            add_header Access-Control-Allow-Methods GET,OPTIONS,PATCH,DELETE,POST,PUT;
-            add_header Access-Control-Allow-Headers X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version;
+            if ($http_origin = '''){
+              set $http_origin "*";
+            }
+            proxy_hide_header Access-Control-Allow-Origin;
+            add_header Access-Control-Allow-Origin $http_origin always;
+            add_header Access-Control-Allow-Credentials 'true' always;
+            add_header Access-Control-Allow-Methods 'GET,OPTIONS,PATCH,DELETE,POST,PUT' always;
+            add_header Access-Control-Allow-Headers 'X-CSRF-Token,X-Requested-With,Accept,Accept-Version,Content-Length,Content-MD5,Content-Type,Date,X-Api-Version' always;
           '';
 
           locations."/member/download" = {
