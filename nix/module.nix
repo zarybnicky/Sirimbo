@@ -136,8 +136,8 @@ in {
 
         environment = {
           PORT = toString cfg.frontend.port;
-          GRAPHQL_BACKEND = cfg.frontend.backend or "http://localhost:${toString cfg.backend.port}";
-          NEXT_PUBLIC_GRAPHQL_BACKEND = cfg.frontend.backend or cfg.backend.domain;
+          GRAPHQL_BACKEND = if cfg.frontend.backend != null then cfg.frontend.backend else "http://localhost:${toString cfg.backend.port}";
+          NEXT_PUBLIC_GRAPHQL_BACKEND = if cfg.frontend.backend != null then cfg.frontend.backend else cfg.backend.domain;
           NEXT_PUBLIC_SENTRY_ENVIRONMENT = cfg.frontend.domain;
         };
 
