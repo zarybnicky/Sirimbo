@@ -73,7 +73,9 @@ module.exports = require('nextjs-routes/config')({ outDir: '.' })(
             { source: '/galerie/:path*', destination: `${phpUrl}/galerie/:path*` },
           ];
         } else {
-          return [];
+          return [
+            { source: '/galerie/:path*', destination: 'https://api.rozpisovnik.cz/galerie/:path*' },
+          ];
         }
       },
 

@@ -295,6 +295,9 @@ in {
             add_header Access-Control-Allow-Headers 'X-CSRF-Token,X-Requested-With,Accept,Accept-Version,Content-Length,Content-MD5,Content-Type,Date,X-Api-Version' always;
           '';
 
+          locations."/gallery".root = cfg.stateDir;
+          locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
+
           locations."/member/download" = {
             proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";
           };
