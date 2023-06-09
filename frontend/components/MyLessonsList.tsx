@@ -42,7 +42,7 @@ export const MyLessonsList: React.FC = () => {
         <div className="text-stone-600">Žádné lekce tento týden</div>
       )}
 
-      <div className="flex flex-wrap gap-x-2">
+      <div className="flex flex-wrap flex-col gap-x-2">
         {Object.entries(lessonsPerDay).map(([key, lessons]) => (
           <LessonList
             key={key}

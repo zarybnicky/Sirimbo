@@ -120,6 +120,7 @@ create policy admin_all on upozorneni_skupiny to administrator using (true) with
 create policy member_view on upozorneni_skupiny for select to member using (true);
 create policy my_tenant on upozorneni_skupiny as restrictive using (tenant_id = current_tenant_id()) with check (tenant_id = current_tenant_id());
 
+/*
 create or replace view lesson as
   select
     ri_id as id,
@@ -155,3 +156,4 @@ create or replace view lesson_attendee_couple as
 comment on view lesson_attendee_couple is E'@foreignKey (tenant_id) references tenant (id)
 @foreignKey (lesson_id) references lesson (id)
 @foreignKey (couple_id) references pary (id)';
+*/
