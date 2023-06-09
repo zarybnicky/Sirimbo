@@ -64,8 +64,8 @@ const AnimatedCheck = () => (
       className="animated circle"
       fill="none"
       stroke="currentColor"
-      stroke-width="6"
-      stroke-miterlimit="10"
+      strokeWidth="6"
+      strokeMiterlimit="10"
       cx="65.1"
       cy="65.1"
       r="62.1"
@@ -74,9 +74,9 @@ const AnimatedCheck = () => (
       className="animated check"
       fill="none"
       stroke="currentColor"
-      stroke-width="6"
-      stroke-linecap="round"
-      stroke-miterlimit="10"
+      strokeWidth="6"
+      strokeLinecap="round"
+      strokeMiterlimit="10"
       points="100.2,40.2 51.5,88.8 29.8,67.5 "
     />
   </svg>

@@ -134,6 +134,14 @@ export default withUrqlClient(
       ssrExchange,
       fetchExchange,
     ],
+    fetchOptions: {
+      credentials: 'include',
+      headers: {
+        ...(process.env.NEXT_PUBLIC_TENANT_ID ? {
+          'x-tenant-id': process.env.NEXT_PUBLIC_TENANT_ID,
+        } : {}),
+      },
+    },
   }),
   { ssr: false },
 )(App);

@@ -178,7 +178,7 @@ in {
             add_header Access-Control-Allow-Origin $http_origin always;
             add_header Access-Control-Allow-Credentials 'true' always;
             add_header Access-Control-Allow-Methods 'GET,OPTIONS,PATCH,DELETE,POST,PUT' always;
-            add_header Access-Control-Allow-Headers 'X-CSRF-Token,X-Requested-With,Accept,Accept-Version,Content-Length,Content-MD5,Content-Type,Date,X-Api-Version' always;
+            add_header Access-Control-Allow-Headers 'X-Tenant-Id,X-CSRF-Token,X-Requested-With,Accept,Accept-Version,Content-Length,Content-MD5,Content-Type,Date,X-Api-Version' always;
           '' else "";
 
           locations."/gallery".root = cfg.stateDir;
@@ -292,7 +292,7 @@ in {
             add_header Access-Control-Allow-Origin $http_origin always;
             add_header Access-Control-Allow-Credentials 'true' always;
             add_header Access-Control-Allow-Methods 'GET,OPTIONS,PATCH,DELETE,POST,PUT' always;
-            add_header Access-Control-Allow-Headers 'X-CSRF-Token,X-Requested-With,Accept,Accept-Version,Content-Length,Content-MD5,Content-Type,Date,X-Api-Version' always;
+            add_header Access-Control-Allow-Headers 'X-Tenant-Id,X-CSRF-Token,X-Requested-With,Accept,Accept-Version,Content-Length,Content-MD5,Content-Type,Date,X-Api-Version' always;
           '';
 
           locations."/gallery".root = cfg.stateDir;
