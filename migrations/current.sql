@@ -119,3 +119,39 @@ select app_private.drop_policies('public.upozorneni_skupiny');
 create policy admin_all on upozorneni_skupiny to administrator using (true) with check (true);
 create policy member_view on upozorneni_skupiny for select to member using (true);
 create policy my_tenant on upozorneni_skupiny as restrictive using (tenant_id = current_tenant_id()) with check (tenant_id = current_tenant_id());
+
+create or replace view lesson as
+  select
+    ri_id as id,
+    rozpis_item.tenant_id as tenant_id,
+    (r_datum + ri_od) as since,
+    (r_datum + ri_do) as until,
+    r_kde as location,
+    r_visible as is_published,
+    r_lock or ri_lock as is_locked,
+    r_timestamp as created_at,
+    r_timestamp as updated_at
+  from rozpis inner join rozpis_item on r_id=ri_id_rodic;
+comment on view lesson is E'@foreignKey (tenant_id) references tenant (id)';
+
+create or replace view lesson_trainer as
+  select
+    r_id as id,
+    rozpis_item.tenant_id as tenant_id,
+    ri_id as lesson_id,
+    r_trener as trainer_id
+  from rozpis inner join rozpis_item on r_id=ri_id_rodic;
+comment on view lesson_trainer is E'@foreignKey (tenant_id) references tenant (id)
+@foreignKey (lesson_id) references lesson (id)
+@foreignKey (trainer_id) references users (id)';
+
+create or replace view lesson_attendee_couple as
+  select
+    r_id as id,
+    rozpis_item.tenant_id as tenant_id,
+    ri_id as lesson_id,
+    ri_partner as couple_id
+  from rozpis inner join rozpis_item on r_id=ri_id_rodic;
+comment on view lesson_attendee_couple is E'@foreignKey (tenant_id) references tenant (id)
+@foreignKey (lesson_id) references lesson (id)
+@foreignKey (couple_id) references pary (id)';

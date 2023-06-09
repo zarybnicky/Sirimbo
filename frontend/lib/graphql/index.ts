@@ -4375,6 +4375,189 @@ export type GenderType =
   | 'UNSPECIFIED'
   | 'WOMAN';
 
+export type Lesson = {
+  __typename?: 'Lesson';
+  createdAt: Maybe<Scalars['Datetime']>;
+  id: Maybe<Scalars['BigInt']>;
+  isLocked: Maybe<Scalars['Boolean']>;
+  isPublished: Maybe<Scalars['Boolean']>;
+  /** Reads and enables pagination through a set of `LessonAttendeeCouple`. */
+  lessonAttendeeCouples: LessonAttendeeCouplesConnection;
+  /** Reads and enables pagination through a set of `LessonTrainer`. */
+  lessonTrainers: LessonTrainersConnection;
+  location: Maybe<Scalars['String']>;
+  since: Maybe<Scalars['Datetime']>;
+  /** Reads a single `Tenant` that is related to this `Lesson`. */
+  tenant: Maybe<Tenant>;
+  tenantId: Maybe<Scalars['BigInt']>;
+  until: Maybe<Scalars['Datetime']>;
+  updatedAt: Maybe<Scalars['Datetime']>;
+};
+
+
+export type LessonLessonAttendeeCouplesArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<LessonAttendeeCouplesOrderBy>>;
+};
+
+
+export type LessonLessonTrainersArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<LessonTrainersOrderBy>>;
+};
+
+export type LessonAttendeeCouple = {
+  __typename?: 'LessonAttendeeCouple';
+  /** Reads a single `Pary` that is related to this `LessonAttendeeCouple`. */
+  couple: Maybe<Pary>;
+  coupleId: Maybe<Scalars['BigInt']>;
+  id: Maybe<Scalars['BigInt']>;
+  /** Reads a single `Lesson` that is related to this `LessonAttendeeCouple`. */
+  lesson: Maybe<Lesson>;
+  lessonId: Maybe<Scalars['BigInt']>;
+  /** Reads a single `Tenant` that is related to this `LessonAttendeeCouple`. */
+  tenant: Maybe<Tenant>;
+  tenantId: Maybe<Scalars['BigInt']>;
+};
+
+/** A connection to a list of `LessonAttendeeCouple` values. */
+export type LessonAttendeeCouplesConnection = {
+  __typename?: 'LessonAttendeeCouplesConnection';
+  /** A list of edges which contains the `LessonAttendeeCouple` and cursor to aid in pagination. */
+  edges: Array<LessonAttendeeCouplesEdge>;
+  /** A list of `LessonAttendeeCouple` objects. */
+  nodes: Array<LessonAttendeeCouple>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `LessonAttendeeCouple` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `LessonAttendeeCouple` edge in the connection. */
+export type LessonAttendeeCouplesEdge = {
+  __typename?: 'LessonAttendeeCouplesEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']>;
+  /** The `LessonAttendeeCouple` at the end of the edge. */
+  node: LessonAttendeeCouple;
+};
+
+/** Methods to use when ordering `LessonAttendeeCouple`. */
+export type LessonAttendeeCouplesOrderBy =
+  | 'NATURAL'
+  | 'PARY_BY_COUPLE_ID__P_HODNOCENI_ASC'
+  | 'PARY_BY_COUPLE_ID__P_HODNOCENI_DESC'
+  | 'PARY_BY_COUPLE_ID__P_ID_ASC'
+  | 'PARY_BY_COUPLE_ID__P_ID_DESC'
+  | 'PARY_BY_COUPLE_ID__P_ID_PARTNER_ASC'
+  | 'PARY_BY_COUPLE_ID__P_ID_PARTNER_DESC'
+  | 'PARY_BY_COUPLE_ID__P_ID_PARTNERKA_ASC'
+  | 'PARY_BY_COUPLE_ID__P_ID_PARTNERKA_DESC'
+  | 'TENANT_BY_TENANT_ID__ID_ASC'
+  | 'TENANT_BY_TENANT_ID__ID_DESC';
+
+/** A connection to a list of `Lesson` values. */
+export type LessonsConnection = {
+  __typename?: 'LessonsConnection';
+  /** A list of edges which contains the `Lesson` and cursor to aid in pagination. */
+  edges: Array<LessonsEdge>;
+  /** A list of `Lesson` objects. */
+  nodes: Array<Lesson>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Lesson` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Lesson` edge in the connection. */
+export type LessonsEdge = {
+  __typename?: 'LessonsEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']>;
+  /** The `Lesson` at the end of the edge. */
+  node: Lesson;
+};
+
+/** Methods to use when ordering `Lesson`. */
+export type LessonsOrderBy =
+  | 'LESSON_ATTENDEE_COUPLES_BY_LESSON_ID__COUNT_ASC'
+  | 'LESSON_ATTENDEE_COUPLES_BY_LESSON_ID__COUNT_DESC'
+  | 'LESSON_TRAINERS_BY_LESSON_ID__COUNT_ASC'
+  | 'LESSON_TRAINERS_BY_LESSON_ID__COUNT_DESC'
+  | 'NATURAL'
+  | 'TENANT_BY_TENANT_ID__ID_ASC'
+  | 'TENANT_BY_TENANT_ID__ID_DESC';
+
+export type LessonTrainer = {
+  __typename?: 'LessonTrainer';
+  id: Maybe<Scalars['BigInt']>;
+  /** Reads a single `Lesson` that is related to this `LessonTrainer`. */
+  lesson: Maybe<Lesson>;
+  lessonId: Maybe<Scalars['BigInt']>;
+  /** Reads a single `Tenant` that is related to this `LessonTrainer`. */
+  tenant: Maybe<Tenant>;
+  tenantId: Maybe<Scalars['BigInt']>;
+  /** Reads a single `User` that is related to this `LessonTrainer`. */
+  trainer: Maybe<User>;
+  trainerId: Maybe<Scalars['BigInt']>;
+};
+
+/** A connection to a list of `LessonTrainer` values. */
+export type LessonTrainersConnection = {
+  __typename?: 'LessonTrainersConnection';
+  /** A list of edges which contains the `LessonTrainer` and cursor to aid in pagination. */
+  edges: Array<LessonTrainersEdge>;
+  /** A list of `LessonTrainer` objects. */
+  nodes: Array<LessonTrainer>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `LessonTrainer` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `LessonTrainer` edge in the connection. */
+export type LessonTrainersEdge = {
+  __typename?: 'LessonTrainersEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']>;
+  /** The `LessonTrainer` at the end of the edge. */
+  node: LessonTrainer;
+};
+
+/** Methods to use when ordering `LessonTrainer`. */
+export type LessonTrainersOrderBy =
+  | 'NATURAL'
+  | 'TENANT_BY_TENANT_ID__ID_ASC'
+  | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'USER_BY_TRAINER_ID__U_BAN_ASC'
+  | 'USER_BY_TRAINER_ID__U_BAN_DESC'
+  | 'USER_BY_TRAINER_ID__U_CONFIRMED_ASC'
+  | 'USER_BY_TRAINER_ID__U_CONFIRMED_DESC'
+  | 'USER_BY_TRAINER_ID__U_GROUP_ASC'
+  | 'USER_BY_TRAINER_ID__U_GROUP_DESC'
+  | 'USER_BY_TRAINER_ID__U_ID_ASC'
+  | 'USER_BY_TRAINER_ID__U_ID_DESC'
+  | 'USER_BY_TRAINER_ID__U_JMENO_ASC'
+  | 'USER_BY_TRAINER_ID__U_JMENO_DESC'
+  | 'USER_BY_TRAINER_ID__U_LOGIN_ASC'
+  | 'USER_BY_TRAINER_ID__U_LOGIN_DESC'
+  | 'USER_BY_TRAINER_ID__U_NAROZENI_ASC'
+  | 'USER_BY_TRAINER_ID__U_NAROZENI_DESC'
+  | 'USER_BY_TRAINER_ID__U_PRIJMENI_ASC'
+  | 'USER_BY_TRAINER_ID__U_PRIJMENI_DESC'
+  | 'USER_BY_TRAINER_ID__U_SKUPINA_ASC'
+  | 'USER_BY_TRAINER_ID__U_SKUPINA_DESC'
+  | 'USER_BY_TRAINER_ID__U_SYSTEM_ASC'
+  | 'USER_BY_TRAINER_ID__U_SYSTEM_DESC';
+
 export type Location = {
   __typename?: 'Location';
   description: Scalars['JSON'];
@@ -6137,6 +6320,8 @@ export type PariesEdge = {
 
 /** Methods to use when ordering `Pary`. */
 export type PariesOrderBy =
+  | 'LESSON_ATTENDEE_COUPLES_BY_COUPLE_ID__COUNT_ASC'
+  | 'LESSON_ATTENDEE_COUPLES_BY_COUPLE_ID__COUNT_DESC'
   | 'NABIDKA_ITEMS_BY_NI_PARTNER__COUNT_ASC'
   | 'NABIDKA_ITEMS_BY_NI_PARTNER__COUNT_DESC'
   | 'NATURAL'
@@ -6196,6 +6381,8 @@ export type PariesOrderBy =
 export type Pary = {
   __typename?: 'Pary';
   id: Maybe<Scalars['BigInt']>;
+  /** Reads and enables pagination through a set of `LessonAttendeeCouple`. */
+  lessonAttendeeCouplesByCoupleId: LessonAttendeeCouplesConnection;
   /** Reads and enables pagination through a set of `NabidkaItem`. */
   nabidkaItemsByNiPartner: NabidkaItemsConnection;
   pArchiv: Scalars['Boolean'];
@@ -6217,6 +6404,16 @@ export type Pary = {
   userByPIdPartner: Maybe<User>;
   /** Reads a single `User` that is related to this `Pary`. */
   userByPIdPartnerka: Maybe<User>;
+};
+
+
+export type ParyLessonAttendeeCouplesByCoupleIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<LessonAttendeeCouplesOrderBy>>;
 };
 
 
@@ -7351,6 +7548,12 @@ export type Query = {
   getCurrentCouple: Maybe<Pary>;
   getCurrentTenant: Maybe<Tenant>;
   getCurrentUser: Maybe<User>;
+  /** Reads and enables pagination through a set of `LessonAttendeeCouple`. */
+  lessonAttendeeCouples: Maybe<LessonAttendeeCouplesConnection>;
+  /** Reads and enables pagination through a set of `Lesson`. */
+  lessons: Maybe<LessonsConnection>;
+  /** Reads and enables pagination through a set of `LessonTrainer`. */
+  lessonTrainers: Maybe<LessonTrainersConnection>;
   location: Maybe<Location>;
   locationAttachment: Maybe<LocationAttachment>;
   /** Reads and enables pagination through a set of `LocationAttachment`. */
@@ -7699,6 +7902,39 @@ export type QueryGalerieFotosArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<GalerieFotosOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLessonAttendeeCouplesArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<LessonAttendeeCouplesOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLessonsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<LessonsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLessonTrainersArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<LessonTrainersOrderBy>>;
 };
 
 
@@ -9014,6 +9250,12 @@ export type Tenant = {
   /** Reads and enables pagination through a set of `CohortGroup`. */
   cohortGroupsByTenant: CohortGroupsConnection;
   id: Scalars['BigInt'];
+  /** Reads and enables pagination through a set of `LessonAttendeeCouple`. */
+  lessonAttendeeCouples: LessonAttendeeCouplesConnection;
+  /** Reads and enables pagination through a set of `Lesson`. */
+  lessons: LessonsConnection;
+  /** Reads and enables pagination through a set of `LessonTrainer`. */
+  lessonTrainers: LessonTrainersConnection;
   memberInfo: Scalars['String'];
   name: Scalars['String'];
   origins: Array<Maybe<Scalars['String']>>;
@@ -9034,6 +9276,36 @@ export type TenantCohortGroupsByTenantArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<CohortGroupsOrderBy>>;
+};
+
+
+export type TenantLessonAttendeeCouplesArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<LessonAttendeeCouplesOrderBy>>;
+};
+
+
+export type TenantLessonsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<LessonsOrderBy>>;
+};
+
+
+export type TenantLessonTrainersArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<LessonTrainersOrderBy>>;
 };
 
 
@@ -9336,6 +9608,12 @@ export type TenantsOrderBy =
   | 'COHORT_GROUPS_BY_TENANT__COUNT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
+  | 'LESSON_ATTENDEE_COUPLES_BY_TENANT_ID__COUNT_ASC'
+  | 'LESSON_ATTENDEE_COUPLES_BY_TENANT_ID__COUNT_DESC'
+  | 'LESSON_TRAINERS_BY_TENANT_ID__COUNT_ASC'
+  | 'LESSON_TRAINERS_BY_TENANT_ID__COUNT_DESC'
+  | 'LESSONS_BY_TENANT_ID__COUNT_ASC'
+  | 'LESSONS_BY_TENANT_ID__COUNT_DESC'
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
@@ -11041,6 +11319,8 @@ export type User = {
   hasValidPayment: Maybe<Scalars['Boolean']>;
   id: Maybe<Scalars['BigInt']>;
   inPublicCohort: Maybe<Scalars['Boolean']>;
+  /** Reads and enables pagination through a set of `LessonTrainer`. */
+  lessonTrainersByTrainerId: LessonTrainersConnection;
   /** Reads and enables pagination through a set of `Nabidka`. */
   nabidkasByNTrener: NabidkasConnection;
   /** Reads and enables pagination through a set of `Pary`. */
@@ -11185,6 +11465,16 @@ export type UserGalerieFotosByGfKdoArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<GalerieFotosOrderBy>>;
+};
+
+
+export type UserLessonTrainersByTrainerIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<LessonTrainersOrderBy>>;
 };
 
 
@@ -11439,6 +11729,8 @@ export type UsersOrderBy =
   | 'DOKUMENTIES_BY_D_KDO__COUNT_DESC'
   | 'GALERIE_FOTOS_BY_GF_KDO__COUNT_ASC'
   | 'GALERIE_FOTOS_BY_GF_KDO__COUNT_DESC'
+  | 'LESSON_TRAINERS_BY_TRAINER_ID__COUNT_ASC'
+  | 'LESSON_TRAINERS_BY_TRAINER_ID__COUNT_DESC'
   | 'NABIDKAS_BY_N_TRENER__COUNT_ASC'
   | 'NABIDKAS_BY_N_TRENER__COUNT_DESC'
   | 'NATURAL'
@@ -11677,6 +11969,15 @@ export type GraphCacheKeysConfig = {
   GalerieFoto?: (data: WithTypename<GalerieFoto>) => null | string,
   GalerieFotosConnection?: (data: WithTypename<GalerieFotosConnection>) => null | string,
   GalerieFotosEdge?: (data: WithTypename<GalerieFotosEdge>) => null | string,
+  Lesson?: (data: WithTypename<Lesson>) => null | string,
+  LessonAttendeeCouple?: (data: WithTypename<LessonAttendeeCouple>) => null | string,
+  LessonAttendeeCouplesConnection?: (data: WithTypename<LessonAttendeeCouplesConnection>) => null | string,
+  LessonAttendeeCouplesEdge?: (data: WithTypename<LessonAttendeeCouplesEdge>) => null | string,
+  LessonsConnection?: (data: WithTypename<LessonsConnection>) => null | string,
+  LessonsEdge?: (data: WithTypename<LessonsEdge>) => null | string,
+  LessonTrainer?: (data: WithTypename<LessonTrainer>) => null | string,
+  LessonTrainersConnection?: (data: WithTypename<LessonTrainersConnection>) => null | string,
+  LessonTrainersEdge?: (data: WithTypename<LessonTrainersEdge>) => null | string,
   Location?: (data: WithTypename<Location>) => null | string,
   LocationAttachment?: (data: WithTypename<LocationAttachment>) => null | string,
   LocationAttachmentsConnection?: (data: WithTypename<LocationAttachmentsConnection>) => null | string,
@@ -11854,6 +12155,9 @@ export type GraphCacheResolvers = {
     getCurrentCouple?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<Pary> | string>,
     getCurrentTenant?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<Tenant> | string>,
     getCurrentUser?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<User> | string>,
+    lessonAttendeeCouples?: GraphCacheResolver<WithTypename<Query>, QueryLessonAttendeeCouplesArgs, WithTypename<LessonAttendeeCouplesConnection> | string>,
+    lessons?: GraphCacheResolver<WithTypename<Query>, QueryLessonsArgs, WithTypename<LessonsConnection> | string>,
+    lessonTrainers?: GraphCacheResolver<WithTypename<Query>, QueryLessonTrainersArgs, WithTypename<LessonTrainersConnection> | string>,
     location?: GraphCacheResolver<WithTypename<Query>, QueryLocationArgs, WithTypename<Location> | string>,
     locationAttachment?: GraphCacheResolver<WithTypename<Query>, QueryLocationAttachmentArgs, WithTypename<LocationAttachment> | string>,
     locationAttachments?: GraphCacheResolver<WithTypename<Query>, QueryLocationAttachmentsArgs, WithTypename<LocationAttachmentsConnection> | string>,
@@ -12846,6 +13150,68 @@ export type GraphCacheResolvers = {
     cursor?: GraphCacheResolver<WithTypename<GalerieFotosEdge>, Record<string, never>, Scalars['Cursor'] | string>,
     node?: GraphCacheResolver<WithTypename<GalerieFotosEdge>, Record<string, never>, WithTypename<GalerieFoto> | string>
   },
+  Lesson?: {
+    createdAt?: GraphCacheResolver<WithTypename<Lesson>, Record<string, never>, Scalars['Datetime'] | string>,
+    id?: GraphCacheResolver<WithTypename<Lesson>, Record<string, never>, Scalars['BigInt'] | string>,
+    isLocked?: GraphCacheResolver<WithTypename<Lesson>, Record<string, never>, Scalars['Boolean'] | string>,
+    isPublished?: GraphCacheResolver<WithTypename<Lesson>, Record<string, never>, Scalars['Boolean'] | string>,
+    lessonAttendeeCouples?: GraphCacheResolver<WithTypename<Lesson>, LessonLessonAttendeeCouplesArgs, WithTypename<LessonAttendeeCouplesConnection> | string>,
+    lessonTrainers?: GraphCacheResolver<WithTypename<Lesson>, LessonLessonTrainersArgs, WithTypename<LessonTrainersConnection> | string>,
+    location?: GraphCacheResolver<WithTypename<Lesson>, Record<string, never>, Scalars['String'] | string>,
+    since?: GraphCacheResolver<WithTypename<Lesson>, Record<string, never>, Scalars['Datetime'] | string>,
+    tenant?: GraphCacheResolver<WithTypename<Lesson>, Record<string, never>, WithTypename<Tenant> | string>,
+    tenantId?: GraphCacheResolver<WithTypename<Lesson>, Record<string, never>, Scalars['BigInt'] | string>,
+    until?: GraphCacheResolver<WithTypename<Lesson>, Record<string, never>, Scalars['Datetime'] | string>,
+    updatedAt?: GraphCacheResolver<WithTypename<Lesson>, Record<string, never>, Scalars['Datetime'] | string>
+  },
+  LessonAttendeeCouple?: {
+    couple?: GraphCacheResolver<WithTypename<LessonAttendeeCouple>, Record<string, never>, WithTypename<Pary> | string>,
+    coupleId?: GraphCacheResolver<WithTypename<LessonAttendeeCouple>, Record<string, never>, Scalars['BigInt'] | string>,
+    id?: GraphCacheResolver<WithTypename<LessonAttendeeCouple>, Record<string, never>, Scalars['BigInt'] | string>,
+    lesson?: GraphCacheResolver<WithTypename<LessonAttendeeCouple>, Record<string, never>, WithTypename<Lesson> | string>,
+    lessonId?: GraphCacheResolver<WithTypename<LessonAttendeeCouple>, Record<string, never>, Scalars['BigInt'] | string>,
+    tenant?: GraphCacheResolver<WithTypename<LessonAttendeeCouple>, Record<string, never>, WithTypename<Tenant> | string>,
+    tenantId?: GraphCacheResolver<WithTypename<LessonAttendeeCouple>, Record<string, never>, Scalars['BigInt'] | string>
+  },
+  LessonAttendeeCouplesConnection?: {
+    edges?: GraphCacheResolver<WithTypename<LessonAttendeeCouplesConnection>, Record<string, never>, Array<WithTypename<LessonAttendeeCouplesEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<LessonAttendeeCouplesConnection>, Record<string, never>, Array<WithTypename<LessonAttendeeCouple> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<LessonAttendeeCouplesConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<LessonAttendeeCouplesConnection>, Record<string, never>, Scalars['Int'] | string>
+  },
+  LessonAttendeeCouplesEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<LessonAttendeeCouplesEdge>, Record<string, never>, Scalars['Cursor'] | string>,
+    node?: GraphCacheResolver<WithTypename<LessonAttendeeCouplesEdge>, Record<string, never>, WithTypename<LessonAttendeeCouple> | string>
+  },
+  LessonsConnection?: {
+    edges?: GraphCacheResolver<WithTypename<LessonsConnection>, Record<string, never>, Array<WithTypename<LessonsEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<LessonsConnection>, Record<string, never>, Array<WithTypename<Lesson> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<LessonsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<LessonsConnection>, Record<string, never>, Scalars['Int'] | string>
+  },
+  LessonsEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<LessonsEdge>, Record<string, never>, Scalars['Cursor'] | string>,
+    node?: GraphCacheResolver<WithTypename<LessonsEdge>, Record<string, never>, WithTypename<Lesson> | string>
+  },
+  LessonTrainer?: {
+    id?: GraphCacheResolver<WithTypename<LessonTrainer>, Record<string, never>, Scalars['BigInt'] | string>,
+    lesson?: GraphCacheResolver<WithTypename<LessonTrainer>, Record<string, never>, WithTypename<Lesson> | string>,
+    lessonId?: GraphCacheResolver<WithTypename<LessonTrainer>, Record<string, never>, Scalars['BigInt'] | string>,
+    tenant?: GraphCacheResolver<WithTypename<LessonTrainer>, Record<string, never>, WithTypename<Tenant> | string>,
+    tenantId?: GraphCacheResolver<WithTypename<LessonTrainer>, Record<string, never>, Scalars['BigInt'] | string>,
+    trainer?: GraphCacheResolver<WithTypename<LessonTrainer>, Record<string, never>, WithTypename<User> | string>,
+    trainerId?: GraphCacheResolver<WithTypename<LessonTrainer>, Record<string, never>, Scalars['BigInt'] | string>
+  },
+  LessonTrainersConnection?: {
+    edges?: GraphCacheResolver<WithTypename<LessonTrainersConnection>, Record<string, never>, Array<WithTypename<LessonTrainersEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<LessonTrainersConnection>, Record<string, never>, Array<WithTypename<LessonTrainer> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<LessonTrainersConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<LessonTrainersConnection>, Record<string, never>, Scalars['Int'] | string>
+  },
+  LessonTrainersEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<LessonTrainersEdge>, Record<string, never>, Scalars['Cursor'] | string>,
+    node?: GraphCacheResolver<WithTypename<LessonTrainersEdge>, Record<string, never>, WithTypename<LessonTrainer> | string>
+  },
   Location?: {
     description?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, Scalars['JSON'] | string>,
     id?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -13013,6 +13379,7 @@ export type GraphCacheResolvers = {
   },
   Pary?: {
     id?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, Scalars['BigInt'] | string>,
+    lessonAttendeeCouplesByCoupleId?: GraphCacheResolver<WithTypename<Pary>, ParyLessonAttendeeCouplesByCoupleIdArgs, WithTypename<LessonAttendeeCouplesConnection> | string>,
     nabidkaItemsByNiPartner?: GraphCacheResolver<WithTypename<Pary>, ParyNabidkaItemsByNiPartnerArgs, WithTypename<NabidkaItemsConnection> | string>,
     pArchiv?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, Scalars['Boolean'] | string>,
     pHodnoceni?: GraphCacheResolver<WithTypename<Pary>, Record<string, never>, Scalars['Int'] | string>,
@@ -13378,6 +13745,9 @@ export type GraphCacheResolvers = {
   Tenant?: {
     cohortGroupsByTenant?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortGroupsByTenantArgs, WithTypename<CohortGroupsConnection> | string>,
     id?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['BigInt'] | string>,
+    lessonAttendeeCouples?: GraphCacheResolver<WithTypename<Tenant>, TenantLessonAttendeeCouplesArgs, WithTypename<LessonAttendeeCouplesConnection> | string>,
+    lessons?: GraphCacheResolver<WithTypename<Tenant>, TenantLessonsArgs, WithTypename<LessonsConnection> | string>,
+    lessonTrainers?: GraphCacheResolver<WithTypename<Tenant>, TenantLessonTrainersArgs, WithTypename<LessonTrainersConnection> | string>,
     memberInfo?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String'] | string>,
     name?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String'] | string>,
     origins?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Array<Scalars['String'] | string>>,
@@ -13787,6 +14157,7 @@ export type GraphCacheResolvers = {
     hasValidPayment?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Boolean'] | string>,
     id?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['BigInt'] | string>,
     inPublicCohort?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Boolean'] | string>,
+    lessonTrainersByTrainerId?: GraphCacheResolver<WithTypename<User>, UserLessonTrainersByTrainerIdArgs, WithTypename<LessonTrainersConnection> | string>,
     nabidkasByNTrener?: GraphCacheResolver<WithTypename<User>, UserNabidkasByNTrenerArgs, WithTypename<NabidkasConnection> | string>,
     pariesByPIdPartner?: GraphCacheResolver<WithTypename<User>, UserPariesByPIdPartnerArgs, WithTypename<PariesConnection> | string>,
     pariesByPIdPartnerka?: GraphCacheResolver<WithTypename<User>, UserPariesByPIdPartnerkaArgs, WithTypename<PariesConnection> | string>,

@@ -2,6 +2,7 @@
   "name": "sirimbo",
   "private": true,
   "workspaces": [
+    "kometa",
     "frontend",
     "backend",
     "schema"

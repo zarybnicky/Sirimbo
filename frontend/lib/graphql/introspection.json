@@ -8866,6 +8866,627 @@
       },
       {
         "kind": "OBJECT",
+        "name": "Lesson",
+        "fields": [
+          {
+            "name": "createdAt",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "isLocked",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "isPublished",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "lessonAttendeeCouples",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "LessonAttendeeCouplesConnection",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "lessonTrainers",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "LessonTrainersConnection",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "location",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "since",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "until",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "updatedAt",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "LessonAttendeeCouple",
+        "fields": [
+          {
+            "name": "couple",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Pary",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "coupleId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "id",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "lesson",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Lesson",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "lessonId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "LessonAttendeeCouplesConnection",
+        "fields": [
+          {
+            "name": "edges",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "LessonAttendeeCouplesEdge",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "nodes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "LessonAttendeeCouple",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "pageInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "PageInfo",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "totalCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "LessonAttendeeCouplesEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "LessonAttendeeCouple",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "LessonsConnection",
+        "fields": [
+          {
+            "name": "edges",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "LessonsEdge",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "nodes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "Lesson",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "pageInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "PageInfo",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "totalCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "LessonsEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Lesson",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "LessonTrainer",
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "lesson",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Lesson",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "lessonId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "tenant",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Tenant",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "tenantId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "trainer",
+            "type": {
+              "kind": "OBJECT",
+              "name": "User",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "trainerId",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "LessonTrainersConnection",
+        "fields": [
+          {
+            "name": "edges",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "LessonTrainersEdge",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "nodes",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "LessonTrainer",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "pageInfo",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "PageInfo",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "totalCount",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "LessonTrainersEdge",
+        "fields": [
+          {
+            "name": "cursor",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "node",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "LessonTrainer",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "Location",
         "fields": [
           {
@@ -13339,6 +13960,67 @@
             "args": []
           },
           {
+            "name": "lessonAttendeeCouplesByCoupleId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "LessonAttendeeCouplesConnection",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "nabidkaItemsByNiPartner",
             "type": {
               "kind": "NON_NULL",
@@ -17113,6 +17795,180 @@
               "ofType": null
             },
             "args": []
+          },
+          {
+            "name": "lessonAttendeeCouples",
+            "type": {
+              "kind": "OBJECT",
+              "name": "LessonAttendeeCouplesConnection",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "lessons",
+            "type": {
+              "kind": "OBJECT",
+              "name": "LessonsConnection",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "lessonTrainers",
+            "type": {
+              "kind": "OBJECT",
+              "name": "LessonTrainersConnection",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
           },
           {
             "name": "location",
@@ -21715,6 +22571,189 @@
             "args": []
           },
           {
+            "name": "lessonAttendeeCouples",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "LessonAttendeeCouplesConnection",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "lessons",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "LessonsConnection",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "lessonTrainers",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "LessonTrainersConnection",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "memberInfo",
             "type": {
               "kind": "NON_NULL",
@@ -26151,6 +27190,67 @@
               "name": "Any"
             },
             "args": []
+          },
+          {
+            "name": "lessonTrainersByTrainerId",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "LessonTrainersConnection",
+                "ofType": null
+              }
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "offset",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "orderBy",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
           },
           {
             "name": "nabidkasByNTrener",
