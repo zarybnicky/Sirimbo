@@ -15,7 +15,7 @@ export async function fetchGql<TResult, TVariables>(
 ): Promise<TResult> {
   const response = await fetch(origin + '/graphql', {
     method: 'POST',
-    credentials: 'always',
+    credentials: 'include',
     headers: {
       'content-type': 'application/json',
       ...(process.env.NEXT_PUBLIC_TENANT_ID ? {
