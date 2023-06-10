@@ -14,10 +14,10 @@ export function CallToAction() {
         backgroundSize: '100%, auto 100%',
       }}
     >
-      <div className="col-feature px-4 py-10 md:p-16 md:pr-24 drop-shadow-xl">
+      <div className="col-feature px-4 py-10 md:p-16 md:pr-24">
         <div className="text-white font-black text-3xl md:text-4xl">PŘIDEJ SE K NÁM</div>
 
-        <div className="font-bold text-2xl md:text-3xl">A OBJEV LÁSKU K TANCI</div>
+        <div className="font-bold text-2xl md:text-3xl [text-shadow:0_0_6px_rgba(255,255,255,0.8)]">A OBJEV LÁSKU K TANCI</div>
 
         <Link href="/prijdtancit" className="mt-4 font-bold tracking-wider button text-white button-lg bg-stone-800 hover:bg-stone-900">
           Chci tančit

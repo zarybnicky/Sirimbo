@@ -157,6 +157,7 @@ const grepi: TrainerCardProps = {
   image: '/images/treneri/pavel2.jpg',
   children: (
     <ul>
+      <li>Trenér Národního reprezentačního týmu</li>
       <li>Absolvent kvalifikačního studia pro trenéry a porotce II. třídy</li>
       <li>Tanečník mezinárodní třídy</li>
       <li>Finalista Akademického mistrovství ČR ve standardních tancích</li>
@@ -165,7 +166,7 @@ const grepi: TrainerCardProps = {
         fyziologie; od roku 2021)
       </li>
       <li>
-        Absolvent magisterského studia na Fakultě tělesné kultury UP v Olomouci (obor:
+        Absolvent magisterského studia na Fakultě tělesné kultury UP v Olomouci (specializace:
         Analýza pohybu)
       </li>
       <li>Trenér atletiky III. třídy a plavání III. třídy</li>
@@ -207,7 +208,7 @@ const roman: TrainerCardProps = {
 };
 
 const hanka: TrainerCardProps = {
-  name: 'Hana Anna Šišková',
+  name: 'Bc. Hana Anna Šišková',
   image: '/images/treneri-2023/hanka.jpg',
   children: (
     <ul>
@@ -320,12 +321,12 @@ const jerry: TrainerCardProps = {
       <li>Trenér mistrů České republiky všech věkových kategorií</li>
       <li>Vicemistr ČR v latinskoamerických tancích (1992, 1993, 1995)</li>
       <li>Finalista mistrovství ČR v deseti tancích (1993)</li>
-      <li>Trenér a porotce i. třídy</li>
+      <li>Trenér a porotce I. třídy</li>
       <li>Porotce s nejvyšší mezinárodní licencí WDSF</li>
       <li>Porotce mistrovství Evropy</li>
     </ul>
   ),
 };
 
-const internal = [mirek, filip, marie, roman, hanka, nela, lucka, grepi, maruska];
+const internal = [mirek, filip, marie, roman, grepi, hanka, nela, lucka, maruska];
 const external = [martin, david, tara, pavla, jerry];

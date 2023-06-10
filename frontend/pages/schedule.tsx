@@ -38,18 +38,6 @@ const Page: NextPageWithLayout = () => {
         !schedules?.schedulesForRange?.nodes?.length && (
           <div className="border p-2 bg-red-500 text-white rounded-md">Žádné tréninky pro tento týden</div>
         )}
-      {!!reservations?.reservationsForRange?.nodes?.length && (
-        <>
-          <div className="text-xl tracking-wide text-stone-700 mb-2">
-            Nabídky tréninků
-          </div>
-          <div className="flex justify-start flex-wrap gap-4 ml-2 pl-5 border-l-4 border-red-400">
-            {reservations?.reservationsForRange?.nodes.map((item, i) => (
-              <ReservationItem key={i} item={item} />
-            ))}
-          </div>
-        </>
-      )}
 
       {Object.entries(scheduleByDay).map(([date, items], i) => (
         <React.Fragment key={i}>
@@ -64,6 +52,20 @@ const Page: NextPageWithLayout = () => {
           </div>
         </React.Fragment>
       ))}
+
+      {!!reservations?.reservationsForRange?.nodes?.length && (
+        <>
+          <div className="text-xl tracking-wide text-stone-700 mb-2">
+            Nabídky tréninků
+          </div>
+          <div className="flex justify-start flex-wrap gap-4 ml-2 pl-5 border-l-4 border-red-400">
+            {reservations?.reservationsForRange?.nodes.map((item, i) => (
+              <ReservationItem key={i} item={item} />
+            ))}
+          </div>
+        </>
+      )}
+
     </div>
   );
 };

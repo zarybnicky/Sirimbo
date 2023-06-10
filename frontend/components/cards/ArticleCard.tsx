@@ -26,7 +26,7 @@ export const ArticleCard = ({ item: x }: { item: Article }) => {
         <div className="flex justify-center mt-3">
           <div className=" font-bold tracking-wider button text-white button-lg button button-red button-lg">
             Více zde
-            <ChevronRight className="h-3 w-3 mt-0.5 ml-2 -mr-2" />
+            <ChevronRight className="h-3 w-3 ml-2 -mr-2" />
           </div>
         </div>
       </Card>

@@ -58,11 +58,11 @@ const Page: NextPageWithLayout = () => {
             email: lucie.benyskova@tkolymp.cz
           </p>
 
-          <h3>Taneční kroužky OlympDance</h3>
+          <h3>Taneční kroužky Olymp Dance</h3>
           <p>
             <b>Martin Matýsek</b>
             <br />
-            Vedoucí projektu OlympDance
+            Vedoucí projektu Olymp Dance
             <br />
             tel: 774 090 200
             <br />

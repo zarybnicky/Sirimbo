@@ -39,7 +39,7 @@ function FeedbackForm() {
               'text-white shadow-stone-700 bg-red-500 hover:bg-red-600 inline-flex h-[35px] items-center justify-center rounded-lg px-3 leading-none shadow-[0_2px_10px] focus:shadow-[0_0_0_2px] focus:shadow-black focus:outline-none',
             )}
           >
-            <Edit3 className="h-4 w-4 mr-2" /> Ohodnoťte nový web!
+            <Edit3 className="h-4 w-4 mr-2" /> Ohodnoť nový web!
           </button>
         </Dialog.Trigger>
 
@@ -61,7 +61,7 @@ function FeedbackForm() {
             )}
           >
             <Dialog.Title className="text-stone-900 mb-2 text-lg">
-              <Edit3 className="inline h-4 w-4 mr-1" /> Ohodnoťte nový web!
+              <Edit3 className="inline h-4 w-4 mr-1" /> Ohodnoť nový web!
             </Dialog.Title>
 
             <form className="grid gap-4" onSubmit={handleSubmit(onSubmit.execute)}>

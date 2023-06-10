@@ -23,7 +23,7 @@ const Page: NextPageWithLayout = () => {
         </ul>
 
         <p>
-          Můžete nás kontaktovat na 737 545 525 nebo nezávazně vyplnit formulář ZDE a my
+          Můžete nás kontaktovat na 737 545 525 nebo nezávazně vyplnit formulář a my
           se Vám ozveme.
         </p>
       </div>
