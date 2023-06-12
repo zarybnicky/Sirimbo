@@ -1,159 +1,97 @@
--- Write your migration here
-CREATE INDEX ON "public"."room_attachment"("object_name");
-CREATE INDEX ON "public"."tenant_attachment"("object_name");
-CREATE INDEX ON "public"."skupiny"("cohort_group");
-CREATE INDEX ON "public"."skupiny"("ordering");
-CREATE INDEX ON "public"."cohort_group"("tenant");
-CREATE INDEX ON "public"."room"("location");
+drop table if exists event_instance;
+drop table if exists event;
+drop table if exists lesson_trainer;
+drop table if exists lesson;
+drop table if exists attendee_person;
+drop table if exists attendee_couple;
+drop table if exists attendee_list;
+drop table if exists couple;
 
-create or replace function current_tenant_id() returns bigint as $$
-  select COALESCE(current_setting('jwt.claims.tenant_id', '1')::bigint, 1);
-$$ language sql stable;
-grant execute on function current_tenant_id to anonymous;
+create table couple (
+  id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  tenant_id bigint not null references tenant (id) DEFAULT public.current_tenant_id(),
+  since timestamptz not null,
+  until timestamptz not null,
+  leader_id bigint not null references person (id),
+  follower_id bigint not null references person (id),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+create trigger _100_timestamps before insert or update on couple
+  for each row execute procedure app_private.tg__timestamps();
+comment on table couple is E'@omit create,update,delete';
+create index on couple (tenant_id);
+create index on couple (leader_id);
+create index on couple (follower_id);
 
-alter table upozorneni add column if not exists sticky boolean not null default false;
+create table attendee_list (
+  id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  tenant_id bigint not null references tenant (id) DEFAULT public.current_tenant_id(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+create trigger _100_timestamps before insert or update on attendee_list
+  for each row execute procedure app_private.tg__timestamps();
+comment on table attendee_list is E'@omit create,update,delete';
+create index on attendee_list (tenant_id);
 
+create table attendee_couple (
+  id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  tenant_id bigint not null references tenant (id) DEFAULT public.current_tenant_id(),
+  list_id bigint not null references attendee_list (id),
+  couple_id bigint not null references couple (id),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+create trigger _100_timestamps before insert or update on attendee_couple
+  for each row execute procedure app_private.tg__timestamps();
+comment on table attendee_couple is E'@omit create,update,delete';
+create index on attendee_couple (tenant_id);
+create index on attendee_couple (list_id);
+create index on attendee_couple (couple_id);
 
-select app_private.drop_policies('public.attachment');
-create policy admin_all on attachment to administrator using (true) with check (true);
-create policy public_view on attachment for select to anonymous using (true);
+create table attendee_person (
+  id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  tenant_id bigint not null references tenant (id) DEFAULT public.current_tenant_id(),
+  list_id bigint not null references attendee_list (id),
+  person_id bigint not null references person (id),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+create trigger _100_timestamps before insert or update on attendee_person
+  for each row execute procedure app_private.tg__timestamps();
+comment on table attendee_person is E'@omit create,update,delete';
+create index on attendee_person (tenant_id);
+create index on attendee_person (list_id);
+create index on attendee_person (person_id);
 
-select app_private.drop_policies('public.cohort_group');
-create policy admin_all on cohort_group to administrator using (true) with check (true);
-create policy public_view on cohort_group for select to anonymous using (true);
-create policy my_tenant on cohort_group as restrictive using (tenant_id = current_tenant_id()) with check (tenant_id = current_tenant_id());
+create table lesson (
+  id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  tenant_id bigint not null references tenant (id) DEFAULT public.current_tenant_id(),
+  since timestamptz not null,
+  until timestamptz not null,
+  location_id bigint null references location (id),
+  location_text text,
+  list_id bigint not null references attendee_list (id),
+  is_locked boolean not null default false,
+  is_visible boolean not null default true,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+create trigger _100_timestamps before insert or update on lesson
+  for each row execute procedure app_private.tg__timestamps();
+comment on table lesson is E'@omit create,update,delete';
+create index on lesson (tenant_id);
+create index on lesson (list_id);
+create index on lesson (location_id);
 
-select app_private.drop_policies('public.dokumenty');
-create policy admin_all on dokumenty to administrator using (true) with check (true);
-create policy public_view on dokumenty for select to member using (true);
-create policy my_tenant on dokumenty as restrictive using (tenant_id = current_tenant_id()) with check (tenant_id = current_tenant_id());
-
-select app_private.drop_policies('public.location');
-create policy admin_all on location to administrator using (true) with check (true);
-create policy public_view on location for select to anonymous using (true);
-
-select app_private.drop_policies('public.location_attachment');
-create policy admin_all on location_attachment to administrator using (true) with check (true);
-create policy public_view on location_attachment for select to anonymous using (true);
-
-select app_private.drop_policies('public.nabidka');
-create policy admin_all on nabidka to administrator using (true) with check (true);
-create policy member_view on nabidka for select to member using (true);
-create policy my_tenant on nabidka as restrictive using (tenant_id = current_tenant_id()) with check (tenant_id = current_tenant_id());
-
-select app_private.drop_policies('public.nabidka_item');
-create policy admin_all on nabidka_item to administrator using (true) with check (true);
-create policy member_view on nabidka_item for select to member using (true);
-create policy manage_own on nabidka_item for all to member
-  using (ni_partner in (select current_couple_ids()))
-  with check (ni_partner in (select current_couple_ids()));
-create policy my_tenant on nabidka_item as restrictive using (tenant_id = current_tenant_id()) with check (tenant_id = current_tenant_id());
-
-select app_private.drop_policies('public.platby_group');
-create policy admin_all on platby_group to administrator using (true) with check (true);
-create policy member_view on platby_group for select to member using (true);
-create policy my_tenant on platby_group as restrictive using (tenant_id = current_tenant_id()) with check (tenant_id = current_tenant_id());
-
-select app_private.drop_policies('public.platby_category');
-alter table platby_category enable row level security;
-create policy admin_all on platby_category to administrator using (true) with check (true);
-create policy member_view on platby_category for select to member using (true);
-create policy my_tenant on platby_category as restrictive using (tenant_id = current_tenant_id()) with check (tenant_id = current_tenant_id());
-
-select app_private.drop_policies('public.platby_category_group');
-create policy admin_all on platby_category_group to administrator using (true) with check (true);
-create policy member_view on platby_category_group for select to member using (true);
-create policy my_tenant on platby_category_group as restrictive using (tenant_id = current_tenant_id()) with check (tenant_id = current_tenant_id());
-
-select app_private.drop_policies('public.platby_group_skupina');
-create policy admin_all on platby_group_skupina to administrator using (true) with check (true);
-create policy member_view on platby_group_skupina for select to member using (true);
-create policy my_tenant on platby_group_skupina as restrictive using (tenant_id = current_tenant_id()) with check (tenant_id = current_tenant_id());
-
-select app_private.drop_policies('public.room');
-create policy admin_all on room to administrator using (true) with check (true);
-create policy public_view on room for select to anonymous using (true);
-
-select app_private.drop_policies('public.room_attachment');
-create policy admin_all on room_attachment to administrator using (true) with check (true);
-create policy public_view on room_attachment for select to anonymous using (true);
-
-select app_private.drop_policies('public.rozpis');
-create policy admin_all on rozpis to administrator using (true) with check (true);
-create policy member_view on rozpis for select to member using (true);
-create policy my_tenant on rozpis as restrictive using (tenant_id = current_tenant_id()) with check (tenant_id = current_tenant_id());
-
-select app_private.drop_policies('public.rozpis_item');
-create policy admin_all on rozpis_item to administrator using (true) with check (true);
-create policy member_view on rozpis_item for select to member using (true);
-create policy manage_own on rozpis_item for all to member
-  using (ri_partner in (select current_couple_ids()))
-  with check (ri_partner in (select current_couple_ids()));
-create policy my_tenant on rozpis_item as restrictive using (tenant_id = current_tenant_id()) with check (tenant_id = current_tenant_id());
-
-select app_private.drop_policies('public.tenant');
-create policy admin_all on tenant to administrator using (true) with check (true);
-create policy public_view on tenant for select to anonymous using (true);
-create policy my_tenant on tenant as restrictive using (id = current_tenant_id()) with check (id = current_tenant_id());
-
-select app_private.drop_policies('public.tenant_attachment');
-create policy admin_all on tenant_attachment to administrator using (true) with check (true);
-create policy public_view on tenant_attachment for select to anonymous using (true);
-create policy my_tenant on tenant_attachment as restrictive using (tenant_id = current_tenant_id()) with check (tenant_id = current_tenant_id());
-
-select app_private.drop_policies('public.tenant_location');
-create policy admin_all on tenant_location to administrator using (true) with check (true);
-create policy public_view on tenant_location for select to anonymous using (true);
-
-select app_private.drop_policies('public.tenant_person');
-create policy admin_all on tenant_person to administrator using (true) with check (true);
-create policy public_view on tenant_person for select to anonymous using (true);
-create policy my_tenant on tenant_person as restrictive using (tenant_id = current_tenant_id()) with check (tenant_id = current_tenant_id());
-
-select app_private.drop_policies('public.upozorneni');
-create policy admin_all on upozorneni to administrator using (true) with check (true);
-create policy member_view on upozorneni for select to member using (true);
-create policy my_tenant on upozorneni as restrictive using (tenant_id = current_tenant_id()) with check (tenant_id = current_tenant_id());
-
-select app_private.drop_policies('public.upozorneni_skupiny');
-create policy admin_all on upozorneni_skupiny to administrator using (true) with check (true);
-create policy member_view on upozorneni_skupiny for select to member using (true);
-create policy my_tenant on upozorneni_skupiny as restrictive using (tenant_id = current_tenant_id()) with check (tenant_id = current_tenant_id());
-
-/*
-create or replace view lesson as
-  select
-    ri_id as id,
-    rozpis_item.tenant_id as tenant_id,
-    (r_datum + ri_od) as since,
-    (r_datum + ri_do) as until,
-    r_kde as location,
-    r_visible as is_published,
-    r_lock or ri_lock as is_locked,
-    r_timestamp as created_at,
-    r_timestamp as updated_at
-  from rozpis inner join rozpis_item on r_id=ri_id_rodic;
-comment on view lesson is E'@foreignKey (tenant_id) references tenant (id)';
-
-create or replace view lesson_trainer as
-  select
-    r_id as id,
-    rozpis_item.tenant_id as tenant_id,
-    ri_id as lesson_id,
-    r_trener as trainer_id
-  from rozpis inner join rozpis_item on r_id=ri_id_rodic;
-comment on view lesson_trainer is E'@foreignKey (tenant_id) references tenant (id)
-@foreignKey (lesson_id) references lesson (id)
-@foreignKey (trainer_id) references users (id)';
-
-create or replace view lesson_attendee_couple as
-  select
-    r_id as id,
-    rozpis_item.tenant_id as tenant_id,
-    ri_id as lesson_id,
-    ri_partner as couple_id
-  from rozpis inner join rozpis_item on r_id=ri_id_rodic;
-comment on view lesson_attendee_couple is E'@foreignKey (tenant_id) references tenant (id)
-@foreignKey (lesson_id) references lesson (id)
-@foreignKey (couple_id) references pary (id)';
-*/
+create table lesson_trainer (
+  id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  tenant_id bigint not null references tenant (id) DEFAULT public.current_tenant_id(),
+  lesson_id bigint not null references lesson (id),
+  trainer_id bigint not null references users (u_id)
+);
+comment on table lesson_trainer is E'@omit create,update,delete';
+create index on lesson_trainer (tenant_id);
+create index on lesson_trainer (lesson_id);
+create index on lesson_trainer (trainer_id);

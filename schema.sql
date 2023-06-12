@@ -317,7 +317,7 @@ $$;
 CREATE FUNCTION public.current_tenant_id() RETURNS bigint
     LANGUAGE sql STABLE
     AS $$
-  select nullif(current_setting('jwt.claims.tenant_id', '1')::bigint, 1);
+  select COALESCE(current_setting('jwt.claims.tenant_id', '1')::bigint, 1);
 $$;
 
 
@@ -924,7 +924,8 @@ CREATE TABLE public.upozorneni (
     scheduled_until timestamp with time zone,
     is_visible boolean DEFAULT true,
     id bigint GENERATED ALWAYS AS (up_id) STORED,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    sticky boolean DEFAULT false NOT NULL
 );
 
 
@@ -3290,6 +3291,13 @@ ALTER TABLE ONLY public.tenant
 
 
 --
+-- Name: cohort_group_tenant_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX cohort_group_tenant_idx ON public.cohort_group USING btree (tenant);
+
+
+--
 -- Name: confirmed_by; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3661,6 +3669,20 @@ CREATE INDEX ri_od ON public.rozpis_item USING btree (ri_od);
 
 
 --
+-- Name: room_attachment_object_name_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX room_attachment_object_name_idx ON public.room_attachment USING btree (object_name);
+
+
+--
+-- Name: room_location_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX room_location_idx ON public.room USING btree (location);
+
+
+--
 -- Name: s_visible; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3675,10 +3697,31 @@ CREATE INDEX since ON public.event USING btree (since);
 
 
 --
+-- Name: skupiny_cohort_group_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX skupiny_cohort_group_idx ON public.skupiny USING btree (cohort_group);
+
+
+--
+-- Name: skupiny_ordering_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX skupiny_ordering_idx ON public.skupiny USING btree (ordering);
+
+
+--
 -- Name: ss_user; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX ss_user ON public.session USING btree (ss_user);
+
+
+--
+-- Name: tenant_attachment_object_name_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tenant_attachment_object_name_idx ON public.tenant_attachment USING btree (object_name);
 
 
 --
@@ -4789,42 +4832,42 @@ CREATE POLICY manage_own ON public.users USING ((u_id = public.current_user_id()
 -- Name: nabidka member_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY member_view ON public.nabidka FOR SELECT TO member;
+CREATE POLICY member_view ON public.nabidka FOR SELECT TO member USING (true);
 
 
 --
 -- Name: nabidka_item member_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY member_view ON public.nabidka_item FOR SELECT TO member;
+CREATE POLICY member_view ON public.nabidka_item FOR SELECT TO member USING (true);
 
 
 --
 -- Name: platby_category member_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY member_view ON public.platby_category FOR SELECT TO member;
+CREATE POLICY member_view ON public.platby_category FOR SELECT TO member USING (true);
 
 
 --
 -- Name: platby_category_group member_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY member_view ON public.platby_category_group FOR SELECT TO member;
+CREATE POLICY member_view ON public.platby_category_group FOR SELECT TO member USING (true);
 
 
 --
 -- Name: platby_group member_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY member_view ON public.platby_group FOR SELECT TO member;
+CREATE POLICY member_view ON public.platby_group FOR SELECT TO member USING (true);
 
 
 --
 -- Name: platby_group_skupina member_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY member_view ON public.platby_group_skupina FOR SELECT TO member;
+CREATE POLICY member_view ON public.platby_group_skupina FOR SELECT TO member USING (true);
 
 
 --
@@ -4847,28 +4890,28 @@ CREATE POLICY member_view ON public.platby_raw FOR SELECT TO member USING ((EXIS
 -- Name: rozpis member_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY member_view ON public.rozpis FOR SELECT TO member;
+CREATE POLICY member_view ON public.rozpis FOR SELECT TO member USING (true);
 
 
 --
 -- Name: rozpis_item member_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY member_view ON public.rozpis_item FOR SELECT TO member;
+CREATE POLICY member_view ON public.rozpis_item FOR SELECT TO member USING (true);
 
 
 --
 -- Name: upozorneni member_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY member_view ON public.upozorneni FOR SELECT TO member;
+CREATE POLICY member_view ON public.upozorneni FOR SELECT TO member USING (true);
 
 
 --
 -- Name: upozorneni_skupiny member_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY member_view ON public.upozorneni_skupiny FOR SELECT TO member;
+CREATE POLICY member_view ON public.upozorneni_skupiny FOR SELECT TO member USING (true);
 
 
 --
@@ -5147,77 +5190,77 @@ ALTER TABLE public.platby_raw ENABLE ROW LEVEL SECURITY;
 -- Name: attachment public_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY public_view ON public.attachment FOR SELECT TO anonymous;
+CREATE POLICY public_view ON public.attachment FOR SELECT TO anonymous USING (true);
 
 
 --
 -- Name: cohort_group public_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY public_view ON public.cohort_group FOR SELECT TO anonymous;
+CREATE POLICY public_view ON public.cohort_group FOR SELECT TO anonymous USING (true);
 
 
 --
 -- Name: dokumenty public_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY public_view ON public.dokumenty FOR SELECT TO member;
+CREATE POLICY public_view ON public.dokumenty FOR SELECT TO member USING (true);
 
 
 --
 -- Name: location public_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY public_view ON public.location FOR SELECT TO anonymous;
+CREATE POLICY public_view ON public.location FOR SELECT TO anonymous USING (true);
 
 
 --
 -- Name: location_attachment public_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY public_view ON public.location_attachment FOR SELECT TO anonymous;
+CREATE POLICY public_view ON public.location_attachment FOR SELECT TO anonymous USING (true);
 
 
 --
 -- Name: room public_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY public_view ON public.room FOR SELECT TO anonymous;
+CREATE POLICY public_view ON public.room FOR SELECT TO anonymous USING (true);
 
 
 --
 -- Name: room_attachment public_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY public_view ON public.room_attachment FOR SELECT TO anonymous;
+CREATE POLICY public_view ON public.room_attachment FOR SELECT TO anonymous USING (true);
 
 
 --
 -- Name: tenant public_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY public_view ON public.tenant FOR SELECT TO anonymous;
+CREATE POLICY public_view ON public.tenant FOR SELECT TO anonymous USING (true);
 
 
 --
 -- Name: tenant_attachment public_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY public_view ON public.tenant_attachment FOR SELECT TO anonymous;
+CREATE POLICY public_view ON public.tenant_attachment FOR SELECT TO anonymous USING (true);
 
 
 --
 -- Name: tenant_location public_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY public_view ON public.tenant_location FOR SELECT TO anonymous;
+CREATE POLICY public_view ON public.tenant_location FOR SELECT TO anonymous USING (true);
 
 
 --
 -- Name: tenant_person public_view; Type: POLICY; Schema: public; Owner: -
 --
 
-CREATE POLICY public_view ON public.tenant_person FOR SELECT TO anonymous;
+CREATE POLICY public_view ON public.tenant_person FOR SELECT TO anonymous USING (true);
 
 
 --
