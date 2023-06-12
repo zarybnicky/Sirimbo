@@ -2,6 +2,7 @@
   "name": "sirimbo",
   "private": true,
   "workspaces": [
+    "@app/*",
     "kometa",
     "frontend",
     "backend",
