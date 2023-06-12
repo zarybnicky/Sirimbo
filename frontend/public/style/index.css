@@ -106,7 +106,7 @@ body {
   height: 9px;
 }
 .glider-dot.active {
-  background-color: theme('colors.primary.500');
+  background-color: theme('colors.primary');
 }
 .glider-prev,
 .glider-next {

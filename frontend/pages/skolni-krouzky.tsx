@@ -29,7 +29,7 @@ const Page: NextPageWithLayout = () => {
         </p>
 
         <p>
-          V tuto chvíli působíme na několika Základních školách v okolí Olomouce a
+          V tuto chvíli působíme na několika základních školách v okolí Olomouce a
           Prostějova.
         </p>
       </div>

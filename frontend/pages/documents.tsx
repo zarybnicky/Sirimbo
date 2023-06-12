@@ -7,6 +7,7 @@ import { Card } from 'components/Card';
 import type { NextPageWithLayout } from 'pages/_app';
 import { useQuery } from 'urql';
 import { TitleBar } from 'components/layout/TitleBar';
+import { origin } from 'lib/query';
 
 const categories = [
   { id: '1', label: 'Schůze,\u{00A0}rady' },
@@ -44,7 +45,7 @@ const Page: NextPageWithLayout = () => {
           <a
             target="_blank"
             rel="noreferrer"
-            href={`/member/download?id=${row.id}`}
+            href={`${origin}/member/download?id=${row.id}`}
             className="flex justify-between"
           >
             <span>{row.dName}</span>

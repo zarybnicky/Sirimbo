@@ -41,10 +41,10 @@ module.exports = {
       },
       colors: {
         red,
-        primary: red,
-        secondary: colors.stone,
+
+        primary: '#ED1734',
         prose: {
-          bullets: red['500'],
+          bullets: '#ED1734',
         },
 
         success: '#90CA63',
