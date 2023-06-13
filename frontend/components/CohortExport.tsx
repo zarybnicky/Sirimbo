@@ -3,7 +3,7 @@ import { saveAs } from 'file-saver';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { Button } from './Button';
 import { useAuth } from 'lib/data/use-auth';
-import { fetchGql } from 'lib/query';
+import { fetchGql } from '@app/graphql/query';
 import { MemberListDocument } from '@app/graphql/User';
 
 export function CohortExport({ id, name }: { id?: string; name?: string }) {

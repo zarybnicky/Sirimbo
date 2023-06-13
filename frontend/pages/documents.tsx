@@ -7,7 +7,7 @@ import { Card } from 'components/Card';
 import type { NextPageWithLayout } from 'pages/_app';
 import { useQuery } from 'urql';
 import { TitleBar } from 'components/layout/TitleBar';
-import { origin } from 'lib/query';
+import { origin } from '@app/graphql/query';
 
 const categories = [
   { id: '1', label: 'Schůze,\u{00A0}rady' },

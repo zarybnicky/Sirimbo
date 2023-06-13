@@ -7,7 +7,6 @@ import { YoutubeEmbed } from 'components/YoutubeEmbed';
 import { Route } from 'nextjs-routes';
 import type { NextPageWithLayout } from 'pages/_app';
 import { ArticleCard } from 'components/cards/ArticleCard';
-import { NextSeo } from 'next-seo';
 
 const Page: NextPageWithLayout = () => {
   const { articles } = useArticles(3, 3);
@@ -15,7 +14,6 @@ const Page: NextPageWithLayout = () => {
 
   return (
     <>
-      <NextSeo />
       <Hero />
       <div className="col-feature my-4">
         {services.map((x, i) => (
@@ -32,7 +30,6 @@ const Page: NextPageWithLayout = () => {
           thumbnail="https://i3.ytimg.com/vi/bgUYrFexFr4/maxresdefault.jpg"
         >
           <iframe
-            frameBorder="0"
             allowFullScreen
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             width="100%"
@@ -47,8 +44,8 @@ const Page: NextPageWithLayout = () => {
       <div className="col-feature my-12">
         <h4 className="text-3xl font-bold text-red-500">Aktuálně</h4>
         <div className="grid place-items-stretch gap-4 grid-cols-2 lg:grid-cols-3 mt-3 mb-6">
-          {articles.map((x, i) => (
-            <ArticleCard key={i} item={x} />
+          {articles.map((x) => (
+            <ArticleCard key={x.id} item={x} />
           ))}
         </div>
       </div>
@@ -69,19 +66,28 @@ const useServices = (): {
     text: 'První kroky do světa tanečního sportu pro děti od 5 do 10 let. Všeobecná taneční průprava a základy tanečních kroků pro budoucí hvězdy.',
   },
   {
-    href: { pathname: '/programy/[id]/[...slug]', query: {id: '1', slug: ['treninkovy-program-basic']}},
+    href: {
+      pathname: '/programy/[id]/[...slug]',
+      query: { id: '1', slug: ['treninkovy-program-basic'] },
+    },
     image: '/images/services-pro-deti.png',
     header: 'Základy tanečního sportu',
     text: 'Tréninkové programy pro začínající a mírně pokročilé tanečníky ve věkových skupinách juniorů (12-15 let), mládež a dospělí (16+ let).',
   },
   {
-    href: { pathname: '/programy/[id]/[...slug]', query: {id: '2', slug: ['treninkovy-program-sport']}},
+    href: {
+      pathname: '/programy/[id]/[...slug]',
+      query: { id: '2', slug: ['treninkovy-program-sport'] },
+    },
     image: '/images/services-pro-zacatecniky.png',
     header: 'Výkonnostní sport',
     text: 'Tréninkové programy pro soutěžní tanečníky ve všech věkových skupinách a výkonnostních třídách uzpůsobené podle potřeb v jednotlivých výkonnostních stupních.',
   },
   {
-    href: { pathname: '/programy/[id]/[...slug]', query: {id: '3', slug: ['treninkovy-program-top']}},
+    href: {
+      pathname: '/programy/[id]/[...slug]',
+      query: { id: '3', slug: ['treninkovy-program-top'] },
+    },
     image: '/images/services-soutezni.png',
     header: 'Sportovní centrum mládeže',
     text: 'Tréninkový program pro vrcholové sportovce, reprezentanty ČR se špičkovými českými trenéry, speciální kondiční přípravou a moderními metodami sportovního tréninku. Jsme jediným klubem v Olomouckém kraji se statutem Sprtovního centra mládeže dle MŠMT.',

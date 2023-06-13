@@ -15,16 +15,7 @@ import i18next from 'i18next';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 import csZodTranslation from 'public/locales/cs/zod.json';
-import { withUrqlClient } from 'next-urql';
-import { makeDefaultStorage } from '@urql/exchange-graphcache/default-storage';
-import { fetchExchange } from 'urql';
-import { offlineExchange } from '@urql/exchange-graphcache';
-import { retryExchange } from '@urql/exchange-retry';
-import { refocusExchange } from '@urql/exchange-refocus';
-import { requestPolicyExchange } from '@urql/exchange-request-policy';
-import { origin, cacheConfig } from 'lib/query';
-import schema from '@app/graphql/introspection.json';
-import { devtoolsExchange } from '@urql/devtools';
+import { withPreconfiguredUrql } from '@app/graphql/query'
 
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
@@ -109,42 +100,7 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
   );
 }
 
-export default withUrqlClient(
-  (ssrExchange) => ({
-    url: `${origin}/graphql`,
-    exchanges: [
-      process.env.NODE_ENV !== 'production' ? devtoolsExchange : (({forward}) => forward),
-      refocusExchange(),
-      requestPolicyExchange({ttl: 60 * 1000}),
-      typeof window !== 'undefined' ? offlineExchange({
-        schema,
-        storage: makeDefaultStorage({
-          idbName: 'graphcache-v3',
-          maxAge: 7,
-        }),
-        ...cacheConfig,
-      }) : (({forward}) => forward),
-      retryExchange({
-        initialDelayMs: 1000,
-        maxDelayMs: 15000,
-        randomDelay: true,
-        maxNumberAttempts: 2,
-        retryIf: (err) => !!err && !!err.networkError,
-      }),
-      ssrExchange,
-      fetchExchange,
-    ],
-    fetchOptions: {
-      credentials: 'include',
-      headers: {
-        ...(process.env.NEXT_PUBLIC_TENANT_ID ? {
-          'x-tenant-id': process.env.NEXT_PUBLIC_TENANT_ID,
-        } : {}),
-      },
-    },
-  }),
-  { ssr: false },
-)(App);
+export default withPreconfiguredUrql(App);
 
 export function reportWebVitals({ id, name, label, value }: NextWebVitalsMetric) {
   if (label === 'web-vital') {

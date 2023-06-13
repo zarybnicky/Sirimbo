@@ -8,7 +8,7 @@ import { Heading } from 'components/Heading';
 import type { NextPageWithLayout } from 'pages/_app';
 import { GetStaticProps } from 'next';
 import { fromSlugArray, slugify } from 'lib/slugify';
-import { fetchGql } from 'lib/query';
+import { fetchGql } from '@app/graphql/query';
 
 type PageProps = {
   item: ArticleFragment;

@@ -2,7 +2,7 @@ import { Card } from 'components/Card';
 import { Heading } from 'components/Heading';
 import { RichTextView } from 'components/RichTextView';
 import { CohortGroupFragment, CohortGroupDocument } from '@app/graphql/CohortGroup';
-import { fetchGql } from 'lib/query';
+import { fetchGql } from '@app/graphql/query';
 import { fromSlugArray, slugify } from 'lib/slugify';
 import { GetStaticProps } from 'next';
 import { NextSeo } from 'next-seo';
