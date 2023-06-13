@@ -131,7 +131,7 @@ export const CohortList = makeAdminList(
   subtitle: [!x.sVisible && 'Skrytá', x.sLocation].filter(Boolean).join(', '),
   children: (
     <div
-      className="absolute rounded-l-lg w-4 shadow-sm top-0 bottom-0 left-0"
+      className="absolute rounded-l-lg w-4 shadow-sm inset-y-0 left-0"
       style={{ backgroundColor: x.sColorRgb }}
     />
   ),

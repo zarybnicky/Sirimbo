@@ -120,7 +120,7 @@ const AuthButton = () => {
 
 const DesktopLogo = () => (
   <div className="relative overflow-visible min-w-[104px]">
-    <div className="w-[104px] h-[130px] text-white bg-stone-800 z-50 shadow-stone-900/40 shadow-lg absolute top-0 left-0 right-0">
+    <div className="w-[104px] h-[130px] text-white bg-stone-800 z-50 shadow-stone-900/40 shadow-lg absolute top-0 inset-x-0">
       <Link href="/" className="block p-0 m-0 h-full w-full relative">
         <OlympLogoVertical
           style={{

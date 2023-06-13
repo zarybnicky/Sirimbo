@@ -1,6 +1,73 @@
-import 'public/style/index.css'
-import type { AppProps } from 'next/app'
+import * as React from 'react';
+import { AppProps, NextWebVitalsMetric } from 'next/app';
+import Router from 'next/router';
+import NProgress from 'nprogress';
+import { event } from 'nextjs-google-analytics';
+import { ProvideAuth } from 'lib/use-auth';
+import { Layout, type LayoutProps } from 'components/Layout';
+import 'public/style/index.css';
+import { ToastContainer } from 'react-toastify';
+import { NextPage } from 'next';
+import { DefaultSeo } from 'next-seo';
+import { withPreconfiguredUrql } from '@app/graphql/query';
 
-export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+Router.events.on('routeChangeStart', () => NProgress.start());
+Router.events.on('routeChangeComplete', () => NProgress.done());
+Router.events.on('routeChangeError', () => NProgress.done());
+
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> &
+  Omit<LayoutProps, 'children'>;
+
+type AppPropsWithLayout<T = {}> = AppProps<T> & {
+  Component: NextPageWithLayout<T>;
+};
+
+function App({ Component, pageProps }: AppPropsWithLayout) {
+  const { staticTitle, isDetail, list, showTopMenu, hideTopMenuIfLoggedIn, permissions, requireLoggedOut } = Component;
+  const layoutProps = { staticTitle, isDetail, list, showTopMenu, hideTopMenuIfLoggedIn, permissions, requireLoggedOut };
+  return (
+    <ProvideAuth>
+        <DefaultSeo
+          titleTemplate="%s · Rozpisovník"
+          defaultTitle="Rozpisovník"
+          themeColor="#000"
+          openGraph={{
+            siteName: 'Rozpisovník',
+          }}
+          additionalLinkTags={[
+            {
+              rel: 'apple-touch-icon',
+              sizes: '180x180',
+              href: '/apple-touch-icon.png?v=3',
+            },
+            { rel: 'icon', sizes: '32x32', href: '/favicon-32x32.png?v=3' },
+            { rel: 'icon', sizes: '16x16', href: '/favicon-16x16.png?v=3' },
+            { rel: 'shortcut icon', href: '/favicon.ico?v=3' },
+            { rel: 'manifest', href: '/site.webmanifest?v=3' },
+            {
+              rel: 'mask-icon',
+              color: '#5bbad5',
+              href: '/safari-pinned-tab.svg?v=3',
+            },
+          ]}
+        />
+        <Layout {...layoutProps} >
+          <Component {...pageProps} />
+        </Layout>
+        <ToastContainer limit={3} />
+    </ProvideAuth>
+  );
+}
+
+export default withPreconfiguredUrql(App);
+
+export function reportWebVitals({ id, name, label, value }: NextWebVitalsMetric) {
+  if (label === 'web-vital') {
+    event(name, {
+      category: 'Web Vitals',
+      value: Math.round(name === 'CLS' ? value * 1000 : value), // values must be integers
+      label: id, // id unique to current page load
+      nonInteraction: true, // avoids affecting bounce rate.
+    });
+  }
 }

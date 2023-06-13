@@ -148,7 +148,7 @@ function LessonAdminForm({ lesson }: { lesson: ScheduleItemBasicFragment }) {
   const onSubmit = React.useCallback((patch: LessonFormProps) => {
     setMode('view');
     update({ id: lesson.id, patch})
-  }, []);
+  }, [update, lesson.id]);
 
   return mode === 'view' ? (
     <Card

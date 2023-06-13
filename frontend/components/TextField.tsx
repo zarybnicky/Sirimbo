@@ -104,7 +104,7 @@ export function TextField({
           name={name}
           type={type}
           {...props}
-          className="block w-full border-red-400 text-stone-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
+          className="block w-full border-red-400 text-stone-900 placeholder:text-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
         />
         {error && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">

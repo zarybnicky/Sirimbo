@@ -14,7 +14,7 @@ export function TrainerCard(props: TrainerCardProps) {
     <div className="mb-14 relative">
       {props.image && (
         <img
-          className="object-cover shrink-0 ml-8 lg:ml-0 mb-4 lg:mb-0 lg:absolute lg:-left-[11.2rem] lg:top-[3.85rem] drop-shadow"
+          className="object-cover shrink-0 ml-8 lg:ml-0 mb-4 lg:mb-0 lg:absolute lg:left-[-11.2rem] lg:top-[3.85rem] drop-shadow"
           src={props.image}
           alt={props.name}
           height={220}

@@ -52,7 +52,7 @@ function ExternalParticipationForm({ data, onSuccess }: Props) {
 
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <div className="h3">Přihlášení na akci</div>
+      <div>Přihlášení na akci</div>
       <div className="flex flex-wrap gap-1 w-full">
         <TextFieldElement
           className="grow"
@@ -83,7 +83,7 @@ function ExternalParticipationForm({ data, onSuccess }: Props) {
         }}
       />
 
-      <div className="h3 mt-2">Kontaktní údaje</div>
+      <div className="mt-2">Kontaktní údaje</div>
       <TextFieldElement
         control={control}
         name="guardianName"
@@ -134,7 +134,7 @@ function ParticipationForm({ data, onSuccess }: Props) {
     reset({
       myNotes: myRegistration?.notes || '',
     });
-  }, [reset, user, data]);
+  }, [reset, user, myRegistration]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await create({input: { eventId: data.id!, ...values, yearOfBirth: 0 }});
@@ -163,7 +163,7 @@ function ParticipationForm({ data, onSuccess }: Props) {
         {myRegistration ? 'Upravit přihlášku' : 'Přihlásit'}
       </SubmitButton>
       {myRegistration && (
-        <button type="button" className="button button-white" onClick={onCancel.execute}>
+        <button type="button" className="button button-outline" onClick={onCancel.execute}>
           Zrušit přihlášku
         </button>
       )}

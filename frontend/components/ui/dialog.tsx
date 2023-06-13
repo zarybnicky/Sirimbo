@@ -48,7 +48,8 @@ export const DialogContent = React.forwardRef<
       ref={ref}
       className={cn(
         "fixed z-50 grid w-full gap-4 rounded-b-lg border bg-white p-6 shadow-lg",
-        "animate-in data-[state=open]:fade-in-90 data-[state=open]:slide-in-from-bottom-10 sm:max-w-lg sm:rounded-lg sm:zoom-in-90 data-[state=open]:sm:slide-in-from-bottom-0",
+        'data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide',
+        "sm:max-w-lg sm:rounded-lg",
         className
       )}
       {...props}
@@ -112,7 +113,7 @@ export const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("text-sm text-neutral-10", className)}
     {...props}
   />
 ))

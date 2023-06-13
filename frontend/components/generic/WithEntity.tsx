@@ -40,7 +40,7 @@ export const WithEntity = <T,>({
 }): JSX.Element => {
   const [{ data, fetching }] = fetcher.useQuery(id);
   const { perms: myPerms } = useAuth();
-  const props = React.useMemo(() => ({ data, id, onSuccess    }), [data, id]);
+  const props = React.useMemo(() => ({ data, id, onSuccess }), [data, id, onSuccess]);
   if (perms && !myPerms.hasPermission(perms[0], perms[1])) return <ErrorPage error="Přístup zakázán" />;
   if (fetching) return <Loader />;
   if (!fetching && !data) return <ErrorPage error="Nenalezeno" />;

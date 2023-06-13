@@ -15,7 +15,7 @@ export function YoutubeEmbed({
       <DialogTrigger asChild>
         <div className="relative">
           <div className="absolute inset-2 flex justify-center">
-            <div className="basis-1/3 text-red-700/80 text-shadow-lg">
+            <div className="basis-1/3 text-red-700/80">
               <PlayCircle className="w-full h-full" />
             </div>
           </div>

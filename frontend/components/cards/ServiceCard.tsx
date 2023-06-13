@@ -22,13 +22,13 @@ export function ServiceCard(props: ServiceCardProps) {
     >
       <div className="relative overflow-hidden max-h-[300px]">
         <img
-          className="sm:rounded-l-lg w-full h-full object-cover object-[50%_30%] transform transition duration-300 group-hover:scale-110"
+          className="sm:rounded-l-lg w-full h-full object-cover object-[50%_30%] transition duration-300 group-hover:scale-110"
           src={props.image}
           alt={props.header}
         />
       </div>
       <div className="bg-stone-800 group-even:bg-red-500 h-3 md:h-auto md:w-3" />
-      <div className="grow basis-4 px-4 py-6 md:px-8 md:py-8">
+      <div className="grow basis-4 px-4 py-6 md:p-8">
         <div className="text-2xl text-stone-800 group-odd:text-red-500 font-bold mb-2 md:mb-4">
           {props.header}
         </div>

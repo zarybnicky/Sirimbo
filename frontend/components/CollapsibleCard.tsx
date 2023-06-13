@@ -20,14 +20,14 @@ export function CollapsibleCard({title, cohort, children}: CollapsibleCardProps)
     >
       <Collapsible.Trigger className="group flex justify-between p-2">
         <div>{title}</div>
-        <ChevronDown className="text-stone-400 transform duration-300 ease-in-out group:data-[state=open]:rotate-180" />
+        <ChevronDown className="text-stone-400 duration-300 ease-in-out group:data-[state=open]:rotate-180" />
       </Collapsible.Trigger>
       <Collapsible.Content className="CollapsibleContent">
         <div className="p-2">{children}</div>
       </Collapsible.Content>
       {cohort && (
         <div
-          className="absolute rounded-l-lg w-3 border-r border-stone-200 shadow-sm top-0 bottom-0 left-0"
+          className="absolute rounded-l-lg w-3 border-r border-stone-200 shadow-sm inset-y-0 left-0"
           style={{ backgroundColor: cohort.sColorRgb }}
         />
       )}

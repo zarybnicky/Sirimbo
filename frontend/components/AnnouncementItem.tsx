@@ -36,7 +36,7 @@ export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
       <h2 className="text-lg font-bold mb-4">{item.upNadpis}</h2>
 
       <RichTextView
-        className={expanded ? '' : 'line-clamp-3 after'}
+        className={expanded ? '' : 'line-clamp-3'}
         value={item.upText}
       />
       {!expanded && <div className="text-accent-11 font-bold mt-3">Zobrazit více...</div>}

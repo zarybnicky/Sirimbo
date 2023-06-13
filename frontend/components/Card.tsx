@@ -36,7 +36,7 @@ export function Card({ menu, cohort, children, ...props }: CardProps) {
       {children}
       {cohort && (
         <div
-          className="absolute rounded-l-lg w-4 border-r border-stone-200 shadow-sm top-0 bottom-0 left-0"
+          className="absolute rounded-l-lg w-4 border-r border-stone-200 shadow-sm inset-y-0 left-0"
           style={{ backgroundColor: cohort.sColorRgb }}
         />
       )}
