@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTrigger } from 'components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger } from '@app/ui/dialog';
 import { PlayCircle } from 'lucide-react';
 
 export function YoutubeEmbed({

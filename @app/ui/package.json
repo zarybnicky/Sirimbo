@@ -7,5 +7,15 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@radix-ui/react-dialog": "^1.0.4",
+    "classnames": "^2.3.2",
+    "cmdk": "^0.2.0",
+    "lucide-react": "^0.244.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.44.3",
+    "tailwind-merge": "^1.13.1"
+  }
 }

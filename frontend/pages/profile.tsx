@@ -10,7 +10,7 @@ import { ChangePasswordForm } from 'components/ChangePasswordForm';
 import { LessonButton } from 'components/LessonButton';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import type { NextPageWithLayout } from 'pages/_app';
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from 'components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@app/ui/dialog';
 import { useQuery } from 'urql';
 import { TitleBar } from 'components/layout/TitleBar';
 import { NextSeo } from 'next-seo';

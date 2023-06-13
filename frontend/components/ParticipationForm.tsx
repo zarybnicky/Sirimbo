@@ -15,7 +15,7 @@ import { useAuth } from 'lib/data/use-auth';
 import { Button } from './Button';
 import type { AttendeeExternalInput } from '@app/graphql';
 import { toast } from 'react-toastify';
-import { Dialog, DialogContent, DialogTrigger } from './ui/dialog';
+import { Dialog, DialogContent, DialogTrigger } from '@app/ui/dialog';
 import { useMutation } from 'urql';
 
 interface Props {

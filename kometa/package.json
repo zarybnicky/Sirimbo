@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@app/graphql": "workspace:*",
+    "@app/ui": "workspace:*",
     "@types/node": "^20.3.1",
     "@types/react": "^18.2.12",
     "@types/react-big-scheduler": "^0.2.4",

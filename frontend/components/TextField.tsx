@@ -6,7 +6,7 @@ import {
   Path,
   useController,
 } from 'react-hook-form';
-import { FieldHelper, FieldHelperProps, FieldLabel } from './ui/form';
+import { FieldHelper, FieldHelperProps, FieldLabel } from '@app/ui/form';
 
 type Extras = {
   className?: string;

@@ -105,9 +105,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@app/ui@workspace:@app/ui":
+"@app/ui@workspace:*, @app/ui@workspace:@app/ui":
   version: 0.0.0-use.local
   resolution: "@app/ui@workspace:@app/ui"
+  dependencies:
+    "@radix-ui/react-dialog": ^1.0.4
+    classnames: ^2.3.2
+    cmdk: ^0.2.0
+    lucide-react: ^0.244.0
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    react-hook-form: ^7.44.3
+    tailwind-merge: ^1.13.1
   languageName: unknown
   linkType: soft
 
@@ -10336,6 +10345,7 @@ __metadata:
   resolution: "kometa@workspace:kometa"
   dependencies:
     "@app/graphql": "workspace:*"
+    "@app/ui": "workspace:*"
     "@types/node": ^20.3.1
     "@types/react": ^18.2.12
     "@types/react-big-scheduler": ^0.2.4
@@ -14971,6 +14981,7 @@ __metadata:
   dependencies:
     "@0no-co/graphql.web": ^1.0.4
     "@app/graphql": "workspace:*"
+    "@app/ui": "workspace:*"
     "@babel/core": ^7.22.5
     "@babel/preset-env": ^7.22.5
     "@ckeditor/ckeditor5-build-classic": ^38.0.1

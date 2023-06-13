@@ -7,7 +7,6 @@
   "settings": {
     "tailwindcss": {
       "callees": ["classnames", "clsx", "ctl", "cn"],
-      "cssFiles": ["public/style/*.css"],
       "config": "./tailwind.config.js"
     }
   },

@@ -1,4 +1,4 @@
-import { cn } from 'lib/utils';
+import { cn } from './cn';
 import { FieldError, Path } from 'react-hook-form';
 
 export const FieldLabel = ({

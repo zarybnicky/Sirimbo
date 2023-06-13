@@ -8,7 +8,7 @@ import { RichTextView } from './RichTextView';
 import { EventParticipantExport } from './EventParticipantExport';
 import { Event } from 'lib/entities';
 import { useAuth } from 'lib/data/use-auth';
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from './ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@app/ui/dialog';
 
 interface Props {
   event: EventWithItemsFragment;

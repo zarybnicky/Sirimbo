@@ -6,7 +6,7 @@ import { CohortWithMembersFragment } from '@app/graphql/Cohorts';
 import { UserPublicFragment } from '@app/graphql/User';
 import { RichTextView } from 'components/RichTextView';
 import { Cohort } from 'lib/entities';
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from './ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@app/ui/dialog';
 
 export function CohortItem({ item }: { item: CohortWithMembersFragment }) {
   const menu = Cohort.useMenu(item);

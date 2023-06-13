@@ -62,7 +62,6 @@ body {
 .scrollbar {
   @apply scrollbar-thin scrollbar-track-white scrollbar-thumb-stone-800/20 hover:scrollbar-thumb-stone-800/50;
 }
-
 .button {
   @apply relative inline-flex justify-center items-center shadow-md rounded-lg;
 }

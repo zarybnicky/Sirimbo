@@ -8,7 +8,7 @@ import {
   Control,
   ControllerProps,
 } from 'react-hook-form';
-import { FieldHelper, FieldLabel } from './ui/form';
+import { FieldHelper, FieldLabel } from '@app/ui/form';
 
 type Extras = {
   className?: string;

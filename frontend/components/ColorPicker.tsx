@@ -5,7 +5,7 @@ import React from 'react';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import classNames from 'classnames';
 import { X as Cross } from 'lucide-react';
-import { FieldLabel } from './ui/form';
+import { FieldLabel } from '@app/ui/form';
 
 type ColorPickerProps<T extends FieldValues> = {
   name: Path<T>;
