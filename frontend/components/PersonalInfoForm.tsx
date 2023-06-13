@@ -11,13 +11,14 @@ import { SubmitButton } from './SubmitButton';
 import { UpdateUserDocument } from '@app/graphql/User';
 import { useMutation } from 'urql';
 import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Form = z.object({
   uJmeno: z.string(),
   uPrijmeni: z.string(),
   uNarozeni: z.string(),
-  uRodneCislo: z.string().optional(),
-  uPohlavi: z.string(),
+  uRodneCislo: z.string().regex(/[0-9]{9,10}/, 'Neplatné rodné číslo').optional(),
+  uPohlavi: z.enum(['m', 'f']),
   uEmail: z.string().email(),
   uTelefon: z.string(),
   uStreet: z.string(),
@@ -38,7 +39,7 @@ export const PersonalInfoForm: React.FC<{
   const countries = useCountries();
   const doUpdate = useMutation(UpdateUserDocument)[1];
 
-  const { reset, control, handleSubmit } = useForm<FormProps>();
+  const { reset, control, handleSubmit } = useForm<FormProps>({ resolver: zodResolver(Form) });
   React.useEffect(() => {
     reset(Form.optional().parse(user));
   }, [reset, user]);
@@ -70,19 +71,12 @@ export const PersonalInfoForm: React.FC<{
         label="Rodné číslo"
         required
         placeholder="1111119999"
-        validation={{
-          pattern: {
-            value: /[0-9]{9,10}/,
-            message: 'Neplatné rodné číslo',
-          },
-        }}
       />
 
       <div>
         <RadioButtonGroupElement
           control={control}
           name="uPohlavi"
-          required
           options={[
             { id: 'm', label: 'Muž' },
             { id: 'f', label: 'Žena' },
@@ -137,7 +131,6 @@ export const PersonalInfoForm: React.FC<{
           control={control}
           label="Národnost"
           name="uNationality"
-          required
           options={countries.map((x) => ({ id: x.code.toString(), label: x.label }))}
         />
       </div>

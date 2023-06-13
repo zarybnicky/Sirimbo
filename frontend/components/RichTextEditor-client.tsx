@@ -6,7 +6,6 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { FieldHelper, FieldLabel } from '@app/ui/form';
 
 export type RichTextEditorProps<T extends FieldValues> = {
-  validation?: ControllerProps['rules'];
   name: Path<T>;
   control?: Control<T, any>;
   initialState?: string;

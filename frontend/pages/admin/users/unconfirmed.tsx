@@ -18,11 +18,14 @@ import { UserList } from 'components/UserList';
 import { NextPageWithLayout } from 'pages/_app';
 import { useMutation, useQuery } from 'urql';
 import { TitleBar } from 'components/layout/TitleBar';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-type FormProps = {
-  cohort: string;
-  role: string;
-};
+const Form = z.object({
+  cohort: z.string(),
+  role: z.string(),
+});
+type FormProps = z.infer<typeof Form>;
 
 const UnconfirmedUser: React.FC<{
   item: UserFragment;
@@ -31,10 +34,11 @@ const UnconfirmedUser: React.FC<{
   const confirm = useConfirm();
   const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: { cohort: item.uSkupina },
+    resolver: zodResolver(Form),
   });
 
-  const [{ data: cohorts }] = useQuery({query: CohortListDocument});
-  const [{ data: roles }] = useQuery({query: RoleListDocument});
+  const [{ data: cohorts }] = useQuery({ query: CohortListDocument });
+  const [{ data: roles }] = useQuery({ query: RoleListDocument });
   const confirmUser = useMutation(ConfirmUserDocument)[1];
   const deleteUser = useMutation(DeleteUserDocument)[1];
 
@@ -80,7 +84,6 @@ const UnconfirmedUser: React.FC<{
 
         <div className="flex gap-2">
           <ComboboxElement
-            required
             control={control}
             name="cohort"
             label="Tréninková skupina"
@@ -90,7 +93,6 @@ const UnconfirmedUser: React.FC<{
             }))}
           />
           <ComboboxElement
-            required
             control={control}
             name="role"
             label="Role oprávnění"
@@ -102,10 +104,7 @@ const UnconfirmedUser: React.FC<{
         </div>
 
         <div className="col-full flex gap-4 flex-row-reverse">
-          <button
-            type="submit"
-            className="button button-accent flex gap-2 items-center"
-          >
+          <button type="submit" className="button button-accent flex gap-2 items-center">
             <CheckIcon /> Potvrdit
           </button>
           <button
@@ -122,11 +121,14 @@ const UnconfirmedUser: React.FC<{
 };
 
 const Page: NextPageWithLayout = () => {
-  const [{data: users}, refetch] = useQuery({query: UserListDocument, variables:{ confirmed: false }});
+  const [{ data: users }, refetch] = useQuery({
+    query: UserListDocument,
+    variables: { confirmed: false },
+  });
 
   return (
     <div className="container py-4">
-    <TitleBar backHref="/admin/users" title="Nepotvrzení uživatelé" />
+      <TitleBar backHref="/admin/users" title="Nepotvrzení uživatelé" />
       {users?.users?.nodes?.map((item, i) => (
         <UnconfirmedUser onProcessed={refetch} item={item} key={i} />
       ))}

@@ -18,7 +18,6 @@ export function Checkbox({
   label,
   error,
   helperText,
-  required,
   ...props
 }: FieldHelperProps & Extras & Omit<React.HTMLProps<HTMLInputElement>, 'label'>) {
   return (
@@ -35,7 +34,6 @@ export function Checkbox({
       <div className="ml-3 text-sm">
         <FieldLabel htmlFor={name}>
           {label}
-          {required && <sup>*</sup>}
         </FieldLabel>
         <FieldHelper error={error} helperText={helperText} />
       </div>
@@ -47,26 +45,16 @@ type CheckboxElementProps<T extends FieldValues> = Omit<
   React.HTMLProps<HTMLInputElement>,
   'label' | 'name'
 > & {
-  validation?: ControllerProps['rules'];
   name: Path<T>;
   control?: Control<T>;
 } & Extras;
 
 export function CheckboxElement<T extends FieldValues>({
   name,
-  required,
   control,
-  validation = {},
   ...props
 }: CheckboxElementProps<T>) {
-  if (required && !validation?.required) {
-    validation.required = 'Toto pole je povinné';
-  }
-  const { field, fieldState } = useController<T>({
-    name,
-    rules: validation,
-    control,
-  });
+  const { field, fieldState } = useController<T>({ name, control });
 
   return (
     <Checkbox

@@ -10,12 +10,27 @@ import { useForm } from 'react-hook-form';
 import { Card } from './Card';
 import { useMutation } from 'urql';
 import { SubmitFormDocument } from '@app/graphql/Crm';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const Form = z.object({
+  date: z.date(),
+  time: z.string(),
+  location: z.string(),
+  event: z.string(),
+  exhibition: z.string().optional(),
+  phone: z.string(),
+  email: z.string().email(),
+  notes: z.string().optional(),
+  op: z.boolean().refine(x => x),
+});
+type FormProps = z.infer<typeof Form>;
 
 export const ExhibitionRequestForm = () => {
   const submit = useMutation(SubmitFormDocument)[1];
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit } = useForm<FormProps>({ resolver: zodResolver(Form) });
 
-  const onSubmit = useAsyncCallback(async ({ op, ...data }: any) => {
+  const onSubmit = useAsyncCallback(async ({ op, ...data }: FormProps) => {
     if (typeof fbq !== 'undefined') {
       fbq('track', 'SubmitApplication');
     }
@@ -32,7 +47,7 @@ export const ExhibitionRequestForm = () => {
         </h4>
 
         <div className="grid md:grid-cols-2 gap-2">
-          <DatePickerElement control={control} name="date" label="Termín" required />
+          <DatePickerElement control={control} name="date" label="Termín" />
           <TextFieldElement
             control={control}
             name="time"

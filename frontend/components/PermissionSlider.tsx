@@ -14,7 +14,6 @@ import {
 } from 'react-hook-form';
 
 type PermissionSliderProps<T extends FieldValues> = {
-  validation?: ControllerProps['rules'];
   name: Path<T> & keyof typeof PermissionKey;
   control?: Control<T>;
   label?: React.ReactNode;
@@ -24,9 +23,8 @@ export function PermissionSlider<T extends FieldValues>({
   name,
   control,
   label,
-  validation = {},
 }: PermissionSliderProps<T>) {
-  const { field } = useController<T>({ name, control, rules: validation });
+  const { field } = useController<T>({ name, control });
   return (
     <div className="grid relative my-1">
       <div className="text-stone-700 text-sm mb-1">{label}</div>

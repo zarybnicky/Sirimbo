@@ -13,28 +13,35 @@ import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { useAuth } from 'lib/data/use-auth';
 import { Button } from './Button';
-import type { AttendeeExternalInput } from '@app/graphql';
 import { toast } from 'react-toastify';
 import { Dialog, DialogContent, DialogTrigger } from '@app/ui/dialog';
 import { useMutation } from 'urql';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 interface Props {
   data: EventFragment & Partial<MyEventFragment>;
   onSuccess: () => void;
 }
 
+const ExternalForm = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
+  guardianName: z.string().optional(),
+  email: z.string().email(),
+  phone: z.string(),
+  notes: z.string().optional(),
+  birthNumber: z.string().regex(/[0-9]{9,10}/, 'Neplatné rodné číslo'),
+});
+type ExternalFormProps = z.infer<typeof ExternalForm>;
+
 type FormProps = {
   myNotes: string;
 };
 
-type ExternalFormProps = Pick<
-  AttendeeExternalInput,
-  'firstName' | 'lastName' | 'guardianName' | 'email' | 'phone' | 'notes' | 'birthNumber'
->;
-
 function ExternalParticipationForm({ data, onSuccess }: Props) {
   const create = useMutation(CreateAttendeeExternalDocument)[1];
-  const { control, handleSubmit } = useForm<ExternalFormProps>();
+  const { control, handleSubmit } = useForm<ExternalFormProps>({ resolver: zodResolver(ExternalForm) });
 
   const onSubmit = useAsyncCallback(async (values: ExternalFormProps) => {
     await create({
@@ -75,12 +82,6 @@ function ExternalParticipationForm({ data, onSuccess }: Props) {
         label="Rodné číslo účastníka"
         required
         placeholder="1111119999"
-        validation={{
-          pattern: {
-            value: /[0-9]{9,10}/,
-            message: 'Neplatné rodné číslo',
-          },
-        }}
       />
 
       <div className="mt-2">Kontaktní údaje</div>

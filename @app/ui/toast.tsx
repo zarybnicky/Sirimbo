@@ -57,3 +57,20 @@ export const ToastDescription = React.forwardRef<
   />
 ));
 ToastDescription.displayName = ToastPrimitive.Description.displayName;
+
+export const ToastProvider = ToastPrimitive.Provider;
+
+export const ToastViewport = React.forwardRef<
+  React.ElementRef<typeof ToastPrimitive.Viewport>,
+  React.ComponentPropsWithoutRef<typeof ToastPrimitive.Viewport>
+>(({ className, ...props }, ref) => (
+  <ToastPrimitive.Viewport
+    ref={ref}
+    className={cn(
+      "[--viewport-padding:_25px] fixed bottom-0 right-0 flex flex-col p-[var(--viewport-padding)] gap-[10px] w-[390px] max-w-[100vw] m-0 list-none z-[2147483647] outline-none",
+      className,
+    )}
+    {...props}
+  />
+));
+ToastViewport.displayName = ToastPrimitive.Viewport.displayName;

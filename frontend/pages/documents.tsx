@@ -21,7 +21,7 @@ const Page: NextPageWithLayout = () => {
   const category = watch('category');
 
   const [{ data }] = useQuery({
-    query:FileListDocument,
+    query: FileListDocument,
     variables: {
       category: category ? parseInt(category, 10) : undefined,
     },
@@ -34,8 +34,7 @@ const Page: NextPageWithLayout = () => {
           align="end"
           control={control}
           name="category"
-          placeholder='Vybrat kategorii'
-          required
+          placeholder="Vybrat kategorii"
           options={categories}
         />
       </TitleBar>

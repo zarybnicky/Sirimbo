@@ -8,7 +8,6 @@ import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { useCountries } from 'lib/data/use-countries';
 import { SubmitButton } from './SubmitButton';
-import { UserInput } from '@app/graphql';
 import { RoleListDocument } from '@app/graphql/Roles';
 import { CohortListDocument } from '@app/graphql/Cohorts';
 import {CreateUserDocument, DeleteUserDocument, UpdateUserDocument, UserDocument} from '@app/graphql/User';
@@ -20,34 +19,36 @@ import { DeleteButton } from './DeleteButton';
 import { User } from 'lib/entities';
 import { RichTextEditor } from './RichTextEditor';
 import { TitleBar } from './layout/TitleBar';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-type FormProps = Pick<
-  UserInput,
-  | 'uLogin'
-  | 'uJmeno'
-  | 'uPrijmeni'
-  | 'uNarozeni'
-  | 'uRodneCislo'
-  | 'uPohlavi'
-  | 'uEmail'
-  | 'uTelefon'
-  | 'uStreet'
-  | 'uConscriptionNumber'
-  | 'uOrientationNumber'
-  | 'uCity'
-  | 'uDistrict'
-  | 'uPostalCode'
-  | 'uNationality'
-  | 'uPoznamky'
-  | 'uDancer'
-  | 'uTeacher'
-  | 'uBan'
-  | 'uLock'
-  | 'uSystem'
-  | 'uGroup'
-  | 'uSkupina'
-  | 'uPass'
->;
+const Form = z.object({
+  uLogin: z.string(),
+  uPass: z.string(),
+  uJmeno: z.string(),
+  uPrijmeni: z.string(),
+  uNarozeni: z.string(),
+  uRodneCislo: z.string().regex(/[0-9]{9,10}/, 'Neplatné rodné číslo').optional(),
+  uPohlavi: z.enum(['m', 'f']),
+  uEmail: z.string().email(),
+  uTelefon: z.string(),
+  uStreet: z.string(),
+  uConscriptionNumber: z.string().optional(),
+  uOrientationNumber: z.string().optional(),
+  uCity: z.string(),
+  uDistrict: z.string().optional(),
+  uPostalCode: z.string(),
+  uNationality: z.string(),
+  uPoznamky: z.string().optional(),
+  uDancer: z.boolean().default(false),
+  uTeacher: z.boolean().default(false),
+  uBan: z.boolean().default(false),
+  uLock: z.boolean().default(false),
+  uSystem: z.boolean().default(false),
+  uGroup: z.string(),
+  uSkupina: z.string(),
+});
+type FormProps = z.infer<typeof Form>;
 
 const entity = User;
 
@@ -64,43 +65,20 @@ export const UserForm = ({ id = '' }: { id?: string; }) => {
   const [{ data: roles }] = useQuery({query: RoleListDocument});
   const [{ data: cohorts }] = useQuery({query: CohortListDocument});
 
-  const { reset, control, handleSubmit } = useForm<FormProps>();
+  const { reset, control, handleSubmit } = useForm<FormProps>({ resolver: zodResolver(Form) });
   React.useEffect(() => {
-    reset({
-      uLogin: data?.uLogin,
-      uJmeno: data?.uJmeno,
-      uPrijmeni: data?.uPrijmeni,
-      uNarozeni: data?.uNarozeni,
-      uRodneCislo: data?.uRodneCislo,
-      uPohlavi: data?.uPohlavi,
-      uEmail: data?.uEmail,
-      uTelefon: data?.uTelefon,
-      uStreet: data?.uStreet,
-      uConscriptionNumber: data?.uConscriptionNumber,
-      uOrientationNumber: data?.uOrientationNumber,
-      uCity: data?.uCity,
-      uDistrict: data?.uDistrict,
-      uPostalCode: data?.uPostalCode,
-      uNationality: data?.uNationality,
-      uPoznamky: data?.uPoznamky,
-      uDancer: data?.uDancer,
-      uTeacher: data?.uTeacher,
-      uBan: data?.uBan,
-      uLock: data?.uLock,
-      uSystem: data?.uSystem,
-      uGroup: data?.uGroup,
-      uSkupina: data?.uSkupina,
-    });
+    reset(Form.optional().parse(data));
   }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
-    const { uLogin: _uLogin, ...patch } = values;
+    const { uLogin: _uLogin, uPass, ...patch } = values;
     if (id) {
       await update({ id, patch });
     } else {
       const res = await create({
         input: {
           ...patch,
+          uPass,
           uLogin: _uLogin.toLowerCase(),
           uLock: false,
         },
@@ -175,19 +153,12 @@ export const UserForm = ({ id = '' }: { id?: string; }) => {
         label="Rodné číslo"
         required
         placeholder="1111119999"
-        validation={{
-          pattern: {
-            value: /[0-9]{9,10}/,
-            message: 'Neplatné rodné číslo',
-          },
-        }}
       />
 
       <div>
         <RadioButtonGroupElement
           control={control}
           name="uPohlavi"
-          required
           options={[
             { id: 'm', label: 'Muž' },
             { id: 'f', label: 'Žena' },
@@ -242,7 +213,6 @@ export const UserForm = ({ id = '' }: { id?: string; }) => {
           control={control}
           label="Národnost"
           name="uNationality"
-          required
           options={countries.map((x) => ({ id: x.code.toString(), label: x.label }))}
         />
       </div>

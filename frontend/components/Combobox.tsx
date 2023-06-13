@@ -20,29 +20,21 @@ type Extras = {
 
 type Item = { id: string | null; label: string };
 type ComboboxElementProps<T extends FieldValues> = {
-  validation?: ControllerProps['rules'];
   name: Path<T>;
   control?: Control<T>;
   options?: Item[];
-  required?: boolean;
 } & Extras;
 
 export function ComboboxElement<T extends FieldValues>({
   name,
   control,
-  validation: rules = {},
-  required,
   options = [],
   label,
   placeholder,
   ...props
 }: ComboboxElementProps<T> & Popover.PopoverContentProps) {
-  if (required && !rules?.required) {
-    rules.required = 'Toto pole je povinné';
-  }
-
   const [open, setOpen] = React.useState(false);
-  const { field, fieldState } = useController<T>({ name, control, rules });
+  const { field, fieldState } = useController<T>({ name, control });
 
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>

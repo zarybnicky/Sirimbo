@@ -18,28 +18,20 @@ type Extras = {
 
 type Item = { id: string; label: string; disabled?: boolean };
 export type RadioButtonGroupElementProps<T extends FieldValues> = {
-  validation?: ControllerProps['rules'];
   name: Path<T>;
   control?: Control<T>;
   options: Item[];
-  required?: boolean;
 } & Extras;
 
 export function RadioButtonGroupElement<T extends FieldValues>({
   name,
   control,
-  validation = {},
-  required,
   options,
   className,
   helperText,
   label,
 }: RadioButtonGroupElementProps<T>) {
-  if (required && !validation?.required) {
-    validation.required = 'Toto pole je povinné';
-  }
-
-  const { field, fieldState } = useController<T>({ name, control, rules: validation });
+  const { field, fieldState } = useController<T>({ name, control });
 
   return (
     <div className={`relative my-2 ${className}`}>

@@ -7,11 +7,14 @@ import { SubmitButton } from './SubmitButton';
 import { UserListDocument } from '@app/graphql/User';
 import { CreateCoupleDocument } from '@app/graphql/Couple';
 import { useMutation, useQuery } from 'urql';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-type FormProps = {
-  man: string;
-  woman: string;
-};
+const Form = z.object({
+  man: z.string(),
+  woman: z.string(),
+});
+type FormProps = z.infer<typeof Form>;
 
 export const NewCoupleForm: React.FC<{
   onSuccess?: () => void;
@@ -34,7 +37,7 @@ export const NewCoupleForm: React.FC<{
 
   const doCreate = useMutation(CreateCoupleDocument)[1];
 
-  const { control, handleSubmit } = useForm<FormProps>();
+  const { control, handleSubmit } = useForm<FormProps>({ resolver: zodResolver(Form) });
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await doCreate({ man: values.man, woman: values.woman });
     onSuccess?.();
@@ -47,14 +50,12 @@ export const NewCoupleForm: React.FC<{
         control={control}
         name="man"
         label="Partner"
-        required
         options={men}
       />
       <ComboboxElement
         control={control}
         name="woman"
         label="Partnerka"
-        required
         options={women}
       />
       <SubmitButton loading={onSubmit.loading}>Spárovat</SubmitButton>

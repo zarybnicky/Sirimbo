@@ -18,7 +18,6 @@ export type TextAreaElementProps<T extends FieldValues> = Omit<
   React.HTMLProps<HTMLTextAreaElement>,
   'label' | 'name' | 'control'
 > & {
-  validation?: ControllerProps['rules'];
   name: Path<T>;
   control?: Control<T>;
 } & Extras;
@@ -29,7 +28,6 @@ export function TextArea({
   className,
   error,
   helperText,
-  required,
   ...props
 }: FieldHelperProps & Extras & Omit<React.HTMLProps<HTMLTextAreaElement>, 'label'>) {
   return (
@@ -55,15 +53,10 @@ export function TextArea({
 
 export function TextAreaElement<T extends FieldValues>({
   name,
-  required,
   control,
-  validation = {},
   ...props
 }: TextAreaElementProps<T>) {
-  if (required && !validation?.required) {
-    validation.required = 'Toto pole je povinné';
-  }
-  const { field, fieldState } = useController<T>({ name, control, rules: validation });
+  const { field, fieldState } = useController<T>({ name, control });
 
   return (
     <TextArea
@@ -80,7 +73,6 @@ export type TextFieldElementProps<T extends FieldValues> = Omit<
   React.HTMLProps<HTMLInputElement>,
   'label' | 'name'
 > & {
-  validation?: ControllerProps['rules'];
   name: Path<T>;
   control?: Control<T>;
 } & Extras;
@@ -92,7 +84,6 @@ export function TextField({
   label,
   error,
   helperText,
-  required,
   ...props
 }: FieldHelperProps & Extras & Omit<React.HTMLProps<HTMLInputElement>, 'label'>) {
   return (
@@ -119,24 +110,11 @@ export function TextField({
 
 export function TextFieldElement<T extends FieldValues>({
   name,
-  required,
   control,
-  validation = {},
   ...props
 }: TextFieldElementProps<T>) {
-  if (required && !validation?.required) {
-    validation.required = 'Toto pole je povinné';
-  }
   const valueAsNumber = props?.type === 'number';
-
-  if (props?.type === 'email' && !validation.pattern) {
-    validation.pattern = {
-      value:
-        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      message: 'Zadejte platný e-mail',
-    };
-  }
-  const { field, fieldState } = useController<T>({ name, control, rules: validation });
+  const { field, fieldState } = useController<T>({ name, control });
 
   return (
     <TextField

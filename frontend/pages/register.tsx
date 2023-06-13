@@ -14,31 +14,69 @@ import { CohortListDocument } from '@app/graphql/Cohorts';
 import { RegisterDocument } from '@app/graphql/CurrentUser';
 import type { NextPageWithLayout } from 'pages/_app';
 import { useMutation, useQuery } from 'urql';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const Form = z.object({
+  username: z.string(),
+  password: z.string(),
+  jmeno: z.string(),
+  prijmeni: z.string(),
+  narozeni: z.date(),
+  rodneCislo: z.string().regex(/[0-9]{9,10}/, 'Neplatné rodné číslo'),
+  nationality: z.string(),
+  pohlavi: z.enum(['m', 'f']),
+  email: z.string().email(),
+  telefon: z.string(),
+  street: z.string(),
+  popisne: z.string().optional(),
+  orientacni: z.string().optional(),
+  city: z.string(),
+  district: z.string().optional(),
+  postal: z.string(),
+  skupina: z.string().optional(),
+  poznamky: z.string().optional(),
+  dancerName: z.string().optional(),
+  other: z.string().optional(),
+});
+type FormProps = z.infer<typeof Form>;
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const countries = useCountries();
   const [{ data: cohorts }] = useQuery({query: CohortListDocument, variables: { visible: true }});
   const register = useMutation(RegisterDocument)[1];
-  const { control, handleSubmit, watch } = useForm();
+  const { control, handleSubmit, watch } = useForm<FormProps>({ resolver: zodResolver(Form) });
 
-  const onSubmit = useAsyncCallback(async (values: any) => {
+  const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await register({
       input: {
-        ...values,
-        username: values.username.toLowerCase(),
-        poznamky:
+        user: {
+          uLogin: values.username.toLowerCase(),
+          uPoznamky:
           values.poznamky === 'dancer'
             ? 'Tanečník/tanečnice'
             : values.poznamky === 'parent'
             ? `Rodič tanečníka: ${values.dancerName}`
             : `Jiný vztah: ${values.other}`,
-        dancer: values.poznamky === 'dancer',
-        nationality: values.nationality.toString(),
-        skupina: values.skupina,
-        narozeni: new Date(values.narozeni).toISOString().substring(0, 10),
-        dancerName: undefined,
-        other: undefined,
+          uDancer: values.poznamky === 'dancer',
+          uNationality: values.nationality.toString(),
+          uSkupina: values.skupina,
+          uNarozeni: new Date(values.narozeni).toISOString().substring(0, 10),
+          uCity: values.city,
+          uEmail: values.email,
+          uJmeno: values.jmeno,
+          uPass: values.password,
+          uPohlavi: values.pohlavi,
+          uPostalCode: values.postal,
+          uPrijmeni: values.prijmeni,
+          uStreet: values.street,
+          uTelefon: values.telefon,
+          uConscriptionNumber: values.popisne,
+          uDistrict: values.district,
+          uOrientationNumber: values.orientacni,
+          uRodneCislo: values.rodneCislo,
+        },
       },
     });
     toast.success(
@@ -108,12 +146,6 @@ const Page: NextPageWithLayout = () => {
             label="Rodné číslo"
             name="rodneCislo"
             required
-            validation={{
-              pattern: {
-                value: /[0-9]{9,10}/,
-                message: 'Neplatné rodné číslo',
-              },
-            }}
           />
 
           <div className="col-full grid gap-2">
@@ -121,14 +153,12 @@ const Page: NextPageWithLayout = () => {
               control={control}
               label="Národnost"
               name="nationality"
-              required
               options={countries.map((x) => ({ id: x.code.toString(), label: x.label }))}
             />
 
             <RadioButtonGroupElement
               control={control}
               name="pohlavi"
-              required
               options={[
                 { label: 'Muž', id: 'm' },
                 { label: 'Žena', id: 'f' },
@@ -217,7 +247,6 @@ const Page: NextPageWithLayout = () => {
               control={control}
               label="Vztah ke klubu"
               name="poznamky"
-              required
               options={[
                 { id: 'dancer', label: 'Tanečník/tanečnice' },
                 { id: 'parent', label: 'Rodič tanečníka' },
@@ -228,7 +257,7 @@ const Page: NextPageWithLayout = () => {
               <TextFieldElement
                 control={control}
                 label="Jméno tanečníka"
-                name="dancer-name"
+                name="dancerName"
               />
             )}
             {watch('poznamky') === 'other' && (

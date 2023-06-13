@@ -6,7 +6,7 @@ import 'public/style/index.css';
 import { NextPage } from 'next';
 import { DefaultSeo } from 'next-seo';
 import { withPreconfiguredUrql } from '@app/graphql/query';
-import * as Toast from '@radix-ui/react-toast';
+import { ToastProvider, ToastViewport } from '@app/ui/toast';
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> &
   Omit<LayoutProps, 'children'>;
@@ -20,7 +20,7 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
   const layoutProps = { isDetail, list };
   return (
     <ProvideAuth>
-      <Toast.ToastProvider swipeDirection="right">
+      <ToastProvider swipeDirection="right">
         <DefaultSeo
           titleTemplate="%s · Rozpisovník"
           defaultTitle="Rozpisovník"
@@ -48,8 +48,8 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
         <Layout {...layoutProps} >
           <Component {...pageProps} />
         </Layout>
-        <Toast.Viewport className="[--viewport-padding:_25px] fixed bottom-0 right-0 flex flex-col p-[var(--viewport-padding)] gap-[10px] w-[390px] max-w-[100vw] m-0 list-none z-[2147483647] outline-none" />
-      </Toast.ToastProvider>
+        <ToastViewport />
+      </ToastProvider>
     </ProvideAuth>
   );
 }

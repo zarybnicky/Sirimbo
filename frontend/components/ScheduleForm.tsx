@@ -95,7 +95,6 @@ export const ScheduleForm = ({ id = '' }: { id?: string }) => {
         control={control}
         name="rTrener"
         label="Trenér"
-        required
         options={(trainers?.trainers?.nodes || []).map((x) => ({
           id: x.id,
           label: `${x.uJmeno} ${x.uPrijmeni}`,

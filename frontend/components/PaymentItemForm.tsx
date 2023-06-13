@@ -12,7 +12,6 @@ import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
-import { PlatbyItemInput } from '@app/graphql';
 import { UserListDocument } from '@app/graphql/User';
 import { useMutation, useQuery } from 'urql';
 import { useRouter } from 'next/router';
@@ -21,11 +20,17 @@ import { ErrorPage } from './ErrorPage';
 import { DeleteButton } from './DeleteButton';
 import { PaymentItem } from 'lib/entities';
 import { TitleBar } from './layout/TitleBar';
+import { z } from 'zod';
 
-type FormProps = Pick<
-  PlatbyItemInput,
-  'piAmount' | 'piDate' | 'piIdCategory' | 'piIdUser' | 'piPrefix'
->;
+const Form = z.object({
+  piAmount: z.number(),
+  piDate: z.date(),
+  piIdCategory: z.string(),
+  piIdUser: z.string(),
+  piPrefix: z.number().optional(),
+});
+type FormProps = z.infer<typeof Form>;
+
 const entity = PaymentItem;
 
 export const PaymentItemForm = ({id = ''}: {id?: string}) => {
@@ -46,16 +51,11 @@ export const PaymentItemForm = ({id = ''}: {id?: string}) => {
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
-    reset({
-      piAmount: data?.piAmount,
-      piDate: data?.piDate,
-      piIdCategory: data?.piIdCategory,
-      piIdUser: data?.piIdUser,
-      piPrefix: data?.piPrefix,
-    });
+    reset(Form.optional().parse(data));
   }, [reset, data]);
 
-  const onSubmit = useAsyncCallback(async (patch: FormProps) => {
+  const onSubmit = useAsyncCallback(async (values: FormProps) => {
+    const patch = { ...values, piDate: values.piDate.toString() };
     if (id) {
       await update({ id, patch });
     } else {
@@ -103,7 +103,6 @@ export const PaymentItemForm = ({id = ''}: {id?: string}) => {
         control={control}
         name="piIdUser"
         label="Uživatel"
-        required
         options={(users?.users?.nodes || []).map((x) => ({
           id: x.id,
           label: `${x.id.padStart(6, '0')} - ${x.uJmeno} ${x.uPrijmeni}`,
@@ -113,13 +112,12 @@ export const PaymentItemForm = ({id = ''}: {id?: string}) => {
         control={control}
         name="piIdUser"
         label="Uživatel"
-        required
         options={(categories?.platbyCategories?.nodes || []).map((x) => ({
           id: x.id,
           label: `${x.id} - ${x.pcName}`,
         }))}
       />
-      <TextFieldElement control={control} name="piPrefix" label="Prefix (rok)" required />
+      <TextFieldElement control={control} name="piPrefix" label="Prefix (rok)" />
     </form>
   );
 };

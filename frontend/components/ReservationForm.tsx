@@ -104,7 +104,6 @@ export const ReservationForm = ({ id = '' }: { id?: string }) => {
         control={control}
         name="nTrener"
         label="Trenér"
-        required
         options={(trainers?.trainers?.nodes || []).map((x) => ({
           id: x.id,
           label: `${x.uJmeno} ${x.uPrijmeni}`,
