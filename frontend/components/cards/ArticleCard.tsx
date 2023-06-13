@@ -24,8 +24,8 @@ export const ArticleCard = ({ item: x }: { item: Article }) => {
         <p className="text-stone-700 grow">{x.preview}</p>
 
         <div className="flex justify-center mt-3">
-          <div className=" font-bold tracking-wider button text-white button-lg button button-red button-lg">
-            Více zde
+          <div className="font-bold tracking-wider button button-lg button-accent">
+            Zjisti více
             <ChevronRight className="h-3 w-3 ml-2 -mr-2" />
           </div>
         </div>

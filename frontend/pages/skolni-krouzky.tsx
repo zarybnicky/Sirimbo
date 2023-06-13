@@ -8,7 +8,7 @@ const Page: NextPageWithLayout = () => {
     <>
       <Heading>Olymp Dance</Heading>
 
-      <div className="mt-6 prose">
+      <div className="mt-6 prose prose-accent">
         <h2>Tanči s námi na své škole!</h2>
 
         <p>
@@ -36,7 +36,7 @@ const Page: NextPageWithLayout = () => {
 
       <div className="flex justify-center">
         <a
-          className="button button-red button-lg hover:underline my-6"
+          className="button button-accent button-lg hover:underline my-6"
           href="https://olympdance.cz"
           target="blank"
           rel="nofollow"

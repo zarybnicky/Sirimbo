@@ -22,7 +22,7 @@ export function TrainerCard(props: TrainerCardProps) {
         />
       )}
       <h3 className="text-4xl mb-4 text-red-500 drop-shadow">{props.name}</h3>
-      <div className="prose lg:min-h-[220px]">{props.children}</div>
+      <div className="prose prose-accent lg:min-h-[220px]">{props.children}</div>
     </div>
   );
 }
@@ -33,7 +33,7 @@ const Page: NextPageWithLayout = () => {
       <Heading>Naši trenéři</Heading>
 
       <div className="mb-12">
-        <p className="prose">
+        <p className="prose prose-accent">
           Taneční klub se pyšní týmem trenérů, kteří představují základ dlouholeté úspěšné
           historie. Trenéři disponují vysokou odborností, bohatými zkušenostmi a vášní pro
           taneční sport. Stále se snažíme zdokonalovat a držet krok s nejnovějšími trendy
@@ -53,7 +53,7 @@ const Page: NextPageWithLayout = () => {
       <Heading>Externí trenéři</Heading>
 
       <div className="mb-12">
-        <p className="prose">
+        <p className="prose prose-accent">
           V rámci klubu spolupracujeme s významnými odborníky tanečního světa z různých
           částí republiky, kteří s námi sdílí své znalosti a dovednosti. Externí odborníci
           přinášejí nové perspektivy, inovativní přístupy a inspiraci, které nám pomáhají

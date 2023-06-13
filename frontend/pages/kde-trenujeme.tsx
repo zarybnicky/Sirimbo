@@ -3,14 +3,16 @@ import { LocationCard } from 'components/cards/LocationCard';
 import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
 import type { NextPageWithLayout } from 'pages/_app';
+import { NextSeo } from 'next-seo';
 
 const Page: NextPageWithLayout = () => {
   return (
     <>
       <Heading>Kde trénujeme</Heading>
+      <NextSeo title="Kde trénujeme" />
 
       <div className="my-16 space-y-4">
-        <h2 className="text-3xl text-red-500 drop-shadow tracking-wide">V Olomouci</h2>
+        <h2 className="text-3xl text-accent-11 drop-shadow tracking-wide">V Olomouci</h2>
         <LocationCard
           name="Taneční centrum při FZŠ Holečkova"
           href="https://www.zsholeckova.cz/"
@@ -32,26 +34,12 @@ const Page: NextPageWithLayout = () => {
           <br />
           (vchod brankou z ulice U reálky)
         </LocationCard>
-
-        <h2 className="mt-8 text-3xl text-red-500 drop-shadow tracking-wide">
-          V Prostějově
-        </h2>
-        <LocationCard
-          name="Taneční sál Gala"
-          mapHref="https://goo.gl/maps/Jtv6mdoSgBEdsiTN7"
-          map={{ lat: 49.4681836, lng: 17.0837344, zoom: 12 }}
-        >
-          Západní 1, 796 04 Prostějov-Krasice
-          <br />
-          (vchod vedle podnikové prodejny Gala)
-        </LocationCard>
       </div>
       <CallToAction />
     </>
   );
 }
 
-Page.staticTitle = "Kde trénujeme";
 Page.showTopMenu = true;
 
 export default Page;

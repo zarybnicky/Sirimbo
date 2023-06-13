@@ -1,13 +1,15 @@
 import { ExhibitionRequestForm } from 'components/ExhibitionRequestForm';
 import { Heading } from 'components/Heading';
+import { NextSeo } from 'next-seo';
 import type { NextPageWithLayout } from 'pages/_app';
 
 const Page: NextPageWithLayout = () => {
   return (
     <>
       <Heading>Taneční vystoupení</Heading>
+      <NextSeo title="Taneční vystoupení" />
 
-      <div className="mb-8 prose">
+      <div className="mb-8 prose prose-accent">
         <p>
           Hledáte taneční vystoupení na svůj ples, firemní večírek nebo jinou společenskou
           akci? Máme pro Vás řešení!
@@ -33,7 +35,6 @@ const Page: NextPageWithLayout = () => {
   );
 }
 
-Page.staticTitle = "Taneční vystoupení";
 Page.showTopMenu = true;
 
 export default Page;

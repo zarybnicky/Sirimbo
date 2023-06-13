@@ -12,7 +12,7 @@ const Page: NextPageWithLayout = () => {
       <Heading>Přijďte si vyzkoušet, jak vypadá taneční trénink!</Heading>
 
       <div className="col-feature my-8 grid lg:grid-cols-2 gap-4">
-        <div className="prose">
+        <div className="prose prose-accent">
           <h2>Na co se můžete těšit?</h2>
           <ul>
             <li>Výukové lekce standardních a latinskoamerických tanců</li>
@@ -26,7 +26,7 @@ const Page: NextPageWithLayout = () => {
           </ul>
         </div>
 
-        <div className="prose">
+        <div className="prose prose-accent">
           <h2>Víte, že...?</h2>
           <ul>
             <li>Taneční sport je nově olympijským sportem</li>
@@ -47,7 +47,7 @@ const Page: NextPageWithLayout = () => {
       <img src="https://tkolymp.cz/galerie/clanky/Týmové-foto-1.jpg" />
 
       <div className="col-feature my-16 grid lg:grid-cols-2 gap-4">
-        <div className="prose">
+        <div className="prose prose-accent">
           <h2>Informace k tréninku</h2>
           <ul>
             <li>
@@ -60,7 +60,7 @@ const Page: NextPageWithLayout = () => {
             <li>Přítomnost rodičů se nedoporučuje</li>
           </ul>
         </div>
-        <div className="prose">
+        <div className="prose prose-accent">
           <h2>Co vás čeká...?</h2>
           <ul>
             <li>Základní kroky čtyř tanců (Waltz, Polka, Chacha, Jive)</li>
@@ -95,7 +95,7 @@ const Page: NextPageWithLayout = () => {
           ></iframe>
         </YoutubeEmbed>
 
-        <div className="prose self-center">
+        <div className="prose prose-accent self-center">
           <h3>
             Znáte StarDance? A připadá vám někdy neuvěřitelné naučit se těžké kroky do
             velkého množství tanců?
@@ -107,7 +107,7 @@ const Page: NextPageWithLayout = () => {
       </div>
 
       <div className="col-feature my-8 grid lg:grid-cols-2 gap-4">
-        <div className="prose">
+        <div className="prose prose-accent">
           <h2>Příběh tanečníků</h2>
           <p>Dan s Barčou spolu začali tancovat v roce 2010 v dětské věkové kategorii.</p>
           <p>
@@ -130,7 +130,6 @@ const Page: NextPageWithLayout = () => {
           thumbnail="https://i.ytimg.com/vi/lURCOEiVbGc/hqdefault.jpg"
         >
           <iframe
-            frameBorder="0"
             allowFullScreen
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             width="100%"
@@ -140,7 +139,7 @@ const Page: NextPageWithLayout = () => {
         </YoutubeEmbed>
       </div>
 
-      <div className="my-8 prose text-center">
+      <div className="my-8 prose prose-accent text-center">
         <h2>
           Nečekejte, až vaše děti vyrostou, vrcholoví sportovci začínají již v dětském
           věku.

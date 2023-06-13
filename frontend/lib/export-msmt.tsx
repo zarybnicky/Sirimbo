@@ -1,6 +1,6 @@
 import { saveAs } from 'file-saver';
 import format from 'date-fns/format';
-import { fetchGql } from './query';
+import { fetchGql } from '@app/graphql/query';
 import { MsmtExportDocument } from '@app/graphql/User';
 
 export async function exportMSMT() {

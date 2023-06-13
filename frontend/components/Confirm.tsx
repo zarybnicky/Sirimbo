@@ -86,12 +86,12 @@ export const ConfirmProvider = React.memo(function ConfirmProvider({
               'fixed z-50',
               'w-[95vw] max-w-md rounded-lg p-4 md:w-full',
               'top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]',
-              'bg-white dark:bg-gray-800',
+              'bg-white',
               'focus:outline-none focus-visible:ring focus-visible:ring-red-500 focus-visible:ring-opacity-75',
               'data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide',
             )}
           >
-            <DialogPrimitive.Title className="text-sm font-medium text-gray-900 dark:text-gray-100">
+            <DialogPrimitive.Title className="text-sm font-medium text-gray-900">
               {options.title}
             </DialogPrimitive.Title>
 
@@ -102,7 +102,7 @@ export const ConfirmProvider = React.memo(function ConfirmProvider({
                 onClick={handleConfirm}
                 className={cx(
                   'inline-flex select-none justify-center rounded-md px-4 py-2 text-sm font-medium',
-                  'bg-red-600 text-white hover:bg-red-700 dark:bg-red-700 dark:text-gray-100 dark:hover:bg-red-600',
+                  'bg-red-600 text-white hover:bg-red-700',
                   'border border-transparent',
                   'focus:outline-none focus-visible:ring focus-visible:ring-red-500 focus-visible:ring-opacity-75',
                 )}
@@ -117,7 +117,7 @@ export const ConfirmProvider = React.memo(function ConfirmProvider({
                 'focus:outline-none focus-visible:ring focus-visible:ring-red-500 focus-visible:ring-opacity-75',
               )}
             >
-              <CloseIcon className="h-4 w-4 text-gray-500 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-400" />
+              <CloseIcon className="h-4 w-4 text-gray-500 hover:text-gray-700" />
             </DialogPrimitive.Close>
           </DialogPrimitive.Content>
         </DialogPrimitive.Portal>

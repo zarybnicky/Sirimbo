@@ -104,14 +104,14 @@ const UnconfirmedUser: React.FC<{
         <div className="col-full flex gap-4 flex-row-reverse">
           <button
             type="submit"
-            className="button button-red button-text flex gap-2 items-center"
+            className="button button-accent flex gap-2 items-center"
           >
             <CheckIcon /> Potvrdit
           </button>
           <button
             type="button"
             onClick={onDelete}
-            className="button button-red button-text flex gap-2 items-center"
+            className="button button-accent flex gap-2 items-center"
           >
             <DeleteIcon /> Odstranit
           </button>

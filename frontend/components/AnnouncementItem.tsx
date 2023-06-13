@@ -39,7 +39,7 @@ export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
         className={expanded ? '' : 'line-clamp-3 after'}
         value={item.upText}
       />
-      {!expanded && <div className="text-primary font-bold mt-3">Zobrazit více...</div>}
+      {!expanded && <div className="text-accent-11 font-bold mt-3">Zobrazit více...</div>}
     </Card>
   );
 };

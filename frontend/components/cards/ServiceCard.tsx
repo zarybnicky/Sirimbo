@@ -35,7 +35,7 @@ export function ServiceCard(props: ServiceCardProps) {
         {props.children}
         {props.href && (
           <div>
-            <span className="mt-4 button button-red">
+            <span className="mt-4 button button-accent">
               Zjisti více <ArrowRight className="ml-2" />
             </span>
           </div>

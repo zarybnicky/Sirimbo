@@ -29,7 +29,7 @@ export const Footer: React.FC = () => {
             miroslav.hyza@tkolymp.cz
           </div>
 
-          <Link className="button button-lg button-red mt-4" href="/contact">
+          <Link className="button button-lg button-accent mt-4" href="/contact">
             Kontaktní detaily
             <ChevronRight className="h-3 w-3 ml-2 -mr-2" />
           </Link>

@@ -58,7 +58,7 @@ export function RadioButtonGroupElement<T extends FieldValues>({
               'group data-[state=on]:text-white data-[state=on]:bg-red-500 bg-white',
               'border-y px-2.5 py-2 first:rounded-l-xl first:border-x last:rounded-r-xl last:border-x',
               'border-gray-400 data-[state=on]:border-red-800',
-              'focus:relative focus:outline-none focus-visible:z-20 focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75',
+              'focus:relative focus:outline-none focus-visible:z-20 focus-visible:ring focus-visible:ring-red-500 focus-visible:ring-opacity-75',
             )}
           >
             {label}

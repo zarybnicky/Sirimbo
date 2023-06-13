@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import type { NextPageWithLayout } from 'pages/_app';
 import { ResetPasswordDocument } from '@app/graphql/CurrentUser';
 import { useMutation } from 'urql';
+import { NextSeo } from 'next-seo';
 
 const Page: NextPageWithLayout = () => {
   const { control, handleSubmit } = useForm();
@@ -26,6 +27,7 @@ const Page: NextPageWithLayout = () => {
 
   return (
     <div className="container mx-auto max-w-md mt-16 mb-20">
+      <NextSeo title="Zapomenuté heslo" />
       <Card>
         <form onSubmit={handleSubmit(onSubmit.execute)}>
           <h5 className="text-xl mb-2">Zapomenuté heslo</h5>
@@ -64,7 +66,6 @@ const Page: NextPageWithLayout = () => {
   );
 };
 
-Page.staticTitle = 'Zapomenuté heslo';
 Page.requireLoggedOut = true;
 
 export default Page;

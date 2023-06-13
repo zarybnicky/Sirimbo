@@ -33,10 +33,10 @@ export function ColorPicker<T extends FieldValues>({
           sideOffset={4}
           className={classNames(
             'z-20 data-[side=top]:animate-slide-up data-[side=bottom]:animate-slide-down',
-            'w-[320px] rounded-lg p-2 shadow-md bg-white dark:bg-gray-800',
+            'w-[320px] rounded-lg p-2 shadow-md bg-white',
           )}
         >
-          <PopoverPrimitive.Arrow className="fill-current text-white dark:text-gray-800" />
+          <PopoverPrimitive.Arrow className="fill-current text-white" />
           <div className="text-right -mt-2 -mr-2 mb-2">
             <PopoverPrimitive.Close
               className={classNames(
@@ -44,7 +44,7 @@ export function ColorPicker<T extends FieldValues>({
                 'focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75',
               )}
             >
-              <Cross className="h-4 w-4 text-gray-500 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-400" />
+              <Cross className="h-4 w-4 text-gray-500 hover:text-gray-700" />
             </PopoverPrimitive.Close>
           </div>
 

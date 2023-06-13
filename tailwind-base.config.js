@@ -1,4 +1,4 @@
-const colors = require('tailwindcss/colors');
+const radixColors = require("@radix-ui/colors");
 
 // https://www.tints.dev/red/ED1734
 const red = {
@@ -16,12 +16,26 @@ const red = {
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'media',
   corePlugins: {
     aspectRatio: false,
   },
   plugins: [
+		require("windy-radix-palette")({
+			colors: {
+				mauve: radixColors.mauve,
+				mauveDark: radixColors.mauveDark,
+				red: radixColors.red,
+				redDark: radixColors.redDark,
+				gold: radixColors.gold,
+				goldDark: radixColors.goldDark,
+			},
+		}),
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
+		require("windy-radix-typography")({
+      colors: ['accent', 'neutral'],
+    }),
     require('@tailwindcss/aspect-ratio'),
     require('tailwindcss-opentype'),
     require('tailwind-scrollbar'),
@@ -39,8 +53,6 @@ module.exports = {
         fit: 'fit-content',
       },
       colors: {
-        red,
-
         success: '#90CA63',
         warning: '#e6be2a',
         error: '#e24320',

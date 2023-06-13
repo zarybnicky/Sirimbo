@@ -1,13 +1,15 @@
 import * as React from 'react';
 import { Heading } from 'components/Heading';
 import type { NextPageWithLayout } from 'pages/_app';
+import { NextSeo } from 'next-seo';
 
 const Page: NextPageWithLayout = () => {
   return (
     <>
       <Heading>Ochrana osobních údajů</Heading>
+      <NextSeo title="Ochrana osobních ůdajů" />
 
-      <div className="prose">
+      <div className="prose prose-accent">
         <p>
           <b>I. Základní ustanovení</b>
         </p>
@@ -173,6 +175,5 @@ const Page: NextPageWithLayout = () => {
 }
 
 Page.showTopMenu = true;
-Page.staticTitle = "Ochrana osobních údajů";
 
 export default Page;

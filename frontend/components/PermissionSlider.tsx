@@ -46,7 +46,7 @@ export function PermissionSlider<T extends FieldValues>({
               'disabled:text-stone-500 disabled:bg-stone-200',
               'border-y px-2.5 py-2 first:rounded-l-xl first:border-x border-r last:rounded-r-xl',
               'border-gray-400 data-[state=on]:border-red-800',
-              'focus:relative focus:outline-none focus-visible:z-20 focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75',
+              'focus:relative focus:outline-none focus-visible:z-20 focus-visible:ring focus-visible:ring-red-500 focus-visible:ring-opacity-75',
             )}
           >
             {label}

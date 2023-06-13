@@ -136,7 +136,7 @@ export function CohortGroupForm({ id = '' }: Props) {
 
           <Popover.Root>
             <Popover.Trigger asChild>
-              <button className="button button-white">
+              <button className="button button-outline">
                   <Plus className="inline w-4 h-4" /> Přidat skupinu
               </button>
             </Popover.Trigger>
@@ -146,10 +146,10 @@ export function CohortGroupForm({ id = '' }: Props) {
               className={cn(
                 'z-20 data-[side=top]:animate-slide-up data-[side=bottom]:animate-slide-down',
                 'w-48 rounded-lg shadow-md md:w-56',
-                'bg-white dark:bg-stone-800',
+                'bg-white',
               )}
             >
-              <Popover.Arrow className="fill-current text-white dark:text-stone-800" />
+              <Popover.Arrow className="fill-current text-white" />
               <Command className="border">
                 <CommandInput autoFocus placeholder="Vyhledat..." />
                 <CommandList>

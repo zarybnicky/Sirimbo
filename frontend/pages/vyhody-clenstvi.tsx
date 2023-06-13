@@ -2,17 +2,19 @@ import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
 import type { NextPageWithLayout } from 'pages/_app';
+import { NextSeo } from 'next-seo';
 
 const Page: NextPageWithLayout = () => {
   return (
     <>
       <Heading>Členství v Olympu</Heading>
+      <NextSeo title="Členství" />
 
       <div className="col-feature mt-8 mb-16 grid gap-16 px-4 md:grid-cols-3">
         <div className="flex items-center justify-center">
           <img src="https://tkolymp.cz/galerie/clanky/293547069655557869525116228763683690860426o.jpg" />
         </div>
-        <div className="prose col-span-2 -order-1 md:order-1">
+        <div className="prose prose-accent col-span-2 -order-1 md:order-1">
           <p>
             <b>Členstvím v TK Olymp se zapojíte do špičkového tanečního klubu:</b>
           </p>
@@ -41,7 +43,6 @@ const Page: NextPageWithLayout = () => {
   );
 }
 
-Page.staticTitle = "Výhody členství";
 Page.showTopMenu = true;
 
 export default Page;

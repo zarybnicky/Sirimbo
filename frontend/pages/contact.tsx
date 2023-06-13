@@ -8,7 +8,7 @@ const Page: NextPageWithLayout = () => {
     <>
       <Heading>Kontakt</Heading>
 
-      <div className="prose mt-8">
+      <div className="prose prose-accent mt-8">
         <h2>Fakturační údaje:</h2>
         <p>
           Taneční klub Olymp Olomouc, z. s.
@@ -22,11 +22,11 @@ const Page: NextPageWithLayout = () => {
       </div>
 
       <div className="col-popout gap-4 my-8 grid lg:grid-cols-2">
-        <div className="lg:col-span-2 prose">
+        <div className="lg:col-span-2 prose prose-accent">
           <h2>Kontaktní osoby:</h2>
         </div>
 
-        <div className="prose">
+        <div className="prose prose-accent">
           <h3>Statutární zástupce:</h3>
           <p>
             <b>Mgr. Miroslav Hýža</b>
@@ -70,7 +70,7 @@ const Page: NextPageWithLayout = () => {
           </p>
         </div>
 
-        <div className="prose">
+        <div className="prose prose-accent">
           <h3>Prostějov - noví zájemci i členové</h3>
           <p>
             <b>Roman Pecha</b>

@@ -12,9 +12,7 @@ export const Button = React.memo(function Button({
   children,
   ...props
 }: ButtonProps) {
-  const color = props.disabled
-    ? 'button text-center button-secondary'
-    : 'button text-center button-red';
+  const color = 'button text-center button-accent';
   if (href) {
     return (
       <Link href={href} className={color}>

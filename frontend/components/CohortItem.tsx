@@ -27,7 +27,7 @@ export function CohortItem({ item }: { item: CohortWithMembersFragment }) {
         <div className="flex flex-wrap gap-2 mt-3">
           <Dialog>
             <DialogTrigger asChild>
-              <button className="button button-red">Seznam členů</button>
+              <button className="button button-accent">Seznam členů</button>
             </DialogTrigger>
             <DialogContent>
               <DialogTitle>Seznam členů</DialogTitle>

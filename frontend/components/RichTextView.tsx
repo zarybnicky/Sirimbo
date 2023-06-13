@@ -12,29 +12,12 @@ interface Props {
 }
 
 export const RichTextView = ({ value, className }: Props) => {
-  if (!value || (Array.isArray(value) && !value.length)) {
+  if (!value || !value.trim()) {
     return null;
   }
-  /* if (Array.isArray(value)) {
-   *   return (
-   *     <div className={className}>
-   *       <SlateEditor name="viewOnly" readOnly value={value} />
-   *     </div>
-   *   );
-   * }
-   * if (typeof value === 'object') {
-   *   return <>Neplatný obsah, nahlašte to prosím správci obsahu</>;
-   * }
-   * if (value.startsWith('[')) {
-   *   return (
-   *     <div className={className}>
-   *       <SlateEditor name="viewOnly" readOnly value={JSON.parse(value) as any[]} />
-   *     </div>
-   *   );
-   * } */
   return (
     <div
-      className={`prose ${className}`}
+      className={`prose prose-accent ${className}`}
       style={{
         overflowWrap: 'break-word',
         wordWrap: 'break-word',
@@ -49,7 +32,6 @@ export const RichTextView = ({ value, className }: Props) => {
 const isElement = (domNode: DOMNode): domNode is Element => {
   const isTag = domNode.type === 'tag';
   const hasAttributes = (domNode as Element).attribs !== undefined;
-
   return isTag && hasAttributes;
 };
 

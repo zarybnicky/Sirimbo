@@ -13,6 +13,7 @@ import type { NextPageWithLayout } from 'pages/_app';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from 'components/ui/dialog';
 import { useQuery } from 'urql';
 import { TitleBar } from 'components/layout/TitleBar';
+import { NextSeo } from 'next-seo';
 
 const Page: NextPageWithLayout = () => {
   const { user, couple } = useAuth();
@@ -41,6 +42,7 @@ const Page: NextPageWithLayout = () => {
 
   return (
     <div className="container p-4 lg:py-8">
+      <NextSeo title="Profil" />
       <TitleBar title={`${user.uJmeno} ${user.uPrijmeni}`}>
         <Dialog open={editOpen} onOpenChange={setEditOpen}>
           <DialogTrigger asChild>
@@ -109,7 +111,6 @@ const Page: NextPageWithLayout = () => {
   );
 };
 
-Page.staticTitle = 'Profil';
 Page.permissions = [PermissionKey.peNastenka, PermissionLevel.P_VIEW];
 
 export default Page;

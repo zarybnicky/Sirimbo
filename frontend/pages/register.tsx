@@ -241,7 +241,7 @@ const Page: NextPageWithLayout = () => {
             )}
           </div>
 
-          <div className="col-full prose mt-4">
+          <div className="col-full prose prose-accent mt-4">
             <p>
               Zákon č. 101/2000 Sb., o ochraně osobních údajů, ve znění pozdějších
               předpisů, ukládá

@@ -15,7 +15,7 @@ import i18next from 'i18next';
 import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 import csZodTranslation from 'public/locales/cs/zod.json';
-import { withPreconfiguredUrql } from '@app/graphql/query'
+import { withPreconfiguredUrql } from '@app/graphql/query';
 
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
@@ -29,7 +29,16 @@ i18next.init({
 });
 z.setErrorMap(zodI18nMap);
 
-const WithProviders = (children: React.ReactNode) => {
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> &
+  Omit<LayoutProps, 'children'>;
+
+type AppPropsWithLayout<T = {}> = AppProps<T> & {
+  Component: NextPageWithLayout<T>;
+};
+
+function App({ Component, pageProps }: AppPropsWithLayout) {
+  const { staticTitle, isDetail, list, showTopMenu, hideTopMenuIfLoggedIn, permissions, requireLoggedOut } = Component;
+  const layoutProps = { staticTitle, isDetail, list, showTopMenu, hideTopMenuIfLoggedIn, permissions, requireLoggedOut };
   return (
     <ProvideAuth>
       <ConfirmProvider>
@@ -59,44 +68,12 @@ const WithProviders = (children: React.ReactNode) => {
             },
           ]}
         />
-        {children}
+        <Layout {...layoutProps} >
+          <Component {...pageProps} />
+        </Layout>
         <ToastContainer limit={3} />
       </ConfirmProvider>
     </ProvideAuth>
-  );
-};
-
-export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> &
-  Omit<LayoutProps, 'children'>;
-
-type AppPropsWithLayout<T = {}> = AppProps<T> & {
-  Component: NextPageWithLayout<T>;
-};
-
-function App({ Component, pageProps }: AppPropsWithLayout) {
-  const {
-    isDetail,
-    list,
-    showTopMenu,
-    hideTopMenuIfLoggedIn,
-    permissions,
-    staticTitle,
-    requireLoggedOut,
-  } = Component;
-  return WithProviders(
-    <Layout
-      {...{
-        isDetail,
-        list,
-        showTopMenu,
-        hideTopMenuIfLoggedIn,
-        permissions,
-        staticTitle,
-        requireLoggedOut,
-      }}
-    >
-      <Component {...pageProps} />
-    </Layout>,
   );
 }
 

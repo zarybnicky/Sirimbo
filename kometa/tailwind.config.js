@@ -1,3 +1,5 @@
+const { toRadixVars } = require("windy-radix-palette/vars");
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -9,14 +11,9 @@ module.exports = {
     extend: {
       colors: {
         primary: '#be9f69',
+        accent: toRadixVars('gold'),
+        neutral: toRadixVars('mauve'),
       },
-      typography: ({ theme }) => ({
-        DEFAULT: {
-          css: {
-            '--tw-prose-bullets': theme('colors.primary'),
-          },
-        },
-      }),
     },
   },
   presets: [require('../tailwind-base.config.js')],

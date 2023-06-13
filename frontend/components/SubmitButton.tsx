@@ -29,7 +29,7 @@ export const SubmitButton = React.forwardRef(function SubmitButton(
     });
   }, [loading]);
 
-  const color = state !== 'NORMAL' ? 'button-white' : disabled ? 'button-secondary' : 'button-red';
+  const color = state !== 'NORMAL' ? 'button-outline' : 'button-accent';
   return (
     <button
       type="submit"

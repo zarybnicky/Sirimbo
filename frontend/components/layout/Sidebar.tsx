@@ -48,7 +48,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
       <div
         onClick={() => setIsOpen(false)}
         className={classNames(
-          `fixed inset-0 z-20 bg-black bg-opacity-10 transition duration-200 ease-in-out dark:bg-opacity-50`,
+          `fixed inset-0 z-20 bg-black bg-opacity-10 transition duration-200 ease-in-out`,
           isOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0',
         )}
       />
@@ -61,7 +61,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
           showTopMenu && 'lg:hidden',
           'w-3/4 sm:w-1/2 md:w-1/3 lg:w-56 xl:w-64 2xl:w-72 3xl:w-80',
           'z-30 h-full max-h-screen min-h-screen flex-none transform pb-10 transition duration-200 ease-in-out sm:pb-0 md:w-1/3 lg:relative lg:z-auto lg:translate-x-0',
-          'bg-white dark:bg-gray-900 lg:bg-red-500 lg:text-white',
+          'bg-white lg:bg-red-500 lg:text-white',
           'overflow-y-auto scrollbar'
         )}
       >
