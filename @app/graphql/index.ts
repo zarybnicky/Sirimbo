@@ -8,108 +8,110 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
+  ID: { input: string | number; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
   /** A floating point number that requires more precision than IEEE 754 binary 64 */
-  BigFloat: any;
+  BigFloat: { input: any; output: any; }
   /**
    * A signed eight-byte integer. The upper big integer values are greater than the
    * max value for a JavaScript number. Therefore all big integers will be output as
    * strings and not numbers.
    */
-  BigInt: string;
+  BigInt: { input: string; output: string; }
   /** A location in a connection that can be used for resuming pagination. */
-  Cursor: any;
+  Cursor: { input: any; output: any; }
   /** The day, does not include a time. */
-  Date: string;
+  Date: { input: string; output: string; }
   /**
    * A point in time as described by the [ISO
    * 8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone.
    */
-  Datetime: string;
+  Datetime: { input: string; output: string; }
   /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
-  JSON: { [key: string]: any };
+  JSON: { input: { [key: string]: any }; output: { [key: string]: any }; }
   /** A builtin object identifier type for a relation name */
-  RegClass: any;
+  RegClass: { input: any; output: any; }
   /** A builtin object identifier type for a function name */
-  RegProc: any;
+  RegProc: { input: any; output: any; }
   /** The exact time of day, does not include the date. May or may not have a timezone offset. */
-  Time: string;
+  Time: { input: string; output: string; }
 };
 
 export type Akce = {
   __typename?: 'Akce';
-  aDo: Maybe<Scalars['Date']>;
-  aDokumenty: Maybe<Scalars['String']>;
-  aId: Maybe<Scalars['BigInt']>;
-  aInfo: Maybe<Scalars['String']>;
-  aJmeno: Maybe<Scalars['String']>;
-  aKapacita: Maybe<Scalars['BigInt']>;
+  aDo: Maybe<Scalars['Date']['output']>;
+  aDokumenty: Maybe<Scalars['String']['output']>;
+  aId: Maybe<Scalars['BigInt']['output']>;
+  aInfo: Maybe<Scalars['String']['output']>;
+  aJmeno: Maybe<Scalars['String']['output']>;
+  aKapacita: Maybe<Scalars['BigInt']['output']>;
+  aKde: Maybe<Scalars['String']['output']>;
+  aLock: Maybe<Scalars['Boolean']['output']>;
+  aOd: Maybe<Scalars['Date']['output']>;
+  aTimestamp: Maybe<Scalars['Datetime']['output']>;
+  aVisible: Maybe<Scalars['Boolean']['output']>;
   /** Reads and enables pagination through a set of `AkceItem`. */
   akceItemsByAiIdRodic: AkceItemsConnection;
-  aKde: Maybe<Scalars['String']>;
-  aLock: Maybe<Scalars['Boolean']>;
-  aOd: Maybe<Scalars['Date']>;
-  aTimestamp: Maybe<Scalars['Datetime']>;
-  aVisible: Maybe<Scalars['Boolean']>;
-  enableNotes: Maybe<Scalars['Boolean']>;
-  isPublic: Maybe<Scalars['Boolean']>;
-  summary: Maybe<Scalars['String']>;
+  enableNotes: Maybe<Scalars['Boolean']['output']>;
+  isPublic: Maybe<Scalars['Boolean']['output']>;
+  summary: Maybe<Scalars['String']['output']>;
 };
 
 
 export type AkceAkceItemsByAiIdRodicArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AkceItemsOrderBy>>;
 };
 
 /** An input for mutations affecting `Akce` */
 export type AkceInput = {
-  aDo?: InputMaybe<Scalars['Date']>;
-  aDokumenty?: InputMaybe<Scalars['String']>;
-  aId?: InputMaybe<Scalars['BigInt']>;
-  aInfo?: InputMaybe<Scalars['String']>;
-  aJmeno?: InputMaybe<Scalars['String']>;
-  aKapacita?: InputMaybe<Scalars['BigInt']>;
-  aKde?: InputMaybe<Scalars['String']>;
-  aLock?: InputMaybe<Scalars['Boolean']>;
-  aOd?: InputMaybe<Scalars['Date']>;
-  aTimestamp?: InputMaybe<Scalars['Datetime']>;
-  aVisible?: InputMaybe<Scalars['Boolean']>;
-  enableNotes?: InputMaybe<Scalars['Boolean']>;
-  isPublic?: InputMaybe<Scalars['Boolean']>;
-  summary?: InputMaybe<Scalars['String']>;
+  aDo?: InputMaybe<Scalars['Date']['input']>;
+  aDokumenty?: InputMaybe<Scalars['String']['input']>;
+  aId?: InputMaybe<Scalars['BigInt']['input']>;
+  aInfo?: InputMaybe<Scalars['String']['input']>;
+  aJmeno?: InputMaybe<Scalars['String']['input']>;
+  aKapacita?: InputMaybe<Scalars['BigInt']['input']>;
+  aKde?: InputMaybe<Scalars['String']['input']>;
+  aLock?: InputMaybe<Scalars['Boolean']['input']>;
+  aOd?: InputMaybe<Scalars['Date']['input']>;
+  aTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+  aVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
+  isPublic?: InputMaybe<Scalars['Boolean']['input']>;
+  summary?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type AkceItem = {
   __typename?: 'AkceItem';
-  aiId: Maybe<Scalars['BigInt']>;
-  aiIdRodic: Maybe<Scalars['BigInt']>;
-  aiRokNarozeni: Maybe<Scalars['Int']>;
-  aiUser: Maybe<Scalars['BigInt']>;
+  aiId: Maybe<Scalars['BigInt']['output']>;
+  aiIdRodic: Maybe<Scalars['BigInt']['output']>;
+  aiRokNarozeni: Maybe<Scalars['Int']['output']>;
+  aiUser: Maybe<Scalars['BigInt']['output']>;
   /** Reads a single `Akce` that is related to this `AkceItem`. */
   akceByAiIdRodic: Maybe<Akce>;
-  notes: Maybe<Scalars['String']>;
+  notes: Maybe<Scalars['String']['output']>;
   /** Reads a single `User` that is related to this `AkceItem`. */
   userByAiUser: Maybe<User>;
 };
 
 /** An input for mutations affecting `AkceItem` */
 export type AkceItemInput = {
-  aiId?: InputMaybe<Scalars['BigInt']>;
-  aiIdRodic?: InputMaybe<Scalars['BigInt']>;
-  aiRokNarozeni?: InputMaybe<Scalars['Int']>;
-  aiUser?: InputMaybe<Scalars['BigInt']>;
-  notes?: InputMaybe<Scalars['String']>;
+  aiId?: InputMaybe<Scalars['BigInt']['input']>;
+  aiIdRodic?: InputMaybe<Scalars['BigInt']['input']>;
+  aiRokNarozeni?: InputMaybe<Scalars['Int']['input']>;
+  aiUser?: InputMaybe<Scalars['BigInt']['input']>;
+  notes?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A connection to a list of `AkceItem` values. */
@@ -122,14 +124,14 @@ export type AkceItemsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `AkceItem` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `AkceItem` edge in the connection. */
 export type AkceItemsEdge = {
   __typename?: 'AkceItemsEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `AkceItem` at the end of the edge. */
   node: AkceItem;
 };
@@ -168,14 +170,14 @@ export type AkcesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Akce` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Akce` edge in the connection. */
 export type AkcesEdge = {
   __typename?: 'AkcesEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `Akce` at the end of the edge. */
   node: Akce;
 };
@@ -196,14 +198,14 @@ export type AktualitiesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Aktuality` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Aktuality` edge in the connection. */
 export type AktualitiesEdge = {
   __typename?: 'AktualitiesEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `Aktuality` at the end of the edge. */
   node: Aktuality;
 };
@@ -252,20 +254,20 @@ export type AktualitiesOrderBy =
 
 export type Aktuality = {
   __typename?: 'Aktuality';
-  atFoto: Maybe<Scalars['BigInt']>;
-  atFotoMain: Maybe<Scalars['BigInt']>;
-  atId: Scalars['BigInt'];
-  atJmeno: Scalars['String'];
-  atKat: Scalars['String'];
-  atKdo: Maybe<Scalars['BigInt']>;
-  atPreview: Scalars['String'];
-  atText: Scalars['String'];
-  atTimestamp: Maybe<Scalars['Datetime']>;
-  atTimestampAdd: Maybe<Scalars['Datetime']>;
+  atFoto: Maybe<Scalars['BigInt']['output']>;
+  atFotoMain: Maybe<Scalars['BigInt']['output']>;
+  atId: Scalars['BigInt']['output'];
+  atJmeno: Scalars['String']['output'];
+  atKat: Scalars['String']['output'];
+  atKdo: Maybe<Scalars['BigInt']['output']>;
+  atPreview: Scalars['String']['output'];
+  atText: Scalars['String']['output'];
+  atTimestamp: Maybe<Scalars['Datetime']['output']>;
+  atTimestampAdd: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `GalerieFoto` that is related to this `Aktuality`. */
   galerieFotoByAtFotoMain: Maybe<GalerieFoto>;
-  id: Maybe<Scalars['BigInt']>;
-  tenantId: Scalars['BigInt'];
+  id: Maybe<Scalars['BigInt']['output']>;
+  tenantId: Scalars['BigInt']['output'];
   /** Reads a single `User` that is related to this `Aktuality`. */
   userByAtKdo: Maybe<User>;
 };
@@ -276,95 +278,95 @@ export type Aktuality = {
  */
 export type AktualityCondition = {
   /** Checks for equality with the object’s `atFotoMain` field. */
-  atFotoMain?: InputMaybe<Scalars['BigInt']>;
+  atFotoMain?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `atId` field. */
-  atId?: InputMaybe<Scalars['BigInt']>;
+  atId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `atKdo` field. */
-  atKdo?: InputMaybe<Scalars['BigInt']>;
+  atKdo?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `atTimestampAdd` field. */
-  atTimestampAdd?: InputMaybe<Scalars['Datetime']>;
+  atTimestampAdd?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `Aktuality` */
 export type AktualityInput = {
-  atFoto?: InputMaybe<Scalars['BigInt']>;
-  atFotoMain?: InputMaybe<Scalars['BigInt']>;
-  atId?: InputMaybe<Scalars['BigInt']>;
-  atJmeno: Scalars['String'];
-  atKat?: InputMaybe<Scalars['String']>;
-  atKdo?: InputMaybe<Scalars['BigInt']>;
-  atPreview: Scalars['String'];
-  atText: Scalars['String'];
-  atTimestamp?: InputMaybe<Scalars['Datetime']>;
-  atTimestampAdd?: InputMaybe<Scalars['Datetime']>;
-  id?: InputMaybe<Scalars['BigInt']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  atFoto?: InputMaybe<Scalars['BigInt']['input']>;
+  atFotoMain?: InputMaybe<Scalars['BigInt']['input']>;
+  atId?: InputMaybe<Scalars['BigInt']['input']>;
+  atJmeno: Scalars['String']['input'];
+  atKat?: InputMaybe<Scalars['String']['input']>;
+  atKdo?: InputMaybe<Scalars['BigInt']['input']>;
+  atPreview: Scalars['String']['input'];
+  atText: Scalars['String']['input'];
+  atTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+  atTimestampAdd?: InputMaybe<Scalars['Datetime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** Represents an update to a `Aktuality`. Fields that are set will be updated. */
 export type AktualityPatch = {
-  atFoto?: InputMaybe<Scalars['BigInt']>;
-  atFotoMain?: InputMaybe<Scalars['BigInt']>;
-  atId?: InputMaybe<Scalars['BigInt']>;
-  atJmeno?: InputMaybe<Scalars['String']>;
-  atKat?: InputMaybe<Scalars['String']>;
-  atKdo?: InputMaybe<Scalars['BigInt']>;
-  atPreview?: InputMaybe<Scalars['String']>;
-  atText?: InputMaybe<Scalars['String']>;
-  atTimestamp?: InputMaybe<Scalars['Datetime']>;
-  atTimestampAdd?: InputMaybe<Scalars['Datetime']>;
-  id?: InputMaybe<Scalars['BigInt']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  atFoto?: InputMaybe<Scalars['BigInt']['input']>;
+  atFotoMain?: InputMaybe<Scalars['BigInt']['input']>;
+  atId?: InputMaybe<Scalars['BigInt']['input']>;
+  atJmeno?: InputMaybe<Scalars['String']['input']>;
+  atKat?: InputMaybe<Scalars['String']['input']>;
+  atKdo?: InputMaybe<Scalars['BigInt']['input']>;
+  atPreview?: InputMaybe<Scalars['String']['input']>;
+  atText?: InputMaybe<Scalars['String']['input']>;
+  atTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+  atTimestampAdd?: InputMaybe<Scalars['Datetime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 export type Attachment = {
   __typename?: 'Attachment';
   /** Reads and enables pagination through a set of `LocationAttachment`. */
   locationAttachmentsByObjectName: LocationAttachmentsConnection;
-  objectName: Scalars['String'];
-  previewObjectName: Maybe<Scalars['String']>;
+  objectName: Scalars['String']['output'];
+  previewObjectName: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `RoomAttachment`. */
   roomAttachmentsByObjectName: RoomAttachmentsConnection;
   /** Reads and enables pagination through a set of `TenantAttachment`. */
   tenantAttachmentsByObjectName: TenantAttachmentsConnection;
-  uploadedAt: Scalars['Datetime'];
-  uploadedBy: Maybe<Scalars['BigInt']>;
+  uploadedAt: Scalars['Datetime']['output'];
+  uploadedBy: Maybe<Scalars['BigInt']['output']>;
   /** Reads a single `User` that is related to this `Attachment`. */
   userByUploadedBy: Maybe<User>;
 };
 
 
 export type AttachmentLocationAttachmentsByObjectNameArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<LocationAttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<LocationAttachmentsOrderBy>>;
 };
 
 
 export type AttachmentRoomAttachmentsByObjectNameArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<RoomAttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<RoomAttachmentsOrderBy>>;
 };
 
 
 export type AttachmentTenantAttachmentsByObjectNameArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TenantAttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TenantAttachmentsOrderBy>>;
 };
 
@@ -374,25 +376,25 @@ export type AttachmentTenantAttachmentsByObjectNameArgs = {
  */
 export type AttachmentCondition = {
   /** Checks for equality with the object’s `objectName` field. */
-  objectName?: InputMaybe<Scalars['String']>;
+  objectName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `uploadedBy` field. */
-  uploadedBy?: InputMaybe<Scalars['BigInt']>;
+  uploadedBy?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `Attachment` */
 export type AttachmentInput = {
-  objectName: Scalars['String'];
-  previewObjectName?: InputMaybe<Scalars['String']>;
-  uploadedAt?: InputMaybe<Scalars['Datetime']>;
-  uploadedBy?: InputMaybe<Scalars['BigInt']>;
+  objectName: Scalars['String']['input'];
+  previewObjectName?: InputMaybe<Scalars['String']['input']>;
+  uploadedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  uploadedBy?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** Represents an update to a `Attachment`. Fields that are set will be updated. */
 export type AttachmentPatch = {
-  objectName?: InputMaybe<Scalars['String']>;
-  previewObjectName?: InputMaybe<Scalars['String']>;
-  uploadedAt?: InputMaybe<Scalars['Datetime']>;
-  uploadedBy?: InputMaybe<Scalars['BigInt']>;
+  objectName?: InputMaybe<Scalars['String']['input']>;
+  previewObjectName?: InputMaybe<Scalars['String']['input']>;
+  uploadedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  uploadedBy?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `Attachment` values. */
@@ -405,14 +407,14 @@ export type AttachmentsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Attachment` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Attachment` edge in the connection. */
 export type AttachmentsEdge = {
   __typename?: 'AttachmentsEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `Attachment` at the end of the edge. */
   node: Attachment;
 };
@@ -457,16 +459,16 @@ export type AttendeeCouple = {
   __typename?: 'AttendeeCouple';
   /** Reads a single `Couple` that is related to this `AttendeeCouple`. */
   couple: Maybe<Couple>;
-  coupleId: Scalars['BigInt'];
-  createdAt: Scalars['Datetime'];
-  id: Scalars['BigInt'];
+  coupleId: Scalars['BigInt']['output'];
+  createdAt: Scalars['Datetime']['output'];
+  id: Scalars['BigInt']['output'];
   /** Reads a single `AttendeeList` that is related to this `AttendeeCouple`. */
   list: Maybe<AttendeeList>;
-  listId: Scalars['BigInt'];
+  listId: Scalars['BigInt']['output'];
   /** Reads a single `Tenant` that is related to this `AttendeeCouple`. */
   tenant: Maybe<Tenant>;
-  tenantId: Scalars['BigInt'];
-  updatedAt: Scalars['Datetime'];
+  tenantId: Scalars['BigInt']['output'];
+  updatedAt: Scalars['Datetime']['output'];
 };
 
 /**
@@ -475,13 +477,13 @@ export type AttendeeCouple = {
  */
 export type AttendeeCoupleCondition = {
   /** Checks for equality with the object’s `coupleId` field. */
-  coupleId?: InputMaybe<Scalars['BigInt']>;
+  coupleId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `listId` field. */
-  listId?: InputMaybe<Scalars['BigInt']>;
+  listId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `AttendeeCouple` values. */
@@ -494,14 +496,14 @@ export type AttendeeCouplesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `AttendeeCouple` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `AttendeeCouple` edge in the connection. */
 export type AttendeeCouplesEdge = {
   __typename?: 'AttendeeCouplesEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `AttendeeCouple` at the end of the edge. */
   node: AttendeeCouple;
 };
@@ -536,23 +538,23 @@ export type AttendeeCouplesOrderBy =
 
 export type AttendeeExternal = {
   __typename?: 'AttendeeExternal';
-  birthNumber: Maybe<Scalars['String']>;
-  confirmedAt: Maybe<Scalars['Datetime']>;
-  confirmedBy: Maybe<Scalars['BigInt']>;
-  createdAt: Scalars['Datetime'];
-  email: Scalars['String'];
+  birthNumber: Maybe<Scalars['String']['output']>;
+  confirmedAt: Maybe<Scalars['Datetime']['output']>;
+  confirmedBy: Maybe<Scalars['BigInt']['output']>;
+  createdAt: Scalars['Datetime']['output'];
+  email: Scalars['String']['output'];
   /** Reads a single `Event` that is related to this `AttendeeExternal`. */
   event: Maybe<Event>;
-  eventId: Scalars['BigInt'];
-  firstName: Scalars['String'];
-  guardianName: Scalars['String'];
-  id: Scalars['BigInt'];
-  lastName: Scalars['String'];
-  managedBy: Maybe<Scalars['BigInt']>;
-  notes: Scalars['String'];
-  phone: Scalars['String'];
-  tenantId: Scalars['BigInt'];
-  updatedAt: Scalars['Datetime'];
+  eventId: Scalars['BigInt']['output'];
+  firstName: Scalars['String']['output'];
+  guardianName: Scalars['String']['output'];
+  id: Scalars['BigInt']['output'];
+  lastName: Scalars['String']['output'];
+  managedBy: Maybe<Scalars['BigInt']['output']>;
+  notes: Scalars['String']['output'];
+  phone: Scalars['String']['output'];
+  tenantId: Scalars['BigInt']['output'];
+  updatedAt: Scalars['Datetime']['output'];
   /** Reads a single `User` that is related to this `AttendeeExternal`. */
   userByConfirmedBy: Maybe<User>;
   /** Reads a single `User` that is related to this `AttendeeExternal`. */
@@ -565,49 +567,49 @@ export type AttendeeExternal = {
  */
 export type AttendeeExternalCondition = {
   /** Checks for equality with the object’s `confirmedBy` field. */
-  confirmedBy?: InputMaybe<Scalars['BigInt']>;
+  confirmedBy?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `eventId` field. */
-  eventId?: InputMaybe<Scalars['BigInt']>;
+  eventId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `managedBy` field. */
-  managedBy?: InputMaybe<Scalars['BigInt']>;
+  managedBy?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `AttendeeExternal` */
 export type AttendeeExternalInput = {
-  birthNumber?: InputMaybe<Scalars['String']>;
-  confirmedAt?: InputMaybe<Scalars['Datetime']>;
-  confirmedBy?: InputMaybe<Scalars['BigInt']>;
-  createdAt?: InputMaybe<Scalars['Datetime']>;
-  email: Scalars['String'];
-  eventId: Scalars['BigInt'];
-  firstName: Scalars['String'];
-  guardianName?: InputMaybe<Scalars['String']>;
-  lastName: Scalars['String'];
-  managedBy?: InputMaybe<Scalars['BigInt']>;
-  notes?: InputMaybe<Scalars['String']>;
-  phone: Scalars['String'];
-  tenantId?: InputMaybe<Scalars['BigInt']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']>;
+  birthNumber?: InputMaybe<Scalars['String']['input']>;
+  confirmedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  confirmedBy?: InputMaybe<Scalars['BigInt']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  email: Scalars['String']['input'];
+  eventId: Scalars['BigInt']['input'];
+  firstName: Scalars['String']['input'];
+  guardianName?: InputMaybe<Scalars['String']['input']>;
+  lastName: Scalars['String']['input'];
+  managedBy?: InputMaybe<Scalars['BigInt']['input']>;
+  notes?: InputMaybe<Scalars['String']['input']>;
+  phone: Scalars['String']['input'];
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** Represents an update to a `AttendeeExternal`. Fields that are set will be updated. */
 export type AttendeeExternalPatch = {
-  birthNumber?: InputMaybe<Scalars['String']>;
-  confirmedAt?: InputMaybe<Scalars['Datetime']>;
-  confirmedBy?: InputMaybe<Scalars['BigInt']>;
-  createdAt?: InputMaybe<Scalars['Datetime']>;
-  email?: InputMaybe<Scalars['String']>;
-  eventId?: InputMaybe<Scalars['BigInt']>;
-  firstName?: InputMaybe<Scalars['String']>;
-  guardianName?: InputMaybe<Scalars['String']>;
-  lastName?: InputMaybe<Scalars['String']>;
-  managedBy?: InputMaybe<Scalars['BigInt']>;
-  notes?: InputMaybe<Scalars['String']>;
-  phone?: InputMaybe<Scalars['String']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']>;
+  birthNumber?: InputMaybe<Scalars['String']['input']>;
+  confirmedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  confirmedBy?: InputMaybe<Scalars['BigInt']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  eventId?: InputMaybe<Scalars['BigInt']['input']>;
+  firstName?: InputMaybe<Scalars['String']['input']>;
+  guardianName?: InputMaybe<Scalars['String']['input']>;
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  managedBy?: InputMaybe<Scalars['BigInt']['input']>;
+  notes?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** A connection to a list of `AttendeeExternal` values. */
@@ -620,14 +622,14 @@ export type AttendeeExternalsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `AttendeeExternal` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `AttendeeExternal` edge in the connection. */
 export type AttendeeExternalsEdge = {
   __typename?: 'AttendeeExternalsEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `AttendeeExternal` at the end of the edge. */
   node: AttendeeExternal;
 };
@@ -698,46 +700,46 @@ export type AttendeeList = {
   attendeeCouplesByListId: AttendeeCouplesConnection;
   /** Reads and enables pagination through a set of `AttendeePerson`. */
   attendeePeopleByListId: AttendeePeopleConnection;
-  createdAt: Scalars['Datetime'];
-  id: Scalars['BigInt'];
+  createdAt: Scalars['Datetime']['output'];
+  id: Scalars['BigInt']['output'];
   /** Reads and enables pagination through a set of `Lesson`. */
   lessonsByListId: LessonsConnection;
   /** Reads a single `Tenant` that is related to this `AttendeeList`. */
   tenant: Maybe<Tenant>;
-  tenantId: Scalars['BigInt'];
-  updatedAt: Scalars['Datetime'];
+  tenantId: Scalars['BigInt']['output'];
+  updatedAt: Scalars['Datetime']['output'];
 };
 
 
 export type AttendeeListAttendeeCouplesByListIdArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<AttendeeCoupleCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AttendeeCouplesOrderBy>>;
 };
 
 
 export type AttendeeListAttendeePeopleByListIdArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<AttendeePersonCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AttendeePeopleOrderBy>>;
 };
 
 
 export type AttendeeListLessonsByListIdArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<LessonCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<LessonsOrderBy>>;
 };
 
@@ -747,9 +749,9 @@ export type AttendeeListLessonsByListIdArgs = {
  */
 export type AttendeeListCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `AttendeeList` values. */
@@ -762,14 +764,14 @@ export type AttendeeListsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `AttendeeList` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `AttendeeList` edge in the connection. */
 export type AttendeeListsEdge = {
   __typename?: 'AttendeeListsEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `AttendeeList` at the end of the edge. */
   node: AttendeeList;
 };
@@ -802,14 +804,14 @@ export type AttendeePeopleConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `AttendeePerson` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `AttendeePerson` edge in the connection. */
 export type AttendeePeopleEdge = {
   __typename?: 'AttendeePeopleEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `AttendeePerson` at the end of the edge. */
   node: AttendeePerson;
 };
@@ -838,18 +840,18 @@ export type AttendeePeopleOrderBy =
 
 export type AttendeePerson = {
   __typename?: 'AttendeePerson';
-  createdAt: Scalars['Datetime'];
-  id: Scalars['BigInt'];
+  createdAt: Scalars['Datetime']['output'];
+  id: Scalars['BigInt']['output'];
   /** Reads a single `AttendeeList` that is related to this `AttendeePerson`. */
   list: Maybe<AttendeeList>;
-  listId: Scalars['BigInt'];
+  listId: Scalars['BigInt']['output'];
   /** Reads a single `Person` that is related to this `AttendeePerson`. */
   person: Maybe<Person>;
-  personId: Scalars['BigInt'];
+  personId: Scalars['BigInt']['output'];
   /** Reads a single `Tenant` that is related to this `AttendeePerson`. */
   tenant: Maybe<Tenant>;
-  tenantId: Scalars['BigInt'];
-  updatedAt: Scalars['Datetime'];
+  tenantId: Scalars['BigInt']['output'];
+  updatedAt: Scalars['Datetime']['output'];
 };
 
 /**
@@ -858,27 +860,27 @@ export type AttendeePerson = {
  */
 export type AttendeePersonCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `listId` field. */
-  listId?: InputMaybe<Scalars['BigInt']>;
+  listId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `personId` field. */
-  personId?: InputMaybe<Scalars['BigInt']>;
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 export type AttendeeUser = {
   __typename?: 'AttendeeUser';
-  birthYear: Scalars['Int'];
+  birthYear: Scalars['Int']['output'];
   /** Reads a single `Event` that is related to this `AttendeeUser`. */
   event: Maybe<Event>;
-  eventId: Scalars['BigInt'];
-  id: Scalars['BigInt'];
-  notes: Scalars['String'];
-  tenantId: Scalars['BigInt'];
+  eventId: Scalars['BigInt']['output'];
+  id: Scalars['BigInt']['output'];
+  notes: Scalars['String']['output'];
+  tenantId: Scalars['BigInt']['output'];
   /** Reads a single `User` that is related to this `AttendeeUser`. */
   user: Maybe<User>;
-  userId: Scalars['BigInt'];
+  userId: Scalars['BigInt']['output'];
 };
 
 /**
@@ -887,31 +889,31 @@ export type AttendeeUser = {
  */
 export type AttendeeUserCondition = {
   /** Checks for equality with the object’s `eventId` field. */
-  eventId?: InputMaybe<Scalars['BigInt']>;
+  eventId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `userId` field. */
-  userId?: InputMaybe<Scalars['BigInt']>;
+  userId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `AttendeeUser` */
 export type AttendeeUserInput = {
-  birthYear: Scalars['Int'];
-  eventId: Scalars['BigInt'];
-  id?: InputMaybe<Scalars['BigInt']>;
-  notes?: InputMaybe<Scalars['String']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
-  userId: Scalars['BigInt'];
+  birthYear: Scalars['Int']['input'];
+  eventId: Scalars['BigInt']['input'];
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  notes?: InputMaybe<Scalars['String']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  userId: Scalars['BigInt']['input'];
 };
 
 /** Represents an update to a `AttendeeUser`. Fields that are set will be updated. */
 export type AttendeeUserPatch = {
-  birthYear?: InputMaybe<Scalars['Int']>;
-  eventId?: InputMaybe<Scalars['BigInt']>;
-  id?: InputMaybe<Scalars['BigInt']>;
-  notes?: InputMaybe<Scalars['String']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
-  userId?: InputMaybe<Scalars['BigInt']>;
+  birthYear?: InputMaybe<Scalars['Int']['input']>;
+  eventId?: InputMaybe<Scalars['BigInt']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  notes?: InputMaybe<Scalars['String']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  userId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `AttendeeUser` values. */
@@ -924,14 +926,14 @@ export type AttendeeUsersConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `AttendeeUser` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `AttendeeUser` edge in the connection. */
 export type AttendeeUsersEdge = {
   __typename?: 'AttendeeUsersEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `AttendeeUser` at the end of the edge. */
   node: AttendeeUser;
 };
@@ -980,8 +982,8 @@ export type BookLessonInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  lessonId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  lessonId: Scalars['BigInt']['input'];
 };
 
 /** The output of our `bookLesson` mutation. */
@@ -991,7 +993,7 @@ export type BookLessonPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   rozpisItems: Maybe<Array<RozpisItem>>;
@@ -1003,8 +1005,8 @@ export type CancelLessonInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  lessonId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  lessonId: Scalars['BigInt']['input'];
 };
 
 /** The output of our `cancelLesson` mutation. */
@@ -1014,7 +1016,7 @@ export type CancelLessonPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   rozpisItems: Maybe<Array<RozpisItem>>;
@@ -1026,8 +1028,8 @@ export type CancelParticipationInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  eventId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  eventId: Scalars['BigInt']['input'];
 };
 
 /** The output of our `cancelParticipation` mutation. */
@@ -1037,7 +1039,7 @@ export type CancelParticipationPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
 };
@@ -1048,9 +1050,9 @@ export type ChangePasswordInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  newPass: Scalars['String'];
-  oldPass: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  newPass: Scalars['String']['input'];
+  oldPass: Scalars['String']['input'];
 };
 
 /** The output of our `changePassword` mutation. */
@@ -1060,34 +1062,34 @@ export type ChangePasswordPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
 };
 
 export type CohortGroup = {
   __typename?: 'CohortGroup';
-  description: Scalars['String'];
-  id: Scalars['BigInt'];
-  isPublic: Scalars['Boolean'];
-  name: Scalars['String'];
-  ordering: Scalars['Int'];
+  description: Scalars['String']['output'];
+  id: Scalars['BigInt']['output'];
+  isPublic: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
+  ordering: Scalars['Int']['output'];
   /** Reads and enables pagination through a set of `Skupiny`. */
   skupiniesByCohortGroup: SkupiniesConnection;
-  tenant: Maybe<Scalars['BigInt']>;
+  tenant: Maybe<Scalars['BigInt']['output']>;
   /** Reads a single `Tenant` that is related to this `CohortGroup`. */
   tenantByTenant: Maybe<Tenant>;
-  tenantId: Scalars['BigInt'];
+  tenantId: Scalars['BigInt']['output'];
 };
 
 
 export type CohortGroupSkupiniesByCohortGroupArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SkupinyCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SkupiniesOrderBy>>;
 };
 
@@ -1097,35 +1099,35 @@ export type CohortGroupSkupiniesByCohortGroupArgs = {
  */
 export type CohortGroupCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `isPublic` field. */
-  isPublic?: InputMaybe<Scalars['Boolean']>;
+  isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `ordering` field. */
-  ordering?: InputMaybe<Scalars['Int']>;
+  ordering?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `tenant` field. */
-  tenant?: InputMaybe<Scalars['BigInt']>;
+  tenant?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `CohortGroup` */
 export type CohortGroupInput = {
-  description?: InputMaybe<Scalars['String']>;
-  id?: InputMaybe<Scalars['BigInt']>;
-  isPublic?: InputMaybe<Scalars['Boolean']>;
-  name: Scalars['String'];
-  ordering?: InputMaybe<Scalars['Int']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  isPublic?: InputMaybe<Scalars['Boolean']['input']>;
+  name: Scalars['String']['input'];
+  ordering?: InputMaybe<Scalars['Int']['input']>;
+  tenant?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** Represents an update to a `CohortGroup`. Fields that are set will be updated. */
 export type CohortGroupPatch = {
-  description?: InputMaybe<Scalars['String']>;
-  id?: InputMaybe<Scalars['BigInt']>;
-  isPublic?: InputMaybe<Scalars['Boolean']>;
-  name?: InputMaybe<Scalars['String']>;
-  ordering?: InputMaybe<Scalars['Int']>;
-  tenant?: InputMaybe<Scalars['BigInt']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  isPublic?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  ordering?: InputMaybe<Scalars['Int']['input']>;
+  tenant?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `CohortGroup` values. */
@@ -1138,14 +1140,14 @@ export type CohortGroupsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `CohortGroup` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `CohortGroup` edge in the connection. */
 export type CohortGroupsEdge = {
   __typename?: 'CohortGroupsEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `CohortGroup` at the end of the edge. */
   node: CohortGroup;
 };
@@ -1174,10 +1176,10 @@ export type ConfirmUserInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  cohort: Scalars['BigInt'];
-  grp: Scalars['BigInt'];
-  id: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  cohort: Scalars['BigInt']['input'];
+  grp: Scalars['BigInt']['input'];
+  id: Scalars['BigInt']['input'];
 };
 
 /** The output of our `confirmUser` mutation. */
@@ -1187,7 +1189,7 @@ export type ConfirmUserPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
 };
@@ -1196,43 +1198,43 @@ export type Couple = {
   __typename?: 'Couple';
   /** Reads and enables pagination through a set of `AttendeeCouple`. */
   attendeeCouples: AttendeeCouplesConnection;
-  createdAt: Scalars['Datetime'];
+  createdAt: Scalars['Datetime']['output'];
   /** Reads a single `Person` that is related to this `Couple`. */
   follower: Maybe<Person>;
-  followerId: Scalars['BigInt'];
-  id: Scalars['BigInt'];
+  followerId: Scalars['BigInt']['output'];
+  id: Scalars['BigInt']['output'];
   /** Reads a single `Person` that is related to this `Couple`. */
   leader: Maybe<Person>;
-  leaderId: Scalars['BigInt'];
-  since: Scalars['Datetime'];
+  leaderId: Scalars['BigInt']['output'];
+  since: Scalars['Datetime']['output'];
   /** Reads a single `Tenant` that is related to this `Couple`. */
   tenant: Maybe<Tenant>;
-  tenantId: Scalars['BigInt'];
-  until: Scalars['Datetime'];
-  updatedAt: Scalars['Datetime'];
+  tenantId: Scalars['BigInt']['output'];
+  until: Scalars['Datetime']['output'];
+  updatedAt: Scalars['Datetime']['output'];
 };
 
 
 export type CoupleAttendeeCouplesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<AttendeeCoupleCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AttendeeCouplesOrderBy>>;
 };
 
 /** A condition to be used against `Couple` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type CoupleCondition = {
   /** Checks for equality with the object’s `followerId` field. */
-  followerId?: InputMaybe<Scalars['BigInt']>;
+  followerId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `leaderId` field. */
-  leaderId?: InputMaybe<Scalars['BigInt']>;
+  leaderId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `Couple` values. */
@@ -1245,14 +1247,14 @@ export type CouplesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Couple` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Couple` edge in the connection. */
 export type CouplesEdge = {
   __typename?: 'CouplesEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `Couple` at the end of the edge. */
   node: Couple;
 };
@@ -1287,7 +1289,7 @@ export type CreateAkceInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** All input for the create `AkceItem` mutation. */
@@ -1298,7 +1300,7 @@ export type CreateAkceItemInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** The output of our create `AkceItem` mutation. */
@@ -1314,7 +1316,7 @@ export type CreateAkceItemPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `User` that is related to this `AkceItem`. */
@@ -1338,7 +1340,7 @@ export type CreateAkcePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
 };
@@ -1357,7 +1359,7 @@ export type CreateAktualityInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** The output of our create `Aktuality` mutation. */
@@ -1371,7 +1373,7 @@ export type CreateAktualityPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `GalerieFoto` that is related to this `Aktuality`. */
   galerieFotoByAtFotoMain: Maybe<GalerieFoto>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -1394,7 +1396,7 @@ export type CreateAttachmentInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** The output of our create `Attachment` mutation. */
@@ -1408,7 +1410,7 @@ export type CreateAttachmentPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `User` that is related to this `Attachment`. */
@@ -1429,7 +1431,7 @@ export type CreateAttendeeExternalInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** The output of our create `AttendeeExternal` mutation. */
@@ -1443,7 +1445,7 @@ export type CreateAttendeeExternalPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `Event` that is related to this `AttendeeExternal`. */
   event: Maybe<Event>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -1468,7 +1470,7 @@ export type CreateAttendeeUserInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** The output of our create `AttendeeUser` mutation. */
@@ -1482,7 +1484,7 @@ export type CreateAttendeeUserPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `Event` that is related to this `AttendeeUser`. */
   event: Maybe<Event>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -1503,7 +1505,7 @@ export type CreateCohortGroupInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `CohortGroup` to be created by this mutation. */
   cohortGroup: CohortGroupInput;
 };
@@ -1515,7 +1517,7 @@ export type CreateCohortGroupPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `CohortGroup` that was created by this mutation. */
   cohortGroup: Maybe<CohortGroup>;
   /** An edge for our `CohortGroup`. May be used by Relay 1. */
@@ -1538,9 +1540,9 @@ export type CreateCoupleInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  man: Scalars['BigInt'];
-  woman: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  man: Scalars['BigInt']['input'];
+  woman: Scalars['BigInt']['input'];
 };
 
 /** The output of our `createCouple` mutation. */
@@ -1550,7 +1552,7 @@ export type CreateCouplePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   paries: Maybe<Array<Pary>>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
@@ -1562,7 +1564,7 @@ export type CreateDokumentyInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `Dokumenty` to be created by this mutation. */
   dokumenty: DokumentyInput;
 };
@@ -1574,7 +1576,7 @@ export type CreateDokumentyPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `Dokumenty` that was created by this mutation. */
   dokumenty: Maybe<Dokumenty>;
   /** An edge for our `Dokumenty`. May be used by Relay 1. */
@@ -1597,7 +1599,7 @@ export type CreateEventInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `Event` to be created by this mutation. */
   event: EventInput;
 };
@@ -1609,7 +1611,7 @@ export type CreateEventPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `Event` that was created by this mutation. */
   event: Maybe<Event>;
   /** An edge for our `Event`. May be used by Relay 1. */
@@ -1630,7 +1632,7 @@ export type CreateFormResponseInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `FormResponse` to be created by this mutation. */
   formResponse: FormResponseInput;
 };
@@ -1642,7 +1644,7 @@ export type CreateFormResponsePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `FormResponse` that was created by this mutation. */
   formResponse: Maybe<FormResponse>;
   /** An edge for our `FormResponse`. May be used by Relay 1. */
@@ -1663,7 +1665,7 @@ export type CreateGalerieDirInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `GalerieDir` to be created by this mutation. */
   galerieDir: GalerieDirInput;
 };
@@ -1675,7 +1677,7 @@ export type CreateGalerieDirPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `GalerieDir` that was created by this mutation. */
   galerieDir: Maybe<GalerieDir>;
   /** An edge for our `GalerieDir`. May be used by Relay 1. */
@@ -1696,7 +1698,7 @@ export type CreateGalerieFotoInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `GalerieFoto` to be created by this mutation. */
   galerieFoto: GalerieFotoInput;
 };
@@ -1708,7 +1710,7 @@ export type CreateGalerieFotoPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `GalerieDir` that is related to this `GalerieFoto`. */
   galerieDirByGfIdRodic: Maybe<GalerieDir>;
   /** The `GalerieFoto` that was created by this mutation. */
@@ -1733,7 +1735,7 @@ export type CreateLocationAttachmentInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `LocationAttachment` to be created by this mutation. */
   locationAttachment: LocationAttachmentInput;
 };
@@ -1747,7 +1749,7 @@ export type CreateLocationAttachmentPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `Location` that is related to this `LocationAttachment`. */
   location: Maybe<Location>;
   /** The `LocationAttachment` that was created by this mutation. */
@@ -1770,7 +1772,7 @@ export type CreateLocationInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `Location` to be created by this mutation. */
   location: LocationInput;
 };
@@ -1782,7 +1784,7 @@ export type CreateLocationPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `Location` that was created by this mutation. */
   location: Maybe<Location>;
   /** An edge for our `Location`. May be used by Relay 1. */
@@ -1803,7 +1805,7 @@ export type CreateNabidkaInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `Nabidka` to be created by this mutation. */
   nabidka: NabidkaInput;
 };
@@ -1814,7 +1816,7 @@ export type CreateNabidkaItemInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `NabidkaItem` to be created by this mutation. */
   nabidkaItem: NabidkaItemInput;
 };
@@ -1826,7 +1828,7 @@ export type CreateNabidkaItemPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `Nabidka` that is related to this `NabidkaItem`. */
   nabidkaByNiIdRodic: Maybe<Nabidka>;
   /** The `NabidkaItem` that was created by this mutation. */
@@ -1852,7 +1854,7 @@ export type CreateNabidkaPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `Nabidka` that was created by this mutation. */
   nabidka: Maybe<Nabidka>;
   /** An edge for our `Nabidka`. May be used by Relay 1. */
@@ -1875,7 +1877,7 @@ export type CreatePageInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `Page` to be created by this mutation. */
   page: PageInput;
 };
@@ -1887,7 +1889,7 @@ export type CreatePagePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `Page` that was created by this mutation. */
   page: Maybe<Page>;
   /** An edge for our `Page`. May be used by Relay 1. */
@@ -1908,7 +1910,7 @@ export type CreateParameterInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `Parameter` to be created by this mutation. */
   parameter: ParameterInput;
 };
@@ -1920,7 +1922,7 @@ export type CreateParameterPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `Parameter` that was created by this mutation. */
   parameter: Maybe<Parameter>;
   /** An edge for our `Parameter`. May be used by Relay 1. */
@@ -1937,19 +1939,19 @@ export type CreateParameterPayloadParameterEdgeArgs = {
 
 /** All input for the `createParticipationExternal` mutation. */
 export type CreateParticipationExternalInput = {
-  birthNumber: Scalars['String'];
+  birthNumber: Scalars['String']['input'];
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  email: Scalars['String'];
-  eventId: Scalars['BigInt'];
-  firstName: Scalars['String'];
-  guardianName: Scalars['String'];
-  lastName: Scalars['String'];
-  notes: Scalars['String'];
-  phone: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  email: Scalars['String']['input'];
+  eventId: Scalars['BigInt']['input'];
+  firstName: Scalars['String']['input'];
+  guardianName: Scalars['String']['input'];
+  lastName: Scalars['String']['input'];
+  notes: Scalars['String']['input'];
+  phone: Scalars['String']['input'];
 };
 
 /** The output of our `createParticipationExternal` mutation. */
@@ -1959,7 +1961,7 @@ export type CreateParticipationExternalPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
 };
@@ -1970,10 +1972,10 @@ export type CreateParticipationInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  eventId: Scalars['BigInt'];
-  myNotes: Scalars['String'];
-  yearOfBirth: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  eventId: Scalars['BigInt']['input'];
+  myNotes: Scalars['String']['input'];
+  yearOfBirth: Scalars['Int']['input'];
 };
 
 /** The output of our `createParticipation` mutation. */
@@ -1983,7 +1985,7 @@ export type CreateParticipationPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
 };
@@ -1994,7 +1996,7 @@ export type CreateParyInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `Pary` to be created by this mutation. */
   pary: ParyInput;
 };
@@ -2005,7 +2007,7 @@ export type CreateParyNavrhInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `ParyNavrh` to be created by this mutation. */
   paryNavrh: ParyNavrhInput;
 };
@@ -2017,7 +2019,7 @@ export type CreateParyNavrhPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `ParyNavrh` that was created by this mutation. */
   paryNavrh: Maybe<ParyNavrh>;
   /** An edge for our `ParyNavrh`. May be used by Relay 1. */
@@ -2045,7 +2047,7 @@ export type CreateParyPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `Pary` that was created by this mutation. */
   pary: Maybe<Pary>;
   /** An edge for our `Pary`. May be used by Relay 1. */
@@ -2070,7 +2072,7 @@ export type CreatePermissionInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `Permission` to be created by this mutation. */
   permission: PermissionInput;
 };
@@ -2082,7 +2084,7 @@ export type CreatePermissionPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `Permission` that was created by this mutation. */
   permission: Maybe<Permission>;
   /** An edge for our `Permission`. May be used by Relay 1. */
@@ -2103,7 +2105,7 @@ export type CreatePersonInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `Person` to be created by this mutation. */
   person: PersonInput;
 };
@@ -2115,7 +2117,7 @@ export type CreatePersonPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `Person` that was created by this mutation. */
   person: Maybe<Person>;
   /** An edge for our `Person`. May be used by Relay 1. */
@@ -2136,7 +2138,7 @@ export type CreatePlatbyCategoryGroupInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `PlatbyCategoryGroup` to be created by this mutation. */
   platbyCategoryGroup: PlatbyCategoryGroupInput;
 };
@@ -2148,7 +2150,7 @@ export type CreatePlatbyCategoryGroupPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `PlatbyCategory` that is related to this `PlatbyCategoryGroup`. */
   platbyCategoryByPcgIdCategory: Maybe<PlatbyCategory>;
   /** The `PlatbyCategoryGroup` that was created by this mutation. */
@@ -2173,7 +2175,7 @@ export type CreatePlatbyCategoryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `PlatbyCategory` to be created by this mutation. */
   platbyCategory: PlatbyCategoryInput;
 };
@@ -2185,7 +2187,7 @@ export type CreatePlatbyCategoryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `PlatbyCategory` that was created by this mutation. */
   platbyCategory: Maybe<PlatbyCategory>;
   /** An edge for our `PlatbyCategory`. May be used by Relay 1. */
@@ -2206,7 +2208,7 @@ export type CreatePlatbyGroupInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `PlatbyGroup` to be created by this mutation. */
   platbyGroup: PlatbyGroupInput;
 };
@@ -2218,7 +2220,7 @@ export type CreatePlatbyGroupPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `PlatbyGroup` that was created by this mutation. */
   platbyGroup: Maybe<PlatbyGroup>;
   /** An edge for our `PlatbyGroup`. May be used by Relay 1. */
@@ -2239,7 +2241,7 @@ export type CreatePlatbyGroupSkupinaInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `PlatbyGroupSkupina` to be created by this mutation. */
   platbyGroupSkupina: PlatbyGroupSkupinaInput;
 };
@@ -2251,7 +2253,7 @@ export type CreatePlatbyGroupSkupinaPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `PlatbyGroup` that is related to this `PlatbyGroupSkupina`. */
   platbyGroupByPgsIdGroup: Maybe<PlatbyGroup>;
   /** The `PlatbyGroupSkupina` that was created by this mutation. */
@@ -2276,7 +2278,7 @@ export type CreatePlatbyItemInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `PlatbyItem` to be created by this mutation. */
   platbyItem: PlatbyItemInput;
 };
@@ -2288,7 +2290,7 @@ export type CreatePlatbyItemPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `PlatbyCategory` that is related to this `PlatbyItem`. */
   platbyCategoryByPiIdCategory: Maybe<PlatbyCategory>;
   /** The `PlatbyItem` that was created by this mutation. */
@@ -2315,7 +2317,7 @@ export type CreatePlatbyRawInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `PlatbyRaw` to be created by this mutation. */
   platbyRaw: PlatbyRawInput;
 };
@@ -2327,7 +2329,7 @@ export type CreatePlatbyRawPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `PlatbyRaw` that was created by this mutation. */
   platbyRaw: Maybe<PlatbyRaw>;
   /** An edge for our `PlatbyRaw`. May be used by Relay 1. */
@@ -2348,7 +2350,7 @@ export type CreateRoomAttachmentInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `RoomAttachment` to be created by this mutation. */
   roomAttachment: RoomAttachmentInput;
 };
@@ -2362,7 +2364,7 @@ export type CreateRoomAttachmentPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `Room` that is related to this `RoomAttachment`. */
@@ -2385,7 +2387,7 @@ export type CreateRoomInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `Room` to be created by this mutation. */
   room: RoomInput;
 };
@@ -2397,7 +2399,7 @@ export type CreateRoomPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `Location` that is related to this `Room`. */
   locationByLocation: Maybe<Location>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -2420,7 +2422,7 @@ export type CreateRozpiInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `Rozpi` to be created by this mutation. */
   rozpi: RozpiInput;
 };
@@ -2432,7 +2434,7 @@ export type CreateRozpiPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** The `Rozpi` that was created by this mutation. */
@@ -2455,7 +2457,7 @@ export type CreateRozpisItemInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `RozpisItem` to be created by this mutation. */
   rozpisItem: RozpisItemInput;
 };
@@ -2467,7 +2469,7 @@ export type CreateRozpisItemPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `Pary` that is related to this `RozpisItem`. */
   paryByRiPartner: Maybe<Pary>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -2492,7 +2494,7 @@ export type CreateSkupinyInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `Skupiny` to be created by this mutation. */
   skupiny: SkupinyInput;
 };
@@ -2504,7 +2506,7 @@ export type CreateSkupinyPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `CohortGroup` that is related to this `Skupiny`. */
   cohortGroupByCohortGroup: Maybe<CohortGroup>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -2527,7 +2529,7 @@ export type CreateTenantAttachmentInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `TenantAttachment` to be created by this mutation. */
   tenantAttachment: TenantAttachmentInput;
 };
@@ -2541,7 +2543,7 @@ export type CreateTenantAttachmentPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `Tenant` that is related to this `TenantAttachment`. */
@@ -2564,7 +2566,7 @@ export type CreateTenantInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `Tenant` to be created by this mutation. */
   tenant: TenantInput;
 };
@@ -2575,7 +2577,7 @@ export type CreateTenantLocationInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `TenantLocation` to be created by this mutation. */
   tenantLocation: TenantLocationInput;
 };
@@ -2587,7 +2589,7 @@ export type CreateTenantLocationPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `Location` that is related to this `TenantLocation`. */
   location: Maybe<Location>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -2613,7 +2615,7 @@ export type CreateTenantPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** The `Tenant` that was created by this mutation. */
@@ -2634,7 +2636,7 @@ export type CreateTenantPersonInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `TenantPerson` to be created by this mutation. */
   tenantPerson: TenantPersonInput;
 };
@@ -2646,7 +2648,7 @@ export type CreateTenantPersonPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `Person` that is related to this `TenantPerson`. */
   person: Maybe<Person>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -2671,7 +2673,7 @@ export type CreateUpozorneniInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `Upozorneni` to be created by this mutation. */
   upozorneni: UpozorneniInput;
 };
@@ -2683,7 +2685,7 @@ export type CreateUpozorneniPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** The `Upozorneni` that was created by this mutation. */
@@ -2706,7 +2708,7 @@ export type CreateUpozorneniSkupinyInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `UpozorneniSkupiny` to be created by this mutation. */
   upozorneniSkupiny: UpozorneniSkupinyInput;
 };
@@ -2718,7 +2720,7 @@ export type CreateUpozorneniSkupinyPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`. */
@@ -2743,7 +2745,7 @@ export type CreateUserInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `User` to be created by this mutation. */
   user: UserInput;
 };
@@ -2755,7 +2757,7 @@ export type CreateUserPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `Permission` that is related to this `User`. */
   permissionByUGroup: Maybe<Permission>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -2785,9 +2787,9 @@ export type CrmCohort =
 export type CurrentCoupleIdEdge = {
   __typename?: 'CurrentCoupleIdEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `BigInt` at the end of the edge. */
-  node: Maybe<Scalars['BigInt']>;
+  node: Maybe<Scalars['BigInt']['output']>;
 };
 
 /** A connection to a list of `BigInt` values. */
@@ -2796,19 +2798,19 @@ export type CurrentCoupleIdsConnection = {
   /** A list of edges which contains the `BigInt` and cursor to aid in pagination. */
   edges: Array<CurrentCoupleIdEdge>;
   /** A list of `BigInt` objects. */
-  nodes: Array<Maybe<Scalars['BigInt']>>;
+  nodes: Array<Maybe<Scalars['BigInt']['output']>>;
   /** The count of *all* `BigInt` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** All input for the `deleteAktuality` mutation. */
 export type DeleteAktualityInput = {
-  atId: Scalars['BigInt'];
+  atId: Scalars['BigInt']['input'];
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** The output of our delete `Aktuality` mutation. */
@@ -2822,8 +2824,8 @@ export type DeleteAktualityPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedAktualityNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedAktualityNodeId: Maybe<Scalars['ID']['output']>;
   /** Reads a single `GalerieFoto` that is related to this `Aktuality`. */
   galerieFotoByAtFotoMain: Maybe<GalerieFoto>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -2844,8 +2846,8 @@ export type DeleteAttachmentInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  objectName: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  objectName: Scalars['String']['input'];
 };
 
 /** The output of our delete `Attachment` mutation. */
@@ -2859,8 +2861,8 @@ export type DeleteAttachmentPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedAttachmentNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedAttachmentNodeId: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `User` that is related to this `Attachment`. */
@@ -2879,8 +2881,8 @@ export type DeleteAttendeeExternalInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `AttendeeExternal` mutation. */
@@ -2894,8 +2896,8 @@ export type DeleteAttendeeExternalPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedAttendeeExternalNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedAttendeeExternalNodeId: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Event` that is related to this `AttendeeExternal`. */
   event: Maybe<Event>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -2918,9 +2920,9 @@ export type DeleteAttendeeUserByUserIdAndEventIdInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  eventId: Scalars['BigInt'];
-  userId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  eventId: Scalars['BigInt']['input'];
+  userId: Scalars['BigInt']['input'];
 };
 
 /** All input for the `deleteAttendeeUser` mutation. */
@@ -2929,8 +2931,8 @@ export type DeleteAttendeeUserInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `AttendeeUser` mutation. */
@@ -2944,8 +2946,8 @@ export type DeleteAttendeeUserPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedAttendeeUserNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedAttendeeUserNodeId: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Event` that is related to this `AttendeeUser`. */
   event: Maybe<Event>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -2966,8 +2968,8 @@ export type DeleteCohortGroupInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `CohortGroup` mutation. */
@@ -2977,12 +2979,12 @@ export type DeleteCohortGroupPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `CohortGroup` that was deleted by this mutation. */
   cohortGroup: Maybe<CohortGroup>;
   /** An edge for our `CohortGroup`. May be used by Relay 1. */
   cohortGroupEdge: Maybe<CohortGroupsEdge>;
-  deletedCohortGroupNodeId: Maybe<Scalars['ID']>;
+  deletedCohortGroupNodeId: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `Tenant` that is related to this `CohortGroup`. */
@@ -3001,8 +3003,8 @@ export type DeleteDokumentyInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  dId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  dId: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `Dokumenty` mutation. */
@@ -3012,8 +3014,8 @@ export type DeleteDokumentyPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedDokumentyNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedDokumentyNodeId: Maybe<Scalars['ID']['output']>;
   /** The `Dokumenty` that was deleted by this mutation. */
   dokumenty: Maybe<Dokumenty>;
   /** An edge for our `Dokumenty`. May be used by Relay 1. */
@@ -3036,8 +3038,8 @@ export type DeleteEventInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `Event` mutation. */
@@ -3047,8 +3049,8 @@ export type DeleteEventPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedEventNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedEventNodeId: Maybe<Scalars['ID']['output']>;
   /** The `Event` that was deleted by this mutation. */
   event: Maybe<Event>;
   /** An edge for our `Event`. May be used by Relay 1. */
@@ -3069,8 +3071,8 @@ export type DeleteFormResponseInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `FormResponse` mutation. */
@@ -3080,8 +3082,8 @@ export type DeleteFormResponsePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedFormResponseNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedFormResponseNodeId: Maybe<Scalars['ID']['output']>;
   /** The `FormResponse` that was deleted by this mutation. */
   formResponse: Maybe<FormResponse>;
   /** An edge for our `FormResponse`. May be used by Relay 1. */
@@ -3102,8 +3104,8 @@ export type DeleteGalerieDirInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  gdId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  gdId: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `GalerieDir` mutation. */
@@ -3113,8 +3115,8 @@ export type DeleteGalerieDirPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedGalerieDirNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedGalerieDirNodeId: Maybe<Scalars['ID']['output']>;
   /** The `GalerieDir` that was deleted by this mutation. */
   galerieDir: Maybe<GalerieDir>;
   /** An edge for our `GalerieDir`. May be used by Relay 1. */
@@ -3135,8 +3137,8 @@ export type DeleteGalerieFotoInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  gfId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  gfId: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `GalerieFoto` mutation. */
@@ -3146,8 +3148,8 @@ export type DeleteGalerieFotoPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedGalerieFotoNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedGalerieFotoNodeId: Maybe<Scalars['ID']['output']>;
   /** Reads a single `GalerieDir` that is related to this `GalerieFoto`. */
   galerieDirByGfIdRodic: Maybe<GalerieDir>;
   /** The `GalerieFoto` that was deleted by this mutation. */
@@ -3172,9 +3174,9 @@ export type DeleteLocationAttachmentInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  locationId: Scalars['BigInt'];
-  objectName: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  locationId: Scalars['BigInt']['input'];
+  objectName: Scalars['String']['input'];
 };
 
 /** The output of our delete `LocationAttachment` mutation. */
@@ -3186,8 +3188,8 @@ export type DeleteLocationAttachmentPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedLocationAttachmentNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedLocationAttachmentNodeId: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Location` that is related to this `LocationAttachment`. */
   location: Maybe<Location>;
   /** The `LocationAttachment` that was deleted by this mutation. */
@@ -3210,8 +3212,8 @@ export type DeleteLocationInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `Location` mutation. */
@@ -3221,8 +3223,8 @@ export type DeleteLocationPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedLocationNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedLocationNodeId: Maybe<Scalars['ID']['output']>;
   /** The `Location` that was deleted by this mutation. */
   location: Maybe<Location>;
   /** An edge for our `Location`. May be used by Relay 1. */
@@ -3243,8 +3245,8 @@ export type DeleteNabidkaInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  nId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  nId: Scalars['BigInt']['input'];
 };
 
 /** All input for the `deleteNabidkaItemByNiPartnerAndNiIdRodic` mutation. */
@@ -3253,9 +3255,9 @@ export type DeleteNabidkaItemByNiPartnerAndNiIdRodicInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  niIdRodic: Scalars['BigInt'];
-  niPartner: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  niIdRodic: Scalars['BigInt']['input'];
+  niPartner: Scalars['BigInt']['input'];
 };
 
 /** All input for the `deleteNabidkaItem` mutation. */
@@ -3264,8 +3266,8 @@ export type DeleteNabidkaItemInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  niId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  niId: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `NabidkaItem` mutation. */
@@ -3275,8 +3277,8 @@ export type DeleteNabidkaItemPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedNabidkaItemNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedNabidkaItemNodeId: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Nabidka` that is related to this `NabidkaItem`. */
   nabidkaByNiIdRodic: Maybe<Nabidka>;
   /** The `NabidkaItem` that was deleted by this mutation. */
@@ -3302,8 +3304,8 @@ export type DeleteNabidkaPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedNabidkaNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedNabidkaNodeId: Maybe<Scalars['ID']['output']>;
   /** The `Nabidka` that was deleted by this mutation. */
   nabidka: Maybe<Nabidka>;
   /** An edge for our `Nabidka`. May be used by Relay 1. */
@@ -3326,8 +3328,8 @@ export type DeleteParameterInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  paName: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  paName: Scalars['String']['input'];
 };
 
 /** The output of our delete `Parameter` mutation. */
@@ -3337,8 +3339,8 @@ export type DeleteParameterPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedParameterNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedParameterNodeId: Maybe<Scalars['ID']['output']>;
   /** The `Parameter` that was deleted by this mutation. */
   parameter: Maybe<Parameter>;
   /** An edge for our `Parameter`. May be used by Relay 1. */
@@ -3359,8 +3361,8 @@ export type DeleteParyInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  pId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  pId: Scalars['BigInt']['input'];
 };
 
 /** All input for the `deleteParyNavrh` mutation. */
@@ -3369,8 +3371,8 @@ export type DeleteParyNavrhInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  pnId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  pnId: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `ParyNavrh` mutation. */
@@ -3380,8 +3382,8 @@ export type DeleteParyNavrhPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedParyNavrhNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedParyNavrhNodeId: Maybe<Scalars['ID']['output']>;
   /** The `ParyNavrh` that was deleted by this mutation. */
   paryNavrh: Maybe<ParyNavrh>;
   /** An edge for our `ParyNavrh`. May be used by Relay 1. */
@@ -3409,8 +3411,8 @@ export type DeleteParyPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedParyNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedParyNodeId: Maybe<Scalars['ID']['output']>;
   /** The `Pary` that was deleted by this mutation. */
   pary: Maybe<Pary>;
   /** An edge for our `Pary`. May be used by Relay 1. */
@@ -3435,8 +3437,8 @@ export type DeletePermissionInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  peId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  peId: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `Permission` mutation. */
@@ -3446,8 +3448,8 @@ export type DeletePermissionPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedPermissionNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedPermissionNodeId: Maybe<Scalars['ID']['output']>;
   /** The `Permission` that was deleted by this mutation. */
   permission: Maybe<Permission>;
   /** An edge for our `Permission`. May be used by Relay 1. */
@@ -3468,8 +3470,8 @@ export type DeletePersonInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `Person` mutation. */
@@ -3479,8 +3481,8 @@ export type DeletePersonPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedPersonNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedPersonNodeId: Maybe<Scalars['ID']['output']>;
   /** The `Person` that was deleted by this mutation. */
   person: Maybe<Person>;
   /** An edge for our `Person`. May be used by Relay 1. */
@@ -3501,8 +3503,8 @@ export type DeletePlatbyCategoryGroupInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  pcgId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  pcgId: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `PlatbyCategoryGroup` mutation. */
@@ -3512,8 +3514,8 @@ export type DeletePlatbyCategoryGroupPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedPlatbyCategoryGroupNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedPlatbyCategoryGroupNodeId: Maybe<Scalars['ID']['output']>;
   /** Reads a single `PlatbyCategory` that is related to this `PlatbyCategoryGroup`. */
   platbyCategoryByPcgIdCategory: Maybe<PlatbyCategory>;
   /** The `PlatbyCategoryGroup` that was deleted by this mutation. */
@@ -3538,8 +3540,8 @@ export type DeletePlatbyCategoryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  pcId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  pcId: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `PlatbyCategory` mutation. */
@@ -3549,8 +3551,8 @@ export type DeletePlatbyCategoryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedPlatbyCategoryNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedPlatbyCategoryNodeId: Maybe<Scalars['ID']['output']>;
   /** The `PlatbyCategory` that was deleted by this mutation. */
   platbyCategory: Maybe<PlatbyCategory>;
   /** An edge for our `PlatbyCategory`. May be used by Relay 1. */
@@ -3571,8 +3573,8 @@ export type DeletePlatbyGroupInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  pgId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  pgId: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `PlatbyGroup` mutation. */
@@ -3582,8 +3584,8 @@ export type DeletePlatbyGroupPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedPlatbyGroupNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedPlatbyGroupNodeId: Maybe<Scalars['ID']['output']>;
   /** The `PlatbyGroup` that was deleted by this mutation. */
   platbyGroup: Maybe<PlatbyGroup>;
   /** An edge for our `PlatbyGroup`. May be used by Relay 1. */
@@ -3604,8 +3606,8 @@ export type DeletePlatbyGroupSkupinaInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  pgsId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  pgsId: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `PlatbyGroupSkupina` mutation. */
@@ -3615,8 +3617,8 @@ export type DeletePlatbyGroupSkupinaPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedPlatbyGroupSkupinaNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedPlatbyGroupSkupinaNodeId: Maybe<Scalars['ID']['output']>;
   /** Reads a single `PlatbyGroup` that is related to this `PlatbyGroupSkupina`. */
   platbyGroupByPgsIdGroup: Maybe<PlatbyGroup>;
   /** The `PlatbyGroupSkupina` that was deleted by this mutation. */
@@ -3641,8 +3643,8 @@ export type DeletePlatbyItemInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  piId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  piId: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `PlatbyItem` mutation. */
@@ -3652,8 +3654,8 @@ export type DeletePlatbyItemPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedPlatbyItemNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedPlatbyItemNodeId: Maybe<Scalars['ID']['output']>;
   /** Reads a single `PlatbyCategory` that is related to this `PlatbyItem`. */
   platbyCategoryByPiIdCategory: Maybe<PlatbyCategory>;
   /** The `PlatbyItem` that was deleted by this mutation. */
@@ -3680,8 +3682,8 @@ export type DeletePlatbyRawInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  prId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  prId: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `PlatbyRaw` mutation. */
@@ -3691,8 +3693,8 @@ export type DeletePlatbyRawPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedPlatbyRawNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedPlatbyRawNodeId: Maybe<Scalars['ID']['output']>;
   /** The `PlatbyRaw` that was deleted by this mutation. */
   platbyRaw: Maybe<PlatbyRaw>;
   /** An edge for our `PlatbyRaw`. May be used by Relay 1. */
@@ -3713,9 +3715,9 @@ export type DeleteRoomAttachmentInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  objectName: Scalars['String'];
-  roomId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  objectName: Scalars['String']['input'];
+  roomId: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `RoomAttachment` mutation. */
@@ -3727,8 +3729,8 @@ export type DeleteRoomAttachmentPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedRoomAttachmentNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedRoomAttachmentNodeId: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `Room` that is related to this `RoomAttachment`. */
@@ -3751,8 +3753,8 @@ export type DeleteRoomInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `Room` mutation. */
@@ -3762,8 +3764,8 @@ export type DeleteRoomPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedRoomNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedRoomNodeId: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Location` that is related to this `Room`. */
   locationByLocation: Maybe<Location>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -3786,8 +3788,8 @@ export type DeleteRozpiInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  rId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  rId: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `Rozpi` mutation. */
@@ -3797,8 +3799,8 @@ export type DeleteRozpiPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedRozpiNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedRozpiNodeId: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** The `Rozpi` that was deleted by this mutation. */
@@ -3821,8 +3823,8 @@ export type DeleteRozpisItemInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  riId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  riId: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `RozpisItem` mutation. */
@@ -3832,8 +3834,8 @@ export type DeleteRozpisItemPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedRozpisItemNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedRozpisItemNodeId: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Pary` that is related to this `RozpisItem`. */
   paryByRiPartner: Maybe<Pary>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -3858,8 +3860,8 @@ export type DeleteSkupinyInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  sId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  sId: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `Skupiny` mutation. */
@@ -3869,10 +3871,10 @@ export type DeleteSkupinyPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `CohortGroup` that is related to this `Skupiny`. */
   cohortGroupByCohortGroup: Maybe<CohortGroup>;
-  deletedSkupinyNodeId: Maybe<Scalars['ID']>;
+  deletedSkupinyNodeId: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** The `Skupiny` that was deleted by this mutation. */
@@ -3893,9 +3895,9 @@ export type DeleteTenantAttachmentInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  objectName: Scalars['String'];
-  tenantId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  objectName: Scalars['String']['input'];
+  tenantId: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `TenantAttachment` mutation. */
@@ -3907,8 +3909,8 @@ export type DeleteTenantAttachmentPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedTenantAttachmentNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedTenantAttachmentNodeId: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `Tenant` that is related to this `TenantAttachment`. */
@@ -3931,8 +3933,8 @@ export type DeleteTenantInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
 };
 
 /** All input for the `deleteTenantLocation` mutation. */
@@ -3941,9 +3943,9 @@ export type DeleteTenantLocationInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  locationId: Scalars['BigInt'];
-  tenantId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  locationId: Scalars['BigInt']['input'];
+  tenantId: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `TenantLocation` mutation. */
@@ -3953,8 +3955,8 @@ export type DeleteTenantLocationPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedTenantLocationNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedTenantLocationNodeId: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Location` that is related to this `TenantLocation`. */
   location: Maybe<Location>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -3980,8 +3982,8 @@ export type DeleteTenantPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedTenantNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedTenantNodeId: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** The `Tenant` that was deleted by this mutation. */
@@ -4002,9 +4004,9 @@ export type DeleteTenantPersonInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  personId: Scalars['BigInt'];
-  tenantId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  personId: Scalars['BigInt']['input'];
+  tenantId: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `TenantPerson` mutation. */
@@ -4014,8 +4016,8 @@ export type DeleteTenantPersonPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedTenantPersonNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedTenantPersonNodeId: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Person` that is related to this `TenantPerson`. */
   person: Maybe<Person>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -4040,8 +4042,8 @@ export type DeleteUpozorneniInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  upId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  upId: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `Upozorneni` mutation. */
@@ -4051,8 +4053,8 @@ export type DeleteUpozorneniPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedUpozorneniNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedUpozorneniNodeId: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** The `Upozorneni` that was deleted by this mutation. */
@@ -4075,8 +4077,8 @@ export type DeleteUpozorneniSkupinyInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  upsId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  upsId: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `UpozorneniSkupiny` mutation. */
@@ -4086,8 +4088,8 @@ export type DeleteUpozorneniSkupinyPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedUpozorneniSkupinyNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedUpozorneniSkupinyNodeId: Maybe<Scalars['ID']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`. */
@@ -4112,8 +4114,8 @@ export type DeleteUserInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  uId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  uId: Scalars['BigInt']['input'];
 };
 
 /** The output of our delete `User` mutation. */
@@ -4123,8 +4125,8 @@ export type DeleteUserPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
-  deletedUserNodeId: Maybe<Scalars['ID']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
+  deletedUserNodeId: Maybe<Scalars['ID']['output']>;
   /** Reads a single `Permission` that is related to this `User`. */
   permissionByUGroup: Maybe<Permission>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -4153,14 +4155,14 @@ export type DokumentiesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Dokumenty` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Dokumenty` edge in the connection. */
 export type DokumentiesEdge = {
   __typename?: 'DokumentiesEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `Dokumenty` at the end of the edge. */
   node: Dokumenty;
 };
@@ -4203,15 +4205,15 @@ export type DokumentiesOrderBy =
 
 export type Dokumenty = {
   __typename?: 'Dokumenty';
-  dFilename: Scalars['String'];
-  dId: Scalars['BigInt'];
-  dKategorie: Scalars['Int'];
-  dKdo: Scalars['BigInt'];
-  dName: Scalars['String'];
-  dPath: Scalars['String'];
-  dTimestamp: Maybe<Scalars['Datetime']>;
-  id: Maybe<Scalars['BigInt']>;
-  tenantId: Scalars['BigInt'];
+  dFilename: Scalars['String']['output'];
+  dId: Scalars['BigInt']['output'];
+  dKategorie: Scalars['Int']['output'];
+  dKdo: Scalars['BigInt']['output'];
+  dName: Scalars['String']['output'];
+  dPath: Scalars['String']['output'];
+  dTimestamp: Maybe<Scalars['Datetime']['output']>;
+  id: Maybe<Scalars['BigInt']['output']>;
+  tenantId: Scalars['BigInt']['output'];
   /** Reads a single `User` that is related to this `Dokumenty`. */
   userByDKdo: Maybe<User>;
 };
@@ -4222,41 +4224,41 @@ export type Dokumenty = {
  */
 export type DokumentyCondition = {
   /** Checks for equality with the object’s `dId` field. */
-  dId?: InputMaybe<Scalars['BigInt']>;
+  dId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `dKategorie` field. */
-  dKategorie?: InputMaybe<Scalars['Int']>;
+  dKategorie?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `dKdo` field. */
-  dKdo?: InputMaybe<Scalars['BigInt']>;
+  dKdo?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `dPath` field. */
-  dPath?: InputMaybe<Scalars['String']>;
+  dPath?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `dTimestamp` field. */
-  dTimestamp?: InputMaybe<Scalars['Datetime']>;
+  dTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** An input for mutations affecting `Dokumenty` */
 export type DokumentyInput = {
-  dFilename: Scalars['String'];
-  dId?: InputMaybe<Scalars['BigInt']>;
-  dKategorie: Scalars['Int'];
-  dKdo: Scalars['BigInt'];
-  dName: Scalars['String'];
-  dPath: Scalars['String'];
-  dTimestamp?: InputMaybe<Scalars['Datetime']>;
-  id?: InputMaybe<Scalars['BigInt']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  dFilename: Scalars['String']['input'];
+  dId?: InputMaybe<Scalars['BigInt']['input']>;
+  dKategorie: Scalars['Int']['input'];
+  dKdo: Scalars['BigInt']['input'];
+  dName: Scalars['String']['input'];
+  dPath: Scalars['String']['input'];
+  dTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** Represents an update to a `Dokumenty`. Fields that are set will be updated. */
 export type DokumentyPatch = {
-  dFilename?: InputMaybe<Scalars['String']>;
-  dId?: InputMaybe<Scalars['BigInt']>;
-  dKategorie?: InputMaybe<Scalars['Int']>;
-  dKdo?: InputMaybe<Scalars['BigInt']>;
-  dName?: InputMaybe<Scalars['String']>;
-  dPath?: InputMaybe<Scalars['String']>;
-  dTimestamp?: InputMaybe<Scalars['Datetime']>;
-  id?: InputMaybe<Scalars['BigInt']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  dFilename?: InputMaybe<Scalars['String']['input']>;
+  dId?: InputMaybe<Scalars['BigInt']['input']>;
+  dKategorie?: InputMaybe<Scalars['Int']['input']>;
+  dKdo?: InputMaybe<Scalars['BigInt']['input']>;
+  dName?: InputMaybe<Scalars['String']['input']>;
+  dPath?: InputMaybe<Scalars['String']['input']>;
+  dTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 export type Event = {
@@ -4265,92 +4267,92 @@ export type Event = {
   attendeeExternals: AttendeeExternalsConnection;
   /** Reads and enables pagination through a set of `AttendeeUser`. */
   attendeeUsers: AttendeeUsersConnection;
-  capacity: Scalars['BigInt'];
-  description: Scalars['String'];
-  enableNotes: Scalars['Boolean'];
-  filesLegacy: Scalars['String'];
-  id: Scalars['BigInt'];
-  isLocked: Scalars['Boolean'];
-  isPublic: Scalars['Boolean'];
-  isVisible: Scalars['Boolean'];
-  locationText: Scalars['String'];
-  name: Scalars['String'];
-  remainingSpots: Maybe<Scalars['Int']>;
-  since: Scalars['Date'];
-  summary: Scalars['String'];
-  tenantId: Scalars['BigInt'];
-  until: Scalars['Date'];
-  updatedAt: Maybe<Scalars['Datetime']>;
+  capacity: Scalars['BigInt']['output'];
+  description: Scalars['String']['output'];
+  enableNotes: Scalars['Boolean']['output'];
+  filesLegacy: Scalars['String']['output'];
+  id: Scalars['BigInt']['output'];
+  isLocked: Scalars['Boolean']['output'];
+  isPublic: Scalars['Boolean']['output'];
+  isVisible: Scalars['Boolean']['output'];
+  locationText: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  remainingSpots: Maybe<Scalars['Int']['output']>;
+  since: Scalars['Date']['output'];
+  summary: Scalars['String']['output'];
+  tenantId: Scalars['BigInt']['output'];
+  until: Scalars['Date']['output'];
+  updatedAt: Maybe<Scalars['Datetime']['output']>;
 };
 
 
 export type EventAttendeeExternalsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<AttendeeExternalCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AttendeeExternalsOrderBy>>;
 };
 
 
 export type EventAttendeeUsersArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<AttendeeUserCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AttendeeUsersOrderBy>>;
 };
 
 /** A condition to be used against `Event` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type EventCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `isVisible` field. */
-  isVisible?: InputMaybe<Scalars['Boolean']>;
+  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `since` field. */
-  since?: InputMaybe<Scalars['Date']>;
+  since?: InputMaybe<Scalars['Date']['input']>;
 };
 
 /** An input for mutations affecting `Event` */
 export type EventInput = {
-  capacity?: InputMaybe<Scalars['BigInt']>;
-  description: Scalars['String'];
-  enableNotes?: InputMaybe<Scalars['Boolean']>;
-  filesLegacy?: InputMaybe<Scalars['String']>;
-  id?: InputMaybe<Scalars['BigInt']>;
-  isLocked?: InputMaybe<Scalars['Boolean']>;
-  isPublic?: InputMaybe<Scalars['Boolean']>;
-  isVisible?: InputMaybe<Scalars['Boolean']>;
-  locationText: Scalars['String'];
-  name: Scalars['String'];
-  since: Scalars['Date'];
-  summary?: InputMaybe<Scalars['String']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
-  until: Scalars['Date'];
-  updatedAt?: InputMaybe<Scalars['Datetime']>;
+  capacity?: InputMaybe<Scalars['BigInt']['input']>;
+  description: Scalars['String']['input'];
+  enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
+  filesLegacy?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  isLocked?: InputMaybe<Scalars['Boolean']['input']>;
+  isPublic?: InputMaybe<Scalars['Boolean']['input']>;
+  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  locationText: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  since: Scalars['Date']['input'];
+  summary?: InputMaybe<Scalars['String']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  until: Scalars['Date']['input'];
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** Represents an update to a `Event`. Fields that are set will be updated. */
 export type EventPatch = {
-  capacity?: InputMaybe<Scalars['BigInt']>;
-  description?: InputMaybe<Scalars['String']>;
-  enableNotes?: InputMaybe<Scalars['Boolean']>;
-  filesLegacy?: InputMaybe<Scalars['String']>;
-  id?: InputMaybe<Scalars['BigInt']>;
-  isLocked?: InputMaybe<Scalars['Boolean']>;
-  isPublic?: InputMaybe<Scalars['Boolean']>;
-  isVisible?: InputMaybe<Scalars['Boolean']>;
-  locationText?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  since?: InputMaybe<Scalars['Date']>;
-  summary?: InputMaybe<Scalars['String']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
-  until?: InputMaybe<Scalars['Date']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']>;
+  capacity?: InputMaybe<Scalars['BigInt']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
+  filesLegacy?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  isLocked?: InputMaybe<Scalars['Boolean']['input']>;
+  isPublic?: InputMaybe<Scalars['Boolean']['input']>;
+  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  locationText?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  since?: InputMaybe<Scalars['Date']['input']>;
+  summary?: InputMaybe<Scalars['String']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  until?: InputMaybe<Scalars['Date']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** A connection to a list of `Event` values. */
@@ -4363,14 +4365,14 @@ export type EventsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Event` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Event` edge in the connection. */
 export type EventsEdge = {
   __typename?: 'EventsEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `Event` at the end of the edge. */
   node: Event;
 };
@@ -4397,7 +4399,7 @@ export type FixUnpairedCouplesInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** The output of our `fixUnpairedCouples` mutation. */
@@ -4407,7 +4409,7 @@ export type FixUnpairedCouplesPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   paries: Maybe<Array<Pary>>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
@@ -4415,13 +4417,13 @@ export type FixUnpairedCouplesPayload = {
 
 export type FormResponse = {
   __typename?: 'FormResponse';
-  createdAt: Scalars['Datetime'];
-  data: Scalars['JSON'];
-  id: Scalars['BigInt'];
-  tenantId: Scalars['BigInt'];
-  type: Scalars['String'];
-  updatedAt: Scalars['Datetime'];
-  url: Scalars['String'];
+  createdAt: Scalars['Datetime']['output'];
+  data: Scalars['JSON']['output'];
+  id: Scalars['BigInt']['output'];
+  tenantId: Scalars['BigInt']['output'];
+  type: Scalars['String']['output'];
+  updatedAt: Scalars['Datetime']['output'];
+  url: Scalars['String']['output'];
 };
 
 /**
@@ -4430,33 +4432,33 @@ export type FormResponse = {
  */
 export type FormResponseCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `type` field. */
-  type?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
-  updatedAt?: InputMaybe<Scalars['Datetime']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** An input for mutations affecting `FormResponse` */
 export type FormResponseInput = {
-  createdAt?: InputMaybe<Scalars['Datetime']>;
-  data: Scalars['JSON'];
-  id?: InputMaybe<Scalars['BigInt']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
-  type: Scalars['String'];
-  updatedAt?: InputMaybe<Scalars['Datetime']>;
-  url: Scalars['String'];
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  data: Scalars['JSON']['input'];
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  type: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  url: Scalars['String']['input'];
 };
 
 /** Represents an update to a `FormResponse`. Fields that are set will be updated. */
 export type FormResponsePatch = {
-  createdAt?: InputMaybe<Scalars['Datetime']>;
-  data?: InputMaybe<Scalars['JSON']>;
-  id?: InputMaybe<Scalars['BigInt']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
-  type?: InputMaybe<Scalars['String']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']>;
-  url?: InputMaybe<Scalars['String']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  data?: InputMaybe<Scalars['JSON']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A connection to a list of `FormResponse` values. */
@@ -4469,14 +4471,14 @@ export type FormResponsesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `FormResponse` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `FormResponse` edge in the connection. */
 export type FormResponsesEdge = {
   __typename?: 'FormResponsesEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `FormResponse` at the end of the edge. */
   node: FormResponse;
 };
@@ -4497,24 +4499,24 @@ export type GalerieDir = {
   __typename?: 'GalerieDir';
   /** Reads and enables pagination through a set of `GalerieFoto`. */
   galerieFotosByGfIdRodic: GalerieFotosConnection;
-  gdHidden: Scalars['Boolean'];
-  gdId: Scalars['BigInt'];
-  gdIdRodic: Scalars['BigInt'];
-  gdLevel: Scalars['Int'];
-  gdName: Scalars['String'];
-  gdPath: Scalars['String'];
-  id: Maybe<Scalars['BigInt']>;
-  tenantId: Scalars['BigInt'];
+  gdHidden: Scalars['Boolean']['output'];
+  gdId: Scalars['BigInt']['output'];
+  gdIdRodic: Scalars['BigInt']['output'];
+  gdLevel: Scalars['Int']['output'];
+  gdName: Scalars['String']['output'];
+  gdPath: Scalars['String']['output'];
+  id: Maybe<Scalars['BigInt']['output']>;
+  tenantId: Scalars['BigInt']['output'];
 };
 
 
 export type GalerieDirGalerieFotosByGfIdRodicArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<GalerieFotoCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<GalerieFotosOrderBy>>;
 };
 
@@ -4524,33 +4526,33 @@ export type GalerieDirGalerieFotosByGfIdRodicArgs = {
  */
 export type GalerieDirCondition = {
   /** Checks for equality with the object’s `gdId` field. */
-  gdId?: InputMaybe<Scalars['BigInt']>;
+  gdId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `gdIdRodic` field. */
-  gdIdRodic?: InputMaybe<Scalars['BigInt']>;
+  gdIdRodic?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `GalerieDir` */
 export type GalerieDirInput = {
-  gdHidden?: InputMaybe<Scalars['Boolean']>;
-  gdId?: InputMaybe<Scalars['BigInt']>;
-  gdIdRodic: Scalars['BigInt'];
-  gdLevel?: InputMaybe<Scalars['Int']>;
-  gdName: Scalars['String'];
-  gdPath: Scalars['String'];
-  id?: InputMaybe<Scalars['BigInt']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  gdHidden?: InputMaybe<Scalars['Boolean']['input']>;
+  gdId?: InputMaybe<Scalars['BigInt']['input']>;
+  gdIdRodic: Scalars['BigInt']['input'];
+  gdLevel?: InputMaybe<Scalars['Int']['input']>;
+  gdName: Scalars['String']['input'];
+  gdPath: Scalars['String']['input'];
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** Represents an update to a `GalerieDir`. Fields that are set will be updated. */
 export type GalerieDirPatch = {
-  gdHidden?: InputMaybe<Scalars['Boolean']>;
-  gdId?: InputMaybe<Scalars['BigInt']>;
-  gdIdRodic?: InputMaybe<Scalars['BigInt']>;
-  gdLevel?: InputMaybe<Scalars['Int']>;
-  gdName?: InputMaybe<Scalars['String']>;
-  gdPath?: InputMaybe<Scalars['String']>;
-  id?: InputMaybe<Scalars['BigInt']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  gdHidden?: InputMaybe<Scalars['Boolean']['input']>;
+  gdId?: InputMaybe<Scalars['BigInt']['input']>;
+  gdIdRodic?: InputMaybe<Scalars['BigInt']['input']>;
+  gdLevel?: InputMaybe<Scalars['Int']['input']>;
+  gdName?: InputMaybe<Scalars['String']['input']>;
+  gdPath?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `GalerieDir` values. */
@@ -4563,14 +4565,14 @@ export type GalerieDirsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `GalerieDir` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `GalerieDir` edge in the connection. */
 export type GalerieDirsEdge = {
   __typename?: 'GalerieDirsEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `GalerieDir` at the end of the edge. */
   node: GalerieDir;
 };
@@ -4593,26 +4595,26 @@ export type GalerieFoto = {
   aktualitiesByAtFotoMain: AktualitiesConnection;
   /** Reads a single `GalerieDir` that is related to this `GalerieFoto`. */
   galerieDirByGfIdRodic: Maybe<GalerieDir>;
-  gfId: Scalars['BigInt'];
-  gfIdRodic: Scalars['BigInt'];
-  gfKdo: Scalars['BigInt'];
-  gfName: Scalars['String'];
-  gfPath: Scalars['String'];
-  gfTimestamp: Maybe<Scalars['Datetime']>;
-  id: Maybe<Scalars['BigInt']>;
-  tenantId: Scalars['BigInt'];
+  gfId: Scalars['BigInt']['output'];
+  gfIdRodic: Scalars['BigInt']['output'];
+  gfKdo: Scalars['BigInt']['output'];
+  gfName: Scalars['String']['output'];
+  gfPath: Scalars['String']['output'];
+  gfTimestamp: Maybe<Scalars['Datetime']['output']>;
+  id: Maybe<Scalars['BigInt']['output']>;
+  tenantId: Scalars['BigInt']['output'];
   /** Reads a single `User` that is related to this `GalerieFoto`. */
   userByGfKdo: Maybe<User>;
 };
 
 
 export type GalerieFotoAktualitiesByAtFotoMainArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<AktualityCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AktualitiesOrderBy>>;
 };
 
@@ -4622,35 +4624,35 @@ export type GalerieFotoAktualitiesByAtFotoMainArgs = {
  */
 export type GalerieFotoCondition = {
   /** Checks for equality with the object’s `gfId` field. */
-  gfId?: InputMaybe<Scalars['BigInt']>;
+  gfId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `gfIdRodic` field. */
-  gfIdRodic?: InputMaybe<Scalars['BigInt']>;
+  gfIdRodic?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `gfKdo` field. */
-  gfKdo?: InputMaybe<Scalars['BigInt']>;
+  gfKdo?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `GalerieFoto` */
 export type GalerieFotoInput = {
-  gfId?: InputMaybe<Scalars['BigInt']>;
-  gfIdRodic: Scalars['BigInt'];
-  gfKdo: Scalars['BigInt'];
-  gfName: Scalars['String'];
-  gfPath: Scalars['String'];
-  gfTimestamp?: InputMaybe<Scalars['Datetime']>;
-  id?: InputMaybe<Scalars['BigInt']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  gfId?: InputMaybe<Scalars['BigInt']['input']>;
+  gfIdRodic: Scalars['BigInt']['input'];
+  gfKdo: Scalars['BigInt']['input'];
+  gfName: Scalars['String']['input'];
+  gfPath: Scalars['String']['input'];
+  gfTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** Represents an update to a `GalerieFoto`. Fields that are set will be updated. */
 export type GalerieFotoPatch = {
-  gfId?: InputMaybe<Scalars['BigInt']>;
-  gfIdRodic?: InputMaybe<Scalars['BigInt']>;
-  gfKdo?: InputMaybe<Scalars['BigInt']>;
-  gfName?: InputMaybe<Scalars['String']>;
-  gfPath?: InputMaybe<Scalars['String']>;
-  gfTimestamp?: InputMaybe<Scalars['Datetime']>;
-  id?: InputMaybe<Scalars['BigInt']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  gfId?: InputMaybe<Scalars['BigInt']['input']>;
+  gfIdRodic?: InputMaybe<Scalars['BigInt']['input']>;
+  gfKdo?: InputMaybe<Scalars['BigInt']['input']>;
+  gfName?: InputMaybe<Scalars['String']['input']>;
+  gfPath?: InputMaybe<Scalars['String']['input']>;
+  gfTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `GalerieFoto` values. */
@@ -4663,14 +4665,14 @@ export type GalerieFotosConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `GalerieFoto` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `GalerieFoto` edge in the connection. */
 export type GalerieFotosEdge = {
   __typename?: 'GalerieFotosEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `GalerieFoto` at the end of the edge. */
   node: GalerieFoto;
 };
@@ -4720,108 +4722,62 @@ export type GenderType =
 
 export type Lesson = {
   __typename?: 'Lesson';
-  createdAt: Scalars['Datetime'];
-  id: Scalars['BigInt'];
-  isLocked: Scalars['Boolean'];
-  isVisible: Scalars['Boolean'];
+  createdAt: Scalars['Datetime']['output'];
+  id: Scalars['BigInt']['output'];
+  isLocked: Scalars['Boolean']['output'];
+  isVisible: Scalars['Boolean']['output'];
   /** Reads and enables pagination through a set of `LessonTrainer`. */
   lessonTrainers: LessonTrainersConnection;
   /** Reads a single `AttendeeList` that is related to this `Lesson`. */
   list: Maybe<AttendeeList>;
-  listId: Scalars['BigInt'];
+  listId: Scalars['BigInt']['output'];
   /** Reads a single `Location` that is related to this `Lesson`. */
   location: Maybe<Location>;
-  locationId: Maybe<Scalars['BigInt']>;
-  locationText: Maybe<Scalars['String']>;
-  since: Scalars['Datetime'];
+  locationId: Maybe<Scalars['BigInt']['output']>;
+  locationText: Maybe<Scalars['String']['output']>;
+  since: Scalars['Datetime']['output'];
   /** Reads a single `Tenant` that is related to this `Lesson`. */
   tenant: Maybe<Tenant>;
-  tenantId: Scalars['BigInt'];
-  until: Scalars['Datetime'];
-  updatedAt: Scalars['Datetime'];
+  tenantId: Scalars['BigInt']['output'];
+  until: Scalars['Datetime']['output'];
+  updatedAt: Scalars['Datetime']['output'];
 };
 
 
 export type LessonLessonTrainersArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<LessonTrainerCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<LessonTrainersOrderBy>>;
 };
 
 /** A condition to be used against `Lesson` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type LessonCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `listId` field. */
-  listId?: InputMaybe<Scalars['BigInt']>;
+  listId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `locationId` field. */
-  locationId?: InputMaybe<Scalars['BigInt']>;
+  locationId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
-
-/** A connection to a list of `Lesson` values. */
-export type LessonsConnection = {
-  __typename?: 'LessonsConnection';
-  /** A list of edges which contains the `Lesson` and cursor to aid in pagination. */
-  edges: Array<LessonsEdge>;
-  /** A list of `Lesson` objects. */
-  nodes: Array<Lesson>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Lesson` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `Lesson` edge in the connection. */
-export type LessonsEdge = {
-  __typename?: 'LessonsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
-  /** The `Lesson` at the end of the edge. */
-  node: Lesson;
-};
-
-/** Methods to use when ordering `Lesson`. */
-export type LessonsOrderBy =
-  | 'ATTENDEE_LIST_BY_LIST_ID__ID_ASC'
-  | 'ATTENDEE_LIST_BY_LIST_ID__ID_DESC'
-  | 'ATTENDEE_LIST_BY_LIST_ID__TENANT_ID_ASC'
-  | 'ATTENDEE_LIST_BY_LIST_ID__TENANT_ID_DESC'
-  | 'ID_ASC'
-  | 'ID_DESC'
-  | 'LESSON_TRAINERS_BY_LESSON_ID__COUNT_ASC'
-  | 'LESSON_TRAINERS_BY_LESSON_ID__COUNT_DESC'
-  | 'LIST_ID_ASC'
-  | 'LIST_ID_DESC'
-  | 'LOCATION_BY_LOCATION_ID__ID_ASC'
-  | 'LOCATION_BY_LOCATION_ID__ID_DESC'
-  | 'LOCATION_ID_ASC'
-  | 'LOCATION_ID_DESC'
-  | 'NATURAL'
-  | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC'
-  | 'TENANT_BY_TENANT_ID__ID_ASC'
-  | 'TENANT_BY_TENANT_ID__ID_DESC'
-  | 'TENANT_ID_ASC'
-  | 'TENANT_ID_DESC';
 
 export type LessonTrainer = {
   __typename?: 'LessonTrainer';
-  id: Scalars['BigInt'];
+  id: Scalars['BigInt']['output'];
   /** Reads a single `Lesson` that is related to this `LessonTrainer`. */
   lesson: Maybe<Lesson>;
-  lessonId: Scalars['BigInt'];
+  lessonId: Scalars['BigInt']['output'];
   /** Reads a single `Tenant` that is related to this `LessonTrainer`. */
   tenant: Maybe<Tenant>;
-  tenantId: Scalars['BigInt'];
+  tenantId: Scalars['BigInt']['output'];
   /** Reads a single `User` that is related to this `LessonTrainer`. */
   trainer: Maybe<User>;
-  trainerId: Scalars['BigInt'];
+  trainerId: Scalars['BigInt']['output'];
 };
 
 /**
@@ -4830,13 +4786,13 @@ export type LessonTrainer = {
  */
 export type LessonTrainerCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `lessonId` field. */
-  lessonId?: InputMaybe<Scalars['BigInt']>;
+  lessonId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `trainerId` field. */
-  trainerId?: InputMaybe<Scalars['BigInt']>;
+  trainerId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `LessonTrainer` values. */
@@ -4849,14 +4805,14 @@ export type LessonTrainersConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `LessonTrainer` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `LessonTrainer` edge in the connection. */
 export type LessonTrainersEdge = {
   __typename?: 'LessonTrainersEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `LessonTrainer` at the end of the edge. */
   node: LessonTrainer;
 };
@@ -4905,15 +4861,61 @@ export type LessonTrainersOrderBy =
   | 'USER_BY_TRAINER_ID__U_SYSTEM_ASC'
   | 'USER_BY_TRAINER_ID__U_SYSTEM_DESC';
 
+/** A connection to a list of `Lesson` values. */
+export type LessonsConnection = {
+  __typename?: 'LessonsConnection';
+  /** A list of edges which contains the `Lesson` and cursor to aid in pagination. */
+  edges: Array<LessonsEdge>;
+  /** A list of `Lesson` objects. */
+  nodes: Array<Lesson>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Lesson` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Lesson` edge in the connection. */
+export type LessonsEdge = {
+  __typename?: 'LessonsEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `Lesson` at the end of the edge. */
+  node: Lesson;
+};
+
+/** Methods to use when ordering `Lesson`. */
+export type LessonsOrderBy =
+  | 'ATTENDEE_LIST_BY_LIST_ID__ID_ASC'
+  | 'ATTENDEE_LIST_BY_LIST_ID__ID_DESC'
+  | 'ATTENDEE_LIST_BY_LIST_ID__TENANT_ID_ASC'
+  | 'ATTENDEE_LIST_BY_LIST_ID__TENANT_ID_DESC'
+  | 'ID_ASC'
+  | 'ID_DESC'
+  | 'LESSON_TRAINERS_BY_LESSON_ID__COUNT_ASC'
+  | 'LESSON_TRAINERS_BY_LESSON_ID__COUNT_DESC'
+  | 'LIST_ID_ASC'
+  | 'LIST_ID_DESC'
+  | 'LOCATION_BY_LOCATION_ID__ID_ASC'
+  | 'LOCATION_BY_LOCATION_ID__ID_DESC'
+  | 'LOCATION_ID_ASC'
+  | 'LOCATION_ID_DESC'
+  | 'NATURAL'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
+  | 'TENANT_BY_TENANT_ID__ID_ASC'
+  | 'TENANT_BY_TENANT_ID__ID_DESC'
+  | 'TENANT_ID_ASC'
+  | 'TENANT_ID_DESC';
+
 export type Location = {
   __typename?: 'Location';
-  description: Scalars['JSON'];
-  id: Scalars['BigInt'];
+  description: Scalars['JSON']['output'];
+  id: Scalars['BigInt']['output'];
   /** Reads and enables pagination through a set of `Lesson`. */
   lessons: LessonsConnection;
   /** Reads and enables pagination through a set of `LocationAttachment`. */
   locationAttachments: LocationAttachmentsConnection;
-  name: Scalars['String'];
+  name: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `Room`. */
   roomsByLocation: RoomsConnection;
   /** Reads and enables pagination through a set of `TenantLocation`. */
@@ -4922,45 +4924,45 @@ export type Location = {
 
 
 export type LocationLessonsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<LessonCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<LessonsOrderBy>>;
 };
 
 
 export type LocationLocationAttachmentsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<LocationAttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<LocationAttachmentsOrderBy>>;
 };
 
 
 export type LocationRoomsByLocationArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<RoomCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<RoomsOrderBy>>;
 };
 
 
 export type LocationTenantLocationsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TenantLocationCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TenantLocationsOrderBy>>;
 };
 
@@ -4970,8 +4972,8 @@ export type LocationAttachment = {
   attachmentByObjectName: Maybe<Attachment>;
   /** Reads a single `Location` that is related to this `LocationAttachment`. */
   location: Maybe<Location>;
-  locationId: Scalars['BigInt'];
-  objectName: Scalars['String'];
+  locationId: Scalars['BigInt']['output'];
+  objectName: Scalars['String']['output'];
 };
 
 /**
@@ -4980,21 +4982,21 @@ export type LocationAttachment = {
  */
 export type LocationAttachmentCondition = {
   /** Checks for equality with the object’s `locationId` field. */
-  locationId?: InputMaybe<Scalars['BigInt']>;
+  locationId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `objectName` field. */
-  objectName?: InputMaybe<Scalars['String']>;
+  objectName?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** An input for mutations affecting `LocationAttachment` */
 export type LocationAttachmentInput = {
-  locationId: Scalars['BigInt'];
-  objectName: Scalars['String'];
+  locationId: Scalars['BigInt']['input'];
+  objectName: Scalars['String']['input'];
 };
 
 /** Represents an update to a `LocationAttachment`. Fields that are set will be updated. */
 export type LocationAttachmentPatch = {
-  locationId?: InputMaybe<Scalars['BigInt']>;
-  objectName?: InputMaybe<Scalars['String']>;
+  locationId?: InputMaybe<Scalars['BigInt']['input']>;
+  objectName?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A connection to a list of `LocationAttachment` values. */
@@ -5007,14 +5009,14 @@ export type LocationAttachmentsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `LocationAttachment` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `LocationAttachment` edge in the connection. */
 export type LocationAttachmentsEdge = {
   __typename?: 'LocationAttachmentsEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `LocationAttachment` at the end of the edge. */
   node: LocationAttachment;
 };
@@ -5041,21 +5043,21 @@ export type LocationAttachmentsOrderBy =
  */
 export type LocationCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `Location` */
 export type LocationInput = {
-  description: Scalars['JSON'];
-  id?: InputMaybe<Scalars['BigInt']>;
-  name: Scalars['String'];
+  description: Scalars['JSON']['input'];
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  name: Scalars['String']['input'];
 };
 
 /** Represents an update to a `Location`. Fields that are set will be updated. */
 export type LocationPatch = {
-  description?: InputMaybe<Scalars['JSON']>;
-  id?: InputMaybe<Scalars['BigInt']>;
-  name?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['JSON']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A connection to a list of `Location` values. */
@@ -5068,14 +5070,14 @@ export type LocationsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Location` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Location` edge in the connection. */
 export type LocationsEdge = {
   __typename?: 'LocationsEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `Location` at the end of the edge. */
   node: Location;
 };
@@ -5102,9 +5104,9 @@ export type LoginInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  login: Scalars['String'];
-  passwd: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  login: Scalars['String']['input'];
+  passwd: Scalars['String']['input'];
 };
 
 /** The output of our `login` mutation. */
@@ -5114,7 +5116,7 @@ export type LoginPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   result: Maybe<LoginRecord>;
@@ -5134,7 +5136,7 @@ export type LogoutInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** The output of our `logout` mutation. */
@@ -5144,7 +5146,7 @@ export type LogoutPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
 };
@@ -5318,7 +5320,7 @@ export type Mutation = {
   deleteUpozorneniSkupiny: Maybe<DeleteUpozorneniSkupinyPayload>;
   /** Deletes a single `User` using a unique key. */
   deleteUser: Maybe<DeleteUserPayload>;
-  downloadFile: Scalars['String'];
+  downloadFile: Scalars['String']['output'];
   fixUnpairedCouples: Maybe<FixUnpairedCouplesPayload>;
   login: Maybe<LoginPayload>;
   logout: Maybe<LogoutPayload>;
@@ -5937,7 +5939,7 @@ export type MutationDeleteUserArgs = {
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDownloadFileArgs = {
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 };
 
 
@@ -6231,7 +6233,7 @@ export type MutationUpdateUserArgs = {
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUploadFileArgs = {
-  fileName: Scalars['String'];
+  fileName: Scalars['String']['input'];
 };
 
 
@@ -6242,74 +6244,74 @@ export type MutationVerifyFunctionArgs = {
 
 export type Nabidka = {
   __typename?: 'Nabidka';
-  freeLessons: Maybe<Scalars['Int']>;
-  id: Maybe<Scalars['BigInt']>;
-  myLessons: Maybe<Scalars['Int']>;
+  freeLessons: Maybe<Scalars['Int']['output']>;
+  id: Maybe<Scalars['BigInt']['output']>;
+  myLessons: Maybe<Scalars['Int']['output']>;
+  nDo: Scalars['Date']['output'];
+  nId: Scalars['BigInt']['output'];
+  nLock: Scalars['Boolean']['output'];
+  nMaxPocetHod: Scalars['Int']['output'];
+  nOd: Scalars['Date']['output'];
+  nPocetHod: Scalars['Int']['output'];
+  nTimestamp: Maybe<Scalars['Datetime']['output']>;
+  nTrener: Scalars['BigInt']['output'];
+  nVisible: Scalars['Boolean']['output'];
   /** Reads and enables pagination through a set of `NabidkaItem`. */
   nabidkaItemsByNiIdRodic: NabidkaItemsConnection;
-  nDo: Scalars['Date'];
-  nId: Scalars['BigInt'];
-  nLock: Scalars['Boolean'];
-  nMaxPocetHod: Scalars['Int'];
-  nOd: Scalars['Date'];
-  nPocetHod: Scalars['Int'];
-  nTimestamp: Maybe<Scalars['Datetime']>;
-  nTrener: Scalars['BigInt'];
-  nVisible: Scalars['Boolean'];
-  tenantId: Scalars['BigInt'];
+  tenantId: Scalars['BigInt']['output'];
   /** Reads a single `User` that is related to this `Nabidka`. */
   userByNTrener: Maybe<User>;
 };
 
 
 export type NabidkaNabidkaItemsByNiIdRodicArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<NabidkaItemCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<NabidkaItemsOrderBy>>;
 };
 
 /** A condition to be used against `Nabidka` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type NabidkaCondition = {
   /** Checks for equality with the object’s `nId` field. */
-  nId?: InputMaybe<Scalars['BigInt']>;
+  nId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `nOd` field. */
-  nOd?: InputMaybe<Scalars['Date']>;
+  nOd?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `nTrener` field. */
-  nTrener?: InputMaybe<Scalars['BigInt']>;
+  nTrener?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `Nabidka` */
 export type NabidkaInput = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  nDo: Scalars['Date'];
-  nId?: InputMaybe<Scalars['BigInt']>;
-  nLock?: InputMaybe<Scalars['Boolean']>;
-  nMaxPocetHod?: InputMaybe<Scalars['Int']>;
-  nOd: Scalars['Date'];
-  nPocetHod?: InputMaybe<Scalars['Int']>;
-  nTimestamp?: InputMaybe<Scalars['Datetime']>;
-  nTrener: Scalars['BigInt'];
-  nVisible?: InputMaybe<Scalars['Boolean']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  nDo: Scalars['Date']['input'];
+  nId?: InputMaybe<Scalars['BigInt']['input']>;
+  nLock?: InputMaybe<Scalars['Boolean']['input']>;
+  nMaxPocetHod?: InputMaybe<Scalars['Int']['input']>;
+  nOd: Scalars['Date']['input'];
+  nPocetHod?: InputMaybe<Scalars['Int']['input']>;
+  nTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+  nTrener: Scalars['BigInt']['input'];
+  nVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 export type NabidkaItem = {
   __typename?: 'NabidkaItem';
-  id: Maybe<Scalars['BigInt']>;
+  id: Maybe<Scalars['BigInt']['output']>;
   /** Reads a single `Nabidka` that is related to this `NabidkaItem`. */
   nabidkaByNiIdRodic: Maybe<Nabidka>;
-  niId: Scalars['BigInt'];
-  niIdRodic: Scalars['BigInt'];
-  niLock: Scalars['Boolean'];
-  niPartner: Scalars['BigInt'];
-  niPocetHod: Scalars['Int'];
+  niId: Scalars['BigInt']['output'];
+  niIdRodic: Scalars['BigInt']['output'];
+  niLock: Scalars['Boolean']['output'];
+  niPartner: Scalars['BigInt']['output'];
+  niPocetHod: Scalars['Int']['output'];
   /** Reads a single `Pary` that is related to this `NabidkaItem`. */
   paryByNiPartner: Maybe<Pary>;
-  tenantId: Scalars['BigInt'];
+  tenantId: Scalars['BigInt']['output'];
 };
 
 /**
@@ -6318,33 +6320,33 @@ export type NabidkaItem = {
  */
 export type NabidkaItemCondition = {
   /** Checks for equality with the object’s `niId` field. */
-  niId?: InputMaybe<Scalars['BigInt']>;
+  niId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `niIdRodic` field. */
-  niIdRodic?: InputMaybe<Scalars['BigInt']>;
+  niIdRodic?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `niPartner` field. */
-  niPartner?: InputMaybe<Scalars['BigInt']>;
+  niPartner?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `NabidkaItem` */
 export type NabidkaItemInput = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  niId?: InputMaybe<Scalars['BigInt']>;
-  niIdRodic: Scalars['BigInt'];
-  niLock?: InputMaybe<Scalars['Boolean']>;
-  niPartner: Scalars['BigInt'];
-  niPocetHod?: InputMaybe<Scalars['Int']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  niId?: InputMaybe<Scalars['BigInt']['input']>;
+  niIdRodic: Scalars['BigInt']['input'];
+  niLock?: InputMaybe<Scalars['Boolean']['input']>;
+  niPartner: Scalars['BigInt']['input'];
+  niPocetHod?: InputMaybe<Scalars['Int']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** Represents an update to a `NabidkaItem`. Fields that are set will be updated. */
 export type NabidkaItemPatch = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  niId?: InputMaybe<Scalars['BigInt']>;
-  niIdRodic?: InputMaybe<Scalars['BigInt']>;
-  niLock?: InputMaybe<Scalars['Boolean']>;
-  niPartner?: InputMaybe<Scalars['BigInt']>;
-  niPocetHod?: InputMaybe<Scalars['Int']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  niId?: InputMaybe<Scalars['BigInt']['input']>;
+  niIdRodic?: InputMaybe<Scalars['BigInt']['input']>;
+  niLock?: InputMaybe<Scalars['Boolean']['input']>;
+  niPartner?: InputMaybe<Scalars['BigInt']['input']>;
+  niPocetHod?: InputMaybe<Scalars['Int']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `NabidkaItem` values. */
@@ -6357,14 +6359,14 @@ export type NabidkaItemsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `NabidkaItem` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `NabidkaItem` edge in the connection. */
 export type NabidkaItemsEdge = {
   __typename?: 'NabidkaItemsEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `NabidkaItem` at the end of the edge. */
   node: NabidkaItem;
 };
@@ -6388,26 +6390,26 @@ export type NabidkaItemsOrderBy =
   | 'PARY_BY_NI_PARTNER__P_HODNOCENI_DESC'
   | 'PARY_BY_NI_PARTNER__P_ID_ASC'
   | 'PARY_BY_NI_PARTNER__P_ID_DESC'
-  | 'PARY_BY_NI_PARTNER__P_ID_PARTNER_ASC'
-  | 'PARY_BY_NI_PARTNER__P_ID_PARTNER_DESC'
   | 'PARY_BY_NI_PARTNER__P_ID_PARTNERKA_ASC'
   | 'PARY_BY_NI_PARTNER__P_ID_PARTNERKA_DESC'
+  | 'PARY_BY_NI_PARTNER__P_ID_PARTNER_ASC'
+  | 'PARY_BY_NI_PARTNER__P_ID_PARTNER_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC';
 
 /** Represents an update to a `Nabidka`. Fields that are set will be updated. */
 export type NabidkaPatch = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  nDo?: InputMaybe<Scalars['Date']>;
-  nId?: InputMaybe<Scalars['BigInt']>;
-  nLock?: InputMaybe<Scalars['Boolean']>;
-  nMaxPocetHod?: InputMaybe<Scalars['Int']>;
-  nOd?: InputMaybe<Scalars['Date']>;
-  nPocetHod?: InputMaybe<Scalars['Int']>;
-  nTimestamp?: InputMaybe<Scalars['Datetime']>;
-  nTrener?: InputMaybe<Scalars['BigInt']>;
-  nVisible?: InputMaybe<Scalars['Boolean']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  nDo?: InputMaybe<Scalars['Date']['input']>;
+  nId?: InputMaybe<Scalars['BigInt']['input']>;
+  nLock?: InputMaybe<Scalars['Boolean']['input']>;
+  nMaxPocetHod?: InputMaybe<Scalars['Int']['input']>;
+  nOd?: InputMaybe<Scalars['Date']['input']>;
+  nPocetHod?: InputMaybe<Scalars['Int']['input']>;
+  nTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+  nTrener?: InputMaybe<Scalars['BigInt']['input']>;
+  nVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `Nabidka` values. */
@@ -6420,29 +6422,29 @@ export type NabidkasConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Nabidka` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Nabidka` edge in the connection. */
 export type NabidkasEdge = {
   __typename?: 'NabidkasEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `Nabidka` at the end of the edge. */
   node: Nabidka;
 };
 
 /** Methods to use when ordering `Nabidka`. */
 export type NabidkasOrderBy =
+  | 'NABIDKA_ITEMS_BY_NI_ID_RODIC__COUNT_ASC'
+  | 'NABIDKA_ITEMS_BY_NI_ID_RODIC__COUNT_DESC'
+  | 'NATURAL'
   | 'N_ID_ASC'
   | 'N_ID_DESC'
   | 'N_OD_ASC'
   | 'N_OD_DESC'
   | 'N_TRENER_ASC'
   | 'N_TRENER_DESC'
-  | 'NABIDKA_ITEMS_BY_NI_ID_RODIC__COUNT_ASC'
-  | 'NABIDKA_ITEMS_BY_NI_ID_RODIC__COUNT_DESC'
-  | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
   | 'USER_BY_N_TRENER__U_BAN_ASC'
@@ -6468,66 +6470,66 @@ export type NabidkasOrderBy =
 
 export type Page = {
   __typename?: 'Page';
-  content: Scalars['JSON'];
-  createdAt: Scalars['Datetime'];
-  id: Scalars['Int'];
-  title: Scalars['String'];
-  updatedAt: Scalars['Datetime'];
-  url: Scalars['String'];
+  content: Scalars['JSON']['output'];
+  createdAt: Scalars['Datetime']['output'];
+  id: Scalars['Int']['output'];
+  title: Scalars['String']['output'];
+  updatedAt: Scalars['Datetime']['output'];
+  url: Scalars['String']['output'];
 };
 
 /** A condition to be used against `Page` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type PageCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `url` field. */
-  url?: InputMaybe<Scalars['String']>;
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Information about pagination in a connection. */
 export type PageInfo = {
   __typename?: 'PageInfo';
   /** When paginating forwards, the cursor to continue. */
-  endCursor: Maybe<Scalars['Cursor']>;
+  endCursor: Maybe<Scalars['Cursor']['output']>;
   /** When paginating forwards, are there more items? */
-  hasNextPage: Scalars['Boolean'];
+  hasNextPage: Scalars['Boolean']['output'];
   /** When paginating backwards, are there more items? */
-  hasPreviousPage: Scalars['Boolean'];
+  hasPreviousPage: Scalars['Boolean']['output'];
   /** When paginating backwards, the cursor to continue. */
-  startCursor: Maybe<Scalars['Cursor']>;
+  startCursor: Maybe<Scalars['Cursor']['output']>;
 };
 
 /** An input for mutations affecting `Page` */
 export type PageInput = {
-  content: Scalars['JSON'];
-  createdAt?: InputMaybe<Scalars['Datetime']>;
-  id?: InputMaybe<Scalars['Int']>;
-  title?: InputMaybe<Scalars['String']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']>;
-  url: Scalars['String'];
+  content: Scalars['JSON']['input'];
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  url: Scalars['String']['input'];
 };
 
 /** Represents an update to a `Page`. Fields that are set will be updated. */
 export type PagePatch = {
-  content?: InputMaybe<Scalars['JSON']>;
-  createdAt?: InputMaybe<Scalars['Datetime']>;
-  id?: InputMaybe<Scalars['Int']>;
-  title?: InputMaybe<Scalars['String']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']>;
-  url?: InputMaybe<Scalars['String']>;
+  content?: InputMaybe<Scalars['JSON']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type PageRevision = {
   __typename?: 'PageRevision';
-  content: Scalars['JSON'];
-  createdAt: Scalars['Datetime'];
-  id: Scalars['Int'];
-  revNumber: Scalars['Int'];
-  revOperation: Scalars['String'];
-  revTimestamp: Maybe<Scalars['Datetime']>;
-  title: Scalars['String'];
-  updatedAt: Scalars['Datetime'];
-  url: Scalars['String'];
+  content: Scalars['JSON']['output'];
+  createdAt: Scalars['Datetime']['output'];
+  id: Scalars['Int']['output'];
+  revNumber: Scalars['Int']['output'];
+  revOperation: Scalars['String']['output'];
+  revTimestamp: Maybe<Scalars['Datetime']['output']>;
+  title: Scalars['String']['output'];
+  updatedAt: Scalars['Datetime']['output'];
+  url: Scalars['String']['output'];
 };
 
 /**
@@ -6536,7 +6538,7 @@ export type PageRevision = {
  */
 export type PageRevisionCondition = {
   /** Checks for equality with the object’s `revNumber` field. */
-  revNumber?: InputMaybe<Scalars['Int']>;
+  revNumber?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A connection to a list of `PageRevision` values. */
@@ -6549,14 +6551,14 @@ export type PageRevisionsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `PageRevision` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `PageRevision` edge in the connection. */
 export type PageRevisionsEdge = {
   __typename?: 'PageRevisionsEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `PageRevision` at the end of the edge. */
   node: PageRevision;
 };
@@ -6579,14 +6581,14 @@ export type PagesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Page` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Page` edge in the connection. */
 export type PagesEdge = {
   __typename?: 'PagesEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `Page` at the end of the edge. */
   node: Page;
 };
@@ -6603,8 +6605,8 @@ export type PagesOrderBy =
 
 export type Parameter = {
   __typename?: 'Parameter';
-  paName: Scalars['String'];
-  paValue: Scalars['String'];
+  paName: Scalars['String']['output'];
+  paValue: Scalars['String']['output'];
 };
 
 /**
@@ -6613,19 +6615,19 @@ export type Parameter = {
  */
 export type ParameterCondition = {
   /** Checks for equality with the object’s `paName` field. */
-  paName?: InputMaybe<Scalars['String']>;
+  paName?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** An input for mutations affecting `Parameter` */
 export type ParameterInput = {
-  paName: Scalars['String'];
-  paValue: Scalars['String'];
+  paName: Scalars['String']['input'];
+  paValue: Scalars['String']['input'];
 };
 
 /** Represents an update to a `Parameter`. Fields that are set will be updated. */
 export type ParameterPatch = {
-  paName?: InputMaybe<Scalars['String']>;
-  paValue?: InputMaybe<Scalars['String']>;
+  paName?: InputMaybe<Scalars['String']['input']>;
+  paValue?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A connection to a list of `Parameter` values. */
@@ -6638,14 +6640,14 @@ export type ParametersConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Parameter` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Parameter` edge in the connection. */
 export type ParametersEdge = {
   __typename?: 'ParametersEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `Parameter` at the end of the edge. */
   node: Parameter;
 };
@@ -6668,14 +6670,14 @@ export type PariesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Pary` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Pary` edge in the connection. */
 export type PariesEdge = {
   __typename?: 'PariesEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `Pary` at the end of the edge. */
   node: Pary;
 };
@@ -6685,38 +6687,18 @@ export type PariesOrderBy =
   | 'NABIDKA_ITEMS_BY_NI_PARTNER__COUNT_ASC'
   | 'NABIDKA_ITEMS_BY_NI_PARTNER__COUNT_DESC'
   | 'NATURAL'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
   | 'P_HODNOCENI_ASC'
   | 'P_HODNOCENI_DESC'
   | 'P_ID_ASC'
   | 'P_ID_DESC'
-  | 'P_ID_PARTNER_ASC'
-  | 'P_ID_PARTNER_DESC'
   | 'P_ID_PARTNERKA_ASC'
   | 'P_ID_PARTNERKA_DESC'
-  | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC'
+  | 'P_ID_PARTNER_ASC'
+  | 'P_ID_PARTNER_DESC'
   | 'ROZPIS_ITEMS_BY_RI_PARTNER__COUNT_ASC'
   | 'ROZPIS_ITEMS_BY_RI_PARTNER__COUNT_DESC'
-  | 'USER_BY_P_ID_PARTNER__U_BAN_ASC'
-  | 'USER_BY_P_ID_PARTNER__U_BAN_DESC'
-  | 'USER_BY_P_ID_PARTNER__U_CONFIRMED_ASC'
-  | 'USER_BY_P_ID_PARTNER__U_CONFIRMED_DESC'
-  | 'USER_BY_P_ID_PARTNER__U_GROUP_ASC'
-  | 'USER_BY_P_ID_PARTNER__U_GROUP_DESC'
-  | 'USER_BY_P_ID_PARTNER__U_ID_ASC'
-  | 'USER_BY_P_ID_PARTNER__U_ID_DESC'
-  | 'USER_BY_P_ID_PARTNER__U_JMENO_ASC'
-  | 'USER_BY_P_ID_PARTNER__U_JMENO_DESC'
-  | 'USER_BY_P_ID_PARTNER__U_LOGIN_ASC'
-  | 'USER_BY_P_ID_PARTNER__U_LOGIN_DESC'
-  | 'USER_BY_P_ID_PARTNER__U_NAROZENI_ASC'
-  | 'USER_BY_P_ID_PARTNER__U_NAROZENI_DESC'
-  | 'USER_BY_P_ID_PARTNER__U_PRIJMENI_ASC'
-  | 'USER_BY_P_ID_PARTNER__U_PRIJMENI_DESC'
-  | 'USER_BY_P_ID_PARTNER__U_SKUPINA_ASC'
-  | 'USER_BY_P_ID_PARTNER__U_SKUPINA_DESC'
-  | 'USER_BY_P_ID_PARTNER__U_SYSTEM_ASC'
-  | 'USER_BY_P_ID_PARTNER__U_SYSTEM_DESC'
   | 'USER_BY_P_ID_PARTNERKA__U_BAN_ASC'
   | 'USER_BY_P_ID_PARTNERKA__U_BAN_DESC'
   | 'USER_BY_P_ID_PARTNERKA__U_CONFIRMED_ASC'
@@ -6736,26 +6718,46 @@ export type PariesOrderBy =
   | 'USER_BY_P_ID_PARTNERKA__U_SKUPINA_ASC'
   | 'USER_BY_P_ID_PARTNERKA__U_SKUPINA_DESC'
   | 'USER_BY_P_ID_PARTNERKA__U_SYSTEM_ASC'
-  | 'USER_BY_P_ID_PARTNERKA__U_SYSTEM_DESC';
+  | 'USER_BY_P_ID_PARTNERKA__U_SYSTEM_DESC'
+  | 'USER_BY_P_ID_PARTNER__U_BAN_ASC'
+  | 'USER_BY_P_ID_PARTNER__U_BAN_DESC'
+  | 'USER_BY_P_ID_PARTNER__U_CONFIRMED_ASC'
+  | 'USER_BY_P_ID_PARTNER__U_CONFIRMED_DESC'
+  | 'USER_BY_P_ID_PARTNER__U_GROUP_ASC'
+  | 'USER_BY_P_ID_PARTNER__U_GROUP_DESC'
+  | 'USER_BY_P_ID_PARTNER__U_ID_ASC'
+  | 'USER_BY_P_ID_PARTNER__U_ID_DESC'
+  | 'USER_BY_P_ID_PARTNER__U_JMENO_ASC'
+  | 'USER_BY_P_ID_PARTNER__U_JMENO_DESC'
+  | 'USER_BY_P_ID_PARTNER__U_LOGIN_ASC'
+  | 'USER_BY_P_ID_PARTNER__U_LOGIN_DESC'
+  | 'USER_BY_P_ID_PARTNER__U_NAROZENI_ASC'
+  | 'USER_BY_P_ID_PARTNER__U_NAROZENI_DESC'
+  | 'USER_BY_P_ID_PARTNER__U_PRIJMENI_ASC'
+  | 'USER_BY_P_ID_PARTNER__U_PRIJMENI_DESC'
+  | 'USER_BY_P_ID_PARTNER__U_SKUPINA_ASC'
+  | 'USER_BY_P_ID_PARTNER__U_SKUPINA_DESC'
+  | 'USER_BY_P_ID_PARTNER__U_SYSTEM_ASC'
+  | 'USER_BY_P_ID_PARTNER__U_SYSTEM_DESC';
 
 export type Pary = {
   __typename?: 'Pary';
-  id: Maybe<Scalars['BigInt']>;
+  id: Maybe<Scalars['BigInt']['output']>;
   /** Reads and enables pagination through a set of `NabidkaItem`. */
   nabidkaItemsByNiPartner: NabidkaItemsConnection;
-  pArchiv: Scalars['Boolean'];
-  pHodnoceni: Scalars['Int'];
-  pId: Scalars['BigInt'];
-  pIdPartner: Scalars['BigInt'];
-  pIdPartnerka: Maybe<Scalars['BigInt']>;
-  pLatBody: Scalars['Int'];
-  pLatFinale: Scalars['Boolean'];
+  pArchiv: Scalars['Boolean']['output'];
+  pHodnoceni: Scalars['Int']['output'];
+  pId: Scalars['BigInt']['output'];
+  pIdPartner: Scalars['BigInt']['output'];
+  pIdPartnerka: Maybe<Scalars['BigInt']['output']>;
+  pLatBody: Scalars['Int']['output'];
+  pLatFinale: Scalars['Boolean']['output'];
   pLatTrida: ParyPLatTrida;
-  pSttBody: Scalars['Int'];
-  pSttFinale: Scalars['Boolean'];
+  pSttBody: Scalars['Int']['output'];
+  pSttFinale: Scalars['Boolean']['output'];
   pSttTrida: ParyPSttTrida;
-  pTimestampAdd: Scalars['Datetime'];
-  pTimestampArchive: Maybe<Scalars['Datetime']>;
+  pTimestampAdd: Scalars['Datetime']['output'];
+  pTimestampArchive: Maybe<Scalars['Datetime']['output']>;
   /** Reads and enables pagination through a set of `RozpisItem`. */
   rozpisItemsByRiPartner: RozpisItemsConnection;
   /** Reads a single `User` that is related to this `Pary`. */
@@ -6766,63 +6768,63 @@ export type Pary = {
 
 
 export type ParyNabidkaItemsByNiPartnerArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<NabidkaItemCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<NabidkaItemsOrderBy>>;
 };
 
 
 export type ParyRozpisItemsByRiPartnerArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<RozpisItemCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<RozpisItemsOrderBy>>;
 };
 
 /** A condition to be used against `Pary` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type ParyCondition = {
   /** Checks for equality with the object’s `pHodnoceni` field. */
-  pHodnoceni?: InputMaybe<Scalars['Int']>;
+  pHodnoceni?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `pId` field. */
-  pId?: InputMaybe<Scalars['BigInt']>;
+  pId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `pIdPartner` field. */
-  pIdPartner?: InputMaybe<Scalars['BigInt']>;
+  pIdPartner?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `pIdPartnerka` field. */
-  pIdPartnerka?: InputMaybe<Scalars['BigInt']>;
+  pIdPartnerka?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `Pary` */
 export type ParyInput = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  pArchiv?: InputMaybe<Scalars['Boolean']>;
-  pHodnoceni?: InputMaybe<Scalars['Int']>;
-  pId?: InputMaybe<Scalars['BigInt']>;
-  pIdPartner: Scalars['BigInt'];
-  pIdPartnerka?: InputMaybe<Scalars['BigInt']>;
-  pLatBody?: InputMaybe<Scalars['Int']>;
-  pLatFinale?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  pArchiv?: InputMaybe<Scalars['Boolean']['input']>;
+  pHodnoceni?: InputMaybe<Scalars['Int']['input']>;
+  pId?: InputMaybe<Scalars['BigInt']['input']>;
+  pIdPartner: Scalars['BigInt']['input'];
+  pIdPartnerka?: InputMaybe<Scalars['BigInt']['input']>;
+  pLatBody?: InputMaybe<Scalars['Int']['input']>;
+  pLatFinale?: InputMaybe<Scalars['Boolean']['input']>;
   pLatTrida?: InputMaybe<ParyPLatTrida>;
-  pSttBody?: InputMaybe<Scalars['Int']>;
-  pSttFinale?: InputMaybe<Scalars['Boolean']>;
+  pSttBody?: InputMaybe<Scalars['Int']['input']>;
+  pSttFinale?: InputMaybe<Scalars['Boolean']['input']>;
   pSttTrida?: InputMaybe<ParyPSttTrida>;
-  pTimestampAdd?: InputMaybe<Scalars['Datetime']>;
-  pTimestampArchive?: InputMaybe<Scalars['Datetime']>;
+  pTimestampAdd?: InputMaybe<Scalars['Datetime']['input']>;
+  pTimestampArchive?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 export type ParyNavrh = {
   __typename?: 'ParyNavrh';
-  id: Maybe<Scalars['BigInt']>;
-  pnId: Scalars['BigInt'];
-  pnNavrhl: Scalars['BigInt'];
-  pnPartner: Scalars['BigInt'];
-  pnPartnerka: Scalars['BigInt'];
+  id: Maybe<Scalars['BigInt']['output']>;
+  pnId: Scalars['BigInt']['output'];
+  pnNavrhl: Scalars['BigInt']['output'];
+  pnPartner: Scalars['BigInt']['output'];
+  pnPartnerka: Scalars['BigInt']['output'];
   /** Reads a single `User` that is related to this `ParyNavrh`. */
   userByPnNavrhl: Maybe<User>;
   /** Reads a single `User` that is related to this `ParyNavrh`. */
@@ -6837,31 +6839,31 @@ export type ParyNavrh = {
  */
 export type ParyNavrhCondition = {
   /** Checks for equality with the object’s `pnId` field. */
-  pnId?: InputMaybe<Scalars['BigInt']>;
+  pnId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `pnNavrhl` field. */
-  pnNavrhl?: InputMaybe<Scalars['BigInt']>;
+  pnNavrhl?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `pnPartner` field. */
-  pnPartner?: InputMaybe<Scalars['BigInt']>;
+  pnPartner?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `pnPartnerka` field. */
-  pnPartnerka?: InputMaybe<Scalars['BigInt']>;
+  pnPartnerka?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `ParyNavrh` */
 export type ParyNavrhInput = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  pnId?: InputMaybe<Scalars['BigInt']>;
-  pnNavrhl: Scalars['BigInt'];
-  pnPartner: Scalars['BigInt'];
-  pnPartnerka: Scalars['BigInt'];
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  pnId?: InputMaybe<Scalars['BigInt']['input']>;
+  pnNavrhl: Scalars['BigInt']['input'];
+  pnPartner: Scalars['BigInt']['input'];
+  pnPartnerka: Scalars['BigInt']['input'];
 };
 
 /** Represents an update to a `ParyNavrh`. Fields that are set will be updated. */
 export type ParyNavrhPatch = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  pnId?: InputMaybe<Scalars['BigInt']>;
-  pnNavrhl?: InputMaybe<Scalars['BigInt']>;
-  pnPartner?: InputMaybe<Scalars['BigInt']>;
-  pnPartnerka?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  pnId?: InputMaybe<Scalars['BigInt']['input']>;
+  pnNavrhl?: InputMaybe<Scalars['BigInt']['input']>;
+  pnPartner?: InputMaybe<Scalars['BigInt']['input']>;
+  pnPartnerka?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `ParyNavrh` values. */
@@ -6874,14 +6876,14 @@ export type ParyNavrhsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `ParyNavrh` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `ParyNavrh` edge in the connection. */
 export type ParyNavrhsEdge = {
   __typename?: 'ParyNavrhsEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `ParyNavrh` at the end of the edge. */
   node: ParyNavrh;
 };
@@ -6893,10 +6895,10 @@ export type ParyNavrhsOrderBy =
   | 'PN_ID_DESC'
   | 'PN_NAVRHL_ASC'
   | 'PN_NAVRHL_DESC'
-  | 'PN_PARTNER_ASC'
-  | 'PN_PARTNER_DESC'
   | 'PN_PARTNERKA_ASC'
   | 'PN_PARTNERKA_DESC'
+  | 'PN_PARTNER_ASC'
+  | 'PN_PARTNER_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
   | 'USER_BY_PN_NAVRHL__U_BAN_ASC'
@@ -6919,26 +6921,6 @@ export type ParyNavrhsOrderBy =
   | 'USER_BY_PN_NAVRHL__U_SKUPINA_DESC'
   | 'USER_BY_PN_NAVRHL__U_SYSTEM_ASC'
   | 'USER_BY_PN_NAVRHL__U_SYSTEM_DESC'
-  | 'USER_BY_PN_PARTNER__U_BAN_ASC'
-  | 'USER_BY_PN_PARTNER__U_BAN_DESC'
-  | 'USER_BY_PN_PARTNER__U_CONFIRMED_ASC'
-  | 'USER_BY_PN_PARTNER__U_CONFIRMED_DESC'
-  | 'USER_BY_PN_PARTNER__U_GROUP_ASC'
-  | 'USER_BY_PN_PARTNER__U_GROUP_DESC'
-  | 'USER_BY_PN_PARTNER__U_ID_ASC'
-  | 'USER_BY_PN_PARTNER__U_ID_DESC'
-  | 'USER_BY_PN_PARTNER__U_JMENO_ASC'
-  | 'USER_BY_PN_PARTNER__U_JMENO_DESC'
-  | 'USER_BY_PN_PARTNER__U_LOGIN_ASC'
-  | 'USER_BY_PN_PARTNER__U_LOGIN_DESC'
-  | 'USER_BY_PN_PARTNER__U_NAROZENI_ASC'
-  | 'USER_BY_PN_PARTNER__U_NAROZENI_DESC'
-  | 'USER_BY_PN_PARTNER__U_PRIJMENI_ASC'
-  | 'USER_BY_PN_PARTNER__U_PRIJMENI_DESC'
-  | 'USER_BY_PN_PARTNER__U_SKUPINA_ASC'
-  | 'USER_BY_PN_PARTNER__U_SKUPINA_DESC'
-  | 'USER_BY_PN_PARTNER__U_SYSTEM_ASC'
-  | 'USER_BY_PN_PARTNER__U_SYSTEM_DESC'
   | 'USER_BY_PN_PARTNERKA__U_BAN_ASC'
   | 'USER_BY_PN_PARTNERKA__U_BAN_DESC'
   | 'USER_BY_PN_PARTNERKA__U_CONFIRMED_ASC'
@@ -6958,25 +6940,27 @@ export type ParyNavrhsOrderBy =
   | 'USER_BY_PN_PARTNERKA__U_SKUPINA_ASC'
   | 'USER_BY_PN_PARTNERKA__U_SKUPINA_DESC'
   | 'USER_BY_PN_PARTNERKA__U_SYSTEM_ASC'
-  | 'USER_BY_PN_PARTNERKA__U_SYSTEM_DESC';
-
-/** Represents an update to a `Pary`. Fields that are set will be updated. */
-export type ParyPatch = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  pArchiv?: InputMaybe<Scalars['Boolean']>;
-  pHodnoceni?: InputMaybe<Scalars['Int']>;
-  pId?: InputMaybe<Scalars['BigInt']>;
-  pIdPartner?: InputMaybe<Scalars['BigInt']>;
-  pIdPartnerka?: InputMaybe<Scalars['BigInt']>;
-  pLatBody?: InputMaybe<Scalars['Int']>;
-  pLatFinale?: InputMaybe<Scalars['Boolean']>;
-  pLatTrida?: InputMaybe<ParyPLatTrida>;
-  pSttBody?: InputMaybe<Scalars['Int']>;
-  pSttFinale?: InputMaybe<Scalars['Boolean']>;
-  pSttTrida?: InputMaybe<ParyPSttTrida>;
-  pTimestampAdd?: InputMaybe<Scalars['Datetime']>;
-  pTimestampArchive?: InputMaybe<Scalars['Datetime']>;
-};
+  | 'USER_BY_PN_PARTNERKA__U_SYSTEM_DESC'
+  | 'USER_BY_PN_PARTNER__U_BAN_ASC'
+  | 'USER_BY_PN_PARTNER__U_BAN_DESC'
+  | 'USER_BY_PN_PARTNER__U_CONFIRMED_ASC'
+  | 'USER_BY_PN_PARTNER__U_CONFIRMED_DESC'
+  | 'USER_BY_PN_PARTNER__U_GROUP_ASC'
+  | 'USER_BY_PN_PARTNER__U_GROUP_DESC'
+  | 'USER_BY_PN_PARTNER__U_ID_ASC'
+  | 'USER_BY_PN_PARTNER__U_ID_DESC'
+  | 'USER_BY_PN_PARTNER__U_JMENO_ASC'
+  | 'USER_BY_PN_PARTNER__U_JMENO_DESC'
+  | 'USER_BY_PN_PARTNER__U_LOGIN_ASC'
+  | 'USER_BY_PN_PARTNER__U_LOGIN_DESC'
+  | 'USER_BY_PN_PARTNER__U_NAROZENI_ASC'
+  | 'USER_BY_PN_PARTNER__U_NAROZENI_DESC'
+  | 'USER_BY_PN_PARTNER__U_PRIJMENI_ASC'
+  | 'USER_BY_PN_PARTNER__U_PRIJMENI_DESC'
+  | 'USER_BY_PN_PARTNER__U_SKUPINA_ASC'
+  | 'USER_BY_PN_PARTNER__U_SKUPINA_DESC'
+  | 'USER_BY_PN_PARTNER__U_SYSTEM_ASC'
+  | 'USER_BY_PN_PARTNER__U_SYSTEM_DESC';
 
 export type ParyPLatTrida =
   | 'A'
@@ -6996,6 +6980,24 @@ export type ParyPSttTrida =
   | 'M'
   | 'Z';
 
+/** Represents an update to a `Pary`. Fields that are set will be updated. */
+export type ParyPatch = {
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  pArchiv?: InputMaybe<Scalars['Boolean']['input']>;
+  pHodnoceni?: InputMaybe<Scalars['Int']['input']>;
+  pId?: InputMaybe<Scalars['BigInt']['input']>;
+  pIdPartner?: InputMaybe<Scalars['BigInt']['input']>;
+  pIdPartnerka?: InputMaybe<Scalars['BigInt']['input']>;
+  pLatBody?: InputMaybe<Scalars['Int']['input']>;
+  pLatFinale?: InputMaybe<Scalars['Boolean']['input']>;
+  pLatTrida?: InputMaybe<ParyPLatTrida>;
+  pSttBody?: InputMaybe<Scalars['Int']['input']>;
+  pSttFinale?: InputMaybe<Scalars['Boolean']['input']>;
+  pSttTrida?: InputMaybe<ParyPSttTrida>;
+  pTimestampAdd?: InputMaybe<Scalars['Datetime']['input']>;
+  pTimestampArchive?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
 /** A connection to a list of `Person` values. */
 export type PeopleConnection = {
   __typename?: 'PeopleConnection';
@@ -7006,14 +7008,14 @@ export type PeopleConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Person` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Person` edge in the connection. */
 export type PeopleEdge = {
   __typename?: 'PeopleEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `Person` at the end of the edge. */
   node: Person;
 };
@@ -7036,39 +7038,39 @@ export type PeopleOrderBy =
 
 export type Permission = {
   __typename?: 'Permission';
-  id: Maybe<Scalars['BigInt']>;
-  peAkce: Scalars['Int'];
-  peAktuality: Scalars['Int'];
-  peAnkety: Scalars['Int'];
-  peDescription: Scalars['String'];
-  peDokumenty: Scalars['Int'];
-  peGalerie: Scalars['Int'];
-  peId: Scalars['BigInt'];
-  peInzerce: Scalars['Int'];
-  peKonzole: Scalars['Int'];
-  peMain: Scalars['Int'];
-  peNabidka: Scalars['Int'];
-  peName: Scalars['String'];
-  peNastenka: Scalars['Int'];
-  peNovinky: Scalars['Int'];
-  pePary: Scalars['Int'];
-  pePermissions: Scalars['Int'];
-  pePlatby: Scalars['Int'];
-  peRozpis: Scalars['Int'];
-  peSkupiny: Scalars['Int'];
-  peUsers: Scalars['Int'];
+  id: Maybe<Scalars['BigInt']['output']>;
+  peAkce: Scalars['Int']['output'];
+  peAktuality: Scalars['Int']['output'];
+  peAnkety: Scalars['Int']['output'];
+  peDescription: Scalars['String']['output'];
+  peDokumenty: Scalars['Int']['output'];
+  peGalerie: Scalars['Int']['output'];
+  peId: Scalars['BigInt']['output'];
+  peInzerce: Scalars['Int']['output'];
+  peKonzole: Scalars['Int']['output'];
+  peMain: Scalars['Int']['output'];
+  peNabidka: Scalars['Int']['output'];
+  peName: Scalars['String']['output'];
+  peNastenka: Scalars['Int']['output'];
+  peNovinky: Scalars['Int']['output'];
+  pePary: Scalars['Int']['output'];
+  pePermissions: Scalars['Int']['output'];
+  pePlatby: Scalars['Int']['output'];
+  peRozpis: Scalars['Int']['output'];
+  peSkupiny: Scalars['Int']['output'];
+  peUsers: Scalars['Int']['output'];
   /** Reads and enables pagination through a set of `User`. */
   usersByUGroup: UsersConnection;
 };
 
 
 export type PermissionUsersByUGroupArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<UserCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
 };
 
@@ -7078,57 +7080,57 @@ export type PermissionUsersByUGroupArgs = {
  */
 export type PermissionCondition = {
   /** Checks for equality with the object’s `peId` field. */
-  peId?: InputMaybe<Scalars['BigInt']>;
+  peId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `Permission` */
 export type PermissionInput = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  peAkce: Scalars['Int'];
-  peAktuality: Scalars['Int'];
-  peAnkety: Scalars['Int'];
-  peDescription: Scalars['String'];
-  peDokumenty: Scalars['Int'];
-  peGalerie: Scalars['Int'];
-  peId?: InputMaybe<Scalars['BigInt']>;
-  peInzerce: Scalars['Int'];
-  peKonzole: Scalars['Int'];
-  peMain: Scalars['Int'];
-  peNabidka: Scalars['Int'];
-  peName: Scalars['String'];
-  peNastenka: Scalars['Int'];
-  peNovinky: Scalars['Int'];
-  pePary: Scalars['Int'];
-  pePermissions: Scalars['Int'];
-  pePlatby: Scalars['Int'];
-  peRozpis: Scalars['Int'];
-  peSkupiny: Scalars['Int'];
-  peUsers: Scalars['Int'];
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  peAkce: Scalars['Int']['input'];
+  peAktuality: Scalars['Int']['input'];
+  peAnkety: Scalars['Int']['input'];
+  peDescription: Scalars['String']['input'];
+  peDokumenty: Scalars['Int']['input'];
+  peGalerie: Scalars['Int']['input'];
+  peId?: InputMaybe<Scalars['BigInt']['input']>;
+  peInzerce: Scalars['Int']['input'];
+  peKonzole: Scalars['Int']['input'];
+  peMain: Scalars['Int']['input'];
+  peNabidka: Scalars['Int']['input'];
+  peName: Scalars['String']['input'];
+  peNastenka: Scalars['Int']['input'];
+  peNovinky: Scalars['Int']['input'];
+  pePary: Scalars['Int']['input'];
+  pePermissions: Scalars['Int']['input'];
+  pePlatby: Scalars['Int']['input'];
+  peRozpis: Scalars['Int']['input'];
+  peSkupiny: Scalars['Int']['input'];
+  peUsers: Scalars['Int']['input'];
 };
 
 /** Represents an update to a `Permission`. Fields that are set will be updated. */
 export type PermissionPatch = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  peAkce?: InputMaybe<Scalars['Int']>;
-  peAktuality?: InputMaybe<Scalars['Int']>;
-  peAnkety?: InputMaybe<Scalars['Int']>;
-  peDescription?: InputMaybe<Scalars['String']>;
-  peDokumenty?: InputMaybe<Scalars['Int']>;
-  peGalerie?: InputMaybe<Scalars['Int']>;
-  peId?: InputMaybe<Scalars['BigInt']>;
-  peInzerce?: InputMaybe<Scalars['Int']>;
-  peKonzole?: InputMaybe<Scalars['Int']>;
-  peMain?: InputMaybe<Scalars['Int']>;
-  peNabidka?: InputMaybe<Scalars['Int']>;
-  peName?: InputMaybe<Scalars['String']>;
-  peNastenka?: InputMaybe<Scalars['Int']>;
-  peNovinky?: InputMaybe<Scalars['Int']>;
-  pePary?: InputMaybe<Scalars['Int']>;
-  pePermissions?: InputMaybe<Scalars['Int']>;
-  pePlatby?: InputMaybe<Scalars['Int']>;
-  peRozpis?: InputMaybe<Scalars['Int']>;
-  peSkupiny?: InputMaybe<Scalars['Int']>;
-  peUsers?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  peAkce?: InputMaybe<Scalars['Int']['input']>;
+  peAktuality?: InputMaybe<Scalars['Int']['input']>;
+  peAnkety?: InputMaybe<Scalars['Int']['input']>;
+  peDescription?: InputMaybe<Scalars['String']['input']>;
+  peDokumenty?: InputMaybe<Scalars['Int']['input']>;
+  peGalerie?: InputMaybe<Scalars['Int']['input']>;
+  peId?: InputMaybe<Scalars['BigInt']['input']>;
+  peInzerce?: InputMaybe<Scalars['Int']['input']>;
+  peKonzole?: InputMaybe<Scalars['Int']['input']>;
+  peMain?: InputMaybe<Scalars['Int']['input']>;
+  peNabidka?: InputMaybe<Scalars['Int']['input']>;
+  peName?: InputMaybe<Scalars['String']['input']>;
+  peNastenka?: InputMaybe<Scalars['Int']['input']>;
+  peNovinky?: InputMaybe<Scalars['Int']['input']>;
+  pePary?: InputMaybe<Scalars['Int']['input']>;
+  pePermissions?: InputMaybe<Scalars['Int']['input']>;
+  pePlatby?: InputMaybe<Scalars['Int']['input']>;
+  peRozpis?: InputMaybe<Scalars['Int']['input']>;
+  peSkupiny?: InputMaybe<Scalars['Int']['input']>;
+  peUsers?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A connection to a list of `Permission` values. */
@@ -7141,14 +7143,14 @@ export type PermissionsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Permission` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Permission` edge in the connection. */
 export type PermissionsEdge = {
   __typename?: 'PermissionsEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `Permission` at the end of the edge. */
   node: Permission;
 };
@@ -7171,78 +7173,78 @@ export type Person = {
   couplesByFollowerId: CouplesConnection;
   /** Reads and enables pagination through a set of `Couple`. */
   couplesByLeaderId: CouplesConnection;
-  firstName: Scalars['String'];
+  firstName: Scalars['String']['output'];
   gender: GenderType;
-  id: Scalars['BigInt'];
-  lastName: Scalars['String'];
+  id: Scalars['BigInt']['output'];
+  lastName: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `TenantPerson`. */
   tenantPeople: TenantPeopleConnection;
 };
 
 
 export type PersonAttendeePeopleArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<AttendeePersonCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AttendeePeopleOrderBy>>;
 };
 
 
 export type PersonCouplesByFollowerIdArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CoupleCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CouplesOrderBy>>;
 };
 
 
 export type PersonCouplesByLeaderIdArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CoupleCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CouplesOrderBy>>;
 };
 
 
 export type PersonTenantPeopleArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TenantPersonCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TenantPeopleOrderBy>>;
 };
 
 /** A condition to be used against `Person` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type PersonCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `Person` */
 export type PersonInput = {
-  firstName: Scalars['String'];
+  firstName: Scalars['String']['input'];
   gender: GenderType;
-  id?: InputMaybe<Scalars['BigInt']>;
-  lastName: Scalars['String'];
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  lastName: Scalars['String']['input'];
 };
 
 /** Represents an update to a `Person`. Fields that are set will be updated. */
 export type PersonPatch = {
-  firstName?: InputMaybe<Scalars['String']>;
+  firstName?: InputMaybe<Scalars['String']['input']>;
   gender?: InputMaybe<GenderType>;
-  id?: InputMaybe<Scalars['BigInt']>;
-  lastName?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  lastName?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A connection to a list of `PlatbyCategory` values. */
@@ -7255,14 +7257,14 @@ export type PlatbyCategoriesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `PlatbyCategory` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `PlatbyCategory` edge in the connection. */
 export type PlatbyCategoriesEdge = {
   __typename?: 'PlatbyCategoriesEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `PlatbyCategory` at the end of the edge. */
   node: PlatbyCategory;
 };
@@ -7283,44 +7285,44 @@ export type PlatbyCategoriesOrderBy =
 
 export type PlatbyCategory = {
   __typename?: 'PlatbyCategory';
-  id: Maybe<Scalars['BigInt']>;
-  pcAmount: Scalars['BigFloat'];
-  pcArchive: Scalars['Boolean'];
-  pcDateDue: Scalars['Date'];
-  pcId: Scalars['BigInt'];
-  pcName: Scalars['String'];
-  pcSymbol: Scalars['BigInt'];
-  pcUseBase: Scalars['Boolean'];
-  pcUsePrefix: Scalars['Boolean'];
-  pcValidFrom: Scalars['Date'];
-  pcValidTo: Scalars['Date'];
-  pcVisible: Scalars['Boolean'];
+  id: Maybe<Scalars['BigInt']['output']>;
+  pcAmount: Scalars['BigFloat']['output'];
+  pcArchive: Scalars['Boolean']['output'];
+  pcDateDue: Scalars['Date']['output'];
+  pcId: Scalars['BigInt']['output'];
+  pcName: Scalars['String']['output'];
+  pcSymbol: Scalars['BigInt']['output'];
+  pcUseBase: Scalars['Boolean']['output'];
+  pcUsePrefix: Scalars['Boolean']['output'];
+  pcValidFrom: Scalars['Date']['output'];
+  pcValidTo: Scalars['Date']['output'];
+  pcVisible: Scalars['Boolean']['output'];
   /** Reads and enables pagination through a set of `PlatbyCategoryGroup`. */
   platbyCategoryGroupsByPcgIdCategory: PlatbyCategoryGroupsConnection;
   /** Reads and enables pagination through a set of `PlatbyItem`. */
   platbyItemsByPiIdCategory: PlatbyItemsConnection;
-  tenantId: Scalars['BigInt'];
+  tenantId: Scalars['BigInt']['output'];
 };
 
 
 export type PlatbyCategoryPlatbyCategoryGroupsByPcgIdCategoryArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<PlatbyCategoryGroupCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PlatbyCategoryGroupsOrderBy>>;
 };
 
 
 export type PlatbyCategoryPlatbyItemsByPiIdCategoryArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<PlatbyItemCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PlatbyItemsOrderBy>>;
 };
 
@@ -7330,22 +7332,22 @@ export type PlatbyCategoryPlatbyItemsByPiIdCategoryArgs = {
  */
 export type PlatbyCategoryCondition = {
   /** Checks for equality with the object’s `pcId` field. */
-  pcId?: InputMaybe<Scalars['BigInt']>;
+  pcId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `pcSymbol` field. */
-  pcSymbol?: InputMaybe<Scalars['BigInt']>;
+  pcSymbol?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 export type PlatbyCategoryGroup = {
   __typename?: 'PlatbyCategoryGroup';
-  id: Maybe<Scalars['BigInt']>;
-  pcgId: Scalars['BigInt'];
-  pcgIdCategory: Scalars['BigInt'];
-  pcgIdGroup: Scalars['BigInt'];
+  id: Maybe<Scalars['BigInt']['output']>;
+  pcgId: Scalars['BigInt']['output'];
+  pcgIdCategory: Scalars['BigInt']['output'];
+  pcgIdGroup: Scalars['BigInt']['output'];
   /** Reads a single `PlatbyCategory` that is related to this `PlatbyCategoryGroup`. */
   platbyCategoryByPcgIdCategory: Maybe<PlatbyCategory>;
   /** Reads a single `PlatbyGroup` that is related to this `PlatbyCategoryGroup`. */
   platbyGroupByPcgIdGroup: Maybe<PlatbyGroup>;
-  tenantId: Scalars['BigInt'];
+  tenantId: Scalars['BigInt']['output'];
 };
 
 /**
@@ -7354,29 +7356,29 @@ export type PlatbyCategoryGroup = {
  */
 export type PlatbyCategoryGroupCondition = {
   /** Checks for equality with the object’s `pcgId` field. */
-  pcgId?: InputMaybe<Scalars['BigInt']>;
+  pcgId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `pcgIdCategory` field. */
-  pcgIdCategory?: InputMaybe<Scalars['BigInt']>;
+  pcgIdCategory?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `pcgIdGroup` field. */
-  pcgIdGroup?: InputMaybe<Scalars['BigInt']>;
+  pcgIdGroup?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `PlatbyCategoryGroup` */
 export type PlatbyCategoryGroupInput = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  pcgId?: InputMaybe<Scalars['BigInt']>;
-  pcgIdCategory: Scalars['BigInt'];
-  pcgIdGroup: Scalars['BigInt'];
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  pcgId?: InputMaybe<Scalars['BigInt']['input']>;
+  pcgIdCategory: Scalars['BigInt']['input'];
+  pcgIdGroup: Scalars['BigInt']['input'];
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** Represents an update to a `PlatbyCategoryGroup`. Fields that are set will be updated. */
 export type PlatbyCategoryGroupPatch = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  pcgId?: InputMaybe<Scalars['BigInt']>;
-  pcgIdCategory?: InputMaybe<Scalars['BigInt']>;
-  pcgIdGroup?: InputMaybe<Scalars['BigInt']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  pcgId?: InputMaybe<Scalars['BigInt']['input']>;
+  pcgIdCategory?: InputMaybe<Scalars['BigInt']['input']>;
+  pcgIdGroup?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `PlatbyCategoryGroup` values. */
@@ -7389,14 +7391,14 @@ export type PlatbyCategoryGroupsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `PlatbyCategoryGroup` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `PlatbyCategoryGroup` edge in the connection. */
 export type PlatbyCategoryGroupsEdge = {
   __typename?: 'PlatbyCategoryGroupsEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `PlatbyCategoryGroup` at the end of the edge. */
   node: PlatbyCategoryGroup;
 };
@@ -7421,72 +7423,72 @@ export type PlatbyCategoryGroupsOrderBy =
 
 /** An input for mutations affecting `PlatbyCategory` */
 export type PlatbyCategoryInput = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  pcAmount: Scalars['BigFloat'];
-  pcArchive?: InputMaybe<Scalars['Boolean']>;
-  pcDateDue: Scalars['Date'];
-  pcId?: InputMaybe<Scalars['BigInt']>;
-  pcName: Scalars['String'];
-  pcSymbol: Scalars['BigInt'];
-  pcUseBase?: InputMaybe<Scalars['Boolean']>;
-  pcUsePrefix?: InputMaybe<Scalars['Boolean']>;
-  pcValidFrom: Scalars['Date'];
-  pcValidTo: Scalars['Date'];
-  pcVisible?: InputMaybe<Scalars['Boolean']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  pcAmount: Scalars['BigFloat']['input'];
+  pcArchive?: InputMaybe<Scalars['Boolean']['input']>;
+  pcDateDue: Scalars['Date']['input'];
+  pcId?: InputMaybe<Scalars['BigInt']['input']>;
+  pcName: Scalars['String']['input'];
+  pcSymbol: Scalars['BigInt']['input'];
+  pcUseBase?: InputMaybe<Scalars['Boolean']['input']>;
+  pcUsePrefix?: InputMaybe<Scalars['Boolean']['input']>;
+  pcValidFrom: Scalars['Date']['input'];
+  pcValidTo: Scalars['Date']['input'];
+  pcVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** Represents an update to a `PlatbyCategory`. Fields that are set will be updated. */
 export type PlatbyCategoryPatch = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  pcAmount?: InputMaybe<Scalars['BigFloat']>;
-  pcArchive?: InputMaybe<Scalars['Boolean']>;
-  pcDateDue?: InputMaybe<Scalars['Date']>;
-  pcId?: InputMaybe<Scalars['BigInt']>;
-  pcName?: InputMaybe<Scalars['String']>;
-  pcSymbol?: InputMaybe<Scalars['BigInt']>;
-  pcUseBase?: InputMaybe<Scalars['Boolean']>;
-  pcUsePrefix?: InputMaybe<Scalars['Boolean']>;
-  pcValidFrom?: InputMaybe<Scalars['Date']>;
-  pcValidTo?: InputMaybe<Scalars['Date']>;
-  pcVisible?: InputMaybe<Scalars['Boolean']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  pcAmount?: InputMaybe<Scalars['BigFloat']['input']>;
+  pcArchive?: InputMaybe<Scalars['Boolean']['input']>;
+  pcDateDue?: InputMaybe<Scalars['Date']['input']>;
+  pcId?: InputMaybe<Scalars['BigInt']['input']>;
+  pcName?: InputMaybe<Scalars['String']['input']>;
+  pcSymbol?: InputMaybe<Scalars['BigInt']['input']>;
+  pcUseBase?: InputMaybe<Scalars['Boolean']['input']>;
+  pcUsePrefix?: InputMaybe<Scalars['Boolean']['input']>;
+  pcValidFrom?: InputMaybe<Scalars['Date']['input']>;
+  pcValidTo?: InputMaybe<Scalars['Date']['input']>;
+  pcVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 export type PlatbyGroup = {
   __typename?: 'PlatbyGroup';
-  id: Maybe<Scalars['BigInt']>;
-  pgBase: Scalars['BigInt'];
-  pgDescription: Scalars['String'];
-  pgId: Scalars['BigInt'];
-  pgName: Scalars['String'];
-  pgType: Scalars['BigFloat'];
+  id: Maybe<Scalars['BigInt']['output']>;
+  pgBase: Scalars['BigInt']['output'];
+  pgDescription: Scalars['String']['output'];
+  pgId: Scalars['BigInt']['output'];
+  pgName: Scalars['String']['output'];
+  pgType: Scalars['BigFloat']['output'];
   /** Reads and enables pagination through a set of `PlatbyCategoryGroup`. */
   platbyCategoryGroupsByPcgIdGroup: PlatbyCategoryGroupsConnection;
   /** Reads and enables pagination through a set of `PlatbyGroupSkupina`. */
   platbyGroupSkupinasByPgsIdGroup: PlatbyGroupSkupinasConnection;
-  tenantId: Scalars['BigInt'];
+  tenantId: Scalars['BigInt']['output'];
 };
 
 
 export type PlatbyGroupPlatbyCategoryGroupsByPcgIdGroupArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<PlatbyCategoryGroupCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PlatbyCategoryGroupsOrderBy>>;
 };
 
 
 export type PlatbyGroupPlatbyGroupSkupinasByPgsIdGroupArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<PlatbyGroupSkupinaCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PlatbyGroupSkupinasOrderBy>>;
 };
 
@@ -7496,64 +7498,42 @@ export type PlatbyGroupPlatbyGroupSkupinasByPgsIdGroupArgs = {
  */
 export type PlatbyGroupCondition = {
   /** Checks for equality with the object’s `pgId` field. */
-  pgId?: InputMaybe<Scalars['BigInt']>;
+  pgId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `PlatbyGroup` */
 export type PlatbyGroupInput = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  pgBase?: InputMaybe<Scalars['BigInt']>;
-  pgDescription: Scalars['String'];
-  pgId?: InputMaybe<Scalars['BigInt']>;
-  pgName: Scalars['String'];
-  pgType?: InputMaybe<Scalars['BigFloat']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  pgBase?: InputMaybe<Scalars['BigInt']['input']>;
+  pgDescription: Scalars['String']['input'];
+  pgId?: InputMaybe<Scalars['BigInt']['input']>;
+  pgName: Scalars['String']['input'];
+  pgType?: InputMaybe<Scalars['BigFloat']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** Represents an update to a `PlatbyGroup`. Fields that are set will be updated. */
 export type PlatbyGroupPatch = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  pgBase?: InputMaybe<Scalars['BigInt']>;
-  pgDescription?: InputMaybe<Scalars['String']>;
-  pgId?: InputMaybe<Scalars['BigInt']>;
-  pgName?: InputMaybe<Scalars['String']>;
-  pgType?: InputMaybe<Scalars['BigFloat']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
-};
-
-/** A connection to a list of `PlatbyGroup` values. */
-export type PlatbyGroupsConnection = {
-  __typename?: 'PlatbyGroupsConnection';
-  /** A list of edges which contains the `PlatbyGroup` and cursor to aid in pagination. */
-  edges: Array<PlatbyGroupsEdge>;
-  /** A list of `PlatbyGroup` objects. */
-  nodes: Array<PlatbyGroup>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `PlatbyGroup` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `PlatbyGroup` edge in the connection. */
-export type PlatbyGroupsEdge = {
-  __typename?: 'PlatbyGroupsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
-  /** The `PlatbyGroup` at the end of the edge. */
-  node: PlatbyGroup;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  pgBase?: InputMaybe<Scalars['BigInt']['input']>;
+  pgDescription?: InputMaybe<Scalars['String']['input']>;
+  pgId?: InputMaybe<Scalars['BigInt']['input']>;
+  pgName?: InputMaybe<Scalars['String']['input']>;
+  pgType?: InputMaybe<Scalars['BigFloat']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 export type PlatbyGroupSkupina = {
   __typename?: 'PlatbyGroupSkupina';
-  id: Maybe<Scalars['BigInt']>;
-  pgsId: Scalars['BigInt'];
-  pgsIdGroup: Scalars['BigInt'];
-  pgsIdSkupina: Scalars['BigInt'];
+  id: Maybe<Scalars['BigInt']['output']>;
+  pgsId: Scalars['BigInt']['output'];
+  pgsIdGroup: Scalars['BigInt']['output'];
+  pgsIdSkupina: Scalars['BigInt']['output'];
   /** Reads a single `PlatbyGroup` that is related to this `PlatbyGroupSkupina`. */
   platbyGroupByPgsIdGroup: Maybe<PlatbyGroup>;
   /** Reads a single `Skupiny` that is related to this `PlatbyGroupSkupina`. */
   skupinyByPgsIdSkupina: Maybe<Skupiny>;
-  tenantId: Scalars['BigInt'];
+  tenantId: Scalars['BigInt']['output'];
 };
 
 /**
@@ -7562,29 +7542,29 @@ export type PlatbyGroupSkupina = {
  */
 export type PlatbyGroupSkupinaCondition = {
   /** Checks for equality with the object’s `pgsId` field. */
-  pgsId?: InputMaybe<Scalars['BigInt']>;
+  pgsId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `pgsIdGroup` field. */
-  pgsIdGroup?: InputMaybe<Scalars['BigInt']>;
+  pgsIdGroup?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `pgsIdSkupina` field. */
-  pgsIdSkupina?: InputMaybe<Scalars['BigInt']>;
+  pgsIdSkupina?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `PlatbyGroupSkupina` */
 export type PlatbyGroupSkupinaInput = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  pgsId?: InputMaybe<Scalars['BigInt']>;
-  pgsIdGroup: Scalars['BigInt'];
-  pgsIdSkupina: Scalars['BigInt'];
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  pgsId?: InputMaybe<Scalars['BigInt']['input']>;
+  pgsIdGroup: Scalars['BigInt']['input'];
+  pgsIdSkupina: Scalars['BigInt']['input'];
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** Represents an update to a `PlatbyGroupSkupina`. Fields that are set will be updated. */
 export type PlatbyGroupSkupinaPatch = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  pgsId?: InputMaybe<Scalars['BigInt']>;
-  pgsIdGroup?: InputMaybe<Scalars['BigInt']>;
-  pgsIdSkupina?: InputMaybe<Scalars['BigInt']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  pgsId?: InputMaybe<Scalars['BigInt']['input']>;
+  pgsIdGroup?: InputMaybe<Scalars['BigInt']['input']>;
+  pgsIdSkupina?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `PlatbyGroupSkupina` values. */
@@ -7597,14 +7577,14 @@ export type PlatbyGroupSkupinasConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `PlatbyGroupSkupina` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `PlatbyGroupSkupina` edge in the connection. */
 export type PlatbyGroupSkupinasEdge = {
   __typename?: 'PlatbyGroupSkupinasEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `PlatbyGroupSkupina` at the end of the edge. */
   node: PlatbyGroupSkupina;
 };
@@ -7631,6 +7611,28 @@ export type PlatbyGroupSkupinasOrderBy =
   | 'SKUPINY_BY_PGS_ID_SKUPINA__S_VISIBLE_ASC'
   | 'SKUPINY_BY_PGS_ID_SKUPINA__S_VISIBLE_DESC';
 
+/** A connection to a list of `PlatbyGroup` values. */
+export type PlatbyGroupsConnection = {
+  __typename?: 'PlatbyGroupsConnection';
+  /** A list of edges which contains the `PlatbyGroup` and cursor to aid in pagination. */
+  edges: Array<PlatbyGroupsEdge>;
+  /** A list of `PlatbyGroup` objects. */
+  nodes: Array<PlatbyGroup>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `PlatbyGroup` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `PlatbyGroup` edge in the connection. */
+export type PlatbyGroupsEdge = {
+  __typename?: 'PlatbyGroupsEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `PlatbyGroup` at the end of the edge. */
+  node: PlatbyGroup;
+};
+
 /** Methods to use when ordering `PlatbyGroup`. */
 export type PlatbyGroupsOrderBy =
   | 'NATURAL'
@@ -7645,19 +7647,19 @@ export type PlatbyGroupsOrderBy =
 
 export type PlatbyItem = {
   __typename?: 'PlatbyItem';
-  id: Maybe<Scalars['BigInt']>;
-  piAmount: Scalars['BigFloat'];
-  piDate: Scalars['Date'];
-  piId: Scalars['BigInt'];
-  piIdCategory: Scalars['BigInt'];
-  piIdRaw: Maybe<Scalars['BigInt']>;
-  piIdUser: Maybe<Scalars['BigInt']>;
-  piPrefix: Scalars['Int'];
+  id: Maybe<Scalars['BigInt']['output']>;
+  piAmount: Scalars['BigFloat']['output'];
+  piDate: Scalars['Date']['output'];
+  piId: Scalars['BigInt']['output'];
+  piIdCategory: Scalars['BigInt']['output'];
+  piIdRaw: Maybe<Scalars['BigInt']['output']>;
+  piIdUser: Maybe<Scalars['BigInt']['output']>;
+  piPrefix: Scalars['Int']['output'];
   /** Reads a single `PlatbyCategory` that is related to this `PlatbyItem`. */
   platbyCategoryByPiIdCategory: Maybe<PlatbyCategory>;
   /** Reads a single `PlatbyRaw` that is related to this `PlatbyItem`. */
   platbyRawByPiIdRaw: Maybe<PlatbyRaw>;
-  tenantId: Scalars['BigInt'];
+  tenantId: Scalars['BigInt']['output'];
   /** Reads a single `User` that is related to this `PlatbyItem`. */
   userByPiIdUser: Maybe<User>;
 };
@@ -7668,39 +7670,39 @@ export type PlatbyItem = {
  */
 export type PlatbyItemCondition = {
   /** Checks for equality with the object’s `piId` field. */
-  piId?: InputMaybe<Scalars['BigInt']>;
+  piId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `piIdCategory` field. */
-  piIdCategory?: InputMaybe<Scalars['BigInt']>;
+  piIdCategory?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `piIdRaw` field. */
-  piIdRaw?: InputMaybe<Scalars['BigInt']>;
+  piIdRaw?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `piIdUser` field. */
-  piIdUser?: InputMaybe<Scalars['BigInt']>;
+  piIdUser?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `PlatbyItem` */
 export type PlatbyItemInput = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  piAmount: Scalars['BigFloat'];
-  piDate: Scalars['Date'];
-  piId?: InputMaybe<Scalars['BigInt']>;
-  piIdCategory: Scalars['BigInt'];
-  piIdRaw?: InputMaybe<Scalars['BigInt']>;
-  piIdUser?: InputMaybe<Scalars['BigInt']>;
-  piPrefix?: InputMaybe<Scalars['Int']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  piAmount: Scalars['BigFloat']['input'];
+  piDate: Scalars['Date']['input'];
+  piId?: InputMaybe<Scalars['BigInt']['input']>;
+  piIdCategory: Scalars['BigInt']['input'];
+  piIdRaw?: InputMaybe<Scalars['BigInt']['input']>;
+  piIdUser?: InputMaybe<Scalars['BigInt']['input']>;
+  piPrefix?: InputMaybe<Scalars['Int']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** Represents an update to a `PlatbyItem`. Fields that are set will be updated. */
 export type PlatbyItemPatch = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  piAmount?: InputMaybe<Scalars['BigFloat']>;
-  piDate?: InputMaybe<Scalars['Date']>;
-  piId?: InputMaybe<Scalars['BigInt']>;
-  piIdCategory?: InputMaybe<Scalars['BigInt']>;
-  piIdRaw?: InputMaybe<Scalars['BigInt']>;
-  piIdUser?: InputMaybe<Scalars['BigInt']>;
-  piPrefix?: InputMaybe<Scalars['Int']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  piAmount?: InputMaybe<Scalars['BigFloat']['input']>;
+  piDate?: InputMaybe<Scalars['Date']['input']>;
+  piId?: InputMaybe<Scalars['BigInt']['input']>;
+  piIdCategory?: InputMaybe<Scalars['BigInt']['input']>;
+  piIdRaw?: InputMaybe<Scalars['BigInt']['input']>;
+  piIdUser?: InputMaybe<Scalars['BigInt']['input']>;
+  piPrefix?: InputMaybe<Scalars['Int']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `PlatbyItem` values. */
@@ -7713,14 +7715,14 @@ export type PlatbyItemsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `PlatbyItem` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `PlatbyItem` edge in the connection. */
 export type PlatbyItemsEdge = {
   __typename?: 'PlatbyItemsEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `PlatbyItem` at the end of the edge. */
   node: PlatbyItem;
 };
@@ -7769,25 +7771,25 @@ export type PlatbyItemsOrderBy =
 
 export type PlatbyRaw = {
   __typename?: 'PlatbyRaw';
-  id: Maybe<Scalars['BigInt']>;
+  id: Maybe<Scalars['BigInt']['output']>;
   /** Reads and enables pagination through a set of `PlatbyItem`. */
   platbyItemsByPiIdRaw: PlatbyItemsConnection;
-  prDiscarded: Scalars['Boolean'];
-  prHash: Scalars['String'];
-  prId: Scalars['BigInt'];
-  prRaw: Scalars['String'];
-  prSorted: Scalars['Boolean'];
-  tenantId: Scalars['BigInt'];
+  prDiscarded: Scalars['Boolean']['output'];
+  prHash: Scalars['String']['output'];
+  prId: Scalars['BigInt']['output'];
+  prRaw: Scalars['String']['output'];
+  prSorted: Scalars['Boolean']['output'];
+  tenantId: Scalars['BigInt']['output'];
 };
 
 
 export type PlatbyRawPlatbyItemsByPiIdRawArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<PlatbyItemCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PlatbyItemsOrderBy>>;
 };
 
@@ -7797,31 +7799,31 @@ export type PlatbyRawPlatbyItemsByPiIdRawArgs = {
  */
 export type PlatbyRawCondition = {
   /** Checks for equality with the object’s `prHash` field. */
-  prHash?: InputMaybe<Scalars['String']>;
+  prHash?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `prId` field. */
-  prId?: InputMaybe<Scalars['BigInt']>;
+  prId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `PlatbyRaw` */
 export type PlatbyRawInput = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  prDiscarded?: InputMaybe<Scalars['Boolean']>;
-  prHash: Scalars['String'];
-  prId?: InputMaybe<Scalars['BigInt']>;
-  prRaw: Scalars['String'];
-  prSorted?: InputMaybe<Scalars['Boolean']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  prDiscarded?: InputMaybe<Scalars['Boolean']['input']>;
+  prHash: Scalars['String']['input'];
+  prId?: InputMaybe<Scalars['BigInt']['input']>;
+  prRaw: Scalars['String']['input'];
+  prSorted?: InputMaybe<Scalars['Boolean']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** Represents an update to a `PlatbyRaw`. Fields that are set will be updated. */
 export type PlatbyRawPatch = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  prDiscarded?: InputMaybe<Scalars['Boolean']>;
-  prHash?: InputMaybe<Scalars['String']>;
-  prId?: InputMaybe<Scalars['BigInt']>;
-  prRaw?: InputMaybe<Scalars['String']>;
-  prSorted?: InputMaybe<Scalars['Boolean']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  prDiscarded?: InputMaybe<Scalars['Boolean']['input']>;
+  prHash?: InputMaybe<Scalars['String']['input']>;
+  prId?: InputMaybe<Scalars['BigInt']['input']>;
+  prRaw?: InputMaybe<Scalars['String']['input']>;
+  prSorted?: InputMaybe<Scalars['Boolean']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `PlatbyRaw` values. */
@@ -7834,14 +7836,14 @@ export type PlatbyRawsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `PlatbyRaw` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `PlatbyRaw` edge in the connection. */
 export type PlatbyRawsEdge = {
   __typename?: 'PlatbyRawsEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `PlatbyRaw` at the end of the edge. */
   node: PlatbyRaw;
 };
@@ -7851,20 +7853,20 @@ export type PlatbyRawsOrderBy =
   | 'NATURAL'
   | 'PLATBY_ITEMS_BY_PI_ID_RAW__COUNT_ASC'
   | 'PLATBY_ITEMS_BY_PI_ID_RAW__COUNT_DESC'
+  | 'PRIMARY_KEY_ASC'
+  | 'PRIMARY_KEY_DESC'
   | 'PR_HASH_ASC'
   | 'PR_HASH_DESC'
   | 'PR_ID_ASC'
-  | 'PR_ID_DESC'
-  | 'PRIMARY_KEY_ASC'
-  | 'PRIMARY_KEY_DESC';
+  | 'PR_ID_DESC';
 
 /** An input for mutations affecting `ProspectDatum` */
 export type ProspectDatumInput = {
-  email?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  phone?: InputMaybe<Scalars['String']>;
-  surname?: InputMaybe<Scalars['String']>;
-  yearofbirth?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
+  surname?: InputMaybe<Scalars['String']['input']>;
+  yearofbirth?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** All input for the `prospectFormDancer` mutation. */
@@ -7873,10 +7875,10 @@ export type ProspectFormDancerInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   cohort: CrmCohort;
-  note: Scalars['String'];
-  origin: Scalars['String'];
+  note: Scalars['String']['input'];
+  origin: Scalars['String']['input'];
   prospectData: ProspectDatumInput;
 };
 
@@ -7887,7 +7889,7 @@ export type ProspectFormDancerPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
 };
@@ -7932,9 +7934,9 @@ export type Query = {
   currentCoupleIds: Maybe<CurrentCoupleIdsConnection>;
   /** Reads and enables pagination through a set of `Permission`. */
   currentPermissions: Maybe<PermissionsConnection>;
-  currentSessionId: Maybe<Scalars['String']>;
-  currentTenantId: Maybe<Scalars['BigInt']>;
-  currentUserId: Maybe<Scalars['BigInt']>;
+  currentSessionId: Maybe<Scalars['String']['output']>;
+  currentTenantId: Maybe<Scalars['BigInt']['output']>;
+  currentUserId: Maybe<Scalars['BigInt']['output']>;
   /** Reads and enables pagination through a set of `Dokumenty`. */
   dokumenties: Maybe<DokumentiesConnection>;
   dokumenty: Maybe<Dokumenty>;
@@ -7954,11 +7956,11 @@ export type Query = {
   getCurrentTenant: Maybe<Tenant>;
   getCurrentUser: Maybe<User>;
   lesson: Maybe<Lesson>;
-  /** Reads and enables pagination through a set of `Lesson`. */
-  lessons: Maybe<LessonsConnection>;
   lessonTrainer: Maybe<LessonTrainer>;
   /** Reads and enables pagination through a set of `LessonTrainer`. */
   lessonTrainers: Maybe<LessonTrainersConnection>;
+  /** Reads and enables pagination through a set of `Lesson`. */
+  lessons: Maybe<LessonsConnection>;
   location: Maybe<Location>;
   locationAttachment: Maybe<LocationAttachment>;
   /** Reads and enables pagination through a set of `LocationAttachment`. */
@@ -8005,11 +8007,11 @@ export type Query = {
   /** Reads and enables pagination through a set of `PlatbyCategoryGroup`. */
   platbyCategoryGroups: Maybe<PlatbyCategoryGroupsConnection>;
   platbyGroup: Maybe<PlatbyGroup>;
-  /** Reads and enables pagination through a set of `PlatbyGroup`. */
-  platbyGroups: Maybe<PlatbyGroupsConnection>;
   platbyGroupSkupina: Maybe<PlatbyGroupSkupina>;
   /** Reads and enables pagination through a set of `PlatbyGroupSkupina`. */
   platbyGroupSkupinas: Maybe<PlatbyGroupSkupinasConnection>;
+  /** Reads and enables pagination through a set of `PlatbyGroup`. */
+  platbyGroups: Maybe<PlatbyGroupsConnection>;
   platbyItem: Maybe<PlatbyItem>;
   /** Reads and enables pagination through a set of `PlatbyItem`. */
   platbyItems: Maybe<PlatbyItemsConnection>;
@@ -8060,11 +8062,11 @@ export type Query = {
   /** Reads and enables pagination through a set of `User`. */
   trainers: Maybe<UsersConnection>;
   upozorneni: Maybe<Upozorneni>;
-  /** Reads and enables pagination through a set of `Upozorneni`. */
-  upozornenis: Maybe<UpozornenisConnection>;
   /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
   upozorneniSkupinies: Maybe<UpozorneniSkupiniesConnection>;
   upozorneniSkupiny: Maybe<UpozorneniSkupiny>;
+  /** Reads and enables pagination through a set of `Upozorneni`. */
+  upozornenis: Maybe<UpozornenisConnection>;
   user: Maybe<User>;
   /** Reads and enables pagination through a set of `User`. */
   users: Maybe<UsersConnection>;
@@ -8073,972 +8075,972 @@ export type Query = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryActiveCouplesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAkceItemsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AkceItemsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAkcesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AkcesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAktualitiesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<AktualityCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AktualitiesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAktualityArgs = {
-  atId: Scalars['BigInt'];
+  atId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAttachmentArgs = {
-  objectName: Scalars['String'];
+  objectName: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAttachmentsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<AttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AttachmentsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAttendeeCoupleArgs = {
-  id: Scalars['BigInt'];
+  id: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAttendeeCouplesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<AttendeeCoupleCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AttendeeCouplesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAttendeeExternalArgs = {
-  id: Scalars['BigInt'];
+  id: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAttendeeExternalsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<AttendeeExternalCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AttendeeExternalsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAttendeeListArgs = {
-  id: Scalars['BigInt'];
+  id: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAttendeeListsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<AttendeeListCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AttendeeListsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAttendeePeopleArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<AttendeePersonCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AttendeePeopleOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAttendeePersonArgs = {
-  id: Scalars['BigInt'];
+  id: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAttendeeUserArgs = {
-  id: Scalars['BigInt'];
+  id: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAttendeeUserByUserIdAndEventIdArgs = {
-  eventId: Scalars['BigInt'];
-  userId: Scalars['BigInt'];
+  eventId: Scalars['BigInt']['input'];
+  userId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAttendeeUsersArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<AttendeeUserCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AttendeeUsersOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCohortGroupArgs = {
-  id: Scalars['BigInt'];
+  id: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCohortGroupsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CohortGroupCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CohortGroupsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCoupleArgs = {
-  id: Scalars['BigInt'];
+  id: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCouplesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CoupleCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CouplesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCurrentCoupleIdsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCurrentPermissionsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryDokumentiesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<DokumentyCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<DokumentiesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryDokumentyArgs = {
-  dId: Scalars['BigInt'];
+  dId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEventArgs = {
-  id: Scalars['BigInt'];
+  id: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryEventsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<EventCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryFormResponseArgs = {
-  id: Scalars['BigInt'];
+  id: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryFormResponsesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<FormResponseCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<FormResponsesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryGalerieDirArgs = {
-  gdId: Scalars['BigInt'];
+  gdId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryGalerieDirsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<GalerieDirCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<GalerieDirsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryGalerieFotoArgs = {
-  gfId: Scalars['BigInt'];
+  gfId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryGalerieFotosArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<GalerieFotoCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<GalerieFotosOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryLessonArgs = {
-  id: Scalars['BigInt'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryLessonsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<LessonCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<LessonsOrderBy>>;
+  id: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryLessonTrainerArgs = {
-  id: Scalars['BigInt'];
+  id: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryLessonTrainersArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<LessonTrainerCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<LessonTrainersOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryLessonsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<LessonCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<LessonsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryLocationArgs = {
-  id: Scalars['BigInt'];
+  id: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryLocationAttachmentArgs = {
-  locationId: Scalars['BigInt'];
-  objectName: Scalars['String'];
+  locationId: Scalars['BigInt']['input'];
+  objectName: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryLocationAttachmentsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<LocationAttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<LocationAttachmentsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryLocationsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<LocationCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<LocationsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMyAnnouncementsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryMyLessonsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  endDate?: InputMaybe<Scalars['Date']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  startDate?: InputMaybe<Scalars['Date']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  endDate?: InputMaybe<Scalars['Date']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  startDate?: InputMaybe<Scalars['Date']['input']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryNabidkaArgs = {
-  nId: Scalars['BigInt'];
+  nId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryNabidkaItemArgs = {
-  niId: Scalars['BigInt'];
+  niId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryNabidkaItemByNiPartnerAndNiIdRodicArgs = {
-  niIdRodic: Scalars['BigInt'];
-  niPartner: Scalars['BigInt'];
+  niIdRodic: Scalars['BigInt']['input'];
+  niPartner: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryNabidkaItemsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<NabidkaItemCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<NabidkaItemsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryNabidkasArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<NabidkaCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<NabidkasOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPageArgs = {
-  id: Scalars['Int'];
+  id: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPageByUrlArgs = {
-  url: Scalars['String'];
+  url: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPageRevisionArgs = {
-  id: Scalars['Int'];
-  revNumber: Scalars['Int'];
+  id: Scalars['Int']['input'];
+  revNumber: Scalars['Int']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPageRevisionsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<PageRevisionCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PageRevisionsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPagesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<PageCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PagesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryParameterArgs = {
-  paName: Scalars['String'];
+  paName: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryParametersArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ParameterCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ParametersOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPariesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ParyCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PariesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryParyArgs = {
-  pId: Scalars['BigInt'];
+  pId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryParyNavrhArgs = {
-  pnId: Scalars['BigInt'];
+  pnId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryParyNavrhsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ParyNavrhCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ParyNavrhsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPeopleArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<PersonCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PeopleOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPermissionArgs = {
-  peId: Scalars['BigInt'];
+  peId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPermissionsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<PermissionCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PermissionsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPersonArgs = {
-  id: Scalars['BigInt'];
+  id: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPlatbyCategoriesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<PlatbyCategoryCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PlatbyCategoriesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPlatbyCategoryArgs = {
-  pcId: Scalars['BigInt'];
+  pcId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPlatbyCategoryGroupArgs = {
-  pcgId: Scalars['BigInt'];
+  pcgId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPlatbyCategoryGroupsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<PlatbyCategoryGroupCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PlatbyCategoryGroupsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPlatbyGroupArgs = {
-  pgId: Scalars['BigInt'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryPlatbyGroupsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<PlatbyGroupCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<PlatbyGroupsOrderBy>>;
+  pgId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPlatbyGroupSkupinaArgs = {
-  pgsId: Scalars['BigInt'];
+  pgsId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPlatbyGroupSkupinasArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<PlatbyGroupSkupinaCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PlatbyGroupSkupinasOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryPlatbyGroupsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PlatbyGroupCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PlatbyGroupsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryPlatbyItemArgs = {
-  piId: Scalars['BigInt'];
+  piId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPlatbyItemsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<PlatbyItemCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PlatbyItemsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPlatbyRawArgs = {
-  prId: Scalars['BigInt'];
+  prId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPlatbyRawsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<PlatbyRawCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PlatbyRawsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryReservationsForRangeArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  endDate?: InputMaybe<Scalars['Date']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  startDate?: InputMaybe<Scalars['Date']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  endDate?: InputMaybe<Scalars['Date']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  startDate?: InputMaybe<Scalars['Date']['input']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryRoomArgs = {
-  id: Scalars['BigInt'];
+  id: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryRoomAttachmentArgs = {
-  objectName: Scalars['String'];
-  roomId: Scalars['BigInt'];
+  objectName: Scalars['String']['input'];
+  roomId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryRoomAttachmentsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<RoomAttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<RoomAttachmentsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryRoomsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<RoomCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<RoomsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryRozpiArgs = {
-  rId: Scalars['BigInt'];
+  rId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryRozpisArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<RozpiCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<RozpisOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryRozpisItemArgs = {
-  riId: Scalars['BigInt'];
+  riId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryRozpisItemsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<RozpisItemCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<RozpisItemsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySchedulesForRangeArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  endDate?: InputMaybe<Scalars['Date']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  startDate?: InputMaybe<Scalars['Date']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  endDate?: InputMaybe<Scalars['Date']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  startDate?: InputMaybe<Scalars['Date']['input']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySessionArgs = {
-  ssId: Scalars['String'];
+  ssId: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySessionsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SessionCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SessionsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySkupiniesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SkupinyCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SkupiniesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QuerySkupinyArgs = {
-  sId: Scalars['BigInt'];
+  sId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTenantArgs = {
-  id: Scalars['BigInt'];
+  id: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTenantAttachmentArgs = {
-  objectName: Scalars['String'];
-  tenantId: Scalars['BigInt'];
+  objectName: Scalars['String']['input'];
+  tenantId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTenantAttachmentsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TenantAttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TenantAttachmentsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTenantLocationArgs = {
-  locationId: Scalars['BigInt'];
-  tenantId: Scalars['BigInt'];
+  locationId: Scalars['BigInt']['input'];
+  tenantId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTenantLocationsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TenantLocationCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TenantLocationsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTenantPeopleArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TenantPersonCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TenantPeopleOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTenantPersonArgs = {
-  personId: Scalars['BigInt'];
-  tenantId: Scalars['BigInt'];
+  personId: Scalars['BigInt']['input'];
+  tenantId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTenantsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TenantCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TenantsOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTitleVideosArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTrainersArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryUpozorneniArgs = {
-  upId: Scalars['BigInt'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryUpozornenisArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<UpozorneniCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
+  upId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryUpozorneniSkupiniesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<UpozorneniSkupinyCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<UpozorneniSkupiniesOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryUpozorneniSkupinyArgs = {
-  upsId: Scalars['BigInt'];
+  upsId: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUpozornenisArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<UpozorneniCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryUserArgs = {
-  uId: Scalars['BigInt'];
+  uId: Scalars['BigInt']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryUsersArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<UserCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
 };
 
@@ -9048,9 +9050,9 @@ export type ReservationSetDesiredLessonsInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  lessonCount: Scalars['Int'];
-  reservationId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  lessonCount: Scalars['Int']['input'];
+  reservationId: Scalars['BigInt']['input'];
 };
 
 /** The output of our `reservationSetDesiredLessons` mutation. */
@@ -9060,7 +9062,7 @@ export type ReservationSetDesiredLessonsPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** An edge for our `Nabidka`. May be used by Relay 1. */
   nabidkaEdge: Maybe<NabidkasEdge>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -9082,9 +9084,9 @@ export type ResetPasswordInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  email: Scalars['String'];
-  login: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  email: Scalars['String']['input'];
+  login: Scalars['String']['input'];
 };
 
 /** The output of our `resetPassword` mutation. */
@@ -9094,31 +9096,31 @@ export type ResetPasswordPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
 };
 
 export type Room = {
   __typename?: 'Room';
-  description: Scalars['JSON'];
-  id: Scalars['BigInt'];
-  location: Maybe<Scalars['BigInt']>;
+  description: Scalars['JSON']['output'];
+  id: Scalars['BigInt']['output'];
+  location: Maybe<Scalars['BigInt']['output']>;
   /** Reads a single `Location` that is related to this `Room`. */
   locationByLocation: Maybe<Location>;
-  name: Scalars['String'];
+  name: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `RoomAttachment`. */
   roomAttachments: RoomAttachmentsConnection;
 };
 
 
 export type RoomRoomAttachmentsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<RoomAttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<RoomAttachmentsOrderBy>>;
 };
 
@@ -9126,10 +9128,10 @@ export type RoomAttachment = {
   __typename?: 'RoomAttachment';
   /** Reads a single `Attachment` that is related to this `RoomAttachment`. */
   attachmentByObjectName: Maybe<Attachment>;
-  objectName: Scalars['String'];
+  objectName: Scalars['String']['output'];
   /** Reads a single `Room` that is related to this `RoomAttachment`. */
   room: Maybe<Room>;
-  roomId: Scalars['BigInt'];
+  roomId: Scalars['BigInt']['output'];
 };
 
 /**
@@ -9138,21 +9140,21 @@ export type RoomAttachment = {
  */
 export type RoomAttachmentCondition = {
   /** Checks for equality with the object’s `objectName` field. */
-  objectName?: InputMaybe<Scalars['String']>;
+  objectName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `roomId` field. */
-  roomId?: InputMaybe<Scalars['BigInt']>;
+  roomId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `RoomAttachment` */
 export type RoomAttachmentInput = {
-  objectName: Scalars['String'];
-  roomId: Scalars['BigInt'];
+  objectName: Scalars['String']['input'];
+  roomId: Scalars['BigInt']['input'];
 };
 
 /** Represents an update to a `RoomAttachment`. Fields that are set will be updated. */
 export type RoomAttachmentPatch = {
-  objectName?: InputMaybe<Scalars['String']>;
-  roomId?: InputMaybe<Scalars['BigInt']>;
+  objectName?: InputMaybe<Scalars['String']['input']>;
+  roomId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `RoomAttachment` values. */
@@ -9165,14 +9167,14 @@ export type RoomAttachmentsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `RoomAttachment` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `RoomAttachment` edge in the connection. */
 export type RoomAttachmentsEdge = {
   __typename?: 'RoomAttachmentsEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `RoomAttachment` at the end of the edge. */
   node: RoomAttachment;
 };
@@ -9198,25 +9200,25 @@ export type RoomAttachmentsOrderBy =
 /** A condition to be used against `Room` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type RoomCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `location` field. */
-  location?: InputMaybe<Scalars['BigInt']>;
+  location?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `Room` */
 export type RoomInput = {
-  description: Scalars['JSON'];
-  id?: InputMaybe<Scalars['BigInt']>;
-  location?: InputMaybe<Scalars['BigInt']>;
-  name: Scalars['String'];
+  description: Scalars['JSON']['input'];
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  location?: InputMaybe<Scalars['BigInt']['input']>;
+  name: Scalars['String']['input'];
 };
 
 /** Represents an update to a `Room`. Fields that are set will be updated. */
 export type RoomPatch = {
-  description?: InputMaybe<Scalars['JSON']>;
-  id?: InputMaybe<Scalars['BigInt']>;
-  location?: InputMaybe<Scalars['BigInt']>;
-  name?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['JSON']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  location?: InputMaybe<Scalars['BigInt']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A connection to a list of `Room` values. */
@@ -9229,14 +9231,14 @@ export type RoomsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Room` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Room` edge in the connection. */
 export type RoomsEdge = {
   __typename?: 'RoomsEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `Room` at the end of the edge. */
   node: Room;
 };
@@ -9257,66 +9259,66 @@ export type RoomsOrderBy =
 
 export type Rozpi = {
   __typename?: 'Rozpi';
-  id: Maybe<Scalars['BigInt']>;
-  rDatum: Scalars['Date'];
-  rId: Scalars['BigInt'];
-  rKde: Scalars['String'];
-  rLock: Scalars['Boolean'];
+  id: Maybe<Scalars['BigInt']['output']>;
+  rDatum: Scalars['Date']['output'];
+  rId: Scalars['BigInt']['output'];
+  rKde: Scalars['String']['output'];
+  rLock: Scalars['Boolean']['output'];
+  rTimestamp: Maybe<Scalars['Datetime']['output']>;
+  rTrener: Scalars['BigInt']['output'];
+  rVisible: Scalars['Boolean']['output'];
   /** Reads and enables pagination through a set of `RozpisItem`. */
   rozpisItemsByRiIdRodic: RozpisItemsConnection;
-  rTimestamp: Maybe<Scalars['Datetime']>;
-  rTrener: Scalars['BigInt'];
-  rVisible: Scalars['Boolean'];
-  tenantId: Scalars['BigInt'];
+  tenantId: Scalars['BigInt']['output'];
   /** Reads a single `User` that is related to this `Rozpi`. */
   userByRTrener: Maybe<User>;
 };
 
 
 export type RozpiRozpisItemsByRiIdRodicArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<RozpisItemCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<RozpisItemsOrderBy>>;
 };
 
 /** A condition to be used against `Rozpi` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type RozpiCondition = {
   /** Checks for equality with the object’s `rDatum` field. */
-  rDatum?: InputMaybe<Scalars['Date']>;
+  rDatum?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `rId` field. */
-  rId?: InputMaybe<Scalars['BigInt']>;
+  rId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `rTrener` field. */
-  rTrener?: InputMaybe<Scalars['BigInt']>;
+  rTrener?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `Rozpi` */
 export type RozpiInput = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  rDatum: Scalars['Date'];
-  rId?: InputMaybe<Scalars['BigInt']>;
-  rKde: Scalars['String'];
-  rLock?: InputMaybe<Scalars['Boolean']>;
-  rTimestamp?: InputMaybe<Scalars['Datetime']>;
-  rTrener: Scalars['BigInt'];
-  rVisible?: InputMaybe<Scalars['Boolean']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  rDatum: Scalars['Date']['input'];
+  rId?: InputMaybe<Scalars['BigInt']['input']>;
+  rKde: Scalars['String']['input'];
+  rLock?: InputMaybe<Scalars['Boolean']['input']>;
+  rTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+  rTrener: Scalars['BigInt']['input'];
+  rVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** Represents an update to a `Rozpi`. Fields that are set will be updated. */
 export type RozpiPatch = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  rDatum?: InputMaybe<Scalars['Date']>;
-  rId?: InputMaybe<Scalars['BigInt']>;
-  rKde?: InputMaybe<Scalars['String']>;
-  rLock?: InputMaybe<Scalars['Boolean']>;
-  rTimestamp?: InputMaybe<Scalars['Datetime']>;
-  rTrener?: InputMaybe<Scalars['BigInt']>;
-  rVisible?: InputMaybe<Scalars['Boolean']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  rDatum?: InputMaybe<Scalars['Date']['input']>;
+  rId?: InputMaybe<Scalars['BigInt']['input']>;
+  rKde?: InputMaybe<Scalars['String']['input']>;
+  rLock?: InputMaybe<Scalars['Boolean']['input']>;
+  rTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+  rTrener?: InputMaybe<Scalars['BigInt']['input']>;
+  rVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `Rozpi` values. */
@@ -9329,32 +9331,32 @@ export type RozpisConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Rozpi` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Rozpi` edge in the connection. */
 export type RozpisEdge = {
   __typename?: 'RozpisEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `Rozpi` at the end of the edge. */
   node: Rozpi;
 };
 
 export type RozpisItem = {
   __typename?: 'RozpisItem';
-  id: Maybe<Scalars['BigInt']>;
+  id: Maybe<Scalars['BigInt']['output']>;
   /** Reads a single `Pary` that is related to this `RozpisItem`. */
   paryByRiPartner: Maybe<Pary>;
-  riDo: Scalars['Time'];
-  riId: Scalars['BigInt'];
-  riIdRodic: Scalars['BigInt'];
-  riLock: Scalars['Boolean'];
-  riOd: Scalars['Time'];
-  riPartner: Maybe<Scalars['BigInt']>;
+  riDo: Scalars['Time']['output'];
+  riId: Scalars['BigInt']['output'];
+  riIdRodic: Scalars['BigInt']['output'];
+  riLock: Scalars['Boolean']['output'];
+  riOd: Scalars['Time']['output'];
+  riPartner: Maybe<Scalars['BigInt']['output']>;
   /** Reads a single `Rozpi` that is related to this `RozpisItem`. */
   rozpiByRiIdRodic: Maybe<Rozpi>;
-  tenantId: Scalars['BigInt'];
+  tenantId: Scalars['BigInt']['output'];
 };
 
 /**
@@ -9363,37 +9365,37 @@ export type RozpisItem = {
  */
 export type RozpisItemCondition = {
   /** Checks for equality with the object’s `riId` field. */
-  riId?: InputMaybe<Scalars['BigInt']>;
+  riId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `riIdRodic` field. */
-  riIdRodic?: InputMaybe<Scalars['BigInt']>;
+  riIdRodic?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `riOd` field. */
-  riOd?: InputMaybe<Scalars['Time']>;
+  riOd?: InputMaybe<Scalars['Time']['input']>;
   /** Checks for equality with the object’s `riPartner` field. */
-  riPartner?: InputMaybe<Scalars['BigInt']>;
+  riPartner?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `RozpisItem` */
 export type RozpisItemInput = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  riDo: Scalars['Time'];
-  riId?: InputMaybe<Scalars['BigInt']>;
-  riIdRodic: Scalars['BigInt'];
-  riLock?: InputMaybe<Scalars['Boolean']>;
-  riOd: Scalars['Time'];
-  riPartner?: InputMaybe<Scalars['BigInt']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  riDo: Scalars['Time']['input'];
+  riId?: InputMaybe<Scalars['BigInt']['input']>;
+  riIdRodic: Scalars['BigInt']['input'];
+  riLock?: InputMaybe<Scalars['Boolean']['input']>;
+  riOd: Scalars['Time']['input'];
+  riPartner?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** Represents an update to a `RozpisItem`. Fields that are set will be updated. */
 export type RozpisItemPatch = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  riDo?: InputMaybe<Scalars['Time']>;
-  riId?: InputMaybe<Scalars['BigInt']>;
-  riIdRodic?: InputMaybe<Scalars['BigInt']>;
-  riLock?: InputMaybe<Scalars['Boolean']>;
-  riOd?: InputMaybe<Scalars['Time']>;
-  riPartner?: InputMaybe<Scalars['BigInt']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  riDo?: InputMaybe<Scalars['Time']['input']>;
+  riId?: InputMaybe<Scalars['BigInt']['input']>;
+  riIdRodic?: InputMaybe<Scalars['BigInt']['input']>;
+  riLock?: InputMaybe<Scalars['Boolean']['input']>;
+  riOd?: InputMaybe<Scalars['Time']['input']>;
+  riPartner?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `RozpisItem` values. */
@@ -9406,14 +9408,14 @@ export type RozpisItemsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `RozpisItem` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `RozpisItem` edge in the connection. */
 export type RozpisItemsEdge = {
   __typename?: 'RozpisItemsEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `RozpisItem` at the end of the edge. */
   node: RozpisItem;
 };
@@ -9425,10 +9427,10 @@ export type RozpisItemsOrderBy =
   | 'PARY_BY_RI_PARTNER__P_HODNOCENI_DESC'
   | 'PARY_BY_RI_PARTNER__P_ID_ASC'
   | 'PARY_BY_RI_PARTNER__P_ID_DESC'
-  | 'PARY_BY_RI_PARTNER__P_ID_PARTNER_ASC'
-  | 'PARY_BY_RI_PARTNER__P_ID_PARTNER_DESC'
   | 'PARY_BY_RI_PARTNER__P_ID_PARTNERKA_ASC'
   | 'PARY_BY_RI_PARTNER__P_ID_PARTNERKA_DESC'
+  | 'PARY_BY_RI_PARTNER__P_ID_PARTNER_ASC'
+  | 'PARY_BY_RI_PARTNER__P_ID_PARTNER_DESC'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
   | 'RI_ID_ASC'
@@ -9451,14 +9453,14 @@ export type RozpisOrderBy =
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'ROZPIS_ITEMS_BY_RI_ID_RODIC__COUNT_ASC'
+  | 'ROZPIS_ITEMS_BY_RI_ID_RODIC__COUNT_DESC'
   | 'R_DATUM_ASC'
   | 'R_DATUM_DESC'
   | 'R_ID_ASC'
   | 'R_ID_DESC'
   | 'R_TRENER_ASC'
   | 'R_TRENER_DESC'
-  | 'ROZPIS_ITEMS_BY_RI_ID_RODIC__COUNT_ASC'
-  | 'ROZPIS_ITEMS_BY_RI_ID_RODIC__COUNT_DESC'
   | 'USER_BY_R_TRENER__U_BAN_ASC'
   | 'USER_BY_R_TRENER__U_BAN_DESC'
   | 'USER_BY_R_TRENER__U_CONFIRMED_ASC'
@@ -9482,10 +9484,10 @@ export type RozpisOrderBy =
 
 export type Session = {
   __typename?: 'Session';
-  ssId: Scalars['String'];
-  ssLifetime: Scalars['BigInt'];
-  ssUpdatedAt: Scalars['Datetime'];
-  ssUser: Maybe<Scalars['BigInt']>;
+  ssId: Scalars['String']['output'];
+  ssLifetime: Scalars['BigInt']['output'];
+  ssUpdatedAt: Scalars['Datetime']['output'];
+  ssUser: Maybe<Scalars['BigInt']['output']>;
   /** Reads a single `User` that is related to this `Session`. */
   userBySsUser: Maybe<User>;
 };
@@ -9493,9 +9495,9 @@ export type Session = {
 /** A condition to be used against `Session` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type SessionCondition = {
   /** Checks for equality with the object’s `ssId` field. */
-  ssId?: InputMaybe<Scalars['String']>;
+  ssId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `ssUser` field. */
-  ssUser?: InputMaybe<Scalars['BigInt']>;
+  ssUser?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `Session` values. */
@@ -9508,14 +9510,14 @@ export type SessionsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Session` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Session` edge in the connection. */
 export type SessionsEdge = {
   __typename?: 'SessionsEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `Session` at the end of the edge. */
   node: Session;
 };
@@ -9560,14 +9562,14 @@ export type SkupiniesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Skupiny` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Skupiny` edge in the connection. */
 export type SkupiniesEdge = {
   __typename?: 'SkupiniesEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `Skupiny` at the end of the edge. */
   node: Skupiny;
 };
@@ -9602,22 +9604,22 @@ export type SkupiniesOrderBy =
 
 export type Skupiny = {
   __typename?: 'Skupiny';
-  cohortGroup: Maybe<Scalars['BigInt']>;
+  cohortGroup: Maybe<Scalars['BigInt']['output']>;
   /** Reads a single `CohortGroup` that is related to this `Skupiny`. */
   cohortGroupByCohortGroup: Maybe<CohortGroup>;
-  id: Maybe<Scalars['BigInt']>;
-  internalInfo: Scalars['String'];
-  ordering: Scalars['Int'];
+  id: Maybe<Scalars['BigInt']['output']>;
+  internalInfo: Scalars['String']['output'];
+  ordering: Scalars['Int']['output'];
   /** Reads and enables pagination through a set of `PlatbyGroupSkupina`. */
   platbyGroupSkupinasByPgsIdSkupina: PlatbyGroupSkupinasConnection;
-  sColorRgb: Scalars['String'];
-  sColorText: Scalars['String'];
-  sDescription: Scalars['String'];
-  sId: Scalars['BigInt'];
-  sLocation: Scalars['String'];
-  sName: Scalars['String'];
-  sVisible: Scalars['Boolean'];
-  tenantId: Scalars['BigInt'];
+  sColorRgb: Scalars['String']['output'];
+  sColorText: Scalars['String']['output'];
+  sDescription: Scalars['String']['output'];
+  sId: Scalars['BigInt']['output'];
+  sLocation: Scalars['String']['output'];
+  sName: Scalars['String']['output'];
+  sVisible: Scalars['Boolean']['output'];
+  tenantId: Scalars['BigInt']['output'];
   /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
   upozorneniSkupiniesByUpsIdSkupina: UpozorneniSkupiniesConnection;
   /** Reads and enables pagination through a set of `User`. */
@@ -9626,79 +9628,79 @@ export type Skupiny = {
 
 
 export type SkupinyPlatbyGroupSkupinasByPgsIdSkupinaArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<PlatbyGroupSkupinaCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PlatbyGroupSkupinasOrderBy>>;
 };
 
 
 export type SkupinyUpozorneniSkupiniesByUpsIdSkupinaArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<UpozorneniSkupinyCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<UpozorneniSkupiniesOrderBy>>;
 };
 
 
 export type SkupinyUsersByUSkupinaArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<UserCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
 };
 
 /** A condition to be used against `Skupiny` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type SkupinyCondition = {
   /** Checks for equality with the object’s `cohortGroup` field. */
-  cohortGroup?: InputMaybe<Scalars['BigInt']>;
+  cohortGroup?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `ordering` field. */
-  ordering?: InputMaybe<Scalars['Int']>;
+  ordering?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `sId` field. */
-  sId?: InputMaybe<Scalars['BigInt']>;
+  sId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `sVisible` field. */
-  sVisible?: InputMaybe<Scalars['Boolean']>;
+  sVisible?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** An input for mutations affecting `Skupiny` */
 export type SkupinyInput = {
-  cohortGroup?: InputMaybe<Scalars['BigInt']>;
-  id?: InputMaybe<Scalars['BigInt']>;
-  internalInfo?: InputMaybe<Scalars['String']>;
-  ordering?: InputMaybe<Scalars['Int']>;
-  sColorRgb: Scalars['String'];
-  sColorText?: InputMaybe<Scalars['String']>;
-  sDescription: Scalars['String'];
-  sId?: InputMaybe<Scalars['BigInt']>;
-  sLocation?: InputMaybe<Scalars['String']>;
-  sName: Scalars['String'];
-  sVisible?: InputMaybe<Scalars['Boolean']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  cohortGroup?: InputMaybe<Scalars['BigInt']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  internalInfo?: InputMaybe<Scalars['String']['input']>;
+  ordering?: InputMaybe<Scalars['Int']['input']>;
+  sColorRgb: Scalars['String']['input'];
+  sColorText?: InputMaybe<Scalars['String']['input']>;
+  sDescription: Scalars['String']['input'];
+  sId?: InputMaybe<Scalars['BigInt']['input']>;
+  sLocation?: InputMaybe<Scalars['String']['input']>;
+  sName: Scalars['String']['input'];
+  sVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** Represents an update to a `Skupiny`. Fields that are set will be updated. */
 export type SkupinyPatch = {
-  cohortGroup?: InputMaybe<Scalars['BigInt']>;
-  id?: InputMaybe<Scalars['BigInt']>;
-  internalInfo?: InputMaybe<Scalars['String']>;
-  ordering?: InputMaybe<Scalars['Int']>;
-  sColorRgb?: InputMaybe<Scalars['String']>;
-  sColorText?: InputMaybe<Scalars['String']>;
-  sDescription?: InputMaybe<Scalars['String']>;
-  sId?: InputMaybe<Scalars['BigInt']>;
-  sLocation?: InputMaybe<Scalars['String']>;
-  sName?: InputMaybe<Scalars['String']>;
-  sVisible?: InputMaybe<Scalars['Boolean']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  cohortGroup?: InputMaybe<Scalars['BigInt']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  internalInfo?: InputMaybe<Scalars['String']['input']>;
+  ordering?: InputMaybe<Scalars['Int']['input']>;
+  sColorRgb?: InputMaybe<Scalars['String']['input']>;
+  sColorText?: InputMaybe<Scalars['String']['input']>;
+  sDescription?: InputMaybe<Scalars['String']['input']>;
+  sId?: InputMaybe<Scalars['BigInt']['input']>;
+  sLocation?: InputMaybe<Scalars['String']['input']>;
+  sName?: InputMaybe<Scalars['String']['input']>;
+  sVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** All input for the `submitForm` mutation. */
@@ -9707,10 +9709,10 @@ export type SubmitFormInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  data: Scalars['JSON'];
-  type: Scalars['String'];
-  url: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  data: Scalars['JSON']['input'];
+  type: Scalars['String']['input'];
+  url: Scalars['String']['input'];
 };
 
 /** The output of our `submitForm` mutation. */
@@ -9720,7 +9722,7 @@ export type SubmitFormPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
 };
@@ -9737,14 +9739,14 @@ export type Tenant = {
   cohortGroupsByTenant: CohortGroupsConnection;
   /** Reads and enables pagination through a set of `Couple`. */
   couples: CouplesConnection;
-  id: Scalars['BigInt'];
-  /** Reads and enables pagination through a set of `Lesson`. */
-  lessons: LessonsConnection;
+  id: Scalars['BigInt']['output'];
   /** Reads and enables pagination through a set of `LessonTrainer`. */
   lessonTrainers: LessonTrainersConnection;
-  memberInfo: Scalars['String'];
-  name: Scalars['String'];
-  origins: Array<Maybe<Scalars['String']>>;
+  /** Reads and enables pagination through a set of `Lesson`. */
+  lessons: LessonsConnection;
+  memberInfo: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  origins: Array<Maybe<Scalars['String']['output']>>;
   /** Reads and enables pagination through a set of `TenantAttachment`. */
   tenantAttachments: TenantAttachmentsConnection;
   /** Reads and enables pagination through a set of `TenantLocation`. */
@@ -9755,111 +9757,111 @@ export type Tenant = {
 
 
 export type TenantAttendeeCouplesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<AttendeeCoupleCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AttendeeCouplesOrderBy>>;
 };
 
 
 export type TenantAttendeeListsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<AttendeeListCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AttendeeListsOrderBy>>;
 };
 
 
 export type TenantAttendeePeopleArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<AttendeePersonCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AttendeePeopleOrderBy>>;
 };
 
 
 export type TenantCohortGroupsByTenantArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CohortGroupCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CohortGroupsOrderBy>>;
 };
 
 
 export type TenantCouplesArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<CoupleCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CouplesOrderBy>>;
 };
 
 
-export type TenantLessonsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  condition?: InputMaybe<LessonCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Array<LessonsOrderBy>>;
-};
-
-
 export type TenantLessonTrainersArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<LessonTrainerCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<LessonTrainersOrderBy>>;
 };
 
 
+export type TenantLessonsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<LessonCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<LessonsOrderBy>>;
+};
+
+
 export type TenantTenantAttachmentsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TenantAttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TenantAttachmentsOrderBy>>;
 };
 
 
 export type TenantTenantLocationsArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TenantLocationCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TenantLocationsOrderBy>>;
 };
 
 
 export type TenantTenantPeopleArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<TenantPersonCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<TenantPeopleOrderBy>>;
 };
 
@@ -9867,10 +9869,10 @@ export type TenantAttachment = {
   __typename?: 'TenantAttachment';
   /** Reads a single `Attachment` that is related to this `TenantAttachment`. */
   attachmentByObjectName: Maybe<Attachment>;
-  objectName: Scalars['String'];
+  objectName: Scalars['String']['output'];
   /** Reads a single `Tenant` that is related to this `TenantAttachment`. */
   tenant: Maybe<Tenant>;
-  tenantId: Scalars['BigInt'];
+  tenantId: Scalars['BigInt']['output'];
   type: Maybe<TenantAttachmentType>;
 };
 
@@ -9880,24 +9882,29 @@ export type TenantAttachment = {
  */
 export type TenantAttachmentCondition = {
   /** Checks for equality with the object’s `objectName` field. */
-  objectName?: InputMaybe<Scalars['String']>;
+  objectName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `TenantAttachment` */
 export type TenantAttachmentInput = {
-  objectName: Scalars['String'];
-  tenantId: Scalars['BigInt'];
+  objectName: Scalars['String']['input'];
+  tenantId: Scalars['BigInt']['input'];
   type?: InputMaybe<TenantAttachmentType>;
 };
 
 /** Represents an update to a `TenantAttachment`. Fields that are set will be updated. */
 export type TenantAttachmentPatch = {
-  objectName?: InputMaybe<Scalars['String']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  objectName?: InputMaybe<Scalars['String']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
   type?: InputMaybe<TenantAttachmentType>;
 };
+
+export type TenantAttachmentType =
+  | 'LOGO'
+  | 'MAP'
+  | 'PHOTO';
 
 /** A connection to a list of `TenantAttachment` values. */
 export type TenantAttachmentsConnection = {
@@ -9909,14 +9916,14 @@ export type TenantAttachmentsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `TenantAttachment` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `TenantAttachment` edge in the connection. */
 export type TenantAttachmentsEdge = {
   __typename?: 'TenantAttachmentsEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `TenantAttachment` at the end of the edge. */
   node: TenantAttachment;
 };
@@ -9937,33 +9944,28 @@ export type TenantAttachmentsOrderBy =
   | 'TENANT_ID_ASC'
   | 'TENANT_ID_DESC';
 
-export type TenantAttachmentType =
-  | 'LOGO'
-  | 'MAP'
-  | 'PHOTO';
-
 /** A condition to be used against `Tenant` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type TenantCondition = {
   /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `Tenant` */
 export type TenantInput = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  memberInfo: Scalars['String'];
-  name: Scalars['String'];
-  origins?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  memberInfo: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  origins?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 export type TenantLocation = {
   __typename?: 'TenantLocation';
   /** Reads a single `Location` that is related to this `TenantLocation`. */
   location: Maybe<Location>;
-  locationId: Scalars['BigInt'];
+  locationId: Scalars['BigInt']['output'];
   /** Reads a single `Tenant` that is related to this `TenantLocation`. */
   tenant: Maybe<Tenant>;
-  tenantId: Scalars['BigInt'];
+  tenantId: Scalars['BigInt']['output'];
 };
 
 /**
@@ -9972,21 +9974,21 @@ export type TenantLocation = {
  */
 export type TenantLocationCondition = {
   /** Checks for equality with the object’s `locationId` field. */
-  locationId?: InputMaybe<Scalars['BigInt']>;
+  locationId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `TenantLocation` */
 export type TenantLocationInput = {
-  locationId: Scalars['BigInt'];
-  tenantId: Scalars['BigInt'];
+  locationId: Scalars['BigInt']['input'];
+  tenantId: Scalars['BigInt']['input'];
 };
 
 /** Represents an update to a `TenantLocation`. Fields that are set will be updated. */
 export type TenantLocationPatch = {
-  locationId?: InputMaybe<Scalars['BigInt']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  locationId?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `TenantLocation` values. */
@@ -9999,14 +10001,14 @@ export type TenantLocationsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `TenantLocation` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `TenantLocation` edge in the connection. */
 export type TenantLocationsEdge = {
   __typename?: 'TenantLocationsEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `TenantLocation` at the end of the edge. */
   node: TenantLocation;
 };
@@ -10027,10 +10029,10 @@ export type TenantLocationsOrderBy =
 
 /** Represents an update to a `Tenant`. Fields that are set will be updated. */
 export type TenantPatch = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  memberInfo?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  origins?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  memberInfo?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  origins?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 /** A connection to a list of `TenantPerson` values. */
@@ -10043,14 +10045,14 @@ export type TenantPeopleConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `TenantPerson` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `TenantPerson` edge in the connection. */
 export type TenantPeopleEdge = {
   __typename?: 'TenantPeopleEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `TenantPerson` at the end of the edge. */
   node: TenantPerson;
 };
@@ -10073,10 +10075,10 @@ export type TenantPerson = {
   __typename?: 'TenantPerson';
   /** Reads a single `Person` that is related to this `TenantPerson`. */
   person: Maybe<Person>;
-  personId: Scalars['BigInt'];
+  personId: Scalars['BigInt']['output'];
   /** Reads a single `Tenant` that is related to this `TenantPerson`. */
   tenant: Maybe<Tenant>;
-  tenantId: Scalars['BigInt'];
+  tenantId: Scalars['BigInt']['output'];
 };
 
 /**
@@ -10085,21 +10087,21 @@ export type TenantPerson = {
  */
 export type TenantPersonCondition = {
   /** Checks for equality with the object’s `personId` field. */
-  personId?: InputMaybe<Scalars['BigInt']>;
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `tenantId` field. */
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `TenantPerson` */
 export type TenantPersonInput = {
-  personId: Scalars['BigInt'];
-  tenantId: Scalars['BigInt'];
+  personId: Scalars['BigInt']['input'];
+  tenantId: Scalars['BigInt']['input'];
 };
 
 /** Represents an update to a `TenantPerson`. Fields that are set will be updated. */
 export type TenantPersonPatch = {
-  personId?: InputMaybe<Scalars['BigInt']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
+  personId?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** A connection to a list of `Tenant` values. */
@@ -10112,14 +10114,14 @@ export type TenantsConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Tenant` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Tenant` edge in the connection. */
 export type TenantsEdge = {
   __typename?: 'TenantsEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `Tenant` at the end of the edge. */
   node: Tenant;
 };
@@ -10138,10 +10140,10 @@ export type TenantsOrderBy =
   | 'COUPLES_BY_TENANT_ID__COUNT_DESC'
   | 'ID_ASC'
   | 'ID_DESC'
-  | 'LESSON_TRAINERS_BY_TENANT_ID__COUNT_ASC'
-  | 'LESSON_TRAINERS_BY_TENANT_ID__COUNT_DESC'
   | 'LESSONS_BY_TENANT_ID__COUNT_ASC'
   | 'LESSONS_BY_TENANT_ID__COUNT_DESC'
+  | 'LESSON_TRAINERS_BY_TENANT_ID__COUNT_ASC'
+  | 'LESSON_TRAINERS_BY_TENANT_ID__COUNT_DESC'
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
@@ -10154,12 +10156,12 @@ export type TenantsOrderBy =
 
 /** All input for the `updateAktuality` mutation. */
 export type UpdateAktualityInput = {
-  atId: Scalars['BigInt'];
+  atId: Scalars['BigInt']['input'];
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** An object where the defined keys will be set on the `Aktuality` being updated. */
   patch: AktualityPatch;
 };
@@ -10175,7 +10177,7 @@ export type UpdateAktualityPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `GalerieFoto` that is related to this `Aktuality`. */
   galerieFotoByAtFotoMain: Maybe<GalerieFoto>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -10196,8 +10198,8 @@ export type UpdateAttachmentInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  objectName: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  objectName: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `Attachment` being updated. */
   patch: AttachmentPatch;
 };
@@ -10213,7 +10215,7 @@ export type UpdateAttachmentPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `User` that is related to this `Attachment`. */
@@ -10232,8 +10234,8 @@ export type UpdateAttendeeExternalInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
   /** An object where the defined keys will be set on the `AttendeeExternal` being updated. */
   patch: AttendeeExternalPatch;
 };
@@ -10249,7 +10251,7 @@ export type UpdateAttendeeExternalPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `Event` that is related to this `AttendeeExternal`. */
   event: Maybe<Event>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -10272,11 +10274,11 @@ export type UpdateAttendeeUserByUserIdAndEventIdInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  eventId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  eventId: Scalars['BigInt']['input'];
   /** An object where the defined keys will be set on the `AttendeeUser` being updated. */
   patch: AttendeeUserPatch;
-  userId: Scalars['BigInt'];
+  userId: Scalars['BigInt']['input'];
 };
 
 /** All input for the `updateAttendeeUser` mutation. */
@@ -10285,8 +10287,8 @@ export type UpdateAttendeeUserInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
   /** An object where the defined keys will be set on the `AttendeeUser` being updated. */
   patch: AttendeeUserPatch;
 };
@@ -10302,7 +10304,7 @@ export type UpdateAttendeeUserPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `Event` that is related to this `AttendeeUser`. */
   event: Maybe<Event>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -10323,8 +10325,8 @@ export type UpdateCohortGroupInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
   /** An object where the defined keys will be set on the `CohortGroup` being updated. */
   patch: CohortGroupPatch;
 };
@@ -10336,7 +10338,7 @@ export type UpdateCohortGroupPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `CohortGroup` that was updated by this mutation. */
   cohortGroup: Maybe<CohortGroup>;
   /** An edge for our `CohortGroup`. May be used by Relay 1. */
@@ -10359,8 +10361,8 @@ export type UpdateDokumentyInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  dId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  dId: Scalars['BigInt']['input'];
   /** An object where the defined keys will be set on the `Dokumenty` being updated. */
   patch: DokumentyPatch;
 };
@@ -10372,7 +10374,7 @@ export type UpdateDokumentyPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `Dokumenty` that was updated by this mutation. */
   dokumenty: Maybe<Dokumenty>;
   /** An edge for our `Dokumenty`. May be used by Relay 1. */
@@ -10395,8 +10397,8 @@ export type UpdateEventInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
   /** An object where the defined keys will be set on the `Event` being updated. */
   patch: EventPatch;
 };
@@ -10408,7 +10410,7 @@ export type UpdateEventPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `Event` that was updated by this mutation. */
   event: Maybe<Event>;
   /** An edge for our `Event`. May be used by Relay 1. */
@@ -10429,8 +10431,8 @@ export type UpdateFormResponseInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
   /** An object where the defined keys will be set on the `FormResponse` being updated. */
   patch: FormResponsePatch;
 };
@@ -10442,7 +10444,7 @@ export type UpdateFormResponsePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `FormResponse` that was updated by this mutation. */
   formResponse: Maybe<FormResponse>;
   /** An edge for our `FormResponse`. May be used by Relay 1. */
@@ -10463,8 +10465,8 @@ export type UpdateGalerieDirInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  gdId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  gdId: Scalars['BigInt']['input'];
   /** An object where the defined keys will be set on the `GalerieDir` being updated. */
   patch: GalerieDirPatch;
 };
@@ -10476,7 +10478,7 @@ export type UpdateGalerieDirPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `GalerieDir` that was updated by this mutation. */
   galerieDir: Maybe<GalerieDir>;
   /** An edge for our `GalerieDir`. May be used by Relay 1. */
@@ -10497,8 +10499,8 @@ export type UpdateGalerieFotoInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  gfId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  gfId: Scalars['BigInt']['input'];
   /** An object where the defined keys will be set on the `GalerieFoto` being updated. */
   patch: GalerieFotoPatch;
 };
@@ -10510,7 +10512,7 @@ export type UpdateGalerieFotoPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `GalerieDir` that is related to this `GalerieFoto`. */
   galerieDirByGfIdRodic: Maybe<GalerieDir>;
   /** The `GalerieFoto` that was updated by this mutation. */
@@ -10535,9 +10537,9 @@ export type UpdateLocationAttachmentInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  locationId: Scalars['BigInt'];
-  objectName: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  locationId: Scalars['BigInt']['input'];
+  objectName: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `LocationAttachment` being updated. */
   patch: LocationAttachmentPatch;
 };
@@ -10551,7 +10553,7 @@ export type UpdateLocationAttachmentPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `Location` that is related to this `LocationAttachment`. */
   location: Maybe<Location>;
   /** The `LocationAttachment` that was updated by this mutation. */
@@ -10574,8 +10576,8 @@ export type UpdateLocationInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
   /** An object where the defined keys will be set on the `Location` being updated. */
   patch: LocationPatch;
 };
@@ -10587,7 +10589,7 @@ export type UpdateLocationPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `Location` that was updated by this mutation. */
   location: Maybe<Location>;
   /** An edge for our `Location`. May be used by Relay 1. */
@@ -10608,8 +10610,8 @@ export type UpdateNabidkaInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  nId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  nId: Scalars['BigInt']['input'];
   /** An object where the defined keys will be set on the `Nabidka` being updated. */
   patch: NabidkaPatch;
 };
@@ -10620,9 +10622,9 @@ export type UpdateNabidkaItemByNiPartnerAndNiIdRodicInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  niIdRodic: Scalars['BigInt'];
-  niPartner: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  niIdRodic: Scalars['BigInt']['input'];
+  niPartner: Scalars['BigInt']['input'];
   /** An object where the defined keys will be set on the `NabidkaItem` being updated. */
   patch: NabidkaItemPatch;
 };
@@ -10633,8 +10635,8 @@ export type UpdateNabidkaItemInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  niId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  niId: Scalars['BigInt']['input'];
   /** An object where the defined keys will be set on the `NabidkaItem` being updated. */
   patch: NabidkaItemPatch;
 };
@@ -10646,7 +10648,7 @@ export type UpdateNabidkaItemPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `Nabidka` that is related to this `NabidkaItem`. */
   nabidkaByNiIdRodic: Maybe<Nabidka>;
   /** The `NabidkaItem` that was updated by this mutation. */
@@ -10672,7 +10674,7 @@ export type UpdateNabidkaPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `Nabidka` that was updated by this mutation. */
   nabidka: Maybe<Nabidka>;
   /** An edge for our `Nabidka`. May be used by Relay 1. */
@@ -10695,10 +10697,10 @@ export type UpdatePageByUrlInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** An object where the defined keys will be set on the `Page` being updated. */
   patch: PagePatch;
-  url: Scalars['String'];
+  url: Scalars['String']['input'];
 };
 
 /** All input for the `updatePage` mutation. */
@@ -10707,8 +10709,8 @@ export type UpdatePageInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['Int'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
   /** An object where the defined keys will be set on the `Page` being updated. */
   patch: PagePatch;
 };
@@ -10720,7 +10722,7 @@ export type UpdatePagePayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `Page` that was updated by this mutation. */
   page: Maybe<Page>;
   /** An edge for our `Page`. May be used by Relay 1. */
@@ -10741,8 +10743,8 @@ export type UpdateParameterInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  paName: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  paName: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `Parameter` being updated. */
   patch: ParameterPatch;
 };
@@ -10754,7 +10756,7 @@ export type UpdateParameterPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `Parameter` that was updated by this mutation. */
   parameter: Maybe<Parameter>;
   /** An edge for our `Parameter`. May be used by Relay 1. */
@@ -10775,10 +10777,10 @@ export type UpdateParyInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  pId: Scalars['BigInt']['input'];
   /** An object where the defined keys will be set on the `Pary` being updated. */
   patch: ParyPatch;
-  pId: Scalars['BigInt'];
 };
 
 /** All input for the `updateParyNavrh` mutation. */
@@ -10787,10 +10789,10 @@ export type UpdateParyNavrhInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** An object where the defined keys will be set on the `ParyNavrh` being updated. */
   patch: ParyNavrhPatch;
-  pnId: Scalars['BigInt'];
+  pnId: Scalars['BigInt']['input'];
 };
 
 /** The output of our update `ParyNavrh` mutation. */
@@ -10800,7 +10802,7 @@ export type UpdateParyNavrhPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `ParyNavrh` that was updated by this mutation. */
   paryNavrh: Maybe<ParyNavrh>;
   /** An edge for our `ParyNavrh`. May be used by Relay 1. */
@@ -10828,7 +10830,7 @@ export type UpdateParyPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `Pary` that was updated by this mutation. */
   pary: Maybe<Pary>;
   /** An edge for our `Pary`. May be used by Relay 1. */
@@ -10853,10 +10855,10 @@ export type UpdatePermissionInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** An object where the defined keys will be set on the `Permission` being updated. */
   patch: PermissionPatch;
-  peId: Scalars['BigInt'];
+  peId: Scalars['BigInt']['input'];
 };
 
 /** The output of our update `Permission` mutation. */
@@ -10866,7 +10868,7 @@ export type UpdatePermissionPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `Permission` that was updated by this mutation. */
   permission: Maybe<Permission>;
   /** An edge for our `Permission`. May be used by Relay 1. */
@@ -10887,8 +10889,8 @@ export type UpdatePersonInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
   /** An object where the defined keys will be set on the `Person` being updated. */
   patch: PersonPatch;
 };
@@ -10900,7 +10902,7 @@ export type UpdatePersonPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `Person` that was updated by this mutation. */
   person: Maybe<Person>;
   /** An edge for our `Person`. May be used by Relay 1. */
@@ -10921,10 +10923,10 @@ export type UpdatePlatbyCategoryGroupInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** An object where the defined keys will be set on the `PlatbyCategoryGroup` being updated. */
   patch: PlatbyCategoryGroupPatch;
-  pcgId: Scalars['BigInt'];
+  pcgId: Scalars['BigInt']['input'];
 };
 
 /** The output of our update `PlatbyCategoryGroup` mutation. */
@@ -10934,7 +10936,7 @@ export type UpdatePlatbyCategoryGroupPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `PlatbyCategory` that is related to this `PlatbyCategoryGroup`. */
   platbyCategoryByPcgIdCategory: Maybe<PlatbyCategory>;
   /** The `PlatbyCategoryGroup` that was updated by this mutation. */
@@ -10959,10 +10961,10 @@ export type UpdatePlatbyCategoryInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** An object where the defined keys will be set on the `PlatbyCategory` being updated. */
   patch: PlatbyCategoryPatch;
-  pcId: Scalars['BigInt'];
+  pcId: Scalars['BigInt']['input'];
 };
 
 /** The output of our update `PlatbyCategory` mutation. */
@@ -10972,7 +10974,7 @@ export type UpdatePlatbyCategoryPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `PlatbyCategory` that was updated by this mutation. */
   platbyCategory: Maybe<PlatbyCategory>;
   /** An edge for our `PlatbyCategory`. May be used by Relay 1. */
@@ -10993,10 +10995,10 @@ export type UpdatePlatbyGroupInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** An object where the defined keys will be set on the `PlatbyGroup` being updated. */
   patch: PlatbyGroupPatch;
-  pgId: Scalars['BigInt'];
+  pgId: Scalars['BigInt']['input'];
 };
 
 /** The output of our update `PlatbyGroup` mutation. */
@@ -11006,7 +11008,7 @@ export type UpdatePlatbyGroupPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `PlatbyGroup` that was updated by this mutation. */
   platbyGroup: Maybe<PlatbyGroup>;
   /** An edge for our `PlatbyGroup`. May be used by Relay 1. */
@@ -11027,10 +11029,10 @@ export type UpdatePlatbyGroupSkupinaInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** An object where the defined keys will be set on the `PlatbyGroupSkupina` being updated. */
   patch: PlatbyGroupSkupinaPatch;
-  pgsId: Scalars['BigInt'];
+  pgsId: Scalars['BigInt']['input'];
 };
 
 /** The output of our update `PlatbyGroupSkupina` mutation. */
@@ -11040,7 +11042,7 @@ export type UpdatePlatbyGroupSkupinaPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `PlatbyGroup` that is related to this `PlatbyGroupSkupina`. */
   platbyGroupByPgsIdGroup: Maybe<PlatbyGroup>;
   /** The `PlatbyGroupSkupina` that was updated by this mutation. */
@@ -11065,10 +11067,10 @@ export type UpdatePlatbyItemInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** An object where the defined keys will be set on the `PlatbyItem` being updated. */
   patch: PlatbyItemPatch;
-  piId: Scalars['BigInt'];
+  piId: Scalars['BigInt']['input'];
 };
 
 /** The output of our update `PlatbyItem` mutation. */
@@ -11078,7 +11080,7 @@ export type UpdatePlatbyItemPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `PlatbyCategory` that is related to this `PlatbyItem`. */
   platbyCategoryByPiIdCategory: Maybe<PlatbyCategory>;
   /** The `PlatbyItem` that was updated by this mutation. */
@@ -11105,10 +11107,10 @@ export type UpdatePlatbyRawInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** An object where the defined keys will be set on the `PlatbyRaw` being updated. */
   patch: PlatbyRawPatch;
-  prId: Scalars['BigInt'];
+  prId: Scalars['BigInt']['input'];
 };
 
 /** The output of our update `PlatbyRaw` mutation. */
@@ -11118,7 +11120,7 @@ export type UpdatePlatbyRawPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** The `PlatbyRaw` that was updated by this mutation. */
   platbyRaw: Maybe<PlatbyRaw>;
   /** An edge for our `PlatbyRaw`. May be used by Relay 1. */
@@ -11139,11 +11141,11 @@ export type UpdateRoomAttachmentInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  objectName: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  objectName: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `RoomAttachment` being updated. */
   patch: RoomAttachmentPatch;
-  roomId: Scalars['BigInt'];
+  roomId: Scalars['BigInt']['input'];
 };
 
 /** The output of our update `RoomAttachment` mutation. */
@@ -11155,7 +11157,7 @@ export type UpdateRoomAttachmentPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `Room` that is related to this `RoomAttachment`. */
@@ -11178,8 +11180,8 @@ export type UpdateRoomInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
   /** An object where the defined keys will be set on the `Room` being updated. */
   patch: RoomPatch;
 };
@@ -11191,7 +11193,7 @@ export type UpdateRoomPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `Location` that is related to this `Room`. */
   locationByLocation: Maybe<Location>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -11214,10 +11216,10 @@ export type UpdateRozpiInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** An object where the defined keys will be set on the `Rozpi` being updated. */
   patch: RozpiPatch;
-  rId: Scalars['BigInt'];
+  rId: Scalars['BigInt']['input'];
 };
 
 /** The output of our update `Rozpi` mutation. */
@@ -11227,7 +11229,7 @@ export type UpdateRozpiPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** The `Rozpi` that was updated by this mutation. */
@@ -11250,10 +11252,10 @@ export type UpdateRozpisItemInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** An object where the defined keys will be set on the `RozpisItem` being updated. */
   patch: RozpisItemPatch;
-  riId: Scalars['BigInt'];
+  riId: Scalars['BigInt']['input'];
 };
 
 /** The output of our update `RozpisItem` mutation. */
@@ -11263,7 +11265,7 @@ export type UpdateRozpisItemPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `Pary` that is related to this `RozpisItem`. */
   paryByRiPartner: Maybe<Pary>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -11288,10 +11290,10 @@ export type UpdateSkupinyInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** An object where the defined keys will be set on the `Skupiny` being updated. */
   patch: SkupinyPatch;
-  sId: Scalars['BigInt'];
+  sId: Scalars['BigInt']['input'];
 };
 
 /** The output of our update `Skupiny` mutation. */
@@ -11301,7 +11303,7 @@ export type UpdateSkupinyPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `CohortGroup` that is related to this `Skupiny`. */
   cohortGroupByCohortGroup: Maybe<CohortGroup>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -11324,11 +11326,11 @@ export type UpdateTenantAttachmentInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  objectName: Scalars['String'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  objectName: Scalars['String']['input'];
   /** An object where the defined keys will be set on the `TenantAttachment` being updated. */
   patch: TenantAttachmentPatch;
-  tenantId: Scalars['BigInt'];
+  tenantId: Scalars['BigInt']['input'];
 };
 
 /** The output of our update `TenantAttachment` mutation. */
@@ -11340,7 +11342,7 @@ export type UpdateTenantAttachmentPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `Tenant` that is related to this `TenantAttachment`. */
@@ -11363,8 +11365,8 @@ export type UpdateTenantInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  id: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['BigInt']['input'];
   /** An object where the defined keys will be set on the `Tenant` being updated. */
   patch: TenantPatch;
 };
@@ -11375,11 +11377,11 @@ export type UpdateTenantLocationInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  locationId: Scalars['BigInt'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  locationId: Scalars['BigInt']['input'];
   /** An object where the defined keys will be set on the `TenantLocation` being updated. */
   patch: TenantLocationPatch;
-  tenantId: Scalars['BigInt'];
+  tenantId: Scalars['BigInt']['input'];
 };
 
 /** The output of our update `TenantLocation` mutation. */
@@ -11389,7 +11391,7 @@ export type UpdateTenantLocationPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `Location` that is related to this `TenantLocation`. */
   location: Maybe<Location>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -11415,7 +11417,7 @@ export type UpdateTenantPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** The `Tenant` that was updated by this mutation. */
@@ -11436,11 +11438,11 @@ export type UpdateTenantPersonInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** An object where the defined keys will be set on the `TenantPerson` being updated. */
   patch: TenantPersonPatch;
-  personId: Scalars['BigInt'];
-  tenantId: Scalars['BigInt'];
+  personId: Scalars['BigInt']['input'];
+  tenantId: Scalars['BigInt']['input'];
 };
 
 /** The output of our update `TenantPerson` mutation. */
@@ -11450,7 +11452,7 @@ export type UpdateTenantPersonPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `Person` that is related to this `TenantPerson`. */
   person: Maybe<Person>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -11475,10 +11477,10 @@ export type UpdateUpozorneniInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** An object where the defined keys will be set on the `Upozorneni` being updated. */
   patch: UpozorneniPatch;
-  upId: Scalars['BigInt'];
+  upId: Scalars['BigInt']['input'];
 };
 
 /** The output of our update `Upozorneni` mutation. */
@@ -11488,7 +11490,7 @@ export type UpdateUpozorneniPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** The `Upozorneni` that was updated by this mutation. */
@@ -11511,10 +11513,10 @@ export type UpdateUpozorneniSkupinyInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** An object where the defined keys will be set on the `UpozorneniSkupiny` being updated. */
   patch: UpozorneniSkupinyPatch;
-  upsId: Scalars['BigInt'];
+  upsId: Scalars['BigInt']['input'];
 };
 
 /** The output of our update `UpozorneniSkupiny` mutation. */
@@ -11524,7 +11526,7 @@ export type UpdateUpozorneniSkupinyPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
   /** Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`. */
@@ -11549,10 +11551,10 @@ export type UpdateUserInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** An object where the defined keys will be set on the `User` being updated. */
   patch: UserPatch;
-  uId: Scalars['BigInt'];
+  uId: Scalars['BigInt']['input'];
 };
 
 /** The output of our update `User` mutation. */
@@ -11562,7 +11564,7 @@ export type UpdateUserPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Reads a single `Permission` that is related to this `User`. */
   permissionByUGroup: Maybe<Permission>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
@@ -11583,40 +11585,40 @@ export type UpdateUserPayloadUserEdgeArgs = {
 
 export type UploadFilePayload = {
   __typename?: 'UploadFilePayload';
-  objectName: Scalars['String'];
-  uploadUrl: Scalars['String'];
+  objectName: Scalars['String']['output'];
+  uploadUrl: Scalars['String']['output'];
 };
 
 export type Upozorneni = {
   __typename?: 'Upozorneni';
-  id: Maybe<Scalars['BigInt']>;
-  isVisible: Maybe<Scalars['Boolean']>;
-  scheduledSince: Maybe<Scalars['Datetime']>;
-  scheduledUntil: Maybe<Scalars['Datetime']>;
-  sticky: Scalars['Boolean'];
-  tenantId: Scalars['BigInt'];
-  upBarvy: Scalars['BigInt'];
-  upId: Scalars['BigInt'];
-  upKdo: Maybe<Scalars['BigInt']>;
-  upLock: Scalars['Boolean'];
-  upNadpis: Scalars['String'];
+  id: Maybe<Scalars['BigInt']['output']>;
+  isVisible: Maybe<Scalars['Boolean']['output']>;
+  scheduledSince: Maybe<Scalars['Datetime']['output']>;
+  scheduledUntil: Maybe<Scalars['Datetime']['output']>;
+  sticky: Scalars['Boolean']['output'];
+  tenantId: Scalars['BigInt']['output'];
+  upBarvy: Scalars['BigInt']['output'];
+  upId: Scalars['BigInt']['output'];
+  upKdo: Maybe<Scalars['BigInt']['output']>;
+  upLock: Scalars['Boolean']['output'];
+  upNadpis: Scalars['String']['output'];
+  upText: Scalars['String']['output'];
+  upTimestamp: Maybe<Scalars['Datetime']['output']>;
+  upTimestampAdd: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
   upozorneniSkupiniesByUpsIdRodic: UpozorneniSkupiniesConnection;
-  upText: Scalars['String'];
-  upTimestamp: Maybe<Scalars['Datetime']>;
-  upTimestampAdd: Scalars['Datetime'];
   /** Reads a single `User` that is related to this `Upozorneni`. */
   userByUpKdo: Maybe<User>;
 };
 
 
 export type UpozorneniUpozorneniSkupiniesByUpsIdRodicArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<UpozorneniSkupinyCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<UpozorneniSkupiniesOrderBy>>;
 };
 
@@ -11626,69 +11628,47 @@ export type UpozorneniUpozorneniSkupiniesByUpsIdRodicArgs = {
  */
 export type UpozorneniCondition = {
   /** Checks for equality with the object’s `upId` field. */
-  upId?: InputMaybe<Scalars['BigInt']>;
+  upId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `upKdo` field. */
-  upKdo?: InputMaybe<Scalars['BigInt']>;
+  upKdo?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `upTimestampAdd` field. */
-  upTimestampAdd?: InputMaybe<Scalars['Datetime']>;
+  upTimestampAdd?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** An input for mutations affecting `Upozorneni` */
 export type UpozorneniInput = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  isVisible?: InputMaybe<Scalars['Boolean']>;
-  scheduledSince?: InputMaybe<Scalars['Datetime']>;
-  scheduledUntil?: InputMaybe<Scalars['Datetime']>;
-  sticky?: InputMaybe<Scalars['Boolean']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
-  upBarvy?: InputMaybe<Scalars['BigInt']>;
-  upId?: InputMaybe<Scalars['BigInt']>;
-  upKdo?: InputMaybe<Scalars['BigInt']>;
-  upLock?: InputMaybe<Scalars['Boolean']>;
-  upNadpis: Scalars['String'];
-  upText: Scalars['String'];
-  upTimestamp?: InputMaybe<Scalars['Datetime']>;
-  upTimestampAdd?: InputMaybe<Scalars['Datetime']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  scheduledSince?: InputMaybe<Scalars['Datetime']['input']>;
+  scheduledUntil?: InputMaybe<Scalars['Datetime']['input']>;
+  sticky?: InputMaybe<Scalars['Boolean']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  upBarvy?: InputMaybe<Scalars['BigInt']['input']>;
+  upId?: InputMaybe<Scalars['BigInt']['input']>;
+  upKdo?: InputMaybe<Scalars['BigInt']['input']>;
+  upLock?: InputMaybe<Scalars['Boolean']['input']>;
+  upNadpis: Scalars['String']['input'];
+  upText: Scalars['String']['input'];
+  upTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+  upTimestampAdd?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** Represents an update to a `Upozorneni`. Fields that are set will be updated. */
 export type UpozorneniPatch = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  isVisible?: InputMaybe<Scalars['Boolean']>;
-  scheduledSince?: InputMaybe<Scalars['Datetime']>;
-  scheduledUntil?: InputMaybe<Scalars['Datetime']>;
-  sticky?: InputMaybe<Scalars['Boolean']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
-  upBarvy?: InputMaybe<Scalars['BigInt']>;
-  upId?: InputMaybe<Scalars['BigInt']>;
-  upKdo?: InputMaybe<Scalars['BigInt']>;
-  upLock?: InputMaybe<Scalars['Boolean']>;
-  upNadpis?: InputMaybe<Scalars['String']>;
-  upText?: InputMaybe<Scalars['String']>;
-  upTimestamp?: InputMaybe<Scalars['Datetime']>;
-  upTimestampAdd?: InputMaybe<Scalars['Datetime']>;
-};
-
-/** A connection to a list of `Upozorneni` values. */
-export type UpozornenisConnection = {
-  __typename?: 'UpozornenisConnection';
-  /** A list of edges which contains the `Upozorneni` and cursor to aid in pagination. */
-  edges: Array<UpozornenisEdge>;
-  /** A list of `Upozorneni` objects. */
-  nodes: Array<Upozorneni>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Upozorneni` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `Upozorneni` edge in the connection. */
-export type UpozornenisEdge = {
-  __typename?: 'UpozornenisEdge';
-  /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
-  /** The `Upozorneni` at the end of the edge. */
-  node: Upozorneni;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  isVisible?: InputMaybe<Scalars['Boolean']['input']>;
+  scheduledSince?: InputMaybe<Scalars['Datetime']['input']>;
+  scheduledUntil?: InputMaybe<Scalars['Datetime']['input']>;
+  sticky?: InputMaybe<Scalars['Boolean']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  upBarvy?: InputMaybe<Scalars['BigInt']['input']>;
+  upId?: InputMaybe<Scalars['BigInt']['input']>;
+  upKdo?: InputMaybe<Scalars['BigInt']['input']>;
+  upLock?: InputMaybe<Scalars['Boolean']['input']>;
+  upNadpis?: InputMaybe<Scalars['String']['input']>;
+  upText?: InputMaybe<Scalars['String']['input']>;
+  upTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
+  upTimestampAdd?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** A connection to a list of `UpozorneniSkupiny` values. */
@@ -11701,14 +11681,14 @@ export type UpozorneniSkupiniesConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `UpozorneniSkupiny` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `UpozorneniSkupiny` edge in the connection. */
 export type UpozorneniSkupiniesEdge = {
   __typename?: 'UpozorneniSkupiniesEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `UpozorneniSkupiny` at the end of the edge. */
   node: UpozorneniSkupiny;
 };
@@ -11741,17 +11721,17 @@ export type UpozorneniSkupiniesOrderBy =
 
 export type UpozorneniSkupiny = {
   __typename?: 'UpozorneniSkupiny';
-  id: Maybe<Scalars['BigInt']>;
+  id: Maybe<Scalars['BigInt']['output']>;
   /** Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`. */
   skupinyByUpsIdSkupina: Maybe<Skupiny>;
-  tenantId: Scalars['BigInt'];
+  tenantId: Scalars['BigInt']['output'];
   /** Reads a single `Upozorneni` that is related to this `UpozorneniSkupiny`. */
   upozorneniByUpsIdRodic: Maybe<Upozorneni>;
-  upsColor: Scalars['String'];
-  upsId: Scalars['BigInt'];
-  upsIdRodic: Scalars['BigInt'];
-  upsIdSkupina: Scalars['BigInt'];
-  upsPopis: Scalars['String'];
+  upsColor: Scalars['String']['output'];
+  upsId: Scalars['BigInt']['output'];
+  upsIdRodic: Scalars['BigInt']['output'];
+  upsIdSkupina: Scalars['BigInt']['output'];
+  upsPopis: Scalars['String']['output'];
 };
 
 /**
@@ -11760,33 +11740,55 @@ export type UpozorneniSkupiny = {
  */
 export type UpozorneniSkupinyCondition = {
   /** Checks for equality with the object’s `upsId` field. */
-  upsId?: InputMaybe<Scalars['BigInt']>;
+  upsId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `upsIdRodic` field. */
-  upsIdRodic?: InputMaybe<Scalars['BigInt']>;
+  upsIdRodic?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `upsIdSkupina` field. */
-  upsIdSkupina?: InputMaybe<Scalars['BigInt']>;
+  upsIdSkupina?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 /** An input for mutations affecting `UpozorneniSkupiny` */
 export type UpozorneniSkupinyInput = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
-  upsColor: Scalars['String'];
-  upsId?: InputMaybe<Scalars['BigInt']>;
-  upsIdRodic: Scalars['BigInt'];
-  upsIdSkupina: Scalars['BigInt'];
-  upsPopis: Scalars['String'];
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  upsColor: Scalars['String']['input'];
+  upsId?: InputMaybe<Scalars['BigInt']['input']>;
+  upsIdRodic: Scalars['BigInt']['input'];
+  upsIdSkupina: Scalars['BigInt']['input'];
+  upsPopis: Scalars['String']['input'];
 };
 
 /** Represents an update to a `UpozorneniSkupiny`. Fields that are set will be updated. */
 export type UpozorneniSkupinyPatch = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
-  upsColor?: InputMaybe<Scalars['String']>;
-  upsId?: InputMaybe<Scalars['BigInt']>;
-  upsIdRodic?: InputMaybe<Scalars['BigInt']>;
-  upsIdSkupina?: InputMaybe<Scalars['BigInt']>;
-  upsPopis?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  upsColor?: InputMaybe<Scalars['String']['input']>;
+  upsId?: InputMaybe<Scalars['BigInt']['input']>;
+  upsIdRodic?: InputMaybe<Scalars['BigInt']['input']>;
+  upsIdSkupina?: InputMaybe<Scalars['BigInt']['input']>;
+  upsPopis?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A connection to a list of `Upozorneni` values. */
+export type UpozornenisConnection = {
+  __typename?: 'UpozornenisConnection';
+  /** A list of edges which contains the `Upozorneni` and cursor to aid in pagination. */
+  edges: Array<UpozornenisEdge>;
+  /** A list of `Upozorneni` objects. */
+  nodes: Array<Upozorneni>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Upozorneni` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Upozorneni` edge in the connection. */
+export type UpozornenisEdge = {
+  __typename?: 'UpozornenisEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `Upozorneni` at the end of the edge. */
+  node: Upozorneni;
 };
 
 /** Methods to use when ordering `Upozorneni`. */
@@ -11794,14 +11796,14 @@ export type UpozornenisOrderBy =
   | 'NATURAL'
   | 'PRIMARY_KEY_ASC'
   | 'PRIMARY_KEY_DESC'
+  | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_ASC'
+  | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_DESC'
   | 'UP_ID_ASC'
   | 'UP_ID_DESC'
   | 'UP_KDO_ASC'
   | 'UP_KDO_DESC'
   | 'UP_TIMESTAMP_ADD_ASC'
   | 'UP_TIMESTAMP_ADD_DESC'
-  | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_ASC'
-  | 'UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_DESC'
   | 'USER_BY_UP_KDO__U_BAN_ASC'
   | 'USER_BY_UP_KDO__U_BAN_DESC'
   | 'USER_BY_UP_KDO__U_CONFIRMED_ASC'
@@ -11837,16 +11839,16 @@ export type User = {
   attendeeExternalsByManagedBy: AttendeeExternalsConnection;
   /** Reads and enables pagination through a set of `AttendeeUser`. */
   attendeeUsers: AttendeeUsersConnection;
-  dateOfNewestPayment: Maybe<Scalars['Date']>;
-  dateOfOldestPayment: Maybe<Scalars['Date']>;
+  dateOfNewestPayment: Maybe<Scalars['Date']['output']>;
+  dateOfOldestPayment: Maybe<Scalars['Date']['output']>;
   /** Reads and enables pagination through a set of `Dokumenty`. */
   dokumentiesByDKdo: DokumentiesConnection;
-  fullName: Maybe<Scalars['String']>;
+  fullName: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `GalerieFoto`. */
   galerieFotosByGfKdo: GalerieFotosConnection;
-  hasValidPayment: Maybe<Scalars['Boolean']>;
-  id: Maybe<Scalars['BigInt']>;
-  inPublicCohort: Maybe<Scalars['Boolean']>;
+  hasValidPayment: Maybe<Scalars['Boolean']['output']>;
+  id: Maybe<Scalars['BigInt']['output']>;
+  inPublicCohort: Maybe<Scalars['Boolean']['output']>;
   /** Reads and enables pagination through a set of `LessonTrainer`. */
   lessonTrainersByTrainerId: LessonTrainersConnection;
   /** Reads and enables pagination through a set of `Nabidka`. */
@@ -11871,351 +11873,351 @@ export type User = {
   sessionsBySsUser: SessionsConnection;
   /** Reads a single `Skupiny` that is related to this `User`. */
   skupinyByUSkupina: Maybe<Skupiny>;
-  tenantId: Scalars['BigInt'];
-  uBan: Scalars['Boolean'];
-  uCity: Scalars['String'];
-  uConfirmed: Scalars['Boolean'];
-  uConscriptionNumber: Scalars['String'];
-  uCreatedAt: Scalars['Datetime'];
-  uDancer: Scalars['Boolean'];
-  uDistrict: Scalars['String'];
-  uEmail: Scalars['String'];
-  uGdprSignedAt: Maybe<Scalars['Datetime']>;
-  uGroup: Scalars['BigInt'];
-  uId: Scalars['BigInt'];
-  uJmeno: Scalars['String'];
-  uLevel: Scalars['Int'];
-  uLock: Scalars['Boolean'];
-  uLogin: Scalars['String'];
-  uMemberSince: Maybe<Scalars['Datetime']>;
-  uMemberUntil: Maybe<Scalars['Datetime']>;
-  uNarozeni: Scalars['Date'];
-  uNationality: Scalars['String'];
-  uOrientationNumber: Scalars['String'];
-  uPass: Scalars['String'];
-  uPohlavi: Scalars['String'];
-  uPostalCode: Scalars['String'];
-  uPoznamky: Scalars['String'];
+  tenantId: Scalars['BigInt']['output'];
+  uBan: Scalars['Boolean']['output'];
+  uCity: Scalars['String']['output'];
+  uConfirmed: Scalars['Boolean']['output'];
+  uConscriptionNumber: Scalars['String']['output'];
+  uCreatedAt: Scalars['Datetime']['output'];
+  uDancer: Scalars['Boolean']['output'];
+  uDistrict: Scalars['String']['output'];
+  uEmail: Scalars['String']['output'];
+  uGdprSignedAt: Maybe<Scalars['Datetime']['output']>;
+  uGroup: Scalars['BigInt']['output'];
+  uId: Scalars['BigInt']['output'];
+  uJmeno: Scalars['String']['output'];
+  uLevel: Scalars['Int']['output'];
+  uLock: Scalars['Boolean']['output'];
+  uLogin: Scalars['String']['output'];
+  uMemberSince: Maybe<Scalars['Datetime']['output']>;
+  uMemberUntil: Maybe<Scalars['Datetime']['output']>;
+  uNarozeni: Scalars['Date']['output'];
+  uNationality: Scalars['String']['output'];
+  uOrientationNumber: Scalars['String']['output'];
+  uPass: Scalars['String']['output'];
+  uPohlavi: Scalars['String']['output'];
+  uPostalCode: Scalars['String']['output'];
+  uPoznamky: Scalars['String']['output'];
+  uPrijmeni: Scalars['String']['output'];
+  uRodneCislo: Maybe<Scalars['String']['output']>;
+  uSkupina: Scalars['BigInt']['output'];
+  uStreet: Scalars['String']['output'];
+  uSystem: Scalars['Boolean']['output'];
+  uTeacher: Scalars['Boolean']['output'];
+  uTelefon: Scalars['String']['output'];
+  uTimestamp: Scalars['Datetime']['output'];
   /** Reads and enables pagination through a set of `Upozorneni`. */
   upozornenisByUpKdo: UpozornenisConnection;
-  uPrijmeni: Scalars['String'];
-  uRodneCislo: Maybe<Scalars['String']>;
-  uSkupina: Scalars['BigInt'];
-  uStreet: Scalars['String'];
-  uSystem: Scalars['Boolean'];
-  uTeacher: Scalars['Boolean'];
-  uTelefon: Scalars['String'];
-  uTimestamp: Scalars['Datetime'];
 };
 
 
 export type UserAkceItemsByAiUserArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AkceItemsOrderBy>>;
 };
 
 
 export type UserAktualitiesByAtKdoArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<AktualityCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AktualitiesOrderBy>>;
 };
 
 
 export type UserAttachmentsByUploadedByArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<AttachmentCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AttachmentsOrderBy>>;
 };
 
 
 export type UserAttendeeExternalsByConfirmedByArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<AttendeeExternalCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AttendeeExternalsOrderBy>>;
 };
 
 
 export type UserAttendeeExternalsByManagedByArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<AttendeeExternalCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AttendeeExternalsOrderBy>>;
 };
 
 
 export type UserAttendeeUsersArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<AttendeeUserCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AttendeeUsersOrderBy>>;
 };
 
 
 export type UserDokumentiesByDKdoArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<DokumentyCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<DokumentiesOrderBy>>;
 };
 
 
 export type UserGalerieFotosByGfKdoArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<GalerieFotoCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<GalerieFotosOrderBy>>;
 };
 
 
 export type UserLessonTrainersByTrainerIdArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<LessonTrainerCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<LessonTrainersOrderBy>>;
 };
 
 
 export type UserNabidkasByNTrenerArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<NabidkaCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<NabidkasOrderBy>>;
 };
 
 
 export type UserPariesByPIdPartnerArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ParyCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PariesOrderBy>>;
 };
 
 
 export type UserPariesByPIdPartnerkaArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ParyCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PariesOrderBy>>;
 };
 
 
 export type UserParyNavrhsByPnNavrhlArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ParyNavrhCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ParyNavrhsOrderBy>>;
 };
 
 
 export type UserParyNavrhsByPnPartnerArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ParyNavrhCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ParyNavrhsOrderBy>>;
 };
 
 
 export type UserParyNavrhsByPnPartnerkaArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<ParyNavrhCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ParyNavrhsOrderBy>>;
 };
 
 
 export type UserPlatbyItemsByPiIdUserArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<PlatbyItemCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PlatbyItemsOrderBy>>;
 };
 
 
 export type UserRozpisByRTrenerArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<RozpiCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<RozpisOrderBy>>;
 };
 
 
 export type UserSessionsBySsUserArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<SessionCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SessionsOrderBy>>;
 };
 
 
 export type UserUpozornenisByUpKdoArgs = {
-  after?: InputMaybe<Scalars['Cursor']>;
-  before?: InputMaybe<Scalars['Cursor']>;
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<UpozorneniCondition>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
 };
 
 /** A condition to be used against `User` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type UserCondition = {
   /** Checks for equality with the object’s `inPublicCohort` field. */
-  inPublicCohort?: InputMaybe<Scalars['Boolean']>;
+  inPublicCohort?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `uBan` field. */
-  uBan?: InputMaybe<Scalars['Boolean']>;
+  uBan?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `uConfirmed` field. */
-  uConfirmed?: InputMaybe<Scalars['Boolean']>;
+  uConfirmed?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `uGroup` field. */
-  uGroup?: InputMaybe<Scalars['BigInt']>;
+  uGroup?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `uId` field. */
-  uId?: InputMaybe<Scalars['BigInt']>;
+  uId?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `uJmeno` field. */
-  uJmeno?: InputMaybe<Scalars['String']>;
+  uJmeno?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `uLogin` field. */
-  uLogin?: InputMaybe<Scalars['String']>;
+  uLogin?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `uNarozeni` field. */
-  uNarozeni?: InputMaybe<Scalars['Date']>;
+  uNarozeni?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `uPrijmeni` field. */
-  uPrijmeni?: InputMaybe<Scalars['String']>;
+  uPrijmeni?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `uSkupina` field. */
-  uSkupina?: InputMaybe<Scalars['BigInt']>;
+  uSkupina?: InputMaybe<Scalars['BigInt']['input']>;
   /** Checks for equality with the object’s `uSystem` field. */
-  uSystem?: InputMaybe<Scalars['Boolean']>;
+  uSystem?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** An input for mutations affecting `User` */
 export type UserInput = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
-  uBan?: InputMaybe<Scalars['Boolean']>;
-  uCity: Scalars['String'];
-  uConfirmed?: InputMaybe<Scalars['Boolean']>;
-  uConscriptionNumber?: InputMaybe<Scalars['String']>;
-  uCreatedAt?: InputMaybe<Scalars['Datetime']>;
-  uDancer?: InputMaybe<Scalars['Boolean']>;
-  uDistrict?: InputMaybe<Scalars['String']>;
-  uEmail: Scalars['String'];
-  uGdprSignedAt?: InputMaybe<Scalars['Datetime']>;
-  uGroup?: InputMaybe<Scalars['BigInt']>;
-  uId?: InputMaybe<Scalars['BigInt']>;
-  uJmeno: Scalars['String'];
-  uLevel?: InputMaybe<Scalars['Int']>;
-  uLock?: InputMaybe<Scalars['Boolean']>;
-  uLogin: Scalars['String'];
-  uMemberSince?: InputMaybe<Scalars['Datetime']>;
-  uMemberUntil?: InputMaybe<Scalars['Datetime']>;
-  uNarozeni: Scalars['Date'];
-  uNationality: Scalars['String'];
-  uOrientationNumber?: InputMaybe<Scalars['String']>;
-  uPass: Scalars['String'];
-  uPohlavi: Scalars['String'];
-  uPostalCode: Scalars['String'];
-  uPoznamky?: InputMaybe<Scalars['String']>;
-  uPrijmeni: Scalars['String'];
-  uRodneCislo?: InputMaybe<Scalars['String']>;
-  uSkupina?: InputMaybe<Scalars['BigInt']>;
-  uStreet: Scalars['String'];
-  uSystem?: InputMaybe<Scalars['Boolean']>;
-  uTeacher?: InputMaybe<Scalars['Boolean']>;
-  uTelefon: Scalars['String'];
-  uTimestamp?: InputMaybe<Scalars['Datetime']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  uBan?: InputMaybe<Scalars['Boolean']['input']>;
+  uCity: Scalars['String']['input'];
+  uConfirmed?: InputMaybe<Scalars['Boolean']['input']>;
+  uConscriptionNumber?: InputMaybe<Scalars['String']['input']>;
+  uCreatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  uDancer?: InputMaybe<Scalars['Boolean']['input']>;
+  uDistrict?: InputMaybe<Scalars['String']['input']>;
+  uEmail: Scalars['String']['input'];
+  uGdprSignedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  uGroup?: InputMaybe<Scalars['BigInt']['input']>;
+  uId?: InputMaybe<Scalars['BigInt']['input']>;
+  uJmeno: Scalars['String']['input'];
+  uLevel?: InputMaybe<Scalars['Int']['input']>;
+  uLock?: InputMaybe<Scalars['Boolean']['input']>;
+  uLogin: Scalars['String']['input'];
+  uMemberSince?: InputMaybe<Scalars['Datetime']['input']>;
+  uMemberUntil?: InputMaybe<Scalars['Datetime']['input']>;
+  uNarozeni: Scalars['Date']['input'];
+  uNationality: Scalars['String']['input'];
+  uOrientationNumber?: InputMaybe<Scalars['String']['input']>;
+  uPass: Scalars['String']['input'];
+  uPohlavi: Scalars['String']['input'];
+  uPostalCode: Scalars['String']['input'];
+  uPoznamky?: InputMaybe<Scalars['String']['input']>;
+  uPrijmeni: Scalars['String']['input'];
+  uRodneCislo?: InputMaybe<Scalars['String']['input']>;
+  uSkupina?: InputMaybe<Scalars['BigInt']['input']>;
+  uStreet: Scalars['String']['input'];
+  uSystem?: InputMaybe<Scalars['Boolean']['input']>;
+  uTeacher?: InputMaybe<Scalars['Boolean']['input']>;
+  uTelefon: Scalars['String']['input'];
+  uTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** Represents an update to a `User`. Fields that are set will be updated. */
 export type UserPatch = {
-  id?: InputMaybe<Scalars['BigInt']>;
-  tenantId?: InputMaybe<Scalars['BigInt']>;
-  uBan?: InputMaybe<Scalars['Boolean']>;
-  uCity?: InputMaybe<Scalars['String']>;
-  uConfirmed?: InputMaybe<Scalars['Boolean']>;
-  uConscriptionNumber?: InputMaybe<Scalars['String']>;
-  uCreatedAt?: InputMaybe<Scalars['Datetime']>;
-  uDancer?: InputMaybe<Scalars['Boolean']>;
-  uDistrict?: InputMaybe<Scalars['String']>;
-  uEmail?: InputMaybe<Scalars['String']>;
-  uGdprSignedAt?: InputMaybe<Scalars['Datetime']>;
-  uGroup?: InputMaybe<Scalars['BigInt']>;
-  uId?: InputMaybe<Scalars['BigInt']>;
-  uJmeno?: InputMaybe<Scalars['String']>;
-  uLevel?: InputMaybe<Scalars['Int']>;
-  uLock?: InputMaybe<Scalars['Boolean']>;
-  uLogin?: InputMaybe<Scalars['String']>;
-  uMemberSince?: InputMaybe<Scalars['Datetime']>;
-  uMemberUntil?: InputMaybe<Scalars['Datetime']>;
-  uNarozeni?: InputMaybe<Scalars['Date']>;
-  uNationality?: InputMaybe<Scalars['String']>;
-  uOrientationNumber?: InputMaybe<Scalars['String']>;
-  uPass?: InputMaybe<Scalars['String']>;
-  uPohlavi?: InputMaybe<Scalars['String']>;
-  uPostalCode?: InputMaybe<Scalars['String']>;
-  uPoznamky?: InputMaybe<Scalars['String']>;
-  uPrijmeni?: InputMaybe<Scalars['String']>;
-  uRodneCislo?: InputMaybe<Scalars['String']>;
-  uSkupina?: InputMaybe<Scalars['BigInt']>;
-  uStreet?: InputMaybe<Scalars['String']>;
-  uSystem?: InputMaybe<Scalars['Boolean']>;
-  uTeacher?: InputMaybe<Scalars['Boolean']>;
-  uTelefon?: InputMaybe<Scalars['String']>;
-  uTimestamp?: InputMaybe<Scalars['Datetime']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  uBan?: InputMaybe<Scalars['Boolean']['input']>;
+  uCity?: InputMaybe<Scalars['String']['input']>;
+  uConfirmed?: InputMaybe<Scalars['Boolean']['input']>;
+  uConscriptionNumber?: InputMaybe<Scalars['String']['input']>;
+  uCreatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  uDancer?: InputMaybe<Scalars['Boolean']['input']>;
+  uDistrict?: InputMaybe<Scalars['String']['input']>;
+  uEmail?: InputMaybe<Scalars['String']['input']>;
+  uGdprSignedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  uGroup?: InputMaybe<Scalars['BigInt']['input']>;
+  uId?: InputMaybe<Scalars['BigInt']['input']>;
+  uJmeno?: InputMaybe<Scalars['String']['input']>;
+  uLevel?: InputMaybe<Scalars['Int']['input']>;
+  uLock?: InputMaybe<Scalars['Boolean']['input']>;
+  uLogin?: InputMaybe<Scalars['String']['input']>;
+  uMemberSince?: InputMaybe<Scalars['Datetime']['input']>;
+  uMemberUntil?: InputMaybe<Scalars['Datetime']['input']>;
+  uNarozeni?: InputMaybe<Scalars['Date']['input']>;
+  uNationality?: InputMaybe<Scalars['String']['input']>;
+  uOrientationNumber?: InputMaybe<Scalars['String']['input']>;
+  uPass?: InputMaybe<Scalars['String']['input']>;
+  uPohlavi?: InputMaybe<Scalars['String']['input']>;
+  uPostalCode?: InputMaybe<Scalars['String']['input']>;
+  uPoznamky?: InputMaybe<Scalars['String']['input']>;
+  uPrijmeni?: InputMaybe<Scalars['String']['input']>;
+  uRodneCislo?: InputMaybe<Scalars['String']['input']>;
+  uSkupina?: InputMaybe<Scalars['BigInt']['input']>;
+  uStreet?: InputMaybe<Scalars['String']['input']>;
+  uSystem?: InputMaybe<Scalars['Boolean']['input']>;
+  uTeacher?: InputMaybe<Scalars['Boolean']['input']>;
+  uTelefon?: InputMaybe<Scalars['String']['input']>;
+  uTimestamp?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** A connection to a list of `User` values. */
@@ -12228,14 +12230,14 @@ export type UsersConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `User` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `User` edge in the connection. */
 export type UsersEdge = {
   __typename?: 'UsersEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `User` at the end of the edge. */
   node: User;
 };
@@ -12263,16 +12265,16 @@ export type UsersOrderBy =
   | 'NABIDKAS_BY_N_TRENER__COUNT_ASC'
   | 'NABIDKAS_BY_N_TRENER__COUNT_DESC'
   | 'NATURAL'
-  | 'PARIES_BY_P_ID_PARTNER__COUNT_ASC'
-  | 'PARIES_BY_P_ID_PARTNER__COUNT_DESC'
   | 'PARIES_BY_P_ID_PARTNERKA__COUNT_ASC'
   | 'PARIES_BY_P_ID_PARTNERKA__COUNT_DESC'
+  | 'PARIES_BY_P_ID_PARTNER__COUNT_ASC'
+  | 'PARIES_BY_P_ID_PARTNER__COUNT_DESC'
   | 'PARY_NAVRHS_BY_PN_NAVRHL__COUNT_ASC'
   | 'PARY_NAVRHS_BY_PN_NAVRHL__COUNT_DESC'
-  | 'PARY_NAVRHS_BY_PN_PARTNER__COUNT_ASC'
-  | 'PARY_NAVRHS_BY_PN_PARTNER__COUNT_DESC'
   | 'PARY_NAVRHS_BY_PN_PARTNERKA__COUNT_ASC'
   | 'PARY_NAVRHS_BY_PN_PARTNERKA__COUNT_DESC'
+  | 'PARY_NAVRHS_BY_PN_PARTNER__COUNT_ASC'
+  | 'PARY_NAVRHS_BY_PN_PARTNER__COUNT_DESC'
   | 'PERMISSION_BY_U_GROUP__PE_ID_ASC'
   | 'PERMISSION_BY_U_GROUP__PE_ID_DESC'
   | 'PLATBY_ITEMS_BY_PI_ID_USER__COUNT_ASC'
@@ -12291,6 +12293,8 @@ export type UsersOrderBy =
   | 'SKUPINY_BY_U_SKUPINA__S_ID_DESC'
   | 'SKUPINY_BY_U_SKUPINA__S_VISIBLE_ASC'
   | 'SKUPINY_BY_U_SKUPINA__S_VISIBLE_DESC'
+  | 'UPOZORNENIS_BY_UP_KDO__COUNT_ASC'
+  | 'UPOZORNENIS_BY_UP_KDO__COUNT_DESC'
   | 'U_BAN_ASC'
   | 'U_BAN_DESC'
   | 'U_CONFIRMED_ASC'
@@ -12310,9 +12314,7 @@ export type UsersOrderBy =
   | 'U_SKUPINA_ASC'
   | 'U_SKUPINA_DESC'
   | 'U_SYSTEM_ASC'
-  | 'U_SYSTEM_DESC'
-  | 'UPOZORNENIS_BY_UP_KDO__COUNT_ASC'
-  | 'UPOZORNENIS_BY_UP_KDO__COUNT_DESC';
+  | 'U_SYSTEM_DESC';
 
 /** All input for the `verifyFunction` mutation. */
 export type VerifyFunctionInput = {
@@ -12320,9 +12322,9 @@ export type VerifyFunctionInput = {
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
-  clientMutationId?: InputMaybe<Scalars['String']>;
-  f?: InputMaybe<Scalars['RegProc']>;
-  relid?: InputMaybe<Scalars['RegClass']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  f?: InputMaybe<Scalars['RegProc']['input']>;
+  relid?: InputMaybe<Scalars['RegClass']['input']>;
 };
 
 /** The output of our `verifyFunction` mutation. */
@@ -12332,21 +12334,21 @@ export type VerifyFunctionPayload = {
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
-  clientMutationId: Maybe<Scalars['String']>;
+  clientMutationId: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
 };
 
 export type Video = {
   __typename?: 'Video';
-  vAuthor: Scalars['String'];
-  vCreatedAt: Scalars['Datetime'];
-  vDescription: Scalars['String'];
-  vId: Scalars['BigInt'];
-  vPlaylist: Maybe<Scalars['String']>;
-  vTitle: Scalars['String'];
-  vUpdatedAt: Scalars['Datetime'];
-  vUri: Scalars['String'];
+  vAuthor: Scalars['String']['output'];
+  vCreatedAt: Scalars['Datetime']['output'];
+  vDescription: Scalars['String']['output'];
+  vId: Scalars['BigInt']['output'];
+  vPlaylist: Maybe<Scalars['String']['output']>;
+  vTitle: Scalars['String']['output'];
+  vUpdatedAt: Scalars['Datetime']['output'];
+  vUri: Scalars['String']['output'];
 };
 
 /** A connection to a list of `Video` values. */
@@ -12359,14 +12361,14 @@ export type VideosConnection = {
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** The count of *all* `Video` you could get from the connection. */
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 /** A `Video` edge in the connection. */
 export type VideosEdge = {
   __typename?: 'VideosEdge';
   /** A cursor for use in pagination. */
-  cursor: Maybe<Scalars['Cursor']>;
+  cursor: Maybe<Scalars['Cursor']['output']>;
   /** The `Video` at the end of the edge. */
   node: Video;
 };
@@ -12511,11 +12513,11 @@ export type GraphCacheKeysConfig = {
   GalerieFotosConnection?: (data: WithTypename<GalerieFotosConnection>) => null | string,
   GalerieFotosEdge?: (data: WithTypename<GalerieFotosEdge>) => null | string,
   Lesson?: (data: WithTypename<Lesson>) => null | string,
-  LessonsConnection?: (data: WithTypename<LessonsConnection>) => null | string,
-  LessonsEdge?: (data: WithTypename<LessonsEdge>) => null | string,
   LessonTrainer?: (data: WithTypename<LessonTrainer>) => null | string,
   LessonTrainersConnection?: (data: WithTypename<LessonTrainersConnection>) => null | string,
   LessonTrainersEdge?: (data: WithTypename<LessonTrainersEdge>) => null | string,
+  LessonsConnection?: (data: WithTypename<LessonsConnection>) => null | string,
+  LessonsEdge?: (data: WithTypename<LessonsEdge>) => null | string,
   Location?: (data: WithTypename<Location>) => null | string,
   LocationAttachment?: (data: WithTypename<LocationAttachment>) => null | string,
   LocationAttachmentsConnection?: (data: WithTypename<LocationAttachmentsConnection>) => null | string,
@@ -12560,11 +12562,11 @@ export type GraphCacheKeysConfig = {
   PlatbyCategoryGroupsConnection?: (data: WithTypename<PlatbyCategoryGroupsConnection>) => null | string,
   PlatbyCategoryGroupsEdge?: (data: WithTypename<PlatbyCategoryGroupsEdge>) => null | string,
   PlatbyGroup?: (data: WithTypename<PlatbyGroup>) => null | string,
-  PlatbyGroupsConnection?: (data: WithTypename<PlatbyGroupsConnection>) => null | string,
-  PlatbyGroupsEdge?: (data: WithTypename<PlatbyGroupsEdge>) => null | string,
   PlatbyGroupSkupina?: (data: WithTypename<PlatbyGroupSkupina>) => null | string,
   PlatbyGroupSkupinasConnection?: (data: WithTypename<PlatbyGroupSkupinasConnection>) => null | string,
   PlatbyGroupSkupinasEdge?: (data: WithTypename<PlatbyGroupSkupinasEdge>) => null | string,
+  PlatbyGroupsConnection?: (data: WithTypename<PlatbyGroupsConnection>) => null | string,
+  PlatbyGroupsEdge?: (data: WithTypename<PlatbyGroupsEdge>) => null | string,
   PlatbyItem?: (data: WithTypename<PlatbyItem>) => null | string,
   PlatbyItemsConnection?: (data: WithTypename<PlatbyItemsConnection>) => null | string,
   PlatbyItemsEdge?: (data: WithTypename<PlatbyItemsEdge>) => null | string,
@@ -12645,11 +12647,11 @@ export type GraphCacheKeysConfig = {
   UpdateUserPayload?: (data: WithTypename<UpdateUserPayload>) => null | string,
   UploadFilePayload?: (data: WithTypename<UploadFilePayload>) => null | string,
   Upozorneni?: (data: WithTypename<Upozorneni>) => null | string,
-  UpozornenisConnection?: (data: WithTypename<UpozornenisConnection>) => null | string,
-  UpozornenisEdge?: (data: WithTypename<UpozornenisEdge>) => null | string,
   UpozorneniSkupiniesConnection?: (data: WithTypename<UpozorneniSkupiniesConnection>) => null | string,
   UpozorneniSkupiniesEdge?: (data: WithTypename<UpozorneniSkupiniesEdge>) => null | string,
   UpozorneniSkupiny?: (data: WithTypename<UpozorneniSkupiny>) => null | string,
+  UpozornenisConnection?: (data: WithTypename<UpozornenisConnection>) => null | string,
+  UpozornenisEdge?: (data: WithTypename<UpozornenisEdge>) => null | string,
   User?: (data: WithTypename<User>) => null | string,
   UsersConnection?: (data: WithTypename<UsersConnection>) => null | string,
   UsersEdge?: (data: WithTypename<UsersEdge>) => null | string,
@@ -12702,9 +12704,9 @@ export type GraphCacheResolvers = {
     getCurrentTenant?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<Tenant> | string>,
     getCurrentUser?: GraphCacheResolver<WithTypename<Query>, Record<string, never>, WithTypename<User> | string>,
     lesson?: GraphCacheResolver<WithTypename<Query>, QueryLessonArgs, WithTypename<Lesson> | string>,
-    lessons?: GraphCacheResolver<WithTypename<Query>, QueryLessonsArgs, WithTypename<LessonsConnection> | string>,
     lessonTrainer?: GraphCacheResolver<WithTypename<Query>, QueryLessonTrainerArgs, WithTypename<LessonTrainer> | string>,
     lessonTrainers?: GraphCacheResolver<WithTypename<Query>, QueryLessonTrainersArgs, WithTypename<LessonTrainersConnection> | string>,
+    lessons?: GraphCacheResolver<WithTypename<Query>, QueryLessonsArgs, WithTypename<LessonsConnection> | string>,
     location?: GraphCacheResolver<WithTypename<Query>, QueryLocationArgs, WithTypename<Location> | string>,
     locationAttachment?: GraphCacheResolver<WithTypename<Query>, QueryLocationAttachmentArgs, WithTypename<LocationAttachment> | string>,
     locationAttachments?: GraphCacheResolver<WithTypename<Query>, QueryLocationAttachmentsArgs, WithTypename<LocationAttachmentsConnection> | string>,
@@ -12736,9 +12738,9 @@ export type GraphCacheResolvers = {
     platbyCategoryGroup?: GraphCacheResolver<WithTypename<Query>, QueryPlatbyCategoryGroupArgs, WithTypename<PlatbyCategoryGroup> | string>,
     platbyCategoryGroups?: GraphCacheResolver<WithTypename<Query>, QueryPlatbyCategoryGroupsArgs, WithTypename<PlatbyCategoryGroupsConnection> | string>,
     platbyGroup?: GraphCacheResolver<WithTypename<Query>, QueryPlatbyGroupArgs, WithTypename<PlatbyGroup> | string>,
-    platbyGroups?: GraphCacheResolver<WithTypename<Query>, QueryPlatbyGroupsArgs, WithTypename<PlatbyGroupsConnection> | string>,
     platbyGroupSkupina?: GraphCacheResolver<WithTypename<Query>, QueryPlatbyGroupSkupinaArgs, WithTypename<PlatbyGroupSkupina> | string>,
     platbyGroupSkupinas?: GraphCacheResolver<WithTypename<Query>, QueryPlatbyGroupSkupinasArgs, WithTypename<PlatbyGroupSkupinasConnection> | string>,
+    platbyGroups?: GraphCacheResolver<WithTypename<Query>, QueryPlatbyGroupsArgs, WithTypename<PlatbyGroupsConnection> | string>,
     platbyItem?: GraphCacheResolver<WithTypename<Query>, QueryPlatbyItemArgs, WithTypename<PlatbyItem> | string>,
     platbyItems?: GraphCacheResolver<WithTypename<Query>, QueryPlatbyItemsArgs, WithTypename<PlatbyItemsConnection> | string>,
     platbyRaw?: GraphCacheResolver<WithTypename<Query>, QueryPlatbyRawArgs, WithTypename<PlatbyRaw> | string>,
@@ -12769,9 +12771,9 @@ export type GraphCacheResolvers = {
     titleVideos?: GraphCacheResolver<WithTypename<Query>, QueryTitleVideosArgs, WithTypename<VideosConnection> | string>,
     trainers?: GraphCacheResolver<WithTypename<Query>, QueryTrainersArgs, WithTypename<UsersConnection> | string>,
     upozorneni?: GraphCacheResolver<WithTypename<Query>, QueryUpozorneniArgs, WithTypename<Upozorneni> | string>,
-    upozornenis?: GraphCacheResolver<WithTypename<Query>, QueryUpozornenisArgs, WithTypename<UpozornenisConnection> | string>,
     upozorneniSkupinies?: GraphCacheResolver<WithTypename<Query>, QueryUpozorneniSkupiniesArgs, WithTypename<UpozorneniSkupiniesConnection> | string>,
     upozorneniSkupiny?: GraphCacheResolver<WithTypename<Query>, QueryUpozorneniSkupinyArgs, WithTypename<UpozorneniSkupiny> | string>,
+    upozornenis?: GraphCacheResolver<WithTypename<Query>, QueryUpozornenisArgs, WithTypename<UpozornenisConnection> | string>,
     user?: GraphCacheResolver<WithTypename<Query>, QueryUserArgs, WithTypename<User> | string>,
     users?: GraphCacheResolver<WithTypename<Query>, QueryUsersArgs, WithTypename<UsersConnection> | string>
   },
@@ -12782,12 +12784,12 @@ export type GraphCacheResolvers = {
     aInfo?: GraphCacheResolver<WithTypename<Akce>, Record<string, never>, Scalars['String'] | string>,
     aJmeno?: GraphCacheResolver<WithTypename<Akce>, Record<string, never>, Scalars['String'] | string>,
     aKapacita?: GraphCacheResolver<WithTypename<Akce>, Record<string, never>, Scalars['BigInt'] | string>,
-    akceItemsByAiIdRodic?: GraphCacheResolver<WithTypename<Akce>, AkceAkceItemsByAiIdRodicArgs, WithTypename<AkceItemsConnection> | string>,
     aKde?: GraphCacheResolver<WithTypename<Akce>, Record<string, never>, Scalars['String'] | string>,
     aLock?: GraphCacheResolver<WithTypename<Akce>, Record<string, never>, Scalars['Boolean'] | string>,
     aOd?: GraphCacheResolver<WithTypename<Akce>, Record<string, never>, Scalars['Date'] | string>,
     aTimestamp?: GraphCacheResolver<WithTypename<Akce>, Record<string, never>, Scalars['Datetime'] | string>,
     aVisible?: GraphCacheResolver<WithTypename<Akce>, Record<string, never>, Scalars['Boolean'] | string>,
+    akceItemsByAiIdRodic?: GraphCacheResolver<WithTypename<Akce>, AkceAkceItemsByAiIdRodicArgs, WithTypename<AkceItemsConnection> | string>,
     enableNotes?: GraphCacheResolver<WithTypename<Akce>, Record<string, never>, Scalars['Boolean'] | string>,
     isPublic?: GraphCacheResolver<WithTypename<Akce>, Record<string, never>, Scalars['Boolean'] | string>,
     summary?: GraphCacheResolver<WithTypename<Akce>, Record<string, never>, Scalars['String'] | string>
@@ -13800,16 +13802,6 @@ export type GraphCacheResolvers = {
     until?: GraphCacheResolver<WithTypename<Lesson>, Record<string, never>, Scalars['Datetime'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<Lesson>, Record<string, never>, Scalars['Datetime'] | string>
   },
-  LessonsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<LessonsConnection>, Record<string, never>, Array<WithTypename<LessonsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<LessonsConnection>, Record<string, never>, Array<WithTypename<Lesson> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<LessonsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<LessonsConnection>, Record<string, never>, Scalars['Int'] | string>
-  },
-  LessonsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<LessonsEdge>, Record<string, never>, Scalars['Cursor'] | string>,
-    node?: GraphCacheResolver<WithTypename<LessonsEdge>, Record<string, never>, WithTypename<Lesson> | string>
-  },
   LessonTrainer?: {
     id?: GraphCacheResolver<WithTypename<LessonTrainer>, Record<string, never>, Scalars['BigInt'] | string>,
     lesson?: GraphCacheResolver<WithTypename<LessonTrainer>, Record<string, never>, WithTypename<Lesson> | string>,
@@ -13828,6 +13820,16 @@ export type GraphCacheResolvers = {
   LessonTrainersEdge?: {
     cursor?: GraphCacheResolver<WithTypename<LessonTrainersEdge>, Record<string, never>, Scalars['Cursor'] | string>,
     node?: GraphCacheResolver<WithTypename<LessonTrainersEdge>, Record<string, never>, WithTypename<LessonTrainer> | string>
+  },
+  LessonsConnection?: {
+    edges?: GraphCacheResolver<WithTypename<LessonsConnection>, Record<string, never>, Array<WithTypename<LessonsEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<LessonsConnection>, Record<string, never>, Array<WithTypename<Lesson> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<LessonsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<LessonsConnection>, Record<string, never>, Scalars['Int'] | string>
+  },
+  LessonsEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<LessonsEdge>, Record<string, never>, Scalars['Cursor'] | string>,
+    node?: GraphCacheResolver<WithTypename<LessonsEdge>, Record<string, never>, WithTypename<Lesson> | string>
   },
   Location?: {
     description?: GraphCacheResolver<WithTypename<Location>, Record<string, never>, Scalars['JSON'] | string>,
@@ -13882,7 +13884,6 @@ export type GraphCacheResolvers = {
     freeLessons?: GraphCacheResolver<WithTypename<Nabidka>, Record<string, never>, Scalars['Int'] | string>,
     id?: GraphCacheResolver<WithTypename<Nabidka>, Record<string, never>, Scalars['BigInt'] | string>,
     myLessons?: GraphCacheResolver<WithTypename<Nabidka>, Record<string, never>, Scalars['Int'] | string>,
-    nabidkaItemsByNiIdRodic?: GraphCacheResolver<WithTypename<Nabidka>, NabidkaNabidkaItemsByNiIdRodicArgs, WithTypename<NabidkaItemsConnection> | string>,
     nDo?: GraphCacheResolver<WithTypename<Nabidka>, Record<string, never>, Scalars['Date'] | string>,
     nId?: GraphCacheResolver<WithTypename<Nabidka>, Record<string, never>, Scalars['BigInt'] | string>,
     nLock?: GraphCacheResolver<WithTypename<Nabidka>, Record<string, never>, Scalars['Boolean'] | string>,
@@ -13892,6 +13893,7 @@ export type GraphCacheResolvers = {
     nTimestamp?: GraphCacheResolver<WithTypename<Nabidka>, Record<string, never>, Scalars['Datetime'] | string>,
     nTrener?: GraphCacheResolver<WithTypename<Nabidka>, Record<string, never>, Scalars['BigInt'] | string>,
     nVisible?: GraphCacheResolver<WithTypename<Nabidka>, Record<string, never>, Scalars['Boolean'] | string>,
+    nabidkaItemsByNiIdRodic?: GraphCacheResolver<WithTypename<Nabidka>, NabidkaNabidkaItemsByNiIdRodicArgs, WithTypename<NabidkaItemsConnection> | string>,
     tenantId?: GraphCacheResolver<WithTypename<Nabidka>, Record<string, never>, Scalars['BigInt'] | string>,
     userByNTrener?: GraphCacheResolver<WithTypename<Nabidka>, Record<string, never>, WithTypename<User> | string>
   },
@@ -14146,16 +14148,6 @@ export type GraphCacheResolvers = {
     platbyGroupSkupinasByPgsIdGroup?: GraphCacheResolver<WithTypename<PlatbyGroup>, PlatbyGroupPlatbyGroupSkupinasByPgsIdGroupArgs, WithTypename<PlatbyGroupSkupinasConnection> | string>,
     tenantId?: GraphCacheResolver<WithTypename<PlatbyGroup>, Record<string, never>, Scalars['BigInt'] | string>
   },
-  PlatbyGroupsConnection?: {
-    edges?: GraphCacheResolver<WithTypename<PlatbyGroupsConnection>, Record<string, never>, Array<WithTypename<PlatbyGroupsEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<PlatbyGroupsConnection>, Record<string, never>, Array<WithTypename<PlatbyGroup> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<PlatbyGroupsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<PlatbyGroupsConnection>, Record<string, never>, Scalars['Int'] | string>
-  },
-  PlatbyGroupsEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<PlatbyGroupsEdge>, Record<string, never>, Scalars['Cursor'] | string>,
-    node?: GraphCacheResolver<WithTypename<PlatbyGroupsEdge>, Record<string, never>, WithTypename<PlatbyGroup> | string>
-  },
   PlatbyGroupSkupina?: {
     id?: GraphCacheResolver<WithTypename<PlatbyGroupSkupina>, Record<string, never>, Scalars['BigInt'] | string>,
     pgsId?: GraphCacheResolver<WithTypename<PlatbyGroupSkupina>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -14174,6 +14166,16 @@ export type GraphCacheResolvers = {
   PlatbyGroupSkupinasEdge?: {
     cursor?: GraphCacheResolver<WithTypename<PlatbyGroupSkupinasEdge>, Record<string, never>, Scalars['Cursor'] | string>,
     node?: GraphCacheResolver<WithTypename<PlatbyGroupSkupinasEdge>, Record<string, never>, WithTypename<PlatbyGroupSkupina> | string>
+  },
+  PlatbyGroupsConnection?: {
+    edges?: GraphCacheResolver<WithTypename<PlatbyGroupsConnection>, Record<string, never>, Array<WithTypename<PlatbyGroupsEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<PlatbyGroupsConnection>, Record<string, never>, Array<WithTypename<PlatbyGroup> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<PlatbyGroupsConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<PlatbyGroupsConnection>, Record<string, never>, Scalars['Int'] | string>
+  },
+  PlatbyGroupsEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<PlatbyGroupsEdge>, Record<string, never>, Scalars['Cursor'] | string>,
+    node?: GraphCacheResolver<WithTypename<PlatbyGroupsEdge>, Record<string, never>, WithTypename<PlatbyGroup> | string>
   },
   PlatbyItem?: {
     id?: GraphCacheResolver<WithTypename<PlatbyItem>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -14274,10 +14276,10 @@ export type GraphCacheResolvers = {
     rId?: GraphCacheResolver<WithTypename<Rozpi>, Record<string, never>, Scalars['BigInt'] | string>,
     rKde?: GraphCacheResolver<WithTypename<Rozpi>, Record<string, never>, Scalars['String'] | string>,
     rLock?: GraphCacheResolver<WithTypename<Rozpi>, Record<string, never>, Scalars['Boolean'] | string>,
-    rozpisItemsByRiIdRodic?: GraphCacheResolver<WithTypename<Rozpi>, RozpiRozpisItemsByRiIdRodicArgs, WithTypename<RozpisItemsConnection> | string>,
     rTimestamp?: GraphCacheResolver<WithTypename<Rozpi>, Record<string, never>, Scalars['Datetime'] | string>,
     rTrener?: GraphCacheResolver<WithTypename<Rozpi>, Record<string, never>, Scalars['BigInt'] | string>,
     rVisible?: GraphCacheResolver<WithTypename<Rozpi>, Record<string, never>, Scalars['Boolean'] | string>,
+    rozpisItemsByRiIdRodic?: GraphCacheResolver<WithTypename<Rozpi>, RozpiRozpisItemsByRiIdRodicArgs, WithTypename<RozpisItemsConnection> | string>,
     tenantId?: GraphCacheResolver<WithTypename<Rozpi>, Record<string, never>, Scalars['BigInt'] | string>,
     userByRTrener?: GraphCacheResolver<WithTypename<Rozpi>, Record<string, never>, WithTypename<User> | string>
   },
@@ -14369,8 +14371,8 @@ export type GraphCacheResolvers = {
     cohortGroupsByTenant?: GraphCacheResolver<WithTypename<Tenant>, TenantCohortGroupsByTenantArgs, WithTypename<CohortGroupsConnection> | string>,
     couples?: GraphCacheResolver<WithTypename<Tenant>, TenantCouplesArgs, WithTypename<CouplesConnection> | string>,
     id?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['BigInt'] | string>,
-    lessons?: GraphCacheResolver<WithTypename<Tenant>, TenantLessonsArgs, WithTypename<LessonsConnection> | string>,
     lessonTrainers?: GraphCacheResolver<WithTypename<Tenant>, TenantLessonTrainersArgs, WithTypename<LessonTrainersConnection> | string>,
+    lessons?: GraphCacheResolver<WithTypename<Tenant>, TenantLessonsArgs, WithTypename<LessonsConnection> | string>,
     memberInfo?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String'] | string>,
     name?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Scalars['String'] | string>,
     origins?: GraphCacheResolver<WithTypename<Tenant>, Record<string, never>, Array<Scalars['String'] | string>>,
@@ -14728,21 +14730,11 @@ export type GraphCacheResolvers = {
     upKdo?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['BigInt'] | string>,
     upLock?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Boolean'] | string>,
     upNadpis?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['String'] | string>,
-    upozorneniSkupiniesByUpsIdRodic?: GraphCacheResolver<WithTypename<Upozorneni>, UpozorneniUpozorneniSkupiniesByUpsIdRodicArgs, WithTypename<UpozorneniSkupiniesConnection> | string>,
     upText?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['String'] | string>,
     upTimestamp?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Datetime'] | string>,
     upTimestampAdd?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Datetime'] | string>,
+    upozorneniSkupiniesByUpsIdRodic?: GraphCacheResolver<WithTypename<Upozorneni>, UpozorneniUpozorneniSkupiniesByUpsIdRodicArgs, WithTypename<UpozorneniSkupiniesConnection> | string>,
     userByUpKdo?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, WithTypename<User> | string>
-  },
-  UpozornenisConnection?: {
-    edges?: GraphCacheResolver<WithTypename<UpozornenisConnection>, Record<string, never>, Array<WithTypename<UpozornenisEdge> | string>>,
-    nodes?: GraphCacheResolver<WithTypename<UpozornenisConnection>, Record<string, never>, Array<WithTypename<Upozorneni> | string>>,
-    pageInfo?: GraphCacheResolver<WithTypename<UpozornenisConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
-    totalCount?: GraphCacheResolver<WithTypename<UpozornenisConnection>, Record<string, never>, Scalars['Int'] | string>
-  },
-  UpozornenisEdge?: {
-    cursor?: GraphCacheResolver<WithTypename<UpozornenisEdge>, Record<string, never>, Scalars['Cursor'] | string>,
-    node?: GraphCacheResolver<WithTypename<UpozornenisEdge>, Record<string, never>, WithTypename<Upozorneni> | string>
   },
   UpozorneniSkupiniesConnection?: {
     edges?: GraphCacheResolver<WithTypename<UpozorneniSkupiniesConnection>, Record<string, never>, Array<WithTypename<UpozorneniSkupiniesEdge> | string>>,
@@ -14764,6 +14756,16 @@ export type GraphCacheResolvers = {
     upsIdRodic?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, Scalars['BigInt'] | string>,
     upsIdSkupina?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, Scalars['BigInt'] | string>,
     upsPopis?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, Scalars['String'] | string>
+  },
+  UpozornenisConnection?: {
+    edges?: GraphCacheResolver<WithTypename<UpozornenisConnection>, Record<string, never>, Array<WithTypename<UpozornenisEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<UpozornenisConnection>, Record<string, never>, Array<WithTypename<Upozorneni> | string>>,
+    pageInfo?: GraphCacheResolver<WithTypename<UpozornenisConnection>, Record<string, never>, WithTypename<PageInfo> | string>,
+    totalCount?: GraphCacheResolver<WithTypename<UpozornenisConnection>, Record<string, never>, Scalars['Int'] | string>
+  },
+  UpozornenisEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<UpozornenisEdge>, Record<string, never>, Scalars['Cursor'] | string>,
+    node?: GraphCacheResolver<WithTypename<UpozornenisEdge>, Record<string, never>, WithTypename<Upozorneni> | string>
   },
   User?: {
     akceItemsByAiUser?: GraphCacheResolver<WithTypename<User>, UserAkceItemsByAiUserArgs, WithTypename<AkceItemsConnection> | string>,
@@ -14817,7 +14819,6 @@ export type GraphCacheResolvers = {
     uPohlavi?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uPostalCode?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uPoznamky?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
-    upozornenisByUpKdo?: GraphCacheResolver<WithTypename<User>, UserUpozornenisByUpKdoArgs, WithTypename<UpozornenisConnection> | string>,
     uPrijmeni?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uRodneCislo?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
     uSkupina?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['BigInt'] | string>,
@@ -14825,7 +14826,8 @@ export type GraphCacheResolvers = {
     uSystem?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Boolean'] | string>,
     uTeacher?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Boolean'] | string>,
     uTelefon?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['String'] | string>,
-    uTimestamp?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime'] | string>
+    uTimestamp?: GraphCacheResolver<WithTypename<User>, Record<string, never>, Scalars['Datetime'] | string>,
+    upozornenisByUpKdo?: GraphCacheResolver<WithTypename<User>, UserUpozornenisByUpKdoArgs, WithTypename<UpozornenisConnection> | string>
   },
   UsersConnection?: {
     edges?: GraphCacheResolver<WithTypename<UsersConnection>, Record<string, never>, Array<WithTypename<UsersEdge> | string>>,

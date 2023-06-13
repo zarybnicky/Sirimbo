@@ -10,24 +10,24 @@ export type EventItemFragment = { __typename?: 'AttendeeUser', id: string, notes
 export type EventWithItemsFragment = { __typename: 'Event', id: string, since: string, until: string, summary: string, description: string, filesLegacy: string, name: string, capacity: string, remainingSpots: number | null, locationText: string, isLocked: boolean, isVisible: boolean, isPublic: boolean, enableNotes: boolean, attendeeExternals: { __typename?: 'AttendeeExternalsConnection', nodes: Array<{ __typename?: 'AttendeeExternal', firstName: string, lastName: string }> }, attendeeUsers: { __typename?: 'AttendeeUsersConnection', nodes: Array<{ __typename?: 'AttendeeUser', notes: string, user: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string, uNarozeni: string, uTelefon: string, uEmail: string, uRodneCislo: string | null } | null }> } };
 
 export type EventQueryVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
 }>;
 
 
 export type EventQuery = { __typename?: 'Query', event: { __typename: 'Event', id: string, since: string, until: string, summary: string, description: string, filesLegacy: string, name: string, capacity: string, remainingSpots: number | null, locationText: string, isLocked: boolean, isVisible: boolean, isPublic: boolean, enableNotes: boolean, attendeeExternals: { __typename?: 'AttendeeExternalsConnection', nodes: Array<{ __typename?: 'AttendeeExternal', firstName: string, lastName: string }> }, attendeeUsers: { __typename?: 'AttendeeUsersConnection', nodes: Array<{ __typename?: 'AttendeeUser', notes: string, user: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string, uNarozeni: string, uTelefon: string, uEmail: string, uRodneCislo: string | null } | null }> } } | null };
 
 export type EventListQueryVariables = Types.Exact<{
-  first?: Types.InputMaybe<Types.Scalars['Int']>;
-  offset?: Types.InputMaybe<Types.Scalars['Int']>;
-  visible?: Types.InputMaybe<Types.Scalars['Boolean']>;
+  first?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  offset?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  visible?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
 }>;
 
 
 export type EventListQuery = { __typename?: 'Query', events: { __typename?: 'EventsConnection', totalCount: number, nodes: Array<{ __typename: 'Event', id: string, since: string, until: string, summary: string, description: string, filesLegacy: string, name: string, capacity: string, remainingSpots: number | null, locationText: string, isLocked: boolean, isVisible: boolean, isPublic: boolean, enableNotes: boolean, attendeeExternals: { __typename?: 'AttendeeExternalsConnection', nodes: Array<{ __typename?: 'AttendeeExternal', firstName: string, lastName: string }> }, attendeeUsers: { __typename?: 'AttendeeUsersConnection', nodes: Array<{ __typename?: 'AttendeeUser', notes: string, user: { __typename?: 'User', uId: string, uJmeno: string, uPrijmeni: string, uNarozeni: string, uTelefon: string, uEmail: string, uRodneCislo: string | null } | null }> } }> } | null };
 
 export type ToggleEventVisibleMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
-  visible: Types.Scalars['Boolean'];
+  id: Types.Scalars['BigInt']['input'];
+  visible: Types.Scalars['Boolean']['input'];
 }>;
 
 
@@ -41,7 +41,7 @@ export type CreateEventMutationVariables = Types.Exact<{
 export type CreateEventMutation = { __typename?: 'Mutation', createEvent: { __typename?: 'CreateEventPayload', event: { __typename?: 'Event', id: string } | null } | null };
 
 export type UpdateEventMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
   patch: Types.EventPatch;
 }>;
 
@@ -49,7 +49,7 @@ export type UpdateEventMutationVariables = Types.Exact<{
 export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent: { __typename: 'UpdateEventPayload' } | null };
 
 export type DeleteEventMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
 }>;
 
 

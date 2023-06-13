@@ -4,16 +4,16 @@ import * as Types from './index';
 
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type FormResponsesQueryVariables = Types.Exact<{
-  type?: Types.InputMaybe<Types.Scalars['String']>;
+  type?: Types.InputMaybe<Types.Scalars['String']['input']>;
 }>;
 
 
 export type FormResponsesQuery = { __typename?: 'Query', formResponses: { __typename?: 'FormResponsesConnection', totalCount: number, nodes: Array<{ __typename?: 'FormResponse', id: string, data: { [key: string]: any }, type: string, url: string, createdAt: string }> } | null };
 
 export type SubmitFormMutationVariables = Types.Exact<{
-  type: Types.Scalars['String'];
-  url: Types.Scalars['String'];
-  data: Types.Scalars['JSON'];
+  type: Types.Scalars['String']['input'];
+  url: Types.Scalars['String']['input'];
+  data: Types.Scalars['JSON']['input'];
 }>;
 
 

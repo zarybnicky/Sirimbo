@@ -6,9 +6,6 @@ import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
-import { PlatbyCategoryInput } from '@app/graphql';
-import { pipe } from 'fp-ts/lib/function';
-import { pick } from 'lib/form-utils';
 import { useMutation, useQuery } from 'urql';
 import { useRouter } from 'next/router';
 import { ErrorPage } from './ErrorPage';
@@ -16,19 +13,21 @@ import { toast } from 'react-toastify';
 import { DeleteButton } from './DeleteButton';
 import { Route } from 'nextjs-routes';
 import { TitleBar } from './layout/TitleBar';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 
-const fields = [
-  'pcName',
-  'pcSymbol',
-  'pcAmount',
-  'pcDateDue',
-  'pcValidFrom',
-  'pcValidTo',
-  'pcUsePrefix',
-  'pcArchive',
-  'pcVisible',
-] as const;
-type FormProps = Pick<PlatbyCategoryInput, (typeof fields)[number]>;
+const Form = z.object({
+  pcName: z.string(),
+  pcSymbol: z.string(),
+  pcAmount: z.number(),
+  pcDateDue: z.string(),
+  pcValidFrom: z.string(),
+  pcValidTo: z.string(),
+  pcUsePrefix: z.boolean().optional(),
+  pcArchive: z.boolean().optional(),
+  pcVisible: z.boolean().optional(),
+});
+type FormProps = z.infer<typeof Form>;
 
 const backHref: Route = { pathname: '/admin/platby/structure/category' };
 
@@ -41,11 +40,9 @@ export const PaymentCategoryForm = ({ id = '' }: { id?: string }) => {
   const create = useMutation(CreatePaymentCategoryDocument)[1];
   const update = useMutation(UpdatePaymentCategoryDocument)[1];
 
-  const { reset, control, handleSubmit } = useForm<FormProps>();
+  const { reset, control, handleSubmit } = useForm<FormProps>({ resolver: zodResolver(Form) });
   React.useEffect(() => {
-    if (data) {
-      reset(pipe(data, pick(fields)));
-    }
+    reset(Form.optional().parse(data));
   }, [data, reset]);
 
   const onSubmit = useAsyncCallback(async (patch: FormProps) => {

@@ -1,4 +1,3 @@
-import { SkupinyInput } from '@app/graphql';
 import {
   CohortDocument,
   CreateCohortDocument,
@@ -15,8 +14,6 @@ import { SubmitButton } from './SubmitButton';
 import { ColorPicker } from './ColorPicker';
 import { CohortGroupListDocument } from '@app/graphql/CohortGroup';
 import { ComboboxElement } from './Combobox';
-import { pick } from 'lib/form-utils';
-import { pipe } from 'fp-ts/function';
 import { useMutation, useQuery } from 'urql';
 import { DeleteButton } from './DeleteButton';
 import { useRouter } from 'next/router';
@@ -25,20 +22,21 @@ import { ErrorPage } from './ErrorPage';
 import { toast } from 'react-toastify';
 import { RichTextEditor } from './RichTextEditor';
 import { TitleBar } from './layout/TitleBar';
+import { z } from 'zod';
 
-const fields = [
-  'sName',
-  'sDescription',
-  'sLocation',
-  'sVisible',
-  'sColorRgb',
-  'internalInfo',
-  'ordering',
-  'cohortGroup',
-] as const;
-type FormProps = Pick<SkupinyInput, (typeof fields)[number]>;
+const Form = z.object({
+  sName: z.string(),
+  sDescription: z.string(),
+  sLocation: z.string().optional(),
+  sVisible: z.boolean().default(false),
+  sColorRgb: z.string(),
+  internalInfo: z.string().optional(),
+  ordering: z.number().optional(),
+  cohortGroup: z.string().optional(),
+});
+type FormProps = z.infer<typeof Form>;
 
-const backHref: Route = {pathname: '/admin/skupiny' };
+const backHref: Route = { pathname: '/admin/skupiny' };
 
 export const CohortForm = ({ id = '' }: { id?: string }) => {
   const router = useRouter();
@@ -54,9 +52,7 @@ export const CohortForm = ({ id = '' }: { id?: string }) => {
     defaultValues: { sColorRgb: '#ff0000' },
   });
   React.useEffect(() => {
-    if (data) {
-      reset(pipe(data, pick(fields))); //TODO: replace
-    }
+    reset(Form.optional().parse(data));
   }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (patch: FormProps) => {

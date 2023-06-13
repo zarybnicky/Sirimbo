@@ -25,7 +25,7 @@ export type RadioButtonGroupElementProps<T extends FieldValues> = {
   required?: boolean;
 } & Extras;
 
-export function RadioButtonGroupElement<TFieldValues extends FieldValues>({
+export function RadioButtonGroupElement<T extends FieldValues>({
   name,
   control,
   validation = {},
@@ -34,12 +34,12 @@ export function RadioButtonGroupElement<TFieldValues extends FieldValues>({
   className,
   helperText,
   label,
-}: RadioButtonGroupElementProps<TFieldValues>) {
+}: RadioButtonGroupElementProps<T>) {
   if (required && !validation?.required) {
     validation.required = 'Toto pole je povinné';
   }
 
-  const { field, fieldState } = useController({ name, control, rules: validation });
+  const { field, fieldState } = useController<T>({ name, control, rules: validation });
 
   return (
     <div className={`relative my-2 ${className}`}>
@@ -55,9 +55,9 @@ export function RadioButtonGroupElement<TFieldValues extends FieldValues>({
             value={id}
             disabled={disabled}
             className={classNames(
-              'group radix-state-on:text-white radix-state-on:bg-red-500 bg-white',
+              'group data-[state=on]:text-white data-[state=on]:bg-red-500 bg-white',
               'border-y px-2.5 py-2 first:rounded-l-xl first:border-x last:rounded-r-xl last:border-x',
-              'border-gray-400 radix-state-on:border-red-800',
+              'border-gray-400 data-[state=on]:border-red-800',
               'focus:relative focus:outline-none focus-visible:z-20 focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75',
             )}
           >

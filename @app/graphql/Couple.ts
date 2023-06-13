@@ -6,30 +6,30 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 export type CoupleExtendedFragment = { __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean, id: string, rozpisItemsByRiPartner: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riLock: boolean, riPartner: string | null, id: string, rozpiByRiIdRodic: { __typename: 'Rozpi', rDatum: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, id: string, userByRTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, fullName: string | null, id: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean, id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null }> }, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null };
 
 export type CoupleListQueryVariables = Types.Exact<{
-  first?: Types.InputMaybe<Types.Scalars['Int']>;
-  offset?: Types.InputMaybe<Types.Scalars['Int']>;
+  first?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  offset?: Types.InputMaybe<Types.Scalars['Int']['input']>;
 }>;
 
 
 export type CoupleListQuery = { __typename?: 'Query', activeCouples: { __typename?: 'PariesConnection', totalCount: number, nodes: Array<{ __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean, id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null }> } | null };
 
 export type CoupleQueryVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
 }>;
 
 
 export type CoupleQuery = { __typename?: 'Query', pary: { __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean, id: string, rozpisItemsByRiPartner: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename: 'RozpisItem', riOd: string, riDo: string, riLock: boolean, riPartner: string | null, id: string, rozpiByRiIdRodic: { __typename: 'Rozpi', rDatum: string, rKde: string, rLock: boolean, rTrener: string, rVisible: boolean, id: string, userByRTrener: { __typename?: 'User', uJmeno: string, uPrijmeni: string, fullName: string | null, id: string } | null } | null, paryByRiPartner: { __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean, id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null }> }, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null };
 
 export type CreateCoupleMutationVariables = Types.Exact<{
-  man: Types.Scalars['BigInt'];
-  woman: Types.Scalars['BigInt'];
+  man: Types.Scalars['BigInt']['input'];
+  woman: Types.Scalars['BigInt']['input'];
 }>;
 
 
 export type CreateCoupleMutation = { __typename?: 'Mutation', createCouple: { __typename?: 'CreateCouplePayload', paries: Array<{ __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean, id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null }> | null } | null };
 
 export type DeleteCoupleMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
 }>;
 
 

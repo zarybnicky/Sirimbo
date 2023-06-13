@@ -24,7 +24,6 @@ module.exports = {
     require('@tailwindcss/typography'),
     require('@tailwindcss/aspect-ratio'),
     require('tailwindcss-opentype'),
-    require('tailwindcss-radix')(),
     require('tailwind-scrollbar'),
   ],
   theme: {

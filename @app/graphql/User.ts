@@ -6,18 +6,18 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 export type UserPublicFragment = { __typename?: 'User', uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string, id: string };
 
 export type UserQueryVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
 }>;
 
 
 export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, id: string } | null };
 
 export type UserListQueryVariables = Types.Exact<{
-  confirmed?: Types.InputMaybe<Types.Scalars['Boolean']>;
-  system?: Types.InputMaybe<Types.Scalars['Boolean']>;
-  ban?: Types.InputMaybe<Types.Scalars['Boolean']>;
-  first?: Types.InputMaybe<Types.Scalars['Int']>;
-  offset?: Types.InputMaybe<Types.Scalars['Int']>;
+  confirmed?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
+  system?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
+  ban?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
+  first?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  offset?: Types.InputMaybe<Types.Scalars['Int']['input']>;
 }>;
 
 
@@ -29,7 +29,7 @@ export type MsmtExportQueryVariables = Types.Exact<{ [key: string]: never; }>;
 export type MsmtExportQuery = { __typename?: 'Query', users: { __typename?: 'UsersConnection', nodes: Array<{ __typename?: 'User', uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uRodneCislo: string | null, uNationality: string, uNarozeni: string, uCity: string, uDistrict: string, uConscriptionNumber: string, uOrientationNumber: string, uPostalCode: string, uStreet: string, uGroup: string, hasValidPayment: boolean | null, dateOfOldestPayment: string | null, dateOfNewestPayment: string | null, id: string, skupinyByUSkupina: { __typename?: 'Skupiny', sId: string, sName: string, sColorRgb: string, sDescription: string, sVisible: boolean } | null }> } | null };
 
 export type MemberListQueryVariables = Types.Exact<{
-  cohortId?: Types.InputMaybe<Types.Scalars['BigInt']>;
+  cohortId?: Types.InputMaybe<Types.Scalars['BigInt']['input']>;
 }>;
 
 
@@ -41,9 +41,9 @@ export type TrainerListQueryVariables = Types.Exact<{ [key: string]: never; }>;
 export type TrainerListQuery = { __typename?: 'Query', trainers: { __typename?: 'UsersConnection', totalCount: number, nodes: Array<{ __typename?: 'User', uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, id: string }> } | null };
 
 export type ConfirmUserMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
-  role: Types.Scalars['BigInt'];
-  cohort: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
+  role: Types.Scalars['BigInt']['input'];
+  cohort: Types.Scalars['BigInt']['input'];
 }>;
 
 
@@ -57,7 +57,7 @@ export type CreateUserMutationVariables = Types.Exact<{
 export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'CreateUserPayload', user: { __typename?: 'User', uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, id: string } | null } | null };
 
 export type UpdateUserMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
   patch: Types.UserPatch;
 }>;
 
@@ -65,7 +65,7 @@ export type UpdateUserMutationVariables = Types.Exact<{
 export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'UpdateUserPayload', user: { __typename?: 'User', uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, id: string } | null } | null };
 
 export type DeleteUserMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
 }>;
 
 

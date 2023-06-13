@@ -15,8 +15,8 @@ export type CurrentUserQueryVariables = Types.Exact<{ [key: string]: never; }>;
 export type CurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'User', uLogin: string, uJmeno: string, uPrijmeni: string, uEmail: string, uTelefon: string, uConfirmed: boolean, uTeacher: boolean, uDancer: boolean, uSystem: boolean, uLock: boolean, uBan: boolean, uGroup: string, uSkupina: string, uTimestamp: string, uStreet: string, uRodneCislo: string | null, uPoznamky: string, uPostalCode: string, uPohlavi: string, uOrientationNumber: string, uNationality: string, uNarozeni: string, uMemberUntil: string | null, uMemberSince: string | null, uGdprSignedAt: string | null, uDistrict: string, uCreatedAt: string, uConscriptionNumber: string, uCity: string, id: string, permissionByUGroup: { __typename: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number, id: string } | null } | null, getCurrentCouple: { __typename?: 'Pary', pIdPartner: string, pIdPartnerka: string | null, pArchiv: boolean, id: string, userByPIdPartner: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, userByPIdPartnerka: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null } | null };
 
 export type LoginMutationVariables = Types.Exact<{
-  login: Types.Scalars['String'];
-  passwd: Types.Scalars['String'];
+  login: Types.Scalars['String']['input'];
+  passwd: Types.Scalars['String']['input'];
 }>;
 
 

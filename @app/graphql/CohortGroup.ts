@@ -6,16 +6,16 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 export type CohortGroupFragment = { __typename: 'CohortGroup', id: string, name: string, description: string, isPublic: boolean, ordering: number, skupiniesByCohortGroup: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename: 'Skupiny', sDescription: string, internalInfo: string, cohortGroup: string | null, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string }> } };
 
 export type CohortGroupListQueryVariables = Types.Exact<{
-  first?: Types.InputMaybe<Types.Scalars['Int']>;
-  offset?: Types.InputMaybe<Types.Scalars['Int']>;
-  isPublic?: Types.InputMaybe<Types.Scalars['Boolean']>;
+  first?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  offset?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  isPublic?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
 }>;
 
 
 export type CohortGroupListQuery = { __typename?: 'Query', cohortGroups: { __typename?: 'CohortGroupsConnection', nodes: Array<{ __typename: 'CohortGroup', id: string, name: string, description: string, isPublic: boolean, ordering: number, skupiniesByCohortGroup: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename: 'Skupiny', sDescription: string, internalInfo: string, cohortGroup: string | null, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string }> } }> } | null };
 
 export type CohortGroupQueryVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
 }>;
 
 
@@ -29,7 +29,7 @@ export type CreateCohortGroupMutationVariables = Types.Exact<{
 export type CreateCohortGroupMutation = { __typename?: 'Mutation', createCohortGroup: { __typename?: 'CreateCohortGroupPayload', cohortGroup: { __typename: 'CohortGroup', id: string, name: string, description: string, isPublic: boolean, ordering: number, skupiniesByCohortGroup: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename: 'Skupiny', sDescription: string, internalInfo: string, cohortGroup: string | null, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string }> } } | null } | null };
 
 export type UpdateCohortGroupMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
   patch: Types.CohortGroupPatch;
 }>;
 
@@ -37,7 +37,7 @@ export type UpdateCohortGroupMutationVariables = Types.Exact<{
 export type UpdateCohortGroupMutation = { __typename?: 'Mutation', updateCohortGroup: { __typename?: 'UpdateCohortGroupPayload', cohortGroup: { __typename: 'CohortGroup', id: string, name: string, description: string, isPublic: boolean, ordering: number, skupiniesByCohortGroup: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename: 'Skupiny', sDescription: string, internalInfo: string, cohortGroup: string | null, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string }> } } | null } | null };
 
 export type DeleteCohortGroupMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
 }>;
 
 

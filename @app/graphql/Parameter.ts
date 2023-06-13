@@ -23,15 +23,15 @@ export type CreateParameterMutationVariables = Types.Exact<{
 export type CreateParameterMutation = { __typename?: 'Mutation', createParameter: { __typename?: 'CreateParameterPayload', parameter: { __typename?: 'Parameter', paName: string, paValue: string } | null } | null };
 
 export type UpdateParameterMutationVariables = Types.Exact<{
-  id: Types.Scalars['String'];
-  value: Types.Scalars['String'];
+  id: Types.Scalars['String']['input'];
+  value: Types.Scalars['String']['input'];
 }>;
 
 
 export type UpdateParameterMutation = { __typename?: 'Mutation', updateParameter: { __typename?: 'UpdateParameterPayload', parameter: { __typename?: 'Parameter', paName: string, paValue: string } | null } | null };
 
 export type DeleteParameterMutationVariables = Types.Exact<{
-  id: Types.Scalars['String'];
+  id: Types.Scalars['String']['input'];
 }>;
 
 

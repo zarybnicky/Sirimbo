@@ -72,7 +72,7 @@ export const RadioButtonGroup = <T extends FieldValues>({
   control,
   isDisabled,
 }: RadioButtonGroupProps<T>) => {
-  const { field } = useController({ name, control });
+  const { field } = useController<T>({ name, control });
   return (
     <div className={cx('space-y-4 ml-1', { 'opacity-50': isDisabled })}>
       <label

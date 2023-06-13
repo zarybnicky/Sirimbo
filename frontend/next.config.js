@@ -30,6 +30,7 @@ module.exports = require('nextjs-routes/config')({ outDir: '.' })(
       experimental: {
         outputFileTracingRoot: path.join(__dirname, '../'),
       },
+      transpilePackages: ['@app/graphql'],
 
       images: {
         domains: ['tkolymp.cz', 'www.tkolymp.cz'],

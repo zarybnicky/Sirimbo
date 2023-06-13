@@ -69,7 +69,7 @@ export const ReservationButton = ({ item }: { item: MyReservationFragment }) => 
           align="start"
           sideOffset={4}
           className={classNames(
-            'z-20 radix-side-top:animate-slide-up radix-side-bottom:animate-slide-down',
+            'z-20 data-[side=top]:animate-slide-up data-[side=bottom]:animate-slide-down',
             'w-48 rounded-lg p-4 shadow-md md:w-56',
             'bg-white dark:bg-gray-800',
           )}

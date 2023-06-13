@@ -10,23 +10,23 @@ export type CohortFragment = { __typename: 'Skupiny', sDescription: string, inte
 export type CohortWithMembersFragment = { __typename: 'Skupiny', sDescription: string, internalInfo: string, cohortGroup: string | null, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string, usersByUSkupina: { __typename?: 'UsersConnection', nodes: Array<{ __typename?: 'User', hasValidPayment: boolean | null, uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string, id: string }> } };
 
 export type CohortListQueryVariables = Types.Exact<{
-  first?: Types.InputMaybe<Types.Scalars['Int']>;
-  offset?: Types.InputMaybe<Types.Scalars['Int']>;
-  visible?: Types.InputMaybe<Types.Scalars['Boolean']>;
+  first?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  offset?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  visible?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
 }>;
 
 
 export type CohortListQuery = { __typename?: 'Query', skupinies: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename: 'Skupiny', sDescription: string, internalInfo: string, cohortGroup: string | null, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string }> } | null };
 
 export type CohortListWithMembersQueryVariables = Types.Exact<{
-  visible?: Types.InputMaybe<Types.Scalars['Boolean']>;
+  visible?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
 }>;
 
 
 export type CohortListWithMembersQuery = { __typename?: 'Query', skupinies: { __typename?: 'SkupiniesConnection', nodes: Array<{ __typename: 'Skupiny', sDescription: string, internalInfo: string, cohortGroup: string | null, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string, usersByUSkupina: { __typename?: 'UsersConnection', nodes: Array<{ __typename?: 'User', hasValidPayment: boolean | null, uJmeno: string, uPrijmeni: string, uRodneCislo: string | null, uTelefon: string, uEmail: string, id: string }> } }> } | null };
 
 export type CohortQueryVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
 }>;
 
 
@@ -40,7 +40,7 @@ export type CreateCohortMutationVariables = Types.Exact<{
 export type CreateCohortMutation = { __typename?: 'Mutation', createSkupiny: { __typename?: 'CreateSkupinyPayload', skupiny: { __typename: 'Skupiny', sDescription: string, internalInfo: string, cohortGroup: string | null, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string } | null } | null };
 
 export type UpdateCohortMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
   patch: Types.SkupinyPatch;
 }>;
 
@@ -48,7 +48,7 @@ export type UpdateCohortMutationVariables = Types.Exact<{
 export type UpdateCohortMutation = { __typename?: 'Mutation', updateSkupiny: { __typename?: 'UpdateSkupinyPayload', skupiny: { __typename: 'Skupiny', sDescription: string, internalInfo: string, cohortGroup: string | null, sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string } | null } | null };
 
 export type DeleteCohortMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
 }>;
 
 

@@ -6,15 +6,15 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 export type ArticleFragment = { __typename: 'Aktuality', atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, id: string, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null };
 
 export type ArticleQueryVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
 }>;
 
 
 export type ArticleQuery = { __typename?: 'Query', aktuality: { __typename: 'Aktuality', atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, id: string, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null } | null };
 
 export type ArticlesQueryVariables = Types.Exact<{
-  first?: Types.InputMaybe<Types.Scalars['Int']>;
-  offset?: Types.InputMaybe<Types.Scalars['Int']>;
+  first?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  offset?: Types.InputMaybe<Types.Scalars['Int']['input']>;
 }>;
 
 
@@ -28,7 +28,7 @@ export type CreateArticleMutationVariables = Types.Exact<{
 export type CreateArticleMutation = { __typename?: 'Mutation', createAktuality: { __typename?: 'CreateAktualityPayload', aktuality: { __typename: 'Aktuality', atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, id: string, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null } | null } | null };
 
 export type UpdateArticleMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
   patch: Types.AktualityPatch;
 }>;
 
@@ -36,7 +36,7 @@ export type UpdateArticleMutationVariables = Types.Exact<{
 export type UpdateArticleMutation = { __typename?: 'Mutation', updateAktuality: { __typename?: 'UpdateAktualityPayload', aktuality: { __typename: 'Aktuality', atPreview: string, atJmeno: string, atText: string, atFoto: string | null, atFotoMain: string | null, atTimestamp: string | null, atTimestampAdd: string | null, id: string, galerieFotoByAtFotoMain: { __typename?: 'GalerieFoto', gfPath: string } | null } | null } | null };
 
 export type DeleteArticleMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
 }>;
 
 

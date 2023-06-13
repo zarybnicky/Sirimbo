@@ -6,16 +6,16 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 export type FileFragment = { __typename: 'Dokumenty', dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null, id: string };
 
 export type FileListQueryVariables = Types.Exact<{
-  first?: Types.InputMaybe<Types.Scalars['Int']>;
-  offset?: Types.InputMaybe<Types.Scalars['Int']>;
-  category?: Types.InputMaybe<Types.Scalars['Int']>;
+  first?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  offset?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  category?: Types.InputMaybe<Types.Scalars['Int']['input']>;
 }>;
 
 
 export type FileListQuery = { __typename?: 'Query', dokumenties: { __typename?: 'DokumentiesConnection', totalCount: number, nodes: Array<{ __typename: 'Dokumenty', dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null, id: string, userByDKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string } | null }> } | null };
 
 export type FileQueryVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
 }>;
 
 
@@ -29,7 +29,7 @@ export type CreateFileMutationVariables = Types.Exact<{
 export type CreateFileMutation = { __typename?: 'Mutation', createDokumenty: { __typename?: 'CreateDokumentyPayload', dokumenty: { __typename: 'Dokumenty', dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null, id: string } | null } | null };
 
 export type UpdateFileMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
   patch: Types.DokumentyPatch;
 }>;
 
@@ -37,7 +37,7 @@ export type UpdateFileMutationVariables = Types.Exact<{
 export type UpdateFileMutation = { __typename?: 'Mutation', updateDokumenty: { __typename?: 'UpdateDokumentyPayload', dokumenty: { __typename: 'Dokumenty', dName: string, dFilename: string, dKategorie: number, dTimestamp: string | null, id: string } | null } | null };
 
 export type DeleteFileMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
 }>;
 
 

@@ -144,7 +144,7 @@ export function CohortGroupForm({ id = '' }: Props) {
               align="start"
               sideOffset={4}
               className={cn(
-                'z-20 radix-side-top:animate-slide-up radix-side-bottom:animate-slide-down',
+                'z-20 data-[side=top]:animate-slide-up data-[side=bottom]:animate-slide-down',
                 'w-48 rounded-lg shadow-md md:w-56',
                 'bg-white dark:bg-stone-800',
               )}

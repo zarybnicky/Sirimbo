@@ -52,17 +52,17 @@ type CheckboxElementProps<T extends FieldValues> = Omit<
   control?: Control<T>;
 } & Extras;
 
-export function CheckboxElement<TFieldValues extends FieldValues>({
+export function CheckboxElement<T extends FieldValues>({
   name,
   required,
   control,
   validation = {},
   ...props
-}: CheckboxElementProps<TFieldValues>) {
+}: CheckboxElementProps<T>) {
   if (required && !validation?.required) {
     validation.required = 'Toto pole je povinné';
   }
-  const { field, fieldState } = useController({
+  const { field, fieldState } = useController<T>({
     name,
     rules: validation,
     control,

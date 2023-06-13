@@ -70,7 +70,7 @@ type Extras = {
   helperText?: React.ReactNode;
 };
 
-export function DateRangeInput<TFieldValues extends FieldValues>({
+export function DateRangeInput<T extends FieldValues>({
   name,
   control,
   validation = {},
@@ -78,11 +78,11 @@ export function DateRangeInput<TFieldValues extends FieldValues>({
   required,
   className,
   helperText,
-}: DateRangeInputProps<TFieldValues> & Extras) {
+}: DateRangeInputProps<T> & Extras) {
   if (required && !validation?.required) {
     validation.required = 'Toto pole je povinné';
   }
-  const { field, fieldState } = useController({ control, name, rules: validation });
+  const { field, fieldState } = useController<T>({ control, name, rules: validation });
 
   const [month, setMonth] = React.useState(new Date());
   React.useEffect(() => {
@@ -108,7 +108,7 @@ export function DateRangeInput<TFieldValues extends FieldValues>({
   );
 }
 
-export function DatePickerElement<TFieldValues extends FieldValues>({
+export function DatePickerElement<T extends FieldValues>({
   name,
   control,
   validation = {},
@@ -116,11 +116,11 @@ export function DatePickerElement<TFieldValues extends FieldValues>({
   required,
   className,
   helperText,
-}: DateRangeInputProps<TFieldValues> & Extras) {
+}: DateRangeInputProps<T> & Extras) {
   if (required && !validation?.required) {
     validation.required = 'Toto pole je povinné';
   }
-  const { field, fieldState } = useController({ control, name, rules: validation });
+  const { field, fieldState } = useController<T>({ control, name, rules: validation });
 
   const [month, setMonth] = React.useState(new Date());
   React.useEffect(() => {

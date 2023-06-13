@@ -6,31 +6,31 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 export type AnnouncementFragment = { __typename: 'Upozorneni', upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, scheduledSince: string | null, scheduledUntil: string | null, isVisible: boolean | null, id: string, userByUpKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', id: string, skupinyByUpsIdSkupina: { __typename: 'Skupiny', sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string } | null }> } };
 
 export type MyAnnouncementsQueryVariables = Types.Exact<{
-  first?: Types.InputMaybe<Types.Scalars['Int']>;
-  offset?: Types.InputMaybe<Types.Scalars['Int']>;
+  first?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  offset?: Types.InputMaybe<Types.Scalars['Int']['input']>;
 }>;
 
 
 export type MyAnnouncementsQuery = { __typename?: 'Query', myAnnouncements: { __typename?: 'UpozornenisConnection', totalCount: number, nodes: Array<{ __typename: 'Upozorneni', upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, scheduledSince: string | null, scheduledUntil: string | null, isVisible: boolean | null, id: string, userByUpKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', id: string, skupinyByUpsIdSkupina: { __typename: 'Skupiny', sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string } | null }> } }> } | null };
 
 export type AnnouncementListQueryVariables = Types.Exact<{
-  first?: Types.InputMaybe<Types.Scalars['Int']>;
-  cursor?: Types.InputMaybe<Types.Scalars['Cursor']>;
+  first?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  cursor?: Types.InputMaybe<Types.Scalars['Cursor']['input']>;
 }>;
 
 
 export type AnnouncementListQuery = { __typename?: 'Query', upozornenis: { __typename?: 'UpozornenisConnection', totalCount: number, nodes: Array<{ __typename: 'Upozorneni', upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, scheduledSince: string | null, scheduledUntil: string | null, isVisible: boolean | null, id: string, userByUpKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', id: string, skupinyByUpsIdSkupina: { __typename: 'Skupiny', sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string } | null }> } }>, pageInfo: { __typename: 'PageInfo', hasNextPage: boolean, endCursor: any | null } } | null };
 
 export type ToggleUpozorneniVisibleMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
-  visible: Types.Scalars['Boolean'];
+  id: Types.Scalars['BigInt']['input'];
+  visible: Types.Scalars['Boolean']['input'];
 }>;
 
 
 export type ToggleUpozorneniVisibleMutation = { __typename?: 'Mutation', updateUpozorneni: { __typename?: 'UpdateUpozorneniPayload', upozorneni: { __typename: 'Upozorneni', upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, scheduledSince: string | null, scheduledUntil: string | null, isVisible: boolean | null, id: string, userByUpKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', id: string, skupinyByUpsIdSkupina: { __typename: 'Skupiny', sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string } | null }> } } | null } | null };
 
 export type AnnouncementQueryVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
 }>;
 
 
@@ -44,7 +44,7 @@ export type CreateAnnouncementMutationVariables = Types.Exact<{
 export type CreateAnnouncementMutation = { __typename?: 'Mutation', createUpozorneni: { __typename?: 'CreateUpozorneniPayload', upozorneni: { __typename: 'Upozorneni', upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, scheduledSince: string | null, scheduledUntil: string | null, isVisible: boolean | null, id: string, userByUpKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', id: string, skupinyByUpsIdSkupina: { __typename: 'Skupiny', sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string } | null }> } } | null } | null };
 
 export type UpdateAnnouncementMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
   patch: Types.UpozorneniPatch;
 }>;
 
@@ -52,7 +52,7 @@ export type UpdateAnnouncementMutationVariables = Types.Exact<{
 export type UpdateAnnouncementMutation = { __typename?: 'Mutation', updateUpozorneni: { __typename?: 'UpdateUpozorneniPayload', upozorneni: { __typename: 'Upozorneni', upKdo: string | null, upLock: boolean, upNadpis: string, upText: string, upTimestamp: string | null, upTimestampAdd: string, scheduledSince: string | null, scheduledUntil: string | null, isVisible: boolean | null, id: string, userByUpKdo: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', id: string, skupinyByUpsIdSkupina: { __typename: 'Skupiny', sName: string, sLocation: string, sVisible: boolean, sColorRgb: string, ordering: number, id: string } | null }> } } | null } | null };
 
 export type DeleteAnnouncementMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
 }>;
 
 

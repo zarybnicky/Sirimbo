@@ -18,7 +18,7 @@ export function ColorPicker<T extends FieldValues>({
   control,
   label,
 }: ColorPickerProps<T>) {
-  const { field } = useController({ name, control });
+  const { field } = useController<T>({ name, control });
 
   return (
     <div className="relative">
@@ -32,7 +32,7 @@ export function ColorPicker<T extends FieldValues>({
           align="start"
           sideOffset={4}
           className={classNames(
-            'z-20 radix-side-top:animate-slide-up radix-side-bottom:animate-slide-down',
+            'z-20 data-[side=top]:animate-slide-up data-[side=bottom]:animate-slide-down',
             'w-[320px] rounded-lg p-2 shadow-md bg-white dark:bg-gray-800',
           )}
         >

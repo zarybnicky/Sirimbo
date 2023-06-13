@@ -6,21 +6,26 @@
       "@app/*",
       "kometa",
       "frontend",
-      "backend",
-      "schema"
+      "backend"
     ]
   },
   "devDependencies": {
-    "concurrently": "^7.0.0",
-    "prettier": "^2.8.7"
+    "concurrently": "^8.2.0",
+    "prettier": "^2.8.8"
   },
   "scripts": {
     "frontend": "yarn workspace sirimbo-frontend dev",
     "kometa": "yarn workspace kometa dev",
-    "schema": "yarn workspace sirimbo-schema dev",
+    "schema": "yarn workspace @app/graphql dev",
     "backend": "yarn workspace sirimbo-backend start",
     "migrate": "graphile-migrate watch",
     "start": "concurrently --kill-others-on-fail 'yarn migrate' 'yarn frontend' 'yarn backend' 'yarn schema' 'yarn kometa'"
   },
-  "packageManager": "yarn@3.6.0"
+  "packageManager": "yarn@3.6.0",
+  "dependencies": {
+    "syncpack": "^10.5.1"
+  },
+  "resolutions": {
+    "@urql/core": "4.0.7"
+  }
 }

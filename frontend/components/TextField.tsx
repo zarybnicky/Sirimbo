@@ -16,7 +16,7 @@ type Extras = {
 
 export type TextAreaElementProps<T extends FieldValues> = Omit<
   React.HTMLProps<HTMLTextAreaElement>,
-  'label' | 'name'
+  'label' | 'name' | 'control'
 > & {
   validation?: ControllerProps['rules'];
   name: Path<T>;
@@ -50,6 +50,29 @@ export function TextArea({
       </div>
       <FieldHelper error={error} helperText={helperText} />
     </div>
+  );
+}
+
+export function TextAreaElement<T extends FieldValues>({
+  name,
+  required,
+  control,
+  validation = {},
+  ...props
+}: TextAreaElementProps<T>) {
+  if (required && !validation?.required) {
+    validation.required = 'Toto pole je povinné';
+  }
+  const { field, fieldState } = useController<T>({ name, control, rules: validation });
+
+  return (
+    <TextArea
+      name={name}
+      value={field.value}
+      error={fieldState.error}
+      {...props}
+      onChange={(e) => field.onChange(e.currentTarget.value)}
+    />
   );
 }
 
@@ -94,13 +117,13 @@ export function TextField({
   );
 }
 
-export function TextFieldElement<TFieldValues extends FieldValues>({
+export function TextFieldElement<T extends FieldValues>({
   name,
   required,
   control,
   validation = {},
   ...props
-}: TextFieldElementProps<TFieldValues>) {
+}: TextFieldElementProps<T>) {
   if (required && !validation?.required) {
     validation.required = 'Toto pole je povinné';
   }
@@ -113,7 +136,7 @@ export function TextFieldElement<TFieldValues extends FieldValues>({
       message: 'Zadejte platný e-mail',
     };
   }
-  const { field, fieldState } = useController({ name, control, rules: validation });
+  const { field, fieldState } = useController<T>({ name, control, rules: validation });
 
   return (
     <TextField
@@ -126,29 +149,6 @@ export function TextFieldElement<TFieldValues extends FieldValues>({
           valueAsNumber ? parseInt(e.currentTarget.value, 10) : e.currentTarget.value,
         )
       }
-    />
-  );
-}
-
-export function TextAreaElement<TFieldValues extends FieldValues>({
-  name,
-  required,
-  control,
-  validation = {},
-  ...props
-}: TextAreaElementProps<TFieldValues>) {
-  if (required && !validation?.required) {
-    validation.required = 'Toto pole je povinné';
-  }
-  const { field, fieldState } = useController({ name, control, rules: validation });
-
-  return (
-    <TextArea
-      name={name}
-      value={field.value}
-      error={fieldState.error}
-      {...props}
-      onChange={(e) => field.onChange(e.currentTarget.value)}
     />
   );
 }

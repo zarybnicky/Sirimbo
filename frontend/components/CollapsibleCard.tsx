@@ -20,7 +20,7 @@ export function CollapsibleCard({title, cohort, children}: CollapsibleCardProps)
     >
       <Collapsible.Trigger className="group flex justify-between p-2">
         <div>{title}</div>
-        <ChevronDown className="text-stone-400 transform duration-300 ease-in-out group-radix-state-open:rotate-180" />
+        <ChevronDown className="text-stone-400 transform duration-300 ease-in-out group:data-[state=open]:rotate-180" />
       </Collapsible.Trigger>
       <Collapsible.Content className="CollapsibleContent">
         <div className="p-2">{children}</div>

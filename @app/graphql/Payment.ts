@@ -6,15 +6,15 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 export type PaymentGroupFragment = { __typename: 'PlatbyGroup', pgName: string, pgType: any, pgDescription: string, pgBase: string, id: string };
 
 export type PaymentGroupListQueryVariables = Types.Exact<{
-  first?: Types.InputMaybe<Types.Scalars['Int']>;
-  offset?: Types.InputMaybe<Types.Scalars['Int']>;
+  first?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  offset?: Types.InputMaybe<Types.Scalars['Int']['input']>;
 }>;
 
 
 export type PaymentGroupListQuery = { __typename?: 'Query', platbyGroups: { __typename?: 'PlatbyGroupsConnection', totalCount: number, nodes: Array<{ __typename: 'PlatbyGroup', pgName: string, pgType: any, pgDescription: string, pgBase: string, id: string }> } | null };
 
 export type PaymentGroupQueryVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
 }>;
 
 
@@ -28,7 +28,7 @@ export type CreatePaymentGroupMutationVariables = Types.Exact<{
 export type CreatePaymentGroupMutation = { __typename?: 'Mutation', createPlatbyGroup: { __typename?: 'CreatePlatbyGroupPayload', platbyGroup: { __typename: 'PlatbyGroup', pgName: string, pgType: any, pgDescription: string, pgBase: string, id: string } | null } | null };
 
 export type UpdatePaymentGroupMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
   patch: Types.PlatbyGroupPatch;
 }>;
 
@@ -36,7 +36,7 @@ export type UpdatePaymentGroupMutationVariables = Types.Exact<{
 export type UpdatePaymentGroupMutation = { __typename?: 'Mutation', updatePlatbyGroup: { __typename?: 'UpdatePlatbyGroupPayload', platbyGroup: { __typename: 'PlatbyGroup', pgName: string, pgType: any, pgDescription: string, pgBase: string, id: string } | null } | null };
 
 export type DeletePaymentGroupMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
 }>;
 
 
@@ -45,15 +45,15 @@ export type DeletePaymentGroupMutation = { __typename?: 'Mutation', deletePlatby
 export type PaymentItemFragment = { __typename: 'PlatbyItem', piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, id: string, userByPiIdUser: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcName: string, id: string } | null };
 
 export type PaymentItemListQueryVariables = Types.Exact<{
-  first?: Types.InputMaybe<Types.Scalars['Int']>;
-  offset?: Types.InputMaybe<Types.Scalars['Int']>;
+  first?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  offset?: Types.InputMaybe<Types.Scalars['Int']['input']>;
 }>;
 
 
 export type PaymentItemListQuery = { __typename?: 'Query', platbyItems: { __typename?: 'PlatbyItemsConnection', totalCount: number, nodes: Array<{ __typename: 'PlatbyItem', piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, id: string, userByPiIdUser: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcName: string, id: string } | null }> } | null };
 
 export type PaymentItemQueryVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
 }>;
 
 
@@ -67,7 +67,7 @@ export type CreatePaymentItemMutationVariables = Types.Exact<{
 export type CreatePaymentItemMutation = { __typename?: 'Mutation', createPlatbyItem: { __typename?: 'CreatePlatbyItemPayload', platbyItem: { __typename: 'PlatbyItem', piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, id: string, userByPiIdUser: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcName: string, id: string } | null } | null } | null };
 
 export type UpdatePaymentItemMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
   patch: Types.PlatbyItemPatch;
 }>;
 
@@ -75,7 +75,7 @@ export type UpdatePaymentItemMutationVariables = Types.Exact<{
 export type UpdatePaymentItemMutation = { __typename?: 'Mutation', updatePlatbyItem: { __typename?: 'UpdatePlatbyItemPayload', platbyItem: { __typename: 'PlatbyItem', piIdCategory: string, piIdRaw: string | null, piIdUser: string | null, piAmount: any, piPrefix: number, piDate: string, id: string, userByPiIdUser: { __typename?: 'User', uJmeno: string, uPrijmeni: string, id: string } | null, platbyCategoryByPiIdCategory: { __typename?: 'PlatbyCategory', pcName: string, id: string } | null } | null } | null };
 
 export type DeletePaymentItemMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
 }>;
 
 
@@ -84,15 +84,15 @@ export type DeletePaymentItemMutation = { __typename?: 'Mutation', deletePlatbyI
 export type PaymentCategoryFragment = { __typename: 'PlatbyCategory', pcName: string, pcSymbol: string, pcAmount: any, pcDateDue: string, pcValidFrom: string, pcValidTo: string, pcUsePrefix: boolean, pcUseBase: boolean, pcArchive: boolean, pcVisible: boolean, id: string };
 
 export type PaymentCategoryListQueryVariables = Types.Exact<{
-  first?: Types.InputMaybe<Types.Scalars['Int']>;
-  offset?: Types.InputMaybe<Types.Scalars['Int']>;
+  first?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  offset?: Types.InputMaybe<Types.Scalars['Int']['input']>;
 }>;
 
 
 export type PaymentCategoryListQuery = { __typename?: 'Query', platbyCategories: { __typename?: 'PlatbyCategoriesConnection', totalCount: number, nodes: Array<{ __typename: 'PlatbyCategory', pcName: string, pcSymbol: string, pcAmount: any, pcDateDue: string, pcValidFrom: string, pcValidTo: string, pcUsePrefix: boolean, pcUseBase: boolean, pcArchive: boolean, pcVisible: boolean, id: string }> } | null };
 
 export type PaymentCategoryQueryVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
 }>;
 
 
@@ -106,7 +106,7 @@ export type CreatePaymentCategoryMutationVariables = Types.Exact<{
 export type CreatePaymentCategoryMutation = { __typename?: 'Mutation', createPlatbyCategory: { __typename?: 'CreatePlatbyCategoryPayload', platbyCategory: { __typename: 'PlatbyCategory', pcName: string, pcSymbol: string, pcAmount: any, pcDateDue: string, pcValidFrom: string, pcValidTo: string, pcUsePrefix: boolean, pcUseBase: boolean, pcArchive: boolean, pcVisible: boolean, id: string } | null } | null };
 
 export type UpdatePaymentCategoryMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
   patch: Types.PlatbyCategoryPatch;
 }>;
 
@@ -114,7 +114,7 @@ export type UpdatePaymentCategoryMutationVariables = Types.Exact<{
 export type UpdatePaymentCategoryMutation = { __typename?: 'Mutation', updatePlatbyCategory: { __typename?: 'UpdatePlatbyCategoryPayload', platbyCategory: { __typename: 'PlatbyCategory', pcName: string, pcSymbol: string, pcAmount: any, pcDateDue: string, pcValidFrom: string, pcValidTo: string, pcUsePrefix: boolean, pcUseBase: boolean, pcArchive: boolean, pcVisible: boolean, id: string } | null } | null };
 
 export type DeletePaymentCategoryMutationVariables = Types.Exact<{
-  id: Types.Scalars['BigInt'];
+  id: Types.Scalars['BigInt']['input'];
 }>;
 
 

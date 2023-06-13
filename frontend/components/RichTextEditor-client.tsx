@@ -1,28 +1,28 @@
 import React from 'react';
 import { AlertCircle as ReportProblemIcon } from 'lucide-react';
-import { ControllerProps, useController } from 'react-hook-form';
+import { Control, ControllerProps, FieldValues, Path, useController } from 'react-hook-form';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { FieldHelper, FieldLabel } from './ui/form';
 
-export type RichTextEditorProps = {
+export type RichTextEditorProps<T extends FieldValues> = {
   validation?: ControllerProps['rules'];
-  name: string;
-  control?: any;
+  name: Path<T>;
+  control?: Control<T, any>;
   initialState?: string;
   className?: string;
   label?: React.ReactNode;
   helperText?: React.ReactNode;
 };
 
-export default function RichTextEditor({
+export default function RichTextEditor<T extends FieldValues>({
   name,
   control,
   label,
   className,
   helperText,
   initialState,
-}: RichTextEditorProps) {
+}: RichTextEditorProps<T>) {
   const [editor, setEditor] = React.useState<ClassicEditor | null>(null);
 
   React.useEffect(() => {
@@ -31,7 +31,7 @@ export default function RichTextEditor({
     }
   }, [editor, initialState]);
 
-  const { field, fieldState } = useController({ name, control });
+  const { field, fieldState } = useController<T>({ name, control });
 
   const _ckContent = <div className="ck-content" />; // for tailwind's JIT
   return (

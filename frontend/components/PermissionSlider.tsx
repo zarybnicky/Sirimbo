@@ -20,13 +20,13 @@ type PermissionSliderProps<T extends FieldValues> = {
   label?: React.ReactNode;
 };
 
-export function PermissionSlider<TFieldValues extends FieldValues>({
+export function PermissionSlider<T extends FieldValues>({
   name,
   control,
   label,
   validation = {},
-}: PermissionSliderProps<TFieldValues>) {
-  const { field } = useController({ name, control, rules: validation });
+}: PermissionSliderProps<T>) {
+  const { field } = useController<T>({ name, control, rules: validation });
   return (
     <div className="grid relative my-1">
       <div className="text-stone-700 text-sm mb-1">{label}</div>
@@ -42,10 +42,10 @@ export function PermissionSlider<TFieldValues extends FieldValues>({
             value={realValue as any}
             disabled={!allowedPermissions[name].includes(realValue)}
             className={classNames(
-              'group radix-state-on:text-white radix-state-on:bg-red-500  bg-white',
+              'group data-[state=on]:text-white data-[state=on]:bg-red-500 bg-white',
               'disabled:text-stone-500 disabled:bg-stone-200',
               'border-y px-2.5 py-2 first:rounded-l-xl first:border-x border-r last:rounded-r-xl',
-              'border-gray-400 radix-state-on:border-red-800',
+              'border-gray-400 data-[state=on]:border-red-800',
               'focus:relative focus:outline-none focus-visible:z-20 focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75',
             )}
           >

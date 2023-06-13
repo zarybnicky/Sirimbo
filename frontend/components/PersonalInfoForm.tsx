@@ -6,32 +6,30 @@ import { RadioButtonGroupElement } from 'components/RadioButtomGroupElement';
 import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook';
 import { useCountries } from 'lib/data/use-countries';
-import { UserInput } from '@app/graphql';
 import { ErrorBox } from 'components/ErrorBox';
 import { SubmitButton } from './SubmitButton';
-import { pipe } from 'fp-ts/lib/function';
-import { pick } from 'lib/form-utils';
 import { UpdateUserDocument } from '@app/graphql/User';
 import { useMutation } from 'urql';
+import { z } from 'zod';
 
-const fields = [
-  'uJmeno',
-  'uPrijmeni',
-  'uNarozeni',
-  'uRodneCislo',
-  'uPohlavi',
-  'uEmail',
-  'uTelefon',
-  'uStreet',
-  'uConscriptionNumber',
-  'uOrientationNumber',
-  'uCity',
-  'uDistrict',
-  'uPostalCode',
-  'uNationality',
-  'uPoznamky',
-] as const;
-type FormProps = Pick<UserInput, (typeof fields)[number]>;
+const Form = z.object({
+  uJmeno: z.string(),
+  uPrijmeni: z.string(),
+  uNarozeni: z.string(),
+  uRodneCislo: z.string().optional(),
+  uPohlavi: z.string(),
+  uEmail: z.string().email(),
+  uTelefon: z.string(),
+  uStreet: z.string(),
+  uConscriptionNumber: z.string().optional(),
+  uOrientationNumber: z.string().optional(),
+  uCity: z.string(),
+  uDistrict: z.string().optional(),
+  uPostalCode: z.string(),
+  uNationality: z.string(),
+  uPoznamky: z.string().optional(),
+});
+type FormProps = z.infer<typeof Form>;
 
 export const PersonalInfoForm: React.FC<{
   onSuccess: () => void;
@@ -42,9 +40,7 @@ export const PersonalInfoForm: React.FC<{
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
-    if (user) {
-      reset(pipe(user, pick(fields)));
-    }
+    reset(Form.optional().parse(user));
   }, [reset, user]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
