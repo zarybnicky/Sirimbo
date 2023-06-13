@@ -1,4 +1,4 @@
-import { CohortBasicFragment } from 'lib/graphql/Cohorts';
+import { CohortBasicFragment } from '@app/graphql/Cohorts';
 import React from 'react';
 
 export function CohortColorBoxes({

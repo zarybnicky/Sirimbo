@@ -3,7 +3,7 @@ import {
   CancelLessonDocument,
   ScheduleBasicFragment,
   ScheduleItemBasicFragment,
-} from 'lib/graphql/Schedule';
+} from '@app/graphql/Schedule';
 import React from 'react';
 import { Calendar, Clock, User, Users } from 'lucide-react';
 import { SubmitButton } from './SubmitButton';

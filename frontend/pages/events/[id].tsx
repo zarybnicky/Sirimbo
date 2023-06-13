@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { EventDocument } from 'lib/graphql/Event';
+import { EventDocument } from '@app/graphql/Event';
 import { EventItem } from 'components/EventItem';
 import { useAuth } from 'lib/data/use-auth';
 import { EventMemberList } from 'components/EventMemberList';

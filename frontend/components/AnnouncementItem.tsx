@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { fullDateFormatter } from 'lib/format-date';
-import { AnnouncementFragment } from 'lib/graphql/Announcement';
+import { AnnouncementFragment } from '@app/graphql/Announcement';
 import React from 'react';
 import { Card } from './Card';
 import { CohortColorBoxes } from './CohortColorBox';

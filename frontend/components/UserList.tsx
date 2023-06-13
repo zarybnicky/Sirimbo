@@ -1,13 +1,13 @@
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { List } from 'components/layout/List';
-import { RoleListDocument } from 'lib/graphql/Roles';
-import { CohortListDocument } from 'lib/graphql/Cohorts';
+import { RoleListDocument } from '@app/graphql/Roles';
+import { CohortListDocument } from '@app/graphql/Cohorts';
 import { TextField } from './TextField';
 import React from 'react';
 import { exportMSMT } from 'lib/export-msmt';
 import { fromSlugArray } from 'lib/slugify';
-import { UserListDocument } from 'lib/graphql/User';
+import { UserListDocument } from '@app/graphql/User';
 import { useFuzzySearch } from 'lib/use-fuzzy-search';
 import { Virtuoso } from 'react-virtuoso';
 import { useQuery } from 'urql';

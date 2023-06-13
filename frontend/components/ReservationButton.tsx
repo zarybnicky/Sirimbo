@@ -7,7 +7,7 @@ import { formatCoupleName } from 'lib/format-name';
 import {
   MyReservationFragment,
   SetDesiredLessonsDocument,
-} from 'lib/graphql/Reservation';
+} from '@app/graphql/Reservation';
 import { useMutation } from 'urql';
 
 export const ReservationButton = ({ item }: { item: MyReservationFragment }) => {

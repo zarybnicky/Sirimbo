@@ -1,7 +1,7 @@
 import { Card } from 'components/Card';
 import { Heading } from 'components/Heading';
 import { RichTextView } from 'components/RichTextView';
-import { CohortGroupFragment, CohortGroupDocument } from 'lib/graphql/CohortGroup';
+import { CohortGroupFragment, CohortGroupDocument } from '@app/graphql/CohortGroup';
 import { fetchGql } from 'lib/query';
 import { fromSlugArray, slugify } from 'lib/slugify';
 import { GetStaticProps } from 'next';

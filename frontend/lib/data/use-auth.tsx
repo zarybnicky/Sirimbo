@@ -5,7 +5,7 @@ import {
   LoginDocument,
   LogoutDocument,
   UserAuthFragment,
-} from 'lib/graphql/CurrentUser';
+} from '@app/graphql/CurrentUser';
 import { useRouter } from 'next/router';
 import { defaultPermissions, PermissionChecker } from './use-permissions';
 import { useMutation, useQuery } from 'urql';

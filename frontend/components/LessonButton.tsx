@@ -1,4 +1,4 @@
-import { ScheduleBasicFragment, ScheduleItemBasicFragment } from 'lib/graphql/Schedule';
+import { ScheduleBasicFragment, ScheduleItemBasicFragment } from '@app/graphql/Schedule';
 import * as Collapsible from '@radix-ui/react-collapsible';
 import React from 'react';
 import classNames from 'classnames';

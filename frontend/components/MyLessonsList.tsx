@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { MyLessonsDocument, ScheduleItemFragment } from 'lib/graphql/Schedule';
+import { MyLessonsDocument, ScheduleItemFragment } from '@app/graphql/Schedule';
 import { useAuth } from 'lib/data/use-auth';
 import { LessonButton } from './LessonButton';
 import { Card } from './Card';
 import { formatWeekDay } from 'lib/format-date';
 import { WeekPicker, mondayToWeekRange, getCurrentMonday } from './WeekPicker';
-import { CohortDocument } from 'lib/graphql/Cohorts';
+import { CohortDocument } from '@app/graphql/Cohorts';
 import { RichTextView } from './RichTextView';
 import { Schedule } from 'lib/entities';
 import { useQuery } from 'urql';

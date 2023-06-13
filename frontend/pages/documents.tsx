@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { ComboboxElement } from 'components/Combobox';
-import { FileListDocument } from 'lib/graphql/Documents';
+import { FileListDocument } from '@app/graphql/Documents';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { fullDateFormatter } from 'lib/format-date';
 import { Card } from 'components/Card';

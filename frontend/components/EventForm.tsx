@@ -1,10 +1,10 @@
-import { EventInput } from 'lib/graphql';
+import { EventInput } from '@app/graphql';
 import {
   CreateEventDocument,
   DeleteEventDocument,
   EventDocument,
   UpdateEventDocument,
-} from 'lib/graphql/Event';
+} from '@app/graphql/Event';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';

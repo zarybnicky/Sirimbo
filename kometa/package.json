@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@app/graphql": "workspace:*",
     "@types/node": "^20.2",
     "@types/react": "18.2.6",
     "@types/react-big-scheduler": "^0.2.4",

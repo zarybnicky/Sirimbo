@@ -1,11 +1,11 @@
 import { DropdownItem } from 'components/Dropdown';
-import { AnnouncementFragment } from 'lib/graphql/Announcement';
+import { AnnouncementFragment } from '@app/graphql/Announcement';
 import { useAuth } from './data/use-auth';
-import { CohortBasicFragment } from './graphql/Cohorts';
-import { EventFragment } from './graphql/Event';
-import { ReservationBasicFragment } from './graphql/Reservation';
-import { ToggleUpozorneniVisibleDocument } from './graphql/Announcement';
-import { ScheduleBasicFragment } from './graphql/Schedule';
+import { CohortBasicFragment } from '@app/graphql/Cohorts';
+import { EventFragment } from '@app/graphql/Event';
+import { ReservationBasicFragment } from '@app/graphql/Reservation';
+import { ToggleUpozorneniVisibleDocument } from '@app/graphql/Announcement';
+import { ScheduleBasicFragment } from '@app/graphql/Schedule';
 import { useMutation } from 'urql';
 import { Route } from 'nextjs-routes';
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
-import { CohortListWithMembersDocument } from 'lib/graphql/Cohorts';
+import { CohortListWithMembersDocument } from '@app/graphql/Cohorts';
 import { useAuth } from 'lib/data/use-auth';
 import { CohortExport } from 'components/CohortExport';
 import { CohortItem } from 'components/CohortItem';

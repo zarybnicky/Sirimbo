@@ -3,15 +3,15 @@ import {
   ConfirmUserDocument,
   DeleteUserDocument,
   UserListDocument,
-} from 'lib/graphql/User';
+} from '@app/graphql/User';
 import { ComboboxElement } from 'components/Combobox';
 import { useForm } from 'react-hook-form';
 import { Trash2 as DeleteIcon, Check as CheckIcon } from 'lucide-react';
 import { useConfirm } from 'components/Confirm';
 import React from 'react';
-import { UserFragment } from 'lib/graphql/CurrentUser';
-import { CohortListDocument } from 'lib/graphql/Cohorts';
-import { RoleListDocument } from 'lib/graphql/Roles';
+import { UserFragment } from '@app/graphql/CurrentUser';
+import { CohortListDocument } from '@app/graphql/Cohorts';
+import { RoleListDocument } from '@app/graphql/Roles';
 import { fullDateFormatter } from 'lib/format-date';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { UserList } from 'components/UserList';

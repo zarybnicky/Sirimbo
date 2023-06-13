@@ -4,7 +4,7 @@ import {
   CreateParticipationDocument,
   EventFragment,
   MyEventFragment,
-} from 'lib/graphql/Event';
+} from '@app/graphql/Event';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextAreaElement, TextField, TextFieldElement } from 'components/TextField';
@@ -13,7 +13,7 @@ import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { useAuth } from 'lib/data/use-auth';
 import { Button } from './Button';
-import type { AttendeeExternalInput } from 'lib/graphql';
+import type { AttendeeExternalInput } from '@app/graphql';
 import { toast } from 'react-toastify';
 import { Dialog, DialogContent, DialogTrigger } from './ui/dialog';
 import { useMutation } from 'urql';

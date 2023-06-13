@@ -1,11 +1,11 @@
-import {CreatePaymentGroupDocument, DeletePaymentGroupDocument, PaymentGroupDocument, UpdatePaymentGroupDocument} from 'lib/graphql/Payment';
+import {CreatePaymentGroupDocument, DeletePaymentGroupDocument, PaymentGroupDocument, UpdatePaymentGroupDocument} from '@app/graphql/Payment';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextAreaElement, TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
-import { PlatbyGroupInput } from 'lib/graphql';
+import { PlatbyGroupInput } from '@app/graphql';
 import { useMutation, useQuery } from 'urql';
 import { useRouter } from 'next/router';
 import { ErrorPage } from './ErrorPage';

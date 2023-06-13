@@ -4,8 +4,8 @@ import { useForm } from 'react-hook-form';
 import { ComboboxElement } from 'components/Combobox';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
-import { UserListDocument } from 'lib/graphql/User';
-import { CreateCoupleDocument } from 'lib/graphql/Couple';
+import { UserListDocument } from '@app/graphql/User';
+import { CreateCoupleDocument } from '@app/graphql/Couple';
 import { useMutation, useQuery } from 'urql';
 
 type FormProps = {

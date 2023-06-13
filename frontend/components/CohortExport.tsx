@@ -4,7 +4,7 @@ import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { Button } from './Button';
 import { useAuth } from 'lib/data/use-auth';
 import { fetchGql } from 'lib/query';
-import { MemberListDocument } from 'lib/graphql/User';
+import { MemberListDocument } from '@app/graphql/User';
 
 export function CohortExport({ id, name }: { id?: string; name?: string }) {
   const { perms } = useAuth();

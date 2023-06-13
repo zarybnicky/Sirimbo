@@ -4,7 +4,7 @@ import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from 'components/ErrorBox';
 import { SubmitButton } from './SubmitButton';
-import { ChangePasswordDocument } from 'lib/graphql/CurrentUser';
+import { ChangePasswordDocument } from '@app/graphql/CurrentUser';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from 'urql';

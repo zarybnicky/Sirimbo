@@ -23,7 +23,7 @@ import { retryExchange } from '@urql/exchange-retry';
 import { refocusExchange } from '@urql/exchange-refocus';
 import { requestPolicyExchange } from '@urql/exchange-request-policy';
 import { origin, cacheConfig } from 'lib/query';
-import schema from 'lib/graphql/introspection.json';
+import schema from '@app/graphql/introspection.json';
 import { devtoolsExchange } from '@urql/devtools';
 
 Router.events.on('routeChangeStart', () => NProgress.start());

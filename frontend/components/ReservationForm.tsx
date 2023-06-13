@@ -3,7 +3,7 @@ import {
   DeleteReservationDocument,
   ReservationDocument,
   UpdateReservationDocument,
-} from 'lib/graphql/Reservation';
+} from '@app/graphql/Reservation';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { ComboboxElement } from 'components/Combobox';
@@ -12,9 +12,9 @@ import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
-import { NabidkaInput } from 'lib/graphql';
+import { NabidkaInput } from '@app/graphql';
 import { DateRange, DateRangeInput } from './DateRange';
-import { TrainerListDocument } from 'lib/graphql/User';
+import { TrainerListDocument } from '@app/graphql/User';
 import { DeleteButton } from './DeleteButton';
 import { Route } from 'nextjs-routes';
 import { useRouter } from 'next/router';

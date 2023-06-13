@@ -4,7 +4,7 @@ import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
-import {CurrentTenantDocument, UpdateTenantDocument} from 'lib/graphql/Tenant';
+import {CurrentTenantDocument, UpdateTenantDocument} from '@app/graphql/Tenant';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';

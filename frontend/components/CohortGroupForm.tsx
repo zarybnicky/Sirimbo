@@ -3,7 +3,7 @@ import {
   CreateCohortGroupDocument,
   DeleteCohortGroupDocument,
   UpdateCohortGroupDocument,
-} from 'lib/graphql/CohortGroup';
+} from '@app/graphql/CohortGroup';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
@@ -12,7 +12,7 @@ import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { toast } from 'react-toastify';
-import { CohortListDocument, UpdateCohortDocument } from 'lib/graphql/Cohorts';
+import { CohortListDocument, UpdateCohortDocument } from '@app/graphql/Cohorts';
 import { Plus } from 'lucide-react';
 import { Command, CommandItem, CommandInput, CommandList } from 'components/ui/command';
 import { z } from 'zod';

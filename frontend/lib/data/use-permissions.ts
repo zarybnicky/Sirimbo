@@ -1,8 +1,8 @@
-import { ScheduleBasicFragment, ScheduleItemBasicFragment } from 'lib/graphql/Schedule';
+import { ScheduleBasicFragment, ScheduleItemBasicFragment } from '@app/graphql/Schedule';
 import {
   ReservationBasicFragment,
   ReservationItemBasicFragment,
-} from 'lib/graphql/Reservation';
+} from '@app/graphql/Reservation';
 import { useAuth } from './use-auth';
 
 export enum PermissionLevel {

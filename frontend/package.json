@@ -9,7 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@app/graphql": "*",
+    "@0no-co/graphql.web": "^1.0.4",
+    "@app/graphql": "workspace:*",
     "@babel/core": "^7.20.2",
     "@babel/preset-env": "^7.20.2",
     "@ckeditor/ckeditor5-build-classic": "^37.1.0",

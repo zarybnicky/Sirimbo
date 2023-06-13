@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { fullDateFormatter } from 'lib/format-date';
-import { MyEventsDocument } from 'lib/graphql/Event';
+import { MyEventsDocument } from '@app/graphql/Event';
 import Link from 'next/link';
 import { useQuery } from 'urql';
 import { Card } from './Card';

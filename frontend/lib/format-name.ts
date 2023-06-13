@@ -1,4 +1,4 @@
-import { CouplePartialFragment } from './graphql/CurrentUser';
+import { CouplePartialFragment } from '@app/graphql/CurrentUser';
 
 export const formatCoupleName = (couple: CouplePartialFragment | null) => {
   const man = couple?.userByPIdPartner;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Pagination } from './Pagination';
 import { AnnouncementItem } from './AnnouncementItem';
-import { MyAnnouncementsDocument } from 'lib/graphql/Announcement';
+import { MyAnnouncementsDocument } from '@app/graphql/Announcement';
 import { useQuery } from 'urql';
 
 export function MyAnnouncements() {

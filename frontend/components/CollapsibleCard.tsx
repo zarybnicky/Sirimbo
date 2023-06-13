@@ -1,6 +1,6 @@
 import * as Collapsible from '@radix-ui/react-collapsible';
 import classNames from 'classnames';
-import { CohortFragment } from 'lib/graphql/Cohorts';
+import { CohortFragment } from '@app/graphql/Cohorts';
 import React from 'react';
 import { ChevronDown } from 'lucide-react';
 

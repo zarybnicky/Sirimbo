@@ -9,7 +9,7 @@ import { RadioButtonGroup } from './RadioButtonGroup';
 import { useForm } from 'react-hook-form';
 import { Card } from './Card';
 import { useMutation } from 'urql';
-import { SubmitFormDocument } from 'lib/graphql/Crm';
+import { SubmitFormDocument } from '@app/graphql/Crm';
 
 export const ExhibitionRequestForm = () => {
   const submit = useMutation(SubmitFormDocument)[1];

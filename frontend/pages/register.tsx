@@ -10,8 +10,8 @@ import { useRouter } from 'next/router';
 import { SubmitButton } from 'components/SubmitButton';
 import { RadioButtonGroupElement } from 'components/RadioButtomGroupElement';
 import { toast } from 'react-toastify';
-import { CohortListDocument } from 'lib/graphql/Cohorts';
-import { RegisterDocument } from 'lib/graphql/CurrentUser';
+import { CohortListDocument } from '@app/graphql/Cohorts';
+import { RegisterDocument } from '@app/graphql/CurrentUser';
 import type { NextPageWithLayout } from 'pages/_app';
 import { useMutation, useQuery } from 'urql';
 

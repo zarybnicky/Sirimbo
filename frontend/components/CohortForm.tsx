@@ -1,10 +1,10 @@
-import { SkupinyInput } from 'lib/graphql';
+import { SkupinyInput } from '@app/graphql';
 import {
   CohortDocument,
   CreateCohortDocument,
   DeleteCohortDocument,
   UpdateCohortDocument,
-} from 'lib/graphql/Cohorts';
+} from '@app/graphql/Cohorts';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
@@ -13,7 +13,7 @@ import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { ColorPicker } from './ColorPicker';
-import { CohortGroupListDocument } from 'lib/graphql/CohortGroup';
+import { CohortGroupListDocument } from '@app/graphql/CohortGroup';
 import { ComboboxElement } from './Combobox';
 import { pick } from 'lib/form-utils';
 import { pipe } from 'fp-ts/function';

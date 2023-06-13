@@ -1,7 +1,7 @@
 import { saveAs } from 'file-saver';
 import format from 'date-fns/format';
 import { fetchGql } from './query';
-import { MsmtExportDocument } from './graphql/User';
+import { MsmtExportDocument } from '@app/graphql/User';
 
 export async function exportMSMT() {
   const { Workbook } = await import('exceljs');

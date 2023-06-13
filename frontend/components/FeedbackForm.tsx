@@ -5,7 +5,7 @@ import { Edit3, X as CloseIcon } from 'lucide-react';
 import { TextFieldElement } from './TextField';
 import { SubmitButton } from './SubmitButton';
 import { useForm } from 'react-hook-form';
-import { SubmitFormDocument } from 'lib/graphql/Crm';
+import { SubmitFormDocument } from '@app/graphql/Crm';
 import { useAsyncCallback } from 'react-async-hook';
 import { toast } from 'react-toastify';
 import { useCookie } from 'lib/use-cookie';

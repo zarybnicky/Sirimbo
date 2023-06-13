@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
 import { toast } from 'react-toastify';
 import type { NextPageWithLayout } from 'pages/_app';
-import { ResetPasswordDocument } from 'lib/graphql/CurrentUser';
+import { ResetPasswordDocument } from '@app/graphql/CurrentUser';
 import { useMutation } from 'urql';
 
 const Page: NextPageWithLayout = () => {

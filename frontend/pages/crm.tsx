@@ -3,7 +3,7 @@ import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { fullDateFormatter } from 'lib/format-date';
 import { Button } from 'components/Button';
 import { saveAs } from 'file-saver';
-import { FormResponsesDocument } from 'lib/graphql/Crm';
+import { FormResponsesDocument } from '@app/graphql/Crm';
 import type { NextPageWithLayout } from 'pages/_app';
 import { useQuery } from 'urql';
 import { TitleBar } from 'components/layout/TitleBar';

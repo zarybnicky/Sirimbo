@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MyReservationFragment } from 'lib/graphql/Reservation';
+import { MyReservationFragment } from '@app/graphql/Reservation';
 import { Card } from 'components/Card';
 import { shortDateFormatter } from 'lib/format-date';
 import { formatCoupleName } from 'lib/format-name';

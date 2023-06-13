@@ -1,4 +1,4 @@
-import { ArticlesDocument } from 'lib/graphql/Articles';
+import { ArticlesDocument } from '@app/graphql/Articles';
 import { slugify } from 'lib/slugify';
 import { Route } from 'nextjs-routes';
 import { useQuery } from 'urql';

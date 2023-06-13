@@ -1,4 +1,4 @@
-import {CreatePaymentCategoryDocument, DeletePaymentCategoryDocument, PaymentCategoryDocument, UpdatePaymentCategoryDocument,} from 'lib/graphql/Payment';
+import {CreatePaymentCategoryDocument, DeletePaymentCategoryDocument, PaymentCategoryDocument, UpdatePaymentCategoryDocument,} from '@app/graphql/Payment';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
@@ -6,7 +6,7 @@ import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
-import { PlatbyCategoryInput } from 'lib/graphql';
+import { PlatbyCategoryInput } from '@app/graphql';
 import { pipe } from 'fp-ts/lib/function';
 import { pick } from 'lib/form-utils';
 import { useMutation, useQuery } from 'urql';

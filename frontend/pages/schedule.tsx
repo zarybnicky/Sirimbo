@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { ReservationRangeDocument } from 'lib/graphql/Reservation';
-import { ScheduleFragment, ScheduleRangeDocument } from 'lib/graphql/Schedule';
+import { ReservationRangeDocument } from '@app/graphql/Reservation';
+import { ScheduleFragment, ScheduleRangeDocument } from '@app/graphql/Schedule';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { formatWeekDay } from 'lib/format-date';
 import { ScheduleItem } from 'components/ScheduleItem';

@@ -1,4 +1,4 @@
-import { CohortFragment } from 'lib/graphql/Cohorts';
+import { CohortFragment } from '@app/graphql/Cohorts';
 import React from 'react';
 import { MoreVertical } from 'lucide-react';
 import { Dropdown, DropdownItem } from './Dropdown';

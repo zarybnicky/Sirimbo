@@ -6,7 +6,7 @@ import {
   ScheduleItemBasicFragment,
   UpdateScheduleDocument,
   UpdateLessonDocument,
-} from 'lib/graphql/Schedule';
+} from '@app/graphql/Schedule';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from 'components/TextField';
@@ -14,8 +14,8 @@ import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
-import { RozpiInput } from 'lib/graphql';
-import { TrainerListDocument } from 'lib/graphql/User';
+import { RozpiInput } from '@app/graphql';
+import { TrainerListDocument } from '@app/graphql/User';
 import { useRouter } from 'next/router';
 import { ComboboxElement } from './Combobox';
 import { Route } from 'nextjs-routes';
@@ -27,7 +27,7 @@ import { X, Check } from 'lucide-react';
 import { useMutation, useQuery } from 'urql';
 import { TitleBar } from './layout/TitleBar';
 import { Card } from './Card';
-import { CoupleListDocument } from 'lib/graphql/Couple';
+import { CoupleListDocument } from '@app/graphql/Couple';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 

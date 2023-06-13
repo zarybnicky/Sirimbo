@@ -15,20 +15,20 @@ import {
 } from './entities';
 import { fullDateFormatter } from './format-date';
 import { formatCoupleName } from './format-name';
-import { AnnouncementListDocument } from './graphql/Announcement';
-import { ArticlesDocument } from './graphql/Articles';
-import { CohortGroupListDocument } from './graphql/CohortGroup';
-import { CohortListDocument } from './graphql/Cohorts';
-import { CoupleListDocument } from './graphql/Couple';
-import { EventListDocument } from './graphql/Event';
-import { ReservationListDocument } from './graphql/Reservation';
-import { ScheduleListDocument } from './graphql/Schedule';
+import { AnnouncementListDocument } from '@app/graphql/Announcement';
+import { ArticlesDocument } from '@app/graphql/Articles';
+import { CohortGroupListDocument } from '@app/graphql/CohortGroup';
+import { CohortListDocument } from '@app/graphql/Cohorts';
+import { CoupleListDocument } from '@app/graphql/Couple';
+import { EventListDocument } from '@app/graphql/Event';
+import { ReservationListDocument } from '@app/graphql/Reservation';
+import { ScheduleListDocument } from '@app/graphql/Schedule';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
-import { FixUnpairedCouplesDocument } from 'lib/graphql/Couple';
+import { FixUnpairedCouplesDocument } from '@app/graphql/Couple';
 import React from 'react';
 import { List } from 'components/layout/List';
-import { PaymentCategoryListDocument, PaymentGroupListDocument, PaymentItemListDocument } from './graphql/Payment';
+import { PaymentCategoryListDocument, PaymentGroupListDocument, PaymentItemListDocument } from '@app/graphql/Payment';
 
 export const ArticleList = makeAdminList(
   Article,

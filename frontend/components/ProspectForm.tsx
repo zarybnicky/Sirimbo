@@ -7,7 +7,7 @@ import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { toast } from 'react-toastify';
-import { SubmitFormDocument } from 'lib/graphql/Crm';
+import { SubmitFormDocument } from '@app/graphql/Crm';
 import { useMutation } from 'urql';
 
 type ProspectFormProps = {

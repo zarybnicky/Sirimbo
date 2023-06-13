@@ -3,7 +3,7 @@ import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { DeleteButton } from 'components/DeleteButton';
 import { fromSlugArray } from 'lib/slugify';
 import type { NextPageWithLayout } from 'pages/_app';
-import { CoupleDocument, DeleteCoupleDocument } from 'lib/graphql/Couple';
+import { CoupleDocument, DeleteCoupleDocument } from '@app/graphql/Couple';
 import { LessonButton } from 'components/LessonButton';
 import { CoupleList } from 'lib/entity-lists';
 import { formatCoupleName } from 'lib/format-name';

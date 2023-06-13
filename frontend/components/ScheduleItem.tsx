@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ScheduleFragment } from 'lib/graphql/Schedule';
+import { ScheduleFragment } from '@app/graphql/Schedule';
 import { LessonButton } from 'components/LessonButton';
 import { Card } from 'components/Card';
 import { Schedule } from 'lib/entities';

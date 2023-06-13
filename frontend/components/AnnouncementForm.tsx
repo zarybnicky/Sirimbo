@@ -4,14 +4,14 @@ import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
-import { UpozorneniInput } from 'lib/graphql';
+import { UpozorneniInput } from '@app/graphql';
 import {
   AnnouncementDocument,
   AnnouncementFragment,
   CreateAnnouncementDocument,
   DeleteAnnouncementDocument,
   UpdateAnnouncementDocument,
-} from 'lib/graphql/Announcement';
+} from '@app/graphql/Announcement';
 import { DatePickerElement } from './DateRange';
 import { useMutation } from 'urql';
 import { CheckboxElement } from './Checkbox';

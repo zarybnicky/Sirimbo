@@ -6,12 +6,12 @@ import { RadioButtonGroupElement } from 'components/RadioButtomGroupElement';
 import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook';
 import { useCountries } from 'lib/data/use-countries';
-import { UserInput } from 'lib/graphql';
+import { UserInput } from '@app/graphql';
 import { ErrorBox } from 'components/ErrorBox';
 import { SubmitButton } from './SubmitButton';
 import { pipe } from 'fp-ts/lib/function';
 import { pick } from 'lib/form-utils';
-import { UpdateUserDocument } from 'lib/graphql/User';
+import { UpdateUserDocument } from '@app/graphql/User';
 import { useMutation } from 'urql';
 
 const fields = [

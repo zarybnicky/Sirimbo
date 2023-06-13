@@ -1,8 +1,8 @@
 import { List } from 'components/layout/List';
 import { useAuth } from 'lib/data/use-auth';
 import { getAgeGroup } from 'lib/get-age-group';
-import { CohortListDocument } from 'lib/graphql/Cohorts';
-import { MyLessonsDocument } from 'lib/graphql/Schedule';
+import { CohortListDocument } from '@app/graphql/Cohorts';
+import { MyLessonsDocument } from '@app/graphql/Schedule';
 import React from 'react';
 import { Edit } from 'lucide-react';
 import { PersonalInfoForm } from 'components/PersonalInfoForm';

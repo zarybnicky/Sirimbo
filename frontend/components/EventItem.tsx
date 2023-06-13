@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Card } from 'components/Card';
 import { fullDateFormatter } from 'lib/format-date';
 import { Button } from './Button';
-import { EventWithItemsFragment } from 'lib/graphql/Event';
+import { EventWithItemsFragment } from '@app/graphql/Event';
 import { ParticipationDialog } from './ParticipationForm';
 import { RichTextView } from './RichTextView';
 import { EventParticipantExport } from './EventParticipantExport';

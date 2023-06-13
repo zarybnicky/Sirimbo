@@ -5,15 +5,15 @@ import {
   PaymentCategoryListDocument,
   PaymentItemDocument,
   UpdatePaymentItemDocument,
-} from 'lib/graphql/Payment';
+} from '@app/graphql/Payment';
 import { useForm } from 'react-hook-form';
 import { ComboboxElement } from 'components/Combobox';
 import { TextFieldElement } from 'components/TextField';
 import { useAsyncCallback } from 'react-async-hook';
 import { ErrorBox } from './ErrorBox';
 import { SubmitButton } from './SubmitButton';
-import { PlatbyItemInput } from 'lib/graphql';
-import { UserListDocument } from 'lib/graphql/User';
+import { PlatbyItemInput } from '@app/graphql';
+import { UserListDocument } from '@app/graphql/User';
 import { useMutation, useQuery } from 'urql';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';

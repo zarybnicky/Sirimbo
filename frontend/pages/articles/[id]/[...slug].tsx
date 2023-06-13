@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
-import { ArticleDocument, ArticleFragment } from 'lib/graphql/Articles';
+import { ArticleDocument, ArticleFragment } from '@app/graphql/Articles';
 import { fullDateFormatter } from 'lib/format-date';
 import { RichTextView } from 'components/RichTextView';
 import { NextSeo } from 'next-seo';
