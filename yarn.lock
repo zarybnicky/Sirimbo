@@ -34,6 +34,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@app/calendar@workspace:@app/calendar":
+  version: 0.0.0-use.local
+  resolution: "@app/calendar@workspace:@app/calendar"
+  dependencies:
+    clsx: ^1.2.1
+    date-arithmetic: ^4.1.0
+    dom-helpers: ^5.2.1
+    lodash: ^4.17.21
+    memoize-one: ^6.0.0
+    react-overlays: ^5.2.1
+    uncontrollable: ^7.2.1
+  peerDependencies:
+    react: "*"
+    react-dom: "*"
+  languageName: unknown
+  linkType: soft
+
 "@app/graphql@workspace:*, @app/graphql@workspace:@app/graphql":
   version: 0.0.0-use.local
   resolution: "@app/graphql@workspace:@app/graphql"
@@ -64,10 +81,11 @@ __metadata:
     classnames: ^2.3.2
     cmdk: ^0.2.0
     lucide-react: ^0.244.0
-    react: ^18.2.0
-    react-dom: ^18.2.0
     react-hook-form: ^7.44.3
     tailwind-merge: ^1.13.1
+  peerDependencies:
+    react: "*"
+    react-dom: "*"
   languageName: unknown
   linkType: soft
 
