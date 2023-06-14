@@ -1,12 +1,6 @@
 import React from 'react';
 import { AlertCircle as ReportProblemIcon } from 'lucide-react';
-import {
-  Control,
-  FieldValues,
-  ControllerProps,
-  Path,
-  useController,
-} from 'react-hook-form';
+import { Control, FieldValues, Path, useController } from 'react-hook-form';
 import { FieldHelper, FieldHelperProps, FieldLabel } from '../form';
 
 type Extras = {

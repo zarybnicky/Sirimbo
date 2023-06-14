@@ -137,8 +137,8 @@ const SidebarSection = ({ item }: { item: MenuStructItem }) => {
     <SidebarLink item={item} />
   ) : (
     <>
-      <div key={item.title} className="ml-5 mt-4">
-        <div className="font-bold text-xs uppercase grow my-1">{item.title}</div>
+      <div key={item.title} className="ml-5">
+        <div className="font-bold text-xs uppercase grow mt-5">{item.title}</div>
       </div>
       <div className="list-none grid gap-0.5">
         {item.children.map((y) => (

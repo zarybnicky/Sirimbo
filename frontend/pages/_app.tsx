@@ -34,13 +34,14 @@ export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> &
 
 type AppPropsWithLayout<T = {}> = AppProps<T> & {
   Component: NextPageWithLayout<T>;
+  resetUrqlClient: () => void;
 };
 
-function App({ Component, pageProps }: AppPropsWithLayout) {
+function App({ Component, pageProps, resetUrqlClient }: AppPropsWithLayout) {
   const { staticTitle, isDetail, list, showTopMenu, hideTopMenuIfLoggedIn, permissions, requireLoggedOut } = Component;
   const layoutProps = { staticTitle, isDetail, list, showTopMenu, hideTopMenuIfLoggedIn, permissions, requireLoggedOut };
   return (
-    <ProvideAuth>
+    <ProvideAuth onReset={resetUrqlClient}>
       <ConfirmProvider>
         <Tracking />
         <DefaultSeo

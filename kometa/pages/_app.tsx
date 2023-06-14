@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AppProps, NextWebVitalsMetric } from 'next/app';
+import { AppProps } from 'next/app';
 import { ProvideAuth } from 'lib/use-auth';
 import { Layout, type LayoutProps } from 'components/Layout';
 import 'public/style/index.css';
@@ -13,13 +13,14 @@ export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> &
 
 type AppPropsWithLayout<T = {}> = AppProps<T> & {
   Component: NextPageWithLayout<T>;
+  resetUrqlClient: () => void;
 };
 
-function App({ Component, pageProps }: AppPropsWithLayout) {
+function App({ Component, pageProps, resetUrqlClient }: AppPropsWithLayout) {
   const { isDetail, list } = Component;
   const layoutProps = { isDetail, list };
   return (
-    <ProvideAuth>
+    <ProvideAuth onReset={resetUrqlClient}>
       <ToastProvider swipeDirection="right">
         <DefaultSeo
           titleTemplate="%s · Rozpisovník"

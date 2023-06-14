@@ -21,7 +21,10 @@ interface AuthContextType {
 
 const authContext = React.createContext<AuthContextType | undefined>(undefined);
 
-export const ProvideAuth = ({ children }: React.PropsWithChildren) => {
+export const ProvideAuth = ({ children, onReset }: {
+  onReset?: () => void;
+  children: React.ReactNode;
+}) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
@@ -45,10 +48,12 @@ export const ProvideAuth = ({ children }: React.PropsWithChildren) => {
     },
     [doSignIn],
   );
+
   const signOut = React.useCallback(async () => {
-    router.push('/');
     await doSignOut({});
-  }, [router, doSignOut]);
+    onReset?.();
+    router.push('/');
+  }, [router, doSignOut, onReset]);
 
   const perms = React.useMemo(() => {
     const perms = user?.permissionByUGroup || defaultPermissions;

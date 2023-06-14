@@ -1,6 +1,6 @@
 import { LoginForm } from '@/components/LoginForm';
 import { useAuth } from '@/lib/use-auth';
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   Calendar,
   SlotInfo,
@@ -17,6 +17,9 @@ import format from 'date-fns/format';
 import startOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
 import cs from 'date-fns/locale/cs';
+import { ScheduleRangeDocument } from '@app/graphql/Schedule';
+import { useQuery } from 'urql';
+import { formatCoupleName } from '../../frontend/lib/format-name';
 
 const DragAndDropCalendar = withDragAndDrop<Event, Resource>(Calendar);
 
@@ -34,43 +37,51 @@ type Resource = {
   resourceTitle: string;
 };
 
-const defaultEvents: Event[] = [
-  {
-    id: 0,
-    title: 'Board meeting',
-    start: new Date(2018, 0, 29, 9, 0, 0),
-    end: new Date(2018, 0, 29, 13, 0, 0),
-    resourceId: [1, 2],
-  },
-  {
-    id: 1,
-    title: 'MS training',
-    start: new Date(2018, 0, 29, 14, 0, 0),
-    end: new Date(2018, 0, 29, 16, 30, 0),
-    resourceId: 2,
-  },
-  {
-    id: 2,
-    title: 'Team lead meeting',
-    start: new Date(2018, 0, 29, 8, 30, 0),
-    end: new Date(2018, 0, 29, 12, 30, 0),
-    resourceId: 3,
-  },
-];
-
-const resourceMap: Resource[] = [
-  { resourceId: 1, resourceTitle: 'Board room' },
-  { resourceId: 2, resourceTitle: 'Training room' },
-  { resourceId: 3, resourceTitle: 'Meeting room 1' },
-  { resourceId: 4, resourceTitle: 'Meeting room 2' },
-];
-
 const localizer = dateFnsLocalizer({ format, startOfWeek, getDay, locales: { cs } });
 
 function DnDResource() {
   const { user } = useAuth();
 
-  const [events, setEvents] = React.useState(defaultEvents);
+  const defaultDate = React.useMemo(() => new Date(2023, 4, 15), []);
+  const min = React.useMemo(() => new Date(1972, 0, 1, 8), []);
+  const max = React.useMemo(() => new Date(1972, 0, 1, 23), []);
+  const [{ data: schedules }] = useQuery({
+    query: ScheduleRangeDocument,
+    pause: !user,
+    variables: {
+      startDate: '2023-05-15',
+      endDate: '2023-05-21',
+    },
+  });
+
+  const resources = useMemo(() => {
+    const resources: Resource[] = [];
+    schedules?.schedulesForRange?.nodes.forEach((x) => {
+      const existing = resources.find((y) => y.resourceId === parseInt(x.rTrener));
+      if (!existing) {
+        resources.push({
+          resourceId: parseInt(x.rTrener),
+          resourceTitle: x.userByRTrener?.fullName ?? '',
+        });
+      }
+    });
+    return resources;
+  }, [schedules]);
+  const events = useMemo(() => {
+    const events: Event[] = [];
+    schedules?.schedulesForRange?.nodes.forEach((schedule) => {
+      schedule.rozpisItemsByRiIdRodic.nodes.forEach((lesson) => {
+        events.push({
+          id: parseInt(lesson.id),
+          title: formatCoupleName(lesson.paryByRiPartner),
+          resourceId: parseInt(schedule.rTrener),
+          start: new Date(schedule.rDatum + 'T' + lesson.riOd),
+          end: new Date(schedule.rDatum + 'T' + lesson.riDo),
+        });
+      });
+    });
+    return events;
+  }, [schedules]);
 
   const moveEvent = React.useCallback(
     ({
@@ -93,56 +104,50 @@ function DnDResource() {
         );
       }
 
-      setEvents((prev) => {
-        const existing = prev.find((ev) => ev.id === event.id);
-        if (existing) {
-          const filtered = prev.filter((ev) => ev.id !== event.id);
-          return [
-            ...filtered,
-            { ...existing, start, end, resourceId, allDay: event.allDay },
-          ];
-        } else {
-          // TODO: NEW EVENT
-          return prev;
-        }
-      });
+      /* setEvents((prev) => {
+       *   const existing = prev.find((ev) => ev.id === event.id);
+       *   if (existing) {
+       *     const filtered = prev.filter((ev) => ev.id !== event.id);
+       *     return [
+       *       ...filtered,
+       *       { ...existing, start, end, resourceId, allDay: event.allDay },
+       *     ];
+       *   } else {
+       *     // TODO: NEW EVENT
+       *     return prev;
+       *   }
+       * }); */
     },
     [],
   );
 
   const resizeEvent = React.useCallback(
     ({ event, start, end }: EventInteractionArgs<Event>) => {
-      setEvents((prev) => {
-        const existing = prev.find((ev) => ev.id === event.id);
-        if (existing) {
-          const filtered = prev.filter((ev) => ev.id !== event.id);
-          return [...filtered, { ...existing, start, end }];
-        } else {
-          // TODO: NEW EVENT
-          return prev;
-        }
-      });
+      /* setEvents((prev) => {
+       *   const existing = prev.find((ev) => ev.id === event.id);
+       *   if (existing) {
+       *     const filtered = prev.filter((ev) => ev.id !== event.id);
+       *     return [...filtered, { ...existing, start, end }];
+       *   } else {
+       *     // TODO: NEW EVENT
+       *     return prev;
+       *   }
+       * }); */
     },
     [],
   );
 
-  const handleSelectSlot = React.useCallback(
-    ({ start, end }: SlotInfo) => {
-      const title = window.prompt('New Event name');
-      if (title) {
-        setEvents((prev) => [...prev, { id: NaN, start, end, title }]);
-      }
-    },
-    [setEvents],
-  );
+  const handleSelectSlot = React.useCallback(({ start, end }: SlotInfo) => {
+    const title = window.prompt('New Event name');
+    if (title) {
+      /* setEvents((prev) => [...prev, { id: NaN, start, end, title }]); */
+    }
+  }, []);
 
   const handleSelectEvent = React.useCallback(
     (event: Event) => window.alert(event.title),
     [],
   );
-
-  const defaultDate = React.useMemo(() => new Date(2018, 0, 29), []);
-  const scrollToTime = React.useMemo(() => new Date(1972, 0, 1, 8), []);
 
   if (!user) {
     return <LoginForm />;
@@ -162,10 +167,11 @@ function DnDResource() {
         onSelectEvent={handleSelectEvent}
         onSelectSlot={handleSelectSlot}
         resizable
-        resources={resourceMap}
+        resources={resources}
         resourceIdAccessor="resourceId"
         resourceTitleAccessor="resourceTitle"
-        scrollToTime={scrollToTime}
+              min={min}
+        max={max}
         selectable
         showMultiDayTimes={true}
         step={15}
