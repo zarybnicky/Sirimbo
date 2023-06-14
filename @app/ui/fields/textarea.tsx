@@ -39,11 +39,11 @@ export function TextArea({
           id={name}
           name={name}
           {...props}
-          className="text-stone-900 shadow-sm focus:ring-red-500 focus:border-red-500 block w-full sm:text-sm border-red-400 rounded-md"
+          className="text-accent-12 shadow-sm focus:ring-accent-7 focus:border-accent-8 block w-full sm:text-sm border-accent-7 rounded-md"
         />
         {error && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            <ReportProblemIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
+            <ReportProblemIcon className="h-5 w-5 text-accent-7" aria-hidden="true" />
           </div>
         )}
       </div>

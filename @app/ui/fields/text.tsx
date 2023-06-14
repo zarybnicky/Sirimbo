@@ -41,11 +41,11 @@ export function TextField({
           name={name}
           type={type}
           {...props}
-          className="block w-full border-red-400 text-stone-900 placeholder:text-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
+          className="block w-full border-accent-7 text-accent-12 placeholder:text-accent-7 focus:outline-none focus:ring-accent-7 focus:border-accent-8 sm:text-sm rounded-md"
         />
         {error && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            <ReportProblemIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
+            <ReportProblemIcon className="h-5 w-5 text-accent-7" aria-hidden="true" />
           </div>
         )}
       </div>

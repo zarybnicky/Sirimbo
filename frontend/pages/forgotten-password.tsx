@@ -11,13 +11,21 @@ import type { NextPageWithLayout } from 'pages/_app';
 import { ResetPasswordDocument } from '@app/graphql/CurrentUser';
 import { useMutation } from 'urql';
 import { NextSeo } from 'next-seo';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const Form = z.object({
+  login: z.string(),
+  email: z.string().email(),
+});
+type FormProps = z.infer<typeof Form>
 
 const Page: NextPageWithLayout = () => {
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit } = useForm<FormProps>({ resolver: zodResolver(Form) });
   const resetPassword = useMutation(ResetPasswordDocument)[1];
   const router = useRouter();
 
-  const onSubmit = useAsyncCallback(async (data: any) => {
+  const onSubmit = useAsyncCallback(async (data: FormProps) => {
     await resetPassword({ input: data });
     toast.success(
       'Heslo bylo úspěšně změněno, za chvíli byste jej měli obdržet v e-mailu',

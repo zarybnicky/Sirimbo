@@ -7,7 +7,7 @@ export const FieldLabel = ({
   ...props
 }: React.HTMLAttributes<HTMLLabelElement> & { htmlFor?: string | Path<any> }) => {
   return (
-    <label className={cn('block text-sm text-gray-700 mt-1', className)} {...props}>
+    <label className={cn('block text-sm text-neutral-9 mt-1', className)} {...props}>
       {children}
     </label>
   );
@@ -22,7 +22,7 @@ export const FieldHelper = ({ error, helperText }: FieldHelperProps) => {
   const parsedHelperText = !error ? helperText : error.message;
   if (!parsedHelperText) return null;
   return (
-    <p className={cn('mt-2 text-sm', error ? 'text-red-800' : 'text-gray-500')}>
+    <p className={cn('mt-2 text-sm', error ? 'text-accent-11' : 'text-neutral-9')}>
       {parsedHelperText}
     </p>
   );
