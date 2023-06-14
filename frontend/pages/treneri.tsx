@@ -175,7 +175,7 @@ const grepi: TrainerCardProps = {
 };
 
 const maruska: TrainerCardProps = {
-  name: 'Bc. Marie Hýžová ml.',
+  name: 'Mgr. Marie Hýžová ml.',
   image: '/images/treneri/maruska.jpg',
   children: (
     <ul>
@@ -188,7 +188,7 @@ const maruska: TrainerCardProps = {
 };
 
 const roman: TrainerCardProps = {
-  name: 'Bc. Roman Pecha',
+  name: 'Mgr. Roman Pecha',
   image: '/images/treneri-2023/roman.jpg',
   children: (
     <ul>
@@ -315,5 +315,5 @@ const jerry: TrainerCardProps = {
   ),
 };
 
-const internal = [mirek, filip, marie, roman, grepi, hanka, nela, lucka, maruska];
+const internal = [mirek, filip, marie, roman, grepi, hanka, lucka, maruska, nela];
 const external = [martin, david, tara, pavla, jerry];

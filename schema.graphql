@@ -4818,6 +4818,7 @@ type Event {
   enableNotes: Boolean!
   filesLegacy: String!
   id: BigInt!
+  isFuture: Boolean
   isLocked: Boolean!
   isPublic: Boolean!
   isVisible: Boolean!
@@ -4837,6 +4838,9 @@ A condition to be used against `Event` object types. All fields are tested for e
 input EventCondition {
   """Checks for equality with the object’s `id` field."""
   id: BigInt
+
+  """Checks for equality with the object’s `isFuture` field."""
+  isFuture: Boolean
 
   """Checks for equality with the object’s `isVisible` field."""
   isVisible: Boolean

@@ -100,7 +100,7 @@ fragment MyEvent on Event {
 }
 
 query MyEvents {
-  events(condition: {isVisible: true}, orderBy: [SINCE_ASC]) {
+  events(condition: {isVisible: true, isFuture: true}, orderBy: [SINCE_ASC]) {
     nodes {
       ...MyEvent
     }

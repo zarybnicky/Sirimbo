@@ -8943,6 +8943,14 @@
             "args": []
           },
           {
+            "name": "isFuture",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "isLocked",
             "type": {
               "kind": "NON_NULL",

@@ -94,6 +94,12 @@ create index on lesson_trainer (tenant_id);
 create index on lesson_trainer (lesson_id);
 create index on lesson_trainer (trainer_id);
 
+create or replace function event_is_future(event event) returns boolean AS $$
+  SELECT event.until >= now();
+$$ language SQL STABLE;
+comment on function event_is_future(event) is E'@filterable';
+
+
 do $$
 begin
   if not exists (select * from tenant where id = 2) then

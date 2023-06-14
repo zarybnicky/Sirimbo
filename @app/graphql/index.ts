@@ -4272,6 +4272,7 @@ export type Event = {
   enableNotes: Scalars['Boolean']['output'];
   filesLegacy: Scalars['String']['output'];
   id: Scalars['BigInt']['output'];
+  isFuture: Maybe<Scalars['Boolean']['output']>;
   isLocked: Scalars['Boolean']['output'];
   isPublic: Scalars['Boolean']['output'];
   isVisible: Scalars['Boolean']['output'];
@@ -4311,6 +4312,8 @@ export type EventAttendeeUsersArgs = {
 export type EventCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `isFuture` field. */
+  isFuture?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isVisible` field. */
   isVisible?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `since` field. */
@@ -13695,6 +13698,7 @@ export type GraphCacheResolvers = {
     enableNotes?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean'] | string>,
     filesLegacy?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
     id?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['BigInt'] | string>,
+    isFuture?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean'] | string>,
     isLocked?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean'] | string>,
     isPublic?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean'] | string>,
     isVisible?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean'] | string>,
