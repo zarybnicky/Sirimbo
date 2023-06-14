@@ -1,5 +1,3 @@
-drop table if exists event_instance;
-drop table if exists event;
 drop table if exists lesson_trainer;
 drop table if exists lesson;
 drop table if exists attendee_person;
@@ -95,3 +93,14 @@ comment on table lesson_trainer is E'@omit create,update,delete';
 create index on lesson_trainer (tenant_id);
 create index on lesson_trainer (lesson_id);
 create index on lesson_trainer (trainer_id);
+
+do $$
+begin
+  if not exists (select * from tenant where id = 2) then
+    insert into tenant (id, name, member_info) values (2, 'DSP Kometa Brno', '[]'::json);
+  end if;
+
+  if not exists (select * from tenant_location where tenant_id = 2) then
+
+  end if;
+end $$;

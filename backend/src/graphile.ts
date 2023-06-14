@@ -124,10 +124,11 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
   allowExplain: isDevelopment,
   exportGqlSchemaPath: isDevelopment ? path.resolve('../schema.graphql') : undefined,
 
-  async additionalGraphQLContextFromRequest(_, res) {
+  async additionalGraphQLContextFromRequest(req, res) {
     return {
       setAuthCookie: (sessionId: string) => {
-        res.cookie('PHPSESSID', sessionId, { sameSite: 'none', httpOnly: true, secure: !isDevelopment });
+        const { secure } = req;
+        res.cookie('PHPSESSID', sessionId, { sameSite: secure ? 'none' : 'lax', httpOnly: true, secure });
       },
       unsetAuthCookie: () => {
         res.clearCookie('PHPSESSID');

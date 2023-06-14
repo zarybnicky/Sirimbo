@@ -16,7 +16,6 @@ const Page: NextPageWithLayout = () => {
     query: CohortListWithMembersDocument,
     variables: { visible: true },
   });
-console.log(cohorts);
   return (
     <>
       {!user && <Heading>Tréninkové skupiny</Heading>}

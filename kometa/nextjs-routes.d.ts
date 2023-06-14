@@ -11,7 +11,6 @@ declare module "nextjs-routes" {
   } from "next";
 
   export type Route =
-    | StaticRoute<"/agenda">
     | StaticRoute<"/club">
     | StaticRoute<"/">
     | StaticRoute<"/members">;
