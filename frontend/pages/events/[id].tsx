@@ -22,7 +22,7 @@ const Page: NextPageWithLayout = () => {
     <>
       <NextSeo title={data?.event?.name || 'Nadcházející akce'} />
       {!user && <Heading>Nadcházející akce</Heading>}
-      <div className={classNames(user ? 'col-full-width p-4 lg:py-8' : 'col-feature')}>
+      <div className={classNames(user ? 'col-full-width p-4 lg:py-8' : 'col-feature h-fit mb-12')}>
         {user && <TitleBar title="Nadcházející akce" />}
         <EventMemberList selected={id} />
         <div className="mt-6">{data?.event && <EventItem event={data.event} />}</div>

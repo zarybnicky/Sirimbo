@@ -11,7 +11,7 @@ const Page: NextPageWithLayout = () => {
   return (
     <>
       {!user && <Heading>Nadcházející akce</Heading>}
-      <div className={classNames(user ? 'col-full-width p-4 lg:py-8' : 'col-feature')}>
+      <div className={classNames(user ? 'col-full-width p-4 lg:pb-8' : 'col-feature min-h-[60vh] mb-8')}>
         {user && <TitleBar title="Nadcházející akce" />}
         <EventMemberList />
       </div>
