@@ -5,6 +5,7 @@ import React from 'react';
 import { Menu as MenuIcon } from 'lucide-react';
 import { useAuth } from 'lib/use-auth';
 import { Route, route } from 'nextjs-routes';
+import { origin } from '@app/graphql/query';
 
 export type MenuLink = {
   type: 'link';
@@ -110,6 +111,7 @@ export function Layout({ children, list, isDetail }: LayoutProps) {
 
             <div className="mt-4 text-xs text-neutral-10 lg:text-white p-4 grid gap-2">
               <div>© 2023 Rozpisovnik.cz</div>
+              <div>API server: {origin}</div>
               <div>Verze: {process.env.BUILD_ID?.substring(0, 7)}</div>
             </div>
           </div>
@@ -161,7 +163,7 @@ const SidebarLink = ({ item, onClick }: SidebarLinkProps) => {
         'rounded-2xl px-3 py-1.5',
         'flex items-center grow mx-2 hover:bg-accent-10 hover:text-white',
         'tracking-wider text-sm',
-        inPath ? 'underline font-bold bg-accent-9 text-white lg:bg-accent-10' : '',
+        inPath ? 'underline font-bold bg-accent-9 text-white' : '',
       )}
     >
       {item.title}
