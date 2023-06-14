@@ -2,12 +2,12 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { ComboboxElement } from 'components/Combobox';
 import { RadioButtonGroupElement } from 'components/RadioButtomGroupElement';
-import { TextFieldElement } from 'components/TextField';
+import { TextFieldElement } from '@app/ui/fields/text';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook';
-import { ErrorBox } from './ErrorBox';
+import { FormError } from '@app/ui/form';
 import { useCountries } from 'lib/data/use-countries';
-import { SubmitButton } from './SubmitButton';
+import { SubmitButton } from '@app/ui/submit';
 import { RoleListDocument } from '@app/graphql/Roles';
 import { CohortListDocument } from '@app/graphql/Cohorts';
 import {CreateUserDocument, DeleteUserDocument, UpdateUserDocument, UserDocument} from '@app/graphql/User';
@@ -111,7 +111,7 @@ export const UserForm = ({ id = '' }: { id?: string; }) => {
         <SubmitButton loading={onSubmit.loading} />
       </TitleBar>
 
-      <ErrorBox error={onSubmit.error} />
+      <FormError error={onSubmit.error} />
       {id ? (
         <TextFieldElement
           control={control}

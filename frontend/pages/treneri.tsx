@@ -240,19 +240,6 @@ const nela: TrainerCardProps = {
   ),
 };
 
-const matej: TrainerCardProps = {
-  name: 'Matěj Očenášek',
-  image: '/images/treneri/matej.jpg',
-  children: (
-    <ul>
-      <li>Absolvent kvalifikačního studia pro trenéry a porotce III. třídy</li>
-      <li>2x finalista mistrovství ČR mládeže</li>
-      <li>3x finalista mistrovství ČR v kategorii U21 (vicemistr ČR v deseti tancích)</li>
-      <li>Student VUT FEKT</li>
-    </ul>
-  ),
-};
-
 const martin: TrainerCardProps = {
   name: 'Martin Odstrčil',
   image: '/images/treneri-2023/martin.jpg',

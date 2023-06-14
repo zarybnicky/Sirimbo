@@ -3,7 +3,6 @@
     "next/core-web-vitals",
     "plugin:tailwindcss/recommended"
   ],
-  "plugins": ["tailwindcss"],
   "settings": {
     "tailwindcss": {
       "callees": ["classnames", "clsx", "ctl", "cn"],
@@ -12,7 +11,6 @@
   },
   "rules": {
     "tailwindcss/classnames-order": ["off"],
-    "tailwindcss/no-custom-classname": ["error"],
     "@next/next/no-img-element": ["off"],
     "import/no-unused-modules": ["off", {
       "unusedExports": true,

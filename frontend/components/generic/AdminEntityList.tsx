@@ -1,13 +1,13 @@
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { List } from 'components/layout/List';
-import { TextField } from 'components/TextField';
+import { TextField } from '@app/ui/fields/text';
 import { fromSlugArray } from 'lib/slugify';
 import { useRouter } from 'next/router';
 import { Route } from 'nextjs-routes';
 import React, { ReactNode } from 'react';
 import { Plus } from 'lucide-react';
 import { Virtuoso } from 'react-virtuoso';
-import { SubmitButton } from 'components/SubmitButton';
+import { SubmitButton } from '@app/ui/submit';
 import { useFuzzySearch } from 'lib/use-fuzzy-search';
 import { NextRouter } from 'next/router';
 import { useQuery } from 'urql';

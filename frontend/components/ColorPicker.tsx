@@ -1,6 +1,6 @@
 import { Control, FieldValues, Path, useController } from 'react-hook-form';
 import { HexColorPicker } from 'react-colorful';
-import { TextField } from 'components/TextField';
+import { TextField } from '@app/ui/fields/text';
 import React from 'react';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import classNames from 'classnames';

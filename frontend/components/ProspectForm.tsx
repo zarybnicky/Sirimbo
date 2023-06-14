@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Card } from 'components/Card';
 import { useForm } from 'react-hook-form';
-import { TextFieldElement } from 'components/TextField';
+import { TextFieldElement } from '@app/ui/fields/text';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook';
-import { ErrorBox } from './ErrorBox';
-import { SubmitButton } from './SubmitButton';
+import { FormError } from '@app/ui/form';
+import { SubmitButton } from '@app/ui/submit';
 import { toast } from 'react-toastify';
 import { SubmitFormDocument } from '@app/graphql/Crm';
 import { useMutation } from 'urql';
@@ -94,7 +94,7 @@ export const ProspectForm = ({ title }: ProspectFormProps) => {
             </>
           }
         />
-        <ErrorBox error={onSubmit.error} />
+        <FormError error={onSubmit.error} />
         <SubmitButton className="w-full" loading={onSubmit.loading}>
           Chci tančit!
         </SubmitButton>

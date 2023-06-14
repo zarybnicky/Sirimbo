@@ -1,9 +1,9 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { TextFieldElement } from 'components/TextField';
+import { TextFieldElement } from '@app/ui/fields/text';
 import { useAsyncCallback } from 'react-async-hook';
-import { ErrorBox } from './ErrorBox';
-import { SubmitButton } from './SubmitButton';
+import { FormError } from '@app/ui/form';
+import { SubmitButton } from '@app/ui/submit';
 import { AktualityInput } from '@app/graphql';
 import {ArticleDocument, CreateArticleDocument, DeleteArticleDocument, UpdateArticleDocument} from '@app/graphql/Articles';
 import { useMutation, useQuery } from 'urql';
@@ -71,7 +71,7 @@ export const ArticleForm = ({ id = '' }: { id?: string }) => {
         <SubmitButton loading={onSubmit.loading} />
       </TitleBar>
 
-      <ErrorBox error={onSubmit.error} />
+      <FormError error={onSubmit.error} />
       <TextFieldElement control={control} name="atJmeno" label="Název" required />
       <RichTextEditor
         control={control}

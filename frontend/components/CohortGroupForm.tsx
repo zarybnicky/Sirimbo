@@ -6,11 +6,11 @@ import {
 } from '@app/graphql/CohortGroup';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { TextFieldElement } from 'components/TextField';
+import { TextFieldElement } from '@app/ui/fields/text';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook';
-import { ErrorBox } from './ErrorBox';
-import { SubmitButton } from './SubmitButton';
+import { FormError } from '@app/ui/form';
+import { SubmitButton } from '@app/ui/submit';
 import { toast } from 'react-toastify';
 import { CohortListDocument, UpdateCohortDocument } from '@app/graphql/Cohorts';
 import { Plus } from 'lucide-react';
@@ -99,7 +99,7 @@ export function CohortGroupForm({ id = '' }: Props) {
         <SubmitButton loading={onSubmit.loading} />
       </TitleBar>
 
-      <ErrorBox error={onSubmit.error} />
+      <FormError error={onSubmit.error} />
       <TextFieldElement control={control} name="name" label="Název" required />
       <CheckboxElement control={control} name="isPublic" label="Zobrazit pro veřejnost" />
       <TextFieldElement

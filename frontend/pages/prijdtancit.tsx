@@ -86,7 +86,6 @@ const Page: NextPageWithLayout = () => {
           thumbnail="https://i3.ytimg.com/vi/MSahpLevS2g/maxresdefault.jpg"
         >
           <iframe
-            frameBorder="0"
             allowFullScreen
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             width="100%"
@@ -154,7 +153,6 @@ const Page: NextPageWithLayout = () => {
           thumbnail="https://i3.ytimg.com/vi/TOrHc7JYUac/maxresdefault.jpg"
         >
           <iframe
-            frameBorder="0"
             allowFullScreen
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             title="Vánoční večírek Olymp DANCE 2021"

@@ -2,14 +2,7 @@ import cx from 'classnames';
 import { ChevronsDown, Check, Search, XCircle } from 'lucide-react';
 import * as Popover from '@radix-ui/react-popover';
 import { Command } from 'cmdk';
-import {
-  useController,
-  FieldError,
-  FieldValues,
-  Path,
-  Control,
-  ControllerProps,
-} from 'react-hook-form';
+import { useController, FieldValues, Path, Control } from 'react-hook-form';
 import React from 'react';
 
 type Extras = {
@@ -34,7 +27,7 @@ export function ComboboxElement<T extends FieldValues>({
   ...props
 }: ComboboxElementProps<T> & Popover.PopoverContentProps) {
   const [open, setOpen] = React.useState(false);
-  const { field, fieldState } = useController<T>({ name, control });
+  const { field } = useController<T>({ name, control });
 
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>

@@ -27,7 +27,7 @@ export type LayoutProps = {
 };
 
 export const menu: MenuLink[] = [
-  { type: 'link', title: 'Kalendář', href: '/calendar' },
+  { type: 'link', title: 'Kalendář', href: '/' },
   { type: 'link', title: 'Agenda', href: '/agenda' },
   { type: 'link', title: 'Členové', href: '/members' },
   { type: 'link', title: 'Klub', href: '/club' },

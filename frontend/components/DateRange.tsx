@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  Control,
-  FieldValues,
-  ControllerProps,
-  Path,
-  useController,
-} from 'react-hook-form';
+import { Control, FieldValues, Path, useController } from 'react-hook-form';
 import cs from 'date-fns/locale/cs';
 import cx from 'classnames';
 import { ChevronLeft, ChevronRight } from 'lucide-react';

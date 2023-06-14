@@ -1,13 +1,7 @@
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import classNames from 'classnames';
 import React from 'react';
-import {
-  useController,
-  FieldValues,
-  Path,
-  Control,
-  ControllerProps,
-} from 'react-hook-form';
+import { useController, FieldValues, Path, Control } from 'react-hook-form';
 import { FieldHelper, FieldLabel } from '@app/ui/form';
 
 type Extras = {

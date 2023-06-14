@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { ComboboxElement } from 'components/Combobox';
-import { TextFieldElement } from 'components/TextField';
+import { TextFieldElement } from '@app/ui/fields/text';
 import { useCountries } from 'lib/data/use-countries';
 import { useAsyncCallback } from 'react-async-hook';
-import { ErrorBox } from 'components/ErrorBox';
+import { FormError } from '@app/ui/form';
 import { Card } from 'components/Card';
 import { useRouter } from 'next/router';
-import { SubmitButton } from 'components/SubmitButton';
+import { SubmitButton } from '@app/ui/submit';
 import { RadioButtonGroupElement } from 'components/RadioButtomGroupElement';
 import { toast } from 'react-toastify';
 import { CohortListDocument } from '@app/graphql/Cohorts';
@@ -303,7 +303,7 @@ const Page: NextPageWithLayout = () => {
             </p>
           </div>
 
-          <ErrorBox error={onSubmit.error} />
+          <FormError error={onSubmit.error} />
           <SubmitButton className="w-full" loading={onSubmit.loading}>
             Registrovat
           </SubmitButton>

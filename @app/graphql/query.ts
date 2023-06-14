@@ -137,7 +137,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate({ __typename: 'Event', id: args.input.eventId});
       },
 
-      login(_result, args, cache, _info) {
+      login(_result, _args, cache, _info) {
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
           const login = _result.login?.result;
           if (!login) return old;
@@ -147,7 +147,7 @@ const cacheConfig: Partial<GraphCacheConfig> = {
           } as CurrentUserQuery;
         });
       },
-      logout(_result, args, cache, _info) {
+      logout(_result, _args, cache, _info) {
         cache.updateQuery({query: CurrentUserDocument}, () => null);
       },
     },

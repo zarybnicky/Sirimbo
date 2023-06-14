@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { List } from 'components/layout/List';
 import { RoleListDocument } from '@app/graphql/Roles';
 import { CohortListDocument } from '@app/graphql/Cohorts';
-import { TextField } from './TextField';
+import { TextField } from '@app/ui/fields/text';
 import React from 'react';
 import { exportMSMT } from 'lib/export-msmt';
 import { fromSlugArray } from 'lib/slugify';

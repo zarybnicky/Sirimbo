@@ -8,10 +8,10 @@ import {
 } from '@app/graphql/Payment';
 import { useForm } from 'react-hook-form';
 import { ComboboxElement } from 'components/Combobox';
-import { TextFieldElement } from 'components/TextField';
+import { TextFieldElement } from '@app/ui/fields/text';
 import { useAsyncCallback } from 'react-async-hook';
-import { ErrorBox } from './ErrorBox';
-import { SubmitButton } from './SubmitButton';
+import { FormError } from '@app/ui/form';
+import { SubmitButton } from '@app/ui/submit';
 import { UserListDocument } from '@app/graphql/User';
 import { useMutation, useQuery } from 'urql';
 import { useRouter } from 'next/router';
@@ -90,7 +90,7 @@ export const PaymentItemForm = ({id = ''}: {id?: string}) => {
 
       <SubmitButton loading={onSubmit.loading} />
 
-      <ErrorBox error={onSubmit.error} />
+      <FormError error={onSubmit.error} />
       <TextFieldElement
         control={control}
         type="date"

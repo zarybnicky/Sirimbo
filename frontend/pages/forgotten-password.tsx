@@ -1,11 +1,11 @@
 import { Card } from 'components/Card';
-import { ErrorBox } from 'components/ErrorBox';
-import { SubmitButton } from 'components/SubmitButton';
+import { FormError } from '@app/ui/form';
+import { SubmitButton } from '@app/ui/submit';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
-import { TextFieldElement } from 'components/TextField';
+import { TextFieldElement } from '@app/ui/fields/text';
 import { toast } from 'react-toastify';
 import type { NextPageWithLayout } from 'pages/_app';
 import { ResetPasswordDocument } from '@app/graphql/CurrentUser';
@@ -52,7 +52,7 @@ const Page: NextPageWithLayout = () => {
               autoComplete="email"
               required
             />
-            <ErrorBox
+            <FormError
               error={onSubmit.error}
               default="Nepodařilo se změnit heslo, prosím kontaktujte administrátora."
             />

@@ -3,11 +3,11 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { ComboboxElement } from 'components/Combobox';
 import { RadioButtonGroupElement } from 'components/RadioButtomGroupElement';
-import { TextFieldElement } from 'components/TextField';
+import { TextFieldElement } from '@app/ui/fields/text';
 import { useAsyncCallback } from 'react-async-hook';
 import { useCountries } from 'lib/data/use-countries';
-import { ErrorBox } from 'components/ErrorBox';
-import { SubmitButton } from './SubmitButton';
+import { FormError } from '@app/ui/form';
+import { SubmitButton } from '@app/ui/submit';
 import { UpdateUserDocument } from '@app/graphql/User';
 import { useMutation } from 'urql';
 import { z } from 'zod';
@@ -53,7 +53,7 @@ export const PersonalInfoForm: React.FC<{
     <form className="grid lg:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
       <SubmitButton loading={onSubmit.loading} />
 
-      <ErrorBox error={onSubmit.error} />
+      <FormError error={onSubmit.error} />
 
       <TextFieldElement control={control} name="uJmeno" label="Jméno" required />
       <TextFieldElement control={control} name="uPrijmeni" label="Příjmení" required />

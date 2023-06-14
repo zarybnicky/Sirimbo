@@ -1,9 +1,9 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { TextFieldElement } from 'components/TextField';
+import { TextFieldElement } from '@app/ui/fields/text';
 import { useAsyncCallback } from 'react-async-hook';
-import { ErrorBox } from 'components/ErrorBox';
-import { SubmitButton } from './SubmitButton';
+import { FormError } from '@app/ui/form';
+import { SubmitButton } from '@app/ui/submit';
 import { ChangePasswordDocument } from '@app/graphql/CurrentUser';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -33,7 +33,7 @@ export const ChangePasswordForm: React.FC<{
 
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <ErrorBox error={onSubmit.error} />
+      <FormError error={onSubmit.error} />
 
       <TextFieldElement
         control={control}

@@ -1,9 +1,9 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { TextFieldElement } from 'components/TextField';
+import { TextFieldElement } from '@app/ui/fields/text';
 import { useAsyncCallback } from 'react-async-hook';
-import { ErrorBox } from './ErrorBox';
-import { SubmitButton } from './SubmitButton';
+import { FormError } from '@app/ui/form';
+import { SubmitButton } from '@app/ui/submit';
 import {CurrentTenantDocument, UpdateTenantDocument} from '@app/graphql/Tenant';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
@@ -39,7 +39,7 @@ export const TenantForm = () => {
       <TitleBar title={data?.name || '(Bez názvu)'}>
         <SubmitButton loading={onSubmit.loading} />
       </TitleBar>
-      <ErrorBox error={onSubmit.error} />
+      <FormError error={onSubmit.error} />
       <TextFieldElement control={control} name="name" label="Název organizace" required />
       <RichTextEditor
         control={control}

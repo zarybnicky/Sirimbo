@@ -1,11 +1,11 @@
 import {CreatePaymentCategoryDocument, DeletePaymentCategoryDocument, PaymentCategoryDocument, UpdatePaymentCategoryDocument,} from '@app/graphql/Payment';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { TextFieldElement } from 'components/TextField';
+import { TextFieldElement } from '@app/ui/fields/text';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook';
-import { ErrorBox } from './ErrorBox';
-import { SubmitButton } from './SubmitButton';
+import { FormError } from '@app/ui/form';
+import { SubmitButton } from '@app/ui/submit';
 import { useMutation, useQuery } from 'urql';
 import { useRouter } from 'next/router';
 import { ErrorPage } from './ErrorPage';
@@ -78,7 +78,7 @@ export const PaymentCategoryForm = ({ id = '' }: { id?: string }) => {
         <SubmitButton loading={onSubmit.loading} />
       </TitleBar>
 
-      <ErrorBox error={onSubmit.error} />
+      <FormError error={onSubmit.error} />
       <TextFieldElement control={control} name="pcName" label="Název" required />
       <TextFieldElement
         control={control}

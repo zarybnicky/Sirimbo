@@ -7,11 +7,11 @@ import {
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { ComboboxElement } from 'components/Combobox';
-import { TextFieldElement } from 'components/TextField';
+import { TextFieldElement } from '@app/ui/fields/text';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook';
-import { ErrorBox } from './ErrorBox';
-import { SubmitButton } from './SubmitButton';
+import { FormError } from '@app/ui/form';
+import { SubmitButton } from '@app/ui/submit';
 import { NabidkaInput } from '@app/graphql';
 import { DateRange, DateRangeInput } from './DateRange';
 import { TrainerListDocument } from '@app/graphql/User';
@@ -99,7 +99,7 @@ export const ReservationForm = ({ id = '' }: { id?: string }) => {
         <SubmitButton loading={onSubmit.loading} />
       </TitleBar>
 
-      <ErrorBox error={onSubmit.error} />
+      <FormError error={onSubmit.error} />
       <ComboboxElement
         control={control}
         name="nTrener"

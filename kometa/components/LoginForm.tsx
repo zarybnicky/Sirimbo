@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { Card } from 'components/Card';
-import Link from 'next/link';
-import { useAuth } from 'lib/data/use-auth';
+import { useAuth } from 'lib/use-auth';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from '@app/ui/fields/text';
@@ -9,26 +7,28 @@ import { FormError } from '@app/ui/form';
 import { useAsyncCallback } from 'react-async-hook';
 import { SubmitButton } from '@app/ui/submit';
 import { Route } from 'nextjs-routes';
-import type { NextPageWithLayout } from 'pages/_app';
 
 type FormProps = {
   login: string;
   passwd: string;
 };
 
-const Page: NextPageWithLayout = () => {
+export function LoginForm() {
   const { signIn } = useAuth();
   const router = useRouter();
   const { control, handleSubmit } = useForm<FormProps>();
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await signIn(values.login, values.passwd);
-    router.push((router.query?.from as any as Route) || '/dashboard');
+    const redirect = router.query?.from as any as Route;
+    if (redirect) {
+      router.push(redirect);
+    }
   });
 
   return (
     <div className="flex items-center justify-center min-h-[50vh]">
-      <Card>
+      <div className="group bg-white relative border border-neutral-6 shadow-sm sm:rounded-lg p-3 mb-1">
         <form className="grid gap-2 p-4" onSubmit={handleSubmit(onSubmit.execute)}>
           <h4 className="text-2xl">Přihlášení do systému</h4>
 
@@ -52,28 +52,8 @@ const Page: NextPageWithLayout = () => {
           <SubmitButton className="w-full my-2" loading={onSubmit.loading}>
             Přihlásit
           </SubmitButton>
-
-          <div className="flex justify-between flex-wrap gap-2">
-            <Link
-              href="/register"
-              className="uppercase rounded-md px-3 text-sm py-2 text-red-500 hover:bg-red-100 text-left"
-            >
-              Registrovat se
-            </Link>
-            <Link
-              href="/forgotten-password"
-              className="uppercase rounded-md px-3 text-sm py-2 text-red-500 hover:bg-red-100 text-right"
-            >
-              Zapomněli jste heslo?
-            </Link>
-          </div>
         </form>
-      </Card>
+      </div>
     </div>
   );
 };
-
-Page.staticTitle = "Přihlášení";
-Page.requireLoggedOut = true;
-
-export default Page;

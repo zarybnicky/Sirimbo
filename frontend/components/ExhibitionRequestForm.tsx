@@ -1,8 +1,9 @@
-import { TextAreaElement, TextFieldElement } from 'components/TextField';
+import { TextFieldElement } from '@app/ui/fields/text';
+import { TextAreaElement } from '@app/ui/fields/textarea';
 import { CheckboxElement } from 'components/Checkbox';
 import { useAsyncCallback } from 'react-async-hook';
-import { ErrorBox } from './ErrorBox';
-import { SubmitButton } from './SubmitButton';
+import { FormError } from '@app/ui/form';
+import { SubmitButton } from '@app/ui/submit';
 import { toast } from 'react-toastify';
 import { DatePickerElement } from './DateRange';
 import { RadioButtonGroup } from './RadioButtonGroup';
@@ -118,7 +119,7 @@ export const ExhibitionRequestForm = () => {
 
         <p>Ozveme se Vám co nejdříve. V případě potřeby volejte 737 545 525.</p>
 
-        <ErrorBox error={onSubmit.error} />
+        <FormError error={onSubmit.error} />
         <SubmitButton loading={onSubmit.loading}>Odeslat</SubmitButton>
       </form>
     </Card>

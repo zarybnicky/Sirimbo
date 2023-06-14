@@ -1,19 +1,5 @@
 const radixColors = require("@radix-ui/colors");
 
-// https://www.tints.dev/red/ED1734
-const red = {
-  50: '#FDE7EA',
-  100: '#FBD0D5',
-  200: '#F8A0AC',
-  300: '#F47687',
-  400: '#F1465D',
-  500: '#ED1734',
-  600: '#C20F27',
-  700: '#930B1D',
-  800: '#5F0713',
-  900: '#2F0409',
-};
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: 'media',

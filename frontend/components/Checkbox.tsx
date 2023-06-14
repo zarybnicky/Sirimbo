@@ -1,10 +1,4 @@
-import {
-  Control,
-  FieldValues,
-  ControllerProps,
-  Path,
-  useController,
-} from 'react-hook-form';
+import { Control, FieldValues, Path, useController } from 'react-hook-form';
 import { FieldHelper, FieldHelperProps, FieldLabel } from '@app/ui/form';
 
 type Extras = {
@@ -32,9 +26,7 @@ export function Checkbox({
         />
       </div>
       <div className="ml-3 text-sm">
-        <FieldLabel htmlFor={name}>
-          {label}
-        </FieldLabel>
+        <FieldLabel htmlFor={name}>{label}</FieldLabel>
         <FieldHelper error={error} helperText={helperText} />
       </div>
     </div>

@@ -7,10 +7,11 @@ import {
 } from '@app/graphql/Event';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { TextAreaElement, TextField, TextFieldElement } from 'components/TextField';
+import { TextField, TextFieldElement } from '@app/ui/fields/text';
+import { TextAreaElement } from '@app/ui/fields/textarea';
 import { useAsyncCallback } from 'react-async-hook';
-import { ErrorBox } from './ErrorBox';
-import { SubmitButton } from './SubmitButton';
+import { FormError } from '@app/ui/form';
+import { SubmitButton } from '@app/ui/submit';
 import { useAuth } from 'lib/data/use-auth';
 import { Button } from './Button';
 import { toast } from 'react-toastify';
@@ -150,7 +151,7 @@ function ParticipationForm({ data, onSuccess }: Props) {
 
   return (
     <form className="grid gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <ErrorBox error={onSubmit.error} />
+      <FormError error={onSubmit.error} />
       <TextField disabled label="Člen" value={`${user?.uJmeno} ${user?.uPrijmeni}`} />
       {data.enableNotes || myRegistration?.notes ? (
         <TextAreaElement

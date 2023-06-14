@@ -6,7 +6,7 @@ import {
 } from '@app/graphql/Schedule';
 import React from 'react';
 import { Calendar, Clock, User, Users } from 'lucide-react';
-import { SubmitButton } from './SubmitButton';
+import { SubmitButton } from '@app/ui/submit';
 import { useAuth } from 'lib/data/use-auth';
 import { formatCoupleName } from 'lib/format-name';
 import { fullDateFormatter } from 'lib/format-date';
