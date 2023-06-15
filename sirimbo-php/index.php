@@ -114,13 +114,11 @@ function makeRouter()
     $router = new \Olymp\Router('Olymp.Controller');
 
     $router->get('/', '@Home::get');
-    $router->get('/app', '@StaticContent::app');
-    $router->get('/app/(.*)', '@StaticContent::app');
     $router->get('/home', '@Home::get');
     $router->get('/error', '@Error::get');
 
-    $router->get('/prijdtancit', '@Page::get');
-    $router->get('/ochrana-osobnich-udaju', '@Page::get');
+    $router->get('/prijdtancit', '@Page::prijdTancit');
+    $router->get('/ochrana-osobnich-udaju', '@Page::ochranaUdaju');
 
     $router->get('/kontakt', '@StaticContent::kontakt');
     $router->get('/oklubu/klubovi-treneri', '@StaticContent::klubovi');

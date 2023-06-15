@@ -105,7 +105,7 @@
     </nav>
 
     {% block header %}
-      {% if block('title') != "TK Olymp" %}
+      {% if block('title') and block('title') != "TK Olymp" %}
         <div class="header-section">
           <div class="container full">
             <h1>{{ block('title') }}</h1>
@@ -129,17 +129,15 @@
         <div class="row text-center">
           <div class="col d-flex" style="flex-direction:column;justify-content:space-around;">
             <div>
-              <a class="no-a" href="https://www.facebook.com/tkolymp"
-                 target="_blank">
-                <img alt="Facebook, stránka Taneční klub Olymp"
-                     src="/style/fb-logo.png" />
+              <a class="no-a" href="https://www.facebook.com/tkolymp" target="_blank">
+                <img alt="Facebook, stránka Taneční klub Olymp" src="/style/fb-logo.png" />
               </a>
             </div>
             <div>
-              design a realizace:
+              realizace:
               <a href="mailto:jakub@zarybnicky.com">Jakub Zárybnický</a>
               <br>
-              © 2018 TK Olymp
+              © 2022 TK Olymp
             </div>
           </div>
           <div class="col">
@@ -150,8 +148,7 @@
               </a>
               <br/>
               <a class="no-a" href="http://www.olomouc.eu/" target="_blank">
-                <img alt="Město Olomouc" src="/style/logo-olomouc.jpg"
-                     style="height:85px;width:auto;"/>
+                <img alt="Město Olomouc" src="/style/logo-olomouc.jpg" style="height:85px;width:auto;"/>
               </a>
             </div>
           </div>

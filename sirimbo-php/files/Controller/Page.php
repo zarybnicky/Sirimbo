@@ -3,11 +3,13 @@ namespace Olymp\Controller;
 
 class Page
 {
-    public static function get()
+    public static function prijdTancit()
     {
-        $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        \Render::twig('Main/Page.twig', [
-            'page' => \DBPage::getSinglePage($url)
-        ]);
+        \Render::twig('Main/PrijdTancit.twig');
+    }
+
+    public static function ochranaUdaju()
+    {
+        \Render::twig('Main/OchranaUdaju.twig');
     }
 }

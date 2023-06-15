@@ -1,4 +1,4 @@
-import { $, InputType, GraphQLTypes, NabidkaItemsOrderBy, Selector } from '../zeus';
+import { $, InputType, GraphQLTypes, Selector } from '../zeus';
 
 export const ReservationItemPartial = Selector('NabidkaItem')({
   niId: true,
@@ -30,7 +30,7 @@ export const ReservationPartial = Selector('Nabidka')({
     uPrijmeni: true,
   },
   nabidkaItemsByNiIdRodic: [
-    { orderBy: [NabidkaItemsOrderBy.NI_POCET_HOD_DESC] },
+    { },
     { nodes: ReservationItemPartial },
   ],
 });

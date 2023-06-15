@@ -7,13 +7,13 @@ import Excel from 'exceljs';
 import { saveAs } from 'file-saver';
 
 const ExportQuery = Selector('Query')({
-  akce: [
-    { aId: $`id` },
+  event: [
+    { id: $`id` },
     {
-      aJmeno: true,
-      akceItemsByAiIdRodic: [{}, {
+      name: true,
+      attendeeUsers: [{}, {
         nodes: {
-          userByAiUser: {
+          user: {
             uJmeno: true,
             uPrijmeni: true,
             uRodneCislo: true,
@@ -35,7 +35,7 @@ export function EventParticipantExport({ id }: { id: string; }) {
       return;
     }
     const workbook = new Excel.Workbook();
-    const worksheet = workbook.addWorksheet(data.akce?.aJmeno || "Sheet 1");
+    const worksheet = workbook.addWorksheet(data.event?.name || "Sheet 1");
 
     worksheet.columns = [
       { header: 'First Name', key: 'firstName' },
@@ -51,16 +51,16 @@ export function EventParticipantExport({ id }: { id: string; }) {
       column.alignment = { horizontal: 'center' };
     });
 
-    data.akce?.akceItemsByAiIdRodic.nodes.forEach(x => worksheet.addRow({
-      firstName: x.userByAiUser?.uJmeno,
-      lastName: x.userByAiUser?.uPrijmeni,
-      birthNumber: x.userByAiUser?.uRodneCislo,
-      phone: x.userByAiUser?.uTelefon,
-      email: x.userByAiUser?.uEmail,
+    data.event?.attendeeUsers.nodes.forEach(x => worksheet.addRow({
+      firstName: x.user?.uJmeno,
+      lastName: x.user?.uPrijmeni,
+      birthNumber: x.user?.uRodneCislo,
+      phone: x.user?.uTelefon,
+      email: x.user?.uEmail,
     }));
 
     const buf = await workbook.xlsx.writeBuffer();
-    saveAs(new Blob([buf]), `${data.akce?.aJmeno || "export-akce"}.xlsx`);
+    saveAs(new Blob([buf]), `${data.event?.name || "export-akce"}.xlsx`);
   };
 
   return <button className="btn btn-primary" onClick={(e) => {

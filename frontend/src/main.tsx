@@ -28,12 +28,11 @@ import { GalleryDirectoryListElement } from './custom-elements/gallery-directory
 import { ReservationAdminListElement } from './custom-elements/reservation-list';
 import { ReservationSelectElement } from './custom-elements/reservation-select';
 import { RozpisAdminListElement } from './custom-elements/schedule-list';
-import { ReactPageElement } from './custom-elements/react-page';
+import { PrijdTancitElement } from './custom-elements/prijd-tancit';
 
 customElements.define('announcement-list', AnnouncementListElement);
 customElements.define('article-admin-list', ArticleAdminListElement);
 customElements.define('date-range', DateRangeElement);
-customElements.define('single-date', DateElement);
 customElements.define('event-list', EventListElement);
 customElements.define('gallery-directory-list', GalleryDirectoryListElement);
 customElements.define('reservation-admin-list', ReservationAdminListElement);
@@ -41,7 +40,7 @@ customElements.define('reservation-select', ReservationSelectElement);
 customElements.define('rozpis-admin-list', RozpisAdminListElement);
 customElements.define('event-participant-export', EventParticipantExportElement);
 customElements.define('cohort-export', CohortExportElement);
-customElements.define('react-page', ReactPageElement);
+customElements.define('prijd-tancit', PrijdTancitElement);
 
 import { QRPayment } from './components/QRPayment';
 class QRCodeElement extends HTMLElement {

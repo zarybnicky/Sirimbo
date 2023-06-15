@@ -2,14 +2,6 @@
 
 export const AllTypesProps: Record<string,any> = {
 	Query:{
-		node:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
 		akces:{
 			first:{
 				type:"Int",
@@ -46,12 +38,6 @@ export const AllTypesProps: Record<string,any> = {
 				array:true,
 				arrayRequired:false,
 				required:true
-			},
-			condition:{
-				type:"AkceCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
 			}
 		},
 		akceItems:{
@@ -90,12 +76,6 @@ export const AllTypesProps: Record<string,any> = {
 				array:true,
 				arrayRequired:false,
 				required:true
-			},
-			condition:{
-				type:"AkceItemCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
 			}
 		},
 		aktualities:{
@@ -142,6 +122,182 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
+		attachments:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"AttachmentsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"AttachmentCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		attendeeExternals:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"AttendeeExternalsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"AttendeeExternalCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		attendeeUsers:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"AttendeeUsersOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"AttendeeUserCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		cohortGroups:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"CohortGroupsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"CohortGroupCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
 		dokumenties:{
 			first:{
 				type:"Int",
@@ -181,6 +337,94 @@ export const AllTypesProps: Record<string,any> = {
 			},
 			condition:{
 				type:"DokumentyCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		events:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"EventsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"EventCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		formResponses:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"FormResponsesOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"FormResponseCondition",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -274,7 +518,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		members:{
+		locations:{
 			first:{
 				type:"Int",
 				array:false,
@@ -306,13 +550,57 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			},
 			orderBy:{
-				type:"MembersOrderBy",
+				type:"LocationsOrderBy",
 				array:true,
 				arrayRequired:false,
 				required:true
 			},
 			condition:{
-				type:"MemberCondition",
+				type:"LocationCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		locationAttachments:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"LocationAttachmentsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"LocationAttachmentCondition",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -670,6 +958,50 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
+		people:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"PeopleOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"PersonCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
 		platbyCategories:{
 			first:{
 				type:"Int",
@@ -934,6 +1266,94 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
+		rooms:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"RoomsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"RoomCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		roomAttachments:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"RoomAttachmentsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"RoomAttachmentCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
 		rozpis:{
 			first:{
 				type:"Int",
@@ -1110,6 +1530,182 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
+		tenants:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"TenantsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"TenantCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		tenantAttachments:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"TenantAttachmentsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"TenantAttachmentCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		tenantLocations:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"TenantLocationsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"TenantLocationCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		tenantPeople:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"TenantPeopleOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"TenantPersonCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
 		upozornenis:{
 			first:{
 				type:"Int",
@@ -1242,198 +1838,6 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		usersSkupinies:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"UsersSkupiniesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"UsersSkupinyCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		videos:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"VideosOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"VideoCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		videoLists:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"VideoListsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"VideoListCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		videoSources:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"VideoSourcesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"VideoSourceCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		akce:{
-			aId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		akceItem:{
-			aiId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
 		aktuality:{
 			atId:{
 				type:"BigInt",
@@ -1442,8 +1846,70 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
+		attachment:{
+			objectName:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		attendeeExternal:{
+			id:{
+				type:"BigInt",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		attendeeUser:{
+			id:{
+				type:"BigInt",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		attendeeUserByUserIdAndEventId:{
+			userId:{
+				type:"BigInt",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			eventId:{
+				type:"BigInt",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		cohortGroup:{
+			id:{
+				type:"BigInt",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
 		dokumenty:{
 			dId:{
+				type:"BigInt",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		event:{
+			id:{
+				type:"BigInt",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		formResponse:{
+			id:{
 				type:"BigInt",
 				array:false,
 				arrayRequired:false,
@@ -1466,6 +1932,28 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
+		location:{
+			id:{
+				type:"BigInt",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		locationAttachment:{
+			locationId:{
+				type:"BigInt",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			objectName:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
 		nabidka:{
 			nId:{
 				type:"BigInt",
@@ -1476,6 +1964,20 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		nabidkaItem:{
 			niId:{
+				type:"BigInt",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		nabidkaItemByNiPartnerAndNiIdRodic:{
+			niPartner:{
+				type:"BigInt",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			niIdRodic:{
 				type:"BigInt",
 				array:false,
 				arrayRequired:false,
@@ -1544,6 +2046,14 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
+		person:{
+			id:{
+				type:"BigInt",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
 		platbyCategory:{
 			pcId:{
 				type:"BigInt",
@@ -1592,6 +2102,28 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
+		room:{
+			id:{
+				type:"BigInt",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		roomAttachment:{
+			roomId:{
+				type:"BigInt",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			objectName:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
 		rozpi:{
 			rId:{
 				type:"BigInt",
@@ -1624,6 +2156,56 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
+		tenant:{
+			id:{
+				type:"BigInt",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		tenantAttachment:{
+			tenantId:{
+				type:"BigInt",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			objectName:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		tenantLocation:{
+			tenantId:{
+				type:"BigInt",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			locationId:{
+				type:"BigInt",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		tenantPerson:{
+			tenantId:{
+				type:"BigInt",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			personId:{
+				type:"BigInt",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
 		upozorneni:{
 			upId:{
 				type:"BigInt",
@@ -1648,77 +2230,7 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		usersSkupiny:{
-			usId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		video:{
-			vId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		videoList:{
-			vlId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		videoSource:{
-			vsId:{
-				type:"BigInt",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		activeProspects:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		cohortMembers:{
-			id:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
+		activeCouples:{
 			first:{
 				type:"Int",
 				array:false,
@@ -1751,6 +2263,114 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		},
 		currentCoupleIds:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		currentPermissions:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		myAnnouncements:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		myLessons:{
+			startDate:{
+				type:"Date",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			endDate:{
+				type:"Date",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
 			first:{
 				type:"Int",
 				array:false,
@@ -1902,252 +2522,36 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		akceByNodeId:{
-			nodeId:{
-				type:"ID",
+		trainers:{
+			first:{
+				type:"Int",
 				array:false,
 				arrayRequired:false,
-				required:true
-			}
-		},
-		akceItemByNodeId:{
-			nodeId:{
-				type:"ID",
+				required:false
+			},
+			last:{
+				type:"Int",
 				array:false,
 				arrayRequired:false,
-				required:true
-			}
-		},
-		aktualityByNodeId:{
-			nodeId:{
-				type:"ID",
+				required:false
+			},
+			offset:{
+				type:"Int",
 				array:false,
 				arrayRequired:false,
-				required:true
-			}
-		},
-		dokumentyByNodeId:{
-			nodeId:{
-				type:"ID",
+				required:false
+			},
+			before:{
+				type:"Cursor",
 				array:false,
 				arrayRequired:false,
-				required:true
-			}
-		},
-		galerieDirByNodeId:{
-			nodeId:{
-				type:"ID",
+				required:false
+			},
+			after:{
+				type:"Cursor",
 				array:false,
 				arrayRequired:false,
-				required:true
-			}
-		},
-		galerieFotoByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		nabidkaByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		nabidkaItemByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		pageByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		pageRevisionByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		parameterByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		paryByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		paryNavrhByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		permissionByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		platbyCategoryByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		platbyCategoryGroupByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		platbyGroupByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		platbyGroupSkupinaByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		platbyItemByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		platbyRawByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		rozpiByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		rozpisItemByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		sessionByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		skupinyByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		upozorneniByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		upozorneniSkupinyByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		userByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		usersSkupinyByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		videoByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		videoListByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		videoSourceByNodeId:{
-			nodeId:{
-				type:"ID",
-				array:false,
-				arrayRequired:false,
-				required:true
+				required:false
 			}
 		}
 	},
@@ -2188,12 +2592,6 @@ export const AllTypesProps: Record<string,any> = {
 				array:true,
 				arrayRequired:false,
 				required:true
-			},
-			condition:{
-				type:"AkceItemCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
 			}
 		}
 	},
@@ -2201,6 +2599,50 @@ export const AllTypesProps: Record<string,any> = {
 	Date: "String",
 	Datetime: "String",
 	User:{
+		attendeeUsers:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"AttendeeUsersOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"AttendeeUserCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
 		aktualitiesByAtKdo:{
 			first:{
 				type:"Int",
@@ -2240,182 +2682,6 @@ export const AllTypesProps: Record<string,any> = {
 			},
 			condition:{
 				type:"AktualityCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		nabidkasByNTrener:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"NabidkasOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"NabidkaCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		rozpisByRTrener:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"RozpisOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"RozpiCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		sessionsBySsUser:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"SessionsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"SessionCondition",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
-		akceItemsByAiUser:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			orderBy:{
-				type:"AkceItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			},
-			condition:{
-				type:"AkceItemCondition",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -2548,6 +2814,50 @@ export const AllTypesProps: Record<string,any> = {
 			},
 			condition:{
 				type:"PlatbyItemCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		nabidkasByNTrener:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"NabidkasOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"NabidkaCondition",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -2729,6 +3039,94 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
+		rozpisByRTrener:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"RozpisOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"RozpiCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		sessionsBySsUser:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"SessionsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"SessionCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
 		upozornenisByUpKdo:{
 			first:{
 				type:"Int",
@@ -2768,6 +3166,220 @@ export const AllTypesProps: Record<string,any> = {
 			},
 			condition:{
 				type:"UpozorneniCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		attachmentsByUploadedBy:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"AttachmentsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"AttachmentCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		attendeeExternalsByManagedBy:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"AttendeeExternalsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"AttendeeExternalCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		attendeeExternalsByConfirmedBy:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"AttendeeExternalsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"AttendeeExternalCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		akceItemsByAiUser:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"AkceItemsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		pariesByPIdPartnerka:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"PariesOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"ParyCondition",
 				array:false,
 				arrayRequired:false,
 				required:false
@@ -2835,12 +3447,6 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		uPass:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		uJmeno:{
 			type:"String",
 			array:false,
@@ -2853,50 +3459,8 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		uPohlavi:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uEmail:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uTelefon:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		uNarozeni:{
 			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uRodneCislo:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uPoznamky:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uLevel:{
-			type:"Int",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -2913,19 +3477,7 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		uDancer:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		uBan:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uLock:{
 			type:"Boolean",
 			array:false,
 			arrayRequired:false,
@@ -2943,74 +3495,8 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		uStreet:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uConscriptionNumber:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uOrientationNumber:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uDistrict:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uCity:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uPostalCode:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uNationality:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uMemberSince:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uMemberUntil:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uTeacher:{
+		inPublicCohort:{
 			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uGdprSignedAt:{
-			type:"Datetime",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -3148,6 +3634,737 @@ export const AllTypesProps: Record<string,any> = {
 				arrayRequired:false,
 				required:false
 			}
+		}
+	},
+	CohortGroup:{
+		skupiniesByCohortGroup:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"SkupiniesOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"SkupinyCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	Tenant:{
+		tenantAttachments:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"TenantAttachmentsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"TenantAttachmentCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		tenantPeople:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"TenantPeopleOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"TenantPersonCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		cohortGroupsByTenant:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"CohortGroupsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"CohortGroupCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		tenantLocations:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"TenantLocationsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"TenantLocationCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	TenantAttachmentType: "enum",
+	Attachment:{
+		tenantAttachmentsByObjectName:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"TenantAttachmentsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"TenantAttachmentCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		locationAttachmentsByObjectName:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"LocationAttachmentsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"LocationAttachmentCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		roomAttachmentsByObjectName:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"RoomAttachmentsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"RoomAttachmentCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	TenantAttachmentsOrderBy: "enum",
+	TenantAttachmentCondition:{
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		objectName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	Location:{
+		roomsByLocation:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"RoomsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"RoomCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		locationAttachments:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"LocationAttachmentsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"LocationAttachmentCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		},
+		tenantLocations:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"TenantLocationsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"TenantLocationCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	JSON: "String",
+	Room:{
+		roomAttachments:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"RoomAttachmentsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"RoomAttachmentCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	RoomAttachmentsOrderBy: "enum",
+	RoomAttachmentCondition:{
+		roomId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		objectName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	RoomsOrderBy: "enum",
+	RoomCondition:{
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		location:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	LocationAttachmentsOrderBy: "enum",
+	LocationAttachmentCondition:{
+		locationId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		objectName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	TenantLocationsOrderBy: "enum",
+	TenantLocationCondition:{
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		locationId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	Person:{
+		tenantPeople:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"TenantPeopleOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"TenantPersonCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	GenderType: "enum",
+	TenantPeopleOrderBy: "enum",
+	TenantPersonCondition:{
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		personId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	CohortGroupsOrderBy: "enum",
+	CohortGroupCondition:{
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		ordering:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		isPublic:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenant:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	SkupiniesOrderBy: "enum",
+	SkupinyCondition:{
+		sId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		sVisible:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		ordering:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		cohortGroup:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	PlatbyGroup:{
@@ -3423,24 +4640,6 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
-		},
-		piAmount:{
-			type:"BigFloat",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		piDate:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		piPrefix:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
 		}
 	},
 	PlatbyGroupSkupinasOrderBy: "enum",
@@ -3529,15 +4728,141 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		}
+	},
+	Event:{
+		attendeeUsers:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"AttendeeUsersOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"AttendeeUserCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
 		},
-		upsColor:{
-			type:"String",
+		attendeeExternals:{
+			first:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			last:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			offset:{
+				type:"Int",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			before:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			after:{
+				type:"Cursor",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			orderBy:{
+				type:"AttendeeExternalsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			},
+			condition:{
+				type:"AttendeeExternalCondition",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
+		}
+	},
+	AttendeeUsersOrderBy: "enum",
+	AttendeeUserCondition:{
+		id:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		upsPopis:{
-			type:"String",
+		eventId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		userId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	AttendeeExternalsOrderBy: "enum",
+	AttendeeExternalCondition:{
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		eventId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		managedBy:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		confirmedBy:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -3649,26 +4974,8 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		gfName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gfPath:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		gfKdo:{
 			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gfTimestamp:{
-			type:"Datetime",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -3688,49 +4995,52 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		atKat:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atJmeno:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atText:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atPreview:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		atFoto:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		atFotoMain:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		atTimestamp:{
+		atTimestampAdd:{
 			type:"Datetime",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		atTimestampAdd:{
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	DokumentiesOrderBy: "enum",
+	DokumentyCondition:{
+		dId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		dPath:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		dKategorie:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		dKdo:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		dTimestamp:{
 			type:"Datetime",
 			array:false,
 			arrayRequired:false,
@@ -3894,18 +5204,6 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
-		},
-		niPocetHod:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		niLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
 		}
 	},
 	Time: "String",
@@ -3980,18 +5278,6 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
-		},
-		riDo:{
-			type:"Time",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		riLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
 		}
 	},
 	NabidkasOrderBy: "enum",
@@ -4008,194 +5294,8 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		nPocetHod:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nMaxPocetHod:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		nOd:{
 			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nDo:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nVisible:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	RozpisOrderBy: "enum",
-	RozpiCondition:{
-		rId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rTrener:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rKde:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rDatum:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rVisible:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		rTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	SessionsOrderBy: "enum",
-	SessionCondition:{
-		ssId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssData:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssUpdatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssLifetime:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssUser:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	AkceItemsOrderBy: "enum",
-	AkceItemCondition:{
-		aiId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aiIdRodic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aiUser:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aiRokNarozeni:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	DokumentiesOrderBy: "enum",
-	DokumentyCondition:{
-		dId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dPath:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dFilename:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dKategorie:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dKdo:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		dTimestamp:{
-			type:"Datetime",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -4221,62 +5321,8 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		pSttTrida:{
-			type:"ParyPSttTrida",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pSttBody:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pSttFinale:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pLatTrida:{
-			type:"ParyPLatTrida",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pLatBody:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pLatFinale:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		pHodnoceni:{
 			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pArchiv:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pTimestampAdd:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pTimestampArchive:{
-			type:"Datetime",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -4309,6 +5355,42 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
+	RozpisOrderBy: "enum",
+	RozpiCondition:{
+		rId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		rTrener:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		rDatum:{
+			type:"Date",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	SessionsOrderBy: "enum",
+	SessionCondition:{
+		ssId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		ssUser:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
 	UpozornenisOrderBy: "enum",
 	UpozorneniCondition:{
 		upId:{
@@ -4323,36 +5405,6 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		upNadpis:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upText:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upBarvy:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		upTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		upTimestampAdd:{
 			type:"Datetime",
 			array:false,
@@ -4360,70 +5412,60 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
+	AttachmentsOrderBy: "enum",
+	AttachmentCondition:{
+		objectName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		uploadedBy:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	AkceItemsOrderBy: "enum",
 	AkcesOrderBy: "enum",
-	AkceCondition:{
-		aId:{
+	EventsOrderBy: "enum",
+	EventCondition:{
+		id:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		aJmeno:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aKde:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aInfo:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aOd:{
+		since:{
 			type:"Date",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		aDo:{
-			type:"Date",
+		isVisible:{
+			type:"Boolean",
 			array:false,
 			arrayRequired:false,
 			required:false
-		},
-		aKapacita:{
+		}
+	},
+	FormResponsesOrderBy: "enum",
+	FormResponseCondition:{
+		id:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		aDokumenty:{
+		type:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		aTimestamp:{
+		updatedAt:{
 			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aVisible:{
-			type:"Boolean",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -4442,246 +5484,17 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
-		},
-		gdName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gdLevel:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gdPath:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gdHidden:{
-			type:"Boolean",
+		}
+	},
+	LocationsOrderBy: "enum",
+	LocationCondition:{
+		id:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
 		}
 	},
-	MembersOrderBy: "enum",
-	MemberCondition:{
-		uId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uLogin:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uPass:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uJmeno:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uPrijmeni:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uPohlavi:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uEmail:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uTelefon:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uNarozeni:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uRodneCislo:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uPoznamky:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uLevel:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uGroup:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uSkupina:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uDancer:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uBan:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uConfirmed:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uSystem:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uStreet:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uConscriptionNumber:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uOrientationNumber:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uDistrict:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uCity:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uPostalCode:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uNationality:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uMemberSince:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uMemberUntil:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uTeacher:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		uGdprSignedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		paymentValid:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	JSON: "String",
 	PagesOrderBy: "enum",
 	PageCondition:{
 		id:{
@@ -4695,30 +5508,6 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
-		},
-		content:{
-			type:"JSON",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		createdAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		updatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		title:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
 		}
 	},
 	PageRevisionsOrderBy: "enum",
@@ -4728,65 +5517,11 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
-		},
-		revOperation:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		revTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		id:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		url:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		content:{
-			type:"JSON",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		createdAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		updatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		title:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
 		}
 	},
 	ParametersOrderBy: "enum",
 	ParameterCondition:{
 		paName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		paValue:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
@@ -4800,117 +5535,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
-		},
-		peName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peAkce:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peAktuality:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peAnkety:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peDokumenty:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peGalerie:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peInzerce:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peKonzole:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peNabidka:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peNastenka:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peNovinky:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pePary:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pePlatby:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pePermissions:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peRozpis:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peSkupiny:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peUsers:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		peMain:{
-			type:"Int",
+		}
+	},
+	PeopleOrderBy: "enum",
+	PersonCondition:{
+		id:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -4924,62 +5554,8 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		pcName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		pcSymbol:{
 			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcAmount:{
-			type:"BigFloat",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcDateDue:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcValidFrom:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcValidTo:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcUseBase:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcUsePrefix:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcArchive:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pcVisible:{
-			type:"Boolean",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -4988,30 +5564,6 @@ export const AllTypesProps: Record<string,any> = {
 	PlatbyGroupsOrderBy: "enum",
 	PlatbyGroupCondition:{
 		pgId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pgType:{
-			type:"BigFloat",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pgName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pgDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pgBase:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
@@ -5026,251 +5578,22 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:false
 		},
-		prRaw:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
 		prHash:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
-		},
-		prSorted:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		prDiscarded:{
-			type:"Boolean",
+		}
+	},
+	TenantsOrderBy: "enum",
+	TenantCondition:{
+		id:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
 		}
 	},
-	SkupiniesOrderBy: "enum",
-	SkupinyCondition:{
-		sId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sColorRgb:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sColorText:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sLocation:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		sVisible:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	UsersSkupiniesOrderBy: "enum",
-	UsersSkupinyCondition:{
-		usId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usColor:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usPlatbaMesic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usPlatbaCtvrtrok:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usPlatbaPulrok:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usPopis:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	VideosOrderBy: "enum",
-	VideoCondition:{
-		vId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vUri:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vTitle:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vAuthor:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vPlaylist:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vUpdatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	VideoListsOrderBy: "enum",
-	VideoListCondition:{
-		vlId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlUrl:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlTitle:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlCount:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlLastChecked:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	VideoSourcesOrderBy: "enum",
-	VideoSourceCondition:{
-		vsId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsUrl:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsTitle:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsLastChecked:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	CrmCohort: "enum",
 	Mutation:{
 		createAkce:{
 			input:{
@@ -5296,9 +5619,57 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
+		createAttachment:{
+			input:{
+				type:"CreateAttachmentInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		createAttendeeExternal:{
+			input:{
+				type:"CreateAttendeeExternalInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		createAttendeeUser:{
+			input:{
+				type:"CreateAttendeeUserInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		createCohortGroup:{
+			input:{
+				type:"CreateCohortGroupInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
 		createDokumenty:{
 			input:{
 				type:"CreateDokumentyInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		createEvent:{
+			input:{
+				type:"CreateEventInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		createFormResponse:{
+			input:{
+				type:"CreateFormResponseInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5315,6 +5686,22 @@ export const AllTypesProps: Record<string,any> = {
 		createGalerieFoto:{
 			input:{
 				type:"CreateGalerieFotoInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		createLocation:{
+			input:{
+				type:"CreateLocationInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		createLocationAttachment:{
+			input:{
+				type:"CreateLocationAttachmentInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5376,6 +5763,14 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
+		createPerson:{
+			input:{
+				type:"CreatePersonInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
 		createPlatbyCategory:{
 			input:{
 				type:"CreatePlatbyCategoryInput",
@@ -5424,6 +5819,22 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
+		createRoom:{
+			input:{
+				type:"CreateRoomInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		createRoomAttachment:{
+			input:{
+				type:"CreateRoomAttachmentInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
 		createRozpi:{
 			input:{
 				type:"CreateRozpiInput",
@@ -5440,17 +5851,41 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		createSession:{
+		createSkupiny:{
 			input:{
-				type:"CreateSessionInput",
+				type:"CreateSkupinyInput",
 				array:false,
 				arrayRequired:false,
 				required:true
 			}
 		},
-		createSkupiny:{
+		createTenant:{
 			input:{
-				type:"CreateSkupinyInput",
+				type:"CreateTenantInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		createTenantAttachment:{
+			input:{
+				type:"CreateTenantAttachmentInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		createTenantLocation:{
+			input:{
+				type:"CreateTenantLocationInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		createTenantPerson:{
+			input:{
+				type:"CreateTenantPersonInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5480,78 +5915,6 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		createUsersSkupiny:{
-			input:{
-				type:"CreateUsersSkupinyInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		createVideo:{
-			input:{
-				type:"CreateVideoInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		createVideoList:{
-			input:{
-				type:"CreateVideoListInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		createVideoSource:{
-			input:{
-				type:"CreateVideoSourceInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		updateAkceByNodeId:{
-			input:{
-				type:"UpdateAkceByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		updateAkce:{
-			input:{
-				type:"UpdateAkceInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		updateAkceItemByNodeId:{
-			input:{
-				type:"UpdateAkceItemByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		updateAkceItem:{
-			input:{
-				type:"UpdateAkceItemInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		updateAktualityByNodeId:{
-			input:{
-				type:"UpdateAktualityByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
 		updateAktuality:{
 			input:{
 				type:"UpdateAktualityInput",
@@ -5560,9 +5923,41 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateDokumentyByNodeId:{
+		updateAttachment:{
 			input:{
-				type:"UpdateDokumentyByNodeIdInput",
+				type:"UpdateAttachmentInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		updateAttendeeExternal:{
+			input:{
+				type:"UpdateAttendeeExternalInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		updateAttendeeUser:{
+			input:{
+				type:"UpdateAttendeeUserInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		updateAttendeeUserByUserIdAndEventId:{
+			input:{
+				type:"UpdateAttendeeUserByUserIdAndEventIdInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		updateCohortGroup:{
+			input:{
+				type:"UpdateCohortGroupInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5576,9 +5971,17 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateGalerieDirByNodeId:{
+		updateEvent:{
 			input:{
-				type:"UpdateGalerieDirByNodeIdInput",
+				type:"UpdateEventInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		updateFormResponse:{
+			input:{
+				type:"UpdateFormResponseInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5592,14 +5995,6 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateGalerieFotoByNodeId:{
-			input:{
-				type:"UpdateGalerieFotoByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
 		updateGalerieFoto:{
 			input:{
 				type:"UpdateGalerieFotoInput",
@@ -5608,9 +6003,17 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateNabidkaByNodeId:{
+		updateLocation:{
 			input:{
-				type:"UpdateNabidkaByNodeIdInput",
+				type:"UpdateLocationInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		updateLocationAttachment:{
+			input:{
+				type:"UpdateLocationAttachmentInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5624,14 +6027,6 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateNabidkaItemByNodeId:{
-			input:{
-				type:"UpdateNabidkaItemByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
 		updateNabidkaItem:{
 			input:{
 				type:"UpdateNabidkaItemInput",
@@ -5640,9 +6035,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updatePageByNodeId:{
+		updateNabidkaItemByNiPartnerAndNiIdRodic:{
 			input:{
-				type:"UpdatePageByNodeIdInput",
+				type:"UpdateNabidkaItemByNiPartnerAndNiIdRodicInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5664,25 +6059,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateParameterByNodeId:{
-			input:{
-				type:"UpdateParameterByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
 		updateParameter:{
 			input:{
 				type:"UpdateParameterInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		updateParyByNodeId:{
-			input:{
-				type:"UpdateParyByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5696,25 +6075,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateParyNavrhByNodeId:{
-			input:{
-				type:"UpdateParyNavrhByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
 		updateParyNavrh:{
 			input:{
 				type:"UpdateParyNavrhInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		updatePermissionByNodeId:{
-			input:{
-				type:"UpdatePermissionByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5728,9 +6091,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updatePlatbyCategoryByNodeId:{
+		updatePerson:{
 			input:{
-				type:"UpdatePlatbyCategoryByNodeIdInput",
+				type:"UpdatePersonInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5744,25 +6107,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updatePlatbyCategoryGroupByNodeId:{
-			input:{
-				type:"UpdatePlatbyCategoryGroupByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
 		updatePlatbyCategoryGroup:{
 			input:{
 				type:"UpdatePlatbyCategoryGroupInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		updatePlatbyGroupByNodeId:{
-			input:{
-				type:"UpdatePlatbyGroupByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5776,25 +6123,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updatePlatbyGroupSkupinaByNodeId:{
-			input:{
-				type:"UpdatePlatbyGroupSkupinaByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
 		updatePlatbyGroupSkupina:{
 			input:{
 				type:"UpdatePlatbyGroupSkupinaInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		updatePlatbyItemByNodeId:{
-			input:{
-				type:"UpdatePlatbyItemByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5808,14 +6139,6 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updatePlatbyRawByNodeId:{
-			input:{
-				type:"UpdatePlatbyRawByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
 		updatePlatbyRaw:{
 			input:{
 				type:"UpdatePlatbyRawInput",
@@ -5824,9 +6147,17 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateRozpiByNodeId:{
+		updateRoom:{
 			input:{
-				type:"UpdateRozpiByNodeIdInput",
+				type:"UpdateRoomInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		updateRoomAttachment:{
+			input:{
+				type:"UpdateRoomAttachmentInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5840,41 +6171,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateRozpisItemByNodeId:{
-			input:{
-				type:"UpdateRozpisItemByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
 		updateRozpisItem:{
 			input:{
 				type:"UpdateRozpisItemInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		updateSessionByNodeId:{
-			input:{
-				type:"UpdateSessionByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		updateSession:{
-			input:{
-				type:"UpdateSessionInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		updateSkupinyByNodeId:{
-			input:{
-				type:"UpdateSkupinyByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5888,9 +6187,33 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateUpozorneniByNodeId:{
+		updateTenant:{
 			input:{
-				type:"UpdateUpozorneniByNodeIdInput",
+				type:"UpdateTenantInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		updateTenantAttachment:{
+			input:{
+				type:"UpdateTenantAttachmentInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		updateTenantLocation:{
+			input:{
+				type:"UpdateTenantLocationInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		updateTenantPerson:{
+			input:{
+				type:"UpdateTenantPersonInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5904,25 +6227,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateUpozorneniSkupinyByNodeId:{
-			input:{
-				type:"UpdateUpozorneniSkupinyByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
 		updateUpozorneniSkupiny:{
 			input:{
 				type:"UpdateUpozorneniSkupinyInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		updateUserByNodeId:{
-			input:{
-				type:"UpdateUserByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -5936,110 +6243,6 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		updateUsersSkupinyByNodeId:{
-			input:{
-				type:"UpdateUsersSkupinyByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		updateUsersSkupiny:{
-			input:{
-				type:"UpdateUsersSkupinyInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		updateVideoByNodeId:{
-			input:{
-				type:"UpdateVideoByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		updateVideo:{
-			input:{
-				type:"UpdateVideoInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		updateVideoListByNodeId:{
-			input:{
-				type:"UpdateVideoListByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		updateVideoList:{
-			input:{
-				type:"UpdateVideoListInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		updateVideoSourceByNodeId:{
-			input:{
-				type:"UpdateVideoSourceByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		updateVideoSource:{
-			input:{
-				type:"UpdateVideoSourceInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		deleteAkceByNodeId:{
-			input:{
-				type:"DeleteAkceByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		deleteAkce:{
-			input:{
-				type:"DeleteAkceInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		deleteAkceItemByNodeId:{
-			input:{
-				type:"DeleteAkceItemByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		deleteAkceItem:{
-			input:{
-				type:"DeleteAkceItemInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		deleteAktualityByNodeId:{
-			input:{
-				type:"DeleteAktualityByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
 		deleteAktuality:{
 			input:{
 				type:"DeleteAktualityInput",
@@ -6048,9 +6251,41 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteDokumentyByNodeId:{
+		deleteAttachment:{
 			input:{
-				type:"DeleteDokumentyByNodeIdInput",
+				type:"DeleteAttachmentInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		deleteAttendeeExternal:{
+			input:{
+				type:"DeleteAttendeeExternalInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		deleteAttendeeUser:{
+			input:{
+				type:"DeleteAttendeeUserInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		deleteAttendeeUserByUserIdAndEventId:{
+			input:{
+				type:"DeleteAttendeeUserByUserIdAndEventIdInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		deleteCohortGroup:{
+			input:{
+				type:"DeleteCohortGroupInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -6064,9 +6299,17 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteGalerieDirByNodeId:{
+		deleteEvent:{
 			input:{
-				type:"DeleteGalerieDirByNodeIdInput",
+				type:"DeleteEventInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		deleteFormResponse:{
+			input:{
+				type:"DeleteFormResponseInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -6080,14 +6323,6 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteGalerieFotoByNodeId:{
-			input:{
-				type:"DeleteGalerieFotoByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
 		deleteGalerieFoto:{
 			input:{
 				type:"DeleteGalerieFotoInput",
@@ -6096,9 +6331,17 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteNabidkaByNodeId:{
+		deleteLocation:{
 			input:{
-				type:"DeleteNabidkaByNodeIdInput",
+				type:"DeleteLocationInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		deleteLocationAttachment:{
+			input:{
+				type:"DeleteLocationAttachmentInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -6112,14 +6355,6 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteNabidkaItemByNodeId:{
-			input:{
-				type:"DeleteNabidkaItemByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
 		deleteNabidkaItem:{
 			input:{
 				type:"DeleteNabidkaItemInput",
@@ -6128,9 +6363,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteParameterByNodeId:{
+		deleteNabidkaItemByNiPartnerAndNiIdRodic:{
 			input:{
-				type:"DeleteParameterByNodeIdInput",
+				type:"DeleteNabidkaItemByNiPartnerAndNiIdRodicInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -6144,25 +6379,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteParyByNodeId:{
-			input:{
-				type:"DeleteParyByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
 		deletePary:{
 			input:{
 				type:"DeleteParyInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		deleteParyNavrhByNodeId:{
-			input:{
-				type:"DeleteParyNavrhByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -6176,14 +6395,6 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deletePermissionByNodeId:{
-			input:{
-				type:"DeletePermissionByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
 		deletePermission:{
 			input:{
 				type:"DeletePermissionInput",
@@ -6192,9 +6403,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deletePlatbyCategoryByNodeId:{
+		deletePerson:{
 			input:{
-				type:"DeletePlatbyCategoryByNodeIdInput",
+				type:"DeletePersonInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -6208,25 +6419,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deletePlatbyCategoryGroupByNodeId:{
-			input:{
-				type:"DeletePlatbyCategoryGroupByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
 		deletePlatbyCategoryGroup:{
 			input:{
 				type:"DeletePlatbyCategoryGroupInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		deletePlatbyGroupByNodeId:{
-			input:{
-				type:"DeletePlatbyGroupByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -6240,25 +6435,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deletePlatbyGroupSkupinaByNodeId:{
-			input:{
-				type:"DeletePlatbyGroupSkupinaByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
 		deletePlatbyGroupSkupina:{
 			input:{
 				type:"DeletePlatbyGroupSkupinaInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		deletePlatbyItemByNodeId:{
-			input:{
-				type:"DeletePlatbyItemByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -6272,14 +6451,6 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deletePlatbyRawByNodeId:{
-			input:{
-				type:"DeletePlatbyRawByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
 		deletePlatbyRaw:{
 			input:{
 				type:"DeletePlatbyRawInput",
@@ -6288,9 +6459,17 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteRozpiByNodeId:{
+		deleteRoom:{
 			input:{
-				type:"DeleteRozpiByNodeIdInput",
+				type:"DeleteRoomInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		deleteRoomAttachment:{
+			input:{
+				type:"DeleteRoomAttachmentInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -6304,41 +6483,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteRozpisItemByNodeId:{
-			input:{
-				type:"DeleteRozpisItemByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
 		deleteRozpisItem:{
 			input:{
 				type:"DeleteRozpisItemInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		deleteSessionByNodeId:{
-			input:{
-				type:"DeleteSessionByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		deleteSession:{
-			input:{
-				type:"DeleteSessionInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		deleteSkupinyByNodeId:{
-			input:{
-				type:"DeleteSkupinyByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -6352,9 +6499,33 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteUpozorneniByNodeId:{
+		deleteTenant:{
 			input:{
-				type:"DeleteUpozorneniByNodeIdInput",
+				type:"DeleteTenantInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		deleteTenantAttachment:{
+			input:{
+				type:"DeleteTenantAttachmentInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		deleteTenantLocation:{
+			input:{
+				type:"DeleteTenantLocationInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		deleteTenantPerson:{
+			input:{
+				type:"DeleteTenantPersonInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -6368,25 +6539,9 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteUpozorneniSkupinyByNodeId:{
-			input:{
-				type:"DeleteUpozorneniSkupinyByNodeIdInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
 		deleteUpozorneniSkupiny:{
 			input:{
 				type:"DeleteUpozorneniSkupinyInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
-		},
-		deleteUserByNodeId:{
-			input:{
-				type:"DeleteUserByNodeIdInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -6400,65 +6555,73 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		deleteUsersSkupinyByNodeId:{
+		bookLesson:{
 			input:{
-				type:"DeleteUsersSkupinyByNodeIdInput",
+				type:"BookLessonInput",
 				array:false,
 				arrayRequired:false,
 				required:true
 			}
 		},
-		deleteUsersSkupiny:{
+		cancelLesson:{
 			input:{
-				type:"DeleteUsersSkupinyInput",
+				type:"CancelLessonInput",
 				array:false,
 				arrayRequired:false,
 				required:true
 			}
 		},
-		deleteVideoByNodeId:{
+		cancelParticipation:{
 			input:{
-				type:"DeleteVideoByNodeIdInput",
+				type:"CancelParticipationInput",
 				array:false,
 				arrayRequired:false,
 				required:true
 			}
 		},
-		deleteVideo:{
+		changePassword:{
 			input:{
-				type:"DeleteVideoInput",
+				type:"ChangePasswordInput",
 				array:false,
 				arrayRequired:false,
 				required:true
 			}
 		},
-		deleteVideoListByNodeId:{
+		confirmUser:{
 			input:{
-				type:"DeleteVideoListByNodeIdInput",
+				type:"ConfirmUserInput",
 				array:false,
 				arrayRequired:false,
 				required:true
 			}
 		},
-		deleteVideoList:{
+		createCouple:{
 			input:{
-				type:"DeleteVideoListInput",
+				type:"CreateCoupleInput",
 				array:false,
 				arrayRequired:false,
 				required:true
 			}
 		},
-		deleteVideoSourceByNodeId:{
+		createParticipation:{
 			input:{
-				type:"DeleteVideoSourceByNodeIdInput",
+				type:"CreateParticipationInput",
 				array:false,
 				arrayRequired:false,
 				required:true
 			}
 		},
-		deleteVideoSource:{
+		createParticipationExternal:{
 			input:{
-				type:"DeleteVideoSourceInput",
+				type:"CreateParticipationExternalInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		fixUnpairedCouples:{
+			input:{
+				type:"FixUnpairedCouplesInput",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -6488,9 +6651,49 @@ export const AllTypesProps: Record<string,any> = {
 				required:true
 			}
 		},
-		uploadFile:{
+		reservationSetDesiredLessons:{
 			input:{
-				type:"UploadInput",
+				type:"ReservationSetDesiredLessonsInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		resetPassword:{
+			input:{
+				type:"ResetPasswordInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		submitForm:{
+			input:{
+				type:"SubmitFormInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		verifyFunction:{
+			input:{
+				type:"VerifyFunctionInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		uploadFile:{
+			fileName:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		downloadFile:{
+			id:{
+				type:"Int",
 				array:false,
 				arrayRequired:false,
 				required:true
@@ -6532,31 +6735,31 @@ export const AllTypesProps: Record<string,any> = {
 			type:"String",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		},
 		aKde:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		},
 		aInfo:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		},
 		aOd:{
 			type:"Date",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		},
 		aDo:{
 			type:"Date",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		},
 		aKapacita:{
 			type:"BigInt",
@@ -6568,7 +6771,7 @@ export const AllTypesProps: Record<string,any> = {
 			type:"String",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		},
 		aTimestamp:{
 			type:"Datetime",
@@ -6583,6 +6786,24 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		aVisible:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		summary:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		isPublic:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		enableNotes:{
 			type:"Boolean",
 			array:false,
 			arrayRequired:false,
@@ -6624,19 +6845,25 @@ export const AllTypesProps: Record<string,any> = {
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		},
 		aiUser:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		},
 		aiRokNarozeni:{
 			type:"Int",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
+		},
+		notes:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	CreateAktualityPayload:{
@@ -6674,13 +6901,13 @@ export const AllTypesProps: Record<string,any> = {
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		},
 		atKat:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		},
 		atJmeno:{
 			type:"String",
@@ -6720,6 +6947,308 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		atTimestampAdd:{
 			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	CreateAttachmentPayload:{
+		attachmentEdge:{
+			orderBy:{
+				type:"AttachmentsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	CreateAttachmentInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		attachment:{
+			type:"AttachmentInput",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	AttachmentInput:{
+		objectName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		previewObjectName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		uploadedBy:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		uploadedAt:{
+			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	CreateAttendeeExternalPayload:{
+		attendeeExternalEdge:{
+			orderBy:{
+				type:"AttendeeExternalsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	CreateAttendeeExternalInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		attendeeExternal:{
+			type:"AttendeeExternalInput",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	AttendeeExternalInput:{
+		eventId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		firstName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		lastName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		email:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		phone:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		notes:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		birthNumber:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		guardianName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		managedBy:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		confirmedBy:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		confirmedAt:{
+			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		createdAt:{
+			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		updatedAt:{
+			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	CreateAttendeeUserPayload:{
+		attendeeUserEdge:{
+			orderBy:{
+				type:"AttendeeUsersOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	CreateAttendeeUserInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		attendeeUser:{
+			type:"AttendeeUserInput",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	AttendeeUserInput:{
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		eventId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		userId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		birthYear:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		notes:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	CreateCohortGroupPayload:{
+		cohortGroupEdge:{
+			orderBy:{
+				type:"CohortGroupsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	CreateCohortGroupInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		cohortGroup:{
+			type:"CohortGroupInput",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	CohortGroupInput:{
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		description:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		ordering:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		isPublic:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenant:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -6791,6 +7320,202 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	CreateEventPayload:{
+		eventEdge:{
+			orderBy:{
+				type:"EventsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	CreateEventInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		event:{
+			type:"EventInput",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	EventInput:{
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		locationText:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		description:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		since:{
+			type:"Date",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		until:{
+			type:"Date",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		capacity:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		filesLegacy:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		updatedAt:{
+			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		isLocked:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		isVisible:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		summary:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		isPublic:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		enableNotes:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	CreateFormResponsePayload:{
+		formResponseEdge:{
+			orderBy:{
+				type:"FormResponsesOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	CreateFormResponseInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		formResponse:{
+			type:"FormResponseInput",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	FormResponseInput:{
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		type:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		data:{
+			type:"JSON",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		url:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		createdAt:{
+			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		updatedAt:{
+			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	CreateGalerieDirPayload:{
@@ -6850,6 +7575,18 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		gdHidden:{
 			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -6915,6 +7652,100 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	CreateLocationPayload:{
+		locationEdge:{
+			orderBy:{
+				type:"LocationsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	CreateLocationInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		location:{
+			type:"LocationInput",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	LocationInput:{
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		description:{
+			type:"JSON",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	CreateLocationAttachmentPayload:{
+		locationAttachmentEdge:{
+			orderBy:{
+				type:"LocationAttachmentsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	CreateLocationAttachmentInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		locationAttachment:{
+			type:"LocationAttachmentInput",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	LocationAttachmentInput:{
+		locationId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		objectName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
 		}
 	},
 	CreateNabidkaPayload:{
@@ -6961,7 +7792,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		nMaxPocetHod:{
-			type:"BigInt",
+			type:"Int",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -6992,6 +7823,18 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		nTimestamp:{
 			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -7048,6 +7891,18 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		niLock:{
 			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -7255,6 +8110,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	CreateParyNavrhPayload:{
@@ -7305,6 +8166,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:true
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	CreatePermissionPayload:{
@@ -7451,6 +8318,62 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:true
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	CreatePersonPayload:{
+		personEdge:{
+			orderBy:{
+				type:"PeopleOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	CreatePersonInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		person:{
+			type:"PersonInput",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	PersonInput:{
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		firstName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		lastName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		gender:{
+			type:"GenderType",
+			array:false,
+			arrayRequired:false,
+			required:true
 		}
 	},
 	CreatePlatbyCategoryPayload:{
@@ -7543,6 +8466,18 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	CreatePlatbyCategoryGroupPayload:{
@@ -7587,6 +8522,18 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:true
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	CreatePlatbyGroupPayload:{
@@ -7643,6 +8590,18 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	CreatePlatbyGroupSkupinaPayload:{
@@ -7687,6 +8646,18 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:true
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	CreatePlatbyItemPayload:{
@@ -7755,6 +8726,18 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	CreatePlatbyRawPayload:{
@@ -7811,6 +8794,106 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	CreateRoomPayload:{
+		roomEdge:{
+			orderBy:{
+				type:"RoomsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	CreateRoomInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		room:{
+			type:"RoomInput",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	RoomInput:{
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		description:{
+			type:"JSON",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		location:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	CreateRoomAttachmentPayload:{
+		roomAttachmentEdge:{
+			orderBy:{
+				type:"RoomAttachmentsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	CreateRoomAttachmentInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		roomAttachment:{
+			type:"RoomAttachmentInput",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	RoomAttachmentInput:{
+		roomId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		objectName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
 		}
 	},
 	CreateRozpiPayload:{
@@ -7879,6 +8962,18 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	CreateRozpisItemPayload:{
@@ -7941,58 +9036,14 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
-		}
-	},
-	CreateSessionPayload:{
-		sessionEdge:{
-			orderBy:{
-				type:"SessionsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
-		}
-	},
-	CreateSessionInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
 		},
-		session:{
-			type:"SessionInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	SessionInput:{
-		ssId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		ssData:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		ssUpdatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssLifetime:{
+		id:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		},
-		ssUser:{
+		tenantId:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
@@ -8052,7 +9103,7 @@ export const AllTypesProps: Record<string,any> = {
 			type:"String",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		},
 		sLocation:{
 			type:"String",
@@ -8065,6 +9116,206 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		ordering:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		internalInfo:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		cohortGroup:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	CreateTenantPayload:{
+		tenantEdge:{
+			orderBy:{
+				type:"TenantsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	CreateTenantInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenant:{
+			type:"TenantInput",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	TenantInput:{
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		memberInfo:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		origins:{
+			type:"String",
+			array:true,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	CreateTenantAttachmentPayload:{
+		tenantAttachmentEdge:{
+			orderBy:{
+				type:"TenantAttachmentsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	CreateTenantAttachmentInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantAttachment:{
+			type:"TenantAttachmentInput",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	TenantAttachmentInput:{
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		objectName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		type:{
+			type:"TenantAttachmentType",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	CreateTenantLocationPayload:{
+		tenantLocationEdge:{
+			orderBy:{
+				type:"TenantLocationsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	CreateTenantLocationInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantLocation:{
+			type:"TenantLocationInput",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	TenantLocationInput:{
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		locationId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	CreateTenantPersonPayload:{
+		tenantPersonEdge:{
+			orderBy:{
+				type:"TenantPeopleOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	CreateTenantPersonInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantPerson:{
+			type:"TenantPersonInput",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	TenantPersonInput:{
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		personId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
 		}
 	},
 	CreateUpozorneniPayload:{
@@ -8102,7 +9353,7 @@ export const AllTypesProps: Record<string,any> = {
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		},
 		upNadpis:{
 			type:"String",
@@ -8136,6 +9387,36 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		upTimestampAdd:{
 			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		scheduledSince:{
+			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		scheduledUntil:{
+			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		isVisible:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -8195,6 +9476,18 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:true
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	CreateUserPayload:{
@@ -8304,7 +9597,7 @@ export const AllTypesProps: Record<string,any> = {
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		},
 		uSkupina:{
 			type:"BigInt",
@@ -8413,466 +9706,18 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
-		}
-	},
-	CreateUsersSkupinyPayload:{
-		usersSkupinyEdge:{
-			orderBy:{
-				type:"UsersSkupiniesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
-		}
-	},
-	CreateUsersSkupinyInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
 		},
-		usersSkupiny:{
-			type:"UsersSkupinyInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	UsersSkupinyInput:{
-		usId:{
+		id:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		usColor:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usPlatbaMesic:{
+		tenantId:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
-		},
-		usPlatbaCtvrtrok:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usPlatbaPulrok:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usPopis:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	CreateVideoPayload:{
-		videoEdge:{
-			orderBy:{
-				type:"VideosOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
-		}
-	},
-	CreateVideoInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		video:{
-			type:"VideoInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	VideoInput:{
-		vId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vUri:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vTitle:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vAuthor:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vPlaylist:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vUpdatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	CreateVideoListPayload:{
-		videoListEdge:{
-			orderBy:{
-				type:"VideoListsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
-		}
-	},
-	CreateVideoListInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		videoList:{
-			type:"VideoListInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	VideoListInput:{
-		vlId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlUrl:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vlTitle:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vlDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vlCount:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vlCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vlLastChecked:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	CreateVideoSourcePayload:{
-		videoSourceEdge:{
-			orderBy:{
-				type:"VideoSourcesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
-		}
-	},
-	CreateVideoSourceInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		videoSource:{
-			type:"VideoSourceInput",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	VideoSourceInput:{
-		vsId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsUrl:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vsTitle:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsLastChecked:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	UpdateAkcePayload:{
-		akceEdge:{
-			orderBy:{
-				type:"AkcesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
-		}
-	},
-	UpdateAkceByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"AkcePatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	AkcePatch:{
-		aId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aJmeno:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aKde:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aInfo:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aOd:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aDo:{
-			type:"Date",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aKapacita:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aDokumenty:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aTimestamp:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aLock:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aVisible:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	UpdateAkceInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"AkcePatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		aId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	UpdateAkceItemPayload:{
-		akceItemEdge:{
-			orderBy:{
-				type:"AkceItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
-		}
-	},
-	UpdateAkceItemByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"AkceItemPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	AkceItemPatch:{
-		aiId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aiIdRodic:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aiUser:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aiRokNarozeni:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	UpdateAkceItemInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"AkceItemPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		aiId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
 		}
 	},
 	UpdateAktualityPayload:{
@@ -8885,21 +9730,21 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateAktualityByNodeIdInput:{
+	UpdateAktualityInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
+		patch:{
+			type:"AktualityPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		patch:{
-			type:"AktualityPatch",
+		atId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -8965,9 +9810,31 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
-	UpdateAktualityInput:{
+	UpdateAttachmentPayload:{
+		attachmentEdge:{
+			orderBy:{
+				type:"AttachmentsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	UpdateAttachmentInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -8975,16 +9842,326 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		patch:{
-			type:"AktualityPatch",
+			type:"AttachmentPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		atId:{
+		objectName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	AttachmentPatch:{
+		objectName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		previewObjectName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		uploadedBy:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		uploadedAt:{
+			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	UpdateAttendeeExternalPayload:{
+		attendeeExternalEdge:{
+			orderBy:{
+				type:"AttendeeExternalsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	UpdateAttendeeExternalInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		patch:{
+			type:"AttendeeExternalPatch",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		id:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
+		}
+	},
+	AttendeeExternalPatch:{
+		eventId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		firstName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		lastName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		email:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		phone:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		notes:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		birthNumber:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		guardianName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		managedBy:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		confirmedBy:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		confirmedAt:{
+			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		createdAt:{
+			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		updatedAt:{
+			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	UpdateAttendeeUserPayload:{
+		attendeeUserEdge:{
+			orderBy:{
+				type:"AttendeeUsersOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	UpdateAttendeeUserInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		patch:{
+			type:"AttendeeUserPatch",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	AttendeeUserPatch:{
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		eventId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		userId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		birthYear:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		notes:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	UpdateAttendeeUserByUserIdAndEventIdInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		patch:{
+			type:"AttendeeUserPatch",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		userId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		eventId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	UpdateCohortGroupPayload:{
+		cohortGroupEdge:{
+			orderBy:{
+				type:"CohortGroupsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	UpdateCohortGroupInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		patch:{
+			type:"CohortGroupPatch",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	CohortGroupPatch:{
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		description:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		ordering:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		isPublic:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenant:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	UpdateDokumentyPayload:{
@@ -8997,21 +10174,21 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateDokumentyByNodeIdInput:{
+	UpdateDokumentyInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
+		patch:{
+			type:"DokumentyPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		patch:{
-			type:"DokumentyPatch",
+		dId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -9059,9 +10236,31 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
-	UpdateDokumentyInput:{
+	UpdateEventPayload:{
+		eventEdge:{
+			orderBy:{
+				type:"EventsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	UpdateEventInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -9069,16 +10268,182 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		patch:{
-			type:"DokumentyPatch",
+			type:"EventPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		dId:{
+		id:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
+		}
+	},
+	EventPatch:{
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		locationText:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		description:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		since:{
+			type:"Date",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		until:{
+			type:"Date",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		capacity:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		filesLegacy:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		updatedAt:{
+			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		isLocked:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		isVisible:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		summary:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		isPublic:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		enableNotes:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	UpdateFormResponsePayload:{
+		formResponseEdge:{
+			orderBy:{
+				type:"FormResponsesOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	UpdateFormResponseInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		patch:{
+			type:"FormResponsePatch",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	FormResponsePatch:{
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		type:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		data:{
+			type:"JSON",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		url:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		createdAt:{
+			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		updatedAt:{
+			type:"Datetime",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	UpdateGalerieDirPayload:{
@@ -9091,21 +10456,21 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateGalerieDirByNodeIdInput:{
+	UpdateGalerieDirInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
+		patch:{
+			type:"GalerieDirPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		patch:{
-			type:"GalerieDirPatch",
+		gdId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -9147,26 +10512,18 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
-		}
-	},
-	UpdateGalerieDirInput:{
-		clientMutationId:{
-			type:"String",
+		},
+		id:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		patch:{
-			type:"GalerieDirPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		gdId:{
+		tenantId:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		}
 	},
 	UpdateGalerieFotoPayload:{
@@ -9179,21 +10536,21 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateGalerieFotoByNodeIdInput:{
+	UpdateGalerieFotoInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
+		patch:{
+			type:"GalerieFotoPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		patch:{
-			type:"GalerieFotoPatch",
+		gfId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -9235,9 +10592,31 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
-	UpdateGalerieFotoInput:{
+	UpdateLocationPayload:{
+		locationEdge:{
+			orderBy:{
+				type:"LocationsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	UpdateLocationInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -9245,16 +10624,86 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		patch:{
-			type:"GalerieFotoPatch",
+			type:"LocationPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		gfId:{
+		id:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
+		}
+	},
+	LocationPatch:{
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		description:{
+			type:"JSON",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	UpdateLocationAttachmentPayload:{
+		locationAttachmentEdge:{
+			orderBy:{
+				type:"LocationAttachmentsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	UpdateLocationAttachmentInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		patch:{
+			type:"LocationAttachmentPatch",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		locationId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		objectName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	LocationAttachmentPatch:{
+		locationId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		objectName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	UpdateNabidkaPayload:{
@@ -9267,21 +10716,21 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateNabidkaByNodeIdInput:{
+	UpdateNabidkaInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
+		patch:{
+			type:"NabidkaPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		patch:{
-			type:"NabidkaPatch",
+		nId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -9307,7 +10756,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		nMaxPocetHod:{
-			type:"BigInt",
+			type:"Int",
 			array:false,
 			arrayRequired:false,
 			required:false
@@ -9341,26 +10790,18 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
-		}
-	},
-	UpdateNabidkaInput:{
-		clientMutationId:{
-			type:"String",
+		},
+		id:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		patch:{
-			type:"NabidkaPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		nId:{
+		tenantId:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		}
 	},
 	UpdateNabidkaItemPayload:{
@@ -9373,21 +10814,21 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateNabidkaItemByNodeIdInput:{
+	UpdateNabidkaItemInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
+		patch:{
+			type:"NabidkaItemPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		patch:{
-			type:"NabidkaItemPatch",
+		niId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -9423,9 +10864,21 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
-	UpdateNabidkaItemInput:{
+	UpdateNabidkaItemByNiPartnerAndNiIdRodicInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -9438,7 +10891,13 @@ export const AllTypesProps: Record<string,any> = {
 			arrayRequired:false,
 			required:true
 		},
-		niId:{
+		niPartner:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		niIdRodic:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
@@ -9455,21 +10914,21 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdatePageByNodeIdInput:{
+	UpdatePageInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
+		patch:{
+			type:"PagePatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		patch:{
-			type:"PagePatch",
+		id:{
+			type:"Int",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -9513,26 +10972,6 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UpdatePageInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"PagePatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		id:{
-			type:"Int",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
 	UpdatePageByUrlInput:{
 		clientMutationId:{
 			type:"String",
@@ -9563,40 +11002,6 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateParameterByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"ParameterPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	ParameterPatch:{
-		paName:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		paValue:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
 	UpdateParameterInput:{
 		clientMutationId:{
 			type:"String",
@@ -9617,6 +11022,20 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
+	ParameterPatch:{
+		paName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		paValue:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
 	UpdateParyPayload:{
 		paryEdge:{
 			orderBy:{
@@ -9627,21 +11046,21 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateParyByNodeIdInput:{
+	UpdateParyInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
+		patch:{
+			type:"ParyPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		patch:{
-			type:"ParyPatch",
+		pId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -9725,26 +11144,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
-		}
-	},
-	UpdateParyInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
 		},
-		patch:{
-			type:"ParyPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pId:{
+		id:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		}
 	},
 	UpdateParyNavrhPayload:{
@@ -9757,21 +11162,21 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateParyNavrhByNodeIdInput:{
+	UpdateParyNavrhInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
+		patch:{
+			type:"ParyNavrhPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		patch:{
-			type:"ParyNavrhPatch",
+		pnId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -9801,26 +11206,12 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
-		}
-	},
-	UpdateParyNavrhInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
 		},
-		patch:{
-			type:"ParyNavrhPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pnId:{
+		id:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		}
 	},
 	UpdatePermissionPayload:{
@@ -9833,21 +11224,21 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdatePermissionByNodeIdInput:{
+	UpdatePermissionInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
+		patch:{
+			type:"PermissionPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		patch:{
-			type:"PermissionPatch",
+		peId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -9973,9 +11364,25 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
-	UpdatePermissionInput:{
+	UpdatePersonPayload:{
+		personEdge:{
+			orderBy:{
+				type:"PeopleOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	UpdatePersonInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -9983,16 +11390,42 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		patch:{
-			type:"PermissionPatch",
+			type:"PersonPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		peId:{
+		id:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
+		}
+	},
+	PersonPatch:{
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		firstName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		lastName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		gender:{
+			type:"GenderType",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	UpdatePlatbyCategoryPayload:{
@@ -10005,21 +11438,21 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdatePlatbyCategoryByNodeIdInput:{
+	UpdatePlatbyCategoryInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
+		patch:{
+			type:"PlatbyCategoryPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		patch:{
-			type:"PlatbyCategoryPatch",
+		pcId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -10091,26 +11524,18 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
-		}
-	},
-	UpdatePlatbyCategoryInput:{
-		clientMutationId:{
-			type:"String",
+		},
+		id:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		patch:{
-			type:"PlatbyCategoryPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pcId:{
+		tenantId:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		}
 	},
 	UpdatePlatbyCategoryGroupPayload:{
@@ -10123,21 +11548,21 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdatePlatbyCategoryGroupByNodeIdInput:{
+	UpdatePlatbyCategoryGroupInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
+		patch:{
+			type:"PlatbyCategoryGroupPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		patch:{
-			type:"PlatbyCategoryGroupPatch",
+		pcgId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -10161,26 +11586,18 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
-		}
-	},
-	UpdatePlatbyCategoryGroupInput:{
-		clientMutationId:{
-			type:"String",
+		},
+		id:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		patch:{
-			type:"PlatbyCategoryGroupPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pcgId:{
+		tenantId:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		}
 	},
 	UpdatePlatbyGroupPayload:{
@@ -10193,21 +11610,21 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdatePlatbyGroupByNodeIdInput:{
+	UpdatePlatbyGroupInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
+		patch:{
+			type:"PlatbyGroupPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		patch:{
-			type:"PlatbyGroupPatch",
+		pgId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -10243,26 +11660,18 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
-		}
-	},
-	UpdatePlatbyGroupInput:{
-		clientMutationId:{
-			type:"String",
+		},
+		id:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		patch:{
-			type:"PlatbyGroupPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pgId:{
+		tenantId:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		}
 	},
 	UpdatePlatbyGroupSkupinaPayload:{
@@ -10275,21 +11684,21 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdatePlatbyGroupSkupinaByNodeIdInput:{
+	UpdatePlatbyGroupSkupinaInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
+		patch:{
+			type:"PlatbyGroupSkupinaPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		patch:{
-			type:"PlatbyGroupSkupinaPatch",
+		pgsId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -10313,26 +11722,18 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
-		}
-	},
-	UpdatePlatbyGroupSkupinaInput:{
-		clientMutationId:{
-			type:"String",
+		},
+		id:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		patch:{
-			type:"PlatbyGroupSkupinaPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		pgsId:{
+		tenantId:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		}
 	},
 	UpdatePlatbyItemPayload:{
@@ -10345,21 +11746,21 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdatePlatbyItemByNodeIdInput:{
+	UpdatePlatbyItemInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
+		patch:{
+			type:"PlatbyItemPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		patch:{
-			type:"PlatbyItemPatch",
+		piId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -10407,26 +11808,18 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
-		}
-	},
-	UpdatePlatbyItemInput:{
-		clientMutationId:{
-			type:"String",
+		},
+		id:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		patch:{
-			type:"PlatbyItemPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		piId:{
+		tenantId:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		}
 	},
 	UpdatePlatbyRawPayload:{
@@ -10439,21 +11832,21 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdatePlatbyRawByNodeIdInput:{
+	UpdatePlatbyRawInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
+		patch:{
+			type:"PlatbyRawPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		patch:{
-			type:"PlatbyRawPatch",
+		prId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -10489,9 +11882,31 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
-	UpdatePlatbyRawInput:{
+	UpdateRoomPayload:{
+		roomEdge:{
+			orderBy:{
+				type:"RoomsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	UpdateRoomInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -10499,16 +11914,92 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		patch:{
-			type:"PlatbyRawPatch",
+			type:"RoomPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		prId:{
+		id:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
+		}
+	},
+	RoomPatch:{
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		description:{
+			type:"JSON",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		location:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	UpdateRoomAttachmentPayload:{
+		roomAttachmentEdge:{
+			orderBy:{
+				type:"RoomAttachmentsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	UpdateRoomAttachmentInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		patch:{
+			type:"RoomAttachmentPatch",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		roomId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		objectName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	RoomAttachmentPatch:{
+		roomId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		objectName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	UpdateRozpiPayload:{
@@ -10521,21 +12012,21 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateRozpiByNodeIdInput:{
+	UpdateRozpiInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
+		patch:{
+			type:"RozpiPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		patch:{
-			type:"RozpiPatch",
+		rId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -10583,26 +12074,18 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
-		}
-	},
-	UpdateRozpiInput:{
-		clientMutationId:{
-			type:"String",
+		},
+		id:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		patch:{
-			type:"RozpiPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		rId:{
+		tenantId:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		}
 	},
 	UpdateRozpisItemPayload:{
@@ -10615,21 +12098,21 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateRozpisItemByNodeIdInput:{
+	UpdateRozpisItemInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
+		patch:{
+			type:"RozpisItemPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		patch:{
-			type:"RozpisItemPatch",
+		riId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -10671,108 +12154,18 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
-		}
-	},
-	UpdateRozpisItemInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
 		},
-		patch:{
-			type:"RozpisItemPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		riId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	UpdateSessionPayload:{
-		sessionEdge:{
-			orderBy:{
-				type:"SessionsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
-		}
-	},
-	UpdateSessionByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"SessionPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	SessionPatch:{
-		ssId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssData:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssUpdatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssLifetime:{
+		id:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		ssUser:{
+		tenantId:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
-		}
-	},
-	UpdateSessionInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"SessionPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		ssId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
 		}
 	},
 	UpdateSkupinyPayload:{
@@ -10785,21 +12178,21 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateSkupinyByNodeIdInput:{
+	UpdateSkupinyInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
+		patch:{
+			type:"SkupinyPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		patch:{
-			type:"SkupinyPatch",
+		sId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -10847,9 +12240,49 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
+		},
+		ordering:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		internalInfo:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		cohortGroup:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
-	UpdateSkupinyInput:{
+	UpdateTenantPayload:{
+		tenantEdge:{
+			orderBy:{
+				type:"TenantsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	UpdateTenantInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
@@ -10857,16 +12290,198 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		},
 		patch:{
-			type:"SkupinyPatch",
+			type:"TenantPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		sId:{
+		id:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
+		}
+	},
+	TenantPatch:{
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		memberInfo:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		origins:{
+			type:"String",
+			array:true,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	UpdateTenantAttachmentPayload:{
+		tenantAttachmentEdge:{
+			orderBy:{
+				type:"TenantAttachmentsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	UpdateTenantAttachmentInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		patch:{
+			type:"TenantAttachmentPatch",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		objectName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	TenantAttachmentPatch:{
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		objectName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		type:{
+			type:"TenantAttachmentType",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	UpdateTenantLocationPayload:{
+		tenantLocationEdge:{
+			orderBy:{
+				type:"TenantLocationsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	UpdateTenantLocationInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		patch:{
+			type:"TenantLocationPatch",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		locationId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	TenantLocationPatch:{
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		locationId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	UpdateTenantPersonPayload:{
+		tenantPersonEdge:{
+			orderBy:{
+				type:"TenantPeopleOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	UpdateTenantPersonInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		patch:{
+			type:"TenantPersonPatch",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		personId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	TenantPersonPatch:{
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		personId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	UpdateUpozorneniPayload:{
@@ -10879,21 +12494,21 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateUpozorneniByNodeIdInput:{
+	UpdateUpozorneniInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
+		patch:{
+			type:"UpozorneniPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		patch:{
-			type:"UpozorneniPatch",
+		upId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -10947,26 +12562,36 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
-		}
-	},
-	UpdateUpozorneniInput:{
-		clientMutationId:{
-			type:"String",
+		},
+		scheduledSince:{
+			type:"Datetime",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		patch:{
-			type:"UpozorneniPatch",
+		scheduledUntil:{
+			type:"Datetime",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		},
-		upId:{
+		isVisible:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	UpdateUpozorneniSkupinyPayload:{
@@ -10979,21 +12604,21 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateUpozorneniSkupinyByNodeIdInput:{
+	UpdateUpozorneniSkupinyInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
+		patch:{
+			type:"UpozorneniSkupinyPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		patch:{
-			type:"UpozorneniSkupinyPatch",
+		upsId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -11029,26 +12654,18 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
-		}
-	},
-	UpdateUpozorneniSkupinyInput:{
-		clientMutationId:{
-			type:"String",
+		},
+		id:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		patch:{
-			type:"UpozorneniSkupinyPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		upsId:{
+		tenantId:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
-			required:true
+			required:false
 		}
 	},
 	UpdateUserPayload:{
@@ -11061,21 +12678,21 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	UpdateUserByNodeIdInput:{
+	UpdateUserInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
+		patch:{
+			type:"UserPatch",
 			array:false,
 			arrayRequired:false,
 			required:true
 		},
-		patch:{
-			type:"UserPatch",
+		uId:{
+			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
@@ -11273,472 +12890,18 @@ export const AllTypesProps: Record<string,any> = {
 			array:false,
 			arrayRequired:false,
 			required:false
-		}
-	},
-	UpdateUserInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
 		},
-		patch:{
-			type:"UserPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		uId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	UpdateUsersSkupinyPayload:{
-		usersSkupinyEdge:{
-			orderBy:{
-				type:"UsersSkupiniesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
-		}
-	},
-	UpdateUsersSkupinyByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"UsersSkupinyPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	UsersSkupinyPatch:{
-		usId:{
+		id:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		usColor:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usPlatbaMesic:{
+		tenantId:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:false
-		},
-		usPlatbaCtvrtrok:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usPlatbaPulrok:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usPopis:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	UpdateUsersSkupinyInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"UsersSkupinyPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		usId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	UpdateVideoPayload:{
-		videoEdge:{
-			orderBy:{
-				type:"VideosOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
-		}
-	},
-	UpdateVideoByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"VideoPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	VideoPatch:{
-		vId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vUri:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vTitle:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vAuthor:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vPlaylist:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vUpdatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	UpdateVideoInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"VideoPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	UpdateVideoListPayload:{
-		videoListEdge:{
-			orderBy:{
-				type:"VideoListsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
-		}
-	},
-	UpdateVideoListByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"VideoListPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	VideoListPatch:{
-		vlId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlUrl:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlTitle:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlCount:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlLastChecked:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	UpdateVideoListInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"VideoListPatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vlId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	UpdateVideoSourcePayload:{
-		videoSourceEdge:{
-			orderBy:{
-				type:"VideoSourcesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
-		}
-	},
-	UpdateVideoSourceByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		patch:{
-			type:"VideoSourcePatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	VideoSourcePatch:{
-		vsId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsUrl:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsTitle:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsDescription:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsCreatedAt:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vsLastChecked:{
-			type:"Datetime",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
-	},
-	UpdateVideoSourceInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		patch:{
-			type:"VideoSourcePatch",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		vsId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	DeleteAkcePayload:{
-		akceEdge:{
-			orderBy:{
-				type:"AkcesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
-		}
-	},
-	DeleteAkceByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	DeleteAkceInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	DeleteAkceItemPayload:{
-		akceItemEdge:{
-			orderBy:{
-				type:"AkceItemsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
-		}
-	},
-	DeleteAkceItemByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	DeleteAkceItemInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		aiId:{
-			type:"BigInt",
-			array:false,
-			arrayRequired:false,
-			required:true
 		}
 	},
 	DeleteAktualityPayload:{
@@ -11749,20 +12912,6 @@ export const AllTypesProps: Record<string,any> = {
 				arrayRequired:false,
 				required:true
 			}
-		}
-	},
-	DeleteAktualityByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
 		}
 	},
 	DeleteAktualityInput:{
@@ -11779,6 +12928,122 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
+	DeleteAttachmentPayload:{
+		attachmentEdge:{
+			orderBy:{
+				type:"AttachmentsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	DeleteAttachmentInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		objectName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	DeleteAttendeeExternalPayload:{
+		attendeeExternalEdge:{
+			orderBy:{
+				type:"AttendeeExternalsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	DeleteAttendeeExternalInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	DeleteAttendeeUserPayload:{
+		attendeeUserEdge:{
+			orderBy:{
+				type:"AttendeeUsersOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	DeleteAttendeeUserInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	DeleteAttendeeUserByUserIdAndEventIdInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		userId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		eventId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	DeleteCohortGroupPayload:{
+		cohortGroupEdge:{
+			orderBy:{
+				type:"CohortGroupsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	DeleteCohortGroupInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
 	DeleteDokumentyPayload:{
 		dokumentyEdge:{
 			orderBy:{
@@ -11787,20 +13052,6 @@ export const AllTypesProps: Record<string,any> = {
 				arrayRequired:false,
 				required:true
 			}
-		}
-	},
-	DeleteDokumentyByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
 		}
 	},
 	DeleteDokumentyInput:{
@@ -11817,6 +13068,54 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
+	DeleteEventPayload:{
+		eventEdge:{
+			orderBy:{
+				type:"EventsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	DeleteEventInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	DeleteFormResponsePayload:{
+		formResponseEdge:{
+			orderBy:{
+				type:"FormResponsesOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	DeleteFormResponseInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
 	DeleteGalerieDirPayload:{
 		galerieDirEdge:{
 			orderBy:{
@@ -11825,20 +13124,6 @@ export const AllTypesProps: Record<string,any> = {
 				arrayRequired:false,
 				required:true
 			}
-		}
-	},
-	DeleteGalerieDirByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
 		}
 	},
 	DeleteGalerieDirInput:{
@@ -11865,20 +13150,6 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteGalerieFotoByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
 	DeleteGalerieFotoInput:{
 		clientMutationId:{
 			type:"String",
@@ -11893,6 +13164,60 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
+	DeleteLocationPayload:{
+		locationEdge:{
+			orderBy:{
+				type:"LocationsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	DeleteLocationInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	DeleteLocationAttachmentPayload:{
+		locationAttachmentEdge:{
+			orderBy:{
+				type:"LocationAttachmentsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	DeleteLocationAttachmentInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		locationId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		objectName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
 	DeleteNabidkaPayload:{
 		nabidkaEdge:{
 			orderBy:{
@@ -11901,20 +13226,6 @@ export const AllTypesProps: Record<string,any> = {
 				arrayRequired:false,
 				required:true
 			}
-		}
-	},
-	DeleteNabidkaByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
 		}
 	},
 	DeleteNabidkaInput:{
@@ -11941,20 +13252,6 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteNabidkaItemByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
 	DeleteNabidkaItemInput:{
 		clientMutationId:{
 			type:"String",
@@ -11969,6 +13266,26 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
+	DeleteNabidkaItemByNiPartnerAndNiIdRodicInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		niPartner:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		niIdRodic:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
 	DeleteParameterPayload:{
 		parameterEdge:{
 			orderBy:{
@@ -11977,20 +13294,6 @@ export const AllTypesProps: Record<string,any> = {
 				arrayRequired:false,
 				required:true
 			}
-		}
-	},
-	DeleteParameterByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
 		}
 	},
 	DeleteParameterInput:{
@@ -12017,20 +13320,6 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteParyByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
 	DeleteParyInput:{
 		clientMutationId:{
 			type:"String",
@@ -12053,20 +13342,6 @@ export const AllTypesProps: Record<string,any> = {
 				arrayRequired:false,
 				required:true
 			}
-		}
-	},
-	DeleteParyNavrhByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
 		}
 	},
 	DeleteParyNavrhInput:{
@@ -12093,20 +13368,6 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeletePermissionByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
 	DeletePermissionInput:{
 		clientMutationId:{
 			type:"String",
@@ -12121,6 +13382,30 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
+	DeletePersonPayload:{
+		personEdge:{
+			orderBy:{
+				type:"PeopleOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	DeletePersonInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
 	DeletePlatbyCategoryPayload:{
 		platbyCategoryEdge:{
 			orderBy:{
@@ -12129,20 +13414,6 @@ export const AllTypesProps: Record<string,any> = {
 				arrayRequired:false,
 				required:true
 			}
-		}
-	},
-	DeletePlatbyCategoryByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
 		}
 	},
 	DeletePlatbyCategoryInput:{
@@ -12169,20 +13440,6 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeletePlatbyCategoryGroupByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
 	DeletePlatbyCategoryGroupInput:{
 		clientMutationId:{
 			type:"String",
@@ -12205,20 +13462,6 @@ export const AllTypesProps: Record<string,any> = {
 				arrayRequired:false,
 				required:true
 			}
-		}
-	},
-	DeletePlatbyGroupByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
 		}
 	},
 	DeletePlatbyGroupInput:{
@@ -12245,20 +13488,6 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeletePlatbyGroupSkupinaByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
 	DeletePlatbyGroupSkupinaInput:{
 		clientMutationId:{
 			type:"String",
@@ -12281,20 +13510,6 @@ export const AllTypesProps: Record<string,any> = {
 				arrayRequired:false,
 				required:true
 			}
-		}
-	},
-	DeletePlatbyItemByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
 		}
 	},
 	DeletePlatbyItemInput:{
@@ -12321,20 +13536,6 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeletePlatbyRawByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
 	DeletePlatbyRawInput:{
 		clientMutationId:{
 			type:"String",
@@ -12349,6 +13550,60 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
+	DeleteRoomPayload:{
+		roomEdge:{
+			orderBy:{
+				type:"RoomsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	DeleteRoomInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	DeleteRoomAttachmentPayload:{
+		roomAttachmentEdge:{
+			orderBy:{
+				type:"RoomAttachmentsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	DeleteRoomAttachmentInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		roomId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		objectName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
 	DeleteRozpiPayload:{
 		rozpiEdge:{
 			orderBy:{
@@ -12357,20 +13612,6 @@ export const AllTypesProps: Record<string,any> = {
 				arrayRequired:false,
 				required:true
 			}
-		}
-	},
-	DeleteRozpiByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
 		}
 	},
 	DeleteRozpiInput:{
@@ -12397,20 +13638,6 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteRozpisItemByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
 	DeleteRozpisItemInput:{
 		clientMutationId:{
 			type:"String",
@@ -12425,44 +13652,6 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteSessionPayload:{
-		sessionEdge:{
-			orderBy:{
-				type:"SessionsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
-		}
-	},
-	DeleteSessionByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	DeleteSessionInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		ssId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
 	DeleteSkupinyPayload:{
 		skupinyEdge:{
 			orderBy:{
@@ -12471,20 +13660,6 @@ export const AllTypesProps: Record<string,any> = {
 				arrayRequired:false,
 				required:true
 			}
-		}
-	},
-	DeleteSkupinyByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
 		}
 	},
 	DeleteSkupinyInput:{
@@ -12501,6 +13676,120 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
+	DeleteTenantPayload:{
+		tenantEdge:{
+			orderBy:{
+				type:"TenantsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	DeleteTenantInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		id:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	DeleteTenantAttachmentPayload:{
+		tenantAttachmentEdge:{
+			orderBy:{
+				type:"TenantAttachmentsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	DeleteTenantAttachmentInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		objectName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	DeleteTenantLocationPayload:{
+		tenantLocationEdge:{
+			orderBy:{
+				type:"TenantLocationsOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	DeleteTenantLocationInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		locationId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	DeleteTenantPersonPayload:{
+		tenantPersonEdge:{
+			orderBy:{
+				type:"TenantPeopleOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	DeleteTenantPersonInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		tenantId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		personId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
 	DeleteUpozorneniPayload:{
 		upozorneniEdge:{
 			orderBy:{
@@ -12509,20 +13798,6 @@ export const AllTypesProps: Record<string,any> = {
 				arrayRequired:false,
 				required:true
 			}
-		}
-	},
-	DeleteUpozorneniByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
 		}
 	},
 	DeleteUpozorneniInput:{
@@ -12549,20 +13824,6 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteUpozorneniSkupinyByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
 	DeleteUpozorneniSkupinyInput:{
 		clientMutationId:{
 			type:"String",
@@ -12587,20 +13848,6 @@ export const AllTypesProps: Record<string,any> = {
 			}
 		}
 	},
-	DeleteUserByNodeIdInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
 	DeleteUserInput:{
 		clientMutationId:{
 			type:"String",
@@ -12615,156 +13862,202 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
-	DeleteUsersSkupinyPayload:{
-		usersSkupinyEdge:{
-			orderBy:{
-				type:"UsersSkupiniesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
-		}
-	},
-	DeleteUsersSkupinyByNodeIdInput:{
+	BookLessonInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	DeleteUsersSkupinyInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		usId:{
+		lessonId:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
 		}
 	},
-	DeleteVideoPayload:{
-		videoEdge:{
-			orderBy:{
-				type:"VideosOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
-		}
-	},
-	DeleteVideoByNodeIdInput:{
+	CancelLessonInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	DeleteVideoInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vId:{
+		lessonId:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
 		}
 	},
-	DeleteVideoListPayload:{
-		videoListEdge:{
-			orderBy:{
-				type:"VideoListsOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
-		}
-	},
-	DeleteVideoListByNodeIdInput:{
+	CancelParticipationInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
-			array:false,
-			arrayRequired:false,
-			required:true
-		}
-	},
-	DeleteVideoListInput:{
-		clientMutationId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		vlId:{
+		eventId:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
 		}
 	},
-	DeleteVideoSourcePayload:{
-		videoSourceEdge:{
-			orderBy:{
-				type:"VideoSourcesOrderBy",
-				array:true,
-				arrayRequired:false,
-				required:true
-			}
-		}
-	},
-	DeleteVideoSourceByNodeIdInput:{
+	ChangePasswordInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		nodeId:{
-			type:"ID",
+		oldPass:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		newPass:{
+			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:true
 		}
 	},
-	DeleteVideoSourceInput:{
+	ConfirmUserInput:{
 		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		vsId:{
+		id:{
 			type:"BigInt",
 			array:false,
 			arrayRequired:false,
 			required:true
+		},
+		grp:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		cohort:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	CreateCoupleInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		man:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		woman:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	CreateParticipationInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		eventId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		yearOfBirth:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		myNotes:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	CreateParticipationExternalInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		eventId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		firstName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		lastName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		guardianName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		email:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		phone:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		notes:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		birthNumber:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	FixUnpairedCouplesInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
 		}
 	},
 	LoginInput:{
@@ -12827,6 +14120,7 @@ export const AllTypesProps: Record<string,any> = {
 			required:true
 		}
 	},
+	CrmCohort: "enum",
 	ProspectDatumInput:{
 		name:{
 			type:"String",
@@ -12859,34 +14153,123 @@ export const AllTypesProps: Record<string,any> = {
 			required:false
 		}
 	},
-	UploadInput:{
-		directory:{
+	ReservationSetDesiredLessonsPayload:{
+		nabidkaEdge:{
+			orderBy:{
+				type:"NabidkasOrderBy",
+				array:true,
+				arrayRequired:false,
+				required:true
+			}
+		}
+	},
+	ReservationSetDesiredLessonsInput:{
+		clientMutationId:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:false
 		},
-		filename:{
+		reservationId:{
+			type:"BigInt",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		lessonCount:{
+			type:"Int",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	ResetPasswordInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		login:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		email:{
 			type:"String",
 			array:false,
 			arrayRequired:false,
 			required:true
 		}
-	}
+	},
+	SubmitFormInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		type:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		data:{
+			type:"JSON",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		url:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	VerifyFunctionInput:{
+		clientMutationId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		f:{
+			type:"RegProc",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		relid:{
+			type:"RegClass",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
+	},
+	RegProc: "String",
+	RegClass: "String"
 }
 
 export const ReturnTypes: Record<string,any> = {
 	Query:{
 		query:"Query",
-		nodeId:"ID",
-		node:"Node",
 		akces:"AkcesConnection",
 		akceItems:"AkceItemsConnection",
 		aktualities:"AktualitiesConnection",
+		attachments:"AttachmentsConnection",
+		attendeeExternals:"AttendeeExternalsConnection",
+		attendeeUsers:"AttendeeUsersConnection",
+		cohortGroups:"CohortGroupsConnection",
 		dokumenties:"DokumentiesConnection",
+		events:"EventsConnection",
+		formResponses:"FormResponsesConnection",
 		galerieDirs:"GalerieDirsConnection",
 		galerieFotos:"GalerieFotosConnection",
-		members:"MembersConnection",
+		locations:"LocationsConnection",
+		locationAttachments:"LocationAttachmentsConnection",
 		nabidkas:"NabidkasConnection",
 		nabidkaItems:"NabidkaItemsConnection",
 		pages:"PagesConnection",
@@ -12895,31 +14278,42 @@ export const ReturnTypes: Record<string,any> = {
 		paries:"PariesConnection",
 		paryNavrhs:"ParyNavrhsConnection",
 		permissions:"PermissionsConnection",
+		people:"PeopleConnection",
 		platbyCategories:"PlatbyCategoriesConnection",
 		platbyCategoryGroups:"PlatbyCategoryGroupsConnection",
 		platbyGroups:"PlatbyGroupsConnection",
 		platbyGroupSkupinas:"PlatbyGroupSkupinasConnection",
 		platbyItems:"PlatbyItemsConnection",
 		platbyRaws:"PlatbyRawsConnection",
+		rooms:"RoomsConnection",
+		roomAttachments:"RoomAttachmentsConnection",
 		rozpis:"RozpisConnection",
 		rozpisItems:"RozpisItemsConnection",
 		sessions:"SessionsConnection",
 		skupinies:"SkupiniesConnection",
+		tenants:"TenantsConnection",
+		tenantAttachments:"TenantAttachmentsConnection",
+		tenantLocations:"TenantLocationsConnection",
+		tenantPeople:"TenantPeopleConnection",
 		upozornenis:"UpozornenisConnection",
 		upozorneniSkupinies:"UpozorneniSkupiniesConnection",
 		users:"UsersConnection",
-		usersSkupinies:"UsersSkupiniesConnection",
-		videos:"VideosConnection",
-		videoLists:"VideoListsConnection",
-		videoSources:"VideoSourcesConnection",
-		akce:"Akce",
-		akceItem:"AkceItem",
 		aktuality:"Aktuality",
+		attachment:"Attachment",
+		attendeeExternal:"AttendeeExternal",
+		attendeeUser:"AttendeeUser",
+		attendeeUserByUserIdAndEventId:"AttendeeUser",
+		cohortGroup:"CohortGroup",
 		dokumenty:"Dokumenty",
+		event:"Event",
+		formResponse:"FormResponse",
 		galerieDir:"GalerieDir",
 		galerieFoto:"GalerieFoto",
+		location:"Location",
+		locationAttachment:"LocationAttachment",
 		nabidka:"Nabidka",
 		nabidkaItem:"NabidkaItem",
+		nabidkaItemByNiPartnerAndNiIdRodic:"NabidkaItem",
 		page:"Page",
 		pageByUrl:"Page",
 		pageRevision:"PageRevision",
@@ -12927,98 +14321,41 @@ export const ReturnTypes: Record<string,any> = {
 		pary:"Pary",
 		paryNavrh:"ParyNavrh",
 		permission:"Permission",
+		person:"Person",
 		platbyCategory:"PlatbyCategory",
 		platbyCategoryGroup:"PlatbyCategoryGroup",
 		platbyGroup:"PlatbyGroup",
 		platbyGroupSkupina:"PlatbyGroupSkupina",
 		platbyItem:"PlatbyItem",
 		platbyRaw:"PlatbyRaw",
+		room:"Room",
+		roomAttachment:"RoomAttachment",
 		rozpi:"Rozpi",
 		rozpisItem:"RozpisItem",
 		session:"Session",
 		skupiny:"Skupiny",
+		tenant:"Tenant",
+		tenantAttachment:"TenantAttachment",
+		tenantLocation:"TenantLocation",
+		tenantPerson:"TenantPerson",
 		upozorneni:"Upozorneni",
 		upozorneniSkupiny:"UpozorneniSkupiny",
 		user:"User",
-		usersSkupiny:"UsersSkupiny",
-		video:"Video",
-		videoList:"VideoList",
-		videoSource:"VideoSource",
-		activeProspects:"ActiveProspectsConnection",
-		cohortMembers:"MembersConnection",
+		activeCouples:"PariesConnection",
 		currentCoupleIds:"CurrentCoupleIdsConnection",
+		currentPermissions:"PermissionsConnection",
 		currentSessionId:"String",
+		currentTenantId:"BigInt",
 		currentUserId:"BigInt",
+		getCurrentCouple:"Pary",
+		getCurrentTenant:"Tenant",
 		getCurrentUser:"User",
+		myAnnouncements:"UpozornenisConnection",
+		myLessons:"RozpisItemsConnection",
 		reservationsForRange:"NabidkasConnection",
 		schedulesForRange:"RozpisConnection",
 		titleVideos:"VideosConnection",
-		akceByNodeId:"Akce",
-		akceItemByNodeId:"AkceItem",
-		aktualityByNodeId:"Aktuality",
-		dokumentyByNodeId:"Dokumenty",
-		galerieDirByNodeId:"GalerieDir",
-		galerieFotoByNodeId:"GalerieFoto",
-		nabidkaByNodeId:"Nabidka",
-		nabidkaItemByNodeId:"NabidkaItem",
-		pageByNodeId:"Page",
-		pageRevisionByNodeId:"PageRevision",
-		parameterByNodeId:"Parameter",
-		paryByNodeId:"Pary",
-		paryNavrhByNodeId:"ParyNavrh",
-		permissionByNodeId:"Permission",
-		platbyCategoryByNodeId:"PlatbyCategory",
-		platbyCategoryGroupByNodeId:"PlatbyCategoryGroup",
-		platbyGroupByNodeId:"PlatbyGroup",
-		platbyGroupSkupinaByNodeId:"PlatbyGroupSkupina",
-		platbyItemByNodeId:"PlatbyItem",
-		platbyRawByNodeId:"PlatbyRaw",
-		rozpiByNodeId:"Rozpi",
-		rozpisItemByNodeId:"RozpisItem",
-		sessionByNodeId:"Session",
-		skupinyByNodeId:"Skupiny",
-		upozorneniByNodeId:"Upozorneni",
-		upozorneniSkupinyByNodeId:"UpozorneniSkupiny",
-		userByNodeId:"User",
-		usersSkupinyByNodeId:"UsersSkupiny",
-		videoByNodeId:"Video",
-		videoListByNodeId:"VideoList",
-		videoSourceByNodeId:"VideoSource"
-	},
-	Node:{
-		"...on Query": "Query",
-		"...on Akce": "Akce",
-		"...on AkceItem": "AkceItem",
-		"...on User": "User",
-		"...on Permission": "Permission",
-		"...on Skupiny": "Skupiny",
-		"...on PlatbyGroupSkupina": "PlatbyGroupSkupina",
-		"...on PlatbyGroup": "PlatbyGroup",
-		"...on PlatbyCategoryGroup": "PlatbyCategoryGroup",
-		"...on PlatbyCategory": "PlatbyCategory",
-		"...on PlatbyItem": "PlatbyItem",
-		"...on PlatbyRaw": "PlatbyRaw",
-		"...on UpozorneniSkupiny": "UpozorneniSkupiny",
-		"...on Upozorneni": "Upozorneni",
-		"...on Aktuality": "Aktuality",
-		"...on GalerieFoto": "GalerieFoto",
-		"...on GalerieDir": "GalerieDir",
-		"...on Nabidka": "Nabidka",
-		"...on NabidkaItem": "NabidkaItem",
-		"...on Pary": "Pary",
-		"...on RozpisItem": "RozpisItem",
-		"...on Rozpi": "Rozpi",
-		"...on Session": "Session",
-		"...on Dokumenty": "Dokumenty",
-		"...on ParyNavrh": "ParyNavrh",
-		"...on Page": "Page",
-		"...on PageRevision": "PageRevision",
-		"...on Parameter": "Parameter",
-		"...on UsersSkupiny": "UsersSkupiny",
-		"...on Video": "Video",
-		"...on VideoList": "VideoList",
-		"...on VideoSource": "VideoSource",
-		nodeId:"ID"
+		trainers:"UsersConnection"
 	},
 	AkcesConnection:{
 		nodes:"Akce",
@@ -13027,7 +14364,6 @@ export const ReturnTypes: Record<string,any> = {
 		totalCount:"Int"
 	},
 	Akce:{
-		nodeId:"ID",
 		aId:"BigInt",
 		aJmeno:"String",
 		aKde:"String",
@@ -13039,6 +14375,9 @@ export const ReturnTypes: Record<string,any> = {
 		aTimestamp:"Datetime",
 		aLock:"Boolean",
 		aVisible:"Boolean",
+		summary:"String",
+		isPublic:"Boolean",
+		enableNotes:"Boolean",
 		akceItemsByAiIdRodic:"AkceItemsConnection"
 	},
 	AkceItemsConnection:{
@@ -13048,16 +14387,15 @@ export const ReturnTypes: Record<string,any> = {
 		totalCount:"Int"
 	},
 	AkceItem:{
-		nodeId:"ID",
 		aiId:"BigInt",
 		aiIdRodic:"BigInt",
 		aiUser:"BigInt",
 		aiRokNarozeni:"Int",
+		notes:"String",
 		akceByAiIdRodic:"Akce",
 		userByAiUser:"User"
 	},
 	User:{
-		nodeId:"ID",
 		uId:"BigInt",
 		uLogin:"String",
 		uPass:"String",
@@ -13090,24 +14428,35 @@ export const ReturnTypes: Record<string,any> = {
 		uCreatedAt:"Datetime",
 		uTeacher:"Boolean",
 		uGdprSignedAt:"Datetime",
+		id:"BigInt",
+		tenantId:"BigInt",
 		permissionByUGroup:"Permission",
 		skupinyByUSkupina:"Skupiny",
+		attendeeUsers:"AttendeeUsersConnection",
 		aktualitiesByAtKdo:"AktualitiesConnection",
-		nabidkasByNTrener:"NabidkasConnection",
-		rozpisByRTrener:"RozpisConnection",
-		sessionsBySsUser:"SessionsConnection",
-		akceItemsByAiUser:"AkceItemsConnection",
 		dokumentiesByDKdo:"DokumentiesConnection",
 		galerieFotosByGfKdo:"GalerieFotosConnection",
 		platbyItemsByPiIdUser:"PlatbyItemsConnection",
+		nabidkasByNTrener:"NabidkasConnection",
 		pariesByPIdPartner:"PariesConnection",
 		paryNavrhsByPnNavrhl:"ParyNavrhsConnection",
 		paryNavrhsByPnPartner:"ParyNavrhsConnection",
 		paryNavrhsByPnPartnerka:"ParyNavrhsConnection",
-		upozornenisByUpKdo:"UpozornenisConnection"
+		rozpisByRTrener:"RozpisConnection",
+		sessionsBySsUser:"SessionsConnection",
+		upozornenisByUpKdo:"UpozornenisConnection",
+		attachmentsByUploadedBy:"AttachmentsConnection",
+		attendeeExternalsByManagedBy:"AttendeeExternalsConnection",
+		attendeeExternalsByConfirmedBy:"AttendeeExternalsConnection",
+		akceItemsByAiUser:"AkceItemsConnection",
+		pariesByPIdPartnerka:"PariesConnection",
+		dateOfNewestPayment:"Date",
+		dateOfOldestPayment:"Date",
+		fullName:"String",
+		hasValidPayment:"Boolean",
+		inPublicCohort:"Boolean"
 	},
 	Permission:{
-		nodeId:"ID",
 		peId:"BigInt",
 		peName:"String",
 		peDescription:"String",
@@ -13128,6 +14477,7 @@ export const ReturnTypes: Record<string,any> = {
 		peSkupiny:"Int",
 		peUsers:"Int",
 		peMain:"Int",
+		id:"BigInt",
 		usersByUGroup:"UsersConnection"
 	},
 	UsersConnection:{
@@ -13147,7 +14497,6 @@ export const ReturnTypes: Record<string,any> = {
 		endCursor:"Cursor"
 	},
 	Skupiny:{
-		nodeId:"ID",
 		sId:"BigInt",
 		sName:"String",
 		sDescription:"String",
@@ -13155,9 +14504,180 @@ export const ReturnTypes: Record<string,any> = {
 		sColorText:"String",
 		sLocation:"String",
 		sVisible:"Boolean",
+		ordering:"Int",
+		internalInfo:"String",
+		cohortGroup:"BigInt",
+		id:"BigInt",
+		tenantId:"BigInt",
+		cohortGroupByCohortGroup:"CohortGroup",
 		usersByUSkupina:"UsersConnection",
 		platbyGroupSkupinasByPgsIdSkupina:"PlatbyGroupSkupinasConnection",
 		upozorneniSkupiniesByUpsIdSkupina:"UpozorneniSkupiniesConnection"
+	},
+	CohortGroup:{
+		id:"BigInt",
+		name:"String",
+		description:"String",
+		ordering:"Int",
+		isPublic:"Boolean",
+		tenant:"BigInt",
+		tenantId:"BigInt",
+		tenantByTenant:"Tenant",
+		skupiniesByCohortGroup:"SkupiniesConnection"
+	},
+	Tenant:{
+		id:"BigInt",
+		name:"String",
+		memberInfo:"String",
+		origins:"String",
+		tenantAttachments:"TenantAttachmentsConnection",
+		tenantPeople:"TenantPeopleConnection",
+		cohortGroupsByTenant:"CohortGroupsConnection",
+		tenantLocations:"TenantLocationsConnection"
+	},
+	TenantAttachmentsConnection:{
+		nodes:"TenantAttachment",
+		edges:"TenantAttachmentsEdge",
+		pageInfo:"PageInfo",
+		totalCount:"Int"
+	},
+	TenantAttachment:{
+		tenantId:"BigInt",
+		objectName:"String",
+		type:"TenantAttachmentType",
+		tenant:"Tenant",
+		attachmentByObjectName:"Attachment"
+	},
+	Attachment:{
+		objectName:"String",
+		previewObjectName:"String",
+		uploadedBy:"BigInt",
+		uploadedAt:"Datetime",
+		userByUploadedBy:"User",
+		tenantAttachmentsByObjectName:"TenantAttachmentsConnection",
+		locationAttachmentsByObjectName:"LocationAttachmentsConnection",
+		roomAttachmentsByObjectName:"RoomAttachmentsConnection"
+	},
+	LocationAttachmentsConnection:{
+		nodes:"LocationAttachment",
+		edges:"LocationAttachmentsEdge",
+		pageInfo:"PageInfo",
+		totalCount:"Int"
+	},
+	LocationAttachment:{
+		locationId:"BigInt",
+		objectName:"String",
+		location:"Location",
+		attachmentByObjectName:"Attachment"
+	},
+	Location:{
+		id:"BigInt",
+		name:"String",
+		description:"JSON",
+		roomsByLocation:"RoomsConnection",
+		locationAttachments:"LocationAttachmentsConnection",
+		tenantLocations:"TenantLocationsConnection"
+	},
+	RoomsConnection:{
+		nodes:"Room",
+		edges:"RoomsEdge",
+		pageInfo:"PageInfo",
+		totalCount:"Int"
+	},
+	Room:{
+		id:"BigInt",
+		name:"String",
+		description:"JSON",
+		location:"BigInt",
+		locationByLocation:"Location",
+		roomAttachments:"RoomAttachmentsConnection"
+	},
+	RoomAttachmentsConnection:{
+		nodes:"RoomAttachment",
+		edges:"RoomAttachmentsEdge",
+		pageInfo:"PageInfo",
+		totalCount:"Int"
+	},
+	RoomAttachment:{
+		roomId:"BigInt",
+		objectName:"String",
+		room:"Room",
+		attachmentByObjectName:"Attachment"
+	},
+	RoomAttachmentsEdge:{
+		cursor:"Cursor",
+		node:"RoomAttachment"
+	},
+	RoomsEdge:{
+		cursor:"Cursor",
+		node:"Room"
+	},
+	TenantLocationsConnection:{
+		nodes:"TenantLocation",
+		edges:"TenantLocationsEdge",
+		pageInfo:"PageInfo",
+		totalCount:"Int"
+	},
+	TenantLocation:{
+		tenantId:"BigInt",
+		locationId:"BigInt",
+		tenant:"Tenant",
+		location:"Location"
+	},
+	TenantLocationsEdge:{
+		cursor:"Cursor",
+		node:"TenantLocation"
+	},
+	LocationAttachmentsEdge:{
+		cursor:"Cursor",
+		node:"LocationAttachment"
+	},
+	TenantAttachmentsEdge:{
+		cursor:"Cursor",
+		node:"TenantAttachment"
+	},
+	TenantPeopleConnection:{
+		nodes:"TenantPerson",
+		edges:"TenantPeopleEdge",
+		pageInfo:"PageInfo",
+		totalCount:"Int"
+	},
+	TenantPerson:{
+		tenantId:"BigInt",
+		personId:"BigInt",
+		tenant:"Tenant",
+		person:"Person"
+	},
+	Person:{
+		id:"BigInt",
+		firstName:"String",
+		lastName:"String",
+		gender:"GenderType",
+		tenantPeople:"TenantPeopleConnection"
+	},
+	TenantPeopleEdge:{
+		cursor:"Cursor",
+		node:"TenantPerson"
+	},
+	CohortGroupsConnection:{
+		nodes:"CohortGroup",
+		edges:"CohortGroupsEdge",
+		pageInfo:"PageInfo",
+		totalCount:"Int"
+	},
+	CohortGroupsEdge:{
+		cursor:"Cursor",
+		node:"CohortGroup"
+	},
+	SkupiniesConnection:{
+		nodes:"Skupiny",
+		edges:"SkupiniesEdge",
+		pageInfo:"PageInfo",
+		totalCount:"Int"
+	},
+	SkupiniesEdge:{
+		cursor:"Cursor",
+		node:"Skupiny"
 	},
 	PlatbyGroupSkupinasConnection:{
 		nodes:"PlatbyGroupSkupina",
@@ -13166,20 +14686,22 @@ export const ReturnTypes: Record<string,any> = {
 		totalCount:"Int"
 	},
 	PlatbyGroupSkupina:{
-		nodeId:"ID",
 		pgsId:"BigInt",
 		pgsIdSkupina:"BigInt",
 		pgsIdGroup:"BigInt",
+		id:"BigInt",
+		tenantId:"BigInt",
 		skupinyByPgsIdSkupina:"Skupiny",
 		platbyGroupByPgsIdGroup:"PlatbyGroup"
 	},
 	PlatbyGroup:{
-		nodeId:"ID",
 		pgId:"BigInt",
 		pgType:"BigFloat",
 		pgName:"String",
 		pgDescription:"String",
 		pgBase:"BigInt",
+		id:"BigInt",
+		tenantId:"BigInt",
 		platbyCategoryGroupsByPcgIdGroup:"PlatbyCategoryGroupsConnection",
 		platbyGroupSkupinasByPgsIdGroup:"PlatbyGroupSkupinasConnection"
 	},
@@ -13190,15 +14712,15 @@ export const ReturnTypes: Record<string,any> = {
 		totalCount:"Int"
 	},
 	PlatbyCategoryGroup:{
-		nodeId:"ID",
 		pcgId:"BigInt",
 		pcgIdGroup:"BigInt",
 		pcgIdCategory:"BigInt",
+		id:"BigInt",
+		tenantId:"BigInt",
 		platbyGroupByPcgIdGroup:"PlatbyGroup",
 		platbyCategoryByPcgIdCategory:"PlatbyCategory"
 	},
 	PlatbyCategory:{
-		nodeId:"ID",
 		pcId:"BigInt",
 		pcName:"String",
 		pcSymbol:"BigInt",
@@ -13210,6 +14732,8 @@ export const ReturnTypes: Record<string,any> = {
 		pcUsePrefix:"Boolean",
 		pcArchive:"Boolean",
 		pcVisible:"Boolean",
+		id:"BigInt",
+		tenantId:"BigInt",
 		platbyCategoryGroupsByPcgIdCategory:"PlatbyCategoryGroupsConnection",
 		platbyItemsByPiIdCategory:"PlatbyItemsConnection"
 	},
@@ -13220,7 +14744,6 @@ export const ReturnTypes: Record<string,any> = {
 		totalCount:"Int"
 	},
 	PlatbyItem:{
-		nodeId:"ID",
 		piId:"BigInt",
 		piIdUser:"BigInt",
 		piIdCategory:"BigInt",
@@ -13228,17 +14751,20 @@ export const ReturnTypes: Record<string,any> = {
 		piAmount:"BigFloat",
 		piDate:"Date",
 		piPrefix:"Int",
+		id:"BigInt",
+		tenantId:"BigInt",
 		userByPiIdUser:"User",
 		platbyCategoryByPiIdCategory:"PlatbyCategory",
 		platbyRawByPiIdRaw:"PlatbyRaw"
 	},
 	PlatbyRaw:{
-		nodeId:"ID",
 		prId:"BigInt",
 		prRaw:"String",
 		prHash:"String",
 		prSorted:"Boolean",
 		prDiscarded:"Boolean",
+		id:"BigInt",
+		tenantId:"BigInt",
 		platbyItemsByPiIdRaw:"PlatbyItemsConnection"
 	},
 	PlatbyItemsEdge:{
@@ -13260,17 +14786,17 @@ export const ReturnTypes: Record<string,any> = {
 		totalCount:"Int"
 	},
 	UpozorneniSkupiny:{
-		nodeId:"ID",
 		upsId:"BigInt",
 		upsIdRodic:"BigInt",
 		upsIdSkupina:"BigInt",
 		upsColor:"String",
 		upsPopis:"String",
+		id:"BigInt",
+		tenantId:"BigInt",
 		upozorneniByUpsIdRodic:"Upozorneni",
 		skupinyByUpsIdSkupina:"Skupiny"
 	},
 	Upozorneni:{
-		nodeId:"ID",
 		upId:"BigInt",
 		upKdo:"BigInt",
 		upNadpis:"String",
@@ -13279,12 +14805,87 @@ export const ReturnTypes: Record<string,any> = {
 		upLock:"Boolean",
 		upTimestamp:"Datetime",
 		upTimestampAdd:"Datetime",
+		scheduledSince:"Datetime",
+		scheduledUntil:"Datetime",
+		isVisible:"Boolean",
+		id:"BigInt",
+		tenantId:"BigInt",
 		userByUpKdo:"User",
 		upozorneniSkupiniesByUpsIdRodic:"UpozorneniSkupiniesConnection"
 	},
 	UpozorneniSkupiniesEdge:{
 		cursor:"Cursor",
 		node:"UpozorneniSkupiny"
+	},
+	AttendeeUsersConnection:{
+		nodes:"AttendeeUser",
+		edges:"AttendeeUsersEdge",
+		pageInfo:"PageInfo",
+		totalCount:"Int"
+	},
+	AttendeeUser:{
+		id:"BigInt",
+		eventId:"BigInt",
+		userId:"BigInt",
+		birthYear:"Int",
+		notes:"String",
+		tenantId:"BigInt",
+		event:"Event",
+		user:"User"
+	},
+	Event:{
+		id:"BigInt",
+		name:"String",
+		locationText:"String",
+		description:"String",
+		since:"Date",
+		until:"Date",
+		capacity:"BigInt",
+		filesLegacy:"String",
+		updatedAt:"Datetime",
+		isLocked:"Boolean",
+		isVisible:"Boolean",
+		summary:"String",
+		isPublic:"Boolean",
+		enableNotes:"Boolean",
+		tenantId:"BigInt",
+		attendeeUsers:"AttendeeUsersConnection",
+		attendeeExternals:"AttendeeExternalsConnection",
+		remainingSpots:"Int"
+	},
+	AttendeeExternalsConnection:{
+		nodes:"AttendeeExternal",
+		edges:"AttendeeExternalsEdge",
+		pageInfo:"PageInfo",
+		totalCount:"Int"
+	},
+	AttendeeExternal:{
+		id:"BigInt",
+		eventId:"BigInt",
+		firstName:"String",
+		lastName:"String",
+		email:"String",
+		phone:"String",
+		notes:"String",
+		birthNumber:"String",
+		guardianName:"String",
+		managedBy:"BigInt",
+		confirmedBy:"BigInt",
+		confirmedAt:"Datetime",
+		createdAt:"Datetime",
+		updatedAt:"Datetime",
+		tenantId:"BigInt",
+		event:"Event",
+		userByManagedBy:"User",
+		userByConfirmedBy:"User"
+	},
+	AttendeeExternalsEdge:{
+		cursor:"Cursor",
+		node:"AttendeeExternal"
+	},
+	AttendeeUsersEdge:{
+		cursor:"Cursor",
+		node:"AttendeeUser"
 	},
 	AktualitiesConnection:{
 		nodes:"Aktuality",
@@ -13293,7 +14894,6 @@ export const ReturnTypes: Record<string,any> = {
 		totalCount:"Int"
 	},
 	Aktuality:{
-		nodeId:"ID",
 		atId:"BigInt",
 		atKdo:"BigInt",
 		atKat:"String",
@@ -13304,29 +14904,33 @@ export const ReturnTypes: Record<string,any> = {
 		atFotoMain:"BigInt",
 		atTimestamp:"Datetime",
 		atTimestampAdd:"Datetime",
+		id:"BigInt",
+		tenantId:"BigInt",
 		userByAtKdo:"User",
 		galerieFotoByAtFotoMain:"GalerieFoto"
 	},
 	GalerieFoto:{
-		nodeId:"ID",
 		gfId:"BigInt",
 		gfIdRodic:"BigInt",
 		gfName:"String",
 		gfPath:"String",
 		gfKdo:"BigInt",
 		gfTimestamp:"Datetime",
+		id:"BigInt",
+		tenantId:"BigInt",
 		galerieDirByGfIdRodic:"GalerieDir",
 		userByGfKdo:"User",
 		aktualitiesByAtFotoMain:"AktualitiesConnection"
 	},
 	GalerieDir:{
-		nodeId:"ID",
 		gdId:"BigInt",
 		gdIdRodic:"BigInt",
 		gdName:"String",
 		gdLevel:"Int",
 		gdPath:"String",
 		gdHidden:"Boolean",
+		id:"BigInt",
+		tenantId:"BigInt",
 		galerieFotosByGfIdRodic:"GalerieFotosConnection"
 	},
 	GalerieFotosConnection:{
@@ -13343,6 +14947,28 @@ export const ReturnTypes: Record<string,any> = {
 		cursor:"Cursor",
 		node:"Aktuality"
 	},
+	DokumentiesConnection:{
+		nodes:"Dokumenty",
+		edges:"DokumentiesEdge",
+		pageInfo:"PageInfo",
+		totalCount:"Int"
+	},
+	Dokumenty:{
+		dId:"BigInt",
+		dPath:"String",
+		dName:"String",
+		dFilename:"String",
+		dKategorie:"Int",
+		dKdo:"BigInt",
+		dTimestamp:"Datetime",
+		id:"BigInt",
+		tenantId:"BigInt",
+		userByDKdo:"User"
+	},
+	DokumentiesEdge:{
+		cursor:"Cursor",
+		node:"Dokumenty"
+	},
 	NabidkasConnection:{
 		nodes:"Nabidka",
 		edges:"NabidkasEdge",
@@ -13350,18 +14976,21 @@ export const ReturnTypes: Record<string,any> = {
 		totalCount:"Int"
 	},
 	Nabidka:{
-		nodeId:"ID",
 		nId:"BigInt",
 		nTrener:"BigInt",
 		nPocetHod:"Int",
-		nMaxPocetHod:"BigInt",
+		nMaxPocetHod:"Int",
 		nOd:"Date",
 		nDo:"Date",
 		nVisible:"Boolean",
 		nLock:"Boolean",
 		nTimestamp:"Datetime",
+		id:"BigInt",
+		tenantId:"BigInt",
 		userByNTrener:"User",
-		nabidkaItemsByNiIdRodic:"NabidkaItemsConnection"
+		nabidkaItemsByNiIdRodic:"NabidkaItemsConnection",
+		freeLessons:"Int",
+		myLessons:"Int"
 	},
 	NabidkaItemsConnection:{
 		nodes:"NabidkaItem",
@@ -13370,17 +14999,17 @@ export const ReturnTypes: Record<string,any> = {
 		totalCount:"Int"
 	},
 	NabidkaItem:{
-		nodeId:"ID",
 		niId:"BigInt",
 		niIdRodic:"BigInt",
 		niPartner:"BigInt",
 		niPocetHod:"Int",
 		niLock:"Boolean",
+		id:"BigInt",
+		tenantId:"BigInt",
 		nabidkaByNiIdRodic:"Nabidka",
 		paryByNiPartner:"Pary"
 	},
 	Pary:{
-		nodeId:"ID",
 		pId:"BigInt",
 		pIdPartner:"BigInt",
 		pIdPartnerka:"BigInt",
@@ -13394,7 +15023,9 @@ export const ReturnTypes: Record<string,any> = {
 		pArchiv:"Boolean",
 		pTimestampAdd:"Datetime",
 		pTimestampArchive:"Datetime",
+		id:"BigInt",
 		userByPIdPartner:"User",
+		userByPIdPartnerka:"User",
 		nabidkaItemsByNiPartner:"NabidkaItemsConnection",
 		rozpisItemsByRiPartner:"RozpisItemsConnection"
 	},
@@ -13405,18 +15036,18 @@ export const ReturnTypes: Record<string,any> = {
 		totalCount:"Int"
 	},
 	RozpisItem:{
-		nodeId:"ID",
 		riId:"BigInt",
 		riIdRodic:"BigInt",
 		riPartner:"BigInt",
 		riOd:"Time",
 		riDo:"Time",
 		riLock:"Boolean",
+		id:"BigInt",
+		tenantId:"BigInt",
 		rozpiByRiIdRodic:"Rozpi",
 		paryByRiPartner:"Pary"
 	},
 	Rozpi:{
-		nodeId:"ID",
 		rId:"BigInt",
 		rTrener:"BigInt",
 		rKde:"String",
@@ -13424,6 +15055,8 @@ export const ReturnTypes: Record<string,any> = {
 		rVisible:"Boolean",
 		rLock:"Boolean",
 		rTimestamp:"Datetime",
+		id:"BigInt",
+		tenantId:"BigInt",
 		userByRTrener:"User",
 		rozpisItemsByRiIdRodic:"RozpisItemsConnection"
 	},
@@ -13438,56 +15071,6 @@ export const ReturnTypes: Record<string,any> = {
 	NabidkasEdge:{
 		cursor:"Cursor",
 		node:"Nabidka"
-	},
-	RozpisConnection:{
-		nodes:"Rozpi",
-		edges:"RozpisEdge",
-		pageInfo:"PageInfo",
-		totalCount:"Int"
-	},
-	RozpisEdge:{
-		cursor:"Cursor",
-		node:"Rozpi"
-	},
-	SessionsConnection:{
-		nodes:"Session",
-		edges:"SessionsEdge",
-		pageInfo:"PageInfo",
-		totalCount:"Int"
-	},
-	Session:{
-		nodeId:"ID",
-		ssId:"String",
-		ssData:"String",
-		ssUpdatedAt:"Datetime",
-		ssLifetime:"BigInt",
-		ssUser:"BigInt",
-		userBySsUser:"User"
-	},
-	SessionsEdge:{
-		cursor:"Cursor",
-		node:"Session"
-	},
-	DokumentiesConnection:{
-		nodes:"Dokumenty",
-		edges:"DokumentiesEdge",
-		pageInfo:"PageInfo",
-		totalCount:"Int"
-	},
-	Dokumenty:{
-		nodeId:"ID",
-		dId:"BigInt",
-		dPath:"String",
-		dName:"String",
-		dFilename:"String",
-		dKategorie:"Int",
-		dKdo:"BigInt",
-		dTimestamp:"Datetime",
-		userByDKdo:"User"
-	},
-	DokumentiesEdge:{
-		cursor:"Cursor",
-		node:"Dokumenty"
 	},
 	PariesConnection:{
 		nodes:"Pary",
@@ -13506,11 +15089,11 @@ export const ReturnTypes: Record<string,any> = {
 		totalCount:"Int"
 	},
 	ParyNavrh:{
-		nodeId:"ID",
 		pnId:"BigInt",
 		pnNavrhl:"BigInt",
 		pnPartner:"BigInt",
 		pnPartnerka:"BigInt",
+		id:"BigInt",
 		userByPnNavrhl:"User",
 		userByPnPartner:"User",
 		userByPnPartnerka:"User"
@@ -13518,6 +15101,33 @@ export const ReturnTypes: Record<string,any> = {
 	ParyNavrhsEdge:{
 		cursor:"Cursor",
 		node:"ParyNavrh"
+	},
+	RozpisConnection:{
+		nodes:"Rozpi",
+		edges:"RozpisEdge",
+		pageInfo:"PageInfo",
+		totalCount:"Int"
+	},
+	RozpisEdge:{
+		cursor:"Cursor",
+		node:"Rozpi"
+	},
+	SessionsConnection:{
+		nodes:"Session",
+		edges:"SessionsEdge",
+		pageInfo:"PageInfo",
+		totalCount:"Int"
+	},
+	Session:{
+		ssId:"String",
+		ssUpdatedAt:"Datetime",
+		ssLifetime:"BigInt",
+		ssUser:"BigInt",
+		userBySsUser:"User"
+	},
+	SessionsEdge:{
+		cursor:"Cursor",
+		node:"Session"
 	},
 	UpozornenisConnection:{
 		nodes:"Upozorneni",
@@ -13529,6 +15139,16 @@ export const ReturnTypes: Record<string,any> = {
 		cursor:"Cursor",
 		node:"Upozorneni"
 	},
+	AttachmentsConnection:{
+		nodes:"Attachment",
+		edges:"AttachmentsEdge",
+		pageInfo:"PageInfo",
+		totalCount:"Int"
+	},
+	AttachmentsEdge:{
+		cursor:"Cursor",
+		node:"Attachment"
+	},
 	AkceItemsEdge:{
 		cursor:"Cursor",
 		node:"AkceItem"
@@ -13536,6 +15156,35 @@ export const ReturnTypes: Record<string,any> = {
 	AkcesEdge:{
 		cursor:"Cursor",
 		node:"Akce"
+	},
+	EventsConnection:{
+		nodes:"Event",
+		edges:"EventsEdge",
+		pageInfo:"PageInfo",
+		totalCount:"Int"
+	},
+	EventsEdge:{
+		cursor:"Cursor",
+		node:"Event"
+	},
+	FormResponsesConnection:{
+		nodes:"FormResponse",
+		edges:"FormResponsesEdge",
+		pageInfo:"PageInfo",
+		totalCount:"Int"
+	},
+	FormResponse:{
+		id:"BigInt",
+		type:"String",
+		data:"JSON",
+		url:"String",
+		createdAt:"Datetime",
+		updatedAt:"Datetime",
+		tenantId:"BigInt"
+	},
+	FormResponsesEdge:{
+		cursor:"Cursor",
+		node:"FormResponse"
 	},
 	GalerieDirsConnection:{
 		nodes:"GalerieDir",
@@ -13547,52 +15196,15 @@ export const ReturnTypes: Record<string,any> = {
 		cursor:"Cursor",
 		node:"GalerieDir"
 	},
-	MembersConnection:{
-		nodes:"Member",
-		edges:"MembersEdge",
+	LocationsConnection:{
+		nodes:"Location",
+		edges:"LocationsEdge",
 		pageInfo:"PageInfo",
 		totalCount:"Int"
 	},
-	Member:{
-		uId:"BigInt",
-		uLogin:"String",
-		uPass:"String",
-		uJmeno:"String",
-		uPrijmeni:"String",
-		uPohlavi:"String",
-		uEmail:"String",
-		uTelefon:"String",
-		uNarozeni:"Date",
-		uRodneCislo:"String",
-		uPoznamky:"String",
-		uTimestamp:"Datetime",
-		uLevel:"Int",
-		uGroup:"BigInt",
-		uSkupina:"BigInt",
-		uDancer:"Boolean",
-		uBan:"Boolean",
-		uLock:"Boolean",
-		uConfirmed:"Boolean",
-		uSystem:"Boolean",
-		uStreet:"String",
-		uConscriptionNumber:"String",
-		uOrientationNumber:"String",
-		uDistrict:"String",
-		uCity:"String",
-		uPostalCode:"String",
-		uNationality:"String",
-		uMemberSince:"Datetime",
-		uMemberUntil:"Datetime",
-		uCreatedAt:"Datetime",
-		uTeacher:"Boolean",
-		uGdprSignedAt:"Datetime",
-		sId:"BigInt",
-		sName:"String",
-		paymentValid:"Boolean"
-	},
-	MembersEdge:{
+	LocationsEdge:{
 		cursor:"Cursor",
-		node:"Member"
+		node:"Location"
 	},
 	PagesConnection:{
 		nodes:"Page",
@@ -13601,7 +15213,6 @@ export const ReturnTypes: Record<string,any> = {
 		totalCount:"Int"
 	},
 	Page:{
-		nodeId:"ID",
 		id:"Int",
 		url:"String",
 		content:"JSON",
@@ -13620,7 +15231,6 @@ export const ReturnTypes: Record<string,any> = {
 		totalCount:"Int"
 	},
 	PageRevision:{
-		nodeId:"ID",
 		revNumber:"Int",
 		revOperation:"String",
 		revTimestamp:"Datetime",
@@ -13642,7 +15252,6 @@ export const ReturnTypes: Record<string,any> = {
 		totalCount:"Int"
 	},
 	Parameter:{
-		nodeId:"ID",
 		paName:"String",
 		paValue:"String"
 	},
@@ -13659,6 +15268,16 @@ export const ReturnTypes: Record<string,any> = {
 	PermissionsEdge:{
 		cursor:"Cursor",
 		node:"Permission"
+	},
+	PeopleConnection:{
+		nodes:"Person",
+		edges:"PeopleEdge",
+		pageInfo:"PageInfo",
+		totalCount:"Int"
+	},
+	PeopleEdge:{
+		cursor:"Cursor",
+		node:"Person"
 	},
 	PlatbyCategoriesConnection:{
 		nodes:"PlatbyCategory",
@@ -13690,34 +15309,24 @@ export const ReturnTypes: Record<string,any> = {
 		cursor:"Cursor",
 		node:"PlatbyRaw"
 	},
-	SkupiniesConnection:{
-		nodes:"Skupiny",
-		edges:"SkupiniesEdge",
+	TenantsConnection:{
+		nodes:"Tenant",
+		edges:"TenantsEdge",
 		pageInfo:"PageInfo",
 		totalCount:"Int"
 	},
-	SkupiniesEdge:{
+	TenantsEdge:{
 		cursor:"Cursor",
-		node:"Skupiny"
+		node:"Tenant"
 	},
-	UsersSkupiniesConnection:{
-		nodes:"UsersSkupiny",
-		edges:"UsersSkupiniesEdge",
-		pageInfo:"PageInfo",
+	CurrentCoupleIdsConnection:{
+		nodes:"BigInt",
+		edges:"CurrentCoupleIdEdge",
 		totalCount:"Int"
 	},
-	UsersSkupiny:{
-		nodeId:"ID",
-		usId:"BigInt",
-		usColor:"String",
-		usPlatbaMesic:"BigInt",
-		usPlatbaCtvrtrok:"BigInt",
-		usPlatbaPulrok:"BigInt",
-		usPopis:"String"
-	},
-	UsersSkupiniesEdge:{
+	CurrentCoupleIdEdge:{
 		cursor:"Cursor",
-		node:"UsersSkupiny"
+		node:"BigInt"
 	},
 	VideosConnection:{
 		nodes:"Video",
@@ -13726,7 +15335,6 @@ export const ReturnTypes: Record<string,any> = {
 		totalCount:"Int"
 	},
 	Video:{
-		nodeId:"ID",
 		vId:"BigInt",
 		vUri:"String",
 		vTitle:"String",
@@ -13740,83 +15348,21 @@ export const ReturnTypes: Record<string,any> = {
 		cursor:"Cursor",
 		node:"Video"
 	},
-	VideoListsConnection:{
-		nodes:"VideoList",
-		edges:"VideoListsEdge",
-		pageInfo:"PageInfo",
-		totalCount:"Int"
-	},
-	VideoList:{
-		nodeId:"ID",
-		vlId:"BigInt",
-		vlUrl:"String",
-		vlTitle:"String",
-		vlDescription:"String",
-		vlCount:"BigInt",
-		vlCreatedAt:"Datetime",
-		vlLastChecked:"Datetime"
-	},
-	VideoListsEdge:{
-		cursor:"Cursor",
-		node:"VideoList"
-	},
-	VideoSourcesConnection:{
-		nodes:"VideoSource",
-		edges:"VideoSourcesEdge",
-		pageInfo:"PageInfo",
-		totalCount:"Int"
-	},
-	VideoSource:{
-		nodeId:"ID",
-		vsId:"BigInt",
-		vsUrl:"String",
-		vsTitle:"String",
-		vsDescription:"String",
-		vsCreatedAt:"Datetime",
-		vsLastChecked:"Datetime"
-	},
-	VideoSourcesEdge:{
-		cursor:"Cursor",
-		node:"VideoSource"
-	},
-	ActiveProspectsConnection:{
-		nodes:"ActiveProspectsRecord",
-		edges:"ActiveProspectEdge",
-		totalCount:"Int"
-	},
-	ActiveProspectsRecord:{
-		id:"BigInt",
-		data:"ProspectDatum",
-		cohort:"CrmCohort",
-		updatedAt:"Datetime"
-	},
-	ProspectDatum:{
-		name:"String",
-		surname:"String",
-		email:"String",
-		phone:"String",
-		yearofbirth:"String"
-	},
-	ActiveProspectEdge:{
-		cursor:"Cursor",
-		node:"ActiveProspectsRecord"
-	},
-	CurrentCoupleIdsConnection:{
-		nodes:"BigInt",
-		edges:"CurrentCoupleIdEdge",
-		totalCount:"Int"
-	},
-	CurrentCoupleIdEdge:{
-		cursor:"Cursor",
-		node:"BigInt"
-	},
 	Mutation:{
 		createAkce:"CreateAkcePayload",
 		createAkceItem:"CreateAkceItemPayload",
 		createAktuality:"CreateAktualityPayload",
+		createAttachment:"CreateAttachmentPayload",
+		createAttendeeExternal:"CreateAttendeeExternalPayload",
+		createAttendeeUser:"CreateAttendeeUserPayload",
+		createCohortGroup:"CreateCohortGroupPayload",
 		createDokumenty:"CreateDokumentyPayload",
+		createEvent:"CreateEventPayload",
+		createFormResponse:"CreateFormResponsePayload",
 		createGalerieDir:"CreateGalerieDirPayload",
 		createGalerieFoto:"CreateGalerieFotoPayload",
+		createLocation:"CreateLocationPayload",
+		createLocationAttachment:"CreateLocationAttachmentPayload",
 		createNabidka:"CreateNabidkaPayload",
 		createNabidkaItem:"CreateNabidkaItemPayload",
 		createPage:"CreatePagePayload",
@@ -13824,146 +15370,123 @@ export const ReturnTypes: Record<string,any> = {
 		createPary:"CreateParyPayload",
 		createParyNavrh:"CreateParyNavrhPayload",
 		createPermission:"CreatePermissionPayload",
+		createPerson:"CreatePersonPayload",
 		createPlatbyCategory:"CreatePlatbyCategoryPayload",
 		createPlatbyCategoryGroup:"CreatePlatbyCategoryGroupPayload",
 		createPlatbyGroup:"CreatePlatbyGroupPayload",
 		createPlatbyGroupSkupina:"CreatePlatbyGroupSkupinaPayload",
 		createPlatbyItem:"CreatePlatbyItemPayload",
 		createPlatbyRaw:"CreatePlatbyRawPayload",
+		createRoom:"CreateRoomPayload",
+		createRoomAttachment:"CreateRoomAttachmentPayload",
 		createRozpi:"CreateRozpiPayload",
 		createRozpisItem:"CreateRozpisItemPayload",
-		createSession:"CreateSessionPayload",
 		createSkupiny:"CreateSkupinyPayload",
+		createTenant:"CreateTenantPayload",
+		createTenantAttachment:"CreateTenantAttachmentPayload",
+		createTenantLocation:"CreateTenantLocationPayload",
+		createTenantPerson:"CreateTenantPersonPayload",
 		createUpozorneni:"CreateUpozorneniPayload",
 		createUpozorneniSkupiny:"CreateUpozorneniSkupinyPayload",
 		createUser:"CreateUserPayload",
-		createUsersSkupiny:"CreateUsersSkupinyPayload",
-		createVideo:"CreateVideoPayload",
-		createVideoList:"CreateVideoListPayload",
-		createVideoSource:"CreateVideoSourcePayload",
-		updateAkceByNodeId:"UpdateAkcePayload",
-		updateAkce:"UpdateAkcePayload",
-		updateAkceItemByNodeId:"UpdateAkceItemPayload",
-		updateAkceItem:"UpdateAkceItemPayload",
-		updateAktualityByNodeId:"UpdateAktualityPayload",
 		updateAktuality:"UpdateAktualityPayload",
-		updateDokumentyByNodeId:"UpdateDokumentyPayload",
+		updateAttachment:"UpdateAttachmentPayload",
+		updateAttendeeExternal:"UpdateAttendeeExternalPayload",
+		updateAttendeeUser:"UpdateAttendeeUserPayload",
+		updateAttendeeUserByUserIdAndEventId:"UpdateAttendeeUserPayload",
+		updateCohortGroup:"UpdateCohortGroupPayload",
 		updateDokumenty:"UpdateDokumentyPayload",
-		updateGalerieDirByNodeId:"UpdateGalerieDirPayload",
+		updateEvent:"UpdateEventPayload",
+		updateFormResponse:"UpdateFormResponsePayload",
 		updateGalerieDir:"UpdateGalerieDirPayload",
-		updateGalerieFotoByNodeId:"UpdateGalerieFotoPayload",
 		updateGalerieFoto:"UpdateGalerieFotoPayload",
-		updateNabidkaByNodeId:"UpdateNabidkaPayload",
+		updateLocation:"UpdateLocationPayload",
+		updateLocationAttachment:"UpdateLocationAttachmentPayload",
 		updateNabidka:"UpdateNabidkaPayload",
-		updateNabidkaItemByNodeId:"UpdateNabidkaItemPayload",
 		updateNabidkaItem:"UpdateNabidkaItemPayload",
-		updatePageByNodeId:"UpdatePagePayload",
+		updateNabidkaItemByNiPartnerAndNiIdRodic:"UpdateNabidkaItemPayload",
 		updatePage:"UpdatePagePayload",
 		updatePageByUrl:"UpdatePagePayload",
-		updateParameterByNodeId:"UpdateParameterPayload",
 		updateParameter:"UpdateParameterPayload",
-		updateParyByNodeId:"UpdateParyPayload",
 		updatePary:"UpdateParyPayload",
-		updateParyNavrhByNodeId:"UpdateParyNavrhPayload",
 		updateParyNavrh:"UpdateParyNavrhPayload",
-		updatePermissionByNodeId:"UpdatePermissionPayload",
 		updatePermission:"UpdatePermissionPayload",
-		updatePlatbyCategoryByNodeId:"UpdatePlatbyCategoryPayload",
+		updatePerson:"UpdatePersonPayload",
 		updatePlatbyCategory:"UpdatePlatbyCategoryPayload",
-		updatePlatbyCategoryGroupByNodeId:"UpdatePlatbyCategoryGroupPayload",
 		updatePlatbyCategoryGroup:"UpdatePlatbyCategoryGroupPayload",
-		updatePlatbyGroupByNodeId:"UpdatePlatbyGroupPayload",
 		updatePlatbyGroup:"UpdatePlatbyGroupPayload",
-		updatePlatbyGroupSkupinaByNodeId:"UpdatePlatbyGroupSkupinaPayload",
 		updatePlatbyGroupSkupina:"UpdatePlatbyGroupSkupinaPayload",
-		updatePlatbyItemByNodeId:"UpdatePlatbyItemPayload",
 		updatePlatbyItem:"UpdatePlatbyItemPayload",
-		updatePlatbyRawByNodeId:"UpdatePlatbyRawPayload",
 		updatePlatbyRaw:"UpdatePlatbyRawPayload",
-		updateRozpiByNodeId:"UpdateRozpiPayload",
+		updateRoom:"UpdateRoomPayload",
+		updateRoomAttachment:"UpdateRoomAttachmentPayload",
 		updateRozpi:"UpdateRozpiPayload",
-		updateRozpisItemByNodeId:"UpdateRozpisItemPayload",
 		updateRozpisItem:"UpdateRozpisItemPayload",
-		updateSessionByNodeId:"UpdateSessionPayload",
-		updateSession:"UpdateSessionPayload",
-		updateSkupinyByNodeId:"UpdateSkupinyPayload",
 		updateSkupiny:"UpdateSkupinyPayload",
-		updateUpozorneniByNodeId:"UpdateUpozorneniPayload",
+		updateTenant:"UpdateTenantPayload",
+		updateTenantAttachment:"UpdateTenantAttachmentPayload",
+		updateTenantLocation:"UpdateTenantLocationPayload",
+		updateTenantPerson:"UpdateTenantPersonPayload",
 		updateUpozorneni:"UpdateUpozorneniPayload",
-		updateUpozorneniSkupinyByNodeId:"UpdateUpozorneniSkupinyPayload",
 		updateUpozorneniSkupiny:"UpdateUpozorneniSkupinyPayload",
-		updateUserByNodeId:"UpdateUserPayload",
 		updateUser:"UpdateUserPayload",
-		updateUsersSkupinyByNodeId:"UpdateUsersSkupinyPayload",
-		updateUsersSkupiny:"UpdateUsersSkupinyPayload",
-		updateVideoByNodeId:"UpdateVideoPayload",
-		updateVideo:"UpdateVideoPayload",
-		updateVideoListByNodeId:"UpdateVideoListPayload",
-		updateVideoList:"UpdateVideoListPayload",
-		updateVideoSourceByNodeId:"UpdateVideoSourcePayload",
-		updateVideoSource:"UpdateVideoSourcePayload",
-		deleteAkceByNodeId:"DeleteAkcePayload",
-		deleteAkce:"DeleteAkcePayload",
-		deleteAkceItemByNodeId:"DeleteAkceItemPayload",
-		deleteAkceItem:"DeleteAkceItemPayload",
-		deleteAktualityByNodeId:"DeleteAktualityPayload",
 		deleteAktuality:"DeleteAktualityPayload",
-		deleteDokumentyByNodeId:"DeleteDokumentyPayload",
+		deleteAttachment:"DeleteAttachmentPayload",
+		deleteAttendeeExternal:"DeleteAttendeeExternalPayload",
+		deleteAttendeeUser:"DeleteAttendeeUserPayload",
+		deleteAttendeeUserByUserIdAndEventId:"DeleteAttendeeUserPayload",
+		deleteCohortGroup:"DeleteCohortGroupPayload",
 		deleteDokumenty:"DeleteDokumentyPayload",
-		deleteGalerieDirByNodeId:"DeleteGalerieDirPayload",
+		deleteEvent:"DeleteEventPayload",
+		deleteFormResponse:"DeleteFormResponsePayload",
 		deleteGalerieDir:"DeleteGalerieDirPayload",
-		deleteGalerieFotoByNodeId:"DeleteGalerieFotoPayload",
 		deleteGalerieFoto:"DeleteGalerieFotoPayload",
-		deleteNabidkaByNodeId:"DeleteNabidkaPayload",
+		deleteLocation:"DeleteLocationPayload",
+		deleteLocationAttachment:"DeleteLocationAttachmentPayload",
 		deleteNabidka:"DeleteNabidkaPayload",
-		deleteNabidkaItemByNodeId:"DeleteNabidkaItemPayload",
 		deleteNabidkaItem:"DeleteNabidkaItemPayload",
-		deleteParameterByNodeId:"DeleteParameterPayload",
+		deleteNabidkaItemByNiPartnerAndNiIdRodic:"DeleteNabidkaItemPayload",
 		deleteParameter:"DeleteParameterPayload",
-		deleteParyByNodeId:"DeleteParyPayload",
 		deletePary:"DeleteParyPayload",
-		deleteParyNavrhByNodeId:"DeleteParyNavrhPayload",
 		deleteParyNavrh:"DeleteParyNavrhPayload",
-		deletePermissionByNodeId:"DeletePermissionPayload",
 		deletePermission:"DeletePermissionPayload",
-		deletePlatbyCategoryByNodeId:"DeletePlatbyCategoryPayload",
+		deletePerson:"DeletePersonPayload",
 		deletePlatbyCategory:"DeletePlatbyCategoryPayload",
-		deletePlatbyCategoryGroupByNodeId:"DeletePlatbyCategoryGroupPayload",
 		deletePlatbyCategoryGroup:"DeletePlatbyCategoryGroupPayload",
-		deletePlatbyGroupByNodeId:"DeletePlatbyGroupPayload",
 		deletePlatbyGroup:"DeletePlatbyGroupPayload",
-		deletePlatbyGroupSkupinaByNodeId:"DeletePlatbyGroupSkupinaPayload",
 		deletePlatbyGroupSkupina:"DeletePlatbyGroupSkupinaPayload",
-		deletePlatbyItemByNodeId:"DeletePlatbyItemPayload",
 		deletePlatbyItem:"DeletePlatbyItemPayload",
-		deletePlatbyRawByNodeId:"DeletePlatbyRawPayload",
 		deletePlatbyRaw:"DeletePlatbyRawPayload",
-		deleteRozpiByNodeId:"DeleteRozpiPayload",
+		deleteRoom:"DeleteRoomPayload",
+		deleteRoomAttachment:"DeleteRoomAttachmentPayload",
 		deleteRozpi:"DeleteRozpiPayload",
-		deleteRozpisItemByNodeId:"DeleteRozpisItemPayload",
 		deleteRozpisItem:"DeleteRozpisItemPayload",
-		deleteSessionByNodeId:"DeleteSessionPayload",
-		deleteSession:"DeleteSessionPayload",
-		deleteSkupinyByNodeId:"DeleteSkupinyPayload",
 		deleteSkupiny:"DeleteSkupinyPayload",
-		deleteUpozorneniByNodeId:"DeleteUpozorneniPayload",
+		deleteTenant:"DeleteTenantPayload",
+		deleteTenantAttachment:"DeleteTenantAttachmentPayload",
+		deleteTenantLocation:"DeleteTenantLocationPayload",
+		deleteTenantPerson:"DeleteTenantPersonPayload",
 		deleteUpozorneni:"DeleteUpozorneniPayload",
-		deleteUpozorneniSkupinyByNodeId:"DeleteUpozorneniSkupinyPayload",
 		deleteUpozorneniSkupiny:"DeleteUpozorneniSkupinyPayload",
-		deleteUserByNodeId:"DeleteUserPayload",
 		deleteUser:"DeleteUserPayload",
-		deleteUsersSkupinyByNodeId:"DeleteUsersSkupinyPayload",
-		deleteUsersSkupiny:"DeleteUsersSkupinyPayload",
-		deleteVideoByNodeId:"DeleteVideoPayload",
-		deleteVideo:"DeleteVideoPayload",
-		deleteVideoListByNodeId:"DeleteVideoListPayload",
-		deleteVideoList:"DeleteVideoListPayload",
-		deleteVideoSourceByNodeId:"DeleteVideoSourcePayload",
-		deleteVideoSource:"DeleteVideoSourcePayload",
+		bookLesson:"BookLessonPayload",
+		cancelLesson:"CancelLessonPayload",
+		cancelParticipation:"CancelParticipationPayload",
+		changePassword:"ChangePasswordPayload",
+		confirmUser:"ConfirmUserPayload",
+		createCouple:"CreateCouplePayload",
+		createParticipation:"CreateParticipationPayload",
+		createParticipationExternal:"CreateParticipationExternalPayload",
+		fixUnpairedCouples:"FixUnpairedCouplesPayload",
 		login:"LoginPayload",
 		logout:"LogoutPayload",
 		prospectFormDancer:"ProspectFormDancerPayload",
-		uploadFile:"Upload"
+		reservationSetDesiredLessons:"ReservationSetDesiredLessonsPayload",
+		resetPassword:"ResetPasswordPayload",
+		submitForm:"SubmitFormPayload",
+		verifyFunction:"VerifyFunctionPayload",
+		uploadFile:"UploadFilePayload",
+		downloadFile:"String"
 	},
 	CreateAkcePayload:{
 		clientMutationId:"String",
@@ -13987,12 +15510,55 @@ export const ReturnTypes: Record<string,any> = {
 		galerieFotoByAtFotoMain:"GalerieFoto",
 		aktualityEdge:"AktualitiesEdge"
 	},
+	CreateAttachmentPayload:{
+		clientMutationId:"String",
+		attachment:"Attachment",
+		query:"Query",
+		userByUploadedBy:"User",
+		attachmentEdge:"AttachmentsEdge"
+	},
+	CreateAttendeeExternalPayload:{
+		clientMutationId:"String",
+		attendeeExternal:"AttendeeExternal",
+		query:"Query",
+		event:"Event",
+		userByManagedBy:"User",
+		userByConfirmedBy:"User",
+		attendeeExternalEdge:"AttendeeExternalsEdge"
+	},
+	CreateAttendeeUserPayload:{
+		clientMutationId:"String",
+		attendeeUser:"AttendeeUser",
+		query:"Query",
+		event:"Event",
+		user:"User",
+		attendeeUserEdge:"AttendeeUsersEdge"
+	},
+	CreateCohortGroupPayload:{
+		clientMutationId:"String",
+		cohortGroup:"CohortGroup",
+		query:"Query",
+		tenantByTenant:"Tenant",
+		cohortGroupEdge:"CohortGroupsEdge"
+	},
 	CreateDokumentyPayload:{
 		clientMutationId:"String",
 		dokumenty:"Dokumenty",
 		query:"Query",
 		userByDKdo:"User",
 		dokumentyEdge:"DokumentiesEdge"
+	},
+	CreateEventPayload:{
+		clientMutationId:"String",
+		event:"Event",
+		query:"Query",
+		eventEdge:"EventsEdge"
+	},
+	CreateFormResponsePayload:{
+		clientMutationId:"String",
+		formResponse:"FormResponse",
+		query:"Query",
+		formResponseEdge:"FormResponsesEdge"
 	},
 	CreateGalerieDirPayload:{
 		clientMutationId:"String",
@@ -14007,6 +15573,20 @@ export const ReturnTypes: Record<string,any> = {
 		galerieDirByGfIdRodic:"GalerieDir",
 		userByGfKdo:"User",
 		galerieFotoEdge:"GalerieFotosEdge"
+	},
+	CreateLocationPayload:{
+		clientMutationId:"String",
+		location:"Location",
+		query:"Query",
+		locationEdge:"LocationsEdge"
+	},
+	CreateLocationAttachmentPayload:{
+		clientMutationId:"String",
+		locationAttachment:"LocationAttachment",
+		query:"Query",
+		location:"Location",
+		attachmentByObjectName:"Attachment",
+		locationAttachmentEdge:"LocationAttachmentsEdge"
 	},
 	CreateNabidkaPayload:{
 		clientMutationId:"String",
@@ -14040,6 +15620,7 @@ export const ReturnTypes: Record<string,any> = {
 		pary:"Pary",
 		query:"Query",
 		userByPIdPartner:"User",
+		userByPIdPartnerka:"User",
 		paryEdge:"PariesEdge"
 	},
 	CreateParyNavrhPayload:{
@@ -14056,6 +15637,12 @@ export const ReturnTypes: Record<string,any> = {
 		permission:"Permission",
 		query:"Query",
 		permissionEdge:"PermissionsEdge"
+	},
+	CreatePersonPayload:{
+		clientMutationId:"String",
+		person:"Person",
+		query:"Query",
+		personEdge:"PeopleEdge"
 	},
 	CreatePlatbyCategoryPayload:{
 		clientMutationId:"String",
@@ -14100,6 +15687,21 @@ export const ReturnTypes: Record<string,any> = {
 		query:"Query",
 		platbyRawEdge:"PlatbyRawsEdge"
 	},
+	CreateRoomPayload:{
+		clientMutationId:"String",
+		room:"Room",
+		query:"Query",
+		locationByLocation:"Location",
+		roomEdge:"RoomsEdge"
+	},
+	CreateRoomAttachmentPayload:{
+		clientMutationId:"String",
+		roomAttachment:"RoomAttachment",
+		query:"Query",
+		room:"Room",
+		attachmentByObjectName:"Attachment",
+		roomAttachmentEdge:"RoomAttachmentsEdge"
+	},
 	CreateRozpiPayload:{
 		clientMutationId:"String",
 		rozpi:"Rozpi",
@@ -14115,18 +15717,42 @@ export const ReturnTypes: Record<string,any> = {
 		paryByRiPartner:"Pary",
 		rozpisItemEdge:"RozpisItemsEdge"
 	},
-	CreateSessionPayload:{
-		clientMutationId:"String",
-		session:"Session",
-		query:"Query",
-		userBySsUser:"User",
-		sessionEdge:"SessionsEdge"
-	},
 	CreateSkupinyPayload:{
 		clientMutationId:"String",
 		skupiny:"Skupiny",
 		query:"Query",
+		cohortGroupByCohortGroup:"CohortGroup",
 		skupinyEdge:"SkupiniesEdge"
+	},
+	CreateTenantPayload:{
+		clientMutationId:"String",
+		tenant:"Tenant",
+		query:"Query",
+		tenantEdge:"TenantsEdge"
+	},
+	CreateTenantAttachmentPayload:{
+		clientMutationId:"String",
+		tenantAttachment:"TenantAttachment",
+		query:"Query",
+		tenant:"Tenant",
+		attachmentByObjectName:"Attachment",
+		tenantAttachmentEdge:"TenantAttachmentsEdge"
+	},
+	CreateTenantLocationPayload:{
+		clientMutationId:"String",
+		tenantLocation:"TenantLocation",
+		query:"Query",
+		tenant:"Tenant",
+		location:"Location",
+		tenantLocationEdge:"TenantLocationsEdge"
+	},
+	CreateTenantPersonPayload:{
+		clientMutationId:"String",
+		tenantPerson:"TenantPerson",
+		query:"Query",
+		tenant:"Tenant",
+		person:"Person",
+		tenantPersonEdge:"TenantPeopleEdge"
 	},
 	CreateUpozorneniPayload:{
 		clientMutationId:"String",
@@ -14151,44 +15777,6 @@ export const ReturnTypes: Record<string,any> = {
 		skupinyByUSkupina:"Skupiny",
 		userEdge:"UsersEdge"
 	},
-	CreateUsersSkupinyPayload:{
-		clientMutationId:"String",
-		usersSkupiny:"UsersSkupiny",
-		query:"Query",
-		usersSkupinyEdge:"UsersSkupiniesEdge"
-	},
-	CreateVideoPayload:{
-		clientMutationId:"String",
-		video:"Video",
-		query:"Query",
-		videoEdge:"VideosEdge"
-	},
-	CreateVideoListPayload:{
-		clientMutationId:"String",
-		videoList:"VideoList",
-		query:"Query",
-		videoListEdge:"VideoListsEdge"
-	},
-	CreateVideoSourcePayload:{
-		clientMutationId:"String",
-		videoSource:"VideoSource",
-		query:"Query",
-		videoSourceEdge:"VideoSourcesEdge"
-	},
-	UpdateAkcePayload:{
-		clientMutationId:"String",
-		akce:"Akce",
-		query:"Query",
-		akceEdge:"AkcesEdge"
-	},
-	UpdateAkceItemPayload:{
-		clientMutationId:"String",
-		akceItem:"AkceItem",
-		query:"Query",
-		akceByAiIdRodic:"Akce",
-		userByAiUser:"User",
-		akceItemEdge:"AkceItemsEdge"
-	},
 	UpdateAktualityPayload:{
 		clientMutationId:"String",
 		aktuality:"Aktuality",
@@ -14197,12 +15785,55 @@ export const ReturnTypes: Record<string,any> = {
 		galerieFotoByAtFotoMain:"GalerieFoto",
 		aktualityEdge:"AktualitiesEdge"
 	},
+	UpdateAttachmentPayload:{
+		clientMutationId:"String",
+		attachment:"Attachment",
+		query:"Query",
+		userByUploadedBy:"User",
+		attachmentEdge:"AttachmentsEdge"
+	},
+	UpdateAttendeeExternalPayload:{
+		clientMutationId:"String",
+		attendeeExternal:"AttendeeExternal",
+		query:"Query",
+		event:"Event",
+		userByManagedBy:"User",
+		userByConfirmedBy:"User",
+		attendeeExternalEdge:"AttendeeExternalsEdge"
+	},
+	UpdateAttendeeUserPayload:{
+		clientMutationId:"String",
+		attendeeUser:"AttendeeUser",
+		query:"Query",
+		event:"Event",
+		user:"User",
+		attendeeUserEdge:"AttendeeUsersEdge"
+	},
+	UpdateCohortGroupPayload:{
+		clientMutationId:"String",
+		cohortGroup:"CohortGroup",
+		query:"Query",
+		tenantByTenant:"Tenant",
+		cohortGroupEdge:"CohortGroupsEdge"
+	},
 	UpdateDokumentyPayload:{
 		clientMutationId:"String",
 		dokumenty:"Dokumenty",
 		query:"Query",
 		userByDKdo:"User",
 		dokumentyEdge:"DokumentiesEdge"
+	},
+	UpdateEventPayload:{
+		clientMutationId:"String",
+		event:"Event",
+		query:"Query",
+		eventEdge:"EventsEdge"
+	},
+	UpdateFormResponsePayload:{
+		clientMutationId:"String",
+		formResponse:"FormResponse",
+		query:"Query",
+		formResponseEdge:"FormResponsesEdge"
 	},
 	UpdateGalerieDirPayload:{
 		clientMutationId:"String",
@@ -14217,6 +15848,20 @@ export const ReturnTypes: Record<string,any> = {
 		galerieDirByGfIdRodic:"GalerieDir",
 		userByGfKdo:"User",
 		galerieFotoEdge:"GalerieFotosEdge"
+	},
+	UpdateLocationPayload:{
+		clientMutationId:"String",
+		location:"Location",
+		query:"Query",
+		locationEdge:"LocationsEdge"
+	},
+	UpdateLocationAttachmentPayload:{
+		clientMutationId:"String",
+		locationAttachment:"LocationAttachment",
+		query:"Query",
+		location:"Location",
+		attachmentByObjectName:"Attachment",
+		locationAttachmentEdge:"LocationAttachmentsEdge"
 	},
 	UpdateNabidkaPayload:{
 		clientMutationId:"String",
@@ -14250,6 +15895,7 @@ export const ReturnTypes: Record<string,any> = {
 		pary:"Pary",
 		query:"Query",
 		userByPIdPartner:"User",
+		userByPIdPartnerka:"User",
 		paryEdge:"PariesEdge"
 	},
 	UpdateParyNavrhPayload:{
@@ -14266,6 +15912,12 @@ export const ReturnTypes: Record<string,any> = {
 		permission:"Permission",
 		query:"Query",
 		permissionEdge:"PermissionsEdge"
+	},
+	UpdatePersonPayload:{
+		clientMutationId:"String",
+		person:"Person",
+		query:"Query",
+		personEdge:"PeopleEdge"
 	},
 	UpdatePlatbyCategoryPayload:{
 		clientMutationId:"String",
@@ -14310,6 +15962,21 @@ export const ReturnTypes: Record<string,any> = {
 		query:"Query",
 		platbyRawEdge:"PlatbyRawsEdge"
 	},
+	UpdateRoomPayload:{
+		clientMutationId:"String",
+		room:"Room",
+		query:"Query",
+		locationByLocation:"Location",
+		roomEdge:"RoomsEdge"
+	},
+	UpdateRoomAttachmentPayload:{
+		clientMutationId:"String",
+		roomAttachment:"RoomAttachment",
+		query:"Query",
+		room:"Room",
+		attachmentByObjectName:"Attachment",
+		roomAttachmentEdge:"RoomAttachmentsEdge"
+	},
 	UpdateRozpiPayload:{
 		clientMutationId:"String",
 		rozpi:"Rozpi",
@@ -14325,18 +15992,42 @@ export const ReturnTypes: Record<string,any> = {
 		paryByRiPartner:"Pary",
 		rozpisItemEdge:"RozpisItemsEdge"
 	},
-	UpdateSessionPayload:{
-		clientMutationId:"String",
-		session:"Session",
-		query:"Query",
-		userBySsUser:"User",
-		sessionEdge:"SessionsEdge"
-	},
 	UpdateSkupinyPayload:{
 		clientMutationId:"String",
 		skupiny:"Skupiny",
 		query:"Query",
+		cohortGroupByCohortGroup:"CohortGroup",
 		skupinyEdge:"SkupiniesEdge"
+	},
+	UpdateTenantPayload:{
+		clientMutationId:"String",
+		tenant:"Tenant",
+		query:"Query",
+		tenantEdge:"TenantsEdge"
+	},
+	UpdateTenantAttachmentPayload:{
+		clientMutationId:"String",
+		tenantAttachment:"TenantAttachment",
+		query:"Query",
+		tenant:"Tenant",
+		attachmentByObjectName:"Attachment",
+		tenantAttachmentEdge:"TenantAttachmentsEdge"
+	},
+	UpdateTenantLocationPayload:{
+		clientMutationId:"String",
+		tenantLocation:"TenantLocation",
+		query:"Query",
+		tenant:"Tenant",
+		location:"Location",
+		tenantLocationEdge:"TenantLocationsEdge"
+	},
+	UpdateTenantPersonPayload:{
+		clientMutationId:"String",
+		tenantPerson:"TenantPerson",
+		query:"Query",
+		tenant:"Tenant",
+		person:"Person",
+		tenantPersonEdge:"TenantPeopleEdge"
 	},
 	UpdateUpozorneniPayload:{
 		clientMutationId:"String",
@@ -14361,46 +16052,6 @@ export const ReturnTypes: Record<string,any> = {
 		skupinyByUSkupina:"Skupiny",
 		userEdge:"UsersEdge"
 	},
-	UpdateUsersSkupinyPayload:{
-		clientMutationId:"String",
-		usersSkupiny:"UsersSkupiny",
-		query:"Query",
-		usersSkupinyEdge:"UsersSkupiniesEdge"
-	},
-	UpdateVideoPayload:{
-		clientMutationId:"String",
-		video:"Video",
-		query:"Query",
-		videoEdge:"VideosEdge"
-	},
-	UpdateVideoListPayload:{
-		clientMutationId:"String",
-		videoList:"VideoList",
-		query:"Query",
-		videoListEdge:"VideoListsEdge"
-	},
-	UpdateVideoSourcePayload:{
-		clientMutationId:"String",
-		videoSource:"VideoSource",
-		query:"Query",
-		videoSourceEdge:"VideoSourcesEdge"
-	},
-	DeleteAkcePayload:{
-		clientMutationId:"String",
-		akce:"Akce",
-		deletedAkceNodeId:"ID",
-		query:"Query",
-		akceEdge:"AkcesEdge"
-	},
-	DeleteAkceItemPayload:{
-		clientMutationId:"String",
-		akceItem:"AkceItem",
-		deletedAkceItemNodeId:"ID",
-		query:"Query",
-		akceByAiIdRodic:"Akce",
-		userByAiUser:"User",
-		akceItemEdge:"AkceItemsEdge"
-	},
 	DeleteAktualityPayload:{
 		clientMutationId:"String",
 		aktuality:"Aktuality",
@@ -14410,6 +16061,41 @@ export const ReturnTypes: Record<string,any> = {
 		galerieFotoByAtFotoMain:"GalerieFoto",
 		aktualityEdge:"AktualitiesEdge"
 	},
+	DeleteAttachmentPayload:{
+		clientMutationId:"String",
+		attachment:"Attachment",
+		deletedAttachmentNodeId:"ID",
+		query:"Query",
+		userByUploadedBy:"User",
+		attachmentEdge:"AttachmentsEdge"
+	},
+	DeleteAttendeeExternalPayload:{
+		clientMutationId:"String",
+		attendeeExternal:"AttendeeExternal",
+		deletedAttendeeExternalNodeId:"ID",
+		query:"Query",
+		event:"Event",
+		userByManagedBy:"User",
+		userByConfirmedBy:"User",
+		attendeeExternalEdge:"AttendeeExternalsEdge"
+	},
+	DeleteAttendeeUserPayload:{
+		clientMutationId:"String",
+		attendeeUser:"AttendeeUser",
+		deletedAttendeeUserNodeId:"ID",
+		query:"Query",
+		event:"Event",
+		user:"User",
+		attendeeUserEdge:"AttendeeUsersEdge"
+	},
+	DeleteCohortGroupPayload:{
+		clientMutationId:"String",
+		cohortGroup:"CohortGroup",
+		deletedCohortGroupNodeId:"ID",
+		query:"Query",
+		tenantByTenant:"Tenant",
+		cohortGroupEdge:"CohortGroupsEdge"
+	},
 	DeleteDokumentyPayload:{
 		clientMutationId:"String",
 		dokumenty:"Dokumenty",
@@ -14417,6 +16103,20 @@ export const ReturnTypes: Record<string,any> = {
 		query:"Query",
 		userByDKdo:"User",
 		dokumentyEdge:"DokumentiesEdge"
+	},
+	DeleteEventPayload:{
+		clientMutationId:"String",
+		event:"Event",
+		deletedEventNodeId:"ID",
+		query:"Query",
+		eventEdge:"EventsEdge"
+	},
+	DeleteFormResponsePayload:{
+		clientMutationId:"String",
+		formResponse:"FormResponse",
+		deletedFormResponseNodeId:"ID",
+		query:"Query",
+		formResponseEdge:"FormResponsesEdge"
 	},
 	DeleteGalerieDirPayload:{
 		clientMutationId:"String",
@@ -14433,6 +16133,22 @@ export const ReturnTypes: Record<string,any> = {
 		galerieDirByGfIdRodic:"GalerieDir",
 		userByGfKdo:"User",
 		galerieFotoEdge:"GalerieFotosEdge"
+	},
+	DeleteLocationPayload:{
+		clientMutationId:"String",
+		location:"Location",
+		deletedLocationNodeId:"ID",
+		query:"Query",
+		locationEdge:"LocationsEdge"
+	},
+	DeleteLocationAttachmentPayload:{
+		clientMutationId:"String",
+		locationAttachment:"LocationAttachment",
+		deletedLocationAttachmentNodeId:"ID",
+		query:"Query",
+		location:"Location",
+		attachmentByObjectName:"Attachment",
+		locationAttachmentEdge:"LocationAttachmentsEdge"
 	},
 	DeleteNabidkaPayload:{
 		clientMutationId:"String",
@@ -14464,6 +16180,7 @@ export const ReturnTypes: Record<string,any> = {
 		deletedParyNodeId:"ID",
 		query:"Query",
 		userByPIdPartner:"User",
+		userByPIdPartnerka:"User",
 		paryEdge:"PariesEdge"
 	},
 	DeleteParyNavrhPayload:{
@@ -14482,6 +16199,13 @@ export const ReturnTypes: Record<string,any> = {
 		deletedPermissionNodeId:"ID",
 		query:"Query",
 		permissionEdge:"PermissionsEdge"
+	},
+	DeletePersonPayload:{
+		clientMutationId:"String",
+		person:"Person",
+		deletedPersonNodeId:"ID",
+		query:"Query",
+		personEdge:"PeopleEdge"
 	},
 	DeletePlatbyCategoryPayload:{
 		clientMutationId:"String",
@@ -14532,6 +16256,23 @@ export const ReturnTypes: Record<string,any> = {
 		query:"Query",
 		platbyRawEdge:"PlatbyRawsEdge"
 	},
+	DeleteRoomPayload:{
+		clientMutationId:"String",
+		room:"Room",
+		deletedRoomNodeId:"ID",
+		query:"Query",
+		locationByLocation:"Location",
+		roomEdge:"RoomsEdge"
+	},
+	DeleteRoomAttachmentPayload:{
+		clientMutationId:"String",
+		roomAttachment:"RoomAttachment",
+		deletedRoomAttachmentNodeId:"ID",
+		query:"Query",
+		room:"Room",
+		attachmentByObjectName:"Attachment",
+		roomAttachmentEdge:"RoomAttachmentsEdge"
+	},
 	DeleteRozpiPayload:{
 		clientMutationId:"String",
 		rozpi:"Rozpi",
@@ -14549,20 +16290,47 @@ export const ReturnTypes: Record<string,any> = {
 		paryByRiPartner:"Pary",
 		rozpisItemEdge:"RozpisItemsEdge"
 	},
-	DeleteSessionPayload:{
-		clientMutationId:"String",
-		session:"Session",
-		deletedSessionNodeId:"ID",
-		query:"Query",
-		userBySsUser:"User",
-		sessionEdge:"SessionsEdge"
-	},
 	DeleteSkupinyPayload:{
 		clientMutationId:"String",
 		skupiny:"Skupiny",
 		deletedSkupinyNodeId:"ID",
 		query:"Query",
+		cohortGroupByCohortGroup:"CohortGroup",
 		skupinyEdge:"SkupiniesEdge"
+	},
+	DeleteTenantPayload:{
+		clientMutationId:"String",
+		tenant:"Tenant",
+		deletedTenantNodeId:"ID",
+		query:"Query",
+		tenantEdge:"TenantsEdge"
+	},
+	DeleteTenantAttachmentPayload:{
+		clientMutationId:"String",
+		tenantAttachment:"TenantAttachment",
+		deletedTenantAttachmentNodeId:"ID",
+		query:"Query",
+		tenant:"Tenant",
+		attachmentByObjectName:"Attachment",
+		tenantAttachmentEdge:"TenantAttachmentsEdge"
+	},
+	DeleteTenantLocationPayload:{
+		clientMutationId:"String",
+		tenantLocation:"TenantLocation",
+		deletedTenantLocationNodeId:"ID",
+		query:"Query",
+		tenant:"Tenant",
+		location:"Location",
+		tenantLocationEdge:"TenantLocationsEdge"
+	},
+	DeleteTenantPersonPayload:{
+		clientMutationId:"String",
+		tenantPerson:"TenantPerson",
+		deletedTenantPersonNodeId:"ID",
+		query:"Query",
+		tenant:"Tenant",
+		person:"Person",
+		tenantPersonEdge:"TenantPeopleEdge"
 	},
 	DeleteUpozorneniPayload:{
 		clientMutationId:"String",
@@ -14590,33 +16358,45 @@ export const ReturnTypes: Record<string,any> = {
 		skupinyByUSkupina:"Skupiny",
 		userEdge:"UsersEdge"
 	},
-	DeleteUsersSkupinyPayload:{
+	BookLessonPayload:{
 		clientMutationId:"String",
-		usersSkupiny:"UsersSkupiny",
-		deletedUsersSkupinyNodeId:"ID",
-		query:"Query",
-		usersSkupinyEdge:"UsersSkupiniesEdge"
+		rozpisItems:"RozpisItem",
+		query:"Query"
 	},
-	DeleteVideoPayload:{
+	CancelLessonPayload:{
 		clientMutationId:"String",
-		video:"Video",
-		deletedVideoNodeId:"ID",
-		query:"Query",
-		videoEdge:"VideosEdge"
+		rozpisItems:"RozpisItem",
+		query:"Query"
 	},
-	DeleteVideoListPayload:{
+	CancelParticipationPayload:{
 		clientMutationId:"String",
-		videoList:"VideoList",
-		deletedVideoListNodeId:"ID",
-		query:"Query",
-		videoListEdge:"VideoListsEdge"
+		query:"Query"
 	},
-	DeleteVideoSourcePayload:{
+	ChangePasswordPayload:{
 		clientMutationId:"String",
-		videoSource:"VideoSource",
-		deletedVideoSourceNodeId:"ID",
-		query:"Query",
-		videoSourceEdge:"VideoSourcesEdge"
+		query:"Query"
+	},
+	ConfirmUserPayload:{
+		clientMutationId:"String",
+		query:"Query"
+	},
+	CreateCouplePayload:{
+		clientMutationId:"String",
+		paries:"Pary",
+		query:"Query"
+	},
+	CreateParticipationPayload:{
+		clientMutationId:"String",
+		query:"Query"
+	},
+	CreateParticipationExternalPayload:{
+		clientMutationId:"String",
+		query:"Query"
+	},
+	FixUnpairedCouplesPayload:{
+		clientMutationId:"String",
+		paries:"Pary",
+		query:"Query"
 	},
 	LoginPayload:{
 		clientMutationId:"String",
@@ -14636,7 +16416,27 @@ export const ReturnTypes: Record<string,any> = {
 		clientMutationId:"String",
 		query:"Query"
 	},
-	Upload:{
-		uploadUrl:"String"
+	ReservationSetDesiredLessonsPayload:{
+		clientMutationId:"String",
+		reservation:"Nabidka",
+		query:"Query",
+		userByNTrener:"User",
+		nabidkaEdge:"NabidkasEdge"
+	},
+	ResetPasswordPayload:{
+		clientMutationId:"String",
+		query:"Query"
+	},
+	SubmitFormPayload:{
+		clientMutationId:"String",
+		query:"Query"
+	},
+	VerifyFunctionPayload:{
+		clientMutationId:"String",
+		query:"Query"
+	},
+	UploadFilePayload:{
+		uploadUrl:"String",
+		objectName:"String"
 	}
 }

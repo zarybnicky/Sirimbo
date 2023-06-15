@@ -1,5 +1,4 @@
 import * as React from 'react';
-import type { CellPlugin } from '@react-page/editor';
 import { Card, CardContent, CardActions, Grid, Button, Typography } from '@material-ui/core';
 import { Checkboxes, TextField } from 'mui-rff';
 import { Alert } from '@material-ui/lab';
@@ -9,15 +8,14 @@ import { $, CrmCohort, Selector } from '../zeus';
 import { useSnackbar } from 'notistack';
 
 export const SubmitProspectForm = Selector('Mutation')({
-  prospectFormDancer: [{
+  submitForm: [{
     input: {
-      cohort: CrmCohort.FREE_LESSON,
-      prospectData: $`prospectData`,
-      origin: $`origin`,
-      note: '',
-    }
+      data: $`prospectData`,
+      type: 'Přijď tančit!',
+      url: $`origin`
+    },
   }, {
-    clientMutationId: true,
+    clientMutationId: true
   }],
 });
 
@@ -79,27 +77,4 @@ export const ProspectForm = ({ title }: ProspectFormProps) => {
       </Card>
     </>} />
   );
-};
-
-export const ProspectFormPlugin: CellPlugin<ProspectFormProps> = {
-  Renderer: ({ data }) => <ProspectForm {...data} />,
-
-  id: 'app-prospect-form',
-  title: 'Prospect Form',
-  description: undefined,
-  version: 2,
-
-  createInitialData: () => ({
-    title: 'Chci úvodní hodinu ZDARMA!',
-  }),
-  controls: {
-    type: 'autoform',
-    schema: {
-      properties: {
-        title: {
-          type: 'string',
-        },
-      },
-    },
-  },
 };

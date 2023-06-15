@@ -10,7 +10,7 @@ import { Dropdown } from './dropdown';
 
 const GalleryDirList = Selector('Query')({
   galerieDirs: [
-    { first: $`limit`, offset: $`offset`, orderBy: [GalerieDirsOrderBy.GD_NAME_ASC] },
+    { first: $`limit`, offset: $`offset`, orderBy: [GalerieDirsOrderBy.GD_ID_ASC] },
     {
       nodes: {
         gdHidden: true,
@@ -64,7 +64,7 @@ function flatten<T>(root: Treeified<T>): T[] {
 }
 
 export function GalleryDirectoryList() {
-  const [limit, setLimit] = useState(30);
+  const [limit] = useState(30);
   const [offset, setOffset] = useState(0);
   const [total, setTotal] = useState(0);
   const { data, refetch } = useTypedQuery(GalleryDirList, {

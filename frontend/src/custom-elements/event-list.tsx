@@ -6,29 +6,29 @@ import Form from 'react-bootstrap/Form';
 import { Pagination } from './pagination';
 import { DateRange } from './date';
 import { Dropdown } from './dropdown';
-import { $, AkcesOrderBy, Selector } from '../zeus';
+import { $, EventsOrderBy, Selector } from '../zeus';
 import { useTypedQuery, useTypedMutation } from '../zeus/apollo';
 
 export const AkceList = Selector('Query')({
-  akces: [
-    { first: $`limit`, offset: $`offset`, orderBy: [AkcesOrderBy.A_OD_DESC] },
+  events: [
+    { first: $`limit`, offset: $`offset`, orderBy: [EventsOrderBy.SINCE_ASC] },
     {
       nodes: {
-        aDo: true,
-        aId: true,
-        aInfo: true,
-        aDokumenty: true,
-        aJmeno: true,
-        aKapacita: true,
-        aKde: true,
-        aLock: true,
-        aOd: true,
-        aTimestamp: true,
-        aVisible: true,
-        akceItemsByAiIdRodic: [{}, {
+        id: true,
+        since: true,
+        until: true,
+        description: true,
+        title: true,
+        filesLegacy: true,
+        capacity: true,
+        locationText: true,
+        updatedAt: true,
+        isLocked: true,
+        isVisible: true,
+        attendeeUsers: [{}, {
           nodes: {
-            aiId: true,
-            userByAiUser: {
+            id: true,
+            user: {
               uJmeno: true,
               uPrijmeni: true,
               uId: true,
@@ -43,24 +43,24 @@ export const AkceList = Selector('Query')({
 });
 
 export const ToggleVisible = Selector('Mutation')({
-  updateAkce: [
-    { input: { aId: $`id`, patch: { aVisible: $`visible` } } },
+  updateEvent: [
+    { input: { id: $`id`, patch: { isVisible: $`visible` } } },
     {
-      akce: {
-        aId: true,
+      event: {
+        id: true,
       },
     },
   ],
 });
 
 export function EventList() {
-  const [limit, setLimit] = useState(30);
+  const [limit] = useState(30);
   const [offset, setOffset] = useState(0);
   const [total, setTotal] = useState(0);
   const { data, refetch } = useTypedQuery(AkceList, {
     variables: { limit, offset },
     onCompleted: (data) => {
-      const total = data.akces?.totalCount;
+      const total = data.events?.totalCount;
       total && setTotal(total);
     },
   });
@@ -69,7 +69,7 @@ export function EventList() {
     onCompleted: () => refetch(),
   });
 
-  const list = !data?.akces?.nodes.length ? null : <table>
+  const list = !data?.events?.nodes.length ? null : <table>
     <thead>
       <tr>
         <th>Jméno</th>
@@ -79,21 +79,21 @@ export function EventList() {
       </tr>
     </thead>
     <tbody>
-      {data!.akces.nodes.map((a) => <tr key={a.aId}>
+      {data!.events.nodes.map((a) => <tr key={a.id}>
         <td>
           <Dropdown links={{
-            [`/admin/akce/edit/${a.aId}`]: "Upravit",
-            [`/admin/akce/detail/${a.aId}`]: "Upravit účastníky",
-            [`/admin/akce/dokumenty/${a.aId}`]: "Upravit dokumenty",
-            [`/admin/akce/remove/${a.aId}`]: "Odstranit",
+            [`/admin/akce/edit/${a.id}`]: "Upravit",
+            [`/admin/akce/detail/${a.id}`]: "Upravit účastníky",
+            [`/admin/akce/dokumenty/${a.id}`]: "Upravit dokumenty",
+            [`/admin/akce/remove/${a.id}`]: "Odstranit",
           }} />
-          {a.aJmeno}
+          {a.title}
         </td>
-        <td><DateRange from={a.aOd} to={a.aDo} /></td>
-        <td>{a.akceItemsByAiIdRodic.totalCount || 0}/{a.aKapacita}</td>
+        <td><DateRange from={a.since} to={a.until} /></td>
+        <td>{a.attendeeUsers.totalCount || 0}/{a.capacity}</td>
         <td>
-          <Form.Check checked={a.aVisible} onChange={() => toggleVisible({
-            variables: { id: a.aId, visible: !a.aVisible },
+          <Form.Check checked={a.isVisible} onChange={() => toggleVisible({
+            variables: { id: a.id, visible: !a.isVisible },
           })} />
         </td>
       </tr>)}

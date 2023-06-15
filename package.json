@@ -13,5 +13,6 @@
     "backend": "yarn workspace sirimbo-backend start",
     "migrate": "graphile-migrate watch",
     "start": "concurrently --kill-others-on-fail 'yarn frontend' 'yarn backend' 'yarn migrate'"
-  }
+  },
+  "dependencies": {}
 }

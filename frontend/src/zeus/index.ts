@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import { AllTypesProps, ReturnTypes } from './const';
-type ZEUS_INTERFACES = GraphQLTypes["Node"]
+type ZEUS_INTERFACES = never
 type ZEUS_UNIONS = never
 
 export type ValueTypes = {
@@ -10,10 +10,6 @@ export type ValueTypes = {
 	/** Exposes the root query type nested one level down. This is helpful for Relay 1
 which can only query top level fields if they are in a particular form. */
 	query?:ValueTypes["Query"],
-	/** The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`. */
-	nodeId?:boolean,
-node?: [{	/** The globally unique `ID`. */
-	nodeId:string},ValueTypes["Node"]],
 akces?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -21,8 +17,7 @@ based pagination. May not be used with `last`. */
 	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
 	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Akce`. */
-	orderBy?:ValueTypes["AkcesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
-	condition?:ValueTypes["AkceCondition"] | null},ValueTypes["AkcesConnection"]],
+	orderBy?:ValueTypes["AkcesOrderBy"][]},ValueTypes["AkcesConnection"]],
 akceItems?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -30,8 +25,7 @@ based pagination. May not be used with `last`. */
 	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
 	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `AkceItem`. */
-	orderBy?:ValueTypes["AkceItemsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
-	condition?:ValueTypes["AkceItemCondition"] | null},ValueTypes["AkceItemsConnection"]],
+	orderBy?:ValueTypes["AkceItemsOrderBy"][]},ValueTypes["AkceItemsConnection"]],
 aktualities?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -41,6 +35,42 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Aktuality`. */
 	orderBy?:ValueTypes["AktualitiesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["AktualityCondition"] | null},ValueTypes["AktualitiesConnection"]],
+attachments?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Attachment`. */
+	orderBy?:ValueTypes["AttachmentsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["AttachmentCondition"] | null},ValueTypes["AttachmentsConnection"]],
+attendeeExternals?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `AttendeeExternal`. */
+	orderBy?:ValueTypes["AttendeeExternalsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["AttendeeExternalCondition"] | null},ValueTypes["AttendeeExternalsConnection"]],
+attendeeUsers?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `AttendeeUser`. */
+	orderBy?:ValueTypes["AttendeeUsersOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["AttendeeUserCondition"] | null},ValueTypes["AttendeeUsersConnection"]],
+cohortGroups?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `CohortGroup`. */
+	orderBy?:ValueTypes["CohortGroupsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["CohortGroupCondition"] | null},ValueTypes["CohortGroupsConnection"]],
 dokumenties?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -50,6 +80,24 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Dokumenty`. */
 	orderBy?:ValueTypes["DokumentiesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["DokumentyCondition"] | null},ValueTypes["DokumentiesConnection"]],
+events?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Event`. */
+	orderBy?:ValueTypes["EventsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["EventCondition"] | null},ValueTypes["EventsConnection"]],
+formResponses?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `FormResponse`. */
+	orderBy?:ValueTypes["FormResponsesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["FormResponseCondition"] | null},ValueTypes["FormResponsesConnection"]],
 galerieDirs?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -68,15 +116,24 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `GalerieFoto`. */
 	orderBy?:ValueTypes["GalerieFotosOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["GalerieFotoCondition"] | null},ValueTypes["GalerieFotosConnection"]],
-members?: [{	/** Only read the first `n` values of the set. */
+locations?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
 	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
 	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
-	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Member`. */
-	orderBy?:ValueTypes["MembersOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
-	condition?:ValueTypes["MemberCondition"] | null},ValueTypes["MembersConnection"]],
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Location`. */
+	orderBy?:ValueTypes["LocationsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["LocationCondition"] | null},ValueTypes["LocationsConnection"]],
+locationAttachments?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `LocationAttachment`. */
+	orderBy?:ValueTypes["LocationAttachmentsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["LocationAttachmentCondition"] | null},ValueTypes["LocationAttachmentsConnection"]],
 nabidkas?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -149,6 +206,15 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Permission`. */
 	orderBy?:ValueTypes["PermissionsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["PermissionCondition"] | null},ValueTypes["PermissionsConnection"]],
+people?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Person`. */
+	orderBy?:ValueTypes["PeopleOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["PersonCondition"] | null},ValueTypes["PeopleConnection"]],
 platbyCategories?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -203,6 +269,24 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `PlatbyRaw`. */
 	orderBy?:ValueTypes["PlatbyRawsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["PlatbyRawCondition"] | null},ValueTypes["PlatbyRawsConnection"]],
+rooms?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Room`. */
+	orderBy?:ValueTypes["RoomsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["RoomCondition"] | null},ValueTypes["RoomsConnection"]],
+roomAttachments?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `RoomAttachment`. */
+	orderBy?:ValueTypes["RoomAttachmentsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["RoomAttachmentCondition"] | null},ValueTypes["RoomAttachmentsConnection"]],
 rozpis?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -239,6 +323,42 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Skupiny`. */
 	orderBy?:ValueTypes["SkupiniesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["SkupinyCondition"] | null},ValueTypes["SkupiniesConnection"]],
+tenants?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Tenant`. */
+	orderBy?:ValueTypes["TenantsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["TenantCondition"] | null},ValueTypes["TenantsConnection"]],
+tenantAttachments?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `TenantAttachment`. */
+	orderBy?:ValueTypes["TenantAttachmentsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["TenantAttachmentCondition"] | null},ValueTypes["TenantAttachmentsConnection"]],
+tenantLocations?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `TenantLocation`. */
+	orderBy?:ValueTypes["TenantLocationsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["TenantLocationCondition"] | null},ValueTypes["TenantLocationsConnection"]],
+tenantPeople?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `TenantPerson`. */
+	orderBy?:ValueTypes["TenantPeopleOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["TenantPersonCondition"] | null},ValueTypes["TenantPeopleConnection"]],
 upozornenis?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -266,50 +386,22 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `User`. */
 	orderBy?:ValueTypes["UsersOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["UserCondition"] | null},ValueTypes["UsersConnection"]],
-usersSkupinies?: [{	/** Only read the first `n` values of the set. */
-	first?:number | null,	/** Only read the last `n` values of the set. */
-	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
-based pagination. May not be used with `last`. */
-	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
-	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
-	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `UsersSkupiny`. */
-	orderBy?:ValueTypes["UsersSkupiniesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
-	condition?:ValueTypes["UsersSkupinyCondition"] | null},ValueTypes["UsersSkupiniesConnection"]],
-videos?: [{	/** Only read the first `n` values of the set. */
-	first?:number | null,	/** Only read the last `n` values of the set. */
-	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
-based pagination. May not be used with `last`. */
-	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
-	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
-	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Video`. */
-	orderBy?:ValueTypes["VideosOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
-	condition?:ValueTypes["VideoCondition"] | null},ValueTypes["VideosConnection"]],
-videoLists?: [{	/** Only read the first `n` values of the set. */
-	first?:number | null,	/** Only read the last `n` values of the set. */
-	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
-based pagination. May not be used with `last`. */
-	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
-	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
-	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `VideoList`. */
-	orderBy?:ValueTypes["VideoListsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
-	condition?:ValueTypes["VideoListCondition"] | null},ValueTypes["VideoListsConnection"]],
-videoSources?: [{	/** Only read the first `n` values of the set. */
-	first?:number | null,	/** Only read the last `n` values of the set. */
-	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
-based pagination. May not be used with `last`. */
-	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
-	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
-	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `VideoSource`. */
-	orderBy?:ValueTypes["VideoSourcesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
-	condition?:ValueTypes["VideoSourceCondition"] | null},ValueTypes["VideoSourcesConnection"]],
-akce?: [{	aId:ValueTypes["BigInt"]},ValueTypes["Akce"]],
-akceItem?: [{	aiId:ValueTypes["BigInt"]},ValueTypes["AkceItem"]],
 aktuality?: [{	atId:ValueTypes["BigInt"]},ValueTypes["Aktuality"]],
+attachment?: [{	objectName:string},ValueTypes["Attachment"]],
+attendeeExternal?: [{	id:ValueTypes["BigInt"]},ValueTypes["AttendeeExternal"]],
+attendeeUser?: [{	id:ValueTypes["BigInt"]},ValueTypes["AttendeeUser"]],
+attendeeUserByUserIdAndEventId?: [{	userId:ValueTypes["BigInt"],	eventId:ValueTypes["BigInt"]},ValueTypes["AttendeeUser"]],
+cohortGroup?: [{	id:ValueTypes["BigInt"]},ValueTypes["CohortGroup"]],
 dokumenty?: [{	dId:ValueTypes["BigInt"]},ValueTypes["Dokumenty"]],
+event?: [{	id:ValueTypes["BigInt"]},ValueTypes["Event"]],
+formResponse?: [{	id:ValueTypes["BigInt"]},ValueTypes["FormResponse"]],
 galerieDir?: [{	gdId:ValueTypes["BigInt"]},ValueTypes["GalerieDir"]],
 galerieFoto?: [{	gfId:ValueTypes["BigInt"]},ValueTypes["GalerieFoto"]],
+location?: [{	id:ValueTypes["BigInt"]},ValueTypes["Location"]],
+locationAttachment?: [{	locationId:ValueTypes["BigInt"],	objectName:string},ValueTypes["LocationAttachment"]],
 nabidka?: [{	nId:ValueTypes["BigInt"]},ValueTypes["Nabidka"]],
 nabidkaItem?: [{	niId:ValueTypes["BigInt"]},ValueTypes["NabidkaItem"]],
+nabidkaItemByNiPartnerAndNiIdRodic?: [{	niPartner:ValueTypes["BigInt"],	niIdRodic:ValueTypes["BigInt"]},ValueTypes["NabidkaItem"]],
 page?: [{	id:number},ValueTypes["Page"]],
 pageByUrl?: [{	url:string},ValueTypes["Page"]],
 pageRevision?: [{	revNumber:number,	id:number},ValueTypes["PageRevision"]],
@@ -317,37 +409,33 @@ parameter?: [{	paName:string},ValueTypes["Parameter"]],
 pary?: [{	pId:ValueTypes["BigInt"]},ValueTypes["Pary"]],
 paryNavrh?: [{	pnId:ValueTypes["BigInt"]},ValueTypes["ParyNavrh"]],
 permission?: [{	peId:ValueTypes["BigInt"]},ValueTypes["Permission"]],
+person?: [{	id:ValueTypes["BigInt"]},ValueTypes["Person"]],
 platbyCategory?: [{	pcId:ValueTypes["BigInt"]},ValueTypes["PlatbyCategory"]],
 platbyCategoryGroup?: [{	pcgId:ValueTypes["BigInt"]},ValueTypes["PlatbyCategoryGroup"]],
 platbyGroup?: [{	pgId:ValueTypes["BigInt"]},ValueTypes["PlatbyGroup"]],
 platbyGroupSkupina?: [{	pgsId:ValueTypes["BigInt"]},ValueTypes["PlatbyGroupSkupina"]],
 platbyItem?: [{	piId:ValueTypes["BigInt"]},ValueTypes["PlatbyItem"]],
 platbyRaw?: [{	prId:ValueTypes["BigInt"]},ValueTypes["PlatbyRaw"]],
+room?: [{	id:ValueTypes["BigInt"]},ValueTypes["Room"]],
+roomAttachment?: [{	roomId:ValueTypes["BigInt"],	objectName:string},ValueTypes["RoomAttachment"]],
 rozpi?: [{	rId:ValueTypes["BigInt"]},ValueTypes["Rozpi"]],
 rozpisItem?: [{	riId:ValueTypes["BigInt"]},ValueTypes["RozpisItem"]],
 session?: [{	ssId:string},ValueTypes["Session"]],
 skupiny?: [{	sId:ValueTypes["BigInt"]},ValueTypes["Skupiny"]],
+tenant?: [{	id:ValueTypes["BigInt"]},ValueTypes["Tenant"]],
+tenantAttachment?: [{	tenantId:ValueTypes["BigInt"],	objectName:string},ValueTypes["TenantAttachment"]],
+tenantLocation?: [{	tenantId:ValueTypes["BigInt"],	locationId:ValueTypes["BigInt"]},ValueTypes["TenantLocation"]],
+tenantPerson?: [{	tenantId:ValueTypes["BigInt"],	personId:ValueTypes["BigInt"]},ValueTypes["TenantPerson"]],
 upozorneni?: [{	upId:ValueTypes["BigInt"]},ValueTypes["Upozorneni"]],
 upozorneniSkupiny?: [{	upsId:ValueTypes["BigInt"]},ValueTypes["UpozorneniSkupiny"]],
 user?: [{	uId:ValueTypes["BigInt"]},ValueTypes["User"]],
-usersSkupiny?: [{	usId:ValueTypes["BigInt"]},ValueTypes["UsersSkupiny"]],
-video?: [{	vId:ValueTypes["BigInt"]},ValueTypes["Video"]],
-videoList?: [{	vlId:ValueTypes["BigInt"]},ValueTypes["VideoList"]],
-videoSource?: [{	vsId:ValueTypes["BigInt"]},ValueTypes["VideoSource"]],
-activeProspects?: [{	/** Only read the first `n` values of the set. */
+activeCouples?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
 based pagination. May not be used with `last`. */
 	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
 	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
-	after?:ValueTypes["Cursor"] | null},ValueTypes["ActiveProspectsConnection"]],
-cohortMembers?: [{	id?:number | null,	/** Only read the first `n` values of the set. */
-	first?:number | null,	/** Only read the last `n` values of the set. */
-	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
-based pagination. May not be used with `last`. */
-	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
-	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
-	after?:ValueTypes["Cursor"] | null},ValueTypes["MembersConnection"]],
+	after?:ValueTypes["Cursor"] | null},ValueTypes["PariesConnection"]],
 currentCoupleIds?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -355,9 +443,33 @@ based pagination. May not be used with `last`. */
 	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
 	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
 	after?:ValueTypes["Cursor"] | null},ValueTypes["CurrentCoupleIdsConnection"]],
+currentPermissions?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null},ValueTypes["PermissionsConnection"]],
 	currentSessionId?:boolean,
+	currentTenantId?:boolean,
 	currentUserId?:boolean,
+	getCurrentCouple?:ValueTypes["Pary"],
+	getCurrentTenant?:ValueTypes["Tenant"],
 	getCurrentUser?:ValueTypes["User"],
+myAnnouncements?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null},ValueTypes["UpozornenisConnection"]],
+myLessons?: [{	startDate?:ValueTypes["Date"] | null,	endDate?:ValueTypes["Date"] | null,	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null},ValueTypes["RozpisItemsConnection"]],
 reservationsForRange?: [{	startDate?:ValueTypes["Date"] | null,	endDate?:ValueTypes["Date"] | null,	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -379,106 +491,13 @@ based pagination. May not be used with `last`. */
 	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
 	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
 	after?:ValueTypes["Cursor"] | null},ValueTypes["VideosConnection"]],
-akceByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Akce`. */
-	nodeId:string},ValueTypes["Akce"]],
-akceItemByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `AkceItem`. */
-	nodeId:string},ValueTypes["AkceItem"]],
-aktualityByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Aktuality`. */
-	nodeId:string},ValueTypes["Aktuality"]],
-dokumentyByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Dokumenty`. */
-	nodeId:string},ValueTypes["Dokumenty"]],
-galerieDirByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `GalerieDir`. */
-	nodeId:string},ValueTypes["GalerieDir"]],
-galerieFotoByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `GalerieFoto`. */
-	nodeId:string},ValueTypes["GalerieFoto"]],
-nabidkaByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Nabidka`. */
-	nodeId:string},ValueTypes["Nabidka"]],
-nabidkaItemByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `NabidkaItem`. */
-	nodeId:string},ValueTypes["NabidkaItem"]],
-pageByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Page`. */
-	nodeId:string},ValueTypes["Page"]],
-pageRevisionByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `PageRevision`. */
-	nodeId:string},ValueTypes["PageRevision"]],
-parameterByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Parameter`. */
-	nodeId:string},ValueTypes["Parameter"]],
-paryByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Pary`. */
-	nodeId:string},ValueTypes["Pary"]],
-paryNavrhByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `ParyNavrh`. */
-	nodeId:string},ValueTypes["ParyNavrh"]],
-permissionByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Permission`. */
-	nodeId:string},ValueTypes["Permission"]],
-platbyCategoryByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `PlatbyCategory`. */
-	nodeId:string},ValueTypes["PlatbyCategory"]],
-platbyCategoryGroupByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `PlatbyCategoryGroup`. */
-	nodeId:string},ValueTypes["PlatbyCategoryGroup"]],
-platbyGroupByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `PlatbyGroup`. */
-	nodeId:string},ValueTypes["PlatbyGroup"]],
-platbyGroupSkupinaByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `PlatbyGroupSkupina`. */
-	nodeId:string},ValueTypes["PlatbyGroupSkupina"]],
-platbyItemByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `PlatbyItem`. */
-	nodeId:string},ValueTypes["PlatbyItem"]],
-platbyRawByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `PlatbyRaw`. */
-	nodeId:string},ValueTypes["PlatbyRaw"]],
-rozpiByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Rozpi`. */
-	nodeId:string},ValueTypes["Rozpi"]],
-rozpisItemByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `RozpisItem`. */
-	nodeId:string},ValueTypes["RozpisItem"]],
-sessionByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Session`. */
-	nodeId:string},ValueTypes["Session"]],
-skupinyByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Skupiny`. */
-	nodeId:string},ValueTypes["Skupiny"]],
-upozorneniByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Upozorneni`. */
-	nodeId:string},ValueTypes["Upozorneni"]],
-upozorneniSkupinyByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `UpozorneniSkupiny`. */
-	nodeId:string},ValueTypes["UpozorneniSkupiny"]],
-userByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `User`. */
-	nodeId:string},ValueTypes["User"]],
-usersSkupinyByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `UsersSkupiny`. */
-	nodeId:string},ValueTypes["UsersSkupiny"]],
-videoByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `Video`. */
-	nodeId:string},ValueTypes["Video"]],
-videoListByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `VideoList`. */
-	nodeId:string},ValueTypes["VideoList"]],
-videoSourceByNodeId?: [{	/** The globally unique `ID` to be used in selecting a single `VideoSource`. */
-	nodeId:string},ValueTypes["VideoSource"]],
-		__typename?: boolean
-}>;
-	/** An object with a globally unique `ID`. */
-["Node"]:AliasType<{
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean;
-		['...on Query']?: Omit<ValueTypes["Query"],keyof ValueTypes["Node"]>;
-		['...on Akce']?: Omit<ValueTypes["Akce"],keyof ValueTypes["Node"]>;
-		['...on AkceItem']?: Omit<ValueTypes["AkceItem"],keyof ValueTypes["Node"]>;
-		['...on User']?: Omit<ValueTypes["User"],keyof ValueTypes["Node"]>;
-		['...on Permission']?: Omit<ValueTypes["Permission"],keyof ValueTypes["Node"]>;
-		['...on Skupiny']?: Omit<ValueTypes["Skupiny"],keyof ValueTypes["Node"]>;
-		['...on PlatbyGroupSkupina']?: Omit<ValueTypes["PlatbyGroupSkupina"],keyof ValueTypes["Node"]>;
-		['...on PlatbyGroup']?: Omit<ValueTypes["PlatbyGroup"],keyof ValueTypes["Node"]>;
-		['...on PlatbyCategoryGroup']?: Omit<ValueTypes["PlatbyCategoryGroup"],keyof ValueTypes["Node"]>;
-		['...on PlatbyCategory']?: Omit<ValueTypes["PlatbyCategory"],keyof ValueTypes["Node"]>;
-		['...on PlatbyItem']?: Omit<ValueTypes["PlatbyItem"],keyof ValueTypes["Node"]>;
-		['...on PlatbyRaw']?: Omit<ValueTypes["PlatbyRaw"],keyof ValueTypes["Node"]>;
-		['...on UpozorneniSkupiny']?: Omit<ValueTypes["UpozorneniSkupiny"],keyof ValueTypes["Node"]>;
-		['...on Upozorneni']?: Omit<ValueTypes["Upozorneni"],keyof ValueTypes["Node"]>;
-		['...on Aktuality']?: Omit<ValueTypes["Aktuality"],keyof ValueTypes["Node"]>;
-		['...on GalerieFoto']?: Omit<ValueTypes["GalerieFoto"],keyof ValueTypes["Node"]>;
-		['...on GalerieDir']?: Omit<ValueTypes["GalerieDir"],keyof ValueTypes["Node"]>;
-		['...on Nabidka']?: Omit<ValueTypes["Nabidka"],keyof ValueTypes["Node"]>;
-		['...on NabidkaItem']?: Omit<ValueTypes["NabidkaItem"],keyof ValueTypes["Node"]>;
-		['...on Pary']?: Omit<ValueTypes["Pary"],keyof ValueTypes["Node"]>;
-		['...on RozpisItem']?: Omit<ValueTypes["RozpisItem"],keyof ValueTypes["Node"]>;
-		['...on Rozpi']?: Omit<ValueTypes["Rozpi"],keyof ValueTypes["Node"]>;
-		['...on Session']?: Omit<ValueTypes["Session"],keyof ValueTypes["Node"]>;
-		['...on Dokumenty']?: Omit<ValueTypes["Dokumenty"],keyof ValueTypes["Node"]>;
-		['...on ParyNavrh']?: Omit<ValueTypes["ParyNavrh"],keyof ValueTypes["Node"]>;
-		['...on Page']?: Omit<ValueTypes["Page"],keyof ValueTypes["Node"]>;
-		['...on PageRevision']?: Omit<ValueTypes["PageRevision"],keyof ValueTypes["Node"]>;
-		['...on Parameter']?: Omit<ValueTypes["Parameter"],keyof ValueTypes["Node"]>;
-		['...on UsersSkupiny']?: Omit<ValueTypes["UsersSkupiny"],keyof ValueTypes["Node"]>;
-		['...on Video']?: Omit<ValueTypes["Video"],keyof ValueTypes["Node"]>;
-		['...on VideoList']?: Omit<ValueTypes["VideoList"],keyof ValueTypes["Node"]>;
-		['...on VideoSource']?: Omit<ValueTypes["VideoSource"],keyof ValueTypes["Node"]>;
+trainers?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null},ValueTypes["UsersConnection"]],
 		__typename?: boolean
 }>;
 	/** A connection to a list of `Akce` values. */
@@ -494,8 +513,6 @@ videoSourceByNodeId?: [{	/** The globally unique `ID` to be used in selecting a 
 		__typename?: boolean
 }>;
 	["Akce"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	aId?:boolean,
 	aJmeno?:boolean,
 	aKde?:boolean,
@@ -507,6 +524,9 @@ videoSourceByNodeId?: [{	/** The globally unique `ID` to be used in selecting a 
 	aTimestamp?:boolean,
 	aLock?:boolean,
 	aVisible?:boolean,
+	summary?:boolean,
+	isPublic?:boolean,
+	enableNotes?:boolean,
 akceItemsByAiIdRodic?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -514,8 +534,7 @@ based pagination. May not be used with `last`. */
 	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
 	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `AkceItem`. */
-	orderBy?:ValueTypes["AkceItemsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
-	condition?:ValueTypes["AkceItemCondition"] | null},ValueTypes["AkceItemsConnection"]],
+	orderBy?:ValueTypes["AkceItemsOrderBy"][]},ValueTypes["AkceItemsConnection"]],
 		__typename?: boolean
 }>;
 	/** A signed eight-byte integer. The upper big integer values are greater than the
@@ -540,12 +559,11 @@ strings and not numbers. */
 		__typename?: boolean
 }>;
 	["AkceItem"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	aiId?:boolean,
 	aiIdRodic?:boolean,
 	aiUser?:boolean,
 	aiRokNarozeni?:boolean,
+	notes?:boolean,
 	/** Reads a single `Akce` that is related to this `AkceItem`. */
 	akceByAiIdRodic?:ValueTypes["Akce"],
 	/** Reads a single `User` that is related to this `AkceItem`. */
@@ -553,8 +571,6 @@ strings and not numbers. */
 		__typename?: boolean
 }>;
 	["User"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	uId?:boolean,
 	uLogin?:boolean,
 	uPass?:boolean,
@@ -587,10 +603,21 @@ strings and not numbers. */
 	uCreatedAt?:boolean,
 	uTeacher?:boolean,
 	uGdprSignedAt?:boolean,
+	id?:boolean,
+	tenantId?:boolean,
 	/** Reads a single `Permission` that is related to this `User`. */
 	permissionByUGroup?:ValueTypes["Permission"],
 	/** Reads a single `Skupiny` that is related to this `User`. */
 	skupinyByUSkupina?:ValueTypes["Skupiny"],
+attendeeUsers?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `AttendeeUser`. */
+	orderBy?:ValueTypes["AttendeeUsersOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["AttendeeUserCondition"] | null},ValueTypes["AttendeeUsersConnection"]],
 aktualitiesByAtKdo?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -600,42 +627,6 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Aktuality`. */
 	orderBy?:ValueTypes["AktualitiesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["AktualityCondition"] | null},ValueTypes["AktualitiesConnection"]],
-nabidkasByNTrener?: [{	/** Only read the first `n` values of the set. */
-	first?:number | null,	/** Only read the last `n` values of the set. */
-	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
-based pagination. May not be used with `last`. */
-	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
-	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
-	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Nabidka`. */
-	orderBy?:ValueTypes["NabidkasOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
-	condition?:ValueTypes["NabidkaCondition"] | null},ValueTypes["NabidkasConnection"]],
-rozpisByRTrener?: [{	/** Only read the first `n` values of the set. */
-	first?:number | null,	/** Only read the last `n` values of the set. */
-	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
-based pagination. May not be used with `last`. */
-	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
-	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
-	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Rozpi`. */
-	orderBy?:ValueTypes["RozpisOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
-	condition?:ValueTypes["RozpiCondition"] | null},ValueTypes["RozpisConnection"]],
-sessionsBySsUser?: [{	/** Only read the first `n` values of the set. */
-	first?:number | null,	/** Only read the last `n` values of the set. */
-	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
-based pagination. May not be used with `last`. */
-	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
-	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
-	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Session`. */
-	orderBy?:ValueTypes["SessionsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
-	condition?:ValueTypes["SessionCondition"] | null},ValueTypes["SessionsConnection"]],
-akceItemsByAiUser?: [{	/** Only read the first `n` values of the set. */
-	first?:number | null,	/** Only read the last `n` values of the set. */
-	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
-based pagination. May not be used with `last`. */
-	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
-	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
-	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `AkceItem`. */
-	orderBy?:ValueTypes["AkceItemsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
-	condition?:ValueTypes["AkceItemCondition"] | null},ValueTypes["AkceItemsConnection"]],
 dokumentiesByDKdo?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -663,6 +654,15 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `PlatbyItem`. */
 	orderBy?:ValueTypes["PlatbyItemsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["PlatbyItemCondition"] | null},ValueTypes["PlatbyItemsConnection"]],
+nabidkasByNTrener?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Nabidka`. */
+	orderBy?:ValueTypes["NabidkasOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["NabidkaCondition"] | null},ValueTypes["NabidkasConnection"]],
 pariesByPIdPartner?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -699,6 +699,24 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `ParyNavrh`. */
 	orderBy?:ValueTypes["ParyNavrhsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["ParyNavrhCondition"] | null},ValueTypes["ParyNavrhsConnection"]],
+rozpisByRTrener?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Rozpi`. */
+	orderBy?:ValueTypes["RozpisOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["RozpiCondition"] | null},ValueTypes["RozpisConnection"]],
+sessionsBySsUser?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Session`. */
+	orderBy?:ValueTypes["SessionsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["SessionCondition"] | null},ValueTypes["SessionsConnection"]],
 upozornenisByUpKdo?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -708,11 +726,58 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Upozorneni`. */
 	orderBy?:ValueTypes["UpozornenisOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["UpozorneniCondition"] | null},ValueTypes["UpozornenisConnection"]],
+attachmentsByUploadedBy?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Attachment`. */
+	orderBy?:ValueTypes["AttachmentsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["AttachmentCondition"] | null},ValueTypes["AttachmentsConnection"]],
+attendeeExternalsByManagedBy?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `AttendeeExternal`. */
+	orderBy?:ValueTypes["AttendeeExternalsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["AttendeeExternalCondition"] | null},ValueTypes["AttendeeExternalsConnection"]],
+attendeeExternalsByConfirmedBy?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `AttendeeExternal`. */
+	orderBy?:ValueTypes["AttendeeExternalsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["AttendeeExternalCondition"] | null},ValueTypes["AttendeeExternalsConnection"]],
+akceItemsByAiUser?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `AkceItem`. */
+	orderBy?:ValueTypes["AkceItemsOrderBy"][]},ValueTypes["AkceItemsConnection"]],
+pariesByPIdPartnerka?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Pary`. */
+	orderBy?:ValueTypes["PariesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["ParyCondition"] | null},ValueTypes["PariesConnection"]],
+	dateOfNewestPayment?:boolean,
+	dateOfOldestPayment?:boolean,
+	fullName?:boolean,
+	hasValidPayment?:boolean,
+	inPublicCohort?:boolean,
 		__typename?: boolean
 }>;
 	["Permission"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	peId?:boolean,
 	peName?:boolean,
 	peDescription?:boolean,
@@ -733,6 +798,7 @@ based pagination. May not be used with `last`. */
 	peSkupiny?:boolean,
 	peUsers?:boolean,
 	peMain?:boolean,
+	id?:boolean,
 usersByUGroup?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -786,70 +852,26 @@ based pagination. May not be used with `last`. */
 	uId?:ValueTypes["BigInt"] | null,
 	/** Checks for equality with the object’s `uLogin` field. */
 	uLogin?:string | null,
-	/** Checks for equality with the object’s `uPass` field. */
-	uPass?:string | null,
 	/** Checks for equality with the object’s `uJmeno` field. */
 	uJmeno?:string | null,
 	/** Checks for equality with the object’s `uPrijmeni` field. */
 	uPrijmeni?:string | null,
-	/** Checks for equality with the object’s `uPohlavi` field. */
-	uPohlavi?:string | null,
-	/** Checks for equality with the object’s `uEmail` field. */
-	uEmail?:string | null,
-	/** Checks for equality with the object’s `uTelefon` field. */
-	uTelefon?:string | null,
 	/** Checks for equality with the object’s `uNarozeni` field. */
 	uNarozeni?:ValueTypes["Date"] | null,
-	/** Checks for equality with the object’s `uRodneCislo` field. */
-	uRodneCislo?:string | null,
-	/** Checks for equality with the object’s `uPoznamky` field. */
-	uPoznamky?:string | null,
-	/** Checks for equality with the object’s `uTimestamp` field. */
-	uTimestamp?:ValueTypes["Datetime"] | null,
-	/** Checks for equality with the object’s `uLevel` field. */
-	uLevel?:number | null,
 	/** Checks for equality with the object’s `uGroup` field. */
 	uGroup?:ValueTypes["BigInt"] | null,
 	/** Checks for equality with the object’s `uSkupina` field. */
 	uSkupina?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `uDancer` field. */
-	uDancer?:boolean | null,
 	/** Checks for equality with the object’s `uBan` field. */
 	uBan?:boolean | null,
-	/** Checks for equality with the object’s `uLock` field. */
-	uLock?:boolean | null,
 	/** Checks for equality with the object’s `uConfirmed` field. */
 	uConfirmed?:boolean | null,
 	/** Checks for equality with the object’s `uSystem` field. */
 	uSystem?:boolean | null,
-	/** Checks for equality with the object’s `uStreet` field. */
-	uStreet?:string | null,
-	/** Checks for equality with the object’s `uConscriptionNumber` field. */
-	uConscriptionNumber?:string | null,
-	/** Checks for equality with the object’s `uOrientationNumber` field. */
-	uOrientationNumber?:string | null,
-	/** Checks for equality with the object’s `uDistrict` field. */
-	uDistrict?:string | null,
-	/** Checks for equality with the object’s `uCity` field. */
-	uCity?:string | null,
-	/** Checks for equality with the object’s `uPostalCode` field. */
-	uPostalCode?:string | null,
-	/** Checks for equality with the object’s `uNationality` field. */
-	uNationality?:string | null,
-	/** Checks for equality with the object’s `uMemberSince` field. */
-	uMemberSince?:ValueTypes["Datetime"] | null,
-	/** Checks for equality with the object’s `uMemberUntil` field. */
-	uMemberUntil?:ValueTypes["Datetime"] | null,
-	/** Checks for equality with the object’s `uCreatedAt` field. */
-	uCreatedAt?:ValueTypes["Datetime"] | null,
-	/** Checks for equality with the object’s `uTeacher` field. */
-	uTeacher?:boolean | null,
-	/** Checks for equality with the object’s `uGdprSignedAt` field. */
-	uGdprSignedAt?:ValueTypes["Datetime"] | null
+	/** Checks for equality with the object’s `inPublicCohort` field. */
+	inPublicCohort?:boolean | null
 };
 	["Skupiny"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	sId?:boolean,
 	sName?:boolean,
 	sDescription?:boolean,
@@ -857,6 +879,13 @@ based pagination. May not be used with `last`. */
 	sColorText?:boolean,
 	sLocation?:boolean,
 	sVisible?:boolean,
+	ordering?:boolean,
+	internalInfo?:boolean,
+	cohortGroup?:boolean,
+	id?:boolean,
+	tenantId?:boolean,
+	/** Reads a single `CohortGroup` that is related to this `Skupiny`. */
+	cohortGroupByCohortGroup?:ValueTypes["CohortGroup"],
 usersByUSkupina?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -886,6 +915,469 @@ based pagination. May not be used with `last`. */
 	condition?:ValueTypes["UpozorneniSkupinyCondition"] | null},ValueTypes["UpozorneniSkupiniesConnection"]],
 		__typename?: boolean
 }>;
+	["CohortGroup"]: AliasType<{
+	id?:boolean,
+	name?:boolean,
+	description?:boolean,
+	ordering?:boolean,
+	isPublic?:boolean,
+	tenant?:boolean,
+	tenantId?:boolean,
+	/** Reads a single `Tenant` that is related to this `CohortGroup`. */
+	tenantByTenant?:ValueTypes["Tenant"],
+skupiniesByCohortGroup?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Skupiny`. */
+	orderBy?:ValueTypes["SkupiniesOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["SkupinyCondition"] | null},ValueTypes["SkupiniesConnection"]],
+		__typename?: boolean
+}>;
+	["Tenant"]: AliasType<{
+	id?:boolean,
+	name?:boolean,
+	memberInfo?:boolean,
+	origins?:boolean,
+tenantAttachments?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `TenantAttachment`. */
+	orderBy?:ValueTypes["TenantAttachmentsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["TenantAttachmentCondition"] | null},ValueTypes["TenantAttachmentsConnection"]],
+tenantPeople?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `TenantPerson`. */
+	orderBy?:ValueTypes["TenantPeopleOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["TenantPersonCondition"] | null},ValueTypes["TenantPeopleConnection"]],
+cohortGroupsByTenant?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `CohortGroup`. */
+	orderBy?:ValueTypes["CohortGroupsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["CohortGroupCondition"] | null},ValueTypes["CohortGroupsConnection"]],
+tenantLocations?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `TenantLocation`. */
+	orderBy?:ValueTypes["TenantLocationsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["TenantLocationCondition"] | null},ValueTypes["TenantLocationsConnection"]],
+		__typename?: boolean
+}>;
+	/** A connection to a list of `TenantAttachment` values. */
+["TenantAttachmentsConnection"]: AliasType<{
+	/** A list of `TenantAttachment` objects. */
+	nodes?:ValueTypes["TenantAttachment"],
+	/** A list of edges which contains the `TenantAttachment` and cursor to aid in pagination. */
+	edges?:ValueTypes["TenantAttachmentsEdge"],
+	/** Information to aid in pagination. */
+	pageInfo?:ValueTypes["PageInfo"],
+	/** The count of *all* `TenantAttachment` you could get from the connection. */
+	totalCount?:boolean,
+		__typename?: boolean
+}>;
+	["TenantAttachment"]: AliasType<{
+	tenantId?:boolean,
+	objectName?:boolean,
+	type?:boolean,
+	/** Reads a single `Tenant` that is related to this `TenantAttachment`. */
+	tenant?:ValueTypes["Tenant"],
+	/** Reads a single `Attachment` that is related to this `TenantAttachment`. */
+	attachmentByObjectName?:ValueTypes["Attachment"],
+		__typename?: boolean
+}>;
+	["TenantAttachmentType"]:TenantAttachmentType;
+	["Attachment"]: AliasType<{
+	objectName?:boolean,
+	previewObjectName?:boolean,
+	uploadedBy?:boolean,
+	uploadedAt?:boolean,
+	/** Reads a single `User` that is related to this `Attachment`. */
+	userByUploadedBy?:ValueTypes["User"],
+tenantAttachmentsByObjectName?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `TenantAttachment`. */
+	orderBy?:ValueTypes["TenantAttachmentsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["TenantAttachmentCondition"] | null},ValueTypes["TenantAttachmentsConnection"]],
+locationAttachmentsByObjectName?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `LocationAttachment`. */
+	orderBy?:ValueTypes["LocationAttachmentsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["LocationAttachmentCondition"] | null},ValueTypes["LocationAttachmentsConnection"]],
+roomAttachmentsByObjectName?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `RoomAttachment`. */
+	orderBy?:ValueTypes["RoomAttachmentsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["RoomAttachmentCondition"] | null},ValueTypes["RoomAttachmentsConnection"]],
+		__typename?: boolean
+}>;
+	/** Methods to use when ordering `TenantAttachment`. */
+["TenantAttachmentsOrderBy"]:TenantAttachmentsOrderBy;
+	/** A condition to be used against `TenantAttachment` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["TenantAttachmentCondition"]: {
+	/** Checks for equality with the object’s `tenantId` field. */
+	tenantId?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `objectName` field. */
+	objectName?:string | null
+};
+	/** A connection to a list of `LocationAttachment` values. */
+["LocationAttachmentsConnection"]: AliasType<{
+	/** A list of `LocationAttachment` objects. */
+	nodes?:ValueTypes["LocationAttachment"],
+	/** A list of edges which contains the `LocationAttachment` and cursor to aid in pagination. */
+	edges?:ValueTypes["LocationAttachmentsEdge"],
+	/** Information to aid in pagination. */
+	pageInfo?:ValueTypes["PageInfo"],
+	/** The count of *all* `LocationAttachment` you could get from the connection. */
+	totalCount?:boolean,
+		__typename?: boolean
+}>;
+	["LocationAttachment"]: AliasType<{
+	locationId?:boolean,
+	objectName?:boolean,
+	/** Reads a single `Location` that is related to this `LocationAttachment`. */
+	location?:ValueTypes["Location"],
+	/** Reads a single `Attachment` that is related to this `LocationAttachment`. */
+	attachmentByObjectName?:ValueTypes["Attachment"],
+		__typename?: boolean
+}>;
+	["Location"]: AliasType<{
+	id?:boolean,
+	name?:boolean,
+	description?:boolean,
+roomsByLocation?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `Room`. */
+	orderBy?:ValueTypes["RoomsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["RoomCondition"] | null},ValueTypes["RoomsConnection"]],
+locationAttachments?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `LocationAttachment`. */
+	orderBy?:ValueTypes["LocationAttachmentsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["LocationAttachmentCondition"] | null},ValueTypes["LocationAttachmentsConnection"]],
+tenantLocations?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `TenantLocation`. */
+	orderBy?:ValueTypes["TenantLocationsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["TenantLocationCondition"] | null},ValueTypes["TenantLocationsConnection"]],
+		__typename?: boolean
+}>;
+	/** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+["JSON"]:unknown;
+	/** A connection to a list of `Room` values. */
+["RoomsConnection"]: AliasType<{
+	/** A list of `Room` objects. */
+	nodes?:ValueTypes["Room"],
+	/** A list of edges which contains the `Room` and cursor to aid in pagination. */
+	edges?:ValueTypes["RoomsEdge"],
+	/** Information to aid in pagination. */
+	pageInfo?:ValueTypes["PageInfo"],
+	/** The count of *all* `Room` you could get from the connection. */
+	totalCount?:boolean,
+		__typename?: boolean
+}>;
+	["Room"]: AliasType<{
+	id?:boolean,
+	name?:boolean,
+	description?:boolean,
+	location?:boolean,
+	/** Reads a single `Location` that is related to this `Room`. */
+	locationByLocation?:ValueTypes["Location"],
+roomAttachments?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `RoomAttachment`. */
+	orderBy?:ValueTypes["RoomAttachmentsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["RoomAttachmentCondition"] | null},ValueTypes["RoomAttachmentsConnection"]],
+		__typename?: boolean
+}>;
+	/** A connection to a list of `RoomAttachment` values. */
+["RoomAttachmentsConnection"]: AliasType<{
+	/** A list of `RoomAttachment` objects. */
+	nodes?:ValueTypes["RoomAttachment"],
+	/** A list of edges which contains the `RoomAttachment` and cursor to aid in pagination. */
+	edges?:ValueTypes["RoomAttachmentsEdge"],
+	/** Information to aid in pagination. */
+	pageInfo?:ValueTypes["PageInfo"],
+	/** The count of *all* `RoomAttachment` you could get from the connection. */
+	totalCount?:boolean,
+		__typename?: boolean
+}>;
+	["RoomAttachment"]: AliasType<{
+	roomId?:boolean,
+	objectName?:boolean,
+	/** Reads a single `Room` that is related to this `RoomAttachment`. */
+	room?:ValueTypes["Room"],
+	/** Reads a single `Attachment` that is related to this `RoomAttachment`. */
+	attachmentByObjectName?:ValueTypes["Attachment"],
+		__typename?: boolean
+}>;
+	/** A `RoomAttachment` edge in the connection. */
+["RoomAttachmentsEdge"]: AliasType<{
+	/** A cursor for use in pagination. */
+	cursor?:boolean,
+	/** The `RoomAttachment` at the end of the edge. */
+	node?:ValueTypes["RoomAttachment"],
+		__typename?: boolean
+}>;
+	/** Methods to use when ordering `RoomAttachment`. */
+["RoomAttachmentsOrderBy"]:RoomAttachmentsOrderBy;
+	/** A condition to be used against `RoomAttachment` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["RoomAttachmentCondition"]: {
+	/** Checks for equality with the object’s `roomId` field. */
+	roomId?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `objectName` field. */
+	objectName?:string | null
+};
+	/** A `Room` edge in the connection. */
+["RoomsEdge"]: AliasType<{
+	/** A cursor for use in pagination. */
+	cursor?:boolean,
+	/** The `Room` at the end of the edge. */
+	node?:ValueTypes["Room"],
+		__typename?: boolean
+}>;
+	/** Methods to use when ordering `Room`. */
+["RoomsOrderBy"]:RoomsOrderBy;
+	/** A condition to be used against `Room` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["RoomCondition"]: {
+	/** Checks for equality with the object’s `id` field. */
+	id?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `location` field. */
+	location?:ValueTypes["BigInt"] | null
+};
+	/** Methods to use when ordering `LocationAttachment`. */
+["LocationAttachmentsOrderBy"]:LocationAttachmentsOrderBy;
+	/** A condition to be used against `LocationAttachment` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["LocationAttachmentCondition"]: {
+	/** Checks for equality with the object’s `locationId` field. */
+	locationId?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `objectName` field. */
+	objectName?:string | null
+};
+	/** A connection to a list of `TenantLocation` values. */
+["TenantLocationsConnection"]: AliasType<{
+	/** A list of `TenantLocation` objects. */
+	nodes?:ValueTypes["TenantLocation"],
+	/** A list of edges which contains the `TenantLocation` and cursor to aid in pagination. */
+	edges?:ValueTypes["TenantLocationsEdge"],
+	/** Information to aid in pagination. */
+	pageInfo?:ValueTypes["PageInfo"],
+	/** The count of *all* `TenantLocation` you could get from the connection. */
+	totalCount?:boolean,
+		__typename?: boolean
+}>;
+	["TenantLocation"]: AliasType<{
+	tenantId?:boolean,
+	locationId?:boolean,
+	/** Reads a single `Tenant` that is related to this `TenantLocation`. */
+	tenant?:ValueTypes["Tenant"],
+	/** Reads a single `Location` that is related to this `TenantLocation`. */
+	location?:ValueTypes["Location"],
+		__typename?: boolean
+}>;
+	/** A `TenantLocation` edge in the connection. */
+["TenantLocationsEdge"]: AliasType<{
+	/** A cursor for use in pagination. */
+	cursor?:boolean,
+	/** The `TenantLocation` at the end of the edge. */
+	node?:ValueTypes["TenantLocation"],
+		__typename?: boolean
+}>;
+	/** Methods to use when ordering `TenantLocation`. */
+["TenantLocationsOrderBy"]:TenantLocationsOrderBy;
+	/** A condition to be used against `TenantLocation` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["TenantLocationCondition"]: {
+	/** Checks for equality with the object’s `tenantId` field. */
+	tenantId?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `locationId` field. */
+	locationId?:ValueTypes["BigInt"] | null
+};
+	/** A `LocationAttachment` edge in the connection. */
+["LocationAttachmentsEdge"]: AliasType<{
+	/** A cursor for use in pagination. */
+	cursor?:boolean,
+	/** The `LocationAttachment` at the end of the edge. */
+	node?:ValueTypes["LocationAttachment"],
+		__typename?: boolean
+}>;
+	/** A `TenantAttachment` edge in the connection. */
+["TenantAttachmentsEdge"]: AliasType<{
+	/** A cursor for use in pagination. */
+	cursor?:boolean,
+	/** The `TenantAttachment` at the end of the edge. */
+	node?:ValueTypes["TenantAttachment"],
+		__typename?: boolean
+}>;
+	/** A connection to a list of `TenantPerson` values. */
+["TenantPeopleConnection"]: AliasType<{
+	/** A list of `TenantPerson` objects. */
+	nodes?:ValueTypes["TenantPerson"],
+	/** A list of edges which contains the `TenantPerson` and cursor to aid in pagination. */
+	edges?:ValueTypes["TenantPeopleEdge"],
+	/** Information to aid in pagination. */
+	pageInfo?:ValueTypes["PageInfo"],
+	/** The count of *all* `TenantPerson` you could get from the connection. */
+	totalCount?:boolean,
+		__typename?: boolean
+}>;
+	["TenantPerson"]: AliasType<{
+	tenantId?:boolean,
+	personId?:boolean,
+	/** Reads a single `Tenant` that is related to this `TenantPerson`. */
+	tenant?:ValueTypes["Tenant"],
+	/** Reads a single `Person` that is related to this `TenantPerson`. */
+	person?:ValueTypes["Person"],
+		__typename?: boolean
+}>;
+	["Person"]: AliasType<{
+	id?:boolean,
+	firstName?:boolean,
+	lastName?:boolean,
+	gender?:boolean,
+tenantPeople?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `TenantPerson`. */
+	orderBy?:ValueTypes["TenantPeopleOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["TenantPersonCondition"] | null},ValueTypes["TenantPeopleConnection"]],
+		__typename?: boolean
+}>;
+	["GenderType"]:GenderType;
+	/** Methods to use when ordering `TenantPerson`. */
+["TenantPeopleOrderBy"]:TenantPeopleOrderBy;
+	/** A condition to be used against `TenantPerson` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["TenantPersonCondition"]: {
+	/** Checks for equality with the object’s `tenantId` field. */
+	tenantId?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `personId` field. */
+	personId?:ValueTypes["BigInt"] | null
+};
+	/** A `TenantPerson` edge in the connection. */
+["TenantPeopleEdge"]: AliasType<{
+	/** A cursor for use in pagination. */
+	cursor?:boolean,
+	/** The `TenantPerson` at the end of the edge. */
+	node?:ValueTypes["TenantPerson"],
+		__typename?: boolean
+}>;
+	/** A connection to a list of `CohortGroup` values. */
+["CohortGroupsConnection"]: AliasType<{
+	/** A list of `CohortGroup` objects. */
+	nodes?:ValueTypes["CohortGroup"],
+	/** A list of edges which contains the `CohortGroup` and cursor to aid in pagination. */
+	edges?:ValueTypes["CohortGroupsEdge"],
+	/** Information to aid in pagination. */
+	pageInfo?:ValueTypes["PageInfo"],
+	/** The count of *all* `CohortGroup` you could get from the connection. */
+	totalCount?:boolean,
+		__typename?: boolean
+}>;
+	/** A `CohortGroup` edge in the connection. */
+["CohortGroupsEdge"]: AliasType<{
+	/** A cursor for use in pagination. */
+	cursor?:boolean,
+	/** The `CohortGroup` at the end of the edge. */
+	node?:ValueTypes["CohortGroup"],
+		__typename?: boolean
+}>;
+	/** Methods to use when ordering `CohortGroup`. */
+["CohortGroupsOrderBy"]:CohortGroupsOrderBy;
+	/** A condition to be used against `CohortGroup` object types. All fields are tested
+for equality and combined with a logical ‘and.’ */
+["CohortGroupCondition"]: {
+	/** Checks for equality with the object’s `id` field. */
+	id?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `ordering` field. */
+	ordering?:number | null,
+	/** Checks for equality with the object’s `isPublic` field. */
+	isPublic?:boolean | null,
+	/** Checks for equality with the object’s `tenant` field. */
+	tenant?:ValueTypes["BigInt"] | null
+};
+	/** A connection to a list of `Skupiny` values. */
+["SkupiniesConnection"]: AliasType<{
+	/** A list of `Skupiny` objects. */
+	nodes?:ValueTypes["Skupiny"],
+	/** A list of edges which contains the `Skupiny` and cursor to aid in pagination. */
+	edges?:ValueTypes["SkupiniesEdge"],
+	/** Information to aid in pagination. */
+	pageInfo?:ValueTypes["PageInfo"],
+	/** The count of *all* `Skupiny` you could get from the connection. */
+	totalCount?:boolean,
+		__typename?: boolean
+}>;
+	/** A `Skupiny` edge in the connection. */
+["SkupiniesEdge"]: AliasType<{
+	/** A cursor for use in pagination. */
+	cursor?:boolean,
+	/** The `Skupiny` at the end of the edge. */
+	node?:ValueTypes["Skupiny"],
+		__typename?: boolean
+}>;
+	/** Methods to use when ordering `Skupiny`. */
+["SkupiniesOrderBy"]:SkupiniesOrderBy;
+	/** A condition to be used against `Skupiny` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["SkupinyCondition"]: {
+	/** Checks for equality with the object’s `sId` field. */
+	sId?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `sVisible` field. */
+	sVisible?:boolean | null,
+	/** Checks for equality with the object’s `ordering` field. */
+	ordering?:number | null,
+	/** Checks for equality with the object’s `cohortGroup` field. */
+	cohortGroup?:ValueTypes["BigInt"] | null
+};
 	/** A connection to a list of `PlatbyGroupSkupina` values. */
 ["PlatbyGroupSkupinasConnection"]: AliasType<{
 	/** A list of `PlatbyGroupSkupina` objects. */
@@ -899,11 +1391,11 @@ based pagination. May not be used with `last`. */
 		__typename?: boolean
 }>;
 	["PlatbyGroupSkupina"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	pgsId?:boolean,
 	pgsIdSkupina?:boolean,
 	pgsIdGroup?:boolean,
+	id?:boolean,
+	tenantId?:boolean,
 	/** Reads a single `Skupiny` that is related to this `PlatbyGroupSkupina`. */
 	skupinyByPgsIdSkupina?:ValueTypes["Skupiny"],
 	/** Reads a single `PlatbyGroup` that is related to this `PlatbyGroupSkupina`. */
@@ -911,13 +1403,13 @@ based pagination. May not be used with `last`. */
 		__typename?: boolean
 }>;
 	["PlatbyGroup"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	pgId?:boolean,
 	pgType?:boolean,
 	pgName?:boolean,
 	pgDescription?:boolean,
 	pgBase?:boolean,
+	id?:boolean,
+	tenantId?:boolean,
 platbyCategoryGroupsByPcgIdGroup?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -953,11 +1445,11 @@ based pagination. May not be used with `last`. */
 		__typename?: boolean
 }>;
 	["PlatbyCategoryGroup"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	pcgId?:boolean,
 	pcgIdGroup?:boolean,
 	pcgIdCategory?:boolean,
+	id?:boolean,
+	tenantId?:boolean,
 	/** Reads a single `PlatbyGroup` that is related to this `PlatbyCategoryGroup`. */
 	platbyGroupByPcgIdGroup?:ValueTypes["PlatbyGroup"],
 	/** Reads a single `PlatbyCategory` that is related to this `PlatbyCategoryGroup`. */
@@ -965,8 +1457,6 @@ based pagination. May not be used with `last`. */
 		__typename?: boolean
 }>;
 	["PlatbyCategory"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	pcId?:boolean,
 	pcName?:boolean,
 	pcSymbol?:boolean,
@@ -978,6 +1468,8 @@ based pagination. May not be used with `last`. */
 	pcUsePrefix?:boolean,
 	pcArchive?:boolean,
 	pcVisible?:boolean,
+	id?:boolean,
+	tenantId?:boolean,
 platbyCategoryGroupsByPcgIdCategory?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -1023,8 +1515,6 @@ are tested for equality and combined with a logical ‘and.’ */
 		__typename?: boolean
 }>;
 	["PlatbyItem"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	piId?:boolean,
 	piIdUser?:boolean,
 	piIdCategory?:boolean,
@@ -1032,6 +1522,8 @@ are tested for equality and combined with a logical ‘and.’ */
 	piAmount?:boolean,
 	piDate?:boolean,
 	piPrefix?:boolean,
+	id?:boolean,
+	tenantId?:boolean,
 	/** Reads a single `User` that is related to this `PlatbyItem`. */
 	userByPiIdUser?:ValueTypes["User"],
 	/** Reads a single `PlatbyCategory` that is related to this `PlatbyItem`. */
@@ -1041,13 +1533,13 @@ are tested for equality and combined with a logical ‘and.’ */
 		__typename?: boolean
 }>;
 	["PlatbyRaw"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	prId?:boolean,
 	prRaw?:boolean,
 	prHash?:boolean,
 	prSorted?:boolean,
 	prDiscarded?:boolean,
+	id?:boolean,
+	tenantId?:boolean,
 platbyItemsByPiIdRaw?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -1071,13 +1563,7 @@ for equality and combined with a logical ‘and.’ */
 	/** Checks for equality with the object’s `piIdCategory` field. */
 	piIdCategory?:ValueTypes["BigInt"] | null,
 	/** Checks for equality with the object’s `piIdRaw` field. */
-	piIdRaw?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `piAmount` field. */
-	piAmount?:ValueTypes["BigFloat"] | null,
-	/** Checks for equality with the object’s `piDate` field. */
-	piDate?:ValueTypes["Date"] | null,
-	/** Checks for equality with the object’s `piPrefix` field. */
-	piPrefix?:number | null
+	piIdRaw?:ValueTypes["BigInt"] | null
 };
 	/** A `PlatbyItem` edge in the connection. */
 ["PlatbyItemsEdge"]: AliasType<{
@@ -1128,13 +1614,13 @@ tested for equality and combined with a logical ‘and.’ */
 		__typename?: boolean
 }>;
 	["UpozorneniSkupiny"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	upsId?:boolean,
 	upsIdRodic?:boolean,
 	upsIdSkupina?:boolean,
 	upsColor?:boolean,
 	upsPopis?:boolean,
+	id?:boolean,
+	tenantId?:boolean,
 	/** Reads a single `Upozorneni` that is related to this `UpozorneniSkupiny`. */
 	upozorneniByUpsIdRodic?:ValueTypes["Upozorneni"],
 	/** Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`. */
@@ -1142,8 +1628,6 @@ tested for equality and combined with a logical ‘and.’ */
 		__typename?: boolean
 }>;
 	["Upozorneni"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	upId?:boolean,
 	upKdo?:boolean,
 	upNadpis?:boolean,
@@ -1152,6 +1636,11 @@ tested for equality and combined with a logical ‘and.’ */
 	upLock?:boolean,
 	upTimestamp?:boolean,
 	upTimestampAdd?:boolean,
+	scheduledSince?:boolean,
+	scheduledUntil?:boolean,
+	isVisible?:boolean,
+	id?:boolean,
+	tenantId?:boolean,
 	/** Reads a single `User` that is related to this `Upozorneni`. */
 	userByUpKdo?:ValueTypes["User"],
 upozorneniSkupiniesByUpsIdRodic?: [{	/** Only read the first `n` values of the set. */
@@ -1175,11 +1664,7 @@ tested for equality and combined with a logical ‘and.’ */
 	/** Checks for equality with the object’s `upsIdRodic` field. */
 	upsIdRodic?:ValueTypes["BigInt"] | null,
 	/** Checks for equality with the object’s `upsIdSkupina` field. */
-	upsIdSkupina?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `upsColor` field. */
-	upsColor?:string | null,
-	/** Checks for equality with the object’s `upsPopis` field. */
-	upsPopis?:string | null
+	upsIdSkupina?:ValueTypes["BigInt"] | null
 };
 	/** A `UpozorneniSkupiny` edge in the connection. */
 ["UpozorneniSkupiniesEdge"]: AliasType<{
@@ -1187,6 +1672,146 @@ tested for equality and combined with a logical ‘and.’ */
 	cursor?:boolean,
 	/** The `UpozorneniSkupiny` at the end of the edge. */
 	node?:ValueTypes["UpozorneniSkupiny"],
+		__typename?: boolean
+}>;
+	/** A connection to a list of `AttendeeUser` values. */
+["AttendeeUsersConnection"]: AliasType<{
+	/** A list of `AttendeeUser` objects. */
+	nodes?:ValueTypes["AttendeeUser"],
+	/** A list of edges which contains the `AttendeeUser` and cursor to aid in pagination. */
+	edges?:ValueTypes["AttendeeUsersEdge"],
+	/** Information to aid in pagination. */
+	pageInfo?:ValueTypes["PageInfo"],
+	/** The count of *all* `AttendeeUser` you could get from the connection. */
+	totalCount?:boolean,
+		__typename?: boolean
+}>;
+	["AttendeeUser"]: AliasType<{
+	id?:boolean,
+	eventId?:boolean,
+	userId?:boolean,
+	birthYear?:boolean,
+	notes?:boolean,
+	tenantId?:boolean,
+	/** Reads a single `Event` that is related to this `AttendeeUser`. */
+	event?:ValueTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeUser`. */
+	user?:ValueTypes["User"],
+		__typename?: boolean
+}>;
+	["Event"]: AliasType<{
+	id?:boolean,
+	name?:boolean,
+	locationText?:boolean,
+	description?:boolean,
+	since?:boolean,
+	until?:boolean,
+	capacity?:boolean,
+	filesLegacy?:boolean,
+	updatedAt?:boolean,
+	isLocked?:boolean,
+	isVisible?:boolean,
+	summary?:boolean,
+	isPublic?:boolean,
+	enableNotes?:boolean,
+	tenantId?:boolean,
+attendeeUsers?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `AttendeeUser`. */
+	orderBy?:ValueTypes["AttendeeUsersOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["AttendeeUserCondition"] | null},ValueTypes["AttendeeUsersConnection"]],
+attendeeExternals?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `AttendeeExternal`. */
+	orderBy?:ValueTypes["AttendeeExternalsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
+	condition?:ValueTypes["AttendeeExternalCondition"] | null},ValueTypes["AttendeeExternalsConnection"]],
+	remainingSpots?:boolean,
+		__typename?: boolean
+}>;
+	/** Methods to use when ordering `AttendeeUser`. */
+["AttendeeUsersOrderBy"]:AttendeeUsersOrderBy;
+	/** A condition to be used against `AttendeeUser` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["AttendeeUserCondition"]: {
+	/** Checks for equality with the object’s `id` field. */
+	id?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `eventId` field. */
+	eventId?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `userId` field. */
+	userId?:ValueTypes["BigInt"] | null
+};
+	/** A connection to a list of `AttendeeExternal` values. */
+["AttendeeExternalsConnection"]: AliasType<{
+	/** A list of `AttendeeExternal` objects. */
+	nodes?:ValueTypes["AttendeeExternal"],
+	/** A list of edges which contains the `AttendeeExternal` and cursor to aid in pagination. */
+	edges?:ValueTypes["AttendeeExternalsEdge"],
+	/** Information to aid in pagination. */
+	pageInfo?:ValueTypes["PageInfo"],
+	/** The count of *all* `AttendeeExternal` you could get from the connection. */
+	totalCount?:boolean,
+		__typename?: boolean
+}>;
+	["AttendeeExternal"]: AliasType<{
+	id?:boolean,
+	eventId?:boolean,
+	firstName?:boolean,
+	lastName?:boolean,
+	email?:boolean,
+	phone?:boolean,
+	notes?:boolean,
+	birthNumber?:boolean,
+	guardianName?:boolean,
+	managedBy?:boolean,
+	confirmedBy?:boolean,
+	confirmedAt?:boolean,
+	createdAt?:boolean,
+	updatedAt?:boolean,
+	tenantId?:boolean,
+	/** Reads a single `Event` that is related to this `AttendeeExternal`. */
+	event?:ValueTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByManagedBy?:ValueTypes["User"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByConfirmedBy?:ValueTypes["User"],
+		__typename?: boolean
+}>;
+	/** A `AttendeeExternal` edge in the connection. */
+["AttendeeExternalsEdge"]: AliasType<{
+	/** A cursor for use in pagination. */
+	cursor?:boolean,
+	/** The `AttendeeExternal` at the end of the edge. */
+	node?:ValueTypes["AttendeeExternal"],
+		__typename?: boolean
+}>;
+	/** Methods to use when ordering `AttendeeExternal`. */
+["AttendeeExternalsOrderBy"]:AttendeeExternalsOrderBy;
+	/** A condition to be used against `AttendeeExternal` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["AttendeeExternalCondition"]: {
+	/** Checks for equality with the object’s `id` field. */
+	id?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `eventId` field. */
+	eventId?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `managedBy` field. */
+	managedBy?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `confirmedBy` field. */
+	confirmedBy?:ValueTypes["BigInt"] | null
+};
+	/** A `AttendeeUser` edge in the connection. */
+["AttendeeUsersEdge"]: AliasType<{
+	/** A cursor for use in pagination. */
+	cursor?:boolean,
+	/** The `AttendeeUser` at the end of the edge. */
+	node?:ValueTypes["AttendeeUser"],
 		__typename?: boolean
 }>;
 	/** A connection to a list of `Aktuality` values. */
@@ -1202,8 +1827,6 @@ tested for equality and combined with a logical ‘and.’ */
 		__typename?: boolean
 }>;
 	["Aktuality"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	atId?:boolean,
 	atKdo?:boolean,
 	atKat?:boolean,
@@ -1214,6 +1837,8 @@ tested for equality and combined with a logical ‘and.’ */
 	atFotoMain?:boolean,
 	atTimestamp?:boolean,
 	atTimestampAdd?:boolean,
+	id?:boolean,
+	tenantId?:boolean,
 	/** Reads a single `User` that is related to this `Aktuality`. */
 	userByAtKdo?:ValueTypes["User"],
 	/** Reads a single `GalerieFoto` that is related to this `Aktuality`. */
@@ -1221,14 +1846,14 @@ tested for equality and combined with a logical ‘and.’ */
 		__typename?: boolean
 }>;
 	["GalerieFoto"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	gfId?:boolean,
 	gfIdRodic?:boolean,
 	gfName?:boolean,
 	gfPath?:boolean,
 	gfKdo?:boolean,
 	gfTimestamp?:boolean,
+	id?:boolean,
+	tenantId?:boolean,
 	/** Reads a single `GalerieDir` that is related to this `GalerieFoto`. */
 	galerieDirByGfIdRodic?:ValueTypes["GalerieDir"],
 	/** Reads a single `User` that is related to this `GalerieFoto`. */
@@ -1245,14 +1870,14 @@ based pagination. May not be used with `last`. */
 		__typename?: boolean
 }>;
 	["GalerieDir"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	gdId?:boolean,
 	gdIdRodic?:boolean,
 	gdName?:boolean,
 	gdLevel?:boolean,
 	gdPath?:boolean,
 	gdHidden?:boolean,
+	id?:boolean,
+	tenantId?:boolean,
 galerieFotosByGfIdRodic?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -1293,14 +1918,8 @@ for equality and combined with a logical ‘and.’ */
 	gfId?:ValueTypes["BigInt"] | null,
 	/** Checks for equality with the object’s `gfIdRodic` field. */
 	gfIdRodic?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `gfName` field. */
-	gfName?:string | null,
-	/** Checks for equality with the object’s `gfPath` field. */
-	gfPath?:string | null,
 	/** Checks for equality with the object’s `gfKdo` field. */
-	gfKdo?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `gfTimestamp` field. */
-	gfTimestamp?:ValueTypes["Datetime"] | null
+	gfKdo?:ValueTypes["BigInt"] | null
 };
 	/** Methods to use when ordering `Aktuality`. */
 ["AktualitiesOrderBy"]:AktualitiesOrderBy;
@@ -1311,22 +1930,12 @@ for equality and combined with a logical ‘and.’ */
 	atId?:ValueTypes["BigInt"] | null,
 	/** Checks for equality with the object’s `atKdo` field. */
 	atKdo?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `atKat` field. */
-	atKat?:string | null,
-	/** Checks for equality with the object’s `atJmeno` field. */
-	atJmeno?:string | null,
-	/** Checks for equality with the object’s `atText` field. */
-	atText?:string | null,
-	/** Checks for equality with the object’s `atPreview` field. */
-	atPreview?:string | null,
-	/** Checks for equality with the object’s `atFoto` field. */
-	atFoto?:ValueTypes["BigInt"] | null,
 	/** Checks for equality with the object’s `atFotoMain` field. */
 	atFotoMain?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `atTimestamp` field. */
-	atTimestamp?:ValueTypes["Datetime"] | null,
 	/** Checks for equality with the object’s `atTimestampAdd` field. */
-	atTimestampAdd?:ValueTypes["Datetime"] | null
+	atTimestampAdd?:ValueTypes["Datetime"] | null,
+	/** Checks for equality with the object’s `tenantId` field. */
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** A `Aktuality` edge in the connection. */
 ["AktualitiesEdge"]: AliasType<{
@@ -1336,6 +1945,56 @@ for equality and combined with a logical ‘and.’ */
 	node?:ValueTypes["Aktuality"],
 		__typename?: boolean
 }>;
+	/** A connection to a list of `Dokumenty` values. */
+["DokumentiesConnection"]: AliasType<{
+	/** A list of `Dokumenty` objects. */
+	nodes?:ValueTypes["Dokumenty"],
+	/** A list of edges which contains the `Dokumenty` and cursor to aid in pagination. */
+	edges?:ValueTypes["DokumentiesEdge"],
+	/** Information to aid in pagination. */
+	pageInfo?:ValueTypes["PageInfo"],
+	/** The count of *all* `Dokumenty` you could get from the connection. */
+	totalCount?:boolean,
+		__typename?: boolean
+}>;
+	["Dokumenty"]: AliasType<{
+	dId?:boolean,
+	dPath?:boolean,
+	dName?:boolean,
+	dFilename?:boolean,
+	dKategorie?:boolean,
+	dKdo?:boolean,
+	dTimestamp?:boolean,
+	id?:boolean,
+	tenantId?:boolean,
+	/** Reads a single `User` that is related to this `Dokumenty`. */
+	userByDKdo?:ValueTypes["User"],
+		__typename?: boolean
+}>;
+	/** A `Dokumenty` edge in the connection. */
+["DokumentiesEdge"]: AliasType<{
+	/** A cursor for use in pagination. */
+	cursor?:boolean,
+	/** The `Dokumenty` at the end of the edge. */
+	node?:ValueTypes["Dokumenty"],
+		__typename?: boolean
+}>;
+	/** Methods to use when ordering `Dokumenty`. */
+["DokumentiesOrderBy"]:DokumentiesOrderBy;
+	/** A condition to be used against `Dokumenty` object types. All fields are tested
+for equality and combined with a logical ‘and.’ */
+["DokumentyCondition"]: {
+	/** Checks for equality with the object’s `dId` field. */
+	dId?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `dPath` field. */
+	dPath?:string | null,
+	/** Checks for equality with the object’s `dKategorie` field. */
+	dKategorie?:number | null,
+	/** Checks for equality with the object’s `dKdo` field. */
+	dKdo?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `dTimestamp` field. */
+	dTimestamp?:ValueTypes["Datetime"] | null
+};
 	/** A connection to a list of `Nabidka` values. */
 ["NabidkasConnection"]: AliasType<{
 	/** A list of `Nabidka` objects. */
@@ -1349,8 +2008,6 @@ for equality and combined with a logical ‘and.’ */
 		__typename?: boolean
 }>;
 	["Nabidka"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	nId?:boolean,
 	nTrener?:boolean,
 	nPocetHod?:boolean,
@@ -1360,6 +2017,8 @@ for equality and combined with a logical ‘and.’ */
 	nVisible?:boolean,
 	nLock?:boolean,
 	nTimestamp?:boolean,
+	id?:boolean,
+	tenantId?:boolean,
 	/** Reads a single `User` that is related to this `Nabidka`. */
 	userByNTrener?:ValueTypes["User"],
 nabidkaItemsByNiIdRodic?: [{	/** Only read the first `n` values of the set. */
@@ -1371,6 +2030,8 @@ based pagination. May not be used with `last`. */
 	after?:ValueTypes["Cursor"] | null,	/** The method to use when ordering `NabidkaItem`. */
 	orderBy?:ValueTypes["NabidkaItemsOrderBy"][],	/** A condition to be used in determining which values should be returned by the collection. */
 	condition?:ValueTypes["NabidkaItemCondition"] | null},ValueTypes["NabidkaItemsConnection"]],
+	freeLessons?:boolean,
+	myLessons?:boolean,
 		__typename?: boolean
 }>;
 	/** A connection to a list of `NabidkaItem` values. */
@@ -1386,13 +2047,13 @@ based pagination. May not be used with `last`. */
 		__typename?: boolean
 }>;
 	["NabidkaItem"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	niId?:boolean,
 	niIdRodic?:boolean,
 	niPartner?:boolean,
 	niPocetHod?:boolean,
 	niLock?:boolean,
+	id?:boolean,
+	tenantId?:boolean,
 	/** Reads a single `Nabidka` that is related to this `NabidkaItem`. */
 	nabidkaByNiIdRodic?:ValueTypes["Nabidka"],
 	/** Reads a single `Pary` that is related to this `NabidkaItem`. */
@@ -1400,8 +2061,6 @@ based pagination. May not be used with `last`. */
 		__typename?: boolean
 }>;
 	["Pary"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	pId?:boolean,
 	pIdPartner?:boolean,
 	pIdPartnerka?:boolean,
@@ -1415,8 +2074,11 @@ based pagination. May not be used with `last`. */
 	pArchiv?:boolean,
 	pTimestampAdd?:boolean,
 	pTimestampArchive?:boolean,
+	id?:boolean,
 	/** Reads a single `User` that is related to this `Pary`. */
 	userByPIdPartner?:ValueTypes["User"],
+	/** Reads a single `User` that is related to this `Pary`. */
+	userByPIdPartnerka?:ValueTypes["User"],
 nabidkaItemsByNiPartner?: [{	/** Only read the first `n` values of the set. */
 	first?:number | null,	/** Only read the last `n` values of the set. */
 	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
@@ -1449,11 +2111,7 @@ for equality and combined with a logical ‘and.’ */
 	/** Checks for equality with the object’s `niIdRodic` field. */
 	niIdRodic?:ValueTypes["BigInt"] | null,
 	/** Checks for equality with the object’s `niPartner` field. */
-	niPartner?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `niPocetHod` field. */
-	niPocetHod?:number | null,
-	/** Checks for equality with the object’s `niLock` field. */
-	niLock?:boolean | null
+	niPartner?:ValueTypes["BigInt"] | null
 };
 	/** A connection to a list of `RozpisItem` values. */
 ["RozpisItemsConnection"]: AliasType<{
@@ -1468,14 +2126,14 @@ for equality and combined with a logical ‘and.’ */
 		__typename?: boolean
 }>;
 	["RozpisItem"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	riId?:boolean,
 	riIdRodic?:boolean,
 	riPartner?:boolean,
 	riOd?:boolean,
 	riDo?:boolean,
 	riLock?:boolean,
+	id?:boolean,
+	tenantId?:boolean,
 	/** Reads a single `Rozpi` that is related to this `RozpisItem`. */
 	rozpiByRiIdRodic?:ValueTypes["Rozpi"],
 	/** Reads a single `Pary` that is related to this `RozpisItem`. */
@@ -1485,8 +2143,6 @@ for equality and combined with a logical ‘and.’ */
 	/** The exact time of day, does not include the date. May or may not have a timezone offset. */
 ["Time"]:unknown;
 	["Rozpi"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	rId?:boolean,
 	rTrener?:boolean,
 	rKde?:boolean,
@@ -1494,6 +2150,8 @@ for equality and combined with a logical ‘and.’ */
 	rVisible?:boolean,
 	rLock?:boolean,
 	rTimestamp?:boolean,
+	id?:boolean,
+	tenantId?:boolean,
 	/** Reads a single `User` that is related to this `Rozpi`. */
 	userByRTrener?:ValueTypes["User"],
 rozpisItemsByRiIdRodic?: [{	/** Only read the first `n` values of the set. */
@@ -1519,11 +2177,7 @@ for equality and combined with a logical ‘and.’ */
 	/** Checks for equality with the object’s `riPartner` field. */
 	riPartner?:ValueTypes["BigInt"] | null,
 	/** Checks for equality with the object’s `riOd` field. */
-	riOd?:ValueTypes["Time"] | null,
-	/** Checks for equality with the object’s `riDo` field. */
-	riDo?:ValueTypes["Time"] | null,
-	/** Checks for equality with the object’s `riLock` field. */
-	riLock?:boolean | null
+	riOd?:ValueTypes["Time"] | null
 };
 	/** A `RozpisItem` edge in the connection. */
 ["RozpisItemsEdge"]: AliasType<{
@@ -1557,174 +2211,8 @@ for equality and combined with a logical ‘and.’ */
 	nId?:ValueTypes["BigInt"] | null,
 	/** Checks for equality with the object’s `nTrener` field. */
 	nTrener?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `nPocetHod` field. */
-	nPocetHod?:number | null,
-	/** Checks for equality with the object’s `nMaxPocetHod` field. */
-	nMaxPocetHod?:ValueTypes["BigInt"] | null,
 	/** Checks for equality with the object’s `nOd` field. */
-	nOd?:ValueTypes["Date"] | null,
-	/** Checks for equality with the object’s `nDo` field. */
-	nDo?:ValueTypes["Date"] | null,
-	/** Checks for equality with the object’s `nVisible` field. */
-	nVisible?:boolean | null,
-	/** Checks for equality with the object’s `nLock` field. */
-	nLock?:boolean | null,
-	/** Checks for equality with the object’s `nTimestamp` field. */
-	nTimestamp?:ValueTypes["Datetime"] | null
-};
-	/** A connection to a list of `Rozpi` values. */
-["RozpisConnection"]: AliasType<{
-	/** A list of `Rozpi` objects. */
-	nodes?:ValueTypes["Rozpi"],
-	/** A list of edges which contains the `Rozpi` and cursor to aid in pagination. */
-	edges?:ValueTypes["RozpisEdge"],
-	/** Information to aid in pagination. */
-	pageInfo?:ValueTypes["PageInfo"],
-	/** The count of *all* `Rozpi` you could get from the connection. */
-	totalCount?:boolean,
-		__typename?: boolean
-}>;
-	/** A `Rozpi` edge in the connection. */
-["RozpisEdge"]: AliasType<{
-	/** A cursor for use in pagination. */
-	cursor?:boolean,
-	/** The `Rozpi` at the end of the edge. */
-	node?:ValueTypes["Rozpi"],
-		__typename?: boolean
-}>;
-	/** Methods to use when ordering `Rozpi`. */
-["RozpisOrderBy"]:RozpisOrderBy;
-	/** A condition to be used against `Rozpi` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["RozpiCondition"]: {
-	/** Checks for equality with the object’s `rId` field. */
-	rId?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `rTrener` field. */
-	rTrener?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `rKde` field. */
-	rKde?:string | null,
-	/** Checks for equality with the object’s `rDatum` field. */
-	rDatum?:ValueTypes["Date"] | null,
-	/** Checks for equality with the object’s `rVisible` field. */
-	rVisible?:boolean | null,
-	/** Checks for equality with the object’s `rLock` field. */
-	rLock?:boolean | null,
-	/** Checks for equality with the object’s `rTimestamp` field. */
-	rTimestamp?:ValueTypes["Datetime"] | null
-};
-	/** A connection to a list of `Session` values. */
-["SessionsConnection"]: AliasType<{
-	/** A list of `Session` objects. */
-	nodes?:ValueTypes["Session"],
-	/** A list of edges which contains the `Session` and cursor to aid in pagination. */
-	edges?:ValueTypes["SessionsEdge"],
-	/** Information to aid in pagination. */
-	pageInfo?:ValueTypes["PageInfo"],
-	/** The count of *all* `Session` you could get from the connection. */
-	totalCount?:boolean,
-		__typename?: boolean
-}>;
-	["Session"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
-	ssId?:boolean,
-	ssData?:boolean,
-	ssUpdatedAt?:boolean,
-	ssLifetime?:boolean,
-	ssUser?:boolean,
-	/** Reads a single `User` that is related to this `Session`. */
-	userBySsUser?:ValueTypes["User"],
-		__typename?: boolean
-}>;
-	/** A `Session` edge in the connection. */
-["SessionsEdge"]: AliasType<{
-	/** A cursor for use in pagination. */
-	cursor?:boolean,
-	/** The `Session` at the end of the edge. */
-	node?:ValueTypes["Session"],
-		__typename?: boolean
-}>;
-	/** Methods to use when ordering `Session`. */
-["SessionsOrderBy"]:SessionsOrderBy;
-	/** A condition to be used against `Session` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["SessionCondition"]: {
-	/** Checks for equality with the object’s `ssId` field. */
-	ssId?:string | null,
-	/** Checks for equality with the object’s `ssData` field. */
-	ssData?:string | null,
-	/** Checks for equality with the object’s `ssUpdatedAt` field. */
-	ssUpdatedAt?:ValueTypes["Datetime"] | null,
-	/** Checks for equality with the object’s `ssLifetime` field. */
-	ssLifetime?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `ssUser` field. */
-	ssUser?:ValueTypes["BigInt"] | null
-};
-	/** Methods to use when ordering `AkceItem`. */
-["AkceItemsOrderBy"]:AkceItemsOrderBy;
-	/** A condition to be used against `AkceItem` object types. All fields are tested
-for equality and combined with a logical ‘and.’ */
-["AkceItemCondition"]: {
-	/** Checks for equality with the object’s `aiId` field. */
-	aiId?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `aiIdRodic` field. */
-	aiIdRodic?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `aiUser` field. */
-	aiUser?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `aiRokNarozeni` field. */
-	aiRokNarozeni?:number | null
-};
-	/** A connection to a list of `Dokumenty` values. */
-["DokumentiesConnection"]: AliasType<{
-	/** A list of `Dokumenty` objects. */
-	nodes?:ValueTypes["Dokumenty"],
-	/** A list of edges which contains the `Dokumenty` and cursor to aid in pagination. */
-	edges?:ValueTypes["DokumentiesEdge"],
-	/** Information to aid in pagination. */
-	pageInfo?:ValueTypes["PageInfo"],
-	/** The count of *all* `Dokumenty` you could get from the connection. */
-	totalCount?:boolean,
-		__typename?: boolean
-}>;
-	["Dokumenty"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
-	dId?:boolean,
-	dPath?:boolean,
-	dName?:boolean,
-	dFilename?:boolean,
-	dKategorie?:boolean,
-	dKdo?:boolean,
-	dTimestamp?:boolean,
-	/** Reads a single `User` that is related to this `Dokumenty`. */
-	userByDKdo?:ValueTypes["User"],
-		__typename?: boolean
-}>;
-	/** A `Dokumenty` edge in the connection. */
-["DokumentiesEdge"]: AliasType<{
-	/** A cursor for use in pagination. */
-	cursor?:boolean,
-	/** The `Dokumenty` at the end of the edge. */
-	node?:ValueTypes["Dokumenty"],
-		__typename?: boolean
-}>;
-	/** Methods to use when ordering `Dokumenty`. */
-["DokumentiesOrderBy"]:DokumentiesOrderBy;
-	/** A condition to be used against `Dokumenty` object types. All fields are tested
-for equality and combined with a logical ‘and.’ */
-["DokumentyCondition"]: {
-	/** Checks for equality with the object’s `dId` field. */
-	dId?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `dPath` field. */
-	dPath?:string | null,
-	/** Checks for equality with the object’s `dName` field. */
-	dName?:string | null,
-	/** Checks for equality with the object’s `dFilename` field. */
-	dFilename?:string | null,
-	/** Checks for equality with the object’s `dKategorie` field. */
-	dKategorie?:number | null,
-	/** Checks for equality with the object’s `dKdo` field. */
-	dKdo?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `dTimestamp` field. */
-	dTimestamp?:ValueTypes["Datetime"] | null
+	nOd?:ValueTypes["Date"] | null
 };
 	/** A connection to a list of `Pary` values. */
 ["PariesConnection"]: AliasType<{
@@ -1756,26 +2244,8 @@ for equality and combined with a logical ‘and.’ */
 	pIdPartner?:ValueTypes["BigInt"] | null,
 	/** Checks for equality with the object’s `pIdPartnerka` field. */
 	pIdPartnerka?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `pSttTrida` field. */
-	pSttTrida?:ValueTypes["ParyPSttTrida"] | null,
-	/** Checks for equality with the object’s `pSttBody` field. */
-	pSttBody?:number | null,
-	/** Checks for equality with the object’s `pSttFinale` field. */
-	pSttFinale?:boolean | null,
-	/** Checks for equality with the object’s `pLatTrida` field. */
-	pLatTrida?:ValueTypes["ParyPLatTrida"] | null,
-	/** Checks for equality with the object’s `pLatBody` field. */
-	pLatBody?:number | null,
-	/** Checks for equality with the object’s `pLatFinale` field. */
-	pLatFinale?:boolean | null,
 	/** Checks for equality with the object’s `pHodnoceni` field. */
-	pHodnoceni?:number | null,
-	/** Checks for equality with the object’s `pArchiv` field. */
-	pArchiv?:boolean | null,
-	/** Checks for equality with the object’s `pTimestampAdd` field. */
-	pTimestampAdd?:ValueTypes["Datetime"] | null,
-	/** Checks for equality with the object’s `pTimestampArchive` field. */
-	pTimestampArchive?:ValueTypes["Datetime"] | null
+	pHodnoceni?:number | null
 };
 	/** A connection to a list of `ParyNavrh` values. */
 ["ParyNavrhsConnection"]: AliasType<{
@@ -1790,12 +2260,11 @@ for equality and combined with a logical ‘and.’ */
 		__typename?: boolean
 }>;
 	["ParyNavrh"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	pnId?:boolean,
 	pnNavrhl?:boolean,
 	pnPartner?:boolean,
 	pnPartnerka?:boolean,
+	id?:boolean,
 	/** Reads a single `User` that is related to this `ParyNavrh`. */
 	userByPnNavrhl?:ValueTypes["User"],
 	/** Reads a single `User` that is related to this `ParyNavrh`. */
@@ -1826,6 +2295,75 @@ for equality and combined with a logical ‘and.’ */
 	/** Checks for equality with the object’s `pnPartnerka` field. */
 	pnPartnerka?:ValueTypes["BigInt"] | null
 };
+	/** A connection to a list of `Rozpi` values. */
+["RozpisConnection"]: AliasType<{
+	/** A list of `Rozpi` objects. */
+	nodes?:ValueTypes["Rozpi"],
+	/** A list of edges which contains the `Rozpi` and cursor to aid in pagination. */
+	edges?:ValueTypes["RozpisEdge"],
+	/** Information to aid in pagination. */
+	pageInfo?:ValueTypes["PageInfo"],
+	/** The count of *all* `Rozpi` you could get from the connection. */
+	totalCount?:boolean,
+		__typename?: boolean
+}>;
+	/** A `Rozpi` edge in the connection. */
+["RozpisEdge"]: AliasType<{
+	/** A cursor for use in pagination. */
+	cursor?:boolean,
+	/** The `Rozpi` at the end of the edge. */
+	node?:ValueTypes["Rozpi"],
+		__typename?: boolean
+}>;
+	/** Methods to use when ordering `Rozpi`. */
+["RozpisOrderBy"]:RozpisOrderBy;
+	/** A condition to be used against `Rozpi` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["RozpiCondition"]: {
+	/** Checks for equality with the object’s `rId` field. */
+	rId?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `rTrener` field. */
+	rTrener?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `rDatum` field. */
+	rDatum?:ValueTypes["Date"] | null
+};
+	/** A connection to a list of `Session` values. */
+["SessionsConnection"]: AliasType<{
+	/** A list of `Session` objects. */
+	nodes?:ValueTypes["Session"],
+	/** A list of edges which contains the `Session` and cursor to aid in pagination. */
+	edges?:ValueTypes["SessionsEdge"],
+	/** Information to aid in pagination. */
+	pageInfo?:ValueTypes["PageInfo"],
+	/** The count of *all* `Session` you could get from the connection. */
+	totalCount?:boolean,
+		__typename?: boolean
+}>;
+	["Session"]: AliasType<{
+	ssId?:boolean,
+	ssUpdatedAt?:boolean,
+	ssLifetime?:boolean,
+	ssUser?:boolean,
+	/** Reads a single `User` that is related to this `Session`. */
+	userBySsUser?:ValueTypes["User"],
+		__typename?: boolean
+}>;
+	/** A `Session` edge in the connection. */
+["SessionsEdge"]: AliasType<{
+	/** A cursor for use in pagination. */
+	cursor?:boolean,
+	/** The `Session` at the end of the edge. */
+	node?:ValueTypes["Session"],
+		__typename?: boolean
+}>;
+	/** Methods to use when ordering `Session`. */
+["SessionsOrderBy"]:SessionsOrderBy;
+	/** A condition to be used against `Session` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["SessionCondition"]: {
+	/** Checks for equality with the object’s `ssId` field. */
+	ssId?:string | null,
+	/** Checks for equality with the object’s `ssUser` field. */
+	ssUser?:ValueTypes["BigInt"] | null
+};
 	/** A connection to a list of `Upozorneni` values. */
 ["UpozornenisConnection"]: AliasType<{
 	/** A list of `Upozorneni` objects. */
@@ -1855,19 +2393,41 @@ for equality and combined with a logical ‘and.’ */
 	upId?:ValueTypes["BigInt"] | null,
 	/** Checks for equality with the object’s `upKdo` field. */
 	upKdo?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `upNadpis` field. */
-	upNadpis?:string | null,
-	/** Checks for equality with the object’s `upText` field. */
-	upText?:string | null,
-	/** Checks for equality with the object’s `upBarvy` field. */
-	upBarvy?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `upLock` field. */
-	upLock?:boolean | null,
-	/** Checks for equality with the object’s `upTimestamp` field. */
-	upTimestamp?:ValueTypes["Datetime"] | null,
 	/** Checks for equality with the object’s `upTimestampAdd` field. */
 	upTimestampAdd?:ValueTypes["Datetime"] | null
 };
+	/** A connection to a list of `Attachment` values. */
+["AttachmentsConnection"]: AliasType<{
+	/** A list of `Attachment` objects. */
+	nodes?:ValueTypes["Attachment"],
+	/** A list of edges which contains the `Attachment` and cursor to aid in pagination. */
+	edges?:ValueTypes["AttachmentsEdge"],
+	/** Information to aid in pagination. */
+	pageInfo?:ValueTypes["PageInfo"],
+	/** The count of *all* `Attachment` you could get from the connection. */
+	totalCount?:boolean,
+		__typename?: boolean
+}>;
+	/** A `Attachment` edge in the connection. */
+["AttachmentsEdge"]: AliasType<{
+	/** A cursor for use in pagination. */
+	cursor?:boolean,
+	/** The `Attachment` at the end of the edge. */
+	node?:ValueTypes["Attachment"],
+		__typename?: boolean
+}>;
+	/** Methods to use when ordering `Attachment`. */
+["AttachmentsOrderBy"]:AttachmentsOrderBy;
+	/** A condition to be used against `Attachment` object types. All fields are tested
+for equality and combined with a logical ‘and.’ */
+["AttachmentCondition"]: {
+	/** Checks for equality with the object’s `objectName` field. */
+	objectName?:string | null,
+	/** Checks for equality with the object’s `uploadedBy` field. */
+	uploadedBy?:ValueTypes["BigInt"] | null
+};
+	/** Methods to use when ordering `AkceItem`. */
+["AkceItemsOrderBy"]:AkceItemsOrderBy;
 	/** A `AkceItem` edge in the connection. */
 ["AkceItemsEdge"]: AliasType<{
 	/** A cursor for use in pagination. */
@@ -1886,30 +2446,78 @@ for equality and combined with a logical ‘and.’ */
 }>;
 	/** Methods to use when ordering `Akce`. */
 ["AkcesOrderBy"]:AkcesOrderBy;
-	/** A condition to be used against `Akce` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["AkceCondition"]: {
-	/** Checks for equality with the object’s `aId` field. */
-	aId?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `aJmeno` field. */
-	aJmeno?:string | null,
-	/** Checks for equality with the object’s `aKde` field. */
-	aKde?:string | null,
-	/** Checks for equality with the object’s `aInfo` field. */
-	aInfo?:string | null,
-	/** Checks for equality with the object’s `aOd` field. */
-	aOd?:ValueTypes["Date"] | null,
-	/** Checks for equality with the object’s `aDo` field. */
-	aDo?:ValueTypes["Date"] | null,
-	/** Checks for equality with the object’s `aKapacita` field. */
-	aKapacita?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `aDokumenty` field. */
-	aDokumenty?:string | null,
-	/** Checks for equality with the object’s `aTimestamp` field. */
-	aTimestamp?:ValueTypes["Datetime"] | null,
-	/** Checks for equality with the object’s `aLock` field. */
-	aLock?:boolean | null,
-	/** Checks for equality with the object’s `aVisible` field. */
-	aVisible?:boolean | null
+	/** A connection to a list of `Event` values. */
+["EventsConnection"]: AliasType<{
+	/** A list of `Event` objects. */
+	nodes?:ValueTypes["Event"],
+	/** A list of edges which contains the `Event` and cursor to aid in pagination. */
+	edges?:ValueTypes["EventsEdge"],
+	/** Information to aid in pagination. */
+	pageInfo?:ValueTypes["PageInfo"],
+	/** The count of *all* `Event` you could get from the connection. */
+	totalCount?:boolean,
+		__typename?: boolean
+}>;
+	/** A `Event` edge in the connection. */
+["EventsEdge"]: AliasType<{
+	/** A cursor for use in pagination. */
+	cursor?:boolean,
+	/** The `Event` at the end of the edge. */
+	node?:ValueTypes["Event"],
+		__typename?: boolean
+}>;
+	/** Methods to use when ordering `Event`. */
+["EventsOrderBy"]:EventsOrderBy;
+	/** A condition to be used against `Event` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["EventCondition"]: {
+	/** Checks for equality with the object’s `id` field. */
+	id?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `since` field. */
+	since?:ValueTypes["Date"] | null,
+	/** Checks for equality with the object’s `isVisible` field. */
+	isVisible?:boolean | null
+};
+	/** A connection to a list of `FormResponse` values. */
+["FormResponsesConnection"]: AliasType<{
+	/** A list of `FormResponse` objects. */
+	nodes?:ValueTypes["FormResponse"],
+	/** A list of edges which contains the `FormResponse` and cursor to aid in pagination. */
+	edges?:ValueTypes["FormResponsesEdge"],
+	/** Information to aid in pagination. */
+	pageInfo?:ValueTypes["PageInfo"],
+	/** The count of *all* `FormResponse` you could get from the connection. */
+	totalCount?:boolean,
+		__typename?: boolean
+}>;
+	["FormResponse"]: AliasType<{
+	id?:boolean,
+	type?:boolean,
+	data?:boolean,
+	url?:boolean,
+	createdAt?:boolean,
+	updatedAt?:boolean,
+	tenantId?:boolean,
+		__typename?: boolean
+}>;
+	/** A `FormResponse` edge in the connection. */
+["FormResponsesEdge"]: AliasType<{
+	/** A cursor for use in pagination. */
+	cursor?:boolean,
+	/** The `FormResponse` at the end of the edge. */
+	node?:ValueTypes["FormResponse"],
+		__typename?: boolean
+}>;
+	/** Methods to use when ordering `FormResponse`. */
+["FormResponsesOrderBy"]:FormResponsesOrderBy;
+	/** A condition to be used against `FormResponse` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["FormResponseCondition"]: {
+	/** Checks for equality with the object’s `id` field. */
+	id?:ValueTypes["BigInt"] | null,
+	/** Checks for equality with the object’s `type` field. */
+	type?:string | null,
+	/** Checks for equality with the object’s `updatedAt` field. */
+	updatedAt?:ValueTypes["Datetime"] | null
 };
 	/** A connection to a list of `GalerieDir` values. */
 ["GalerieDirsConnection"]: AliasType<{
@@ -1939,148 +2547,35 @@ for equality and combined with a logical ‘and.’ */
 	/** Checks for equality with the object’s `gdId` field. */
 	gdId?:ValueTypes["BigInt"] | null,
 	/** Checks for equality with the object’s `gdIdRodic` field. */
-	gdIdRodic?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `gdName` field. */
-	gdName?:string | null,
-	/** Checks for equality with the object’s `gdLevel` field. */
-	gdLevel?:number | null,
-	/** Checks for equality with the object’s `gdPath` field. */
-	gdPath?:string | null,
-	/** Checks for equality with the object’s `gdHidden` field. */
-	gdHidden?:boolean | null
+	gdIdRodic?:ValueTypes["BigInt"] | null
 };
-	/** A connection to a list of `Member` values. */
-["MembersConnection"]: AliasType<{
-	/** A list of `Member` objects. */
-	nodes?:ValueTypes["Member"],
-	/** A list of edges which contains the `Member` and cursor to aid in pagination. */
-	edges?:ValueTypes["MembersEdge"],
+	/** A connection to a list of `Location` values. */
+["LocationsConnection"]: AliasType<{
+	/** A list of `Location` objects. */
+	nodes?:ValueTypes["Location"],
+	/** A list of edges which contains the `Location` and cursor to aid in pagination. */
+	edges?:ValueTypes["LocationsEdge"],
 	/** Information to aid in pagination. */
 	pageInfo?:ValueTypes["PageInfo"],
-	/** The count of *all* `Member` you could get from the connection. */
+	/** The count of *all* `Location` you could get from the connection. */
 	totalCount?:boolean,
 		__typename?: boolean
 }>;
-	["Member"]: AliasType<{
-	uId?:boolean,
-	uLogin?:boolean,
-	uPass?:boolean,
-	uJmeno?:boolean,
-	uPrijmeni?:boolean,
-	uPohlavi?:boolean,
-	uEmail?:boolean,
-	uTelefon?:boolean,
-	uNarozeni?:boolean,
-	uRodneCislo?:boolean,
-	uPoznamky?:boolean,
-	uTimestamp?:boolean,
-	uLevel?:boolean,
-	uGroup?:boolean,
-	uSkupina?:boolean,
-	uDancer?:boolean,
-	uBan?:boolean,
-	uLock?:boolean,
-	uConfirmed?:boolean,
-	uSystem?:boolean,
-	uStreet?:boolean,
-	uConscriptionNumber?:boolean,
-	uOrientationNumber?:boolean,
-	uDistrict?:boolean,
-	uCity?:boolean,
-	uPostalCode?:boolean,
-	uNationality?:boolean,
-	uMemberSince?:boolean,
-	uMemberUntil?:boolean,
-	uCreatedAt?:boolean,
-	uTeacher?:boolean,
-	uGdprSignedAt?:boolean,
-	sId?:boolean,
-	sName?:boolean,
-	paymentValid?:boolean,
-		__typename?: boolean
-}>;
-	/** A `Member` edge in the connection. */
-["MembersEdge"]: AliasType<{
+	/** A `Location` edge in the connection. */
+["LocationsEdge"]: AliasType<{
 	/** A cursor for use in pagination. */
 	cursor?:boolean,
-	/** The `Member` at the end of the edge. */
-	node?:ValueTypes["Member"],
+	/** The `Location` at the end of the edge. */
+	node?:ValueTypes["Location"],
 		__typename?: boolean
 }>;
-	/** Methods to use when ordering `Member`. */
-["MembersOrderBy"]:MembersOrderBy;
-	/** A condition to be used against `Member` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["MemberCondition"]: {
-	/** Checks for equality with the object’s `uId` field. */
-	uId?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `uLogin` field. */
-	uLogin?:string | null,
-	/** Checks for equality with the object’s `uPass` field. */
-	uPass?:string | null,
-	/** Checks for equality with the object’s `uJmeno` field. */
-	uJmeno?:string | null,
-	/** Checks for equality with the object’s `uPrijmeni` field. */
-	uPrijmeni?:string | null,
-	/** Checks for equality with the object’s `uPohlavi` field. */
-	uPohlavi?:string | null,
-	/** Checks for equality with the object’s `uEmail` field. */
-	uEmail?:string | null,
-	/** Checks for equality with the object’s `uTelefon` field. */
-	uTelefon?:string | null,
-	/** Checks for equality with the object’s `uNarozeni` field. */
-	uNarozeni?:ValueTypes["Date"] | null,
-	/** Checks for equality with the object’s `uRodneCislo` field. */
-	uRodneCislo?:string | null,
-	/** Checks for equality with the object’s `uPoznamky` field. */
-	uPoznamky?:string | null,
-	/** Checks for equality with the object’s `uTimestamp` field. */
-	uTimestamp?:ValueTypes["Datetime"] | null,
-	/** Checks for equality with the object’s `uLevel` field. */
-	uLevel?:number | null,
-	/** Checks for equality with the object’s `uGroup` field. */
-	uGroup?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `uSkupina` field. */
-	uSkupina?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `uDancer` field. */
-	uDancer?:boolean | null,
-	/** Checks for equality with the object’s `uBan` field. */
-	uBan?:boolean | null,
-	/** Checks for equality with the object’s `uLock` field. */
-	uLock?:boolean | null,
-	/** Checks for equality with the object’s `uConfirmed` field. */
-	uConfirmed?:boolean | null,
-	/** Checks for equality with the object’s `uSystem` field. */
-	uSystem?:boolean | null,
-	/** Checks for equality with the object’s `uStreet` field. */
-	uStreet?:string | null,
-	/** Checks for equality with the object’s `uConscriptionNumber` field. */
-	uConscriptionNumber?:string | null,
-	/** Checks for equality with the object’s `uOrientationNumber` field. */
-	uOrientationNumber?:string | null,
-	/** Checks for equality with the object’s `uDistrict` field. */
-	uDistrict?:string | null,
-	/** Checks for equality with the object’s `uCity` field. */
-	uCity?:string | null,
-	/** Checks for equality with the object’s `uPostalCode` field. */
-	uPostalCode?:string | null,
-	/** Checks for equality with the object’s `uNationality` field. */
-	uNationality?:string | null,
-	/** Checks for equality with the object’s `uMemberSince` field. */
-	uMemberSince?:ValueTypes["Datetime"] | null,
-	/** Checks for equality with the object’s `uMemberUntil` field. */
-	uMemberUntil?:ValueTypes["Datetime"] | null,
-	/** Checks for equality with the object’s `uCreatedAt` field. */
-	uCreatedAt?:ValueTypes["Datetime"] | null,
-	/** Checks for equality with the object’s `uTeacher` field. */
-	uTeacher?:boolean | null,
-	/** Checks for equality with the object’s `uGdprSignedAt` field. */
-	uGdprSignedAt?:ValueTypes["Datetime"] | null,
-	/** Checks for equality with the object’s `sId` field. */
-	sId?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `sName` field. */
-	sName?:string | null,
-	/** Checks for equality with the object’s `paymentValid` field. */
-	paymentValid?:boolean | null
+	/** Methods to use when ordering `Location`. */
+["LocationsOrderBy"]:LocationsOrderBy;
+	/** A condition to be used against `Location` object types. All fields are tested
+for equality and combined with a logical ‘and.’ */
+["LocationCondition"]: {
+	/** Checks for equality with the object’s `id` field. */
+	id?:ValueTypes["BigInt"] | null
 };
 	/** A connection to a list of `Page` values. */
 ["PagesConnection"]: AliasType<{
@@ -2095,8 +2590,6 @@ for equality and combined with a logical ‘and.’ */
 		__typename?: boolean
 }>;
 	["Page"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	id?:boolean,
 	url?:boolean,
 	content?:boolean,
@@ -2105,8 +2598,6 @@ for equality and combined with a logical ‘and.’ */
 	title?:boolean,
 		__typename?: boolean
 }>;
-	/** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
-["JSON"]:unknown;
 	/** A `Page` edge in the connection. */
 ["PagesEdge"]: AliasType<{
 	/** A cursor for use in pagination. */
@@ -2122,15 +2613,7 @@ for equality and combined with a logical ‘and.’ */
 	/** Checks for equality with the object’s `id` field. */
 	id?:number | null,
 	/** Checks for equality with the object’s `url` field. */
-	url?:string | null,
-	/** Checks for equality with the object’s `content` field. */
-	content?:ValueTypes["JSON"] | null,
-	/** Checks for equality with the object’s `createdAt` field. */
-	createdAt?:ValueTypes["Datetime"] | null,
-	/** Checks for equality with the object’s `updatedAt` field. */
-	updatedAt?:ValueTypes["Datetime"] | null,
-	/** Checks for equality with the object’s `title` field. */
-	title?:string | null
+	url?:string | null
 };
 	/** A connection to a list of `PageRevision` values. */
 ["PageRevisionsConnection"]: AliasType<{
@@ -2145,8 +2628,6 @@ for equality and combined with a logical ‘and.’ */
 		__typename?: boolean
 }>;
 	["PageRevision"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	revNumber?:boolean,
 	revOperation?:boolean,
 	revTimestamp?:boolean,
@@ -2172,23 +2653,7 @@ for equality and combined with a logical ‘and.’ */
 tested for equality and combined with a logical ‘and.’ */
 ["PageRevisionCondition"]: {
 	/** Checks for equality with the object’s `revNumber` field. */
-	revNumber?:number | null,
-	/** Checks for equality with the object’s `revOperation` field. */
-	revOperation?:string | null,
-	/** Checks for equality with the object’s `revTimestamp` field. */
-	revTimestamp?:ValueTypes["Datetime"] | null,
-	/** Checks for equality with the object’s `id` field. */
-	id?:number | null,
-	/** Checks for equality with the object’s `url` field. */
-	url?:string | null,
-	/** Checks for equality with the object’s `content` field. */
-	content?:ValueTypes["JSON"] | null,
-	/** Checks for equality with the object’s `createdAt` field. */
-	createdAt?:ValueTypes["Datetime"] | null,
-	/** Checks for equality with the object’s `updatedAt` field. */
-	updatedAt?:ValueTypes["Datetime"] | null,
-	/** Checks for equality with the object’s `title` field. */
-	title?:string | null
+	revNumber?:number | null
 };
 	/** A connection to a list of `Parameter` values. */
 ["ParametersConnection"]: AliasType<{
@@ -2203,8 +2668,6 @@ tested for equality and combined with a logical ‘and.’ */
 		__typename?: boolean
 }>;
 	["Parameter"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
 	paName?:boolean,
 	paValue?:boolean,
 		__typename?: boolean
@@ -2223,9 +2686,7 @@ tested for equality and combined with a logical ‘and.’ */
 for equality and combined with a logical ‘and.’ */
 ["ParameterCondition"]: {
 	/** Checks for equality with the object’s `paName` field. */
-	paName?:string | null,
-	/** Checks for equality with the object’s `paValue` field. */
-	paValue?:string | null
+	paName?:string | null
 };
 	/** A connection to a list of `Permission` values. */
 ["PermissionsConnection"]: AliasType<{
@@ -2253,45 +2714,34 @@ for equality and combined with a logical ‘and.’ */
 for equality and combined with a logical ‘and.’ */
 ["PermissionCondition"]: {
 	/** Checks for equality with the object’s `peId` field. */
-	peId?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `peName` field. */
-	peName?:string | null,
-	/** Checks for equality with the object’s `peDescription` field. */
-	peDescription?:string | null,
-	/** Checks for equality with the object’s `peAkce` field. */
-	peAkce?:number | null,
-	/** Checks for equality with the object’s `peAktuality` field. */
-	peAktuality?:number | null,
-	/** Checks for equality with the object’s `peAnkety` field. */
-	peAnkety?:number | null,
-	/** Checks for equality with the object’s `peDokumenty` field. */
-	peDokumenty?:number | null,
-	/** Checks for equality with the object’s `peGalerie` field. */
-	peGalerie?:number | null,
-	/** Checks for equality with the object’s `peInzerce` field. */
-	peInzerce?:number | null,
-	/** Checks for equality with the object’s `peKonzole` field. */
-	peKonzole?:number | null,
-	/** Checks for equality with the object’s `peNabidka` field. */
-	peNabidka?:number | null,
-	/** Checks for equality with the object’s `peNastenka` field. */
-	peNastenka?:number | null,
-	/** Checks for equality with the object’s `peNovinky` field. */
-	peNovinky?:number | null,
-	/** Checks for equality with the object’s `pePary` field. */
-	pePary?:number | null,
-	/** Checks for equality with the object’s `pePlatby` field. */
-	pePlatby?:number | null,
-	/** Checks for equality with the object’s `pePermissions` field. */
-	pePermissions?:number | null,
-	/** Checks for equality with the object’s `peRozpis` field. */
-	peRozpis?:number | null,
-	/** Checks for equality with the object’s `peSkupiny` field. */
-	peSkupiny?:number | null,
-	/** Checks for equality with the object’s `peUsers` field. */
-	peUsers?:number | null,
-	/** Checks for equality with the object’s `peMain` field. */
-	peMain?:number | null
+	peId?:ValueTypes["BigInt"] | null
+};
+	/** A connection to a list of `Person` values. */
+["PeopleConnection"]: AliasType<{
+	/** A list of `Person` objects. */
+	nodes?:ValueTypes["Person"],
+	/** A list of edges which contains the `Person` and cursor to aid in pagination. */
+	edges?:ValueTypes["PeopleEdge"],
+	/** Information to aid in pagination. */
+	pageInfo?:ValueTypes["PageInfo"],
+	/** The count of *all* `Person` you could get from the connection. */
+	totalCount?:boolean,
+		__typename?: boolean
+}>;
+	/** A `Person` edge in the connection. */
+["PeopleEdge"]: AliasType<{
+	/** A cursor for use in pagination. */
+	cursor?:boolean,
+	/** The `Person` at the end of the edge. */
+	node?:ValueTypes["Person"],
+		__typename?: boolean
+}>;
+	/** Methods to use when ordering `Person`. */
+["PeopleOrderBy"]:PeopleOrderBy;
+	/** A condition to be used against `Person` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["PersonCondition"]: {
+	/** Checks for equality with the object’s `id` field. */
+	id?:ValueTypes["BigInt"] | null
 };
 	/** A connection to a list of `PlatbyCategory` values. */
 ["PlatbyCategoriesConnection"]: AliasType<{
@@ -2320,26 +2770,8 @@ tested for equality and combined with a logical ‘and.’ */
 ["PlatbyCategoryCondition"]: {
 	/** Checks for equality with the object’s `pcId` field. */
 	pcId?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `pcName` field. */
-	pcName?:string | null,
 	/** Checks for equality with the object’s `pcSymbol` field. */
-	pcSymbol?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `pcAmount` field. */
-	pcAmount?:ValueTypes["BigFloat"] | null,
-	/** Checks for equality with the object’s `pcDateDue` field. */
-	pcDateDue?:ValueTypes["Date"] | null,
-	/** Checks for equality with the object’s `pcValidFrom` field. */
-	pcValidFrom?:ValueTypes["Date"] | null,
-	/** Checks for equality with the object’s `pcValidTo` field. */
-	pcValidTo?:ValueTypes["Date"] | null,
-	/** Checks for equality with the object’s `pcUseBase` field. */
-	pcUseBase?:boolean | null,
-	/** Checks for equality with the object’s `pcUsePrefix` field. */
-	pcUsePrefix?:boolean | null,
-	/** Checks for equality with the object’s `pcArchive` field. */
-	pcArchive?:boolean | null,
-	/** Checks for equality with the object’s `pcVisible` field. */
-	pcVisible?:boolean | null
+	pcSymbol?:ValueTypes["BigInt"] | null
 };
 	/** A connection to a list of `PlatbyGroup` values. */
 ["PlatbyGroupsConnection"]: AliasType<{
@@ -2367,15 +2799,7 @@ tested for equality and combined with a logical ‘and.’ */
 for equality and combined with a logical ‘and.’ */
 ["PlatbyGroupCondition"]: {
 	/** Checks for equality with the object’s `pgId` field. */
-	pgId?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `pgType` field. */
-	pgType?:ValueTypes["BigFloat"] | null,
-	/** Checks for equality with the object’s `pgName` field. */
-	pgName?:string | null,
-	/** Checks for equality with the object’s `pgDescription` field. */
-	pgDescription?:string | null,
-	/** Checks for equality with the object’s `pgBase` field. */
-	pgBase?:ValueTypes["BigInt"] | null
+	pgId?:ValueTypes["BigInt"] | null
 };
 	/** A connection to a list of `PlatbyRaw` values. */
 ["PlatbyRawsConnection"]: AliasType<{
@@ -2404,293 +2828,36 @@ for equality and combined with a logical ‘and.’ */
 ["PlatbyRawCondition"]: {
 	/** Checks for equality with the object’s `prId` field. */
 	prId?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `prRaw` field. */
-	prRaw?:string | null,
 	/** Checks for equality with the object’s `prHash` field. */
-	prHash?:string | null,
-	/** Checks for equality with the object’s `prSorted` field. */
-	prSorted?:boolean | null,
-	/** Checks for equality with the object’s `prDiscarded` field. */
-	prDiscarded?:boolean | null
+	prHash?:string | null
 };
-	/** A connection to a list of `Skupiny` values. */
-["SkupiniesConnection"]: AliasType<{
-	/** A list of `Skupiny` objects. */
-	nodes?:ValueTypes["Skupiny"],
-	/** A list of edges which contains the `Skupiny` and cursor to aid in pagination. */
-	edges?:ValueTypes["SkupiniesEdge"],
+	/** A connection to a list of `Tenant` values. */
+["TenantsConnection"]: AliasType<{
+	/** A list of `Tenant` objects. */
+	nodes?:ValueTypes["Tenant"],
+	/** A list of edges which contains the `Tenant` and cursor to aid in pagination. */
+	edges?:ValueTypes["TenantsEdge"],
 	/** Information to aid in pagination. */
 	pageInfo?:ValueTypes["PageInfo"],
-	/** The count of *all* `Skupiny` you could get from the connection. */
+	/** The count of *all* `Tenant` you could get from the connection. */
 	totalCount?:boolean,
 		__typename?: boolean
 }>;
-	/** A `Skupiny` edge in the connection. */
-["SkupiniesEdge"]: AliasType<{
+	/** A `Tenant` edge in the connection. */
+["TenantsEdge"]: AliasType<{
 	/** A cursor for use in pagination. */
 	cursor?:boolean,
-	/** The `Skupiny` at the end of the edge. */
-	node?:ValueTypes["Skupiny"],
+	/** The `Tenant` at the end of the edge. */
+	node?:ValueTypes["Tenant"],
 		__typename?: boolean
 }>;
-	/** Methods to use when ordering `Skupiny`. */
-["SkupiniesOrderBy"]:SkupiniesOrderBy;
-	/** A condition to be used against `Skupiny` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["SkupinyCondition"]: {
-	/** Checks for equality with the object’s `sId` field. */
-	sId?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `sName` field. */
-	sName?:string | null,
-	/** Checks for equality with the object’s `sDescription` field. */
-	sDescription?:string | null,
-	/** Checks for equality with the object’s `sColorRgb` field. */
-	sColorRgb?:string | null,
-	/** Checks for equality with the object’s `sColorText` field. */
-	sColorText?:string | null,
-	/** Checks for equality with the object’s `sLocation` field. */
-	sLocation?:string | null,
-	/** Checks for equality with the object’s `sVisible` field. */
-	sVisible?:boolean | null
+	/** Methods to use when ordering `Tenant`. */
+["TenantsOrderBy"]:TenantsOrderBy;
+	/** A condition to be used against `Tenant` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["TenantCondition"]: {
+	/** Checks for equality with the object’s `id` field. */
+	id?:ValueTypes["BigInt"] | null
 };
-	/** A connection to a list of `UsersSkupiny` values. */
-["UsersSkupiniesConnection"]: AliasType<{
-	/** A list of `UsersSkupiny` objects. */
-	nodes?:ValueTypes["UsersSkupiny"],
-	/** A list of edges which contains the `UsersSkupiny` and cursor to aid in pagination. */
-	edges?:ValueTypes["UsersSkupiniesEdge"],
-	/** Information to aid in pagination. */
-	pageInfo?:ValueTypes["PageInfo"],
-	/** The count of *all* `UsersSkupiny` you could get from the connection. */
-	totalCount?:boolean,
-		__typename?: boolean
-}>;
-	["UsersSkupiny"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
-	usId?:boolean,
-	usColor?:boolean,
-	usPlatbaMesic?:boolean,
-	usPlatbaCtvrtrok?:boolean,
-	usPlatbaPulrok?:boolean,
-	usPopis?:boolean,
-		__typename?: boolean
-}>;
-	/** A `UsersSkupiny` edge in the connection. */
-["UsersSkupiniesEdge"]: AliasType<{
-	/** A cursor for use in pagination. */
-	cursor?:boolean,
-	/** The `UsersSkupiny` at the end of the edge. */
-	node?:ValueTypes["UsersSkupiny"],
-		__typename?: boolean
-}>;
-	/** Methods to use when ordering `UsersSkupiny`. */
-["UsersSkupiniesOrderBy"]:UsersSkupiniesOrderBy;
-	/** A condition to be used against `UsersSkupiny` object types. All fields are
-tested for equality and combined with a logical ‘and.’ */
-["UsersSkupinyCondition"]: {
-	/** Checks for equality with the object’s `usId` field. */
-	usId?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `usColor` field. */
-	usColor?:string | null,
-	/** Checks for equality with the object’s `usPlatbaMesic` field. */
-	usPlatbaMesic?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `usPlatbaCtvrtrok` field. */
-	usPlatbaCtvrtrok?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `usPlatbaPulrok` field. */
-	usPlatbaPulrok?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `usPopis` field. */
-	usPopis?:string | null
-};
-	/** A connection to a list of `Video` values. */
-["VideosConnection"]: AliasType<{
-	/** A list of `Video` objects. */
-	nodes?:ValueTypes["Video"],
-	/** A list of edges which contains the `Video` and cursor to aid in pagination. */
-	edges?:ValueTypes["VideosEdge"],
-	/** Information to aid in pagination. */
-	pageInfo?:ValueTypes["PageInfo"],
-	/** The count of *all* `Video` you could get from the connection. */
-	totalCount?:boolean,
-		__typename?: boolean
-}>;
-	["Video"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
-	vId?:boolean,
-	vUri?:boolean,
-	vTitle?:boolean,
-	vAuthor?:boolean,
-	vDescription?:boolean,
-	vPlaylist?:boolean,
-	vCreatedAt?:boolean,
-	vUpdatedAt?:boolean,
-		__typename?: boolean
-}>;
-	/** A `Video` edge in the connection. */
-["VideosEdge"]: AliasType<{
-	/** A cursor for use in pagination. */
-	cursor?:boolean,
-	/** The `Video` at the end of the edge. */
-	node?:ValueTypes["Video"],
-		__typename?: boolean
-}>;
-	/** Methods to use when ordering `Video`. */
-["VideosOrderBy"]:VideosOrderBy;
-	/** A condition to be used against `Video` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["VideoCondition"]: {
-	/** Checks for equality with the object’s `vId` field. */
-	vId?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `vUri` field. */
-	vUri?:string | null,
-	/** Checks for equality with the object’s `vTitle` field. */
-	vTitle?:string | null,
-	/** Checks for equality with the object’s `vAuthor` field. */
-	vAuthor?:string | null,
-	/** Checks for equality with the object’s `vDescription` field. */
-	vDescription?:string | null,
-	/** Checks for equality with the object’s `vPlaylist` field. */
-	vPlaylist?:string | null,
-	/** Checks for equality with the object’s `vCreatedAt` field. */
-	vCreatedAt?:ValueTypes["Datetime"] | null,
-	/** Checks for equality with the object’s `vUpdatedAt` field. */
-	vUpdatedAt?:ValueTypes["Datetime"] | null
-};
-	/** A connection to a list of `VideoList` values. */
-["VideoListsConnection"]: AliasType<{
-	/** A list of `VideoList` objects. */
-	nodes?:ValueTypes["VideoList"],
-	/** A list of edges which contains the `VideoList` and cursor to aid in pagination. */
-	edges?:ValueTypes["VideoListsEdge"],
-	/** Information to aid in pagination. */
-	pageInfo?:ValueTypes["PageInfo"],
-	/** The count of *all* `VideoList` you could get from the connection. */
-	totalCount?:boolean,
-		__typename?: boolean
-}>;
-	["VideoList"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
-	vlId?:boolean,
-	vlUrl?:boolean,
-	vlTitle?:boolean,
-	vlDescription?:boolean,
-	vlCount?:boolean,
-	vlCreatedAt?:boolean,
-	vlLastChecked?:boolean,
-		__typename?: boolean
-}>;
-	/** A `VideoList` edge in the connection. */
-["VideoListsEdge"]: AliasType<{
-	/** A cursor for use in pagination. */
-	cursor?:boolean,
-	/** The `VideoList` at the end of the edge. */
-	node?:ValueTypes["VideoList"],
-		__typename?: boolean
-}>;
-	/** Methods to use when ordering `VideoList`. */
-["VideoListsOrderBy"]:VideoListsOrderBy;
-	/** A condition to be used against `VideoList` object types. All fields are tested
-for equality and combined with a logical ‘and.’ */
-["VideoListCondition"]: {
-	/** Checks for equality with the object’s `vlId` field. */
-	vlId?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `vlUrl` field. */
-	vlUrl?:string | null,
-	/** Checks for equality with the object’s `vlTitle` field. */
-	vlTitle?:string | null,
-	/** Checks for equality with the object’s `vlDescription` field. */
-	vlDescription?:string | null,
-	/** Checks for equality with the object’s `vlCount` field. */
-	vlCount?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `vlCreatedAt` field. */
-	vlCreatedAt?:ValueTypes["Datetime"] | null,
-	/** Checks for equality with the object’s `vlLastChecked` field. */
-	vlLastChecked?:ValueTypes["Datetime"] | null
-};
-	/** A connection to a list of `VideoSource` values. */
-["VideoSourcesConnection"]: AliasType<{
-	/** A list of `VideoSource` objects. */
-	nodes?:ValueTypes["VideoSource"],
-	/** A list of edges which contains the `VideoSource` and cursor to aid in pagination. */
-	edges?:ValueTypes["VideoSourcesEdge"],
-	/** Information to aid in pagination. */
-	pageInfo?:ValueTypes["PageInfo"],
-	/** The count of *all* `VideoSource` you could get from the connection. */
-	totalCount?:boolean,
-		__typename?: boolean
-}>;
-	["VideoSource"]: AliasType<{
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId?:boolean,
-	vsId?:boolean,
-	vsUrl?:boolean,
-	vsTitle?:boolean,
-	vsDescription?:boolean,
-	vsCreatedAt?:boolean,
-	vsLastChecked?:boolean,
-		__typename?: boolean
-}>;
-	/** A `VideoSource` edge in the connection. */
-["VideoSourcesEdge"]: AliasType<{
-	/** A cursor for use in pagination. */
-	cursor?:boolean,
-	/** The `VideoSource` at the end of the edge. */
-	node?:ValueTypes["VideoSource"],
-		__typename?: boolean
-}>;
-	/** Methods to use when ordering `VideoSource`. */
-["VideoSourcesOrderBy"]:VideoSourcesOrderBy;
-	/** A condition to be used against `VideoSource` object types. All fields are tested
-for equality and combined with a logical ‘and.’ */
-["VideoSourceCondition"]: {
-	/** Checks for equality with the object’s `vsId` field. */
-	vsId?:ValueTypes["BigInt"] | null,
-	/** Checks for equality with the object’s `vsUrl` field. */
-	vsUrl?:string | null,
-	/** Checks for equality with the object’s `vsTitle` field. */
-	vsTitle?:string | null,
-	/** Checks for equality with the object’s `vsDescription` field. */
-	vsDescription?:string | null,
-	/** Checks for equality with the object’s `vsCreatedAt` field. */
-	vsCreatedAt?:ValueTypes["Datetime"] | null,
-	/** Checks for equality with the object’s `vsLastChecked` field. */
-	vsLastChecked?:ValueTypes["Datetime"] | null
-};
-	/** A connection to a list of `ActiveProspectsRecord` values. */
-["ActiveProspectsConnection"]: AliasType<{
-	/** A list of `ActiveProspectsRecord` objects. */
-	nodes?:ValueTypes["ActiveProspectsRecord"],
-	/** A list of edges which contains the `ActiveProspectsRecord` and cursor to aid in pagination. */
-	edges?:ValueTypes["ActiveProspectEdge"],
-	/** The count of *all* `ActiveProspectsRecord` you could get from the connection. */
-	totalCount?:boolean,
-		__typename?: boolean
-}>;
-	/** The return type of our `activeProspects` query. */
-["ActiveProspectsRecord"]: AliasType<{
-	id?:boolean,
-	data?:ValueTypes["ProspectDatum"],
-	cohort?:boolean,
-	updatedAt?:boolean,
-		__typename?: boolean
-}>;
-	["ProspectDatum"]: AliasType<{
-	name?:boolean,
-	surname?:boolean,
-	email?:boolean,
-	phone?:boolean,
-	yearofbirth?:boolean,
-		__typename?: boolean
-}>;
-	["CrmCohort"]:CrmCohort;
-	/** A `ActiveProspectsRecord` edge in the connection. */
-["ActiveProspectEdge"]: AliasType<{
-	/** A cursor for use in pagination. */
-	cursor?:boolean,
-	/** The `ActiveProspectsRecord` at the end of the edge. */
-	node?:ValueTypes["ActiveProspectsRecord"],
-		__typename?: boolean
-}>;
 	/** A connection to a list of `BigInt` values. */
 ["CurrentCoupleIdsConnection"]: AliasType<{
 	/** A list of `BigInt` objects. */
@@ -2709,6 +2876,37 @@ for equality and combined with a logical ‘and.’ */
 	node?:boolean,
 		__typename?: boolean
 }>;
+	/** A connection to a list of `Video` values. */
+["VideosConnection"]: AliasType<{
+	/** A list of `Video` objects. */
+	nodes?:ValueTypes["Video"],
+	/** A list of edges which contains the `Video` and cursor to aid in pagination. */
+	edges?:ValueTypes["VideosEdge"],
+	/** Information to aid in pagination. */
+	pageInfo?:ValueTypes["PageInfo"],
+	/** The count of *all* `Video` you could get from the connection. */
+	totalCount?:boolean,
+		__typename?: boolean
+}>;
+	["Video"]: AliasType<{
+	vId?:boolean,
+	vUri?:boolean,
+	vTitle?:boolean,
+	vAuthor?:boolean,
+	vDescription?:boolean,
+	vPlaylist?:boolean,
+	vCreatedAt?:boolean,
+	vUpdatedAt?:boolean,
+		__typename?: boolean
+}>;
+	/** A `Video` edge in the connection. */
+["VideosEdge"]: AliasType<{
+	/** A cursor for use in pagination. */
+	cursor?:boolean,
+	/** The `Video` at the end of the edge. */
+	node?:ValueTypes["Video"],
+		__typename?: boolean
+}>;
 	/** The root mutation type which contains root level fields which mutate data. */
 ["Mutation"]: AliasType<{
 createAkce?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
@@ -2717,12 +2915,28 @@ createAkceItem?: [{	/** The exclusive input argument for this mutation. An objec
 	input:ValueTypes["CreateAkceItemInput"]},ValueTypes["CreateAkceItemPayload"]],
 createAktuality?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["CreateAktualityInput"]},ValueTypes["CreateAktualityPayload"]],
+createAttachment?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["CreateAttachmentInput"]},ValueTypes["CreateAttachmentPayload"]],
+createAttendeeExternal?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["CreateAttendeeExternalInput"]},ValueTypes["CreateAttendeeExternalPayload"]],
+createAttendeeUser?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["CreateAttendeeUserInput"]},ValueTypes["CreateAttendeeUserPayload"]],
+createCohortGroup?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["CreateCohortGroupInput"]},ValueTypes["CreateCohortGroupPayload"]],
 createDokumenty?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["CreateDokumentyInput"]},ValueTypes["CreateDokumentyPayload"]],
+createEvent?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["CreateEventInput"]},ValueTypes["CreateEventPayload"]],
+createFormResponse?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["CreateFormResponseInput"]},ValueTypes["CreateFormResponsePayload"]],
 createGalerieDir?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["CreateGalerieDirInput"]},ValueTypes["CreateGalerieDirPayload"]],
 createGalerieFoto?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["CreateGalerieFotoInput"]},ValueTypes["CreateGalerieFotoPayload"]],
+createLocation?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["CreateLocationInput"]},ValueTypes["CreateLocationPayload"]],
+createLocationAttachment?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["CreateLocationAttachmentInput"]},ValueTypes["CreateLocationAttachmentPayload"]],
 createNabidka?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["CreateNabidkaInput"]},ValueTypes["CreateNabidkaPayload"]],
 createNabidkaItem?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
@@ -2737,6 +2951,8 @@ createParyNavrh?: [{	/** The exclusive input argument for this mutation. An obje
 	input:ValueTypes["CreateParyNavrhInput"]},ValueTypes["CreateParyNavrhPayload"]],
 createPermission?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["CreatePermissionInput"]},ValueTypes["CreatePermissionPayload"]],
+createPerson?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["CreatePersonInput"]},ValueTypes["CreatePersonPayload"]],
 createPlatbyCategory?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["CreatePlatbyCategoryInput"]},ValueTypes["CreatePlatbyCategoryPayload"]],
 createPlatbyCategoryGroup?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
@@ -2749,274 +2965,224 @@ createPlatbyItem?: [{	/** The exclusive input argument for this mutation. An obj
 	input:ValueTypes["CreatePlatbyItemInput"]},ValueTypes["CreatePlatbyItemPayload"]],
 createPlatbyRaw?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["CreatePlatbyRawInput"]},ValueTypes["CreatePlatbyRawPayload"]],
+createRoom?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["CreateRoomInput"]},ValueTypes["CreateRoomPayload"]],
+createRoomAttachment?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["CreateRoomAttachmentInput"]},ValueTypes["CreateRoomAttachmentPayload"]],
 createRozpi?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["CreateRozpiInput"]},ValueTypes["CreateRozpiPayload"]],
 createRozpisItem?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["CreateRozpisItemInput"]},ValueTypes["CreateRozpisItemPayload"]],
-createSession?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["CreateSessionInput"]},ValueTypes["CreateSessionPayload"]],
 createSkupiny?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["CreateSkupinyInput"]},ValueTypes["CreateSkupinyPayload"]],
+createTenant?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["CreateTenantInput"]},ValueTypes["CreateTenantPayload"]],
+createTenantAttachment?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["CreateTenantAttachmentInput"]},ValueTypes["CreateTenantAttachmentPayload"]],
+createTenantLocation?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["CreateTenantLocationInput"]},ValueTypes["CreateTenantLocationPayload"]],
+createTenantPerson?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["CreateTenantPersonInput"]},ValueTypes["CreateTenantPersonPayload"]],
 createUpozorneni?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["CreateUpozorneniInput"]},ValueTypes["CreateUpozorneniPayload"]],
 createUpozorneniSkupiny?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["CreateUpozorneniSkupinyInput"]},ValueTypes["CreateUpozorneniSkupinyPayload"]],
 createUser?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["CreateUserInput"]},ValueTypes["CreateUserPayload"]],
-createUsersSkupiny?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["CreateUsersSkupinyInput"]},ValueTypes["CreateUsersSkupinyPayload"]],
-createVideo?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["CreateVideoInput"]},ValueTypes["CreateVideoPayload"]],
-createVideoList?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["CreateVideoListInput"]},ValueTypes["CreateVideoListPayload"]],
-createVideoSource?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["CreateVideoSourceInput"]},ValueTypes["CreateVideoSourcePayload"]],
-updateAkceByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateAkceByNodeIdInput"]},ValueTypes["UpdateAkcePayload"]],
-updateAkce?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateAkceInput"]},ValueTypes["UpdateAkcePayload"]],
-updateAkceItemByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateAkceItemByNodeIdInput"]},ValueTypes["UpdateAkceItemPayload"]],
-updateAkceItem?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateAkceItemInput"]},ValueTypes["UpdateAkceItemPayload"]],
-updateAktualityByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateAktualityByNodeIdInput"]},ValueTypes["UpdateAktualityPayload"]],
 updateAktuality?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateAktualityInput"]},ValueTypes["UpdateAktualityPayload"]],
-updateDokumentyByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateDokumentyByNodeIdInput"]},ValueTypes["UpdateDokumentyPayload"]],
+updateAttachment?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateAttachmentInput"]},ValueTypes["UpdateAttachmentPayload"]],
+updateAttendeeExternal?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateAttendeeExternalInput"]},ValueTypes["UpdateAttendeeExternalPayload"]],
+updateAttendeeUser?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateAttendeeUserInput"]},ValueTypes["UpdateAttendeeUserPayload"]],
+updateAttendeeUserByUserIdAndEventId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateAttendeeUserByUserIdAndEventIdInput"]},ValueTypes["UpdateAttendeeUserPayload"]],
+updateCohortGroup?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateCohortGroupInput"]},ValueTypes["UpdateCohortGroupPayload"]],
 updateDokumenty?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateDokumentyInput"]},ValueTypes["UpdateDokumentyPayload"]],
-updateGalerieDirByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateGalerieDirByNodeIdInput"]},ValueTypes["UpdateGalerieDirPayload"]],
+updateEvent?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateEventInput"]},ValueTypes["UpdateEventPayload"]],
+updateFormResponse?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateFormResponseInput"]},ValueTypes["UpdateFormResponsePayload"]],
 updateGalerieDir?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateGalerieDirInput"]},ValueTypes["UpdateGalerieDirPayload"]],
-updateGalerieFotoByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateGalerieFotoByNodeIdInput"]},ValueTypes["UpdateGalerieFotoPayload"]],
 updateGalerieFoto?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateGalerieFotoInput"]},ValueTypes["UpdateGalerieFotoPayload"]],
-updateNabidkaByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateNabidkaByNodeIdInput"]},ValueTypes["UpdateNabidkaPayload"]],
+updateLocation?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateLocationInput"]},ValueTypes["UpdateLocationPayload"]],
+updateLocationAttachment?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateLocationAttachmentInput"]},ValueTypes["UpdateLocationAttachmentPayload"]],
 updateNabidka?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateNabidkaInput"]},ValueTypes["UpdateNabidkaPayload"]],
-updateNabidkaItemByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateNabidkaItemByNodeIdInput"]},ValueTypes["UpdateNabidkaItemPayload"]],
 updateNabidkaItem?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateNabidkaItemInput"]},ValueTypes["UpdateNabidkaItemPayload"]],
-updatePageByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdatePageByNodeIdInput"]},ValueTypes["UpdatePagePayload"]],
+updateNabidkaItemByNiPartnerAndNiIdRodic?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateNabidkaItemByNiPartnerAndNiIdRodicInput"]},ValueTypes["UpdateNabidkaItemPayload"]],
 updatePage?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdatePageInput"]},ValueTypes["UpdatePagePayload"]],
 updatePageByUrl?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdatePageByUrlInput"]},ValueTypes["UpdatePagePayload"]],
-updateParameterByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateParameterByNodeIdInput"]},ValueTypes["UpdateParameterPayload"]],
 updateParameter?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateParameterInput"]},ValueTypes["UpdateParameterPayload"]],
-updateParyByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateParyByNodeIdInput"]},ValueTypes["UpdateParyPayload"]],
 updatePary?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateParyInput"]},ValueTypes["UpdateParyPayload"]],
-updateParyNavrhByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateParyNavrhByNodeIdInput"]},ValueTypes["UpdateParyNavrhPayload"]],
 updateParyNavrh?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateParyNavrhInput"]},ValueTypes["UpdateParyNavrhPayload"]],
-updatePermissionByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdatePermissionByNodeIdInput"]},ValueTypes["UpdatePermissionPayload"]],
 updatePermission?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdatePermissionInput"]},ValueTypes["UpdatePermissionPayload"]],
-updatePlatbyCategoryByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdatePlatbyCategoryByNodeIdInput"]},ValueTypes["UpdatePlatbyCategoryPayload"]],
+updatePerson?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdatePersonInput"]},ValueTypes["UpdatePersonPayload"]],
 updatePlatbyCategory?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdatePlatbyCategoryInput"]},ValueTypes["UpdatePlatbyCategoryPayload"]],
-updatePlatbyCategoryGroupByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdatePlatbyCategoryGroupByNodeIdInput"]},ValueTypes["UpdatePlatbyCategoryGroupPayload"]],
 updatePlatbyCategoryGroup?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdatePlatbyCategoryGroupInput"]},ValueTypes["UpdatePlatbyCategoryGroupPayload"]],
-updatePlatbyGroupByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdatePlatbyGroupByNodeIdInput"]},ValueTypes["UpdatePlatbyGroupPayload"]],
 updatePlatbyGroup?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdatePlatbyGroupInput"]},ValueTypes["UpdatePlatbyGroupPayload"]],
-updatePlatbyGroupSkupinaByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdatePlatbyGroupSkupinaByNodeIdInput"]},ValueTypes["UpdatePlatbyGroupSkupinaPayload"]],
 updatePlatbyGroupSkupina?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdatePlatbyGroupSkupinaInput"]},ValueTypes["UpdatePlatbyGroupSkupinaPayload"]],
-updatePlatbyItemByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdatePlatbyItemByNodeIdInput"]},ValueTypes["UpdatePlatbyItemPayload"]],
 updatePlatbyItem?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdatePlatbyItemInput"]},ValueTypes["UpdatePlatbyItemPayload"]],
-updatePlatbyRawByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdatePlatbyRawByNodeIdInput"]},ValueTypes["UpdatePlatbyRawPayload"]],
 updatePlatbyRaw?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdatePlatbyRawInput"]},ValueTypes["UpdatePlatbyRawPayload"]],
-updateRozpiByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateRozpiByNodeIdInput"]},ValueTypes["UpdateRozpiPayload"]],
+updateRoom?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateRoomInput"]},ValueTypes["UpdateRoomPayload"]],
+updateRoomAttachment?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateRoomAttachmentInput"]},ValueTypes["UpdateRoomAttachmentPayload"]],
 updateRozpi?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateRozpiInput"]},ValueTypes["UpdateRozpiPayload"]],
-updateRozpisItemByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateRozpisItemByNodeIdInput"]},ValueTypes["UpdateRozpisItemPayload"]],
 updateRozpisItem?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateRozpisItemInput"]},ValueTypes["UpdateRozpisItemPayload"]],
-updateSessionByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateSessionByNodeIdInput"]},ValueTypes["UpdateSessionPayload"]],
-updateSession?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateSessionInput"]},ValueTypes["UpdateSessionPayload"]],
-updateSkupinyByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateSkupinyByNodeIdInput"]},ValueTypes["UpdateSkupinyPayload"]],
 updateSkupiny?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateSkupinyInput"]},ValueTypes["UpdateSkupinyPayload"]],
-updateUpozorneniByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateUpozorneniByNodeIdInput"]},ValueTypes["UpdateUpozorneniPayload"]],
+updateTenant?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateTenantInput"]},ValueTypes["UpdateTenantPayload"]],
+updateTenantAttachment?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateTenantAttachmentInput"]},ValueTypes["UpdateTenantAttachmentPayload"]],
+updateTenantLocation?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateTenantLocationInput"]},ValueTypes["UpdateTenantLocationPayload"]],
+updateTenantPerson?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["UpdateTenantPersonInput"]},ValueTypes["UpdateTenantPersonPayload"]],
 updateUpozorneni?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateUpozorneniInput"]},ValueTypes["UpdateUpozorneniPayload"]],
-updateUpozorneniSkupinyByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateUpozorneniSkupinyByNodeIdInput"]},ValueTypes["UpdateUpozorneniSkupinyPayload"]],
 updateUpozorneniSkupiny?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateUpozorneniSkupinyInput"]},ValueTypes["UpdateUpozorneniSkupinyPayload"]],
-updateUserByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateUserByNodeIdInput"]},ValueTypes["UpdateUserPayload"]],
 updateUser?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["UpdateUserInput"]},ValueTypes["UpdateUserPayload"]],
-updateUsersSkupinyByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateUsersSkupinyByNodeIdInput"]},ValueTypes["UpdateUsersSkupinyPayload"]],
-updateUsersSkupiny?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateUsersSkupinyInput"]},ValueTypes["UpdateUsersSkupinyPayload"]],
-updateVideoByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateVideoByNodeIdInput"]},ValueTypes["UpdateVideoPayload"]],
-updateVideo?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateVideoInput"]},ValueTypes["UpdateVideoPayload"]],
-updateVideoListByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateVideoListByNodeIdInput"]},ValueTypes["UpdateVideoListPayload"]],
-updateVideoList?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateVideoListInput"]},ValueTypes["UpdateVideoListPayload"]],
-updateVideoSourceByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateVideoSourceByNodeIdInput"]},ValueTypes["UpdateVideoSourcePayload"]],
-updateVideoSource?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UpdateVideoSourceInput"]},ValueTypes["UpdateVideoSourcePayload"]],
-deleteAkceByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteAkceByNodeIdInput"]},ValueTypes["DeleteAkcePayload"]],
-deleteAkce?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteAkceInput"]},ValueTypes["DeleteAkcePayload"]],
-deleteAkceItemByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteAkceItemByNodeIdInput"]},ValueTypes["DeleteAkceItemPayload"]],
-deleteAkceItem?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteAkceItemInput"]},ValueTypes["DeleteAkceItemPayload"]],
-deleteAktualityByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteAktualityByNodeIdInput"]},ValueTypes["DeleteAktualityPayload"]],
 deleteAktuality?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteAktualityInput"]},ValueTypes["DeleteAktualityPayload"]],
-deleteDokumentyByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteDokumentyByNodeIdInput"]},ValueTypes["DeleteDokumentyPayload"]],
+deleteAttachment?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteAttachmentInput"]},ValueTypes["DeleteAttachmentPayload"]],
+deleteAttendeeExternal?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteAttendeeExternalInput"]},ValueTypes["DeleteAttendeeExternalPayload"]],
+deleteAttendeeUser?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteAttendeeUserInput"]},ValueTypes["DeleteAttendeeUserPayload"]],
+deleteAttendeeUserByUserIdAndEventId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteAttendeeUserByUserIdAndEventIdInput"]},ValueTypes["DeleteAttendeeUserPayload"]],
+deleteCohortGroup?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteCohortGroupInput"]},ValueTypes["DeleteCohortGroupPayload"]],
 deleteDokumenty?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteDokumentyInput"]},ValueTypes["DeleteDokumentyPayload"]],
-deleteGalerieDirByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteGalerieDirByNodeIdInput"]},ValueTypes["DeleteGalerieDirPayload"]],
+deleteEvent?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteEventInput"]},ValueTypes["DeleteEventPayload"]],
+deleteFormResponse?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteFormResponseInput"]},ValueTypes["DeleteFormResponsePayload"]],
 deleteGalerieDir?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteGalerieDirInput"]},ValueTypes["DeleteGalerieDirPayload"]],
-deleteGalerieFotoByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteGalerieFotoByNodeIdInput"]},ValueTypes["DeleteGalerieFotoPayload"]],
 deleteGalerieFoto?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteGalerieFotoInput"]},ValueTypes["DeleteGalerieFotoPayload"]],
-deleteNabidkaByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteNabidkaByNodeIdInput"]},ValueTypes["DeleteNabidkaPayload"]],
+deleteLocation?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteLocationInput"]},ValueTypes["DeleteLocationPayload"]],
+deleteLocationAttachment?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteLocationAttachmentInput"]},ValueTypes["DeleteLocationAttachmentPayload"]],
 deleteNabidka?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteNabidkaInput"]},ValueTypes["DeleteNabidkaPayload"]],
-deleteNabidkaItemByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteNabidkaItemByNodeIdInput"]},ValueTypes["DeleteNabidkaItemPayload"]],
 deleteNabidkaItem?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteNabidkaItemInput"]},ValueTypes["DeleteNabidkaItemPayload"]],
-deleteParameterByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteParameterByNodeIdInput"]},ValueTypes["DeleteParameterPayload"]],
+deleteNabidkaItemByNiPartnerAndNiIdRodic?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteNabidkaItemByNiPartnerAndNiIdRodicInput"]},ValueTypes["DeleteNabidkaItemPayload"]],
 deleteParameter?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteParameterInput"]},ValueTypes["DeleteParameterPayload"]],
-deleteParyByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteParyByNodeIdInput"]},ValueTypes["DeleteParyPayload"]],
 deletePary?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteParyInput"]},ValueTypes["DeleteParyPayload"]],
-deleteParyNavrhByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteParyNavrhByNodeIdInput"]},ValueTypes["DeleteParyNavrhPayload"]],
 deleteParyNavrh?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteParyNavrhInput"]},ValueTypes["DeleteParyNavrhPayload"]],
-deletePermissionByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeletePermissionByNodeIdInput"]},ValueTypes["DeletePermissionPayload"]],
 deletePermission?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeletePermissionInput"]},ValueTypes["DeletePermissionPayload"]],
-deletePlatbyCategoryByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeletePlatbyCategoryByNodeIdInput"]},ValueTypes["DeletePlatbyCategoryPayload"]],
+deletePerson?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeletePersonInput"]},ValueTypes["DeletePersonPayload"]],
 deletePlatbyCategory?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeletePlatbyCategoryInput"]},ValueTypes["DeletePlatbyCategoryPayload"]],
-deletePlatbyCategoryGroupByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeletePlatbyCategoryGroupByNodeIdInput"]},ValueTypes["DeletePlatbyCategoryGroupPayload"]],
 deletePlatbyCategoryGroup?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeletePlatbyCategoryGroupInput"]},ValueTypes["DeletePlatbyCategoryGroupPayload"]],
-deletePlatbyGroupByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeletePlatbyGroupByNodeIdInput"]},ValueTypes["DeletePlatbyGroupPayload"]],
 deletePlatbyGroup?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeletePlatbyGroupInput"]},ValueTypes["DeletePlatbyGroupPayload"]],
-deletePlatbyGroupSkupinaByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeletePlatbyGroupSkupinaByNodeIdInput"]},ValueTypes["DeletePlatbyGroupSkupinaPayload"]],
 deletePlatbyGroupSkupina?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeletePlatbyGroupSkupinaInput"]},ValueTypes["DeletePlatbyGroupSkupinaPayload"]],
-deletePlatbyItemByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeletePlatbyItemByNodeIdInput"]},ValueTypes["DeletePlatbyItemPayload"]],
 deletePlatbyItem?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeletePlatbyItemInput"]},ValueTypes["DeletePlatbyItemPayload"]],
-deletePlatbyRawByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeletePlatbyRawByNodeIdInput"]},ValueTypes["DeletePlatbyRawPayload"]],
 deletePlatbyRaw?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeletePlatbyRawInput"]},ValueTypes["DeletePlatbyRawPayload"]],
-deleteRozpiByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteRozpiByNodeIdInput"]},ValueTypes["DeleteRozpiPayload"]],
+deleteRoom?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteRoomInput"]},ValueTypes["DeleteRoomPayload"]],
+deleteRoomAttachment?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteRoomAttachmentInput"]},ValueTypes["DeleteRoomAttachmentPayload"]],
 deleteRozpi?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteRozpiInput"]},ValueTypes["DeleteRozpiPayload"]],
-deleteRozpisItemByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteRozpisItemByNodeIdInput"]},ValueTypes["DeleteRozpisItemPayload"]],
 deleteRozpisItem?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteRozpisItemInput"]},ValueTypes["DeleteRozpisItemPayload"]],
-deleteSessionByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteSessionByNodeIdInput"]},ValueTypes["DeleteSessionPayload"]],
-deleteSession?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteSessionInput"]},ValueTypes["DeleteSessionPayload"]],
-deleteSkupinyByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteSkupinyByNodeIdInput"]},ValueTypes["DeleteSkupinyPayload"]],
 deleteSkupiny?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteSkupinyInput"]},ValueTypes["DeleteSkupinyPayload"]],
-deleteUpozorneniByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteUpozorneniByNodeIdInput"]},ValueTypes["DeleteUpozorneniPayload"]],
+deleteTenant?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteTenantInput"]},ValueTypes["DeleteTenantPayload"]],
+deleteTenantAttachment?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteTenantAttachmentInput"]},ValueTypes["DeleteTenantAttachmentPayload"]],
+deleteTenantLocation?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteTenantLocationInput"]},ValueTypes["DeleteTenantLocationPayload"]],
+deleteTenantPerson?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["DeleteTenantPersonInput"]},ValueTypes["DeleteTenantPersonPayload"]],
 deleteUpozorneni?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteUpozorneniInput"]},ValueTypes["DeleteUpozorneniPayload"]],
-deleteUpozorneniSkupinyByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteUpozorneniSkupinyByNodeIdInput"]},ValueTypes["DeleteUpozorneniSkupinyPayload"]],
 deleteUpozorneniSkupiny?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteUpozorneniSkupinyInput"]},ValueTypes["DeleteUpozorneniSkupinyPayload"]],
-deleteUserByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteUserByNodeIdInput"]},ValueTypes["DeleteUserPayload"]],
 deleteUser?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["DeleteUserInput"]},ValueTypes["DeleteUserPayload"]],
-deleteUsersSkupinyByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteUsersSkupinyByNodeIdInput"]},ValueTypes["DeleteUsersSkupinyPayload"]],
-deleteUsersSkupiny?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteUsersSkupinyInput"]},ValueTypes["DeleteUsersSkupinyPayload"]],
-deleteVideoByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteVideoByNodeIdInput"]},ValueTypes["DeleteVideoPayload"]],
-deleteVideo?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteVideoInput"]},ValueTypes["DeleteVideoPayload"]],
-deleteVideoListByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteVideoListByNodeIdInput"]},ValueTypes["DeleteVideoListPayload"]],
-deleteVideoList?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteVideoListInput"]},ValueTypes["DeleteVideoListPayload"]],
-deleteVideoSourceByNodeId?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteVideoSourceByNodeIdInput"]},ValueTypes["DeleteVideoSourcePayload"]],
-deleteVideoSource?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["DeleteVideoSourceInput"]},ValueTypes["DeleteVideoSourcePayload"]],
+bookLesson?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["BookLessonInput"]},ValueTypes["BookLessonPayload"]],
+cancelLesson?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["CancelLessonInput"]},ValueTypes["CancelLessonPayload"]],
+cancelParticipation?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["CancelParticipationInput"]},ValueTypes["CancelParticipationPayload"]],
+changePassword?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["ChangePasswordInput"]},ValueTypes["ChangePasswordPayload"]],
+confirmUser?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["ConfirmUserInput"]},ValueTypes["ConfirmUserPayload"]],
+createCouple?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["CreateCoupleInput"]},ValueTypes["CreateCouplePayload"]],
+createParticipation?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["CreateParticipationInput"]},ValueTypes["CreateParticipationPayload"]],
+createParticipationExternal?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["CreateParticipationExternalInput"]},ValueTypes["CreateParticipationExternalPayload"]],
+fixUnpairedCouples?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["FixUnpairedCouplesInput"]},ValueTypes["FixUnpairedCouplesPayload"]],
 login?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["LoginInput"]},ValueTypes["LoginPayload"]],
 logout?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["LogoutInput"]},ValueTypes["LogoutPayload"]],
 prospectFormDancer?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
 	input:ValueTypes["ProspectFormDancerInput"]},ValueTypes["ProspectFormDancerPayload"]],
-uploadFile?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
-	input:ValueTypes["UploadInput"]},ValueTypes["Upload"]],
+reservationSetDesiredLessons?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["ReservationSetDesiredLessonsInput"]},ValueTypes["ReservationSetDesiredLessonsPayload"]],
+resetPassword?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["ResetPasswordInput"]},ValueTypes["ResetPasswordPayload"]],
+submitForm?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["SubmitFormInput"]},ValueTypes["SubmitFormPayload"]],
+verifyFunction?: [{	/** The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields. */
+	input:ValueTypes["VerifyFunctionInput"]},ValueTypes["VerifyFunctionPayload"]],
+uploadFile?: [{	fileName:string},ValueTypes["UploadFilePayload"]],
+downloadFile?: [{	id:number},boolean],
 		__typename?: boolean
 }>;
 	/** The output of our create `Akce` mutation. */
@@ -3043,16 +3209,19 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An input for mutations affecting `Akce` */
 ["AkceInput"]: {
 	aId?:ValueTypes["BigInt"] | null,
-	aJmeno:string,
-	aKde:string,
-	aInfo:string,
-	aOd:ValueTypes["Date"],
-	aDo:ValueTypes["Date"],
+	aJmeno?:string | null,
+	aKde?:string | null,
+	aInfo?:string | null,
+	aOd?:ValueTypes["Date"] | null,
+	aDo?:ValueTypes["Date"] | null,
 	aKapacita?:ValueTypes["BigInt"] | null,
-	aDokumenty:string,
+	aDokumenty?:string | null,
 	aTimestamp?:ValueTypes["Datetime"] | null,
 	aLock?:boolean | null,
-	aVisible?:boolean | null
+	aVisible?:boolean | null,
+	summary?:string | null,
+	isPublic?:boolean | null,
+	enableNotes?:boolean | null
 };
 	/** The output of our create `AkceItem` mutation. */
 ["CreateAkceItemPayload"]: AliasType<{
@@ -3082,9 +3251,10 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An input for mutations affecting `AkceItem` */
 ["AkceItemInput"]: {
 	aiId?:ValueTypes["BigInt"] | null,
-	aiIdRodic:ValueTypes["BigInt"],
-	aiUser:ValueTypes["BigInt"],
-	aiRokNarozeni:number
+	aiIdRodic?:ValueTypes["BigInt"] | null,
+	aiUser?:ValueTypes["BigInt"] | null,
+	aiRokNarozeni?:number | null,
+	notes?:string | null
 };
 	/** The output of our create `Aktuality` mutation. */
 ["CreateAktualityPayload"]: AliasType<{
@@ -3114,15 +3284,158 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An input for mutations affecting `Aktuality` */
 ["AktualityInput"]: {
 	atId?:ValueTypes["BigInt"] | null,
-	atKdo:ValueTypes["BigInt"],
-	atKat:string,
+	atKdo?:ValueTypes["BigInt"] | null,
+	atKat?:string | null,
 	atJmeno:string,
 	atText:string,
 	atPreview:string,
 	atFoto?:ValueTypes["BigInt"] | null,
 	atFotoMain?:ValueTypes["BigInt"] | null,
 	atTimestamp?:ValueTypes["Datetime"] | null,
-	atTimestampAdd?:ValueTypes["Datetime"] | null
+	atTimestampAdd?:ValueTypes["Datetime"] | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
+};
+	/** The output of our create `Attachment` mutation. */
+["CreateAttachmentPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `Attachment` that was created by this mutation. */
+	attachment?:ValueTypes["Attachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `User` that is related to this `Attachment`. */
+	userByUploadedBy?:ValueTypes["User"],
+attachmentEdge?: [{	/** The method to use when ordering `Attachment`. */
+	orderBy?:ValueTypes["AttachmentsOrderBy"][]},ValueTypes["AttachmentsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the create `Attachment` mutation. */
+["CreateAttachmentInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** The `Attachment` to be created by this mutation. */
+	attachment:ValueTypes["AttachmentInput"]
+};
+	/** An input for mutations affecting `Attachment` */
+["AttachmentInput"]: {
+	objectName:string,
+	previewObjectName?:string | null,
+	uploadedBy?:ValueTypes["BigInt"] | null,
+	uploadedAt?:ValueTypes["Datetime"] | null
+};
+	/** The output of our create `AttendeeExternal` mutation. */
+["CreateAttendeeExternalPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `AttendeeExternal` that was created by this mutation. */
+	attendeeExternal?:ValueTypes["AttendeeExternal"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Event` that is related to this `AttendeeExternal`. */
+	event?:ValueTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByManagedBy?:ValueTypes["User"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByConfirmedBy?:ValueTypes["User"],
+attendeeExternalEdge?: [{	/** The method to use when ordering `AttendeeExternal`. */
+	orderBy?:ValueTypes["AttendeeExternalsOrderBy"][]},ValueTypes["AttendeeExternalsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the create `AttendeeExternal` mutation. */
+["CreateAttendeeExternalInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** The `AttendeeExternal` to be created by this mutation. */
+	attendeeExternal:ValueTypes["AttendeeExternalInput"]
+};
+	/** An input for mutations affecting `AttendeeExternal` */
+["AttendeeExternalInput"]: {
+	eventId:ValueTypes["BigInt"],
+	firstName:string,
+	lastName:string,
+	email:string,
+	phone:string,
+	notes?:string | null,
+	birthNumber?:string | null,
+	guardianName?:string | null,
+	managedBy?:ValueTypes["BigInt"] | null,
+	confirmedBy?:ValueTypes["BigInt"] | null,
+	confirmedAt?:ValueTypes["Datetime"] | null,
+	createdAt?:ValueTypes["Datetime"] | null,
+	updatedAt?:ValueTypes["Datetime"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
+};
+	/** The output of our create `AttendeeUser` mutation. */
+["CreateAttendeeUserPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `AttendeeUser` that was created by this mutation. */
+	attendeeUser?:ValueTypes["AttendeeUser"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Event` that is related to this `AttendeeUser`. */
+	event?:ValueTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeUser`. */
+	user?:ValueTypes["User"],
+attendeeUserEdge?: [{	/** The method to use when ordering `AttendeeUser`. */
+	orderBy?:ValueTypes["AttendeeUsersOrderBy"][]},ValueTypes["AttendeeUsersEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the create `AttendeeUser` mutation. */
+["CreateAttendeeUserInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** The `AttendeeUser` to be created by this mutation. */
+	attendeeUser:ValueTypes["AttendeeUserInput"]
+};
+	/** An input for mutations affecting `AttendeeUser` */
+["AttendeeUserInput"]: {
+	id?:ValueTypes["BigInt"] | null,
+	eventId:ValueTypes["BigInt"],
+	userId:ValueTypes["BigInt"],
+	birthYear:number,
+	notes?:string | null,
+	tenantId?:ValueTypes["BigInt"] | null
+};
+	/** The output of our create `CohortGroup` mutation. */
+["CreateCohortGroupPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `CohortGroup` that was created by this mutation. */
+	cohortGroup?:ValueTypes["CohortGroup"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `CohortGroup`. */
+	tenantByTenant?:ValueTypes["Tenant"],
+cohortGroupEdge?: [{	/** The method to use when ordering `CohortGroup`. */
+	orderBy?:ValueTypes["CohortGroupsOrderBy"][]},ValueTypes["CohortGroupsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the create `CohortGroup` mutation. */
+["CreateCohortGroupInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** The `CohortGroup` to be created by this mutation. */
+	cohortGroup:ValueTypes["CohortGroupInput"]
+};
+	/** An input for mutations affecting `CohortGroup` */
+["CohortGroupInput"]: {
+	id?:ValueTypes["BigInt"] | null,
+	name:string,
+	description?:string | null,
+	ordering?:number | null,
+	isPublic?:boolean | null,
+	tenant?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our create `Dokumenty` mutation. */
 ["CreateDokumentyPayload"]: AliasType<{
@@ -3155,7 +3468,79 @@ payload verbatim. May be used to track mutations by the client. */
 	dFilename:string,
 	dKategorie:number,
 	dKdo:ValueTypes["BigInt"],
-	dTimestamp?:ValueTypes["Datetime"] | null
+	dTimestamp?:ValueTypes["Datetime"] | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
+};
+	/** The output of our create `Event` mutation. */
+["CreateEventPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `Event` that was created by this mutation. */
+	event?:ValueTypes["Event"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+eventEdge?: [{	/** The method to use when ordering `Event`. */
+	orderBy?:ValueTypes["EventsOrderBy"][]},ValueTypes["EventsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the create `Event` mutation. */
+["CreateEventInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** The `Event` to be created by this mutation. */
+	event:ValueTypes["EventInput"]
+};
+	/** An input for mutations affecting `Event` */
+["EventInput"]: {
+	id?:ValueTypes["BigInt"] | null,
+	name:string,
+	locationText:string,
+	description:string,
+	since:ValueTypes["Date"],
+	until:ValueTypes["Date"],
+	capacity?:ValueTypes["BigInt"] | null,
+	filesLegacy?:string | null,
+	updatedAt?:ValueTypes["Datetime"] | null,
+	isLocked?:boolean | null,
+	isVisible?:boolean | null,
+	summary?:string | null,
+	isPublic?:boolean | null,
+	enableNotes?:boolean | null,
+	tenantId?:ValueTypes["BigInt"] | null
+};
+	/** The output of our create `FormResponse` mutation. */
+["CreateFormResponsePayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `FormResponse` that was created by this mutation. */
+	formResponse?:ValueTypes["FormResponse"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+formResponseEdge?: [{	/** The method to use when ordering `FormResponse`. */
+	orderBy?:ValueTypes["FormResponsesOrderBy"][]},ValueTypes["FormResponsesEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the create `FormResponse` mutation. */
+["CreateFormResponseInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** The `FormResponse` to be created by this mutation. */
+	formResponse:ValueTypes["FormResponseInput"]
+};
+	/** An input for mutations affecting `FormResponse` */
+["FormResponseInput"]: {
+	id?:ValueTypes["BigInt"] | null,
+	type:string,
+	data:ValueTypes["JSON"],
+	url:string,
+	createdAt?:ValueTypes["Datetime"] | null,
+	updatedAt?:ValueTypes["Datetime"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our create `GalerieDir` mutation. */
 ["CreateGalerieDirPayload"]: AliasType<{
@@ -3185,7 +3570,9 @@ payload verbatim. May be used to track mutations by the client. */
 	gdName:string,
 	gdLevel?:number | null,
 	gdPath:string,
-	gdHidden?:boolean | null
+	gdHidden?:boolean | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our create `GalerieFoto` mutation. */
 ["CreateGalerieFotoPayload"]: AliasType<{
@@ -3219,7 +3606,66 @@ payload verbatim. May be used to track mutations by the client. */
 	gfName:string,
 	gfPath:string,
 	gfKdo:ValueTypes["BigInt"],
-	gfTimestamp?:ValueTypes["Datetime"] | null
+	gfTimestamp?:ValueTypes["Datetime"] | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
+};
+	/** The output of our create `Location` mutation. */
+["CreateLocationPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `Location` that was created by this mutation. */
+	location?:ValueTypes["Location"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+locationEdge?: [{	/** The method to use when ordering `Location`. */
+	orderBy?:ValueTypes["LocationsOrderBy"][]},ValueTypes["LocationsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the create `Location` mutation. */
+["CreateLocationInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** The `Location` to be created by this mutation. */
+	location:ValueTypes["LocationInput"]
+};
+	/** An input for mutations affecting `Location` */
+["LocationInput"]: {
+	id?:ValueTypes["BigInt"] | null,
+	name:string,
+	description:ValueTypes["JSON"]
+};
+	/** The output of our create `LocationAttachment` mutation. */
+["CreateLocationAttachmentPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `LocationAttachment` that was created by this mutation. */
+	locationAttachment?:ValueTypes["LocationAttachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Location` that is related to this `LocationAttachment`. */
+	location?:ValueTypes["Location"],
+	/** Reads a single `Attachment` that is related to this `LocationAttachment`. */
+	attachmentByObjectName?:ValueTypes["Attachment"],
+locationAttachmentEdge?: [{	/** The method to use when ordering `LocationAttachment`. */
+	orderBy?:ValueTypes["LocationAttachmentsOrderBy"][]},ValueTypes["LocationAttachmentsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the create `LocationAttachment` mutation. */
+["CreateLocationAttachmentInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** The `LocationAttachment` to be created by this mutation. */
+	locationAttachment:ValueTypes["LocationAttachmentInput"]
+};
+	/** An input for mutations affecting `LocationAttachment` */
+["LocationAttachmentInput"]: {
+	locationId:ValueTypes["BigInt"],
+	objectName:string
 };
 	/** The output of our create `Nabidka` mutation. */
 ["CreateNabidkaPayload"]: AliasType<{
@@ -3249,12 +3695,14 @@ payload verbatim. May be used to track mutations by the client. */
 	nId?:ValueTypes["BigInt"] | null,
 	nTrener:ValueTypes["BigInt"],
 	nPocetHod?:number | null,
-	nMaxPocetHod?:ValueTypes["BigInt"] | null,
+	nMaxPocetHod?:number | null,
 	nOd:ValueTypes["Date"],
 	nDo:ValueTypes["Date"],
 	nVisible?:boolean | null,
 	nLock?:boolean | null,
-	nTimestamp?:ValueTypes["Datetime"] | null
+	nTimestamp?:ValueTypes["Datetime"] | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our create `NabidkaItem` mutation. */
 ["CreateNabidkaItemPayload"]: AliasType<{
@@ -3287,7 +3735,9 @@ payload verbatim. May be used to track mutations by the client. */
 	niIdRodic:ValueTypes["BigInt"],
 	niPartner:ValueTypes["BigInt"],
 	niPocetHod?:number | null,
-	niLock?:boolean | null
+	niLock?:boolean | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our create `Page` mutation. */
 ["CreatePagePayload"]: AliasType<{
@@ -3356,6 +3806,8 @@ unchanged and unused. May be used by a client to track mutations. */
 	query?:ValueTypes["Query"],
 	/** Reads a single `User` that is related to this `Pary`. */
 	userByPIdPartner?:ValueTypes["User"],
+	/** Reads a single `User` that is related to this `Pary`. */
+	userByPIdPartnerka?:ValueTypes["User"],
 paryEdge?: [{	/** The method to use when ordering `Pary`. */
 	orderBy?:ValueTypes["PariesOrderBy"][]},ValueTypes["PariesEdge"]],
 		__typename?: boolean
@@ -3382,7 +3834,8 @@ payload verbatim. May be used to track mutations by the client. */
 	pHodnoceni?:number | null,
 	pArchiv?:boolean | null,
 	pTimestampAdd?:ValueTypes["Datetime"] | null,
-	pTimestampArchive?:ValueTypes["Datetime"] | null
+	pTimestampArchive?:ValueTypes["Datetime"] | null,
+	id?:ValueTypes["BigInt"] | null
 };
 	/** The output of our create `ParyNavrh` mutation. */
 ["CreateParyNavrhPayload"]: AliasType<{
@@ -3416,7 +3869,8 @@ payload verbatim. May be used to track mutations by the client. */
 	pnId?:ValueTypes["BigInt"] | null,
 	pnNavrhl:ValueTypes["BigInt"],
 	pnPartner:ValueTypes["BigInt"],
-	pnPartnerka:ValueTypes["BigInt"]
+	pnPartnerka:ValueTypes["BigInt"],
+	id?:ValueTypes["BigInt"] | null
 };
 	/** The output of our create `Permission` mutation. */
 ["CreatePermissionPayload"]: AliasType<{
@@ -3460,7 +3914,36 @@ payload verbatim. May be used to track mutations by the client. */
 	peRozpis:number,
 	peSkupiny:number,
 	peUsers:number,
-	peMain:number
+	peMain:number,
+	id?:ValueTypes["BigInt"] | null
+};
+	/** The output of our create `Person` mutation. */
+["CreatePersonPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `Person` that was created by this mutation. */
+	person?:ValueTypes["Person"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+personEdge?: [{	/** The method to use when ordering `Person`. */
+	orderBy?:ValueTypes["PeopleOrderBy"][]},ValueTypes["PeopleEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the create `Person` mutation. */
+["CreatePersonInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** The `Person` to be created by this mutation. */
+	person:ValueTypes["PersonInput"]
+};
+	/** An input for mutations affecting `Person` */
+["PersonInput"]: {
+	id?:ValueTypes["BigInt"] | null,
+	firstName:string,
+	lastName:string,
+	gender:ValueTypes["GenderType"]
 };
 	/** The output of our create `PlatbyCategory` mutation. */
 ["CreatePlatbyCategoryPayload"]: AliasType<{
@@ -3495,7 +3978,9 @@ payload verbatim. May be used to track mutations by the client. */
 	pcUseBase?:boolean | null,
 	pcUsePrefix?:boolean | null,
 	pcArchive?:boolean | null,
-	pcVisible?:boolean | null
+	pcVisible?:boolean | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our create `PlatbyCategoryGroup` mutation. */
 ["CreatePlatbyCategoryGroupPayload"]: AliasType<{
@@ -3526,7 +4011,9 @@ payload verbatim. May be used to track mutations by the client. */
 ["PlatbyCategoryGroupInput"]: {
 	pcgId?:ValueTypes["BigInt"] | null,
 	pcgIdGroup:ValueTypes["BigInt"],
-	pcgIdCategory:ValueTypes["BigInt"]
+	pcgIdCategory:ValueTypes["BigInt"],
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our create `PlatbyGroup` mutation. */
 ["CreatePlatbyGroupPayload"]: AliasType<{
@@ -3555,7 +4042,9 @@ payload verbatim. May be used to track mutations by the client. */
 	pgType?:ValueTypes["BigFloat"] | null,
 	pgName:string,
 	pgDescription:string,
-	pgBase?:ValueTypes["BigInt"] | null
+	pgBase?:ValueTypes["BigInt"] | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our create `PlatbyGroupSkupina` mutation. */
 ["CreatePlatbyGroupSkupinaPayload"]: AliasType<{
@@ -3586,7 +4075,9 @@ payload verbatim. May be used to track mutations by the client. */
 ["PlatbyGroupSkupinaInput"]: {
 	pgsId?:ValueTypes["BigInt"] | null,
 	pgsIdSkupina:ValueTypes["BigInt"],
-	pgsIdGroup:ValueTypes["BigInt"]
+	pgsIdGroup:ValueTypes["BigInt"],
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our create `PlatbyItem` mutation. */
 ["CreatePlatbyItemPayload"]: AliasType<{
@@ -3623,7 +4114,9 @@ payload verbatim. May be used to track mutations by the client. */
 	piIdRaw?:ValueTypes["BigInt"] | null,
 	piAmount:ValueTypes["BigFloat"],
 	piDate:ValueTypes["Date"],
-	piPrefix?:number | null
+	piPrefix?:number | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our create `PlatbyRaw` mutation. */
 ["CreatePlatbyRawPayload"]: AliasType<{
@@ -3652,7 +4145,69 @@ payload verbatim. May be used to track mutations by the client. */
 	prRaw:string,
 	prHash:string,
 	prSorted?:boolean | null,
-	prDiscarded?:boolean | null
+	prDiscarded?:boolean | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
+};
+	/** The output of our create `Room` mutation. */
+["CreateRoomPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `Room` that was created by this mutation. */
+	room?:ValueTypes["Room"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Location` that is related to this `Room`. */
+	locationByLocation?:ValueTypes["Location"],
+roomEdge?: [{	/** The method to use when ordering `Room`. */
+	orderBy?:ValueTypes["RoomsOrderBy"][]},ValueTypes["RoomsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the create `Room` mutation. */
+["CreateRoomInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** The `Room` to be created by this mutation. */
+	room:ValueTypes["RoomInput"]
+};
+	/** An input for mutations affecting `Room` */
+["RoomInput"]: {
+	id?:ValueTypes["BigInt"] | null,
+	name:string,
+	description:ValueTypes["JSON"],
+	location?:ValueTypes["BigInt"] | null
+};
+	/** The output of our create `RoomAttachment` mutation. */
+["CreateRoomAttachmentPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `RoomAttachment` that was created by this mutation. */
+	roomAttachment?:ValueTypes["RoomAttachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Room` that is related to this `RoomAttachment`. */
+	room?:ValueTypes["Room"],
+	/** Reads a single `Attachment` that is related to this `RoomAttachment`. */
+	attachmentByObjectName?:ValueTypes["Attachment"],
+roomAttachmentEdge?: [{	/** The method to use when ordering `RoomAttachment`. */
+	orderBy?:ValueTypes["RoomAttachmentsOrderBy"][]},ValueTypes["RoomAttachmentsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the create `RoomAttachment` mutation. */
+["CreateRoomAttachmentInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** The `RoomAttachment` to be created by this mutation. */
+	roomAttachment:ValueTypes["RoomAttachmentInput"]
+};
+	/** An input for mutations affecting `RoomAttachment` */
+["RoomAttachmentInput"]: {
+	roomId:ValueTypes["BigInt"],
+	objectName:string
 };
 	/** The output of our create `Rozpi` mutation. */
 ["CreateRozpiPayload"]: AliasType<{
@@ -3685,7 +4240,9 @@ payload verbatim. May be used to track mutations by the client. */
 	rDatum:ValueTypes["Date"],
 	rVisible?:boolean | null,
 	rLock?:boolean | null,
-	rTimestamp?:ValueTypes["Datetime"] | null
+	rTimestamp?:ValueTypes["Datetime"] | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our create `RozpisItem` mutation. */
 ["CreateRozpisItemPayload"]: AliasType<{
@@ -3719,38 +4276,9 @@ payload verbatim. May be used to track mutations by the client. */
 	riPartner?:ValueTypes["BigInt"] | null,
 	riOd:ValueTypes["Time"],
 	riDo:ValueTypes["Time"],
-	riLock?:boolean | null
-};
-	/** The output of our create `Session` mutation. */
-["CreateSessionPayload"]: AliasType<{
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:boolean,
-	/** The `Session` that was created by this mutation. */
-	session?:ValueTypes["Session"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ValueTypes["Query"],
-	/** Reads a single `User` that is related to this `Session`. */
-	userBySsUser?:ValueTypes["User"],
-sessionEdge?: [{	/** The method to use when ordering `Session`. */
-	orderBy?:ValueTypes["SessionsOrderBy"][]},ValueTypes["SessionsEdge"]],
-		__typename?: boolean
-}>;
-	/** All input for the create `Session` mutation. */
-["CreateSessionInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The `Session` to be created by this mutation. */
-	session:ValueTypes["SessionInput"]
-};
-	/** An input for mutations affecting `Session` */
-["SessionInput"]: {
-	ssId:string,
-	ssData:string,
-	ssUpdatedAt?:ValueTypes["Datetime"] | null,
-	ssLifetime:ValueTypes["BigInt"],
-	ssUser?:ValueTypes["BigInt"] | null
+	riLock?:boolean | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our create `Skupiny` mutation. */
 ["CreateSkupinyPayload"]: AliasType<{
@@ -3761,6 +4289,8 @@ unchanged and unused. May be used by a client to track mutations. */
 	skupiny?:ValueTypes["Skupiny"],
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
+	/** Reads a single `CohortGroup` that is related to this `Skupiny`. */
+	cohortGroupByCohortGroup?:ValueTypes["CohortGroup"],
 skupinyEdge?: [{	/** The method to use when ordering `Skupiny`. */
 	orderBy?:ValueTypes["SkupiniesOrderBy"][]},ValueTypes["SkupiniesEdge"]],
 		__typename?: boolean
@@ -3779,9 +4309,133 @@ payload verbatim. May be used to track mutations by the client. */
 	sName:string,
 	sDescription:string,
 	sColorRgb:string,
-	sColorText:string,
+	sColorText?:string | null,
 	sLocation?:string | null,
-	sVisible?:boolean | null
+	sVisible?:boolean | null,
+	ordering?:number | null,
+	internalInfo?:string | null,
+	cohortGroup?:ValueTypes["BigInt"] | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
+};
+	/** The output of our create `Tenant` mutation. */
+["CreateTenantPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `Tenant` that was created by this mutation. */
+	tenant?:ValueTypes["Tenant"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+tenantEdge?: [{	/** The method to use when ordering `Tenant`. */
+	orderBy?:ValueTypes["TenantsOrderBy"][]},ValueTypes["TenantsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the create `Tenant` mutation. */
+["CreateTenantInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** The `Tenant` to be created by this mutation. */
+	tenant:ValueTypes["TenantInput"]
+};
+	/** An input for mutations affecting `Tenant` */
+["TenantInput"]: {
+	id?:ValueTypes["BigInt"] | null,
+	name:string,
+	memberInfo:string,
+	origins?:(string | undefined | null)[]
+};
+	/** The output of our create `TenantAttachment` mutation. */
+["CreateTenantAttachmentPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `TenantAttachment` that was created by this mutation. */
+	tenantAttachment?:ValueTypes["TenantAttachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantAttachment`. */
+	tenant?:ValueTypes["Tenant"],
+	/** Reads a single `Attachment` that is related to this `TenantAttachment`. */
+	attachmentByObjectName?:ValueTypes["Attachment"],
+tenantAttachmentEdge?: [{	/** The method to use when ordering `TenantAttachment`. */
+	orderBy?:ValueTypes["TenantAttachmentsOrderBy"][]},ValueTypes["TenantAttachmentsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the create `TenantAttachment` mutation. */
+["CreateTenantAttachmentInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** The `TenantAttachment` to be created by this mutation. */
+	tenantAttachment:ValueTypes["TenantAttachmentInput"]
+};
+	/** An input for mutations affecting `TenantAttachment` */
+["TenantAttachmentInput"]: {
+	tenantId:ValueTypes["BigInt"],
+	objectName:string,
+	type?:ValueTypes["TenantAttachmentType"] | null
+};
+	/** The output of our create `TenantLocation` mutation. */
+["CreateTenantLocationPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `TenantLocation` that was created by this mutation. */
+	tenantLocation?:ValueTypes["TenantLocation"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantLocation`. */
+	tenant?:ValueTypes["Tenant"],
+	/** Reads a single `Location` that is related to this `TenantLocation`. */
+	location?:ValueTypes["Location"],
+tenantLocationEdge?: [{	/** The method to use when ordering `TenantLocation`. */
+	orderBy?:ValueTypes["TenantLocationsOrderBy"][]},ValueTypes["TenantLocationsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the create `TenantLocation` mutation. */
+["CreateTenantLocationInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** The `TenantLocation` to be created by this mutation. */
+	tenantLocation:ValueTypes["TenantLocationInput"]
+};
+	/** An input for mutations affecting `TenantLocation` */
+["TenantLocationInput"]: {
+	tenantId:ValueTypes["BigInt"],
+	locationId:ValueTypes["BigInt"]
+};
+	/** The output of our create `TenantPerson` mutation. */
+["CreateTenantPersonPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `TenantPerson` that was created by this mutation. */
+	tenantPerson?:ValueTypes["TenantPerson"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantPerson`. */
+	tenant?:ValueTypes["Tenant"],
+	/** Reads a single `Person` that is related to this `TenantPerson`. */
+	person?:ValueTypes["Person"],
+tenantPersonEdge?: [{	/** The method to use when ordering `TenantPerson`. */
+	orderBy?:ValueTypes["TenantPeopleOrderBy"][]},ValueTypes["TenantPeopleEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the create `TenantPerson` mutation. */
+["CreateTenantPersonInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** The `TenantPerson` to be created by this mutation. */
+	tenantPerson:ValueTypes["TenantPersonInput"]
+};
+	/** An input for mutations affecting `TenantPerson` */
+["TenantPersonInput"]: {
+	tenantId:ValueTypes["BigInt"],
+	personId:ValueTypes["BigInt"]
 };
 	/** The output of our create `Upozorneni` mutation. */
 ["CreateUpozorneniPayload"]: AliasType<{
@@ -3809,13 +4463,18 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An input for mutations affecting `Upozorneni` */
 ["UpozorneniInput"]: {
 	upId?:ValueTypes["BigInt"] | null,
-	upKdo:ValueTypes["BigInt"],
+	upKdo?:ValueTypes["BigInt"] | null,
 	upNadpis:string,
 	upText:string,
 	upBarvy?:ValueTypes["BigInt"] | null,
 	upLock?:boolean | null,
 	upTimestamp?:ValueTypes["Datetime"] | null,
-	upTimestampAdd?:ValueTypes["Datetime"] | null
+	upTimestampAdd?:ValueTypes["Datetime"] | null,
+	scheduledSince?:ValueTypes["Datetime"] | null,
+	scheduledUntil?:ValueTypes["Datetime"] | null,
+	isVisible?:boolean | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our create `UpozorneniSkupiny` mutation. */
 ["CreateUpozorneniSkupinyPayload"]: AliasType<{
@@ -3848,7 +4507,9 @@ payload verbatim. May be used to track mutations by the client. */
 	upsIdRodic:ValueTypes["BigInt"],
 	upsIdSkupina:ValueTypes["BigInt"],
 	upsColor:string,
-	upsPopis:string
+	upsPopis:string,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our create `User` mutation. */
 ["CreateUserPayload"]: AliasType<{
@@ -3890,7 +4551,7 @@ payload verbatim. May be used to track mutations by the client. */
 	uPoznamky?:string | null,
 	uTimestamp?:ValueTypes["Datetime"] | null,
 	uLevel?:number | null,
-	uGroup:ValueTypes["BigInt"],
+	uGroup?:ValueTypes["BigInt"] | null,
 	uSkupina?:ValueTypes["BigInt"] | null,
 	uDancer?:boolean | null,
 	uBan?:boolean | null,
@@ -3908,219 +4569,9 @@ payload verbatim. May be used to track mutations by the client. */
 	uMemberUntil?:ValueTypes["Datetime"] | null,
 	uCreatedAt?:ValueTypes["Datetime"] | null,
 	uTeacher?:boolean | null,
-	uGdprSignedAt?:ValueTypes["Datetime"] | null
-};
-	/** The output of our create `UsersSkupiny` mutation. */
-["CreateUsersSkupinyPayload"]: AliasType<{
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:boolean,
-	/** The `UsersSkupiny` that was created by this mutation. */
-	usersSkupiny?:ValueTypes["UsersSkupiny"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ValueTypes["Query"],
-usersSkupinyEdge?: [{	/** The method to use when ordering `UsersSkupiny`. */
-	orderBy?:ValueTypes["UsersSkupiniesOrderBy"][]},ValueTypes["UsersSkupiniesEdge"]],
-		__typename?: boolean
-}>;
-	/** All input for the create `UsersSkupiny` mutation. */
-["CreateUsersSkupinyInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The `UsersSkupiny` to be created by this mutation. */
-	usersSkupiny:ValueTypes["UsersSkupinyInput"]
-};
-	/** An input for mutations affecting `UsersSkupiny` */
-["UsersSkupinyInput"]: {
-	usId?:ValueTypes["BigInt"] | null,
-	usColor?:string | null,
-	usPlatbaMesic?:ValueTypes["BigInt"] | null,
-	usPlatbaCtvrtrok?:ValueTypes["BigInt"] | null,
-	usPlatbaPulrok?:ValueTypes["BigInt"] | null,
-	usPopis:string
-};
-	/** The output of our create `Video` mutation. */
-["CreateVideoPayload"]: AliasType<{
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:boolean,
-	/** The `Video` that was created by this mutation. */
-	video?:ValueTypes["Video"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ValueTypes["Query"],
-videoEdge?: [{	/** The method to use when ordering `Video`. */
-	orderBy?:ValueTypes["VideosOrderBy"][]},ValueTypes["VideosEdge"]],
-		__typename?: boolean
-}>;
-	/** All input for the create `Video` mutation. */
-["CreateVideoInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The `Video` to be created by this mutation. */
-	video:ValueTypes["VideoInput"]
-};
-	/** An input for mutations affecting `Video` */
-["VideoInput"]: {
-	vId?:ValueTypes["BigInt"] | null,
-	vUri:string,
-	vTitle:string,
-	vAuthor:string,
-	vDescription:string,
-	vPlaylist?:string | null,
-	vCreatedAt:ValueTypes["Datetime"],
-	vUpdatedAt?:ValueTypes["Datetime"] | null
-};
-	/** The output of our create `VideoList` mutation. */
-["CreateVideoListPayload"]: AliasType<{
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:boolean,
-	/** The `VideoList` that was created by this mutation. */
-	videoList?:ValueTypes["VideoList"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ValueTypes["Query"],
-videoListEdge?: [{	/** The method to use when ordering `VideoList`. */
-	orderBy?:ValueTypes["VideoListsOrderBy"][]},ValueTypes["VideoListsEdge"]],
-		__typename?: boolean
-}>;
-	/** All input for the create `VideoList` mutation. */
-["CreateVideoListInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The `VideoList` to be created by this mutation. */
-	videoList:ValueTypes["VideoListInput"]
-};
-	/** An input for mutations affecting `VideoList` */
-["VideoListInput"]: {
-	vlId?:ValueTypes["BigInt"] | null,
-	vlUrl:string,
-	vlTitle:string,
-	vlDescription:string,
-	vlCount:ValueTypes["BigInt"],
-	vlCreatedAt:ValueTypes["Datetime"],
-	vlLastChecked?:ValueTypes["Datetime"] | null
-};
-	/** The output of our create `VideoSource` mutation. */
-["CreateVideoSourcePayload"]: AliasType<{
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:boolean,
-	/** The `VideoSource` that was created by this mutation. */
-	videoSource?:ValueTypes["VideoSource"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ValueTypes["Query"],
-videoSourceEdge?: [{	/** The method to use when ordering `VideoSource`. */
-	orderBy?:ValueTypes["VideoSourcesOrderBy"][]},ValueTypes["VideoSourcesEdge"]],
-		__typename?: boolean
-}>;
-	/** All input for the create `VideoSource` mutation. */
-["CreateVideoSourceInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The `VideoSource` to be created by this mutation. */
-	videoSource:ValueTypes["VideoSourceInput"]
-};
-	/** An input for mutations affecting `VideoSource` */
-["VideoSourceInput"]: {
-	vsId?:ValueTypes["BigInt"] | null,
-	vsUrl:string,
-	vsTitle?:string | null,
-	vsDescription?:string | null,
-	vsCreatedAt?:ValueTypes["Datetime"] | null,
-	vsLastChecked?:ValueTypes["Datetime"] | null
-};
-	/** The output of our update `Akce` mutation. */
-["UpdateAkcePayload"]: AliasType<{
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:boolean,
-	/** The `Akce` that was updated by this mutation. */
-	akce?:ValueTypes["Akce"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ValueTypes["Query"],
-akceEdge?: [{	/** The method to use when ordering `Akce`. */
-	orderBy?:ValueTypes["AkcesOrderBy"][]},ValueTypes["AkcesEdge"]],
-		__typename?: boolean
-}>;
-	/** All input for the `updateAkceByNodeId` mutation. */
-["UpdateAkceByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Akce` to be updated. */
-	nodeId:string,
-	/** An object where the defined keys will be set on the `Akce` being updated. */
-	patch:ValueTypes["AkcePatch"]
-};
-	/** Represents an update to a `Akce`. Fields that are set will be updated. */
-["AkcePatch"]: {
-	aId?:ValueTypes["BigInt"] | null,
-	aJmeno?:string | null,
-	aKde?:string | null,
-	aInfo?:string | null,
-	aOd?:ValueTypes["Date"] | null,
-	aDo?:ValueTypes["Date"] | null,
-	aKapacita?:ValueTypes["BigInt"] | null,
-	aDokumenty?:string | null,
-	aTimestamp?:ValueTypes["Datetime"] | null,
-	aLock?:boolean | null,
-	aVisible?:boolean | null
-};
-	/** All input for the `updateAkce` mutation. */
-["UpdateAkceInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** An object where the defined keys will be set on the `Akce` being updated. */
-	patch:ValueTypes["AkcePatch"],
-	aId:ValueTypes["BigInt"]
-};
-	/** The output of our update `AkceItem` mutation. */
-["UpdateAkceItemPayload"]: AliasType<{
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:boolean,
-	/** The `AkceItem` that was updated by this mutation. */
-	akceItem?:ValueTypes["AkceItem"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ValueTypes["Query"],
-	/** Reads a single `Akce` that is related to this `AkceItem`. */
-	akceByAiIdRodic?:ValueTypes["Akce"],
-	/** Reads a single `User` that is related to this `AkceItem`. */
-	userByAiUser?:ValueTypes["User"],
-akceItemEdge?: [{	/** The method to use when ordering `AkceItem`. */
-	orderBy?:ValueTypes["AkceItemsOrderBy"][]},ValueTypes["AkceItemsEdge"]],
-		__typename?: boolean
-}>;
-	/** All input for the `updateAkceItemByNodeId` mutation. */
-["UpdateAkceItemByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `AkceItem` to be updated. */
-	nodeId:string,
-	/** An object where the defined keys will be set on the `AkceItem` being updated. */
-	patch:ValueTypes["AkceItemPatch"]
-};
-	/** Represents an update to a `AkceItem`. Fields that are set will be updated. */
-["AkceItemPatch"]: {
-	aiId?:ValueTypes["BigInt"] | null,
-	aiIdRodic?:ValueTypes["BigInt"] | null,
-	aiUser?:ValueTypes["BigInt"] | null,
-	aiRokNarozeni?:number | null
-};
-	/** All input for the `updateAkceItem` mutation. */
-["UpdateAkceItemInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** An object where the defined keys will be set on the `AkceItem` being updated. */
-	patch:ValueTypes["AkceItemPatch"],
-	aiId:ValueTypes["BigInt"]
+	uGdprSignedAt?:ValueTypes["Datetime"] | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our update `Aktuality` mutation. */
 ["UpdateAktualityPayload"]: AliasType<{
@@ -4139,15 +4590,14 @@ aktualityEdge?: [{	/** The method to use when ordering `Aktuality`. */
 	orderBy?:ValueTypes["AktualitiesOrderBy"][]},ValueTypes["AktualitiesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateAktualityByNodeId` mutation. */
-["UpdateAktualityByNodeIdInput"]: {
+	/** All input for the `updateAktuality` mutation. */
+["UpdateAktualityInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Aktuality` to be updated. */
-	nodeId:string,
 	/** An object where the defined keys will be set on the `Aktuality` being updated. */
-	patch:ValueTypes["AktualityPatch"]
+	patch:ValueTypes["AktualityPatch"],
+	atId:ValueTypes["BigInt"]
 };
 	/** Represents an update to a `Aktuality`. Fields that are set will be updated. */
 ["AktualityPatch"]: {
@@ -4160,16 +4610,164 @@ payload verbatim. May be used to track mutations by the client. */
 	atFoto?:ValueTypes["BigInt"] | null,
 	atFotoMain?:ValueTypes["BigInt"] | null,
 	atTimestamp?:ValueTypes["Datetime"] | null,
-	atTimestampAdd?:ValueTypes["Datetime"] | null
+	atTimestampAdd?:ValueTypes["Datetime"] | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
-	/** All input for the `updateAktuality` mutation. */
-["UpdateAktualityInput"]: {
+	/** The output of our update `Attachment` mutation. */
+["UpdateAttachmentPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `Attachment` that was updated by this mutation. */
+	attachment?:ValueTypes["Attachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `User` that is related to this `Attachment`. */
+	userByUploadedBy?:ValueTypes["User"],
+attachmentEdge?: [{	/** The method to use when ordering `Attachment`. */
+	orderBy?:ValueTypes["AttachmentsOrderBy"][]},ValueTypes["AttachmentsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `updateAttachment` mutation. */
+["UpdateAttachmentInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
-	/** An object where the defined keys will be set on the `Aktuality` being updated. */
-	patch:ValueTypes["AktualityPatch"],
-	atId:ValueTypes["BigInt"]
+	/** An object where the defined keys will be set on the `Attachment` being updated. */
+	patch:ValueTypes["AttachmentPatch"],
+	objectName:string
+};
+	/** Represents an update to a `Attachment`. Fields that are set will be updated. */
+["AttachmentPatch"]: {
+	objectName?:string | null,
+	previewObjectName?:string | null,
+	uploadedBy?:ValueTypes["BigInt"] | null,
+	uploadedAt?:ValueTypes["Datetime"] | null
+};
+	/** The output of our update `AttendeeExternal` mutation. */
+["UpdateAttendeeExternalPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `AttendeeExternal` that was updated by this mutation. */
+	attendeeExternal?:ValueTypes["AttendeeExternal"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Event` that is related to this `AttendeeExternal`. */
+	event?:ValueTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByManagedBy?:ValueTypes["User"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByConfirmedBy?:ValueTypes["User"],
+attendeeExternalEdge?: [{	/** The method to use when ordering `AttendeeExternal`. */
+	orderBy?:ValueTypes["AttendeeExternalsOrderBy"][]},ValueTypes["AttendeeExternalsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `updateAttendeeExternal` mutation. */
+["UpdateAttendeeExternalInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** An object where the defined keys will be set on the `AttendeeExternal` being updated. */
+	patch:ValueTypes["AttendeeExternalPatch"],
+	id:ValueTypes["BigInt"]
+};
+	/** Represents an update to a `AttendeeExternal`. Fields that are set will be updated. */
+["AttendeeExternalPatch"]: {
+	eventId?:ValueTypes["BigInt"] | null,
+	firstName?:string | null,
+	lastName?:string | null,
+	email?:string | null,
+	phone?:string | null,
+	notes?:string | null,
+	birthNumber?:string | null,
+	guardianName?:string | null,
+	managedBy?:ValueTypes["BigInt"] | null,
+	confirmedBy?:ValueTypes["BigInt"] | null,
+	confirmedAt?:ValueTypes["Datetime"] | null,
+	createdAt?:ValueTypes["Datetime"] | null,
+	updatedAt?:ValueTypes["Datetime"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
+};
+	/** The output of our update `AttendeeUser` mutation. */
+["UpdateAttendeeUserPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `AttendeeUser` that was updated by this mutation. */
+	attendeeUser?:ValueTypes["AttendeeUser"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Event` that is related to this `AttendeeUser`. */
+	event?:ValueTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeUser`. */
+	user?:ValueTypes["User"],
+attendeeUserEdge?: [{	/** The method to use when ordering `AttendeeUser`. */
+	orderBy?:ValueTypes["AttendeeUsersOrderBy"][]},ValueTypes["AttendeeUsersEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `updateAttendeeUser` mutation. */
+["UpdateAttendeeUserInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** An object where the defined keys will be set on the `AttendeeUser` being updated. */
+	patch:ValueTypes["AttendeeUserPatch"],
+	id:ValueTypes["BigInt"]
+};
+	/** Represents an update to a `AttendeeUser`. Fields that are set will be updated. */
+["AttendeeUserPatch"]: {
+	id?:ValueTypes["BigInt"] | null,
+	eventId?:ValueTypes["BigInt"] | null,
+	userId?:ValueTypes["BigInt"] | null,
+	birthYear?:number | null,
+	notes?:string | null,
+	tenantId?:ValueTypes["BigInt"] | null
+};
+	/** All input for the `updateAttendeeUserByUserIdAndEventId` mutation. */
+["UpdateAttendeeUserByUserIdAndEventIdInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** An object where the defined keys will be set on the `AttendeeUser` being updated. */
+	patch:ValueTypes["AttendeeUserPatch"],
+	userId:ValueTypes["BigInt"],
+	eventId:ValueTypes["BigInt"]
+};
+	/** The output of our update `CohortGroup` mutation. */
+["UpdateCohortGroupPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `CohortGroup` that was updated by this mutation. */
+	cohortGroup?:ValueTypes["CohortGroup"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `CohortGroup`. */
+	tenantByTenant?:ValueTypes["Tenant"],
+cohortGroupEdge?: [{	/** The method to use when ordering `CohortGroup`. */
+	orderBy?:ValueTypes["CohortGroupsOrderBy"][]},ValueTypes["CohortGroupsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `updateCohortGroup` mutation. */
+["UpdateCohortGroupInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** An object where the defined keys will be set on the `CohortGroup` being updated. */
+	patch:ValueTypes["CohortGroupPatch"],
+	id:ValueTypes["BigInt"]
+};
+	/** Represents an update to a `CohortGroup`. Fields that are set will be updated. */
+["CohortGroupPatch"]: {
+	id?:ValueTypes["BigInt"] | null,
+	name?:string | null,
+	description?:string | null,
+	ordering?:number | null,
+	isPublic?:boolean | null,
+	tenant?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our update `Dokumenty` mutation. */
 ["UpdateDokumentyPayload"]: AliasType<{
@@ -4186,15 +4784,14 @@ dokumentyEdge?: [{	/** The method to use when ordering `Dokumenty`. */
 	orderBy?:ValueTypes["DokumentiesOrderBy"][]},ValueTypes["DokumentiesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateDokumentyByNodeId` mutation. */
-["UpdateDokumentyByNodeIdInput"]: {
+	/** All input for the `updateDokumenty` mutation. */
+["UpdateDokumentyInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Dokumenty` to be updated. */
-	nodeId:string,
 	/** An object where the defined keys will be set on the `Dokumenty` being updated. */
-	patch:ValueTypes["DokumentyPatch"]
+	patch:ValueTypes["DokumentyPatch"],
+	dId:ValueTypes["BigInt"]
 };
 	/** Represents an update to a `Dokumenty`. Fields that are set will be updated. */
 ["DokumentyPatch"]: {
@@ -4204,16 +4801,81 @@ payload verbatim. May be used to track mutations by the client. */
 	dFilename?:string | null,
 	dKategorie?:number | null,
 	dKdo?:ValueTypes["BigInt"] | null,
-	dTimestamp?:ValueTypes["Datetime"] | null
+	dTimestamp?:ValueTypes["Datetime"] | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
-	/** All input for the `updateDokumenty` mutation. */
-["UpdateDokumentyInput"]: {
+	/** The output of our update `Event` mutation. */
+["UpdateEventPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `Event` that was updated by this mutation. */
+	event?:ValueTypes["Event"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+eventEdge?: [{	/** The method to use when ordering `Event`. */
+	orderBy?:ValueTypes["EventsOrderBy"][]},ValueTypes["EventsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `updateEvent` mutation. */
+["UpdateEventInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
-	/** An object where the defined keys will be set on the `Dokumenty` being updated. */
-	patch:ValueTypes["DokumentyPatch"],
-	dId:ValueTypes["BigInt"]
+	/** An object where the defined keys will be set on the `Event` being updated. */
+	patch:ValueTypes["EventPatch"],
+	id:ValueTypes["BigInt"]
+};
+	/** Represents an update to a `Event`. Fields that are set will be updated. */
+["EventPatch"]: {
+	id?:ValueTypes["BigInt"] | null,
+	name?:string | null,
+	locationText?:string | null,
+	description?:string | null,
+	since?:ValueTypes["Date"] | null,
+	until?:ValueTypes["Date"] | null,
+	capacity?:ValueTypes["BigInt"] | null,
+	filesLegacy?:string | null,
+	updatedAt?:ValueTypes["Datetime"] | null,
+	isLocked?:boolean | null,
+	isVisible?:boolean | null,
+	summary?:string | null,
+	isPublic?:boolean | null,
+	enableNotes?:boolean | null,
+	tenantId?:ValueTypes["BigInt"] | null
+};
+	/** The output of our update `FormResponse` mutation. */
+["UpdateFormResponsePayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `FormResponse` that was updated by this mutation. */
+	formResponse?:ValueTypes["FormResponse"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+formResponseEdge?: [{	/** The method to use when ordering `FormResponse`. */
+	orderBy?:ValueTypes["FormResponsesOrderBy"][]},ValueTypes["FormResponsesEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `updateFormResponse` mutation. */
+["UpdateFormResponseInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** An object where the defined keys will be set on the `FormResponse` being updated. */
+	patch:ValueTypes["FormResponsePatch"],
+	id:ValueTypes["BigInt"]
+};
+	/** Represents an update to a `FormResponse`. Fields that are set will be updated. */
+["FormResponsePatch"]: {
+	id?:ValueTypes["BigInt"] | null,
+	type?:string | null,
+	data?:ValueTypes["JSON"] | null,
+	url?:string | null,
+	createdAt?:ValueTypes["Datetime"] | null,
+	updatedAt?:ValueTypes["Datetime"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our update `GalerieDir` mutation. */
 ["UpdateGalerieDirPayload"]: AliasType<{
@@ -4228,25 +4890,6 @@ galerieDirEdge?: [{	/** The method to use when ordering `GalerieDir`. */
 	orderBy?:ValueTypes["GalerieDirsOrderBy"][]},ValueTypes["GalerieDirsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateGalerieDirByNodeId` mutation. */
-["UpdateGalerieDirByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `GalerieDir` to be updated. */
-	nodeId:string,
-	/** An object where the defined keys will be set on the `GalerieDir` being updated. */
-	patch:ValueTypes["GalerieDirPatch"]
-};
-	/** Represents an update to a `GalerieDir`. Fields that are set will be updated. */
-["GalerieDirPatch"]: {
-	gdId?:ValueTypes["BigInt"] | null,
-	gdIdRodic?:ValueTypes["BigInt"] | null,
-	gdName?:string | null,
-	gdLevel?:number | null,
-	gdPath?:string | null,
-	gdHidden?:boolean | null
-};
 	/** All input for the `updateGalerieDir` mutation. */
 ["UpdateGalerieDirInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -4255,6 +4898,17 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An object where the defined keys will be set on the `GalerieDir` being updated. */
 	patch:ValueTypes["GalerieDirPatch"],
 	gdId:ValueTypes["BigInt"]
+};
+	/** Represents an update to a `GalerieDir`. Fields that are set will be updated. */
+["GalerieDirPatch"]: {
+	gdId?:ValueTypes["BigInt"] | null,
+	gdIdRodic?:ValueTypes["BigInt"] | null,
+	gdName?:string | null,
+	gdLevel?:number | null,
+	gdPath?:string | null,
+	gdHidden?:boolean | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our update `GalerieFoto` mutation. */
 ["UpdateGalerieFotoPayload"]: AliasType<{
@@ -4273,25 +4927,6 @@ galerieFotoEdge?: [{	/** The method to use when ordering `GalerieFoto`. */
 	orderBy?:ValueTypes["GalerieFotosOrderBy"][]},ValueTypes["GalerieFotosEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateGalerieFotoByNodeId` mutation. */
-["UpdateGalerieFotoByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `GalerieFoto` to be updated. */
-	nodeId:string,
-	/** An object where the defined keys will be set on the `GalerieFoto` being updated. */
-	patch:ValueTypes["GalerieFotoPatch"]
-};
-	/** Represents an update to a `GalerieFoto`. Fields that are set will be updated. */
-["GalerieFotoPatch"]: {
-	gfId?:ValueTypes["BigInt"] | null,
-	gfIdRodic?:ValueTypes["BigInt"] | null,
-	gfName?:string | null,
-	gfPath?:string | null,
-	gfKdo?:ValueTypes["BigInt"] | null,
-	gfTimestamp?:ValueTypes["Datetime"] | null
-};
 	/** All input for the `updateGalerieFoto` mutation. */
 ["UpdateGalerieFotoInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -4300,6 +4935,77 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An object where the defined keys will be set on the `GalerieFoto` being updated. */
 	patch:ValueTypes["GalerieFotoPatch"],
 	gfId:ValueTypes["BigInt"]
+};
+	/** Represents an update to a `GalerieFoto`. Fields that are set will be updated. */
+["GalerieFotoPatch"]: {
+	gfId?:ValueTypes["BigInt"] | null,
+	gfIdRodic?:ValueTypes["BigInt"] | null,
+	gfName?:string | null,
+	gfPath?:string | null,
+	gfKdo?:ValueTypes["BigInt"] | null,
+	gfTimestamp?:ValueTypes["Datetime"] | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
+};
+	/** The output of our update `Location` mutation. */
+["UpdateLocationPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `Location` that was updated by this mutation. */
+	location?:ValueTypes["Location"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+locationEdge?: [{	/** The method to use when ordering `Location`. */
+	orderBy?:ValueTypes["LocationsOrderBy"][]},ValueTypes["LocationsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `updateLocation` mutation. */
+["UpdateLocationInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** An object where the defined keys will be set on the `Location` being updated. */
+	patch:ValueTypes["LocationPatch"],
+	id:ValueTypes["BigInt"]
+};
+	/** Represents an update to a `Location`. Fields that are set will be updated. */
+["LocationPatch"]: {
+	id?:ValueTypes["BigInt"] | null,
+	name?:string | null,
+	description?:ValueTypes["JSON"] | null
+};
+	/** The output of our update `LocationAttachment` mutation. */
+["UpdateLocationAttachmentPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `LocationAttachment` that was updated by this mutation. */
+	locationAttachment?:ValueTypes["LocationAttachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Location` that is related to this `LocationAttachment`. */
+	location?:ValueTypes["Location"],
+	/** Reads a single `Attachment` that is related to this `LocationAttachment`. */
+	attachmentByObjectName?:ValueTypes["Attachment"],
+locationAttachmentEdge?: [{	/** The method to use when ordering `LocationAttachment`. */
+	orderBy?:ValueTypes["LocationAttachmentsOrderBy"][]},ValueTypes["LocationAttachmentsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `updateLocationAttachment` mutation. */
+["UpdateLocationAttachmentInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** An object where the defined keys will be set on the `LocationAttachment` being updated. */
+	patch:ValueTypes["LocationAttachmentPatch"],
+	locationId:ValueTypes["BigInt"],
+	objectName:string
+};
+	/** Represents an update to a `LocationAttachment`. Fields that are set will be updated. */
+["LocationAttachmentPatch"]: {
+	locationId?:ValueTypes["BigInt"] | null,
+	objectName?:string | null
 };
 	/** The output of our update `Nabidka` mutation. */
 ["UpdateNabidkaPayload"]: AliasType<{
@@ -4316,28 +5022,6 @@ nabidkaEdge?: [{	/** The method to use when ordering `Nabidka`. */
 	orderBy?:ValueTypes["NabidkasOrderBy"][]},ValueTypes["NabidkasEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateNabidkaByNodeId` mutation. */
-["UpdateNabidkaByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Nabidka` to be updated. */
-	nodeId:string,
-	/** An object where the defined keys will be set on the `Nabidka` being updated. */
-	patch:ValueTypes["NabidkaPatch"]
-};
-	/** Represents an update to a `Nabidka`. Fields that are set will be updated. */
-["NabidkaPatch"]: {
-	nId?:ValueTypes["BigInt"] | null,
-	nTrener?:ValueTypes["BigInt"] | null,
-	nPocetHod?:number | null,
-	nMaxPocetHod?:ValueTypes["BigInt"] | null,
-	nOd?:ValueTypes["Date"] | null,
-	nDo?:ValueTypes["Date"] | null,
-	nVisible?:boolean | null,
-	nLock?:boolean | null,
-	nTimestamp?:ValueTypes["Datetime"] | null
-};
 	/** All input for the `updateNabidka` mutation. */
 ["UpdateNabidkaInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -4346,6 +5030,20 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An object where the defined keys will be set on the `Nabidka` being updated. */
 	patch:ValueTypes["NabidkaPatch"],
 	nId:ValueTypes["BigInt"]
+};
+	/** Represents an update to a `Nabidka`. Fields that are set will be updated. */
+["NabidkaPatch"]: {
+	nId?:ValueTypes["BigInt"] | null,
+	nTrener?:ValueTypes["BigInt"] | null,
+	nPocetHod?:number | null,
+	nMaxPocetHod?:number | null,
+	nOd?:ValueTypes["Date"] | null,
+	nDo?:ValueTypes["Date"] | null,
+	nVisible?:boolean | null,
+	nLock?:boolean | null,
+	nTimestamp?:ValueTypes["Datetime"] | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our update `NabidkaItem` mutation. */
 ["UpdateNabidkaItemPayload"]: AliasType<{
@@ -4364,24 +5062,6 @@ nabidkaItemEdge?: [{	/** The method to use when ordering `NabidkaItem`. */
 	orderBy?:ValueTypes["NabidkaItemsOrderBy"][]},ValueTypes["NabidkaItemsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateNabidkaItemByNodeId` mutation. */
-["UpdateNabidkaItemByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `NabidkaItem` to be updated. */
-	nodeId:string,
-	/** An object where the defined keys will be set on the `NabidkaItem` being updated. */
-	patch:ValueTypes["NabidkaItemPatch"]
-};
-	/** Represents an update to a `NabidkaItem`. Fields that are set will be updated. */
-["NabidkaItemPatch"]: {
-	niId?:ValueTypes["BigInt"] | null,
-	niIdRodic?:ValueTypes["BigInt"] | null,
-	niPartner?:ValueTypes["BigInt"] | null,
-	niPocetHod?:number | null,
-	niLock?:boolean | null
-};
 	/** All input for the `updateNabidkaItem` mutation. */
 ["UpdateNabidkaItemInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -4390,6 +5070,26 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An object where the defined keys will be set on the `NabidkaItem` being updated. */
 	patch:ValueTypes["NabidkaItemPatch"],
 	niId:ValueTypes["BigInt"]
+};
+	/** Represents an update to a `NabidkaItem`. Fields that are set will be updated. */
+["NabidkaItemPatch"]: {
+	niId?:ValueTypes["BigInt"] | null,
+	niIdRodic?:ValueTypes["BigInt"] | null,
+	niPartner?:ValueTypes["BigInt"] | null,
+	niPocetHod?:number | null,
+	niLock?:boolean | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
+};
+	/** All input for the `updateNabidkaItemByNiPartnerAndNiIdRodic` mutation. */
+["UpdateNabidkaItemByNiPartnerAndNiIdRodicInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** An object where the defined keys will be set on the `NabidkaItem` being updated. */
+	patch:ValueTypes["NabidkaItemPatch"],
+	niPartner:ValueTypes["BigInt"],
+	niIdRodic:ValueTypes["BigInt"]
 };
 	/** The output of our update `Page` mutation. */
 ["UpdatePagePayload"]: AliasType<{
@@ -4404,15 +5104,14 @@ pageEdge?: [{	/** The method to use when ordering `Page`. */
 	orderBy?:ValueTypes["PagesOrderBy"][]},ValueTypes["PagesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updatePageByNodeId` mutation. */
-["UpdatePageByNodeIdInput"]: {
+	/** All input for the `updatePage` mutation. */
+["UpdatePageInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Page` to be updated. */
-	nodeId:string,
 	/** An object where the defined keys will be set on the `Page` being updated. */
-	patch:ValueTypes["PagePatch"]
+	patch:ValueTypes["PagePatch"],
+	id:number
 };
 	/** Represents an update to a `Page`. Fields that are set will be updated. */
 ["PagePatch"]: {
@@ -4422,15 +5121,6 @@ payload verbatim. May be used to track mutations by the client. */
 	createdAt?:ValueTypes["Datetime"] | null,
 	updatedAt?:ValueTypes["Datetime"] | null,
 	title?:string | null
-};
-	/** All input for the `updatePage` mutation. */
-["UpdatePageInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** An object where the defined keys will be set on the `Page` being updated. */
-	patch:ValueTypes["PagePatch"],
-	id:number
 };
 	/** All input for the `updatePageByUrl` mutation. */
 ["UpdatePageByUrlInput"]: {
@@ -4454,21 +5144,6 @@ parameterEdge?: [{	/** The method to use when ordering `Parameter`. */
 	orderBy?:ValueTypes["ParametersOrderBy"][]},ValueTypes["ParametersEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateParameterByNodeId` mutation. */
-["UpdateParameterByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Parameter` to be updated. */
-	nodeId:string,
-	/** An object where the defined keys will be set on the `Parameter` being updated. */
-	patch:ValueTypes["ParameterPatch"]
-};
-	/** Represents an update to a `Parameter`. Fields that are set will be updated. */
-["ParameterPatch"]: {
-	paName?:string | null,
-	paValue?:string | null
-};
 	/** All input for the `updateParameter` mutation. */
 ["UpdateParameterInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -4477,6 +5152,11 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An object where the defined keys will be set on the `Parameter` being updated. */
 	patch:ValueTypes["ParameterPatch"],
 	paName:string
+};
+	/** Represents an update to a `Parameter`. Fields that are set will be updated. */
+["ParameterPatch"]: {
+	paName?:string | null,
+	paValue?:string | null
 };
 	/** The output of our update `Pary` mutation. */
 ["UpdateParyPayload"]: AliasType<{
@@ -4489,19 +5169,20 @@ unchanged and unused. May be used by a client to track mutations. */
 	query?:ValueTypes["Query"],
 	/** Reads a single `User` that is related to this `Pary`. */
 	userByPIdPartner?:ValueTypes["User"],
+	/** Reads a single `User` that is related to this `Pary`. */
+	userByPIdPartnerka?:ValueTypes["User"],
 paryEdge?: [{	/** The method to use when ordering `Pary`. */
 	orderBy?:ValueTypes["PariesOrderBy"][]},ValueTypes["PariesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateParyByNodeId` mutation. */
-["UpdateParyByNodeIdInput"]: {
+	/** All input for the `updatePary` mutation. */
+["UpdateParyInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Pary` to be updated. */
-	nodeId:string,
 	/** An object where the defined keys will be set on the `Pary` being updated. */
-	patch:ValueTypes["ParyPatch"]
+	patch:ValueTypes["ParyPatch"],
+	pId:ValueTypes["BigInt"]
 };
 	/** Represents an update to a `Pary`. Fields that are set will be updated. */
 ["ParyPatch"]: {
@@ -4517,16 +5198,8 @@ payload verbatim. May be used to track mutations by the client. */
 	pHodnoceni?:number | null,
 	pArchiv?:boolean | null,
 	pTimestampAdd?:ValueTypes["Datetime"] | null,
-	pTimestampArchive?:ValueTypes["Datetime"] | null
-};
-	/** All input for the `updatePary` mutation. */
-["UpdateParyInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** An object where the defined keys will be set on the `Pary` being updated. */
-	patch:ValueTypes["ParyPatch"],
-	pId:ValueTypes["BigInt"]
+	pTimestampArchive?:ValueTypes["Datetime"] | null,
+	id?:ValueTypes["BigInt"] | null
 };
 	/** The output of our update `ParyNavrh` mutation. */
 ["UpdateParyNavrhPayload"]: AliasType<{
@@ -4547,23 +5220,6 @@ paryNavrhEdge?: [{	/** The method to use when ordering `ParyNavrh`. */
 	orderBy?:ValueTypes["ParyNavrhsOrderBy"][]},ValueTypes["ParyNavrhsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateParyNavrhByNodeId` mutation. */
-["UpdateParyNavrhByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `ParyNavrh` to be updated. */
-	nodeId:string,
-	/** An object where the defined keys will be set on the `ParyNavrh` being updated. */
-	patch:ValueTypes["ParyNavrhPatch"]
-};
-	/** Represents an update to a `ParyNavrh`. Fields that are set will be updated. */
-["ParyNavrhPatch"]: {
-	pnId?:ValueTypes["BigInt"] | null,
-	pnNavrhl?:ValueTypes["BigInt"] | null,
-	pnPartner?:ValueTypes["BigInt"] | null,
-	pnPartnerka?:ValueTypes["BigInt"] | null
-};
 	/** All input for the `updateParyNavrh` mutation. */
 ["UpdateParyNavrhInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -4572,6 +5228,14 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An object where the defined keys will be set on the `ParyNavrh` being updated. */
 	patch:ValueTypes["ParyNavrhPatch"],
 	pnId:ValueTypes["BigInt"]
+};
+	/** Represents an update to a `ParyNavrh`. Fields that are set will be updated. */
+["ParyNavrhPatch"]: {
+	pnId?:ValueTypes["BigInt"] | null,
+	pnNavrhl?:ValueTypes["BigInt"] | null,
+	pnPartner?:ValueTypes["BigInt"] | null,
+	pnPartnerka?:ValueTypes["BigInt"] | null,
+	id?:ValueTypes["BigInt"] | null
 };
 	/** The output of our update `Permission` mutation. */
 ["UpdatePermissionPayload"]: AliasType<{
@@ -4586,15 +5250,14 @@ permissionEdge?: [{	/** The method to use when ordering `Permission`. */
 	orderBy?:ValueTypes["PermissionsOrderBy"][]},ValueTypes["PermissionsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updatePermissionByNodeId` mutation. */
-["UpdatePermissionByNodeIdInput"]: {
+	/** All input for the `updatePermission` mutation. */
+["UpdatePermissionInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Permission` to be updated. */
-	nodeId:string,
 	/** An object where the defined keys will be set on the `Permission` being updated. */
-	patch:ValueTypes["PermissionPatch"]
+	patch:ValueTypes["PermissionPatch"],
+	peId:ValueTypes["BigInt"]
 };
 	/** Represents an update to a `Permission`. Fields that are set will be updated. */
 ["PermissionPatch"]: {
@@ -4617,16 +5280,37 @@ payload verbatim. May be used to track mutations by the client. */
 	peRozpis?:number | null,
 	peSkupiny?:number | null,
 	peUsers?:number | null,
-	peMain?:number | null
+	peMain?:number | null,
+	id?:ValueTypes["BigInt"] | null
 };
-	/** All input for the `updatePermission` mutation. */
-["UpdatePermissionInput"]: {
+	/** The output of our update `Person` mutation. */
+["UpdatePersonPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `Person` that was updated by this mutation. */
+	person?:ValueTypes["Person"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+personEdge?: [{	/** The method to use when ordering `Person`. */
+	orderBy?:ValueTypes["PeopleOrderBy"][]},ValueTypes["PeopleEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `updatePerson` mutation. */
+["UpdatePersonInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
-	/** An object where the defined keys will be set on the `Permission` being updated. */
-	patch:ValueTypes["PermissionPatch"],
-	peId:ValueTypes["BigInt"]
+	/** An object where the defined keys will be set on the `Person` being updated. */
+	patch:ValueTypes["PersonPatch"],
+	id:ValueTypes["BigInt"]
+};
+	/** Represents an update to a `Person`. Fields that are set will be updated. */
+["PersonPatch"]: {
+	id?:ValueTypes["BigInt"] | null,
+	firstName?:string | null,
+	lastName?:string | null,
+	gender?:ValueTypes["GenderType"] | null
 };
 	/** The output of our update `PlatbyCategory` mutation. */
 ["UpdatePlatbyCategoryPayload"]: AliasType<{
@@ -4641,15 +5325,14 @@ platbyCategoryEdge?: [{	/** The method to use when ordering `PlatbyCategory`. */
 	orderBy?:ValueTypes["PlatbyCategoriesOrderBy"][]},ValueTypes["PlatbyCategoriesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updatePlatbyCategoryByNodeId` mutation. */
-["UpdatePlatbyCategoryByNodeIdInput"]: {
+	/** All input for the `updatePlatbyCategory` mutation. */
+["UpdatePlatbyCategoryInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `PlatbyCategory` to be updated. */
-	nodeId:string,
 	/** An object where the defined keys will be set on the `PlatbyCategory` being updated. */
-	patch:ValueTypes["PlatbyCategoryPatch"]
+	patch:ValueTypes["PlatbyCategoryPatch"],
+	pcId:ValueTypes["BigInt"]
 };
 	/** Represents an update to a `PlatbyCategory`. Fields that are set will be updated. */
 ["PlatbyCategoryPatch"]: {
@@ -4663,16 +5346,9 @@ payload verbatim. May be used to track mutations by the client. */
 	pcUseBase?:boolean | null,
 	pcUsePrefix?:boolean | null,
 	pcArchive?:boolean | null,
-	pcVisible?:boolean | null
-};
-	/** All input for the `updatePlatbyCategory` mutation. */
-["UpdatePlatbyCategoryInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** An object where the defined keys will be set on the `PlatbyCategory` being updated. */
-	patch:ValueTypes["PlatbyCategoryPatch"],
-	pcId:ValueTypes["BigInt"]
+	pcVisible?:boolean | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our update `PlatbyCategoryGroup` mutation. */
 ["UpdatePlatbyCategoryGroupPayload"]: AliasType<{
@@ -4691,22 +5367,6 @@ platbyCategoryGroupEdge?: [{	/** The method to use when ordering `PlatbyCategory
 	orderBy?:ValueTypes["PlatbyCategoryGroupsOrderBy"][]},ValueTypes["PlatbyCategoryGroupsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updatePlatbyCategoryGroupByNodeId` mutation. */
-["UpdatePlatbyCategoryGroupByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `PlatbyCategoryGroup` to be updated. */
-	nodeId:string,
-	/** An object where the defined keys will be set on the `PlatbyCategoryGroup` being updated. */
-	patch:ValueTypes["PlatbyCategoryGroupPatch"]
-};
-	/** Represents an update to a `PlatbyCategoryGroup`. Fields that are set will be updated. */
-["PlatbyCategoryGroupPatch"]: {
-	pcgId?:ValueTypes["BigInt"] | null,
-	pcgIdGroup?:ValueTypes["BigInt"] | null,
-	pcgIdCategory?:ValueTypes["BigInt"] | null
-};
 	/** All input for the `updatePlatbyCategoryGroup` mutation. */
 ["UpdatePlatbyCategoryGroupInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -4715,6 +5375,14 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An object where the defined keys will be set on the `PlatbyCategoryGroup` being updated. */
 	patch:ValueTypes["PlatbyCategoryGroupPatch"],
 	pcgId:ValueTypes["BigInt"]
+};
+	/** Represents an update to a `PlatbyCategoryGroup`. Fields that are set will be updated. */
+["PlatbyCategoryGroupPatch"]: {
+	pcgId?:ValueTypes["BigInt"] | null,
+	pcgIdGroup?:ValueTypes["BigInt"] | null,
+	pcgIdCategory?:ValueTypes["BigInt"] | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our update `PlatbyGroup` mutation. */
 ["UpdatePlatbyGroupPayload"]: AliasType<{
@@ -4729,24 +5397,6 @@ platbyGroupEdge?: [{	/** The method to use when ordering `PlatbyGroup`. */
 	orderBy?:ValueTypes["PlatbyGroupsOrderBy"][]},ValueTypes["PlatbyGroupsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updatePlatbyGroupByNodeId` mutation. */
-["UpdatePlatbyGroupByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `PlatbyGroup` to be updated. */
-	nodeId:string,
-	/** An object where the defined keys will be set on the `PlatbyGroup` being updated. */
-	patch:ValueTypes["PlatbyGroupPatch"]
-};
-	/** Represents an update to a `PlatbyGroup`. Fields that are set will be updated. */
-["PlatbyGroupPatch"]: {
-	pgId?:ValueTypes["BigInt"] | null,
-	pgType?:ValueTypes["BigFloat"] | null,
-	pgName?:string | null,
-	pgDescription?:string | null,
-	pgBase?:ValueTypes["BigInt"] | null
-};
 	/** All input for the `updatePlatbyGroup` mutation. */
 ["UpdatePlatbyGroupInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -4755,6 +5405,16 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An object where the defined keys will be set on the `PlatbyGroup` being updated. */
 	patch:ValueTypes["PlatbyGroupPatch"],
 	pgId:ValueTypes["BigInt"]
+};
+	/** Represents an update to a `PlatbyGroup`. Fields that are set will be updated. */
+["PlatbyGroupPatch"]: {
+	pgId?:ValueTypes["BigInt"] | null,
+	pgType?:ValueTypes["BigFloat"] | null,
+	pgName?:string | null,
+	pgDescription?:string | null,
+	pgBase?:ValueTypes["BigInt"] | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our update `PlatbyGroupSkupina` mutation. */
 ["UpdatePlatbyGroupSkupinaPayload"]: AliasType<{
@@ -4773,22 +5433,6 @@ platbyGroupSkupinaEdge?: [{	/** The method to use when ordering `PlatbyGroupSkup
 	orderBy?:ValueTypes["PlatbyGroupSkupinasOrderBy"][]},ValueTypes["PlatbyGroupSkupinasEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updatePlatbyGroupSkupinaByNodeId` mutation. */
-["UpdatePlatbyGroupSkupinaByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `PlatbyGroupSkupina` to be updated. */
-	nodeId:string,
-	/** An object where the defined keys will be set on the `PlatbyGroupSkupina` being updated. */
-	patch:ValueTypes["PlatbyGroupSkupinaPatch"]
-};
-	/** Represents an update to a `PlatbyGroupSkupina`. Fields that are set will be updated. */
-["PlatbyGroupSkupinaPatch"]: {
-	pgsId?:ValueTypes["BigInt"] | null,
-	pgsIdSkupina?:ValueTypes["BigInt"] | null,
-	pgsIdGroup?:ValueTypes["BigInt"] | null
-};
 	/** All input for the `updatePlatbyGroupSkupina` mutation. */
 ["UpdatePlatbyGroupSkupinaInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -4797,6 +5441,14 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An object where the defined keys will be set on the `PlatbyGroupSkupina` being updated. */
 	patch:ValueTypes["PlatbyGroupSkupinaPatch"],
 	pgsId:ValueTypes["BigInt"]
+};
+	/** Represents an update to a `PlatbyGroupSkupina`. Fields that are set will be updated. */
+["PlatbyGroupSkupinaPatch"]: {
+	pgsId?:ValueTypes["BigInt"] | null,
+	pgsIdSkupina?:ValueTypes["BigInt"] | null,
+	pgsIdGroup?:ValueTypes["BigInt"] | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our update `PlatbyItem` mutation. */
 ["UpdatePlatbyItemPayload"]: AliasType<{
@@ -4817,15 +5469,14 @@ platbyItemEdge?: [{	/** The method to use when ordering `PlatbyItem`. */
 	orderBy?:ValueTypes["PlatbyItemsOrderBy"][]},ValueTypes["PlatbyItemsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updatePlatbyItemByNodeId` mutation. */
-["UpdatePlatbyItemByNodeIdInput"]: {
+	/** All input for the `updatePlatbyItem` mutation. */
+["UpdatePlatbyItemInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `PlatbyItem` to be updated. */
-	nodeId:string,
 	/** An object where the defined keys will be set on the `PlatbyItem` being updated. */
-	patch:ValueTypes["PlatbyItemPatch"]
+	patch:ValueTypes["PlatbyItemPatch"],
+	piId:ValueTypes["BigInt"]
 };
 	/** Represents an update to a `PlatbyItem`. Fields that are set will be updated. */
 ["PlatbyItemPatch"]: {
@@ -4835,16 +5486,9 @@ payload verbatim. May be used to track mutations by the client. */
 	piIdRaw?:ValueTypes["BigInt"] | null,
 	piAmount?:ValueTypes["BigFloat"] | null,
 	piDate?:ValueTypes["Date"] | null,
-	piPrefix?:number | null
-};
-	/** All input for the `updatePlatbyItem` mutation. */
-["UpdatePlatbyItemInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** An object where the defined keys will be set on the `PlatbyItem` being updated. */
-	patch:ValueTypes["PlatbyItemPatch"],
-	piId:ValueTypes["BigInt"]
+	piPrefix?:number | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our update `PlatbyRaw` mutation. */
 ["UpdatePlatbyRawPayload"]: AliasType<{
@@ -4859,24 +5503,6 @@ platbyRawEdge?: [{	/** The method to use when ordering `PlatbyRaw`. */
 	orderBy?:ValueTypes["PlatbyRawsOrderBy"][]},ValueTypes["PlatbyRawsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updatePlatbyRawByNodeId` mutation. */
-["UpdatePlatbyRawByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `PlatbyRaw` to be updated. */
-	nodeId:string,
-	/** An object where the defined keys will be set on the `PlatbyRaw` being updated. */
-	patch:ValueTypes["PlatbyRawPatch"]
-};
-	/** Represents an update to a `PlatbyRaw`. Fields that are set will be updated. */
-["PlatbyRawPatch"]: {
-	prId?:ValueTypes["BigInt"] | null,
-	prRaw?:string | null,
-	prHash?:string | null,
-	prSorted?:boolean | null,
-	prDiscarded?:boolean | null
-};
 	/** All input for the `updatePlatbyRaw` mutation. */
 ["UpdatePlatbyRawInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -4885,6 +5511,79 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An object where the defined keys will be set on the `PlatbyRaw` being updated. */
 	patch:ValueTypes["PlatbyRawPatch"],
 	prId:ValueTypes["BigInt"]
+};
+	/** Represents an update to a `PlatbyRaw`. Fields that are set will be updated. */
+["PlatbyRawPatch"]: {
+	prId?:ValueTypes["BigInt"] | null,
+	prRaw?:string | null,
+	prHash?:string | null,
+	prSorted?:boolean | null,
+	prDiscarded?:boolean | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
+};
+	/** The output of our update `Room` mutation. */
+["UpdateRoomPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `Room` that was updated by this mutation. */
+	room?:ValueTypes["Room"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Location` that is related to this `Room`. */
+	locationByLocation?:ValueTypes["Location"],
+roomEdge?: [{	/** The method to use when ordering `Room`. */
+	orderBy?:ValueTypes["RoomsOrderBy"][]},ValueTypes["RoomsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `updateRoom` mutation. */
+["UpdateRoomInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** An object where the defined keys will be set on the `Room` being updated. */
+	patch:ValueTypes["RoomPatch"],
+	id:ValueTypes["BigInt"]
+};
+	/** Represents an update to a `Room`. Fields that are set will be updated. */
+["RoomPatch"]: {
+	id?:ValueTypes["BigInt"] | null,
+	name?:string | null,
+	description?:ValueTypes["JSON"] | null,
+	location?:ValueTypes["BigInt"] | null
+};
+	/** The output of our update `RoomAttachment` mutation. */
+["UpdateRoomAttachmentPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `RoomAttachment` that was updated by this mutation. */
+	roomAttachment?:ValueTypes["RoomAttachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Room` that is related to this `RoomAttachment`. */
+	room?:ValueTypes["Room"],
+	/** Reads a single `Attachment` that is related to this `RoomAttachment`. */
+	attachmentByObjectName?:ValueTypes["Attachment"],
+roomAttachmentEdge?: [{	/** The method to use when ordering `RoomAttachment`. */
+	orderBy?:ValueTypes["RoomAttachmentsOrderBy"][]},ValueTypes["RoomAttachmentsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `updateRoomAttachment` mutation. */
+["UpdateRoomAttachmentInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** An object where the defined keys will be set on the `RoomAttachment` being updated. */
+	patch:ValueTypes["RoomAttachmentPatch"],
+	roomId:ValueTypes["BigInt"],
+	objectName:string
+};
+	/** Represents an update to a `RoomAttachment`. Fields that are set will be updated. */
+["RoomAttachmentPatch"]: {
+	roomId?:ValueTypes["BigInt"] | null,
+	objectName?:string | null
 };
 	/** The output of our update `Rozpi` mutation. */
 ["UpdateRozpiPayload"]: AliasType<{
@@ -4901,15 +5600,14 @@ rozpiEdge?: [{	/** The method to use when ordering `Rozpi`. */
 	orderBy?:ValueTypes["RozpisOrderBy"][]},ValueTypes["RozpisEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateRozpiByNodeId` mutation. */
-["UpdateRozpiByNodeIdInput"]: {
+	/** All input for the `updateRozpi` mutation. */
+["UpdateRozpiInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Rozpi` to be updated. */
-	nodeId:string,
 	/** An object where the defined keys will be set on the `Rozpi` being updated. */
-	patch:ValueTypes["RozpiPatch"]
+	patch:ValueTypes["RozpiPatch"],
+	rId:ValueTypes["BigInt"]
 };
 	/** Represents an update to a `Rozpi`. Fields that are set will be updated. */
 ["RozpiPatch"]: {
@@ -4919,16 +5617,9 @@ payload verbatim. May be used to track mutations by the client. */
 	rDatum?:ValueTypes["Date"] | null,
 	rVisible?:boolean | null,
 	rLock?:boolean | null,
-	rTimestamp?:ValueTypes["Datetime"] | null
-};
-	/** All input for the `updateRozpi` mutation. */
-["UpdateRozpiInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** An object where the defined keys will be set on the `Rozpi` being updated. */
-	patch:ValueTypes["RozpiPatch"],
-	rId:ValueTypes["BigInt"]
+	rTimestamp?:ValueTypes["Datetime"] | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our update `RozpisItem` mutation. */
 ["UpdateRozpisItemPayload"]: AliasType<{
@@ -4947,25 +5638,6 @@ rozpisItemEdge?: [{	/** The method to use when ordering `RozpisItem`. */
 	orderBy?:ValueTypes["RozpisItemsOrderBy"][]},ValueTypes["RozpisItemsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateRozpisItemByNodeId` mutation. */
-["UpdateRozpisItemByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `RozpisItem` to be updated. */
-	nodeId:string,
-	/** An object where the defined keys will be set on the `RozpisItem` being updated. */
-	patch:ValueTypes["RozpisItemPatch"]
-};
-	/** Represents an update to a `RozpisItem`. Fields that are set will be updated. */
-["RozpisItemPatch"]: {
-	riId?:ValueTypes["BigInt"] | null,
-	riIdRodic?:ValueTypes["BigInt"] | null,
-	riPartner?:ValueTypes["BigInt"] | null,
-	riOd?:ValueTypes["Time"] | null,
-	riDo?:ValueTypes["Time"] | null,
-	riLock?:boolean | null
-};
 	/** All input for the `updateRozpisItem` mutation. */
 ["UpdateRozpisItemInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -4975,47 +5647,16 @@ payload verbatim. May be used to track mutations by the client. */
 	patch:ValueTypes["RozpisItemPatch"],
 	riId:ValueTypes["BigInt"]
 };
-	/** The output of our update `Session` mutation. */
-["UpdateSessionPayload"]: AliasType<{
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:boolean,
-	/** The `Session` that was updated by this mutation. */
-	session?:ValueTypes["Session"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ValueTypes["Query"],
-	/** Reads a single `User` that is related to this `Session`. */
-	userBySsUser?:ValueTypes["User"],
-sessionEdge?: [{	/** The method to use when ordering `Session`. */
-	orderBy?:ValueTypes["SessionsOrderBy"][]},ValueTypes["SessionsEdge"]],
-		__typename?: boolean
-}>;
-	/** All input for the `updateSessionByNodeId` mutation. */
-["UpdateSessionByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Session` to be updated. */
-	nodeId:string,
-	/** An object where the defined keys will be set on the `Session` being updated. */
-	patch:ValueTypes["SessionPatch"]
-};
-	/** Represents an update to a `Session`. Fields that are set will be updated. */
-["SessionPatch"]: {
-	ssId?:string | null,
-	ssData?:string | null,
-	ssUpdatedAt?:ValueTypes["Datetime"] | null,
-	ssLifetime?:ValueTypes["BigInt"] | null,
-	ssUser?:ValueTypes["BigInt"] | null
-};
-	/** All input for the `updateSession` mutation. */
-["UpdateSessionInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** An object where the defined keys will be set on the `Session` being updated. */
-	patch:ValueTypes["SessionPatch"],
-	ssId:string
+	/** Represents an update to a `RozpisItem`. Fields that are set will be updated. */
+["RozpisItemPatch"]: {
+	riId?:ValueTypes["BigInt"] | null,
+	riIdRodic?:ValueTypes["BigInt"] | null,
+	riPartner?:ValueTypes["BigInt"] | null,
+	riOd?:ValueTypes["Time"] | null,
+	riDo?:ValueTypes["Time"] | null,
+	riLock?:boolean | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our update `Skupiny` mutation. */
 ["UpdateSkupinyPayload"]: AliasType<{
@@ -5026,19 +5667,20 @@ unchanged and unused. May be used by a client to track mutations. */
 	skupiny?:ValueTypes["Skupiny"],
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
+	/** Reads a single `CohortGroup` that is related to this `Skupiny`. */
+	cohortGroupByCohortGroup?:ValueTypes["CohortGroup"],
 skupinyEdge?: [{	/** The method to use when ordering `Skupiny`. */
 	orderBy?:ValueTypes["SkupiniesOrderBy"][]},ValueTypes["SkupiniesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateSkupinyByNodeId` mutation. */
-["UpdateSkupinyByNodeIdInput"]: {
+	/** All input for the `updateSkupiny` mutation. */
+["UpdateSkupinyInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Skupiny` to be updated. */
-	nodeId:string,
 	/** An object where the defined keys will be set on the `Skupiny` being updated. */
-	patch:ValueTypes["SkupinyPatch"]
+	patch:ValueTypes["SkupinyPatch"],
+	sId:ValueTypes["BigInt"]
 };
 	/** Represents an update to a `Skupiny`. Fields that are set will be updated. */
 ["SkupinyPatch"]: {
@@ -5048,16 +5690,138 @@ payload verbatim. May be used to track mutations by the client. */
 	sColorRgb?:string | null,
 	sColorText?:string | null,
 	sLocation?:string | null,
-	sVisible?:boolean | null
+	sVisible?:boolean | null,
+	ordering?:number | null,
+	internalInfo?:string | null,
+	cohortGroup?:ValueTypes["BigInt"] | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
-	/** All input for the `updateSkupiny` mutation. */
-["UpdateSkupinyInput"]: {
+	/** The output of our update `Tenant` mutation. */
+["UpdateTenantPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `Tenant` that was updated by this mutation. */
+	tenant?:ValueTypes["Tenant"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+tenantEdge?: [{	/** The method to use when ordering `Tenant`. */
+	orderBy?:ValueTypes["TenantsOrderBy"][]},ValueTypes["TenantsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `updateTenant` mutation. */
+["UpdateTenantInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
-	/** An object where the defined keys will be set on the `Skupiny` being updated. */
-	patch:ValueTypes["SkupinyPatch"],
-	sId:ValueTypes["BigInt"]
+	/** An object where the defined keys will be set on the `Tenant` being updated. */
+	patch:ValueTypes["TenantPatch"],
+	id:ValueTypes["BigInt"]
+};
+	/** Represents an update to a `Tenant`. Fields that are set will be updated. */
+["TenantPatch"]: {
+	id?:ValueTypes["BigInt"] | null,
+	name?:string | null,
+	memberInfo?:string | null,
+	origins?:(string | undefined | null)[]
+};
+	/** The output of our update `TenantAttachment` mutation. */
+["UpdateTenantAttachmentPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `TenantAttachment` that was updated by this mutation. */
+	tenantAttachment?:ValueTypes["TenantAttachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantAttachment`. */
+	tenant?:ValueTypes["Tenant"],
+	/** Reads a single `Attachment` that is related to this `TenantAttachment`. */
+	attachmentByObjectName?:ValueTypes["Attachment"],
+tenantAttachmentEdge?: [{	/** The method to use when ordering `TenantAttachment`. */
+	orderBy?:ValueTypes["TenantAttachmentsOrderBy"][]},ValueTypes["TenantAttachmentsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `updateTenantAttachment` mutation. */
+["UpdateTenantAttachmentInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** An object where the defined keys will be set on the `TenantAttachment` being updated. */
+	patch:ValueTypes["TenantAttachmentPatch"],
+	tenantId:ValueTypes["BigInt"],
+	objectName:string
+};
+	/** Represents an update to a `TenantAttachment`. Fields that are set will be updated. */
+["TenantAttachmentPatch"]: {
+	tenantId?:ValueTypes["BigInt"] | null,
+	objectName?:string | null,
+	type?:ValueTypes["TenantAttachmentType"] | null
+};
+	/** The output of our update `TenantLocation` mutation. */
+["UpdateTenantLocationPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `TenantLocation` that was updated by this mutation. */
+	tenantLocation?:ValueTypes["TenantLocation"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantLocation`. */
+	tenant?:ValueTypes["Tenant"],
+	/** Reads a single `Location` that is related to this `TenantLocation`. */
+	location?:ValueTypes["Location"],
+tenantLocationEdge?: [{	/** The method to use when ordering `TenantLocation`. */
+	orderBy?:ValueTypes["TenantLocationsOrderBy"][]},ValueTypes["TenantLocationsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `updateTenantLocation` mutation. */
+["UpdateTenantLocationInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** An object where the defined keys will be set on the `TenantLocation` being updated. */
+	patch:ValueTypes["TenantLocationPatch"],
+	tenantId:ValueTypes["BigInt"],
+	locationId:ValueTypes["BigInt"]
+};
+	/** Represents an update to a `TenantLocation`. Fields that are set will be updated. */
+["TenantLocationPatch"]: {
+	tenantId?:ValueTypes["BigInt"] | null,
+	locationId?:ValueTypes["BigInt"] | null
+};
+	/** The output of our update `TenantPerson` mutation. */
+["UpdateTenantPersonPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `TenantPerson` that was updated by this mutation. */
+	tenantPerson?:ValueTypes["TenantPerson"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantPerson`. */
+	tenant?:ValueTypes["Tenant"],
+	/** Reads a single `Person` that is related to this `TenantPerson`. */
+	person?:ValueTypes["Person"],
+tenantPersonEdge?: [{	/** The method to use when ordering `TenantPerson`. */
+	orderBy?:ValueTypes["TenantPeopleOrderBy"][]},ValueTypes["TenantPeopleEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `updateTenantPerson` mutation. */
+["UpdateTenantPersonInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	/** An object where the defined keys will be set on the `TenantPerson` being updated. */
+	patch:ValueTypes["TenantPersonPatch"],
+	tenantId:ValueTypes["BigInt"],
+	personId:ValueTypes["BigInt"]
+};
+	/** Represents an update to a `TenantPerson`. Fields that are set will be updated. */
+["TenantPersonPatch"]: {
+	tenantId?:ValueTypes["BigInt"] | null,
+	personId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our update `Upozorneni` mutation. */
 ["UpdateUpozorneniPayload"]: AliasType<{
@@ -5074,15 +5838,14 @@ upozorneniEdge?: [{	/** The method to use when ordering `Upozorneni`. */
 	orderBy?:ValueTypes["UpozornenisOrderBy"][]},ValueTypes["UpozornenisEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateUpozorneniByNodeId` mutation. */
-["UpdateUpozorneniByNodeIdInput"]: {
+	/** All input for the `updateUpozorneni` mutation. */
+["UpdateUpozorneniInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Upozorneni` to be updated. */
-	nodeId:string,
 	/** An object where the defined keys will be set on the `Upozorneni` being updated. */
-	patch:ValueTypes["UpozorneniPatch"]
+	patch:ValueTypes["UpozorneniPatch"],
+	upId:ValueTypes["BigInt"]
 };
 	/** Represents an update to a `Upozorneni`. Fields that are set will be updated. */
 ["UpozorneniPatch"]: {
@@ -5093,16 +5856,12 @@ payload verbatim. May be used to track mutations by the client. */
 	upBarvy?:ValueTypes["BigInt"] | null,
 	upLock?:boolean | null,
 	upTimestamp?:ValueTypes["Datetime"] | null,
-	upTimestampAdd?:ValueTypes["Datetime"] | null
-};
-	/** All input for the `updateUpozorneni` mutation. */
-["UpdateUpozorneniInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** An object where the defined keys will be set on the `Upozorneni` being updated. */
-	patch:ValueTypes["UpozorneniPatch"],
-	upId:ValueTypes["BigInt"]
+	upTimestampAdd?:ValueTypes["Datetime"] | null,
+	scheduledSince?:ValueTypes["Datetime"] | null,
+	scheduledUntil?:ValueTypes["Datetime"] | null,
+	isVisible?:boolean | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our update `UpozorneniSkupiny` mutation. */
 ["UpdateUpozorneniSkupinyPayload"]: AliasType<{
@@ -5121,24 +5880,6 @@ upozorneniSkupinyEdge?: [{	/** The method to use when ordering `UpozorneniSkupin
 	orderBy?:ValueTypes["UpozorneniSkupiniesOrderBy"][]},ValueTypes["UpozorneniSkupiniesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateUpozorneniSkupinyByNodeId` mutation. */
-["UpdateUpozorneniSkupinyByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `UpozorneniSkupiny` to be updated. */
-	nodeId:string,
-	/** An object where the defined keys will be set on the `UpozorneniSkupiny` being updated. */
-	patch:ValueTypes["UpozorneniSkupinyPatch"]
-};
-	/** Represents an update to a `UpozorneniSkupiny`. Fields that are set will be updated. */
-["UpozorneniSkupinyPatch"]: {
-	upsId?:ValueTypes["BigInt"] | null,
-	upsIdRodic?:ValueTypes["BigInt"] | null,
-	upsIdSkupina?:ValueTypes["BigInt"] | null,
-	upsColor?:string | null,
-	upsPopis?:string | null
-};
 	/** All input for the `updateUpozorneniSkupiny` mutation. */
 ["UpdateUpozorneniSkupinyInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -5147,6 +5888,16 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An object where the defined keys will be set on the `UpozorneniSkupiny` being updated. */
 	patch:ValueTypes["UpozorneniSkupinyPatch"],
 	upsId:ValueTypes["BigInt"]
+};
+	/** Represents an update to a `UpozorneniSkupiny`. Fields that are set will be updated. */
+["UpozorneniSkupinyPatch"]: {
+	upsId?:ValueTypes["BigInt"] | null,
+	upsIdRodic?:ValueTypes["BigInt"] | null,
+	upsIdSkupina?:ValueTypes["BigInt"] | null,
+	upsColor?:string | null,
+	upsPopis?:string | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our update `User` mutation. */
 ["UpdateUserPayload"]: AliasType<{
@@ -5165,15 +5916,14 @@ userEdge?: [{	/** The method to use when ordering `User`. */
 	orderBy?:ValueTypes["UsersOrderBy"][]},ValueTypes["UsersEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `updateUserByNodeId` mutation. */
-["UpdateUserByNodeIdInput"]: {
+	/** All input for the `updateUser` mutation. */
+["UpdateUserInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `User` to be updated. */
-	nodeId:string,
 	/** An object where the defined keys will be set on the `User` being updated. */
-	patch:ValueTypes["UserPatch"]
+	patch:ValueTypes["UserPatch"],
+	uId:ValueTypes["BigInt"]
 };
 	/** Represents an update to a `User`. Fields that are set will be updated. */
 ["UserPatch"]: {
@@ -5208,245 +5958,9 @@ payload verbatim. May be used to track mutations by the client. */
 	uMemberUntil?:ValueTypes["Datetime"] | null,
 	uCreatedAt?:ValueTypes["Datetime"] | null,
 	uTeacher?:boolean | null,
-	uGdprSignedAt?:ValueTypes["Datetime"] | null
-};
-	/** All input for the `updateUser` mutation. */
-["UpdateUserInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** An object where the defined keys will be set on the `User` being updated. */
-	patch:ValueTypes["UserPatch"],
-	uId:ValueTypes["BigInt"]
-};
-	/** The output of our update `UsersSkupiny` mutation. */
-["UpdateUsersSkupinyPayload"]: AliasType<{
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:boolean,
-	/** The `UsersSkupiny` that was updated by this mutation. */
-	usersSkupiny?:ValueTypes["UsersSkupiny"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ValueTypes["Query"],
-usersSkupinyEdge?: [{	/** The method to use when ordering `UsersSkupiny`. */
-	orderBy?:ValueTypes["UsersSkupiniesOrderBy"][]},ValueTypes["UsersSkupiniesEdge"]],
-		__typename?: boolean
-}>;
-	/** All input for the `updateUsersSkupinyByNodeId` mutation. */
-["UpdateUsersSkupinyByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `UsersSkupiny` to be updated. */
-	nodeId:string,
-	/** An object where the defined keys will be set on the `UsersSkupiny` being updated. */
-	patch:ValueTypes["UsersSkupinyPatch"]
-};
-	/** Represents an update to a `UsersSkupiny`. Fields that are set will be updated. */
-["UsersSkupinyPatch"]: {
-	usId?:ValueTypes["BigInt"] | null,
-	usColor?:string | null,
-	usPlatbaMesic?:ValueTypes["BigInt"] | null,
-	usPlatbaCtvrtrok?:ValueTypes["BigInt"] | null,
-	usPlatbaPulrok?:ValueTypes["BigInt"] | null,
-	usPopis?:string | null
-};
-	/** All input for the `updateUsersSkupiny` mutation. */
-["UpdateUsersSkupinyInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** An object where the defined keys will be set on the `UsersSkupiny` being updated. */
-	patch:ValueTypes["UsersSkupinyPatch"],
-	usId:ValueTypes["BigInt"]
-};
-	/** The output of our update `Video` mutation. */
-["UpdateVideoPayload"]: AliasType<{
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:boolean,
-	/** The `Video` that was updated by this mutation. */
-	video?:ValueTypes["Video"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ValueTypes["Query"],
-videoEdge?: [{	/** The method to use when ordering `Video`. */
-	orderBy?:ValueTypes["VideosOrderBy"][]},ValueTypes["VideosEdge"]],
-		__typename?: boolean
-}>;
-	/** All input for the `updateVideoByNodeId` mutation. */
-["UpdateVideoByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Video` to be updated. */
-	nodeId:string,
-	/** An object where the defined keys will be set on the `Video` being updated. */
-	patch:ValueTypes["VideoPatch"]
-};
-	/** Represents an update to a `Video`. Fields that are set will be updated. */
-["VideoPatch"]: {
-	vId?:ValueTypes["BigInt"] | null,
-	vUri?:string | null,
-	vTitle?:string | null,
-	vAuthor?:string | null,
-	vDescription?:string | null,
-	vPlaylist?:string | null,
-	vCreatedAt?:ValueTypes["Datetime"] | null,
-	vUpdatedAt?:ValueTypes["Datetime"] | null
-};
-	/** All input for the `updateVideo` mutation. */
-["UpdateVideoInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** An object where the defined keys will be set on the `Video` being updated. */
-	patch:ValueTypes["VideoPatch"],
-	vId:ValueTypes["BigInt"]
-};
-	/** The output of our update `VideoList` mutation. */
-["UpdateVideoListPayload"]: AliasType<{
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:boolean,
-	/** The `VideoList` that was updated by this mutation. */
-	videoList?:ValueTypes["VideoList"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ValueTypes["Query"],
-videoListEdge?: [{	/** The method to use when ordering `VideoList`. */
-	orderBy?:ValueTypes["VideoListsOrderBy"][]},ValueTypes["VideoListsEdge"]],
-		__typename?: boolean
-}>;
-	/** All input for the `updateVideoListByNodeId` mutation. */
-["UpdateVideoListByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `VideoList` to be updated. */
-	nodeId:string,
-	/** An object where the defined keys will be set on the `VideoList` being updated. */
-	patch:ValueTypes["VideoListPatch"]
-};
-	/** Represents an update to a `VideoList`. Fields that are set will be updated. */
-["VideoListPatch"]: {
-	vlId?:ValueTypes["BigInt"] | null,
-	vlUrl?:string | null,
-	vlTitle?:string | null,
-	vlDescription?:string | null,
-	vlCount?:ValueTypes["BigInt"] | null,
-	vlCreatedAt?:ValueTypes["Datetime"] | null,
-	vlLastChecked?:ValueTypes["Datetime"] | null
-};
-	/** All input for the `updateVideoList` mutation. */
-["UpdateVideoListInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** An object where the defined keys will be set on the `VideoList` being updated. */
-	patch:ValueTypes["VideoListPatch"],
-	vlId:ValueTypes["BigInt"]
-};
-	/** The output of our update `VideoSource` mutation. */
-["UpdateVideoSourcePayload"]: AliasType<{
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:boolean,
-	/** The `VideoSource` that was updated by this mutation. */
-	videoSource?:ValueTypes["VideoSource"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ValueTypes["Query"],
-videoSourceEdge?: [{	/** The method to use when ordering `VideoSource`. */
-	orderBy?:ValueTypes["VideoSourcesOrderBy"][]},ValueTypes["VideoSourcesEdge"]],
-		__typename?: boolean
-}>;
-	/** All input for the `updateVideoSourceByNodeId` mutation. */
-["UpdateVideoSourceByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `VideoSource` to be updated. */
-	nodeId:string,
-	/** An object where the defined keys will be set on the `VideoSource` being updated. */
-	patch:ValueTypes["VideoSourcePatch"]
-};
-	/** Represents an update to a `VideoSource`. Fields that are set will be updated. */
-["VideoSourcePatch"]: {
-	vsId?:ValueTypes["BigInt"] | null,
-	vsUrl?:string | null,
-	vsTitle?:string | null,
-	vsDescription?:string | null,
-	vsCreatedAt?:ValueTypes["Datetime"] | null,
-	vsLastChecked?:ValueTypes["Datetime"] | null
-};
-	/** All input for the `updateVideoSource` mutation. */
-["UpdateVideoSourceInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** An object where the defined keys will be set on the `VideoSource` being updated. */
-	patch:ValueTypes["VideoSourcePatch"],
-	vsId:ValueTypes["BigInt"]
-};
-	/** The output of our delete `Akce` mutation. */
-["DeleteAkcePayload"]: AliasType<{
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:boolean,
-	/** The `Akce` that was deleted by this mutation. */
-	akce?:ValueTypes["Akce"],
-	deletedAkceNodeId?:boolean,
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ValueTypes["Query"],
-akceEdge?: [{	/** The method to use when ordering `Akce`. */
-	orderBy?:ValueTypes["AkcesOrderBy"][]},ValueTypes["AkcesEdge"]],
-		__typename?: boolean
-}>;
-	/** All input for the `deleteAkceByNodeId` mutation. */
-["DeleteAkceByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Akce` to be deleted. */
-	nodeId:string
-};
-	/** All input for the `deleteAkce` mutation. */
-["DeleteAkceInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	aId:ValueTypes["BigInt"]
-};
-	/** The output of our delete `AkceItem` mutation. */
-["DeleteAkceItemPayload"]: AliasType<{
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:boolean,
-	/** The `AkceItem` that was deleted by this mutation. */
-	akceItem?:ValueTypes["AkceItem"],
-	deletedAkceItemNodeId?:boolean,
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ValueTypes["Query"],
-	/** Reads a single `Akce` that is related to this `AkceItem`. */
-	akceByAiIdRodic?:ValueTypes["Akce"],
-	/** Reads a single `User` that is related to this `AkceItem`. */
-	userByAiUser?:ValueTypes["User"],
-akceItemEdge?: [{	/** The method to use when ordering `AkceItem`. */
-	orderBy?:ValueTypes["AkceItemsOrderBy"][]},ValueTypes["AkceItemsEdge"]],
-		__typename?: boolean
-}>;
-	/** All input for the `deleteAkceItemByNodeId` mutation. */
-["DeleteAkceItemByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `AkceItem` to be deleted. */
-	nodeId:string
-};
-	/** All input for the `deleteAkceItem` mutation. */
-["DeleteAkceItemInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	aiId:ValueTypes["BigInt"]
+	uGdprSignedAt?:ValueTypes["Datetime"] | null,
+	id?:ValueTypes["BigInt"] | null,
+	tenantId?:ValueTypes["BigInt"] | null
 };
 	/** The output of our delete `Aktuality` mutation. */
 ["DeleteAktualityPayload"]: AliasType<{
@@ -5466,20 +5980,118 @@ aktualityEdge?: [{	/** The method to use when ordering `Aktuality`. */
 	orderBy?:ValueTypes["AktualitiesOrderBy"][]},ValueTypes["AktualitiesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteAktualityByNodeId` mutation. */
-["DeleteAktualityByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Aktuality` to be deleted. */
-	nodeId:string
-};
 	/** All input for the `deleteAktuality` mutation. */
 ["DeleteAktualityInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	atId:ValueTypes["BigInt"]
+};
+	/** The output of our delete `Attachment` mutation. */
+["DeleteAttachmentPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `Attachment` that was deleted by this mutation. */
+	attachment?:ValueTypes["Attachment"],
+	deletedAttachmentNodeId?:boolean,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `User` that is related to this `Attachment`. */
+	userByUploadedBy?:ValueTypes["User"],
+attachmentEdge?: [{	/** The method to use when ordering `Attachment`. */
+	orderBy?:ValueTypes["AttachmentsOrderBy"][]},ValueTypes["AttachmentsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `deleteAttachment` mutation. */
+["DeleteAttachmentInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	objectName:string
+};
+	/** The output of our delete `AttendeeExternal` mutation. */
+["DeleteAttendeeExternalPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `AttendeeExternal` that was deleted by this mutation. */
+	attendeeExternal?:ValueTypes["AttendeeExternal"],
+	deletedAttendeeExternalNodeId?:boolean,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Event` that is related to this `AttendeeExternal`. */
+	event?:ValueTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByManagedBy?:ValueTypes["User"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByConfirmedBy?:ValueTypes["User"],
+attendeeExternalEdge?: [{	/** The method to use when ordering `AttendeeExternal`. */
+	orderBy?:ValueTypes["AttendeeExternalsOrderBy"][]},ValueTypes["AttendeeExternalsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `deleteAttendeeExternal` mutation. */
+["DeleteAttendeeExternalInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	id:ValueTypes["BigInt"]
+};
+	/** The output of our delete `AttendeeUser` mutation. */
+["DeleteAttendeeUserPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `AttendeeUser` that was deleted by this mutation. */
+	attendeeUser?:ValueTypes["AttendeeUser"],
+	deletedAttendeeUserNodeId?:boolean,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Event` that is related to this `AttendeeUser`. */
+	event?:ValueTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeUser`. */
+	user?:ValueTypes["User"],
+attendeeUserEdge?: [{	/** The method to use when ordering `AttendeeUser`. */
+	orderBy?:ValueTypes["AttendeeUsersOrderBy"][]},ValueTypes["AttendeeUsersEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `deleteAttendeeUser` mutation. */
+["DeleteAttendeeUserInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	id:ValueTypes["BigInt"]
+};
+	/** All input for the `deleteAttendeeUserByUserIdAndEventId` mutation. */
+["DeleteAttendeeUserByUserIdAndEventIdInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	userId:ValueTypes["BigInt"],
+	eventId:ValueTypes["BigInt"]
+};
+	/** The output of our delete `CohortGroup` mutation. */
+["DeleteCohortGroupPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `CohortGroup` that was deleted by this mutation. */
+	cohortGroup?:ValueTypes["CohortGroup"],
+	deletedCohortGroupNodeId?:boolean,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `CohortGroup`. */
+	tenantByTenant?:ValueTypes["Tenant"],
+cohortGroupEdge?: [{	/** The method to use when ordering `CohortGroup`. */
+	orderBy?:ValueTypes["CohortGroupsOrderBy"][]},ValueTypes["CohortGroupsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `deleteCohortGroup` mutation. */
+["DeleteCohortGroupInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	id:ValueTypes["BigInt"]
 };
 	/** The output of our delete `Dokumenty` mutation. */
 ["DeleteDokumentyPayload"]: AliasType<{
@@ -5497,20 +6109,54 @@ dokumentyEdge?: [{	/** The method to use when ordering `Dokumenty`. */
 	orderBy?:ValueTypes["DokumentiesOrderBy"][]},ValueTypes["DokumentiesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteDokumentyByNodeId` mutation. */
-["DeleteDokumentyByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Dokumenty` to be deleted. */
-	nodeId:string
-};
 	/** All input for the `deleteDokumenty` mutation. */
 ["DeleteDokumentyInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	dId:ValueTypes["BigInt"]
+};
+	/** The output of our delete `Event` mutation. */
+["DeleteEventPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `Event` that was deleted by this mutation. */
+	event?:ValueTypes["Event"],
+	deletedEventNodeId?:boolean,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+eventEdge?: [{	/** The method to use when ordering `Event`. */
+	orderBy?:ValueTypes["EventsOrderBy"][]},ValueTypes["EventsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `deleteEvent` mutation. */
+["DeleteEventInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	id:ValueTypes["BigInt"]
+};
+	/** The output of our delete `FormResponse` mutation. */
+["DeleteFormResponsePayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `FormResponse` that was deleted by this mutation. */
+	formResponse?:ValueTypes["FormResponse"],
+	deletedFormResponseNodeId?:boolean,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+formResponseEdge?: [{	/** The method to use when ordering `FormResponse`. */
+	orderBy?:ValueTypes["FormResponsesOrderBy"][]},ValueTypes["FormResponsesEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `deleteFormResponse` mutation. */
+["DeleteFormResponseInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	id:ValueTypes["BigInt"]
 };
 	/** The output of our delete `GalerieDir` mutation. */
 ["DeleteGalerieDirPayload"]: AliasType<{
@@ -5526,14 +6172,6 @@ galerieDirEdge?: [{	/** The method to use when ordering `GalerieDir`. */
 	orderBy?:ValueTypes["GalerieDirsOrderBy"][]},ValueTypes["GalerieDirsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteGalerieDirByNodeId` mutation. */
-["DeleteGalerieDirByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `GalerieDir` to be deleted. */
-	nodeId:string
-};
 	/** All input for the `deleteGalerieDir` mutation. */
 ["DeleteGalerieDirInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -5559,20 +6197,59 @@ galerieFotoEdge?: [{	/** The method to use when ordering `GalerieFoto`. */
 	orderBy?:ValueTypes["GalerieFotosOrderBy"][]},ValueTypes["GalerieFotosEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteGalerieFotoByNodeId` mutation. */
-["DeleteGalerieFotoByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `GalerieFoto` to be deleted. */
-	nodeId:string
-};
 	/** All input for the `deleteGalerieFoto` mutation. */
 ["DeleteGalerieFotoInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	gfId:ValueTypes["BigInt"]
+};
+	/** The output of our delete `Location` mutation. */
+["DeleteLocationPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `Location` that was deleted by this mutation. */
+	location?:ValueTypes["Location"],
+	deletedLocationNodeId?:boolean,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+locationEdge?: [{	/** The method to use when ordering `Location`. */
+	orderBy?:ValueTypes["LocationsOrderBy"][]},ValueTypes["LocationsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `deleteLocation` mutation. */
+["DeleteLocationInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	id:ValueTypes["BigInt"]
+};
+	/** The output of our delete `LocationAttachment` mutation. */
+["DeleteLocationAttachmentPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `LocationAttachment` that was deleted by this mutation. */
+	locationAttachment?:ValueTypes["LocationAttachment"],
+	deletedLocationAttachmentNodeId?:boolean,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Location` that is related to this `LocationAttachment`. */
+	location?:ValueTypes["Location"],
+	/** Reads a single `Attachment` that is related to this `LocationAttachment`. */
+	attachmentByObjectName?:ValueTypes["Attachment"],
+locationAttachmentEdge?: [{	/** The method to use when ordering `LocationAttachment`. */
+	orderBy?:ValueTypes["LocationAttachmentsOrderBy"][]},ValueTypes["LocationAttachmentsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `deleteLocationAttachment` mutation. */
+["DeleteLocationAttachmentInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	locationId:ValueTypes["BigInt"],
+	objectName:string
 };
 	/** The output of our delete `Nabidka` mutation. */
 ["DeleteNabidkaPayload"]: AliasType<{
@@ -5590,14 +6267,6 @@ nabidkaEdge?: [{	/** The method to use when ordering `Nabidka`. */
 	orderBy?:ValueTypes["NabidkasOrderBy"][]},ValueTypes["NabidkasEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteNabidkaByNodeId` mutation. */
-["DeleteNabidkaByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Nabidka` to be deleted. */
-	nodeId:string
-};
 	/** All input for the `deleteNabidka` mutation. */
 ["DeleteNabidkaInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -5623,20 +6292,20 @@ nabidkaItemEdge?: [{	/** The method to use when ordering `NabidkaItem`. */
 	orderBy?:ValueTypes["NabidkaItemsOrderBy"][]},ValueTypes["NabidkaItemsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteNabidkaItemByNodeId` mutation. */
-["DeleteNabidkaItemByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `NabidkaItem` to be deleted. */
-	nodeId:string
-};
 	/** All input for the `deleteNabidkaItem` mutation. */
 ["DeleteNabidkaItemInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	niId:ValueTypes["BigInt"]
+};
+	/** All input for the `deleteNabidkaItemByNiPartnerAndNiIdRodic` mutation. */
+["DeleteNabidkaItemByNiPartnerAndNiIdRodicInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	niPartner:ValueTypes["BigInt"],
+	niIdRodic:ValueTypes["BigInt"]
 };
 	/** The output of our delete `Parameter` mutation. */
 ["DeleteParameterPayload"]: AliasType<{
@@ -5652,14 +6321,6 @@ parameterEdge?: [{	/** The method to use when ordering `Parameter`. */
 	orderBy?:ValueTypes["ParametersOrderBy"][]},ValueTypes["ParametersEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteParameterByNodeId` mutation. */
-["DeleteParameterByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Parameter` to be deleted. */
-	nodeId:string
-};
 	/** All input for the `deleteParameter` mutation. */
 ["DeleteParameterInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -5679,18 +6340,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	query?:ValueTypes["Query"],
 	/** Reads a single `User` that is related to this `Pary`. */
 	userByPIdPartner?:ValueTypes["User"],
+	/** Reads a single `User` that is related to this `Pary`. */
+	userByPIdPartnerka?:ValueTypes["User"],
 paryEdge?: [{	/** The method to use when ordering `Pary`. */
 	orderBy?:ValueTypes["PariesOrderBy"][]},ValueTypes["PariesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteParyByNodeId` mutation. */
-["DeleteParyByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Pary` to be deleted. */
-	nodeId:string
-};
 	/** All input for the `deletePary` mutation. */
 ["DeleteParyInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -5718,14 +6373,6 @@ paryNavrhEdge?: [{	/** The method to use when ordering `ParyNavrh`. */
 	orderBy?:ValueTypes["ParyNavrhsOrderBy"][]},ValueTypes["ParyNavrhsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteParyNavrhByNodeId` mutation. */
-["DeleteParyNavrhByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `ParyNavrh` to be deleted. */
-	nodeId:string
-};
 	/** All input for the `deleteParyNavrh` mutation. */
 ["DeleteParyNavrhInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -5747,20 +6394,33 @@ permissionEdge?: [{	/** The method to use when ordering `Permission`. */
 	orderBy?:ValueTypes["PermissionsOrderBy"][]},ValueTypes["PermissionsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deletePermissionByNodeId` mutation. */
-["DeletePermissionByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Permission` to be deleted. */
-	nodeId:string
-};
 	/** All input for the `deletePermission` mutation. */
 ["DeletePermissionInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	peId:ValueTypes["BigInt"]
+};
+	/** The output of our delete `Person` mutation. */
+["DeletePersonPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `Person` that was deleted by this mutation. */
+	person?:ValueTypes["Person"],
+	deletedPersonNodeId?:boolean,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+personEdge?: [{	/** The method to use when ordering `Person`. */
+	orderBy?:ValueTypes["PeopleOrderBy"][]},ValueTypes["PeopleEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `deletePerson` mutation. */
+["DeletePersonInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	id:ValueTypes["BigInt"]
 };
 	/** The output of our delete `PlatbyCategory` mutation. */
 ["DeletePlatbyCategoryPayload"]: AliasType<{
@@ -5776,14 +6436,6 @@ platbyCategoryEdge?: [{	/** The method to use when ordering `PlatbyCategory`. */
 	orderBy?:ValueTypes["PlatbyCategoriesOrderBy"][]},ValueTypes["PlatbyCategoriesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deletePlatbyCategoryByNodeId` mutation. */
-["DeletePlatbyCategoryByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `PlatbyCategory` to be deleted. */
-	nodeId:string
-};
 	/** All input for the `deletePlatbyCategory` mutation. */
 ["DeletePlatbyCategoryInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -5809,14 +6461,6 @@ platbyCategoryGroupEdge?: [{	/** The method to use when ordering `PlatbyCategory
 	orderBy?:ValueTypes["PlatbyCategoryGroupsOrderBy"][]},ValueTypes["PlatbyCategoryGroupsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deletePlatbyCategoryGroupByNodeId` mutation. */
-["DeletePlatbyCategoryGroupByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `PlatbyCategoryGroup` to be deleted. */
-	nodeId:string
-};
 	/** All input for the `deletePlatbyCategoryGroup` mutation. */
 ["DeletePlatbyCategoryGroupInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -5838,14 +6482,6 @@ platbyGroupEdge?: [{	/** The method to use when ordering `PlatbyGroup`. */
 	orderBy?:ValueTypes["PlatbyGroupsOrderBy"][]},ValueTypes["PlatbyGroupsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deletePlatbyGroupByNodeId` mutation. */
-["DeletePlatbyGroupByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `PlatbyGroup` to be deleted. */
-	nodeId:string
-};
 	/** All input for the `deletePlatbyGroup` mutation. */
 ["DeletePlatbyGroupInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -5871,14 +6507,6 @@ platbyGroupSkupinaEdge?: [{	/** The method to use when ordering `PlatbyGroupSkup
 	orderBy?:ValueTypes["PlatbyGroupSkupinasOrderBy"][]},ValueTypes["PlatbyGroupSkupinasEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deletePlatbyGroupSkupinaByNodeId` mutation. */
-["DeletePlatbyGroupSkupinaByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `PlatbyGroupSkupina` to be deleted. */
-	nodeId:string
-};
 	/** All input for the `deletePlatbyGroupSkupina` mutation. */
 ["DeletePlatbyGroupSkupinaInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -5906,14 +6534,6 @@ platbyItemEdge?: [{	/** The method to use when ordering `PlatbyItem`. */
 	orderBy?:ValueTypes["PlatbyItemsOrderBy"][]},ValueTypes["PlatbyItemsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deletePlatbyItemByNodeId` mutation. */
-["DeletePlatbyItemByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `PlatbyItem` to be deleted. */
-	nodeId:string
-};
 	/** All input for the `deletePlatbyItem` mutation. */
 ["DeletePlatbyItemInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -5935,20 +6555,61 @@ platbyRawEdge?: [{	/** The method to use when ordering `PlatbyRaw`. */
 	orderBy?:ValueTypes["PlatbyRawsOrderBy"][]},ValueTypes["PlatbyRawsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deletePlatbyRawByNodeId` mutation. */
-["DeletePlatbyRawByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `PlatbyRaw` to be deleted. */
-	nodeId:string
-};
 	/** All input for the `deletePlatbyRaw` mutation. */
 ["DeletePlatbyRawInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	prId:ValueTypes["BigInt"]
+};
+	/** The output of our delete `Room` mutation. */
+["DeleteRoomPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `Room` that was deleted by this mutation. */
+	room?:ValueTypes["Room"],
+	deletedRoomNodeId?:boolean,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Location` that is related to this `Room`. */
+	locationByLocation?:ValueTypes["Location"],
+roomEdge?: [{	/** The method to use when ordering `Room`. */
+	orderBy?:ValueTypes["RoomsOrderBy"][]},ValueTypes["RoomsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `deleteRoom` mutation. */
+["DeleteRoomInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	id:ValueTypes["BigInt"]
+};
+	/** The output of our delete `RoomAttachment` mutation. */
+["DeleteRoomAttachmentPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `RoomAttachment` that was deleted by this mutation. */
+	roomAttachment?:ValueTypes["RoomAttachment"],
+	deletedRoomAttachmentNodeId?:boolean,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Room` that is related to this `RoomAttachment`. */
+	room?:ValueTypes["Room"],
+	/** Reads a single `Attachment` that is related to this `RoomAttachment`. */
+	attachmentByObjectName?:ValueTypes["Attachment"],
+roomAttachmentEdge?: [{	/** The method to use when ordering `RoomAttachment`. */
+	orderBy?:ValueTypes["RoomAttachmentsOrderBy"][]},ValueTypes["RoomAttachmentsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `deleteRoomAttachment` mutation. */
+["DeleteRoomAttachmentInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	roomId:ValueTypes["BigInt"],
+	objectName:string
 };
 	/** The output of our delete `Rozpi` mutation. */
 ["DeleteRozpiPayload"]: AliasType<{
@@ -5966,14 +6627,6 @@ rozpiEdge?: [{	/** The method to use when ordering `Rozpi`. */
 	orderBy?:ValueTypes["RozpisOrderBy"][]},ValueTypes["RozpisEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteRozpiByNodeId` mutation. */
-["DeleteRozpiByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Rozpi` to be deleted. */
-	nodeId:string
-};
 	/** All input for the `deleteRozpi` mutation. */
 ["DeleteRozpiInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -5999,51 +6652,12 @@ rozpisItemEdge?: [{	/** The method to use when ordering `RozpisItem`. */
 	orderBy?:ValueTypes["RozpisItemsOrderBy"][]},ValueTypes["RozpisItemsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteRozpisItemByNodeId` mutation. */
-["DeleteRozpisItemByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `RozpisItem` to be deleted. */
-	nodeId:string
-};
 	/** All input for the `deleteRozpisItem` mutation. */
 ["DeleteRozpisItemInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	riId:ValueTypes["BigInt"]
-};
-	/** The output of our delete `Session` mutation. */
-["DeleteSessionPayload"]: AliasType<{
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:boolean,
-	/** The `Session` that was deleted by this mutation. */
-	session?:ValueTypes["Session"],
-	deletedSessionNodeId?:boolean,
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ValueTypes["Query"],
-	/** Reads a single `User` that is related to this `Session`. */
-	userBySsUser?:ValueTypes["User"],
-sessionEdge?: [{	/** The method to use when ordering `Session`. */
-	orderBy?:ValueTypes["SessionsOrderBy"][]},ValueTypes["SessionsEdge"]],
-		__typename?: boolean
-}>;
-	/** All input for the `deleteSessionByNodeId` mutation. */
-["DeleteSessionByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Session` to be deleted. */
-	nodeId:string
-};
-	/** All input for the `deleteSession` mutation. */
-["DeleteSessionInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	ssId:string
 };
 	/** The output of our delete `Skupiny` mutation. */
 ["DeleteSkupinyPayload"]: AliasType<{
@@ -6055,24 +6669,117 @@ unchanged and unused. May be used by a client to track mutations. */
 	deletedSkupinyNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
+	/** Reads a single `CohortGroup` that is related to this `Skupiny`. */
+	cohortGroupByCohortGroup?:ValueTypes["CohortGroup"],
 skupinyEdge?: [{	/** The method to use when ordering `Skupiny`. */
 	orderBy?:ValueTypes["SkupiniesOrderBy"][]},ValueTypes["SkupiniesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteSkupinyByNodeId` mutation. */
-["DeleteSkupinyByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Skupiny` to be deleted. */
-	nodeId:string
-};
 	/** All input for the `deleteSkupiny` mutation. */
 ["DeleteSkupinyInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	sId:ValueTypes["BigInt"]
+};
+	/** The output of our delete `Tenant` mutation. */
+["DeleteTenantPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `Tenant` that was deleted by this mutation. */
+	tenant?:ValueTypes["Tenant"],
+	deletedTenantNodeId?:boolean,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+tenantEdge?: [{	/** The method to use when ordering `Tenant`. */
+	orderBy?:ValueTypes["TenantsOrderBy"][]},ValueTypes["TenantsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `deleteTenant` mutation. */
+["DeleteTenantInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	id:ValueTypes["BigInt"]
+};
+	/** The output of our delete `TenantAttachment` mutation. */
+["DeleteTenantAttachmentPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `TenantAttachment` that was deleted by this mutation. */
+	tenantAttachment?:ValueTypes["TenantAttachment"],
+	deletedTenantAttachmentNodeId?:boolean,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantAttachment`. */
+	tenant?:ValueTypes["Tenant"],
+	/** Reads a single `Attachment` that is related to this `TenantAttachment`. */
+	attachmentByObjectName?:ValueTypes["Attachment"],
+tenantAttachmentEdge?: [{	/** The method to use when ordering `TenantAttachment`. */
+	orderBy?:ValueTypes["TenantAttachmentsOrderBy"][]},ValueTypes["TenantAttachmentsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `deleteTenantAttachment` mutation. */
+["DeleteTenantAttachmentInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	tenantId:ValueTypes["BigInt"],
+	objectName:string
+};
+	/** The output of our delete `TenantLocation` mutation. */
+["DeleteTenantLocationPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `TenantLocation` that was deleted by this mutation. */
+	tenantLocation?:ValueTypes["TenantLocation"],
+	deletedTenantLocationNodeId?:boolean,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantLocation`. */
+	tenant?:ValueTypes["Tenant"],
+	/** Reads a single `Location` that is related to this `TenantLocation`. */
+	location?:ValueTypes["Location"],
+tenantLocationEdge?: [{	/** The method to use when ordering `TenantLocation`. */
+	orderBy?:ValueTypes["TenantLocationsOrderBy"][]},ValueTypes["TenantLocationsEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `deleteTenantLocation` mutation. */
+["DeleteTenantLocationInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	tenantId:ValueTypes["BigInt"],
+	locationId:ValueTypes["BigInt"]
+};
+	/** The output of our delete `TenantPerson` mutation. */
+["DeleteTenantPersonPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** The `TenantPerson` that was deleted by this mutation. */
+	tenantPerson?:ValueTypes["TenantPerson"],
+	deletedTenantPersonNodeId?:boolean,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantPerson`. */
+	tenant?:ValueTypes["Tenant"],
+	/** Reads a single `Person` that is related to this `TenantPerson`. */
+	person?:ValueTypes["Person"],
+tenantPersonEdge?: [{	/** The method to use when ordering `TenantPerson`. */
+	orderBy?:ValueTypes["TenantPeopleOrderBy"][]},ValueTypes["TenantPeopleEdge"]],
+		__typename?: boolean
+}>;
+	/** All input for the `deleteTenantPerson` mutation. */
+["DeleteTenantPersonInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	tenantId:ValueTypes["BigInt"],
+	personId:ValueTypes["BigInt"]
 };
 	/** The output of our delete `Upozorneni` mutation. */
 ["DeleteUpozorneniPayload"]: AliasType<{
@@ -6090,14 +6797,6 @@ upozorneniEdge?: [{	/** The method to use when ordering `Upozorneni`. */
 	orderBy?:ValueTypes["UpozornenisOrderBy"][]},ValueTypes["UpozornenisEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteUpozorneniByNodeId` mutation. */
-["DeleteUpozorneniByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Upozorneni` to be deleted. */
-	nodeId:string
-};
 	/** All input for the `deleteUpozorneni` mutation. */
 ["DeleteUpozorneniInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -6123,14 +6822,6 @@ upozorneniSkupinyEdge?: [{	/** The method to use when ordering `UpozorneniSkupin
 	orderBy?:ValueTypes["UpozorneniSkupiniesOrderBy"][]},ValueTypes["UpozorneniSkupiniesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteUpozorneniSkupinyByNodeId` mutation. */
-["DeleteUpozorneniSkupinyByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `UpozorneniSkupiny` to be deleted. */
-	nodeId:string
-};
 	/** All input for the `deleteUpozorneniSkupiny` mutation. */
 ["DeleteUpozorneniSkupinyInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -6156,14 +6847,6 @@ userEdge?: [{	/** The method to use when ordering `User`. */
 	orderBy?:ValueTypes["UsersOrderBy"][]},ValueTypes["UsersEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteUserByNodeId` mutation. */
-["DeleteUserByNodeIdInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `User` to be deleted. */
-	nodeId:string
-};
 	/** All input for the `deleteUser` mutation. */
 ["DeleteUserInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -6171,121 +6854,165 @@ payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
 	uId:ValueTypes["BigInt"]
 };
-	/** The output of our delete `UsersSkupiny` mutation. */
-["DeleteUsersSkupinyPayload"]: AliasType<{
+	/** The output of our `bookLesson` mutation. */
+["BookLessonPayload"]: AliasType<{
 	/** The exact same `clientMutationId` that was provided in the mutation input,
 unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
-	/** The `UsersSkupiny` that was deleted by this mutation. */
-	usersSkupiny?:ValueTypes["UsersSkupiny"],
-	deletedUsersSkupinyNodeId?:boolean,
+	rozpisItems?:ValueTypes["RozpisItem"],
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
-usersSkupinyEdge?: [{	/** The method to use when ordering `UsersSkupiny`. */
-	orderBy?:ValueTypes["UsersSkupiniesOrderBy"][]},ValueTypes["UsersSkupiniesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteUsersSkupinyByNodeId` mutation. */
-["DeleteUsersSkupinyByNodeIdInput"]: {
+	/** All input for the `bookLesson` mutation. */
+["BookLessonInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `UsersSkupiny` to be deleted. */
-	nodeId:string
+	lessonId:ValueTypes["BigInt"]
 };
-	/** All input for the `deleteUsersSkupiny` mutation. */
-["DeleteUsersSkupinyInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	usId:ValueTypes["BigInt"]
-};
-	/** The output of our delete `Video` mutation. */
-["DeleteVideoPayload"]: AliasType<{
+	/** The output of our `cancelLesson` mutation. */
+["CancelLessonPayload"]: AliasType<{
 	/** The exact same `clientMutationId` that was provided in the mutation input,
 unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
-	/** The `Video` that was deleted by this mutation. */
-	video?:ValueTypes["Video"],
-	deletedVideoNodeId?:boolean,
+	rozpisItems?:ValueTypes["RozpisItem"],
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
-videoEdge?: [{	/** The method to use when ordering `Video`. */
-	orderBy?:ValueTypes["VideosOrderBy"][]},ValueTypes["VideosEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteVideoByNodeId` mutation. */
-["DeleteVideoByNodeIdInput"]: {
+	/** All input for the `cancelLesson` mutation. */
+["CancelLessonInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `Video` to be deleted. */
-	nodeId:string
+	lessonId:ValueTypes["BigInt"]
 };
-	/** All input for the `deleteVideo` mutation. */
-["DeleteVideoInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	vId:ValueTypes["BigInt"]
-};
-	/** The output of our delete `VideoList` mutation. */
-["DeleteVideoListPayload"]: AliasType<{
+	/** The output of our `cancelParticipation` mutation. */
+["CancelParticipationPayload"]: AliasType<{
 	/** The exact same `clientMutationId` that was provided in the mutation input,
 unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
-	/** The `VideoList` that was deleted by this mutation. */
-	videoList?:ValueTypes["VideoList"],
-	deletedVideoListNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
-videoListEdge?: [{	/** The method to use when ordering `VideoList`. */
-	orderBy?:ValueTypes["VideoListsOrderBy"][]},ValueTypes["VideoListsEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteVideoListByNodeId` mutation. */
-["DeleteVideoListByNodeIdInput"]: {
+	/** All input for the `cancelParticipation` mutation. */
+["CancelParticipationInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `VideoList` to be deleted. */
-	nodeId:string
+	eventId:ValueTypes["BigInt"]
 };
-	/** All input for the `deleteVideoList` mutation. */
-["DeleteVideoListInput"]: {
-	/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?:string | null,
-	vlId:ValueTypes["BigInt"]
-};
-	/** The output of our delete `VideoSource` mutation. */
-["DeleteVideoSourcePayload"]: AliasType<{
+	/** The output of our `changePassword` mutation. */
+["ChangePasswordPayload"]: AliasType<{
 	/** The exact same `clientMutationId` that was provided in the mutation input,
 unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:boolean,
-	/** The `VideoSource` that was deleted by this mutation. */
-	videoSource?:ValueTypes["VideoSource"],
-	deletedVideoSourceNodeId?:boolean,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ValueTypes["Query"],
-videoSourceEdge?: [{	/** The method to use when ordering `VideoSource`. */
-	orderBy?:ValueTypes["VideoSourcesOrderBy"][]},ValueTypes["VideoSourcesEdge"]],
 		__typename?: boolean
 }>;
-	/** All input for the `deleteVideoSourceByNodeId` mutation. */
-["DeleteVideoSourceByNodeIdInput"]: {
+	/** All input for the `changePassword` mutation. */
+["ChangePasswordInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
-	/** The globally unique `ID` which will identify a single `VideoSource` to be deleted. */
-	nodeId:string
+	oldPass:string,
+	newPass:string
 };
-	/** All input for the `deleteVideoSource` mutation. */
-["DeleteVideoSourceInput"]: {
+	/** The output of our `confirmUser` mutation. */
+["ConfirmUserPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+		__typename?: boolean
+}>;
+	/** All input for the `confirmUser` mutation. */
+["ConfirmUserInput"]: {
 	/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?:string | null,
-	vsId:ValueTypes["BigInt"]
+	id:ValueTypes["BigInt"],
+	grp:ValueTypes["BigInt"],
+	cohort:ValueTypes["BigInt"]
+};
+	/** The output of our `createCouple` mutation. */
+["CreateCouplePayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	paries?:ValueTypes["Pary"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+		__typename?: boolean
+}>;
+	/** All input for the `createCouple` mutation. */
+["CreateCoupleInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	man:ValueTypes["BigInt"],
+	woman:ValueTypes["BigInt"]
+};
+	/** The output of our `createParticipation` mutation. */
+["CreateParticipationPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+		__typename?: boolean
+}>;
+	/** All input for the `createParticipation` mutation. */
+["CreateParticipationInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	eventId:ValueTypes["BigInt"],
+	yearOfBirth:number,
+	myNotes:string
+};
+	/** The output of our `createParticipationExternal` mutation. */
+["CreateParticipationExternalPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+		__typename?: boolean
+}>;
+	/** All input for the `createParticipationExternal` mutation. */
+["CreateParticipationExternalInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	eventId:ValueTypes["BigInt"],
+	firstName:string,
+	lastName:string,
+	guardianName:string,
+	email:string,
+	phone:string,
+	notes:string,
+	birthNumber:string
+};
+	/** The output of our `fixUnpairedCouples` mutation. */
+["FixUnpairedCouplesPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	paries?:ValueTypes["Pary"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+		__typename?: boolean
+}>;
+	/** All input for the `fixUnpairedCouples` mutation. */
+["FixUnpairedCouplesInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null
 };
 	/** The output of our `login` mutation. */
 ["LoginPayload"]: AliasType<{
@@ -6346,6 +7073,7 @@ payload verbatim. May be used to track mutations by the client. */
 	origin:string,
 	note:string
 };
+	["CrmCohort"]:CrmCohort;
 	/** An input for mutations affecting `ProspectDatum` */
 ["ProspectDatumInput"]: {
 	name?:string | null,
@@ -6354,14 +7082,89 @@ payload verbatim. May be used to track mutations by the client. */
 	phone?:string | null,
 	yearofbirth?:string | null
 };
-	["Upload"]: AliasType<{
-	uploadUrl?:boolean,
+	/** The output of our `reservationSetDesiredLessons` mutation. */
+["ReservationSetDesiredLessonsPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	reservation?:ValueTypes["Nabidka"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+	/** Reads a single `User` that is related to this `Nabidka`. */
+	userByNTrener?:ValueTypes["User"],
+nabidkaEdge?: [{	/** The method to use when ordering `Nabidka`. */
+	orderBy?:ValueTypes["NabidkasOrderBy"][]},ValueTypes["NabidkasEdge"]],
 		__typename?: boolean
 }>;
-	["UploadInput"]: {
-	directory?:string | null,
-	filename:string
-}
+	/** All input for the `reservationSetDesiredLessons` mutation. */
+["ReservationSetDesiredLessonsInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	reservationId:ValueTypes["BigInt"],
+	lessonCount:number
+};
+	/** The output of our `resetPassword` mutation. */
+["ResetPasswordPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+		__typename?: boolean
+}>;
+	/** All input for the `resetPassword` mutation. */
+["ResetPasswordInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	login:string,
+	email:string
+};
+	/** The output of our `submitForm` mutation. */
+["SubmitFormPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+		__typename?: boolean
+}>;
+	/** All input for the `submitForm` mutation. */
+["SubmitFormInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	type:string,
+	data:ValueTypes["JSON"],
+	url:string
+};
+	/** The output of our `verifyFunction` mutation. */
+["VerifyFunctionPayload"]: AliasType<{
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:boolean,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ValueTypes["Query"],
+		__typename?: boolean
+}>;
+	/** All input for the `verifyFunction` mutation. */
+["VerifyFunctionInput"]: {
+	/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?:string | null,
+	f?:ValueTypes["RegProc"] | null,
+	relid?:ValueTypes["RegClass"] | null
+};
+	/** A builtin object identifier type for a function name */
+["RegProc"]:unknown;
+	/** A builtin object identifier type for a relation name */
+["RegClass"]:unknown;
+	["UploadFilePayload"]: AliasType<{
+	uploadUrl?:boolean,
+	objectName?:boolean,
+		__typename?: boolean
+}>
   }
 
 export type ModelTypes = {
@@ -6370,24 +7173,34 @@ export type ModelTypes = {
 		/** Exposes the root query type nested one level down. This is helpful for Relay 1
 which can only query top level fields if they are in a particular form. */
 	query:ModelTypes["Query"],
-	/** The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`. */
-	nodeId:string,
-	/** Fetches an object given its globally unique `ID`. */
-	node?:ModelTypes["Node"],
 	/** Reads and enables pagination through a set of `Akce`. */
 	akces?:ModelTypes["AkcesConnection"],
 	/** Reads and enables pagination through a set of `AkceItem`. */
 	akceItems?:ModelTypes["AkceItemsConnection"],
 	/** Reads and enables pagination through a set of `Aktuality`. */
 	aktualities?:ModelTypes["AktualitiesConnection"],
+	/** Reads and enables pagination through a set of `Attachment`. */
+	attachments?:ModelTypes["AttachmentsConnection"],
+	/** Reads and enables pagination through a set of `AttendeeExternal`. */
+	attendeeExternals?:ModelTypes["AttendeeExternalsConnection"],
+	/** Reads and enables pagination through a set of `AttendeeUser`. */
+	attendeeUsers?:ModelTypes["AttendeeUsersConnection"],
+	/** Reads and enables pagination through a set of `CohortGroup`. */
+	cohortGroups?:ModelTypes["CohortGroupsConnection"],
 	/** Reads and enables pagination through a set of `Dokumenty`. */
 	dokumenties?:ModelTypes["DokumentiesConnection"],
+	/** Reads and enables pagination through a set of `Event`. */
+	events?:ModelTypes["EventsConnection"],
+	/** Reads and enables pagination through a set of `FormResponse`. */
+	formResponses?:ModelTypes["FormResponsesConnection"],
 	/** Reads and enables pagination through a set of `GalerieDir`. */
 	galerieDirs?:ModelTypes["GalerieDirsConnection"],
 	/** Reads and enables pagination through a set of `GalerieFoto`. */
 	galerieFotos?:ModelTypes["GalerieFotosConnection"],
-	/** Reads and enables pagination through a set of `Member`. */
-	members?:ModelTypes["MembersConnection"],
+	/** Reads and enables pagination through a set of `Location`. */
+	locations?:ModelTypes["LocationsConnection"],
+	/** Reads and enables pagination through a set of `LocationAttachment`. */
+	locationAttachments?:ModelTypes["LocationAttachmentsConnection"],
 	/** Reads and enables pagination through a set of `Nabidka`. */
 	nabidkas?:ModelTypes["NabidkasConnection"],
 	/** Reads and enables pagination through a set of `NabidkaItem`. */
@@ -6404,6 +7217,8 @@ which can only query top level fields if they are in a particular form. */
 	paryNavrhs?:ModelTypes["ParyNavrhsConnection"],
 	/** Reads and enables pagination through a set of `Permission`. */
 	permissions?:ModelTypes["PermissionsConnection"],
+	/** Reads and enables pagination through a set of `Person`. */
+	people?:ModelTypes["PeopleConnection"],
 	/** Reads and enables pagination through a set of `PlatbyCategory`. */
 	platbyCategories?:ModelTypes["PlatbyCategoriesConnection"],
 	/** Reads and enables pagination through a set of `PlatbyCategoryGroup`. */
@@ -6416,6 +7231,10 @@ which can only query top level fields if they are in a particular form. */
 	platbyItems?:ModelTypes["PlatbyItemsConnection"],
 	/** Reads and enables pagination through a set of `PlatbyRaw`. */
 	platbyRaws?:ModelTypes["PlatbyRawsConnection"],
+	/** Reads and enables pagination through a set of `Room`. */
+	rooms?:ModelTypes["RoomsConnection"],
+	/** Reads and enables pagination through a set of `RoomAttachment`. */
+	roomAttachments?:ModelTypes["RoomAttachmentsConnection"],
 	/** Reads and enables pagination through a set of `Rozpi`. */
 	rozpis?:ModelTypes["RozpisConnection"],
 	/** Reads and enables pagination through a set of `RozpisItem`. */
@@ -6424,28 +7243,36 @@ which can only query top level fields if they are in a particular form. */
 	sessions?:ModelTypes["SessionsConnection"],
 	/** Reads and enables pagination through a set of `Skupiny`. */
 	skupinies?:ModelTypes["SkupiniesConnection"],
+	/** Reads and enables pagination through a set of `Tenant`. */
+	tenants?:ModelTypes["TenantsConnection"],
+	/** Reads and enables pagination through a set of `TenantAttachment`. */
+	tenantAttachments?:ModelTypes["TenantAttachmentsConnection"],
+	/** Reads and enables pagination through a set of `TenantLocation`. */
+	tenantLocations?:ModelTypes["TenantLocationsConnection"],
+	/** Reads and enables pagination through a set of `TenantPerson`. */
+	tenantPeople?:ModelTypes["TenantPeopleConnection"],
 	/** Reads and enables pagination through a set of `Upozorneni`. */
 	upozornenis?:ModelTypes["UpozornenisConnection"],
 	/** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
 	upozorneniSkupinies?:ModelTypes["UpozorneniSkupiniesConnection"],
 	/** Reads and enables pagination through a set of `User`. */
 	users?:ModelTypes["UsersConnection"],
-	/** Reads and enables pagination through a set of `UsersSkupiny`. */
-	usersSkupinies?:ModelTypes["UsersSkupiniesConnection"],
-	/** Reads and enables pagination through a set of `Video`. */
-	videos?:ModelTypes["VideosConnection"],
-	/** Reads and enables pagination through a set of `VideoList`. */
-	videoLists?:ModelTypes["VideoListsConnection"],
-	/** Reads and enables pagination through a set of `VideoSource`. */
-	videoSources?:ModelTypes["VideoSourcesConnection"],
-	akce?:ModelTypes["Akce"],
-	akceItem?:ModelTypes["AkceItem"],
 	aktuality?:ModelTypes["Aktuality"],
+	attachment?:ModelTypes["Attachment"],
+	attendeeExternal?:ModelTypes["AttendeeExternal"],
+	attendeeUser?:ModelTypes["AttendeeUser"],
+	attendeeUserByUserIdAndEventId?:ModelTypes["AttendeeUser"],
+	cohortGroup?:ModelTypes["CohortGroup"],
 	dokumenty?:ModelTypes["Dokumenty"],
+	event?:ModelTypes["Event"],
+	formResponse?:ModelTypes["FormResponse"],
 	galerieDir?:ModelTypes["GalerieDir"],
 	galerieFoto?:ModelTypes["GalerieFoto"],
+	location?:ModelTypes["Location"],
+	locationAttachment?:ModelTypes["LocationAttachment"],
 	nabidka?:ModelTypes["Nabidka"],
 	nabidkaItem?:ModelTypes["NabidkaItem"],
+	nabidkaItemByNiPartnerAndNiIdRodic?:ModelTypes["NabidkaItem"],
 	page?:ModelTypes["Page"],
 	pageByUrl?:ModelTypes["Page"],
 	pageRevision?:ModelTypes["PageRevision"],
@@ -6453,101 +7280,50 @@ which can only query top level fields if they are in a particular form. */
 	pary?:ModelTypes["Pary"],
 	paryNavrh?:ModelTypes["ParyNavrh"],
 	permission?:ModelTypes["Permission"],
+	person?:ModelTypes["Person"],
 	platbyCategory?:ModelTypes["PlatbyCategory"],
 	platbyCategoryGroup?:ModelTypes["PlatbyCategoryGroup"],
 	platbyGroup?:ModelTypes["PlatbyGroup"],
 	platbyGroupSkupina?:ModelTypes["PlatbyGroupSkupina"],
 	platbyItem?:ModelTypes["PlatbyItem"],
 	platbyRaw?:ModelTypes["PlatbyRaw"],
+	room?:ModelTypes["Room"],
+	roomAttachment?:ModelTypes["RoomAttachment"],
 	rozpi?:ModelTypes["Rozpi"],
 	rozpisItem?:ModelTypes["RozpisItem"],
 	session?:ModelTypes["Session"],
 	skupiny?:ModelTypes["Skupiny"],
+	tenant?:ModelTypes["Tenant"],
+	tenantAttachment?:ModelTypes["TenantAttachment"],
+	tenantLocation?:ModelTypes["TenantLocation"],
+	tenantPerson?:ModelTypes["TenantPerson"],
 	upozorneni?:ModelTypes["Upozorneni"],
 	upozorneniSkupiny?:ModelTypes["UpozorneniSkupiny"],
 	user?:ModelTypes["User"],
-	usersSkupiny?:ModelTypes["UsersSkupiny"],
-	video?:ModelTypes["Video"],
-	videoList?:ModelTypes["VideoList"],
-	videoSource?:ModelTypes["VideoSource"],
-	activeProspects?:ModelTypes["ActiveProspectsConnection"],
-	/** Reads and enables pagination through a set of `Member`. */
-	cohortMembers?:ModelTypes["MembersConnection"],
+	/** Reads and enables pagination through a set of `Pary`. */
+	activeCouples?:ModelTypes["PariesConnection"],
 	currentCoupleIds?:ModelTypes["CurrentCoupleIdsConnection"],
+	/** Reads and enables pagination through a set of `Permission`. */
+	currentPermissions?:ModelTypes["PermissionsConnection"],
 	currentSessionId?:string,
+	currentTenantId?:ModelTypes["BigInt"],
 	currentUserId?:ModelTypes["BigInt"],
+	getCurrentCouple?:ModelTypes["Pary"],
+	getCurrentTenant?:ModelTypes["Tenant"],
 	getCurrentUser?:ModelTypes["User"],
+	/** Reads and enables pagination through a set of `Upozorneni`. */
+	myAnnouncements?:ModelTypes["UpozornenisConnection"],
+	/** Reads and enables pagination through a set of `RozpisItem`. */
+	myLessons?:ModelTypes["RozpisItemsConnection"],
 	/** Reads and enables pagination through a set of `Nabidka`. */
 	reservationsForRange?:ModelTypes["NabidkasConnection"],
 	/** Reads and enables pagination through a set of `Rozpi`. */
 	schedulesForRange?:ModelTypes["RozpisConnection"],
 	/** Reads and enables pagination through a set of `Video`. */
 	titleVideos?:ModelTypes["VideosConnection"],
-	/** Reads a single `Akce` using its globally unique `ID`. */
-	akceByNodeId?:ModelTypes["Akce"],
-	/** Reads a single `AkceItem` using its globally unique `ID`. */
-	akceItemByNodeId?:ModelTypes["AkceItem"],
-	/** Reads a single `Aktuality` using its globally unique `ID`. */
-	aktualityByNodeId?:ModelTypes["Aktuality"],
-	/** Reads a single `Dokumenty` using its globally unique `ID`. */
-	dokumentyByNodeId?:ModelTypes["Dokumenty"],
-	/** Reads a single `GalerieDir` using its globally unique `ID`. */
-	galerieDirByNodeId?:ModelTypes["GalerieDir"],
-	/** Reads a single `GalerieFoto` using its globally unique `ID`. */
-	galerieFotoByNodeId?:ModelTypes["GalerieFoto"],
-	/** Reads a single `Nabidka` using its globally unique `ID`. */
-	nabidkaByNodeId?:ModelTypes["Nabidka"],
-	/** Reads a single `NabidkaItem` using its globally unique `ID`. */
-	nabidkaItemByNodeId?:ModelTypes["NabidkaItem"],
-	/** Reads a single `Page` using its globally unique `ID`. */
-	pageByNodeId?:ModelTypes["Page"],
-	/** Reads a single `PageRevision` using its globally unique `ID`. */
-	pageRevisionByNodeId?:ModelTypes["PageRevision"],
-	/** Reads a single `Parameter` using its globally unique `ID`. */
-	parameterByNodeId?:ModelTypes["Parameter"],
-	/** Reads a single `Pary` using its globally unique `ID`. */
-	paryByNodeId?:ModelTypes["Pary"],
-	/** Reads a single `ParyNavrh` using its globally unique `ID`. */
-	paryNavrhByNodeId?:ModelTypes["ParyNavrh"],
-	/** Reads a single `Permission` using its globally unique `ID`. */
-	permissionByNodeId?:ModelTypes["Permission"],
-	/** Reads a single `PlatbyCategory` using its globally unique `ID`. */
-	platbyCategoryByNodeId?:ModelTypes["PlatbyCategory"],
-	/** Reads a single `PlatbyCategoryGroup` using its globally unique `ID`. */
-	platbyCategoryGroupByNodeId?:ModelTypes["PlatbyCategoryGroup"],
-	/** Reads a single `PlatbyGroup` using its globally unique `ID`. */
-	platbyGroupByNodeId?:ModelTypes["PlatbyGroup"],
-	/** Reads a single `PlatbyGroupSkupina` using its globally unique `ID`. */
-	platbyGroupSkupinaByNodeId?:ModelTypes["PlatbyGroupSkupina"],
-	/** Reads a single `PlatbyItem` using its globally unique `ID`. */
-	platbyItemByNodeId?:ModelTypes["PlatbyItem"],
-	/** Reads a single `PlatbyRaw` using its globally unique `ID`. */
-	platbyRawByNodeId?:ModelTypes["PlatbyRaw"],
-	/** Reads a single `Rozpi` using its globally unique `ID`. */
-	rozpiByNodeId?:ModelTypes["Rozpi"],
-	/** Reads a single `RozpisItem` using its globally unique `ID`. */
-	rozpisItemByNodeId?:ModelTypes["RozpisItem"],
-	/** Reads a single `Session` using its globally unique `ID`. */
-	sessionByNodeId?:ModelTypes["Session"],
-	/** Reads a single `Skupiny` using its globally unique `ID`. */
-	skupinyByNodeId?:ModelTypes["Skupiny"],
-	/** Reads a single `Upozorneni` using its globally unique `ID`. */
-	upozorneniByNodeId?:ModelTypes["Upozorneni"],
-	/** Reads a single `UpozorneniSkupiny` using its globally unique `ID`. */
-	upozorneniSkupinyByNodeId?:ModelTypes["UpozorneniSkupiny"],
-	/** Reads a single `User` using its globally unique `ID`. */
-	userByNodeId?:ModelTypes["User"],
-	/** Reads a single `UsersSkupiny` using its globally unique `ID`. */
-	usersSkupinyByNodeId?:ModelTypes["UsersSkupiny"],
-	/** Reads a single `Video` using its globally unique `ID`. */
-	videoByNodeId?:ModelTypes["Video"],
-	/** Reads a single `VideoList` using its globally unique `ID`. */
-	videoListByNodeId?:ModelTypes["VideoList"],
-	/** Reads a single `VideoSource` using its globally unique `ID`. */
-	videoSourceByNodeId?:ModelTypes["VideoSource"]
+	/** Reads and enables pagination through a set of `User`. */
+	trainers?:ModelTypes["UsersConnection"]
 };
-	/** An object with a globally unique `ID`. */
-["Node"]: ModelTypes["Query"] | ModelTypes["Akce"] | ModelTypes["AkceItem"] | ModelTypes["User"] | ModelTypes["Permission"] | ModelTypes["Skupiny"] | ModelTypes["PlatbyGroupSkupina"] | ModelTypes["PlatbyGroup"] | ModelTypes["PlatbyCategoryGroup"] | ModelTypes["PlatbyCategory"] | ModelTypes["PlatbyItem"] | ModelTypes["PlatbyRaw"] | ModelTypes["UpozorneniSkupiny"] | ModelTypes["Upozorneni"] | ModelTypes["Aktuality"] | ModelTypes["GalerieFoto"] | ModelTypes["GalerieDir"] | ModelTypes["Nabidka"] | ModelTypes["NabidkaItem"] | ModelTypes["Pary"] | ModelTypes["RozpisItem"] | ModelTypes["Rozpi"] | ModelTypes["Session"] | ModelTypes["Dokumenty"] | ModelTypes["ParyNavrh"] | ModelTypes["Page"] | ModelTypes["PageRevision"] | ModelTypes["Parameter"] | ModelTypes["UsersSkupiny"] | ModelTypes["Video"] | ModelTypes["VideoList"] | ModelTypes["VideoSource"];
 	/** A connection to a list of `Akce` values. */
 ["AkcesConnection"]: {
 		/** A list of `Akce` objects. */
@@ -6560,19 +7336,20 @@ which can only query top level fields if they are in a particular form. */
 	totalCount:number
 };
 	["Akce"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	aId:ModelTypes["BigInt"],
-	aJmeno:string,
-	aKde:string,
-	aInfo:string,
-	aOd:ModelTypes["Date"],
-	aDo:ModelTypes["Date"],
-	aKapacita:ModelTypes["BigInt"],
-	aDokumenty:string,
+		aId?:ModelTypes["BigInt"],
+	aJmeno?:string,
+	aKde?:string,
+	aInfo?:string,
+	aOd?:ModelTypes["Date"],
+	aDo?:ModelTypes["Date"],
+	aKapacita?:ModelTypes["BigInt"],
+	aDokumenty?:string,
 	aTimestamp?:ModelTypes["Datetime"],
-	aLock:boolean,
-	aVisible:boolean,
+	aLock?:boolean,
+	aVisible?:boolean,
+	summary?:string,
+	isPublic?:boolean,
+	enableNotes?:boolean,
 	/** Reads and enables pagination through a set of `AkceItem`. */
 	akceItemsByAiIdRodic:ModelTypes["AkceItemsConnection"]
 };
@@ -6597,21 +7374,18 @@ strings and not numbers. */
 	totalCount:number
 };
 	["AkceItem"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	aiId:ModelTypes["BigInt"],
-	aiIdRodic:ModelTypes["BigInt"],
-	aiUser:ModelTypes["BigInt"],
-	aiRokNarozeni:number,
+		aiId?:ModelTypes["BigInt"],
+	aiIdRodic?:ModelTypes["BigInt"],
+	aiUser?:ModelTypes["BigInt"],
+	aiRokNarozeni?:number,
+	notes?:string,
 	/** Reads a single `Akce` that is related to this `AkceItem`. */
 	akceByAiIdRodic?:ModelTypes["Akce"],
 	/** Reads a single `User` that is related to this `AkceItem`. */
 	userByAiUser?:ModelTypes["User"]
 };
 	["User"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	uId:ModelTypes["BigInt"],
+		uId:ModelTypes["BigInt"],
 	uLogin:string,
 	uPass:string,
 	uJmeno:string,
@@ -6643,26 +7417,24 @@ strings and not numbers. */
 	uCreatedAt:ModelTypes["Datetime"],
 	uTeacher:boolean,
 	uGdprSignedAt?:ModelTypes["Datetime"],
+	id?:ModelTypes["BigInt"],
+	tenantId:ModelTypes["BigInt"],
 	/** Reads a single `Permission` that is related to this `User`. */
 	permissionByUGroup?:ModelTypes["Permission"],
 	/** Reads a single `Skupiny` that is related to this `User`. */
 	skupinyByUSkupina?:ModelTypes["Skupiny"],
+	/** Reads and enables pagination through a set of `AttendeeUser`. */
+	attendeeUsers:ModelTypes["AttendeeUsersConnection"],
 	/** Reads and enables pagination through a set of `Aktuality`. */
 	aktualitiesByAtKdo:ModelTypes["AktualitiesConnection"],
-	/** Reads and enables pagination through a set of `Nabidka`. */
-	nabidkasByNTrener:ModelTypes["NabidkasConnection"],
-	/** Reads and enables pagination through a set of `Rozpi`. */
-	rozpisByRTrener:ModelTypes["RozpisConnection"],
-	/** Reads and enables pagination through a set of `Session`. */
-	sessionsBySsUser:ModelTypes["SessionsConnection"],
-	/** Reads and enables pagination through a set of `AkceItem`. */
-	akceItemsByAiUser:ModelTypes["AkceItemsConnection"],
 	/** Reads and enables pagination through a set of `Dokumenty`. */
 	dokumentiesByDKdo:ModelTypes["DokumentiesConnection"],
 	/** Reads and enables pagination through a set of `GalerieFoto`. */
 	galerieFotosByGfKdo:ModelTypes["GalerieFotosConnection"],
 	/** Reads and enables pagination through a set of `PlatbyItem`. */
 	platbyItemsByPiIdUser:ModelTypes["PlatbyItemsConnection"],
+	/** Reads and enables pagination through a set of `Nabidka`. */
+	nabidkasByNTrener:ModelTypes["NabidkasConnection"],
 	/** Reads and enables pagination through a set of `Pary`. */
 	pariesByPIdPartner:ModelTypes["PariesConnection"],
 	/** Reads and enables pagination through a set of `ParyNavrh`. */
@@ -6671,13 +7443,30 @@ strings and not numbers. */
 	paryNavrhsByPnPartner:ModelTypes["ParyNavrhsConnection"],
 	/** Reads and enables pagination through a set of `ParyNavrh`. */
 	paryNavrhsByPnPartnerka:ModelTypes["ParyNavrhsConnection"],
+	/** Reads and enables pagination through a set of `Rozpi`. */
+	rozpisByRTrener:ModelTypes["RozpisConnection"],
+	/** Reads and enables pagination through a set of `Session`. */
+	sessionsBySsUser:ModelTypes["SessionsConnection"],
 	/** Reads and enables pagination through a set of `Upozorneni`. */
-	upozornenisByUpKdo:ModelTypes["UpozornenisConnection"]
+	upozornenisByUpKdo:ModelTypes["UpozornenisConnection"],
+	/** Reads and enables pagination through a set of `Attachment`. */
+	attachmentsByUploadedBy:ModelTypes["AttachmentsConnection"],
+	/** Reads and enables pagination through a set of `AttendeeExternal`. */
+	attendeeExternalsByManagedBy:ModelTypes["AttendeeExternalsConnection"],
+	/** Reads and enables pagination through a set of `AttendeeExternal`. */
+	attendeeExternalsByConfirmedBy:ModelTypes["AttendeeExternalsConnection"],
+	/** Reads and enables pagination through a set of `AkceItem`. */
+	akceItemsByAiUser:ModelTypes["AkceItemsConnection"],
+	/** Reads and enables pagination through a set of `Pary`. */
+	pariesByPIdPartnerka:ModelTypes["PariesConnection"],
+	dateOfNewestPayment?:ModelTypes["Date"],
+	dateOfOldestPayment?:ModelTypes["Date"],
+	fullName?:string,
+	hasValidPayment?:boolean,
+	inPublicCohort?:boolean
 };
 	["Permission"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	peId:ModelTypes["BigInt"],
+		peId:ModelTypes["BigInt"],
 	peName:string,
 	peDescription:string,
 	peAkce:number,
@@ -6697,6 +7486,7 @@ strings and not numbers. */
 	peSkupiny:number,
 	peUsers:number,
 	peMain:number,
+	id?:ModelTypes["BigInt"],
 	/** Reads and enables pagination through a set of `User`. */
 	usersByUGroup:ModelTypes["UsersConnection"]
 };
@@ -6736,15 +7526,20 @@ strings and not numbers. */
 	/** A condition to be used against `User` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 ["UserCondition"]: GraphQLTypes["UserCondition"];
 	["Skupiny"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	sId:ModelTypes["BigInt"],
+		sId:ModelTypes["BigInt"],
 	sName:string,
 	sDescription:string,
 	sColorRgb:string,
 	sColorText:string,
 	sLocation:string,
 	sVisible:boolean,
+	ordering:number,
+	internalInfo:string,
+	cohortGroup?:ModelTypes["BigInt"],
+	id?:ModelTypes["BigInt"],
+	tenantId:ModelTypes["BigInt"],
+	/** Reads a single `CohortGroup` that is related to this `Skupiny`. */
+	cohortGroupByCohortGroup?:ModelTypes["CohortGroup"],
 	/** Reads and enables pagination through a set of `User`. */
 	usersByUSkupina:ModelTypes["UsersConnection"],
 	/** Reads and enables pagination through a set of `PlatbyGroupSkupina`. */
@@ -6752,6 +7547,303 @@ strings and not numbers. */
 	/** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
 	upozorneniSkupiniesByUpsIdSkupina:ModelTypes["UpozorneniSkupiniesConnection"]
 };
+	["CohortGroup"]: {
+		id:ModelTypes["BigInt"],
+	name:string,
+	description:string,
+	ordering:number,
+	isPublic:boolean,
+	tenant?:ModelTypes["BigInt"],
+	tenantId:ModelTypes["BigInt"],
+	/** Reads a single `Tenant` that is related to this `CohortGroup`. */
+	tenantByTenant?:ModelTypes["Tenant"],
+	/** Reads and enables pagination through a set of `Skupiny`. */
+	skupiniesByCohortGroup:ModelTypes["SkupiniesConnection"]
+};
+	["Tenant"]: {
+		id:ModelTypes["BigInt"],
+	name:string,
+	memberInfo:string,
+	origins?:string[],
+	/** Reads and enables pagination through a set of `TenantAttachment`. */
+	tenantAttachments:ModelTypes["TenantAttachmentsConnection"],
+	/** Reads and enables pagination through a set of `TenantPerson`. */
+	tenantPeople:ModelTypes["TenantPeopleConnection"],
+	/** Reads and enables pagination through a set of `CohortGroup`. */
+	cohortGroupsByTenant:ModelTypes["CohortGroupsConnection"],
+	/** Reads and enables pagination through a set of `TenantLocation`. */
+	tenantLocations:ModelTypes["TenantLocationsConnection"]
+};
+	/** A connection to a list of `TenantAttachment` values. */
+["TenantAttachmentsConnection"]: {
+		/** A list of `TenantAttachment` objects. */
+	nodes:ModelTypes["TenantAttachment"][],
+	/** A list of edges which contains the `TenantAttachment` and cursor to aid in pagination. */
+	edges:ModelTypes["TenantAttachmentsEdge"][],
+	/** Information to aid in pagination. */
+	pageInfo:ModelTypes["PageInfo"],
+	/** The count of *all* `TenantAttachment` you could get from the connection. */
+	totalCount:number
+};
+	["TenantAttachment"]: {
+		tenantId:ModelTypes["BigInt"],
+	objectName:string,
+	type?:ModelTypes["TenantAttachmentType"],
+	/** Reads a single `Tenant` that is related to this `TenantAttachment`. */
+	tenant?:ModelTypes["Tenant"],
+	/** Reads a single `Attachment` that is related to this `TenantAttachment`. */
+	attachmentByObjectName?:ModelTypes["Attachment"]
+};
+	["TenantAttachmentType"]: GraphQLTypes["TenantAttachmentType"];
+	["Attachment"]: {
+		objectName:string,
+	previewObjectName?:string,
+	uploadedBy?:ModelTypes["BigInt"],
+	uploadedAt:ModelTypes["Datetime"],
+	/** Reads a single `User` that is related to this `Attachment`. */
+	userByUploadedBy?:ModelTypes["User"],
+	/** Reads and enables pagination through a set of `TenantAttachment`. */
+	tenantAttachmentsByObjectName:ModelTypes["TenantAttachmentsConnection"],
+	/** Reads and enables pagination through a set of `LocationAttachment`. */
+	locationAttachmentsByObjectName:ModelTypes["LocationAttachmentsConnection"],
+	/** Reads and enables pagination through a set of `RoomAttachment`. */
+	roomAttachmentsByObjectName:ModelTypes["RoomAttachmentsConnection"]
+};
+	/** Methods to use when ordering `TenantAttachment`. */
+["TenantAttachmentsOrderBy"]: GraphQLTypes["TenantAttachmentsOrderBy"];
+	/** A condition to be used against `TenantAttachment` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["TenantAttachmentCondition"]: GraphQLTypes["TenantAttachmentCondition"];
+	/** A connection to a list of `LocationAttachment` values. */
+["LocationAttachmentsConnection"]: {
+		/** A list of `LocationAttachment` objects. */
+	nodes:ModelTypes["LocationAttachment"][],
+	/** A list of edges which contains the `LocationAttachment` and cursor to aid in pagination. */
+	edges:ModelTypes["LocationAttachmentsEdge"][],
+	/** Information to aid in pagination. */
+	pageInfo:ModelTypes["PageInfo"],
+	/** The count of *all* `LocationAttachment` you could get from the connection. */
+	totalCount:number
+};
+	["LocationAttachment"]: {
+		locationId:ModelTypes["BigInt"],
+	objectName:string,
+	/** Reads a single `Location` that is related to this `LocationAttachment`. */
+	location?:ModelTypes["Location"],
+	/** Reads a single `Attachment` that is related to this `LocationAttachment`. */
+	attachmentByObjectName?:ModelTypes["Attachment"]
+};
+	["Location"]: {
+		id:ModelTypes["BigInt"],
+	name:string,
+	description:ModelTypes["JSON"],
+	/** Reads and enables pagination through a set of `Room`. */
+	roomsByLocation:ModelTypes["RoomsConnection"],
+	/** Reads and enables pagination through a set of `LocationAttachment`. */
+	locationAttachments:ModelTypes["LocationAttachmentsConnection"],
+	/** Reads and enables pagination through a set of `TenantLocation`. */
+	tenantLocations:ModelTypes["TenantLocationsConnection"]
+};
+	/** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+["JSON"]:any;
+	/** A connection to a list of `Room` values. */
+["RoomsConnection"]: {
+		/** A list of `Room` objects. */
+	nodes:ModelTypes["Room"][],
+	/** A list of edges which contains the `Room` and cursor to aid in pagination. */
+	edges:ModelTypes["RoomsEdge"][],
+	/** Information to aid in pagination. */
+	pageInfo:ModelTypes["PageInfo"],
+	/** The count of *all* `Room` you could get from the connection. */
+	totalCount:number
+};
+	["Room"]: {
+		id:ModelTypes["BigInt"],
+	name:string,
+	description:ModelTypes["JSON"],
+	location?:ModelTypes["BigInt"],
+	/** Reads a single `Location` that is related to this `Room`. */
+	locationByLocation?:ModelTypes["Location"],
+	/** Reads and enables pagination through a set of `RoomAttachment`. */
+	roomAttachments:ModelTypes["RoomAttachmentsConnection"]
+};
+	/** A connection to a list of `RoomAttachment` values. */
+["RoomAttachmentsConnection"]: {
+		/** A list of `RoomAttachment` objects. */
+	nodes:ModelTypes["RoomAttachment"][],
+	/** A list of edges which contains the `RoomAttachment` and cursor to aid in pagination. */
+	edges:ModelTypes["RoomAttachmentsEdge"][],
+	/** Information to aid in pagination. */
+	pageInfo:ModelTypes["PageInfo"],
+	/** The count of *all* `RoomAttachment` you could get from the connection. */
+	totalCount:number
+};
+	["RoomAttachment"]: {
+		roomId:ModelTypes["BigInt"],
+	objectName:string,
+	/** Reads a single `Room` that is related to this `RoomAttachment`. */
+	room?:ModelTypes["Room"],
+	/** Reads a single `Attachment` that is related to this `RoomAttachment`. */
+	attachmentByObjectName?:ModelTypes["Attachment"]
+};
+	/** A `RoomAttachment` edge in the connection. */
+["RoomAttachmentsEdge"]: {
+		/** A cursor for use in pagination. */
+	cursor?:ModelTypes["Cursor"],
+	/** The `RoomAttachment` at the end of the edge. */
+	node:ModelTypes["RoomAttachment"]
+};
+	/** Methods to use when ordering `RoomAttachment`. */
+["RoomAttachmentsOrderBy"]: GraphQLTypes["RoomAttachmentsOrderBy"];
+	/** A condition to be used against `RoomAttachment` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["RoomAttachmentCondition"]: GraphQLTypes["RoomAttachmentCondition"];
+	/** A `Room` edge in the connection. */
+["RoomsEdge"]: {
+		/** A cursor for use in pagination. */
+	cursor?:ModelTypes["Cursor"],
+	/** The `Room` at the end of the edge. */
+	node:ModelTypes["Room"]
+};
+	/** Methods to use when ordering `Room`. */
+["RoomsOrderBy"]: GraphQLTypes["RoomsOrderBy"];
+	/** A condition to be used against `Room` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["RoomCondition"]: GraphQLTypes["RoomCondition"];
+	/** Methods to use when ordering `LocationAttachment`. */
+["LocationAttachmentsOrderBy"]: GraphQLTypes["LocationAttachmentsOrderBy"];
+	/** A condition to be used against `LocationAttachment` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["LocationAttachmentCondition"]: GraphQLTypes["LocationAttachmentCondition"];
+	/** A connection to a list of `TenantLocation` values. */
+["TenantLocationsConnection"]: {
+		/** A list of `TenantLocation` objects. */
+	nodes:ModelTypes["TenantLocation"][],
+	/** A list of edges which contains the `TenantLocation` and cursor to aid in pagination. */
+	edges:ModelTypes["TenantLocationsEdge"][],
+	/** Information to aid in pagination. */
+	pageInfo:ModelTypes["PageInfo"],
+	/** The count of *all* `TenantLocation` you could get from the connection. */
+	totalCount:number
+};
+	["TenantLocation"]: {
+		tenantId:ModelTypes["BigInt"],
+	locationId:ModelTypes["BigInt"],
+	/** Reads a single `Tenant` that is related to this `TenantLocation`. */
+	tenant?:ModelTypes["Tenant"],
+	/** Reads a single `Location` that is related to this `TenantLocation`. */
+	location?:ModelTypes["Location"]
+};
+	/** A `TenantLocation` edge in the connection. */
+["TenantLocationsEdge"]: {
+		/** A cursor for use in pagination. */
+	cursor?:ModelTypes["Cursor"],
+	/** The `TenantLocation` at the end of the edge. */
+	node:ModelTypes["TenantLocation"]
+};
+	/** Methods to use when ordering `TenantLocation`. */
+["TenantLocationsOrderBy"]: GraphQLTypes["TenantLocationsOrderBy"];
+	/** A condition to be used against `TenantLocation` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["TenantLocationCondition"]: GraphQLTypes["TenantLocationCondition"];
+	/** A `LocationAttachment` edge in the connection. */
+["LocationAttachmentsEdge"]: {
+		/** A cursor for use in pagination. */
+	cursor?:ModelTypes["Cursor"],
+	/** The `LocationAttachment` at the end of the edge. */
+	node:ModelTypes["LocationAttachment"]
+};
+	/** A `TenantAttachment` edge in the connection. */
+["TenantAttachmentsEdge"]: {
+		/** A cursor for use in pagination. */
+	cursor?:ModelTypes["Cursor"],
+	/** The `TenantAttachment` at the end of the edge. */
+	node:ModelTypes["TenantAttachment"]
+};
+	/** A connection to a list of `TenantPerson` values. */
+["TenantPeopleConnection"]: {
+		/** A list of `TenantPerson` objects. */
+	nodes:ModelTypes["TenantPerson"][],
+	/** A list of edges which contains the `TenantPerson` and cursor to aid in pagination. */
+	edges:ModelTypes["TenantPeopleEdge"][],
+	/** Information to aid in pagination. */
+	pageInfo:ModelTypes["PageInfo"],
+	/** The count of *all* `TenantPerson` you could get from the connection. */
+	totalCount:number
+};
+	["TenantPerson"]: {
+		tenantId:ModelTypes["BigInt"],
+	personId:ModelTypes["BigInt"],
+	/** Reads a single `Tenant` that is related to this `TenantPerson`. */
+	tenant?:ModelTypes["Tenant"],
+	/** Reads a single `Person` that is related to this `TenantPerson`. */
+	person?:ModelTypes["Person"]
+};
+	["Person"]: {
+		id:ModelTypes["BigInt"],
+	firstName:string,
+	lastName:string,
+	gender:ModelTypes["GenderType"],
+	/** Reads and enables pagination through a set of `TenantPerson`. */
+	tenantPeople:ModelTypes["TenantPeopleConnection"]
+};
+	["GenderType"]: GraphQLTypes["GenderType"];
+	/** Methods to use when ordering `TenantPerson`. */
+["TenantPeopleOrderBy"]: GraphQLTypes["TenantPeopleOrderBy"];
+	/** A condition to be used against `TenantPerson` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["TenantPersonCondition"]: GraphQLTypes["TenantPersonCondition"];
+	/** A `TenantPerson` edge in the connection. */
+["TenantPeopleEdge"]: {
+		/** A cursor for use in pagination. */
+	cursor?:ModelTypes["Cursor"],
+	/** The `TenantPerson` at the end of the edge. */
+	node:ModelTypes["TenantPerson"]
+};
+	/** A connection to a list of `CohortGroup` values. */
+["CohortGroupsConnection"]: {
+		/** A list of `CohortGroup` objects. */
+	nodes:ModelTypes["CohortGroup"][],
+	/** A list of edges which contains the `CohortGroup` and cursor to aid in pagination. */
+	edges:ModelTypes["CohortGroupsEdge"][],
+	/** Information to aid in pagination. */
+	pageInfo:ModelTypes["PageInfo"],
+	/** The count of *all* `CohortGroup` you could get from the connection. */
+	totalCount:number
+};
+	/** A `CohortGroup` edge in the connection. */
+["CohortGroupsEdge"]: {
+		/** A cursor for use in pagination. */
+	cursor?:ModelTypes["Cursor"],
+	/** The `CohortGroup` at the end of the edge. */
+	node:ModelTypes["CohortGroup"]
+};
+	/** Methods to use when ordering `CohortGroup`. */
+["CohortGroupsOrderBy"]: GraphQLTypes["CohortGroupsOrderBy"];
+	/** A condition to be used against `CohortGroup` object types. All fields are tested
+for equality and combined with a logical ‘and.’ */
+["CohortGroupCondition"]: GraphQLTypes["CohortGroupCondition"];
+	/** A connection to a list of `Skupiny` values. */
+["SkupiniesConnection"]: {
+		/** A list of `Skupiny` objects. */
+	nodes:ModelTypes["Skupiny"][],
+	/** A list of edges which contains the `Skupiny` and cursor to aid in pagination. */
+	edges:ModelTypes["SkupiniesEdge"][],
+	/** Information to aid in pagination. */
+	pageInfo:ModelTypes["PageInfo"],
+	/** The count of *all* `Skupiny` you could get from the connection. */
+	totalCount:number
+};
+	/** A `Skupiny` edge in the connection. */
+["SkupiniesEdge"]: {
+		/** A cursor for use in pagination. */
+	cursor?:ModelTypes["Cursor"],
+	/** The `Skupiny` at the end of the edge. */
+	node:ModelTypes["Skupiny"]
+};
+	/** Methods to use when ordering `Skupiny`. */
+["SkupiniesOrderBy"]: GraphQLTypes["SkupiniesOrderBy"];
+	/** A condition to be used against `Skupiny` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["SkupinyCondition"]: GraphQLTypes["SkupinyCondition"];
 	/** A connection to a list of `PlatbyGroupSkupina` values. */
 ["PlatbyGroupSkupinasConnection"]: {
 		/** A list of `PlatbyGroupSkupina` objects. */
@@ -6764,24 +7856,24 @@ strings and not numbers. */
 	totalCount:number
 };
 	["PlatbyGroupSkupina"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	pgsId:ModelTypes["BigInt"],
+		pgsId:ModelTypes["BigInt"],
 	pgsIdSkupina:ModelTypes["BigInt"],
 	pgsIdGroup:ModelTypes["BigInt"],
+	id?:ModelTypes["BigInt"],
+	tenantId:ModelTypes["BigInt"],
 	/** Reads a single `Skupiny` that is related to this `PlatbyGroupSkupina`. */
 	skupinyByPgsIdSkupina?:ModelTypes["Skupiny"],
 	/** Reads a single `PlatbyGroup` that is related to this `PlatbyGroupSkupina`. */
 	platbyGroupByPgsIdGroup?:ModelTypes["PlatbyGroup"]
 };
 	["PlatbyGroup"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	pgId:ModelTypes["BigInt"],
+		pgId:ModelTypes["BigInt"],
 	pgType:ModelTypes["BigFloat"],
 	pgName:string,
 	pgDescription:string,
 	pgBase:ModelTypes["BigInt"],
+	id?:ModelTypes["BigInt"],
+	tenantId:ModelTypes["BigInt"],
 	/** Reads and enables pagination through a set of `PlatbyCategoryGroup`. */
 	platbyCategoryGroupsByPcgIdGroup:ModelTypes["PlatbyCategoryGroupsConnection"],
 	/** Reads and enables pagination through a set of `PlatbyGroupSkupina`. */
@@ -6801,20 +7893,18 @@ strings and not numbers. */
 	totalCount:number
 };
 	["PlatbyCategoryGroup"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	pcgId:ModelTypes["BigInt"],
+		pcgId:ModelTypes["BigInt"],
 	pcgIdGroup:ModelTypes["BigInt"],
 	pcgIdCategory:ModelTypes["BigInt"],
+	id?:ModelTypes["BigInt"],
+	tenantId:ModelTypes["BigInt"],
 	/** Reads a single `PlatbyGroup` that is related to this `PlatbyCategoryGroup`. */
 	platbyGroupByPcgIdGroup?:ModelTypes["PlatbyGroup"],
 	/** Reads a single `PlatbyCategory` that is related to this `PlatbyCategoryGroup`. */
 	platbyCategoryByPcgIdCategory?:ModelTypes["PlatbyCategory"]
 };
 	["PlatbyCategory"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	pcId:ModelTypes["BigInt"],
+		pcId:ModelTypes["BigInt"],
 	pcName:string,
 	pcSymbol:ModelTypes["BigInt"],
 	pcAmount:ModelTypes["BigFloat"],
@@ -6825,6 +7915,8 @@ strings and not numbers. */
 	pcUsePrefix:boolean,
 	pcArchive:boolean,
 	pcVisible:boolean,
+	id?:ModelTypes["BigInt"],
+	tenantId:ModelTypes["BigInt"],
 	/** Reads and enables pagination through a set of `PlatbyCategoryGroup`. */
 	platbyCategoryGroupsByPcgIdCategory:ModelTypes["PlatbyCategoryGroupsConnection"],
 	/** Reads and enables pagination through a set of `PlatbyItem`. */
@@ -6847,15 +7939,15 @@ are tested for equality and combined with a logical ‘and.’ */
 	totalCount:number
 };
 	["PlatbyItem"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	piId:ModelTypes["BigInt"],
+		piId:ModelTypes["BigInt"],
 	piIdUser?:ModelTypes["BigInt"],
 	piIdCategory:ModelTypes["BigInt"],
 	piIdRaw?:ModelTypes["BigInt"],
 	piAmount:ModelTypes["BigFloat"],
 	piDate:ModelTypes["Date"],
 	piPrefix:number,
+	id?:ModelTypes["BigInt"],
+	tenantId:ModelTypes["BigInt"],
 	/** Reads a single `User` that is related to this `PlatbyItem`. */
 	userByPiIdUser?:ModelTypes["User"],
 	/** Reads a single `PlatbyCategory` that is related to this `PlatbyItem`. */
@@ -6864,13 +7956,13 @@ are tested for equality and combined with a logical ‘and.’ */
 	platbyRawByPiIdRaw?:ModelTypes["PlatbyRaw"]
 };
 	["PlatbyRaw"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	prId:ModelTypes["BigInt"],
+		prId:ModelTypes["BigInt"],
 	prRaw:string,
 	prHash:string,
 	prSorted:boolean,
 	prDiscarded:boolean,
+	id?:ModelTypes["BigInt"],
+	tenantId:ModelTypes["BigInt"],
 	/** Reads and enables pagination through a set of `PlatbyItem`. */
 	platbyItemsByPiIdRaw:ModelTypes["PlatbyItemsConnection"]
 };
@@ -6917,29 +8009,32 @@ tested for equality and combined with a logical ‘and.’ */
 	totalCount:number
 };
 	["UpozorneniSkupiny"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	upsId:ModelTypes["BigInt"],
+		upsId:ModelTypes["BigInt"],
 	upsIdRodic:ModelTypes["BigInt"],
 	upsIdSkupina:ModelTypes["BigInt"],
 	upsColor:string,
 	upsPopis:string,
+	id?:ModelTypes["BigInt"],
+	tenantId:ModelTypes["BigInt"],
 	/** Reads a single `Upozorneni` that is related to this `UpozorneniSkupiny`. */
 	upozorneniByUpsIdRodic?:ModelTypes["Upozorneni"],
 	/** Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`. */
 	skupinyByUpsIdSkupina?:ModelTypes["Skupiny"]
 };
 	["Upozorneni"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	upId:ModelTypes["BigInt"],
-	upKdo:ModelTypes["BigInt"],
+		upId:ModelTypes["BigInt"],
+	upKdo?:ModelTypes["BigInt"],
 	upNadpis:string,
 	upText:string,
 	upBarvy:ModelTypes["BigInt"],
 	upLock:boolean,
 	upTimestamp?:ModelTypes["Datetime"],
 	upTimestampAdd:ModelTypes["Datetime"],
+	scheduledSince?:ModelTypes["Datetime"],
+	scheduledUntil?:ModelTypes["Datetime"],
+	isVisible?:boolean,
+	id?:ModelTypes["BigInt"],
+	tenantId:ModelTypes["BigInt"],
 	/** Reads a single `User` that is related to this `Upozorneni`. */
 	userByUpKdo?:ModelTypes["User"],
 	/** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
@@ -6957,6 +8052,109 @@ tested for equality and combined with a logical ‘and.’ */
 	/** The `UpozorneniSkupiny` at the end of the edge. */
 	node:ModelTypes["UpozorneniSkupiny"]
 };
+	/** A connection to a list of `AttendeeUser` values. */
+["AttendeeUsersConnection"]: {
+		/** A list of `AttendeeUser` objects. */
+	nodes:ModelTypes["AttendeeUser"][],
+	/** A list of edges which contains the `AttendeeUser` and cursor to aid in pagination. */
+	edges:ModelTypes["AttendeeUsersEdge"][],
+	/** Information to aid in pagination. */
+	pageInfo:ModelTypes["PageInfo"],
+	/** The count of *all* `AttendeeUser` you could get from the connection. */
+	totalCount:number
+};
+	["AttendeeUser"]: {
+		id:ModelTypes["BigInt"],
+	eventId:ModelTypes["BigInt"],
+	userId:ModelTypes["BigInt"],
+	birthYear:number,
+	notes:string,
+	tenantId:ModelTypes["BigInt"],
+	/** Reads a single `Event` that is related to this `AttendeeUser`. */
+	event?:ModelTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeUser`. */
+	user?:ModelTypes["User"]
+};
+	["Event"]: {
+		id:ModelTypes["BigInt"],
+	name:string,
+	locationText:string,
+	description:string,
+	since:ModelTypes["Date"],
+	until:ModelTypes["Date"],
+	capacity:ModelTypes["BigInt"],
+	filesLegacy:string,
+	updatedAt?:ModelTypes["Datetime"],
+	isLocked:boolean,
+	isVisible:boolean,
+	summary:string,
+	isPublic:boolean,
+	enableNotes:boolean,
+	tenantId:ModelTypes["BigInt"],
+	/** Reads and enables pagination through a set of `AttendeeUser`. */
+	attendeeUsers:ModelTypes["AttendeeUsersConnection"],
+	/** Reads and enables pagination through a set of `AttendeeExternal`. */
+	attendeeExternals:ModelTypes["AttendeeExternalsConnection"],
+	remainingSpots?:number
+};
+	/** Methods to use when ordering `AttendeeUser`. */
+["AttendeeUsersOrderBy"]: GraphQLTypes["AttendeeUsersOrderBy"];
+	/** A condition to be used against `AttendeeUser` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["AttendeeUserCondition"]: GraphQLTypes["AttendeeUserCondition"];
+	/** A connection to a list of `AttendeeExternal` values. */
+["AttendeeExternalsConnection"]: {
+		/** A list of `AttendeeExternal` objects. */
+	nodes:ModelTypes["AttendeeExternal"][],
+	/** A list of edges which contains the `AttendeeExternal` and cursor to aid in pagination. */
+	edges:ModelTypes["AttendeeExternalsEdge"][],
+	/** Information to aid in pagination. */
+	pageInfo:ModelTypes["PageInfo"],
+	/** The count of *all* `AttendeeExternal` you could get from the connection. */
+	totalCount:number
+};
+	["AttendeeExternal"]: {
+		id:ModelTypes["BigInt"],
+	eventId:ModelTypes["BigInt"],
+	firstName:string,
+	lastName:string,
+	email:string,
+	phone:string,
+	notes:string,
+	birthNumber?:string,
+	guardianName:string,
+	managedBy?:ModelTypes["BigInt"],
+	confirmedBy?:ModelTypes["BigInt"],
+	confirmedAt?:ModelTypes["Datetime"],
+	createdAt:ModelTypes["Datetime"],
+	updatedAt:ModelTypes["Datetime"],
+	tenantId:ModelTypes["BigInt"],
+	/** Reads a single `Event` that is related to this `AttendeeExternal`. */
+	event?:ModelTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByManagedBy?:ModelTypes["User"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByConfirmedBy?:ModelTypes["User"]
+};
+	/** A `AttendeeExternal` edge in the connection. */
+["AttendeeExternalsEdge"]: {
+		/** A cursor for use in pagination. */
+	cursor?:ModelTypes["Cursor"],
+	/** The `AttendeeExternal` at the end of the edge. */
+	node:ModelTypes["AttendeeExternal"]
+};
+	/** Methods to use when ordering `AttendeeExternal`. */
+["AttendeeExternalsOrderBy"]: GraphQLTypes["AttendeeExternalsOrderBy"];
+	/** A condition to be used against `AttendeeExternal` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["AttendeeExternalCondition"]: GraphQLTypes["AttendeeExternalCondition"];
+	/** A `AttendeeUser` edge in the connection. */
+["AttendeeUsersEdge"]: {
+		/** A cursor for use in pagination. */
+	cursor?:ModelTypes["Cursor"],
+	/** The `AttendeeUser` at the end of the edge. */
+	node:ModelTypes["AttendeeUser"]
+};
 	/** A connection to a list of `Aktuality` values. */
 ["AktualitiesConnection"]: {
 		/** A list of `Aktuality` objects. */
@@ -6969,10 +8167,8 @@ tested for equality and combined with a logical ‘and.’ */
 	totalCount:number
 };
 	["Aktuality"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	atId:ModelTypes["BigInt"],
-	atKdo:ModelTypes["BigInt"],
+		atId:ModelTypes["BigInt"],
+	atKdo?:ModelTypes["BigInt"],
 	atKat:string,
 	atJmeno:string,
 	atText:string,
@@ -6981,20 +8177,22 @@ tested for equality and combined with a logical ‘and.’ */
 	atFotoMain?:ModelTypes["BigInt"],
 	atTimestamp?:ModelTypes["Datetime"],
 	atTimestampAdd?:ModelTypes["Datetime"],
+	id?:ModelTypes["BigInt"],
+	tenantId:ModelTypes["BigInt"],
 	/** Reads a single `User` that is related to this `Aktuality`. */
 	userByAtKdo?:ModelTypes["User"],
 	/** Reads a single `GalerieFoto` that is related to this `Aktuality`. */
 	galerieFotoByAtFotoMain?:ModelTypes["GalerieFoto"]
 };
 	["GalerieFoto"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	gfId:ModelTypes["BigInt"],
+		gfId:ModelTypes["BigInt"],
 	gfIdRodic:ModelTypes["BigInt"],
 	gfName:string,
 	gfPath:string,
 	gfKdo:ModelTypes["BigInt"],
 	gfTimestamp?:ModelTypes["Datetime"],
+	id?:ModelTypes["BigInt"],
+	tenantId:ModelTypes["BigInt"],
 	/** Reads a single `GalerieDir` that is related to this `GalerieFoto`. */
 	galerieDirByGfIdRodic?:ModelTypes["GalerieDir"],
 	/** Reads a single `User` that is related to this `GalerieFoto`. */
@@ -7003,14 +8201,14 @@ tested for equality and combined with a logical ‘and.’ */
 	aktualitiesByAtFotoMain:ModelTypes["AktualitiesConnection"]
 };
 	["GalerieDir"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	gdId:ModelTypes["BigInt"],
+		gdId:ModelTypes["BigInt"],
 	gdIdRodic:ModelTypes["BigInt"],
 	gdName:string,
 	gdLevel:number,
 	gdPath:string,
 	gdHidden:boolean,
+	id?:ModelTypes["BigInt"],
+	tenantId:ModelTypes["BigInt"],
 	/** Reads and enables pagination through a set of `GalerieFoto`. */
 	galerieFotosByGfIdRodic:ModelTypes["GalerieFotosConnection"]
 };
@@ -7049,6 +8247,42 @@ for equality and combined with a logical ‘and.’ */
 	/** The `Aktuality` at the end of the edge. */
 	node:ModelTypes["Aktuality"]
 };
+	/** A connection to a list of `Dokumenty` values. */
+["DokumentiesConnection"]: {
+		/** A list of `Dokumenty` objects. */
+	nodes:ModelTypes["Dokumenty"][],
+	/** A list of edges which contains the `Dokumenty` and cursor to aid in pagination. */
+	edges:ModelTypes["DokumentiesEdge"][],
+	/** Information to aid in pagination. */
+	pageInfo:ModelTypes["PageInfo"],
+	/** The count of *all* `Dokumenty` you could get from the connection. */
+	totalCount:number
+};
+	["Dokumenty"]: {
+		dId:ModelTypes["BigInt"],
+	dPath:string,
+	dName:string,
+	dFilename:string,
+	dKategorie:number,
+	dKdo:ModelTypes["BigInt"],
+	dTimestamp?:ModelTypes["Datetime"],
+	id?:ModelTypes["BigInt"],
+	tenantId:ModelTypes["BigInt"],
+	/** Reads a single `User` that is related to this `Dokumenty`. */
+	userByDKdo?:ModelTypes["User"]
+};
+	/** A `Dokumenty` edge in the connection. */
+["DokumentiesEdge"]: {
+		/** A cursor for use in pagination. */
+	cursor?:ModelTypes["Cursor"],
+	/** The `Dokumenty` at the end of the edge. */
+	node:ModelTypes["Dokumenty"]
+};
+	/** Methods to use when ordering `Dokumenty`. */
+["DokumentiesOrderBy"]: GraphQLTypes["DokumentiesOrderBy"];
+	/** A condition to be used against `Dokumenty` object types. All fields are tested
+for equality and combined with a logical ‘and.’ */
+["DokumentyCondition"]: GraphQLTypes["DokumentyCondition"];
 	/** A connection to a list of `Nabidka` values. */
 ["NabidkasConnection"]: {
 		/** A list of `Nabidka` objects. */
@@ -7061,21 +8295,23 @@ for equality and combined with a logical ‘and.’ */
 	totalCount:number
 };
 	["Nabidka"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	nId:ModelTypes["BigInt"],
+		nId:ModelTypes["BigInt"],
 	nTrener:ModelTypes["BigInt"],
 	nPocetHod:number,
-	nMaxPocetHod:ModelTypes["BigInt"],
+	nMaxPocetHod:number,
 	nOd:ModelTypes["Date"],
 	nDo:ModelTypes["Date"],
 	nVisible:boolean,
 	nLock:boolean,
 	nTimestamp?:ModelTypes["Datetime"],
+	id?:ModelTypes["BigInt"],
+	tenantId:ModelTypes["BigInt"],
 	/** Reads a single `User` that is related to this `Nabidka`. */
 	userByNTrener?:ModelTypes["User"],
 	/** Reads and enables pagination through a set of `NabidkaItem`. */
-	nabidkaItemsByNiIdRodic:ModelTypes["NabidkaItemsConnection"]
+	nabidkaItemsByNiIdRodic:ModelTypes["NabidkaItemsConnection"],
+	freeLessons?:number,
+	myLessons?:number
 };
 	/** A connection to a list of `NabidkaItem` values. */
 ["NabidkaItemsConnection"]: {
@@ -7089,22 +8325,20 @@ for equality and combined with a logical ‘and.’ */
 	totalCount:number
 };
 	["NabidkaItem"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	niId:ModelTypes["BigInt"],
+		niId:ModelTypes["BigInt"],
 	niIdRodic:ModelTypes["BigInt"],
 	niPartner:ModelTypes["BigInt"],
 	niPocetHod:number,
 	niLock:boolean,
+	id?:ModelTypes["BigInt"],
+	tenantId:ModelTypes["BigInt"],
 	/** Reads a single `Nabidka` that is related to this `NabidkaItem`. */
 	nabidkaByNiIdRodic?:ModelTypes["Nabidka"],
 	/** Reads a single `Pary` that is related to this `NabidkaItem`. */
 	paryByNiPartner?:ModelTypes["Pary"]
 };
 	["Pary"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	pId:ModelTypes["BigInt"],
+		pId:ModelTypes["BigInt"],
 	pIdPartner:ModelTypes["BigInt"],
 	pIdPartnerka?:ModelTypes["BigInt"],
 	pSttTrida:ModelTypes["ParyPSttTrida"],
@@ -7117,8 +8351,11 @@ for equality and combined with a logical ‘and.’ */
 	pArchiv:boolean,
 	pTimestampAdd:ModelTypes["Datetime"],
 	pTimestampArchive?:ModelTypes["Datetime"],
+	id?:ModelTypes["BigInt"],
 	/** Reads a single `User` that is related to this `Pary`. */
 	userByPIdPartner?:ModelTypes["User"],
+	/** Reads a single `User` that is related to this `Pary`. */
+	userByPIdPartnerka?:ModelTypes["User"],
 	/** Reads and enables pagination through a set of `NabidkaItem`. */
 	nabidkaItemsByNiPartner:ModelTypes["NabidkaItemsConnection"],
 	/** Reads and enables pagination through a set of `RozpisItem`. */
@@ -7143,14 +8380,14 @@ for equality and combined with a logical ‘and.’ */
 	totalCount:number
 };
 	["RozpisItem"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	riId:ModelTypes["BigInt"],
+		riId:ModelTypes["BigInt"],
 	riIdRodic:ModelTypes["BigInt"],
 	riPartner?:ModelTypes["BigInt"],
 	riOd:ModelTypes["Time"],
 	riDo:ModelTypes["Time"],
 	riLock:boolean,
+	id?:ModelTypes["BigInt"],
+	tenantId:ModelTypes["BigInt"],
 	/** Reads a single `Rozpi` that is related to this `RozpisItem`. */
 	rozpiByRiIdRodic?:ModelTypes["Rozpi"],
 	/** Reads a single `Pary` that is related to this `RozpisItem`. */
@@ -7159,15 +8396,15 @@ for equality and combined with a logical ‘and.’ */
 	/** The exact time of day, does not include the date. May or may not have a timezone offset. */
 ["Time"]:any;
 	["Rozpi"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	rId:ModelTypes["BigInt"],
+		rId:ModelTypes["BigInt"],
 	rTrener:ModelTypes["BigInt"],
 	rKde:string,
 	rDatum:ModelTypes["Date"],
 	rVisible:boolean,
 	rLock:boolean,
 	rTimestamp?:ModelTypes["Datetime"],
+	id?:ModelTypes["BigInt"],
+	tenantId:ModelTypes["BigInt"],
 	/** Reads a single `User` that is related to this `Rozpi`. */
 	userByRTrener?:ModelTypes["User"],
 	/** Reads and enables pagination through a set of `RozpisItem`. */
@@ -7203,102 +8440,6 @@ for equality and combined with a logical ‘and.’ */
 ["NabidkasOrderBy"]: GraphQLTypes["NabidkasOrderBy"];
 	/** A condition to be used against `Nabidka` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 ["NabidkaCondition"]: GraphQLTypes["NabidkaCondition"];
-	/** A connection to a list of `Rozpi` values. */
-["RozpisConnection"]: {
-		/** A list of `Rozpi` objects. */
-	nodes:ModelTypes["Rozpi"][],
-	/** A list of edges which contains the `Rozpi` and cursor to aid in pagination. */
-	edges:ModelTypes["RozpisEdge"][],
-	/** Information to aid in pagination. */
-	pageInfo:ModelTypes["PageInfo"],
-	/** The count of *all* `Rozpi` you could get from the connection. */
-	totalCount:number
-};
-	/** A `Rozpi` edge in the connection. */
-["RozpisEdge"]: {
-		/** A cursor for use in pagination. */
-	cursor?:ModelTypes["Cursor"],
-	/** The `Rozpi` at the end of the edge. */
-	node:ModelTypes["Rozpi"]
-};
-	/** Methods to use when ordering `Rozpi`. */
-["RozpisOrderBy"]: GraphQLTypes["RozpisOrderBy"];
-	/** A condition to be used against `Rozpi` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["RozpiCondition"]: GraphQLTypes["RozpiCondition"];
-	/** A connection to a list of `Session` values. */
-["SessionsConnection"]: {
-		/** A list of `Session` objects. */
-	nodes:ModelTypes["Session"][],
-	/** A list of edges which contains the `Session` and cursor to aid in pagination. */
-	edges:ModelTypes["SessionsEdge"][],
-	/** Information to aid in pagination. */
-	pageInfo:ModelTypes["PageInfo"],
-	/** The count of *all* `Session` you could get from the connection. */
-	totalCount:number
-};
-	["Session"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	ssId:string,
-	ssData:string,
-	ssUpdatedAt:ModelTypes["Datetime"],
-	ssLifetime:ModelTypes["BigInt"],
-	ssUser?:ModelTypes["BigInt"],
-	/** Reads a single `User` that is related to this `Session`. */
-	userBySsUser?:ModelTypes["User"]
-};
-	/** A `Session` edge in the connection. */
-["SessionsEdge"]: {
-		/** A cursor for use in pagination. */
-	cursor?:ModelTypes["Cursor"],
-	/** The `Session` at the end of the edge. */
-	node:ModelTypes["Session"]
-};
-	/** Methods to use when ordering `Session`. */
-["SessionsOrderBy"]: GraphQLTypes["SessionsOrderBy"];
-	/** A condition to be used against `Session` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["SessionCondition"]: GraphQLTypes["SessionCondition"];
-	/** Methods to use when ordering `AkceItem`. */
-["AkceItemsOrderBy"]: GraphQLTypes["AkceItemsOrderBy"];
-	/** A condition to be used against `AkceItem` object types. All fields are tested
-for equality and combined with a logical ‘and.’ */
-["AkceItemCondition"]: GraphQLTypes["AkceItemCondition"];
-	/** A connection to a list of `Dokumenty` values. */
-["DokumentiesConnection"]: {
-		/** A list of `Dokumenty` objects. */
-	nodes:ModelTypes["Dokumenty"][],
-	/** A list of edges which contains the `Dokumenty` and cursor to aid in pagination. */
-	edges:ModelTypes["DokumentiesEdge"][],
-	/** Information to aid in pagination. */
-	pageInfo:ModelTypes["PageInfo"],
-	/** The count of *all* `Dokumenty` you could get from the connection. */
-	totalCount:number
-};
-	["Dokumenty"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	dId:ModelTypes["BigInt"],
-	dPath:string,
-	dName:string,
-	dFilename:string,
-	dKategorie:number,
-	dKdo:ModelTypes["BigInt"],
-	dTimestamp?:ModelTypes["Datetime"],
-	/** Reads a single `User` that is related to this `Dokumenty`. */
-	userByDKdo?:ModelTypes["User"]
-};
-	/** A `Dokumenty` edge in the connection. */
-["DokumentiesEdge"]: {
-		/** A cursor for use in pagination. */
-	cursor?:ModelTypes["Cursor"],
-	/** The `Dokumenty` at the end of the edge. */
-	node:ModelTypes["Dokumenty"]
-};
-	/** Methods to use when ordering `Dokumenty`. */
-["DokumentiesOrderBy"]: GraphQLTypes["DokumentiesOrderBy"];
-	/** A condition to be used against `Dokumenty` object types. All fields are tested
-for equality and combined with a logical ‘and.’ */
-["DokumentyCondition"]: GraphQLTypes["DokumentyCondition"];
 	/** A connection to a list of `Pary` values. */
 ["PariesConnection"]: {
 		/** A list of `Pary` objects. */
@@ -7333,12 +8474,11 @@ for equality and combined with a logical ‘and.’ */
 	totalCount:number
 };
 	["ParyNavrh"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	pnId:ModelTypes["BigInt"],
+		pnId:ModelTypes["BigInt"],
 	pnNavrhl:ModelTypes["BigInt"],
 	pnPartner:ModelTypes["BigInt"],
 	pnPartnerka:ModelTypes["BigInt"],
+	id?:ModelTypes["BigInt"],
 	/** Reads a single `User` that is related to this `ParyNavrh`. */
 	userByPnNavrhl?:ModelTypes["User"],
 	/** Reads a single `User` that is related to this `ParyNavrh`. */
@@ -7358,6 +8498,58 @@ for equality and combined with a logical ‘and.’ */
 	/** A condition to be used against `ParyNavrh` object types. All fields are tested
 for equality and combined with a logical ‘and.’ */
 ["ParyNavrhCondition"]: GraphQLTypes["ParyNavrhCondition"];
+	/** A connection to a list of `Rozpi` values. */
+["RozpisConnection"]: {
+		/** A list of `Rozpi` objects. */
+	nodes:ModelTypes["Rozpi"][],
+	/** A list of edges which contains the `Rozpi` and cursor to aid in pagination. */
+	edges:ModelTypes["RozpisEdge"][],
+	/** Information to aid in pagination. */
+	pageInfo:ModelTypes["PageInfo"],
+	/** The count of *all* `Rozpi` you could get from the connection. */
+	totalCount:number
+};
+	/** A `Rozpi` edge in the connection. */
+["RozpisEdge"]: {
+		/** A cursor for use in pagination. */
+	cursor?:ModelTypes["Cursor"],
+	/** The `Rozpi` at the end of the edge. */
+	node:ModelTypes["Rozpi"]
+};
+	/** Methods to use when ordering `Rozpi`. */
+["RozpisOrderBy"]: GraphQLTypes["RozpisOrderBy"];
+	/** A condition to be used against `Rozpi` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["RozpiCondition"]: GraphQLTypes["RozpiCondition"];
+	/** A connection to a list of `Session` values. */
+["SessionsConnection"]: {
+		/** A list of `Session` objects. */
+	nodes:ModelTypes["Session"][],
+	/** A list of edges which contains the `Session` and cursor to aid in pagination. */
+	edges:ModelTypes["SessionsEdge"][],
+	/** Information to aid in pagination. */
+	pageInfo:ModelTypes["PageInfo"],
+	/** The count of *all* `Session` you could get from the connection. */
+	totalCount:number
+};
+	["Session"]: {
+		ssId:string,
+	ssUpdatedAt:ModelTypes["Datetime"],
+	ssLifetime:ModelTypes["BigInt"],
+	ssUser?:ModelTypes["BigInt"],
+	/** Reads a single `User` that is related to this `Session`. */
+	userBySsUser?:ModelTypes["User"]
+};
+	/** A `Session` edge in the connection. */
+["SessionsEdge"]: {
+		/** A cursor for use in pagination. */
+	cursor?:ModelTypes["Cursor"],
+	/** The `Session` at the end of the edge. */
+	node:ModelTypes["Session"]
+};
+	/** Methods to use when ordering `Session`. */
+["SessionsOrderBy"]: GraphQLTypes["SessionsOrderBy"];
+	/** A condition to be used against `Session` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["SessionCondition"]: GraphQLTypes["SessionCondition"];
 	/** A connection to a list of `Upozorneni` values. */
 ["UpozornenisConnection"]: {
 		/** A list of `Upozorneni` objects. */
@@ -7381,6 +8573,31 @@ for equality and combined with a logical ‘and.’ */
 	/** A condition to be used against `Upozorneni` object types. All fields are tested
 for equality and combined with a logical ‘and.’ */
 ["UpozorneniCondition"]: GraphQLTypes["UpozorneniCondition"];
+	/** A connection to a list of `Attachment` values. */
+["AttachmentsConnection"]: {
+		/** A list of `Attachment` objects. */
+	nodes:ModelTypes["Attachment"][],
+	/** A list of edges which contains the `Attachment` and cursor to aid in pagination. */
+	edges:ModelTypes["AttachmentsEdge"][],
+	/** Information to aid in pagination. */
+	pageInfo:ModelTypes["PageInfo"],
+	/** The count of *all* `Attachment` you could get from the connection. */
+	totalCount:number
+};
+	/** A `Attachment` edge in the connection. */
+["AttachmentsEdge"]: {
+		/** A cursor for use in pagination. */
+	cursor?:ModelTypes["Cursor"],
+	/** The `Attachment` at the end of the edge. */
+	node:ModelTypes["Attachment"]
+};
+	/** Methods to use when ordering `Attachment`. */
+["AttachmentsOrderBy"]: GraphQLTypes["AttachmentsOrderBy"];
+	/** A condition to be used against `Attachment` object types. All fields are tested
+for equality and combined with a logical ‘and.’ */
+["AttachmentCondition"]: GraphQLTypes["AttachmentCondition"];
+	/** Methods to use when ordering `AkceItem`. */
+["AkceItemsOrderBy"]: GraphQLTypes["AkceItemsOrderBy"];
 	/** A `AkceItem` edge in the connection. */
 ["AkceItemsEdge"]: {
 		/** A cursor for use in pagination. */
@@ -7397,8 +8614,60 @@ for equality and combined with a logical ‘and.’ */
 };
 	/** Methods to use when ordering `Akce`. */
 ["AkcesOrderBy"]: GraphQLTypes["AkcesOrderBy"];
-	/** A condition to be used against `Akce` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["AkceCondition"]: GraphQLTypes["AkceCondition"];
+	/** A connection to a list of `Event` values. */
+["EventsConnection"]: {
+		/** A list of `Event` objects. */
+	nodes:ModelTypes["Event"][],
+	/** A list of edges which contains the `Event` and cursor to aid in pagination. */
+	edges:ModelTypes["EventsEdge"][],
+	/** Information to aid in pagination. */
+	pageInfo:ModelTypes["PageInfo"],
+	/** The count of *all* `Event` you could get from the connection. */
+	totalCount:number
+};
+	/** A `Event` edge in the connection. */
+["EventsEdge"]: {
+		/** A cursor for use in pagination. */
+	cursor?:ModelTypes["Cursor"],
+	/** The `Event` at the end of the edge. */
+	node:ModelTypes["Event"]
+};
+	/** Methods to use when ordering `Event`. */
+["EventsOrderBy"]: GraphQLTypes["EventsOrderBy"];
+	/** A condition to be used against `Event` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["EventCondition"]: GraphQLTypes["EventCondition"];
+	/** A connection to a list of `FormResponse` values. */
+["FormResponsesConnection"]: {
+		/** A list of `FormResponse` objects. */
+	nodes:ModelTypes["FormResponse"][],
+	/** A list of edges which contains the `FormResponse` and cursor to aid in pagination. */
+	edges:ModelTypes["FormResponsesEdge"][],
+	/** Information to aid in pagination. */
+	pageInfo:ModelTypes["PageInfo"],
+	/** The count of *all* `FormResponse` you could get from the connection. */
+	totalCount:number
+};
+	["FormResponse"]: {
+		id:ModelTypes["BigInt"],
+	type:string,
+	data:ModelTypes["JSON"],
+	url:string,
+	createdAt:ModelTypes["Datetime"],
+	updatedAt:ModelTypes["Datetime"],
+	tenantId:ModelTypes["BigInt"]
+};
+	/** A `FormResponse` edge in the connection. */
+["FormResponsesEdge"]: {
+		/** A cursor for use in pagination. */
+	cursor?:ModelTypes["Cursor"],
+	/** The `FormResponse` at the end of the edge. */
+	node:ModelTypes["FormResponse"]
+};
+	/** Methods to use when ordering `FormResponse`. */
+["FormResponsesOrderBy"]: GraphQLTypes["FormResponsesOrderBy"];
+	/** A condition to be used against `FormResponse` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["FormResponseCondition"]: GraphQLTypes["FormResponseCondition"];
 	/** A connection to a list of `GalerieDir` values. */
 ["GalerieDirsConnection"]: {
 		/** A list of `GalerieDir` objects. */
@@ -7422,65 +8691,29 @@ for equality and combined with a logical ‘and.’ */
 	/** A condition to be used against `GalerieDir` object types. All fields are tested
 for equality and combined with a logical ‘and.’ */
 ["GalerieDirCondition"]: GraphQLTypes["GalerieDirCondition"];
-	/** A connection to a list of `Member` values. */
-["MembersConnection"]: {
-		/** A list of `Member` objects. */
-	nodes:ModelTypes["Member"][],
-	/** A list of edges which contains the `Member` and cursor to aid in pagination. */
-	edges:ModelTypes["MembersEdge"][],
+	/** A connection to a list of `Location` values. */
+["LocationsConnection"]: {
+		/** A list of `Location` objects. */
+	nodes:ModelTypes["Location"][],
+	/** A list of edges which contains the `Location` and cursor to aid in pagination. */
+	edges:ModelTypes["LocationsEdge"][],
 	/** Information to aid in pagination. */
 	pageInfo:ModelTypes["PageInfo"],
-	/** The count of *all* `Member` you could get from the connection. */
+	/** The count of *all* `Location` you could get from the connection. */
 	totalCount:number
 };
-	["Member"]: {
-		uId?:ModelTypes["BigInt"],
-	uLogin?:string,
-	uPass?:string,
-	uJmeno?:string,
-	uPrijmeni?:string,
-	uPohlavi?:string,
-	uEmail?:string,
-	uTelefon?:string,
-	uNarozeni?:ModelTypes["Date"],
-	uRodneCislo?:string,
-	uPoznamky?:string,
-	uTimestamp?:ModelTypes["Datetime"],
-	uLevel?:number,
-	uGroup?:ModelTypes["BigInt"],
-	uSkupina?:ModelTypes["BigInt"],
-	uDancer?:boolean,
-	uBan?:boolean,
-	uLock?:boolean,
-	uConfirmed?:boolean,
-	uSystem?:boolean,
-	uStreet?:string,
-	uConscriptionNumber?:string,
-	uOrientationNumber?:string,
-	uDistrict?:string,
-	uCity?:string,
-	uPostalCode?:string,
-	uNationality?:string,
-	uMemberSince?:ModelTypes["Datetime"],
-	uMemberUntil?:ModelTypes["Datetime"],
-	uCreatedAt?:ModelTypes["Datetime"],
-	uTeacher?:boolean,
-	uGdprSignedAt?:ModelTypes["Datetime"],
-	sId?:ModelTypes["BigInt"],
-	sName?:string,
-	paymentValid?:boolean
-};
-	/** A `Member` edge in the connection. */
-["MembersEdge"]: {
+	/** A `Location` edge in the connection. */
+["LocationsEdge"]: {
 		/** A cursor for use in pagination. */
 	cursor?:ModelTypes["Cursor"],
-	/** The `Member` at the end of the edge. */
-	node:ModelTypes["Member"]
+	/** The `Location` at the end of the edge. */
+	node:ModelTypes["Location"]
 };
-	/** Methods to use when ordering `Member`. */
-["MembersOrderBy"]: GraphQLTypes["MembersOrderBy"];
-	/** A condition to be used against `Member` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["MemberCondition"]: GraphQLTypes["MemberCondition"];
+	/** Methods to use when ordering `Location`. */
+["LocationsOrderBy"]: GraphQLTypes["LocationsOrderBy"];
+	/** A condition to be used against `Location` object types. All fields are tested
+for equality and combined with a logical ‘and.’ */
+["LocationCondition"]: GraphQLTypes["LocationCondition"];
 	/** A connection to a list of `Page` values. */
 ["PagesConnection"]: {
 		/** A list of `Page` objects. */
@@ -7493,17 +8726,13 @@ for equality and combined with a logical ‘and.’ */
 	totalCount:number
 };
 	["Page"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	id:number,
+		id:number,
 	url:string,
 	content:ModelTypes["JSON"],
 	createdAt:ModelTypes["Datetime"],
 	updatedAt:ModelTypes["Datetime"],
 	title:string
 };
-	/** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
-["JSON"]:any;
 	/** A `Page` edge in the connection. */
 ["PagesEdge"]: {
 		/** A cursor for use in pagination. */
@@ -7527,9 +8756,7 @@ for equality and combined with a logical ‘and.’ */
 	totalCount:number
 };
 	["PageRevision"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	revNumber:number,
+		revNumber:number,
 	revOperation:string,
 	revTimestamp?:ModelTypes["Datetime"],
 	id:number,
@@ -7563,9 +8790,7 @@ tested for equality and combined with a logical ‘and.’ */
 	totalCount:number
 };
 	["Parameter"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	paName:string,
+		paName:string,
 	paValue:string
 };
 	/** A `Parameter` edge in the connection. */
@@ -7603,6 +8828,28 @@ for equality and combined with a logical ‘and.’ */
 	/** A condition to be used against `Permission` object types. All fields are tested
 for equality and combined with a logical ‘and.’ */
 ["PermissionCondition"]: GraphQLTypes["PermissionCondition"];
+	/** A connection to a list of `Person` values. */
+["PeopleConnection"]: {
+		/** A list of `Person` objects. */
+	nodes:ModelTypes["Person"][],
+	/** A list of edges which contains the `Person` and cursor to aid in pagination. */
+	edges:ModelTypes["PeopleEdge"][],
+	/** Information to aid in pagination. */
+	pageInfo:ModelTypes["PageInfo"],
+	/** The count of *all* `Person` you could get from the connection. */
+	totalCount:number
+};
+	/** A `Person` edge in the connection. */
+["PeopleEdge"]: {
+		/** A cursor for use in pagination. */
+	cursor?:ModelTypes["Cursor"],
+	/** The `Person` at the end of the edge. */
+	node:ModelTypes["Person"]
+};
+	/** Methods to use when ordering `Person`. */
+["PeopleOrderBy"]: GraphQLTypes["PeopleOrderBy"];
+	/** A condition to be used against `Person` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["PersonCondition"]: GraphQLTypes["PersonCondition"];
 	/** A connection to a list of `PlatbyCategory` values. */
 ["PlatbyCategoriesConnection"]: {
 		/** A list of `PlatbyCategory` objects. */
@@ -7672,193 +8919,28 @@ for equality and combined with a logical ‘and.’ */
 	/** A condition to be used against `PlatbyRaw` object types. All fields are tested
 for equality and combined with a logical ‘and.’ */
 ["PlatbyRawCondition"]: GraphQLTypes["PlatbyRawCondition"];
-	/** A connection to a list of `Skupiny` values. */
-["SkupiniesConnection"]: {
-		/** A list of `Skupiny` objects. */
-	nodes:ModelTypes["Skupiny"][],
-	/** A list of edges which contains the `Skupiny` and cursor to aid in pagination. */
-	edges:ModelTypes["SkupiniesEdge"][],
+	/** A connection to a list of `Tenant` values. */
+["TenantsConnection"]: {
+		/** A list of `Tenant` objects. */
+	nodes:ModelTypes["Tenant"][],
+	/** A list of edges which contains the `Tenant` and cursor to aid in pagination. */
+	edges:ModelTypes["TenantsEdge"][],
 	/** Information to aid in pagination. */
 	pageInfo:ModelTypes["PageInfo"],
-	/** The count of *all* `Skupiny` you could get from the connection. */
+	/** The count of *all* `Tenant` you could get from the connection. */
 	totalCount:number
 };
-	/** A `Skupiny` edge in the connection. */
-["SkupiniesEdge"]: {
+	/** A `Tenant` edge in the connection. */
+["TenantsEdge"]: {
 		/** A cursor for use in pagination. */
 	cursor?:ModelTypes["Cursor"],
-	/** The `Skupiny` at the end of the edge. */
-	node:ModelTypes["Skupiny"]
+	/** The `Tenant` at the end of the edge. */
+	node:ModelTypes["Tenant"]
 };
-	/** Methods to use when ordering `Skupiny`. */
-["SkupiniesOrderBy"]: GraphQLTypes["SkupiniesOrderBy"];
-	/** A condition to be used against `Skupiny` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["SkupinyCondition"]: GraphQLTypes["SkupinyCondition"];
-	/** A connection to a list of `UsersSkupiny` values. */
-["UsersSkupiniesConnection"]: {
-		/** A list of `UsersSkupiny` objects. */
-	nodes:ModelTypes["UsersSkupiny"][],
-	/** A list of edges which contains the `UsersSkupiny` and cursor to aid in pagination. */
-	edges:ModelTypes["UsersSkupiniesEdge"][],
-	/** Information to aid in pagination. */
-	pageInfo:ModelTypes["PageInfo"],
-	/** The count of *all* `UsersSkupiny` you could get from the connection. */
-	totalCount:number
-};
-	["UsersSkupiny"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	usId:ModelTypes["BigInt"],
-	usColor:string,
-	usPlatbaMesic:ModelTypes["BigInt"],
-	usPlatbaCtvrtrok:ModelTypes["BigInt"],
-	usPlatbaPulrok:ModelTypes["BigInt"],
-	usPopis:string
-};
-	/** A `UsersSkupiny` edge in the connection. */
-["UsersSkupiniesEdge"]: {
-		/** A cursor for use in pagination. */
-	cursor?:ModelTypes["Cursor"],
-	/** The `UsersSkupiny` at the end of the edge. */
-	node:ModelTypes["UsersSkupiny"]
-};
-	/** Methods to use when ordering `UsersSkupiny`. */
-["UsersSkupiniesOrderBy"]: GraphQLTypes["UsersSkupiniesOrderBy"];
-	/** A condition to be used against `UsersSkupiny` object types. All fields are
-tested for equality and combined with a logical ‘and.’ */
-["UsersSkupinyCondition"]: GraphQLTypes["UsersSkupinyCondition"];
-	/** A connection to a list of `Video` values. */
-["VideosConnection"]: {
-		/** A list of `Video` objects. */
-	nodes:ModelTypes["Video"][],
-	/** A list of edges which contains the `Video` and cursor to aid in pagination. */
-	edges:ModelTypes["VideosEdge"][],
-	/** Information to aid in pagination. */
-	pageInfo:ModelTypes["PageInfo"],
-	/** The count of *all* `Video` you could get from the connection. */
-	totalCount:number
-};
-	["Video"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	vId:ModelTypes["BigInt"],
-	vUri:string,
-	vTitle:string,
-	vAuthor:string,
-	vDescription:string,
-	vPlaylist?:string,
-	vCreatedAt:ModelTypes["Datetime"],
-	vUpdatedAt:ModelTypes["Datetime"]
-};
-	/** A `Video` edge in the connection. */
-["VideosEdge"]: {
-		/** A cursor for use in pagination. */
-	cursor?:ModelTypes["Cursor"],
-	/** The `Video` at the end of the edge. */
-	node:ModelTypes["Video"]
-};
-	/** Methods to use when ordering `Video`. */
-["VideosOrderBy"]: GraphQLTypes["VideosOrderBy"];
-	/** A condition to be used against `Video` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["VideoCondition"]: GraphQLTypes["VideoCondition"];
-	/** A connection to a list of `VideoList` values. */
-["VideoListsConnection"]: {
-		/** A list of `VideoList` objects. */
-	nodes:ModelTypes["VideoList"][],
-	/** A list of edges which contains the `VideoList` and cursor to aid in pagination. */
-	edges:ModelTypes["VideoListsEdge"][],
-	/** Information to aid in pagination. */
-	pageInfo:ModelTypes["PageInfo"],
-	/** The count of *all* `VideoList` you could get from the connection. */
-	totalCount:number
-};
-	["VideoList"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	vlId:ModelTypes["BigInt"],
-	vlUrl:string,
-	vlTitle:string,
-	vlDescription:string,
-	vlCount:ModelTypes["BigInt"],
-	vlCreatedAt:ModelTypes["Datetime"],
-	vlLastChecked?:ModelTypes["Datetime"]
-};
-	/** A `VideoList` edge in the connection. */
-["VideoListsEdge"]: {
-		/** A cursor for use in pagination. */
-	cursor?:ModelTypes["Cursor"],
-	/** The `VideoList` at the end of the edge. */
-	node:ModelTypes["VideoList"]
-};
-	/** Methods to use when ordering `VideoList`. */
-["VideoListsOrderBy"]: GraphQLTypes["VideoListsOrderBy"];
-	/** A condition to be used against `VideoList` object types. All fields are tested
-for equality and combined with a logical ‘and.’ */
-["VideoListCondition"]: GraphQLTypes["VideoListCondition"];
-	/** A connection to a list of `VideoSource` values. */
-["VideoSourcesConnection"]: {
-		/** A list of `VideoSource` objects. */
-	nodes:ModelTypes["VideoSource"][],
-	/** A list of edges which contains the `VideoSource` and cursor to aid in pagination. */
-	edges:ModelTypes["VideoSourcesEdge"][],
-	/** Information to aid in pagination. */
-	pageInfo:ModelTypes["PageInfo"],
-	/** The count of *all* `VideoSource` you could get from the connection. */
-	totalCount:number
-};
-	["VideoSource"]: {
-		/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId:string,
-	vsId:ModelTypes["BigInt"],
-	vsUrl:string,
-	vsTitle?:string,
-	vsDescription?:string,
-	vsCreatedAt:ModelTypes["Datetime"],
-	vsLastChecked?:ModelTypes["Datetime"]
-};
-	/** A `VideoSource` edge in the connection. */
-["VideoSourcesEdge"]: {
-		/** A cursor for use in pagination. */
-	cursor?:ModelTypes["Cursor"],
-	/** The `VideoSource` at the end of the edge. */
-	node:ModelTypes["VideoSource"]
-};
-	/** Methods to use when ordering `VideoSource`. */
-["VideoSourcesOrderBy"]: GraphQLTypes["VideoSourcesOrderBy"];
-	/** A condition to be used against `VideoSource` object types. All fields are tested
-for equality and combined with a logical ‘and.’ */
-["VideoSourceCondition"]: GraphQLTypes["VideoSourceCondition"];
-	/** A connection to a list of `ActiveProspectsRecord` values. */
-["ActiveProspectsConnection"]: {
-		/** A list of `ActiveProspectsRecord` objects. */
-	nodes:ModelTypes["ActiveProspectsRecord"][],
-	/** A list of edges which contains the `ActiveProspectsRecord` and cursor to aid in pagination. */
-	edges:ModelTypes["ActiveProspectEdge"][],
-	/** The count of *all* `ActiveProspectsRecord` you could get from the connection. */
-	totalCount:number
-};
-	/** The return type of our `activeProspects` query. */
-["ActiveProspectsRecord"]: {
-		id?:ModelTypes["BigInt"],
-	data?:ModelTypes["ProspectDatum"],
-	cohort?:ModelTypes["CrmCohort"],
-	updatedAt?:ModelTypes["Datetime"]
-};
-	["ProspectDatum"]: {
-		name?:string,
-	surname?:string,
-	email?:string,
-	phone?:string,
-	yearofbirth?:string
-};
-	["CrmCohort"]: GraphQLTypes["CrmCohort"];
-	/** A `ActiveProspectsRecord` edge in the connection. */
-["ActiveProspectEdge"]: {
-		/** A cursor for use in pagination. */
-	cursor?:ModelTypes["Cursor"],
-	/** The `ActiveProspectsRecord` at the end of the edge. */
-	node:ModelTypes["ActiveProspectsRecord"]
-};
+	/** Methods to use when ordering `Tenant`. */
+["TenantsOrderBy"]: GraphQLTypes["TenantsOrderBy"];
+	/** A condition to be used against `Tenant` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["TenantCondition"]: GraphQLTypes["TenantCondition"];
 	/** A connection to a list of `BigInt` values. */
 ["CurrentCoupleIdsConnection"]: {
 		/** A list of `BigInt` objects. */
@@ -7875,6 +8957,34 @@ for equality and combined with a logical ‘and.’ */
 	/** The `BigInt` at the end of the edge. */
 	node?:ModelTypes["BigInt"]
 };
+	/** A connection to a list of `Video` values. */
+["VideosConnection"]: {
+		/** A list of `Video` objects. */
+	nodes:ModelTypes["Video"][],
+	/** A list of edges which contains the `Video` and cursor to aid in pagination. */
+	edges:ModelTypes["VideosEdge"][],
+	/** Information to aid in pagination. */
+	pageInfo:ModelTypes["PageInfo"],
+	/** The count of *all* `Video` you could get from the connection. */
+	totalCount:number
+};
+	["Video"]: {
+		vId:ModelTypes["BigInt"],
+	vUri:string,
+	vTitle:string,
+	vAuthor:string,
+	vDescription:string,
+	vPlaylist?:string,
+	vCreatedAt:ModelTypes["Datetime"],
+	vUpdatedAt:ModelTypes["Datetime"]
+};
+	/** A `Video` edge in the connection. */
+["VideosEdge"]: {
+		/** A cursor for use in pagination. */
+	cursor?:ModelTypes["Cursor"],
+	/** The `Video` at the end of the edge. */
+	node:ModelTypes["Video"]
+};
 	/** The root mutation type which contains root level fields which mutate data. */
 ["Mutation"]: {
 		/** Creates a single `Akce`. */
@@ -7883,12 +8993,28 @@ for equality and combined with a logical ‘and.’ */
 	createAkceItem?:ModelTypes["CreateAkceItemPayload"],
 	/** Creates a single `Aktuality`. */
 	createAktuality?:ModelTypes["CreateAktualityPayload"],
+	/** Creates a single `Attachment`. */
+	createAttachment?:ModelTypes["CreateAttachmentPayload"],
+	/** Creates a single `AttendeeExternal`. */
+	createAttendeeExternal?:ModelTypes["CreateAttendeeExternalPayload"],
+	/** Creates a single `AttendeeUser`. */
+	createAttendeeUser?:ModelTypes["CreateAttendeeUserPayload"],
+	/** Creates a single `CohortGroup`. */
+	createCohortGroup?:ModelTypes["CreateCohortGroupPayload"],
 	/** Creates a single `Dokumenty`. */
 	createDokumenty?:ModelTypes["CreateDokumentyPayload"],
+	/** Creates a single `Event`. */
+	createEvent?:ModelTypes["CreateEventPayload"],
+	/** Creates a single `FormResponse`. */
+	createFormResponse?:ModelTypes["CreateFormResponsePayload"],
 	/** Creates a single `GalerieDir`. */
 	createGalerieDir?:ModelTypes["CreateGalerieDirPayload"],
 	/** Creates a single `GalerieFoto`. */
 	createGalerieFoto?:ModelTypes["CreateGalerieFotoPayload"],
+	/** Creates a single `Location`. */
+	createLocation?:ModelTypes["CreateLocationPayload"],
+	/** Creates a single `LocationAttachment`. */
+	createLocationAttachment?:ModelTypes["CreateLocationAttachmentPayload"],
 	/** Creates a single `Nabidka`. */
 	createNabidka?:ModelTypes["CreateNabidkaPayload"],
 	/** Creates a single `NabidkaItem`. */
@@ -7903,6 +9029,8 @@ for equality and combined with a logical ‘and.’ */
 	createParyNavrh?:ModelTypes["CreateParyNavrhPayload"],
 	/** Creates a single `Permission`. */
 	createPermission?:ModelTypes["CreatePermissionPayload"],
+	/** Creates a single `Person`. */
+	createPerson?:ModelTypes["CreatePersonPayload"],
 	/** Creates a single `PlatbyCategory`. */
 	createPlatbyCategory?:ModelTypes["CreatePlatbyCategoryPayload"],
 	/** Creates a single `PlatbyCategoryGroup`. */
@@ -7915,270 +9043,208 @@ for equality and combined with a logical ‘and.’ */
 	createPlatbyItem?:ModelTypes["CreatePlatbyItemPayload"],
 	/** Creates a single `PlatbyRaw`. */
 	createPlatbyRaw?:ModelTypes["CreatePlatbyRawPayload"],
+	/** Creates a single `Room`. */
+	createRoom?:ModelTypes["CreateRoomPayload"],
+	/** Creates a single `RoomAttachment`. */
+	createRoomAttachment?:ModelTypes["CreateRoomAttachmentPayload"],
 	/** Creates a single `Rozpi`. */
 	createRozpi?:ModelTypes["CreateRozpiPayload"],
 	/** Creates a single `RozpisItem`. */
 	createRozpisItem?:ModelTypes["CreateRozpisItemPayload"],
-	/** Creates a single `Session`. */
-	createSession?:ModelTypes["CreateSessionPayload"],
 	/** Creates a single `Skupiny`. */
 	createSkupiny?:ModelTypes["CreateSkupinyPayload"],
+	/** Creates a single `Tenant`. */
+	createTenant?:ModelTypes["CreateTenantPayload"],
+	/** Creates a single `TenantAttachment`. */
+	createTenantAttachment?:ModelTypes["CreateTenantAttachmentPayload"],
+	/** Creates a single `TenantLocation`. */
+	createTenantLocation?:ModelTypes["CreateTenantLocationPayload"],
+	/** Creates a single `TenantPerson`. */
+	createTenantPerson?:ModelTypes["CreateTenantPersonPayload"],
 	/** Creates a single `Upozorneni`. */
 	createUpozorneni?:ModelTypes["CreateUpozorneniPayload"],
 	/** Creates a single `UpozorneniSkupiny`. */
 	createUpozorneniSkupiny?:ModelTypes["CreateUpozorneniSkupinyPayload"],
 	/** Creates a single `User`. */
 	createUser?:ModelTypes["CreateUserPayload"],
-	/** Creates a single `UsersSkupiny`. */
-	createUsersSkupiny?:ModelTypes["CreateUsersSkupinyPayload"],
-	/** Creates a single `Video`. */
-	createVideo?:ModelTypes["CreateVideoPayload"],
-	/** Creates a single `VideoList`. */
-	createVideoList?:ModelTypes["CreateVideoListPayload"],
-	/** Creates a single `VideoSource`. */
-	createVideoSource?:ModelTypes["CreateVideoSourcePayload"],
-	/** Updates a single `Akce` using its globally unique id and a patch. */
-	updateAkceByNodeId?:ModelTypes["UpdateAkcePayload"],
-	/** Updates a single `Akce` using a unique key and a patch. */
-	updateAkce?:ModelTypes["UpdateAkcePayload"],
-	/** Updates a single `AkceItem` using its globally unique id and a patch. */
-	updateAkceItemByNodeId?:ModelTypes["UpdateAkceItemPayload"],
-	/** Updates a single `AkceItem` using a unique key and a patch. */
-	updateAkceItem?:ModelTypes["UpdateAkceItemPayload"],
-	/** Updates a single `Aktuality` using its globally unique id and a patch. */
-	updateAktualityByNodeId?:ModelTypes["UpdateAktualityPayload"],
 	/** Updates a single `Aktuality` using a unique key and a patch. */
 	updateAktuality?:ModelTypes["UpdateAktualityPayload"],
-	/** Updates a single `Dokumenty` using its globally unique id and a patch. */
-	updateDokumentyByNodeId?:ModelTypes["UpdateDokumentyPayload"],
+	/** Updates a single `Attachment` using a unique key and a patch. */
+	updateAttachment?:ModelTypes["UpdateAttachmentPayload"],
+	/** Updates a single `AttendeeExternal` using a unique key and a patch. */
+	updateAttendeeExternal?:ModelTypes["UpdateAttendeeExternalPayload"],
+	/** Updates a single `AttendeeUser` using a unique key and a patch. */
+	updateAttendeeUser?:ModelTypes["UpdateAttendeeUserPayload"],
+	/** Updates a single `AttendeeUser` using a unique key and a patch. */
+	updateAttendeeUserByUserIdAndEventId?:ModelTypes["UpdateAttendeeUserPayload"],
+	/** Updates a single `CohortGroup` using a unique key and a patch. */
+	updateCohortGroup?:ModelTypes["UpdateCohortGroupPayload"],
 	/** Updates a single `Dokumenty` using a unique key and a patch. */
 	updateDokumenty?:ModelTypes["UpdateDokumentyPayload"],
-	/** Updates a single `GalerieDir` using its globally unique id and a patch. */
-	updateGalerieDirByNodeId?:ModelTypes["UpdateGalerieDirPayload"],
+	/** Updates a single `Event` using a unique key and a patch. */
+	updateEvent?:ModelTypes["UpdateEventPayload"],
+	/** Updates a single `FormResponse` using a unique key and a patch. */
+	updateFormResponse?:ModelTypes["UpdateFormResponsePayload"],
 	/** Updates a single `GalerieDir` using a unique key and a patch. */
 	updateGalerieDir?:ModelTypes["UpdateGalerieDirPayload"],
-	/** Updates a single `GalerieFoto` using its globally unique id and a patch. */
-	updateGalerieFotoByNodeId?:ModelTypes["UpdateGalerieFotoPayload"],
 	/** Updates a single `GalerieFoto` using a unique key and a patch. */
 	updateGalerieFoto?:ModelTypes["UpdateGalerieFotoPayload"],
-	/** Updates a single `Nabidka` using its globally unique id and a patch. */
-	updateNabidkaByNodeId?:ModelTypes["UpdateNabidkaPayload"],
+	/** Updates a single `Location` using a unique key and a patch. */
+	updateLocation?:ModelTypes["UpdateLocationPayload"],
+	/** Updates a single `LocationAttachment` using a unique key and a patch. */
+	updateLocationAttachment?:ModelTypes["UpdateLocationAttachmentPayload"],
 	/** Updates a single `Nabidka` using a unique key and a patch. */
 	updateNabidka?:ModelTypes["UpdateNabidkaPayload"],
-	/** Updates a single `NabidkaItem` using its globally unique id and a patch. */
-	updateNabidkaItemByNodeId?:ModelTypes["UpdateNabidkaItemPayload"],
 	/** Updates a single `NabidkaItem` using a unique key and a patch. */
 	updateNabidkaItem?:ModelTypes["UpdateNabidkaItemPayload"],
-	/** Updates a single `Page` using its globally unique id and a patch. */
-	updatePageByNodeId?:ModelTypes["UpdatePagePayload"],
+	/** Updates a single `NabidkaItem` using a unique key and a patch. */
+	updateNabidkaItemByNiPartnerAndNiIdRodic?:ModelTypes["UpdateNabidkaItemPayload"],
 	/** Updates a single `Page` using a unique key and a patch. */
 	updatePage?:ModelTypes["UpdatePagePayload"],
 	/** Updates a single `Page` using a unique key and a patch. */
 	updatePageByUrl?:ModelTypes["UpdatePagePayload"],
-	/** Updates a single `Parameter` using its globally unique id and a patch. */
-	updateParameterByNodeId?:ModelTypes["UpdateParameterPayload"],
 	/** Updates a single `Parameter` using a unique key and a patch. */
 	updateParameter?:ModelTypes["UpdateParameterPayload"],
-	/** Updates a single `Pary` using its globally unique id and a patch. */
-	updateParyByNodeId?:ModelTypes["UpdateParyPayload"],
 	/** Updates a single `Pary` using a unique key and a patch. */
 	updatePary?:ModelTypes["UpdateParyPayload"],
-	/** Updates a single `ParyNavrh` using its globally unique id and a patch. */
-	updateParyNavrhByNodeId?:ModelTypes["UpdateParyNavrhPayload"],
 	/** Updates a single `ParyNavrh` using a unique key and a patch. */
 	updateParyNavrh?:ModelTypes["UpdateParyNavrhPayload"],
-	/** Updates a single `Permission` using its globally unique id and a patch. */
-	updatePermissionByNodeId?:ModelTypes["UpdatePermissionPayload"],
 	/** Updates a single `Permission` using a unique key and a patch. */
 	updatePermission?:ModelTypes["UpdatePermissionPayload"],
-	/** Updates a single `PlatbyCategory` using its globally unique id and a patch. */
-	updatePlatbyCategoryByNodeId?:ModelTypes["UpdatePlatbyCategoryPayload"],
+	/** Updates a single `Person` using a unique key and a patch. */
+	updatePerson?:ModelTypes["UpdatePersonPayload"],
 	/** Updates a single `PlatbyCategory` using a unique key and a patch. */
 	updatePlatbyCategory?:ModelTypes["UpdatePlatbyCategoryPayload"],
-	/** Updates a single `PlatbyCategoryGroup` using its globally unique id and a patch. */
-	updatePlatbyCategoryGroupByNodeId?:ModelTypes["UpdatePlatbyCategoryGroupPayload"],
 	/** Updates a single `PlatbyCategoryGroup` using a unique key and a patch. */
 	updatePlatbyCategoryGroup?:ModelTypes["UpdatePlatbyCategoryGroupPayload"],
-	/** Updates a single `PlatbyGroup` using its globally unique id and a patch. */
-	updatePlatbyGroupByNodeId?:ModelTypes["UpdatePlatbyGroupPayload"],
 	/** Updates a single `PlatbyGroup` using a unique key and a patch. */
 	updatePlatbyGroup?:ModelTypes["UpdatePlatbyGroupPayload"],
-	/** Updates a single `PlatbyGroupSkupina` using its globally unique id and a patch. */
-	updatePlatbyGroupSkupinaByNodeId?:ModelTypes["UpdatePlatbyGroupSkupinaPayload"],
 	/** Updates a single `PlatbyGroupSkupina` using a unique key and a patch. */
 	updatePlatbyGroupSkupina?:ModelTypes["UpdatePlatbyGroupSkupinaPayload"],
-	/** Updates a single `PlatbyItem` using its globally unique id and a patch. */
-	updatePlatbyItemByNodeId?:ModelTypes["UpdatePlatbyItemPayload"],
 	/** Updates a single `PlatbyItem` using a unique key and a patch. */
 	updatePlatbyItem?:ModelTypes["UpdatePlatbyItemPayload"],
-	/** Updates a single `PlatbyRaw` using its globally unique id and a patch. */
-	updatePlatbyRawByNodeId?:ModelTypes["UpdatePlatbyRawPayload"],
 	/** Updates a single `PlatbyRaw` using a unique key and a patch. */
 	updatePlatbyRaw?:ModelTypes["UpdatePlatbyRawPayload"],
-	/** Updates a single `Rozpi` using its globally unique id and a patch. */
-	updateRozpiByNodeId?:ModelTypes["UpdateRozpiPayload"],
+	/** Updates a single `Room` using a unique key and a patch. */
+	updateRoom?:ModelTypes["UpdateRoomPayload"],
+	/** Updates a single `RoomAttachment` using a unique key and a patch. */
+	updateRoomAttachment?:ModelTypes["UpdateRoomAttachmentPayload"],
 	/** Updates a single `Rozpi` using a unique key and a patch. */
 	updateRozpi?:ModelTypes["UpdateRozpiPayload"],
-	/** Updates a single `RozpisItem` using its globally unique id and a patch. */
-	updateRozpisItemByNodeId?:ModelTypes["UpdateRozpisItemPayload"],
 	/** Updates a single `RozpisItem` using a unique key and a patch. */
 	updateRozpisItem?:ModelTypes["UpdateRozpisItemPayload"],
-	/** Updates a single `Session` using its globally unique id and a patch. */
-	updateSessionByNodeId?:ModelTypes["UpdateSessionPayload"],
-	/** Updates a single `Session` using a unique key and a patch. */
-	updateSession?:ModelTypes["UpdateSessionPayload"],
-	/** Updates a single `Skupiny` using its globally unique id and a patch. */
-	updateSkupinyByNodeId?:ModelTypes["UpdateSkupinyPayload"],
 	/** Updates a single `Skupiny` using a unique key and a patch. */
 	updateSkupiny?:ModelTypes["UpdateSkupinyPayload"],
-	/** Updates a single `Upozorneni` using its globally unique id and a patch. */
-	updateUpozorneniByNodeId?:ModelTypes["UpdateUpozorneniPayload"],
+	/** Updates a single `Tenant` using a unique key and a patch. */
+	updateTenant?:ModelTypes["UpdateTenantPayload"],
+	/** Updates a single `TenantAttachment` using a unique key and a patch. */
+	updateTenantAttachment?:ModelTypes["UpdateTenantAttachmentPayload"],
+	/** Updates a single `TenantLocation` using a unique key and a patch. */
+	updateTenantLocation?:ModelTypes["UpdateTenantLocationPayload"],
+	/** Updates a single `TenantPerson` using a unique key and a patch. */
+	updateTenantPerson?:ModelTypes["UpdateTenantPersonPayload"],
 	/** Updates a single `Upozorneni` using a unique key and a patch. */
 	updateUpozorneni?:ModelTypes["UpdateUpozorneniPayload"],
-	/** Updates a single `UpozorneniSkupiny` using its globally unique id and a patch. */
-	updateUpozorneniSkupinyByNodeId?:ModelTypes["UpdateUpozorneniSkupinyPayload"],
 	/** Updates a single `UpozorneniSkupiny` using a unique key and a patch. */
 	updateUpozorneniSkupiny?:ModelTypes["UpdateUpozorneniSkupinyPayload"],
-	/** Updates a single `User` using its globally unique id and a patch. */
-	updateUserByNodeId?:ModelTypes["UpdateUserPayload"],
 	/** Updates a single `User` using a unique key and a patch. */
 	updateUser?:ModelTypes["UpdateUserPayload"],
-	/** Updates a single `UsersSkupiny` using its globally unique id and a patch. */
-	updateUsersSkupinyByNodeId?:ModelTypes["UpdateUsersSkupinyPayload"],
-	/** Updates a single `UsersSkupiny` using a unique key and a patch. */
-	updateUsersSkupiny?:ModelTypes["UpdateUsersSkupinyPayload"],
-	/** Updates a single `Video` using its globally unique id and a patch. */
-	updateVideoByNodeId?:ModelTypes["UpdateVideoPayload"],
-	/** Updates a single `Video` using a unique key and a patch. */
-	updateVideo?:ModelTypes["UpdateVideoPayload"],
-	/** Updates a single `VideoList` using its globally unique id and a patch. */
-	updateVideoListByNodeId?:ModelTypes["UpdateVideoListPayload"],
-	/** Updates a single `VideoList` using a unique key and a patch. */
-	updateVideoList?:ModelTypes["UpdateVideoListPayload"],
-	/** Updates a single `VideoSource` using its globally unique id and a patch. */
-	updateVideoSourceByNodeId?:ModelTypes["UpdateVideoSourcePayload"],
-	/** Updates a single `VideoSource` using a unique key and a patch. */
-	updateVideoSource?:ModelTypes["UpdateVideoSourcePayload"],
-	/** Deletes a single `Akce` using its globally unique id. */
-	deleteAkceByNodeId?:ModelTypes["DeleteAkcePayload"],
-	/** Deletes a single `Akce` using a unique key. */
-	deleteAkce?:ModelTypes["DeleteAkcePayload"],
-	/** Deletes a single `AkceItem` using its globally unique id. */
-	deleteAkceItemByNodeId?:ModelTypes["DeleteAkceItemPayload"],
-	/** Deletes a single `AkceItem` using a unique key. */
-	deleteAkceItem?:ModelTypes["DeleteAkceItemPayload"],
-	/** Deletes a single `Aktuality` using its globally unique id. */
-	deleteAktualityByNodeId?:ModelTypes["DeleteAktualityPayload"],
 	/** Deletes a single `Aktuality` using a unique key. */
 	deleteAktuality?:ModelTypes["DeleteAktualityPayload"],
-	/** Deletes a single `Dokumenty` using its globally unique id. */
-	deleteDokumentyByNodeId?:ModelTypes["DeleteDokumentyPayload"],
+	/** Deletes a single `Attachment` using a unique key. */
+	deleteAttachment?:ModelTypes["DeleteAttachmentPayload"],
+	/** Deletes a single `AttendeeExternal` using a unique key. */
+	deleteAttendeeExternal?:ModelTypes["DeleteAttendeeExternalPayload"],
+	/** Deletes a single `AttendeeUser` using a unique key. */
+	deleteAttendeeUser?:ModelTypes["DeleteAttendeeUserPayload"],
+	/** Deletes a single `AttendeeUser` using a unique key. */
+	deleteAttendeeUserByUserIdAndEventId?:ModelTypes["DeleteAttendeeUserPayload"],
+	/** Deletes a single `CohortGroup` using a unique key. */
+	deleteCohortGroup?:ModelTypes["DeleteCohortGroupPayload"],
 	/** Deletes a single `Dokumenty` using a unique key. */
 	deleteDokumenty?:ModelTypes["DeleteDokumentyPayload"],
-	/** Deletes a single `GalerieDir` using its globally unique id. */
-	deleteGalerieDirByNodeId?:ModelTypes["DeleteGalerieDirPayload"],
+	/** Deletes a single `Event` using a unique key. */
+	deleteEvent?:ModelTypes["DeleteEventPayload"],
+	/** Deletes a single `FormResponse` using a unique key. */
+	deleteFormResponse?:ModelTypes["DeleteFormResponsePayload"],
 	/** Deletes a single `GalerieDir` using a unique key. */
 	deleteGalerieDir?:ModelTypes["DeleteGalerieDirPayload"],
-	/** Deletes a single `GalerieFoto` using its globally unique id. */
-	deleteGalerieFotoByNodeId?:ModelTypes["DeleteGalerieFotoPayload"],
 	/** Deletes a single `GalerieFoto` using a unique key. */
 	deleteGalerieFoto?:ModelTypes["DeleteGalerieFotoPayload"],
-	/** Deletes a single `Nabidka` using its globally unique id. */
-	deleteNabidkaByNodeId?:ModelTypes["DeleteNabidkaPayload"],
+	/** Deletes a single `Location` using a unique key. */
+	deleteLocation?:ModelTypes["DeleteLocationPayload"],
+	/** Deletes a single `LocationAttachment` using a unique key. */
+	deleteLocationAttachment?:ModelTypes["DeleteLocationAttachmentPayload"],
 	/** Deletes a single `Nabidka` using a unique key. */
 	deleteNabidka?:ModelTypes["DeleteNabidkaPayload"],
-	/** Deletes a single `NabidkaItem` using its globally unique id. */
-	deleteNabidkaItemByNodeId?:ModelTypes["DeleteNabidkaItemPayload"],
 	/** Deletes a single `NabidkaItem` using a unique key. */
 	deleteNabidkaItem?:ModelTypes["DeleteNabidkaItemPayload"],
-	/** Deletes a single `Parameter` using its globally unique id. */
-	deleteParameterByNodeId?:ModelTypes["DeleteParameterPayload"],
+	/** Deletes a single `NabidkaItem` using a unique key. */
+	deleteNabidkaItemByNiPartnerAndNiIdRodic?:ModelTypes["DeleteNabidkaItemPayload"],
 	/** Deletes a single `Parameter` using a unique key. */
 	deleteParameter?:ModelTypes["DeleteParameterPayload"],
-	/** Deletes a single `Pary` using its globally unique id. */
-	deleteParyByNodeId?:ModelTypes["DeleteParyPayload"],
 	/** Deletes a single `Pary` using a unique key. */
 	deletePary?:ModelTypes["DeleteParyPayload"],
-	/** Deletes a single `ParyNavrh` using its globally unique id. */
-	deleteParyNavrhByNodeId?:ModelTypes["DeleteParyNavrhPayload"],
 	/** Deletes a single `ParyNavrh` using a unique key. */
 	deleteParyNavrh?:ModelTypes["DeleteParyNavrhPayload"],
-	/** Deletes a single `Permission` using its globally unique id. */
-	deletePermissionByNodeId?:ModelTypes["DeletePermissionPayload"],
 	/** Deletes a single `Permission` using a unique key. */
 	deletePermission?:ModelTypes["DeletePermissionPayload"],
-	/** Deletes a single `PlatbyCategory` using its globally unique id. */
-	deletePlatbyCategoryByNodeId?:ModelTypes["DeletePlatbyCategoryPayload"],
+	/** Deletes a single `Person` using a unique key. */
+	deletePerson?:ModelTypes["DeletePersonPayload"],
 	/** Deletes a single `PlatbyCategory` using a unique key. */
 	deletePlatbyCategory?:ModelTypes["DeletePlatbyCategoryPayload"],
-	/** Deletes a single `PlatbyCategoryGroup` using its globally unique id. */
-	deletePlatbyCategoryGroupByNodeId?:ModelTypes["DeletePlatbyCategoryGroupPayload"],
 	/** Deletes a single `PlatbyCategoryGroup` using a unique key. */
 	deletePlatbyCategoryGroup?:ModelTypes["DeletePlatbyCategoryGroupPayload"],
-	/** Deletes a single `PlatbyGroup` using its globally unique id. */
-	deletePlatbyGroupByNodeId?:ModelTypes["DeletePlatbyGroupPayload"],
 	/** Deletes a single `PlatbyGroup` using a unique key. */
 	deletePlatbyGroup?:ModelTypes["DeletePlatbyGroupPayload"],
-	/** Deletes a single `PlatbyGroupSkupina` using its globally unique id. */
-	deletePlatbyGroupSkupinaByNodeId?:ModelTypes["DeletePlatbyGroupSkupinaPayload"],
 	/** Deletes a single `PlatbyGroupSkupina` using a unique key. */
 	deletePlatbyGroupSkupina?:ModelTypes["DeletePlatbyGroupSkupinaPayload"],
-	/** Deletes a single `PlatbyItem` using its globally unique id. */
-	deletePlatbyItemByNodeId?:ModelTypes["DeletePlatbyItemPayload"],
 	/** Deletes a single `PlatbyItem` using a unique key. */
 	deletePlatbyItem?:ModelTypes["DeletePlatbyItemPayload"],
-	/** Deletes a single `PlatbyRaw` using its globally unique id. */
-	deletePlatbyRawByNodeId?:ModelTypes["DeletePlatbyRawPayload"],
 	/** Deletes a single `PlatbyRaw` using a unique key. */
 	deletePlatbyRaw?:ModelTypes["DeletePlatbyRawPayload"],
-	/** Deletes a single `Rozpi` using its globally unique id. */
-	deleteRozpiByNodeId?:ModelTypes["DeleteRozpiPayload"],
+	/** Deletes a single `Room` using a unique key. */
+	deleteRoom?:ModelTypes["DeleteRoomPayload"],
+	/** Deletes a single `RoomAttachment` using a unique key. */
+	deleteRoomAttachment?:ModelTypes["DeleteRoomAttachmentPayload"],
 	/** Deletes a single `Rozpi` using a unique key. */
 	deleteRozpi?:ModelTypes["DeleteRozpiPayload"],
-	/** Deletes a single `RozpisItem` using its globally unique id. */
-	deleteRozpisItemByNodeId?:ModelTypes["DeleteRozpisItemPayload"],
 	/** Deletes a single `RozpisItem` using a unique key. */
 	deleteRozpisItem?:ModelTypes["DeleteRozpisItemPayload"],
-	/** Deletes a single `Session` using its globally unique id. */
-	deleteSessionByNodeId?:ModelTypes["DeleteSessionPayload"],
-	/** Deletes a single `Session` using a unique key. */
-	deleteSession?:ModelTypes["DeleteSessionPayload"],
-	/** Deletes a single `Skupiny` using its globally unique id. */
-	deleteSkupinyByNodeId?:ModelTypes["DeleteSkupinyPayload"],
 	/** Deletes a single `Skupiny` using a unique key. */
 	deleteSkupiny?:ModelTypes["DeleteSkupinyPayload"],
-	/** Deletes a single `Upozorneni` using its globally unique id. */
-	deleteUpozorneniByNodeId?:ModelTypes["DeleteUpozorneniPayload"],
+	/** Deletes a single `Tenant` using a unique key. */
+	deleteTenant?:ModelTypes["DeleteTenantPayload"],
+	/** Deletes a single `TenantAttachment` using a unique key. */
+	deleteTenantAttachment?:ModelTypes["DeleteTenantAttachmentPayload"],
+	/** Deletes a single `TenantLocation` using a unique key. */
+	deleteTenantLocation?:ModelTypes["DeleteTenantLocationPayload"],
+	/** Deletes a single `TenantPerson` using a unique key. */
+	deleteTenantPerson?:ModelTypes["DeleteTenantPersonPayload"],
 	/** Deletes a single `Upozorneni` using a unique key. */
 	deleteUpozorneni?:ModelTypes["DeleteUpozorneniPayload"],
-	/** Deletes a single `UpozorneniSkupiny` using its globally unique id. */
-	deleteUpozorneniSkupinyByNodeId?:ModelTypes["DeleteUpozorneniSkupinyPayload"],
 	/** Deletes a single `UpozorneniSkupiny` using a unique key. */
 	deleteUpozorneniSkupiny?:ModelTypes["DeleteUpozorneniSkupinyPayload"],
-	/** Deletes a single `User` using its globally unique id. */
-	deleteUserByNodeId?:ModelTypes["DeleteUserPayload"],
 	/** Deletes a single `User` using a unique key. */
 	deleteUser?:ModelTypes["DeleteUserPayload"],
-	/** Deletes a single `UsersSkupiny` using its globally unique id. */
-	deleteUsersSkupinyByNodeId?:ModelTypes["DeleteUsersSkupinyPayload"],
-	/** Deletes a single `UsersSkupiny` using a unique key. */
-	deleteUsersSkupiny?:ModelTypes["DeleteUsersSkupinyPayload"],
-	/** Deletes a single `Video` using its globally unique id. */
-	deleteVideoByNodeId?:ModelTypes["DeleteVideoPayload"],
-	/** Deletes a single `Video` using a unique key. */
-	deleteVideo?:ModelTypes["DeleteVideoPayload"],
-	/** Deletes a single `VideoList` using its globally unique id. */
-	deleteVideoListByNodeId?:ModelTypes["DeleteVideoListPayload"],
-	/** Deletes a single `VideoList` using a unique key. */
-	deleteVideoList?:ModelTypes["DeleteVideoListPayload"],
-	/** Deletes a single `VideoSource` using its globally unique id. */
-	deleteVideoSourceByNodeId?:ModelTypes["DeleteVideoSourcePayload"],
-	/** Deletes a single `VideoSource` using a unique key. */
-	deleteVideoSource?:ModelTypes["DeleteVideoSourcePayload"],
+	bookLesson?:ModelTypes["BookLessonPayload"],
+	cancelLesson?:ModelTypes["CancelLessonPayload"],
+	cancelParticipation?:ModelTypes["CancelParticipationPayload"],
+	changePassword?:ModelTypes["ChangePasswordPayload"],
+	confirmUser?:ModelTypes["ConfirmUserPayload"],
+	createCouple?:ModelTypes["CreateCouplePayload"],
+	createParticipation?:ModelTypes["CreateParticipationPayload"],
+	createParticipationExternal?:ModelTypes["CreateParticipationExternalPayload"],
+	fixUnpairedCouples?:ModelTypes["FixUnpairedCouplesPayload"],
 	login?:ModelTypes["LoginPayload"],
 	logout?:ModelTypes["LogoutPayload"],
 	prospectFormDancer?:ModelTypes["ProspectFormDancerPayload"],
-	uploadFile:ModelTypes["Upload"]
+	reservationSetDesiredLessons?:ModelTypes["ReservationSetDesiredLessonsPayload"],
+	resetPassword?:ModelTypes["ResetPasswordPayload"],
+	submitForm?:ModelTypes["SubmitFormPayload"],
+	verifyFunction?:ModelTypes["VerifyFunctionPayload"],
+	uploadFile:ModelTypes["UploadFilePayload"],
+	downloadFile:string
 };
 	/** The output of our create `Akce` mutation. */
 ["CreateAkcePayload"]: {
@@ -8236,6 +9302,84 @@ unchanged and unused. May be used by a client to track mutations. */
 ["CreateAktualityInput"]: GraphQLTypes["CreateAktualityInput"];
 	/** An input for mutations affecting `Aktuality` */
 ["AktualityInput"]: GraphQLTypes["AktualityInput"];
+	/** The output of our create `Attachment` mutation. */
+["CreateAttachmentPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `Attachment` that was created by this mutation. */
+	attachment?:ModelTypes["Attachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `User` that is related to this `Attachment`. */
+	userByUploadedBy?:ModelTypes["User"],
+	/** An edge for our `Attachment`. May be used by Relay 1. */
+	attachmentEdge?:ModelTypes["AttachmentsEdge"]
+};
+	/** All input for the create `Attachment` mutation. */
+["CreateAttachmentInput"]: GraphQLTypes["CreateAttachmentInput"];
+	/** An input for mutations affecting `Attachment` */
+["AttachmentInput"]: GraphQLTypes["AttachmentInput"];
+	/** The output of our create `AttendeeExternal` mutation. */
+["CreateAttendeeExternalPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `AttendeeExternal` that was created by this mutation. */
+	attendeeExternal?:ModelTypes["AttendeeExternal"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Event` that is related to this `AttendeeExternal`. */
+	event?:ModelTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByManagedBy?:ModelTypes["User"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByConfirmedBy?:ModelTypes["User"],
+	/** An edge for our `AttendeeExternal`. May be used by Relay 1. */
+	attendeeExternalEdge?:ModelTypes["AttendeeExternalsEdge"]
+};
+	/** All input for the create `AttendeeExternal` mutation. */
+["CreateAttendeeExternalInput"]: GraphQLTypes["CreateAttendeeExternalInput"];
+	/** An input for mutations affecting `AttendeeExternal` */
+["AttendeeExternalInput"]: GraphQLTypes["AttendeeExternalInput"];
+	/** The output of our create `AttendeeUser` mutation. */
+["CreateAttendeeUserPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `AttendeeUser` that was created by this mutation. */
+	attendeeUser?:ModelTypes["AttendeeUser"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Event` that is related to this `AttendeeUser`. */
+	event?:ModelTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeUser`. */
+	user?:ModelTypes["User"],
+	/** An edge for our `AttendeeUser`. May be used by Relay 1. */
+	attendeeUserEdge?:ModelTypes["AttendeeUsersEdge"]
+};
+	/** All input for the create `AttendeeUser` mutation. */
+["CreateAttendeeUserInput"]: GraphQLTypes["CreateAttendeeUserInput"];
+	/** An input for mutations affecting `AttendeeUser` */
+["AttendeeUserInput"]: GraphQLTypes["AttendeeUserInput"];
+	/** The output of our create `CohortGroup` mutation. */
+["CreateCohortGroupPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `CohortGroup` that was created by this mutation. */
+	cohortGroup?:ModelTypes["CohortGroup"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `CohortGroup`. */
+	tenantByTenant?:ModelTypes["Tenant"],
+	/** An edge for our `CohortGroup`. May be used by Relay 1. */
+	cohortGroupEdge?:ModelTypes["CohortGroupsEdge"]
+};
+	/** All input for the create `CohortGroup` mutation. */
+["CreateCohortGroupInput"]: GraphQLTypes["CreateCohortGroupInput"];
+	/** An input for mutations affecting `CohortGroup` */
+["CohortGroupInput"]: GraphQLTypes["CohortGroupInput"];
 	/** The output of our create `Dokumenty` mutation. */
 ["CreateDokumentyPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8254,6 +9398,38 @@ unchanged and unused. May be used by a client to track mutations. */
 ["CreateDokumentyInput"]: GraphQLTypes["CreateDokumentyInput"];
 	/** An input for mutations affecting `Dokumenty` */
 ["DokumentyInput"]: GraphQLTypes["DokumentyInput"];
+	/** The output of our create `Event` mutation. */
+["CreateEventPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `Event` that was created by this mutation. */
+	event?:ModelTypes["Event"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** An edge for our `Event`. May be used by Relay 1. */
+	eventEdge?:ModelTypes["EventsEdge"]
+};
+	/** All input for the create `Event` mutation. */
+["CreateEventInput"]: GraphQLTypes["CreateEventInput"];
+	/** An input for mutations affecting `Event` */
+["EventInput"]: GraphQLTypes["EventInput"];
+	/** The output of our create `FormResponse` mutation. */
+["CreateFormResponsePayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `FormResponse` that was created by this mutation. */
+	formResponse?:ModelTypes["FormResponse"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** An edge for our `FormResponse`. May be used by Relay 1. */
+	formResponseEdge?:ModelTypes["FormResponsesEdge"]
+};
+	/** All input for the create `FormResponse` mutation. */
+["CreateFormResponseInput"]: GraphQLTypes["CreateFormResponseInput"];
+	/** An input for mutations affecting `FormResponse` */
+["FormResponseInput"]: GraphQLTypes["FormResponseInput"];
 	/** The output of our create `GalerieDir` mutation. */
 ["CreateGalerieDirPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8290,6 +9466,42 @@ unchanged and unused. May be used by a client to track mutations. */
 ["CreateGalerieFotoInput"]: GraphQLTypes["CreateGalerieFotoInput"];
 	/** An input for mutations affecting `GalerieFoto` */
 ["GalerieFotoInput"]: GraphQLTypes["GalerieFotoInput"];
+	/** The output of our create `Location` mutation. */
+["CreateLocationPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `Location` that was created by this mutation. */
+	location?:ModelTypes["Location"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** An edge for our `Location`. May be used by Relay 1. */
+	locationEdge?:ModelTypes["LocationsEdge"]
+};
+	/** All input for the create `Location` mutation. */
+["CreateLocationInput"]: GraphQLTypes["CreateLocationInput"];
+	/** An input for mutations affecting `Location` */
+["LocationInput"]: GraphQLTypes["LocationInput"];
+	/** The output of our create `LocationAttachment` mutation. */
+["CreateLocationAttachmentPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `LocationAttachment` that was created by this mutation. */
+	locationAttachment?:ModelTypes["LocationAttachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Location` that is related to this `LocationAttachment`. */
+	location?:ModelTypes["Location"],
+	/** Reads a single `Attachment` that is related to this `LocationAttachment`. */
+	attachmentByObjectName?:ModelTypes["Attachment"],
+	/** An edge for our `LocationAttachment`. May be used by Relay 1. */
+	locationAttachmentEdge?:ModelTypes["LocationAttachmentsEdge"]
+};
+	/** All input for the create `LocationAttachment` mutation. */
+["CreateLocationAttachmentInput"]: GraphQLTypes["CreateLocationAttachmentInput"];
+	/** An input for mutations affecting `LocationAttachment` */
+["LocationAttachmentInput"]: GraphQLTypes["LocationAttachmentInput"];
 	/** The output of our create `Nabidka` mutation. */
 ["CreateNabidkaPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8371,6 +9583,8 @@ unchanged and unused. May be used by a client to track mutations. */
 	query?:ModelTypes["Query"],
 	/** Reads a single `User` that is related to this `Pary`. */
 	userByPIdPartner?:ModelTypes["User"],
+	/** Reads a single `User` that is related to this `Pary`. */
+	userByPIdPartnerka?:ModelTypes["User"],
 	/** An edge for our `Pary`. May be used by Relay 1. */
 	paryEdge?:ModelTypes["PariesEdge"]
 };
@@ -8416,6 +9630,22 @@ unchanged and unused. May be used by a client to track mutations. */
 ["CreatePermissionInput"]: GraphQLTypes["CreatePermissionInput"];
 	/** An input for mutations affecting `Permission` */
 ["PermissionInput"]: GraphQLTypes["PermissionInput"];
+	/** The output of our create `Person` mutation. */
+["CreatePersonPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `Person` that was created by this mutation. */
+	person?:ModelTypes["Person"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** An edge for our `Person`. May be used by Relay 1. */
+	personEdge?:ModelTypes["PeopleEdge"]
+};
+	/** All input for the create `Person` mutation. */
+["CreatePersonInput"]: GraphQLTypes["CreatePersonInput"];
+	/** An input for mutations affecting `Person` */
+["PersonInput"]: GraphQLTypes["PersonInput"];
 	/** The output of our create `PlatbyCategory` mutation. */
 ["CreatePlatbyCategoryPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8526,6 +9756,44 @@ unchanged and unused. May be used by a client to track mutations. */
 ["CreatePlatbyRawInput"]: GraphQLTypes["CreatePlatbyRawInput"];
 	/** An input for mutations affecting `PlatbyRaw` */
 ["PlatbyRawInput"]: GraphQLTypes["PlatbyRawInput"];
+	/** The output of our create `Room` mutation. */
+["CreateRoomPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `Room` that was created by this mutation. */
+	room?:ModelTypes["Room"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Location` that is related to this `Room`. */
+	locationByLocation?:ModelTypes["Location"],
+	/** An edge for our `Room`. May be used by Relay 1. */
+	roomEdge?:ModelTypes["RoomsEdge"]
+};
+	/** All input for the create `Room` mutation. */
+["CreateRoomInput"]: GraphQLTypes["CreateRoomInput"];
+	/** An input for mutations affecting `Room` */
+["RoomInput"]: GraphQLTypes["RoomInput"];
+	/** The output of our create `RoomAttachment` mutation. */
+["CreateRoomAttachmentPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `RoomAttachment` that was created by this mutation. */
+	roomAttachment?:ModelTypes["RoomAttachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Room` that is related to this `RoomAttachment`. */
+	room?:ModelTypes["Room"],
+	/** Reads a single `Attachment` that is related to this `RoomAttachment`. */
+	attachmentByObjectName?:ModelTypes["Attachment"],
+	/** An edge for our `RoomAttachment`. May be used by Relay 1. */
+	roomAttachmentEdge?:ModelTypes["RoomAttachmentsEdge"]
+};
+	/** All input for the create `RoomAttachment` mutation. */
+["CreateRoomAttachmentInput"]: GraphQLTypes["CreateRoomAttachmentInput"];
+	/** An input for mutations affecting `RoomAttachment` */
+["RoomAttachmentInput"]: GraphQLTypes["RoomAttachmentInput"];
 	/** The output of our create `Rozpi` mutation. */
 ["CreateRozpiPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8564,24 +9832,6 @@ unchanged and unused. May be used by a client to track mutations. */
 ["CreateRozpisItemInput"]: GraphQLTypes["CreateRozpisItemInput"];
 	/** An input for mutations affecting `RozpisItem` */
 ["RozpisItemInput"]: GraphQLTypes["RozpisItemInput"];
-	/** The output of our create `Session` mutation. */
-["CreateSessionPayload"]: {
-		/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:string,
-	/** The `Session` that was created by this mutation. */
-	session?:ModelTypes["Session"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ModelTypes["Query"],
-	/** Reads a single `User` that is related to this `Session`. */
-	userBySsUser?:ModelTypes["User"],
-	/** An edge for our `Session`. May be used by Relay 1. */
-	sessionEdge?:ModelTypes["SessionsEdge"]
-};
-	/** All input for the create `Session` mutation. */
-["CreateSessionInput"]: GraphQLTypes["CreateSessionInput"];
-	/** An input for mutations affecting `Session` */
-["SessionInput"]: GraphQLTypes["SessionInput"];
 	/** The output of our create `Skupiny` mutation. */
 ["CreateSkupinyPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8591,6 +9841,8 @@ unchanged and unused. May be used by a client to track mutations. */
 	skupiny?:ModelTypes["Skupiny"],
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
+	/** Reads a single `CohortGroup` that is related to this `Skupiny`. */
+	cohortGroupByCohortGroup?:ModelTypes["CohortGroup"],
 	/** An edge for our `Skupiny`. May be used by Relay 1. */
 	skupinyEdge?:ModelTypes["SkupiniesEdge"]
 };
@@ -8598,6 +9850,82 @@ unchanged and unused. May be used by a client to track mutations. */
 ["CreateSkupinyInput"]: GraphQLTypes["CreateSkupinyInput"];
 	/** An input for mutations affecting `Skupiny` */
 ["SkupinyInput"]: GraphQLTypes["SkupinyInput"];
+	/** The output of our create `Tenant` mutation. */
+["CreateTenantPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `Tenant` that was created by this mutation. */
+	tenant?:ModelTypes["Tenant"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** An edge for our `Tenant`. May be used by Relay 1. */
+	tenantEdge?:ModelTypes["TenantsEdge"]
+};
+	/** All input for the create `Tenant` mutation. */
+["CreateTenantInput"]: GraphQLTypes["CreateTenantInput"];
+	/** An input for mutations affecting `Tenant` */
+["TenantInput"]: GraphQLTypes["TenantInput"];
+	/** The output of our create `TenantAttachment` mutation. */
+["CreateTenantAttachmentPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `TenantAttachment` that was created by this mutation. */
+	tenantAttachment?:ModelTypes["TenantAttachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantAttachment`. */
+	tenant?:ModelTypes["Tenant"],
+	/** Reads a single `Attachment` that is related to this `TenantAttachment`. */
+	attachmentByObjectName?:ModelTypes["Attachment"],
+	/** An edge for our `TenantAttachment`. May be used by Relay 1. */
+	tenantAttachmentEdge?:ModelTypes["TenantAttachmentsEdge"]
+};
+	/** All input for the create `TenantAttachment` mutation. */
+["CreateTenantAttachmentInput"]: GraphQLTypes["CreateTenantAttachmentInput"];
+	/** An input for mutations affecting `TenantAttachment` */
+["TenantAttachmentInput"]: GraphQLTypes["TenantAttachmentInput"];
+	/** The output of our create `TenantLocation` mutation. */
+["CreateTenantLocationPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `TenantLocation` that was created by this mutation. */
+	tenantLocation?:ModelTypes["TenantLocation"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantLocation`. */
+	tenant?:ModelTypes["Tenant"],
+	/** Reads a single `Location` that is related to this `TenantLocation`. */
+	location?:ModelTypes["Location"],
+	/** An edge for our `TenantLocation`. May be used by Relay 1. */
+	tenantLocationEdge?:ModelTypes["TenantLocationsEdge"]
+};
+	/** All input for the create `TenantLocation` mutation. */
+["CreateTenantLocationInput"]: GraphQLTypes["CreateTenantLocationInput"];
+	/** An input for mutations affecting `TenantLocation` */
+["TenantLocationInput"]: GraphQLTypes["TenantLocationInput"];
+	/** The output of our create `TenantPerson` mutation. */
+["CreateTenantPersonPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `TenantPerson` that was created by this mutation. */
+	tenantPerson?:ModelTypes["TenantPerson"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantPerson`. */
+	tenant?:ModelTypes["Tenant"],
+	/** Reads a single `Person` that is related to this `TenantPerson`. */
+	person?:ModelTypes["Person"],
+	/** An edge for our `TenantPerson`. May be used by Relay 1. */
+	tenantPersonEdge?:ModelTypes["TenantPeopleEdge"]
+};
+	/** All input for the create `TenantPerson` mutation. */
+["CreateTenantPersonInput"]: GraphQLTypes["CreateTenantPersonInput"];
+	/** An input for mutations affecting `TenantPerson` */
+["TenantPersonInput"]: GraphQLTypes["TenantPersonInput"];
 	/** The output of our create `Upozorneni` mutation. */
 ["CreateUpozorneniPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8656,110 +9984,6 @@ unchanged and unused. May be used by a client to track mutations. */
 ["CreateUserInput"]: GraphQLTypes["CreateUserInput"];
 	/** An input for mutations affecting `User` */
 ["UserInput"]: GraphQLTypes["UserInput"];
-	/** The output of our create `UsersSkupiny` mutation. */
-["CreateUsersSkupinyPayload"]: {
-		/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:string,
-	/** The `UsersSkupiny` that was created by this mutation. */
-	usersSkupiny?:ModelTypes["UsersSkupiny"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ModelTypes["Query"],
-	/** An edge for our `UsersSkupiny`. May be used by Relay 1. */
-	usersSkupinyEdge?:ModelTypes["UsersSkupiniesEdge"]
-};
-	/** All input for the create `UsersSkupiny` mutation. */
-["CreateUsersSkupinyInput"]: GraphQLTypes["CreateUsersSkupinyInput"];
-	/** An input for mutations affecting `UsersSkupiny` */
-["UsersSkupinyInput"]: GraphQLTypes["UsersSkupinyInput"];
-	/** The output of our create `Video` mutation. */
-["CreateVideoPayload"]: {
-		/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:string,
-	/** The `Video` that was created by this mutation. */
-	video?:ModelTypes["Video"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ModelTypes["Query"],
-	/** An edge for our `Video`. May be used by Relay 1. */
-	videoEdge?:ModelTypes["VideosEdge"]
-};
-	/** All input for the create `Video` mutation. */
-["CreateVideoInput"]: GraphQLTypes["CreateVideoInput"];
-	/** An input for mutations affecting `Video` */
-["VideoInput"]: GraphQLTypes["VideoInput"];
-	/** The output of our create `VideoList` mutation. */
-["CreateVideoListPayload"]: {
-		/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:string,
-	/** The `VideoList` that was created by this mutation. */
-	videoList?:ModelTypes["VideoList"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ModelTypes["Query"],
-	/** An edge for our `VideoList`. May be used by Relay 1. */
-	videoListEdge?:ModelTypes["VideoListsEdge"]
-};
-	/** All input for the create `VideoList` mutation. */
-["CreateVideoListInput"]: GraphQLTypes["CreateVideoListInput"];
-	/** An input for mutations affecting `VideoList` */
-["VideoListInput"]: GraphQLTypes["VideoListInput"];
-	/** The output of our create `VideoSource` mutation. */
-["CreateVideoSourcePayload"]: {
-		/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:string,
-	/** The `VideoSource` that was created by this mutation. */
-	videoSource?:ModelTypes["VideoSource"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ModelTypes["Query"],
-	/** An edge for our `VideoSource`. May be used by Relay 1. */
-	videoSourceEdge?:ModelTypes["VideoSourcesEdge"]
-};
-	/** All input for the create `VideoSource` mutation. */
-["CreateVideoSourceInput"]: GraphQLTypes["CreateVideoSourceInput"];
-	/** An input for mutations affecting `VideoSource` */
-["VideoSourceInput"]: GraphQLTypes["VideoSourceInput"];
-	/** The output of our update `Akce` mutation. */
-["UpdateAkcePayload"]: {
-		/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:string,
-	/** The `Akce` that was updated by this mutation. */
-	akce?:ModelTypes["Akce"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ModelTypes["Query"],
-	/** An edge for our `Akce`. May be used by Relay 1. */
-	akceEdge?:ModelTypes["AkcesEdge"]
-};
-	/** All input for the `updateAkceByNodeId` mutation. */
-["UpdateAkceByNodeIdInput"]: GraphQLTypes["UpdateAkceByNodeIdInput"];
-	/** Represents an update to a `Akce`. Fields that are set will be updated. */
-["AkcePatch"]: GraphQLTypes["AkcePatch"];
-	/** All input for the `updateAkce` mutation. */
-["UpdateAkceInput"]: GraphQLTypes["UpdateAkceInput"];
-	/** The output of our update `AkceItem` mutation. */
-["UpdateAkceItemPayload"]: {
-		/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:string,
-	/** The `AkceItem` that was updated by this mutation. */
-	akceItem?:ModelTypes["AkceItem"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ModelTypes["Query"],
-	/** Reads a single `Akce` that is related to this `AkceItem`. */
-	akceByAiIdRodic?:ModelTypes["Akce"],
-	/** Reads a single `User` that is related to this `AkceItem`. */
-	userByAiUser?:ModelTypes["User"],
-	/** An edge for our `AkceItem`. May be used by Relay 1. */
-	akceItemEdge?:ModelTypes["AkceItemsEdge"]
-};
-	/** All input for the `updateAkceItemByNodeId` mutation. */
-["UpdateAkceItemByNodeIdInput"]: GraphQLTypes["UpdateAkceItemByNodeIdInput"];
-	/** Represents an update to a `AkceItem`. Fields that are set will be updated. */
-["AkceItemPatch"]: GraphQLTypes["AkceItemPatch"];
-	/** All input for the `updateAkceItem` mutation. */
-["UpdateAkceItemInput"]: GraphQLTypes["UpdateAkceItemInput"];
 	/** The output of our update `Aktuality` mutation. */
 ["UpdateAktualityPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8776,12 +10000,90 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Aktuality`. May be used by Relay 1. */
 	aktualityEdge?:ModelTypes["AktualitiesEdge"]
 };
-	/** All input for the `updateAktualityByNodeId` mutation. */
-["UpdateAktualityByNodeIdInput"]: GraphQLTypes["UpdateAktualityByNodeIdInput"];
-	/** Represents an update to a `Aktuality`. Fields that are set will be updated. */
-["AktualityPatch"]: GraphQLTypes["AktualityPatch"];
 	/** All input for the `updateAktuality` mutation. */
 ["UpdateAktualityInput"]: GraphQLTypes["UpdateAktualityInput"];
+	/** Represents an update to a `Aktuality`. Fields that are set will be updated. */
+["AktualityPatch"]: GraphQLTypes["AktualityPatch"];
+	/** The output of our update `Attachment` mutation. */
+["UpdateAttachmentPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `Attachment` that was updated by this mutation. */
+	attachment?:ModelTypes["Attachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `User` that is related to this `Attachment`. */
+	userByUploadedBy?:ModelTypes["User"],
+	/** An edge for our `Attachment`. May be used by Relay 1. */
+	attachmentEdge?:ModelTypes["AttachmentsEdge"]
+};
+	/** All input for the `updateAttachment` mutation. */
+["UpdateAttachmentInput"]: GraphQLTypes["UpdateAttachmentInput"];
+	/** Represents an update to a `Attachment`. Fields that are set will be updated. */
+["AttachmentPatch"]: GraphQLTypes["AttachmentPatch"];
+	/** The output of our update `AttendeeExternal` mutation. */
+["UpdateAttendeeExternalPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `AttendeeExternal` that was updated by this mutation. */
+	attendeeExternal?:ModelTypes["AttendeeExternal"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Event` that is related to this `AttendeeExternal`. */
+	event?:ModelTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByManagedBy?:ModelTypes["User"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByConfirmedBy?:ModelTypes["User"],
+	/** An edge for our `AttendeeExternal`. May be used by Relay 1. */
+	attendeeExternalEdge?:ModelTypes["AttendeeExternalsEdge"]
+};
+	/** All input for the `updateAttendeeExternal` mutation. */
+["UpdateAttendeeExternalInput"]: GraphQLTypes["UpdateAttendeeExternalInput"];
+	/** Represents an update to a `AttendeeExternal`. Fields that are set will be updated. */
+["AttendeeExternalPatch"]: GraphQLTypes["AttendeeExternalPatch"];
+	/** The output of our update `AttendeeUser` mutation. */
+["UpdateAttendeeUserPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `AttendeeUser` that was updated by this mutation. */
+	attendeeUser?:ModelTypes["AttendeeUser"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Event` that is related to this `AttendeeUser`. */
+	event?:ModelTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeUser`. */
+	user?:ModelTypes["User"],
+	/** An edge for our `AttendeeUser`. May be used by Relay 1. */
+	attendeeUserEdge?:ModelTypes["AttendeeUsersEdge"]
+};
+	/** All input for the `updateAttendeeUser` mutation. */
+["UpdateAttendeeUserInput"]: GraphQLTypes["UpdateAttendeeUserInput"];
+	/** Represents an update to a `AttendeeUser`. Fields that are set will be updated. */
+["AttendeeUserPatch"]: GraphQLTypes["AttendeeUserPatch"];
+	/** All input for the `updateAttendeeUserByUserIdAndEventId` mutation. */
+["UpdateAttendeeUserByUserIdAndEventIdInput"]: GraphQLTypes["UpdateAttendeeUserByUserIdAndEventIdInput"];
+	/** The output of our update `CohortGroup` mutation. */
+["UpdateCohortGroupPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `CohortGroup` that was updated by this mutation. */
+	cohortGroup?:ModelTypes["CohortGroup"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `CohortGroup`. */
+	tenantByTenant?:ModelTypes["Tenant"],
+	/** An edge for our `CohortGroup`. May be used by Relay 1. */
+	cohortGroupEdge?:ModelTypes["CohortGroupsEdge"]
+};
+	/** All input for the `updateCohortGroup` mutation. */
+["UpdateCohortGroupInput"]: GraphQLTypes["UpdateCohortGroupInput"];
+	/** Represents an update to a `CohortGroup`. Fields that are set will be updated. */
+["CohortGroupPatch"]: GraphQLTypes["CohortGroupPatch"];
 	/** The output of our update `Dokumenty` mutation. */
 ["UpdateDokumentyPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8796,12 +10098,42 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Dokumenty`. May be used by Relay 1. */
 	dokumentyEdge?:ModelTypes["DokumentiesEdge"]
 };
-	/** All input for the `updateDokumentyByNodeId` mutation. */
-["UpdateDokumentyByNodeIdInput"]: GraphQLTypes["UpdateDokumentyByNodeIdInput"];
-	/** Represents an update to a `Dokumenty`. Fields that are set will be updated. */
-["DokumentyPatch"]: GraphQLTypes["DokumentyPatch"];
 	/** All input for the `updateDokumenty` mutation. */
 ["UpdateDokumentyInput"]: GraphQLTypes["UpdateDokumentyInput"];
+	/** Represents an update to a `Dokumenty`. Fields that are set will be updated. */
+["DokumentyPatch"]: GraphQLTypes["DokumentyPatch"];
+	/** The output of our update `Event` mutation. */
+["UpdateEventPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `Event` that was updated by this mutation. */
+	event?:ModelTypes["Event"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** An edge for our `Event`. May be used by Relay 1. */
+	eventEdge?:ModelTypes["EventsEdge"]
+};
+	/** All input for the `updateEvent` mutation. */
+["UpdateEventInput"]: GraphQLTypes["UpdateEventInput"];
+	/** Represents an update to a `Event`. Fields that are set will be updated. */
+["EventPatch"]: GraphQLTypes["EventPatch"];
+	/** The output of our update `FormResponse` mutation. */
+["UpdateFormResponsePayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `FormResponse` that was updated by this mutation. */
+	formResponse?:ModelTypes["FormResponse"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** An edge for our `FormResponse`. May be used by Relay 1. */
+	formResponseEdge?:ModelTypes["FormResponsesEdge"]
+};
+	/** All input for the `updateFormResponse` mutation. */
+["UpdateFormResponseInput"]: GraphQLTypes["UpdateFormResponseInput"];
+	/** Represents an update to a `FormResponse`. Fields that are set will be updated. */
+["FormResponsePatch"]: GraphQLTypes["FormResponsePatch"];
 	/** The output of our update `GalerieDir` mutation. */
 ["UpdateGalerieDirPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8814,12 +10146,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `GalerieDir`. May be used by Relay 1. */
 	galerieDirEdge?:ModelTypes["GalerieDirsEdge"]
 };
-	/** All input for the `updateGalerieDirByNodeId` mutation. */
-["UpdateGalerieDirByNodeIdInput"]: GraphQLTypes["UpdateGalerieDirByNodeIdInput"];
-	/** Represents an update to a `GalerieDir`. Fields that are set will be updated. */
-["GalerieDirPatch"]: GraphQLTypes["GalerieDirPatch"];
 	/** All input for the `updateGalerieDir` mutation. */
 ["UpdateGalerieDirInput"]: GraphQLTypes["UpdateGalerieDirInput"];
+	/** Represents an update to a `GalerieDir`. Fields that are set will be updated. */
+["GalerieDirPatch"]: GraphQLTypes["GalerieDirPatch"];
 	/** The output of our update `GalerieFoto` mutation. */
 ["UpdateGalerieFotoPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8836,12 +10166,46 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `GalerieFoto`. May be used by Relay 1. */
 	galerieFotoEdge?:ModelTypes["GalerieFotosEdge"]
 };
-	/** All input for the `updateGalerieFotoByNodeId` mutation. */
-["UpdateGalerieFotoByNodeIdInput"]: GraphQLTypes["UpdateGalerieFotoByNodeIdInput"];
-	/** Represents an update to a `GalerieFoto`. Fields that are set will be updated. */
-["GalerieFotoPatch"]: GraphQLTypes["GalerieFotoPatch"];
 	/** All input for the `updateGalerieFoto` mutation. */
 ["UpdateGalerieFotoInput"]: GraphQLTypes["UpdateGalerieFotoInput"];
+	/** Represents an update to a `GalerieFoto`. Fields that are set will be updated. */
+["GalerieFotoPatch"]: GraphQLTypes["GalerieFotoPatch"];
+	/** The output of our update `Location` mutation. */
+["UpdateLocationPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `Location` that was updated by this mutation. */
+	location?:ModelTypes["Location"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** An edge for our `Location`. May be used by Relay 1. */
+	locationEdge?:ModelTypes["LocationsEdge"]
+};
+	/** All input for the `updateLocation` mutation. */
+["UpdateLocationInput"]: GraphQLTypes["UpdateLocationInput"];
+	/** Represents an update to a `Location`. Fields that are set will be updated. */
+["LocationPatch"]: GraphQLTypes["LocationPatch"];
+	/** The output of our update `LocationAttachment` mutation. */
+["UpdateLocationAttachmentPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `LocationAttachment` that was updated by this mutation. */
+	locationAttachment?:ModelTypes["LocationAttachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Location` that is related to this `LocationAttachment`. */
+	location?:ModelTypes["Location"],
+	/** Reads a single `Attachment` that is related to this `LocationAttachment`. */
+	attachmentByObjectName?:ModelTypes["Attachment"],
+	/** An edge for our `LocationAttachment`. May be used by Relay 1. */
+	locationAttachmentEdge?:ModelTypes["LocationAttachmentsEdge"]
+};
+	/** All input for the `updateLocationAttachment` mutation. */
+["UpdateLocationAttachmentInput"]: GraphQLTypes["UpdateLocationAttachmentInput"];
+	/** Represents an update to a `LocationAttachment`. Fields that are set will be updated. */
+["LocationAttachmentPatch"]: GraphQLTypes["LocationAttachmentPatch"];
 	/** The output of our update `Nabidka` mutation. */
 ["UpdateNabidkaPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8856,12 +10220,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Nabidka`. May be used by Relay 1. */
 	nabidkaEdge?:ModelTypes["NabidkasEdge"]
 };
-	/** All input for the `updateNabidkaByNodeId` mutation. */
-["UpdateNabidkaByNodeIdInput"]: GraphQLTypes["UpdateNabidkaByNodeIdInput"];
-	/** Represents an update to a `Nabidka`. Fields that are set will be updated. */
-["NabidkaPatch"]: GraphQLTypes["NabidkaPatch"];
 	/** All input for the `updateNabidka` mutation. */
 ["UpdateNabidkaInput"]: GraphQLTypes["UpdateNabidkaInput"];
+	/** Represents an update to a `Nabidka`. Fields that are set will be updated. */
+["NabidkaPatch"]: GraphQLTypes["NabidkaPatch"];
 	/** The output of our update `NabidkaItem` mutation. */
 ["UpdateNabidkaItemPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8878,12 +10240,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `NabidkaItem`. May be used by Relay 1. */
 	nabidkaItemEdge?:ModelTypes["NabidkaItemsEdge"]
 };
-	/** All input for the `updateNabidkaItemByNodeId` mutation. */
-["UpdateNabidkaItemByNodeIdInput"]: GraphQLTypes["UpdateNabidkaItemByNodeIdInput"];
-	/** Represents an update to a `NabidkaItem`. Fields that are set will be updated. */
-["NabidkaItemPatch"]: GraphQLTypes["NabidkaItemPatch"];
 	/** All input for the `updateNabidkaItem` mutation. */
 ["UpdateNabidkaItemInput"]: GraphQLTypes["UpdateNabidkaItemInput"];
+	/** Represents an update to a `NabidkaItem`. Fields that are set will be updated. */
+["NabidkaItemPatch"]: GraphQLTypes["NabidkaItemPatch"];
+	/** All input for the `updateNabidkaItemByNiPartnerAndNiIdRodic` mutation. */
+["UpdateNabidkaItemByNiPartnerAndNiIdRodicInput"]: GraphQLTypes["UpdateNabidkaItemByNiPartnerAndNiIdRodicInput"];
 	/** The output of our update `Page` mutation. */
 ["UpdatePagePayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8896,12 +10258,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Page`. May be used by Relay 1. */
 	pageEdge?:ModelTypes["PagesEdge"]
 };
-	/** All input for the `updatePageByNodeId` mutation. */
-["UpdatePageByNodeIdInput"]: GraphQLTypes["UpdatePageByNodeIdInput"];
-	/** Represents an update to a `Page`. Fields that are set will be updated. */
-["PagePatch"]: GraphQLTypes["PagePatch"];
 	/** All input for the `updatePage` mutation. */
 ["UpdatePageInput"]: GraphQLTypes["UpdatePageInput"];
+	/** Represents an update to a `Page`. Fields that are set will be updated. */
+["PagePatch"]: GraphQLTypes["PagePatch"];
 	/** All input for the `updatePageByUrl` mutation. */
 ["UpdatePageByUrlInput"]: GraphQLTypes["UpdatePageByUrlInput"];
 	/** The output of our update `Parameter` mutation. */
@@ -8916,12 +10276,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Parameter`. May be used by Relay 1. */
 	parameterEdge?:ModelTypes["ParametersEdge"]
 };
-	/** All input for the `updateParameterByNodeId` mutation. */
-["UpdateParameterByNodeIdInput"]: GraphQLTypes["UpdateParameterByNodeIdInput"];
-	/** Represents an update to a `Parameter`. Fields that are set will be updated. */
-["ParameterPatch"]: GraphQLTypes["ParameterPatch"];
 	/** All input for the `updateParameter` mutation. */
 ["UpdateParameterInput"]: GraphQLTypes["UpdateParameterInput"];
+	/** Represents an update to a `Parameter`. Fields that are set will be updated. */
+["ParameterPatch"]: GraphQLTypes["ParameterPatch"];
 	/** The output of our update `Pary` mutation. */
 ["UpdateParyPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8933,15 +10291,15 @@ unchanged and unused. May be used by a client to track mutations. */
 	query?:ModelTypes["Query"],
 	/** Reads a single `User` that is related to this `Pary`. */
 	userByPIdPartner?:ModelTypes["User"],
+	/** Reads a single `User` that is related to this `Pary`. */
+	userByPIdPartnerka?:ModelTypes["User"],
 	/** An edge for our `Pary`. May be used by Relay 1. */
 	paryEdge?:ModelTypes["PariesEdge"]
 };
-	/** All input for the `updateParyByNodeId` mutation. */
-["UpdateParyByNodeIdInput"]: GraphQLTypes["UpdateParyByNodeIdInput"];
-	/** Represents an update to a `Pary`. Fields that are set will be updated. */
-["ParyPatch"]: GraphQLTypes["ParyPatch"];
 	/** All input for the `updatePary` mutation. */
 ["UpdateParyInput"]: GraphQLTypes["UpdateParyInput"];
+	/** Represents an update to a `Pary`. Fields that are set will be updated. */
+["ParyPatch"]: GraphQLTypes["ParyPatch"];
 	/** The output of our update `ParyNavrh` mutation. */
 ["UpdateParyNavrhPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8960,12 +10318,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `ParyNavrh`. May be used by Relay 1. */
 	paryNavrhEdge?:ModelTypes["ParyNavrhsEdge"]
 };
-	/** All input for the `updateParyNavrhByNodeId` mutation. */
-["UpdateParyNavrhByNodeIdInput"]: GraphQLTypes["UpdateParyNavrhByNodeIdInput"];
-	/** Represents an update to a `ParyNavrh`. Fields that are set will be updated. */
-["ParyNavrhPatch"]: GraphQLTypes["ParyNavrhPatch"];
 	/** All input for the `updateParyNavrh` mutation. */
 ["UpdateParyNavrhInput"]: GraphQLTypes["UpdateParyNavrhInput"];
+	/** Represents an update to a `ParyNavrh`. Fields that are set will be updated. */
+["ParyNavrhPatch"]: GraphQLTypes["ParyNavrhPatch"];
 	/** The output of our update `Permission` mutation. */
 ["UpdatePermissionPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8978,12 +10334,26 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Permission`. May be used by Relay 1. */
 	permissionEdge?:ModelTypes["PermissionsEdge"]
 };
-	/** All input for the `updatePermissionByNodeId` mutation. */
-["UpdatePermissionByNodeIdInput"]: GraphQLTypes["UpdatePermissionByNodeIdInput"];
-	/** Represents an update to a `Permission`. Fields that are set will be updated. */
-["PermissionPatch"]: GraphQLTypes["PermissionPatch"];
 	/** All input for the `updatePermission` mutation. */
 ["UpdatePermissionInput"]: GraphQLTypes["UpdatePermissionInput"];
+	/** Represents an update to a `Permission`. Fields that are set will be updated. */
+["PermissionPatch"]: GraphQLTypes["PermissionPatch"];
+	/** The output of our update `Person` mutation. */
+["UpdatePersonPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `Person` that was updated by this mutation. */
+	person?:ModelTypes["Person"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** An edge for our `Person`. May be used by Relay 1. */
+	personEdge?:ModelTypes["PeopleEdge"]
+};
+	/** All input for the `updatePerson` mutation. */
+["UpdatePersonInput"]: GraphQLTypes["UpdatePersonInput"];
+	/** Represents an update to a `Person`. Fields that are set will be updated. */
+["PersonPatch"]: GraphQLTypes["PersonPatch"];
 	/** The output of our update `PlatbyCategory` mutation. */
 ["UpdatePlatbyCategoryPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -8996,12 +10366,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyCategory`. May be used by Relay 1. */
 	platbyCategoryEdge?:ModelTypes["PlatbyCategoriesEdge"]
 };
-	/** All input for the `updatePlatbyCategoryByNodeId` mutation. */
-["UpdatePlatbyCategoryByNodeIdInput"]: GraphQLTypes["UpdatePlatbyCategoryByNodeIdInput"];
-	/** Represents an update to a `PlatbyCategory`. Fields that are set will be updated. */
-["PlatbyCategoryPatch"]: GraphQLTypes["PlatbyCategoryPatch"];
 	/** All input for the `updatePlatbyCategory` mutation. */
 ["UpdatePlatbyCategoryInput"]: GraphQLTypes["UpdatePlatbyCategoryInput"];
+	/** Represents an update to a `PlatbyCategory`. Fields that are set will be updated. */
+["PlatbyCategoryPatch"]: GraphQLTypes["PlatbyCategoryPatch"];
 	/** The output of our update `PlatbyCategoryGroup` mutation. */
 ["UpdatePlatbyCategoryGroupPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9018,12 +10386,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyCategoryGroup`. May be used by Relay 1. */
 	platbyCategoryGroupEdge?:ModelTypes["PlatbyCategoryGroupsEdge"]
 };
-	/** All input for the `updatePlatbyCategoryGroupByNodeId` mutation. */
-["UpdatePlatbyCategoryGroupByNodeIdInput"]: GraphQLTypes["UpdatePlatbyCategoryGroupByNodeIdInput"];
-	/** Represents an update to a `PlatbyCategoryGroup`. Fields that are set will be updated. */
-["PlatbyCategoryGroupPatch"]: GraphQLTypes["PlatbyCategoryGroupPatch"];
 	/** All input for the `updatePlatbyCategoryGroup` mutation. */
 ["UpdatePlatbyCategoryGroupInput"]: GraphQLTypes["UpdatePlatbyCategoryGroupInput"];
+	/** Represents an update to a `PlatbyCategoryGroup`. Fields that are set will be updated. */
+["PlatbyCategoryGroupPatch"]: GraphQLTypes["PlatbyCategoryGroupPatch"];
 	/** The output of our update `PlatbyGroup` mutation. */
 ["UpdatePlatbyGroupPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9036,12 +10402,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyGroup`. May be used by Relay 1. */
 	platbyGroupEdge?:ModelTypes["PlatbyGroupsEdge"]
 };
-	/** All input for the `updatePlatbyGroupByNodeId` mutation. */
-["UpdatePlatbyGroupByNodeIdInput"]: GraphQLTypes["UpdatePlatbyGroupByNodeIdInput"];
-	/** Represents an update to a `PlatbyGroup`. Fields that are set will be updated. */
-["PlatbyGroupPatch"]: GraphQLTypes["PlatbyGroupPatch"];
 	/** All input for the `updatePlatbyGroup` mutation. */
 ["UpdatePlatbyGroupInput"]: GraphQLTypes["UpdatePlatbyGroupInput"];
+	/** Represents an update to a `PlatbyGroup`. Fields that are set will be updated. */
+["PlatbyGroupPatch"]: GraphQLTypes["PlatbyGroupPatch"];
 	/** The output of our update `PlatbyGroupSkupina` mutation. */
 ["UpdatePlatbyGroupSkupinaPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9058,12 +10422,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyGroupSkupina`. May be used by Relay 1. */
 	platbyGroupSkupinaEdge?:ModelTypes["PlatbyGroupSkupinasEdge"]
 };
-	/** All input for the `updatePlatbyGroupSkupinaByNodeId` mutation. */
-["UpdatePlatbyGroupSkupinaByNodeIdInput"]: GraphQLTypes["UpdatePlatbyGroupSkupinaByNodeIdInput"];
-	/** Represents an update to a `PlatbyGroupSkupina`. Fields that are set will be updated. */
-["PlatbyGroupSkupinaPatch"]: GraphQLTypes["PlatbyGroupSkupinaPatch"];
 	/** All input for the `updatePlatbyGroupSkupina` mutation. */
 ["UpdatePlatbyGroupSkupinaInput"]: GraphQLTypes["UpdatePlatbyGroupSkupinaInput"];
+	/** Represents an update to a `PlatbyGroupSkupina`. Fields that are set will be updated. */
+["PlatbyGroupSkupinaPatch"]: GraphQLTypes["PlatbyGroupSkupinaPatch"];
 	/** The output of our update `PlatbyItem` mutation. */
 ["UpdatePlatbyItemPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9082,12 +10444,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyItem`. May be used by Relay 1. */
 	platbyItemEdge?:ModelTypes["PlatbyItemsEdge"]
 };
-	/** All input for the `updatePlatbyItemByNodeId` mutation. */
-["UpdatePlatbyItemByNodeIdInput"]: GraphQLTypes["UpdatePlatbyItemByNodeIdInput"];
-	/** Represents an update to a `PlatbyItem`. Fields that are set will be updated. */
-["PlatbyItemPatch"]: GraphQLTypes["PlatbyItemPatch"];
 	/** All input for the `updatePlatbyItem` mutation. */
 ["UpdatePlatbyItemInput"]: GraphQLTypes["UpdatePlatbyItemInput"];
+	/** Represents an update to a `PlatbyItem`. Fields that are set will be updated. */
+["PlatbyItemPatch"]: GraphQLTypes["PlatbyItemPatch"];
 	/** The output of our update `PlatbyRaw` mutation. */
 ["UpdatePlatbyRawPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9100,12 +10460,48 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyRaw`. May be used by Relay 1. */
 	platbyRawEdge?:ModelTypes["PlatbyRawsEdge"]
 };
-	/** All input for the `updatePlatbyRawByNodeId` mutation. */
-["UpdatePlatbyRawByNodeIdInput"]: GraphQLTypes["UpdatePlatbyRawByNodeIdInput"];
-	/** Represents an update to a `PlatbyRaw`. Fields that are set will be updated. */
-["PlatbyRawPatch"]: GraphQLTypes["PlatbyRawPatch"];
 	/** All input for the `updatePlatbyRaw` mutation. */
 ["UpdatePlatbyRawInput"]: GraphQLTypes["UpdatePlatbyRawInput"];
+	/** Represents an update to a `PlatbyRaw`. Fields that are set will be updated. */
+["PlatbyRawPatch"]: GraphQLTypes["PlatbyRawPatch"];
+	/** The output of our update `Room` mutation. */
+["UpdateRoomPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `Room` that was updated by this mutation. */
+	room?:ModelTypes["Room"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Location` that is related to this `Room`. */
+	locationByLocation?:ModelTypes["Location"],
+	/** An edge for our `Room`. May be used by Relay 1. */
+	roomEdge?:ModelTypes["RoomsEdge"]
+};
+	/** All input for the `updateRoom` mutation. */
+["UpdateRoomInput"]: GraphQLTypes["UpdateRoomInput"];
+	/** Represents an update to a `Room`. Fields that are set will be updated. */
+["RoomPatch"]: GraphQLTypes["RoomPatch"];
+	/** The output of our update `RoomAttachment` mutation. */
+["UpdateRoomAttachmentPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `RoomAttachment` that was updated by this mutation. */
+	roomAttachment?:ModelTypes["RoomAttachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Room` that is related to this `RoomAttachment`. */
+	room?:ModelTypes["Room"],
+	/** Reads a single `Attachment` that is related to this `RoomAttachment`. */
+	attachmentByObjectName?:ModelTypes["Attachment"],
+	/** An edge for our `RoomAttachment`. May be used by Relay 1. */
+	roomAttachmentEdge?:ModelTypes["RoomAttachmentsEdge"]
+};
+	/** All input for the `updateRoomAttachment` mutation. */
+["UpdateRoomAttachmentInput"]: GraphQLTypes["UpdateRoomAttachmentInput"];
+	/** Represents an update to a `RoomAttachment`. Fields that are set will be updated. */
+["RoomAttachmentPatch"]: GraphQLTypes["RoomAttachmentPatch"];
 	/** The output of our update `Rozpi` mutation. */
 ["UpdateRozpiPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9120,12 +10516,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Rozpi`. May be used by Relay 1. */
 	rozpiEdge?:ModelTypes["RozpisEdge"]
 };
-	/** All input for the `updateRozpiByNodeId` mutation. */
-["UpdateRozpiByNodeIdInput"]: GraphQLTypes["UpdateRozpiByNodeIdInput"];
-	/** Represents an update to a `Rozpi`. Fields that are set will be updated. */
-["RozpiPatch"]: GraphQLTypes["RozpiPatch"];
 	/** All input for the `updateRozpi` mutation. */
 ["UpdateRozpiInput"]: GraphQLTypes["UpdateRozpiInput"];
+	/** Represents an update to a `Rozpi`. Fields that are set will be updated. */
+["RozpiPatch"]: GraphQLTypes["RozpiPatch"];
 	/** The output of our update `RozpisItem` mutation. */
 ["UpdateRozpisItemPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9142,32 +10536,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `RozpisItem`. May be used by Relay 1. */
 	rozpisItemEdge?:ModelTypes["RozpisItemsEdge"]
 };
-	/** All input for the `updateRozpisItemByNodeId` mutation. */
-["UpdateRozpisItemByNodeIdInput"]: GraphQLTypes["UpdateRozpisItemByNodeIdInput"];
-	/** Represents an update to a `RozpisItem`. Fields that are set will be updated. */
-["RozpisItemPatch"]: GraphQLTypes["RozpisItemPatch"];
 	/** All input for the `updateRozpisItem` mutation. */
 ["UpdateRozpisItemInput"]: GraphQLTypes["UpdateRozpisItemInput"];
-	/** The output of our update `Session` mutation. */
-["UpdateSessionPayload"]: {
-		/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:string,
-	/** The `Session` that was updated by this mutation. */
-	session?:ModelTypes["Session"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ModelTypes["Query"],
-	/** Reads a single `User` that is related to this `Session`. */
-	userBySsUser?:ModelTypes["User"],
-	/** An edge for our `Session`. May be used by Relay 1. */
-	sessionEdge?:ModelTypes["SessionsEdge"]
-};
-	/** All input for the `updateSessionByNodeId` mutation. */
-["UpdateSessionByNodeIdInput"]: GraphQLTypes["UpdateSessionByNodeIdInput"];
-	/** Represents an update to a `Session`. Fields that are set will be updated. */
-["SessionPatch"]: GraphQLTypes["SessionPatch"];
-	/** All input for the `updateSession` mutation. */
-["UpdateSessionInput"]: GraphQLTypes["UpdateSessionInput"];
+	/** Represents an update to a `RozpisItem`. Fields that are set will be updated. */
+["RozpisItemPatch"]: GraphQLTypes["RozpisItemPatch"];
 	/** The output of our update `Skupiny` mutation. */
 ["UpdateSkupinyPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9177,15 +10549,91 @@ unchanged and unused. May be used by a client to track mutations. */
 	skupiny?:ModelTypes["Skupiny"],
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
+	/** Reads a single `CohortGroup` that is related to this `Skupiny`. */
+	cohortGroupByCohortGroup?:ModelTypes["CohortGroup"],
 	/** An edge for our `Skupiny`. May be used by Relay 1. */
 	skupinyEdge?:ModelTypes["SkupiniesEdge"]
 };
-	/** All input for the `updateSkupinyByNodeId` mutation. */
-["UpdateSkupinyByNodeIdInput"]: GraphQLTypes["UpdateSkupinyByNodeIdInput"];
-	/** Represents an update to a `Skupiny`. Fields that are set will be updated. */
-["SkupinyPatch"]: GraphQLTypes["SkupinyPatch"];
 	/** All input for the `updateSkupiny` mutation. */
 ["UpdateSkupinyInput"]: GraphQLTypes["UpdateSkupinyInput"];
+	/** Represents an update to a `Skupiny`. Fields that are set will be updated. */
+["SkupinyPatch"]: GraphQLTypes["SkupinyPatch"];
+	/** The output of our update `Tenant` mutation. */
+["UpdateTenantPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `Tenant` that was updated by this mutation. */
+	tenant?:ModelTypes["Tenant"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** An edge for our `Tenant`. May be used by Relay 1. */
+	tenantEdge?:ModelTypes["TenantsEdge"]
+};
+	/** All input for the `updateTenant` mutation. */
+["UpdateTenantInput"]: GraphQLTypes["UpdateTenantInput"];
+	/** Represents an update to a `Tenant`. Fields that are set will be updated. */
+["TenantPatch"]: GraphQLTypes["TenantPatch"];
+	/** The output of our update `TenantAttachment` mutation. */
+["UpdateTenantAttachmentPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `TenantAttachment` that was updated by this mutation. */
+	tenantAttachment?:ModelTypes["TenantAttachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantAttachment`. */
+	tenant?:ModelTypes["Tenant"],
+	/** Reads a single `Attachment` that is related to this `TenantAttachment`. */
+	attachmentByObjectName?:ModelTypes["Attachment"],
+	/** An edge for our `TenantAttachment`. May be used by Relay 1. */
+	tenantAttachmentEdge?:ModelTypes["TenantAttachmentsEdge"]
+};
+	/** All input for the `updateTenantAttachment` mutation. */
+["UpdateTenantAttachmentInput"]: GraphQLTypes["UpdateTenantAttachmentInput"];
+	/** Represents an update to a `TenantAttachment`. Fields that are set will be updated. */
+["TenantAttachmentPatch"]: GraphQLTypes["TenantAttachmentPatch"];
+	/** The output of our update `TenantLocation` mutation. */
+["UpdateTenantLocationPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `TenantLocation` that was updated by this mutation. */
+	tenantLocation?:ModelTypes["TenantLocation"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantLocation`. */
+	tenant?:ModelTypes["Tenant"],
+	/** Reads a single `Location` that is related to this `TenantLocation`. */
+	location?:ModelTypes["Location"],
+	/** An edge for our `TenantLocation`. May be used by Relay 1. */
+	tenantLocationEdge?:ModelTypes["TenantLocationsEdge"]
+};
+	/** All input for the `updateTenantLocation` mutation. */
+["UpdateTenantLocationInput"]: GraphQLTypes["UpdateTenantLocationInput"];
+	/** Represents an update to a `TenantLocation`. Fields that are set will be updated. */
+["TenantLocationPatch"]: GraphQLTypes["TenantLocationPatch"];
+	/** The output of our update `TenantPerson` mutation. */
+["UpdateTenantPersonPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `TenantPerson` that was updated by this mutation. */
+	tenantPerson?:ModelTypes["TenantPerson"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantPerson`. */
+	tenant?:ModelTypes["Tenant"],
+	/** Reads a single `Person` that is related to this `TenantPerson`. */
+	person?:ModelTypes["Person"],
+	/** An edge for our `TenantPerson`. May be used by Relay 1. */
+	tenantPersonEdge?:ModelTypes["TenantPeopleEdge"]
+};
+	/** All input for the `updateTenantPerson` mutation. */
+["UpdateTenantPersonInput"]: GraphQLTypes["UpdateTenantPersonInput"];
+	/** Represents an update to a `TenantPerson`. Fields that are set will be updated. */
+["TenantPersonPatch"]: GraphQLTypes["TenantPersonPatch"];
 	/** The output of our update `Upozorneni` mutation. */
 ["UpdateUpozorneniPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9200,12 +10648,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Upozorneni`. May be used by Relay 1. */
 	upozorneniEdge?:ModelTypes["UpozornenisEdge"]
 };
-	/** All input for the `updateUpozorneniByNodeId` mutation. */
-["UpdateUpozorneniByNodeIdInput"]: GraphQLTypes["UpdateUpozorneniByNodeIdInput"];
-	/** Represents an update to a `Upozorneni`. Fields that are set will be updated. */
-["UpozorneniPatch"]: GraphQLTypes["UpozorneniPatch"];
 	/** All input for the `updateUpozorneni` mutation. */
 ["UpdateUpozorneniInput"]: GraphQLTypes["UpdateUpozorneniInput"];
+	/** Represents an update to a `Upozorneni`. Fields that are set will be updated. */
+["UpozorneniPatch"]: GraphQLTypes["UpozorneniPatch"];
 	/** The output of our update `UpozorneniSkupiny` mutation. */
 ["UpdateUpozorneniSkupinyPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9222,12 +10668,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `UpozorneniSkupiny`. May be used by Relay 1. */
 	upozorneniSkupinyEdge?:ModelTypes["UpozorneniSkupiniesEdge"]
 };
-	/** All input for the `updateUpozorneniSkupinyByNodeId` mutation. */
-["UpdateUpozorneniSkupinyByNodeIdInput"]: GraphQLTypes["UpdateUpozorneniSkupinyByNodeIdInput"];
-	/** Represents an update to a `UpozorneniSkupiny`. Fields that are set will be updated. */
-["UpozorneniSkupinyPatch"]: GraphQLTypes["UpozorneniSkupinyPatch"];
 	/** All input for the `updateUpozorneniSkupiny` mutation. */
 ["UpdateUpozorneniSkupinyInput"]: GraphQLTypes["UpdateUpozorneniSkupinyInput"];
+	/** Represents an update to a `UpozorneniSkupiny`. Fields that are set will be updated. */
+["UpozorneniSkupinyPatch"]: GraphQLTypes["UpozorneniSkupinyPatch"];
 	/** The output of our update `User` mutation. */
 ["UpdateUserPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9244,122 +10688,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `User`. May be used by Relay 1. */
 	userEdge?:ModelTypes["UsersEdge"]
 };
-	/** All input for the `updateUserByNodeId` mutation. */
-["UpdateUserByNodeIdInput"]: GraphQLTypes["UpdateUserByNodeIdInput"];
-	/** Represents an update to a `User`. Fields that are set will be updated. */
-["UserPatch"]: GraphQLTypes["UserPatch"];
 	/** All input for the `updateUser` mutation. */
 ["UpdateUserInput"]: GraphQLTypes["UpdateUserInput"];
-	/** The output of our update `UsersSkupiny` mutation. */
-["UpdateUsersSkupinyPayload"]: {
-		/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:string,
-	/** The `UsersSkupiny` that was updated by this mutation. */
-	usersSkupiny?:ModelTypes["UsersSkupiny"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ModelTypes["Query"],
-	/** An edge for our `UsersSkupiny`. May be used by Relay 1. */
-	usersSkupinyEdge?:ModelTypes["UsersSkupiniesEdge"]
-};
-	/** All input for the `updateUsersSkupinyByNodeId` mutation. */
-["UpdateUsersSkupinyByNodeIdInput"]: GraphQLTypes["UpdateUsersSkupinyByNodeIdInput"];
-	/** Represents an update to a `UsersSkupiny`. Fields that are set will be updated. */
-["UsersSkupinyPatch"]: GraphQLTypes["UsersSkupinyPatch"];
-	/** All input for the `updateUsersSkupiny` mutation. */
-["UpdateUsersSkupinyInput"]: GraphQLTypes["UpdateUsersSkupinyInput"];
-	/** The output of our update `Video` mutation. */
-["UpdateVideoPayload"]: {
-		/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:string,
-	/** The `Video` that was updated by this mutation. */
-	video?:ModelTypes["Video"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ModelTypes["Query"],
-	/** An edge for our `Video`. May be used by Relay 1. */
-	videoEdge?:ModelTypes["VideosEdge"]
-};
-	/** All input for the `updateVideoByNodeId` mutation. */
-["UpdateVideoByNodeIdInput"]: GraphQLTypes["UpdateVideoByNodeIdInput"];
-	/** Represents an update to a `Video`. Fields that are set will be updated. */
-["VideoPatch"]: GraphQLTypes["VideoPatch"];
-	/** All input for the `updateVideo` mutation. */
-["UpdateVideoInput"]: GraphQLTypes["UpdateVideoInput"];
-	/** The output of our update `VideoList` mutation. */
-["UpdateVideoListPayload"]: {
-		/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:string,
-	/** The `VideoList` that was updated by this mutation. */
-	videoList?:ModelTypes["VideoList"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ModelTypes["Query"],
-	/** An edge for our `VideoList`. May be used by Relay 1. */
-	videoListEdge?:ModelTypes["VideoListsEdge"]
-};
-	/** All input for the `updateVideoListByNodeId` mutation. */
-["UpdateVideoListByNodeIdInput"]: GraphQLTypes["UpdateVideoListByNodeIdInput"];
-	/** Represents an update to a `VideoList`. Fields that are set will be updated. */
-["VideoListPatch"]: GraphQLTypes["VideoListPatch"];
-	/** All input for the `updateVideoList` mutation. */
-["UpdateVideoListInput"]: GraphQLTypes["UpdateVideoListInput"];
-	/** The output of our update `VideoSource` mutation. */
-["UpdateVideoSourcePayload"]: {
-		/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:string,
-	/** The `VideoSource` that was updated by this mutation. */
-	videoSource?:ModelTypes["VideoSource"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ModelTypes["Query"],
-	/** An edge for our `VideoSource`. May be used by Relay 1. */
-	videoSourceEdge?:ModelTypes["VideoSourcesEdge"]
-};
-	/** All input for the `updateVideoSourceByNodeId` mutation. */
-["UpdateVideoSourceByNodeIdInput"]: GraphQLTypes["UpdateVideoSourceByNodeIdInput"];
-	/** Represents an update to a `VideoSource`. Fields that are set will be updated. */
-["VideoSourcePatch"]: GraphQLTypes["VideoSourcePatch"];
-	/** All input for the `updateVideoSource` mutation. */
-["UpdateVideoSourceInput"]: GraphQLTypes["UpdateVideoSourceInput"];
-	/** The output of our delete `Akce` mutation. */
-["DeleteAkcePayload"]: {
-		/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:string,
-	/** The `Akce` that was deleted by this mutation. */
-	akce?:ModelTypes["Akce"],
-	deletedAkceNodeId?:string,
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ModelTypes["Query"],
-	/** An edge for our `Akce`. May be used by Relay 1. */
-	akceEdge?:ModelTypes["AkcesEdge"]
-};
-	/** All input for the `deleteAkceByNodeId` mutation. */
-["DeleteAkceByNodeIdInput"]: GraphQLTypes["DeleteAkceByNodeIdInput"];
-	/** All input for the `deleteAkce` mutation. */
-["DeleteAkceInput"]: GraphQLTypes["DeleteAkceInput"];
-	/** The output of our delete `AkceItem` mutation. */
-["DeleteAkceItemPayload"]: {
-		/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:string,
-	/** The `AkceItem` that was deleted by this mutation. */
-	akceItem?:ModelTypes["AkceItem"],
-	deletedAkceItemNodeId?:string,
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ModelTypes["Query"],
-	/** Reads a single `Akce` that is related to this `AkceItem`. */
-	akceByAiIdRodic?:ModelTypes["Akce"],
-	/** Reads a single `User` that is related to this `AkceItem`. */
-	userByAiUser?:ModelTypes["User"],
-	/** An edge for our `AkceItem`. May be used by Relay 1. */
-	akceItemEdge?:ModelTypes["AkceItemsEdge"]
-};
-	/** All input for the `deleteAkceItemByNodeId` mutation. */
-["DeleteAkceItemByNodeIdInput"]: GraphQLTypes["DeleteAkceItemByNodeIdInput"];
-	/** All input for the `deleteAkceItem` mutation. */
-["DeleteAkceItemInput"]: GraphQLTypes["DeleteAkceItemInput"];
+	/** Represents an update to a `User`. Fields that are set will be updated. */
+["UserPatch"]: GraphQLTypes["UserPatch"];
 	/** The output of our delete `Aktuality` mutation. */
 ["DeleteAktualityPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9377,10 +10709,84 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Aktuality`. May be used by Relay 1. */
 	aktualityEdge?:ModelTypes["AktualitiesEdge"]
 };
-	/** All input for the `deleteAktualityByNodeId` mutation. */
-["DeleteAktualityByNodeIdInput"]: GraphQLTypes["DeleteAktualityByNodeIdInput"];
 	/** All input for the `deleteAktuality` mutation. */
 ["DeleteAktualityInput"]: GraphQLTypes["DeleteAktualityInput"];
+	/** The output of our delete `Attachment` mutation. */
+["DeleteAttachmentPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `Attachment` that was deleted by this mutation. */
+	attachment?:ModelTypes["Attachment"],
+	deletedAttachmentNodeId?:string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `User` that is related to this `Attachment`. */
+	userByUploadedBy?:ModelTypes["User"],
+	/** An edge for our `Attachment`. May be used by Relay 1. */
+	attachmentEdge?:ModelTypes["AttachmentsEdge"]
+};
+	/** All input for the `deleteAttachment` mutation. */
+["DeleteAttachmentInput"]: GraphQLTypes["DeleteAttachmentInput"];
+	/** The output of our delete `AttendeeExternal` mutation. */
+["DeleteAttendeeExternalPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `AttendeeExternal` that was deleted by this mutation. */
+	attendeeExternal?:ModelTypes["AttendeeExternal"],
+	deletedAttendeeExternalNodeId?:string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Event` that is related to this `AttendeeExternal`. */
+	event?:ModelTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByManagedBy?:ModelTypes["User"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByConfirmedBy?:ModelTypes["User"],
+	/** An edge for our `AttendeeExternal`. May be used by Relay 1. */
+	attendeeExternalEdge?:ModelTypes["AttendeeExternalsEdge"]
+};
+	/** All input for the `deleteAttendeeExternal` mutation. */
+["DeleteAttendeeExternalInput"]: GraphQLTypes["DeleteAttendeeExternalInput"];
+	/** The output of our delete `AttendeeUser` mutation. */
+["DeleteAttendeeUserPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `AttendeeUser` that was deleted by this mutation. */
+	attendeeUser?:ModelTypes["AttendeeUser"],
+	deletedAttendeeUserNodeId?:string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Event` that is related to this `AttendeeUser`. */
+	event?:ModelTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeUser`. */
+	user?:ModelTypes["User"],
+	/** An edge for our `AttendeeUser`. May be used by Relay 1. */
+	attendeeUserEdge?:ModelTypes["AttendeeUsersEdge"]
+};
+	/** All input for the `deleteAttendeeUser` mutation. */
+["DeleteAttendeeUserInput"]: GraphQLTypes["DeleteAttendeeUserInput"];
+	/** All input for the `deleteAttendeeUserByUserIdAndEventId` mutation. */
+["DeleteAttendeeUserByUserIdAndEventIdInput"]: GraphQLTypes["DeleteAttendeeUserByUserIdAndEventIdInput"];
+	/** The output of our delete `CohortGroup` mutation. */
+["DeleteCohortGroupPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `CohortGroup` that was deleted by this mutation. */
+	cohortGroup?:ModelTypes["CohortGroup"],
+	deletedCohortGroupNodeId?:string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `CohortGroup`. */
+	tenantByTenant?:ModelTypes["Tenant"],
+	/** An edge for our `CohortGroup`. May be used by Relay 1. */
+	cohortGroupEdge?:ModelTypes["CohortGroupsEdge"]
+};
+	/** All input for the `deleteCohortGroup` mutation. */
+["DeleteCohortGroupInput"]: GraphQLTypes["DeleteCohortGroupInput"];
 	/** The output of our delete `Dokumenty` mutation. */
 ["DeleteDokumentyPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9396,10 +10802,38 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Dokumenty`. May be used by Relay 1. */
 	dokumentyEdge?:ModelTypes["DokumentiesEdge"]
 };
-	/** All input for the `deleteDokumentyByNodeId` mutation. */
-["DeleteDokumentyByNodeIdInput"]: GraphQLTypes["DeleteDokumentyByNodeIdInput"];
 	/** All input for the `deleteDokumenty` mutation. */
 ["DeleteDokumentyInput"]: GraphQLTypes["DeleteDokumentyInput"];
+	/** The output of our delete `Event` mutation. */
+["DeleteEventPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `Event` that was deleted by this mutation. */
+	event?:ModelTypes["Event"],
+	deletedEventNodeId?:string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** An edge for our `Event`. May be used by Relay 1. */
+	eventEdge?:ModelTypes["EventsEdge"]
+};
+	/** All input for the `deleteEvent` mutation. */
+["DeleteEventInput"]: GraphQLTypes["DeleteEventInput"];
+	/** The output of our delete `FormResponse` mutation. */
+["DeleteFormResponsePayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `FormResponse` that was deleted by this mutation. */
+	formResponse?:ModelTypes["FormResponse"],
+	deletedFormResponseNodeId?:string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** An edge for our `FormResponse`. May be used by Relay 1. */
+	formResponseEdge?:ModelTypes["FormResponsesEdge"]
+};
+	/** All input for the `deleteFormResponse` mutation. */
+["DeleteFormResponseInput"]: GraphQLTypes["DeleteFormResponseInput"];
 	/** The output of our delete `GalerieDir` mutation. */
 ["DeleteGalerieDirPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9413,8 +10847,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `GalerieDir`. May be used by Relay 1. */
 	galerieDirEdge?:ModelTypes["GalerieDirsEdge"]
 };
-	/** All input for the `deleteGalerieDirByNodeId` mutation. */
-["DeleteGalerieDirByNodeIdInput"]: GraphQLTypes["DeleteGalerieDirByNodeIdInput"];
 	/** All input for the `deleteGalerieDir` mutation. */
 ["DeleteGalerieDirInput"]: GraphQLTypes["DeleteGalerieDirInput"];
 	/** The output of our delete `GalerieFoto` mutation. */
@@ -9434,10 +10866,42 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `GalerieFoto`. May be used by Relay 1. */
 	galerieFotoEdge?:ModelTypes["GalerieFotosEdge"]
 };
-	/** All input for the `deleteGalerieFotoByNodeId` mutation. */
-["DeleteGalerieFotoByNodeIdInput"]: GraphQLTypes["DeleteGalerieFotoByNodeIdInput"];
 	/** All input for the `deleteGalerieFoto` mutation. */
 ["DeleteGalerieFotoInput"]: GraphQLTypes["DeleteGalerieFotoInput"];
+	/** The output of our delete `Location` mutation. */
+["DeleteLocationPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `Location` that was deleted by this mutation. */
+	location?:ModelTypes["Location"],
+	deletedLocationNodeId?:string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** An edge for our `Location`. May be used by Relay 1. */
+	locationEdge?:ModelTypes["LocationsEdge"]
+};
+	/** All input for the `deleteLocation` mutation. */
+["DeleteLocationInput"]: GraphQLTypes["DeleteLocationInput"];
+	/** The output of our delete `LocationAttachment` mutation. */
+["DeleteLocationAttachmentPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `LocationAttachment` that was deleted by this mutation. */
+	locationAttachment?:ModelTypes["LocationAttachment"],
+	deletedLocationAttachmentNodeId?:string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Location` that is related to this `LocationAttachment`. */
+	location?:ModelTypes["Location"],
+	/** Reads a single `Attachment` that is related to this `LocationAttachment`. */
+	attachmentByObjectName?:ModelTypes["Attachment"],
+	/** An edge for our `LocationAttachment`. May be used by Relay 1. */
+	locationAttachmentEdge?:ModelTypes["LocationAttachmentsEdge"]
+};
+	/** All input for the `deleteLocationAttachment` mutation. */
+["DeleteLocationAttachmentInput"]: GraphQLTypes["DeleteLocationAttachmentInput"];
 	/** The output of our delete `Nabidka` mutation. */
 ["DeleteNabidkaPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9453,8 +10917,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Nabidka`. May be used by Relay 1. */
 	nabidkaEdge?:ModelTypes["NabidkasEdge"]
 };
-	/** All input for the `deleteNabidkaByNodeId` mutation. */
-["DeleteNabidkaByNodeIdInput"]: GraphQLTypes["DeleteNabidkaByNodeIdInput"];
 	/** All input for the `deleteNabidka` mutation. */
 ["DeleteNabidkaInput"]: GraphQLTypes["DeleteNabidkaInput"];
 	/** The output of our delete `NabidkaItem` mutation. */
@@ -9474,10 +10936,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `NabidkaItem`. May be used by Relay 1. */
 	nabidkaItemEdge?:ModelTypes["NabidkaItemsEdge"]
 };
-	/** All input for the `deleteNabidkaItemByNodeId` mutation. */
-["DeleteNabidkaItemByNodeIdInput"]: GraphQLTypes["DeleteNabidkaItemByNodeIdInput"];
 	/** All input for the `deleteNabidkaItem` mutation. */
 ["DeleteNabidkaItemInput"]: GraphQLTypes["DeleteNabidkaItemInput"];
+	/** All input for the `deleteNabidkaItemByNiPartnerAndNiIdRodic` mutation. */
+["DeleteNabidkaItemByNiPartnerAndNiIdRodicInput"]: GraphQLTypes["DeleteNabidkaItemByNiPartnerAndNiIdRodicInput"];
 	/** The output of our delete `Parameter` mutation. */
 ["DeleteParameterPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9491,8 +10953,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Parameter`. May be used by Relay 1. */
 	parameterEdge?:ModelTypes["ParametersEdge"]
 };
-	/** All input for the `deleteParameterByNodeId` mutation. */
-["DeleteParameterByNodeIdInput"]: GraphQLTypes["DeleteParameterByNodeIdInput"];
 	/** All input for the `deleteParameter` mutation. */
 ["DeleteParameterInput"]: GraphQLTypes["DeleteParameterInput"];
 	/** The output of our delete `Pary` mutation. */
@@ -9507,11 +10967,11 @@ unchanged and unused. May be used by a client to track mutations. */
 	query?:ModelTypes["Query"],
 	/** Reads a single `User` that is related to this `Pary`. */
 	userByPIdPartner?:ModelTypes["User"],
+	/** Reads a single `User` that is related to this `Pary`. */
+	userByPIdPartnerka?:ModelTypes["User"],
 	/** An edge for our `Pary`. May be used by Relay 1. */
 	paryEdge?:ModelTypes["PariesEdge"]
 };
-	/** All input for the `deleteParyByNodeId` mutation. */
-["DeleteParyByNodeIdInput"]: GraphQLTypes["DeleteParyByNodeIdInput"];
 	/** All input for the `deletePary` mutation. */
 ["DeleteParyInput"]: GraphQLTypes["DeleteParyInput"];
 	/** The output of our delete `ParyNavrh` mutation. */
@@ -9533,8 +10993,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `ParyNavrh`. May be used by Relay 1. */
 	paryNavrhEdge?:ModelTypes["ParyNavrhsEdge"]
 };
-	/** All input for the `deleteParyNavrhByNodeId` mutation. */
-["DeleteParyNavrhByNodeIdInput"]: GraphQLTypes["DeleteParyNavrhByNodeIdInput"];
 	/** All input for the `deleteParyNavrh` mutation. */
 ["DeleteParyNavrhInput"]: GraphQLTypes["DeleteParyNavrhInput"];
 	/** The output of our delete `Permission` mutation. */
@@ -9550,10 +11008,23 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Permission`. May be used by Relay 1. */
 	permissionEdge?:ModelTypes["PermissionsEdge"]
 };
-	/** All input for the `deletePermissionByNodeId` mutation. */
-["DeletePermissionByNodeIdInput"]: GraphQLTypes["DeletePermissionByNodeIdInput"];
 	/** All input for the `deletePermission` mutation. */
 ["DeletePermissionInput"]: GraphQLTypes["DeletePermissionInput"];
+	/** The output of our delete `Person` mutation. */
+["DeletePersonPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `Person` that was deleted by this mutation. */
+	person?:ModelTypes["Person"],
+	deletedPersonNodeId?:string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** An edge for our `Person`. May be used by Relay 1. */
+	personEdge?:ModelTypes["PeopleEdge"]
+};
+	/** All input for the `deletePerson` mutation. */
+["DeletePersonInput"]: GraphQLTypes["DeletePersonInput"];
 	/** The output of our delete `PlatbyCategory` mutation. */
 ["DeletePlatbyCategoryPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9567,8 +11038,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyCategory`. May be used by Relay 1. */
 	platbyCategoryEdge?:ModelTypes["PlatbyCategoriesEdge"]
 };
-	/** All input for the `deletePlatbyCategoryByNodeId` mutation. */
-["DeletePlatbyCategoryByNodeIdInput"]: GraphQLTypes["DeletePlatbyCategoryByNodeIdInput"];
 	/** All input for the `deletePlatbyCategory` mutation. */
 ["DeletePlatbyCategoryInput"]: GraphQLTypes["DeletePlatbyCategoryInput"];
 	/** The output of our delete `PlatbyCategoryGroup` mutation. */
@@ -9588,8 +11057,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyCategoryGroup`. May be used by Relay 1. */
 	platbyCategoryGroupEdge?:ModelTypes["PlatbyCategoryGroupsEdge"]
 };
-	/** All input for the `deletePlatbyCategoryGroupByNodeId` mutation. */
-["DeletePlatbyCategoryGroupByNodeIdInput"]: GraphQLTypes["DeletePlatbyCategoryGroupByNodeIdInput"];
 	/** All input for the `deletePlatbyCategoryGroup` mutation. */
 ["DeletePlatbyCategoryGroupInput"]: GraphQLTypes["DeletePlatbyCategoryGroupInput"];
 	/** The output of our delete `PlatbyGroup` mutation. */
@@ -9605,8 +11072,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyGroup`. May be used by Relay 1. */
 	platbyGroupEdge?:ModelTypes["PlatbyGroupsEdge"]
 };
-	/** All input for the `deletePlatbyGroupByNodeId` mutation. */
-["DeletePlatbyGroupByNodeIdInput"]: GraphQLTypes["DeletePlatbyGroupByNodeIdInput"];
 	/** All input for the `deletePlatbyGroup` mutation. */
 ["DeletePlatbyGroupInput"]: GraphQLTypes["DeletePlatbyGroupInput"];
 	/** The output of our delete `PlatbyGroupSkupina` mutation. */
@@ -9626,8 +11091,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyGroupSkupina`. May be used by Relay 1. */
 	platbyGroupSkupinaEdge?:ModelTypes["PlatbyGroupSkupinasEdge"]
 };
-	/** All input for the `deletePlatbyGroupSkupinaByNodeId` mutation. */
-["DeletePlatbyGroupSkupinaByNodeIdInput"]: GraphQLTypes["DeletePlatbyGroupSkupinaByNodeIdInput"];
 	/** All input for the `deletePlatbyGroupSkupina` mutation. */
 ["DeletePlatbyGroupSkupinaInput"]: GraphQLTypes["DeletePlatbyGroupSkupinaInput"];
 	/** The output of our delete `PlatbyItem` mutation. */
@@ -9649,8 +11112,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyItem`. May be used by Relay 1. */
 	platbyItemEdge?:ModelTypes["PlatbyItemsEdge"]
 };
-	/** All input for the `deletePlatbyItemByNodeId` mutation. */
-["DeletePlatbyItemByNodeIdInput"]: GraphQLTypes["DeletePlatbyItemByNodeIdInput"];
 	/** All input for the `deletePlatbyItem` mutation. */
 ["DeletePlatbyItemInput"]: GraphQLTypes["DeletePlatbyItemInput"];
 	/** The output of our delete `PlatbyRaw` mutation. */
@@ -9666,10 +11127,44 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyRaw`. May be used by Relay 1. */
 	platbyRawEdge?:ModelTypes["PlatbyRawsEdge"]
 };
-	/** All input for the `deletePlatbyRawByNodeId` mutation. */
-["DeletePlatbyRawByNodeIdInput"]: GraphQLTypes["DeletePlatbyRawByNodeIdInput"];
 	/** All input for the `deletePlatbyRaw` mutation. */
 ["DeletePlatbyRawInput"]: GraphQLTypes["DeletePlatbyRawInput"];
+	/** The output of our delete `Room` mutation. */
+["DeleteRoomPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `Room` that was deleted by this mutation. */
+	room?:ModelTypes["Room"],
+	deletedRoomNodeId?:string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Location` that is related to this `Room`. */
+	locationByLocation?:ModelTypes["Location"],
+	/** An edge for our `Room`. May be used by Relay 1. */
+	roomEdge?:ModelTypes["RoomsEdge"]
+};
+	/** All input for the `deleteRoom` mutation. */
+["DeleteRoomInput"]: GraphQLTypes["DeleteRoomInput"];
+	/** The output of our delete `RoomAttachment` mutation. */
+["DeleteRoomAttachmentPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `RoomAttachment` that was deleted by this mutation. */
+	roomAttachment?:ModelTypes["RoomAttachment"],
+	deletedRoomAttachmentNodeId?:string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Room` that is related to this `RoomAttachment`. */
+	room?:ModelTypes["Room"],
+	/** Reads a single `Attachment` that is related to this `RoomAttachment`. */
+	attachmentByObjectName?:ModelTypes["Attachment"],
+	/** An edge for our `RoomAttachment`. May be used by Relay 1. */
+	roomAttachmentEdge?:ModelTypes["RoomAttachmentsEdge"]
+};
+	/** All input for the `deleteRoomAttachment` mutation. */
+["DeleteRoomAttachmentInput"]: GraphQLTypes["DeleteRoomAttachmentInput"];
 	/** The output of our delete `Rozpi` mutation. */
 ["DeleteRozpiPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9685,8 +11180,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Rozpi`. May be used by Relay 1. */
 	rozpiEdge?:ModelTypes["RozpisEdge"]
 };
-	/** All input for the `deleteRozpiByNodeId` mutation. */
-["DeleteRozpiByNodeIdInput"]: GraphQLTypes["DeleteRozpiByNodeIdInput"];
 	/** All input for the `deleteRozpi` mutation. */
 ["DeleteRozpiInput"]: GraphQLTypes["DeleteRozpiInput"];
 	/** The output of our delete `RozpisItem` mutation. */
@@ -9706,29 +11199,8 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `RozpisItem`. May be used by Relay 1. */
 	rozpisItemEdge?:ModelTypes["RozpisItemsEdge"]
 };
-	/** All input for the `deleteRozpisItemByNodeId` mutation. */
-["DeleteRozpisItemByNodeIdInput"]: GraphQLTypes["DeleteRozpisItemByNodeIdInput"];
 	/** All input for the `deleteRozpisItem` mutation. */
 ["DeleteRozpisItemInput"]: GraphQLTypes["DeleteRozpisItemInput"];
-	/** The output of our delete `Session` mutation. */
-["DeleteSessionPayload"]: {
-		/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?:string,
-	/** The `Session` that was deleted by this mutation. */
-	session?:ModelTypes["Session"],
-	deletedSessionNodeId?:string,
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ModelTypes["Query"],
-	/** Reads a single `User` that is related to this `Session`. */
-	userBySsUser?:ModelTypes["User"],
-	/** An edge for our `Session`. May be used by Relay 1. */
-	sessionEdge?:ModelTypes["SessionsEdge"]
-};
-	/** All input for the `deleteSessionByNodeId` mutation. */
-["DeleteSessionByNodeIdInput"]: GraphQLTypes["DeleteSessionByNodeIdInput"];
-	/** All input for the `deleteSession` mutation. */
-["DeleteSessionInput"]: GraphQLTypes["DeleteSessionInput"];
 	/** The output of our delete `Skupiny` mutation. */
 ["DeleteSkupinyPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9739,13 +11211,85 @@ unchanged and unused. May be used by a client to track mutations. */
 	deletedSkupinyNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?:ModelTypes["Query"],
+	/** Reads a single `CohortGroup` that is related to this `Skupiny`. */
+	cohortGroupByCohortGroup?:ModelTypes["CohortGroup"],
 	/** An edge for our `Skupiny`. May be used by Relay 1. */
 	skupinyEdge?:ModelTypes["SkupiniesEdge"]
 };
-	/** All input for the `deleteSkupinyByNodeId` mutation. */
-["DeleteSkupinyByNodeIdInput"]: GraphQLTypes["DeleteSkupinyByNodeIdInput"];
 	/** All input for the `deleteSkupiny` mutation. */
 ["DeleteSkupinyInput"]: GraphQLTypes["DeleteSkupinyInput"];
+	/** The output of our delete `Tenant` mutation. */
+["DeleteTenantPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `Tenant` that was deleted by this mutation. */
+	tenant?:ModelTypes["Tenant"],
+	deletedTenantNodeId?:string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** An edge for our `Tenant`. May be used by Relay 1. */
+	tenantEdge?:ModelTypes["TenantsEdge"]
+};
+	/** All input for the `deleteTenant` mutation. */
+["DeleteTenantInput"]: GraphQLTypes["DeleteTenantInput"];
+	/** The output of our delete `TenantAttachment` mutation. */
+["DeleteTenantAttachmentPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `TenantAttachment` that was deleted by this mutation. */
+	tenantAttachment?:ModelTypes["TenantAttachment"],
+	deletedTenantAttachmentNodeId?:string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantAttachment`. */
+	tenant?:ModelTypes["Tenant"],
+	/** Reads a single `Attachment` that is related to this `TenantAttachment`. */
+	attachmentByObjectName?:ModelTypes["Attachment"],
+	/** An edge for our `TenantAttachment`. May be used by Relay 1. */
+	tenantAttachmentEdge?:ModelTypes["TenantAttachmentsEdge"]
+};
+	/** All input for the `deleteTenantAttachment` mutation. */
+["DeleteTenantAttachmentInput"]: GraphQLTypes["DeleteTenantAttachmentInput"];
+	/** The output of our delete `TenantLocation` mutation. */
+["DeleteTenantLocationPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `TenantLocation` that was deleted by this mutation. */
+	tenantLocation?:ModelTypes["TenantLocation"],
+	deletedTenantLocationNodeId?:string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantLocation`. */
+	tenant?:ModelTypes["Tenant"],
+	/** Reads a single `Location` that is related to this `TenantLocation`. */
+	location?:ModelTypes["Location"],
+	/** An edge for our `TenantLocation`. May be used by Relay 1. */
+	tenantLocationEdge?:ModelTypes["TenantLocationsEdge"]
+};
+	/** All input for the `deleteTenantLocation` mutation. */
+["DeleteTenantLocationInput"]: GraphQLTypes["DeleteTenantLocationInput"];
+	/** The output of our delete `TenantPerson` mutation. */
+["DeleteTenantPersonPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** The `TenantPerson` that was deleted by this mutation. */
+	tenantPerson?:ModelTypes["TenantPerson"],
+	deletedTenantPersonNodeId?:string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantPerson`. */
+	tenant?:ModelTypes["Tenant"],
+	/** Reads a single `Person` that is related to this `TenantPerson`. */
+	person?:ModelTypes["Person"],
+	/** An edge for our `TenantPerson`. May be used by Relay 1. */
+	tenantPersonEdge?:ModelTypes["TenantPeopleEdge"]
+};
+	/** All input for the `deleteTenantPerson` mutation. */
+["DeleteTenantPersonInput"]: GraphQLTypes["DeleteTenantPersonInput"];
 	/** The output of our delete `Upozorneni` mutation. */
 ["DeleteUpozorneniPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9761,8 +11305,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Upozorneni`. May be used by Relay 1. */
 	upozorneniEdge?:ModelTypes["UpozornenisEdge"]
 };
-	/** All input for the `deleteUpozorneniByNodeId` mutation. */
-["DeleteUpozorneniByNodeIdInput"]: GraphQLTypes["DeleteUpozorneniByNodeIdInput"];
 	/** All input for the `deleteUpozorneni` mutation. */
 ["DeleteUpozorneniInput"]: GraphQLTypes["DeleteUpozorneniInput"];
 	/** The output of our delete `UpozorneniSkupiny` mutation. */
@@ -9782,8 +11324,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `UpozorneniSkupiny`. May be used by Relay 1. */
 	upozorneniSkupinyEdge?:ModelTypes["UpozorneniSkupiniesEdge"]
 };
-	/** All input for the `deleteUpozorneniSkupinyByNodeId` mutation. */
-["DeleteUpozorneniSkupinyByNodeIdInput"]: GraphQLTypes["DeleteUpozorneniSkupinyByNodeIdInput"];
 	/** All input for the `deleteUpozorneniSkupiny` mutation. */
 ["DeleteUpozorneniSkupinyInput"]: GraphQLTypes["DeleteUpozorneniSkupinyInput"];
 	/** The output of our delete `User` mutation. */
@@ -9803,78 +11343,102 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `User`. May be used by Relay 1. */
 	userEdge?:ModelTypes["UsersEdge"]
 };
-	/** All input for the `deleteUserByNodeId` mutation. */
-["DeleteUserByNodeIdInput"]: GraphQLTypes["DeleteUserByNodeIdInput"];
 	/** All input for the `deleteUser` mutation. */
 ["DeleteUserInput"]: GraphQLTypes["DeleteUserInput"];
-	/** The output of our delete `UsersSkupiny` mutation. */
-["DeleteUsersSkupinyPayload"]: {
+	/** The output of our `bookLesson` mutation. */
+["BookLessonPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
 unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
-	/** The `UsersSkupiny` that was deleted by this mutation. */
-	usersSkupiny?:ModelTypes["UsersSkupiny"],
-	deletedUsersSkupinyNodeId?:string,
+	rozpisItems?:ModelTypes["RozpisItem"][],
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ModelTypes["Query"],
-	/** An edge for our `UsersSkupiny`. May be used by Relay 1. */
-	usersSkupinyEdge?:ModelTypes["UsersSkupiniesEdge"]
+	query?:ModelTypes["Query"]
 };
-	/** All input for the `deleteUsersSkupinyByNodeId` mutation. */
-["DeleteUsersSkupinyByNodeIdInput"]: GraphQLTypes["DeleteUsersSkupinyByNodeIdInput"];
-	/** All input for the `deleteUsersSkupiny` mutation. */
-["DeleteUsersSkupinyInput"]: GraphQLTypes["DeleteUsersSkupinyInput"];
-	/** The output of our delete `Video` mutation. */
-["DeleteVideoPayload"]: {
+	/** All input for the `bookLesson` mutation. */
+["BookLessonInput"]: GraphQLTypes["BookLessonInput"];
+	/** The output of our `cancelLesson` mutation. */
+["CancelLessonPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
 unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
-	/** The `Video` that was deleted by this mutation. */
-	video?:ModelTypes["Video"],
-	deletedVideoNodeId?:string,
+	rozpisItems?:ModelTypes["RozpisItem"][],
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ModelTypes["Query"],
-	/** An edge for our `Video`. May be used by Relay 1. */
-	videoEdge?:ModelTypes["VideosEdge"]
+	query?:ModelTypes["Query"]
 };
-	/** All input for the `deleteVideoByNodeId` mutation. */
-["DeleteVideoByNodeIdInput"]: GraphQLTypes["DeleteVideoByNodeIdInput"];
-	/** All input for the `deleteVideo` mutation. */
-["DeleteVideoInput"]: GraphQLTypes["DeleteVideoInput"];
-	/** The output of our delete `VideoList` mutation. */
-["DeleteVideoListPayload"]: {
+	/** All input for the `cancelLesson` mutation. */
+["CancelLessonInput"]: GraphQLTypes["CancelLessonInput"];
+	/** The output of our `cancelParticipation` mutation. */
+["CancelParticipationPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
 unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
-	/** The `VideoList` that was deleted by this mutation. */
-	videoList?:ModelTypes["VideoList"],
-	deletedVideoListNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ModelTypes["Query"],
-	/** An edge for our `VideoList`. May be used by Relay 1. */
-	videoListEdge?:ModelTypes["VideoListsEdge"]
+	query?:ModelTypes["Query"]
 };
-	/** All input for the `deleteVideoListByNodeId` mutation. */
-["DeleteVideoListByNodeIdInput"]: GraphQLTypes["DeleteVideoListByNodeIdInput"];
-	/** All input for the `deleteVideoList` mutation. */
-["DeleteVideoListInput"]: GraphQLTypes["DeleteVideoListInput"];
-	/** The output of our delete `VideoSource` mutation. */
-["DeleteVideoSourcePayload"]: {
+	/** All input for the `cancelParticipation` mutation. */
+["CancelParticipationInput"]: GraphQLTypes["CancelParticipationInput"];
+	/** The output of our `changePassword` mutation. */
+["ChangePasswordPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
 unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?:string,
-	/** The `VideoSource` that was deleted by this mutation. */
-	videoSource?:ModelTypes["VideoSource"],
-	deletedVideoSourceNodeId?:string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?:ModelTypes["Query"],
-	/** An edge for our `VideoSource`. May be used by Relay 1. */
-	videoSourceEdge?:ModelTypes["VideoSourcesEdge"]
+	query?:ModelTypes["Query"]
 };
-	/** All input for the `deleteVideoSourceByNodeId` mutation. */
-["DeleteVideoSourceByNodeIdInput"]: GraphQLTypes["DeleteVideoSourceByNodeIdInput"];
-	/** All input for the `deleteVideoSource` mutation. */
-["DeleteVideoSourceInput"]: GraphQLTypes["DeleteVideoSourceInput"];
+	/** All input for the `changePassword` mutation. */
+["ChangePasswordInput"]: GraphQLTypes["ChangePasswordInput"];
+	/** The output of our `confirmUser` mutation. */
+["ConfirmUserPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"]
+};
+	/** All input for the `confirmUser` mutation. */
+["ConfirmUserInput"]: GraphQLTypes["ConfirmUserInput"];
+	/** The output of our `createCouple` mutation. */
+["CreateCouplePayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	paries?:ModelTypes["Pary"][],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"]
+};
+	/** All input for the `createCouple` mutation. */
+["CreateCoupleInput"]: GraphQLTypes["CreateCoupleInput"];
+	/** The output of our `createParticipation` mutation. */
+["CreateParticipationPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"]
+};
+	/** All input for the `createParticipation` mutation. */
+["CreateParticipationInput"]: GraphQLTypes["CreateParticipationInput"];
+	/** The output of our `createParticipationExternal` mutation. */
+["CreateParticipationExternalPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"]
+};
+	/** All input for the `createParticipationExternal` mutation. */
+["CreateParticipationExternalInput"]: GraphQLTypes["CreateParticipationExternalInput"];
+	/** The output of our `fixUnpairedCouples` mutation. */
+["FixUnpairedCouplesPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	paries?:ModelTypes["Pary"][],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"]
+};
+	/** All input for the `fixUnpairedCouples` mutation. */
+["FixUnpairedCouplesInput"]: GraphQLTypes["FixUnpairedCouplesInput"];
 	/** The output of our `login` mutation. */
 ["LoginPayload"]: {
 		/** The exact same `clientMutationId` that was provided in the mutation input,
@@ -9912,12 +11476,62 @@ unchanged and unused. May be used by a client to track mutations. */
 };
 	/** All input for the `prospectFormDancer` mutation. */
 ["ProspectFormDancerInput"]: GraphQLTypes["ProspectFormDancerInput"];
+	["CrmCohort"]: GraphQLTypes["CrmCohort"];
 	/** An input for mutations affecting `ProspectDatum` */
 ["ProspectDatumInput"]: GraphQLTypes["ProspectDatumInput"];
-	["Upload"]: {
-		uploadUrl:string
+	/** The output of our `reservationSetDesiredLessons` mutation. */
+["ReservationSetDesiredLessonsPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	reservation?:ModelTypes["Nabidka"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"],
+	/** Reads a single `User` that is related to this `Nabidka`. */
+	userByNTrener?:ModelTypes["User"],
+	/** An edge for our `Nabidka`. May be used by Relay 1. */
+	nabidkaEdge?:ModelTypes["NabidkasEdge"]
 };
-	["UploadInput"]: GraphQLTypes["UploadInput"]
+	/** All input for the `reservationSetDesiredLessons` mutation. */
+["ReservationSetDesiredLessonsInput"]: GraphQLTypes["ReservationSetDesiredLessonsInput"];
+	/** The output of our `resetPassword` mutation. */
+["ResetPasswordPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"]
+};
+	/** All input for the `resetPassword` mutation. */
+["ResetPasswordInput"]: GraphQLTypes["ResetPasswordInput"];
+	/** The output of our `submitForm` mutation. */
+["SubmitFormPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"]
+};
+	/** All input for the `submitForm` mutation. */
+["SubmitFormInput"]: GraphQLTypes["SubmitFormInput"];
+	/** The output of our `verifyFunction` mutation. */
+["VerifyFunctionPayload"]: {
+		/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?:string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?:ModelTypes["Query"]
+};
+	/** All input for the `verifyFunction` mutation. */
+["VerifyFunctionInput"]: GraphQLTypes["VerifyFunctionInput"];
+	/** A builtin object identifier type for a function name */
+["RegProc"]:any;
+	/** A builtin object identifier type for a relation name */
+["RegClass"]:any;
+	["UploadFilePayload"]: {
+		uploadUrl:string,
+	objectName:string
+}
     }
 
 export type GraphQLTypes = {
@@ -9927,24 +11541,34 @@ export type GraphQLTypes = {
 	/** Exposes the root query type nested one level down. This is helpful for Relay 1
 which can only query top level fields if they are in a particular form. */
 	query: GraphQLTypes["Query"],
-	/** The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`. */
-	nodeId: string,
-	/** Fetches an object given its globally unique `ID`. */
-	node?: GraphQLTypes["Node"],
 	/** Reads and enables pagination through a set of `Akce`. */
 	akces?: GraphQLTypes["AkcesConnection"],
 	/** Reads and enables pagination through a set of `AkceItem`. */
 	akceItems?: GraphQLTypes["AkceItemsConnection"],
 	/** Reads and enables pagination through a set of `Aktuality`. */
 	aktualities?: GraphQLTypes["AktualitiesConnection"],
+	/** Reads and enables pagination through a set of `Attachment`. */
+	attachments?: GraphQLTypes["AttachmentsConnection"],
+	/** Reads and enables pagination through a set of `AttendeeExternal`. */
+	attendeeExternals?: GraphQLTypes["AttendeeExternalsConnection"],
+	/** Reads and enables pagination through a set of `AttendeeUser`. */
+	attendeeUsers?: GraphQLTypes["AttendeeUsersConnection"],
+	/** Reads and enables pagination through a set of `CohortGroup`. */
+	cohortGroups?: GraphQLTypes["CohortGroupsConnection"],
 	/** Reads and enables pagination through a set of `Dokumenty`. */
 	dokumenties?: GraphQLTypes["DokumentiesConnection"],
+	/** Reads and enables pagination through a set of `Event`. */
+	events?: GraphQLTypes["EventsConnection"],
+	/** Reads and enables pagination through a set of `FormResponse`. */
+	formResponses?: GraphQLTypes["FormResponsesConnection"],
 	/** Reads and enables pagination through a set of `GalerieDir`. */
 	galerieDirs?: GraphQLTypes["GalerieDirsConnection"],
 	/** Reads and enables pagination through a set of `GalerieFoto`. */
 	galerieFotos?: GraphQLTypes["GalerieFotosConnection"],
-	/** Reads and enables pagination through a set of `Member`. */
-	members?: GraphQLTypes["MembersConnection"],
+	/** Reads and enables pagination through a set of `Location`. */
+	locations?: GraphQLTypes["LocationsConnection"],
+	/** Reads and enables pagination through a set of `LocationAttachment`. */
+	locationAttachments?: GraphQLTypes["LocationAttachmentsConnection"],
 	/** Reads and enables pagination through a set of `Nabidka`. */
 	nabidkas?: GraphQLTypes["NabidkasConnection"],
 	/** Reads and enables pagination through a set of `NabidkaItem`. */
@@ -9961,6 +11585,8 @@ which can only query top level fields if they are in a particular form. */
 	paryNavrhs?: GraphQLTypes["ParyNavrhsConnection"],
 	/** Reads and enables pagination through a set of `Permission`. */
 	permissions?: GraphQLTypes["PermissionsConnection"],
+	/** Reads and enables pagination through a set of `Person`. */
+	people?: GraphQLTypes["PeopleConnection"],
 	/** Reads and enables pagination through a set of `PlatbyCategory`. */
 	platbyCategories?: GraphQLTypes["PlatbyCategoriesConnection"],
 	/** Reads and enables pagination through a set of `PlatbyCategoryGroup`. */
@@ -9973,6 +11599,10 @@ which can only query top level fields if they are in a particular form. */
 	platbyItems?: GraphQLTypes["PlatbyItemsConnection"],
 	/** Reads and enables pagination through a set of `PlatbyRaw`. */
 	platbyRaws?: GraphQLTypes["PlatbyRawsConnection"],
+	/** Reads and enables pagination through a set of `Room`. */
+	rooms?: GraphQLTypes["RoomsConnection"],
+	/** Reads and enables pagination through a set of `RoomAttachment`. */
+	roomAttachments?: GraphQLTypes["RoomAttachmentsConnection"],
 	/** Reads and enables pagination through a set of `Rozpi`. */
 	rozpis?: GraphQLTypes["RozpisConnection"],
 	/** Reads and enables pagination through a set of `RozpisItem`. */
@@ -9981,28 +11611,36 @@ which can only query top level fields if they are in a particular form. */
 	sessions?: GraphQLTypes["SessionsConnection"],
 	/** Reads and enables pagination through a set of `Skupiny`. */
 	skupinies?: GraphQLTypes["SkupiniesConnection"],
+	/** Reads and enables pagination through a set of `Tenant`. */
+	tenants?: GraphQLTypes["TenantsConnection"],
+	/** Reads and enables pagination through a set of `TenantAttachment`. */
+	tenantAttachments?: GraphQLTypes["TenantAttachmentsConnection"],
+	/** Reads and enables pagination through a set of `TenantLocation`. */
+	tenantLocations?: GraphQLTypes["TenantLocationsConnection"],
+	/** Reads and enables pagination through a set of `TenantPerson`. */
+	tenantPeople?: GraphQLTypes["TenantPeopleConnection"],
 	/** Reads and enables pagination through a set of `Upozorneni`. */
 	upozornenis?: GraphQLTypes["UpozornenisConnection"],
 	/** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
 	upozorneniSkupinies?: GraphQLTypes["UpozorneniSkupiniesConnection"],
 	/** Reads and enables pagination through a set of `User`. */
 	users?: GraphQLTypes["UsersConnection"],
-	/** Reads and enables pagination through a set of `UsersSkupiny`. */
-	usersSkupinies?: GraphQLTypes["UsersSkupiniesConnection"],
-	/** Reads and enables pagination through a set of `Video`. */
-	videos?: GraphQLTypes["VideosConnection"],
-	/** Reads and enables pagination through a set of `VideoList`. */
-	videoLists?: GraphQLTypes["VideoListsConnection"],
-	/** Reads and enables pagination through a set of `VideoSource`. */
-	videoSources?: GraphQLTypes["VideoSourcesConnection"],
-	akce?: GraphQLTypes["Akce"],
-	akceItem?: GraphQLTypes["AkceItem"],
 	aktuality?: GraphQLTypes["Aktuality"],
+	attachment?: GraphQLTypes["Attachment"],
+	attendeeExternal?: GraphQLTypes["AttendeeExternal"],
+	attendeeUser?: GraphQLTypes["AttendeeUser"],
+	attendeeUserByUserIdAndEventId?: GraphQLTypes["AttendeeUser"],
+	cohortGroup?: GraphQLTypes["CohortGroup"],
 	dokumenty?: GraphQLTypes["Dokumenty"],
+	event?: GraphQLTypes["Event"],
+	formResponse?: GraphQLTypes["FormResponse"],
 	galerieDir?: GraphQLTypes["GalerieDir"],
 	galerieFoto?: GraphQLTypes["GalerieFoto"],
+	location?: GraphQLTypes["Location"],
+	locationAttachment?: GraphQLTypes["LocationAttachment"],
 	nabidka?: GraphQLTypes["Nabidka"],
 	nabidkaItem?: GraphQLTypes["NabidkaItem"],
+	nabidkaItemByNiPartnerAndNiIdRodic?: GraphQLTypes["NabidkaItem"],
 	page?: GraphQLTypes["Page"],
 	pageByUrl?: GraphQLTypes["Page"],
 	pageRevision?: GraphQLTypes["PageRevision"],
@@ -10010,136 +11648,49 @@ which can only query top level fields if they are in a particular form. */
 	pary?: GraphQLTypes["Pary"],
 	paryNavrh?: GraphQLTypes["ParyNavrh"],
 	permission?: GraphQLTypes["Permission"],
+	person?: GraphQLTypes["Person"],
 	platbyCategory?: GraphQLTypes["PlatbyCategory"],
 	platbyCategoryGroup?: GraphQLTypes["PlatbyCategoryGroup"],
 	platbyGroup?: GraphQLTypes["PlatbyGroup"],
 	platbyGroupSkupina?: GraphQLTypes["PlatbyGroupSkupina"],
 	platbyItem?: GraphQLTypes["PlatbyItem"],
 	platbyRaw?: GraphQLTypes["PlatbyRaw"],
+	room?: GraphQLTypes["Room"],
+	roomAttachment?: GraphQLTypes["RoomAttachment"],
 	rozpi?: GraphQLTypes["Rozpi"],
 	rozpisItem?: GraphQLTypes["RozpisItem"],
 	session?: GraphQLTypes["Session"],
 	skupiny?: GraphQLTypes["Skupiny"],
+	tenant?: GraphQLTypes["Tenant"],
+	tenantAttachment?: GraphQLTypes["TenantAttachment"],
+	tenantLocation?: GraphQLTypes["TenantLocation"],
+	tenantPerson?: GraphQLTypes["TenantPerson"],
 	upozorneni?: GraphQLTypes["Upozorneni"],
 	upozorneniSkupiny?: GraphQLTypes["UpozorneniSkupiny"],
 	user?: GraphQLTypes["User"],
-	usersSkupiny?: GraphQLTypes["UsersSkupiny"],
-	video?: GraphQLTypes["Video"],
-	videoList?: GraphQLTypes["VideoList"],
-	videoSource?: GraphQLTypes["VideoSource"],
-	activeProspects?: GraphQLTypes["ActiveProspectsConnection"],
-	/** Reads and enables pagination through a set of `Member`. */
-	cohortMembers?: GraphQLTypes["MembersConnection"],
+	/** Reads and enables pagination through a set of `Pary`. */
+	activeCouples?: GraphQLTypes["PariesConnection"],
 	currentCoupleIds?: GraphQLTypes["CurrentCoupleIdsConnection"],
+	/** Reads and enables pagination through a set of `Permission`. */
+	currentPermissions?: GraphQLTypes["PermissionsConnection"],
 	currentSessionId?: string,
+	currentTenantId?: GraphQLTypes["BigInt"],
 	currentUserId?: GraphQLTypes["BigInt"],
+	getCurrentCouple?: GraphQLTypes["Pary"],
+	getCurrentTenant?: GraphQLTypes["Tenant"],
 	getCurrentUser?: GraphQLTypes["User"],
+	/** Reads and enables pagination through a set of `Upozorneni`. */
+	myAnnouncements?: GraphQLTypes["UpozornenisConnection"],
+	/** Reads and enables pagination through a set of `RozpisItem`. */
+	myLessons?: GraphQLTypes["RozpisItemsConnection"],
 	/** Reads and enables pagination through a set of `Nabidka`. */
 	reservationsForRange?: GraphQLTypes["NabidkasConnection"],
 	/** Reads and enables pagination through a set of `Rozpi`. */
 	schedulesForRange?: GraphQLTypes["RozpisConnection"],
 	/** Reads and enables pagination through a set of `Video`. */
 	titleVideos?: GraphQLTypes["VideosConnection"],
-	/** Reads a single `Akce` using its globally unique `ID`. */
-	akceByNodeId?: GraphQLTypes["Akce"],
-	/** Reads a single `AkceItem` using its globally unique `ID`. */
-	akceItemByNodeId?: GraphQLTypes["AkceItem"],
-	/** Reads a single `Aktuality` using its globally unique `ID`. */
-	aktualityByNodeId?: GraphQLTypes["Aktuality"],
-	/** Reads a single `Dokumenty` using its globally unique `ID`. */
-	dokumentyByNodeId?: GraphQLTypes["Dokumenty"],
-	/** Reads a single `GalerieDir` using its globally unique `ID`. */
-	galerieDirByNodeId?: GraphQLTypes["GalerieDir"],
-	/** Reads a single `GalerieFoto` using its globally unique `ID`. */
-	galerieFotoByNodeId?: GraphQLTypes["GalerieFoto"],
-	/** Reads a single `Nabidka` using its globally unique `ID`. */
-	nabidkaByNodeId?: GraphQLTypes["Nabidka"],
-	/** Reads a single `NabidkaItem` using its globally unique `ID`. */
-	nabidkaItemByNodeId?: GraphQLTypes["NabidkaItem"],
-	/** Reads a single `Page` using its globally unique `ID`. */
-	pageByNodeId?: GraphQLTypes["Page"],
-	/** Reads a single `PageRevision` using its globally unique `ID`. */
-	pageRevisionByNodeId?: GraphQLTypes["PageRevision"],
-	/** Reads a single `Parameter` using its globally unique `ID`. */
-	parameterByNodeId?: GraphQLTypes["Parameter"],
-	/** Reads a single `Pary` using its globally unique `ID`. */
-	paryByNodeId?: GraphQLTypes["Pary"],
-	/** Reads a single `ParyNavrh` using its globally unique `ID`. */
-	paryNavrhByNodeId?: GraphQLTypes["ParyNavrh"],
-	/** Reads a single `Permission` using its globally unique `ID`. */
-	permissionByNodeId?: GraphQLTypes["Permission"],
-	/** Reads a single `PlatbyCategory` using its globally unique `ID`. */
-	platbyCategoryByNodeId?: GraphQLTypes["PlatbyCategory"],
-	/** Reads a single `PlatbyCategoryGroup` using its globally unique `ID`. */
-	platbyCategoryGroupByNodeId?: GraphQLTypes["PlatbyCategoryGroup"],
-	/** Reads a single `PlatbyGroup` using its globally unique `ID`. */
-	platbyGroupByNodeId?: GraphQLTypes["PlatbyGroup"],
-	/** Reads a single `PlatbyGroupSkupina` using its globally unique `ID`. */
-	platbyGroupSkupinaByNodeId?: GraphQLTypes["PlatbyGroupSkupina"],
-	/** Reads a single `PlatbyItem` using its globally unique `ID`. */
-	platbyItemByNodeId?: GraphQLTypes["PlatbyItem"],
-	/** Reads a single `PlatbyRaw` using its globally unique `ID`. */
-	platbyRawByNodeId?: GraphQLTypes["PlatbyRaw"],
-	/** Reads a single `Rozpi` using its globally unique `ID`. */
-	rozpiByNodeId?: GraphQLTypes["Rozpi"],
-	/** Reads a single `RozpisItem` using its globally unique `ID`. */
-	rozpisItemByNodeId?: GraphQLTypes["RozpisItem"],
-	/** Reads a single `Session` using its globally unique `ID`. */
-	sessionByNodeId?: GraphQLTypes["Session"],
-	/** Reads a single `Skupiny` using its globally unique `ID`. */
-	skupinyByNodeId?: GraphQLTypes["Skupiny"],
-	/** Reads a single `Upozorneni` using its globally unique `ID`. */
-	upozorneniByNodeId?: GraphQLTypes["Upozorneni"],
-	/** Reads a single `UpozorneniSkupiny` using its globally unique `ID`. */
-	upozorneniSkupinyByNodeId?: GraphQLTypes["UpozorneniSkupiny"],
-	/** Reads a single `User` using its globally unique `ID`. */
-	userByNodeId?: GraphQLTypes["User"],
-	/** Reads a single `UsersSkupiny` using its globally unique `ID`. */
-	usersSkupinyByNodeId?: GraphQLTypes["UsersSkupiny"],
-	/** Reads a single `Video` using its globally unique `ID`. */
-	videoByNodeId?: GraphQLTypes["Video"],
-	/** Reads a single `VideoList` using its globally unique `ID`. */
-	videoListByNodeId?: GraphQLTypes["VideoList"],
-	/** Reads a single `VideoSource` using its globally unique `ID`. */
-	videoSourceByNodeId?: GraphQLTypes["VideoSource"]
-};
-	/** An object with a globally unique `ID`. */
-["Node"]: {
-	__typename:"Query" | "Akce" | "AkceItem" | "User" | "Permission" | "Skupiny" | "PlatbyGroupSkupina" | "PlatbyGroup" | "PlatbyCategoryGroup" | "PlatbyCategory" | "PlatbyItem" | "PlatbyRaw" | "UpozorneniSkupiny" | "Upozorneni" | "Aktuality" | "GalerieFoto" | "GalerieDir" | "Nabidka" | "NabidkaItem" | "Pary" | "RozpisItem" | "Rozpi" | "Session" | "Dokumenty" | "ParyNavrh" | "Page" | "PageRevision" | "Parameter" | "UsersSkupiny" | "Video" | "VideoList" | "VideoSource",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string
-	['...on Query']: '__union' & GraphQLTypes["Query"];
-	['...on Akce']: '__union' & GraphQLTypes["Akce"];
-	['...on AkceItem']: '__union' & GraphQLTypes["AkceItem"];
-	['...on User']: '__union' & GraphQLTypes["User"];
-	['...on Permission']: '__union' & GraphQLTypes["Permission"];
-	['...on Skupiny']: '__union' & GraphQLTypes["Skupiny"];
-	['...on PlatbyGroupSkupina']: '__union' & GraphQLTypes["PlatbyGroupSkupina"];
-	['...on PlatbyGroup']: '__union' & GraphQLTypes["PlatbyGroup"];
-	['...on PlatbyCategoryGroup']: '__union' & GraphQLTypes["PlatbyCategoryGroup"];
-	['...on PlatbyCategory']: '__union' & GraphQLTypes["PlatbyCategory"];
-	['...on PlatbyItem']: '__union' & GraphQLTypes["PlatbyItem"];
-	['...on PlatbyRaw']: '__union' & GraphQLTypes["PlatbyRaw"];
-	['...on UpozorneniSkupiny']: '__union' & GraphQLTypes["UpozorneniSkupiny"];
-	['...on Upozorneni']: '__union' & GraphQLTypes["Upozorneni"];
-	['...on Aktuality']: '__union' & GraphQLTypes["Aktuality"];
-	['...on GalerieFoto']: '__union' & GraphQLTypes["GalerieFoto"];
-	['...on GalerieDir']: '__union' & GraphQLTypes["GalerieDir"];
-	['...on Nabidka']: '__union' & GraphQLTypes["Nabidka"];
-	['...on NabidkaItem']: '__union' & GraphQLTypes["NabidkaItem"];
-	['...on Pary']: '__union' & GraphQLTypes["Pary"];
-	['...on RozpisItem']: '__union' & GraphQLTypes["RozpisItem"];
-	['...on Rozpi']: '__union' & GraphQLTypes["Rozpi"];
-	['...on Session']: '__union' & GraphQLTypes["Session"];
-	['...on Dokumenty']: '__union' & GraphQLTypes["Dokumenty"];
-	['...on ParyNavrh']: '__union' & GraphQLTypes["ParyNavrh"];
-	['...on Page']: '__union' & GraphQLTypes["Page"];
-	['...on PageRevision']: '__union' & GraphQLTypes["PageRevision"];
-	['...on Parameter']: '__union' & GraphQLTypes["Parameter"];
-	['...on UsersSkupiny']: '__union' & GraphQLTypes["UsersSkupiny"];
-	['...on Video']: '__union' & GraphQLTypes["Video"];
-	['...on VideoList']: '__union' & GraphQLTypes["VideoList"];
-	['...on VideoSource']: '__union' & GraphQLTypes["VideoSource"];
+	/** Reads and enables pagination through a set of `User`. */
+	trainers?: GraphQLTypes["UsersConnection"]
 };
 	/** A connection to a list of `Akce` values. */
 ["AkcesConnection"]: {
@@ -10155,19 +11706,20 @@ which can only query top level fields if they are in a particular form. */
 };
 	["Akce"]: {
 	__typename: "Akce",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
-	aId: GraphQLTypes["BigInt"],
-	aJmeno: string,
-	aKde: string,
-	aInfo: string,
-	aOd: GraphQLTypes["Date"],
-	aDo: GraphQLTypes["Date"],
-	aKapacita: GraphQLTypes["BigInt"],
-	aDokumenty: string,
+	aId?: GraphQLTypes["BigInt"],
+	aJmeno?: string,
+	aKde?: string,
+	aInfo?: string,
+	aOd?: GraphQLTypes["Date"],
+	aDo?: GraphQLTypes["Date"],
+	aKapacita?: GraphQLTypes["BigInt"],
+	aDokumenty?: string,
 	aTimestamp?: GraphQLTypes["Datetime"],
-	aLock: boolean,
-	aVisible: boolean,
+	aLock?: boolean,
+	aVisible?: boolean,
+	summary?: string,
+	isPublic?: boolean,
+	enableNotes?: boolean,
 	/** Reads and enables pagination through a set of `AkceItem`. */
 	akceItemsByAiIdRodic: GraphQLTypes["AkceItemsConnection"]
 };
@@ -10194,12 +11746,11 @@ strings and not numbers. */
 };
 	["AkceItem"]: {
 	__typename: "AkceItem",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
-	aiId: GraphQLTypes["BigInt"],
-	aiIdRodic: GraphQLTypes["BigInt"],
-	aiUser: GraphQLTypes["BigInt"],
-	aiRokNarozeni: number,
+	aiId?: GraphQLTypes["BigInt"],
+	aiIdRodic?: GraphQLTypes["BigInt"],
+	aiUser?: GraphQLTypes["BigInt"],
+	aiRokNarozeni?: number,
+	notes?: string,
 	/** Reads a single `Akce` that is related to this `AkceItem`. */
 	akceByAiIdRodic?: GraphQLTypes["Akce"],
 	/** Reads a single `User` that is related to this `AkceItem`. */
@@ -10207,8 +11758,6 @@ strings and not numbers. */
 };
 	["User"]: {
 	__typename: "User",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
 	uId: GraphQLTypes["BigInt"],
 	uLogin: string,
 	uPass: string,
@@ -10241,26 +11790,24 @@ strings and not numbers. */
 	uCreatedAt: GraphQLTypes["Datetime"],
 	uTeacher: boolean,
 	uGdprSignedAt?: GraphQLTypes["Datetime"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId: GraphQLTypes["BigInt"],
 	/** Reads a single `Permission` that is related to this `User`. */
 	permissionByUGroup?: GraphQLTypes["Permission"],
 	/** Reads a single `Skupiny` that is related to this `User`. */
 	skupinyByUSkupina?: GraphQLTypes["Skupiny"],
+	/** Reads and enables pagination through a set of `AttendeeUser`. */
+	attendeeUsers: GraphQLTypes["AttendeeUsersConnection"],
 	/** Reads and enables pagination through a set of `Aktuality`. */
 	aktualitiesByAtKdo: GraphQLTypes["AktualitiesConnection"],
-	/** Reads and enables pagination through a set of `Nabidka`. */
-	nabidkasByNTrener: GraphQLTypes["NabidkasConnection"],
-	/** Reads and enables pagination through a set of `Rozpi`. */
-	rozpisByRTrener: GraphQLTypes["RozpisConnection"],
-	/** Reads and enables pagination through a set of `Session`. */
-	sessionsBySsUser: GraphQLTypes["SessionsConnection"],
-	/** Reads and enables pagination through a set of `AkceItem`. */
-	akceItemsByAiUser: GraphQLTypes["AkceItemsConnection"],
 	/** Reads and enables pagination through a set of `Dokumenty`. */
 	dokumentiesByDKdo: GraphQLTypes["DokumentiesConnection"],
 	/** Reads and enables pagination through a set of `GalerieFoto`. */
 	galerieFotosByGfKdo: GraphQLTypes["GalerieFotosConnection"],
 	/** Reads and enables pagination through a set of `PlatbyItem`. */
 	platbyItemsByPiIdUser: GraphQLTypes["PlatbyItemsConnection"],
+	/** Reads and enables pagination through a set of `Nabidka`. */
+	nabidkasByNTrener: GraphQLTypes["NabidkasConnection"],
 	/** Reads and enables pagination through a set of `Pary`. */
 	pariesByPIdPartner: GraphQLTypes["PariesConnection"],
 	/** Reads and enables pagination through a set of `ParyNavrh`. */
@@ -10269,13 +11816,30 @@ strings and not numbers. */
 	paryNavrhsByPnPartner: GraphQLTypes["ParyNavrhsConnection"],
 	/** Reads and enables pagination through a set of `ParyNavrh`. */
 	paryNavrhsByPnPartnerka: GraphQLTypes["ParyNavrhsConnection"],
+	/** Reads and enables pagination through a set of `Rozpi`. */
+	rozpisByRTrener: GraphQLTypes["RozpisConnection"],
+	/** Reads and enables pagination through a set of `Session`. */
+	sessionsBySsUser: GraphQLTypes["SessionsConnection"],
 	/** Reads and enables pagination through a set of `Upozorneni`. */
-	upozornenisByUpKdo: GraphQLTypes["UpozornenisConnection"]
+	upozornenisByUpKdo: GraphQLTypes["UpozornenisConnection"],
+	/** Reads and enables pagination through a set of `Attachment`. */
+	attachmentsByUploadedBy: GraphQLTypes["AttachmentsConnection"],
+	/** Reads and enables pagination through a set of `AttendeeExternal`. */
+	attendeeExternalsByManagedBy: GraphQLTypes["AttendeeExternalsConnection"],
+	/** Reads and enables pagination through a set of `AttendeeExternal`. */
+	attendeeExternalsByConfirmedBy: GraphQLTypes["AttendeeExternalsConnection"],
+	/** Reads and enables pagination through a set of `AkceItem`. */
+	akceItemsByAiUser: GraphQLTypes["AkceItemsConnection"],
+	/** Reads and enables pagination through a set of `Pary`. */
+	pariesByPIdPartnerka: GraphQLTypes["PariesConnection"],
+	dateOfNewestPayment?: GraphQLTypes["Date"],
+	dateOfOldestPayment?: GraphQLTypes["Date"],
+	fullName?: string,
+	hasValidPayment?: boolean,
+	inPublicCohort?: boolean
 };
 	["Permission"]: {
 	__typename: "Permission",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
 	peId: GraphQLTypes["BigInt"],
 	peName: string,
 	peDescription: string,
@@ -10296,6 +11860,7 @@ strings and not numbers. */
 	peSkupiny: number,
 	peUsers: number,
 	peMain: number,
+	id?: GraphQLTypes["BigInt"],
 	/** Reads and enables pagination through a set of `User`. */
 	usersByUGroup: GraphQLTypes["UsersConnection"]
 };
@@ -10341,71 +11906,27 @@ strings and not numbers. */
 	uId?: GraphQLTypes["BigInt"],
 	/** Checks for equality with the object’s `uLogin` field. */
 	uLogin?: string,
-	/** Checks for equality with the object’s `uPass` field. */
-	uPass?: string,
 	/** Checks for equality with the object’s `uJmeno` field. */
 	uJmeno?: string,
 	/** Checks for equality with the object’s `uPrijmeni` field. */
 	uPrijmeni?: string,
-	/** Checks for equality with the object’s `uPohlavi` field. */
-	uPohlavi?: string,
-	/** Checks for equality with the object’s `uEmail` field. */
-	uEmail?: string,
-	/** Checks for equality with the object’s `uTelefon` field. */
-	uTelefon?: string,
 	/** Checks for equality with the object’s `uNarozeni` field. */
 	uNarozeni?: GraphQLTypes["Date"],
-	/** Checks for equality with the object’s `uRodneCislo` field. */
-	uRodneCislo?: string,
-	/** Checks for equality with the object’s `uPoznamky` field. */
-	uPoznamky?: string,
-	/** Checks for equality with the object’s `uTimestamp` field. */
-	uTimestamp?: GraphQLTypes["Datetime"],
-	/** Checks for equality with the object’s `uLevel` field. */
-	uLevel?: number,
 	/** Checks for equality with the object’s `uGroup` field. */
 	uGroup?: GraphQLTypes["BigInt"],
 	/** Checks for equality with the object’s `uSkupina` field. */
 	uSkupina?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `uDancer` field. */
-	uDancer?: boolean,
 	/** Checks for equality with the object’s `uBan` field. */
 	uBan?: boolean,
-	/** Checks for equality with the object’s `uLock` field. */
-	uLock?: boolean,
 	/** Checks for equality with the object’s `uConfirmed` field. */
 	uConfirmed?: boolean,
 	/** Checks for equality with the object’s `uSystem` field. */
 	uSystem?: boolean,
-	/** Checks for equality with the object’s `uStreet` field. */
-	uStreet?: string,
-	/** Checks for equality with the object’s `uConscriptionNumber` field. */
-	uConscriptionNumber?: string,
-	/** Checks for equality with the object’s `uOrientationNumber` field. */
-	uOrientationNumber?: string,
-	/** Checks for equality with the object’s `uDistrict` field. */
-	uDistrict?: string,
-	/** Checks for equality with the object’s `uCity` field. */
-	uCity?: string,
-	/** Checks for equality with the object’s `uPostalCode` field. */
-	uPostalCode?: string,
-	/** Checks for equality with the object’s `uNationality` field. */
-	uNationality?: string,
-	/** Checks for equality with the object’s `uMemberSince` field. */
-	uMemberSince?: GraphQLTypes["Datetime"],
-	/** Checks for equality with the object’s `uMemberUntil` field. */
-	uMemberUntil?: GraphQLTypes["Datetime"],
-	/** Checks for equality with the object’s `uCreatedAt` field. */
-	uCreatedAt?: GraphQLTypes["Datetime"],
-	/** Checks for equality with the object’s `uTeacher` field. */
-	uTeacher?: boolean,
-	/** Checks for equality with the object’s `uGdprSignedAt` field. */
-	uGdprSignedAt?: GraphQLTypes["Datetime"]
+	/** Checks for equality with the object’s `inPublicCohort` field. */
+	inPublicCohort?: boolean
 };
 	["Skupiny"]: {
 	__typename: "Skupiny",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
 	sId: GraphQLTypes["BigInt"],
 	sName: string,
 	sDescription: string,
@@ -10413,12 +11934,391 @@ strings and not numbers. */
 	sColorText: string,
 	sLocation: string,
 	sVisible: boolean,
+	ordering: number,
+	internalInfo: string,
+	cohortGroup?: GraphQLTypes["BigInt"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId: GraphQLTypes["BigInt"],
+	/** Reads a single `CohortGroup` that is related to this `Skupiny`. */
+	cohortGroupByCohortGroup?: GraphQLTypes["CohortGroup"],
 	/** Reads and enables pagination through a set of `User`. */
 	usersByUSkupina: GraphQLTypes["UsersConnection"],
 	/** Reads and enables pagination through a set of `PlatbyGroupSkupina`. */
 	platbyGroupSkupinasByPgsIdSkupina: GraphQLTypes["PlatbyGroupSkupinasConnection"],
 	/** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
 	upozorneniSkupiniesByUpsIdSkupina: GraphQLTypes["UpozorneniSkupiniesConnection"]
+};
+	["CohortGroup"]: {
+	__typename: "CohortGroup",
+	id: GraphQLTypes["BigInt"],
+	name: string,
+	description: string,
+	ordering: number,
+	isPublic: boolean,
+	tenant?: GraphQLTypes["BigInt"],
+	tenantId: GraphQLTypes["BigInt"],
+	/** Reads a single `Tenant` that is related to this `CohortGroup`. */
+	tenantByTenant?: GraphQLTypes["Tenant"],
+	/** Reads and enables pagination through a set of `Skupiny`. */
+	skupiniesByCohortGroup: GraphQLTypes["SkupiniesConnection"]
+};
+	["Tenant"]: {
+	__typename: "Tenant",
+	id: GraphQLTypes["BigInt"],
+	name: string,
+	memberInfo: string,
+	origins?: Array<string>,
+	/** Reads and enables pagination through a set of `TenantAttachment`. */
+	tenantAttachments: GraphQLTypes["TenantAttachmentsConnection"],
+	/** Reads and enables pagination through a set of `TenantPerson`. */
+	tenantPeople: GraphQLTypes["TenantPeopleConnection"],
+	/** Reads and enables pagination through a set of `CohortGroup`. */
+	cohortGroupsByTenant: GraphQLTypes["CohortGroupsConnection"],
+	/** Reads and enables pagination through a set of `TenantLocation`. */
+	tenantLocations: GraphQLTypes["TenantLocationsConnection"]
+};
+	/** A connection to a list of `TenantAttachment` values. */
+["TenantAttachmentsConnection"]: {
+	__typename: "TenantAttachmentsConnection",
+	/** A list of `TenantAttachment` objects. */
+	nodes: Array<GraphQLTypes["TenantAttachment"]>,
+	/** A list of edges which contains the `TenantAttachment` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["TenantAttachmentsEdge"]>,
+	/** Information to aid in pagination. */
+	pageInfo: GraphQLTypes["PageInfo"],
+	/** The count of *all* `TenantAttachment` you could get from the connection. */
+	totalCount: number
+};
+	["TenantAttachment"]: {
+	__typename: "TenantAttachment",
+	tenantId: GraphQLTypes["BigInt"],
+	objectName: string,
+	type?: GraphQLTypes["TenantAttachmentType"],
+	/** Reads a single `Tenant` that is related to this `TenantAttachment`. */
+	tenant?: GraphQLTypes["Tenant"],
+	/** Reads a single `Attachment` that is related to this `TenantAttachment`. */
+	attachmentByObjectName?: GraphQLTypes["Attachment"]
+};
+	["TenantAttachmentType"]: TenantAttachmentType;
+	["Attachment"]: {
+	__typename: "Attachment",
+	objectName: string,
+	previewObjectName?: string,
+	uploadedBy?: GraphQLTypes["BigInt"],
+	uploadedAt: GraphQLTypes["Datetime"],
+	/** Reads a single `User` that is related to this `Attachment`. */
+	userByUploadedBy?: GraphQLTypes["User"],
+	/** Reads and enables pagination through a set of `TenantAttachment`. */
+	tenantAttachmentsByObjectName: GraphQLTypes["TenantAttachmentsConnection"],
+	/** Reads and enables pagination through a set of `LocationAttachment`. */
+	locationAttachmentsByObjectName: GraphQLTypes["LocationAttachmentsConnection"],
+	/** Reads and enables pagination through a set of `RoomAttachment`. */
+	roomAttachmentsByObjectName: GraphQLTypes["RoomAttachmentsConnection"]
+};
+	/** Methods to use when ordering `TenantAttachment`. */
+["TenantAttachmentsOrderBy"]: TenantAttachmentsOrderBy;
+	/** A condition to be used against `TenantAttachment` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["TenantAttachmentCondition"]: {
+		/** Checks for equality with the object’s `tenantId` field. */
+	tenantId?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `objectName` field. */
+	objectName?: string
+};
+	/** A connection to a list of `LocationAttachment` values. */
+["LocationAttachmentsConnection"]: {
+	__typename: "LocationAttachmentsConnection",
+	/** A list of `LocationAttachment` objects. */
+	nodes: Array<GraphQLTypes["LocationAttachment"]>,
+	/** A list of edges which contains the `LocationAttachment` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["LocationAttachmentsEdge"]>,
+	/** Information to aid in pagination. */
+	pageInfo: GraphQLTypes["PageInfo"],
+	/** The count of *all* `LocationAttachment` you could get from the connection. */
+	totalCount: number
+};
+	["LocationAttachment"]: {
+	__typename: "LocationAttachment",
+	locationId: GraphQLTypes["BigInt"],
+	objectName: string,
+	/** Reads a single `Location` that is related to this `LocationAttachment`. */
+	location?: GraphQLTypes["Location"],
+	/** Reads a single `Attachment` that is related to this `LocationAttachment`. */
+	attachmentByObjectName?: GraphQLTypes["Attachment"]
+};
+	["Location"]: {
+	__typename: "Location",
+	id: GraphQLTypes["BigInt"],
+	name: string,
+	description: GraphQLTypes["JSON"],
+	/** Reads and enables pagination through a set of `Room`. */
+	roomsByLocation: GraphQLTypes["RoomsConnection"],
+	/** Reads and enables pagination through a set of `LocationAttachment`. */
+	locationAttachments: GraphQLTypes["LocationAttachmentsConnection"],
+	/** Reads and enables pagination through a set of `TenantLocation`. */
+	tenantLocations: GraphQLTypes["TenantLocationsConnection"]
+};
+	/** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+["JSON"]:any;
+	/** A connection to a list of `Room` values. */
+["RoomsConnection"]: {
+	__typename: "RoomsConnection",
+	/** A list of `Room` objects. */
+	nodes: Array<GraphQLTypes["Room"]>,
+	/** A list of edges which contains the `Room` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["RoomsEdge"]>,
+	/** Information to aid in pagination. */
+	pageInfo: GraphQLTypes["PageInfo"],
+	/** The count of *all* `Room` you could get from the connection. */
+	totalCount: number
+};
+	["Room"]: {
+	__typename: "Room",
+	id: GraphQLTypes["BigInt"],
+	name: string,
+	description: GraphQLTypes["JSON"],
+	location?: GraphQLTypes["BigInt"],
+	/** Reads a single `Location` that is related to this `Room`. */
+	locationByLocation?: GraphQLTypes["Location"],
+	/** Reads and enables pagination through a set of `RoomAttachment`. */
+	roomAttachments: GraphQLTypes["RoomAttachmentsConnection"]
+};
+	/** A connection to a list of `RoomAttachment` values. */
+["RoomAttachmentsConnection"]: {
+	__typename: "RoomAttachmentsConnection",
+	/** A list of `RoomAttachment` objects. */
+	nodes: Array<GraphQLTypes["RoomAttachment"]>,
+	/** A list of edges which contains the `RoomAttachment` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["RoomAttachmentsEdge"]>,
+	/** Information to aid in pagination. */
+	pageInfo: GraphQLTypes["PageInfo"],
+	/** The count of *all* `RoomAttachment` you could get from the connection. */
+	totalCount: number
+};
+	["RoomAttachment"]: {
+	__typename: "RoomAttachment",
+	roomId: GraphQLTypes["BigInt"],
+	objectName: string,
+	/** Reads a single `Room` that is related to this `RoomAttachment`. */
+	room?: GraphQLTypes["Room"],
+	/** Reads a single `Attachment` that is related to this `RoomAttachment`. */
+	attachmentByObjectName?: GraphQLTypes["Attachment"]
+};
+	/** A `RoomAttachment` edge in the connection. */
+["RoomAttachmentsEdge"]: {
+	__typename: "RoomAttachmentsEdge",
+	/** A cursor for use in pagination. */
+	cursor?: GraphQLTypes["Cursor"],
+	/** The `RoomAttachment` at the end of the edge. */
+	node: GraphQLTypes["RoomAttachment"]
+};
+	/** Methods to use when ordering `RoomAttachment`. */
+["RoomAttachmentsOrderBy"]: RoomAttachmentsOrderBy;
+	/** A condition to be used against `RoomAttachment` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["RoomAttachmentCondition"]: {
+		/** Checks for equality with the object’s `roomId` field. */
+	roomId?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `objectName` field. */
+	objectName?: string
+};
+	/** A `Room` edge in the connection. */
+["RoomsEdge"]: {
+	__typename: "RoomsEdge",
+	/** A cursor for use in pagination. */
+	cursor?: GraphQLTypes["Cursor"],
+	/** The `Room` at the end of the edge. */
+	node: GraphQLTypes["Room"]
+};
+	/** Methods to use when ordering `Room`. */
+["RoomsOrderBy"]: RoomsOrderBy;
+	/** A condition to be used against `Room` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["RoomCondition"]: {
+		/** Checks for equality with the object’s `id` field. */
+	id?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `location` field. */
+	location?: GraphQLTypes["BigInt"]
+};
+	/** Methods to use when ordering `LocationAttachment`. */
+["LocationAttachmentsOrderBy"]: LocationAttachmentsOrderBy;
+	/** A condition to be used against `LocationAttachment` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["LocationAttachmentCondition"]: {
+		/** Checks for equality with the object’s `locationId` field. */
+	locationId?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `objectName` field. */
+	objectName?: string
+};
+	/** A connection to a list of `TenantLocation` values. */
+["TenantLocationsConnection"]: {
+	__typename: "TenantLocationsConnection",
+	/** A list of `TenantLocation` objects. */
+	nodes: Array<GraphQLTypes["TenantLocation"]>,
+	/** A list of edges which contains the `TenantLocation` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["TenantLocationsEdge"]>,
+	/** Information to aid in pagination. */
+	pageInfo: GraphQLTypes["PageInfo"],
+	/** The count of *all* `TenantLocation` you could get from the connection. */
+	totalCount: number
+};
+	["TenantLocation"]: {
+	__typename: "TenantLocation",
+	tenantId: GraphQLTypes["BigInt"],
+	locationId: GraphQLTypes["BigInt"],
+	/** Reads a single `Tenant` that is related to this `TenantLocation`. */
+	tenant?: GraphQLTypes["Tenant"],
+	/** Reads a single `Location` that is related to this `TenantLocation`. */
+	location?: GraphQLTypes["Location"]
+};
+	/** A `TenantLocation` edge in the connection. */
+["TenantLocationsEdge"]: {
+	__typename: "TenantLocationsEdge",
+	/** A cursor for use in pagination. */
+	cursor?: GraphQLTypes["Cursor"],
+	/** The `TenantLocation` at the end of the edge. */
+	node: GraphQLTypes["TenantLocation"]
+};
+	/** Methods to use when ordering `TenantLocation`. */
+["TenantLocationsOrderBy"]: TenantLocationsOrderBy;
+	/** A condition to be used against `TenantLocation` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["TenantLocationCondition"]: {
+		/** Checks for equality with the object’s `tenantId` field. */
+	tenantId?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `locationId` field. */
+	locationId?: GraphQLTypes["BigInt"]
+};
+	/** A `LocationAttachment` edge in the connection. */
+["LocationAttachmentsEdge"]: {
+	__typename: "LocationAttachmentsEdge",
+	/** A cursor for use in pagination. */
+	cursor?: GraphQLTypes["Cursor"],
+	/** The `LocationAttachment` at the end of the edge. */
+	node: GraphQLTypes["LocationAttachment"]
+};
+	/** A `TenantAttachment` edge in the connection. */
+["TenantAttachmentsEdge"]: {
+	__typename: "TenantAttachmentsEdge",
+	/** A cursor for use in pagination. */
+	cursor?: GraphQLTypes["Cursor"],
+	/** The `TenantAttachment` at the end of the edge. */
+	node: GraphQLTypes["TenantAttachment"]
+};
+	/** A connection to a list of `TenantPerson` values. */
+["TenantPeopleConnection"]: {
+	__typename: "TenantPeopleConnection",
+	/** A list of `TenantPerson` objects. */
+	nodes: Array<GraphQLTypes["TenantPerson"]>,
+	/** A list of edges which contains the `TenantPerson` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["TenantPeopleEdge"]>,
+	/** Information to aid in pagination. */
+	pageInfo: GraphQLTypes["PageInfo"],
+	/** The count of *all* `TenantPerson` you could get from the connection. */
+	totalCount: number
+};
+	["TenantPerson"]: {
+	__typename: "TenantPerson",
+	tenantId: GraphQLTypes["BigInt"],
+	personId: GraphQLTypes["BigInt"],
+	/** Reads a single `Tenant` that is related to this `TenantPerson`. */
+	tenant?: GraphQLTypes["Tenant"],
+	/** Reads a single `Person` that is related to this `TenantPerson`. */
+	person?: GraphQLTypes["Person"]
+};
+	["Person"]: {
+	__typename: "Person",
+	id: GraphQLTypes["BigInt"],
+	firstName: string,
+	lastName: string,
+	gender: GraphQLTypes["GenderType"],
+	/** Reads and enables pagination through a set of `TenantPerson`. */
+	tenantPeople: GraphQLTypes["TenantPeopleConnection"]
+};
+	["GenderType"]: GenderType;
+	/** Methods to use when ordering `TenantPerson`. */
+["TenantPeopleOrderBy"]: TenantPeopleOrderBy;
+	/** A condition to be used against `TenantPerson` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["TenantPersonCondition"]: {
+		/** Checks for equality with the object’s `tenantId` field. */
+	tenantId?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `personId` field. */
+	personId?: GraphQLTypes["BigInt"]
+};
+	/** A `TenantPerson` edge in the connection. */
+["TenantPeopleEdge"]: {
+	__typename: "TenantPeopleEdge",
+	/** A cursor for use in pagination. */
+	cursor?: GraphQLTypes["Cursor"],
+	/** The `TenantPerson` at the end of the edge. */
+	node: GraphQLTypes["TenantPerson"]
+};
+	/** A connection to a list of `CohortGroup` values. */
+["CohortGroupsConnection"]: {
+	__typename: "CohortGroupsConnection",
+	/** A list of `CohortGroup` objects. */
+	nodes: Array<GraphQLTypes["CohortGroup"]>,
+	/** A list of edges which contains the `CohortGroup` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["CohortGroupsEdge"]>,
+	/** Information to aid in pagination. */
+	pageInfo: GraphQLTypes["PageInfo"],
+	/** The count of *all* `CohortGroup` you could get from the connection. */
+	totalCount: number
+};
+	/** A `CohortGroup` edge in the connection. */
+["CohortGroupsEdge"]: {
+	__typename: "CohortGroupsEdge",
+	/** A cursor for use in pagination. */
+	cursor?: GraphQLTypes["Cursor"],
+	/** The `CohortGroup` at the end of the edge. */
+	node: GraphQLTypes["CohortGroup"]
+};
+	/** Methods to use when ordering `CohortGroup`. */
+["CohortGroupsOrderBy"]: CohortGroupsOrderBy;
+	/** A condition to be used against `CohortGroup` object types. All fields are tested
+for equality and combined with a logical ‘and.’ */
+["CohortGroupCondition"]: {
+		/** Checks for equality with the object’s `id` field. */
+	id?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `ordering` field. */
+	ordering?: number,
+	/** Checks for equality with the object’s `isPublic` field. */
+	isPublic?: boolean,
+	/** Checks for equality with the object’s `tenant` field. */
+	tenant?: GraphQLTypes["BigInt"]
+};
+	/** A connection to a list of `Skupiny` values. */
+["SkupiniesConnection"]: {
+	__typename: "SkupiniesConnection",
+	/** A list of `Skupiny` objects. */
+	nodes: Array<GraphQLTypes["Skupiny"]>,
+	/** A list of edges which contains the `Skupiny` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["SkupiniesEdge"]>,
+	/** Information to aid in pagination. */
+	pageInfo: GraphQLTypes["PageInfo"],
+	/** The count of *all* `Skupiny` you could get from the connection. */
+	totalCount: number
+};
+	/** A `Skupiny` edge in the connection. */
+["SkupiniesEdge"]: {
+	__typename: "SkupiniesEdge",
+	/** A cursor for use in pagination. */
+	cursor?: GraphQLTypes["Cursor"],
+	/** The `Skupiny` at the end of the edge. */
+	node: GraphQLTypes["Skupiny"]
+};
+	/** Methods to use when ordering `Skupiny`. */
+["SkupiniesOrderBy"]: SkupiniesOrderBy;
+	/** A condition to be used against `Skupiny` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["SkupinyCondition"]: {
+		/** Checks for equality with the object’s `sId` field. */
+	sId?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `sVisible` field. */
+	sVisible?: boolean,
+	/** Checks for equality with the object’s `ordering` field. */
+	ordering?: number,
+	/** Checks for equality with the object’s `cohortGroup` field. */
+	cohortGroup?: GraphQLTypes["BigInt"]
 };
 	/** A connection to a list of `PlatbyGroupSkupina` values. */
 ["PlatbyGroupSkupinasConnection"]: {
@@ -10434,11 +12334,11 @@ strings and not numbers. */
 };
 	["PlatbyGroupSkupina"]: {
 	__typename: "PlatbyGroupSkupina",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
 	pgsId: GraphQLTypes["BigInt"],
 	pgsIdSkupina: GraphQLTypes["BigInt"],
 	pgsIdGroup: GraphQLTypes["BigInt"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId: GraphQLTypes["BigInt"],
 	/** Reads a single `Skupiny` that is related to this `PlatbyGroupSkupina`. */
 	skupinyByPgsIdSkupina?: GraphQLTypes["Skupiny"],
 	/** Reads a single `PlatbyGroup` that is related to this `PlatbyGroupSkupina`. */
@@ -10446,13 +12346,13 @@ strings and not numbers. */
 };
 	["PlatbyGroup"]: {
 	__typename: "PlatbyGroup",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
 	pgId: GraphQLTypes["BigInt"],
 	pgType: GraphQLTypes["BigFloat"],
 	pgName: string,
 	pgDescription: string,
 	pgBase: GraphQLTypes["BigInt"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId: GraphQLTypes["BigInt"],
 	/** Reads and enables pagination through a set of `PlatbyCategoryGroup`. */
 	platbyCategoryGroupsByPcgIdGroup: GraphQLTypes["PlatbyCategoryGroupsConnection"],
 	/** Reads and enables pagination through a set of `PlatbyGroupSkupina`. */
@@ -10474,11 +12374,11 @@ strings and not numbers. */
 };
 	["PlatbyCategoryGroup"]: {
 	__typename: "PlatbyCategoryGroup",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
 	pcgId: GraphQLTypes["BigInt"],
 	pcgIdGroup: GraphQLTypes["BigInt"],
 	pcgIdCategory: GraphQLTypes["BigInt"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId: GraphQLTypes["BigInt"],
 	/** Reads a single `PlatbyGroup` that is related to this `PlatbyCategoryGroup`. */
 	platbyGroupByPcgIdGroup?: GraphQLTypes["PlatbyGroup"],
 	/** Reads a single `PlatbyCategory` that is related to this `PlatbyCategoryGroup`. */
@@ -10486,8 +12386,6 @@ strings and not numbers. */
 };
 	["PlatbyCategory"]: {
 	__typename: "PlatbyCategory",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
 	pcId: GraphQLTypes["BigInt"],
 	pcName: string,
 	pcSymbol: GraphQLTypes["BigInt"],
@@ -10499,6 +12397,8 @@ strings and not numbers. */
 	pcUsePrefix: boolean,
 	pcArchive: boolean,
 	pcVisible: boolean,
+	id?: GraphQLTypes["BigInt"],
+	tenantId: GraphQLTypes["BigInt"],
 	/** Reads and enables pagination through a set of `PlatbyCategoryGroup`. */
 	platbyCategoryGroupsByPcgIdCategory: GraphQLTypes["PlatbyCategoryGroupsConnection"],
 	/** Reads and enables pagination through a set of `PlatbyItem`. */
@@ -10530,8 +12430,6 @@ are tested for equality and combined with a logical ‘and.’ */
 };
 	["PlatbyItem"]: {
 	__typename: "PlatbyItem",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
 	piId: GraphQLTypes["BigInt"],
 	piIdUser?: GraphQLTypes["BigInt"],
 	piIdCategory: GraphQLTypes["BigInt"],
@@ -10539,6 +12437,8 @@ are tested for equality and combined with a logical ‘and.’ */
 	piAmount: GraphQLTypes["BigFloat"],
 	piDate: GraphQLTypes["Date"],
 	piPrefix: number,
+	id?: GraphQLTypes["BigInt"],
+	tenantId: GraphQLTypes["BigInt"],
 	/** Reads a single `User` that is related to this `PlatbyItem`. */
 	userByPiIdUser?: GraphQLTypes["User"],
 	/** Reads a single `PlatbyCategory` that is related to this `PlatbyItem`. */
@@ -10548,13 +12448,13 @@ are tested for equality and combined with a logical ‘and.’ */
 };
 	["PlatbyRaw"]: {
 	__typename: "PlatbyRaw",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
 	prId: GraphQLTypes["BigInt"],
 	prRaw: string,
 	prHash: string,
 	prSorted: boolean,
 	prDiscarded: boolean,
+	id?: GraphQLTypes["BigInt"],
+	tenantId: GraphQLTypes["BigInt"],
 	/** Reads and enables pagination through a set of `PlatbyItem`. */
 	platbyItemsByPiIdRaw: GraphQLTypes["PlatbyItemsConnection"]
 };
@@ -10570,13 +12470,7 @@ for equality and combined with a logical ‘and.’ */
 	/** Checks for equality with the object’s `piIdCategory` field. */
 	piIdCategory?: GraphQLTypes["BigInt"],
 	/** Checks for equality with the object’s `piIdRaw` field. */
-	piIdRaw?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `piAmount` field. */
-	piAmount?: GraphQLTypes["BigFloat"],
-	/** Checks for equality with the object’s `piDate` field. */
-	piDate?: GraphQLTypes["Date"],
-	/** Checks for equality with the object’s `piPrefix` field. */
-	piPrefix?: number
+	piIdRaw?: GraphQLTypes["BigInt"]
 };
 	/** A `PlatbyItem` edge in the connection. */
 ["PlatbyItemsEdge"]: {
@@ -10628,13 +12522,13 @@ tested for equality and combined with a logical ‘and.’ */
 };
 	["UpozorneniSkupiny"]: {
 	__typename: "UpozorneniSkupiny",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
 	upsId: GraphQLTypes["BigInt"],
 	upsIdRodic: GraphQLTypes["BigInt"],
 	upsIdSkupina: GraphQLTypes["BigInt"],
 	upsColor: string,
 	upsPopis: string,
+	id?: GraphQLTypes["BigInt"],
+	tenantId: GraphQLTypes["BigInt"],
 	/** Reads a single `Upozorneni` that is related to this `UpozorneniSkupiny`. */
 	upozorneniByUpsIdRodic?: GraphQLTypes["Upozorneni"],
 	/** Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`. */
@@ -10642,16 +12536,19 @@ tested for equality and combined with a logical ‘and.’ */
 };
 	["Upozorneni"]: {
 	__typename: "Upozorneni",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
 	upId: GraphQLTypes["BigInt"],
-	upKdo: GraphQLTypes["BigInt"],
+	upKdo?: GraphQLTypes["BigInt"],
 	upNadpis: string,
 	upText: string,
 	upBarvy: GraphQLTypes["BigInt"],
 	upLock: boolean,
 	upTimestamp?: GraphQLTypes["Datetime"],
 	upTimestampAdd: GraphQLTypes["Datetime"],
+	scheduledSince?: GraphQLTypes["Datetime"],
+	scheduledUntil?: GraphQLTypes["Datetime"],
+	isVisible?: boolean,
+	id?: GraphQLTypes["BigInt"],
+	tenantId: GraphQLTypes["BigInt"],
 	/** Reads a single `User` that is related to this `Upozorneni`. */
 	userByUpKdo?: GraphQLTypes["User"],
 	/** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
@@ -10667,11 +12564,7 @@ tested for equality and combined with a logical ‘and.’ */
 	/** Checks for equality with the object’s `upsIdRodic` field. */
 	upsIdRodic?: GraphQLTypes["BigInt"],
 	/** Checks for equality with the object’s `upsIdSkupina` field. */
-	upsIdSkupina?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `upsColor` field. */
-	upsColor?: string,
-	/** Checks for equality with the object’s `upsPopis` field. */
-	upsPopis?: string
+	upsIdSkupina?: GraphQLTypes["BigInt"]
 };
 	/** A `UpozorneniSkupiny` edge in the connection. */
 ["UpozorneniSkupiniesEdge"]: {
@@ -10680,6 +12573,132 @@ tested for equality and combined with a logical ‘and.’ */
 	cursor?: GraphQLTypes["Cursor"],
 	/** The `UpozorneniSkupiny` at the end of the edge. */
 	node: GraphQLTypes["UpozorneniSkupiny"]
+};
+	/** A connection to a list of `AttendeeUser` values. */
+["AttendeeUsersConnection"]: {
+	__typename: "AttendeeUsersConnection",
+	/** A list of `AttendeeUser` objects. */
+	nodes: Array<GraphQLTypes["AttendeeUser"]>,
+	/** A list of edges which contains the `AttendeeUser` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["AttendeeUsersEdge"]>,
+	/** Information to aid in pagination. */
+	pageInfo: GraphQLTypes["PageInfo"],
+	/** The count of *all* `AttendeeUser` you could get from the connection. */
+	totalCount: number
+};
+	["AttendeeUser"]: {
+	__typename: "AttendeeUser",
+	id: GraphQLTypes["BigInt"],
+	eventId: GraphQLTypes["BigInt"],
+	userId: GraphQLTypes["BigInt"],
+	birthYear: number,
+	notes: string,
+	tenantId: GraphQLTypes["BigInt"],
+	/** Reads a single `Event` that is related to this `AttendeeUser`. */
+	event?: GraphQLTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeUser`. */
+	user?: GraphQLTypes["User"]
+};
+	["Event"]: {
+	__typename: "Event",
+	id: GraphQLTypes["BigInt"],
+	name: string,
+	locationText: string,
+	description: string,
+	since: GraphQLTypes["Date"],
+	until: GraphQLTypes["Date"],
+	capacity: GraphQLTypes["BigInt"],
+	filesLegacy: string,
+	updatedAt?: GraphQLTypes["Datetime"],
+	isLocked: boolean,
+	isVisible: boolean,
+	summary: string,
+	isPublic: boolean,
+	enableNotes: boolean,
+	tenantId: GraphQLTypes["BigInt"],
+	/** Reads and enables pagination through a set of `AttendeeUser`. */
+	attendeeUsers: GraphQLTypes["AttendeeUsersConnection"],
+	/** Reads and enables pagination through a set of `AttendeeExternal`. */
+	attendeeExternals: GraphQLTypes["AttendeeExternalsConnection"],
+	remainingSpots?: number
+};
+	/** Methods to use when ordering `AttendeeUser`. */
+["AttendeeUsersOrderBy"]: AttendeeUsersOrderBy;
+	/** A condition to be used against `AttendeeUser` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["AttendeeUserCondition"]: {
+		/** Checks for equality with the object’s `id` field. */
+	id?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `eventId` field. */
+	eventId?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `userId` field. */
+	userId?: GraphQLTypes["BigInt"]
+};
+	/** A connection to a list of `AttendeeExternal` values. */
+["AttendeeExternalsConnection"]: {
+	__typename: "AttendeeExternalsConnection",
+	/** A list of `AttendeeExternal` objects. */
+	nodes: Array<GraphQLTypes["AttendeeExternal"]>,
+	/** A list of edges which contains the `AttendeeExternal` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["AttendeeExternalsEdge"]>,
+	/** Information to aid in pagination. */
+	pageInfo: GraphQLTypes["PageInfo"],
+	/** The count of *all* `AttendeeExternal` you could get from the connection. */
+	totalCount: number
+};
+	["AttendeeExternal"]: {
+	__typename: "AttendeeExternal",
+	id: GraphQLTypes["BigInt"],
+	eventId: GraphQLTypes["BigInt"],
+	firstName: string,
+	lastName: string,
+	email: string,
+	phone: string,
+	notes: string,
+	birthNumber?: string,
+	guardianName: string,
+	managedBy?: GraphQLTypes["BigInt"],
+	confirmedBy?: GraphQLTypes["BigInt"],
+	confirmedAt?: GraphQLTypes["Datetime"],
+	createdAt: GraphQLTypes["Datetime"],
+	updatedAt: GraphQLTypes["Datetime"],
+	tenantId: GraphQLTypes["BigInt"],
+	/** Reads a single `Event` that is related to this `AttendeeExternal`. */
+	event?: GraphQLTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByManagedBy?: GraphQLTypes["User"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByConfirmedBy?: GraphQLTypes["User"]
+};
+	/** A `AttendeeExternal` edge in the connection. */
+["AttendeeExternalsEdge"]: {
+	__typename: "AttendeeExternalsEdge",
+	/** A cursor for use in pagination. */
+	cursor?: GraphQLTypes["Cursor"],
+	/** The `AttendeeExternal` at the end of the edge. */
+	node: GraphQLTypes["AttendeeExternal"]
+};
+	/** Methods to use when ordering `AttendeeExternal`. */
+["AttendeeExternalsOrderBy"]: AttendeeExternalsOrderBy;
+	/** A condition to be used against `AttendeeExternal` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["AttendeeExternalCondition"]: {
+		/** Checks for equality with the object’s `id` field. */
+	id?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `eventId` field. */
+	eventId?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `managedBy` field. */
+	managedBy?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `confirmedBy` field. */
+	confirmedBy?: GraphQLTypes["BigInt"]
+};
+	/** A `AttendeeUser` edge in the connection. */
+["AttendeeUsersEdge"]: {
+	__typename: "AttendeeUsersEdge",
+	/** A cursor for use in pagination. */
+	cursor?: GraphQLTypes["Cursor"],
+	/** The `AttendeeUser` at the end of the edge. */
+	node: GraphQLTypes["AttendeeUser"]
 };
 	/** A connection to a list of `Aktuality` values. */
 ["AktualitiesConnection"]: {
@@ -10695,10 +12714,8 @@ tested for equality and combined with a logical ‘and.’ */
 };
 	["Aktuality"]: {
 	__typename: "Aktuality",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
 	atId: GraphQLTypes["BigInt"],
-	atKdo: GraphQLTypes["BigInt"],
+	atKdo?: GraphQLTypes["BigInt"],
 	atKat: string,
 	atJmeno: string,
 	atText: string,
@@ -10707,6 +12724,8 @@ tested for equality and combined with a logical ‘and.’ */
 	atFotoMain?: GraphQLTypes["BigInt"],
 	atTimestamp?: GraphQLTypes["Datetime"],
 	atTimestampAdd?: GraphQLTypes["Datetime"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId: GraphQLTypes["BigInt"],
 	/** Reads a single `User` that is related to this `Aktuality`. */
 	userByAtKdo?: GraphQLTypes["User"],
 	/** Reads a single `GalerieFoto` that is related to this `Aktuality`. */
@@ -10714,14 +12733,14 @@ tested for equality and combined with a logical ‘and.’ */
 };
 	["GalerieFoto"]: {
 	__typename: "GalerieFoto",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
 	gfId: GraphQLTypes["BigInt"],
 	gfIdRodic: GraphQLTypes["BigInt"],
 	gfName: string,
 	gfPath: string,
 	gfKdo: GraphQLTypes["BigInt"],
 	gfTimestamp?: GraphQLTypes["Datetime"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId: GraphQLTypes["BigInt"],
 	/** Reads a single `GalerieDir` that is related to this `GalerieFoto`. */
 	galerieDirByGfIdRodic?: GraphQLTypes["GalerieDir"],
 	/** Reads a single `User` that is related to this `GalerieFoto`. */
@@ -10731,14 +12750,14 @@ tested for equality and combined with a logical ‘and.’ */
 };
 	["GalerieDir"]: {
 	__typename: "GalerieDir",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
 	gdId: GraphQLTypes["BigInt"],
 	gdIdRodic: GraphQLTypes["BigInt"],
 	gdName: string,
 	gdLevel: number,
 	gdPath: string,
 	gdHidden: boolean,
+	id?: GraphQLTypes["BigInt"],
+	tenantId: GraphQLTypes["BigInt"],
 	/** Reads and enables pagination through a set of `GalerieFoto`. */
 	galerieFotosByGfIdRodic: GraphQLTypes["GalerieFotosConnection"]
 };
@@ -10771,14 +12790,8 @@ for equality and combined with a logical ‘and.’ */
 	gfId?: GraphQLTypes["BigInt"],
 	/** Checks for equality with the object’s `gfIdRodic` field. */
 	gfIdRodic?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `gfName` field. */
-	gfName?: string,
-	/** Checks for equality with the object’s `gfPath` field. */
-	gfPath?: string,
 	/** Checks for equality with the object’s `gfKdo` field. */
-	gfKdo?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `gfTimestamp` field. */
-	gfTimestamp?: GraphQLTypes["Datetime"]
+	gfKdo?: GraphQLTypes["BigInt"]
 };
 	/** Methods to use when ordering `Aktuality`. */
 ["AktualitiesOrderBy"]: AktualitiesOrderBy;
@@ -10789,22 +12802,12 @@ for equality and combined with a logical ‘and.’ */
 	atId?: GraphQLTypes["BigInt"],
 	/** Checks for equality with the object’s `atKdo` field. */
 	atKdo?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `atKat` field. */
-	atKat?: string,
-	/** Checks for equality with the object’s `atJmeno` field. */
-	atJmeno?: string,
-	/** Checks for equality with the object’s `atText` field. */
-	atText?: string,
-	/** Checks for equality with the object’s `atPreview` field. */
-	atPreview?: string,
-	/** Checks for equality with the object’s `atFoto` field. */
-	atFoto?: GraphQLTypes["BigInt"],
 	/** Checks for equality with the object’s `atFotoMain` field. */
 	atFotoMain?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `atTimestamp` field. */
-	atTimestamp?: GraphQLTypes["Datetime"],
 	/** Checks for equality with the object’s `atTimestampAdd` field. */
-	atTimestampAdd?: GraphQLTypes["Datetime"]
+	atTimestampAdd?: GraphQLTypes["Datetime"],
+	/** Checks for equality with the object’s `tenantId` field. */
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** A `Aktuality` edge in the connection. */
 ["AktualitiesEdge"]: {
@@ -10813,6 +12816,56 @@ for equality and combined with a logical ‘and.’ */
 	cursor?: GraphQLTypes["Cursor"],
 	/** The `Aktuality` at the end of the edge. */
 	node: GraphQLTypes["Aktuality"]
+};
+	/** A connection to a list of `Dokumenty` values. */
+["DokumentiesConnection"]: {
+	__typename: "DokumentiesConnection",
+	/** A list of `Dokumenty` objects. */
+	nodes: Array<GraphQLTypes["Dokumenty"]>,
+	/** A list of edges which contains the `Dokumenty` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["DokumentiesEdge"]>,
+	/** Information to aid in pagination. */
+	pageInfo: GraphQLTypes["PageInfo"],
+	/** The count of *all* `Dokumenty` you could get from the connection. */
+	totalCount: number
+};
+	["Dokumenty"]: {
+	__typename: "Dokumenty",
+	dId: GraphQLTypes["BigInt"],
+	dPath: string,
+	dName: string,
+	dFilename: string,
+	dKategorie: number,
+	dKdo: GraphQLTypes["BigInt"],
+	dTimestamp?: GraphQLTypes["Datetime"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId: GraphQLTypes["BigInt"],
+	/** Reads a single `User` that is related to this `Dokumenty`. */
+	userByDKdo?: GraphQLTypes["User"]
+};
+	/** A `Dokumenty` edge in the connection. */
+["DokumentiesEdge"]: {
+	__typename: "DokumentiesEdge",
+	/** A cursor for use in pagination. */
+	cursor?: GraphQLTypes["Cursor"],
+	/** The `Dokumenty` at the end of the edge. */
+	node: GraphQLTypes["Dokumenty"]
+};
+	/** Methods to use when ordering `Dokumenty`. */
+["DokumentiesOrderBy"]: DokumentiesOrderBy;
+	/** A condition to be used against `Dokumenty` object types. All fields are tested
+for equality and combined with a logical ‘and.’ */
+["DokumentyCondition"]: {
+		/** Checks for equality with the object’s `dId` field. */
+	dId?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `dPath` field. */
+	dPath?: string,
+	/** Checks for equality with the object’s `dKategorie` field. */
+	dKategorie?: number,
+	/** Checks for equality with the object’s `dKdo` field. */
+	dKdo?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `dTimestamp` field. */
+	dTimestamp?: GraphQLTypes["Datetime"]
 };
 	/** A connection to a list of `Nabidka` values. */
 ["NabidkasConnection"]: {
@@ -10828,21 +12881,23 @@ for equality and combined with a logical ‘and.’ */
 };
 	["Nabidka"]: {
 	__typename: "Nabidka",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
 	nId: GraphQLTypes["BigInt"],
 	nTrener: GraphQLTypes["BigInt"],
 	nPocetHod: number,
-	nMaxPocetHod: GraphQLTypes["BigInt"],
+	nMaxPocetHod: number,
 	nOd: GraphQLTypes["Date"],
 	nDo: GraphQLTypes["Date"],
 	nVisible: boolean,
 	nLock: boolean,
 	nTimestamp?: GraphQLTypes["Datetime"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId: GraphQLTypes["BigInt"],
 	/** Reads a single `User` that is related to this `Nabidka`. */
 	userByNTrener?: GraphQLTypes["User"],
 	/** Reads and enables pagination through a set of `NabidkaItem`. */
-	nabidkaItemsByNiIdRodic: GraphQLTypes["NabidkaItemsConnection"]
+	nabidkaItemsByNiIdRodic: GraphQLTypes["NabidkaItemsConnection"],
+	freeLessons?: number,
+	myLessons?: number
 };
 	/** A connection to a list of `NabidkaItem` values. */
 ["NabidkaItemsConnection"]: {
@@ -10858,13 +12913,13 @@ for equality and combined with a logical ‘and.’ */
 };
 	["NabidkaItem"]: {
 	__typename: "NabidkaItem",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
 	niId: GraphQLTypes["BigInt"],
 	niIdRodic: GraphQLTypes["BigInt"],
 	niPartner: GraphQLTypes["BigInt"],
 	niPocetHod: number,
 	niLock: boolean,
+	id?: GraphQLTypes["BigInt"],
+	tenantId: GraphQLTypes["BigInt"],
 	/** Reads a single `Nabidka` that is related to this `NabidkaItem`. */
 	nabidkaByNiIdRodic?: GraphQLTypes["Nabidka"],
 	/** Reads a single `Pary` that is related to this `NabidkaItem`. */
@@ -10872,8 +12927,6 @@ for equality and combined with a logical ‘and.’ */
 };
 	["Pary"]: {
 	__typename: "Pary",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
 	pId: GraphQLTypes["BigInt"],
 	pIdPartner: GraphQLTypes["BigInt"],
 	pIdPartnerka?: GraphQLTypes["BigInt"],
@@ -10887,8 +12940,11 @@ for equality and combined with a logical ‘and.’ */
 	pArchiv: boolean,
 	pTimestampAdd: GraphQLTypes["Datetime"],
 	pTimestampArchive?: GraphQLTypes["Datetime"],
+	id?: GraphQLTypes["BigInt"],
 	/** Reads a single `User` that is related to this `Pary`. */
 	userByPIdPartner?: GraphQLTypes["User"],
+	/** Reads a single `User` that is related to this `Pary`. */
+	userByPIdPartnerka?: GraphQLTypes["User"],
 	/** Reads and enables pagination through a set of `NabidkaItem`. */
 	nabidkaItemsByNiPartner: GraphQLTypes["NabidkaItemsConnection"],
 	/** Reads and enables pagination through a set of `RozpisItem`. */
@@ -10906,11 +12962,7 @@ for equality and combined with a logical ‘and.’ */
 	/** Checks for equality with the object’s `niIdRodic` field. */
 	niIdRodic?: GraphQLTypes["BigInt"],
 	/** Checks for equality with the object’s `niPartner` field. */
-	niPartner?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `niPocetHod` field. */
-	niPocetHod?: number,
-	/** Checks for equality with the object’s `niLock` field. */
-	niLock?: boolean
+	niPartner?: GraphQLTypes["BigInt"]
 };
 	/** A connection to a list of `RozpisItem` values. */
 ["RozpisItemsConnection"]: {
@@ -10926,14 +12978,14 @@ for equality and combined with a logical ‘and.’ */
 };
 	["RozpisItem"]: {
 	__typename: "RozpisItem",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
 	riId: GraphQLTypes["BigInt"],
 	riIdRodic: GraphQLTypes["BigInt"],
 	riPartner?: GraphQLTypes["BigInt"],
 	riOd: GraphQLTypes["Time"],
 	riDo: GraphQLTypes["Time"],
 	riLock: boolean,
+	id?: GraphQLTypes["BigInt"],
+	tenantId: GraphQLTypes["BigInt"],
 	/** Reads a single `Rozpi` that is related to this `RozpisItem`. */
 	rozpiByRiIdRodic?: GraphQLTypes["Rozpi"],
 	/** Reads a single `Pary` that is related to this `RozpisItem`. */
@@ -10943,8 +12995,6 @@ for equality and combined with a logical ‘and.’ */
 ["Time"]:any;
 	["Rozpi"]: {
 	__typename: "Rozpi",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
 	rId: GraphQLTypes["BigInt"],
 	rTrener: GraphQLTypes["BigInt"],
 	rKde: string,
@@ -10952,6 +13002,8 @@ for equality and combined with a logical ‘and.’ */
 	rVisible: boolean,
 	rLock: boolean,
 	rTimestamp?: GraphQLTypes["Datetime"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId: GraphQLTypes["BigInt"],
 	/** Reads a single `User` that is related to this `Rozpi`. */
 	userByRTrener?: GraphQLTypes["User"],
 	/** Reads and enables pagination through a set of `RozpisItem`. */
@@ -10969,11 +13021,7 @@ for equality and combined with a logical ‘and.’ */
 	/** Checks for equality with the object’s `riPartner` field. */
 	riPartner?: GraphQLTypes["BigInt"],
 	/** Checks for equality with the object’s `riOd` field. */
-	riOd?: GraphQLTypes["Time"],
-	/** Checks for equality with the object’s `riDo` field. */
-	riDo?: GraphQLTypes["Time"],
-	/** Checks for equality with the object’s `riLock` field. */
-	riLock?: boolean
+	riOd?: GraphQLTypes["Time"]
 };
 	/** A `RozpisItem` edge in the connection. */
 ["RozpisItemsEdge"]: {
@@ -11007,174 +13055,8 @@ for equality and combined with a logical ‘and.’ */
 	nId?: GraphQLTypes["BigInt"],
 	/** Checks for equality with the object’s `nTrener` field. */
 	nTrener?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `nPocetHod` field. */
-	nPocetHod?: number,
-	/** Checks for equality with the object’s `nMaxPocetHod` field. */
-	nMaxPocetHod?: GraphQLTypes["BigInt"],
 	/** Checks for equality with the object’s `nOd` field. */
-	nOd?: GraphQLTypes["Date"],
-	/** Checks for equality with the object’s `nDo` field. */
-	nDo?: GraphQLTypes["Date"],
-	/** Checks for equality with the object’s `nVisible` field. */
-	nVisible?: boolean,
-	/** Checks for equality with the object’s `nLock` field. */
-	nLock?: boolean,
-	/** Checks for equality with the object’s `nTimestamp` field. */
-	nTimestamp?: GraphQLTypes["Datetime"]
-};
-	/** A connection to a list of `Rozpi` values. */
-["RozpisConnection"]: {
-	__typename: "RozpisConnection",
-	/** A list of `Rozpi` objects. */
-	nodes: Array<GraphQLTypes["Rozpi"]>,
-	/** A list of edges which contains the `Rozpi` and cursor to aid in pagination. */
-	edges: Array<GraphQLTypes["RozpisEdge"]>,
-	/** Information to aid in pagination. */
-	pageInfo: GraphQLTypes["PageInfo"],
-	/** The count of *all* `Rozpi` you could get from the connection. */
-	totalCount: number
-};
-	/** A `Rozpi` edge in the connection. */
-["RozpisEdge"]: {
-	__typename: "RozpisEdge",
-	/** A cursor for use in pagination. */
-	cursor?: GraphQLTypes["Cursor"],
-	/** The `Rozpi` at the end of the edge. */
-	node: GraphQLTypes["Rozpi"]
-};
-	/** Methods to use when ordering `Rozpi`. */
-["RozpisOrderBy"]: RozpisOrderBy;
-	/** A condition to be used against `Rozpi` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["RozpiCondition"]: {
-		/** Checks for equality with the object’s `rId` field. */
-	rId?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `rTrener` field. */
-	rTrener?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `rKde` field. */
-	rKde?: string,
-	/** Checks for equality with the object’s `rDatum` field. */
-	rDatum?: GraphQLTypes["Date"],
-	/** Checks for equality with the object’s `rVisible` field. */
-	rVisible?: boolean,
-	/** Checks for equality with the object’s `rLock` field. */
-	rLock?: boolean,
-	/** Checks for equality with the object’s `rTimestamp` field. */
-	rTimestamp?: GraphQLTypes["Datetime"]
-};
-	/** A connection to a list of `Session` values. */
-["SessionsConnection"]: {
-	__typename: "SessionsConnection",
-	/** A list of `Session` objects. */
-	nodes: Array<GraphQLTypes["Session"]>,
-	/** A list of edges which contains the `Session` and cursor to aid in pagination. */
-	edges: Array<GraphQLTypes["SessionsEdge"]>,
-	/** Information to aid in pagination. */
-	pageInfo: GraphQLTypes["PageInfo"],
-	/** The count of *all* `Session` you could get from the connection. */
-	totalCount: number
-};
-	["Session"]: {
-	__typename: "Session",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
-	ssId: string,
-	ssData: string,
-	ssUpdatedAt: GraphQLTypes["Datetime"],
-	ssLifetime: GraphQLTypes["BigInt"],
-	ssUser?: GraphQLTypes["BigInt"],
-	/** Reads a single `User` that is related to this `Session`. */
-	userBySsUser?: GraphQLTypes["User"]
-};
-	/** A `Session` edge in the connection. */
-["SessionsEdge"]: {
-	__typename: "SessionsEdge",
-	/** A cursor for use in pagination. */
-	cursor?: GraphQLTypes["Cursor"],
-	/** The `Session` at the end of the edge. */
-	node: GraphQLTypes["Session"]
-};
-	/** Methods to use when ordering `Session`. */
-["SessionsOrderBy"]: SessionsOrderBy;
-	/** A condition to be used against `Session` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["SessionCondition"]: {
-		/** Checks for equality with the object’s `ssId` field. */
-	ssId?: string,
-	/** Checks for equality with the object’s `ssData` field. */
-	ssData?: string,
-	/** Checks for equality with the object’s `ssUpdatedAt` field. */
-	ssUpdatedAt?: GraphQLTypes["Datetime"],
-	/** Checks for equality with the object’s `ssLifetime` field. */
-	ssLifetime?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `ssUser` field. */
-	ssUser?: GraphQLTypes["BigInt"]
-};
-	/** Methods to use when ordering `AkceItem`. */
-["AkceItemsOrderBy"]: AkceItemsOrderBy;
-	/** A condition to be used against `AkceItem` object types. All fields are tested
-for equality and combined with a logical ‘and.’ */
-["AkceItemCondition"]: {
-		/** Checks for equality with the object’s `aiId` field. */
-	aiId?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `aiIdRodic` field. */
-	aiIdRodic?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `aiUser` field. */
-	aiUser?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `aiRokNarozeni` field. */
-	aiRokNarozeni?: number
-};
-	/** A connection to a list of `Dokumenty` values. */
-["DokumentiesConnection"]: {
-	__typename: "DokumentiesConnection",
-	/** A list of `Dokumenty` objects. */
-	nodes: Array<GraphQLTypes["Dokumenty"]>,
-	/** A list of edges which contains the `Dokumenty` and cursor to aid in pagination. */
-	edges: Array<GraphQLTypes["DokumentiesEdge"]>,
-	/** Information to aid in pagination. */
-	pageInfo: GraphQLTypes["PageInfo"],
-	/** The count of *all* `Dokumenty` you could get from the connection. */
-	totalCount: number
-};
-	["Dokumenty"]: {
-	__typename: "Dokumenty",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
-	dId: GraphQLTypes["BigInt"],
-	dPath: string,
-	dName: string,
-	dFilename: string,
-	dKategorie: number,
-	dKdo: GraphQLTypes["BigInt"],
-	dTimestamp?: GraphQLTypes["Datetime"],
-	/** Reads a single `User` that is related to this `Dokumenty`. */
-	userByDKdo?: GraphQLTypes["User"]
-};
-	/** A `Dokumenty` edge in the connection. */
-["DokumentiesEdge"]: {
-	__typename: "DokumentiesEdge",
-	/** A cursor for use in pagination. */
-	cursor?: GraphQLTypes["Cursor"],
-	/** The `Dokumenty` at the end of the edge. */
-	node: GraphQLTypes["Dokumenty"]
-};
-	/** Methods to use when ordering `Dokumenty`. */
-["DokumentiesOrderBy"]: DokumentiesOrderBy;
-	/** A condition to be used against `Dokumenty` object types. All fields are tested
-for equality and combined with a logical ‘and.’ */
-["DokumentyCondition"]: {
-		/** Checks for equality with the object’s `dId` field. */
-	dId?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `dPath` field. */
-	dPath?: string,
-	/** Checks for equality with the object’s `dName` field. */
-	dName?: string,
-	/** Checks for equality with the object’s `dFilename` field. */
-	dFilename?: string,
-	/** Checks for equality with the object’s `dKategorie` field. */
-	dKategorie?: number,
-	/** Checks for equality with the object’s `dKdo` field. */
-	dKdo?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `dTimestamp` field. */
-	dTimestamp?: GraphQLTypes["Datetime"]
+	nOd?: GraphQLTypes["Date"]
 };
 	/** A connection to a list of `Pary` values. */
 ["PariesConnection"]: {
@@ -11206,26 +13088,8 @@ for equality and combined with a logical ‘and.’ */
 	pIdPartner?: GraphQLTypes["BigInt"],
 	/** Checks for equality with the object’s `pIdPartnerka` field. */
 	pIdPartnerka?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `pSttTrida` field. */
-	pSttTrida?: GraphQLTypes["ParyPSttTrida"],
-	/** Checks for equality with the object’s `pSttBody` field. */
-	pSttBody?: number,
-	/** Checks for equality with the object’s `pSttFinale` field. */
-	pSttFinale?: boolean,
-	/** Checks for equality with the object’s `pLatTrida` field. */
-	pLatTrida?: GraphQLTypes["ParyPLatTrida"],
-	/** Checks for equality with the object’s `pLatBody` field. */
-	pLatBody?: number,
-	/** Checks for equality with the object’s `pLatFinale` field. */
-	pLatFinale?: boolean,
 	/** Checks for equality with the object’s `pHodnoceni` field. */
-	pHodnoceni?: number,
-	/** Checks for equality with the object’s `pArchiv` field. */
-	pArchiv?: boolean,
-	/** Checks for equality with the object’s `pTimestampAdd` field. */
-	pTimestampAdd?: GraphQLTypes["Datetime"],
-	/** Checks for equality with the object’s `pTimestampArchive` field. */
-	pTimestampArchive?: GraphQLTypes["Datetime"]
+	pHodnoceni?: number
 };
 	/** A connection to a list of `ParyNavrh` values. */
 ["ParyNavrhsConnection"]: {
@@ -11241,12 +13105,11 @@ for equality and combined with a logical ‘and.’ */
 };
 	["ParyNavrh"]: {
 	__typename: "ParyNavrh",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
 	pnId: GraphQLTypes["BigInt"],
 	pnNavrhl: GraphQLTypes["BigInt"],
 	pnPartner: GraphQLTypes["BigInt"],
 	pnPartnerka: GraphQLTypes["BigInt"],
+	id?: GraphQLTypes["BigInt"],
 	/** Reads a single `User` that is related to this `ParyNavrh`. */
 	userByPnNavrhl?: GraphQLTypes["User"],
 	/** Reads a single `User` that is related to this `ParyNavrh`. */
@@ -11275,6 +13138,75 @@ for equality and combined with a logical ‘and.’ */
 	pnPartner?: GraphQLTypes["BigInt"],
 	/** Checks for equality with the object’s `pnPartnerka` field. */
 	pnPartnerka?: GraphQLTypes["BigInt"]
+};
+	/** A connection to a list of `Rozpi` values. */
+["RozpisConnection"]: {
+	__typename: "RozpisConnection",
+	/** A list of `Rozpi` objects. */
+	nodes: Array<GraphQLTypes["Rozpi"]>,
+	/** A list of edges which contains the `Rozpi` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["RozpisEdge"]>,
+	/** Information to aid in pagination. */
+	pageInfo: GraphQLTypes["PageInfo"],
+	/** The count of *all* `Rozpi` you could get from the connection. */
+	totalCount: number
+};
+	/** A `Rozpi` edge in the connection. */
+["RozpisEdge"]: {
+	__typename: "RozpisEdge",
+	/** A cursor for use in pagination. */
+	cursor?: GraphQLTypes["Cursor"],
+	/** The `Rozpi` at the end of the edge. */
+	node: GraphQLTypes["Rozpi"]
+};
+	/** Methods to use when ordering `Rozpi`. */
+["RozpisOrderBy"]: RozpisOrderBy;
+	/** A condition to be used against `Rozpi` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["RozpiCondition"]: {
+		/** Checks for equality with the object’s `rId` field. */
+	rId?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `rTrener` field. */
+	rTrener?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `rDatum` field. */
+	rDatum?: GraphQLTypes["Date"]
+};
+	/** A connection to a list of `Session` values. */
+["SessionsConnection"]: {
+	__typename: "SessionsConnection",
+	/** A list of `Session` objects. */
+	nodes: Array<GraphQLTypes["Session"]>,
+	/** A list of edges which contains the `Session` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["SessionsEdge"]>,
+	/** Information to aid in pagination. */
+	pageInfo: GraphQLTypes["PageInfo"],
+	/** The count of *all* `Session` you could get from the connection. */
+	totalCount: number
+};
+	["Session"]: {
+	__typename: "Session",
+	ssId: string,
+	ssUpdatedAt: GraphQLTypes["Datetime"],
+	ssLifetime: GraphQLTypes["BigInt"],
+	ssUser?: GraphQLTypes["BigInt"],
+	/** Reads a single `User` that is related to this `Session`. */
+	userBySsUser?: GraphQLTypes["User"]
+};
+	/** A `Session` edge in the connection. */
+["SessionsEdge"]: {
+	__typename: "SessionsEdge",
+	/** A cursor for use in pagination. */
+	cursor?: GraphQLTypes["Cursor"],
+	/** The `Session` at the end of the edge. */
+	node: GraphQLTypes["Session"]
+};
+	/** Methods to use when ordering `Session`. */
+["SessionsOrderBy"]: SessionsOrderBy;
+	/** A condition to be used against `Session` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["SessionCondition"]: {
+		/** Checks for equality with the object’s `ssId` field. */
+	ssId?: string,
+	/** Checks for equality with the object’s `ssUser` field. */
+	ssUser?: GraphQLTypes["BigInt"]
 };
 	/** A connection to a list of `Upozorneni` values. */
 ["UpozornenisConnection"]: {
@@ -11305,19 +13237,41 @@ for equality and combined with a logical ‘and.’ */
 	upId?: GraphQLTypes["BigInt"],
 	/** Checks for equality with the object’s `upKdo` field. */
 	upKdo?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `upNadpis` field. */
-	upNadpis?: string,
-	/** Checks for equality with the object’s `upText` field. */
-	upText?: string,
-	/** Checks for equality with the object’s `upBarvy` field. */
-	upBarvy?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `upLock` field. */
-	upLock?: boolean,
-	/** Checks for equality with the object’s `upTimestamp` field. */
-	upTimestamp?: GraphQLTypes["Datetime"],
 	/** Checks for equality with the object’s `upTimestampAdd` field. */
 	upTimestampAdd?: GraphQLTypes["Datetime"]
 };
+	/** A connection to a list of `Attachment` values. */
+["AttachmentsConnection"]: {
+	__typename: "AttachmentsConnection",
+	/** A list of `Attachment` objects. */
+	nodes: Array<GraphQLTypes["Attachment"]>,
+	/** A list of edges which contains the `Attachment` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["AttachmentsEdge"]>,
+	/** Information to aid in pagination. */
+	pageInfo: GraphQLTypes["PageInfo"],
+	/** The count of *all* `Attachment` you could get from the connection. */
+	totalCount: number
+};
+	/** A `Attachment` edge in the connection. */
+["AttachmentsEdge"]: {
+	__typename: "AttachmentsEdge",
+	/** A cursor for use in pagination. */
+	cursor?: GraphQLTypes["Cursor"],
+	/** The `Attachment` at the end of the edge. */
+	node: GraphQLTypes["Attachment"]
+};
+	/** Methods to use when ordering `Attachment`. */
+["AttachmentsOrderBy"]: AttachmentsOrderBy;
+	/** A condition to be used against `Attachment` object types. All fields are tested
+for equality and combined with a logical ‘and.’ */
+["AttachmentCondition"]: {
+		/** Checks for equality with the object’s `objectName` field. */
+	objectName?: string,
+	/** Checks for equality with the object’s `uploadedBy` field. */
+	uploadedBy?: GraphQLTypes["BigInt"]
+};
+	/** Methods to use when ordering `AkceItem`. */
+["AkceItemsOrderBy"]: AkceItemsOrderBy;
 	/** A `AkceItem` edge in the connection. */
 ["AkceItemsEdge"]: {
 	__typename: "AkceItemsEdge",
@@ -11336,30 +13290,78 @@ for equality and combined with a logical ‘and.’ */
 };
 	/** Methods to use when ordering `Akce`. */
 ["AkcesOrderBy"]: AkcesOrderBy;
-	/** A condition to be used against `Akce` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["AkceCondition"]: {
-		/** Checks for equality with the object’s `aId` field. */
-	aId?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `aJmeno` field. */
-	aJmeno?: string,
-	/** Checks for equality with the object’s `aKde` field. */
-	aKde?: string,
-	/** Checks for equality with the object’s `aInfo` field. */
-	aInfo?: string,
-	/** Checks for equality with the object’s `aOd` field. */
-	aOd?: GraphQLTypes["Date"],
-	/** Checks for equality with the object’s `aDo` field. */
-	aDo?: GraphQLTypes["Date"],
-	/** Checks for equality with the object’s `aKapacita` field. */
-	aKapacita?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `aDokumenty` field. */
-	aDokumenty?: string,
-	/** Checks for equality with the object’s `aTimestamp` field. */
-	aTimestamp?: GraphQLTypes["Datetime"],
-	/** Checks for equality with the object’s `aLock` field. */
-	aLock?: boolean,
-	/** Checks for equality with the object’s `aVisible` field. */
-	aVisible?: boolean
+	/** A connection to a list of `Event` values. */
+["EventsConnection"]: {
+	__typename: "EventsConnection",
+	/** A list of `Event` objects. */
+	nodes: Array<GraphQLTypes["Event"]>,
+	/** A list of edges which contains the `Event` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["EventsEdge"]>,
+	/** Information to aid in pagination. */
+	pageInfo: GraphQLTypes["PageInfo"],
+	/** The count of *all* `Event` you could get from the connection. */
+	totalCount: number
+};
+	/** A `Event` edge in the connection. */
+["EventsEdge"]: {
+	__typename: "EventsEdge",
+	/** A cursor for use in pagination. */
+	cursor?: GraphQLTypes["Cursor"],
+	/** The `Event` at the end of the edge. */
+	node: GraphQLTypes["Event"]
+};
+	/** Methods to use when ordering `Event`. */
+["EventsOrderBy"]: EventsOrderBy;
+	/** A condition to be used against `Event` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["EventCondition"]: {
+		/** Checks for equality with the object’s `id` field. */
+	id?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `since` field. */
+	since?: GraphQLTypes["Date"],
+	/** Checks for equality with the object’s `isVisible` field. */
+	isVisible?: boolean
+};
+	/** A connection to a list of `FormResponse` values. */
+["FormResponsesConnection"]: {
+	__typename: "FormResponsesConnection",
+	/** A list of `FormResponse` objects. */
+	nodes: Array<GraphQLTypes["FormResponse"]>,
+	/** A list of edges which contains the `FormResponse` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["FormResponsesEdge"]>,
+	/** Information to aid in pagination. */
+	pageInfo: GraphQLTypes["PageInfo"],
+	/** The count of *all* `FormResponse` you could get from the connection. */
+	totalCount: number
+};
+	["FormResponse"]: {
+	__typename: "FormResponse",
+	id: GraphQLTypes["BigInt"],
+	type: string,
+	data: GraphQLTypes["JSON"],
+	url: string,
+	createdAt: GraphQLTypes["Datetime"],
+	updatedAt: GraphQLTypes["Datetime"],
+	tenantId: GraphQLTypes["BigInt"]
+};
+	/** A `FormResponse` edge in the connection. */
+["FormResponsesEdge"]: {
+	__typename: "FormResponsesEdge",
+	/** A cursor for use in pagination. */
+	cursor?: GraphQLTypes["Cursor"],
+	/** The `FormResponse` at the end of the edge. */
+	node: GraphQLTypes["FormResponse"]
+};
+	/** Methods to use when ordering `FormResponse`. */
+["FormResponsesOrderBy"]: FormResponsesOrderBy;
+	/** A condition to be used against `FormResponse` object types. All fields are
+tested for equality and combined with a logical ‘and.’ */
+["FormResponseCondition"]: {
+		/** Checks for equality with the object’s `id` field. */
+	id?: GraphQLTypes["BigInt"],
+	/** Checks for equality with the object’s `type` field. */
+	type?: string,
+	/** Checks for equality with the object’s `updatedAt` field. */
+	updatedAt?: GraphQLTypes["Datetime"]
 };
 	/** A connection to a list of `GalerieDir` values. */
 ["GalerieDirsConnection"]: {
@@ -11389,148 +13391,35 @@ for equality and combined with a logical ‘and.’ */
 		/** Checks for equality with the object’s `gdId` field. */
 	gdId?: GraphQLTypes["BigInt"],
 	/** Checks for equality with the object’s `gdIdRodic` field. */
-	gdIdRodic?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `gdName` field. */
-	gdName?: string,
-	/** Checks for equality with the object’s `gdLevel` field. */
-	gdLevel?: number,
-	/** Checks for equality with the object’s `gdPath` field. */
-	gdPath?: string,
-	/** Checks for equality with the object’s `gdHidden` field. */
-	gdHidden?: boolean
+	gdIdRodic?: GraphQLTypes["BigInt"]
 };
-	/** A connection to a list of `Member` values. */
-["MembersConnection"]: {
-	__typename: "MembersConnection",
-	/** A list of `Member` objects. */
-	nodes: Array<GraphQLTypes["Member"]>,
-	/** A list of edges which contains the `Member` and cursor to aid in pagination. */
-	edges: Array<GraphQLTypes["MembersEdge"]>,
+	/** A connection to a list of `Location` values. */
+["LocationsConnection"]: {
+	__typename: "LocationsConnection",
+	/** A list of `Location` objects. */
+	nodes: Array<GraphQLTypes["Location"]>,
+	/** A list of edges which contains the `Location` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["LocationsEdge"]>,
 	/** Information to aid in pagination. */
 	pageInfo: GraphQLTypes["PageInfo"],
-	/** The count of *all* `Member` you could get from the connection. */
+	/** The count of *all* `Location` you could get from the connection. */
 	totalCount: number
 };
-	["Member"]: {
-	__typename: "Member",
-	uId?: GraphQLTypes["BigInt"],
-	uLogin?: string,
-	uPass?: string,
-	uJmeno?: string,
-	uPrijmeni?: string,
-	uPohlavi?: string,
-	uEmail?: string,
-	uTelefon?: string,
-	uNarozeni?: GraphQLTypes["Date"],
-	uRodneCislo?: string,
-	uPoznamky?: string,
-	uTimestamp?: GraphQLTypes["Datetime"],
-	uLevel?: number,
-	uGroup?: GraphQLTypes["BigInt"],
-	uSkupina?: GraphQLTypes["BigInt"],
-	uDancer?: boolean,
-	uBan?: boolean,
-	uLock?: boolean,
-	uConfirmed?: boolean,
-	uSystem?: boolean,
-	uStreet?: string,
-	uConscriptionNumber?: string,
-	uOrientationNumber?: string,
-	uDistrict?: string,
-	uCity?: string,
-	uPostalCode?: string,
-	uNationality?: string,
-	uMemberSince?: GraphQLTypes["Datetime"],
-	uMemberUntil?: GraphQLTypes["Datetime"],
-	uCreatedAt?: GraphQLTypes["Datetime"],
-	uTeacher?: boolean,
-	uGdprSignedAt?: GraphQLTypes["Datetime"],
-	sId?: GraphQLTypes["BigInt"],
-	sName?: string,
-	paymentValid?: boolean
-};
-	/** A `Member` edge in the connection. */
-["MembersEdge"]: {
-	__typename: "MembersEdge",
+	/** A `Location` edge in the connection. */
+["LocationsEdge"]: {
+	__typename: "LocationsEdge",
 	/** A cursor for use in pagination. */
 	cursor?: GraphQLTypes["Cursor"],
-	/** The `Member` at the end of the edge. */
-	node: GraphQLTypes["Member"]
+	/** The `Location` at the end of the edge. */
+	node: GraphQLTypes["Location"]
 };
-	/** Methods to use when ordering `Member`. */
-["MembersOrderBy"]: MembersOrderBy;
-	/** A condition to be used against `Member` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["MemberCondition"]: {
-		/** Checks for equality with the object’s `uId` field. */
-	uId?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `uLogin` field. */
-	uLogin?: string,
-	/** Checks for equality with the object’s `uPass` field. */
-	uPass?: string,
-	/** Checks for equality with the object’s `uJmeno` field. */
-	uJmeno?: string,
-	/** Checks for equality with the object’s `uPrijmeni` field. */
-	uPrijmeni?: string,
-	/** Checks for equality with the object’s `uPohlavi` field. */
-	uPohlavi?: string,
-	/** Checks for equality with the object’s `uEmail` field. */
-	uEmail?: string,
-	/** Checks for equality with the object’s `uTelefon` field. */
-	uTelefon?: string,
-	/** Checks for equality with the object’s `uNarozeni` field. */
-	uNarozeni?: GraphQLTypes["Date"],
-	/** Checks for equality with the object’s `uRodneCislo` field. */
-	uRodneCislo?: string,
-	/** Checks for equality with the object’s `uPoznamky` field. */
-	uPoznamky?: string,
-	/** Checks for equality with the object’s `uTimestamp` field. */
-	uTimestamp?: GraphQLTypes["Datetime"],
-	/** Checks for equality with the object’s `uLevel` field. */
-	uLevel?: number,
-	/** Checks for equality with the object’s `uGroup` field. */
-	uGroup?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `uSkupina` field. */
-	uSkupina?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `uDancer` field. */
-	uDancer?: boolean,
-	/** Checks for equality with the object’s `uBan` field. */
-	uBan?: boolean,
-	/** Checks for equality with the object’s `uLock` field. */
-	uLock?: boolean,
-	/** Checks for equality with the object’s `uConfirmed` field. */
-	uConfirmed?: boolean,
-	/** Checks for equality with the object’s `uSystem` field. */
-	uSystem?: boolean,
-	/** Checks for equality with the object’s `uStreet` field. */
-	uStreet?: string,
-	/** Checks for equality with the object’s `uConscriptionNumber` field. */
-	uConscriptionNumber?: string,
-	/** Checks for equality with the object’s `uOrientationNumber` field. */
-	uOrientationNumber?: string,
-	/** Checks for equality with the object’s `uDistrict` field. */
-	uDistrict?: string,
-	/** Checks for equality with the object’s `uCity` field. */
-	uCity?: string,
-	/** Checks for equality with the object’s `uPostalCode` field. */
-	uPostalCode?: string,
-	/** Checks for equality with the object’s `uNationality` field. */
-	uNationality?: string,
-	/** Checks for equality with the object’s `uMemberSince` field. */
-	uMemberSince?: GraphQLTypes["Datetime"],
-	/** Checks for equality with the object’s `uMemberUntil` field. */
-	uMemberUntil?: GraphQLTypes["Datetime"],
-	/** Checks for equality with the object’s `uCreatedAt` field. */
-	uCreatedAt?: GraphQLTypes["Datetime"],
-	/** Checks for equality with the object’s `uTeacher` field. */
-	uTeacher?: boolean,
-	/** Checks for equality with the object’s `uGdprSignedAt` field. */
-	uGdprSignedAt?: GraphQLTypes["Datetime"],
-	/** Checks for equality with the object’s `sId` field. */
-	sId?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `sName` field. */
-	sName?: string,
-	/** Checks for equality with the object’s `paymentValid` field. */
-	paymentValid?: boolean
+	/** Methods to use when ordering `Location`. */
+["LocationsOrderBy"]: LocationsOrderBy;
+	/** A condition to be used against `Location` object types. All fields are tested
+for equality and combined with a logical ‘and.’ */
+["LocationCondition"]: {
+		/** Checks for equality with the object’s `id` field. */
+	id?: GraphQLTypes["BigInt"]
 };
 	/** A connection to a list of `Page` values. */
 ["PagesConnection"]: {
@@ -11546,8 +13435,6 @@ for equality and combined with a logical ‘and.’ */
 };
 	["Page"]: {
 	__typename: "Page",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
 	id: number,
 	url: string,
 	content: GraphQLTypes["JSON"],
@@ -11555,8 +13442,6 @@ for equality and combined with a logical ‘and.’ */
 	updatedAt: GraphQLTypes["Datetime"],
 	title: string
 };
-	/** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
-["JSON"]:any;
 	/** A `Page` edge in the connection. */
 ["PagesEdge"]: {
 	__typename: "PagesEdge",
@@ -11572,15 +13457,7 @@ for equality and combined with a logical ‘and.’ */
 		/** Checks for equality with the object’s `id` field. */
 	id?: number,
 	/** Checks for equality with the object’s `url` field. */
-	url?: string,
-	/** Checks for equality with the object’s `content` field. */
-	content?: GraphQLTypes["JSON"],
-	/** Checks for equality with the object’s `createdAt` field. */
-	createdAt?: GraphQLTypes["Datetime"],
-	/** Checks for equality with the object’s `updatedAt` field. */
-	updatedAt?: GraphQLTypes["Datetime"],
-	/** Checks for equality with the object’s `title` field. */
-	title?: string
+	url?: string
 };
 	/** A connection to a list of `PageRevision` values. */
 ["PageRevisionsConnection"]: {
@@ -11596,8 +13473,6 @@ for equality and combined with a logical ‘and.’ */
 };
 	["PageRevision"]: {
 	__typename: "PageRevision",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
 	revNumber: number,
 	revOperation: string,
 	revTimestamp?: GraphQLTypes["Datetime"],
@@ -11622,23 +13497,7 @@ for equality and combined with a logical ‘and.’ */
 tested for equality and combined with a logical ‘and.’ */
 ["PageRevisionCondition"]: {
 		/** Checks for equality with the object’s `revNumber` field. */
-	revNumber?: number,
-	/** Checks for equality with the object’s `revOperation` field. */
-	revOperation?: string,
-	/** Checks for equality with the object’s `revTimestamp` field. */
-	revTimestamp?: GraphQLTypes["Datetime"],
-	/** Checks for equality with the object’s `id` field. */
-	id?: number,
-	/** Checks for equality with the object’s `url` field. */
-	url?: string,
-	/** Checks for equality with the object’s `content` field. */
-	content?: GraphQLTypes["JSON"],
-	/** Checks for equality with the object’s `createdAt` field. */
-	createdAt?: GraphQLTypes["Datetime"],
-	/** Checks for equality with the object’s `updatedAt` field. */
-	updatedAt?: GraphQLTypes["Datetime"],
-	/** Checks for equality with the object’s `title` field. */
-	title?: string
+	revNumber?: number
 };
 	/** A connection to a list of `Parameter` values. */
 ["ParametersConnection"]: {
@@ -11654,8 +13513,6 @@ tested for equality and combined with a logical ‘and.’ */
 };
 	["Parameter"]: {
 	__typename: "Parameter",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
 	paName: string,
 	paValue: string
 };
@@ -11673,9 +13530,7 @@ tested for equality and combined with a logical ‘and.’ */
 for equality and combined with a logical ‘and.’ */
 ["ParameterCondition"]: {
 		/** Checks for equality with the object’s `paName` field. */
-	paName?: string,
-	/** Checks for equality with the object’s `paValue` field. */
-	paValue?: string
+	paName?: string
 };
 	/** A connection to a list of `Permission` values. */
 ["PermissionsConnection"]: {
@@ -11703,45 +13558,34 @@ for equality and combined with a logical ‘and.’ */
 for equality and combined with a logical ‘and.’ */
 ["PermissionCondition"]: {
 		/** Checks for equality with the object’s `peId` field. */
-	peId?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `peName` field. */
-	peName?: string,
-	/** Checks for equality with the object’s `peDescription` field. */
-	peDescription?: string,
-	/** Checks for equality with the object’s `peAkce` field. */
-	peAkce?: number,
-	/** Checks for equality with the object’s `peAktuality` field. */
-	peAktuality?: number,
-	/** Checks for equality with the object’s `peAnkety` field. */
-	peAnkety?: number,
-	/** Checks for equality with the object’s `peDokumenty` field. */
-	peDokumenty?: number,
-	/** Checks for equality with the object’s `peGalerie` field. */
-	peGalerie?: number,
-	/** Checks for equality with the object’s `peInzerce` field. */
-	peInzerce?: number,
-	/** Checks for equality with the object’s `peKonzole` field. */
-	peKonzole?: number,
-	/** Checks for equality with the object’s `peNabidka` field. */
-	peNabidka?: number,
-	/** Checks for equality with the object’s `peNastenka` field. */
-	peNastenka?: number,
-	/** Checks for equality with the object’s `peNovinky` field. */
-	peNovinky?: number,
-	/** Checks for equality with the object’s `pePary` field. */
-	pePary?: number,
-	/** Checks for equality with the object’s `pePlatby` field. */
-	pePlatby?: number,
-	/** Checks for equality with the object’s `pePermissions` field. */
-	pePermissions?: number,
-	/** Checks for equality with the object’s `peRozpis` field. */
-	peRozpis?: number,
-	/** Checks for equality with the object’s `peSkupiny` field. */
-	peSkupiny?: number,
-	/** Checks for equality with the object’s `peUsers` field. */
-	peUsers?: number,
-	/** Checks for equality with the object’s `peMain` field. */
-	peMain?: number
+	peId?: GraphQLTypes["BigInt"]
+};
+	/** A connection to a list of `Person` values. */
+["PeopleConnection"]: {
+	__typename: "PeopleConnection",
+	/** A list of `Person` objects. */
+	nodes: Array<GraphQLTypes["Person"]>,
+	/** A list of edges which contains the `Person` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["PeopleEdge"]>,
+	/** Information to aid in pagination. */
+	pageInfo: GraphQLTypes["PageInfo"],
+	/** The count of *all* `Person` you could get from the connection. */
+	totalCount: number
+};
+	/** A `Person` edge in the connection. */
+["PeopleEdge"]: {
+	__typename: "PeopleEdge",
+	/** A cursor for use in pagination. */
+	cursor?: GraphQLTypes["Cursor"],
+	/** The `Person` at the end of the edge. */
+	node: GraphQLTypes["Person"]
+};
+	/** Methods to use when ordering `Person`. */
+["PeopleOrderBy"]: PeopleOrderBy;
+	/** A condition to be used against `Person` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["PersonCondition"]: {
+		/** Checks for equality with the object’s `id` field. */
+	id?: GraphQLTypes["BigInt"]
 };
 	/** A connection to a list of `PlatbyCategory` values. */
 ["PlatbyCategoriesConnection"]: {
@@ -11770,26 +13614,8 @@ tested for equality and combined with a logical ‘and.’ */
 ["PlatbyCategoryCondition"]: {
 		/** Checks for equality with the object’s `pcId` field. */
 	pcId?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `pcName` field. */
-	pcName?: string,
 	/** Checks for equality with the object’s `pcSymbol` field. */
-	pcSymbol?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `pcAmount` field. */
-	pcAmount?: GraphQLTypes["BigFloat"],
-	/** Checks for equality with the object’s `pcDateDue` field. */
-	pcDateDue?: GraphQLTypes["Date"],
-	/** Checks for equality with the object’s `pcValidFrom` field. */
-	pcValidFrom?: GraphQLTypes["Date"],
-	/** Checks for equality with the object’s `pcValidTo` field. */
-	pcValidTo?: GraphQLTypes["Date"],
-	/** Checks for equality with the object’s `pcUseBase` field. */
-	pcUseBase?: boolean,
-	/** Checks for equality with the object’s `pcUsePrefix` field. */
-	pcUsePrefix?: boolean,
-	/** Checks for equality with the object’s `pcArchive` field. */
-	pcArchive?: boolean,
-	/** Checks for equality with the object’s `pcVisible` field. */
-	pcVisible?: boolean
+	pcSymbol?: GraphQLTypes["BigInt"]
 };
 	/** A connection to a list of `PlatbyGroup` values. */
 ["PlatbyGroupsConnection"]: {
@@ -11817,15 +13643,7 @@ tested for equality and combined with a logical ‘and.’ */
 for equality and combined with a logical ‘and.’ */
 ["PlatbyGroupCondition"]: {
 		/** Checks for equality with the object’s `pgId` field. */
-	pgId?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `pgType` field. */
-	pgType?: GraphQLTypes["BigFloat"],
-	/** Checks for equality with the object’s `pgName` field. */
-	pgName?: string,
-	/** Checks for equality with the object’s `pgDescription` field. */
-	pgDescription?: string,
-	/** Checks for equality with the object’s `pgBase` field. */
-	pgBase?: GraphQLTypes["BigInt"]
+	pgId?: GraphQLTypes["BigInt"]
 };
 	/** A connection to a list of `PlatbyRaw` values. */
 ["PlatbyRawsConnection"]: {
@@ -11854,292 +13672,35 @@ for equality and combined with a logical ‘and.’ */
 ["PlatbyRawCondition"]: {
 		/** Checks for equality with the object’s `prId` field. */
 	prId?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `prRaw` field. */
-	prRaw?: string,
 	/** Checks for equality with the object’s `prHash` field. */
-	prHash?: string,
-	/** Checks for equality with the object’s `prSorted` field. */
-	prSorted?: boolean,
-	/** Checks for equality with the object’s `prDiscarded` field. */
-	prDiscarded?: boolean
+	prHash?: string
 };
-	/** A connection to a list of `Skupiny` values. */
-["SkupiniesConnection"]: {
-	__typename: "SkupiniesConnection",
-	/** A list of `Skupiny` objects. */
-	nodes: Array<GraphQLTypes["Skupiny"]>,
-	/** A list of edges which contains the `Skupiny` and cursor to aid in pagination. */
-	edges: Array<GraphQLTypes["SkupiniesEdge"]>,
+	/** A connection to a list of `Tenant` values. */
+["TenantsConnection"]: {
+	__typename: "TenantsConnection",
+	/** A list of `Tenant` objects. */
+	nodes: Array<GraphQLTypes["Tenant"]>,
+	/** A list of edges which contains the `Tenant` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["TenantsEdge"]>,
 	/** Information to aid in pagination. */
 	pageInfo: GraphQLTypes["PageInfo"],
-	/** The count of *all* `Skupiny` you could get from the connection. */
+	/** The count of *all* `Tenant` you could get from the connection. */
 	totalCount: number
 };
-	/** A `Skupiny` edge in the connection. */
-["SkupiniesEdge"]: {
-	__typename: "SkupiniesEdge",
+	/** A `Tenant` edge in the connection. */
+["TenantsEdge"]: {
+	__typename: "TenantsEdge",
 	/** A cursor for use in pagination. */
 	cursor?: GraphQLTypes["Cursor"],
-	/** The `Skupiny` at the end of the edge. */
-	node: GraphQLTypes["Skupiny"]
+	/** The `Tenant` at the end of the edge. */
+	node: GraphQLTypes["Tenant"]
 };
-	/** Methods to use when ordering `Skupiny`. */
-["SkupiniesOrderBy"]: SkupiniesOrderBy;
-	/** A condition to be used against `Skupiny` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["SkupinyCondition"]: {
-		/** Checks for equality with the object’s `sId` field. */
-	sId?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `sName` field. */
-	sName?: string,
-	/** Checks for equality with the object’s `sDescription` field. */
-	sDescription?: string,
-	/** Checks for equality with the object’s `sColorRgb` field. */
-	sColorRgb?: string,
-	/** Checks for equality with the object’s `sColorText` field. */
-	sColorText?: string,
-	/** Checks for equality with the object’s `sLocation` field. */
-	sLocation?: string,
-	/** Checks for equality with the object’s `sVisible` field. */
-	sVisible?: boolean
-};
-	/** A connection to a list of `UsersSkupiny` values. */
-["UsersSkupiniesConnection"]: {
-	__typename: "UsersSkupiniesConnection",
-	/** A list of `UsersSkupiny` objects. */
-	nodes: Array<GraphQLTypes["UsersSkupiny"]>,
-	/** A list of edges which contains the `UsersSkupiny` and cursor to aid in pagination. */
-	edges: Array<GraphQLTypes["UsersSkupiniesEdge"]>,
-	/** Information to aid in pagination. */
-	pageInfo: GraphQLTypes["PageInfo"],
-	/** The count of *all* `UsersSkupiny` you could get from the connection. */
-	totalCount: number
-};
-	["UsersSkupiny"]: {
-	__typename: "UsersSkupiny",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
-	usId: GraphQLTypes["BigInt"],
-	usColor: string,
-	usPlatbaMesic: GraphQLTypes["BigInt"],
-	usPlatbaCtvrtrok: GraphQLTypes["BigInt"],
-	usPlatbaPulrok: GraphQLTypes["BigInt"],
-	usPopis: string
-};
-	/** A `UsersSkupiny` edge in the connection. */
-["UsersSkupiniesEdge"]: {
-	__typename: "UsersSkupiniesEdge",
-	/** A cursor for use in pagination. */
-	cursor?: GraphQLTypes["Cursor"],
-	/** The `UsersSkupiny` at the end of the edge. */
-	node: GraphQLTypes["UsersSkupiny"]
-};
-	/** Methods to use when ordering `UsersSkupiny`. */
-["UsersSkupiniesOrderBy"]: UsersSkupiniesOrderBy;
-	/** A condition to be used against `UsersSkupiny` object types. All fields are
-tested for equality and combined with a logical ‘and.’ */
-["UsersSkupinyCondition"]: {
-		/** Checks for equality with the object’s `usId` field. */
-	usId?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `usColor` field. */
-	usColor?: string,
-	/** Checks for equality with the object’s `usPlatbaMesic` field. */
-	usPlatbaMesic?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `usPlatbaCtvrtrok` field. */
-	usPlatbaCtvrtrok?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `usPlatbaPulrok` field. */
-	usPlatbaPulrok?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `usPopis` field. */
-	usPopis?: string
-};
-	/** A connection to a list of `Video` values. */
-["VideosConnection"]: {
-	__typename: "VideosConnection",
-	/** A list of `Video` objects. */
-	nodes: Array<GraphQLTypes["Video"]>,
-	/** A list of edges which contains the `Video` and cursor to aid in pagination. */
-	edges: Array<GraphQLTypes["VideosEdge"]>,
-	/** Information to aid in pagination. */
-	pageInfo: GraphQLTypes["PageInfo"],
-	/** The count of *all* `Video` you could get from the connection. */
-	totalCount: number
-};
-	["Video"]: {
-	__typename: "Video",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
-	vId: GraphQLTypes["BigInt"],
-	vUri: string,
-	vTitle: string,
-	vAuthor: string,
-	vDescription: string,
-	vPlaylist?: string,
-	vCreatedAt: GraphQLTypes["Datetime"],
-	vUpdatedAt: GraphQLTypes["Datetime"]
-};
-	/** A `Video` edge in the connection. */
-["VideosEdge"]: {
-	__typename: "VideosEdge",
-	/** A cursor for use in pagination. */
-	cursor?: GraphQLTypes["Cursor"],
-	/** The `Video` at the end of the edge. */
-	node: GraphQLTypes["Video"]
-};
-	/** Methods to use when ordering `Video`. */
-["VideosOrderBy"]: VideosOrderBy;
-	/** A condition to be used against `Video` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-["VideoCondition"]: {
-		/** Checks for equality with the object’s `vId` field. */
-	vId?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `vUri` field. */
-	vUri?: string,
-	/** Checks for equality with the object’s `vTitle` field. */
-	vTitle?: string,
-	/** Checks for equality with the object’s `vAuthor` field. */
-	vAuthor?: string,
-	/** Checks for equality with the object’s `vDescription` field. */
-	vDescription?: string,
-	/** Checks for equality with the object’s `vPlaylist` field. */
-	vPlaylist?: string,
-	/** Checks for equality with the object’s `vCreatedAt` field. */
-	vCreatedAt?: GraphQLTypes["Datetime"],
-	/** Checks for equality with the object’s `vUpdatedAt` field. */
-	vUpdatedAt?: GraphQLTypes["Datetime"]
-};
-	/** A connection to a list of `VideoList` values. */
-["VideoListsConnection"]: {
-	__typename: "VideoListsConnection",
-	/** A list of `VideoList` objects. */
-	nodes: Array<GraphQLTypes["VideoList"]>,
-	/** A list of edges which contains the `VideoList` and cursor to aid in pagination. */
-	edges: Array<GraphQLTypes["VideoListsEdge"]>,
-	/** Information to aid in pagination. */
-	pageInfo: GraphQLTypes["PageInfo"],
-	/** The count of *all* `VideoList` you could get from the connection. */
-	totalCount: number
-};
-	["VideoList"]: {
-	__typename: "VideoList",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
-	vlId: GraphQLTypes["BigInt"],
-	vlUrl: string,
-	vlTitle: string,
-	vlDescription: string,
-	vlCount: GraphQLTypes["BigInt"],
-	vlCreatedAt: GraphQLTypes["Datetime"],
-	vlLastChecked?: GraphQLTypes["Datetime"]
-};
-	/** A `VideoList` edge in the connection. */
-["VideoListsEdge"]: {
-	__typename: "VideoListsEdge",
-	/** A cursor for use in pagination. */
-	cursor?: GraphQLTypes["Cursor"],
-	/** The `VideoList` at the end of the edge. */
-	node: GraphQLTypes["VideoList"]
-};
-	/** Methods to use when ordering `VideoList`. */
-["VideoListsOrderBy"]: VideoListsOrderBy;
-	/** A condition to be used against `VideoList` object types. All fields are tested
-for equality and combined with a logical ‘and.’ */
-["VideoListCondition"]: {
-		/** Checks for equality with the object’s `vlId` field. */
-	vlId?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `vlUrl` field. */
-	vlUrl?: string,
-	/** Checks for equality with the object’s `vlTitle` field. */
-	vlTitle?: string,
-	/** Checks for equality with the object’s `vlDescription` field. */
-	vlDescription?: string,
-	/** Checks for equality with the object’s `vlCount` field. */
-	vlCount?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `vlCreatedAt` field. */
-	vlCreatedAt?: GraphQLTypes["Datetime"],
-	/** Checks for equality with the object’s `vlLastChecked` field. */
-	vlLastChecked?: GraphQLTypes["Datetime"]
-};
-	/** A connection to a list of `VideoSource` values. */
-["VideoSourcesConnection"]: {
-	__typename: "VideoSourcesConnection",
-	/** A list of `VideoSource` objects. */
-	nodes: Array<GraphQLTypes["VideoSource"]>,
-	/** A list of edges which contains the `VideoSource` and cursor to aid in pagination. */
-	edges: Array<GraphQLTypes["VideoSourcesEdge"]>,
-	/** Information to aid in pagination. */
-	pageInfo: GraphQLTypes["PageInfo"],
-	/** The count of *all* `VideoSource` you could get from the connection. */
-	totalCount: number
-};
-	["VideoSource"]: {
-	__typename: "VideoSource",
-	/** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-	nodeId: string,
-	vsId: GraphQLTypes["BigInt"],
-	vsUrl: string,
-	vsTitle?: string,
-	vsDescription?: string,
-	vsCreatedAt: GraphQLTypes["Datetime"],
-	vsLastChecked?: GraphQLTypes["Datetime"]
-};
-	/** A `VideoSource` edge in the connection. */
-["VideoSourcesEdge"]: {
-	__typename: "VideoSourcesEdge",
-	/** A cursor for use in pagination. */
-	cursor?: GraphQLTypes["Cursor"],
-	/** The `VideoSource` at the end of the edge. */
-	node: GraphQLTypes["VideoSource"]
-};
-	/** Methods to use when ordering `VideoSource`. */
-["VideoSourcesOrderBy"]: VideoSourcesOrderBy;
-	/** A condition to be used against `VideoSource` object types. All fields are tested
-for equality and combined with a logical ‘and.’ */
-["VideoSourceCondition"]: {
-		/** Checks for equality with the object’s `vsId` field. */
-	vsId?: GraphQLTypes["BigInt"],
-	/** Checks for equality with the object’s `vsUrl` field. */
-	vsUrl?: string,
-	/** Checks for equality with the object’s `vsTitle` field. */
-	vsTitle?: string,
-	/** Checks for equality with the object’s `vsDescription` field. */
-	vsDescription?: string,
-	/** Checks for equality with the object’s `vsCreatedAt` field. */
-	vsCreatedAt?: GraphQLTypes["Datetime"],
-	/** Checks for equality with the object’s `vsLastChecked` field. */
-	vsLastChecked?: GraphQLTypes["Datetime"]
-};
-	/** A connection to a list of `ActiveProspectsRecord` values. */
-["ActiveProspectsConnection"]: {
-	__typename: "ActiveProspectsConnection",
-	/** A list of `ActiveProspectsRecord` objects. */
-	nodes: Array<GraphQLTypes["ActiveProspectsRecord"]>,
-	/** A list of edges which contains the `ActiveProspectsRecord` and cursor to aid in pagination. */
-	edges: Array<GraphQLTypes["ActiveProspectEdge"]>,
-	/** The count of *all* `ActiveProspectsRecord` you could get from the connection. */
-	totalCount: number
-};
-	/** The return type of our `activeProspects` query. */
-["ActiveProspectsRecord"]: {
-	__typename: "ActiveProspectsRecord",
-	id?: GraphQLTypes["BigInt"],
-	data?: GraphQLTypes["ProspectDatum"],
-	cohort?: GraphQLTypes["CrmCohort"],
-	updatedAt?: GraphQLTypes["Datetime"]
-};
-	["ProspectDatum"]: {
-	__typename: "ProspectDatum",
-	name?: string,
-	surname?: string,
-	email?: string,
-	phone?: string,
-	yearofbirth?: string
-};
-	["CrmCohort"]: CrmCohort;
-	/** A `ActiveProspectsRecord` edge in the connection. */
-["ActiveProspectEdge"]: {
-	__typename: "ActiveProspectEdge",
-	/** A cursor for use in pagination. */
-	cursor?: GraphQLTypes["Cursor"],
-	/** The `ActiveProspectsRecord` at the end of the edge. */
-	node: GraphQLTypes["ActiveProspectsRecord"]
+	/** Methods to use when ordering `Tenant`. */
+["TenantsOrderBy"]: TenantsOrderBy;
+	/** A condition to be used against `Tenant` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+["TenantCondition"]: {
+		/** Checks for equality with the object’s `id` field. */
+	id?: GraphQLTypes["BigInt"]
 };
 	/** A connection to a list of `BigInt` values. */
 ["CurrentCoupleIdsConnection"]: {
@@ -12159,6 +13720,37 @@ for equality and combined with a logical ‘and.’ */
 	/** The `BigInt` at the end of the edge. */
 	node?: GraphQLTypes["BigInt"]
 };
+	/** A connection to a list of `Video` values. */
+["VideosConnection"]: {
+	__typename: "VideosConnection",
+	/** A list of `Video` objects. */
+	nodes: Array<GraphQLTypes["Video"]>,
+	/** A list of edges which contains the `Video` and cursor to aid in pagination. */
+	edges: Array<GraphQLTypes["VideosEdge"]>,
+	/** Information to aid in pagination. */
+	pageInfo: GraphQLTypes["PageInfo"],
+	/** The count of *all* `Video` you could get from the connection. */
+	totalCount: number
+};
+	["Video"]: {
+	__typename: "Video",
+	vId: GraphQLTypes["BigInt"],
+	vUri: string,
+	vTitle: string,
+	vAuthor: string,
+	vDescription: string,
+	vPlaylist?: string,
+	vCreatedAt: GraphQLTypes["Datetime"],
+	vUpdatedAt: GraphQLTypes["Datetime"]
+};
+	/** A `Video` edge in the connection. */
+["VideosEdge"]: {
+	__typename: "VideosEdge",
+	/** A cursor for use in pagination. */
+	cursor?: GraphQLTypes["Cursor"],
+	/** The `Video` at the end of the edge. */
+	node: GraphQLTypes["Video"]
+};
 	/** The root mutation type which contains root level fields which mutate data. */
 ["Mutation"]: {
 	__typename: "Mutation",
@@ -12168,12 +13760,28 @@ for equality and combined with a logical ‘and.’ */
 	createAkceItem?: GraphQLTypes["CreateAkceItemPayload"],
 	/** Creates a single `Aktuality`. */
 	createAktuality?: GraphQLTypes["CreateAktualityPayload"],
+	/** Creates a single `Attachment`. */
+	createAttachment?: GraphQLTypes["CreateAttachmentPayload"],
+	/** Creates a single `AttendeeExternal`. */
+	createAttendeeExternal?: GraphQLTypes["CreateAttendeeExternalPayload"],
+	/** Creates a single `AttendeeUser`. */
+	createAttendeeUser?: GraphQLTypes["CreateAttendeeUserPayload"],
+	/** Creates a single `CohortGroup`. */
+	createCohortGroup?: GraphQLTypes["CreateCohortGroupPayload"],
 	/** Creates a single `Dokumenty`. */
 	createDokumenty?: GraphQLTypes["CreateDokumentyPayload"],
+	/** Creates a single `Event`. */
+	createEvent?: GraphQLTypes["CreateEventPayload"],
+	/** Creates a single `FormResponse`. */
+	createFormResponse?: GraphQLTypes["CreateFormResponsePayload"],
 	/** Creates a single `GalerieDir`. */
 	createGalerieDir?: GraphQLTypes["CreateGalerieDirPayload"],
 	/** Creates a single `GalerieFoto`. */
 	createGalerieFoto?: GraphQLTypes["CreateGalerieFotoPayload"],
+	/** Creates a single `Location`. */
+	createLocation?: GraphQLTypes["CreateLocationPayload"],
+	/** Creates a single `LocationAttachment`. */
+	createLocationAttachment?: GraphQLTypes["CreateLocationAttachmentPayload"],
 	/** Creates a single `Nabidka`. */
 	createNabidka?: GraphQLTypes["CreateNabidkaPayload"],
 	/** Creates a single `NabidkaItem`. */
@@ -12188,6 +13796,8 @@ for equality and combined with a logical ‘and.’ */
 	createParyNavrh?: GraphQLTypes["CreateParyNavrhPayload"],
 	/** Creates a single `Permission`. */
 	createPermission?: GraphQLTypes["CreatePermissionPayload"],
+	/** Creates a single `Person`. */
+	createPerson?: GraphQLTypes["CreatePersonPayload"],
 	/** Creates a single `PlatbyCategory`. */
 	createPlatbyCategory?: GraphQLTypes["CreatePlatbyCategoryPayload"],
 	/** Creates a single `PlatbyCategoryGroup`. */
@@ -12200,270 +13810,208 @@ for equality and combined with a logical ‘and.’ */
 	createPlatbyItem?: GraphQLTypes["CreatePlatbyItemPayload"],
 	/** Creates a single `PlatbyRaw`. */
 	createPlatbyRaw?: GraphQLTypes["CreatePlatbyRawPayload"],
+	/** Creates a single `Room`. */
+	createRoom?: GraphQLTypes["CreateRoomPayload"],
+	/** Creates a single `RoomAttachment`. */
+	createRoomAttachment?: GraphQLTypes["CreateRoomAttachmentPayload"],
 	/** Creates a single `Rozpi`. */
 	createRozpi?: GraphQLTypes["CreateRozpiPayload"],
 	/** Creates a single `RozpisItem`. */
 	createRozpisItem?: GraphQLTypes["CreateRozpisItemPayload"],
-	/** Creates a single `Session`. */
-	createSession?: GraphQLTypes["CreateSessionPayload"],
 	/** Creates a single `Skupiny`. */
 	createSkupiny?: GraphQLTypes["CreateSkupinyPayload"],
+	/** Creates a single `Tenant`. */
+	createTenant?: GraphQLTypes["CreateTenantPayload"],
+	/** Creates a single `TenantAttachment`. */
+	createTenantAttachment?: GraphQLTypes["CreateTenantAttachmentPayload"],
+	/** Creates a single `TenantLocation`. */
+	createTenantLocation?: GraphQLTypes["CreateTenantLocationPayload"],
+	/** Creates a single `TenantPerson`. */
+	createTenantPerson?: GraphQLTypes["CreateTenantPersonPayload"],
 	/** Creates a single `Upozorneni`. */
 	createUpozorneni?: GraphQLTypes["CreateUpozorneniPayload"],
 	/** Creates a single `UpozorneniSkupiny`. */
 	createUpozorneniSkupiny?: GraphQLTypes["CreateUpozorneniSkupinyPayload"],
 	/** Creates a single `User`. */
 	createUser?: GraphQLTypes["CreateUserPayload"],
-	/** Creates a single `UsersSkupiny`. */
-	createUsersSkupiny?: GraphQLTypes["CreateUsersSkupinyPayload"],
-	/** Creates a single `Video`. */
-	createVideo?: GraphQLTypes["CreateVideoPayload"],
-	/** Creates a single `VideoList`. */
-	createVideoList?: GraphQLTypes["CreateVideoListPayload"],
-	/** Creates a single `VideoSource`. */
-	createVideoSource?: GraphQLTypes["CreateVideoSourcePayload"],
-	/** Updates a single `Akce` using its globally unique id and a patch. */
-	updateAkceByNodeId?: GraphQLTypes["UpdateAkcePayload"],
-	/** Updates a single `Akce` using a unique key and a patch. */
-	updateAkce?: GraphQLTypes["UpdateAkcePayload"],
-	/** Updates a single `AkceItem` using its globally unique id and a patch. */
-	updateAkceItemByNodeId?: GraphQLTypes["UpdateAkceItemPayload"],
-	/** Updates a single `AkceItem` using a unique key and a patch. */
-	updateAkceItem?: GraphQLTypes["UpdateAkceItemPayload"],
-	/** Updates a single `Aktuality` using its globally unique id and a patch. */
-	updateAktualityByNodeId?: GraphQLTypes["UpdateAktualityPayload"],
 	/** Updates a single `Aktuality` using a unique key and a patch. */
 	updateAktuality?: GraphQLTypes["UpdateAktualityPayload"],
-	/** Updates a single `Dokumenty` using its globally unique id and a patch. */
-	updateDokumentyByNodeId?: GraphQLTypes["UpdateDokumentyPayload"],
+	/** Updates a single `Attachment` using a unique key and a patch. */
+	updateAttachment?: GraphQLTypes["UpdateAttachmentPayload"],
+	/** Updates a single `AttendeeExternal` using a unique key and a patch. */
+	updateAttendeeExternal?: GraphQLTypes["UpdateAttendeeExternalPayload"],
+	/** Updates a single `AttendeeUser` using a unique key and a patch. */
+	updateAttendeeUser?: GraphQLTypes["UpdateAttendeeUserPayload"],
+	/** Updates a single `AttendeeUser` using a unique key and a patch. */
+	updateAttendeeUserByUserIdAndEventId?: GraphQLTypes["UpdateAttendeeUserPayload"],
+	/** Updates a single `CohortGroup` using a unique key and a patch. */
+	updateCohortGroup?: GraphQLTypes["UpdateCohortGroupPayload"],
 	/** Updates a single `Dokumenty` using a unique key and a patch. */
 	updateDokumenty?: GraphQLTypes["UpdateDokumentyPayload"],
-	/** Updates a single `GalerieDir` using its globally unique id and a patch. */
-	updateGalerieDirByNodeId?: GraphQLTypes["UpdateGalerieDirPayload"],
+	/** Updates a single `Event` using a unique key and a patch. */
+	updateEvent?: GraphQLTypes["UpdateEventPayload"],
+	/** Updates a single `FormResponse` using a unique key and a patch. */
+	updateFormResponse?: GraphQLTypes["UpdateFormResponsePayload"],
 	/** Updates a single `GalerieDir` using a unique key and a patch. */
 	updateGalerieDir?: GraphQLTypes["UpdateGalerieDirPayload"],
-	/** Updates a single `GalerieFoto` using its globally unique id and a patch. */
-	updateGalerieFotoByNodeId?: GraphQLTypes["UpdateGalerieFotoPayload"],
 	/** Updates a single `GalerieFoto` using a unique key and a patch. */
 	updateGalerieFoto?: GraphQLTypes["UpdateGalerieFotoPayload"],
-	/** Updates a single `Nabidka` using its globally unique id and a patch. */
-	updateNabidkaByNodeId?: GraphQLTypes["UpdateNabidkaPayload"],
+	/** Updates a single `Location` using a unique key and a patch. */
+	updateLocation?: GraphQLTypes["UpdateLocationPayload"],
+	/** Updates a single `LocationAttachment` using a unique key and a patch. */
+	updateLocationAttachment?: GraphQLTypes["UpdateLocationAttachmentPayload"],
 	/** Updates a single `Nabidka` using a unique key and a patch. */
 	updateNabidka?: GraphQLTypes["UpdateNabidkaPayload"],
-	/** Updates a single `NabidkaItem` using its globally unique id and a patch. */
-	updateNabidkaItemByNodeId?: GraphQLTypes["UpdateNabidkaItemPayload"],
 	/** Updates a single `NabidkaItem` using a unique key and a patch. */
 	updateNabidkaItem?: GraphQLTypes["UpdateNabidkaItemPayload"],
-	/** Updates a single `Page` using its globally unique id and a patch. */
-	updatePageByNodeId?: GraphQLTypes["UpdatePagePayload"],
+	/** Updates a single `NabidkaItem` using a unique key and a patch. */
+	updateNabidkaItemByNiPartnerAndNiIdRodic?: GraphQLTypes["UpdateNabidkaItemPayload"],
 	/** Updates a single `Page` using a unique key and a patch. */
 	updatePage?: GraphQLTypes["UpdatePagePayload"],
 	/** Updates a single `Page` using a unique key and a patch. */
 	updatePageByUrl?: GraphQLTypes["UpdatePagePayload"],
-	/** Updates a single `Parameter` using its globally unique id and a patch. */
-	updateParameterByNodeId?: GraphQLTypes["UpdateParameterPayload"],
 	/** Updates a single `Parameter` using a unique key and a patch. */
 	updateParameter?: GraphQLTypes["UpdateParameterPayload"],
-	/** Updates a single `Pary` using its globally unique id and a patch. */
-	updateParyByNodeId?: GraphQLTypes["UpdateParyPayload"],
 	/** Updates a single `Pary` using a unique key and a patch. */
 	updatePary?: GraphQLTypes["UpdateParyPayload"],
-	/** Updates a single `ParyNavrh` using its globally unique id and a patch. */
-	updateParyNavrhByNodeId?: GraphQLTypes["UpdateParyNavrhPayload"],
 	/** Updates a single `ParyNavrh` using a unique key and a patch. */
 	updateParyNavrh?: GraphQLTypes["UpdateParyNavrhPayload"],
-	/** Updates a single `Permission` using its globally unique id and a patch. */
-	updatePermissionByNodeId?: GraphQLTypes["UpdatePermissionPayload"],
 	/** Updates a single `Permission` using a unique key and a patch. */
 	updatePermission?: GraphQLTypes["UpdatePermissionPayload"],
-	/** Updates a single `PlatbyCategory` using its globally unique id and a patch. */
-	updatePlatbyCategoryByNodeId?: GraphQLTypes["UpdatePlatbyCategoryPayload"],
+	/** Updates a single `Person` using a unique key and a patch. */
+	updatePerson?: GraphQLTypes["UpdatePersonPayload"],
 	/** Updates a single `PlatbyCategory` using a unique key and a patch. */
 	updatePlatbyCategory?: GraphQLTypes["UpdatePlatbyCategoryPayload"],
-	/** Updates a single `PlatbyCategoryGroup` using its globally unique id and a patch. */
-	updatePlatbyCategoryGroupByNodeId?: GraphQLTypes["UpdatePlatbyCategoryGroupPayload"],
 	/** Updates a single `PlatbyCategoryGroup` using a unique key and a patch. */
 	updatePlatbyCategoryGroup?: GraphQLTypes["UpdatePlatbyCategoryGroupPayload"],
-	/** Updates a single `PlatbyGroup` using its globally unique id and a patch. */
-	updatePlatbyGroupByNodeId?: GraphQLTypes["UpdatePlatbyGroupPayload"],
 	/** Updates a single `PlatbyGroup` using a unique key and a patch. */
 	updatePlatbyGroup?: GraphQLTypes["UpdatePlatbyGroupPayload"],
-	/** Updates a single `PlatbyGroupSkupina` using its globally unique id and a patch. */
-	updatePlatbyGroupSkupinaByNodeId?: GraphQLTypes["UpdatePlatbyGroupSkupinaPayload"],
 	/** Updates a single `PlatbyGroupSkupina` using a unique key and a patch. */
 	updatePlatbyGroupSkupina?: GraphQLTypes["UpdatePlatbyGroupSkupinaPayload"],
-	/** Updates a single `PlatbyItem` using its globally unique id and a patch. */
-	updatePlatbyItemByNodeId?: GraphQLTypes["UpdatePlatbyItemPayload"],
 	/** Updates a single `PlatbyItem` using a unique key and a patch. */
 	updatePlatbyItem?: GraphQLTypes["UpdatePlatbyItemPayload"],
-	/** Updates a single `PlatbyRaw` using its globally unique id and a patch. */
-	updatePlatbyRawByNodeId?: GraphQLTypes["UpdatePlatbyRawPayload"],
 	/** Updates a single `PlatbyRaw` using a unique key and a patch. */
 	updatePlatbyRaw?: GraphQLTypes["UpdatePlatbyRawPayload"],
-	/** Updates a single `Rozpi` using its globally unique id and a patch. */
-	updateRozpiByNodeId?: GraphQLTypes["UpdateRozpiPayload"],
+	/** Updates a single `Room` using a unique key and a patch. */
+	updateRoom?: GraphQLTypes["UpdateRoomPayload"],
+	/** Updates a single `RoomAttachment` using a unique key and a patch. */
+	updateRoomAttachment?: GraphQLTypes["UpdateRoomAttachmentPayload"],
 	/** Updates a single `Rozpi` using a unique key and a patch. */
 	updateRozpi?: GraphQLTypes["UpdateRozpiPayload"],
-	/** Updates a single `RozpisItem` using its globally unique id and a patch. */
-	updateRozpisItemByNodeId?: GraphQLTypes["UpdateRozpisItemPayload"],
 	/** Updates a single `RozpisItem` using a unique key and a patch. */
 	updateRozpisItem?: GraphQLTypes["UpdateRozpisItemPayload"],
-	/** Updates a single `Session` using its globally unique id and a patch. */
-	updateSessionByNodeId?: GraphQLTypes["UpdateSessionPayload"],
-	/** Updates a single `Session` using a unique key and a patch. */
-	updateSession?: GraphQLTypes["UpdateSessionPayload"],
-	/** Updates a single `Skupiny` using its globally unique id and a patch. */
-	updateSkupinyByNodeId?: GraphQLTypes["UpdateSkupinyPayload"],
 	/** Updates a single `Skupiny` using a unique key and a patch. */
 	updateSkupiny?: GraphQLTypes["UpdateSkupinyPayload"],
-	/** Updates a single `Upozorneni` using its globally unique id and a patch. */
-	updateUpozorneniByNodeId?: GraphQLTypes["UpdateUpozorneniPayload"],
+	/** Updates a single `Tenant` using a unique key and a patch. */
+	updateTenant?: GraphQLTypes["UpdateTenantPayload"],
+	/** Updates a single `TenantAttachment` using a unique key and a patch. */
+	updateTenantAttachment?: GraphQLTypes["UpdateTenantAttachmentPayload"],
+	/** Updates a single `TenantLocation` using a unique key and a patch. */
+	updateTenantLocation?: GraphQLTypes["UpdateTenantLocationPayload"],
+	/** Updates a single `TenantPerson` using a unique key and a patch. */
+	updateTenantPerson?: GraphQLTypes["UpdateTenantPersonPayload"],
 	/** Updates a single `Upozorneni` using a unique key and a patch. */
 	updateUpozorneni?: GraphQLTypes["UpdateUpozorneniPayload"],
-	/** Updates a single `UpozorneniSkupiny` using its globally unique id and a patch. */
-	updateUpozorneniSkupinyByNodeId?: GraphQLTypes["UpdateUpozorneniSkupinyPayload"],
 	/** Updates a single `UpozorneniSkupiny` using a unique key and a patch. */
 	updateUpozorneniSkupiny?: GraphQLTypes["UpdateUpozorneniSkupinyPayload"],
-	/** Updates a single `User` using its globally unique id and a patch. */
-	updateUserByNodeId?: GraphQLTypes["UpdateUserPayload"],
 	/** Updates a single `User` using a unique key and a patch. */
 	updateUser?: GraphQLTypes["UpdateUserPayload"],
-	/** Updates a single `UsersSkupiny` using its globally unique id and a patch. */
-	updateUsersSkupinyByNodeId?: GraphQLTypes["UpdateUsersSkupinyPayload"],
-	/** Updates a single `UsersSkupiny` using a unique key and a patch. */
-	updateUsersSkupiny?: GraphQLTypes["UpdateUsersSkupinyPayload"],
-	/** Updates a single `Video` using its globally unique id and a patch. */
-	updateVideoByNodeId?: GraphQLTypes["UpdateVideoPayload"],
-	/** Updates a single `Video` using a unique key and a patch. */
-	updateVideo?: GraphQLTypes["UpdateVideoPayload"],
-	/** Updates a single `VideoList` using its globally unique id and a patch. */
-	updateVideoListByNodeId?: GraphQLTypes["UpdateVideoListPayload"],
-	/** Updates a single `VideoList` using a unique key and a patch. */
-	updateVideoList?: GraphQLTypes["UpdateVideoListPayload"],
-	/** Updates a single `VideoSource` using its globally unique id and a patch. */
-	updateVideoSourceByNodeId?: GraphQLTypes["UpdateVideoSourcePayload"],
-	/** Updates a single `VideoSource` using a unique key and a patch. */
-	updateVideoSource?: GraphQLTypes["UpdateVideoSourcePayload"],
-	/** Deletes a single `Akce` using its globally unique id. */
-	deleteAkceByNodeId?: GraphQLTypes["DeleteAkcePayload"],
-	/** Deletes a single `Akce` using a unique key. */
-	deleteAkce?: GraphQLTypes["DeleteAkcePayload"],
-	/** Deletes a single `AkceItem` using its globally unique id. */
-	deleteAkceItemByNodeId?: GraphQLTypes["DeleteAkceItemPayload"],
-	/** Deletes a single `AkceItem` using a unique key. */
-	deleteAkceItem?: GraphQLTypes["DeleteAkceItemPayload"],
-	/** Deletes a single `Aktuality` using its globally unique id. */
-	deleteAktualityByNodeId?: GraphQLTypes["DeleteAktualityPayload"],
 	/** Deletes a single `Aktuality` using a unique key. */
 	deleteAktuality?: GraphQLTypes["DeleteAktualityPayload"],
-	/** Deletes a single `Dokumenty` using its globally unique id. */
-	deleteDokumentyByNodeId?: GraphQLTypes["DeleteDokumentyPayload"],
+	/** Deletes a single `Attachment` using a unique key. */
+	deleteAttachment?: GraphQLTypes["DeleteAttachmentPayload"],
+	/** Deletes a single `AttendeeExternal` using a unique key. */
+	deleteAttendeeExternal?: GraphQLTypes["DeleteAttendeeExternalPayload"],
+	/** Deletes a single `AttendeeUser` using a unique key. */
+	deleteAttendeeUser?: GraphQLTypes["DeleteAttendeeUserPayload"],
+	/** Deletes a single `AttendeeUser` using a unique key. */
+	deleteAttendeeUserByUserIdAndEventId?: GraphQLTypes["DeleteAttendeeUserPayload"],
+	/** Deletes a single `CohortGroup` using a unique key. */
+	deleteCohortGroup?: GraphQLTypes["DeleteCohortGroupPayload"],
 	/** Deletes a single `Dokumenty` using a unique key. */
 	deleteDokumenty?: GraphQLTypes["DeleteDokumentyPayload"],
-	/** Deletes a single `GalerieDir` using its globally unique id. */
-	deleteGalerieDirByNodeId?: GraphQLTypes["DeleteGalerieDirPayload"],
+	/** Deletes a single `Event` using a unique key. */
+	deleteEvent?: GraphQLTypes["DeleteEventPayload"],
+	/** Deletes a single `FormResponse` using a unique key. */
+	deleteFormResponse?: GraphQLTypes["DeleteFormResponsePayload"],
 	/** Deletes a single `GalerieDir` using a unique key. */
 	deleteGalerieDir?: GraphQLTypes["DeleteGalerieDirPayload"],
-	/** Deletes a single `GalerieFoto` using its globally unique id. */
-	deleteGalerieFotoByNodeId?: GraphQLTypes["DeleteGalerieFotoPayload"],
 	/** Deletes a single `GalerieFoto` using a unique key. */
 	deleteGalerieFoto?: GraphQLTypes["DeleteGalerieFotoPayload"],
-	/** Deletes a single `Nabidka` using its globally unique id. */
-	deleteNabidkaByNodeId?: GraphQLTypes["DeleteNabidkaPayload"],
+	/** Deletes a single `Location` using a unique key. */
+	deleteLocation?: GraphQLTypes["DeleteLocationPayload"],
+	/** Deletes a single `LocationAttachment` using a unique key. */
+	deleteLocationAttachment?: GraphQLTypes["DeleteLocationAttachmentPayload"],
 	/** Deletes a single `Nabidka` using a unique key. */
 	deleteNabidka?: GraphQLTypes["DeleteNabidkaPayload"],
-	/** Deletes a single `NabidkaItem` using its globally unique id. */
-	deleteNabidkaItemByNodeId?: GraphQLTypes["DeleteNabidkaItemPayload"],
 	/** Deletes a single `NabidkaItem` using a unique key. */
 	deleteNabidkaItem?: GraphQLTypes["DeleteNabidkaItemPayload"],
-	/** Deletes a single `Parameter` using its globally unique id. */
-	deleteParameterByNodeId?: GraphQLTypes["DeleteParameterPayload"],
+	/** Deletes a single `NabidkaItem` using a unique key. */
+	deleteNabidkaItemByNiPartnerAndNiIdRodic?: GraphQLTypes["DeleteNabidkaItemPayload"],
 	/** Deletes a single `Parameter` using a unique key. */
 	deleteParameter?: GraphQLTypes["DeleteParameterPayload"],
-	/** Deletes a single `Pary` using its globally unique id. */
-	deleteParyByNodeId?: GraphQLTypes["DeleteParyPayload"],
 	/** Deletes a single `Pary` using a unique key. */
 	deletePary?: GraphQLTypes["DeleteParyPayload"],
-	/** Deletes a single `ParyNavrh` using its globally unique id. */
-	deleteParyNavrhByNodeId?: GraphQLTypes["DeleteParyNavrhPayload"],
 	/** Deletes a single `ParyNavrh` using a unique key. */
 	deleteParyNavrh?: GraphQLTypes["DeleteParyNavrhPayload"],
-	/** Deletes a single `Permission` using its globally unique id. */
-	deletePermissionByNodeId?: GraphQLTypes["DeletePermissionPayload"],
 	/** Deletes a single `Permission` using a unique key. */
 	deletePermission?: GraphQLTypes["DeletePermissionPayload"],
-	/** Deletes a single `PlatbyCategory` using its globally unique id. */
-	deletePlatbyCategoryByNodeId?: GraphQLTypes["DeletePlatbyCategoryPayload"],
+	/** Deletes a single `Person` using a unique key. */
+	deletePerson?: GraphQLTypes["DeletePersonPayload"],
 	/** Deletes a single `PlatbyCategory` using a unique key. */
 	deletePlatbyCategory?: GraphQLTypes["DeletePlatbyCategoryPayload"],
-	/** Deletes a single `PlatbyCategoryGroup` using its globally unique id. */
-	deletePlatbyCategoryGroupByNodeId?: GraphQLTypes["DeletePlatbyCategoryGroupPayload"],
 	/** Deletes a single `PlatbyCategoryGroup` using a unique key. */
 	deletePlatbyCategoryGroup?: GraphQLTypes["DeletePlatbyCategoryGroupPayload"],
-	/** Deletes a single `PlatbyGroup` using its globally unique id. */
-	deletePlatbyGroupByNodeId?: GraphQLTypes["DeletePlatbyGroupPayload"],
 	/** Deletes a single `PlatbyGroup` using a unique key. */
 	deletePlatbyGroup?: GraphQLTypes["DeletePlatbyGroupPayload"],
-	/** Deletes a single `PlatbyGroupSkupina` using its globally unique id. */
-	deletePlatbyGroupSkupinaByNodeId?: GraphQLTypes["DeletePlatbyGroupSkupinaPayload"],
 	/** Deletes a single `PlatbyGroupSkupina` using a unique key. */
 	deletePlatbyGroupSkupina?: GraphQLTypes["DeletePlatbyGroupSkupinaPayload"],
-	/** Deletes a single `PlatbyItem` using its globally unique id. */
-	deletePlatbyItemByNodeId?: GraphQLTypes["DeletePlatbyItemPayload"],
 	/** Deletes a single `PlatbyItem` using a unique key. */
 	deletePlatbyItem?: GraphQLTypes["DeletePlatbyItemPayload"],
-	/** Deletes a single `PlatbyRaw` using its globally unique id. */
-	deletePlatbyRawByNodeId?: GraphQLTypes["DeletePlatbyRawPayload"],
 	/** Deletes a single `PlatbyRaw` using a unique key. */
 	deletePlatbyRaw?: GraphQLTypes["DeletePlatbyRawPayload"],
-	/** Deletes a single `Rozpi` using its globally unique id. */
-	deleteRozpiByNodeId?: GraphQLTypes["DeleteRozpiPayload"],
+	/** Deletes a single `Room` using a unique key. */
+	deleteRoom?: GraphQLTypes["DeleteRoomPayload"],
+	/** Deletes a single `RoomAttachment` using a unique key. */
+	deleteRoomAttachment?: GraphQLTypes["DeleteRoomAttachmentPayload"],
 	/** Deletes a single `Rozpi` using a unique key. */
 	deleteRozpi?: GraphQLTypes["DeleteRozpiPayload"],
-	/** Deletes a single `RozpisItem` using its globally unique id. */
-	deleteRozpisItemByNodeId?: GraphQLTypes["DeleteRozpisItemPayload"],
 	/** Deletes a single `RozpisItem` using a unique key. */
 	deleteRozpisItem?: GraphQLTypes["DeleteRozpisItemPayload"],
-	/** Deletes a single `Session` using its globally unique id. */
-	deleteSessionByNodeId?: GraphQLTypes["DeleteSessionPayload"],
-	/** Deletes a single `Session` using a unique key. */
-	deleteSession?: GraphQLTypes["DeleteSessionPayload"],
-	/** Deletes a single `Skupiny` using its globally unique id. */
-	deleteSkupinyByNodeId?: GraphQLTypes["DeleteSkupinyPayload"],
 	/** Deletes a single `Skupiny` using a unique key. */
 	deleteSkupiny?: GraphQLTypes["DeleteSkupinyPayload"],
-	/** Deletes a single `Upozorneni` using its globally unique id. */
-	deleteUpozorneniByNodeId?: GraphQLTypes["DeleteUpozorneniPayload"],
+	/** Deletes a single `Tenant` using a unique key. */
+	deleteTenant?: GraphQLTypes["DeleteTenantPayload"],
+	/** Deletes a single `TenantAttachment` using a unique key. */
+	deleteTenantAttachment?: GraphQLTypes["DeleteTenantAttachmentPayload"],
+	/** Deletes a single `TenantLocation` using a unique key. */
+	deleteTenantLocation?: GraphQLTypes["DeleteTenantLocationPayload"],
+	/** Deletes a single `TenantPerson` using a unique key. */
+	deleteTenantPerson?: GraphQLTypes["DeleteTenantPersonPayload"],
 	/** Deletes a single `Upozorneni` using a unique key. */
 	deleteUpozorneni?: GraphQLTypes["DeleteUpozorneniPayload"],
-	/** Deletes a single `UpozorneniSkupiny` using its globally unique id. */
-	deleteUpozorneniSkupinyByNodeId?: GraphQLTypes["DeleteUpozorneniSkupinyPayload"],
 	/** Deletes a single `UpozorneniSkupiny` using a unique key. */
 	deleteUpozorneniSkupiny?: GraphQLTypes["DeleteUpozorneniSkupinyPayload"],
-	/** Deletes a single `User` using its globally unique id. */
-	deleteUserByNodeId?: GraphQLTypes["DeleteUserPayload"],
 	/** Deletes a single `User` using a unique key. */
 	deleteUser?: GraphQLTypes["DeleteUserPayload"],
-	/** Deletes a single `UsersSkupiny` using its globally unique id. */
-	deleteUsersSkupinyByNodeId?: GraphQLTypes["DeleteUsersSkupinyPayload"],
-	/** Deletes a single `UsersSkupiny` using a unique key. */
-	deleteUsersSkupiny?: GraphQLTypes["DeleteUsersSkupinyPayload"],
-	/** Deletes a single `Video` using its globally unique id. */
-	deleteVideoByNodeId?: GraphQLTypes["DeleteVideoPayload"],
-	/** Deletes a single `Video` using a unique key. */
-	deleteVideo?: GraphQLTypes["DeleteVideoPayload"],
-	/** Deletes a single `VideoList` using its globally unique id. */
-	deleteVideoListByNodeId?: GraphQLTypes["DeleteVideoListPayload"],
-	/** Deletes a single `VideoList` using a unique key. */
-	deleteVideoList?: GraphQLTypes["DeleteVideoListPayload"],
-	/** Deletes a single `VideoSource` using its globally unique id. */
-	deleteVideoSourceByNodeId?: GraphQLTypes["DeleteVideoSourcePayload"],
-	/** Deletes a single `VideoSource` using a unique key. */
-	deleteVideoSource?: GraphQLTypes["DeleteVideoSourcePayload"],
+	bookLesson?: GraphQLTypes["BookLessonPayload"],
+	cancelLesson?: GraphQLTypes["CancelLessonPayload"],
+	cancelParticipation?: GraphQLTypes["CancelParticipationPayload"],
+	changePassword?: GraphQLTypes["ChangePasswordPayload"],
+	confirmUser?: GraphQLTypes["ConfirmUserPayload"],
+	createCouple?: GraphQLTypes["CreateCouplePayload"],
+	createParticipation?: GraphQLTypes["CreateParticipationPayload"],
+	createParticipationExternal?: GraphQLTypes["CreateParticipationExternalPayload"],
+	fixUnpairedCouples?: GraphQLTypes["FixUnpairedCouplesPayload"],
 	login?: GraphQLTypes["LoginPayload"],
 	logout?: GraphQLTypes["LogoutPayload"],
 	prospectFormDancer?: GraphQLTypes["ProspectFormDancerPayload"],
-	uploadFile: GraphQLTypes["Upload"]
+	reservationSetDesiredLessons?: GraphQLTypes["ReservationSetDesiredLessonsPayload"],
+	resetPassword?: GraphQLTypes["ResetPasswordPayload"],
+	submitForm?: GraphQLTypes["SubmitFormPayload"],
+	verifyFunction?: GraphQLTypes["VerifyFunctionPayload"],
+	uploadFile: GraphQLTypes["UploadFilePayload"],
+	downloadFile: string
 };
 	/** The output of our create `Akce` mutation. */
 ["CreateAkcePayload"]: {
@@ -12489,16 +14037,19 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An input for mutations affecting `Akce` */
 ["AkceInput"]: {
 		aId?: GraphQLTypes["BigInt"],
-	aJmeno: string,
-	aKde: string,
-	aInfo: string,
-	aOd: GraphQLTypes["Date"],
-	aDo: GraphQLTypes["Date"],
+	aJmeno?: string,
+	aKde?: string,
+	aInfo?: string,
+	aOd?: GraphQLTypes["Date"],
+	aDo?: GraphQLTypes["Date"],
 	aKapacita?: GraphQLTypes["BigInt"],
-	aDokumenty: string,
+	aDokumenty?: string,
 	aTimestamp?: GraphQLTypes["Datetime"],
 	aLock?: boolean,
-	aVisible?: boolean
+	aVisible?: boolean,
+	summary?: string,
+	isPublic?: boolean,
+	enableNotes?: boolean
 };
 	/** The output of our create `AkceItem` mutation. */
 ["CreateAkceItemPayload"]: {
@@ -12528,9 +14079,10 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An input for mutations affecting `AkceItem` */
 ["AkceItemInput"]: {
 		aiId?: GraphQLTypes["BigInt"],
-	aiIdRodic: GraphQLTypes["BigInt"],
-	aiUser: GraphQLTypes["BigInt"],
-	aiRokNarozeni: number
+	aiIdRodic?: GraphQLTypes["BigInt"],
+	aiUser?: GraphQLTypes["BigInt"],
+	aiRokNarozeni?: number,
+	notes?: string
 };
 	/** The output of our create `Aktuality` mutation. */
 ["CreateAktualityPayload"]: {
@@ -12560,15 +14112,158 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An input for mutations affecting `Aktuality` */
 ["AktualityInput"]: {
 		atId?: GraphQLTypes["BigInt"],
-	atKdo: GraphQLTypes["BigInt"],
-	atKat: string,
+	atKdo?: GraphQLTypes["BigInt"],
+	atKat?: string,
 	atJmeno: string,
 	atText: string,
 	atPreview: string,
 	atFoto?: GraphQLTypes["BigInt"],
 	atFotoMain?: GraphQLTypes["BigInt"],
 	atTimestamp?: GraphQLTypes["Datetime"],
-	atTimestampAdd?: GraphQLTypes["Datetime"]
+	atTimestampAdd?: GraphQLTypes["Datetime"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
+};
+	/** The output of our create `Attachment` mutation. */
+["CreateAttachmentPayload"]: {
+	__typename: "CreateAttachmentPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `Attachment` that was created by this mutation. */
+	attachment?: GraphQLTypes["Attachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `User` that is related to this `Attachment`. */
+	userByUploadedBy?: GraphQLTypes["User"],
+	/** An edge for our `Attachment`. May be used by Relay 1. */
+	attachmentEdge?: GraphQLTypes["AttachmentsEdge"]
+};
+	/** All input for the create `Attachment` mutation. */
+["CreateAttachmentInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** The `Attachment` to be created by this mutation. */
+	attachment: GraphQLTypes["AttachmentInput"]
+};
+	/** An input for mutations affecting `Attachment` */
+["AttachmentInput"]: {
+		objectName: string,
+	previewObjectName?: string,
+	uploadedBy?: GraphQLTypes["BigInt"],
+	uploadedAt?: GraphQLTypes["Datetime"]
+};
+	/** The output of our create `AttendeeExternal` mutation. */
+["CreateAttendeeExternalPayload"]: {
+	__typename: "CreateAttendeeExternalPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `AttendeeExternal` that was created by this mutation. */
+	attendeeExternal?: GraphQLTypes["AttendeeExternal"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Event` that is related to this `AttendeeExternal`. */
+	event?: GraphQLTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByManagedBy?: GraphQLTypes["User"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByConfirmedBy?: GraphQLTypes["User"],
+	/** An edge for our `AttendeeExternal`. May be used by Relay 1. */
+	attendeeExternalEdge?: GraphQLTypes["AttendeeExternalsEdge"]
+};
+	/** All input for the create `AttendeeExternal` mutation. */
+["CreateAttendeeExternalInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** The `AttendeeExternal` to be created by this mutation. */
+	attendeeExternal: GraphQLTypes["AttendeeExternalInput"]
+};
+	/** An input for mutations affecting `AttendeeExternal` */
+["AttendeeExternalInput"]: {
+		eventId: GraphQLTypes["BigInt"],
+	firstName: string,
+	lastName: string,
+	email: string,
+	phone: string,
+	notes?: string,
+	birthNumber?: string,
+	guardianName?: string,
+	managedBy?: GraphQLTypes["BigInt"],
+	confirmedBy?: GraphQLTypes["BigInt"],
+	confirmedAt?: GraphQLTypes["Datetime"],
+	createdAt?: GraphQLTypes["Datetime"],
+	updatedAt?: GraphQLTypes["Datetime"],
+	tenantId?: GraphQLTypes["BigInt"]
+};
+	/** The output of our create `AttendeeUser` mutation. */
+["CreateAttendeeUserPayload"]: {
+	__typename: "CreateAttendeeUserPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `AttendeeUser` that was created by this mutation. */
+	attendeeUser?: GraphQLTypes["AttendeeUser"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Event` that is related to this `AttendeeUser`. */
+	event?: GraphQLTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeUser`. */
+	user?: GraphQLTypes["User"],
+	/** An edge for our `AttendeeUser`. May be used by Relay 1. */
+	attendeeUserEdge?: GraphQLTypes["AttendeeUsersEdge"]
+};
+	/** All input for the create `AttendeeUser` mutation. */
+["CreateAttendeeUserInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** The `AttendeeUser` to be created by this mutation. */
+	attendeeUser: GraphQLTypes["AttendeeUserInput"]
+};
+	/** An input for mutations affecting `AttendeeUser` */
+["AttendeeUserInput"]: {
+		id?: GraphQLTypes["BigInt"],
+	eventId: GraphQLTypes["BigInt"],
+	userId: GraphQLTypes["BigInt"],
+	birthYear: number,
+	notes?: string,
+	tenantId?: GraphQLTypes["BigInt"]
+};
+	/** The output of our create `CohortGroup` mutation. */
+["CreateCohortGroupPayload"]: {
+	__typename: "CreateCohortGroupPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `CohortGroup` that was created by this mutation. */
+	cohortGroup?: GraphQLTypes["CohortGroup"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `CohortGroup`. */
+	tenantByTenant?: GraphQLTypes["Tenant"],
+	/** An edge for our `CohortGroup`. May be used by Relay 1. */
+	cohortGroupEdge?: GraphQLTypes["CohortGroupsEdge"]
+};
+	/** All input for the create `CohortGroup` mutation. */
+["CreateCohortGroupInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** The `CohortGroup` to be created by this mutation. */
+	cohortGroup: GraphQLTypes["CohortGroupInput"]
+};
+	/** An input for mutations affecting `CohortGroup` */
+["CohortGroupInput"]: {
+		id?: GraphQLTypes["BigInt"],
+	name: string,
+	description?: string,
+	ordering?: number,
+	isPublic?: boolean,
+	tenant?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our create `Dokumenty` mutation. */
 ["CreateDokumentyPayload"]: {
@@ -12601,7 +14296,79 @@ payload verbatim. May be used to track mutations by the client. */
 	dFilename: string,
 	dKategorie: number,
 	dKdo: GraphQLTypes["BigInt"],
-	dTimestamp?: GraphQLTypes["Datetime"]
+	dTimestamp?: GraphQLTypes["Datetime"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
+};
+	/** The output of our create `Event` mutation. */
+["CreateEventPayload"]: {
+	__typename: "CreateEventPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `Event` that was created by this mutation. */
+	event?: GraphQLTypes["Event"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** An edge for our `Event`. May be used by Relay 1. */
+	eventEdge?: GraphQLTypes["EventsEdge"]
+};
+	/** All input for the create `Event` mutation. */
+["CreateEventInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** The `Event` to be created by this mutation. */
+	event: GraphQLTypes["EventInput"]
+};
+	/** An input for mutations affecting `Event` */
+["EventInput"]: {
+		id?: GraphQLTypes["BigInt"],
+	name: string,
+	locationText: string,
+	description: string,
+	since: GraphQLTypes["Date"],
+	until: GraphQLTypes["Date"],
+	capacity?: GraphQLTypes["BigInt"],
+	filesLegacy?: string,
+	updatedAt?: GraphQLTypes["Datetime"],
+	isLocked?: boolean,
+	isVisible?: boolean,
+	summary?: string,
+	isPublic?: boolean,
+	enableNotes?: boolean,
+	tenantId?: GraphQLTypes["BigInt"]
+};
+	/** The output of our create `FormResponse` mutation. */
+["CreateFormResponsePayload"]: {
+	__typename: "CreateFormResponsePayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `FormResponse` that was created by this mutation. */
+	formResponse?: GraphQLTypes["FormResponse"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** An edge for our `FormResponse`. May be used by Relay 1. */
+	formResponseEdge?: GraphQLTypes["FormResponsesEdge"]
+};
+	/** All input for the create `FormResponse` mutation. */
+["CreateFormResponseInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** The `FormResponse` to be created by this mutation. */
+	formResponse: GraphQLTypes["FormResponseInput"]
+};
+	/** An input for mutations affecting `FormResponse` */
+["FormResponseInput"]: {
+		id?: GraphQLTypes["BigInt"],
+	type: string,
+	data: GraphQLTypes["JSON"],
+	url: string,
+	createdAt?: GraphQLTypes["Datetime"],
+	updatedAt?: GraphQLTypes["Datetime"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our create `GalerieDir` mutation. */
 ["CreateGalerieDirPayload"]: {
@@ -12631,7 +14398,9 @@ payload verbatim. May be used to track mutations by the client. */
 	gdName: string,
 	gdLevel?: number,
 	gdPath: string,
-	gdHidden?: boolean
+	gdHidden?: boolean,
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our create `GalerieFoto` mutation. */
 ["CreateGalerieFotoPayload"]: {
@@ -12665,7 +14434,66 @@ payload verbatim. May be used to track mutations by the client. */
 	gfName: string,
 	gfPath: string,
 	gfKdo: GraphQLTypes["BigInt"],
-	gfTimestamp?: GraphQLTypes["Datetime"]
+	gfTimestamp?: GraphQLTypes["Datetime"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
+};
+	/** The output of our create `Location` mutation. */
+["CreateLocationPayload"]: {
+	__typename: "CreateLocationPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `Location` that was created by this mutation. */
+	location?: GraphQLTypes["Location"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** An edge for our `Location`. May be used by Relay 1. */
+	locationEdge?: GraphQLTypes["LocationsEdge"]
+};
+	/** All input for the create `Location` mutation. */
+["CreateLocationInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** The `Location` to be created by this mutation. */
+	location: GraphQLTypes["LocationInput"]
+};
+	/** An input for mutations affecting `Location` */
+["LocationInput"]: {
+		id?: GraphQLTypes["BigInt"],
+	name: string,
+	description: GraphQLTypes["JSON"]
+};
+	/** The output of our create `LocationAttachment` mutation. */
+["CreateLocationAttachmentPayload"]: {
+	__typename: "CreateLocationAttachmentPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `LocationAttachment` that was created by this mutation. */
+	locationAttachment?: GraphQLTypes["LocationAttachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Location` that is related to this `LocationAttachment`. */
+	location?: GraphQLTypes["Location"],
+	/** Reads a single `Attachment` that is related to this `LocationAttachment`. */
+	attachmentByObjectName?: GraphQLTypes["Attachment"],
+	/** An edge for our `LocationAttachment`. May be used by Relay 1. */
+	locationAttachmentEdge?: GraphQLTypes["LocationAttachmentsEdge"]
+};
+	/** All input for the create `LocationAttachment` mutation. */
+["CreateLocationAttachmentInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** The `LocationAttachment` to be created by this mutation. */
+	locationAttachment: GraphQLTypes["LocationAttachmentInput"]
+};
+	/** An input for mutations affecting `LocationAttachment` */
+["LocationAttachmentInput"]: {
+		locationId: GraphQLTypes["BigInt"],
+	objectName: string
 };
 	/** The output of our create `Nabidka` mutation. */
 ["CreateNabidkaPayload"]: {
@@ -12695,12 +14523,14 @@ payload verbatim. May be used to track mutations by the client. */
 		nId?: GraphQLTypes["BigInt"],
 	nTrener: GraphQLTypes["BigInt"],
 	nPocetHod?: number,
-	nMaxPocetHod?: GraphQLTypes["BigInt"],
+	nMaxPocetHod?: number,
 	nOd: GraphQLTypes["Date"],
 	nDo: GraphQLTypes["Date"],
 	nVisible?: boolean,
 	nLock?: boolean,
-	nTimestamp?: GraphQLTypes["Datetime"]
+	nTimestamp?: GraphQLTypes["Datetime"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our create `NabidkaItem` mutation. */
 ["CreateNabidkaItemPayload"]: {
@@ -12733,7 +14563,9 @@ payload verbatim. May be used to track mutations by the client. */
 	niIdRodic: GraphQLTypes["BigInt"],
 	niPartner: GraphQLTypes["BigInt"],
 	niPocetHod?: number,
-	niLock?: boolean
+	niLock?: boolean,
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our create `Page` mutation. */
 ["CreatePagePayload"]: {
@@ -12803,6 +14635,8 @@ unchanged and unused. May be used by a client to track mutations. */
 	query?: GraphQLTypes["Query"],
 	/** Reads a single `User` that is related to this `Pary`. */
 	userByPIdPartner?: GraphQLTypes["User"],
+	/** Reads a single `User` that is related to this `Pary`. */
+	userByPIdPartnerka?: GraphQLTypes["User"],
 	/** An edge for our `Pary`. May be used by Relay 1. */
 	paryEdge?: GraphQLTypes["PariesEdge"]
 };
@@ -12828,7 +14662,8 @@ payload verbatim. May be used to track mutations by the client. */
 	pHodnoceni?: number,
 	pArchiv?: boolean,
 	pTimestampAdd?: GraphQLTypes["Datetime"],
-	pTimestampArchive?: GraphQLTypes["Datetime"]
+	pTimestampArchive?: GraphQLTypes["Datetime"],
+	id?: GraphQLTypes["BigInt"]
 };
 	/** The output of our create `ParyNavrh` mutation. */
 ["CreateParyNavrhPayload"]: {
@@ -12862,7 +14697,8 @@ payload verbatim. May be used to track mutations by the client. */
 		pnId?: GraphQLTypes["BigInt"],
 	pnNavrhl: GraphQLTypes["BigInt"],
 	pnPartner: GraphQLTypes["BigInt"],
-	pnPartnerka: GraphQLTypes["BigInt"]
+	pnPartnerka: GraphQLTypes["BigInt"],
+	id?: GraphQLTypes["BigInt"]
 };
 	/** The output of our create `Permission` mutation. */
 ["CreatePermissionPayload"]: {
@@ -12906,7 +14742,36 @@ payload verbatim. May be used to track mutations by the client. */
 	peRozpis: number,
 	peSkupiny: number,
 	peUsers: number,
-	peMain: number
+	peMain: number,
+	id?: GraphQLTypes["BigInt"]
+};
+	/** The output of our create `Person` mutation. */
+["CreatePersonPayload"]: {
+	__typename: "CreatePersonPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `Person` that was created by this mutation. */
+	person?: GraphQLTypes["Person"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** An edge for our `Person`. May be used by Relay 1. */
+	personEdge?: GraphQLTypes["PeopleEdge"]
+};
+	/** All input for the create `Person` mutation. */
+["CreatePersonInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** The `Person` to be created by this mutation. */
+	person: GraphQLTypes["PersonInput"]
+};
+	/** An input for mutations affecting `Person` */
+["PersonInput"]: {
+		id?: GraphQLTypes["BigInt"],
+	firstName: string,
+	lastName: string,
+	gender: GraphQLTypes["GenderType"]
 };
 	/** The output of our create `PlatbyCategory` mutation. */
 ["CreatePlatbyCategoryPayload"]: {
@@ -12941,7 +14806,9 @@ payload verbatim. May be used to track mutations by the client. */
 	pcUseBase?: boolean,
 	pcUsePrefix?: boolean,
 	pcArchive?: boolean,
-	pcVisible?: boolean
+	pcVisible?: boolean,
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our create `PlatbyCategoryGroup` mutation. */
 ["CreatePlatbyCategoryGroupPayload"]: {
@@ -12972,7 +14839,9 @@ payload verbatim. May be used to track mutations by the client. */
 ["PlatbyCategoryGroupInput"]: {
 		pcgId?: GraphQLTypes["BigInt"],
 	pcgIdGroup: GraphQLTypes["BigInt"],
-	pcgIdCategory: GraphQLTypes["BigInt"]
+	pcgIdCategory: GraphQLTypes["BigInt"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our create `PlatbyGroup` mutation. */
 ["CreatePlatbyGroupPayload"]: {
@@ -13001,7 +14870,9 @@ payload verbatim. May be used to track mutations by the client. */
 	pgType?: GraphQLTypes["BigFloat"],
 	pgName: string,
 	pgDescription: string,
-	pgBase?: GraphQLTypes["BigInt"]
+	pgBase?: GraphQLTypes["BigInt"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our create `PlatbyGroupSkupina` mutation. */
 ["CreatePlatbyGroupSkupinaPayload"]: {
@@ -13032,7 +14903,9 @@ payload verbatim. May be used to track mutations by the client. */
 ["PlatbyGroupSkupinaInput"]: {
 		pgsId?: GraphQLTypes["BigInt"],
 	pgsIdSkupina: GraphQLTypes["BigInt"],
-	pgsIdGroup: GraphQLTypes["BigInt"]
+	pgsIdGroup: GraphQLTypes["BigInt"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our create `PlatbyItem` mutation. */
 ["CreatePlatbyItemPayload"]: {
@@ -13069,7 +14942,9 @@ payload verbatim. May be used to track mutations by the client. */
 	piIdRaw?: GraphQLTypes["BigInt"],
 	piAmount: GraphQLTypes["BigFloat"],
 	piDate: GraphQLTypes["Date"],
-	piPrefix?: number
+	piPrefix?: number,
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our create `PlatbyRaw` mutation. */
 ["CreatePlatbyRawPayload"]: {
@@ -13098,7 +14973,69 @@ payload verbatim. May be used to track mutations by the client. */
 	prRaw: string,
 	prHash: string,
 	prSorted?: boolean,
-	prDiscarded?: boolean
+	prDiscarded?: boolean,
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
+};
+	/** The output of our create `Room` mutation. */
+["CreateRoomPayload"]: {
+	__typename: "CreateRoomPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `Room` that was created by this mutation. */
+	room?: GraphQLTypes["Room"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Location` that is related to this `Room`. */
+	locationByLocation?: GraphQLTypes["Location"],
+	/** An edge for our `Room`. May be used by Relay 1. */
+	roomEdge?: GraphQLTypes["RoomsEdge"]
+};
+	/** All input for the create `Room` mutation. */
+["CreateRoomInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** The `Room` to be created by this mutation. */
+	room: GraphQLTypes["RoomInput"]
+};
+	/** An input for mutations affecting `Room` */
+["RoomInput"]: {
+		id?: GraphQLTypes["BigInt"],
+	name: string,
+	description: GraphQLTypes["JSON"],
+	location?: GraphQLTypes["BigInt"]
+};
+	/** The output of our create `RoomAttachment` mutation. */
+["CreateRoomAttachmentPayload"]: {
+	__typename: "CreateRoomAttachmentPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `RoomAttachment` that was created by this mutation. */
+	roomAttachment?: GraphQLTypes["RoomAttachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Room` that is related to this `RoomAttachment`. */
+	room?: GraphQLTypes["Room"],
+	/** Reads a single `Attachment` that is related to this `RoomAttachment`. */
+	attachmentByObjectName?: GraphQLTypes["Attachment"],
+	/** An edge for our `RoomAttachment`. May be used by Relay 1. */
+	roomAttachmentEdge?: GraphQLTypes["RoomAttachmentsEdge"]
+};
+	/** All input for the create `RoomAttachment` mutation. */
+["CreateRoomAttachmentInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** The `RoomAttachment` to be created by this mutation. */
+	roomAttachment: GraphQLTypes["RoomAttachmentInput"]
+};
+	/** An input for mutations affecting `RoomAttachment` */
+["RoomAttachmentInput"]: {
+		roomId: GraphQLTypes["BigInt"],
+	objectName: string
 };
 	/** The output of our create `Rozpi` mutation. */
 ["CreateRozpiPayload"]: {
@@ -13131,7 +15068,9 @@ payload verbatim. May be used to track mutations by the client. */
 	rDatum: GraphQLTypes["Date"],
 	rVisible?: boolean,
 	rLock?: boolean,
-	rTimestamp?: GraphQLTypes["Datetime"]
+	rTimestamp?: GraphQLTypes["Datetime"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our create `RozpisItem` mutation. */
 ["CreateRozpisItemPayload"]: {
@@ -13165,38 +15104,9 @@ payload verbatim. May be used to track mutations by the client. */
 	riPartner?: GraphQLTypes["BigInt"],
 	riOd: GraphQLTypes["Time"],
 	riDo: GraphQLTypes["Time"],
-	riLock?: boolean
-};
-	/** The output of our create `Session` mutation. */
-["CreateSessionPayload"]: {
-	__typename: "CreateSessionPayload",
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?: string,
-	/** The `Session` that was created by this mutation. */
-	session?: GraphQLTypes["Session"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?: GraphQLTypes["Query"],
-	/** Reads a single `User` that is related to this `Session`. */
-	userBySsUser?: GraphQLTypes["User"],
-	/** An edge for our `Session`. May be used by Relay 1. */
-	sessionEdge?: GraphQLTypes["SessionsEdge"]
-};
-	/** All input for the create `Session` mutation. */
-["CreateSessionInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The `Session` to be created by this mutation. */
-	session: GraphQLTypes["SessionInput"]
-};
-	/** An input for mutations affecting `Session` */
-["SessionInput"]: {
-		ssId: string,
-	ssData: string,
-	ssUpdatedAt?: GraphQLTypes["Datetime"],
-	ssLifetime: GraphQLTypes["BigInt"],
-	ssUser?: GraphQLTypes["BigInt"]
+	riLock?: boolean,
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our create `Skupiny` mutation. */
 ["CreateSkupinyPayload"]: {
@@ -13208,6 +15118,8 @@ unchanged and unused. May be used by a client to track mutations. */
 	skupiny?: GraphQLTypes["Skupiny"],
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
+	/** Reads a single `CohortGroup` that is related to this `Skupiny`. */
+	cohortGroupByCohortGroup?: GraphQLTypes["CohortGroup"],
 	/** An edge for our `Skupiny`. May be used by Relay 1. */
 	skupinyEdge?: GraphQLTypes["SkupiniesEdge"]
 };
@@ -13225,9 +15137,133 @@ payload verbatim. May be used to track mutations by the client. */
 	sName: string,
 	sDescription: string,
 	sColorRgb: string,
-	sColorText: string,
+	sColorText?: string,
 	sLocation?: string,
-	sVisible?: boolean
+	sVisible?: boolean,
+	ordering?: number,
+	internalInfo?: string,
+	cohortGroup?: GraphQLTypes["BigInt"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
+};
+	/** The output of our create `Tenant` mutation. */
+["CreateTenantPayload"]: {
+	__typename: "CreateTenantPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `Tenant` that was created by this mutation. */
+	tenant?: GraphQLTypes["Tenant"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** An edge for our `Tenant`. May be used by Relay 1. */
+	tenantEdge?: GraphQLTypes["TenantsEdge"]
+};
+	/** All input for the create `Tenant` mutation. */
+["CreateTenantInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** The `Tenant` to be created by this mutation. */
+	tenant: GraphQLTypes["TenantInput"]
+};
+	/** An input for mutations affecting `Tenant` */
+["TenantInput"]: {
+		id?: GraphQLTypes["BigInt"],
+	name: string,
+	memberInfo: string,
+	origins?: Array<string | undefined>
+};
+	/** The output of our create `TenantAttachment` mutation. */
+["CreateTenantAttachmentPayload"]: {
+	__typename: "CreateTenantAttachmentPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `TenantAttachment` that was created by this mutation. */
+	tenantAttachment?: GraphQLTypes["TenantAttachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantAttachment`. */
+	tenant?: GraphQLTypes["Tenant"],
+	/** Reads a single `Attachment` that is related to this `TenantAttachment`. */
+	attachmentByObjectName?: GraphQLTypes["Attachment"],
+	/** An edge for our `TenantAttachment`. May be used by Relay 1. */
+	tenantAttachmentEdge?: GraphQLTypes["TenantAttachmentsEdge"]
+};
+	/** All input for the create `TenantAttachment` mutation. */
+["CreateTenantAttachmentInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** The `TenantAttachment` to be created by this mutation. */
+	tenantAttachment: GraphQLTypes["TenantAttachmentInput"]
+};
+	/** An input for mutations affecting `TenantAttachment` */
+["TenantAttachmentInput"]: {
+		tenantId: GraphQLTypes["BigInt"],
+	objectName: string,
+	type?: GraphQLTypes["TenantAttachmentType"]
+};
+	/** The output of our create `TenantLocation` mutation. */
+["CreateTenantLocationPayload"]: {
+	__typename: "CreateTenantLocationPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `TenantLocation` that was created by this mutation. */
+	tenantLocation?: GraphQLTypes["TenantLocation"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantLocation`. */
+	tenant?: GraphQLTypes["Tenant"],
+	/** Reads a single `Location` that is related to this `TenantLocation`. */
+	location?: GraphQLTypes["Location"],
+	/** An edge for our `TenantLocation`. May be used by Relay 1. */
+	tenantLocationEdge?: GraphQLTypes["TenantLocationsEdge"]
+};
+	/** All input for the create `TenantLocation` mutation. */
+["CreateTenantLocationInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** The `TenantLocation` to be created by this mutation. */
+	tenantLocation: GraphQLTypes["TenantLocationInput"]
+};
+	/** An input for mutations affecting `TenantLocation` */
+["TenantLocationInput"]: {
+		tenantId: GraphQLTypes["BigInt"],
+	locationId: GraphQLTypes["BigInt"]
+};
+	/** The output of our create `TenantPerson` mutation. */
+["CreateTenantPersonPayload"]: {
+	__typename: "CreateTenantPersonPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `TenantPerson` that was created by this mutation. */
+	tenantPerson?: GraphQLTypes["TenantPerson"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantPerson`. */
+	tenant?: GraphQLTypes["Tenant"],
+	/** Reads a single `Person` that is related to this `TenantPerson`. */
+	person?: GraphQLTypes["Person"],
+	/** An edge for our `TenantPerson`. May be used by Relay 1. */
+	tenantPersonEdge?: GraphQLTypes["TenantPeopleEdge"]
+};
+	/** All input for the create `TenantPerson` mutation. */
+["CreateTenantPersonInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** The `TenantPerson` to be created by this mutation. */
+	tenantPerson: GraphQLTypes["TenantPersonInput"]
+};
+	/** An input for mutations affecting `TenantPerson` */
+["TenantPersonInput"]: {
+		tenantId: GraphQLTypes["BigInt"],
+	personId: GraphQLTypes["BigInt"]
 };
 	/** The output of our create `Upozorneni` mutation. */
 ["CreateUpozorneniPayload"]: {
@@ -13255,13 +15291,18 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An input for mutations affecting `Upozorneni` */
 ["UpozorneniInput"]: {
 		upId?: GraphQLTypes["BigInt"],
-	upKdo: GraphQLTypes["BigInt"],
+	upKdo?: GraphQLTypes["BigInt"],
 	upNadpis: string,
 	upText: string,
 	upBarvy?: GraphQLTypes["BigInt"],
 	upLock?: boolean,
 	upTimestamp?: GraphQLTypes["Datetime"],
-	upTimestampAdd?: GraphQLTypes["Datetime"]
+	upTimestampAdd?: GraphQLTypes["Datetime"],
+	scheduledSince?: GraphQLTypes["Datetime"],
+	scheduledUntil?: GraphQLTypes["Datetime"],
+	isVisible?: boolean,
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our create `UpozorneniSkupiny` mutation. */
 ["CreateUpozorneniSkupinyPayload"]: {
@@ -13294,7 +15335,9 @@ payload verbatim. May be used to track mutations by the client. */
 	upsIdRodic: GraphQLTypes["BigInt"],
 	upsIdSkupina: GraphQLTypes["BigInt"],
 	upsColor: string,
-	upsPopis: string
+	upsPopis: string,
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our create `User` mutation. */
 ["CreateUserPayload"]: {
@@ -13336,7 +15379,7 @@ payload verbatim. May be used to track mutations by the client. */
 	uPoznamky?: string,
 	uTimestamp?: GraphQLTypes["Datetime"],
 	uLevel?: number,
-	uGroup: GraphQLTypes["BigInt"],
+	uGroup?: GraphQLTypes["BigInt"],
 	uSkupina?: GraphQLTypes["BigInt"],
 	uDancer?: boolean,
 	uBan?: boolean,
@@ -13354,219 +15397,9 @@ payload verbatim. May be used to track mutations by the client. */
 	uMemberUntil?: GraphQLTypes["Datetime"],
 	uCreatedAt?: GraphQLTypes["Datetime"],
 	uTeacher?: boolean,
-	uGdprSignedAt?: GraphQLTypes["Datetime"]
-};
-	/** The output of our create `UsersSkupiny` mutation. */
-["CreateUsersSkupinyPayload"]: {
-	__typename: "CreateUsersSkupinyPayload",
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?: string,
-	/** The `UsersSkupiny` that was created by this mutation. */
-	usersSkupiny?: GraphQLTypes["UsersSkupiny"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?: GraphQLTypes["Query"],
-	/** An edge for our `UsersSkupiny`. May be used by Relay 1. */
-	usersSkupinyEdge?: GraphQLTypes["UsersSkupiniesEdge"]
-};
-	/** All input for the create `UsersSkupiny` mutation. */
-["CreateUsersSkupinyInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The `UsersSkupiny` to be created by this mutation. */
-	usersSkupiny: GraphQLTypes["UsersSkupinyInput"]
-};
-	/** An input for mutations affecting `UsersSkupiny` */
-["UsersSkupinyInput"]: {
-		usId?: GraphQLTypes["BigInt"],
-	usColor?: string,
-	usPlatbaMesic?: GraphQLTypes["BigInt"],
-	usPlatbaCtvrtrok?: GraphQLTypes["BigInt"],
-	usPlatbaPulrok?: GraphQLTypes["BigInt"],
-	usPopis: string
-};
-	/** The output of our create `Video` mutation. */
-["CreateVideoPayload"]: {
-	__typename: "CreateVideoPayload",
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?: string,
-	/** The `Video` that was created by this mutation. */
-	video?: GraphQLTypes["Video"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?: GraphQLTypes["Query"],
-	/** An edge for our `Video`. May be used by Relay 1. */
-	videoEdge?: GraphQLTypes["VideosEdge"]
-};
-	/** All input for the create `Video` mutation. */
-["CreateVideoInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The `Video` to be created by this mutation. */
-	video: GraphQLTypes["VideoInput"]
-};
-	/** An input for mutations affecting `Video` */
-["VideoInput"]: {
-		vId?: GraphQLTypes["BigInt"],
-	vUri: string,
-	vTitle: string,
-	vAuthor: string,
-	vDescription: string,
-	vPlaylist?: string,
-	vCreatedAt: GraphQLTypes["Datetime"],
-	vUpdatedAt?: GraphQLTypes["Datetime"]
-};
-	/** The output of our create `VideoList` mutation. */
-["CreateVideoListPayload"]: {
-	__typename: "CreateVideoListPayload",
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?: string,
-	/** The `VideoList` that was created by this mutation. */
-	videoList?: GraphQLTypes["VideoList"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?: GraphQLTypes["Query"],
-	/** An edge for our `VideoList`. May be used by Relay 1. */
-	videoListEdge?: GraphQLTypes["VideoListsEdge"]
-};
-	/** All input for the create `VideoList` mutation. */
-["CreateVideoListInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The `VideoList` to be created by this mutation. */
-	videoList: GraphQLTypes["VideoListInput"]
-};
-	/** An input for mutations affecting `VideoList` */
-["VideoListInput"]: {
-		vlId?: GraphQLTypes["BigInt"],
-	vlUrl: string,
-	vlTitle: string,
-	vlDescription: string,
-	vlCount: GraphQLTypes["BigInt"],
-	vlCreatedAt: GraphQLTypes["Datetime"],
-	vlLastChecked?: GraphQLTypes["Datetime"]
-};
-	/** The output of our create `VideoSource` mutation. */
-["CreateVideoSourcePayload"]: {
-	__typename: "CreateVideoSourcePayload",
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?: string,
-	/** The `VideoSource` that was created by this mutation. */
-	videoSource?: GraphQLTypes["VideoSource"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?: GraphQLTypes["Query"],
-	/** An edge for our `VideoSource`. May be used by Relay 1. */
-	videoSourceEdge?: GraphQLTypes["VideoSourcesEdge"]
-};
-	/** All input for the create `VideoSource` mutation. */
-["CreateVideoSourceInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The `VideoSource` to be created by this mutation. */
-	videoSource: GraphQLTypes["VideoSourceInput"]
-};
-	/** An input for mutations affecting `VideoSource` */
-["VideoSourceInput"]: {
-		vsId?: GraphQLTypes["BigInt"],
-	vsUrl: string,
-	vsTitle?: string,
-	vsDescription?: string,
-	vsCreatedAt?: GraphQLTypes["Datetime"],
-	vsLastChecked?: GraphQLTypes["Datetime"]
-};
-	/** The output of our update `Akce` mutation. */
-["UpdateAkcePayload"]: {
-	__typename: "UpdateAkcePayload",
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?: string,
-	/** The `Akce` that was updated by this mutation. */
-	akce?: GraphQLTypes["Akce"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?: GraphQLTypes["Query"],
-	/** An edge for our `Akce`. May be used by Relay 1. */
-	akceEdge?: GraphQLTypes["AkcesEdge"]
-};
-	/** All input for the `updateAkceByNodeId` mutation. */
-["UpdateAkceByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Akce` to be updated. */
-	nodeId: string,
-	/** An object where the defined keys will be set on the `Akce` being updated. */
-	patch: GraphQLTypes["AkcePatch"]
-};
-	/** Represents an update to a `Akce`. Fields that are set will be updated. */
-["AkcePatch"]: {
-		aId?: GraphQLTypes["BigInt"],
-	aJmeno?: string,
-	aKde?: string,
-	aInfo?: string,
-	aOd?: GraphQLTypes["Date"],
-	aDo?: GraphQLTypes["Date"],
-	aKapacita?: GraphQLTypes["BigInt"],
-	aDokumenty?: string,
-	aTimestamp?: GraphQLTypes["Datetime"],
-	aLock?: boolean,
-	aVisible?: boolean
-};
-	/** All input for the `updateAkce` mutation. */
-["UpdateAkceInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** An object where the defined keys will be set on the `Akce` being updated. */
-	patch: GraphQLTypes["AkcePatch"],
-	aId: GraphQLTypes["BigInt"]
-};
-	/** The output of our update `AkceItem` mutation. */
-["UpdateAkceItemPayload"]: {
-	__typename: "UpdateAkceItemPayload",
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?: string,
-	/** The `AkceItem` that was updated by this mutation. */
-	akceItem?: GraphQLTypes["AkceItem"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?: GraphQLTypes["Query"],
-	/** Reads a single `Akce` that is related to this `AkceItem`. */
-	akceByAiIdRodic?: GraphQLTypes["Akce"],
-	/** Reads a single `User` that is related to this `AkceItem`. */
-	userByAiUser?: GraphQLTypes["User"],
-	/** An edge for our `AkceItem`. May be used by Relay 1. */
-	akceItemEdge?: GraphQLTypes["AkceItemsEdge"]
-};
-	/** All input for the `updateAkceItemByNodeId` mutation. */
-["UpdateAkceItemByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `AkceItem` to be updated. */
-	nodeId: string,
-	/** An object where the defined keys will be set on the `AkceItem` being updated. */
-	patch: GraphQLTypes["AkceItemPatch"]
-};
-	/** Represents an update to a `AkceItem`. Fields that are set will be updated. */
-["AkceItemPatch"]: {
-		aiId?: GraphQLTypes["BigInt"],
-	aiIdRodic?: GraphQLTypes["BigInt"],
-	aiUser?: GraphQLTypes["BigInt"],
-	aiRokNarozeni?: number
-};
-	/** All input for the `updateAkceItem` mutation. */
-["UpdateAkceItemInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** An object where the defined keys will be set on the `AkceItem` being updated. */
-	patch: GraphQLTypes["AkceItemPatch"],
-	aiId: GraphQLTypes["BigInt"]
+	uGdprSignedAt?: GraphQLTypes["Datetime"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `Aktuality` mutation. */
 ["UpdateAktualityPayload"]: {
@@ -13585,15 +15418,14 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Aktuality`. May be used by Relay 1. */
 	aktualityEdge?: GraphQLTypes["AktualitiesEdge"]
 };
-	/** All input for the `updateAktualityByNodeId` mutation. */
-["UpdateAktualityByNodeIdInput"]: {
+	/** All input for the `updateAktuality` mutation. */
+["UpdateAktualityInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Aktuality` to be updated. */
-	nodeId: string,
 	/** An object where the defined keys will be set on the `Aktuality` being updated. */
-	patch: GraphQLTypes["AktualityPatch"]
+	patch: GraphQLTypes["AktualityPatch"],
+	atId: GraphQLTypes["BigInt"]
 };
 	/** Represents an update to a `Aktuality`. Fields that are set will be updated. */
 ["AktualityPatch"]: {
@@ -13606,16 +15438,164 @@ payload verbatim. May be used to track mutations by the client. */
 	atFoto?: GraphQLTypes["BigInt"],
 	atFotoMain?: GraphQLTypes["BigInt"],
 	atTimestamp?: GraphQLTypes["Datetime"],
-	atTimestampAdd?: GraphQLTypes["Datetime"]
+	atTimestampAdd?: GraphQLTypes["Datetime"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
-	/** All input for the `updateAktuality` mutation. */
-["UpdateAktualityInput"]: {
+	/** The output of our update `Attachment` mutation. */
+["UpdateAttachmentPayload"]: {
+	__typename: "UpdateAttachmentPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `Attachment` that was updated by this mutation. */
+	attachment?: GraphQLTypes["Attachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `User` that is related to this `Attachment`. */
+	userByUploadedBy?: GraphQLTypes["User"],
+	/** An edge for our `Attachment`. May be used by Relay 1. */
+	attachmentEdge?: GraphQLTypes["AttachmentsEdge"]
+};
+	/** All input for the `updateAttachment` mutation. */
+["UpdateAttachmentInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
-	/** An object where the defined keys will be set on the `Aktuality` being updated. */
-	patch: GraphQLTypes["AktualityPatch"],
-	atId: GraphQLTypes["BigInt"]
+	/** An object where the defined keys will be set on the `Attachment` being updated. */
+	patch: GraphQLTypes["AttachmentPatch"],
+	objectName: string
+};
+	/** Represents an update to a `Attachment`. Fields that are set will be updated. */
+["AttachmentPatch"]: {
+		objectName?: string,
+	previewObjectName?: string,
+	uploadedBy?: GraphQLTypes["BigInt"],
+	uploadedAt?: GraphQLTypes["Datetime"]
+};
+	/** The output of our update `AttendeeExternal` mutation. */
+["UpdateAttendeeExternalPayload"]: {
+	__typename: "UpdateAttendeeExternalPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `AttendeeExternal` that was updated by this mutation. */
+	attendeeExternal?: GraphQLTypes["AttendeeExternal"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Event` that is related to this `AttendeeExternal`. */
+	event?: GraphQLTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByManagedBy?: GraphQLTypes["User"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByConfirmedBy?: GraphQLTypes["User"],
+	/** An edge for our `AttendeeExternal`. May be used by Relay 1. */
+	attendeeExternalEdge?: GraphQLTypes["AttendeeExternalsEdge"]
+};
+	/** All input for the `updateAttendeeExternal` mutation. */
+["UpdateAttendeeExternalInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** An object where the defined keys will be set on the `AttendeeExternal` being updated. */
+	patch: GraphQLTypes["AttendeeExternalPatch"],
+	id: GraphQLTypes["BigInt"]
+};
+	/** Represents an update to a `AttendeeExternal`. Fields that are set will be updated. */
+["AttendeeExternalPatch"]: {
+		eventId?: GraphQLTypes["BigInt"],
+	firstName?: string,
+	lastName?: string,
+	email?: string,
+	phone?: string,
+	notes?: string,
+	birthNumber?: string,
+	guardianName?: string,
+	managedBy?: GraphQLTypes["BigInt"],
+	confirmedBy?: GraphQLTypes["BigInt"],
+	confirmedAt?: GraphQLTypes["Datetime"],
+	createdAt?: GraphQLTypes["Datetime"],
+	updatedAt?: GraphQLTypes["Datetime"],
+	tenantId?: GraphQLTypes["BigInt"]
+};
+	/** The output of our update `AttendeeUser` mutation. */
+["UpdateAttendeeUserPayload"]: {
+	__typename: "UpdateAttendeeUserPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `AttendeeUser` that was updated by this mutation. */
+	attendeeUser?: GraphQLTypes["AttendeeUser"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Event` that is related to this `AttendeeUser`. */
+	event?: GraphQLTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeUser`. */
+	user?: GraphQLTypes["User"],
+	/** An edge for our `AttendeeUser`. May be used by Relay 1. */
+	attendeeUserEdge?: GraphQLTypes["AttendeeUsersEdge"]
+};
+	/** All input for the `updateAttendeeUser` mutation. */
+["UpdateAttendeeUserInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** An object where the defined keys will be set on the `AttendeeUser` being updated. */
+	patch: GraphQLTypes["AttendeeUserPatch"],
+	id: GraphQLTypes["BigInt"]
+};
+	/** Represents an update to a `AttendeeUser`. Fields that are set will be updated. */
+["AttendeeUserPatch"]: {
+		id?: GraphQLTypes["BigInt"],
+	eventId?: GraphQLTypes["BigInt"],
+	userId?: GraphQLTypes["BigInt"],
+	birthYear?: number,
+	notes?: string,
+	tenantId?: GraphQLTypes["BigInt"]
+};
+	/** All input for the `updateAttendeeUserByUserIdAndEventId` mutation. */
+["UpdateAttendeeUserByUserIdAndEventIdInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** An object where the defined keys will be set on the `AttendeeUser` being updated. */
+	patch: GraphQLTypes["AttendeeUserPatch"],
+	userId: GraphQLTypes["BigInt"],
+	eventId: GraphQLTypes["BigInt"]
+};
+	/** The output of our update `CohortGroup` mutation. */
+["UpdateCohortGroupPayload"]: {
+	__typename: "UpdateCohortGroupPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `CohortGroup` that was updated by this mutation. */
+	cohortGroup?: GraphQLTypes["CohortGroup"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `CohortGroup`. */
+	tenantByTenant?: GraphQLTypes["Tenant"],
+	/** An edge for our `CohortGroup`. May be used by Relay 1. */
+	cohortGroupEdge?: GraphQLTypes["CohortGroupsEdge"]
+};
+	/** All input for the `updateCohortGroup` mutation. */
+["UpdateCohortGroupInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** An object where the defined keys will be set on the `CohortGroup` being updated. */
+	patch: GraphQLTypes["CohortGroupPatch"],
+	id: GraphQLTypes["BigInt"]
+};
+	/** Represents an update to a `CohortGroup`. Fields that are set will be updated. */
+["CohortGroupPatch"]: {
+		id?: GraphQLTypes["BigInt"],
+	name?: string,
+	description?: string,
+	ordering?: number,
+	isPublic?: boolean,
+	tenant?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `Dokumenty` mutation. */
 ["UpdateDokumentyPayload"]: {
@@ -13632,15 +15612,14 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Dokumenty`. May be used by Relay 1. */
 	dokumentyEdge?: GraphQLTypes["DokumentiesEdge"]
 };
-	/** All input for the `updateDokumentyByNodeId` mutation. */
-["UpdateDokumentyByNodeIdInput"]: {
+	/** All input for the `updateDokumenty` mutation. */
+["UpdateDokumentyInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Dokumenty` to be updated. */
-	nodeId: string,
 	/** An object where the defined keys will be set on the `Dokumenty` being updated. */
-	patch: GraphQLTypes["DokumentyPatch"]
+	patch: GraphQLTypes["DokumentyPatch"],
+	dId: GraphQLTypes["BigInt"]
 };
 	/** Represents an update to a `Dokumenty`. Fields that are set will be updated. */
 ["DokumentyPatch"]: {
@@ -13650,16 +15629,81 @@ payload verbatim. May be used to track mutations by the client. */
 	dFilename?: string,
 	dKategorie?: number,
 	dKdo?: GraphQLTypes["BigInt"],
-	dTimestamp?: GraphQLTypes["Datetime"]
+	dTimestamp?: GraphQLTypes["Datetime"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
-	/** All input for the `updateDokumenty` mutation. */
-["UpdateDokumentyInput"]: {
+	/** The output of our update `Event` mutation. */
+["UpdateEventPayload"]: {
+	__typename: "UpdateEventPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `Event` that was updated by this mutation. */
+	event?: GraphQLTypes["Event"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** An edge for our `Event`. May be used by Relay 1. */
+	eventEdge?: GraphQLTypes["EventsEdge"]
+};
+	/** All input for the `updateEvent` mutation. */
+["UpdateEventInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
-	/** An object where the defined keys will be set on the `Dokumenty` being updated. */
-	patch: GraphQLTypes["DokumentyPatch"],
-	dId: GraphQLTypes["BigInt"]
+	/** An object where the defined keys will be set on the `Event` being updated. */
+	patch: GraphQLTypes["EventPatch"],
+	id: GraphQLTypes["BigInt"]
+};
+	/** Represents an update to a `Event`. Fields that are set will be updated. */
+["EventPatch"]: {
+		id?: GraphQLTypes["BigInt"],
+	name?: string,
+	locationText?: string,
+	description?: string,
+	since?: GraphQLTypes["Date"],
+	until?: GraphQLTypes["Date"],
+	capacity?: GraphQLTypes["BigInt"],
+	filesLegacy?: string,
+	updatedAt?: GraphQLTypes["Datetime"],
+	isLocked?: boolean,
+	isVisible?: boolean,
+	summary?: string,
+	isPublic?: boolean,
+	enableNotes?: boolean,
+	tenantId?: GraphQLTypes["BigInt"]
+};
+	/** The output of our update `FormResponse` mutation. */
+["UpdateFormResponsePayload"]: {
+	__typename: "UpdateFormResponsePayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `FormResponse` that was updated by this mutation. */
+	formResponse?: GraphQLTypes["FormResponse"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** An edge for our `FormResponse`. May be used by Relay 1. */
+	formResponseEdge?: GraphQLTypes["FormResponsesEdge"]
+};
+	/** All input for the `updateFormResponse` mutation. */
+["UpdateFormResponseInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** An object where the defined keys will be set on the `FormResponse` being updated. */
+	patch: GraphQLTypes["FormResponsePatch"],
+	id: GraphQLTypes["BigInt"]
+};
+	/** Represents an update to a `FormResponse`. Fields that are set will be updated. */
+["FormResponsePatch"]: {
+		id?: GraphQLTypes["BigInt"],
+	type?: string,
+	data?: GraphQLTypes["JSON"],
+	url?: string,
+	createdAt?: GraphQLTypes["Datetime"],
+	updatedAt?: GraphQLTypes["Datetime"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `GalerieDir` mutation. */
 ["UpdateGalerieDirPayload"]: {
@@ -13674,25 +15718,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `GalerieDir`. May be used by Relay 1. */
 	galerieDirEdge?: GraphQLTypes["GalerieDirsEdge"]
 };
-	/** All input for the `updateGalerieDirByNodeId` mutation. */
-["UpdateGalerieDirByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `GalerieDir` to be updated. */
-	nodeId: string,
-	/** An object where the defined keys will be set on the `GalerieDir` being updated. */
-	patch: GraphQLTypes["GalerieDirPatch"]
-};
-	/** Represents an update to a `GalerieDir`. Fields that are set will be updated. */
-["GalerieDirPatch"]: {
-		gdId?: GraphQLTypes["BigInt"],
-	gdIdRodic?: GraphQLTypes["BigInt"],
-	gdName?: string,
-	gdLevel?: number,
-	gdPath?: string,
-	gdHidden?: boolean
-};
 	/** All input for the `updateGalerieDir` mutation. */
 ["UpdateGalerieDirInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -13701,6 +15726,17 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An object where the defined keys will be set on the `GalerieDir` being updated. */
 	patch: GraphQLTypes["GalerieDirPatch"],
 	gdId: GraphQLTypes["BigInt"]
+};
+	/** Represents an update to a `GalerieDir`. Fields that are set will be updated. */
+["GalerieDirPatch"]: {
+		gdId?: GraphQLTypes["BigInt"],
+	gdIdRodic?: GraphQLTypes["BigInt"],
+	gdName?: string,
+	gdLevel?: number,
+	gdPath?: string,
+	gdHidden?: boolean,
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `GalerieFoto` mutation. */
 ["UpdateGalerieFotoPayload"]: {
@@ -13719,25 +15755,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `GalerieFoto`. May be used by Relay 1. */
 	galerieFotoEdge?: GraphQLTypes["GalerieFotosEdge"]
 };
-	/** All input for the `updateGalerieFotoByNodeId` mutation. */
-["UpdateGalerieFotoByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `GalerieFoto` to be updated. */
-	nodeId: string,
-	/** An object where the defined keys will be set on the `GalerieFoto` being updated. */
-	patch: GraphQLTypes["GalerieFotoPatch"]
-};
-	/** Represents an update to a `GalerieFoto`. Fields that are set will be updated. */
-["GalerieFotoPatch"]: {
-		gfId?: GraphQLTypes["BigInt"],
-	gfIdRodic?: GraphQLTypes["BigInt"],
-	gfName?: string,
-	gfPath?: string,
-	gfKdo?: GraphQLTypes["BigInt"],
-	gfTimestamp?: GraphQLTypes["Datetime"]
-};
 	/** All input for the `updateGalerieFoto` mutation. */
 ["UpdateGalerieFotoInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -13746,6 +15763,77 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An object where the defined keys will be set on the `GalerieFoto` being updated. */
 	patch: GraphQLTypes["GalerieFotoPatch"],
 	gfId: GraphQLTypes["BigInt"]
+};
+	/** Represents an update to a `GalerieFoto`. Fields that are set will be updated. */
+["GalerieFotoPatch"]: {
+		gfId?: GraphQLTypes["BigInt"],
+	gfIdRodic?: GraphQLTypes["BigInt"],
+	gfName?: string,
+	gfPath?: string,
+	gfKdo?: GraphQLTypes["BigInt"],
+	gfTimestamp?: GraphQLTypes["Datetime"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
+};
+	/** The output of our update `Location` mutation. */
+["UpdateLocationPayload"]: {
+	__typename: "UpdateLocationPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `Location` that was updated by this mutation. */
+	location?: GraphQLTypes["Location"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** An edge for our `Location`. May be used by Relay 1. */
+	locationEdge?: GraphQLTypes["LocationsEdge"]
+};
+	/** All input for the `updateLocation` mutation. */
+["UpdateLocationInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** An object where the defined keys will be set on the `Location` being updated. */
+	patch: GraphQLTypes["LocationPatch"],
+	id: GraphQLTypes["BigInt"]
+};
+	/** Represents an update to a `Location`. Fields that are set will be updated. */
+["LocationPatch"]: {
+		id?: GraphQLTypes["BigInt"],
+	name?: string,
+	description?: GraphQLTypes["JSON"]
+};
+	/** The output of our update `LocationAttachment` mutation. */
+["UpdateLocationAttachmentPayload"]: {
+	__typename: "UpdateLocationAttachmentPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `LocationAttachment` that was updated by this mutation. */
+	locationAttachment?: GraphQLTypes["LocationAttachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Location` that is related to this `LocationAttachment`. */
+	location?: GraphQLTypes["Location"],
+	/** Reads a single `Attachment` that is related to this `LocationAttachment`. */
+	attachmentByObjectName?: GraphQLTypes["Attachment"],
+	/** An edge for our `LocationAttachment`. May be used by Relay 1. */
+	locationAttachmentEdge?: GraphQLTypes["LocationAttachmentsEdge"]
+};
+	/** All input for the `updateLocationAttachment` mutation. */
+["UpdateLocationAttachmentInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** An object where the defined keys will be set on the `LocationAttachment` being updated. */
+	patch: GraphQLTypes["LocationAttachmentPatch"],
+	locationId: GraphQLTypes["BigInt"],
+	objectName: string
+};
+	/** Represents an update to a `LocationAttachment`. Fields that are set will be updated. */
+["LocationAttachmentPatch"]: {
+		locationId?: GraphQLTypes["BigInt"],
+	objectName?: string
 };
 	/** The output of our update `Nabidka` mutation. */
 ["UpdateNabidkaPayload"]: {
@@ -13762,28 +15850,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Nabidka`. May be used by Relay 1. */
 	nabidkaEdge?: GraphQLTypes["NabidkasEdge"]
 };
-	/** All input for the `updateNabidkaByNodeId` mutation. */
-["UpdateNabidkaByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Nabidka` to be updated. */
-	nodeId: string,
-	/** An object where the defined keys will be set on the `Nabidka` being updated. */
-	patch: GraphQLTypes["NabidkaPatch"]
-};
-	/** Represents an update to a `Nabidka`. Fields that are set will be updated. */
-["NabidkaPatch"]: {
-		nId?: GraphQLTypes["BigInt"],
-	nTrener?: GraphQLTypes["BigInt"],
-	nPocetHod?: number,
-	nMaxPocetHod?: GraphQLTypes["BigInt"],
-	nOd?: GraphQLTypes["Date"],
-	nDo?: GraphQLTypes["Date"],
-	nVisible?: boolean,
-	nLock?: boolean,
-	nTimestamp?: GraphQLTypes["Datetime"]
-};
 	/** All input for the `updateNabidka` mutation. */
 ["UpdateNabidkaInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -13792,6 +15858,20 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An object where the defined keys will be set on the `Nabidka` being updated. */
 	patch: GraphQLTypes["NabidkaPatch"],
 	nId: GraphQLTypes["BigInt"]
+};
+	/** Represents an update to a `Nabidka`. Fields that are set will be updated. */
+["NabidkaPatch"]: {
+		nId?: GraphQLTypes["BigInt"],
+	nTrener?: GraphQLTypes["BigInt"],
+	nPocetHod?: number,
+	nMaxPocetHod?: number,
+	nOd?: GraphQLTypes["Date"],
+	nDo?: GraphQLTypes["Date"],
+	nVisible?: boolean,
+	nLock?: boolean,
+	nTimestamp?: GraphQLTypes["Datetime"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `NabidkaItem` mutation. */
 ["UpdateNabidkaItemPayload"]: {
@@ -13810,24 +15890,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `NabidkaItem`. May be used by Relay 1. */
 	nabidkaItemEdge?: GraphQLTypes["NabidkaItemsEdge"]
 };
-	/** All input for the `updateNabidkaItemByNodeId` mutation. */
-["UpdateNabidkaItemByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `NabidkaItem` to be updated. */
-	nodeId: string,
-	/** An object where the defined keys will be set on the `NabidkaItem` being updated. */
-	patch: GraphQLTypes["NabidkaItemPatch"]
-};
-	/** Represents an update to a `NabidkaItem`. Fields that are set will be updated. */
-["NabidkaItemPatch"]: {
-		niId?: GraphQLTypes["BigInt"],
-	niIdRodic?: GraphQLTypes["BigInt"],
-	niPartner?: GraphQLTypes["BigInt"],
-	niPocetHod?: number,
-	niLock?: boolean
-};
 	/** All input for the `updateNabidkaItem` mutation. */
 ["UpdateNabidkaItemInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -13836,6 +15898,26 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An object where the defined keys will be set on the `NabidkaItem` being updated. */
 	patch: GraphQLTypes["NabidkaItemPatch"],
 	niId: GraphQLTypes["BigInt"]
+};
+	/** Represents an update to a `NabidkaItem`. Fields that are set will be updated. */
+["NabidkaItemPatch"]: {
+		niId?: GraphQLTypes["BigInt"],
+	niIdRodic?: GraphQLTypes["BigInt"],
+	niPartner?: GraphQLTypes["BigInt"],
+	niPocetHod?: number,
+	niLock?: boolean,
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
+};
+	/** All input for the `updateNabidkaItemByNiPartnerAndNiIdRodic` mutation. */
+["UpdateNabidkaItemByNiPartnerAndNiIdRodicInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** An object where the defined keys will be set on the `NabidkaItem` being updated. */
+	patch: GraphQLTypes["NabidkaItemPatch"],
+	niPartner: GraphQLTypes["BigInt"],
+	niIdRodic: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `Page` mutation. */
 ["UpdatePagePayload"]: {
@@ -13850,15 +15932,14 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Page`. May be used by Relay 1. */
 	pageEdge?: GraphQLTypes["PagesEdge"]
 };
-	/** All input for the `updatePageByNodeId` mutation. */
-["UpdatePageByNodeIdInput"]: {
+	/** All input for the `updatePage` mutation. */
+["UpdatePageInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Page` to be updated. */
-	nodeId: string,
 	/** An object where the defined keys will be set on the `Page` being updated. */
-	patch: GraphQLTypes["PagePatch"]
+	patch: GraphQLTypes["PagePatch"],
+	id: number
 };
 	/** Represents an update to a `Page`. Fields that are set will be updated. */
 ["PagePatch"]: {
@@ -13868,15 +15949,6 @@ payload verbatim. May be used to track mutations by the client. */
 	createdAt?: GraphQLTypes["Datetime"],
 	updatedAt?: GraphQLTypes["Datetime"],
 	title?: string
-};
-	/** All input for the `updatePage` mutation. */
-["UpdatePageInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** An object where the defined keys will be set on the `Page` being updated. */
-	patch: GraphQLTypes["PagePatch"],
-	id: number
 };
 	/** All input for the `updatePageByUrl` mutation. */
 ["UpdatePageByUrlInput"]: {
@@ -13900,21 +15972,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Parameter`. May be used by Relay 1. */
 	parameterEdge?: GraphQLTypes["ParametersEdge"]
 };
-	/** All input for the `updateParameterByNodeId` mutation. */
-["UpdateParameterByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Parameter` to be updated. */
-	nodeId: string,
-	/** An object where the defined keys will be set on the `Parameter` being updated. */
-	patch: GraphQLTypes["ParameterPatch"]
-};
-	/** Represents an update to a `Parameter`. Fields that are set will be updated. */
-["ParameterPatch"]: {
-		paName?: string,
-	paValue?: string
-};
 	/** All input for the `updateParameter` mutation. */
 ["UpdateParameterInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -13923,6 +15980,11 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An object where the defined keys will be set on the `Parameter` being updated. */
 	patch: GraphQLTypes["ParameterPatch"],
 	paName: string
+};
+	/** Represents an update to a `Parameter`. Fields that are set will be updated. */
+["ParameterPatch"]: {
+		paName?: string,
+	paValue?: string
 };
 	/** The output of our update `Pary` mutation. */
 ["UpdateParyPayload"]: {
@@ -13936,18 +15998,19 @@ unchanged and unused. May be used by a client to track mutations. */
 	query?: GraphQLTypes["Query"],
 	/** Reads a single `User` that is related to this `Pary`. */
 	userByPIdPartner?: GraphQLTypes["User"],
+	/** Reads a single `User` that is related to this `Pary`. */
+	userByPIdPartnerka?: GraphQLTypes["User"],
 	/** An edge for our `Pary`. May be used by Relay 1. */
 	paryEdge?: GraphQLTypes["PariesEdge"]
 };
-	/** All input for the `updateParyByNodeId` mutation. */
-["UpdateParyByNodeIdInput"]: {
+	/** All input for the `updatePary` mutation. */
+["UpdateParyInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Pary` to be updated. */
-	nodeId: string,
 	/** An object where the defined keys will be set on the `Pary` being updated. */
-	patch: GraphQLTypes["ParyPatch"]
+	patch: GraphQLTypes["ParyPatch"],
+	pId: GraphQLTypes["BigInt"]
 };
 	/** Represents an update to a `Pary`. Fields that are set will be updated. */
 ["ParyPatch"]: {
@@ -13963,16 +16026,8 @@ payload verbatim. May be used to track mutations by the client. */
 	pHodnoceni?: number,
 	pArchiv?: boolean,
 	pTimestampAdd?: GraphQLTypes["Datetime"],
-	pTimestampArchive?: GraphQLTypes["Datetime"]
-};
-	/** All input for the `updatePary` mutation. */
-["UpdateParyInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** An object where the defined keys will be set on the `Pary` being updated. */
-	patch: GraphQLTypes["ParyPatch"],
-	pId: GraphQLTypes["BigInt"]
+	pTimestampArchive?: GraphQLTypes["Datetime"],
+	id?: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `ParyNavrh` mutation. */
 ["UpdateParyNavrhPayload"]: {
@@ -13993,23 +16048,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `ParyNavrh`. May be used by Relay 1. */
 	paryNavrhEdge?: GraphQLTypes["ParyNavrhsEdge"]
 };
-	/** All input for the `updateParyNavrhByNodeId` mutation. */
-["UpdateParyNavrhByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `ParyNavrh` to be updated. */
-	nodeId: string,
-	/** An object where the defined keys will be set on the `ParyNavrh` being updated. */
-	patch: GraphQLTypes["ParyNavrhPatch"]
-};
-	/** Represents an update to a `ParyNavrh`. Fields that are set will be updated. */
-["ParyNavrhPatch"]: {
-		pnId?: GraphQLTypes["BigInt"],
-	pnNavrhl?: GraphQLTypes["BigInt"],
-	pnPartner?: GraphQLTypes["BigInt"],
-	pnPartnerka?: GraphQLTypes["BigInt"]
-};
 	/** All input for the `updateParyNavrh` mutation. */
 ["UpdateParyNavrhInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -14018,6 +16056,14 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An object where the defined keys will be set on the `ParyNavrh` being updated. */
 	patch: GraphQLTypes["ParyNavrhPatch"],
 	pnId: GraphQLTypes["BigInt"]
+};
+	/** Represents an update to a `ParyNavrh`. Fields that are set will be updated. */
+["ParyNavrhPatch"]: {
+		pnId?: GraphQLTypes["BigInt"],
+	pnNavrhl?: GraphQLTypes["BigInt"],
+	pnPartner?: GraphQLTypes["BigInt"],
+	pnPartnerka?: GraphQLTypes["BigInt"],
+	id?: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `Permission` mutation. */
 ["UpdatePermissionPayload"]: {
@@ -14032,15 +16078,14 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Permission`. May be used by Relay 1. */
 	permissionEdge?: GraphQLTypes["PermissionsEdge"]
 };
-	/** All input for the `updatePermissionByNodeId` mutation. */
-["UpdatePermissionByNodeIdInput"]: {
+	/** All input for the `updatePermission` mutation. */
+["UpdatePermissionInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Permission` to be updated. */
-	nodeId: string,
 	/** An object where the defined keys will be set on the `Permission` being updated. */
-	patch: GraphQLTypes["PermissionPatch"]
+	patch: GraphQLTypes["PermissionPatch"],
+	peId: GraphQLTypes["BigInt"]
 };
 	/** Represents an update to a `Permission`. Fields that are set will be updated. */
 ["PermissionPatch"]: {
@@ -14063,16 +16108,37 @@ payload verbatim. May be used to track mutations by the client. */
 	peRozpis?: number,
 	peSkupiny?: number,
 	peUsers?: number,
-	peMain?: number
+	peMain?: number,
+	id?: GraphQLTypes["BigInt"]
 };
-	/** All input for the `updatePermission` mutation. */
-["UpdatePermissionInput"]: {
+	/** The output of our update `Person` mutation. */
+["UpdatePersonPayload"]: {
+	__typename: "UpdatePersonPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `Person` that was updated by this mutation. */
+	person?: GraphQLTypes["Person"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** An edge for our `Person`. May be used by Relay 1. */
+	personEdge?: GraphQLTypes["PeopleEdge"]
+};
+	/** All input for the `updatePerson` mutation. */
+["UpdatePersonInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
-	/** An object where the defined keys will be set on the `Permission` being updated. */
-	patch: GraphQLTypes["PermissionPatch"],
-	peId: GraphQLTypes["BigInt"]
+	/** An object where the defined keys will be set on the `Person` being updated. */
+	patch: GraphQLTypes["PersonPatch"],
+	id: GraphQLTypes["BigInt"]
+};
+	/** Represents an update to a `Person`. Fields that are set will be updated. */
+["PersonPatch"]: {
+		id?: GraphQLTypes["BigInt"],
+	firstName?: string,
+	lastName?: string,
+	gender?: GraphQLTypes["GenderType"]
 };
 	/** The output of our update `PlatbyCategory` mutation. */
 ["UpdatePlatbyCategoryPayload"]: {
@@ -14087,15 +16153,14 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyCategory`. May be used by Relay 1. */
 	platbyCategoryEdge?: GraphQLTypes["PlatbyCategoriesEdge"]
 };
-	/** All input for the `updatePlatbyCategoryByNodeId` mutation. */
-["UpdatePlatbyCategoryByNodeIdInput"]: {
+	/** All input for the `updatePlatbyCategory` mutation. */
+["UpdatePlatbyCategoryInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `PlatbyCategory` to be updated. */
-	nodeId: string,
 	/** An object where the defined keys will be set on the `PlatbyCategory` being updated. */
-	patch: GraphQLTypes["PlatbyCategoryPatch"]
+	patch: GraphQLTypes["PlatbyCategoryPatch"],
+	pcId: GraphQLTypes["BigInt"]
 };
 	/** Represents an update to a `PlatbyCategory`. Fields that are set will be updated. */
 ["PlatbyCategoryPatch"]: {
@@ -14109,16 +16174,9 @@ payload verbatim. May be used to track mutations by the client. */
 	pcUseBase?: boolean,
 	pcUsePrefix?: boolean,
 	pcArchive?: boolean,
-	pcVisible?: boolean
-};
-	/** All input for the `updatePlatbyCategory` mutation. */
-["UpdatePlatbyCategoryInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** An object where the defined keys will be set on the `PlatbyCategory` being updated. */
-	patch: GraphQLTypes["PlatbyCategoryPatch"],
-	pcId: GraphQLTypes["BigInt"]
+	pcVisible?: boolean,
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `PlatbyCategoryGroup` mutation. */
 ["UpdatePlatbyCategoryGroupPayload"]: {
@@ -14137,22 +16195,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyCategoryGroup`. May be used by Relay 1. */
 	platbyCategoryGroupEdge?: GraphQLTypes["PlatbyCategoryGroupsEdge"]
 };
-	/** All input for the `updatePlatbyCategoryGroupByNodeId` mutation. */
-["UpdatePlatbyCategoryGroupByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `PlatbyCategoryGroup` to be updated. */
-	nodeId: string,
-	/** An object where the defined keys will be set on the `PlatbyCategoryGroup` being updated. */
-	patch: GraphQLTypes["PlatbyCategoryGroupPatch"]
-};
-	/** Represents an update to a `PlatbyCategoryGroup`. Fields that are set will be updated. */
-["PlatbyCategoryGroupPatch"]: {
-		pcgId?: GraphQLTypes["BigInt"],
-	pcgIdGroup?: GraphQLTypes["BigInt"],
-	pcgIdCategory?: GraphQLTypes["BigInt"]
-};
 	/** All input for the `updatePlatbyCategoryGroup` mutation. */
 ["UpdatePlatbyCategoryGroupInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -14161,6 +16203,14 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An object where the defined keys will be set on the `PlatbyCategoryGroup` being updated. */
 	patch: GraphQLTypes["PlatbyCategoryGroupPatch"],
 	pcgId: GraphQLTypes["BigInt"]
+};
+	/** Represents an update to a `PlatbyCategoryGroup`. Fields that are set will be updated. */
+["PlatbyCategoryGroupPatch"]: {
+		pcgId?: GraphQLTypes["BigInt"],
+	pcgIdGroup?: GraphQLTypes["BigInt"],
+	pcgIdCategory?: GraphQLTypes["BigInt"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `PlatbyGroup` mutation. */
 ["UpdatePlatbyGroupPayload"]: {
@@ -14175,24 +16225,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyGroup`. May be used by Relay 1. */
 	platbyGroupEdge?: GraphQLTypes["PlatbyGroupsEdge"]
 };
-	/** All input for the `updatePlatbyGroupByNodeId` mutation. */
-["UpdatePlatbyGroupByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `PlatbyGroup` to be updated. */
-	nodeId: string,
-	/** An object where the defined keys will be set on the `PlatbyGroup` being updated. */
-	patch: GraphQLTypes["PlatbyGroupPatch"]
-};
-	/** Represents an update to a `PlatbyGroup`. Fields that are set will be updated. */
-["PlatbyGroupPatch"]: {
-		pgId?: GraphQLTypes["BigInt"],
-	pgType?: GraphQLTypes["BigFloat"],
-	pgName?: string,
-	pgDescription?: string,
-	pgBase?: GraphQLTypes["BigInt"]
-};
 	/** All input for the `updatePlatbyGroup` mutation. */
 ["UpdatePlatbyGroupInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -14201,6 +16233,16 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An object where the defined keys will be set on the `PlatbyGroup` being updated. */
 	patch: GraphQLTypes["PlatbyGroupPatch"],
 	pgId: GraphQLTypes["BigInt"]
+};
+	/** Represents an update to a `PlatbyGroup`. Fields that are set will be updated. */
+["PlatbyGroupPatch"]: {
+		pgId?: GraphQLTypes["BigInt"],
+	pgType?: GraphQLTypes["BigFloat"],
+	pgName?: string,
+	pgDescription?: string,
+	pgBase?: GraphQLTypes["BigInt"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `PlatbyGroupSkupina` mutation. */
 ["UpdatePlatbyGroupSkupinaPayload"]: {
@@ -14219,22 +16261,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyGroupSkupina`. May be used by Relay 1. */
 	platbyGroupSkupinaEdge?: GraphQLTypes["PlatbyGroupSkupinasEdge"]
 };
-	/** All input for the `updatePlatbyGroupSkupinaByNodeId` mutation. */
-["UpdatePlatbyGroupSkupinaByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `PlatbyGroupSkupina` to be updated. */
-	nodeId: string,
-	/** An object where the defined keys will be set on the `PlatbyGroupSkupina` being updated. */
-	patch: GraphQLTypes["PlatbyGroupSkupinaPatch"]
-};
-	/** Represents an update to a `PlatbyGroupSkupina`. Fields that are set will be updated. */
-["PlatbyGroupSkupinaPatch"]: {
-		pgsId?: GraphQLTypes["BigInt"],
-	pgsIdSkupina?: GraphQLTypes["BigInt"],
-	pgsIdGroup?: GraphQLTypes["BigInt"]
-};
 	/** All input for the `updatePlatbyGroupSkupina` mutation. */
 ["UpdatePlatbyGroupSkupinaInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -14243,6 +16269,14 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An object where the defined keys will be set on the `PlatbyGroupSkupina` being updated. */
 	patch: GraphQLTypes["PlatbyGroupSkupinaPatch"],
 	pgsId: GraphQLTypes["BigInt"]
+};
+	/** Represents an update to a `PlatbyGroupSkupina`. Fields that are set will be updated. */
+["PlatbyGroupSkupinaPatch"]: {
+		pgsId?: GraphQLTypes["BigInt"],
+	pgsIdSkupina?: GraphQLTypes["BigInt"],
+	pgsIdGroup?: GraphQLTypes["BigInt"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `PlatbyItem` mutation. */
 ["UpdatePlatbyItemPayload"]: {
@@ -14263,15 +16297,14 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyItem`. May be used by Relay 1. */
 	platbyItemEdge?: GraphQLTypes["PlatbyItemsEdge"]
 };
-	/** All input for the `updatePlatbyItemByNodeId` mutation. */
-["UpdatePlatbyItemByNodeIdInput"]: {
+	/** All input for the `updatePlatbyItem` mutation. */
+["UpdatePlatbyItemInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `PlatbyItem` to be updated. */
-	nodeId: string,
 	/** An object where the defined keys will be set on the `PlatbyItem` being updated. */
-	patch: GraphQLTypes["PlatbyItemPatch"]
+	patch: GraphQLTypes["PlatbyItemPatch"],
+	piId: GraphQLTypes["BigInt"]
 };
 	/** Represents an update to a `PlatbyItem`. Fields that are set will be updated. */
 ["PlatbyItemPatch"]: {
@@ -14281,16 +16314,9 @@ payload verbatim. May be used to track mutations by the client. */
 	piIdRaw?: GraphQLTypes["BigInt"],
 	piAmount?: GraphQLTypes["BigFloat"],
 	piDate?: GraphQLTypes["Date"],
-	piPrefix?: number
-};
-	/** All input for the `updatePlatbyItem` mutation. */
-["UpdatePlatbyItemInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** An object where the defined keys will be set on the `PlatbyItem` being updated. */
-	patch: GraphQLTypes["PlatbyItemPatch"],
-	piId: GraphQLTypes["BigInt"]
+	piPrefix?: number,
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `PlatbyRaw` mutation. */
 ["UpdatePlatbyRawPayload"]: {
@@ -14305,24 +16331,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyRaw`. May be used by Relay 1. */
 	platbyRawEdge?: GraphQLTypes["PlatbyRawsEdge"]
 };
-	/** All input for the `updatePlatbyRawByNodeId` mutation. */
-["UpdatePlatbyRawByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `PlatbyRaw` to be updated. */
-	nodeId: string,
-	/** An object where the defined keys will be set on the `PlatbyRaw` being updated. */
-	patch: GraphQLTypes["PlatbyRawPatch"]
-};
-	/** Represents an update to a `PlatbyRaw`. Fields that are set will be updated. */
-["PlatbyRawPatch"]: {
-		prId?: GraphQLTypes["BigInt"],
-	prRaw?: string,
-	prHash?: string,
-	prSorted?: boolean,
-	prDiscarded?: boolean
-};
 	/** All input for the `updatePlatbyRaw` mutation. */
 ["UpdatePlatbyRawInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -14331,6 +16339,79 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An object where the defined keys will be set on the `PlatbyRaw` being updated. */
 	patch: GraphQLTypes["PlatbyRawPatch"],
 	prId: GraphQLTypes["BigInt"]
+};
+	/** Represents an update to a `PlatbyRaw`. Fields that are set will be updated. */
+["PlatbyRawPatch"]: {
+		prId?: GraphQLTypes["BigInt"],
+	prRaw?: string,
+	prHash?: string,
+	prSorted?: boolean,
+	prDiscarded?: boolean,
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
+};
+	/** The output of our update `Room` mutation. */
+["UpdateRoomPayload"]: {
+	__typename: "UpdateRoomPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `Room` that was updated by this mutation. */
+	room?: GraphQLTypes["Room"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Location` that is related to this `Room`. */
+	locationByLocation?: GraphQLTypes["Location"],
+	/** An edge for our `Room`. May be used by Relay 1. */
+	roomEdge?: GraphQLTypes["RoomsEdge"]
+};
+	/** All input for the `updateRoom` mutation. */
+["UpdateRoomInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** An object where the defined keys will be set on the `Room` being updated. */
+	patch: GraphQLTypes["RoomPatch"],
+	id: GraphQLTypes["BigInt"]
+};
+	/** Represents an update to a `Room`. Fields that are set will be updated. */
+["RoomPatch"]: {
+		id?: GraphQLTypes["BigInt"],
+	name?: string,
+	description?: GraphQLTypes["JSON"],
+	location?: GraphQLTypes["BigInt"]
+};
+	/** The output of our update `RoomAttachment` mutation. */
+["UpdateRoomAttachmentPayload"]: {
+	__typename: "UpdateRoomAttachmentPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `RoomAttachment` that was updated by this mutation. */
+	roomAttachment?: GraphQLTypes["RoomAttachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Room` that is related to this `RoomAttachment`. */
+	room?: GraphQLTypes["Room"],
+	/** Reads a single `Attachment` that is related to this `RoomAttachment`. */
+	attachmentByObjectName?: GraphQLTypes["Attachment"],
+	/** An edge for our `RoomAttachment`. May be used by Relay 1. */
+	roomAttachmentEdge?: GraphQLTypes["RoomAttachmentsEdge"]
+};
+	/** All input for the `updateRoomAttachment` mutation. */
+["UpdateRoomAttachmentInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** An object where the defined keys will be set on the `RoomAttachment` being updated. */
+	patch: GraphQLTypes["RoomAttachmentPatch"],
+	roomId: GraphQLTypes["BigInt"],
+	objectName: string
+};
+	/** Represents an update to a `RoomAttachment`. Fields that are set will be updated. */
+["RoomAttachmentPatch"]: {
+		roomId?: GraphQLTypes["BigInt"],
+	objectName?: string
 };
 	/** The output of our update `Rozpi` mutation. */
 ["UpdateRozpiPayload"]: {
@@ -14347,15 +16428,14 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Rozpi`. May be used by Relay 1. */
 	rozpiEdge?: GraphQLTypes["RozpisEdge"]
 };
-	/** All input for the `updateRozpiByNodeId` mutation. */
-["UpdateRozpiByNodeIdInput"]: {
+	/** All input for the `updateRozpi` mutation. */
+["UpdateRozpiInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Rozpi` to be updated. */
-	nodeId: string,
 	/** An object where the defined keys will be set on the `Rozpi` being updated. */
-	patch: GraphQLTypes["RozpiPatch"]
+	patch: GraphQLTypes["RozpiPatch"],
+	rId: GraphQLTypes["BigInt"]
 };
 	/** Represents an update to a `Rozpi`. Fields that are set will be updated. */
 ["RozpiPatch"]: {
@@ -14365,16 +16445,9 @@ payload verbatim. May be used to track mutations by the client. */
 	rDatum?: GraphQLTypes["Date"],
 	rVisible?: boolean,
 	rLock?: boolean,
-	rTimestamp?: GraphQLTypes["Datetime"]
-};
-	/** All input for the `updateRozpi` mutation. */
-["UpdateRozpiInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** An object where the defined keys will be set on the `Rozpi` being updated. */
-	patch: GraphQLTypes["RozpiPatch"],
-	rId: GraphQLTypes["BigInt"]
+	rTimestamp?: GraphQLTypes["Datetime"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `RozpisItem` mutation. */
 ["UpdateRozpisItemPayload"]: {
@@ -14393,25 +16466,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `RozpisItem`. May be used by Relay 1. */
 	rozpisItemEdge?: GraphQLTypes["RozpisItemsEdge"]
 };
-	/** All input for the `updateRozpisItemByNodeId` mutation. */
-["UpdateRozpisItemByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `RozpisItem` to be updated. */
-	nodeId: string,
-	/** An object where the defined keys will be set on the `RozpisItem` being updated. */
-	patch: GraphQLTypes["RozpisItemPatch"]
-};
-	/** Represents an update to a `RozpisItem`. Fields that are set will be updated. */
-["RozpisItemPatch"]: {
-		riId?: GraphQLTypes["BigInt"],
-	riIdRodic?: GraphQLTypes["BigInt"],
-	riPartner?: GraphQLTypes["BigInt"],
-	riOd?: GraphQLTypes["Time"],
-	riDo?: GraphQLTypes["Time"],
-	riLock?: boolean
-};
 	/** All input for the `updateRozpisItem` mutation. */
 ["UpdateRozpisItemInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -14421,47 +16475,16 @@ payload verbatim. May be used to track mutations by the client. */
 	patch: GraphQLTypes["RozpisItemPatch"],
 	riId: GraphQLTypes["BigInt"]
 };
-	/** The output of our update `Session` mutation. */
-["UpdateSessionPayload"]: {
-	__typename: "UpdateSessionPayload",
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?: string,
-	/** The `Session` that was updated by this mutation. */
-	session?: GraphQLTypes["Session"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?: GraphQLTypes["Query"],
-	/** Reads a single `User` that is related to this `Session`. */
-	userBySsUser?: GraphQLTypes["User"],
-	/** An edge for our `Session`. May be used by Relay 1. */
-	sessionEdge?: GraphQLTypes["SessionsEdge"]
-};
-	/** All input for the `updateSessionByNodeId` mutation. */
-["UpdateSessionByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Session` to be updated. */
-	nodeId: string,
-	/** An object where the defined keys will be set on the `Session` being updated. */
-	patch: GraphQLTypes["SessionPatch"]
-};
-	/** Represents an update to a `Session`. Fields that are set will be updated. */
-["SessionPatch"]: {
-		ssId?: string,
-	ssData?: string,
-	ssUpdatedAt?: GraphQLTypes["Datetime"],
-	ssLifetime?: GraphQLTypes["BigInt"],
-	ssUser?: GraphQLTypes["BigInt"]
-};
-	/** All input for the `updateSession` mutation. */
-["UpdateSessionInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** An object where the defined keys will be set on the `Session` being updated. */
-	patch: GraphQLTypes["SessionPatch"],
-	ssId: string
+	/** Represents an update to a `RozpisItem`. Fields that are set will be updated. */
+["RozpisItemPatch"]: {
+		riId?: GraphQLTypes["BigInt"],
+	riIdRodic?: GraphQLTypes["BigInt"],
+	riPartner?: GraphQLTypes["BigInt"],
+	riOd?: GraphQLTypes["Time"],
+	riDo?: GraphQLTypes["Time"],
+	riLock?: boolean,
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `Skupiny` mutation. */
 ["UpdateSkupinyPayload"]: {
@@ -14473,28 +16496,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	skupiny?: GraphQLTypes["Skupiny"],
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
+	/** Reads a single `CohortGroup` that is related to this `Skupiny`. */
+	cohortGroupByCohortGroup?: GraphQLTypes["CohortGroup"],
 	/** An edge for our `Skupiny`. May be used by Relay 1. */
 	skupinyEdge?: GraphQLTypes["SkupiniesEdge"]
-};
-	/** All input for the `updateSkupinyByNodeId` mutation. */
-["UpdateSkupinyByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Skupiny` to be updated. */
-	nodeId: string,
-	/** An object where the defined keys will be set on the `Skupiny` being updated. */
-	patch: GraphQLTypes["SkupinyPatch"]
-};
-	/** Represents an update to a `Skupiny`. Fields that are set will be updated. */
-["SkupinyPatch"]: {
-		sId?: GraphQLTypes["BigInt"],
-	sName?: string,
-	sDescription?: string,
-	sColorRgb?: string,
-	sColorText?: string,
-	sLocation?: string,
-	sVisible?: boolean
 };
 	/** All input for the `updateSkupiny` mutation. */
 ["UpdateSkupinyInput"]: {
@@ -14504,6 +16509,147 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An object where the defined keys will be set on the `Skupiny` being updated. */
 	patch: GraphQLTypes["SkupinyPatch"],
 	sId: GraphQLTypes["BigInt"]
+};
+	/** Represents an update to a `Skupiny`. Fields that are set will be updated. */
+["SkupinyPatch"]: {
+		sId?: GraphQLTypes["BigInt"],
+	sName?: string,
+	sDescription?: string,
+	sColorRgb?: string,
+	sColorText?: string,
+	sLocation?: string,
+	sVisible?: boolean,
+	ordering?: number,
+	internalInfo?: string,
+	cohortGroup?: GraphQLTypes["BigInt"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
+};
+	/** The output of our update `Tenant` mutation. */
+["UpdateTenantPayload"]: {
+	__typename: "UpdateTenantPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `Tenant` that was updated by this mutation. */
+	tenant?: GraphQLTypes["Tenant"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** An edge for our `Tenant`. May be used by Relay 1. */
+	tenantEdge?: GraphQLTypes["TenantsEdge"]
+};
+	/** All input for the `updateTenant` mutation. */
+["UpdateTenantInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** An object where the defined keys will be set on the `Tenant` being updated. */
+	patch: GraphQLTypes["TenantPatch"],
+	id: GraphQLTypes["BigInt"]
+};
+	/** Represents an update to a `Tenant`. Fields that are set will be updated. */
+["TenantPatch"]: {
+		id?: GraphQLTypes["BigInt"],
+	name?: string,
+	memberInfo?: string,
+	origins?: Array<string | undefined>
+};
+	/** The output of our update `TenantAttachment` mutation. */
+["UpdateTenantAttachmentPayload"]: {
+	__typename: "UpdateTenantAttachmentPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `TenantAttachment` that was updated by this mutation. */
+	tenantAttachment?: GraphQLTypes["TenantAttachment"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantAttachment`. */
+	tenant?: GraphQLTypes["Tenant"],
+	/** Reads a single `Attachment` that is related to this `TenantAttachment`. */
+	attachmentByObjectName?: GraphQLTypes["Attachment"],
+	/** An edge for our `TenantAttachment`. May be used by Relay 1. */
+	tenantAttachmentEdge?: GraphQLTypes["TenantAttachmentsEdge"]
+};
+	/** All input for the `updateTenantAttachment` mutation. */
+["UpdateTenantAttachmentInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** An object where the defined keys will be set on the `TenantAttachment` being updated. */
+	patch: GraphQLTypes["TenantAttachmentPatch"],
+	tenantId: GraphQLTypes["BigInt"],
+	objectName: string
+};
+	/** Represents an update to a `TenantAttachment`. Fields that are set will be updated. */
+["TenantAttachmentPatch"]: {
+		tenantId?: GraphQLTypes["BigInt"],
+	objectName?: string,
+	type?: GraphQLTypes["TenantAttachmentType"]
+};
+	/** The output of our update `TenantLocation` mutation. */
+["UpdateTenantLocationPayload"]: {
+	__typename: "UpdateTenantLocationPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `TenantLocation` that was updated by this mutation. */
+	tenantLocation?: GraphQLTypes["TenantLocation"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantLocation`. */
+	tenant?: GraphQLTypes["Tenant"],
+	/** Reads a single `Location` that is related to this `TenantLocation`. */
+	location?: GraphQLTypes["Location"],
+	/** An edge for our `TenantLocation`. May be used by Relay 1. */
+	tenantLocationEdge?: GraphQLTypes["TenantLocationsEdge"]
+};
+	/** All input for the `updateTenantLocation` mutation. */
+["UpdateTenantLocationInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** An object where the defined keys will be set on the `TenantLocation` being updated. */
+	patch: GraphQLTypes["TenantLocationPatch"],
+	tenantId: GraphQLTypes["BigInt"],
+	locationId: GraphQLTypes["BigInt"]
+};
+	/** Represents an update to a `TenantLocation`. Fields that are set will be updated. */
+["TenantLocationPatch"]: {
+		tenantId?: GraphQLTypes["BigInt"],
+	locationId?: GraphQLTypes["BigInt"]
+};
+	/** The output of our update `TenantPerson` mutation. */
+["UpdateTenantPersonPayload"]: {
+	__typename: "UpdateTenantPersonPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `TenantPerson` that was updated by this mutation. */
+	tenantPerson?: GraphQLTypes["TenantPerson"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantPerson`. */
+	tenant?: GraphQLTypes["Tenant"],
+	/** Reads a single `Person` that is related to this `TenantPerson`. */
+	person?: GraphQLTypes["Person"],
+	/** An edge for our `TenantPerson`. May be used by Relay 1. */
+	tenantPersonEdge?: GraphQLTypes["TenantPeopleEdge"]
+};
+	/** All input for the `updateTenantPerson` mutation. */
+["UpdateTenantPersonInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	/** An object where the defined keys will be set on the `TenantPerson` being updated. */
+	patch: GraphQLTypes["TenantPersonPatch"],
+	tenantId: GraphQLTypes["BigInt"],
+	personId: GraphQLTypes["BigInt"]
+};
+	/** Represents an update to a `TenantPerson`. Fields that are set will be updated. */
+["TenantPersonPatch"]: {
+		tenantId?: GraphQLTypes["BigInt"],
+	personId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `Upozorneni` mutation. */
 ["UpdateUpozorneniPayload"]: {
@@ -14520,15 +16666,14 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Upozorneni`. May be used by Relay 1. */
 	upozorneniEdge?: GraphQLTypes["UpozornenisEdge"]
 };
-	/** All input for the `updateUpozorneniByNodeId` mutation. */
-["UpdateUpozorneniByNodeIdInput"]: {
+	/** All input for the `updateUpozorneni` mutation. */
+["UpdateUpozorneniInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Upozorneni` to be updated. */
-	nodeId: string,
 	/** An object where the defined keys will be set on the `Upozorneni` being updated. */
-	patch: GraphQLTypes["UpozorneniPatch"]
+	patch: GraphQLTypes["UpozorneniPatch"],
+	upId: GraphQLTypes["BigInt"]
 };
 	/** Represents an update to a `Upozorneni`. Fields that are set will be updated. */
 ["UpozorneniPatch"]: {
@@ -14539,16 +16684,12 @@ payload verbatim. May be used to track mutations by the client. */
 	upBarvy?: GraphQLTypes["BigInt"],
 	upLock?: boolean,
 	upTimestamp?: GraphQLTypes["Datetime"],
-	upTimestampAdd?: GraphQLTypes["Datetime"]
-};
-	/** All input for the `updateUpozorneni` mutation. */
-["UpdateUpozorneniInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** An object where the defined keys will be set on the `Upozorneni` being updated. */
-	patch: GraphQLTypes["UpozorneniPatch"],
-	upId: GraphQLTypes["BigInt"]
+	upTimestampAdd?: GraphQLTypes["Datetime"],
+	scheduledSince?: GraphQLTypes["Datetime"],
+	scheduledUntil?: GraphQLTypes["Datetime"],
+	isVisible?: boolean,
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `UpozorneniSkupiny` mutation. */
 ["UpdateUpozorneniSkupinyPayload"]: {
@@ -14567,24 +16708,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `UpozorneniSkupiny`. May be used by Relay 1. */
 	upozorneniSkupinyEdge?: GraphQLTypes["UpozorneniSkupiniesEdge"]
 };
-	/** All input for the `updateUpozorneniSkupinyByNodeId` mutation. */
-["UpdateUpozorneniSkupinyByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `UpozorneniSkupiny` to be updated. */
-	nodeId: string,
-	/** An object where the defined keys will be set on the `UpozorneniSkupiny` being updated. */
-	patch: GraphQLTypes["UpozorneniSkupinyPatch"]
-};
-	/** Represents an update to a `UpozorneniSkupiny`. Fields that are set will be updated. */
-["UpozorneniSkupinyPatch"]: {
-		upsId?: GraphQLTypes["BigInt"],
-	upsIdRodic?: GraphQLTypes["BigInt"],
-	upsIdSkupina?: GraphQLTypes["BigInt"],
-	upsColor?: string,
-	upsPopis?: string
-};
 	/** All input for the `updateUpozorneniSkupiny` mutation. */
 ["UpdateUpozorneniSkupinyInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -14593,6 +16716,16 @@ payload verbatim. May be used to track mutations by the client. */
 	/** An object where the defined keys will be set on the `UpozorneniSkupiny` being updated. */
 	patch: GraphQLTypes["UpozorneniSkupinyPatch"],
 	upsId: GraphQLTypes["BigInt"]
+};
+	/** Represents an update to a `UpozorneniSkupiny`. Fields that are set will be updated. */
+["UpozorneniSkupinyPatch"]: {
+		upsId?: GraphQLTypes["BigInt"],
+	upsIdRodic?: GraphQLTypes["BigInt"],
+	upsIdSkupina?: GraphQLTypes["BigInt"],
+	upsColor?: string,
+	upsPopis?: string,
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our update `User` mutation. */
 ["UpdateUserPayload"]: {
@@ -14611,15 +16744,14 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `User`. May be used by Relay 1. */
 	userEdge?: GraphQLTypes["UsersEdge"]
 };
-	/** All input for the `updateUserByNodeId` mutation. */
-["UpdateUserByNodeIdInput"]: {
+	/** All input for the `updateUser` mutation. */
+["UpdateUserInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `User` to be updated. */
-	nodeId: string,
 	/** An object where the defined keys will be set on the `User` being updated. */
-	patch: GraphQLTypes["UserPatch"]
+	patch: GraphQLTypes["UserPatch"],
+	uId: GraphQLTypes["BigInt"]
 };
 	/** Represents an update to a `User`. Fields that are set will be updated. */
 ["UserPatch"]: {
@@ -14654,245 +16786,9 @@ payload verbatim. May be used to track mutations by the client. */
 	uMemberUntil?: GraphQLTypes["Datetime"],
 	uCreatedAt?: GraphQLTypes["Datetime"],
 	uTeacher?: boolean,
-	uGdprSignedAt?: GraphQLTypes["Datetime"]
-};
-	/** All input for the `updateUser` mutation. */
-["UpdateUserInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** An object where the defined keys will be set on the `User` being updated. */
-	patch: GraphQLTypes["UserPatch"],
-	uId: GraphQLTypes["BigInt"]
-};
-	/** The output of our update `UsersSkupiny` mutation. */
-["UpdateUsersSkupinyPayload"]: {
-	__typename: "UpdateUsersSkupinyPayload",
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?: string,
-	/** The `UsersSkupiny` that was updated by this mutation. */
-	usersSkupiny?: GraphQLTypes["UsersSkupiny"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?: GraphQLTypes["Query"],
-	/** An edge for our `UsersSkupiny`. May be used by Relay 1. */
-	usersSkupinyEdge?: GraphQLTypes["UsersSkupiniesEdge"]
-};
-	/** All input for the `updateUsersSkupinyByNodeId` mutation. */
-["UpdateUsersSkupinyByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `UsersSkupiny` to be updated. */
-	nodeId: string,
-	/** An object where the defined keys will be set on the `UsersSkupiny` being updated. */
-	patch: GraphQLTypes["UsersSkupinyPatch"]
-};
-	/** Represents an update to a `UsersSkupiny`. Fields that are set will be updated. */
-["UsersSkupinyPatch"]: {
-		usId?: GraphQLTypes["BigInt"],
-	usColor?: string,
-	usPlatbaMesic?: GraphQLTypes["BigInt"],
-	usPlatbaCtvrtrok?: GraphQLTypes["BigInt"],
-	usPlatbaPulrok?: GraphQLTypes["BigInt"],
-	usPopis?: string
-};
-	/** All input for the `updateUsersSkupiny` mutation. */
-["UpdateUsersSkupinyInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** An object where the defined keys will be set on the `UsersSkupiny` being updated. */
-	patch: GraphQLTypes["UsersSkupinyPatch"],
-	usId: GraphQLTypes["BigInt"]
-};
-	/** The output of our update `Video` mutation. */
-["UpdateVideoPayload"]: {
-	__typename: "UpdateVideoPayload",
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?: string,
-	/** The `Video` that was updated by this mutation. */
-	video?: GraphQLTypes["Video"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?: GraphQLTypes["Query"],
-	/** An edge for our `Video`. May be used by Relay 1. */
-	videoEdge?: GraphQLTypes["VideosEdge"]
-};
-	/** All input for the `updateVideoByNodeId` mutation. */
-["UpdateVideoByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Video` to be updated. */
-	nodeId: string,
-	/** An object where the defined keys will be set on the `Video` being updated. */
-	patch: GraphQLTypes["VideoPatch"]
-};
-	/** Represents an update to a `Video`. Fields that are set will be updated. */
-["VideoPatch"]: {
-		vId?: GraphQLTypes["BigInt"],
-	vUri?: string,
-	vTitle?: string,
-	vAuthor?: string,
-	vDescription?: string,
-	vPlaylist?: string,
-	vCreatedAt?: GraphQLTypes["Datetime"],
-	vUpdatedAt?: GraphQLTypes["Datetime"]
-};
-	/** All input for the `updateVideo` mutation. */
-["UpdateVideoInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** An object where the defined keys will be set on the `Video` being updated. */
-	patch: GraphQLTypes["VideoPatch"],
-	vId: GraphQLTypes["BigInt"]
-};
-	/** The output of our update `VideoList` mutation. */
-["UpdateVideoListPayload"]: {
-	__typename: "UpdateVideoListPayload",
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?: string,
-	/** The `VideoList` that was updated by this mutation. */
-	videoList?: GraphQLTypes["VideoList"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?: GraphQLTypes["Query"],
-	/** An edge for our `VideoList`. May be used by Relay 1. */
-	videoListEdge?: GraphQLTypes["VideoListsEdge"]
-};
-	/** All input for the `updateVideoListByNodeId` mutation. */
-["UpdateVideoListByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `VideoList` to be updated. */
-	nodeId: string,
-	/** An object where the defined keys will be set on the `VideoList` being updated. */
-	patch: GraphQLTypes["VideoListPatch"]
-};
-	/** Represents an update to a `VideoList`. Fields that are set will be updated. */
-["VideoListPatch"]: {
-		vlId?: GraphQLTypes["BigInt"],
-	vlUrl?: string,
-	vlTitle?: string,
-	vlDescription?: string,
-	vlCount?: GraphQLTypes["BigInt"],
-	vlCreatedAt?: GraphQLTypes["Datetime"],
-	vlLastChecked?: GraphQLTypes["Datetime"]
-};
-	/** All input for the `updateVideoList` mutation. */
-["UpdateVideoListInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** An object where the defined keys will be set on the `VideoList` being updated. */
-	patch: GraphQLTypes["VideoListPatch"],
-	vlId: GraphQLTypes["BigInt"]
-};
-	/** The output of our update `VideoSource` mutation. */
-["UpdateVideoSourcePayload"]: {
-	__typename: "UpdateVideoSourcePayload",
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?: string,
-	/** The `VideoSource` that was updated by this mutation. */
-	videoSource?: GraphQLTypes["VideoSource"],
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?: GraphQLTypes["Query"],
-	/** An edge for our `VideoSource`. May be used by Relay 1. */
-	videoSourceEdge?: GraphQLTypes["VideoSourcesEdge"]
-};
-	/** All input for the `updateVideoSourceByNodeId` mutation. */
-["UpdateVideoSourceByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `VideoSource` to be updated. */
-	nodeId: string,
-	/** An object where the defined keys will be set on the `VideoSource` being updated. */
-	patch: GraphQLTypes["VideoSourcePatch"]
-};
-	/** Represents an update to a `VideoSource`. Fields that are set will be updated. */
-["VideoSourcePatch"]: {
-		vsId?: GraphQLTypes["BigInt"],
-	vsUrl?: string,
-	vsTitle?: string,
-	vsDescription?: string,
-	vsCreatedAt?: GraphQLTypes["Datetime"],
-	vsLastChecked?: GraphQLTypes["Datetime"]
-};
-	/** All input for the `updateVideoSource` mutation. */
-["UpdateVideoSourceInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** An object where the defined keys will be set on the `VideoSource` being updated. */
-	patch: GraphQLTypes["VideoSourcePatch"],
-	vsId: GraphQLTypes["BigInt"]
-};
-	/** The output of our delete `Akce` mutation. */
-["DeleteAkcePayload"]: {
-	__typename: "DeleteAkcePayload",
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?: string,
-	/** The `Akce` that was deleted by this mutation. */
-	akce?: GraphQLTypes["Akce"],
-	deletedAkceNodeId?: string,
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?: GraphQLTypes["Query"],
-	/** An edge for our `Akce`. May be used by Relay 1. */
-	akceEdge?: GraphQLTypes["AkcesEdge"]
-};
-	/** All input for the `deleteAkceByNodeId` mutation. */
-["DeleteAkceByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Akce` to be deleted. */
-	nodeId: string
-};
-	/** All input for the `deleteAkce` mutation. */
-["DeleteAkceInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	aId: GraphQLTypes["BigInt"]
-};
-	/** The output of our delete `AkceItem` mutation. */
-["DeleteAkceItemPayload"]: {
-	__typename: "DeleteAkceItemPayload",
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?: string,
-	/** The `AkceItem` that was deleted by this mutation. */
-	akceItem?: GraphQLTypes["AkceItem"],
-	deletedAkceItemNodeId?: string,
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?: GraphQLTypes["Query"],
-	/** Reads a single `Akce` that is related to this `AkceItem`. */
-	akceByAiIdRodic?: GraphQLTypes["Akce"],
-	/** Reads a single `User` that is related to this `AkceItem`. */
-	userByAiUser?: GraphQLTypes["User"],
-	/** An edge for our `AkceItem`. May be used by Relay 1. */
-	akceItemEdge?: GraphQLTypes["AkceItemsEdge"]
-};
-	/** All input for the `deleteAkceItemByNodeId` mutation. */
-["DeleteAkceItemByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `AkceItem` to be deleted. */
-	nodeId: string
-};
-	/** All input for the `deleteAkceItem` mutation. */
-["DeleteAkceItemInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	aiId: GraphQLTypes["BigInt"]
+	uGdprSignedAt?: GraphQLTypes["Datetime"],
+	id?: GraphQLTypes["BigInt"],
+	tenantId?: GraphQLTypes["BigInt"]
 };
 	/** The output of our delete `Aktuality` mutation. */
 ["DeleteAktualityPayload"]: {
@@ -14912,20 +16808,118 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Aktuality`. May be used by Relay 1. */
 	aktualityEdge?: GraphQLTypes["AktualitiesEdge"]
 };
-	/** All input for the `deleteAktualityByNodeId` mutation. */
-["DeleteAktualityByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Aktuality` to be deleted. */
-	nodeId: string
-};
 	/** All input for the `deleteAktuality` mutation. */
 ["DeleteAktualityInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	atId: GraphQLTypes["BigInt"]
+};
+	/** The output of our delete `Attachment` mutation. */
+["DeleteAttachmentPayload"]: {
+	__typename: "DeleteAttachmentPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `Attachment` that was deleted by this mutation. */
+	attachment?: GraphQLTypes["Attachment"],
+	deletedAttachmentNodeId?: string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `User` that is related to this `Attachment`. */
+	userByUploadedBy?: GraphQLTypes["User"],
+	/** An edge for our `Attachment`. May be used by Relay 1. */
+	attachmentEdge?: GraphQLTypes["AttachmentsEdge"]
+};
+	/** All input for the `deleteAttachment` mutation. */
+["DeleteAttachmentInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	objectName: string
+};
+	/** The output of our delete `AttendeeExternal` mutation. */
+["DeleteAttendeeExternalPayload"]: {
+	__typename: "DeleteAttendeeExternalPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `AttendeeExternal` that was deleted by this mutation. */
+	attendeeExternal?: GraphQLTypes["AttendeeExternal"],
+	deletedAttendeeExternalNodeId?: string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Event` that is related to this `AttendeeExternal`. */
+	event?: GraphQLTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByManagedBy?: GraphQLTypes["User"],
+	/** Reads a single `User` that is related to this `AttendeeExternal`. */
+	userByConfirmedBy?: GraphQLTypes["User"],
+	/** An edge for our `AttendeeExternal`. May be used by Relay 1. */
+	attendeeExternalEdge?: GraphQLTypes["AttendeeExternalsEdge"]
+};
+	/** All input for the `deleteAttendeeExternal` mutation. */
+["DeleteAttendeeExternalInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	id: GraphQLTypes["BigInt"]
+};
+	/** The output of our delete `AttendeeUser` mutation. */
+["DeleteAttendeeUserPayload"]: {
+	__typename: "DeleteAttendeeUserPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `AttendeeUser` that was deleted by this mutation. */
+	attendeeUser?: GraphQLTypes["AttendeeUser"],
+	deletedAttendeeUserNodeId?: string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Event` that is related to this `AttendeeUser`. */
+	event?: GraphQLTypes["Event"],
+	/** Reads a single `User` that is related to this `AttendeeUser`. */
+	user?: GraphQLTypes["User"],
+	/** An edge for our `AttendeeUser`. May be used by Relay 1. */
+	attendeeUserEdge?: GraphQLTypes["AttendeeUsersEdge"]
+};
+	/** All input for the `deleteAttendeeUser` mutation. */
+["DeleteAttendeeUserInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	id: GraphQLTypes["BigInt"]
+};
+	/** All input for the `deleteAttendeeUserByUserIdAndEventId` mutation. */
+["DeleteAttendeeUserByUserIdAndEventIdInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	userId: GraphQLTypes["BigInt"],
+	eventId: GraphQLTypes["BigInt"]
+};
+	/** The output of our delete `CohortGroup` mutation. */
+["DeleteCohortGroupPayload"]: {
+	__typename: "DeleteCohortGroupPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `CohortGroup` that was deleted by this mutation. */
+	cohortGroup?: GraphQLTypes["CohortGroup"],
+	deletedCohortGroupNodeId?: string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `CohortGroup`. */
+	tenantByTenant?: GraphQLTypes["Tenant"],
+	/** An edge for our `CohortGroup`. May be used by Relay 1. */
+	cohortGroupEdge?: GraphQLTypes["CohortGroupsEdge"]
+};
+	/** All input for the `deleteCohortGroup` mutation. */
+["DeleteCohortGroupInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	id: GraphQLTypes["BigInt"]
 };
 	/** The output of our delete `Dokumenty` mutation. */
 ["DeleteDokumentyPayload"]: {
@@ -14943,20 +16937,54 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Dokumenty`. May be used by Relay 1. */
 	dokumentyEdge?: GraphQLTypes["DokumentiesEdge"]
 };
-	/** All input for the `deleteDokumentyByNodeId` mutation. */
-["DeleteDokumentyByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Dokumenty` to be deleted. */
-	nodeId: string
-};
 	/** All input for the `deleteDokumenty` mutation. */
 ["DeleteDokumentyInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	dId: GraphQLTypes["BigInt"]
+};
+	/** The output of our delete `Event` mutation. */
+["DeleteEventPayload"]: {
+	__typename: "DeleteEventPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `Event` that was deleted by this mutation. */
+	event?: GraphQLTypes["Event"],
+	deletedEventNodeId?: string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** An edge for our `Event`. May be used by Relay 1. */
+	eventEdge?: GraphQLTypes["EventsEdge"]
+};
+	/** All input for the `deleteEvent` mutation. */
+["DeleteEventInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	id: GraphQLTypes["BigInt"]
+};
+	/** The output of our delete `FormResponse` mutation. */
+["DeleteFormResponsePayload"]: {
+	__typename: "DeleteFormResponsePayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `FormResponse` that was deleted by this mutation. */
+	formResponse?: GraphQLTypes["FormResponse"],
+	deletedFormResponseNodeId?: string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** An edge for our `FormResponse`. May be used by Relay 1. */
+	formResponseEdge?: GraphQLTypes["FormResponsesEdge"]
+};
+	/** All input for the `deleteFormResponse` mutation. */
+["DeleteFormResponseInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	id: GraphQLTypes["BigInt"]
 };
 	/** The output of our delete `GalerieDir` mutation. */
 ["DeleteGalerieDirPayload"]: {
@@ -14971,14 +16999,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	query?: GraphQLTypes["Query"],
 	/** An edge for our `GalerieDir`. May be used by Relay 1. */
 	galerieDirEdge?: GraphQLTypes["GalerieDirsEdge"]
-};
-	/** All input for the `deleteGalerieDirByNodeId` mutation. */
-["DeleteGalerieDirByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `GalerieDir` to be deleted. */
-	nodeId: string
 };
 	/** All input for the `deleteGalerieDir` mutation. */
 ["DeleteGalerieDirInput"]: {
@@ -15005,20 +17025,59 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `GalerieFoto`. May be used by Relay 1. */
 	galerieFotoEdge?: GraphQLTypes["GalerieFotosEdge"]
 };
-	/** All input for the `deleteGalerieFotoByNodeId` mutation. */
-["DeleteGalerieFotoByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `GalerieFoto` to be deleted. */
-	nodeId: string
-};
 	/** All input for the `deleteGalerieFoto` mutation. */
 ["DeleteGalerieFotoInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	gfId: GraphQLTypes["BigInt"]
+};
+	/** The output of our delete `Location` mutation. */
+["DeleteLocationPayload"]: {
+	__typename: "DeleteLocationPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `Location` that was deleted by this mutation. */
+	location?: GraphQLTypes["Location"],
+	deletedLocationNodeId?: string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** An edge for our `Location`. May be used by Relay 1. */
+	locationEdge?: GraphQLTypes["LocationsEdge"]
+};
+	/** All input for the `deleteLocation` mutation. */
+["DeleteLocationInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	id: GraphQLTypes["BigInt"]
+};
+	/** The output of our delete `LocationAttachment` mutation. */
+["DeleteLocationAttachmentPayload"]: {
+	__typename: "DeleteLocationAttachmentPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `LocationAttachment` that was deleted by this mutation. */
+	locationAttachment?: GraphQLTypes["LocationAttachment"],
+	deletedLocationAttachmentNodeId?: string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Location` that is related to this `LocationAttachment`. */
+	location?: GraphQLTypes["Location"],
+	/** Reads a single `Attachment` that is related to this `LocationAttachment`. */
+	attachmentByObjectName?: GraphQLTypes["Attachment"],
+	/** An edge for our `LocationAttachment`. May be used by Relay 1. */
+	locationAttachmentEdge?: GraphQLTypes["LocationAttachmentsEdge"]
+};
+	/** All input for the `deleteLocationAttachment` mutation. */
+["DeleteLocationAttachmentInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	locationId: GraphQLTypes["BigInt"],
+	objectName: string
 };
 	/** The output of our delete `Nabidka` mutation. */
 ["DeleteNabidkaPayload"]: {
@@ -15035,14 +17094,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	userByNTrener?: GraphQLTypes["User"],
 	/** An edge for our `Nabidka`. May be used by Relay 1. */
 	nabidkaEdge?: GraphQLTypes["NabidkasEdge"]
-};
-	/** All input for the `deleteNabidkaByNodeId` mutation. */
-["DeleteNabidkaByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Nabidka` to be deleted. */
-	nodeId: string
 };
 	/** All input for the `deleteNabidka` mutation. */
 ["DeleteNabidkaInput"]: {
@@ -15069,20 +17120,20 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `NabidkaItem`. May be used by Relay 1. */
 	nabidkaItemEdge?: GraphQLTypes["NabidkaItemsEdge"]
 };
-	/** All input for the `deleteNabidkaItemByNodeId` mutation. */
-["DeleteNabidkaItemByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `NabidkaItem` to be deleted. */
-	nodeId: string
-};
 	/** All input for the `deleteNabidkaItem` mutation. */
 ["DeleteNabidkaItemInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	niId: GraphQLTypes["BigInt"]
+};
+	/** All input for the `deleteNabidkaItemByNiPartnerAndNiIdRodic` mutation. */
+["DeleteNabidkaItemByNiPartnerAndNiIdRodicInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	niPartner: GraphQLTypes["BigInt"],
+	niIdRodic: GraphQLTypes["BigInt"]
 };
 	/** The output of our delete `Parameter` mutation. */
 ["DeleteParameterPayload"]: {
@@ -15097,14 +17148,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	query?: GraphQLTypes["Query"],
 	/** An edge for our `Parameter`. May be used by Relay 1. */
 	parameterEdge?: GraphQLTypes["ParametersEdge"]
-};
-	/** All input for the `deleteParameterByNodeId` mutation. */
-["DeleteParameterByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Parameter` to be deleted. */
-	nodeId: string
 };
 	/** All input for the `deleteParameter` mutation. */
 ["DeleteParameterInput"]: {
@@ -15126,16 +17169,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	query?: GraphQLTypes["Query"],
 	/** Reads a single `User` that is related to this `Pary`. */
 	userByPIdPartner?: GraphQLTypes["User"],
+	/** Reads a single `User` that is related to this `Pary`. */
+	userByPIdPartnerka?: GraphQLTypes["User"],
 	/** An edge for our `Pary`. May be used by Relay 1. */
 	paryEdge?: GraphQLTypes["PariesEdge"]
-};
-	/** All input for the `deleteParyByNodeId` mutation. */
-["DeleteParyByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Pary` to be deleted. */
-	nodeId: string
 };
 	/** All input for the `deletePary` mutation. */
 ["DeleteParyInput"]: {
@@ -15164,14 +17201,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `ParyNavrh`. May be used by Relay 1. */
 	paryNavrhEdge?: GraphQLTypes["ParyNavrhsEdge"]
 };
-	/** All input for the `deleteParyNavrhByNodeId` mutation. */
-["DeleteParyNavrhByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `ParyNavrh` to be deleted. */
-	nodeId: string
-};
 	/** All input for the `deleteParyNavrh` mutation. */
 ["DeleteParyNavrhInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -15193,20 +17222,33 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `Permission`. May be used by Relay 1. */
 	permissionEdge?: GraphQLTypes["PermissionsEdge"]
 };
-	/** All input for the `deletePermissionByNodeId` mutation. */
-["DeletePermissionByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Permission` to be deleted. */
-	nodeId: string
-};
 	/** All input for the `deletePermission` mutation. */
 ["DeletePermissionInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	peId: GraphQLTypes["BigInt"]
+};
+	/** The output of our delete `Person` mutation. */
+["DeletePersonPayload"]: {
+	__typename: "DeletePersonPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `Person` that was deleted by this mutation. */
+	person?: GraphQLTypes["Person"],
+	deletedPersonNodeId?: string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** An edge for our `Person`. May be used by Relay 1. */
+	personEdge?: GraphQLTypes["PeopleEdge"]
+};
+	/** All input for the `deletePerson` mutation. */
+["DeletePersonInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	id: GraphQLTypes["BigInt"]
 };
 	/** The output of our delete `PlatbyCategory` mutation. */
 ["DeletePlatbyCategoryPayload"]: {
@@ -15221,14 +17263,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	query?: GraphQLTypes["Query"],
 	/** An edge for our `PlatbyCategory`. May be used by Relay 1. */
 	platbyCategoryEdge?: GraphQLTypes["PlatbyCategoriesEdge"]
-};
-	/** All input for the `deletePlatbyCategoryByNodeId` mutation. */
-["DeletePlatbyCategoryByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `PlatbyCategory` to be deleted. */
-	nodeId: string
 };
 	/** All input for the `deletePlatbyCategory` mutation. */
 ["DeletePlatbyCategoryInput"]: {
@@ -15255,14 +17289,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyCategoryGroup`. May be used by Relay 1. */
 	platbyCategoryGroupEdge?: GraphQLTypes["PlatbyCategoryGroupsEdge"]
 };
-	/** All input for the `deletePlatbyCategoryGroupByNodeId` mutation. */
-["DeletePlatbyCategoryGroupByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `PlatbyCategoryGroup` to be deleted. */
-	nodeId: string
-};
 	/** All input for the `deletePlatbyCategoryGroup` mutation. */
 ["DeletePlatbyCategoryGroupInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -15283,14 +17309,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	query?: GraphQLTypes["Query"],
 	/** An edge for our `PlatbyGroup`. May be used by Relay 1. */
 	platbyGroupEdge?: GraphQLTypes["PlatbyGroupsEdge"]
-};
-	/** All input for the `deletePlatbyGroupByNodeId` mutation. */
-["DeletePlatbyGroupByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `PlatbyGroup` to be deleted. */
-	nodeId: string
 };
 	/** All input for the `deletePlatbyGroup` mutation. */
 ["DeletePlatbyGroupInput"]: {
@@ -15316,14 +17334,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	platbyGroupByPgsIdGroup?: GraphQLTypes["PlatbyGroup"],
 	/** An edge for our `PlatbyGroupSkupina`. May be used by Relay 1. */
 	platbyGroupSkupinaEdge?: GraphQLTypes["PlatbyGroupSkupinasEdge"]
-};
-	/** All input for the `deletePlatbyGroupSkupinaByNodeId` mutation. */
-["DeletePlatbyGroupSkupinaByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `PlatbyGroupSkupina` to be deleted. */
-	nodeId: string
 };
 	/** All input for the `deletePlatbyGroupSkupina` mutation. */
 ["DeletePlatbyGroupSkupinaInput"]: {
@@ -15352,14 +17362,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyItem`. May be used by Relay 1. */
 	platbyItemEdge?: GraphQLTypes["PlatbyItemsEdge"]
 };
-	/** All input for the `deletePlatbyItemByNodeId` mutation. */
-["DeletePlatbyItemByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `PlatbyItem` to be deleted. */
-	nodeId: string
-};
 	/** All input for the `deletePlatbyItem` mutation. */
 ["DeletePlatbyItemInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -15381,20 +17383,61 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `PlatbyRaw`. May be used by Relay 1. */
 	platbyRawEdge?: GraphQLTypes["PlatbyRawsEdge"]
 };
-	/** All input for the `deletePlatbyRawByNodeId` mutation. */
-["DeletePlatbyRawByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `PlatbyRaw` to be deleted. */
-	nodeId: string
-};
 	/** All input for the `deletePlatbyRaw` mutation. */
 ["DeletePlatbyRawInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	prId: GraphQLTypes["BigInt"]
+};
+	/** The output of our delete `Room` mutation. */
+["DeleteRoomPayload"]: {
+	__typename: "DeleteRoomPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `Room` that was deleted by this mutation. */
+	room?: GraphQLTypes["Room"],
+	deletedRoomNodeId?: string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Location` that is related to this `Room`. */
+	locationByLocation?: GraphQLTypes["Location"],
+	/** An edge for our `Room`. May be used by Relay 1. */
+	roomEdge?: GraphQLTypes["RoomsEdge"]
+};
+	/** All input for the `deleteRoom` mutation. */
+["DeleteRoomInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	id: GraphQLTypes["BigInt"]
+};
+	/** The output of our delete `RoomAttachment` mutation. */
+["DeleteRoomAttachmentPayload"]: {
+	__typename: "DeleteRoomAttachmentPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `RoomAttachment` that was deleted by this mutation. */
+	roomAttachment?: GraphQLTypes["RoomAttachment"],
+	deletedRoomAttachmentNodeId?: string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Room` that is related to this `RoomAttachment`. */
+	room?: GraphQLTypes["Room"],
+	/** Reads a single `Attachment` that is related to this `RoomAttachment`. */
+	attachmentByObjectName?: GraphQLTypes["Attachment"],
+	/** An edge for our `RoomAttachment`. May be used by Relay 1. */
+	roomAttachmentEdge?: GraphQLTypes["RoomAttachmentsEdge"]
+};
+	/** All input for the `deleteRoomAttachment` mutation. */
+["DeleteRoomAttachmentInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	roomId: GraphQLTypes["BigInt"],
+	objectName: string
 };
 	/** The output of our delete `Rozpi` mutation. */
 ["DeleteRozpiPayload"]: {
@@ -15411,14 +17454,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	userByRTrener?: GraphQLTypes["User"],
 	/** An edge for our `Rozpi`. May be used by Relay 1. */
 	rozpiEdge?: GraphQLTypes["RozpisEdge"]
-};
-	/** All input for the `deleteRozpiByNodeId` mutation. */
-["DeleteRozpiByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Rozpi` to be deleted. */
-	nodeId: string
 };
 	/** All input for the `deleteRozpi` mutation. */
 ["DeleteRozpiInput"]: {
@@ -15445,51 +17480,12 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `RozpisItem`. May be used by Relay 1. */
 	rozpisItemEdge?: GraphQLTypes["RozpisItemsEdge"]
 };
-	/** All input for the `deleteRozpisItemByNodeId` mutation. */
-["DeleteRozpisItemByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `RozpisItem` to be deleted. */
-	nodeId: string
-};
 	/** All input for the `deleteRozpisItem` mutation. */
 ["DeleteRozpisItemInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	riId: GraphQLTypes["BigInt"]
-};
-	/** The output of our delete `Session` mutation. */
-["DeleteSessionPayload"]: {
-	__typename: "DeleteSessionPayload",
-	/** The exact same `clientMutationId` that was provided in the mutation input,
-unchanged and unused. May be used by a client to track mutations. */
-	clientMutationId?: string,
-	/** The `Session` that was deleted by this mutation. */
-	session?: GraphQLTypes["Session"],
-	deletedSessionNodeId?: string,
-	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?: GraphQLTypes["Query"],
-	/** Reads a single `User` that is related to this `Session`. */
-	userBySsUser?: GraphQLTypes["User"],
-	/** An edge for our `Session`. May be used by Relay 1. */
-	sessionEdge?: GraphQLTypes["SessionsEdge"]
-};
-	/** All input for the `deleteSessionByNodeId` mutation. */
-["DeleteSessionByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Session` to be deleted. */
-	nodeId: string
-};
-	/** All input for the `deleteSession` mutation. */
-["DeleteSessionInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	ssId: string
 };
 	/** The output of our delete `Skupiny` mutation. */
 ["DeleteSkupinyPayload"]: {
@@ -15502,16 +17498,10 @@ unchanged and unused. May be used by a client to track mutations. */
 	deletedSkupinyNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
 	query?: GraphQLTypes["Query"],
+	/** Reads a single `CohortGroup` that is related to this `Skupiny`. */
+	cohortGroupByCohortGroup?: GraphQLTypes["CohortGroup"],
 	/** An edge for our `Skupiny`. May be used by Relay 1. */
 	skupinyEdge?: GraphQLTypes["SkupiniesEdge"]
-};
-	/** All input for the `deleteSkupinyByNodeId` mutation. */
-["DeleteSkupinyByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Skupiny` to be deleted. */
-	nodeId: string
 };
 	/** All input for the `deleteSkupiny` mutation. */
 ["DeleteSkupinyInput"]: {
@@ -15519,6 +17509,105 @@ payload verbatim. May be used to track mutations by the client. */
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	sId: GraphQLTypes["BigInt"]
+};
+	/** The output of our delete `Tenant` mutation. */
+["DeleteTenantPayload"]: {
+	__typename: "DeleteTenantPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `Tenant` that was deleted by this mutation. */
+	tenant?: GraphQLTypes["Tenant"],
+	deletedTenantNodeId?: string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** An edge for our `Tenant`. May be used by Relay 1. */
+	tenantEdge?: GraphQLTypes["TenantsEdge"]
+};
+	/** All input for the `deleteTenant` mutation. */
+["DeleteTenantInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	id: GraphQLTypes["BigInt"]
+};
+	/** The output of our delete `TenantAttachment` mutation. */
+["DeleteTenantAttachmentPayload"]: {
+	__typename: "DeleteTenantAttachmentPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `TenantAttachment` that was deleted by this mutation. */
+	tenantAttachment?: GraphQLTypes["TenantAttachment"],
+	deletedTenantAttachmentNodeId?: string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantAttachment`. */
+	tenant?: GraphQLTypes["Tenant"],
+	/** Reads a single `Attachment` that is related to this `TenantAttachment`. */
+	attachmentByObjectName?: GraphQLTypes["Attachment"],
+	/** An edge for our `TenantAttachment`. May be used by Relay 1. */
+	tenantAttachmentEdge?: GraphQLTypes["TenantAttachmentsEdge"]
+};
+	/** All input for the `deleteTenantAttachment` mutation. */
+["DeleteTenantAttachmentInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	tenantId: GraphQLTypes["BigInt"],
+	objectName: string
+};
+	/** The output of our delete `TenantLocation` mutation. */
+["DeleteTenantLocationPayload"]: {
+	__typename: "DeleteTenantLocationPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `TenantLocation` that was deleted by this mutation. */
+	tenantLocation?: GraphQLTypes["TenantLocation"],
+	deletedTenantLocationNodeId?: string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantLocation`. */
+	tenant?: GraphQLTypes["Tenant"],
+	/** Reads a single `Location` that is related to this `TenantLocation`. */
+	location?: GraphQLTypes["Location"],
+	/** An edge for our `TenantLocation`. May be used by Relay 1. */
+	tenantLocationEdge?: GraphQLTypes["TenantLocationsEdge"]
+};
+	/** All input for the `deleteTenantLocation` mutation. */
+["DeleteTenantLocationInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	tenantId: GraphQLTypes["BigInt"],
+	locationId: GraphQLTypes["BigInt"]
+};
+	/** The output of our delete `TenantPerson` mutation. */
+["DeleteTenantPersonPayload"]: {
+	__typename: "DeleteTenantPersonPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** The `TenantPerson` that was deleted by this mutation. */
+	tenantPerson?: GraphQLTypes["TenantPerson"],
+	deletedTenantPersonNodeId?: string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `Tenant` that is related to this `TenantPerson`. */
+	tenant?: GraphQLTypes["Tenant"],
+	/** Reads a single `Person` that is related to this `TenantPerson`. */
+	person?: GraphQLTypes["Person"],
+	/** An edge for our `TenantPerson`. May be used by Relay 1. */
+	tenantPersonEdge?: GraphQLTypes["TenantPeopleEdge"]
+};
+	/** All input for the `deleteTenantPerson` mutation. */
+["DeleteTenantPersonInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	tenantId: GraphQLTypes["BigInt"],
+	personId: GraphQLTypes["BigInt"]
 };
 	/** The output of our delete `Upozorneni` mutation. */
 ["DeleteUpozorneniPayload"]: {
@@ -15535,14 +17624,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	userByUpKdo?: GraphQLTypes["User"],
 	/** An edge for our `Upozorneni`. May be used by Relay 1. */
 	upozorneniEdge?: GraphQLTypes["UpozornenisEdge"]
-};
-	/** All input for the `deleteUpozorneniByNodeId` mutation. */
-["DeleteUpozorneniByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Upozorneni` to be deleted. */
-	nodeId: string
 };
 	/** All input for the `deleteUpozorneni` mutation. */
 ["DeleteUpozorneniInput"]: {
@@ -15569,14 +17650,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `UpozorneniSkupiny`. May be used by Relay 1. */
 	upozorneniSkupinyEdge?: GraphQLTypes["UpozorneniSkupiniesEdge"]
 };
-	/** All input for the `deleteUpozorneniSkupinyByNodeId` mutation. */
-["DeleteUpozorneniSkupinyByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `UpozorneniSkupiny` to be deleted. */
-	nodeId: string
-};
 	/** All input for the `deleteUpozorneniSkupiny` mutation. */
 ["DeleteUpozorneniSkupinyInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -15602,14 +17675,6 @@ unchanged and unused. May be used by a client to track mutations. */
 	/** An edge for our `User`. May be used by Relay 1. */
 	userEdge?: GraphQLTypes["UsersEdge"]
 };
-	/** All input for the `deleteUserByNodeId` mutation. */
-["DeleteUserByNodeIdInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `User` to be deleted. */
-	nodeId: string
-};
 	/** All input for the `deleteUser` mutation. */
 ["DeleteUserInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
@@ -15617,121 +17682,165 @@ payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
 	uId: GraphQLTypes["BigInt"]
 };
-	/** The output of our delete `UsersSkupiny` mutation. */
-["DeleteUsersSkupinyPayload"]: {
-	__typename: "DeleteUsersSkupinyPayload",
+	/** The output of our `bookLesson` mutation. */
+["BookLessonPayload"]: {
+	__typename: "BookLessonPayload",
 	/** The exact same `clientMutationId` that was provided in the mutation input,
 unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
-	/** The `UsersSkupiny` that was deleted by this mutation. */
-	usersSkupiny?: GraphQLTypes["UsersSkupiny"],
-	deletedUsersSkupinyNodeId?: string,
+	rozpisItems?: Array<GraphQLTypes["RozpisItem"]>,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?: GraphQLTypes["Query"],
-	/** An edge for our `UsersSkupiny`. May be used by Relay 1. */
-	usersSkupinyEdge?: GraphQLTypes["UsersSkupiniesEdge"]
+	query?: GraphQLTypes["Query"]
 };
-	/** All input for the `deleteUsersSkupinyByNodeId` mutation. */
-["DeleteUsersSkupinyByNodeIdInput"]: {
+	/** All input for the `bookLesson` mutation. */
+["BookLessonInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `UsersSkupiny` to be deleted. */
-	nodeId: string
+	lessonId: GraphQLTypes["BigInt"]
 };
-	/** All input for the `deleteUsersSkupiny` mutation. */
-["DeleteUsersSkupinyInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	usId: GraphQLTypes["BigInt"]
-};
-	/** The output of our delete `Video` mutation. */
-["DeleteVideoPayload"]: {
-	__typename: "DeleteVideoPayload",
+	/** The output of our `cancelLesson` mutation. */
+["CancelLessonPayload"]: {
+	__typename: "CancelLessonPayload",
 	/** The exact same `clientMutationId` that was provided in the mutation input,
 unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
-	/** The `Video` that was deleted by this mutation. */
-	video?: GraphQLTypes["Video"],
-	deletedVideoNodeId?: string,
+	rozpisItems?: Array<GraphQLTypes["RozpisItem"]>,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?: GraphQLTypes["Query"],
-	/** An edge for our `Video`. May be used by Relay 1. */
-	videoEdge?: GraphQLTypes["VideosEdge"]
+	query?: GraphQLTypes["Query"]
 };
-	/** All input for the `deleteVideoByNodeId` mutation. */
-["DeleteVideoByNodeIdInput"]: {
+	/** All input for the `cancelLesson` mutation. */
+["CancelLessonInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `Video` to be deleted. */
-	nodeId: string
+	lessonId: GraphQLTypes["BigInt"]
 };
-	/** All input for the `deleteVideo` mutation. */
-["DeleteVideoInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	vId: GraphQLTypes["BigInt"]
-};
-	/** The output of our delete `VideoList` mutation. */
-["DeleteVideoListPayload"]: {
-	__typename: "DeleteVideoListPayload",
+	/** The output of our `cancelParticipation` mutation. */
+["CancelParticipationPayload"]: {
+	__typename: "CancelParticipationPayload",
 	/** The exact same `clientMutationId` that was provided in the mutation input,
 unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
-	/** The `VideoList` that was deleted by this mutation. */
-	videoList?: GraphQLTypes["VideoList"],
-	deletedVideoListNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?: GraphQLTypes["Query"],
-	/** An edge for our `VideoList`. May be used by Relay 1. */
-	videoListEdge?: GraphQLTypes["VideoListsEdge"]
+	query?: GraphQLTypes["Query"]
 };
-	/** All input for the `deleteVideoListByNodeId` mutation. */
-["DeleteVideoListByNodeIdInput"]: {
+	/** All input for the `cancelParticipation` mutation. */
+["CancelParticipationInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `VideoList` to be deleted. */
-	nodeId: string
+	eventId: GraphQLTypes["BigInt"]
 };
-	/** All input for the `deleteVideoList` mutation. */
-["DeleteVideoListInput"]: {
-		/** An arbitrary string value with no semantic meaning. Will be included in the
-payload verbatim. May be used to track mutations by the client. */
-	clientMutationId?: string,
-	vlId: GraphQLTypes["BigInt"]
-};
-	/** The output of our delete `VideoSource` mutation. */
-["DeleteVideoSourcePayload"]: {
-	__typename: "DeleteVideoSourcePayload",
+	/** The output of our `changePassword` mutation. */
+["ChangePasswordPayload"]: {
+	__typename: "ChangePasswordPayload",
 	/** The exact same `clientMutationId` that was provided in the mutation input,
 unchanged and unused. May be used by a client to track mutations. */
 	clientMutationId?: string,
-	/** The `VideoSource` that was deleted by this mutation. */
-	videoSource?: GraphQLTypes["VideoSource"],
-	deletedVideoSourceNodeId?: string,
 	/** Our root query field type. Allows us to run any query from our mutation payload. */
-	query?: GraphQLTypes["Query"],
-	/** An edge for our `VideoSource`. May be used by Relay 1. */
-	videoSourceEdge?: GraphQLTypes["VideoSourcesEdge"]
+	query?: GraphQLTypes["Query"]
 };
-	/** All input for the `deleteVideoSourceByNodeId` mutation. */
-["DeleteVideoSourceByNodeIdInput"]: {
+	/** All input for the `changePassword` mutation. */
+["ChangePasswordInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
-	/** The globally unique `ID` which will identify a single `VideoSource` to be deleted. */
-	nodeId: string
+	oldPass: string,
+	newPass: string
 };
-	/** All input for the `deleteVideoSource` mutation. */
-["DeleteVideoSourceInput"]: {
+	/** The output of our `confirmUser` mutation. */
+["ConfirmUserPayload"]: {
+	__typename: "ConfirmUserPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"]
+};
+	/** All input for the `confirmUser` mutation. */
+["ConfirmUserInput"]: {
 		/** An arbitrary string value with no semantic meaning. Will be included in the
 payload verbatim. May be used to track mutations by the client. */
 	clientMutationId?: string,
-	vsId: GraphQLTypes["BigInt"]
+	id: GraphQLTypes["BigInt"],
+	grp: GraphQLTypes["BigInt"],
+	cohort: GraphQLTypes["BigInt"]
+};
+	/** The output of our `createCouple` mutation. */
+["CreateCouplePayload"]: {
+	__typename: "CreateCouplePayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	paries?: Array<GraphQLTypes["Pary"]>,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"]
+};
+	/** All input for the `createCouple` mutation. */
+["CreateCoupleInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	man: GraphQLTypes["BigInt"],
+	woman: GraphQLTypes["BigInt"]
+};
+	/** The output of our `createParticipation` mutation. */
+["CreateParticipationPayload"]: {
+	__typename: "CreateParticipationPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"]
+};
+	/** All input for the `createParticipation` mutation. */
+["CreateParticipationInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	eventId: GraphQLTypes["BigInt"],
+	yearOfBirth: number,
+	myNotes: string
+};
+	/** The output of our `createParticipationExternal` mutation. */
+["CreateParticipationExternalPayload"]: {
+	__typename: "CreateParticipationExternalPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"]
+};
+	/** All input for the `createParticipationExternal` mutation. */
+["CreateParticipationExternalInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	eventId: GraphQLTypes["BigInt"],
+	firstName: string,
+	lastName: string,
+	guardianName: string,
+	email: string,
+	phone: string,
+	notes: string,
+	birthNumber: string
+};
+	/** The output of our `fixUnpairedCouples` mutation. */
+["FixUnpairedCouplesPayload"]: {
+	__typename: "FixUnpairedCouplesPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	paries?: Array<GraphQLTypes["Pary"]>,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"]
+};
+	/** All input for the `fixUnpairedCouples` mutation. */
+["FixUnpairedCouplesInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string
 };
 	/** The output of our `login` mutation. */
 ["LoginPayload"]: {
@@ -15792,6 +17901,7 @@ payload verbatim. May be used to track mutations by the client. */
 	origin: string,
 	note: string
 };
+	["CrmCohort"]: CrmCohort;
 	/** An input for mutations affecting `ProspectDatum` */
 ["ProspectDatumInput"]: {
 		name?: string,
@@ -15800,13 +17910,88 @@ payload verbatim. May be used to track mutations by the client. */
 	phone?: string,
 	yearofbirth?: string
 };
-	["Upload"]: {
-	__typename: "Upload",
-	uploadUrl: string
+	/** The output of our `reservationSetDesiredLessons` mutation. */
+["ReservationSetDesiredLessonsPayload"]: {
+	__typename: "ReservationSetDesiredLessonsPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	reservation?: GraphQLTypes["Nabidka"],
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"],
+	/** Reads a single `User` that is related to this `Nabidka`. */
+	userByNTrener?: GraphQLTypes["User"],
+	/** An edge for our `Nabidka`. May be used by Relay 1. */
+	nabidkaEdge?: GraphQLTypes["NabidkasEdge"]
 };
-	["UploadInput"]: {
-		directory?: string,
-	filename: string
+	/** All input for the `reservationSetDesiredLessons` mutation. */
+["ReservationSetDesiredLessonsInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	reservationId: GraphQLTypes["BigInt"],
+	lessonCount: number
+};
+	/** The output of our `resetPassword` mutation. */
+["ResetPasswordPayload"]: {
+	__typename: "ResetPasswordPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"]
+};
+	/** All input for the `resetPassword` mutation. */
+["ResetPasswordInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	login: string,
+	email: string
+};
+	/** The output of our `submitForm` mutation. */
+["SubmitFormPayload"]: {
+	__typename: "SubmitFormPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"]
+};
+	/** All input for the `submitForm` mutation. */
+["SubmitFormInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	type: string,
+	data: GraphQLTypes["JSON"],
+	url: string
+};
+	/** The output of our `verifyFunction` mutation. */
+["VerifyFunctionPayload"]: {
+	__typename: "VerifyFunctionPayload",
+	/** The exact same `clientMutationId` that was provided in the mutation input,
+unchanged and unused. May be used by a client to track mutations. */
+	clientMutationId?: string,
+	/** Our root query field type. Allows us to run any query from our mutation payload. */
+	query?: GraphQLTypes["Query"]
+};
+	/** All input for the `verifyFunction` mutation. */
+["VerifyFunctionInput"]: {
+		/** An arbitrary string value with no semantic meaning. Will be included in the
+payload verbatim. May be used to track mutations by the client. */
+	clientMutationId?: string,
+	f?: GraphQLTypes["RegProc"],
+	relid?: GraphQLTypes["RegClass"]
+};
+	/** A builtin object identifier type for a function name */
+["RegProc"]:any;
+	/** A builtin object identifier type for a relation name */
+["RegClass"]:any;
+	["UploadFilePayload"]: {
+	__typename: "UploadFilePayload",
+	uploadUrl: string,
+	objectName: string
 }
     }
 /** Methods to use when ordering `User`. */
@@ -15816,68 +18001,218 @@ export const enum UsersOrderBy {
 	U_ID_DESC = "U_ID_DESC",
 	U_LOGIN_ASC = "U_LOGIN_ASC",
 	U_LOGIN_DESC = "U_LOGIN_DESC",
-	U_PASS_ASC = "U_PASS_ASC",
-	U_PASS_DESC = "U_PASS_DESC",
 	U_JMENO_ASC = "U_JMENO_ASC",
 	U_JMENO_DESC = "U_JMENO_DESC",
 	U_PRIJMENI_ASC = "U_PRIJMENI_ASC",
 	U_PRIJMENI_DESC = "U_PRIJMENI_DESC",
-	U_POHLAVI_ASC = "U_POHLAVI_ASC",
-	U_POHLAVI_DESC = "U_POHLAVI_DESC",
-	U_EMAIL_ASC = "U_EMAIL_ASC",
-	U_EMAIL_DESC = "U_EMAIL_DESC",
-	U_TELEFON_ASC = "U_TELEFON_ASC",
-	U_TELEFON_DESC = "U_TELEFON_DESC",
 	U_NAROZENI_ASC = "U_NAROZENI_ASC",
 	U_NAROZENI_DESC = "U_NAROZENI_DESC",
-	U_RODNE_CISLO_ASC = "U_RODNE_CISLO_ASC",
-	U_RODNE_CISLO_DESC = "U_RODNE_CISLO_DESC",
-	U_POZNAMKY_ASC = "U_POZNAMKY_ASC",
-	U_POZNAMKY_DESC = "U_POZNAMKY_DESC",
-	U_TIMESTAMP_ASC = "U_TIMESTAMP_ASC",
-	U_TIMESTAMP_DESC = "U_TIMESTAMP_DESC",
-	U_LEVEL_ASC = "U_LEVEL_ASC",
-	U_LEVEL_DESC = "U_LEVEL_DESC",
 	U_GROUP_ASC = "U_GROUP_ASC",
 	U_GROUP_DESC = "U_GROUP_DESC",
 	U_SKUPINA_ASC = "U_SKUPINA_ASC",
 	U_SKUPINA_DESC = "U_SKUPINA_DESC",
-	U_DANCER_ASC = "U_DANCER_ASC",
-	U_DANCER_DESC = "U_DANCER_DESC",
 	U_BAN_ASC = "U_BAN_ASC",
 	U_BAN_DESC = "U_BAN_DESC",
-	U_LOCK_ASC = "U_LOCK_ASC",
-	U_LOCK_DESC = "U_LOCK_DESC",
 	U_CONFIRMED_ASC = "U_CONFIRMED_ASC",
 	U_CONFIRMED_DESC = "U_CONFIRMED_DESC",
 	U_SYSTEM_ASC = "U_SYSTEM_ASC",
 	U_SYSTEM_DESC = "U_SYSTEM_DESC",
-	U_STREET_ASC = "U_STREET_ASC",
-	U_STREET_DESC = "U_STREET_DESC",
-	U_CONSCRIPTION_NUMBER_ASC = "U_CONSCRIPTION_NUMBER_ASC",
-	U_CONSCRIPTION_NUMBER_DESC = "U_CONSCRIPTION_NUMBER_DESC",
-	U_ORIENTATION_NUMBER_ASC = "U_ORIENTATION_NUMBER_ASC",
-	U_ORIENTATION_NUMBER_DESC = "U_ORIENTATION_NUMBER_DESC",
-	U_DISTRICT_ASC = "U_DISTRICT_ASC",
-	U_DISTRICT_DESC = "U_DISTRICT_DESC",
-	U_CITY_ASC = "U_CITY_ASC",
-	U_CITY_DESC = "U_CITY_DESC",
-	U_POSTAL_CODE_ASC = "U_POSTAL_CODE_ASC",
-	U_POSTAL_CODE_DESC = "U_POSTAL_CODE_DESC",
-	U_NATIONALITY_ASC = "U_NATIONALITY_ASC",
-	U_NATIONALITY_DESC = "U_NATIONALITY_DESC",
-	U_MEMBER_SINCE_ASC = "U_MEMBER_SINCE_ASC",
-	U_MEMBER_SINCE_DESC = "U_MEMBER_SINCE_DESC",
-	U_MEMBER_UNTIL_ASC = "U_MEMBER_UNTIL_ASC",
-	U_MEMBER_UNTIL_DESC = "U_MEMBER_UNTIL_DESC",
-	U_CREATED_AT_ASC = "U_CREATED_AT_ASC",
-	U_CREATED_AT_DESC = "U_CREATED_AT_DESC",
-	U_TEACHER_ASC = "U_TEACHER_ASC",
-	U_TEACHER_DESC = "U_TEACHER_DESC",
-	U_GDPR_SIGNED_AT_ASC = "U_GDPR_SIGNED_AT_ASC",
-	U_GDPR_SIGNED_AT_DESC = "U_GDPR_SIGNED_AT_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	PERMISSION_BY_U_GROUP__PE_ID_ASC = "PERMISSION_BY_U_GROUP__PE_ID_ASC",
+	PERMISSION_BY_U_GROUP__PE_ID_DESC = "PERMISSION_BY_U_GROUP__PE_ID_DESC",
+	SKUPINY_BY_U_SKUPINA__S_ID_ASC = "SKUPINY_BY_U_SKUPINA__S_ID_ASC",
+	SKUPINY_BY_U_SKUPINA__S_ID_DESC = "SKUPINY_BY_U_SKUPINA__S_ID_DESC",
+	SKUPINY_BY_U_SKUPINA__S_VISIBLE_ASC = "SKUPINY_BY_U_SKUPINA__S_VISIBLE_ASC",
+	SKUPINY_BY_U_SKUPINA__S_VISIBLE_DESC = "SKUPINY_BY_U_SKUPINA__S_VISIBLE_DESC",
+	SKUPINY_BY_U_SKUPINA__ORDERING_ASC = "SKUPINY_BY_U_SKUPINA__ORDERING_ASC",
+	SKUPINY_BY_U_SKUPINA__ORDERING_DESC = "SKUPINY_BY_U_SKUPINA__ORDERING_DESC",
+	SKUPINY_BY_U_SKUPINA__COHORT_GROUP_ASC = "SKUPINY_BY_U_SKUPINA__COHORT_GROUP_ASC",
+	SKUPINY_BY_U_SKUPINA__COHORT_GROUP_DESC = "SKUPINY_BY_U_SKUPINA__COHORT_GROUP_DESC",
+	ATTENDEE_USERS_BY_USER_ID__COUNT_ASC = "ATTENDEE_USERS_BY_USER_ID__COUNT_ASC",
+	ATTENDEE_USERS_BY_USER_ID__COUNT_DESC = "ATTENDEE_USERS_BY_USER_ID__COUNT_DESC",
+	AKTUALITIES_BY_AT_KDO__COUNT_ASC = "AKTUALITIES_BY_AT_KDO__COUNT_ASC",
+	AKTUALITIES_BY_AT_KDO__COUNT_DESC = "AKTUALITIES_BY_AT_KDO__COUNT_DESC",
+	DOKUMENTIES_BY_D_KDO__COUNT_ASC = "DOKUMENTIES_BY_D_KDO__COUNT_ASC",
+	DOKUMENTIES_BY_D_KDO__COUNT_DESC = "DOKUMENTIES_BY_D_KDO__COUNT_DESC",
+	GALERIE_FOTOS_BY_GF_KDO__COUNT_ASC = "GALERIE_FOTOS_BY_GF_KDO__COUNT_ASC",
+	GALERIE_FOTOS_BY_GF_KDO__COUNT_DESC = "GALERIE_FOTOS_BY_GF_KDO__COUNT_DESC",
+	PLATBY_ITEMS_BY_PI_ID_USER__COUNT_ASC = "PLATBY_ITEMS_BY_PI_ID_USER__COUNT_ASC",
+	PLATBY_ITEMS_BY_PI_ID_USER__COUNT_DESC = "PLATBY_ITEMS_BY_PI_ID_USER__COUNT_DESC",
+	NABIDKAS_BY_N_TRENER__COUNT_ASC = "NABIDKAS_BY_N_TRENER__COUNT_ASC",
+	NABIDKAS_BY_N_TRENER__COUNT_DESC = "NABIDKAS_BY_N_TRENER__COUNT_DESC",
+	PARIES_BY_P_ID_PARTNER__COUNT_ASC = "PARIES_BY_P_ID_PARTNER__COUNT_ASC",
+	PARIES_BY_P_ID_PARTNER__COUNT_DESC = "PARIES_BY_P_ID_PARTNER__COUNT_DESC",
+	PARY_NAVRHS_BY_PN_NAVRHL__COUNT_ASC = "PARY_NAVRHS_BY_PN_NAVRHL__COUNT_ASC",
+	PARY_NAVRHS_BY_PN_NAVRHL__COUNT_DESC = "PARY_NAVRHS_BY_PN_NAVRHL__COUNT_DESC",
+	PARY_NAVRHS_BY_PN_PARTNER__COUNT_ASC = "PARY_NAVRHS_BY_PN_PARTNER__COUNT_ASC",
+	PARY_NAVRHS_BY_PN_PARTNER__COUNT_DESC = "PARY_NAVRHS_BY_PN_PARTNER__COUNT_DESC",
+	PARY_NAVRHS_BY_PN_PARTNERKA__COUNT_ASC = "PARY_NAVRHS_BY_PN_PARTNERKA__COUNT_ASC",
+	PARY_NAVRHS_BY_PN_PARTNERKA__COUNT_DESC = "PARY_NAVRHS_BY_PN_PARTNERKA__COUNT_DESC",
+	ROZPIS_BY_R_TRENER__COUNT_ASC = "ROZPIS_BY_R_TRENER__COUNT_ASC",
+	ROZPIS_BY_R_TRENER__COUNT_DESC = "ROZPIS_BY_R_TRENER__COUNT_DESC",
+	SESSIONS_BY_SS_USER__COUNT_ASC = "SESSIONS_BY_SS_USER__COUNT_ASC",
+	SESSIONS_BY_SS_USER__COUNT_DESC = "SESSIONS_BY_SS_USER__COUNT_DESC",
+	UPOZORNENIS_BY_UP_KDO__COUNT_ASC = "UPOZORNENIS_BY_UP_KDO__COUNT_ASC",
+	UPOZORNENIS_BY_UP_KDO__COUNT_DESC = "UPOZORNENIS_BY_UP_KDO__COUNT_DESC",
+	ATTACHMENTS_BY_UPLOADED_BY__COUNT_ASC = "ATTACHMENTS_BY_UPLOADED_BY__COUNT_ASC",
+	ATTACHMENTS_BY_UPLOADED_BY__COUNT_DESC = "ATTACHMENTS_BY_UPLOADED_BY__COUNT_DESC",
+	ATTENDEE_EXTERNALS_BY_MANAGED_BY__COUNT_ASC = "ATTENDEE_EXTERNALS_BY_MANAGED_BY__COUNT_ASC",
+	ATTENDEE_EXTERNALS_BY_MANAGED_BY__COUNT_DESC = "ATTENDEE_EXTERNALS_BY_MANAGED_BY__COUNT_DESC",
+	ATTENDEE_EXTERNALS_BY_CONFIRMED_BY__COUNT_ASC = "ATTENDEE_EXTERNALS_BY_CONFIRMED_BY__COUNT_ASC",
+	ATTENDEE_EXTERNALS_BY_CONFIRMED_BY__COUNT_DESC = "ATTENDEE_EXTERNALS_BY_CONFIRMED_BY__COUNT_DESC",
+	AKCE_ITEMS_BY_AI_USER__COUNT_ASC = "AKCE_ITEMS_BY_AI_USER__COUNT_ASC",
+	AKCE_ITEMS_BY_AI_USER__COUNT_DESC = "AKCE_ITEMS_BY_AI_USER__COUNT_DESC",
+	PARIES_BY_P_ID_PARTNERKA__COUNT_ASC = "PARIES_BY_P_ID_PARTNERKA__COUNT_ASC",
+	PARIES_BY_P_ID_PARTNERKA__COUNT_DESC = "PARIES_BY_P_ID_PARTNERKA__COUNT_DESC"
+}
+export const enum TenantAttachmentType {
+	LOGO = "LOGO",
+	PHOTO = "PHOTO",
+	MAP = "MAP"
+}
+/** Methods to use when ordering `TenantAttachment`. */
+export const enum TenantAttachmentsOrderBy {
+	NATURAL = "NATURAL",
+	TENANT_ID_ASC = "TENANT_ID_ASC",
+	TENANT_ID_DESC = "TENANT_ID_DESC",
+	OBJECT_NAME_ASC = "OBJECT_NAME_ASC",
+	OBJECT_NAME_DESC = "OBJECT_NAME_DESC",
+	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	TENANT_BY_TENANT_ID__ID_ASC = "TENANT_BY_TENANT_ID__ID_ASC",
+	TENANT_BY_TENANT_ID__ID_DESC = "TENANT_BY_TENANT_ID__ID_DESC",
+	ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_ASC = "ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_ASC",
+	ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_DESC = "ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_DESC",
+	ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_ASC = "ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_ASC",
+	ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_DESC = "ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_DESC"
+}
+/** Methods to use when ordering `RoomAttachment`. */
+export const enum RoomAttachmentsOrderBy {
+	NATURAL = "NATURAL",
+	ROOM_ID_ASC = "ROOM_ID_ASC",
+	ROOM_ID_DESC = "ROOM_ID_DESC",
+	OBJECT_NAME_ASC = "OBJECT_NAME_ASC",
+	OBJECT_NAME_DESC = "OBJECT_NAME_DESC",
+	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	ROOM_BY_ROOM_ID__ID_ASC = "ROOM_BY_ROOM_ID__ID_ASC",
+	ROOM_BY_ROOM_ID__ID_DESC = "ROOM_BY_ROOM_ID__ID_DESC",
+	ROOM_BY_ROOM_ID__LOCATION_ASC = "ROOM_BY_ROOM_ID__LOCATION_ASC",
+	ROOM_BY_ROOM_ID__LOCATION_DESC = "ROOM_BY_ROOM_ID__LOCATION_DESC",
+	ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_ASC = "ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_ASC",
+	ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_DESC = "ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_DESC",
+	ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_ASC = "ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_ASC",
+	ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_DESC = "ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_DESC"
+}
+/** Methods to use when ordering `Room`. */
+export const enum RoomsOrderBy {
+	NATURAL = "NATURAL",
+	ID_ASC = "ID_ASC",
+	ID_DESC = "ID_DESC",
+	LOCATION_ASC = "LOCATION_ASC",
+	LOCATION_DESC = "LOCATION_DESC",
+	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	LOCATION_BY_LOCATION__ID_ASC = "LOCATION_BY_LOCATION__ID_ASC",
+	LOCATION_BY_LOCATION__ID_DESC = "LOCATION_BY_LOCATION__ID_DESC",
+	ROOM_ATTACHMENTS_BY_ROOM_ID__COUNT_ASC = "ROOM_ATTACHMENTS_BY_ROOM_ID__COUNT_ASC",
+	ROOM_ATTACHMENTS_BY_ROOM_ID__COUNT_DESC = "ROOM_ATTACHMENTS_BY_ROOM_ID__COUNT_DESC"
+}
+/** Methods to use when ordering `LocationAttachment`. */
+export const enum LocationAttachmentsOrderBy {
+	NATURAL = "NATURAL",
+	LOCATION_ID_ASC = "LOCATION_ID_ASC",
+	LOCATION_ID_DESC = "LOCATION_ID_DESC",
+	OBJECT_NAME_ASC = "OBJECT_NAME_ASC",
+	OBJECT_NAME_DESC = "OBJECT_NAME_DESC",
+	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	LOCATION_BY_LOCATION_ID__ID_ASC = "LOCATION_BY_LOCATION_ID__ID_ASC",
+	LOCATION_BY_LOCATION_ID__ID_DESC = "LOCATION_BY_LOCATION_ID__ID_DESC",
+	ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_ASC = "ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_ASC",
+	ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_DESC = "ATTACHMENT_BY_OBJECT_NAME__OBJECT_NAME_DESC",
+	ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_ASC = "ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_ASC",
+	ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_DESC = "ATTACHMENT_BY_OBJECT_NAME__UPLOADED_BY_DESC"
+}
+/** Methods to use when ordering `TenantLocation`. */
+export const enum TenantLocationsOrderBy {
+	NATURAL = "NATURAL",
+	TENANT_ID_ASC = "TENANT_ID_ASC",
+	TENANT_ID_DESC = "TENANT_ID_DESC",
+	LOCATION_ID_ASC = "LOCATION_ID_ASC",
+	LOCATION_ID_DESC = "LOCATION_ID_DESC",
+	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	TENANT_BY_TENANT_ID__ID_ASC = "TENANT_BY_TENANT_ID__ID_ASC",
+	TENANT_BY_TENANT_ID__ID_DESC = "TENANT_BY_TENANT_ID__ID_DESC",
+	LOCATION_BY_LOCATION_ID__ID_ASC = "LOCATION_BY_LOCATION_ID__ID_ASC",
+	LOCATION_BY_LOCATION_ID__ID_DESC = "LOCATION_BY_LOCATION_ID__ID_DESC"
+}
+export const enum GenderType {
+	MEN = "MEN",
+	WOMAN = "WOMAN",
+	UNSPECIFIED = "UNSPECIFIED"
+}
+/** Methods to use when ordering `TenantPerson`. */
+export const enum TenantPeopleOrderBy {
+	NATURAL = "NATURAL",
+	TENANT_ID_ASC = "TENANT_ID_ASC",
+	TENANT_ID_DESC = "TENANT_ID_DESC",
+	PERSON_ID_ASC = "PERSON_ID_ASC",
+	PERSON_ID_DESC = "PERSON_ID_DESC",
+	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	TENANT_BY_TENANT_ID__ID_ASC = "TENANT_BY_TENANT_ID__ID_ASC",
+	TENANT_BY_TENANT_ID__ID_DESC = "TENANT_BY_TENANT_ID__ID_DESC",
+	PERSON_BY_PERSON_ID__ID_ASC = "PERSON_BY_PERSON_ID__ID_ASC",
+	PERSON_BY_PERSON_ID__ID_DESC = "PERSON_BY_PERSON_ID__ID_DESC"
+}
+/** Methods to use when ordering `CohortGroup`. */
+export const enum CohortGroupsOrderBy {
+	NATURAL = "NATURAL",
+	ID_ASC = "ID_ASC",
+	ID_DESC = "ID_DESC",
+	ORDERING_ASC = "ORDERING_ASC",
+	ORDERING_DESC = "ORDERING_DESC",
+	IS_PUBLIC_ASC = "IS_PUBLIC_ASC",
+	IS_PUBLIC_DESC = "IS_PUBLIC_DESC",
+	TENANT_ASC = "TENANT_ASC",
+	TENANT_DESC = "TENANT_DESC",
+	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	TENANT_BY_TENANT__ID_ASC = "TENANT_BY_TENANT__ID_ASC",
+	TENANT_BY_TENANT__ID_DESC = "TENANT_BY_TENANT__ID_DESC",
+	SKUPINIES_BY_COHORT_GROUP__COUNT_ASC = "SKUPINIES_BY_COHORT_GROUP__COUNT_ASC",
+	SKUPINIES_BY_COHORT_GROUP__COUNT_DESC = "SKUPINIES_BY_COHORT_GROUP__COUNT_DESC"
+}
+/** Methods to use when ordering `Skupiny`. */
+export const enum SkupiniesOrderBy {
+	NATURAL = "NATURAL",
+	S_ID_ASC = "S_ID_ASC",
+	S_ID_DESC = "S_ID_DESC",
+	S_VISIBLE_ASC = "S_VISIBLE_ASC",
+	S_VISIBLE_DESC = "S_VISIBLE_DESC",
+	ORDERING_ASC = "ORDERING_ASC",
+	ORDERING_DESC = "ORDERING_DESC",
+	COHORT_GROUP_ASC = "COHORT_GROUP_ASC",
+	COHORT_GROUP_DESC = "COHORT_GROUP_DESC",
+	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	COHORT_GROUP_BY_COHORT_GROUP__ID_ASC = "COHORT_GROUP_BY_COHORT_GROUP__ID_ASC",
+	COHORT_GROUP_BY_COHORT_GROUP__ID_DESC = "COHORT_GROUP_BY_COHORT_GROUP__ID_DESC",
+	COHORT_GROUP_BY_COHORT_GROUP__ORDERING_ASC = "COHORT_GROUP_BY_COHORT_GROUP__ORDERING_ASC",
+	COHORT_GROUP_BY_COHORT_GROUP__ORDERING_DESC = "COHORT_GROUP_BY_COHORT_GROUP__ORDERING_DESC",
+	COHORT_GROUP_BY_COHORT_GROUP__IS_PUBLIC_ASC = "COHORT_GROUP_BY_COHORT_GROUP__IS_PUBLIC_ASC",
+	COHORT_GROUP_BY_COHORT_GROUP__IS_PUBLIC_DESC = "COHORT_GROUP_BY_COHORT_GROUP__IS_PUBLIC_DESC",
+	COHORT_GROUP_BY_COHORT_GROUP__TENANT_ASC = "COHORT_GROUP_BY_COHORT_GROUP__TENANT_ASC",
+	COHORT_GROUP_BY_COHORT_GROUP__TENANT_DESC = "COHORT_GROUP_BY_COHORT_GROUP__TENANT_DESC",
+	USERS_BY_U_SKUPINA__COUNT_ASC = "USERS_BY_U_SKUPINA__COUNT_ASC",
+	USERS_BY_U_SKUPINA__COUNT_DESC = "USERS_BY_U_SKUPINA__COUNT_DESC",
+	PLATBY_GROUP_SKUPINAS_BY_PGS_ID_SKUPINA__COUNT_ASC = "PLATBY_GROUP_SKUPINAS_BY_PGS_ID_SKUPINA__COUNT_ASC",
+	PLATBY_GROUP_SKUPINAS_BY_PGS_ID_SKUPINA__COUNT_DESC = "PLATBY_GROUP_SKUPINAS_BY_PGS_ID_SKUPINA__COUNT_DESC",
+	UPOZORNENI_SKUPINIES_BY_UPS_ID_SKUPINA__COUNT_ASC = "UPOZORNENI_SKUPINIES_BY_UPS_ID_SKUPINA__COUNT_ASC",
+	UPOZORNENI_SKUPINIES_BY_UPS_ID_SKUPINA__COUNT_DESC = "UPOZORNENI_SKUPINIES_BY_UPS_ID_SKUPINA__COUNT_DESC"
 }
 /** Methods to use when ordering `PlatbyCategoryGroup`. */
 export const enum PlatbyCategoryGroupsOrderBy {
@@ -15889,7 +18224,13 @@ export const enum PlatbyCategoryGroupsOrderBy {
 	PCG_ID_CATEGORY_ASC = "PCG_ID_CATEGORY_ASC",
 	PCG_ID_CATEGORY_DESC = "PCG_ID_CATEGORY_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	PLATBY_GROUP_BY_PCG_ID_GROUP__PG_ID_ASC = "PLATBY_GROUP_BY_PCG_ID_GROUP__PG_ID_ASC",
+	PLATBY_GROUP_BY_PCG_ID_GROUP__PG_ID_DESC = "PLATBY_GROUP_BY_PCG_ID_GROUP__PG_ID_DESC",
+	PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_ID_ASC = "PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_ID_ASC",
+	PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_ID_DESC = "PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_ID_DESC",
+	PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_SYMBOL_ASC = "PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_SYMBOL_ASC",
+	PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_SYMBOL_DESC = "PLATBY_CATEGORY_BY_PCG_ID_CATEGORY__PC_SYMBOL_DESC"
 }
 /** Methods to use when ordering `PlatbyItem`. */
 export const enum PlatbyItemsOrderBy {
@@ -15902,14 +18243,36 @@ export const enum PlatbyItemsOrderBy {
 	PI_ID_CATEGORY_DESC = "PI_ID_CATEGORY_DESC",
 	PI_ID_RAW_ASC = "PI_ID_RAW_ASC",
 	PI_ID_RAW_DESC = "PI_ID_RAW_DESC",
-	PI_AMOUNT_ASC = "PI_AMOUNT_ASC",
-	PI_AMOUNT_DESC = "PI_AMOUNT_DESC",
-	PI_DATE_ASC = "PI_DATE_ASC",
-	PI_DATE_DESC = "PI_DATE_DESC",
-	PI_PREFIX_ASC = "PI_PREFIX_ASC",
-	PI_PREFIX_DESC = "PI_PREFIX_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	USER_BY_PI_ID_USER__U_ID_ASC = "USER_BY_PI_ID_USER__U_ID_ASC",
+	USER_BY_PI_ID_USER__U_ID_DESC = "USER_BY_PI_ID_USER__U_ID_DESC",
+	USER_BY_PI_ID_USER__U_LOGIN_ASC = "USER_BY_PI_ID_USER__U_LOGIN_ASC",
+	USER_BY_PI_ID_USER__U_LOGIN_DESC = "USER_BY_PI_ID_USER__U_LOGIN_DESC",
+	USER_BY_PI_ID_USER__U_JMENO_ASC = "USER_BY_PI_ID_USER__U_JMENO_ASC",
+	USER_BY_PI_ID_USER__U_JMENO_DESC = "USER_BY_PI_ID_USER__U_JMENO_DESC",
+	USER_BY_PI_ID_USER__U_PRIJMENI_ASC = "USER_BY_PI_ID_USER__U_PRIJMENI_ASC",
+	USER_BY_PI_ID_USER__U_PRIJMENI_DESC = "USER_BY_PI_ID_USER__U_PRIJMENI_DESC",
+	USER_BY_PI_ID_USER__U_NAROZENI_ASC = "USER_BY_PI_ID_USER__U_NAROZENI_ASC",
+	USER_BY_PI_ID_USER__U_NAROZENI_DESC = "USER_BY_PI_ID_USER__U_NAROZENI_DESC",
+	USER_BY_PI_ID_USER__U_GROUP_ASC = "USER_BY_PI_ID_USER__U_GROUP_ASC",
+	USER_BY_PI_ID_USER__U_GROUP_DESC = "USER_BY_PI_ID_USER__U_GROUP_DESC",
+	USER_BY_PI_ID_USER__U_SKUPINA_ASC = "USER_BY_PI_ID_USER__U_SKUPINA_ASC",
+	USER_BY_PI_ID_USER__U_SKUPINA_DESC = "USER_BY_PI_ID_USER__U_SKUPINA_DESC",
+	USER_BY_PI_ID_USER__U_BAN_ASC = "USER_BY_PI_ID_USER__U_BAN_ASC",
+	USER_BY_PI_ID_USER__U_BAN_DESC = "USER_BY_PI_ID_USER__U_BAN_DESC",
+	USER_BY_PI_ID_USER__U_CONFIRMED_ASC = "USER_BY_PI_ID_USER__U_CONFIRMED_ASC",
+	USER_BY_PI_ID_USER__U_CONFIRMED_DESC = "USER_BY_PI_ID_USER__U_CONFIRMED_DESC",
+	USER_BY_PI_ID_USER__U_SYSTEM_ASC = "USER_BY_PI_ID_USER__U_SYSTEM_ASC",
+	USER_BY_PI_ID_USER__U_SYSTEM_DESC = "USER_BY_PI_ID_USER__U_SYSTEM_DESC",
+	PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_ID_ASC = "PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_ID_ASC",
+	PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_ID_DESC = "PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_ID_DESC",
+	PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_SYMBOL_ASC = "PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_SYMBOL_ASC",
+	PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_SYMBOL_DESC = "PLATBY_CATEGORY_BY_PI_ID_CATEGORY__PC_SYMBOL_DESC",
+	PLATBY_RAW_BY_PI_ID_RAW__PR_ID_ASC = "PLATBY_RAW_BY_PI_ID_RAW__PR_ID_ASC",
+	PLATBY_RAW_BY_PI_ID_RAW__PR_ID_DESC = "PLATBY_RAW_BY_PI_ID_RAW__PR_ID_DESC",
+	PLATBY_RAW_BY_PI_ID_RAW__PR_HASH_ASC = "PLATBY_RAW_BY_PI_ID_RAW__PR_HASH_ASC",
+	PLATBY_RAW_BY_PI_ID_RAW__PR_HASH_DESC = "PLATBY_RAW_BY_PI_ID_RAW__PR_HASH_DESC"
 }
 /** Methods to use when ordering `PlatbyGroupSkupina`. */
 export const enum PlatbyGroupSkupinasOrderBy {
@@ -15921,7 +18284,17 @@ export const enum PlatbyGroupSkupinasOrderBy {
 	PGS_ID_GROUP_ASC = "PGS_ID_GROUP_ASC",
 	PGS_ID_GROUP_DESC = "PGS_ID_GROUP_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	SKUPINY_BY_PGS_ID_SKUPINA__S_ID_ASC = "SKUPINY_BY_PGS_ID_SKUPINA__S_ID_ASC",
+	SKUPINY_BY_PGS_ID_SKUPINA__S_ID_DESC = "SKUPINY_BY_PGS_ID_SKUPINA__S_ID_DESC",
+	SKUPINY_BY_PGS_ID_SKUPINA__S_VISIBLE_ASC = "SKUPINY_BY_PGS_ID_SKUPINA__S_VISIBLE_ASC",
+	SKUPINY_BY_PGS_ID_SKUPINA__S_VISIBLE_DESC = "SKUPINY_BY_PGS_ID_SKUPINA__S_VISIBLE_DESC",
+	SKUPINY_BY_PGS_ID_SKUPINA__ORDERING_ASC = "SKUPINY_BY_PGS_ID_SKUPINA__ORDERING_ASC",
+	SKUPINY_BY_PGS_ID_SKUPINA__ORDERING_DESC = "SKUPINY_BY_PGS_ID_SKUPINA__ORDERING_DESC",
+	SKUPINY_BY_PGS_ID_SKUPINA__COHORT_GROUP_ASC = "SKUPINY_BY_PGS_ID_SKUPINA__COHORT_GROUP_ASC",
+	SKUPINY_BY_PGS_ID_SKUPINA__COHORT_GROUP_DESC = "SKUPINY_BY_PGS_ID_SKUPINA__COHORT_GROUP_DESC",
+	PLATBY_GROUP_BY_PGS_ID_GROUP__PG_ID_ASC = "PLATBY_GROUP_BY_PGS_ID_GROUP__PG_ID_ASC",
+	PLATBY_GROUP_BY_PGS_ID_GROUP__PG_ID_DESC = "PLATBY_GROUP_BY_PGS_ID_GROUP__PG_ID_DESC"
 }
 /** Methods to use when ordering `UpozorneniSkupiny`. */
 export const enum UpozorneniSkupiniesOrderBy {
@@ -15932,12 +18305,120 @@ export const enum UpozorneniSkupiniesOrderBy {
 	UPS_ID_RODIC_DESC = "UPS_ID_RODIC_DESC",
 	UPS_ID_SKUPINA_ASC = "UPS_ID_SKUPINA_ASC",
 	UPS_ID_SKUPINA_DESC = "UPS_ID_SKUPINA_DESC",
-	UPS_COLOR_ASC = "UPS_COLOR_ASC",
-	UPS_COLOR_DESC = "UPS_COLOR_DESC",
-	UPS_POPIS_ASC = "UPS_POPIS_ASC",
-	UPS_POPIS_DESC = "UPS_POPIS_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	UPOZORNENI_BY_UPS_ID_RODIC__UP_ID_ASC = "UPOZORNENI_BY_UPS_ID_RODIC__UP_ID_ASC",
+	UPOZORNENI_BY_UPS_ID_RODIC__UP_ID_DESC = "UPOZORNENI_BY_UPS_ID_RODIC__UP_ID_DESC",
+	UPOZORNENI_BY_UPS_ID_RODIC__UP_KDO_ASC = "UPOZORNENI_BY_UPS_ID_RODIC__UP_KDO_ASC",
+	UPOZORNENI_BY_UPS_ID_RODIC__UP_KDO_DESC = "UPOZORNENI_BY_UPS_ID_RODIC__UP_KDO_DESC",
+	UPOZORNENI_BY_UPS_ID_RODIC__UP_TIMESTAMP_ADD_ASC = "UPOZORNENI_BY_UPS_ID_RODIC__UP_TIMESTAMP_ADD_ASC",
+	UPOZORNENI_BY_UPS_ID_RODIC__UP_TIMESTAMP_ADD_DESC = "UPOZORNENI_BY_UPS_ID_RODIC__UP_TIMESTAMP_ADD_DESC",
+	SKUPINY_BY_UPS_ID_SKUPINA__S_ID_ASC = "SKUPINY_BY_UPS_ID_SKUPINA__S_ID_ASC",
+	SKUPINY_BY_UPS_ID_SKUPINA__S_ID_DESC = "SKUPINY_BY_UPS_ID_SKUPINA__S_ID_DESC",
+	SKUPINY_BY_UPS_ID_SKUPINA__S_VISIBLE_ASC = "SKUPINY_BY_UPS_ID_SKUPINA__S_VISIBLE_ASC",
+	SKUPINY_BY_UPS_ID_SKUPINA__S_VISIBLE_DESC = "SKUPINY_BY_UPS_ID_SKUPINA__S_VISIBLE_DESC",
+	SKUPINY_BY_UPS_ID_SKUPINA__ORDERING_ASC = "SKUPINY_BY_UPS_ID_SKUPINA__ORDERING_ASC",
+	SKUPINY_BY_UPS_ID_SKUPINA__ORDERING_DESC = "SKUPINY_BY_UPS_ID_SKUPINA__ORDERING_DESC",
+	SKUPINY_BY_UPS_ID_SKUPINA__COHORT_GROUP_ASC = "SKUPINY_BY_UPS_ID_SKUPINA__COHORT_GROUP_ASC",
+	SKUPINY_BY_UPS_ID_SKUPINA__COHORT_GROUP_DESC = "SKUPINY_BY_UPS_ID_SKUPINA__COHORT_GROUP_DESC"
+}
+/** Methods to use when ordering `AttendeeUser`. */
+export const enum AttendeeUsersOrderBy {
+	NATURAL = "NATURAL",
+	ID_ASC = "ID_ASC",
+	ID_DESC = "ID_DESC",
+	EVENT_ID_ASC = "EVENT_ID_ASC",
+	EVENT_ID_DESC = "EVENT_ID_DESC",
+	USER_ID_ASC = "USER_ID_ASC",
+	USER_ID_DESC = "USER_ID_DESC",
+	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	EVENT_BY_EVENT_ID__ID_ASC = "EVENT_BY_EVENT_ID__ID_ASC",
+	EVENT_BY_EVENT_ID__ID_DESC = "EVENT_BY_EVENT_ID__ID_DESC",
+	EVENT_BY_EVENT_ID__SINCE_ASC = "EVENT_BY_EVENT_ID__SINCE_ASC",
+	EVENT_BY_EVENT_ID__SINCE_DESC = "EVENT_BY_EVENT_ID__SINCE_DESC",
+	EVENT_BY_EVENT_ID__IS_VISIBLE_ASC = "EVENT_BY_EVENT_ID__IS_VISIBLE_ASC",
+	EVENT_BY_EVENT_ID__IS_VISIBLE_DESC = "EVENT_BY_EVENT_ID__IS_VISIBLE_DESC",
+	USER_BY_USER_ID__U_ID_ASC = "USER_BY_USER_ID__U_ID_ASC",
+	USER_BY_USER_ID__U_ID_DESC = "USER_BY_USER_ID__U_ID_DESC",
+	USER_BY_USER_ID__U_LOGIN_ASC = "USER_BY_USER_ID__U_LOGIN_ASC",
+	USER_BY_USER_ID__U_LOGIN_DESC = "USER_BY_USER_ID__U_LOGIN_DESC",
+	USER_BY_USER_ID__U_JMENO_ASC = "USER_BY_USER_ID__U_JMENO_ASC",
+	USER_BY_USER_ID__U_JMENO_DESC = "USER_BY_USER_ID__U_JMENO_DESC",
+	USER_BY_USER_ID__U_PRIJMENI_ASC = "USER_BY_USER_ID__U_PRIJMENI_ASC",
+	USER_BY_USER_ID__U_PRIJMENI_DESC = "USER_BY_USER_ID__U_PRIJMENI_DESC",
+	USER_BY_USER_ID__U_NAROZENI_ASC = "USER_BY_USER_ID__U_NAROZENI_ASC",
+	USER_BY_USER_ID__U_NAROZENI_DESC = "USER_BY_USER_ID__U_NAROZENI_DESC",
+	USER_BY_USER_ID__U_GROUP_ASC = "USER_BY_USER_ID__U_GROUP_ASC",
+	USER_BY_USER_ID__U_GROUP_DESC = "USER_BY_USER_ID__U_GROUP_DESC",
+	USER_BY_USER_ID__U_SKUPINA_ASC = "USER_BY_USER_ID__U_SKUPINA_ASC",
+	USER_BY_USER_ID__U_SKUPINA_DESC = "USER_BY_USER_ID__U_SKUPINA_DESC",
+	USER_BY_USER_ID__U_BAN_ASC = "USER_BY_USER_ID__U_BAN_ASC",
+	USER_BY_USER_ID__U_BAN_DESC = "USER_BY_USER_ID__U_BAN_DESC",
+	USER_BY_USER_ID__U_CONFIRMED_ASC = "USER_BY_USER_ID__U_CONFIRMED_ASC",
+	USER_BY_USER_ID__U_CONFIRMED_DESC = "USER_BY_USER_ID__U_CONFIRMED_DESC",
+	USER_BY_USER_ID__U_SYSTEM_ASC = "USER_BY_USER_ID__U_SYSTEM_ASC",
+	USER_BY_USER_ID__U_SYSTEM_DESC = "USER_BY_USER_ID__U_SYSTEM_DESC"
+}
+/** Methods to use when ordering `AttendeeExternal`. */
+export const enum AttendeeExternalsOrderBy {
+	NATURAL = "NATURAL",
+	ID_ASC = "ID_ASC",
+	ID_DESC = "ID_DESC",
+	EVENT_ID_ASC = "EVENT_ID_ASC",
+	EVENT_ID_DESC = "EVENT_ID_DESC",
+	MANAGED_BY_ASC = "MANAGED_BY_ASC",
+	MANAGED_BY_DESC = "MANAGED_BY_DESC",
+	CONFIRMED_BY_ASC = "CONFIRMED_BY_ASC",
+	CONFIRMED_BY_DESC = "CONFIRMED_BY_DESC",
+	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	EVENT_BY_EVENT_ID__ID_ASC = "EVENT_BY_EVENT_ID__ID_ASC",
+	EVENT_BY_EVENT_ID__ID_DESC = "EVENT_BY_EVENT_ID__ID_DESC",
+	EVENT_BY_EVENT_ID__SINCE_ASC = "EVENT_BY_EVENT_ID__SINCE_ASC",
+	EVENT_BY_EVENT_ID__SINCE_DESC = "EVENT_BY_EVENT_ID__SINCE_DESC",
+	EVENT_BY_EVENT_ID__IS_VISIBLE_ASC = "EVENT_BY_EVENT_ID__IS_VISIBLE_ASC",
+	EVENT_BY_EVENT_ID__IS_VISIBLE_DESC = "EVENT_BY_EVENT_ID__IS_VISIBLE_DESC",
+	USER_BY_MANAGED_BY__U_ID_ASC = "USER_BY_MANAGED_BY__U_ID_ASC",
+	USER_BY_MANAGED_BY__U_ID_DESC = "USER_BY_MANAGED_BY__U_ID_DESC",
+	USER_BY_MANAGED_BY__U_LOGIN_ASC = "USER_BY_MANAGED_BY__U_LOGIN_ASC",
+	USER_BY_MANAGED_BY__U_LOGIN_DESC = "USER_BY_MANAGED_BY__U_LOGIN_DESC",
+	USER_BY_MANAGED_BY__U_JMENO_ASC = "USER_BY_MANAGED_BY__U_JMENO_ASC",
+	USER_BY_MANAGED_BY__U_JMENO_DESC = "USER_BY_MANAGED_BY__U_JMENO_DESC",
+	USER_BY_MANAGED_BY__U_PRIJMENI_ASC = "USER_BY_MANAGED_BY__U_PRIJMENI_ASC",
+	USER_BY_MANAGED_BY__U_PRIJMENI_DESC = "USER_BY_MANAGED_BY__U_PRIJMENI_DESC",
+	USER_BY_MANAGED_BY__U_NAROZENI_ASC = "USER_BY_MANAGED_BY__U_NAROZENI_ASC",
+	USER_BY_MANAGED_BY__U_NAROZENI_DESC = "USER_BY_MANAGED_BY__U_NAROZENI_DESC",
+	USER_BY_MANAGED_BY__U_GROUP_ASC = "USER_BY_MANAGED_BY__U_GROUP_ASC",
+	USER_BY_MANAGED_BY__U_GROUP_DESC = "USER_BY_MANAGED_BY__U_GROUP_DESC",
+	USER_BY_MANAGED_BY__U_SKUPINA_ASC = "USER_BY_MANAGED_BY__U_SKUPINA_ASC",
+	USER_BY_MANAGED_BY__U_SKUPINA_DESC = "USER_BY_MANAGED_BY__U_SKUPINA_DESC",
+	USER_BY_MANAGED_BY__U_BAN_ASC = "USER_BY_MANAGED_BY__U_BAN_ASC",
+	USER_BY_MANAGED_BY__U_BAN_DESC = "USER_BY_MANAGED_BY__U_BAN_DESC",
+	USER_BY_MANAGED_BY__U_CONFIRMED_ASC = "USER_BY_MANAGED_BY__U_CONFIRMED_ASC",
+	USER_BY_MANAGED_BY__U_CONFIRMED_DESC = "USER_BY_MANAGED_BY__U_CONFIRMED_DESC",
+	USER_BY_MANAGED_BY__U_SYSTEM_ASC = "USER_BY_MANAGED_BY__U_SYSTEM_ASC",
+	USER_BY_MANAGED_BY__U_SYSTEM_DESC = "USER_BY_MANAGED_BY__U_SYSTEM_DESC",
+	USER_BY_CONFIRMED_BY__U_ID_ASC = "USER_BY_CONFIRMED_BY__U_ID_ASC",
+	USER_BY_CONFIRMED_BY__U_ID_DESC = "USER_BY_CONFIRMED_BY__U_ID_DESC",
+	USER_BY_CONFIRMED_BY__U_LOGIN_ASC = "USER_BY_CONFIRMED_BY__U_LOGIN_ASC",
+	USER_BY_CONFIRMED_BY__U_LOGIN_DESC = "USER_BY_CONFIRMED_BY__U_LOGIN_DESC",
+	USER_BY_CONFIRMED_BY__U_JMENO_ASC = "USER_BY_CONFIRMED_BY__U_JMENO_ASC",
+	USER_BY_CONFIRMED_BY__U_JMENO_DESC = "USER_BY_CONFIRMED_BY__U_JMENO_DESC",
+	USER_BY_CONFIRMED_BY__U_PRIJMENI_ASC = "USER_BY_CONFIRMED_BY__U_PRIJMENI_ASC",
+	USER_BY_CONFIRMED_BY__U_PRIJMENI_DESC = "USER_BY_CONFIRMED_BY__U_PRIJMENI_DESC",
+	USER_BY_CONFIRMED_BY__U_NAROZENI_ASC = "USER_BY_CONFIRMED_BY__U_NAROZENI_ASC",
+	USER_BY_CONFIRMED_BY__U_NAROZENI_DESC = "USER_BY_CONFIRMED_BY__U_NAROZENI_DESC",
+	USER_BY_CONFIRMED_BY__U_GROUP_ASC = "USER_BY_CONFIRMED_BY__U_GROUP_ASC",
+	USER_BY_CONFIRMED_BY__U_GROUP_DESC = "USER_BY_CONFIRMED_BY__U_GROUP_DESC",
+	USER_BY_CONFIRMED_BY__U_SKUPINA_ASC = "USER_BY_CONFIRMED_BY__U_SKUPINA_ASC",
+	USER_BY_CONFIRMED_BY__U_SKUPINA_DESC = "USER_BY_CONFIRMED_BY__U_SKUPINA_DESC",
+	USER_BY_CONFIRMED_BY__U_BAN_ASC = "USER_BY_CONFIRMED_BY__U_BAN_ASC",
+	USER_BY_CONFIRMED_BY__U_BAN_DESC = "USER_BY_CONFIRMED_BY__U_BAN_DESC",
+	USER_BY_CONFIRMED_BY__U_CONFIRMED_ASC = "USER_BY_CONFIRMED_BY__U_CONFIRMED_ASC",
+	USER_BY_CONFIRMED_BY__U_CONFIRMED_DESC = "USER_BY_CONFIRMED_BY__U_CONFIRMED_DESC",
+	USER_BY_CONFIRMED_BY__U_SYSTEM_ASC = "USER_BY_CONFIRMED_BY__U_SYSTEM_ASC",
+	USER_BY_CONFIRMED_BY__U_SYSTEM_DESC = "USER_BY_CONFIRMED_BY__U_SYSTEM_DESC"
 }
 /** Methods to use when ordering `GalerieFoto`. */
 export const enum GalerieFotosOrderBy {
@@ -15946,16 +18427,36 @@ export const enum GalerieFotosOrderBy {
 	GF_ID_DESC = "GF_ID_DESC",
 	GF_ID_RODIC_ASC = "GF_ID_RODIC_ASC",
 	GF_ID_RODIC_DESC = "GF_ID_RODIC_DESC",
-	GF_NAME_ASC = "GF_NAME_ASC",
-	GF_NAME_DESC = "GF_NAME_DESC",
-	GF_PATH_ASC = "GF_PATH_ASC",
-	GF_PATH_DESC = "GF_PATH_DESC",
 	GF_KDO_ASC = "GF_KDO_ASC",
 	GF_KDO_DESC = "GF_KDO_DESC",
-	GF_TIMESTAMP_ASC = "GF_TIMESTAMP_ASC",
-	GF_TIMESTAMP_DESC = "GF_TIMESTAMP_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_ASC = "GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_ASC",
+	GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_DESC = "GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_DESC",
+	GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_RODIC_ASC = "GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_RODIC_ASC",
+	GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_RODIC_DESC = "GALERIE_DIR_BY_GF_ID_RODIC__GD_ID_RODIC_DESC",
+	USER_BY_GF_KDO__U_ID_ASC = "USER_BY_GF_KDO__U_ID_ASC",
+	USER_BY_GF_KDO__U_ID_DESC = "USER_BY_GF_KDO__U_ID_DESC",
+	USER_BY_GF_KDO__U_LOGIN_ASC = "USER_BY_GF_KDO__U_LOGIN_ASC",
+	USER_BY_GF_KDO__U_LOGIN_DESC = "USER_BY_GF_KDO__U_LOGIN_DESC",
+	USER_BY_GF_KDO__U_JMENO_ASC = "USER_BY_GF_KDO__U_JMENO_ASC",
+	USER_BY_GF_KDO__U_JMENO_DESC = "USER_BY_GF_KDO__U_JMENO_DESC",
+	USER_BY_GF_KDO__U_PRIJMENI_ASC = "USER_BY_GF_KDO__U_PRIJMENI_ASC",
+	USER_BY_GF_KDO__U_PRIJMENI_DESC = "USER_BY_GF_KDO__U_PRIJMENI_DESC",
+	USER_BY_GF_KDO__U_NAROZENI_ASC = "USER_BY_GF_KDO__U_NAROZENI_ASC",
+	USER_BY_GF_KDO__U_NAROZENI_DESC = "USER_BY_GF_KDO__U_NAROZENI_DESC",
+	USER_BY_GF_KDO__U_GROUP_ASC = "USER_BY_GF_KDO__U_GROUP_ASC",
+	USER_BY_GF_KDO__U_GROUP_DESC = "USER_BY_GF_KDO__U_GROUP_DESC",
+	USER_BY_GF_KDO__U_SKUPINA_ASC = "USER_BY_GF_KDO__U_SKUPINA_ASC",
+	USER_BY_GF_KDO__U_SKUPINA_DESC = "USER_BY_GF_KDO__U_SKUPINA_DESC",
+	USER_BY_GF_KDO__U_BAN_ASC = "USER_BY_GF_KDO__U_BAN_ASC",
+	USER_BY_GF_KDO__U_BAN_DESC = "USER_BY_GF_KDO__U_BAN_DESC",
+	USER_BY_GF_KDO__U_CONFIRMED_ASC = "USER_BY_GF_KDO__U_CONFIRMED_ASC",
+	USER_BY_GF_KDO__U_CONFIRMED_DESC = "USER_BY_GF_KDO__U_CONFIRMED_DESC",
+	USER_BY_GF_KDO__U_SYSTEM_ASC = "USER_BY_GF_KDO__U_SYSTEM_ASC",
+	USER_BY_GF_KDO__U_SYSTEM_DESC = "USER_BY_GF_KDO__U_SYSTEM_DESC",
+	AKTUALITIES_BY_AT_FOTO_MAIN__COUNT_ASC = "AKTUALITIES_BY_AT_FOTO_MAIN__COUNT_ASC",
+	AKTUALITIES_BY_AT_FOTO_MAIN__COUNT_DESC = "AKTUALITIES_BY_AT_FOTO_MAIN__COUNT_DESC"
 }
 /** Methods to use when ordering `Aktuality`. */
 export const enum AktualitiesOrderBy {
@@ -15964,24 +18465,76 @@ export const enum AktualitiesOrderBy {
 	AT_ID_DESC = "AT_ID_DESC",
 	AT_KDO_ASC = "AT_KDO_ASC",
 	AT_KDO_DESC = "AT_KDO_DESC",
-	AT_KAT_ASC = "AT_KAT_ASC",
-	AT_KAT_DESC = "AT_KAT_DESC",
-	AT_JMENO_ASC = "AT_JMENO_ASC",
-	AT_JMENO_DESC = "AT_JMENO_DESC",
-	AT_TEXT_ASC = "AT_TEXT_ASC",
-	AT_TEXT_DESC = "AT_TEXT_DESC",
-	AT_PREVIEW_ASC = "AT_PREVIEW_ASC",
-	AT_PREVIEW_DESC = "AT_PREVIEW_DESC",
-	AT_FOTO_ASC = "AT_FOTO_ASC",
-	AT_FOTO_DESC = "AT_FOTO_DESC",
 	AT_FOTO_MAIN_ASC = "AT_FOTO_MAIN_ASC",
 	AT_FOTO_MAIN_DESC = "AT_FOTO_MAIN_DESC",
-	AT_TIMESTAMP_ASC = "AT_TIMESTAMP_ASC",
-	AT_TIMESTAMP_DESC = "AT_TIMESTAMP_DESC",
 	AT_TIMESTAMP_ADD_ASC = "AT_TIMESTAMP_ADD_ASC",
 	AT_TIMESTAMP_ADD_DESC = "AT_TIMESTAMP_ADD_DESC",
+	TENANT_ID_ASC = "TENANT_ID_ASC",
+	TENANT_ID_DESC = "TENANT_ID_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	USER_BY_AT_KDO__U_ID_ASC = "USER_BY_AT_KDO__U_ID_ASC",
+	USER_BY_AT_KDO__U_ID_DESC = "USER_BY_AT_KDO__U_ID_DESC",
+	USER_BY_AT_KDO__U_LOGIN_ASC = "USER_BY_AT_KDO__U_LOGIN_ASC",
+	USER_BY_AT_KDO__U_LOGIN_DESC = "USER_BY_AT_KDO__U_LOGIN_DESC",
+	USER_BY_AT_KDO__U_JMENO_ASC = "USER_BY_AT_KDO__U_JMENO_ASC",
+	USER_BY_AT_KDO__U_JMENO_DESC = "USER_BY_AT_KDO__U_JMENO_DESC",
+	USER_BY_AT_KDO__U_PRIJMENI_ASC = "USER_BY_AT_KDO__U_PRIJMENI_ASC",
+	USER_BY_AT_KDO__U_PRIJMENI_DESC = "USER_BY_AT_KDO__U_PRIJMENI_DESC",
+	USER_BY_AT_KDO__U_NAROZENI_ASC = "USER_BY_AT_KDO__U_NAROZENI_ASC",
+	USER_BY_AT_KDO__U_NAROZENI_DESC = "USER_BY_AT_KDO__U_NAROZENI_DESC",
+	USER_BY_AT_KDO__U_GROUP_ASC = "USER_BY_AT_KDO__U_GROUP_ASC",
+	USER_BY_AT_KDO__U_GROUP_DESC = "USER_BY_AT_KDO__U_GROUP_DESC",
+	USER_BY_AT_KDO__U_SKUPINA_ASC = "USER_BY_AT_KDO__U_SKUPINA_ASC",
+	USER_BY_AT_KDO__U_SKUPINA_DESC = "USER_BY_AT_KDO__U_SKUPINA_DESC",
+	USER_BY_AT_KDO__U_BAN_ASC = "USER_BY_AT_KDO__U_BAN_ASC",
+	USER_BY_AT_KDO__U_BAN_DESC = "USER_BY_AT_KDO__U_BAN_DESC",
+	USER_BY_AT_KDO__U_CONFIRMED_ASC = "USER_BY_AT_KDO__U_CONFIRMED_ASC",
+	USER_BY_AT_KDO__U_CONFIRMED_DESC = "USER_BY_AT_KDO__U_CONFIRMED_DESC",
+	USER_BY_AT_KDO__U_SYSTEM_ASC = "USER_BY_AT_KDO__U_SYSTEM_ASC",
+	USER_BY_AT_KDO__U_SYSTEM_DESC = "USER_BY_AT_KDO__U_SYSTEM_DESC",
+	GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_ASC = "GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_ASC",
+	GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_DESC = "GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_DESC",
+	GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_RODIC_ASC = "GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_RODIC_ASC",
+	GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_RODIC_DESC = "GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_ID_RODIC_DESC",
+	GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_KDO_ASC = "GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_KDO_ASC",
+	GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_KDO_DESC = "GALERIE_FOTO_BY_AT_FOTO_MAIN__GF_KDO_DESC"
+}
+/** Methods to use when ordering `Dokumenty`. */
+export const enum DokumentiesOrderBy {
+	NATURAL = "NATURAL",
+	D_ID_ASC = "D_ID_ASC",
+	D_ID_DESC = "D_ID_DESC",
+	D_PATH_ASC = "D_PATH_ASC",
+	D_PATH_DESC = "D_PATH_DESC",
+	D_KATEGORIE_ASC = "D_KATEGORIE_ASC",
+	D_KATEGORIE_DESC = "D_KATEGORIE_DESC",
+	D_KDO_ASC = "D_KDO_ASC",
+	D_KDO_DESC = "D_KDO_DESC",
+	D_TIMESTAMP_ASC = "D_TIMESTAMP_ASC",
+	D_TIMESTAMP_DESC = "D_TIMESTAMP_DESC",
+	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	USER_BY_D_KDO__U_ID_ASC = "USER_BY_D_KDO__U_ID_ASC",
+	USER_BY_D_KDO__U_ID_DESC = "USER_BY_D_KDO__U_ID_DESC",
+	USER_BY_D_KDO__U_LOGIN_ASC = "USER_BY_D_KDO__U_LOGIN_ASC",
+	USER_BY_D_KDO__U_LOGIN_DESC = "USER_BY_D_KDO__U_LOGIN_DESC",
+	USER_BY_D_KDO__U_JMENO_ASC = "USER_BY_D_KDO__U_JMENO_ASC",
+	USER_BY_D_KDO__U_JMENO_DESC = "USER_BY_D_KDO__U_JMENO_DESC",
+	USER_BY_D_KDO__U_PRIJMENI_ASC = "USER_BY_D_KDO__U_PRIJMENI_ASC",
+	USER_BY_D_KDO__U_PRIJMENI_DESC = "USER_BY_D_KDO__U_PRIJMENI_DESC",
+	USER_BY_D_KDO__U_NAROZENI_ASC = "USER_BY_D_KDO__U_NAROZENI_ASC",
+	USER_BY_D_KDO__U_NAROZENI_DESC = "USER_BY_D_KDO__U_NAROZENI_DESC",
+	USER_BY_D_KDO__U_GROUP_ASC = "USER_BY_D_KDO__U_GROUP_ASC",
+	USER_BY_D_KDO__U_GROUP_DESC = "USER_BY_D_KDO__U_GROUP_DESC",
+	USER_BY_D_KDO__U_SKUPINA_ASC = "USER_BY_D_KDO__U_SKUPINA_ASC",
+	USER_BY_D_KDO__U_SKUPINA_DESC = "USER_BY_D_KDO__U_SKUPINA_DESC",
+	USER_BY_D_KDO__U_BAN_ASC = "USER_BY_D_KDO__U_BAN_ASC",
+	USER_BY_D_KDO__U_BAN_DESC = "USER_BY_D_KDO__U_BAN_DESC",
+	USER_BY_D_KDO__U_CONFIRMED_ASC = "USER_BY_D_KDO__U_CONFIRMED_ASC",
+	USER_BY_D_KDO__U_CONFIRMED_DESC = "USER_BY_D_KDO__U_CONFIRMED_DESC",
+	USER_BY_D_KDO__U_SYSTEM_ASC = "USER_BY_D_KDO__U_SYSTEM_ASC",
+	USER_BY_D_KDO__U_SYSTEM_DESC = "USER_BY_D_KDO__U_SYSTEM_DESC"
 }
 export const enum ParyPSttTrida {
 	Z = "Z",
@@ -16010,12 +18563,22 @@ export const enum NabidkaItemsOrderBy {
 	NI_ID_RODIC_DESC = "NI_ID_RODIC_DESC",
 	NI_PARTNER_ASC = "NI_PARTNER_ASC",
 	NI_PARTNER_DESC = "NI_PARTNER_DESC",
-	NI_POCET_HOD_ASC = "NI_POCET_HOD_ASC",
-	NI_POCET_HOD_DESC = "NI_POCET_HOD_DESC",
-	NI_LOCK_ASC = "NI_LOCK_ASC",
-	NI_LOCK_DESC = "NI_LOCK_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	NABIDKA_BY_NI_ID_RODIC__N_ID_ASC = "NABIDKA_BY_NI_ID_RODIC__N_ID_ASC",
+	NABIDKA_BY_NI_ID_RODIC__N_ID_DESC = "NABIDKA_BY_NI_ID_RODIC__N_ID_DESC",
+	NABIDKA_BY_NI_ID_RODIC__N_TRENER_ASC = "NABIDKA_BY_NI_ID_RODIC__N_TRENER_ASC",
+	NABIDKA_BY_NI_ID_RODIC__N_TRENER_DESC = "NABIDKA_BY_NI_ID_RODIC__N_TRENER_DESC",
+	NABIDKA_BY_NI_ID_RODIC__N_OD_ASC = "NABIDKA_BY_NI_ID_RODIC__N_OD_ASC",
+	NABIDKA_BY_NI_ID_RODIC__N_OD_DESC = "NABIDKA_BY_NI_ID_RODIC__N_OD_DESC",
+	PARY_BY_NI_PARTNER__P_ID_ASC = "PARY_BY_NI_PARTNER__P_ID_ASC",
+	PARY_BY_NI_PARTNER__P_ID_DESC = "PARY_BY_NI_PARTNER__P_ID_DESC",
+	PARY_BY_NI_PARTNER__P_ID_PARTNER_ASC = "PARY_BY_NI_PARTNER__P_ID_PARTNER_ASC",
+	PARY_BY_NI_PARTNER__P_ID_PARTNER_DESC = "PARY_BY_NI_PARTNER__P_ID_PARTNER_DESC",
+	PARY_BY_NI_PARTNER__P_ID_PARTNERKA_ASC = "PARY_BY_NI_PARTNER__P_ID_PARTNERKA_ASC",
+	PARY_BY_NI_PARTNER__P_ID_PARTNERKA_DESC = "PARY_BY_NI_PARTNER__P_ID_PARTNERKA_DESC",
+	PARY_BY_NI_PARTNER__P_HODNOCENI_ASC = "PARY_BY_NI_PARTNER__P_HODNOCENI_ASC",
+	PARY_BY_NI_PARTNER__P_HODNOCENI_DESC = "PARY_BY_NI_PARTNER__P_HODNOCENI_DESC"
 }
 /** Methods to use when ordering `RozpisItem`. */
 export const enum RozpisItemsOrderBy {
@@ -16028,12 +18591,22 @@ export const enum RozpisItemsOrderBy {
 	RI_PARTNER_DESC = "RI_PARTNER_DESC",
 	RI_OD_ASC = "RI_OD_ASC",
 	RI_OD_DESC = "RI_OD_DESC",
-	RI_DO_ASC = "RI_DO_ASC",
-	RI_DO_DESC = "RI_DO_DESC",
-	RI_LOCK_ASC = "RI_LOCK_ASC",
-	RI_LOCK_DESC = "RI_LOCK_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	ROZPI_BY_RI_ID_RODIC__R_ID_ASC = "ROZPI_BY_RI_ID_RODIC__R_ID_ASC",
+	ROZPI_BY_RI_ID_RODIC__R_ID_DESC = "ROZPI_BY_RI_ID_RODIC__R_ID_DESC",
+	ROZPI_BY_RI_ID_RODIC__R_TRENER_ASC = "ROZPI_BY_RI_ID_RODIC__R_TRENER_ASC",
+	ROZPI_BY_RI_ID_RODIC__R_TRENER_DESC = "ROZPI_BY_RI_ID_RODIC__R_TRENER_DESC",
+	ROZPI_BY_RI_ID_RODIC__R_DATUM_ASC = "ROZPI_BY_RI_ID_RODIC__R_DATUM_ASC",
+	ROZPI_BY_RI_ID_RODIC__R_DATUM_DESC = "ROZPI_BY_RI_ID_RODIC__R_DATUM_DESC",
+	PARY_BY_RI_PARTNER__P_ID_ASC = "PARY_BY_RI_PARTNER__P_ID_ASC",
+	PARY_BY_RI_PARTNER__P_ID_DESC = "PARY_BY_RI_PARTNER__P_ID_DESC",
+	PARY_BY_RI_PARTNER__P_ID_PARTNER_ASC = "PARY_BY_RI_PARTNER__P_ID_PARTNER_ASC",
+	PARY_BY_RI_PARTNER__P_ID_PARTNER_DESC = "PARY_BY_RI_PARTNER__P_ID_PARTNER_DESC",
+	PARY_BY_RI_PARTNER__P_ID_PARTNERKA_ASC = "PARY_BY_RI_PARTNER__P_ID_PARTNERKA_ASC",
+	PARY_BY_RI_PARTNER__P_ID_PARTNERKA_DESC = "PARY_BY_RI_PARTNER__P_ID_PARTNERKA_DESC",
+	PARY_BY_RI_PARTNER__P_HODNOCENI_ASC = "PARY_BY_RI_PARTNER__P_HODNOCENI_ASC",
+	PARY_BY_RI_PARTNER__P_HODNOCENI_DESC = "PARY_BY_RI_PARTNER__P_HODNOCENI_DESC"
 }
 /** Methods to use when ordering `Nabidka`. */
 export const enum NabidkasOrderBy {
@@ -16042,92 +18615,32 @@ export const enum NabidkasOrderBy {
 	N_ID_DESC = "N_ID_DESC",
 	N_TRENER_ASC = "N_TRENER_ASC",
 	N_TRENER_DESC = "N_TRENER_DESC",
-	N_POCET_HOD_ASC = "N_POCET_HOD_ASC",
-	N_POCET_HOD_DESC = "N_POCET_HOD_DESC",
-	N_MAX_POCET_HOD_ASC = "N_MAX_POCET_HOD_ASC",
-	N_MAX_POCET_HOD_DESC = "N_MAX_POCET_HOD_DESC",
 	N_OD_ASC = "N_OD_ASC",
 	N_OD_DESC = "N_OD_DESC",
-	N_DO_ASC = "N_DO_ASC",
-	N_DO_DESC = "N_DO_DESC",
-	N_VISIBLE_ASC = "N_VISIBLE_ASC",
-	N_VISIBLE_DESC = "N_VISIBLE_DESC",
-	N_LOCK_ASC = "N_LOCK_ASC",
-	N_LOCK_DESC = "N_LOCK_DESC",
-	N_TIMESTAMP_ASC = "N_TIMESTAMP_ASC",
-	N_TIMESTAMP_DESC = "N_TIMESTAMP_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
-}
-/** Methods to use when ordering `Rozpi`. */
-export const enum RozpisOrderBy {
-	NATURAL = "NATURAL",
-	R_ID_ASC = "R_ID_ASC",
-	R_ID_DESC = "R_ID_DESC",
-	R_TRENER_ASC = "R_TRENER_ASC",
-	R_TRENER_DESC = "R_TRENER_DESC",
-	R_KDE_ASC = "R_KDE_ASC",
-	R_KDE_DESC = "R_KDE_DESC",
-	R_DATUM_ASC = "R_DATUM_ASC",
-	R_DATUM_DESC = "R_DATUM_DESC",
-	R_VISIBLE_ASC = "R_VISIBLE_ASC",
-	R_VISIBLE_DESC = "R_VISIBLE_DESC",
-	R_LOCK_ASC = "R_LOCK_ASC",
-	R_LOCK_DESC = "R_LOCK_DESC",
-	R_TIMESTAMP_ASC = "R_TIMESTAMP_ASC",
-	R_TIMESTAMP_DESC = "R_TIMESTAMP_DESC",
-	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
-}
-/** Methods to use when ordering `Session`. */
-export const enum SessionsOrderBy {
-	NATURAL = "NATURAL",
-	SS_ID_ASC = "SS_ID_ASC",
-	SS_ID_DESC = "SS_ID_DESC",
-	SS_DATA_ASC = "SS_DATA_ASC",
-	SS_DATA_DESC = "SS_DATA_DESC",
-	SS_UPDATED_AT_ASC = "SS_UPDATED_AT_ASC",
-	SS_UPDATED_AT_DESC = "SS_UPDATED_AT_DESC",
-	SS_LIFETIME_ASC = "SS_LIFETIME_ASC",
-	SS_LIFETIME_DESC = "SS_LIFETIME_DESC",
-	SS_USER_ASC = "SS_USER_ASC",
-	SS_USER_DESC = "SS_USER_DESC",
-	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
-}
-/** Methods to use when ordering `AkceItem`. */
-export const enum AkceItemsOrderBy {
-	NATURAL = "NATURAL",
-	AI_ID_ASC = "AI_ID_ASC",
-	AI_ID_DESC = "AI_ID_DESC",
-	AI_ID_RODIC_ASC = "AI_ID_RODIC_ASC",
-	AI_ID_RODIC_DESC = "AI_ID_RODIC_DESC",
-	AI_USER_ASC = "AI_USER_ASC",
-	AI_USER_DESC = "AI_USER_DESC",
-	AI_ROK_NAROZENI_ASC = "AI_ROK_NAROZENI_ASC",
-	AI_ROK_NAROZENI_DESC = "AI_ROK_NAROZENI_DESC",
-	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
-}
-/** Methods to use when ordering `Dokumenty`. */
-export const enum DokumentiesOrderBy {
-	NATURAL = "NATURAL",
-	D_ID_ASC = "D_ID_ASC",
-	D_ID_DESC = "D_ID_DESC",
-	D_PATH_ASC = "D_PATH_ASC",
-	D_PATH_DESC = "D_PATH_DESC",
-	D_NAME_ASC = "D_NAME_ASC",
-	D_NAME_DESC = "D_NAME_DESC",
-	D_FILENAME_ASC = "D_FILENAME_ASC",
-	D_FILENAME_DESC = "D_FILENAME_DESC",
-	D_KATEGORIE_ASC = "D_KATEGORIE_ASC",
-	D_KATEGORIE_DESC = "D_KATEGORIE_DESC",
-	D_KDO_ASC = "D_KDO_ASC",
-	D_KDO_DESC = "D_KDO_DESC",
-	D_TIMESTAMP_ASC = "D_TIMESTAMP_ASC",
-	D_TIMESTAMP_DESC = "D_TIMESTAMP_DESC",
-	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	USER_BY_N_TRENER__U_ID_ASC = "USER_BY_N_TRENER__U_ID_ASC",
+	USER_BY_N_TRENER__U_ID_DESC = "USER_BY_N_TRENER__U_ID_DESC",
+	USER_BY_N_TRENER__U_LOGIN_ASC = "USER_BY_N_TRENER__U_LOGIN_ASC",
+	USER_BY_N_TRENER__U_LOGIN_DESC = "USER_BY_N_TRENER__U_LOGIN_DESC",
+	USER_BY_N_TRENER__U_JMENO_ASC = "USER_BY_N_TRENER__U_JMENO_ASC",
+	USER_BY_N_TRENER__U_JMENO_DESC = "USER_BY_N_TRENER__U_JMENO_DESC",
+	USER_BY_N_TRENER__U_PRIJMENI_ASC = "USER_BY_N_TRENER__U_PRIJMENI_ASC",
+	USER_BY_N_TRENER__U_PRIJMENI_DESC = "USER_BY_N_TRENER__U_PRIJMENI_DESC",
+	USER_BY_N_TRENER__U_NAROZENI_ASC = "USER_BY_N_TRENER__U_NAROZENI_ASC",
+	USER_BY_N_TRENER__U_NAROZENI_DESC = "USER_BY_N_TRENER__U_NAROZENI_DESC",
+	USER_BY_N_TRENER__U_GROUP_ASC = "USER_BY_N_TRENER__U_GROUP_ASC",
+	USER_BY_N_TRENER__U_GROUP_DESC = "USER_BY_N_TRENER__U_GROUP_DESC",
+	USER_BY_N_TRENER__U_SKUPINA_ASC = "USER_BY_N_TRENER__U_SKUPINA_ASC",
+	USER_BY_N_TRENER__U_SKUPINA_DESC = "USER_BY_N_TRENER__U_SKUPINA_DESC",
+	USER_BY_N_TRENER__U_BAN_ASC = "USER_BY_N_TRENER__U_BAN_ASC",
+	USER_BY_N_TRENER__U_BAN_DESC = "USER_BY_N_TRENER__U_BAN_DESC",
+	USER_BY_N_TRENER__U_CONFIRMED_ASC = "USER_BY_N_TRENER__U_CONFIRMED_ASC",
+	USER_BY_N_TRENER__U_CONFIRMED_DESC = "USER_BY_N_TRENER__U_CONFIRMED_DESC",
+	USER_BY_N_TRENER__U_SYSTEM_ASC = "USER_BY_N_TRENER__U_SYSTEM_ASC",
+	USER_BY_N_TRENER__U_SYSTEM_DESC = "USER_BY_N_TRENER__U_SYSTEM_DESC",
+	NABIDKA_ITEMS_BY_NI_ID_RODIC__COUNT_ASC = "NABIDKA_ITEMS_BY_NI_ID_RODIC__COUNT_ASC",
+	NABIDKA_ITEMS_BY_NI_ID_RODIC__COUNT_DESC = "NABIDKA_ITEMS_BY_NI_ID_RODIC__COUNT_DESC"
 }
 /** Methods to use when ordering `Pary`. */
 export const enum PariesOrderBy {
@@ -16138,28 +18651,54 @@ export const enum PariesOrderBy {
 	P_ID_PARTNER_DESC = "P_ID_PARTNER_DESC",
 	P_ID_PARTNERKA_ASC = "P_ID_PARTNERKA_ASC",
 	P_ID_PARTNERKA_DESC = "P_ID_PARTNERKA_DESC",
-	P_STT_TRIDA_ASC = "P_STT_TRIDA_ASC",
-	P_STT_TRIDA_DESC = "P_STT_TRIDA_DESC",
-	P_STT_BODY_ASC = "P_STT_BODY_ASC",
-	P_STT_BODY_DESC = "P_STT_BODY_DESC",
-	P_STT_FINALE_ASC = "P_STT_FINALE_ASC",
-	P_STT_FINALE_DESC = "P_STT_FINALE_DESC",
-	P_LAT_TRIDA_ASC = "P_LAT_TRIDA_ASC",
-	P_LAT_TRIDA_DESC = "P_LAT_TRIDA_DESC",
-	P_LAT_BODY_ASC = "P_LAT_BODY_ASC",
-	P_LAT_BODY_DESC = "P_LAT_BODY_DESC",
-	P_LAT_FINALE_ASC = "P_LAT_FINALE_ASC",
-	P_LAT_FINALE_DESC = "P_LAT_FINALE_DESC",
 	P_HODNOCENI_ASC = "P_HODNOCENI_ASC",
 	P_HODNOCENI_DESC = "P_HODNOCENI_DESC",
-	P_ARCHIV_ASC = "P_ARCHIV_ASC",
-	P_ARCHIV_DESC = "P_ARCHIV_DESC",
-	P_TIMESTAMP_ADD_ASC = "P_TIMESTAMP_ADD_ASC",
-	P_TIMESTAMP_ADD_DESC = "P_TIMESTAMP_ADD_DESC",
-	P_TIMESTAMP_ARCHIVE_ASC = "P_TIMESTAMP_ARCHIVE_ASC",
-	P_TIMESTAMP_ARCHIVE_DESC = "P_TIMESTAMP_ARCHIVE_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	USER_BY_P_ID_PARTNER__U_ID_ASC = "USER_BY_P_ID_PARTNER__U_ID_ASC",
+	USER_BY_P_ID_PARTNER__U_ID_DESC = "USER_BY_P_ID_PARTNER__U_ID_DESC",
+	USER_BY_P_ID_PARTNER__U_LOGIN_ASC = "USER_BY_P_ID_PARTNER__U_LOGIN_ASC",
+	USER_BY_P_ID_PARTNER__U_LOGIN_DESC = "USER_BY_P_ID_PARTNER__U_LOGIN_DESC",
+	USER_BY_P_ID_PARTNER__U_JMENO_ASC = "USER_BY_P_ID_PARTNER__U_JMENO_ASC",
+	USER_BY_P_ID_PARTNER__U_JMENO_DESC = "USER_BY_P_ID_PARTNER__U_JMENO_DESC",
+	USER_BY_P_ID_PARTNER__U_PRIJMENI_ASC = "USER_BY_P_ID_PARTNER__U_PRIJMENI_ASC",
+	USER_BY_P_ID_PARTNER__U_PRIJMENI_DESC = "USER_BY_P_ID_PARTNER__U_PRIJMENI_DESC",
+	USER_BY_P_ID_PARTNER__U_NAROZENI_ASC = "USER_BY_P_ID_PARTNER__U_NAROZENI_ASC",
+	USER_BY_P_ID_PARTNER__U_NAROZENI_DESC = "USER_BY_P_ID_PARTNER__U_NAROZENI_DESC",
+	USER_BY_P_ID_PARTNER__U_GROUP_ASC = "USER_BY_P_ID_PARTNER__U_GROUP_ASC",
+	USER_BY_P_ID_PARTNER__U_GROUP_DESC = "USER_BY_P_ID_PARTNER__U_GROUP_DESC",
+	USER_BY_P_ID_PARTNER__U_SKUPINA_ASC = "USER_BY_P_ID_PARTNER__U_SKUPINA_ASC",
+	USER_BY_P_ID_PARTNER__U_SKUPINA_DESC = "USER_BY_P_ID_PARTNER__U_SKUPINA_DESC",
+	USER_BY_P_ID_PARTNER__U_BAN_ASC = "USER_BY_P_ID_PARTNER__U_BAN_ASC",
+	USER_BY_P_ID_PARTNER__U_BAN_DESC = "USER_BY_P_ID_PARTNER__U_BAN_DESC",
+	USER_BY_P_ID_PARTNER__U_CONFIRMED_ASC = "USER_BY_P_ID_PARTNER__U_CONFIRMED_ASC",
+	USER_BY_P_ID_PARTNER__U_CONFIRMED_DESC = "USER_BY_P_ID_PARTNER__U_CONFIRMED_DESC",
+	USER_BY_P_ID_PARTNER__U_SYSTEM_ASC = "USER_BY_P_ID_PARTNER__U_SYSTEM_ASC",
+	USER_BY_P_ID_PARTNER__U_SYSTEM_DESC = "USER_BY_P_ID_PARTNER__U_SYSTEM_DESC",
+	USER_BY_P_ID_PARTNERKA__U_ID_ASC = "USER_BY_P_ID_PARTNERKA__U_ID_ASC",
+	USER_BY_P_ID_PARTNERKA__U_ID_DESC = "USER_BY_P_ID_PARTNERKA__U_ID_DESC",
+	USER_BY_P_ID_PARTNERKA__U_LOGIN_ASC = "USER_BY_P_ID_PARTNERKA__U_LOGIN_ASC",
+	USER_BY_P_ID_PARTNERKA__U_LOGIN_DESC = "USER_BY_P_ID_PARTNERKA__U_LOGIN_DESC",
+	USER_BY_P_ID_PARTNERKA__U_JMENO_ASC = "USER_BY_P_ID_PARTNERKA__U_JMENO_ASC",
+	USER_BY_P_ID_PARTNERKA__U_JMENO_DESC = "USER_BY_P_ID_PARTNERKA__U_JMENO_DESC",
+	USER_BY_P_ID_PARTNERKA__U_PRIJMENI_ASC = "USER_BY_P_ID_PARTNERKA__U_PRIJMENI_ASC",
+	USER_BY_P_ID_PARTNERKA__U_PRIJMENI_DESC = "USER_BY_P_ID_PARTNERKA__U_PRIJMENI_DESC",
+	USER_BY_P_ID_PARTNERKA__U_NAROZENI_ASC = "USER_BY_P_ID_PARTNERKA__U_NAROZENI_ASC",
+	USER_BY_P_ID_PARTNERKA__U_NAROZENI_DESC = "USER_BY_P_ID_PARTNERKA__U_NAROZENI_DESC",
+	USER_BY_P_ID_PARTNERKA__U_GROUP_ASC = "USER_BY_P_ID_PARTNERKA__U_GROUP_ASC",
+	USER_BY_P_ID_PARTNERKA__U_GROUP_DESC = "USER_BY_P_ID_PARTNERKA__U_GROUP_DESC",
+	USER_BY_P_ID_PARTNERKA__U_SKUPINA_ASC = "USER_BY_P_ID_PARTNERKA__U_SKUPINA_ASC",
+	USER_BY_P_ID_PARTNERKA__U_SKUPINA_DESC = "USER_BY_P_ID_PARTNERKA__U_SKUPINA_DESC",
+	USER_BY_P_ID_PARTNERKA__U_BAN_ASC = "USER_BY_P_ID_PARTNERKA__U_BAN_ASC",
+	USER_BY_P_ID_PARTNERKA__U_BAN_DESC = "USER_BY_P_ID_PARTNERKA__U_BAN_DESC",
+	USER_BY_P_ID_PARTNERKA__U_CONFIRMED_ASC = "USER_BY_P_ID_PARTNERKA__U_CONFIRMED_ASC",
+	USER_BY_P_ID_PARTNERKA__U_CONFIRMED_DESC = "USER_BY_P_ID_PARTNERKA__U_CONFIRMED_DESC",
+	USER_BY_P_ID_PARTNERKA__U_SYSTEM_ASC = "USER_BY_P_ID_PARTNERKA__U_SYSTEM_ASC",
+	USER_BY_P_ID_PARTNERKA__U_SYSTEM_DESC = "USER_BY_P_ID_PARTNERKA__U_SYSTEM_DESC",
+	NABIDKA_ITEMS_BY_NI_PARTNER__COUNT_ASC = "NABIDKA_ITEMS_BY_NI_PARTNER__COUNT_ASC",
+	NABIDKA_ITEMS_BY_NI_PARTNER__COUNT_DESC = "NABIDKA_ITEMS_BY_NI_PARTNER__COUNT_DESC",
+	ROZPIS_ITEMS_BY_RI_PARTNER__COUNT_ASC = "ROZPIS_ITEMS_BY_RI_PARTNER__COUNT_ASC",
+	ROZPIS_ITEMS_BY_RI_PARTNER__COUNT_DESC = "ROZPIS_ITEMS_BY_RI_PARTNER__COUNT_DESC"
 }
 /** Methods to use when ordering `ParyNavrh`. */
 export const enum ParyNavrhsOrderBy {
@@ -16173,7 +18712,131 @@ export const enum ParyNavrhsOrderBy {
 	PN_PARTNERKA_ASC = "PN_PARTNERKA_ASC",
 	PN_PARTNERKA_DESC = "PN_PARTNERKA_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	USER_BY_PN_NAVRHL__U_ID_ASC = "USER_BY_PN_NAVRHL__U_ID_ASC",
+	USER_BY_PN_NAVRHL__U_ID_DESC = "USER_BY_PN_NAVRHL__U_ID_DESC",
+	USER_BY_PN_NAVRHL__U_LOGIN_ASC = "USER_BY_PN_NAVRHL__U_LOGIN_ASC",
+	USER_BY_PN_NAVRHL__U_LOGIN_DESC = "USER_BY_PN_NAVRHL__U_LOGIN_DESC",
+	USER_BY_PN_NAVRHL__U_JMENO_ASC = "USER_BY_PN_NAVRHL__U_JMENO_ASC",
+	USER_BY_PN_NAVRHL__U_JMENO_DESC = "USER_BY_PN_NAVRHL__U_JMENO_DESC",
+	USER_BY_PN_NAVRHL__U_PRIJMENI_ASC = "USER_BY_PN_NAVRHL__U_PRIJMENI_ASC",
+	USER_BY_PN_NAVRHL__U_PRIJMENI_DESC = "USER_BY_PN_NAVRHL__U_PRIJMENI_DESC",
+	USER_BY_PN_NAVRHL__U_NAROZENI_ASC = "USER_BY_PN_NAVRHL__U_NAROZENI_ASC",
+	USER_BY_PN_NAVRHL__U_NAROZENI_DESC = "USER_BY_PN_NAVRHL__U_NAROZENI_DESC",
+	USER_BY_PN_NAVRHL__U_GROUP_ASC = "USER_BY_PN_NAVRHL__U_GROUP_ASC",
+	USER_BY_PN_NAVRHL__U_GROUP_DESC = "USER_BY_PN_NAVRHL__U_GROUP_DESC",
+	USER_BY_PN_NAVRHL__U_SKUPINA_ASC = "USER_BY_PN_NAVRHL__U_SKUPINA_ASC",
+	USER_BY_PN_NAVRHL__U_SKUPINA_DESC = "USER_BY_PN_NAVRHL__U_SKUPINA_DESC",
+	USER_BY_PN_NAVRHL__U_BAN_ASC = "USER_BY_PN_NAVRHL__U_BAN_ASC",
+	USER_BY_PN_NAVRHL__U_BAN_DESC = "USER_BY_PN_NAVRHL__U_BAN_DESC",
+	USER_BY_PN_NAVRHL__U_CONFIRMED_ASC = "USER_BY_PN_NAVRHL__U_CONFIRMED_ASC",
+	USER_BY_PN_NAVRHL__U_CONFIRMED_DESC = "USER_BY_PN_NAVRHL__U_CONFIRMED_DESC",
+	USER_BY_PN_NAVRHL__U_SYSTEM_ASC = "USER_BY_PN_NAVRHL__U_SYSTEM_ASC",
+	USER_BY_PN_NAVRHL__U_SYSTEM_DESC = "USER_BY_PN_NAVRHL__U_SYSTEM_DESC",
+	USER_BY_PN_PARTNER__U_ID_ASC = "USER_BY_PN_PARTNER__U_ID_ASC",
+	USER_BY_PN_PARTNER__U_ID_DESC = "USER_BY_PN_PARTNER__U_ID_DESC",
+	USER_BY_PN_PARTNER__U_LOGIN_ASC = "USER_BY_PN_PARTNER__U_LOGIN_ASC",
+	USER_BY_PN_PARTNER__U_LOGIN_DESC = "USER_BY_PN_PARTNER__U_LOGIN_DESC",
+	USER_BY_PN_PARTNER__U_JMENO_ASC = "USER_BY_PN_PARTNER__U_JMENO_ASC",
+	USER_BY_PN_PARTNER__U_JMENO_DESC = "USER_BY_PN_PARTNER__U_JMENO_DESC",
+	USER_BY_PN_PARTNER__U_PRIJMENI_ASC = "USER_BY_PN_PARTNER__U_PRIJMENI_ASC",
+	USER_BY_PN_PARTNER__U_PRIJMENI_DESC = "USER_BY_PN_PARTNER__U_PRIJMENI_DESC",
+	USER_BY_PN_PARTNER__U_NAROZENI_ASC = "USER_BY_PN_PARTNER__U_NAROZENI_ASC",
+	USER_BY_PN_PARTNER__U_NAROZENI_DESC = "USER_BY_PN_PARTNER__U_NAROZENI_DESC",
+	USER_BY_PN_PARTNER__U_GROUP_ASC = "USER_BY_PN_PARTNER__U_GROUP_ASC",
+	USER_BY_PN_PARTNER__U_GROUP_DESC = "USER_BY_PN_PARTNER__U_GROUP_DESC",
+	USER_BY_PN_PARTNER__U_SKUPINA_ASC = "USER_BY_PN_PARTNER__U_SKUPINA_ASC",
+	USER_BY_PN_PARTNER__U_SKUPINA_DESC = "USER_BY_PN_PARTNER__U_SKUPINA_DESC",
+	USER_BY_PN_PARTNER__U_BAN_ASC = "USER_BY_PN_PARTNER__U_BAN_ASC",
+	USER_BY_PN_PARTNER__U_BAN_DESC = "USER_BY_PN_PARTNER__U_BAN_DESC",
+	USER_BY_PN_PARTNER__U_CONFIRMED_ASC = "USER_BY_PN_PARTNER__U_CONFIRMED_ASC",
+	USER_BY_PN_PARTNER__U_CONFIRMED_DESC = "USER_BY_PN_PARTNER__U_CONFIRMED_DESC",
+	USER_BY_PN_PARTNER__U_SYSTEM_ASC = "USER_BY_PN_PARTNER__U_SYSTEM_ASC",
+	USER_BY_PN_PARTNER__U_SYSTEM_DESC = "USER_BY_PN_PARTNER__U_SYSTEM_DESC",
+	USER_BY_PN_PARTNERKA__U_ID_ASC = "USER_BY_PN_PARTNERKA__U_ID_ASC",
+	USER_BY_PN_PARTNERKA__U_ID_DESC = "USER_BY_PN_PARTNERKA__U_ID_DESC",
+	USER_BY_PN_PARTNERKA__U_LOGIN_ASC = "USER_BY_PN_PARTNERKA__U_LOGIN_ASC",
+	USER_BY_PN_PARTNERKA__U_LOGIN_DESC = "USER_BY_PN_PARTNERKA__U_LOGIN_DESC",
+	USER_BY_PN_PARTNERKA__U_JMENO_ASC = "USER_BY_PN_PARTNERKA__U_JMENO_ASC",
+	USER_BY_PN_PARTNERKA__U_JMENO_DESC = "USER_BY_PN_PARTNERKA__U_JMENO_DESC",
+	USER_BY_PN_PARTNERKA__U_PRIJMENI_ASC = "USER_BY_PN_PARTNERKA__U_PRIJMENI_ASC",
+	USER_BY_PN_PARTNERKA__U_PRIJMENI_DESC = "USER_BY_PN_PARTNERKA__U_PRIJMENI_DESC",
+	USER_BY_PN_PARTNERKA__U_NAROZENI_ASC = "USER_BY_PN_PARTNERKA__U_NAROZENI_ASC",
+	USER_BY_PN_PARTNERKA__U_NAROZENI_DESC = "USER_BY_PN_PARTNERKA__U_NAROZENI_DESC",
+	USER_BY_PN_PARTNERKA__U_GROUP_ASC = "USER_BY_PN_PARTNERKA__U_GROUP_ASC",
+	USER_BY_PN_PARTNERKA__U_GROUP_DESC = "USER_BY_PN_PARTNERKA__U_GROUP_DESC",
+	USER_BY_PN_PARTNERKA__U_SKUPINA_ASC = "USER_BY_PN_PARTNERKA__U_SKUPINA_ASC",
+	USER_BY_PN_PARTNERKA__U_SKUPINA_DESC = "USER_BY_PN_PARTNERKA__U_SKUPINA_DESC",
+	USER_BY_PN_PARTNERKA__U_BAN_ASC = "USER_BY_PN_PARTNERKA__U_BAN_ASC",
+	USER_BY_PN_PARTNERKA__U_BAN_DESC = "USER_BY_PN_PARTNERKA__U_BAN_DESC",
+	USER_BY_PN_PARTNERKA__U_CONFIRMED_ASC = "USER_BY_PN_PARTNERKA__U_CONFIRMED_ASC",
+	USER_BY_PN_PARTNERKA__U_CONFIRMED_DESC = "USER_BY_PN_PARTNERKA__U_CONFIRMED_DESC",
+	USER_BY_PN_PARTNERKA__U_SYSTEM_ASC = "USER_BY_PN_PARTNERKA__U_SYSTEM_ASC",
+	USER_BY_PN_PARTNERKA__U_SYSTEM_DESC = "USER_BY_PN_PARTNERKA__U_SYSTEM_DESC"
+}
+/** Methods to use when ordering `Rozpi`. */
+export const enum RozpisOrderBy {
+	NATURAL = "NATURAL",
+	R_ID_ASC = "R_ID_ASC",
+	R_ID_DESC = "R_ID_DESC",
+	R_TRENER_ASC = "R_TRENER_ASC",
+	R_TRENER_DESC = "R_TRENER_DESC",
+	R_DATUM_ASC = "R_DATUM_ASC",
+	R_DATUM_DESC = "R_DATUM_DESC",
+	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	USER_BY_R_TRENER__U_ID_ASC = "USER_BY_R_TRENER__U_ID_ASC",
+	USER_BY_R_TRENER__U_ID_DESC = "USER_BY_R_TRENER__U_ID_DESC",
+	USER_BY_R_TRENER__U_LOGIN_ASC = "USER_BY_R_TRENER__U_LOGIN_ASC",
+	USER_BY_R_TRENER__U_LOGIN_DESC = "USER_BY_R_TRENER__U_LOGIN_DESC",
+	USER_BY_R_TRENER__U_JMENO_ASC = "USER_BY_R_TRENER__U_JMENO_ASC",
+	USER_BY_R_TRENER__U_JMENO_DESC = "USER_BY_R_TRENER__U_JMENO_DESC",
+	USER_BY_R_TRENER__U_PRIJMENI_ASC = "USER_BY_R_TRENER__U_PRIJMENI_ASC",
+	USER_BY_R_TRENER__U_PRIJMENI_DESC = "USER_BY_R_TRENER__U_PRIJMENI_DESC",
+	USER_BY_R_TRENER__U_NAROZENI_ASC = "USER_BY_R_TRENER__U_NAROZENI_ASC",
+	USER_BY_R_TRENER__U_NAROZENI_DESC = "USER_BY_R_TRENER__U_NAROZENI_DESC",
+	USER_BY_R_TRENER__U_GROUP_ASC = "USER_BY_R_TRENER__U_GROUP_ASC",
+	USER_BY_R_TRENER__U_GROUP_DESC = "USER_BY_R_TRENER__U_GROUP_DESC",
+	USER_BY_R_TRENER__U_SKUPINA_ASC = "USER_BY_R_TRENER__U_SKUPINA_ASC",
+	USER_BY_R_TRENER__U_SKUPINA_DESC = "USER_BY_R_TRENER__U_SKUPINA_DESC",
+	USER_BY_R_TRENER__U_BAN_ASC = "USER_BY_R_TRENER__U_BAN_ASC",
+	USER_BY_R_TRENER__U_BAN_DESC = "USER_BY_R_TRENER__U_BAN_DESC",
+	USER_BY_R_TRENER__U_CONFIRMED_ASC = "USER_BY_R_TRENER__U_CONFIRMED_ASC",
+	USER_BY_R_TRENER__U_CONFIRMED_DESC = "USER_BY_R_TRENER__U_CONFIRMED_DESC",
+	USER_BY_R_TRENER__U_SYSTEM_ASC = "USER_BY_R_TRENER__U_SYSTEM_ASC",
+	USER_BY_R_TRENER__U_SYSTEM_DESC = "USER_BY_R_TRENER__U_SYSTEM_DESC",
+	ROZPIS_ITEMS_BY_RI_ID_RODIC__COUNT_ASC = "ROZPIS_ITEMS_BY_RI_ID_RODIC__COUNT_ASC",
+	ROZPIS_ITEMS_BY_RI_ID_RODIC__COUNT_DESC = "ROZPIS_ITEMS_BY_RI_ID_RODIC__COUNT_DESC"
+}
+/** Methods to use when ordering `Session`. */
+export const enum SessionsOrderBy {
+	NATURAL = "NATURAL",
+	SS_ID_ASC = "SS_ID_ASC",
+	SS_ID_DESC = "SS_ID_DESC",
+	SS_USER_ASC = "SS_USER_ASC",
+	SS_USER_DESC = "SS_USER_DESC",
+	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	USER_BY_SS_USER__U_ID_ASC = "USER_BY_SS_USER__U_ID_ASC",
+	USER_BY_SS_USER__U_ID_DESC = "USER_BY_SS_USER__U_ID_DESC",
+	USER_BY_SS_USER__U_LOGIN_ASC = "USER_BY_SS_USER__U_LOGIN_ASC",
+	USER_BY_SS_USER__U_LOGIN_DESC = "USER_BY_SS_USER__U_LOGIN_DESC",
+	USER_BY_SS_USER__U_JMENO_ASC = "USER_BY_SS_USER__U_JMENO_ASC",
+	USER_BY_SS_USER__U_JMENO_DESC = "USER_BY_SS_USER__U_JMENO_DESC",
+	USER_BY_SS_USER__U_PRIJMENI_ASC = "USER_BY_SS_USER__U_PRIJMENI_ASC",
+	USER_BY_SS_USER__U_PRIJMENI_DESC = "USER_BY_SS_USER__U_PRIJMENI_DESC",
+	USER_BY_SS_USER__U_NAROZENI_ASC = "USER_BY_SS_USER__U_NAROZENI_ASC",
+	USER_BY_SS_USER__U_NAROZENI_DESC = "USER_BY_SS_USER__U_NAROZENI_DESC",
+	USER_BY_SS_USER__U_GROUP_ASC = "USER_BY_SS_USER__U_GROUP_ASC",
+	USER_BY_SS_USER__U_GROUP_DESC = "USER_BY_SS_USER__U_GROUP_DESC",
+	USER_BY_SS_USER__U_SKUPINA_ASC = "USER_BY_SS_USER__U_SKUPINA_ASC",
+	USER_BY_SS_USER__U_SKUPINA_DESC = "USER_BY_SS_USER__U_SKUPINA_DESC",
+	USER_BY_SS_USER__U_BAN_ASC = "USER_BY_SS_USER__U_BAN_ASC",
+	USER_BY_SS_USER__U_BAN_DESC = "USER_BY_SS_USER__U_BAN_DESC",
+	USER_BY_SS_USER__U_CONFIRMED_ASC = "USER_BY_SS_USER__U_CONFIRMED_ASC",
+	USER_BY_SS_USER__U_CONFIRMED_DESC = "USER_BY_SS_USER__U_CONFIRMED_DESC",
+	USER_BY_SS_USER__U_SYSTEM_ASC = "USER_BY_SS_USER__U_SYSTEM_ASC",
+	USER_BY_SS_USER__U_SYSTEM_DESC = "USER_BY_SS_USER__U_SYSTEM_DESC"
 }
 /** Methods to use when ordering `Upozorneni`. */
 export const enum UpozornenisOrderBy {
@@ -16182,46 +18845,124 @@ export const enum UpozornenisOrderBy {
 	UP_ID_DESC = "UP_ID_DESC",
 	UP_KDO_ASC = "UP_KDO_ASC",
 	UP_KDO_DESC = "UP_KDO_DESC",
-	UP_NADPIS_ASC = "UP_NADPIS_ASC",
-	UP_NADPIS_DESC = "UP_NADPIS_DESC",
-	UP_TEXT_ASC = "UP_TEXT_ASC",
-	UP_TEXT_DESC = "UP_TEXT_DESC",
-	UP_BARVY_ASC = "UP_BARVY_ASC",
-	UP_BARVY_DESC = "UP_BARVY_DESC",
-	UP_LOCK_ASC = "UP_LOCK_ASC",
-	UP_LOCK_DESC = "UP_LOCK_DESC",
-	UP_TIMESTAMP_ASC = "UP_TIMESTAMP_ASC",
-	UP_TIMESTAMP_DESC = "UP_TIMESTAMP_DESC",
 	UP_TIMESTAMP_ADD_ASC = "UP_TIMESTAMP_ADD_ASC",
 	UP_TIMESTAMP_ADD_DESC = "UP_TIMESTAMP_ADD_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	USER_BY_UP_KDO__U_ID_ASC = "USER_BY_UP_KDO__U_ID_ASC",
+	USER_BY_UP_KDO__U_ID_DESC = "USER_BY_UP_KDO__U_ID_DESC",
+	USER_BY_UP_KDO__U_LOGIN_ASC = "USER_BY_UP_KDO__U_LOGIN_ASC",
+	USER_BY_UP_KDO__U_LOGIN_DESC = "USER_BY_UP_KDO__U_LOGIN_DESC",
+	USER_BY_UP_KDO__U_JMENO_ASC = "USER_BY_UP_KDO__U_JMENO_ASC",
+	USER_BY_UP_KDO__U_JMENO_DESC = "USER_BY_UP_KDO__U_JMENO_DESC",
+	USER_BY_UP_KDO__U_PRIJMENI_ASC = "USER_BY_UP_KDO__U_PRIJMENI_ASC",
+	USER_BY_UP_KDO__U_PRIJMENI_DESC = "USER_BY_UP_KDO__U_PRIJMENI_DESC",
+	USER_BY_UP_KDO__U_NAROZENI_ASC = "USER_BY_UP_KDO__U_NAROZENI_ASC",
+	USER_BY_UP_KDO__U_NAROZENI_DESC = "USER_BY_UP_KDO__U_NAROZENI_DESC",
+	USER_BY_UP_KDO__U_GROUP_ASC = "USER_BY_UP_KDO__U_GROUP_ASC",
+	USER_BY_UP_KDO__U_GROUP_DESC = "USER_BY_UP_KDO__U_GROUP_DESC",
+	USER_BY_UP_KDO__U_SKUPINA_ASC = "USER_BY_UP_KDO__U_SKUPINA_ASC",
+	USER_BY_UP_KDO__U_SKUPINA_DESC = "USER_BY_UP_KDO__U_SKUPINA_DESC",
+	USER_BY_UP_KDO__U_BAN_ASC = "USER_BY_UP_KDO__U_BAN_ASC",
+	USER_BY_UP_KDO__U_BAN_DESC = "USER_BY_UP_KDO__U_BAN_DESC",
+	USER_BY_UP_KDO__U_CONFIRMED_ASC = "USER_BY_UP_KDO__U_CONFIRMED_ASC",
+	USER_BY_UP_KDO__U_CONFIRMED_DESC = "USER_BY_UP_KDO__U_CONFIRMED_DESC",
+	USER_BY_UP_KDO__U_SYSTEM_ASC = "USER_BY_UP_KDO__U_SYSTEM_ASC",
+	USER_BY_UP_KDO__U_SYSTEM_DESC = "USER_BY_UP_KDO__U_SYSTEM_DESC",
+	UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_ASC = "UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_ASC",
+	UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_DESC = "UPOZORNENI_SKUPINIES_BY_UPS_ID_RODIC__COUNT_DESC"
+}
+/** Methods to use when ordering `Attachment`. */
+export const enum AttachmentsOrderBy {
+	NATURAL = "NATURAL",
+	OBJECT_NAME_ASC = "OBJECT_NAME_ASC",
+	OBJECT_NAME_DESC = "OBJECT_NAME_DESC",
+	UPLOADED_BY_ASC = "UPLOADED_BY_ASC",
+	UPLOADED_BY_DESC = "UPLOADED_BY_DESC",
+	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	USER_BY_UPLOADED_BY__U_ID_ASC = "USER_BY_UPLOADED_BY__U_ID_ASC",
+	USER_BY_UPLOADED_BY__U_ID_DESC = "USER_BY_UPLOADED_BY__U_ID_DESC",
+	USER_BY_UPLOADED_BY__U_LOGIN_ASC = "USER_BY_UPLOADED_BY__U_LOGIN_ASC",
+	USER_BY_UPLOADED_BY__U_LOGIN_DESC = "USER_BY_UPLOADED_BY__U_LOGIN_DESC",
+	USER_BY_UPLOADED_BY__U_JMENO_ASC = "USER_BY_UPLOADED_BY__U_JMENO_ASC",
+	USER_BY_UPLOADED_BY__U_JMENO_DESC = "USER_BY_UPLOADED_BY__U_JMENO_DESC",
+	USER_BY_UPLOADED_BY__U_PRIJMENI_ASC = "USER_BY_UPLOADED_BY__U_PRIJMENI_ASC",
+	USER_BY_UPLOADED_BY__U_PRIJMENI_DESC = "USER_BY_UPLOADED_BY__U_PRIJMENI_DESC",
+	USER_BY_UPLOADED_BY__U_NAROZENI_ASC = "USER_BY_UPLOADED_BY__U_NAROZENI_ASC",
+	USER_BY_UPLOADED_BY__U_NAROZENI_DESC = "USER_BY_UPLOADED_BY__U_NAROZENI_DESC",
+	USER_BY_UPLOADED_BY__U_GROUP_ASC = "USER_BY_UPLOADED_BY__U_GROUP_ASC",
+	USER_BY_UPLOADED_BY__U_GROUP_DESC = "USER_BY_UPLOADED_BY__U_GROUP_DESC",
+	USER_BY_UPLOADED_BY__U_SKUPINA_ASC = "USER_BY_UPLOADED_BY__U_SKUPINA_ASC",
+	USER_BY_UPLOADED_BY__U_SKUPINA_DESC = "USER_BY_UPLOADED_BY__U_SKUPINA_DESC",
+	USER_BY_UPLOADED_BY__U_BAN_ASC = "USER_BY_UPLOADED_BY__U_BAN_ASC",
+	USER_BY_UPLOADED_BY__U_BAN_DESC = "USER_BY_UPLOADED_BY__U_BAN_DESC",
+	USER_BY_UPLOADED_BY__U_CONFIRMED_ASC = "USER_BY_UPLOADED_BY__U_CONFIRMED_ASC",
+	USER_BY_UPLOADED_BY__U_CONFIRMED_DESC = "USER_BY_UPLOADED_BY__U_CONFIRMED_DESC",
+	USER_BY_UPLOADED_BY__U_SYSTEM_ASC = "USER_BY_UPLOADED_BY__U_SYSTEM_ASC",
+	USER_BY_UPLOADED_BY__U_SYSTEM_DESC = "USER_BY_UPLOADED_BY__U_SYSTEM_DESC",
+	TENANT_ATTACHMENTS_BY_OBJECT_NAME__COUNT_ASC = "TENANT_ATTACHMENTS_BY_OBJECT_NAME__COUNT_ASC",
+	TENANT_ATTACHMENTS_BY_OBJECT_NAME__COUNT_DESC = "TENANT_ATTACHMENTS_BY_OBJECT_NAME__COUNT_DESC",
+	LOCATION_ATTACHMENTS_BY_OBJECT_NAME__COUNT_ASC = "LOCATION_ATTACHMENTS_BY_OBJECT_NAME__COUNT_ASC",
+	LOCATION_ATTACHMENTS_BY_OBJECT_NAME__COUNT_DESC = "LOCATION_ATTACHMENTS_BY_OBJECT_NAME__COUNT_DESC",
+	ROOM_ATTACHMENTS_BY_OBJECT_NAME__COUNT_ASC = "ROOM_ATTACHMENTS_BY_OBJECT_NAME__COUNT_ASC",
+	ROOM_ATTACHMENTS_BY_OBJECT_NAME__COUNT_DESC = "ROOM_ATTACHMENTS_BY_OBJECT_NAME__COUNT_DESC"
+}
+/** Methods to use when ordering `AkceItem`. */
+export const enum AkceItemsOrderBy {
+	NATURAL = "NATURAL",
+	USER_BY_AI_USER__U_ID_ASC = "USER_BY_AI_USER__U_ID_ASC",
+	USER_BY_AI_USER__U_ID_DESC = "USER_BY_AI_USER__U_ID_DESC",
+	USER_BY_AI_USER__U_LOGIN_ASC = "USER_BY_AI_USER__U_LOGIN_ASC",
+	USER_BY_AI_USER__U_LOGIN_DESC = "USER_BY_AI_USER__U_LOGIN_DESC",
+	USER_BY_AI_USER__U_JMENO_ASC = "USER_BY_AI_USER__U_JMENO_ASC",
+	USER_BY_AI_USER__U_JMENO_DESC = "USER_BY_AI_USER__U_JMENO_DESC",
+	USER_BY_AI_USER__U_PRIJMENI_ASC = "USER_BY_AI_USER__U_PRIJMENI_ASC",
+	USER_BY_AI_USER__U_PRIJMENI_DESC = "USER_BY_AI_USER__U_PRIJMENI_DESC",
+	USER_BY_AI_USER__U_NAROZENI_ASC = "USER_BY_AI_USER__U_NAROZENI_ASC",
+	USER_BY_AI_USER__U_NAROZENI_DESC = "USER_BY_AI_USER__U_NAROZENI_DESC",
+	USER_BY_AI_USER__U_GROUP_ASC = "USER_BY_AI_USER__U_GROUP_ASC",
+	USER_BY_AI_USER__U_GROUP_DESC = "USER_BY_AI_USER__U_GROUP_DESC",
+	USER_BY_AI_USER__U_SKUPINA_ASC = "USER_BY_AI_USER__U_SKUPINA_ASC",
+	USER_BY_AI_USER__U_SKUPINA_DESC = "USER_BY_AI_USER__U_SKUPINA_DESC",
+	USER_BY_AI_USER__U_BAN_ASC = "USER_BY_AI_USER__U_BAN_ASC",
+	USER_BY_AI_USER__U_BAN_DESC = "USER_BY_AI_USER__U_BAN_DESC",
+	USER_BY_AI_USER__U_CONFIRMED_ASC = "USER_BY_AI_USER__U_CONFIRMED_ASC",
+	USER_BY_AI_USER__U_CONFIRMED_DESC = "USER_BY_AI_USER__U_CONFIRMED_DESC",
+	USER_BY_AI_USER__U_SYSTEM_ASC = "USER_BY_AI_USER__U_SYSTEM_ASC",
+	USER_BY_AI_USER__U_SYSTEM_DESC = "USER_BY_AI_USER__U_SYSTEM_DESC"
 }
 /** Methods to use when ordering `Akce`. */
 export const enum AkcesOrderBy {
 	NATURAL = "NATURAL",
-	A_ID_ASC = "A_ID_ASC",
-	A_ID_DESC = "A_ID_DESC",
-	A_JMENO_ASC = "A_JMENO_ASC",
-	A_JMENO_DESC = "A_JMENO_DESC",
-	A_KDE_ASC = "A_KDE_ASC",
-	A_KDE_DESC = "A_KDE_DESC",
-	A_INFO_ASC = "A_INFO_ASC",
-	A_INFO_DESC = "A_INFO_DESC",
-	A_OD_ASC = "A_OD_ASC",
-	A_OD_DESC = "A_OD_DESC",
-	A_DO_ASC = "A_DO_ASC",
-	A_DO_DESC = "A_DO_DESC",
-	A_KAPACITA_ASC = "A_KAPACITA_ASC",
-	A_KAPACITA_DESC = "A_KAPACITA_DESC",
-	A_DOKUMENTY_ASC = "A_DOKUMENTY_ASC",
-	A_DOKUMENTY_DESC = "A_DOKUMENTY_DESC",
-	A_TIMESTAMP_ASC = "A_TIMESTAMP_ASC",
-	A_TIMESTAMP_DESC = "A_TIMESTAMP_DESC",
-	A_LOCK_ASC = "A_LOCK_ASC",
-	A_LOCK_DESC = "A_LOCK_DESC",
-	A_VISIBLE_ASC = "A_VISIBLE_ASC",
-	A_VISIBLE_DESC = "A_VISIBLE_DESC",
+	AKCE_ITEMS_BY_AI_ID_RODIC__COUNT_ASC = "AKCE_ITEMS_BY_AI_ID_RODIC__COUNT_ASC",
+	AKCE_ITEMS_BY_AI_ID_RODIC__COUNT_DESC = "AKCE_ITEMS_BY_AI_ID_RODIC__COUNT_DESC"
+}
+/** Methods to use when ordering `Event`. */
+export const enum EventsOrderBy {
+	NATURAL = "NATURAL",
+	ID_ASC = "ID_ASC",
+	ID_DESC = "ID_DESC",
+	SINCE_ASC = "SINCE_ASC",
+	SINCE_DESC = "SINCE_DESC",
+	IS_VISIBLE_ASC = "IS_VISIBLE_ASC",
+	IS_VISIBLE_DESC = "IS_VISIBLE_DESC",
+	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	ATTENDEE_USERS_BY_EVENT_ID__COUNT_ASC = "ATTENDEE_USERS_BY_EVENT_ID__COUNT_ASC",
+	ATTENDEE_USERS_BY_EVENT_ID__COUNT_DESC = "ATTENDEE_USERS_BY_EVENT_ID__COUNT_DESC",
+	ATTENDEE_EXTERNALS_BY_EVENT_ID__COUNT_ASC = "ATTENDEE_EXTERNALS_BY_EVENT_ID__COUNT_ASC",
+	ATTENDEE_EXTERNALS_BY_EVENT_ID__COUNT_DESC = "ATTENDEE_EXTERNALS_BY_EVENT_ID__COUNT_DESC"
+}
+/** Methods to use when ordering `FormResponse`. */
+export const enum FormResponsesOrderBy {
+	NATURAL = "NATURAL",
+	ID_ASC = "ID_ASC",
+	ID_DESC = "ID_DESC",
+	TYPE_ASC = "TYPE_ASC",
+	TYPE_DESC = "TYPE_DESC",
+	UPDATED_AT_ASC = "UPDATED_AT_ASC",
+	UPDATED_AT_DESC = "UPDATED_AT_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
 	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
 }
@@ -16232,90 +18973,24 @@ export const enum GalerieDirsOrderBy {
 	GD_ID_DESC = "GD_ID_DESC",
 	GD_ID_RODIC_ASC = "GD_ID_RODIC_ASC",
 	GD_ID_RODIC_DESC = "GD_ID_RODIC_DESC",
-	GD_NAME_ASC = "GD_NAME_ASC",
-	GD_NAME_DESC = "GD_NAME_DESC",
-	GD_LEVEL_ASC = "GD_LEVEL_ASC",
-	GD_LEVEL_DESC = "GD_LEVEL_DESC",
-	GD_PATH_ASC = "GD_PATH_ASC",
-	GD_PATH_DESC = "GD_PATH_DESC",
-	GD_HIDDEN_ASC = "GD_HIDDEN_ASC",
-	GD_HIDDEN_DESC = "GD_HIDDEN_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	GALERIE_FOTOS_BY_GF_ID_RODIC__COUNT_ASC = "GALERIE_FOTOS_BY_GF_ID_RODIC__COUNT_ASC",
+	GALERIE_FOTOS_BY_GF_ID_RODIC__COUNT_DESC = "GALERIE_FOTOS_BY_GF_ID_RODIC__COUNT_DESC"
 }
-/** Methods to use when ordering `Member`. */
-export const enum MembersOrderBy {
+/** Methods to use when ordering `Location`. */
+export const enum LocationsOrderBy {
 	NATURAL = "NATURAL",
-	U_ID_ASC = "U_ID_ASC",
-	U_ID_DESC = "U_ID_DESC",
-	U_LOGIN_ASC = "U_LOGIN_ASC",
-	U_LOGIN_DESC = "U_LOGIN_DESC",
-	U_PASS_ASC = "U_PASS_ASC",
-	U_PASS_DESC = "U_PASS_DESC",
-	U_JMENO_ASC = "U_JMENO_ASC",
-	U_JMENO_DESC = "U_JMENO_DESC",
-	U_PRIJMENI_ASC = "U_PRIJMENI_ASC",
-	U_PRIJMENI_DESC = "U_PRIJMENI_DESC",
-	U_POHLAVI_ASC = "U_POHLAVI_ASC",
-	U_POHLAVI_DESC = "U_POHLAVI_DESC",
-	U_EMAIL_ASC = "U_EMAIL_ASC",
-	U_EMAIL_DESC = "U_EMAIL_DESC",
-	U_TELEFON_ASC = "U_TELEFON_ASC",
-	U_TELEFON_DESC = "U_TELEFON_DESC",
-	U_NAROZENI_ASC = "U_NAROZENI_ASC",
-	U_NAROZENI_DESC = "U_NAROZENI_DESC",
-	U_RODNE_CISLO_ASC = "U_RODNE_CISLO_ASC",
-	U_RODNE_CISLO_DESC = "U_RODNE_CISLO_DESC",
-	U_POZNAMKY_ASC = "U_POZNAMKY_ASC",
-	U_POZNAMKY_DESC = "U_POZNAMKY_DESC",
-	U_TIMESTAMP_ASC = "U_TIMESTAMP_ASC",
-	U_TIMESTAMP_DESC = "U_TIMESTAMP_DESC",
-	U_LEVEL_ASC = "U_LEVEL_ASC",
-	U_LEVEL_DESC = "U_LEVEL_DESC",
-	U_GROUP_ASC = "U_GROUP_ASC",
-	U_GROUP_DESC = "U_GROUP_DESC",
-	U_SKUPINA_ASC = "U_SKUPINA_ASC",
-	U_SKUPINA_DESC = "U_SKUPINA_DESC",
-	U_DANCER_ASC = "U_DANCER_ASC",
-	U_DANCER_DESC = "U_DANCER_DESC",
-	U_BAN_ASC = "U_BAN_ASC",
-	U_BAN_DESC = "U_BAN_DESC",
-	U_LOCK_ASC = "U_LOCK_ASC",
-	U_LOCK_DESC = "U_LOCK_DESC",
-	U_CONFIRMED_ASC = "U_CONFIRMED_ASC",
-	U_CONFIRMED_DESC = "U_CONFIRMED_DESC",
-	U_SYSTEM_ASC = "U_SYSTEM_ASC",
-	U_SYSTEM_DESC = "U_SYSTEM_DESC",
-	U_STREET_ASC = "U_STREET_ASC",
-	U_STREET_DESC = "U_STREET_DESC",
-	U_CONSCRIPTION_NUMBER_ASC = "U_CONSCRIPTION_NUMBER_ASC",
-	U_CONSCRIPTION_NUMBER_DESC = "U_CONSCRIPTION_NUMBER_DESC",
-	U_ORIENTATION_NUMBER_ASC = "U_ORIENTATION_NUMBER_ASC",
-	U_ORIENTATION_NUMBER_DESC = "U_ORIENTATION_NUMBER_DESC",
-	U_DISTRICT_ASC = "U_DISTRICT_ASC",
-	U_DISTRICT_DESC = "U_DISTRICT_DESC",
-	U_CITY_ASC = "U_CITY_ASC",
-	U_CITY_DESC = "U_CITY_DESC",
-	U_POSTAL_CODE_ASC = "U_POSTAL_CODE_ASC",
-	U_POSTAL_CODE_DESC = "U_POSTAL_CODE_DESC",
-	U_NATIONALITY_ASC = "U_NATIONALITY_ASC",
-	U_NATIONALITY_DESC = "U_NATIONALITY_DESC",
-	U_MEMBER_SINCE_ASC = "U_MEMBER_SINCE_ASC",
-	U_MEMBER_SINCE_DESC = "U_MEMBER_SINCE_DESC",
-	U_MEMBER_UNTIL_ASC = "U_MEMBER_UNTIL_ASC",
-	U_MEMBER_UNTIL_DESC = "U_MEMBER_UNTIL_DESC",
-	U_CREATED_AT_ASC = "U_CREATED_AT_ASC",
-	U_CREATED_AT_DESC = "U_CREATED_AT_DESC",
-	U_TEACHER_ASC = "U_TEACHER_ASC",
-	U_TEACHER_DESC = "U_TEACHER_DESC",
-	U_GDPR_SIGNED_AT_ASC = "U_GDPR_SIGNED_AT_ASC",
-	U_GDPR_SIGNED_AT_DESC = "U_GDPR_SIGNED_AT_DESC",
-	S_ID_ASC = "S_ID_ASC",
-	S_ID_DESC = "S_ID_DESC",
-	S_NAME_ASC = "S_NAME_ASC",
-	S_NAME_DESC = "S_NAME_DESC",
-	PAYMENT_VALID_ASC = "PAYMENT_VALID_ASC",
-	PAYMENT_VALID_DESC = "PAYMENT_VALID_DESC"
+	ID_ASC = "ID_ASC",
+	ID_DESC = "ID_DESC",
+	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	ROOMS_BY_LOCATION__COUNT_ASC = "ROOMS_BY_LOCATION__COUNT_ASC",
+	ROOMS_BY_LOCATION__COUNT_DESC = "ROOMS_BY_LOCATION__COUNT_DESC",
+	LOCATION_ATTACHMENTS_BY_LOCATION_ID__COUNT_ASC = "LOCATION_ATTACHMENTS_BY_LOCATION_ID__COUNT_ASC",
+	LOCATION_ATTACHMENTS_BY_LOCATION_ID__COUNT_DESC = "LOCATION_ATTACHMENTS_BY_LOCATION_ID__COUNT_DESC",
+	TENANT_LOCATIONS_BY_LOCATION_ID__COUNT_ASC = "TENANT_LOCATIONS_BY_LOCATION_ID__COUNT_ASC",
+	TENANT_LOCATIONS_BY_LOCATION_ID__COUNT_DESC = "TENANT_LOCATIONS_BY_LOCATION_ID__COUNT_DESC"
 }
 /** Methods to use when ordering `Page`. */
 export const enum PagesOrderBy {
@@ -16324,14 +18999,6 @@ export const enum PagesOrderBy {
 	ID_DESC = "ID_DESC",
 	URL_ASC = "URL_ASC",
 	URL_DESC = "URL_DESC",
-	CONTENT_ASC = "CONTENT_ASC",
-	CONTENT_DESC = "CONTENT_DESC",
-	CREATED_AT_ASC = "CREATED_AT_ASC",
-	CREATED_AT_DESC = "CREATED_AT_DESC",
-	UPDATED_AT_ASC = "UPDATED_AT_ASC",
-	UPDATED_AT_DESC = "UPDATED_AT_DESC",
-	TITLE_ASC = "TITLE_ASC",
-	TITLE_DESC = "TITLE_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
 	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
 }
@@ -16340,22 +19007,6 @@ export const enum PageRevisionsOrderBy {
 	NATURAL = "NATURAL",
 	REV_NUMBER_ASC = "REV_NUMBER_ASC",
 	REV_NUMBER_DESC = "REV_NUMBER_DESC",
-	REV_OPERATION_ASC = "REV_OPERATION_ASC",
-	REV_OPERATION_DESC = "REV_OPERATION_DESC",
-	REV_TIMESTAMP_ASC = "REV_TIMESTAMP_ASC",
-	REV_TIMESTAMP_DESC = "REV_TIMESTAMP_DESC",
-	ID_ASC = "ID_ASC",
-	ID_DESC = "ID_DESC",
-	URL_ASC = "URL_ASC",
-	URL_DESC = "URL_DESC",
-	CONTENT_ASC = "CONTENT_ASC",
-	CONTENT_DESC = "CONTENT_DESC",
-	CREATED_AT_ASC = "CREATED_AT_ASC",
-	CREATED_AT_DESC = "CREATED_AT_DESC",
-	UPDATED_AT_ASC = "UPDATED_AT_ASC",
-	UPDATED_AT_DESC = "UPDATED_AT_DESC",
-	TITLE_ASC = "TITLE_ASC",
-	TITLE_DESC = "TITLE_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
 	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
 }
@@ -16364,8 +19015,6 @@ export const enum ParametersOrderBy {
 	NATURAL = "NATURAL",
 	PA_NAME_ASC = "PA_NAME_ASC",
 	PA_NAME_DESC = "PA_NAME_DESC",
-	PA_VALUE_ASC = "PA_VALUE_ASC",
-	PA_VALUE_DESC = "PA_VALUE_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
 	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
 }
@@ -16374,204 +19023,74 @@ export const enum PermissionsOrderBy {
 	NATURAL = "NATURAL",
 	PE_ID_ASC = "PE_ID_ASC",
 	PE_ID_DESC = "PE_ID_DESC",
-	PE_NAME_ASC = "PE_NAME_ASC",
-	PE_NAME_DESC = "PE_NAME_DESC",
-	PE_DESCRIPTION_ASC = "PE_DESCRIPTION_ASC",
-	PE_DESCRIPTION_DESC = "PE_DESCRIPTION_DESC",
-	PE_AKCE_ASC = "PE_AKCE_ASC",
-	PE_AKCE_DESC = "PE_AKCE_DESC",
-	PE_AKTUALITY_ASC = "PE_AKTUALITY_ASC",
-	PE_AKTUALITY_DESC = "PE_AKTUALITY_DESC",
-	PE_ANKETY_ASC = "PE_ANKETY_ASC",
-	PE_ANKETY_DESC = "PE_ANKETY_DESC",
-	PE_DOKUMENTY_ASC = "PE_DOKUMENTY_ASC",
-	PE_DOKUMENTY_DESC = "PE_DOKUMENTY_DESC",
-	PE_GALERIE_ASC = "PE_GALERIE_ASC",
-	PE_GALERIE_DESC = "PE_GALERIE_DESC",
-	PE_INZERCE_ASC = "PE_INZERCE_ASC",
-	PE_INZERCE_DESC = "PE_INZERCE_DESC",
-	PE_KONZOLE_ASC = "PE_KONZOLE_ASC",
-	PE_KONZOLE_DESC = "PE_KONZOLE_DESC",
-	PE_NABIDKA_ASC = "PE_NABIDKA_ASC",
-	PE_NABIDKA_DESC = "PE_NABIDKA_DESC",
-	PE_NASTENKA_ASC = "PE_NASTENKA_ASC",
-	PE_NASTENKA_DESC = "PE_NASTENKA_DESC",
-	PE_NOVINKY_ASC = "PE_NOVINKY_ASC",
-	PE_NOVINKY_DESC = "PE_NOVINKY_DESC",
-	PE_PARY_ASC = "PE_PARY_ASC",
-	PE_PARY_DESC = "PE_PARY_DESC",
-	PE_PLATBY_ASC = "PE_PLATBY_ASC",
-	PE_PLATBY_DESC = "PE_PLATBY_DESC",
-	PE_PERMISSIONS_ASC = "PE_PERMISSIONS_ASC",
-	PE_PERMISSIONS_DESC = "PE_PERMISSIONS_DESC",
-	PE_ROZPIS_ASC = "PE_ROZPIS_ASC",
-	PE_ROZPIS_DESC = "PE_ROZPIS_DESC",
-	PE_SKUPINY_ASC = "PE_SKUPINY_ASC",
-	PE_SKUPINY_DESC = "PE_SKUPINY_DESC",
-	PE_USERS_ASC = "PE_USERS_ASC",
-	PE_USERS_DESC = "PE_USERS_DESC",
-	PE_MAIN_ASC = "PE_MAIN_ASC",
-	PE_MAIN_DESC = "PE_MAIN_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	USERS_BY_U_GROUP__COUNT_ASC = "USERS_BY_U_GROUP__COUNT_ASC",
+	USERS_BY_U_GROUP__COUNT_DESC = "USERS_BY_U_GROUP__COUNT_DESC"
+}
+/** Methods to use when ordering `Person`. */
+export const enum PeopleOrderBy {
+	NATURAL = "NATURAL",
+	ID_ASC = "ID_ASC",
+	ID_DESC = "ID_DESC",
+	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	TENANT_PEOPLE_BY_PERSON_ID__COUNT_ASC = "TENANT_PEOPLE_BY_PERSON_ID__COUNT_ASC",
+	TENANT_PEOPLE_BY_PERSON_ID__COUNT_DESC = "TENANT_PEOPLE_BY_PERSON_ID__COUNT_DESC"
 }
 /** Methods to use when ordering `PlatbyCategory`. */
 export const enum PlatbyCategoriesOrderBy {
 	NATURAL = "NATURAL",
 	PC_ID_ASC = "PC_ID_ASC",
 	PC_ID_DESC = "PC_ID_DESC",
-	PC_NAME_ASC = "PC_NAME_ASC",
-	PC_NAME_DESC = "PC_NAME_DESC",
 	PC_SYMBOL_ASC = "PC_SYMBOL_ASC",
 	PC_SYMBOL_DESC = "PC_SYMBOL_DESC",
-	PC_AMOUNT_ASC = "PC_AMOUNT_ASC",
-	PC_AMOUNT_DESC = "PC_AMOUNT_DESC",
-	PC_DATE_DUE_ASC = "PC_DATE_DUE_ASC",
-	PC_DATE_DUE_DESC = "PC_DATE_DUE_DESC",
-	PC_VALID_FROM_ASC = "PC_VALID_FROM_ASC",
-	PC_VALID_FROM_DESC = "PC_VALID_FROM_DESC",
-	PC_VALID_TO_ASC = "PC_VALID_TO_ASC",
-	PC_VALID_TO_DESC = "PC_VALID_TO_DESC",
-	PC_USE_BASE_ASC = "PC_USE_BASE_ASC",
-	PC_USE_BASE_DESC = "PC_USE_BASE_DESC",
-	PC_USE_PREFIX_ASC = "PC_USE_PREFIX_ASC",
-	PC_USE_PREFIX_DESC = "PC_USE_PREFIX_DESC",
-	PC_ARCHIVE_ASC = "PC_ARCHIVE_ASC",
-	PC_ARCHIVE_DESC = "PC_ARCHIVE_DESC",
-	PC_VISIBLE_ASC = "PC_VISIBLE_ASC",
-	PC_VISIBLE_DESC = "PC_VISIBLE_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	PLATBY_CATEGORY_GROUPS_BY_PCG_ID_CATEGORY__COUNT_ASC = "PLATBY_CATEGORY_GROUPS_BY_PCG_ID_CATEGORY__COUNT_ASC",
+	PLATBY_CATEGORY_GROUPS_BY_PCG_ID_CATEGORY__COUNT_DESC = "PLATBY_CATEGORY_GROUPS_BY_PCG_ID_CATEGORY__COUNT_DESC",
+	PLATBY_ITEMS_BY_PI_ID_CATEGORY__COUNT_ASC = "PLATBY_ITEMS_BY_PI_ID_CATEGORY__COUNT_ASC",
+	PLATBY_ITEMS_BY_PI_ID_CATEGORY__COUNT_DESC = "PLATBY_ITEMS_BY_PI_ID_CATEGORY__COUNT_DESC"
 }
 /** Methods to use when ordering `PlatbyGroup`. */
 export const enum PlatbyGroupsOrderBy {
 	NATURAL = "NATURAL",
 	PG_ID_ASC = "PG_ID_ASC",
 	PG_ID_DESC = "PG_ID_DESC",
-	PG_TYPE_ASC = "PG_TYPE_ASC",
-	PG_TYPE_DESC = "PG_TYPE_DESC",
-	PG_NAME_ASC = "PG_NAME_ASC",
-	PG_NAME_DESC = "PG_NAME_DESC",
-	PG_DESCRIPTION_ASC = "PG_DESCRIPTION_ASC",
-	PG_DESCRIPTION_DESC = "PG_DESCRIPTION_DESC",
-	PG_BASE_ASC = "PG_BASE_ASC",
-	PG_BASE_DESC = "PG_BASE_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	PLATBY_CATEGORY_GROUPS_BY_PCG_ID_GROUP__COUNT_ASC = "PLATBY_CATEGORY_GROUPS_BY_PCG_ID_GROUP__COUNT_ASC",
+	PLATBY_CATEGORY_GROUPS_BY_PCG_ID_GROUP__COUNT_DESC = "PLATBY_CATEGORY_GROUPS_BY_PCG_ID_GROUP__COUNT_DESC",
+	PLATBY_GROUP_SKUPINAS_BY_PGS_ID_GROUP__COUNT_ASC = "PLATBY_GROUP_SKUPINAS_BY_PGS_ID_GROUP__COUNT_ASC",
+	PLATBY_GROUP_SKUPINAS_BY_PGS_ID_GROUP__COUNT_DESC = "PLATBY_GROUP_SKUPINAS_BY_PGS_ID_GROUP__COUNT_DESC"
 }
 /** Methods to use when ordering `PlatbyRaw`. */
 export const enum PlatbyRawsOrderBy {
 	NATURAL = "NATURAL",
 	PR_ID_ASC = "PR_ID_ASC",
 	PR_ID_DESC = "PR_ID_DESC",
-	PR_RAW_ASC = "PR_RAW_ASC",
-	PR_RAW_DESC = "PR_RAW_DESC",
 	PR_HASH_ASC = "PR_HASH_ASC",
 	PR_HASH_DESC = "PR_HASH_DESC",
-	PR_SORTED_ASC = "PR_SORTED_ASC",
-	PR_SORTED_DESC = "PR_SORTED_DESC",
-	PR_DISCARDED_ASC = "PR_DISCARDED_ASC",
-	PR_DISCARDED_DESC = "PR_DISCARDED_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	PLATBY_ITEMS_BY_PI_ID_RAW__COUNT_ASC = "PLATBY_ITEMS_BY_PI_ID_RAW__COUNT_ASC",
+	PLATBY_ITEMS_BY_PI_ID_RAW__COUNT_DESC = "PLATBY_ITEMS_BY_PI_ID_RAW__COUNT_DESC"
 }
-/** Methods to use when ordering `Skupiny`. */
-export const enum SkupiniesOrderBy {
+/** Methods to use when ordering `Tenant`. */
+export const enum TenantsOrderBy {
 	NATURAL = "NATURAL",
-	S_ID_ASC = "S_ID_ASC",
-	S_ID_DESC = "S_ID_DESC",
-	S_NAME_ASC = "S_NAME_ASC",
-	S_NAME_DESC = "S_NAME_DESC",
-	S_DESCRIPTION_ASC = "S_DESCRIPTION_ASC",
-	S_DESCRIPTION_DESC = "S_DESCRIPTION_DESC",
-	S_COLOR_RGB_ASC = "S_COLOR_RGB_ASC",
-	S_COLOR_RGB_DESC = "S_COLOR_RGB_DESC",
-	S_COLOR_TEXT_ASC = "S_COLOR_TEXT_ASC",
-	S_COLOR_TEXT_DESC = "S_COLOR_TEXT_DESC",
-	S_LOCATION_ASC = "S_LOCATION_ASC",
-	S_LOCATION_DESC = "S_LOCATION_DESC",
-	S_VISIBLE_ASC = "S_VISIBLE_ASC",
-	S_VISIBLE_DESC = "S_VISIBLE_DESC",
+	ID_ASC = "ID_ASC",
+	ID_DESC = "ID_DESC",
 	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
-}
-/** Methods to use when ordering `UsersSkupiny`. */
-export const enum UsersSkupiniesOrderBy {
-	NATURAL = "NATURAL",
-	US_ID_ASC = "US_ID_ASC",
-	US_ID_DESC = "US_ID_DESC",
-	US_COLOR_ASC = "US_COLOR_ASC",
-	US_COLOR_DESC = "US_COLOR_DESC",
-	US_PLATBA_MESIC_ASC = "US_PLATBA_MESIC_ASC",
-	US_PLATBA_MESIC_DESC = "US_PLATBA_MESIC_DESC",
-	US_PLATBA_CTVRTROK_ASC = "US_PLATBA_CTVRTROK_ASC",
-	US_PLATBA_CTVRTROK_DESC = "US_PLATBA_CTVRTROK_DESC",
-	US_PLATBA_PULROK_ASC = "US_PLATBA_PULROK_ASC",
-	US_PLATBA_PULROK_DESC = "US_PLATBA_PULROK_DESC",
-	US_POPIS_ASC = "US_POPIS_ASC",
-	US_POPIS_DESC = "US_POPIS_DESC",
-	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
-}
-/** Methods to use when ordering `Video`. */
-export const enum VideosOrderBy {
-	NATURAL = "NATURAL",
-	V_ID_ASC = "V_ID_ASC",
-	V_ID_DESC = "V_ID_DESC",
-	V_URI_ASC = "V_URI_ASC",
-	V_URI_DESC = "V_URI_DESC",
-	V_TITLE_ASC = "V_TITLE_ASC",
-	V_TITLE_DESC = "V_TITLE_DESC",
-	V_AUTHOR_ASC = "V_AUTHOR_ASC",
-	V_AUTHOR_DESC = "V_AUTHOR_DESC",
-	V_DESCRIPTION_ASC = "V_DESCRIPTION_ASC",
-	V_DESCRIPTION_DESC = "V_DESCRIPTION_DESC",
-	V_PLAYLIST_ASC = "V_PLAYLIST_ASC",
-	V_PLAYLIST_DESC = "V_PLAYLIST_DESC",
-	V_CREATED_AT_ASC = "V_CREATED_AT_ASC",
-	V_CREATED_AT_DESC = "V_CREATED_AT_DESC",
-	V_UPDATED_AT_ASC = "V_UPDATED_AT_ASC",
-	V_UPDATED_AT_DESC = "V_UPDATED_AT_DESC",
-	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
-}
-/** Methods to use when ordering `VideoList`. */
-export const enum VideoListsOrderBy {
-	NATURAL = "NATURAL",
-	VL_ID_ASC = "VL_ID_ASC",
-	VL_ID_DESC = "VL_ID_DESC",
-	VL_URL_ASC = "VL_URL_ASC",
-	VL_URL_DESC = "VL_URL_DESC",
-	VL_TITLE_ASC = "VL_TITLE_ASC",
-	VL_TITLE_DESC = "VL_TITLE_DESC",
-	VL_DESCRIPTION_ASC = "VL_DESCRIPTION_ASC",
-	VL_DESCRIPTION_DESC = "VL_DESCRIPTION_DESC",
-	VL_COUNT_ASC = "VL_COUNT_ASC",
-	VL_COUNT_DESC = "VL_COUNT_DESC",
-	VL_CREATED_AT_ASC = "VL_CREATED_AT_ASC",
-	VL_CREATED_AT_DESC = "VL_CREATED_AT_DESC",
-	VL_LAST_CHECKED_ASC = "VL_LAST_CHECKED_ASC",
-	VL_LAST_CHECKED_DESC = "VL_LAST_CHECKED_DESC",
-	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
-}
-/** Methods to use when ordering `VideoSource`. */
-export const enum VideoSourcesOrderBy {
-	NATURAL = "NATURAL",
-	VS_ID_ASC = "VS_ID_ASC",
-	VS_ID_DESC = "VS_ID_DESC",
-	VS_URL_ASC = "VS_URL_ASC",
-	VS_URL_DESC = "VS_URL_DESC",
-	VS_TITLE_ASC = "VS_TITLE_ASC",
-	VS_TITLE_DESC = "VS_TITLE_DESC",
-	VS_DESCRIPTION_ASC = "VS_DESCRIPTION_ASC",
-	VS_DESCRIPTION_DESC = "VS_DESCRIPTION_DESC",
-	VS_CREATED_AT_ASC = "VS_CREATED_AT_ASC",
-	VS_CREATED_AT_DESC = "VS_CREATED_AT_DESC",
-	VS_LAST_CHECKED_ASC = "VS_LAST_CHECKED_ASC",
-	VS_LAST_CHECKED_DESC = "VS_LAST_CHECKED_DESC",
-	PRIMARY_KEY_ASC = "PRIMARY_KEY_ASC",
-	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC"
+	PRIMARY_KEY_DESC = "PRIMARY_KEY_DESC",
+	TENANT_ATTACHMENTS_BY_TENANT_ID__COUNT_ASC = "TENANT_ATTACHMENTS_BY_TENANT_ID__COUNT_ASC",
+	TENANT_ATTACHMENTS_BY_TENANT_ID__COUNT_DESC = "TENANT_ATTACHMENTS_BY_TENANT_ID__COUNT_DESC",
+	TENANT_PEOPLE_BY_TENANT_ID__COUNT_ASC = "TENANT_PEOPLE_BY_TENANT_ID__COUNT_ASC",
+	TENANT_PEOPLE_BY_TENANT_ID__COUNT_DESC = "TENANT_PEOPLE_BY_TENANT_ID__COUNT_DESC",
+	COHORT_GROUPS_BY_TENANT__COUNT_ASC = "COHORT_GROUPS_BY_TENANT__COUNT_ASC",
+	COHORT_GROUPS_BY_TENANT__COUNT_DESC = "COHORT_GROUPS_BY_TENANT__COUNT_DESC",
+	TENANT_LOCATIONS_BY_TENANT_ID__COUNT_ASC = "TENANT_LOCATIONS_BY_TENANT_ID__COUNT_ASC",
+	TENANT_LOCATIONS_BY_TENANT_ID__COUNT_DESC = "TENANT_LOCATIONS_BY_TENANT_ID__COUNT_DESC"
 }
 export const enum CrmCohort {
 	DANCER = "DANCER",
@@ -17096,4 +19615,4 @@ export const Zeus = <
 export const Selector = <T extends keyof ValueTypes>(key: T) => ZeusSelect<ValueTypes[T]>();
   
 
-export const Gql = Chain('http://localhost:3000/graphql')
+export const Gql = Chain('https://api.rozpisovnik.cz/graphql')

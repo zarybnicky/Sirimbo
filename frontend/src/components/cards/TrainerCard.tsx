@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { makeStyles, Typography, Paper } from '@material-ui/core';
-import { CellPlugin } from '@react-page/editor';
-import { defaultSlate } from '../ReactPage';
 
 const useStyles = makeStyles((theme) => ({
   item: {
@@ -52,32 +50,4 @@ export const TrainerCard = (props: TrainerCardProps & { children: React.ReactNod
     {props.children}
     <img className="image" src={props.image} alt={props.name} />
   </Paper>;
-};
-
-export const TrainerCardPlugin: CellPlugin<TrainerCardProps> = {
-  Renderer: ({ children, data }) => <TrainerCard {...data}>
-    {children}
-  </TrainerCard>,
-
-  id: 'app-trainer-card-plugin',
-  title: 'TrainerCard',
-  version: 1,
-  createInitialData: () => ({
-    name: 'Franta Nový',
-    image: '/images/services-pripravka.png',
-  }),
-  createInitialChildren: () => [[{ plugin: defaultSlate }]],
-  childConstraints: {
-    maxChildren: 1,
-  },
-  controls: {
-    type: 'autoform',
-    schema: {
-      required: [],
-      properties: {
-        name: { type: 'string' },
-        image: { type: 'string' },
-      },
-    },
-  },
 };
