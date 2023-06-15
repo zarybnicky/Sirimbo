@@ -47,7 +47,6 @@ function Agenda({date, events, length, onDoubleClickEvent, onSelectEvent}) {
   const _adjustHeader = () => {
     if (!tbodyRef.current) return
 
-    let header = headerRef.current
     let firstRow = tbodyRef.current.firstChild
 
     if (!firstRow) return
@@ -64,8 +63,6 @@ function Agenda({date, events, length, onDoubleClickEvent, onSelectEvent}) {
   }
 
   let end = localizer.add(date, length, 'day')
-  let range = localizer.range(date, end, 'day')
-
   events = events.filter((event) => inRange(event, localizer.startOf(date, 'day'), localizer.endOf(end, 'day')))
   events.sort((a, b) => +a.start - +b.start)
 

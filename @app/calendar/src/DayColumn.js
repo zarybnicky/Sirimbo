@@ -1,15 +1,12 @@
 import React, { createRef } from 'react'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
-
 import Selection, { getBoundsForNode, isEvent } from './Selection'
 import * as TimeSlotUtils from './utils/TimeSlots'
 import { isSelected } from './utils/selection'
-
 import * as DayEventLayout from './utils/DayEventLayout'
 import TimeSlotGroup from './TimeSlotGroup'
 import TimeGridEvent from './TimeGridEvent'
-import { DayLayoutAlgorithmPropType } from './utils/propTypes'
 import localizer from './localizer'
 import { EventContainer } from './addons/dragAndDrop/EventContainerWrapper'
 
@@ -60,8 +57,7 @@ class DayColumn extends React.Component {
       }
     } else if (
       isNow &&
-      (localizer.neq(prevProps.min, min, 'minutes') ||
-        localizer.neq(prevProps.max, max, 'minutes'))
+      (localizer.neq(prevProps.min, min, 'minutes') || localizer.neq(prevProps.max, max, 'minutes'))
     ) {
       this.positionTimeIndicator()
     }
@@ -102,12 +98,7 @@ class DayColumn extends React.Component {
   }
 
   render() {
-    const {
-      date,
-      isNow,
-      resource,
-    } = this.props
-
+    const {date, isNow, resource, events, backgroundEvents} = this.props
     let { slotMetrics } = this
     let { selecting, top, height, startDate, endDate } = this.state
 
@@ -126,19 +117,12 @@ class DayColumn extends React.Component {
         slotMetrics={slotMetrics}
       >
         {slotMetrics.groups.map((grp, idx) => (
-          <TimeSlotGroup
-            key={idx}
-            group={grp}
-            resource={resource}
-          />
+          <TimeSlotGroup key={idx} group={grp} resource={resource} />
         ))}
         <EventContainer resource={resource} slotMetrics={slotMetrics}>
           <div className='rbc-events-container'>
-            {this.renderEvents({
-              events: this.props.backgroundEvents,
-              isBackgroundEvent: true,
-            })}
-            {this.renderEvents({ events: this.props.events })}
+            {this.renderEvents({events: backgroundEvents, isBackgroundEvent: true})}
+            {this.renderEvents({ events })}
           </div>
         </EventContainer>
 
@@ -158,14 +142,7 @@ class DayColumn extends React.Component {
   }
 
   renderEvents = ({ events, isBackgroundEvent }) => {
-    let {
-      selected,
-      step,
-      timeslots,
-      dayLayoutAlgorithm,
-      resizable,
-    } = this.props
-
+    let {selected, step, timeslots, dayLayoutAlgorithm, resizable} = this.props
     const { slotMetrics } = this
 
     let styledEvents = DayEventLayout.getStyledEvents({
@@ -377,7 +354,7 @@ DayColumn.propTypes = {
   dragThroughEvents: PropTypes.bool,
   resource: PropTypes.any,
 
-  dayLayoutAlgorithm: DayLayoutAlgorithmPropType,
+  dayLayoutAlgorithm: PropTypes.oneOf(['overlap', 'no-overlap']),
 }
 
 DayColumn.defaultProps = {

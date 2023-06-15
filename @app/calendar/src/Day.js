@@ -1,9 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-
 import { navigate } from './utils/constants'
-import { DayLayoutAlgorithmPropType } from './utils/propTypes'
-
 import TimeGrid from './TimeGrid'
 import localizer from './localizer'
 
@@ -14,7 +11,6 @@ class Day extends React.Component {
       min = localizer.startOf(new Date(), 'day'),
       max = localizer.endOf(new Date(), 'day'),
       scrollToTime = localizer.startOf(new Date(), 'day'),
-      enableAutoScroll = true,
       ...props
     } = this.props
     return (
@@ -25,7 +21,6 @@ class Day extends React.Component {
         min={min}
         max={max}
         scrollToTime={scrollToTime}
-        enableAutoScroll={enableAutoScroll}
       />
     )
   }
@@ -45,7 +40,6 @@ Day.propTypes = {
   max: PropTypes.instanceOf(Date),
 
   scrollToTime: PropTypes.instanceOf(Date),
-  enableAutoScroll: PropTypes.bool,
   showMultiDayTimes: PropTypes.bool,
 
   resizable: PropTypes.bool,
@@ -65,10 +59,8 @@ Day.propTypes = {
   onDrillDown: PropTypes.func,
   getDrilldownView: PropTypes.func.isRequired,
 
-  dayLayoutAlgorithm: DayLayoutAlgorithmPropType,
-
+  dayLayoutAlgorithm: PropTypes.oneOf(['overlap', 'no-overlap']),
   doShowMoreDrillDown: PropTypes.bool,
-
   popup: PropTypes.bool,
   handleDragStart: PropTypes.func,
 }

@@ -2,10 +2,6 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { uncontrollable } from 'uncontrollable'
 import clsx from 'clsx'
-import {
-  DayLayoutAlgorithmPropType,
-  views as componentViews,
-} from './utils/propTypes'
 
 import { navigate, views } from './utils/constants'
 import VIEWS from './Views'
@@ -191,38 +187,6 @@ class Calendar extends React.Component {
     selected: PropTypes.object,
 
     /**
-     * An array of built-in view names to allow the calendar to display.
-     * accepts either an array of builtin view names,
-     *
-     * ```jsx
-     * views={['month', 'day', 'agenda']}
-     * ```
-     * or an object hash of the view name and the component (or boolean for builtin).
-     *
-     * ```jsx
-     * views={{
-     *   month: true,
-     *   week: false,
-     *   myweek: WorkWeekViewComponent,
-     * }}
-     * ```
-     *
-     * Custom views can be any React component, that implements the following
-     * interface:
-     *
-     * ```js
-     * interface View {
-     *   static title(date: Date, { ...props }): string
-     *   static navigate(date: Date, action: 'PREV' | 'NEXT' | 'DATE'): Date
-     * }
-     * ```
-     *
-     * @View
-     ['month', 'week', 'day', 'agenda']
-     */
-    views: componentViews,
-
-    /**
      * Determines whether the drill down should occur when clicking on the "+_x_ more" link.
      * If `popup` is false, and `doShowMoreDrillDown` is true, the drill down will occur as usual.
      * If `popup` is false, and `doShowMoreDrillDown` is false, the drill down will not occur and the `onShowMore` function will trigger.
@@ -319,12 +283,7 @@ class Calendar extends React.Component {
      */
     scrollToTime: PropTypes.instanceOf(Date),
 
-    /**
-     * Determines whether the scroll pane is automatically scrolled down or not.
-     */
-    enableAutoScroll: PropTypes.bool,
-
-    dayLayoutAlgorithm: DayLayoutAlgorithmPropType,
+    dayLayoutAlgorithm: PropTypes.oneOf(['overlap', 'no-overlap']),
   }
 
   static defaultProps = {
@@ -332,7 +291,6 @@ class Calendar extends React.Component {
     backgroundEvents: [],
     popup: false,
     view: views.MONTH,
-    views: [views.MONTH, views.WEEK, views.DAY, views.AGENDA],
     step: 30,
     length: 30,
 

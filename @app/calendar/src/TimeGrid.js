@@ -1,20 +1,16 @@
 import React, { Component, createRef } from 'react'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
-import * as animationFrame from 'dom-helpers/animationFrame'
 import memoize from 'memoize-one'
-
 import DayColumn from './DayColumn'
 import TimeGutter from './TimeGutter'
 import TimeGridHeader from './TimeGridHeader'
 import PopOverlay from './PopOverlay'
-
 import getWidth from 'dom-helpers/width'
 import getPosition from 'dom-helpers/position'
 import { views } from './utils/constants'
 import { inRange, sortEvents } from './utils/eventLevels'
 import Resources from './utils/Resources'
-import { DayLayoutAlgorithmPropType } from './utils/propTypes'
 import localizer from './localizer'
 
 export default class TimeGrid extends Component {
@@ -72,13 +68,7 @@ export default class TimeGrid extends Component {
   }
 
   handleShowMore = (events, date, cell, slot, target) => {
-    const {
-      popup,
-      onDrillDown,
-      onShowMore,
-      getDrilldownView,
-      doShowMoreDrillDown,
-    } = this.props
+    const {popup, onDrillDown, onShowMore, getDrilldownView, doShowMoreDrillDown} = this.props
     this.clearSelection()
 
     if (popup) {
@@ -116,48 +106,31 @@ export default class TimeGrid extends Component {
   }
 
   renderEvents(range, events, backgroundEvents, now) {
-    let { min, max, dayLayoutAlgorithm } =
-      this.props
+    let { min, max } = this.props
 
     const resources = this.memoizedResources(this.props.resources)
     const groupedEvents = resources.groupEvents(events)
     const groupedBackgroundEvents = resources.groupEvents(backgroundEvents)
 
     return resources.map(([id, resource], i) =>
-      range.map((date, jj) => {
-        let daysEvents = (groupedEvents.get(id) || []).filter((event) =>
-          localizer.inRange(
-            date,
-            event.start, event.end,
-            'day'
-          )
-        )
-
-        let daysBackgroundEvents = (
-          groupedBackgroundEvents.get(id) || []
-        ).filter((event) =>
-          localizer.inRange(
-            date,
-            event.start, event.end,
-            'day'
-          )
-        )
-
-        return (
-          <DayColumn
-            {...this.props}
-            min={localizer.merge(date, min)}
-            max={localizer.merge(date, max)}
-            resource={resource && id}
-            isNow={localizer.isSameDate(date, now)}
-            key={i + '-' + jj}
-            date={date}
-            events={daysEvents}
-            backgroundEvents={daysBackgroundEvents}
-            dayLayoutAlgorithm={dayLayoutAlgorithm}
-          />
-        )
-      })
+      range.map((date, jj) => (
+        <DayColumn
+          {...this.props}
+          min={localizer.merge(date, min)}
+          max={localizer.merge(date, max)}
+          resource={resource && id}
+          isNow={localizer.isSameDate(date, now)}
+          key={i + '-' + jj}
+          date={date}
+          events={(groupedEvents.get(id) || []).filter((event) =>
+            localizer.inRange(date, event.start, event.end, 'day')
+          )}
+          backgroundEvents={(groupedBackgroundEvents.get(id) || []).filter((event) =>
+            localizer.inRange(date, event.start, event.end, 'day')
+          )}
+          dayLayoutAlgorithm={this.props.dayLayoutAlgorithm}
+        />
+      ))
     )
   }
 
@@ -212,11 +185,11 @@ export default class TimeGrid extends Component {
 
     return (
       <div
+        ref={this.containerRef}
         className={clsx(
           'rbc-time-view',
           resources && 'rbc-time-view-resources'
         )}
-        ref={this.containerRef}
       >
         <TimeGridHeader
           range={range}
@@ -250,12 +223,7 @@ export default class TimeGrid extends Component {
             timeslots={this.props.timeslots}
             className="rbc-time-gutter"
           />
-          {this.renderEvents(
-            range,
-            rangeEvents,
-            rangeBackgroundEvents,
-            new Date()
-          )}
+          {this.renderEvents(range, rangeEvents, rangeBackgroundEvents, new Date())}
         </div>
       </div>
     )
@@ -263,10 +231,7 @@ export default class TimeGrid extends Component {
 
   renderOverlay() {
     let overlay = this.state?.overlay ?? {}
-    let {
-      selected,
-      handleDragStart,
-    } = this.props
+    let {selected, handleDragStart} = this.props
 
     const onHide = () => this.setState({ overlay: null })
 
@@ -286,11 +251,7 @@ export default class TimeGrid extends Component {
     )
   }
 
-  overlayDisplay = () => {
-    this.setState({
-      overlay: null,
-    })
-  }
+  overlayDisplay = () => this.setState({overlay: null})
 
   clearSelection() {
     clearTimeout(this._selectTimer)
@@ -316,7 +277,7 @@ export default class TimeGrid extends Component {
 
   applyScroll() {
     // If auto-scroll is disabled, we don't actually apply the scroll
-    if (this._scrollRatio != null && this.props.enableAutoScroll === true) {
+    if (this._scrollRatio) {
       const content = this.contentRef.current
       content.scrollTop = content.scrollHeight * this._scrollRatio
       // Only do this once
@@ -348,7 +309,6 @@ TimeGrid.propTypes = {
   max: PropTypes.instanceOf(Date).isRequired,
 
   scrollToTime: PropTypes.instanceOf(Date).isRequired,
-  enableAutoScroll: PropTypes.bool,
   showMultiDayTimes: PropTypes.bool,
 
   resizable: PropTypes.bool,
@@ -368,7 +328,7 @@ TimeGrid.propTypes = {
   onDrillDown: PropTypes.func,
   getDrilldownView: PropTypes.func.isRequired,
 
-  dayLayoutAlgorithm: DayLayoutAlgorithmPropType,
+  dayLayoutAlgorithm: PropTypes.oneOf(['overlap', 'no-overlap']),
 
   doShowMoreDrillDown: PropTypes.bool,
 

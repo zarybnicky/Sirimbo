@@ -1,7 +1,7 @@
 import React, { Fragment, useCallback, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import events from '../../resources/events'
-import { Calendar, Views, DateLocalizer } from 'react-big-calendar'
+import { Calendar, Views } from 'react-big-calendar'
 import DemoLink from '../../DemoLink.component'
 // Storybook cannot alias this, so you would use 'react-big-calendar/lib/addons/dragAndDrop'
 import withDragAndDrop from '../../../src/addons/dragAndDrop'
@@ -10,7 +10,7 @@ import '../../../src/addons/dragAndDrop/styles.scss'
 
 const DragAndDropCalendar = withDragAndDrop(Calendar)
 
-export default function DragAndDrop({ localizer }) {
+export default function DragAndDrop() {
   const [myEvents, setMyEvents] = useState(events)
 
   const moveEvent = useCallback(
@@ -55,7 +55,6 @@ export default function DragAndDrop({ localizer }) {
           defaultDate={defaultDate}
           defaultView={Views.MONTH}
           events={myEvents}
-          localizer={localizer}
           onEventDrop={moveEvent}
           onEventResize={resizeEvent}
           popup
@@ -64,7 +63,4 @@ export default function DragAndDrop({ localizer }) {
       </div>
     </Fragment>
   )
-}
-DragAndDrop.propTypes = {
-  localizer: PropTypes.instanceOf(DateLocalizer),
 }

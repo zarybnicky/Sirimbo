@@ -118,7 +118,7 @@ export interface CalendarProps<TEvent extends object = Event, TResource extends 
     onSelecting?: (range: { start: Date; end: Date }) => boolean | undefined;
     onRangeChange?: (range: Date[] | { start: Date; end: Date }, view?: View) => void | undefined;
     selected?: any;
-    views?: ViewsProps<TEvent, TResource> | undefined;
+    views?: ViewsProps | undefined;
     doShowMoreDrillDown?: boolean | undefined;
     drilldownView?: View | null | undefined;
     getDrilldownView?:
@@ -134,7 +134,6 @@ export interface CalendarProps<TEvent extends object = Event, TResource extends 
     min?: Date | undefined;
     max?: Date | undefined;
     scrollToTime?: Date | undefined;
-    enableAutoScroll?: boolean | undefined;
     dayLayoutAlgorithm?: DayLayoutAlgorithm | DayLayoutFunction<TEvent> | undefined;
     resources?: TResource[] | undefined;
     defaultView?: View | undefined;
