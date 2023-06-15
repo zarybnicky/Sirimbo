@@ -2,10 +2,7 @@ import React, { Fragment, useMemo, useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { Calendar, Views, DateLocalizer } from 'react-big-calendar'
 import DemoLink from '../../DemoLink.component'
-// Storybook cannot alias this, so you would use 'react-big-calendar/lib/addons/dragAndDrop'
 import withDragAndDrop from '../../../src/addons/dragAndDrop'
-// Storybook cannot alias this, so you would use 'react-big-calendar/lib/addons/dragAndDrop/styles.scss'
-import '../../../src/addons/dragAndDrop/styles.scss'
 
 const DragAndDropCalendar = withDragAndDrop(Calendar)
 
@@ -162,7 +159,6 @@ export default function DnDResource({ localizer }) {
           resizable
           resources={resourceMap}
           scrollToTime={scrollToTime}
-          selectable
           showMultiDayTimes={true}
           step={15}
         />

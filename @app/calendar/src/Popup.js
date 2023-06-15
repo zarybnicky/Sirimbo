@@ -4,7 +4,7 @@ import getOffset from 'dom-helpers/offset'
 
 import EventCell from './EventCell'
 import { isSelected } from './utils/selection'
-import localizer from './localizer'
+import { format, gte, lt } from './localizer'
 
 /**
  * Changes to react-overlays cause issue with auto positioning,
@@ -81,7 +81,7 @@ function Pop({
   return (
     <div style={style} className="rbc-overlay" ref={popperRef}>
       <div className="rbc-overlay-header">
-        {localizer.format(slotStart, 'cccc MMM dd')}
+        {format(slotStart, 'cccc MMM dd')}
       </div>
       {events.map((event, idx) => (
         <EventCell
@@ -91,8 +91,8 @@ function Pop({
           onSelect={onSelect}
           onDoubleClick={onDoubleClick}
           onKeyPress={onKeyPress}
-          continuesPrior={localizer.lt(event.end, slotStart, 'day')}
-          continuesAfter={localizer.gte(event.start, slotEnd, 'day')}
+          continuesPrior={lt(event.end, slotStart, 'day')}
+          continuesAfter={gte(event.start, slotEnd, 'day')}
           slotStart={slotStart}
           slotEnd={slotEnd}
           selected={isSelected(event, selected)}

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import clsx from 'clsx'
-import localizer from './localizer'
+import { ceil, diff } from './localizer'
 import EventWrapper from './addons/dragAndDrop/EventWrapper';
 
 class EventCell extends React.Component {
@@ -25,11 +25,7 @@ class EventCell extends React.Component {
     } = this.props
 
     let { start, end, title, allDay } = event;
-
-    let showAsAllDay =
-      isAllDay ||
-      allDay ||
-      localizer.diff(start, localizer.ceil(end, 'day'), 'day') > 1
+    let showAsAllDay = isAllDay || allDay || diff(start, ceil(end, 'day'), 'day') > 1;
 
     return (
       <EventWrapper {...this.props} type="date">

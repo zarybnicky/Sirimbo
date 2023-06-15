@@ -4,10 +4,7 @@ import events from '../../resources/events'
 import { Calendar, Views, DateLocalizer } from 'react-big-calendar'
 import Card from '../../resources/Card'
 import DemoLink from '../../DemoLink.component'
-// Storybook cannot alias this, so you would use 'react-big-calendar/lib/addons/dragAndDrop'
 import withDragAndDrop from '../../../src/addons/dragAndDrop'
-// Storybook cannot alias this, so you would use 'react-big-calendar/lib/addons/dragAndDrop/styles.scss'
-import '../../../src/addons/dragAndDrop/styles.scss'
 
 const DragAndDropCalendar = withDragAndDrop(Calendar)
 
@@ -169,7 +166,6 @@ export default function DnDOutsideResource({ localizer }) {
           onEventResize={resizeEvent}
           onSelectSlot={newEvent}
           resizable
-          selectable
         />
       </div>
     </Fragment>

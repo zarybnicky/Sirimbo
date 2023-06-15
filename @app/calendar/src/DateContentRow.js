@@ -1,15 +1,14 @@
 import React, { createRef } from 'react'
 import clsx from 'clsx'
 import getHeight from 'dom-helpers/height'
-import qsa from 'dom-helpers/querySelectorAll'
 import PropTypes from 'prop-types'
 
 import BackgroundCells from './BackgroundCells'
 import EventRow from './EventRow'
 import EventEndingRow from './EventEndingRow'
-import * as DateSlotMetrics from './utils/DateSlotMetrics'
+import { getSlotMetrics } from './utils/DateSlotMetrics'
 import WeekWrapper from './addons/dragAndDrop/WeekWrapper'
-import localizer from './localizer'
+import { isSameDate } from './localizer'
 
 class DateContentRow extends React.Component {
   constructor(...args) {
@@ -19,7 +18,7 @@ class DateContentRow extends React.Component {
     this.headingRowRef = createRef()
     this.eventRowRef = createRef()
 
-    this.slotMetrics = DateSlotMetrics.getSlotMetrics()
+    this.slotMetrics = getSlotMetrics()
   }
 
   handleSelectSlot = (slot) => {
@@ -31,7 +30,7 @@ class DateContentRow extends React.Component {
   handleShowMore = (slot, target) => {
     const { range, onShowMore } = this.props
     let metrics = this.slotMetrics(this.props)
-    let row = qsa(this.containerRef.current, '.rbc-row-bg')[0]
+    let row = this.containerRef.current?.querySelector('.rbc-row-bg');
 
     let cell
     if (row) cell = row.children[slot - 1]
@@ -46,13 +45,9 @@ class DateContentRow extends React.Component {
   }
 
   getRowLimit() {
-    /* Guessing this only gets called on the dummyRow */
     const eventHeight = getHeight(this.eventRowRef.current)
-    const headingHeight = this.headingRowRef?.current
-      ? getHeight(this.headingRowRef.current)
-      : 0
+    const headingHeight = this.headingRowRef?.current ? getHeight(this.headingRowRef.current) : 0
     const eventSpace = getHeight(this.containerRef.current) - headingHeight
-
     return Math.max(Math.floor(eventSpace / eventHeight), 1)
   }
 
@@ -62,10 +57,7 @@ class DateContentRow extends React.Component {
     return renderHeader({
       date,
       key: `header_${index}`,
-      className: clsx(
-        'rbc-date-cell',
-        localizer.isSameDate(date, new Date()) && 'rbc-now'
-      ),
+      className: clsx('rbc-date-cell', isSameDate(date, new Date()) && 'rbc-now'),
     })
   }
 
@@ -73,9 +65,7 @@ class DateContentRow extends React.Component {
     let { className, range, renderHeader } = this.props
     return (
       <div className={className} ref={this.containerRef}>
-        <div
-          className='rbc-row-content'
-        >
+        <div className='rbc-row-content'>
           {renderHeader && (
             <div className="rbc-row" ref={this.headingRowRef}>
               {range.map(this.renderHeadingCell)}
@@ -99,7 +89,6 @@ class DateContentRow extends React.Component {
       range,
       className,
       selected,
-      selectable,
       renderForMeasure,
       renderHeader,
       onSelect,
@@ -132,7 +121,6 @@ class DateContentRow extends React.Component {
         <BackgroundCells
           date={date}
           range={range}
-          selectable={selectable}
           container={this.getContainer}
           onSelectStart={onSelectStart}
           onSelectEnd={onSelectEnd}
@@ -146,18 +134,14 @@ class DateContentRow extends React.Component {
               {range.map(this.renderHeadingCell)}
             </div>
           )}
-            <WeekWrapper isAllDay={isAllDay} {...eventRowProps}>
-              {levels.map((segs, idx) => (
-                <EventRow key={idx} segments={segs} {...eventRowProps} />
-              ))}
-              {!!extra.length && (
-                <EventEndingRow
-                  segments={extra}
-                  onShowMore={this.handleShowMore}
-                  {...eventRowProps}
-                />
-              )}
-            </WeekWrapper>
+          <WeekWrapper isAllDay={isAllDay} {...eventRowProps}>
+            {levels.map((segs, idx) => (
+              <EventRow key={idx} segments={segs} {...eventRowProps} />
+            ))}
+            {!!extra.length && (
+              <EventEndingRow segments={extra} onShowMore={this.handleShowMore} {...eventRowProps} />
+            )}
+          </WeekWrapper>
         </div>
       </div>
     )
@@ -176,7 +160,6 @@ DateContentRow.propTypes = {
 
   container: PropTypes.func,
   selected: PropTypes.object,
-  selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
 
   onShowMore: PropTypes.func,
   onSelectSlot: PropTypes.func,

@@ -3,8 +3,7 @@ import React, { useRef, useEffect } from 'react'
 import getWidth from 'dom-helpers/width'
 
 import { navigate } from './utils/constants'
-import { inRange } from './utils/eventLevels'
-import localizer from './localizer'
+import { add, agendaHeaderFormat, endOf, format, gt, inEventRange, isSameDate, lt, startOf } from './localizer'
 import clsx from 'clsx'
 
 function Agenda({date, events, length, onDoubleClickEvent, onSelectEvent}) {
@@ -24,20 +23,20 @@ function Agenda({date, events, length, onDoubleClickEvent, onSelectEvent}) {
     let label = "Celý den";
     if (!event.allDay) {
       if (localizer.eq(start, end)) {
-        label = localizer.format(start, 'p')
-      } else if (localizer.isSameDate(start, end)) {
-        label = localizer.format({ start, end }, 'timeRangeFormat')
-      } else if (localizer.isSameDate(day, start)) {
-        label = localizer.format(start, 'p')
-      } else if (localizer.isSameDate(day, end)) {
-        label = localizer.format(end, 'p')
+        label = format(start, 'p')
+      } else if (isSameDate(start, end)) {
+        label = format({ start, end }, 'timeRangeFormat')
+      } else if (isSameDate(day, start)) {
+        label = format(start, 'p')
+      } else if (isSameDate(day, end)) {
+        label = format(end, 'p')
       }
     }
 
     return (
       <span className={clsx({
-        'rbc-continues-prior': localizer.gt(day, start, 'day'),
-        'rbc-continues-after': localizer.lt(day, end, 'day'),
+        'rbc-continues-prior': gt(day, start, 'day'),
+        'rbc-continues-after': lt(day, end, 'day'),
       })}>
         {label}
       </span>
@@ -62,9 +61,9 @@ function Agenda({date, events, length, onDoubleClickEvent, onSelectEvent}) {
     }
   }
 
-  let end = localizer.add(date, length, 'day')
-  events = events.filter((event) => inRange(event, localizer.startOf(date, 'day'), localizer.endOf(end, 'day')))
-  events.sort((a, b) => +a.start - +b.start)
+  let end = add(date, length, 'day')
+  events = events.filter((event) => inEventRange({ event, range: {start: startOf(date, 'day'), end: endOf(end, 'day')}}));
+  events.sort((a, b) => +a.start - +b.start);
 
   if (!events.length) {
     return (
@@ -97,12 +96,12 @@ function Agenda({date, events, length, onDoubleClickEvent, onSelectEvent}) {
         <table className="rbc-agenda-table">
           <tbody ref={tbodyRef}>
             {events
-             .filter((e) => inRange(e, localizer.startOf(day, 'day'), localizer.endOf(day, 'day')))
+             .filter((e) => inRange(e, startOf(day, 'day'), endOf(day, 'day')))
              .map((event, idx) => (
                <tr key={dayKey + '_' + idx}>
                  {idx === 0 ? (
                    <td rowSpan={events.length} className="rbc-agenda-date-cell">
-                     {localizer.format(day, 'ccc MMM dd')}
+                     {format(day, 'ccc MMM dd')}
                    </td>
                  ) : null}
 
@@ -140,7 +139,7 @@ Agenda.defaultProps = {
 }
 
 Agenda.range = (start, { length = Agenda.defaultProps.length, }) => {
-  let end = localizer.add(start, length, 'day')
+  let end = add(start, length, 'day')
   return { start, end }
 }
 
@@ -151,17 +150,17 @@ Agenda.navigate = (
 ) => {
   switch (action) {
     case navigate.PREVIOUS:
-      return localizer.add(date, -length, 'day')
+      return add(date, -length, 'day')
     case navigate.NEXT:
-      return localizer.add(date, length, 'day')
+      return add(date, length, 'day')
     default:
       return date
   }
 }
 
 Agenda.title = (start, { length = Agenda.defaultProps.length }) => {
-  let end = localizer.add(start, length, 'day')
-  return localizer.format({ start, end }, 'agendaHeaderFormat')
+  let end = add(start, length, 'day')
+  return agendaHeaderFormat({ start, end })
 }
 Agenda.name = "Agenda";
 

@@ -9,9 +9,9 @@ import PopOverlay from './PopOverlay'
 import getWidth from 'dom-helpers/width'
 import getPosition from 'dom-helpers/position'
 import { views } from './utils/constants'
-import { inRange, sortEvents } from './utils/eventLevels'
+import { inRange } from './utils/eventLevels'
 import Resources from './utils/Resources'
-import localizer from './localizer'
+import { sortEvents, merge, isSameDate, inRange, startAndEndAreDateOnly } from './localizer'
 
 export default class TimeGrid extends Component {
   constructor(props) {
@@ -116,17 +116,17 @@ export default class TimeGrid extends Component {
       range.map((date, jj) => (
         <DayColumn
           {...this.props}
-          min={localizer.merge(date, min)}
-          max={localizer.merge(date, max)}
+          min={merge(date, min)}
+          max={merge(date, max)}
           resource={resource && id}
-          isNow={localizer.isSameDate(date, now)}
+          isNow={isSameDate(date, now)}
           key={i + '-' + jj}
           date={date}
           events={(groupedEvents.get(id) || []).filter((event) =>
-            localizer.inRange(date, event.start, event.end, 'day')
+            inRange(date, event.start, event.end, 'day')
           )}
           backgroundEvents={(groupedBackgroundEvents.get(id) || []).filter((event) =>
-            localizer.inRange(date, event.start, event.end, 'day')
+            inRange(date, event.start, event.end, 'day')
           )}
           dayLayoutAlgorithm={this.props.dayLayoutAlgorithm}
         />
@@ -165,8 +165,8 @@ export default class TimeGrid extends Component {
 
         if (
           event.allDay ||
-          localizer.startAndEndAreDateOnly(eStart, eEnd) ||
-          (!showMultiDayTimes && !localizer.isSameDate(eStart, eEnd))
+          startAndEndAreDateOnly(eStart, eEnd) ||
+          (!showMultiDayTimes && !isSameDate(eStart, eEnd))
         ) {
           allDayEvents.push(event)
         } else {
@@ -197,7 +197,6 @@ export default class TimeGrid extends Component {
           width={width}
           selected={selected}
           resources={this.memoizedResources(resources)}
-          selectable={this.props.selectable}
           scrollRef={this.scrollRef}
           onSelectSlot={this.handleSelectAllDaySlot}
           onSelectEvent={this.handleSelectEvent}
@@ -217,8 +216,8 @@ export default class TimeGrid extends Component {
           <TimeGutter
             date={start}
             ref={this.gutterRef}
-            min={localizer.merge(start, min)}
-            max={localizer.merge(start, max)}
+            min={merge(start, min)}
+            max={merge(start, max)}
             step={this.props.step}
             timeslots={this.props.timeslots}
             className="rbc-time-gutter"
@@ -288,8 +287,8 @@ export default class TimeGrid extends Component {
   calculateScroll(props = this.props) {
     const { min, max, scrollToTime } = props
 
-    const diffMillis = localizer.diff(localizer.merge(scrollToTime, min), scrollToTime, 'milliseconds')
-    const totalMillis = localizer.diff(min, max, 'milliseconds')
+    const diffMillis = diff(merge(scrollToTime, min), scrollToTime, 'milliseconds')
+    const totalMillis = diff(min, max, 'milliseconds')
 
     this._scrollRatio = diffMillis / totalMillis
   }
@@ -313,9 +312,7 @@ TimeGrid.propTypes = {
 
   resizable: PropTypes.bool,
   width: PropTypes.number,
-
   selected: PropTypes.object,
-  selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
 
   onNavigate: PropTypes.func,
   onSelectSlot: PropTypes.func,

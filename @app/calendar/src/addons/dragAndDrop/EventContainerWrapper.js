@@ -10,7 +10,7 @@ import Selection, {
 } from '../../Selection'
 import TimeGridEvent from '../../TimeGridEvent'
 import { eventTimes, pointInColumn } from './common'
-import localizer from '../../localizer'
+import { add, max, min, timeRangeEndFormat, timeRangeFormat, timeRangeStartFormat } from '../../localizer'
 
 class EventContainerWrapper extends React.Component {
   static propTypes = {
@@ -41,11 +41,7 @@ class EventContainerWrapper extends React.Component {
 
   update(event, { startDate, endDate, top, height }) {
     const { event: lastEvent } = this.state
-    if (
-      lastEvent &&
-      startDate === lastEvent.start &&
-      endDate === lastEvent.end
-    ) {
+    if (lastEvent && startDate === lastEvent.start && endDate === lastEvent.end) {
       return
     }
 
@@ -67,7 +63,7 @@ class EventContainerWrapper extends React.Component {
     )
 
     const { duration } = eventTimes(event)
-    let newEnd = localizer.add(newSlot, duration, 'milliseconds')
+    let newEnd = add(newSlot, duration, 'milliseconds')
     this.update(event, slotMetrics.getRange(newSlot, newEnd, false, true))
   }
 
@@ -79,29 +75,17 @@ class EventContainerWrapper extends React.Component {
     let { start, end } = eventTimes(event)
     let newRange
     if (direction === 'UP') {
-      const newStart = localizer.min(
-        newTime,
-        slotMetrics.closestSlotFromDate(end, -1)
-      )
+      const newStart = min(newTime, slotMetrics.closestSlotFromDate(end, -1))
       // Get the new range based on the new start
       // but don't overwrite the end date as it could be outside this day boundary.
       newRange = slotMetrics.getRange(newStart, end)
-      newRange = {
-        ...newRange,
-        endDate: end,
-      }
+      newRange = {...newRange, endDate: end}
     } else if (direction === 'DOWN') {
       // Get the new range based on the new end
       // but don't overwrite the start date as it could be outside this day boundary.
-      const newEnd = localizer.max(
-        newTime,
-        slotMetrics.closestSlotFromDate(start)
-      )
+      const newEnd = max(newTime, slotMetrics.closestSlotFromDate(start))
       newRange = slotMetrics.getRange(start, newEnd)
-      newRange = {
-        ...newRange,
-        startDate: start,
-      }
+      newRange = {...newRange, startDate: start}
     }
 
     this.update(event, newRange)
@@ -259,13 +243,11 @@ class EventContainerWrapper extends React.Component {
     const startsBeforeDay = slotMetrics.startsBeforeDay(start)
     const startsAfterDay = slotMetrics.startsAfterDay(end)
 
-    let format = 'eventTimeRangeFormat'
-    if (startsBeforeDay) format = 'eventTimeRangeEndFormat'
-    else if (startsAfterDay) format = 'eventTimeRangeStartFormat'
-
     let label
     if (startsBeforeDay && startsAfterDay) label = "Celý den"
-    else label = localizer.format({ start, end }, format)
+    if (startsBeforeDay) label = timeRangeEndFormat({ start, end })
+    else if (startsAfterDay) format = timeRangeStartFormat({ start, end })
+    else format = timeRangeFormat({ start, end })
 
     return React.cloneElement(children, {
       children: (

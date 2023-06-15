@@ -14,10 +14,7 @@ export default function withDragAndDrop(Calendar) {
       onDragStart: PropTypes.func,
       onDragOver: PropTypes.func,
       onDropFromOutside: PropTypes.func,
-
       dragFromOutsideItem: PropTypes.func,
-
-      selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
       resizable: PropTypes.bool,
     }
 
@@ -76,12 +73,10 @@ export default function withDragAndDrop(Calendar) {
     }
 
     render() {
-      const { selectable, ...props } = this.props
       const { interacting } = this.state
 
       delete props.onEventDrop
       delete props.onEventResize
-      props.selectable = selectable ? 'ignoreEvents' : false
 
       const elementPropsWithDropFromOutside = this.props.onDropFromOutside
             ? {onDragOver: this.props.onDragOver || this.defaultOnDragOver} : {}

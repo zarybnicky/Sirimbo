@@ -2,15 +2,15 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { navigate } from './utils/constants'
 import TimeGrid from './TimeGrid'
-import localizer from './localizer'
+import { startOf, endOf, add, dayRangeHeaderFormat } from './localizer'
 
 class Week extends React.Component {
   render() {
     let {
       date,
-      min = localizer.startOf(new Date(), 'day'),
-      max = localizer.endOf(new Date(), 'day'),
-      scrollToTime = localizer.startOf(new Date(), 'day'),
+      min = startOf(new Date(), 'day'),
+      max = endOf(new Date(), 'day'),
+      scrollToTime = startOf(new Date(), 'day'),
       ...props
     } = this.props
     let range = Week.range(date, this.props)
@@ -48,7 +48,6 @@ Week.propTypes = {
   width: PropTypes.number,
 
   selected: PropTypes.object,
-  selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
 
   onNavigate: PropTypes.func,
   onSelectSlot: PropTypes.func,
@@ -74,10 +73,10 @@ Week.defaultProps = TimeGrid.defaultProps
 Week.navigate = (date, action) => {
   switch (action) {
     case navigate.PREVIOUS:
-      return localizer.add(date, -1, 'week')
+      return add(date, -1, 'week')
 
     case navigate.NEXT:
-      return localizer.add(date, 1, 'week')
+      return add(date, 1, 'week')
 
     default:
       return date
@@ -85,16 +84,14 @@ Week.navigate = (date, action) => {
 }
 
 Week.range = (date) => {
-  let firstOfWeek = localizer.startOfWeek()
-  let start = localizer.startOf(date, 'week', firstOfWeek)
-  let end = localizer.endOf(date, 'week', firstOfWeek)
-
-  return localizer.range(start, end)
+  let start = startOf(date, 'week', firstOfWeek)
+  let end = endOf(date, 'week', firstOfWeek)
+  return range(start, end)
 }
 
 Week.title = (date) => {
   let [start, ...rest] = Week.range(date)
-  return localizer.format({ start, end: rest.pop() }, 'dayRangeHeaderFormat')
+  return dayRangeHeaderFormat({ start, end: rest.pop() })
 }
 Week.name = "Týden";
 

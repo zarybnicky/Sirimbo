@@ -6,7 +6,6 @@ import withDragAndDrop, {
   EventInteractionArgs,
 } from 'react-big-calendar/lib/addons/dragAndDrop';
 import 'react-big-calendar/lib/sass/styles.scss';
-import 'react-big-calendar/lib/addons/dragAndDrop/styles.scss';
 import { ScheduleRangeDocument } from '@app/graphql/Schedule';
 import { useQuery } from 'urql';
 import { formatCoupleName } from '../../frontend/lib/format-name';
@@ -157,7 +156,6 @@ function DnDResource() {
         resources={resources}
         min={min}
         max={max}
-        selectable
         showMultiDayTimes={true}
         step={15}
       />

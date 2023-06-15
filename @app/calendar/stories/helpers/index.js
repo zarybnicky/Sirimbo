@@ -5,17 +5,8 @@ import 'moment-timezone'
 import React from 'react'
 
 import { Calendar as BaseCalendar, momentLocalizer } from '../../src'
-
-// For Testing SASS styling
-import '../../src/sass/styles.scss'
-import '../../src/addons/dragAndDrop/styles.scss'
-
 import withDragAndDrop from '../../src/addons/dragAndDrop'
-
 export { Views } from '../../src'
-
-// uncomment for timezone testing in Storybook
-//moment.tz.setDefault('America/Los_Angeles')
 
 const localizer = momentLocalizer(moment)
 
@@ -33,7 +24,6 @@ export const DragableCalendar = (props) => {
   return (
     <DragAndDropCalendar
       popup
-      selectable
       localizer={localizer}
       onEventDrop={action('event dropped')}
       onSelectEvent={action('event selected')}

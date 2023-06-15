@@ -11,8 +11,8 @@ import * as animationFrame from 'dom-helpers/animationFrame'
 import PopOverlay from './PopOverlay'
 import DateContentRow from './DateContentRow'
 
-import { inRange, sortEvents } from './utils/eventLevels'
-import localizer from './localizer'
+import { inRange } from './utils/eventLevels'
+import { sortEvents, add, firstVisibleDay, format, isSameDate, lastVisibleDay, neq, range, visibleDays } from './localizer'
 
 let eventsForWeek = (evts, start, end) => evts.filter((e) => inRange(e, start, end))
 
@@ -35,7 +35,7 @@ class MonthView extends React.Component {
   static getDerivedStateFromProps({ date }, state) {
     return {
       date,
-      needLimitMeasure: localizer.neq(date, state.date, 'month'),
+      needLimitMeasure: neq(date, state.date, 'month'),
     }
   }
 
@@ -72,7 +72,7 @@ class MonthView extends React.Component {
 
   render() {
     let { date, className } = this.props,
-      month = localizer.visibleDays(date),
+      month = visibleDays(date),
       weeks = chunk(month, 7)
 
     this._weekCount = weeks.length
@@ -94,16 +94,10 @@ class MonthView extends React.Component {
   }
 
   renderWeek = (week, weekIdx) => {
-    let {events, selectable, selected, date} = this.props
+    let {events, selected, date} = this.props
     const { needLimitMeasure } = this.state
 
-    // let's not mutate props
-    const weeksEvents = eventsForWeek(
-      [...events],
-      week[0],
-      week[week.length - 1],
-    )
-
+    const weeksEvents = eventsForWeek([...events], week[0], week[week.length - 1])
     weeksEvents.sort((a, b) => sortEvents(a, b))
 
     return (
@@ -116,7 +110,6 @@ class MonthView extends React.Component {
         range={week}
         events={weeksEvents}
         selected={selected}
-        selectable={selectable}
         renderHeader={this.readerDateHeading}
         renderForMeasure={needLimitMeasure}
         onShowMore={this.handleShowMore}
@@ -131,10 +124,10 @@ class MonthView extends React.Component {
 
   readerDateHeading = ({ date, className, ...props }) => {
     let { date: currentDate, getDrilldownView } = this.props
-    let isOffRange = localizer.neq(date, currentDate, 'month')
-    let isCurrent = localizer.isSameDate(date, currentDate)
+    let isOffRange = neq(date, currentDate, 'month')
+    let isCurrent = isSameDate(date, currentDate)
     let drilldownView = getDrilldownView(date)
-    let label = localizer.format(date, 'dd')
+    let label = format(date, 'dd')
 
     return (
       <div
@@ -166,10 +159,10 @@ class MonthView extends React.Component {
     let first = row[0]
     let last = row[row.length - 1]
 
-    return localizer.range(first, last, 'day').map((day, idx) => (
+    return range(first, last, 'day').map((day, idx) => (
       <div key={'header_' + idx} className="rbc-header">
         <span role="columnheader" aria-sort="none">
-          {localizer.format(day, 'cccc')}
+          {format(day, 'cccc')}
         </span>
       </div>
     ))
@@ -301,9 +294,7 @@ MonthView.propTypes = {
   scrollToTime: PropTypes.instanceOf(Date),
   resizable: PropTypes.bool,
   width: PropTypes.number,
-
   selected: PropTypes.object,
-  selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
 
   onNavigate: PropTypes.func,
   onSelectSlot: PropTypes.func,
@@ -320,25 +311,25 @@ MonthView.propTypes = {
 }
 
 MonthView.range = (date) => {
-  let start = localizer.firstVisibleDay(date)
-  let end = localizer.lastVisibleDay(date)
+  let start = firstVisibleDay(date)
+  let end = lastVisibleDay(date)
   return { start, end }
 }
 
 MonthView.navigate = (date, action) => {
   switch (action) {
     case navigate.PREVIOUS:
-      return localizer.add(date, -1, 'month')
+      return add(date, -1, 'month')
 
     case navigate.NEXT:
-      return localizer.add(date, 1, 'month')
+      return add(date, 1, 'month')
 
     default:
       return date
   }
 }
 
-MonthView.title = (date) => localizer.format(date, 'MMMM yyyy')
+MonthView.title = (date) => format(date, 'MMMM yyyy')
 MonthView.name = "Měsíc";
 
 export default MonthView

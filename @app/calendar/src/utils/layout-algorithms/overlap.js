@@ -1,6 +1,6 @@
 import sortBy from 'lodash/sortBy'
 
-class Event {
+class ProxyEvent {
   constructor(data, { slotMetrics }) {
     const { start, startDate, end, endDate, top, height } =
       slotMetrics.getRange(data.start, data.end)
@@ -128,9 +128,7 @@ export default function getStyledEvents({
 }) {
   // Create proxy events and order them so that we don't have
   // to fiddle with z-indexes.
-  const proxies = events.map(
-    (event) => new Event(event, { slotMetrics })
-  )
+  const proxies = events.map((event) => new ProxyEvent(event, { slotMetrics }))
   const eventsInRenderOrder = sortByRender(proxies)
 
   // Group overlapping events, while keeping order.

@@ -1,7 +1,7 @@
 import React, { createRef } from 'react'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
-import localizer from './localizer'
+import { isSameDate, neq } from './localizer'
 
 import { dateCellSelection, getSlotAtX, pointInBox } from './utils/selection'
 import Selection, { getBoundsForNode, isEvent, isShowMore } from './Selection'
@@ -15,18 +15,11 @@ class BackgroundCells extends React.Component {
   }
 
   componentDidMount() {
-    this.props.selectable && this._selectable()
+    this._selectable()
   }
 
   componentWillUnmount() {
     this._teardownSelectable()
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!prevProps.selectable && this.props.selectable) this._selectable()
-
-    if (prevProps.selectable && !this.props.selectable)
-      this._teardownSelectable()
   }
 
   render() {
@@ -40,8 +33,8 @@ class BackgroundCells extends React.Component {
             className={clsx(
               'rbc-day-bg',
               selecting && index >= startIdx && index <= endIdx && 'rbc-selected-cell',
-              localizer.isSameDate(date, new Date()) && 'rbc-today',
-              currentDate && localizer.neq(currentDate, date, 'month') && 'rbc-off-range-bg'
+              isSameDate(date, new Date()) && 'rbc-today',
+              currentDate && neq(currentDate, date, 'month') && 'rbc-off-range-bg'
             )}
           />
         ))}
@@ -60,13 +53,7 @@ class BackgroundCells extends React.Component {
 
         if (pointInBox(rowBox, point)) {
           let currentCell = getSlotAtX(rowBox, point.x, range.length)
-
-          this._selectSlot({
-            startIdx: currentCell,
-            endIdx: currentCell,
-            action: actionType,
-            box: point,
-          })
+          this._selectSlot({startIdx: currentCell, endIdx: currentCell, action: actionType, box: point,})
         }
       }
 
@@ -89,24 +76,12 @@ class BackgroundCells extends React.Component {
         ;({ startIdx, endIdx } = dateCellSelection(this._initial, nodeBox, box, range.length))
       }
 
-      this.setState({
-        selecting: true,
-        startIdx,
-        endIdx,
-      })
+      this.setState({ selecting: true, startIdx, endIdx })
     })
 
-    selector.on('beforeSelect', (box) => {
-      if (this.props.selectable !== 'ignoreEvents') return
-
-      return !isEvent(this.containerRef.current, box)
-    })
-
+    selector.on('beforeSelect', (box) => !isEvent(this.containerRef.current, box))
     selector.on('click', (point) => selectorClicksHandler(point, 'click'))
-
-    selector.on('doubleClick', (point) =>
-      selectorClicksHandler(point, 'doubleClick')
-    )
+    selector.on('doubleClick', (point) => selectorClicksHandler(point, 'doubleClick'))
 
     selector.on('select', (bounds) => {
       this._selectSlot({ ...this.state, action: 'select', bounds })
@@ -130,7 +105,7 @@ class BackgroundCells extends React.Component {
         action,
         bounds,
         box,
-          resourceId: this.props.resourceId,
+        resourceId: this.props.resourceId,
       })
   }
 }
@@ -139,7 +114,6 @@ BackgroundCells.propTypes = {
   date: PropTypes.instanceOf(Date),
 
   container: PropTypes.func,
-  selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
 
   onSelectSlot: PropTypes.func.isRequired,
   onSelectEnd: PropTypes.func,

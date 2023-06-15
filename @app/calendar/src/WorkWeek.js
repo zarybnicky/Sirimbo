@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import Week from './Week'
 import TimeGrid from './TimeGrid'
-import localizer from './localizer'
+import { startOf, endOf, dayRangeHeaderFormat } from './localizer'
 
 function workWeekRange(date, options) {
   return Week.range(date, options).filter(
@@ -14,9 +14,9 @@ class WorkWeek extends React.Component {
   render() {
     let {
       date,
-      min = localizer.startOf(new Date(), 'day'),
-      max = localizer.endOf(new Date(), 'day'),
-      scrollToTime = localizer.startOf(new Date(), 'day'),
+      min = startOf(new Date(), 'day'),
+      max = endOf(new Date(), 'day'),
+      scrollToTime = startOf(new Date(), 'day'),
       ...props
     } = this.props
     let range = workWeekRange(date, this.props)
@@ -48,7 +48,7 @@ WorkWeek.navigate = Week.navigate
 
 WorkWeek.title = (date) => {
   let [start, ...rest] = workWeekRange(date)
-  return localizer.format({ start, end: rest.pop() }, 'dayRangeHeaderFormat')
+  return dayRangeHeaderFormat({ start, end: rest.pop() }, '')
 }
 WorkWeek.name = "Pracovní týden";
 

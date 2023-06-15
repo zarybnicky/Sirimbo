@@ -1,12 +1,8 @@
 import React, { Fragment, useCallback, useMemo, useState } from 'react'
-import PropTypes from 'prop-types'
 import events from '../../resources/events'
 import { Calendar, Views } from 'react-big-calendar'
 import DemoLink from '../../DemoLink.component'
-// Storybook cannot alias this, so you would use 'react-big-calendar/lib/addons/dragAndDrop'
 import withDragAndDrop from '../../../src/addons/dragAndDrop'
-// Storybook cannot alias this, so you would use 'react-big-calendar/lib/addons/dragAndDrop/styles.scss'
-import '../../../src/addons/dragAndDrop/styles.scss'
 
 const DragAndDropCalendar = withDragAndDrop(Calendar)
 

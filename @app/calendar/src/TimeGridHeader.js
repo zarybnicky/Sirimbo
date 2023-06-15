@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import clsx from 'clsx'
 import React from 'react'
 import DateContentRow from './DateContentRow'
-import localizer from './localizer'
+import { format, isSameDate } from './localizer'
 
 class TimeGridHeader extends React.Component {
   handleHeaderClick = (date, view, e) => {
@@ -17,11 +17,9 @@ class TimeGridHeader extends React.Component {
 
     return range.map((date, i) => {
       let drilldownView = getDrilldownView(date)
-      let label = localizer.format(date, 'dd eee')
-
       let header = (
         <span role="columnheader" aria-sort="none">
-          {label}
+          {format(date, 'dd eee')}
         </span>
       )
 
@@ -30,7 +28,7 @@ class TimeGridHeader extends React.Component {
           key={i}
           className={clsx(
             'rbc-header',
-            localizer.isSameDate(date, today) && 'rbc-today'
+            isSameDate(date, today) && 'rbc-today'
           )}
         >
           {drilldownView ? (
@@ -49,12 +47,7 @@ class TimeGridHeader extends React.Component {
     })
   }
   renderRow = (resource) => {
-    let {
-      events,
-      selectable,
-      range,
-      resizable,
-    } = this.props
+    let {events, range, resizable} = this.props
 
     const resourceId = resource.resourceId
     let eventsToDisplay = resource
@@ -68,7 +61,6 @@ class TimeGridHeader extends React.Component {
         events={eventsToDisplay}
         resourceId={resourceId}
         className="rbc-allday-cell"
-        selectable={selectable}
         selected={this.props.selected}
         onSelect={this.props.onSelectEvent}
         onShowMore={this.props.onShowMore}
@@ -87,7 +79,6 @@ class TimeGridHeader extends React.Component {
       resources,
       range,
       events,
-      selectable,
       scrollRef,
       resizable,
     } = this.props
@@ -131,7 +122,6 @@ class TimeGridHeader extends React.Component {
               events={groupedEvents.get(id) || []}
               resourceId={resource && id}
               className="rbc-allday-cell"
-              selectable={selectable}
               selected={this.props.selected}
               onSelect={this.props.onSelectEvent}
               onShowMore={this.props.onShowMore}
@@ -152,12 +142,10 @@ TimeGridHeader.propTypes = {
   events: PropTypes.array.isRequired,
   resources: PropTypes.object,
 
-  resizable: PropTypes.bool,
   width: PropTypes.number,
-
   selected: PropTypes.object,
-  selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
 
+  resizable: PropTypes.bool,
   onSelectSlot: PropTypes.func,
   onSelectEvent: PropTypes.func,
   onDoubleClickEvent: PropTypes.func,

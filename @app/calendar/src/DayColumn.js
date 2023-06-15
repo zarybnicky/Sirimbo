@@ -2,12 +2,11 @@ import React, { createRef } from 'react'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
 import Selection, { getBoundsForNode, isEvent } from './Selection'
-import * as TimeSlotUtils from './utils/TimeSlots'
+import { getSlotMetrics } from './utils/TimeSlotMetrics'
 import { isSelected } from './utils/selection'
 import * as DayEventLayout from './utils/DayEventLayout'
-import TimeSlotGroup from './TimeSlotGroup'
 import TimeGridEvent from './TimeGridEvent'
-import localizer from './localizer'
+import { eq, gt, lte, max, min, neq, timeRangeEndFormat, timeRangeFormat, timeRangeStartFormat } from './localizer'
 import { EventContainer } from './addons/dragAndDrop/EventContainerWrapper'
 
 class DayColumn extends React.Component {
@@ -17,13 +16,12 @@ class DayColumn extends React.Component {
   constructor(...args) {
     super(...args)
 
-    this.slotMetrics = TimeSlotUtils.getSlotMetrics(this.props)
+    this.slotMetrics = getSlotMetrics(this.props)
     this.containerRef = createRef()
   }
 
   componentDidMount() {
-    this.props.selectable && this._selectable()
-
+    this._selectable()
     if (this.props.isNow) {
       this.setTimeIndicatorPositionUpdateInterval()
     }
@@ -35,10 +33,6 @@ class DayColumn extends React.Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.selectable && !this.props.selectable) this._selectable()
-    if (!nextProps.selectable && this.props.selectable)
-      this._teardownSelectable()
-
     this.slotMetrics = this.slotMetrics.update(nextProps)
   }
 
@@ -50,14 +44,14 @@ class DayColumn extends React.Component {
 
       if (isNow) {
         const tail =
-          localizer.eq(prevProps.date, date, 'minutes') &&
+          eq(prevProps.date, date, 'minutes') &&
           prevState.timeIndicatorPosition === this.state.timeIndicatorPosition
 
         this.setTimeIndicatorPositionUpdateInterval(tail)
       }
     } else if (
       isNow &&
-      (localizer.neq(prevProps.min, min, 'minutes') || localizer.neq(prevProps.max, max, 'minutes'))
+      (neq(prevProps.min, min, 'minutes') || neq(prevProps.max, max, 'minutes'))
     ) {
       this.positionTimeIndicator()
     }
@@ -116,8 +110,12 @@ class DayColumn extends React.Component {
         )}
         slotMetrics={slotMetrics}
       >
-        {slotMetrics.groups.map((grp, idx) => (
-          <TimeSlotGroup key={idx} group={grp} resource={resource} />
+        {slotMetrics.groups.map((group, idx) => (
+          <div key={idx} className="rbc-timeslot-group">
+            {group.map((_, idx) => (
+              <div key={idx} className='rbc-time-slot' />
+            ))}
+          </div>
         ))}
         <EventContainer resource={resource} slotMetrics={slotMetrics}>
           <div className='rbc-events-container'>
@@ -128,7 +126,7 @@ class DayColumn extends React.Component {
 
         {selecting && (
           <div className="rbc-slot-selection" style={{ top, height }}>
-            <span>{localizer.format(selectDates, 'timeRangeFormat')}</span>
+            <span>{timeRangeFormat(selectDates)}</span>
           </div>
         )}
         {isNow && this.intervalTriggered && (
@@ -158,13 +156,11 @@ class DayColumn extends React.Component {
       const startsBeforeDay = slotMetrics.startsBeforeDay(start)
       const startsAfterDay = slotMetrics.startsAfterDay(end)
 
-      let format = 'timeRangeFormat'
-      if (startsBeforeDay) format = 'timeRangeEndFormat'
-      else if (startsAfterDay) format = 'timeRangeStartFormat'
-
       let label
       if (startsBeforeDay && startsAfterDay) label = "Celý den"
-      else label = localizer.format({ start, end }, format)
+      if (startsBeforeDay) label = timeRangeEndFormat({ start, end })
+      else if (startsAfterDay) format = timeRangeStartFormat({ start, end })
+      else format = timeRangeFormat({ start, end })
 
       return (
         <TimeGridEvent
@@ -198,8 +194,7 @@ class DayColumn extends React.Component {
 
       if (onSelecting) {
         if (
-          (localizer.eq(current.startDate, start, 'minutes') &&
-            localizer.eq(current.endDate, end, 'minutes')) ||
+          (eq(current.startDate, start, 'minutes') && eq(current.endDate, end, 'minutes')) ||
           onSelecting({ start, end, resourceId: this.props.resource }) === false
         )
           return
@@ -225,21 +220,17 @@ class DayColumn extends React.Component {
       }
 
       let initialSlot = this._initialSlot
-      if (localizer.lte(initialSlot, currentSlot)) {
+      if (lte(initialSlot, currentSlot)) {
         currentSlot = this.slotMetrics.nextSlot(currentSlot)
-      } else if (localizer.gt(initialSlot, currentSlot)) {
+      } else if (gt(initialSlot, currentSlot)) {
         initialSlot = this.slotMetrics.nextSlot(initialSlot)
       }
 
-      const selectRange = this.slotMetrics.getRange(
-        localizer.min(initialSlot, currentSlot),
-        localizer.max(initialSlot, currentSlot)
-      )
+      const selectRange = this.slotMetrics.getRange(min(initialSlot, currentSlot), max(initialSlot, currentSlot))
 
       return {
         ...selectRange,
         selecting: true,
-
         top: `${selectRange.top}%`,
         height: `${selectRange.height}%`,
       }
@@ -260,18 +251,9 @@ class DayColumn extends React.Component {
 
     selector.on('selecting', maybeSelect)
     selector.on('selectStart', maybeSelect)
-
-    selector.on('beforeSelect', (box) => {
-      if (this.props.selectable !== 'ignoreEvents') return
-
-      return !isEvent(this.containerRef.current, box)
-    })
-
+    selector.on('beforeSelect', (box) => !isEvent(this.containerRef.current, box))
     selector.on('click', (box) => selectorClicksHandler(box, 'click'))
-
-    selector.on('doubleClick', (box) =>
-      selectorClicksHandler(box, 'doubleClick')
-    )
+    selector.on('doubleClick', (box) => selectorClicksHandler(box, 'doubleClick'))
 
     selector.on('select', (bounds) => {
       if (this.state.selecting) {
@@ -297,7 +279,7 @@ class DayColumn extends React.Component {
     let current = startDate,
       slots = []
 
-    while (localizer.lte(current, endDate)) {
+    while (lte(current, endDate)) {
       slots.push(current)
       current = new Date(+current + this.props.step * 60 * 1000) // using Date ensures not to create an endless loop the day DST begins
     }
@@ -341,7 +323,6 @@ DayColumn.propTypes = {
   timeslots: PropTypes.number,
 
   selected: PropTypes.object,
-  selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
   eventOffset: PropTypes.number,
 
   onSelecting: PropTypes.func,

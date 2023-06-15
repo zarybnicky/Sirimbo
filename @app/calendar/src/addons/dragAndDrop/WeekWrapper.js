@@ -6,7 +6,8 @@ import { eventSegments } from '../../utils/eventLevels'
 import { getSlotAtX, pointInBox } from '../../utils/selection'
 import { eventTimes } from './common'
 import { DnDContext } from './DnDContext'
-import localizer from './localizer'
+import { merge, add, eq, inRange, lt } from './localizer'
+import { startOf } from 'date-arithmetic'
 
 class WeekWrapper extends React.Component {
   static propTypes = {
@@ -64,8 +65,8 @@ class WeekWrapper extends React.Component {
 
     // Adjust the dates, but maintain the times when moving
     let { start, duration } = eventTimes(event)
-    start = localizer.merge(date, start)
-    const end = localizer.add(start, duration, 'milliseconds')
+    start = merge(date, start)
+    const end = add(start, duration, 'milliseconds')
     // LATER: when dragging a multi-row event, only the first row is animating
     this.update(event, start, end)
   }
@@ -76,12 +77,9 @@ class WeekWrapper extends React.Component {
 
     const slot = getSlotAtX(bounds, point.x, slotMetrics.slots)
     const start = slotMetrics.getDateForSlot(slot)
+    const end = add(start, 1, 'day')
 
-    this.context.draggable.onDropFromOutside({
-      start,
-      end: localizer.add(start, 1, 'day'),
-      allDay: false,
-    })
+    this.context.draggable.onDropFromOutside({start, end, allDay: false})
   }
 
   handleDragOverFromOutside = (point, node) => {
@@ -102,21 +100,21 @@ class WeekWrapper extends React.Component {
     if (direction === 'RIGHT') {
       if (cursorInRow) {
         if (slotMetrics.last < start) return this.reset()
-        if (localizer.eq(localizer.startOf(end, 'day'), end))
-          end = localizer.add(date, 1, 'day')
+        if (eq(startOf(end, 'day'), end))
+          end = add(date, 1, 'day')
         else end = date
       } else if (
-        localizer.inRange(start, slotMetrics.first, slotMetrics.last) ||
+        inRange(start, slotMetrics.first, slotMetrics.last) ||
         (bounds.bottom < point.y && +slotMetrics.first > +start)
       ) {
-        end = localizer.add(slotMetrics.last, 1, 'milliseconds')
+        end = add(slotMetrics.last, 1, 'milliseconds')
       } else {
         this.setState({ segment: null })
         return
       }
       const originalEnd = event.end
-      end = localizer.merge(end, originalEnd)
-      if (localizer.lt(end, start)) {
+      end = merge(end, originalEnd)
+      if (lt(end, start)) {
         end = originalEnd
       }
     } else if (direction === 'LEFT') {
@@ -124,17 +122,17 @@ class WeekWrapper extends React.Component {
         if (slotMetrics.first > end) return this.reset()
         start = date
       } else if (
-        localizer.inRange(end, slotMetrics.first, slotMetrics.last) ||
-        (bounds.top > point.y && localizer.lt(slotMetrics.last, end))
+        inRange(end, slotMetrics.first, slotMetrics.last) ||
+        (bounds.top > point.y && lt(slotMetrics.last, end))
       ) {
-        start = localizer.add(slotMetrics.first, -1, 'milliseconds')
+        start = add(slotMetrics.first, -1, 'milliseconds')
       } else {
         this.reset()
         return
       }
       const originalStart = event.start
-      start = localizer.merge(start, originalStart)
-      if (localizer.gt(start, end)) {
+      start = merge(start, originalStart)
+      if (gt(start, end)) {
         start = originalStart
       }
     }
@@ -192,9 +190,7 @@ class WeekWrapper extends React.Component {
 
     selector.on('dragOverFromOutside', (point) => {
       if (!this.context.draggable.dragFromOutsideItem) return
-      const bounds = getBoundsForNode(node)
-
-      this.handleDragOverFromOutside(point, bounds)
+      this.handleDragOverFromOutside(point, getBoundsForNode(node))
     })
 
     selector.on('click', () => this.context.draggable.onEnd(null))
@@ -226,14 +222,10 @@ class WeekWrapper extends React.Component {
   }
 
   render() {
-    const { children } = this.props
-
     let { segment } = this.state
-
     return (
       <div ref={this.ref} className="rbc-addons-dnd-row-body">
-        {children}
-
+        {this.props.children}
         {segment && (
           <EventRow
             {...this.props}

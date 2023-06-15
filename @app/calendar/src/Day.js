@@ -2,15 +2,15 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { navigate } from './utils/constants'
 import TimeGrid from './TimeGrid'
-import localizer from './localizer'
+import { add, startOf, endOf, format } from './localizer'
 
 class Day extends React.Component {
   render() {
     let {
       date,
-      min = localizer.startOf(new Date(), 'day'),
-      max = localizer.endOf(new Date(), 'day'),
-      scrollToTime = localizer.startOf(new Date(), 'day'),
+      min = startOf(new Date(), 'day'),
+      max = endOf(new Date(), 'day'),
+      scrollToTime = startOf(new Date(), 'day'),
       ...props
     } = this.props
     return (
@@ -44,9 +44,7 @@ Day.propTypes = {
 
   resizable: PropTypes.bool,
   width: PropTypes.number,
-
   selected: PropTypes.object,
-  selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
 
   onNavigate: PropTypes.func,
   onSelectSlot: PropTypes.func,
@@ -66,23 +64,23 @@ Day.propTypes = {
 }
 
 Day.range = (date) => {
-  return [localizer.startOf(date, 'day')]
+  return [startOf(date, 'day')]
 }
 
 Day.navigate = (date, action) => {
   switch (action) {
     case navigate.PREVIOUS:
-      return localizer.add(date, -1, 'day')
+      return add(date, -1, 'day')
 
     case navigate.NEXT:
-      return localizer.add(date, 1, 'day')
+      return add(date, 1, 'day')
 
     default:
       return date
   }
 }
 
-Day.title = (date) => localizer.format(date, 'cccc MMM dd')
+Day.title = (date) => format(date, 'cccc MMM dd')
 Day.name = "Den";
 
 export default Day

@@ -52,7 +52,6 @@ export default function CreateEventWithNoOverlap({
           localizer={localizer}
           onSelectEvent={handleSelectEvent}
           onSelectSlot={handleSelectSlot}
-          selectable
           scrollToTime={scrollToTime}
         />
       </div>
