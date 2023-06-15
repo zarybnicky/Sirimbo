@@ -11,6 +11,10 @@ module.exports = {
     preflight: false,
     aspectRatio: false,
   },
+  blocklist: [
+    'container',
+    'collapse',
+  ],
   plugins: [
 		require("windy-radix-palette")({
 			colors: {
