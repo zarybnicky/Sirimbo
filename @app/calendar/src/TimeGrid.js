@@ -21,18 +21,13 @@ export default class TimeGrid extends Component {
   constructor(props) {
     super(props)
 
-    this.state = { gutterWidth: undefined, isOverflowing: null }
+    this.state = { gutterWidth: undefined }
 
     this.scrollRef = React.createRef()
     this.contentRef = React.createRef()
     this.containerRef = React.createRef()
     this._scrollRatio = null
     this.gutterRef = createRef()
-  }
-
-  getSnapshotBeforeUpdate() {
-    this.checkOverflow()
-    return null
   }
 
   componentDidMount() {
@@ -42,8 +37,6 @@ export default class TimeGrid extends Component {
 
     this.calculateScroll()
     this.applyScroll()
-
-    window.addEventListener('resize', this.handleResize)
   }
 
   handleScroll = (e) => {
@@ -52,16 +45,7 @@ export default class TimeGrid extends Component {
     }
   }
 
-  handleResize = () => {
-    animationFrame.cancel(this.rafHandle)
-    this.rafHandle = animationFrame.request(this.checkOverflow)
-  }
-
   componentWillUnmount() {
-    window.removeEventListener('resize', this.handleResize)
-
-    animationFrame.cancel(this.rafHandle)
-
     if (this.measureGutterAnimationFrameRequest) {
       window.cancelAnimationFrame(this.measureGutterAnimationFrameRequest)
     }
@@ -242,7 +226,6 @@ export default class TimeGrid extends Component {
           resources={this.memoizedResources(resources)}
           selectable={this.props.selectable}
           scrollRef={this.scrollRef}
-          isOverflowing={this.state.isOverflowing}
           onSelectSlot={this.handleSelectAllDaySlot}
           onSelectEvent={this.handleSelectEvent}
           onShowMore={this.handleShowMore}
@@ -348,20 +331,6 @@ export default class TimeGrid extends Component {
     const totalMillis = localizer.diff(min, max, 'milliseconds')
 
     this._scrollRatio = diffMillis / totalMillis
-  }
-
-  checkOverflow = () => {
-    if (this._updatingOverflow) return
-
-    const content = this.contentRef.current
-    let isOverflowing = content.scrollHeight > content.clientHeight
-
-    if (this.state.isOverflowing !== isOverflowing) {
-      this._updatingOverflow = true
-      this.setState({ isOverflowing }, () => {
-        this._updatingOverflow = false
-      })
-    }
   }
 
   memoizedResources = memoize((resources) => Resources(resources))

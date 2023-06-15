@@ -1,21 +1,13 @@
 import PropTypes from 'prop-types'
 import React, { useRef, useEffect } from 'react'
-import addClass from 'dom-helpers/addClass'
-import removeClass from 'dom-helpers/removeClass'
 import getWidth from 'dom-helpers/width'
-import scrollbarSize from 'dom-helpers/scrollbarSize'
 
 import { navigate } from './utils/constants'
 import { inRange } from './utils/eventLevels'
-import localizer, { messages } from './localizer'
+import localizer from './localizer'
+import clsx from 'clsx'
 
-function Agenda({
-  date,
-  events,
-  length,
-  onDoubleClickEvent,
-  onSelectEvent,
-}) {
+function Agenda({date, events, length, onDoubleClickEvent, onSelectEvent}) {
   const headerRef = useRef(null)
   const dateColRef = useRef(null)
   const timeColRef = useRef(null)
@@ -26,34 +18,10 @@ function Agenda({
     _adjustHeader()
   })
 
-  const renderDay = (day, events, dayKey) => {
-    events = events.filter((e) => inRange(e, localizer.startOf(day, 'day'), localizer.endOf(day, 'day')))
-
-    return events.map((event, idx) => (
-      <tr key={dayKey + '_' + idx}>
-        {idx === 0 ? (
-          <td rowSpan={events.length} className="rbc-agenda-date-cell">
-            {localizer.format(day, 'ccc MMM dd')}
-          </td>
-        ) : null}
-        <td className="rbc-agenda-time-cell">
-          {timeRangeLabel(day, event)}
-        </td>
-        <td
-          className="rbc-agenda-event-cell"
-          onClick={(e) => onSelectEvent?.(event, e)}
-          onDoubleClick={(e) => onDoubleClickEvent?.(event, e)}
-        >
-          {event.title}
-        </td>
-      </tr>
-    ))
-  }
-
   const timeRangeLabel = (day, event) => {
     let { start, end } = event
 
-    let label = messages.allDay;
+    let label = "Celý den";
     if (!event.allDay) {
       if (localizer.eq(start, end)) {
         label = localizer.format(start, 'p')
@@ -66,12 +34,11 @@ function Agenda({
       }
     }
 
-    let labelClass = '';
-    if (localizer.gt(day, start, 'day')) labelClass = 'rbc-continues-prior'
-    if (localizer.lt(day, end, 'day')) labelClass += ' rbc-continues-after'
-
     return (
-      <span className={labelClass.trim()}>
+      <span className={clsx({
+        'rbc-continues-prior': localizer.gt(day, start, 'day'),
+        'rbc-continues-after': localizer.lt(day, end, 'day'),
+      })}>
         {label}
       </span>
     )
@@ -85,9 +52,6 @@ function Agenda({
 
     if (!firstRow) return
 
-    let isOverflowing =
-      contentRef.current.scrollHeight > contentRef.current.clientHeight
-
     let _widths = []
     let widths = _widths
 
@@ -97,50 +61,70 @@ function Agenda({
       dateColRef.current.style.width = _widths[0] + 'px'
       timeColRef.current.style.width = _widths[1] + 'px'
     }
-
-    if (isOverflowing) {
-      addClass(header, 'rbc-header-overflowing')
-      header.style.marginRight = scrollbarSize() + 'px'
-    } else {
-      removeClass(header, 'rbc-header-overflowing')
-    }
   }
 
   let end = localizer.add(date, length, 'day')
   let range = localizer.range(date, end, 'day')
 
   events = events.filter((event) => inRange(event, localizer.startOf(date, 'day'), localizer.endOf(end, 'day')))
-
   events.sort((a, b) => +a.start - +b.start)
+
+  if (!events.length) {
+    return (
+      <div className="rbc-agenda-view">
+        <span className="rbc-agenda-empty">
+          Žádné události ve zvoleném období
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className="rbc-agenda-view">
-      {events.length !== 0 ? (
-        <React.Fragment>
-          <table ref={headerRef} className="rbc-agenda-table">
-            <thead>
-              <tr>
-                <th className="rbc-header" ref={dateColRef}>
-                  {messages.date}
-                </th>
-                <th className="rbc-header" ref={timeColRef}>
-                  {messages.time}
-                </th>
-                <th className="rbc-header">{messages.event}</th>
-              </tr>
-            </thead>
-          </table>
-          <div className="rbc-agenda-content" ref={contentRef}>
-            <table className="rbc-agenda-table">
-              <tbody ref={tbodyRef}>
-                {range.map((day, idx) => renderDay(day, events, idx))}
-              </tbody>
-            </table>
-          </div>
-        </React.Fragment>
-      ) : (
-        <span className="rbc-agenda-empty">{messages.noEventsInRange}</span>
-      )}
+      <table ref={headerRef} className="rbc-agenda-table">
+        <thead>
+          <tr>
+            <th className="rbc-header" ref={dateColRef}>
+              Datum
+            </th>
+            <th className="rbc-header" ref={timeColRef}>
+                  Čas
+            </th>
+            <th className="rbc-header">
+              Událost
+            </th>
+          </tr>
+        </thead>
+      </table>
+      <div className="rbc-agenda-content" ref={contentRef}>
+        <table className="rbc-agenda-table">
+          <tbody ref={tbodyRef}>
+            {events
+             .filter((e) => inRange(e, localizer.startOf(day, 'day'), localizer.endOf(day, 'day')))
+             .map((event, idx) => (
+               <tr key={dayKey + '_' + idx}>
+                 {idx === 0 ? (
+                   <td rowSpan={events.length} className="rbc-agenda-date-cell">
+                     {localizer.format(day, 'ccc MMM dd')}
+                   </td>
+                 ) : null}
+
+                 <td className="rbc-agenda-time-cell">
+                   {timeRangeLabel(day, event)}
+                 </td>
+
+                 <td
+                   className="rbc-agenda-event-cell"
+                   onClick={(e) => onSelectEvent?.(event, e)}
+                   onDoubleClick={(e) => onDoubleClickEvent?.(event, e)}
+                 >
+                   {event.title}
+                 </td>
+               </tr>
+             ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }
@@ -155,7 +139,7 @@ Agenda.propTypes = {
 }
 
 Agenda.defaultProps = {
-  length: 30,
+  length: 7,
 }
 
 Agenda.range = (start, { length = Agenda.defaultProps.length, }) => {
@@ -182,5 +166,6 @@ Agenda.title = (start, { length = Agenda.defaultProps.length }) => {
   let end = localizer.add(start, length, 'day')
   return localizer.format({ start, end }, 'agendaHeaderFormat')
 }
+Agenda.name = "Agenda";
 
 export default Agenda

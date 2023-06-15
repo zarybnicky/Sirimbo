@@ -11,26 +11,6 @@ import { navigate, views } from './utils/constants'
 import VIEWS from './Views'
 import Toolbar from './Toolbar'
 
-import transform from 'lodash/transform'
-import mapValues from 'lodash/mapValues'
-
-function viewNames(_views) {
-  if (Array.isArray(_views)) {
-    return _views
-  }
-  const views = []
-  for (const [key, value] of Object.entries(_views)) {
-    if (value) {
-      views.push(key)
-    }
-  }
-  return views
-}
-
-function isValidView(view, { views: _views }) {
-  return viewNames(_views).indexOf(view) !== -1
-}
-
 class Calendar extends React.Component {
   static propTypes = {
     /**
@@ -273,8 +253,8 @@ class Calendar extends React.Component {
      *
      * ```js
      * <Calendar
-     *   getDrilldownView={(targetDate, currentViewName, configuredViewNames) =>
-     *     if (currentViewName === 'month' && configuredViewNames.includes('week'))
+     *   getDrilldownView={(targetDate, currentViewName) =>
+     *     if (currentViewName === 'month')
      *       return 'week'
      *
      *     return null;
@@ -289,11 +269,6 @@ class Calendar extends React.Component {
      * date prop + length (in number of days) = end date
      */
     length: PropTypes.number,
-
-    /**
-     * Determines whether the toolbar is displayed
-     */
-    toolbar: PropTypes.bool,
 
     /**
      * Show truncated events in an overlay when you click the "+_x_ more" link.
@@ -356,7 +331,6 @@ class Calendar extends React.Component {
     events: [],
     backgroundEvents: [],
     popup: false,
-    toolbar: true,
     view: views.MONTH,
     views: [views.MONTH, views.WEEK, views.DAY, views.AGENDA],
     step: 30,
@@ -367,60 +341,15 @@ class Calendar extends React.Component {
     dayLayoutAlgorithm: 'overlap',
   }
 
-  constructor(...args) {
-    super(...args)
-
-    this.state = {
-      context: Calendar.getContext(this.props),
-    }
-  }
-  static getDerivedStateFromProps(nextProps) {
-    return { context: Calendar.getContext(nextProps) }
-  }
-
-  static getContext({
-    views,
-  }) {
-    return {
-      viewNames: viewNames(views),
-    }
-  }
-
-  getViews = () => {
-    const views = this.props.views
-
-    if (Array.isArray(views)) {
-      return transform(views, (obj, name) => (obj[name] = VIEWS[name]), {})
-    }
-
-    if (typeof views === 'object') {
-      return mapValues(views, (value, key) => {
-        if (value === true) {
-          return VIEWS[key]
-        }
-
-        return value
-      })
-    }
-    return VIEWS
-  }
-
-  getView() {
-    return this.getViews()[this.props.view];
-  }
-
   getDrilldownView = (date) => {
     const { view, drilldownView, getDrilldownView } = this.props
-
     if (!getDrilldownView) return drilldownView
-
-    return getDrilldownView(date, view, Object.keys(this.getViews()))
+    return getDrilldownView(date, view, views);
   }
 
   render() {
     let {
       view,
-      toolbar,
       events,
       backgroundEvents,
       style,
@@ -434,27 +363,20 @@ class Calendar extends React.Component {
     } = this.props
 
     current = current || new Date()
-
-    let View = this.getView()
-    const { viewNames } = this.state.context
-
-    const label = View.title(current, { length })
+    const View = VIEWS[this.props.view];
 
     return (
       <div
         className={clsx(className, 'rbc-calendar')}
         style={style}
       >
-        {toolbar && (
-          <Toolbar
-            date={current}
-            view={view}
-            views={viewNames}
-            label={label}
-            onView={this.handleViewChange}
-            onNavigate={this.handleNavigate}
-          />
-        )}
+        <Toolbar
+          date={current}
+          view={view}
+          label={View.title(current, { length })}
+          onView={this.handleViewChange}
+          onNavigate={this.handleNavigate}
+        />
         <View
           {...props}
           events={events}
@@ -501,22 +423,26 @@ class Calendar extends React.Component {
 
   handleNavigate = (action, newDate) => {
     let { view, date, onNavigate, ...props } = this.props
-    let View = this.getView()
-    let today = new Date()
+    const View = VIEWS[this.props.view]
 
-    newDate = newDate || date || today
-    date = action === navigate.TODAY ? (today || new Date()) : action === navigate.DATE ? newDate : View.navigate(newDate, action, props)
+    newDate = newDate || date || new Date()
+    date =
+      action === navigate.TODAY
+        ? (today || new Date())
+      : action === navigate.DATE
+      ? newDate
+      : View.navigate(newDate, action, props)
 
     onNavigate(date, view, action)
     this.handleRangeChange(date, View)
   }
 
   handleViewChange = (view) => {
-    if (view !== this.props.view && isValidView(view, this.props)) {
+    if (view !== this.props.view && views.includes(view)) {
       this.props.onView?.(view)
     }
 
-    this.handleRangeChange(this.props.date || new Date(), this.getViews()[view], view)
+    this.handleRangeChange(this.props.date || new Date(), VIEWS[view], view)
   }
 
   handleSelectEvent = (...args) => {

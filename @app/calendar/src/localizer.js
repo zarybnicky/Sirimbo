@@ -121,25 +121,6 @@ function startAndEndAreDateOnly(start, end) {
   return isJustDate(start) && isJustDate(end)
 }
 
-export const messages = {
-  date: 'Date',
-  time: 'Time',
-  event: 'Event',
-  allDay: 'All Day',
-  week: 'Week',
-  work_week: 'Work Week',
-  day: 'Day',
-  month: 'Month',
-  previous: 'Back',
-  next: 'Next',
-  yesterday: 'Yesterday',
-  tomorrow: 'Tomorrow',
-  today: 'Today',
-  agenda: 'Agenda',
-  noEventsInRange: 'There are no events in this range.',
-  showMore: (total) => `+${total} more`,
-}
-
 class DateLocalizer {
   format(value, format) {
     return typeof this.formats[format] === 'function'

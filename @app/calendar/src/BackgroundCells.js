@@ -7,9 +7,7 @@ import { dateCellSelection, getSlotAtX, pointInBox } from './utils/selection'
 import Selection, { getBoundsForNode, isEvent, isShowMore } from './Selection'
 
 class BackgroundCells extends React.Component {
-  constructor(props, context) {
-    super(props, context)
-
+  constructor() {
     this.state = {
       selecting: false,
     }
@@ -34,25 +32,19 @@ class BackgroundCells extends React.Component {
   render() {
     let {range, date: currentDate} = this.props
     let { selecting, startIdx, endIdx } = this.state
-    let current = new Date()
 
     return (
       <div className="rbc-row-bg" ref={this.containerRef}>
-        {range.map((date, index) => {
-          let selected = selecting && index >= startIdx && index <= endIdx
-          return (
-            <div
-              className={clsx(
-                'rbc-day-bg',
-                selected && 'rbc-selected-cell',
-                localizer.isSameDate(date, current) && 'rbc-today',
-                currentDate &&
-                  localizer.neq(currentDate, date, 'month') &&
-                  'rbc-off-range-bg'
-              )}
-            />
-          )
-        })}
+        {range.map((date, index) => (
+          <div
+            className={clsx(
+              'rbc-day-bg',
+              selecting && index >= startIdx && index <= endIdx && 'rbc-selected-cell',
+              localizer.isSameDate(date, new Date()) && 'rbc-today',
+              currentDate && localizer.neq(currentDate, date, 'month') && 'rbc-off-range-bg'
+            )}
+          />
+        ))}
       </div>
     )
   }
@@ -132,21 +124,19 @@ class BackgroundCells extends React.Component {
 
   _selectSlot({ endIdx, startIdx, action, bounds, box }) {
     if (endIdx !== -1 && startIdx !== -1)
-      this.props.onSelectSlot &&
-        this.props.onSelectSlot({
-          start: startIdx,
-          end: endIdx,
-          action,
-          bounds,
-          box,
+      this.props.onSelectSlot?.({
+        start: startIdx,
+        end: endIdx,
+        action,
+        bounds,
+        box,
           resourceId: this.props.resourceId,
-        })
+      })
   }
 }
 
 BackgroundCells.propTypes = {
   date: PropTypes.instanceOf(Date),
-  getNow: PropTypes.func.isRequired,
 
   container: PropTypes.func,
   selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),

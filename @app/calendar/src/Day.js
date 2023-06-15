@@ -91,5 +91,6 @@ Day.navigate = (date, action) => {
 }
 
 Day.title = (date) => localizer.format(date, 'cccc MMM dd')
+Day.name = "Den";
 
 export default Day

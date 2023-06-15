@@ -10,7 +10,7 @@ import * as DayEventLayout from './utils/DayEventLayout'
 import TimeSlotGroup from './TimeSlotGroup'
 import TimeGridEvent from './TimeGridEvent'
 import { DayLayoutAlgorithmPropType } from './utils/propTypes'
-import localizer, { messages } from './localizer'
+import localizer from './localizer'
 import { EventContainer } from './addons/dragAndDrop/EventContainerWrapper'
 
 class DayColumn extends React.Component {
@@ -186,7 +186,7 @@ class DayColumn extends React.Component {
       else if (startsAfterDay) format = 'timeRangeStartFormat'
 
       let label
-      if (startsBeforeDay && startsAfterDay) label = messages.allDay
+      if (startsBeforeDay && startsAfterDay) label = "Celý den"
       else label = localizer.format({ start, end }, format)
 
       return (

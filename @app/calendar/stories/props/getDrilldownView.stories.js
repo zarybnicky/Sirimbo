@@ -18,8 +18,8 @@ export default {
 
 export function GetDrilldownView() {
   const getDrilldownView = useCallback(
-    (targetDate, currentViewName, configuredViewNames) => {
-      if (currentViewName === 'month' && configuredViewNames.includes('week'))
+    (targetDate, currentViewName) => {
+      if (currentViewName === 'month')
         return 'week'
 
       return null

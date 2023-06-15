@@ -371,7 +371,7 @@ Set to `null` to disable drill-down actions.
 
 ### getDrilldownView
 
-- type: `function (targetDate: Date, currentViewName: string, configuredViewNames: Views[]) => string|null`
+- type: `function (targetDate: Date, currentViewName: string) => string|null`
 - <LinkTo kind="props" story="get-drilldown-view">
     Example
   </LinkTo>
@@ -389,16 +389,6 @@ Return null to disable drill-down actions.
   </LinkTo>
 
 Determines the end date from date prop in the agenda view date prop + length (in number of days) = end date.
-
-### toolbar
-
-- type: `boolean`
-- default: `true`
-- <LinkTo kind="props" story="toolbar">
-    Example
-  </LinkTo>
-
-Determines whether the toolbar is displayed
 
 ### popup
 

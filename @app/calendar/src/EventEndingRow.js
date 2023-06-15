@@ -1,21 +1,17 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import clsx from 'clsx'
-import EventRowMixin from './EventRowMixin'
+import * as EventRowMixin from './EventRowMixin'
+import { renderEvent, renderSpan } from './EventRowMixin'
 import { eventLevels } from './utils/eventLevels'
 import range from 'lodash/range'
-import { messages } from './localizer'
 
 let isSegmentInSlot = (seg, slot) => seg.left <= slot && seg.right >= slot
-let eventsInSlot = (segments, slot) =>
-  segments.filter((seg) => isSegmentInSlot(seg, slot)).length
+let eventsInSlot = (segments, slot) => segments.filter((seg) => isSegmentInSlot(seg, slot)).length
 
 class EventEndingRow extends React.Component {
   render() {
-    let {
-      segments,
-      slotMetrics: { slots },
-    } = this.props
+    let { segments, slotMetrics: { slots } } = this.props
     let rowSegments = eventLevels(segments).levels[0]
 
     let current = 1,
@@ -36,28 +32,17 @@ class EventEndingRow extends React.Component {
       let gap = Math.max(0, left - lastEnd)
 
       if (this.canRenderSlotEvent(left, span)) {
-        let content = EventRowMixin.renderEvent(this.props, event)
-
+        let content = renderEvent(this.props, event)
         if (gap) {
-          row.push(EventRowMixin.renderSpan(slots, gap, key + '_gap'))
+          row.push(renderSpan(slots, gap, key + '_gap'))
         }
-
-        row.push(EventRowMixin.renderSpan(slots, span, key, content))
-
+        row.push(renderSpan(slots, span, key, content))
         lastEnd = current = right + 1
       } else {
         if (gap) {
-          row.push(EventRowMixin.renderSpan(slots, gap, key + '_gap'))
+          row.push(renderSpan(slots, gap, key + '_gap'))
         }
-
-        row.push(
-          EventRowMixin.renderSpan(
-            slots,
-            1,
-            key,
-            this.renderShowMore(segments, current)
-          )
-        )
+        row.push(renderSpan(slots, 1, key, this.renderShowMore(segments, current)))
         lastEnd = current = current + 1
       }
     }
@@ -84,7 +69,7 @@ class EventEndingRow extends React.Component {
         className={clsx('rbc-button-link', 'rbc-show-more')}
         onClick={(e) => this.showMore(slot, e)}
       >
-        {messages.showMore(count)}
+        {`+${count} dalších`}
       </button>
     ) : (
       false

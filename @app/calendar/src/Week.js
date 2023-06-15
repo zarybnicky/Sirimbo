@@ -105,5 +105,6 @@ Week.title = (date) => {
   let [start, ...rest] = Week.range(date)
   return localizer.format({ start, end: rest.pop() }, 'dayRangeHeaderFormat')
 }
+Week.name = "Týden";
 
 export default Week

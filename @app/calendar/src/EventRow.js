@@ -12,23 +12,21 @@ class EventRow extends React.Component {
     } = this.props
 
     let lastEnd = 1
+    const row = []
+    segments.forEach(({ event, left, right, span }, li) => {
+      let key = '_lvl_' + li
+      let gap = left - lastEnd
+      let content = EventRowMixin.renderEvent(this.props, event)
+      if (gap) {
+        row.push(EventRowMixin.renderSpan(slots, gap, `${key}_gap`))
+      }
+      row.push(EventRowMixin.renderSpan(slots, span, key, content))
+      lastEnd = right + 1
+    });
 
     return (
       <div className={clsx(className, 'rbc-row')}>
-        {segments.reduce((row, { event, left, right, span }, li) => {
-          let key = '_lvl_' + li
-          let gap = left - lastEnd
-
-          let content = EventRowMixin.renderEvent(this.props, event)
-
-          if (gap) row.push(EventRowMixin.renderSpan(slots, gap, `${key}_gap`))
-
-          row.push(EventRowMixin.renderSpan(slots, span, key, content))
-
-          lastEnd = right + 1
-
-          return row
-        }, [])}
+        {row}
       </div>
     )
   }

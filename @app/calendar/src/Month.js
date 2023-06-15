@@ -340,5 +340,6 @@ MonthView.navigate = (date, action) => {
 }
 
 MonthView.title = (date) => localizer.format(date, 'MMMM yyyy')
+MonthView.name = "Měsíc";
 
 export default MonthView

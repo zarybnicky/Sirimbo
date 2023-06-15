@@ -28,7 +28,7 @@ export type ViewKey = 'MONTH' | 'WEEK' | 'WORK_WEEK' | 'DAY' | 'AGENDA';
 export type View = 'month' | 'week' | 'work_week' | 'day' | 'agenda';
 export type ViewProps<TEvent extends object = Event, TResource extends object = object> = Omit<
     CalendarProps<TEvent, TResource>,
-    'className' | 'style' | 'view' | 'toolbar'
+    'className' | 'style' | 'view'
 > & {
     date: stringOrDate; // date has always a value, in contrast to optional date in CalendarProps
 
@@ -122,11 +122,10 @@ export interface CalendarProps<TEvent extends object = Event, TResource extends 
     doShowMoreDrillDown?: boolean | undefined;
     drilldownView?: View | null | undefined;
     getDrilldownView?:
-        | ((targetDate: Date, currentViewName: View, configuredViewNames: View[]) => void)
+        | ((targetDate: Date, currentViewName: View) => void)
         | null
         | undefined;
     length?: number | undefined;
-    toolbar?: boolean | undefined;
     popup?: boolean | undefined;
     selectable?: boolean | 'ignoreEvents' | undefined;
     step?: number | undefined;
@@ -203,7 +202,7 @@ export interface TimeGridProps<TEvent extends object = Event, TResource extends 
     onKeyPressEvent?: ((...args: any[]) => any) | undefined;
     onDrillDown?: ((date: Date, view: View) => void) | undefined;
     getDrilldownView?:
-        | ((targetDate: Date, currentViewName: View, configuredViewNames: View[]) => void)
+        | ((targetDate: Date, currentViewName: View) => void)
         | null
         | undefined;
     dayLayoutAlgorithm?: any;

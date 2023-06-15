@@ -251,29 +251,26 @@ class EventContainerWrapper extends React.Component {
 
   renderContent() {
     const { children, slotMetrics } = this.props
-
     let { event, top, height } = this.state
+
     if (!event) return children
 
-    const events = children.props.children
     const { start, end } = event
-
-    let label
-    let format = 'eventTimeRangeFormat'
-
     const startsBeforeDay = slotMetrics.startsBeforeDay(start)
     const startsAfterDay = slotMetrics.startsAfterDay(end)
 
+    let format = 'eventTimeRangeFormat'
     if (startsBeforeDay) format = 'eventTimeRangeEndFormat'
     else if (startsAfterDay) format = 'eventTimeRangeStartFormat'
 
-    if (startsBeforeDay && startsAfterDay) label = messages.allDay
+    let label
+    if (startsBeforeDay && startsAfterDay) label = "Celý den"
     else label = localizer.format({ start, end }, format)
 
     return React.cloneElement(children, {
       children: (
         <React.Fragment>
-          {events}
+          {children.props.children}
 
           {event && (
             <TimeGridEvent
