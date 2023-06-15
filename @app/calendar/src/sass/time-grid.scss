@@ -58,11 +58,6 @@
     border-right: 1px solid $cell-border;
   }
 
-  .rbc-rtl &.rbc-overflowing {
-    border-right-width: 0;
-    border-left: 1px solid $cell-border;
-  }
-
   > .rbc-row:first-child {
     border-bottom: 1px solid $cell-border;
   }
@@ -91,11 +86,6 @@
   flex-direction: column;
   border-left: 1px solid $cell-border;
 
-  .rbc-rtl & {
-    border-left-width: 0;
-    border-right: 1px solid $cell-border;
-  }
-
   > .rbc-row.rbc-row-resource {
     border-bottom: 1px solid $cell-border;
     flex-shrink: 0;
@@ -117,11 +107,6 @@
 
   > * + * > * {
     border-left: 1px solid $cell-border;
-  }
-
-  .rbc-rtl & > * + * > * {
-    border-left-width: 0;
-    border-right: 1px solid $cell-border;
   }
 
   > .rbc-day-slot {

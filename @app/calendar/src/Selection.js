@@ -502,9 +502,9 @@ export function objectsCollide(nodeA, nodeB, tolerance = 0) {
 export function getBoundsForNode(node) {
   if (!node.getBoundingClientRect) return node
 
-  let rect = node.getBoundingClientRect(),
-    left = rect.left + pageOffset('left'),
-    top = rect.top + pageOffset('top')
+  let rect = node.getBoundingClientRect();
+  let left = rect.left + pageOffset('left');
+  let top = rect.top + pageOffset('top');
 
   return {
     top,

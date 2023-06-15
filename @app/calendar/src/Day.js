@@ -5,31 +5,23 @@ import { navigate } from './utils/constants'
 import { DayLayoutAlgorithmPropType } from './utils/propTypes'
 
 import TimeGrid from './TimeGrid'
+import localizer from './localizer'
 
 class Day extends React.Component {
   render() {
-    /**
-     * This allows us to default min, max, and scrollToTime
-     * using our localizer. This is necessary until such time
-     * as TODO: TimeGrid is converted to a functional component.
-     */
     let {
       date,
-      localizer,
       min = localizer.startOf(new Date(), 'day'),
       max = localizer.endOf(new Date(), 'day'),
       scrollToTime = localizer.startOf(new Date(), 'day'),
       enableAutoScroll = true,
       ...props
     } = this.props
-    let range = Day.range(date, { localizer: localizer })
-
     return (
       <TimeGrid
         {...props}
-        range={range}
+        range={Day.range(date)}
         eventOffset={10}
-        localizer={localizer}
         min={min}
         max={max}
         scrollToTime={scrollToTime}
@@ -51,26 +43,16 @@ Day.propTypes = {
   range: PropTypes.arrayOf(PropTypes.instanceOf(Date)),
   min: PropTypes.instanceOf(Date),
   max: PropTypes.instanceOf(Date),
-  getNow: PropTypes.func.isRequired,
 
   scrollToTime: PropTypes.instanceOf(Date),
   enableAutoScroll: PropTypes.bool,
   showMultiDayTimes: PropTypes.bool,
 
-  rtl: PropTypes.bool,
   resizable: PropTypes.bool,
   width: PropTypes.number,
 
-  accessors: PropTypes.object.isRequired,
-  components: PropTypes.object.isRequired,
-  getters: PropTypes.object.isRequired,
-  localizer: PropTypes.object.isRequired,
-
-  allDayMaxRows: PropTypes.number,
-
   selected: PropTypes.object,
   selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
-  longPressThreshold: PropTypes.number,
 
   onNavigate: PropTypes.func,
   onSelectSlot: PropTypes.func,
@@ -89,21 +71,13 @@ Day.propTypes = {
 
   popup: PropTypes.bool,
   handleDragStart: PropTypes.func,
-
-  popupOffset: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-    }),
-  ]),
 }
 
-Day.range = (date, { localizer }) => {
+Day.range = (date) => {
   return [localizer.startOf(date, 'day')]
 }
 
-Day.navigate = (date, action, { localizer }) => {
+Day.navigate = (date, action) => {
   switch (action) {
     case navigate.PREVIOUS:
       return localizer.add(date, -1, 'day')
@@ -116,6 +90,6 @@ Day.navigate = (date, action, { localizer }) => {
   }
 }
 
-Day.title = (date, { localizer }) => localizer.format(date, 'dayHeaderFormat')
+Day.title = (date) => localizer.format(date, 'cccc MMM dd')
 
 export default Day

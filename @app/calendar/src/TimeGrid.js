@@ -15,6 +15,7 @@ import { views } from './utils/constants'
 import { inRange, sortEvents } from './utils/eventLevels'
 import Resources from './utils/Resources'
 import { DayLayoutAlgorithmPropType } from './utils/propTypes'
+import localizer from './localizer'
 
 export default class TimeGrid extends Component {
   constructor(props) {
@@ -131,10 +132,10 @@ export default class TimeGrid extends Component {
   }
 
   renderEvents(range, events, backgroundEvents, now) {
-    let { min, max, components, accessors, localizer, dayLayoutAlgorithm } =
+    let { min, max, dayLayoutAlgorithm } =
       this.props
 
-    const resources = this.memoizedResources(this.props.resources, accessors)
+    const resources = this.memoizedResources(this.props.resources)
     const groupedEvents = resources.groupEvents(events)
     const groupedBackgroundEvents = resources.groupEvents(backgroundEvents)
 
@@ -143,8 +144,7 @@ export default class TimeGrid extends Component {
         let daysEvents = (groupedEvents.get(id) || []).filter((event) =>
           localizer.inRange(
             date,
-            accessors.start(event),
-            accessors.end(event),
+            event.start, event.end,
             'day'
           )
         )
@@ -154,8 +154,7 @@ export default class TimeGrid extends Component {
         ).filter((event) =>
           localizer.inRange(
             date,
-            accessors.start(event),
-            accessors.end(event),
+            event.start, event.end,
             'day'
           )
         )
@@ -163,11 +162,9 @@ export default class TimeGrid extends Component {
         return (
           <DayColumn
             {...this.props}
-            localizer={localizer}
             min={localizer.merge(date, min)}
             max={localizer.merge(date, max)}
             resource={resource && id}
-            components={components}
             isNow={localizer.isSameDate(date, now)}
             key={i + '-' + jj}
             date={date}
@@ -186,18 +183,11 @@ export default class TimeGrid extends Component {
       backgroundEvents,
       range,
       width,
-      rtl,
       selected,
-      getNow,
       resources,
-      components,
-      accessors,
-      getters,
-      localizer,
       min,
       max,
       showMultiDayTimes,
-      longPressThreshold,
       resizable,
     } = this.props
 
@@ -213,12 +203,11 @@ export default class TimeGrid extends Component {
       rangeBackgroundEvents = []
 
     events.forEach((event) => {
-      if (inRange(event, start, end, accessors, localizer)) {
-        let eStart = accessors.start(event),
-          eEnd = accessors.end(event)
+      if (inRange(event, start, end)) {
+        let { start: eStart, end: eEnd } = event;
 
         if (
-          accessors.allDay(event) ||
+          event.allDay ||
           localizer.startAndEndAreDateOnly(eStart, eEnd) ||
           (!showMultiDayTimes && !localizer.isSameDate(eStart, eEnd))
         ) {
@@ -230,12 +219,12 @@ export default class TimeGrid extends Component {
     })
 
     backgroundEvents.forEach((event) => {
-      if (inRange(event, start, end, accessors, localizer)) {
+      if (inRange(event, start, end)) {
         rangeBackgroundEvents.push(event)
       }
     })
 
-    allDayEvents.sort((a, b) => sortEvents(a, b, accessors, localizer))
+    allDayEvents.sort((a, b) => sortEvents(a, b))
 
     return (
       <div
@@ -249,19 +238,11 @@ export default class TimeGrid extends Component {
           range={range}
           events={allDayEvents}
           width={width}
-          rtl={rtl}
-          getNow={getNow}
-          localizer={localizer}
           selected={selected}
-          allDayMaxRows={this.props.allDayMaxRows ?? Infinity}
-          resources={this.memoizedResources(resources, accessors)}
+          resources={this.memoizedResources(resources)}
           selectable={this.props.selectable}
-          accessors={accessors}
-          getters={getters}
-          components={components}
           scrollRef={this.scrollRef}
           isOverflowing={this.state.isOverflowing}
-          longPressThreshold={longPressThreshold}
           onSelectSlot={this.handleSelectAllDaySlot}
           onSelectEvent={this.handleSelectEvent}
           onShowMore={this.handleShowMore}
@@ -280,21 +261,17 @@ export default class TimeGrid extends Component {
           <TimeGutter
             date={start}
             ref={this.gutterRef}
-            localizer={localizer}
             min={localizer.merge(start, min)}
             max={localizer.merge(start, max)}
             step={this.props.step}
-            getNow={this.props.getNow}
             timeslots={this.props.timeslots}
-            components={components}
             className="rbc-time-gutter"
-            getters={getters}
           />
           {this.renderEvents(
             range,
             rangeEvents,
             rangeBackgroundEvents,
-            getNow()
+            new Date()
           )}
         </div>
       </div>
@@ -304,12 +281,7 @@ export default class TimeGrid extends Component {
   renderOverlay() {
     let overlay = this.state?.overlay ?? {}
     let {
-      accessors,
-      localizer,
-      components,
-      getters,
       selected,
-      popupOffset,
       handleDragStart,
     } = this.props
 
@@ -318,12 +290,7 @@ export default class TimeGrid extends Component {
     return (
       <PopOverlay
         overlay={overlay}
-        accessors={accessors}
-        localizer={localizer}
-        components={components}
-        getters={getters}
         selected={selected}
-        popupOffset={popupOffset}
         ref={this.containerRef}
         handleKeyPressEvent={this.handleKeyPressEvent}
         handleSelectEvent={this.handleSelectEvent}
@@ -375,7 +342,7 @@ export default class TimeGrid extends Component {
   }
 
   calculateScroll(props = this.props) {
-    const { min, max, scrollToTime, localizer } = props
+    const { min, max, scrollToTime } = props
 
     const diffMillis = localizer.diff(localizer.merge(scrollToTime, min), scrollToTime, 'milliseconds')
     const totalMillis = localizer.diff(min, max, 'milliseconds')
@@ -397,9 +364,7 @@ export default class TimeGrid extends Component {
     }
   }
 
-  memoizedResources = memoize((resources, accessors) =>
-    Resources(resources, accessors)
-  )
+  memoizedResources = memoize((resources) => Resources(resources))
 }
 
 TimeGrid.propTypes = {
@@ -412,26 +377,16 @@ TimeGrid.propTypes = {
   range: PropTypes.arrayOf(PropTypes.instanceOf(Date)),
   min: PropTypes.instanceOf(Date).isRequired,
   max: PropTypes.instanceOf(Date).isRequired,
-  getNow: PropTypes.func.isRequired,
 
   scrollToTime: PropTypes.instanceOf(Date).isRequired,
   enableAutoScroll: PropTypes.bool,
   showMultiDayTimes: PropTypes.bool,
 
-  rtl: PropTypes.bool,
   resizable: PropTypes.bool,
   width: PropTypes.number,
 
-  accessors: PropTypes.object.isRequired,
-  components: PropTypes.object.isRequired,
-  getters: PropTypes.object.isRequired,
-  localizer: PropTypes.object.isRequired,
-
-  allDayMaxRows: PropTypes.number,
-
   selected: PropTypes.object,
   selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
-  longPressThreshold: PropTypes.number,
 
   onNavigate: PropTypes.func,
   onSelectSlot: PropTypes.func,
@@ -450,14 +405,6 @@ TimeGrid.propTypes = {
 
   popup: PropTypes.bool,
   handleDragStart: PropTypes.func,
-
-  popupOffset: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-    }),
-  ]),
 }
 
 TimeGrid.defaultProps = {

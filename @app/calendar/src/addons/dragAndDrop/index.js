@@ -2,10 +2,6 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import clsx from 'clsx'
 
-import EventWrapper from './EventWrapper'
-import EventContainerWrapper from './EventContainerWrapper'
-import WeekWrapper from './WeekWrapper'
-import { mergeComponents } from './common'
 import { DnDContext } from './DnDContext'
 
 export default function withDragAndDrop(Calendar) {
@@ -32,15 +28,6 @@ export default function withDragAndDrop(Calendar) {
 
     constructor(...args) {
       super(...args)
-
-      const { components } = this.props
-
-      this.components = mergeComponents(components, {
-        eventWrapper: EventWrapper,
-        eventContainerWrapper: EventContainerWrapper,
-        weekWrapper: WeekWrapper,
-      })
-
       this.state = { interacting: false }
     }
 
@@ -63,8 +50,7 @@ export default function withDragAndDrop(Calendar) {
 
     handleBeginAction = (event, action, direction) => {
       this.setState({ event, action, direction })
-      const { onDragStart } = this.props
-      if (onDragStart) onDragStart({ event, action, direction })
+      this.props.onDragStart?.({ event, action, direction })
     }
 
     handleInteractionStart = () => {
@@ -85,13 +71,12 @@ export default function withDragAndDrop(Calendar) {
       if (interactionInfo == null) return
 
       interactionInfo.event = event
-      const { onEventDrop, onEventResize } = this.props
-      if (action === 'move' && onEventDrop) onEventDrop(interactionInfo)
-      if (action === 'resize' && onEventResize) onEventResize(interactionInfo)
+      if (action === 'move') this.props.onEventDrop?.(interactionInfo)
+      if (action === 'resize') this.props.onEventResize?.(interactionInfo)
     }
 
     render() {
-      const { selectable, elementProps, ...props } = this.props
+      const { selectable, ...props } = this.props
       const { interacting } = this.state
 
       delete props.onEventDrop
@@ -99,11 +84,7 @@ export default function withDragAndDrop(Calendar) {
       props.selectable = selectable ? 'ignoreEvents' : false
 
       const elementPropsWithDropFromOutside = this.props.onDropFromOutside
-        ? {
-            ...elementProps,
-            onDragOver: this.props.onDragOver || this.defaultOnDragOver,
-          }
-        : elementProps
+            ? {onDragOver: this.props.onDragOver || this.defaultOnDragOver} : {}
 
       props.className = clsx(
         props.className,
@@ -113,11 +94,7 @@ export default function withDragAndDrop(Calendar) {
 
       return (
         <DnDContext.Provider value={this.getDnDContextValue()}>
-          <Calendar
-            {...props}
-            elementProps={elementPropsWithDropFromOutside}
-            components={this.components}
-          />
+          <Calendar {...props} elementProps={elementPropsWithDropFromOutside} />
         </DnDContext.Provider>
       )
     }

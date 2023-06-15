@@ -1,6 +1,7 @@
 import React, { createRef } from 'react'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
+import localizer from './localizer'
 
 import { dateCellSelection, getSlotAtX, pointInBox } from './utils/selection'
 import Selection, { getBoundsForNode, isEvent, isShowMore } from './Selection'
@@ -31,38 +32,25 @@ class BackgroundCells extends React.Component {
   }
 
   render() {
-    let {
-      range,
-      getNow,
-      getters,
-      date: currentDate,
-      components: { dateCellWrapper: Wrapper },
-      localizer,
-    } = this.props
+    let {range, date: currentDate} = this.props
     let { selecting, startIdx, endIdx } = this.state
-    let current = getNow()
+    let current = new Date()
 
     return (
       <div className="rbc-row-bg" ref={this.containerRef}>
         {range.map((date, index) => {
           let selected = selecting && index >= startIdx && index <= endIdx
-          const { className, style } = getters.dayProp(date)
-
           return (
-            <Wrapper key={index} value={date} range={range}>
-              <div
-                style={style}
-                className={clsx(
-                  'rbc-day-bg',
-                  className,
-                  selected && 'rbc-selected-cell',
-                  localizer.isSameDate(date, current) && 'rbc-today',
-                  currentDate &&
-                    localizer.neq(currentDate, date, 'month') &&
-                    'rbc-off-range-bg'
-                )}
-              />
-            </Wrapper>
+            <div
+              className={clsx(
+                'rbc-day-bg',
+                selected && 'rbc-selected-cell',
+                localizer.isSameDate(date, current) && 'rbc-today',
+                currentDate &&
+                  localizer.neq(currentDate, date, 'month') &&
+                  'rbc-off-range-bg'
+              )}
+            />
           )
         })}
       </div>
@@ -71,17 +59,15 @@ class BackgroundCells extends React.Component {
 
   _selectable() {
     let node = this.containerRef.current
-    let selector = (this._selector = new Selection(this.props.container, {
-      longPressThreshold: this.props.longPressThreshold,
-    }))
+    let selector = (this._selector = new Selection(this.props.container));
 
     let selectorClicksHandler = (point, actionType) => {
       if (!isEvent(node, point) && !isShowMore(node, point)) {
         let rowBox = getBoundsForNode(node)
-        let { range, rtl } = this.props
+        let { range } = this.props
 
         if (pointInBox(rowBox, point)) {
-          let currentCell = getSlotAtX(rowBox, point.x, rtl, range.length)
+          let currentCell = getSlotAtX(rowBox, point.x, range.length)
 
           this._selectSlot({
             startIdx: currentCell,
@@ -97,7 +83,7 @@ class BackgroundCells extends React.Component {
     }
 
     selector.on('selecting', (box) => {
-      let { range, rtl } = this.props
+      let { range } = this.props
 
       let startIdx = -1
       let endIdx = -1
@@ -108,13 +94,7 @@ class BackgroundCells extends React.Component {
       }
       if (selector.isSelected(node)) {
         let nodeBox = getBoundsForNode(node)
-        ;({ startIdx, endIdx } = dateCellSelection(
-          this._initial,
-          nodeBox,
-          box,
-          range.length,
-          rtl
-        ))
+        ;({ startIdx, endIdx } = dateCellSelection(this._initial, nodeBox, box, range.length))
       }
 
       this.setState({
@@ -168,24 +148,16 @@ BackgroundCells.propTypes = {
   date: PropTypes.instanceOf(Date),
   getNow: PropTypes.func.isRequired,
 
-  getters: PropTypes.object.isRequired,
-  components: PropTypes.object.isRequired,
-
   container: PropTypes.func,
-  dayPropGetter: PropTypes.func,
   selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
-  longPressThreshold: PropTypes.number,
 
   onSelectSlot: PropTypes.func.isRequired,
   onSelectEnd: PropTypes.func,
   onSelectStart: PropTypes.func,
 
   range: PropTypes.arrayOf(PropTypes.instanceOf(Date)),
-  rtl: PropTypes.bool,
   type: PropTypes.string,
   resourceId: PropTypes.any,
-
-  localizer: PropTypes.any,
 }
 
 export default BackgroundCells

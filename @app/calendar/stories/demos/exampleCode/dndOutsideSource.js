@@ -24,17 +24,6 @@ export default function DnDOutsideResource({ localizer }) {
   const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true)
   const [counters, setCounters] = useState({ item1: 0, item2: 0 })
 
-  const eventPropGetter = useCallback(
-    (event) => ({
-      ...(event.isDraggable
-        ? { className: 'isDraggable' }
-        : { className: 'nonDraggable' }),
-    }),
-    []
-  )
-  //,
-  const handleDragStart = useCallback((event) => setDraggedEvent(event), [])
-
   const dragFromOutsideItem = useCallback(() => draggedEvent, [draggedEvent])
 
   const customOnDragOver = useCallback(
@@ -172,7 +161,6 @@ export default function DnDOutsideResource({ localizer }) {
           dragFromOutsideItem={
             displayDragItemInCell ? dragFromOutsideItem : null
           }
-          eventPropGetter={eventPropGetter}
           events={myEvents}
           localizer={localizer}
           onDropFromOutside={onDropFromOutside}

@@ -4,6 +4,7 @@ import clsx from 'clsx'
 import EventRowMixin from './EventRowMixin'
 import { eventLevels } from './utils/eventLevels'
 import range from 'lodash/range'
+import { messages } from './localizer'
 
 let isSegmentInSlot = (seg, slot) => seg.left <= slot && seg.right >= slot
 let eventsInSlot = (segments, slot) =>
@@ -74,7 +75,6 @@ class EventEndingRow extends React.Component {
   }
 
   renderShowMore(segments, slot) {
-    let { localizer } = this.props
     let count = eventsInSlot(segments, slot)
 
     return count ? (
@@ -84,7 +84,7 @@ class EventEndingRow extends React.Component {
         className={clsx('rbc-button-link', 'rbc-show-more')}
         onClick={(e) => this.showMore(slot, e)}
       >
-        {localizer.messages.showMore(count)}
+        {messages.showMore(count)}
       </button>
     ) : (
       false

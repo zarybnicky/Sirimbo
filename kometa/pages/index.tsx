@@ -1,22 +1,12 @@
 import { LoginForm } from '@/components/LoginForm';
 import { useAuth } from '@/lib/use-auth';
-import React, { useMemo } from 'react';
-import {
-  Calendar,
-  SlotInfo,
-  Views,
-  dateFnsLocalizer,
-  stringOrDate,
-} from 'react-big-calendar';
+import React from 'react';
+import { Calendar, SlotInfo, Views, stringOrDate } from 'react-big-calendar';
 import withDragAndDrop, {
   EventInteractionArgs,
 } from 'react-big-calendar/lib/addons/dragAndDrop';
 import 'react-big-calendar/lib/sass/styles.scss';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.scss';
-import format from 'date-fns/format';
-import startOfWeek from 'date-fns/startOfWeek';
-import getDay from 'date-fns/getDay';
-import cs from 'date-fns/locale/cs';
 import { ScheduleRangeDocument } from '@app/graphql/Schedule';
 import { useQuery } from 'urql';
 import { formatCoupleName } from '../../frontend/lib/format-name';
@@ -37,8 +27,6 @@ type Resource = {
   resourceTitle: string;
 };
 
-const localizer = dateFnsLocalizer({ format, startOfWeek, getDay, locales: { cs } });
-
 function DnDResource() {
   const { user } = useAuth();
 
@@ -54,7 +42,7 @@ function DnDResource() {
     },
   });
 
-  const resources = useMemo(() => {
+  const resources = React.useMemo(() => {
     const resources: Resource[] = [];
     schedules?.schedulesForRange?.nodes.forEach((x) => {
       const existing = resources.find((y) => y.resourceId === parseInt(x.rTrener));
@@ -67,7 +55,8 @@ function DnDResource() {
     });
     return resources;
   }, [schedules]);
-  const events = useMemo(() => {
+
+  const events = React.useMemo(() => {
     const events: Event[] = [];
     schedules?.schedulesForRange?.nodes.forEach((schedule) => {
       schedule.rozpisItemsByRiIdRodic.nodes.forEach((lesson) => {
@@ -156,11 +145,9 @@ function DnDResource() {
   return (
     <div className="col-full">
       <DragAndDropCalendar
-        culture="cs"
         defaultDate={defaultDate}
         defaultView={Views.DAY}
         events={events}
-        localizer={localizer}
         timeslots={4}
         onEventDrop={moveEvent as any}
         onEventResize={resizeEvent}
@@ -168,9 +155,7 @@ function DnDResource() {
         onSelectSlot={handleSelectSlot}
         resizable
         resources={resources}
-        resourceIdAccessor="resourceId"
-        resourceTitleAccessor="resourceTitle"
-              min={min}
+        min={min}
         max={max}
         selectable
         showMultiDayTimes={true}

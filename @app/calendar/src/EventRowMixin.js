@@ -9,12 +9,6 @@ export default {
     slotMetrics: PropTypes.object.isRequired,
 
     selected: PropTypes.object,
-    isAllDay: PropTypes.bool,
-
-    accessors: PropTypes.object.isRequired,
-    localizer: PropTypes.object.isRequired,
-    components: PropTypes.object.isRequired,
-    getters: PropTypes.object.isRequired,
 
     onSelect: PropTypes.func,
     onDoubleClick: PropTypes.func,
@@ -29,15 +23,10 @@ export default {
   renderEvent(props, event) {
     let {
       selected,
-      isAllDay: _,
-      accessors,
-      getters,
       onSelect,
       onDoubleClick,
       onKeyPress,
-      localizer,
       slotMetrics,
-      components,
       resizable,
     } = props
 
@@ -47,10 +36,6 @@ export default {
     return (
       <EventCell
         event={event}
-        getters={getters}
-        localizer={localizer}
-        accessors={accessors}
-        components={components}
         onSelect={onSelect}
         onDoubleClick={onDoubleClick}
         onKeyPress={onKeyPress}

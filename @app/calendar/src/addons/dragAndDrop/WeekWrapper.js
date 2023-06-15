@@ -4,19 +4,15 @@ import EventRow from '../../EventRow'
 import Selection, { getBoundsForNode } from '../../Selection'
 import { eventSegments } from '../../utils/eventLevels'
 import { getSlotAtX, pointInBox } from '../../utils/selection'
-import { dragAccessors, eventTimes } from './common'
+import { eventTimes } from './common'
 import { DnDContext } from './DnDContext'
+import localizer from './localizer'
 
 class WeekWrapper extends React.Component {
   static propTypes = {
     isAllDay: PropTypes.bool,
     slotMetrics: PropTypes.object.isRequired,
-    accessors: PropTypes.object.isRequired,
-    getters: PropTypes.object.isRequired,
-    components: PropTypes.object.isRequired,
     resourceId: PropTypes.any,
-    rtl: PropTypes.bool,
-    localizer: PropTypes.any,
   }
 
   static contextType = DnDContext
@@ -43,8 +39,6 @@ class WeekWrapper extends React.Component {
     const segment = eventSegments(
       { ...event, end, start, __isPreview: true },
       this.props.slotMetrics.range,
-      dragAccessors,
-      this.props.localizer
     )
 
     const { segment: lastSegment } = this.state
@@ -62,14 +56,14 @@ class WeekWrapper extends React.Component {
   handleMove = (point, bounds, draggedEvent) => {
     if (!pointInBox(bounds, point)) return this.reset()
     const event = this.context.draggable.dragAndDropAction.event || draggedEvent
-    const { accessors, slotMetrics, rtl, localizer } = this.props
+    const { slotMetrics } = this.props
 
-    const slot = getSlotAtX(bounds, point.x, rtl, slotMetrics.slots)
+    const slot = getSlotAtX(bounds, point.x, slotMetrics.slots)
 
     const date = slotMetrics.getDateForSlot(slot)
 
     // Adjust the dates, but maintain the times when moving
-    let { start, duration } = eventTimes(event, accessors, localizer)
+    let { start, duration } = eventTimes(event)
     start = localizer.merge(date, start)
     const end = localizer.add(start, duration, 'milliseconds')
     // LATER: when dragging a multi-row event, only the first row is animating
@@ -78,9 +72,9 @@ class WeekWrapper extends React.Component {
 
   handleDropFromOutside = (point, bounds) => {
     if (!this.context.draggable.onDropFromOutside) return
-    const { slotMetrics, rtl, localizer } = this.props
+    const { slotMetrics } = this.props
 
-    const slot = getSlotAtX(bounds, point.x, rtl, slotMetrics.slots)
+    const slot = getSlotAtX(bounds, point.x, slotMetrics.slots)
     const start = slotMetrics.getDateForSlot(slot)
 
     this.context.draggable.onDropFromOutside({
@@ -97,11 +91,11 @@ class WeekWrapper extends React.Component {
 
   handleResize(point, bounds) {
     const { event, direction } = this.context.draggable.dragAndDropAction
-    const { accessors, slotMetrics, rtl, localizer } = this.props
+    const { slotMetrics } = this.props
 
-    let { start, end } = eventTimes(event, accessors, localizer)
+    let { start, end } = eventTimes(event)
 
-    const slot = getSlotAtX(bounds, point.x, rtl, slotMetrics.slots)
+    const slot = getSlotAtX(bounds, point.x, slotMetrics.slots)
     const date = slotMetrics.getDateForSlot(slot)
     const cursorInRow = pointInBox(bounds, point)
 
@@ -120,7 +114,7 @@ class WeekWrapper extends React.Component {
         this.setState({ segment: null })
         return
       }
-      const originalEnd = accessors.end(event)
+      const originalEnd = event.end
       end = localizer.merge(end, originalEnd)
       if (localizer.lt(end, start)) {
         end = originalEnd
@@ -138,7 +132,7 @@ class WeekWrapper extends React.Component {
         this.reset()
         return
       }
-      const originalStart = accessors.start(event)
+      const originalStart = event.start
       start = localizer.merge(start, originalStart)
       if (localizer.gt(start, end)) {
         start = originalStart
@@ -232,7 +226,7 @@ class WeekWrapper extends React.Component {
   }
 
   render() {
-    const { children, accessors } = this.props
+    const { children } = this.props
 
     let { segment } = this.state
 
@@ -246,10 +240,6 @@ class WeekWrapper extends React.Component {
             selected={null}
             className="rbc-addons-dnd-drag-row"
             segments={[segment]}
-            accessors={{
-              ...accessors,
-              ...dragAccessors,
-            }}
           />
         )}
       </div>

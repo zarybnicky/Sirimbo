@@ -26,7 +26,7 @@ Custom views can be any React component, that implements the following interface
 
 ```js
 interface View {
-  static title(date: Date, { formats: DateFormat[], culture: string?, ...props }): string
+  static title(date: Date, { ...props }): string
   static navigate(date: Date, action: 'PREV' | 'NEXT' | 'DATE'): Date
 }
 ```

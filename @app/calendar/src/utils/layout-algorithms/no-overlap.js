@@ -16,13 +16,11 @@ export default function ({
   events,
   minimumStartDifference,
   slotMetrics,
-  accessors,
 }) {
   const styledEvents = overlap({
     events,
     minimumStartDifference,
     slotMetrics,
-    accessors,
   })
 
   styledEvents.sort((a, b) => {

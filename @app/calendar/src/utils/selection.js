@@ -1,29 +1,23 @@
 import isEqual from 'lodash/isEqual'
 
 export function isSelected(event, selected) {
-  if (!event || selected == null) return false
-  return isEqual(event, selected)
+  return event && selected && isEqual(event, selected)
 }
 
 export function slotWidth(rowBox, slots) {
-  let rowWidth = rowBox.right - rowBox.left
-  let cellWidth = rowWidth / slots
-
-  return cellWidth
+  return (rowBox.right - rowBox.left) / slots
 }
 
-export function getSlotAtX(rowBox, x, rtl, slots) {
+export function getSlotAtX(rowBox, x, slots) {
   const cellWidth = slotWidth(rowBox, slots)
-  return rtl
-    ? slots - 1 - Math.floor((x - rowBox.left) / cellWidth)
-    : Math.floor((x - rowBox.left) / cellWidth)
+  return Math.floor((x - rowBox.left) / cellWidth)
 }
 
 export function pointInBox(box, { x, y }) {
   return y >= box.top && y <= box.bottom && x >= box.left && x <= box.right
 }
 
-export function dateCellSelection(start, rowBox, box, slots, rtl) {
+export function dateCellSelection(start, rowBox, box, slots) {
   let startIdx = -1
   let endIdx = -1
   let lastSlotIdx = slots - 1
@@ -31,7 +25,7 @@ export function dateCellSelection(start, rowBox, box, slots, rtl) {
   let cellWidth = slotWidth(rowBox, slots)
 
   // cell under the mouse
-  let currentSlot = getSlotAtX(rowBox, box.x, rtl, slots)
+  let currentSlot = getSlotAtX(rowBox, box.x, slots)
 
   // Identify row as either the initial row
   // or the row under the current mouse point
@@ -61,9 +55,7 @@ export function dateCellSelection(start, rowBox, box, slots, rtl) {
 
   if (isStartRow) {
     // select the cell under the initial point
-    startIdx = endIdx = rtl
-      ? lastSlotIdx - Math.floor((start.x - rowBox.left) / cellWidth)
-      : Math.floor((start.x - rowBox.left) / cellWidth)
+    startIdx = endIdx = Math.floor((start.x - rowBox.left) / cellWidth)
 
     if (isCurrentRow) {
       if (currentSlot < startIdx) startIdx = currentSlot

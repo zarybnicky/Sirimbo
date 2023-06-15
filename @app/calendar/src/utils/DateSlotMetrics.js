@@ -1,5 +1,6 @@
 import memoize from 'memoize-one'
 import { eventSegments, endOfRange, eventLevels } from './eventLevels'
+import localizer from '../localizer'
 
 let isSegmentInSlot = (seg, slot) => seg.left <= slot && seg.right >= slot
 
@@ -8,12 +9,10 @@ const isEqual = (a, b) =>
 
 export function getSlotMetrics() {
   return memoize((options) => {
-    const { range, events, maxRows, minRows, accessors, localizer } = options
-    let { first, last } = endOfRange({ dateRange: range, localizer })
+    const { range, events, maxRows, minRows } = options
+    let { first, last } = endOfRange({ dateRange: range })
 
-    let segments = events.map((evt) =>
-      eventSegments(evt, range, accessors, localizer)
-    )
+    let segments = events.map((evt) => eventSegments(evt, range))
 
     let { levels, extra } = eventLevels(segments, Math.max(maxRows - 1, 1))
     // Subtract 1 from minRows to not include showMore button row when
@@ -49,13 +48,11 @@ export function getSlotMetrics() {
           .map((seg) => seg.event)
       },
 
-      continuesPrior(event) {
-        return localizer.continuesPrior(accessors.start(event), first)
+      continuesPrior({ start }) {
+        return localizer.continuesPrior(start, first)
       },
 
-      continuesAfter(event) {
-        const start = accessors.start(event)
-        const end = accessors.end(event)
+      continuesAfter({ start, end }) {
         return localizer.continuesAfter(start, end, last)
       },
     }

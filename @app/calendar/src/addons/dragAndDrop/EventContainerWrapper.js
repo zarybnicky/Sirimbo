@@ -9,14 +9,11 @@ import Selection, {
   getEventNodeFromPoint,
 } from '../../Selection'
 import TimeGridEvent from '../../TimeGridEvent'
-import { dragAccessors, eventTimes, pointInColumn } from './common'
+import { eventTimes, pointInColumn } from './common'
+import localizer from '../../localizer'
 
 class EventContainerWrapper extends React.Component {
   static propTypes = {
-    accessors: PropTypes.object.isRequired,
-    components: PropTypes.object.isRequired,
-    getters: PropTypes.object.isRequired,
-    localizer: PropTypes.object.isRequired,
     slotMetrics: PropTypes.object.isRequired,
     resource: PropTypes.any,
   }
@@ -62,24 +59,24 @@ class EventContainerWrapper extends React.Component {
   handleMove = (point, bounds) => {
     if (!pointInColumn(bounds, point)) return this.reset()
     const { event } = this.context.draggable.dragAndDropAction
-    const { accessors, slotMetrics } = this.props
+    const { slotMetrics } = this.props
 
     const newSlot = slotMetrics.closestSlotFromPoint(
       { y: point.y - this.eventOffsetTop, x: point.x },
       bounds
     )
 
-    const { duration } = eventTimes(event, accessors, this.props.localizer)
-    let newEnd = this.props.localizer.add(newSlot, duration, 'milliseconds')
+    const { duration } = eventTimes(event)
+    let newEnd = localizer.add(newSlot, duration, 'milliseconds')
     this.update(event, slotMetrics.getRange(newSlot, newEnd, false, true))
   }
 
   handleResize(point, bounds) {
-    const { accessors, slotMetrics, localizer } = this.props
+    const { slotMetrics } = this.props
     const { event, direction } = this.context.draggable.dragAndDropAction
     const newTime = slotMetrics.closestSlotFromPoint(point, bounds)
 
-    let { start, end } = eventTimes(event, accessors, localizer)
+    let { start, end } = eventTimes(event)
     let newRange
     if (direction === 'UP') {
       const newStart = localizer.min(
@@ -253,8 +250,7 @@ class EventContainerWrapper extends React.Component {
   }
 
   renderContent() {
-    const { children, accessors, components, getters, slotMetrics, localizer } =
-      this.props
+    const { children, slotMetrics } = this.props
 
     let { event, top, height } = this.state
     if (!event) return children
@@ -271,7 +267,7 @@ class EventContainerWrapper extends React.Component {
     if (startsBeforeDay) format = 'eventTimeRangeEndFormat'
     else if (startsAfterDay) format = 'eventTimeRangeStartFormat'
 
-    if (startsBeforeDay && startsAfterDay) label = localizer.messages.allDay
+    if (startsBeforeDay && startsAfterDay) label = messages.allDay
     else label = localizer.format({ start, end }, format)
 
     return React.cloneElement(children, {
@@ -285,9 +281,6 @@ class EventContainerWrapper extends React.Component {
               label={label}
               className="rbc-addons-dnd-drag-preview"
               style={{ top, height, width: 100 }}
-              getters={getters}
-              components={components}
-              accessors={{ ...accessors, ...dragAccessors }}
               continuesPrior={startsBeforeDay}
               continuesAfter={startsAfterDay}
             />

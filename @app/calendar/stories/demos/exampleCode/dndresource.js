@@ -160,9 +160,7 @@ export default function DnDResource({ localizer }) {
           onEventDrop={moveEvent}
           onEventResize={resizeEvent}
           resizable
-          resourceIdAccessor="resourceId"
           resources={resourceMap}
-          resourceTitleAccessor="resourceTitle"
           scrollToTime={scrollToTime}
           selectable
           showMultiDayTimes={true}

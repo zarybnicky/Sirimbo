@@ -1,5 +1,6 @@
 /* eslint no-fallthrough: off */
 import * as dates from 'date-arithmetic'
+import localizer from '../localizer'
 
 export {
   milliseconds,
@@ -36,21 +37,21 @@ export function monthsInYear(year) {
   return MONTHS.map((i) => dates.month(date, i))
 }
 
-export function firstVisibleDay(date, localizer) {
+export function firstVisibleDay(date) {
   let firstOfMonth = dates.startOf(date, 'month')
 
   return dates.startOf(firstOfMonth, 'week', localizer.startOfWeek())
 }
 
-export function lastVisibleDay(date, localizer) {
+export function lastVisibleDay(date) {
   let endOfMonth = dates.endOf(date, 'month')
 
   return dates.endOf(endOfMonth, 'week', localizer.startOfWeek())
 }
 
-export function visibleDays(date, localizer) {
-  let current = firstVisibleDay(date, localizer),
-    last = lastVisibleDay(date, localizer),
+export function visibleDays(date) {
+  let current = firstVisibleDay(date),
+    last = lastVisibleDay(date),
     days = []
 
   while (dates.lte(current, last, 'day')) {

@@ -1,4 +1,4 @@
-import { CalendarProps, Components, Event, stringOrDate } from '../../index';
+import { CalendarProps, Event, stringOrDate } from '../../index';
 import * as React from 'react';
 
 export type DragAction = 'resize' | 'move';
@@ -24,7 +24,7 @@ export interface DragFromOutsideItemArgs {
   allDay: boolean;
 }
 
-export interface withDragAndDropProps<TEvent extends object = Event, TResource extends object = object> {
+export interface withDragAndDropProps<TEvent extends object = Event> {
   onEventDrop?: ((args: EventInteractionArgs<TEvent>) => void) | undefined;
   onEventResize?: ((args: EventInteractionArgs<TEvent>) => void) | undefined;
   onDragStart?: ((args: OnDragStartArgs<TEvent>) => void) | undefined;
@@ -33,16 +33,11 @@ export interface withDragAndDropProps<TEvent extends object = Event, TResource e
   dragFromOutsideItem?: (() => keyof TEvent | ((event: TEvent) => Date)) | undefined;
   selectable?: true | false | 'ignoreEvents' | undefined;
   resizable?: boolean | undefined;
-  components?: Components<TEvent, TResource> | undefined;
-  elementProps?: React.HTMLAttributes<HTMLElement> | undefined;
   step?: number | undefined;
 }
 
 interface DragAndDropCalendarProps<TEvent extends object = Event, TResource extends object = object>
   extends CalendarProps<TEvent, TResource>, withDragAndDropProps<TEvent, TResource> {}
-
-declare class DragAndDropCalendar<TEvent extends object = Event, TResource extends object = object>
-  extends React.Component<DragAndDropCalendarProps<TEvent, TResource>> {}
 
 declare function withDragAndDrop<TEvent extends object = Event, TResource extends object = object>(
     calendar: React.ComponentType<CalendarProps<TEvent, TResource>>

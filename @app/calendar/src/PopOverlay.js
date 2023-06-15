@@ -5,12 +5,7 @@ import Popup from './Popup'
 
 function CalOverlay({
   containerRef,
-  popupOffset = 5,
   overlay,
-  accessors,
-  localizer,
-  components,
-  getters,
   selected,
   handleSelectEvent,
   handleDoubleClickEvent,
@@ -22,11 +17,7 @@ function CalOverlay({
   const popperRef = useRef(null)
   if (!overlay.position) return null
 
-  let offset = popupOffset
-  if (!isNaN(popupOffset)) {
-    offset = { x: popupOffset, y: popupOffset }
-  }
-
+  const offset = { x: 5, y: 5 }
   const { position, events, date, end } = overlay
   return (
     <Overlay
@@ -44,11 +35,7 @@ function CalOverlay({
           ref={popperRef}
           target={overlay.target}
           offset={offset}
-          accessors={accessors}
-          getters={getters}
           selected={selected}
-          components={components}
-          localizer={localizer}
           position={position}
           show={overlayDisplay}
           events={events}
@@ -69,20 +56,12 @@ const PopOverlay = React.forwardRef((props, ref) => (
 ))
 
 PopOverlay.propTypes = {
-  popupOffset: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.shape({ x: PropTypes.number, y: PropTypes.number }),
-  ]),
   overlay: PropTypes.shape({
     position: PropTypes.object,
     events: PropTypes.array,
     date: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),
   }),
-  accessors: PropTypes.object.isRequired,
-  localizer: PropTypes.object.isRequired,
-  components: PropTypes.object.isRequired,
-  getters: PropTypes.object.isRequired,
   selected: PropTypes.object,
   handleSelectEvent: PropTypes.func,
   handleDoubleClickEvent: PropTypes.func,

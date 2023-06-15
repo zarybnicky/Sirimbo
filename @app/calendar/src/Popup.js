@@ -2,9 +2,9 @@ import React, { useLayoutEffect } from 'react'
 import PropTypes from 'prop-types'
 import getOffset from 'dom-helpers/offset'
 
-import useClickOutside from './hooks/useClickOutside'
 import EventCell from './EventCell'
 import { isSelected } from './utils/selection'
+import localizer from './localizer'
 
 /**
  * Changes to react-overlays cause issue with auto positioning,
@@ -36,11 +36,7 @@ function getPosition({ target, offset, container, box }) {
 
 function Pop({
   containerRef,
-  accessors,
-  getters,
   selected,
-  components,
-  localizer,
   position,
   show,
   events,
@@ -54,7 +50,18 @@ function Pop({
   target,
   offset,
 }) {
-  useClickOutside({ ref: popperRef, callback: show })
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (popperRef.current && !popperRef.current.contains(e.target)) {
+        show()
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [popperRef, show])
+
   useLayoutEffect(() => {
     const { topOffset, leftOffset } = getPosition({
       target,
@@ -74,22 +81,18 @@ function Pop({
   return (
     <div style={style} className="rbc-overlay" ref={popperRef}>
       <div className="rbc-overlay-header">
-        {localizer.format(slotStart, 'dayHeaderFormat')}
+        {localizer.format(slotStart, 'cccc MMM dd')}
       </div>
       {events.map((event, idx) => (
         <EventCell
           key={idx}
           type="popup"
-          localizer={localizer}
           event={event}
-          getters={getters}
           onSelect={onSelect}
-          accessors={accessors}
-          components={components}
           onDoubleClick={onDoubleClick}
           onKeyPress={onKeyPress}
-          continuesPrior={localizer.lt(accessors.end(event), slotStart, 'day')}
-          continuesAfter={localizer.gte(accessors.start(event), slotEnd, 'day')}
+          continuesPrior={localizer.lt(event.end, slotStart, 'day')}
+          continuesAfter={localizer.gte(event.start, slotEnd, 'day')}
           slotStart={slotStart}
           slotEnd={slotEnd}
           selected={isSelected(event, selected)}
@@ -106,11 +109,7 @@ const Popup = React.forwardRef((props, ref) => (
   <Pop {...props} popperRef={ref} />
 ))
 Popup.propTypes = {
-  accessors: PropTypes.object.isRequired,
-  getters: PropTypes.object.isRequired,
   selected: PropTypes.object,
-  components: PropTypes.object.isRequired,
-  localizer: PropTypes.object.isRequired,
   position: PropTypes.object.isRequired,
   show: PropTypes.func.isRequired,
   events: PropTypes.array.isRequired,

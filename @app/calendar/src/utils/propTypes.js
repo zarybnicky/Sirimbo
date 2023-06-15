@@ -3,12 +3,6 @@ import { views as Views } from './constants'
 
 let viewNames = Object.keys(Views).map((k) => Views[k])
 
-export let accessor = PropTypes.oneOfType([PropTypes.string, PropTypes.func])
-
-export let dateFormat = PropTypes.any
-
-export let dateRangeFormat = PropTypes.func
-
 /**
  * accepts either an array of builtin view names:
  *

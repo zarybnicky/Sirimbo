@@ -3,6 +3,7 @@ import React from 'react'
 
 import Week from './Week'
 import TimeGrid from './TimeGrid'
+import localizer from './localizer'
 
 function workWeekRange(date, options) {
   return Week.range(date, options).filter(
@@ -12,14 +13,8 @@ function workWeekRange(date, options) {
 
 class WorkWeek extends React.Component {
   render() {
-    /**
-     * This allows us to default min, max, and scrollToTime
-     * using our localizer. This is necessary until such time
-     * as TimeGrid is converted to a functional component.
-     */
     let {
       date,
-      localizer,
       min = localizer.startOf(new Date(), 'day'),
       max = localizer.endOf(new Date(), 'day'),
       scrollToTime = localizer.startOf(new Date(), 'day'),
@@ -32,7 +27,6 @@ class WorkWeek extends React.Component {
         {...props}
         range={range}
         eventOffset={15}
-        localizer={localizer}
         min={min}
         max={max}
         scrollToTime={scrollToTime}
@@ -44,7 +38,6 @@ class WorkWeek extends React.Component {
 
 WorkWeek.propTypes = {
   date: PropTypes.instanceOf(Date).isRequired,
-  localizer: PropTypes.any,
   min: PropTypes.instanceOf(Date),
   max: PropTypes.instanceOf(Date),
   scrollToTime: PropTypes.instanceOf(Date),
@@ -57,9 +50,8 @@ WorkWeek.range = workWeekRange
 
 WorkWeek.navigate = Week.navigate
 
-WorkWeek.title = (date, { localizer }) => {
-  let [start, ...rest] = workWeekRange(date, { localizer })
-
+WorkWeek.title = (date) => {
+  let [start, ...rest] = workWeekRange(date)
   return localizer.format({ start, end: rest.pop() }, 'dayRangeHeaderFormat')
 }
 

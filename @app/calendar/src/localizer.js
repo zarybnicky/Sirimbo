@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types'
 import {
   merge,
   inRange,
@@ -23,16 +22,11 @@ import {
   isJustDate,
 } from './utils/dates'
 
-const localePropType = PropTypes.oneOfType([PropTypes.string, PropTypes.func])
-
-function _format(localizer, formatter, value, format, culture) {
-  let result =
-    typeof format === 'function'
-      ? format(value, culture, localizer)
-      : formatter.call(localizer, value, format, culture)
-
-  return result
-}
+import * as dates from '../utils/dates'
+import dateFnsFormat from 'date-fns/format';
+import startOfWeek from 'date-fns/startOfWeek';
+import getDay from 'date-fns/getDay';
+import cs from 'date-fns/locale/cs';
 
 /**
  * This date conversion was moved out of TimeSlots.js, to
@@ -127,14 +121,43 @@ function startAndEndAreDateOnly(start, end) {
   return isJustDate(start) && isJustDate(end)
 }
 
-export class DateLocalizer {
-  constructor(spec) {
-    this.propType = spec.propType || localePropType
+export const messages = {
+  date: 'Date',
+  time: 'Time',
+  event: 'Event',
+  allDay: 'All Day',
+  week: 'Week',
+  work_week: 'Work Week',
+  day: 'Day',
+  month: 'Month',
+  previous: 'Back',
+  next: 'Next',
+  yesterday: 'Yesterday',
+  tomorrow: 'Tomorrow',
+  today: 'Today',
+  agenda: 'Agenda',
+  noEventsInRange: 'There are no events in this range.',
+  showMore: (total) => `+${total} more`,
+}
 
-    this.formats = spec.formats
-    this.format = (...args) => _format(this, spec.format, ...args)
+class DateLocalizer {
+  format(value, format) {
+    return typeof this.formats[format] === 'function'
+      ? this.formats[format](value, this)
+      : dateFnsFormat(new Date(value), this.formats[format], { locale: cs })
+  }
+
+  constructor(spec) {
+    this.formats = {
+      timeRangeFormat: ({ start, end }, local) => `${local.format(start, 'p')} – ${local.format(end, 'p')}`,
+      timeRangeStartFormat: ({ start }, local) => `${local.format(start, 'p')} – `,
+      timeRangeEndFormat: ({ end }, local) => ` – ${local.format(end, 'p')}`,
+      dayRangeHeaderFormat: ({ start, end }, local) => `${local.format(start, 'MMMM dd')} – ${local.format(end, dates.eq(start, end, 'month') ? 'dd' : 'MMMM dd')}`,
+      agendaHeaderFormat: ({ start, end }, local) => `${local.format(start, 'P')} – ${local.format(end, 'P')}`,
+    }
+
     // These date arithmetic methods can be overriden by the localizer
-    this.startOfWeek = spec.firstOfWeek
+    this.startOfWeek = () => getDay(startOfWeek(new Date(), { locale: cs }))
     this.merge = spec.merge || merge
     this.inRange = spec.inRange || inRange
     this.lt = spec.lt || lt
@@ -170,26 +193,9 @@ export class DateLocalizer {
     this.isSameDate = spec.isSameDate || isSameDate
     this.startAndEndAreDateOnly =
       spec.startAndEndAreDateOnly || startAndEndAreDateOnly
-    this.segmentOffset = spec.browserTZOffset ? spec.browserTZOffset() : 0
+
+    this.segmentOffset = 0;
   }
 }
 
-export function mergeWithDefaults(
-  localizer,
-  culture,
-  formatOverrides,
-  messages
-) {
-  const formats = {
-    ...localizer.formats,
-    ...formatOverrides,
-  }
-
-  return {
-    ...localizer,
-    messages,
-    startOfWeek: () => localizer.startOfWeek(culture),
-    format: (value, format) =>
-      localizer.format(value, formats[format] || format, culture),
-  }
-}
+export default new DateLocalizer({});

@@ -1,12 +1,10 @@
 export const NONE = {}
 
-export default function Resources(resources, accessors) {
+export default function Resources(resources) {
   return {
     map(fn) {
       if (!resources) return [fn([NONE, null], 0)]
-      return resources.map((resource, idx) =>
-        fn([accessors.resourceId(resource), resource], idx)
-      )
+      return resources.map((resource, idx) => fn([resource.id, resource], idx))
     },
 
     groupEvents(events) {
@@ -19,7 +17,7 @@ export default function Resources(resources, accessors) {
       }
 
       events.forEach((event) => {
-        const id = accessors.resource(event) || NONE
+        const id = event.resourceId || NONE
         if (Array.isArray(id)) {
           id.forEach((item) => {
             let resourceEvents = eventsByResource.get(item) || []

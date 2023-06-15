@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-
 import { navigate } from './utils/constants'
 import { DayLayoutAlgorithmPropType } from './utils/propTypes'
-
 import TimeGrid from './TimeGrid'
+import localizer from './localizer'
 
 class Week extends React.Component {
   render() {
@@ -15,7 +14,6 @@ class Week extends React.Component {
      */
     let {
       date,
-      localizer,
       min = localizer.startOf(new Date(), 'day'),
       max = localizer.endOf(new Date(), 'day'),
       scrollToTime = localizer.startOf(new Date(), 'day'),
@@ -29,7 +27,6 @@ class Week extends React.Component {
         {...props}
         range={range}
         eventOffset={15}
-        localizer={localizer}
         min={min}
         max={max}
         scrollToTime={scrollToTime}
@@ -51,26 +48,16 @@ Week.propTypes = {
   range: PropTypes.arrayOf(PropTypes.instanceOf(Date)),
   min: PropTypes.instanceOf(Date),
   max: PropTypes.instanceOf(Date),
-  getNow: PropTypes.func.isRequired,
 
   scrollToTime: PropTypes.instanceOf(Date),
   enableAutoScroll: PropTypes.bool,
   showMultiDayTimes: PropTypes.bool,
 
-  rtl: PropTypes.bool,
   resizable: PropTypes.bool,
   width: PropTypes.number,
 
-  accessors: PropTypes.object.isRequired,
-  components: PropTypes.object.isRequired,
-  getters: PropTypes.object.isRequired,
-  localizer: PropTypes.object.isRequired,
-
-  allDayMaxRows: PropTypes.number,
-
   selected: PropTypes.object,
   selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
-  longPressThreshold: PropTypes.number,
 
   onNavigate: PropTypes.func,
   onSelectSlot: PropTypes.func,
@@ -89,19 +76,11 @@ Week.propTypes = {
 
   popup: PropTypes.bool,
   handleDragStart: PropTypes.func,
-
-  popupOffset: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-    }),
-  ]),
 }
 
 Week.defaultProps = TimeGrid.defaultProps
 
-Week.navigate = (date, action, { localizer }) => {
+Week.navigate = (date, action) => {
   switch (action) {
     case navigate.PREVIOUS:
       return localizer.add(date, -1, 'week')
@@ -114,7 +93,7 @@ Week.navigate = (date, action, { localizer }) => {
   }
 }
 
-Week.range = (date, { localizer }) => {
+Week.range = (date) => {
   let firstOfWeek = localizer.startOfWeek()
   let start = localizer.startOf(date, 'week', firstOfWeek)
   let end = localizer.endOf(date, 'week', firstOfWeek)
@@ -122,8 +101,8 @@ Week.range = (date, { localizer }) => {
   return localizer.range(start, end)
 }
 
-Week.title = (date, { localizer }) => {
-  let [start, ...rest] = Week.range(date, { localizer })
+Week.title = (date) => {
+  let [start, ...rest] = Week.range(date)
   return localizer.format({ start, end: rest.pop() }, 'dayRangeHeaderFormat')
 }
 

@@ -10,13 +10,11 @@ import * as animationFrame from 'dom-helpers/animationFrame'
 
 import PopOverlay from './PopOverlay'
 import DateContentRow from './DateContentRow'
-import Header from './Header'
-import DateHeader from './DateHeader'
 
 import { inRange, sortEvents } from './utils/eventLevels'
+import localizer from './localizer'
 
-let eventsForWeek = (evts, start, end, accessors, localizer) =>
-  evts.filter((e) => inRange(e, start, end, accessors, localizer))
+let eventsForWeek = (evts, start, end) => evts.filter((e) => inRange(e, start, end))
 
 class MonthView extends React.Component {
   constructor(...args) {
@@ -34,7 +32,7 @@ class MonthView extends React.Component {
     this._pendingSelection = []
   }
 
-  static getDerivedStateFromProps({ date, localizer }, state) {
+  static getDerivedStateFromProps({ date }, state) {
     return {
       date,
       needLimitMeasure: localizer.neq(date, state.date, 'month'),
@@ -73,8 +71,8 @@ class MonthView extends React.Component {
   }
 
   render() {
-    let { date, localizer, className } = this.props,
-      month = localizer.visibleDays(date, localizer),
+    let { date, className } = this.props,
+      month = localizer.visibleDays(date),
       weeks = chunk(month, 7)
 
     this._weekCount = weeks.length
@@ -96,31 +94,17 @@ class MonthView extends React.Component {
   }
 
   renderWeek = (week, weekIdx) => {
-    let {
-      events,
-      components,
-      selectable,
-      getNow,
-      selected,
-      date,
-      localizer,
-      longPressThreshold,
-      accessors,
-      getters,
-    } = this.props
-
-    const { needLimitMeasure, rowLimit } = this.state
+    let {events, selectable, selected, date} = this.props
+    const { needLimitMeasure } = this.state
 
     // let's not mutate props
     const weeksEvents = eventsForWeek(
       [...events],
       week[0],
       week[week.length - 1],
-      accessors,
-      localizer
     )
 
-    weeksEvents.sort((a, b) => sortEvents(a, b, accessors, localizer))
+    weeksEvents.sort((a, b) => sortEvents(a, b))
 
     return (
       <DateContentRow
@@ -128,17 +112,11 @@ class MonthView extends React.Component {
         ref={weekIdx === 0 ? this.slotRowRef : undefined}
         container={this.getContainer}
         className="rbc-month-row"
-        getNow={getNow}
         date={date}
         range={week}
         events={weeksEvents}
-        maxRows={rowLimit}
         selected={selected}
         selectable={selectable}
-        components={components}
-        accessors={accessors}
-        getters={getters}
-        localizer={localizer}
         renderHeader={this.readerDateHeading}
         renderForMeasure={needLimitMeasure}
         onShowMore={this.handleShowMore}
@@ -146,20 +124,17 @@ class MonthView extends React.Component {
         onDoubleClick={this.handleDoubleClickEvent}
         onKeyPress={this.handleKeyPressEvent}
         onSelectSlot={this.handleSelectSlot}
-        longPressThreshold={longPressThreshold}
-        rtl={this.props.rtl}
         resizable={this.props.resizable}
       />
     )
   }
 
   readerDateHeading = ({ date, className, ...props }) => {
-    let { date: currentDate, getDrilldownView, localizer } = this.props
+    let { date: currentDate, getDrilldownView } = this.props
     let isOffRange = localizer.neq(date, currentDate, 'month')
     let isCurrent = localizer.isSameDate(date, currentDate)
     let drilldownView = getDrilldownView(date)
-    let label = localizer.format(date, 'dateFormat')
-    let DateHeaderComponent = this.props.components.dateHeader || DateHeader
+    let label = localizer.format(date, 'dd')
 
     return (
       <div
@@ -171,57 +146,45 @@ class MonthView extends React.Component {
         )}
         role="cell"
       >
-        <DateHeaderComponent
-          label={label}
-          date={date}
-          drilldownView={drilldownView}
-          isOffRange={isOffRange}
-          onDrillDown={(e) => this.handleHeadingClick(date, drilldownView, e)}
-        />
+        {drilldownView ? (
+          <button
+            type="button"
+            className="rbc-button-link"
+            onClick={(e) => this.handleHeadingClick(date, drilldownView, e)}
+            role="cell"
+          >
+            {label}
+          </button>
+        ) : (
+          <span>{label}</span>
+        )}
       </div>
     )
   }
 
   renderHeaders(row) {
-    let { localizer, components } = this.props
     let first = row[0]
     let last = row[row.length - 1]
-    let HeaderComponent = components.header || Header
 
     return localizer.range(first, last, 'day').map((day, idx) => (
       <div key={'header_' + idx} className="rbc-header">
-        <HeaderComponent
-          date={day}
-          localizer={localizer}
-          label={localizer.format(day, 'weekdayFormat')}
-        />
+        <span role="columnheader" aria-sort="none">
+          {localizer.format(day, 'cccc')}
+        </span>
       </div>
     ))
   }
 
   renderOverlay() {
     let overlay = this.state?.overlay ?? {}
-    let {
-      accessors,
-      localizer,
-      components,
-      getters,
-      selected,
-      popupOffset,
-      handleDragStart,
-    } = this.props
+    let {selected, handleDragStart} = this.props
 
     const onHide = () => this.setState({ overlay: null })
 
     return (
       <PopOverlay
         overlay={overlay}
-        accessors={accessors}
-        localizer={localizer}
-        components={components}
-        getters={getters}
         selected={selected}
-        popupOffset={popupOffset}
         ref={this.containerRef}
         handleKeyPressEvent={this.handleKeyPressEvent}
         handleSelectEvent={this.handleSelectEvent}
@@ -334,22 +297,14 @@ MonthView.propTypes = {
   max: PropTypes.instanceOf(Date),
 
   step: PropTypes.number,
-  getNow: PropTypes.func.isRequired,
 
   scrollToTime: PropTypes.instanceOf(Date),
   enableAutoScroll: PropTypes.bool,
-  rtl: PropTypes.bool,
   resizable: PropTypes.bool,
   width: PropTypes.number,
 
-  accessors: PropTypes.object.isRequired,
-  components: PropTypes.object.isRequired,
-  getters: PropTypes.object.isRequired,
-  localizer: PropTypes.object.isRequired,
-
   selected: PropTypes.object,
   selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
-  longPressThreshold: PropTypes.number,
 
   onNavigate: PropTypes.func,
   onSelectSlot: PropTypes.func,
@@ -363,23 +318,15 @@ MonthView.propTypes = {
 
   popup: PropTypes.bool,
   handleDragStart: PropTypes.func,
-
-  popupOffset: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-    }),
-  ]),
 }
 
-MonthView.range = (date, { localizer }) => {
-  let start = localizer.firstVisibleDay(date, localizer)
-  let end = localizer.lastVisibleDay(date, localizer)
+MonthView.range = (date) => {
+  let start = localizer.firstVisibleDay(date)
+  let end = localizer.lastVisibleDay(date)
   return { start, end }
 }
 
-MonthView.navigate = (date, action, { localizer }) => {
+MonthView.navigate = (date, action) => {
   switch (action) {
     case navigate.PREVIOUS:
       return localizer.add(date, -1, 'month')
@@ -392,7 +339,6 @@ MonthView.navigate = (date, action, { localizer }) => {
   }
 }
 
-MonthView.title = (date, { localizer }) =>
-  localizer.format(date, 'monthHeaderFormat')
+MonthView.title = (date) => localizer.format(date, 'MMMM yyyy')
 
 export default MonthView

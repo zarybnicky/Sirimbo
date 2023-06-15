@@ -1,6 +1,7 @@
 import findIndex from 'lodash/findIndex'
+import localizer from './localizer'
 
-export function endOfRange({ dateRange, unit = 'day', localizer }) {
+export function endOfRange({ dateRange, unit = 'day' }) {
   return {
     first: dateRange[0],
     last: localizer.add(dateRange[dateRange.length - 1], 1, unit),
@@ -9,15 +10,15 @@ export function endOfRange({ dateRange, unit = 'day', localizer }) {
 
 // properly calculating segments requires working with dates in
 // the timezone we're working with, so we use the localizer
-export function eventSegments(event, range, accessors, localizer) {
-  let { first, last } = endOfRange({ dateRange: range, localizer })
+export function eventSegments(event, range) {
+  let { first, last } = endOfRange({ dateRange: range })
 
   let slots = localizer.diff(first, last, 'day')
   let start = localizer.max(
-    localizer.startOf(accessors.start(event), 'day'),
+    localizer.startOf(event.start, 'day'),
     first
   )
-  let end = localizer.min(localizer.ceil(accessors.end(event), 'day'), last)
+  let end = localizer.min(localizer.ceil(event.end, 'day'), last)
 
   let padding = findIndex(range, (x) => localizer.isSameDate(x, start))
   let span = localizer.diff(start, end, 'day')
@@ -61,12 +62,9 @@ export function eventLevels(rowSegments, limit = Infinity) {
   return { levels, extra }
 }
 
-export function inRange(e, start, end, accessors, localizer) {
-  const event = {
-    start: accessors.start(e),
-    end: accessors.end(e),
-  }
-  const range = { start, end }
+export function inRange(e, start, end) {
+  const event = { start: e.start, end: e.end };
+  const range = { start, end };
   return localizer.inEventRange({ event, range })
 }
 
@@ -76,16 +74,16 @@ export function segsOverlap(seg, otherSegs) {
   )
 }
 
-export function sortEvents(eventA, eventB, accessors, localizer) {
+export function sortEvents(eventA, eventB) {
   const evtA = {
-    start: accessors.start(eventA),
-    end: accessors.end(eventA),
-    allDay: accessors.allDay(eventA),
+    start: eventA.start,
+    end: eventA.end,
+    allDay: eventA.allDay,
   }
   const evtB = {
-    start: accessors.start(eventB),
-    end: accessors.end(eventB),
-    allDay: accessors.allDay(eventB),
+    start: eventB.start,
+    end: eventB.end,
+    allDay: eventB.allDay,
   }
   return localizer.sortEvents({ evtA, evtB })
 }

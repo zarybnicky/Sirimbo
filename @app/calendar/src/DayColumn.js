@@ -6,13 +6,12 @@ import Selection, { getBoundsForNode, isEvent } from './Selection'
 import * as TimeSlotUtils from './utils/TimeSlots'
 import { isSelected } from './utils/selection'
 
-import { notify } from './utils/helpers'
 import * as DayEventLayout from './utils/DayEventLayout'
 import TimeSlotGroup from './TimeSlotGroup'
 import TimeGridEvent from './TimeGridEvent'
 import { DayLayoutAlgorithmPropType } from './utils/propTypes'
-
-import DayColumnWrapper from './DayColumnWrapper'
+import localizer, { messages } from './localizer'
+import { EventContainer } from './addons/dragAndDrop/EventContainerWrapper'
 
 class DayColumn extends React.Component {
   state = { selecting: false, timeIndicatorPosition: null }
@@ -47,15 +46,13 @@ class DayColumn extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { getNow, isNow, localizer, date, min, max } = this.props
-    const getNowChanged = localizer.neq(prevProps.getNow(), getNow(), 'minutes')
+    const { isNow, date, min, max } = this.props
 
-    if (prevProps.isNow !== isNow || getNowChanged) {
+    if (prevProps.isNow !== isNow) {
       this.clearTimeIndicatorInterval()
 
       if (isNow) {
         const tail =
-          !getNowChanged &&
           localizer.eq(prevProps.date, date, 'minutes') &&
           prevState.timeIndicatorPosition === this.state.timeIndicatorPosition
 
@@ -92,8 +89,8 @@ class DayColumn extends React.Component {
   }
 
   positionTimeIndicator() {
-    const { min, max, getNow } = this.props
-    const current = getNow()
+    const { min, max } = this.props
+    const current = new Date()
 
     if (current >= min && current <= max) {
       const top = this.slotMetrics.getCurrentTimePosition(current)
@@ -107,14 +104,8 @@ class DayColumn extends React.Component {
   render() {
     const {
       date,
-      max,
-      rtl,
       isNow,
       resource,
-      accessors,
-      localizer,
-      getters: { dayProp, ...getters },
-      components: { eventContainerWrapper: EventContainer, ...components },
     } = this.props
 
     let { slotMetrics } = this
@@ -122,22 +113,14 @@ class DayColumn extends React.Component {
 
     let selectDates = { start: startDate, end: endDate }
 
-    const { className, style } = dayProp(max)
-
-    const DayColumnWrapperComponent =
-      components.dayColumnWrapper || DayColumnWrapper
-
     return (
-      <DayColumnWrapperComponent
+      <div
         ref={this.containerRef}
         date={date}
-        style={style}
         className={clsx(
-          className,
           'rbc-day-slot',
           'rbc-time-column',
-          isNow && 'rbc-now',
-          isNow && 'rbc-today', // WHY
+          isNow && 'rbc-now rbc-today',
           selecting && 'rbc-slot-selecting'
         )}
         slotMetrics={slotMetrics}
@@ -147,19 +130,10 @@ class DayColumn extends React.Component {
             key={idx}
             group={grp}
             resource={resource}
-            getters={getters}
-            components={components}
           />
         ))}
-        <EventContainer
-          localizer={localizer}
-          resource={resource}
-          accessors={accessors}
-          getters={getters}
-          components={components}
-          slotMetrics={slotMetrics}
-        >
-          <div className={clsx('rbc-events-container', rtl && 'rtl')}>
+        <EventContainer resource={resource} slotMetrics={slotMetrics}>
+          <div className='rbc-events-container'>
             {this.renderEvents({
               events: this.props.backgroundEvents,
               isBackgroundEvent: true,
@@ -170,7 +144,7 @@ class DayColumn extends React.Component {
 
         {selecting && (
           <div className="rbc-slot-selection" style={{ top, height }}>
-            <span>{localizer.format(selectDates, 'selectRangeFormat')}</span>
+            <span>{localizer.format(selectDates, 'timeRangeFormat')}</span>
           </div>
         )}
         {isNow && this.intervalTriggered && (
@@ -179,18 +153,13 @@ class DayColumn extends React.Component {
             style={{ top: `${this.state.timeIndicatorPosition}%` }}
           />
         )}
-      </DayColumnWrapperComponent>
+      </div>
     )
   }
 
   renderEvents = ({ events, isBackgroundEvent }) => {
     let {
-      rtl,
       selected,
-      accessors,
-      localizer,
-      getters,
-      components,
       step,
       timeslots,
       dayLayoutAlgorithm,
@@ -198,33 +167,27 @@ class DayColumn extends React.Component {
     } = this.props
 
     const { slotMetrics } = this
-    const { messages } = localizer
 
     let styledEvents = DayEventLayout.getStyledEvents({
       events,
-      accessors,
       slotMetrics,
       minimumStartDifference: Math.ceil((step * timeslots) / 2),
       dayLayoutAlgorithm,
     })
 
     return styledEvents.map(({ event, style }, idx) => {
-      let end = accessors.end(event)
-      let start = accessors.start(event)
-      let format = 'eventTimeRangeFormat'
-      let label
+      let { start, end } = event
 
       const startsBeforeDay = slotMetrics.startsBeforeDay(start)
       const startsAfterDay = slotMetrics.startsAfterDay(end)
 
-      if (startsBeforeDay) format = 'eventTimeRangeEndFormat'
-      else if (startsAfterDay) format = 'eventTimeRangeStartFormat'
+      let format = 'timeRangeFormat'
+      if (startsBeforeDay) format = 'timeRangeEndFormat'
+      else if (startsAfterDay) format = 'timeRangeStartFormat'
 
+      let label
       if (startsBeforeDay && startsAfterDay) label = messages.allDay
       else label = localizer.format({ start, end }, format)
-
-      let continuesPrior = startsBeforeDay || slotMetrics.startsBefore(start)
-      let continuesAfter = startsAfterDay || slotMetrics.startsAfter(end)
 
       return (
         <TimeGridEvent
@@ -232,17 +195,11 @@ class DayColumn extends React.Component {
           event={event}
           label={label}
           key={'evt_' + idx}
-          getters={getters}
-          rtl={rtl}
-          components={components}
-          continuesPrior={continuesPrior}
-          continuesAfter={continuesAfter}
-          accessors={accessors}
+          continuesPrior={startsBeforeDay || slotMetrics.startsBefore(start)}
+          continuesAfter={startsAfterDay || slotMetrics.startsAfter(end)}
           resource={this.props.resource}
           selected={isSelected(event, selected)}
-          onClick={(e) =>
-            this._select({ ...event, sourceResource: this.props.resource }, e)
-          }
+          onClick={(e) => this._select({ ...event, sourceResource: this.props.resource }, e)}
           onDoubleClick={(e) => this._doubleClick(event, e)}
           isBackgroundEvent={isBackgroundEvent}
           onKeyPress={(e) => this._keyPress(event, e)}
@@ -254,10 +211,7 @@ class DayColumn extends React.Component {
 
   _selectable = () => {
     let node = this.containerRef.current
-    const { longPressThreshold, localizer } = this.props
-    let selector = (this._selector = new Selection(() => node, {
-      longPressThreshold: longPressThreshold,
-    }))
+    let selector = (this._selector = new Selection(() => node));
 
     let maybeSelect = (box) => {
       let onSelecting = this.props.onSelecting
@@ -366,7 +320,7 @@ class DayColumn extends React.Component {
     let current = startDate,
       slots = []
 
-    while (this.props.localizer.lte(current, endDate)) {
+    while (localizer.lte(current, endDate)) {
       slots.push(current)
       current = new Date(+current + this.props.step * 60 * 1000) // using Date ensures not to create an endless loop the day DST begins
     }
@@ -402,25 +356,16 @@ DayColumn.propTypes = {
   date: PropTypes.instanceOf(Date).isRequired,
   min: PropTypes.instanceOf(Date).isRequired,
   max: PropTypes.instanceOf(Date).isRequired,
-  getNow: PropTypes.func.isRequired,
   isNow: PropTypes.bool,
 
-  rtl: PropTypes.bool,
   resizable: PropTypes.bool,
 
-  accessors: PropTypes.object.isRequired,
-  components: PropTypes.object.isRequired,
-  getters: PropTypes.object.isRequired,
-  localizer: PropTypes.object.isRequired,
-
   showMultiDayTimes: PropTypes.bool,
-  culture: PropTypes.string,
   timeslots: PropTypes.number,
 
   selected: PropTypes.object,
   selectable: PropTypes.oneOf([true, false, 'ignoreEvents']),
   eventOffset: PropTypes.number,
-  longPressThreshold: PropTypes.number,
 
   onSelecting: PropTypes.func,
   onSelectSlot: PropTypes.func.isRequired,

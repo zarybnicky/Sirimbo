@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 
 import { getSlotMetrics } from './utils/TimeSlots'
 import TimeSlotGroup from './TimeSlotGroup'
+import localizer from './localizer'
 
 /**
  * Since the TimeGutter only displays the 'times' of slots in a day, and is separate
@@ -11,7 +12,7 @@ import TimeSlotGroup from './TimeSlotGroup'
  * and, if so, change the beginning and end 'date' by a day to properly display the slots times
  * used.
  */
-function adjustForDST({ min, max, localizer }) {
+function adjustForDST({ min, max }) {
   if (localizer.getTimezoneOffset(min) !== localizer.getTimezoneOffset(max)) {
     return {
       start: localizer.add(min, -1, 'day'),
@@ -26,18 +27,13 @@ const TimeGutter = ({
   max,
   timeslots,
   step,
-  localizer,
-  getNow,
   resource,
-  components,
-  getters,
   gutterRef,
 }) => {
-  const { timeGutterWrapper: TimeGutterWrapper } = components
   const { start, end } = useMemo(
-    () => adjustForDST({ min, max, localizer }),
+    () => adjustForDST({ min, max }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [min?.toISOString(), max?.toISOString(), localizer]
+    [min?.toISOString(), max?.toISOString()]
   )
   const [slotMetrics, setSlotMetrics] = useState(
     getSlotMetrics({
@@ -45,7 +41,6 @@ const TimeGutter = ({
       max: end,
       timeslots,
       step,
-      localizer,
     })
   )
 
@@ -57,7 +52,6 @@ const TimeGutter = ({
           max: end,
           timeslots,
           step,
-          localizer,
         })
       )
     }
@@ -71,33 +65,22 @@ const TimeGutter = ({
     (value, idx) => {
       if (idx) return null // don't return the first (0) idx
 
-      const isNow = slotMetrics.dateIsInGroup(getNow(), idx)
+      const isNow = slotMetrics.dateIsInGroup(new Date(), idx)
       return (
         <span className={clsx('rbc-label', isNow && 'rbc-now')}>
-          {localizer.format(value, 'timeGutterFormat')}
+          {localizer.format(value, 'p')}
         </span>
       )
     },
-    [slotMetrics, localizer, getNow]
+    [slotMetrics]
   )
 
   return (
-    <TimeGutterWrapper slotMetrics={slotMetrics}>
-      <div className="rbc-time-gutter rbc-time-column" ref={gutterRef}>
-        {slotMetrics.groups.map((grp, idx) => {
-          return (
-            <TimeSlotGroup
-              key={idx}
-              group={grp}
-              resource={resource}
-              components={components}
-              renderSlot={renderSlot}
-              getters={getters}
-            />
-          )
-        })}
-      </div>
-    </TimeGutterWrapper>
+    <div className="rbc-time-gutter rbc-time-column" ref={gutterRef}>
+      {slotMetrics.groups.map((grp, idx) => (
+        <TimeSlotGroup key={idx} group={grp} resource={resource} renderSlot={renderSlot} />
+      ))}
+    </div>
   )
 }
 
@@ -106,11 +89,6 @@ TimeGutter.propTypes = {
   max: PropTypes.instanceOf(Date).isRequired,
   timeslots: PropTypes.number.isRequired,
   step: PropTypes.number.isRequired,
-  getNow: PropTypes.func.isRequired,
-  components: PropTypes.object.isRequired,
-  getters: PropTypes.object,
-
-  localizer: PropTypes.object.isRequired,
   resource: PropTypes.string,
   gutterRef: PropTypes.any,
 }

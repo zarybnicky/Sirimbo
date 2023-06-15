@@ -1,9 +1,9 @@
 import sortBy from 'lodash/sortBy'
 
 class Event {
-  constructor(data, { accessors, slotMetrics }) {
+  constructor(data, { slotMetrics }) {
     const { start, startDate, end, endDate, top, height } =
-      slotMetrics.getRange(accessors.start(data), accessors.end(data))
+      slotMetrics.getRange(data.start, data.end)
 
     this.start = start
     this.end = end
@@ -125,12 +125,11 @@ export default function getStyledEvents({
   events,
   minimumStartDifference,
   slotMetrics,
-  accessors,
 }) {
   // Create proxy events and order them so that we don't have
   // to fiddle with z-indexes.
   const proxies = events.map(
-    (event) => new Event(event, { slotMetrics, accessors })
+    (event) => new Event(event, { slotMetrics })
   )
   const eventsInRenderOrder = sortByRender(proxies)
 

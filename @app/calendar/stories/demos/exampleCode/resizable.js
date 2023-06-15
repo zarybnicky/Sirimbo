@@ -21,15 +21,6 @@ export default function Resizable({ localizer }) {
   const [myEvents, setMyEvents] = useState(adjEvents)
   const [resizable, setResizable] = useState(true)
 
-  const eventPropGetter = useCallback(
-    (event) => ({
-      // add class if not allowing resizing at all, or if
-      // allowing resizing, but not on a specific event
-      ...((!resizable || !event.isResizable) && { className: 'nonResizable' }),
-    }),
-    [resizable]
-  )
-
   const toggleResizing = useCallback(() => setResizable((prev) => !prev), [])
 
   const resizeEvent = useCallback(
@@ -78,7 +69,6 @@ export default function Resizable({ localizer }) {
         <DragAndDropCalendar
           defaultDate={defaultDate}
           defaultView={Views.MONTH}
-          eventPropGetter={eventPropGetter}
           events={myEvents}
           localizer={localizer}
           onEventResize={resizeEvent}
