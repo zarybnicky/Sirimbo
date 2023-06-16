@@ -4,10 +4,10 @@ import DayColumn from './DayColumn'
 import TimeGutter from './TimeGutter'
 import TimeGridHeader from './TimeGridHeader'
 import getWidth from 'dom-helpers/width'
-import { sortEvents, inEventRange, merge, isSameDate, inRange, startAndEndAreDateOnly, diff } from './localizer'
-import makeGrouper from './utils/ResourceGrouper'
+import { eq, sortEvents, inEventRange, merge, inRange, startAndEndAreDateOnly, diff } from './localizer'
+import makeGrouper from './ResourceGrouper'
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect'
-import { Event, Resource, SlotInfo, View } from './utils/constants'
+import { Event, Resource } from './types'
 
 interface TimeGridProps {
   events: Event[];
@@ -16,15 +16,10 @@ interface TimeGridProps {
   range: Date[];
   min: Date;
   max: Date;
-  selected?: Event;
-  onDrillDown: (date: Date, view: View) => void
-  onSelectSlot: (slotInfo: SlotInfo) => void;
-  onSelectEvent: (event: Event) => void;
 }
 
-const TimeGrid = (props: TimeGridProps) => {
-  let {events, backgroundEvents, range, selected, resources, min, max, onDrillDown, onSelectSlot, onSelectEvent} = props
-  const dateRange = { start: range[0], end: range[range.length - 1] };
+const TimeGrid = ({ events, backgroundEvents, range, resources, min, max }: TimeGridProps) => {
+  const dateRange = { start: range[0]!, end: range[range.length - 1]! };
 
   const scrollRef = React.useRef<HTMLDivElement>(null)
   const contentRef = React.useRef<HTMLDivElement>(null)
@@ -55,7 +50,7 @@ const TimeGrid = (props: TimeGridProps) => {
     let rangeEvents: Event[] = [];
     events.forEach((event) => {
       if (inEventRange(event, dateRange)) {
-        if (event.allDay || startAndEndAreDateOnly(event.start, event.end) || (!showMultiDayTimes && !isSameDate(event.start, event.end))) {
+        if (event.allDay || startAndEndAreDateOnly(event.start, event.end) || (!showMultiDayTimes && !eq(event.start, event.end, 'day'))) {
           allDayEvents.push(event)
         } else {
           rangeEvents.push(event)
@@ -84,17 +79,8 @@ const TimeGrid = (props: TimeGridProps) => {
           range={range}
           events={allDayEvents}
           width={gutterWidth}
-          selected={selected}
           resources={grouper}
           scrollRef={scrollRef}
-          onSelectSlot={(slots, slotInfo) => {
-            const start = new Date(slots[0])
-            const end = new Date(slots[slots.length - 1])
-            end.setDate(slots[slots.length - 1].getDate() + 1)
-            onSelectSlot({slots, start, end, action: slotInfo.action, resourceId: slotInfo.resourceId})
-          }}
-          onSelectEvent={onSelectEvent}
-          onDrillDown={onDrillDown}
         />
         <div
           ref={contentRef}
@@ -118,13 +104,11 @@ const TimeGrid = (props: TimeGridProps) => {
           {grouper.map(([resource, id], i) => (
             range.map((date, jj) => (
               <DayColumn
-                {...props}
                 step={15}
                 timeslots={4}
                 min={merge(date, min)}
                 max={merge(date, max)}
-                resource={resource && id}
-                isNow={isSameDate(date, new Date())}
+                resourceId={resource && id}
                 key={i + '-' + jj}
                 date={date}
                 events={(groupedEvents.get(id) || []).filter((event) => inRange(date, event.start, event.end, 'day'))}

@@ -1,25 +1,21 @@
 import React from 'react';
 import clsx from 'clsx';
 import getHeight from 'dom-helpers/height';
+import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import BackgroundCells from './BackgroundCells';
 import EventRow from './EventRow';
 import EventEndingRow from './EventEndingRow';
-import { getSlotMetrics } from './utils/DateSlotMetrics';
+import { getSlotMetrics } from './DateSlotMetrics';
 import WeekWrapper from './WeekWrapper';
-import { isSameDate } from './localizer';
-import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import { Event, SlotInfo, View } from './utils/constants';
+import { eq } from './localizer';
+import { Event } from './types';
 
 type DateContentRowProps = {
   date?: Date;
   range: Date[];
   events: Event[];
   className?: string;
-  selected?: Event;
   renderHeader?: (x: { date: Date } & React.HTMLProps<HTMLDivElement>) => JSX.Element;
-  onSelectEvent: (event: Event) => void;
-  onSelectSlot: (range: Date[], slotInfo: SlotInfo) => void;
-  onDrillDown: (date: Date, view: View) => void;
   resourceId?: number;
   isAllDay?: boolean;
   measureRows?: boolean;
@@ -30,11 +26,7 @@ const DateContentRow = ({
   range,
   events,
   className,
-  selected,
   renderHeader,
-  onSelectEvent,
-  onSelectSlot,
-  onDrillDown,
   resourceId,
   isAllDay,
   measureRows,
@@ -43,14 +35,14 @@ const DateContentRow = ({
   const headingRowRef = React.useRef<HTMLDivElement>(null);
   const eventRowRef = React.useRef<HTMLDivElement>(null);
   const [maxRows, setMaxRows] = React.useState(5);
-  const [previousDate, setPreviousDate] = React.useState(range[0]);
+  const [previousDate, setPreviousDate] = React.useState(range[0]!);
   const [renderForMeasure, setRenderForMeasure] = React.useState(!!measureRows);
 
   React.useEffect(() => {
-    if (range[0].getMonth() !== previousDate.getMonth()) {
+    if (range[0]!.getMonth() !== previousDate.getMonth()) {
       setRenderForMeasure(true);
     }
-    setPreviousDate(range[0]);
+    setPreviousDate(range[0]!);
   }, [range]);
 
   useLayoutEffect(() => {
@@ -72,9 +64,6 @@ const DateContentRow = ({
           date={date}
           range={range}
           container={() => containerRef.current}
-          onSelectSlot={(slot) =>
-            onSelectSlot(range.slice(+slot.start, +slot.end + 1), slot)
-          }
           resourceId={resourceId}
         />
       )}
@@ -88,7 +77,7 @@ const DateContentRow = ({
                 key: `header_${index}`,
                 className: clsx(
                   'rbc-date-cell',
-                  isSameDate(date, new Date()) && 'rbc-now',
+                  eq(date, new Date(), 'day') && 'rbc-now',
                 ),
               }),
             )}
@@ -109,8 +98,6 @@ const DateContentRow = ({
               <EventRow
                 key={idx}
                 segments={segs}
-                selected={selected}
-                onSelectEvent={onSelectEvent}
                 resourceId={resourceId}
                 slotMetrics={metrics}
               />
@@ -118,11 +105,8 @@ const DateContentRow = ({
             {!!metrics.extra.length && (
               <EventEndingRow
                 segments={metrics.extra}
-                selected={selected}
-                onSelectEvent={onSelectEvent}
                 resourceId={resourceId}
                 slotMetrics={metrics}
-                onDrillDown={onDrillDown}
               />
             )}
           </WeekWrapper>

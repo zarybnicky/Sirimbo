@@ -1,22 +1,18 @@
 import clsx from 'clsx'
 import React from 'react'
-import { isSelected } from './utils/selection'
 import EventCell from './EventCell'
-import { DateSlotMetrics } from './utils/DateSlotMetrics'
-import { Segment } from './utils/eventLevels'
-import { Event } from './utils/constants'
+import { DateSlotMetrics } from './DateSlotMetrics'
+import { Segment } from './common'
+import { Event } from './types'
 
 const EventRow: React.FC<{
   className?: string;
   segments: Segment[];
   slotMetrics: DateSlotMetrics;
-  selected?: Event;
-  onSelectEvent: (event: Event) => void;
   resourceId?: number;
 }> = ({
   className,
   segments = [],
-  selected = {},
   slotMetrics,
   ...props
 }) => {
@@ -37,7 +33,6 @@ const EventRow: React.FC<{
           event={event}
           continuesPrior={slotMetrics.continuesPrior(event)}
           continuesAfter={slotMetrics.continuesAfter(event)}
-          selected={isSelected(event, selected)}
           {...props}
         />
       </div>

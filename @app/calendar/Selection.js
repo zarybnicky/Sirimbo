@@ -113,9 +113,7 @@ class Selection {
 
   isSelected(node) {
     let box = this._selectRect
-
     if (!box || !this.selecting) return false
-
     return objectsCollide(box, getBoundsForNode(node))
   }
 
@@ -445,7 +443,7 @@ export function objectsCollide(nodeA, nodeB, tolerance = 0) {
 /**
  * Given a node, get everything needed to calculate its boundaries
  * @param  {HTMLElement} node
- * @return {Object}
+ * @return {{ top: number; left: number; right: number; bottom: number }}
  */
 export function getBoundsForNode(node) {
   if (!node.getBoundingClientRect) return node

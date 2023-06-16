@@ -1,37 +1,42 @@
 import clsx from 'clsx'
-import React from 'react'
+import React, { useContext } from 'react'
 import getWidth from 'dom-helpers/width'
-import { Navigate, Event, ViewClass } from './utils/constants'
-import { eq, add, agendaHeaderFormat, endOf, format, gt, inEventRange, isSameDate, lt, startOf, timeRangeFormat, range } from './localizer'
+import { Navigate, Event, ViewClass } from '../types'
+import { eq, add, agendaHeaderFormat, endOf, format, gt, inEventRange, lt, startOf, timeRangeFormat, range } from '../localizer'
+import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
+import { SelectionContext } from 'SelectContext'
 
-const Agenda: ViewClass = ({date, events, length = 7, onSelectEvent}) => {
+const Agenda: ViewClass = ({ date, events }) => {
   const dateColRef = React.useRef<HTMLTableCellElement>(null)
   const timeColRef = React.useRef<HTMLTableCellElement>(null)
   const tbodyRef = React.useRef<HTMLTableSectionElement>(null)
+  const { onSelectEvent } = useContext(SelectionContext);
 
-  React.useEffect(() => {
-    if (!tbodyRef.current) return
+  useLayoutEffect(() => {
     let firstRow = tbodyRef.current?.firstChild
     if (!firstRow) return
-    let widths = [getWidth(firstRow.childNodes[0] as any), getWidth(firstRow.childNodes[1] as any)]
-    if (dateColRef.current) dateColRef.current.style.width = widths[0] + 'px'
-    if (timeColRef.current) timeColRef.current.style.width = widths[1] + 'px'
+    if (dateColRef.current) {
+      dateColRef.current.style.width = getWidth(firstRow.childNodes[0] as any) + 'px'
+    }
+    if (timeColRef.current) {
+      timeColRef.current.style.width = getWidth(firstRow.childNodes[1] as any) + 'px'
+    }
   })
 
   const timeRangeLabel = (day: Date, event: Event) => {
     let { start, end } = event
 
-    let label = "Celý den";
-    if (!event.allDay) {
-        if (eq(start, end)) {
-        label = format(start, 'p')
-      } else if (isSameDate(start, end)) {
-        label = timeRangeFormat(event)
-      } else if (isSameDate(day, start)) {
-        label = format(start, 'p')
-      } else if (isSameDate(day, end)) {
-        label = format(end, 'p')
-      }
+    let label = "";
+    if (event.allDay) {
+      label = "Celý den"
+    } else if (eq(start, end)) {
+      label = format(start, 'p')
+    } else if (eq(start, end, 'day')) {
+      label = timeRangeFormat(event)
+    } else if (eq(day, start, 'day')) {
+      label = format(start, 'p')
+    } else if (eq(day, end, 'day')) {
+      label = format(end, 'p')
     }
 
     return (
@@ -44,11 +49,9 @@ const Agenda: ViewClass = ({date, events, length = 7, onSelectEvent}) => {
     )
   }
 
-  let end = add(date, length, 'day')
+  let end = add(date, 7, 'day')
   events = events.filter((event) => inEventRange(event, {start: startOf(date, 'day'), end: endOf(end, 'day')}));
   events.sort((a, b) => +a.start - +b.start);
-
-  const dateRange = range(date, end, 'day');
 
   if (!events.length) {
     return (
@@ -74,7 +77,7 @@ const Agenda: ViewClass = ({date, events, length = 7, onSelectEvent}) => {
       <div className="rbc-agenda-content">
         <table className="rbc-agenda-table">
           <tbody ref={tbodyRef}>
-            {dateRange.map((day, dayKey) => (
+            {range(date, end, 'day').map((day, dayKey) => (
               events
                 .filter((e) => inEventRange(e, {start: startOf(day, 'day'), end: endOf(day, 'day')}))
                 .map((event, idx) => (
@@ -102,23 +105,21 @@ const Agenda: ViewClass = ({date, events, length = 7, onSelectEvent}) => {
   )
 }
 
-Agenda.range = (start: Date, length = 7) => [start, add(start, length, 'day')];
+Agenda.range = (start: Date) => [start, add(start, 7, 'day')];
 
-Agenda.navigate = (date: Date, action: Navigate, length = 7) => {
+Agenda.navigate = (date: Date, action: Navigate) => {
   switch (action) {
     case Navigate.PREVIOUS:
-      return add(date, -length, 'day')
+      return add(date, -7, 'day')
     case Navigate.NEXT:
-      return add(date, length, 'day')
+      return add(date, 7, 'day')
     default:
       return date
   }
 }
 
-Agenda.title = (start: Date, length = 7) => {
-  let end = add(start, length, 'day')
-  return agendaHeaderFormat({ start, end })
-}
+Agenda.title = (start: Date) => agendaHeaderFormat({ start, end: add(start, 7, 'day') })
+
 Agenda.name = "Agenda";
 
 export default Agenda

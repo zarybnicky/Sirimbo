@@ -1,4 +1,4 @@
-import { getTotalMin, getMinutesFromMidnight, getSlotDate, getDstOffset, add, lt, gt, merge, min, inRange, diff, max, eq } from "../localizer"
+import { getTotalMin, getMinutesFromMidnight, getSlotDate, getDstOffset, add, lt, gt, merge, min, inRange, diff, max, eq } from "./localizer"
 
 export type TimeSlotMetrics = ReturnType<typeof getSlotMetrics>;
 
@@ -25,7 +25,7 @@ export function getSlotMetrics({ min: start, max: end, step, timeslots }: {
       const slotIdx = grp * timeslots + slot
       const minFromStart = slotIdx * step
       // A date with total minutes calculated from the start of the day
-      slots[slotIdx] = groups[grp][slot] = getSlotDate(start, minutesFromMidnight, minFromStart)
+      slots[slotIdx] = groups[grp]![slot] = getSlotDate(start, minutesFromMidnight, minFromStart)
     }
   }
 
@@ -42,7 +42,7 @@ export function getSlotMetrics({ min: start, max: end, step, timeslots }: {
 
     dateIsInGroup(date: Date, groupIndex: number) {
       const nextGroup = groups[groupIndex + 1]
-      return inRange(date, groups[groupIndex][0], nextGroup ? nextGroup[0] : end, 'minutes')
+      return inRange(date, groups[groupIndex]![0]!, nextGroup ? nextGroup[0]! : end, 'minutes')
     },
 
     nextSlot(slot: Date) {
@@ -86,6 +86,8 @@ export function getSlotMetrics({ min: start, max: end, step, timeslots }: {
     },
 
     getRange(rangeStart: Date, rangeEnd: Date, ignoreMin: boolean = false, ignoreMax: boolean = false) {
+      rangeStart = min(rangeStart, rangeEnd);
+      rangeEnd = max(rangeStart, rangeEnd);
       if (!ignoreMin)
         rangeStart = min(end, max(start, rangeStart))
       if (!ignoreMax)

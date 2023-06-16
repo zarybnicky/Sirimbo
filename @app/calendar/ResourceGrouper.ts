@@ -1,4 +1,4 @@
-import { Resource, Event } from "./constants"
+import { Resource, Event } from "./types"
 
 export type ResourceGrouper = ReturnType<typeof makeGrouper>;
 

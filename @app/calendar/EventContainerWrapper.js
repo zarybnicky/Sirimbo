@@ -1,17 +1,16 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { DnDContext } from './DnDContext'
 import { scrollParent, scrollTop } from 'dom-helpers'
-
+import { DnDContext } from './DnDContext'
 import Selection, {getBoundsForNode, getEventNodeFromPoint} from './Selection'
 import TimeGridEvent from './TimeGridEvent'
 import { eventTimes, pointInColumn } from './common'
-import { add, max, min, timeRangeEndFormat, timeRangeFormat, timeRangeStartFormat } from './localizer'
+import { add, max, min } from './localizer'
 
 class EventContainerWrapper extends React.Component {
   static propTypes = {
     slotMetrics: PropTypes.object.isRequired,
-    resource: PropTypes.any,
+    resourceId: PropTypes.any,
   }
 
   static contextType = DnDContext
@@ -27,7 +26,7 @@ class EventContainerWrapper extends React.Component {
   }
 
   componentWillUnmount() {
-    this._teardownSelectable()
+    this._selector.teardown()
   }
 
   reset() {
@@ -48,13 +47,10 @@ class EventContainerWrapper extends React.Component {
     })
   }
 
-  handleResize(point, bounds) {
-  }
-
   handleDropFromOutside = (point, boundaryBox) => {
-    const { slotMetrics, resource } = this.props
+    const { slotMetrics, resourceId } = this.props
     let start = slotMetrics.closestSlotFromPoint({ y: point.y, x: point.x }, boundaryBox)
-    this.context.draggable.onDropFromOutside({start, end: slotMetrics.nextSlot(start), allDay: false, resource})
+    this.context.draggable.onDropFromOutside({start, end: slotMetrics.nextSlot(start), allDay: false, resourceId})
   }
 
   updateParentScroll = (parent, node) => {
@@ -182,13 +178,7 @@ class EventContainerWrapper extends React.Component {
   handleInteractionEnd = () => {
     const { event } = this.state
     this.reset()
-    this.context.draggable.onEnd({start: event.start, end: event.end, resourceId: this.props.resource})
-  }
-
-  _teardownSelectable = () => {
-    if (!this._selector) return
-    this._selector.teardown()
-    this._selector = null
+    this.context.draggable.onEnd({start: event.start, end: event.end, resourceId: this.props.resourceId})
   }
 
   renderContent() {
@@ -196,16 +186,6 @@ class EventContainerWrapper extends React.Component {
     let { event, top, height } = this.state
 
     if (!event) return children
-
-    const { start, end } = event
-    const startsBeforeDay = slotMetrics.startsBeforeDay(start)
-    const startsAfterDay = slotMetrics.startsAfterDay(end)
-
-    let label
-    if (startsBeforeDay && startsAfterDay) label = "Celý den"
-    if (startsBeforeDay) label = timeRangeEndFormat({ start, end })
-    else if (startsAfterDay) format = timeRangeStartFormat({ start, end })
-    else format = timeRangeFormat({ start, end })
 
     return React.cloneElement(children, {
       children: (
@@ -215,11 +195,8 @@ class EventContainerWrapper extends React.Component {
           {event && (
             <TimeGridEvent
               event={event}
-              label={label}
               className="rbc-addons-dnd-drag-preview"
               style={{ top, height, width: 100 }}
-              continuesPrior={startsBeforeDay}
-              continuesAfter={startsAfterDay}
             />
           )}
         </React.Fragment>

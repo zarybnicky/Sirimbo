@@ -1,16 +1,16 @@
 import React from 'react';
 import clsx from 'clsx';
-import { isSameDate, neq } from './localizer';
+import { eq, neq } from './localizer';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import { dateCellSelection, getSlotAtX, pointInBox } from './utils/selection';
+import { dateCellSelection, getSlotAtX, pointInBox } from './common';
+import { Bounds, Point } from './types';
 import Selection, { getBoundsForNode, isEvent, isShowMore } from './Selection';
-import { Bounds, Box, SlotInfo } from './utils/constants';
+import { SelectionContext } from 'SelectContext';
 
 type BackgroundCellsProps = {
   container: () => HTMLDivElement | null;
   range: Date[];
   date?: Date;
-  onSelectSlot: (slotInfo: SlotInfo) => void;
   resourceId?: number;
 };
 
@@ -18,24 +18,24 @@ type SelectingState = {
   selecting: boolean;
   start?: number;
   end?: number;
-  initial?: { x: number; y: number };
+  initial?: Point;
 };
 
 const BackgroundCells = ({
   container,
   range,
   date: currentDate,
-  onSelectSlot,
   resourceId,
 }: BackgroundCellsProps) => {
   const [state, setState] = React.useState<SelectingState>({ selecting: false });
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const { onSelectSlot } = React.useContext(SelectionContext);
 
   useLayoutEffect(() => {
     let node = containerRef.current;
     let selector = new Selection(container);
 
-    selector.on('selecting', (box: Box) => {
+    selector.on('selecting', (box: Bounds) => {
       setState(({ initial, selecting, start, end }) => {
         if (!selecting) {
           initial = { x: box.x, y: box.y };
@@ -44,24 +44,23 @@ const BackgroundCells = ({
         end = -1;
         if (node && selector.isSelected(node)) {
           const bounds = getBoundsForNode(node);
-          ({ start, end } = dateCellSelection(initial, bounds, box, range.length));
+          ({ start, end } = dateCellSelection(initial!, bounds, box, range.length));
         }
         return { initial, selecting: true, start, end };
       });
     });
 
-    selector.on('beforeSelect', (box: Box) => !isEvent(containerRef.current, box));
-    selector.on('click', (box: Box) => {
+    selector.on('beforeSelect', (box: Point) => !isEvent(containerRef.current, box));
+    selector.on('click', (box: Point) => {
       if (node && !isEvent(node, box) && !isShowMore(node, box)) {
         let rowBox = getBoundsForNode(node);
         if (!pointInBox(rowBox, box)) return;
-        let currentCell = getSlotAtX(rowBox, box.x, range.length);
-        if (currentCell === -1) return;
+        let currentSlot = getSlotAtX(rowBox, box.x, range.length);
+        if (currentSlot === -1) return;
         onSelectSlot({
-          // TODO: unclear
-          slots: [currentCell],
-          start: currentCell,
-          end: currentCell,
+          slots: [range[currentSlot]!],
+          start: range[currentSlot]!,
+          end: range[currentSlot]!,
           action: 'click',
           box,
           resourceId,
@@ -74,13 +73,13 @@ const BackgroundCells = ({
       setState(({ start, end }) => {
         if (start && end && end !== -1 && start !== -1) {
           onSelectSlot({
-            slots: [start, end],
-            start,
-            end,
+            slots: range.slice(start, end + 1),
+            start: range[start]!,
+            end: range[end]!,
             action: 'select',
             bounds,
             resourceId,
-          }); //TODO: ???
+          });
         }
         return { selecting: false };
       });
@@ -94,11 +93,8 @@ const BackgroundCells = ({
         <div
           className={clsx({
             'rbc-day-bg': true,
-            'rbc-selected-cell':
-              state.selecting &&
-              index >= (state.start ?? -1) &&
-              index <= (state.end ?? Infinity),
-            'rbc-today': isSameDate(date, new Date()),
+            'rbc-selected-cell': state.selecting && index >= (state.start ?? -1) && index <= (state.end ?? Infinity),
+            'rbc-today': eq(date, new Date(), 'day'),
             'rbc-off-range-bg': currentDate && neq(currentDate, date, 'month'),
           })}
         />

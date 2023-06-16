@@ -1,6 +1,6 @@
-import { eventSegments, endOfRange, eventLevels } from './eventLevels'
-import { isSameDate, continuesAfter, continuesPrior } from '../localizer'
-import { Event } from './constants';
+import { eventSegments, endOfRange, eventLevels } from './common'
+import { eq, continuesAfter, continuesPrior } from './localizer'
+import { Event } from './types';
 
 export type DateSlotMetrics = ReturnType<typeof getSlotMetrics>;
 
@@ -29,11 +29,11 @@ export const getSlotMetrics = ({ range, events, maxRows, minRows }: {
     slots: range.length,
 
     getDateForSlot(slotNumber: number) {
-      return range[slotNumber]
+      return range[slotNumber]!
     },
 
     getSlotForDate(date: Date) {
-      return range.find((r) => isSameDate(r, date))
+      return range.find((r) => eq(r, date, 'day'))
     },
 
     getEventsForSlot(slot: number) {

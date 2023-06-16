@@ -14,6 +14,7 @@ export enum View {
 }
 
 export interface Event {
+  id: number;
   allDay?: boolean;
   title: React.ReactNode;
   start: Date;
@@ -35,6 +36,13 @@ export interface DateRange {
   end: Date;
 }
 
+export interface BoxSize {
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+}
+
 export interface Bounds {
   x: number;
   y: number;
@@ -44,24 +52,24 @@ export interface Bounds {
   right: number;
 }
 
-export interface Box {
+export interface Point {
   x: number;
   y: number;
-  clientX: number;
-  clientY: number;
+  clientX?: number;
+  clientY?: number;
 }
 
 export interface SlotInfo {
-  start: Date | number; // TODO: wtf?
-  end: Date | number;
-  slots: (Date | number)[];
+  start: Date; // TODO: wtf?
+  end: Date;
+  slots: Date[];
   action: 'select' | 'click';
   /** For "TimeGrid" views */
   resourceId?: number | string;
   /** For "select" action */
   bounds?: Bounds;
   /** For "click" actions */
-  box?: Box;
+  box?: Point;
 }
 
 export type ViewProps = {
@@ -69,26 +77,18 @@ export type ViewProps = {
   events: Event[];
   backgroundEvents: Event[];
   resources: Resource[];
-  selected?: Event;
-  length?: number;
   min?: Date;
   max?: Date;
-
-  onNavigate: (action: Navigate, newDate: Date) => void;
-  onSelectEvent: (event: Event) => void
-  onSelectSlot: (slotInfo: SlotInfo) => void;
-  onDrillDown: (date: Date, view: View) => void;
 };
 
 export interface ViewClass extends React.FunctionComponent<ViewProps> {
   name: string;
-  range: (date: Date, length?: number) => Date[];
-  navigate(date: Date, action: Navigate, length?: number): Date;
-  title(date: Date, length?: number): string;
+  range: (date: Date) => Date[];
+  navigate(date: Date, action: Navigate): Date;
+  title(date: Date): string;
 }
 
 export type DragAction = 'resize' | 'move';
-
 export type DragDirection = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
 
 export interface EventInteractionArgs {

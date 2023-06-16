@@ -1,12 +1,13 @@
 import React from 'react'
 import clsx from 'clsx'
-import { Event, View, Navigate, DragAction, DragDirection, EventInteractionArgs, Resource, SlotInfo } from './utils/constants'
+import { Event, View, Navigate, DragAction, DragDirection, EventInteractionArgs, Resource } from './types'
 import { DnDContext, DnDContextType, DnDState } from './DnDContext';
-import Month from './Month';
-import Day from './Day';
-import Week from './Week';
-import WorkWeek from './WorkWeek';
-import Agenda from './Agenda';
+import Month from './views/Month';
+import Day from './views/Day';
+import Week from './views/Week';
+import WorkWeek from './views/WorkWeek';
+import Agenda from './views/Agenda';
+import { NavigationContext } from 'NavigationContext';
 
 const VIEWS = {
   [View.MONTH]: Month,
@@ -19,13 +20,10 @@ const VIEWS = {
 export interface CalendarProps {
   events?: Event[];
   backgroundEvents?: Event[];
-  onSelectEvent?: (event: Event) => void;
-  onSelectSlot?: (slotInfo: SlotInfo) => void;
   onEventDrop?: (args: EventInteractionArgs) => void;
   onEventResize?: (args: EventInteractionArgs) => void;
   onDropFromOutside?: DnDContextType['draggable']['onDropFromOutside'];
   dragFromOutsideItem?: () => keyof Event | ((event: Event) => Date);
-  length?: number;
   min?: Date;
   max?: Date;
   resources?: Resource[];
@@ -33,10 +31,6 @@ export interface CalendarProps {
 }
 
 export const Calendar = ({
-  events = [],
-  backgroundEvents = [],
-  resources = [],
-  length,
   defaultDate = new Date(),
   onEventDrop,
   onEventResize,
@@ -48,46 +42,55 @@ export const Calendar = ({
   const [date, setDate] = React.useState(defaultDate);
   const [state, setState] = React.useState<DnDState>({ interacting: false });
 
+  const draggableState = React.useMemo<DnDContextType>(() => ({
+    draggable: {
+      onStart() {
+        if (!state.interacting) {
+          setState(x => ({ ...x, interacting: true }))
+        }
+      },
+      onEnd(interactionInfo) {
+        if (!state.action || !state.event) return
+        setState({ action: null, event: null, interacting: false, direction: null })
+        if (!interactionInfo) return
+        if (state.action === 'move') onEventDrop?.({ ...interactionInfo, event: state.event })
+        if (state.action === 'resize') onEventResize?.({ ...interactionInfo, event: state.event })
+      },
+      onBeginAction(event: Event, action: DragAction, direction: DragDirection|undefined) {
+        setState(x => ({ ...x, event, action, direction }))
+      },
+      onDropFromOutside,
+      dragFromOutsideItem,
+      dragAndDropAction: state,
+    },
+  }), [state, date, view]);
+
   const ViewComponent = VIEWS[view];
 
-  const handleNavigate = (action: Navigate, newDate?: Date) => {
-    newDate = newDate || date || new Date()
-    setDate(action === Navigate.TODAY ? new Date() : action === Navigate.DATE ? newDate : ViewComponent.navigate(newDate, action, length));
-  }
+  const navigationContext: NavigationContext = {
+    onNavigate(action: Navigate, newDate?: Date) {
+      newDate = newDate || date || new Date()
+      setDate(action === Navigate.TODAY ? new Date() : action === Navigate.DATE ? newDate : ViewComponent.navigate(newDate, action));
+    },
+    onDrillDown(date, view) {
+      setView(view);
+      setDate(date);
+    },
+  };
 
   return (
-    <DnDContext.Provider value={{
-      draggable: {
-        onStart() {
-          if (!state.interacting) {
-            setState(x => ({ ...x, interacting: true }))
-          }
-        },
-        onEnd(interactionInfo) {
-          if (!state.action || !state.event) return
-          setState({ action: null, event: null, interacting: false, direction: null })
-          if (!interactionInfo) return
-          if (state.action === 'move') onEventDrop?.({ ...interactionInfo, event: state.event })
-          if (state.action === 'resize') onEventResize?.({ ...interactionInfo, event: state.event })
-        },
-        onBeginAction(event: Event, action: DragAction, direction: DragDirection) {
-          setState(x => ({ ...x, event, action, direction }))
-        },
-        onDropFromOutside,
-        dragFromOutsideItem,
-        dragAndDropAction: state,
-      },
-    } as DnDContextType}>
+    <DnDContext.Provider value={draggableState}>
+      <NavigationContext.Provider value={navigationContext}>
       <div className={clsx('rbc-calendar rbc-addons-dnd', !!state.interacting && 'rbc-addons-dnd-is-dragging')}>
         <div className="rbc-toolbar">
           <span className="rbc-btn-group">
-            <button type="button" onClick={() => handleNavigate(Navigate.TODAY)}>Dnes</button>
-            <button type="button" onClick={() => handleNavigate(Navigate.PREVIOUS)}>Zpět</button>
-            <button type="button" onClick={() => handleNavigate(Navigate.NEXT)}>Dále</button>
+            <button type="button" onClick={() => navigationContext.onNavigate(Navigate.TODAY)}>Dnes</button>
+            <button type="button" onClick={() => navigationContext.onNavigate(Navigate.PREVIOUS)}>Zpět</button>
+            <button type="button" onClick={() => navigationContext.onNavigate(Navigate.NEXT)}>Dále</button>
           </span>
 
           <span className="rbc-toolbar-label">
-            {ViewComponent.title(date, length)}
+            {ViewComponent.title(date)}
           </span>
 
           <span className="rbc-btn-group">
@@ -99,20 +102,14 @@ export const Calendar = ({
           </span>
         </div>
 
-        <ViewComponent
-          {...props}
-          events={events}
-          backgroundEvents={backgroundEvents}
-          resources={resources}
-          date={date}
-          length={length}
-          onNavigate={handleNavigate}
-          onDrillDown={(date: Date, view: View) => {
-            setView(view)
-            setDate(date)
-          }}
-        />
-      </div>
+          <ViewComponent
+            date={date}
+            events={props.events || []}
+            backgroundEvents={props.backgroundEvents || []}
+            resources={props.resources || []}
+          />
+        </div>
+      </NavigationContext.Provider>
     </DnDContext.Provider>
   )
 }

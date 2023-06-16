@@ -1,6 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
-import { getSlotMetrics } from './utils/TimeSlotMetrics'
+import { getSlotMetrics } from './TimeSlotMetrics'
 import { add, format, getTimezoneOffset } from './localizer'
 
 type TimeGutterProps = {

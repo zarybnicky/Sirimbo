@@ -21,7 +21,7 @@ import dateFnsFormat from 'date-fns/format';
 import getStartOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
 import cs from 'date-fns/locale/cs';
-import { Event } from './utils/constants';
+import { DateRange, Event } from './types';
 
 export {
   inRange,
@@ -43,6 +43,10 @@ const MILLI = {
   minutes: 1000 * 60,
   hours: 1000 * 60 * 60,
   day: 1000 * 60 * 60 * 24,
+  month: 1000 * 60 * 60 * 24 * 30,
+  year: 1000 * 60 * 60 * 24 * 365.25,
+  decade: 1000 * 60 * 60 * 24 * 365.25 * 10,
+  century: 1000 * 60 * 60 * 24 * 365.25 * 100,
 }
 
 export const startOfWeek = getDay(getStartOfWeek(new Date(), { locale: cs }));
@@ -210,8 +214,8 @@ export function sortEvents(
 }
 
 export function inEventRange(
-  { start, end },
-  { start: rangeStart, end: rangeEnd },
+  { start, end }: DateRange,
+  { start: rangeStart, end: rangeEnd }: DateRange,
 ) {
   let eStart = startOf(start, 'day')
 
@@ -239,25 +243,25 @@ export function format(value: string | Date, format: string) {
   return dateFnsFormat(new Date(value), format, { locale: cs })
 }
 
-export function timeRangeFormat({ start, end }) {
-  return `${this.format(start, 'p')} – ${this.format(end, 'p')}`;
+export function timeRangeFormat({ start, end }: DateRange) {
+  return `${format(start, 'p')} – ${format(end, 'p')}`;
 }
 
-export function timeRangeStartFormat({ start }) {
-  return `${this.format(start, 'p')} – `
+export function timeRangeStartFormat({ start }: DateRange) {
+  return `${format(start, 'p')} – `
 }
 
-export function timeRangeEndFormat({ end }) {
-  return ` – ${this.format(end, 'p')}`
+export function timeRangeEndFormat({ end }: DateRange) {
+  return ` – ${format(end, 'p')}`
 }
 
-export function dayRangeHeaderFormat({ start, end }) {
+export function dayRangeHeaderFormat({ start, end }: DateRange) {
   const endFormat = eq(start, end, 'month') ? 'dd' : 'MMMM dd'
-  return `${this.format(start, 'MMMM dd')} – ${this.format(end, endFormat)}`
+  return `${format(start, 'MMMM dd')} – ${format(end, endFormat)}`
 }
 
-export function agendaHeaderFormat({ start, end }) {
-  return `${this.format(start, 'P')} – ${this.format(end, 'P')}`
+export function agendaHeaderFormat({ start, end }: DateRange) {
+  return `${format(start, 'P')} – ${format(end, 'P')}`
 }
 
 export const getTimezoneOffset = (value: Date) => value.getTimezoneOffset()

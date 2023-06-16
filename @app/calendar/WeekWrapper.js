@@ -2,9 +2,8 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import EventRow from './EventRow'
 import Selection, { getBoundsForNode } from './Selection'
-import { eventSegments } from './utils/eventLevels'
 import { getSlotAtX, pointInBox } from './utils/selection'
-import { eventTimes } from './common'
+import { eventSegments, eventTimes } from './common'
 import { DnDContext } from './DnDContext'
 import { merge, add, eq, inRange, lt } from './localizer'
 import { startOf } from 'date-arithmetic'
@@ -212,7 +211,7 @@ class WeekWrapper extends React.Component {
       <div ref={this.ref} className="rbc-addons-dnd-row-body">
         {this.props.children}
         {segment && (
-          <EventRow {...this.props} selected={null} className="rbc-addons-dnd-drag-row" segments={[segment]} />
+          <EventRow {...this.props} className="rbc-addons-dnd-drag-row" segments={[segment]} />
         )}
       </div>
     )

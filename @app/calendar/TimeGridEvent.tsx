@@ -1,38 +1,52 @@
 import clsx from 'clsx'
+import { timeRangeEndFormat, timeRangeFormat, timeRangeStartFormat } from 'localizer';
 import React from 'react'
+import { SelectionContext } from 'SelectContext';
+import { TimeSlotMetrics } from 'TimeSlotMetrics';
 import EventWrapper from './EventWrapper';
-import { Event } from './utils/constants';
+import { Event } from './types';
 
 function stringifyPercent(v: string | number) {
   return typeof v === 'string' ? v : v + '%'
 }
 
-function TimeGridEvent(props: {
+type TimeGridEventProps = {
   style: { top: number|string, width: number|string, height: number|string, xOffset: number};
   className?: string;
   event: Event;
   isBackgroundEvent?: boolean;
-  selected?: Event;
-  label?: string;
-  continuesPrior?: boolean;
-  continuesAfter?: boolean;
-  onClick?: React.MouseEventHandler<HTMLDivElement>;
-}) {
-  const {
-    style,
-    className,
-    event,
-    selected,
-    label,
-    continuesPrior,
-    continuesAfter,
-    onClick,
-    isBackgroundEvent,
-  } = props
+  slotMetrics: TimeSlotMetrics;
+  resourceId?: number;
+}
+
+function TimeGridEvent({
+ style,
+  className,
+  event,
+  isBackgroundEvent,
+  slotMetrics,
+  resourceId,
+}: TimeGridEventProps) {
+  const { onSelectEvent } = React.useContext(SelectionContext);
+
+  const startsBeforeDay = slotMetrics.startsBeforeDay(event.start)
+  const startsAfterDay = slotMetrics.startsAfterDay(event.end)
+  const startsBefore = slotMetrics.startsBefore(event.start)
+  const startsAfter = slotMetrics.startsAfter(event.end)
+
+  let label = ""
+  if (startsBeforeDay && startsAfterDay) label = "Celý den";
+  else if (startsBeforeDay) label = timeRangeEndFormat(event)
+  else if (startsAfterDay) label = timeRangeStartFormat(event)
+  else label = timeRangeFormat(event)
+
+  const continuesPrior = startsBeforeDay || startsBefore;
+  const continuesAfter = startsAfterDay || startsAfter;
+
   return (
-    <EventWrapper type="time" {...props}>
+    <EventWrapper type="time" event={event} resourceId={resourceId}>
       <div
-        onClick={onClick}
+        onClick={() => onSelectEvent(event)}
         style={{
           top: stringifyPercent(style.top),
           width: isBackgroundEvent ? `calc(${style.width} + 10px)` : stringifyPercent(style.width),
@@ -44,7 +58,7 @@ function TimeGridEvent(props: {
           isBackgroundEvent ? 'rbc-background-event' : 'rbc-event',
           className,
           {
-            'rbc-selected': selected,
+            // TODO: 'rbc-selected': selected,
             'rbc-event-continues-earlier': continuesPrior,
             'rbc-event-continues-later': continuesAfter,
           }

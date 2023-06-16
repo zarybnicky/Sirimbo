@@ -1,11 +1,10 @@
-import React from 'react'
-import { eventLevels } from './utils/eventLevels'
+import React, { useContext } from 'react'
+import { eventLevels, Segment } from './common'
 import range from 'lodash/range'
-import { isSelected } from './utils/selection'
 import EventCell from './EventCell'
-import type { DateSlotMetrics } from './utils/DateSlotMetrics'
-import type { Segment } from './utils/eventLevels'
-import { Event, View } from './utils/constants'
+import type { DateSlotMetrics } from './DateSlotMetrics'
+import { View } from './types'
+import { NavigationContext } from 'NavigationContext'
 
 let isSegmentInSlot = (seg: Segment, slot: number) => seg.left <= slot && seg.right >= slot
 let eventsInSlot = (segments: Segment[], s: number) => segments.filter((seg) => isSegmentInSlot(seg, s)).length
@@ -14,20 +13,16 @@ const EventEndingRow: React.FC<{
   className?: string;
   segments: Segment[];
   slotMetrics: DateSlotMetrics,
-  selected?: Event,
-  onSelectEvent: (event: Event) => void;
-  onDrillDown: (slot: Date, view: View) => void;
   resourceId?: number;
 }> = ({
   className,
   segments = [],
-  selected = {},
   slotMetrics,
-  onDrillDown,
   ...props
 }) => {
+  const { onDrillDown } = useContext(NavigationContext);
   const { slots } = slotMetrics;
-  let rowSegments = eventLevels(segments).levels[0]
+  let rowSegments = eventLevels(segments).levels[0]!
 
   let current = 1,
       lastEnd = 1,
@@ -36,7 +31,7 @@ const EventEndingRow: React.FC<{
   while (current <= slots) {
     let key = '_lvl_' + current
 
-    let { event, left, right, span } = rowSegments.filter((seg) => isSegmentInSlot(seg, current))[0] || {}
+    let { event, left, right, span } = rowSegments.filter((seg) => isSegmentInSlot(seg, current))[0]! || {}
 
     if (!event) {
       current++
@@ -57,7 +52,6 @@ const EventEndingRow: React.FC<{
             event={event}
             continuesPrior={slotMetrics.continuesPrior(event)}
             continuesAfter={slotMetrics.continuesAfter(event)}
-            selected={isSelected(event, selected)}
             {...props}
           />
         </div>

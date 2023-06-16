@@ -1,7 +1,7 @@
 import React from 'react'
-import { Navigate, ViewClass } from './utils/constants'
-import TimeGrid from './TimeGrid'
-import { add, startOf, endOf, format } from './localizer'
+import { Navigate, ViewClass } from '../types'
+import TimeGrid from '../TimeGrid'
+import { add, startOf, endOf, format } from '../localizer'
 
 const Day: ViewClass = (props) => (
   <TimeGrid

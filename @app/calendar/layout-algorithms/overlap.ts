@@ -1,6 +1,7 @@
 // @ts-nocheck
 
 import sortBy from 'lodash/sortBy'
+import { Event } from 'types';
 import type { TimeSlotMetrics } from '../utils/TimeSlotMetrics';
 
 class ProxyEvent {
@@ -125,9 +126,9 @@ function sortByRender(events) {
 
 export default function getStyledEvents(
   events: Event[],
-  minimumStartDifference: number,
   slotMetrics: TimeSlotMetrics,
-): { event: Event; style: React.CSSProperties }[] {
+  minimumStartDifference: number,
+): { event: Event; style: { top: number|string, width: number|string, height: number|string, xOffset: number} }[] {
   // Create proxy events and order them so that we don't have
   // to fiddle with z-indexes.
   const proxies = events.map((event) => new ProxyEvent(event, slotMetrics))
