@@ -1,30 +1,11 @@
 import { LoginForm } from '@/components/LoginForm';
 import { useAuth } from '@/lib/use-auth';
 import React from 'react';
-import { Calendar, SlotInfo, Views, stringOrDate } from 'react-big-calendar';
-import withDragAndDrop, {
-  EventInteractionArgs,
-} from 'react-big-calendar/lib/addons/dragAndDrop';
-import 'react-big-calendar/lib/sass/styles.scss';
+import { Caledar, Event, Resource } from '@app/calendar';
+import '@app/calendar/lib/sass/styles.scss';
 import { ScheduleRangeDocument } from '@app/graphql/Schedule';
 import { useQuery } from 'urql';
 import { formatCoupleName } from '../../frontend/lib/format-name';
-
-const DragAndDropCalendar = withDragAndDrop<Event, Resource>(Calendar);
-
-type Event = {
-  id: number;
-  title: string;
-  start: stringOrDate;
-  end: stringOrDate;
-  resourceId?: number | number[];
-  allDay?: boolean;
-  sourceResource?: number;
-};
-type Resource = {
-  resourceId: number;
-  resourceTitle: string;
-};
 
 function DnDResource() {
   const { user } = useAuth();
@@ -145,19 +126,14 @@ function DnDResource() {
     <div className="col-full">
       <DragAndDropCalendar
         defaultDate={defaultDate}
-        defaultView={Views.DAY}
         events={events}
-        timeslots={4}
         onEventDrop={moveEvent as any}
         onEventResize={resizeEvent}
         onSelectEvent={handleSelectEvent}
         onSelectSlot={handleSelectSlot}
-        resizable
         resources={resources}
         min={min}
         max={max}
-        showMultiDayTimes={true}
-        step={15}
       />
     </div>
   );

@@ -21,7 +21,7 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
   const auth = useAuth();
 
   return (
-    <div className="static w-full text-white bg-red-500 shadow-lg border-b border-red-700">
+    <div className="static w-full text-white bg-primary shadow-lg border-b border-red-700">
       <div className="container relative max-w-5xl mx-auto">
         {showTopMenu && (
           <div className="relative hidden lg:flex items-stretch justify-between min-h-[48px] md:min-h-[64px]">

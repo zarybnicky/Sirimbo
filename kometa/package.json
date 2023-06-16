@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@app/calendar": "workspace:*",
     "@app/graphql": "workspace:*",
     "@app/ui": "workspace:*",
     "@types/node": "^20.3.1",

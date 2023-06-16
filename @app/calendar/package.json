@@ -5,13 +5,12 @@
   "license": "MIT",
   "main": "lib/index.js",
   "dependencies": {
+    "@radix-ui/react-use-layout-effect": "^1.0.1",
+    "@types/lodash": "^4.14.195",
     "clsx": "^1.2.1",
     "date-arithmetic": "^4.1.0",
     "dom-helpers": "^5.2.1",
-    "lodash": "^4.17.21",
-    "memoize-one": "^6.0.0",
-    "react-overlays": "^5.2.1",
-    "uncontrollable": "^7.2.1"
+    "lodash": "^4.17.21"
   },
   "peerDependencies": {
     "react": "*",

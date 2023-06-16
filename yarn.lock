@@ -34,17 +34,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@app/calendar@workspace:@app/calendar":
+"@app/calendar@workspace:*, @app/calendar@workspace:@app/calendar":
   version: 0.0.0-use.local
   resolution: "@app/calendar@workspace:@app/calendar"
   dependencies:
+    "@radix-ui/react-use-layout-effect": ^1.0.1
+    "@types/lodash": ^4.14.195
     clsx: ^1.2.1
     date-arithmetic: ^4.1.0
     dom-helpers: ^5.2.1
     lodash: ^4.17.21
-    memoize-one: ^6.0.0
-    react-overlays: ^5.2.1
-    uncontrollable: ^7.2.1
   peerDependencies:
     react: "*"
     react-dom: "*"
@@ -3891,7 +3890,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@radix-ui/react-use-layout-effect@npm:1.0.1":
+"@radix-ui/react-use-layout-effect@npm:1.0.1, @radix-ui/react-use-layout-effect@npm:^1.0.1":
   version: 1.0.1
   resolution: "@radix-ui/react-use-layout-effect@npm:1.0.1"
   dependencies:
@@ -10056,6 +10055,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "kometa@workspace:kometa"
   dependencies:
+    "@app/calendar": "workspace:*"
     "@app/graphql": "workspace:*"
     "@app/ui": "workspace:*"
     "@types/node": ^20.3.1

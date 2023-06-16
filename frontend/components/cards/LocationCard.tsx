@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Map } from 'components/Map';
-import { Card } from 'components/Card';
 import classNames from 'classnames';
 
 const CardMap = (props: {
