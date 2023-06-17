@@ -20,8 +20,6 @@ const VIEWS = {
 export interface CalendarProps {
   events?: Event[];
   backgroundEvents?: Event[];
-  onEventDrop?: (args: EventInteractionArgs) => void;
-  onEventResize?: (args: EventInteractionArgs) => void;
   onDropFromOutside?: DnDContextType['draggable']['onDropFromOutside'];
   dragFromOutsideItem?: () => keyof Event | ((event: Event) => Date);
   min?: Date;
@@ -32,54 +30,63 @@ export interface CalendarProps {
 
 export const Calendar = ({
   defaultDate = new Date(),
-  onEventDrop,
-  onEventResize,
-  onDropFromOutside,
-  dragFromOutsideItem,
   ...props
 }: CalendarProps) => {
   const [view, setView] = React.useState(View.DAY)
   const [date, setDate] = React.useState(defaultDate);
-  const [state, setState] = React.useState<DnDState>({ interacting: false });
+  const draggableState = React.useRef<DnDState>({ interacting: false });
 
-  const draggableState = React.useMemo<DnDContextType>(() => ({
+  const draggableContext = React.useMemo<DnDContextType>(() => ({
     draggable: {
       onStart() {
-        if (!state.interacting) {
-          setState(x => ({ ...x, interacting: true }))
-        }
+        draggableState.current = { ...draggableState.current, interacting: true };
       },
       onEnd(interactionInfo) {
-        if (!state.action || !state.event) return
-        setState({ action: null, event: null, interacting: false, direction: null })
-        if (!interactionInfo) return
-        if (state.action === 'move') onEventDrop?.({ ...interactionInfo, event: state.event })
-        if (state.action === 'resize') onEventResize?.({ ...interactionInfo, event: state.event })
+        const { event, action, direction } = draggableState.current;
+        draggableState.current = { action: null, event: null, interacting: false, direction: null };
+        if (!action || !event || !interactionInfo) return
+        if (action === 'move') {
+          // TODO: onDrop
+        }
+        if (action === 'resize') {
+          // TODO: onResize
+        }
       },
       onBeginAction(event: Event, action: DragAction, direction: DragDirection|undefined) {
-        setState(x => ({ ...x, event, action, direction }))
+        draggableState.current = { action, event, interacting: true, direction };
       },
-      onDropFromOutside,
-      dragFromOutsideItem,
-      dragAndDropAction: state,
+      onDropFromOutside({ start, end, allDay, resource }) {
+        // TODO: onDrop
+      },
+      dragFromOutsideItem() {
+        return undefined
+      },
+      dragAndDropAction: draggableState,
     },
-  }), [state, date, view]);
+  }), []);
 
   const ViewComponent = VIEWS[view];
 
-  const navigationContext: NavigationContext = {
+  const navigationContext: NavigationContext = React.useMemo<NavigationContext>(() => ({
     onNavigate(action: Navigate, newDate?: Date) {
-      newDate = newDate || date || new Date()
-      setDate(action === Navigate.TODAY ? new Date() : action === Navigate.DATE ? newDate : ViewComponent.navigate(newDate, action));
+      setDate((oldDate) => {
+        if (action === Navigate.TODAY) {
+          return new Date()
+        }
+        if (action === Navigate.DATE) {
+          return newDate || date || new Date();
+        }
+        return ViewComponent.navigate(newDate || date || new Date(), action);
+      })
     },
     onDrillDown(date, view) {
       setView(view);
       setDate(date);
     },
-  };
+  }), []);
 
   return (
-    <DnDContext.Provider value={draggableState}>
+    <DnDContext.Provider value={draggableContext}>
       <NavigationContext.Provider value={navigationContext}>
       <div className={clsx('rbc-calendar rbc-addons-dnd', !!state.interacting && 'rbc-addons-dnd-is-dragging')}>
         <div className="rbc-toolbar">

@@ -4,7 +4,7 @@ import { scrollParent, scrollTop } from 'dom-helpers'
 import { DnDContext } from './DnDContext'
 import Selection, {getBoundsForNode, getEventNodeFromPoint} from './Selection'
 import TimeGridEvent from './TimeGridEvent'
-import { eventTimes, pointInColumn } from './common'
+import { pointInColumn } from './common'
 import { add, max, min } from './localizer'
 
 class EventContainerWrapper extends React.Component {
@@ -107,7 +107,8 @@ class EventContainerWrapper extends React.Component {
 
       const bounds = getBoundsForNode(node)
       const { slotMetrics } = this.props
-      const { duration, start, end } = eventTimes(event)
+      const { start, end } = event;
+      const duration = diff(start, end, 'milliseconds')
 
       if (action === 'move') {
         if (!pointInColumn(bounds, point)) return this.reset()
@@ -123,16 +124,10 @@ class EventContainerWrapper extends React.Component {
         let newRange
         if (direction === 'UP') {
           const newStart = min(newTime, slotMetrics.closestSlotFromDate(end, -1))
-          // Get the new range based on the new start
-          // but don't overwrite the end date as it could be outside this day boundary.
-          newRange = slotMetrics.getRange(newStart, end)
-          newRange = {...newRange, endDate: end}
+          newRange = {...slotMetrics.getRange(newStart, end), endDate: end}
         } else if (direction === 'DOWN') {
-          // Get the new range based on the new end
-          // but don't overwrite the start date as it could be outside this day boundary.
           const newEnd = max(newTime, slotMetrics.closestSlotFromDate(start))
-          newRange = slotMetrics.getRange(start, newEnd)
-          newRange = {...newRange, startDate: start}
+          newRange = {...slotMetrics.getRange(start, newEnd), startDate: start}
         }
         this.update(event, newRange)
       }

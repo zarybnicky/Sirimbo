@@ -19,12 +19,12 @@ export type DnDContextType = {
   draggable: {
     onStart: () => void;
     onEnd: (
-      info: null | { start: Date; end: Date; resourceId: number; isAllDay: boolean },
+      info: null | { start: Date; end: Date; resourceId?: number; isAllDay?: boolean },
     ) => void;
     onBeginAction: (event: Event, action: DragAction, direction?: DragDirection) => void;
     onDropFromOutside?: typeof onDropFromOutside;
-    dragFromOutsideItem: unknown;
-    dragAndDropAction: DnDState;
+    dragFromOutsideItem: () => Event | undefined;
+    dragAndDropAction: React.MutableRefObject<DnDState>;
   };
 };
 

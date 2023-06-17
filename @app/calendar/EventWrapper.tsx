@@ -85,16 +85,16 @@ const EventWrapper: React.FC<{
     );
     newProps.children = (
       <div className="rbc-addons-dnd-resizable">
-        {continuesPrior ? null : renderAnchor(type === 'date' ? 'LEFT' : 'UP')}
+        {!continuesPrior && renderAnchor(type === 'date' ? 'LEFT' : 'UP')}
         {children.props.children}
-        {continuesAfter ? null : renderAnchor(type === 'date' ? 'RIGHT' : 'DOWN')}
+        {!continuesAfter && renderAnchor(type === 'date' ? 'RIGHT' : 'DOWN')}
       </div>
     );
   }
 
   if (
-    draggable.dragAndDropAction.interacting && // if an event is being dragged right now
-    draggable.dragAndDropAction.event === event // and it's the current event
+    draggable.dragAndDropAction.current.interacting && // if an event is being dragged right now
+    draggable.dragAndDropAction.current.event === event // and it's the current event
   ) {
     // add a new class to it
     newProps.className = clsx(children.props.className, 'rbc-addons-dnd-dragged-event');

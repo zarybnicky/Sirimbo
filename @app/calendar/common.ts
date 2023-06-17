@@ -1,5 +1,4 @@
 import type { Bounds, BoxSize, Event, Point } from "./types"
-import { Unit } from 'date-arithmetic'
 import { add, eq, min, max, diff, startOf, ceil } from './localizer'
 
 export function pointInColumn(bounds: Bounds, point: Point) {
@@ -8,23 +7,12 @@ export function pointInColumn(bounds: Bounds, point: Point) {
   return x < right + 10 && x > left && y > top
 }
 
-export function eventTimes({ start, end }: Event) {
-  const isZeroDuration = eq(start, end, 'minutes') && diff(start, end, 'minutes') === 0
-  // make zero duration midnight events at least one day long
-  if (isZeroDuration) end = add(end, 1, 'day')
-  const duration = diff(start, end, 'milliseconds')
-  return { start, end, duration }
-}
-
-export function endOfRange(dateRange: Date[], unit: Unit = 'day') {
+export function endOfRange(dateRange: Date[]) {
   return {
     first: dateRange[0]!,
-    last: add(dateRange[dateRange.length - 1]!, 1, unit),
+    last: add(dateRange[dateRange.length - 1]!, 1, 'day'),
   }
 }
-
-// properly calculating segments requires working with dates in
-// the timezone we're working with, so we use the localizer
 
 export type Segment = {
   event: Event;
@@ -81,12 +69,8 @@ export function eventLevels(rowSegments: Segment[], limit = Infinity) {
   return { levels, extra }
 }
 
-export function slotWidth(rowBox: BoxSize, slots: number) {
-  return (rowBox.right - rowBox.left) / slots
-}
-
 export function getSlotAtX(rowBox: BoxSize, x: number, slots: number) {
-  const cellWidth = slotWidth(rowBox, slots)
+  const cellWidth = (rowBox.right - rowBox.left) / slots
   return Math.floor((x - rowBox.left) / cellWidth)
 }
 
@@ -99,7 +83,7 @@ export function dateCellSelection(start: Point, rowBox: BoxSize, box: Bounds, sl
   let endIdx = -1
   let lastSlotIdx = slots - 1
 
-  let cellWidth = slotWidth(rowBox, slots)
+  let cellWidth = (rowBox.right - rowBox.left) / slots
 
   // cell under the mouse
   let currentSlot = getSlotAtX(rowBox, box.x, slots)

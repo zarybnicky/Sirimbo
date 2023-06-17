@@ -55,10 +55,11 @@ function TimeGridEvent({
         }}
         title={[label, event.title].filter(Boolean).join(': ')}
         className={clsx(
-          isBackgroundEvent ? 'rbc-background-event' : 'rbc-event',
+          'rbc-event',
           className,
           {
             // TODO: 'rbc-selected': selected,
+            'opacity-75': isBackgroundEvent,
             'rbc-event-continues-earlier': continuesPrior,
             'rbc-event-continues-later': continuesAfter,
           }

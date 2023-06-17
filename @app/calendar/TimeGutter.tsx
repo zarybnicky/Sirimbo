@@ -1,29 +1,27 @@
 import React from 'react'
 import clsx from 'clsx'
 import { getSlotMetrics } from './TimeSlotMetrics'
-import { add, format, getTimezoneOffset } from './localizer'
+import { add, format, getTimezoneOffset, merge } from './localizer'
+import { NavigationContext } from 'NavigationContext'
 
 type TimeGutterProps = {
   className: string;
   date: Date;
-  min: Date;
-  max: Date;
-  timeslots: number;
-  step: number;
   gutterRef: React.ForwardedRef<HTMLDivElement>
 }
 
-const TimeGutter = ({ min, max, timeslots, step, gutterRef, className, date }: TimeGutterProps) => {
-  const { start, end } = React.useMemo(() => {
-    if (getTimezoneOffset(min) !== getTimezoneOffset(max)) {
-      return { start: add(min, -1, 'day'), end: add(max, -1, 'day') }
-    }
-    return { start: min, end: max }
-  }, [min?.toISOString(), max?.toISOString()])
+const TimeGutter = ({ gutterRef, className, date }: TimeGutterProps) => {
+  let { min, max, timeslots, step } = React.useContext(NavigationContext);
 
   const slotMetrics = React.useMemo(() => {
-    return getSlotMetrics({min: start, max: end, timeslots, step})
-  }, [start, end, timeslots, step])
+    min = merge(date, min);
+    max = merge(date, max);
+    if (getTimezoneOffset(min) !== getTimezoneOffset(max)) {
+      min = add(min, -1, 'day');
+      max = add(max, -1, 'day');
+    }
+    return getSlotMetrics({ min, max, timeslots, step })
+  }, [date, min, max, timeslots, step])
 
   return (
     <div className={clsx('rbc-time-gutter rbc-time-column', className)} ref={gutterRef}>

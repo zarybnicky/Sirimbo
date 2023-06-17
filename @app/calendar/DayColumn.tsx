@@ -4,23 +4,20 @@ import Selection, { getBoundsForNode, isEvent } from './Selection';
 import { getSlotMetrics } from './TimeSlotMetrics';
 import TimeGridEvent from './TimeGridEvent';
 import { Bounds, Event, Point } from './types';
-import { eq, gt, lte, max, min, range, timeRangeFormat } from './localizer';
+import { eq, gt, lte, max, merge, min, range, timeRangeFormat } from './localizer';
 import EventContainer from './EventContainerWrapper';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import { SelectionContext } from './SelectContext';
 import getStyledEventsOverlap from './layout-algorithms/overlap';
 import { NowIndicator } from './NowIndicator';
 import getStyledEventsNoOverlap from './layout-algorithms/no-overlap';
+import { NavigationContext } from 'NavigationContext';
 
 type DayColumnProps = {
   date: Date;
   resourceId?: number;
   events: Event[];
   backgroundEvents: Event[];
-  min: Date;
-  max: Date;
-  step: number;
-  timeslots: number;
 };
 
 type SelectionState = {
@@ -34,22 +31,20 @@ type SelectionState = {
   endDate?: Date;
 };
 
-const DayColumn = ({
-  date,
-  resourceId,
-  events,
-  backgroundEvents,
-  min: minDate,
-  max: maxDate,
-  step,
-  timeslots,
-}: DayColumnProps) => {
+const DayColumn = ({ date, resourceId, events, backgroundEvents }: DayColumnProps) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const { onSelectSlot } = React.useContext(SelectionContext);
-  const slotMetrics = React.useMemo(() => {
-    return getSlotMetrics({ min: minDate, max: maxDate, step, timeslots });
-  }, [min, max, step, timeslots]);
+  const { min, max, step, timeslots } = React.useContext(NavigationContext);
   const [state, setState] = React.useState<SelectionState>({ selecting: false });
+  const slotMetrics = React.useMemo(() => {
+    return getSlotMetrics({
+      min: merge(date, min),
+      max: merge(date, max),
+      step,
+      timeslots,
+    });
+  }, [min, max, step, timeslots]);
+
   useLayoutEffect(() => {
     const selector = new Selection(() => containerRef.current);
 
@@ -191,7 +186,7 @@ const DayColumn = ({
           <span>{timeRangeFormat({ start: state.startDate!, end: state.endDate! })}</span>
         </div>
       )}
-      <NowIndicator date={date} min={minDate} max={maxDate} slotMetrics={slotMetrics}  />
+      <NowIndicator date={date} slotMetrics={slotMetrics} />
     </div>
   );
 };

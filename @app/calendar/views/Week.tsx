@@ -4,12 +4,7 @@ import TimeGrid from '../TimeGrid'
 import { startOf, endOf, add, dayRangeHeaderFormat, range, startOfWeek } from '../localizer'
 
 const Week: ViewClass = (props) => (
-  <TimeGrid
-    {...props}
-    range={Week.range(props.date)}
-    min={props.min || startOf(new Date(), 'day')}
-    max={props.max || endOf(new Date(), 'day')}
-  />
+  <TimeGrid {...props} range={Week.range(props.date)} />
 )
 
 Week.navigate = (date, action) => {

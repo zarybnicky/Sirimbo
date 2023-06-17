@@ -3,7 +3,6 @@ import React from 'react'
 import EventCell from './EventCell'
 import { DateSlotMetrics } from './DateSlotMetrics'
 import { Segment } from './common'
-import { Event } from './types'
 
 const EventRow: React.FC<{
   className?: string;
@@ -14,7 +13,7 @@ const EventRow: React.FC<{
   className,
   segments = [],
   slotMetrics,
-  ...props
+  resourceId,
 }) => {
   const { slots } = slotMetrics;
   let lastEnd = 1
@@ -33,7 +32,7 @@ const EventRow: React.FC<{
           event={event}
           continuesPrior={slotMetrics.continuesPrior(event)}
           continuesAfter={slotMetrics.continuesAfter(event)}
-          {...props}
+          resourceId={resourceId}
         />
       </div>
     )

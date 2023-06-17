@@ -4,12 +4,7 @@ import TimeGrid from '../TimeGrid'
 import { add, startOf, endOf, format } from '../localizer'
 
 const Day: ViewClass = (props) => (
-  <TimeGrid
-    {...props}
-    range={Day.range(props.date)}
-    min={props.min || startOf(new Date(), 'day')}
-    max={props.max || endOf(new Date(), 'day')}
-  />
+  <TimeGrid {...props} range={Day.range(props.date)} />
 )
 
 Day.range = (date) => [startOf(date, 'day')];

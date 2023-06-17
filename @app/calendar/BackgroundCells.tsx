@@ -32,18 +32,17 @@ const BackgroundCells = ({
   const { onSelectSlot } = React.useContext(SelectionContext);
 
   useLayoutEffect(() => {
-    let node = containerRef.current;
     let selector = new Selection(container);
 
     selector.on('selecting', (box: Bounds) => {
+      const bounds = getBoundsForNode(containerRef.current!);
       setState(({ initial, selecting, start, end }) => {
         if (!selecting) {
           initial = { x: box.x, y: box.y };
         }
         start = -1;
         end = -1;
-        if (node && selector.isSelected(node)) {
-          const bounds = getBoundsForNode(node);
+        if (containerRef.current && selector.isSelected(containerRef.current)) {
           ({ start, end } = dateCellSelection(initial!, bounds, box, range.length));
         }
         return { initial, selecting: true, start, end };
@@ -52,8 +51,8 @@ const BackgroundCells = ({
 
     selector.on('beforeSelect', (box: Point) => !isEvent(containerRef.current, box));
     selector.on('click', (box: Point) => {
-      if (node && !isEvent(node, box) && !isShowMore(node, box)) {
-        let rowBox = getBoundsForNode(node);
+      if (containerRef.current && !isEvent(containerRef.current, box) && !isShowMore(containerRef.current, box)) {
+        let rowBox = getBoundsForNode(containerRef.current!);
         if (!pointInBox(rowBox, box)) return;
         let currentSlot = getSlotAtX(rowBox, box.x, range.length);
         if (currentSlot === -1) return;
@@ -88,7 +87,7 @@ const BackgroundCells = ({
   });
 
   return (
-    <div className="rbc-row-bg" ref={containerRef}>
+    <div className="rbc-row-bg">
       {range.map((date, index) => (
         <div
           className={clsx({
