@@ -12,7 +12,7 @@ function isOverContainer(container, x, y) {
 
 export function getEventNodeFromPoint(node, { clientX, clientY }) {
   let target = document.elementFromPoint(clientX, clientY)
-  return closest(target, '.rbc-event', node)
+  return closest(target, '.rbc-event', node) as HTMLElement
 }
 
 export function getShowMoreNodeFromPoint(node, { clientX, clientY }) {
@@ -46,32 +46,26 @@ function getEventCoordinates(e) {
 const clickTolerance = 5
 
 class Selection {
-  constructor(
-    node,
-    { global = false, longPressThreshold = 250, validContainers = [] } = {}
-  ) {
-    this.isDetached = false
-    this.container = node
-    this.globalMouse = !node || global
-    this.longPressThreshold = longPressThreshold
-    this.validContainers = validContainers
+  public isDetached = false;
+  public _listeners = {
 
-    this._listeners = Object.create(null)
+  }
+  constructor(
+    public container: () => HTMLElement | null,
+    public validContainers: string[] = []
+  ) {
 
     this._handleInitialEvent = this._handleInitialEvent.bind(this)
     this._handleMoveEvent = this._handleMoveEvent.bind(this)
     this._handleTerminatingEvent = this._handleTerminatingEvent.bind(this)
-    this._keyListener = this._keyListener.bind(this)
     this._dropFromOutsideListener = this._dropFromOutsideListener.bind(this)
     this._dragOverFromOutsideListener = this._dragOverFromOutsideListener.bind(this)
 
     // Fixes an iOS 10 bug where scrolling could not be prevented on the window.
     // https://github.com/metafizzy/flickity/issues/457#issuecomment-254501356
-    this._removeTouchMoveWindowListener = addEventListener('touchmove', () => {}, window)
-    this._removeKeyDownListener = addEventListener('keydown', this._keyListener)
-    this._removeKeyUpListener = addEventListener('keyup', this._keyListener)
-    this._removeDropFromOutsideListener = addEventListener('drop', this._dropFromOutsideListener)
-    this._removeDragOverFromOutsideListener = addEventListener('dragover', this._dragOverFromOutsideListener)
+    this._removeTouchMoveWindowListener = window.addEventListener('touchmove', () => {}, window as any)
+    this._removeDropFromOutsideListener = window.addEventListener('drop', this._dropFromOutsideListener)
+    this._removeDragOverFromOutsideListener = window.addEventListener('dragover', this._dragOverFromOutsideListener)
     this._addInitialEventListener()
   }
 
@@ -111,19 +105,10 @@ class Selection {
     this._removeDragOverFromOutsideListener?.()
   }
 
-  isSelected(node) {
+  isSelected(node: HTMLElement) {
     let box = this._selectRect
     if (!box || !this.selecting) return false
     return objectsCollide(box, getBoundsForNode(node))
-  }
-
-  filter(items) {
-    let box = this._selectRect
-
-    //not selecting
-    if (!box || !this.selecting) return []
-
-    return items.filter(this.isSelected, this)
   }
 
   // Adds a listener that will call the handler only after the user has pressed on the screen
@@ -136,34 +121,24 @@ class Selection {
       timer = setTimeout(() => {
         cleanup()
         handler(initialEvent)
-      }, this.longPressThreshold)
-      removeTouchMoveListener = addEventListener('touchmove', () => cleanup())
-      removeTouchEndListener = addEventListener('touchend', () => cleanup())
+      }, 250)
+      removeTouchMoveListener = window.addEventListener('touchmove', () => cleanup())
+      removeTouchEndListener = window.addEventListener('touchend', () => cleanup())
     }
-    const removeTouchStartListener = addEventListener(
-      'touchstart',
-      handleTouchStart
-    )
+    const removeTouchStartListener = window.addEventListener('touchstart', handleTouchStart)
     const cleanup = () => {
       if (timer) {
         clearTimeout(timer)
+        timer = null
       }
-      if (removeTouchMoveListener) {
-        removeTouchMoveListener()
-      }
-      if (removeTouchEndListener) {
-        removeTouchEndListener()
-      }
-
-      timer = null
+      removeTouchMoveListener?.()
       removeTouchMoveListener = null
+      removeTouchEndListener?.()
       removeTouchEndListener = null
     }
-
     if (initialEvent) {
       handleTouchStart(initialEvent)
     }
-
     return () => {
       cleanup()
       removeTouchStartListener()
@@ -173,12 +148,12 @@ class Selection {
   // Listen for mousedown and touchstart events. When one is received, disable the other and setup
   // future event handling based on the type of event.
   _addInitialEventListener() {
-    const removeMouseDownListener = addEventListener('mousedown', (e) => {
+    const removeMouseDownListener = window.addEventListener('mousedown', (e) => {
       this._removeInitialEventListener()
       this._handleInitialEvent(e)
-      this._removeInitialEventListener = addEventListener('mousedown', this._handleInitialEvent)
+      this._removeInitialEventListener = window.addEventListener('mousedown', this._handleInitialEvent)
     })
-    const removeTouchStartListener = addEventListener('touchstart', (e) => {
+    const removeTouchStartListener = window.addEventListener('touchstart', (e) => {
       this._removeInitialEventListener()
       this._removeInitialEventListener = this._addLongPressListener(this._handleInitialEvent, e)
     })
@@ -233,8 +208,8 @@ class Selection {
     )
       return
 
-    if (!this.globalMouse && node && !contains(node, e.target)) {
-      let { top, left, bottom, right } = normalizeDistance(0)
+    if (node && !contains(node, e.target)) {
+      let { top, left, bottom, right } = {top: 0, left: 0, right: 0, bottom: 0}
 
       offsetData = getBoundsForNode(node)
 
@@ -251,16 +226,14 @@ class Selection {
       if (!collides) return
     }
 
-    let result = this.emit(
-      'beforeSelect',
-      (this._initialEventData = {
-        isTouch: /^touch/.test(e.type),
+    this._initialEventData = {
+      isTouch: /^touch/.test(e.type),
         x: pageX,
         y: pageY,
         clientX,
         clientY,
-      })
-    )
+    }
+    let result = this.emit('beforeSelect', this._initialEventData)
 
     if (result === false) return
 
@@ -379,30 +352,10 @@ class Selection {
     e.preventDefault()
   }
 
-  _keyListener(e) {
-    this.ctrl = e.metaKey || e.ctrlKey
-  }
-
   isClick(pageX, pageY) {
     let { x, y, isTouch } = this._initialEventData
     return !isTouch && Math.abs(pageX - x) <= clickTolerance && Math.abs(pageY - y) <= clickTolerance
   }
-}
-
-/**
- * Resolve the disance prop from either an Int or an Object
- * @return {Object}
- */
-function normalizeDistance(distance = 0) {
-  if (typeof distance !== 'object')
-    distance = {
-      top: distance,
-      left: distance,
-      right: distance,
-      bottom: distance,
-    }
-
-  return distance
 }
 
 /**
@@ -412,7 +365,7 @@ function normalizeDistance(distance = 0) {
  * @param  {Object|HTMLElement} b
  * @return {bool}
  */
-export function objectsCollide(nodeA, nodeB, tolerance = 0) {
+function objectsCollide(nodeA, nodeB, tolerance = 0) {
   let {
     top: aTop,
     left: aLeft,
@@ -440,13 +393,8 @@ export function objectsCollide(nodeA, nodeB, tolerance = 0) {
   )
 }
 
-/**
- * Given a node, get everything needed to calculate its boundaries
- * @param  {HTMLElement} node
- * @return {{ top: number; left: number; right: number; bottom: number }}
- */
-export function getBoundsForNode(node) {
-  if (!node.getBoundingClientRect) return node
+export function getBoundsForNode(node: HTMLElement): { top: number; left: number; right: number; bottom: number } {
+  if (!node.getBoundingClientRect) return node as any
 
   let rect = node.getBoundingClientRect();
   let left = rect.left + pageOffset('left');
@@ -460,8 +408,9 @@ export function getBoundsForNode(node) {
   }
 }
 
-function pageOffset(dir) {
+function pageOffset(dir: 'left' | 'top') {
   if (dir === 'left') return window.pageXOffset || document.body.scrollLeft || 0
   if (dir === 'top') return window.pageYOffset || document.body.scrollTop || 0
+  return 0
 }
 export default Selection

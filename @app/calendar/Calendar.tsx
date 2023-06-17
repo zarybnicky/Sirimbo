@@ -1,6 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
-import { Event, View, Navigate, DragAction, DragDirection, EventInteractionArgs, Resource } from './types'
+import { Event, View, Navigate, DragAction, DragDirection, Resource } from './types'
 import { DnDContext, DnDContextType, DnDState } from './DnDContext';
 import Month from './views/Month';
 import Day from './views/Day';
@@ -8,6 +8,7 @@ import Week from './views/Week';
 import WorkWeek from './views/WorkWeek';
 import Agenda from './views/Agenda';
 import { NavigationContext } from 'NavigationContext';
+import { endOf, startOf } from 'date-arithmetic';
 
 const VIEWS = {
   [View.MONTH]: Month,
@@ -42,7 +43,7 @@ export const Calendar = ({
         draggableState.current = { ...draggableState.current, interacting: true };
       },
       onEnd(interactionInfo) {
-        const { event, action, direction } = draggableState.current;
+        const { event, action } = draggableState.current;
         draggableState.current = { action: null, event: null, interacting: false, direction: null };
         if (!action || !event || !interactionInfo) return
         if (action === 'move') {
@@ -55,10 +56,11 @@ export const Calendar = ({
       onBeginAction(event: Event, action: DragAction, direction: DragDirection|undefined) {
         draggableState.current = { action, event, interacting: true, direction };
       },
-      onDropFromOutside({ start, end, allDay, resource }) {
+      onDropFromOutside({ start, end, allDay, resourceId }) {
         // TODO: onDrop
       },
       dragFromOutsideItem() {
+        // TODO: dragFromOutside
         return undefined
       },
       dragAndDropAction: draggableState,
@@ -68,22 +70,27 @@ export const Calendar = ({
   const ViewComponent = VIEWS[view];
 
   const navigationContext: NavigationContext = React.useMemo<NavigationContext>(() => ({
+    timeslots: 4,
+    step: 15,
+    min: startOf(new Date(), 'day'),
+    max: endOf(new Date(), 'day'),
+    focusedTime: new Date(1972, 0, 1, 16, 0, 0),
     onNavigate(action: Navigate, newDate?: Date) {
       setDate((oldDate) => {
         if (action === Navigate.TODAY) {
           return new Date()
         }
         if (action === Navigate.DATE) {
-          return newDate || date || new Date();
+          return newDate || oldDate || new Date();
         }
-        return ViewComponent.navigate(newDate || date || new Date(), action);
+        return ViewComponent.navigate(newDate || oldDate || new Date(), action);
       })
     },
     onDrillDown(date, view) {
       setView(view);
       setDate(date);
     },
-  }), []);
+  }), [view]);
 
   return (
     <DnDContext.Provider value={draggableContext}>

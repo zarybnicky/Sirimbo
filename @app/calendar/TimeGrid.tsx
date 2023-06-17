@@ -112,6 +112,7 @@ const TimeGrid = ({
         {grouper.map(([resource, id], i) =>
           range.map((date, jj) => (
             <DayColumn
+              gridRef={containerRef}
               resourceId={resource && id}
               key={i + '-' + jj}
               date={date}

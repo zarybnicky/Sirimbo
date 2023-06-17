@@ -49,9 +49,10 @@ const DateContentRow = ({
   }, [range, events, maxRows]);
 
   useLayoutEffect(() => {
-    const selector = new Selection(() => containerRef.current, {
-      validContainers: !isAllDay ? [] : ['.rbc-day-slot', '.rbc-allday-cell'],
-    })
+    const selector = new Selection(
+      () => containerRef.current,
+      !isAllDay ? [] : ['.rbc-day-slot', '.rbc-allday-cell'],
+    )
 
     selector.on('beforeSelect', (point: Point) => {
       const { action } = draggable.dragAndDropAction.current

@@ -48,12 +48,12 @@ export function getSlotMetrics({ min: start, max: end, step, timeslots }: {
     nextSlot(slot: Date) {
       let next = slots[Math.min(slots.indexOf(slot) + 1, slots.length - 1)]
       // in the case of the last slot we won't a long enough range so manually get it
-      return (next === slot) ? add(slot, step, 'minutes') : next;
+      return (next === slot) ? add(slot, step, 'minutes') : next as Date;
     },
 
     closestSlotToPosition(percent: number) {
       const slot = Math.min(slots.length - 1, Math.max(0, Math.floor(percent * numSlots)))
-      return slots[slot]
+      return slots[slot]!
     },
 
     closestSlotFromPoint(point: { x: number; y: number }, boundaryRect: { top: number; bottom: number }) {
@@ -62,11 +62,11 @@ export function getSlotMetrics({ min: start, max: end, step, timeslots }: {
     },
 
     closestSlotFromDate(date: Date, offset = 0) {
-      if (lt(date, start, 'minutes')) return slots[0]
-      if (gt(date, end, 'minutes')) return slots[slots.length - 1]
+      if (lt(date, start, 'minutes')) return slots[0]!
+      if (gt(date, end, 'minutes')) return slots[slots.length - 1]!
 
       const diffMins = diff(start, date, 'minutes')
-      return slots[(diffMins - (diffMins % step)) / step + offset]
+      return slots[(diffMins - (diffMins % step)) / step + offset]!
     },
 
     startsBeforeDay(date: Date) {

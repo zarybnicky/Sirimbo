@@ -1,7 +1,7 @@
 import type { Bounds, BoxSize, Event, Point } from "./types"
 import { add, eq, min, max, diff, startOf, ceil } from './localizer'
 
-export function pointInColumn(bounds: Bounds, point: Point) {
+export function pointInColumn(bounds: BoxSize, point: Point) {
   const { left, right, top } = bounds
   const { x, y } = point
   return x < right + 10 && x > left && y > top

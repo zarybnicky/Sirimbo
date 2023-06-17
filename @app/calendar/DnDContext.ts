@@ -12,7 +12,7 @@ declare function onDropFromOutside(info: {
   start: Date;
   end: Date;
   allDay: boolean;
-  resource?: number;
+  resourceId?: number;
 }): void;
 
 export type DnDContextType = {
