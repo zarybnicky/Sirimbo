@@ -30,18 +30,18 @@ function TimeGridEvent({
   const { onSelectEvent } = React.useContext(SelectionContext);
 
   const startsBeforeDay = slotMetrics.startsBeforeDay(event.start)
-  const startsAfterDay = slotMetrics.startsAfterDay(event.end)
   const startsBefore = slotMetrics.startsBefore(event.start)
+  const continuesPrior = startsBeforeDay || startsBefore;
+
+  const startsAfterDay = slotMetrics.startsAfterDay(event.end)
   const startsAfter = slotMetrics.startsAfter(event.end)
+  const continuesAfter = startsAfterDay || startsAfter;
 
   let label = ""
   if (startsBeforeDay && startsAfterDay) label = "Celý den";
   else if (startsBeforeDay) label = timeRangeEndFormat(event)
   else if (startsAfterDay) label = timeRangeStartFormat(event)
   else label = timeRangeFormat(event)
-
-  const continuesPrior = startsBeforeDay || startsBefore;
-  const continuesAfter = startsAfterDay || startsAfter;
 
   return (
     <EventWrapper type="time" event={event} resourceId={resourceId}>
@@ -54,16 +54,15 @@ function TimeGridEvent({
           left: stringifyPercent(Math.max(0, style.xOffset)),
         }}
         title={[label, event.title].filter(Boolean).join(': ')}
-        className={clsx(
-          'rbc-event',
-          className,
-          {
-            // TODO: 'rbc-selected': selected,
-            'opacity-75': isBackgroundEvent,
-            'rbc-event-continues-earlier': continuesPrior,
-            'rbc-event-continues-later': continuesAfter,
-          }
-        )}
+        className={clsx({
+          'rbc-event': true,
+          [className ?? '']: true,
+          // TODO: 'rbc-selected': selected,
+          'opacity-75': isBackgroundEvent,
+          'rbc-drag-preview': event.__isPreview,
+          'rbc-event-continues-earlier': continuesPrior,
+          'rbc-event-continues-later': continuesAfter,
+        })}
       >
         <div className="rbc-event-label">
           {label}

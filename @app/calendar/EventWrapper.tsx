@@ -13,12 +13,6 @@ const EventWrapper: React.FC<{
 }> = ({ children, event, resourceId, type, continuesPrior, continuesAfter }) => {
   const { draggable } = React.useContext(DnDContext);
 
-  if (event.__isPreview) {
-    return React.cloneElement(children, {
-      className: clsx(children.props.className, 'rbc-addons-dnd-drag-preview'),
-    });
-  }
-
   if (event.isDraggable === false) {
     return children;
   }
@@ -29,14 +23,14 @@ const EventWrapper: React.FC<{
       // hack: because of the way the anchors are arranged in the DOM, resize
       // anchor events will bubble up to the move anchor listener. Don't start
       // move operations when we're on a resize anchor.
-      if (!e.currentTarget.getAttribute('class')?.includes('rbc-addons-dnd-resize')) {
+      if (!e.currentTarget.getAttribute('class')?.includes('rbc-resize')) {
         event.sourceResource = resourceId;
         draggable.onBeginAction(event, 'move');
       }
     },
     onTouchStart(e: React.MouseEvent<HTMLDivElement>) {
       if (e.button !== 0) return;
-      if (!e.currentTarget.getAttribute('class')?.includes('rbc-addons-dnd-resize')) {
+      if (!e.currentTarget.getAttribute('class')?.includes('rbc-resize')) {
         event.sourceResource = resourceId;
         draggable.onBeginAction(event, 'move');
       }
@@ -50,8 +44,8 @@ const EventWrapper: React.FC<{
       <div
         className={
           ['UP', 'DOWN'].includes(direction)
-            ? `rbc-addons-dnd-resize-ns-anchor`
-            : `rbc-addons-dnd-resize-ew-anchor`
+            ? `rbc-resize-ns-anchor`
+            : `rbc-resize-ew-anchor`
         }
         onMouseDown={(e) => {
           if (e.button !== 0) return;
@@ -61,14 +55,14 @@ const EventWrapper: React.FC<{
         <div
           className={
             ['UP', 'DOWN'].includes(direction)
-              ? `rbc-addons-dnd-resize-ns-icon`
-              : `rbc-addons-dnd-resize-ew-icon`
+              ? `rbc-resize-ns-icon`
+              : `rbc-resize-ew-icon`
           }
         />
       </div>
     );
     newProps.children = (
-      <div className="rbc-addons-dnd-resizable">
+      <div className="rbc-resizable">
         {!continuesPrior && renderAnchor(type === 'date' ? 'LEFT' : 'UP')}
         {children.props.children}
         {!continuesAfter && renderAnchor(type === 'date' ? 'RIGHT' : 'DOWN')}
@@ -80,7 +74,7 @@ const EventWrapper: React.FC<{
     draggable.dragAndDropAction.current.interacting &&
     draggable.dragAndDropAction.current.event === event
   ) {
-    newProps.className = clsx(children.props.className, 'rbc-addons-dnd-dragged-event');
+    newProps.className = clsx(children.props.className, 'rbc-dragged-event');
   }
 
   return React.cloneElement(children, newProps);

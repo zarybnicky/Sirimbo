@@ -238,7 +238,7 @@ const DateContentRow = ({
               />
             )}
             {segment && (
-              <EventRow className="rbc-addons-dnd-drag-row" segments={[segment]} resourceId={resourceId} slotMetrics={slotMetrics} />
+              <EventRow className="rbc-drag-row" segments={[segment]} resourceId={resourceId} slotMetrics={slotMetrics} />
             )}
           </div>
         )}

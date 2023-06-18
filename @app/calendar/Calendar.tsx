@@ -1,5 +1,7 @@
+import { ScheduleRangeDocument } from '@app/graphql/Schedule';
 import clsx from 'clsx';
 import React from 'react';
+import { useQuery } from 'urql';
 import { DndProvider } from './DnDContext';
 import { add, agendaHeaderFormat, dayRangeHeaderFormat, endOf, format, startOf, startOfWeek } from './localizer';
 import { NavigationProvider } from './NavigationContext';
@@ -9,22 +11,12 @@ import Day from './views/Day';
 import Month from './views/Month';
 import Week from './views/Week';
 import WorkWeek from './views/WorkWeek';
+import { formatCoupleName } from '../../frontend/lib/format-name';
+import '@app/calendar/styles.scss';
 
-export interface CalendarProps {
-  events?: Event[];
-  backgroundEvents?: Event[];
-  min?: Date;
-  max?: Date;
-  resources?: Resource[];
-  defaultDate?: Date;
-}
-
-export const Calendar = ({
-  defaultDate = new Date(),
-  ...props
-}: CalendarProps) => {
-  const [view, setView] = React.useState(View.DAY)
-  const [date, setDate] = React.useState(defaultDate);
+export const Calendar = () => {
+  const [view, setView] = React.useState(View.WORK_WEEK)
+  const [date, setDate] = React.useState(new Date(2023, 4, 15));
   const [isDragging, setIsDragging] = React.useState(false);
 
   const ViewComponent = {
@@ -35,10 +27,52 @@ export const Calendar = ({
     [View.AGENDA]: Agenda,
   }[view];
 
+  const range = ViewComponent.range(date);
+
+  const backgroundEvents: Event[] = [];
+
+  const [{ data: schedules }] = useQuery({
+    query: ScheduleRangeDocument,
+    variables: {
+      startDate: range[0]!.toISOString(),
+      endDate: range[range.length - 1]!.toISOString(),
+    },
+  });
+
+  const resources = React.useMemo(() => {
+    const resources: Resource[] = [];
+    schedules?.schedulesForRange?.nodes.forEach((x) => {
+      const existing = resources.find((y) => y.resourceId === parseInt(x.rTrener));
+      if (!existing) {
+        resources.push({
+          resourceId: parseInt(x.rTrener),
+          resourceTitle: x.userByRTrener?.fullName ?? '',
+        });
+      }
+    });
+    return resources;
+  }, [schedules]);
+
+  const events = React.useMemo(() => {
+    const events: Event[] = [];
+    schedules?.schedulesForRange?.nodes.forEach((schedule) => {
+      schedule.rozpisItemsByRiIdRodic.nodes.forEach((lesson) => {
+        events.push({
+          id: parseInt(lesson.id),
+          title: formatCoupleName(lesson.paryByRiPartner),
+          resourceId: parseInt(schedule.rTrener),
+          start: new Date(schedule.rDatum + 'T' + lesson.riOd),
+          end: new Date(schedule.rDatum + 'T' + lesson.riDo),
+        });
+      });
+    });
+    return events;
+  }, [schedules]);
+
   return (
     <DndProvider setIsDragging={setIsDragging}>
       <NavigationProvider setDate={setDate} setView={setView}>
-        <div className={clsx('rbc-calendar rbc-addons-dnd', isDragging && 'rbc-addons-dnd-is-dragging')}>
+        <div className={clsx('rbc-calendar', isDragging && 'rbc-is-dragging')}>
           <div className="rbc-toolbar">
             <span className="rbc-btn-group">
               <button type="button" onClick={() => setDate(new Date())}>Dnes</button>
@@ -68,12 +102,7 @@ export const Calendar = ({
             </span>
           </div>
 
-          <ViewComponent
-            date={date}
-            events={props.events || []}
-            backgroundEvents={props.backgroundEvents || []}
-            resources={props.resources || []}
-          />
+          <ViewComponent date={date} events={events} backgroundEvents={backgroundEvents} resources={resources} />
         </div>
       </NavigationProvider>
     </DndProvider>

@@ -51,28 +51,6 @@ const MILLI = {
 
 export const startOfWeek = getDay(getStartOfWeek(new Date(), { locale: cs }));
 
-export function firstVisibleDay(date: Date) {
-  let firstOfMonth = startOf(date, 'month')
-  return startOf(firstOfMonth, 'week', startOfWeek)
-}
-
-export function lastVisibleDay(date: Date) {
-  let endOfMonth = endOf(date, 'month')
-  return endOf(endOfMonth, 'week', startOfWeek)
-}
-
-export function visibleDays(date: Date) {
-  let current = firstVisibleDay(date);
-  const last = lastVisibleDay(date);
-  const days: Date[] = []
-
-  while (lte(current, last, 'day')) {
-    days.push(current)
-    current = add(current, 1, 'day')
-  }
-  return days
-}
-
 export function ceil(date: Date, unit: Exclude<Unit, 'week'>) {
   let floor = startOf(date, unit)
   return eq(floor, date) ? floor : add(floor, 1, unit)
@@ -157,11 +135,8 @@ export function inEventRange(
   { start: rangeStart, end: rangeEnd }: DateRange,
 ) {
   let eStart = startOf(start, 'day')
-
   let startsBeforeEnd = lte(eStart, rangeEnd, 'day')
-  // when the event is zero duration we need to handle a bit differently
-  const sameMin = neq(eStart, end, 'minutes')
-  let endsAfterStart = sameMin
+  let endsAfterStart = neq(eStart, end, 'minutes')
     ? gt(end, rangeStart, 'minutes')
     : gte(end, rangeStart, 'minutes')
   return startsBeforeEnd && endsAfterStart

@@ -32,6 +32,6 @@ export const NowIndicator = ({date, slotMetrics}: Props) => {
 
   if (!top) return null
   return (
-    <div className="rbc-current-time-indicator" style={{ top }} />
+    <div className="absolute z-[3] inset-x-0 h-px pointer-events-none rbc-current-time-indicator bg-success" style={{ top }} />
   );
 };

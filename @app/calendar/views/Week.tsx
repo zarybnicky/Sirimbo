@@ -1,7 +1,7 @@
 import React from 'react'
 import { Navigate, ViewClass } from '../types'
 import TimeGrid from '../TimeGrid'
-import { startOf, endOf, add, dayRangeHeaderFormat, range, startOfWeek } from '../localizer'
+import { startOf, endOf, add, range, startOfWeek } from '../localizer'
 
 const Week: ViewClass = (props) => (
   <TimeGrid {...props} range={Week.range(props.date)} />

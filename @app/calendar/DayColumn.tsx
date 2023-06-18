@@ -175,7 +175,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
       }
 
       setTimeout(() => {
-        const draggedEl = columnRef.current!.querySelector('.rbc-addons-dnd-drag-preview') as HTMLElement;
+        const draggedEl = columnRef.current!.querySelector('.rbc-drag-preview') as HTMLElement;
         if (draggedEl) {
           const parent = gridRef.current!;
           if (draggedEl.offsetTop < parent.scrollTop) {
@@ -304,7 +304,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
         {eventState.event && (
           <TimeGridEvent
             event={eventState.event}
-            className="rbc-addons-dnd-drag-preview"
+            className="rbc-drag-preview"
             style={{ top: eventState.top ?? 0, height: eventState.height ?? 0, width: 100, xOffset: 0 }}
             resourceId={resourceId}
             slotMetrics={slotMetrics}

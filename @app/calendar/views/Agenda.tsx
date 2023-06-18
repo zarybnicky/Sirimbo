@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import React, { useContext } from 'react'
 import getWidth from 'dom-helpers/width'
 import { Navigate, Event, ViewClass } from '../types'
-import { eq, add, agendaHeaderFormat, endOf, format, gt, inEventRange, lt, startOf, timeRangeFormat, range } from '../localizer'
+import { eq, add, endOf, format, gt, inEventRange, lt, startOf, timeRangeFormat, range } from '../localizer'
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import { SelectionContext } from '../SelectContext'
 
@@ -82,21 +82,21 @@ const Agenda: ViewClass = ({ date, events }) => {
                 .filter((e) => inEventRange(e, {start: startOf(day, 'day'), end: endOf(day, 'day')}))
                 .map((event, idx) => (
                   <tr key={dayKey + '_' + idx}>
-                 {idx === 0 ? (
-                   <td rowSpan={events.length} className="rbc-agenda-date-cell">
-                     {format(day, 'ccc MMM dd')}
-                   </td>
-                 ) : null}
+                    {idx === 0 ? (
+                      <td rowSpan={events.length} className="rbc-agenda-date-cell">
+                        {format(day, 'ccc MMM dd')}
+                      </td>
+                    ) : null}
 
-                 <td className="rbc-agenda-time-cell">
-                   {timeRangeLabel(day, event)}
-                 </td>
+                    <td className="rbc-agenda-time-cell">
+                      {timeRangeLabel(day, event)}
+                    </td>
 
-                 <td className="rbc-agenda-event-cell" onClick={() => onSelectEvent?.(event)}>
-                   {event.title}
-                 </td>
-               </tr>
-              ))
+                    <td className="rbc-agenda-event-cell" onClick={() => onSelectEvent?.(event)}>
+                      {event.title}
+                    </td>
+                  </tr>
+                ))
             ))}
           </tbody>
         </table>

@@ -1,10 +1,10 @@
-import React from 'react';
-import clsx from 'clsx';
-import { eq, neq } from './localizer';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import Selection, { getBoundsForNode, isEvent, getSlotAtX, pointInBox, Bounds } from './Selection';
+import clsx from 'clsx';
+import closest from 'dom-helpers/closest';
+import React from 'react';
+import { eq, neq } from './localizer';
 import { SelectionContext } from './SelectContext';
-import { closest } from 'dom-helpers';
+import Selection, { Bounds, getBoundsForNode, getSlotAtX, isEvent, pointInBox } from './Selection';
 
 type BackgroundCellsProps = {
   rowRef: React.RefObject<HTMLDivElement>;

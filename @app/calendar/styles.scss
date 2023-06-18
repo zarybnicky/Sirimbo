@@ -6,9 +6,6 @@ $cell-border: #ddd !default;
 
 $border-color: #ccc !default;
 
-// Each calendar segment is 1/7th.
-$segment-width: 0.14286% !default;
-
 $time-selection-color: white !default;
 $time-selection-bg-color: rgba(0, 0, 0, 0.5) !default;
 $date-selection-bg-color: rgba(0, 0, 0, 0.1) !default;
@@ -25,11 +22,10 @@ $btn-color: #373a3c !default;
 $btn-bg: #fff !default;
 $btn-border: #ccc !default;
 
-$current-time-color: #74ad31 !default;
-
-$rbc-css-prefix: rbc-i !default;
-
 $today-highlight-bg: #eaf6ff !default;
+
+$active-background: darken($btn-bg, 10%);
+$active-border: darken($btn-border, 12%);
 
 .rbc-btn {
   color: inherit;
@@ -40,7 +36,7 @@ $today-highlight-bg: #eaf6ff !default;
 button.rbc-btn {
   overflow: visible;
   text-transform: none;
-  -webkit-appearance: button;
+  appearance: button;
   cursor: pointer;
 }
 
@@ -66,15 +62,6 @@ button.rbc-input::-moz-focus-inner {
 .rbc-calendar *:before,
 .rbc-calendar *:after {
   box-sizing: inherit;
-}
-
-.rbc-abs-full {
-  overflow: hidden;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
 }
 
 .rbc-ellipsis {
@@ -139,9 +126,6 @@ button.rbc-input::-moz-focus-inner {
 .rbc-today {
   background-color: $today-highlight-bg;
 }
-
-$active-background: darken($btn-bg, 10%);
-$active-border: darken($btn-border, 12%);
 
 .rbc-toolbar {
   display: flex;
@@ -369,7 +353,12 @@ $active-border: darken($btn-border, 12%);
 }
 
 .rbc-row-bg {
-  @extend .rbc-abs-full;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   flex-direction: row;
   flex: 1 0 0;
@@ -666,26 +655,14 @@ $active-border: darken($btn-border, 12%);
   }
 }
 
-.rbc-current-time-indicator {
-  position: absolute;
-  z-index: 3;
-  left: 0;
-  right: 0;
-  height: 1px;
-
-  background-color: $current-time-color;
-  pointer-events: none;
-}
-
-.rbc-addons-dnd-drag-row {
+.rbc-drag-row {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
 }
 
-
-.rbc-addons-dnd-over {
+.rbc-over {
   background-color: rgba(
     red($date-selection-bg-color),
     green($date-selection-bg-color),
@@ -698,39 +675,37 @@ $active-border: darken($btn-border, 12%);
   transition: opacity 150ms;
 
   &:hover {
-    .rbc-addons-dnd-resize-ns-icon, .rbc-addons-dnd-resize-ew-icon { display: block; }
+    .rbc-resize-ns-icon, .rbc-resize-ew-icon { display: block; }
   }
 }
-.rbc-draggable {
-  cursor: grab !important;
-}
+
 .rbc-nondraggable {
   background-color: lighten(#3174ad, 40) !important;
   color: black !important;
 }
 
-.rbc-addons-dnd-dragged-event {
+.rbc-dragged-event {
   opacity: 0;
 }
 
-.rbc-addons-dnd-is-dragging .rbc-event:not(.rbc-addons-dnd-dragged-event):not(.rbc-addons-dnd-drag-preview) {
+.rbc-is-dragging .rbc-event:not(.rbc-dragged-event):not(.rbc-drag-preview) {
   opacity: .50;
 }
 
-.rbc-addons-dnd-resizable {
+.rbc-resizable {
   position: relative;
   width: 100%;
   height: 100%;
 }
 
-.rbc-addons-dnd-resize-ns-anchor {
+.rbc-resize-ns-anchor {
   width: 100%;
   text-align: center;
   position: absolute;
   &:first-child { top: 0; }
   &:last-child { bottom: 0; }
 
-  .rbc-addons-dnd-resize-ns-icon {
+  .rbc-resize-ns-icon {
     display: none;
     border-top: 3px double;
     margin: 0 auto;
@@ -739,14 +714,14 @@ $active-border: darken($btn-border, 12%);
   }
 }
 
-.rbc-addons-dnd-resize-ew-anchor {
+.rbc-resize-ew-anchor {
   position: absolute;
   top: 4px;
   bottom: 0;
   &:first-child { left: 0; }
   &:last-child { right: 0; }
 
-  .rbc-addons-dnd-resize-ew-icon {
+  .rbc-resize-ew-icon {
     display: none;
     border-left: 3px double;
     margin-top: auto;

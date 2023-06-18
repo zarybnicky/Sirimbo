@@ -36,8 +36,9 @@ const EventCell = (props: EventCellProps) => {
           'rbc-event-allday': isAllDay || event.allDay || diff(event.start, ceil(event.end, 'day'), 'day') > 1,
           'rbc-event-continues-prior': continuesPrior,
           'rbc-event-continues-after': continuesAfter,
-          'rbc-draggable': event.isDraggable !== false,
+          'rbc-drag-preview': event.__isPreview,
           'rbc-nondraggable': event.isDraggable === false,
+          'cursor-grab': event.isDraggable !== false,
         })}
         onClick={() => onSelectEvent(event)}
       >

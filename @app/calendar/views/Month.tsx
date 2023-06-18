@@ -3,12 +3,13 @@ import clsx from 'clsx'
 import chunk from 'lodash/chunk'
 import { View, Navigate } from '../types'
 import DateContentRow from '../DateContentRow'
-import { eq, neq, sortEvents, add, firstVisibleDay, format, lastVisibleDay, range, visibleDays, inEventRange } from '../localizer'
+import { lte, eq, neq, sortEvents, add, format, range, inEventRange, startOf, endOf, startOfWeek } from '../localizer'
 import { NavigationContext } from '../NavigationContext'
 import { ViewClass } from '../types'
 
 const MonthView: ViewClass = ({ date: currentDate, events }) => {
-  let weeks = chunk(visibleDays(currentDate), 7);
+  const days = MonthView.range(currentDate);
+  let weeks = chunk(days, 7);
   const { onDrillDown } = useContext(NavigationContext)
 
   return (
@@ -25,9 +26,8 @@ const MonthView: ViewClass = ({ date: currentDate, events }) => {
 
       {weeks.map((week, weekIdx) => (
         <DateContentRow
-          key={weekIdx}
           className="rbc-month-row"
-          date={currentDate}
+          key={weekIdx}
           range={week}
           measureRows
           events={events.filter((e) => inEventRange(e, {start: week[0]!, end: week[week.length - 1]!})).sort(sortEvents)}
@@ -69,6 +69,16 @@ MonthView.navigate = (date, action) => {
     default:
       return date
   }
+}
+
+export function firstVisibleDay(date: Date) {
+  let firstOfMonth = startOf(date, 'month')
+  return startOf(firstOfMonth, 'week', startOfWeek)
+}
+
+export function lastVisibleDay(date: Date) {
+  let endOfMonth = endOf(date, 'month')
+  return endOf(endOfMonth, 'week', startOfWeek)
 }
 
 export default MonthView
