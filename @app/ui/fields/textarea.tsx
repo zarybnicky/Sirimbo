@@ -33,7 +33,7 @@ export function TextArea({
           id={name}
           name={name}
           {...props}
-          className="text-accent-12 shadow-sm focus:ring-accent-7 focus:border-accent-8 block w-full sm:text-sm border-accent-7 rounded-md"
+          className="bg-accent-3 text-accent-12 shadow-sm focus:ring-accent-7 focus:border-accent-8 block w-full sm:text-sm border-accent-7 rounded-md"
         />
         {error && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">

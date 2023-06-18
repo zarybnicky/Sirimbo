@@ -9,7 +9,7 @@ const Page: NextPageWithLayout = () => {
       <Heading>Taneční vystoupení</Heading>
       <NextSeo title="Taneční vystoupení" />
 
-      <div className="mb-8 prose prose-accent">
+      <div className="prose prose-accent">
         <p>
           Hledáte taneční vystoupení na svůj ples, firemní večírek nebo jinou společenskou
           akci? Máme pro Vás řešení!
@@ -30,7 +30,9 @@ const Page: NextPageWithLayout = () => {
         </p>
       </div>
 
-      <ExhibitionRequestForm />
+      <div className="my-16">
+        <ExhibitionRequestForm />
+      </div>
     </>
   );
 }

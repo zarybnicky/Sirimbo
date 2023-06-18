@@ -39,16 +39,16 @@ export const WeekPicker = ({
       </h4>
 
       <div className="mb-2 flex items-center">
-        <button className="button button-icon text-stone-500" onClick={setPrevWeek}>
+        <button className="button button-icon text-neutral-11" onClick={setPrevWeek}>
           <ChevronLeft />
         </button>
-        <div className="text-stone-500">
+        <div className="text-neutral-11">
           {fullDateFormatter.formatRange(
             startDate,
             lastDayOfWeek(startDate, { weekStartsOn: 1 }),
           )}
         </div>
-        <button className="button button-icon text-stone-500" onClick={setNextWeek}>
+        <button className="button button-icon text-neutral-11" onClick={setNextWeek}>
           <ChevronRight />
         </button>
       </div>

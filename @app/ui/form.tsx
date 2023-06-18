@@ -7,7 +7,7 @@ export const FieldLabel = ({
   ...props
 }: React.HTMLAttributes<HTMLLabelElement> & { htmlFor?: string | Path<any> }) => {
   return (
-    <label className={cn('block text-sm text-neutral-10 mt-1', className)} {...props}>
+    <label className={cn('block text-sm text-neutral-11 mt-1', className)} {...props}>
       {children}
     </label>
   );
@@ -22,7 +22,7 @@ export const FieldHelper = ({ error, helperText }: FieldHelperProps) => {
   const parsedHelperText = !error ? helperText : error.message;
   if (!parsedHelperText) return null;
   return (
-    <p className={cn('mt-2 text-sm', error ? 'text-accent-11' : 'text-neutral-9')}>
+    <p className={cn('mt-2 text-sm', error ? 'text-accent-11' : 'text-neutral-10')}>
       {parsedHelperText}
     </p>
   );
@@ -50,7 +50,7 @@ export const FormError = ({ error: e, default: def }: { error: any; default?: Re
   }
 
   return (
-    <div className="rounded-lg px-4 py-2 bg-accent-9 text-white col-full">
+    <div className="rounded-lg px-4 py-2 bg-accent-10 text-accent-1 col-full">
       {errorTranslation[error] || (
         <>
           <div className="font-bold">

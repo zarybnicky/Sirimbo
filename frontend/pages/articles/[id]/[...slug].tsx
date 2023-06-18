@@ -29,7 +29,7 @@ const Page: NextPageWithLayout<PageProps> = ({ item }) => {
         }}
       />
       <Heading>{item.atJmeno}</Heading>
-      <div className="text-stone-600 mb-6">
+      <div className="text-neutral-11 mb-6 -mt-4">
         {item.atTimestampAdd && fullDateFormatter.format(new Date(item.atTimestampAdd))}
       </div>
       <RichTextView value={item.atText} />

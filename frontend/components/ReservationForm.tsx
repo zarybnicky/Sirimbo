@@ -13,7 +13,7 @@ import { useAsyncCallback } from 'react-async-hook';
 import { FormError } from '@app/ui/form';
 import { SubmitButton } from '@app/ui/submit';
 import { NabidkaInput } from '@app/graphql';
-import { DateRange, DateRangeInput } from './DateRange';
+import { DateRange, DateRangeInput } from '@app/ui/fields/date';
 import { TrainerListDocument } from '@app/graphql/User';
 import { DeleteButton } from './DeleteButton';
 import { Route } from 'nextjs-routes';

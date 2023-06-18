@@ -44,12 +44,12 @@ export default function RichTextEditor<T extends FieldValues>({
           onReady={setEditor}
           onBlur={field.onBlur}
         />
-        {fieldState.error && (
-          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            <ReportProblemIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
-          </div>
-        )}
       </div>
+      {fieldState.error && (
+        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+          <ReportProblemIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
+        </div>
+      )}
       <FieldHelper error={fieldState.error} helperText={helperText} />
     </div>
   );

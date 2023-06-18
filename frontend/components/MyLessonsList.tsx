@@ -39,7 +39,7 @@ export const MyLessonsList: React.FC = () => {
       <WeekPicker title="Moje lekce" startDate={startDate} onChange={setStartDate} />
 
       {!fetching && !data?.myLessons?.nodes?.length && (
-        <div className="text-stone-600">Žádné lekce tento týden</div>
+        <div className="text-neutral-11">Žádné lekce tento týden</div>
       )}
 
       <div className="flex flex-wrap flex-col gap-x-2">
@@ -80,11 +80,11 @@ function LessonList({ day, location, lessons }: LessonListProps) {
   );
   return (
     <Card
-      className="grid w-72 rounded-lg border-stone-200 border"
+      className="grid w-72 rounded-lg border-neutral-6 border"
       menu={isSameTrainer ? menu : []}
     >
       <h6>
-        <div className="text-sm text-stone-500">{location}</div>
+        <div className="text-sm text-neutral-11">{location}</div>
         <div className="font-bold mb-1">{day}</div>
       </h6>
       {lessons.map((lesson, i) => (

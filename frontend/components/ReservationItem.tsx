@@ -13,7 +13,7 @@ export const ReservationItem = ({ item }: { item: MyReservationFragment }) => {
   return (
     <Card
       menu={Reservation.useMenu(item)}
-      className="group relative min-w-[200px] grid w-72 rounded-lg border-stone-200 border"
+      className="group relative min-w-[200px] grid w-72 rounded-lg border-neutral-7 border"
     >
       <div className="mb-0.5">
         <div className="font-bold">
@@ -23,11 +23,11 @@ export const ReservationItem = ({ item }: { item: MyReservationFragment }) => {
 
         {item.nMaxPocetHod > 0 && (
           <div>
-            <span className="text-stone-500">Maximálně hodin/pár: </span>
+            <span className="text-neutral-11">Maximálně hodin/pár: </span>
             <span className="text-lg">{item.nMaxPocetHod}</span>
           </div>
         )}
-        <div className="text-sm text-stone-500">
+        <div className="text-sm text-neutral-11">
           Zbývá {item.freeLessons} z {item.nPocetHod} nabízených
         </div>
       </div>

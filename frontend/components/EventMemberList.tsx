@@ -18,13 +18,13 @@ export function EventMemberList({ selected }: Props) {
           <Card className="flex flex-wrap justify-between items-center">
             <div
               className={classNames(
-                'text-xl text-red-500',
+                'text-xl text-neutral-12',
                 selected === event.id && 'font-bold',
               )}
             >
               {event.name}
             </div>
-            <div className="text-sm text-stone-600 flex flex-wrap gap-4">
+            <div className="text-sm text-neutral-11 flex flex-wrap gap-4">
               <div>
                 {fullDateFormatter.formatRange(
                   new Date(event.since || ''),

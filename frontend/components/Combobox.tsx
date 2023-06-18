@@ -4,6 +4,7 @@ import * as Popover from '@radix-ui/react-popover';
 import { Command } from 'cmdk';
 import { useController, FieldValues, Path, Control } from 'react-hook-form';
 import React from 'react';
+import { FieldLabel } from '@app/ui/form';
 
 type Extras = {
   className?: string;
@@ -31,15 +32,15 @@ export function ComboboxElement<T extends FieldValues>({
 
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
-      <div className="text-stone-700 text-sm mt-1">{label}</div>
+      <FieldLabel>{label}</FieldLabel>
 
       <Popover.Trigger asChild>
         <button
           type="button"
           role="combobox"
           className={cx(
-            'flex bg-white px-3 py-2 text-sm border rounded-md border-red-500 justify-between items-center',
-            !field.value && 'text-stone-700',
+            'flex bg-accent-1 px-3 py-2 text-sm border rounded-md border-accent-7 justify-between items-center',
+            !field.value && 'text-accent-11',
           )}
         >
           {field.value
@@ -53,7 +54,7 @@ export function ComboboxElement<T extends FieldValues>({
         <Popover.Content align="start" sideOffset={5} {...props}>
           <Command
             className={cx(
-              'border rounded-md bg-white h-full max-h-full relative ',
+              'border rounded-md bg-neutral-1 h-full max-h-full relative ',
               '[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted',
               '[&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2',
               '[&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5',
@@ -97,7 +98,7 @@ export function ComboboxElement<T extends FieldValues>({
                     setOpen(false);
                   }}
                   className={cx(
-                    'relative flex cursor-default select-none items-center rounded-sm text-sm outline-none aria-selected:bg-red-500 aria-selected:text-white',
+                    'relative flex cursor-default select-none items-center rounded-sm text-sm outline-none aria-selected:bg-accent-7 aria-selected:text-accent-12 text-accent-11',
                     'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
                   )}
                 >

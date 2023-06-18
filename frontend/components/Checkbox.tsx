@@ -1,5 +1,6 @@
 import { Control, FieldValues, Path, useController } from 'react-hook-form';
 import { FieldHelper, FieldHelperProps, FieldLabel } from '@app/ui/form';
+import { cn } from '@app/ui/cn';
 
 type Extras = {
   label?: React.ReactNode;
@@ -16,17 +17,19 @@ export function Checkbox({
 }: FieldHelperProps & Extras & Omit<React.HTMLProps<HTMLInputElement>, 'label'>) {
   return (
     <div className={`relative flex items-start my-2 ${className}`}>
-      <div className="flex items-center h-5">
+      <div className="flex items-center h-5 pt-2 pl-0.5">
         <input
           id={name}
           name={name}
           type="checkbox"
           {...props}
-          className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded"
+          className="focus:ring-red-500 h-4 w-4 bg-accent-2 text-accent-10 border-accent-9 border-[2px] rounded"
         />
       </div>
-      <div className="ml-3 text-sm">
-        <FieldLabel htmlFor={name}>{label}</FieldLabel>
+      <div className="ml-2 text-sm">
+        <label htmlFor={name} className="block text-sm text-neutral-12 mt-1">
+          {label}
+        </label>
         <FieldHelper error={error} helperText={helperText} />
       </div>
     </div>

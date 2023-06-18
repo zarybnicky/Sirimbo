@@ -81,12 +81,12 @@ module.exports = {
           to: { opacity: '0' },
         },
         contentShow: {
-          from: { opacity: '0', transform: 'translate(-50%, -48%) scale(0.96)' },
-          to: { opacity: '1', transform: 'translate(-50%, -50%) scale(1)' },
+          from: { opacity: '0', transform: 'scale(0.96)' },
+          to: { opacity: '1', transform: 'scale(1)' },
         },
         contentHide: {
-          from: { opacity: '1', transform: 'translate(-50%, -50%) scale(1)' },
-          to: { opacity: '0', transform: 'translate(-50%, -48%) scale(0.96)' },
+          from: { opacity: '1', transform: 'scale(1)' },
+          to: { opacity: '0', transform: 'scale(0.96)' },
         },
       },
       animation: {

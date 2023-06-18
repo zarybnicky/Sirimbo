@@ -15,7 +15,7 @@
 @tailwind utilities;
 
 .ck-content {
-  @apply prose prose-accent;
+  @apply prose prose-accent !bg-accent-1;
 }
 .ck.ck-toolbar.ck-toolbar_grouping > .ck-toolbar__items {
   flex-wrap: wrap !important;
@@ -60,7 +60,7 @@ body {
 }
 
 .scrollbar {
-  @apply scrollbar-thin scrollbar-track-white scrollbar-thumb-stone-800/20 hover:scrollbar-thumb-stone-800/50;
+  @apply scrollbar-thin scrollbar-track-red-6 scrollbar-thumb-mauve-11/40 hover:scrollbar-thumb-mauve-11/70;
 }
 .button {
   @apply relative inline-flex justify-center items-center shadow-md rounded-lg;

@@ -55,12 +55,12 @@ function FeedbackForm() {
               'fixed z-50 overflow-y-auto',
               'w-[95vw] max-h-[95vh] max-w-2xl rounded-lg p-4 md:w-full',
               'top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]',
-              'bg-white',
+              'bg-neutral-2',
               'focus:outline-none focus-visible:ring focus-visible:ring-red-500 focus-visible:ring-opacity-75',
               'data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide',
             )}
           >
-            <Dialog.Title className="text-stone-900 mb-2 text-lg">
+            <Dialog.Title className="text-neutral-12 mb-2 text-lg">
               <Edit3 className="inline h-4 w-4 mr-1" /> Ohodnoť nový web!
             </Dialog.Title>
 

@@ -43,18 +43,18 @@ export const LessonButton = ({ schedule, lesson, showTrainer, showDate, alwaysEx
         'leading-4 text-sm tabular-nums cursor-pointer',
         canBook
           ? 'hover:bg-green-100/80 bg-green-100 text-green-900'
-          : 'hover:bg-yellow-50',
-        !showTrainer && isMyLesson && 'bg-yellow-100',
+          : 'hover:bg-accent-4',
+        !showTrainer && isMyLesson && 'bg-accent-5',
       )}
     >
-      <div className="text-stone-600">
+      <div className="text-neutral-11">
         {showDate ? shortDateFormatter.format(new Date(schedule.rDatum)) + ' ' : ''}
         {lesson.riOd.substring(0, 5)}
       </div>
       <div className="grow">
         {canBook ? 'VOLNÁ' : lesson.paryByRiPartner ? name : '-'}
       </div>
-      <div className="text-stone-600">{duration}&apos;</div>
+      <div className="text-neutral-11">{duration}&apos;</div>
     </div>
   );
 
@@ -62,7 +62,7 @@ export const LessonButton = ({ schedule, lesson, showTrainer, showDate, alwaysEx
     <Collapsible.Root open={alwaysExpanded || isOpen} onOpenChange={setIsOpen}>
       <Collapsible.Trigger asChild>{trigger}</Collapsible.Trigger>
       <Collapsible.Content className="CollapsibleContent">
-        <div className="px-4 py-3 mb-2 bg-stone-100 rounded-md">
+        <div className="px-4 py-3 mb-2 bg-neutral-2 rounded-md">
           <LessonForm
             lesson={lesson}
             schedule={schedule}

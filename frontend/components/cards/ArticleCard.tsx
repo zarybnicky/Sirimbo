@@ -16,12 +16,12 @@ export const ArticleCard = ({ item: x }: { item: Article }) => {
             title={x.header}
           />
         </div>
-        <div className="tracking-wide mt-2 text-lg text-red-500 font-bold">
+        <div className="tracking-wide mt-2 text-lg text-primary font-bold">
           {x.header}
         </div>
-        <div className="mr-24 mt-1 mb-4 h-1 bg-red-500" />
+        <div className="mr-24 mt-1 mb-4 h-1 bg-primary" />
 
-        <p className="text-stone-700 grow">{x.preview}</p>
+        <p className="text-neutral-12 grow">{x.preview}</p>
 
         <div className="flex justify-center mt-3">
           <div className="font-bold tracking-wider button button-lg button-accent">

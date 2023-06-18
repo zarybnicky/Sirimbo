@@ -1,19 +1,21 @@
 import Link from 'next/link';
 import { Route } from 'nextjs-routes';
 import { CornerLeftUp as UpIcon } from 'lucide-react';
+import { cn } from '@app/ui/cn';
 
 type TitleBarProps = {
   title: string;
   backHref?: Route | Exclude<Route, {query: any}>["pathname"];
   children?: React.ReactNode;
+  className?: string;
 };
 
-export function TitleBar({backHref, title, children,}: TitleBarProps) {
+export function TitleBar({backHref, title, children,className}: TitleBarProps) {
   return (
-    <div className="my-4 lg:mt-8">
+    <div className={cn("my-4 lg:mt-8", className)}>
       {backHref && (
         <div className="block lg:hidden">
-          <Link href={backHref} className="flex gap-2 text-red-500 items-center text-sm">
+          <Link href={backHref} className="flex gap-2 text-accent-11 items-center text-sm">
             <UpIcon className="inline-block w-4 h-4" /> Zpět na seznam
           </Link>
         </div>

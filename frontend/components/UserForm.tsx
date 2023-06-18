@@ -56,7 +56,7 @@ export const UserForm = ({ id = '' }: { id?: string; }) => {
   const router = useRouter();
   const [query] = useQuery({ query: UserDocument, variables: { id } });
   const data = query.data?.user;
-  const title = id ? `${data?.uJmeno??''} ${data?.uPrijmeni ??''}}` : 'Nový uživatel';
+  const title = id ? `${data?.uJmeno??''} ${data?.uPrijmeni ?? ''}` : 'Nový uživatel';
 
   const create = useMutation(CreateUserDocument)[1];
   const update = useMutation(UpdateUserDocument)[1];
@@ -67,7 +67,7 @@ export const UserForm = ({ id = '' }: { id?: string; }) => {
 
   const { reset, control, handleSubmit } = useForm<FormProps>({ resolver: zodResolver(Form) });
   React.useEffect(() => {
-    reset(Form.optional().parse(data));
+    reset(Form.partial().optional().parse(data));
   }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
@@ -99,7 +99,7 @@ export const UserForm = ({ id = '' }: { id?: string; }) => {
 
   return (
     <form className="grid lg:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <TitleBar backHref={entity.listRoute} title={title} >
+      <TitleBar backHref={entity.listRoute} title={title} className="col-span-2">
         {id && (
           <DeleteButton
             doc={DeleteUserDocument}
@@ -166,7 +166,7 @@ export const UserForm = ({ id = '' }: { id?: string; }) => {
         />
       </div>
 
-      <div className="tracking-wide uppercase text-stone-700 text-xs col-full mt-4">
+      <div className="tracking-wide uppercase text-neutral-12 text-xs col-full mt-4">
         Kontaktní údaje
       </div>
 
@@ -185,7 +185,7 @@ export const UserForm = ({ id = '' }: { id?: string; }) => {
         required
       />
 
-      <div className="tracking-wide uppercase text-stone-700 text-xs col-full mt-4">
+      <div className="tracking-wide uppercase text-neutral-12 text-xs col-full mt-4">
         Bydliště
       </div>
 
@@ -217,7 +217,7 @@ export const UserForm = ({ id = '' }: { id?: string; }) => {
         />
       </div>
 
-      <div className="tracking-wide uppercase text-stone-700 text-xs col-full mt-4">
+      <div className="tracking-wide uppercase text-neutral-12 text-xs col-full mt-4">
         Tréninkové údaje
       </div>
 
@@ -245,7 +245,7 @@ export const UserForm = ({ id = '' }: { id?: string; }) => {
         <CheckboxElement control={control} name="uTeacher" value="1" label="Trenér" />
       </div>
 
-      <div className="tracking-wide uppercase text-stone-700 text-xs col-full mt-4">
+      <div className="tracking-wide uppercase text-neutral-12 text-xs col-full mt-4">
         Přístupy
       </div>
 

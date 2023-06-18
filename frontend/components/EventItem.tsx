@@ -24,7 +24,7 @@ export const EventItem = ({ event }: Props) => {
 
   return (
     <Card menu={menu} className="break-inside-avoid">
-      <div className="flex justify-between flex-wrap text-stone-600">
+      <div className="flex justify-between flex-wrap text-neutral-11">
         <div>
           {fullDateFormatter.formatRange(
             new Date(event.since || ''),
@@ -35,8 +35,8 @@ export const EventItem = ({ event }: Props) => {
           Zbývá {event.remainingSpots} míst z {event.capacity}
         </div>
       </div>
-      <div className="text-2xl text-stone-900">{event.name}</div>
-      <div className="text-stone-600">{event.locationText}</div>
+      <div className="text-2xl text-neutral-12">{event.name}</div>
+      <div className="text-neutral-11">{event.locationText}</div>
 
       <div className="flex gap-1 flex-wrap my-4">
         <ParticipationDialog data={event} />

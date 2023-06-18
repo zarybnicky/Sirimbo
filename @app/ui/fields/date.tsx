@@ -20,7 +20,7 @@ export function Calendar({
       className={cx('py-2 flex flex-row', className)}
       classNames={{
         months:
-          'p-1 border rounded-lg border-red-500 bg-white space-y-4 sm:space-x-4 sm:space-y-0',
+          'p-1 border rounded-lg border-accent-9 bg-accent-1 space-y-4 sm:space-x-4 sm:space-y-0',
         month: 'space-y-4',
         caption: 'flex justify-center pt-1 mx-2 relative justify-between items-center',
         caption_label: 'text-sm font-medium',
@@ -28,17 +28,16 @@ export function Calendar({
         nav_button: 'button button-accent',
         table: 'w-full border-collapse space-y-1',
         head_row: 'flex',
-        head_cell: 'text-stone-700 rounded-md w-9 text-[0.8rem]',
+        head_cell: 'text-accent-11 rounded-md w-9 text-[0.8rem]',
         row: 'flex w-full mt-2',
-        cell: 'text-center text-sm p-0 relative [&:has([aria-selected])]:bg-red-100 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
-        day: 'flex justify-center items-center rounded-lg hover:bg-stone-200 h-9 w-9 p-0 aria-selected:opacity-100',
+        cell: 'text-center text-sm p-0 relative [&:has([aria-selected])]:bg-accent-3 first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
+        day: 'flex justify-center items-center rounded-lg hover:bg-accent-4 h-9 w-9 p-0 aria-selected:opacity-100',
         day_selected:
-          'bg-red-500 text-white font-bold hover:!bg-red-500 hover:text-white focus:bg-red-500 focus:text-white',
-        day_today: 'bg-stone-200 text-black',
-        day_outside: 'text-stone-700 opacity-50',
-        day_disabled: 'text-stone-700 opacity-50',
-        day_range_middle:
-          'aria-selected:bg-red-100 aria-selected:text-stone-700 aria-selected:font-normal',
+          'bg-accent-9 text-accent-1 font-bold hover:!bg-accent-10 hover:text-accent-2 focus:bg-accent-10 focus:text-accent-2',
+        day_today: 'bg-accent-4 text-accent-11',
+        day_outside: 'text-neutral-11 opacity-50',
+        day_disabled: 'text-neutral-11 opacity-50',
+        day_range_middle: 'aria-selected:bg-accent-8 aria-selected:text-accent-1 aria-selected:font-normal',
         day_hidden: 'invisible',
         ...classNames,
       }}
@@ -61,6 +60,7 @@ type Extras = {
   label?: React.ReactNode;
   helperText?: React.ReactNode;
 };
+
 
 export function DateRangeInput<T extends FieldValues>({
   name,

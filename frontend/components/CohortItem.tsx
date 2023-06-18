@@ -49,7 +49,7 @@ const UserDetailButton: React.FC<{ user: UserPublicFragment & { hasValidPayment:
   return (
     <Dialog>
       <DialogTrigger>
-        <button className="underline text-stone-700">
+        <button className="underline text-neutral-12">
           {user.uPrijmeni}, {user.uJmeno}
         </button>
       </DialogTrigger>

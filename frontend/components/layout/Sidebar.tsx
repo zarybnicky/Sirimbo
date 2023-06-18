@@ -61,7 +61,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
           showTopMenu && 'lg:hidden',
           'w-3/4 sm:w-1/2 md:w-1/3 lg:w-56 xl:w-64 2xl:w-72 3xl:w-80',
           'z-30 h-full max-h-screen min-h-screen flex-none transform pb-10 transition duration-200 ease-in-out sm:pb-0 md:w-1/3 lg:relative lg:z-auto lg:translate-x-0',
-          'bg-white lg:bg-red-500 lg:text-white',
+          'bg-accent-1 lg:bg-primary lg:text-white',
           'overflow-y-auto scrollbar'
         )}
       >
@@ -76,7 +76,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
           {auth.user ? (
             <>
               <SidebarSection
-                item={{ type: 'menu', title: 'Pro členy', children: memberMenu }}
+                item={{ type: 'menu', title: 'Členská sekce', children: memberMenu }}
               />
               <SidebarLink
                 item={{ type: 'link', title: 'Odhlásit se', href: '/' }}
@@ -93,7 +93,7 @@ export const Sidebar = ({ isOpen, setIsOpen, showTopMenu }: SidebarProps) => {
           {showTopMenu ? (
             topMenu.map((x) => <SidebarSection key={x.title} item={x} />)
           ) : (
-            <SidebarLink item={{ type: 'link', title: 'Pro veřejnost', href: '/' }} />
+            <SidebarLink item={{ type: 'link', title: 'Veřejná sekce', href: '/' }} />
           )}
 
           <div className="mt-4 text-xs text-stone-700 lg:text-white p-4 grid gap-2">

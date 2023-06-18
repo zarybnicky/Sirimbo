@@ -126,7 +126,7 @@ export const ScheduleForm = ({ id = '' }: { id?: string }) => {
 const LessonForm = z.object({
   riOd: z.string().regex(/[0-9]{1,2}:[0-9]{2}(:[0-9]{2})?/),
   riDo: z.string().regex(/[0-9]{1,2}:[0-9]{2}(:[0-9]{2})?/),
-  riPartner: z.string(),
+  riPartner: z.string().nullish(),
   riLock: z.boolean().optional(),
 }).refine((form) => form.riOd < form.riDo, 'Čas začátku musí být před časem konce')
 type LessonFormProps = z.infer<typeof LessonForm>;

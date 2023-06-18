@@ -64,7 +64,7 @@ const Page: NextPageWithLayout = () => {
         <Button onClick={saveData}>Export všech</Button>
       </TitleBar>
 
-      <table className="w-full text-sm text-left text-stone-900">
+      <table className="w-full text-sm text-left text-neutral-11">
         <thead>
           <tr>
             <th>Jméno</th>
@@ -77,7 +77,7 @@ const Page: NextPageWithLayout = () => {
         </thead>
         <tbody>
           {data?.formResponses?.nodes?.map((row, i) => (
-            <tr key={i} className="even:bg-white odd:bg-stone-200 border-b">
+            <tr key={i} className="even:bg-neutral-2 odd:bg-neutral-1 border-b">
               <td className="py-1">
                 {row.data?.name} {row.data?.surname}
               </td>

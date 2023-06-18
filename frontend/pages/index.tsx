@@ -62,8 +62,8 @@ const useServices = (): {
   {
     href: '/skolni-krouzky',
     image: '/images/services-pripravka.png',
-    header: 'Přípravka tanečního sportu',
-    text: 'První kroky do světa tanečního sportu pro děti od 5 do 10 let. Všeobecná taneční průprava a základy tanečních kroků pro budoucí hvězdy.',
+    header: 'Kroužky Olymp Dance',
+    text: 'Tanči s námi na tvé škole: základní krůčky jednoduše a pohodlně ve školních kroužcích na 22 školách v Olomouci, Prostějově a okolí.',
   },
   {
     href: {
@@ -71,8 +71,8 @@ const useServices = (): {
       query: { id: '1', slug: ['treninkovy-program-basic'] },
     },
     image: '/images/services-pro-deti.png',
-    header: 'Základy tanečního sportu',
-    text: 'Tréninkové programy pro začínající a mírně pokročilé tanečníky ve věkových skupinách juniorů (12-15 let), mládež a dospělí (16+ let).',
+    header: 'Tréninkový program Basic',
+    text: 'Začátky s trenéry národního týmu - základy tanců, správné držení těla, kondiční průprava. Už od začátku pod vedením špičkových trenérů.',
   },
   {
     href: {
@@ -80,8 +80,8 @@ const useServices = (): {
       query: { id: '2', slug: ['treninkovy-program-sport'] },
     },
     image: '/images/services-pro-zacatecniky.png',
-    header: 'Výkonnostní sport',
-    text: 'Tréninkové programy pro soutěžní tanečníky ve všech věkových skupinách a výkonnostních třídách uzpůsobené podle potřeb v jednotlivých výkonnostních stupních.',
+    header: 'Tréninkový program Sport',
+    text: 'Tréninkový program pro výkonnostní sportovce, pravidelná účast na soutěžích.',
   },
   {
     href: {
@@ -89,8 +89,8 @@ const useServices = (): {
       query: { id: '3', slug: ['treninkovy-program-top'] },
     },
     image: '/images/services-soutezni.png',
-    header: 'Sportovní centrum mládeže',
-    text: 'Tréninkový program pro vrcholové sportovce, reprezentanty ČR se špičkovými českými trenéry, speciální kondiční přípravou a moderními metodami sportovního tréninku. Jsme jediným klubem v Olomouckém kraji se statutem Sprtovního centra mládeže dle MŠMT.',
+    header: 'Tréninkový program TOP',
+    text: 'Tréninkový program na úrovni vrcholových sportovců včetně tréninků s pravidelně zvanými externisty. Taneční sportovci na mistrovské úrovni.',
   },
 ];
 

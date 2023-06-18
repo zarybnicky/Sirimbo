@@ -14,7 +14,7 @@ export function Card({ menu, cohort, children, ...props }: CardProps) {
     <div
       {...props}
       className={cn(
-        'group bg-white relative border border-neutral-6 shadow-sm sm:rounded-lg p-3 mb-1',
+        'group bg-neutral-1 relative border border-neutral-6 shadow-sm sm:rounded-lg p-3 mb-1',
         cohort ? 'pl-8' : '',
         props.className,
       )}
@@ -24,7 +24,7 @@ export function Card({ menu, cohort, children, ...props }: CardProps) {
           <Dropdown
             button={
               <button>
-                <MoreVertical className="text-neutral-3 w-6 group:data-[state=open]:text-neutral-6 group-hover:text-neutral-5" />
+                <MoreVertical className="text-neutral-7 w-6 group:data-[state=open]:text-neutral-9 group-hover:text-neutral-8" />
               </button>
             }
             modal={false}

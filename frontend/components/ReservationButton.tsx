@@ -39,7 +39,7 @@ export const ReservationButton = ({ item }: { item: MyReservationFragment }) => 
       <div
         className={classNames(
           'group flex justify-between gap-3 px-2.5 py-2 rounded-lg text-sm items-center',
-          canEdit && 'cursor-pointer border border-red-500 hover:bg-red-50',
+          canEdit && 'cursor-pointer border border-accent-7 hover:bg-accent-4',
         )}
       >
         <div>Rezervovat</div>
@@ -49,8 +49,7 @@ export const ReservationButton = ({ item }: { item: MyReservationFragment }) => 
       <div
         className={classNames(
           'group flex justify-between gap-3 px-2.5 py-2 rounded-lg leading-4 text-sm tabular-nums',
-          canEdit &&
-            'cursor-pointer bg-yellow-100 border border-yellow-200 hover:bg-yellow-50',
+          canEdit && 'cursor-pointer bg-accent-4 border border-accent-7 hover:bg-accent-8',
         )}
       >
         <div>{formatCoupleName(couple)}</div>
@@ -71,14 +70,14 @@ export const ReservationButton = ({ item }: { item: MyReservationFragment }) => 
           className={classNames(
             'z-20 data-[side=top]:animate-slide-up data-[side=bottom]:animate-slide-down',
             'w-48 rounded-lg p-4 shadow-md md:w-56',
-            'bg-white',
+            'bg-neutral-1 text-neutral-12',
           )}
         >
-          <PopoverPrimitive.Arrow className="fill-current text-white" />
+          <PopoverPrimitive.Arrow className="fill-current text-neutral-1" />
 
           <div className="flex gap-2">
             <button
-              className="text-red-500 disabled:text-red-200"
+              className="text-accent-9 disabled:text-accent-7"
               onClick={removeLesson}
               disabled={disableRemove}
             >
@@ -86,7 +85,7 @@ export const ReservationButton = ({ item }: { item: MyReservationFragment }) => 
             </button>
             <div className="text-xl tabular-nums">{myLessons}x</div>
             <button
-              className="text-red-500 disabled:text-red-200"
+              className="text-accent-9 disabled:text-accent-7"
               onClick={addLesson}
               disabled={disableAdd}
             >

@@ -12,7 +12,7 @@ import {
   DeleteAnnouncementDocument,
   UpdateAnnouncementDocument,
 } from '@app/graphql/Announcement';
-import { DatePickerElement } from './DateRange';
+import { DatePickerElement } from '@app/ui/fields/date';
 import { useMutation } from 'urql';
 import { CheckboxElement } from './Checkbox';
 import { DeleteButton } from './DeleteButton';
@@ -107,7 +107,7 @@ export function AnnouncementForm({
         control={control}
         name="sticky"
         value="1"
-        label="Připnutý nahoru"
+        label="Připnutý příspěvek (stálá nástěnka)"
       />
       <RichTextEditor
         initialState={data?.upText}

@@ -2,6 +2,7 @@ import React from 'react';
 import { AlertCircle as ReportProblemIcon } from 'lucide-react';
 import { Control, FieldValues, Path, useController } from 'react-hook-form';
 import { FieldHelper, FieldHelperProps, FieldLabel } from '@app/ui/form';
+import { cn } from '../cn';
 
 type Extras = {
   className?: string;
@@ -35,7 +36,11 @@ export function TextField({
           name={name}
           type={type}
           {...props}
-          className="block w-full border-accent-7 text-accent-12 placeholder:text-accent-7 focus:outline-none focus:ring-accent-7 focus:border-accent-8 sm:text-sm rounded-md"
+          className={cn(
+             "block w-full sm:text-sm rounded-md",
+             "bg-accent-2 border-accent-7 text-accent-12 placeholder:text-accent-7",
+             "focus:outline-none focus:ring-accent-7 focus:border-accent-8",
+          )}
         />
         {error && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -62,11 +67,7 @@ export function TextFieldElement<T extends FieldValues>({
       value={field.value || ''}
       error={fieldState.error}
       {...props}
-      onChange={(e) =>
-        field.onChange(
-          valueAsNumber ? parseInt(e.currentTarget.value, 10) : e.currentTarget.value,
-        )
-      }
+      onChange={(e) => field.onChange(valueAsNumber ? parseInt(e.currentTarget.value, 10) : e.currentTarget.value)}
     />
   );
 }

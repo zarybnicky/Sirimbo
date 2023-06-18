@@ -51,10 +51,6 @@ export const PersonalInfoForm: React.FC<{
 
   return (
     <form className="grid lg:grid-cols-2 gap-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <SubmitButton loading={onSubmit.loading} />
-
-      <FormError error={onSubmit.error} />
-
       <TextFieldElement control={control} name="uJmeno" label="Jméno" required />
       <TextFieldElement control={control} name="uPrijmeni" label="Příjmení" required />
 
@@ -134,6 +130,9 @@ export const PersonalInfoForm: React.FC<{
           options={countries.map((x) => ({ id: x.code.toString(), label: x.label }))}
         />
       </div>
+
+      <FormError error={onSubmit.error} />
+      <SubmitButton loading={onSubmit.loading} />
     </form>
   );
 };
