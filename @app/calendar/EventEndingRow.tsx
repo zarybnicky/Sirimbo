@@ -1,10 +1,10 @@
+import range from 'lodash/range'
 import React, { useContext } from 'react'
 import { eventLevels, Segment } from './common'
-import range from 'lodash/range'
-import EventCell from './EventCell'
 import type { DateSlotMetrics } from './DateSlotMetrics'
+import EventCell from './EventCell'
+import { NavigationContext } from './NavigationContext'
 import { View } from './types'
-import { NavigationContext } from 'NavigationContext'
 
 let isSegmentInSlot = (seg: Segment, slot: number) => seg.left <= slot && seg.right >= slot
 let eventsInSlot = (segments: Segment[], s: number) => segments.filter((seg) => isSegmentInSlot(seg, s)).length

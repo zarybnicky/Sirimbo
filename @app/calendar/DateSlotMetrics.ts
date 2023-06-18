@@ -1,5 +1,5 @@
 import { eventSegments, endOfRange, eventLevels } from './common'
-import { eq, continuesAfter, continuesPrior } from './localizer'
+import { eq, lt, gt, gte } from './localizer'
 import { Event } from './types';
 
 export type DateSlotMetrics = ReturnType<typeof getSlotMetrics>;
@@ -43,11 +43,14 @@ export const getSlotMetrics = ({ range, events, maxRows, minRows }: {
     },
 
     continuesPrior({ start }: Event) {
-      return continuesPrior(start, first)
+      return lt(start, first, 'day')
     },
 
     continuesAfter({ start, end }: Event) {
-      return continuesAfter(start, end, last)
+      const singleDayDuration = eq(start, end, 'minutes')
+      return singleDayDuration
+        ? gte(end, last, 'minutes')
+        : gt(end, last, 'minutes')
     },
   }
 }

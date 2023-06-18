@@ -2,13 +2,12 @@ import React from 'react';
 import clsx from 'clsx';
 import { eq, neq } from './localizer';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import { dateCellSelection, getSlotAtX, pointInBox } from './common';
-import { Bounds, Point } from './types';
-import Selection, { getBoundsForNode, isEvent, isShowMore } from './Selection';
-import { SelectionContext } from 'SelectContext';
+import Selection, { getBoundsForNode, isEvent, getSlotAtX, pointInBox, Bounds } from './Selection';
+import { SelectionContext } from './SelectContext';
+import { closest } from 'dom-helpers';
 
 type BackgroundCellsProps = {
-  container: () => HTMLDivElement | null;
+  rowRef: React.RefObject<HTMLDivElement>;
   range: Date[];
   date?: Date;
   resourceId?: number;
@@ -18,57 +17,118 @@ type SelectingState = {
   selecting: boolean;
   start?: number;
   end?: number;
-  initial?: Point;
+  initial?: Bounds;
 };
+const EMPTY = {selecting: false};
 
 const BackgroundCells = ({
-  container,
+  rowRef,
   range,
   date: currentDate,
   resourceId,
 }: BackgroundCellsProps) => {
-  const [state, setState] = React.useState<SelectingState>({ selecting: false });
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [state, setState] = React.useState<SelectingState>(EMPTY);
+  const cellRef = React.useRef<HTMLDivElement>(null);
   const { onSelectSlot } = React.useContext(SelectionContext);
 
   useLayoutEffect(() => {
-    let selector = new Selection(container);
+    let selector = new Selection(() => rowRef.current, {
+      shouldSelect(point) {
+        return !isEvent(cellRef.current!, point)
+      }
+    });
 
-    selector.on('selecting', (box: Bounds) => {
-      const bounds = getBoundsForNode(containerRef.current!);
-      setState(({ initial, selecting, start, end }) => {
+    selector.addEventListener('selecting', ({ detail: bounds }) => {
+      const rowBox = getBoundsForNode(cellRef.current!);
+      setState(({ initial, selecting }) => {
         if (!selecting) {
-          initial = { x: box.x, y: box.y };
+          initial = bounds;
         }
-        start = -1;
-        end = -1;
-        if (containerRef.current && selector.isSelected(containerRef.current)) {
-          ({ start, end } = dateCellSelection(initial!, bounds, box, range.length));
+        if (initial && selector.isSelected(cellRef.current!)) {
+  let startIdx = -1
+  let endIdx = -1
+  let lastSlotIdx = range.length - 1
+
+  let cellWidth = (rowBox.right - rowBox.left) / range.length
+  let currentSlot = getSlotAtX(rowBox, bounds.x, range.length)
+
+  // Identify row as either the initial row
+  // or the row under the current mouse point
+  let isCurrentRow = rowBox.top < bounds.y && rowBox.bottom > bounds.y
+  let isStartRow = rowBox.top < initial.y && rowBox.bottom > initial.y
+
+  // this row's position relative to the start point
+  let isAboveStart = initial.y > rowBox.bottom
+  let isBelowStart = rowBox.top > initial.y
+
+  // this row is between the current and start rows, so entirely selected
+  if (bounds.top < rowBox.top && bounds.bottom > rowBox.bottom) {
+    startIdx = 0
+    endIdx = lastSlotIdx
+  }
+
+  if (isCurrentRow) {
+    if (isBelowStart) {
+      startIdx = 0
+      endIdx = currentSlot
+    } else if (isAboveStart) {
+      startIdx = currentSlot
+      endIdx = lastSlotIdx
+    }
+  }
+
+  if (isStartRow) {
+    startIdx = endIdx = Math.floor((initial.x - rowBox.left) / cellWidth)
+    if (isCurrentRow) {
+      if (currentSlot < startIdx) {
+        startIdx = currentSlot
+      } else {
+        endIdx = currentSlot //select current range
+      }
+    } else if (initial.y < bounds.y) {
+      // the current row is below start row
+      // select cells to the right of the start cell
+      endIdx = lastSlotIdx
+    } else {
+      // select cells to the left of the start cell
+      startIdx = 0
+    }
+  }
+          return { initial, selecting: true, start: startIdx, end: endIdx };
         }
-        return { initial, selecting: true, start, end };
+        return { initial, selecting: true, start: -1, end: -1 };
       });
     });
 
-    selector.on('beforeSelect', (box: Point) => !isEvent(containerRef.current, box));
-    selector.on('click', (box: Point) => {
-      if (containerRef.current && !isEvent(containerRef.current, box) && !isShowMore(containerRef.current, box)) {
-        let rowBox = getBoundsForNode(containerRef.current!);
-        if (!pointInBox(rowBox, box)) return;
-        let currentSlot = getSlotAtX(rowBox, box.x, range.length);
-        if (currentSlot === -1) return;
-        onSelectSlot({
-          slots: [range[currentSlot]!],
-          start: range[currentSlot]!,
-          end: range[currentSlot]!,
-          action: 'click',
-          box,
-          resourceId,
-        });
-      }
-      setState({ selecting: false });
+    selector.addEventListener('click', ({ detail: point }) => {
+      setState(() => {
+        let target = document.elementFromPoint(point.clientX, point.clientY)!
+        if (isEvent(cellRef.current!, point)) {
+          return EMPTY
+        }
+        if (closest(target, '.rbc-show-more', cellRef.current!)) {
+          return EMPTY
+        }
+        let rowBox = getBoundsForNode(cellRef.current!);
+        if (!pointInBox(rowBox, point)) {
+          return EMPTY
+        }
+        let currentSlot = getSlotAtX(rowBox, point.x, range.length);
+        if (currentSlot !== -1) {
+          onSelectSlot({
+            slots: [range[currentSlot]!],
+            start: range[currentSlot]!,
+            end: range[currentSlot]!,
+            action: 'click',
+            box: point,
+            resourceId,
+          });
+        }
+        return EMPTY;
+      })
     });
 
-    selector.on('select', (bounds: Bounds) => {
+    selector.addEventListener('select', ({ detail: bounds }) => {
       setState(({ start, end }) => {
         if (start && end && end !== -1 && start !== -1) {
           onSelectSlot({
@@ -80,14 +140,19 @@ const BackgroundCells = ({
             resourceId,
           });
         }
-        return { selecting: false };
+        return EMPTY
       });
     });
+
+    selector.addEventListener('reset', () => {
+      setState(EMPTY);
+    })
+
     return () => selector.teardown();
   });
 
   return (
-    <div className="rbc-row-bg">
+    <div className="rbc-row-bg" ref={cellRef}>
       {range.map((date, index) => (
         <div
           className={clsx({

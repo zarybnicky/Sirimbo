@@ -9,7 +9,5 @@ const WorkWeek: ViewClass = (props) => (
 
 WorkWeek.range = (date: Date) => Week.range(date).filter((d) => [6, 0].indexOf(d.getDay()) === -1);
 WorkWeek.navigate = Week.navigate
-WorkWeek.title = Week.title
-WorkWeek.name = "Pracovní dny";
 
 export default WorkWeek

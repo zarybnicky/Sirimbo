@@ -713,7 +713,7 @@ $active-border: darken($btn-border, 12%);
   opacity: 0;
 }
 
-&.rbc-addons-dnd-is-dragging .rbc-event:not(.rbc-addons-dnd-dragged-event):not(.rbc-addons-dnd-drag-preview) {
+.rbc-addons-dnd-is-dragging .rbc-event:not(.rbc-addons-dnd-dragged-event):not(.rbc-addons-dnd-drag-preview) {
   opacity: .50;
 }
 

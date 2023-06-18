@@ -1,22 +1,14 @@
-import React from 'react';
-import clsx from 'clsx';
-import DayColumn from './DayColumn';
-import TimeGutter from './TimeGutter';
-import TimeGridHeader from './TimeGridHeader';
-import getWidth from 'dom-helpers/width';
-import {
-  eq,
-  sortEvents,
-  inEventRange,
-  merge,
-  inRange,
-  startAndEndAreDateOnly,
-  diff,
-} from './localizer';
-import makeGrouper from './ResourceGrouper';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import { Event, Resource } from './types';
-import { NavigationContext } from 'NavigationContext';
+import clsx from 'clsx';
+import getWidth from 'dom-helpers/width';
+import React from 'react';
+import DateContentRow from './DateContentRow';
+import DayColumn from './DayColumn';
+import {diff, eq, format, inEventRange, inRange, merge, sortEvents, isJustDate} from './localizer';
+import { NavigationContext } from './NavigationContext';
+import makeGrouper from './ResourceGrouper';
+import TimeGutter from './TimeGutter';
+import { Event, Resource, View } from './types';
 
 interface TimeGridProps {
   events: Event[];
@@ -31,8 +23,9 @@ const TimeGrid = ({
   range,
   resources,
 }: TimeGridProps) => {
+  const today = new Date();
   const dateRange = { start: range[0]!, end: range[range.length - 1]! };
-  const { min, max, focusedTime } = React.useContext(NavigationContext);
+  const { min, max, focusedTime, onDrillDown } = React.useContext(NavigationContext);
 
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const contentRef = React.useRef<HTMLDivElement>(null);
@@ -64,7 +57,7 @@ const TimeGrid = ({
     if (inEventRange(event, dateRange)) {
       if (
         event.allDay ||
-        startAndEndAreDateOnly(event.start, event.end) ||
+        (isJustDate(event.start) && isJustDate(event.end)) ||
         (!showMultiDayTimes && !eq(event.start, event.end, 'day'))
       ) {
         allDayEvents.push(event);
@@ -84,6 +77,7 @@ const TimeGrid = ({
   allDayEvents.sort(sortEvents);
   const grouper = makeGrouper(resources);
   const groupedEvents = grouper.groupEvents(rangeEvents);
+  const groupedAllDayEvents = grouper.groupEvents(allDayEvents);
   const groupedBackgroundEvents = grouper.groupEvents(rangeBackgroundEvents);
 
   return (
@@ -91,13 +85,46 @@ const TimeGrid = ({
       ref={containerRef}
       className={clsx('rbc-time-view', resources && 'rbc-time-view-resources')}
     >
-      <TimeGridHeader
-        range={range}
-        events={allDayEvents}
-        width={gutterWidth}
-        resources={grouper}
-        scrollRef={scrollRef}
-      />
+    <div ref={scrollRef} className="rbc-time-header">
+      <div className="rbc-label rbc-time-header-gutter" style={{ width: gutterWidth, minWidth: gutterWidth, maxWidth: gutterWidth }} />
+
+      {grouper.map(([resource, id], idx) => (
+        <div className="rbc-time-header-content" key={id || idx}>
+          {resource && (
+            <div className="rbc-row rbc-row-resource" key={`resource_${idx}`}>
+              <div className="rbc-header">{resource.resourceTitle}</div>
+            </div>
+          )}
+          <div className={clsx('rbc-row rbc-time-header-cell', range.length <= 1 && 'rbc-time-header-cell-single-day')}>
+            {range.map((date, i) => (
+              <div key={i} className={clsx('rbc-header', eq(date, today, 'day') && 'rbc-today')}>
+                <button
+                  type="button"
+                  className="rbc-button-link"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onDrillDown(date, View.DAY);
+                  }}
+                >
+                  <span role="columnheader" aria-sort="none">
+                    {format(date, 'dd eee')}
+                  </span>
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <DateContentRow
+            isAllDay
+            range={range}
+            events={groupedAllDayEvents.get(id) || []}
+            resourceId={resource && id}
+            className="rbc-allday-cell"
+          />
+        </div>
+      ))}
+    </div>
+
       <div
         ref={contentRef}
         className="rbc-time-content"

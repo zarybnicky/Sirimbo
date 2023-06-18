@@ -6,9 +6,9 @@ import BackgroundCells from './BackgroundCells';
 import EventRow from './EventRow';
 import EventEndingRow from './EventEndingRow';
 import { getSlotMetrics } from './DateSlotMetrics';
-import { Event, Point } from './types';
-import { Segment, eventSegments, getSlotAtX, pointInBox } from './common'
-import Selection, { getBoundsForNode } from './Selection'
+import { Event } from './types';
+import { Segment, eventSegments } from './common'
+import Selection, { getBoundsForNode, getSlotAtX, pointInBox } from './Selection'
 import { DnDContext } from './DnDContext'
 import { diff, merge, add, eq, inRange, lt, gt } from './localizer'
 import { startOf } from 'date-arithmetic'
@@ -49,18 +49,16 @@ const DateContentRow = ({
   }, [range, events, maxRows]);
 
   useLayoutEffect(() => {
-    const selector = new Selection(
-      () => containerRef.current,
-      !isAllDay ? [] : ['.rbc-day-slot', '.rbc-allday-cell'],
-    )
-
-    selector.on('beforeSelect', (point: Point) => {
-      const { action } = draggable.dragAndDropAction.current
-      const bounds = getBoundsForNode(containerRef.current!)
-      return action === 'move' || (action === 'resize' && (!isAllDay || pointInBox(bounds, point)));
+    const selector = new Selection(() => containerRef.current, {
+      validContainers: !isAllDay ? [] : ['.rbc-day-slot', '.rbc-allday-cell'],
+        shouldSelect(point) {
+          const { action } = draggable.dragAndDropAction.current
+          const bounds = getBoundsForNode(containerRef.current!)
+          return action === 'move' || (action === 'resize' && (!isAllDay || pointInBox(bounds, point)));
+        },
     })
 
-    selector.on('dragOverFromOutside', (point: Point) => {
+    selector.addEventListener('dragOverFromOutside', ({ detail: point }) => {
       const bounds = getBoundsForNode(containerRef.current!)
       const event = draggable.dragFromOutsideItem?.()
       setSegment((segment) => {
@@ -78,7 +76,7 @@ const DateContentRow = ({
       })
     })
 
-    selector.on('selecting', (point: Point) => {
+    selector.addEventListener('selecting', ({ detail: point }) => {
       const { action, event, direction } = draggable.dragAndDropAction.current
       const bounds = getBoundsForNode(containerRef.current!)
       const date = slotMetrics.getDateForSlot(getSlotAtX(bounds, point.x, slotMetrics.slots))
@@ -135,7 +133,7 @@ const DateContentRow = ({
       })
     })
 
-    selector.on('dropFromOutside', (point: Point) => {
+    selector.addEventListener('dropFromOutside', ({ detail: point }) => {
       if (!draggable.onDropFromOutside) return
       const bounds = getBoundsForNode(containerRef.current!)
       if (pointInBox(bounds, point)) {
@@ -145,9 +143,9 @@ const DateContentRow = ({
       }
     })
 
-    selector.on('selectStart', () => draggable.onStart())
+    selector.addEventListener('selectStart', () => draggable.onStart())
 
-    selector.on('select', (point: Point) => {
+    selector.addEventListener('select', ({detail:point}) => {
       const bounds = getBoundsForNode(containerRef.current!)
       setSegment((segment) => {
         if (segment && pointInBox(bounds, point)) {
@@ -157,12 +155,12 @@ const DateContentRow = ({
       })
     })
 
-    selector.on('click', () => {
+    selector.addEventListener('click', () => {
       draggable.onEnd(null)
       setSegment(null);
     })
 
-    selector.on('reset', () => {
+    selector.addEventListener('reset', () => {
       draggable.onEnd(null)
       setSegment(null);
     })
@@ -193,7 +191,7 @@ const DateContentRow = ({
         <BackgroundCells
           date={date}
           range={range}
-          container={() => containerRef.current}
+          rowRef={containerRef}
           resourceId={resourceId}
         />
       )}

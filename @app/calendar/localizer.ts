@@ -100,14 +100,6 @@ export function merge(date: Date | null, time: Date | null): Date {
   return milliseconds(date, milliseconds(time))
 }
 
-export function eqTime(dateA: Date, dateB: Date) {
-  return (
-    hours(dateA) === hours(dateB) &&
-    minutes(dateA) === minutes(dateB) &&
-    seconds(dateA) === seconds(dateB)
-  )
-}
-
 export function isJustDate(date: Date) {
   return (
     hours(date) === 0 &&
@@ -127,42 +119,11 @@ export function diff(dateA: Date, dateB: Date, unit: Exclude<Unit, 'week'>) {
   )
 }
 
-export function total(date: Date, unit: 'week'|'day'|'hours'|'minutes'|'seconds') {
-  let ms = date.getTime(),
-    div = 1
-
-  switch (unit) {
-    case 'week':
-      div *= 7
-    case 'day':
-      div *= 24
-    case 'hours':
-      div *= 60
-    case 'minutes':
-      div *= 60
-    case 'seconds':
-      div *= 1000
-  }
-  return ms / div
-}
-
 export function week(date: Date) {
   var d = new Date(date)
   d.setHours(0, 0, 0)
   d.setDate(d.getDate() + 4 - (d.getDay() || 7))
   return Math.ceil(((+d - +new Date(d.getFullYear(), 0, 1)) / 8.64e7 + 1) / 7)
-}
-
-export function today() {
-  return startOf(new Date(), 'day')
-}
-
-export function yesterday() {
-  return add(startOf(new Date(), 'day'), -1, 'day')
-}
-
-export function tomorrow() {
-  return add(startOf(new Date(), 'day'), 1, 'day')
 }
 
 export function getSlotDate(dt: Date, minutesFromMidnight: number, offset: number) {
@@ -171,28 +132,6 @@ export function getSlotDate(dt: Date, minutesFromMidnight: number, offset: numbe
 
 export function getDstOffset(start: Date, end: Date) {
   return start.getTimezoneOffset() - end.getTimezoneOffset()
-}
-
-// if the start is on a DST-changing day but *after* the moment of DST
-// transition we need to add those extra minutes to our minutesFromMidnight
-export function getTotalMin(start: Date, end: Date) {
-  return diff(start, end, 'minutes') + getDstOffset(start, end)
-}
-
-export function getMinutesFromMidnight(start: Date) {
-  const daystart = startOf(start, 'day')
-  return diff(daystart, start, 'minutes') + getDstOffset(daystart, start)
-}
-
-export function continuesPrior(start: Date, first: Date) {
-  return lt(start, first, 'day')
-}
-
-export function continuesAfter(start: Date, end: Date, last: Date) {
-  const singleDayDuration = eq(start, end, 'minutes')
-  return singleDayDuration
-    ? gte(end, last, 'minutes')
-    : gt(end, last, 'minutes')
 }
 
 // These two are used by eventLevels
@@ -226,17 +165,6 @@ export function inEventRange(
     ? gt(end, rangeStart, 'minutes')
     : gte(end, rangeStart, 'minutes')
   return startsBeforeEnd && endsAfterStart
-}
-
-// other localizers treats 'day' and 'date' equality very differently, so we
-// abstract the change the 'localizer.eq(date1, date2, 'day') into this
-// new method, where they can be treated correctly by the localizer overrides
-export function isSameDate(date1: Date, date2: Date) {
-  return eq(date1, date2, 'day')
-}
-
-export function startAndEndAreDateOnly(start: Date, end: Date) {
-  return isJustDate(start) && isJustDate(end)
 }
 
 export function format(value: string | Date, format: string) {

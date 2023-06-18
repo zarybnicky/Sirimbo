@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
-import { DnDContext } from './DnDContext';
-import { DragDirection, Event } from './types';
+import { DnDContext, DragDirection } from './DnDContext';
+import { Event } from './types';
 
 const EventWrapper: React.FC<{
   children: React.ReactElement;

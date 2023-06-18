@@ -1,5 +1,9 @@
 import React from 'react';
-import { DragAction, DragDirection, Event } from './types';
+import { Event } from './types';
+
+export type DragAction = 'resize' | 'move';
+
+export type DragDirection = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
 
 export type DnDState = {
   interacting: boolean;
@@ -31,3 +35,46 @@ export type DnDContextType = {
 export const DnDContext = React.createContext<DnDContextType>(
   null as any as DnDContextType,
 );
+
+export const DndProvider = ({ setIsDragging, children }: {
+  children: React.ReactNode;
+  setIsDragging: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  const state = React.useRef<DnDState>({ interacting: false });
+  const context = React.useMemo<DnDContextType>(() => ({
+    draggable: {
+      onStart() {
+        state.current = { ...state.current, interacting: true };
+        setIsDragging(true);
+      },
+      onBeginAction(event: Event, action, direction) {
+        state.current = { action, event, interacting: true, direction };
+        setIsDragging(true);
+      },
+      onEnd(interactionInfo) {
+        const { event, action } = state.current;
+        state.current = { action: null, event: null, interacting: false, direction: null };
+        setIsDragging(false);
+
+        if (!action || !event || !interactionInfo) return
+        if (action === 'move') {
+          // TODO: onDrop
+        }
+        if (action === 'resize') {
+          // TODO: onResize
+        }
+      },
+      onDropFromOutside({ start, end, allDay, resourceId }) {
+        setIsDragging(false);
+        // TODO: onDrop
+      },
+      dragFromOutsideItem() {
+        // TODO: dragFromOutside
+        return undefined
+      },
+      dragAndDropAction: state,
+    },
+  }), []);
+
+  return React.createElement(DnDContext.Provider, { children, value: context });
+};

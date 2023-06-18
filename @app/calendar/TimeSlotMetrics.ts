@@ -1,4 +1,4 @@
-import { getTotalMin, getMinutesFromMidnight, getSlotDate, getDstOffset, add, lt, gt, merge, min, inRange, diff, max, eq } from "./localizer"
+import { getSlotDate, getDstOffset, startOf, add, lt, gt, merge, min, inRange, diff, max, eq } from "./localizer"
 
 export type TimeSlotMetrics = ReturnType<typeof getSlotMetrics>;
 
@@ -9,8 +9,9 @@ export function getSlotMetrics({ min: start, max: end, step, timeslots }: {
   timeslots: number;
 }) {
   // DST differences are handled inside the localizer
-  const totalMin = 1 + getTotalMin(start, end)
-  const minutesFromMidnight = getMinutesFromMidnight(start)
+  const totalMin = 1 + diff(start, end, 'minutes') + getDstOffset(start, end)
+  const dayStart = startOf(start, 'day')
+  const minutesFromMidnight = diff(dayStart, start, 'minutes') + getDstOffset(dayStart, start)
   const numGroups = Math.ceil((totalMin - 1) / (step * timeslots))
   const numSlots = numGroups * timeslots
 

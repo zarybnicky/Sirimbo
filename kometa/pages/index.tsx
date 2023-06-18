@@ -1,7 +1,7 @@
 import { LoginForm } from '@/components/LoginForm';
 import { useAuth } from '@/lib/use-auth';
 import React from 'react';
-import { Calendar, SlotInfo, type Event, type Resource } from '@app/calendar';
+import { Calendar, type Event, type Resource } from '@app/calendar';
 import '@app/calendar/styles.scss';
 import { ScheduleRangeDocument } from '@app/graphql/Schedule';
 import { useQuery } from 'urql';
@@ -94,7 +94,7 @@ function DnDResource() {
      * }); */
   }, []);
 
-  const handleSelectSlot = React.useCallback(({ start, end }: SlotInfo) => {
+  const handleSelectSlot = React.useCallback(({ start, end }: any) => {
     const title = window.prompt('New Event name');
     if (title) {
       /* setEvents((prev) => [...prev, { id: NaN, start, end, title }]); */
@@ -110,8 +110,6 @@ function DnDResource() {
       <Calendar
         defaultDate={defaultDate}
         events={events}
-        onEventDrop={moveEvent as any}
-        onEventResize={resizeEvent}
         resources={resources}
         min={min}
         max={max}

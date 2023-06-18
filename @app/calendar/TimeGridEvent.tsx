@@ -1,8 +1,8 @@
 import clsx from 'clsx'
-import { timeRangeEndFormat, timeRangeFormat, timeRangeStartFormat } from 'localizer';
+import { timeRangeEndFormat, timeRangeFormat, timeRangeStartFormat } from './localizer';
 import React from 'react'
-import { SelectionContext } from 'SelectContext';
-import { TimeSlotMetrics } from 'TimeSlotMetrics';
+import { SelectionContext } from './SelectContext';
+import { TimeSlotMetrics } from './TimeSlotMetrics';
 import EventWrapper from './EventWrapper';
 import { Event } from './types';
 

@@ -4,7 +4,7 @@ import getWidth from 'dom-helpers/width'
 import { Navigate, Event, ViewClass } from '../types'
 import { eq, add, agendaHeaderFormat, endOf, format, gt, inEventRange, lt, startOf, timeRangeFormat, range } from '../localizer'
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import { SelectionContext } from 'SelectContext'
+import { SelectionContext } from '../SelectContext'
 
 const Agenda: ViewClass = ({ date, events }) => {
   const dateColRef = React.useRef<HTMLTableCellElement>(null)
@@ -117,9 +117,5 @@ Agenda.navigate = (date: Date, action: Navigate) => {
       return date
   }
 }
-
-Agenda.title = (start: Date) => agendaHeaderFormat({ start, end: add(start, 7, 'day') })
-
-Agenda.name = "Agenda";
 
 export default Agenda

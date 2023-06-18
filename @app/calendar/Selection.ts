@@ -1,40 +1,58 @@
 import contains from 'dom-helpers/contains'
 import closest from 'dom-helpers/closest'
-import listen from 'dom-helpers/listen'
+import { TypedEventTarget } from 'typescript-event-target';
 
-function addEventListener(type, handler, target = document) {
-  return listen(target, type, handler, { passive: false })
+export interface ClientPoint {
+  x: number;
+  y: number;
+  clientX: number;
+  clientY: number;
 }
 
-function isOverContainer(container, x, y) {
-  return !container || contains(container, document.elementFromPoint(x, y))
+export interface BoxSize {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
 }
 
-export function getEventNodeFromPoint(node, { clientX, clientY }) {
-  let target = document.elementFromPoint(clientX, clientY)
+export interface Bounds extends BoxSize {
+  x: number;
+  y: number;
+}
+
+const addEventListener: <K extends keyof WindowEventMap>(type: K, listener: (ev: WindowEventMap[K]) => any, options?: boolean | AddEventListenerOptions) => () => void = (...args) => {
+  window.addEventListener(args[0], args[1], args[2]);
+  return () => window.removeEventListener(args[0], args[1]);
+}
+
+export function getEventNodeFromPoint(node: HTMLElement, { clientX, clientY }: ClientPoint) {
+  let target = document.elementFromPoint(clientX!, clientY!)!
   return closest(target, '.rbc-event', node) as HTMLElement
 }
 
-export function getShowMoreNodeFromPoint(node, { clientX, clientY }) {
-  let target = document.elementFromPoint(clientX, clientY)
-  return closest(target, '.rbc-show-more', node)
-}
-
-export function isEvent(node, bounds) {
+export function isEvent(node: HTMLElement, bounds: ClientPoint) {
   return !!getEventNodeFromPoint(node, bounds)
 }
 
-export function isShowMore(node, bounds) {
-  return !!getShowMoreNodeFromPoint(node, bounds)
+export function pointInColumn(bounds: BoxSize, point: { x: number; y: number; }) {
+  const { left, right, top } = bounds
+  const { x, y } = point
+  return x < right + 10 && x > left && y > top
 }
 
-function getEventCoordinates(e) {
-  let target = e
+export function getSlotAtX(rowBox: BoxSize, x: number, slots: number) {
+  const cellWidth = (rowBox.right - rowBox.left) / slots
+  return Math.floor((x - rowBox.left) / cellWidth)
+}
 
-  if (e.touches && e.touches.length) {
-    target = e.touches[0]
-  }
+export function pointInBox(box: BoxSize, { x, y }: { x:number,y:number }) {
+  return y >= box.top && y <= box.bottom && x >= box.left && x <= box.right
+}
 
+const isTouchEvent = (e: any): e is TouchEvent => 'touches' in e && !!e.touches.length;
+function getEventCoordinates(e: TouchEvent | DragEvent | MouseEvent) {
+  const target = isTouchEvent(e) ? e.touches[0]! : e;
   return {
     clientX: target.clientX,
     clientY: target.clientY,
@@ -45,96 +63,87 @@ function getEventCoordinates(e) {
 
 const clickTolerance = 5
 
-class Selection {
-  public isDetached = false;
-  public _listeners = {
+interface EventMap {
+  reset: CustomEvent<void>;
+  click: CustomEvent<ClientPoint>;
+  select: CustomEvent<Bounds>;
+  selectStart: CustomEvent<ClientPoint & { isTouch: boolean }>;
+  selecting: CustomEvent<Bounds>;
+  dropFromOutside: CustomEvent<ClientPoint>;
+  dragOverFromOutside: CustomEvent<ClientPoint>;
+}
 
-  }
+class Selection extends TypedEventTarget<EventMap> {
+  public selecting = false;
+  public isDetached = false;
+  public selectRect?: Bounds;
+  public removeTouchMoveWindowListener?: () => void;
+  public removeInitialEventListener?: () => void;
+  public removeEndListener?: () => void;
+  public onEscListener?: () => void;
+  public removeMoveListener?: () => void;
+  public removeKeyUpListener?: () => void;
+  public removeKeyDownListener?: () => void;
+  public removeDropFromOutsideListener?: () => void;
+  public removeDragOverFromOutsideListener?: () => void;
+  public initialEventData?: ClientPoint & { isTouch: boolean };
+
   constructor(
     public container: () => HTMLElement | null,
-    public validContainers: string[] = []
+    public options: { validContainers?: string[], shouldSelect: (point: ClientPoint) => boolean } = { shouldSelect: () => true },
   ) {
-
-    this._handleInitialEvent = this._handleInitialEvent.bind(this)
-    this._handleMoveEvent = this._handleMoveEvent.bind(this)
-    this._handleTerminatingEvent = this._handleTerminatingEvent.bind(this)
-    this._dropFromOutsideListener = this._dropFromOutsideListener.bind(this)
-    this._dragOverFromOutsideListener = this._dragOverFromOutsideListener.bind(this)
-
+    super();
     // Fixes an iOS 10 bug where scrolling could not be prevented on the window.
     // https://github.com/metafizzy/flickity/issues/457#issuecomment-254501356
-    this._removeTouchMoveWindowListener = window.addEventListener('touchmove', () => {}, window as any)
-    this._removeDropFromOutsideListener = window.addEventListener('drop', this._dropFromOutsideListener)
-    this._removeDragOverFromOutsideListener = window.addEventListener('dragover', this._dragOverFromOutsideListener)
-    this._addInitialEventListener()
-  }
-
-  on(type, handler) {
-    let handlers = this._listeners[type] || (this._listeners[type] = [])
-
-    handlers.push(handler)
-
-    return {
-      remove() {
-        let idx = handlers.indexOf(handler)
-        if (idx !== -1) handlers.splice(idx, 1)
-      },
-    }
-  }
-
-  emit(type, ...args) {
-    let result
-    let handlers = this._listeners[type] || []
-    handlers.forEach((fn) => {
-      if (result === undefined) result = fn(...args)
-    })
-    return result
+    this.removeTouchMoveWindowListener = addEventListener('touchmove', () => {})
+    this.removeDropFromOutsideListener = addEventListener('drop', this.dropFromOutsideListener.bind(this))
+    this.removeDragOverFromOutsideListener = addEventListener('dragover', this.dragOverFromOutsideListener.bind(this))
+    this.addInitialEventListener()
   }
 
   teardown() {
     this.isDetached = true
-    this._listeners = Object.create(null)
-    this._removeTouchMoveWindowListener?.()
-    this._removeInitialEventListener?.()
-    this._removeEndListener?.()
-    this._onEscListener?.()
-    this._removeMoveListener?.()
-    this._removeKeyUpListener?.()
-    this._removeKeyDownListener?.()
-    this._removeDropFromOutsideListener?.()
-    this._removeDragOverFromOutsideListener?.()
+    this.removeTouchMoveWindowListener?.()
+    this.removeInitialEventListener?.()
+    this.removeEndListener?.()
+    this.onEscListener?.()
+    this.removeMoveListener?.()
+    this.removeKeyUpListener?.()
+    this.removeKeyDownListener?.()
+    this.removeDropFromOutsideListener?.()
+    this.removeDragOverFromOutsideListener?.()
   }
 
   isSelected(node: HTMLElement) {
-    let box = this._selectRect
+    let box = this.selectRect
     if (!box || !this.selecting) return false
-    return objectsCollide(box, getBoundsForNode(node))
+    return objectsCollide(box, node)
   }
 
   // Adds a listener that will call the handler only after the user has pressed on the screen
   // without moving their finger for 250ms.
-  _addLongPressListener(handler, initialEvent) {
-    let timer = null
-    let removeTouchMoveListener = null
-    let removeTouchEndListener = null
-    const handleTouchStart = (initialEvent) => {
+  addLongPressListener(handler: (e: TouchEvent|MouseEvent) => void, initialEvent: TouchEvent) {
+    let timer: any = null
+    let removeTouchMoveListener: undefined | (() => void);
+    let removeTouchEndListener: undefined | (() => void);
+    const handleTouchStart = (initialEvent: TouchEvent) => {
       timer = setTimeout(() => {
         cleanup()
         handler(initialEvent)
       }, 250)
-      removeTouchMoveListener = window.addEventListener('touchmove', () => cleanup())
-      removeTouchEndListener = window.addEventListener('touchend', () => cleanup())
+      removeTouchMoveListener = addEventListener('touchmove', () => cleanup())
+      removeTouchEndListener = addEventListener('touchend', () => cleanup())
     }
-    const removeTouchStartListener = window.addEventListener('touchstart', handleTouchStart)
+    const removeTouchStartListener = addEventListener('touchstart', handleTouchStart)
     const cleanup = () => {
       if (timer) {
         clearTimeout(timer)
         timer = null
       }
       removeTouchMoveListener?.()
-      removeTouchMoveListener = null
+      removeTouchMoveListener = undefined
       removeTouchEndListener?.()
-      removeTouchEndListener = null
+      removeTouchEndListener = undefined
     }
     if (initialEvent) {
       handleTouchStart(initialEvent)
@@ -147,194 +156,147 @@ class Selection {
 
   // Listen for mousedown and touchstart events. When one is received, disable the other and setup
   // future event handling based on the type of event.
-  _addInitialEventListener() {
-    const removeMouseDownListener = window.addEventListener('mousedown', (e) => {
-      this._removeInitialEventListener()
-      this._handleInitialEvent(e)
-      this._removeInitialEventListener = window.addEventListener('mousedown', this._handleInitialEvent)
+  addInitialEventListener() {
+    const removeMouseDownListener = addEventListener('mousedown', (e) => {
+      this.removeInitialEventListener?.()
+      this.handleInitialEvent(e)
+      this.removeInitialEventListener = addEventListener('mousedown', this.handleInitialEvent.bind(this))
     })
-    const removeTouchStartListener = window.addEventListener('touchstart', (e) => {
-      this._removeInitialEventListener()
-      this._removeInitialEventListener = this._addLongPressListener(this._handleInitialEvent, e)
+    const removeTouchStartListener = addEventListener('touchstart', (e) => {
+      this.removeInitialEventListener?.()
+      this.removeInitialEventListener = this.addLongPressListener(this.handleInitialEvent.bind(this), e)
     })
-
-    this._removeInitialEventListener = () => {
+    this.removeInitialEventListener = () => {
       removeMouseDownListener()
       removeTouchStartListener()
     }
   }
 
-  _dropFromOutsideListener(e) {
+  dropFromOutsideListener(e: DragEvent) {
+    e.preventDefault()
     const { pageX, pageY, clientX, clientY } = getEventCoordinates(e)
-
-    this.emit('dropFromOutside', {
+    this.dispatchTypedEvent('dropFromOutside', new CustomEvent('dropFromOutside', { detail: {
       x: pageX,
       y: pageY,
       clientX: clientX,
       clientY: clientY,
-    })
-
-    e.preventDefault()
+    }}))
   }
 
-  _dragOverFromOutsideListener(e) {
+  dragOverFromOutsideListener(e: DragEvent) {
+    e.preventDefault()
     const { pageX, pageY, clientX, clientY } = getEventCoordinates(e)
-
-    this.emit('dragOverFromOutside', {
+    this.dispatchTypedEvent('dragOverFromOutside', new CustomEvent('dragOverFromOutside', { detail: {
       x: pageX,
       y: pageY,
       clientX: clientX,
       clientY: clientY,
-    })
-
-    e.preventDefault()
+    }}))
   }
 
-  _handleInitialEvent(e) {
+  handleInitialEvent(e: MouseEvent | TouchEvent) {
     if (this.isDetached) {
       return
     }
 
     const { clientX, clientY, pageX, pageY } = getEventCoordinates(e)
-    let node = this.container(),
-      collides,
-      offsetData
-
-    // Right clicks
-    if (
-      e.which === 3 ||
-      e.button === 2 ||
-      !isOverContainer(node, clientX, clientY)
-    )
+    let node = this.container()!
+    if (e.which === 3 || (e as MouseEvent).button === 2 || !contains(node, document.elementFromPoint(clientX, clientY)!)) {
       return
-
-    if (node && !contains(node, e.target)) {
-      let { top, left, bottom, right } = {top: 0, left: 0, right: 0, bottom: 0}
-
-      offsetData = getBoundsForNode(node)
-
-      collides = objectsCollide(
-        {
-          top: offsetData.top - top,
-          left: offsetData.left - left,
-          bottom: offsetData.bottom + bottom,
-          right: offsetData.right + right,
-        },
-        { top: pageY, left: pageX }
-      )
-
-      if (!collides) return
     }
 
-    this._initialEventData = {
+    if (!contains(node, e.target as HTMLElement)) {
+      if (!objectsCollide(node, { top: pageY, left: pageX, bottom: pageY, right: pageX })) {
+        return
+      }
+    }
+
+    this.initialEventData = {
       isTouch: /^touch/.test(e.type),
-        x: pageX,
-        y: pageY,
-        clientX,
-        clientY,
+      x: pageX,
+      y: pageY,
+      clientX,
+      clientY,
     }
-    let result = this.emit('beforeSelect', this._initialEventData)
-
-    if (result === false) return
+    if (!this.options.shouldSelect(this.initialEventData) === false) {
+      return
+    }
 
     switch (e.type) {
       case 'mousedown':
-        this._removeEndListener = addEventListener('mouseup', this._handleTerminatingEvent)
-        this._onEscListener = addEventListener('keydown', this._handleTerminatingEvent)
-        this._removeMoveListener = addEventListener('mousemove', this._handleMoveEvent)
+        this.removeEndListener = addEventListener('mouseup', this.handleTerminatingEvent.bind(this))
+        this.onEscListener = addEventListener('keydown', this.handleTerminatingEvent.bind(this))
+        this.removeMoveListener = addEventListener('mousemove', this.handleMoveEvent.bind(this))
         break
       case 'touchstart':
-        this._handleMoveEvent(e)
-        this._removeEndListener = addEventListener('touchend', this._handleTerminatingEvent)
-        this._removeMoveListener = addEventListener('touchmove', this._handleMoveEvent)
-        break
-      default:
+        this.handleMoveEvent(e)
+        this.removeEndListener = addEventListener('touchend', this.handleTerminatingEvent.bind(this))
+        this.removeMoveListener = addEventListener('touchmove', this.handleMoveEvent.bind(this))
         break
     }
   }
 
   // Check whether provided event target element
   // - is contained within a valid container
-  _isWithinValidContainer(e) {
-    const eventTarget = e.target
-    const containers = this.validContainers
-
-    if (!containers || !containers.length || !eventTarget) {
+  isWithinValidContainer(e: MouseEvent | TouchEvent | KeyboardEvent) {
+    if (!this.options.validContainers?.length || !e.target) {
       return true
     }
-
-    return containers.some((target) => !!eventTarget.closest(target))
+    return this.options.validContainers.some((target) => !!(e.target as HTMLElement)!.closest(target))
   }
 
-  _handleTerminatingEvent(e) {
-    const { pageX, pageY } = getEventCoordinates(e)
-
+  handleTerminatingEvent(e: MouseEvent | TouchEvent | KeyboardEvent) {
     this.selecting = false
 
-    this._removeEndListener && this._removeEndListener()
-    this._removeMoveListener && this._removeMoveListener()
+    this.removeEndListener?.()
+    this.removeMoveListener?.()
 
-    if (!this._initialEventData) return
+    if (!this.initialEventData) return
 
-    let inRoot = !this.container || contains(this.container(), e.target)
-    let isWithinValidContainer = this._isWithinValidContainer(e)
-    let bounds = this._selectRect
+    let inRoot = !this.container || contains(this.container()!, e.target as HTMLElement)
+
+    const { pageX, pageY } = getEventCoordinates(e as MouseEvent)
     let click = this.isClick(pageX, pageY)
 
-    this._initialEventData = null
+    this.initialEventData = undefined
 
-    if (e.key === 'Escape' || !isWithinValidContainer) {
-      return this.emit('reset')
+    if ((e as KeyboardEvent).key === 'Escape' || !this.isWithinValidContainer(e)) {
+      return this.dispatchTypedEvent('reset', new CustomEvent('reset'))
     }
 
     if (click && inRoot) {
-      return this._handleClickEvent(e)
+      const { pageX, pageY, clientX, clientY } = getEventCoordinates(e as MouseEvent)
+      return this.dispatchTypedEvent('click', new CustomEvent('click', { detail: {x: pageX, y: pageY, clientX, clientY} }))
     }
 
     // User drag-clicked in the Selectable area
-    if (!click) return this.emit('select', bounds)
-
-    return this.emit('reset')
-  }
-
-  _handleClickEvent(e) {
-    const { pageX, pageY, clientX, clientY } = getEventCoordinates(e)
-    const now = new Date().getTime()
-
-    // Click event
-    this._lastClickData = {
-      timestamp: now,
+    if (!click) {
+      return this.dispatchTypedEvent('select', new CustomEvent('select', { detail: this.selectRect }))
     }
-    return this.emit('click', {
-      x: pageX,
-      y: pageY,
-      clientX: clientX,
-      clientY: clientY,
-    })
+
+    return this.dispatchTypedEvent('reset', new CustomEvent('reset'))
   }
 
-  _handleMoveEvent(e) {
-    if (this._initialEventData === null || this.isDetached) {
+  handleMoveEvent(e: TouchEvent | MouseEvent) {
+    if (this.initialEventData === null || this.isDetached) {
       return
     }
+    e.preventDefault()
 
-    let { x, y } = this._initialEventData
+    let { x = 0, y = 0 } = this.initialEventData || {}
     const { pageX, pageY } = getEventCoordinates(e)
     let w = Math.abs(x - pageX)
     let h = Math.abs(y - pageY)
-
-    let left = Math.min(pageX, x),
-      top = Math.min(pageY, y),
-      old = this.selecting
+    let left = Math.min(pageX, x)
+    let top = Math.min(pageY, y);
 
     // Prevent emitting selectStart event until mouse is moved.
     // in Chrome on Windows, mouseMove event may be fired just after mouseDown event.
-    if (this.isClick(pageX, pageY) && !old && !(w || h)) {
+    if (this.isClick(pageX, pageY) && !this.selecting && !(w || h)) {
       return
     }
 
-    this.selecting = true
-    this._selectRect = {
+    this.selectRect = {
       top,
       left,
       x: pageX,
@@ -342,30 +304,25 @@ class Selection {
       right: left + w,
       bottom: top + h,
     }
+    const wasSelecting = this.selecting
+    this.selecting = true
 
-    if (!old) {
-      this.emit('selectStart', this._initialEventData)
+    if (!wasSelecting) {
+      this.dispatchTypedEvent('selectStart', new CustomEvent('selectStart', { detail: this.initialEventData }))
     }
 
-    if (!this.isClick(pageX, pageY)) this.emit('selecting', this._selectRect)
-
-    e.preventDefault()
+    if (!this.isClick(pageX, pageY)) {
+      this.dispatchTypedEvent('selecting', new CustomEvent('selecting', { detail: this.selectRect }))
+    }
   }
 
-  isClick(pageX, pageY) {
-    let { x, y, isTouch } = this._initialEventData
+  isClick(pageX: number, pageY: number) {
+    let { x = 0, y = 0, isTouch } = this.initialEventData || {};
     return !isTouch && Math.abs(pageX - x) <= clickTolerance && Math.abs(pageY - y) <= clickTolerance
   }
 }
 
-/**
- * Given two objects containing "top", "left", "offsetWidth" and "offsetHeight"
- * properties, determine if they collide.
- * @param  {Object|HTMLElement} a
- * @param  {Object|HTMLElement} b
- * @return {bool}
- */
-function objectsCollide(nodeA, nodeB, tolerance = 0) {
+function objectsCollide(nodeA: HTMLElement | BoxSize, nodeB: HTMLElement | BoxSize, tolerance = 0) {
   let {
     top: aTop,
     left: aLeft,
@@ -393,12 +350,14 @@ function objectsCollide(nodeA, nodeB, tolerance = 0) {
   )
 }
 
-export function getBoundsForNode(node: HTMLElement): { top: number; left: number; right: number; bottom: number } {
-  if (!node.getBoundingClientRect) return node as any
+const isElement = (x: any): x is HTMLElement => !!x.getBoundingClientRect
+
+export function getBoundsForNode(node: HTMLElement | BoxSize): BoxSize {
+  if (!isElement(node)) return node as BoxSize
 
   let rect = node.getBoundingClientRect();
-  let left = rect.left + pageOffset('left');
-  let top = rect.top + pageOffset('top');
+  let left = rect.left + (window.pageXOffset || document.body.scrollLeft || 0)
+  let top = rect.top + (window.pageYOffset || document.body.scrollTop || 0)
 
   return {
     top,
@@ -408,9 +367,4 @@ export function getBoundsForNode(node: HTMLElement): { top: number; left: number
   }
 }
 
-function pageOffset(dir: 'left' | 'top') {
-  if (dir === 'left') return window.pageXOffset || document.body.scrollLeft || 0
-  if (dir === 'top') return window.pageYOffset || document.body.scrollTop || 0
-  return 0
-}
 export default Selection

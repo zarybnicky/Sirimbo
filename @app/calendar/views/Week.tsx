@@ -24,11 +24,4 @@ Week.range = (date) => {
   return range(start, end)
 }
 
-Week.title = (date) => {
-  let start = startOf(date, 'week', startOfWeek)
-  let end = endOf(date, 'week', startOfWeek)
-  return dayRangeHeaderFormat({ start, end })
-}
-Week.name = "Týden";
-
 export default Week

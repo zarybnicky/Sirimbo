@@ -22,7 +22,4 @@ Day.navigate = (date, action) => {
   }
 }
 
-Day.title = (date) => format(date, 'cccc MMM dd')
-Day.name = "Den";
-
 export default Day

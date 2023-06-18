@@ -1,9 +1,9 @@
-import React from 'react'
-import clsx from 'clsx'
-import { ceil, diff } from './localizer'
+import clsx from 'clsx';
+import React from 'react';
 import EventWrapper from './EventWrapper';
+import { ceil, diff } from './localizer';
+import { SelectionContext } from './SelectContext';
 import { Event } from './types';
-import { SelectionContext } from 'SelectContext';
 
 type EventCellProps = {
   style?: React.CSSProperties;

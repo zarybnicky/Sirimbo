@@ -1,8 +1,8 @@
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
-import { merge } from 'localizer';
-import { NavigationContext } from 'NavigationContext';
 import React from 'react';
-import { TimeSlotMetrics } from 'TimeSlotMetrics';
+import { merge } from './localizer';
+import { NavigationContext } from './NavigationContext';
+import { TimeSlotMetrics } from './TimeSlotMetrics';
 
 type Props = {
   date: Date;

@@ -2,7 +2,7 @@ import React from 'react'
 import clsx from 'clsx'
 import { getSlotMetrics } from './TimeSlotMetrics'
 import { add, format, getTimezoneOffset, merge } from './localizer'
-import { NavigationContext } from 'NavigationContext'
+import { NavigationContext } from './NavigationContext'
 
 type TimeGutterProps = {
   className: string;

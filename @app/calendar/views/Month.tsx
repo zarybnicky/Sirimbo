@@ -4,8 +4,8 @@ import chunk from 'lodash/chunk'
 import { View, Navigate } from '../types'
 import DateContentRow from '../DateContentRow'
 import { eq, neq, sortEvents, add, firstVisibleDay, format, lastVisibleDay, range, visibleDays, inEventRange } from '../localizer'
-import { NavigationContext } from 'NavigationContext'
-import { ViewClass } from 'types'
+import { NavigationContext } from '../NavigationContext'
+import { ViewClass } from '../types'
 
 const MonthView: ViewClass = ({ date: currentDate, events }) => {
   let weeks = chunk(visibleDays(currentDate), 7);
@@ -70,8 +70,5 @@ MonthView.navigate = (date, action) => {
       return date
   }
 }
-
-MonthView.title = (date) => format(date, 'MMMM yyyy')
-MonthView.name = "Měsíc";
 
 export default MonthView

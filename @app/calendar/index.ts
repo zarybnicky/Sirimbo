@@ -1,5 +1,5 @@
 import { Calendar } from './Calendar'
-import { Event, Resource, SlotInfo } from './types'
+import { Event, Resource } from './types'
 
 export { Calendar };
-export type { Event, Resource, SlotInfo };
+export type { Event, Resource };
