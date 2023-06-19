@@ -3,9 +3,7 @@ import { Navigate, ViewClass } from '../types'
 import TimeGrid from '../TimeGrid'
 import { startOf, endOf, add, range, startOfWeek } from '../localizer'
 
-const Week: ViewClass = (props) => (
-  <TimeGrid {...props} range={Week.range(props.date)} />
-)
+const Week: ViewClass = (props) => <TimeGrid {...props} />
 
 Week.navigate = (date, action) => {
   switch (action) {

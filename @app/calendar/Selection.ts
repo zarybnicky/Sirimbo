@@ -175,40 +175,40 @@ class Selection extends TypedEventTarget<EventMap> {
   dropFromOutsideListener(e: DragEvent) {
     e.preventDefault()
     const { pageX, pageY, clientX, clientY } = getEventCoordinates(e)
-    this.dispatchTypedEvent('dropFromOutside', new CustomEvent('dropFromOutside', { detail: {
+    const detail = {
       x: pageX,
       y: pageY,
       clientX: clientX,
       clientY: clientY,
-    }}))
+    };
+    console.log('dropFromOutside', detail);
+    this.dispatchTypedEvent('dropFromOutside', new CustomEvent('dropFromOutside', { detail }))
   }
 
   dragOverFromOutsideListener(e: DragEvent) {
     e.preventDefault()
     const { pageX, pageY, clientX, clientY } = getEventCoordinates(e)
-    this.dispatchTypedEvent('dragOverFromOutside', new CustomEvent('dragOverFromOutside', { detail: {
+    const detail = {
       x: pageX,
       y: pageY,
       clientX: clientX,
       clientY: clientY,
-    }}))
+    }
+    console.log('dragOverFromOutside', detail);
+    this.dispatchTypedEvent('dragOverFromOutside', new CustomEvent('dragOverFromOutside', { detail }))
   }
 
   handleInitialEvent(e: MouseEvent | TouchEvent) {
+    const { clientX, clientY, pageX, pageY } = getEventCoordinates(e)
+    const node = this.container()!
     if (this.isDetached) {
       return
     }
-
-    const { clientX, clientY, pageX, pageY } = getEventCoordinates(e)
-    let node = this.container()!
     if (e.which === 3 || (e as MouseEvent).button === 2 || !contains(node, document.elementFromPoint(clientX, clientY)!)) {
       return
     }
-
-    if (!contains(node, e.target as HTMLElement)) {
-      if (!objectsCollide(node, { top: pageY, left: pageX, bottom: pageY, right: pageX })) {
-        return
-      }
+    if (!contains(node, e.target as HTMLElement) && !objectsCollide(node, { top: pageY, left: pageX, bottom: pageY, right: pageX })) {
+      return
     }
 
     this.initialEventData = {
@@ -218,7 +218,7 @@ class Selection extends TypedEventTarget<EventMap> {
       clientX,
       clientY,
     }
-    if (!this.options.shouldSelect(this.initialEventData) === false) {
+    if (this.options.shouldSelect(this.initialEventData) === false) {
       return
     }
 
@@ -261,19 +261,23 @@ class Selection extends TypedEventTarget<EventMap> {
     this.initialEventData = undefined
 
     if ((e as KeyboardEvent).key === 'Escape' || !this.isWithinValidContainer(e)) {
+      console.log('reset');
       return this.dispatchTypedEvent('reset', new CustomEvent('reset'))
     }
 
     if (click && inRoot) {
       const { pageX, pageY, clientX, clientY } = getEventCoordinates(e as MouseEvent)
-      return this.dispatchTypedEvent('click', new CustomEvent('click', { detail: {x: pageX, y: pageY, clientX, clientY} }))
+      const detail = {x: pageX, y: pageY, clientX, clientY}
+      return this.dispatchTypedEvent('click', new CustomEvent('click', { detail }))
     }
 
     // User drag-clicked in the Selectable area
     if (!click) {
+      console.log('select', this.selectRect)
       return this.dispatchTypedEvent('select', new CustomEvent('select', { detail: this.selectRect }))
     }
 
+    console.log('reset');
     return this.dispatchTypedEvent('reset', new CustomEvent('reset'))
   }
 
@@ -308,10 +312,11 @@ class Selection extends TypedEventTarget<EventMap> {
     this.selecting = true
 
     if (!wasSelecting) {
+      console.log('selectStart', this.initialEventData);
       this.dispatchTypedEvent('selectStart', new CustomEvent('selectStart', { detail: this.initialEventData }))
     }
-
     if (!this.isClick(pageX, pageY)) {
+      console.log('selecting', this.selectRect)
       this.dispatchTypedEvent('selecting', new CustomEvent('selecting', { detail: this.selectRect }))
     }
   }

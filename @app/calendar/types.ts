@@ -37,12 +37,13 @@ export interface DateRange {
 }
 
 export type ViewProps = {
-  date: Date;
   events: Event[];
+  range: Date[];
   backgroundEvents: Event[];
   resources: Resource[];
   min?: Date;
   max?: Date;
+  date: Date;
 };
 
 export interface ViewClass extends React.FunctionComponent<ViewProps> {

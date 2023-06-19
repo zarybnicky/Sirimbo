@@ -48,7 +48,7 @@ const TimeGrid = ({
     if (content) {
       content.scrollTop = content.scrollHeight * _scrollRatio;
     }
-  });
+  }, [focusedTime, min, max]);
 
   const showMultiDayTimes = true;
   let allDayEvents: Event[] = [];

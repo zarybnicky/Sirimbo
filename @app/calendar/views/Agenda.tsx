@@ -2,11 +2,11 @@ import clsx from 'clsx'
 import React, { useContext } from 'react'
 import getWidth from 'dom-helpers/width'
 import { Navigate, Event, ViewClass } from '../types'
-import { eq, add, endOf, format, gt, inEventRange, lt, startOf, timeRangeFormat, range } from '../localizer'
+import { eq, add, endOf, format, gt, inEventRange, lt, startOf, range } from '../localizer'
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import { SelectionContext } from '../SelectContext'
 
-const Agenda: ViewClass = ({ date, events }) => {
+const Agenda: ViewClass = ({ date, range, events }) => {
   const dateColRef = React.useRef<HTMLTableCellElement>(null)
   const timeColRef = React.useRef<HTMLTableCellElement>(null)
   const tbodyRef = React.useRef<HTMLTableSectionElement>(null)
@@ -32,7 +32,7 @@ const Agenda: ViewClass = ({ date, events }) => {
     } else if (eq(start, end)) {
       label = format(start, 'p')
     } else if (eq(start, end, 'day')) {
-      label = timeRangeFormat(event)
+      label = `${format(start, 'p')} – ${format(end, 'p')}`;
     } else if (eq(day, start, 'day')) {
       label = format(start, 'p')
     } else if (eq(day, end, 'day')) {
@@ -77,13 +77,13 @@ const Agenda: ViewClass = ({ date, events }) => {
       <div className="rbc-agenda-content">
         <table className="rbc-agenda-table">
           <tbody ref={tbodyRef}>
-            {range(date, end, 'day').map((day, dayKey) => (
+            {range.map((day, dayKey) => (
               events
                 .filter((e) => inEventRange(e, {start: startOf(day, 'day'), end: endOf(day, 'day')}))
-                .map((event, idx) => (
+                .map((event, idx, daysEvents) => (
                   <tr key={dayKey + '_' + idx}>
                     {idx === 0 ? (
-                      <td rowSpan={events.length} className="rbc-agenda-date-cell">
+                      <td rowSpan={daysEvents.length} className="rbc-agenda-date-cell">
                         {format(day, 'ccc MMM dd')}
                       </td>
                     ) : null}
@@ -105,7 +105,7 @@ const Agenda: ViewClass = ({ date, events }) => {
   )
 }
 
-Agenda.range = (start: Date) => [start, add(start, 7, 'day')];
+Agenda.range = (start: Date) => range(start, add(start, 7, 'day'), 'day');
 
 Agenda.navigate = (date: Date, action: Navigate) => {
   switch (action) {

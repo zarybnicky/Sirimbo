@@ -1,11 +1,9 @@
 import React from 'react'
 import { Navigate, ViewClass } from '../types'
 import TimeGrid from '../TimeGrid'
-import { add, startOf } from '../localizer'
+import { add, startOf, endOf } from '../localizer'
 
-const Day: ViewClass = (props) => (
-  <TimeGrid {...props} range={Day.range(props.date)} />
-)
+const Day: ViewClass = (props) => <TimeGrid {...props} />
 
 Day.range = (date) => [startOf(date, 'day')];
 

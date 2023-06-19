@@ -43,12 +43,11 @@ export const DndProvider = ({ setIsDragging, children }: {
   const state = React.useRef<DnDState>({ interacting: false });
   const context = React.useMemo<DnDContextType>(() => ({
     draggable: {
-      onStart() {
-        state.current = { ...state.current, interacting: true };
-        setIsDragging(true);
-      },
       onBeginAction(event: Event, action, direction) {
         state.current = { action, event, interacting: true, direction };
+      },
+      onStart() {
+        state.current = { ...state.current, interacting: true };
         setIsDragging(true);
       },
       onEnd(interactionInfo) {

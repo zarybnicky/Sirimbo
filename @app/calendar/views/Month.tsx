@@ -7,8 +7,7 @@ import { eq, neq, sortEvents, add, format, range, inEventRange, startOf, endOf, 
 import { NavigationContext } from '../NavigationContext'
 import { ViewClass } from '../types'
 
-const MonthView: ViewClass = ({ date: currentDate, events }) => {
-  const days = MonthView.range(currentDate);
+const MonthView: ViewClass = ({ date: currentDate, range: days, events }) => {
   let weeks = chunk(days, 7);
   const { onDrillDown } = useContext(NavigationContext)
 

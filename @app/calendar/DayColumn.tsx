@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import React from 'react';
 import { DnDContext } from './DnDContext';
 import getStyledEventsOverlap from './layout-algorithms/overlap';
-import { add, diff, eq, gt, lte, max, merge, min, range, timeRangeFormat } from './localizer';
+import { add, diff, eq, gt, lte, max, merge, min, range, format } from './localizer';
 import { NavigationContext } from './NavigationContext';
 import { NowIndicator } from './NowIndicator';
 import { SelectionContext } from './SelectContext';
@@ -36,11 +36,11 @@ type EventSelectionState = {
   event?: Event;
   top?: number;
   height?: number;
-  eventOffsetTop?: number;
 }
 
 const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayColumnProps) => {
   const columnRef = React.useRef<HTMLDivElement>(null);
+  const eventOffsetTopRef = React.useRef<number>(0);
   const { onSelectSlot } = React.useContext(SelectionContext);
   const { min: minTime, max: maxTime, step, timeslots } = React.useContext(NavigationContext);
   const [backgroundState, setBackgroundState] = React.useState<BackgroundSelectionState>({});
@@ -162,7 +162,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
         // delta from this point. note: if we want to DRY this with WeekWrapper,
         // probably better just to capture the mouseDown point here and do the
         // placement computation in handleMove()...
-        setEventState(x => ({ ...x, eventOffsetTop: point.y - getBoundsForNode(eventNode).top}))
+        eventOffsetTopRef.current = point.y - getBoundsForNode(eventNode).top;
         return true;
       },
     })
@@ -186,32 +186,30 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
         }
       })
 
-      const { start, end } = event;
-      const duration = diff(start, end, 'milliseconds')
-
       setEventState((eventState) => {
-        let newRange = { startDate: event.start, endDate: event.end };
+        const { start, end } = event;
+        const duration = diff(start, end, 'milliseconds')
+
+        let newRange = slotMetrics.getRange(event.start, event.end);
         if (action === 'move') {
           if (!pointInColumn(bounds, point)) {
             return EMPTY
           }
-          const newSlot = slotMetrics.closestSlotFromPoint({ ...point, y: point.y - (eventState.eventOffsetTop ?? 0) }, bounds)
+          const newSlot = slotMetrics.closestSlotFromPoint({ x: point.x, y: point.y - eventOffsetTopRef.current }, bounds)
           let newEnd = add(newSlot, duration, 'milliseconds')
           newRange = slotMetrics.getRange(newSlot, newEnd, false, true)
         } else {
           const newTime = slotMetrics.closestSlotFromPoint(point, bounds)
           if (direction === 'UP') {
-            const newStart = min(newTime, slotMetrics.closestSlotFromDate(end, -1))
-            newRange = {...slotMetrics.getRange(newStart, end), endDate: end}
+            newRange = slotMetrics.getRange(min(newTime, slotMetrics.closestSlotFromDate(end, -1)), end)
           } else if (direction === 'DOWN') {
-            const newEnd = max(newTime, slotMetrics.closestSlotFromDate(start))
-            newRange = {...slotMetrics.getRange(start, newEnd), startDate: start}
+            newRange = slotMetrics.getRange(start, max(newTime, slotMetrics.closestSlotFromDate(start)))
           }
         }
         if (event && newRange.startDate === event.start && newRange.endDate === event.end) {
           return eventState
         }
-        return { ...eventState, event: { ...event, start: newRange.startDate, end: newRange.endDate } };
+        return { ...newRange, event: { ...event, __isPreview: true, start: newRange.startDate, end: newRange.endDate } };
       })
     })
 
@@ -229,15 +227,26 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
       draggable.onDropFromOutside?.({start, end: slotMetrics.nextSlot(start), allDay: false, resourceId})
     })
 
-    selector.addEventListener('selectStart', () => {
+    selector.addEventListener('selectStart', ({ detail: point }) => {
+      const bounds = getBoundsForNode(columnRef.current!)
+      if (!pointInColumn(bounds, point)) {
+        return
+      }
       draggable.onStart()
+      const { event, action } = draggable.dragAndDropAction.current
+      console.log(event, action, point)
+      if (event) {
+        setEventState({...slotMetrics.getRange(event.start, event.end, false, true), event})
+      }
     })
 
     selector.addEventListener('select', ({ detail: point }) => {
       const bounds = getBoundsForNode(columnRef.current!)
       setEventState(({ event }) => {
         if (event && (draggable.dragAndDropAction.current.action === 'resize' || pointInColumn(bounds, point))) {
-          draggable.onEnd({start: event.start, end: event.end, resourceId})
+          setTimeout(() => {
+            draggable.onEnd({start: event.start, end: event.end, resourceId})
+          })
         }
         return EMPTY;
       })
@@ -317,7 +326,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
           className="rbc-slot-selection"
           style={{ top: backgroundState.top, height: backgroundState.height }}
         >
-          <span>{timeRangeFormat({ start: backgroundState.startDate!, end: backgroundState.endDate! })}</span>
+          <span>{format(backgroundState.startDate!, 'p')} – {format(backgroundState.endDate!, 'p')}</span>
         </div>
       )}
       <NowIndicator date={date} slotMetrics={slotMetrics} />

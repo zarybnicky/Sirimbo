@@ -28,7 +28,7 @@ export const NavigationProvider = ({ children, setDate, setView }: {
   const navigationContext: NavigationContext = React.useMemo<NavigationContext>(() => ({
     timeslots: 4,
     step: 15,
-    min: startOf(new Date(), 'day'),
+    min: new Date(1972, 0, 1, 7, 0, 0),
     max: endOf(new Date(), 'day'),
     focusedTime: new Date(1972, 0, 1, 16, 0, 0),
     onDrillDown(date, view) {

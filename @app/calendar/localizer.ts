@@ -145,26 +145,3 @@ export function inEventRange(
 export function format(value: string | Date, format: string) {
   return dateFnsFormat(new Date(value), format, { locale: cs })
 }
-
-export function timeRangeFormat({ start, end }: DateRange) {
-  return `${format(start, 'p')} – ${format(end, 'p')}`;
-}
-
-export function timeRangeStartFormat({ start }: DateRange) {
-  return `${format(start, 'p')} – `
-}
-
-export function timeRangeEndFormat({ end }: DateRange) {
-  return ` – ${format(end, 'p')}`
-}
-
-export function dayRangeHeaderFormat({ start, end }: DateRange) {
-  const endFormat = eq(start, end, 'month') ? 'dd' : 'MMMM dd'
-  return `${format(start, 'MMMM dd')} – ${format(end, endFormat)}`
-}
-
-export function agendaHeaderFormat({ start, end }: DateRange) {
-  return `${format(start, 'P')} – ${format(end, 'P')}`
-}
-
-export const getTimezoneOffset = (value: Date) => value.getTimezoneOffset()

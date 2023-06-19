@@ -10,11 +10,7 @@ function DnDResource() {
     return <LoginForm />;
   }
 
-  return (
-    <div className="col-full">
-      <Calendar />
-    </div>
-  );
+  return <Calendar />;
 }
 
 export default DnDResource;

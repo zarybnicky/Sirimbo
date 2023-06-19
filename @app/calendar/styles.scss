@@ -546,6 +546,7 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-time-slot {
   flex: 1 0 0;
+  min-height: 16px;
 
   &.rbc-now {
     font-weight: bold;

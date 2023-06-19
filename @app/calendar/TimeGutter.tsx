@@ -1,7 +1,7 @@
 import React from 'react'
 import clsx from 'clsx'
 import { getSlotMetrics } from './TimeSlotMetrics'
-import { add, format, getTimezoneOffset, merge } from './localizer'
+import { add, format, merge } from './localizer'
 import { NavigationContext } from './NavigationContext'
 
 type TimeGutterProps = {
@@ -16,7 +16,7 @@ const TimeGutter = ({ gutterRef, className, date }: TimeGutterProps) => {
   const slotMetrics = React.useMemo(() => {
     min = merge(date, min);
     max = merge(date, max);
-    if (getTimezoneOffset(min) !== getTimezoneOffset(max)) {
+    if (min.getTimezoneOffset() !== max.getTimezoneOffset()) {
       min = add(min, -1, 'day');
       max = add(max, -1, 'day');
     }
@@ -28,7 +28,7 @@ const TimeGutter = ({ gutterRef, className, date }: TimeGutterProps) => {
       {slotMetrics.groups.map((group, idx) => (
         <div key={idx} className="rbc-timeslot-group">
           {group.map((value, idx) => (
-            <div className='rbc-time-slot'>
+            <div key={idx} className='rbc-time-slot'>
               {idx === 0 ? (
                 <span key={idx} className={clsx('rbc-label', slotMetrics.dateIsInGroup(date, idx) && 'rbc-now')}>
                   {format(value, 'p')}

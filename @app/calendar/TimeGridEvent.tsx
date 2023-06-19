@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { timeRangeEndFormat, timeRangeFormat, timeRangeStartFormat } from './localizer';
+import { format } from './localizer';
 import React from 'react'
 import { SelectionContext } from './SelectContext';
 import { TimeSlotMetrics } from './TimeSlotMetrics';
@@ -37,11 +37,18 @@ function TimeGridEvent({
   const startsAfter = slotMetrics.startsAfter(event.end)
   const continuesAfter = startsAfterDay || startsAfter;
 
-  let label = ""
-  if (startsBeforeDay && startsAfterDay) label = "Celý den";
-  else if (startsBeforeDay) label = timeRangeEndFormat(event)
-  else if (startsAfterDay) label = timeRangeStartFormat(event)
-  else label = timeRangeFormat(event)
+  const label = React.useMemo(() => {
+    if (startsBeforeDay && startsAfterDay) {
+      return "Celý den";
+    }
+    if (startsBeforeDay) {
+      return ` – ${format(event.end, 'p')}`
+    }
+    if (startsAfterDay) {
+      return `${format(event.start, 'p')} – `
+    }
+    return `${format(event.start, 'p')} – ${format(event.end, 'p')}`;
+  }, [continuesPrior, continuesAfter, event]);
 
   return (
     <EventWrapper type="time" event={event} resourceId={resourceId}>

@@ -23,19 +23,19 @@ const EventWrapper: React.FC<{
       // hack: because of the way the anchors are arranged in the DOM, resize
       // anchor events will bubble up to the move anchor listener. Don't start
       // move operations when we're on a resize anchor.
-      if (!e.currentTarget.getAttribute('class')?.includes('rbc-resize-')) {
+      if (!(e.target as any).getAttribute('class')?.includes('rbc-resize-')) {
         event.sourceResource = resourceId;
         draggable.onBeginAction(event, 'move');
       }
     },
     onTouchStart(e: React.MouseEvent<HTMLDivElement>) {
       if (e.button !== 0) return;
-      if (!e.currentTarget.getAttribute('class')?.includes('rbc-resize-')) {
+      if (!(e.target as any).getAttribute('class')?.includes('rbc-resize-')) {
         event.sourceResource = resourceId;
         draggable.onBeginAction(event, 'move');
       }
     },
-    className: '',
+    className: children.props.className,
     children: children.props.children,
   };
 
