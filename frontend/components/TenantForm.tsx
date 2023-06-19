@@ -26,7 +26,7 @@ export const TenantForm = () => {
     resolver: zodResolver(Form),
   });
   React.useEffect(() => {
-    reset(Form.optional().parse(data));
+    reset(Form.partial().optional().parse(data));
     // TODO: increment richtexteditor key
   }, [reset, data]);
 

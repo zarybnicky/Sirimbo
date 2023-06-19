@@ -10,7 +10,12 @@ import { useCountries } from 'lib/data/use-countries';
 import { SubmitButton } from '@app/ui/submit';
 import { RoleListDocument } from '@app/graphql/Roles';
 import { CohortListDocument } from '@app/graphql/Cohorts';
-import {CreateUserDocument, DeleteUserDocument, UpdateUserDocument, UserDocument} from '@app/graphql/User';
+import {
+  CreateUserDocument,
+  DeleteUserDocument,
+  UpdateUserDocument,
+  UserDocument,
+} from '@app/graphql/User';
 import { useMutation, useQuery } from 'urql';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
@@ -28,7 +33,10 @@ const Form = z.object({
   uJmeno: z.string(),
   uPrijmeni: z.string(),
   uNarozeni: z.string(),
-  uRodneCislo: z.string().regex(/[0-9]{9,10}/, 'Neplatné rodné číslo').optional(),
+  uRodneCislo: z
+    .string()
+    .regex(/[0-9]{9,10}/, 'Neplatné rodné číslo')
+    .optional(),
   uPohlavi: z.enum(['m', 'f']),
   uEmail: z.string().email(),
   uTelefon: z.string(),
@@ -52,20 +60,22 @@ type FormProps = z.infer<typeof Form>;
 
 const entity = User;
 
-export const UserForm = ({ id = '' }: { id?: string; }) => {
+export const UserForm = ({ id = '' }: { id?: string }) => {
   const router = useRouter();
   const [query] = useQuery({ query: UserDocument, variables: { id } });
   const data = query.data?.user;
-  const title = id ? `${data?.uJmeno??''} ${data?.uPrijmeni ?? ''}` : 'Nový uživatel';
+  const title = id ? `${data?.uJmeno ?? ''} ${data?.uPrijmeni ?? ''}` : 'Nový uživatel';
 
   const create = useMutation(CreateUserDocument)[1];
   const update = useMutation(UpdateUserDocument)[1];
 
   const countries = useCountries();
-  const [{ data: roles }] = useQuery({query: RoleListDocument});
-  const [{ data: cohorts }] = useQuery({query: CohortListDocument});
+  const [{ data: roles }] = useQuery({ query: RoleListDocument });
+  const [{ data: cohorts }] = useQuery({ query: CohortListDocument });
 
-  const { reset, control, handleSubmit } = useForm<FormProps>({ resolver: zodResolver(Form) });
+  const { reset, control, handleSubmit } = useForm<FormProps>({
+    resolver: zodResolver(Form),
+  });
   React.useEffect(() => {
     reset(Form.partial().optional().parse(data));
   }, [reset, data]);
@@ -105,7 +115,7 @@ export const UserForm = ({ id = '' }: { id?: string; }) => {
             doc={DeleteUserDocument}
             id={id}
             title="smazat uživatele"
-            onDelete={() => router.push(entity.listRoute)}
+            redirect={entity.listRoute}
           />
         )}
         <SubmitButton loading={onSubmit.loading} />

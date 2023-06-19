@@ -109,9 +109,7 @@ export const EventForm = ({ id = '' }: { id?: string }) => {
             doc={DeleteEventDocument}
             id={id}
             title="smazat akci"
-            onDelete={() => {
-              router.push(backHref);
-            }}
+            redirect={backHref}
           />
         )}
         <SubmitButton loading={onSubmit.loading} />

@@ -40,11 +40,11 @@ const backHref: Route = { pathname: '/admin/skupiny' };
 
 export const CohortForm = ({ id = '' }: { id?: string }) => {
   const router = useRouter();
-  const [query] = useQuery({query: CohortDocument, variables: { id }, pause: !!id });
+  const [query] = useQuery({ query: CohortDocument, variables: { id }, pause: !!id });
   const data = query.data?.skupiny;
-  const title = id ? (data?.sName || '(Bez názvu)') : 'Nová skupina';
+  const title = id ? data?.sName || '(Bez názvu)' : 'Nová skupina';
 
-  const [{ data: cohortGroups }] = useQuery({query: CohortGroupListDocument });
+  const [{ data: cohortGroups }] = useQuery({ query: CohortGroupListDocument });
   const create = useMutation(CreateCohortDocument)[1];
   const update = useMutation(UpdateCohortDocument)[1];
 
@@ -52,7 +52,7 @@ export const CohortForm = ({ id = '' }: { id?: string }) => {
     defaultValues: { sColorRgb: '#ff0000' },
   });
   React.useEffect(() => {
-    reset(Form.optional().parse(data));
+    reset(Form.partial().optional().parse(data));
   }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (patch: FormProps) => {
@@ -80,7 +80,7 @@ export const CohortForm = ({ id = '' }: { id?: string }) => {
         <DeleteButton
           doc={DeleteCohortDocument}
           id={id}
-          onDelete={() => router.push('/admin/skupiny')}
+          redirect="/admin/skupiny"
           title="smazat skupinu"
         />
         <SubmitButton loading={onSubmit.loading} />

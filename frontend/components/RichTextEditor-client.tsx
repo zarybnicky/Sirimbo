@@ -1,6 +1,6 @@
 import React from 'react';
 import { AlertCircle as ReportProblemIcon } from 'lucide-react';
-import { Control, ControllerProps, FieldValues, Path, useController } from 'react-hook-form';
+import { Control, FieldValues, Path, useController } from 'react-hook-form';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { FieldHelper, FieldLabel } from '@app/ui/form';

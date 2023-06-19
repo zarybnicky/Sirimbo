@@ -42,7 +42,7 @@ export const PaymentCategoryForm = ({ id = '' }: { id?: string }) => {
 
   const { reset, control, handleSubmit } = useForm<FormProps>({ resolver: zodResolver(Form) });
   React.useEffect(() => {
-    reset(Form.optional().parse(data));
+    reset(Form.partial().optional().parse(data));
   }, [data, reset]);
 
   const onSubmit = useAsyncCallback(async (patch: FormProps) => {
@@ -72,7 +72,7 @@ export const PaymentCategoryForm = ({ id = '' }: { id?: string }) => {
             doc={DeletePaymentCategoryDocument}
             id={id}
             title="smazat rozpis"
-            onDelete={() => router.push(backHref)}
+            redirect={backHref}
           />
         )}
         <SubmitButton loading={onSubmit.loading} />

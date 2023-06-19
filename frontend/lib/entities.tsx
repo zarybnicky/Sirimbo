@@ -4,7 +4,7 @@ import { useAuth } from './data/use-auth';
 import { CohortBasicFragment } from '@app/graphql/Cohorts';
 import { EventFragment } from '@app/graphql/Event';
 import { ReservationBasicFragment } from '@app/graphql/Reservation';
-import { ToggleUpozorneniVisibleDocument } from '@app/graphql/Announcement';
+import { ToggleUpozorneniVisibleDocument, ToggleUpozorneniStickyDocument } from '@app/graphql/Announcement';
 import { ScheduleBasicFragment } from '@app/graphql/Schedule';
 import { useMutation } from 'urql';
 import { Route } from 'nextjs-routes';
@@ -66,6 +66,7 @@ export const Announcement = {
   useMenu(item: AnnouncementFragment): DropdownItem[] {
     const { perms } = useAuth();
     const hideMutation = useMutation(ToggleUpozorneniVisibleDocument)[1];
+    const stickyMutation = useMutation(ToggleUpozorneniStickyDocument)[1];
     if (!perms.canEditAnnouncement(item)) {
       return [];
     }
@@ -73,6 +74,10 @@ export const Announcement = {
       {
         title: 'Upravit',
         href: { pathname: '/admin/nastenka/[id]', query: { id: item.id } },
+      },
+      {
+        title: item.sticky ? 'Odepnout' : 'Připnout',
+        onClick: () => stickyMutation({ id: item.id, sticky: !item.sticky }),
       },
       {
         title: 'Skrýt',

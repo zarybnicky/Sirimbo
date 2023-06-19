@@ -24,10 +24,32 @@ fragment Announcement on Upozorneni {
   scheduledSince
   scheduledUntil
   isVisible
+  sticky
+}
+
+query StickyAnnouncements {
+  stickyAnnouncements {
+    totalCount
+    nodes {
+      ...Announcement
+    }
+  }
 }
 
 query MyAnnouncements($first: Int, $offset: Int) {
   myAnnouncements(
+    first: $first,
+    offset: $offset,
+  ) {
+    totalCount
+    nodes {
+      ...Announcement
+    }
+  }
+}
+
+query ArchivedAnnouncements($first: Int, $offset: Int) {
+  archivedAnnouncements(
     first: $first,
     offset: $offset,
   ) {
@@ -64,6 +86,13 @@ mutation ToggleUpozorneniVisible($id: BigInt!, $visible: Boolean!) {
   }
 }
 
+mutation ToggleUpozorneniSticky($id: BigInt!, $sticky: Boolean!) {
+  updateUpozorneni(input: {upId: $id, patch: {sticky: $sticky}}) {
+    upozorneni {
+      ...Announcement
+    }
+  }
+}
 
 query Announcement($id: BigInt!) {
   upozorneni(upId: $id) {

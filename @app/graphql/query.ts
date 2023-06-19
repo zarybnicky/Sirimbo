@@ -137,6 +137,13 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate({ __typename: 'Event', id: args.input.eventId});
       },
 
+      updateUpozorneni(result, args, cache) {
+        console.log(cache.inspectFields('Query'));
+        const fields = cache
+          .inspectFields('Query')
+          .filter(field => ['myAnnouncements', 'stickyAnnouncements'].includes(field.fieldName))
+          .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));
+      },
       login(_result, _args, cache, _info) {
         cache.updateQuery({ query: CurrentUserDocument }, (old) => {
           const login = _result.login?.result;
@@ -149,6 +156,12 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       },
       logout(_result, _args, cache, _info) {
         cache.updateQuery({query: CurrentUserDocument}, () => null);
+        cache.invalidate('Query', 'currentUserId');
+        cache.invalidate('Query', 'currentTenantId');
+        cache.invalidate('Query', 'currentSessionId');
+        cache.invalidate('Query', 'getCurrentCouple');
+        cache.invalidate('Query', 'getCurrentTenant');
+        cache.invalidate('Query', 'getCurrentUser');
       },
     },
   },

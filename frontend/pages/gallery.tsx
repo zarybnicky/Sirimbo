@@ -3,6 +3,9 @@ import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
 import classNames from 'classnames';
 import type { NextPageWithLayout } from 'pages/_app';
+import Image from 'next/image';
+import YoutubeImage from 'public/images/YouTube-Veverka.jpg';
+import FacebookImage from 'public/images/Facebook-202209.jpg';
 
 const Page: NextPageWithLayout = () => {
   return (
@@ -12,7 +15,7 @@ const Page: NextPageWithLayout = () => {
       <div className="col-feature my-16 grid gap-16 px-4 md:grid-cols-2">
         {[
           {
-            image: '/images/services-pro-zacatecniky.png',
+            image: YoutubeImage,
             href: 'https://www.youtube.com/user/TheMamcro',
             label: (
               <>
@@ -23,7 +26,7 @@ const Page: NextPageWithLayout = () => {
             ),
           },
           {
-            image: '/images/services-soutezni.png',
+            image: FacebookImage,
             href: 'https://www.facebook.com/tkolymp/photos_albums?locale=cs_CZ',
             label: (
               <>
@@ -41,8 +44,8 @@ const Page: NextPageWithLayout = () => {
             href={item.href}
             className="relative aspect-w-16 aspect-h-9 group"
           >
-            <div className="absolute inset-0 border-8 border-red-500">
-              <img className="w-full h-full object-cover" src={item.image} />
+            <div className="absolute inset-0 border-8 border-red-500 overflow-hidden">
+              <Image src={item.image} layout="fill" alt="" style={{ objectFit: 'cover'}} />
             </div>
             <div
               className={classNames(

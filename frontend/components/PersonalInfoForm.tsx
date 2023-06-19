@@ -41,7 +41,7 @@ export const PersonalInfoForm: React.FC<{
 
   const { reset, control, handleSubmit } = useForm<FormProps>({ resolver: zodResolver(Form) });
   React.useEffect(() => {
-    reset(Form.optional().parse(user));
+    reset(Form.partial().optional().parse(user));
   }, [reset, user]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {

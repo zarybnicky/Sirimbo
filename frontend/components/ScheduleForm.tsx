@@ -84,7 +84,7 @@ export const ScheduleForm = ({ id = '' }: { id?: string }) => {
             doc={DeleteScheduleDocument}
             id={id}
             title="smazat rozpis"
-            onDelete={() => router.push(backHref)}
+            redirect={backHref}
           />
         )}
         <SubmitButton loading={onSubmit.loading} />
@@ -141,7 +141,7 @@ function LessonAdminForm({ lesson }: { lesson: ScheduleItemBasicFragment }) {
   const couple = lesson.paryByRiPartner;
 
   React.useEffect(() => {
-    reset(LessonForm.optional().parse(lesson));
+    reset(LessonForm.innerType().partial().optional().parse(lesson));
   }, [mode, reset, lesson]);
 
   const onSubmit = React.useCallback((patch: LessonFormProps) => {

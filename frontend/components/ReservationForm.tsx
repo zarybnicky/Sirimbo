@@ -93,7 +93,7 @@ export const ReservationForm = ({ id = '' }: { id?: string }) => {
             doc={DeleteReservationDocument}
             id={id}
             title="smazat nabídku"
-            onDelete={() => router.push(backHref)}
+            redirect={backHref}
           />
         )}
         <SubmitButton loading={onSubmit.loading} />

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Navigate, ViewClass } from '../types'
 import TimeGrid from '../TimeGrid'
-import { add, startOf, endOf, format } from '../localizer'
+import { add, startOf } from '../localizer'
 
 const Day: ViewClass = (props) => (
   <TimeGrid {...props} range={Day.range(props.date)} />
@@ -13,10 +13,8 @@ Day.navigate = (date, action) => {
   switch (action) {
     case Navigate.PREVIOUS:
       return add(date, -1, 'day')
-
     case Navigate.NEXT:
       return add(date, 1, 'day')
-
     default:
       return date
   }

@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import chunk from 'lodash/chunk'
 import { View, Navigate } from '../types'
 import DateContentRow from '../DateContentRow'
-import { lte, eq, neq, sortEvents, add, format, range, inEventRange, startOf, endOf, startOfWeek } from '../localizer'
+import { eq, neq, sortEvents, add, format, range, inEventRange, startOf, endOf, startOfWeek } from '../localizer'
 import { NavigationContext } from '../NavigationContext'
 import { ViewClass } from '../types'
 

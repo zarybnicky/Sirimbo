@@ -11,7 +11,7 @@ const Page: NextPageWithLayout = () => {
     <>
       <Heading>Kontakt</Heading>
 
-      <div className="prose prose-accent mt-8">
+      <div className="prose prose-accent">
         <h2>Fakturační údaje:</h2>
         <p>
           Taneční klub Olymp Olomouc, z. s.

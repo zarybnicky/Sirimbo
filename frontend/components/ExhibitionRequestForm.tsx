@@ -5,7 +5,7 @@ import { useAsyncCallback } from 'react-async-hook';
 import { FormError } from '@app/ui/form';
 import { SubmitButton } from '@app/ui/submit';
 import { toast } from 'react-toastify';
-import { DateRange, DatePickerElement } from '@app/ui/fields/date';
+import { DatePickerElement } from '@app/ui/fields/date';
 import { RadioButtonGroup } from './RadioButtonGroup';
 import { useForm } from 'react-hook-form';
 import { Card } from './Card';

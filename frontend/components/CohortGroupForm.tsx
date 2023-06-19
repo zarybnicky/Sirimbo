@@ -63,7 +63,7 @@ export function CohortGroupForm({ id = '' }: Props) {
     resolver: zodResolver(Form),
   });
   React.useEffect(() => {
-    reset(Form.optional().parse(data));
+    reset(Form.partial().optional().parse(data));
   }, [data, reset]);
 
   const onSubmit = useAsyncCallback(async (patch: FormProps) => {
@@ -93,7 +93,7 @@ export function CohortGroupForm({ id = '' }: Props) {
             doc={DeleteCohortGroupDocument}
             id={id}
             title="smazat tréninkový program"
-            onDelete={() => router.push(backHref)}
+            redirect={backHref}
           />
         )}
         <SubmitButton loading={onSubmit.loading} />

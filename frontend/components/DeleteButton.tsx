@@ -4,20 +4,23 @@ import { Trash2 as DeleteIcon } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { useMutation } from 'urql';
+import { Route } from 'nextjs-routes';
+import { useRouter } from 'next/router';
 
 type DeleteButtonProps = {
   title: string;
   doc: TypedDocumentNode<any, { id: string }>;
   id: string;
-  onDelete?: () => any;
+  redirect?: Route | Exclude<Route, { query: any }>["pathname"];
 };
 
 export const DeleteButton = React.memo(function DeleteButton({
   title,
   doc,
   id,
-  onDelete,
+  redirect,
 }: DeleteButtonProps) {
+  const router = useRouter();
   const confirm = useConfirm();
   const deleteMutation = useMutation(doc)[1];
 
@@ -25,8 +28,10 @@ export const DeleteButton = React.memo(function DeleteButton({
     await confirm({ description: `Opravdu chcete smazat ${title}?` });
     try {
       await deleteMutation({ id });
-      onDelete?.();
       toast.success('Smazáno');
+      if (redirect) {
+        router.push(redirect);
+      }
     } catch (e) {
       if (e instanceof Error) {
         toast.error(e.message);
@@ -34,7 +39,7 @@ export const DeleteButton = React.memo(function DeleteButton({
         toast.error('Nepodařilo se smazat položku');
       }
     }
-  }, [deleteMutation, id, confirm, onDelete, title]);
+  }, [deleteMutation, id, confirm, title, redirect]);
 
   return (
     <button

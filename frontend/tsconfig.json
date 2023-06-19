@@ -2,7 +2,6 @@
   "compilerOptions": {
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "skipLibCheck": true,
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "forceConsistentCasingInFileNames": true,
@@ -14,9 +13,6 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "baseUrl": "./",
-    "paths": {
-      "@/*": ["./*"]
-    },
     "incremental": true,
     "allowJs": true
   },

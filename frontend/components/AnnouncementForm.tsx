@@ -84,7 +84,7 @@ export function AnnouncementForm({
             doc={DeleteAnnouncementDocument}
             id={id}
             title="smazat příspěvek"
-            onDelete={() => router.push(entity.listRoute)}
+            redirect={entity.listRoute}
           />
         )}
         <SubmitButton loading={onSubmit.loading} />

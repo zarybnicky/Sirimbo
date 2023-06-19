@@ -77,6 +77,7 @@ declare module "nextjs-routes" {
     | StaticRoute<"/schedule">
     | StaticRoute<"/skolni-krouzky">
     | StaticRoute<"/treneri">
+    | StaticRoute<"/treninkove-programy">
     | StaticRoute<"/treninkove-skupiny">
     | StaticRoute<"/vyhody-clenstvi">
     | StaticRoute<"/vystoupeni">;

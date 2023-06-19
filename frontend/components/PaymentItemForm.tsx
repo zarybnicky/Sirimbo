@@ -51,7 +51,7 @@ export const PaymentItemForm = ({id = ''}: {id?: string}) => {
 
   const { reset, control, handleSubmit } = useForm<FormProps>();
   React.useEffect(() => {
-    reset(Form.optional().parse(data));
+    reset(Form.partial().optional().parse(data));
   }, [reset, data]);
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
@@ -82,7 +82,7 @@ export const PaymentItemForm = ({id = ''}: {id?: string}) => {
             doc={DeletePaymentItemDocument}
             id={id}
             title="smazat platbu"
-            onDelete={() => router.push(entity.listRoute)}
+            redirect={entity.listRoute}
           />
         )}
         <SubmitButton loading={onSubmit.loading} />

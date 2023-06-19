@@ -11,8 +11,6 @@
   },
   "rules": {
     "tailwindcss/classnames-order": ["off"],
-    "tailwindcss/no-custom-classname": ["error"],
-    "@next/next/no-img-element": ["off"],
     "import/no-unused-modules": ["off", {
       "unusedExports": true,
       "ignoreExports": ["pages/**"]

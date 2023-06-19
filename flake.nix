@@ -30,7 +30,6 @@
             pkgs.graphile-migrate
             pkgs.yarn
             pkgs.nodePackages.typescript
-            pkgs.yarn2nix
             pkgs.postgresql_13
             pkgs.ncc
             pkgs.sqlint

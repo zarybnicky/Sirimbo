@@ -4,6 +4,7 @@ import { MyLessonsList } from 'components/MyLessonsList';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { TabMenu } from 'components/TabMenu';
 import type { NextPageWithLayout } from 'pages/_app';
+import { StickyAnnouncements } from 'components/StickyAnnouncements';
 
 const Page: NextPageWithLayout = () => {
   const [variant, setVariant] = React.useState('myLessons');
@@ -17,20 +18,24 @@ const Page: NextPageWithLayout = () => {
           options={[
             { id: 'myLessons', label: 'Moje lekce' },
             { id: 'myAnnouncements', label: 'Aktuality' },
+            { id: 'stickyAnnouncements', label: 'Stálá nástěnka' },
           ]}
         />
         <div className="mt-4">
           {variant === 'myLessons' ? (
             <MyLessonsList />
-          ) : (
+          ) : variant === 'myAnnouncements' ? (
             <MyAnnouncements />
+          ) : (
+            <StickyAnnouncements />
           )}
         </div>
       </div>
 
-      <div className="hidden xl:grid grid-cols-2 gap-4">
-        <MyAnnouncements />
+      <div className="hidden xl:grid grid-cols-3 gap-4">
         <MyLessonsList />
+        <MyAnnouncements />
+        <StickyAnnouncements />
       </div>
     </div>
   );

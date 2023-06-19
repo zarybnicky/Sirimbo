@@ -7909,6 +7909,8 @@ export type Query = {
   /** Reads and enables pagination through a set of `Aktuality`. */
   aktualities: Maybe<AktualitiesConnection>;
   aktuality: Maybe<Aktuality>;
+  /** Reads and enables pagination through a set of `Upozorneni`. */
+  archivedAnnouncements: Maybe<UpozornenisConnection>;
   attachment: Maybe<Attachment>;
   /** Reads and enables pagination through a set of `Attachment`. */
   attachments: Maybe<AttachmentsConnection>;
@@ -8048,6 +8050,8 @@ export type Query = {
   /** Reads and enables pagination through a set of `Skupiny`. */
   skupinies: Maybe<SkupiniesConnection>;
   skupiny: Maybe<Skupiny>;
+  /** Reads and enables pagination through a set of `Upozorneni`. */
+  stickyAnnouncements: Maybe<UpozornenisConnection>;
   tenant: Maybe<Tenant>;
   tenantAttachment: Maybe<TenantAttachment>;
   /** Reads and enables pagination through a set of `TenantAttachment`. */
@@ -8123,6 +8127,16 @@ export type QueryAktualitiesArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryAktualityArgs = {
   atId: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryArchivedAnnouncementsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -8896,6 +8910,16 @@ export type QuerySkupiniesArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QuerySkupinyArgs = {
   sId: Scalars['BigInt']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryStickyAnnouncementsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -12671,6 +12695,7 @@ export type GraphCacheResolvers = {
     akces?: GraphCacheResolver<WithTypename<Query>, QueryAkcesArgs, WithTypename<AkcesConnection> | string>,
     aktualities?: GraphCacheResolver<WithTypename<Query>, QueryAktualitiesArgs, WithTypename<AktualitiesConnection> | string>,
     aktuality?: GraphCacheResolver<WithTypename<Query>, QueryAktualityArgs, WithTypename<Aktuality> | string>,
+    archivedAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryArchivedAnnouncementsArgs, WithTypename<UpozornenisConnection> | string>,
     attachment?: GraphCacheResolver<WithTypename<Query>, QueryAttachmentArgs, WithTypename<Attachment> | string>,
     attachments?: GraphCacheResolver<WithTypename<Query>, QueryAttachmentsArgs, WithTypename<AttachmentsConnection> | string>,
     attendeeCouple?: GraphCacheResolver<WithTypename<Query>, QueryAttendeeCoupleArgs, WithTypename<AttendeeCouple> | string>,
@@ -12763,6 +12788,7 @@ export type GraphCacheResolvers = {
     sessions?: GraphCacheResolver<WithTypename<Query>, QuerySessionsArgs, WithTypename<SessionsConnection> | string>,
     skupinies?: GraphCacheResolver<WithTypename<Query>, QuerySkupiniesArgs, WithTypename<SkupiniesConnection> | string>,
     skupiny?: GraphCacheResolver<WithTypename<Query>, QuerySkupinyArgs, WithTypename<Skupiny> | string>,
+    stickyAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryStickyAnnouncementsArgs, WithTypename<UpozornenisConnection> | string>,
     tenant?: GraphCacheResolver<WithTypename<Query>, QueryTenantArgs, WithTypename<Tenant> | string>,
     tenantAttachment?: GraphCacheResolver<WithTypename<Query>, QueryTenantAttachmentArgs, WithTypename<TenantAttachment> | string>,
     tenantAttachments?: GraphCacheResolver<WithTypename<Query>, QueryTenantAttachmentsArgs, WithTypename<TenantAttachmentsConnection> | string>,

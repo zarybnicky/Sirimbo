@@ -31,7 +31,7 @@ export const useTopMenu = (): MenuStructItem[] => [
     children: [
       { type: 'link', title: 'O nás', href: '/o-nas' },
       { type: 'link', title: 'Kde trénujeme', href: '/kde-trenujeme' },
-      { type: 'link', title: 'Tréninkové skupiny', href: '/treninkove-skupiny' },
+      { type: 'link', title: 'Tréninkové programy', href: '/treninkove-programy' },
       { type: 'link', title: 'Trenéři', href: '/treneri' },
       { type: 'link', title: 'Výhody členství', href: '/vyhody-clenstvi' },
       { type: 'link', title: 'Galerie mistrů', href: '/galerie-mistru' },
