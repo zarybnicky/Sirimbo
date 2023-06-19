@@ -1,5 +1,5 @@
-import { LoginForm } from '@/components/LoginForm';
-import { useAuth } from '@/lib/use-auth';
+import { LoginForm } from 'components/LoginForm';
+import { useAuth } from 'lib/use-auth';
 import { CohortListWithMembersDocument } from '@app/graphql/Cohorts';
 import { useQuery} from 'urql';
 

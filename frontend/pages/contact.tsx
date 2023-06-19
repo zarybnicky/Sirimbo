@@ -2,7 +2,7 @@ import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
 import type { NextPageWithLayout } from 'pages/_app';
-import { useAuth } from '@/lib/data/use-auth';
+import { useAuth } from 'lib/data/use-auth';
 
 const Page: NextPageWithLayout = () => {
   const { user } = useAuth();

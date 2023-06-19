@@ -1,5 +1,5 @@
-import { LoginForm } from '@/components/LoginForm';
-import { useAuth } from '@/lib/use-auth';
+import { LoginForm } from 'components/LoginForm';
+import { useAuth } from 'lib/use-auth';
 import React from 'react';
 import { Calendar } from '@app/calendar';
 
