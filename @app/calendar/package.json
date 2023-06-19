@@ -17,7 +17,7 @@
     "urql": "~4.0.4"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-dom": "*"
+    "react": "^18",
+    "react-dom": "^18"
   }
 }
