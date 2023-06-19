@@ -39,7 +39,7 @@ export const DeleteButton = React.memo(function DeleteButton({
         toast.error('Nepodařilo se smazat položku');
       }
     }
-  }, [deleteMutation, id, confirm, title, redirect]);
+  }, [deleteMutation, id, confirm, title, redirect, router]);
 
   return (
     <button

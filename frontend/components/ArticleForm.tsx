@@ -5,7 +5,12 @@ import { useAsyncCallback } from 'react-async-hook';
 import { FormError } from '@app/ui/form';
 import { SubmitButton } from '@app/ui/submit';
 import { AktualityInput } from '@app/graphql';
-import {ArticleDocument, CreateArticleDocument, DeleteArticleDocument, UpdateArticleDocument} from '@app/graphql/Articles';
+import {
+  ArticleDocument,
+  CreateArticleDocument,
+  DeleteArticleDocument,
+  UpdateArticleDocument,
+} from '@app/graphql/Articles';
 import { useMutation, useQuery } from 'urql';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
@@ -65,7 +70,7 @@ export const ArticleForm = ({ id = '' }: { id?: string }) => {
             doc={DeleteArticleDocument}
             id={id}
             title="smazat článek"
-            onDelete={() => router.push(backHref)}
+            redirect={backHref}
           />
         )}
         <SubmitButton loading={onSubmit.loading} />

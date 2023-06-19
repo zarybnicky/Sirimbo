@@ -50,7 +50,7 @@ export const ProvideAuth = ({ children, onReset }: {
     await doSignOut({});
     router.push('/');
     onReset?.();
-  }, [router, doSignOut]);
+  }, [router, doSignOut, onReset]);
 
   const context = { isLoading, user, couple, signIn, signOut };
   return <authContext.Provider value={context}>{children}</authContext.Provider>;

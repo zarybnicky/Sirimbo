@@ -13,7 +13,7 @@ import { TitleBar } from 'components/layout/TitleBar';
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
   const id = fromSlugArray(router.query.id);
-  const [{ data }] = useQuery({query: CoupleDocument, variables: { id },pause: !id });
+  const [{ data }] = useQuery({ query: CoupleDocument, variables: { id }, pause: !id });
   const item = data?.pary;
   if (!item) {
     return null;
@@ -24,14 +24,19 @@ const Page: NextPageWithLayout = () => {
         <DeleteButton
           doc={DeleteCoupleDocument}
           id={id}
-          onDelete={() => router.push('/admin/nastenka')}
+          redirect={'/admin/nastenka'}
           title="smazat pár"
         />
       </TitleBar>
-
       Minulé lekce
       {item.rozpisItemsByRiPartner?.nodes.map((item) => (
-        <LessonButton key={item.id} schedule={item.rozpiByRiIdRodic!} lesson={item} showTrainer showDate />
+        <LessonButton
+          key={item.id}
+          schedule={item.rozpiByRiIdRodic!}
+          lesson={item}
+          showTrainer
+          showDate
+        />
       ))}
     </div>
   );
@@ -40,6 +45,6 @@ const Page: NextPageWithLayout = () => {
 Page.list = <CoupleList />;
 Page.isDetail = true;
 Page.permissions = [PermissionKey.pePary, PermissionLevel.P_OWNED];
-Page.staticTitle = "Páry";
+Page.staticTitle = 'Páry';
 
 export default Page;

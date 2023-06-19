@@ -1,4 +1,9 @@
-import {CreatePaymentGroupDocument, DeletePaymentGroupDocument, PaymentGroupDocument, UpdatePaymentGroupDocument} from '@app/graphql/Payment';
+import {
+  CreatePaymentGroupDocument,
+  DeletePaymentGroupDocument,
+  PaymentGroupDocument,
+  UpdatePaymentGroupDocument,
+} from '@app/graphql/Payment';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from '@app/ui/fields/text';
@@ -21,7 +26,11 @@ const backHref: Route = { pathname: '/admin/platby/structure/group' };
 
 export const PaymentGroupForm = ({ id = '' }: { id?: string }) => {
   const router = useRouter();
-  const [query] = useQuery({ query: PaymentGroupDocument, variables: { id }, pause: !id });
+  const [query] = useQuery({
+    query: PaymentGroupDocument,
+    variables: { id },
+    pause: !id,
+  });
   const data = query.data?.platbyGroup;
   const title = id ? data?.pgName || '(Bez názvu)' : 'Nová skupina';
 
@@ -64,7 +73,7 @@ export const PaymentGroupForm = ({ id = '' }: { id?: string }) => {
             doc={DeletePaymentGroupDocument}
             id={id}
             title="smazat kategorii"
-            onDelete={() => router.push(backHref)}
+            redirect={backHref}
           />
         )}
         <SubmitButton loading={onSubmit.loading} />
