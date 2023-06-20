@@ -1,5 +1,5 @@
 import React from 'react';
-import { Event } from './types';
+import { CalendarEvent } from './types';
 
 export interface SlotInfo {
   start: Date;
@@ -28,7 +28,7 @@ export interface SlotInfo {
 
 export type SelectionContext = {
   selectedIds: number[];
-  onSelectEvent: (event?: Event) => void;
+  onSelectEvent: (event?: CalendarEvent) => void;
   onSelectSlot: (slotInfo?: SlotInfo) => void;
 };
 

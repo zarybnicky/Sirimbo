@@ -13,6 +13,7 @@ import Week from './views/Week';
 import WorkWeek from './views/WorkWeek';
 import { formatCoupleName } from '../../frontend/lib/format-name';
 import '@app/calendar/styles.scss';
+import { ChevronsRight, ChevronsLeft } from 'lucide-react';
 
 const Views = {
   [View.MONTH]: Month,
@@ -126,7 +127,7 @@ export const Calendar = () => {
       return format(date, 'MMMM yyyy');
     }
     if (view === View.DAY) {
-      return format(date, 'cccc dd. MM.');
+      return format(date, 'cccc dd. MM. yyyy');
     }
     if (view === View.AGENDA) {
       return `${format(date, 'P')} – ${format(add(date, 7, 'day'), 'P')}`;
@@ -134,7 +135,7 @@ export const Calendar = () => {
     const start = startOf(date, 'week', startOfWeek);
     const end = endOf(date, 'week', startOfWeek);
     const startFormat = eq(start, end, 'month') ? 'dd' : 'dd. MM.'
-    return `${format(start, startFormat)} – ${format(end, 'dd. MM.')}`
+    return `${format(start, startFormat)} – ${format(end, 'dd. MM. yyyy')}`
   }, [view, date]);
 
   return (
@@ -143,9 +144,17 @@ export const Calendar = () => {
         <div className={clsx('rbc-calendar col-full overflow-hidden', isDragging && 'rbc-is-dragging')}>
           <div className="rbc-toolbar">
             <span className="rbc-btn-group">
-              <button type="button" onClick={() => setDate(new Date())}>Dnes</button>
-              <button type="button" onClick={() => setDate(ViewComponent.navigate(date, Navigate.PREVIOUS))}>Zpět</button>
-              <button type="button" onClick={() => setDate(ViewComponent.navigate(date, Navigate.NEXT))}>Dále</button>
+              <button type="button" onClick={() => setDate(ViewComponent.navigate(date, Navigate.PREVIOUS))}>
+                <ChevronsLeft className="h-4 w-4 pt-1" />
+                Předchozí
+              </button>
+              <button type="button" onClick={() => setDate(new Date())}>
+                Dnes
+              </button>
+              <button type="button" onClick={() => setDate(ViewComponent.navigate(date, Navigate.NEXT))}>
+                Další
+                <ChevronsRight className="h-4 w-4 pt-1" />
+              </button>
             </span>
 
             <span className="rbc-toolbar-label">{label}</span>

@@ -13,13 +13,10 @@ const EventWrapper: React.FC<{
 }> = ({ children, event, resourceId, type, continuesPrior, continuesAfter }) => {
   const { draggable } = React.useContext(DnDContext);
 
-  if (event.isDraggable === false) {
-    return children;
-  }
-
   const newProps = {
     onMouseDown(e: React.MouseEvent<HTMLDivElement>) {
       if (e.button !== 0) return;
+      if (event.isDraggable === false) return
       // hack: because of the way the anchors are arranged in the DOM, resize
       // anchor events will bubble up to the move anchor listener. Don't start
       // move operations when we're on a resize anchor.
@@ -30,14 +27,18 @@ const EventWrapper: React.FC<{
     },
     onTouchStart(e: React.MouseEvent<HTMLDivElement>) {
       if (e.button !== 0) return;
+      if (event.isDraggable === false) return;
       if (!(e.target as any).getAttribute('class')?.includes('rbc-resize-')) {
         event.sourceResource = resourceId;
         draggable.onBeginAction(event, 'move');
       }
     },
-    className: children.props.className,
     children: children.props.children,
+    className: clsx(children.props.className, {
+      'rbc-dragged-event': draggable.dragAndDropAction.current.interacting && draggable.dragAndDropAction.current.event === event,
+    }),
   };
+
 
   if (event.isResizable !== false) {
     const renderAnchor = (direction: DragDirection) => (
@@ -68,13 +69,6 @@ const EventWrapper: React.FC<{
         {!continuesAfter && renderAnchor(type === 'date' ? 'RIGHT' : 'DOWN')}
       </div>
     );
-  }
-
-  if (
-    draggable.dragAndDropAction.current.interacting &&
-    draggable.dragAndDropAction.current.event === event
-  ) {
-    newProps.className = clsx(children.props.className, 'rbc-dragged-event');
   }
 
   return React.cloneElement(children, newProps);

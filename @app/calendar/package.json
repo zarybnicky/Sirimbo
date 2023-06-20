@@ -12,6 +12,7 @@
     "date-arithmetic": "~4.1.0",
     "dom-helpers": "~5.2.1",
     "lodash": "~4.17.21",
+    "lucide-react": "*",
     "react": "*",
     "react-dom": "*",
     "typescript": "~5.1.3",

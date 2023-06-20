@@ -1,7 +1,7 @@
 import { LoginForm } from 'components/LoginForm';
 import { useAuth } from 'lib/use-auth';
 import React from 'react';
-import { Calendar } from '@app/calendar';
+import { Calendar } from '@app/calendar/Calendar';
 
 function DnDResource() {
   const { user } = useAuth();

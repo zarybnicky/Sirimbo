@@ -128,11 +128,11 @@ button.rbc-input::-moz-focus-inner {
 }
 
 .rbc-toolbar {
+  background-color: white;
+  padding: 8px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   align-items: center;
-  margin-bottom: 10px;
   font-size: 16px;
 
   .rbc-toolbar-label {
@@ -143,11 +143,12 @@ button.rbc-input::-moz-focus-inner {
 
   & button {
     color: $btn-color;
-    display: inline-block;
+    display: inline-flex;
     margin: 0;
     text-align: center;
-    vertical-align: middle;
     background: none;
+    gap: 4px;
+    align-items: baseline;
     background-image: none;
     border: 1px solid $btn-border;
     padding: .375rem 1rem;
@@ -571,7 +572,6 @@ button.rbc-input::-moz-focus-inner {
   flex-direction: column;
   flex: 1;
   width: 100%;
-  border: 1px solid $calendar-border;
   min-height: 0;
 
   .rbc-time-gutter {
@@ -624,6 +624,7 @@ button.rbc-input::-moz-focus-inner {
   min-width: 0;
   flex-direction: column;
   border-left: 1px solid $cell-border;
+  border: 1px solid $calendar-border;
 
   > .rbc-row.rbc-row-resource {
     border-bottom: 1px solid $cell-border;

@@ -21,7 +21,6 @@ import dateFnsFormat from 'date-fns/format';
 import getStartOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
 import cs from 'date-fns/locale/cs';
-import { DateRange, Event } from './types';
 
 export {
   inRange,
@@ -114,8 +113,8 @@ export function getDstOffset(start: Date, end: Date) {
 
 // These two are used by eventLevels
 export function sortEvents(
-  { start: aStart, end: aEnd, allDay: aAllDay = false }: Event,
-  { start: bStart, end: bEnd, allDay: bAllDay = false }: Event,
+  { start: aStart, end: aEnd, allDay: aAllDay = false }: { start: Date, end: Date, allDay?: boolean },
+  { start: bStart, end: bEnd, allDay: bAllDay = false }: { start: Date, end: Date, allDay?: boolean },
 ) {
   let startSort = +startOf(aStart, 'day') - +startOf(bStart, 'day')
   let durA = diff(aStart, ceil(aEnd, 'day'), 'day')
@@ -131,8 +130,8 @@ export function sortEvents(
 }
 
 export function inEventRange(
-  { start, end }: DateRange,
-  { start: rangeStart, end: rangeEnd }: DateRange,
+  { start, end }: { start: Date, end: Date },
+  { start: rangeStart, end: rangeEnd }: { start: Date, end: Date },
 ) {
   let eStart = startOf(start, 'day')
   let startsBeforeEnd = lte(eStart, rangeEnd, 'day')

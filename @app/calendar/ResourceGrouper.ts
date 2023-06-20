@@ -1,4 +1,4 @@
-import { Resource, Event } from "./types"
+import { Resource, CalendarEvent } from "./types"
 
 export type ResourceGrouper = ReturnType<typeof makeGrouper>;
 
@@ -9,7 +9,7 @@ export default function makeGrouper(resources: Resource[]) {
       return resources.map((resource, idx) => fn([resource, resource.resourceId], idx))
     },
 
-    groupEvents(events: Event[]): Map<number|undefined, Event[]> {
+    groupEvents(events: CalendarEvent[]): Map<number|undefined, CalendarEvent[]> {
       const eventsByResource = new Map()
 
       if (!resources) {

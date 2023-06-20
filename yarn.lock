@@ -3522,7 +3522,7 @@
     "@typescript-eslint/types" "5.59.11"
     eslint-visitor-keys "^3.3.0"
 
-"@urql/core@4.0.7", "@urql/core@>=4.0.0", "@urql/core@^4.0.0", "@urql/core@~4.0.7":
+"@urql/core@>=4.0.0", "@urql/core@^4.0.0", "@urql/core@~4.0.7":
   version "4.0.7"
   resolved "https://registry.yarnpkg.com/@urql/core/-/core-4.0.7.tgz#8918a956f8e2ffbaeb3aae58190d728813de5841"
   integrity sha512-UtZ9oSbSFODXzFydgLCXpAQz26KGT1d6uEfcylKphiRWNXSWZi8k7vhJXNceNm/Dn0MiZ+kaaJHKcnGY1jvHRQ==
@@ -8064,6 +8064,11 @@ lru_map@^0.3.3:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/lru_map/-/lru_map-0.3.3.tgz#b5c8351b9464cbd750335a79650a0ec0e56118dd"
   integrity sha512-Pn9cox5CsMYngeDbmChANltQl+5pi6XmTrraMSzhPmMBbmgcxmqWry0U3PGapCU1yB4/LqCcom7qhHZiF/jGfQ==
+
+lucide-react@*:
+  version "0.246.0"
+  resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-0.246.0.tgz#53b3c710ce7e8872a9aa28c540371a8009261973"
+  integrity sha512-0OkIG28coMDnQfy9+vYr/+8BY42KpBO05WkslfIEJuDxi/qwcJfUXsG+nhONGMAUs/ADR5fE8upHBw76O/yMPg==
 
 lucide-react@~0.244.0:
   version "0.244.0"

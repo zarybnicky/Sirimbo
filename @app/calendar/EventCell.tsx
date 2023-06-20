@@ -3,12 +3,12 @@ import React from 'react';
 import EventWrapper from './EventWrapper';
 import { ceil, diff } from './localizer';
 import { SelectionContext } from './SelectContext';
-import { Event } from './types';
+import { CalendarEvent } from './types';
 
 type EventCellProps = {
   style?: React.CSSProperties;
   className?: string;
-  event: Event;
+  event: CalendarEvent;
   isAllDay?: boolean;
   continuesPrior: boolean;
   continuesAfter: boolean;
