@@ -11,6 +11,7 @@ const app = express();
 
 app.use(require('compression')({ threshold: 0 }));
 app.use(require('helmet')());
+app.use(require('cors')());
 app.use(require('morgan')('tiny'));
 app.use(require('cookie-parser')());
 
