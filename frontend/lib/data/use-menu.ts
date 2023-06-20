@@ -68,6 +68,7 @@ export function useSideMenu(): MenuStructItem[] {
 
 export const useMemberMenu = (): MenuLink[] => [
   { type: 'link', title: 'Nástěnka', href: '/dashboard' },
+  { type: 'link', title: 'Kalendář (WIP)', href: '/calendar' },
   { type: 'link', title: 'Tréninky', href: '/schedule' },
   { type: 'link', title: 'Akce', href: '/events' },
   { type: 'link', title: 'Dokumenty', href: '/documents' },

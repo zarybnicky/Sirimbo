@@ -7,7 +7,6 @@ import type { TimeSlotMetrics } from '../utils/TimeSlotMetrics';
 class ProxyEvent {
   constructor(data, slotMetrics: TimeSlotMetrics) {
     const { start, startDate, end, endDate, top, height } = slotMetrics.getRange(data.start, data.end)
-
     this.start = start
     this.end = end
     this.startMs = +startDate

@@ -12,8 +12,8 @@ import Month from './views/Month';
 import Week from './views/Week';
 import WorkWeek from './views/WorkWeek';
 import { formatCoupleName } from '../../frontend/lib/format-name';
-import '@app/calendar/styles.scss';
 import { ChevronsRight, ChevronsLeft } from 'lucide-react';
+import '@app/calendar/styles.scss';
 
 const Views = {
   [View.MONTH]: Month,
@@ -25,7 +25,7 @@ const Views = {
 
 export const Calendar = () => {
   const [view, setView] = React.useState(View.WORK_WEEK)
-  const [date, setDate] = React.useState(new Date(2023, 4, 15));
+  const [date, setDate] = React.useState(new Date());
   const [isDragging, setIsDragging] = React.useState(false);
 
   const ViewComponent = Views[view];
@@ -37,8 +37,8 @@ export const Calendar = () => {
   const [{ data: schedules }] = useQuery({
     query: ScheduleRangeDocument,
     variables: {
-      startDate: startOf(range[0]!, 'day').toISOString(),
-      endDate: endOf(range[range.length - 1]!, 'day').toISOString(),
+      startDate: format(startOf(range[0]!, 'day'), 'yyyy-MM-dd'),
+      endDate: format(endOf(range[range.length - 1]!, 'day'), 'yyyy-MM-dd'),
     },
     requestPolicy: 'cache-and-network',
   });

@@ -53,7 +53,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
       step,
       timeslots,
     });
-  }, [minTime, maxTime, step, timeslots]);
+  }, [date, minTime, maxTime, step, timeslots]);
 
   useLayoutEffect(() => {
     const selector = new Selection(() => columnRef.current, {
@@ -233,7 +233,6 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
       }
       draggable.onStart()
       const { event, action } = draggable.dragAndDropAction.current
-      console.log(event, action, point)
       if (event) {
         setEventState({...slotMetrics.getRange(event.start, event.end, false, true), event})
       }
@@ -272,7 +271,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
   const eventsInRange = React.useMemo(() => {
     const minimumStartDifference = Math.ceil((step * timeslots) / 2);
     return getStyledEventsOverlap(events, slotMetrics, minimumStartDifference);
-  }, [step, timeslots, backgroundEvents, slotMetrics]);
+  }, [step, timeslots, events, slotMetrics]);
 
   return (
     <div
