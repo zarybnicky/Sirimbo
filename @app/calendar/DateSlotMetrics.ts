@@ -1,12 +1,12 @@
 import { eventSegments, endOfRange, eventLevels } from './common'
 import { eq, lt, gt, gte } from './localizer'
-import { Event } from './types';
+import { CalendarEvent } from './types';
 
 export type DateSlotMetrics = ReturnType<typeof getSlotMetrics>;
 
 export const getSlotMetrics = ({ range, events, maxRows, minRows }: {
   range: Date[];
-  events: Event[];
+  events: CalendarEvent[];
   maxRows: number;
   minRows: number;
 }) => {
@@ -42,11 +42,11 @@ export const getSlotMetrics = ({ range, events, maxRows, minRows }: {
         .map((seg) => seg.event)
     },
 
-    continuesPrior({ start }: Event) {
+    continuesPrior({ start }: CalendarEvent) {
       return lt(start, first, 'day')
     },
 
-    continuesAfter({ start, end }: Event) {
+    continuesAfter({ start, end }: CalendarEvent) {
       const singleDayDuration = eq(start, end, 'minutes')
       return singleDayDuration
         ? gte(end, last, 'minutes')

@@ -1,4 +1,4 @@
-import type { Event } from "./types"
+import type { CalendarEvent } from "./types"
 import { add, eq, min, max, diff, startOf, ceil } from './localizer'
 
 export function endOfRange(dateRange: Date[]) {
@@ -9,12 +9,12 @@ export function endOfRange(dateRange: Date[]) {
 }
 
 export type Segment = {
-  event: Event;
+  event: CalendarEvent;
   span: number;
   left: number;
   right: number;
 }
-export function eventSegments(event: Event, range: Date[]): Segment {
+export function eventSegments(event: CalendarEvent, range: Date[]): Segment {
   let { first, last } = endOfRange(range)
 
   let slots = diff(first, last, 'day')

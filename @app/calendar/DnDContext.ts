@@ -1,5 +1,5 @@
 import React from 'react';
-import { Event } from './types';
+import { CalendarEvent } from './types';
 
 export type DragAction = 'resize' | 'move';
 
@@ -8,7 +8,7 @@ export type DragDirection = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
 export type DnDState = {
   interacting: boolean;
   action?: DragAction | null;
-  event?: Event | null;
+  event?: CalendarEvent | null;
   direction?: DragDirection | null;
 };
 
@@ -25,9 +25,9 @@ export type DnDContextType = {
     onEnd: (
       info: null | { start: Date; end: Date; resourceId?: number; isAllDay?: boolean },
     ) => void;
-    onBeginAction: (event: Event, action: DragAction, direction?: DragDirection) => void;
+    onBeginAction: (event: CalendarEvent, action: DragAction, direction?: DragDirection) => void;
     onDropFromOutside?: typeof onDropFromOutside;
-    dragFromOutsideItem: () => Event | undefined;
+    dragFromOutsideItem: () => CalendarEvent | undefined;
     dragAndDropAction: React.MutableRefObject<DnDState>;
   };
 };
@@ -43,7 +43,7 @@ export const DndProvider = ({ setIsDragging, children }: {
   const state = React.useRef<DnDState>({ interacting: false });
   const context = React.useMemo<DnDContextType>(() => ({
     draggable: {
-      onBeginAction(event: Event, action, direction) {
+      onBeginAction(event: CalendarEvent, action, direction) {
         state.current = { action, event, interacting: true, direction };
       },
       onStart() {

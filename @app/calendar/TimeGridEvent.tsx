@@ -4,7 +4,7 @@ import React from 'react'
 import { SelectionContext } from './SelectContext';
 import { TimeSlotMetrics } from './TimeSlotMetrics';
 import EventWrapper from './EventWrapper';
-import { Event } from './types';
+import { CalendarEvent } from './types';
 
 function stringifyPercent(v: string | number) {
   return typeof v === 'string' ? v : v + '%'
@@ -13,7 +13,7 @@ function stringifyPercent(v: string | number) {
 type TimeGridEventProps = {
   style: { top: number|string, width: number|string, height: number|string, xOffset: number};
   className?: string;
-  event: Event;
+  event: CalendarEvent;
   isBackgroundEvent?: boolean;
   slotMetrics: TimeSlotMetrics;
   resourceId?: number;

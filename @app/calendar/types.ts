@@ -13,7 +13,7 @@ export enum View {
   AGENDA = 'agenda',
 }
 
-export interface Event {
+export interface CalendarEvent {
   id: number;
   allDay?: boolean;
   title: React.ReactNode;
@@ -37,9 +37,9 @@ export interface DateRange {
 }
 
 export type ViewProps = {
-  events: Event[];
+  events: CalendarEvent[];
   range: Date[];
-  backgroundEvents: Event[];
+  backgroundEvents: CalendarEvent[];
   resources: Resource[];
   min?: Date;
   max?: Date;

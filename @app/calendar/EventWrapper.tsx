@@ -1,11 +1,11 @@
 import React from 'react';
 import clsx from 'clsx';
 import { DnDContext, DragDirection } from './DnDContext';
-import { Event } from './types';
+import { CalendarEvent } from './types';
 
 const EventWrapper: React.FC<{
   children: React.ReactElement;
-  event: Event;
+  event: CalendarEvent;
   resourceId?: number;
   type: 'date' | 'time';
   continuesPrior?: boolean;

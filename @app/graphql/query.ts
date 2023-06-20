@@ -1,6 +1,6 @@
 import type { ExecutionResult, TypedDocumentNode } from 'urql';
 import { print } from '@0no-co/graphql.web';
-import type { GraphCacheConfig, RozpisConnection } from '@app/graphql';
+import type { GraphCacheConfig, RozpisConnection, WithTypename } from '@app/graphql';
 import { CurrentUserDocument, CurrentUserQuery } from '@app/graphql/CurrentUser';
 import { relayPagination } from '@urql/exchange-graphcache/extras';
 import { makeDefaultStorage } from '@urql/exchange-graphcache/default-storage';
@@ -97,14 +97,19 @@ const cacheConfig: Partial<GraphCacheConfig> = {
   resolvers: {
     Query: {
       upozornenis: relayPagination(),
-      schedulesForRange(_parent, args, cache, _info) {
+      schedulesForRange(parent, args, cache, info) {
+        const result = cache.resolve(parent, 'schedulesForRange', args) as WithTypename<RozpisConnection>;
+        if (result) {
+          return result;
+        }
+        info.partial = true;
         const startDate = new Date(args.startDate!);
         const endDate = new Date(args.endDate!);
         const conn = cache.resolve('Query', 'rozpi') as RozpisConnection;
         return {
           __typename: 'RozpisConnection',
-          edges: conn.edges.filter(x => new Date(x.node.rDatum) >= startDate && new Date(x.node.rDatum) <= endDate),
-          nodes: conn.nodes.filter(x => new Date(x.rDatum) >= startDate && new Date(x.rDatum) <= endDate),
+          edges: (conn?.edges || []).filter(x => new Date(x.node.rDatum) >= startDate && new Date(x.node.rDatum) <= endDate),
+          nodes: (conn?.nodes || []).filter(x => new Date(x.rDatum) >= startDate && new Date(x.rDatum) <= endDate),
         }
       },
     },

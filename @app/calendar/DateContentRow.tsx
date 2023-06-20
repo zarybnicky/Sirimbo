@@ -6,7 +6,7 @@ import BackgroundCells from './BackgroundCells';
 import EventRow from './EventRow';
 import EventEndingRow from './EventEndingRow';
 import { getSlotMetrics } from './DateSlotMetrics';
-import { Event } from './types';
+import { CalendarEvent } from './types';
 import { Segment, eventSegments } from './common'
 import Selection, { getBoundsForNode, getSlotAtX, pointInBox } from './Selection'
 import { DnDContext } from './DnDContext'
@@ -16,7 +16,7 @@ import { startOf } from 'date-arithmetic'
 type DateContentRowProps = {
   date?: Date;
   range: Date[];
-  events: Event[];
+  events: CalendarEvent[];
   className?: string;
   renderHeader?: (x: { date: Date } & React.HTMLProps<HTMLDivElement>) => JSX.Element;
   resourceId?: number;

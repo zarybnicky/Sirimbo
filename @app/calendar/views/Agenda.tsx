@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import React, { useContext } from 'react'
 import getWidth from 'dom-helpers/width'
-import { Navigate, Event, ViewClass } from '../types'
+import { Navigate, CalendarEvent, ViewClass } from '../types'
 import { eq, add, endOf, format, gt, inEventRange, lt, startOf, range } from '../localizer'
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import { SelectionContext } from '../SelectContext'
@@ -23,7 +23,7 @@ const Agenda: ViewClass = ({ date, range, events }) => {
     }
   })
 
-  const timeRangeLabel = (day: Date, event: Event) => {
+  const timeRangeLabel = (day: Date, event: CalendarEvent) => {
     let { start, end } = event
 
     let label = "";

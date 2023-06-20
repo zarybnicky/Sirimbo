@@ -10,15 +10,15 @@ import { SelectionContext } from './SelectContext';
 import Selection, { Bounds, ClientPoint, getBoundsForNode, getEventNodeFromPoint, isEvent, pointInColumn } from './Selection';
 import TimeGridEvent from './TimeGridEvent';
 import { getSlotMetrics } from './TimeSlotMetrics';
-import { Event } from './types';
+import { CalendarEvent } from './types';
 
 const EMPTY = {}
 
 type DayColumnProps = {
   date: Date;
   resourceId?: number;
-  events: Event[];
-  backgroundEvents: Event[];
+  events: CalendarEvent[];
+  backgroundEvents: CalendarEvent[];
   gridRef: React.RefObject<HTMLDivElement>;
 };
 
@@ -33,7 +33,7 @@ type BackgroundSelectionState = {
   endDate?: Date;
 };
 type EventSelectionState = {
-  event?: Event;
+  event?: CalendarEvent;
   top?: number;
   height?: number;
 }

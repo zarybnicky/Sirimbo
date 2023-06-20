@@ -1,6 +1,7 @@
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import clsx from 'clsx';
 import getWidth from 'dom-helpers/width';
+import scrollbarSize from 'dom-helpers/scrollbarSize';
 import React from 'react';
 import DateContentRow from './DateContentRow';
 import DayColumn from './DayColumn';
@@ -8,11 +9,11 @@ import {diff, eq, format, inEventRange, inRange, merge, sortEvents, isJustDate} 
 import { NavigationContext } from './NavigationContext';
 import makeGrouper from './ResourceGrouper';
 import TimeGutter from './TimeGutter';
-import { Event, Resource, View } from './types';
+import { CalendarEvent, Resource, View } from './types';
 
 interface TimeGridProps {
-  events: Event[];
-  backgroundEvents: Event[];
+  events: CalendarEvent[];
+  backgroundEvents: CalendarEvent[];
   resources: Resource[];
   range: Date[];
 }
@@ -32,10 +33,16 @@ const TimeGrid = ({
   const gutterRef = React.useRef<HTMLDivElement>(null);
 
   const [gutterWidth, setGutterWidth] = React.useState<number | undefined>(undefined);
+  const [scrollbarMargin, setScrollbarMargin] = React.useState(false);
+
   useLayoutEffect(() => {
     const width = gutterRef?.current ? getWidth(gutterRef.current) : undefined;
     if (width && gutterWidth !== width) {
       setGutterWidth(width);
+    }
+    let isOverflowing = contentRef.current!.scrollHeight > contentRef.current!.clientHeight
+    if (scrollbarMargin !== isOverflowing) {
+      setScrollbarMargin(isOverflowing)
     }
   });
 
@@ -52,8 +59,8 @@ const TimeGrid = ({
   const showMultiDayTimes = true;
   const { grouper, groupedEvents, groupedAllDayEvents, groupedBackgroundEvents } = React.useMemo(() => {
     const dateRange = { start: range[0]!, end: range[range.length - 1]! };
-    const allDayEvents: Event[] = [];
-    const rangeEvents: Event[] = [];
+    const allDayEvents: CalendarEvent[] = [];
+    const rangeEvents: CalendarEvent[] = [];
     events.forEach((event) => {
       if (inEventRange(event, dateRange)) {
         if (
@@ -68,7 +75,7 @@ const TimeGrid = ({
       }
     });
 
-    const rangeBackgroundEvents: Event[] = [];
+    const rangeBackgroundEvents: CalendarEvent[] = [];
     backgroundEvents.forEach((event) => {
       if (inEventRange(event, dateRange)) {
         rangeBackgroundEvents.push(event);
@@ -90,45 +97,49 @@ const TimeGrid = ({
       ref={containerRef}
       className={clsx('rbc-time-view', resources && 'rbc-time-view-resources')}
     >
-    <div ref={scrollRef} className="rbc-time-header">
-      <div className="rbc-label rbc-time-header-gutter" style={{ width: gutterWidth, minWidth: gutterWidth, maxWidth: gutterWidth }} />
+      <div
+        ref={scrollRef}
+        className="rbc-time-header"
+        style={{ marginRight: scrollbarMargin ? `${scrollbarSize() - 1}px` : undefined }}
+      >
+        <div className="rbc-label rbc-time-header-gutter" style={{ width: gutterWidth, minWidth: gutterWidth, maxWidth: gutterWidth }} />
 
-      {grouper.map(([resource, id], idx) => (
-        <div className="rbc-time-header-content" key={id || idx}>
-          {resource && (
-            <div className="rbc-row rbc-row-resource" key={`resource_${idx}`}>
-              <div className="rbc-header">{resource.resourceTitle}</div>
-            </div>
-          )}
-          <div className={clsx('rbc-row rbc-time-header-cell', range.length <= 1 && 'rbc-time-header-cell-single-day')}>
-            {range.map((date, i) => (
-              <div key={i} className={clsx('rbc-header', eq(date, today, 'day') && 'rbc-today')}>
-                <button
-                  type="button"
-                  className="rbc-button-link"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onDrillDown(date, View.DAY);
-                  }}
-                >
-                  <span role="columnheader" aria-sort="none">
-                    {format(date, 'dd eee')}
-                  </span>
-                </button>
+        {grouper.map(([resource, id], idx) => (
+          <div className="rbc-time-header-content" key={id || idx}>
+            {resource && (
+              <div className="rbc-row rbc-row-resource" key={`resource_${idx}`}>
+                <div className="rbc-header">{resource.resourceTitle}</div>
               </div>
-            ))}
-          </div>
+            )}
+            <div className={clsx('rbc-row rbc-time-header-cell', range.length <= 1 && 'rbc-time-header-cell-single-day')}>
+              {range.map((date, i) => (
+                <div key={i} className={clsx('rbc-header', eq(date, today, 'day') && 'rbc-today')}>
+                  <button
+                    type="button"
+                    className="rbc-button-link"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onDrillDown(date, View.DAY);
+                    }}
+                  >
+                    <span role="columnheader" aria-sort="none">
+                      {format(date, 'dd eee')}
+                    </span>
+                  </button>
+                </div>
+              ))}
+            </div>
 
-          <DateContentRow
-            isAllDay
-            range={range}
-            events={groupedAllDayEvents.get(id) || []}
-            resourceId={resource && id}
-            className="rbc-allday-cell"
-          />
-        </div>
-      ))}
-    </div>
+            <DateContentRow
+              isAllDay
+              range={range}
+              events={groupedAllDayEvents.get(id) || []}
+              resourceId={resource && id}
+              className="rbc-allday-cell"
+            />
+          </div>
+        ))}
+      </div>
 
       <div
         ref={contentRef}

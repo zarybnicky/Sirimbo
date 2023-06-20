@@ -5,7 +5,7 @@ import { useQuery } from 'urql';
 import { DndProvider } from './DnDContext';
 import { eq, add, endOf, format, startOf, startOfWeek } from './localizer';
 import { NavigationProvider } from './NavigationContext';
-import { Event, Navigate, Resource, View } from './types';
+import { CalendarEvent, Navigate, Resource, View } from './types';
 import Agenda from './views/Agenda';
 import Day from './views/Day';
 import Month from './views/Month';
@@ -31,7 +31,7 @@ export const Calendar = () => {
 
   const range = React.useMemo(() => Views[view].range(date), [view, date]);;
 
-  const backgroundEvents: Event[] = React.useMemo(() => [], []);
+  const backgroundEvents: CalendarEvent[] = React.useMemo(() => [], []);
 
   const [{ data: schedules }] = useQuery({
     query: ScheduleRangeDocument,
@@ -57,7 +57,7 @@ export const Calendar = () => {
   }, [schedules]);
 
   const events = React.useMemo(() => {
-    const events: Event[] = [];
+    const events: CalendarEvent[] = [];
     schedules?.schedulesForRange?.nodes.forEach((schedule) => {
       schedule.rozpisItemsByRiIdRodic.nodes.forEach((lesson) => {
         events.push({
