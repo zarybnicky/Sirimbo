@@ -127,8 +127,11 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
   async additionalGraphQLContextFromRequest(req, res) {
     return {
       setAuthCookie: (sessionId: string) => {
-        const { secure } = req;
-        res.cookie('PHPSESSID', sessionId, { sameSite: secure ? 'none' : 'lax', httpOnly: true, secure });
+        res.cookie('PHPSESSID', sessionId, {
+          sameSite: isDevelopment ? 'lax' : 'none',
+          httpOnly: true,
+          secure: !isDevelopment,
+        });
       },
       unsetAuthCookie: () => {
         res.clearCookie('PHPSESSID');
