@@ -33,7 +33,7 @@ module.exports = require('nextjs-routes/config')({ outDir: '.' })(
       transpilePackages: ['@app/graphql'],
 
       images: {
-        domains: ['tkolymp.cz', 'www.tkolymp.cz'],
+        domains: ['tkolymp.cz', 'www.tkolymp.cz', 'api.rozpisovnik.cz', 'files.rozpisovnik.cz'],
       },
 
       async redirects() {

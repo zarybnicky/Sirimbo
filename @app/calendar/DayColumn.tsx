@@ -44,7 +44,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
   const { onSelectSlot } = React.useContext(SelectionContext);
   const { min: minTime, max: maxTime, step, timeslots } = React.useContext(NavigationContext);
   const [backgroundState, setBackgroundState] = React.useState<BackgroundSelectionState>({});
-  const { draggable } = React.useContext(DnDContext);
+  const draggable = React.useContext(DnDContext);
   const [eventState, setEventState] = React.useState<EventSelectionState>(EMPTY)
   const slotMetrics = React.useMemo(() => {
     return getSlotMetrics({
@@ -147,8 +147,8 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
     let selector = new Selection(() => gridRef.current, {
       shouldSelect(point) {
         const bounds = getBoundsForNode(columnRef.current!)
-        if (!draggable.dragAndDropAction.current.action) return false
-        if (draggable.dragAndDropAction.current.action === 'resize') {
+        if (!draggable.stateRef.current.action) return false
+        if (draggable.stateRef.current.action === 'resize') {
           return pointInColumn(bounds, point)
         }
         const eventNode = getEventNodeFromPoint(columnRef.current!, point as any)
@@ -167,7 +167,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
     })
 
     selector.addEventListener('selecting', ({ detail: point }) => {
-      const { event, direction, action } = draggable.dragAndDropAction.current
+      const { event, direction, action } = draggable.stateRef.current
       const bounds = getBoundsForNode(columnRef.current!)
       if (!event || !['move', 'resize'].includes(action ?? '')) {
         return;
@@ -232,7 +232,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
         return
       }
       draggable.onStart()
-      const { event, action } = draggable.dragAndDropAction.current
+      const { event } = draggable.stateRef.current
       if (event) {
         setEventState({...slotMetrics.getRange(event.start, event.end, false, true), event})
       }
@@ -241,7 +241,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
     selector.addEventListener('select', ({ detail: point }) => {
       const bounds = getBoundsForNode(columnRef.current!)
       setEventState(({ event }) => {
-        if (event && (draggable.dragAndDropAction.current.action === 'resize' || pointInColumn(bounds, point))) {
+        if (event && (draggable.stateRef.current.action === 'resize' || pointInColumn(bounds, point))) {
           setTimeout(() => {
             draggable.onEnd({start: event.start, end: event.end, resourceId})
           })

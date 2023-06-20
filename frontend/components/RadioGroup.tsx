@@ -1,7 +1,7 @@
 import { Control, useController, FieldValues, Path } from 'react-hook-form';
 import cx from 'classnames';
 
-export type RadioButtonProps = {
+export type RadioProps = {
   label: string;
   name: string;
   isSelected: boolean;
@@ -10,14 +10,14 @@ export type RadioButtonProps = {
   isDisabled?: boolean;
 };
 
-const RadioButton = ({
+const Radio = ({
   label,
   name,
   isSelected,
   onChange,
   value,
   isDisabled = false,
-}: RadioButtonProps) => {
+}: RadioProps) => {
   return (
     <label className={cx('flex items-center', { 'opacity-50': isDisabled })}>
       <div
@@ -51,27 +51,27 @@ const RadioButton = ({
   );
 };
 
-type RadioButtonGroupOption = {
+type RadioGroupOption = {
   value: string;
   label: string;
   isDisabled?: boolean;
 };
 
-type RadioButtonGroupProps<T extends FieldValues> = {
+type RadioGroupProps<T extends FieldValues> = {
   control: Control<T>;
   name: Path<T>;
   label: string;
-  options: RadioButtonGroupOption[];
+  options: RadioGroupOption[];
   isDisabled?: boolean;
 };
 
-export const RadioButtonGroup = <T extends FieldValues>({
+export const RadioGroup = <T extends FieldValues>({
   name,
         label,
   options,
   control,
   isDisabled,
-}: RadioButtonGroupProps<T>) => {
+}: RadioGroupProps<T>) => {
   const { field } = useController<T>({ name, control });
   return (
     <div className={cx('space-y-4 ml-1', { 'opacity-50': isDisabled })}>
@@ -82,7 +82,7 @@ export const RadioButtonGroup = <T extends FieldValues>({
         {label}
       </label>
       {options.map((opt) => (
-        <RadioButton
+        <Radio
           value={opt.value}
           isSelected={field.value === opt.value}
           name={name}
@@ -90,7 +90,7 @@ export const RadioButtonGroup = <T extends FieldValues>({
           key={opt.label}
           onChange={field.onChange}
           isDisabled={opt.isDisabled || isDisabled}
-        ></RadioButton>
+        ></Radio>
       ))}
     </div>
   );

@@ -6,7 +6,7 @@ import { FormError } from '@app/ui/form';
 import { SubmitButton } from '@app/ui/submit';
 import { toast } from 'react-toastify';
 import { DatePickerElement } from '@app/ui/fields/date';
-import { RadioButtonGroup } from './RadioButtonGroup';
+import { RadioGroup } from './RadioGroup';
 import { useForm } from 'react-hook-form';
 import { Card } from './Card';
 import { useMutation } from 'urql';
@@ -50,7 +50,7 @@ export const ExhibitionRequestForm = () => {
         <div className="grid md:grid-cols-2 gap-2">
           <div>
             <DatePickerElement control={control} name="date" label="Termín" />
-            <RadioButtonGroup
+            <RadioGroup
               control={control}
               label="Typ vystoupení"
               name="exhibition"

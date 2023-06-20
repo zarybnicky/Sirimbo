@@ -20,16 +20,14 @@ declare function onDropFromOutside(info: {
 }): void;
 
 export type DnDContextType = {
-  draggable: {
-    onStart: () => void;
-    onEnd: (
-      info: null | { start: Date; end: Date; resourceId?: number; isAllDay?: boolean },
-    ) => void;
-    onBeginAction: (event: CalendarEvent, action: DragAction, direction?: DragDirection) => void;
-    onDropFromOutside?: typeof onDropFromOutside;
-    dragFromOutsideItem: () => CalendarEvent | undefined;
-    dragAndDropAction: React.MutableRefObject<DnDState>;
-  };
+  onStart: () => void;
+  onEnd: (
+    info: null | { start: Date; end: Date; resourceId?: number; isAllDay?: boolean },
+  ) => void;
+  onBeginAction: (event: CalendarEvent, action: DragAction, direction?: DragDirection) => void;
+  onDropFromOutside?: typeof onDropFromOutside;
+  dragFromOutsideItem: () => CalendarEvent | undefined;
+  stateRef: React.MutableRefObject<DnDState>;
 };
 
 export const DnDContext = React.createContext<DnDContextType>(
@@ -40,39 +38,41 @@ export const DndProvider = ({ setIsDragging, children }: {
   children: React.ReactNode;
   setIsDragging: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const state = React.useRef<DnDState>({ interacting: false });
+  const stateRef = React.useRef<DnDState>({ interacting: false });
   const context = React.useMemo<DnDContextType>(() => ({
-    draggable: {
       onBeginAction(event: CalendarEvent, action, direction) {
-        state.current = { action, event, interacting: true, direction };
+        stateRef.current = { action, event, interacting: true, direction };
       },
       onStart() {
-        state.current = { ...state.current, interacting: true };
+        stateRef.current = { ...stateRef.current, interacting: true };
         setIsDragging(true);
       },
       onEnd(interactionInfo) {
-        const { event, action } = state.current;
-        state.current = { action: null, event: null, interacting: false, direction: null };
+        const { event, action } = stateRef.current;
+        stateRef.current = { action: null, event: null, interacting: false, direction: null };
         setIsDragging(false);
 
         if (!action || !event || !interactionInfo) return
         if (action === 'move') {
+          console.log('onMove', event, interactionInfo);
           // TODO: onDrop
         }
         if (action === 'resize') {
+          console.log('onResize', event, interactionInfo)
           // TODO: onResize
         }
       },
-      onDropFromOutside({ start, end, allDay, resourceId }) {
+      onDropFromOutside(details) {
         setIsDragging(false);
+        console.log('onDropFromOutside', details)
         // TODO: onDrop
       },
       dragFromOutsideItem() {
+        console.log('dragFromOutside', stateRef.current);
         // TODO: dragFromOutside
         return undefined
       },
-      dragAndDropAction: state,
-    },
+    stateRef,
   }), []);
 
   return React.createElement(DnDContext.Provider, { children, value: context });

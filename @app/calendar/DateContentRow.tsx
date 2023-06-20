@@ -41,7 +41,7 @@ const DateContentRow = ({
   const headingRowRef = React.useRef<HTMLDivElement>(null);
   const eventRowRef = React.useRef<HTMLDivElement>(null);
   const draggableRef = React.useRef<HTMLDivElement>(null);
-  const { draggable } = React.useContext(DnDContext);
+  const draggable = React.useContext(DnDContext);
   const [segment, setSegment] = React.useState<Segment | null>(null);
   const [maxRows, setMaxRows] = React.useState(5);
   const [previousDate, setPreviousDate] = React.useState(range[0]!);
@@ -63,7 +63,7 @@ const DateContentRow = ({
     const selector = new Selection(() => outerContainerRef.current, {
       validContainers: !isAllDay ? [] : ['.rbc-day-slot', '.rbc-allday-cell'],
       shouldSelect(point) {
-        const { action } = draggable.dragAndDropAction.current
+        const { action } = draggable.stateRef.current
         const bounds = getBoundsForNode(containerRef.current!)
         return action === 'move' || (action === 'resize' && (!isAllDay || pointInBox(bounds, point)));
       },
@@ -88,7 +88,7 @@ const DateContentRow = ({
     })
 
     selector.addEventListener('selecting', ({ detail: point }) => {
-      const { action, event, direction } = draggable.dragAndDropAction.current
+      const { action, event, direction } = draggable.stateRef.current
       const bounds = getBoundsForNode(containerRef.current!)
       const date = slotMetrics.getDateForSlot(getSlotAtX(bounds, point.x, slotMetrics.slots))
 

@@ -124,7 +124,7 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
   allowExplain: isDevelopment,
   exportGqlSchemaPath: isDevelopment ? path.resolve('../schema.graphql') : undefined,
 
-  async additionalGraphQLContextFromRequest(req, res) {
+  async additionalGraphQLContextFromRequest(_req, res) {
     return {
       setAuthCookie: (sessionId: string) => {
         res.cookie('PHPSESSID', sessionId, {
