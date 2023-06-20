@@ -8,14 +8,21 @@
       "frontend",
       "backend"
     ],
-    "nohoist": ["sirimbo-backend/**"]
+    "nohoist": [
+      "sirimbo-backend/**"
+    ]
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.6.5",
+    "@commitlint/config-conventional": "^17.6.5",
     "concurrently": "~8.2.0",
+    "husky": "^8.0.3",
     "prettier": "^2.8.8",
+    "standard-version": "^9.5.0",
     "syncpack": "^10.5.1"
   },
   "scripts": {
+    "postinstall": "husky install",
     "frontend": "yarn workspace sirimbo-frontend dev",
     "kometa": "yarn workspace kometa dev",
     "schema": "yarn workspace @app/graphql dev",
