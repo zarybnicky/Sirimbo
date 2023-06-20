@@ -87,8 +87,7 @@ export function getSlotMetrics({ min: start, max: end, step, timeslots }: {
     },
 
     getRange(rangeStart: Date, rangeEnd: Date, ignoreMin: boolean = false, ignoreMax: boolean = false) {
-      rangeStart = min(rangeStart, rangeEnd);
-      rangeEnd = max(rangeStart, rangeEnd);
+      ({ rangeStart, rangeEnd } = { rangeStart: min(rangeStart, rangeEnd), rangeEnd: max(rangeStart, rangeEnd) })
       if (!ignoreMin)
         rangeStart = min(end, max(start, rangeStart))
       if (!ignoreMax)
@@ -104,9 +103,9 @@ export function getSlotMetrics({ min: start, max: end, step, timeslots }: {
       return {
         top,
         height: (rangeEndMin / (step * numSlots)) * 100 - top,
-        start: positionFromDate(rangeStart),
+        start: rangeStartMin,
         startDate: rangeStart,
-        end: positionFromDate(rangeEnd),
+        end: rangeEndMin,
         endDate: rangeEnd,
       }
     },

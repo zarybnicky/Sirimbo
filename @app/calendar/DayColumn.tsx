@@ -67,15 +67,13 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
       let currentSlot = slotMetrics.closestSlotFromPoint(point, bounds)!;
       let initialSlot = state.initialSlot || currentSlot;
 
-      if (lte(initialSlot, currentSlot)) {
-        currentSlot = slotMetrics.nextSlot(currentSlot)!;
-      } else if (gt(initialSlot, currentSlot)) {
-        initialSlot = slotMetrics.nextSlot(initialSlot)!;
-      }
-      const selectRange = slotMetrics.getRange(initialSlot, currentSlot);
+      const selectRange = slotMetrics.getRange(
+        lte(initialSlot, currentSlot) ? slotMetrics.nextSlot(currentSlot) : currentSlot,
+        gt(initialSlot, currentSlot) ? slotMetrics.nextSlot(initialSlot) : initialSlot,
+      );
       return {
         ...selectRange,
-        initialSlot: state.initialSlot || currentSlot,
+        initialSlot,
         selecting: true,
         top: `${selectRange.top}%`,
         height: `${selectRange.height}%`,
@@ -106,18 +104,19 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
 
     selector.addEventListener('click', ({ detail: point }) => {
       setBackgroundState((backgroundState) => {
-        if (!isEvent(columnRef.current!, point)) {
-          const { startDate, endDate } = selectionState(point, backgroundState);
-          onSelectSlot({
-            slots: range(startDate, endDate, 'hours'),
-            start: startDate,
-            end: endDate,
-            resourceId,
-            action: 'click',
-            box: point,
-          });
+        if (isEvent(columnRef.current!, point)) {
+          return EMPTY;
         }
-        return { selecting: false };
+        const { startDate, endDate } = selectionState(point, backgroundState);
+        onSelectSlot({
+          slots: range(startDate, endDate, 'hours'),
+          start: startDate,
+          end: endDate,
+          resourceId,
+          action: 'click',
+          box: point,
+        });
+        return EMPTY
       });
     });
 
@@ -133,12 +132,12 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
           action: 'select',
           bounds,
         });
-        return { selecting: false };
+        return EMPTY
       });
     });
 
     selector.addEventListener('reset', () => {
-      setBackgroundState((state) => (state.selecting ? { selecting: false } : state));
+      setBackgroundState(EMPTY);
     });
 
     return () => selector.teardown();
@@ -190,7 +189,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
         const { start, end } = event;
         const duration = diff(start, end, 'milliseconds')
 
-        let newRange = slotMetrics.getRange(event.start, event.end);
+        let newRange = slotMetrics.getRange(start, end);
         if (action === 'move') {
           if (!pointInColumn(bounds, point)) {
             return EMPTY
