@@ -27,7 +27,7 @@ const addEventListener: <K extends keyof WindowEventMap>(type: K, listener: (ev:
 }
 
 export function getEventNodeFromPoint(node: HTMLElement, { clientX, clientY }: ClientPoint) {
-  let target = document.elementFromPoint(clientX!, clientY!)!
+  let target = document.elementFromPoint(clientX, clientY)!
   return closest(target, '.rbc-event', node) as HTMLElement
 }
 
@@ -181,7 +181,6 @@ class Selection extends TypedEventTarget<EventMap> {
       clientX: clientX,
       clientY: clientY,
     };
-    console.log('dropFromOutside', detail);
     this.dispatchTypedEvent('dropFromOutside', new CustomEvent('dropFromOutside', { detail }))
   }
 
@@ -194,14 +193,13 @@ class Selection extends TypedEventTarget<EventMap> {
       clientX: clientX,
       clientY: clientY,
     }
-    console.log('dragOverFromOutside', detail);
     this.dispatchTypedEvent('dragOverFromOutside', new CustomEvent('dragOverFromOutside', { detail }))
   }
 
   handleInitialEvent(e: MouseEvent | TouchEvent) {
     const { clientX, clientY, pageX, pageY } = getEventCoordinates(e)
-    const node = this.container()!
-    if (this.isDetached) {
+    const node = this.container()
+    if (!node || this.isDetached) {
       return
     }
     if (e.which === 3 || (e as MouseEvent).button === 2 || !contains(node, document.elementFromPoint(clientX, clientY)!)) {
@@ -253,7 +251,8 @@ class Selection extends TypedEventTarget<EventMap> {
 
     if (!this.initialEventData) return
 
-    let inRoot = !this.container || contains(this.container()!, e.target as HTMLElement)
+    const node = this.container();
+    let inRoot = !node || contains(node, e.target as HTMLElement);
 
     const { pageX, pageY } = getEventCoordinates(e as MouseEvent)
     let click = this.isClick(pageX, pageY)
@@ -261,7 +260,6 @@ class Selection extends TypedEventTarget<EventMap> {
     this.initialEventData = undefined
 
     if ((e as KeyboardEvent).key === 'Escape' || !this.isWithinValidContainer(e)) {
-      console.log('reset');
       return this.dispatchTypedEvent('reset', new CustomEvent('reset'))
     }
 
@@ -273,11 +271,8 @@ class Selection extends TypedEventTarget<EventMap> {
 
     // User drag-clicked in the Selectable area
     if (!click) {
-      console.log('select', this.selectRect)
       return this.dispatchTypedEvent('select', new CustomEvent('select', { detail: this.selectRect }))
     }
-
-    console.log('reset');
     return this.dispatchTypedEvent('reset', new CustomEvent('reset'))
   }
 
@@ -312,11 +307,9 @@ class Selection extends TypedEventTarget<EventMap> {
     this.selecting = true
 
     if (!wasSelecting) {
-      console.log('selectStart', this.initialEventData);
       this.dispatchTypedEvent('selectStart', new CustomEvent('selectStart', { detail: this.initialEventData }))
     }
     if (!this.isClick(pageX, pageY)) {
-      console.log('selecting', this.selectRect)
       this.dispatchTypedEvent('selecting', new CustomEvent('selecting', { detail: this.selectRect }))
     }
   }

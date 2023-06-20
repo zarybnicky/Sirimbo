@@ -22,6 +22,7 @@ type DateContentRowProps = {
   resourceId?: number;
   isAllDay?: boolean;
   measureRows?: boolean;
+  containerRef?: React.RefObject<HTMLDivElement>;
 };
 
 const DateContentRow = ({
@@ -33,8 +34,10 @@ const DateContentRow = ({
   resourceId,
   isAllDay,
   measureRows,
+  containerRef: maybeOuterContainerRef,
 }: DateContentRowProps) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const outerContainerRef = maybeOuterContainerRef || containerRef;
   const headingRowRef = React.useRef<HTMLDivElement>(null);
   const eventRowRef = React.useRef<HTMLDivElement>(null);
   const draggableRef = React.useRef<HTMLDivElement>(null);
@@ -44,18 +47,26 @@ const DateContentRow = ({
   const [previousDate, setPreviousDate] = React.useState(range[0]!);
   const [renderForMeasure, setRenderForMeasure] = React.useState(!!measureRows);
 
+  React.useEffect(() => {
+    if (measureRows) {
+      const update = () => setRenderForMeasure(true);
+      window.addEventListener('resize', update);
+      return () => window.removeEventListener('resize', update);
+    }
+  }, [measureRows]);
+
   const slotMetrics = React.useMemo(() => {
     return getSlotMetrics({ range, events, minRows: 1, maxRows });
   }, [range, events, maxRows]);
 
   useLayoutEffect(() => {
-    const selector = new Selection(() => containerRef.current, {
+    const selector = new Selection(() => outerContainerRef.current, {
       validContainers: !isAllDay ? [] : ['.rbc-day-slot', '.rbc-allday-cell'],
-        shouldSelect(point) {
-          const { action } = draggable.dragAndDropAction.current
-          const bounds = getBoundsForNode(containerRef.current!)
-          return action === 'move' || (action === 'resize' && (!isAllDay || pointInBox(bounds, point)));
-        },
+      shouldSelect(point) {
+        const { action } = draggable.dragAndDropAction.current
+        const bounds = getBoundsForNode(containerRef.current!)
+        return action === 'move' || (action === 'resize' && (!isAllDay || pointInBox(bounds, point)));
+      },
     })
 
     selector.addEventListener('dragOverFromOutside', ({ detail: point }) => {
@@ -82,13 +93,17 @@ const DateContentRow = ({
       const date = slotMetrics.getDateForSlot(getSlotAtX(bounds, point.x, slotMetrics.slots))
 
       setSegment((segment) => {
-        let { start, end } = event!
+        if (!event) {
+          return null;
+        }
+        console.log(action, direction, event);
+        let { start, end } = event
         if (action === 'move') {
           if (!pointInBox(bounds, point)) {
             return null;
           }
-          start = merge(date, start)
-          end = add(start, diff(start, end, 'milliseconds'), 'milliseconds')
+          start = merge(date, event.start);
+          end = add(start, diff(event.start, event.end, 'milliseconds'), 'milliseconds')
         }
         if (action === 'resize') {
           const cursorInRow = pointInBox(bounds, point)
@@ -119,13 +134,13 @@ const DateContentRow = ({
             } else {
               return null;
             }
-            start = merge(start, event!.start)
+            start = merge(start, event.start)
             if (gt(start, end)) {
-              start = event!.start
+              start = event.start
             }
           }
         }
-        const newSegment = eventSegments({ ...event!, end, start, __isPreview: true }, slotMetrics.range)
+        const newSegment = eventSegments({ ...event, end, start, __isPreview: true }, slotMetrics.range)
         if (segment && segment.span === newSegment.span && segment.left === newSegment.left && segment.right === newSegment.right) {
           return segment;
         }
@@ -182,6 +197,7 @@ const DateContentRow = ({
       const eventSpace =
         (containerRef.current ? getHeight(containerRef.current) : 0) - headingHeight;
       setMaxRows(Math.max(Math.floor(eventSpace / eventHeight), 1));
+      setRenderForMeasure(false);
     }
   }, [renderForMeasure]);
 
@@ -191,7 +207,7 @@ const DateContentRow = ({
         <BackgroundCells
           date={date}
           range={range}
-          rowRef={containerRef}
+          rowRef={outerContainerRef}
           resourceId={resourceId}
         />
       )}

@@ -30,6 +30,7 @@ export const Calendar = () => {
   const ViewComponent = Views[view];
 
   const range = React.useMemo(() => Views[view].range(date), [view, date]);;
+
   const backgroundEvents: Event[] = React.useMemo(() => [], []);
 
   const [{ data: schedules }] = useQuery({
@@ -38,6 +39,7 @@ export const Calendar = () => {
       startDate: startOf(range[0]!, 'day').toISOString(),
       endDate: endOf(range[range.length - 1]!, 'day').toISOString(),
     },
+    requestPolicy: 'cache-and-network',
   });
 
   const resources = React.useMemo(() => {

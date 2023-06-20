@@ -43,7 +43,7 @@ const EventCell = (props: EventCellProps) => {
         onClick={() => onSelectEvent(event)}
       >
         <div className="rbc-event-content" title={event.title?.toString()}>
-          {event.title}
+          {event.title || '-'}
         </div>
       </div>
     </EventWrapper>

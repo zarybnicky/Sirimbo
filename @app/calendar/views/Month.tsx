@@ -9,10 +9,11 @@ import { ViewClass } from '../types'
 
 const MonthView: ViewClass = ({ date: currentDate, range: days, events }) => {
   let weeks = chunk(days, 7);
+  const containerRef = React.useRef<HTMLDivElement>(null);
   const { onDrillDown } = useContext(NavigationContext)
 
   return (
-    <div className="rbc-month-view" role="table" aria-label="Month View">
+    <div className="rbc-month-view" role="table" aria-label="Month View" ref={containerRef}>
       <div className="rbc-row rbc-month-header" role="row">
         {range(weeks[0]![0]!, weeks[0]![weeks[0]!.length - 1]!, 'day').map((day, idx) => (
           <div key={'header_' + idx} className="rbc-header">
@@ -29,6 +30,7 @@ const MonthView: ViewClass = ({ date: currentDate, range: days, events }) => {
           key={weekIdx}
           range={week}
           measureRows
+          containerRef={containerRef}
           events={events.filter((e) => inEventRange(e, {start: week[0]!, end: week[week.length - 1]!})).sort(sortEvents)}
           renderHeader={({ date, className, ...props }) => (
             <div

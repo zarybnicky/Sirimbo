@@ -1,6 +1,6 @@
 import type { ExecutionResult, TypedDocumentNode } from 'urql';
 import { print } from '@0no-co/graphql.web';
-import type { GraphCacheConfig } from '@app/graphql';
+import type { GraphCacheConfig, RozpisConnection } from '@app/graphql';
 import { CurrentUserDocument, CurrentUserQuery } from '@app/graphql/CurrentUser';
 import { relayPagination } from '@urql/exchange-graphcache/extras';
 import { makeDefaultStorage } from '@urql/exchange-graphcache/default-storage';
@@ -97,6 +97,16 @@ const cacheConfig: Partial<GraphCacheConfig> = {
   resolvers: {
     Query: {
       upozornenis: relayPagination(),
+      schedulesForRange(_parent, args, cache, _info) {
+        const startDate = new Date(args.startDate!);
+        const endDate = new Date(args.endDate!);
+        const conn = cache.resolve('Query', 'rozpi') as RozpisConnection;
+        return {
+          __typename: 'RozpisConnection',
+          edges: conn.edges.filter(x => new Date(x.node.rDatum) >= startDate && new Date(x.node.rDatum) <= endDate),
+          nodes: conn.nodes.filter(x => new Date(x.rDatum) >= startDate && new Date(x.rDatum) <= endDate),
+        }
+      },
     },
   },
   updates: {
@@ -137,9 +147,8 @@ const cacheConfig: Partial<GraphCacheConfig> = {
         cache.invalidate({ __typename: 'Event', id: args.input.eventId});
       },
 
-      updateUpozorneni(result, args, cache) {
-        console.log(cache.inspectFields('Query'));
-        const fields = cache
+      updateUpozorneni(_result, _args, cache) {
+        cache
           .inspectFields('Query')
           .filter(field => ['myAnnouncements', 'stickyAnnouncements'].includes(field.fieldName))
           .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));

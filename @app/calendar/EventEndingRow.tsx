@@ -58,6 +58,7 @@ const EventEndingRow: React.FC<{
       )
       lastEnd = current = right + 1
     } else {
+      const closureCurrent = current;
       if (gap) {
         row.push(
           <div key={`${key}_gap`} className="rbc-row-segment" style={{ flexBasis: `${(Math.abs(gap) / slots) * 100}%` }} />
@@ -74,7 +75,7 @@ const EventEndingRow: React.FC<{
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
-                onDrillDown(slotMetrics.getDateForSlot(current), View.DAY)
+                onDrillDown(slotMetrics.getDateForSlot(closureCurrent - 1), View.DAY)
               }}
             >
               {`+${count} dalších`}

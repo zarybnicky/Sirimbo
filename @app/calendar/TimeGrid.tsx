@@ -24,7 +24,6 @@ const TimeGrid = ({
   resources,
 }: TimeGridProps) => {
   const today = new Date();
-  const dateRange = { start: range[0]!, end: range[range.length - 1]! };
   const { min, max, focusedTime, onDrillDown } = React.useContext(NavigationContext);
 
   const scrollRef = React.useRef<HTMLDivElement>(null);
@@ -51,34 +50,40 @@ const TimeGrid = ({
   }, [focusedTime, min, max]);
 
   const showMultiDayTimes = true;
-  let allDayEvents: Event[] = [];
-  let rangeEvents: Event[] = [];
-  events.forEach((event) => {
-    if (inEventRange(event, dateRange)) {
-      if (
-        event.allDay ||
-        (isJustDate(event.start) && isJustDate(event.end)) ||
-        (!showMultiDayTimes && !eq(event.start, event.end, 'day'))
-      ) {
-        allDayEvents.push(event);
-      } else {
-        rangeEvents.push(event);
+  const { grouper, groupedEvents, groupedAllDayEvents, groupedBackgroundEvents } = React.useMemo(() => {
+    const dateRange = { start: range[0]!, end: range[range.length - 1]! };
+    const allDayEvents: Event[] = [];
+    const rangeEvents: Event[] = [];
+    events.forEach((event) => {
+      if (inEventRange(event, dateRange)) {
+        if (
+          event.allDay ||
+          (isJustDate(event.start) && isJustDate(event.end)) ||
+          (!showMultiDayTimes && !eq(event.start, event.end, 'day'))
+        ) {
+          allDayEvents.push(event);
+        } else {
+          rangeEvents.push(event);
+        }
       }
-    }
-  });
+    });
 
-  let rangeBackgroundEvents: Event[] = [];
-  backgroundEvents.forEach((event) => {
-    if (inEventRange(event, dateRange)) {
-      rangeBackgroundEvents.push(event);
-    }
-  });
+    const rangeBackgroundEvents: Event[] = [];
+    backgroundEvents.forEach((event) => {
+      if (inEventRange(event, dateRange)) {
+        rangeBackgroundEvents.push(event);
+      }
+    });
 
-  allDayEvents.sort(sortEvents);
-  const grouper = makeGrouper(resources);
-  const groupedEvents = grouper.groupEvents(rangeEvents);
-  const groupedAllDayEvents = grouper.groupEvents(allDayEvents);
-  const groupedBackgroundEvents = grouper.groupEvents(rangeBackgroundEvents);
+    allDayEvents.sort(sortEvents);
+    const grouper = makeGrouper(resources);
+    return {
+      grouper,
+      groupedEvents: grouper.groupEvents(rangeEvents),
+      groupedAllDayEvents: grouper.groupEvents(allDayEvents),
+      groupedBackgroundEvents: grouper.groupEvents(rangeBackgroundEvents),
+    };
+  }, [range, events, backgroundEvents]);
 
   return (
     <div
@@ -134,7 +139,7 @@ const TimeGrid = ({
           }
         }}
       >
-        <TimeGutter className="rbc-time-gutter" gutterRef={gutterRef} date={dateRange.start} />
+        <TimeGutter className="rbc-time-gutter" gutterRef={gutterRef} date={range[0]!} />
 
         {grouper.map(([resource, id], i) =>
           range.map((date, jj) => (

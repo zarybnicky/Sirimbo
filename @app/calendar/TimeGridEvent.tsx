@@ -71,11 +71,11 @@ function TimeGridEvent({
           'rbc-event-continues-later': continuesAfter,
         })}
       >
+        <div className="rbc-event-content">
+          {event.title || '-'}
+        </div>
         <div className="rbc-event-label">
           {label}
-        </div>
-        <div className="rbc-event-content">
-          {event.title}
         </div>
       </div>
     </EventWrapper>

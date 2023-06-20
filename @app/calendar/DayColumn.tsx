@@ -264,7 +264,15 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
     return () => selector.teardown()
   }, [])
 
-  const minimumStartDifference = Math.ceil((step * timeslots) / 2);
+  const backgroundEventsInRange = React.useMemo(() => {
+    const minimumStartDifference = Math.ceil((step * timeslots) / 2);
+    return getStyledEventsOverlap(backgroundEvents, slotMetrics, minimumStartDifference);
+  }, [step, timeslots, backgroundEvents, slotMetrics]);
+
+  const eventsInRange = React.useMemo(() => {
+    const minimumStartDifference = Math.ceil((step * timeslots) / 2);
+    return getStyledEventsOverlap(events, slotMetrics, minimumStartDifference);
+  }, [step, timeslots, backgroundEvents, slotMetrics]);
 
   return (
     <div
@@ -284,11 +292,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
       ))}
 
       <div className="rbc-events-container">
-        {getStyledEventsOverlap(
-          backgroundEvents,
-          slotMetrics,
-          minimumStartDifference,
-        ).map(({ event, style }) => (
+        {backgroundEventsInRange.map(({ event, style }) => (
           <TimeGridEvent
             isBackgroundEvent
             key={event.id}
@@ -298,17 +302,15 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
             slotMetrics={slotMetrics}
           />
         ))}
-        {getStyledEventsOverlap(events, slotMetrics, minimumStartDifference).map(
-          ({ event, style }) => (
-            <TimeGridEvent
-              key={event.id}
-              style={style}
-              event={event}
-              resourceId={resourceId}
+        {eventsInRange.map(({ event, style }) => (
+          <TimeGridEvent
+            key={event.id}
+            style={style}
+            event={event}
+            resourceId={resourceId}
               slotMetrics={slotMetrics}
-            />
-          ),
-        )}
+          />
+        ))}
         {eventState.event && (
           <TimeGridEvent
             event={eventState.event}
