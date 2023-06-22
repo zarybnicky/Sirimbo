@@ -13,6 +13,7 @@ const s3client = new S3Client({
   forcePathStyle: true,
 });
 const bucketName = process.env.S3_BUCKET!
+const s3publicEndpoint = process.env.S3_PUBLIC_ENDPOINT || process.env.S3_ENDPOINT;
 
 async function loadUserFromSession(req: express.Request): Promise<{ [k: string]: any }> {
   const settings = {
@@ -131,7 +132,7 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
         Attachment: {
           uploadUrl: ({ objectName }) => getSignedUrl(s3client, new PutObjectCommand({ Key: objectName, Bucket: bucketName })),
           downloadUrl: ({ objectName }) => getSignedUrl(s3client, new GetObjectCommand({ Key: objectName, Bucket: bucketName })),
-          publicUrl: ({ objectName }) => `${process.env.S3_ENDPOINT}/${process.env.S3_BUCKET}/${objectName}`,
+          publicUrl: ({ objectName }) => `${s3publicEndpoint}/${bucketName}/${objectName}`,
         },
       },
     })),
