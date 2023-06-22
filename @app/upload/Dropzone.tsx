@@ -80,7 +80,7 @@ export const Dropzone = ({}: {}) => {
       <ul>
         {(data.data?.attachments?.nodes || []).map(x => (
           <li>
-            <a href={x.publicUrl} key={x.objectName}>{x.objectName}</a>
+            <a target="_blank" href={x.publicUrl} key={x.objectName}>{x.objectName}</a>
           </li>
         ))}
       </ul>
