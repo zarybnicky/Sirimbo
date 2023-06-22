@@ -1,8 +1,10 @@
 import React from 'react';
 import { useDropzone } from 'react-dropzone';
 import { rgbaToThumbHash, thumbHashToDataURL } from 'thumbhash';
-import { AttachmentsDocument, CreateAttachmentDocument } from '@app/graphql/Attachment';
+import { AttachmentDirectoriesDocument, AttachmentsDocument, CreateAttachmentDocument } from '@app/graphql/Attachment';
 import { useMutation, useQuery } from 'urql';
+import { TextField } from '@app/ui/fields/text';
+import { cn } from '@app/ui/cn';
 
 type Image = {
   file: File;
@@ -10,11 +12,14 @@ type Image = {
   objectURL: string;
   width: number;
   height: number;
+  status: 'waiting' | 'uploading' | 'error' | 'done';
 };
 
 export const Dropzone = ({}: {}) => {
-  const [files, setFiles] = React.useState<Image[]>([]);
-  const { getRootProps, getInputProps } = useDropzone({
+  const [newFiles, setNewFiles] = React.useState<Image[]>([]);
+
+  const { getRootProps, getInputProps, open } = useDropzone({
+    noClick: true,
     accept: {
       'image/png': ['.png'],
       'image/jpg': ['.jpg'],
@@ -41,61 +46,82 @@ export const Dropzone = ({}: {}) => {
         const binaryThumbHash = rgbaToThumbHash(pixels.width, pixels.height, pixels.data)
         const thumbhash = btoa(String.fromCharCode(...binaryThumbHash))
 
-        setFiles(xs => xs.concat({ file, thumbhash, objectURL, width, height }))
+        setNewFiles(xs => xs.concat({ file, thumbhash, objectURL, width, height, status: 'waiting' }))
       });
     },
   });
 
-  const [data] = useQuery({ query: AttachmentsDocument });
+  const [directory, setDirectory] = React.useState('');
+  const [{ data: existingFiles }] = useQuery({ query: AttachmentsDocument, variables: { directory } });
+  const [{ data: directories }] = useQuery({ query: AttachmentDirectoriesDocument });
   const [_1, mutate] = useMutation(CreateAttachmentDocument);
-  const confirm = React.useCallback((e: React.MouseEvent) => {
+
+  const confirm = React.useCallback(async (e: React.MouseEvent) => {
     e.preventDefault();
-    files.forEach(async (file) => {
-      const objectName =  `${+new Date()}-${file.file.name}`;
+    setNewFiles(xs => xs.map(x => ({ ...x, status: 'uploading' })));
+
+    await Promise.all(newFiles.map(async (file) => {
+      const objectName = [directory, `${+new Date()}-${file.file.name}`].filter(Boolean).join('/');
       const result = await mutate({
         input: {
           attachment: { objectName },
         },
       });
       const { uploadUrl } = result.data?.createAttachment?.attachment || {};
-      if (!uploadUrl) {
+      if (uploadUrl) {
+        await fetch(uploadUrl, {
+          method: 'PUT',
+          body: file.file,
+        });
+        setNewFiles(xs => xs.map(x => x.file === file.file ? ({ ...file, status: 'done' }) : x))
+      } else {
         console.log(result);
-        return;
+        setNewFiles(xs => xs.map(x => x.file === file.file ? ({ ...file, status: 'error' }) : x))
       }
-      const uploadResult = await fetch(uploadUrl, {
-        method: 'PUT',
-        body: file.file,
+    }));
+    setTimeout(() => {
+      setNewFiles(newFiles => {
+        newFiles.forEach(file => URL.revokeObjectURL(file.objectURL));
+        return []
       });
-      console.log(uploadResult);
-    });
-  }, [files, mutate]);
+    }, 2000);
+  }, [newFiles, mutate]);
 
   React.useEffect(() => {
-    return () => files.forEach(file => URL.revokeObjectURL(file.objectURL));
+    return () => newFiles.forEach(file => URL.revokeObjectURL(file.objectURL));
   }, []);
 
   return (
-    <section className="container prose">
-      Existing:
-      <ul>
-        {(data.data?.attachments?.nodes || []).map(x => (
-          <li>
-            <a target="_blank" href={x.publicUrl} key={x.objectName}>{x.objectName}</a>
-          </li>
-        ))}
-      </ul>
+    <section className="container prose prose-accent">
+    {(directories?.attachmentDirectories?.nodes || []).map(x => (
+      <button key={x} className={cn('button', directory === x ? 'button-accent' : 'button-outline')} onClick={() => setDirectory(x || '')}>
+        {x}
+      </button>
+    ))}
 
-      <button type="button" onClick={confirm}>Nahrát</button>
+      <div className="flex gap-2 items-stretch">
+        <TextField className="grow" placeholder="Složka" value={directory} onChange={e => setDirectory(e.currentTarget.value)} />
+        <button type="button" className="button button-accent" onClick={confirm} disabled={!newFiles.length}>Nahrát</button>
+      </div>
+
       <div {...getRootProps({className: 'dropzone'})}>
         <input {...getInputProps()} />
-        <p>Drag 'n' drop some files here, or click to select files</p>
-      </div>
-        {files.map((image) => (
-          <div key={image.file.name}>
+
+        <button className="button button-accent" onClick={open}>Přidat soubory</button>
+
+        {newFiles.map((image) => (
+          <div className="flex" key={image.file.name}>
             <img src={image.objectURL} />
             <img width={image.width} height={image.height} src={thumbHashToDataURL(new Uint8Array(atob(image.thumbhash).split('').map(x => x.charCodeAt(0))))} />
           </div>
         ))}
+
+        {(existingFiles?.attachments?.nodes || []).map(x => (
+          <a className="block" target="_blank" href={x.publicUrl} key={x.objectName}>
+            {x.objectName}
+          </a>
+        ))}
+      </div>
     </section>
   );
 };

@@ -151,6 +151,12 @@ const cacheConfig: Partial<GraphCacheConfig> = {
       cancelParticipation(_result, args, cache, _info) {
         cache.invalidate({ __typename: 'Event', id: args.input.eventId});
       },
+      createAttachment(_result, _args, cache, _info) {
+        cache
+          .inspectFields('Query')
+          .filter(field => ['attachments'].includes(field.fieldName))
+          .forEach(field => cache.invalidate('Query', field.fieldName, field.arguments));
+      },
 
       updateUpozorneni(_result, _args, cache) {
         cache

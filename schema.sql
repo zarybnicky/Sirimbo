@@ -389,6 +389,101 @@ $$;
 
 
 --
+-- Name: upozorneni; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.upozorneni (
+    up_id bigint NOT NULL,
+    up_kdo bigint,
+    up_nadpis text NOT NULL,
+    up_text text NOT NULL,
+    up_barvy bigint DEFAULT '0'::bigint NOT NULL,
+    up_lock boolean DEFAULT false NOT NULL,
+    up_timestamp timestamp with time zone,
+    up_timestamp_add timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    scheduled_since timestamp with time zone,
+    scheduled_until timestamp with time zone,
+    is_visible boolean DEFAULT true,
+    id bigint GENERATED ALWAYS AS (up_id) STORED,
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    sticky boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: archived_announcements(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.archived_announcements() RETURNS SETOF public.upozorneni
+    LANGUAGE sql STABLE
+    AS $$
+  select upozorneni.* from upozorneni
+  where is_visible = false
+    or (scheduled_until is null or scheduled_until >= now())
+  order by up_timestamp_add desc;
+$$;
+
+
+--
+-- Name: attachment_directories(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.attachment_directories() RETURNS SETOF text
+    LANGUAGE sql STABLE
+    AS $_$
+  SELECT distinct regexp_replace(object_name, '/[^/]*$', '') from attachment;
+$_$;
+
+
+--
+-- Name: FUNCTION attachment_directories(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.attachment_directories() IS '@sortable';
+
+
+--
+-- Name: current_user_id(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.current_user_id() RETURNS bigint
+    LANGUAGE sql STABLE
+    AS $$
+  SELECT current_setting('jwt.claims.user_id', true)::bigint;
+$$;
+
+
+--
+-- Name: attachment; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.attachment (
+    object_name text NOT NULL,
+    preview_object_name text,
+    uploaded_by bigint DEFAULT public.current_user_id(),
+    uploaded_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: attachment_directory(public.attachment); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.attachment_directory(attachment public.attachment) RETURNS text
+    LANGUAGE sql STABLE
+    AS $_$
+  SELECT regexp_replace(attachment.object_name, '/[^/]*$', '');
+$_$;
+
+
+--
+-- Name: FUNCTION attachment_directory(attachment public.attachment); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.attachment_directory(attachment public.attachment) IS '@filterable';
+
+
+--
 -- Name: rozpis_item; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -708,17 +803,6 @@ $$;
 
 
 --
--- Name: current_user_id(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.current_user_id() RETURNS bigint
-    LANGUAGE sql STABLE
-    AS $$
-  SELECT current_setting('jwt.claims.user_id', true)::bigint;
-$$;
-
-
---
 -- Name: event_remaining_spots(public.event); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -908,28 +992,6 @@ $$;
 
 
 --
--- Name: upozorneni; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.upozorneni (
-    up_id bigint NOT NULL,
-    up_kdo bigint,
-    up_nadpis text NOT NULL,
-    up_text text NOT NULL,
-    up_barvy bigint DEFAULT '0'::bigint NOT NULL,
-    up_lock boolean DEFAULT false NOT NULL,
-    up_timestamp timestamp with time zone,
-    up_timestamp_add timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    scheduled_since timestamp with time zone,
-    scheduled_until timestamp with time zone,
-    is_visible boolean DEFAULT true,
-    id bigint GENERATED ALWAYS AS (up_id) STORED,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
-    sticky boolean DEFAULT false NOT NULL
-);
-
-
---
 -- Name: my_announcements(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -937,7 +999,7 @@ CREATE FUNCTION public.my_announcements() RETURNS SETOF public.upozorneni
     LANGUAGE sql STABLE
     AS $$
   select upozorneni.* from upozorneni
-  where is_visible = true
+  where is_visible = true and sticky = false
     and (scheduled_since is null or scheduled_since <= now())
     and (scheduled_until is null or scheduled_until >= now())
   order by up_timestamp_add desc;
@@ -1278,6 +1340,21 @@ CREATE FUNCTION public.schedules_for_range(start_date date, end_date date) RETUR
   where r_visible=true
   and r_datum >= start_date and r_datum <= end_date
   order by r_datum asc;
+$$;
+
+
+--
+-- Name: sticky_announcements(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.sticky_announcements() RETURNS SETOF public.upozorneni
+    LANGUAGE sql STABLE
+    AS $$
+  select upozorneni.* from upozorneni
+  where is_visible = true and sticky = true
+    and (scheduled_since is null or scheduled_since <= now())
+    and (scheduled_until is null or scheduled_until >= now())
+  order by up_timestamp_add desc;
 $$;
 
 
@@ -1790,18 +1867,6 @@ CREATE SEQUENCE public.aktuality_at_id_seq
 --
 
 ALTER SEQUENCE public.aktuality_at_id_seq OWNED BY public.aktuality.at_id;
-
-
---
--- Name: attachment; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.attachment (
-    object_name text NOT NULL,
-    preview_object_name text,
-    uploaded_by bigint,
-    uploaded_at timestamp with time zone DEFAULT now() NOT NULL
-);
 
 
 --
@@ -5458,6 +5523,48 @@ GRANT ALL ON FUNCTION public.akce_signed_up(a public.event) TO anonymous;
 
 
 --
+-- Name: TABLE upozorneni; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.upozorneni TO anonymous;
+
+
+--
+-- Name: FUNCTION archived_announcements(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.archived_announcements() TO anonymous;
+
+
+--
+-- Name: FUNCTION attachment_directories(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.attachment_directories() TO anonymous;
+
+
+--
+-- Name: FUNCTION current_user_id(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.current_user_id() TO anonymous;
+
+
+--
+-- Name: TABLE attachment; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.attachment TO anonymous;
+
+
+--
+-- Name: FUNCTION attachment_directory(attachment public.attachment); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.attachment_directory(attachment public.attachment) TO anonymous;
+
+
+--
 -- Name: TABLE rozpis_item; Type: ACL; Schema: public; Owner: -
 --
 
@@ -5539,13 +5646,6 @@ GRANT ALL ON TABLE public.permissions TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.current_session_id() TO anonymous;
-
-
---
--- Name: FUNCTION current_user_id(); Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON FUNCTION public.current_user_id() TO anonymous;
 
 
 --
@@ -5752,17 +5852,11 @@ GRANT ALL ON FUNCTION public.logout() TO anonymous;
 
 
 --
--- Name: TABLE upozorneni; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.upozorneni TO anonymous;
-
-
---
 -- Name: FUNCTION my_announcements(); Type: ACL; Schema: public; Owner: -
 --
 
 GRANT ALL ON FUNCTION public.my_announcements() TO member;
+GRANT ALL ON FUNCTION public.my_announcements() TO anonymous;
 
 
 --
@@ -5882,6 +5976,13 @@ GRANT ALL ON TABLE public.rozpis TO anonymous;
 --
 
 GRANT ALL ON FUNCTION public.schedules_for_range(start_date date, end_date date) TO member;
+
+
+--
+-- Name: FUNCTION sticky_announcements(); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.sticky_announcements() TO anonymous;
 
 
 --
@@ -6022,13 +6123,6 @@ GRANT ALL ON TABLE public.aktuality TO anonymous;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.aktuality_at_id_seq TO anonymous;
-
-
---
--- Name: TABLE attachment; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE public.attachment TO anonymous;
 
 
 --

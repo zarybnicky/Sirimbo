@@ -310,6 +310,7 @@ input AktualityPatch {
 }
 
 type Attachment {
+  directory: String
   downloadUrl: String!
 
   """Reads and enables pagination through a set of `LocationAttachment`."""
@@ -414,11 +415,37 @@ A condition to be used against `Attachment` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input AttachmentCondition {
+  """Checks for equality with the object’s `directory` field."""
+  directory: String
+
   """Checks for equality with the object’s `objectName` field."""
   objectName: String
 
   """Checks for equality with the object’s `uploadedBy` field."""
   uploadedBy: BigInt
+}
+
+"""A connection to a list of `String` values."""
+type AttachmentDirectoriesConnection {
+  """
+  A list of edges which contains the `String` and cursor to aid in pagination.
+  """
+  edges: [AttachmentDirectoryEdge!]!
+
+  """A list of `String` objects."""
+  nodes: [String]!
+
+  """The count of *all* `String` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `String` edge in the connection."""
+type AttachmentDirectoryEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `String` at the end of the edge."""
+  node: String
 }
 
 """An input for mutations affecting `Attachment`"""
@@ -9068,6 +9095,25 @@ type Query {
     offset: Int
   ): UpozornenisConnection
   attachment(objectName: String!): Attachment
+  attachmentDirectories(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+  ): AttachmentDirectoriesConnection
 
   """Reads and enables pagination through a set of `Attachment`."""
   attachments(

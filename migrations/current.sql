@@ -97,6 +97,7 @@ create index on lesson_trainer (trainer_id);
 create or replace function event_is_future(event event) returns boolean AS $$
   SELECT event.until >= now();
 $$ language SQL STABLE;
+grant execute on function event_is_future(event) to anonymous;
 comment on function event_is_future(event) is E'@filterable';
 
 
@@ -110,32 +111,3 @@ begin
 
   end if;
 end $$;
-
-
-create or replace function my_announcements() returns setof upozorneni as $$
-  select upozorneni.* from upozorneni
-  where is_visible = true and sticky = false
-    and (scheduled_since is null or scheduled_since <= now())
-    and (scheduled_until is null or scheduled_until >= now())
-  order by up_timestamp_add desc;
-$$ language sql stable;
-grant execute on function my_announcements to anonymous;
-
-create or replace function sticky_announcements() returns setof upozorneni as $$
-  select upozorneni.* from upozorneni
-  where is_visible = true and sticky = true
-    and (scheduled_since is null or scheduled_since <= now())
-    and (scheduled_until is null or scheduled_until >= now())
-  order by up_timestamp_add desc;
-$$ language sql stable;
-grant execute on function sticky_announcements to anonymous;
-
-create or replace function archived_announcements() returns setof upozorneni as $$
-  select upozorneni.* from upozorneni
-  where is_visible = false
-    or (scheduled_until is null or scheduled_until >= now())
-  order by up_timestamp_add desc;
-$$ language sql stable;
-grant execute on function archived_announcements to anonymous;
-
-alter table attachment alter column uploaded_by set default current_user_id();

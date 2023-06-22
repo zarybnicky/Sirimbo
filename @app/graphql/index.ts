@@ -323,6 +323,7 @@ export type AktualityPatch = {
 
 export type Attachment = {
   __typename?: 'Attachment';
+  directory: Maybe<Scalars['String']['output']>;
   downloadUrl: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `LocationAttachment`. */
   locationAttachmentsByObjectName: LocationAttachmentsConnection;
@@ -378,10 +379,32 @@ export type AttachmentTenantAttachmentsByObjectNameArgs = {
  * for equality and combined with a logical ‘and.’
  */
 export type AttachmentCondition = {
+  /** Checks for equality with the object’s `directory` field. */
+  directory?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `objectName` field. */
   objectName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `uploadedBy` field. */
   uploadedBy?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
+/** A connection to a list of `String` values. */
+export type AttachmentDirectoriesConnection = {
+  __typename?: 'AttachmentDirectoriesConnection';
+  /** A list of edges which contains the `String` and cursor to aid in pagination. */
+  edges: Array<AttachmentDirectoryEdge>;
+  /** A list of `String` objects. */
+  nodes: Array<Maybe<Scalars['String']['output']>>;
+  /** The count of *all* `String` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `String` edge in the connection. */
+export type AttachmentDirectoryEdge = {
+  __typename?: 'AttachmentDirectoryEdge';
+  /** A cursor for use in pagination. */
+  cursor: Maybe<Scalars['Cursor']['output']>;
+  /** The `String` at the end of the edge. */
+  node: Maybe<Scalars['String']['output']>;
 };
 
 /** An input for mutations affecting `Attachment` */
@@ -7901,6 +7924,7 @@ export type Query = {
   /** Reads and enables pagination through a set of `Upozorneni`. */
   archivedAnnouncements: Maybe<UpozornenisConnection>;
   attachment: Maybe<Attachment>;
+  attachmentDirectories: Maybe<AttachmentDirectoriesConnection>;
   /** Reads and enables pagination through a set of `Attachment`. */
   attachments: Maybe<AttachmentsConnection>;
   attendeeCouple: Maybe<AttendeeCouple>;
@@ -8132,6 +8156,16 @@ export type QueryArchivedAnnouncementsArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryAttachmentArgs = {
   objectName: Scalars['String']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAttachmentDirectoriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -12396,6 +12430,8 @@ export type GraphCacheKeysConfig = {
   AktualitiesEdge?: (data: WithTypename<AktualitiesEdge>) => null | string,
   Aktuality?: (data: WithTypename<Aktuality>) => null | string,
   Attachment?: (data: WithTypename<Attachment>) => null | string,
+  AttachmentDirectoriesConnection?: (data: WithTypename<AttachmentDirectoriesConnection>) => null | string,
+  AttachmentDirectoryEdge?: (data: WithTypename<AttachmentDirectoryEdge>) => null | string,
   AttachmentsConnection?: (data: WithTypename<AttachmentsConnection>) => null | string,
   AttachmentsEdge?: (data: WithTypename<AttachmentsEdge>) => null | string,
   AttendeeCouple?: (data: WithTypename<AttendeeCouple>) => null | string,
@@ -12679,6 +12715,7 @@ export type GraphCacheResolvers = {
     aktuality?: GraphCacheResolver<WithTypename<Query>, QueryAktualityArgs, WithTypename<Aktuality> | string>,
     archivedAnnouncements?: GraphCacheResolver<WithTypename<Query>, QueryArchivedAnnouncementsArgs, WithTypename<UpozornenisConnection> | string>,
     attachment?: GraphCacheResolver<WithTypename<Query>, QueryAttachmentArgs, WithTypename<Attachment> | string>,
+    attachmentDirectories?: GraphCacheResolver<WithTypename<Query>, QueryAttachmentDirectoriesArgs, WithTypename<AttachmentDirectoriesConnection> | string>,
     attachments?: GraphCacheResolver<WithTypename<Query>, QueryAttachmentsArgs, WithTypename<AttachmentsConnection> | string>,
     attendeeCouple?: GraphCacheResolver<WithTypename<Query>, QueryAttendeeCoupleArgs, WithTypename<AttendeeCouple> | string>,
     attendeeCouples?: GraphCacheResolver<WithTypename<Query>, QueryAttendeeCouplesArgs, WithTypename<AttendeeCouplesConnection> | string>,
@@ -12861,6 +12898,7 @@ export type GraphCacheResolvers = {
     userByAtKdo?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, WithTypename<User> | string>
   },
   Attachment?: {
+    directory?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
     downloadUrl?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
     locationAttachmentsByObjectName?: GraphCacheResolver<WithTypename<Attachment>, AttachmentLocationAttachmentsByObjectNameArgs, WithTypename<LocationAttachmentsConnection> | string>,
     objectName?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
@@ -12872,6 +12910,15 @@ export type GraphCacheResolvers = {
     uploadedAt?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['Datetime'] | string>,
     uploadedBy?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['BigInt'] | string>,
     userByUploadedBy?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, WithTypename<User> | string>
+  },
+  AttachmentDirectoriesConnection?: {
+    edges?: GraphCacheResolver<WithTypename<AttachmentDirectoriesConnection>, Record<string, never>, Array<WithTypename<AttachmentDirectoryEdge> | string>>,
+    nodes?: GraphCacheResolver<WithTypename<AttachmentDirectoriesConnection>, Record<string, never>, Array<Scalars['String'] | string>>,
+    totalCount?: GraphCacheResolver<WithTypename<AttachmentDirectoriesConnection>, Record<string, never>, Scalars['Int'] | string>
+  },
+  AttachmentDirectoryEdge?: {
+    cursor?: GraphCacheResolver<WithTypename<AttachmentDirectoryEdge>, Record<string, never>, Scalars['Cursor'] | string>,
+    node?: GraphCacheResolver<WithTypename<AttachmentDirectoryEdge>, Record<string, never>, Scalars['String'] | string>
   },
   AttachmentsConnection?: {
     edges?: GraphCacheResolver<WithTypename<AttachmentsConnection>, Record<string, never>, Array<WithTypename<AttachmentsEdge> | string>>,

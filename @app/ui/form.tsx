@@ -6,6 +6,7 @@ export const FieldLabel = ({
   children,
   ...props
 }: React.HTMLAttributes<HTMLLabelElement> & { htmlFor?: string | Path<any> }) => {
+  if (!children) return null;
   return (
     <label className={cn('block text-sm text-neutral-11 mt-1', className)} {...props}>
       {children}

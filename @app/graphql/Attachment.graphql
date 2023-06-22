@@ -7,8 +7,8 @@ mutation CreateAttachment($input: CreateAttachmentInput!) {
   }
 }
 
-query Attachments {
-  attachments {
+query Attachments($directory: String) {
+  attachments(condition: { directory: $directory }) {
     nodes {
       objectName
       publicUrl
@@ -20,5 +20,11 @@ query Attachment($objectName: String!) {
   attachment(objectName: $objectName) {
     objectName
     publicUrl
+  }
+}
+
+query AttachmentDirectories {
+  attachmentDirectories {
+    nodes
   }
 }

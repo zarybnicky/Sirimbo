@@ -5,7 +5,6 @@ import { Calendar } from '@app/calendar/Calendar';
 
 function DnDResource() {
   const { user } = useAuth();
-
   if (!user) {
     return <LoginForm />;
   }
