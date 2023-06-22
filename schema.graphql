@@ -310,6 +310,8 @@ input AktualityPatch {
 }
 
 type Attachment {
+  downloadUrl: String!
+
   """Reads and enables pagination through a set of `LocationAttachment`."""
   locationAttachmentsByObjectName(
     """Read all values in the set after (below) this cursor."""
@@ -398,6 +400,7 @@ type Attachment {
     """The method to use when ordering `TenantAttachment`."""
     orderBy: [TenantAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TenantAttachmentsConnection!
+  uploadUrl: String!
   uploadedAt: Datetime!
   uploadedBy: BigInt
 
@@ -6562,7 +6565,6 @@ type Mutation {
     """
     input: DeleteUserInput!
   ): DeleteUserPayload
-  downloadFile(id: Int!): String!
   fixUnpairedCouples(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -6933,7 +6935,6 @@ type Mutation {
     """
     input: UpdateUserInput!
   ): UpdateUserPayload
-  uploadFile(fileName: String!): UploadFilePayload!
   verifyFunction(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -13735,11 +13736,6 @@ type UpdateUserPayload {
     """The method to use when ordering `User`."""
     orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
   ): UsersEdge
-}
-
-type UploadFilePayload {
-  objectName: String!
-  uploadUrl: String!
 }
 
 type Upozorneni {

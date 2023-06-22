@@ -12,6 +12,8 @@
     "start": "NODE_ENV=development nodemon src/index.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.354.0",
+    "@aws-sdk/s3-request-presigner": "^3.354.0",
     "@graphile-contrib/pg-order-by-related": "~1.0.0",
     "@graphile-contrib/pg-simplify-inflector": "~6.1.0",
     "@graphile/operation-hooks": "~1.0.0",
@@ -43,7 +45,6 @@
     "helmet": "~7.0.0",
     "html-to-text": "~8.2.1",
     "lodash": "~4.17.21",
-    "minio": "~7.1.1",
     "mjml": "~4.14.1",
     "morgan": "~1.10.0",
     "nodemailer": "~6.9.3",

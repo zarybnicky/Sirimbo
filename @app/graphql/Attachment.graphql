@@ -1,0 +1,15 @@
+mutation CreateAttachment($input: CreateAttachmentInput!) {
+  createAttachment(input: $input) {
+    attachment {
+      objectName
+      uploadUrl
+    }
+  }
+}
+
+query Attachment($objectName: String!) {
+  attachment(objectName: $objectName) {
+    objectName
+    downloadUrl
+  }
+}

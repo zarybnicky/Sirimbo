@@ -323,6 +323,7 @@ export type AktualityPatch = {
 
 export type Attachment = {
   __typename?: 'Attachment';
+  downloadUrl: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `LocationAttachment`. */
   locationAttachmentsByObjectName: LocationAttachmentsConnection;
   objectName: Scalars['String']['output'];
@@ -331,6 +332,7 @@ export type Attachment = {
   roomAttachmentsByObjectName: RoomAttachmentsConnection;
   /** Reads and enables pagination through a set of `TenantAttachment`. */
   tenantAttachmentsByObjectName: TenantAttachmentsConnection;
+  uploadUrl: Scalars['String']['output'];
   uploadedAt: Scalars['Datetime']['output'];
   uploadedBy: Maybe<Scalars['BigInt']['output']>;
   /** Reads a single `User` that is related to this `Attachment`. */
@@ -5323,7 +5325,6 @@ export type Mutation = {
   deleteUpozorneniSkupiny: Maybe<DeleteUpozorneniSkupinyPayload>;
   /** Deletes a single `User` using a unique key. */
   deleteUser: Maybe<DeleteUserPayload>;
-  downloadFile: Scalars['String']['output'];
   fixUnpairedCouples: Maybe<FixUnpairedCouplesPayload>;
   login: Maybe<LoginPayload>;
   logout: Maybe<LogoutPayload>;
@@ -5413,7 +5414,6 @@ export type Mutation = {
   updateUpozorneniSkupiny: Maybe<UpdateUpozorneniSkupinyPayload>;
   /** Updates a single `User` using a unique key and a patch. */
   updateUser: Maybe<UpdateUserPayload>;
-  uploadFile: UploadFilePayload;
   verifyFunction: Maybe<VerifyFunctionPayload>;
 };
 
@@ -5941,12 +5941,6 @@ export type MutationDeleteUserArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDownloadFileArgs = {
-  id: Scalars['Int']['input'];
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationFixUnpairedCouplesArgs = {
   input: FixUnpairedCouplesInput;
 };
@@ -6231,12 +6225,6 @@ export type MutationUpdateUpozorneniSkupinyArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateUserArgs = {
   input: UpdateUserInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUploadFileArgs = {
-  fileName: Scalars['String']['input'];
 };
 
 
@@ -11610,12 +11598,6 @@ export type UpdateUserPayloadUserEdgeArgs = {
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
 };
 
-export type UploadFilePayload = {
-  __typename?: 'UploadFilePayload';
-  objectName: Scalars['String']['output'];
-  uploadUrl: Scalars['String']['output'];
-};
-
 export type Upozorneni = {
   __typename?: 'Upozorneni';
   id: Maybe<Scalars['BigInt']['output']>;
@@ -12672,7 +12654,6 @@ export type GraphCacheKeysConfig = {
   UpdateUpozorneniPayload?: (data: WithTypename<UpdateUpozorneniPayload>) => null | string,
   UpdateUpozorneniSkupinyPayload?: (data: WithTypename<UpdateUpozorneniSkupinyPayload>) => null | string,
   UpdateUserPayload?: (data: WithTypename<UpdateUserPayload>) => null | string,
-  UploadFilePayload?: (data: WithTypename<UploadFilePayload>) => null | string,
   Upozorneni?: (data: WithTypename<Upozorneni>) => null | string,
   UpozorneniSkupiniesConnection?: (data: WithTypename<UpozorneniSkupiniesConnection>) => null | string,
   UpozorneniSkupiniesEdge?: (data: WithTypename<UpozorneniSkupiniesEdge>) => null | string,
@@ -12879,11 +12860,13 @@ export type GraphCacheResolvers = {
     userByAtKdo?: GraphCacheResolver<WithTypename<Aktuality>, Record<string, never>, WithTypename<User> | string>
   },
   Attachment?: {
+    downloadUrl?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
     locationAttachmentsByObjectName?: GraphCacheResolver<WithTypename<Attachment>, AttachmentLocationAttachmentsByObjectNameArgs, WithTypename<LocationAttachmentsConnection> | string>,
     objectName?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
     previewObjectName?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
     roomAttachmentsByObjectName?: GraphCacheResolver<WithTypename<Attachment>, AttachmentRoomAttachmentsByObjectNameArgs, WithTypename<RoomAttachmentsConnection> | string>,
     tenantAttachmentsByObjectName?: GraphCacheResolver<WithTypename<Attachment>, AttachmentTenantAttachmentsByObjectNameArgs, WithTypename<TenantAttachmentsConnection> | string>,
+    uploadUrl?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
     uploadedAt?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['Datetime'] | string>,
     uploadedBy?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['BigInt'] | string>,
     userByUploadedBy?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, WithTypename<User> | string>
@@ -14744,10 +14727,6 @@ export type GraphCacheResolvers = {
     user?: GraphCacheResolver<WithTypename<UpdateUserPayload>, Record<string, never>, WithTypename<User> | string>,
     userEdge?: GraphCacheResolver<WithTypename<UpdateUserPayload>, UpdateUserPayloadUserEdgeArgs, WithTypename<UsersEdge> | string>
   },
-  UploadFilePayload?: {
-    objectName?: GraphCacheResolver<WithTypename<UploadFilePayload>, Record<string, never>, Scalars['String'] | string>,
-    uploadUrl?: GraphCacheResolver<WithTypename<UploadFilePayload>, Record<string, never>, Scalars['String'] | string>
-  },
   Upozorneni?: {
     id?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['BigInt'] | string>,
     isVisible?: GraphCacheResolver<WithTypename<Upozorneni>, Record<string, never>, Scalars['Boolean'] | string>,
@@ -14983,7 +14962,6 @@ export type GraphCacheOptimisticUpdaters = {
   deleteUpozorneni?: GraphCacheOptimisticMutationResolver<MutationDeleteUpozorneniArgs, Maybe<WithTypename<DeleteUpozorneniPayload>>>,
   deleteUpozorneniSkupiny?: GraphCacheOptimisticMutationResolver<MutationDeleteUpozorneniSkupinyArgs, Maybe<WithTypename<DeleteUpozorneniSkupinyPayload>>>,
   deleteUser?: GraphCacheOptimisticMutationResolver<MutationDeleteUserArgs, Maybe<WithTypename<DeleteUserPayload>>>,
-  downloadFile?: GraphCacheOptimisticMutationResolver<MutationDownloadFileArgs, Scalars['String']>,
   fixUnpairedCouples?: GraphCacheOptimisticMutationResolver<MutationFixUnpairedCouplesArgs, Maybe<WithTypename<FixUnpairedCouplesPayload>>>,
   login?: GraphCacheOptimisticMutationResolver<MutationLoginArgs, Maybe<WithTypename<LoginPayload>>>,
   logout?: GraphCacheOptimisticMutationResolver<MutationLogoutArgs, Maybe<WithTypename<LogoutPayload>>>,
@@ -15032,7 +15010,6 @@ export type GraphCacheOptimisticUpdaters = {
   updateUpozorneni?: GraphCacheOptimisticMutationResolver<MutationUpdateUpozorneniArgs, Maybe<WithTypename<UpdateUpozorneniPayload>>>,
   updateUpozorneniSkupiny?: GraphCacheOptimisticMutationResolver<MutationUpdateUpozorneniSkupinyArgs, Maybe<WithTypename<UpdateUpozorneniSkupinyPayload>>>,
   updateUser?: GraphCacheOptimisticMutationResolver<MutationUpdateUserArgs, Maybe<WithTypename<UpdateUserPayload>>>,
-  uploadFile?: GraphCacheOptimisticMutationResolver<MutationUploadFileArgs, WithTypename<UploadFilePayload>>,
   verifyFunction?: GraphCacheOptimisticMutationResolver<MutationVerifyFunctionArgs, Maybe<WithTypename<VerifyFunctionPayload>>>
 };
 
@@ -15125,7 +15102,6 @@ export type GraphCacheUpdaters = {
     deleteUpozorneni?: GraphCacheUpdateResolver<{ deleteUpozorneni: Maybe<WithTypename<DeleteUpozorneniPayload>> }, MutationDeleteUpozorneniArgs>,
     deleteUpozorneniSkupiny?: GraphCacheUpdateResolver<{ deleteUpozorneniSkupiny: Maybe<WithTypename<DeleteUpozorneniSkupinyPayload>> }, MutationDeleteUpozorneniSkupinyArgs>,
     deleteUser?: GraphCacheUpdateResolver<{ deleteUser: Maybe<WithTypename<DeleteUserPayload>> }, MutationDeleteUserArgs>,
-    downloadFile?: GraphCacheUpdateResolver<{ downloadFile: Scalars['String'] }, MutationDownloadFileArgs>,
     fixUnpairedCouples?: GraphCacheUpdateResolver<{ fixUnpairedCouples: Maybe<WithTypename<FixUnpairedCouplesPayload>> }, MutationFixUnpairedCouplesArgs>,
     login?: GraphCacheUpdateResolver<{ login: Maybe<WithTypename<LoginPayload>> }, MutationLoginArgs>,
     logout?: GraphCacheUpdateResolver<{ logout: Maybe<WithTypename<LogoutPayload>> }, MutationLogoutArgs>,
@@ -15174,7 +15150,6 @@ export type GraphCacheUpdaters = {
     updateUpozorneni?: GraphCacheUpdateResolver<{ updateUpozorneni: Maybe<WithTypename<UpdateUpozorneniPayload>> }, MutationUpdateUpozorneniArgs>,
     updateUpozorneniSkupiny?: GraphCacheUpdateResolver<{ updateUpozorneniSkupiny: Maybe<WithTypename<UpdateUpozorneniSkupinyPayload>> }, MutationUpdateUpozorneniSkupinyArgs>,
     updateUser?: GraphCacheUpdateResolver<{ updateUser: Maybe<WithTypename<UpdateUserPayload>> }, MutationUpdateUserArgs>,
-    uploadFile?: GraphCacheUpdateResolver<{ uploadFile: WithTypename<UploadFilePayload> }, MutationUploadFileArgs>,
     verifyFunction?: GraphCacheUpdateResolver<{ verifyFunction: Maybe<WithTypename<VerifyFunctionPayload>> }, MutationVerifyFunctionArgs>
   },
   Subscription?: {},

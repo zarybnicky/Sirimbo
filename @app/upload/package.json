@@ -1,0 +1,16 @@
+{
+  "name": "@app/upload",
+  "private": true,
+  "version": "1.8.1",
+  "license": "MIT",
+  "dependencies": {
+    "@app/graphql": "*",
+    "@app/ui": "*",
+    "lucide-react": "*",
+    "react": "*",
+    "react-dom": "*",
+    "react-dropzone": "^14.2.3",
+    "thumbhash": "^0.1.1",
+    "typescript": "~5.1.3"
+  }
+}

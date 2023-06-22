@@ -676,6 +676,17 @@
         "name": "Attachment",
         "fields": [
           {
+            "name": "downloadUrl",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "locationAttachmentsByObjectName",
             "type": {
               "kind": "NON_NULL",
@@ -897,6 +908,17 @@
                 }
               }
             ]
+          },
+          {
+            "name": "uploadUrl",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
           },
           {
             "name": "uploadedAt",
@@ -12760,28 +12782,6 @@
             ]
           },
           {
-            "name": "downloadFile",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": [
-              {
-                "name": "id",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
             "name": "fixUnpairedCouples",
             "type": {
               "kind": "OBJECT",
@@ -13731,29 +13731,6 @@
             "args": [
               {
                 "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "uploadFile",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UploadFilePayload",
-                "ofType": null
-              }
-            },
-            "args": [
-              {
-                "name": "fileName",
                 "type": {
                   "kind": "NON_NULL",
                   "ofType": {
@@ -27820,35 +27797,6 @@
                 }
               }
             ]
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "UploadFilePayload",
-        "fields": [
-          {
-            "name": "objectName",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "uploadUrl",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
           }
         ],
         "interfaces": []
