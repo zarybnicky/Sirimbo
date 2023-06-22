@@ -67,10 +67,6 @@
       PGDATABASE = "olymp";
       SMTP_HOST = "olymp-test";
       SMTP_PORT = "1025";
-      MINIO_DOMAIN = "olymp-test";
-      MINIO_PORT = "9000";
-      MINIO_ACCESS_KEY = "00000000";
-      MINIO_SECRET_KEY = "000000000000";
       DOMAIN = "olymp-test";
     };
 
@@ -119,11 +115,6 @@
             smtpTLS = false;
             smtpHost = "127.0.0.1";
             smtpPort = 1025;
-
-            minioDomain = "cdn.olymp-test"; # doesn't work in local container
-            minioPort = 9000;
-            minioAccessKey = "00000000";
-            minioSecretKey = "000000000000";
           };
         })
       ];

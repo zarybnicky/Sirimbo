@@ -2,7 +2,6 @@ import express from 'express';
 import { makePluginHook, Build, PostGraphileOptions } from 'postgraphile';
 import operationHooks, { AddOperationHookFn, OperationHookGenerator } from '@graphile/operation-hooks';
 import { getSession, getUser } from './db';
-import { UploadPlugin } from './minio';
 
 const useAuthCredentials: (build: Build) => OperationHookGenerator = _ => ctx => {
   if (ctx.scope.isRootMutation && ctx.scope.pgFieldIntrospection?.name === "login") {
@@ -86,7 +85,6 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
 
   appendPlugins: [
     require("@graphile-contrib/pg-simplify-inflector"),
-    UploadPlugin,
     function OperationHookPlugin(builder) {
       builder.hook("init", (_, build) => {
         const addOperationHook: AddOperationHookFn = build.addOperationHook;
