@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { saveAs } from 'file-saver';
-import { Button } from './Button';
 import { EventDocument } from '@app/graphql/Event';
 import { useQuery } from 'urql';
 
@@ -47,5 +46,7 @@ export function EventParticipantExport({ id }: { id: string }) {
     [data],
   );
 
-  return <Button onClick={saveData}>Export přihlášených</Button>;
+  return <button type="button" className="button button-outline" onClick={saveData}>
+    Export přihlášených
+  </button>;
 }

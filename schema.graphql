@@ -342,6 +342,7 @@ type Attachment {
   ): LocationAttachmentsConnection!
   objectName: String!
   previewObjectName: String
+  publicUrl: String!
 
   """Reads and enables pagination through a set of `RoomAttachment`."""
   roomAttachmentsByObjectName(

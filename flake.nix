@@ -77,7 +77,6 @@
                   "ALL TABLES IN SCHEMA public" = "ALL";
                 };
               }
-              { name = "olympuser"; }
             ];
             authentication = "host all all all trust";
           };
@@ -94,23 +93,57 @@
               port = 4000;
               database = "olymp";
             };
-            frontend = {
-              enable = true;
-              port = 3030;
-              domain = "olymp-test";
-              ssl = false;
-            };
             smtp = {
               auth = false;
               tls = false;
               host = "127.0.0.1";
               port = 1025;
             };
-            minio = {
-              enable = true;
-              accessKey = "00000000";
-              secretKey = "000000000000";
+            s3 = {
+              bucket = "public";
+              region = "us-west-1";
+              endpoint = "http://olymp-test:9000";
+              accessKeyId = "00000000";
+              secretAccessKey = "000000000000";
             };
+          };
+
+          services.minio = {
+            enable = true;
+            browser = false;
+            listenAddress = ":9000";
+            configDir = "/var/lib/olymp/minio-config";
+            dataDir = ["/var/lib/olymp/minio-data"];
+            accessKey = "00000000";
+            secretKey = "000000000000";
+          };
+
+          systemd.services.minio = {
+            serviceConfig = {
+              ExecStartPost= ''
+                ${pkgs.coreutils}/bin/timeout 30 ${pkgs.bash}/bin/bash -c \
+                  'while ! ${pkgs.curl}/bin/curl --silent --fail http://localhost:9000/minio/health/cluster; do sleep 1; done'
+              '';
+            };
+          };
+
+          systemd.services.minio-config = {
+            path = [pkgs.minio pkgs.minio-client];
+            requiredBy = ["multi-user.target"];
+            after = ["minio.service"];
+            serviceConfig = {
+              Type = "simple";
+              User = "minio";
+              Group = "minio";
+              WorkingDirectory = "/var/lib/olymp/minio-config";
+            };
+            script = ''
+              set -e
+              mc --config-dir . config host add minio http://localhost:9000 "00000000" "000000000000"
+              mc --config-dir . mb --ignore-existing minio/private
+              mc --config-dir . mb --ignore-existing minio/public
+              mc --config-dir . policy set download minio/public
+            '';
           };
         })
       ];

@@ -66,20 +66,31 @@ in {
       enable = lib.mkEnableOption "${pkgName}";
     };
 
-    minio = {
-      enable = lib.mkEnableOption "${pkgName}";
-      port = lib.mkOption {
-        type = lib.types.int;
-        description = "${pkgName} internal Minio port";
-        default = 9000;
-      };
-      accessKey = lib.mkOption {
+    s3 = {
+      bucket = lib.mkOption {
         type = lib.types.str;
-        description = "${pkgName} Minio access key";
+        description = "${pkgName} S3 bucket";
       };
-      secretKey = lib.mkOption {
+      region = lib.mkOption {
         type = lib.types.str;
-        description = "${pkgName} Minio secret key";
+        description = "${pkgName} S3 region";
+      };
+      endpoint = lib.mkOption {
+        type = lib.types.str;
+        description = "${pkgName} S3 endpoint";
+      };
+      publicEndpoint = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        description = "${pkgName} publicly accessible endpoint (Cloudflare URL)";
+        default = null;
+      };
+      accessKeyId = lib.mkOption {
+        type = lib.types.str;
+        description = "${pkgName} AWS_ACCESS_KEY_ID";
+      };
+      secretAccessKey = lib.mkOption {
+        type = lib.types.str;
+        description = "${pkgName} AWS_SECRET_ACCESS_KEY";
       };
     };
 
@@ -107,7 +118,7 @@ in {
   };
 
   config = lib.mkMerge [
-    (lib.mkIf (cfg.frontend.enable or cfg.backend.enable) {
+    (lib.mkIf (cfg.backend.enable or cfg.frontend.enable) {
       users.users.${cfg.user} = {
         name = cfg.user;
         group = cfg.group;
@@ -192,54 +203,13 @@ in {
       };
     })
 
-    (lib.mkIf cfg.minio.enable {
-      services.minio = {
-        enable = true;
-        browser = false;
-        listenAddress = ":${toString cfg.minio.port}";
-        configDir = lib.mkForce "${cfg.stateDir}/minio-config";
-        dataDir = lib.mkForce ["${cfg.stateDir}/minio-data"];
-        accessKey = cfg.minio.accessKey;
-        secretKey = cfg.minio.secretKey;
-      };
-      networking.firewall.allowedTCPPorts = [cfg.minio.port];
-
-      systemd.services.minio = {
-        serviceConfig = {
-          ExecStartPost= ''
-            ${pkgs.coreutils}/bin/timeout 30 ${pkgs.bash}/bin/bash -c \
-              'while ! ${pkgs.curl}/bin/curl --silent --fail http://localhost:${toString cfg.minio.port}/minio/health/cluster; do sleep 1; done'
-          '';
-        };
-      };
-
-      systemd.services.minio-config = {
-        path = [pkgs.minio pkgs.minio-client];
-        requiredBy = ["multi-user.target"];
-        after = ["minio.service"];
-        serviceConfig = {
-          Type = "simple";
-          User = "minio";
-          Group = "minio";
-          WorkingDirectory = config.services.minio.configDir;
-        };
-        script = ''
-          set -e
-          mc --config-dir . config host add minio \
-            http://localhost:${toString cfg.minio.port} "${cfg.minio.accessKey}" "${cfg.minio.secretKey}"
-          mc --config-dir . mb --ignore-existing minio/private
-          mc --config-dir . mb --ignore-existing minio/public
-          mc --config-dir . policy set download minio/public
-        '';
-      };
-    })
-
     (lib.mkIf cfg.backend.enable {
       systemd.services.sirimbo-backend-beta = {
         after = [ "network.target" ];
         wantedBy = [ "multi-user.target" ];
 
         environment = {
+          DEBUG = if cfg.backend.debug then "postgraphile:postgres,postgraphile:postgres:error" else "";
           PGDATABASE = cfg.backend.database;
           PGHOST = "/run/postgresql";
           PORT = toString cfg.backend.port;
@@ -252,11 +222,12 @@ in {
           SMTP_PORT = toString cfg.smtp.port;
           SMTP_USER = cfg.smtp.user;
           SMTP_PASS = cfg.smtp.pass;
-          MINIO_DOMAIN = cfg.backend.domain;
-          MINIO_PORT = toString cfg.minio.port;
-          MINIO_ACCESS_KEY = cfg.minio.accessKey;
-          MINIO_SECRET_KEY = cfg.minio.secretKey;
-          DEBUG = if cfg.backend.debug then "postgraphile:postgres,postgraphile:postgres:error" else "";
+          AWS_ACCESS_KEY_ID = cfg.s3.accessKeyId;
+          AWS_SECRET_ACCESS_KEY = cfg.s3.secretAccessKey;
+          S3_BUCKET = cfg.s3.bucket;
+          S3_REGION = cfg.s3.region;
+          S3_ENDPOINT = cfg.s3.endpoint;
+          S3_PUBLIC_ENDPOINT = if cfg.s3.publicEndpoint != null then cfg.s3.publicEndpoint else cfg.s3.endpoint;
         };
 
         serviceConfig = {

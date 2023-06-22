@@ -124,12 +124,14 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
         extend type Attachment {
           uploadUrl: String! @requires(columns: ["object_name"])
           downloadUrl: String! @requires(columns: ["object_name"])
+          publicUrl: String! @requires(columns: ["object_name"])
         }
       `,
       resolvers: {
         Attachment: {
           uploadUrl: ({ objectName }) => getSignedUrl(s3client, new PutObjectCommand({ Key: objectName, Bucket: bucketName })),
           downloadUrl: ({ objectName }) => getSignedUrl(s3client, new GetObjectCommand({ Key: objectName, Bucket: bucketName })),
+          publicUrl: ({ objectName }) => `${process.env.S3_ENDPOINT}/${process.env.S3_BUCKET}/${objectName}`,
         },
       },
     })),

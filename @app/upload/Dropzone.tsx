@@ -1,8 +1,8 @@
 import React from 'react';
 import { useDropzone } from 'react-dropzone';
 import { rgbaToThumbHash, thumbHashToDataURL } from 'thumbhash';
-import { CreateAttachmentDocument, AttachmentDocument } from '@app/graphql/Attachment';
-import { useMutation, useClient } from 'urql';
+import { AttachmentsDocument, CreateAttachmentDocument } from '@app/graphql/Attachment';
+import { useMutation, useQuery } from 'urql';
 
 type Image = {
   file: File;
@@ -46,7 +46,7 @@ export const Dropzone = ({}: {}) => {
     },
   });
 
-  const client = useClient();
+  const [data] = useQuery({ query: AttachmentsDocument });
   const [_1, mutate] = useMutation(CreateAttachmentDocument);
   const confirm = React.useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -67,8 +67,6 @@ export const Dropzone = ({}: {}) => {
         body: file.file,
       });
       console.log(uploadResult);
-      const updatedResult = await client.query(AttachmentDocument, { objectName });
-      console.log(updatedResult)
     });
   }, [files, mutate]);
 
@@ -77,21 +75,27 @@ export const Dropzone = ({}: {}) => {
   }, []);
 
   return (
-    <section className="container">
+    <section className="container prose">
+      Existing:
+      <ul>
+        {(data.data?.attachments?.nodes || []).map(x => (
+          <li>
+            <a href={x.publicUrl} key={x.objectName}>{x.objectName}</a>
+          </li>
+        ))}
+      </ul>
+
       <button type="button" onClick={confirm}>Nahrát</button>
       <div {...getRootProps({className: 'dropzone'})}>
         <input {...getInputProps()} />
         <p>Drag 'n' drop some files here, or click to select files</p>
       </div>
-      <aside>
-        <h4>Files</h4>
         {files.map((image) => (
           <div key={image.file.name}>
             <img src={image.objectURL} />
             <img width={image.width} height={image.height} src={thumbHashToDataURL(new Uint8Array(atob(image.thumbhash).split('').map(x => x.charCodeAt(0))))} />
           </div>
         ))}
-      </aside>
     </section>
   );
 };

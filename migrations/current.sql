@@ -137,3 +137,5 @@ create or replace function archived_announcements() returns setof upozorneni as 
   order by up_timestamp_add desc;
 $$ language sql stable;
 grant execute on function archived_announcements to anonymous;
+
+alter table attachment alter column uploaded_by set default current_user_id();

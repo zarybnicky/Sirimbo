@@ -774,6 +774,17 @@
             "args": []
           },
           {
+            "name": "publicUrl",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "roomAttachmentsByObjectName",
             "type": {
               "kind": "NON_NULL",

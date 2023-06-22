@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { fullDateFormatter } from 'lib/format-date';
-import { Button } from 'components/Button';
 import { saveAs } from 'file-saver';
 import { FormResponsesDocument } from '@app/graphql/Crm';
 import type { NextPageWithLayout } from 'pages/_app';
@@ -61,7 +60,9 @@ const Page: NextPageWithLayout = () => {
   return (
     <div className="container col-feature">
       <TitleBar title="Odeslané formuláře">
-        <Button onClick={saveData}>Export všech</Button>
+        <button type="button" className="button button-outline" onClick={saveData}>
+          Export všech
+        </button>
       </TitleBar>
 
       <table className="w-full text-sm text-left text-neutral-11">

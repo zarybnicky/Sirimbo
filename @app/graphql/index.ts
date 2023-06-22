@@ -328,6 +328,7 @@ export type Attachment = {
   locationAttachmentsByObjectName: LocationAttachmentsConnection;
   objectName: Scalars['String']['output'];
   previewObjectName: Maybe<Scalars['String']['output']>;
+  publicUrl: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `RoomAttachment`. */
   roomAttachmentsByObjectName: RoomAttachmentsConnection;
   /** Reads and enables pagination through a set of `TenantAttachment`. */
@@ -12864,6 +12865,7 @@ export type GraphCacheResolvers = {
     locationAttachmentsByObjectName?: GraphCacheResolver<WithTypename<Attachment>, AttachmentLocationAttachmentsByObjectNameArgs, WithTypename<LocationAttachmentsConnection> | string>,
     objectName?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
     previewObjectName?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
+    publicUrl?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
     roomAttachmentsByObjectName?: GraphCacheResolver<WithTypename<Attachment>, AttachmentRoomAttachmentsByObjectNameArgs, WithTypename<RoomAttachmentsConnection> | string>,
     tenantAttachmentsByObjectName?: GraphCacheResolver<WithTypename<Attachment>, AttachmentTenantAttachmentsByObjectNameArgs, WithTypename<TenantAttachmentsConnection> | string>,
     uploadUrl?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,

@@ -7,9 +7,18 @@ mutation CreateAttachment($input: CreateAttachmentInput!) {
   }
 }
 
+query Attachments {
+  attachments {
+    nodes {
+      objectName
+      publicUrl
+    }
+  }
+}
+
 query Attachment($objectName: String!) {
   attachment(objectName: $objectName) {
     objectName
-    downloadUrl
+    publicUrl
   }
 }

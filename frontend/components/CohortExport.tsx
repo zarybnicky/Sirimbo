@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { saveAs } from 'file-saver';
 import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
-import { Button } from './Button';
 import { useAuth } from 'lib/data/use-auth';
 import { fetchGql } from '@app/graphql/query';
 import { MemberListDocument } from '@app/graphql/User';
@@ -51,5 +50,7 @@ export function CohortExport({ id, name }: { id?: string; name?: string }) {
     return null;
   }
 
-  return <Button onClick={saveData}>Export {!name && 'všech'}</Button>;
+  return <button type="button" className="button button-outline" onClick={saveData}>
+    Export {!name && 'všech'}
+  </button>;
 }
