@@ -135,7 +135,7 @@ export const Footer: React.FC = () => {
           <div>© 2023 Taneční klub Olymp Olomouc, z. s.</div>
           <div>
             <div>Realizace: Jakub Zárybnický</div>
-            <div>Verze: {process.env.BUILD_ID?.substring(0, 7)}</div>
+            <div>Verze: {(process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || process.env.BUILD_ID)?.substring(0, 7)}</div>
           </div>
         </div>
       </div>

@@ -111,7 +111,7 @@ export function Layout({ children, list, isDetail }: LayoutProps) {
             <div className="mt-4 text-xs text-neutral-10 lg:text-white p-4 grid gap-2">
               <div>© 2023 Rozpisovnik.cz</div>
               <div>API server: {origin}</div>
-              <div>Verze: {process.env.BUILD_ID?.substring(0, 7)}</div>
+              <div>Verze: {(process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || process.env.BUILD_ID)?.substring(0, 7)}</div>
             </div>
           </div>
         </nav>
