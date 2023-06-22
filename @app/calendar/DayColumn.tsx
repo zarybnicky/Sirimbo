@@ -252,12 +252,12 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
 
     selector.addEventListener('click', () => {
       setEventState(EMPTY)
-      draggable.onEnd(null)
+      draggable.onEnd()
     })
 
     selector.addEventListener('reset', () => {
       setEventState(EMPTY)
-      draggable.onEnd(null)
+      draggable.onEnd()
     })
 
     return () => selector.teardown()

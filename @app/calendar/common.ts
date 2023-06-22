@@ -56,9 +56,7 @@ export function eventLevels(rowSegments: Segment[], limit = Infinity) {
     }
   }
 
-  for (let i = 0; i < levels.length; i++) {
-    levels[i]!.sort((a, b) => a.left - b.left)
-  }
+  levels.forEach(arr => arr.sort((a, b) => a.left - b.left));
 
   return { levels, extra }
 }

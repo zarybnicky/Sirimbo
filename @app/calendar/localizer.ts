@@ -111,7 +111,6 @@ export function getDstOffset(start: Date, end: Date) {
   return start.getTimezoneOffset() - end.getTimezoneOffset()
 }
 
-// These two are used by eventLevels
 export function sortEvents(
   { start: aStart, end: aEnd, allDay: aAllDay = false }: { start: Date, end: Date, allDay?: boolean },
   { start: bStart, end: bEnd, allDay: bAllDay = false }: { start: Date, end: Date, allDay?: boolean },

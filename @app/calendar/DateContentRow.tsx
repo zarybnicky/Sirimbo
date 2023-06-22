@@ -96,7 +96,6 @@ const DateContentRow = ({
         if (!event) {
           return null;
         }
-        console.log(action, direction, event);
         let { start, end } = event
         if (action === 'move') {
           if (!pointInBox(bounds, point)) {
@@ -171,12 +170,12 @@ const DateContentRow = ({
     })
 
     selector.addEventListener('click', () => {
-      draggable.onEnd(null)
+      draggable.onEnd()
       setSegment(null);
     })
 
     selector.addEventListener('reset', () => {
-      draggable.onEnd(null)
+      draggable.onEnd()
       setSegment(null);
     })
 
@@ -254,7 +253,12 @@ const DateContentRow = ({
               />
             )}
             {segment && (
-              <EventRow className="rbc-drag-row" segments={[segment]} resourceId={resourceId} slotMetrics={slotMetrics} />
+              <EventRow
+                className="rbc-drag-row"
+                segments={[segment]}
+                resourceId={resourceId}
+                slotMetrics={slotMetrics}
+              />
             )}
           </div>
         )}

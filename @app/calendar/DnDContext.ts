@@ -21,9 +21,7 @@ declare function onDropFromOutside(info: {
 
 export type DnDContextType = {
   onStart: () => void;
-  onEnd: (
-    info: null | { start: Date; end: Date; resourceId?: number; isAllDay?: boolean },
-  ) => void;
+  onEnd: (info?: { start: Date; end: Date; resourceId?: number; isAllDay?: boolean }) => void;
   onBeginAction: (event: CalendarEvent, action: DragAction, direction?: DragDirection) => void;
   onDropFromOutside?: typeof onDropFromOutside;
   dragFromOutsideItem: () => CalendarEvent | undefined;

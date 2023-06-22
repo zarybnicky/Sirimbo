@@ -44,59 +44,52 @@ const BackgroundCells = ({
         if (!selecting) {
           initial = bounds;
         }
-        if (initial && selector.isSelected(cellRef.current!)) {
-          let startIdx = -1
-          let endIdx = -1
-          let lastSlotIdx = range.length - 1
-
-          let cellWidth = (rowBox.right - rowBox.left) / range.length
-          let currentSlot = getSlotAtX(rowBox, bounds.x, range.length)
-
-          // Identify row as either the initial row
-          // or the row under the current mouse point
-          let isCurrentRow = rowBox.top < bounds.y && rowBox.bottom > bounds.y
-          let isStartRow = rowBox.top < initial.y && rowBox.bottom > initial.y
-
-          // this row's position relative to the start point
-          let isAboveStart = initial.y > rowBox.bottom
-          let isBelowStart = rowBox.top > initial.y
-
-          // this row is between the current and start rows, so entirely selected
-          if (bounds.top < rowBox.top && bounds.bottom > rowBox.bottom) {
-            startIdx = 0
-            endIdx = lastSlotIdx
-          }
-
-          if (isCurrentRow) {
-            if (isBelowStart) {
-              startIdx = 0
-              endIdx = currentSlot
-            } else if (isAboveStart) {
-              startIdx = currentSlot
-              endIdx = lastSlotIdx
-            }
-          }
-
-          if (isStartRow) {
-            startIdx = endIdx = Math.floor((initial.x - rowBox.left) / cellWidth)
-            if (isCurrentRow) {
-              if (currentSlot < startIdx) {
-                startIdx = currentSlot
-              } else {
-                endIdx = currentSlot //select current range
-              }
-            } else if (initial.y < bounds.y) {
-              // the current row is below start row
-              // select cells to the right of the start cell
-              endIdx = lastSlotIdx
-            } else {
-              // select cells to the left of the start cell
-              startIdx = 0
-            }
-          }
-          return { initial, selecting: true, start: startIdx, end: endIdx };
+        if (!initial || !selector.isSelected(cellRef.current!)) {
+          return { initial, selecting: true, start: -1, end: -1 };
         }
-        return { initial, selecting: true, start: -1, end: -1 };
+        let startIdx = -1
+        let endIdx = -1
+
+        // this row is between the current and start rows, so entirely selected
+        if (bounds.top < rowBox.top && bounds.bottom > rowBox.bottom) {
+          startIdx = 0
+          endIdx = range.length - 1
+        }
+
+        let currentSlot = getSlotAtX(rowBox, bounds.x, range.length)
+        const isCurrentRow = rowBox.top < bounds.y && rowBox.bottom > bounds.y
+        const isAboveStart = initial.y > rowBox.bottom
+        const isBelowStart = rowBox.top > initial.y
+        if (isCurrentRow) {
+          if (isBelowStart) {
+            startIdx = 0
+            endIdx = currentSlot
+          } else if (isAboveStart) {
+            startIdx = currentSlot
+            endIdx = range.length - 1
+          }
+        }
+
+        let cellWidth = (rowBox.right - rowBox.left) / range.length
+        const isStartRow = rowBox.top < initial.y && rowBox.bottom > initial.y
+        if (isStartRow) {
+          startIdx = endIdx = Math.floor((initial.x - rowBox.left) / cellWidth)
+          if (isCurrentRow) {
+            if (currentSlot < startIdx) {
+              startIdx = currentSlot
+            } else {
+              endIdx = currentSlot //select current range
+            }
+          } else if (initial.y < bounds.y) {
+            // the current row is below start row
+            // select cells to the right of the start cell
+            endIdx = range.length - 1
+          } else {
+            // select cells to the left of the start cell
+            startIdx = 0
+          }
+        }
+        return { initial, selecting: true, start: startIdx, end: endIdx };
       });
     });
 

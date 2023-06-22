@@ -24,7 +24,7 @@ const Views = {
 };
 
 export const Calendar = () => {
-  const [view, setView] = React.useState(View.WORK_WEEK)
+  const [view, setView] = React.useState(View.DAY)
   const [date, setDate] = React.useState(new Date());
   const [isDragging, setIsDragging] = React.useState(false);
 

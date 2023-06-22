@@ -10,63 +10,43 @@ let isSegmentInSlot = (seg: Segment, slot: number) => seg.left <= slot && seg.ri
 let eventsInSlot = (segments: Segment[], s: number) => segments.filter((seg) => isSegmentInSlot(seg, s)).length
 
 const EventEndingRow: React.FC<{
-  className?: string;
   segments: Segment[];
   slotMetrics: DateSlotMetrics,
   resourceId?: number;
 }> = ({
-  className,
-  segments = [],
+  segments,
   slotMetrics,
-  ...props
+  resourceId,
 }) => {
   const { onDrillDown } = useContext(NavigationContext);
   const { slots } = slotMetrics;
-  let rowSegments = eventLevels(segments).levels[0]!
+  const rowSegments = eventLevels(segments).levels[0]!
+  const row: JSX.Element[] = [];
 
-  let current = 1,
-      lastEnd = 1,
-      row: JSX.Element[] = []
+  let current = 1;
+  let lastEnd = 1;
 
   while (current <= slots) {
-    let key = '_lvl_' + current
-
-    let { event, left, right, span } = rowSegments.filter((seg) => isSegmentInSlot(seg, current))[0]! || {}
-
-    if (!event) {
+    const segment = rowSegments.find((s) => isSegmentInSlot(s, current))
+    if (!segment?.event) {
       current++
       continue
     }
 
-    let gap = Math.max(0, left - lastEnd)
+    const key = '_lvl_' + current
+    const gap = Math.max(0, segment.left - lastEnd)
 
-    if (range(left, left + span).every((s: number) => eventsInSlot(segments, s) === 1)) {
-      if (gap) {
-        row.push(
-          <div key={`${key}_gap`} className="rbc-row-segment" style={{ flexBasis: `${(Math.abs(gap) / slots) * 100}%` }} />
-        );
-      }
-      row.push(
-        <div key={key} className="rbc-row-segment" style={{ flexBasis: `${(Math.abs(span) / slots) * 100}%` }}>
-          <EventCell
-            event={event}
-            continuesPrior={slotMetrics.continuesPrior(event)}
-            continuesAfter={slotMetrics.continuesAfter(event)}
-            {...props}
-          />
-        </div>
-      )
-      lastEnd = current = right + 1
-    } else {
+    const exactlyOneEvent = range(segment.left, segment.left + segment.span).every((s) => eventsInSlot(segments, s) === 1)
+    if (!exactlyOneEvent) {
       const closureCurrent = current;
       if (gap) {
-        row.push(
-          <div key={`${key}_gap`} className="rbc-row-segment" style={{ flexBasis: `${(Math.abs(gap) / slots) * 100}%` }} />
-        );
+        const flexBasis = `${(Math.abs(gap) / slots) * 100}%`;
+        row.push(<div key={`${key}_gap`} className="rbc-row-segment" style={{ flexBasis }} />);
       }
-      let count = eventsInSlot(segments, current)
+      const count = eventsInSlot(segments, current)
+      const flexBasis = `${(Math.abs(segment.span) / slots) * 100}%`;
       row.push(
-        <div key={key} className="rbc-row-segment" style={{ flexBasis: `${(1 / slots) * 100}%` }}>
+        <div key={key} className="rbc-row-segment" style={{ flexBasis }}>
           {!count ? null : (
             <button
               type="button"
@@ -84,7 +64,25 @@ const EventEndingRow: React.FC<{
         </div>
       )
       lastEnd = current = current + 1
+      continue
     }
+
+    if (gap) {
+      const flexBasis = `${(Math.abs(gap) / slots) * 100}%`;
+      row.push(<div key={`${key}_gap`} className="rbc-row-segment" style={{ flexBasis }} />);
+    }
+    const flexBasis = `${(Math.abs(segment.span) / slots) * 100}%`;
+    row.push(
+      <div key={key} className="rbc-row-segment" style={{ flexBasis }}>
+        <EventCell
+          event={segment.event}
+          continuesPrior={slotMetrics.continuesPrior(segment.event)}
+          continuesAfter={slotMetrics.continuesAfter(segment.event)}
+          resourceId={resourceId}
+        />
+      </div>
+    )
+    lastEnd = current = segment.right + 1
   }
 
   return <div className="rbc-row">{row}</div>
