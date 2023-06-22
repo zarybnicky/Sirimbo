@@ -16,7 +16,7 @@ export function MyAnnouncements() {
       <h4 className="text-2xl tracking-wide mb-10">Aktuality</h4>
 
       <div className="mb-2 flex items-center">
-        <div className="text-neutral-11">
+        <div className="button-outline text-neutral-11">
           Aktuální
         </div>
         <div className="text-neutral-11">

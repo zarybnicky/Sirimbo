@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Card } from 'components/Card';
 import { fullDateFormatter } from 'lib/format-date';
-import { Button } from './Button';
 import { EventWithItemsFragment } from '@app/graphql/Event';
 import { ParticipationDialog } from './ParticipationForm';
 import { RichTextView } from './RichTextView';
@@ -43,8 +42,8 @@ export const EventItem = ({ event }: Props) => {
 
         {total > 0 && (
           <Dialog>
-            <DialogTrigger>
-              <Button>Účastníci ({total})</Button>
+            <DialogTrigger className="button button-accent">
+              Účastníci ({total})
             </DialogTrigger>
             <DialogContent>
               <DialogTitle>Účastníci</DialogTitle>
@@ -68,7 +67,9 @@ export const EventItem = ({ event }: Props) => {
         )}
       </div>
 
-      <RichTextView value={event.summary} />
+      {event.summary && event.summary !== '[]' && (
+        <RichTextView value={event.summary} />
+      )}
       <RichTextView value={event.description} />
     </Card>
   );

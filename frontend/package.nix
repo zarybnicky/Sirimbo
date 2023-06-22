@@ -14,15 +14,13 @@ yarn2nix-moretea.mkYarnPackage {
   name = "sirimbo-frontend";
   # doCheck = true;
   # checkPhase = "yarn test --coverage --ci";
+  distPhase = "true";
   buildPhase = ''
     shopt -s dotglob
     unlink deps/sirimbo-frontend/sirimbo-frontend
     unlink deps/sirimbo-frontend/node_modules
     mv deps/sirimbo-frontend/* .
     NEXT_PUBLIC_BASE_URL="http://undefined" yarn --offline run build
-  '';
-  distPhase = "true";
-  installPhase = ''
     shopt -s dotglob
     mkdir -p $out
     cp -r public package.json $out/

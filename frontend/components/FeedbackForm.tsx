@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import { useCookie } from 'lib/use-cookie';
 import { useMutation } from 'urql';
 import { RichTextEditor } from './RichTextEditor';
+import { DialogContent, DialogTitle } from '@app/ui/dialog';
 
 function FeedbackForm() {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -43,26 +44,10 @@ function FeedbackForm() {
           </button>
         </Dialog.Trigger>
 
-        <Dialog.Portal>
-          <Dialog.Overlay
-            className={cx(
-              'bg-black/50 fixed inset-0 z-20',
-              'data-[state=open]:animate-overlayShow data-[state=closed]:animate-overlayHide',
-            )}
-          />
-          <Dialog.Content
-            className={cx(
-              'fixed z-50 overflow-y-auto',
-              'w-[95vw] max-h-[95vh] max-w-2xl rounded-lg p-4 md:w-full',
-              'top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]',
-              'bg-neutral-2',
-              'focus:outline-none focus-visible:ring focus-visible:ring-red-500 focus-visible:ring-opacity-75',
-              'data-[state=open]:animate-contentShow data-[state=closed]:animate-contentHide',
-            )}
-          >
-            <Dialog.Title className="text-neutral-12 mb-2 text-lg">
+        <DialogContent>
+            <DialogTitle className="text-neutral-12 mb-2 text-lg">
               <Edit3 className="inline h-4 w-4 mr-1" /> Ohodnoť nový web!
-            </Dialog.Title>
+            </DialogTitle>
 
             <form className="grid gap-4" onSubmit={handleSubmit(onSubmit.execute)}>
               <TextFieldElement control={control} name="name" label="Jméno" />
@@ -85,8 +70,7 @@ function FeedbackForm() {
                 <CloseIcon className="h-4 w-4" />
               </button>
             </Dialog.Close>
-          </Dialog.Content>
-        </Dialog.Portal>
+        </DialogContent>
       </Dialog.Root>
     </div>
   );

@@ -13,7 +13,6 @@ import { useAsyncCallback } from 'react-async-hook';
 import { FormError } from '@app/ui/form';
 import { SubmitButton } from '@app/ui/submit';
 import { useAuth } from 'lib/data/use-auth';
-import { Button } from './Button';
 import { toast } from 'react-toastify';
 import { Dialog, DialogContent, DialogTrigger } from '@app/ui/dialog';
 import { useMutation } from 'urql';
@@ -188,8 +187,8 @@ export const ParticipationDialog = ({ data }: DialogProps) => {
   }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
-        <Button>{myRegistration ? 'Upravit přihlášku' : 'Přihlásit'}</Button>
+      <DialogTrigger className="button button-accent">
+        {myRegistration ? 'Upravit přihlášku' : 'Přihlásit'}
       </DialogTrigger>
       <DialogContent>
         {user ? (

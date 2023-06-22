@@ -48,10 +48,8 @@ export function CohortItem({ item }: { item: CohortWithMembersFragment }) {
 const UserDetailButton: React.FC<{ user: UserPublicFragment & { hasValidPayment: boolean | null } }> = ({ user }) => {
   return (
     <Dialog>
-      <DialogTrigger>
-        <button className="underline text-neutral-12">
-          {user.uPrijmeni}, {user.uJmeno}
-        </button>
+      <DialogTrigger className="underline text-neutral-12">
+        {user.uPrijmeni}, {user.uJmeno}
       </DialogTrigger>
       <DialogContent>
         <DialogTitle className="text-xl">
