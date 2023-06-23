@@ -3,6 +3,7 @@ import Link from 'next/link';
 import classNames from 'classnames';
 import { ArrowRight } from 'lucide-react';
 import { Route } from 'nextjs-routes';
+import Image from 'next/image';
 
 type ServiceCardProps = {
   image: string;
@@ -21,10 +22,12 @@ export function ServiceCard(props: ServiceCardProps) {
       )}
     >
       <div className="relative overflow-hidden max-h-[300px]">
-        <img
-          className="sm:rounded-l-lg w-full h-full object-cover object-[50%_30%] transition duration-300 group-hover:scale-110"
+        <Image
+          className="sm:rounded-l-lg object-cover object-[50%_30%] transition duration-300 group-hover:scale-110"
           src={props.image}
           alt={props.header}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 30vw, 25vw"
+          fill
         />
       </div>
       <div className="bg-stone-800 group-even:bg-red-500 h-3 md:h-auto md:w-3" />

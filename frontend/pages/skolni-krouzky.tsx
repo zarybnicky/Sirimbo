@@ -2,6 +2,7 @@ import * as React from 'react';
 import { CallToAction } from 'components/CallToAction';
 import { Heading } from 'components/Heading';
 import type { NextPageWithLayout } from 'pages/_app';
+import Image from 'next/image';
 
 const Page: NextPageWithLayout = () => {
   return (
@@ -45,7 +46,13 @@ const Page: NextPageWithLayout = () => {
         </a>
       </div>
 
-      <img className="my-8" src="https://tkolymp.cz/galerie/clanky/Týmové-foto-1.jpg" />
+      <Image
+        className="my-8"
+        src="https://tkolymp.cz/galerie/clanky/Týmové-foto-1.jpg"
+        alt="Společné foto závěrečného vystoupení Olymp Dance"
+        sizes="(max-width: 768px) 100vw, 50vw"
+        fill
+      />
 
       <CallToAction />
     </>

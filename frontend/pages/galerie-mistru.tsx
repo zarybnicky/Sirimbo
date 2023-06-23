@@ -53,7 +53,7 @@ const boruvci = {
       <p>Mistři ČR Junioři I 2016 – Standardní tance (Praha)</p>
       <p>Mistři ČR Junioři I 2016 – Latinskoamerické tance (Olomouc)</p>
       <p>Mistři ČR Junioři I 2016 – 10 tanců (Zlín)</p>
-      <p>Mistři ČR Junioři II 2016 – 10 tanců (Zlín)</p>
+      <p>Mistři ČR Junioři II 2017 – 10 tanců (Zlín)</p>
     </div>
   ),
 };
@@ -99,6 +99,9 @@ const selsdon = {
   content: (
     <div className="prose prose-accent">
       <p>Mistři ČR Junioři I 2022 – Latinskoamerické tance (Praha)</p>
+      <p>Mistři ČR Junioři I 2023 – Standardní tance</p>
+      <p>Mistři ČR Junioři I 2023 – Latinskoamerické tance</p>
+      <p>Mistři ČR Junioři I 2023 – 10 tanců</p>
     </div>
   ),
 };
