@@ -1,7 +1,5 @@
 {
-  inputs.migrate = { flake = false; url = github:graphile/migrate/main; };
-
-  outputs = { self, nixpkgs, migrate }: let
+  outputs = { self, nixpkgs }: let
     inherit (nixpkgs.lib) flip mapAttrs mapAttrsToList;
 
     pkgs = import nixpkgs {
@@ -15,10 +13,8 @@
       phpstan = final.callPackage ./nix/phpstan.nix {};
       ncc = final.callPackage ./nix/ncc.nix {};
       squawk = final.callPackage ./nix/squawk.nix {};
-      graphile-migrate = final.callPackage ./nix/graphile-migrate.nix { src = migrate; };
       sirimbo-backend = final.callPackage ./backend/package.nix {};
       sirimbo-frontend = final.callPackage ./frontend/package.nix {};
-      sirimbo-migrations = final.callPackage ./migrations/package.nix {};
 
       sirimbo-php = (final.callPackage ./sirimbo-php/composer-project.nix {
         php = final.php82;
@@ -44,13 +40,12 @@
 
     packages.x86_64-linux = {
       inherit (pkgs)
-        squawk ncc sirimbo-php sirimbo-frontend sirimbo-backend graphile-migrate sirimbo-migrations;
+        squawk ncc sirimbo-php sirimbo-frontend sirimbo-backend;
     };
 
     devShell.x86_64-linux = pkgs.mkShell {
       nativeBuildInputs = [
         pkgs.entr
-        pkgs.graphile-migrate
         pkgs.yarn
         pkgs.phpstan
         pkgs.nodePackages.typescript

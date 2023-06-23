@@ -8,7 +8,6 @@
   "private": true,
   "scripts": {
     "build": "webpack --progress",
-    "worker-schema": "tsnd src/worker-schema.ts",
     "start": "tsnd --respawn src/index.ts"
   },
   "dependencies": {

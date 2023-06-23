@@ -217,22 +217,6 @@ in {
           RestartSec = "10s";
         };
       };
-
-      systemd.services.sirimbo-migrate = {
-        description = "${pkgName} Migrations";
-        wantedBy = [ "multi-user.target" ];
-        after = [ "network-online.target" "postgresql.service" ];
-        requires = [ "postgresql.service" ];
-        environment.DATABASE_URL = "postgres://${cfg.user}@localhost/olymp";
-        serviceConfig = {
-          User = cfg.user;
-          Group = cfg.group;
-          Type = "oneshot";
-          RemainAfterExit = "true";
-          WorkingDirectory = pkgs.sirimbo-migrations;
-          ExecStart = "${pkgs.graphile-migrate}/bin/graphile-migrate migrate";
-        };
-      };
     })
   ];
 }
