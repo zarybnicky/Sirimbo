@@ -325,6 +325,7 @@ export type Attachment = {
   __typename?: 'Attachment';
   directory: Maybe<Scalars['String']['output']>;
   downloadUrl: Scalars['String']['output'];
+  height: Maybe<Scalars['Int']['output']>;
   /** Reads and enables pagination through a set of `LocationAttachment`. */
   locationAttachmentsByObjectName: LocationAttachmentsConnection;
   objectName: Scalars['String']['output'];
@@ -334,11 +335,13 @@ export type Attachment = {
   roomAttachmentsByObjectName: RoomAttachmentsConnection;
   /** Reads and enables pagination through a set of `TenantAttachment`. */
   tenantAttachmentsByObjectName: TenantAttachmentsConnection;
+  thumbhash: Maybe<Scalars['String']['output']>;
   uploadUrl: Scalars['String']['output'];
   uploadedAt: Scalars['Datetime']['output'];
   uploadedBy: Maybe<Scalars['BigInt']['output']>;
   /** Reads a single `User` that is related to this `Attachment`. */
   userByUploadedBy: Maybe<User>;
+  width: Maybe<Scalars['Int']['output']>;
 };
 
 
@@ -409,18 +412,24 @@ export type AttachmentDirectoryEdge = {
 
 /** An input for mutations affecting `Attachment` */
 export type AttachmentInput = {
+  height?: InputMaybe<Scalars['Int']['input']>;
   objectName: Scalars['String']['input'];
   previewObjectName?: InputMaybe<Scalars['String']['input']>;
+  thumbhash?: InputMaybe<Scalars['String']['input']>;
   uploadedAt?: InputMaybe<Scalars['Datetime']['input']>;
   uploadedBy?: InputMaybe<Scalars['BigInt']['input']>;
+  width?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** Represents an update to a `Attachment`. Fields that are set will be updated. */
 export type AttachmentPatch = {
+  height?: InputMaybe<Scalars['Int']['input']>;
   objectName?: InputMaybe<Scalars['String']['input']>;
   previewObjectName?: InputMaybe<Scalars['String']['input']>;
+  thumbhash?: InputMaybe<Scalars['String']['input']>;
   uploadedAt?: InputMaybe<Scalars['Datetime']['input']>;
   uploadedBy?: InputMaybe<Scalars['BigInt']['input']>;
+  width?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** A connection to a list of `Attachment` values. */
@@ -12900,16 +12909,19 @@ export type GraphCacheResolvers = {
   Attachment?: {
     directory?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
     downloadUrl?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
+    height?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['Int'] | string>,
     locationAttachmentsByObjectName?: GraphCacheResolver<WithTypename<Attachment>, AttachmentLocationAttachmentsByObjectNameArgs, WithTypename<LocationAttachmentsConnection> | string>,
     objectName?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
     previewObjectName?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
     publicUrl?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
     roomAttachmentsByObjectName?: GraphCacheResolver<WithTypename<Attachment>, AttachmentRoomAttachmentsByObjectNameArgs, WithTypename<RoomAttachmentsConnection> | string>,
     tenantAttachmentsByObjectName?: GraphCacheResolver<WithTypename<Attachment>, AttachmentTenantAttachmentsByObjectNameArgs, WithTypename<TenantAttachmentsConnection> | string>,
+    thumbhash?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
     uploadUrl?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['String'] | string>,
     uploadedAt?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['Datetime'] | string>,
     uploadedBy?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['BigInt'] | string>,
-    userByUploadedBy?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, WithTypename<User> | string>
+    userByUploadedBy?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, WithTypename<User> | string>,
+    width?: GraphCacheResolver<WithTypename<Attachment>, Record<string, never>, Scalars['Int'] | string>
   },
   AttachmentDirectoriesConnection?: {
     edges?: GraphCacheResolver<WithTypename<AttachmentDirectoriesConnection>, Record<string, never>, Array<WithTypename<AttachmentDirectoryEdge> | string>>,

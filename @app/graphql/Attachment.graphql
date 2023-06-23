@@ -7,19 +7,25 @@ mutation CreateAttachment($input: CreateAttachmentInput!) {
   }
 }
 
+fragment Attachment on Attachment {
+  objectName
+  publicUrl
+  width
+  height
+  thumbhash
+}
+
 query Attachments($directory: String) {
   attachments(condition: { directory: $directory }) {
     nodes {
-      objectName
-      publicUrl
+      ...Attachment
     }
   }
 }
 
 query Attachment($objectName: String!) {
   attachment(objectName: $objectName) {
-    objectName
-    publicUrl
+    ...Attachment
   }
 }
 

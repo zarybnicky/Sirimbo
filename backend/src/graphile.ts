@@ -4,7 +4,7 @@ import path from 'path';
 import { pool } from './db';
 import { gql, makeWrapResolversPlugin } from 'graphile-utils';
 import { NodePlugin } from 'graphile-build';
-import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 const s3client = new S3Client({
@@ -105,19 +105,26 @@ export const graphileOptions: PostGraphileOptions<express.Request, express.Respo
     makeWrapResolversPlugin({
       Mutation: {
         login: {
-          async resolve(resolver, _parent, _args, context, _resolveInfo) {
-            const result = await (resolver as any)();
+          async resolve(resolve, _parent, _args, context, _resolveInfo) {
+            const result = await (resolve as any)();
             context.setAuthCookie(result.data.value.sess.ss_id);
             return result;
           },
         },
         logout: {
-          async resolve(resolver, _parent, _args, context, _resolveInfo) {
-            const result = await (resolver as any)();
+          async resolve(resolve, _parent, _args, context, _resolveInfo) {
+            const result = await (resolve as any)();
             context.unsetAuthCookie();
             return result;
           },
         },
+        deleteAttachment: {
+          async resolve(resolve, _source, args, _context, _resolveInfo) {
+            const result = await (resolve as any)();
+            s3client.send(new DeleteObjectCommand({ Key: args.input.objectName, Bucket: bucketName }));
+            return result;
+          },
+        }
       },
     }),
     makeExtendSchemaPlugin((_build) => ({

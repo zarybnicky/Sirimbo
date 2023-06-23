@@ -111,3 +111,7 @@ begin
 
   end if;
 end $$;
+
+alter table attachment add column if not exists thumbhash text null;
+alter table attachment add column if not exists width int null;
+alter table attachment add column if not exists height int null;

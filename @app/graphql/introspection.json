@@ -695,6 +695,14 @@
             "args": []
           },
           {
+            "name": "height",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "locationAttachmentsByObjectName",
             "type": {
               "kind": "NON_NULL",
@@ -929,6 +937,14 @@
             ]
           },
           {
+            "name": "thumbhash",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "uploadUrl",
             "type": {
               "kind": "NON_NULL",
@@ -964,6 +980,14 @@
               "kind": "OBJECT",
               "name": "User",
               "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "width",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           }

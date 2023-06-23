@@ -312,6 +312,7 @@ input AktualityPatch {
 type Attachment {
   directory: String
   downloadUrl: String!
+  height: Int
 
   """Reads and enables pagination through a set of `LocationAttachment`."""
   locationAttachmentsByObjectName(
@@ -402,12 +403,14 @@ type Attachment {
     """The method to use when ordering `TenantAttachment`."""
     orderBy: [TenantAttachmentsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TenantAttachmentsConnection!
+  thumbhash: String
   uploadUrl: String!
   uploadedAt: Datetime!
   uploadedBy: BigInt
 
   """Reads a single `User` that is related to this `Attachment`."""
   userByUploadedBy: User
+  width: Int
 }
 
 """
@@ -450,20 +453,26 @@ type AttachmentDirectoryEdge {
 
 """An input for mutations affecting `Attachment`"""
 input AttachmentInput {
+  height: Int
   objectName: String!
   previewObjectName: String
+  thumbhash: String
   uploadedAt: Datetime
   uploadedBy: BigInt
+  width: Int
 }
 
 """
 Represents an update to a `Attachment`. Fields that are set will be updated.
 """
 input AttachmentPatch {
+  height: Int
   objectName: String
   previewObjectName: String
+  thumbhash: String
   uploadedAt: Datetime
   uploadedBy: BigInt
+  width: Int
 }
 
 """A connection to a list of `Attachment` values."""

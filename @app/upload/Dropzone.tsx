@@ -52,31 +52,28 @@ export const Dropzone = ({}: {}) => {
   });
 
   const [directory, setDirectory] = React.useState('');
-  const [{ data: existingFiles }] = useQuery({ query: AttachmentsDocument, variables: { directory } });
-  const [{ data: directories }] = useQuery({ query: AttachmentDirectoriesDocument });
+  const [{ data: existingFiles }] = useQuery({ query: AttachmentsDocument, variables: { directory }, requestPolicy: 'cache-and-network' });
+  const [{ data: directories }] = useQuery({ query: AttachmentDirectoriesDocument, requestPolicy: 'cache-and-network' });
   const [_1, mutate] = useMutation(CreateAttachmentDocument);
 
   const confirm = React.useCallback(async (e: React.MouseEvent) => {
     e.preventDefault();
     setNewFiles(xs => xs.map(x => ({ ...x, status: 'uploading' })));
 
-    await Promise.all(newFiles.map(async (file) => {
-      const objectName = [directory, `${+new Date()}-${file.file.name}`].filter(Boolean).join('/');
+    await Promise.all(newFiles.map(async ({file, width, height, thumbhash }) => {
+      const objectName = [directory, `${+new Date()}-${file.name}`].filter(Boolean).join('/');
       const result = await mutate({
         input: {
-          attachment: { objectName },
+          attachment: { objectName, width, height, thumbhash },
         },
       });
       const { uploadUrl } = result.data?.createAttachment?.attachment || {};
       if (uploadUrl) {
-        await fetch(uploadUrl, {
-          method: 'PUT',
-          body: file.file,
-        });
-        setNewFiles(xs => xs.map(x => x.file === file.file ? ({ ...file, status: 'done' }) : x))
+        await fetch(uploadUrl, { method: 'PUT', body: file });
+        setNewFiles(xs => xs.map(x => x.file === file ? ({ ...x, status: 'done' }) : x))
       } else {
         console.log(result);
-        setNewFiles(xs => xs.map(x => x.file === file.file ? ({ ...file, status: 'error' }) : x))
+        setNewFiles(xs => xs.map(x => x.file === file ? ({ ...x, status: 'error' }) : x))
       }
     }));
     setTimeout(() => {
@@ -111,8 +108,8 @@ export const Dropzone = ({}: {}) => {
 
         {newFiles.map((image) => (
           <div className="flex" key={image.file.name}>
-            <img src={image.objectURL} />
-            <img width={image.width} height={image.height} src={thumbHashToDataURL(new Uint8Array(atob(image.thumbhash).split('').map(x => x.charCodeAt(0))))} />
+            <img src={image.objectURL} draggable={false} />
+            <img width={image.width} draggable={false} height={image.height} src={thumbHashToDataURL(new Uint8Array(atob(image.thumbhash).split('').map(x => x.charCodeAt(0))))} />
           </div>
         ))}
 
