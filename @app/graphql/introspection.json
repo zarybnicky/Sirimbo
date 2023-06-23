@@ -19790,6 +19790,13 @@
                 }
               },
               {
+                "name": "archive",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
                 "name": "before",
                 "type": {
                   "kind": "SCALAR",

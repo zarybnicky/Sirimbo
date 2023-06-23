@@ -8509,6 +8509,7 @@ export type QueryLocationsArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryMyAnnouncementsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
+  archive?: InputMaybe<Scalars['Boolean']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;

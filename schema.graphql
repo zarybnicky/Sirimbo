@@ -9684,6 +9684,7 @@ type Query {
   myAnnouncements(
     """Read all values in the set after (below) this cursor."""
     after: Cursor
+    archive: Boolean
 
     """Read all values in the set before (above) this cursor."""
     before: Cursor

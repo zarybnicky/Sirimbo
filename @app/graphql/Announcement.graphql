@@ -36,8 +36,9 @@ query StickyAnnouncements {
   }
 }
 
-query MyAnnouncements($first: Int, $offset: Int) {
+query MyAnnouncements($archive: Boolean = false, $first: Int, $offset: Int) {
   myAnnouncements(
+    archive: $archive,
     first: $first,
     offset: $offset,
   ) {

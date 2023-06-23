@@ -115,3 +115,13 @@ end $$;
 alter table attachment add column if not exists thumbhash text null;
 alter table attachment add column if not exists width int null;
 alter table attachment add column if not exists height int null;
+
+drop function my_announcements();
+create or replace function my_announcements(archive boolean default false) returns setof upozorneni as $$
+  select upozorneni.* from upozorneni
+  where is_visible = not archive and sticky = false
+    and (scheduled_since is null or scheduled_since <= now())
+    and (scheduled_until is null or scheduled_until >= now())
+  order by up_timestamp_add desc;
+$$ language sql stable;
+grant execute on function my_announcements to anonymous;
