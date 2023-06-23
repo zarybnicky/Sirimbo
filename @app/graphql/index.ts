@@ -4304,6 +4304,7 @@ export type Event = {
   attendeeUsers: AttendeeUsersConnection;
   capacity: Scalars['BigInt']['output'];
   description: Scalars['String']['output'];
+  descriptionMember: Scalars['String']['output'];
   enableNotes: Scalars['Boolean']['output'];
   filesLegacy: Scalars['String']['output'];
   id: Scalars['BigInt']['output'];
@@ -4359,6 +4360,7 @@ export type EventCondition = {
 export type EventInput = {
   capacity?: InputMaybe<Scalars['BigInt']['input']>;
   description: Scalars['String']['input'];
+  descriptionMember?: InputMaybe<Scalars['String']['input']>;
   enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
   filesLegacy?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
@@ -4378,6 +4380,7 @@ export type EventInput = {
 export type EventPatch = {
   capacity?: InputMaybe<Scalars['BigInt']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  descriptionMember?: InputMaybe<Scalars['String']['input']>;
   enableNotes?: InputMaybe<Scalars['Boolean']['input']>;
   filesLegacy?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
@@ -13766,6 +13769,7 @@ export type GraphCacheResolvers = {
     attendeeUsers?: GraphCacheResolver<WithTypename<Event>, EventAttendeeUsersArgs, WithTypename<AttendeeUsersConnection> | string>,
     capacity?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['BigInt'] | string>,
     description?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
+    descriptionMember?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
     enableNotes?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Boolean'] | string>,
     filesLegacy?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
     id?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['BigInt'] | string>,

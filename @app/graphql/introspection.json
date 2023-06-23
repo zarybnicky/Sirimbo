@@ -9048,6 +9048,17 @@
             "args": []
           },
           {
+            "name": "descriptionMember",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "enableNotes",
             "type": {
               "kind": "NON_NULL",

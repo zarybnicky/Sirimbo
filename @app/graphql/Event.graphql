@@ -5,6 +5,7 @@ fragment Event on Event {
   until
   summary
   description
+  descriptionMember
   filesLegacy
   name
   capacity

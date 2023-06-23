@@ -28,6 +28,7 @@ type FormProps = Pick<
   | 'locationText'
   | 'summary'
   | 'description'
+  | 'descriptionMember'
   | 'capacity'
   | 'isVisible'
   | 'isPublic'
@@ -161,6 +162,12 @@ export const EventForm = ({ id = '' }: { id?: string }) => {
         initialState={data?.description}
         name="description"
         label="Další info"
+      />
+      <RichTextEditor
+        control={control}
+        initialState={data?.description}
+        name="descriptionMember"
+        label="Další info pro členy"
       />
     </form>
   );

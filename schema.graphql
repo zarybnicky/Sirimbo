@@ -4855,6 +4855,7 @@ type Event {
   ): AttendeeUsersConnection!
   capacity: BigInt!
   description: String!
+  descriptionMember: String!
   enableNotes: Boolean!
   filesLegacy: String!
   id: BigInt!
@@ -4893,6 +4894,7 @@ input EventCondition {
 input EventInput {
   capacity: BigInt
   description: String!
+  descriptionMember: String
   enableNotes: Boolean
   filesLegacy: String
   id: BigInt
@@ -4914,6 +4916,7 @@ Represents an update to a `Event`. Fields that are set will be updated.
 input EventPatch {
   capacity: BigInt
   description: String
+  descriptionMember: String
   enableNotes: Boolean
   filesLegacy: String
   id: BigInt

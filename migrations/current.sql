@@ -116,7 +116,7 @@ alter table attachment add column if not exists thumbhash text null;
 alter table attachment add column if not exists width int null;
 alter table attachment add column if not exists height int null;
 
-drop function my_announcements();
+drop function if exists my_announcements();
 create or replace function my_announcements(archive boolean default false) returns setof upozorneni as $$
   select upozorneni.* from upozorneni
   where is_visible = not archive and sticky = false
@@ -125,3 +125,5 @@ create or replace function my_announcements(archive boolean default false) retur
   order by up_timestamp_add desc;
 $$ language sql stable;
 grant execute on function my_announcements to anonymous;
+
+alter table event add column if not exists description_member text not null default '';

@@ -15,7 +15,7 @@ interface Props {
 }
 
 export const EventItem = ({ event }: Props) => {
-  const { perms } = useAuth();
+  const { user, perms } = useAuth();
   const menu = Event.useMenu(event);
   const total =
     (event.attendeeUsers?.nodes?.length ?? 0) +
@@ -71,6 +71,9 @@ export const EventItem = ({ event }: Props) => {
         <RichTextView value={event.summary} />
       )}
       <RichTextView value={event.description} />
+      {!!user && (
+        <RichTextView value={event.descriptionMember} />
+      )}
     </Card>
   );
 };
