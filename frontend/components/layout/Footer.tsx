@@ -95,7 +95,7 @@ export const Footer: React.FC = () => {
               {label: "Město Prostějov", image: LogoProstejov.src},
               {label: "Národní sportovní agentura", image: LogoNsa.src},
             ].map(x => (
-              <div className="flex flex-col grow">
+              <div key={x.label} className="flex flex-col grow">
                 <div className="grow flex items-center">
                 <img
                   alt={x.label}

@@ -37,7 +37,6 @@ export function ComboboxElement<T extends FieldValues>({
       <Popover.Trigger asChild>
         <button
           type="button"
-          role="combobox"
           className={cx(
             'flex bg-accent-1 px-3 py-2 text-sm border rounded-md border-accent-7 justify-between items-center',
             !field.value && 'text-accent-11',

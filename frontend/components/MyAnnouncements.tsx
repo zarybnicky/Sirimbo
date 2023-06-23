@@ -36,7 +36,7 @@ export function MyAnnouncements() {
               'group data-[state=on]:bg-neutral-5 bg-white text-neutral-11',
               'border-y px-2.5 py-2 first:rounded-l-xl first:border-x last:rounded-r-xl last:border-x',
               'border-neutral-5 data-[state=on]:border-neutral-8',
-              'focus:relative focus:outline-none focus-visible:z-20 focus-visible:ring focus-visible:ring-neutral-8 focus-visible:ring-opacity-75',
+              'focus:relative focus:outline-none focus-visible:z-20 focus-visible:ring focus-visible:ring-neutral-8',
             )}
           >
             {label}

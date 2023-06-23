@@ -21,7 +21,7 @@ export const LocationCard = (x: Location) => {
       <h3 className="text-accent-10 text-2xl font-bold mb-4 mt-8">{x.name}</h3>
       <div className="grid md:grid-cols-[1fr_2fr] gap-4 items-center">
         <Map
-          className="map h-[200px]"
+          className="h-[200px]"
           center={x.map}
           zoom={x.map.zoom}
           scrollWheelZoom={false}
