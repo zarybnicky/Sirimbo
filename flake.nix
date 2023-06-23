@@ -15,7 +15,6 @@
 
     overlay = final: prev: {
       ncc = final.callPackage ./nix/ncc.nix {};
-      squawk = final.callPackage ./nix/squawk.nix {};
       graphile-migrate = final.callPackage ./nix/graphile-migrate.nix { src = migrate; };
       sirimbo-backend-beta = final.callPackage ./backend/package.nix {};
       sirimbo-frontend-beta = final.callPackage ./frontend/package.nix {};
@@ -34,7 +33,6 @@
             pkgs.ncc
             pkgs.sqlint
             pkgs.pgformatter
-            # pkgs.squawk
           ];
 
           enterShell = ''
