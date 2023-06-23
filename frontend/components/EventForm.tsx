@@ -165,7 +165,7 @@ export const EventForm = ({ id = '' }: { id?: string }) => {
       />
       <RichTextEditor
         control={control}
-        initialState={data?.description}
+        initialState={data?.descriptionMember}
         name="descriptionMember"
         label="Další info pro členy"
       />

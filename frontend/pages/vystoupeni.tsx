@@ -1,6 +1,7 @@
 import { ExhibitionRequestForm } from 'components/ExhibitionRequestForm';
 import { Heading } from 'components/Heading';
 import { NextSeo } from 'next-seo';
+import { YoutubeEmbed } from 'components/YoutubeEmbed';
 import type { NextPageWithLayout } from 'pages/_app';
 
 const Page: NextPageWithLayout = () => {
@@ -9,7 +10,20 @@ const Page: NextPageWithLayout = () => {
       <Heading>Taneční vystoupení</Heading>
       <NextSeo title="Taneční vystoupení" />
 
-      <div className="prose prose-accent">
+      <YoutubeEmbed
+        title=""
+        thumbnail="https://i3.ytimg.com/vi/VsAgAfc9ZM4/maxresdefault.jpg"
+      >
+        <iframe
+          allowFullScreen
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          width="100%"
+          height="100%"
+          src="https://www.youtube.com/embed/VsAgAfc9ZM4?autoplay=1&amp;mute=0&amp;controls=1&amp;origin=https%3A%2F%2Ftkolymp.cz&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;iv_load_policy=3&amp;modestbranding=1&amp;enablejsapi=1&amp;widgetid=23"
+        ></iframe>
+      </YoutubeEmbed>
+
+      <div className="prose prose-accent mt-8">
         <p>
           Hledáte taneční vystoupení na svůj ples, firemní večírek nebo jinou společenskou
           akci? Máme pro Vás řešení!
@@ -30,7 +44,7 @@ const Page: NextPageWithLayout = () => {
         </p>
       </div>
 
-      <div className="my-16">
+      <div className="mt-8 mb-16">
         <ExhibitionRequestForm />
       </div>
     </>

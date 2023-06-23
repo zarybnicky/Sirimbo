@@ -7,7 +7,7 @@ export function List({ children }: { children: React.ReactNode }) {
     <div
       className={classNames(
         'flex flex-col px-2 max-h-screen min-h-screen flex-none w-full lg:w-80 xl:w-96',
-        'border-r lg:border-accent-6 lg:bg-accent-5 dark:lg:bg-accent-4',
+        'border-r lg:border-accent-6 lg:bg-accent-3 dark:lg:bg-accent-4',
       )}
     >
       {children}
