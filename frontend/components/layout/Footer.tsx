@@ -87,47 +87,25 @@ export const Footer: React.FC = () => {
         <Card className="my-8 p-4 col-span-2">
           <h2 className="text-xl text-red-500 font-bold mb-4">Podporují nás</h2>
 
-          <div className="flex flex-wrap lg:flex-nowrap m-4 gap-4 items-end justify-center text-center text-stone-500">
-            <div>
-              <img
-                alt="Český svaz tanečního sportu"
-                style={{ width: '100%', height: 'auto' }}
-                src={LogoCsts.src}
-              />
-              <div className="h-12 mt-4">Český svaz tanečního sportu</div>
-            </div>
-            <div>
-              <img
-                alt="Město Olomouc"
-                style={{ width: '100%', height: 'auto' }}
-                src={LogoOlomouc.src}
-              />
-              <div className="h-12 mt-4">Město Olomouc</div>
-            </div>
-            <div>
-              <img
-                alt="Olomoucký kraj"
-                style={{ width: '100%', height: 'auto' }}
-                src={LogoKraj.src}
-              />
-              <div className="h-12 mt-4">Olomoucký kraj</div>
-            </div>
-            <div>
-              <img
-                alt="Město Prostějov"
-                style={{ width: '100%', height: 'auto' }}
-                src={LogoProstejov.src}
-              />
-              <div className="h-12 mt-4">Město Prostějov</div>
-            </div>
-            <div>
-              <img
-                alt="Národní sportovní agentura"
-                style={{ width: '100%', height: 'auto' }}
-                src={LogoNsa.src}
-              />
-              <div className="h-12 mt-4">Národní sportovní agentura</div>
-            </div>
+          <div className="flex flex-wrap lg:flex-nowrap m-4 gap-4 items-stretch justify-center text-center text-stone-500">
+            {[
+              {label: "Český svaz tanečního sportu", image: LogoCsts.src},
+              {label: "Město Olomouc", image: LogoOlomouc.src},
+              {label: "Olomoucký kraj", image: LogoKraj.src},
+              {label: "Město Prostějov", image: LogoProstejov.src},
+              {label: "Národní sportovní agentura", image: LogoNsa.src},
+            ].map(x => (
+              <div className="flex flex-col grow">
+                <div className="grow flex items-center">
+                <img
+                  alt={x.label}
+                  className="w-full h-auto"
+                  src={x.image}
+                />
+                </div>
+                <div className="h-12 mt-4">{x.label}</div>
+              </div>
+            ))}
           </div>
         </Card>
 

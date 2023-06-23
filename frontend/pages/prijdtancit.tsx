@@ -170,6 +170,7 @@ const Page: NextPageWithLayout = () => {
       </div>
 
       <LocationCard
+        image="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915639-Saly-Holeckova.jpg"
         name="Taneční centrum při FZŠ Holečkova"
         href="https://www.zsholeckova.cz/"
         mapHref="https://goo.gl/maps/swv3trZB2uvjcQfR6"

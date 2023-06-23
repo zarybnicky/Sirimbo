@@ -46,13 +46,15 @@ const Page: NextPageWithLayout = () => {
         </a>
       </div>
 
+      <div className="my-8 relative min-h-[50vh]">
       <Image
-        className="my-8"
-        src="https://tkolymp.cz/galerie/clanky/Týmové-foto-1.jpg"
+        className="object-contain"
+        src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915638-OlympDance-uvodni-foto.jpg"
         alt="Společné foto závěrečného vystoupení Olymp Dance"
         sizes="(max-width: 768px) 100vw, 50vw"
         fill
       />
+      </div>
 
       <CallToAction />
     </>

@@ -11,9 +11,10 @@ const Page: NextPageWithLayout = () => {
       <Heading>Kde trénujeme</Heading>
       <NextSeo title="Kde trénujeme" />
 
-      <div className="my-16 space-y-4">
-        <h2 className="text-3xl text-accent-11 drop-shadow tracking-wide">V Olomouci</h2>
+      <div className="mt-8 mb-16 space-y-4">
+        <h2 className="text-4xl text-accent-10 tracking-wide">V Olomouci</h2>
         <LocationCard
+          image="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915639-Saly-Holeckova.jpg"
           name="Taneční centrum při FZŠ Holečkova"
           href="https://www.zsholeckova.cz/"
           mapHref="https://goo.gl/maps/swv3trZB2uvjcQfR6"
@@ -25,6 +26,7 @@ const Page: NextPageWithLayout = () => {
         </LocationCard>
 
         <LocationCard
+          image="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915639-Saly-SGO.jpg"
           name="Tělocvična Slovanského gymnázia"
           href="https://www.sgo.cz/"
           mapHref="https://goo.gl/maps/PgsEra8TnYV4V7KGA"

@@ -21,7 +21,7 @@ export function ServiceCard(props: ServiceCardProps) {
         'bg-white relative border border-stone-200 shadow-sm sm:rounded-lg mb-2',
       )}
     >
-      <div className="relative overflow-hidden max-h-[300px]">
+      <div className="relative overflow-hidden min-h-[300px]">
         <Image
           className="sm:rounded-l-lg object-cover object-[50%_30%] transition duration-300 group-hover:scale-110"
           src={props.image}
