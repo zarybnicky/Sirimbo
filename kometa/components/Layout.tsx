@@ -81,7 +81,7 @@ export function Layout({ children, list, isDetail }: LayoutProps) {
         <div
           onClick={() => setIsOpen(false)}
           className={classNames(
-            `fixed inset-0 z-20 bg-black bg-opacity-10 transition duration-200 ease-in-out`,
+            `fixed inset-0 z-20 bg-black/10 transition duration-200 ease-in-out`,
             isOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0',
           )}
         />
@@ -92,7 +92,7 @@ export function Layout({ children, list, isDetail }: LayoutProps) {
               ? 'absolute inset-y-0 left-0 translate-x-0 shadow-lg'
               : 'absolute -translate-x-full',
             'w-3/4 sm:w-1/2 md:w-1/3 lg:w-56 xl:w-64 2xl:w-72 3xl:w-80',
-            'z-30 h-full max-h-screen min-h-screen flex-none transform pb-10 transition duration-200 ease-in-out sm:pb-0 md:w-1/3 lg:relative lg:z-auto lg:translate-x-0',
+            'z-30 h-full max-h-screen min-h-screen flex-none pb-10 transition duration-200 ease-in-out sm:pb-0 lg:relative lg:z-auto lg:translate-x-0',
             'bg-white lg:bg-accent-9 lg:text-white',
             'overflow-y-auto scrollbar',
           )}

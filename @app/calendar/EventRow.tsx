@@ -22,12 +22,12 @@ const EventRow: React.FC<{
     const key = '_lvl_' + current
     const gap = Math.max(0, segment.left - lastEnd)
     if (gap) {
-      const flexBasis = `${(Math.abs(gap) / slots) * 100}%`;
-      row.push(<div key={`${key}_gap`} className="rbc-row-segment" style={{ flexBasis }} />);
+      const width = `${(Math.abs(gap) / slots) * 100}%`;
+      row.push(<div key={`${key}_gap`} className="rbc-row-segment" style={{ width }} />);
     }
-    const flexBasis = `${(Math.abs(segment.span) / slots) * 100}%`;
+    const width = `${(Math.abs(segment.span) / slots) * 100}%`;
     row.push(
-      <div key={key} className="rbc-row-segment" style={{ flexBasis }}>
+      <div key={key} className="rbc-row-segment" style={{ width }}>
         <EventCell
           event={segment.event}
           continuesPrior={slotMetrics.continuesPrior(segment.event)}

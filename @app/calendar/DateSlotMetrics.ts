@@ -1,5 +1,5 @@
 import { eventSegments, endOfRange, eventLevels } from './common'
-import { eq, lt, gt, gte } from './localizer'
+import { eq, lt, gt, gte } from 'date-arithmetic'
 import { CalendarEvent } from './types';
 
 export type DateSlotMetrics = ReturnType<typeof getSlotMetrics>;
@@ -10,11 +10,11 @@ export const getSlotMetrics = ({ range, events, maxRows, minRows }: {
   maxRows: number;
   minRows: number;
 }) => {
-  let { first, last } = endOfRange(range)
+  const { first, last } = endOfRange(range)
 
-  let segments = events.map((evt) => eventSegments(evt, range))
+  const segments = events.map((evt) => eventSegments(evt, range))
+  const { levels, extra } = eventLevels(segments, Math.max(maxRows - 1, 1))
 
-  let { levels, extra } = eventLevels(segments, Math.max(maxRows - 1, 1))
   // Subtract 1 from minRows to not include showMore button row when
   // it would be rendered
   const minEventRows = extra.length > 0 ? minRows - 1 : minRows
@@ -30,10 +30,6 @@ export const getSlotMetrics = ({ range, events, maxRows, minRows }: {
 
     getDateForSlot(slotNumber: number) {
       return range[slotNumber]!
-    },
-
-    getSlotForDate(date: Date) {
-      return range.find((r) => eq(r, date, 'day'))
     },
 
     getEventsForSlot(slot: number) {

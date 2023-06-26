@@ -1,7 +1,7 @@
 import React from 'react';
 import { CalendarEvent } from './types';
 
-export interface SlotInfo {
+interface SlotInfo {
   start: Date;
   end: Date;
   slots: Date[];
@@ -34,6 +34,6 @@ export type SelectionContext = {
 
 export const SelectionContext = React.createContext<SelectionContext>({
   selectedIds: [],
-  onSelectEvent: () => {},
-  onSelectSlot: () => {},
+  onSelectEvent: () => {/* empty */},
+  onSelectSlot: () => {/* empty */},
 });

@@ -15,4 +15,8 @@ export const shortDateFormatter = new Intl.DateTimeFormat('cs-CZ', {
   month: 'long',
 });
 
+export const shortTimeFormatter = new Intl.DateTimeFormat('cs-CZ', {
+  timeStyle: 'short',
+});
+
 export const formatWeekDay = (date: Date) => capitalize(weekDayFormatter.format(date));

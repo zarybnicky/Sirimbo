@@ -1,5 +1,6 @@
 import type { CalendarEvent } from "./types"
-import { add, eq, min, max, diff, startOf, ceil } from './localizer'
+import { diff, ceil } from './localizer'
+import { add, eq, min, max, startOf } from 'date-arithmetic';
 
 export function endOfRange(dateRange: Date[]) {
   return {
@@ -15,13 +16,13 @@ export type Segment = {
   right: number;
 }
 export function eventSegments(event: CalendarEvent, range: Date[]): Segment {
-  let { first, last } = endOfRange(range)
+  const { first, last } = endOfRange(range)
 
-  let slots = diff(first, last, 'day')
-  let start = max(startOf(event.start, 'day'), first)
-  let end = min(ceil(event.end, 'day'), last)
-  let padding = range.findIndex((x) => eq(x, start, 'day'))
-  let span = diff(start, end, 'day')
+  const slots = diff(first, last, 'day')
+  const start = max(startOf(event.start, 'day'), first)
+  const end = min(ceil(event.end, 'day'), last)
+  const padding = range.findIndex((x) => eq(x, start, 'day'))
+  const span = diff(start, end, 'day')
 
   return {
     event,
@@ -36,7 +37,7 @@ export function eventLevels(rowSegments: Segment[], limit = Infinity) {
   const extra: Segment[] = []
 
   for (let i = 0; i < rowSegments.length; i++) {
-    let seg = rowSegments[i]!
+    const seg = rowSegments[i]!
 
     // Check for overlapping
     let j: number

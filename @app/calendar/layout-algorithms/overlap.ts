@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 import sortBy from 'lodash/sortBy'
-import { Event } from 'types';
+import { Event } from '../types';
 import type { TimeSlotMetrics } from '../utils/TimeSlotMetrics';
 
 class ProxyEvent {

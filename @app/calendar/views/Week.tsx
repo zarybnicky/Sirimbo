@@ -1,7 +1,8 @@
 import React from 'react'
 import { Navigate, ViewClass } from '../types'
 import TimeGrid from '../TimeGrid'
-import { startOf, endOf, add, range, startOfWeek } from '../localizer'
+import { range } from '../localizer'
+import { startOf, endOf, add } from 'date-arithmetic';
 
 const Week: ViewClass = (props) => <TimeGrid {...props} />
 
@@ -16,10 +17,6 @@ Week.navigate = (date, action) => {
   }
 }
 
-Week.range = (date) => {
-  let start = startOf(date, 'week', startOfWeek)
-  let end = endOf(date, 'week', startOfWeek)
-  return range(start, end)
-}
+Week.range = (date) => range(startOf(date, 'week', 1), endOf(date, 'week', 1))
 
 export default Week

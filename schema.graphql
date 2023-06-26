@@ -4869,6 +4869,7 @@ type Event {
   since: Date!
   summary: String!
   tenantId: BigInt!
+  titleImageLegacy: String
   until: Date!
   updatedAt: Datetime
 }
@@ -4906,6 +4907,7 @@ input EventInput {
   since: Date!
   summary: String
   tenantId: BigInt
+  titleImageLegacy: String
   until: Date!
   updatedAt: Datetime
 }
@@ -4928,6 +4930,7 @@ input EventPatch {
   since: Date
   summary: String
   tenantId: BigInt
+  titleImageLegacy: String
   until: Date
   updatedAt: Datetime
 }

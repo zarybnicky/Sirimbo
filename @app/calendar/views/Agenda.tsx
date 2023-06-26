@@ -1,106 +1,59 @@
-import clsx from 'clsx'
-import React, { useContext } from 'react'
-import getWidth from 'dom-helpers/width'
-import { Navigate, CalendarEvent, ViewClass } from '../types'
-import { eq, add, endOf, format, gt, inEventRange, lt, startOf, range } from '../localizer'
-import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
+import { add, endOf, eq, startOf } from 'date-arithmetic'
+import React from 'react'
 import { SelectionContext } from '../SelectContext'
+import { format, inEventRange, range, shortTimeIntl, sortEvents } from '../localizer'
+import { CalendarEvent, Navigate, ViewClass } from '../types'
 
-const Agenda: ViewClass = ({ date, range, events }) => {
-  const dateColRef = React.useRef<HTMLTableCellElement>(null)
-  const timeColRef = React.useRef<HTMLTableCellElement>(null)
-  const tbodyRef = React.useRef<HTMLTableSectionElement>(null)
-  const { onSelectEvent } = useContext(SelectionContext);
-
-  useLayoutEffect(() => {
-    let firstRow = tbodyRef.current?.firstChild
-    if (!firstRow) return
-    if (dateColRef.current) {
-      dateColRef.current.style.width = getWidth(firstRow.childNodes[0] as any) + 'px'
-    }
-    if (timeColRef.current) {
-      timeColRef.current.style.width = getWidth(firstRow.childNodes[1] as any) + 'px'
-    }
-  })
-
-  const timeRangeLabel = (day: Date, event: CalendarEvent) => {
-    let { start, end } = event
-
-    let label = "";
-    if (event.allDay) {
-      label = "Celý den"
-    } else if (eq(start, end)) {
-      label = format(start, 'p')
-    } else if (eq(start, end, 'day')) {
-      label = `${format(start, 'p')} – ${format(end, 'p')}`;
-    } else if (eq(day, start, 'day')) {
-      label = format(start, 'p')
-    } else if (eq(day, end, 'day')) {
-      label = format(end, 'p')
-    }
-
-    return (
-      <span className={clsx({
-        'rbc-continues-prior': gt(day, start, 'day'),
-        'rbc-continues-after': lt(day, end, 'day'),
-      })}>
-        {label}
-      </span>
-    )
+const timeRangeLabel = (day: Date, { start, end, allDay }: CalendarEvent) => {
+  if (allDay) {
+    return "Celý den"
   }
-
-  let end = add(date, 7, 'day')
-  events = events.filter((event) => inEventRange(event, {start: startOf(date, 'day'), end: endOf(end, 'day')}));
-  events.sort((a, b) => +a.start - +b.start);
-
-  if (!events.length) {
-    return (
-      <div className="rbc-agenda-view">
-        <span className="rbc-agenda-empty">
-          Žádné události ve zvoleném období
-        </span>
-      </div>
-    );
+  if (eq(start, end)) {
+    return shortTimeIntl.format(start)
   }
+  if (eq(start, end, 'day')) {
+      return shortTimeIntl.formatRange(start, end);
+  }
+  if (eq(day, start, 'day')) {
+    return shortTimeIntl.format(start)
+  }
+  if (eq(day, end, 'day')) {
+    return shortTimeIntl.format(end);
+  }
+}
+
+const Agenda: ViewClass = ({ range, events }) => {
+  const { onSelectEvent } = React.useContext(SelectionContext);
+
+  const eventsPerDay = React.useMemo(() => {
+    const eventsPerDay = new Map<Date, CalendarEvent[]>();
+    range.forEach(day => {
+      const dayRange = { start: startOf(day, 'day'), end: endOf(day, 'day') };
+      const dayEvents = events.filter((e) => inEventRange(e, dayRange));
+      dayEvents.sort(sortEvents);
+      eventsPerDay.set(day, dayEvents);
+    });
+    return Array.from(eventsPerDay.entries());
+  }, [events, range]);
 
   return (
-    <div className="rbc-agenda-view">
-      <table className="rbc-agenda-table">
-        <thead>
-          <tr>
-            <th className="rbc-header" ref={dateColRef}>Datum</th>
-            <th className="rbc-header" ref={timeColRef}>Čas</th>
-            <th className="rbc-header">Událost</th>
-          </tr>
-        </thead>
-      </table>
-      <div className="rbc-agenda-content">
-        <table className="rbc-agenda-table">
-          <tbody ref={tbodyRef}>
-            {range.map((day, dayKey) => (
-              events
-                .filter((e) => inEventRange(e, {start: startOf(day, 'day'), end: endOf(day, 'day')}))
-                .map((event, idx, daysEvents) => (
-                  <tr key={dayKey + '_' + idx}>
-                    {idx === 0 ? (
-                      <td rowSpan={daysEvents.length} className="rbc-agenda-date-cell">
-                        {format(day, 'ccc MMM dd')}
-                      </td>
-                    ) : null}
-
-                    <td className="rbc-agenda-time-cell">
-                      {timeRangeLabel(day, event)}
-                    </td>
-
-                    <td className="rbc-agenda-event-cell" onClick={() => onSelectEvent?.(event)}>
-                      {event.title}
-                    </td>
-                  </tr>
-                ))
-            ))}
-          </tbody>
-        </table>
-      </div>
+    <div>
+      {eventsPerDay.map(([day, events]) => (
+        <div key={+day}>
+          {format(day, 'ccc MMM dd')}
+          {!events.length && (
+            <>Žádné události v tento den</>
+          )}
+          {events.map((event) => (
+            <div key={event.id} onClick={() => onSelectEvent(event)}>
+              <span className="tabular-nums">
+                {timeRangeLabel(day, event)}
+              </span>
+              {event.title}
+            </div>
+          ))}
+        </div>
+      ))}
     </div>
   )
 }

@@ -5,20 +5,28 @@ import { PermissionKey, PermissionLevel } from 'lib/data/use-permissions';
 import { formatWeekDay } from 'lib/format-date';
 import { ScheduleItem } from 'components/ScheduleItem';
 import { ReservationItem } from 'components/ReservationItem';
-import {
-  getCurrentMonday,
-  mondayToWeekRange,
-  mondayToYearRange,
-  WeekPicker,
-} from 'components/WeekPicker';
+import { WeekPicker } from 'components/WeekPicker';
 import type { NextPageWithLayout } from 'pages/_app';
 import { useQuery } from 'urql';
+import { endOf, startOf } from 'date-arithmetic';
 
 const Page: NextPageWithLayout = () => {
-  const [startDate, setStartDate] = React.useState(getCurrentMonday);
+  const [startDate, setStartDate] = React.useState(() => startOf(new Date(), 'week', 1));
 
-  const [{ data: schedules }] = useQuery({query: ScheduleRangeDocument, variables: mondayToWeekRange(startDate)});
-  const [{ data: reservations }] = useQuery({query: ReservationRangeDocument, variables: mondayToYearRange(startDate)});
+  const [{ data: schedules }] = useQuery({
+    query: ScheduleRangeDocument,
+    variables: {
+      startDate: startDate.toISOString(),
+      endDate: endOf(startDate, 'week', 1).toISOString(),
+    }
+  });
+  const [{ data: reservations }] = useQuery({
+    query: ReservationRangeDocument,
+    variables: {
+      startDate: startDate.toISOString(),
+      endDate: endOf(startDate, 'year').toISOString(),
+    },
+  });
 
   const scheduleByDay = React.useMemo(() => {
     const obj: { [date: string]: ScheduleFragment[] } = {};

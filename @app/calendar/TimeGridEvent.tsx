@@ -1,10 +1,10 @@
 import clsx from 'clsx'
-import { format } from './localizer';
+import { shortTimeIntl } from './localizer';
 import React from 'react'
 import { SelectionContext } from './SelectContext';
 import { TimeSlotMetrics } from './TimeSlotMetrics';
 import { CalendarEvent } from './types';
-import { DnDContext } from './DnDContext';
+import { DnDContext, DragDirection } from './DnDContext';
 
 function stringifyPercent(v: string | number) {
   return typeof v === 'string' ? v : v + '%'
@@ -40,40 +40,41 @@ function TimeGridEvent({
   const startsAfter = slotMetrics.startsAfter(event.end)
   const continuesAfter = startsAfterDay || startsAfter;
 
+  const onClick = React.useCallback(() => {
+    onSelectEvent(event)
+  }, [event, onSelectEvent]);
+
+  const onTouchOrMouse = React.useCallback((e: React.TouchEvent | React.MouseEvent) => {
+    if (!!(e as React.MouseEvent).button) {
+      return;
+    }
+    const resizeDirection = (e.target as HTMLElement).dataset.resize
+    if (isResizable && resizeDirection) {
+      draggable.onBeginAction(event, 'resize', resizeDirection as DragDirection);
+    } else if (isDraggable) {
+      event.sourceResource = resourceId;
+      draggable.onBeginAction(event, 'move');
+    }
+  }, [draggable, event, isDraggable, isResizable, resourceId]);
+
   const label = React.useMemo(() => {
     if (startsBeforeDay && startsAfterDay) {
       return "Celý den";
     }
     if (startsBeforeDay) {
-      return ` – ${format(event.end, 'p')}`
+      return ` – ${shortTimeIntl.format(event.end)}`
     }
     if (startsAfterDay) {
-      return `${format(event.start, 'p')} – `
+      return `${shortTimeIntl.format(event.start)} – `
     }
-    return `${format(event.start, 'p')} – ${format(event.end, 'p')}`;
-  }, [continuesPrior, continuesAfter, event]);
+    return shortTimeIntl.formatRange(event.start, event.end);
+  }, [event, startsAfterDay, startsBeforeDay]);
 
   return (
     <div
-      onClick={() => onSelectEvent(event)}
-      onMouseDown={(e) => {
-        if (e.button !== 0) return;
-        if (!isDraggable) return;
-        // hack: because of the way the anchors are arranged in the DOM, resize
-        // anchor events will bubble up to the move anchor listener. Don't start
-        // move operations when we're on a resize anchor.
-        if (!(e.target as any).getAttribute('class')?.includes('rbc-resize-')) {
-          event.sourceResource = resourceId;
-          draggable.onBeginAction(event, 'move');
-        }
-      }}
-      onTouchStart={(e) => {
-        if (!isDraggable) return;
-        if (!(e.target as any).getAttribute('class')?.includes('rbc-resize-')) {
-          event.sourceResource = resourceId;
-          draggable.onBeginAction(event, 'move');
-        }
-        }}
+      onClick={onClick}
+      onMouseDown={onTouchOrMouse}
+      onTouchStart={onTouchOrMouse}
       style={{
         top: stringifyPercent(style.top),
         width: isBackgroundEvent ? `calc(${style.width} + 10px)` : stringifyPercent(style.width),
@@ -81,28 +82,22 @@ function TimeGridEvent({
         left: stringifyPercent(Math.max(0, style.xOffset)),
       }}
       title={[label, event.title].filter(Boolean).join(': ')}
-      className={clsx({
-        'rbc-event': true,
-        [className ?? '']: true,
+      className={clsx(className, {
+        'rbc-event group transition-opacity': true,
         'rbc-resizable': isResizable,
         // TODO: 'rbc-selected': selected,
         'opacity-75': isBackgroundEvent,
         'rbc-drag-preview': event.__isPreview,
-        'rbc-event-continues-earlier': continuesPrior,
-        'rbc-event-continues-later': continuesAfter,
+        'rounded-t-none': continuesPrior,
+        'rounded-b-none': continuesAfter,
         'rbc-dragged-event': draggable.stateRef.current.interacting && draggable.stateRef.current.event === event,
       })}
     >
       {!continuesPrior && isResizable && (
         <div
-          className="rbc-resize-ns-anchor"
-          onMouseDown={(e) => {
-            if (e.button !== 0) return;
-            draggable.onBeginAction(event, 'resize', "UP");
-          }}
-        >
-          <div className="rbc-resize-ns-icon" />
-        </div>
+          className="absolute top-0 opacity-0 group-hover:opacity-100 cursor-n-resize w-3 left-1/2 mx-auto border-t-4 border-double"
+          data-resize="UP"
+        />
       )}
 
       <div className="rbc-event-content">
@@ -114,14 +109,9 @@ function TimeGridEvent({
 
       {!continuesPrior && isResizable && (
         <div
-          className="rbc-resize-ns-anchor"
-          onMouseDown={(e) => {
-            if (e.button !== 0) return;
-            draggable.onBeginAction(event, 'resize', "DOWN");
-          }}
-        >
-          <div className="rbc-resize-ns-icon" />
-        </div>
+          className="absolute bottom-0 opacity-0 group-hover:opacity-100 cursor-s-resize w-3 left-1/2 mx-auto border-t-4 border-double"
+          data-resize="DOWN"
+        />
       )}
     </div>
   );

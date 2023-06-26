@@ -1,55 +1,3 @@
-$out-of-range-color: lighten(#333, 40%) !default;
-$out-of-range-bg-color: lighten(#333, 70%) !default;
-
-$calendar-border: #ddd !default;
-$cell-border: #ddd !default;
-
-$border-color: #ccc !default;
-
-$time-selection-color: white !default;
-$time-selection-bg-color: rgba(0, 0, 0, 0.5) !default;
-$date-selection-bg-color: rgba(0, 0, 0, 0.1) !default;
-
-$event-bg: #3174ad !default;
-$event-border: darken(#3174ad, 10%) !default;
-$event-outline: #3b99fc !default;
-$event-color: #fff !default;
-$event-border-radius: 5px !default;
-$event-padding: 2px 5px !default;
-$event-zindex: 4 !default;
-
-$btn-color: #373a3c !default;
-$btn-bg: #fff !default;
-$btn-border: #ccc !default;
-
-$today-highlight-bg: #eaf6ff !default;
-
-$active-background: darken($btn-bg, 10%);
-$active-border: darken($btn-border, 12%);
-
-.rbc-btn {
-  color: inherit;
-  font: inherit;
-  margin: 0;
-}
-
-button.rbc-btn {
-  overflow: visible;
-  text-transform: none;
-  appearance: button;
-  cursor: pointer;
-}
-
-button[disabled].rbc-btn {
-  cursor: not-allowed;
-}
-
-button.rbc-input::-moz-focus-inner {
-  border: 0;
-  padding: 0;
-}
-
-
 .rbc-calendar {
   box-sizing: border-box;
   height: 100%;
@@ -64,19 +12,12 @@ button.rbc-input::-moz-focus-inner {
   box-sizing: inherit;
 }
 
-.rbc-ellipsis {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .rbc-off-range {
-  color: $out-of-range-color;
+  color: lighten(#333, 40%);
 }
 
 .rbc-off-range-bg {
-  background: $out-of-range-bg-color;
+  background: lighten(#333, 70%);
 }
 
 .rbc-header {
@@ -90,16 +31,14 @@ button.rbc-input::-moz-focus-inner {
   font-weight: bold;
   font-size: 90%;
   min-height: 0;
-  border-bottom: 1px solid $cell-border;
+  border-bottom: 1px solid #ddd;
 
   & + & {
-    border-left: 1px solid $cell-border;
+    border-left: 1px solid #ddd;
   }
 
   & > a {
-    &,
-    &:active,
-    &:visited {
+    &, &:active, &:visited {
       color: inherit;
       text-decoration: none;
     }
@@ -119,12 +58,11 @@ button.rbc-input::-moz-focus-inner {
 .rbc-row-content {
   position: relative;
   user-select: none;
-  -webkit-user-select: none;
   z-index: 4;
 }
 
 .rbc-today {
-  background-color: $today-highlight-bg;
+  background-color: #eaf6ff;
 }
 
 .rbc-toolbar {
@@ -142,7 +80,7 @@ button.rbc-input::-moz-focus-inner {
   }
 
   & button {
-    color: $btn-color;
+    color: #373a3c;
     display: inline-flex;
     margin: 0;
     text-align: center;
@@ -150,7 +88,7 @@ button.rbc-input::-moz-focus-inner {
     gap: 4px;
     align-items: baseline;
     background-image: none;
-    border: 1px solid $btn-border;
+    border: 1px solid #ccc;
     padding: .375rem 1rem;
     border-radius: 4px;
     line-height: normal;
@@ -160,27 +98,21 @@ button.rbc-input::-moz-focus-inner {
     &.rbc-active {
       background-image: none;
       box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
-      background-color: $active-background;
-      border-color: $active-border;
+      background-color: darken(#fff, 10%);
+      border-color: darken(#ccc, 12%);
 
       &:hover,
       &:focus {
-        color: $btn-color;
-        background-color: darken($btn-bg, 17%);
-        border-color: darken($btn-border, 25%);
+        color: #373a3c;
+        background-color: darken(#fff, 17%);
+        border-color: darken(#ccc, 25%);
       }
     }
 
-    &:focus {
-      color: $btn-color;
-      background-color: $active-background;
-      border-color: $active-border;
-    }
-
-    &:hover {
-      color: $btn-color;
-      background-color: $active-background;
-          border-color: $active-border;
+    &:focus, &:hover {
+      color: #373a3c;
+      background-color: darken(#fff, 10%);
+      border-color: darken(#ccc, 12%);
     }
   }
 }
@@ -214,58 +146,36 @@ button.rbc-input::-moz-focus-inner {
 }
 
 .rbc-event {
-  border: none;
-  box-sizing: border-box;
-  box-shadow: none;
-  margin: 0;
-  padding: $event-padding;
-  background-color: $event-bg;
-  border-radius: $event-border-radius;
-  color: $event-color;
+  padding: 2px 5px;
+  background-color: #3174ad;
+  border-radius: 5px;
+  color: #fff;
   cursor: pointer;
   width: 100%;
+  max-width: 100%;
+  text-overflow: ellipsis;
   text-align: left;
 
-  .rbc-slot-selecting & {
-    cursor: inherit;
-    pointer-events: none;
-  }
-
   &.rbc-selected {
-    background-color: darken($event-bg, 10%);
+    background-color: darken(#3174ad, 10%);
   }
 
   &:focus {
-    outline: 5px auto $event-outline;
+    outline: 5px auto #3b99fc;
   }
 }
 
+.rbc-slot-selecting .rbc-event {
+  cursor: inherit;
+  pointer-events: none;
+}
+
 .rbc-event-label {
-  @extend .rbc-ellipsis;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 80%;
-}
-
-.rbc-event-overlaps {
-  box-shadow: -1px 1px 5px 0px rgba(51,51,51,.5);
-}
-
-.rbc-event-continues-prior {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-}
-.rbc-event-continues-after {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-
-.rbc-event-continues-earlier {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-.rbc-event-continues-later {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
 }
 
 .rbc-row {
@@ -277,59 +187,54 @@ button.rbc-input::-moz-focus-inner {
   padding: 0 1px 1px 1px;
 
   .rbc-event-content {
-    @extend .rbc-ellipsis;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
 .rbc-selected-cell {
-  background-color: $date-selection-bg-color;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .rbc-show-more {
-  @extend .rbc-ellipsis;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   background-color: rgba(255, 255, 255, 0.3);
-  z-index: $event-zindex;
+  z-index: 4;
   font-weight: bold;
   font-size: 85%;
   height: auto;
   line-height: normal;
-  color: $event-bg;
+  color: #3174ad;
   &:hover,
   &:focus {
-    color: darken($event-bg, 10%);
+    color: darken(#3174ad, 10%);
   }
 }
 
 .rbc-month-view {
   position: relative;
-  border: 1px solid $calendar-border;
+  border: 1px solid #ddd;
   display: flex;
   flex-direction: column;
   flex: 1 0 0;
   width: 100%;
   user-select: none;
-  -webkit-user-select: none;
-
-  height: 100%; // ie-fix
-}
-
-.rbc-month-header {
-  display: flex;
-  flex-direction: row;
 }
 
 .rbc-month-row {
   display: flex;
   position: relative;
   flex-direction: column;
-  flex: 1 0 0; // postcss will remove the 0px here hence the duplication below
-  flex-basis: 0px;
+  flex: 1 0 0px;
   overflow: hidden;
 
-  height: 100%; // ie-fix
-
   & + & {
-    border-top: 1px solid $cell-border;
+    border-top: 1px solid #ddd;
   }
 }
 
@@ -344,9 +249,7 @@ button.rbc-input::-moz-focus-inner {
   }
 
   > a {
-    &,
-    &:active,
-    &:visited {
+    &, &:active, &:visited {
       color: inherit;
       text-decoration: none;
     }
@@ -354,83 +257,16 @@ button.rbc-input::-moz-focus-inner {
 }
 
 .rbc-row-bg {
-  overflow: hidden;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: row;
+  @apply absolute flex inset-0 overflow-hidden;
   flex: 1 0 0;
-  overflow: hidden;
 }
 
 .rbc-day-bg {
-  flex: 1 0 0%;
+  flex: 1 0 0;
 
   & + & {
-    border-left: 1px solid $cell-border;
+    border-left: 1px solid #ddd;
   }
-}
-
-.rbc-agenda-view {
-  display: flex;
-  flex-direction: column;
-  flex: 1 0 0;
-  overflow: auto;
-
-  table.rbc-agenda-table {
-    width: 100%;
-    border: 1px solid $cell-border;
-    border-spacing: 0;
-    border-collapse: collapse;
-
-    tbody > tr > td {
-      padding: 5px 10px;
-      vertical-align: top;
-    }
-
-    .rbc-agenda-time-cell {
-      padding-left: 15px;
-      padding-right: 15px;
-      text-transform: lowercase;
-    }
-
-    tbody > tr > td + td {
-      border-left: 1px solid $cell-border;
-    }
-
-    tbody > tr + tr {
-      border-top: 1px solid $cell-border;
-    }
-
-    thead > tr > th {
-      padding: 3px 5px;
-      text-align: left;
-      border-bottom: 1px solid $cell-border;
-    }
-  }
-}
-
-.rbc-agenda-time-cell {
-  text-transform: lowercase;
-
-  .rbc-continues-after:after {
-    content: ' »'
-  }
-  .rbc-continues-prior:before {
-    content: '« '
-  }
-}
-
-.rbc-agenda-date-cell,
-.rbc-agenda-time-cell {
-  white-space: nowrap;
-}
-
-.rbc-agenda-event-cell {
-  width: 100%
 }
 
 .rbc-time-column {
@@ -445,7 +281,7 @@ button.rbc-input::-moz-focus-inner {
 
 
 .rbc-timeslot-group {
-  border-bottom: 1px solid $cell-border;
+  border-bottom: 1px solid #ddd;
   min-height: 40px;
   display: flex;
   flex-flow: column nowrap;
@@ -456,49 +292,31 @@ button.rbc-input::-moz-focus-inner {
   flex: none;
 }
 
-.rbc-label {
-  padding: 0 5px;
-}
-
 .rbc-day-slot {
   position: relative;
 
-  .rbc-events-container {
-    bottom: 0;
-    left: 0;
-    position: absolute;
-    right: 0;
-    margin-right: 10px;
-    top: 0;
-  }
-
   .rbc-event {
-    border: 1px solid $event-border;
-    display: flex;
+    border: 1px solid darken(#3174ad, 10%);
     max-height: 100%;
     min-height: 20px;
-    flex-flow: column wrap;
-    align-items: flex-start;
-    overflow: hidden;
     position: absolute;
+    overflow: hidden;
   }
 
   .rbc-event-label {
-    flex: none;
     padding-right: 5px;
     width: auto;
   }
 
   .rbc-event-content {
     width: 100%;
-    flex: 1 1 0;
     word-wrap: break-word;
     line-height: 1;
     min-height: 1em;
   }
 
   .rbc-time-slot {
-    border-top: 1px solid lighten($cell-border, 10%);
+    border-top: 1px solid lighten(#ddd, 10%);
   }
 }
 
@@ -508,7 +326,7 @@ button.rbc-input::-moz-focus-inner {
     position: sticky;
     left: 0;
     background-color: white;
-    border-right: 1px solid $cell-border;
+    border-right: 1px solid #ddd;
     z-index: 10;
     margin-right: -1px;
   }
@@ -519,12 +337,7 @@ button.rbc-input::-moz-focus-inner {
 
   .rbc-time-header-content {
     min-width: auto;
-    flex: 1 0 0;
-    flex-basis: 0px;
-  }
-
-  .rbc-time-header-cell-single-day {
-    display: none;
+    flex: 1 0 0px;
   }
 
   .rbc-day-slot {
@@ -534,9 +347,7 @@ button.rbc-input::-moz-focus-inner {
   .rbc-header,
   .rbc-day-bg {
     width: 140px;
-    // min-width: 0;
-    flex:  1 1 0;
-    flex-basis: 0 px;
+    flex:  1 1 0px;
   }
 }
 
@@ -556,8 +367,8 @@ button.rbc-input::-moz-focus-inner {
 .rbc-slot-selection {
   z-index: 10;
   position: absolute;
-  background-color: $time-selection-bg-color;
-  color: $time-selection-color;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
   font-size: 75%;
   width: 100%;
   padding: 3px;
@@ -586,7 +397,7 @@ button.rbc-input::-moz-focus-inner {
     position: relative;
   }
   .rbc-allday-cell + .rbc-allday-cell {
-    border-left: 1px solid $cell-border;
+    border-left: 1px solid #ddd;
   }
 
   .rbc-allday-events {
@@ -606,16 +417,12 @@ button.rbc-input::-moz-focus-inner {
   flex-direction: row;
 
   > .rbc-row:first-child {
-    border-bottom: 1px solid $cell-border;
+    border-bottom: 1px solid #ddd;
   }
 
   > .rbc-row.rbc-row-resource {
-    border-bottom: 1px solid $cell-border;
+    border-bottom: 1px solid #ddd;
   }
-}
-
-.rbc-time-header-cell-single-day {
-  display: none;
 }
 
 .rbc-time-header-content {
@@ -623,11 +430,11 @@ button.rbc-input::-moz-focus-inner {
   display: flex;
   min-width: 0;
   flex-direction: column;
-  border-left: 1px solid $cell-border;
-  border: 1px solid $calendar-border;
+  border-left: 1px solid #ddd;
+  border: 1px solid #ddd;
 
   > .rbc-row.rbc-row-resource {
-    border-bottom: 1px solid $cell-border;
+    border-bottom: 1px solid #ddd;
     flex-shrink: 0;
   }
 }
@@ -637,7 +444,7 @@ button.rbc-input::-moz-focus-inner {
   flex: 1 0 0%;
   align-items: flex-start;
   width: 100%;
-  border-top: 2px solid $calendar-border;
+  border-top: 2px solid #ddd;
   overflow-y: auto;
   position: relative;
 
@@ -646,13 +453,12 @@ button.rbc-input::-moz-focus-inner {
   }
 
   > * + * > * {
-    border-left: 1px solid $cell-border;
+    border-left: 1px solid #ddd;
   }
 
   > .rbc-day-slot {
     width: 100%;
     user-select: none;
-    -webkit-user-select: none;
   }
 }
 
@@ -663,23 +469,6 @@ button.rbc-input::-moz-focus-inner {
   right: 0;
 }
 
-.rbc-over {
-  background-color: rgba(
-    red($date-selection-bg-color),
-    green($date-selection-bg-color),
-    blue($date-selection-bg-color),
-    .3
-  );
-}
-
-.rbc-event {
-  transition: opacity 150ms;
-
-  &:hover {
-    .rbc-resize-ns-icon, .rbc-resize-ew-icon { display: block; }
-  }
-}
-
 .rbc-nondraggable {
   background-color: lighten(#3174ad, 40) !important;
   color: black !important;
@@ -688,7 +477,6 @@ button.rbc-input::-moz-focus-inner {
 .rbc-dragged-event {
   opacity: 0;
 }
-
 .rbc-is-dragging .rbc-event:not(.rbc-dragged-event):not(.rbc-drag-preview) {
   opacity: .50;
 }
@@ -697,37 +485,4 @@ button.rbc-input::-moz-focus-inner {
   position: relative;
   width: 100%;
   height: 100%;
-}
-
-.rbc-resize-ns-anchor {
-  width: 100%;
-  text-align: center;
-  position: absolute;
-  &:first-child { top: 0; }
-  &:last-child { bottom: 0; }
-
-  .rbc-resize-ns-icon {
-    display: none;
-    border-top: 3px double;
-    margin: 0 auto;
-    width: 10px;
-    cursor: ns-resize;
-  }
-}
-
-.rbc-resize-ew-anchor {
-  position: absolute;
-  top: 4px;
-  bottom: 0;
-  &:first-child { left: 0; }
-  &:last-child { right: 0; }
-
-  .rbc-resize-ew-icon {
-    display: none;
-    border-left: 3px double;
-    margin-top: auto;
-    margin-bottom: auto;
-    height: 10px;
-    cursor: ew-resize;
-  }
 }

@@ -2,7 +2,7 @@ import { Control, useController, FieldValues, Path } from 'react-hook-form';
 import cx from 'classnames';
 
 export type RadioProps = {
-  label: string;
+  label: React.ReactNode;
   name: string;
   isSelected: boolean;
   onChange: () => void;
@@ -53,7 +53,7 @@ const Radio = ({
 
 type RadioGroupOption = {
   value: string;
-  label: string;
+  label: React.ReactNode;
   isDisabled?: boolean;
 };
 
@@ -67,7 +67,7 @@ type RadioGroupProps<T extends FieldValues> = {
 
 export const RadioGroup = <T extends FieldValues>({
   name,
-        label,
+  label,
   options,
   control,
   isDisabled,
@@ -83,11 +83,11 @@ export const RadioGroup = <T extends FieldValues>({
       </label>
       {options.map((opt) => (
         <Radio
+          key={opt.value}
           value={opt.value}
           isSelected={field.value === opt.value}
           name={name}
           label={opt.label}
-          key={opt.label}
           onChange={field.onChange}
           isDisabled={opt.isDisabled || isDisabled}
         ></Radio>

@@ -1,20 +1,20 @@
-import React, { useContext } from 'react'
 import clsx from 'clsx'
+import { add, endOf, eq, neq, startOf } from 'date-arithmetic'
 import chunk from 'lodash/chunk'
-import { View, Navigate } from '../types'
+import React, { useContext } from 'react'
 import DateContentRow from '../DateContentRow'
-import { eq, neq, sortEvents, add, format, range, inEventRange, startOf, endOf, startOfWeek } from '../localizer'
 import { NavigationContext } from '../NavigationContext'
-import { ViewClass } from '../types'
+import { format, inEventRange, range, sortEvents, startOfWeek } from '../localizer'
+import { Navigate, View, ViewClass } from '../types'
 
 const MonthView: ViewClass = ({ date: currentDate, range: days, events }) => {
-  let weeks = chunk(days, 7);
+  const weeks = chunk(days, 7);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const { onDrillDown } = useContext(NavigationContext)
 
   return (
     <div className="rbc-month-view" role="table" aria-label="Month View" ref={containerRef}>
-      <div className="rbc-row rbc-month-header" role="row">
+      <div className="rbc-row flex" role="row">
         {range(weeks[0]![0]!, weeks[0]![weeks[0]!.length - 1]!, 'day').map((day, idx) => (
           <div key={'header_' + idx} className="rbc-header">
             <span role="columnheader" aria-sort="none">
@@ -35,8 +35,7 @@ const MonthView: ViewClass = ({ date: currentDate, range: days, events }) => {
           renderHeader={({ date, className, ...props }) => (
             <div
               {...props}
-              className={clsx({
-                [className ?? '']: true,
+              className={clsx(className, {
                 'rbc-off-range': neq(date, currentDate, 'month'),
                 'rbc-current': eq(date, currentDate, 'day')
               })}
@@ -72,14 +71,7 @@ MonthView.navigate = (date, action) => {
   }
 }
 
-export function firstVisibleDay(date: Date) {
-  let firstOfMonth = startOf(date, 'month')
-  return startOf(firstOfMonth, 'week', startOfWeek)
-}
-
-export function lastVisibleDay(date: Date) {
-  let endOfMonth = endOf(date, 'month')
-  return endOf(endOfMonth, 'week', startOfWeek)
-}
+const firstVisibleDay = (date: Date) => startOf(startOf(date, 'month'), 'week', startOfWeek)
+const lastVisibleDay = (date: Date) => endOf(endOf(date, 'month'), 'week', startOfWeek);
 
 export default MonthView

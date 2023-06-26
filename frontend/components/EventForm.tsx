@@ -8,7 +8,7 @@ import {
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextFieldElement } from '@app/ui/fields/text';
-import { CheckboxElement } from 'components/Checkbox';
+import { CheckboxElement } from '@app/ui/fields/checkbox';
 import { useAsyncCallback } from 'react-async-hook';
 import { FormError } from '@app/ui/form';
 import { SubmitButton } from '@app/ui/submit';
@@ -21,6 +21,7 @@ import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
 import { RichTextEditor } from './RichTextEditor';
 import { TitleBar } from './layout/TitleBar';
+import { RadioButtonGroupElement } from './RadioButtomGroupElement';
 
 type FormProps = Pick<
   EventInput,
@@ -34,6 +35,7 @@ type FormProps = Pick<
   | 'isPublic'
   | 'enableNotes'
   | 'isLocked'
+  | 'titleImageLegacy'
 > & {
   schedule: DateRange;
 };
@@ -168,6 +170,29 @@ export const EventForm = ({ id = '' }: { id?: string }) => {
         initialState={data?.descriptionMember}
         name="descriptionMember"
         label="Další info pro členy"
+      />
+
+      <RadioButtonGroupElement
+        control={control}
+        name="titleImageLegacy"
+        options={[
+          {
+            id: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687515671943-Akce-titulni1.jpg',
+            label: <img alt="" src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687515671943-Akce-titulni1.jpg" />
+          },
+          {
+            id: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687515671944-Akce-titulni2.jpg',
+            label: <img alt="" src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687515671944-Akce-titulni2.jpg" />
+          },
+          {
+            id: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687515671944-Akce-titulni3.jpg',
+            label: <img alt="" src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687515671944-Akce-titulni3.jpg" />
+          },
+          {
+            id: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687515671944-Akce-titulni4.jpg',
+            label: <img alt="" src="https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687515671944-Akce-titulni4.jpg" />
+          },
+        ]}
       />
     </form>
   );

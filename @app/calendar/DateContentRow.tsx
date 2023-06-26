@@ -1,17 +1,17 @@
-import React from 'react';
-import clsx from 'clsx';
-import getHeight from 'dom-helpers/height';
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
+import clsx from 'clsx';
+import { add, eq, gt, inRange, lt, startOf } from 'date-arithmetic';
+import getHeight from 'dom-helpers/height';
+import React from 'react';
 import BackgroundCells from './BackgroundCells';
-import EventRow from './EventRow';
-import EventEndingRow from './EventEndingRow';
 import { getSlotMetrics } from './DateSlotMetrics';
+import { DnDContext } from './DnDContext';
+import EventEndingRow from './EventEndingRow';
+import EventRow from './EventRow';
+import Selection, { getBoundsForNode, getSlotAtX, pointInBox } from './Selection';
+import { Segment, eventSegments } from './common';
+import { diff, merge } from './localizer';
 import { CalendarEvent } from './types';
-import { Segment, eventSegments } from './common'
-import Selection, { getBoundsForNode, getSlotAtX, pointInBox } from './Selection'
-import { DnDContext } from './DnDContext'
-import { diff, merge, add, eq, inRange, lt, gt } from './localizer'
-import { startOf } from 'date-arithmetic'
 
 type DateContentRowProps = {
   date?: Date;
@@ -180,14 +180,14 @@ const DateContentRow = ({
     })
 
     return () => selector.teardown()
-  }, [])
+  }, [draggable, isAllDay, outerContainerRef, resourceId, slotMetrics])
 
   React.useEffect(() => {
     if (range[0]!.getMonth() !== previousDate.getMonth()) {
       setRenderForMeasure(true);
     }
     setPreviousDate(range[0]!);
-  }, [range]);
+  }, [previousDate, range]);
 
   useLayoutEffect(() => {
     if (renderForMeasure) {
@@ -195,7 +195,7 @@ const DateContentRow = ({
       const headingHeight = headingRowRef.current ? getHeight(headingRowRef.current) : 0;
       const eventSpace =
         (containerRef.current ? getHeight(containerRef.current) : 0) - headingHeight;
-      setMaxRows(Math.max(Math.floor(eventSpace / eventHeight), 1));
+      setMaxRows(Math.max(Math.floor(eventSpace / eventHeight + 0.6), 1));
       setRenderForMeasure(false);
     }
   }, [renderForMeasure]);

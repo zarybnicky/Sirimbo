@@ -5,7 +5,9 @@ module.exports = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',
-    "../@app/ui/**/*.{js,ts,jsx,tsx}"
+    "../@app/calendar/**/*.{js,ts,jsx,tsx}",
+    "../@app/ui/**/*.{js,ts,jsx,tsx}",
+    "../@app/upload/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {

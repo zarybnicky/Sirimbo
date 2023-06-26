@@ -4318,6 +4318,7 @@ export type Event = {
   since: Scalars['Date']['output'];
   summary: Scalars['String']['output'];
   tenantId: Scalars['BigInt']['output'];
+  titleImageLegacy: Maybe<Scalars['String']['output']>;
   until: Scalars['Date']['output'];
   updatedAt: Maybe<Scalars['Datetime']['output']>;
 };
@@ -4372,6 +4373,7 @@ export type EventInput = {
   since: Scalars['Date']['input'];
   summary?: InputMaybe<Scalars['String']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  titleImageLegacy?: InputMaybe<Scalars['String']['input']>;
   until: Scalars['Date']['input'];
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
@@ -4392,6 +4394,7 @@ export type EventPatch = {
   since?: InputMaybe<Scalars['Date']['input']>;
   summary?: InputMaybe<Scalars['String']['input']>;
   tenantId?: InputMaybe<Scalars['BigInt']['input']>;
+  titleImageLegacy?: InputMaybe<Scalars['String']['input']>;
   until?: InputMaybe<Scalars['Date']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
@@ -13783,6 +13786,7 @@ export type GraphCacheResolvers = {
     since?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Date'] | string>,
     summary?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
     tenantId?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['BigInt'] | string>,
+    titleImageLegacy?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['String'] | string>,
     until?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Date'] | string>,
     updatedAt?: GraphCacheResolver<WithTypename<Event>, Record<string, never>, Scalars['Datetime'] | string>
   },

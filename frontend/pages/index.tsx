@@ -17,7 +17,7 @@ const Page: NextPageWithLayout = () => {
       <TrainingPrograms />
 
       <div className="my-8">
-        <h4 className="text-3xl font-bold text-red-500 mb-2">Představujeme klub</h4>
+        <h4 className="text-3xl font-bold text-primary mb-2">Představujeme klub</h4>
         <YoutubeEmbed
           title="Taneční soutěž - Národní sportovní centrum Prostějov"
           thumbnail="https://i3.ytimg.com/vi/bgUYrFexFr4/maxresdefault.jpg"
@@ -35,7 +35,7 @@ const Page: NextPageWithLayout = () => {
       <CallToAction />
 
       <div className="col-feature my-12">
-        <h4 className="text-3xl font-bold text-red-500">Aktuálně</h4>
+        <h4 className="text-3xl font-bold text-primary">Aktuálně</h4>
         <div className="grid place-items-stretch gap-4 grid-cols-2 lg:grid-cols-3 mt-3 mb-6">
           {articles.map((x) => (
             <ArticleCard key={x.id} item={x} />

@@ -58,6 +58,7 @@
     "cmdk": "~0.2.0",
     "cookies-next": "~2.1.2",
     "cssnano": "~6.0.1",
+    "date-arithmetic": "^4.1.0",
     "date-fns": "~2.30.0",
     "eslint": "~8.42.0",
     "eslint-config-next": "~13.4.5",

@@ -45,12 +45,12 @@ const Page: NextPageWithLayout = () => {
             className="relative aspect-w-16 aspect-h-9 group"
           >
             <div className="absolute inset-0 border-8 border-red-500 overflow-hidden">
-              <Image src={item.image} layout="fill" alt="" style={{ objectFit: 'cover'}} />
+              <Image src={item.image} fill alt="" style={{ objectFit: 'cover'}} />
             </div>
             <div
               className={classNames(
                 'absolute inset-0 flex justify-center items-center',
-                'text-center text-shadow-2xl text-2xl font-bold text-white',
+                'text-center text-2xl font-bold text-white',
                 'bg-stone-800/50 group-hover:bg-stone-800/70',
               )}
             >

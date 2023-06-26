@@ -1,7 +1,5 @@
 import { Resource, CalendarEvent } from "./types"
 
-export type ResourceGrouper = ReturnType<typeof makeGrouper>;
-
 export default function makeGrouper(resources: Resource[]) {
   return {
     map<T>(fn: (x: [Resource | undefined, number], ix: number) => T): T[] {
@@ -19,18 +17,11 @@ export default function makeGrouper(resources: Resource[]) {
       }
 
       events.forEach((event) => {
-        const id = event.resourceId || undefined
-        if (Array.isArray(id)) {
-          id.forEach((item) => {
-            let resourceEvents = eventsByResource.get(item) || []
-            resourceEvents.push(event)
-            eventsByResource.set(item, resourceEvents)
-          })
-        } else {
-          let resourceEvents = eventsByResource.get(id) || []
+        (event.resourceIds || [undefined]).forEach((id) => {
+          const resourceEvents = eventsByResource.get(id) || []
           resourceEvents.push(event)
           eventsByResource.set(id, resourceEvents)
-        }
+        })
       })
       return eventsByResource
     },

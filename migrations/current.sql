@@ -127,3 +127,5 @@ $$ language sql stable;
 grant execute on function my_announcements to anonymous;
 
 alter table event add column if not exists description_member text not null default '';
+
+alter table event add column if not exists title_image_legacy text null default null;

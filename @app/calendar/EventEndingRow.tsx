@@ -6,8 +6,8 @@ import EventCell from './EventCell'
 import { NavigationContext } from './NavigationContext'
 import { View } from './types'
 
-let isSegmentInSlot = (seg: Segment, slot: number) => seg.left <= slot && seg.right >= slot
-let eventsInSlot = (segments: Segment[], s: number) => segments.filter((seg) => isSegmentInSlot(seg, s)).length
+const isSegmentInSlot = (seg: Segment, slot: number) => seg.left <= slot && seg.right >= slot
+const eventsInSlot = (segments: Segment[], s: number) => segments.filter((seg) => isSegmentInSlot(seg, s)).length
 
 const EventEndingRow: React.FC<{
   segments: Segment[];

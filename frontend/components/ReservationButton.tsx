@@ -68,7 +68,7 @@ export const ReservationButton = ({ item }: { item: MyReservationFragment }) => 
           align="start"
           sideOffset={4}
           className={classNames(
-            'z-20 data-[side=top]:animate-slide-up data-[side=bottom]:animate-slide-down',
+            'z-20 data-[side=top]:animate-slideUpAndFade data-[side=bottom]:animate-slideDownAndFade',
             'w-48 rounded-lg p-4 shadow-md md:w-56',
             'bg-neutral-1 text-neutral-12',
           )}
@@ -96,7 +96,7 @@ export const ReservationButton = ({ item }: { item: MyReservationFragment }) => 
           <PopoverPrimitive.Close
             className={classNames(
               'absolute top-3.5 right-3.5 inline-flex items-center justify-center rounded-full p-1',
-              'focus:outline-none focus-visible:ring focus-visible:ring-red-500 focus-visible:ring-opacity-75',
+              'focus:outline-none focus-visible:ring focus-visible:ring-red-500/75',
             )}
           >
             <Cross className="h-4 w-4 text-gray-500 hover:text-gray-700" />

@@ -9196,6 +9196,14 @@
             "args": []
           },
           {
+            "name": "titleImageLegacy",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
             "name": "until",
             "type": {
               "kind": "NON_NULL",

@@ -5,7 +5,8 @@ import scrollbarSize from 'dom-helpers/scrollbarSize';
 import React from 'react';
 import DateContentRow from './DateContentRow';
 import DayColumn from './DayColumn';
-import {diff, eq, format, inEventRange, inRange, merge, sortEvents, isJustDate} from './localizer';
+import {eq, inRange} from 'date-arithmetic';
+import {diff, format, inEventRange, merge, sortEvents, isJustDate} from './localizer';
 import { NavigationContext } from './NavigationContext';
 import makeGrouper from './ResourceGrouper';
 import TimeGutter from './TimeGutter';
@@ -25,7 +26,7 @@ const TimeGrid = ({
   resources,
 }: TimeGridProps) => {
   const today = new Date();
-  const { min, max, focusedTime, onDrillDown } = React.useContext(NavigationContext);
+  const { minTime, maxTime, focusedTime, onDrillDown } = React.useContext(NavigationContext);
 
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const contentRef = React.useRef<HTMLDivElement>(null);
@@ -40,21 +41,21 @@ const TimeGrid = ({
     if (width && gutterWidth !== width) {
       setGutterWidth(width);
     }
-    let isOverflowing = contentRef.current!.scrollHeight > contentRef.current!.clientHeight
+    const isOverflowing = contentRef.current!.scrollHeight > contentRef.current!.clientHeight
     if (scrollbarMargin !== isOverflowing) {
       setScrollbarMargin(isOverflowing)
     }
-  });
+  }, [gutterWidth, scrollbarMargin]);
 
   useLayoutEffect(() => {
-    const diffMillis = diff(merge(focusedTime, min), focusedTime, 'milliseconds');
-    const totalMillis = diff(min, max, 'milliseconds');
+    const diffMillis = diff(merge(focusedTime, minTime), focusedTime, 'milliseconds');
+    const totalMillis = diff(minTime, maxTime, 'milliseconds');
     const _scrollRatio = diffMillis / totalMillis;
     const content = contentRef.current;
     if (content) {
       content.scrollTop = content.scrollHeight * _scrollRatio;
     }
-  }, [focusedTime, min, max]);
+  }, [focusedTime, minTime, maxTime]);
 
   const showMultiDayTimes = true;
   const { grouper, groupedEvents, groupedAllDayEvents, groupedBackgroundEvents } = React.useMemo(() => {
@@ -90,7 +91,7 @@ const TimeGrid = ({
       groupedAllDayEvents: grouper.groupEvents(allDayEvents),
       groupedBackgroundEvents: grouper.groupEvents(rangeBackgroundEvents),
     };
-  }, [range, events, backgroundEvents]);
+  }, [range, events, backgroundEvents, resources, showMultiDayTimes]);
 
   return (
     <div
@@ -102,7 +103,10 @@ const TimeGrid = ({
         className="rbc-time-header"
         style={{ marginRight: scrollbarMargin ? `${scrollbarSize() - 1}px` : undefined }}
       >
-        <div className="rbc-label rbc-time-header-gutter" style={{ width: gutterWidth, minWidth: gutterWidth, maxWidth: gutterWidth }} />
+        <div
+          className="px-1 rbc-time-header-gutter"
+          style={{ width: gutterWidth, minWidth: gutterWidth, maxWidth: gutterWidth }}
+        />
 
         {grouper.map(([resource, id], idx) => (
           <div className="rbc-time-header-content" key={id || idx}>
@@ -111,7 +115,7 @@ const TimeGrid = ({
                 <div className="rbc-header">{resource.resourceTitle}</div>
               </div>
             )}
-            <div className={clsx('rbc-row rbc-time-header-cell', range.length <= 1 && 'rbc-time-header-cell-single-day')}>
+            <div className={clsx('rbc-row', range.length <= 1 && 'hidden')}>
               {range.map((date, i) => (
                 <div key={i} className={clsx('rbc-header', eq(date, today, 'day') && 'rbc-today')}>
                   <button

@@ -2,21 +2,25 @@ import contains from 'dom-helpers/contains'
 import closest from 'dom-helpers/closest'
 import { TypedEventTarget } from 'typescript-event-target';
 
-export interface ClientPoint {
+export type ClientPoint = {
   x: number;
   y: number;
   clientX: number;
   clientY: number;
 }
 
-export interface BoxSize {
+type BoxSize = {
   left: number;
   right: number;
   top: number;
   bottom: number;
 }
 
-export interface Bounds extends BoxSize {
+export type Bounds = {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
   x: number;
   y: number;
 }
@@ -26,13 +30,9 @@ const addEventListener: <K extends keyof WindowEventMap>(type: K, listener: (ev:
   return () => window.removeEventListener(args[0], args[1]);
 }
 
-export function getEventNodeFromPoint(node: HTMLElement, { clientX, clientY }: ClientPoint) {
-  let target = document.elementFromPoint(clientX, clientY)!
-  return closest(target, '.rbc-event', node) as HTMLElement
-}
-
-export function isEvent(node: HTMLElement, bounds: ClientPoint) {
-  return !!getEventNodeFromPoint(node, bounds)
+export function isEvent(node: HTMLElement, { clientX, clientY }: ClientPoint) {
+  const target = document.elementFromPoint(clientX, clientY)!
+  return !!closest(target, '.rbc-event', node)
 }
 
 export function pointInColumn(bounds: BoxSize, point: { x: number; y: number; }) {
@@ -95,7 +95,7 @@ class Selection extends TypedEventTarget<EventMap> {
     super();
     // Fixes an iOS 10 bug where scrolling could not be prevented on the window.
     // https://github.com/metafizzy/flickity/issues/457#issuecomment-254501356
-    this.removeTouchMoveWindowListener = addEventListener('touchmove', () => {})
+    this.removeTouchMoveWindowListener = addEventListener('touchmove', () => { /* ignore */ })
     this.removeDropFromOutsideListener = addEventListener('drop', this.dropFromOutsideListener.bind(this))
     this.removeDragOverFromOutsideListener = addEventListener('dragover', this.dragOverFromOutsideListener.bind(this))
     this.addInitialEventListener()
@@ -115,7 +115,7 @@ class Selection extends TypedEventTarget<EventMap> {
   }
 
   isSelected(node: HTMLElement) {
-    let box = this.selectRect
+    const box = this.selectRect
     if (!box || !this.selecting) return false
     return objectsCollide(box, node)
   }
@@ -252,10 +252,10 @@ class Selection extends TypedEventTarget<EventMap> {
     if (!this.initialEventData) return
 
     const node = this.container();
-    let inRoot = !node || contains(node, e.target as HTMLElement);
+    const inRoot = !node || contains(node, e.target as HTMLElement);
 
     const { pageX, pageY } = getEventCoordinates(e as MouseEvent)
-    let click = this.isClick(pageX, pageY)
+    const click = this.isClick(pageX, pageY)
 
     this.initialEventData = undefined
 
@@ -282,12 +282,12 @@ class Selection extends TypedEventTarget<EventMap> {
     }
     e.preventDefault()
 
-    let { x = 0, y = 0 } = this.initialEventData || {}
+    const { x = 0, y = 0 } = this.initialEventData || {}
     const { pageX, pageY } = getEventCoordinates(e)
-    let w = Math.abs(x - pageX)
-    let h = Math.abs(y - pageY)
-    let left = Math.min(pageX, x)
-    let top = Math.min(pageY, y);
+    const w = Math.abs(x - pageX)
+    const h = Math.abs(y - pageY)
+    const left = Math.min(pageX, x)
+    const top = Math.min(pageY, y);
 
     // Prevent emitting selectStart event until mouse is moved.
     // in Chrome on Windows, mouseMove event may be fired just after mouseDown event.
@@ -315,19 +315,19 @@ class Selection extends TypedEventTarget<EventMap> {
   }
 
   isClick(pageX: number, pageY: number) {
-    let { x = 0, y = 0, isTouch } = this.initialEventData || {};
+    const { x = 0, y = 0, isTouch } = this.initialEventData || {};
     return !isTouch && Math.abs(pageX - x) <= clickTolerance && Math.abs(pageY - y) <= clickTolerance
   }
 }
 
 function objectsCollide(nodeA: HTMLElement | BoxSize, nodeB: HTMLElement | BoxSize, tolerance = 0) {
-  let {
+  const {
     top: aTop,
     left: aLeft,
     right: aRight = aLeft,
     bottom: aBottom = aTop,
   } = getBoundsForNode(nodeA)
-  let {
+  const {
     top: bTop,
     left: bLeft,
     right: bRight = bLeft,
@@ -348,14 +348,14 @@ function objectsCollide(nodeA: HTMLElement | BoxSize, nodeB: HTMLElement | BoxSi
   )
 }
 
-const isElement = (x: any): x is HTMLElement => !!x.getBoundingClientRect
+const isElement = (x: unknown): x is HTMLElement => !!(x as Element).getBoundingClientRect
 
 export function getBoundsForNode(node: HTMLElement | BoxSize): BoxSize {
   if (!isElement(node)) return node as BoxSize
 
-  let rect = node.getBoundingClientRect();
-  let left = rect.left + (window.pageXOffset || document.body.scrollLeft || 0)
-  let top = rect.top + (window.pageYOffset || document.body.scrollTop || 0)
+  const rect = node.getBoundingClientRect();
+  const left = rect.left + (window.scrollX || document.body.scrollLeft || 0)
+  const top = rect.top + (window.scrollY || document.body.scrollTop || 0)
 
   return {
     top,

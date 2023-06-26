@@ -6,12 +6,12 @@ export function CohortColorBoxes({
 }: {
   items?: (CohortBasicFragment | null)[] | null;
 }) {
-  if (!items || !items.length) {
+  if (!items?.length) {
     return null;
   }
   return (
     <div className="flex gap-0.5">
-      {items.map((g, i) =>
+      {items?.map((g, i) =>
         !g ? (
           <React.Fragment key={i} />
         ) : (

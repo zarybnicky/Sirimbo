@@ -4,15 +4,16 @@ import { useAuth } from 'lib/data/use-auth';
 import { LessonButton } from './LessonButton';
 import { Card } from './Card';
 import { formatWeekDay } from 'lib/format-date';
-import { WeekPicker, mondayToWeekRange, getCurrentMonday } from './WeekPicker';
+import { WeekPicker } from './WeekPicker';
 import { CohortDocument } from '@app/graphql/Cohorts';
 import { RichTextView } from './RichTextView';
 import { Schedule } from 'lib/entities';
 import { useQuery } from 'urql';
+import { add } from 'date-arithmetic';
 
 export const MyLessonsList: React.FC = () => {
   const { user } = useAuth();
-  const [startDate, setStartDate] = React.useState(getCurrentMonday);
+  const [startDate, setStartDate] = React.useState(() => new Date());
   const [{ data: cohortData }] = useQuery({
     query: CohortDocument,
     variables: { id: user?.uSkupina! },
@@ -20,7 +21,13 @@ export const MyLessonsList: React.FC = () => {
   });
   const cohort = cohortData?.skupiny;
 
-  const [{ data, fetching }] = useQuery({query: MyLessonsDocument, variables: mondayToWeekRange(startDate)})
+  const [{ data, fetching }] = useQuery({
+    query: MyLessonsDocument,
+    variables: {
+      startDate: startDate.toISOString(),
+      endDate: add(startDate, 1, 'week').toISOString(),
+    },
+  });
 
   const lessonsPerDay = React.useMemo(() => {
     const lessonsPerDay: { [day: string]: ScheduleItemFragment[] } = {};

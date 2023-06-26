@@ -19,7 +19,7 @@ export interface CalendarEvent {
   title: React.ReactNode;
   start: Date;
   end: Date;
-  resourceId: number;
+  resourceIds: number[];
   isDraggable?: boolean;
   isResizable?: boolean;
   __isPreview?: boolean;
@@ -31,12 +31,7 @@ export interface Resource {
   resourceTitle: React.ReactNode;
 }
 
-export interface DateRange {
-  start: Date;
-  end: Date;
-}
-
-export type ViewProps = {
+type ViewProps = {
   events: CalendarEvent[];
   range: Date[];
   backgroundEvents: CalendarEvent[];

@@ -1,41 +1,6 @@
-import {
-  Unit,
-  milliseconds,
-  seconds,
-  minutes,
-  hours,
-  startOf,
-  endOf,
-  add,
-  eq,
-  neq,
-  gte,
-  gt,
-  lte,
-  lt,
-  inRange,
-  min,
-  max,
-} from 'date-arithmetic'
+import {Unit, milliseconds, seconds, minutes, hours, startOf, add, eq, gte, lte} from 'date-arithmetic'
 import dateFnsFormat from 'date-fns/format';
-import getStartOfWeek from 'date-fns/startOfWeek';
-import getDay from 'date-fns/getDay';
 import cs from 'date-fns/locale/cs';
-
-export {
-  inRange,
-  min,
-  max,
-  startOf,
-  endOf,
-  add,
-  eq,
-  neq,
-  lt,
-  lte,
-  gt,
-  gte,
-}
 
 const MILLI = {
   seconds: 1000,
@@ -48,10 +13,10 @@ const MILLI = {
   century: 1000 * 60 * 60 * 24 * 365.25 * 100,
 }
 
-export const startOfWeek = getDay(getStartOfWeek(new Date(), { locale: cs }));
+export const startOfWeek = 1;
 
 export function ceil(date: Date, unit: Exclude<Unit, 'week'>) {
-  let floor = startOf(date, unit)
+  const floor = startOf(date, unit)
   return eq(floor, date) ? floor : add(floor, 1, unit)
 }
 
@@ -96,50 +61,31 @@ export function diff(dateA: Date, dateB: Date, unit: Exclude<Unit, 'week'>) {
   )
 }
 
-export function week(date: Date) {
-  var d = new Date(date)
-  d.setHours(0, 0, 0)
-  d.setDate(d.getDate() + 4 - (d.getDay() || 7))
-  return Math.ceil(((+d - +new Date(d.getFullYear(), 0, 1)) / 8.64e7 + 1) / 7)
-}
-
-export function getSlotDate(dt: Date, minutesFromMidnight: number, offset: number) {
-  return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 0, minutesFromMidnight + offset, 0, 0)
-}
-
-export function getDstOffset(start: Date, end: Date) {
-  return start.getTimezoneOffset() - end.getTimezoneOffset()
-}
-
 export function sortEvents(
-  { start: aStart, end: aEnd, allDay: aAllDay = false }: { start: Date, end: Date, allDay?: boolean },
-  { start: bStart, end: bEnd, allDay: bAllDay = false }: { start: Date, end: Date, allDay?: boolean },
+  a: { start: Date, end: Date, allDay?: boolean },
+  b: { start: Date, end: Date, allDay?: boolean },
 ) {
-  let startSort = +startOf(aStart, 'day') - +startOf(bStart, 'day')
-  let durA = diff(aStart, ceil(aEnd, 'day'), 'day')
-  let durB = diff(bStart, ceil(bEnd, 'day'), 'day')
+  const startSort = +startOf(a.start, 'day') - +startOf(b.start, 'day')
+  const durA = diff(a.start, ceil(a.end, 'day'), 'day')
+  const durB = diff(b.start, ceil(b.end, 'day'), 'day')
 
   return (
     startSort || // sort by start Day first
     Math.max(durB, 1) - Math.max(durA, 1) || // events spanning multiple days go first
-    +bAllDay - +aAllDay || // then allDay single day events
-    +aStart - +bStart || // then sort by start time
-    +aEnd - +bEnd // then sort by end time
+    +!!b.allDay - +!!a.allDay || // then allDay single day events
+    +a.start - +b.start || // then sort by start time
+    +a.end - +b.end // then sort by end time
   )
 }
 
-export function inEventRange(
-  { start, end }: { start: Date, end: Date },
-  { start: rangeStart, end: rangeEnd }: { start: Date, end: Date },
-) {
-  let eStart = startOf(start, 'day')
-  let startsBeforeEnd = lte(eStart, rangeEnd, 'day')
-  let endsAfterStart = neq(eStart, end, 'minutes')
-    ? gt(end, rangeStart, 'minutes')
-    : gte(end, rangeStart, 'minutes')
-  return startsBeforeEnd && endsAfterStart
+export function inEventRange(event: { start: Date, end: Date }, range: { start: Date, end: Date }) {
+  return lte(event.start, range.end, 'day') && gte(event.end, range.start, 'minutes')
 }
 
 export function format(value: string | Date, format: string) {
   return dateFnsFormat(new Date(value), format, { locale: cs })
 }
+
+export const shortTimeIntl = new Intl.DateTimeFormat('cs-CZ', {
+  timeStyle: 'short',
+});

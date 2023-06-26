@@ -1,13 +1,26 @@
-import { getSlotDate, getDstOffset, startOf, add, lt, gt, merge, min, inRange, diff, max, eq } from "./localizer"
+import { startOf, add, lt, gt, min, inRange, diff, max, eq } from "date-arithmetic"
+import { merge } from './localizer'
+
+function getDstOffset(start: Date, end: Date) {
+  return start.getTimezoneOffset() - end.getTimezoneOffset()
+}
+
+function getSlotDate(dt: Date, minutesFromMidnight: number, offset: number) {
+  return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 0, minutesFromMidnight + offset, 0, 0)
+}
 
 export type TimeSlotMetrics = ReturnType<typeof getSlotMetrics>;
 
-export function getSlotMetrics({ min: start, max: end, step, timeslots }: {
-  min: Date;
-  max: Date;
+export function getSlotMetrics({ date, minTime, maxTime, step, timeslots }: {
+  date: Date;
+  minTime: Date;
+  maxTime: Date;
   step: number;
   timeslots: number;
 }) {
+  let start = merge(date, minTime);
+  let end = merge(date, maxTime);
+
   // DST differences are handled inside the localizer
   const totalMin = 1 + diff(start, end, 'minutes') + getDstOffset(start, end)
   const dayStart = startOf(start, 'day')
@@ -47,7 +60,7 @@ export function getSlotMetrics({ min: start, max: end, step, timeslots }: {
     },
 
     nextSlot(slot: Date) {
-      let next = slots[Math.min(slots.indexOf(slot) + 1, slots.length - 1)]
+      const next = slots[Math.min(slots.indexOf(slot) + 1, slots.length - 1)]
       // in the case of the last slot we won't a long enough range so manually get it
       return (next === slot) ? add(slot, step, 'minutes') : next as Date;
     },
@@ -58,7 +71,7 @@ export function getSlotMetrics({ min: start, max: end, step, timeslots }: {
     },
 
     closestSlotFromPoint(point: { x: number; y: number }, boundaryRect: { top: number; bottom: number }) {
-      let range = Math.abs(boundaryRect.top - boundaryRect.bottom)
+      const range = Math.abs(boundaryRect.top - boundaryRect.bottom)
       return this.closestSlotToPosition((point.y - boundaryRect.top) / range)
     },
 
@@ -86,7 +99,7 @@ export function getSlotMetrics({ min: start, max: end, step, timeslots }: {
       return gt(merge(end, date), end, 'minutes')
     },
 
-    getRange(rangeStart: Date, rangeEnd: Date, ignoreMin: boolean = false, ignoreMax: boolean = false) {
+    getRange(rangeStart: Date, rangeEnd: Date, ignoreMin = false, ignoreMax = false) {
       ({ rangeStart, rangeEnd } = { rangeStart: min(rangeStart, rangeEnd), rangeEnd: max(rangeStart, rangeEnd) })
       if (!ignoreMin)
         rangeStart = min(end, max(start, rangeStart))

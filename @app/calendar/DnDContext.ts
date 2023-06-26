@@ -38,40 +38,40 @@ export const DndProvider = ({ setIsDragging, children }: {
 }) => {
   const stateRef = React.useRef<DnDState>({ interacting: false });
   const context = React.useMemo<DnDContextType>(() => ({
-      onBeginAction(event: CalendarEvent, action, direction) {
-        stateRef.current = { action, event, interacting: true, direction };
-      },
-      onStart() {
-        stateRef.current = { ...stateRef.current, interacting: true };
-        setIsDragging(true);
-      },
-      onEnd(interactionInfo) {
-        const { event, action } = stateRef.current;
-        stateRef.current = { action: null, event: null, interacting: false, direction: null };
-        setIsDragging(false);
+    onBeginAction(event: CalendarEvent, action, direction) {
+      stateRef.current = { action, event, interacting: true, direction };
+    },
+    onStart() {
+      stateRef.current = { ...stateRef.current, interacting: true };
+      setIsDragging(true);
+    },
+    onEnd(interactionInfo) {
+      const { event, action } = stateRef.current;
+      stateRef.current = { action: null, event: null, interacting: false, direction: null };
+      setIsDragging(false);
 
-        if (!action || !event || !interactionInfo) return
-        if (action === 'move') {
-          console.log('onMove', event, interactionInfo);
-          // TODO: onDrop
-        }
-        if (action === 'resize') {
-          console.log('onResize', event, interactionInfo)
-          // TODO: onResize
-        }
-      },
-      onDropFromOutside(details) {
-        setIsDragging(false);
-        console.log('onDropFromOutside', details)
+      if (!action || !event || !interactionInfo) return
+      if (action === 'move') {
+        console.log('onMove', event, interactionInfo);
         // TODO: onDrop
-      },
-      dragFromOutsideItem() {
-        console.log('dragFromOutside', stateRef.current);
-        // TODO: dragFromOutside
-        return undefined
-      },
+      }
+      if (action === 'resize') {
+        console.log('onResize', event, interactionInfo)
+        // TODO: onResize
+      }
+    },
+    onDropFromOutside(details) {
+      setIsDragging(false);
+      console.log('onDropFromOutside', details)
+      // TODO: onDrop
+    },
+    dragFromOutsideItem() {
+      console.log('dragFromOutside', stateRef.current);
+      // TODO: dragFromOutside
+      return undefined
+    },
     stateRef,
-  }), []);
+  }), [setIsDragging]);
 
-  return React.createElement(DnDContext.Provider, { children, value: context });
+  return React.createElement(DnDContext.Provider, { value: context }, children);
 };

@@ -1,19 +1,20 @@
+import '@app/calendar/styles.scss';
 import { ScheduleRangeDocument } from '@app/graphql/Schedule';
 import clsx from 'clsx';
+import { add, endOf, eq, startOf } from 'date-arithmetic';
+import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 import React from 'react';
 import { useQuery } from 'urql';
+import { formatCoupleName } from '../../frontend/lib/format-name';
 import { DndProvider } from './DnDContext';
-import { eq, add, endOf, format, startOf, startOfWeek } from './localizer';
 import { NavigationProvider } from './NavigationContext';
+import { format, startOfWeek } from './localizer';
 import { CalendarEvent, Navigate, Resource, View } from './types';
 import Agenda from './views/Agenda';
 import Day from './views/Day';
 import Month from './views/Month';
 import Week from './views/Week';
 import WorkWeek from './views/WorkWeek';
-import { formatCoupleName } from '../../frontend/lib/format-name';
-import { ChevronsRight, ChevronsLeft } from 'lucide-react';
-import '@app/calendar/styles.scss';
 
 const Views = {
   [View.MONTH]: Month,
@@ -30,7 +31,7 @@ export const Calendar = () => {
 
   const ViewComponent = Views[view];
 
-  const range = React.useMemo(() => Views[view].range(date), [view, date]);;
+  const range = React.useMemo(() => Views[view].range(date), [view, date]);
 
   const backgroundEvents: CalendarEvent[] = React.useMemo(() => [], []);
 
@@ -46,8 +47,7 @@ export const Calendar = () => {
   const resources = React.useMemo(() => {
     const resources: Resource[] = [];
     schedules?.schedulesForRange?.nodes.forEach((x) => {
-      const existing = resources.find((y) => y.resourceId === parseInt(x.rTrener));
-      if (!existing) {
+      if (!resources.find((y) => y.resourceId === parseInt(x.rTrener))) {
         resources.push({
           resourceId: parseInt(x.rTrener),
           resourceTitle: x.userByRTrener?.fullName ?? '',
@@ -64,7 +64,7 @@ export const Calendar = () => {
         events.push({
           id: parseInt(lesson.id),
           title: formatCoupleName(lesson.paryByRiPartner),
-          resourceId: parseInt(schedule.rTrener),
+          resourceIds: [parseInt(schedule.rTrener)],
           start: new Date(schedule.rDatum + 'T' + lesson.riOd),
           end: new Date(schedule.rDatum + 'T' + lesson.riDo),
         });
@@ -77,15 +77,8 @@ export const Calendar = () => {
     if (!event.allDay && isAllDay) {
       event.allDay = true;
     }
-    if (Array.isArray(event.resourceId)) {
-      const filtered = event.resourceId.filter((ev: any) => ev !== event.sourceResource);
-      resourceId = Array.from(
-        new Set([
-          ...filtered,
-          ...(Array.isArray(resourceId) ? resourceId : [resourceId]),
-        ]),
-      );
-    }
+    const filtered = event.resourceId.filter((ev: any) => ev !== event.sourceResource);
+    resourceId = Array.from(new Set(filtered.concat([resourceId])));
 
       /* setEvents((prev) => {
        *   const existing = prev.find((ev) => ev.id === event.id);

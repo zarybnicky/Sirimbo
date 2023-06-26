@@ -1,10 +1,9 @@
+import React from 'react';
 import { Control, FieldValues, Path, useController } from 'react-hook-form';
-import { FieldHelper, FieldHelperProps, FieldLabel } from '@app/ui/form';
-import { cn } from '@app/ui/cn';
+import { FieldHelper, FieldHelperProps } from '@app/ui/form';
 
 type Extras = {
   label?: React.ReactNode;
-  helperText?: string;
 };
 
 export function Checkbox({
@@ -23,7 +22,7 @@ export function Checkbox({
           name={name}
           type="checkbox"
           {...props}
-          className="focus:ring-red-500 h-4 w-4 bg-accent-2 text-accent-10 border-accent-9 border-[2px] rounded"
+          className="focus:ring-accent-9 h-4 w-4 bg-accent-2 text-accent-10 border-accent-9 border-[2px] rounded"
         />
       </div>
       <div className="ml-2 text-sm">

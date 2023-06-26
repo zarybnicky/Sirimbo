@@ -35,10 +35,10 @@ export function Dropdown({ align, button, options, modal = true }: DropdownProps
         >
           {options.map(({ href, icon, title, onClick }, i) => {
             const classes = cx(
-              'group text-sm leading-none text-red-500 rounded-[3px] flex items-center p-3 relative pl-[25px]',
+              'group text-sm leading-none text-primary bg-white rounded-[3px] flex items-center p-3 relative pl-[25px]',
               'select-none outline-none',
-              'data-[disabled]:text-stone-800 data-[disabled]:pointer-events-none cursor-pointer',
-              'data-[highlighted]:bg-red-500 data-[highlighted]:text-red-50 data-[highlighted]:font-bold',
+              'data-[disabled]:text-neutral-11 data-[disabled]:pointer-events-none cursor-pointer',
+              'data-[highlighted]:bg-primary data-[highlighted]:text-white data-[highlighted]:font-bold',
             );
             return (
               <DropdownMenu.Item asChild key={i}>

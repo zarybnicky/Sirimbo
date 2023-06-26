@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import React from 'react';
-import { DnDContext } from './DnDContext';
+import { DnDContext, DragDirection } from './DnDContext';
 import { ceil, diff } from './localizer';
 import { SelectionContext } from './SelectContext';
 import { CalendarEvent } from './types';
@@ -29,53 +29,48 @@ const EventCell = ({
   const isResizable = event.isResizable !== false;
   const isDraggable = event.isDraggable !== false;
 
+  const onClick = React.useCallback(() => {
+    onSelectEvent(event)
+  }, [event, onSelectEvent]);
+
+  const onTouchOrMouse = React.useCallback((e: React.TouchEvent | React.MouseEvent) => {
+    if (!!(e as React.MouseEvent).button) {
+      return;
+    }
+    const resizeDirection = (e.target as HTMLElement).dataset.resize
+    if (isResizable && resizeDirection) {
+      draggable.onBeginAction(event, 'resize', resizeDirection as DragDirection);
+    } else if (isDraggable) {
+      event.sourceResource = resourceId;
+      draggable.onBeginAction(event, 'move');
+    }
+  }, [draggable, event, isDraggable, isResizable, resourceId]);
+
   return (
     <div
       tabIndex={0}
       style={style}
-      onClick={() => onSelectEvent(event)}
-      onMouseDown={(e) => {
-        if (e.button !== 0) return;
-        if (event.isDraggable === false) return
-        // hack: because of the way the anchors are arranged in the DOM, resize
-        // anchor events will bubble up to the move anchor listener. Don't start
-        // move operations when we're on a resize anchor.
-        if (!(e.target as any).getAttribute('class')?.includes('rbc-resize-')) {
-          event.sourceResource = resourceId;
-          draggable.onBeginAction(event, 'move');
-        }
-      }}
-      onTouchStart={(e) => {
-        if (!isDraggable) return;
-        if (!(e.target as any).getAttribute('class')?.includes('rbc-resize-')) {
-          event.sourceResource = resourceId;
-          draggable.onBeginAction(event, 'move');
-        }
-      }}
-      className={clsx({
-        'rbc-event': true,
-        [className ?? '']: true,
+      onClick={onClick}
+      onMouseDown={onTouchOrMouse}
+      onTouchStart={onTouchOrMouse}
+      className={clsx(className, {
+        'rbc-event group transition-opacity': true,
         // TODO: 'rbc-selected': selected,
         'rbc-resizable': isResizable,
         'rbc-event-allday': isAllDay || event.allDay || diff(event.start, ceil(event.end, 'day'), 'day') > 1,
-        'rbc-event-continues-prior': continuesPrior,
-        'rbc-event-continues-after': continuesAfter,
-        'rbc-drag-preview': event.__isPreview,
-        'rbc-nondraggable': event.isDraggable === false,
+        'rounded-l-none': continuesPrior,
+        'rounded-r-none': continuesAfter,
         'cursor-grab': event.isDraggable !== false,
-        'rbc-dragged-event': draggable.stateRef.current.interacting && draggable.stateRef.current.event === event,
+        'rbc-nondraggable': event.isDraggable === false,
+        'rbc-drag-preview': event.__isPreview,
+        'rbc-dragged-event': draggable.stateRef.current.event === event,
       })}
     >
       {!continuesPrior && isResizable && (
         <div
-          className="rbc-resize-ew-anchor"
-          onMouseDown={(e) => {
-            if (e.button !== 0) return;
-            draggable.onBeginAction(event, 'resize', "LEFT");
-          }}
-        >
-          <div className="rbc-resize-ew-icon" />
-        </div>
+          className="absolute left-0 opacity-0 group-hover:opacity-100 cursor-w-resize h-3 top-2 mx-auto border-l-4 border-double"
+          data-resize="LEFT"
+        />
       )}
 
       <div className="rbc-event-content">
@@ -84,14 +79,9 @@ const EventCell = ({
 
       {!continuesAfter && isResizable && (
         <div
-          className="rbc-resize-ew-anchor"
-          onMouseDown={(e) => {
-            if (e.button !== 0) return;
-            draggable.onBeginAction(event, 'resize', "RIGHT");
-          }}
-        >
-          <div className="rbc-resize-ew-icon" />
-        </div>
+          className="absolute right-0 opacity-0 group-hover:opacity-100 cursor-e-resize h-3 top-2 mx-auto border-l-4 border-double"
+          data-resize="RIGHT"
+        />
       )}
     </div>
   )

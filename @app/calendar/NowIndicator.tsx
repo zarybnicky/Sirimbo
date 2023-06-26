@@ -11,11 +11,11 @@ type Props = {
 
 export const NowIndicator = ({date, slotMetrics}: Props) => {
   const [top, setTop] = React.useState('');
-  const { min, max } = React.useContext(NavigationContext);
+  const { minTime, maxTime } = React.useContext(NavigationContext);
 
   useLayoutEffect(() => {
-    const minDate = merge(date, min);
-    const maxDate = merge(date, max);
+    const minDate = merge(date, minTime);
+    const maxDate = merge(date, maxTime);
 
     const update = () => {
       const now = new Date()
@@ -28,10 +28,10 @@ export const NowIndicator = ({date, slotMetrics}: Props) => {
     update();
     const interval = setInterval(update, 60000);
     return () => clearInterval(interval);
-  }, [date, min, max]);
+  }, [date, minTime, maxTime, slotMetrics]);
 
   if (!top) return null
   return (
-    <div className="absolute z-[3] inset-x-0 h-px pointer-events-none rbc-current-time-indicator bg-success" style={{ top }} />
+    <div className="absolute z-[3] inset-x-0 h-px pointer-events-none bg-success" style={{ top }} />
   );
 };

@@ -5,8 +5,8 @@ import { View } from './types';
 export type NavigationContext = {
   timeslots: number;
   step: number;
-  min: Date;
-  max: Date;
+  minTime: Date;
+  maxTime: Date;
   focusedTime: Date;
   onDrillDown: (date: Date, view: View) => void;
 };
@@ -14,10 +14,10 @@ export type NavigationContext = {
 export const NavigationContext = React.createContext<NavigationContext>({
   timeslots: 4,
   step: 15,
-  min: startOf(new Date(), 'day'),
-  max: endOf(new Date(), 'day'),
+  minTime: startOf(new Date(), 'day'),
+  maxTime: endOf(new Date(), 'day'),
   focusedTime: new Date(1972, 0, 1, 16, 0, 0),
-  onDrillDown: () => {},
+  onDrillDown: () => {/* empty */},
 });
 
 export const NavigationProvider = ({ children, setDate, setView }: {
@@ -28,14 +28,14 @@ export const NavigationProvider = ({ children, setDate, setView }: {
   const navigationContext: NavigationContext = React.useMemo<NavigationContext>(() => ({
     timeslots: 4,
     step: 15,
-    min: new Date(1972, 0, 1, 7, 0, 0),
-    max: endOf(new Date(), 'day'),
+    minTime: new Date(1972, 0, 1, 7, 0, 0),
+    maxTime: endOf(new Date(), 'day'),
     focusedTime: new Date(1972, 0, 1, 16, 0, 0),
     onDrillDown(date, view) {
       setView(view);
       setDate(date);
     },
-  }), []);
+  }), [setDate, setView]);
 
-  return React.createElement(NavigationContext.Provider, { children, value: navigationContext });
+  return React.createElement(NavigationContext.Provider, { value: navigationContext }, children);
 };

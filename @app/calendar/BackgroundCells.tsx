@@ -2,7 +2,7 @@ import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import clsx from 'clsx';
 import closest from 'dom-helpers/closest';
 import React from 'react';
-import { eq, neq } from './localizer';
+import { eq, neq } from 'date-arithmetic';
 import { SelectionContext } from './SelectContext';
 import Selection, { Bounds, getBoundsForNode, getSlotAtX, isEvent, pointInBox } from './Selection';
 
@@ -32,7 +32,7 @@ const BackgroundCells = ({
   const { onSelectSlot } = React.useContext(SelectionContext);
 
   useLayoutEffect(() => {
-    let selector = new Selection(() => rowRef.current, {
+    const selector = new Selection(() => rowRef.current, {
       shouldSelect(point) {
         return !isEvent(cellRef.current!, point)
       }
@@ -56,7 +56,7 @@ const BackgroundCells = ({
           endIdx = range.length - 1
         }
 
-        let currentSlot = getSlotAtX(rowBox, bounds.x, range.length)
+        const currentSlot = getSlotAtX(rowBox, bounds.x, range.length)
         const isCurrentRow = rowBox.top < bounds.y && rowBox.bottom > bounds.y
         const isAboveStart = initial.y > rowBox.bottom
         const isBelowStart = rowBox.top > initial.y
@@ -70,7 +70,7 @@ const BackgroundCells = ({
           }
         }
 
-        let cellWidth = (rowBox.right - rowBox.left) / range.length
+        const cellWidth = (rowBox.right - rowBox.left) / range.length
         const isStartRow = rowBox.top < initial.y && rowBox.bottom > initial.y
         if (isStartRow) {
           startIdx = endIdx = Math.floor((initial.x - rowBox.left) / cellWidth)
@@ -95,18 +95,18 @@ const BackgroundCells = ({
 
     selector.addEventListener('click', ({ detail: point }) => {
       setState(() => {
-        let target = document.elementFromPoint(point.clientX, point.clientY)!
+        const target = document.elementFromPoint(point.clientX, point.clientY)!
         if (isEvent(cellRef.current!, point)) {
           return EMPTY
         }
         if (closest(target, '.rbc-show-more', cellRef.current!)) {
           return EMPTY
         }
-        let rowBox = getBoundsForNode(cellRef.current!);
+        const rowBox = getBoundsForNode(cellRef.current!);
         if (!pointInBox(rowBox, point)) {
           return EMPTY
         }
-        let currentSlot = getSlotAtX(rowBox, point.x, range.length);
+        const currentSlot = getSlotAtX(rowBox, point.x, range.length);
         if (currentSlot !== -1) {
           onSelectSlot({
             slots: [range[currentSlot]!],
@@ -142,7 +142,7 @@ const BackgroundCells = ({
     })
 
     return () => selector.teardown();
-  }, []);
+  }, [onSelectSlot, range, resourceId, rowRef]);
 
   return (
     <div className="rbc-row-bg" ref={cellRef}>

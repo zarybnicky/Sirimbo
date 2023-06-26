@@ -1,15 +1,17 @@
 import { useLayoutEffect } from '@radix-ui/react-use-layout-effect';
 import clsx from 'clsx';
+import closest from 'dom-helpers/closest'
+import { add, eq, gt, lte, max, min } from 'date-arithmetic';
 import React from 'react';
 import { DnDContext } from './DnDContext';
-import getStyledEventsOverlap from './layout-algorithms/overlap';
-import { add, diff, eq, gt, lte, max, merge, min, range, format } from './localizer';
 import { NavigationContext } from './NavigationContext';
 import { NowIndicator } from './NowIndicator';
 import { SelectionContext } from './SelectContext';
-import Selection, { Bounds, ClientPoint, getBoundsForNode, getEventNodeFromPoint, isEvent, pointInColumn } from './Selection';
+import Selection, { Bounds, ClientPoint, getBoundsForNode, isEvent, pointInColumn } from './Selection';
 import TimeGridEvent from './TimeGridEvent';
 import { getSlotMetrics } from './TimeSlotMetrics';
+import getStyledEventsOverlap from './layout-algorithms/overlap';
+import { diff, format, range } from './localizer';
 import { CalendarEvent } from './types';
 
 const EMPTY = {}
@@ -41,18 +43,13 @@ type EventSelectionState = {
 const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayColumnProps) => {
   const columnRef = React.useRef<HTMLDivElement>(null);
   const eventOffsetTopRef = React.useRef<number>(0);
-  const { onSelectSlot } = React.useContext(SelectionContext);
-  const { min: minTime, max: maxTime, step, timeslots } = React.useContext(NavigationContext);
-  const [backgroundState, setBackgroundState] = React.useState<BackgroundSelectionState>({});
   const draggable = React.useContext(DnDContext);
+  const { onSelectSlot } = React.useContext(SelectionContext);
+  const { minTime, maxTime, step, timeslots } = React.useContext(NavigationContext);
+  const [backgroundState, setBackgroundState] = React.useState<BackgroundSelectionState>({});
   const [eventState, setEventState] = React.useState<EventSelectionState>(EMPTY)
   const slotMetrics = React.useMemo(() => {
-    return getSlotMetrics({
-      min: merge(date, minTime),
-      max: merge(date, maxTime),
-      step,
-      timeslots,
-    });
+    return getSlotMetrics({date, minTime, maxTime, step, timeslots});
   }, [date, minTime, maxTime, step, timeslots]);
 
   useLayoutEffect(() => {
@@ -62,10 +59,10 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
       },
     });
 
-    let selectionState = (point: ClientPoint | Bounds, state: BackgroundSelectionState) => {
+    const selectionState = (point: ClientPoint | Bounds, state: BackgroundSelectionState) => {
       const bounds = getBoundsForNode(columnRef.current!);
-      let currentSlot = slotMetrics.closestSlotFromPoint(point, bounds)!;
-      let initialSlot = state.initialSlot || currentSlot;
+      const currentSlot = slotMetrics.closestSlotFromPoint(point, bounds);
+      const initialSlot = state.initialSlot || currentSlot;
 
       const selectRange = slotMetrics.getRange(
         lte(initialSlot, currentSlot) ? slotMetrics.nextSlot(currentSlot) : currentSlot,
@@ -82,7 +79,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
 
     selector.addEventListener('selecting', ({ detail: point }) => {
       setBackgroundState((backgroundState) => {
-        let newState = selectionState(point, backgroundState);
+        const newState = selectionState(point, backgroundState);
         return backgroundState.start !== newState.start ||
           backgroundState.end !== newState.end ||
           backgroundState.selecting !== newState.selecting
@@ -93,7 +90,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
 
     selector.addEventListener('selectStart', ({ detail: point }) => {
       setBackgroundState((backgroundState) => {
-        let newState = selectionState(point, backgroundState);
+        const newState = selectionState(point, backgroundState);
         return backgroundState.start !== newState.start ||
           backgroundState.end !== newState.end ||
           backgroundState.selecting !== newState.selecting
@@ -141,17 +138,18 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
     });
 
     return () => selector.teardown();
-  }, []);
+  }, [onSelectSlot, resourceId, slotMetrics]);
 
   useLayoutEffect(() => {
-    let selector = new Selection(() => gridRef.current, {
+    const selector = new Selection(() => gridRef.current, {
       shouldSelect(point) {
         const bounds = getBoundsForNode(columnRef.current!)
         if (!draggable.stateRef.current.action) return false
         if (draggable.stateRef.current.action === 'resize') {
           return pointInColumn(bounds, point)
         }
-        const eventNode = getEventNodeFromPoint(columnRef.current!, point as any)
+        const target = document.elementFromPoint(point.clientX, point.clientY)!
+        const eventNode = closest(target, '.rbc-event', columnRef.current || undefined)
         if (!eventNode) {
           return false
         }
@@ -161,7 +159,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
         // delta from this point. note: if we want to DRY this with WeekWrapper,
         // probably better just to capture the mouseDown point here and do the
         // placement computation in handleMove()...
-        eventOffsetTopRef.current = point.y - getBoundsForNode(eventNode).top;
+        eventOffsetTopRef.current = point.y - getBoundsForNode(eventNode as HTMLElement).top;
         return true;
       },
     })
@@ -195,7 +193,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
             return EMPTY
           }
           const newSlot = slotMetrics.closestSlotFromPoint({ x: point.x, y: point.y - eventOffsetTopRef.current }, bounds)
-          let newEnd = add(newSlot, duration, 'milliseconds')
+          const newEnd = add(newSlot, duration, 'milliseconds')
           newRange = slotMetrics.getRange(newSlot, newEnd, false, true)
         } else {
           const newTime = slotMetrics.closestSlotFromPoint(point, bounds)
@@ -215,14 +213,14 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
     selector.addEventListener('dropFromOutside', ({ detail: point }) => {
       const bounds = getBoundsForNode(columnRef.current!)
       if (pointInColumn(bounds, point)) {
-        let start = slotMetrics.closestSlotFromPoint(point, bounds)
+        const start = slotMetrics.closestSlotFromPoint(point, bounds)
         draggable.onDropFromOutside?.({start, end: slotMetrics.nextSlot(start), allDay: false, resourceId})
       }
     })
 
     selector.addEventListener('dragOverFromOutside', ({ detail: point }) => {
       const bounds = getBoundsForNode(columnRef.current!)
-      let start = slotMetrics.closestSlotFromPoint(point, bounds)
+      const start = slotMetrics.closestSlotFromPoint(point, bounds)
       draggable.onDropFromOutside?.({start, end: slotMetrics.nextSlot(start), allDay: false, resourceId})
     })
 
@@ -261,7 +259,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
     })
 
     return () => selector.teardown()
-  }, [])
+  }, [draggable, gridRef, resourceId, slotMetrics])
 
   const backgroundEventsInRange = React.useMemo(() => {
     const minimumStartDifference = Math.ceil((step * timeslots) / 2);
@@ -290,7 +288,7 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
         </div>
       ))}
 
-      <div className="rbc-events-container">
+      <div className="absolute inset-0 mr-[10px]">
         {backgroundEventsInRange.map(({ event, style }) => (
           <TimeGridEvent
             isBackgroundEvent
@@ -321,12 +319,12 @@ const DayColumn = ({ date, resourceId, events, backgroundEvents, gridRef }: DayC
         )}
       </div>
 
-      {backgroundState.selecting && (
+      {backgroundState.startDate && backgroundState.endDate && (
         <div
           className="rbc-slot-selection"
           style={{ top: backgroundState.top, height: backgroundState.height }}
         >
-          <span>{format(backgroundState.startDate!, 'p')} – {format(backgroundState.endDate!, 'p')}</span>
+          <span>{format(backgroundState.startDate, 'p')} – {format(backgroundState.endDate, 'p')}</span>
         </div>
       )}
       <NowIndicator date={date} slotMetrics={slotMetrics} />

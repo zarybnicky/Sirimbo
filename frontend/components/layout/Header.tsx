@@ -150,7 +150,7 @@ const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {
     'uppercase text-sm font-bold justify-center items-center',
     'hover:text-white hover:border-b-[3px] border-white data-[state=open]:border-b-[3px]',
     inPath
-      ? 'text-white drop-shadow-xl border-b-[3px] tracking-wide -mb-[1px]'
+      ? 'text-white drop-shadow-xl border-b-[3px] tracking-wide mb-[-1px]'
       : 'text-stone-100 drop-shadow',
   );
   if (x.type === 'link') {

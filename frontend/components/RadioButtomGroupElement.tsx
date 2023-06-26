@@ -10,7 +10,7 @@ type Extras = {
   helperText?: React.ReactNode;
 };
 
-type Item = { id: string; label: string; disabled?: boolean };
+type Item = { id: string; label: React.ReactNode; disabled?: boolean };
 export type RadioButtonGroupElementProps<T extends FieldValues> = {
   name: Path<T>;
   control?: Control<T>;
