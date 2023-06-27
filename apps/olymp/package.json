@@ -13,8 +13,6 @@
     "@app/calendar": "*",
     "@app/graphql": "*",
     "@app/ui": "*",
-    "@babel/core": "~7.22.5",
-    "@babel/preset-env": "~7.22.5",
     "@ckeditor/ckeditor5-build-classic": "~38.0.1",
     "@ckeditor/ckeditor5-core": "~38.0.1",
     "@ckeditor/ckeditor5-engine": "~38.0.1",
@@ -114,7 +112,6 @@
     "windy-radix-typography": "~0.2.1",
     "zod": "~3.21.4",
     "zod-i18n": "~0.0.1",
-    "zod-i18n-map": "~2.13.1",
-    "@graphql-codegen/urql-introspection": "~2.2.1"
+    "zod-i18n-map": "~2.13.1"
   }
 }
