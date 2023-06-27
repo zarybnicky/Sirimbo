@@ -30,7 +30,7 @@ const Page: NextPageWithLayout = () => {
     toast.success(
       'Heslo bylo úspěšně změněno, za chvíli byste jej měli obdržet v e-mailu',
     );
-    router.push('/');
+    await router.push('/');
   });
 
   return (

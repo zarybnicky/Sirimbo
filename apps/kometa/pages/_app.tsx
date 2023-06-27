@@ -8,10 +8,10 @@ import { DefaultSeo } from 'next-seo';
 import { withPreconfiguredUrql } from '@app/graphql/query';
 import { ToastProvider, ToastViewport } from '@app/ui/toast';
 
-export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> &
+export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> &
   Omit<LayoutProps, 'children'>;
 
-type AppPropsWithLayout<T = {}> = AppProps<T> & {
+type AppPropsWithLayout<T = object> = AppProps<T> & {
   Component: NextPageWithLayout<T>;
   resetUrqlClient: () => void;
 };

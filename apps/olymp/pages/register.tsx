@@ -57,8 +57,8 @@ const Page: NextPageWithLayout = () => {
           values.poznamky === 'dancer'
             ? 'Tanečník/tanečnice'
             : values.poznamky === 'parent'
-            ? `Rodič tanečníka: ${values.dancerName}`
-            : `Jiný vztah: ${values.other}`,
+            ? `Rodič tanečníka: ${values.dancerName || ''}`
+            : `Jiný vztah: ${values.other || ''}`,
           uDancer: values.poznamky === 'dancer',
           uNationality: values.nationality.toString(),
           uSkupina: values.skupina,
@@ -82,7 +82,7 @@ const Page: NextPageWithLayout = () => {
     toast.success(
       'Registrace úspěšně proběhla. Během několika dnů vám na email příjde potvrzení vašeho účtu, které vyřizuje administrátor ručně',
     );
-    router.push('/');
+    await router.push('/');
   });
 
   return (

@@ -7,8 +7,10 @@ const Page: NextPageWithLayout = () => {
   const { signOut } = useAuth();
   const router = useRouter();
   React.useEffect(() => {
-    signOut();
-    router.push('/');
+    void (async () => {
+      await signOut();
+      await router.push('/');
+    })();
   }, [router, signOut]);
   return null;
 }

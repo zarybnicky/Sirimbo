@@ -13,11 +13,7 @@ type FormProps = {
   passwd: string;
 };
 
-export function LoginForm({
-
-}: {
-
-}) {
+export function LoginForm() {
   const { signIn } = useAuth();
   const router = useRouter();
   const { control, handleSubmit } = useForm<FormProps>();
@@ -26,7 +22,7 @@ export function LoginForm({
     await signIn(values.login, values.passwd);
     const redirect = router.query?.from as any as Route;
     if (redirect) {
-      router.push(redirect);
+      await router.push(redirect);
     }
   });
 
@@ -60,4 +56,4 @@ export function LoginForm({
       </div>
     </div>
   );
-};
+}

@@ -10,7 +10,7 @@ import { origin } from '@app/graphql/query';
 export type MenuLink = {
   type: 'link';
   title: string;
-  href: Route | Exclude<Route, { query: any }>['pathname'];
+  href: Route | Exclude<Route, { query: unknown }>['pathname'];
 };
 
 export type MenuStructItem =
@@ -151,7 +151,7 @@ type SidebarLinkProps = {
 
 const SidebarLink = ({ item, onClick }: SidebarLinkProps) => {
   const { pathname } = useRouter();
-  const realHref = typeof item.href === 'string' ? item.href : route(item.href as Route);
+  const realHref = typeof item.href === 'string' ? item.href : route(item.href);
   const inPath = pathname.startsWith(realHref) && realHref !== '/';
 
   return (

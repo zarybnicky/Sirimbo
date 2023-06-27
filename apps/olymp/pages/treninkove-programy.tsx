@@ -1,18 +1,12 @@
 import * as React from 'react';
 import { CallToAction } from '@app/ui/CallToAction';
 import { Heading } from '@app/ui/Heading';
-import { CohortListWithMembersDocument } from '@app/graphql/Cohorts';
 import type { NextPageWithLayout } from 'pages/_app';
-import { useQuery } from 'urql';
 import { TrainingPrograms } from '@app/ui/TrainingPrograms';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 
 const Page: NextPageWithLayout = () => {
-  const [{ data: cohorts }] = useQuery({
-    query: CohortListWithMembersDocument,
-    variables: { visible: true },
-  });
   return (
     <>
       <Heading>Tréninkové programy</Heading>

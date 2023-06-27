@@ -23,7 +23,7 @@ const Page: NextPageWithLayout = () => {
 
   const onSubmit = useAsyncCallback(async (values: FormProps) => {
     await signIn(values.login, values.passwd);
-    router.push((router.query?.from as any as Route) || '/dashboard');
+    await router.push((router.query?.from as any as Route) || '/dashboard');
   });
 
   return (
