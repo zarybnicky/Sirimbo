@@ -11,15 +11,15 @@ yarn2nix-moretea.mkYarnPackage {
   src = nix-gitignore.gitignoreSourcePure [../.gitignore] ./.;
   packageJSON = ./package.json;
   yarnLock = ../yarn.lock;
-  name = "rozpisovnik-olymp";
+  name = "olymp";
   # doCheck = true;
   # checkPhase = "yarn test --coverage --ci";
   distPhase = "true";
   buildPhase = ''
     shopt -s dotglob
-    unlink deps/rozpisovnik-olymp/rozpisovnik-olymp
-    unlink deps/rozpisovnik-olymp/node_modules
-    mv deps/rozpisovnik-olymp/* .
+    unlink deps/olymp/olymp
+    unlink deps/olymp/node_modules
+    mv deps/olymp/* .
     NEXT_PUBLIC_BASE_URL="http://undefined" yarn --offline run build
     shopt -s dotglob
     mkdir -p $out

@@ -26,8 +26,8 @@
   },
   "scripts": {
     "postinstall": "husky install",
-    "olymp": "yarn workspace rozpisovnik-olymp dev",
-    "kometa": "yarn workspace rozpisovnik-kometa dev",
+    "olymp": "yarn workspace olymp dev",
+    "kometa": "yarn workspace kometa dev",
     "backend": "yarn workspace rozpisovnik-api start",
     "schema": "yarn workspace @app/graphql dev",
     "migrate": "graphile-migrate watch",

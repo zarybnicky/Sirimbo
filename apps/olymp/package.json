@@ -1,5 +1,5 @@
 {
-  "name": "rozpisovnik-olymp",
+  "name": "olymp",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@0no-co/graphql.web": "~1.0.4",
+    "@app/calendar": "*",
     "@app/graphql": "*",
     "@app/ui": "*",
     "@babel/core": "~7.22.5",
