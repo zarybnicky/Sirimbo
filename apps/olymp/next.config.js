@@ -28,7 +28,7 @@ module.exports = require('nextjs-routes/config')({ outDir: '.' })(
 
       output: 'standalone',
       experimental: {
-        outputFileTracingRoot: path.join(__dirname, '../'),
+        outputFileTracingRoot: path.join(__dirname, '../../'),
       },
       transpilePackages: ['@app/graphql'],
 
