@@ -1,8 +1,8 @@
 {
-  "name": "sirimbo-backend",
+  "name": "rozpisovnik-api",
   "version": "1.0.0",
   "main": "src/index.ts",
-  "repository": "https://github.com/zarybnicky/TKOlymp/",
+  "repository": "https://github.com/zarybnicky/rozpisovnik/",
   "author": "Jakub Zárybnický",
   "license": "MIT",
   "private": true,

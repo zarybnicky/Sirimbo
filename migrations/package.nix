@@ -2,7 +2,7 @@
 , makeWrapper
 }:
 
-runCommand "sirimbo-migrations" {
+runCommand "rozpisovnik-api-migrations" {
   buildInputs = [makeWrapper];
 } ''
   mkdir -p $out

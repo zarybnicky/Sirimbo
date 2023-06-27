@@ -75,10 +75,6 @@
     //   "shadow": true,
     //   "command": "if [ \"$IN_TESTS\" = \"1\" ]; then ./scripts/test-seed; fi",
     // },
-    // {
-    //   "_": "command",
-    //   "command": "yarn workspace sirimbo-frontend schema",
-    // },
   ],
 
   "blankMigrationContent": "-- Write your migration here\n",
