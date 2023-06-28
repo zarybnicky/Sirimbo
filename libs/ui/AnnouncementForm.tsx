@@ -11,7 +11,6 @@ import { DatePickerElement } from '@app/ui/fields/date';
 import { TextFieldElement } from '@app/ui/fields/text';
 import { FormError } from '@app/ui/form';
 import { SubmitButton } from '@app/ui/submit';
-import { Announcement } from 'lib/entities';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
@@ -22,18 +21,19 @@ import { DeleteButton } from './DeleteButton';
 import { RichTextEditor } from './RichTextEditor';
 import { TitleBar } from './TitleBar';
 import { makeEntityFetcher } from './generic/WithEntity';
+import { AdminEntity } from './generic/AdminEntityList';
 
 type FormProps = Pick<UpozorneniInput, 'upNadpis' | 'upText' | 'isVisible' | 'sticky'> & {
   scheduledSince: Date | undefined;
   scheduledUntil: Date | undefined;
 };
 
-const entity = Announcement;
-
 export function AnnouncementForm({
+  entity,
   id,
   data,
 }: {
+  entity: AdminEntity<AnnouncementFragment>
   id?: string;
   data?: AnnouncementFragment | null;
 }) {

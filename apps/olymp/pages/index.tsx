@@ -5,7 +5,7 @@ import { useArticles } from '@app/ui/use-articles';
 import { YoutubeEmbed } from '@app/ui/YoutubeEmbed';
 import type { NextPageWithLayout } from 'pages/_app';
 import { ArticleCard } from '@app/ui/cards/ArticleCard';
-import { TrainingPrograms } from '@app/ui/TrainingPrograms';
+import { TrainingPrograms } from 'components/TrainingPrograms';
 
 const Page: NextPageWithLayout = () => {
   const { articles } = useArticles(3, 3);

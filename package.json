@@ -27,11 +27,10 @@
   "scripts": {
     "postinstall": "husky install",
     "olymp": "yarn workspace olymp dev",
-    "kometa": "yarn workspace kometa dev",
     "backend": "yarn workspace rozpisovnik-api start",
     "schema": "yarn workspace @app/graphql dev",
     "migrate": "graphile-migrate watch",
-    "start": "concurrently --kill-others-on-fail 'yarn migrate' 'yarn backend' 'yarn schema' 'yarn olymp' 'yarn kometa'"
+    "start": "concurrently --kill-others-on-fail 'yarn migrate' 'yarn backend' 'yarn schema' 'yarn olymp'"
   },
   "resolutions": {
     "@urql/core": "4.0.7"

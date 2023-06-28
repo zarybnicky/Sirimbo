@@ -1,4 +1,4 @@
-import { LoginForm } from 'components/LoginForm';
+import { LoginForm } from '@app/ui/LoginForm';
 import { useAuth } from '@app/ui/use-auth';
 import { Dropzone } from '@app/upload/Dropzone';
 

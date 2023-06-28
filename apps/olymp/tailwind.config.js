@@ -10,9 +10,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#ED1734',
-        accent: toRadixVars('red'),
-        neutral: toRadixVars('mauve'),
+        primary: process.env.THEME_PRIMARY,
+        accent: toRadixVars(process.env.THEME_ACCENT),
+        neutral: toRadixVars(process.env.THEME_NEUTRAl),
       },
     },
   },

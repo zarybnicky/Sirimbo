@@ -2,7 +2,7 @@ import * as React from 'react';
 import { CallToAction } from '@app/ui/CallToAction';
 import { Heading } from '@app/ui/Heading';
 import type { NextPageWithLayout } from 'pages/_app';
-import { TrainingPrograms } from '@app/ui/TrainingPrograms';
+import { TrainingPrograms } from 'components/TrainingPrograms';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 

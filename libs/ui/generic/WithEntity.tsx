@@ -35,7 +35,7 @@ export const WithEntity = <T,>({
   fetcher: EntityFetcher<T>;
   id?: string;
   perms?: [PermissionKey, PermissionLevel];
-  children: ({ data, id }: { data?: T; id?: string }) => JSX.Element;
+  children:  React.ReactElement<{ data?: T; id?: string }>;
   onSuccess?: () => void;
 }): JSX.Element => {
   const [{ data, fetching }] = fetcher.useQuery(id);
@@ -44,5 +44,5 @@ export const WithEntity = <T,>({
   if (perms && !myPerms.hasPermission(perms[0], perms[1])) return <ErrorPage error="Přístup zakázán" />;
   if (fetching) return <Loader />;
   if (!fetching && !data) return <ErrorPage error="Nenalezeno" />;
-  return children(props);
+  return React.cloneElement(children, props);
 };

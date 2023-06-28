@@ -30,14 +30,14 @@ module.exports = require('nextjs-routes/config')({ outDir: '.' })(
       experimental: {
         outputFileTracingRoot: path.join(__dirname, '../../'),
       },
-      transpilePackages: ['@app/graphql'],
+      transpilePackages: ['@app/graphql', '@app/ui', '@app/map', '@app/calendar'],
 
       images: {
         domains: ['tkolymp.cz', 'www.tkolymp.cz', 'api.rozpisovnik.cz', 'files.rozpisovnik.cz'],
       },
 
       async redirects() {
-        return [
+        const olympLegacy = [
           { source: '/home', destination: '/', permanent: true },
           { source: '/aktualne', destination: '/articles', permanent: true },
           { source: '/aktualne/:path*', destination: '/articles/:path*', permanent: true },
@@ -56,6 +56,20 @@ module.exports = require('nextjs-routes/config')({ outDir: '.' })(
           { source: '/member/dokumenty', destination: '/documents', permanent: true },
           { source: '/member/profil', destination: '/profile', permanent: true },
         ];
+
+        if (!process.env.NEXT_PUBLIC_ENABLE_HOME) {
+          olympLegacy.push(
+            { source: '/', destination: '/dashboard', permanent: false },
+          )
+        }
+
+        if (!process.env.NEXT_PUBLIC_ENABLE_ARTICLES) {
+          olympLegacy.push(
+            { source: '/articles/*', destination: '/dashboard', permanent: false },
+          )
+        }
+
+        return olympLegacy;
       },
 
       async rewrites() {

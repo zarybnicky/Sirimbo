@@ -7,7 +7,7 @@ import {
   useMemberMenu,
   useSideMenu,
   useTopMenu,
-} from 'lib/data/use-menu';
+} from 'lib/use-menu';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { route } from 'nextjs-routes';

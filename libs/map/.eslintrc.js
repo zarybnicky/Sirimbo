@@ -12,15 +12,16 @@ module.exports = {
   },
   settings: {
     tailwindcss: {
-      config: path.join(__dirname, './tailwind.config.js'),
+      config: path.join(__dirname, '../../frontend/tailwind.config.js'),
       callees: ["classNames", "clsx", "ctl", "cn"]
     }
   },
   rules: {
     "tailwindcss/classnames-order": ["off"],
     "import/no-unused-modules": ["off", {
+      "missingExports": true,
       unusedExports: true,
-      ignoreExports: ["pages/**"]
+      "ignoreExports": ["./Calendar.tsx"]
     }],
     "@typescript-eslint/no-misused-promises": ["error", {
       "checksVoidReturn": {

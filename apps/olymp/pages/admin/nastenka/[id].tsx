@@ -5,6 +5,7 @@ import { fromSlugArray } from '@app/ui/slugify';
 import { NextPageWithLayout } from 'pages/_app';
 import { AnnouncementList } from 'lib/entity-lists';
 import { WithEntity } from '@app/ui/generic/WithEntity';
+import { Announcement } from 'lib/entities';
 
 const Page: NextPageWithLayout = () => (
   <WithEntity
@@ -12,7 +13,7 @@ const Page: NextPageWithLayout = () => (
     fetcher={AnnouncementForm.fetcher}
     id={fromSlugArray(useRouter().query.id)}
   >
-    {AnnouncementForm}
+    <AnnouncementForm entity={Announcement} />
   </WithEntity>
 );
 

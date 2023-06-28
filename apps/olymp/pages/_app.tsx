@@ -1,13 +1,11 @@
 import * as React from 'react';
 import { AppProps, NextWebVitalsMetric } from 'next/app';
 import Router from 'next/router';
-import NProgress from 'nprogress';
 import { event } from 'nextjs-google-analytics';
 import { ProvideAuth } from '@app/ui/use-auth';
 import { Layout, type LayoutProps } from 'components/layout/Layout';
 import 'public/style/index.css';
 import { Tracking } from '@app/ui/Tracking';
-import { ToastContainer } from 'react-toastify';
 import { ConfirmProvider } from '@app/ui/Confirm';
 import { NextPage } from 'next';
 import { DefaultSeo } from 'next-seo';
@@ -16,6 +14,12 @@ import { z } from 'zod';
 import { zodI18nMap } from 'zod-i18n-map';
 import csZodTranslation from 'public/locales/cs/zod.json';
 import { withPreconfiguredUrql } from '@app/graphql/query';
+
+import 'nprogress/nprogress.css';
+import NProgress from 'nprogress';
+
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());

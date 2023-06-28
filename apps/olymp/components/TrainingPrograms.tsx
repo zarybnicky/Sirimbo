@@ -1,10 +1,10 @@
 import { Route } from 'nextjs-routes';
-import { ServiceCard } from './cards/ServiceCard';
+import { ServiceCard } from '@app/ui/cards/ServiceCard';
 
 export const TrainingPrograms = () => {
   return (
     <div className="col-feature my-4">
-      {useServices().map((x, i) => (
+      {services.map((x, i) => (
         <ServiceCard key={i} href={x.href} image={x.image} header={x.header}>
           {x.text}
         </ServiceCard>
@@ -13,12 +13,12 @@ export const TrainingPrograms = () => {
   );
 };
 
-const useServices = (): {
-  href: Route | Exclude<Route, { query: any }>['pathname'];
+const services: {
+  href: Route | Exclude<Route, { query: unknown }>['pathname'];
   image: string;
   header: string;
   text: string;
-}[] => [
+}[] = [
   {
     href: '/skolni-krouzky',
     image: 'https://files.rozpisovnik.cz/file/rozpisovnik/tkolymp/1687512915637-Karty-OlympDance.jpg',

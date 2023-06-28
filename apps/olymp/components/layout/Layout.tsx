@@ -1,14 +1,15 @@
-import classNames from 'classnames';
 import { ErrorPage } from '@app/ui/ErrorPage';
+import { LoginForm } from '@app/ui/LoginForm';
 import { useAuth } from '@app/ui/use-auth';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
+import classNames from 'classnames';
 import { NextSeo } from 'next-seo';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { Footer } from './Footer';
+import Footer from './Footer';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
-import dynamic from 'next/dynamic';
 const FeedbackForm = dynamic(() => import('@app/ui/FeedbackForm'), { ssr: false });
 
 export type LayoutProps = {
@@ -36,13 +37,7 @@ export function Layout({
   const router = useRouter();
   const { user, isLoading, perms } = useAuth();
 
-  React.useEffect(() => {
-    const scroll = () =>
-      document.querySelector('[data-nextjs-scroll-focus-boundary]')?.scrollTo(0, 0);
-    router.events.on('routeChangeComplete', scroll);
-    return () => router.events.off('routeChangeComplete', scroll);
-  }, [router]);
-
+  showTopMenu = showTopMenu && !!process.env.NEXT_PUBLIC_ENABLE_HOME;
   if (hideTopMenuIfLoggedIn) {
     showTopMenu = !user;
   }
@@ -50,20 +45,15 @@ export function Layout({
   if (!isLoading && user && requireLoggedOut) {
     void router.replace('/dashboard');
   }
-  if (!isLoading && permissions) {
-    if (!perms.hasPermission(permissions[0], permissions[1])) {
-      if (!perms.userId) {
-        void router.replace({ pathname: '/login', query: { from: router.asPath } });
-        children = null;
-      } else {
-        children = (
-          <ErrorPage
-            error="Přístup zamítnut"
-            details="Nemáte dostatečná práva pro zobrazení této stránky"
-          />
-        );
-      }
-    }
+  if (!isLoading && permissions && !perms.hasPermission(permissions[0], permissions[1])) {
+    children = perms.userId ? (
+      <ErrorPage
+        error="Přístup zamítnut"
+        details="Nemáte dostatečná práva pro zobrazení této stránky"
+      />
+    ) : (
+      <LoginForm />
+    );
   }
 
   return (
@@ -84,15 +74,11 @@ export function Layout({
             {list}
           </div>
         )}
-        <div
-          data-nextjs-scroll-focus-boundary
-          className={classNames(
-            list && isDetail && 'grow content min-h-0 overflow-y-auto',
-            list && !isDetail && 'hidden lg:flex',
-            !list && 'relative h-full grow overflow-y-auto content',
-            'scrollbar',
-          )}
-        >
+        <div className={classNames('scrollbar', {
+          'grow content min-h-0 overflow-y-auto': list && isDetail ,
+          'hidden lg:flex': list && !isDetail,
+          'relative h-full grow overflow-y-auto content': !list,
+        })}>
           {children}
           {showTopMenu && <Footer />}
         </div>

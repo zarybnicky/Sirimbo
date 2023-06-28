@@ -143,4 +143,10 @@ const adminMenu: MenuLink[] = [
     href: '/admin/akce',
     auth: [PermissionKey.peAkce, PermissionLevel.P_OWNED],
   },
+  {
+    type: 'link',
+    title: 'Upload (WIP)',
+    href: '/admin/upload',
+    auth: [PermissionKey.peNastenka, PermissionLevel.P_ADMIN],
+  },
 ];

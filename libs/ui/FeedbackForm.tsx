@@ -1,12 +1,11 @@
 import { SubmitFormDocument } from '@app/graphql/Crm';
 import { RichTextEditor } from '@app/ui/RichTextEditor';
-import { DialogContent, DialogTitle } from '@app/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@app/ui/dialog';
 import { TextFieldElement } from '@app/ui/fields/text';
 import { SubmitButton } from '@app/ui/submit';
 import { useCookie } from '@app/ui/use-cookie';
-import * as Dialog from '@radix-ui/react-dialog';
 import cx from 'classnames';
-import { X as CloseIcon, Edit3 } from 'lucide-react';
+import { Edit3 } from 'lucide-react';
 import React from 'react';
 import { useAsyncCallback } from 'react-async-hook';
 import { useForm } from 'react-hook-form';
@@ -33,8 +32,8 @@ function FeedbackForm() {
 
   return (
     <div key="feedback" className="absolute bottom-4 right-4">
-      <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
-        <Dialog.Trigger asChild>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogTrigger asChild>
           <button
             className={cx(
               'text-white shadow-stone-700 bg-red-500 hover:bg-red-600 inline-flex h-[35px] items-center justify-center rounded-lg px-3 leading-none shadow-[0_2px_10px] focus:shadow-[0_0_0_2px] focus:shadow-black focus:outline-none',
@@ -42,36 +41,27 @@ function FeedbackForm() {
           >
             <Edit3 className="h-4 w-4 mr-2" /> Ohodnoť nový web!
           </button>
-        </Dialog.Trigger>
+        </DialogTrigger>
 
         <DialogContent>
-            <DialogTitle className="text-neutral-12 mb-2 text-lg">
-              <Edit3 className="inline h-4 w-4 mr-1" /> Ohodnoť nový web!
-            </DialogTitle>
+          <DialogTitle className="text-neutral-12 mb-2 text-lg">
+            <Edit3 className="inline h-4 w-4 mr-1" /> Ohodnoť nový web!
+          </DialogTitle>
 
-            <form className="grid gap-4" onSubmit={handleSubmit(onSubmit.execute)}>
-              <TextFieldElement control={control} name="name" label="Jméno" />
-              <TextFieldElement control={control} name="email" type="email" placeholder="@" label="E-mail" />
-              <RichTextEditor
-                control={control}
-                name="feedback"
-                label="Nedostatky, připomínky, chvála, ..."
-              />
-              <div className="flex justify-end">
-                  <SubmitButton loading={onSubmit.loading} />
-              </div>
-            </form>
-
-            <Dialog.Close asChild>
-              <button
-                className="text-red-500 hover:bg-stone-200 focus:shadow-red-700 absolute top-[10px] right-[10px] inline-flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-full focus:shadow-[0_0_0_2px] focus:outline-none"
-                aria-label="Close"
-              >
-                <CloseIcon className="h-4 w-4" />
-              </button>
-            </Dialog.Close>
+          <form className="grid gap-4" onSubmit={handleSubmit(onSubmit.execute)}>
+            <TextFieldElement control={control} name="name" label="Jméno" />
+            <TextFieldElement control={control} name="email" type="email" placeholder="@" label="E-mail" />
+            <RichTextEditor
+              control={control}
+              name="feedback"
+              label="Nedostatky, připomínky, chvála, ..."
+            />
+            <div className="flex justify-end">
+              <SubmitButton loading={onSubmit.loading} />
+            </div>
+          </form>
         </DialogContent>
-      </Dialog.Root>
+      </Dialog>
     </div>
   );
 }

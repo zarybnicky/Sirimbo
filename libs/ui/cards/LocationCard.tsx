@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Map } from '@app/ui/Map';
+import Map from '@app/map';
 import Image from 'next/image';
 
 type Location = {

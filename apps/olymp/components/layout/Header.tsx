@@ -1,14 +1,12 @@
-import classNames from 'classnames';
 import { Dropdown, DropdownItem } from '@app/ui/Dropdown';
-import { OlympLogoVertical } from '@app/ui/Icons';
-import { getHrefs, MenuStructItem, useMemberMenu, useTopMenu } from 'lib/data/use-menu';
+import { OlympLogoOneline, OlympLogoVertical } from '@app/ui/Icons';
+import { useAuth } from '@app/ui/use-auth';
+import classNames from 'classnames';
+import { MenuStructItem, getHrefs, useMemberMenu, useTopMenu } from 'lib/use-menu';
+import { User as Account, ChevronDown, Facebook, Instagram, Menu as MenuIcon, Youtube } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { ChevronDown, Menu as MenuIcon, User as Account } from 'lucide-react';
-import { MobileLogo } from './MobileLogo';
-import { useAuth } from '@app/ui/use-auth';
-import { Instagram, Facebook, Youtube } from 'lucide-react';
 
 type Props = {
   isOpen: boolean;
@@ -76,7 +74,20 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
           >
             <MenuIcon className="w-5 h-5" />
           </button>
-          <MobileLogo />
+
+  <div className="grow flex items-center">
+    <OlympLogoOneline
+      viewBox="0 0 381.82217 111.78744"
+      width="170"
+      height="50"
+      style={{
+        filter: 'drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.2))',
+        color: 'white',
+        fill: 'white !important',
+      }}
+    />
+  </div>
+
           <Link
             href={auth.user ? '/profile' : '/login'}
             className="flex items-center button-icon p-0 m-1"

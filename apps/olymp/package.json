@@ -19,8 +19,6 @@
     "@ckeditor/ckeditor5-react": "~6.0.0",
     "@ckeditor/ckeditor5-utils": "~38.0.1",
     "@ckeditor/ckeditor5-watchdog": "~38.0.1",
-    "@graphql-codegen/typescript-urql-graphcache": "~2.4.5",
-    "@graphql-typed-document-node/core": "~3.2.0",
     "@hookform/resolvers": "~3.1.1",
     "@next/bundle-analyzer": "~13.4.5",
     "@radix-ui/colors": "~0.1.8",

@@ -3,17 +3,19 @@ import Link from 'next/link';
 import { Card } from '@app/ui/Card';
 import { Article } from '@app/ui/use-articles';
 import { ChevronRight } from 'lucide-react';
+import Image from 'next/image';
 
 export const ArticleCard = ({ item: x }: { item: Article }) => {
   return (
     <Link href={x.href}>
       <Card className="h-full flex flex-col group">
-        <div className="-m-3 mb-2 overflow-hidden">
-          <img
-            className="object-cover object-[50%_30%] w-full transition duration-300 group-hover:scale-110"
-            style={{ height: 240 }}
+        <div className="relative -m-3 mb-2 overflow-hidden h-[240px]">
+          <Image
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 30vw, 25vw"
+            className="object-cover object-[50%_30%] transition duration-300 group-hover:scale-110"
             src={x.img}
-            title={x.header}
+            alt={x.header}
           />
         </div>
         <div className="tracking-wide mt-2 text-lg text-primary font-bold">

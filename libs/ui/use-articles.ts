@@ -1,13 +1,12 @@
 import { ArticlesDocument } from '@app/graphql/Articles';
 import { slugify } from '@app/ui/slugify';
-import { Route } from 'nextjs-routes';
 import { useQuery } from 'urql';
+import { LinkProps } from 'next/link';
 
 export interface Article {
   id: string;
-  href: Route;
+  href: LinkProps['href'];
   img: string;
-  imgThumb: string;
   header: string;
   preview: string;
 }
@@ -28,7 +27,6 @@ export const useArticles = (
         query: { id: x.id, slug: [slugify(x.atJmeno)] },
       },
       img: `/galerie/${x.galerieFotoByAtFotoMain?.gfPath}`,
-      imgThumb: `/galerie/thumbnails/${x.galerieFotoByAtFotoMain?.gfPath}`,
       header: x.atJmeno,
       preview: x.atPreview,
     })),

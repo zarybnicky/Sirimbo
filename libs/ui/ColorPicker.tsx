@@ -1,11 +1,9 @@
-import { Control, FieldValues, Path, useController } from 'react-hook-form';
-import { HexColorPicker } from 'react-colorful';
 import { TextField } from '@app/ui/fields/text';
-import React from 'react';
-import * as PopoverPrimitive from '@radix-ui/react-popover';
-import classNames from 'classnames';
-import { X as Cross } from 'lucide-react';
 import { FieldLabel } from '@app/ui/form';
+import React from 'react';
+import { HexColorPicker } from 'react-colorful';
+import { Control, FieldValues, Path, useController } from 'react-hook-form';
+import { Popover, PopoverContent, PopoverTrigger } from './popover';
 
 type ColorPickerProps<T extends FieldValues> = {
   name: Path<T>;
@@ -23,39 +21,21 @@ export function ColorPicker<T extends FieldValues>({
   return (
     <div className="relative">
       <FieldLabel htmlFor={name}>{label}</FieldLabel>
-      <PopoverPrimitive.Root>
-        <PopoverPrimitive.Trigger asChild>
+
+      <Popover>
+        <PopoverTrigger asChild>
           <div className="w-16 h-8 border" style={{ backgroundColor: field.value }} />
-        </PopoverPrimitive.Trigger>
+        </PopoverTrigger>
 
-        <PopoverPrimitive.Content
-          align="start"
-          sideOffset={4}
-          className={classNames(
-            'z-20 data-[side=top]:animate-slideUpAndFade data-[side=bottom]:animate-slideDownAndFade',
-            'w-[320px] rounded-lg p-2 shadow-md bg-white',
-          )}
-        >
-          <PopoverPrimitive.Arrow className="fill-current text-white" />
-          <div className="text-right -mt-2 -mr-2 mb-2">
-            <PopoverPrimitive.Close
-              className={classNames(
-                'inline-flex items-center justify-center rounded-full p-1',
-                'focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75',
-              )}
-            >
-              <Cross className="h-4 w-4 text-gray-500 hover:text-gray-700" />
-            </PopoverPrimitive.Close>
-          </div>
-
+        <PopoverContent align="start" className="flex flex-col gap-4">
           <HexColorPicker
             style={{ width: 300 }}
             color={field.value}
             onChange={field.onChange}
           />
           <TextField name={name} value={field.value} onChange={field.onChange} />
-        </PopoverPrimitive.Content>
-      </PopoverPrimitive.Root>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }

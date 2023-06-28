@@ -1,18 +1,16 @@
-@import 'glider-js/glider.min.css';
-@import 'nprogress/nprogress.css';
-@import 'react-toastify/dist/ReactToastify.css';
-
-.content > * {
-  grid-column: content;
-}
-
-.prose p:empty {
-  display: none;
-}
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  .content > * {
+    grid-column: content;
+  }
+
+  .prose p:empty {
+    display: none;
+  }
+}
 
 .ck-content {
   @apply prose prose-accent !bg-accent-1;
@@ -76,7 +74,7 @@ body {
 .button-outline {
   @apply px-3 py-2 text-sm uppercase tracking-normal font-medium;
   @apply bg-transparent hover:bg-neutral-4 active:bg-neutral-5 text-neutral-11;
-  @apply border border-accent-7 hover:border-accent-8;
+  @apply border border-neutral-7 hover:border-neutral-8 bg-white;
 }
 .button-icon {
   @apply px-1.5 shadow-none;

@@ -3,6 +3,7 @@ import { useArticles } from '@app/ui/use-articles';
 import Glider from './react-glider';
 import Link from 'next/link';
 import GliderJs from 'glider-js';
+import 'glider-js/glider.min.css';
 
 export const Hero = ({}) => {
   const { articles } = useArticles(3, 0);
@@ -29,15 +30,14 @@ export const Hero = ({}) => {
     return () => window.removeEventListener('resize', resize);
   }, [gliderRef.current]);
 
-  React.useEffect(
-    () => () => {
+  React.useEffect(() => {
+    return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
-    },
-    [],
-  );
+    };
+  }, []);
 
   return (
     <Glider

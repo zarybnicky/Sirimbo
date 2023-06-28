@@ -11,8 +11,8 @@ declare module "nextjs-routes" {
   } from "next";
 
   export type Route =
-    | StaticRoute<"/_404">
-    | StaticRoute<"/_500">
+    | StaticRoute<"/404">
+    | StaticRoute<"/500">
     | DynamicRoute<"/admin/akce/[id]", { "id": string }>
     | StaticRoute<"/admin/akce/add">
     | StaticRoute<"/admin/akce">
@@ -47,6 +47,7 @@ declare module "nextjs-routes" {
     | StaticRoute<"/admin/skupiny/add">
     | StaticRoute<"/admin/skupiny">
     | StaticRoute<"/admin/tenant">
+    | StaticRoute<"/admin/upload">
     | DynamicRoute<"/admin/users/[id]", { "id": string }>
     | StaticRoute<"/admin/users/add">
     | StaticRoute<"/admin/users">

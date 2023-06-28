@@ -3,18 +3,24 @@ import { List } from '@app/ui/List';
 import { TextField } from '@app/ui/fields/text';
 import { fromSlugArray } from '@app/ui/slugify';
 import { useRouter } from 'next/router';
-import { Route } from 'nextjs-routes';
 import React, { ReactNode } from 'react';
 import { Plus } from 'lucide-react';
 import { Virtuoso } from 'react-virtuoso';
 import { SubmitButton } from '@app/ui/submit';
 import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
 import { NextRouter } from 'next/router';
+import { LinkProps } from 'next/link';
 import { useQuery } from 'urql';
+import { DropdownItem } from '../Dropdown';
 
-export interface AdminListEntity {
+type Route = LinkProps['href'];
+
+export interface AdminEntity<T = object> {
   name: (num: number) => string;
-  addRoute: Route | Exclude<Route, { query: any }>['pathname'];
+  title: (x?: T | null) => string | null | undefined;
+  useMenu: (x: T) => DropdownItem[];
+  listRoute: Route;
+  addRoute: Route;
   editRoute: (id: string) => Route;
 }
 
@@ -51,7 +57,7 @@ function getPageInfo<T>(data?: T): PageInfo | undefined {
 
 export const makeAdminList =
   <T extends object>(
-    entity: AdminListEntity,
+    entity: AdminEntity,
     document: TypedDocumentNode<T, { first?: number; cursor?: number }>,
   ) =>
   <Orig,>(getList: (x: T) => Orig[] | undefined) =>
@@ -128,7 +134,7 @@ function RenderItem(
   _n: number,
   item: {
     id: string;
-    href: Route | Exclude<Route, { query: any }>['pathname'];
+    href: Route;
     title?: ReactNode;
     subtitle?: ReactNode;
     children?: ReactNode;
