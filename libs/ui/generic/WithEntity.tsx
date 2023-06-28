@@ -44,5 +44,5 @@ export const WithEntity = <T,>({
   if (perms && !myPerms.hasPermission(perms[0], perms[1])) return <ErrorPage error="Přístup zakázán" />;
   if (fetching) return <Loader />;
   if (!fetching && !data) return <ErrorPage error="Nenalezeno" />;
-  return React.cloneElement(children, props);
+  return React.cloneElement(children, { ...children.props, ...props });
 };

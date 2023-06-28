@@ -14,7 +14,6 @@ import { FormError } from '@app/ui/form';
 import { SubmitButton } from '@app/ui/submit';
 import { useRouter } from 'next/router';
 import { DeleteButton } from './DeleteButton';
-import { Route } from 'nextjs-routes';
 import { DateRange, DateRangeInput } from '@app/ui/fields/date';
 import { ErrorPage } from './ErrorPage';
 import { toast } from 'react-toastify';
@@ -22,6 +21,7 @@ import { useMutation, useQuery } from 'urql';
 import { RichTextEditor } from './RichTextEditor';
 import { TitleBar } from './TitleBar';
 import { RadioButtonGroupElement } from './RadioButtomGroupElement';
+import { AdminEntity } from './generic/AdminEntityList';
 
 type FormProps = Pick<
   EventInput,
@@ -40,9 +40,7 @@ type FormProps = Pick<
   schedule: DateRange;
 };
 
-const backHref: Route = { pathname: '/admin/akce' };
-
-export const EventForm = ({ id = '' }: { id?: string }) => {
+export const EventForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string }) => {
   const router = useRouter();
   const [query] = useQuery({query: EventDocument, variables: { id }, pause: !id });
   const data = query.data?.event;
@@ -93,7 +91,7 @@ export const EventForm = ({ id = '' }: { id?: string }) => {
       const id = res.data!.createEvent?.event?.id;
       toast.success('Přidáno.');
       if (id) {
-        router.replace({ pathname: '/admin/nabidka/[id]', query: { id } });
+        router.replace(entity.editRoute(id));
       } else {
         reset(undefined);
       }
@@ -106,13 +104,13 @@ export const EventForm = ({ id = '' }: { id?: string }) => {
 
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <TitleBar backHref={backHref} title={title} >
+      <TitleBar backHref={entity.listRoute} title={title} >
         {id && (
           <DeleteButton
             doc={DeleteEventDocument}
             id={id}
             title="smazat akci"
-            redirect={backHref}
+            redirect={entity.listRoute}
           />
         )}
         <SubmitButton loading={onSubmit.loading} />

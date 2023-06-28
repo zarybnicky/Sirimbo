@@ -26,7 +26,7 @@ export function LoginForm(props: LoginFormProps) {
     await signIn(values.login, values.passwd);
     const redirect = router.query?.from as string | undefined;
     if (redirect) {
-      return await router.push(redirect);
+      return await router.push(redirect as any);
     }
     if (router.pathname === '/login' && props.successHref) {
       return await router.push(props.successHref);

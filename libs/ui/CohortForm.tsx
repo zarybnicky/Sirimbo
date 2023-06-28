@@ -17,12 +17,13 @@ import { ComboboxElement } from './Combobox';
 import { useMutation, useQuery } from 'urql';
 import { DeleteButton } from './DeleteButton';
 import { useRouter } from 'next/router';
-import { Route } from 'nextjs-routes';
 import { ErrorPage } from './ErrorPage';
 import { toast } from 'react-toastify';
 import { RichTextEditor } from './RichTextEditor';
 import { TitleBar } from './TitleBar';
 import { z } from 'zod';
+import { AdminEntity } from './generic/AdminEntityList';
+import { makeEntityFetcher } from './generic/WithEntity';
 
 const Form = z.object({
   sName: z.string(),
@@ -36,9 +37,7 @@ const Form = z.object({
 });
 type FormProps = z.infer<typeof Form>;
 
-const backHref: Route = { pathname: '/admin/skupiny' };
-
-export const CohortForm = ({ id = '' }: { id?: string }) => {
+export const CohortForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string }) => {
   const router = useRouter();
   const [query] = useQuery({ query: CohortDocument, variables: { id }, pause: !!id });
   const data = query.data?.skupiny;
@@ -63,7 +62,7 @@ export const CohortForm = ({ id = '' }: { id?: string }) => {
       const id = res.data?.createSkupiny?.skupiny?.id;
       toast.success('Přidáno.');
       if (id) {
-        router.replace({ pathname: '/admin/skupiny/[id]', query: { id } });
+        router.replace(entity.editRoute(id));
       } else {
         reset(undefined);
       }
@@ -76,11 +75,11 @@ export const CohortForm = ({ id = '' }: { id?: string }) => {
 
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <TitleBar backHref={backHref} title={title}>
+      <TitleBar backHref={entity.listRoute} title={title}>
         <DeleteButton
           doc={DeleteCohortDocument}
           id={id}
-          redirect="/admin/skupiny"
+          redirect={entity.listRoute}
           title="smazat skupinu"
         />
         <SubmitButton loading={onSubmit.loading} />
@@ -131,3 +130,5 @@ export const CohortForm = ({ id = '' }: { id?: string }) => {
     </form>
   );
 };
+
+CohortForm.fetcher = makeEntityFetcher(CohortDocument)((x) => x?.skupiny);

@@ -4,8 +4,9 @@ import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import { fromSlugArray } from '@app/ui/slugify';
 import type { NextPageWithLayout } from 'pages/_app';
 import { ScheduleList } from 'lib/entity-lists';
+import { Schedule } from 'lib/entities';
 
-const Page: NextPageWithLayout = () => <ScheduleForm id={fromSlugArray(useRouter().query.id)}/>;
+const Page: NextPageWithLayout = () => <ScheduleForm entity={Schedule} id={fromSlugArray(useRouter().query.id)}/>;
 
 Page.list = <ScheduleList />;
 Page.isDetail = true;

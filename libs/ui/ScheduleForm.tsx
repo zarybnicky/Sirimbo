@@ -18,7 +18,6 @@ import { RozpiInput } from '@app/graphql';
 import { TrainerListDocument } from '@app/graphql/User';
 import { useRouter } from 'next/router';
 import { ComboboxElement } from './Combobox';
-import { Route } from 'nextjs-routes';
 import { toast } from 'react-toastify';
 import { ErrorPage } from './ErrorPage';
 import { DeleteButton } from './DeleteButton';
@@ -30,12 +29,11 @@ import { Card } from '@app/ui/Card';
 import { CoupleListDocument } from '@app/graphql/Couple';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { AdminEntity } from './generic/AdminEntityList';
 
 type FormProps = Pick<RozpiInput, 'rTrener' | 'rKde' | 'rDatum' | 'rVisible' | 'rLock'>;
 
-const backHref: Route = { pathname: '/admin/akce' };
-
-export const ScheduleForm = ({ id = '' }: { id?: string }) => {
+export const ScheduleForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string }) => {
   const router = useRouter();
   const [query] = useQuery({ query: ScheduleDocument, variables: { id } });
   const data = query.data?.rozpi;
@@ -65,7 +63,7 @@ export const ScheduleForm = ({ id = '' }: { id?: string }) => {
       const id = res.data?.createRozpi?.rozpi?.id;
       toast.success('Přidáno.');
       if (id) {
-        router.replace({ pathname: '/admin/rozpis/[id]', query: { id } });
+        router.replace(entity.editRoute(id));
       } else {
         reset(undefined);
       }
@@ -78,13 +76,13 @@ export const ScheduleForm = ({ id = '' }: { id?: string }) => {
 
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <TitleBar backHref={backHref} title={title}>
+      <TitleBar backHref={entity.listRoute} title={title}>
         {id && (
           <DeleteButton
             doc={DeleteScheduleDocument}
             id={id}
             title="smazat rozpis"
-            redirect={backHref}
+            redirect={entity.listRoute}
           />
         )}
         <SubmitButton loading={onSubmit.loading} />

@@ -1,44 +1,51 @@
 import * as React from 'react';
-import { Card } from '@app/ui/Card';
+import { Card, CardMenu } from '@app/ui/Card';
 import { fullDateFormatter } from '@app/ui/format-date';
 import { EventWithItemsFragment } from '@app/graphql/Event';
 import { ParticipationDialog } from './ParticipationForm';
 import { RichTextView } from './RichTextView';
 import { EventParticipantExport } from './EventParticipantExport';
-import { Event } from 'lib/entities';
 import { useAuth } from '@app/ui/use-auth';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@app/ui/dialog';
+import { DropdownMenuLink } from './dropdown';
 
 interface Props {
   event: EventWithItemsFragment;
   expanded?: boolean;
 }
 
-export const EventItem = ({ event }: Props) => {
+export const EventItem = ({ event: item }: Props) => {
   const { user, perms } = useAuth();
-  const menu = Event.useMenu(event);
   const total =
-    (event.attendeeUsers?.nodes?.length ?? 0) +
-    (event.attendeeExternals?.nodes?.length ?? 0);
+    (item.attendeeUsers?.nodes?.length ?? 0) +
+    (item.attendeeExternals?.nodes?.length ?? 0);
 
   return (
-    <Card menu={menu} className="break-inside-avoid">
+    <Card className="break-inside-avoid">
+      {perms.canEditEvent(item) && (
+        <CardMenu>
+          <DropdownMenuLink href={{ pathname: '/admin/akce/[id]', query: { id: item.id } }}>
+            Upravit
+          </DropdownMenuLink>
+        </CardMenu>
+      )}
+
       <div className="flex justify-between flex-wrap text-neutral-11">
         <div>
           {fullDateFormatter.formatRange(
-            new Date(event.since || ''),
-            new Date(event.until || ''),
+            new Date(item.since || ''),
+            new Date(item.until || ''),
           )}
         </div>
         <div>
-          Zbývá {event.remainingSpots} míst z {event.capacity}
+          Zbývá {item.remainingSpots} míst z {item.capacity}
         </div>
       </div>
-      <div className="text-2xl text-neutral-12">{event.name}</div>
-      <div className="text-neutral-11">{event.locationText}</div>
+      <div className="text-2xl text-neutral-12">{item.name}</div>
+      <div className="text-neutral-11">{item.locationText}</div>
 
       <div className="flex gap-1 flex-wrap my-4">
-        <ParticipationDialog data={event} />
+        <ParticipationDialog data={item} />
 
         {total > 0 && (
           <Dialog>
@@ -47,17 +54,17 @@ export const EventItem = ({ event }: Props) => {
             </DialogTrigger>
             <DialogContent>
               <DialogTitle>Účastníci</DialogTitle>
-              {perms.canEditEvent(event) && <EventParticipantExport id={event.id} />}
+              {perms.canEditEvent(item) && <EventParticipantExport id={item.id} />}
 
-              {!!event.attendeeUsers?.nodes?.length && <u>Členové</u>}
-              {event.attendeeUsers?.nodes?.map((x) => (
+              {!!item.attendeeUsers?.nodes?.length && <u>Členové</u>}
+              {item.attendeeUsers?.nodes?.map((x) => (
                 <div key={x.user?.uId}>
                   {x.user?.uJmeno} {x.user?.uPrijmeni}
                 </div>
               ))}
 
-              {!!event.attendeeExternals?.nodes?.length && <u>Externí</u>}
-              {event.attendeeExternals?.nodes?.map((x, i) => (
+              {!!item.attendeeExternals?.nodes?.length && <u>Externí</u>}
+              {item.attendeeExternals?.nodes?.map((x, i) => (
                 <div key={i}>
                   {x.firstName} {x.lastName}
                 </div>
@@ -67,12 +74,12 @@ export const EventItem = ({ event }: Props) => {
         )}
       </div>
 
-      {event.summary && event.summary !== '[]' && (
-        <RichTextView value={event.summary} />
+      {item.summary && item.summary !== '[]' && (
+        <RichTextView value={item.summary} />
       )}
-      <RichTextView value={event.description} />
+      <RichTextView value={item.description} />
       {!!user && (
-        <RichTextView value={event.descriptionMember} />
+        <RichTextView value={item.descriptionMember} />
       )}
     </Card>
   );

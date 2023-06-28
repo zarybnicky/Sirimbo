@@ -1,9 +1,9 @@
-import { Dropdown, DropdownItem } from '@app/ui/Dropdown';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuContent, DropdownMenuLink, DropdownMenuTrigger } from '@app/ui/dropdown';
 import { OlympLogoOneline, OlympLogoVertical } from '@app/ui/Icons';
 import { useAuth } from '@app/ui/use-auth';
 import classNames from 'classnames';
-import { MenuStructItem, getHrefs, useMemberMenu, useTopMenu } from 'lib/use-menu';
-import { User as Account, ChevronDown, Facebook, Instagram, Menu as MenuIcon, Youtube } from 'lucide-react';
+import { getHrefs, MenuStructItem, useMemberMenu, useTopMenu } from 'lib/use-menu';
+import { ChevronDown, Facebook, Instagram, Menu as MenuIcon, User as Account, Youtube } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -75,18 +75,18 @@ export const Header = ({ isOpen, setIsOpen, showTopMenu }: Props) => {
             <MenuIcon className="w-5 h-5" />
           </button>
 
-  <div className="grow flex items-center">
-    <OlympLogoOneline
-      viewBox="0 0 381.82217 111.78744"
-      width="170"
-      height="50"
-      style={{
-        filter: 'drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.2))',
-        color: 'white',
-        fill: 'white !important',
-      }}
-    />
-  </div>
+          <div className="grow flex items-center">
+            <OlympLogoOneline
+              viewBox="0 0 381.82217 111.78744"
+              width="170"
+              height="50"
+              style={{
+                filter: 'drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.2))',
+                color: 'white',
+                fill: 'white !important',
+              }}
+            />
+          </div>
 
           <Link
             href={auth.user ? '/profile' : '/login'}
@@ -104,28 +104,34 @@ const AuthButton = () => {
   const auth = useAuth();
   const memberMenu = useMemberMenu();
 
-  const button = (
-    <button className="min-h-[48px] md:min-h-[64px] flex gap-2 items-center drop-shadow">
-      <Account className="h-4 w-4" />
-      <div
-        className="flex flex-col justify-center items-start"
-        style={{ lineHeight: 1.3 }}
-      >
-        <span className="text-xs uppercase tracking-wider">Přihlášen</span>
-        <span className="text-sm font-normal">
-          {auth.user?.uJmeno} {auth.user?.uPrijmeni}
-        </span>
-      </div>
-    </button>
-  );
   return (
-    <Dropdown
-      align="end"
-      button={button}
-      options={(memberMenu as DropdownItem[]).concat([
-        { title: 'Odhlásit se', onClick() { void auth.signOut() } },
-      ])}
-    />
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="min-h-[48px] md:min-h-[64px] flex gap-2 items-center drop-shadow">
+          <Account className="h-4 w-4" />
+          <div
+            className="flex flex-col justify-center items-start"
+            style={{ lineHeight: 1.3 }}
+          >
+            <span className="text-xs uppercase tracking-wider">Přihlášen</span>
+            <span className="text-sm font-normal">
+              {auth.user?.uJmeno} {auth.user?.uPrijmeni}
+            </span>
+          </div>
+        </button>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent align="end">
+        {memberMenu.map(item => (
+          <DropdownMenuLink key={JSON.stringify(item.href)} href={item.href}>
+            {item.title}
+          </DropdownMenuLink>
+        ))}
+        <DropdownMenuButton onClick={() => auth.signOut()}>
+          Odhlásit se
+        </DropdownMenuButton>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 
@@ -172,14 +178,19 @@ const DesktopMenuItem = ({ item: x }: { item: MenuStructItem }) => {
     );
   }
   return (
-    <Dropdown
-      align="center"
-      options={x.children}
-      button={
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
         <button className={'block ' + cx}>
           {x.title} <ChevronDown className="w-4 h-4" />
         </button>
-      }
-    />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="center" >
+        {x.children.map(item => (
+          <DropdownMenuLink key={JSON.stringify(item.href)} href={item.href}>
+            {item.title}
+          </DropdownMenuLink>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };

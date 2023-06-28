@@ -4,12 +4,21 @@ import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import { fromSlugArray } from '@app/ui/slugify';
 import type { NextPageWithLayout } from 'pages/_app';
 import { CohortList } from 'lib/entity-lists';
+import { Cohort } from 'lib/entities';
+import { WithEntity } from '@app/ui/generic/WithEntity';
 
-const Page: NextPageWithLayout = () => <CohortForm id={fromSlugArray(useRouter().query.id)} />;
+const Page: NextPageWithLayout = () => (
+  <WithEntity
+    perms={[PermissionKey.peAktuality, PermissionLevel.P_OWNED]}
+    fetcher={CohortForm.fetcher}
+    id={fromSlugArray(useRouter().query.id)}
+  >
+    <CohortForm entity={Cohort} />
+  </WithEntity>
+);
 
 Page.list = <CohortList />;
 Page.isDetail = true;
-Page.permissions = [PermissionKey.peAktuality, PermissionLevel.P_OWNED];
 Page.staticTitle = "Skupiny";
 
 export default Page;

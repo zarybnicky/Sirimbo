@@ -1,28 +1,14 @@
-import {
-  AnnouncementFragment,
-  ToggleUpozorneniStickyDocument,
-  ToggleUpozorneniVisibleDocument,
-} from '@app/graphql/Announcement';
-import { CohortBasicFragment } from '@app/graphql/Cohorts';
-import { EventFragment } from '@app/graphql/Event';
-import { ReservationBasicFragment } from '@app/graphql/Reservation';
-import { ScheduleBasicFragment } from '@app/graphql/Schedule';
-import { DropdownItem } from '@app/ui/Dropdown';
-import { useAuth } from '@app/ui/use-auth';
 import { Route } from 'nextjs-routes';
-import { useMutation } from 'urql';
 import { AdminEntity } from '@app/ui/generic/AdminEntityList';
-import { ArticleFragment } from '@app/graphql/Articles';
 
-interface AppAdminEntity<T = object> extends AdminEntity<T> {
+interface AppAdminEntity extends AdminEntity {
   listRoute: Route;
   addRoute: Route;
   editRoute: (id: string) => Route;
 }
 
-export const Article: AppAdminEntity<ArticleFragment> = {
+export const Article: AppAdminEntity = {
   name: (n) => (n === 1 ? 'článek' : n > 1 && n < 5 ? 'články' : 'článků'),
-  title: (x) => x?.atJmeno,
   listRoute: { pathname: '/admin/aktuality' },
   addRoute: { pathname: '/admin/aktuality/add' },
   editRoute: (id) => ({ pathname: '/admin/aktuality/[id]', query: { id } }),
@@ -71,35 +57,12 @@ export const PaymentGroup: AppAdminEntity = {
   }),
 };
 
-export const Announcement: AppAdminEntity<AnnouncementFragment> = {
+export const Announcement: AppAdminEntity = {
   name: (n: number) =>
     n === 1 ? 'příspěvek' : n > 1 && n < 5 ? 'příspěvky' : 'příspěvků',
   listRoute: { pathname: '/admin/nastenka' },
   addRoute: { pathname: '/admin/nastenka/add' },
   editRoute: (id: string) => ({ pathname: '/admin/nastenka/[id]', query: { id } }),
-  title: (data?: AnnouncementFragment | null) => data === null ? 'Nový příspěvek' : data?.upNadpis,
-  useMenu(item: AnnouncementFragment): DropdownItem[] {
-    const { perms } = useAuth();
-    const hideMutation = useMutation(ToggleUpozorneniVisibleDocument)[1];
-    const stickyMutation = useMutation(ToggleUpozorneniStickyDocument)[1];
-    if (!perms.canEditAnnouncement(item)) {
-      return [];
-    }
-    return [
-      {
-        title: 'Upravit',
-        href: { pathname: '/admin/nastenka/[id]', query: { id: item.id } },
-      },
-      {
-        title: item.sticky ? 'Odepnout' : 'Připnout',
-        onClick: () => void stickyMutation({ id: item.id, sticky: !item.sticky }),
-      },
-      {
-        title: 'Skrýt',
-        onClick: () => void hideMutation({ id: item.id, visible: false }),
-      },
-    ];
-  },
 };
 
 export const Schedule: AppAdminEntity = {
@@ -107,18 +70,6 @@ export const Schedule: AppAdminEntity = {
   listRoute: { pathname: '/admin/rozpis' },
   addRoute: { pathname: '/admin/rozpis/add' },
   editRoute: (id: string) => ({ pathname: '/admin/rozpis/[id]', query: { id } }),
-  useMenu(item?: ScheduleBasicFragment): DropdownItem[] {
-    const { perms } = useAuth();
-    if (!item || !perms.canEditSchedule(item)) {
-      return [];
-    }
-    return [
-      {
-        title: 'Upravit',
-        href: { pathname: '/admin/rozpis/[id]', query: { id: item.id } },
-      },
-    ];
-  },
 };
 
 export const Reservation: AppAdminEntity = {
@@ -126,18 +77,6 @@ export const Reservation: AppAdminEntity = {
   listRoute: { pathname: '/admin/nabidka' },
   addRoute: { pathname: '/admin/nabidka/add' },
   editRoute: (id: string) => ({ pathname: '/admin/nabidka/[id]', query: { id } }),
-  useMenu(item: ReservationBasicFragment): DropdownItem[] {
-    const { perms } = useAuth();
-    if (!perms.canEditReservation(item)) {
-      return [];
-    }
-    return [
-      {
-        title: 'Upravit',
-        href: { pathname: '/admin/nabidka/[id]', query: { id: item.id } },
-      },
-    ];
-  },
 };
 
 export const Event: AppAdminEntity = {
@@ -145,18 +84,6 @@ export const Event: AppAdminEntity = {
   listRoute: { pathname: '/admin/akce' },
   addRoute: { pathname: '/admin/akce/add' },
   editRoute: (id: string) => ({ pathname: '/admin/akce/[id]', query: { id } }),
-  useMenu(item: EventFragment): DropdownItem[] {
-    const { perms } = useAuth();
-    if (!perms.canEditEvent(item)) {
-      return [];
-    }
-    return [
-      {
-        title: 'Upravit',
-        href: { pathname: '/admin/akce/[id]', query: { id: item.id } },
-      },
-    ];
-  },
 };
 
 export const Cohort: AppAdminEntity = {
@@ -164,18 +91,6 @@ export const Cohort: AppAdminEntity = {
   listRoute: { pathname: '/admin/skupiny' },
   addRoute: { pathname: '/admin/skupiny/add' },
   editRoute: (id: string) => ({ pathname: '/admin/skupiny/[id]', query: { id } }),
-  useMenu(item: CohortBasicFragment): DropdownItem[] {
-    const { perms } = useAuth();
-    if (!perms.canEditCohort(item)) {
-      return [];
-    }
-    return [
-      {
-        title: 'Upravit',
-        href: { pathname: '/admin/skupiny/[id]', query: { id: item.id } },
-      },
-    ];
-  },
 };
 
 export const CohortGroup: AppAdminEntity = {

@@ -17,14 +17,12 @@ import { useRouter } from 'next/router';
 import { ErrorPage } from './ErrorPage';
 import { toast } from 'react-toastify';
 import { DeleteButton } from './DeleteButton';
-import { Route } from 'nextjs-routes';
 import { TitleBar } from './TitleBar';
+import { AdminEntity } from './generic/AdminEntityList';
 
 type FormProps = Pick<PlatbyGroupInput, 'pgName' | 'pgDescription' | 'pgBase'>;
 
-const backHref: Route = { pathname: '/admin/platby/structure/group' };
-
-export const PaymentGroupForm = ({ id = '' }: { id?: string }) => {
+export const PaymentGroupForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string }) => {
   const router = useRouter();
   const [query] = useQuery({
     query: PaymentGroupDocument,
@@ -54,7 +52,7 @@ export const PaymentGroupForm = ({ id = '' }: { id?: string }) => {
       const id = res.data?.createPlatbyGroup?.platbyGroup?.id;
       toast.success('Přidáno.');
       if (id) {
-        router.replace({ pathname: '/admin/rozpis/[id]', query: { id } });
+        router.replace(entity.editRoute(id));
       } else {
         reset(undefined);
       }
@@ -67,13 +65,13 @@ export const PaymentGroupForm = ({ id = '' }: { id?: string }) => {
 
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <TitleBar backHref={backHref} title={title}>
+      <TitleBar backHref={entity.listRoute} title={title}>
         {id && (
           <DeleteButton
             doc={DeletePaymentGroupDocument}
             id={id}
             title="smazat kategorii"
-            redirect={backHref}
+            redirect={entity.listRoute}
           />
         )}
         <SubmitButton loading={onSubmit.loading} />

@@ -1,17 +1,17 @@
-import React from 'react';
 import { useConfirm } from '@app/ui/Confirm';
-import { Trash2 as DeleteIcon } from 'lucide-react';
-import { toast } from 'react-toastify';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
-import { useMutation } from 'urql';
-import { Route } from 'nextjs-routes';
+import { Trash2 as DeleteIcon } from 'lucide-react';
+import { LinkProps } from 'next/link';
 import { useRouter } from 'next/router';
+import React from 'react';
+import { toast } from 'react-toastify';
+import { useMutation } from 'urql';
 
 type DeleteButtonProps = {
   title: string;
   doc: TypedDocumentNode<any, { id: string }>;
   id: string;
-  redirect?: Route | Exclude<Route, { query: any }>["pathname"];
+  redirect?: LinkProps['href'];
 };
 
 export const DeleteButton = React.memo(function DeleteButton({

@@ -1,22 +1,45 @@
+import {
+  AnnouncementFragment,
+  ToggleUpozorneniStickyDocument,
+  ToggleUpozorneniVisibleDocument,
+} from '@app/graphql/Announcement';
 import classNames from 'classnames';
 import { fullDateFormatter } from '@app/ui/format-date';
-import { AnnouncementFragment } from '@app/graphql/Announcement';
 import React from 'react';
-import { Card } from './Card';
+import { Card, CardMenu } from './Card';
 import { CohortColorBoxes } from './CohortColorBox';
 import { RichTextView } from './RichTextView';
-import { Announcement } from 'lib/entities';
+import { useAuth } from './use-auth';
+import { useMutation } from 'urql';
+import { DropdownMenuButton, DropdownMenuLink } from './dropdown';
 
 export const AnnouncementItem = ({ item }: { item: AnnouncementFragment }) => {
   const [expanded, setExpanded] = React.useState(false);
   const open = React.useCallback(() => setExpanded(true), []);
 
+  const { perms } = useAuth();
+  const hideMutation = useMutation(ToggleUpozorneniVisibleDocument)[1];
+  const stickyMutation = useMutation(ToggleUpozorneniStickyDocument)[1];
+
   return (
     <Card
-      menu={Announcement.useMenu(item)}
       onClick={expanded ? undefined : open}
       className={classNames('group', !expanded && 'cursor-pointer')}
     >
+      {perms.canEditAnnouncement(item) && (
+        <CardMenu>
+          <DropdownMenuLink href={{ pathname: '/admin/nastenka/[id]', query: { id: item.id } }}>
+            Upravit
+          </DropdownMenuLink>
+          <DropdownMenuButton onClick={() => void stickyMutation({ id: item.id, sticky: !item.sticky })}>
+            {item.sticky ? 'Odepnout' : 'Připnout'}
+          </DropdownMenuButton>
+          <DropdownMenuButton onClick={() => void hideMutation({ id: item.id, visible: false })}>
+            {item.isVisible ? 'Skrýt' : 'Zviditelnit'}
+          </DropdownMenuButton>
+        </CardMenu>
+      )}
+
       <div className="text-stone-500 text-sm flex flex-wrap items-baseline gap-4">
         <div>
           {[

@@ -43,6 +43,7 @@ export const ProvideAuth = ({ children, onReset }: {
   const signIn = React.useCallback(
     async (login: string, passwd: string) => {
       setIsLoading(true);
+      onReset?.();
       await doSignIn({ login, passwd });
       setIsLoading(false);
     },

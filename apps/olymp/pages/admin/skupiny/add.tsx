@@ -1,9 +1,10 @@
 import { CohortForm } from '@app/ui/CohortForm';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
-import type { NextPageWithLayout } from 'pages/_app';
+import { Cohort } from 'lib/entities';
 import { CohortList } from 'lib/entity-lists';
+import type { NextPageWithLayout } from 'pages/_app';
 
-const Page: NextPageWithLayout = () => <CohortForm />
+const Page: NextPageWithLayout = () => <CohortForm entity={Cohort} />
 
 Page.list = <CohortList />;
 Page.isDetail = true;

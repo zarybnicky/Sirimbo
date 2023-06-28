@@ -4,8 +4,9 @@ import { UserList } from '@app/ui/UserList';
 import { PermissionKey, PermissionLevel } from '@app/ui/use-permissions';
 import { fromSlugArray } from '@app/ui/slugify';
 import type { NextPageWithLayout } from 'pages/_app';
+import { User } from 'lib/entities';
 
-const Page: NextPageWithLayout = () => <UserForm id={fromSlugArray(useRouter().query.id)} />;
+const Page: NextPageWithLayout = () => <UserForm entity={User} id={fromSlugArray(useRouter().query.id)} />;
 
 Page.list = <UserList />;
 Page.isDetail = true;

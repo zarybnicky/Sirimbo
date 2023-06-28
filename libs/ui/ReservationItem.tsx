@@ -1,20 +1,25 @@
 import * as React from 'react';
 import { MyReservationFragment } from '@app/graphql/Reservation';
-import { Card } from '@app/ui/Card';
+import { Card, CardMenu } from '@app/ui/Card';
 import { shortDateFormatter } from '@app/ui/format-date';
 import { formatCoupleName } from '@app/ui/format-name';
 import { ReservationButton } from '@app/ui/ReservationButton';
 import { useAuth } from '@app/ui/use-auth';
-import { Reservation } from 'lib/entities';
+import { DropdownMenuLink } from './dropdown';
 
 export const ReservationItem = ({ item }: { item: MyReservationFragment }) => {
-  const { couple, perms} = useAuth();
+  const { couple, perms } = useAuth();
 
   return (
-    <Card
-      menu={Reservation.useMenu(item)}
-      className="group relative min-w-[200px] grid w-72 rounded-lg border-neutral-7 border"
-    >
+    <Card className="group relative min-w-[200px] grid w-72 rounded-lg border-neutral-7 border">
+          {perms.canEditReservation(item) && (
+        <CardMenu>
+          <DropdownMenuLink href={{ pathname: '/admin/nabidka/[id]', query: { id: item.id } }}>
+            Upravit
+          </DropdownMenuLink>
+        </CardMenu>
+      )}
+
       <div className="mb-0.5">
         <div className="font-bold">
           {shortDateFormatter.formatRange(new Date(item.nOd), new Date(item.nDo))}

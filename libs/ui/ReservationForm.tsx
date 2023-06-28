@@ -16,12 +16,12 @@ import { NabidkaInput } from '@app/graphql';
 import { DateRange, DateRangeInput } from '@app/ui/fields/date';
 import { TrainerListDocument } from '@app/graphql/User';
 import { DeleteButton } from './DeleteButton';
-import { Route } from 'nextjs-routes';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { ErrorPage } from './ErrorPage';
 import { useMutation, useQuery } from 'urql';
 import { TitleBar } from './TitleBar';
+import { AdminEntity } from './generic/AdminEntityList';
 
 type FormProps = Pick<
   NabidkaInput,
@@ -30,9 +30,7 @@ type FormProps = Pick<
   schedule: DateRange;
 };
 
-const backHref: Route = { pathname: '/admin/nabidka' };
-
-export const ReservationForm = ({ id = '' }: { id?: string }) => {
+export const ReservationForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string }) => {
   const router = useRouter();
   const [query] = useQuery({query: ReservationDocument, variables: { id }, pause: !id });
   const data = query.data?.nabidka;
@@ -74,7 +72,7 @@ export const ReservationForm = ({ id = '' }: { id?: string }) => {
       const id = res.data!.createNabidka?.nabidka?.id;
       toast.success('Přidáno.');
       if (id) {
-        router.replace({ pathname: '/admin/nabidka/[id]', query: { id } });
+        router.replace(entity.editRoute(id));
       } else {
         reset(undefined);
       }
@@ -87,13 +85,13 @@ export const ReservationForm = ({ id = '' }: { id?: string }) => {
 
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <TitleBar backHref={backHref} title={title}>
+      <TitleBar backHref={entity.listRoute} title={title}>
         {id && (
           <DeleteButton
             doc={DeleteReservationDocument}
             id={id}
             title="smazat nabídku"
-            redirect={backHref}
+            redirect={entity.listRoute}
           />
         )}
         <SubmitButton loading={onSubmit.loading} />

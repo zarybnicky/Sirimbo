@@ -18,9 +18,9 @@ import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { ErrorPage } from './ErrorPage';
 import { DeleteButton } from './DeleteButton';
-import { PaymentItem } from 'lib/entities';
 import { TitleBar } from './TitleBar';
 import { z } from 'zod';
+import { AdminEntity } from './generic/AdminEntityList';
 
 const Form = z.object({
   piAmount: z.number(),
@@ -31,9 +31,7 @@ const Form = z.object({
 });
 type FormProps = z.infer<typeof Form>;
 
-const entity = PaymentItem;
-
-export const PaymentItemForm = ({id = ''}: {id?: string}) => {
+export const PaymentItemForm = ({ entity, id = '' }: {entity: AdminEntity; id?: string}) => {
   const router = useRouter();
   const [query] = useQuery({query: PaymentItemDocument, variables: { id }, pause: !id});
   const data = query.data?.platbyItem;

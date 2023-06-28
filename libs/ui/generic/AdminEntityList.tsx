@@ -11,14 +11,11 @@ import { useFuzzySearch } from '@app/ui/use-fuzzy-search';
 import { NextRouter } from 'next/router';
 import { LinkProps } from 'next/link';
 import { useQuery } from 'urql';
-import { DropdownItem } from '../Dropdown';
 
 type Route = LinkProps['href'];
 
-export interface AdminEntity<T = object> {
+export interface AdminEntity {
   name: (num: number) => string;
-  title: (x?: T | null) => string | null | undefined;
-  useMenu: (x: T) => DropdownItem[];
   listRoute: Route;
   addRoute: Route;
   editRoute: (id: string) => Route;

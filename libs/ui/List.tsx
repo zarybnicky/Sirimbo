@@ -1,6 +1,5 @@
 import classNames from 'classnames';
-import Link from 'next/link';
-import { Route } from 'nextjs-routes';
+import Link, { LinkProps } from 'next/link';
 
 export function List({ children }: { children: React.ReactNode }) {
   return (
@@ -34,7 +33,7 @@ type ListTitleButtonProps = {
   children: React.ReactNode;
   active?: boolean;
   icon?: React.ElementType<{ className?: string }>;
-  href?: Route | Exclude<Route, { query: any }>['pathname'];
+  href?: LinkProps['href'];
   onClick?: () => void;
 };
 
@@ -64,7 +63,7 @@ function ListItem({
 }: {
   children?: React.ReactNode;
   active?: boolean;
-  href: Route | Exclude<Route, { query: any }>['pathname'];
+  href: LinkProps['href'];
   title: React.ReactNode;
   subtitle?: React.ReactNode;
   className?: string;

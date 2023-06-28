@@ -21,11 +21,11 @@ import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { ErrorPage } from './ErrorPage';
 import { DeleteButton } from './DeleteButton';
-import { User } from 'lib/entities';
 import { RichTextEditor } from './RichTextEditor';
 import { TitleBar } from './TitleBar';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { AdminEntity } from './generic/AdminEntityList';
 
 const Form = z.object({
   uLogin: z.string(),
@@ -58,9 +58,7 @@ const Form = z.object({
 });
 type FormProps = z.infer<typeof Form>;
 
-const entity = User;
-
-export const UserForm = ({ id = '' }: { id?: string }) => {
+export const UserForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string }) => {
   const router = useRouter();
   const [query] = useQuery({ query: UserDocument, variables: { id } });
   const data = query.data?.user;

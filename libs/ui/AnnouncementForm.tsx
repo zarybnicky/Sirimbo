@@ -33,12 +33,12 @@ export function AnnouncementForm({
   id,
   data,
 }: {
-  entity: AdminEntity<AnnouncementFragment>
+  entity: AdminEntity
   id?: string;
   data?: AnnouncementFragment | null;
 }) {
   const router = useRouter();
-  const title = id ? entity.title(data) : 'Nový příspěvek';
+  const title = id ? data?.upNadpis : 'Nový příspěvek';
 
   const create = useMutation(CreateAnnouncementDocument)[1];
   const update = useMutation(UpdateAnnouncementDocument)[1];

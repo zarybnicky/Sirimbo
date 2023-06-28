@@ -13,7 +13,6 @@ export function CallToAction() {
   const router = useRouter();
 
   const image = images[Array.from(router.asPath).map((x) => x.charCodeAt(0)).reduce((a,b)=>a+b * 3,0) % 4]!;
-  console.log(router.asPath, Array.from(router.asPath).map((x) => x.charCodeAt(0)).reduce((a,b)=>a+b * 3,0), Array.from(router.asPath).map((x) => x.charCodeAt(0)).reduce((a,b)=>a+b * 3,0) % 4)
 
   return (
     <div

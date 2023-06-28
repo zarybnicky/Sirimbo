@@ -16,15 +16,13 @@ import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { ErrorPage } from './ErrorPage';
 import { DeleteButton } from './DeleteButton';
-import { Route } from 'nextjs-routes';
 import { RichTextEditor } from './RichTextEditor';
 import { TitleBar } from './TitleBar';
+import { AdminEntity } from './generic/AdminEntityList';
 
 type FormProps = Pick<AktualityInput, 'atJmeno' | 'atPreview' | 'atText'>;
 
-const backHref: Route = { pathname: '/admin/aktuality' };
-
-export const ArticleForm = ({ id = '' }: { id?: string }) => {
+export const ArticleForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string }) => {
   const router = useRouter();
   const [query] = useQuery({ query: ArticleDocument, variables: { id } });
   const data = query.data?.aktuality;
@@ -51,7 +49,7 @@ export const ArticleForm = ({ id = '' }: { id?: string }) => {
       const id = res.data?.createAktuality?.aktuality?.id;
       toast.success('Přidáno.');
       if (id) {
-        router.replace({ pathname: '/admin/aktuality/[id]', query: { id } });
+        router.replace(entity.editRoute(id));
       } else {
         reset(undefined);
       }
@@ -64,13 +62,13 @@ export const ArticleForm = ({ id = '' }: { id?: string }) => {
 
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <TitleBar backHref={backHref} title={title}>
+      <TitleBar backHref={entity.listRoute} title={title}>
         {id && (
           <DeleteButton
             doc={DeleteArticleDocument}
             id={id}
             title="smazat článek"
-            redirect={backHref}
+            redirect={entity.listRoute}
           />
         )}
         <SubmitButton loading={onSubmit.loading} />

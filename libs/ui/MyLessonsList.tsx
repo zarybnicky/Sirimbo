@@ -2,14 +2,14 @@ import * as React from 'react';
 import { MyLessonsDocument, ScheduleItemFragment } from '@app/graphql/Schedule';
 import { useAuth } from '@app/ui/use-auth';
 import { LessonButton } from './LessonButton';
-import { Card } from './Card';
+import { Card, CardMenu } from './Card';
 import { formatWeekDay } from '@app/ui/format-date';
 import { WeekPicker } from './WeekPicker';
 import { CohortDocument } from '@app/graphql/Cohorts';
 import { RichTextView } from './RichTextView';
-import { Schedule } from 'lib/entities';
 import { useQuery } from 'urql';
 import { add } from 'date-arithmetic';
+import { DropdownMenuLink } from './dropdown';
 
 export const MyLessonsList: React.FC = () => {
   const { user } = useAuth();
@@ -80,16 +80,20 @@ type LessonListProps = {
   lessons: ScheduleItemFragment[];
 };
 function LessonList({ day, location, lessons }: LessonListProps) {
-  const { user } = useAuth();
-  const menu = Schedule.useMenu(lessons[0]?.rozpiByRiIdRodic || undefined);
+  const { user, perms } = useAuth();
+  const item = lessons[0]?.rozpiByRiIdRodic || undefined;
   const isSameTrainer = lessons.every(
     (x, _, arr) => x.rozpiByRiIdRodic?.rTrener === arr[0]?.rozpiByRiIdRodic?.rTrener,
   );
   return (
-    <Card
-      className="grid w-72 rounded-lg border-neutral-6 border"
-      menu={isSameTrainer ? menu : []}
-    >
+    <Card className="grid w-72 rounded-lg border-neutral-6 border">
+      {isSameTrainer && item && perms.canEditSchedule(item) && (
+        <CardMenu>
+          <DropdownMenuLink href={{ pathname: '/admin/rozpis/[id]', query: { id: item.id } }}>
+            Upravit
+          </DropdownMenuLink>
+        </CardMenu>
+      )}
       <h6>
         <div className="text-sm text-neutral-11">{location}</div>
         <div className="font-bold mb-1">{day}</div>

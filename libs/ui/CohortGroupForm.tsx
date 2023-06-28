@@ -19,14 +19,15 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/router';
 import { DeleteButton } from './DeleteButton';
-import { Route } from 'nextjs-routes';
 import { ErrorPage } from './ErrorPage';
-import { Card } from './Card';
+import { Card, CardMenu } from './Card';
 import * as Popover from '@radix-ui/react-popover';
 import { cn } from '@app/ui/cn';
 import { useMutation, useQuery } from 'urql';
 import { RichTextEditor } from './RichTextEditor';
 import { TitleBar } from './TitleBar';
+import { DropdownMenuButton } from './dropdown';
+import { AdminEntity } from './generic/AdminEntityList';
 
 const Form = z.object({
   name: z.string(),
@@ -38,11 +39,10 @@ type FormProps = z.infer<typeof Form>;
 
 type Props = {
   id?: string;
+  entity: AdminEntity;
 };
 
-const backHref: Route = { pathname: '/admin/cohort-group' };
-
-export function CohortGroupForm({ id = '' }: Props) {
+export function CohortGroupForm({ entity, id = '' }: Props) {
   const router = useRouter();
   const [query] = useQuery({query: CohortGroupDocument, variables: { id }, pause: !id });
   const data = query.data?.cohortGroup;
@@ -74,7 +74,7 @@ export function CohortGroupForm({ id = '' }: Props) {
       const id = res.data!.createCohortGroup?.cohortGroup?.id;
       toast.success('Přidáno.');
       if (id) {
-        router.replace({ pathname: '/admin/cohort-group/[id]', query: { id } });
+        router.replace(entity.editRoute(id));
       } else {
         reset(undefined);
       }
@@ -87,13 +87,13 @@ export function CohortGroupForm({ id = '' }: Props) {
 
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <TitleBar backHref={backHref} title={title} >
+      <TitleBar backHref={entity.listRoute} title={title} >
         {data && (
           <DeleteButton
             doc={DeleteCohortGroupDocument}
             id={id}
             title="smazat tréninkový program"
-            redirect={backHref}
+            redirect={entity.listRoute}
           />
         )}
         <SubmitButton loading={onSubmit.loading} />
@@ -120,16 +120,12 @@ export function CohortGroupForm({ id = '' }: Props) {
           <div className="text-stone-700 text-sm pb-1">Tréninkové skupiny v programu</div>
 
           {data?.skupiniesByCohortGroup.nodes.map((x) => (
-            <Card
-              key={x.id}
-              cohort={x}
-              menu={[
-                {
-                  title: 'Odebrat',
-                  onClick: () => updateCohort({ id: x.id, patch: { cohortGroup: null } }),
-                },
-              ]}
-            >
+            <Card key={x.id} cohort={x}>
+              <CardMenu>
+                <DropdownMenuButton onClick={() => updateCohort({ id: x.id, patch: { cohortGroup: null } })}>
+                  Odebrat
+                </DropdownMenuButton>
+              </CardMenu>
               {x.sName}
             </Card>
           ))}
@@ -137,7 +133,7 @@ export function CohortGroupForm({ id = '' }: Props) {
           <Popover.Root>
             <Popover.Trigger asChild>
               <button className="button button-outline">
-                  <Plus className="inline w-4 h-4" /> Přidat skupinu
+                <Plus className="inline w-4 h-4" /> Přidat skupinu
               </button>
             </Popover.Trigger>
             <Popover.Content

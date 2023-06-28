@@ -1,17 +1,27 @@
 import * as React from 'react';
 import { CohortExport } from '@app/ui/CohortExport';
 import { AtSign as EmailIcon, Phone as PhoneIcon } from 'lucide-react';
-import { Card } from '@app/ui/Card';
+import { Card, CardMenu } from '@app/ui/Card';
 import { CohortWithMembersFragment } from '@app/graphql/Cohorts';
 import { UserPublicFragment } from '@app/graphql/User';
 import { RichTextView } from '@app/ui/RichTextView';
-import { Cohort } from 'lib/entities';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@app/ui/dialog';
+import { useAuth } from './use-auth';
+import { DropdownMenuLink } from './dropdown';
 
 export function CohortItem({ item }: { item: CohortWithMembersFragment }) {
-  const menu = Cohort.useMenu(item);
+  const { perms } = useAuth();
+
   return (
-    <Card menu={menu} cohort={item} className="group break-inside-avoid">
+    <Card cohort={item} className="group break-inside-avoid">
+      {perms.canEditCohort(item) && (
+        <CardMenu>
+          <DropdownMenuLink href={{ pathname: '/admin/skupiny/[id]', query: { id: item.id } }}>
+            Upravit
+          </DropdownMenuLink>
+        </CardMenu>
+      )}
+
       <div>
         {!!item.usersByUSkupina.nodes.length && (
           <>{item.usersByUSkupina?.nodes?.length} členů</>

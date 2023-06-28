@@ -1,15 +1,13 @@
 import { CohortFragment } from '@app/graphql/Cohorts';
 import React from 'react';
-import { MoreVertical } from 'lucide-react';
-import { Dropdown, DropdownItem } from './Dropdown';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTriggerDots } from './dropdown';
 import { cn } from '@app/ui/cn';
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   cohort?: CohortFragment;
-  menu?: DropdownItem[];
 }
 
-export function Card({ menu, cohort, children, ...props }: CardProps) {
+export function Card({ cohort, children, ...props }: CardProps) {
   return (
     <div
       {...props}
@@ -19,20 +17,6 @@ export function Card({ menu, cohort, children, ...props }: CardProps) {
         props.className,
       )}
     >
-      {menu && menu.length > 0 && (
-        <div className="absolute right-1 top-2">
-          <Dropdown
-            button={
-              <button>
-                <MoreVertical className="text-neutral-7 w-6 group:data-[state=open]:text-neutral-9 group-hover:text-neutral-8" />
-              </button>
-            }
-            modal={false}
-            align="end"
-            options={menu}
-          />
-        </div>
-      )}
       {children}
       {cohort && (
         <div
@@ -43,3 +27,12 @@ export function Card({ menu, cohort, children, ...props }: CardProps) {
     </div>
   );
 }
+
+export const CardMenu = ({ children }: { children: React.ReactNode }) => (
+  <DropdownMenu modal={false}>
+    <DropdownMenuTriggerDots />
+    <DropdownMenuContent align="end">
+      {children}
+    </DropdownMenuContent>
+  </DropdownMenu>
+);

@@ -11,10 +11,10 @@ import { useRouter } from 'next/router';
 import { ErrorPage } from './ErrorPage';
 import { toast } from 'react-toastify';
 import { DeleteButton } from './DeleteButton';
-import { Route } from 'nextjs-routes';
 import { TitleBar } from './TitleBar';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { AdminEntity } from './generic/AdminEntityList';
 
 const Form = z.object({
   pcName: z.string(),
@@ -29,9 +29,7 @@ const Form = z.object({
 });
 type FormProps = z.infer<typeof Form>;
 
-const backHref: Route = { pathname: '/admin/platby/structure/category' };
-
-export const PaymentCategoryForm = ({ id = '' }: { id?: string }) => {
+export const PaymentCategoryForm = ({ entity, id = '' }: { entity: AdminEntity; id?: string }) => {
   const router = useRouter();
   const [query] = useQuery({query: PaymentCategoryDocument, variables: { id }, pause: !id});
   const data = query.data?.platbyCategory;
@@ -53,7 +51,7 @@ export const PaymentCategoryForm = ({ id = '' }: { id?: string }) => {
       const id = res.data?.createPlatbyCategory?.platbyCategory?.id;
       toast.success('Přidáno.');
       if (id) {
-        router.replace({ pathname: '/admin/rozpis/[id]', query: { id } });
+        router.replace(entity.editRoute(id));
       } else {
         reset(undefined);
       }
@@ -66,13 +64,13 @@ export const PaymentCategoryForm = ({ id = '' }: { id?: string }) => {
 
   return (
     <form className="container space-y-2" onSubmit={handleSubmit(onSubmit.execute)}>
-      <TitleBar backHref={backHref} title={title}>
+      <TitleBar backHref={entity.listRoute} title={title}>
         {id && (
           <DeleteButton
             doc={DeletePaymentCategoryDocument}
             id={id}
             title="smazat rozpis"
-            redirect={backHref}
+            redirect={entity.listRoute}
           />
         )}
         <SubmitButton loading={onSubmit.loading} />

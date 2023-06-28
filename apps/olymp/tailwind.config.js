@@ -12,7 +12,7 @@ module.exports = {
       colors: {
         primary: process.env.THEME_PRIMARY,
         accent: toRadixVars(process.env.THEME_ACCENT),
-        neutral: toRadixVars(process.env.THEME_NEUTRAl),
+        neutral: toRadixVars(process.env.THEME_NEUTRAL),
       },
     },
   },

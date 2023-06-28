@@ -14,7 +14,7 @@ type ServiceCardProps = {
 export function ServiceCard(props: ServiceCardProps) {
   return (
     <Link
-      href={props.href || '#'}
+      href={props.href || { hash: '#' }}
       className={classNames(
         'group p-0 my-4 flex flex-col md:grid md:grid-cols-[1fr_4px_2fr]',
         'bg-white relative border border-stone-200 shadow-sm sm:rounded-lg mb-2',
