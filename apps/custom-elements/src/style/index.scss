@@ -2,9 +2,6 @@ $fa-font-path: '@fortawesome/fontawesome-free/webfonts';
 @import '@fortawesome/fontawesome-free/scss/fontawesome';
 @import '@fortawesome/fontawesome-free/scss/solid';
 
-// Libraries
-@import 'spectrum';
-
 $blackish:  #1e1e1e;
 $red:       #c90029;
 $light-red: #e80b30;
@@ -157,14 +154,6 @@ $navbar-padding-y: 0;
 }
 
 /* Gallery classes */
-.foto_list {
-    list-style-position: inside;
-    list-style-image: url('../style/directory.png');
-}
-.foto_full {
-    display:block;
-    margin:3px;
-}
 .foto_preview {
     margin:6px;
     float:left;
@@ -176,7 +165,7 @@ $navbar-padding-y: 0;
     width:150px;
     height:150px;
 }
-.foto_preview_in img, .foto_full img {
+.foto_preview_in img {
     display:block;
     margin:auto;
 }
@@ -185,14 +174,6 @@ $navbar-padding-y: 0;
     padding:3px;
 }
 
-.color {
-    background-color:white;
-    color:white;
-    display:inline;
-    padding: 0 5px;
-    content: '';
-    line-height:10px;
-}
 .box {
     display: inline-block;
     width:10px;

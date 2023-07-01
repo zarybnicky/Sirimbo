@@ -24,7 +24,7 @@
       sirimbo-php = (final.callPackage ./backend-php/composer-project.nix {
         php = final.php82;
       } (
-        pkgs.nix-gitignore.gitignoreSourcePure [./.gitignore] ./sirimbo-php
+        pkgs.nix-gitignore.gitignoreSourcePure [./.gitignore] ./backend-php
       )).overrideAttrs (oldAttrs: {
         name = "sirimbo-php";
         buildInputs = oldAttrs.buildInputs ++ [ final.imagemagick ];
@@ -61,9 +61,14 @@
     };
 
     packages.x86_64-linux = {
-      inherit (pkgs) sirimbo-frontend-beta;
-      sirimbo-frontend = pkgs.sirimbo-frontend-beta;
-      sirimbo-backend = pkgs.sirimbo-backend-beta;
+      inherit (pkgs)
+        ncc
+        graphile-migrate
+        sirimbo-frontend
+        sirimbo-backend
+        sirimbo-migrations
+        sirimbo-frontend-old
+        sirimbo-php;
     };
 
     nixosConfigurations.container = nixpkgs.lib.nixosSystem {
@@ -97,9 +102,14 @@
           };
 
           services.mailhog.enable = true;
-          services.olymp-beta = {
+          services.olymp = {
             stateDir = "/var/lib/olymp";
 
+            php = {
+              enable = true;
+              domain = "tkolymp.cz";
+              ssl = false;
+            };
             backend = {
               enable = true;
               domain = "olymp-test";

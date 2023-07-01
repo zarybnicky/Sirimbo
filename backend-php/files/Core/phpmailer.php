@@ -391,66 +391,6 @@ class PHPMailer
     public $LE = "\n";
 
     /**
-     * DKIM selector.
-     * @var string
-     */
-    public $DKIM_selector = '';
-
-    /**
-     * DKIM Identity.
-     * Usually the email address used as the source of the email.
-     * @var string
-     */
-    public $DKIM_identity = '';
-
-    /**
-     * DKIM passphrase.
-     * Used if your key is encrypted.
-     * @var string
-     */
-    public $DKIM_passphrase = '';
-
-    /**
-     * DKIM signing domain name.
-     * @example 'example.com'
-     * @var string
-     */
-    public $DKIM_domain = '';
-
-    /**
-     * DKIM private key file path.
-     * @var string
-     */
-    public $DKIM_private = '';
-
-    /**
-     * DKIM private key string.
-     * If set, takes precedence over `$DKIM_private`.
-     * @var string
-     */
-    public $DKIM_private_string = '';
-
-    /**
-     * Callback Action function name.
-     *
-     * The function that handles the result of the send email action.
-     * It is called out by send() for each email sent.
-     *
-     * Value can be any php callable: http://www.php.net/is_callable
-     *
-     * Parameters:
-     *   boolean $result        result of the send action
-     *   string  $to            email address of the recipient
-     *   string  $cc            cc email addresses
-     *   string  $bcc           bcc email addresses
-     *   string  $subject       the subject
-     *   string  $body          the email body
-     *   string  $from          email address of sender
-     * @var string
-     */
-    public $action_function = '';
-
-    /**
      * What to put in the X-Mailer header.
      * Options: An empty string for PHPMailer default, whitespace for none, or a string to use
      * @var string
@@ -862,7 +802,7 @@ class PHPMailer
      * @param string $kind One of 'to', 'cc', 'bcc', or 'ReplyTo'
      * @param string $address The email address to send, resp. to reply to
      * @param string $name
-     * @throws phpmailerException
+     * @throws Exception
      * @return boolean true on success, false if address already used or invalid in some way
      * @access protected
      */
@@ -876,7 +816,7 @@ class PHPMailer
             $this->setError($error_message);
             $this->edebug($error_message);
             if ($this->exceptions) {
-                throw new phpmailerException($error_message);
+                throw new Exception($error_message);
             }
             return false;
         }
@@ -906,7 +846,7 @@ class PHPMailer
      * @param string $kind One of 'to', 'cc', 'bcc', or 'ReplyTo'
      * @param string $address The email address to send, resp. to reply to
      * @param string $name
-     * @throws phpmailerException
+     * @throws Exception
      * @return boolean true on success, false if address already used or invalid in some way
      * @access protected
      */
@@ -917,7 +857,7 @@ class PHPMailer
             $this->setError($error_message);
             $this->edebug($error_message);
             if ($this->exceptions) {
-                throw new phpmailerException($error_message);
+                throw new Exception($error_message);
             }
             return false;
         }
@@ -926,7 +866,7 @@ class PHPMailer
             $this->setError($error_message);
             $this->edebug($error_message);
             if ($this->exceptions) {
-                throw new phpmailerException($error_message);
+                throw new Exception($error_message);
             }
             return false;
         }
@@ -1005,7 +945,7 @@ class PHPMailer
      * @param string $address
      * @param string $name
      * @param boolean $auto Whether to also set the Sender address, defaults to true
-     * @throws phpmailerException
+     * @throws Exception
      * @return boolean
      */
     public function setFrom($address, $name = '', $auto = true)
@@ -1020,7 +960,7 @@ class PHPMailer
             $this->setError($error_message);
             $this->edebug($error_message);
             if ($this->exceptions) {
-                throw new phpmailerException($error_message);
+                throw new Exception($error_message);
             }
             return false;
         }
@@ -1201,7 +1141,7 @@ class PHPMailer
     /**
      * Create a message and send it.
      * Uses the sending method specified by $Mailer.
-     * @throws phpmailerException
+     * @throws Exception
      * @return boolean false on error - See the ErrorInfo property for details of the error.
      */
     public function send()
@@ -1211,7 +1151,7 @@ class PHPMailer
                 return false;
             }
             return $this->postSend();
-        } catch (phpmailerException $exc) {
+        } catch (Exception $exc) {
             $this->mailHeader = '';
             $this->setError($exc->getMessage());
             if ($this->exceptions) {
@@ -1223,7 +1163,7 @@ class PHPMailer
 
     /**
      * Prepare a message for sending.
-     * @throws phpmailerException
+     * @throws Exception
      * @return boolean
      */
     public function preSend()
@@ -1238,7 +1178,7 @@ class PHPMailer
                 call_user_func_array([$this, 'addAnAddress'], $params);
             }
             if ((count($this->to) + count($this->cc) + count($this->bcc)) < 1) {
-                throw new phpmailerException($this->lang('provide_address'), self::STOP_CRITICAL);
+                throw new Exception($this->lang('provide_address'), self::STOP_CRITICAL);
             }
 
             // Validate From, Sender, and ConfirmReadingTo addresses
@@ -1253,7 +1193,7 @@ class PHPMailer
                     $this->setError($error_message);
                     $this->edebug($error_message);
                     if ($this->exceptions) {
-                        throw new phpmailerException($error_message);
+                        throw new Exception($error_message);
                     }
                     return false;
                 }
@@ -1267,7 +1207,7 @@ class PHPMailer
             $this->setMessageType();
             // Refuse to send an empty message unless we are specifically allowing it
             if (!$this->AllowEmpty and empty($this->Body)) {
-                throw new phpmailerException($this->lang('empty_message'), self::STOP_CRITICAL);
+                throw new Exception($this->lang('empty_message'), self::STOP_CRITICAL);
             }
 
             // Create body before headers in case body makes changes to headers (e.g. altering transfer encoding)
@@ -1292,23 +1232,8 @@ class PHPMailer
                 );
             }
 
-            // Sign with DKIM if enabled
-            if (!empty($this->DKIM_domain)
-                && !empty($this->DKIM_selector)
-                && (!empty($this->DKIM_private_string)
-                   || (!empty($this->DKIM_private) && file_exists($this->DKIM_private))
-                )
-            ) {
-                $header_dkim = $this->DKIM_Add(
-                    $this->MIMEHeader . $this->mailHeader,
-                    $this->encodeHeader($this->secureHeader($this->Subject)),
-                    $this->MIMEBody
-                );
-                $this->MIMEHeader = rtrim($this->MIMEHeader, "\r\n ") . self::CRLF .
-                    str_replace("\r\n", "\n", $header_dkim) . self::CRLF;
-            }
             return true;
-        } catch (phpmailerException $exc) {
+        } catch (Exception $exc) {
             $this->setError($exc->getMessage());
             if ($this->exceptions) {
                 throw $exc;
@@ -1320,7 +1245,7 @@ class PHPMailer
     /**
      * Actually send a message.
      * Send the email via the selected mechanism
-     * @throws phpmailerException
+     * @throws Exception
      * @return boolean
      */
     public function postSend()
@@ -1343,7 +1268,7 @@ class PHPMailer
 
                     return $this->mailSend($this->MIMEHeader, $this->MIMEBody);
             }
-        } catch (phpmailerException $exc) {
+        } catch (Exception $exc) {
             $this->setError($exc->getMessage());
             $this->edebug($exc->getMessage());
             if ($this->exceptions) {
@@ -1358,7 +1283,7 @@ class PHPMailer
      * @param string $header The message headers
      * @param string $body The message body
      * @see PHPMailer::$Sendmail
-     * @throws phpmailerException
+     * @throws Exception
      * @access protected
      * @return boolean
      */
@@ -1385,43 +1310,25 @@ class PHPMailer
         if ($this->SingleTo) {
             foreach ($this->SingleToArray as $toAddr) {
                 if (!@$mail = popen($sendmail, 'w')) {
-                    throw new phpmailerException($this->lang('execute') . $this->Sendmail, self::STOP_CRITICAL);
+                    throw new Exception($this->lang('execute') . $this->Sendmail, self::STOP_CRITICAL);
                 }
                 fputs($mail, 'To: ' . $toAddr . "\n");
                 fputs($mail, $header);
                 fputs($mail, $body);
                 $result = pclose($mail);
-                $this->doCallback(
-                    ($result == 0),
-                    [$toAddr],
-                    $this->cc,
-                    $this->bcc,
-                    $this->Subject,
-                    $body,
-                    $this->From
-                );
                 if ($result != 0) {
-                    throw new phpmailerException($this->lang('execute') . $this->Sendmail, self::STOP_CRITICAL);
+                    throw new Exception($this->lang('execute') . $this->Sendmail, self::STOP_CRITICAL);
                 }
             }
         } else {
             if (!@$mail = popen($sendmail, 'w')) {
-                throw new phpmailerException($this->lang('execute') . $this->Sendmail, self::STOP_CRITICAL);
+                throw new Exception($this->lang('execute') . $this->Sendmail, self::STOP_CRITICAL);
             }
             fputs($mail, $header);
             fputs($mail, $body);
             $result = pclose($mail);
-            $this->doCallback(
-                ($result == 0),
-                $this->to,
-                $this->cc,
-                $this->bcc,
-                $this->Subject,
-                $body,
-                $this->From
-            );
             if ($result != 0) {
-                throw new phpmailerException($this->lang('execute') . $this->Sendmail, self::STOP_CRITICAL);
+                throw new Exception($this->lang('execute') . $this->Sendmail, self::STOP_CRITICAL);
             }
         }
         return true;
@@ -1466,7 +1373,7 @@ class PHPMailer
      * @param string $header The message headers
      * @param string $body The message body
      * @link http://www.php.net/manual/en/book.mail.php
-     * @throws phpmailerException
+     * @throws Exception
      * @access protected
      * @return boolean
      */
@@ -1494,17 +1401,15 @@ class PHPMailer
         if ($this->SingleTo and count($toArr) > 1) {
             foreach ($toArr as $toAddr) {
                 $result = $this->mailPassthru($toAddr, $this->Subject, $body, $header, $params);
-                $this->doCallback($result, [$toAddr], $this->cc, $this->bcc, $this->Subject, $body, $this->From);
             }
         } else {
             $result = $this->mailPassthru($to, $this->Subject, $body, $header, $params);
-            $this->doCallback($result, $this->to, $this->cc, $this->bcc, $this->Subject, $body, $this->From);
         }
         if (isset($old_from)) {
             ini_set('sendmail_from', $old_from);
         }
         if (!$result) {
-            throw new phpmailerException($this->lang('instantiate'), self::STOP_CRITICAL);
+            throw new Exception($this->lang('instantiate'), self::STOP_CRITICAL);
         }
         return true;
     }
@@ -1529,7 +1434,7 @@ class PHPMailer
      * @see PHPMailer::getSMTPInstance() to use a different class.
      * @param string $header The message headers
      * @param string $body The message body
-     * @throws phpmailerException
+     * @throws Exception
      * @uses SMTP
      * @access protected
      * @return boolean
@@ -1538,7 +1443,7 @@ class PHPMailer
     {
         $bad_rcpt = [];
         if (!$this->smtpConnect($this->SMTPOptions)) {
-            throw new phpmailerException($this->lang('smtp_connect_failed'), self::STOP_CRITICAL);
+            throw new Exception($this->lang('smtp_connect_failed'), self::STOP_CRITICAL);
         }
         if (!empty($this->Sender) and $this->validateAddress($this->Sender)) {
             $smtp_from = $this->Sender;
@@ -1547,7 +1452,7 @@ class PHPMailer
         }
         if (!$this->smtp->mail($smtp_from)) {
             $this->setError($this->lang('from_failed') . $smtp_from . ' : ' . implode(',', $this->smtp->getError()));
-            throw new phpmailerException($this->ErrorInfo, self::STOP_CRITICAL);
+            throw new Exception($this->ErrorInfo, self::STOP_CRITICAL);
         }
 
         // Attempt to send to all recipients
@@ -1556,17 +1461,13 @@ class PHPMailer
                 if (!$this->smtp->recipient($to[0])) {
                     $error = $this->smtp->getError();
                     $bad_rcpt[] = ['to' => $to[0], 'error' => $error['detail']];
-                    $isSent = false;
-                } else {
-                    $isSent = true;
                 }
-                $this->doCallback($isSent, [$to[0]], [], [], $this->Subject, $body, $this->From);
             }
         }
 
         // Only send the DATA command if we have viable recipients
         if ((count($this->all_recipients) > count($bad_rcpt)) and !$this->smtp->data($header . $body)) {
-            throw new phpmailerException($this->lang('data_not_accepted'), self::STOP_CRITICAL);
+            throw new Exception($this->lang('data_not_accepted'), self::STOP_CRITICAL);
         }
         if ($this->SMTPKeepAlive) {
             $this->smtp->reset();
@@ -1580,7 +1481,7 @@ class PHPMailer
             foreach ($bad_rcpt as $bad) {
                 $errstr .= $bad['to'] . ': ' . $bad['error'];
             }
-            throw new phpmailerException(
+            throw new Exception(
                 $this->lang('recipients_failed') . $errstr,
                 self::STOP_CONTINUE
             );
@@ -1594,7 +1495,7 @@ class PHPMailer
      * @param array $options An array of options compatible with stream_context_create()
      * @uses SMTP
      * @access public
-     * @throws phpmailerException
+     * @throws Exception
      * @return boolean
      */
     public function smtpConnect($options = null)
@@ -1648,7 +1549,7 @@ class PHPMailer
             if ('tls' === $secure or 'ssl' === $secure) {
                 //Check for an OpenSSL constant rather than using extension_loaded, which is sometimes disabled
                 if (!$sslext) {
-                    throw new phpmailerException($this->lang('extension_missing').'openssl', self::STOP_CRITICAL);
+                    throw new Exception($this->lang('extension_missing').'openssl', self::STOP_CRITICAL);
                 }
             }
             $host = $hostinfo[3];
@@ -1675,7 +1576,7 @@ class PHPMailer
                     }
                     if ($tls) {
                         if (!$this->smtp->startTLS()) {
-                            throw new phpmailerException($this->lang('connect_host'));
+                            throw new Exception($this->lang('connect_host'));
                         }
                         // We must resend EHLO after TLS negotiation
                         $this->smtp->hello($hello);
@@ -1689,11 +1590,11 @@ class PHPMailer
                             $this->Workstation
                         )
                         ) {
-                            throw new phpmailerException($this->lang('authenticate'));
+                            throw new Exception($this->lang('authenticate'));
                         }
                     }
                     return true;
-                } catch (phpmailerException $exc) {
+                } catch (Exception $exc) {
                     $lastexception = $exc;
                     $this->edebug($exc->getMessage());
                     // We must have connected, but then failed TLS or Auth, so close connection nicely
@@ -2190,7 +2091,7 @@ class PHPMailer
      * Assemble the message body.
      * Returns an empty string on failure.
      * @access public
-     * @throws phpmailerException
+     * @throws Exception
      * @return string The assembled message body
      */
     public function createBody()
@@ -2347,12 +2248,12 @@ class PHPMailer
         } elseif ($this->sign_key_file) {
             try {
                 if (!defined('PKCS7_TEXT')) {
-                    throw new phpmailerException($this->lang('extension_missing') . 'openssl');
+                    throw new Exception($this->lang('extension_missing') . 'openssl');
                 }
                 // @TODO would be nice to use php://temp streams here, but need to wrap for PHP < 5.1
                 $file = tempnam(sys_get_temp_dir(), 'mail');
                 if (false === file_put_contents($file, $body)) {
-                    throw new phpmailerException($this->lang('signing') . ' Could not write temp file');
+                    throw new Exception($this->lang('signing') . ' Could not write temp file');
                 }
                 $signed = tempnam(sys_get_temp_dir(), 'signed');
                 //Workaround for PHP bug https://bugs.php.net/bug.php?id=69197
@@ -2386,9 +2287,9 @@ class PHPMailer
                 } else {
                     @unlink($file);
                     @unlink($signed);
-                    throw new phpmailerException($this->lang('signing') . openssl_error_string());
+                    throw new Exception($this->lang('signing') . openssl_error_string());
                 }
-            } catch (phpmailerException $exc) {
+            } catch (Exception $exc) {
                 $body = '';
                 if ($this->exceptions) {
                     throw $exc;
@@ -2499,14 +2400,14 @@ class PHPMailer
      * @param string $encoding File encoding (see $Encoding).
      * @param string $type File extension (MIME) type.
      * @param string $disposition Disposition to use
-     * @throws phpmailerException
+     * @throws Exception
      * @return boolean
      */
     public function addAttachment($path, $name = '', $encoding = 'base64', $type = '', $disposition = 'attachment')
     {
         try {
             if (!@is_file($path)) {
-                throw new phpmailerException($this->lang('file_access') . $path, self::STOP_CONTINUE);
+                throw new Exception($this->lang('file_access') . $path, self::STOP_CONTINUE);
             }
 
             // If a MIME type is not specified, try to work it out from the file name
@@ -2530,7 +2431,7 @@ class PHPMailer
                 7 => 0
             ];
 
-        } catch (phpmailerException $exc) {
+        } catch (Exception $exc) {
             $this->setError($exc->getMessage());
             $this->edebug($exc->getMessage());
             if ($this->exceptions) {
@@ -2679,7 +2580,7 @@ class PHPMailer
      * Returns an empty string on failure.
      * @param string $path The full path to the file
      * @param string $encoding The encoding to use; one of 'base64', '7bit', '8bit', 'binary', 'quoted-printable'
-     * @throws phpmailerException
+     * @throws Exception
      * @access protected
      * @return string
      */
@@ -2687,7 +2588,7 @@ class PHPMailer
     {
         try {
             if (!is_readable($path)) {
-                throw new phpmailerException($this->lang('file_open') . $path, self::STOP_CONTINUE);
+                throw new Exception($this->lang('file_open') . $path, self::STOP_CONTINUE);
             }
             return $this->encodeString(file_get_contents($path), $encoding);
         } catch (Exception $exc) {
@@ -2850,6 +2751,7 @@ class PHPMailer
         // Base64 has a 4:3 ratio
         $avgLength = floor($length * $ratio * .75);
 
+        $offset = 0;
         for ($i = 0; $i < $mb_length; $i += $offset) {
             $lookBack = 0;
             do {
@@ -2888,24 +2790,6 @@ class PHPMailer
             rawurlencode($string)
         );
         return preg_replace('/[^\r\n]{' . ($line_max - 3) . '}[^=\r\n]{2}/', "$0=\r\n", $string);
-    }
-
-    /**
-     * Backward compatibility wrapper for an old QP encoding function that was removed.
-     * @see PHPMailer::encodeQP()
-     * @access public
-     * @param string $string
-     * @param integer $line_max
-     * @param boolean $space_conv
-     * @return string
-     * @deprecated Use encodeQP instead.
-     */
-    public function encodeQPphp(
-        $string,
-        $line_max = 76,
-        /** @noinspection PhpUnusedParameterInspection */ $space_conv = false
-    ) {
-        return $this->encodeQP($string, $line_max);
     }
 
     /**
@@ -3712,210 +3596,6 @@ class PHPMailer
     }
 
     /**
-     * Set the public and private key files and password for S/MIME signing.
-     * @access public
-     * @param string $cert_filename
-     * @param string $key_filename
-     * @param string $key_pass Password for private key
-     * @param string $extracerts_filename Optional path to chain certificate
-     */
-    public function sign($cert_filename, $key_filename, $key_pass, $extracerts_filename = '')
-    {
-        $this->sign_cert_file = $cert_filename;
-        $this->sign_key_file = $key_filename;
-        $this->sign_key_pass = $key_pass;
-        $this->sign_extracerts_file = $extracerts_filename;
-    }
-
-    /**
-     * Quoted-Printable-encode a DKIM header.
-     * @access public
-     * @param string $txt
-     * @return string
-     */
-    public function DKIM_QP($txt)
-    {
-        $line = '';
-        for ($i = 0; $i < strlen($txt); $i++) {
-            $ord = ord($txt[$i]);
-            if (((0x21 <= $ord) && ($ord <= 0x3A)) || $ord == 0x3C || ((0x3E <= $ord) && ($ord <= 0x7E))) {
-                $line .= $txt[$i];
-            } else {
-                $line .= '=' . sprintf('%02X', $ord);
-            }
-        }
-        return $line;
-    }
-
-    /**
-     * Generate a DKIM signature.
-     * @access public
-     * @param string $signHeader
-     * @throws phpmailerException
-     * @return string The DKIM signature value
-     */
-    public function DKIM_Sign($signHeader)
-    {
-        if (!defined('PKCS7_TEXT')) {
-            if ($this->exceptions) {
-                throw new phpmailerException($this->lang('extension_missing') . 'openssl');
-            }
-            return '';
-        }
-        $privKeyStr = !empty($this->DKIM_private_string) ? $this->DKIM_private_string : file_get_contents($this->DKIM_private);
-        if ('' != $this->DKIM_passphrase) {
-            $privKey = openssl_pkey_get_private($privKeyStr, $this->DKIM_passphrase);
-        } else {
-            $privKey = openssl_pkey_get_private($privKeyStr);
-        }
-        //Workaround for missing digest algorithms in old PHP & OpenSSL versions
-        //@link http://stackoverflow.com/a/11117338/333340
-        if (version_compare(PHP_VERSION, '5.3.0') >= 0 and
-            in_array('sha256WithRSAEncryption', openssl_get_md_methods(true))) {
-            if (openssl_sign($signHeader, $signature, $privKey, 'sha256WithRSAEncryption')) {
-                openssl_pkey_free($privKey);
-                return base64_encode($signature);
-            }
-        } else {
-            $pinfo = openssl_pkey_get_details($privKey);
-            $hash = hash('sha256', $signHeader);
-            //'Magic' constant for SHA256 from RFC3447
-            //@link https://tools.ietf.org/html/rfc3447#page-43
-            $t = '3031300d060960864801650304020105000420' . $hash;
-            $pslen = $pinfo['bits'] / 8 - (strlen($t) / 2 + 3);
-            $eb = pack('H*', '0001' . str_repeat('FF', $pslen) . '00' . $t);
-
-            if (openssl_private_encrypt($eb, $signature, $privKey, OPENSSL_NO_PADDING)) {
-                openssl_pkey_free($privKey);
-                return base64_encode($signature);
-            }
-        }
-        openssl_pkey_free($privKey);
-        return '';
-    }
-
-    /**
-     * Generate a DKIM canonicalization header.
-     * @access public
-     * @param string $signHeader Header
-     * @return string
-     */
-    public function DKIM_HeaderC($signHeader)
-    {
-        $signHeader = preg_replace('/\r\n\s+/', ' ', $signHeader);
-        $lines = explode("\r\n", $signHeader);
-        foreach ($lines as $key => $line) {
-            list($heading, $value) = explode(':', $line, 2);
-            $heading = strtolower($heading);
-            $value = preg_replace('/\s{2,}/', ' ', $value); // Compress useless spaces
-            $lines[$key] = $heading . ':' . trim($value); // Don't forget to remove WSP around the value
-        }
-        $signHeader = implode("\r\n", $lines);
-        return $signHeader;
-    }
-
-    /**
-     * Generate a DKIM canonicalization body.
-     * @access public
-     * @param string $body Message Body
-     * @return string
-     */
-    public function DKIM_BodyC($body)
-    {
-        if ($body == '') {
-            return "\r\n";
-        }
-        // stabilize line endings
-        $body = str_replace("\r\n", "\n", $body);
-        $body = str_replace("\n", "\r\n", $body);
-        // END stabilize line endings
-        while (substr($body, strlen($body) - 4, 4) == "\r\n\r\n") {
-            $body = substr($body, 0, strlen($body) - 2);
-        }
-        return $body;
-    }
-
-    /**
-     * Create the DKIM header and body in a new message header.
-     * @access public
-     * @param string $headers_line Header lines
-     * @param string $subject Subject
-     * @param string $body Body
-     * @return string
-     */
-    public function DKIM_Add($headers_line, $subject, $body)
-    {
-        $DKIMsignatureType = 'rsa-sha256'; // Signature & hash algorithms
-        $DKIMcanonicalization = 'relaxed/simple'; // Canonicalization of header/body
-        $DKIMquery = 'dns/txt'; // Query method
-        $DKIMtime = time(); // Signature Timestamp = seconds since 00:00:00 - Jan 1, 1970 (UTC time zone)
-        $subject_header = "Subject: $subject";
-        $headers = explode($this->LE, $headers_line);
-        $from_header = '';
-        $to_header = '';
-        $date_header = '';
-        $current = '';
-        foreach ($headers as $header) {
-            if (strpos($header, 'From:') === 0) {
-                $from_header = $header;
-                $current = 'from_header';
-            } elseif (strpos($header, 'To:') === 0) {
-                $to_header = $header;
-                $current = 'to_header';
-            } elseif (strpos($header, 'Date:') === 0) {
-                $date_header = $header;
-                $current = 'date_header';
-            } else {
-                if (!empty($$current) && strpos($header, ' =?') === 0) {
-                    $$current .= $header;
-                } else {
-                    $current = '';
-                }
-            }
-        }
-        $from = str_replace('|', '=7C', $this->DKIM_QP($from_header));
-        $to = str_replace('|', '=7C', $this->DKIM_QP($to_header));
-        $date = str_replace('|', '=7C', $this->DKIM_QP($date_header));
-        $subject = str_replace(
-            '|',
-            '=7C',
-            $this->DKIM_QP($subject_header)
-        ); // Copied header fields (dkim-quoted-printable)
-        $body = $this->DKIM_BodyC($body);
-        $DKIMlen = strlen($body); // Length of body
-        $DKIMb64 = base64_encode(pack('H*', hash('sha256', $body))); // Base64 of packed binary SHA-256 hash of body
-        if ('' == $this->DKIM_identity) {
-            $ident = '';
-        } else {
-            $ident = ' i=' . $this->DKIM_identity . ';';
-        }
-        $dkimhdrs = 'DKIM-Signature: v=1; a=' .
-            $DKIMsignatureType . '; q=' .
-            $DKIMquery . '; l=' .
-            $DKIMlen . '; s=' .
-            $this->DKIM_selector .
-            ";\r\n" .
-            "\tt=" . $DKIMtime . '; c=' . $DKIMcanonicalization . ";\r\n" .
-            "\th=From:To:Date:Subject;\r\n" .
-            "\td=" . $this->DKIM_domain . ';' . $ident . "\r\n" .
-            "\tz=$from\r\n" .
-            "\t|$to\r\n" .
-            "\t|$date\r\n" .
-            "\t|$subject;\r\n" .
-            "\tbh=" . $DKIMb64 . ";\r\n" .
-            "\tb=";
-        $toSign = $this->DKIM_HeaderC(
-            $from_header . "\r\n" .
-            $to_header . "\r\n" .
-            $date_header . "\r\n" .
-            $subject_header . "\r\n" .
-            $dkimhdrs
-        );
-        $signed = $this->DKIM_Sign($toSign);
-        return $dkimhdrs . $signed . "\r\n";
-    }
-
-    /**
      * Detect if a string contains a line longer than the maximum line length allowed.
      * @param string $str
      * @return boolean
@@ -3925,78 +3605,5 @@ class PHPMailer
     {
         //+2 to include CRLF line break for a 1000 total
         return (boolean)preg_match('/^(.{'.(self::MAX_LINE_LENGTH + 2).',})/m', $str);
-    }
-
-    /**
-     * Allows for public read access to 'to' property.
-     * @note: Before the send() call, queued addresses (i.e. with IDN) are not yet included.
-     * @access public
-     * @return array
-     */
-    public function getToAddresses()
-    {
-        return $this->to;
-    }
-
-    /**
-     * Allows for public read access to 'cc' property.
-     * @note: Before the send() call, queued addresses (i.e. with IDN) are not yet included.
-     * @access public
-     * @return array
-     */
-    public function getCcAddresses()
-    {
-        return $this->cc;
-    }
-
-    /**
-     * Allows for public read access to 'bcc' property.
-     * @note: Before the send() call, queued addresses (i.e. with IDN) are not yet included.
-     * @access public
-     * @return array
-     */
-    public function getBccAddresses()
-    {
-        return $this->bcc;
-    }
-
-    /**
-     * Allows for public read access to 'ReplyTo' property.
-     * @note: Before the send() call, queued addresses (i.e. with IDN) are not yet included.
-     * @access public
-     * @return array
-     */
-    public function getReplyToAddresses()
-    {
-        return $this->ReplyTo;
-    }
-
-    /**
-     * Allows for public read access to 'all_recipients' property.
-     * @note: Before the send() call, queued addresses (i.e. with IDN) are not yet included.
-     * @access public
-     * @return array
-     */
-    public function getAllRecipientAddresses()
-    {
-        return $this->all_recipients;
-    }
-
-    /**
-     * Perform a callback.
-     * @param boolean $isSent
-     * @param array $to
-     * @param array $cc
-     * @param array $bcc
-     * @param string $subject
-     * @param string $body
-     * @param string $from
-     */
-    protected function doCallback($isSent, $to, $cc, $bcc, $subject, $body, $from)
-    {
-        if (!empty($this->action_function) && is_callable($this->action_function)) {
-            $params = [$isSent, $to, $cc, $bcc, $subject, $body, $from];
-            call_user_func_array($this->action_function, $params);
-        }
     }
 }

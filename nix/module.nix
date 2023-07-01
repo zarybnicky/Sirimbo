@@ -1,8 +1,8 @@
 { config, lib, pkgs, ... }: let
-  cfg = config.services.olymp-beta;
+  cfg = config.services.olymp;
   pkgName = "tkolymp.cz";
 in {
-  options.services.olymp-beta = {
+  options.services.olymp = {
     user = lib.mkOption {
       type = lib.types.str;
       default = "olymp";
@@ -118,11 +118,6 @@ in {
 
     php = {
       enable = lib.mkEnableOption "${pkgName}";
-      port = lib.mkOption {
-        type = lib.types.int;
-        description = "${pkgName} PHP port";
-        example = 3002;
-      };
       domain = lib.mkOption {
         type = lib.types.str;
         description = "${pkgName} Nginx vhost domain";
@@ -156,7 +151,7 @@ in {
     })
 
     (lib.mkIf cfg.frontend.enable {
-      systemd.services.sirimbo-frontend-beta = {
+      systemd.services.sirimbo-frontend = {
         after = [ "network.target" ];
         wantedBy = [ "multi-user.target" ];
 
@@ -168,13 +163,13 @@ in {
         };
 
         preStart = ''
-          mkdir -p $(readlink ${pkgs.sirimbo-frontend-beta}/.next/cache)
+          mkdir -p $(readlink ${pkgs.sirimbo-frontend}/.next/cache)
         '';
 
         serviceConfig = {
           User = cfg.user;
           Group = cfg.group;
-          ExecStart = "${pkgs.nodejs}/bin/node ${pkgs.sirimbo-frontend-beta}/server.js";
+          ExecStart = "${pkgs.nodejs}/bin/node ${pkgs.sirimbo-frontend}/server.js";
           WorkingDirectory = cfg.stateDir;
           Restart = "always";
           RestartSec = "10s";
@@ -255,7 +250,10 @@ in {
         recommendedOptimisation = true;
         recommendedProxySettings = true;
 
-        virtualHosts.${cfg.domain} = {
+        virtualHosts.${cfg.php.domain} = {
+          enableACME = cfg.php.ssl;
+          forceSSL = cfg.php.ssl;
+
           root = pkgs.symlinkJoin {
             name = "sirimbo-php-dist";
             paths = [pkgs.sirimbo-php pkgs.sirimbo-frontend-old configPhp];
@@ -265,19 +263,19 @@ in {
           locations."/gallery".root = cfg.stateDir;
           locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
 
+          locations."/member/download" = {
+            proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";
+          };
           locations."/graphql" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
+            proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";
             proxyWebsockets = true;
           };
           locations."/graphiql" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
+            proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";
             proxyWebsockets = true;
           };
           locations."/logout" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
-          };
-          locations."/upload" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
+            proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";
           };
 
           locations."/" = {
@@ -288,14 +286,14 @@ in {
             try_files $uri /index.php?$args;
             client_max_body_size 20M;
             fastcgi_split_path_info ^(.+\.php)(/.+)$;
-            fastcgi_pass unix:${config.services.phpfpm.pools.${cfg.domain}.socket};
+            fastcgi_pass unix:${config.services.phpfpm.pools.${cfg.php.domain}.socket};
             fastcgi_index index.php;
             include ${pkgs.nginx}/conf/fastcgi_params;
             include ${pkgs.nginx}/conf/fastcgi.conf;
           '';
         };
       };
-      services.phpfpm.pools.${cfg.domain} = {
+      services.phpfpm.pools.${cfg.php.domain} = {
         user = cfg.user;
         settings = {
           "listen.owner" = config.services.nginx.user;
@@ -319,7 +317,7 @@ in {
     }))
 
     (lib.mkIf cfg.backend.enable {
-      systemd.services.sirimbo-backend-beta = {
+      systemd.services.sirimbo-backend = {
         after = [ "network.target" ];
         wantedBy = [ "multi-user.target" ];
 
@@ -348,7 +346,7 @@ in {
         serviceConfig = {
           User = cfg.user;
           Group = cfg.group;
-          ExecStart = "${pkgs.nodejs}/bin/node ${pkgs.sirimbo-backend-beta}/bin/sirimbo-backend";
+          ExecStart = "${pkgs.nodejs}/bin/node ${pkgs.sirimbo-backend}/bin/sirimbo-backend";
           WorkingDirectory = cfg.stateDir;
           Restart = "always";
           RestartSec = "10s";
@@ -400,7 +398,7 @@ in {
     })
 
     (lib.mkIf cfg.migrations.enable {
-      systemd.services.sirimbo-migrate-beta = {
+      systemd.services.sirimbo-migrate = {
         description = "${pkgName} Migrations";
         wantedBy = [ "multi-user.target" ];
         after = [ "network-online.target" "postgresql.service" ];
@@ -411,7 +409,7 @@ in {
           Group = cfg.group;
           Type = "oneshot";
           RemainAfterExit = "true";
-          WorkingDirectory = pkgs.sirimbo-migrations-beta;
+          WorkingDirectory = pkgs.sirimbo-migrations;
           ExecStart = "${pkgs.graphile-migrate}/bin/graphile-migrate migrate";
         };
       };

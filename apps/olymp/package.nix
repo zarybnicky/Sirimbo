@@ -8,12 +8,10 @@
 }:
 
 yarn2nix-moretea.mkYarnPackage {
-  src = nix-gitignore.gitignoreSourcePure [../.gitignore] ./.;
+  src = nix-gitignore.gitignoreSourcePure [../../.gitignore ./.gitignore] ./.;
   packageJSON = ./package.json;
-  yarnLock = ../yarn.lock;
+  yarnLock = ../../yarn.lock;
   name = "olymp";
-  # doCheck = true;
-  # checkPhase = "yarn test --coverage --ci";
   distPhase = "true";
   buildPhase = ''
     shopt -s dotglob

@@ -1,8 +1,6 @@
 import 'bootstrap';
-import './bundles/leaflet';
-import './bundles/spectrum';
-import './bundles/video.min';
-import './bundles/main';
+import './leaflet';
+import './video.min';
 
 import 'leaflet/dist/leaflet.css';
 import './style/index.scss';

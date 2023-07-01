@@ -7,9 +7,9 @@
 }:
 
 yarn2nix-moretea.mkYarnPackage {
-  src = nix-gitignore.gitignoreSourcePure [../.gitignore] ./.;
+  src = nix-gitignore.gitignoreSourcePure [../../.gitignore ./.gitignore] ./.;
   packageJSON = ./package.json;
-  yarnLock = ../yarn.lock;
+  yarnLock = ../../yarn.lock;
   name = "sirimbo-frontend-old";
   # doCheck = true;
   # checkPhase = "yarn test --coverage --ci";

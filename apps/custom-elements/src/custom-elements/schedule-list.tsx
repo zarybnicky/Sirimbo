@@ -4,7 +4,7 @@ import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache } from '@apollo/c
 import Form from 'react-bootstrap/Form';
 import { Pagination } from './pagination';
 import { DateEl } from './date';
-import { UserQuery } from '../data/use-auth';
+import { UserQuery } from '../use-auth';
 import { Dropdown } from './dropdown';
 import { $, RozpisOrderBy, Selector } from '../zeus';
 import { useTypedQuery, useTypedMutation } from '../zeus/apollo';

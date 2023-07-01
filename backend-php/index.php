@@ -202,7 +202,6 @@ function makeRouter()
     $router->get('/admin/users/sign-as/([0-9]+)', '@Admin.Users::signAs');
     $router->get('/admin/users/remove/([0-9]+)', '@Admin.Users::remove');
     $router->post('/admin/users/remove/([0-9]+)', '@Admin.Users::removePost');
-    $router->get('/admin/users/getMsmtCsv', '@Admin.Users::getMsmtCsv');
     $router->get('/admin/users/unconfirmed', '@Admin.Users::unconfirmed');
     $router->post('/admin/users/unconfirmed', '@Admin.Users::unconfirmedPost');
     $router->get('/admin/users/duplicate', '@Admin.Users::duplicate');
