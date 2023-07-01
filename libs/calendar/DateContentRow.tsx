@@ -118,9 +118,9 @@ const DateContentRow = ({
             } else {
               return null;
             }
-            end = merge(end, event!.end)
+            end = merge(end, event.end)
             if (lt(end, start)) {
-              end = event!.end
+              end = event.end
             }
           } else if (direction === 'LEFT') {
             if (cursorInRow) {

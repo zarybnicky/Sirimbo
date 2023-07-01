@@ -8,9 +8,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
   ],
   parserOptions: {
-    project: [
-      path.join(__dirname, './tsconfig.json'),
-    ],
+    project: [path.join(__dirname, './tsconfig.json')],
   },
   settings: {
     tailwindcss: {

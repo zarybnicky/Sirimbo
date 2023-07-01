@@ -340,7 +340,9 @@ CREATE TABLE public.event (
     summary text DEFAULT '[]'::jsonb NOT NULL,
     is_public boolean DEFAULT false NOT NULL,
     enable_notes boolean DEFAULT false NOT NULL,
-    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL
+    tenant_id bigint DEFAULT public.current_tenant_id() NOT NULL,
+    description_member text DEFAULT ''::text NOT NULL,
+    title_image_legacy text
 );
 
 
@@ -461,7 +463,10 @@ CREATE TABLE public.attachment (
     object_name text NOT NULL,
     preview_object_name text,
     uploaded_by bigint DEFAULT public.current_user_id(),
-    uploaded_at timestamp with time zone DEFAULT now() NOT NULL
+    uploaded_at timestamp with time zone DEFAULT now() NOT NULL,
+    thumbhash text,
+    width integer,
+    height integer
 );
 
 
@@ -803,6 +808,24 @@ $$;
 
 
 --
+-- Name: event_is_future(public.event); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.event_is_future(event public.event) RETURNS boolean
+    LANGUAGE sql STABLE
+    AS $$
+  SELECT event.until >= now();
+$$;
+
+
+--
+-- Name: FUNCTION event_is_future(event public.event); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.event_is_future(event public.event) IS '@filterable';
+
+
+--
 -- Name: event_remaining_spots(public.event); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -992,14 +1015,14 @@ $$;
 
 
 --
--- Name: my_announcements(); Type: FUNCTION; Schema: public; Owner: -
+-- Name: my_announcements(boolean); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.my_announcements() RETURNS SETOF public.upozorneni
+CREATE FUNCTION public.my_announcements(archive boolean DEFAULT false) RETURNS SETOF public.upozorneni
     LANGUAGE sql STABLE
     AS $$
   select upozorneni.* from upozorneni
-  where is_visible = true and sticky = false
+  where is_visible = not archive and sticky = false
     and (scheduled_since is null or scheduled_since <= now())
     and (scheduled_until is null or scheduled_until >= now())
   order by up_timestamp_add desc;
@@ -5649,6 +5672,13 @@ GRANT ALL ON FUNCTION public.current_session_id() TO anonymous;
 
 
 --
+-- Name: FUNCTION event_is_future(event public.event); Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON FUNCTION public.event_is_future(event public.event) TO anonymous;
+
+
+--
 -- Name: FUNCTION event_remaining_spots(a public.event); Type: ACL; Schema: public; Owner: -
 --
 
@@ -5852,11 +5882,10 @@ GRANT ALL ON FUNCTION public.logout() TO anonymous;
 
 
 --
--- Name: FUNCTION my_announcements(); Type: ACL; Schema: public; Owner: -
+-- Name: FUNCTION my_announcements(archive boolean); Type: ACL; Schema: public; Owner: -
 --
 
-GRANT ALL ON FUNCTION public.my_announcements() TO member;
-GRANT ALL ON FUNCTION public.my_announcements() TO anonymous;
+GRANT ALL ON FUNCTION public.my_announcements(archive boolean) TO anonymous;
 
 
 --

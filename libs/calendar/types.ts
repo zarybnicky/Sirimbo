@@ -43,5 +43,5 @@ type ViewProps = {
 
 export interface ViewClass extends React.FunctionComponent<ViewProps> {
   range: (date: Date) => Date[];
-  navigate(date: Date, action: Navigate): Date;
+  navigate: (this: void, date: Date, action: Navigate) => Date;
 }

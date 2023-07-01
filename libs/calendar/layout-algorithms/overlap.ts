@@ -1,11 +1,20 @@
-// @ts-nocheck
-
 import sortBy from 'lodash/sortBy'
-import { Event } from '../types';
-import type { TimeSlotMetrics } from '../utils/TimeSlotMetrics';
+import { CalendarEvent } from '../types';
+import type { TimeSlotMetrics } from '../TimeSlotMetrics';
 
 class ProxyEvent {
-  constructor(data, slotMetrics: TimeSlotMetrics) {
+  public start: number;
+  public end: number;
+  public startMs: number;
+  public endMs: number;
+  public top: number;
+  public height: number;
+  public rows: ProxyEvent[] = [];
+  public leaves: ProxyEvent[] = [];
+  public container: ProxyEvent | undefined;
+  public row: ProxyEvent | undefined;
+
+  constructor(public data: CalendarEvent, slotMetrics: TimeSlotMetrics) {
     const { start, startDate, end, endDate, top, height } = slotMetrics.getRange(data.start, data.end)
     this.start = start
     this.end = end
@@ -13,13 +22,12 @@ class ProxyEvent {
     this.endMs = +endDate
     this.top = top
     this.height = height
-    this.data = data
   }
 
   /**
    * The event's width without any overlap.
    */
-  get _width() {
+  get _width(): number {
     // The container event's width is determined by the maximum number of
     // events in any of its rows.
     if (this.rows) {
@@ -35,12 +43,12 @@ class ProxyEvent {
     // The row event's width is the space left by the container, divided
     // among itself and its leaves.
     if (this.leaves) {
-      const availableWidth = 100 - this.container._width
+      const availableWidth = 100 - this.container!._width
       return availableWidth / (this.leaves.length + 1)
     }
 
     // The leaf event's width is determined by its row's width
-    return this.row._width
+    return this.row!._width
   }
 
   /**
@@ -62,20 +70,20 @@ class ProxyEvent {
     }
 
     // Leaves can grow unless they're the last item in a row.
-    const { leaves } = this.row
+    const { leaves } = this.row!
     const index = leaves.indexOf(this)
     return index === leaves.length - 1 ? noOverlap : overlap
   }
 
-  get xOffset() {
+  get xOffset(): number {
     // Containers have no offset.
-    if (this.rows) return 0
+    if (!!this.rows.length) return 0
 
     // Rows always start where their container ends.
-    if (this.leaves) return this.container._width
+    if (!!this.leaves.length) return this.container!._width
 
     // Leaves are spread out evenly on the space left by its row.
-    const { leaves, xOffset, _width } = this.row
+    const { leaves, xOffset, _width } = this.row!
     const index = leaves.indexOf(this) + 1
     return xOffset + index * _width
   }
@@ -84,7 +92,7 @@ class ProxyEvent {
 /**
  * Return true if event a and b is considered to be on the same row.
  */
-function onSameRow(a, b, minimumStartDifference) {
+function onSameRow(a: ProxyEvent, b: ProxyEvent, minimumStartDifference: number) {
   return (
     // Occupies the same start slot.
     Math.abs(b.start - a.start) < minimumStartDifference ||
@@ -93,16 +101,16 @@ function onSameRow(a, b, minimumStartDifference) {
   )
 }
 
-function sortByRender(events) {
+function sortByRender(events: ProxyEvent[]) {
   const sortedByTime = sortBy(events, ['startMs', (e) => -e.endMs])
 
   const sorted = []
   while (sortedByTime.length > 0) {
-    const event = sortedByTime.shift()
+    const event = sortedByTime.shift()!
     sorted.push(event)
 
     for (let i = 0; i < sortedByTime.length; i++) {
-      const test = sortedByTime[i]
+      const test = sortedByTime[i]!
 
       // Still inside this event, look for next.
       if (event.endMs > test.startMs) continue
@@ -111,7 +119,7 @@ function sortByRender(events) {
       // If that event is not right next to our current event, we have to
       // move it here.
       if (i > 0) {
-        const event = sortedByTime.splice(i, 1)[0]
+        const event = sortedByTime.splice(i, 1)[0]!
         sorted.push(event)
       }
 
@@ -124,10 +132,10 @@ function sortByRender(events) {
 }
 
 export default function getStyledEvents(
-  events: Event[],
+  events: CalendarEvent[],
   slotMetrics: TimeSlotMetrics,
   minimumStartDifference: number,
-): { event: Event; style: { top: number|string, width: number|string, height: number|string, xOffset: number} }[] {
+): { event: CalendarEvent; style: { top: number, width: number, height: number, xOffset: number } }[] {
   // Create proxy events and order them so that we don't have
   // to fiddle with z-indexes.
   const proxies = events.map((event) => new ProxyEvent(event, slotMetrics))
@@ -136,9 +144,9 @@ export default function getStyledEvents(
   // Group overlapping events, while keeping order.
   // Every event is always one of: container, row or leaf.
   // Containers can contain rows, and rows can contain leaves.
-  const containerEvents = []
+  const containerEvents: ProxyEvent[] = []
   for (let i = 0; i < eventsInRenderOrder.length; i++) {
-    const event = eventsInRenderOrder[i]
+    const event = eventsInRenderOrder[i]!
 
     // Check if this event can go into a container event.
     const container = containerEvents.find(
@@ -161,7 +169,7 @@ export default function getStyledEvents(
     // Start looking from behind.
     let row = null
     for (let j = container.rows.length - 1; !row && j >= 0; j--) {
-      if (onSameRow(container.rows[j], event, minimumStartDifference)) {
+      if (onSameRow(container.rows[j]!, event, minimumStartDifference)) {
         row = container.rows[j]
       }
     }

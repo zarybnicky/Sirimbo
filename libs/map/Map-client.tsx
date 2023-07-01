@@ -6,13 +6,14 @@ import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
 import iconUrl from 'leaflet/dist/images/marker-icon.png';
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 
-const Map: React.FC<
-  {
+export type MapProps =   {
     children: (x: typeof ReactLeaflet) => React.ReactElement;
-  } & Omit<ReactLeaflet.MapContainerProps, 'children'>
-> = ({ children, ...rest }) => {
+} & Omit<ReactLeaflet.MapContainerProps, 'children'>
+
+const Map: React.FC<MapProps> = ({ children, ...rest }) => {
   useEffect(() => {
-    (async function init() {
+    (function init() {
+      // eslint-disable-next-line
       delete (L.Icon.Default.prototype as any)._getIconUrl;
 
       L.Icon.Default.mergeOptions({

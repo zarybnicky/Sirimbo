@@ -94,12 +94,6 @@ create index on lesson_trainer (tenant_id);
 create index on lesson_trainer (lesson_id);
 create index on lesson_trainer (trainer_id);
 
-create or replace function event_is_future(event event) returns boolean AS $$
-  SELECT event.until >= now();
-$$ language SQL STABLE;
-grant execute on function event_is_future(event) to anonymous;
-comment on function event_is_future(event) is E'@filterable';
-
 
 do $$
 begin
@@ -107,25 +101,11 @@ begin
     insert into tenant (id, name, member_info) values (2, 'DSP Kometa Brno', '[]'::json);
   end if;
 
-  if not exists (select * from tenant_location where tenant_id = 2) then
+  if not exists (select * from location where name = 'TS Kometa') then
+    insert into location (id, name, description) values (3, 'TS Kometa', '[]'::json);
+  end if;
 
+  if not exists (select * from tenant_location where tenant_id = 2) then
+    insert into tenant_location (tenant_id, location_id) values (2, 3);
   end if;
 end $$;
-
-alter table attachment add column if not exists thumbhash text null;
-alter table attachment add column if not exists width int null;
-alter table attachment add column if not exists height int null;
-
-drop function if exists my_announcements();
-create or replace function my_announcements(archive boolean default false) returns setof upozorneni as $$
-  select upozorneni.* from upozorneni
-  where is_visible = not archive and sticky = false
-    and (scheduled_since is null or scheduled_since <= now())
-    and (scheduled_until is null or scheduled_until >= now())
-  order by up_timestamp_add desc;
-$$ language sql stable;
-grant execute on function my_announcements to anonymous;
-
-alter table event add column if not exists description_member text not null default '';
-
-alter table event add column if not exists title_image_legacy text null default null;

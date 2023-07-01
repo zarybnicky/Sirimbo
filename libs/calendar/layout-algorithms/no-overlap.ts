@@ -1,6 +1,5 @@
-// @ts-nocheck
-
-import type { TimeSlotMetrics } from '../utils/TimeSlotMetrics'
+import type { TimeSlotMetrics } from '../TimeSlotMetrics'
+import { CalendarEvent } from '../types'
 import overlap from './overlap'
 
 function getMaxIdxDFS(node, maxIdx, visited) {
@@ -16,34 +15,27 @@ function getMaxIdxDFS(node, maxIdx, visited) {
 }
 
 export default function getStyledEvents(
-  events: Event[],
+  events: CalendarEvent[],
   minimumStartDifference: number,
   slotMetrics: TimeSlotMetrics,
-): { event: Event; style: React.CSSProperties }[] {
-  const styledEvents = overlap(events, minimumStartDifference, slotMetrics)
+): { event: CalendarEvent; style: React.CSSProperties }[] {
+  const styledEvents = overlap(events, slotMetrics, minimumStartDifference).map(x => ({
+    ...x,
+    friends: [],
+  }));
 
-  styledEvents.sort((a, b) => {
-    a = a.style
-    b = b.style
+  styledEvents.sort(({ style: a }, { style: b }) => {
     if (a.top !== b.top) return a.top > b.top ? 1 : -1
     else return a.top + a.height < b.top + b.height ? 1 : -1
   })
 
-  for (let i = 0; i < styledEvents.length; ++i) {
-    styledEvents[i].friends = []
-    delete styledEvents[i].style.left
-    delete styledEvents[i].style.left
-    delete styledEvents[i].idx
-    delete styledEvents[i].size
-  }
-
   for (let i = 0; i < styledEvents.length - 1; ++i) {
-    const se1 = styledEvents[i]
+    const se1 = styledEvents[i]!
     const y1 = se1.style.top
     const y2 = se1.style.top + se1.style.height
 
     for (let j = i + 1; j < styledEvents.length; ++j) {
-      const se2 = styledEvents[j]
+      const se2 = styledEvents[j]!
       const y3 = se2.style.top
       const y4 = se2.style.top + se2.style.height
 
@@ -60,7 +52,7 @@ export default function getStyledEvents(
   }
 
   for (let i = 0; i < styledEvents.length; ++i) {
-    const se = styledEvents[i]
+    const se = styledEvents[i]!
     const bitmap = []
     for (let j = 0; j < 100; ++j) bitmap.push(1) // 1 means available
 
@@ -71,10 +63,9 @@ export default function getStyledEvents(
   }
 
   for (let i = 0; i < styledEvents.length; ++i) {
+    if (styledEvents[i]!.size) continue
+
     let size = 0
-
-    if (styledEvents[i].size) continue
-
     const allFriends = []
     const maxIdx = getMaxIdxDFS(styledEvents[i], 0, allFriends)
     size = 100 / (maxIdx + 1)
@@ -84,8 +75,7 @@ export default function getStyledEvents(
   }
 
   for (let i = 0; i < styledEvents.length; ++i) {
-    const e = styledEvents[i]
-    e.style.left = e.idx * e.size
+    const e = styledEvents[i]!
 
     // stretch to maximum
     let maxIdx = 0
@@ -99,6 +89,7 @@ export default function getStyledEvents(
     // for this feature, `width` is not percentage based unit anymore
     // it will be used with calc()
     const padding = e.idx === 0 ? 0 : 3
+    e.style.left = e.idx * e.size
     e.style.width = `calc(${e.size}% - ${padding}px)`
     e.style.height = `calc(${e.style.height}% - 2px)`
     e.style.xOffset = `calc(${e.style.left}% + ${padding}px)`

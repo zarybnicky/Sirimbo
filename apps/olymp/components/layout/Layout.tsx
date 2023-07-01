@@ -60,7 +60,7 @@ export function Layout({
     <div className="h-screen flex flex-col w-full relative overflow-hidden">
       {staticTitle && <NextSeo title={staticTitle} />}
       <Header {...{ isOpen, setIsOpen, showTopMenu }} />
-      <div className="relative grow flex overflow-hidden bg-neutral-2 text-accent-12">
+      <div className="relative grow flex overflow-hidden bg-neutral-1 text-accent-12">
         <Sidebar {...{ isOpen, setIsOpen, showTopMenu }} />
         {list && (
           <div

@@ -98,6 +98,8 @@ module.exports = require('nextjs-routes/config')({ outDir: '.' })(
       webpack: function (config, { webpack, buildId }) {
         const defines = {
           'process.env.BUILD_ID': JSON.stringify(buildId),
+          __SENTRY_DEBUG__: false,
+          __SENTRY_TRACING__: false,
         };
         config.plugins.push(new webpack.DefinePlugin(defines));
         return config;

@@ -4,18 +4,54 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint ."
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@app/graphql": "*",
+    "@app/map": "*",
+    "@graphql-typed-document-node/core": "^3.2.0",
+    "@hookform/resolvers": "^3.1.1",
+    "@radix-ui/react-collapsible": "^1.0.3",
     "@radix-ui/react-dialog": "~1.0.4",
+    "@radix-ui/react-dropdown-menu": "^2.0.5",
+    "@radix-ui/react-popover": "^1.0.6",
+    "@radix-ui/react-toast": "^1.1.4",
+    "@radix-ui/react-toggle-group": "^1.0.4",
     "classnames": "~2.3.2",
     "cmdk": "~0.2.0",
+    "cookies-next": "^2.1.2",
+    "date-arithmetic": "^4.1.0",
+    "date-fns": "^2.30.0",
+    "exceljs": "^4.3.0",
+    "file-saver": "^2.0.5",
     "lucide-react": "~0.244.0",
+    "minisearch": "^6.1.0",
+    "next": "^13.4.7",
+    "nextjs-google-analytics": "^2.3.3",
+    "posthog-js": "^1.68.5",
     "react": "*",
+    "react-async-hook": "^4.0.0",
+    "react-colorful": "^5.6.1",
+    "react-day-picker": "^8.8.0",
     "react-dom": "*",
+    "react-facebook-pixel": "^1.0.4",
     "react-hook-form": "~7.44.3",
-    "tailwind-merge": "~1.13.1"
+    "react-paginate": "^8.2.0",
+    "react-virtuoso": "^4.3.11",
+    "tailwind-merge": "~1.13.1",
+    "urql": "^4.0.4",
+    "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6",
+    "@typescript-eslint/eslint-plugin": "^5.60.1",
+    "@typescript-eslint/parser": "^5.60.1",
+    "eslint": "^8.43.0",
+    "eslint-config-next": "^13.4.7",
+    "eslint-plugin-tailwindcss": "^3.13.0",
+    "typescript": "^5.1.6"
   }
 }

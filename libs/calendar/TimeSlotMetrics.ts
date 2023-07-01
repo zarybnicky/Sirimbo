@@ -18,8 +18,8 @@ export function getSlotMetrics({ date, minTime, maxTime, step, timeslots }: {
   step: number;
   timeslots: number;
 }) {
-  let start = merge(date, minTime);
-  let end = merge(date, maxTime);
+  const start = merge(date, minTime);
+  const end = merge(date, maxTime);
 
   // DST differences are handled inside the localizer
   const totalMin = 1 + diff(start, end, 'minutes') + getDstOffset(start, end)

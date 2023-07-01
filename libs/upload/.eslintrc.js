@@ -8,11 +8,11 @@ module.exports = {
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
   ],
   parserOptions: {
-    project: ['./tsconfig.json'],
+    project: [path.join(__dirname, './tsconfig.json')],
   },
   settings: {
     tailwindcss: {
-      config: path.join(__dirname, '../../frontend/tailwind.config.js'),
+      config: path.join(__dirname, '../../apps/olymp/tailwind.config.js'),
       callees: ["classNames", "clsx", "ctl", "cn"]
     }
   },

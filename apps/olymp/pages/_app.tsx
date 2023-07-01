@@ -11,7 +11,7 @@ import { NextPage } from 'next';
 import { DefaultSeo } from 'next-seo';
 import i18next from 'i18next';
 import { z } from 'zod';
-import { zodI18nMap } from 'zod-i18n-map';
+import { makeZodI18nMap } from 'zod-i18n-map';
 import csZodTranslation from 'public/locales/cs/zod.json';
 import { withPreconfiguredUrql } from '@app/graphql/query';
 
@@ -31,7 +31,10 @@ void i18next.init({
     cs: { zod: csZodTranslation },
   },
 });
-z.setErrorMap(zodI18nMap);
+z.setErrorMap(makeZodI18nMap({
+  ns: 'zod',
+  t: i18next.t,
+}));
 
 export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> &
   Omit<LayoutProps, 'children'>;
