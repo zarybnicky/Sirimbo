@@ -1,0 +1,30 @@
+{% extends "Layout.twig" %}
+
+{% block title %}Přehled členů{% endblock %}
+
+{% block content %}
+  {{ include('Member/ClenoveNavigation.twig') }}
+  <div class="container">
+    <table>
+      <thead>
+        <tr>
+          <th>Název</th>
+          <th>Počet členů</th>
+          <th>Popis</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in data %}
+          <tr>
+            <td>
+              <div class="box" title="{{ row.name }}" style="background-color:{{ row.color }}"></div>
+              &nbsp;&nbsp;{{ row.name }}
+            </td>
+            <td>{{ row.userCount }}</td>
+            <td>{{ row.description }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

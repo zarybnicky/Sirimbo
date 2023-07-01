@@ -1,0 +1,15 @@
+{% extends "Layout.twig" %}
+
+{% block title %}Správa plateb{% endblock %}
+{% block subheader %}<h2>Import plateb</h2>{% endblock %}
+
+{% block content %}
+  {% include 'Admin/PlatbyNavigation.twig' %}
+  <div class="container">
+    <h3>Upload souboru CSV</h3>
+    <form action="" method="POST" enctype="multipart/form-data">
+      <input type="file" multiple name="in[]" class="form-control-file"/>
+      <button name="action" value="upload" class="btn btn-primary">Nahrát</button>
+    </form>
+  </div>
+{% endblock %}

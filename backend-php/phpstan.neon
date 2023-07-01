@@ -1,0 +1,17 @@
+parameters:
+  dynamicConstantNames:
+    - SMTP_AUTH
+    - SMTP_TLS
+  excludes_analyse:
+    - files/Core/phpmailer.php
+    - files/Core/smtp.php
+  earlyTerminatingMethodCalls:
+    Redirect:
+      - to
+  inferPrivatePropertyTypeFromConstructor: true
+  checkMissingIterableValueType: false
+  bootstrapFiles:
+    - phpstan-constants.php
+  fileExtensions:
+    - php
+    - inc

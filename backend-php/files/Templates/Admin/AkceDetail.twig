@@ -1,0 +1,29 @@
+{% extends "Layout.twig" %}
+
+{% block title %}Správa akcí{% endblock %}
+
+{% block content %}
+<div class="container">
+  <form action="" method="POST">
+    {% include 'Member/AkceHeader.twig' with {'item': data} %}
+    <table>
+      <tr>
+        <th>Uživatel</th>
+        <th></th>
+      </tr>
+      {% for row in items %}
+        <tr>
+          <td>{{ userSelect(users, row.ai_id ~ '-user', row.ai_user) }}</td>
+          <td><button class="btn btn-primary" name="remove" value="{{ row.ai_id }}">Odstranit</button>
+        </tr>
+      {% endfor %}
+      <tr>
+        <td>{{ userSelect(users, 'add-user', 0) }}</td>
+        <td><button class="btn-primary" name="add" value="add">Přidat</button></td>
+      </tr>
+    </table>
+    <button class="btn btn-primary">Uložit</button>
+    <a class="btn btn-outline-primary" href="/admin/akce">Zpět</a>
+  </form>
+</div>
+{% endblock %}

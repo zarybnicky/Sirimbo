@@ -1,0 +1,39 @@
+{% extends "Layout.twig" %}
+
+{% block title %}Správa nástěnky{% endblock %}
+
+{% block content %}
+  <!-- <admin-panel></admin-panel> -->
+<div class="container">
+  <form action="" method="POST">
+    <a href="/admin/nastenka/add" class="btn btn-primary">Přidat</a>
+    {% for row in data %}
+      <div class="d-flex mt-2">
+        <div class="btn-group">
+          <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">
+            <img alt="Upravit" width="14" src="/style/icon-gear.png" />
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="/admin/nastenka/edit/{{ row.up_id }}">Upravit</a>
+            <a class="dropdown-item" href="/admin/nastenka/remove/{{ row.up_id }}">Odstranit</a>
+          </div>
+        </div>
+        <div>
+          <div>
+            <big>{{ row.up_nadpis }}</big>
+            {% for group in row.groups %}
+              <div class="box" title="{{ group.ups_popis }}" style="background-color:{{ group.ups_color }}"></div>
+            {% endfor %}
+          </div>
+          <div>
+            {{ row.u_jmeno }} {{ row.u_prijmeni }}, {{ row.up_timestamp_add | date('j. n. Y') }}
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="alert alert-info">Žádné příspěvky na nástěnce</div>
+    {% endfor %}
+  </form>
+  <div class="text-center">{{ navigation | raw }}</div>
+</div>
+{% endblock %}

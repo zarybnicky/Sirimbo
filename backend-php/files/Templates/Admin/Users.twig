@@ -1,0 +1,105 @@
+{% extends "Layout.twig" %}
+
+{% block title %}Správa uživatelů{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <form action="" method="get">
+      <table>
+        <tr>
+          <td>Uživatelé:</td>
+          <td>{{ select('status', statusOptions, status ? status : 'all') }}</td>
+        </tr>
+        <tr>
+          <td>Skupina:</td>
+          <td>{{ select('skupina', skupinyOptions, skupina ? skupina : 'all') }}</td>
+        </tr>
+        <tr>
+          <td>Oprávnění:</td>
+          <td>{{ select('group', groupOptions, group ? group : 'all') }}</td>
+        </tr>
+        <tr>
+          <td>Řadit podle:</td>
+          <td>{{ select('sort', sortOptions, sort ? sort : 'prijmeni') }}</td>
+        </tr>
+        <tr>
+          <td>Zobrazení:</td>
+          <td>{{ select('view', {'info': 'informace', 'status': 'status uživatele'}, view ? view : 'info') }}</td>
+        </tr>
+        <tr>
+          <td colspan="2"><button class="btn btn-primary">Filtrovat</button></td>
+        </tr>
+      </table>
+    </form>
+
+    <form action="" method="POST">
+      <a href="/admin/users/add" class="btn btn-outline-primary">Nový uživatel</a>
+      <a href="/admin/users/duplicate" class="btn btn-outline-primary">Duplicitní uživatelé</a>
+      <a href="/admin/users/unconfirmed" class="btn btn-outline-primary">Nepotvrzení uživatelé</a>
+      <a href="/admin/users/statistiky" class="btn btn-outline-primary">Statistiky</a>
+      <a href="/admin/users/getMsmtCsv" class="btn btn-outline-primary">MŠMT export</a>
+      {% if view == 'status' %}
+        <button class="btn btn-primary" name="action" value="save">Uložit změny</button>
+      {% endif %}
+      <br>
+
+      {% if not data %}
+        <div class="alert alert-info">Žádní takoví uživatelé</div>
+      {% else %}
+        <table style="width:100%">
+          <tr>
+            <th></th>
+            <th>Jméno</th>
+            {% if view == 'status' %}
+              <th></th>
+              <th>Oprávnění</th>
+              <th>Systémový<br/>uživatel</th>
+              <th>Ban</th>
+            {% else %}
+              <th>Oprávnění</th>
+              <th>Datum<br>narození</th>
+              <th>Variabilní<br>symbol</th>
+            {% endif %}
+          </tr>
+          {% for row in data %}
+            <tr>
+              <td class="text-right">{{ startIndex + loop.index }}.</td>
+              <td>
+                <div class="btn-group">
+                  <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">
+                    <img alt="Upravit" width="14" src="/style/icon-gear.png" />
+                  </button>
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item" href="/admin/users/edit/{{ row.user.id }}">Upravit</a>
+                    <a class="dropdown-item" href="/admin/users/sign-as/{{ row.user.id }}">Přihlásit se jako uživatel</a>
+                    <a class="dropdown-item" href="/admin/users/remove/{{ row.user.id }}">Odstranit</a>
+                  </div>
+                </div>
+                <div class="box" title="{{ row.skupina.name }}" style="background-color:{{ row.skupina.color }}"></div>
+                {{ row.user.fullName }}
+              </td>
+              {% if view == 'status' %}
+                <td style="max-width:350px">
+                  <input type='hidden' name='save[]' value='{{ row.user.id }}'>
+                  {{ select(row.user.id ~ '-skupina', onlySkupinyOptions, row.skupina.id) }}
+                </td>
+                <td>{{ row.groupInfo }}</td>
+                <td class="text-center">
+                  {{ checkbox(row.user.id ~ '-system', '1', row.user.system) }}
+                </td>
+                <td class="text-center">
+                  {{ checkbox(row.user.id ~ '-ban', '+', row.user.ban) }}
+                </td>
+              {% else %}
+                <td>{{ row.groupInfo }}</td>
+                <td>{{ row.user.birthDate | date('j. n. Y') }}</td>
+                <td>{{ row.user.varSymbol }}</td>
+              {% endif %}
+            </tr>
+          {% endfor %}
+        </table>
+      {% endif %}
+    </form>
+    <div class="text-center">{{ navigation | raw }}</div>
+  </div>
+{% endblock %}

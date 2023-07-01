@@ -16,9 +16,26 @@
     overlay = final: prev: {
       ncc = final.callPackage ./nix/ncc.nix {};
       graphile-migrate = final.callPackage ./nix/graphile-migrate.nix { src = migrate; };
-      sirimbo-backend-beta = final.callPackage ./backend/package.nix {};
-      sirimbo-frontend-beta = final.callPackage ./frontend/package.nix {};
-      sirimbo-migrations-beta = final.callPackage ./migrations/package.nix {};
+      sirimbo-backend = final.callPackage ./backend/package.nix {};
+      sirimbo-frontend = final.callPackage ./apps/olymp/package.nix {};
+      sirimbo-migrations = final.callPackage ./migrations/package.nix {};
+
+      sirimbo-frontend-old = final.callPackage ./apps/custom-elements/package.nix {};
+      sirimbo-php = (final.callPackage ./backend-php/composer-project.nix {
+        php = final.php82;
+      } (
+        pkgs.nix-gitignore.gitignoreSourcePure [./.gitignore] ./sirimbo-php
+      )).overrideAttrs (oldAttrs: {
+        name = "sirimbo-php";
+        buildInputs = oldAttrs.buildInputs ++ [ final.imagemagick ];
+        buildPhase = "composer validate";
+        installPhase = ''
+          runHook preInstall
+          mkdir -p $out
+          mv $PWD/* $out/
+          runHook postInstall
+        '';
+      });
     };
 
     devShell.x86_64-linux = devenv.lib.mkShell {

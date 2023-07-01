@@ -1,0 +1,28 @@
+{% extends "Layout.twig" %}
+
+{% block title %}Správa oprávnění{% endblock %}
+
+{% block content %}
+<div class="container">
+  <form action="" method="POST">
+    <a href="/admin/permissions/add" class="btn btn-primary">Přidat</a>
+    {% for row in data %}
+      <div class="d-flex py-1">
+        <div class="btn-group">
+          <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">
+            <img alt="Upravit" width="14" src="/style/icon-gear.png" />
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="/admin/permissions/edit/{{ row.pe_id }}">Upravit</a>
+            <a class="dropdown-item" href="/admin/permissions/remove/{{ row.pe_id }}">Odstranit</a>
+          </div>
+        </div>
+        <div>
+          <div>{{ row.pe_name }}</div>
+          <div>{{ row.pe_description }}</div>
+        </div>
+      </div>
+    {% endfor %}
+  </form>
+</div>
+{% endblock %}

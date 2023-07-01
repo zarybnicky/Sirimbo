@@ -1,0 +1,42 @@
+{% extends "Layout.twig" %}
+
+{% block title %}Správa uživatelů{% endblock %}
+{% block subheader %}<h2>Duplicitní uživatelé</h2>{% endblock %}
+
+{% block content %}
+<div class="container">
+  <form action="" method="POST">
+    <table>
+      <tr>
+        <th>Jméno</th>
+        <th>Email</th>
+        <th>Telefon</th>
+        <th>Datum<br>narození</th>
+        <th>Poslední<br>úprava</th>
+      </tr>
+      {% for row in data %}
+        <tr>
+          <td>
+            <div class="btn-group">
+              <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">
+                <img alt="Upravit" width="14" src="/style/icon-gear.png" />
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="/admin/users/edit/{{ row.u_id }}">Upravit</a>
+                <a class="dropdown-item" href="/admin/users/remove/{{ row.u_id }}">Odstranit</a>
+              </div>
+            </div>
+            <div class="box" title="{{ row.s_name }}" style="background-color:{{ row.s_color_rgb }}"></div>
+            &nbsp;{{ row.u_prijmeni }}, {{ row.u_jmeno }}
+          </td>
+          <td>{{ row.u_email }}</td>
+          <td>{{ row.u_telefon }}</td>
+          <td>{{ row.u_narozeni | date('j. n. Y') }}</td>
+          <td>{{ row.u_timestamp | date('j. n. Y H:i') }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    <a class="btn btn-outline-primary" href="/admin/users">Zpět</a>
+  </form>
+</div>
+{% endblock %}

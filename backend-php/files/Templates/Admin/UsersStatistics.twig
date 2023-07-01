@@ -1,0 +1,16 @@
+{% extends "Layout.twig" %}
+
+{% block title %}Správa uživatelů{% endblock %}
+{% block subheader %}<h2>Statistiky</h2>{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div>Uživatelé v databázi: <span class="big">{{ total }}</span></div>
+    <div>Aktivní uživatelé: <span class="big">{{ active }}</span></div>
+    {% for row in groups %}
+      <div>{{ row.pe_name }}: <span class="big">{{ row.count }}</span></div>
+    {% endfor %}
+    <br/>
+    <a class="btn btn-outline-primary" href="/admin/users">Zpět</a>
+  </div>
+{% endblock %}

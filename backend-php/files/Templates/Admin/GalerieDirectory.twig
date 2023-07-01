@@ -1,0 +1,22 @@
+{% extends "Layout.twig" %}
+
+{% block title %}Správa fotogalerie{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <form action="" method="POST">
+      <a class="btn btn-primary" href="/admin/galerie/file/upload?dir={{ id }}">Přidat fotky</a><br>
+        <div class="mt-2 d-flex flex-wrap justify-content-center">
+        {% for item in files %}
+          <a href="/admin/galerie/file/edit/{{ item.id }}"
+             style="min-width:150px;min-height:150px"
+             class="d-flex align-items-center justify-content-center">
+            <img alt="{{ item.id }}" src="{{ item.thumbnailURI }}" />
+          </a>
+        {% else %}
+          <div class="alert alert-info">Žádné fotky</div>
+        {% endfor %}
+      </div>
+    </form>
+  </div>
+{% endblock %}

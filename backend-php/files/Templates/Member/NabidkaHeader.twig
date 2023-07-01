@@ -1,0 +1,32 @@
+<div class="trenink-header">
+  <div class="h5 mb-0">
+    {{ item.u_jmeno }} {{ item.u_prijmeni }}
+    {% if item.canEdit %}
+      <div class="btn-group">
+        <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">
+          <img alt="Upravit" width="16" src="/style/icon-gear.png" />
+        </button>
+        <div class="dropdown-menu dropdown-menu-right">
+          <a class="dropdown-item" href="/admin/nabidka/edit/{{ item.n_id }}">Upravit</a>
+          <a class="dropdown-item" href="/admin/nabidka/detail/{{ item.n_id }}">Upravit rezervace</a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+  <div class="date">
+    <date-range from="{{ item.n_od }}" to="{{ item.n_do }}"></date-range>
+  </div>
+
+  {% if item.n_max_pocet_hod > 0 %}
+    <div>
+      <span class="little">Maximálně hodin/pár:</span>
+      <span class="nadpis">{{ item.n_max_pocet_hod }}</span>
+    </div>
+  {% endif %}
+  <div>
+    <span class="little">Volných hodin: </span>
+    <span class="nadpis">
+      {{ item.n_pocet_hod - item.hourReserved }} z {{ item.n_pocet_hod }} nabízených
+    </span>
+  </div>
+</div>

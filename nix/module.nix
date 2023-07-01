@@ -115,6 +115,21 @@ in {
       };
       ssl = lib.mkEnableOption "${pkgName} enable ssl";
     };
+
+    php = {
+      enable = lib.mkEnableOption "${pkgName}";
+      port = lib.mkOption {
+        type = lib.types.int;
+        description = "${pkgName} PHP port";
+        example = 3002;
+      };
+      domain = lib.mkOption {
+        type = lib.types.str;
+        description = "${pkgName} Nginx vhost domain";
+        example = "tkolymp.cz";
+      };
+      ssl = lib.mkEnableOption "${pkgName} enable ssl";
+    };
   };
 
   config = lib.mkMerge [
@@ -202,6 +217,106 @@ in {
         };
       };
     })
+
+    (lib.mkIf cfg.php.enable (let
+      configPhp = pkgs.runCommand "sirimbo-php-config" {} ''
+        mkdir -p $out
+        cat > $out/config.php <<EOS
+        <?php
+        openlog('${cfg.php.domain}', LOG_ODELAY, LOG_USER);
+        date_default_timezone_set('Europe/Paris');
+        mb_internal_encoding('UTF-8');
+
+        define('FRONTEND_HASH', '${builtins.substring 11 32 "${pkgs.sirimbo-frontend-old}"}');
+        define('SENTRY_ENV', '${cfg.php.domain}');
+        define('DB_CONN_STRING', 'pgsql:host=localhost;port=5432;dbname=${cfg.backend.database};user=${cfg.user}');
+
+        define('CACHE', '${cfg.stateDir}/cache');
+        define('UPLOADS', '${cfg.stateDir}/uploads');
+        define('GALERIE', '${cfg.stateDir}/gallery');
+        define('GALERIE_THUMBS', '${cfg.stateDir}/gallery/thumbnails');
+
+        define('DEFAULT_FROM_MAIL', 'root@tkolymp.cz');
+
+        define('SMTP_AUTH', ${if cfg.smtp.auth then "true" else "false"});
+        define('SMTP_TLS', ${if cfg.smtp.tls then "true" else "false"});
+        define('SMTP_HOST', '${cfg.smtp.host}');
+        define('SMTP_PORT', ${toString cfg.smtp.port});
+        define('SMTP_USER', '${cfg.smtp.user}');
+        define('SMTP_PASS', '${cfg.smtp.pass}');
+        EOS
+      '';
+    in {
+      services.nginx = {
+        enable = true;
+        enableReload = true;
+        recommendedTlsSettings = true;
+        recommendedGzipSettings = true;
+        recommendedOptimisation = true;
+        recommendedProxySettings = true;
+
+        virtualHosts.${cfg.domain} = {
+          root = pkgs.symlinkJoin {
+            name = "sirimbo-php-dist";
+            paths = [pkgs.sirimbo-php pkgs.sirimbo-frontend-old configPhp];
+          };
+
+          serverAliases = ["www.${cfg.domain}"];
+          locations."/gallery".root = cfg.stateDir;
+          locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
+
+          locations."/graphql" = {
+            proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
+            proxyWebsockets = true;
+          };
+          locations."/graphiql" = {
+            proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
+            proxyWebsockets = true;
+          };
+          locations."/logout" = {
+            proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
+          };
+          locations."/upload" = {
+            proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
+          };
+
+          locations."/" = {
+            index = "index.php";
+            extraConfig = "try_files /public/$uri /index.php?$args;";
+          };
+          locations."~ \.php$".extraConfig = ''
+            try_files $uri /index.php?$args;
+            client_max_body_size 20M;
+            fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            fastcgi_pass unix:${config.services.phpfpm.pools.${cfg.domain}.socket};
+            fastcgi_index index.php;
+            include ${pkgs.nginx}/conf/fastcgi_params;
+            include ${pkgs.nginx}/conf/fastcgi.conf;
+          '';
+        };
+      };
+      services.phpfpm.pools.${cfg.domain} = {
+        user = cfg.user;
+        settings = {
+          "listen.owner" = config.services.nginx.user;
+          "pm" = "dynamic";
+          "pm.max_children" = 50;
+          "pm.max_requests" = 500;
+          "pm.start_servers" = 3;
+          "pm.min_spare_servers" = 2;
+          "pm.max_spare_servers" = 4;
+          "catch_workers_output" = true;
+          "php_admin_flag[log_errors]" = true;
+          "php_admin_value[memory_limit]" = "512M";
+          "php_admin_value[upload_max_filesize]" = "40M";
+          "php_admin_value[post_max_size]" = "40M";
+        };
+        phpPackage = pkgs.php.withExtensions ({ all, ... }: with all; [
+          curl imagick opcache pdo openssl posix filter
+          mbstring session ctype exif gd zlib pdo_pgsql
+        ]);
+      };
+    }))
 
     (lib.mkIf cfg.backend.enable {
       systemd.services.sirimbo-backend-beta = {

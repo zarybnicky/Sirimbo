@@ -1,0 +1,30 @@
+{% extends "Layout.twig" %}
+
+{% block title %}Správa akcí{% endblock %}
+
+{% block content %}
+  <div class="container full">
+    <form action="" method="POST">
+      {% include 'Member/AkceHeader.twig' with {'item': data} %}
+      <table>
+        <tr>
+          <th>Soubor</th>
+          <th>Kategorie</th>
+          <th></th>
+        </tr>
+        {% for row in documents %}
+          <tr>
+            <td>{{ row.d_name }}</td>
+            <td>{{ documentTypes[row.d_kategorie] }}</td>
+            <td><button class="btn btn-primary" name="remove" value="{{ row.d_id }}">Odstranit</button></td>
+          </tr>
+        {% endfor %}
+        <tr>
+          <td colspan="2">{{ select('add-id', documentSelect) }}</td>
+          <td><button class="btn btn-primary" name="add" value="add">Přidat</button></td>
+        </tr>
+      </table>
+      <a class="btn btn-outline-primary" href="/admin/akce">Zpět</a>
+    </form>
+  </div>
+{% endblock %}

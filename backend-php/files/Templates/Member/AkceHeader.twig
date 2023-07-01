@@ -1,0 +1,38 @@
+<div class="trenink-header">
+  <div class="h5 mb-0">
+    {{ item.a_jmeno }}
+    {% if item.canEdit %}
+      <div class="btn-group">
+        <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">
+          <img alt="Upravit" width="16" src="/style/icon-gear.png" />
+        </button>
+        <div class="dropdown-menu dropdown-menu-right">
+          <a class="dropdown-item" href="/admin/akce/edit/{{ item.a_id }}">Upravit</a>
+          <a class="dropdown-item" href="/admin/akce/detail/{{ item.a_id }}">Upravit účastníky</a>
+          <a class="dropdown-item" href="/admin/akce/dokumenty/{{ item.a_id }}">Upravit dokumenty</a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+  <div class="date">
+    <date-range from="{{ item.a_od }}" to="{{ item.a_do }}"></date-range>
+  </div>
+  <div class="font-weight-bold">{{ item.a_kde }}</div>
+  <div>
+    <span class="big">Volných míst: </span>
+    {{ item.a_kapacita - item.reserved }} / {{ item.a_kapacita }}
+  </div>
+  {% if item.a_info %}
+    <div class="text-left mb-2">{{ item.a_info | raw | nl2br }}</div>
+  {% endif %}
+  {% if item.dokumenty %}
+    <div class="text-left mb-2">
+      <span class="big">Dokumenty: </span>
+      <ul>
+        {% for row in item.dokumenty %}
+          <li><a href="/member/download?id={{ row.d_id }}">{{ row.d_name }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+</div>
