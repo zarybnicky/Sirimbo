@@ -1,5 +1,6 @@
 schema: schema.graphql
-documents: "libs/graphql/**/*.graphql"
+documents: "libs/graphql/*.graphql"
+watch: "libs/graphql/*.graphql"
 overwrite: true
 config:
   avoidOptionals:

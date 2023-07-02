@@ -47,13 +47,13 @@ export const ProvideAuth = ({ children, onReset }: {
       await doSignIn({ login, passwd });
       setIsLoading(false);
     },
-    [doSignIn],
+    [doSignIn, onReset],
   );
 
   const signOut = React.useCallback(async () => {
     await doSignOut({});
     onReset?.();
-    router.push('/');
+    await router.push('/');
   }, [router, doSignOut, onReset]);
 
   const perms = React.useMemo(() => {

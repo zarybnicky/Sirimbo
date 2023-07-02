@@ -1,3 +1,4 @@
+import React from 'react';
 import { cn } from './cn';
 import { FieldError, Path } from 'react-hook-form';
 
@@ -5,7 +6,7 @@ export const FieldLabel = ({
   className,
   children,
   ...props
-}: React.HTMLAttributes<HTMLLabelElement> & { htmlFor?: string | Path<any> }) => {
+}: React.HTMLAttributes<HTMLLabelElement> & { htmlFor?: string | Path<unknown> }) => {
   if (!children) return null;
   return (
     <label className={cn('block text-sm text-neutral-11 mt-1', className)} {...props}>
@@ -36,13 +37,13 @@ const errorTranslation: { [key: string]: string } = {
   ACCOUNT_NOT_CONFIRMED: 'Účet ještě nebyl potvrzen',
 };
 
-export const FormError = ({ error: e, default: def }: { error: any; default?: React.ReactNode }) => {
+export const FormError = ({ error: e, default: def }: { error: unknown; default?: React.ReactNode }) => {
   let error: string | null = null;
   if (!e) {
     return null;
   }
-  if (e instanceof Error || (e as any).message) {
-    error = e.message;
+  if (e instanceof Error || (typeof e === 'object' && 'message' in e)) {
+    error = (e as any).message;
   } else if (e) {
     error = e.toString();
   }

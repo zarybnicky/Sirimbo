@@ -1,10 +1,9 @@
-import type { ExecutionResult, TypedDocumentNode } from 'urql';
+import type { ClientOptions, ExecutionResult, SSRExchange, TypedDocumentNode } from 'urql';
 import { print } from '@0no-co/graphql.web';
 import type { GraphCacheConfig, RozpisConnection, WithTypename } from '@app/graphql';
 import { CurrentUserDocument, CurrentUserQuery } from '@app/graphql/CurrentUser';
 import { relayPagination } from '@urql/exchange-graphcache/extras';
 import { makeDefaultStorage } from '@urql/exchange-graphcache/default-storage';
-import { withUrqlClient } from 'next-urql';
 import { fetchExchange } from 'urql';
 import { offlineExchange } from '@urql/exchange-graphcache';
 import { retryExchange } from '@urql/exchange-retry';
@@ -52,43 +51,39 @@ export async function fetchGql<TResult, TVariables>(
   return result.data! as TResult;
 }
 
-export const withPreconfiguredUrql: ReturnType<typeof withUrqlClient> = withUrqlClient(
-  (ssrExchange) => ({
-    url: `${origin}/graphql`,
-    exchanges: [
-      process.env.NODE_ENV !== 'production' ? devtoolsExchange : (({forward}) => forward),
-      refocusExchange(),
-      requestPolicyExchange({ttl: 60 * 1000}),
-      typeof window !== 'undefined' ? offlineExchange({
-        schema,
-        storage: makeDefaultStorage({
-          idbName: 'graphcache-v3',
-          maxAge: 7,
-        }),
-        ...cacheConfig,
-      }) : (({forward}) => forward),
-      retryExchange({
-        initialDelayMs: 1000,
-        maxDelayMs: 15000,
-        randomDelay: true,
-        maxNumberAttempts: 2,
-        retryIf: (err) => !!err && !!err.networkError,
+export const configureUrql = (ssrExchange?: SSRExchange): ClientOptions => ({
+  url: `${origin}/graphql`,
+  exchanges: [
+    process.env.NODE_ENV !== 'production' ? devtoolsExchange : (({forward}) => forward),
+    refocusExchange(),
+    requestPolicyExchange({ttl: 60 * 1000}),
+    typeof window !== 'undefined' ? offlineExchange({
+      schema,
+      storage: makeDefaultStorage({
+        idbName: 'graphcache-v3',
+        maxAge: 7,
       }),
-      ssrExchange,
-      fetchExchange,
-    ],
-    fetchOptions: {
-      credentials: 'include',
-      headers: {
-        ...(process.env.NEXT_PUBLIC_TENANT_ID ? {
-          'x-tenant-id': process.env.NEXT_PUBLIC_TENANT_ID,
-        } : {}),
-      },
+      ...cacheConfig,
+    }) : (({forward}) => forward),
+    retryExchange({
+      initialDelayMs: 1000,
+      maxDelayMs: 15000,
+      randomDelay: true,
+      maxNumberAttempts: 2,
+      retryIf: (err) => !!err && !!err.networkError,
+    }),
+    ssrExchange ?? (({ forward }) => forward),
+    fetchExchange,
+  ],
+  fetchOptions: {
+    credentials: 'include',
+    headers: {
+      ...(process.env.NEXT_PUBLIC_TENANT_ID ? {
+        'x-tenant-id': process.env.NEXT_PUBLIC_TENANT_ID,
+      } : {}),
     },
-  }),
- {
-    ssr: false,
-});
+  },
+})
 
 const cacheConfig: Partial<GraphCacheConfig> = {
   keys: {

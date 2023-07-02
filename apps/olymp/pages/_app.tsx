@@ -13,7 +13,8 @@ import i18next from 'i18next';
 import { z } from 'zod';
 import { makeZodI18nMap } from 'zod-i18n-map';
 import csZodTranslation from 'public/locales/cs/zod.json';
-import { withPreconfiguredUrql } from '@app/graphql/query';
+import { configureUrql } from '@app/graphql/query';
+import { withUrqlClient } from 'next-urql';
 
 import 'nprogress/nprogress.css';
 import NProgress from 'nprogress';
@@ -85,7 +86,7 @@ function App({ Component, pageProps, resetUrqlClient }: AppPropsWithLayout) {
   );
 }
 
-export default withPreconfiguredUrql(App);
+export default withUrqlClient(configureUrql, { ssr: false })(App);
 
 export function reportWebVitals({ id, name, label, value }: NextWebVitalsMetric) {
   if (label === 'web-vital') {

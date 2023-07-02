@@ -1,0 +1,30 @@
+fragment GalleryDir on GalerieDir {
+  __typename
+  id: gdId
+  gdHidden
+  gdIdRodic
+  gdLevel
+  gdName
+  gdPath
+}
+
+query GalleryDirList($first: Int, $offset: Int) {
+  galerieDirs(
+    first: $first,
+    offset: $offset,
+    orderBy: [GD_ID_ASC],
+  ) {
+    totalCount
+    nodes {
+      ...GalleryDir
+    }
+  }
+}
+
+mutation ToggleGalleryDirVisible($id: BigInt!, $hidden: Boolean!) {
+  updateGalerieDir(input: {gdId: $id, patch: {gdHidden: $hidden}}) {
+    galerieDir {
+      ...GalleryDir
+    }
+  }
+}

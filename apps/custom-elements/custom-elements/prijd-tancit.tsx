@@ -1,30 +1,10 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import { Dialog, DialogContent, DialogTrigger } from '../components/dialog';
+import { Dialog, DialogContent, DialogTrigger } from '@app/ui/dialog';
+import Map from '@app/map/Map-client'
 import { PlayCircle } from 'lucide-react';
-import { ProspectForm } from '../components/ProspectForm';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache } from '@apollo/client';
-import { SnackbarProvider } from 'notistack';
+import { ProspectForm } from '@app/ui/ProspectForm';
 
-const client = new ApolloClient({
-  link: new HttpLink({ uri: 'https://api.rozpisovnik.cz/graphql' }),
-  cache: new InMemoryCache(),
-});
-
-export class PrijdTancitElement extends HTMLElement {
-  connectedCallback() {
-    ReactDOM.render((
-      <ApolloProvider client={client}>
-        <SnackbarProvider maxSnack={3} anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
-          <Page />
-        </SnackbarProvider>
-      </ApolloProvider>
-    ), this);
-  }
-}
-
-const Page = () => {
+export default () => {
   return (
     <div className="relative content">
       <h1 className="mt-12 mb-8 text-3xl text-red-500 drop-shadow tracking-wide">
@@ -207,12 +187,16 @@ const Page = () => {
       <ProspectForm title="Zapiš se na první hodinu ZDARMA!" />
 
       <div className="col-feature my-16 grid lg:grid-cols-2 gap-4">
-        <MapContainer className="h-48 min-w-24" center={{ lat:49.57963, lng:17.2495939 }} zoom={12} scrollWheelZoom={false}>
-          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          <Marker position={{ lat:49.57963, lng:17.2495939 }}>
-            <Popup>ZŠ Holečkova</Popup>
-          </Marker>
-        </MapContainer>
+        <Map>
+          {({ TileLayer, Marker, MapContainer, Popup }) => (
+            <MapContainer className="h-48 min-w-24" center={{ lat:49.57963, lng:17.2495939 }} zoom={12} scrollWheelZoom={false}>
+              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+              <Marker position={{ lat:49.57963, lng:17.2495939 }}>
+                <Popup>ZŠ Holečkova</Popup>
+              </Marker>
+            </MapContainer>
+          )}
+        </Map>
 
         <div className="prose prose-accent py-8">
           <h3>Taneční centrum při FZŠ Holečkova</h3>

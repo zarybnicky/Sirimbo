@@ -62,7 +62,7 @@
     "minisearch": "~5.1.0",
     "next": "~13.4.5",
     "next-seo": "~6.0.0",
-    "next-urql": "~5.0.2",
+    "next-urql": "^5.0.2",
     "nextjs-google-analytics": "~2.3.3",
     "nextjs-routes": "~2.0.1",
     "nprogress": "~0.2.0",

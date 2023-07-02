@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Pagination } from './Pagination';
+import { Pagination } from '@app/ui/Pagination';
 import { AnnouncementItem } from './AnnouncementItem';
 import { MyAnnouncementsDocument } from '@app/graphql/Announcement';
 import { useQuery } from 'urql';

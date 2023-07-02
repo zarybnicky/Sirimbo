@@ -53,5 +53,9 @@
     "eslint-config-next": "^13.4.7",
     "eslint-plugin-tailwindcss": "^3.13.0",
     "typescript": "^5.1.6"
-  }
+  },
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ]
 }

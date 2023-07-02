@@ -2,6 +2,7 @@ fragment Article on Aktuality {
   __typename
   id: atId
   atPreview
+  atKdo
   atJmeno
   atText
   atFoto

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React from 'react';
 import L from 'leaflet';
 import * as ReactLeaflet from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -6,20 +6,20 @@ import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
 import iconUrl from 'leaflet/dist/images/marker-icon.png';
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 
-export type MapProps =   {
-    children: (x: typeof ReactLeaflet) => React.ReactElement;
-} & Omit<ReactLeaflet.MapContainerProps, 'children'>
+export type MapProps = {
+  children: (x: typeof ReactLeaflet) => React.ReactElement;
+} & Omit<ReactLeaflet.MapContainerProps, 'children'>;
 
 const Map: React.FC<MapProps> = ({ children, ...rest }) => {
-  useEffect(() => {
+  React.useEffect(() => {
     (function init() {
       // eslint-disable-next-line
       delete (L.Icon.Default.prototype as any)._getIconUrl;
 
       L.Icon.Default.mergeOptions({
-        iconRetinaUrl: iconRetinaUrl.src,
-        iconUrl: iconUrl.src,
-        shadowUrl: shadowUrl.src,
+        iconRetinaUrl: typeof iconRetinaUrl === 'object' ? iconRetinaUrl['src'] : iconRetinaUrl,
+        iconUrl: typeof iconUrl === 'object' ? iconUrl['src'] : iconUrl,
+        shadowUrl: typeof shadowUrl === 'object' ? shadowUrl['src'] : shadowUrl,
       });
     })();
   }, []);

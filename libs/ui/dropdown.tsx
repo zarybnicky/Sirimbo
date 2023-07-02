@@ -78,7 +78,7 @@ export const DropdownMenuButton = React.forwardRef<
 export const DropdownMenuTriggerDots = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
+>(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Trigger asChild {...props}>
     <button ref={ref} className={cn("absolute right-1 top-2", className)}>
       <MoreVertical className="text-neutral-7 w-6 group:data-[state=open]:text-neutral-9 group-hover:text-neutral-8" />

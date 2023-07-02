@@ -1,31 +1,21 @@
 {
   "compilerOptions": {
     "target": "es2015",
-    "module": "esnext",
     "lib": ["es2020", "DOM"],
     "sourceMap": true,
     "inlineSources": true,
     "outDir": "./dist",
-    "rootDir": "./src",
     "downlevelIteration": true,
     "jsx": "react",
     "strict": true,
+    "module": "esnext",
     "isolatedModules": true,
     "esModuleInterop": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": true,
-    "noImplicitThis": true,
+    "resolveJsonModule": true,
+    "incremental": true,
     "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true
   },
-    "include": [
-        "src/**/*.ts",
-        "src/**/*.tsx"
-    ],
-    "exclude": [
-        "node_modules"
-    ]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }
