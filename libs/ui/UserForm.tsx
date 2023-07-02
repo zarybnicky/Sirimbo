@@ -21,7 +21,7 @@ import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { ErrorPage } from './ErrorPage';
 import { DeleteButton } from './DeleteButton';
-import { RichTextEditor } from './RichTextEditor';
+import { RichTextEditor } from '@app/editor/RichTextEditor';
 import { TitleBar } from './TitleBar';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';

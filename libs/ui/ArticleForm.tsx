@@ -16,7 +16,7 @@ import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { ErrorPage } from './ErrorPage';
 import { DeleteButton } from './DeleteButton';
-import { RichTextEditor } from './RichTextEditor';
+import { RichTextEditor } from '@app/editor/RichTextEditor';
 import { TitleBar } from './TitleBar';
 import { AdminEntity } from './generic/AdminEntityList';
 

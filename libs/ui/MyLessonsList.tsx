@@ -1,14 +1,14 @@
-import * as React from 'react';
-import { MyLessonsDocument, ScheduleItemFragment } from '@app/graphql/Schedule';
-import { useAuth } from '@app/ui/use-auth';
-import { LessonButton } from './LessonButton';
-import { Card, CardMenu } from './Card';
-import { formatWeekDay } from '@app/ui/format-date';
-import { WeekPicker } from './WeekPicker';
+import { RichTextView } from '@app/editor/RichTextView';
 import { CohortDocument } from '@app/graphql/Cohorts';
-import { RichTextView } from './RichTextView';
-import { useQuery } from 'urql';
+import { MyLessonsDocument, ScheduleItemFragment } from '@app/graphql/Schedule';
+import { formatWeekDay } from '@app/ui/format-date';
+import { useAuth } from '@app/ui/use-auth';
 import { add } from 'date-arithmetic';
+import * as React from 'react';
+import { useQuery } from 'urql';
+import { Card, CardMenu } from './Card';
+import { LessonButton } from './LessonButton';
+import { WeekPicker } from './WeekPicker';
 import { DropdownMenuLink } from './dropdown';
 
 export const MyLessonsList: React.FC = () => {

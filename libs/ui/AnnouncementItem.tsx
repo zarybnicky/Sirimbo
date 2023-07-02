@@ -8,7 +8,7 @@ import { fullDateFormatter } from '@app/ui/format-date';
 import React from 'react';
 import { Card, CardMenu } from './Card';
 import { CohortColorBoxes } from './CohortColorBox';
-import { RichTextView } from './RichTextView';
+import { RichTextView } from '@app/editor/RichTextView';
 import { useAuth } from './use-auth';
 import { useMutation } from 'urql';
 import { DropdownMenuButton, DropdownMenuLink } from './dropdown';

@@ -1,8 +1,8 @@
+import { RichTextView } from '@app/editor/RichTextView';
+import { CohortGroupDocument, CohortGroupFragment } from '@app/graphql/CohortGroup';
+import { fetchGql } from '@app/graphql/query';
 import { Card } from '@app/ui/Card';
 import { Heading } from '@app/ui/Heading';
-import { RichTextView } from '@app/ui/RichTextView';
-import { CohortGroupFragment, CohortGroupDocument } from '@app/graphql/CohortGroup';
-import { fetchGql } from '@app/graphql/query';
 import { fromSlugArray, slugify } from '@app/ui/slugify';
 import { GetStaticProps } from 'next';
 import { NextSeo } from 'next-seo';

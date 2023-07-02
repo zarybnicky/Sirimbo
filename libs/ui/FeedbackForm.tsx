@@ -1,5 +1,5 @@
 import { SubmitFormDocument } from '@app/graphql/Crm';
-import { RichTextEditor } from '@app/ui/RichTextEditor';
+import { RichTextEditor } from '@app/editor/RichTextEditor';
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@app/ui/dialog';
 import { TextFieldElement } from '@app/ui/fields/text';
 import { SubmitButton } from '@app/ui/submit';

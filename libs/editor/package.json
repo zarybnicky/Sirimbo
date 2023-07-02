@@ -1,0 +1,35 @@
+{
+  "name": "@app/editor",
+  "private": true,
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "./index.tsx",
+  "types": "./index.tsx",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@app/ui": "workspace:libs/ui",
+    "@ckeditor/ckeditor5-build-classic": "~38.1.0",
+    "@ckeditor/ckeditor5-core": "~38.1.0",
+    "@ckeditor/ckeditor5-engine": "~38.1.0",
+    "@ckeditor/ckeditor5-react": "~6.1.0",
+    "@ckeditor/ckeditor5-utils": "~38.1.0",
+    "@ckeditor/ckeditor5-watchdog": "~38.1.0",
+    "html-react-parser": "^4.0.0",
+    "lucide-react": "^0.258.0",
+    "next": "^13.4.7",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "~7.44.3",
+    "typescript": "~5.1.6"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6"
+  },
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ]
+}

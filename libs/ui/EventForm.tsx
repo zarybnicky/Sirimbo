@@ -18,7 +18,7 @@ import { DateRange, DateRangeInput } from '@app/ui/fields/date';
 import { ErrorPage } from './ErrorPage';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery } from 'urql';
-import { RichTextEditor } from './RichTextEditor';
+import { RichTextEditor } from '@app/editor/RichTextEditor';
 import { TitleBar } from './TitleBar';
 import { RadioButtonGroupElement } from './RadioButtomGroupElement';
 import { AdminEntity } from './generic/AdminEntityList';

@@ -2,21 +2,27 @@ import { TextField } from '@app/ui/fields/text';
 import { FieldLabel } from '@app/ui/form';
 import React from 'react';
 import { HexColorPicker } from 'react-colorful';
-import { Control, FieldValues, Path, useController } from 'react-hook-form';
+import { Control, FieldPathByValue, FieldValues, Path, useController } from 'react-hook-form';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 
-type ColorPickerProps<T extends FieldValues> = {
-  name: Path<T>;
+type ColorPickerProps<
+  T extends FieldValues,
+  TPath extends FieldPathByValue<T, string | undefined> = FieldPathByValue<T, string | undefined>,
+> = {
+  name: TPath;
   control?: Control<T>;
   label?: string;
 };
 
-export function ColorPicker<T extends FieldValues>({
+export function ColorPicker<
+  T extends FieldValues,
+  TPath extends FieldPathByValue<T, string | undefined> = FieldPathByValue<T, string | undefined>,
+>({
   name,
   control,
   label,
-}: ColorPickerProps<T>) {
-  const { field } = useController<T>({ name, control });
+}: ColorPickerProps<T, TPath>) {
+  const { field } = useController<T, TPath>({ name, control });
 
   return (
     <div className="relative">
@@ -31,7 +37,7 @@ export function ColorPicker<T extends FieldValues>({
           <HexColorPicker
             style={{ width: 300 }}
             color={field.value}
-            onChange={field.onChange}
+            onChange={(value) => field.onChange(value)}
           />
           <TextField name={name} value={field.value} onChange={field.onChange} />
         </PopoverContent>

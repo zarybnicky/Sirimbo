@@ -8,7 +8,7 @@ import {CurrentTenantDocument, UpdateTenantDocument} from '@app/graphql/Tenant';
 import { useMutation, useQuery } from 'urql';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { RichTextEditor } from './RichTextEditor';
+import { RichTextEditor } from '@app/editor/RichTextEditor';
 import { TitleBar } from './TitleBar';
 
 const Form = z.object({

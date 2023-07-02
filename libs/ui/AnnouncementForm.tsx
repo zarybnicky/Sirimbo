@@ -18,7 +18,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useMutation } from 'urql';
 import { DeleteButton } from './DeleteButton';
-import { RichTextEditor } from './RichTextEditor';
+import { RichTextEditor } from '@app/editor/RichTextEditor';
 import { TitleBar } from './TitleBar';
 import { makeEntityFetcher } from './generic/WithEntity';
 import { AdminEntity } from './generic/AdminEntityList';

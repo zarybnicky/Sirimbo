@@ -32,6 +32,18 @@ let
       reference = "virtual:cbff9223b963ec60aaf6c49849b2e96daeda9ea1113fcece5f82f083f8ac2b57d0e479c1d076a5826f883331a154dd0a2cd016f1be04a8e8eca4aeac32c5113d#npm:1.0.4";
       canonicalPackage = packages."@0no-co/graphql.web@npm:1.0.4";
     };
+    "@aashutoshrathi/word-wrap@npm:1.2.6" = {
+      name = "@aashutoshrathi/word-wrap";
+      reference = "npm:1.2.6";
+      linkType = "HARD";
+      outputName = "aashutoshrathi-word-wrap-1.2.6-5b1d95e487";
+      outputHash = "/6eebd12a5cd03cee38fcb915ef9f4ea557df6a06f642dfc7fe8eb4839eb5c9ca55a382f3604d52c14200b0c214c12af5e1f23d2a6d8e23ef2d016b105a9d6c0a";
+      flatName = "word-wrap";
+      languageName = "node";
+      scope = "aashutoshrathi";
+      descriptorRange = "npm:^1.2.3";
+      checksum = "10/6eebd12a5cd03cee38fcb915ef9f4ea557df6a06f642dfc7fe8eb4839eb5c9ca55a382f3604d52c14200b0c214c12af5e1f23d2a6d8e23ef2d016b105a9d6c0a";
+    };
     "@alloc/quick-lru@npm:5.2.0" = {
       name = "@alloc/quick-lru";
       reference = "npm:5.2.0";
@@ -82,21 +94,54 @@ let
         "react" = packages."react@npm:18.2.0";
         "typescript-event-target" = packages."typescript-event-target@npm:1.0.4";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
-        "@radix-ui/react-use-layout-effect" = packages."@radix-ui/react-use-layout-effect@virtual:eaa47a7e693751dea4b43e0d56646efde788dc805480f36a2a26ff27e0eb67d6bdc56514084e384fa81908f2663382f7e8713d229aca504cfc6d2fd2249fd3f5#npm:1.0.1";
-        "lucide-react" = packages."lucide-react@virtual:eaa47a7e693751dea4b43e0d56646efde788dc805480f36a2a26ff27e0eb67d6bdc56514084e384fa81908f2663382f7e8713d229aca504cfc6d2fd2249fd3f5#npm:0.256.0";
-        "react-dom" = packages."react-dom@virtual:eaa47a7e693751dea4b43e0d56646efde788dc805480f36a2a26ff27e0eb67d6bdc56514084e384fa81908f2663382f7e8713d229aca504cfc6d2fd2249fd3f5#npm:18.2.0";
-        "urql" = packages."urql@virtual:4de8affaeadbd53ac06c22885480659871fda1aed8faac7264ab124fd7ef9352967405f1242c686763cb1887356be5d1d0d9c6f38f2392b10c9ce25debec6b24#npm:4.0.4";
+        "@radix-ui/react-use-layout-effect" = packages."@radix-ui/react-use-layout-effect@virtual:4737f0df3c153ebfc48660b59465cf2584396b093e113477cdfc9e57a682343e8ad919ae3e6ccfb11d8d8ffb82fc3d7ebf432ffce5cec59ff10f7f78c77e37b6#npm:1.0.1";
+        "lucide-react" = packages."lucide-react@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:0.258.0";
+        "react-dom" = packages."react-dom@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:18.2.0";
+        "urql" = packages."urql@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:4.0.4";
       };
       devDependencies = {
         "@types/date-arithmetic" = packages."@types/date-arithmetic@npm:4.1.1";
         "@types/lodash" = packages."@types/lodash@npm:4.14.195";
+        "@types/react" = packages."@types/react@npm:18.2.14";
         "@typescript-eslint/eslint-plugin" = packages."@typescript-eslint/eslint-plugin@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:5.60.1";
         "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:5.60.1";
-        "eslint" = packages."eslint@npm:8.43.0";
+        "eslint" = packages."eslint@npm:8.44.0";
         "eslint-config-next" = packages."eslint-config-next@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:13.4.7";
         "eslint-plugin-import" = packages."eslint-plugin-import@virtual:3614f06c0df0a9668b63a0870d65a97907643d79508c38387adce2fceee59ca18663418745630b738a6a868c8e8f3204a427de03895443a5e99c4db60b53c75a#npm:2.27.5";
         "eslint-plugin-tailwindcss" = packages."eslint-plugin-tailwindcss@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:3.13.0";
         "tailwindcss" = packages."tailwindcss@npm:3.3.2";
+      };
+    };
+    "@app/editor@workspace:libs/editor" = {
+      name = "@app/editor";
+      reference = "workspace:libs/editor";
+      linkType = "SOFT";
+      outputName = "app-editor-1.0.0-fb68fb7b60";
+      src = ./libs/editor;
+      shouldBeUnplugged = true;
+      flatName = "editor";
+      languageName = "unknown";
+      scope = "app";
+      descriptorRange = "workspace:libs/editor";
+      dependencies = {
+        "@app/ui" = packages."@app/ui@workspace:libs/ui";
+        "@ckeditor/ckeditor5-build-classic" = packages."@ckeditor/ckeditor5-build-classic@npm:38.1.0";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.1.0";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:38.1.0";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.1.0";
+        "@ckeditor/ckeditor5-watchdog" = packages."@ckeditor/ckeditor5-watchdog@npm:38.1.0";
+        "react" = packages."react@npm:18.2.0";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "@ckeditor/ckeditor5-react" = packages."@ckeditor/ckeditor5-react@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:6.1.0";
+        "html-react-parser" = packages."html-react-parser@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:4.0.0";
+        "lucide-react" = packages."lucide-react@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:0.258.0";
+        "next" = packages."next@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:13.4.7";
+        "react-dom" = packages."react-dom@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:18.2.0";
+        "react-hook-form" = packages."react-hook-form@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:7.44.3";
+      };
+      devDependencies = {
+        "@types/react" = packages."@types/react@npm:18.2.14";
+        "@types/react-dom" = packages."@types/react-dom@npm:18.2.6";
       };
     };
     "@app/graphql@workspace:libs/graphql" = {
@@ -132,7 +177,7 @@ let
         "@graphql-codegen/typescript-urql-graphcache" = packages."@graphql-codegen/typescript-urql-graphcache@virtual:4de8affaeadbd53ac06c22885480659871fda1aed8faac7264ab124fd7ef9352967405f1242c686763cb1887356be5d1d0d9c6f38f2392b10c9ce25debec6b24#npm:2.4.5";
         "@graphql-codegen/urql-introspection" = packages."@graphql-codegen/urql-introspection@virtual:4de8affaeadbd53ac06c22885480659871fda1aed8faac7264ab124fd7ef9352967405f1242c686763cb1887356be5d1d0d9c6f38f2392b10c9ce25debec6b24#npm:2.2.1";
         "@graphql-typed-document-node/core" = packages."@graphql-typed-document-node/core@virtual:4de8affaeadbd53ac06c22885480659871fda1aed8faac7264ab124fd7ef9352967405f1242c686763cb1887356be5d1d0d9c6f38f2392b10c9ce25debec6b24#npm:3.2.0";
-        "@types/node" = packages."@types/node@npm:20.3.2";
+        "@types/node" = packages."@types/node@npm:20.3.3";
         "@urql/exchange-graphcache" = packages."@urql/exchange-graphcache@npm:6.1.4";
         "graphql-tag" = packages."graphql-tag@virtual:4de8affaeadbd53ac06c22885480659871fda1aed8faac7264ab124fd7ef9352967405f1242c686763cb1887356be5d1d0d9c6f38f2392b10c9ce25debec6b24#npm:2.12.6";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
@@ -154,6 +199,7 @@ let
         "leaflet" = packages."leaflet@npm:1.9.4";
         "react" = packages."react@npm:18.2.0";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "next" = packages."next@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:13.4.7";
         "react-dom" = packages."react-dom@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:18.2.0";
         "react-leaflet" = packages."react-leaflet@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:4.2.1";
       };
@@ -174,15 +220,24 @@ let
       scope = "app";
       descriptorRange = "workspace:libs/ui";
       dependencies = {
+        "@app/editor" = packages."@app/editor@workspace:libs/editor";
         "@app/graphql" = packages."@app/graphql@workspace:libs/graphql";
         "@app/map" = packages."@app/map@workspace:libs/map";
+        "@app/ui" = packages."@app/ui@workspace:libs/ui";
+        "@types/date-arithmetic" = packages."@types/date-arithmetic@npm:4.1.1";
+        "@types/facebook-pixel" = packages."@types/facebook-pixel@npm:0.0.25";
+        "@types/file-saver" = packages."@types/file-saver@npm:2.0.5";
+        "@types/glider-js" = packages."@types/glider-js@npm:1.7.8";
+        "@types/iban" = packages."@types/iban@npm:0.0.32";
         "classnames" = packages."classnames@npm:2.3.2";
         "cookies-next" = packages."cookies-next@npm:2.1.2";
         "date-arithmetic" = packages."date-arithmetic@npm:4.1.0";
         "date-fns" = packages."date-fns@npm:2.30.0";
         "exceljs" = packages."exceljs@npm:4.3.0";
         "file-saver" = packages."file-saver@npm:2.0.5";
+        "glider-js" = packages."glider-js@npm:1.7.8";
         "graphql" = packages."graphql@npm:16.7.1";
+        "iban" = packages."iban@npm:0.0.14";
         "minisearch" = packages."minisearch@npm:6.1.0";
         "posthog-js" = packages."posthog-js@npm:1.68.5";
         "react-facebook-pixel" = packages."react-facebook-pixel@npm:1.0.4";
@@ -198,15 +253,17 @@ let
         "@radix-ui/react-toast" = packages."@radix-ui/react-toast@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:1.1.4";
         "@radix-ui/react-toggle-group" = packages."@radix-ui/react-toggle-group@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:1.0.4";
         "cmdk" = packages."cmdk@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:0.2.0";
-        "lucide-react" = packages."lucide-react@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:0.244.0";
-        "next" = packages."next@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:13.4.7";
+        "lucide-react" = packages."lucide-react@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:0.258.0";
+        "next" = packages."next@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:13.4.7";
         "nextjs-google-analytics" = packages."nextjs-google-analytics@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:2.3.3";
+        "qrcode.react" = packages."qrcode.react@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:3.1.0";
         "react-async-hook" = packages."react-async-hook@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:4.0.0";
         "react-colorful" = packages."react-colorful@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:5.6.1";
         "react-day-picker" = packages."react-day-picker@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:8.8.0";
         "react-dom" = packages."react-dom@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:18.2.0";
-        "react-hook-form" = packages."react-hook-form@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:7.44.3";
+        "react-hook-form" = packages."react-hook-form@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:7.44.3";
         "react-paginate" = packages."react-paginate@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:8.2.0";
+        "react-toastify" = packages."react-toastify@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:9.1.3";
         "react-virtuoso" = packages."react-virtuoso@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:4.3.11";
         "urql" = packages."urql@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:4.0.4";
       };
@@ -215,7 +272,7 @@ let
         "@types/react-dom" = packages."@types/react-dom@npm:18.2.6";
         "@typescript-eslint/eslint-plugin" = packages."@typescript-eslint/eslint-plugin@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:5.60.1";
         "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:5.60.1";
-        "eslint" = packages."eslint@npm:8.43.0";
+        "eslint" = packages."eslint@npm:8.44.0";
         "eslint-config-next" = packages."eslint-config-next@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:13.4.7";
         "eslint-plugin-tailwindcss" = packages."eslint-plugin-tailwindcss@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:3.13.0";
         "tailwindcss" = packages."tailwindcss@npm:3.3.2";
@@ -238,14 +295,15 @@ let
         "@app/ui" = packages."@app/ui@workspace:libs/ui";
         "react" = packages."react@npm:18.2.0";
         "thumbhash" = packages."thumbhash@npm:0.1.1";
-        "react-dom" = packages."react-dom@virtual:eaa47a7e693751dea4b43e0d56646efde788dc805480f36a2a26ff27e0eb67d6bdc56514084e384fa81908f2663382f7e8713d229aca504cfc6d2fd2249fd3f5#npm:18.2.0";
+        "react-dom" = packages."react-dom@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:18.2.0";
         "react-dropzone" = packages."react-dropzone@virtual:df61edd0213550e4c5c94e4d824ba8b044b6cba92aef60f2d18427f52b456bca2040748349f36fd8d5446ea0e69f7f85d29e25ae47564407c37472e88496b11b#npm:14.2.3";
-        "urql" = packages."urql@virtual:4de8affaeadbd53ac06c22885480659871fda1aed8faac7264ab124fd7ef9352967405f1242c686763cb1887356be5d1d0d9c6f38f2392b10c9ce25debec6b24#npm:4.0.4";
+        "urql" = packages."urql@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:4.0.4";
       };
       devDependencies = {
+        "@types/react" = packages."@types/react@npm:18.2.14";
         "@typescript-eslint/eslint-plugin" = packages."@typescript-eslint/eslint-plugin@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:5.60.1";
         "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:5.60.1";
-        "eslint" = packages."eslint@npm:8.43.0";
+        "eslint" = packages."eslint@npm:8.44.0";
         "eslint-config-next" = packages."eslint-config-next@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:13.4.7";
         "eslint-plugin-tailwindcss" = packages."eslint-plugin-tailwindcss@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:3.13.0";
         "tailwindcss" = packages."tailwindcss@npm:3.3.2";
@@ -471,22 +529,6 @@ let
         "tslib" = packages."tslib@npm:1.14.1";
       };
     };
-    "@aws-sdk/abort-controller@npm:3.357.0" = {
-      name = "@aws-sdk/abort-controller";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-abort-controller-3.357.0-95d2e674a1";
-      outputHash = "/6f1ea69befadc3b0c0b841878d551315b1666aa9b3dda7abb7939aafe62f0e0cf9a1081161131c2d9ede6af10dff94e9d66a4ca4f4927e3a7f6d1ab348d75122";
-      flatName = "abort-controller";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/6f1ea69befadc3b0c0b841878d551315b1666aa9b3dda7abb7939aafe62f0e0cf9a1081161131c2d9ede6af10dff94e9d66a4ca4f4927e3a7f6d1ab348d75122";
-      dependencies = {
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
     "@aws-sdk/chunked-blob-reader@npm:3.310.0" = {
       name = "@aws-sdk/chunked-blob-reader";
       reference = "npm:3.310.0";
@@ -502,476 +544,341 @@ let
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/client-s3@npm:3.362.0" = {
+    "@aws-sdk/client-s3@npm:3.363.0" = {
       name = "@aws-sdk/client-s3";
-      reference = "npm:3.362.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-client-s3-3.362.0-9d7f779c44";
-      outputHash = "/699582662f90d202c6de8d45bf41931bb4700ffc256c21e0445544f85ae3c834a55613efee6da28c0b2e25690096a5f680f44e26d0039831c1f095cf6694e616";
+      outputName = "aws-sdk-client-s3-3.363.0-91de8d0e73";
+      outputHash = "/06ec710a931b62462400aa28083f98794cc4320565793c70a4f74093cb7bcc6d8392aee621cd66bb8bd953a792756b759bcd9b26d47ca99fefef3adcb5203ef1";
       flatName = "client-s3";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:^3.354.0";
-      checksum = "10/699582662f90d202c6de8d45bf41931bb4700ffc256c21e0445544f85ae3c834a55613efee6da28c0b2e25690096a5f680f44e26d0039831c1f095cf6694e616";
+      descriptorRange = "npm:^3.363.0";
+      checksum = "10/06ec710a931b62462400aa28083f98794cc4320565793c70a4f74093cb7bcc6d8392aee621cd66bb8bd953a792756b759bcd9b26d47ca99fefef3adcb5203ef1";
       dependencies = {
         "@aws-crypto/sha1-browser" = packages."@aws-crypto/sha1-browser@npm:3.0.0";
         "@aws-crypto/sha256-browser" = packages."@aws-crypto/sha256-browser@npm:3.0.0";
         "@aws-crypto/sha256-js" = packages."@aws-crypto/sha256-js@npm:3.0.0";
-        "@aws-sdk/client-sts" = packages."@aws-sdk/client-sts@npm:3.362.0";
-        "@aws-sdk/config-resolver" = packages."@aws-sdk/config-resolver@npm:3.357.0";
-        "@aws-sdk/credential-provider-node" = packages."@aws-sdk/credential-provider-node@npm:3.362.0";
-        "@aws-sdk/eventstream-serde-browser" = packages."@aws-sdk/eventstream-serde-browser@npm:3.357.0";
-        "@aws-sdk/eventstream-serde-config-resolver" = packages."@aws-sdk/eventstream-serde-config-resolver@npm:3.357.0";
-        "@aws-sdk/eventstream-serde-node" = packages."@aws-sdk/eventstream-serde-node@npm:3.357.0";
-        "@aws-sdk/fetch-http-handler" = packages."@aws-sdk/fetch-http-handler@npm:3.357.0";
+        "@aws-sdk/client-sts" = packages."@aws-sdk/client-sts@npm:3.363.0";
+        "@aws-sdk/credential-provider-node" = packages."@aws-sdk/credential-provider-node@npm:3.363.0";
         "@aws-sdk/hash-blob-browser" = packages."@aws-sdk/hash-blob-browser@npm:3.357.0";
-        "@aws-sdk/hash-node" = packages."@aws-sdk/hash-node@npm:3.357.0";
         "@aws-sdk/hash-stream-node" = packages."@aws-sdk/hash-stream-node@npm:3.357.0";
-        "@aws-sdk/invalid-dependency" = packages."@aws-sdk/invalid-dependency@npm:3.357.0";
         "@aws-sdk/md5-js" = packages."@aws-sdk/md5-js@npm:3.357.0";
-        "@aws-sdk/middleware-bucket-endpoint" = packages."@aws-sdk/middleware-bucket-endpoint@npm:3.357.0";
-        "@aws-sdk/middleware-content-length" = packages."@aws-sdk/middleware-content-length@npm:3.357.0";
-        "@aws-sdk/middleware-endpoint" = packages."@aws-sdk/middleware-endpoint@npm:3.357.0";
-        "@aws-sdk/middleware-expect-continue" = packages."@aws-sdk/middleware-expect-continue@npm:3.357.0";
-        "@aws-sdk/middleware-flexible-checksums" = packages."@aws-sdk/middleware-flexible-checksums@npm:3.357.0";
-        "@aws-sdk/middleware-host-header" = packages."@aws-sdk/middleware-host-header@npm:3.357.0";
-        "@aws-sdk/middleware-location-constraint" = packages."@aws-sdk/middleware-location-constraint@npm:3.357.0";
-        "@aws-sdk/middleware-logger" = packages."@aws-sdk/middleware-logger@npm:3.357.0";
-        "@aws-sdk/middleware-recursion-detection" = packages."@aws-sdk/middleware-recursion-detection@npm:3.357.0";
-        "@aws-sdk/middleware-retry" = packages."@aws-sdk/middleware-retry@npm:3.362.0";
-        "@aws-sdk/middleware-sdk-s3" = packages."@aws-sdk/middleware-sdk-s3@npm:3.357.0";
-        "@aws-sdk/middleware-serde" = packages."@aws-sdk/middleware-serde@npm:3.357.0";
-        "@aws-sdk/middleware-signing" = packages."@aws-sdk/middleware-signing@npm:3.357.0";
-        "@aws-sdk/middleware-ssec" = packages."@aws-sdk/middleware-ssec@npm:3.357.0";
-        "@aws-sdk/middleware-stack" = packages."@aws-sdk/middleware-stack@npm:3.357.0";
-        "@aws-sdk/middleware-user-agent" = packages."@aws-sdk/middleware-user-agent@npm:3.357.0";
-        "@aws-sdk/node-config-provider" = packages."@aws-sdk/node-config-provider@npm:3.357.0";
-        "@aws-sdk/node-http-handler" = packages."@aws-sdk/node-http-handler@npm:3.360.0";
-        "@aws-sdk/smithy-client" = packages."@aws-sdk/smithy-client@npm:3.360.0";
+        "@aws-sdk/middleware-bucket-endpoint" = packages."@aws-sdk/middleware-bucket-endpoint@npm:3.363.0";
+        "@aws-sdk/middleware-expect-continue" = packages."@aws-sdk/middleware-expect-continue@npm:3.363.0";
+        "@aws-sdk/middleware-flexible-checksums" = packages."@aws-sdk/middleware-flexible-checksums@npm:3.363.0";
+        "@aws-sdk/middleware-host-header" = packages."@aws-sdk/middleware-host-header@npm:3.363.0";
+        "@aws-sdk/middleware-location-constraint" = packages."@aws-sdk/middleware-location-constraint@npm:3.363.0";
+        "@aws-sdk/middleware-logger" = packages."@aws-sdk/middleware-logger@npm:3.363.0";
+        "@aws-sdk/middleware-recursion-detection" = packages."@aws-sdk/middleware-recursion-detection@npm:3.363.0";
+        "@aws-sdk/middleware-sdk-s3" = packages."@aws-sdk/middleware-sdk-s3@npm:3.363.0";
+        "@aws-sdk/middleware-signing" = packages."@aws-sdk/middleware-signing@npm:3.363.0";
+        "@aws-sdk/middleware-ssec" = packages."@aws-sdk/middleware-ssec@npm:3.363.0";
+        "@aws-sdk/middleware-user-agent" = packages."@aws-sdk/middleware-user-agent@npm:3.363.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "@aws-sdk/url-parser" = packages."@aws-sdk/url-parser@npm:3.357.0";
-        "@aws-sdk/util-base64" = packages."@aws-sdk/util-base64@npm:3.310.0";
-        "@aws-sdk/util-body-length-browser" = packages."@aws-sdk/util-body-length-browser@npm:3.310.0";
-        "@aws-sdk/util-body-length-node" = packages."@aws-sdk/util-body-length-node@npm:3.310.0";
-        "@aws-sdk/util-defaults-mode-browser" = packages."@aws-sdk/util-defaults-mode-browser@npm:3.360.0";
-        "@aws-sdk/util-defaults-mode-node" = packages."@aws-sdk/util-defaults-mode-node@npm:3.360.0";
         "@aws-sdk/util-endpoints" = packages."@aws-sdk/util-endpoints@npm:3.357.0";
-        "@aws-sdk/util-retry" = packages."@aws-sdk/util-retry@npm:3.362.0";
-        "@aws-sdk/util-stream" = packages."@aws-sdk/util-stream@npm:3.360.0";
-        "@aws-sdk/util-user-agent-browser" = packages."@aws-sdk/util-user-agent-browser@npm:3.357.0";
-        "@aws-sdk/util-utf8" = packages."@aws-sdk/util-utf8@npm:3.310.0";
-        "@aws-sdk/util-waiter" = packages."@aws-sdk/util-waiter@npm:3.357.0";
+        "@aws-sdk/util-user-agent-browser" = packages."@aws-sdk/util-user-agent-browser@npm:3.363.0";
         "@aws-sdk/xml-builder" = packages."@aws-sdk/xml-builder@npm:3.310.0";
+        "@smithy/config-resolver" = packages."@smithy/config-resolver@npm:1.0.1";
+        "@smithy/eventstream-serde-browser" = packages."@smithy/eventstream-serde-browser@npm:1.0.1";
+        "@smithy/eventstream-serde-config-resolver" = packages."@smithy/eventstream-serde-config-resolver@npm:1.0.1";
+        "@smithy/eventstream-serde-node" = packages."@smithy/eventstream-serde-node@npm:1.0.1";
+        "@smithy/fetch-http-handler" = packages."@smithy/fetch-http-handler@npm:1.0.1";
+        "@smithy/hash-node" = packages."@smithy/hash-node@npm:1.0.1";
+        "@smithy/invalid-dependency" = packages."@smithy/invalid-dependency@npm:1.0.1";
+        "@smithy/middleware-content-length" = packages."@smithy/middleware-content-length@npm:1.0.1";
+        "@smithy/middleware-endpoint" = packages."@smithy/middleware-endpoint@npm:1.0.2";
+        "@smithy/middleware-retry" = packages."@smithy/middleware-retry@npm:1.0.3";
+        "@smithy/middleware-serde" = packages."@smithy/middleware-serde@npm:1.0.1";
+        "@smithy/middleware-stack" = packages."@smithy/middleware-stack@npm:1.0.1";
+        "@smithy/node-config-provider" = packages."@smithy/node-config-provider@npm:1.0.1";
+        "@smithy/node-http-handler" = packages."@smithy/node-http-handler@npm:1.0.2";
         "@smithy/protocol-http" = packages."@smithy/protocol-http@npm:1.1.0";
+        "@smithy/smithy-client" = packages."@smithy/smithy-client@npm:1.0.3";
         "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "@smithy/url-parser" = packages."@smithy/url-parser@npm:1.0.1";
+        "@smithy/util-base64" = packages."@smithy/util-base64@npm:1.0.1";
+        "@smithy/util-body-length-browser" = packages."@smithy/util-body-length-browser@npm:1.0.1";
+        "@smithy/util-body-length-node" = packages."@smithy/util-body-length-node@npm:1.0.1";
+        "@smithy/util-defaults-mode-browser" = packages."@smithy/util-defaults-mode-browser@npm:1.0.1";
+        "@smithy/util-defaults-mode-node" = packages."@smithy/util-defaults-mode-node@npm:1.0.1";
+        "@smithy/util-retry" = packages."@smithy/util-retry@npm:1.0.3";
+        "@smithy/util-stream" = packages."@smithy/util-stream@npm:1.0.1";
+        "@smithy/util-utf8" = packages."@smithy/util-utf8@npm:1.0.1";
+        "@smithy/util-waiter" = packages."@smithy/util-waiter@npm:1.0.1";
         "fast-xml-parser" = packages."fast-xml-parser@npm:4.2.5";
         "tslib" = packages."tslib@npm:2.6.0";
-        "@aws-sdk/signature-v4-multi-region" = packages."@aws-sdk/signature-v4-multi-region@virtual:9d7f779c44d3b968a4749c4ef4aff5b237dcd5d57d51c6bc971fa01ddde01190f6497162c25fcc769ac0c0d175a1db1554ce01b574360c060b8de11de1a690fb#npm:3.357.0";
-        "@aws-sdk/util-user-agent-node" = packages."@aws-sdk/util-user-agent-node@virtual:6fa902a8583a4891c4928ce4860f9fc58e3db6db28f0d16f6dc5956a0b64ed588eaf78634415f8dfc1dae517cbd5b10d1ddf9b1a0ef862b1786c441e8e3400c0#npm:3.357.0";
+        "@aws-sdk/signature-v4-multi-region" = packages."@aws-sdk/signature-v4-multi-region@virtual:91de8d0e73ee5c5e3d11af044f2abd5089494ea41174df00a838470691d8a55ff3d4313e55d035474069e6a31e45ed53d039ec89dd42a50d848035ffeb595a37#npm:3.363.0";
+        "@aws-sdk/util-user-agent-node" = packages."@aws-sdk/util-user-agent-node@virtual:83a5ecf01f29ea54d623458a162f82461d118ceffe565d011e04c1c78127fd04efa05406b30e89bc72f8a58d34765da653b1032a93f4063409437630c03e09d0#npm:3.363.0";
       };
     };
-    "@aws-sdk/client-sso-oidc@npm:3.362.0" = {
+    "@aws-sdk/client-sso-oidc@npm:3.363.0" = {
       name = "@aws-sdk/client-sso-oidc";
-      reference = "npm:3.362.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-client-sso-oidc-3.362.0-9794819b3f";
-      outputHash = "/54ff119f728b61564dd36cb052a394cefcfb2c4bbad26b2defc9a7405523b4cc5f339ba8961ffd7c410a12ea22ffedf6a4ada5c5200eec69c134ffd7bab15be0";
+      outputName = "aws-sdk-client-sso-oidc-3.363.0-669fa969da";
+      outputHash = "/5ea5bb4729b0bfb8876ac298ac601aca6e9bfa94c8cf9bdc011e819487b1d45bb11a1c0020780f0548e505d4374e143f53e9907b9cf7f13a8fa0b5a8f6addbbe";
       flatName = "client-sso-oidc";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.362.0";
-      checksum = "10/54ff119f728b61564dd36cb052a394cefcfb2c4bbad26b2defc9a7405523b4cc5f339ba8961ffd7c410a12ea22ffedf6a4ada5c5200eec69c134ffd7bab15be0";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/5ea5bb4729b0bfb8876ac298ac601aca6e9bfa94c8cf9bdc011e819487b1d45bb11a1c0020780f0548e505d4374e143f53e9907b9cf7f13a8fa0b5a8f6addbbe";
       dependencies = {
         "@aws-crypto/sha256-browser" = packages."@aws-crypto/sha256-browser@npm:3.0.0";
         "@aws-crypto/sha256-js" = packages."@aws-crypto/sha256-js@npm:3.0.0";
-        "@aws-sdk/config-resolver" = packages."@aws-sdk/config-resolver@npm:3.357.0";
-        "@aws-sdk/fetch-http-handler" = packages."@aws-sdk/fetch-http-handler@npm:3.357.0";
-        "@aws-sdk/hash-node" = packages."@aws-sdk/hash-node@npm:3.357.0";
-        "@aws-sdk/invalid-dependency" = packages."@aws-sdk/invalid-dependency@npm:3.357.0";
-        "@aws-sdk/middleware-content-length" = packages."@aws-sdk/middleware-content-length@npm:3.357.0";
-        "@aws-sdk/middleware-endpoint" = packages."@aws-sdk/middleware-endpoint@npm:3.357.0";
-        "@aws-sdk/middleware-host-header" = packages."@aws-sdk/middleware-host-header@npm:3.357.0";
-        "@aws-sdk/middleware-logger" = packages."@aws-sdk/middleware-logger@npm:3.357.0";
-        "@aws-sdk/middleware-recursion-detection" = packages."@aws-sdk/middleware-recursion-detection@npm:3.357.0";
-        "@aws-sdk/middleware-retry" = packages."@aws-sdk/middleware-retry@npm:3.362.0";
-        "@aws-sdk/middleware-serde" = packages."@aws-sdk/middleware-serde@npm:3.357.0";
-        "@aws-sdk/middleware-stack" = packages."@aws-sdk/middleware-stack@npm:3.357.0";
-        "@aws-sdk/middleware-user-agent" = packages."@aws-sdk/middleware-user-agent@npm:3.357.0";
-        "@aws-sdk/node-config-provider" = packages."@aws-sdk/node-config-provider@npm:3.357.0";
-        "@aws-sdk/node-http-handler" = packages."@aws-sdk/node-http-handler@npm:3.360.0";
-        "@aws-sdk/smithy-client" = packages."@aws-sdk/smithy-client@npm:3.360.0";
+        "@aws-sdk/middleware-host-header" = packages."@aws-sdk/middleware-host-header@npm:3.363.0";
+        "@aws-sdk/middleware-logger" = packages."@aws-sdk/middleware-logger@npm:3.363.0";
+        "@aws-sdk/middleware-recursion-detection" = packages."@aws-sdk/middleware-recursion-detection@npm:3.363.0";
+        "@aws-sdk/middleware-user-agent" = packages."@aws-sdk/middleware-user-agent@npm:3.363.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "@aws-sdk/url-parser" = packages."@aws-sdk/url-parser@npm:3.357.0";
-        "@aws-sdk/util-base64" = packages."@aws-sdk/util-base64@npm:3.310.0";
-        "@aws-sdk/util-body-length-browser" = packages."@aws-sdk/util-body-length-browser@npm:3.310.0";
-        "@aws-sdk/util-body-length-node" = packages."@aws-sdk/util-body-length-node@npm:3.310.0";
-        "@aws-sdk/util-defaults-mode-browser" = packages."@aws-sdk/util-defaults-mode-browser@npm:3.360.0";
-        "@aws-sdk/util-defaults-mode-node" = packages."@aws-sdk/util-defaults-mode-node@npm:3.360.0";
         "@aws-sdk/util-endpoints" = packages."@aws-sdk/util-endpoints@npm:3.357.0";
-        "@aws-sdk/util-retry" = packages."@aws-sdk/util-retry@npm:3.362.0";
-        "@aws-sdk/util-user-agent-browser" = packages."@aws-sdk/util-user-agent-browser@npm:3.357.0";
-        "@aws-sdk/util-utf8" = packages."@aws-sdk/util-utf8@npm:3.310.0";
+        "@aws-sdk/util-user-agent-browser" = packages."@aws-sdk/util-user-agent-browser@npm:3.363.0";
+        "@smithy/config-resolver" = packages."@smithy/config-resolver@npm:1.0.1";
+        "@smithy/fetch-http-handler" = packages."@smithy/fetch-http-handler@npm:1.0.1";
+        "@smithy/hash-node" = packages."@smithy/hash-node@npm:1.0.1";
+        "@smithy/invalid-dependency" = packages."@smithy/invalid-dependency@npm:1.0.1";
+        "@smithy/middleware-content-length" = packages."@smithy/middleware-content-length@npm:1.0.1";
+        "@smithy/middleware-endpoint" = packages."@smithy/middleware-endpoint@npm:1.0.2";
+        "@smithy/middleware-retry" = packages."@smithy/middleware-retry@npm:1.0.3";
+        "@smithy/middleware-serde" = packages."@smithy/middleware-serde@npm:1.0.1";
+        "@smithy/middleware-stack" = packages."@smithy/middleware-stack@npm:1.0.1";
+        "@smithy/node-config-provider" = packages."@smithy/node-config-provider@npm:1.0.1";
+        "@smithy/node-http-handler" = packages."@smithy/node-http-handler@npm:1.0.2";
         "@smithy/protocol-http" = packages."@smithy/protocol-http@npm:1.1.0";
+        "@smithy/smithy-client" = packages."@smithy/smithy-client@npm:1.0.3";
         "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "@smithy/url-parser" = packages."@smithy/url-parser@npm:1.0.1";
+        "@smithy/util-base64" = packages."@smithy/util-base64@npm:1.0.1";
+        "@smithy/util-body-length-browser" = packages."@smithy/util-body-length-browser@npm:1.0.1";
+        "@smithy/util-body-length-node" = packages."@smithy/util-body-length-node@npm:1.0.1";
+        "@smithy/util-defaults-mode-browser" = packages."@smithy/util-defaults-mode-browser@npm:1.0.1";
+        "@smithy/util-defaults-mode-node" = packages."@smithy/util-defaults-mode-node@npm:1.0.1";
+        "@smithy/util-retry" = packages."@smithy/util-retry@npm:1.0.3";
+        "@smithy/util-utf8" = packages."@smithy/util-utf8@npm:1.0.1";
         "tslib" = packages."tslib@npm:2.6.0";
-        "@aws-sdk/util-user-agent-node" = packages."@aws-sdk/util-user-agent-node@virtual:6fa902a8583a4891c4928ce4860f9fc58e3db6db28f0d16f6dc5956a0b64ed588eaf78634415f8dfc1dae517cbd5b10d1ddf9b1a0ef862b1786c441e8e3400c0#npm:3.357.0";
+        "@aws-sdk/util-user-agent-node" = packages."@aws-sdk/util-user-agent-node@virtual:83a5ecf01f29ea54d623458a162f82461d118ceffe565d011e04c1c78127fd04efa05406b30e89bc72f8a58d34765da653b1032a93f4063409437630c03e09d0#npm:3.363.0";
       };
     };
-    "@aws-sdk/client-sso@npm:3.362.0" = {
+    "@aws-sdk/client-sso@npm:3.363.0" = {
       name = "@aws-sdk/client-sso";
-      reference = "npm:3.362.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-client-sso-3.362.0-6fa902a858";
-      outputHash = "/bebc0b7416cc9c19574d2c2b58d8646e55470df3c90d5885aa11f6d58f8acab9c3d077aca5c023a8f6cf0fb79d4a1c8711ddfb050cacfae4c156cf6be743369f";
+      outputName = "aws-sdk-client-sso-3.363.0-83a5ecf01f";
+      outputHash = "/93bb84acba222c8e6fed0294facfa693be3ce0bf42037ca6c2f4914fcf375db838939f9333590593b74b25aeb4fb6c78644121ce02757e8eb8369dd607c94c45";
       flatName = "client-sso";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.362.0";
-      checksum = "10/bebc0b7416cc9c19574d2c2b58d8646e55470df3c90d5885aa11f6d58f8acab9c3d077aca5c023a8f6cf0fb79d4a1c8711ddfb050cacfae4c156cf6be743369f";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/93bb84acba222c8e6fed0294facfa693be3ce0bf42037ca6c2f4914fcf375db838939f9333590593b74b25aeb4fb6c78644121ce02757e8eb8369dd607c94c45";
       dependencies = {
         "@aws-crypto/sha256-browser" = packages."@aws-crypto/sha256-browser@npm:3.0.0";
         "@aws-crypto/sha256-js" = packages."@aws-crypto/sha256-js@npm:3.0.0";
-        "@aws-sdk/config-resolver" = packages."@aws-sdk/config-resolver@npm:3.357.0";
-        "@aws-sdk/fetch-http-handler" = packages."@aws-sdk/fetch-http-handler@npm:3.357.0";
-        "@aws-sdk/hash-node" = packages."@aws-sdk/hash-node@npm:3.357.0";
-        "@aws-sdk/invalid-dependency" = packages."@aws-sdk/invalid-dependency@npm:3.357.0";
-        "@aws-sdk/middleware-content-length" = packages."@aws-sdk/middleware-content-length@npm:3.357.0";
-        "@aws-sdk/middleware-endpoint" = packages."@aws-sdk/middleware-endpoint@npm:3.357.0";
-        "@aws-sdk/middleware-host-header" = packages."@aws-sdk/middleware-host-header@npm:3.357.0";
-        "@aws-sdk/middleware-logger" = packages."@aws-sdk/middleware-logger@npm:3.357.0";
-        "@aws-sdk/middleware-recursion-detection" = packages."@aws-sdk/middleware-recursion-detection@npm:3.357.0";
-        "@aws-sdk/middleware-retry" = packages."@aws-sdk/middleware-retry@npm:3.362.0";
-        "@aws-sdk/middleware-serde" = packages."@aws-sdk/middleware-serde@npm:3.357.0";
-        "@aws-sdk/middleware-stack" = packages."@aws-sdk/middleware-stack@npm:3.357.0";
-        "@aws-sdk/middleware-user-agent" = packages."@aws-sdk/middleware-user-agent@npm:3.357.0";
-        "@aws-sdk/node-config-provider" = packages."@aws-sdk/node-config-provider@npm:3.357.0";
-        "@aws-sdk/node-http-handler" = packages."@aws-sdk/node-http-handler@npm:3.360.0";
-        "@aws-sdk/smithy-client" = packages."@aws-sdk/smithy-client@npm:3.360.0";
+        "@aws-sdk/middleware-host-header" = packages."@aws-sdk/middleware-host-header@npm:3.363.0";
+        "@aws-sdk/middleware-logger" = packages."@aws-sdk/middleware-logger@npm:3.363.0";
+        "@aws-sdk/middleware-recursion-detection" = packages."@aws-sdk/middleware-recursion-detection@npm:3.363.0";
+        "@aws-sdk/middleware-user-agent" = packages."@aws-sdk/middleware-user-agent@npm:3.363.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "@aws-sdk/url-parser" = packages."@aws-sdk/url-parser@npm:3.357.0";
-        "@aws-sdk/util-base64" = packages."@aws-sdk/util-base64@npm:3.310.0";
-        "@aws-sdk/util-body-length-browser" = packages."@aws-sdk/util-body-length-browser@npm:3.310.0";
-        "@aws-sdk/util-body-length-node" = packages."@aws-sdk/util-body-length-node@npm:3.310.0";
-        "@aws-sdk/util-defaults-mode-browser" = packages."@aws-sdk/util-defaults-mode-browser@npm:3.360.0";
-        "@aws-sdk/util-defaults-mode-node" = packages."@aws-sdk/util-defaults-mode-node@npm:3.360.0";
         "@aws-sdk/util-endpoints" = packages."@aws-sdk/util-endpoints@npm:3.357.0";
-        "@aws-sdk/util-retry" = packages."@aws-sdk/util-retry@npm:3.362.0";
-        "@aws-sdk/util-user-agent-browser" = packages."@aws-sdk/util-user-agent-browser@npm:3.357.0";
-        "@aws-sdk/util-utf8" = packages."@aws-sdk/util-utf8@npm:3.310.0";
+        "@aws-sdk/util-user-agent-browser" = packages."@aws-sdk/util-user-agent-browser@npm:3.363.0";
+        "@smithy/config-resolver" = packages."@smithy/config-resolver@npm:1.0.1";
+        "@smithy/fetch-http-handler" = packages."@smithy/fetch-http-handler@npm:1.0.1";
+        "@smithy/hash-node" = packages."@smithy/hash-node@npm:1.0.1";
+        "@smithy/invalid-dependency" = packages."@smithy/invalid-dependency@npm:1.0.1";
+        "@smithy/middleware-content-length" = packages."@smithy/middleware-content-length@npm:1.0.1";
+        "@smithy/middleware-endpoint" = packages."@smithy/middleware-endpoint@npm:1.0.2";
+        "@smithy/middleware-retry" = packages."@smithy/middleware-retry@npm:1.0.3";
+        "@smithy/middleware-serde" = packages."@smithy/middleware-serde@npm:1.0.1";
+        "@smithy/middleware-stack" = packages."@smithy/middleware-stack@npm:1.0.1";
+        "@smithy/node-config-provider" = packages."@smithy/node-config-provider@npm:1.0.1";
+        "@smithy/node-http-handler" = packages."@smithy/node-http-handler@npm:1.0.2";
         "@smithy/protocol-http" = packages."@smithy/protocol-http@npm:1.1.0";
+        "@smithy/smithy-client" = packages."@smithy/smithy-client@npm:1.0.3";
         "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "@smithy/url-parser" = packages."@smithy/url-parser@npm:1.0.1";
+        "@smithy/util-base64" = packages."@smithy/util-base64@npm:1.0.1";
+        "@smithy/util-body-length-browser" = packages."@smithy/util-body-length-browser@npm:1.0.1";
+        "@smithy/util-body-length-node" = packages."@smithy/util-body-length-node@npm:1.0.1";
+        "@smithy/util-defaults-mode-browser" = packages."@smithy/util-defaults-mode-browser@npm:1.0.1";
+        "@smithy/util-defaults-mode-node" = packages."@smithy/util-defaults-mode-node@npm:1.0.1";
+        "@smithy/util-retry" = packages."@smithy/util-retry@npm:1.0.3";
+        "@smithy/util-utf8" = packages."@smithy/util-utf8@npm:1.0.1";
         "tslib" = packages."tslib@npm:2.6.0";
-        "@aws-sdk/util-user-agent-node" = packages."@aws-sdk/util-user-agent-node@virtual:6fa902a8583a4891c4928ce4860f9fc58e3db6db28f0d16f6dc5956a0b64ed588eaf78634415f8dfc1dae517cbd5b10d1ddf9b1a0ef862b1786c441e8e3400c0#npm:3.357.0";
+        "@aws-sdk/util-user-agent-node" = packages."@aws-sdk/util-user-agent-node@virtual:83a5ecf01f29ea54d623458a162f82461d118ceffe565d011e04c1c78127fd04efa05406b30e89bc72f8a58d34765da653b1032a93f4063409437630c03e09d0#npm:3.363.0";
       };
     };
-    "@aws-sdk/client-sts@npm:3.362.0" = {
+    "@aws-sdk/client-sts@npm:3.363.0" = {
       name = "@aws-sdk/client-sts";
-      reference = "npm:3.362.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-client-sts-3.362.0-ef17935837";
-      outputHash = "/ff8f61d8e3b1906535ed28f65d24c2993152598e92242f6893ffad4d99b18628d08ddc0ed517f04821f93e27cd082588fda5f5b85673bfd2d9613aeb82822a12";
+      outputName = "aws-sdk-client-sts-3.363.0-50cf4722f1";
+      outputHash = "/58a3a4ef9c9b935997a91b1da7d359776e071af05587221ab2da59466f3525c47be17715fc5f2967e629ed3e84eb085d2572b2d76f1bfde354724a8021466b6a";
       flatName = "client-sts";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.362.0";
-      checksum = "10/ff8f61d8e3b1906535ed28f65d24c2993152598e92242f6893ffad4d99b18628d08ddc0ed517f04821f93e27cd082588fda5f5b85673bfd2d9613aeb82822a12";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/58a3a4ef9c9b935997a91b1da7d359776e071af05587221ab2da59466f3525c47be17715fc5f2967e629ed3e84eb085d2572b2d76f1bfde354724a8021466b6a";
       dependencies = {
         "@aws-crypto/sha256-browser" = packages."@aws-crypto/sha256-browser@npm:3.0.0";
         "@aws-crypto/sha256-js" = packages."@aws-crypto/sha256-js@npm:3.0.0";
-        "@aws-sdk/config-resolver" = packages."@aws-sdk/config-resolver@npm:3.357.0";
-        "@aws-sdk/credential-provider-node" = packages."@aws-sdk/credential-provider-node@npm:3.362.0";
-        "@aws-sdk/fetch-http-handler" = packages."@aws-sdk/fetch-http-handler@npm:3.357.0";
-        "@aws-sdk/hash-node" = packages."@aws-sdk/hash-node@npm:3.357.0";
-        "@aws-sdk/invalid-dependency" = packages."@aws-sdk/invalid-dependency@npm:3.357.0";
-        "@aws-sdk/middleware-content-length" = packages."@aws-sdk/middleware-content-length@npm:3.357.0";
-        "@aws-sdk/middleware-endpoint" = packages."@aws-sdk/middleware-endpoint@npm:3.357.0";
-        "@aws-sdk/middleware-host-header" = packages."@aws-sdk/middleware-host-header@npm:3.357.0";
-        "@aws-sdk/middleware-logger" = packages."@aws-sdk/middleware-logger@npm:3.357.0";
-        "@aws-sdk/middleware-recursion-detection" = packages."@aws-sdk/middleware-recursion-detection@npm:3.357.0";
-        "@aws-sdk/middleware-retry" = packages."@aws-sdk/middleware-retry@npm:3.362.0";
-        "@aws-sdk/middleware-sdk-sts" = packages."@aws-sdk/middleware-sdk-sts@npm:3.357.0";
-        "@aws-sdk/middleware-serde" = packages."@aws-sdk/middleware-serde@npm:3.357.0";
-        "@aws-sdk/middleware-signing" = packages."@aws-sdk/middleware-signing@npm:3.357.0";
-        "@aws-sdk/middleware-stack" = packages."@aws-sdk/middleware-stack@npm:3.357.0";
-        "@aws-sdk/middleware-user-agent" = packages."@aws-sdk/middleware-user-agent@npm:3.357.0";
-        "@aws-sdk/node-config-provider" = packages."@aws-sdk/node-config-provider@npm:3.357.0";
-        "@aws-sdk/node-http-handler" = packages."@aws-sdk/node-http-handler@npm:3.360.0";
-        "@aws-sdk/smithy-client" = packages."@aws-sdk/smithy-client@npm:3.360.0";
+        "@aws-sdk/credential-provider-node" = packages."@aws-sdk/credential-provider-node@npm:3.363.0";
+        "@aws-sdk/middleware-host-header" = packages."@aws-sdk/middleware-host-header@npm:3.363.0";
+        "@aws-sdk/middleware-logger" = packages."@aws-sdk/middleware-logger@npm:3.363.0";
+        "@aws-sdk/middleware-recursion-detection" = packages."@aws-sdk/middleware-recursion-detection@npm:3.363.0";
+        "@aws-sdk/middleware-sdk-sts" = packages."@aws-sdk/middleware-sdk-sts@npm:3.363.0";
+        "@aws-sdk/middleware-signing" = packages."@aws-sdk/middleware-signing@npm:3.363.0";
+        "@aws-sdk/middleware-user-agent" = packages."@aws-sdk/middleware-user-agent@npm:3.363.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "@aws-sdk/url-parser" = packages."@aws-sdk/url-parser@npm:3.357.0";
-        "@aws-sdk/util-base64" = packages."@aws-sdk/util-base64@npm:3.310.0";
-        "@aws-sdk/util-body-length-browser" = packages."@aws-sdk/util-body-length-browser@npm:3.310.0";
-        "@aws-sdk/util-body-length-node" = packages."@aws-sdk/util-body-length-node@npm:3.310.0";
-        "@aws-sdk/util-defaults-mode-browser" = packages."@aws-sdk/util-defaults-mode-browser@npm:3.360.0";
-        "@aws-sdk/util-defaults-mode-node" = packages."@aws-sdk/util-defaults-mode-node@npm:3.360.0";
         "@aws-sdk/util-endpoints" = packages."@aws-sdk/util-endpoints@npm:3.357.0";
-        "@aws-sdk/util-retry" = packages."@aws-sdk/util-retry@npm:3.362.0";
-        "@aws-sdk/util-user-agent-browser" = packages."@aws-sdk/util-user-agent-browser@npm:3.357.0";
-        "@aws-sdk/util-utf8" = packages."@aws-sdk/util-utf8@npm:3.310.0";
+        "@aws-sdk/util-user-agent-browser" = packages."@aws-sdk/util-user-agent-browser@npm:3.363.0";
+        "@smithy/config-resolver" = packages."@smithy/config-resolver@npm:1.0.1";
+        "@smithy/fetch-http-handler" = packages."@smithy/fetch-http-handler@npm:1.0.1";
+        "@smithy/hash-node" = packages."@smithy/hash-node@npm:1.0.1";
+        "@smithy/invalid-dependency" = packages."@smithy/invalid-dependency@npm:1.0.1";
+        "@smithy/middleware-content-length" = packages."@smithy/middleware-content-length@npm:1.0.1";
+        "@smithy/middleware-endpoint" = packages."@smithy/middleware-endpoint@npm:1.0.2";
+        "@smithy/middleware-retry" = packages."@smithy/middleware-retry@npm:1.0.3";
+        "@smithy/middleware-serde" = packages."@smithy/middleware-serde@npm:1.0.1";
+        "@smithy/middleware-stack" = packages."@smithy/middleware-stack@npm:1.0.1";
+        "@smithy/node-config-provider" = packages."@smithy/node-config-provider@npm:1.0.1";
+        "@smithy/node-http-handler" = packages."@smithy/node-http-handler@npm:1.0.2";
         "@smithy/protocol-http" = packages."@smithy/protocol-http@npm:1.1.0";
+        "@smithy/smithy-client" = packages."@smithy/smithy-client@npm:1.0.3";
         "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "@smithy/url-parser" = packages."@smithy/url-parser@npm:1.0.1";
+        "@smithy/util-base64" = packages."@smithy/util-base64@npm:1.0.1";
+        "@smithy/util-body-length-browser" = packages."@smithy/util-body-length-browser@npm:1.0.1";
+        "@smithy/util-body-length-node" = packages."@smithy/util-body-length-node@npm:1.0.1";
+        "@smithy/util-defaults-mode-browser" = packages."@smithy/util-defaults-mode-browser@npm:1.0.1";
+        "@smithy/util-defaults-mode-node" = packages."@smithy/util-defaults-mode-node@npm:1.0.1";
+        "@smithy/util-retry" = packages."@smithy/util-retry@npm:1.0.3";
+        "@smithy/util-utf8" = packages."@smithy/util-utf8@npm:1.0.1";
         "fast-xml-parser" = packages."fast-xml-parser@npm:4.2.5";
         "tslib" = packages."tslib@npm:2.6.0";
-        "@aws-sdk/util-user-agent-node" = packages."@aws-sdk/util-user-agent-node@virtual:6fa902a8583a4891c4928ce4860f9fc58e3db6db28f0d16f6dc5956a0b64ed588eaf78634415f8dfc1dae517cbd5b10d1ddf9b1a0ef862b1786c441e8e3400c0#npm:3.357.0";
+        "@aws-sdk/util-user-agent-node" = packages."@aws-sdk/util-user-agent-node@virtual:83a5ecf01f29ea54d623458a162f82461d118ceffe565d011e04c1c78127fd04efa05406b30e89bc72f8a58d34765da653b1032a93f4063409437630c03e09d0#npm:3.363.0";
       };
     };
-    "@aws-sdk/config-resolver@npm:3.357.0" = {
-      name = "@aws-sdk/config-resolver";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-config-resolver-3.357.0-f7ca733ed2";
-      outputHash = "/61ce6a2182787baa379e817d5fc354a32149e024cd1d3c17d5076e9ec34b6aa3d7963b513e69674c932027532aef76750a6d37f87bad111f7309dca013e2d167";
-      flatName = "config-resolver";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/61ce6a2182787baa379e817d5fc354a32149e024cd1d3c17d5076e9ec34b6aa3d7963b513e69674c932027532aef76750a6d37f87bad111f7309dca013e2d167";
-      dependencies = {
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "@aws-sdk/util-config-provider" = packages."@aws-sdk/util-config-provider@npm:3.310.0";
-        "@aws-sdk/util-middleware" = packages."@aws-sdk/util-middleware@npm:3.357.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/credential-provider-env@npm:3.357.0" = {
+    "@aws-sdk/credential-provider-env@npm:3.363.0" = {
       name = "@aws-sdk/credential-provider-env";
-      reference = "npm:3.357.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-credential-provider-env-3.357.0-f12826f848";
-      outputHash = "/ed34731ad34a17250b232c1d09182c619af205979bff699d80b433cc8bb7611cccce2425d2d6ff6336acb4951e6d9eefdc728725209a8102109251e7e3f48be1";
+      outputName = "aws-sdk-credential-provider-env-3.363.0-97a5aabae7";
+      outputHash = "/325eab480054aa5b8cea186590753d3ab4c501bb411c60acf193bd79461c9bcb8f0fe6670937b1c70fcad6cffd9f2a4f4c2dfb9bb93872c0ffc61ef70cc4f48b";
       flatName = "credential-provider-env";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/ed34731ad34a17250b232c1d09182c619af205979bff699d80b433cc8bb7611cccce2425d2d6ff6336acb4951e6d9eefdc728725209a8102109251e7e3f48be1";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/325eab480054aa5b8cea186590753d3ab4c501bb411c60acf193bd79461c9bcb8f0fe6670937b1c70fcad6cffd9f2a4f4c2dfb9bb93872c0ffc61ef70cc4f48b";
       dependencies = {
-        "@aws-sdk/property-provider" = packages."@aws-sdk/property-provider@npm:3.357.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
+        "@smithy/property-provider" = packages."@smithy/property-provider@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/credential-provider-imds@npm:3.357.0" = {
-      name = "@aws-sdk/credential-provider-imds";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-credential-provider-imds-3.357.0-1abfa67c6e";
-      outputHash = "/dea4d7fe2fe13d96ee1aa3217266c2d544558a9b081303c65a3d415a8990c1f6a5f6d38a46af7f1d3b8a484929644e289fe62932915deeb0065ba441344f51d8";
-      flatName = "credential-provider-imds";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/dea4d7fe2fe13d96ee1aa3217266c2d544558a9b081303c65a3d415a8990c1f6a5f6d38a46af7f1d3b8a484929644e289fe62932915deeb0065ba441344f51d8";
-      dependencies = {
-        "@aws-sdk/node-config-provider" = packages."@aws-sdk/node-config-provider@npm:3.357.0";
-        "@aws-sdk/property-provider" = packages."@aws-sdk/property-provider@npm:3.357.0";
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "@aws-sdk/url-parser" = packages."@aws-sdk/url-parser@npm:3.357.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/credential-provider-ini@npm:3.362.0" = {
+    "@aws-sdk/credential-provider-ini@npm:3.363.0" = {
       name = "@aws-sdk/credential-provider-ini";
-      reference = "npm:3.362.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-credential-provider-ini-3.362.0-dccf6c861c";
-      outputHash = "/2773a0a8e635ecd32ddce6cbae360e43f59260bd0dbe79f879c33f4a7162611f34d2ea627f22bfdb6b5d17e3a0d668fd39f798c9a39e1d0a121126de9ee465bd";
+      outputName = "aws-sdk-credential-provider-ini-3.363.0-0f9fa76c38";
+      outputHash = "/f9ba1926ce5fbac5aa6373ab562a23398eca78dc4092a6f3e3b5a30641579f80f41a22afbe9bb197cd412e30aa4418853c97d113b553f01fd72c1cd1d362d675";
       flatName = "credential-provider-ini";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.362.0";
-      checksum = "10/2773a0a8e635ecd32ddce6cbae360e43f59260bd0dbe79f879c33f4a7162611f34d2ea627f22bfdb6b5d17e3a0d668fd39f798c9a39e1d0a121126de9ee465bd";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/f9ba1926ce5fbac5aa6373ab562a23398eca78dc4092a6f3e3b5a30641579f80f41a22afbe9bb197cd412e30aa4418853c97d113b553f01fd72c1cd1d362d675";
       dependencies = {
-        "@aws-sdk/credential-provider-env" = packages."@aws-sdk/credential-provider-env@npm:3.357.0";
-        "@aws-sdk/credential-provider-imds" = packages."@aws-sdk/credential-provider-imds@npm:3.357.0";
-        "@aws-sdk/credential-provider-process" = packages."@aws-sdk/credential-provider-process@npm:3.357.0";
-        "@aws-sdk/credential-provider-sso" = packages."@aws-sdk/credential-provider-sso@npm:3.362.0";
-        "@aws-sdk/credential-provider-web-identity" = packages."@aws-sdk/credential-provider-web-identity@npm:3.357.0";
-        "@aws-sdk/property-provider" = packages."@aws-sdk/property-provider@npm:3.357.0";
-        "@aws-sdk/shared-ini-file-loader" = packages."@aws-sdk/shared-ini-file-loader@npm:3.357.0";
+        "@aws-sdk/credential-provider-env" = packages."@aws-sdk/credential-provider-env@npm:3.363.0";
+        "@aws-sdk/credential-provider-process" = packages."@aws-sdk/credential-provider-process@npm:3.363.0";
+        "@aws-sdk/credential-provider-sso" = packages."@aws-sdk/credential-provider-sso@npm:3.363.0";
+        "@aws-sdk/credential-provider-web-identity" = packages."@aws-sdk/credential-provider-web-identity@npm:3.363.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
+        "@smithy/credential-provider-imds" = packages."@smithy/credential-provider-imds@npm:1.0.1";
+        "@smithy/property-provider" = packages."@smithy/property-provider@npm:1.0.1";
+        "@smithy/shared-ini-file-loader" = packages."@smithy/shared-ini-file-loader@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/credential-provider-node@npm:3.362.0" = {
+    "@aws-sdk/credential-provider-node@npm:3.363.0" = {
       name = "@aws-sdk/credential-provider-node";
-      reference = "npm:3.362.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-credential-provider-node-3.362.0-21981283ce";
-      outputHash = "/e042a3ac0983113fadbbca9b931b871ea185de1a3a4fb99206df3a7a91e00eeb3bda4490328fd36c94b601edc8f10d79bab81198cd9b7c2b148cf8770f7ce5d4";
+      outputName = "aws-sdk-credential-provider-node-3.363.0-b547ee0817";
+      outputHash = "/28e9687691bed6e410d037ef0b0906b5e4c3b9c5b4c8e1a85f1de7b0f1bb24f2c9be2c5bde7bd77bae49400d8f7b3f97ad400e664f247ef7a9ea49f46aea9531";
       flatName = "credential-provider-node";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.362.0";
-      checksum = "10/e042a3ac0983113fadbbca9b931b871ea185de1a3a4fb99206df3a7a91e00eeb3bda4490328fd36c94b601edc8f10d79bab81198cd9b7c2b148cf8770f7ce5d4";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/28e9687691bed6e410d037ef0b0906b5e4c3b9c5b4c8e1a85f1de7b0f1bb24f2c9be2c5bde7bd77bae49400d8f7b3f97ad400e664f247ef7a9ea49f46aea9531";
       dependencies = {
-        "@aws-sdk/credential-provider-env" = packages."@aws-sdk/credential-provider-env@npm:3.357.0";
-        "@aws-sdk/credential-provider-imds" = packages."@aws-sdk/credential-provider-imds@npm:3.357.0";
-        "@aws-sdk/credential-provider-ini" = packages."@aws-sdk/credential-provider-ini@npm:3.362.0";
-        "@aws-sdk/credential-provider-process" = packages."@aws-sdk/credential-provider-process@npm:3.357.0";
-        "@aws-sdk/credential-provider-sso" = packages."@aws-sdk/credential-provider-sso@npm:3.362.0";
-        "@aws-sdk/credential-provider-web-identity" = packages."@aws-sdk/credential-provider-web-identity@npm:3.357.0";
-        "@aws-sdk/property-provider" = packages."@aws-sdk/property-provider@npm:3.357.0";
-        "@aws-sdk/shared-ini-file-loader" = packages."@aws-sdk/shared-ini-file-loader@npm:3.357.0";
+        "@aws-sdk/credential-provider-env" = packages."@aws-sdk/credential-provider-env@npm:3.363.0";
+        "@aws-sdk/credential-provider-ini" = packages."@aws-sdk/credential-provider-ini@npm:3.363.0";
+        "@aws-sdk/credential-provider-process" = packages."@aws-sdk/credential-provider-process@npm:3.363.0";
+        "@aws-sdk/credential-provider-sso" = packages."@aws-sdk/credential-provider-sso@npm:3.363.0";
+        "@aws-sdk/credential-provider-web-identity" = packages."@aws-sdk/credential-provider-web-identity@npm:3.363.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
+        "@smithy/credential-provider-imds" = packages."@smithy/credential-provider-imds@npm:1.0.1";
+        "@smithy/property-provider" = packages."@smithy/property-provider@npm:1.0.1";
+        "@smithy/shared-ini-file-loader" = packages."@smithy/shared-ini-file-loader@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/credential-provider-process@npm:3.357.0" = {
+    "@aws-sdk/credential-provider-process@npm:3.363.0" = {
       name = "@aws-sdk/credential-provider-process";
-      reference = "npm:3.357.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-credential-provider-process-3.357.0-da67a3213a";
-      outputHash = "/288aaed9d2168726ec078d725cb8aeda93b86a5c691ee3e89f7eb372df130440e15113a75b714ab9c7265327b7dfae9af87b3d03ea05ea186c74074e62b5989d";
+      outputName = "aws-sdk-credential-provider-process-3.363.0-2a03b152d3";
+      outputHash = "/5a55dbfe3488b5ddfa04f6522d4eeadfa4e4c37dd327eeff4c91ba3e1e1aad6a1744ce3ff4b32c38e734446ad0417122cd09b84790077fdc557351092bee9fc8";
       flatName = "credential-provider-process";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/288aaed9d2168726ec078d725cb8aeda93b86a5c691ee3e89f7eb372df130440e15113a75b714ab9c7265327b7dfae9af87b3d03ea05ea186c74074e62b5989d";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/5a55dbfe3488b5ddfa04f6522d4eeadfa4e4c37dd327eeff4c91ba3e1e1aad6a1744ce3ff4b32c38e734446ad0417122cd09b84790077fdc557351092bee9fc8";
       dependencies = {
-        "@aws-sdk/property-provider" = packages."@aws-sdk/property-provider@npm:3.357.0";
-        "@aws-sdk/shared-ini-file-loader" = packages."@aws-sdk/shared-ini-file-loader@npm:3.357.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
+        "@smithy/property-provider" = packages."@smithy/property-provider@npm:1.0.1";
+        "@smithy/shared-ini-file-loader" = packages."@smithy/shared-ini-file-loader@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/credential-provider-sso@npm:3.362.0" = {
+    "@aws-sdk/credential-provider-sso@npm:3.363.0" = {
       name = "@aws-sdk/credential-provider-sso";
-      reference = "npm:3.362.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-credential-provider-sso-3.362.0-83e4d89225";
-      outputHash = "/c1e5d7900b753ed3813c9f404c47198ffbe7721ffd34ce37af8bb8f78df6814bb01b31610faacbd417c16b8a82cbfa70a4f272b3d3e30d4ed2983e1f9f885c7c";
+      outputName = "aws-sdk-credential-provider-sso-3.363.0-87f09b5233";
+      outputHash = "/8d452d9fe877a65fcfea4d328bd5cfbe2203eb75f08d2b3fcb23d15d6ab4ddd652364e1558ec40f6706f25d427e2153e3b22684001e718178a5e1e34934d230d";
       flatName = "credential-provider-sso";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.362.0";
-      checksum = "10/c1e5d7900b753ed3813c9f404c47198ffbe7721ffd34ce37af8bb8f78df6814bb01b31610faacbd417c16b8a82cbfa70a4f272b3d3e30d4ed2983e1f9f885c7c";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/8d452d9fe877a65fcfea4d328bd5cfbe2203eb75f08d2b3fcb23d15d6ab4ddd652364e1558ec40f6706f25d427e2153e3b22684001e718178a5e1e34934d230d";
       dependencies = {
-        "@aws-sdk/client-sso" = packages."@aws-sdk/client-sso@npm:3.362.0";
-        "@aws-sdk/property-provider" = packages."@aws-sdk/property-provider@npm:3.357.0";
-        "@aws-sdk/shared-ini-file-loader" = packages."@aws-sdk/shared-ini-file-loader@npm:3.357.0";
-        "@aws-sdk/token-providers" = packages."@aws-sdk/token-providers@npm:3.362.0";
+        "@aws-sdk/client-sso" = packages."@aws-sdk/client-sso@npm:3.363.0";
+        "@aws-sdk/token-providers" = packages."@aws-sdk/token-providers@npm:3.363.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
+        "@smithy/property-provider" = packages."@smithy/property-provider@npm:1.0.1";
+        "@smithy/shared-ini-file-loader" = packages."@smithy/shared-ini-file-loader@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/credential-provider-web-identity@npm:3.357.0" = {
+    "@aws-sdk/credential-provider-web-identity@npm:3.363.0" = {
       name = "@aws-sdk/credential-provider-web-identity";
-      reference = "npm:3.357.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-credential-provider-web-identity-3.357.0-011d4bd211";
-      outputHash = "/92750954fa38dff99dea70f20e2a2c16218d0b917cd5c4da6c5070b49408a955640ffc2acd00594825d2247d4994a8f692b95d25025191d77b4a1d092033d5d1";
+      outputName = "aws-sdk-credential-provider-web-identity-3.363.0-951e583258";
+      outputHash = "/27db9bf6c44f21e210e394ae007ab7bd740dad8f17e104b8d6da9b2f9edbf47ff0868cb4ed050e4f247798ac6fa36180675d1e612e87e0b2721b8c5f547821a7";
       flatName = "credential-provider-web-identity";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/92750954fa38dff99dea70f20e2a2c16218d0b917cd5c4da6c5070b49408a955640ffc2acd00594825d2247d4994a8f692b95d25025191d77b4a1d092033d5d1";
-      dependencies = {
-        "@aws-sdk/property-provider" = packages."@aws-sdk/property-provider@npm:3.357.0";
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/eventstream-codec@npm:3.357.0" = {
-      name = "@aws-sdk/eventstream-codec";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-eventstream-codec-3.357.0-667e522514";
-      outputHash = "/2e907e74ddb662ad77ec139ec73fbd7c8689f969fad445fd9f18bde0d768aa702f8359b0a0fc5d66dde1df019e9b292d06ac4ae04b0d5891e778aeadc7349bc7";
-      flatName = "eventstream-codec";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/2e907e74ddb662ad77ec139ec73fbd7c8689f969fad445fd9f18bde0d768aa702f8359b0a0fc5d66dde1df019e9b292d06ac4ae04b0d5891e778aeadc7349bc7";
-      dependencies = {
-        "@aws-crypto/crc32" = packages."@aws-crypto/crc32@npm:3.0.0";
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "@aws-sdk/util-hex-encoding" = packages."@aws-sdk/util-hex-encoding@npm:3.310.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/eventstream-serde-browser@npm:3.357.0" = {
-      name = "@aws-sdk/eventstream-serde-browser";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-eventstream-serde-browser-3.357.0-2253e6c3e7";
-      outputHash = "/025a421226219e72ce3c067475284d3cecb65503e18d646d179e90f407864969b79a8b23cb4fb0ce96fa943732ce258afc398e60db9f00dff4c0867d6cef47f6";
-      flatName = "eventstream-serde-browser";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/025a421226219e72ce3c067475284d3cecb65503e18d646d179e90f407864969b79a8b23cb4fb0ce96fa943732ce258afc398e60db9f00dff4c0867d6cef47f6";
-      dependencies = {
-        "@aws-sdk/eventstream-serde-universal" = packages."@aws-sdk/eventstream-serde-universal@npm:3.357.0";
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/eventstream-serde-config-resolver@npm:3.357.0" = {
-      name = "@aws-sdk/eventstream-serde-config-resolver";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-eventstream-serde-config-resolver-3.357.0-e603d43d41";
-      outputHash = "/2655c92058a1550afb04a5fbaf260231c5e76a3947dac23fba57a10cc886ab0ef114767334aabbbbba1f7cde4aa3b8824acff590654b03925ac77c8fa2595919";
-      flatName = "eventstream-serde-config-resolver";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/2655c92058a1550afb04a5fbaf260231c5e76a3947dac23fba57a10cc886ab0ef114767334aabbbbba1f7cde4aa3b8824acff590654b03925ac77c8fa2595919";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/27db9bf6c44f21e210e394ae007ab7bd740dad8f17e104b8d6da9b2f9edbf47ff0868cb4ed050e4f247798ac6fa36180675d1e612e87e0b2721b8c5f547821a7";
       dependencies = {
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/eventstream-serde-node@npm:3.357.0" = {
-      name = "@aws-sdk/eventstream-serde-node";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-eventstream-serde-node-3.357.0-4eb81c268e";
-      outputHash = "/185bf8d6762cdb6c03c0103d16698225795fcebc49d0b1dd9789da01873b9bddfdb9534b2cdc147bf02891c9aeb1d6afc18d6eaa17eb53b72188c167773b60af";
-      flatName = "eventstream-serde-node";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/185bf8d6762cdb6c03c0103d16698225795fcebc49d0b1dd9789da01873b9bddfdb9534b2cdc147bf02891c9aeb1d6afc18d6eaa17eb53b72188c167773b60af";
-      dependencies = {
-        "@aws-sdk/eventstream-serde-universal" = packages."@aws-sdk/eventstream-serde-universal@npm:3.357.0";
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/eventstream-serde-universal@npm:3.357.0" = {
-      name = "@aws-sdk/eventstream-serde-universal";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-eventstream-serde-universal-3.357.0-c9a291b82b";
-      outputHash = "/b85b2a95dab7c3f75bd018fc1cb34c6a17ff2e69feea38aef89ab872b85e789c3ce9e524335c825abe296a1e32633af3b1941038e560e0b903af3c451638f87e";
-      flatName = "eventstream-serde-universal";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/b85b2a95dab7c3f75bd018fc1cb34c6a17ff2e69feea38aef89ab872b85e789c3ce9e524335c825abe296a1e32633af3b1941038e560e0b903af3c451638f87e";
-      dependencies = {
-        "@aws-sdk/eventstream-codec" = packages."@aws-sdk/eventstream-codec@npm:3.357.0";
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/fetch-http-handler@npm:3.357.0" = {
-      name = "@aws-sdk/fetch-http-handler";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-fetch-http-handler-3.357.0-959520dcf5";
-      outputHash = "/04c7ea6383088c736fccfc115cfb36d53b112522c81125a40079d22ce71f353779fc6f8c2e997ecc6607c578494878f3618d9460d7356b60b7b598a00bebd322";
-      flatName = "fetch-http-handler";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/04c7ea6383088c736fccfc115cfb36d53b112522c81125a40079d22ce71f353779fc6f8c2e997ecc6607c578494878f3618d9460d7356b60b7b598a00bebd322";
-      dependencies = {
-        "@aws-sdk/protocol-http" = packages."@aws-sdk/protocol-http@npm:3.357.0";
-        "@aws-sdk/querystring-builder" = packages."@aws-sdk/querystring-builder@npm:3.357.0";
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "@aws-sdk/util-base64" = packages."@aws-sdk/util-base64@npm:3.310.0";
+        "@smithy/property-provider" = packages."@smithy/property-provider@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
@@ -992,24 +899,6 @@ let
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/hash-node@npm:3.357.0" = {
-      name = "@aws-sdk/hash-node";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-hash-node-3.357.0-142739db6f";
-      outputHash = "/2157fe352a2baa34922e8436e5d7f231610f4c4d468edd3866b723dd3c67d23bfe127dfc34559d2d2bddbfb16a4a95daafea40f4d8599fbb32eed9240fb92b14";
-      flatName = "hash-node";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/2157fe352a2baa34922e8436e5d7f231610f4c4d468edd3866b723dd3c67d23bfe127dfc34559d2d2bddbfb16a4a95daafea40f4d8599fbb32eed9240fb92b14";
-      dependencies = {
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "@aws-sdk/util-buffer-from" = packages."@aws-sdk/util-buffer-from@npm:3.310.0";
-        "@aws-sdk/util-utf8" = packages."@aws-sdk/util-utf8@npm:3.310.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
     "@aws-sdk/hash-stream-node@npm:3.357.0" = {
       name = "@aws-sdk/hash-stream-node";
       reference = "npm:3.357.0";
@@ -1024,22 +913,6 @@ let
       dependencies = {
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
         "@aws-sdk/util-utf8" = packages."@aws-sdk/util-utf8@npm:3.310.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/invalid-dependency@npm:3.357.0" = {
-      name = "@aws-sdk/invalid-dependency";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-invalid-dependency-3.357.0-9a37a9b89f";
-      outputHash = "/c97bc8b2d2fcc9bd088cb84750e3ed011d010696fb33685143505aa0f3d09468d0cc2e755a700d80590513571998ded26a1e05377c816e5f716fdfcd67648530";
-      flatName = "invalid-dependency";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/c97bc8b2d2fcc9bd088cb84750e3ed011d010696fb33685143505aa0f3d09468d0cc2e755a700d80590513571998ded26a1e05377c816e5f716fdfcd67648530";
-      dependencies = {
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
@@ -1075,472 +948,268 @@ let
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/middleware-bucket-endpoint@npm:3.357.0" = {
+    "@aws-sdk/middleware-bucket-endpoint@npm:3.363.0" = {
       name = "@aws-sdk/middleware-bucket-endpoint";
-      reference = "npm:3.357.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-middleware-bucket-endpoint-3.357.0-049fa7b12f";
-      outputHash = "/1a007e21a7f91da4e612bad099c13ad2fa972e08be015f1e5c8f64eddab51755328ef93538fa208ab945b61f54ea910949d5d6231fc46d1ad8e8f0518f97a826";
+      outputName = "aws-sdk-middleware-bucket-endpoint-3.363.0-a38b7227b4";
+      outputHash = "/3cd01d883d24755cf7f3325459e46838e45661767caf60b32208d99c64543f340de2f90eb467c5285c16f44d5c37f1224b3416595743672bc71f888af46d5509";
       flatName = "middleware-bucket-endpoint";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/1a007e21a7f91da4e612bad099c13ad2fa972e08be015f1e5c8f64eddab51755328ef93538fa208ab945b61f54ea910949d5d6231fc46d1ad8e8f0518f97a826";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/3cd01d883d24755cf7f3325459e46838e45661767caf60b32208d99c64543f340de2f90eb467c5285c16f44d5c37f1224b3416595743672bc71f888af46d5509";
       dependencies = {
-        "@aws-sdk/protocol-http" = packages."@aws-sdk/protocol-http@npm:3.357.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
         "@aws-sdk/util-arn-parser" = packages."@aws-sdk/util-arn-parser@npm:3.310.0";
-        "@aws-sdk/util-config-provider" = packages."@aws-sdk/util-config-provider@npm:3.310.0";
+        "@smithy/protocol-http" = packages."@smithy/protocol-http@npm:1.1.0";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "@smithy/util-config-provider" = packages."@smithy/util-config-provider@npm:1.0.1";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/middleware-content-length@npm:3.357.0" = {
-      name = "@aws-sdk/middleware-content-length";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-middleware-content-length-3.357.0-c0d368821d";
-      outputHash = "/aca697217998e322b7858eb703a091846673aef1bf1179faf7e188f5b51930a6f528e8181e8721874add1477b1f5ee6b5d25045a07a7110493e496a325cfddfc";
-      flatName = "middleware-content-length";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/aca697217998e322b7858eb703a091846673aef1bf1179faf7e188f5b51930a6f528e8181e8721874add1477b1f5ee6b5d25045a07a7110493e496a325cfddfc";
-      dependencies = {
-        "@aws-sdk/protocol-http" = packages."@aws-sdk/protocol-http@npm:3.357.0";
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/middleware-endpoint@npm:3.357.0" = {
-      name = "@aws-sdk/middleware-endpoint";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-middleware-endpoint-3.357.0-d36782c4de";
-      outputHash = "/803678146999211318a5ae20a4d3310e410fe9b6990f232a797f4bc8e91634642bdcb82888abce0109e9e3d6b005e7cf38257582c800920a67ff2f902474e98a";
-      flatName = "middleware-endpoint";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/803678146999211318a5ae20a4d3310e410fe9b6990f232a797f4bc8e91634642bdcb82888abce0109e9e3d6b005e7cf38257582c800920a67ff2f902474e98a";
-      dependencies = {
-        "@aws-sdk/middleware-serde" = packages."@aws-sdk/middleware-serde@npm:3.357.0";
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "@aws-sdk/url-parser" = packages."@aws-sdk/url-parser@npm:3.357.0";
-        "@aws-sdk/util-middleware" = packages."@aws-sdk/util-middleware@npm:3.357.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/middleware-expect-continue@npm:3.357.0" = {
+    "@aws-sdk/middleware-expect-continue@npm:3.363.0" = {
       name = "@aws-sdk/middleware-expect-continue";
-      reference = "npm:3.357.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-middleware-expect-continue-3.357.0-730feb2e0d";
-      outputHash = "/df9010bc8314bc7ae7ee5a04987b9ce45801d4a8445891573c7c775aeebc44cfe8bf904adc2f91ed594daafc0750cc0222350fc8065c14776395a60b5f252d36";
+      outputName = "aws-sdk-middleware-expect-continue-3.363.0-da8e39e415";
+      outputHash = "/859215436478f7415fb2c54c1f7ea190314fe8103999bc36caeda6b1cb33b74c470eef8fee4b41bfeed22b0685b8a3f8fbdbedf5ed70968cc5e7de488b74f8d6";
       flatName = "middleware-expect-continue";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/df9010bc8314bc7ae7ee5a04987b9ce45801d4a8445891573c7c775aeebc44cfe8bf904adc2f91ed594daafc0750cc0222350fc8065c14776395a60b5f252d36";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/859215436478f7415fb2c54c1f7ea190314fe8103999bc36caeda6b1cb33b74c470eef8fee4b41bfeed22b0685b8a3f8fbdbedf5ed70968cc5e7de488b74f8d6";
       dependencies = {
-        "@aws-sdk/protocol-http" = packages."@aws-sdk/protocol-http@npm:3.357.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
+        "@smithy/protocol-http" = packages."@smithy/protocol-http@npm:1.1.0";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/middleware-flexible-checksums@npm:3.357.0" = {
+    "@aws-sdk/middleware-flexible-checksums@npm:3.363.0" = {
       name = "@aws-sdk/middleware-flexible-checksums";
-      reference = "npm:3.357.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-middleware-flexible-checksums-3.357.0-84906e7037";
-      outputHash = "/603e0dbee3da2f0d95b47b9d701089bf9143e9405644ab6a1485ba75f753a7cbf24c338342bdaaf1cca8120b161da6b8d1bacd8670b4efbb87e073bdceefbe7f";
+      outputName = "aws-sdk-middleware-flexible-checksums-3.363.0-28d6a6e5d6";
+      outputHash = "/8f9aecca4b256543ce26159e24847a89f4cb20a532f3e47b31a70d7ad30d947b5749835a8a0310687f51e189c075eaa04cf3e09111fa1b91da2aa455092ef2c1";
       flatName = "middleware-flexible-checksums";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/603e0dbee3da2f0d95b47b9d701089bf9143e9405644ab6a1485ba75f753a7cbf24c338342bdaaf1cca8120b161da6b8d1bacd8670b4efbb87e073bdceefbe7f";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/8f9aecca4b256543ce26159e24847a89f4cb20a532f3e47b31a70d7ad30d947b5749835a8a0310687f51e189c075eaa04cf3e09111fa1b91da2aa455092ef2c1";
       dependencies = {
         "@aws-crypto/crc32" = packages."@aws-crypto/crc32@npm:3.0.0";
         "@aws-crypto/crc32c" = packages."@aws-crypto/crc32c@npm:3.0.0";
-        "@aws-sdk/is-array-buffer" = packages."@aws-sdk/is-array-buffer@npm:3.310.0";
-        "@aws-sdk/protocol-http" = packages."@aws-sdk/protocol-http@npm:3.357.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "@aws-sdk/util-utf8" = packages."@aws-sdk/util-utf8@npm:3.310.0";
+        "@smithy/is-array-buffer" = packages."@smithy/is-array-buffer@npm:1.0.1";
+        "@smithy/protocol-http" = packages."@smithy/protocol-http@npm:1.1.0";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "@smithy/util-utf8" = packages."@smithy/util-utf8@npm:1.0.1";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/middleware-host-header@npm:3.357.0" = {
+    "@aws-sdk/middleware-host-header@npm:3.363.0" = {
       name = "@aws-sdk/middleware-host-header";
-      reference = "npm:3.357.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-middleware-host-header-3.357.0-0df66e4c45";
-      outputHash = "/01b8a0ed5502256ce0f1bd261963335838ac11b500153ed9b428846692190445ae02a5c6ea36e33fc7c0bed8e732a0c45b7504f2c3b8ebcb208c26148f17dc93";
+      outputName = "aws-sdk-middleware-host-header-3.363.0-94da61ed18";
+      outputHash = "/fc2efbd53adda3fd92f0485fe25b124239512a7a5959f37a940519683e76c09a20e44983c5c589a9906e822bf52c99c4dcaff64c83ffad4eb5d3fc11cf5874c7";
       flatName = "middleware-host-header";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/01b8a0ed5502256ce0f1bd261963335838ac11b500153ed9b428846692190445ae02a5c6ea36e33fc7c0bed8e732a0c45b7504f2c3b8ebcb208c26148f17dc93";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/fc2efbd53adda3fd92f0485fe25b124239512a7a5959f37a940519683e76c09a20e44983c5c589a9906e822bf52c99c4dcaff64c83ffad4eb5d3fc11cf5874c7";
       dependencies = {
-        "@aws-sdk/protocol-http" = packages."@aws-sdk/protocol-http@npm:3.357.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
+        "@smithy/protocol-http" = packages."@smithy/protocol-http@npm:1.1.0";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/middleware-location-constraint@npm:3.357.0" = {
+    "@aws-sdk/middleware-location-constraint@npm:3.363.0" = {
       name = "@aws-sdk/middleware-location-constraint";
-      reference = "npm:3.357.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-middleware-location-constraint-3.357.0-710b860b6b";
-      outputHash = "/18e95db586be248eaab5ccf276190dba5475f2a41050f425ad7a9a75053247470e30dddc6c854e2f71295118a005227cd2d8d0faa3e14008c1eca0fa4d5dd9b9";
+      outputName = "aws-sdk-middleware-location-constraint-3.363.0-7e4ba242c2";
+      outputHash = "/11a5da1167c7e0fb8f9b9d9c57c62c5f80a8ea08477fbf9c460186aacb4b019367a866d0bfec815b8a229db50b3712b920ecd6f2651bee7a2a211ad5410dcab4";
       flatName = "middleware-location-constraint";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/18e95db586be248eaab5ccf276190dba5475f2a41050f425ad7a9a75053247470e30dddc6c854e2f71295118a005227cd2d8d0faa3e14008c1eca0fa4d5dd9b9";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/11a5da1167c7e0fb8f9b9d9c57c62c5f80a8ea08477fbf9c460186aacb4b019367a866d0bfec815b8a229db50b3712b920ecd6f2651bee7a2a211ad5410dcab4";
       dependencies = {
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/middleware-logger@npm:3.357.0" = {
+    "@aws-sdk/middleware-logger@npm:3.363.0" = {
       name = "@aws-sdk/middleware-logger";
-      reference = "npm:3.357.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-middleware-logger-3.357.0-fe049630cb";
-      outputHash = "/e971cd262f56bc929c48e4cd1dc08c2b48d87e613183e261039f4275eb51beb5c7cfd5a57de619cc531bc224e04e079a756d8fa0952634591e91510861fe7244";
+      outputName = "aws-sdk-middleware-logger-3.363.0-90113dc685";
+      outputHash = "/adafc5e1cfdb5b256b068376d80b8c8abbfcb5ba2ea4a296325e6e389acd667463f88d2f0cd9b9d5cbb2760f2ba12702687b22986f54fd908871a9e9c1b34f24";
       flatName = "middleware-logger";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/e971cd262f56bc929c48e4cd1dc08c2b48d87e613183e261039f4275eb51beb5c7cfd5a57de619cc531bc224e04e079a756d8fa0952634591e91510861fe7244";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/adafc5e1cfdb5b256b068376d80b8c8abbfcb5ba2ea4a296325e6e389acd667463f88d2f0cd9b9d5cbb2760f2ba12702687b22986f54fd908871a9e9c1b34f24";
       dependencies = {
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/middleware-recursion-detection@npm:3.357.0" = {
+    "@aws-sdk/middleware-recursion-detection@npm:3.363.0" = {
       name = "@aws-sdk/middleware-recursion-detection";
-      reference = "npm:3.357.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-middleware-recursion-detection-3.357.0-1ba4714df8";
-      outputHash = "/2c3b3c565a0f1f0b60a1e7f0cf028c4c4e67ba3ce1b98f3141a776455b0da8d277a846b566b1ee19a0477ac9ce5bf08f319dc353e66a3039d96dd31a6d7b0849";
+      outputName = "aws-sdk-middleware-recursion-detection-3.363.0-96c50e2733";
+      outputHash = "/ab38db4712c7d4781d4e93a6d2728fbf32d0da3456238e008f89c224f348ae774eedb50a6fc1e7d2097d4d668025b57d3192d91aaaa11fdd6096a51f768972e5";
       flatName = "middleware-recursion-detection";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/2c3b3c565a0f1f0b60a1e7f0cf028c4c4e67ba3ce1b98f3141a776455b0da8d277a846b566b1ee19a0477ac9ce5bf08f319dc353e66a3039d96dd31a6d7b0849";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/ab38db4712c7d4781d4e93a6d2728fbf32d0da3456238e008f89c224f348ae774eedb50a6fc1e7d2097d4d668025b57d3192d91aaaa11fdd6096a51f768972e5";
       dependencies = {
-        "@aws-sdk/protocol-http" = packages."@aws-sdk/protocol-http@npm:3.357.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
+        "@smithy/protocol-http" = packages."@smithy/protocol-http@npm:1.1.0";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/middleware-retry@npm:3.362.0" = {
-      name = "@aws-sdk/middleware-retry";
-      reference = "npm:3.362.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-middleware-retry-3.362.0-c1a628c78b";
-      outputHash = "/a3d45fde84e9fae196f228b91d8e21e58eb5ea02f60189f33efbb032a4a5cc753ffe4262882723e690c178302a87505e912a9833a103dbed49130df44e0e8d2d";
-      flatName = "middleware-retry";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.362.0";
-      checksum = "10/a3d45fde84e9fae196f228b91d8e21e58eb5ea02f60189f33efbb032a4a5cc753ffe4262882723e690c178302a87505e912a9833a103dbed49130df44e0e8d2d";
-      dependencies = {
-        "@aws-sdk/protocol-http" = packages."@aws-sdk/protocol-http@npm:3.357.0";
-        "@aws-sdk/service-error-classification" = packages."@aws-sdk/service-error-classification@npm:3.357.0";
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "@aws-sdk/util-middleware" = packages."@aws-sdk/util-middleware@npm:3.357.0";
-        "@aws-sdk/util-retry" = packages."@aws-sdk/util-retry@npm:3.362.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-        "uuid" = packages."uuid@npm:8.3.2";
-      };
-    };
-    "@aws-sdk/middleware-sdk-s3@npm:3.357.0" = {
+    "@aws-sdk/middleware-sdk-s3@npm:3.363.0" = {
       name = "@aws-sdk/middleware-sdk-s3";
-      reference = "npm:3.357.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-middleware-sdk-s3-3.357.0-1443696578";
-      outputHash = "/f9aff9d45a4a44186f17e959627e72ebdebd96c58a18e12b3a142774100ad1cf503fdec11c38ce66744b3214085199a0e564645144eb2a1eb84684067bac9f8c";
+      outputName = "aws-sdk-middleware-sdk-s3-3.363.0-73eb8d0845";
+      outputHash = "/bd00495164d606f818b5c4b0680e4e9bae996a6c7fb97e9df7ae9c517b42b07693c1a218c580a9058545ab150e331944415a12f17ea18a31926d06d3a09324cb";
       flatName = "middleware-sdk-s3";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/f9aff9d45a4a44186f17e959627e72ebdebd96c58a18e12b3a142774100ad1cf503fdec11c38ce66744b3214085199a0e564645144eb2a1eb84684067bac9f8c";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/bd00495164d606f818b5c4b0680e4e9bae996a6c7fb97e9df7ae9c517b42b07693c1a218c580a9058545ab150e331944415a12f17ea18a31926d06d3a09324cb";
       dependencies = {
-        "@aws-sdk/protocol-http" = packages."@aws-sdk/protocol-http@npm:3.357.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
         "@aws-sdk/util-arn-parser" = packages."@aws-sdk/util-arn-parser@npm:3.310.0";
+        "@smithy/protocol-http" = packages."@smithy/protocol-http@npm:1.1.0";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/middleware-sdk-sts@npm:3.357.0" = {
+    "@aws-sdk/middleware-sdk-sts@npm:3.363.0" = {
       name = "@aws-sdk/middleware-sdk-sts";
-      reference = "npm:3.357.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-middleware-sdk-sts-3.357.0-bd400e4128";
-      outputHash = "/7971c2f896015fb492cbfd63c8329265572eebe4a73c2d520556a362edf2d1f7a8e57d4440b930e5e55a01346b3b6642dd27fbeeb76b14ee85d6ef8a6c342133";
+      outputName = "aws-sdk-middleware-sdk-sts-3.363.0-7e943a11c6";
+      outputHash = "/1fbb518f73c2586d2ff0ad730aaa2aa1716dbabe0f7a24c6705cb176ef6d1075ad3f7d63bf54d6ec9b7de784289c1419f1994989300e6a0d8945c517e7b8caf7";
       flatName = "middleware-sdk-sts";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/7971c2f896015fb492cbfd63c8329265572eebe4a73c2d520556a362edf2d1f7a8e57d4440b930e5e55a01346b3b6642dd27fbeeb76b14ee85d6ef8a6c342133";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/1fbb518f73c2586d2ff0ad730aaa2aa1716dbabe0f7a24c6705cb176ef6d1075ad3f7d63bf54d6ec9b7de784289c1419f1994989300e6a0d8945c517e7b8caf7";
       dependencies = {
-        "@aws-sdk/middleware-signing" = packages."@aws-sdk/middleware-signing@npm:3.357.0";
+        "@aws-sdk/middleware-signing" = packages."@aws-sdk/middleware-signing@npm:3.363.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/middleware-serde@npm:3.357.0" = {
-      name = "@aws-sdk/middleware-serde";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-middleware-serde-3.357.0-dc820d0f5a";
-      outputHash = "/f80e58e11d61ba45725bf6f89147b59f29bc60abe2b0c2f2257745ff104b34c53d97ab82c7aef5c42d685dd7301621b282c0489ec61059cc8d525f6feefb731b";
-      flatName = "middleware-serde";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/f80e58e11d61ba45725bf6f89147b59f29bc60abe2b0c2f2257745ff104b34c53d97ab82c7aef5c42d685dd7301621b282c0489ec61059cc8d525f6feefb731b";
-      dependencies = {
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/middleware-signing@npm:3.357.0" = {
+    "@aws-sdk/middleware-signing@npm:3.363.0" = {
       name = "@aws-sdk/middleware-signing";
-      reference = "npm:3.357.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-middleware-signing-3.357.0-012d78fdf6";
-      outputHash = "/7fa6cd7071ecbe78c2676dd914148c09a1a65efe9878b5f5bc5855f5ac8be79b3fddbde19409955930c9232fb862639ca9dea06bd458b0b54b93d109a5b91cc0";
+      outputName = "aws-sdk-middleware-signing-3.363.0-40d6a38852";
+      outputHash = "/be99e1ec03999aa2a2437cb7597220c0b353715589285a044acbd4cb8fdc494ff1a1a83fd1ee29d054d284a446e046993dc7ce6db8b8158234019db5147f35f6";
       flatName = "middleware-signing";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/7fa6cd7071ecbe78c2676dd914148c09a1a65efe9878b5f5bc5855f5ac8be79b3fddbde19409955930c9232fb862639ca9dea06bd458b0b54b93d109a5b91cc0";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/be99e1ec03999aa2a2437cb7597220c0b353715589285a044acbd4cb8fdc494ff1a1a83fd1ee29d054d284a446e046993dc7ce6db8b8158234019db5147f35f6";
       dependencies = {
-        "@aws-sdk/property-provider" = packages."@aws-sdk/property-provider@npm:3.357.0";
-        "@aws-sdk/protocol-http" = packages."@aws-sdk/protocol-http@npm:3.357.0";
-        "@aws-sdk/signature-v4" = packages."@aws-sdk/signature-v4@npm:3.357.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "@aws-sdk/util-middleware" = packages."@aws-sdk/util-middleware@npm:3.357.0";
+        "@smithy/property-provider" = packages."@smithy/property-provider@npm:1.0.1";
+        "@smithy/protocol-http" = packages."@smithy/protocol-http@npm:1.1.0";
+        "@smithy/signature-v4" = packages."@smithy/signature-v4@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "@smithy/util-middleware" = packages."@smithy/util-middleware@npm:1.0.1";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/middleware-ssec@npm:3.357.0" = {
+    "@aws-sdk/middleware-ssec@npm:3.363.0" = {
       name = "@aws-sdk/middleware-ssec";
-      reference = "npm:3.357.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-middleware-ssec-3.357.0-36dbab018f";
-      outputHash = "/9cc00a3b50d0ec055eb1f4fb837bf09bdb3c6fadd8365fc2656322d137de36389ae406ce8b919300cc8a4117be820b1adb935841b8d4fb3ea8aa4aff7c7caf5a";
+      outputName = "aws-sdk-middleware-ssec-3.363.0-e85ed9bb29";
+      outputHash = "/cac470fd6a4e0e1e41ecd23c6dfc870bbdbadb3be04ccde90cd3b02766b5bdbd0ffcf30a86d10ba578a509b3fea7678afa78a29f2a622fa8e4926bd9b4bd1533";
       flatName = "middleware-ssec";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/9cc00a3b50d0ec055eb1f4fb837bf09bdb3c6fadd8365fc2656322d137de36389ae406ce8b919300cc8a4117be820b1adb935841b8d4fb3ea8aa4aff7c7caf5a";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/cac470fd6a4e0e1e41ecd23c6dfc870bbdbadb3be04ccde90cd3b02766b5bdbd0ffcf30a86d10ba578a509b3fea7678afa78a29f2a622fa8e4926bd9b4bd1533";
       dependencies = {
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/middleware-stack@npm:3.357.0" = {
-      name = "@aws-sdk/middleware-stack";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-middleware-stack-3.357.0-ebdb3ea63a";
-      outputHash = "/5695d0c4f016d7eb230427fc84bbad1e873d25407218c8c580de183c97133cae7d3405b3034a5d1daf6ac7cef83f4b0cc6f3ced458cb2c19fd1db2eea05d59f4";
-      flatName = "middleware-stack";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/5695d0c4f016d7eb230427fc84bbad1e873d25407218c8c580de183c97133cae7d3405b3034a5d1daf6ac7cef83f4b0cc6f3ced458cb2c19fd1db2eea05d59f4";
-      dependencies = {
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/middleware-user-agent@npm:3.357.0" = {
+    "@aws-sdk/middleware-user-agent@npm:3.363.0" = {
       name = "@aws-sdk/middleware-user-agent";
-      reference = "npm:3.357.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-middleware-user-agent-3.357.0-08f24ca9c4";
-      outputHash = "/98cf176531fd8c509e62d6f1a512bef72b3f12035511f43482b4240f0f0c5e16e3df01da8eebd640f2ba648ee36d71e1d2ced3a4444569cc09c4eb0122b2cab3";
+      outputName = "aws-sdk-middleware-user-agent-3.363.0-7528a91dc1";
+      outputHash = "/a5b2ff355231a796cd1e963f78181bec3e7904be0bd155d75bbe64488be965ed5dd49d3354b40ab2b87471f4fdbdbcf8e8994ec2153dc5df128a38d4225c8344";
       flatName = "middleware-user-agent";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/98cf176531fd8c509e62d6f1a512bef72b3f12035511f43482b4240f0f0c5e16e3df01da8eebd640f2ba648ee36d71e1d2ced3a4444569cc09c4eb0122b2cab3";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/a5b2ff355231a796cd1e963f78181bec3e7904be0bd155d75bbe64488be965ed5dd49d3354b40ab2b87471f4fdbdbcf8e8994ec2153dc5df128a38d4225c8344";
       dependencies = {
-        "@aws-sdk/protocol-http" = packages."@aws-sdk/protocol-http@npm:3.357.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
         "@aws-sdk/util-endpoints" = packages."@aws-sdk/util-endpoints@npm:3.357.0";
+        "@smithy/protocol-http" = packages."@smithy/protocol-http@npm:1.1.0";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/node-config-provider@npm:3.357.0" = {
-      name = "@aws-sdk/node-config-provider";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-node-config-provider-3.357.0-2b8b8e6d3e";
-      outputHash = "/302eb7df28f1ac6d64847841331918aeb2b425d735118516f9c8974d2860218273bbbe152fd4b63f0b6fb91cef24167df56e611c44ce0a774a72e18644b9869d";
-      flatName = "node-config-provider";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/302eb7df28f1ac6d64847841331918aeb2b425d735118516f9c8974d2860218273bbbe152fd4b63f0b6fb91cef24167df56e611c44ce0a774a72e18644b9869d";
-      dependencies = {
-        "@aws-sdk/property-provider" = packages."@aws-sdk/property-provider@npm:3.357.0";
-        "@aws-sdk/shared-ini-file-loader" = packages."@aws-sdk/shared-ini-file-loader@npm:3.357.0";
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/node-http-handler@npm:3.360.0" = {
-      name = "@aws-sdk/node-http-handler";
-      reference = "npm:3.360.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-node-http-handler-3.360.0-d43c2c4892";
-      outputHash = "/d29d2de8aa1acef0b1226f431c15ad03a33fb2f0c4798e6cb68e23ae5e49e16dc66e875d29fba18acbece94b75530867ae22a2d51e7ada3f0d71299c06a69c15";
-      flatName = "node-http-handler";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.360.0";
-      checksum = "10/d29d2de8aa1acef0b1226f431c15ad03a33fb2f0c4798e6cb68e23ae5e49e16dc66e875d29fba18acbece94b75530867ae22a2d51e7ada3f0d71299c06a69c15";
-      dependencies = {
-        "@aws-sdk/abort-controller" = packages."@aws-sdk/abort-controller@npm:3.357.0";
-        "@aws-sdk/protocol-http" = packages."@aws-sdk/protocol-http@npm:3.357.0";
-        "@aws-sdk/querystring-builder" = packages."@aws-sdk/querystring-builder@npm:3.357.0";
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/property-provider@npm:3.357.0" = {
-      name = "@aws-sdk/property-provider";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-property-provider-3.357.0-3fc3ddc9bd";
-      outputHash = "/1695085951aa53a519c2d9ee644dbf12cf3bd404ba2c7427567919ef3adf32a66b484edd02bd50cf2bceceedd06a0d8bd06d7dafbcd5237f5cc093ad740fbb39";
-      flatName = "property-provider";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/1695085951aa53a519c2d9ee644dbf12cf3bd404ba2c7427567919ef3adf32a66b484edd02bd50cf2bceceedd06a0d8bd06d7dafbcd5237f5cc093ad740fbb39";
-      dependencies = {
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/protocol-http@npm:3.357.0" = {
-      name = "@aws-sdk/protocol-http";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-protocol-http-3.357.0-5c393bb63e";
-      outputHash = "/f49782fd51a5a00b6dc9f7887af11231afd525f85de9e55bc225fa155925a1ba9bf9e97695f79ed6e4db6b06d8c011cc4c9deb0da899a9ed14eae36cbdf69302";
-      flatName = "protocol-http";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/f49782fd51a5a00b6dc9f7887af11231afd525f85de9e55bc225fa155925a1ba9bf9e97695f79ed6e4db6b06d8c011cc4c9deb0da899a9ed14eae36cbdf69302";
-      dependencies = {
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/querystring-builder@npm:3.357.0" = {
-      name = "@aws-sdk/querystring-builder";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-querystring-builder-3.357.0-4784cf524b";
-      outputHash = "/06088aef0e9a1f987bde36439f230daddec02b44a880679a4247432d959c4bbaa063dd878efb4797566fddca8c0a985158ba41d0f18fe17d72c5ad8eff70bc36";
-      flatName = "querystring-builder";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/06088aef0e9a1f987bde36439f230daddec02b44a880679a4247432d959c4bbaa063dd878efb4797566fddca8c0a985158ba41d0f18fe17d72c5ad8eff70bc36";
-      dependencies = {
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "@aws-sdk/util-uri-escape" = packages."@aws-sdk/util-uri-escape@npm:3.310.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/querystring-parser@npm:3.357.0" = {
-      name = "@aws-sdk/querystring-parser";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-querystring-parser-3.357.0-8bd4b4bf74";
-      outputHash = "/a25bd88cd685577d7bbbd5c31e64ae47d47911ec18ec20566f64e22feb7c0dc8c4c71dcf31b1d7ab7e9fb1c4fc5c35a60f9f6368f0433f95bcc333f6bed66640";
-      flatName = "querystring-parser";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/a25bd88cd685577d7bbbd5c31e64ae47d47911ec18ec20566f64e22feb7c0dc8c4c71dcf31b1d7ab7e9fb1c4fc5c35a60f9f6368f0433f95bcc333f6bed66640";
-      dependencies = {
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/s3-request-presigner@npm:3.362.0" = {
+    "@aws-sdk/s3-request-presigner@npm:3.363.0" = {
       name = "@aws-sdk/s3-request-presigner";
-      reference = "npm:3.362.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-s3-request-presigner-3.362.0-503860e18e";
-      outputHash = "/d632dcc9f10572982cc3438556bfdb9f09d304307e8b2f6862f2e967b8009c9a02f49200c15395cf5f4d47205dcb0d0cd380665da26a9f2d6015f279befec696";
+      outputName = "aws-sdk-s3-request-presigner-3.363.0-14d0711923";
+      outputHash = "/bc4c8aecccdb67f1ccfe7581103b6a04a129a10c700b51b558bde08a4c6913c4280821e131166fb3bc81b9daa1135de887eaa0f7147d2c9caf37730c6f792cef";
       flatName = "s3-request-presigner";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:^3.354.0";
-      checksum = "10/d632dcc9f10572982cc3438556bfdb9f09d304307e8b2f6862f2e967b8009c9a02f49200c15395cf5f4d47205dcb0d0cd380665da26a9f2d6015f279befec696";
-      dependencies = {
-        "@aws-sdk/middleware-endpoint" = packages."@aws-sdk/middleware-endpoint@npm:3.357.0";
-        "@aws-sdk/protocol-http" = packages."@aws-sdk/protocol-http@npm:3.357.0";
-        "@aws-sdk/smithy-client" = packages."@aws-sdk/smithy-client@npm:3.360.0";
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "@aws-sdk/util-format-url" = packages."@aws-sdk/util-format-url@npm:3.357.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-        "@aws-sdk/signature-v4-multi-region" = packages."@aws-sdk/signature-v4-multi-region@virtual:9d7f779c44d3b968a4749c4ef4aff5b237dcd5d57d51c6bc971fa01ddde01190f6497162c25fcc769ac0c0d175a1db1554ce01b574360c060b8de11de1a690fb#npm:3.357.0";
-      };
-    };
-    "@aws-sdk/service-error-classification@npm:3.357.0" = {
-      name = "@aws-sdk/service-error-classification";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-service-error-classification-3.357.0-4986f8e62a";
-      outputHash = "/393dd38df95a6574f781811ce386d19c45c170025912d7f97412fffc4189a99eaa285e7a748bdc579f37188fd0b69b241b15b12bc85251c3c7e7c71d6e8740d5";
-      flatName = "service-error-classification";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/393dd38df95a6574f781811ce386d19c45c170025912d7f97412fffc4189a99eaa285e7a748bdc579f37188fd0b69b241b15b12bc85251c3c7e7c71d6e8740d5";
-    };
-    "@aws-sdk/shared-ini-file-loader@npm:3.357.0" = {
-      name = "@aws-sdk/shared-ini-file-loader";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-shared-ini-file-loader-3.357.0-93fa33f549";
-      outputHash = "/9a522d6ce4d2b7c5953d024598a3cf47965227b723851fe3a0f0f66f462379ff2ef54495da590bcf385d5acd2587c275c5c595241f9f430515ac9984f98f98d5";
-      flatName = "shared-ini-file-loader";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/9a522d6ce4d2b7c5953d024598a3cf47965227b723851fe3a0f0f66f462379ff2ef54495da590bcf385d5acd2587c275c5c595241f9f430515ac9984f98f98d5";
+      descriptorRange = "npm:^3.363.0";
+      checksum = "10/bc4c8aecccdb67f1ccfe7581103b6a04a129a10c700b51b558bde08a4c6913c4280821e131166fb3bc81b9daa1135de887eaa0f7147d2c9caf37730c6f792cef";
       dependencies = {
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
+        "@aws-sdk/util-format-url" = packages."@aws-sdk/util-format-url@npm:3.363.0";
+        "@smithy/middleware-endpoint" = packages."@smithy/middleware-endpoint@npm:1.0.2";
+        "@smithy/protocol-http" = packages."@smithy/protocol-http@npm:1.1.0";
+        "@smithy/smithy-client" = packages."@smithy/smithy-client@npm:1.0.3";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "tslib" = packages."tslib@npm:2.6.0";
+        "@aws-sdk/signature-v4-multi-region" = packages."@aws-sdk/signature-v4-multi-region@virtual:91de8d0e73ee5c5e3d11af044f2abd5089494ea41174df00a838470691d8a55ff3d4313e55d035474069e6a31e45ed53d039ec89dd42a50d848035ffeb595a37#npm:3.363.0";
       };
     };
-    "@aws-sdk/signature-v4-multi-region@npm:3.357.0" = {
+    "@aws-sdk/signature-v4-multi-region@npm:3.363.0" = {
       name = "@aws-sdk/signature-v4-multi-region";
-      reference = "npm:3.357.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-signature-v4-multi-region-3.357.0-8302a6b1a6";
-      outputHash = "/531bbd32e8d941740d1a76ac5e6cf67710f6d8246f58766edbc67dca042119a63d94b4276f6ebb3654584f54a668601be4628ddbb8b4b6e27d9420eda698b0de";
+      outputName = "aws-sdk-signature-v4-multi-region-3.363.0-edce795942";
+      outputHash = "/218efce45bc99815e2ae78d1424d6aab29cb013674ec2d3ed46edca9ccfcfac6cf0093f59e4dfffe3d7810e6b01f4251f95d8ab516ef077a6ae25bbd4ea8490e";
       flatName = "signature-v4-multi-region";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/531bbd32e8d941740d1a76ac5e6cf67710f6d8246f58766edbc67dca042119a63d94b4276f6ebb3654584f54a668601be4628ddbb8b4b6e27d9420eda698b0de";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/218efce45bc99815e2ae78d1424d6aab29cb013674ec2d3ed46edca9ccfcfac6cf0093f59e4dfffe3d7810e6b01f4251f95d8ab516ef077a6ae25bbd4ea8490e";
       dependencies = {
-        "@aws-sdk/protocol-http" = packages."@aws-sdk/protocol-http@npm:3.357.0";
-        "@aws-sdk/signature-v4" = packages."@aws-sdk/signature-v4@npm:3.357.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
+        "@smithy/protocol-http" = packages."@smithy/protocol-http@npm:1.1.0";
+        "@smithy/signature-v4" = packages."@smithy/signature-v4@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
       packagePeers = [
@@ -1548,74 +1217,35 @@ let
         "@types/aws-sdk__signature-v4-crt"
       ];
     };
-    "@aws-sdk/signature-v4-multi-region@virtual:9d7f779c44d3b968a4749c4ef4aff5b237dcd5d57d51c6bc971fa01ddde01190f6497162c25fcc769ac0c0d175a1db1554ce01b574360c060b8de11de1a690fb#npm:3.357.0" = {
+    "@aws-sdk/signature-v4-multi-region@virtual:91de8d0e73ee5c5e3d11af044f2abd5089494ea41174df00a838470691d8a55ff3d4313e55d035474069e6a31e45ed53d039ec89dd42a50d848035ffeb595a37#npm:3.363.0" = {
       name = "@aws-sdk/signature-v4-multi-region";
-      reference = "virtual:9d7f779c44d3b968a4749c4ef4aff5b237dcd5d57d51c6bc971fa01ddde01190f6497162c25fcc769ac0c0d175a1db1554ce01b574360c060b8de11de1a690fb#npm:3.357.0";
-      canonicalPackage = packages."@aws-sdk/signature-v4-multi-region@npm:3.357.0";
+      reference = "virtual:91de8d0e73ee5c5e3d11af044f2abd5089494ea41174df00a838470691d8a55ff3d4313e55d035474069e6a31e45ed53d039ec89dd42a50d848035ffeb595a37#npm:3.363.0";
+      canonicalPackage = packages."@aws-sdk/signature-v4-multi-region@npm:3.363.0";
       dependencies = {
-        "@aws-sdk/protocol-http" = packages."@aws-sdk/protocol-http@npm:3.357.0";
-        "@aws-sdk/signature-v4" = packages."@aws-sdk/signature-v4@npm:3.357.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/signature-v4@npm:3.357.0" = {
-      name = "@aws-sdk/signature-v4";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-signature-v4-3.357.0-bf19ac61f6";
-      outputHash = "/26ec342cf3598e3faac8fa74db3007f0ba3e8868bf05d05e835efc3763a9d4c0e3323e4af5c9d599da6b73122abd6a0b887278a0db4fc275c4fa1d7a6fb2cff2";
-      flatName = "signature-v4";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/26ec342cf3598e3faac8fa74db3007f0ba3e8868bf05d05e835efc3763a9d4c0e3323e4af5c9d599da6b73122abd6a0b887278a0db4fc275c4fa1d7a6fb2cff2";
-      dependencies = {
-        "@aws-sdk/eventstream-codec" = packages."@aws-sdk/eventstream-codec@npm:3.357.0";
-        "@aws-sdk/is-array-buffer" = packages."@aws-sdk/is-array-buffer@npm:3.310.0";
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "@aws-sdk/util-hex-encoding" = packages."@aws-sdk/util-hex-encoding@npm:3.310.0";
-        "@aws-sdk/util-middleware" = packages."@aws-sdk/util-middleware@npm:3.357.0";
-        "@aws-sdk/util-uri-escape" = packages."@aws-sdk/util-uri-escape@npm:3.310.0";
-        "@aws-sdk/util-utf8" = packages."@aws-sdk/util-utf8@npm:3.310.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/smithy-client@npm:3.360.0" = {
-      name = "@aws-sdk/smithy-client";
-      reference = "npm:3.360.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-smithy-client-3.360.0-a8d42c23b9";
-      outputHash = "/b4a0557d637147fc0a7855f256b3df1ba7a6b81a946e80db585250ad53a2c26e48a65e57d5e3e66f6155019c32a45bdc9d366a5faef4f194e83a3a77ef8d08f6";
-      flatName = "smithy-client";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.360.0";
-      checksum = "10/b4a0557d637147fc0a7855f256b3df1ba7a6b81a946e80db585250ad53a2c26e48a65e57d5e3e66f6155019c32a45bdc9d366a5faef4f194e83a3a77ef8d08f6";
-      dependencies = {
-        "@aws-sdk/middleware-stack" = packages."@aws-sdk/middleware-stack@npm:3.357.0";
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "@aws-sdk/util-stream" = packages."@aws-sdk/util-stream@npm:3.360.0";
+        "@smithy/protocol-http" = packages."@smithy/protocol-http@npm:1.1.0";
+        "@smithy/signature-v4" = packages."@smithy/signature-v4@npm:1.0.1";
         "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/token-providers@npm:3.362.0" = {
+    "@aws-sdk/token-providers@npm:3.363.0" = {
       name = "@aws-sdk/token-providers";
-      reference = "npm:3.362.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-token-providers-3.362.0-6409290050";
-      outputHash = "/3771542b59ea676580e0303b6fb40a6731b25b4ab244bb300a99aae634ddfb85cba2f1485de1d6a2153cd8ad38153ab28012cdd9ea08e36d40ec1af89191f309";
+      outputName = "aws-sdk-token-providers-3.363.0-d4bc8cc357";
+      outputHash = "/69c781438fa11c5329b3e19fc252fd99718edab1baddf1556e2f2a88338d7ac6d03566401cf14c008e8277e51369ce254182e952a0fcb145b24a5f2ff0df978f";
       flatName = "token-providers";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.362.0";
-      checksum = "10/3771542b59ea676580e0303b6fb40a6731b25b4ab244bb300a99aae634ddfb85cba2f1485de1d6a2153cd8ad38153ab28012cdd9ea08e36d40ec1af89191f309";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/69c781438fa11c5329b3e19fc252fd99718edab1baddf1556e2f2a88338d7ac6d03566401cf14c008e8277e51369ce254182e952a0fcb145b24a5f2ff0df978f";
       dependencies = {
-        "@aws-sdk/client-sso-oidc" = packages."@aws-sdk/client-sso-oidc@npm:3.362.0";
-        "@aws-sdk/property-provider" = packages."@aws-sdk/property-provider@npm:3.357.0";
-        "@aws-sdk/shared-ini-file-loader" = packages."@aws-sdk/shared-ini-file-loader@npm:3.357.0";
+        "@aws-sdk/client-sso-oidc" = packages."@aws-sdk/client-sso-oidc@npm:3.363.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
+        "@smithy/property-provider" = packages."@smithy/property-provider@npm:1.0.1";
+        "@smithy/shared-ini-file-loader" = packages."@smithy/shared-ini-file-loader@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
@@ -1634,23 +1264,6 @@ let
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/url-parser@npm:3.357.0" = {
-      name = "@aws-sdk/url-parser";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-url-parser-3.357.0-f121408e86";
-      outputHash = "/576c427d9ed4c31f800eb1cf1abb4a4a81c18c836e5111dcc14e2da87705d25922ddc151ce11799fc27650ee6ceecc47aeba355d86771f727780bb8ae9a4f2b4";
-      flatName = "url-parser";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/576c427d9ed4c31f800eb1cf1abb4a4a81c18c836e5111dcc14e2da87705d25922ddc151ce11799fc27650ee6ceecc47aeba355d86771f727780bb8ae9a4f2b4";
-      dependencies = {
-        "@aws-sdk/querystring-parser" = packages."@aws-sdk/querystring-parser@npm:3.357.0";
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
     "@aws-sdk/util-arn-parser@npm:3.310.0" = {
       name = "@aws-sdk/util-arn-parser";
       reference = "npm:3.310.0";
@@ -1662,52 +1275,6 @@ let
       scope = "aws-sdk";
       descriptorRange = "npm:3.310.0";
       checksum = "10/909d76befcde663b263f28804f7702816f14aa10bd57ec77fda89cb9477e217af6f8a84ac6fa8b051b1b4701c5fe47f4931d0acafb2c6ff01ca432f5f63f15d9";
-      dependencies = {
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/util-base64@npm:3.310.0" = {
-      name = "@aws-sdk/util-base64";
-      reference = "npm:3.310.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-util-base64-3.310.0-bd7dc86865";
-      outputHash = "/d30027c81a05bda6dcdfe82c58882b8e0f8da802a9eb3da67e0f66ab7b48e9a756c6d286a3cf77ee117375fec8c6fb7f66d9eb081bf88f348c38623321554b3a";
-      flatName = "util-base64";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.310.0";
-      checksum = "10/d30027c81a05bda6dcdfe82c58882b8e0f8da802a9eb3da67e0f66ab7b48e9a756c6d286a3cf77ee117375fec8c6fb7f66d9eb081bf88f348c38623321554b3a";
-      dependencies = {
-        "@aws-sdk/util-buffer-from" = packages."@aws-sdk/util-buffer-from@npm:3.310.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/util-body-length-browser@npm:3.310.0" = {
-      name = "@aws-sdk/util-body-length-browser";
-      reference = "npm:3.310.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-util-body-length-browser-3.310.0-32f77bd9c6";
-      outputHash = "/a6fe0b1c95d236d1a6ee1a1b045a329dea53f12072999482677201b274201c2d06c25a55861677dd859c3f56972f3b090bef3e1c363d4a8ee33e0f276a787289";
-      flatName = "util-body-length-browser";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.310.0";
-      checksum = "10/a6fe0b1c95d236d1a6ee1a1b045a329dea53f12072999482677201b274201c2d06c25a55861677dd859c3f56972f3b090bef3e1c363d4a8ee33e0f276a787289";
-      dependencies = {
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/util-body-length-node@npm:3.310.0" = {
-      name = "@aws-sdk/util-body-length-node";
-      reference = "npm:3.310.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-util-body-length-node-3.310.0-dff3170f3a";
-      outputHash = "/3775cb82812c4bcf7f39bce07be5646b6a6ff720b5173aeec7cb6b004633191115920610622162639a28774d2c25fa04e768ffaa2817562c62729de5dcbda3c5";
-      flatName = "util-body-length-node";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.310.0";
-      checksum = "10/3775cb82812c4bcf7f39bce07be5646b6a6ff720b5173aeec7cb6b004633191115920610622162639a28774d2c25fa04e768ffaa2817562c62729de5dcbda3c5";
       dependencies = {
         "tslib" = packages."tslib@npm:2.6.0";
       };
@@ -1728,59 +1295,6 @@ let
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/util-config-provider@npm:3.310.0" = {
-      name = "@aws-sdk/util-config-provider";
-      reference = "npm:3.310.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-util-config-provider-3.310.0-15877c83d4";
-      outputHash = "/40d7369dc932c389efdbbf9b7c0c3a7beaee1b4082d2b63ef667e61f72e40875bd8246d1cf0e4af79d2234bf5126dd61db6fb5ebdf366becd4787140b9bcfd2d";
-      flatName = "util-config-provider";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.310.0";
-      checksum = "10/40d7369dc932c389efdbbf9b7c0c3a7beaee1b4082d2b63ef667e61f72e40875bd8246d1cf0e4af79d2234bf5126dd61db6fb5ebdf366becd4787140b9bcfd2d";
-      dependencies = {
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/util-defaults-mode-browser@npm:3.360.0" = {
-      name = "@aws-sdk/util-defaults-mode-browser";
-      reference = "npm:3.360.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-util-defaults-mode-browser-3.360.0-d29b043a67";
-      outputHash = "/9639ea1acf0f89ebabffea728578bb7d4226ea30bb1a697213b2f0fcd44829e62412efab72c4121a81c6d237ff2ffb3df3ebff31ecd7b8148836aa5a8199df45";
-      flatName = "util-defaults-mode-browser";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.360.0";
-      checksum = "10/9639ea1acf0f89ebabffea728578bb7d4226ea30bb1a697213b2f0fcd44829e62412efab72c4121a81c6d237ff2ffb3df3ebff31ecd7b8148836aa5a8199df45";
-      dependencies = {
-        "@aws-sdk/property-provider" = packages."@aws-sdk/property-provider@npm:3.357.0";
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "bowser" = packages."bowser@npm:2.11.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/util-defaults-mode-node@npm:3.360.0" = {
-      name = "@aws-sdk/util-defaults-mode-node";
-      reference = "npm:3.360.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-util-defaults-mode-node-3.360.0-5cda0eae52";
-      outputHash = "/c995212163e781bd58ea861fa5f5e6e7244490fb60f35f51bb7c81f65ef0c03d9e8179f671271d6ff894eca5d01b496f19cb40d61e820b783a4e193a16b21868";
-      flatName = "util-defaults-mode-node";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.360.0";
-      checksum = "10/c995212163e781bd58ea861fa5f5e6e7244490fb60f35f51bb7c81f65ef0c03d9e8179f671271d6ff894eca5d01b496f19cb40d61e820b783a4e193a16b21868";
-      dependencies = {
-        "@aws-sdk/config-resolver" = packages."@aws-sdk/config-resolver@npm:3.357.0";
-        "@aws-sdk/credential-provider-imds" = packages."@aws-sdk/credential-provider-imds@npm:3.357.0";
-        "@aws-sdk/node-config-provider" = packages."@aws-sdk/node-config-provider@npm:3.357.0";
-        "@aws-sdk/property-provider" = packages."@aws-sdk/property-provider@npm:3.357.0";
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
     "@aws-sdk/util-endpoints@npm:3.357.0" = {
       name = "@aws-sdk/util-endpoints";
       reference = "npm:3.357.0";
@@ -1797,35 +1311,21 @@ let
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/util-format-url@npm:3.357.0" = {
+    "@aws-sdk/util-format-url@npm:3.363.0" = {
       name = "@aws-sdk/util-format-url";
-      reference = "npm:3.357.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-util-format-url-3.357.0-c7eabf5b18";
-      outputHash = "/f9df8e128faf8bfacab8ed2d8220f1c44eefecf8f6733b4f6ac342f3e32309b0372225e15f7cb9f3754cd3197f490f66a9181da22b44d1fb54a549c163c8e672";
+      outputName = "aws-sdk-util-format-url-3.363.0-2fc4edf601";
+      outputHash = "/3b308c72563013a5dab504d34877025de5f3468218856c59d722f245dd6017b7da79191f1b3d5bfa7ee3dd4a7c8b8f39ef13dee34932db7fa59581ec0713d417";
       flatName = "util-format-url";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/f9df8e128faf8bfacab8ed2d8220f1c44eefecf8f6733b4f6ac342f3e32309b0372225e15f7cb9f3754cd3197f490f66a9181da22b44d1fb54a549c163c8e672";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/3b308c72563013a5dab504d34877025de5f3468218856c59d722f245dd6017b7da79191f1b3d5bfa7ee3dd4a7c8b8f39ef13dee34932db7fa59581ec0713d417";
       dependencies = {
-        "@aws-sdk/querystring-builder" = packages."@aws-sdk/querystring-builder@npm:3.357.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/util-hex-encoding@npm:3.310.0" = {
-      name = "@aws-sdk/util-hex-encoding";
-      reference = "npm:3.310.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-util-hex-encoding-3.310.0-aef31b4def";
-      outputHash = "/9ec0388c9667d4d616c61530be88422a315e3d92bf93b941d6f6d8339d6e703f4cacb2e11402658d716b1166e90d0fddb497284220e11075a0c17821c468c44b";
-      flatName = "util-hex-encoding";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.310.0";
-      checksum = "10/9ec0388c9667d4d616c61530be88422a315e3d92bf93b941d6f6d8339d6e703f4cacb2e11402658d716b1166e90d0fddb497284220e11075a0c17821c468c44b";
-      dependencies = {
+        "@smithy/querystring-builder" = packages."@smithy/querystring-builder@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
@@ -1844,105 +1344,39 @@ let
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/util-middleware@npm:3.357.0" = {
-      name = "@aws-sdk/util-middleware";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-util-middleware-3.357.0-8dcbe3471c";
-      outputHash = "/7fe34fd4c3490267a9379de70a7413902c4ce312b8f925c3c96e6d125833584572ed913f174013725982e5e4e1bd15f286930b52f9ee1bc8f475f7400c2e2946";
-      flatName = "util-middleware";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/7fe34fd4c3490267a9379de70a7413902c4ce312b8f925c3c96e6d125833584572ed913f174013725982e5e4e1bd15f286930b52f9ee1bc8f475f7400c2e2946";
-      dependencies = {
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/util-retry@npm:3.362.0" = {
-      name = "@aws-sdk/util-retry";
-      reference = "npm:3.362.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-util-retry-3.362.0-888d4f492d";
-      outputHash = "/df29a876834a545b5ee76bbf8bf70b9240e04a10f3ff48c7e4ea00071f7c0ff45ab0a8c8bd58fab0c0376e1dda95c6973307d77c6eccaa68456de61bcfa4fc8e";
-      flatName = "util-retry";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.362.0";
-      checksum = "10/df29a876834a545b5ee76bbf8bf70b9240e04a10f3ff48c7e4ea00071f7c0ff45ab0a8c8bd58fab0c0376e1dda95c6973307d77c6eccaa68456de61bcfa4fc8e";
-      dependencies = {
-        "@aws-sdk/service-error-classification" = packages."@aws-sdk/service-error-classification@npm:3.357.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/util-stream@npm:3.360.0" = {
-      name = "@aws-sdk/util-stream";
-      reference = "npm:3.360.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-util-stream-3.360.0-a1407dca98";
-      outputHash = "/fa313fbd9cc7af34db356a1b0d082a5ca464676a2771d6b6b595581db90d86aacae0c7623bc920547420a5649cf6399bd8bec5316db86454441c5dddd261c8d5";
-      flatName = "util-stream";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.360.0";
-      checksum = "10/fa313fbd9cc7af34db356a1b0d082a5ca464676a2771d6b6b595581db90d86aacae0c7623bc920547420a5649cf6399bd8bec5316db86454441c5dddd261c8d5";
-      dependencies = {
-        "@aws-sdk/fetch-http-handler" = packages."@aws-sdk/fetch-http-handler@npm:3.357.0";
-        "@aws-sdk/node-http-handler" = packages."@aws-sdk/node-http-handler@npm:3.360.0";
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
-        "@aws-sdk/util-base64" = packages."@aws-sdk/util-base64@npm:3.310.0";
-        "@aws-sdk/util-buffer-from" = packages."@aws-sdk/util-buffer-from@npm:3.310.0";
-        "@aws-sdk/util-hex-encoding" = packages."@aws-sdk/util-hex-encoding@npm:3.310.0";
-        "@aws-sdk/util-utf8" = packages."@aws-sdk/util-utf8@npm:3.310.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/util-uri-escape@npm:3.310.0" = {
-      name = "@aws-sdk/util-uri-escape";
-      reference = "npm:3.310.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-util-uri-escape-3.310.0-c20e335602";
-      outputHash = "/04ca4f2ee9226236d6c629a58329312c5c316b2a0bf29c55f63075447de039c041144755e42ca11db2fd79a793d82bd9e548e7ba5b3ef6b41db5f66aac769e23";
-      flatName = "util-uri-escape";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.310.0";
-      checksum = "10/04ca4f2ee9226236d6c629a58329312c5c316b2a0bf29c55f63075447de039c041144755e42ca11db2fd79a793d82bd9e548e7ba5b3ef6b41db5f66aac769e23";
-      dependencies = {
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/util-user-agent-browser@npm:3.357.0" = {
+    "@aws-sdk/util-user-agent-browser@npm:3.363.0" = {
       name = "@aws-sdk/util-user-agent-browser";
-      reference = "npm:3.357.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-util-user-agent-browser-3.357.0-3ae1c59855";
-      outputHash = "/2ee910f7fb1f2417bd28fdc4ef1e2186a261ac8538c56dc01ff7d5bf47d506d111edf1313baecd4367639661a1c0389b62ab1d3aac9940890ab874777ec17235";
+      outputName = "aws-sdk-util-user-agent-browser-3.363.0-305f9aad64";
+      outputHash = "/b8ef686dbc6892ca3a1dca1966465b91fe7d0699f76a2e605fcb1c7ebcac513c6d04e9189670d37440cf46551ac88826eac1cff8164dc21f55dfdb92ea1b9fee";
       flatName = "util-user-agent-browser";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/2ee910f7fb1f2417bd28fdc4ef1e2186a261ac8538c56dc01ff7d5bf47d506d111edf1313baecd4367639661a1c0389b62ab1d3aac9940890ab874777ec17235";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/b8ef686dbc6892ca3a1dca1966465b91fe7d0699f76a2e605fcb1c7ebcac513c6d04e9189670d37440cf46551ac88826eac1cff8164dc21f55dfdb92ea1b9fee";
       dependencies = {
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "bowser" = packages."bowser@npm:2.11.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@aws-sdk/util-user-agent-node@npm:3.357.0" = {
+    "@aws-sdk/util-user-agent-node@npm:3.363.0" = {
       name = "@aws-sdk/util-user-agent-node";
-      reference = "npm:3.357.0";
+      reference = "npm:3.363.0";
       linkType = "HARD";
-      outputName = "aws-sdk-util-user-agent-node-3.357.0-98baf1a140";
-      outputHash = "/1ad32d51973f5366c324da8e9b2922cd7f54b0dede038fdb0c1c19d80d593dc8814b3233d6294e4a2c9989ce1ab92c9a7b6e3519d782e250d657fa515f9d0df0";
+      outputName = "aws-sdk-util-user-agent-node-3.363.0-0a96a5f405";
+      outputHash = "/677d136805b7a19bbce5ca034d75bb091be18d374906d6cc0a9cd963d9d8de3c40950465100b60f2fdaf49d1e90b383fe738b2e1165d8e94a49aaaa395fa3de1";
       flatName = "util-user-agent-node";
       languageName = "node";
       scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/1ad32d51973f5366c324da8e9b2922cd7f54b0dede038fdb0c1c19d80d593dc8814b3233d6294e4a2c9989ce1ab92c9a7b6e3519d782e250d657fa515f9d0df0";
+      descriptorRange = "npm:3.363.0";
+      checksum = "10/677d136805b7a19bbce5ca034d75bb091be18d374906d6cc0a9cd963d9d8de3c40950465100b60f2fdaf49d1e90b383fe738b2e1165d8e94a49aaaa395fa3de1";
       dependencies = {
-        "@aws-sdk/node-config-provider" = packages."@aws-sdk/node-config-provider@npm:3.357.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
+        "@smithy/node-config-provider" = packages."@smithy/node-config-provider@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
       packagePeers = [
@@ -1950,13 +1384,14 @@ let
         "aws-crt"
       ];
     };
-    "@aws-sdk/util-user-agent-node@virtual:6fa902a8583a4891c4928ce4860f9fc58e3db6db28f0d16f6dc5956a0b64ed588eaf78634415f8dfc1dae517cbd5b10d1ddf9b1a0ef862b1786c441e8e3400c0#npm:3.357.0" = {
+    "@aws-sdk/util-user-agent-node@virtual:83a5ecf01f29ea54d623458a162f82461d118ceffe565d011e04c1c78127fd04efa05406b30e89bc72f8a58d34765da653b1032a93f4063409437630c03e09d0#npm:3.363.0" = {
       name = "@aws-sdk/util-user-agent-node";
-      reference = "virtual:6fa902a8583a4891c4928ce4860f9fc58e3db6db28f0d16f6dc5956a0b64ed588eaf78634415f8dfc1dae517cbd5b10d1ddf9b1a0ef862b1786c441e8e3400c0#npm:3.357.0";
-      canonicalPackage = packages."@aws-sdk/util-user-agent-node@npm:3.357.0";
+      reference = "virtual:83a5ecf01f29ea54d623458a162f82461d118ceffe565d011e04c1c78127fd04efa05406b30e89bc72f8a58d34765da653b1032a93f4063409437630c03e09d0#npm:3.363.0";
+      canonicalPackage = packages."@aws-sdk/util-user-agent-node@npm:3.363.0";
       dependencies = {
-        "@aws-sdk/node-config-provider" = packages."@aws-sdk/node-config-provider@npm:3.357.0";
         "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
+        "@smithy/node-config-provider" = packages."@smithy/node-config-provider@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
@@ -1988,23 +1423,6 @@ let
       checksum = "10/88bf031527a1fe99712b4e2cb00bc47436b39aa29ce0ceeace3bd0bc7d436d14940f190c249b9a69e684f8d3f01f96847848f5d8ebab7e3103c0084c1e609ce4";
       dependencies = {
         "@aws-sdk/util-buffer-from" = packages."@aws-sdk/util-buffer-from@npm:3.310.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
-    "@aws-sdk/util-waiter@npm:3.357.0" = {
-      name = "@aws-sdk/util-waiter";
-      reference = "npm:3.357.0";
-      linkType = "HARD";
-      outputName = "aws-sdk-util-waiter-3.357.0-8fc98ca32e";
-      outputHash = "/36ecc9446fec1f98519f60b6108a4f315cf90ce134a081529a9ff08bb773894b2f37efda285e617f29e223c48d57a94c0946871c86692a4d4da4c411ee3428f8";
-      flatName = "util-waiter";
-      languageName = "node";
-      scope = "aws-sdk";
-      descriptorRange = "npm:3.357.0";
-      checksum = "10/36ecc9446fec1f98519f60b6108a4f315cf90ce134a081529a9ff08bb773894b2f37efda285e617f29e223c48d57a94c0946871c86692a4d4da4c411ee3428f8";
-      dependencies = {
-        "@aws-sdk/abort-controller" = packages."@aws-sdk/abort-controller@npm:3.357.0";
-        "@aws-sdk/types" = packages."@aws-sdk/types@npm:3.357.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
@@ -3345,401 +2763,400 @@ let
         "to-fast-properties" = packages."to-fast-properties@npm:2.0.0";
       };
     };
-    "@ckeditor/ckeditor5-adapter-ckfinder@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-adapter-ckfinder@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-adapter-ckfinder";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-adapter-ckfinder-38.0.1-b368c6bfdd";
-      outputHash = "/6a67bc0f463392586df9c1bc3440ed670be29df3cc831d93cc5a6ee460645e15f6ecc53b7d55f706b78d7d07fe79461bd382ef18f8d97d920ef23ef1309efdb6";
+      outputName = "ckeditor-ckeditor5-adapter-ckfinder-38.1.0-049f59dba0";
+      outputHash = "/bcfaa1404c8c32ee73c2a35e5eb3ae37b744886f98ef7e797cdcda3e41d933be4dc1bdd2efa83b9f587d757946701089f9ef080dc4ea7036176df4fb5146fb19";
       flatName = "ckeditor5-adapter-ckfinder";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/6a67bc0f463392586df9c1bc3440ed670be29df3cc831d93cc5a6ee460645e15f6ecc53b7d55f706b78d7d07fe79461bd382ef18f8d97d920ef23ef1309efdb6";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/bcfaa1404c8c32ee73c2a35e5eb3ae37b744886f98ef7e797cdcda3e41d933be4dc1bdd2efa83b9f587d757946701089f9ef080dc4ea7036176df4fb5146fb19";
       dependencies = {
-        "ckeditor5" = packages."ckeditor5@npm:38.0.1";
+        "ckeditor5" = packages."ckeditor5@npm:38.1.0";
       };
     };
-    "@ckeditor/ckeditor5-autoformat@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-autoformat@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-autoformat";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-autoformat-38.0.1-5afb56bb5c";
-      outputHash = "/c2f0c1b1e507b8338b5174c8767184902bf8b52682a4c6da0b3289b12d204121e777c59fde6bfe36e28bc13d2417d1d33a92a87b7a21a89d6e84356004812c97";
+      outputName = "ckeditor-ckeditor5-autoformat-38.1.0-8d84c01398";
+      outputHash = "/911353209d270aca6057f45f83fcd47c0be6284497a7f1ebd95298eb7f220f982427c337a6183da85cd473a72e0902069fc20036381b8017c130f77cf266f385";
       flatName = "ckeditor5-autoformat";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/c2f0c1b1e507b8338b5174c8767184902bf8b52682a4c6da0b3289b12d204121e777c59fde6bfe36e28bc13d2417d1d33a92a87b7a21a89d6e84356004812c97";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/911353209d270aca6057f45f83fcd47c0be6284497a7f1ebd95298eb7f220f982427c337a6183da85cd473a72e0902069fc20036381b8017c130f77cf266f385";
       dependencies = {
-        "ckeditor5" = packages."ckeditor5@npm:38.0.1";
+        "ckeditor5" = packages."ckeditor5@npm:38.1.0";
       };
     };
-    "@ckeditor/ckeditor5-basic-styles@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-basic-styles@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-basic-styles";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-basic-styles-38.0.1-81923d0bf4";
-      outputHash = "/652aad11f492755c3b0cd8dbd093cf0dcb3f0e72ded6d07c6149abe734928c57cfb387e8aea4da44413086763ba15066a1850de4f404ca2f695dd1deb7578c4c";
+      outputName = "ckeditor-ckeditor5-basic-styles-38.1.0-d6403f0a9b";
+      outputHash = "/a0e47f9a69b2a88c77aada7a29540c66551ec7b4193f400c004a1c8fbea27dc950bbe5d137aed3492953feb820309c13029808f64386c2b6f72ce419376d8655";
       flatName = "ckeditor5-basic-styles";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/652aad11f492755c3b0cd8dbd093cf0dcb3f0e72ded6d07c6149abe734928c57cfb387e8aea4da44413086763ba15066a1850de4f404ca2f695dd1deb7578c4c";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/a0e47f9a69b2a88c77aada7a29540c66551ec7b4193f400c004a1c8fbea27dc950bbe5d137aed3492953feb820309c13029808f64386c2b6f72ce419376d8655";
       dependencies = {
-        "ckeditor5" = packages."ckeditor5@npm:38.0.1";
+        "ckeditor5" = packages."ckeditor5@npm:38.1.0";
       };
     };
-    "@ckeditor/ckeditor5-block-quote@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-block-quote@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-block-quote";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-block-quote-38.0.1-bcef497eac";
-      outputHash = "/97dd87d10d1f2955c2d68c2bc33e913939864a12e95b024e6e2670f93e84e35ac6cd692ffb42a5d46bc3991491d9b9289da28fa1418f2f7d25dadbd6bede5a3b";
+      outputName = "ckeditor-ckeditor5-block-quote-38.1.0-3fb64c5123";
+      outputHash = "/7dc8d1d0d40935540c8d2b9e394020d7283ef0f2334f7e9e58463a15289d55cb23e208d1e38960311a7031025cc33f72b60e5ec195230682b435b51d609e9a26";
       flatName = "ckeditor5-block-quote";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/97dd87d10d1f2955c2d68c2bc33e913939864a12e95b024e6e2670f93e84e35ac6cd692ffb42a5d46bc3991491d9b9289da28fa1418f2f7d25dadbd6bede5a3b";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/7dc8d1d0d40935540c8d2b9e394020d7283ef0f2334f7e9e58463a15289d55cb23e208d1e38960311a7031025cc33f72b60e5ec195230682b435b51d609e9a26";
       dependencies = {
-        "ckeditor5" = packages."ckeditor5@npm:38.0.1";
+        "ckeditor5" = packages."ckeditor5@npm:38.1.0";
       };
     };
-    "@ckeditor/ckeditor5-build-classic@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-build-classic@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-build-classic";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-build-classic-38.0.1-23e30c862b";
-      outputHash = "/5b2ab56e643b50139fac763f1a3ed65bd2fda3bcfba6f09848c44b93d753e6c433db87d566c594a5df538a7a24b700fd035fea5582da11f37887fb417601591c";
+      outputName = "ckeditor-ckeditor5-build-classic-38.1.0-e414401fa8";
+      outputHash = "/52d6be586b6b38439c539f12f754f86a56294878e0d6027f3488ec2fb8a44eaf3734bd569953bc6295b9a9fc15f3aabedf4f0ff15320566bbce8d5615b95971f";
       flatName = "ckeditor5-build-classic";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:~38.0.1";
-      checksum = "10/5b2ab56e643b50139fac763f1a3ed65bd2fda3bcfba6f09848c44b93d753e6c433db87d566c594a5df538a7a24b700fd035fea5582da11f37887fb417601591c";
+      descriptorRange = "npm:~38.1.0";
+      checksum = "10/52d6be586b6b38439c539f12f754f86a56294878e0d6027f3488ec2fb8a44eaf3734bd569953bc6295b9a9fc15f3aabedf4f0ff15320566bbce8d5615b95971f";
       dependencies = {
-        "@ckeditor/ckeditor5-adapter-ckfinder" = packages."@ckeditor/ckeditor5-adapter-ckfinder@npm:38.0.1";
-        "@ckeditor/ckeditor5-autoformat" = packages."@ckeditor/ckeditor5-autoformat@npm:38.0.1";
-        "@ckeditor/ckeditor5-basic-styles" = packages."@ckeditor/ckeditor5-basic-styles@npm:38.0.1";
-        "@ckeditor/ckeditor5-block-quote" = packages."@ckeditor/ckeditor5-block-quote@npm:38.0.1";
-        "@ckeditor/ckeditor5-ckbox" = packages."@ckeditor/ckeditor5-ckbox@npm:38.0.1";
-        "@ckeditor/ckeditor5-ckfinder" = packages."@ckeditor/ckeditor5-ckfinder@npm:38.0.1";
-        "@ckeditor/ckeditor5-cloud-services" = packages."@ckeditor/ckeditor5-cloud-services@npm:38.0.1";
-        "@ckeditor/ckeditor5-easy-image" = packages."@ckeditor/ckeditor5-easy-image@npm:38.0.1";
-        "@ckeditor/ckeditor5-editor-classic" = packages."@ckeditor/ckeditor5-editor-classic@npm:38.0.1";
-        "@ckeditor/ckeditor5-essentials" = packages."@ckeditor/ckeditor5-essentials@npm:38.0.1";
-        "@ckeditor/ckeditor5-heading" = packages."@ckeditor/ckeditor5-heading@npm:38.0.1";
-        "@ckeditor/ckeditor5-image" = packages."@ckeditor/ckeditor5-image@npm:38.0.1";
-        "@ckeditor/ckeditor5-indent" = packages."@ckeditor/ckeditor5-indent@npm:38.0.1";
-        "@ckeditor/ckeditor5-link" = packages."@ckeditor/ckeditor5-link@npm:38.0.1";
-        "@ckeditor/ckeditor5-list" = packages."@ckeditor/ckeditor5-list@npm:38.0.1";
-        "@ckeditor/ckeditor5-media-embed" = packages."@ckeditor/ckeditor5-media-embed@npm:38.0.1";
-        "@ckeditor/ckeditor5-paragraph" = packages."@ckeditor/ckeditor5-paragraph@npm:38.0.1";
-        "@ckeditor/ckeditor5-paste-from-office" = packages."@ckeditor/ckeditor5-paste-from-office@npm:38.0.1";
-        "@ckeditor/ckeditor5-table" = packages."@ckeditor/ckeditor5-table@npm:38.0.1";
-        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:38.0.1";
+        "@ckeditor/ckeditor5-adapter-ckfinder" = packages."@ckeditor/ckeditor5-adapter-ckfinder@npm:38.1.0";
+        "@ckeditor/ckeditor5-autoformat" = packages."@ckeditor/ckeditor5-autoformat@npm:38.1.0";
+        "@ckeditor/ckeditor5-basic-styles" = packages."@ckeditor/ckeditor5-basic-styles@npm:38.1.0";
+        "@ckeditor/ckeditor5-block-quote" = packages."@ckeditor/ckeditor5-block-quote@npm:38.1.0";
+        "@ckeditor/ckeditor5-ckbox" = packages."@ckeditor/ckeditor5-ckbox@npm:38.1.0";
+        "@ckeditor/ckeditor5-ckfinder" = packages."@ckeditor/ckeditor5-ckfinder@npm:38.1.0";
+        "@ckeditor/ckeditor5-cloud-services" = packages."@ckeditor/ckeditor5-cloud-services@npm:38.1.0";
+        "@ckeditor/ckeditor5-easy-image" = packages."@ckeditor/ckeditor5-easy-image@npm:38.1.0";
+        "@ckeditor/ckeditor5-editor-classic" = packages."@ckeditor/ckeditor5-editor-classic@npm:38.1.0";
+        "@ckeditor/ckeditor5-essentials" = packages."@ckeditor/ckeditor5-essentials@npm:38.1.0";
+        "@ckeditor/ckeditor5-heading" = packages."@ckeditor/ckeditor5-heading@npm:38.1.0";
+        "@ckeditor/ckeditor5-image" = packages."@ckeditor/ckeditor5-image@npm:38.1.0";
+        "@ckeditor/ckeditor5-indent" = packages."@ckeditor/ckeditor5-indent@npm:38.1.0";
+        "@ckeditor/ckeditor5-link" = packages."@ckeditor/ckeditor5-link@npm:38.1.0";
+        "@ckeditor/ckeditor5-list" = packages."@ckeditor/ckeditor5-list@npm:38.1.0";
+        "@ckeditor/ckeditor5-media-embed" = packages."@ckeditor/ckeditor5-media-embed@npm:38.1.0";
+        "@ckeditor/ckeditor5-paragraph" = packages."@ckeditor/ckeditor5-paragraph@npm:38.1.0";
+        "@ckeditor/ckeditor5-paste-from-office" = packages."@ckeditor/ckeditor5-paste-from-office@npm:38.1.0";
+        "@ckeditor/ckeditor5-table" = packages."@ckeditor/ckeditor5-table@npm:38.1.0";
+        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:38.1.0";
       };
     };
-    "@ckeditor/ckeditor5-ckbox@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-ckbox@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-ckbox";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-ckbox-38.0.1-9d472f0f80";
-      outputHash = "/69f2bb6fb00d9194b1701b7c3aece03e2857fe48a07ee8779931d3dbd29551a1aae3ec5353e5abfc5f9d5f78f4a9c4bbb7edf5cf6f2da61c548530144a2c3c1d";
+      outputName = "ckeditor-ckeditor5-ckbox-38.1.0-00e785abec";
+      outputHash = "/f583d3c1b197b209ba56474d81feab45664049266d4ce7844bfca1395dfa529678b055fb37ca42f102b14d02cf76b115dcb24e6fa5cf88203b8fcc97614fdd5c";
       flatName = "ckeditor5-ckbox";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/69f2bb6fb00d9194b1701b7c3aece03e2857fe48a07ee8779931d3dbd29551a1aae3ec5353e5abfc5f9d5f78f4a9c4bbb7edf5cf6f2da61c548530144a2c3c1d";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/f583d3c1b197b209ba56474d81feab45664049266d4ce7844bfca1395dfa529678b055fb37ca42f102b14d02cf76b115dcb24e6fa5cf88203b8fcc97614fdd5c";
       dependencies = {
-        "ckeditor5" = packages."ckeditor5@npm:38.0.1";
+        "ckeditor5" = packages."ckeditor5@npm:38.1.0";
       };
     };
-    "@ckeditor/ckeditor5-ckfinder@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-ckfinder@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-ckfinder";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-ckfinder-38.0.1-b85bb5600f";
-      outputHash = "/e1fcb27d6ac877926d7cacea173337c3a26884b09e114a73ef37f8165339cd0bfee29eb917cd2103413a0c9e7848145a40c29d83edccc39a947e9f99750d70ea";
+      outputName = "ckeditor-ckeditor5-ckfinder-38.1.0-ab6a9df50b";
+      outputHash = "/98f9cdc7939214a26137113b5b39fd6758e9a9e9b4e63c1bd8fecd263d01fa762a42259bdac1866309c58700421a1df9035fab68475c5b0f6d224d5e84b3d831";
       flatName = "ckeditor5-ckfinder";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/e1fcb27d6ac877926d7cacea173337c3a26884b09e114a73ef37f8165339cd0bfee29eb917cd2103413a0c9e7848145a40c29d83edccc39a947e9f99750d70ea";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/98f9cdc7939214a26137113b5b39fd6758e9a9e9b4e63c1bd8fecd263d01fa762a42259bdac1866309c58700421a1df9035fab68475c5b0f6d224d5e84b3d831";
       dependencies = {
-        "ckeditor5" = packages."ckeditor5@npm:38.0.1";
+        "ckeditor5" = packages."ckeditor5@npm:38.1.0";
       };
     };
-    "@ckeditor/ckeditor5-clipboard@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-clipboard@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-clipboard";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-clipboard-38.0.1-5a8de6ab49";
-      outputHash = "/8400fc09f4f10824279dc5592e50e2de7602522f475529ff7adfb165237675d2946e9087ea26fc350de17d4322806a3baa51207a3c4cebfa2f32dbf24c6aab73";
+      outputName = "ckeditor-ckeditor5-clipboard-38.1.0-46f2874a13";
+      outputHash = "/150ccd7bb7bda663aeb344af4eec5b4208ca9c6bda04589be5b2debc3da0342fca061a187b20f74edb91241826b3539ee9cc5d9bacae595ab9c64a8c9a17885a";
       flatName = "ckeditor5-clipboard";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/8400fc09f4f10824279dc5592e50e2de7602522f475529ff7adfb165237675d2946e9087ea26fc350de17d4322806a3baa51207a3c4cebfa2f32dbf24c6aab73";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/150ccd7bb7bda663aeb344af4eec5b4208ca9c6bda04589be5b2debc3da0342fca061a187b20f74edb91241826b3539ee9cc5d9bacae595ab9c64a8c9a17885a";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.0.1";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:38.0.1";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:38.0.1";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.0.1";
-        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:38.0.1";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.1.0";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:38.1.0";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:38.1.0";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.1.0";
+        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:38.1.0";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-cloud-services@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-cloud-services@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-cloud-services";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-cloud-services-38.0.1-f2be033b0e";
-      outputHash = "/e12376d84f7f294abc920b124e8d5d4bf9cbcf9f5388fa3b65c09a38fc8c890da2f1a9b5521d179eab81237ead94902e941fe4bfa6084c2dca051c0115b19a67";
+      outputName = "ckeditor-ckeditor5-cloud-services-38.1.0-fa30aafcdc";
+      outputHash = "/dc2c59d37cb8f3d972f50d185070667e15bcc9aacfbe4f33aff2cf1abc4567e6dd07c0136ae516f6ecc4684689f30b8227945e63faadb935796c8dc7468135cd";
       flatName = "ckeditor5-cloud-services";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/e12376d84f7f294abc920b124e8d5d4bf9cbcf9f5388fa3b65c09a38fc8c890da2f1a9b5521d179eab81237ead94902e941fe4bfa6084c2dca051c0115b19a67";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/dc2c59d37cb8f3d972f50d185070667e15bcc9aacfbe4f33aff2cf1abc4567e6dd07c0136ae516f6ecc4684689f30b8227945e63faadb935796c8dc7468135cd";
       dependencies = {
-        "ckeditor5" = packages."ckeditor5@npm:38.0.1";
+        "ckeditor5" = packages."ckeditor5@npm:38.1.0";
       };
     };
-    "@ckeditor/ckeditor5-core@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-core@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-core";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-core-38.0.1-6ea8e8f761";
-      outputHash = "/bf1688d3561388453576221dd7e587bb4e5632029f64352cfbb5706075b134841c147d90fc9cb5e5c00c649dab555598156451d25b814e6e77264339ffa4b2c5";
+      outputName = "ckeditor-ckeditor5-core-38.1.0-29af906882";
+      outputHash = "/983a544012a3b3740c9a062e12e9fe4eaa06cfa1ad978e4755cd457fa51dc63f7d3092313d5db834dd9ec53f1ab3c5aa82c823ae52820911783b8ee56d5bb60a";
       flatName = "ckeditor5-core";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:~38.0.1";
-      checksum = "10/bf1688d3561388453576221dd7e587bb4e5632029f64352cfbb5706075b134841c147d90fc9cb5e5c00c649dab555598156451d25b814e6e77264339ffa4b2c5";
+      descriptorRange = "npm:~38.1.0";
+      checksum = "10/983a544012a3b3740c9a062e12e9fe4eaa06cfa1ad978e4755cd457fa51dc63f7d3092313d5db834dd9ec53f1ab3c5aa82c823ae52820911783b8ee56d5bb60a";
       dependencies = {
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:38.0.1";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.0.1";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:38.1.0";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.1.0";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-easy-image@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-easy-image@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-easy-image";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-easy-image-38.0.1-b5ba789918";
-      outputHash = "/f1dc8579009c9df8e8371f90003c80889a4f9d387b9211163184c16863848f4920c7a0c74484c0e57e9ba301a380329e9fcdffbd860d3ff32b6f12e73a3b6d8f";
+      outputName = "ckeditor-ckeditor5-easy-image-38.1.0-039781276b";
+      outputHash = "/53a5861e231e01c3efb81bffdcdada616978f59cf5eb8ef84989245770f80a227ff630b755865092d6e2fe708c90f55a25df643824454fc6f596d43fa50613ff";
       flatName = "ckeditor5-easy-image";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/f1dc8579009c9df8e8371f90003c80889a4f9d387b9211163184c16863848f4920c7a0c74484c0e57e9ba301a380329e9fcdffbd860d3ff32b6f12e73a3b6d8f";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/53a5861e231e01c3efb81bffdcdada616978f59cf5eb8ef84989245770f80a227ff630b755865092d6e2fe708c90f55a25df643824454fc6f596d43fa50613ff";
       dependencies = {
-        "ckeditor5" = packages."ckeditor5@npm:38.0.1";
+        "ckeditor5" = packages."ckeditor5@npm:38.1.0";
       };
     };
-    "@ckeditor/ckeditor5-editor-classic@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-editor-classic@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-editor-classic";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-editor-classic-38.0.1-197111b083";
-      outputHash = "/54f8b7035788dac91b4451ce82152489cd878dbb4455aacb703f88cf6db8849ea18a27357391774944c471c9a5df35dfa5629f24b51f1053a5e14ec112af8d33";
+      outputName = "ckeditor-ckeditor5-editor-classic-38.1.0-f0b3722803";
+      outputHash = "/35c2b5c3aee5219481961d2689268292ca260977accf310c914ef15e98eeb2b3fe9af8b622cb46d18d34a4634bb1c2d6a5551ccbdb24f6b96bad8b73f73694ab";
       flatName = "ckeditor5-editor-classic";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/54f8b7035788dac91b4451ce82152489cd878dbb4455aacb703f88cf6db8849ea18a27357391774944c471c9a5df35dfa5629f24b51f1053a5e14ec112af8d33";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/35c2b5c3aee5219481961d2689268292ca260977accf310c914ef15e98eeb2b3fe9af8b622cb46d18d34a4634bb1c2d6a5551ccbdb24f6b96bad8b73f73694ab";
       dependencies = {
-        "ckeditor5" = packages."ckeditor5@npm:38.0.1";
+        "ckeditor5" = packages."ckeditor5@npm:38.1.0";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-engine@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-engine@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-engine";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-engine-38.0.1-a9bebd2189";
-      outputHash = "/03ae5cc3a5332b7e4c9f67b618d886495c26127e8d08d9d62c4bc483b7aaddfc72200ba6bb104ea2de37c16c8166719de94fba756ba0098c04f8c73742af2bf5";
+      outputName = "ckeditor-ckeditor5-engine-38.1.0-175393d2ee";
+      outputHash = "/48e1341d177b338053fe92d2c7303a6764bfe6609905b6ed5e27aba701f2590bcbdd8afb6c0ff9bd3e72c33ec8d992732ac147804680ff6113de29f3a97fdbe9";
       flatName = "ckeditor5-engine";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:~38.0.1";
-      checksum = "10/03ae5cc3a5332b7e4c9f67b618d886495c26127e8d08d9d62c4bc483b7aaddfc72200ba6bb104ea2de37c16c8166719de94fba756ba0098c04f8c73742af2bf5";
+      descriptorRange = "npm:~38.1.0";
+      checksum = "10/48e1341d177b338053fe92d2c7303a6764bfe6609905b6ed5e27aba701f2590bcbdd8afb6c0ff9bd3e72c33ec8d992732ac147804680ff6113de29f3a97fdbe9";
       dependencies = {
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.0.1";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.1.0";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-enter@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-enter@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-enter";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-enter-38.0.1-85bea81c85";
-      outputHash = "/65d7b7aa22b56ee7c1f47f0bce470950772160e3494cf2f8ed570aadee7c978a135c37f61e122dc60ad7bce4226306e24ce9b17e5532aa83cd8c8ce1376fdf70";
+      outputName = "ckeditor-ckeditor5-enter-38.1.0-80e121246d";
+      outputHash = "/602c431d36e8559a560f30434ce258ddbb1abfec0fcf1568f90036acffde26085209e96ca021059019f949313c608831f1640687281b114b0a038485070f732f";
       flatName = "ckeditor5-enter";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/65d7b7aa22b56ee7c1f47f0bce470950772160e3494cf2f8ed570aadee7c978a135c37f61e122dc60ad7bce4226306e24ce9b17e5532aa83cd8c8ce1376fdf70";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/602c431d36e8559a560f30434ce258ddbb1abfec0fcf1568f90036acffde26085209e96ca021059019f949313c608831f1640687281b114b0a038485070f732f";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.0.1";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:38.0.1";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.0.1";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.1.0";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:38.1.0";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.1.0";
       };
     };
-    "@ckeditor/ckeditor5-essentials@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-essentials@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-essentials";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-essentials-38.0.1-ba78e87b78";
-      outputHash = "/9d56b54e651533ce85f7bbe4ef1d91dec921535f4f53bb4845ddbde3b492c40bc4426f1c1e41ce4bb9cff76091c20cd757b37071873e2da14a40062dd225f581";
+      outputName = "ckeditor-ckeditor5-essentials-38.1.0-fc77311827";
+      outputHash = "/968427badbceeed3dfa5539ef12b276dcd9e9edd0eeb96197b697f8408320ea9d188ea3efbace70fe45aa49751127b50e07b160aeac7d9bb2da9e46a6170a8ef";
       flatName = "ckeditor5-essentials";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/9d56b54e651533ce85f7bbe4ef1d91dec921535f4f53bb4845ddbde3b492c40bc4426f1c1e41ce4bb9cff76091c20cd757b37071873e2da14a40062dd225f581";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/968427badbceeed3dfa5539ef12b276dcd9e9edd0eeb96197b697f8408320ea9d188ea3efbace70fe45aa49751127b50e07b160aeac7d9bb2da9e46a6170a8ef";
       dependencies = {
-        "ckeditor5" = packages."ckeditor5@npm:38.0.1";
+        "ckeditor5" = packages."ckeditor5@npm:38.1.0";
       };
     };
-    "@ckeditor/ckeditor5-heading@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-heading@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-heading";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-heading-38.0.1-7e1db05d3e";
-      outputHash = "/76b280ec4a78472fac8a5c69f8a1c1b14f661bf1a1523fa3b734aa4abd54ded29047caffadcb0a6681f897de8dbf590ef87b432970d3208844e9a4afd02c3f49";
+      outputName = "ckeditor-ckeditor5-heading-38.1.0-4a0eba6684";
+      outputHash = "/330fe044fd323f043c6e81aaf87d24679457474db5067b97ccb1e18e7cb172812dc64c0b8a5c66b181aae629017b2088cbbd4f073d775112cde3e264c5970530";
       flatName = "ckeditor5-heading";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/76b280ec4a78472fac8a5c69f8a1c1b14f661bf1a1523fa3b734aa4abd54ded29047caffadcb0a6681f897de8dbf590ef87b432970d3208844e9a4afd02c3f49";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/330fe044fd323f043c6e81aaf87d24679457474db5067b97ccb1e18e7cb172812dc64c0b8a5c66b181aae629017b2088cbbd4f073d775112cde3e264c5970530";
       dependencies = {
-        "ckeditor5" = packages."ckeditor5@npm:38.0.1";
+        "ckeditor5" = packages."ckeditor5@npm:38.1.0";
       };
     };
-    "@ckeditor/ckeditor5-image@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-image@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-image";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-image-38.0.1-10b70d49f1";
-      outputHash = "/7782da09b355b9e19d48de290c648eb3f742848a0caff03da4dd9f4b504fde4345836ebcec4374d112c5b4c1d59a6881ba0a1b3bb7f8d3f708d1198398f83b60";
+      outputName = "ckeditor-ckeditor5-image-38.1.0-33491a5cfc";
+      outputHash = "/69ab7130740fdfb3bfa786b15613b4127694bbda644937b38262bc5f8045b64d53d55d15b1f299c17c7efa7b64135b3adc05fbaa3e0f9efa9e8a24c862185bd3";
       flatName = "ckeditor5-image";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/7782da09b355b9e19d48de290c648eb3f742848a0caff03da4dd9f4b504fde4345836ebcec4374d112c5b4c1d59a6881ba0a1b3bb7f8d3f708d1198398f83b60";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/69ab7130740fdfb3bfa786b15613b4127694bbda644937b38262bc5f8045b64d53d55d15b1f299c17c7efa7b64135b3adc05fbaa3e0f9efa9e8a24c862185bd3";
       dependencies = {
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:38.0.1";
-        "ckeditor5" = packages."ckeditor5@npm:38.0.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:38.1.0";
+        "ckeditor5" = packages."ckeditor5@npm:38.1.0";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-indent@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-indent@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-indent";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-indent-38.0.1-7b3f5fdb0f";
-      outputHash = "/35a4cd2a63288e60fd4aed4969de3658998368d307250eb99591c5acab92844c969631786055e6906d7831cfab02049fac0b5a481b0e00c5782228c52aafbb5c";
+      outputName = "ckeditor-ckeditor5-indent-38.1.0-b29743230f";
+      outputHash = "/550d81946e4cc0e2673508fb08a5f43f9f27d77ba1d60553af133eda6dc1eccf3a36962f32e63df3066ff6705a9910980913a4cd8a35a5a8d72870cf735481a5";
       flatName = "ckeditor5-indent";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/35a4cd2a63288e60fd4aed4969de3658998368d307250eb99591c5acab92844c969631786055e6906d7831cfab02049fac0b5a481b0e00c5782228c52aafbb5c";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/550d81946e4cc0e2673508fb08a5f43f9f27d77ba1d60553af133eda6dc1eccf3a36962f32e63df3066ff6705a9910980913a4cd8a35a5a8d72870cf735481a5";
       dependencies = {
-        "ckeditor5" = packages."ckeditor5@npm:38.0.1";
+        "ckeditor5" = packages."ckeditor5@npm:38.1.0";
       };
     };
-    "@ckeditor/ckeditor5-link@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-link@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-link";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-link-38.0.1-cc62f15a1c";
-      outputHash = "/f2aee537926bc7d933f2e49a41da0f91413e03c18f237e72aa2cecfb8e5f8cf3437d5930b778712e03318c5c0ce6ddca6ee740275d053d02317554257cb996e6";
+      outputName = "ckeditor-ckeditor5-link-38.1.0-8512a6fd7f";
+      outputHash = "/5e3dedd85a9338804ef27718fd64b9899143b9b35c417e1ad7473a813ceae06756678fd77c4329cd8df6e3ac8e81390d6cf7eca29b128a48889e7d00532522d4";
       flatName = "ckeditor5-link";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/f2aee537926bc7d933f2e49a41da0f91413e03c18f237e72aa2cecfb8e5f8cf3437d5930b778712e03318c5c0ce6ddca6ee740275d053d02317554257cb996e6";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/5e3dedd85a9338804ef27718fd64b9899143b9b35c417e1ad7473a813ceae06756678fd77c4329cd8df6e3ac8e81390d6cf7eca29b128a48889e7d00532522d4";
       dependencies = {
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:38.0.1";
-        "ckeditor5" = packages."ckeditor5@npm:38.0.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:38.1.0";
+        "ckeditor5" = packages."ckeditor5@npm:38.1.0";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-list@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-list@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-list";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-list-38.0.1-492b33a4c3";
-      outputHash = "/98d1875b345e47b821c579dddbb89d18a0d0fd02353d19d0f2bdea22f1e9b7bdd5f421db920f79cdb48c853ce5b859813608706fbcf717afa90dd48034caa330";
+      outputName = "ckeditor-ckeditor5-list-38.1.0-e2449318f2";
+      outputHash = "/225fcafa02d5edc0795281d0f055ef584730a71406722b8ac38a2a1829bdfef9f97b8ddc22c488fbf4dd04513e462f2af95c8abbac28f5449eaee2111c2703de";
       flatName = "ckeditor5-list";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/98d1875b345e47b821c579dddbb89d18a0d0fd02353d19d0f2bdea22f1e9b7bdd5f421db920f79cdb48c853ce5b859813608706fbcf717afa90dd48034caa330";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/225fcafa02d5edc0795281d0f055ef584730a71406722b8ac38a2a1829bdfef9f97b8ddc22c488fbf4dd04513e462f2af95c8abbac28f5449eaee2111c2703de";
       dependencies = {
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:38.0.1";
-        "ckeditor5" = packages."ckeditor5@npm:38.0.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:38.1.0";
+        "ckeditor5" = packages."ckeditor5@npm:38.1.0";
       };
     };
-    "@ckeditor/ckeditor5-media-embed@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-media-embed@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-media-embed";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-media-embed-38.0.1-1a810dca89";
-      outputHash = "/466a855848f05aab33e887482d7b3df2ec431ce37980eb035996ba7704b0aa0fd45a61174b79d02a0cd1afdf9b98c5ed32b8f4d8930255d600da9d07d262ca09";
+      outputName = "ckeditor-ckeditor5-media-embed-38.1.0-c083d212e8";
+      outputHash = "/80e02f8494d231feaf0b16fab8a69e653f50aa4ce2a980e55373ca22fb2cc31e9919888591ae20e5fece95f1fbb694f7416d2027938da221220ef8c22ce030b8";
       flatName = "ckeditor5-media-embed";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/466a855848f05aab33e887482d7b3df2ec431ce37980eb035996ba7704b0aa0fd45a61174b79d02a0cd1afdf9b98c5ed32b8f4d8930255d600da9d07d262ca09";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/80e02f8494d231feaf0b16fab8a69e653f50aa4ce2a980e55373ca22fb2cc31e9919888591ae20e5fece95f1fbb694f7416d2027938da221220ef8c22ce030b8";
       dependencies = {
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:38.0.1";
-        "ckeditor5" = packages."ckeditor5@npm:38.0.1";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:38.1.0";
+        "ckeditor5" = packages."ckeditor5@npm:38.1.0";
       };
     };
-    "@ckeditor/ckeditor5-paragraph@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-paragraph@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-paragraph";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-paragraph-38.0.1-1543776d88";
-      outputHash = "/8e8a31047ef64276644e7bc77664f12a6268505cb41c5b89077fd229124ee40ae3b2ac0ec1e24451e168f21c8d20b31974d2c7827b428b6aa8744a9aa3756288";
+      outputName = "ckeditor-ckeditor5-paragraph-38.1.0-70b9bec8c1";
+      outputHash = "/57b8bf27a6b4c3390131611c3c06b5027665cf5459cae11ce89ad5481f6eb90d65b1a7e6930c2b4794798a6ad4f2b55083fbd4f81d99cf3e94b08f4545e329f8";
       flatName = "ckeditor5-paragraph";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/8e8a31047ef64276644e7bc77664f12a6268505cb41c5b89077fd229124ee40ae3b2ac0ec1e24451e168f21c8d20b31974d2c7827b428b6aa8744a9aa3756288";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/57b8bf27a6b4c3390131611c3c06b5027665cf5459cae11ce89ad5481f6eb90d65b1a7e6930c2b4794798a6ad4f2b55083fbd4f81d99cf3e94b08f4545e329f8";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.0.1";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:38.0.1";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.0.1";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.1.0";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:38.1.0";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.1.0";
       };
     };
-    "@ckeditor/ckeditor5-paste-from-office@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-paste-from-office@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-paste-from-office";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-paste-from-office-38.0.1-08002263a3";
-      outputHash = "/c356d595108160d39910eb71720c97d98c35a8f09831a45280a1e6dd8db97a5328d84b3729e3d996b6b73ddd14bdf0c4bc05b086aafcc92d021086c1933804cf";
+      outputName = "ckeditor-ckeditor5-paste-from-office-38.1.0-b4e8fa4d34";
+      outputHash = "/9626c959c615bd6973addced44f081f24ac22b6c9316dd81b84b05ffcf64bdf304dc3e3075d6ccb81f64152bc57deae00895cf0ce8061643570ffd74f5b90ee8";
       flatName = "ckeditor5-paste-from-office";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/c356d595108160d39910eb71720c97d98c35a8f09831a45280a1e6dd8db97a5328d84b3729e3d996b6b73ddd14bdf0c4bc05b086aafcc92d021086c1933804cf";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/9626c959c615bd6973addced44f081f24ac22b6c9316dd81b84b05ffcf64bdf304dc3e3075d6ccb81f64152bc57deae00895cf0ce8061643570ffd74f5b90ee8";
       dependencies = {
-        "ckeditor5" = packages."ckeditor5@npm:38.0.1";
+        "ckeditor5" = packages."ckeditor5@npm:38.1.0";
       };
     };
-    "@ckeditor/ckeditor5-react@npm:6.0.0" = {
+    "@ckeditor/ckeditor5-react@npm:6.1.0" = {
       name = "@ckeditor/ckeditor5-react";
-      reference = "npm:6.0.0";
+      reference = "npm:6.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-react-6.0.0-261fd714c5";
-      outputHash = "";
-      shouldBeUnplugged = true;
+      outputName = "ckeditor-ckeditor5-react-6.1.0-9b30bea9fb";
+      outputHash = "/181965902f5745f268030ee86c4239df5e7975adfeb479bd21906861e473f6cf5fc7e4135bd03922e90575481b64bb27b7ff826ad7eabd9c46d69288d9cbe9b6";
       flatName = "ckeditor5-react";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:~6.0.0";
-      checksum = "10/f4bdd9504f7b40328e32caec91ae6a4ab56beb95c730a494b0e11838419735e20e80b2a183c3905c554bb63a7ce4116dac30da9c4773cb1153d129f664a23443";
+      descriptorRange = "npm:~6.1.0";
+      checksum = "10/181965902f5745f268030ee86c4239df5e7975adfeb479bd21906861e473f6cf5fc7e4135bd03922e90575481b64bb27b7ff826ad7eabd9c46d69288d9cbe9b6";
       dependencies = {
         "prop-types" = packages."prop-types@npm:15.8.1";
       };
@@ -3756,193 +3173,193 @@ let
         "react"
       ];
     };
-    "@ckeditor/ckeditor5-react@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:6.0.0" = {
+    "@ckeditor/ckeditor5-react@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:6.1.0" = {
       name = "@ckeditor/ckeditor5-react";
-      reference = "virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:6.0.0";
-      canonicalPackage = packages."@ckeditor/ckeditor5-react@npm:6.0.0";
+      reference = "virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:6.1.0";
+      canonicalPackage = packages."@ckeditor/ckeditor5-react@npm:6.1.0";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.0.1";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:38.0.1";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.0.1";
-        "@ckeditor/ckeditor5-watchdog" = packages."@ckeditor/ckeditor5-watchdog@npm:38.0.1";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.1.0";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:38.1.0";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.1.0";
+        "@ckeditor/ckeditor5-watchdog" = packages."@ckeditor/ckeditor5-watchdog@npm:38.1.0";
         "@types/react" = packages."@types/react@npm:18.2.14";
         "prop-types" = packages."prop-types@npm:15.8.1";
         "react" = packages."react@npm:18.2.0";
       };
     };
-    "@ckeditor/ckeditor5-select-all@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-select-all@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-select-all";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-select-all-38.0.1-e0c2684362";
-      outputHash = "/3a849f9fc114f2318ff18589a79d296c8d0b937c2f99c38d2ad1fbc556b12fc827d436ebe8a24b3047a77f0525e4503d2c9e20570e34d7e10e7726ee8f951ccd";
+      outputName = "ckeditor-ckeditor5-select-all-38.1.0-e7f15de396";
+      outputHash = "/7cefb0b42bf55983a9019d508a69c02924e7f97fae6a015d726efe90d5439e3cdef0f4293bbaf3981f5848c413ae17a7d59772af92f327a22af123184fc83014";
       flatName = "ckeditor5-select-all";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/3a849f9fc114f2318ff18589a79d296c8d0b937c2f99c38d2ad1fbc556b12fc827d436ebe8a24b3047a77f0525e4503d2c9e20570e34d7e10e7726ee8f951ccd";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/7cefb0b42bf55983a9019d508a69c02924e7f97fae6a015d726efe90d5439e3cdef0f4293bbaf3981f5848c413ae17a7d59772af92f327a22af123184fc83014";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.0.1";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:38.0.1";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.0.1";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.1.0";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:38.1.0";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.1.0";
       };
     };
-    "@ckeditor/ckeditor5-table@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-table@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-table";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-table-38.0.1-a8abcb5802";
-      outputHash = "/f3b02801d71f8677097edd9051fbe344d1fd17911f978eb04ad37c256a877ac3bf9bd4aa3d96f40be599c8f0e5824ab57519ce48690885f1009c5bc91846000e";
+      outputName = "ckeditor-ckeditor5-table-38.1.0-5dc09d9661";
+      outputHash = "/ca4219f9420a6093b18a14fe4a0b5b38931876dd8a46d8bdb9e2a7499ec66cc7ea29c8d2353b77954675c215cce81a4172e03f5f2e63b8a4079a0dbfae9efdc9";
       flatName = "ckeditor5-table";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/f3b02801d71f8677097edd9051fbe344d1fd17911f978eb04ad37c256a877ac3bf9bd4aa3d96f40be599c8f0e5824ab57519ce48690885f1009c5bc91846000e";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/ca4219f9420a6093b18a14fe4a0b5b38931876dd8a46d8bdb9e2a7499ec66cc7ea29c8d2353b77954675c215cce81a4172e03f5f2e63b8a4079a0dbfae9efdc9";
       dependencies = {
-        "ckeditor5" = packages."ckeditor5@npm:38.0.1";
+        "ckeditor5" = packages."ckeditor5@npm:38.1.0";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-typing@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-typing@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-typing";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-typing-38.0.1-d34ae5f8b0";
-      outputHash = "/8b0f2b5ca4df196404b8a7ab14efa54244334ecc523d2925f5e7af3ac61da61dc72b30f7813e33d90db42f180ef27d2a811fde3f08b7267672599846538bc084";
+      outputName = "ckeditor-ckeditor5-typing-38.1.0-7e20c1d709";
+      outputHash = "/f20b21f0934a5a9457230a9cbc59f4c680367d2c623c0e5ab0713f01898c0968793dd9f9dd90e8c77756f65174feb47d204645e0fcc4cf7ac1e3f4f6a457d87c";
       flatName = "ckeditor5-typing";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/8b0f2b5ca4df196404b8a7ab14efa54244334ecc523d2925f5e7af3ac61da61dc72b30f7813e33d90db42f180ef27d2a811fde3f08b7267672599846538bc084";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/f20b21f0934a5a9457230a9cbc59f4c680367d2c623c0e5ab0713f01898c0968793dd9f9dd90e8c77756f65174feb47d204645e0fcc4cf7ac1e3f4f6a457d87c";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.0.1";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:38.0.1";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.0.1";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.1.0";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:38.1.0";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.1.0";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-ui@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-ui@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-ui";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-ui-38.0.1-ee7c8a4da9";
-      outputHash = "/841ae11a84507773d7941fc14d9cda7ca07524084f8305269c171f84764d5dd38cc3d7f59297e0627704a3f4af71df0058260831368e70ecd75daa55d0cf3385";
+      outputName = "ckeditor-ckeditor5-ui-38.1.0-f8746fc259";
+      outputHash = "/a48e698553faf03b82e5187fc0261c00f8fdd71f00de55be87b6c00e092852cce2b6962ff48871b9c10d600591d4c2b8e24f4584d8e68ea5b12c885d159b0874";
       flatName = "ckeditor5-ui";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/841ae11a84507773d7941fc14d9cda7ca07524084f8305269c171f84764d5dd38cc3d7f59297e0627704a3f4af71df0058260831368e70ecd75daa55d0cf3385";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/a48e698553faf03b82e5187fc0261c00f8fdd71f00de55be87b6c00e092852cce2b6962ff48871b9c10d600591d4c2b8e24f4584d8e68ea5b12c885d159b0874";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.0.1";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.0.1";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.1.0";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.1.0";
         "color-convert" = packages."color-convert@npm:2.0.1";
         "color-parse" = packages."color-parse@npm:1.4.2";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
         "vanilla-colorful" = packages."vanilla-colorful@npm:0.7.2";
       };
     };
-    "@ckeditor/ckeditor5-undo@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-undo@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-undo";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-undo-38.0.1-4794db93dc";
-      outputHash = "/66af0fa16b646929755a999ae635246ddbfa208f4e58a70c66d34b137c2ecd6c7b353080ab44e3b391f8246f93cebc1c3ce8799c4fc74b3ad6c80f4bb2d5c76b";
+      outputName = "ckeditor-ckeditor5-undo-38.1.0-d175f6e696";
+      outputHash = "/e502ef3c414f770f9716e14d7241483e7e7583b01ed6d3363f6cce72a7ac30a5ae0c78f2366411adb0f63f2197a6cd96772f90da3ea0a68c9cfd4fd187221862";
       flatName = "ckeditor5-undo";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/66af0fa16b646929755a999ae635246ddbfa208f4e58a70c66d34b137c2ecd6c7b353080ab44e3b391f8246f93cebc1c3ce8799c4fc74b3ad6c80f4bb2d5c76b";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/e502ef3c414f770f9716e14d7241483e7e7583b01ed6d3363f6cce72a7ac30a5ae0c78f2366411adb0f63f2197a6cd96772f90da3ea0a68c9cfd4fd187221862";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.0.1";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:38.0.1";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:38.0.1";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.1.0";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:38.1.0";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:38.1.0";
       };
     };
-    "@ckeditor/ckeditor5-upload@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-upload@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-upload";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-upload-38.0.1-558d500ccc";
-      outputHash = "/603670541d8706b31b6373261b384839aa9991fbf7f70e387536a32fc185b142ca0e531fac316bf3908516ffbb328c4c9f53b3e054e7cfbeceb2dadd34031fb7";
+      outputName = "ckeditor-ckeditor5-upload-38.1.0-eb5ac9fa9f";
+      outputHash = "/3d5bef80d386d0070755d6865100f4c4ffe17d985aa7739eb0098c0f487984a1335e9d9eedcc3f5403a9d9efcd22ca9d5504cdf3cfc6327f4e6e48a9bb097417";
       flatName = "ckeditor5-upload";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/603670541d8706b31b6373261b384839aa9991fbf7f70e387536a32fc185b142ca0e531fac316bf3908516ffbb328c4c9f53b3e054e7cfbeceb2dadd34031fb7";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/3d5bef80d386d0070755d6865100f4c4ffe17d985aa7739eb0098c0f487984a1335e9d9eedcc3f5403a9d9efcd22ca9d5504cdf3cfc6327f4e6e48a9bb097417";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.0.1";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:38.0.1";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.0.1";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.1.0";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:38.1.0";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.1.0";
       };
     };
-    "@ckeditor/ckeditor5-utils@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-utils@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-utils";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-utils-38.0.1-fc95db6f2e";
-      outputHash = "/b9efeb7e364a8dee34fb77635909f19b227139448042e85ffa6d3de7871226295299f3b3266948f3cb6f7ab46332464423b1a4a0143409934a48147ffb0d9e62";
+      outputName = "ckeditor-ckeditor5-utils-38.1.0-ce488f51be";
+      outputHash = "/6190b980b7c78ea33c4e163239b5c2476b2393d179793912736a25f16899f91c416038635b3f4d243010498ef601f3680c8275fd3d0f16d073c034bac6905f51";
       flatName = "ckeditor5-utils";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:~38.0.1";
-      checksum = "10/b9efeb7e364a8dee34fb77635909f19b227139448042e85ffa6d3de7871226295299f3b3266948f3cb6f7ab46332464423b1a4a0143409934a48147ffb0d9e62";
+      descriptorRange = "npm:~38.1.0";
+      checksum = "10/6190b980b7c78ea33c4e163239b5c2476b2393d179793912736a25f16899f91c416038635b3f4d243010498ef601f3680c8275fd3d0f16d073c034bac6905f51";
       dependencies = {
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-watchdog@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-watchdog@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-watchdog";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-watchdog-38.0.1-67de0590d5";
-      outputHash = "/0be562d39fe094b91bcefaf8d3071fdc13d35c40ce6232d0b5ed857829f2d442c9c50f48bcab533478d66be03f129382edc65f9dfd34f76657d8b931e5ff235d";
+      outputName = "ckeditor-ckeditor5-watchdog-38.1.0-71dc200b73";
+      outputHash = "/3fbed0452a87d983a033be39362fe9d306c9b1579b79501a17ba5029c80162f61e22ecc50d79699303e1a119aa381baf25dcc4d19d9b9785e2454cd7005e4fdf";
       flatName = "ckeditor5-watchdog";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:~38.0.1";
-      checksum = "10/0be562d39fe094b91bcefaf8d3071fdc13d35c40ce6232d0b5ed857829f2d442c9c50f48bcab533478d66be03f129382edc65f9dfd34f76657d8b931e5ff235d";
+      descriptorRange = "npm:~38.1.0";
+      checksum = "10/3fbed0452a87d983a033be39362fe9d306c9b1579b79501a17ba5029c80162f61e22ecc50d79699303e1a119aa381baf25dcc4d19d9b9785e2454cd7005e4fdf";
       dependencies = {
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@ckeditor/ckeditor5-widget@npm:38.0.1" = {
+    "@ckeditor/ckeditor5-widget@npm:38.1.0" = {
       name = "@ckeditor/ckeditor5-widget";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor-ckeditor5-widget-38.0.1-776279715f";
-      outputHash = "/a8cb2e4e6fb0d0bb39cac6fe994da7fd7979ccdbf9c46ad9b2a95ea371779bea68638872f5d65e7d9b73ad71cbd8772ae84185475bca6d156aa48268fd139e4a";
+      outputName = "ckeditor-ckeditor5-widget-38.1.0-80c1efb6b4";
+      outputHash = "/ed75d6d92953777b006fa5d465d5eb5b974299761ee0cc224c4d52737126a944140ecc411ea0e5a7355ce4e4e3c5e015e8e22cd14fe39cced07893ed1b5d43c3";
       flatName = "ckeditor5-widget";
       languageName = "node";
       scope = "ckeditor";
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/a8cb2e4e6fb0d0bb39cac6fe994da7fd7979ccdbf9c46ad9b2a95ea371779bea68638872f5d65e7d9b73ad71cbd8772ae84185475bca6d156aa48268fd139e4a";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/ed75d6d92953777b006fa5d465d5eb5b974299761ee0cc224c4d52737126a944140ecc411ea0e5a7355ce4e4e3c5e015e8e22cd14fe39cced07893ed1b5d43c3";
       dependencies = {
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.0.1";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:38.0.1";
-        "@ckeditor/ckeditor5-enter" = packages."@ckeditor/ckeditor5-enter@npm:38.0.1";
-        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:38.0.1";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:38.0.1";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.0.1";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.1.0";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:38.1.0";
+        "@ckeditor/ckeditor5-enter" = packages."@ckeditor/ckeditor5-enter@npm:38.1.0";
+        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:38.1.0";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:38.1.0";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.1.0";
         "lodash-es" = packages."lodash-es@npm:4.17.21";
       };
     };
-    "@commitlint/cli@npm:17.6.5" = {
+    "@commitlint/cli@npm:17.6.6" = {
       name = "@commitlint/cli";
-      reference = "npm:17.6.5";
+      reference = "npm:17.6.6";
       linkType = "HARD";
-      outputName = "commitlint-cli-17.6.5-1dd10cbe12";
-      outputHash = "/df2329262bc78c20e9e4929d52645e586b5dafba3cecebf3448e9e52b80cdfb5b2fc503f4ccd2d5bc41390d02fcda21299712c16ad312e1ef0ed833607ce69fc";
+      outputName = "commitlint-cli-17.6.6-f10f54ad5c";
+      outputHash = "/a117c2aba7ac122c7c6df973147db58d92547e6da2a8ce916a3501ccb944f8393b04e32de97a8ad633883344599a73f89d64dd9fa793c06cb1baba22f9fcc0e5";
       flatName = "cli";
       languageName = "node";
       scope = "commitlint";
-      descriptorRange = "npm:^17.6.5";
-      checksum = "10/df2329262bc78c20e9e4929d52645e586b5dafba3cecebf3448e9e52b80cdfb5b2fc503f4ccd2d5bc41390d02fcda21299712c16ad312e1ef0ed833607ce69fc";
+      descriptorRange = "npm:^17.6.6";
+      checksum = "10/a117c2aba7ac122c7c6df973147db58d92547e6da2a8ce916a3501ccb944f8393b04e32de97a8ad633883344599a73f89d64dd9fa793c06cb1baba22f9fcc0e5";
       bin = {
         "commitlint" = "cli.js";
       };
       dependencies = {
         "@commitlint/format" = packages."@commitlint/format@npm:17.4.4";
-        "@commitlint/lint" = packages."@commitlint/lint@npm:17.6.5";
+        "@commitlint/lint" = packages."@commitlint/lint@npm:17.6.6";
         "@commitlint/load" = packages."@commitlint/load@npm:17.5.0";
         "@commitlint/read" = packages."@commitlint/read@npm:17.5.1";
         "@commitlint/types" = packages."@commitlint/types@npm:17.4.4";
@@ -3953,17 +3370,17 @@ let
         "yargs" = packages."yargs@npm:17.7.2";
       };
     };
-    "@commitlint/config-conventional@npm:17.6.5" = {
+    "@commitlint/config-conventional@npm:17.6.6" = {
       name = "@commitlint/config-conventional";
-      reference = "npm:17.6.5";
+      reference = "npm:17.6.6";
       linkType = "HARD";
-      outputName = "commitlint-config-conventional-17.6.5-ef8d82de49";
-      outputHash = "/f2c637a9935044d6dc800eabbb0e032354afb35a7c0dd65d37115320a0fbcf4586ad769647039d0d9347988182213d7ee53339df2af9b2c8a51209ab0225366f";
+      outputName = "commitlint-config-conventional-17.6.6-6f8401774b";
+      outputHash = "/0f649a2cbe684aa18555cb0027c21f58d74216dbe0a850be041af50f1db04e447b7d90995bee54c61059d735b398de61ac7ecbfd312d14480aac3a3f8c62dd66";
       flatName = "config-conventional";
       languageName = "node";
       scope = "commitlint";
-      descriptorRange = "npm:^17.6.5";
-      checksum = "10/f2c637a9935044d6dc800eabbb0e032354afb35a7c0dd65d37115320a0fbcf4586ad769647039d0d9347988182213d7ee53339df2af9b2c8a51209ab0225366f";
+      descriptorRange = "npm:^17.6.6";
+      checksum = "10/0f649a2cbe684aa18555cb0027c21f58d74216dbe0a850be041af50f1db04e447b7d90995bee54c61059d735b398de61ac7ecbfd312d14480aac3a3f8c62dd66";
       dependencies = {
         "conventional-changelog-conventionalcommits" = packages."conventional-changelog-conventionalcommits@npm:5.0.0";
       };
@@ -4032,35 +3449,35 @@ let
         "chalk" = packages."chalk@npm:4.1.2";
       };
     };
-    "@commitlint/is-ignored@npm:17.6.5" = {
+    "@commitlint/is-ignored@npm:17.6.6" = {
       name = "@commitlint/is-ignored";
-      reference = "npm:17.6.5";
+      reference = "npm:17.6.6";
       linkType = "HARD";
-      outputName = "commitlint-is-ignored-17.6.5-eb9c495070";
-      outputHash = "/2b7b7f0773192bb8da018fa789689751ac5692af01e1754a214aaebc8253ee533c191409835af0fdb3c12b2fbb4bec43aeb9e442fca165646db1382ea6c21ec9";
+      outputName = "commitlint-is-ignored-17.6.6-3b777b7611";
+      outputHash = "/ff5f8816765b3f2e9f16de32b1166dd099ab23793212bf4092203441fe3d9f282c80ed96cca5cd42b0ea96d899f8989bdaa6604a3f02bf4bd36b8c7c123968df";
       flatName = "is-ignored";
       languageName = "node";
       scope = "commitlint";
-      descriptorRange = "npm:^17.6.5";
-      checksum = "10/2b7b7f0773192bb8da018fa789689751ac5692af01e1754a214aaebc8253ee533c191409835af0fdb3c12b2fbb4bec43aeb9e442fca165646db1382ea6c21ec9";
+      descriptorRange = "npm:^17.6.6";
+      checksum = "10/ff5f8816765b3f2e9f16de32b1166dd099ab23793212bf4092203441fe3d9f282c80ed96cca5cd42b0ea96d899f8989bdaa6604a3f02bf4bd36b8c7c123968df";
       dependencies = {
         "@commitlint/types" = packages."@commitlint/types@npm:17.4.4";
-        "semver" = packages."semver@npm:7.5.0";
+        "semver" = packages."semver@npm:7.5.2";
       };
     };
-    "@commitlint/lint@npm:17.6.5" = {
+    "@commitlint/lint@npm:17.6.6" = {
       name = "@commitlint/lint";
-      reference = "npm:17.6.5";
+      reference = "npm:17.6.6";
       linkType = "HARD";
-      outputName = "commitlint-lint-17.6.5-4378eb0cdb";
-      outputHash = "/e90a4264ec8e0b2e9ea62e34362eac7f24c976f9dbd1d26597e747ec88f8d48531ac074d2008679201991b147663f5f9f0fa73c463c3b26f1d3aa6e3b1532de8";
+      outputName = "commitlint-lint-17.6.6-bd45db5c43";
+      outputHash = "/e675a533efbed67fe21b268ee0690d89ca10b826cb8ce93fbe6c160123bc72c15665d921bccd3afcf22bc9dd81c104c879428ea326801a3d9c9b2a6c0073445d";
       flatName = "lint";
       languageName = "node";
       scope = "commitlint";
-      descriptorRange = "npm:^17.6.5";
-      checksum = "10/e90a4264ec8e0b2e9ea62e34362eac7f24c976f9dbd1d26597e747ec88f8d48531ac074d2008679201991b147663f5f9f0fa73c463c3b26f1d3aa6e3b1532de8";
+      descriptorRange = "npm:^17.6.6";
+      checksum = "10/e675a533efbed67fe21b268ee0690d89ca10b826cb8ce93fbe6c160123bc72c15665d921bccd3afcf22bc9dd81c104c879428ea326801a3d9c9b2a6c0073445d";
       dependencies = {
-        "@commitlint/is-ignored" = packages."@commitlint/is-ignored@npm:17.6.5";
+        "@commitlint/is-ignored" = packages."@commitlint/is-ignored@npm:17.6.6";
         "@commitlint/parse" = packages."@commitlint/parse@npm:17.6.5";
         "@commitlint/rules" = packages."@commitlint/rules@npm:17.6.5";
         "@commitlint/types" = packages."@commitlint/types@npm:17.4.4";
@@ -5526,12 +4943,12 @@ let
         "eslint"
       ];
     };
-    "@eslint-community/eslint-utils@virtual:5757109ac88221e94a852cc9f73e2f55465a7102fffadd66cbbc453ec0085a59a55391bf490e79144c3026a10d76b992734f4e89f8c9b0e26d0c979c648afdd9#npm:4.4.0" = {
+    "@eslint-community/eslint-utils@virtual:658d375d8a2682df487e0f82908a4064212454abb9799a71f418ff4895a467423e10832ae50012302f5a0f8e4e4486c5dab6eec0513cc024a023ea4d86ec607b#npm:4.4.0" = {
       name = "@eslint-community/eslint-utils";
-      reference = "virtual:5757109ac88221e94a852cc9f73e2f55465a7102fffadd66cbbc453ec0085a59a55391bf490e79144c3026a10d76b992734f4e89f8c9b0e26d0c979c648afdd9#npm:4.4.0";
+      reference = "virtual:658d375d8a2682df487e0f82908a4064212454abb9799a71f418ff4895a467423e10832ae50012302f5a0f8e4e4486c5dab6eec0513cc024a023ea4d86ec607b#npm:4.4.0";
       canonicalPackage = packages."@eslint-community/eslint-utils@npm:4.4.0";
       dependencies = {
-        "eslint" = packages."eslint@npm:8.43.0";
+        "eslint" = packages."eslint@npm:8.44.0";
         "eslint-visitor-keys" = packages."eslint-visitor-keys@npm:3.4.1";
       };
     };
@@ -5547,20 +4964,20 @@ let
       descriptorRange = "npm:^4.4.0";
       checksum = "10/e31e456d44e9bf98d59c8ac445549098e1a6d9c4e22053cad58e86a9f78a1e64104ef7f7f46255c442e0c878fe0e566ffba287787d070196c83510ef30d1d197";
     };
-    "@eslint/eslintrc@npm:2.0.3" = {
+    "@eslint/eslintrc@npm:2.1.0" = {
       name = "@eslint/eslintrc";
-      reference = "npm:2.0.3";
+      reference = "npm:2.1.0";
       linkType = "HARD";
-      outputName = "eslint-eslintrc-2.0.3-531b6e79f7";
-      outputHash = "/3508a9eb1a1cdf205f34648a993862b15c178669b71d6a9544787558b925ac689d8ddf3e598990156a17b708e79d3cb867fb45d5662908d14c1b10eaad858516";
+      outputName = "eslint-eslintrc-2.1.0-352060d453";
+      outputHash = "/923adf0fbadbe1548b2cbf6d020cc135fcd3bafee073b937a4c2e15b971cff607d987cc82e076d19d86d660dc0b992f688e0f5cf5eabfb5045c8ecdc3e50bd63";
       flatName = "eslintrc";
       languageName = "node";
       scope = "eslint";
-      descriptorRange = "npm:^2.0.3";
-      checksum = "10/3508a9eb1a1cdf205f34648a993862b15c178669b71d6a9544787558b925ac689d8ddf3e598990156a17b708e79d3cb867fb45d5662908d14c1b10eaad858516";
+      descriptorRange = "npm:^2.1.0";
+      checksum = "10/923adf0fbadbe1548b2cbf6d020cc135fcd3bafee073b937a4c2e15b971cff607d987cc82e076d19d86d660dc0b992f688e0f5cf5eabfb5045c8ecdc3e50bd63";
       dependencies = {
         "ajv" = packages."ajv@npm:6.12.6";
-        "espree" = packages."espree@npm:9.5.2";
+        "espree" = packages."espree@npm:9.6.0";
         "globals" = packages."globals@npm:13.20.0";
         "ignore" = packages."ignore@npm:5.2.4";
         "import-fresh" = packages."import-fresh@npm:3.3.0";
@@ -5570,17 +4987,17 @@ let
         "debug" = packages."debug@virtual:071d471ccd267160a6f0ec15e4cdc2874728a012db8f34521faf9e64a516aa918ee9ebab3c4c084d955ab74aaac5b8be9afb7a168813c9f210acdb7d88754ab9#npm:4.3.4";
       };
     };
-    "@eslint/js@npm:8.43.0" = {
+    "@eslint/js@npm:8.44.0" = {
       name = "@eslint/js";
-      reference = "npm:8.43.0";
+      reference = "npm:8.44.0";
       linkType = "HARD";
-      outputName = "eslint-js-8.43.0-60a60994b7";
-      outputHash = "/db6a89a5360909e6f670c0f4057811a6d00f35ca5b3632bd30b6f7aab35c9cf689d58ea70a22ac8d03d4abc5760ca8ae10fb0e9efc48c843e9db20039b638dce";
+      outputName = "eslint-js-8.44.0-66b473d41b";
+      outputHash = "/06adec291c023cf1415d5c8dc0b14608d770ffb42b29c65dcbf092051580e1f6080483979c87b2067580b4566e281c0f588efb571303a092b34bca911eca8fb9";
       flatName = "js";
       languageName = "node";
       scope = "eslint";
-      descriptorRange = "npm:8.43.0";
-      checksum = "10/db6a89a5360909e6f670c0f4057811a6d00f35ca5b3632bd30b6f7aab35c9cf689d58ea70a22ac8d03d4abc5760ca8ae10fb0e9efc48c843e9db20039b638dce";
+      descriptorRange = "npm:8.44.0";
+      checksum = "10/06adec291c023cf1415d5c8dc0b14608d770ffb42b29c65dcbf092051580e1f6080483979c87b2067580b4566e281c0f588efb571303a092b34bca911eca8fb9";
     };
     "@fast-csv/format@npm:4.3.5" = {
       name = "@fast-csv/format";
@@ -6138,7 +5555,7 @@ let
       flatName = "typed-document-node";
       languageName = "node";
       scope = "graphql-codegen";
-      descriptorRange = "npm:~5.0.0";
+      descriptorRange = "npm:~5.0.1";
       checksum = "10/eb54219af81c90b9c382f5988ed1661552d3fef1851893f594e99115ad07446b5d42dc9b53a84dcbb3d60074a51a3d645103ccb7fbe50db8b96334f3ba3e2bd4";
       dependencies = {
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@npm:5.0.0";
@@ -6174,7 +5591,7 @@ let
       flatName = "typescript-operations";
       languageName = "node";
       scope = "graphql-codegen";
-      descriptorRange = "npm:~4.0.0";
+      descriptorRange = "npm:~4.0.1";
       checksum = "10/23c74914106adcc92a9d142c397a37cccf7fdbc5d70603d9068f0539717783e20d9d3c81646199e73351bc114692cf71fc47638de2477b670eb6179d1d587a75";
       dependencies = {
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@npm:5.0.0";
@@ -6252,7 +5669,7 @@ let
       flatName = "typescript";
       languageName = "node";
       scope = "graphql-codegen";
-      descriptorRange = "npm:~4.0.0";
+      descriptorRange = "npm:~4.0.1";
       checksum = "10/a44b2b5e2dc9750c39d8fdc50030f3476a897ff314b6c54ef03760539491f095f540908255e1b8d49daaf3a484d6fa9b6463704a08a5bbd7378ff13d64a9e092";
       dependencies = {
         "@graphql-codegen/plugin-helpers" = packages."@graphql-codegen/plugin-helpers@npm:5.0.0";
@@ -7420,7 +6837,7 @@ let
       reference = "virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:3.1.1";
       canonicalPackage = packages."@hookform/resolvers@npm:3.1.1";
       dependencies = {
-        "react-hook-form" = packages."react-hook-form@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:7.44.3";
+        "react-hook-form" = packages."react-hook-form@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:7.44.3";
       };
     };
     "@humanwhocodes/config-array@npm:0.11.10" = {
@@ -7665,7 +7082,7 @@ let
       flatName = "bundle-analyzer";
       languageName = "node";
       scope = "next";
-      descriptorRange = "npm:~13.4.5";
+      descriptorRange = "npm:~13.4.7";
       checksum = "10/d19c53a11b922d517ed43dc4218f2e4b431b18a8c89075c1b7c0a33535ecfb56608673ed2ff015e024c5f96a8d08bc4527ebc195c4ed535d69aae285141027ad";
       dependencies = {
         "webpack-bundle-analyzer" = packages."webpack-bundle-analyzer@npm:4.7.0";
@@ -9698,15 +9115,6 @@ let
         "react" = packages."react@npm:18.2.0";
       };
     };
-    "@radix-ui/react-use-layout-effect@virtual:eaa47a7e693751dea4b43e0d56646efde788dc805480f36a2a26ff27e0eb67d6bdc56514084e384fa81908f2663382f7e8713d229aca504cfc6d2fd2249fd3f5#npm:1.0.1" = {
-      name = "@radix-ui/react-use-layout-effect";
-      reference = "virtual:eaa47a7e693751dea4b43e0d56646efde788dc805480f36a2a26ff27e0eb67d6bdc56514084e384fa81908f2663382f7e8713d229aca504cfc6d2fd2249fd3f5#npm:1.0.1";
-      canonicalPackage = packages."@radix-ui/react-use-layout-effect@npm:1.0.1";
-      dependencies = {
-        "@babel/runtime" = packages."@babel/runtime@npm:7.22.5";
-        "react" = packages."react@npm:18.2.0";
-      };
-    };
     "@radix-ui/react-use-rect@npm:1.0.1" = {
       name = "@radix-ui/react-use-rect";
       reference = "npm:1.0.1";
@@ -9888,9 +9296,9 @@ let
         "rollup"
       ];
     };
-    "@rollup/plugin-commonjs@virtual:3ec5604058e2649e52c13ccdea9bd3b89b528ee59a749cb0cd6f911f20644e4ef7ee36287620d6b13a73b4a1c4d3be37a2637c1b5bdbbbd8539a8b7a295621f3#npm:24.0.0" = {
+    "@rollup/plugin-commonjs@virtual:1dc8cbb94ac0696c81c9d85563f0bbb5aeb202ef5775a05215041db6c60fca3ba4f9d98e5dc0596b39cc211c3c72ee01813f232e4a9793797fdda2076df0ff2f#npm:24.0.0" = {
       name = "@rollup/plugin-commonjs";
-      reference = "virtual:3ec5604058e2649e52c13ccdea9bd3b89b528ee59a749cb0cd6f911f20644e4ef7ee36287620d6b13a73b4a1c4d3be37a2637c1b5bdbbbd8539a8b7a295621f3#npm:24.0.0";
+      reference = "virtual:1dc8cbb94ac0696c81c9d85563f0bbb5aeb202ef5775a05215041db6c60fca3ba4f9d98e5dc0596b39cc211c3c72ee01813f232e4a9793797fdda2076df0ff2f#npm:24.0.0";
       canonicalPackage = packages."@rollup/plugin-commonjs@npm:24.0.0";
       dependencies = {
         "commondir" = packages."commondir@npm:1.0.1";
@@ -9899,7 +9307,7 @@ let
         "is-reference" = packages."is-reference@npm:1.2.1";
         "magic-string" = packages."magic-string@npm:0.27.0";
         "rollup" = packages."rollup@npm:2.78.0";
-        "@rollup/pluginutils" = packages."@rollup/pluginutils@virtual:9fc643ffb2596aab7165228a64fe8bbf4ddcf9f45467ada7a216ac60526dda4b844bb0efea5dc5789ab31b407151d602b38a076f78028a23296d81015f410b0b#npm:5.0.2";
+        "@rollup/pluginutils" = packages."@rollup/pluginutils@virtual:3920e5f417386a72d8ed15856b2f1830e0875a09609e97eb7119ae55edd962ec5cda3a0a7240be23e3c5a43431aceb17fb4fec38d6cf43e1f79b50aa66feb8c3#npm:5.0.2";
       };
     };
     "@rollup/pluginutils@npm:5.0.2" = {
@@ -9923,9 +9331,9 @@ let
         "rollup"
       ];
     };
-    "@rollup/pluginutils@virtual:9fc643ffb2596aab7165228a64fe8bbf4ddcf9f45467ada7a216ac60526dda4b844bb0efea5dc5789ab31b407151d602b38a076f78028a23296d81015f410b0b#npm:5.0.2" = {
+    "@rollup/pluginutils@virtual:3920e5f417386a72d8ed15856b2f1830e0875a09609e97eb7119ae55edd962ec5cda3a0a7240be23e3c5a43431aceb17fb4fec38d6cf43e1f79b50aa66feb8c3#npm:5.0.2" = {
       name = "@rollup/pluginutils";
-      reference = "virtual:9fc643ffb2596aab7165228a64fe8bbf4ddcf9f45467ada7a216ac60526dda4b844bb0efea5dc5789ab31b407151d602b38a076f78028a23296d81015f410b0b#npm:5.0.2";
+      reference = "virtual:3920e5f417386a72d8ed15856b2f1830e0875a09609e97eb7119ae55edd962ec5cda3a0a7240be23e3c5a43431aceb17fb4fec38d6cf43e1f79b50aa66feb8c3#npm:5.0.2";
       canonicalPackage = packages."@rollup/pluginutils@npm:5.0.2";
       dependencies = {
         "@types/estree" = packages."@types/estree@npm:1.0.1";
@@ -9946,58 +9354,58 @@ let
       descriptorRange = "npm:^1.1.3";
       checksum = "10/e4060163f72142e3895cfade5a5600ab7af7bb68ddb41a62d368acffb8f046ccde738c4609d737600919998a7e0bf478211c5fae5a23a6c2b344f6721253a178";
     };
-    "@selderee/plugin-htmlparser2@npm:0.6.0" = {
+    "@selderee/plugin-htmlparser2@npm:0.11.0" = {
       name = "@selderee/plugin-htmlparser2";
-      reference = "npm:0.6.0";
+      reference = "npm:0.11.0";
       linkType = "HARD";
-      outputName = "selderee-plugin-htmlparser2-0.6.0-4d2d338a7e";
-      outputHash = "/a4f1a5412f0fe7d61a80f0fb5ee465948321ab7b85050d4a02f77d2bda59046d4c360f36c5ff08c1eb9879438389dfa3aed44dfd7c922be0e4e0fbaada43f2d4";
+      outputName = "selderee-plugin-htmlparser2-0.11.0-3e13de8e13";
+      outputHash = "/7550108d270e6ea2be4850d55cbf4d58d5a90c109a15b874c3c7c622a1399bd8015359ef3672983a86118432ca8325a6aca1fe79d961b01278fdaeaea8895c5f";
       flatName = "plugin-htmlparser2";
       languageName = "node";
       scope = "selderee";
-      descriptorRange = "npm:^0.6.0";
-      checksum = "10/a4f1a5412f0fe7d61a80f0fb5ee465948321ab7b85050d4a02f77d2bda59046d4c360f36c5ff08c1eb9879438389dfa3aed44dfd7c922be0e4e0fbaada43f2d4";
+      descriptorRange = "npm:^0.11.0";
+      checksum = "10/7550108d270e6ea2be4850d55cbf4d58d5a90c109a15b874c3c7c622a1399bd8015359ef3672983a86118432ca8325a6aca1fe79d961b01278fdaeaea8895c5f";
       dependencies = {
-        "domhandler" = packages."domhandler@npm:4.3.1";
-        "selderee" = packages."selderee@npm:0.6.0";
+        "domhandler" = packages."domhandler@npm:5.0.3";
+        "selderee" = packages."selderee@npm:0.11.0";
       };
     };
-    "@sentry-internal/tracing@npm:7.54.0" = {
+    "@sentry-internal/tracing@npm:7.57.0" = {
       name = "@sentry-internal/tracing";
-      reference = "npm:7.54.0";
+      reference = "npm:7.57.0";
       linkType = "HARD";
-      outputName = "sentry-internal-tracing-7.54.0-72356f322c";
-      outputHash = "/f4205a7f84c3dbe6ffea4ac04996c40d4cdd42bb48ceef0e3149cdacc1a43551f2c12dfa63cb7bc93accf3b443eaadeb2832ae9466988cbd0a2688157a0d0202";
+      outputName = "sentry-internal-tracing-7.57.0-46fbe0142e";
+      outputHash = "/fa51c91e83906a3e2f8887a323065067ac5b60289ed3f4b03e0e9581f29028180fd4aa6262655a85938435ec5233c82d8b42784478f8db7f607995744a1b8cbd";
       flatName = "tracing";
       languageName = "node";
       scope = "sentry-internal";
-      descriptorRange = "npm:7.54.0";
-      checksum = "10/f4205a7f84c3dbe6ffea4ac04996c40d4cdd42bb48ceef0e3149cdacc1a43551f2c12dfa63cb7bc93accf3b443eaadeb2832ae9466988cbd0a2688157a0d0202";
+      descriptorRange = "npm:7.57.0";
+      checksum = "10/fa51c91e83906a3e2f8887a323065067ac5b60289ed3f4b03e0e9581f29028180fd4aa6262655a85938435ec5233c82d8b42784478f8db7f607995744a1b8cbd";
       dependencies = {
-        "@sentry/core" = packages."@sentry/core@npm:7.54.0";
-        "@sentry/types" = packages."@sentry/types@npm:7.54.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:7.54.0";
-        "tslib" = packages."tslib@npm:1.14.1";
+        "@sentry/core" = packages."@sentry/core@npm:7.57.0";
+        "@sentry/types" = packages."@sentry/types@npm:7.57.0";
+        "@sentry/utils" = packages."@sentry/utils@npm:7.57.0";
+        "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@sentry/browser@npm:7.54.0" = {
+    "@sentry/browser@npm:7.57.0" = {
       name = "@sentry/browser";
-      reference = "npm:7.54.0";
+      reference = "npm:7.57.0";
       linkType = "HARD";
-      outputName = "sentry-browser-7.54.0-936f0f15d5";
-      outputHash = "/78d5e37225609f1aaa616ccf60de9dd3e8530862d21e51e45f5c5f703e4fbc2e616ad0a2371464778a3b3c72e177121ce46a6ba035c52c8f5ce098c7afdb429d";
+      outputName = "sentry-browser-7.57.0-765bcb40d9";
+      outputHash = "/8350dbc8ed5277f0c492f727405b991cac87e4309ce504f19928c9e52a2eaa8e981f7c0f5c651a9415104924eee814eb07469f0ec5823b89991afbcdac496e11";
       flatName = "browser";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:7.54.0";
-      checksum = "10/78d5e37225609f1aaa616ccf60de9dd3e8530862d21e51e45f5c5f703e4fbc2e616ad0a2371464778a3b3c72e177121ce46a6ba035c52c8f5ce098c7afdb429d";
+      descriptorRange = "npm:7.57.0";
+      checksum = "10/8350dbc8ed5277f0c492f727405b991cac87e4309ce504f19928c9e52a2eaa8e981f7c0f5c651a9415104924eee814eb07469f0ec5823b89991afbcdac496e11";
       dependencies = {
-        "@sentry-internal/tracing" = packages."@sentry-internal/tracing@npm:7.54.0";
-        "@sentry/core" = packages."@sentry/core@npm:7.54.0";
-        "@sentry/replay" = packages."@sentry/replay@npm:7.54.0";
-        "@sentry/types" = packages."@sentry/types@npm:7.54.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:7.54.0";
-        "tslib" = packages."tslib@npm:1.14.1";
+        "@sentry-internal/tracing" = packages."@sentry-internal/tracing@npm:7.57.0";
+        "@sentry/core" = packages."@sentry/core@npm:7.57.0";
+        "@sentry/replay" = packages."@sentry/replay@npm:7.57.0";
+        "@sentry/types" = packages."@sentry/types@npm:7.57.0";
+        "@sentry/utils" = packages."@sentry/utils@npm:7.57.0";
+        "tslib" = packages."tslib@npm:2.6.0";
       };
     };
     "@sentry/cli@npm:1.75.2" = {
@@ -10026,65 +9434,65 @@ let
         "node-fetch" = packages."node-fetch@virtual:77efa386d167b369532bc7e0ab14d821af0a0ad652012828641b263bff9a95bafaeb34b17f60c56751fb541d995efec119783cb5afaf99038e6024a42da78969#npm:2.6.11";
       };
     };
-    "@sentry/core@npm:7.54.0" = {
+    "@sentry/core@npm:7.57.0" = {
       name = "@sentry/core";
-      reference = "npm:7.54.0";
+      reference = "npm:7.57.0";
       linkType = "HARD";
-      outputName = "sentry-core-7.54.0-923eed3e15";
-      outputHash = "/ef4bfe0ae82b49fdf3e6e82db4b868f856b03c64f883a12225246b2e9e8581425abc4fcefdef6e2850acc4fcdf0327d75b0d3a1996524f8475a667ba54c351cb";
+      outputName = "sentry-core-7.57.0-9d08d017b4";
+      outputHash = "/a0a74babdcf9f6cab1a26ae08ee9019dada2f2a26f41f7c7d67176a8baa240a4490992a8bcf6a4ce54b39acb6b898b8ab032c01b8e483c82d9cedd1abf6b54c5";
       flatName = "core";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:7.54.0";
-      checksum = "10/ef4bfe0ae82b49fdf3e6e82db4b868f856b03c64f883a12225246b2e9e8581425abc4fcefdef6e2850acc4fcdf0327d75b0d3a1996524f8475a667ba54c351cb";
+      descriptorRange = "npm:7.57.0";
+      checksum = "10/a0a74babdcf9f6cab1a26ae08ee9019dada2f2a26f41f7c7d67176a8baa240a4490992a8bcf6a4ce54b39acb6b898b8ab032c01b8e483c82d9cedd1abf6b54c5";
       dependencies = {
-        "@sentry/types" = packages."@sentry/types@npm:7.54.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:7.54.0";
-        "tslib" = packages."tslib@npm:1.14.1";
+        "@sentry/types" = packages."@sentry/types@npm:7.57.0";
+        "@sentry/utils" = packages."@sentry/utils@npm:7.57.0";
+        "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@sentry/integrations@npm:7.54.0" = {
+    "@sentry/integrations@npm:7.57.0" = {
       name = "@sentry/integrations";
-      reference = "npm:7.54.0";
+      reference = "npm:7.57.0";
       linkType = "HARD";
-      outputName = "sentry-integrations-7.54.0-7974cba79e";
-      outputHash = "/202ccb5be5c91f41deb6804b89bb2ce33d071d0d735cd08f5d5d00beeb9169696014dbc69e332648b9d0199fa9ad4287a94fc1bc3c987d7e98652bb27eb61819";
+      outputName = "sentry-integrations-7.57.0-e68313606b";
+      outputHash = "/4f4ea49b897ef3f5b137bd0ded19bf68e536640e3025fe9d53ae3795047a7b6577141201af0eeb91ed7a379f42a632ee6d0fb5f713c9d46ca8b02492816949d0";
       flatName = "integrations";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:7.54.0";
-      checksum = "10/202ccb5be5c91f41deb6804b89bb2ce33d071d0d735cd08f5d5d00beeb9169696014dbc69e332648b9d0199fa9ad4287a94fc1bc3c987d7e98652bb27eb61819";
+      descriptorRange = "npm:7.57.0";
+      checksum = "10/4f4ea49b897ef3f5b137bd0ded19bf68e536640e3025fe9d53ae3795047a7b6577141201af0eeb91ed7a379f42a632ee6d0fb5f713c9d46ca8b02492816949d0";
       dependencies = {
-        "@sentry/types" = packages."@sentry/types@npm:7.54.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:7.54.0";
+        "@sentry/types" = packages."@sentry/types@npm:7.57.0";
+        "@sentry/utils" = packages."@sentry/utils@npm:7.57.0";
         "localforage" = packages."localforage@npm:1.10.0";
-        "tslib" = packages."tslib@npm:1.14.1";
+        "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@sentry/nextjs@npm:7.54.0" = {
+    "@sentry/nextjs@npm:7.57.0" = {
       name = "@sentry/nextjs";
-      reference = "npm:7.54.0";
+      reference = "npm:7.57.0";
       linkType = "HARD";
-      outputName = "sentry-nextjs-7.54.0-3b867a65d0";
-      outputHash = "/b6836953b78494871b02514dca04403a3b3bae0ddee682eaa811495a1b4f40f74bcdc458a67b03026b046d6b8ceab557ac29699685a22d124a90d2ef3e228e26";
+      outputName = "sentry-nextjs-7.57.0-eba95def10";
+      outputHash = "/36ce0c2709e7f8735550a2e8973a962798cb8df5438114d6e59a693a633ba369a7c75ac0412540d6c312ea41bcc86204f1807b88f545d622b81a310af399c93a";
       flatName = "nextjs";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:~7.54.0";
-      checksum = "10/b6836953b78494871b02514dca04403a3b3bae0ddee682eaa811495a1b4f40f74bcdc458a67b03026b046d6b8ceab557ac29699685a22d124a90d2ef3e228e26";
+      descriptorRange = "npm:~7.57.0";
+      checksum = "10/36ce0c2709e7f8735550a2e8973a962798cb8df5438114d6e59a693a633ba369a7c75ac0412540d6c312ea41bcc86204f1807b88f545d622b81a310af399c93a";
       dependencies = {
         "@rollup/plugin-commonjs" = packages."@rollup/plugin-commonjs@npm:24.0.0";
-        "@sentry/core" = packages."@sentry/core@npm:7.54.0";
-        "@sentry/integrations" = packages."@sentry/integrations@npm:7.54.0";
-        "@sentry/node" = packages."@sentry/node@npm:7.54.0";
-        "@sentry/react" = packages."@sentry/react@npm:7.54.0";
-        "@sentry/types" = packages."@sentry/types@npm:7.54.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:7.54.0";
+        "@sentry/core" = packages."@sentry/core@npm:7.57.0";
+        "@sentry/integrations" = packages."@sentry/integrations@npm:7.57.0";
+        "@sentry/node" = packages."@sentry/node@npm:7.57.0";
+        "@sentry/react" = packages."@sentry/react@npm:7.57.0";
+        "@sentry/types" = packages."@sentry/types@npm:7.57.0";
+        "@sentry/utils" = packages."@sentry/utils@npm:7.57.0";
         "@sentry/webpack-plugin" = packages."@sentry/webpack-plugin@npm:1.20.0";
         "chalk" = packages."chalk@npm:3.0.0";
         "rollup" = packages."rollup@npm:2.78.0";
         "stacktrace-parser" = packages."stacktrace-parser@npm:0.1.10";
-        "tslib" = packages."tslib@npm:1.14.1";
+        "tslib" = packages."tslib@npm:2.6.0";
       };
       packagePeers = [
         "@types/next"
@@ -10095,16 +9503,16 @@ let
         "webpack"
       ];
     };
-    "@sentry/nextjs@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:7.54.0" = {
+    "@sentry/nextjs@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:7.57.0" = {
       name = "@sentry/nextjs";
-      reference = "virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:7.54.0";
-      canonicalPackage = packages."@sentry/nextjs@npm:7.54.0";
+      reference = "virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:7.57.0";
+      canonicalPackage = packages."@sentry/nextjs@npm:7.57.0";
       dependencies = {
-        "@sentry/core" = packages."@sentry/core@npm:7.54.0";
-        "@sentry/integrations" = packages."@sentry/integrations@npm:7.54.0";
-        "@sentry/node" = packages."@sentry/node@npm:7.54.0";
-        "@sentry/types" = packages."@sentry/types@npm:7.54.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:7.54.0";
+        "@sentry/core" = packages."@sentry/core@npm:7.57.0";
+        "@sentry/integrations" = packages."@sentry/integrations@npm:7.57.0";
+        "@sentry/node" = packages."@sentry/node@npm:7.57.0";
+        "@sentry/types" = packages."@sentry/types@npm:7.57.0";
+        "@sentry/utils" = packages."@sentry/utils@npm:7.57.0";
         "@sentry/webpack-plugin" = packages."@sentry/webpack-plugin@npm:1.20.0";
         "@types/react" = packages."@types/react@npm:18.2.14";
         "chalk" = packages."chalk@npm:3.0.0";
@@ -10112,114 +9520,114 @@ let
         "react" = packages."react@npm:18.2.0";
         "rollup" = packages."rollup@npm:2.78.0";
         "stacktrace-parser" = packages."stacktrace-parser@npm:0.1.10";
-        "tslib" = packages."tslib@npm:1.14.1";
-        "webpack" = packages."webpack@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:5.86.0";
-        "@rollup/plugin-commonjs" = packages."@rollup/plugin-commonjs@virtual:3ec5604058e2649e52c13ccdea9bd3b89b528ee59a749cb0cd6f911f20644e4ef7ee36287620d6b13a73b4a1c4d3be37a2637c1b5bdbbbd8539a8b7a295621f3#npm:24.0.0";
-        "@sentry/react" = packages."@sentry/react@virtual:3ec5604058e2649e52c13ccdea9bd3b89b528ee59a749cb0cd6f911f20644e4ef7ee36287620d6b13a73b4a1c4d3be37a2637c1b5bdbbbd8539a8b7a295621f3#npm:7.54.0";
+        "tslib" = packages."tslib@npm:2.6.0";
+        "webpack" = packages."webpack@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:5.88.1";
+        "@rollup/plugin-commonjs" = packages."@rollup/plugin-commonjs@virtual:1dc8cbb94ac0696c81c9d85563f0bbb5aeb202ef5775a05215041db6c60fca3ba4f9d98e5dc0596b39cc211c3c72ee01813f232e4a9793797fdda2076df0ff2f#npm:24.0.0";
+        "@sentry/react" = packages."@sentry/react@virtual:1dc8cbb94ac0696c81c9d85563f0bbb5aeb202ef5775a05215041db6c60fca3ba4f9d98e5dc0596b39cc211c3c72ee01813f232e4a9793797fdda2076df0ff2f#npm:7.57.0";
       };
     };
-    "@sentry/node@npm:7.54.0" = {
+    "@sentry/node@npm:7.57.0" = {
       name = "@sentry/node";
-      reference = "npm:7.54.0";
+      reference = "npm:7.57.0";
       linkType = "HARD";
-      outputName = "sentry-node-7.54.0-389d52aa48";
-      outputHash = "/a004db428f6c9d9e49402e48410f67a44a2b54fff72e9fb17e746477aa14f82a16d4475bea23db08523fda7a99034c2cd5e21c8071817ff5ca788851b607d079";
+      outputName = "sentry-node-7.57.0-5246a4219e";
+      outputHash = "/b32ec2c541e0275d53947cfcb2321d82f6871c8b2d15ccd1d5011668404bd4c89be9892ed2025a7fb88ffbb347044ef1b5103639ef063f5de8a74cf9d938a7e6";
       flatName = "node";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:7.54.0";
-      checksum = "10/a004db428f6c9d9e49402e48410f67a44a2b54fff72e9fb17e746477aa14f82a16d4475bea23db08523fda7a99034c2cd5e21c8071817ff5ca788851b607d079";
+      descriptorRange = "npm:7.57.0";
+      checksum = "10/b32ec2c541e0275d53947cfcb2321d82f6871c8b2d15ccd1d5011668404bd4c89be9892ed2025a7fb88ffbb347044ef1b5103639ef063f5de8a74cf9d938a7e6";
       dependencies = {
-        "@sentry-internal/tracing" = packages."@sentry-internal/tracing@npm:7.54.0";
-        "@sentry/core" = packages."@sentry/core@npm:7.54.0";
-        "@sentry/types" = packages."@sentry/types@npm:7.54.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:7.54.0";
+        "@sentry-internal/tracing" = packages."@sentry-internal/tracing@npm:7.57.0";
+        "@sentry/core" = packages."@sentry/core@npm:7.57.0";
+        "@sentry/types" = packages."@sentry/types@npm:7.57.0";
+        "@sentry/utils" = packages."@sentry/utils@npm:7.57.0";
         "cookie" = packages."cookie@npm:0.4.2";
         "https-proxy-agent" = packages."https-proxy-agent@npm:5.0.1";
         "lru_map" = packages."lru_map@npm:0.3.3";
-        "tslib" = packages."tslib@npm:1.14.1";
+        "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@sentry/react@npm:7.54.0" = {
+    "@sentry/react@npm:7.57.0" = {
       name = "@sentry/react";
-      reference = "npm:7.54.0";
+      reference = "npm:7.57.0";
       linkType = "HARD";
-      outputName = "sentry-react-7.54.0-7407588fd4";
-      outputHash = "/c342ec4035de5351c4dd1fc38081e5a34f95bc1bfa045e4a7ce9f8372d0259bac76940f32d0ac32176a8f86f202a38f1a87a58c876571b62e2e73e5e2be91c22";
+      outputName = "sentry-react-7.57.0-8c267fb252";
+      outputHash = "/76853523a269df878dbbe705a5a79aa3201d0166171fe343b7fd833dd424cdc33435d67aca49cf1753227ef78ecb843f3a17e77c03a131c2a3cca4448bea28bc";
       flatName = "react";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:7.54.0";
-      checksum = "10/c342ec4035de5351c4dd1fc38081e5a34f95bc1bfa045e4a7ce9f8372d0259bac76940f32d0ac32176a8f86f202a38f1a87a58c876571b62e2e73e5e2be91c22";
+      descriptorRange = "npm:7.57.0";
+      checksum = "10/76853523a269df878dbbe705a5a79aa3201d0166171fe343b7fd833dd424cdc33435d67aca49cf1753227ef78ecb843f3a17e77c03a131c2a3cca4448bea28bc";
       dependencies = {
-        "@sentry/browser" = packages."@sentry/browser@npm:7.54.0";
-        "@sentry/types" = packages."@sentry/types@npm:7.54.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:7.54.0";
+        "@sentry/browser" = packages."@sentry/browser@npm:7.57.0";
+        "@sentry/types" = packages."@sentry/types@npm:7.57.0";
+        "@sentry/utils" = packages."@sentry/utils@npm:7.57.0";
         "hoist-non-react-statics" = packages."hoist-non-react-statics@npm:3.3.2";
-        "tslib" = packages."tslib@npm:1.14.1";
+        "tslib" = packages."tslib@npm:2.6.0";
       };
       packagePeers = [
         "@types/react"
         "react"
       ];
     };
-    "@sentry/react@virtual:3ec5604058e2649e52c13ccdea9bd3b89b528ee59a749cb0cd6f911f20644e4ef7ee36287620d6b13a73b4a1c4d3be37a2637c1b5bdbbbd8539a8b7a295621f3#npm:7.54.0" = {
+    "@sentry/react@virtual:1dc8cbb94ac0696c81c9d85563f0bbb5aeb202ef5775a05215041db6c60fca3ba4f9d98e5dc0596b39cc211c3c72ee01813f232e4a9793797fdda2076df0ff2f#npm:7.57.0" = {
       name = "@sentry/react";
-      reference = "virtual:3ec5604058e2649e52c13ccdea9bd3b89b528ee59a749cb0cd6f911f20644e4ef7ee36287620d6b13a73b4a1c4d3be37a2637c1b5bdbbbd8539a8b7a295621f3#npm:7.54.0";
-      canonicalPackage = packages."@sentry/react@npm:7.54.0";
+      reference = "virtual:1dc8cbb94ac0696c81c9d85563f0bbb5aeb202ef5775a05215041db6c60fca3ba4f9d98e5dc0596b39cc211c3c72ee01813f232e4a9793797fdda2076df0ff2f#npm:7.57.0";
+      canonicalPackage = packages."@sentry/react@npm:7.57.0";
       dependencies = {
-        "@sentry/browser" = packages."@sentry/browser@npm:7.54.0";
-        "@sentry/types" = packages."@sentry/types@npm:7.54.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:7.54.0";
+        "@sentry/browser" = packages."@sentry/browser@npm:7.57.0";
+        "@sentry/types" = packages."@sentry/types@npm:7.57.0";
+        "@sentry/utils" = packages."@sentry/utils@npm:7.57.0";
         "@types/react" = packages."@types/react@npm:18.2.14";
         "hoist-non-react-statics" = packages."hoist-non-react-statics@npm:3.3.2";
         "react" = packages."react@npm:18.2.0";
-        "tslib" = packages."tslib@npm:1.14.1";
+        "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "@sentry/replay@npm:7.54.0" = {
+    "@sentry/replay@npm:7.57.0" = {
       name = "@sentry/replay";
-      reference = "npm:7.54.0";
+      reference = "npm:7.57.0";
       linkType = "HARD";
-      outputName = "sentry-replay-7.54.0-654cfa345e";
-      outputHash = "/d310f3477bf5b48e080fcbb35df3d27e840e3ba7a513b4408662550b83efbcb778c3aae7662ba843d326730095fff46bda6c33c9e51343ba175737f55948394e";
+      outputName = "sentry-replay-7.57.0-1bed7d9cdb";
+      outputHash = "/fbad03525c461b9f54623b07b8a22a00f3b898cb0b6868a4eef5dfc4277762bcd12484aaccb26d9148d464e1811ccc8e8e1a6fccda4f3593f7dd3217f901e5fe";
       flatName = "replay";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:7.54.0";
-      checksum = "10/d310f3477bf5b48e080fcbb35df3d27e840e3ba7a513b4408662550b83efbcb778c3aae7662ba843d326730095fff46bda6c33c9e51343ba175737f55948394e";
+      descriptorRange = "npm:7.57.0";
+      checksum = "10/fbad03525c461b9f54623b07b8a22a00f3b898cb0b6868a4eef5dfc4277762bcd12484aaccb26d9148d464e1811ccc8e8e1a6fccda4f3593f7dd3217f901e5fe";
       dependencies = {
-        "@sentry/core" = packages."@sentry/core@npm:7.54.0";
-        "@sentry/types" = packages."@sentry/types@npm:7.54.0";
-        "@sentry/utils" = packages."@sentry/utils@npm:7.54.0";
+        "@sentry/core" = packages."@sentry/core@npm:7.57.0";
+        "@sentry/types" = packages."@sentry/types@npm:7.57.0";
+        "@sentry/utils" = packages."@sentry/utils@npm:7.57.0";
       };
     };
-    "@sentry/types@npm:7.54.0" = {
+    "@sentry/types@npm:7.57.0" = {
       name = "@sentry/types";
-      reference = "npm:7.54.0";
+      reference = "npm:7.57.0";
       linkType = "HARD";
-      outputName = "sentry-types-7.54.0-046a027bec";
-      outputHash = "/ff4c2abfe4cb1d3855e81ce26846ef007786cddf0d56de3e6a4a99eb263ffef24bebe5828258147d9ad842ce67347be7930a1cd3555c359744424f49e5218a42";
+      outputName = "sentry-types-7.57.0-3899643d99";
+      outputHash = "/201db27e3f1bc4344ac0b893d61eef2cae412b995f5af650780601937a258959407a80f511b0f02f6564f147fda3621a822521a737fac54420e9a339b377ee61";
       flatName = "types";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:7.54.0";
-      checksum = "10/ff4c2abfe4cb1d3855e81ce26846ef007786cddf0d56de3e6a4a99eb263ffef24bebe5828258147d9ad842ce67347be7930a1cd3555c359744424f49e5218a42";
+      descriptorRange = "npm:7.57.0";
+      checksum = "10/201db27e3f1bc4344ac0b893d61eef2cae412b995f5af650780601937a258959407a80f511b0f02f6564f147fda3621a822521a737fac54420e9a339b377ee61";
     };
-    "@sentry/utils@npm:7.54.0" = {
+    "@sentry/utils@npm:7.57.0" = {
       name = "@sentry/utils";
-      reference = "npm:7.54.0";
+      reference = "npm:7.57.0";
       linkType = "HARD";
-      outputName = "sentry-utils-7.54.0-ea748c1359";
-      outputHash = "/93af7aef610bec1e6eb33a8426186b71649e1f81640daa2ac29840ea78e02f8ee3d9f1dbc9e6356c9679143300b4c3110816a029598d9f5363f387013b07a557";
+      outputName = "sentry-utils-7.57.0-28f41c542f";
+      outputHash = "/f7a504e93016dbd7bb1b1cd95a738cd67982b785ca4833fd6111e2cb829043f225b5a67823c091cbe721873c2214d164f2baef314dff091522ff6a3c1ac5b285";
       flatName = "utils";
       languageName = "node";
       scope = "sentry";
-      descriptorRange = "npm:7.54.0";
-      checksum = "10/93af7aef610bec1e6eb33a8426186b71649e1f81640daa2ac29840ea78e02f8ee3d9f1dbc9e6356c9679143300b4c3110816a029598d9f5363f387013b07a557";
+      descriptorRange = "npm:7.57.0";
+      checksum = "10/f7a504e93016dbd7bb1b1cd95a738cd67982b785ca4833fd6111e2cb829043f225b5a67823c091cbe721873c2214d164f2baef314dff091522ff6a3c1ac5b285";
       dependencies = {
-        "@sentry/types" = packages."@sentry/types@npm:7.54.0";
-        "tslib" = packages."tslib@npm:1.14.1";
+        "@sentry/types" = packages."@sentry/types@npm:7.57.0";
+        "tslib" = packages."tslib@npm:2.6.0";
       };
     };
     "@sentry/webpack-plugin@npm:1.20.0" = {
@@ -10250,6 +9658,353 @@ let
       descriptorRange = "npm:^0.25.16";
       checksum = "10/d415546153478befa3c8386a4723e3061ac065867c7e22fe0374d36091991676d231e5381e66daa0ed21639217c6c80e0d6224a9c89aaac269e58b82b2f4a2f4";
     };
+    "@smithy/abort-controller@npm:1.0.1" = {
+      name = "@smithy/abort-controller";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-abort-controller-1.0.1-ee1deaca3d";
+      outputHash = "/f3d57cae288437a2b4aa2a764990c3cca92d20fc528097dd03ee0177472a588c18395eb89911369a2d58b367fcfd464464eefd8591cd927bae973eff789791b6";
+      flatName = "abort-controller";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/f3d57cae288437a2b4aa2a764990c3cca92d20fc528097dd03ee0177472a588c18395eb89911369a2d58b367fcfd464464eefd8591cd927bae973eff789791b6";
+      dependencies = {
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/config-resolver@npm:1.0.1" = {
+      name = "@smithy/config-resolver";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-config-resolver-1.0.1-ada2f26d57";
+      outputHash = "/c802f7d22a9e4ba684a04ec352c40b908b1e97088badd37cb28020f0fbe0d893342563cbe5fd66d8ba5beac371f7f74d00f976e3dfa453198ec2f5aeb2b06c71";
+      flatName = "config-resolver";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/c802f7d22a9e4ba684a04ec352c40b908b1e97088badd37cb28020f0fbe0d893342563cbe5fd66d8ba5beac371f7f74d00f976e3dfa453198ec2f5aeb2b06c71";
+      dependencies = {
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "@smithy/util-config-provider" = packages."@smithy/util-config-provider@npm:1.0.1";
+        "@smithy/util-middleware" = packages."@smithy/util-middleware@npm:1.0.1";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/credential-provider-imds@npm:1.0.1" = {
+      name = "@smithy/credential-provider-imds";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-credential-provider-imds-1.0.1-4c86bf026d";
+      outputHash = "/c05ea2cd33c4023a05c07bb0e9188a6c195137411115e2931fea4781492248e613a8411f6d0b8980650878984cfd5ece22f79527b4a76452aca7b83dc92c5b72";
+      flatName = "credential-provider-imds";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/c05ea2cd33c4023a05c07bb0e9188a6c195137411115e2931fea4781492248e613a8411f6d0b8980650878984cfd5ece22f79527b4a76452aca7b83dc92c5b72";
+      dependencies = {
+        "@smithy/node-config-provider" = packages."@smithy/node-config-provider@npm:1.0.1";
+        "@smithy/property-provider" = packages."@smithy/property-provider@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "@smithy/url-parser" = packages."@smithy/url-parser@npm:1.0.1";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/eventstream-codec@npm:1.0.1" = {
+      name = "@smithy/eventstream-codec";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-eventstream-codec-1.0.1-c327e1a72d";
+      outputHash = "/77f385bda9750a84e861cd8028e94b1f344ea83f8c2b7656cdaea6e0911fc2569b28ac6f6b65f5bc5ee4cd23b1d6d88ccd2b8e92252f4438871b7b622c9a334b";
+      flatName = "eventstream-codec";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/77f385bda9750a84e861cd8028e94b1f344ea83f8c2b7656cdaea6e0911fc2569b28ac6f6b65f5bc5ee4cd23b1d6d88ccd2b8e92252f4438871b7b622c9a334b";
+      dependencies = {
+        "@aws-crypto/crc32" = packages."@aws-crypto/crc32@npm:3.0.0";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "@smithy/util-hex-encoding" = packages."@smithy/util-hex-encoding@npm:1.0.1";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/eventstream-serde-browser@npm:1.0.1" = {
+      name = "@smithy/eventstream-serde-browser";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-eventstream-serde-browser-1.0.1-ab1100d3f0";
+      outputHash = "/e719b204a92999fb299da2d565ea219542371aebbe868fbf69c62bfba6e6d2433197ec5e86d0ca56b7fa10617261768f1b3cf82ca498bb974c370f8a41d38d77";
+      flatName = "eventstream-serde-browser";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/e719b204a92999fb299da2d565ea219542371aebbe868fbf69c62bfba6e6d2433197ec5e86d0ca56b7fa10617261768f1b3cf82ca498bb974c370f8a41d38d77";
+      dependencies = {
+        "@smithy/eventstream-serde-universal" = packages."@smithy/eventstream-serde-universal@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/eventstream-serde-config-resolver@npm:1.0.1" = {
+      name = "@smithy/eventstream-serde-config-resolver";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-eventstream-serde-config-resolver-1.0.1-2a4902cdd0";
+      outputHash = "/5d8b2c30659f35bd7cfd7dacacf943c5c96f28eafa60ecdf1cb895aa80c78e7289f0449eb7fb2f062f99e51c198c67454d34559aeaae658f95ca1bf8670ef088";
+      flatName = "eventstream-serde-config-resolver";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/5d8b2c30659f35bd7cfd7dacacf943c5c96f28eafa60ecdf1cb895aa80c78e7289f0449eb7fb2f062f99e51c198c67454d34559aeaae658f95ca1bf8670ef088";
+      dependencies = {
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/eventstream-serde-node@npm:1.0.1" = {
+      name = "@smithy/eventstream-serde-node";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-eventstream-serde-node-1.0.1-46cf5469b2";
+      outputHash = "/5e5ed7ee43a706dfc554138be80ce51e7434f83969ede56bfe6ccf2a7936db176cb97a2e8a9d1ac27367aeecdf018832a2f81d6b8bcca9ed3e055956ae6a7efd";
+      flatName = "eventstream-serde-node";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/5e5ed7ee43a706dfc554138be80ce51e7434f83969ede56bfe6ccf2a7936db176cb97a2e8a9d1ac27367aeecdf018832a2f81d6b8bcca9ed3e055956ae6a7efd";
+      dependencies = {
+        "@smithy/eventstream-serde-universal" = packages."@smithy/eventstream-serde-universal@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/eventstream-serde-universal@npm:1.0.1" = {
+      name = "@smithy/eventstream-serde-universal";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-eventstream-serde-universal-1.0.1-dac553ff28";
+      outputHash = "/f380aa3d13c3f2496eaa1354925aace4d6d87f10cf78888910996f5cc9ca7cf8bd6bbd6cbc5b2992b269e97f071942605c7b1aad2e7899bee082aafc10d9d0ba";
+      flatName = "eventstream-serde-universal";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/f380aa3d13c3f2496eaa1354925aace4d6d87f10cf78888910996f5cc9ca7cf8bd6bbd6cbc5b2992b269e97f071942605c7b1aad2e7899bee082aafc10d9d0ba";
+      dependencies = {
+        "@smithy/eventstream-codec" = packages."@smithy/eventstream-codec@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/fetch-http-handler@npm:1.0.1" = {
+      name = "@smithy/fetch-http-handler";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-fetch-http-handler-1.0.1-ccac6ba111";
+      outputHash = "/7862edc71fc3aed7745d1a9ca645bf6b11210454237362a51fa0ff96a7155a7342f940f26ad820733aac7f15be32aba04e84120b0281171b8491601c6e55a770";
+      flatName = "fetch-http-handler";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/7862edc71fc3aed7745d1a9ca645bf6b11210454237362a51fa0ff96a7155a7342f940f26ad820733aac7f15be32aba04e84120b0281171b8491601c6e55a770";
+      dependencies = {
+        "@smithy/protocol-http" = packages."@smithy/protocol-http@npm:1.1.0";
+        "@smithy/querystring-builder" = packages."@smithy/querystring-builder@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "@smithy/util-base64" = packages."@smithy/util-base64@npm:1.0.1";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/hash-node@npm:1.0.1" = {
+      name = "@smithy/hash-node";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-hash-node-1.0.1-37f36e6496";
+      outputHash = "/5c1624d0b83a84a9ea0271f4b638983740eaf960b0032699e0bd30e0b5be736204040cc6b3d2e84e06728993dfa626791e3733a322cd7650c4c8b207b9e33b92";
+      flatName = "hash-node";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/5c1624d0b83a84a9ea0271f4b638983740eaf960b0032699e0bd30e0b5be736204040cc6b3d2e84e06728993dfa626791e3733a322cd7650c4c8b207b9e33b92";
+      dependencies = {
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "@smithy/util-buffer-from" = packages."@smithy/util-buffer-from@npm:1.0.1";
+        "@smithy/util-utf8" = packages."@smithy/util-utf8@npm:1.0.1";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/invalid-dependency@npm:1.0.1" = {
+      name = "@smithy/invalid-dependency";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-invalid-dependency-1.0.1-32fd07ecd7";
+      outputHash = "/f569130fdc045c5f9651a4a05e870f8e1b96ba20f76d75bb51281a895086e18c14dbfb0781ad466182e98a82b65b321c29cf420c27f8ddb63162d4b5822f42ef";
+      flatName = "invalid-dependency";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/f569130fdc045c5f9651a4a05e870f8e1b96ba20f76d75bb51281a895086e18c14dbfb0781ad466182e98a82b65b321c29cf420c27f8ddb63162d4b5822f42ef";
+      dependencies = {
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/is-array-buffer@npm:1.0.1" = {
+      name = "@smithy/is-array-buffer";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-is-array-buffer-1.0.1-33d60ff654";
+      outputHash = "/52027507abf014ba0b0a639921cab07664ca0fbefa2835a912efb8f491c87fd70e8c31ce04cb315ee1581b93e13c00adc675232e1fc18374d5a1415a8abae78c";
+      flatName = "is-array-buffer";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/52027507abf014ba0b0a639921cab07664ca0fbefa2835a912efb8f491c87fd70e8c31ce04cb315ee1581b93e13c00adc675232e1fc18374d5a1415a8abae78c";
+      dependencies = {
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/middleware-content-length@npm:1.0.1" = {
+      name = "@smithy/middleware-content-length";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-middleware-content-length-1.0.1-90a89e3055";
+      outputHash = "/4d0c8ff60583066b46e7219fec31e72c8848327216a3164cc9c38f72b0273807762733e738a28dc85094e68e3bbe5e8fc62a46633ec9f1762c8fd7e60e9cb961";
+      flatName = "middleware-content-length";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/4d0c8ff60583066b46e7219fec31e72c8848327216a3164cc9c38f72b0273807762733e738a28dc85094e68e3bbe5e8fc62a46633ec9f1762c8fd7e60e9cb961";
+      dependencies = {
+        "@smithy/protocol-http" = packages."@smithy/protocol-http@npm:1.1.0";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/middleware-endpoint@npm:1.0.2" = {
+      name = "@smithy/middleware-endpoint";
+      reference = "npm:1.0.2";
+      linkType = "HARD";
+      outputName = "smithy-middleware-endpoint-1.0.2-7b20292684";
+      outputHash = "/21b3dbd18abc42cf7d1c80aa7ac750ab789b1c531c3d039bd69b803e7a7c9ee2f43afa2797fea2c636ef8a381f9b6b318c314e261e7414d2421c0dad03da908d";
+      flatName = "middleware-endpoint";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/21b3dbd18abc42cf7d1c80aa7ac750ab789b1c531c3d039bd69b803e7a7c9ee2f43afa2797fea2c636ef8a381f9b6b318c314e261e7414d2421c0dad03da908d";
+      dependencies = {
+        "@smithy/middleware-serde" = packages."@smithy/middleware-serde@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "@smithy/url-parser" = packages."@smithy/url-parser@npm:1.0.1";
+        "@smithy/util-middleware" = packages."@smithy/util-middleware@npm:1.0.1";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/middleware-retry@npm:1.0.3" = {
+      name = "@smithy/middleware-retry";
+      reference = "npm:1.0.3";
+      linkType = "HARD";
+      outputName = "smithy-middleware-retry-1.0.3-5eb2f3048b";
+      outputHash = "/5ba7572c5893a6218b301aa7b668fa6d80058b566fc6f3936c47acc39408f8d934b0a6941acf07f4f8ec3b70356c05545eaf1e22a31405912c4b3e5f7409088a";
+      flatName = "middleware-retry";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.2";
+      checksum = "10/5ba7572c5893a6218b301aa7b668fa6d80058b566fc6f3936c47acc39408f8d934b0a6941acf07f4f8ec3b70356c05545eaf1e22a31405912c4b3e5f7409088a";
+      dependencies = {
+        "@smithy/protocol-http" = packages."@smithy/protocol-http@npm:1.1.0";
+        "@smithy/service-error-classification" = packages."@smithy/service-error-classification@npm:1.0.2";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "@smithy/util-middleware" = packages."@smithy/util-middleware@npm:1.0.1";
+        "@smithy/util-retry" = packages."@smithy/util-retry@npm:1.0.3";
+        "tslib" = packages."tslib@npm:2.6.0";
+        "uuid" = packages."uuid@npm:8.3.2";
+      };
+    };
+    "@smithy/middleware-serde@npm:1.0.1" = {
+      name = "@smithy/middleware-serde";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-middleware-serde-1.0.1-fc0aa888a9";
+      outputHash = "/7567e1f37ac7b1118d97ad4029a9e4fa053f5e591853fceacc548874502852562c6319b228341ecc59b2adf626ba87835fb1ff90a1244548b87f5363584d0b15";
+      flatName = "middleware-serde";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/7567e1f37ac7b1118d97ad4029a9e4fa053f5e591853fceacc548874502852562c6319b228341ecc59b2adf626ba87835fb1ff90a1244548b87f5363584d0b15";
+      dependencies = {
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/middleware-stack@npm:1.0.1" = {
+      name = "@smithy/middleware-stack";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-middleware-stack-1.0.1-6f1e59f278";
+      outputHash = "/3de5655f22ba005d9db655fa1025ff3eb3ac1da6894d0d74de3146a32ed8c982894f7239448d2a61de6383ff2a26a05a91152692d9cf75cc05f5d2cc54ceb990";
+      flatName = "middleware-stack";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/3de5655f22ba005d9db655fa1025ff3eb3ac1da6894d0d74de3146a32ed8c982894f7239448d2a61de6383ff2a26a05a91152692d9cf75cc05f5d2cc54ceb990";
+      dependencies = {
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/node-config-provider@npm:1.0.1" = {
+      name = "@smithy/node-config-provider";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-node-config-provider-1.0.1-3b330da955";
+      outputHash = "/f92d495fefbeb134155cf8b57085533e56e8fa752aae3fdf742dd2186286242816f9948319f48a09d04226320c86787fc1b195ab9ef3e1cfab100f9e197be6c3";
+      flatName = "node-config-provider";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/f92d495fefbeb134155cf8b57085533e56e8fa752aae3fdf742dd2186286242816f9948319f48a09d04226320c86787fc1b195ab9ef3e1cfab100f9e197be6c3";
+      dependencies = {
+        "@smithy/property-provider" = packages."@smithy/property-provider@npm:1.0.1";
+        "@smithy/shared-ini-file-loader" = packages."@smithy/shared-ini-file-loader@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/node-http-handler@npm:1.0.2" = {
+      name = "@smithy/node-http-handler";
+      reference = "npm:1.0.2";
+      linkType = "HARD";
+      outputName = "smithy-node-http-handler-1.0.2-bd82dbc0a7";
+      outputHash = "/c1a8d398b3bf853f1b4ceb142a1db25a7d333302f8e529a7b43b6ee96ebfbbdd782844af2dea04435869245d4a6be967a797f3954c596b614aafe9cb00d8086c";
+      flatName = "node-http-handler";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.2";
+      checksum = "10/c1a8d398b3bf853f1b4ceb142a1db25a7d333302f8e529a7b43b6ee96ebfbbdd782844af2dea04435869245d4a6be967a797f3954c596b614aafe9cb00d8086c";
+      dependencies = {
+        "@smithy/abort-controller" = packages."@smithy/abort-controller@npm:1.0.1";
+        "@smithy/protocol-http" = packages."@smithy/protocol-http@npm:1.1.0";
+        "@smithy/querystring-builder" = packages."@smithy/querystring-builder@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/property-provider@npm:1.0.1" = {
+      name = "@smithy/property-provider";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-property-provider-1.0.1-1b18e0bd32";
+      outputHash = "/609d4a87db3df737ce9f226496c833f0dce5a8fb810222e37b948eec714e43a3764ef2a2eb4c5dd2d77498ebed9339709ac7cc6c2db33ad555b196314d173884";
+      flatName = "property-provider";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/609d4a87db3df737ce9f226496c833f0dce5a8fb810222e37b948eec714e43a3764ef2a2eb4c5dd2d77498ebed9339709ac7cc6c2db33ad555b196314d173884";
+      dependencies = {
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
     "@smithy/protocol-http@npm:1.1.0" = {
       name = "@smithy/protocol-http";
       reference = "npm:1.1.0";
@@ -10259,10 +10014,111 @@ let
       flatName = "protocol-http";
       languageName = "node";
       scope = "smithy";
-      descriptorRange = "npm:^1.0.1";
+      descriptorRange = "npm:^1.1.0";
       checksum = "10/8b9813db5ce1e89199f0e724033aa44969051158ada523b4aef62d94c1fd4d0f493a525dae027f72b4e58ad2ddc5213a05a815551173cdf613a92eff696fdf90";
       dependencies = {
         "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/querystring-builder@npm:1.0.1" = {
+      name = "@smithy/querystring-builder";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-querystring-builder-1.0.1-9269ef52bf";
+      outputHash = "/5f4dbbd0736a7c9b5c8e601f78121fd5531362ef37a9f9d85207e95f614ab00454c69c1ae18e7a897b431aeab96fa1a51982d8e90ec88ea8fd56c397c96b3876";
+      flatName = "querystring-builder";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/5f4dbbd0736a7c9b5c8e601f78121fd5531362ef37a9f9d85207e95f614ab00454c69c1ae18e7a897b431aeab96fa1a51982d8e90ec88ea8fd56c397c96b3876";
+      dependencies = {
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "@smithy/util-uri-escape" = packages."@smithy/util-uri-escape@npm:1.0.1";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/querystring-parser@npm:1.0.1" = {
+      name = "@smithy/querystring-parser";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-querystring-parser-1.0.1-294a8b226e";
+      outputHash = "/d1fec2df9a506255f07706d29493d7922b9e6368ea9bfb18e54eb96ac7120c62acb1d462c24895b800abf540c1f5aa1dfae7af1b98db3c2650d7d09ccef834de";
+      flatName = "querystring-parser";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/d1fec2df9a506255f07706d29493d7922b9e6368ea9bfb18e54eb96ac7120c62acb1d462c24895b800abf540c1f5aa1dfae7af1b98db3c2650d7d09ccef834de";
+      dependencies = {
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/service-error-classification@npm:1.0.2" = {
+      name = "@smithy/service-error-classification";
+      reference = "npm:1.0.2";
+      linkType = "HARD";
+      outputName = "smithy-service-error-classification-1.0.2-a1ec92a3c6";
+      outputHash = "/19e1aa4748705ec97e1b0acdf3050449f8eba03ab7a6b99cfaef9323a89f5533c81cf9c35d36d68e66a38277f68ffa0d65ecf7fa6b8b8dd8f91cb4d5783ef3f5";
+      flatName = "service-error-classification";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.2";
+      checksum = "10/19e1aa4748705ec97e1b0acdf3050449f8eba03ab7a6b99cfaef9323a89f5533c81cf9c35d36d68e66a38277f68ffa0d65ecf7fa6b8b8dd8f91cb4d5783ef3f5";
+    };
+    "@smithy/shared-ini-file-loader@npm:1.0.1" = {
+      name = "@smithy/shared-ini-file-loader";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-shared-ini-file-loader-1.0.1-8acd3f098f";
+      outputHash = "/989527f3bad25175956a56dc43f148dc4a206a92eb8a5c3435164edcf24e839bdf0e1d68e9d0baa8e90f76d4cf13c78b36c461ad4e2d593fedb0003e5c14c86e";
+      flatName = "shared-ini-file-loader";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/989527f3bad25175956a56dc43f148dc4a206a92eb8a5c3435164edcf24e839bdf0e1d68e9d0baa8e90f76d4cf13c78b36c461ad4e2d593fedb0003e5c14c86e";
+      dependencies = {
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/signature-v4@npm:1.0.1" = {
+      name = "@smithy/signature-v4";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-signature-v4-1.0.1-f5d6b4a23b";
+      outputHash = "/4036916b119319133647e1ee85537095d6ab80b29cb86937295edd59a0fc650d9e63545c10801a90775c9040f1aeedae14814d5419ffe0dcbe68154df901718e";
+      flatName = "signature-v4";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/4036916b119319133647e1ee85537095d6ab80b29cb86937295edd59a0fc650d9e63545c10801a90775c9040f1aeedae14814d5419ffe0dcbe68154df901718e";
+      dependencies = {
+        "@smithy/eventstream-codec" = packages."@smithy/eventstream-codec@npm:1.0.1";
+        "@smithy/is-array-buffer" = packages."@smithy/is-array-buffer@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "@smithy/util-hex-encoding" = packages."@smithy/util-hex-encoding@npm:1.0.1";
+        "@smithy/util-middleware" = packages."@smithy/util-middleware@npm:1.0.1";
+        "@smithy/util-uri-escape" = packages."@smithy/util-uri-escape@npm:1.0.1";
+        "@smithy/util-utf8" = packages."@smithy/util-utf8@npm:1.0.1";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/smithy-client@npm:1.0.3" = {
+      name = "@smithy/smithy-client";
+      reference = "npm:1.0.3";
+      linkType = "HARD";
+      outputName = "smithy-smithy-client-1.0.3-fb91c6b7f3";
+      outputHash = "/d218e8bc5c5236f3ebd0e9b9c8ccfd34a179e037c472acefd44a12cc16a8125e4c02113f17c578d271f9204f3b6f40dfbb2f882da1bfaf38c10e6601dc89f7c7";
+      flatName = "smithy-client";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.3";
+      checksum = "10/d218e8bc5c5236f3ebd0e9b9c8ccfd34a179e037c472acefd44a12cc16a8125e4c02113f17c578d271f9204f3b6f40dfbb2f882da1bfaf38c10e6601dc89f7c7";
+      dependencies = {
+        "@smithy/middleware-stack" = packages."@smithy/middleware-stack@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "@smithy/util-stream" = packages."@smithy/util-stream@npm:1.0.1";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
@@ -10275,9 +10131,257 @@ let
       flatName = "types";
       languageName = "node";
       scope = "smithy";
-      descriptorRange = "npm:^1.0.0";
+      descriptorRange = "npm:^1.1.0";
       checksum = "10/46c3cb80b503ac99e3d253e2841d90ecf8de95b74eb56114b5c375ab24144838a6009302641780b0dfda8c510bd9885ab487bbb06a5d2af1a267a613111511ad";
       dependencies = {
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/url-parser@npm:1.0.1" = {
+      name = "@smithy/url-parser";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-url-parser-1.0.1-baa5a327cd";
+      outputHash = "/925bf562f1cff7c8c5f21565dc4f2cdaf760ed62d2cc6b2ee45204010ecd984ca8724fa764f120e08c421455b1e8cfb5718551973ff4ddd51cdee1afef3e9abb";
+      flatName = "url-parser";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/925bf562f1cff7c8c5f21565dc4f2cdaf760ed62d2cc6b2ee45204010ecd984ca8724fa764f120e08c421455b1e8cfb5718551973ff4ddd51cdee1afef3e9abb";
+      dependencies = {
+        "@smithy/querystring-parser" = packages."@smithy/querystring-parser@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/util-base64@npm:1.0.1" = {
+      name = "@smithy/util-base64";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-util-base64-1.0.1-ec4fb9e662";
+      outputHash = "/f4e9376d62189e6add262815d35d6c09c02f73fa5f785b4fe8e2026c9234dc05302e525712292a81998e82d8e93e370c91dd1edc8046fc0209aaaaf4c9be7268";
+      flatName = "util-base64";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/f4e9376d62189e6add262815d35d6c09c02f73fa5f785b4fe8e2026c9234dc05302e525712292a81998e82d8e93e370c91dd1edc8046fc0209aaaaf4c9be7268";
+      dependencies = {
+        "@smithy/util-buffer-from" = packages."@smithy/util-buffer-from@npm:1.0.1";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/util-body-length-browser@npm:1.0.1" = {
+      name = "@smithy/util-body-length-browser";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-util-body-length-browser-1.0.1-e625f6dbf2";
+      outputHash = "/9941c907292bc4ba5d98f876d825725d78cc22ea2c2cfdfc231b8fcc33fd3de66a1fd6d1c75774957b4f9ebe7a8542a99aa885d67470bad49d86666253eb2517";
+      flatName = "util-body-length-browser";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/9941c907292bc4ba5d98f876d825725d78cc22ea2c2cfdfc231b8fcc33fd3de66a1fd6d1c75774957b4f9ebe7a8542a99aa885d67470bad49d86666253eb2517";
+      dependencies = {
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/util-body-length-node@npm:1.0.1" = {
+      name = "@smithy/util-body-length-node";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-util-body-length-node-1.0.1-6664136d06";
+      outputHash = "/fbc9a67bab971a6b85a707c9aba20253c584183619fb361e786106c565351d9d675314a1e7d59fd1f2def4f3b5c6853952f2a4a0b1892b5aea28a8568f950e61";
+      flatName = "util-body-length-node";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/fbc9a67bab971a6b85a707c9aba20253c584183619fb361e786106c565351d9d675314a1e7d59fd1f2def4f3b5c6853952f2a4a0b1892b5aea28a8568f950e61";
+      dependencies = {
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/util-buffer-from@npm:1.0.1" = {
+      name = "@smithy/util-buffer-from";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-util-buffer-from-1.0.1-67832654d2";
+      outputHash = "/ddf4a7a885bec76227f72b1d2ac23391bc234ab1f592e6d657fb39ef09bd2d348287e56ba3a9fafede1ea5a531124e9a4ca2e0fc6548ccbc4140c12508272c31";
+      flatName = "util-buffer-from";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/ddf4a7a885bec76227f72b1d2ac23391bc234ab1f592e6d657fb39ef09bd2d348287e56ba3a9fafede1ea5a531124e9a4ca2e0fc6548ccbc4140c12508272c31";
+      dependencies = {
+        "@smithy/is-array-buffer" = packages."@smithy/is-array-buffer@npm:1.0.1";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/util-config-provider@npm:1.0.1" = {
+      name = "@smithy/util-config-provider";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-util-config-provider-1.0.1-5b93c15424";
+      outputHash = "/e6f855fba3be5acda70ea38a9ae68a7c08fb82899d8691883a37f5449c7160da787e804c043845853f2139c63c51592d0062febe98245df56482f454f2e42410";
+      flatName = "util-config-provider";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/e6f855fba3be5acda70ea38a9ae68a7c08fb82899d8691883a37f5449c7160da787e804c043845853f2139c63c51592d0062febe98245df56482f454f2e42410";
+      dependencies = {
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/util-defaults-mode-browser@npm:1.0.1" = {
+      name = "@smithy/util-defaults-mode-browser";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-util-defaults-mode-browser-1.0.1-4af98a2c1e";
+      outputHash = "/a517993f52899bd6e7e3196b689c140129e3ed80d55eaa7eabad0181d77c7811ae22ad2dc5204871623fbc3a5ad543e03e46c42ad7aeb1453d2e32b7878b105c";
+      flatName = "util-defaults-mode-browser";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/a517993f52899bd6e7e3196b689c140129e3ed80d55eaa7eabad0181d77c7811ae22ad2dc5204871623fbc3a5ad543e03e46c42ad7aeb1453d2e32b7878b105c";
+      dependencies = {
+        "@smithy/property-provider" = packages."@smithy/property-provider@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "bowser" = packages."bowser@npm:2.11.0";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/util-defaults-mode-node@npm:1.0.1" = {
+      name = "@smithy/util-defaults-mode-node";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-util-defaults-mode-node-1.0.1-8a32cc0722";
+      outputHash = "/c753954a5a98c24cbdc7d35c17574dd9eeec0902147299debd31aa645aa07401cf1097a72c5125c212d50620b625fd2cbee8af0c00662096395e7ce674bd3cd7";
+      flatName = "util-defaults-mode-node";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/c753954a5a98c24cbdc7d35c17574dd9eeec0902147299debd31aa645aa07401cf1097a72c5125c212d50620b625fd2cbee8af0c00662096395e7ce674bd3cd7";
+      dependencies = {
+        "@smithy/config-resolver" = packages."@smithy/config-resolver@npm:1.0.1";
+        "@smithy/credential-provider-imds" = packages."@smithy/credential-provider-imds@npm:1.0.1";
+        "@smithy/node-config-provider" = packages."@smithy/node-config-provider@npm:1.0.1";
+        "@smithy/property-provider" = packages."@smithy/property-provider@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/util-hex-encoding@npm:1.0.1" = {
+      name = "@smithy/util-hex-encoding";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-util-hex-encoding-1.0.1-bcae7e022a";
+      outputHash = "/9fb6414ca767940dca1c57032ce0d7858f0ea290e8f28d2fd95832303ffdc712d694ac7a7c9bb1997109e293072be3bd727412c6e1d8987cec36666b342bd295";
+      flatName = "util-hex-encoding";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/9fb6414ca767940dca1c57032ce0d7858f0ea290e8f28d2fd95832303ffdc712d694ac7a7c9bb1997109e293072be3bd727412c6e1d8987cec36666b342bd295";
+      dependencies = {
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/util-middleware@npm:1.0.1" = {
+      name = "@smithy/util-middleware";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-util-middleware-1.0.1-daa9b99840";
+      outputHash = "/b81c20b637d7faeb8a69e7f158f4fbdd78a43b6263c08cfb9a33b1f2a5fa81e058f0830edc1249c4cb9cf3407889d3d883fc4c81df3b4166dfd553a984da31d1";
+      flatName = "util-middleware";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/b81c20b637d7faeb8a69e7f158f4fbdd78a43b6263c08cfb9a33b1f2a5fa81e058f0830edc1249c4cb9cf3407889d3d883fc4c81df3b4166dfd553a984da31d1";
+      dependencies = {
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/util-retry@npm:1.0.3" = {
+      name = "@smithy/util-retry";
+      reference = "npm:1.0.3";
+      linkType = "HARD";
+      outputName = "smithy-util-retry-1.0.3-546c228e3f";
+      outputHash = "/8827e72bff984dd44dad3bcf5b1efa7747306f7d6efa4748c88d287c86109452db277002a2f3c8a6696835f5965003bfb2879b80e20765d3c89ed94d34a29609";
+      flatName = "util-retry";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.2";
+      checksum = "10/8827e72bff984dd44dad3bcf5b1efa7747306f7d6efa4748c88d287c86109452db277002a2f3c8a6696835f5965003bfb2879b80e20765d3c89ed94d34a29609";
+      dependencies = {
+        "@smithy/service-error-classification" = packages."@smithy/service-error-classification@npm:1.0.2";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/util-stream@npm:1.0.1" = {
+      name = "@smithy/util-stream";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-util-stream-1.0.1-938ce31a6c";
+      outputHash = "/c62adfab5d83906aa5cef281a48dd426ef48b3c767bbdf1776cb3198110399724296da663a2ffa232f06750b1cc57f37880b9684a0bd0f526b0ab6cc1c50064e";
+      flatName = "util-stream";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/c62adfab5d83906aa5cef281a48dd426ef48b3c767bbdf1776cb3198110399724296da663a2ffa232f06750b1cc57f37880b9684a0bd0f526b0ab6cc1c50064e";
+      dependencies = {
+        "@smithy/fetch-http-handler" = packages."@smithy/fetch-http-handler@npm:1.0.1";
+        "@smithy/node-http-handler" = packages."@smithy/node-http-handler@npm:1.0.2";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
+        "@smithy/util-base64" = packages."@smithy/util-base64@npm:1.0.1";
+        "@smithy/util-buffer-from" = packages."@smithy/util-buffer-from@npm:1.0.1";
+        "@smithy/util-hex-encoding" = packages."@smithy/util-hex-encoding@npm:1.0.1";
+        "@smithy/util-utf8" = packages."@smithy/util-utf8@npm:1.0.1";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/util-uri-escape@npm:1.0.1" = {
+      name = "@smithy/util-uri-escape";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-util-uri-escape-1.0.1-11fccae1bd";
+      outputHash = "/ddfd3692a46ecadf451c8dc3f9f898201dbf5f408a3b5d674fa016e397b389c52cc930ab2e4bab47dc59011d116bd3008cc2665358bea3711a65d45006b14345";
+      flatName = "util-uri-escape";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/ddfd3692a46ecadf451c8dc3f9f898201dbf5f408a3b5d674fa016e397b389c52cc930ab2e4bab47dc59011d116bd3008cc2665358bea3711a65d45006b14345";
+      dependencies = {
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/util-utf8@npm:1.0.1" = {
+      name = "@smithy/util-utf8";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-util-utf8-1.0.1-c043a08414";
+      outputHash = "/77c40246283de92f6f56258ec16271a77f01cde918b2a61c6fb32104ab5b2261ea4c11b00b58c338e84bfd1b0149ab4fd889821354b29ea190acd2d942ae175f";
+      flatName = "util-utf8";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/77c40246283de92f6f56258ec16271a77f01cde918b2a61c6fb32104ab5b2261ea4c11b00b58c338e84bfd1b0149ab4fd889821354b29ea190acd2d942ae175f";
+      dependencies = {
+        "@smithy/util-buffer-from" = packages."@smithy/util-buffer-from@npm:1.0.1";
+        "tslib" = packages."tslib@npm:2.6.0";
+      };
+    };
+    "@smithy/util-waiter@npm:1.0.1" = {
+      name = "@smithy/util-waiter";
+      reference = "npm:1.0.1";
+      linkType = "HARD";
+      outputName = "smithy-util-waiter-1.0.1-f5c9f8222f";
+      outputHash = "/386e04be401ce4b9efcf87e3962bbb3b613e6fda90f6f42d874304f67e3f5ef80769d93d6e40f2e40fefadc6711ec0903f01f785ecfebe0558f52ce8145cb08f";
+      flatName = "util-waiter";
+      languageName = "node";
+      scope = "smithy";
+      descriptorRange = "npm:^1.0.1";
+      checksum = "10/386e04be401ce4b9efcf87e3962bbb3b613e6fda90f6f42d874304f67e3f5ef80769d93d6e40f2e40fefadc6711ec0903f01f785ecfebe0558f52ce8145cb08f";
+      dependencies = {
+        "@smithy/abort-controller" = packages."@smithy/abort-controller@npm:1.0.1";
+        "@smithy/types" = packages."@smithy/types@npm:1.1.0";
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
@@ -10427,8 +10531,20 @@ let
       flatName = "node12";
       languageName = "node";
       scope = "tsconfig";
-      descriptorRange = "npm:~1.0.11";
+      descriptorRange = "npm:^1.0.7";
       checksum = "10/5ce29a41b13e7897a58b8e2df11269c5395999e588b9a467386f99d1d26f6c77d1af2719e407621412520ea30517d718d5192a32403b8dfcc163bf33e40a338a";
+    };
+    "@tsconfig/node12@npm:12.1.0" = {
+      name = "@tsconfig/node12";
+      reference = "npm:12.1.0";
+      linkType = "HARD";
+      outputName = "tsconfig-node12-12.1.0-d19dc455bd";
+      outputHash = "/fc40b9770202154abd8926d97dae7eb2fdbb39250ec58ad4f5b777dcb14d3a814382f6e9715f7d23d2979314b6edea3bd65fa12bc0d05dad69fea87b7b2f74ee";
+      flatName = "node12";
+      languageName = "node";
+      scope = "tsconfig";
+      descriptorRange = "npm:~12.1.0";
+      checksum = "10/fc40b9770202154abd8926d97dae7eb2fdbb39250ec58ad4f5b777dcb14d3a814382f6e9715f7d23d2979314b6edea3bd65fa12bc0d05dad69fea87b7b2f74ee";
     };
     "@tsconfig/node14@npm:1.0.3" = {
       name = "@tsconfig/node14";
@@ -10655,7 +10771,7 @@ let
       flatName = "file-saver";
       languageName = "node";
       scope = "types";
-      descriptorRange = "npm:~2.0.5";
+      descriptorRange = "npm:^2.0.5";
       checksum = "10/a31d6ee2abf99598647139f8f35b37b6e1bacf6c7ddf05c66651b9b0e6e53381aa0e8ed13f37faa6e496e0eb1da87c97e6c70fd589d5b83b0c95c57cb64ce92a";
     };
     "@types/geojson@npm:7946.0.10" = {
@@ -10679,20 +10795,20 @@ let
       flatName = "glider-js";
       languageName = "node";
       scope = "types";
-      descriptorRange = "npm:~1.7.8";
+      descriptorRange = "npm:^1.7.8";
       checksum = "10/cae85fe54768eec9803135f64669c9522181c0e29d55e4cdce1bf27271c56f0bcb5b6556f01d6071ba1e25869eb0cc2b471b1f6f04ecfd7105172e52a63b79a7";
     };
-    "@types/html-to-text@npm:8.0.1" = {
+    "@types/html-to-text@npm:9.0.1" = {
       name = "@types/html-to-text";
-      reference = "npm:8.0.1";
+      reference = "npm:9.0.1";
       linkType = "HARD";
-      outputName = "types-html-to-text-8.0.1-ddacc49e9f";
-      outputHash = "/ddd37e7fb73f6adcfd3d3fa7e283dc123f2f1df17a940b4f678af5f085edb32b67d800071f2b695ecd333202fa9b604ee16475524c9bda88c2a78378339e15d3";
+      outputName = "types-html-to-text-9.0.1-07f3807af8";
+      outputHash = "/97fd03299d108ad2040de636bda4f6a9fac1118ea6cb8db1f69aef3b188e1a01ea6b5967c054ad3931408cdf4ba40a48e2ad75ec5a7247bc640ca98a9278a560";
       flatName = "html-to-text";
       languageName = "node";
       scope = "types";
-      descriptorRange = "npm:~8.0.1";
-      checksum = "10/ddd37e7fb73f6adcfd3d3fa7e283dc123f2f1df17a940b4f678af5f085edb32b67d800071f2b695ecd333202fa9b604ee16475524c9bda88c2a78378339e15d3";
+      descriptorRange = "npm:~9.0.1";
+      checksum = "10/97fd03299d108ad2040de636bda4f6a9fac1118ea6cb8db1f69aef3b188e1a01ea6b5967c054ad3931408cdf4ba40a48e2ad75ec5a7247bc640ca98a9278a560";
     };
     "@types/http-errors@npm:2.0.1" = {
       name = "@types/http-errors";
@@ -10715,7 +10831,7 @@ let
       flatName = "iban";
       languageName = "node";
       scope = "types";
-      descriptorRange = "npm:~0.0.32";
+      descriptorRange = "npm:^0.0.32";
       checksum = "10/62e0457a5e629027d62ed0c3d7802b29a6b90a67c1a5d2dd42482670f35a56cfb1ab85adfc766b79ea535d6944e3b02602d0839bc95c55d0b152637d1bdc84c6";
     };
     "@types/istanbul-lib-coverage@npm:2.0.4" = {
@@ -10985,8 +11101,20 @@ let
       flatName = "node";
       languageName = "node";
       scope = "types";
-      descriptorRange = "npm:~20.3.1";
+      descriptorRange = "npm:*";
       checksum = "10/e40a7dbfa00ed34cb46b0b9f96e04f51d676d3a719c2763ead831f7875e6a3411356973e99741821f8857dba5c26c00cad79f5c5b9b62af5c9f5ff7eafb02a21";
+    };
+    "@types/node@npm:20.3.3" = {
+      name = "@types/node";
+      reference = "npm:20.3.3";
+      linkType = "HARD";
+      outputName = "types-node-20.3.3-aac92e0a89";
+      outputHash = "/95fdbe10c74cef580b4b47f6b40f58dd26f1ba4689de18bbd1b7dea8535736ef571a8a6f12dafee63cad8c159ba852c8baf294500fc5968fab92807c86381fa2";
+      flatName = "node";
+      languageName = "node";
+      scope = "types";
+      descriptorRange = "npm:~20.3.3";
+      checksum = "10/95fdbe10c74cef580b4b47f6b40f58dd26f1ba4689de18bbd1b7dea8535736ef571a8a6f12dafee63cad8c159ba852c8baf294500fc5968fab92807c86381fa2";
     };
     "@types/nodemailer@npm:6.4.8" = {
       name = "@types/nodemailer";
@@ -11308,7 +11436,7 @@ let
         "@eslint-community/regexpp" = packages."@eslint-community/regexpp@npm:4.5.1";
         "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:5.60.1";
         "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:5.60.1";
-        "eslint" = packages."eslint@npm:8.43.0";
+        "eslint" = packages."eslint@npm:8.44.0";
         "grapheme-splitter" = packages."grapheme-splitter@npm:1.0.4";
         "ignore" = packages."ignore@npm:5.2.4";
         "natural-compare-lite" = packages."natural-compare-lite@npm:1.4.0";
@@ -11351,7 +11479,7 @@ let
       dependencies = {
         "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:5.60.1";
         "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:5.60.1";
-        "eslint" = packages."eslint@npm:8.43.0";
+        "eslint" = packages."eslint@npm:8.44.0";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
         "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:5b98674e19f7e353066a796b063730502207f22216f05c6be74bd7058bd8714232d9114545dd5d0de3ce15507908cc2bb9f776a4d63086f39a3538cf5195ee3f#npm:5.60.1";
         "debug" = packages."debug@virtual:071d471ccd267160a6f0ec15e4cdc2874728a012db8f34521faf9e64a516aa918ee9ebab3c4c084d955ab74aaac5b8be9afb7a168813c9f210acdb7d88754ab9#npm:4.3.4";
@@ -11402,7 +11530,7 @@ let
       reference = "virtual:b12d2ecaa5e032eff760e5ee3265fb0097a36b3352013dc4efa161dd10247897d1b58fbcef6d81b28b6cdba8ceb78672036a26a0fbb1ae88eeac31f5b173b3f2#npm:5.60.1";
       canonicalPackage = packages."@typescript-eslint/type-utils@npm:5.60.1";
       dependencies = {
-        "eslint" = packages."eslint@npm:8.43.0";
+        "eslint" = packages."eslint@npm:8.44.0";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
         "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:5b98674e19f7e353066a796b063730502207f22216f05c6be74bd7058bd8714232d9114545dd5d0de3ce15507908cc2bb9f776a4d63086f39a3538cf5195ee3f#npm:5.60.1";
         "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:b12d2ecaa5e032eff760e5ee3265fb0097a36b3352013dc4efa161dd10247897d1b58fbcef6d81b28b6cdba8ceb78672036a26a0fbb1ae88eeac31f5b173b3f2#npm:5.60.1";
@@ -11511,10 +11639,10 @@ let
         "@types/semver" = packages."@types/semver@npm:7.5.0";
         "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:5.60.1";
         "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:5.60.1";
-        "eslint" = packages."eslint@npm:8.43.0";
+        "eslint" = packages."eslint@npm:8.44.0";
         "eslint-scope" = packages."eslint-scope@npm:5.1.1";
         "semver" = packages."semver@npm:7.5.3";
-        "@eslint-community/eslint-utils" = packages."@eslint-community/eslint-utils@virtual:5757109ac88221e94a852cc9f73e2f55465a7102fffadd66cbbc453ec0085a59a55391bf490e79144c3026a10d76b992734f4e89f8c9b0e26d0c979c648afdd9#npm:4.4.0";
+        "@eslint-community/eslint-utils" = packages."@eslint-community/eslint-utils@virtual:658d375d8a2682df487e0f82908a4064212454abb9799a71f418ff4895a467423e10832ae50012302f5a0f8e4e4486c5dab6eec0513cc024a023ea4d86ec607b#npm:4.4.0";
         "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:82b540613dc4bb94010b85b59dbcf1e5eee248c2ed88fd90ec2b68998c662af51c1ecc14bd9f1165c001767fcc01f7d260702305efca581f484a155f2cc40844#npm:5.60.1";
       };
     };
@@ -11578,16 +11706,6 @@ let
       dependencies = {
         "@urql/core" = packages."@urql/core@npm:4.0.7";
         "graphql" = packages."graphql@npm:16.7.1";
-        "wonka" = packages."wonka@npm:6.3.2";
-      };
-    };
-    "@urql/devtools@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:2.0.3" = {
-      name = "@urql/devtools";
-      reference = "virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:2.0.3";
-      canonicalPackage = packages."@urql/devtools@npm:2.0.3";
-      dependencies = {
-        "@urql/core" = packages."@urql/core@npm:4.0.7";
-        "graphql" = packages."graphql@npm:16.6.0";
         "wonka" = packages."wonka@npm:6.3.2";
       };
     };
@@ -11939,7 +12057,7 @@ let
       reference = "virtual:85ed05b9e6b2a1b0c2f4942ea144495073c4e4429a942c49ebf444e8f838b1d5caba6eadb16fb17b829a8069d16556dfbfe3bfbae7ee5fbfab664b2975993d86#npm:2.1.1";
       canonicalPackage = packages."@webpack-cli/configtest@npm:2.1.1";
       dependencies = {
-        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.86.0";
+        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.88.1";
         "webpack-cli" = packages."webpack-cli@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.1.4";
       };
     };
@@ -11975,7 +12093,7 @@ let
       reference = "virtual:85ed05b9e6b2a1b0c2f4942ea144495073c4e4429a942c49ebf444e8f838b1d5caba6eadb16fb17b829a8069d16556dfbfe3bfbae7ee5fbfab664b2975993d86#npm:2.0.2";
       canonicalPackage = packages."@webpack-cli/info@npm:2.0.2";
       dependencies = {
-        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.86.0";
+        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.88.1";
         "webpack-cli" = packages."webpack-cli@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.1.4";
       };
     };
@@ -12013,7 +12131,7 @@ let
       reference = "virtual:85ed05b9e6b2a1b0c2f4942ea144495073c4e4429a942c49ebf444e8f838b1d5caba6eadb16fb17b829a8069d16556dfbfe3bfbae7ee5fbfab664b2975993d86#npm:2.0.5";
       canonicalPackage = packages."@webpack-cli/serve@npm:2.0.5";
       dependencies = {
-        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.86.0";
+        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.88.1";
         "webpack-cli" = packages."webpack-cli@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.1.4";
       };
     };
@@ -12215,9 +12333,9 @@ let
         "acorn"
       ];
     };
-    "acorn-jsx@virtual:5fc9506cdac3b623f10b3f7adb0b64c62d2c6059855d74020d649d3c7df60271229590b28e7061203e031c21cd88cfd7344e13902ceb1f7776b1da6a18ef4ad8#npm:5.3.2" = {
+    "acorn-jsx@virtual:8f679a5d0acf690b6810658b1ecf310c78220dcd0a3113eb74cec0d727f2acdcc3ed9603b21826ebb548abd5cf94b22bd55d3aa571dd5b7b0ea80f1177cbc347#npm:5.3.2" = {
       name = "acorn-jsx";
-      reference = "virtual:5fc9506cdac3b623f10b3f7adb0b64c62d2c6059855d74020d649d3c7df60271229590b28e7061203e031c21cd88cfd7344e13902ceb1f7776b1da6a18ef4ad8#npm:5.3.2";
+      reference = "virtual:8f679a5d0acf690b6810658b1ecf310c78220dcd0a3113eb74cec0d727f2acdcc3ed9603b21826ebb548abd5cf94b22bd55d3aa571dd5b7b0ea80f1177cbc347#npm:5.3.2";
       canonicalPackage = packages."acorn-jsx@npm:5.3.2";
       dependencies = {
         "acorn" = packages."acorn@npm:8.9.0";
@@ -13337,7 +13455,7 @@ let
       flatName = "bootstrap";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^4.6.1";
+      descriptorRange = "npm:^4.6.2";
       checksum = "10/28a66f1d869a21208c09245fc349540deda96db02005d9c3dfd3405399eb2775733e55c74aca14697898efadfe88718fe56832ff7da718e7eb4d73c9968f668c";
       packagePeers = [
         "@types/jquery"
@@ -13779,7 +13897,7 @@ let
       flatName = "caniuse-lite";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^1.0.30001464";
+      descriptorRange = "npm:^1.0.30001406";
       checksum = "10/bf87ca19cdc1dc9555e1fdab4fc5813e5d9b2a506f8c8c2a75377cc433a9252737ca3a53cd3238796b93281abd80d637f9c40ed41b40a27e93afb027a920e441";
     };
     "capital-case@npm:1.0.4" = {
@@ -14060,31 +14178,31 @@ let
       descriptorRange = "npm:^3.2.0";
       checksum = "10/b00e9313c1f7042ca8b1297c157c920d6d69f0fbad7b867910235676df228c4b4f4df33d06cacae37f9efba7a160b0a167c6be85492b419ef71d85660e60606b";
     };
-    "ckeditor5@npm:38.0.1" = {
+    "ckeditor5@npm:38.1.0" = {
       name = "ckeditor5";
-      reference = "npm:38.0.1";
+      reference = "npm:38.1.0";
       linkType = "HARD";
-      outputName = "ckeditor5-38.0.1-5240799b6a";
-      outputHash = "/99c069922defbe9a7ccded1d4f3b7a5b6215a79888aa6acc9624c0f88e2ee0ba01702772c29c9f5f086f3710a98a1efc1d7cda9d28d47a730c378ee2cc748a5e";
+      outputName = "ckeditor5-38.1.0-0ed34f6530";
+      outputHash = "/d5987694d5c1254b3e670fdca4c7e09f7c763a727c4c2d0449fa428898658a3d0dc81b81bc73950211948343678419f36544bee4bb1b36d7d278669ee63b096a";
       flatName = "ckeditor5";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^38.0.1";
-      checksum = "10/99c069922defbe9a7ccded1d4f3b7a5b6215a79888aa6acc9624c0f88e2ee0ba01702772c29c9f5f086f3710a98a1efc1d7cda9d28d47a730c378ee2cc748a5e";
+      descriptorRange = "npm:38.1.0";
+      checksum = "10/d5987694d5c1254b3e670fdca4c7e09f7c763a727c4c2d0449fa428898658a3d0dc81b81bc73950211948343678419f36544bee4bb1b36d7d278669ee63b096a";
       dependencies = {
-        "@ckeditor/ckeditor5-clipboard" = packages."@ckeditor/ckeditor5-clipboard@npm:38.0.1";
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.0.1";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:38.0.1";
-        "@ckeditor/ckeditor5-enter" = packages."@ckeditor/ckeditor5-enter@npm:38.0.1";
-        "@ckeditor/ckeditor5-paragraph" = packages."@ckeditor/ckeditor5-paragraph@npm:38.0.1";
-        "@ckeditor/ckeditor5-select-all" = packages."@ckeditor/ckeditor5-select-all@npm:38.0.1";
-        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:38.0.1";
-        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:38.0.1";
-        "@ckeditor/ckeditor5-undo" = packages."@ckeditor/ckeditor5-undo@npm:38.0.1";
-        "@ckeditor/ckeditor5-upload" = packages."@ckeditor/ckeditor5-upload@npm:38.0.1";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.0.1";
-        "@ckeditor/ckeditor5-watchdog" = packages."@ckeditor/ckeditor5-watchdog@npm:38.0.1";
-        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:38.0.1";
+        "@ckeditor/ckeditor5-clipboard" = packages."@ckeditor/ckeditor5-clipboard@npm:38.1.0";
+        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.1.0";
+        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:38.1.0";
+        "@ckeditor/ckeditor5-enter" = packages."@ckeditor/ckeditor5-enter@npm:38.1.0";
+        "@ckeditor/ckeditor5-paragraph" = packages."@ckeditor/ckeditor5-paragraph@npm:38.1.0";
+        "@ckeditor/ckeditor5-select-all" = packages."@ckeditor/ckeditor5-select-all@npm:38.1.0";
+        "@ckeditor/ckeditor5-typing" = packages."@ckeditor/ckeditor5-typing@npm:38.1.0";
+        "@ckeditor/ckeditor5-ui" = packages."@ckeditor/ckeditor5-ui@npm:38.1.0";
+        "@ckeditor/ckeditor5-undo" = packages."@ckeditor/ckeditor5-undo@npm:38.1.0";
+        "@ckeditor/ckeditor5-upload" = packages."@ckeditor/ckeditor5-upload@npm:38.1.0";
+        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.1.0";
+        "@ckeditor/ckeditor5-watchdog" = packages."@ckeditor/ckeditor5-watchdog@npm:38.1.0";
+        "@ckeditor/ckeditor5-widget" = packages."@ckeditor/ckeditor5-widget@npm:38.1.0";
       };
     };
     "classnames@npm:2.3.2" = {
@@ -15486,7 +15604,7 @@ let
       flatName = "css-loader";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^6.5.1";
+      descriptorRange = "npm:^6.8.1";
       checksum = "10/f20bb2a181c64d2f49586ab3922cae884519cfc8ae9ba8513065032255ed7bbdb4de75362f99d641d39d36d3732b7932884cd0e6fc71c8b0fb8b99a654f9cd08";
       dependencies = {
         "icss-utils" = packages."icss-utils@npm:5.1.0";
@@ -15528,7 +15646,7 @@ let
       flatName = "css-minimizer-webpack-plugin";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^5";
+      descriptorRange = "npm:^5.0.1";
       checksum = "10/da5cbdf7be7a91ad2121d778e7c19f800b1fb00b398859cea6b3ab49f468fb1bf4d9fb0cc8c7912ae948977b3dde5890bc0729512b660e7d410a6cadba6a2af8";
       dependencies = {
         "@jridgewell/trace-mapping" = packages."@jridgewell/trace-mapping@npm:0.3.18";
@@ -16113,7 +16231,7 @@ let
       flatName = "deepmerge";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^4.2.2";
+      descriptorRange = "npm:^4.3.1";
       checksum = "10/058d9e1b0ff1a154468bf3837aea436abcfea1ba1d165ddaaf48ca93765fdd01a30d33c36173da8fbbed951dd0a267602bc782fe288b0fc4b7e1e7091afc4529";
     };
     "default-browser-id@npm:3.0.0" = {
@@ -16376,18 +16494,6 @@ let
         "path-type" = packages."path-type@npm:4.0.0";
       };
     };
-    "discontinuous-range@npm:1.0.0" = {
-      name = "discontinuous-range";
-      reference = "npm:1.0.0";
-      linkType = "HARD";
-      outputName = "discontinuous-range-1.0.0-572abfd975";
-      outputHash = "/3c1716c6f107e80082600ac57648b49baa9aa60f71a442dadbaf66179610e239ed95ba96ff6080bc7845ea027ffe9176e22e94a04ff275a7dd5c30e2aece4cba";
-      flatName = "discontinuous-range";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:1.0.0";
-      checksum = "10/3c1716c6f107e80082600ac57648b49baa9aa60f71a442dadbaf66179610e239ed95ba96ff6080bc7845ea027ffe9176e22e94a04ff275a7dd5c30e2aece4cba";
-    };
     "dlv@npm:1.1.3" = {
       name = "dlv";
       reference = "npm:1.1.3";
@@ -16489,7 +16595,7 @@ let
       flatName = "domelementtype";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.0.1";
+      descriptorRange = "npm:^2.3.0";
       checksum = "10/ee837a318ff702622f383409d1f5b25dd1024b692ef64d3096ff702e26339f8e345820f29a68bcdcea8cfee3531776b3382651232fbeae95612d6f0a75efb4f6";
     };
     "domhandler@npm:3.3.0" = {
@@ -16531,7 +16637,7 @@ let
       flatName = "domhandler";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^5.0.3";
+      descriptorRange = "npm:5.0.3";
       checksum = "10/809b805a50a9c6884a29f38aec0a4e1b4537f40e1c861950ed47d10b049febe6b79ab72adaeeebb3cc8fc1cd33f34e97048a72a9265103426d93efafa78d3e96";
       dependencies = {
         "domelementtype" = packages."domelementtype@npm:2.3.0";
@@ -16546,7 +16652,7 @@ let
       flatName = "domutils";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.5.2";
+      descriptorRange = "npm:^2.4.2";
       checksum = "10/1f316a03f00b09a8893d4a25d297d5cbffd02c564509dede28ef72d5ce38d93f6d61f1de88d439f31b14a1d9b42f587ed711b9e8b1b4d3bf6001399832bfc4e0";
       dependencies = {
         "dom-serializer" = packages."dom-serializer@npm:1.4.1";
@@ -16563,7 +16669,7 @@ let
       flatName = "domutils";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^3.0.1";
+      descriptorRange = "npm:^3.1.0";
       checksum = "10/9a169a6e57ac4c738269a73ab4caf785114ed70e46254139c1bbc8144ac3102aacb28a6149508395ae34aa5d6a40081f4fa5313855dc8319c6d8359866b6dfea";
       dependencies = {
         "dom-serializer" = packages."dom-serializer@npm:2.0.0";
@@ -16871,7 +16977,7 @@ let
       flatName = "entities";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^4.4.0";
+      descriptorRange = "npm:^4.5.0";
       checksum = "10/ede2a35c9bce1aeccd055a1b445d41c75a14a2bb1cd22e242f20cf04d236cdcd7f9c859eb83f76885327bfae0c25bf03303665ee1ce3d47c5927b98b0e3e3d48";
     };
     "env-paths@npm:2.2.1" = {
@@ -17209,7 +17315,7 @@ let
       dependencies = {
         "@next/eslint-plugin-next" = packages."@next/eslint-plugin-next@npm:13.4.7";
         "@rushstack/eslint-patch" = packages."@rushstack/eslint-patch@npm:1.3.2";
-        "eslint" = packages."eslint@npm:8.43.0";
+        "eslint" = packages."eslint@npm:8.44.0";
         "eslint-import-resolver-node" = packages."eslint-import-resolver-node@npm:0.3.7";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
         "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:5.60.1";
@@ -17271,7 +17377,7 @@ let
       canonicalPackage = packages."eslint-import-resolver-typescript@npm:3.5.5";
       dependencies = {
         "enhanced-resolve" = packages."enhanced-resolve@npm:5.15.0";
-        "eslint" = packages."eslint@npm:8.43.0";
+        "eslint" = packages."eslint@npm:8.44.0";
         "eslint-plugin-import" = packages."eslint-plugin-import@virtual:3614f06c0df0a9668b63a0870d65a97907643d79508c38387adce2fceee59ca18663418745630b738a6a868c8e8f3204a427de03895443a5e99c4db60b53c75a#npm:2.27.5";
         "get-tsconfig" = packages."get-tsconfig@npm:4.6.2";
         "globby" = packages."globby@npm:13.2.0";
@@ -17314,7 +17420,7 @@ let
       reference = "virtual:148c0c3392e5ab39313fee1d1e66b226fd40646a9fd936c2673b2de84f6fc5318d08260ee6232adc5a3f8d3d5976015686f79aa7917bd08acaad7b68ac6154f0#npm:2.8.0";
       canonicalPackage = packages."eslint-module-utils@npm:2.8.0";
       dependencies = {
-        "eslint" = packages."eslint@npm:8.43.0";
+        "eslint" = packages."eslint@npm:8.44.0";
         "eslint-import-resolver-typescript" = packages."eslint-import-resolver-typescript@virtual:3614f06c0df0a9668b63a0870d65a97907643d79508c38387adce2fceee59ca18663418745630b738a6a868c8e8f3204a427de03895443a5e99c4db60b53c75a#npm:3.5.5";
         "debug" = packages."debug@virtual:65bed195431eadffc59e2238eb20cc12d9a1665bc7458ce780a9320ff795091b03cb5c4c2094938315ddd967b5b02c0f1df67b3ed435c69b7457092b7cc06ed8#npm:3.2.7";
       };
@@ -17325,7 +17431,7 @@ let
       canonicalPackage = packages."eslint-module-utils@npm:2.8.0";
       dependencies = {
         "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:5.60.1";
-        "eslint" = packages."eslint@npm:8.43.0";
+        "eslint" = packages."eslint@npm:8.44.0";
         "eslint-import-resolver-node" = packages."eslint-import-resolver-node@npm:0.3.7";
         "debug" = packages."debug@virtual:65bed195431eadffc59e2238eb20cc12d9a1665bc7458ce780a9320ff795091b03cb5c4c2094938315ddd967b5b02c0f1df67b3ed435c69b7457092b7cc06ed8#npm:3.2.7";
       };
@@ -17375,7 +17481,7 @@ let
         "array.prototype.flat" = packages."array.prototype.flat@npm:1.3.1";
         "array.prototype.flatmap" = packages."array.prototype.flatmap@npm:1.3.1";
         "doctrine" = packages."doctrine@npm:2.1.0";
-        "eslint" = packages."eslint@npm:8.43.0";
+        "eslint" = packages."eslint@npm:8.44.0";
         "eslint-import-resolver-node" = packages."eslint-import-resolver-node@npm:0.3.7";
         "has" = packages."has@npm:1.0.3";
         "is-core-module" = packages."is-core-module@npm:2.12.1";
@@ -17437,7 +17543,7 @@ let
         "axobject-query" = packages."axobject-query@npm:3.2.1";
         "damerau-levenshtein" = packages."damerau-levenshtein@npm:1.0.8";
         "emoji-regex" = packages."emoji-regex@npm:9.2.2";
-        "eslint" = packages."eslint@npm:8.43.0";
+        "eslint" = packages."eslint@npm:8.44.0";
         "has" = packages."has@npm:1.0.3";
         "jsx-ast-utils" = packages."jsx-ast-utils@npm:3.3.4";
         "language-tags" = packages."language-tags@npm:1.0.5";
@@ -17468,7 +17574,7 @@ let
       reference = "virtual:3614f06c0df0a9668b63a0870d65a97907643d79508c38387adce2fceee59ca18663418745630b738a6a868c8e8f3204a427de03895443a5e99c4db60b53c75a#npm:4.6.0";
       canonicalPackage = packages."eslint-plugin-react-hooks@npm:4.6.0";
       dependencies = {
-        "eslint" = packages."eslint@npm:8.43.0";
+        "eslint" = packages."eslint@npm:8.44.0";
       };
     };
     "eslint-plugin-react@npm:7.32.2" = {
@@ -17513,7 +17619,7 @@ let
         "array.prototype.flatmap" = packages."array.prototype.flatmap@npm:1.3.1";
         "array.prototype.tosorted" = packages."array.prototype.tosorted@npm:1.1.1";
         "doctrine" = packages."doctrine@npm:2.1.0";
-        "eslint" = packages."eslint@npm:8.43.0";
+        "eslint" = packages."eslint@npm:8.44.0";
         "estraverse" = packages."estraverse@npm:5.3.0";
         "jsx-ast-utils" = packages."jsx-ast-utils@npm:3.3.4";
         "minimatch" = packages."minimatch@npm:3.1.2";
@@ -17526,26 +17632,6 @@ let
         "semver" = packages."semver@npm:6.3.0";
         "string.prototype.matchall" = packages."string.prototype.matchall@npm:4.0.8";
       };
-    };
-    "eslint-plugin-tailwindcss@npm:3.12.1" = {
-      name = "eslint-plugin-tailwindcss";
-      reference = "npm:3.12.1";
-      linkType = "HARD";
-      outputName = "eslint-plugin-tailwindcss-3.12.1-8b83db9ea2";
-      outputHash = "/3d517c4bda727e2fce4547156eaaae76930400001ac9655d2f3b2e8f00a99c43b2e285c0adf81e932efb395b1758b620b7ab033c412cd3ead7ae11af8dafb417";
-      flatName = "eslint-plugin-tailwindcss";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:~3.12.1";
-      checksum = "10/3d517c4bda727e2fce4547156eaaae76930400001ac9655d2f3b2e8f00a99c43b2e285c0adf81e932efb395b1758b620b7ab033c412cd3ead7ae11af8dafb417";
-      dependencies = {
-        "fast-glob" = packages."fast-glob@npm:3.3.0";
-        "postcss" = packages."postcss@npm:8.4.24";
-      };
-      packagePeers = [
-        "@types/tailwindcss"
-        "tailwindcss"
-      ];
     };
     "eslint-plugin-tailwindcss@npm:3.13.0" = {
       name = "eslint-plugin-tailwindcss";
@@ -17566,16 +17652,6 @@ let
         "@types/tailwindcss"
         "tailwindcss"
       ];
-    };
-    "eslint-plugin-tailwindcss@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:3.12.1" = {
-      name = "eslint-plugin-tailwindcss";
-      reference = "virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:3.12.1";
-      canonicalPackage = packages."eslint-plugin-tailwindcss@npm:3.12.1";
-      dependencies = {
-        "fast-glob" = packages."fast-glob@npm:3.3.0";
-        "postcss" = packages."postcss@npm:8.4.24";
-        "tailwindcss" = packages."tailwindcss@npm:3.3.2";
-      };
     };
     "eslint-plugin-tailwindcss@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:3.13.0" = {
       name = "eslint-plugin-tailwindcss";
@@ -17631,24 +17707,24 @@ let
       descriptorRange = "npm:^3.3.0";
       checksum = "10/92641e7ccde470065aa2931161a6a053690a54aae35ae08f38e376ecfd7c012573c542b37a3baecf921eb951fd57943411392f464c2b8f3399adee4723a1369f";
     };
-    "eslint@npm:8.43.0" = {
+    "eslint@npm:8.44.0" = {
       name = "eslint";
-      reference = "npm:8.43.0";
+      reference = "npm:8.44.0";
       linkType = "HARD";
-      outputName = "eslint-8.43.0-5757109ac8";
-      outputHash = "/192f74a53988677586b23b1f0e55777fff77e32d25a1ce4c6bd0ebafe889032176acdb72cd0f60c13e68688b315fa01ee6923512db060f1cbbc42fb93632f1e8";
+      outputName = "eslint-8.44.0-658d375d8a";
+      outputHash = "/3dc7d7ca06aeff93e3b4e9ef4b1d700a6704d10541d41396a9cadebee43fb708fdfb8a2fef8dab89922ef26a9beffd97dcc97d3a6e1167fbc166bf9b48a36aef";
       flatName = "eslint";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^8.43.0";
-      checksum = "10/192f74a53988677586b23b1f0e55777fff77e32d25a1ce4c6bd0ebafe889032176acdb72cd0f60c13e68688b315fa01ee6923512db060f1cbbc42fb93632f1e8";
+      descriptorRange = "npm:^8.44.0";
+      checksum = "10/3dc7d7ca06aeff93e3b4e9ef4b1d700a6704d10541d41396a9cadebee43fb708fdfb8a2fef8dab89922ef26a9beffd97dcc97d3a6e1167fbc166bf9b48a36aef";
       bin = {
         "eslint" = "bin/eslint.js";
       };
       dependencies = {
         "@eslint-community/regexpp" = packages."@eslint-community/regexpp@npm:4.5.1";
-        "@eslint/eslintrc" = packages."@eslint/eslintrc@npm:2.0.3";
-        "@eslint/js" = packages."@eslint/js@npm:8.43.0";
+        "@eslint/eslintrc" = packages."@eslint/eslintrc@npm:2.1.0";
+        "@eslint/js" = packages."@eslint/js@npm:8.44.0";
         "@humanwhocodes/config-array" = packages."@humanwhocodes/config-array@npm:0.11.10";
         "@humanwhocodes/module-importer" = packages."@humanwhocodes/module-importer@npm:1.0.1";
         "@nodelib/fs.walk" = packages."@nodelib/fs.walk@npm:1.2.8";
@@ -17659,7 +17735,7 @@ let
         "escape-string-regexp" = packages."escape-string-regexp@npm:4.0.0";
         "eslint-scope" = packages."eslint-scope@npm:7.2.0";
         "eslint-visitor-keys" = packages."eslint-visitor-keys@npm:3.4.1";
-        "espree" = packages."espree@npm:9.5.2";
+        "espree" = packages."espree@npm:9.6.0";
         "esquery" = packages."esquery@npm:1.5.0";
         "esutils" = packages."esutils@npm:2.0.3";
         "fast-deep-equal" = packages."fast-deep-equal@npm:3.1.3";
@@ -17679,29 +17755,29 @@ let
         "lodash.merge" = packages."lodash.merge@npm:4.6.2";
         "minimatch" = packages."minimatch@npm:3.1.2";
         "natural-compare" = packages."natural-compare@npm:1.4.0";
-        "optionator" = packages."optionator@npm:0.9.1";
+        "optionator" = packages."optionator@npm:0.9.3";
         "strip-ansi" = packages."strip-ansi@npm:6.0.1";
         "strip-json-comments" = packages."strip-json-comments@npm:3.1.1";
         "text-table" = packages."text-table@npm:0.2.0";
-        "@eslint-community/eslint-utils" = packages."@eslint-community/eslint-utils@virtual:5757109ac88221e94a852cc9f73e2f55465a7102fffadd66cbbc453ec0085a59a55391bf490e79144c3026a10d76b992734f4e89f8c9b0e26d0c979c648afdd9#npm:4.4.0";
+        "@eslint-community/eslint-utils" = packages."@eslint-community/eslint-utils@virtual:658d375d8a2682df487e0f82908a4064212454abb9799a71f418ff4895a467423e10832ae50012302f5a0f8e4e4486c5dab6eec0513cc024a023ea4d86ec607b#npm:4.4.0";
         "debug" = packages."debug@virtual:071d471ccd267160a6f0ec15e4cdc2874728a012db8f34521faf9e64a516aa918ee9ebab3c4c084d955ab74aaac5b8be9afb7a168813c9f210acdb7d88754ab9#npm:4.3.4";
       };
     };
-    "espree@npm:9.5.2" = {
+    "espree@npm:9.6.0" = {
       name = "espree";
-      reference = "npm:9.5.2";
+      reference = "npm:9.6.0";
       linkType = "HARD";
-      outputName = "espree-9.5.2-5fc9506cda";
-      outputHash = "/2c9d0fec9ac1230856baec338bd238ca9a69b451ee451f0da25e07d356e1bdef45a2ae5f8c374f492f4bb568d17fc7c998ef44f04a2e9b6a11fc8c194c677ba4";
+      outputName = "espree-9.6.0-8f679a5d0a";
+      outputHash = "/870834c0ab188213ba56fae7003ff9fadbad2b9285dae941840c3d425cedbb2221ad3cffaabd217bc36b96eb80d651c2a2d9b0b1f3b9394b2358b27052c942e2";
       flatName = "espree";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^9.5.2";
-      checksum = "10/2c9d0fec9ac1230856baec338bd238ca9a69b451ee451f0da25e07d356e1bdef45a2ae5f8c374f492f4bb568d17fc7c998ef44f04a2e9b6a11fc8c194c677ba4";
+      descriptorRange = "npm:^9.6.0";
+      checksum = "10/870834c0ab188213ba56fae7003ff9fadbad2b9285dae941840c3d425cedbb2221ad3cffaabd217bc36b96eb80d651c2a2d9b0b1f3b9394b2358b27052c942e2";
       dependencies = {
         "acorn" = packages."acorn@npm:8.9.0";
         "eslint-visitor-keys" = packages."eslint-visitor-keys@npm:3.4.1";
-        "acorn-jsx" = packages."acorn-jsx@virtual:5fc9506cdac3b623f10b3f7adb0b64c62d2c6059855d74020d649d3c7df60271229590b28e7061203e031c21cd88cfd7344e13902ceb1f7776b1da6a18ef4ad8#npm:5.3.2";
+        "acorn-jsx" = packages."acorn-jsx@virtual:8f679a5d0acf690b6810658b1ecf310c78220dcd0a3113eb74cec0d727f2acdcc3ed9603b21826ebb548abd5cf94b22bd55d3aa571dd5b7b0ea80f1177cbc347#npm:5.3.2";
       };
     };
     "esquery@npm:1.5.0" = {
@@ -18566,7 +18642,7 @@ let
       flatName = "fsevents";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.3.2";
+      descriptorRange = "npm:~2.3.2";
       checksum = "10/6b5b6f5692372446ff81cf9501c76e3e0459a4852b3b5f1fc72c103198c125a6b8c72f5f166bdd76ffb2fca261e7f6ee5565daf80dca6e571e55bcc589cc1256";
       dependencies = {
         "node-gyp" = packages."node-gyp@npm:9.4.0";
@@ -18583,7 +18659,7 @@ let
       flatName = "fsevents";
       languageName = "node";
       scope = null;
-      descriptorRange = "patch:fsevents@npm%3A^2.3.2#optional!builtin<compat/fsevents>";
+      descriptorRange = "patch:fsevents@npm%3A~2.3.2#optional!builtin<compat/fsevents>";
       dependencies = {
         "node-gyp" = packages."node-gyp@npm:9.4.0";
       };
@@ -18881,7 +18957,7 @@ let
       flatName = "glider-js";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~1.7.8";
+      descriptorRange = "npm:^1.7.8";
       checksum = "10/d11ab29f9730ffb6098d14aa0bb10949e62303477d5b3b216854293c50676a8a0b7411c0cafed867982e20b144b9c2cd77378d98b689c5c7a813139a4627f1a9";
     };
     "glob-parent@npm:5.1.2" = {
@@ -19572,15 +19648,6 @@ let
         "tslib" = packages."tslib@npm:2.6.0";
       };
     };
-    "graphql-tag@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:2.12.6" = {
-      name = "graphql-tag";
-      reference = "virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:2.12.6";
-      canonicalPackage = packages."graphql-tag@npm:2.12.6";
-      dependencies = {
-        "graphql" = packages."graphql@npm:16.6.0";
-        "tslib" = packages."tslib@npm:2.6.0";
-      };
-    };
     "graphql-ws@npm:5.13.1" = {
       name = "graphql-ws";
       reference = "npm:5.13.1";
@@ -19624,18 +19691,6 @@ let
       scope = null;
       descriptorRange = "npm:15.8.0";
       checksum = "10/f8d830287a9028d6779b59c437e0ade63a713b47521b02b60316df1761b805b1a7ce03be88053d224b7f78f5d1d1a786d287ab229cd158b42ebeea9e86daaba5";
-    };
-    "graphql@npm:16.6.0" = {
-      name = "graphql";
-      reference = "npm:16.6.0";
-      linkType = "HARD";
-      outputName = "graphql-16.6.0-301c470966";
-      outputHash = "/f2ce5fdd5e1d8f66b40143b791e1063efe50b17071e0b06b30b8cd597a7fc08135d606586935db7e65dbd5ebbf207cd2f9b56c9c5cf4ad818f080d98f47282a4";
-      flatName = "graphql";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:~16.6.0";
-      checksum = "10/f2ce5fdd5e1d8f66b40143b791e1063efe50b17071e0b06b30b8cd597a7fc08135d606586935db7e65dbd5ebbf207cd2f9b56c9c5cf4ad818f080d98f47282a4";
     };
     "graphql@npm:16.7.1" = {
       name = "graphql";
@@ -19900,20 +19955,20 @@ let
         "lru-cache" = packages."lru-cache@npm:6.0.0";
       };
     };
-    "html-dom-parser@npm:3.1.7" = {
+    "html-dom-parser@npm:4.0.0" = {
       name = "html-dom-parser";
-      reference = "npm:3.1.7";
+      reference = "npm:4.0.0";
       linkType = "HARD";
-      outputName = "html-dom-parser-3.1.7-391c85f02e";
-      outputHash = "/14f63cee708f1e9344597408bfd899eb766d943bf52bbd00359ec32eb9b597205d293a939d5f15b7394a3d62bc964599489a377a401a3400d0bad3507e9b0600";
+      outputName = "html-dom-parser-4.0.0-e04b8de494";
+      outputHash = "/32c5201896bc3913c4e421bc923db5bc49171c284225dd2d3d408edccf9c691e75061ca8f0a2647b63e4beb4815d6bb01eb692faaf386a59de4b90b48807935f";
       flatName = "html-dom-parser";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:3.1.7";
-      checksum = "10/14f63cee708f1e9344597408bfd899eb766d943bf52bbd00359ec32eb9b597205d293a939d5f15b7394a3d62bc964599489a377a401a3400d0bad3507e9b0600";
+      descriptorRange = "npm:4.0.0";
+      checksum = "10/32c5201896bc3913c4e421bc923db5bc49171c284225dd2d3d408edccf9c691e75061ca8f0a2647b63e4beb4815d6bb01eb692faaf386a59de4b90b48807935f";
       dependencies = {
         "domhandler" = packages."domhandler@npm:5.0.3";
-        "htmlparser2" = packages."htmlparser2@npm:8.0.2";
+        "htmlparser2" = packages."htmlparser2@npm:9.0.0";
       };
     };
     "html-minifier@npm:4.0.0" = {
@@ -19940,20 +19995,20 @@ let
         "uglify-js" = packages."uglify-js@npm:3.17.4";
       };
     };
-    "html-react-parser@npm:3.0.16" = {
+    "html-react-parser@npm:4.0.0" = {
       name = "html-react-parser";
-      reference = "npm:3.0.16";
+      reference = "npm:4.0.0";
       linkType = "HARD";
-      outputName = "html-react-parser-3.0.16-f52806c00b";
-      outputHash = "/0ada332f1d624cc3ec506de5ce3c5d8de4d2958e7580aad30b4bdefc1366cad24160902589f3b3dce6bf0c48975d8a113d56954ea3938a92c71ac77bf559a4cd";
+      outputName = "html-react-parser-4.0.0-ef537cb34f";
+      outputHash = "/84f4770d9c48a37533a99c1f8a1a87f28a8db6ad588843275a172a4b489b44cb7f61a51ea3868866be1b100d330045b3c5575ddbe87d209c27801bf507113845";
       flatName = "html-react-parser";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~3.0.16";
-      checksum = "10/0ada332f1d624cc3ec506de5ce3c5d8de4d2958e7580aad30b4bdefc1366cad24160902589f3b3dce6bf0c48975d8a113d56954ea3938a92c71ac77bf559a4cd";
+      descriptorRange = "npm:^4.0.0";
+      checksum = "10/84f4770d9c48a37533a99c1f8a1a87f28a8db6ad588843275a172a4b489b44cb7f61a51ea3868866be1b100d330045b3c5575ddbe87d209c27801bf507113845";
       dependencies = {
         "domhandler" = packages."domhandler@npm:5.0.3";
-        "html-dom-parser" = packages."html-dom-parser@npm:3.1.7";
+        "html-dom-parser" = packages."html-dom-parser@npm:4.0.0";
         "react-property" = packages."react-property@npm:2.0.0";
         "style-to-js" = packages."style-to-js@npm:1.1.3";
       };
@@ -19962,40 +20017,36 @@ let
         "react"
       ];
     };
-    "html-react-parser@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:3.0.16" = {
+    "html-react-parser@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:4.0.0" = {
       name = "html-react-parser";
-      reference = "virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:3.0.16";
-      canonicalPackage = packages."html-react-parser@npm:3.0.16";
+      reference = "virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:4.0.0";
+      canonicalPackage = packages."html-react-parser@npm:4.0.0";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.2.14";
         "domhandler" = packages."domhandler@npm:5.0.3";
-        "html-dom-parser" = packages."html-dom-parser@npm:3.1.7";
+        "html-dom-parser" = packages."html-dom-parser@npm:4.0.0";
         "react" = packages."react@npm:18.2.0";
         "react-property" = packages."react-property@npm:2.0.0";
         "style-to-js" = packages."style-to-js@npm:1.1.3";
       };
     };
-    "html-to-text@npm:8.2.1" = {
+    "html-to-text@npm:9.0.5" = {
       name = "html-to-text";
-      reference = "npm:8.2.1";
+      reference = "npm:9.0.5";
       linkType = "HARD";
-      outputName = "html-to-text-8.2.1-866085fa97";
-      outputHash = "/534eb1443c304ee1406a815c61193889e7bfcf74533b6b74881c14b4712d0d26dd57e2a7f1e09cf9af1cc53cac38860f081aa08ced1ee3ef82264e000f084794";
+      outputName = "html-to-text-9.0.5-42d3729c77";
+      outputHash = "/e5991f9946dd0e5c91c4ed863c71a4feaef3d5ce85cd8684fb0f2fc175b1ccee323bb97a1773b6bebc47ac7963dbbfd1fc81b024adff705ae7c0e08992d1dba5";
       flatName = "html-to-text";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~8.2.1";
-      checksum = "10/534eb1443c304ee1406a815c61193889e7bfcf74533b6b74881c14b4712d0d26dd57e2a7f1e09cf9af1cc53cac38860f081aa08ced1ee3ef82264e000f084794";
-      bin = {
-        "html-to-text" = "bin/cli.js";
-      };
+      descriptorRange = "npm:~9.0.5";
+      checksum = "10/e5991f9946dd0e5c91c4ed863c71a4feaef3d5ce85cd8684fb0f2fc175b1ccee323bb97a1773b6bebc47ac7963dbbfd1fc81b024adff705ae7c0e08992d1dba5";
       dependencies = {
-        "@selderee/plugin-htmlparser2" = packages."@selderee/plugin-htmlparser2@npm:0.6.0";
+        "@selderee/plugin-htmlparser2" = packages."@selderee/plugin-htmlparser2@npm:0.11.0";
         "deepmerge" = packages."deepmerge@npm:4.3.1";
-        "he" = packages."he@npm:1.2.0";
-        "htmlparser2" = packages."htmlparser2@npm:6.1.0";
-        "minimist" = packages."minimist@npm:1.2.8";
-        "selderee" = packages."selderee@npm:0.6.0";
+        "dom-serializer" = packages."dom-serializer@npm:2.0.0";
+        "htmlparser2" = packages."htmlparser2@npm:8.0.2";
+        "selderee" = packages."selderee@npm:0.11.0";
       };
     };
     "htmlparser2@npm:5.0.1" = {
@@ -20016,24 +20067,6 @@ let
         "entities" = packages."entities@npm:2.2.0";
       };
     };
-    "htmlparser2@npm:6.1.0" = {
-      name = "htmlparser2";
-      reference = "npm:6.1.0";
-      linkType = "HARD";
-      outputName = "htmlparser2-6.1.0-4ef89ab31e";
-      outputHash = "/c9c34b0b722f5923c4ae05e59268aeb768582152969e3338a1cd3342b87f8dd2c0420f4745e46d2fd87f1b677ea2f314c3a93436ed8831905997e6347e081a5d";
-      flatName = "htmlparser2";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^6.1.0";
-      checksum = "10/c9c34b0b722f5923c4ae05e59268aeb768582152969e3338a1cd3342b87f8dd2c0420f4745e46d2fd87f1b677ea2f314c3a93436ed8831905997e6347e081a5d";
-      dependencies = {
-        "domelementtype" = packages."domelementtype@npm:2.3.0";
-        "domhandler" = packages."domhandler@npm:4.3.1";
-        "domutils" = packages."domutils@npm:2.8.0";
-        "entities" = packages."entities@npm:2.2.0";
-      };
-    };
     "htmlparser2@npm:8.0.2" = {
       name = "htmlparser2";
       reference = "npm:8.0.2";
@@ -20043,8 +20076,26 @@ let
       flatName = "htmlparser2";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^8.0.1";
+      descriptorRange = "npm:^8.0.2";
       checksum = "10/ea5512956eee06f5835add68b4291d313c745e8407efa63848f4b8a90a2dee45f498a698bca8614e436f1ee0cfdd609938b71d67c693794545982b76e53e6f11";
+      dependencies = {
+        "domelementtype" = packages."domelementtype@npm:2.3.0";
+        "domhandler" = packages."domhandler@npm:5.0.3";
+        "domutils" = packages."domutils@npm:3.1.0";
+        "entities" = packages."entities@npm:4.5.0";
+      };
+    };
+    "htmlparser2@npm:9.0.0" = {
+      name = "htmlparser2";
+      reference = "npm:9.0.0";
+      linkType = "HARD";
+      outputName = "htmlparser2-9.0.0-ceeb665083";
+      outputHash = "/6b0132fee4da2f6565dfb9166917992bf67bd7827a00a4baa35e2eea8db488b3a1dfea2a597cf3a743521d5276ecd39fb297ce0e8698af6d14c8f02a5fe08e90";
+      flatName = "htmlparser2";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:9.0.0";
+      checksum = "10/6b0132fee4da2f6565dfb9166917992bf67bd7827a00a4baa35e2eea8db488b3a1dfea2a597cf3a743521d5276ecd39fb297ce0e8698af6d14c8f02a5fe08e90";
       dependencies = {
         "domelementtype" = packages."domelementtype@npm:2.3.0";
         "domhandler" = packages."domhandler@npm:5.0.3";
@@ -20221,17 +20272,17 @@ let
         "husky" = "lib/bin.js";
       };
     };
-    "i18next@npm:22.5.1" = {
+    "i18next@npm:23.2.6" = {
       name = "i18next";
-      reference = "npm:22.5.1";
+      reference = "npm:23.2.6";
       linkType = "HARD";
-      outputName = "i18next-22.5.1-9bf058e9a2";
-      outputHash = "/ab1a0adee97911917fc46fb4216b8eb7c4ec0a243966609dda6a384e4b22acd25386a817dc51146328d5272ce1c6133558361788ebc4a36fbca250b8b3e90bd1";
+      outputName = "i18next-23.2.6-efdf508663";
+      outputHash = "/ae572544c33e213747fd68650e4cbcb72d83f852fab88f355ea1c21e3281904d64d0505370da10543864f7dfac4b666974fbcbc6ab31377f8464ae6cae8afc8a";
       flatName = "i18next";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~22.5.1";
-      checksum = "10/ab1a0adee97911917fc46fb4216b8eb7c4ec0a243966609dda6a384e4b22acd25386a817dc51146328d5272ce1c6133558361788ebc4a36fbca250b8b3e90bd1";
+      descriptorRange = "npm:~23.2.6";
+      checksum = "10/ae572544c33e213747fd68650e4cbcb72d83f852fab88f355ea1c21e3281904d64d0505370da10543864f7dfac4b666974fbcbc6ab31377f8464ae6cae8afc8a";
       dependencies = {
         "@babel/runtime" = packages."@babel/runtime@npm:7.22.5";
       };
@@ -20245,7 +20296,7 @@ let
       flatName = "iban";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~0.0.14";
+      descriptorRange = "npm:^0.0.14";
       checksum = "10/5d14e1c2df993e3ee315a4e2e6a829ea5d4da8e0d6d8146fd62ae025eac2ff0d1d511e7cc40f29391c14f9ad048d2c6123c78f5fe037bab87c36b39cdcdb7883";
     };
     "iconv-lite@npm:0.4.24" = {
@@ -21797,6 +21848,18 @@ let
         "readable-stream" = packages."readable-stream@npm:2.3.8";
       };
     };
+    "leac@npm:0.6.0" = {
+      name = "leac";
+      reference = "npm:0.6.0";
+      linkType = "HARD";
+      outputName = "leac-0.6.0-79f7890bc5";
+      outputHash = "/bfe6aa128ca98664f124096f65584778194a8e1ddebf77d315fd9681be849c1619b0a9d9f4743e67aea0298808bd69ef25bd74320cad50a80be6852714627870";
+      flatName = "leac";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^0.6.0";
+      checksum = "10/bfe6aa128ca98664f124096f65584778194a8e1ddebf77d315fd9681be849c1619b0a9d9f4743e67aea0298808bd69ef25bd74320cad50a80be6852714627870";
+    };
     "leaflet@npm:1.9.4" = {
       name = "leaflet";
       reference = "npm:1.9.4";
@@ -22532,50 +22595,26 @@ let
       descriptorRange = "npm:^7.7.1";
       checksum = "10/6029ca5aba3aacb554e919d7ef804fffd4adfc4c83db00fac8248c7c78811fb6d4b6f70f7fd9d55032b3823446546a007edaa66ad1f2377ae833bd983fac5d98";
     };
-    "lucide-react@npm:0.244.0" = {
+    "lucide-react@npm:0.258.0" = {
       name = "lucide-react";
-      reference = "npm:0.244.0";
+      reference = "npm:0.258.0";
       linkType = "HARD";
-      outputName = "lucide-react-0.244.0-0d07bb1b79";
-      outputHash = "/a4401a945a9c019285a271d03867722c47e37e48ee321366b21c8cf710c1606b4192a25fa38b6df52b2c7dec263a13acd79a65a2bd22da261866927085490d6b";
+      outputName = "lucide-react-0.258.0-249d83cb83";
+      outputHash = "/7888f94e2fffea5b9b3264b67e1a1b59931afc2958dec36769d7a96ebb7ded8a94418099df76f8e562cb5b6ff52f8fecc793a3acadc97c4c2cde9fc0e94fc3a3";
       flatName = "lucide-react";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^0.244.0";
-      checksum = "10/a4401a945a9c019285a271d03867722c47e37e48ee321366b21c8cf710c1606b4192a25fa38b6df52b2c7dec263a13acd79a65a2bd22da261866927085490d6b";
+      descriptorRange = "npm:^0.258.0";
+      checksum = "10/7888f94e2fffea5b9b3264b67e1a1b59931afc2958dec36769d7a96ebb7ded8a94418099df76f8e562cb5b6ff52f8fecc793a3acadc97c4c2cde9fc0e94fc3a3";
       packagePeers = [
         "@types/react"
         "react"
       ];
     };
-    "lucide-react@npm:0.256.0" = {
+    "lucide-react@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:0.258.0" = {
       name = "lucide-react";
-      reference = "npm:0.256.0";
-      linkType = "HARD";
-      outputName = "lucide-react-0.256.0-e305e20626";
-      outputHash = "/d4771be1843b730850c944dfbae1faa39dd7ae50622af731ed130d0a58f288aec904b579bad7bd60cc65ac2a8674f177d83a5b18007fffc81b3740fb3ac82445";
-      flatName = "lucide-react";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:*";
-      checksum = "10/d4771be1843b730850c944dfbae1faa39dd7ae50622af731ed130d0a58f288aec904b579bad7bd60cc65ac2a8674f177d83a5b18007fffc81b3740fb3ac82445";
-      packagePeers = [
-        "@types/react"
-        "react"
-      ];
-    };
-    "lucide-react@virtual:eaa47a7e693751dea4b43e0d56646efde788dc805480f36a2a26ff27e0eb67d6bdc56514084e384fa81908f2663382f7e8713d229aca504cfc6d2fd2249fd3f5#npm:0.256.0" = {
-      name = "lucide-react";
-      reference = "virtual:eaa47a7e693751dea4b43e0d56646efde788dc805480f36a2a26ff27e0eb67d6bdc56514084e384fa81908f2663382f7e8713d229aca504cfc6d2fd2249fd3f5#npm:0.256.0";
-      canonicalPackage = packages."lucide-react@npm:0.256.0";
-      dependencies = {
-        "react" = packages."react@npm:18.2.0";
-      };
-    };
-    "lucide-react@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:0.244.0" = {
-      name = "lucide-react";
-      reference = "virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:0.244.0";
-      canonicalPackage = packages."lucide-react@npm:0.244.0";
+      reference = "virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:0.258.0";
+      canonicalPackage = packages."lucide-react@npm:0.258.0";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.2.14";
         "react" = packages."react@npm:18.2.0";
@@ -22959,7 +22998,7 @@ let
       flatName = "mini-css-extract-plugin";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.4.5";
+      descriptorRange = "npm:^2.7.6";
       checksum = "10/1f718bfdcb7c2bf5e4336f694e5576432149d63f9dacaf94eae38ad046534050471a712a2d1bedf95e1722a2d3b56c3361d7352849e802e4875e716885e952c3";
       dependencies = {
         "schema-utils" = packages."schema-utils@npm:4.2.0";
@@ -23032,7 +23071,7 @@ let
       flatName = "minimatch";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^5.1.0";
+      descriptorRange = "npm:^5.0.1";
       checksum = "10/126b36485b821daf96d33b5c821dac600cc1ab36c87e7a532594f9b1652b1fa89a1eebcaad4dff17c764dce1a7ac1531327f190fed5f97d8f6e5f889c116c429";
       dependencies = {
         "brace-expansion" = packages."brace-expansion@npm:2.0.1";
@@ -23908,18 +23947,6 @@ let
       descriptorRange = "npm:^1.0.0";
       checksum = "10/16fa93f7ddb2540a8e82c99738ae4ed0e8e8cae57c96e13a0db9d68dfad074fd2eec542929b62ebbb18b357bbb3e4680b92d3a4099baa7aeb32360cb1c8f0247";
     };
-    "moo@npm:0.5.2" = {
-      name = "moo";
-      reference = "npm:0.5.2";
-      linkType = "HARD";
-      outputName = "moo-0.5.2-8fca66e02b";
-      outputHash = "/fee356cb13b52e259c925fe297d71b3f47b98b06444b696dd4870d20cad4711eb58d24131afeba9bf7a51d77c77a3cbe8479066497d12a88abb51865c1be7de7";
-      flatName = "moo";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^0.5.1";
-      checksum = "10/fee356cb13b52e259c925fe297d71b3f47b98b06444b696dd4870d20cad4711eb58d24131afeba9bf7a51d77c77a3cbe8479066497d12a88abb51865c1be7de7";
-    };
     "morgan@npm:1.10.0" = {
       name = "morgan";
       reference = "npm:1.10.0";
@@ -24067,30 +24094,6 @@ let
       descriptorRange = "npm:^1.4.0";
       checksum = "10/23ad088b08f898fc9b53011d7bb78ec48e79de7627e01ab5518e806033861bef68d5b0cd0e2205c2f36690ac9571ff6bcb05eb777ced2eeda8d4ac5b44592c3d";
     };
-    "nearley@npm:2.20.1" = {
-      name = "nearley";
-      reference = "npm:2.20.1";
-      linkType = "HARD";
-      outputName = "nearley-2.20.1-2e130941d3";
-      outputHash = "/b327a07d0fee967ec2b74205fee97c3ff13aeb6c91342443e5f0f00ed11e3fb8ce7e71e21de6a74f094206ebdb571e93c79a58f1fe5414714c97b0e55cd57cb2";
-      flatName = "nearley";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^2.20.1";
-      checksum = "10/b327a07d0fee967ec2b74205fee97c3ff13aeb6c91342443e5f0f00ed11e3fb8ce7e71e21de6a74f094206ebdb571e93c79a58f1fe5414714c97b0e55cd57cb2";
-      bin = {
-        "nearley-railroad" = "bin/nearley-railroad.js";
-        "nearley-test" = "bin/nearley-test.js";
-        "nearley-unparse" = "bin/nearley-unparse.js";
-        "nearleyc" = "bin/nearleyc.js";
-      };
-      dependencies = {
-        "commander" = packages."commander@npm:2.20.3";
-        "moo" = packages."moo@npm:0.5.2";
-        "railroad-diagrams" = packages."railroad-diagrams@npm:1.0.0";
-        "randexp" = packages."randexp@npm:0.4.6";
-      };
-    };
     "negotiator@npm:0.6.3" = {
       name = "negotiator";
       reference = "npm:0.6.3";
@@ -24115,17 +24118,17 @@ let
       descriptorRange = "npm:^2.6.2";
       checksum = "10/1a7948fea86f2b33ec766bc899c88796a51ba76a4afc9026764aedc6e7cde692a09067031e4a1bf6db4f978ccd99e7f5b6c03fe47ad9865c3d4f99050d67e002";
     };
-    "next-seo@npm:6.0.0" = {
+    "next-seo@npm:6.1.0" = {
       name = "next-seo";
-      reference = "npm:6.0.0";
+      reference = "npm:6.1.0";
       linkType = "HARD";
-      outputName = "next-seo-6.0.0-d1aee42f79";
-      outputHash = "/5f2de4f4fb2b348cf9776755f43190b452ed7f2af673ff0851c4463e6be241fb2b859ae7764564f53b90780affbd9a03d34330ae0941cbbfdd2f948c32fa4bfb";
+      outputName = "next-seo-6.1.0-1ca79ea1b9";
+      outputHash = "/b72dbd82fff0e98da866584b003cdeb2a8275a3fb99d4ef40443b78ce58ea76dde4394b7447f544114aa4ceeb07499f15e09eab5399ad0aaf6a598d76bd68324";
       flatName = "next-seo";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~6.0.0";
-      checksum = "10/5f2de4f4fb2b348cf9776755f43190b452ed7f2af673ff0851c4463e6be241fb2b859ae7764564f53b90780affbd9a03d34330ae0941cbbfdd2f948c32fa4bfb";
+      descriptorRange = "npm:~6.1.0";
+      checksum = "10/b72dbd82fff0e98da866584b003cdeb2a8275a3fb99d4ef40443b78ce58ea76dde4394b7447f544114aa4ceeb07499f15e09eab5399ad0aaf6a598d76bd68324";
       packagePeers = [
         "@types/next"
         "@types/react-dom"
@@ -24135,10 +24138,10 @@ let
         "react"
       ];
     };
-    "next-seo@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:6.0.0" = {
+    "next-seo@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:6.1.0" = {
       name = "next-seo";
-      reference = "virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:6.0.0";
-      canonicalPackage = packages."next-seo@npm:6.0.0";
+      reference = "virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:6.1.0";
+      canonicalPackage = packages."next-seo@npm:6.1.0";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.2.14";
         "@types/react-dom" = packages."@types/react-dom@npm:18.2.6";
@@ -24159,6 +24162,7 @@ let
       descriptorRange = "npm:^5.0.2";
       checksum = "10/098d8a09bc198f0384060cc5086d3a89b52acef31504331e94d3591d8b1b4cf6b8c9bd591bf2eb4f29b285458d6f7cbd54606cc395265023fbe66b169b18ca12";
       dependencies = {
+        "@urql/core" = packages."@urql/core@npm:4.0.7";
         "react-ssr-prepass" = packages."react-ssr-prepass@npm:1.5.0";
       };
       packagePeers = [
@@ -24174,6 +24178,7 @@ let
       canonicalPackage = packages."next-urql@npm:5.0.2";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.2.14";
+        "@urql/core" = packages."@urql/core@npm:4.0.7";
         "react" = packages."react@npm:18.2.0";
         "urql" = packages."urql@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:4.0.4";
         "react-ssr-prepass" = packages."react-ssr-prepass@virtual:6665932ec5fdf465ade0f675d72199a72ad701ee6514c09f084216619e2d65aafbad6636a59739b21eb5fa83d981cbe213a8a662def816214543d13ecc463cd7#npm:1.5.0";
@@ -24225,6 +24230,34 @@ let
         "sass"
       ];
     };
+    "next@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:13.4.7" = {
+      name = "next";
+      reference = "virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:13.4.7";
+      canonicalPackage = packages."next@npm:13.4.7";
+      dependencies = {
+        "@next/env" = packages."@next/env@npm:13.4.7";
+        "@next/swc-darwin-arm64" = packages."@next/swc-darwin-arm64@npm:13.4.7";
+        "@next/swc-darwin-x64" = packages."@next/swc-darwin-x64@npm:13.4.7";
+        "@next/swc-linux-arm64-gnu" = packages."@next/swc-linux-arm64-gnu@npm:13.4.7";
+        "@next/swc-linux-arm64-musl" = packages."@next/swc-linux-arm64-musl@npm:13.4.7";
+        "@next/swc-linux-x64-gnu" = packages."@next/swc-linux-x64-gnu@npm:13.4.7";
+        "@next/swc-linux-x64-musl" = packages."@next/swc-linux-x64-musl@npm:13.4.7";
+        "@next/swc-win32-arm64-msvc" = packages."@next/swc-win32-arm64-msvc@npm:13.4.7";
+        "@next/swc-win32-ia32-msvc" = packages."@next/swc-win32-ia32-msvc@npm:13.4.7";
+        "@next/swc-win32-x64-msvc" = packages."@next/swc-win32-x64-msvc@npm:13.4.7";
+        "@swc/helpers" = packages."@swc/helpers@npm:0.5.1";
+        "@types/react" = packages."@types/react@npm:18.2.14";
+        "@types/react-dom" = packages."@types/react-dom@npm:18.2.6";
+        "busboy" = packages."busboy@npm:1.6.0";
+        "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001509";
+        "postcss" = packages."postcss@npm:8.4.14";
+        "react" = packages."react@npm:18.2.0";
+        "react-dom" = packages."react-dom@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:18.2.0";
+        "watchpack" = packages."watchpack@npm:2.4.0";
+        "zod" = packages."zod@npm:3.21.4";
+        "styled-jsx" = packages."styled-jsx@virtual:26c6a32c4915409f7bd2d883a4ab67a522b20b15b12128d6df821923ad772b86711a75c3294cc804a0b6d1a27ea80eb0e65f4dac1fe2c8bafcd05bbb5c098774#npm:5.1.1";
+      };
+    };
     "next@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:13.4.7" = {
       name = "next";
       reference = "virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:13.4.7";
@@ -24251,35 +24284,7 @@ let
         "sass" = packages."sass@npm:1.63.6";
         "watchpack" = packages."watchpack@npm:2.4.0";
         "zod" = packages."zod@npm:3.21.4";
-        "styled-jsx" = packages."styled-jsx@virtual:9abdb9722cda2f8d2d531523e5529c22aa0d860f4dc81d7cc173b4fa77f2830fd2679bc99075021016081aa2286fb711dbed19f8270de57d44d73ef99f32e289#npm:5.1.1";
-      };
-    };
-    "next@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:13.4.7" = {
-      name = "next";
-      reference = "virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:13.4.7";
-      canonicalPackage = packages."next@npm:13.4.7";
-      dependencies = {
-        "@next/env" = packages."@next/env@npm:13.4.7";
-        "@next/swc-darwin-arm64" = packages."@next/swc-darwin-arm64@npm:13.4.7";
-        "@next/swc-darwin-x64" = packages."@next/swc-darwin-x64@npm:13.4.7";
-        "@next/swc-linux-arm64-gnu" = packages."@next/swc-linux-arm64-gnu@npm:13.4.7";
-        "@next/swc-linux-arm64-musl" = packages."@next/swc-linux-arm64-musl@npm:13.4.7";
-        "@next/swc-linux-x64-gnu" = packages."@next/swc-linux-x64-gnu@npm:13.4.7";
-        "@next/swc-linux-x64-musl" = packages."@next/swc-linux-x64-musl@npm:13.4.7";
-        "@next/swc-win32-arm64-msvc" = packages."@next/swc-win32-arm64-msvc@npm:13.4.7";
-        "@next/swc-win32-ia32-msvc" = packages."@next/swc-win32-ia32-msvc@npm:13.4.7";
-        "@next/swc-win32-x64-msvc" = packages."@next/swc-win32-x64-msvc@npm:13.4.7";
-        "@swc/helpers" = packages."@swc/helpers@npm:0.5.1";
-        "@types/react" = packages."@types/react@npm:18.2.14";
-        "@types/react-dom" = packages."@types/react-dom@npm:18.2.6";
-        "busboy" = packages."busboy@npm:1.6.0";
-        "caniuse-lite" = packages."caniuse-lite@npm:1.0.30001509";
-        "postcss" = packages."postcss@npm:8.4.14";
-        "react" = packages."react@npm:18.2.0";
-        "react-dom" = packages."react-dom@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:18.2.0";
-        "watchpack" = packages."watchpack@npm:2.4.0";
-        "zod" = packages."zod@npm:3.21.4";
-        "styled-jsx" = packages."styled-jsx@virtual:9abdb9722cda2f8d2d531523e5529c22aa0d860f4dc81d7cc173b4fa77f2830fd2679bc99075021016081aa2286fb711dbed19f8270de57d44d73ef99f32e289#npm:5.1.1";
+        "styled-jsx" = packages."styled-jsx@virtual:26c6a32c4915409f7bd2d883a4ab67a522b20b15b12128d6df821923ad772b86711a75c3294cc804a0b6d1a27ea80eb0e65f4dac1fe2c8bafcd05bbb5c098774#npm:5.1.1";
       };
     };
     "nextjs-google-analytics@npm:2.3.3" = {
@@ -24295,6 +24300,7 @@ let
       checksum = "10/a59b4727d1af72753bb3662c0016dfea5f1c77a78e42a2a7aac4a0073c00be5d4764dcaabae7ae5565757d16154266f2390db5953d1dbb266d5caec1c92ce6bd";
       dependencies = {
         "fsevents" = packages."fsevents@patch:fsevents@npm%3A2.3.2#optional!builtin<compat/fsevents>::version=2.3.2&hash=df0bf1";
+        "tslib" = packages."tslib@npm:2.6.0";
       };
       packagePeers = [
         "@types/next"
@@ -24312,6 +24318,7 @@ let
         "fsevents" = packages."fsevents@patch:fsevents@npm%3A2.3.2#optional!builtin<compat/fsevents>::version=2.3.2&hash=df0bf1";
         "next" = packages."next@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:13.4.7";
         "react" = packages."react@npm:18.2.0";
+        "tslib" = packages."tslib@npm:2.6.0";
       };
     };
     "nextjs-google-analytics@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:2.3.3" = {
@@ -24321,8 +24328,9 @@ let
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.2.14";
         "fsevents" = packages."fsevents@patch:fsevents@npm%3A2.3.2#optional!builtin<compat/fsevents>::version=2.3.2&hash=df0bf1";
-        "next" = packages."next@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:13.4.7";
+        "next" = packages."next@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:13.4.7";
         "react" = packages."react@npm:18.2.0";
+        "tslib" = packages."tslib@npm:2.6.0";
       };
     };
     "nextjs-routes@npm:2.0.1" = {
@@ -24935,28 +24943,23 @@ let
       descriptorRange = "workspace:apps/olymp";
       dependencies = {
         "@app/calendar" = packages."@app/calendar@workspace:libs/calendar";
+        "@app/editor" = packages."@app/editor@workspace:libs/editor";
         "@app/graphql" = packages."@app/graphql@workspace:libs/graphql";
         "@app/ui" = packages."@app/ui@workspace:libs/ui";
-        "@ckeditor/ckeditor5-build-classic" = packages."@ckeditor/ckeditor5-build-classic@npm:38.0.1";
-        "@ckeditor/ckeditor5-core" = packages."@ckeditor/ckeditor5-core@npm:38.0.1";
-        "@ckeditor/ckeditor5-engine" = packages."@ckeditor/ckeditor5-engine@npm:38.0.1";
-        "@ckeditor/ckeditor5-utils" = packages."@ckeditor/ckeditor5-utils@npm:38.0.1";
-        "@ckeditor/ckeditor5-watchdog" = packages."@ckeditor/ckeditor5-watchdog@npm:38.0.1";
+        "@app/upload" = packages."@app/upload@workspace:libs/upload";
         "@next/bundle-analyzer" = packages."@next/bundle-analyzer@npm:13.4.7";
         "@radix-ui/colors" = packages."@radix-ui/colors@npm:0.1.9";
         "@types/facebook-pixel" = packages."@types/facebook-pixel@npm:0.0.25";
         "@types/file-saver" = packages."@types/file-saver@npm:2.0.5";
         "@types/glider-js" = packages."@types/glider-js@npm:1.7.8";
         "@types/iban" = packages."@types/iban@npm:0.0.32";
-        "@types/node" = packages."@types/node@npm:20.3.2";
+        "@types/node" = packages."@types/node@npm:20.3.3";
         "@types/nprogress" = packages."@types/nprogress@npm:0.2.0";
         "@types/qrcode.react" = packages."@types/qrcode.react@npm:1.0.2";
         "@types/react-dom" = packages."@types/react-dom@npm:18.2.6";
         "@types/react-paginate" = packages."@types/react-paginate@npm:7.1.1";
         "@types/react" = packages."@types/react@npm:18.2.14";
         "@urql/core" = packages."@urql/core@npm:4.0.7";
-        "@urql/exchange-graphcache" = packages."@urql/exchange-graphcache@npm:6.1.4";
-        "@urql/exchange-request-policy" = packages."@urql/exchange-request-policy@npm:1.0.2";
         "classnames" = packages."classnames@npm:2.3.2";
         "cookies-next" = packages."cookies-next@npm:2.1.2";
         "date-arithmetic" = packages."date-arithmetic@npm:4.1.0";
@@ -24964,19 +24967,18 @@ let
         "exceljs" = packages."exceljs@npm:4.3.0";
         "file-saver" = packages."file-saver@npm:2.0.5";
         "glider-js" = packages."glider-js@npm:1.7.8";
-        "graphql" = packages."graphql@npm:16.6.0";
-        "i18next" = packages."i18next@npm:22.5.1";
+        "graphql" = packages."graphql@npm:16.7.1";
+        "i18next" = packages."i18next@npm:23.2.6";
         "iban" = packages."iban@npm:0.0.14";
         "minisearch" = packages."minisearch@npm:5.1.0";
         "nprogress" = packages."nprogress@npm:0.2.0";
-        "posthog-js" = packages."posthog-js@npm:1.67.1";
+        "posthog-js" = packages."posthog-js@npm:1.68.5";
         "react-facebook-pixel" = packages."react-facebook-pixel@npm:1.0.4";
         "react" = packages."react@npm:18.2.0";
         "sharp" = packages."sharp@npm:0.32.1";
         "tailwind-merge" = packages."tailwind-merge@npm:1.13.2";
         "tailwindcss" = packages."tailwindcss@npm:3.3.2";
         "zod" = packages."zod@npm:3.21.4";
-        "@ckeditor/ckeditor5-react" = packages."@ckeditor/ckeditor5-react@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:6.0.0";
         "@hookform/resolvers" = packages."@hookform/resolvers@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:3.1.1";
         "@radix-ui/react-collapsible" = packages."@radix-ui/react-collapsible@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:1.0.3";
         "@radix-ui/react-dialog" = packages."@radix-ui/react-dialog@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:1.0.4";
@@ -24984,28 +24986,25 @@ let
         "@radix-ui/react-popover" = packages."@radix-ui/react-popover@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:1.0.6";
         "@radix-ui/react-toast" = packages."@radix-ui/react-toast@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:1.1.4";
         "@radix-ui/react-toggle-group" = packages."@radix-ui/react-toggle-group@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:1.0.4";
-        "@sentry/nextjs" = packages."@sentry/nextjs@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:7.54.0";
+        "@sentry/nextjs" = packages."@sentry/nextjs@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:7.57.0";
         "@tailwindcss/aspect-ratio" = packages."@tailwindcss/aspect-ratio@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:0.4.2";
         "@tailwindcss/forms" = packages."@tailwindcss/forms@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:0.5.3";
         "@tailwindcss/typography" = packages."@tailwindcss/typography@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:0.5.9";
-        "@urql/devtools" = packages."@urql/devtools@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:2.0.3";
-        "cmdk" = packages."cmdk@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:0.2.0";
-        "graphql-tag" = packages."graphql-tag@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:2.12.6";
-        "html-react-parser" = packages."html-react-parser@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:3.0.16";
-        "lucide-react" = packages."lucide-react@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:0.244.0";
-        "next-seo" = packages."next-seo@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:6.0.0";
+        "graphql-tag" = packages."graphql-tag@virtual:4de8affaeadbd53ac06c22885480659871fda1aed8faac7264ab124fd7ef9352967405f1242c686763cb1887356be5d1d0d9c6f38f2392b10c9ce25debec6b24#npm:2.12.6";
+        "lucide-react" = packages."lucide-react@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:0.258.0";
+        "next-seo" = packages."next-seo@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:6.1.0";
         "next-urql" = packages."next-urql@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:5.0.2";
         "next" = packages."next@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:13.4.7";
         "nextjs-google-analytics" = packages."nextjs-google-analytics@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:2.3.3";
         "nextjs-routes" = packages."nextjs-routes@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:2.0.1";
-        "qrcode.react" = packages."qrcode.react@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:3.1.0";
+        "qrcode.react" = packages."qrcode.react@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:3.1.0";
         "react-async-hook" = packages."react-async-hook@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:4.0.0";
         "react-colorful" = packages."react-colorful@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:5.6.1";
-        "react-day-picker" = packages."react-day-picker@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:8.7.1";
+        "react-day-picker" = packages."react-day-picker@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:8.8.0";
         "react-dom" = packages."react-dom@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:18.2.0";
-        "react-hook-form" = packages."react-hook-form@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:7.44.3";
+        "react-hook-form" = packages."react-hook-form@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:7.44.3";
         "react-paginate" = packages."react-paginate@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:8.2.0";
-        "react-toastify" = packages."react-toastify@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:9.1.3";
+        "react-toastify" = packages."react-toastify@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:9.1.3";
         "react-virtuoso" = packages."react-virtuoso@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:4.3.11";
         "tailwind-scrollbar" = packages."tailwind-scrollbar@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:2.1.0";
         "tailwindcss-animate" = packages."tailwindcss-animate@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:1.0.6";
@@ -25017,19 +25016,20 @@ let
         "zod-i18n-map" = packages."zod-i18n-map@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:2.13.1";
       };
       devDependencies = {
+        "@types/date-arithmetic" = packages."@types/date-arithmetic@npm:4.1.1";
         "@typescript-eslint/eslint-plugin" = packages."@typescript-eslint/eslint-plugin@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:5.60.1";
         "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:5.60.1";
         "autoprefixer" = packages."autoprefixer@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:10.4.14";
         "cssnano" = packages."cssnano@virtual:af6115c8132a46c21c82e2d4d42d8b5988b5498e9200ea58947e623f9b799bc75629cc010ccbe74fca43ca29be3a201e978bb72873747060cd8eff72d78bfcc8#npm:6.0.1";
-        "eslint" = packages."eslint@npm:8.43.0";
+        "eslint" = packages."eslint@npm:8.44.0";
         "eslint-config-next" = packages."eslint-config-next@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:13.4.7";
-        "eslint-plugin-tailwindcss" = packages."eslint-plugin-tailwindcss@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:3.12.1";
+        "eslint-plugin-tailwindcss" = packages."eslint-plugin-tailwindcss@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:3.13.0";
         "postcss" = packages."postcss@npm:8.4.24";
         "postcss-import" = packages."postcss-import@virtual:9311a8c9fc2fa723a363b04526c261872a9280ff9a5542cdc84255404f48ad5c7925fba5ed45881f7890d0d836206f3c952ef9a86f561b44b7d6e17f15c70e68#npm:15.1.0";
         "prettier" = packages."prettier@npm:2.8.8";
         "sass" = packages."sass@npm:1.63.6";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
-        "webpack" = packages."webpack@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:5.86.0";
+        "webpack" = packages."webpack@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:5.88.1";
       };
     };
     "on-finished@npm:2.3.0" = {
@@ -25155,24 +25155,24 @@ let
         "opener" = "bin/opener-bin.js";
       };
     };
-    "optionator@npm:0.9.1" = {
+    "optionator@npm:0.9.3" = {
       name = "optionator";
-      reference = "npm:0.9.1";
+      reference = "npm:0.9.3";
       linkType = "HARD";
-      outputName = "optionator-0.9.1-577e397aae";
-      outputHash = "/19cfb625ba3cafd99c204744595a8b5111491632d379be341a8286c53a0101adac6f7ca9be4319ccecaaf5d43a55e65dde8b434620726032472833d958d43698";
+      outputName = "optionator-0.9.3-56c3a4bf80";
+      outputHash = "/fa28d3016395974f7fc087d6bbf0ac7f58ac3489f4f202a377e9c194969f329a7b88c75f8152b33fb08794a30dcd5c079db6bb465c28151357f113d80bbf67da";
       flatName = "optionator";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^0.9.1";
-      checksum = "10/19cfb625ba3cafd99c204744595a8b5111491632d379be341a8286c53a0101adac6f7ca9be4319ccecaaf5d43a55e65dde8b434620726032472833d958d43698";
+      descriptorRange = "npm:^0.9.3";
+      checksum = "10/fa28d3016395974f7fc087d6bbf0ac7f58ac3489f4f202a377e9c194969f329a7b88c75f8152b33fb08794a30dcd5c079db6bb465c28151357f113d80bbf67da";
       dependencies = {
+        "@aashutoshrathi/word-wrap" = packages."@aashutoshrathi/word-wrap@npm:1.2.6";
         "deep-is" = packages."deep-is@npm:0.1.4";
         "fast-levenshtein" = packages."fast-levenshtein@npm:2.0.6";
         "levn" = packages."levn@npm:0.4.1";
         "prelude-ls" = packages."prelude-ls@npm:1.2.1";
         "type-check" = packages."type-check@npm:0.4.0";
-        "word-wrap" = packages."word-wrap@npm:1.2.3";
       };
     };
     "ora@npm:5.4.1" = {
@@ -25506,20 +25506,20 @@ let
         "entities" = packages."entities@npm:4.5.0";
       };
     };
-    "parseley@npm:0.7.0" = {
+    "parseley@npm:0.12.1" = {
       name = "parseley";
-      reference = "npm:0.7.0";
+      reference = "npm:0.12.1";
       linkType = "HARD";
-      outputName = "parseley-0.7.0-ef52928152";
-      outputHash = "/039b782fad3f77f400d24771b28c9cc027d6c3ecdca795977c9b096e2a9107b17045a0cfab95ddf3831d6013d13a2f23dfc80fb6b7751d4593a708bd036eb7ad";
+      outputName = "parseley-0.12.1-dabcf2cdc8";
+      outputHash = "/64788dbe1fbbc231e0fef235357823e03ca3d915693b2109ad862293aad5d091e902fd7cf6f54763728e758a228d06497c787a9af0dfdacd6a941bc2dbf2019e";
       flatName = "parseley";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^0.7.0";
-      checksum = "10/039b782fad3f77f400d24771b28c9cc027d6c3ecdca795977c9b096e2a9107b17045a0cfab95ddf3831d6013d13a2f23dfc80fb6b7751d4593a708bd036eb7ad";
+      descriptorRange = "npm:^0.12.0";
+      checksum = "10/64788dbe1fbbc231e0fef235357823e03ca3d915693b2109ad862293aad5d091e902fd7cf6f54763728e758a228d06497c787a9af0dfdacd6a941bc2dbf2019e";
       dependencies = {
-        "moo" = packages."moo@npm:0.5.2";
-        "nearley" = packages."nearley@npm:2.20.1";
+        "leac" = packages."leac@npm:0.6.0";
+        "peberminta" = packages."peberminta@npm:0.9.0";
       };
     };
     "parseurl@npm:1.3.3" = {
@@ -25719,6 +25719,18 @@ let
       scope = null;
       descriptorRange = "npm:^4.0.0";
       checksum = "10/5b1e2daa247062061325b8fdbfd1fb56dde0a448fb1455453276ea18c60685bdad23a445dc148cf87bc216be1573357509b7d4060494a6fd768c7efad833ee45";
+    };
+    "peberminta@npm:0.9.0" = {
+      name = "peberminta";
+      reference = "npm:0.9.0";
+      linkType = "HARD";
+      outputName = "peberminta-0.9.0-c8a37f2c79";
+      outputHash = "/b396cf8bac836b3cfe9315e6c94747fa02bb68b252a4b176c0f7d6a3fcbdc5e9f23c3523480c91244b42f87be63f200d775587b039abe4b4731915480da2528d";
+      flatName = "peberminta";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^0.9.0";
+      checksum = "10/b396cf8bac836b3cfe9315e6c94747fa02bb68b252a4b176c0f7d6a3fcbdc5e9f23c3523480c91244b42f87be63f200d775587b039abe4b4731915480da2528d";
     };
     "pg-cloudflare@npm:1.1.0" = {
       name = "pg-cloudflare";
@@ -28285,21 +28297,6 @@ let
       descriptorRange = "npm:^1.1.1";
       checksum = "10/356a46d97eab301cca0dbf7a65be6f68c4a7e33d304909e5ca840038b1210390e1d33fcc3b566c42020f7b97e9de189bc5286d1ec8d7ba2445ed3377c576ce9e";
     };
-    "posthog-js@npm:1.67.1" = {
-      name = "posthog-js";
-      reference = "npm:1.67.1";
-      linkType = "HARD";
-      outputName = "posthog-js-1.67.1-2b4a8b0d47";
-      outputHash = "/b56bdc120e428d9fb2063de9bce66176e72af1b7c790f8a6a1caa5522b67835018fddb4bc31c9cf826f53ee6f59d31a9f0a89856f61cf9786022acdc5178be2a";
-      flatName = "posthog-js";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:~1.67.1";
-      checksum = "10/b56bdc120e428d9fb2063de9bce66176e72af1b7c790f8a6a1caa5522b67835018fddb4bc31c9cf826f53ee6f59d31a9f0a89856f61cf9786022acdc5178be2a";
-      dependencies = {
-        "fflate" = packages."fflate@npm:0.4.8";
-      };
-    };
     "posthog-js@npm:1.68.5" = {
       name = "posthog-js";
       reference = "npm:1.68.5";
@@ -28435,7 +28432,7 @@ let
       flatName = "prop-types";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^15.8.1";
+      descriptorRange = "npm:^15.7.2";
       checksum = "10/7d959caec002bc964c86cdc461ec93108b27337dabe6192fb97d69e16a0c799a03462713868b40749bfc1caf5f57ef80ac3e4ffad3effa636ee667582a75e2c0";
       dependencies = {
         "loose-envify" = packages."loose-envify@npm:1.4.0";
@@ -28607,16 +28604,16 @@ let
       flatName = "qrcode.react";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~3.1.0";
+      descriptorRange = "npm:^3.1.0";
       checksum = "10/71953241f151ca5ad4013c034cb13033e1ebad56a1db77297a7ddd7fd4d5f137f37f3be51133aeef0b54dc52d6c76630429d2269bd72e6858c3209fe42310498";
       packagePeers = [
         "@types/react"
         "react"
       ];
     };
-    "qrcode.react@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:3.1.0" = {
+    "qrcode.react@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:3.1.0" = {
       name = "qrcode.react";
-      reference = "virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:3.1.0";
+      reference = "virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:3.1.0";
       canonicalPackage = packages."qrcode.react@npm:3.1.0";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.2.14";
@@ -28661,34 +28658,6 @@ let
       scope = null;
       descriptorRange = "npm:^4.0.1";
       checksum = "10/5c7c75f1c696750f619b165cc9957382f919e4207dabf04597a64f0298861391cdc5ee91a1dde1a5d460ecf7ee1af7fc36fef6d155bef2be66f05d43fd63d4f0";
-    };
-    "railroad-diagrams@npm:1.0.0" = {
-      name = "railroad-diagrams";
-      reference = "npm:1.0.0";
-      linkType = "HARD";
-      outputName = "railroad-diagrams-1.0.0-ab8798413c";
-      outputHash = "/5349cf7a27f28c2cd152b525964624e0d0a795ab062d01682084381570fbb07ab877035771bcfb27cd5b6a7ee9f8371ecc34ccc8c3bde3443676230a59a7a85e";
-      flatName = "railroad-diagrams";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^1.0.0";
-      checksum = "10/5349cf7a27f28c2cd152b525964624e0d0a795ab062d01682084381570fbb07ab877035771bcfb27cd5b6a7ee9f8371ecc34ccc8c3bde3443676230a59a7a85e";
-    };
-    "randexp@npm:0.4.6" = {
-      name = "randexp";
-      reference = "npm:0.4.6";
-      linkType = "HARD";
-      outputName = "randexp-0.4.6-60140c8119";
-      outputHash = "/ae6d213ec8018b2d22960d2b73ee7a4e25f85050a11dc485b6d3a06ace318ca567353b1d75d8d11f529b7ed6bdeb52644b789307ef42812bf5da2ade4f85e113";
-      flatName = "randexp";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:0.4.6";
-      checksum = "10/ae6d213ec8018b2d22960d2b73ee7a4e25f85050a11dc485b6d3a06ace318ca567353b1d75d8d11f529b7ed6bdeb52644b789307ef42812bf5da2ade4f85e113";
-      dependencies = {
-        "discontinuous-range" = packages."discontinuous-range@npm:1.0.0";
-        "ret" = packages."ret@npm:0.1.15";
-      };
     };
     "randombytes@npm:2.1.0" = {
       name = "randombytes";
@@ -28780,7 +28749,7 @@ let
       dependencies = {
         "loader-utils" = packages."loader-utils@npm:2.0.4";
         "schema-utils" = packages."schema-utils@npm:3.3.0";
-        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.86.0";
+        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.88.1";
       };
     };
     "rc@npm:1.2.8" = {
@@ -28858,24 +28827,6 @@ let
         "react-dom" = packages."react-dom@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:18.2.0";
       };
     };
-    "react-day-picker@npm:8.7.1" = {
-      name = "react-day-picker";
-      reference = "npm:8.7.1";
-      linkType = "HARD";
-      outputName = "react-day-picker-8.7.1-2e9e6afbdd";
-      outputHash = "/8ee25aad85a1a1fc9922fc991526c8b54f7659db36f3288f4db8a22538437123c0b817ceb1f4ca7a903e345093037876ceca11a45b2b69b1f9a782f7ec4a2244";
-      flatName = "react-day-picker";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:~8.7.1";
-      checksum = "10/8ee25aad85a1a1fc9922fc991526c8b54f7659db36f3288f4db8a22538437123c0b817ceb1f4ca7a903e345093037876ceca11a45b2b69b1f9a782f7ec4a2244";
-      packagePeers = [
-        "@types/date-fns"
-        "@types/react"
-        "date-fns"
-        "react"
-      ];
-    };
     "react-day-picker@npm:8.8.0" = {
       name = "react-day-picker";
       reference = "npm:8.8.0";
@@ -28893,16 +28844,6 @@ let
         "date-fns"
         "react"
       ];
-    };
-    "react-day-picker@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:8.7.1" = {
-      name = "react-day-picker";
-      reference = "virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:8.7.1";
-      canonicalPackage = packages."react-day-picker@npm:8.7.1";
-      dependencies = {
-        "@types/react" = packages."@types/react@npm:18.2.14";
-        "date-fns" = packages."date-fns@npm:2.30.0";
-        "react" = packages."react@npm:18.2.0";
-      };
     };
     "react-day-picker@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:8.8.0" = {
       name = "react-day-picker";
@@ -28923,7 +28864,7 @@ let
       flatName = "react-dom";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:*";
+      descriptorRange = "npm:^18.2.0";
       checksum = "10/ca5e7762ec8c17a472a3605b6f111895c9f87ac7d43a610ab7024f68cd833d08eda0625ce02ec7178cc1f3c957cf0b9273cdc17aa2cd02da87544331c43b1d21";
       dependencies = {
         "loose-envify" = packages."loose-envify@npm:1.4.0";
@@ -28940,16 +28881,6 @@ let
       canonicalPackage = packages."react-dom@npm:18.2.0";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.2.14";
-        "loose-envify" = packages."loose-envify@npm:1.4.0";
-        "react" = packages."react@npm:18.2.0";
-        "scheduler" = packages."scheduler@npm:0.23.0";
-      };
-    };
-    "react-dom@virtual:eaa47a7e693751dea4b43e0d56646efde788dc805480f36a2a26ff27e0eb67d6bdc56514084e384fa81908f2663382f7e8713d229aca504cfc6d2fd2249fd3f5#npm:18.2.0" = {
-      name = "react-dom";
-      reference = "virtual:eaa47a7e693751dea4b43e0d56646efde788dc805480f36a2a26ff27e0eb67d6bdc56514084e384fa81908f2663382f7e8713d229aca504cfc6d2fd2249fd3f5#npm:18.2.0";
-      canonicalPackage = packages."react-dom@npm:18.2.0";
-      dependencies = {
         "loose-envify" = packages."loose-envify@npm:1.4.0";
         "react" = packages."react@npm:18.2.0";
         "scheduler" = packages."scheduler@npm:0.23.0";
@@ -28981,6 +28912,7 @@ let
       reference = "virtual:df61edd0213550e4c5c94e4d824ba8b044b6cba92aef60f2d18427f52b456bca2040748349f36fd8d5446ea0e69f7f85d29e25ae47564407c37472e88496b11b#npm:14.2.3";
       canonicalPackage = packages."react-dropzone@npm:14.2.3";
       dependencies = {
+        "@types/react" = packages."@types/react@npm:18.2.14";
         "attr-accept" = packages."attr-accept@npm:2.2.2";
         "file-selector" = packages."file-selector@npm:0.6.0";
         "prop-types" = packages."prop-types@npm:15.8.1";
@@ -29015,9 +28947,9 @@ let
         "react"
       ];
     };
-    "react-hook-form@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:7.44.3" = {
+    "react-hook-form@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:7.44.3" = {
       name = "react-hook-form";
-      reference = "virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:7.44.3";
+      reference = "virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:7.44.3";
       canonicalPackage = packages."react-hook-form@npm:7.44.3";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.2.14";
@@ -29298,9 +29230,9 @@ let
         "react"
       ];
     };
-    "react-toastify@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:9.1.3" = {
+    "react-toastify@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:9.1.3" = {
       name = "react-toastify";
-      reference = "virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:9.1.3";
+      reference = "virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:9.1.3";
       canonicalPackage = packages."react-toastify@npm:9.1.3";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.2.14";
@@ -29348,7 +29280,7 @@ let
       flatName = "react";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:*";
+      descriptorRange = "npm:^18.2.0";
       checksum = "10/b9214a9bd79e99d08de55f8bef2b7fc8c39630be97c4e29d7be173d14a9a10670b5325e94485f74cd8bff4966ef3c78ee53c79a7b0b9b70cba20aa8973acc694";
       dependencies = {
         "loose-envify" = packages."loose-envify@npm:1.4.0";
@@ -29844,18 +29776,6 @@ let
         "signal-exit" = packages."signal-exit@npm:3.0.7";
       };
     };
-    "ret@npm:0.1.15" = {
-      name = "ret";
-      reference = "npm:0.1.15";
-      linkType = "HARD";
-      outputName = "ret-0.1.15-0d3c19de76";
-      outputHash = "/07c9e7619b4c86053fa57689bf7606b5a40fc1231fc87682424d0b3e296641cc19c218c3b8a8917305fbcca3bfc43038a5b6a63f54755c1bbca2f91857253b03";
-      flatName = "ret";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:~0.1.10";
-      checksum = "10/07c9e7619b4c86053fa57689bf7606b5a40fc1231fc87682424d0b3e296641cc19c218c3b8a8917305fbcca3bfc43038a5b6a63f54755c1bbca2f91857253b03";
-    };
     "retry@npm:0.12.0" = {
       name = "retry";
       reference = "npm:0.12.0";
@@ -29919,7 +29839,7 @@ let
       flatName = "rimraf";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^3.0.0";
+      descriptorRange = "npm:^3.0.2";
       checksum = "10/063ffaccaaaca2cfd0ef3beafb12d6a03dd7ff1260d752d62a6077b5dfff6ae81bea571f655bb6b589d366930ec1bdd285d40d560c0dae9b12f125e54eb743d5";
       bin = {
         "rimraf" = "bin.js";
@@ -29958,21 +29878,21 @@ let
       scope = null;
       descriptorRange = "workspace:backend";
       dependencies = {
-        "@aws-sdk/client-s3" = packages."@aws-sdk/client-s3@npm:3.362.0";
-        "@aws-sdk/s3-request-presigner" = packages."@aws-sdk/s3-request-presigner@npm:3.362.0";
+        "@aws-sdk/client-s3" = packages."@aws-sdk/client-s3@npm:3.363.0";
+        "@aws-sdk/s3-request-presigner" = packages."@aws-sdk/s3-request-presigner@npm:3.363.0";
         "@graphile-contrib/pg-order-by-related" = packages."@graphile-contrib/pg-order-by-related@npm:1.0.0";
         "@graphile-contrib/pg-simplify-inflector" = packages."@graphile-contrib/pg-simplify-inflector@npm:6.1.0";
         "@graphile/operation-hooks" = packages."@graphile/operation-hooks@npm:1.0.0";
-        "@tsconfig/node12" = packages."@tsconfig/node12@npm:1.0.11";
+        "@tsconfig/node12" = packages."@tsconfig/node12@npm:12.1.0";
         "@types/body-parser" = packages."@types/body-parser@npm:1.19.2";
         "@types/compression" = packages."@types/compression@npm:1.7.2";
         "@types/cookie-parser" = packages."@types/cookie-parser@npm:1.4.3";
         "@types/express" = packages."@types/express@npm:4.17.17";
-        "@types/html-to-text" = packages."@types/html-to-text@npm:8.0.1";
+        "@types/html-to-text" = packages."@types/html-to-text@npm:9.0.1";
         "@types/lodash" = packages."@types/lodash@npm:4.14.195";
         "@types/mjml" = packages."@types/mjml@npm:4.7.1";
         "@types/morgan" = packages."@types/morgan@npm:1.9.4";
-        "@types/node" = packages."@types/node@npm:20.3.2";
+        "@types/node" = packages."@types/node@npm:20.3.3";
         "@types/nodemailer" = packages."@types/nodemailer@npm:6.4.8";
         "@types/pg" = packages."@types/pg@npm:8.10.2";
         "body-parser" = packages."body-parser@npm:1.20.2";
@@ -29985,7 +29905,7 @@ let
         "graphile-worker" = packages."graphile-worker@npm:0.13.0";
         "graphql" = packages."graphql@npm:15.8.0";
         "helmet" = packages."helmet@npm:7.0.0";
-        "html-to-text" = packages."html-to-text@npm:8.2.1";
+        "html-to-text" = packages."html-to-text@npm:9.0.5";
         "lodash" = packages."lodash@npm:4.17.21";
         "mjml" = packages."mjml@npm:4.14.1";
         "morgan" = packages."morgan@npm:1.10.0";
@@ -30001,9 +29921,9 @@ let
         "pg" = packages."pg@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:8.10.0";
         "raw-loader" = packages."raw-loader@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.0.2";
         "ts-loader" = packages."ts-loader@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:9.4.4";
-        "ts-node" = packages."ts-node@virtual:ef6136dc31186c42f92851afb237eadaa9d36085920cabb6ed6ea317680c8271d6b94afcb795fd7e58c08243e470be87ece6bb707daf3ecb0604f7fd8c1aa682#npm:10.9.1";
+        "ts-node" = packages."ts-node@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:10.9.1";
         "webpack-cli" = packages."webpack-cli@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.1.4";
-        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.86.0";
+        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.88.1";
       };
     };
     "rozpisovnik@workspace:." = {
@@ -30018,8 +29938,8 @@ let
       scope = null;
       descriptorRange = "workspace:.";
       devDependencies = {
-        "@commitlint/cli" = packages."@commitlint/cli@npm:17.6.5";
-        "@commitlint/config-conventional" = packages."@commitlint/config-conventional@npm:17.6.5";
+        "@commitlint/cli" = packages."@commitlint/cli@npm:17.6.6";
+        "@commitlint/config-conventional" = packages."@commitlint/config-conventional@npm:17.6.6";
         "concurrently" = packages."concurrently@npm:8.2.0";
         "husky" = packages."husky@npm:8.0.3";
         "prettier" = packages."prettier@npm:2.8.8";
@@ -30147,7 +30067,7 @@ let
       flatName = "sass-loader";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^13.3.0";
+      descriptorRange = "npm:^13.3.2";
       checksum = "10/3486134c8813660772448bcd73e169fbe180fbaea0b825ec3e8fd1017de026e4e177e4b659a5b7d0f6c1b9f334ebe0134d91c60bd627d8ffff9b21018325a532";
       dependencies = {
         "neo-async" = packages."neo-async@npm:2.6.2";
@@ -30184,7 +30104,7 @@ let
       flatName = "sass";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^1.44.0";
+      descriptorRange = "npm:^1.63.6";
       checksum = "10/16e0d0156381a4b401c01823ae5be37bb7ee863b4229418809e30a6668a21097421f08ad731cbf0708c8186600669283073c399f7f0814f8f40996be12c8b52c";
       bin = {
         "sass" = "sass.js";
@@ -30272,19 +30192,19 @@ let
       descriptorRange = "npm:^1.1.0";
       checksum = "10/cd094ac3718b0070a222f9a499b280c698fdea10268cc163fa244421099544c1766dd893fdee0e2a8eba5d53ab9d0bcb11067bedff166665030fa6fda25a096b";
     };
-    "selderee@npm:0.6.0" = {
+    "selderee@npm:0.11.0" = {
       name = "selderee";
-      reference = "npm:0.6.0";
+      reference = "npm:0.11.0";
       linkType = "HARD";
-      outputName = "selderee-0.6.0-4127686959";
-      outputHash = "/a1039c0bb6f22faa3f775ceaffc32be096a458b97d8f6e8b94373b9d2547ed661efadffc15cd33e89ed39bfcb14c866fe1a1a6219369458338253fa04ddf8759";
+      outputName = "selderee-0.11.0-b04976dc09";
+      outputHash = "/9f697a00b8270354777a8423e555fd3168abead1304b8d267412877a4b007830624d8aa562eb29a3ec2d9d2f7f977808d17b790b9c210a7d828c12ed9ef0f1f0";
       flatName = "selderee";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^0.6.0";
-      checksum = "10/a1039c0bb6f22faa3f775ceaffc32be096a458b97d8f6e8b94373b9d2547ed661efadffc15cd33e89ed39bfcb14c866fe1a1a6219369458338253fa04ddf8759";
+      descriptorRange = "npm:^0.11.0";
+      checksum = "10/9f697a00b8270354777a8423e555fd3168abead1304b8d267412877a4b007830624d8aa562eb29a3ec2d9d2f7f977808d17b790b9c210a7d828c12ed9ef0f1f0";
       dependencies = {
-        "parseley" = packages."parseley@npm:0.7.0";
+        "parseley" = packages."parseley@npm:0.12.1";
       };
     };
     "semver@npm:5.7.1" = {
@@ -30330,24 +30250,6 @@ let
       checksum = "10/be264384c7c2f283d52a28cff172a4a25b99cc10f1481ece9479987e7145d197d3c00d8a0b2662316224fb346e97f770545126b0af88f94fee0292004cf809a1";
       bin = {
         "semver" = "bin/semver.js";
-      };
-    };
-    "semver@npm:7.5.0" = {
-      name = "semver";
-      reference = "npm:7.5.0";
-      linkType = "HARD";
-      outputName = "semver-7.5.0-160502ad5d";
-      outputHash = "/5aaa7675f8439b845db0a383f1420217a206fa084f2bc4ebc4bb31c0a50b02e9c922be3da274214ba7d9870d77f63085ac163f84f6ac910346675e9ac8681bf8";
-      flatName = "semver";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:7.5.0";
-      checksum = "10/5aaa7675f8439b845db0a383f1420217a206fa084f2bc4ebc4bb31c0a50b02e9c922be3da274214ba7d9870d77f63085ac163f84f6ac910346675e9ac8681bf8";
-      bin = {
-        "semver" = "bin/semver.js";
-      };
-      dependencies = {
-        "lru-cache" = packages."lru-cache@npm:6.0.0";
       };
     };
     "semver@npm:7.5.2" = {
@@ -30526,7 +30428,7 @@ let
       flatName = "sharp";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~0.32.1";
+      descriptorRange = "npm:^0.32.1";
       checksum = "10/07df854f3d69b1ae95ab82ce5416abdea9b8d5c295965a96a9664767c7541a99cb3df7e56171e200425fd555a2853155817ffa9e945af41eef1762c72e7e1670";
       dependencies = {
         "color" = packages."color@npm:4.2.3";
@@ -30725,9 +30627,9 @@ let
         "sass" = packages."sass@npm:1.63.6";
         "@r2wc/react-to-web-component" = packages."@r2wc/react-to-web-component@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:2.0.2";
         "bootstrap" = packages."bootstrap@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:4.6.2";
-        "lucide-react" = packages."lucide-react@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:0.244.0";
+        "lucide-react" = packages."lucide-react@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:0.258.0";
         "react-dom" = packages."react-dom@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:18.2.0";
-        "react-toastify" = packages."react-toastify@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:9.1.3";
+        "react-toastify" = packages."react-toastify@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:9.1.3";
         "urql" = packages."urql@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:4.0.4";
       };
       devDependencies = {
@@ -31484,7 +31386,7 @@ let
       flatName = "style-loader";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^3.3.1";
+      descriptorRange = "npm:^3.3.3";
       checksum = "10/6c13d5075b5a5d69602215a242ef157460766e6e8a2e48276eb5da5b9852716910b48b3f120d492bbc7cd825dfa940b35fc84e1a9ab2a8792fd8d568b6b3e87a";
       packagePeers = [
         "@types/webpack"
@@ -31552,9 +31454,9 @@ let
         "react"
       ];
     };
-    "styled-jsx@virtual:9abdb9722cda2f8d2d531523e5529c22aa0d860f4dc81d7cc173b4fa77f2830fd2679bc99075021016081aa2286fb711dbed19f8270de57d44d73ef99f32e289#npm:5.1.1" = {
+    "styled-jsx@virtual:26c6a32c4915409f7bd2d883a4ab67a522b20b15b12128d6df821923ad772b86711a75c3294cc804a0b6d1a27ea80eb0e65f4dac1fe2c8bafcd05bbb5c098774#npm:5.1.1" = {
       name = "styled-jsx";
-      reference = "virtual:9abdb9722cda2f8d2d531523e5529c22aa0d860f4dc81d7cc173b4fa77f2830fd2679bc99075021016081aa2286fb711dbed19f8270de57d44d73ef99f32e289#npm:5.1.1";
+      reference = "virtual:26c6a32c4915409f7bd2d883a4ab67a522b20b15b12128d6df821923ad772b86711a75c3294cc804a0b6d1a27ea80eb0e65f4dac1fe2c8bafcd05bbb5c098774#npm:5.1.1";
       canonicalPackage = packages."styled-jsx@npm:5.1.1";
       dependencies = {
         "@types/react" = packages."@types/react@npm:18.2.14";
@@ -31785,7 +31687,7 @@ let
       flatName = "syncpack";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^10.5.1";
+      descriptorRange = "npm:^10.6.1";
       checksum = "10/4279bf99a2dc94004c8dd5bcb4542febe515c18e3295902d2be07e38e67f62f71682119948e3379e8748c33df2820d37880cebcaade9822d1562f8ca40f03a55";
       bin = {
         "syncpack" = "dist/bin.js";
@@ -31824,7 +31726,7 @@ let
       flatName = "tailwind-merge";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~1.13.1";
+      descriptorRange = "npm:~1.13.2";
       checksum = "10/79b4d234d511a546af06f5c9f672b48ceeb28bc9e6d9a00940f6f5a5d84f0cbb3c6bc14a99623344a7e147a4494fb01448fd984cb77c5d16932db98bc44593d4";
     };
     "tailwind-scrollbar@npm:2.1.0" = {
@@ -32062,9 +31964,9 @@ let
         "webpack"
       ];
     };
-    "terser-webpack-plugin@virtual:c2e0608ea5f2e6f8dcf8d655747f6ca45d8c4b3fba46755984d656b55f4b24c18b339e1cf1d134cbb5c422f4bd300f8abcac3eb5be941f376a4b968119c7bc0d#npm:5.3.9" = {
+    "terser-webpack-plugin@virtual:600799c06ddaace41dd589e7142a38a5d9d61e27536fab77842b2b06ccee842a7437595e7cbff3b95a2229964d6a677120e78521bdf8911925807437f4526e65#npm:5.3.9" = {
       name = "terser-webpack-plugin";
-      reference = "virtual:c2e0608ea5f2e6f8dcf8d655747f6ca45d8c4b3fba46755984d656b55f4b24c18b339e1cf1d134cbb5c422f4bd300f8abcac3eb5be941f376a4b968119c7bc0d#npm:5.3.9";
+      reference = "virtual:600799c06ddaace41dd589e7142a38a5d9d61e27536fab77842b2b06ccee842a7437595e7cbff3b95a2229964d6a677120e78521bdf8911925807437f4526e65#npm:5.3.9";
       canonicalPackage = packages."terser-webpack-plugin@npm:5.3.9";
       dependencies = {
         "@jridgewell/trace-mapping" = packages."@jridgewell/trace-mapping@npm:0.3.18";
@@ -32072,7 +31974,20 @@ let
         "schema-utils" = packages."schema-utils@npm:3.3.0";
         "serialize-javascript" = packages."serialize-javascript@npm:6.0.1";
         "terser" = packages."terser@npm:5.18.1";
-        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.86.0";
+        "webpack" = packages."webpack@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:5.88.1";
+      };
+    };
+    "terser-webpack-plugin@virtual:ba0a60de3c07ac0c267d1ee63ebd9054c9aa13aad144df1e905dc307eed8f03744ee682299d09a3405344c15fa9ee49517f37e3c2dc607f7c5c5a5fec9148099#npm:5.3.9" = {
+      name = "terser-webpack-plugin";
+      reference = "virtual:ba0a60de3c07ac0c267d1ee63ebd9054c9aa13aad144df1e905dc307eed8f03744ee682299d09a3405344c15fa9ee49517f37e3c2dc607f7c5c5a5fec9148099#npm:5.3.9";
+      canonicalPackage = packages."terser-webpack-plugin@npm:5.3.9";
+      dependencies = {
+        "@jridgewell/trace-mapping" = packages."@jridgewell/trace-mapping@npm:0.3.18";
+        "jest-worker" = packages."jest-worker@npm:27.5.1";
+        "schema-utils" = packages."schema-utils@npm:3.3.0";
+        "serialize-javascript" = packages."serialize-javascript@npm:6.0.1";
+        "terser" = packages."terser@npm:5.18.1";
+        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.88.1";
       };
     };
     "terser-webpack-plugin@virtual:d4478bccf5c8c078d84fedea1aa2c6fced3c4914234859d51c33beaf579ea459a0c2aedd53463eb959f23561a958dbd0e52595d1a9189f679f4a786609721079#npm:5.3.9" = {
@@ -32086,19 +32001,6 @@ let
         "serialize-javascript" = packages."serialize-javascript@npm:6.0.1";
         "terser" = packages."terser@npm:5.18.1";
         "webpack" = packages."webpack@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:5.88.1";
-      };
-    };
-    "terser-webpack-plugin@virtual:fd3db679ea7c6d693ae8903352cd4524089e45e96ea0ae06370c003a4fc5faa617cc2c2e1b22100a804b2ee376b14db34017d3be7a3c5f5506652764cb84c343#npm:5.3.9" = {
-      name = "terser-webpack-plugin";
-      reference = "virtual:fd3db679ea7c6d693ae8903352cd4524089e45e96ea0ae06370c003a4fc5faa617cc2c2e1b22100a804b2ee376b14db34017d3be7a3c5f5506652764cb84c343#npm:5.3.9";
-      canonicalPackage = packages."terser-webpack-plugin@npm:5.3.9";
-      dependencies = {
-        "@jridgewell/trace-mapping" = packages."@jridgewell/trace-mapping@npm:0.3.18";
-        "jest-worker" = packages."jest-worker@npm:27.5.1";
-        "schema-utils" = packages."schema-utils@npm:3.3.0";
-        "serialize-javascript" = packages."serialize-javascript@npm:6.0.1";
-        "terser" = packages."terser@npm:5.18.1";
-        "webpack" = packages."webpack@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:5.86.0";
       };
     };
     "terser@npm:5.18.1" = {
@@ -32441,7 +32343,7 @@ let
       flatName = "ts-loader";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^9.2.6";
+      descriptorRange = "npm:^9.4.4";
       checksum = "10/52302f3540962d779fc346281d8d4f7310f73e129debc4fb55c1fb3f097519009b32f7e2806299904e98961c785784fccb70ceca9076c4bae33f064ad11dd982";
       dependencies = {
         "chalk" = packages."chalk@npm:4.1.2";
@@ -32466,7 +32368,7 @@ let
         "micromatch" = packages."micromatch@npm:4.0.5";
         "semver" = packages."semver@npm:7.5.3";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
-        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.86.0";
+        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.88.1";
       };
     };
     "ts-loader@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:9.4.4" = {
@@ -32537,6 +32439,28 @@ let
         "@types/typescript"
         "typescript"
       ];
+    };
+    "ts-node@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:10.9.1" = {
+      name = "ts-node";
+      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:10.9.1";
+      canonicalPackage = packages."ts-node@npm:10.9.1";
+      dependencies = {
+        "@cspotcode/source-map-support" = packages."@cspotcode/source-map-support@npm:0.8.1";
+        "@tsconfig/node10" = packages."@tsconfig/node10@npm:1.0.9";
+        "@tsconfig/node12" = packages."@tsconfig/node12@npm:1.0.11";
+        "@tsconfig/node14" = packages."@tsconfig/node14@npm:1.0.3";
+        "@tsconfig/node16" = packages."@tsconfig/node16@npm:1.0.4";
+        "@types/node" = packages."@types/node@npm:20.3.3";
+        "acorn" = packages."acorn@npm:8.9.0";
+        "acorn-walk" = packages."acorn-walk@npm:8.2.0";
+        "arg" = packages."arg@npm:4.1.3";
+        "create-require" = packages."create-require@npm:1.1.1";
+        "diff" = packages."diff@npm:4.0.2";
+        "make-error" = packages."make-error@npm:1.3.6";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "v8-compile-cache-lib" = packages."v8-compile-cache-lib@npm:3.0.1";
+        "yn" = packages."yn@npm:3.1.1";
+      };
     };
     "ts-node@virtual:ef6136dc31186c42f92851afb237eadaa9d36085920cabb6ed6ea317680c8271d6b94afcb795fd7e58c08243e470be87ece6bb707daf3ecb0604f7fd8c1aa682#npm:10.9.1" = {
       name = "ts-node";
@@ -32842,7 +32766,7 @@ let
       flatName = "typescript";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:~5.1.3";
+      descriptorRange = "npm:~5.1.6";
       checksum = "10/f347cde665cf43dc4c1c7d9821c7d9bbec3c3914f4bdd82ee490e9fb9f6d99036ed8666463b6a192dd005eeef333c5087d5931bdd51ec853436ff9a670a7417e";
       bin = {
         "tsc" = "bin/tsc";
@@ -32858,7 +32782,7 @@ let
       flatName = "typescript";
       languageName = "node";
       scope = null;
-      descriptorRange = "patch:typescript@npm%3A~5.1.3#optional!builtin<compat/typescript>";
+      descriptorRange = "patch:typescript@npm%3A~5.1.6#optional!builtin<compat/typescript>";
       checksum = "10/f5481fa3ba0eee8970f46708d13c05650a865ad093b586fc9573f425c64c57ca97e3308e110bb528deb3ccebe83f6fd7b5a8ac90018038da96326a9ccdf8e77c";
       bin = {
         "tsc" = "bin/tsc";
@@ -33620,7 +33544,7 @@ let
         "import-local" = packages."import-local@npm:3.1.0";
         "interpret" = packages."interpret@npm:3.1.1";
         "rechoir" = packages."rechoir@npm:0.8.0";
-        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.86.0";
+        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.88.1";
         "webpack-merge" = packages."webpack-merge@npm:5.9.0";
         "@webpack-cli/configtest" = packages."@webpack-cli/configtest@virtual:85ed05b9e6b2a1b0c2f4942ea144495073c4e4429a942c49ebf444e8f838b1d5caba6eadb16fb17b829a8069d16556dfbfe3bfbae7ee5fbfab664b2975993d86#npm:2.1.1";
         "@webpack-cli/info" = packages."@webpack-cli/info@virtual:85ed05b9e6b2a1b0c2f4942ea144495073c4e4429a942c49ebf444e8f838b1d5caba6eadb16fb17b829a8069d16556dfbfe3bfbae7ee5fbfab664b2975993d86#npm:2.0.2";
@@ -33693,51 +33617,6 @@ let
       descriptorRange = "npm:^3.2.3";
       checksum = "10/a661f41795d678b7526ae8a88cd1b3d8ce71a7d19b6503da8149b2e667fc7a12f9b899041c1665d39e38245ed3a59ab68de648ea31040c3829aa695a5a45211d";
     };
-    "webpack@npm:5.86.0" = {
-      name = "webpack";
-      reference = "npm:5.86.0";
-      linkType = "HARD";
-      outputName = "webpack-5.86.0-7ec9c86422";
-      outputHash = "/0a9f60c356b0fb295db7eff26dd967bd72c6c6802f70c81c4aaad39ebde919e4ebf6b5103140374040515c870f55e8590d219f7b0c84d73fe1dc4e119bd1936c";
-      flatName = "webpack";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:~5.86.0";
-      checksum = "10/0a9f60c356b0fb295db7eff26dd967bd72c6c6802f70c81c4aaad39ebde919e4ebf6b5103140374040515c870f55e8590d219f7b0c84d73fe1dc4e119bd1936c";
-      bin = {
-        "webpack" = "bin/webpack.js";
-      };
-      dependencies = {
-        "@types/eslint-scope" = packages."@types/eslint-scope@npm:3.7.4";
-        "@types/estree" = packages."@types/estree@npm:1.0.1";
-        "@webassemblyjs/ast" = packages."@webassemblyjs/ast@npm:1.11.6";
-        "@webassemblyjs/wasm-edit" = packages."@webassemblyjs/wasm-edit@npm:1.11.6";
-        "@webassemblyjs/wasm-parser" = packages."@webassemblyjs/wasm-parser@npm:1.11.6";
-        "acorn-import-assertions" = packages."acorn-import-assertions@npm:1.9.0";
-        "acorn" = packages."acorn@npm:8.9.0";
-        "browserslist" = packages."browserslist@npm:4.21.9";
-        "chrome-trace-event" = packages."chrome-trace-event@npm:1.0.3";
-        "enhanced-resolve" = packages."enhanced-resolve@npm:5.15.0";
-        "es-module-lexer" = packages."es-module-lexer@npm:1.3.0";
-        "eslint-scope" = packages."eslint-scope@npm:5.1.1";
-        "events" = packages."events@npm:3.3.0";
-        "glob-to-regexp" = packages."glob-to-regexp@npm:0.4.1";
-        "graceful-fs" = packages."graceful-fs@npm:4.2.11";
-        "json-parse-even-better-errors" = packages."json-parse-even-better-errors@npm:2.3.1";
-        "loader-runner" = packages."loader-runner@npm:4.3.0";
-        "mime-types" = packages."mime-types@npm:2.1.35";
-        "neo-async" = packages."neo-async@npm:2.6.2";
-        "schema-utils" = packages."schema-utils@npm:3.3.0";
-        "tapable" = packages."tapable@npm:2.2.1";
-        "terser-webpack-plugin" = packages."terser-webpack-plugin@npm:5.3.9";
-        "watchpack" = packages."watchpack@npm:2.4.0";
-        "webpack-sources" = packages."webpack-sources@npm:3.2.3";
-      };
-      packagePeers = [
-        "@types/webpack-cli"
-        "webpack-cli"
-      ];
-    };
     "webpack@npm:5.88.1" = {
       name = "webpack";
       reference = "npm:5.88.1";
@@ -33747,7 +33626,7 @@ let
       flatName = "webpack";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^5.64.1";
+      descriptorRange = "npm:^5.88.1";
       checksum = "10/1467130267762c1e0002bb1a365874e1f52d2d0ceca61aa0be6241ec26d07feacb2cb5ecb94dd6aa3721d7efb3b0651762c23f1bfbc10612023f8cdf161aec69";
       bin = {
         "webpack" = "bin/webpack.js";
@@ -33783,10 +33662,10 @@ let
         "webpack-cli"
       ];
     };
-    "webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.86.0" = {
+    "webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.88.1" = {
       name = "webpack";
-      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.86.0";
-      canonicalPackage = packages."webpack@npm:5.86.0";
+      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.88.1";
+      canonicalPackage = packages."webpack@npm:5.88.1";
       dependencies = {
         "@types/eslint-scope" = packages."@types/eslint-scope@npm:3.7.4";
         "@types/estree" = packages."@types/estree@npm:1.0.1";
@@ -33812,7 +33691,7 @@ let
         "webpack-cli" = packages."webpack-cli@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.1.4";
         "webpack-sources" = packages."webpack-sources@npm:3.2.3";
         "acorn-import-assertions" = packages."acorn-import-assertions@virtual:d4478bccf5c8c078d84fedea1aa2c6fced3c4914234859d51c33beaf579ea459a0c2aedd53463eb959f23561a958dbd0e52595d1a9189f679f4a786609721079#npm:1.9.0";
-        "terser-webpack-plugin" = packages."terser-webpack-plugin@virtual:c2e0608ea5f2e6f8dcf8d655747f6ca45d8c4b3fba46755984d656b55f4b24c18b339e1cf1d134cbb5c422f4bd300f8abcac3eb5be941f376a4b968119c7bc0d#npm:5.3.9";
+        "terser-webpack-plugin" = packages."terser-webpack-plugin@virtual:ba0a60de3c07ac0c267d1ee63ebd9054c9aa13aad144df1e905dc307eed8f03744ee682299d09a3405344c15fa9ee49517f37e3c2dc607f7c5c5a5fec9148099#npm:5.3.9";
       };
     };
     "webpack@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:5.88.1" = {
@@ -33847,10 +33726,10 @@ let
         "terser-webpack-plugin" = packages."terser-webpack-plugin@virtual:d4478bccf5c8c078d84fedea1aa2c6fced3c4914234859d51c33beaf579ea459a0c2aedd53463eb959f23561a958dbd0e52595d1a9189f679f4a786609721079#npm:5.3.9";
       };
     };
-    "webpack@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:5.86.0" = {
+    "webpack@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:5.88.1" = {
       name = "webpack";
-      reference = "virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:5.86.0";
-      canonicalPackage = packages."webpack@npm:5.86.0";
+      reference = "virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:5.88.1";
+      canonicalPackage = packages."webpack@npm:5.88.1";
       dependencies = {
         "@types/eslint-scope" = packages."@types/eslint-scope@npm:3.7.4";
         "@types/estree" = packages."@types/estree@npm:1.0.1";
@@ -33875,7 +33754,7 @@ let
         "watchpack" = packages."watchpack@npm:2.4.0";
         "webpack-sources" = packages."webpack-sources@npm:3.2.3";
         "acorn-import-assertions" = packages."acorn-import-assertions@virtual:d4478bccf5c8c078d84fedea1aa2c6fced3c4914234859d51c33beaf579ea459a0c2aedd53463eb959f23561a958dbd0e52595d1a9189f679f4a786609721079#npm:1.9.0";
-        "terser-webpack-plugin" = packages."terser-webpack-plugin@virtual:fd3db679ea7c6d693ae8903352cd4524089e45e96ea0ae06370c003a4fc5faa617cc2c2e1b22100a804b2ee376b14db34017d3be7a3c5f5506652764cb84c343#npm:5.3.9";
+        "terser-webpack-plugin" = packages."terser-webpack-plugin@virtual:600799c06ddaace41dd589e7142a38a5d9d61e27536fab77842b2b06ccee842a7437595e7cbff3b95a2229964d6a677120e78521bdf8911925807437f4526e65#npm:5.3.9";
       };
     };
     "whatwg-url@npm:5.0.0" = {
@@ -34055,18 +33934,6 @@ let
       scope = null;
       descriptorRange = "npm:^6.3.2";
       checksum = "10/481f37f21f14e16bda31298d1c961ed6f338d33fd772629e78b1120dbed8533f175ec9d8ed69ec8308dbaf6658bd88577a0780c154f85b88f96d31c0a7ba44aa";
-    };
-    "word-wrap@npm:1.2.3" = {
-      name = "word-wrap";
-      reference = "npm:1.2.3";
-      linkType = "HARD";
-      outputName = "word-wrap-1.2.3-7fb15ab002";
-      outputHash = "/08a677e1578b9cc367a03d52bc51b6869fec06303f68d29439e4ed647257411f857469990c31066c1874678937dac737c9f8f20d3fd59918fb86b7d926a76b15";
-      flatName = "word-wrap";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:^1.2.3";
-      checksum = "10/08a677e1578b9cc367a03d52bc51b6869fec06303f68d29439e4ed647257411f857469990c31066c1874678937dac737c9f8f20d3fd59918fb86b7d926a76b15";
     };
     "wordwrap@npm:1.0.0" = {
       name = "wordwrap";
@@ -34480,7 +34347,7 @@ let
       reference = "virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:2.13.1";
       canonicalPackage = packages."zod-i18n-map@npm:2.13.1";
       dependencies = {
-        "i18next" = packages."i18next@npm:22.5.1";
+        "i18next" = packages."i18next@npm:23.2.6";
         "zod" = packages."zod@npm:3.21.4";
       };
     };
@@ -34493,7 +34360,7 @@ let
       flatName = "zod";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^3.21.4";
+      descriptorRange = "npm:3.21.4";
       checksum = "10/03c79fa4610a35e24119771970be764c6e177a271a225587f86a7fc35d55e94a154d8e1970d23ffe35b567c147262bedbcb53b31aa30eeef2493fbd13e1b4aca";
     };
   };

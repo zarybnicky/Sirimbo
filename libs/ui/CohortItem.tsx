@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { CohortExport } from '@app/ui/CohortExport';
-import { AtSign as EmailIcon, Phone as PhoneIcon } from 'lucide-react';
-import { Card, CardMenu } from '@app/ui/Card';
+import { RichTextView } from '@app/editor/RichTextView';
 import { CohortWithMembersFragment } from '@app/graphql/Cohorts';
 import { UserPublicFragment } from '@app/graphql/User';
-import { RichTextView } from '@app/ui/RichTextView';
+import { Card, CardMenu } from '@app/ui/Card';
+import { CohortExport } from '@app/ui/CohortExport';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@app/ui/dialog';
-import { useAuth } from './use-auth';
+import { AtSign as EmailIcon, Phone as PhoneIcon } from 'lucide-react';
+import * as React from 'react';
 import { DropdownMenuLink } from './dropdown';
+import { useAuth } from './use-auth';
 
 export function CohortItem({ item }: { item: CohortWithMembersFragment }) {
   const { perms } = useAuth();

@@ -1,13 +1,13 @@
-import React from 'react';
-import { AlertCircle as ReportProblemIcon } from 'lucide-react';
-import { Control, FieldValues, Path, useController } from 'react-hook-form';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { FieldHelper, FieldLabel } from '@app/ui/form';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import { AlertCircle } from 'lucide-react';
+import React from 'react';
+import { Path, Control, FieldValues, useController } from 'react-hook-form';
 
 export type RichTextEditorProps<T extends FieldValues> = {
   name: Path<T>;
-  control?: Control<T, any>;
+  control?: Control<T>;
   initialState?: string;
   className?: string;
   label?: React.ReactNode;
@@ -30,7 +30,7 @@ export default function RichTextEditor<T extends FieldValues>({
     }
   }, [editor, initialState]);
 
-  const { field, fieldState } = useController<T>({ name, control });
+  const { field, fieldState } = useController({ name, control });
 
   const _ckContent = <div className="ck-content" />; // for tailwind's JIT
   return (
@@ -40,14 +40,14 @@ export default function RichTextEditor<T extends FieldValues>({
         <CKEditor
           editor={ClassicEditor}
           data={initialState || ''}
-          onChange={(_event, editor) => field.onChange(editor.getData())}
+          onChange={(_event, editor) => field.onChange(editor.getData() as any)}
           onReady={setEditor}
           onBlur={field.onBlur}
         />
       </div>
       {fieldState.error && (
         <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-          <ReportProblemIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
+          <AlertCircle className="h-5 w-5 text-red-500" aria-hidden="true" />
         </div>
       )}
       <FieldHelper error={fieldState.error} helperText={helperText} />

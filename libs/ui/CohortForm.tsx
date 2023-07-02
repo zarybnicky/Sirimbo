@@ -19,7 +19,7 @@ import { DeleteButton } from './DeleteButton';
 import { useRouter } from 'next/router';
 import { ErrorPage } from './ErrorPage';
 import { toast } from 'react-toastify';
-import { RichTextEditor } from './RichTextEditor';
+import { RichTextEditor } from '@app/editor/RichTextEditor';
 import { TitleBar } from './TitleBar';
 import { z } from 'zod';
 import { AdminEntity } from './generic/AdminEntityList';

@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { Card, CardMenu } from '@app/ui/Card';
-import { fullDateFormatter } from '@app/ui/format-date';
+import { RichTextView } from '@app/editor/RichTextView';
 import { EventWithItemsFragment } from '@app/graphql/Event';
-import { ParticipationDialog } from './ParticipationForm';
-import { RichTextView } from './RichTextView';
-import { EventParticipantExport } from './EventParticipantExport';
-import { useAuth } from '@app/ui/use-auth';
+import { Card, CardMenu } from '@app/ui/Card';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@app/ui/dialog';
+import { fullDateFormatter } from '@app/ui/format-date';
+import { useAuth } from '@app/ui/use-auth';
+import * as React from 'react';
+import { EventParticipantExport } from './EventParticipantExport';
+import { ParticipationDialog } from './ParticipationForm';
 import { DropdownMenuLink } from './dropdown';
 
 interface Props {

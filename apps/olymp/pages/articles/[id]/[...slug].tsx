@@ -2,7 +2,7 @@ import * as React from 'react';
 import { CallToAction } from '@app/ui/CallToAction';
 import { ArticleDocument, ArticleFragment } from '@app/graphql/Articles';
 import { fullDateFormatter } from '@app/ui/format-date';
-import { RichTextView } from '@app/ui/RichTextView';
+import { RichTextView } from '@app/editor/RichTextView';
 import { NextSeo } from 'next-seo';
 import { Heading } from '@app/ui/Heading';
 import type { NextPageWithLayout } from 'pages/_app';
