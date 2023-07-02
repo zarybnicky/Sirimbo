@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache } from '@apollo/client';
-import Form from 'react-bootstrap/Form';
 import { Pagination } from './pagination';
 import { DateEl } from './date';
 import { UserQuery } from '../use-auth';
@@ -94,7 +93,7 @@ export function RozpisAdminList() {
         <td><DateEl date={a.rDatum} /></td>
         <td>{a.rKde}</td>
         <td>
-          <Form.Check checked={a.rVisible || false} onChange={() => toggleVisible({
+          <input type="checkbox" checked={a.rVisible} onChange={() => toggleVisible({
             variables: { id: a.rId, visible: !a.rVisible },
           })} />
         </td>

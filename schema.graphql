@@ -863,35 +863,6 @@ type AttendeeList {
   createdAt: Datetime!
   id: BigInt!
 
-  """Reads and enables pagination through a set of `Lesson`."""
-  lessonsByListId(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LessonCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Lesson`."""
-    orderBy: [LessonsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): LessonsConnection!
-
   """Reads a single `Tenant` that is related to this `AttendeeList`."""
   tenant: Tenant
   tenantId: BigInt!
@@ -944,8 +915,6 @@ enum AttendeeListsOrderBy {
   ATTENDEE_PEOPLE_BY_LIST_ID__COUNT_DESC
   ID_ASC
   ID_DESC
-  LESSONS_BY_LIST_ID__COUNT_ASC
-  LESSONS_BY_LIST_ID__COUNT_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
@@ -4870,6 +4839,7 @@ type Event {
   summary: String!
   tenantId: BigInt!
   titleImageLegacy: String
+  type: EventType!
   until: Date!
   updatedAt: Datetime
 }
@@ -4908,6 +4878,7 @@ input EventInput {
   summary: String
   tenantId: BigInt
   titleImageLegacy: String
+  type: EventType
   until: Date!
   updatedAt: Datetime
 }
@@ -4931,8 +4902,15 @@ input EventPatch {
   summary: String
   tenantId: BigInt
   titleImageLegacy: String
+  type: EventType
   until: Date
   updatedAt: Datetime
+}
+
+enum EventType {
+  CAMP
+  LESSON
+  RESERVATION
 }
 
 """A connection to a list of `Event` values."""
@@ -5368,263 +5346,9 @@ The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://
 """
 scalar JSON
 
-type Lesson {
-  createdAt: Datetime!
-  id: BigInt!
-  isLocked: Boolean!
-  isVisible: Boolean!
-
-  """Reads and enables pagination through a set of `LessonTrainer`."""
-  lessonTrainers(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LessonTrainerCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `LessonTrainer`."""
-    orderBy: [LessonTrainersOrderBy!] = [PRIMARY_KEY_ASC]
-  ): LessonTrainersConnection!
-
-  """Reads a single `AttendeeList` that is related to this `Lesson`."""
-  list: AttendeeList
-  listId: BigInt!
-
-  """Reads a single `Location` that is related to this `Lesson`."""
-  location: Location
-  locationId: BigInt
-  locationText: String
-  since: Datetime!
-
-  """Reads a single `Tenant` that is related to this `Lesson`."""
-  tenant: Tenant
-  tenantId: BigInt!
-  until: Datetime!
-  updatedAt: Datetime!
-}
-
-"""
-A condition to be used against `Lesson` object types. All fields are tested for equality and combined with a logical ‘and.’
-"""
-input LessonCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: BigInt
-
-  """Checks for equality with the object’s `listId` field."""
-  listId: BigInt
-
-  """Checks for equality with the object’s `locationId` field."""
-  locationId: BigInt
-
-  """Checks for equality with the object’s `tenantId` field."""
-  tenantId: BigInt
-}
-
-type LessonTrainer {
-  id: BigInt!
-
-  """Reads a single `Lesson` that is related to this `LessonTrainer`."""
-  lesson: Lesson
-  lessonId: BigInt!
-
-  """Reads a single `Tenant` that is related to this `LessonTrainer`."""
-  tenant: Tenant
-  tenantId: BigInt!
-
-  """Reads a single `User` that is related to this `LessonTrainer`."""
-  trainer: User
-  trainerId: BigInt!
-}
-
-"""
-A condition to be used against `LessonTrainer` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input LessonTrainerCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: BigInt
-
-  """Checks for equality with the object’s `lessonId` field."""
-  lessonId: BigInt
-
-  """Checks for equality with the object’s `tenantId` field."""
-  tenantId: BigInt
-
-  """Checks for equality with the object’s `trainerId` field."""
-  trainerId: BigInt
-}
-
-"""A connection to a list of `LessonTrainer` values."""
-type LessonTrainersConnection {
-  """
-  A list of edges which contains the `LessonTrainer` and cursor to aid in pagination.
-  """
-  edges: [LessonTrainersEdge!]!
-
-  """A list of `LessonTrainer` objects."""
-  nodes: [LessonTrainer!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `LessonTrainer` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `LessonTrainer` edge in the connection."""
-type LessonTrainersEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `LessonTrainer` at the end of the edge."""
-  node: LessonTrainer!
-}
-
-"""Methods to use when ordering `LessonTrainer`."""
-enum LessonTrainersOrderBy {
-  ID_ASC
-  ID_DESC
-  LESSON_BY_LESSON_ID__ID_ASC
-  LESSON_BY_LESSON_ID__ID_DESC
-  LESSON_BY_LESSON_ID__LIST_ID_ASC
-  LESSON_BY_LESSON_ID__LIST_ID_DESC
-  LESSON_BY_LESSON_ID__LOCATION_ID_ASC
-  LESSON_BY_LESSON_ID__LOCATION_ID_DESC
-  LESSON_BY_LESSON_ID__TENANT_ID_ASC
-  LESSON_BY_LESSON_ID__TENANT_ID_DESC
-  LESSON_ID_ASC
-  LESSON_ID_DESC
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  TENANT_BY_TENANT_ID__ID_ASC
-  TENANT_BY_TENANT_ID__ID_DESC
-  TENANT_ID_ASC
-  TENANT_ID_DESC
-  TRAINER_ID_ASC
-  TRAINER_ID_DESC
-  USER_BY_TRAINER_ID__U_BAN_ASC
-  USER_BY_TRAINER_ID__U_BAN_DESC
-  USER_BY_TRAINER_ID__U_CONFIRMED_ASC
-  USER_BY_TRAINER_ID__U_CONFIRMED_DESC
-  USER_BY_TRAINER_ID__U_GROUP_ASC
-  USER_BY_TRAINER_ID__U_GROUP_DESC
-  USER_BY_TRAINER_ID__U_ID_ASC
-  USER_BY_TRAINER_ID__U_ID_DESC
-  USER_BY_TRAINER_ID__U_JMENO_ASC
-  USER_BY_TRAINER_ID__U_JMENO_DESC
-  USER_BY_TRAINER_ID__U_LOGIN_ASC
-  USER_BY_TRAINER_ID__U_LOGIN_DESC
-  USER_BY_TRAINER_ID__U_NAROZENI_ASC
-  USER_BY_TRAINER_ID__U_NAROZENI_DESC
-  USER_BY_TRAINER_ID__U_PRIJMENI_ASC
-  USER_BY_TRAINER_ID__U_PRIJMENI_DESC
-  USER_BY_TRAINER_ID__U_SKUPINA_ASC
-  USER_BY_TRAINER_ID__U_SKUPINA_DESC
-  USER_BY_TRAINER_ID__U_SYSTEM_ASC
-  USER_BY_TRAINER_ID__U_SYSTEM_DESC
-}
-
-"""A connection to a list of `Lesson` values."""
-type LessonsConnection {
-  """
-  A list of edges which contains the `Lesson` and cursor to aid in pagination.
-  """
-  edges: [LessonsEdge!]!
-
-  """A list of `Lesson` objects."""
-  nodes: [Lesson!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `Lesson` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `Lesson` edge in the connection."""
-type LessonsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Lesson` at the end of the edge."""
-  node: Lesson!
-}
-
-"""Methods to use when ordering `Lesson`."""
-enum LessonsOrderBy {
-  ATTENDEE_LIST_BY_LIST_ID__ID_ASC
-  ATTENDEE_LIST_BY_LIST_ID__ID_DESC
-  ATTENDEE_LIST_BY_LIST_ID__TENANT_ID_ASC
-  ATTENDEE_LIST_BY_LIST_ID__TENANT_ID_DESC
-  ID_ASC
-  ID_DESC
-  LESSON_TRAINERS_BY_LESSON_ID__COUNT_ASC
-  LESSON_TRAINERS_BY_LESSON_ID__COUNT_DESC
-  LIST_ID_ASC
-  LIST_ID_DESC
-  LOCATION_BY_LOCATION_ID__ID_ASC
-  LOCATION_BY_LOCATION_ID__ID_DESC
-  LOCATION_ID_ASC
-  LOCATION_ID_DESC
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  TENANT_BY_TENANT_ID__ID_ASC
-  TENANT_BY_TENANT_ID__ID_DESC
-  TENANT_ID_ASC
-  TENANT_ID_DESC
-}
-
 type Location {
   description: JSON!
   id: BigInt!
-
-  """Reads and enables pagination through a set of `Lesson`."""
-  lessons(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LessonCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Lesson`."""
-    orderBy: [LessonsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): LessonsConnection!
 
   """Reads and enables pagination through a set of `LocationAttachment`."""
   locationAttachments(
@@ -5855,8 +5579,6 @@ type LocationsEdge {
 enum LocationsOrderBy {
   ID_ASC
   ID_DESC
-  LESSONS_BY_LOCATION_ID__COUNT_ASC
-  LESSONS_BY_LOCATION_ID__COUNT_DESC
   LOCATION_ATTACHMENTS_BY_LOCATION_ID__COUNT_ASC
   LOCATION_ATTACHMENTS_BY_LOCATION_ID__COUNT_DESC
   NATURAL
@@ -8169,6 +7891,7 @@ type Person {
     """The method to use when ordering `TenantPerson`."""
     orderBy: [TenantPeopleOrderBy!] = [PRIMARY_KEY_ASC]
   ): TenantPeopleConnection!
+  userId: BigInt
 }
 
 """
@@ -8185,6 +7908,7 @@ input PersonInput {
   gender: GenderType!
   id: BigInt
   lastName: String!
+  userId: BigInt
 }
 
 """
@@ -8195,6 +7919,7 @@ input PersonPatch {
   gender: GenderType
   id: BigInt
   lastName: String
+  userId: BigInt
 }
 
 """A connection to a list of `PlatbyCategory` values."""
@@ -9565,66 +9290,6 @@ type Query {
   getCurrentCouple: Pary
   getCurrentTenant: Tenant
   getCurrentUser: User
-  lesson(id: BigInt!): Lesson
-  lessonTrainer(id: BigInt!): LessonTrainer
-
-  """Reads and enables pagination through a set of `LessonTrainer`."""
-  lessonTrainers(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LessonTrainerCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `LessonTrainer`."""
-    orderBy: [LessonTrainersOrderBy!] = [PRIMARY_KEY_ASC]
-  ): LessonTrainersConnection
-
-  """Reads and enables pagination through a set of `Lesson`."""
-  lessons(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LessonCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Lesson`."""
-    orderBy: [LessonsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): LessonsConnection
   location(id: BigInt!): Location
   locationAttachment(locationId: BigInt!, objectName: String!): LocationAttachment
 
@@ -11667,64 +11332,6 @@ type Tenant {
     orderBy: [CouplesOrderBy!] = [PRIMARY_KEY_ASC]
   ): CouplesConnection!
   id: BigInt!
-
-  """Reads and enables pagination through a set of `LessonTrainer`."""
-  lessonTrainers(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LessonTrainerCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `LessonTrainer`."""
-    orderBy: [LessonTrainersOrderBy!] = [PRIMARY_KEY_ASC]
-  ): LessonTrainersConnection!
-
-  """Reads and enables pagination through a set of `Lesson`."""
-  lessons(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LessonCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Lesson`."""
-    orderBy: [LessonsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): LessonsConnection!
   memberInfo: String!
   name: String!
   origins: [String]!
@@ -12129,10 +11736,6 @@ enum TenantsOrderBy {
   COUPLES_BY_TENANT_ID__COUNT_DESC
   ID_ASC
   ID_DESC
-  LESSONS_BY_TENANT_ID__COUNT_ASC
-  LESSONS_BY_TENANT_ID__COUNT_DESC
-  LESSON_TRAINERS_BY_TENANT_ID__COUNT_ASC
-  LESSON_TRAINERS_BY_TENANT_ID__COUNT_DESC
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
@@ -14310,35 +13913,6 @@ type User {
   id: BigInt
   inPublicCohort: Boolean
 
-  """Reads and enables pagination through a set of `LessonTrainer`."""
-  lessonTrainersByTrainerId(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LessonTrainerCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `LessonTrainer`."""
-    orderBy: [LessonTrainersOrderBy!] = [PRIMARY_KEY_ASC]
-  ): LessonTrainersConnection!
-
   """Reads and enables pagination through a set of `Nabidka`."""
   nabidkasByNTrener(
     """Read all values in the set after (below) this cursor."""
@@ -14827,8 +14401,6 @@ enum UsersOrderBy {
   DOKUMENTIES_BY_D_KDO__COUNT_DESC
   GALERIE_FOTOS_BY_GF_KDO__COUNT_ASC
   GALERIE_FOTOS_BY_GF_KDO__COUNT_DESC
-  LESSON_TRAINERS_BY_TRAINER_ID__COUNT_ASC
-  LESSON_TRAINERS_BY_TRAINER_ID__COUNT_DESC
   NABIDKAS_BY_N_TRENER__COUNT_ASC
   NABIDKAS_BY_N_TRENER__COUNT_DESC
   NATURAL

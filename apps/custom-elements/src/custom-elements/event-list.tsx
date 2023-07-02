@@ -2,7 +2,6 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { useState } from 'react';
 import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache } from '@apollo/client';
-import Form from 'react-bootstrap/Form';
 import { Pagination } from './pagination';
 import { DateRange } from './date';
 import { Dropdown } from './dropdown';
@@ -87,12 +86,12 @@ export function EventList() {
             [`/admin/akce/dokumenty/${a.id}`]: "Upravit dokumenty",
             [`/admin/akce/remove/${a.id}`]: "Odstranit",
           }} />
-          {a.title}
+          {a.title as string}
         </td>
         <td><DateRange from={a.since} to={a.until} /></td>
         <td>{a.attendeeUsers.totalCount || 0}/{a.capacity}</td>
         <td>
-          <Form.Check checked={a.isVisible} onChange={() => toggleVisible({
+          <input type="checkbox" checked={a.isVisible} onChange={() => toggleVisible({
             variables: { id: a.id, visible: !a.isVisible },
           })} />
         </td>

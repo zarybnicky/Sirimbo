@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { useState } from 'react';
-import Form from 'react-bootstrap/Form';
 import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache } from '@apollo/client';
 import { Pagination } from './pagination';
 import { $, GalerieDirsOrderBy, Selector } from '../zeus';
@@ -99,7 +98,7 @@ export function GalleryDirectoryList() {
           {'→'.repeat(a.gdLevel - 1)} {a.gdName}
         </td>
         <td>
-          <Form.Check checked={a.gdHidden} onChange={() => toggleVisible({
+          <input type="checkbox" checked={a.gdHidden} onChange={() => toggleVisible({
             variables: { id: a.gdId, visible: !a.gdHidden },
           })} />
         </td>

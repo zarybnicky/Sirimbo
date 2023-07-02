@@ -16,11 +16,13 @@
     overlay = final: prev: {
       ncc = final.callPackage ./nix/ncc.nix {};
       graphile-migrate = final.callPackage ./nix/graphile-migrate.nix { src = migrate; };
-      sirimbo-backend = final.callPackage ./backend/package.nix {};
-      sirimbo-frontend = final.callPackage ./apps/olymp/package.nix {};
-      sirimbo-migrations = final.callPackage ./migrations/package.nix {};
 
+      rozpisovnik-api = final.callPackage ./backend/package.nix {};
+      rozpisovnik-api-migrations = final.callPackage ./migrations/package.nix {};
+
+      sirimbo-frontend = final.callPackage ./apps/olymp/package.nix {};
       sirimbo-frontend-old = final.callPackage ./apps/custom-elements/package.nix {};
+
       sirimbo-php = (final.callPackage ./backend-php/composer-project.nix {
         php = final.php82;
       } (
@@ -64,9 +66,9 @@
       inherit (pkgs)
         ncc
         graphile-migrate
+        rozpisovnik-api
+        rozpisovnik-api-migrations
         sirimbo-frontend
-        sirimbo-backend
-        sirimbo-migrations
         sirimbo-frontend-old
         sirimbo-php;
     };
@@ -107,7 +109,7 @@
 
             php = {
               enable = true;
-              domain = "tkolymp.cz";
+              domain = "olymp-test";
               ssl = false;
             };
             backend = {

@@ -44,7 +44,7 @@ const Page: NextPageWithLayout = () => {
         </div>
       </div>
 
-      <img src="https://tkolymp.cz/galerie/clanky/Týmové-foto-1.jpg" />
+      <img alt="" src="https://tkolymp.cz/galerie/clanky/Týmové-foto-1.jpg" />
 
       <div className="col-feature my-16 grid lg:grid-cols-2 gap-4">
         <div className="prose prose-accent">
@@ -146,7 +146,7 @@ const Page: NextPageWithLayout = () => {
       </div>
 
       <div className="col-feature my-8 grid lg:grid-cols-2 gap-4">
-        <img src="https://tkolymp.cz/galerie/clanky/Druzstva2019STTgroupmakrlik.jpg" />
+        <img alt="" src="https://tkolymp.cz/galerie/clanky/Druzstva2019STTgroupmakrlik.jpg" />
 
         <YoutubeEmbed
           title=""
@@ -166,7 +166,7 @@ const Page: NextPageWithLayout = () => {
       <ProspectForm title="Zapiš se na první hodinu ZDARMA!" />
 
       <div className="col-feature my-8">
-        <img src="https://tkolymp.cz/galerie/clanky/TKOLYMP-nabor-FB-post-1200x630.png" />
+        <img alt="" src="https://tkolymp.cz/galerie/clanky/TKOLYMP-nabor-FB-post-1200x630.png" />
       </div>
 
       <LocationCard

@@ -259,7 +259,7 @@ in {
             paths = [pkgs.sirimbo-php pkgs.sirimbo-frontend-old configPhp];
           };
 
-          serverAliases = ["www.${cfg.domain}"];
+          serverAliases = ["www.${cfg.php.domain}"];
           locations."/gallery".root = cfg.stateDir;
           locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
 
@@ -317,7 +317,7 @@ in {
     }))
 
     (lib.mkIf cfg.backend.enable {
-      systemd.services.sirimbo-backend = {
+      systemd.services.rozpisovnik-api = {
         after = [ "network.target" ];
         wantedBy = [ "multi-user.target" ];
 
@@ -346,7 +346,7 @@ in {
         serviceConfig = {
           User = cfg.user;
           Group = cfg.group;
-          ExecStart = "${pkgs.nodejs}/bin/node ${pkgs.sirimbo-backend}/bin/sirimbo-backend";
+          ExecStart = "${pkgs.nodejs}/bin/node ${pkgs.rozpisovnik-api}/bin/rozpisovnik-api";
           WorkingDirectory = cfg.stateDir;
           Restart = "always";
           RestartSec = "10s";
@@ -409,7 +409,7 @@ in {
           Group = cfg.group;
           Type = "oneshot";
           RemainAfterExit = "true";
-          WorkingDirectory = pkgs.sirimbo-migrations;
+          WorkingDirectory = pkgs.rozpisovnik-api-migrations;
           ExecStart = "${pkgs.graphile-migrate}/bin/graphile-migrate migrate";
         };
       };

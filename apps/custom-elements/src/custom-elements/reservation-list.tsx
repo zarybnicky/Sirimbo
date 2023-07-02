@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { useState } from 'react';
-import Form from 'react-bootstrap/Form';
 import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache } from '@apollo/client';
 import { Pagination } from './pagination';
 import { DateRange } from './date';
@@ -101,7 +100,7 @@ export function ReservationAdminList() {
         </td>
         <td><DateRange from={a.nOd} to={a.nDo} /></td>
         <td>
-          <Form.Check checked={a.nVisible || false} onChange={() => toggleVisible({
+          <input type="checkbox" checked={a.nVisible} onChange={() => toggleVisible({
             variables: { id: a.nId, visible: !a.nVisible },
           })} />
         </td>
