@@ -6050,7 +6050,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:~4.14.195":
+"@types/lodash.template@npm:^4.5.1":
+  version: 4.5.1
+  resolution: "@types/lodash.template@npm:4.5.1"
+  dependencies:
+    "@types/lodash": "npm:*"
+  checksum: db9f7ba0ee4186e6542097b1329594a9f013b2161724058011c70519e5f5ec09be6d9adc46d025305233ddccfcf7b6d6be3a2c5b2f6d1c9c29413e1e52da5540
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:*, @types/lodash@npm:~4.14.195":
   version: 4.14.195
   resolution: "@types/lodash@npm:4.14.195"
   checksum: a503fc2cef87abc17ec6f388009a787e609b799b8fcb69c47f9b91d5a47e564b5c00fd121f691acf2b2bb43b788e28ca22781de1ac561b2c35bea380c6446f79
@@ -12600,7 +12609,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"loader-utils@npm:^2.0.0, loader-utils@npm:^2.0.4":
+"loader-utils@npm:^2.0.4":
   version: 2.0.4
   resolution: "loader-utils@npm:2.0.4"
   dependencies:
@@ -12662,6 +12671,13 @@ __metadata:
   version: 4.17.21
   resolution: "lodash-es@npm:4.17.21"
   checksum: d1c3ee94118daeeee47c630ab5f91e94cc4e41ebe2452d837edbe599e853eb2d4be7edf82b4fe62f9fc74f27a8ed7f82fdbd9d301d0acef88f00941db64c4843
+  languageName: node
+  linkType: hard
+
+"lodash._reinterpolate@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "lodash._reinterpolate@npm:3.0.0"
+  checksum: 9facfc8cc4a2c6c5cb30904a5d1423a01a734dffb0326d40061f78599891c1f3c47e8dc9e6058ea6b13fd46f7a1e56ca78e1a1463fadbc8e40724ef9fc0a97d4
   languageName: node
   linkType: hard
 
@@ -12802,6 +12818,25 @@ __metadata:
   version: 4.4.0
   resolution: "lodash.startcase@npm:4.4.0"
   checksum: 69016d357418df331d77517ce537d02eb74e149770dcc2036c146e4e21dc203cc4c43ddefa7f43961edbc9c8676a30c8d3de21275d6c0ecc79afd699adb96bee
+  languageName: node
+  linkType: hard
+
+"lodash.template@npm:^4.5.0":
+  version: 4.5.0
+  resolution: "lodash.template@npm:4.5.0"
+  dependencies:
+    lodash._reinterpolate: "npm:^3.0.0"
+    lodash.templatesettings: "npm:^4.0.0"
+  checksum: 1ae7707368e362daebd16cd1f330b62e9d060c278316851740d8517173faf2f3f8769e6da2d88ccec63ee9068e6d949595bdc9907ed9015f9b58a32fd94fdbd7
+  languageName: node
+  linkType: hard
+
+"lodash.templatesettings@npm:^4.0.0":
+  version: 4.2.0
+  resolution: "lodash.templatesettings@npm:4.2.0"
+  dependencies:
+    lodash._reinterpolate: "npm:^3.0.0"
+  checksum: 2dfd0463e1a8e8709345eeab76007deab3688b549dbc2fde1dd5de0d53fbf1d2bcd4c5f003756f5baaf6540386511c7c7babbe80894f43f5b95de653e50510cb
   languageName: node
   linkType: hard
 
@@ -16285,18 +16320,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"raw-loader@npm:~4.0.2":
-  version: 4.0.2
-  resolution: "raw-loader@npm:4.0.2"
-  dependencies:
-    loader-utils: "npm:^2.0.0"
-    schema-utils: "npm:^3.0.0"
-  peerDependencies:
-    webpack: ^4.0.0 || ^5.0.0
-  checksum: be4770690533b457c059cd8af144c106f73064f59e0165237aef5102f52ccde5818a8c988e53f16b9ec371833847d04cbcfc626652e95b4f6c3ba16df01cc0ce
-  languageName: node
-  linkType: hard
-
 "rc@npm:^1.2.7":
   version: 1.2.8
   resolution: "rc@npm:1.2.8"
@@ -16907,7 +16930,7 @@ __metadata:
     "@types/cookie-parser": "npm:~1.4.3"
     "@types/express": "npm:~4.17.17"
     "@types/html-to-text": "npm:~9.0.1"
-    "@types/lodash": "npm:~4.14.195"
+    "@types/lodash.template": "npm:^4.5.1"
     "@types/mjml": "npm:~4.7.1"
     "@types/morgan": "npm:~1.9.4"
     "@types/node": "npm:^20.3.3"
@@ -16928,7 +16951,7 @@ __metadata:
     graphql: "npm:15.8.0"
     helmet: "npm:~7.0.0"
     html-to-text: "npm:~9.0.5"
-    lodash: "npm:~4.17.21"
+    lodash.template: "npm:^4.5.0"
     mjml: "npm:^4.14.1"
     morgan: "npm:~1.10.0"
     nodemailer: "npm:~6.9.3"
@@ -16936,15 +16959,12 @@ __metadata:
     pg: "npm:8.10.0"
     postgraphile: "npm:~4.13.0"
     prettier: "npm:~2.8.8"
-    raw-loader: "npm:~4.0.2"
-    ts-loader: "npm:~9.4.4"
     ts-node: "npm:~10.9.1"
     typescript: "npm:~5.1.6"
     utf-8-validate: "npm:~6.0.3"
-    webpack: "npm:~5.88.1"
-    webpack-cli: "npm:~5.1.4"
   bin:
     rozpisovnik-api: ./dist/index.cjs
+    rozpisovnik-api-worker-schema: ./dist/worker-schema.cjs
   languageName: unknown
   linkType: soft
 
@@ -16960,6 +16980,7 @@ __metadata:
     prettier: "npm:^2.8.8"
     standard-version: "npm:^9.5.0"
     syncpack: "npm:^10.6.1"
+    ts-node: "npm:^10.9.1"
     typescript: "npm:~5.1.6"
   dependenciesMeta:
     mjml@4.14.1:
@@ -17088,7 +17109,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"schema-utils@npm:^3.0.0, schema-utils@npm:^3.1.1, schema-utils@npm:^3.2.0":
+"schema-utils@npm:^3.1.1, schema-utils@npm:^3.2.0":
   version: 3.3.0
   resolution: "schema-utils@npm:3.3.0"
   dependencies:
@@ -18404,7 +18425,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-loader@npm:^9.4.4, ts-loader@npm:~9.4.4":
+"ts-loader@npm:^9.4.4":
   version: 9.4.4
   resolution: "ts-loader@npm:9.4.4"
   dependencies:
@@ -18426,7 +18447,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:^10.8.1, ts-node@npm:~10.9.1":
+"ts-node@npm:^10.8.1, ts-node@npm:^10.9.1, ts-node@npm:~10.9.1":
   version: 10.9.1
   resolution: "ts-node@npm:10.9.1"
   dependencies:
@@ -19039,7 +19060,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack-cli@npm:^5.1.4, webpack-cli@npm:~5.1.4":
+"webpack-cli@npm:^5.1.4":
   version: 5.1.4
   resolution: "webpack-cli@npm:5.1.4"
   dependencies:

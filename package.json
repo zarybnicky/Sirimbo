@@ -17,6 +17,7 @@
     "prettier": "^2.8.8",
     "standard-version": "^9.5.0",
     "syncpack": "^10.6.1",
+    "ts-node": "^10.9.1",
     "typescript": "~5.1.6"
   },
   "commitlint": {
@@ -41,7 +42,8 @@
     "backend": "yarn workspace rozpisovnik-api start",
     "schema": "yarn workspace @app/graphql dev",
     "migrate": "graphile-migrate watch",
-    "start": "concurrently --kill-others-on-fail 'yarn migrate' 'yarn backend' 'yarn schema' 'yarn olymp'"
+    "start": "concurrently --kill-others-on-fail 'yarn migrate' 'yarn backend' 'yarn schema' 'yarn olymp'",
+    "cloc": "cloc --exclude-dir .next,.yarn,vendor,uploads,schema-split,node_modules,dist,build,schema.sql,schema.graphql,.pnp.cjs,.pnp.loader.mjs,yarn.lock,yarn-manifest.nix,olymp.psql,composer-project.nix,introspection.json,migrations ."
   },
   "resolutions": {
     "@types/react": "18.2.14",

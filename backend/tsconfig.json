@@ -3,7 +3,7 @@
     "lib": ["es2021"],
     "target": "es2021",
     "module": "Node16",
-    "moduleResolution": "node16",
+    "moduleResolution": "node",
     "sourceMap": true,
     "inlineSources": true,
     "outDir": "./dist",
@@ -30,6 +30,6 @@
   ],
   "ts-node": {
     "esm": true,
-    "experimentalSpecifierResolution": "node",
+    "experimentalSpecifierResolution": "node"
   }
 }

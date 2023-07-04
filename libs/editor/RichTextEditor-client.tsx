@@ -2,7 +2,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { AlertCircle } from 'lucide-react';
 import React from 'react';
-import { Path, Control, FieldValues, useController } from 'react-hook-form';
+import { Path, Control, FieldError, FieldValues, useController } from 'react-hook-form';
 import classNames from 'classnames';
 import { twMerge } from 'tailwind-merge';
 

@@ -11254,6 +11254,21 @@ let
         "@types/geojson" = packages."@types/geojson@npm:7946.0.10";
       };
     };
+    "@types/lodash.template@npm:4.5.1" = {
+      name = "@types/lodash.template";
+      reference = "npm:4.5.1";
+      linkType = "HARD";
+      outputName = "types-lodash.template-4.5.1-30cf9db1f4";
+      outputHash = "db9f7ba0ee4186e6542097b1329594a9f013b2161724058011c70519e5f5ec09be6d9adc46d025305233ddccfcf7b6d6be3a2c5b2f6d1c9c29413e1e52da5540";
+      flatName = "lodash.template";
+      languageName = "node";
+      scope = "types";
+      descriptorRange = "npm:^4.5.1";
+      checksum = "9/db9f7ba0ee4186e6542097b1329594a9f013b2161724058011c70519e5f5ec09be6d9adc46d025305233ddccfcf7b6d6be3a2c5b2f6d1c9c29413e1e52da5540";
+      dependencies = {
+        "@types/lodash" = packages."@types/lodash@npm:4.14.195";
+      };
+    };
     "@types/lodash@npm:4.14.195" = {
       name = "@types/lodash";
       reference = "npm:4.14.195";
@@ -12328,15 +12343,6 @@ let
         "webpack"
       ];
     };
-    "@webpack-cli/configtest@virtual:85ed05b9e6b2a1b0c2f4942ea144495073c4e4429a942c49ebf444e8f838b1d5caba6eadb16fb17b829a8069d16556dfbfe3bfbae7ee5fbfab664b2975993d86#npm:2.1.1" = {
-      name = "@webpack-cli/configtest";
-      reference = "virtual:85ed05b9e6b2a1b0c2f4942ea144495073c4e4429a942c49ebf444e8f838b1d5caba6eadb16fb17b829a8069d16556dfbfe3bfbae7ee5fbfab664b2975993d86#npm:2.1.1";
-      canonicalPackage = packages."@webpack-cli/configtest@npm:2.1.1";
-      dependencies = {
-        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.88.1";
-        "webpack-cli" = packages."webpack-cli@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.1.4";
-      };
-    };
     "@webpack-cli/configtest@virtual:a852d779fa398570be54ea7eb002a0789b35b04a91a5fd2f7769382dea95c605c7a857e8979947d014d6d8439972c98c54c99fea183ce97121ac5df46d2e64f3#npm:2.1.1" = {
       name = "@webpack-cli/configtest";
       reference = "virtual:a852d779fa398570be54ea7eb002a0789b35b04a91a5fd2f7769382dea95c605c7a857e8979947d014d6d8439972c98c54c99fea183ce97121ac5df46d2e64f3#npm:2.1.1";
@@ -12363,15 +12369,6 @@ let
         "webpack-cli"
         "webpack"
       ];
-    };
-    "@webpack-cli/info@virtual:85ed05b9e6b2a1b0c2f4942ea144495073c4e4429a942c49ebf444e8f838b1d5caba6eadb16fb17b829a8069d16556dfbfe3bfbae7ee5fbfab664b2975993d86#npm:2.0.2" = {
-      name = "@webpack-cli/info";
-      reference = "virtual:85ed05b9e6b2a1b0c2f4942ea144495073c4e4429a942c49ebf444e8f838b1d5caba6eadb16fb17b829a8069d16556dfbfe3bfbae7ee5fbfab664b2975993d86#npm:2.0.2";
-      canonicalPackage = packages."@webpack-cli/info@npm:2.0.2";
-      dependencies = {
-        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.88.1";
-        "webpack-cli" = packages."webpack-cli@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.1.4";
-      };
     };
     "@webpack-cli/info@virtual:a852d779fa398570be54ea7eb002a0789b35b04a91a5fd2f7769382dea95c605c7a857e8979947d014d6d8439972c98c54c99fea183ce97121ac5df46d2e64f3#npm:2.0.2" = {
       name = "@webpack-cli/info";
@@ -12401,15 +12398,6 @@ let
         "webpack-dev-server"
         "webpack"
       ];
-    };
-    "@webpack-cli/serve@virtual:85ed05b9e6b2a1b0c2f4942ea144495073c4e4429a942c49ebf444e8f838b1d5caba6eadb16fb17b829a8069d16556dfbfe3bfbae7ee5fbfab664b2975993d86#npm:2.0.5" = {
-      name = "@webpack-cli/serve";
-      reference = "virtual:85ed05b9e6b2a1b0c2f4942ea144495073c4e4429a942c49ebf444e8f838b1d5caba6eadb16fb17b829a8069d16556dfbfe3bfbae7ee5fbfab664b2975993d86#npm:2.0.5";
-      canonicalPackage = packages."@webpack-cli/serve@npm:2.0.5";
-      dependencies = {
-        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.88.1";
-        "webpack-cli" = packages."webpack-cli@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.1.4";
-      };
     };
     "@webpack-cli/serve@virtual:a852d779fa398570be54ea7eb002a0789b35b04a91a5fd2f7769382dea95c605c7a857e8979947d014d6d8439972c98c54c99fea183ce97121ac5df46d2e64f3#npm:2.0.5" = {
       name = "@webpack-cli/serve";
@@ -12626,7 +12614,7 @@ let
       flatName = "acorn-walk";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^8.0.0";
+      descriptorRange = "npm:^8.1.1";
       checksum = "9/389d3f19998ac0924a590485a6502b72059e3ab67cc820477c2c40cca06b6c50bb8d424bfbb8fe97955eb489b88cb5dc7ee6979fcf9321dce7eb451ba3456d3d";
     };
     "acorn@npm:8.9.0" = {
@@ -12638,7 +12626,7 @@ let
       flatName = "acorn";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^8.0.4";
+      descriptorRange = "npm:^8.4.1";
       checksum = "9/82583d7017e93fbbf49b7fd808c7a41ea8756838f8477a7647c3fbb26482e7be98828e44e1a248bab45621057b35cc77d454b26f109b1461e755516d4278d35f";
       bin = {
         "acorn" = "bin/acorn";
@@ -22409,6 +22397,18 @@ let
       descriptorRange = "npm:^4.17.15";
       checksum = "9/d1c3ee94118daeeee47c630ab5f91e94cc4e41ebe2452d837edbe599e853eb2d4be7edf82b4fe62f9fc74f27a8ed7f82fdbd9d301d0acef88f00941db64c4843";
     };
+    "lodash._reinterpolate@npm:3.0.0" = {
+      name = "lodash._reinterpolate";
+      reference = "npm:3.0.0";
+      linkType = "HARD";
+      outputName = "lodash._reinterpolate-3.0.0-3c62ca439e";
+      outputHash = "9facfc8cc4a2c6c5cb30904a5d1423a01a734dffb0326d40061f78599891c1f3c47e8dc9e6058ea6b13fd46f7a1e56ca78e1a1463fadbc8e40724ef9fc0a97d4";
+      flatName = "lodash._reinterpolate";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^3.0.0";
+      checksum = "9/9facfc8cc4a2c6c5cb30904a5d1423a01a734dffb0326d40061f78599891c1f3c47e8dc9e6058ea6b13fd46f7a1e56ca78e1a1463fadbc8e40724ef9fc0a97d4";
+    };
     "lodash.camelcase@npm:4.3.0" = {
       name = "lodash.camelcase";
       reference = "npm:4.3.0";
@@ -22648,6 +22648,37 @@ let
       scope = null;
       descriptorRange = "npm:^4.4.0";
       checksum = "9/69016d357418df331d77517ce537d02eb74e149770dcc2036c146e4e21dc203cc4c43ddefa7f43961edbc9c8676a30c8d3de21275d6c0ecc79afd699adb96bee";
+    };
+    "lodash.template@npm:4.5.0" = {
+      name = "lodash.template";
+      reference = "npm:4.5.0";
+      linkType = "HARD";
+      outputName = "lodash.template-4.5.0-5272df3039";
+      outputHash = "1ae7707368e362daebd16cd1f330b62e9d060c278316851740d8517173faf2f3f8769e6da2d88ccec63ee9068e6d949595bdc9907ed9015f9b58a32fd94fdbd7";
+      flatName = "lodash.template";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^4.5.0";
+      checksum = "9/1ae7707368e362daebd16cd1f330b62e9d060c278316851740d8517173faf2f3f8769e6da2d88ccec63ee9068e6d949595bdc9907ed9015f9b58a32fd94fdbd7";
+      dependencies = {
+        "lodash._reinterpolate" = packages."lodash._reinterpolate@npm:3.0.0";
+        "lodash.templatesettings" = packages."lodash.templatesettings@npm:4.2.0";
+      };
+    };
+    "lodash.templatesettings@npm:4.2.0" = {
+      name = "lodash.templatesettings";
+      reference = "npm:4.2.0";
+      linkType = "HARD";
+      outputName = "lodash.templatesettings-4.2.0-15fbdebcf4";
+      outputHash = "2dfd0463e1a8e8709345eeab76007deab3688b549dbc2fde1dd5de0d53fbf1d2bcd4c5f003756f5baaf6540386511c7c7babbe80894f43f5b95de653e50510cb";
+      flatName = "lodash.templatesettings";
+      languageName = "node";
+      scope = null;
+      descriptorRange = "npm:^4.0.0";
+      checksum = "9/2dfd0463e1a8e8709345eeab76007deab3688b549dbc2fde1dd5de0d53fbf1d2bcd4c5f003756f5baaf6540386511c7c7babbe80894f43f5b95de653e50510cb";
+      dependencies = {
+        "lodash._reinterpolate" = packages."lodash._reinterpolate@npm:3.0.0";
+      };
     };
     "lodash.union@npm:4.6.0" = {
       name = "lodash.union";
@@ -23349,7 +23380,7 @@ let
       flatName = "minimatch";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^5.1.0";
+      descriptorRange = "npm:^5.0.1";
       checksum = "9/0c0446ede579b1736bfea4efb288c2dea17ce80fd0339d00547625ed97a60ed403c7c2fb141211119937a811bc635b3f0f44debeb9d7870b3f58cf0fe78ddccc";
       dependencies = {
         "brace-expansion" = packages."brace-expansion@npm:2.0.1";
@@ -29029,36 +29060,6 @@ let
         "unpipe" = packages."unpipe@npm:1.0.0";
       };
     };
-    "raw-loader@npm:4.0.2" = {
-      name = "raw-loader";
-      reference = "npm:4.0.2";
-      linkType = "HARD";
-      outputName = "raw-loader-4.0.2-94da6c700d";
-      outputHash = "be4770690533b457c059cd8af144c106f73064f59e0165237aef5102f52ccde5818a8c988e53f16b9ec371833847d04cbcfc626652e95b4f6c3ba16df01cc0ce";
-      flatName = "raw-loader";
-      languageName = "node";
-      scope = null;
-      descriptorRange = "npm:~4.0.2";
-      checksum = "9/be4770690533b457c059cd8af144c106f73064f59e0165237aef5102f52ccde5818a8c988e53f16b9ec371833847d04cbcfc626652e95b4f6c3ba16df01cc0ce";
-      dependencies = {
-        "loader-utils" = packages."loader-utils@npm:2.0.4";
-        "schema-utils" = packages."schema-utils@npm:3.3.0";
-      };
-      packagePeers = [
-        "@types/webpack"
-        "webpack"
-      ];
-    };
-    "raw-loader@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.0.2" = {
-      name = "raw-loader";
-      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.0.2";
-      canonicalPackage = packages."raw-loader@npm:4.0.2";
-      dependencies = {
-        "loader-utils" = packages."loader-utils@npm:2.0.4";
-        "schema-utils" = packages."schema-utils@npm:3.3.0";
-        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.88.1";
-      };
-    };
     "rc@npm:1.2.8" = {
       name = "rc";
       reference = "npm:1.2.8";
@@ -30186,6 +30187,7 @@ let
       descriptorRange = "workspace:backend";
       bin = {
         "rozpisovnik-api" = "./dist/index.cjs";
+        "rozpisovnik-api-worker-schema" = "./dist/worker-schema.cjs";
       };
       dependencies = {
         "@aws-sdk/client-s3" = packages."@aws-sdk/client-s3@npm:3.363.0";
@@ -30204,7 +30206,7 @@ let
         "graphql" = packages."graphql@npm:15.8.0";
         "helmet" = packages."helmet@npm:7.0.0";
         "html-to-text" = packages."html-to-text@npm:9.0.5";
-        "lodash" = packages."lodash@npm:4.17.21";
+        "lodash.template" = packages."lodash.template@npm:4.5.0";
         "mjml" = packages."mjml@npm:4.14.1";
         "morgan" = packages."morgan@npm:1.10.0";
         "nodemailer" = packages."nodemailer@npm:6.9.3";
@@ -30221,7 +30223,7 @@ let
         "@types/cookie-parser" = packages."@types/cookie-parser@npm:1.4.3";
         "@types/express" = packages."@types/express@npm:4.17.17";
         "@types/html-to-text" = packages."@types/html-to-text@npm:9.0.1";
-        "@types/lodash" = packages."@types/lodash@npm:4.14.195";
+        "@types/lodash.template" = packages."@types/lodash.template@npm:4.5.1";
         "@types/mjml" = packages."@types/mjml@npm:4.7.1";
         "@types/morgan" = packages."@types/morgan@npm:1.9.4";
         "@types/node" = packages."@types/node@npm:20.3.3";
@@ -30231,12 +30233,8 @@ let
         "nodemon" = packages."nodemon@npm:2.0.22";
         "postgraphile" = packages."postgraphile@npm:4.13.0";
         "prettier" = packages."prettier@npm:2.8.8";
-        "raw-loader" = packages."raw-loader@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.0.2";
-        "ts-loader" = packages."ts-loader@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:9.4.4";
         "ts-node" = packages."ts-node@virtual:ef6136dc31186c42f92851afb237eadaa9d36085920cabb6ed6ea317680c8271d6b94afcb795fd7e58c08243e470be87ece6bb707daf3ecb0604f7fd8c1aa682#npm:10.9.1";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
-        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.88.1";
-        "webpack-cli" = packages."webpack-cli@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.1.4";
       };
     };
     "rozpisovnik@workspace:." = {
@@ -30259,6 +30257,7 @@ let
         "prettier" = packages."prettier@npm:2.8.8";
         "standard-version" = packages."standard-version@npm:9.5.0";
         "syncpack" = packages."syncpack@npm:10.6.1";
+        "ts-node" = packages."ts-node@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:10.9.1";
         "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
       };
     };
@@ -30468,7 +30467,7 @@ let
       flatName = "schema-utils";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^3.0.0";
+      descriptorRange = "npm:^3.2.0";
       checksum = "9/0b289b19ec89b665f3050bf7b6d4099dd035ecfc196b4856be1fcc8e07c3133dea07686e687f1a25bc73dbf1283547b4adc8222c8558d2370a7ceeb062efbc2e";
       dependencies = {
         "@types/json-schema" = packages."@types/json-schema@npm:7.0.12";
@@ -32291,19 +32290,6 @@ let
         "webpack" = packages."webpack@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:5.88.1";
       };
     };
-    "terser-webpack-plugin@virtual:ba0a60de3c07ac0c267d1ee63ebd9054c9aa13aad144df1e905dc307eed8f03744ee682299d09a3405344c15fa9ee49517f37e3c2dc607f7c5c5a5fec9148099#npm:5.3.9" = {
-      name = "terser-webpack-plugin";
-      reference = "virtual:ba0a60de3c07ac0c267d1ee63ebd9054c9aa13aad144df1e905dc307eed8f03744ee682299d09a3405344c15fa9ee49517f37e3c2dc607f7c5c5a5fec9148099#npm:5.3.9";
-      canonicalPackage = packages."terser-webpack-plugin@npm:5.3.9";
-      dependencies = {
-        "@jridgewell/trace-mapping" = packages."@jridgewell/trace-mapping@npm:0.3.18";
-        "jest-worker" = packages."jest-worker@npm:27.5.1";
-        "schema-utils" = packages."schema-utils@npm:3.3.0";
-        "serialize-javascript" = packages."serialize-javascript@npm:6.0.1";
-        "terser" = packages."terser@npm:5.18.1";
-        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.88.1";
-      };
-    };
     "terser-webpack-plugin@virtual:d4478bccf5c8c078d84fedea1aa2c6fced3c4914234859d51c33beaf579ea459a0c2aedd53463eb959f23561a958dbd0e52595d1a9189f679f4a786609721079#npm:5.3.9" = {
       name = "terser-webpack-plugin";
       reference = "virtual:d4478bccf5c8c078d84fedea1aa2c6fced3c4914234859d51c33beaf579ea459a0c2aedd53463eb959f23561a958dbd0e52595d1a9189f679f4a786609721079#npm:5.3.9";
@@ -32672,19 +32658,6 @@ let
         "webpack"
       ];
     };
-    "ts-loader@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:9.4.4" = {
-      name = "ts-loader";
-      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:9.4.4";
-      canonicalPackage = packages."ts-loader@npm:9.4.4";
-      dependencies = {
-        "chalk" = packages."chalk@npm:4.1.2";
-        "enhanced-resolve" = packages."enhanced-resolve@npm:5.15.0";
-        "micromatch" = packages."micromatch@npm:4.0.5";
-        "semver" = packages."semver@npm:7.5.3";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
-        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.88.1";
-      };
-    };
     "ts-loader@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:9.4.4" = {
       name = "ts-loader";
       reference = "virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:9.4.4";
@@ -32719,7 +32692,7 @@ let
       flatName = "ts-node";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^10.8.1";
+      descriptorRange = "npm:^10.9.1";
       checksum = "9/c4caff4b9bb7a3a44adbb64a38786ce4203c2ebceb8b5373b504d0826cf047f9f23105767a3e130e2f4078629f592a8332cfd8ee1061b57b7d159de49c7d8f6f";
       bin = {
         "ts-node" = "dist/bin.js";
@@ -32753,6 +32726,27 @@ let
         "@types/typescript"
         "typescript"
       ];
+    };
+    "ts-node@virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:10.9.1" = {
+      name = "ts-node";
+      reference = "virtual:c55c4c8b8ace50b496c66c7199d6893b7efa6b5b8555fa4c6739bca287a5057d6d3d21f7010b4d7e30ee33cc7c8904fd70ac3d19a762c482a32e7bd99642e51d#npm:10.9.1";
+      canonicalPackage = packages."ts-node@npm:10.9.1";
+      dependencies = {
+        "@cspotcode/source-map-support" = packages."@cspotcode/source-map-support@npm:0.8.1";
+        "@tsconfig/node10" = packages."@tsconfig/node10@npm:1.0.9";
+        "@tsconfig/node12" = packages."@tsconfig/node12@npm:1.0.11";
+        "@tsconfig/node14" = packages."@tsconfig/node14@npm:1.0.3";
+        "@tsconfig/node16" = packages."@tsconfig/node16@npm:1.0.4";
+        "acorn" = packages."acorn@npm:8.9.0";
+        "acorn-walk" = packages."acorn-walk@npm:8.2.0";
+        "arg" = packages."arg@npm:4.1.3";
+        "create-require" = packages."create-require@npm:1.1.1";
+        "diff" = packages."diff@npm:4.0.2";
+        "make-error" = packages."make-error@npm:1.3.6";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
+        "v8-compile-cache-lib" = packages."v8-compile-cache-lib@npm:3.0.1";
+        "yn" = packages."yn@npm:3.1.1";
+      };
     };
     "ts-node@virtual:ef6136dc31186c42f92851afb237eadaa9d36085920cabb6ed6ea317680c8271d6b94afcb795fd7e58c08243e470be87ece6bb707daf3ecb0604f7fd8c1aa682#npm:10.9.1" = {
       name = "ts-node";
@@ -32851,7 +32845,7 @@ let
       flatName = "tslib";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^2.1.0";
+      descriptorRange = "npm:^2.4.0";
       checksum = "9/702dfe42c86eb380ff985fd76ddf7f10375a2f9d0c2a3aae2a5553a74e0720f49899c9ba145152ccc02efbb6c5272a62b2913ee29a994d59749117c2193b9cfb";
     };
     "tsutils@npm:3.21.0" = {
@@ -33822,27 +33816,6 @@ let
         "webpack"
       ];
     };
-    "webpack-cli@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.1.4" = {
-      name = "webpack-cli";
-      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.1.4";
-      canonicalPackage = packages."webpack-cli@npm:5.1.4";
-      dependencies = {
-        "@discoveryjs/json-ext" = packages."@discoveryjs/json-ext@npm:0.5.7";
-        "colorette" = packages."colorette@npm:2.0.20";
-        "commander" = packages."commander@npm:10.0.1";
-        "cross-spawn" = packages."cross-spawn@npm:7.0.3";
-        "envinfo" = packages."envinfo@npm:7.8.1";
-        "fastest-levenshtein" = packages."fastest-levenshtein@npm:1.0.16";
-        "import-local" = packages."import-local@npm:3.1.0";
-        "interpret" = packages."interpret@npm:3.1.1";
-        "rechoir" = packages."rechoir@npm:0.8.0";
-        "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.88.1";
-        "webpack-merge" = packages."webpack-merge@npm:5.9.0";
-        "@webpack-cli/configtest" = packages."@webpack-cli/configtest@virtual:85ed05b9e6b2a1b0c2f4942ea144495073c4e4429a942c49ebf444e8f838b1d5caba6eadb16fb17b829a8069d16556dfbfe3bfbae7ee5fbfab664b2975993d86#npm:2.1.1";
-        "@webpack-cli/info" = packages."@webpack-cli/info@virtual:85ed05b9e6b2a1b0c2f4942ea144495073c4e4429a942c49ebf444e8f838b1d5caba6eadb16fb17b829a8069d16556dfbfe3bfbae7ee5fbfab664b2975993d86#npm:2.0.2";
-        "@webpack-cli/serve" = packages."@webpack-cli/serve@virtual:85ed05b9e6b2a1b0c2f4942ea144495073c4e4429a942c49ebf444e8f838b1d5caba6eadb16fb17b829a8069d16556dfbfe3bfbae7ee5fbfab664b2975993d86#npm:2.0.5";
-      };
-    };
     "webpack-cli@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:5.1.4" = {
       name = "webpack-cli";
       reference = "virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:5.1.4";
@@ -33953,38 +33926,6 @@ let
         "@types/webpack-cli"
         "webpack-cli"
       ];
-    };
-    "webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.88.1" = {
-      name = "webpack";
-      reference = "virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.88.1";
-      canonicalPackage = packages."webpack@npm:5.88.1";
-      dependencies = {
-        "@types/eslint-scope" = packages."@types/eslint-scope@npm:3.7.4";
-        "@types/estree" = packages."@types/estree@npm:1.0.1";
-        "@webassemblyjs/ast" = packages."@webassemblyjs/ast@npm:1.11.6";
-        "@webassemblyjs/wasm-edit" = packages."@webassemblyjs/wasm-edit@npm:1.11.6";
-        "@webassemblyjs/wasm-parser" = packages."@webassemblyjs/wasm-parser@npm:1.11.6";
-        "acorn" = packages."acorn@npm:8.9.0";
-        "browserslist" = packages."browserslist@npm:4.21.9";
-        "chrome-trace-event" = packages."chrome-trace-event@npm:1.0.3";
-        "enhanced-resolve" = packages."enhanced-resolve@npm:5.15.0";
-        "es-module-lexer" = packages."es-module-lexer@npm:1.3.0";
-        "eslint-scope" = packages."eslint-scope@npm:5.1.1";
-        "events" = packages."events@npm:3.3.0";
-        "glob-to-regexp" = packages."glob-to-regexp@npm:0.4.1";
-        "graceful-fs" = packages."graceful-fs@npm:4.2.11";
-        "json-parse-even-better-errors" = packages."json-parse-even-better-errors@npm:2.3.1";
-        "loader-runner" = packages."loader-runner@npm:4.3.0";
-        "mime-types" = packages."mime-types@npm:2.1.35";
-        "neo-async" = packages."neo-async@npm:2.6.2";
-        "schema-utils" = packages."schema-utils@npm:3.3.0";
-        "tapable" = packages."tapable@npm:2.2.1";
-        "watchpack" = packages."watchpack@npm:2.4.0";
-        "webpack-cli" = packages."webpack-cli@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.1.4";
-        "webpack-sources" = packages."webpack-sources@npm:3.2.3";
-        "acorn-import-assertions" = packages."acorn-import-assertions@virtual:d4478bccf5c8c078d84fedea1aa2c6fced3c4914234859d51c33beaf579ea459a0c2aedd53463eb959f23561a958dbd0e52595d1a9189f679f4a786609721079#npm:1.9.0";
-        "terser-webpack-plugin" = packages."terser-webpack-plugin@virtual:ba0a60de3c07ac0c267d1ee63ebd9054c9aa13aad144df1e905dc307eed8f03744ee682299d09a3405344c15fa9ee49517f37e3c2dc607f7c5c5a5fec9148099#npm:5.3.9";
-      };
     };
     "webpack@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:5.88.1" = {
       name = "webpack";

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { makeWorkerUtils } from 'graphile-worker';
 
 async function main() {

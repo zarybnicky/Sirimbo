@@ -30,7 +30,7 @@
           };
           "rozpisovnik-api@workspace:backend" = {
             shouldBeUnplugged = true;
-            build = "node build.cjs && sed -i s@../../res/@@ dist/index.cjs";
+            build = "node build.cjs";
           };
           "sirimbo-frontend@workspace:apps/custom-elements" = {
             shouldBeUnplugged = true;

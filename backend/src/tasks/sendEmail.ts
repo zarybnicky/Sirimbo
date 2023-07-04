@@ -1,5 +1,5 @@
 import { Task } from 'graphile-worker';
-import { template as lodashTemplate } from "lodash";
+import lodashTemplate from "lodash.template";
 import mjml2html from "mjml";
 import { htmlToText } from "html-to-text";
 import * as nodemailer from "nodemailer";

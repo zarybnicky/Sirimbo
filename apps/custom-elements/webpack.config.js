@@ -22,6 +22,12 @@ module.exports = {
   plugins: [
     new MiniCssExtractPlugin(),
     new CopyPlugin({ patterns: [{ from: "static" }] }),
+    new webpack.DefinePlugin({
+      'process.env.PORT': 'undefined',
+      'process.env.GRAPHQL_BACKEND': 'undefined',
+      'process.env.NEXT_PUBLIC_GRAPHQL_BACKEND': 'undefined',
+      'process.env.NEXT_PUBLIC_TENANT_ID': '1',
+    }),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
