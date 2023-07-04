@@ -15,7 +15,7 @@
       overlays = [ self.overlays.default ];
     };
   in {
-    nixosModules.default = ./nix/module.nix;
+    nixosModules.default = ./module.nix;
 
     overlays.default = final: prev: let
       yarnPackages = yarnpnp2nix.lib.x86_64-linux.mkYarnPackagesFromManifest {
@@ -25,9 +25,12 @@
           "mjml-core@patch:mjml-core@npm%3A4.14.1#./.yarn/patches/mjml-core-npm-4.14.1-e6ad05b5d7.patch::version=4.14.1&hash=89aa1f&locator=rozpisovnik%40workspace%3A." = {
             outputHash = "sha512-0Ovf7e1Ksrlwig48a0mmiv3XGkxGDrtYYX9I3bxiH6rW0fNKSj8dr4jf+p+D7OD/QQNCfz4jnJ6UUKjMhUjqCA==";
           };
+          "typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071" = {
+            outputHash = "sha512-Pu+UjhDHG5YXLrzkccAx07evsSpI/urLrawYdsC06bDA/BZ3vvU9QWZJcKF0qe4C+dCb4mAoFXHJDo704iV0zw==";
+          };
           "rozpisovnik-api@workspace:backend" = {
             shouldBeUnplugged = true;
-            build = "node build.mjs";
+            build = "node build.cjs && sed -i s@../../res/@@ dist/index.cjs";
           };
           "sirimbo-frontend@workspace:apps/custom-elements" = {
             shouldBeUnplugged = true;
@@ -68,7 +71,7 @@
           packages = [
             pkgs.graphile-migrate
             pkgs.yarn
-            pkgs.nodejs_20
+            pkgs.nodejs
             pkgs.postgresql_13
             pkgs.sqlint
             pkgs.pgformatter
@@ -95,7 +98,7 @@
     nixosConfigurations.container = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
-        self.nixosModule
+        self.nixosModules.default
         { nixpkgs.overlays = [ self.overlays.default ]; }
         ({ pkgs, ... }: {
           boot.isContainer = true;

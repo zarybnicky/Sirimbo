@@ -1,5 +1,5 @@
 const path = require("path");
-const fs = require("fs");
+const process = require("process");
 const webpack  = require('webpack');
 const CopyPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -11,7 +11,7 @@ module.exports = {
     main: './main',
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(process.cwd(), 'dist'),
     publicPath: '/',
     assetModuleFilename: 'assets/[name][ext][query]',
   },
