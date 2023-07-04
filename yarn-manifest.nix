@@ -93,7 +93,7 @@ let
         "lodash" = packages."lodash@npm:4.17.21";
         "react" = packages."react@npm:18.2.0";
         "typescript-event-target" = packages."typescript-event-target@npm:1.0.4";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=d73830";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
         "@radix-ui/react-use-layout-effect" = packages."@radix-ui/react-use-layout-effect@virtual:4737f0df3c153ebfc48660b59465cf2584396b093e113477cdfc9e57a682343e8ad919ae3e6ccfb11d8d8ffb82fc3d7ebf432ffce5cec59ff10f7f78c77e37b6#npm:1.0.1";
         "lucide-react" = packages."lucide-react@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:0.258.0";
         "react-dom" = packages."react-dom@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:18.2.0";
@@ -132,7 +132,7 @@ let
         "classnames" = packages."classnames@npm:2.3.2";
         "react" = packages."react@npm:18.2.0";
         "tailwind-merge" = packages."tailwind-merge@npm:1.13.2";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=d73830";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
         "@ckeditor/ckeditor5-react" = packages."@ckeditor/ckeditor5-react@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:6.1.0";
         "html-react-parser" = packages."html-react-parser@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:4.0.0";
         "lucide-react" = packages."lucide-react@virtual:fb68fb7b6051d2200be871e7b6fd45297f41ac934b2ab84c08368ff6b1f20a57d6259effc6d696926bb80852426ecb56ea45ff9a454f4a2559f0fad9e98569bf#npm:0.258.0";
@@ -181,7 +181,7 @@ let
         "@types/node" = packages."@types/node@npm:20.3.3";
         "@urql/exchange-graphcache" = packages."@urql/exchange-graphcache@npm:6.1.4";
         "graphql-tag" = packages."graphql-tag@virtual:4de8affaeadbd53ac06c22885480659871fda1aed8faac7264ab124fd7ef9352967405f1242c686763cb1887356be5d1d0d9c6f38f2392b10c9ce25debec6b24#npm:2.12.6";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=d73830";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
       };
     };
     "@app/map@workspace:libs/map" = {
@@ -199,7 +199,7 @@ let
         "@types/leaflet" = packages."@types/leaflet@npm:1.9.3";
         "leaflet" = packages."leaflet@npm:1.9.4";
         "react" = packages."react@npm:18.2.0";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=d73830";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
         "next" = packages."next@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:13.4.7";
         "react-dom" = packages."react-dom@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:18.2.0";
         "react-leaflet" = packages."react-leaflet@virtual:53bbe401e674d69f7dd59154e8c587ba18bcd2868e8f738615bfebff27a32bf7b9385bc725156e430b6eb3ae7bdd322bb097d8b3364973d4ace11c42835ff271#npm:4.2.1";
@@ -277,7 +277,7 @@ let
         "eslint-config-next" = packages."eslint-config-next@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:13.4.7";
         "eslint-plugin-tailwindcss" = packages."eslint-plugin-tailwindcss@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:3.13.0";
         "tailwindcss" = packages."tailwindcss@npm:3.3.2";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=d73830";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
       };
     };
     "@app/upload@workspace:libs/upload" = {
@@ -308,7 +308,7 @@ let
         "eslint-config-next" = packages."eslint-config-next@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:13.4.7";
         "eslint-plugin-tailwindcss" = packages."eslint-plugin-tailwindcss@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:3.13.0";
         "tailwindcss" = packages."tailwindcss@npm:3.3.2";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=d73830";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
       };
     };
     "@ardatan/relay-compiler@npm:12.0.0" = {
@@ -3522,7 +3522,7 @@ let
         "lodash.merge" = packages."lodash.merge@npm:4.6.2";
         "lodash.uniq" = packages."lodash.uniq@npm:4.5.0";
         "resolve-from" = packages."resolve-from@npm:5.0.0";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=d73830";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
         "cosmiconfig-typescript-loader" = packages."cosmiconfig-typescript-loader@virtual:ef6136dc31186c42f92851afb237eadaa9d36085920cabb6ed6ea317680c8271d6b94afcb795fd7e58c08243e470be87ece6bb707daf3ecb0604f7fd8c1aa682#npm:4.3.0";
         "ts-node" = packages."ts-node@virtual:ef6136dc31186c42f92851afb237eadaa9d36085920cabb6ed6ea317680c8271d6b94afcb795fd7e58c08243e470be87ece6bb707daf3ecb0604f7fd8c1aa682#npm:10.9.1";
       };
@@ -11733,7 +11733,7 @@ let
         "ignore" = packages."ignore@npm:5.2.4";
         "natural-compare-lite" = packages."natural-compare-lite@npm:1.4.0";
         "semver" = packages."semver@npm:7.5.3";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=d73830";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
         "@typescript-eslint/type-utils" = packages."@typescript-eslint/type-utils@virtual:b12d2ecaa5e032eff760e5ee3265fb0097a36b3352013dc4efa161dd10247897d1b58fbcef6d81b28b6cdba8ceb78672036a26a0fbb1ae88eeac31f5b173b3f2#npm:5.60.1";
         "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:b12d2ecaa5e032eff760e5ee3265fb0097a36b3352013dc4efa161dd10247897d1b58fbcef6d81b28b6cdba8ceb78672036a26a0fbb1ae88eeac31f5b173b3f2#npm:5.60.1";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
@@ -11772,7 +11772,7 @@ let
         "@typescript-eslint/scope-manager" = packages."@typescript-eslint/scope-manager@npm:5.60.1";
         "@typescript-eslint/types" = packages."@typescript-eslint/types@npm:5.60.1";
         "eslint" = packages."eslint@npm:8.44.0";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=d73830";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
         "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:5b98674e19f7e353066a796b063730502207f22216f05c6be74bd7058bd8714232d9114545dd5d0de3ce15507908cc2bb9f776a4d63086f39a3538cf5195ee3f#npm:5.60.1";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
       };
@@ -11823,7 +11823,7 @@ let
       canonicalPackage = packages."@typescript-eslint/type-utils@npm:5.60.1";
       dependencies = {
         "eslint" = packages."eslint@npm:8.44.0";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=d73830";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
         "@typescript-eslint/typescript-estree" = packages."@typescript-eslint/typescript-estree@virtual:5b98674e19f7e353066a796b063730502207f22216f05c6be74bd7058bd8714232d9114545dd5d0de3ce15507908cc2bb9f776a4d63086f39a3538cf5195ee3f#npm:5.60.1";
         "@typescript-eslint/utils" = packages."@typescript-eslint/utils@virtual:b12d2ecaa5e032eff760e5ee3265fb0097a36b3352013dc4efa161dd10247897d1b58fbcef6d81b28b6cdba8ceb78672036a26a0fbb1ae88eeac31f5b173b3f2#npm:5.60.1";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
@@ -11877,7 +11877,7 @@ let
         "globby" = packages."globby@npm:11.1.0";
         "is-glob" = packages."is-glob@npm:4.0.3";
         "semver" = packages."semver@npm:7.5.3";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=d73830";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
         "debug" = packages."debug@virtual:ac3d8e680759ce54399273724d44e041d6c9b73454d191d411a8c44bb27e22f02aaf6ed9d3ad0ac1c298eac4833cff369c9c7b84c573016112c4f84be2cd8543#npm:4.3.4";
         "tsutils" = packages."tsutils@virtual:b12d2ecaa5e032eff760e5ee3265fb0097a36b3352013dc4efa161dd10247897d1b58fbcef6d81b28b6cdba8ceb78672036a26a0fbb1ae88eeac31f5b173b3f2#npm:3.21.0";
       };
@@ -15688,7 +15688,7 @@ let
         "@types/node" = packages."@types/node@npm:20.3.3";
         "cosmiconfig" = packages."cosmiconfig@npm:8.2.0";
         "ts-node" = packages."ts-node@virtual:ef6136dc31186c42f92851afb237eadaa9d36085920cabb6ed6ea317680c8271d6b94afcb795fd7e58c08243e470be87ece6bb707daf3ecb0604f7fd8c1aa682#npm:10.9.1";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=d73830";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
       };
     };
     "cosmiconfig@npm:7.1.0" = {
@@ -17651,7 +17651,7 @@ let
         "@rushstack/eslint-patch" = packages."@rushstack/eslint-patch@npm:1.3.2";
         "eslint" = packages."eslint@npm:8.44.0";
         "eslint-import-resolver-node" = packages."eslint-import-resolver-node@npm:0.3.7";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=d73830";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
         "@typescript-eslint/parser" = packages."@typescript-eslint/parser@virtual:faabcdfd78a0149d9963e8be6733aa4ed3f81af1f0aa63d8b442ca81eb523d6d464d423f436c22edda4a9a3b73e1ddde8fbf23d37d5d206612815ce9fcd6a075#npm:5.60.1";
         "eslint-import-resolver-typescript" = packages."eslint-import-resolver-typescript@virtual:3614f06c0df0a9668b63a0870d65a97907643d79508c38387adce2fceee59ca18663418745630b738a6a868c8e8f3204a427de03895443a5e99c4db60b53c75a#npm:3.5.5";
         "eslint-plugin-import" = packages."eslint-plugin-import@virtual:3614f06c0df0a9668b63a0870d65a97907643d79508c38387adce2fceee59ca18663418745630b738a6a868c8e8f3204a427de03895443a5e99c4db60b53c75a#npm:2.27.5";
@@ -25378,7 +25378,7 @@ let
         "postcss-import" = packages."postcss-import@virtual:9311a8c9fc2fa723a363b04526c261872a9280ff9a5542cdc84255404f48ad5c7925fba5ed45881f7890d0d836206f3c952ef9a86f561b44b7d6e17f15c70e68#npm:15.1.0";
         "prettier" = packages."prettier@npm:2.8.8";
         "sass" = packages."sass@npm:1.63.6";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=d73830";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
         "webpack" = packages."webpack@virtual:cae1482d82e0a499ead4bfe751ef37bb6fe52be9a09ebac8872caabcc4bea69fb929d72c78f9681778f281254434387e92d36d63df6dde124a00825bbed40137#npm:5.88.1";
       };
     };
@@ -30277,7 +30277,7 @@ let
         "raw-loader" = packages."raw-loader@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:4.0.2";
         "ts-loader" = packages."ts-loader@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:9.4.4";
         "ts-node" = packages."ts-node@virtual:ef6136dc31186c42f92851afb237eadaa9d36085920cabb6ed6ea317680c8271d6b94afcb795fd7e58c08243e470be87ece6bb707daf3ecb0604f7fd8c1aa682#npm:10.9.1";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=d73830";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
         "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.88.1";
         "webpack-cli" = packages."webpack-cli@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.1.4";
       };
@@ -30302,7 +30302,7 @@ let
         "prettier" = packages."prettier@npm:2.8.8";
         "standard-version" = packages."standard-version@npm:9.5.0";
         "syncpack" = packages."syncpack@npm:10.6.1";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=d73830";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
       };
     };
     "run-applescript@npm:5.0.0" = {
@@ -31014,7 +31014,7 @@ let
         "tailwindcss" = packages."tailwindcss@npm:3.3.2";
         "tailwindcss-opentype" = packages."tailwindcss-opentype@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:1.1.0";
         "ts-loader" = packages."ts-loader@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:9.4.4";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=d73830";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
         "webpack" = packages."webpack@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:5.88.1";
         "webpack-bundle-analyzer" = packages."webpack-bundle-analyzer@npm:4.9.0";
         "webpack-cli" = packages."webpack-cli@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:5.1.4";
@@ -32724,7 +32724,7 @@ let
         "enhanced-resolve" = packages."enhanced-resolve@npm:5.15.0";
         "micromatch" = packages."micromatch@npm:4.0.5";
         "semver" = packages."semver@npm:7.5.3";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=d73830";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
         "webpack" = packages."webpack@virtual:ab73081c332aaee03eac94f5193f970e74f06fe402f9e19299afca676fbcc8e63dc91ca1713a06514ab0d1db3972ca06aa1ab22795793d21f1b006edbdecff4f#npm:5.88.1";
       };
     };
@@ -32737,7 +32737,7 @@ let
         "enhanced-resolve" = packages."enhanced-resolve@npm:5.15.0";
         "micromatch" = packages."micromatch@npm:4.0.5";
         "semver" = packages."semver@npm:7.5.3";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=d73830";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
         "webpack" = packages."webpack@virtual:b05d0ecf330610f6600fa249143b3a4c6699afda447a9941ab5347a2c525554d65a233ff2f03ffffdd9b9fbc8ebff87843576591cf8d1d36d80d516d0522c854#npm:5.88.1";
       };
     };
@@ -32814,7 +32814,7 @@ let
         "create-require" = packages."create-require@npm:1.1.1";
         "diff" = packages."diff@npm:4.0.2";
         "make-error" = packages."make-error@npm:1.3.6";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=d73830";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
         "v8-compile-cache-lib" = packages."v8-compile-cache-lib@npm:3.0.1";
         "yn" = packages."yn@npm:3.1.1";
       };
@@ -32930,7 +32930,7 @@ let
       canonicalPackage = packages."tsutils@npm:3.21.0";
       dependencies = {
         "tslib" = packages."tslib@npm:1.14.1";
-        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=d73830";
+        "typescript" = packages."typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
       };
     };
     "tunnel-agent@npm:0.6.0" = {
@@ -33108,17 +33108,17 @@ let
         "tsserver" = "bin/tsserver";
       };
     };
-    "typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=d73830" = {
+    "typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071" = {
       name = "typescript";
-      reference = "patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=d73830";
+      reference = "patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071";
       linkType = "HARD";
-      outputName = "typescript-5.1.6-6ec2f7fe27";
-      outputHash = "3eef948e10c71b96172ebce471c031d3b7afb12a48feeacbadac1876c0b4e9b0c0fc1677bef53d41664970a174a9ee02f9d09be260281571c90e8ef4e22574cf";
+      outputName = "typescript-5.1.6-97a611e52a";
+      outputHash = "50b3db6818e04157e1ff3ff77b85423361edcbbedc7c217c7963f51ec951c9b7981275aa10987fcddd93c2c7678424597a20091a6fbc3c23426e2d57304f7677";
       flatName = "typescript";
       languageName = "node";
       scope = null;
       descriptorRange = "patch:typescript@npm%3A~5.1.6#optional!builtin<compat/typescript>";
-      checksum = "9/3eef948e10c71b96172ebce471c031d3b7afb12a48feeacbadac1876c0b4e9b0c0fc1677bef53d41664970a174a9ee02f9d09be260281571c90e8ef4e22574cf";
+      checksum = "9/50b3db6818e04157e1ff3ff77b85423361edcbbedc7c217c7963f51ec951c9b7981275aa10987fcddd93c2c7678424597a20091a6fbc3c23426e2d57304f7677";
       bin = {
         "tsc" = "bin/tsc";
         "tsserver" = "bin/tsserver";

@@ -8,3 +8,5 @@ await esbuild.build({
   external: ["pg-cloudflare", "pg-native", "uglify-js"],
   outdir: 'dist',
 })
+
+// copy SQL
