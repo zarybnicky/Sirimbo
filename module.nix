@@ -346,7 +346,7 @@ in {
         serviceConfig = {
           User = cfg.user;
           Group = cfg.group;
-          ExecStart = "${pkgs.nodejs}/bin/node ${pkgs.rozpisovnik-api}/bin/rozpisovnik-api";
+          ExecStart = "${pkgs.rozpisovnik-api}/bin/rozpisovnik-api";
           WorkingDirectory = cfg.stateDir;
           Restart = "always";
           RestartSec = "10s";

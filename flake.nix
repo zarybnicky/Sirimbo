@@ -1,32 +1,53 @@
 {
-  inputs.nixpkgs.url = github:NixOS/nixpkgs/release-22.11;
+  inputs.nixpkgs.url = github:NixOS/nixpkgs/release-23.05;
   inputs.devenv.url = github:cachix/devenv;
   inputs.migrate = { flake = false; url = github:graphile/migrate/main; };
+  inputs.utils.url = "github:numtide/flake-utils";
+  inputs.yarnpnp2nix.url = "github:madjam002/yarnpnp2nix";
+  inputs.yarnpnp2nix.inputs.nixpkgs.follows = "nixpkgs";
+  inputs.yarnpnp2nix.inputs.utils.follows = "utils";
 
-  outputs = { self, nixpkgs, devenv, migrate } @ inputs: let
+  outputs = { self, nixpkgs, devenv, migrate, utils, yarnpnp2nix } @ inputs: let
     inherit (nixpkgs.lib) flip mapAttrs mapAttrsToList;
 
     pkgs = import nixpkgs {
       system = "x86_64-linux";
-      overlays = [ self.overlay ];
+      overlays = [ self.overlays.default ];
     };
   in {
-    nixosModule = ./nix/module.nix;
+    nixosModules.default = ./nix/module.nix;
 
-    overlay = final: prev: {
-      ncc = final.callPackage ./nix/ncc.nix {};
-      graphile-migrate = final.callPackage ./nix/graphile-migrate.nix { src = migrate; };
+    overlays.default = final: prev: let
+      yarnPackages = yarnpnp2nix.lib.x86_64-linux.mkYarnPackagesFromManifest {
+        inherit pkgs;
+        yarnManifest = import ./yarn-manifest.nix;
+        packageOverrides = {
+          "mjml-core@patch:mjml-core@npm%3A4.14.1#./.yarn/patches/mjml-core-npm-4.14.1-e6ad05b5d7.patch::version=4.14.1&hash=89aa1f&locator=rozpisovnik%40workspace%3A." = {
+            outputHash = "sha512-0Ovf7e1Ksrlwig48a0mmiv3XGkxGDrtYYX9I3bxiH6rW0fNKSj8dr4jf+p+D7OD/QQNCfz4jnJ6UUKjMhUjqCA==";
+          };
+          "rozpisovnik-api@workspace:backend" = {
+            shouldBeUnplugged = true;
+            build = "node build.mjs";
+          };
+          "sirimbo-frontend@workspace:apps/custom-elements" = {
+            shouldBeUnplugged = true;
+            build = "webpack";
+          };
+        };
+      };
 
-      rozpisovnik-api = final.callPackage ./backend/package.nix {};
+    in {
+      graphile-migrate = yarnPackages."graphile-migrate@npm:1.4.1";
+      rozpisovnik-api = yarnPackages."rozpisovnik-api@workspace:backend";
       rozpisovnik-api-migrations = final.callPackage ./migrations/package.nix {};
 
       sirimbo-frontend = final.callPackage ./apps/olymp/package.nix {};
-      sirimbo-frontend-old = final.callPackage ./apps/custom-elements/package.nix {};
+      sirimbo-frontend-old = final.callPackage ./apps/custom-elements/package.nix { inherit yarnPackages; };
 
       sirimbo-php = (final.callPackage ./backend-php/composer-project.nix {
         php = final.php82;
       } (
-        pkgs.nix-gitignore.gitignoreSourcePure [./.gitignore] ./backend-php
+        final.nix-gitignore.gitignoreSourcePure [./.gitignore] ./backend-php
       )).overrideAttrs (oldAttrs: {
         name = "sirimbo-php";
         buildInputs = oldAttrs.buildInputs ++ [ final.imagemagick ];
@@ -40,16 +61,15 @@
       });
     };
 
-    devShell.x86_64-linux = devenv.lib.mkShell {
+    devShells.x86_64-linux.default = devenv.lib.mkShell {
       inherit inputs pkgs;
       modules = [
         ({ pkgs, ... }: {
           packages = [
             pkgs.graphile-migrate
             pkgs.yarn
-            pkgs.nodePackages.typescript
+            pkgs.nodejs_20
             pkgs.postgresql_13
-            pkgs.ncc
             pkgs.sqlint
             pkgs.pgformatter
           ];
@@ -64,7 +84,6 @@
 
     packages.x86_64-linux = {
       inherit (pkgs)
-        ncc
         graphile-migrate
         rozpisovnik-api
         rozpisovnik-api-migrations
@@ -77,7 +96,7 @@
       system = "x86_64-linux";
       modules = [
         self.nixosModule
-        { nixpkgs.overlays = [ self.overlay ]; }
+        { nixpkgs.overlays = [ self.overlays.default ]; }
         ({ pkgs, ... }: {
           boot.isContainer = true;
           system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;

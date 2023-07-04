@@ -12,7 +12,6 @@ yarn2nix-moretea.mkYarnPackage {
   packageJSON = ./package.json;
   yarnLock = ../../yarn.lock;
   name = "olymp";
-  distPhase = "true";
   buildPhase = ''
     shopt -s dotglob
     unlink deps/olymp/olymp

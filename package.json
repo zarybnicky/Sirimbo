@@ -6,20 +6,34 @@
       "apps/*",
       "libs/*",
       "backend"
-    ],
-    "nohoist": [
-      "rozpisovnik-api/**"
     ]
   },
   "devDependencies": {
     "@commitlint/cli": "^17.6.6",
     "@commitlint/config-conventional": "^17.6.6",
     "concurrently": "~8.2.0",
+    "graphile-migrate": "^1.4.1",
     "husky": "^8.0.3",
     "prettier": "^2.8.8",
     "standard-version": "^9.5.0",
     "syncpack": "^10.6.1",
     "typescript": "~5.1.6"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ],
+    "rules": {
+      "subject-case": [
+        2,
+        "never",
+        [
+          "upper-case",
+          "pascal-case",
+          "start-case"
+        ]
+      ]
+    }
   },
   "scripts": {
     "postinstall": "husky install",
@@ -32,11 +46,12 @@
   "resolutions": {
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
-    "@urql/core": "4.0.7"
+    "@urql/core": "4.0.7",
+    "mjml-core@npm:4.14.1": "patch:mjml-core@npm%3A4.14.1#./.yarn/patches/mjml-core-npm-4.14.1-e6ad05b5d7.patch"
   },
-  "packageManager": "yarn@4.0.0-rc.48",
+  "packageManager": "yarn@4.0.0-rc.31",
   "dependenciesMeta": {
-    "react-hook-form@7.45.1": {
+    "mjml@4.14.1": {
       "unplugged": true
     }
   }

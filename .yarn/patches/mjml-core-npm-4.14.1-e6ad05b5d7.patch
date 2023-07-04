@@ -1,0 +1,32 @@
+diff --git a/lib/index.js b/lib/index.js
+index 0031e1d7f3aae88f8e79f7a837402f9353612f57..fa6874f71a89ed4ec9769ce0206e776ee9df7658 100644
+--- a/lib/index.js
++++ b/lib/index.js
+@@ -103,8 +103,6 @@ var _juice = _interopRequireDefault(require("juice"));
+ 
+ var _jsBeautify = require("js-beautify");
+ 
+-var _htmlMinifier = require("html-minifier");
+-
+ var _cheerio = require("cheerio");
+ 
+ var _mjmlParserXml = _interopRequireDefault(require("mjml-parser-xml"));
+@@ -482,18 +480,6 @@ function mjml2html(mjml, options = {}) {
+     });
+   }
+ 
+-  if (minify) {
+-    // eslint-disable-next-line no-console
+-    console.warn('"minify" option is deprecated in mjml-core and only available in mjml cli.');
+-    content = (0, _htmlMinifier.minify)(content, {
+-      collapseWhitespace: true,
+-      minifyCSS: false,
+-      caseSensitive: true,
+-      removeEmptyAttributes: true,
+-      ...minifyOptions
+-    });
+-  }
+-
+   return {
+     html: content,
+     json: mjml,
