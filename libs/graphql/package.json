@@ -4,8 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "cd ../.. && graphql-codegen --config graphql.config.yml",
-    "dev": "cd ../.. && graphql-codegen --config graphql.config.yml --watch",
+    "build": "graphql-codegen --config graphql.config.yml",
+    "dev": "graphql-codegen --config graphql.config.yml --watch",
     "lint": "eslint ."
   },
   "dependencies": {

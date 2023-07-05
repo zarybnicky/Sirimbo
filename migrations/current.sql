@@ -63,6 +63,10 @@ BEGIN
 END;
 $$ language plpgsql security definer;
 
+
+drop EXTENSION if exists plpgsql_check;
+create extension plpgsql_check;
+
 select * from plpgsql_check_function('app_private.tg_users__sync_to_person', 'public.users');
 
 do $$
@@ -70,3 +74,5 @@ begin
   -- insert into person (user_id, first_name, last_name, gender) select ...
 end
 $$;
+
+alter table upozorneni_skupiny drop column if exists ups_popis;

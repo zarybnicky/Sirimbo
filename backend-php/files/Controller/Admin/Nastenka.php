@@ -45,12 +45,7 @@ class Nastenka
             if (!isset($_POST['sk-' . $skupina['s_id']]) || !$_POST['sk-' . $skupina['s_id']]) {
                 continue;
             }
-            \DBNastenka::addNastenkaSkupina(
-                $id,
-                $skupina['s_id'],
-                $skupina['s_color_rgb'],
-                $skupina['s_description']
-            );
+            \DBNastenka::addNastenkaSkupina($id, $skupina['s_id'], $skupina['s_color_rgb']);
         }
 
         \Redirect::to($_POST['returnURI']);
@@ -106,12 +101,7 @@ class Nastenka
         }
         foreach (array_diff($newIds, $oldIds) as $added) {
             $skupinaData = $skupiny_new[$added];
-            \DBNastenka::addNastenkaSkupina(
-                $id,
-                $skupinaData['s_id'],
-                $skupinaData['s_color_rgb'],
-                $skupinaData['s_description']
-            );
+            \DBNastenka::addNastenkaSkupina($id, $skupinaData['s_id'], $skupinaData['s_color_rgb']);
         }
         \DBNastenka::editNastenka($id, $_POST['nadpis'], $_POST['text'], (($_POST['lock'] ?? '') == 'lock') ? 1 : 0);
         \Redirect::to($_POST['returnURI']);

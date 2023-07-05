@@ -31,15 +31,14 @@ class DBNastenka extends Database implements Pagable
         return self::getArray($res);
     }
 
-    public static function addNastenkaSkupina($rodic, $skupina, $color, $popis)
+    public static function addNastenkaSkupina($rodic, $skupina, $color)
     {
         self::query(
-            "INSERT INTO upozorneni_skupiny (ups_id_rodic,ups_id_skupina,ups_color,ups_popis)
+            "INSERT INTO upozorneni_skupiny (ups_id_rodic,ups_id_skupina,ups_color)
             VALUES ('?','?','?','?')",
             $rodic,
             $skupina,
-            $color,
-            $popis
+            $color
         );
     }
 

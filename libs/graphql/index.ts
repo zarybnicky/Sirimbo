@@ -11513,7 +11513,6 @@ export type UpozorneniSkupiny = {
   upsId: Scalars['BigInt']['output'];
   upsIdRodic: Scalars['BigInt']['output'];
   upsIdSkupina: Scalars['BigInt']['output'];
-  upsPopis: Scalars['String']['output'];
 };
 
 /**
@@ -11537,7 +11536,6 @@ export type UpozorneniSkupinyInput = {
   upsId?: InputMaybe<Scalars['BigInt']['input']>;
   upsIdRodic: Scalars['BigInt']['input'];
   upsIdSkupina: Scalars['BigInt']['input'];
-  upsPopis: Scalars['String']['input'];
 };
 
 /** Represents an update to a `UpozorneniSkupiny`. Fields that are set will be updated. */
@@ -11548,7 +11546,6 @@ export type UpozorneniSkupinyPatch = {
   upsId?: InputMaybe<Scalars['BigInt']['input']>;
   upsIdRodic?: InputMaybe<Scalars['BigInt']['input']>;
   upsIdSkupina?: InputMaybe<Scalars['BigInt']['input']>;
-  upsPopis?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A connection to a list of `Upozorneni` values. */
@@ -14482,8 +14479,7 @@ export type GraphCacheResolvers = {
     upsColor?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, Scalars['String'] | string>,
     upsId?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, Scalars['BigInt'] | string>,
     upsIdRodic?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, Scalars['BigInt'] | string>,
-    upsIdSkupina?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, Scalars['BigInt'] | string>,
-    upsPopis?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, Scalars['String'] | string>
+    upsIdSkupina?: GraphCacheResolver<WithTypename<UpozorneniSkupiny>, Record<string, never>, Scalars['BigInt'] | string>
   },
   UpozornenisConnection?: {
     edges?: GraphCacheResolver<WithTypename<UpozornenisConnection>, Record<string, never>, Array<WithTypename<UpozornenisEdge> | string>>,

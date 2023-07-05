@@ -13576,7 +13576,6 @@ type UpozorneniSkupiny {
   upsId: BigInt!
   upsIdRodic: BigInt!
   upsIdSkupina: BigInt!
-  upsPopis: String!
 }
 
 """
@@ -13602,7 +13601,6 @@ input UpozorneniSkupinyInput {
   upsId: BigInt
   upsIdRodic: BigInt!
   upsIdSkupina: BigInt!
-  upsPopis: String!
 }
 
 """
@@ -13615,7 +13613,6 @@ input UpozorneniSkupinyPatch {
   upsId: BigInt
   upsIdRodic: BigInt
   upsIdSkupina: BigInt
-  upsPopis: String
 }
 
 """A connection to a list of `Upozorneni` values."""
