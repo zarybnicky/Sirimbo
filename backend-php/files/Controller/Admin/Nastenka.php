@@ -42,7 +42,7 @@ class Nastenka
 
         $skupiny = \DBSkupiny::get();
         foreach ($skupiny as $skupina) {
-            if (!$_POST['sk-' . $skupina['s_id']]) {
+            if (!isset($_POST['sk-' . $skupina['s_id']]) || !$_POST['sk-' . $skupina['s_id']]) {
                 continue;
             }
             \DBNastenka::addNastenkaSkupina(

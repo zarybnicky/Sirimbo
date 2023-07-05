@@ -1,2 +1,4 @@
 -/frontend/lib/graphql/*.ts
 -/schema.graphql
+-/schema.sql
+-/migrations/committed/*.sql

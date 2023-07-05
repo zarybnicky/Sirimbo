@@ -30654,7 +30654,7 @@ let
       flatName = "serialize-javascript";
       languageName = "node";
       scope = null;
-      descriptorRange = "npm:^6.0.0";
+      descriptorRange = "npm:^6.0.1";
       checksum = "9/918ab48d613d8d7ae3bd0a12da50961f7710dd5f7ec7ffea12c03017c11b02c3d8355b672d6aabef67c2c539ebd1d6665b10748760221df3fc299eb43705412e";
       dependencies = {
         "randombytes" = packages."randombytes@npm:2.1.0";

@@ -41,12 +41,14 @@ BEGIN
 
     RETURN OLD;
   END IF;
+
   IF (TG_OP = 'UPDATE') THEN
     UPDATE person SET
       first_name = NEW.u_jmeno,
       last_name = NEW.u_prijmeni,
       gender = NEW.u_pohlavi
     WHERE user_id = NEW.u_id;
+
     IF NOT FOUND THEN RETURN NULL; END IF;
 
     RETURN NEW;
@@ -62,3 +64,9 @@ END;
 $$ language plpgsql security definer;
 
 select * from plpgsql_check_function('app_private.tg_users__sync_to_person', 'public.users');
+
+do $$
+begin
+  -- insert into person (user_id, first_name, last_name, gender) select ...
+end
+$$;

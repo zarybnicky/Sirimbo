@@ -41,11 +41,16 @@
 
     in {
       graphile-migrate = yarnPackages."graphile-migrate@npm:1.4.1";
+
       rozpisovnik-api = yarnPackages."rozpisovnik-api@workspace:backend";
       rozpisovnik-api-migrations = final.callPackage ./migrations/package.nix {};
 
       sirimbo-frontend = final.callPackage ./apps/olymp/package.nix {};
-      sirimbo-frontend-old = final.callPackage ./apps/custom-elements/package.nix { inherit yarnPackages; };
+      sirimbo-frontend-old = final.runCommand "sirimbo-frontend-old" {} ''
+        cd ${yarnPackages."sirimbo-frontend@workspace:apps/custom-elements".package}/node_modules/sirimbo-frontend
+        mkdir -p $out/public
+        cp -r dist/* $out/public/
+      '';
 
       sirimbo-php = (final.callPackage ./backend-php/composer-project.nix {
         php = final.php82;
@@ -103,6 +108,7 @@
         ({ pkgs, ... }: {
           boot.isContainer = true;
           system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
+          system.stateVersion = "23.05";
           networking.useDHCP = false;
           networking.firewall.allowedTCPPorts = [ 80 3000 3306 5432 8025 1025 9000 ];
           environment.systemPackages = [ pkgs.file ];

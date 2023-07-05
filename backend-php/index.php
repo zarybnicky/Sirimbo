@@ -1,23 +1,4 @@
 <?php
-/*/sitewide OFF switch
-if (isset($_GET['file'])) {
-    if (stripos($_GET['file'], 'cookie_set') !== false) {
-        setcookie('off_mode', '1', 0, '/');
-        header('Location: /');
-        return;
-    }
-    if (stripos($_GET['file'], 'cookie_reset') !== false) {
-        setcookie('off_mode', false, 0, '/');
-        header('Location: /');
-        return;
-    }
-}
-if (!isset($_COOKIE['off_mode'])) {
-    require 'index2.php';
-    return;
-}
-//end OFF switch*/
-
 require 'vendor/autoload.php';
 require 'config.php';
 
@@ -30,6 +11,8 @@ Sentry\init([
 require 'files/Core/settings.php';
 
 ob_start();
+date_default_timezone_set('Europe/Paris');
+mb_internal_encoding('UTF-8');
 ini_set('session.use_trans_sid', 0);
 ini_set('session.use_only_cookies', 1);
 ini_set('session.cookie_lifetime', 0);
@@ -130,6 +113,7 @@ function makeRouter()
 
     $router->get('/login', '@Member::login');
     $router->post('/login', '@Member::loginPost');
+    $router->get('/logout', '@Member::logout');
     $router->get('/nopassword', '@Nopassword::get');
     $router->post('/nopassword', '@Nopassword::post');
     $router->get('/registrace', '@Registrace::get');
@@ -145,7 +129,6 @@ function makeRouter()
     $router->get('/member/treninky', '@Member.Schedule::get');
     $router->post('/member/treninky', '@Member.Schedule::post');
     $router->get('/member/dokumenty', '@Member::dokumenty');
-    $router->get('/member/download', '@Member::download');
     $router->get('/member/clenove', '@Member.Clenove::structure');
     $router->redirect('/member/clenove/structure', '/member/clenove');
     $router->get('/member/clenove/seznam', '@Member.Clenove::list');
@@ -205,7 +188,6 @@ function makeRouter()
     $router->get('/admin/users/unconfirmed', '@Admin.Users::unconfirmed');
     $router->post('/admin/users/unconfirmed', '@Admin.Users::unconfirmedPost');
     $router->get('/admin/users/duplicate', '@Admin.Users::duplicate');
-    $router->get('/admin/users/statistiky', '@Admin.Users::statistiky');
 
     $router->get('/admin/galerie', '@Admin.Galerie::list');
     $router->get('/admin/galerie/file/upload', '@Admin.GalerieFile::upload');
@@ -251,8 +233,6 @@ function makeRouter()
 
     $router->get('/admin/pary', '@Admin.Pary::list');
     $router->post('/admin/pary', '@Admin.Pary::listPost');
-    $router->get('/admin/pary/edit/([0-9]+)', '@Admin.Pary::edit');
-    $router->post('/admin/pary/edit/([0-9]+)', '@Admin.Pary::editPost');
     $router->get('/admin/pary/remove/([0-9]+)', '@Admin.Pary::remove');
 
     $router->get('/admin/skupiny', '@Admin.Skupiny::list');

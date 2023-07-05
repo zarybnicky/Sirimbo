@@ -16,6 +16,8 @@ $link-hover-decoration: none;
 @import 'bootstrap/scss/variables';
 @import 'bootstrap/scss/mixins';
 @import 'bootstrap/scss/utilities';
+@import "bootstrap/scss/root";
+@import "bootstrap/scss/reboot";
 
 table { border-collapse: separate; border-spacing: 1px; }
 th, td { padding: 3px; vertical-align: middle; }
@@ -253,8 +255,6 @@ $navbar-padding-y: 0;
     max-width: 50vw;
 }
 
-@import "bootstrap/scss/root";
-@import "bootstrap/scss/reboot";
 @import "bootstrap/scss/type";
 @import "bootstrap/scss/images";
 @import "bootstrap/scss/code";
@@ -294,6 +294,9 @@ $navbar-padding-y: 0;
     height: auto;
     max-width: 100%;
     display: block;
+}
+input[type=checkbox] {
+    appearance: auto;
 }
 
 @tailwind base;

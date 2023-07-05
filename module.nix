@@ -219,8 +219,6 @@ in {
         cat > $out/config.php <<EOS
         <?php
         openlog('${cfg.php.domain}', LOG_ODELAY, LOG_USER);
-        date_default_timezone_set('Europe/Paris');
-        mb_internal_encoding('UTF-8');
 
         define('FRONTEND_HASH', '${builtins.substring 11 32 "${pkgs.sirimbo-frontend-old}"}');
         define('SENTRY_ENV', '${cfg.php.domain}');
@@ -263,9 +261,8 @@ in {
           locations."/gallery".root = cfg.stateDir;
           locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
 
-          locations."/member/download" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";
-          };
+          locations."/member/download".proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";
+
           locations."/graphql" = {
             proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";
             proxyWebsockets = true;
@@ -273,9 +270,6 @@ in {
           locations."/graphiql" = {
             proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";
             proxyWebsockets = true;
-          };
-          locations."/logout" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.backend.port}";
           };
 
           locations."/" = {

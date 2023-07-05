@@ -46,7 +46,7 @@ class Database
         return static::getConnection()->prepare($query);
     }
 
-    protected static function query($query)
+    public static function query($query)
     {
         if (func_num_args() > 1) {
             $args = static::escapeArray(array_slice(func_get_args(), 1));

@@ -5,12 +5,7 @@ class Session
 
     public static function login($login, $pass)
     {
-        $login = strtolower($login);
-        if ($login == "superadmin" && $pass == "9947a7bc1549a54e7299fe9a3975c8655430ade0") {
-            self::loadUser(1);
-            return true;
-        }
-        if (!$id = \DBUser::checkUser($login, $pass)) {
+        if (!$id = \DBUser::checkUser(strtolower($login), $pass)) {
             return false;
         }
         $data = \DBUser::getUserData($id);
@@ -24,19 +19,16 @@ class Session
         return true;
     }
 
-    public static function logout()
-    {
-        session_destroy();
-    }
-
     public static function loadUser($id): ?User
     {
         if (!$user = \DBUser::getUser($id)) {
-            self::logout();
+            session_destroy();
             \Redirect::to('/');
         }
 
         $_SESSION['id'] = $user->getId();
+        \Database::query('set session "jwt.claims.user_id" = \'?\'', $user->getId());
+        \Database::query('set session "jwt.claims.tenant_id" = \'1\'');
         return self::$user = $user;
     }
 
@@ -46,16 +38,5 @@ class Session
             return null;
         }
         return self::$user;
-    }
-
-    public static function getZaplacenoPar()
-    {
-        return true;
-        // $paid = \DBPlatby::hasPaidMemberFees(self::getUser()->getId);
-        // $par = \DBPary::getLatestPartner($user->getId(), $user->getGender());
-        // if ($par) {
-        //     $paid = $paid && \DBPlatby::hasPaidMemberFees($par['u_id']);
-        // }
-        // return $paid;
     }
 }

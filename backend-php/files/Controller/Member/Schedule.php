@@ -80,9 +80,7 @@ class Schedule
                 return;
             }
             if ($_POST['action'] == 'signup') {
-                if (!\Session::getZaplacenoPar()) {
-                    \Message::warning('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
-                } elseif ($lesson['ri_partner']) {
+                if ($lesson['ri_partner']) {
                     \Message::warning('Lekce už je obsazená');
                 } else {
                     \DBRozpis::reserveLesson($_POST['ri_id'], $par['p_id']);
@@ -110,9 +108,7 @@ class Schedule
                 \Redirect::to('/member/treninky');
             }
             if ($_POST['hodiny'] ?? null) {
-                if (!\Session::getZaplacenoPar()) {
-                    \Message::danger('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
-                } elseif ($data['n_max_pocet_hod'] > 0 &&
+                if ($data['n_max_pocet_hod'] > 0 &&
                           (\DBNabidka::getNabidkaLessons($nId, $par['p_id']) + $_POST['hodiny']) > $data['n_max_pocet_hod']
                 ) {
                     \Message::danger('Maximální počet hodin na pár je ' . $data['n_max_pocet_hod'] . '!');

@@ -314,16 +314,6 @@ class Users
         ]);
     }
 
-    public static function statistiky()
-    {
-        \Permissions::checkError('users', P_ADMIN);
-        \Render::twig('Admin/UsersStatistics.twig', [
-            'total' => count(\DBUser::getUsers()),
-            'active' => count(\DBUser::getActiveUsers()),
-            'groups' => \DBUser::getGroupCounts(),
-        ]);
-    }
-
     private static function displayForm($action)
     {
         \Render::twig('Admin/UsersForm.twig', [
