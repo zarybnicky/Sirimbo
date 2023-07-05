@@ -12,16 +12,16 @@ class Akce
     public static function add()
     {
         \Permissions::checkError('akce', P_OWNED);
-        return static::displayForm('add');
+        return self::displayForm('add');
     }
 
     public static function addPost()
     {
         \Permissions::checkError('akce', P_OWNED);
-        $form = static::checkData();
+        $form = self::checkData();
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            return static::displayForm('add');
+            return self::displayForm('add');
         }
 
         $od = new \Date($_POST['od'] ?? null);
@@ -52,7 +52,7 @@ class Akce
             \Message::warning('Akce s takovým ID neexistuje');
             \Redirect::to('/admin/akce');
         }
-        return static::displayForm('edit', $data);
+        return self::displayForm('edit', $data);
     }
 
     public static function editPost($id)
@@ -63,10 +63,10 @@ class Akce
             \Redirect::to('/admin/akce');
         }
 
-        $form = static::checkData();
+        $form = self::checkData();
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            return static::displayForm('edit', $data);
+            return self::displayForm('edit', $data);
         }
 
         $od = new \Date($_POST['od'] ?? null);

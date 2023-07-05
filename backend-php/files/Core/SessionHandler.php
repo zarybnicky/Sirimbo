@@ -41,7 +41,7 @@ class DbSessionHandler extends Database implements SessionHandlerInterface
         $stmt = self::prepare(
             "DELETE FROM session WHERE (extract(epoch from ss_updated_at) + ss_lifetime) < extract(epoch from now())"
         );
-        return !!$stmt->execute();
+        return $stmt->execute() ? 0 : false;
     }
 
     public function destroy(string $sessionId): bool

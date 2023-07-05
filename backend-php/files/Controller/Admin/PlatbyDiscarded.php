@@ -12,14 +12,14 @@ class PlatbyDiscarded
             \Redirect::to('/admin/platby');
         }
         if (isset($_GET['list'])) {
-            static::_getTable($data, $result, $columns, $header);
+            self::_getTable($data, $result, $columns, $header);
             \Render::twig('Admin/PlatbyDiscardedTable.twig', [
                 'data' => $result,
                 'columns' => $columns,
                 'header' => $header,
             ]);
         } else {
-            static::_getList($data, $groupAmount, $groupDate);
+            self::_getList($data, $groupAmount, $groupDate);
             \Render::twig('Admin/PlatbyDiscardedList.twig', [
                 'groupByDate' => $groupDate,
                 'groupByAmount' => $groupAmount,

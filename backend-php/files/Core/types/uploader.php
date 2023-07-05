@@ -13,19 +13,9 @@ class Uploader
         return $this->errors;
     }
 
-    public function getRefusedFiles()
-    {
-        return $this->refusedFiles;
-    }
-
     public function getSavedFiles()
     {
         return $this->savedFiles;
-    }
-
-    public function hasRefusedFiles()
-    {
-        return !empty($this->refusedFiles);
     }
 
     public function save()

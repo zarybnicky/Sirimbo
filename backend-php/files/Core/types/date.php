@@ -15,7 +15,7 @@ class Date
         }
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getDate();
     }
@@ -74,11 +74,6 @@ class Date
             return '';
         }
         return ((int) $this->day) . '. ' . ((int) $this->month) . '. ' . $this->year;
-    }
-
-    public function getDay()
-    {
-        return $this->day;
     }
 
     public function getMonth()

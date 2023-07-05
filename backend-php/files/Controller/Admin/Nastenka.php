@@ -21,16 +21,16 @@ class Nastenka
     public static function add()
     {
         \Permissions::checkError('nastenka', P_OWNED);
-        return static::renderForm('add');
+        return self::renderForm('add');
     }
 
     public static function addPost()
     {
         \Permissions::checkError('nastenka', P_OWNED);
-        $form = static::checkData();
+        $form = self::checkData();
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            return static::renderForm('add');
+            return self::renderForm('add');
         }
 
         $id = \DBNastenka::addNastenka(
@@ -66,7 +66,7 @@ class Nastenka
             $_POST['sk-' . $skupina['ups_id_skupina']] = 1;
         }
         $_POST['lock'] = $data['up_lock'];
-        return static::renderForm('edit');
+        return self::renderForm('edit');
     }
 
     public static function editPost($id)
@@ -77,10 +77,10 @@ class Nastenka
             \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
-        $form = static::checkData();
+        $form = self::checkData();
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            return static::renderForm('edit');
+            return self::renderForm('edit');
         }
 
         $skupiny_old = [];

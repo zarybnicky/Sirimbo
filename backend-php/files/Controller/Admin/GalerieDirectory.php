@@ -26,16 +26,16 @@ class GalerieDirectory
     public static function add()
     {
         \Permissions::checkError('galerie', P_OWNED);
-        return static::displayForm('add');
+        return self::displayForm('add');
     }
 
     public static function addPost()
     {
         \Permissions::checkError('galerie', P_OWNED);
-        $form = static::checkData();
+        $form = self::checkData();
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            return static::displayForm('add');
+            return self::displayForm('add');
         }
         $parent = \DBGalerie::getSingleDir($_POST['parent']);
         $dirPath = $parent['gd_path'] . DIRECTORY_SEPARATOR . Galerie::sanitizePathname($_POST['name']);
@@ -60,7 +60,7 @@ class GalerieDirectory
         $_POST['name'] = $data['gd_name'];
         $_POST['parent'] = $data['gd_id_rodic'];
         $_POST['hidden'] = $data['gd_hidden'] ? '1' : '0';
-        return static::displayForm('edit');
+        return self::displayForm('edit');
     }
 
     public static function editPost($id)
@@ -70,10 +70,10 @@ class GalerieDirectory
             \Message::warning('Taková složka neexistuje');
             \Redirect::to('/admin/galerie');
         }
-        $form = static::checkData();
+        $form = self::checkData();
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            return static::displayForm('edit');
+            return self::displayForm('edit');
         }
         $parent = \DBGalerie::getSingleDir($_POST['parent']);
         $newPath = $parent['gd_path'] . DIRECTORY_SEPARATOR . Galerie::sanitizePathname(

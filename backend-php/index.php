@@ -132,7 +132,6 @@ function makeRouter()
     $router->get('/member/clenove', '@Member.Clenove::structure');
     $router->redirect('/member/clenove/structure', '/member/clenove');
     $router->get('/member/clenove/seznam', '@Member.Clenove::list');
-    $router->get('/member/clenove/skupiny', '@Member.Clenove::groups');
     $router->get('/member/clenove/([0-9]+)', '@Member.Clenove::single');
 
     $router->get('/member/profil', '@Member.Profil::get');

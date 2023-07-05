@@ -70,7 +70,7 @@ class DateHelper
         return ['from' => $from, 'to' => $to];
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         if ($this->useRange) {
             if ($this->date && $this->dateTo) {
@@ -81,7 +81,7 @@ class DateHelper
                 $to = new \Date();
             }
             $val = '';
-            if ($from->isValid() || $from->isValid()) {
+            if ($from->isValid() || $to->isValid()) {
                 $val = $from->getHumanDate() . ' - ' . $to->getHumanDate();
             }
             return "<input type=\"text\" name=\"{$this->name}\" value=\"$val\" class=\"{$this->cls}\">";

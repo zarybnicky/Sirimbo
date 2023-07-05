@@ -74,8 +74,8 @@ class PlatbyManual
                 'prefix' => $item->prefix
             ],
             'recognized' => $recognized,
-            'users' => static::getUsers(),
-            'categories' => static::getCategories(),
+            'users' => self::getUsers(),
+            'categories' => self::getCategories(),
         ]);
     }
 

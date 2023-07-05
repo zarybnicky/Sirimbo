@@ -33,7 +33,7 @@ class Akce
             \Redirect::to('/member/akce');
         }
 
-        $form = static::checkData($data, $_POST['action']);
+        $form = self::checkData($data, $_POST['action']);
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
         } elseif ($_POST['action'] == 'signup') {

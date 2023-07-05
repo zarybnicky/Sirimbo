@@ -83,8 +83,8 @@ class Users
             if (!$user = \DBUser::getUser($userId)) {
                 continue;
             }
-            if (((bool) $_POST[$userId . '-system']) !== ((bool) $user->getSystem())
-                || ((bool) $_POST[$userId . '-ban']) !== ((bool) $user->getBanned())
+            if (((bool) $_POST[$userId . '-system']) !== $user->getSystem()
+                || ((bool) $_POST[$userId . '-ban']) !== $user->getBanned()
                 || ($_POST[$userId . '-skupina'] != $user->getPermissionGroup())
             ) {
                 \DBUser::setUserData(
@@ -145,16 +145,16 @@ class Users
     public static function add()
     {
         \Permissions::checkError('users', P_ADMIN);
-        return static::displayForm('add');
+        return self::displayForm('add');
     }
 
     public static function addPost()
     {
         \Permissions::checkError('users', P_ADMIN);
-        $form = static::checkData('add');
+        $form = self::checkData('add');
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            return static::displayForm('add');
+            return self::displayForm('add');
         }
         \DBUser::addUser(
             strtolower($_POST['login']),
@@ -222,7 +222,7 @@ class Users
         $_POST['nationality'] = $data['u_nationality'];
         $_POST['createdAt'] = $data['u_created_at'];
         $_POST['gdprSignedAt'] = $data['u_gdpr_signed_at'];
-        return static::displayForm('edit');
+        return self::displayForm('edit');
     }
 
     public static function editPost($id)
@@ -236,10 +236,10 @@ class Users
             \Message::warning('Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
             \Redirect::to($_POST['returnURI'] ?? '/admin/users');
         }
-        $form = static::checkData('edit');
+        $form = self::checkData('edit');
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            return static::displayForm('edit');
+            return self::displayForm('edit');
         }
         \DBUser::setUserData(
             $id,
@@ -297,12 +297,11 @@ class Users
     {
         \Permissions::checkError('users', P_ADMIN);
         $id = $_POST['confirm'];
-        if (!$data = \DBUser::getUser($id)) {
+        if (!\DBUser::getUser($id)) {
             \Message::warning('Uživatel s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/users');
         }
         \DBUser::confirmUser($id, $_POST[$id . '-group'], $_POST[$id . '-skupina']);
-        \Mailer::registrationConfirmNotice($data->getEmail(), $data->getLogin());
         \Redirect::to('/admin/users/unconfirmed');
     }
 

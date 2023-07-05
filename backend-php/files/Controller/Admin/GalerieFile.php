@@ -12,7 +12,7 @@ class GalerieFile
         }
         $_POST['name'] = $data['gf_name'];
         $_POST['parent'] = $data['gf_id_rodic'];
-        return static::displayForm($id);
+        return self::displayForm($id);
     }
 
     public static function editPost($id)
@@ -22,10 +22,10 @@ class GalerieFile
             \Message::warning('Takový soubor neexistuje!');
             \Redirect::to($_SERVER['HTTP_REFERER']);
         }
-        $form = static::checkData();
+        $form = self::checkData();
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            return static::displayForm($id);
+            return self::displayForm($id);
         }
         $parent = \DBGalerie::getSingleDir($_POST['parent']);
         $newPath = Galerie::sanitizePathname(

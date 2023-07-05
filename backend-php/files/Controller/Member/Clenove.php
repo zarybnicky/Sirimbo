@@ -15,27 +15,6 @@ class Clenove
         ]);
     }
 
-    public static function groups()
-    {
-        \Permissions::checkError('users', P_VIEW);
-        $currentID = -1;
-        $currentKey = 0;
-        $skupiny = [];
-        foreach (\DBUser::getUsersWithSkupinaPlatby() as $item) {
-            if ($item['s_id'] != $currentID) {
-                $currentID = $item['s_id'];
-                $currentKey = count($skupiny);
-                $skupiny[$currentKey] = [
-                    'name' => $item['s_name'],
-                    'color' => $item['s_color_rgb'],
-                    'userCount' => 0
-                ];
-            }
-            $skupiny[$currentKey]['userCount']++;
-        }
-        \Render::twig('Member/ClenoveSkupinyList.twig', ['data' => $skupiny]);
-    }
-
     public static function list()
     {
         \Permissions::checkError('users', P_VIEW);

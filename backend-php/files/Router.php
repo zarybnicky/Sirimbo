@@ -14,31 +14,9 @@ class Router
         $this->currentPrefix = '';
     }
 
-    public function route($method, $regex, $handler)
-    {
-        if ($method == '*') {
-            $method = ['GET', 'PUT', 'DELETE', 'POST'];
-        }
-
-        foreach ((array)$method as $m) {
-            $this->addRoute($m, $regex, $handler);
-        }
-
-        return $this;
-    }
-
     private function addRoute($method, $regex, $handler)
     {
         $this->routes[strtoupper($method)][$this->currentPrefix . $regex] = $handler;
-    }
-
-    public function mount($prefix, callable $routes)
-    {
-        $previousPrefix = $this->currentPrefix;
-        $this->currentPrefix = $previousPrefix . $prefix;
-        $routes($this);
-        $this->currentPrefix = $previousPrefix;
-        return $this;
     }
 
     public function get(string $regex, string $handler)
@@ -49,16 +27,6 @@ class Router
     public function post(string $regex, string $handler)
     {
         $this->addRoute('POST', $regex, $handler);
-    }
-
-    public function put(string $regex, string $handler)
-    {
-        $this->addRoute('PUT', $regex, $handler);
-    }
-
-    public function delete(string $regex, string $handler)
-    {
-        $this->addRoute('DELETE', $regex, $handler);
     }
 
     public function redirect(string $regex, string $target)

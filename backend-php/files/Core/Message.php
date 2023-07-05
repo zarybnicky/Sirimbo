@@ -42,12 +42,4 @@ class Message
     {
         self::setMessage('success', $msg);
     }
-    public static function primary($msg): void
-    {
-        self::setMessage('primary', $msg);
-    }
-    public static function secondary($msg): void
-    {
-        self::setMessage('secondary', $msg);
-    }
 }

@@ -44,30 +44,8 @@ class Paging
         $this->_recalculate();
     }
 
-    public function setDefaultItemsPerPage($i)
-    {
-        if (!is_numeric($i)) {
-            return false;
-        }
-        $this->_defaultItemsPerPage = $i;
-        $this->_recalculate();
-    }
-
-    public function setPageRange($p)
-    {
-        if (is_numeric($p)) {
-            $this->_pageRange = $p;
-        }
-        $this->_recalculate();
-    }
-
     private function _recalculate()
     {
-        if (!isset($this->_source)) {
-            $this->_valid = false;
-            return;
-        }
-
         if (!$this->_itemsPerPage) {
             $this->_itemsPerPage = $this->_defaultItemsPerPage ?: 20;
         }
@@ -110,22 +88,6 @@ class Paging
         }
 
         $this->_valid = true;
-    }
-
-    public function getPages()
-    {
-        if (!$this->_valid) {
-            return false;
-        }
-        return [
-            'first' => 1,
-            'previous' => $this->_previousPage,
-            'current' => $this->_currentPage,
-            'next' => $this->_nextPage,
-            'last' => $this->_pageCount,
-            'total' => $this->_totalItems,
-            'pagesInRange' => $this->_pagesInRange
-        ];
     }
 
     public function getLink($i, $label, $perPage = null)

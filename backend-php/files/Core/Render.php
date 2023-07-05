@@ -25,7 +25,7 @@ class Render
         return [
             'currentUri' => $uri,
             'currentUser' => \Session::getUser(),
-            'navbar' => static::getNavbar(),
+            'navbar' => self::getNavbar(),
         ];
     }
 

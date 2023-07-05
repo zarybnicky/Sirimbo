@@ -1,51 +1,11 @@
 <?php
 class User
 {
-    public function __serialize(): array
-    {
-        return $this->toArray();
-    }
-    public function __unserialize(array $x): void
-    {
-        $this->setId($x['u_id']);
-        $this->setLogin($x['u_login']);
-        $this->setPassword($x['u_pass']);
-        $this->setName($x['u_jmeno']);
-        $this->setSurname($x['u_prijmeni']);
-        $this->setGender($x['u_pohlavi']);
-        $this->setEmail($x['u_email']);
-        $this->setPhone($x['u_telefon']);
-        $this->setBirthDate($x['u_narozeni']);
-        $this->setBirthNumber($x['u_rodne_cislo']);
-        $this->setNotes($x['u_poznamky']);
-        $this->setUpdatedAt($x['u_timestamp']);
-        $this->setPermissionGroup($x['u_group']);
-        $this->setTrainingGroup($x['u_skupina']);
-        $this->setDancer($x['u_dancer']);
-        $this->setBanned($x['u_ban']);
-        $this->setLocked($x['u_lock']);
-        $this->setConfirmed($x['u_confirmed']);
-        $this->setSystem($x['u_system']);
-        $this->setStreet($x['u_street']);
-        $this->setConscriptionNumber($x['u_conscription_number']);
-        $this->setOrientationNumber($x['u_orientation_number']);
-        $this->setDistrict($x['u_district']);
-        $this->setCity($x['u_city']);
-        $this->setPostalCode($x['u_postal_code']);
-        $this->setNationality($x['u_nationality']);
-        $this->setMemberSince($x['u_member_since']);
-        $this->setMemberUntil($x['u_member_until']);
-        $this->setCreatedAt($x['u_created_at']);
-        $this->setTeacher($x['u_teacher']);
-        $this->setGdprSignedAt($x['u_gdpr_signed_at']);
-    }
-
     public static function fromArray(array $x): User
     {
         $user = new self();
         $user->setId($x['u_id']);
         $user->setLogin($x['u_login']);
-        $user->setPassword($x['u_pass']);
         $user->setName($x['u_jmeno']);
         $user->setSurname($x['u_prijmeni']);
         $user->setGender($x['u_pohlavi']);
@@ -54,13 +14,11 @@ class User
         $user->setBirthDate($x['u_narozeni']);
         $user->setBirthNumber($x['u_rodne_cislo']);
         $user->setNotes($x['u_poznamky']);
-        $user->setUpdatedAt($x['u_timestamp']);
         $user->setPermissionGroup($x['u_group']);
         $user->setTrainingGroup($x['u_skupina']);
         $user->setDancer($x['u_dancer']);
         $user->setBanned($x['u_ban']);
         $user->setLocked($x['u_lock']);
-        $user->setConfirmed($x['u_confirmed']);
         $user->setSystem($x['u_system']);
         $user->setStreet($x['u_street']);
         $user->setConscriptionNumber($x['u_conscription_number']);
@@ -71,47 +29,9 @@ class User
         $user->setNationality($x['u_nationality']);
         $user->setMemberSince($x['u_member_since']);
         $user->setMemberUntil($x['u_member_until']);
-        $user->setCreatedAt($x['u_created_at']);
         $user->setTeacher($x['u_teacher']);
         $user->setGdprSignedAt($x['u_gdpr_signed_at']);
         return $user;
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'u_id' => $this->getId(),
-            'u_login' => $this->getLogin(),
-            'u_pass' => $this->getPassword(),
-            'u_jmeno' => $this->getName(),
-            'u_prijmeni' => $this->getSurname(),
-            'u_pohlavi' => $this->getGender(),
-            'u_email' => $this->getEmail(),
-            'u_telefon' => $this->getPhone(),
-            'u_narozeni' => $this->getBirthDate(),
-            'u_rodne_cislo' => $this->getBirthNumber(),
-            'u_poznamky' => $this->getNotes(),
-            'u_timestamp' => $this->getCreatedAt(),
-            'u_group' => $this->getPermissionGroup(),
-            'u_skupina' => $this->getTrainingGroup(),
-            'u_dancer' => $this->getDancer(),
-            'u_ban' => $this->getBanned(),
-            'u_lock' => $this->getLocked(),
-            'u_confirmed' => $this->getConfirmed(),
-            'u_system' => $this->getSystem(),
-            'u_street' => $this->getStreet(),
-            'u_conscription_number' => $this->getConscriptionNumber(),
-            'u_orientation_number' => $this->getOrientationNumber(),
-            'u_district' => $this->getDistrict(),
-            'u_city' => $this->getCity(),
-            'u_postal_code' => $this->getPostalCode(),
-            'u_nationality' => $this->getNationality(),
-            'u_member_since' => $this->getMemberSince(),
-            'u_member_until' => $this->getMemberUntil(),
-            'u_created_at' => $this->getCreatedAt(),
-            'u_teacher' => $this->getTeacher(),
-            'u_gdpr_signed_at' => $this->getGdprSignedAt(),
-        ];
     }
 
     public function isValid(): bool
@@ -161,21 +81,6 @@ class User
     /**
      * @var string
      */
-    protected $password;
-
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): void
-    {
-        $this->password = $password;
-    }
-
-    /**
-     * @var string
-     */
     protected $name;
 
     public function getName(): string
@@ -201,11 +106,6 @@ class User
     public function setSurname(string $surname): void
     {
         $this->surname = $surname;
-    }
-
-    public function getFullName(): string
-    {
-        return $this->getSurname() . ', ' . $this->getName();
     }
 
     /**
@@ -304,21 +204,6 @@ class User
     }
 
     /**
-     * @var string
-     */
-    protected $updatedAt;
-
-    public function getUpdatedAt(): string
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(string $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
-    }
-
-    /**
      * @var int
      */
     protected $permissionGroup = 0;
@@ -391,21 +276,6 @@ class User
     public function setLocked(bool $locked): void
     {
         $this->locked = $locked;
-    }
-
-    /**
-     * @var bool
-     */
-    protected $confirmed;
-
-    public function getConfirmed(): bool
-    {
-        return $this->confirmed;
-    }
-
-    public function setConfirmed(bool $confirmed): void
-    {
-        $this->confirmed = $confirmed;
     }
 
     /**
@@ -556,21 +426,6 @@ class User
     public function setMemberUntil(?string $memberUntil): void
     {
         $this->memberUntil = $memberUntil;
-    }
-
-    /**
-     * @var string
-     */
-    protected $createdAt;
-
-    public function getCreatedAt(): string
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(string $createdAt): void
-    {
-        $this->createdAt = $createdAt;
     }
 
     /**

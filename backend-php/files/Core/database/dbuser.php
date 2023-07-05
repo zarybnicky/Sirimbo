@@ -111,19 +111,6 @@ class DBUser extends Database implements Pagable
         return self::getSingleRow($res);
     }
 
-    public static function getUserByNameEmail($login, $email): ?User
-    {
-        $res = self::query(
-            "SELECT * FROM users WHERE LOWER(u_login)='?' AND LOWER(u_email)='?'",
-            strtolower($login),
-            strtolower($email)
-        );
-        if (!$res || !($row = self::getSingleRow($res))) {
-            return null;
-        }
-        return User::fromArray($row);
-    }
-
     public static function getUser(int $id): ?User
     {
         $res = self::query(
@@ -141,24 +128,17 @@ class DBUser extends Database implements Pagable
 
     public static function confirmUser($id, $group, $skupina = '1')
     {
-        self::query(
-            "UPDATE users SET u_confirmed='1',u_group='?',u_skupina='?',u_system='0' WHERE u_id='?'",
-            $group,
-            $skupina,
-            $id
-        );
+        self::query("select confirm_user('?', '?', '?')", $id, $group, $skupina);
     }
 
     public static function markGdprSigned($id)
     {
         self::query("UPDATE users SET u_gdpr_signed_at=NOW() WHERE u_id='?'", $id);
-        return true;
     }
 
-    public static function setPassword($id, $passwd)
+    public static function setPassword($login, $email)
     {
-        self::query("UPDATE users SET u_pass='?' WHERE u_id='?'", $passwd, $id);
-        return true;
+        self::query("select reset_password('?', '?')", $login, $email);
     }
 
     public static function setUserData(
@@ -301,26 +281,6 @@ class DBUser extends Database implements Pagable
         return self::getArray($res);
     }
 
-    public static function getBannedUsers()
-    {
-        $res = self::query(
-            "SELECT u1.*,skupiny.* FROM users u1
-                LEFT JOIN skupiny ON u1.u_skupina=skupiny.s_id
-            WHERE u_ban='1' ORDER BY u_prijmeni"
-        );
-        return self::getArray($res);
-    }
-
-    public static function getUnconfirmedUsers()
-    {
-        $res = self::query(
-            "SELECT u1.*,skupiny.* FROM users u1
-                LEFT JOIN skupiny ON u1.u_skupina=skupiny.s_id
-            WHERE u_confirmed='0' ORDER BY u_prijmeni"
-        );
-        return self::getArray($res);
-    }
-
     public static function getActiveUsers($group = null)
     {
         $res = self::query(
@@ -329,16 +289,6 @@ class DBUser extends Database implements Pagable
             WHERE u_system='0' AND u_confirmed='1' AND u_ban='0' " .
             ($group !== null ? "AND u_group='$group' " : '') .
                 "ORDER BY u_prijmeni "
-        );
-        return self::getArray($res);
-    }
-    public static function getGroupCounts()
-    {
-        $res = self::query(
-            "SELECT u_group, count(*) as count, pe_name
-            FROM permissions LEFT JOIN users ON u_group=pe_id
-            GROUP BY u_group, pe_name
-            ORDER BY u_group, count DESC"
         );
         return self::getArray($res);
     }

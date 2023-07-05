@@ -25,16 +25,16 @@ class Rozpis
     public static function add()
     {
         \Permissions::checkError('rozpis', P_OWNED);
-        return static::displayForm('add');
+        return self::displayForm('add');
     }
 
     public static function addPost()
     {
         \Permissions::checkError('rozpis', P_OWNED);
-        $form = static::checkData();
+        $form = self::checkData();
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            return static::displayForm('add');
+            return self::displayForm('add');
         }
         \Permissions::checkError('rozpis', P_OWNED, $_POST['trener']);
         \DBRozpis::addSchedule(
@@ -55,7 +55,7 @@ class Rozpis
             \Redirect::to('/admin/rozpis');
         }
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
-        return static::displayForm('edit', $data);
+        return self::displayForm('edit', $data);
     }
 
     public static function editPost($id)
@@ -66,10 +66,10 @@ class Rozpis
             \Redirect::to('/admin/rozpis');
         }
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
-        $form = static::checkData();
+        $form = self::checkData();
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            return static::displayForm('edit', $data);
+            return self::displayForm('edit', $data);
         }
         \DBRozpis::editSchedule(
             $id,

@@ -33,7 +33,6 @@ class NabidkaDetail
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
 
         $items = \DBNabidka::getReservationItems($id);
-        $obsazeno = \DBNabidka::getReservationLessons($id);
 
         if (($_POST["remove"] ?? 0) > 0) {
             \DBNabidka::removeNabidkaItem($id, $_POST[$_POST["remove"] . "-partner"]);

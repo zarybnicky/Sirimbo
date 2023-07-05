@@ -134,17 +134,17 @@ class Profil
         $_POST['postal'] = $user->getPostalCode();
         $_POST['nationality'] = $user->getNationality();
         $_POST['dancer'] = $user->getDancer();
-        return static::renderPersonalForm();
+        return self::renderPersonalForm();
     }
 
     public static function editPost()
     {
         \Permissions::checkError('nastenka', P_VIEW);
         $user = \Session::getUser();
-        $form = static::checkDataEdit();
+        $form = self::checkDataEdit();
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            return static::renderPersonalForm();
+            return self::renderPersonalForm();
         }
 
         \DBUser::setUserData(
@@ -187,7 +187,7 @@ class Profil
     public static function hesloPost()
     {
         \Permissions::checkError('nastenka', P_VIEW);
-        $form = static::checkDataHeslo();
+        $form = self::checkDataHeslo();
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
             \Render::twig('Member/ProfilNewPassword.twig');

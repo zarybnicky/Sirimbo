@@ -19,7 +19,7 @@ class Session
         return true;
     }
 
-    public static function loadUser($id): ?User
+    public static function loadUser($id): User
     {
         if (!$user = \DBUser::getUser($id)) {
             session_destroy();
@@ -32,7 +32,7 @@ class Session
         return self::$user = $user;
     }
 
-    public static function getUser()
+    public static function getUser(): \User | null
     {
         if (!($_SESSION['id'] ?? null)) {
             return null;

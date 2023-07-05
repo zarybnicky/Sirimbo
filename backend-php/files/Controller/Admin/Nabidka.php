@@ -16,16 +16,16 @@ class Nabidka
     public static function add()
     {
         \Permissions::checkError('nabidka', P_OWNED);
-        return static::displayForm('add');
+        return self::displayForm('add');
     }
 
     public static function addPost()
     {
         \Permissions::checkError('nabidka', P_OWNED);
-        $form = static::checkData();
+        $form = self::checkData();
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            return static::displayForm('add');
+            return self::displayForm('add');
         }
         \Permissions::checkError('nabidka', P_OWNED, $_POST['trener']);
 
@@ -58,7 +58,7 @@ class Nabidka
             \Redirect::to('/admin/nabidka');
         }
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
-        return static::displayForm('edit', $data);
+        return self::displayForm('edit', $data);
     }
 
     public static function editPost($id)
@@ -69,10 +69,10 @@ class Nabidka
             \Redirect::to($_POST['returnURI'] ?? '/admin/nabidka');
         }
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
-        $form = static::checkData();
+        $form = self::checkData();
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            return static::displayForm('edit', $data);
+            return self::displayForm('edit', $data);
         }
         $od = new \Date($_POST['od'] ?? null);
         $do = new \Date($_POST['do'] ?? null);

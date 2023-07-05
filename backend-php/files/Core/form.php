@@ -72,14 +72,6 @@ class Form
         }
     }
 
-    public function checkArrayKey($i, $array, $message)
-    {
-        if (!array_key_exists($i, $array)) {
-            $this->valid = false;
-            $this->messages[] = $message;
-        }
-    }
-
     public function checkNotEmpty($i, $message)
     {
         if (!$i && $i !== 0) {
@@ -91,14 +83,6 @@ class Form
     public function checkNumeric($i, $message)
     {
         if (!is_numeric($i)) {
-            $this->valid = false;
-            $this->messages[] = $message;
-        }
-    }
-
-    public function checkNumberBetween($i, $min, $max, $message)
-    {
-        if (!is_numeric($i) || $i < $min || $i > $max) {
             $this->valid = false;
             $this->messages[] = $message;
         }

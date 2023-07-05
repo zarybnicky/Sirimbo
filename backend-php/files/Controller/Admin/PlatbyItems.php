@@ -19,7 +19,7 @@ class PlatbyItems
         $date = new \DateHelper('date', $_GET['date'] ?? null);
         \Render::twig('Admin/PlatbyItems.twig', [
             'users' => [['u_id' => 'all', 'u_prijmeni' => '---', 'u_jmeno' => '']] + \DBUser::getUsers(),
-            'categories' => ['all' => '---'] + static::getCategories(),
+            'categories' => ['all' => '---'] + self::getCategories(),
             'data' => \DBPlatbyItem::get(
                 true,
                 $filter,
@@ -34,14 +34,14 @@ class PlatbyItems
     public static function add()
     {
         \Permissions::checkError('platby', P_OWNED);
-        return static::displayForm(0, 'add');
+        return self::displayForm(0, 'add');
     }
 
     public static function addPost()
     {
         if (!is_object($item = Platby::getFromPost())) {
             \Message::warning($item);
-            return static::add();
+            return self::add();
         }
         \DBPlatbyItem::insert(
             $item->variable,
@@ -66,7 +66,7 @@ class PlatbyItems
         $_POST['variable'] = $data['pi_id_user'];
         $_POST['specific'] = $data['pi_id_category'];
         $_POST['prefix'] = $data['pi_prefix'];
-        return static::displayForm($id, 'edit');
+        return self::displayForm($id, 'edit');
     }
 
     public static function editPost($id)
@@ -78,7 +78,7 @@ class PlatbyItems
         }
         if (!is_object($item = Platby::getFromPost($id))) {
             \Message::warning($item);
-            return static::displayForm($id, 'edit');
+            return self::displayForm($id, 'edit');
         }
         \DBPlatbyItem::update(
             $id,
@@ -145,7 +145,7 @@ class PlatbyItems
                 $u = \User::fromArray($x);
                 return "{$u->getVarSymbol()} - {$x['u_prijmeni']}, {$x['u_jmeno']}";
             }),
-            'categories' => static::getCategories(),
+            'categories' => self::getCategories(),
             'date' => $_POST['date'] ?? '',
             'amount' => $_POST['amount'] ?? '',
             'variable' => $_POST['variable'] ?? '',

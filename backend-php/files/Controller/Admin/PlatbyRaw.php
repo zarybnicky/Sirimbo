@@ -17,7 +17,7 @@ class PlatbyRaw
             if (!$fileInfo->isFile()) {
                 continue;
             }
-            static::processCsv($fileInfo->getPathname());
+            self::processCsv($fileInfo->getPathname());
             if ($path = $fileInfo->getRealPath()) {
                 unlink($path);
             }
@@ -39,7 +39,7 @@ class PlatbyRaw
             \Message::warning('Nahrávané soubory musí být typu CSV.');
         }
         foreach ($saved as $path) {
-            static::processCsv($path);
+            self::processCsv($path);
             \Message::success('Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' byl zpracován.');
         }
         \Redirect::to('/admin/platby/raw');
@@ -48,7 +48,7 @@ class PlatbyRaw
     public static function selectColumns()
     {
         \Permissions::checkError('platby', P_OWNED);
-        $headers = static::getParser(self::TEMP_DIR . str_replace('../', '', $_GET['path']))[0];
+        $headers = self::getParser(self::TEMP_DIR . str_replace('../', '', $_GET['path']))[0];
         Platby::recognizeHeaders(array_flip($headers), $specific, $variable, $date, $amount);
         \Render::twig('Admin/PlatbyRawColumnSelect.twig', [
             'data' => $headers,
@@ -64,7 +64,7 @@ class PlatbyRaw
     public static function selectColumnsPost()
     {
         \Permissions::checkError('platby', P_OWNED);
-        static::processCsv(self::TEMP_DIR . str_replace('../', '', $_GET['path']), [
+        self::processCsv(self::TEMP_DIR . str_replace('../', '', $_GET['path']), [
             'specific' => $_POST['specific'],
             'variable' => $_POST['variable'],
             'date' => $_POST['date'],
@@ -94,7 +94,7 @@ class PlatbyRaw
 
     private static function processCsv($path, $columns = null)
     {
-        [$headers, $lines] = static::getParser($path);
+        [$headers, $lines] = self::getParser($path);
         if ($columns === null) {
             Platby::recognizeHeaders(array_flip($headers), $specific, $variable, $date, $amount);
         } else {
@@ -118,10 +118,10 @@ class PlatbyRaw
             $item->processWithSymbolLookup($userLookup, $categoryLookup);
 
             if (!$item->isValid) {
-                \DBPlatbyRaw::insert($serialized, $hash, '0', '0', false);
+                \DBPlatbyRaw::insert($serialized, $hash, '0', '0');
                 continue;
             }
-            $id = \DBPlatbyRaw::insert($serialized, $hash, '1', '0', true);
+            $id = \DBPlatbyRaw::insert($serialized, $hash, '1', '0');
             \DBPlatbyItem::insert(
                 $item->variable,
                 $item->categoryId,

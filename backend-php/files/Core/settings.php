@@ -17,7 +17,7 @@ function errorHandler($severity, $message, $filepath, $line)
             . (isset($v['class']) ? $v['class'] . '->' : '') . $v['function'];
     }
     syslog(LOG_ERR, $_SERVER['REQUEST_URI'] . ": \n$msg");
-    if (isset($_SERVER['REQUEST_URI']) && strpos('error', $_SERVER['REQUEST_URI']) !== false) {
+    if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'error') !== false) {
         syslog(LOG_CRIT, "Recursive error!");
         die('Fatal error: Rekurzivní smyčka přesměrování!');
     }

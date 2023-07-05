@@ -2,12 +2,6 @@
 <?php
 class DBPary extends Database
 {
-    public static function getPary()
-    {
-        $res = self::query("SELECT * FROM pary ORDER BY p_timestamp_add ASC");
-        return self::getArray($res);
-    }
-
     public static function getActivePary()
     {
         $res = self::query(
@@ -77,22 +71,6 @@ class DBPary extends Database
             (SELECT u_id FROM users
                LEFT JOIN pary ON p_id_partnerka=u_id OR p_id_partner=u_id
              WHERE p_archiv='0')"
-        );
-        return self::getArray($res);
-    }
-
-    public static function getPreviousPartners($id)
-    {
-        $res = self::query(
-            "SELECT p_id,
-                m.u_id AS man_id,m.u_jmeno AS man_name,m.u_prijmeni AS man_surname,
-                f.u_id AS woman_id,f.u_jmeno AS woman_name,f.u_prijmeni AS woman_surname
-            FROM pary AS p
-                LEFT JOIN users AS m ON p.p_id_partner=m.u_id
-                LEFT JOIN users AS f ON p.p_id_partnerka=f.u_id
-            WHERE (p.p_id_partner='?' OR p.p_id_partnerka='?') AND p.p_archiv='1'",
-            $id,
-            $id
         );
         return self::getArray($res);
     }

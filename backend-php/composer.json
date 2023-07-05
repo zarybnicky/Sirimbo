@@ -20,7 +20,9 @@
         "sentry/sdk": "^3.3"
     },
     "require-dev": {
-        "sserbin/twig-linter": "@dev"
+        "sserbin/twig-linter": "@dev",
+        "vimeo/psalm": "^5.13",
+        "phpstan/phpstan": "^1.10"
     },
     "extra": {
         "generate-default-nix": false

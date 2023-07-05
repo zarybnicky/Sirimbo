@@ -15,16 +15,16 @@ class PlatbyGroup
     {
         \Permissions::checkError('platby', P_OWNED);
         $_POST['base'] = 1;
-        return static::displayForm('add', 0);
+        return self::displayForm('add', 0);
     }
 
     public static function addPost()
     {
         \Permissions::checkError('platby', P_OWNED);
-        $form = static::checkData();
+        $form = self::checkData();
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            return static::displayForm('add', 0);
+            return self::displayForm('add', 0);
         }
         \DBPlatbyGroup::insert(
             $_POST['type'],
@@ -54,7 +54,7 @@ class PlatbyGroup
         $_POST['name'] = $data['pg_name'];
         $_POST['description'] = $data['pg_description'];
         $_POST['base'] = $data['pg_base'];
-        return static::displayForm('edit', $id);
+        return self::displayForm('edit', $id);
     }
 
     public static function editPost($id)
@@ -64,10 +64,10 @@ class PlatbyGroup
             \Message::warning('Kategorie s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/group');
         }
-        $form = static::checkData();
+        $form = self::checkData();
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            return static::displayForm('edit', $id);
+            return self::displayForm('edit', $id);
         }
         \DBPlatbyGroup::update(
             $id,
@@ -105,7 +105,7 @@ class PlatbyGroup
             \Message::warning('Kategorie s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/group');
         }
-        if (static::getLinkedObjects($id)) {
+        if (self::getLinkedObjects($id)) {
             \Message::info(
                 'Nelze odstranit kategorii s připojenými skupinami nebo specifickými symboly! '
                 . '<form method=post>'
@@ -128,7 +128,7 @@ class PlatbyGroup
             \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/group');
         }
 
-        $f = static::getLinkedObjects($id);
+        $f = self::getLinkedObjects($id);
         if ($_POST['action'] == 'unlink') {
             $categoryCount = 0;
             foreach ($f['categories'] as $data) {

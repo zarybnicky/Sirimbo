@@ -44,4 +44,7 @@ customElements.define('date-range', r2wc(DateRange, {
   },
 }));
 
+
+function CustomMap({  })
+
 customElements.define('leaflet-map', r2wc(Map));
